@@ -10,12 +10,12 @@ import {
 const lesson: CodexLesson = {
   id: "L03",
   number: 3,
-  title: "AGENTS.md: Repository Instructions",
+  title: "AGENTS.md: repository instructions",
   subtitle:
-    "Versioned instructions give Codex explicit project rules, commands, and boundaries.",
+    "Versioned instructions give Codex project rules, commands, and boundaries.",
   durationMinutes: 11,
   trackId: "fundamentals",
-  hook: "Make repository rules explicit.",
+  hook: "Write the repository rules down.",
   keyConcepts: [
     "AGENTS.md",
     "Convention file",
@@ -109,6 +109,9 @@ const lesson: CodexLesson = {
         desc: "Switch on each section you'd put in a first draft. Aim for at least four.",
         goal: "Onboard Codex to a Python payments service in one file.",
         tierLabels: CODEX_TASK_SPEC_TIER_LABELS,
+        fileName: "AGENTS.md",
+        goalHeading: "Goal",
+        signalsLabel: "signals",
         items: [
           {
             section: "What this repo is",

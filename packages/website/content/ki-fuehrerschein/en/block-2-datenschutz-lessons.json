@@ -266,7 +266,7 @@
             "lessonId": "block_2_lesson_3",
             "cpId": "redaction-drill",
             "title": "Redact before pasting",
-            "scenario": "Before pasting a meeting record or customer email, inspect each piece of information: Is it necessary for the purpose, covered by the approved workflow, or should it be removed? Complete two rounds; the second contains less obvious risks."
+            "scenario": "Check each detail: is it needed for the task? If not, redact it."
           }
         }
       ]

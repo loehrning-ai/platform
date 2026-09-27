@@ -29,11 +29,10 @@ const COPY = {
     readingTime: (minutes: number) => `${minutes} Min. Lesezeit`,
     readLabel: (title: string) => `Artikel lesen: ${title}`,
     read: "Artikel lesen",
-    noteLabel: "Kein Redaktionsplan.",
+    noteLabel: "erscheint unregelmäßig",
     sourceLabel: "Quellenstandard",
-    sourceTitle: "Behauptungen mit Belegspur.",
-    sourceBody: "Rechtliche Aussagen führen zu Primärquellen.",
-    sourceMarks: ["Primärquellen", "Prüfdatum", "Lesezeit sichtbar"],
+    sourceBody:
+      "Rechtliche Aussagen verlinken auf Primärquellen und nennen das Prüfdatum.",
   },
   en: {
     metadataTitle: "Blog | loehrning.ai",
@@ -49,11 +48,9 @@ const COPY = {
     readingTime: (minutes: number) => `${minutes} min read`,
     readLabel: (title: string) => `Read article: ${title}`,
     read: "Read article",
-    noteLabel: "No publishing quota.",
+    noteLabel: "published irregularly",
     sourceLabel: "Source standard",
-    sourceTitle: "Claims with an evidence trail.",
-    sourceBody: "Legal claims lead to primary sources.",
-    sourceMarks: ["Primary sources", "Review date", "Reading time visible"],
+    sourceBody: "Legal claims link to primary sources and state the review date.",
   },
 } as const;
 
@@ -207,20 +204,9 @@ function BlogIndexContent({ locale }: { readonly locale: Locale }) {
       >
         <div className="blog-index__container blog-index__standard">
           <header className="blog-index__head">
-            <h2 id="source-standard">{copy.sourceTitle}</h2>
-            <p className="blog-index__caption">{copy.sourceLabel}</p>
+            <h2 id="source-standard">{copy.sourceLabel}</h2>
           </header>
           <p className="blog-index__body-text">{copy.sourceBody}</p>
-          <ul className="blog-index__marks">
-            {copy.sourceMarks.map((mark, index) => (
-              <li key={mark}>
-                <span className="blog-index__no">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                {mark}
-              </li>
-            ))}
-          </ul>
         </div>
       </section>
     </div>

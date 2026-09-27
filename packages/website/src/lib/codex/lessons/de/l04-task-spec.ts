@@ -11,7 +11,7 @@ function prose(sectionIndex: number, blockIndex: number): string {
 
 export default localizeCodexLessonToGerman(canonical, {
   translations: [
-    ["Anatomy of a Task Spec", "Aufbau einer Auftragsbeschreibung"],
+    ["Anatomy of a task spec", "Aufbau einer Auftragsbeschreibung"],
     [
       canonical.subtitle,
       "Ziel, Einschränkungen, Akzeptanzkriterien und ausgeschlossener Umfang machen die angeforderte Änderung prüfbar.",
@@ -51,7 +51,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     ["04 · out of scope", "04 · Nicht Bestandteil"],
     [
-      "What are we explicitly not doing?",
+      "What are we not doing?",
       "Was wird ausdrücklich nicht geändert?",
     ],
     [
@@ -115,7 +115,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ["make test passes.", "make test besteht."],
     ["make lint passes.", "make lint besteht."],
     [
-      "Adjacent work explicitly excluded from this change.",
+      "Adjacent work excluded from this change.",
       "Angrenzende Arbeit, die ausdrücklich draußen bleibt.",
     ],
     ["Don't change filtering logic.", "Filterlogik nicht ändern."],
@@ -127,7 +127,7 @@ export default localizeCodexLessonToGerman(canonical, {
       "Auch Optionales braucht eine Entscheidung über den Umfang.",
     ],
     [
-      "A total-count field, only if explicitly accepted into scope.",
+      "A total-count field, only if accepted into scope.",
       "Ein Feld mit der Gesamtzahl, nur wenn es ausdrücklich in den Umfang kommt.",
     ],
     ["Unverifiable preference", "Nicht prüfbare Präferenz"],
@@ -151,7 +151,7 @@ export default localizeCodexLessonToGerman(canonical, {
       'Ziel\nGET /users unterstützt ?page=N mit 20 Einträgen pro Seite.\n\nEinschränkungen\n- Bestehendes Antwortschema behalten; Objekt "pagination" auf oberster Ebene ergänzen.\n- Offset-basiert über ?page=N, nicht cursor-basiert.\n- Keine neuen Abhängigkeiten.\n\nAkzeptanz\n- Tests decken Seite 1, Seite 2 und Werte außerhalb des Bereichs ab (page=999 → leer).\n- make test && make lint bestehen.\n- Bestehende Filter ?role und ?status funktionieren unverändert.\n\nNicht Bestandteil\n- Detailendpunkt für einzelne Benutzer nicht ändern.\n- Filter Builder nicht refaktorisieren.',
     ],
     [
-      "Without constraints, a goal and tests still allow a schema change or an unrelated filter refactor. The four parts give review an explicit contract.",
+      "Without constraints, a goal and tests still allow a schema change or an unrelated filter refactor. The four parts give review a contract.",
       "Ohne Einschränkungen lassen Ziel und Tests eine Schemaänderung oder ein fremdes Filter-Refactoring durch. Die vier Bestandteile geben dem Review einen expliziten Vertrag.",
     ],
     [

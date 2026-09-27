@@ -68,7 +68,7 @@ export const DATA_ENGINEERING_FUNDAMENTALS_COURSE_COPY = Object.freeze({
     },
     landing: {
       eyebrow: "Data Engineering / Grundlagen",
-      title: "Eine Datenpipeline Station für Station verstehen.",
+      title: "Datenpipelines Station für Station.",
       intro:
         "Zu jeder Station probierst du die Entscheidung in einer Simulation aus.",
       start: "Überblick öffnen",

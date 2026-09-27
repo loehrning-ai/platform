@@ -2,7 +2,7 @@
   "id": "context",
   "number": 3,
   "title": "Kontextfenster, Tokens und Retrieval",
-  "subtitle": "Was in eine Anfrage eingeht, wie Tokens gezählt werden, was du prüfen musst.",
+  "subtitle": "Wie Tokens gezählt werden und was du am Kontext prüfst.",
   "durationMinutes": 10,
   "trackId": "foundations",
   "hook": "Das Kontextfenster ist begrenzt, also wähle relevante Quellen aus.",
@@ -60,8 +60,8 @@
       "props": {
         "lessonId": "context",
         "cpId": "drop",
-        "title": "Bedeutungskarte",
-        "scenario": "Diese lokale Illustration ordnet Wörter vordefinierten Themenfeldern zu. Claude wird nicht aufgerufen; Embeddings werden nicht berechnet.",
+        "title": "Wörter im Bedeutungsraum",
+        "scenario": "Ordnet Wörter festen Themenfeldern zu, ohne Claude und ohne Embeddings.",
         "seed": [
           {
             "w": "database",

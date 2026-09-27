@@ -85,7 +85,7 @@ export const DATA_INFRA_COURSE_COPY = Object.freeze({
     },
     landing: {
       eyebrow: "Data Infrastructure / Kurs",
-      title: "Datenplattformen anhand ihrer Systemgrenzen entwerfen.",
+      title: "Datenplattformen entwerfen.",
       intro:
         "In jeder Lektion triffst du eine Entwurfsentscheidung und prüfst, wie sie ausfallen kann und woran du das im Betrieb erkennst.",
       start: "Lektion 01 starten",
@@ -172,7 +172,7 @@ export const DATA_INFRA_COURSE_COPY = Object.freeze({
     },
     landing: {
       eyebrow: "Data Infrastructure / course",
-      title: "Design data platforms from explicit system boundaries.",
+      title: "Design data platforms.",
       intro:
         "In each lesson you make one design decision and check how it can fail and how you would see that in production.",
       start: "Start lesson 01",

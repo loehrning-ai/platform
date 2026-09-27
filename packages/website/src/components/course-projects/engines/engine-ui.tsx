@@ -29,15 +29,12 @@ const EngineLocaleContext = createContext<"de" | "en">("en");
 interface EngineFrameProps {
   config: CourseProjectConfig;
   locale: "de" | "en";
-  /** Optional variant name, shown as a small eyebrow above the heading. */
-  engineLabel?: string;
   children: ReactNode;
 }
 
 export function EngineFrame({
   config,
   locale,
-  engineLabel,
   children,
 }: EngineFrameProps) {
   // The heading reuses the mission instrument name, so the button that opens
@@ -50,11 +47,6 @@ export function EngineFrame({
         className="min-w-0 border-2 border-foreground bg-card shadow-[5px_5px_0_0_rgba(11,9,8,0.16)]"
       >
         <header className="border-b-2 border-foreground bg-foreground px-4 py-4 text-background sm:px-6">
-          {engineLabel ? (
-            <p className="mb-1 font-mono text-xs font-bold uppercase tracking-[0.14em] text-[#ffc6aa]">
-              {engineLabel}
-            </p>
-          ) : null}
           <h2
             id={`${config.id}-project-title`}
             className="break-words text-xl font-black leading-tight sm:text-2xl"

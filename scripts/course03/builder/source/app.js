@@ -188,7 +188,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
   const y = v => FLOOR - (v / MAX) * H;
   // table for screen readers
   const tb = $('#tub-table tbody');
-  tub.forEach((t, i) => tb.appendChild(el('tr', {}, `<th scope="row">${t.label}</th><td>${eur(t.end)}</td><td>${i ? signed(t.chg) : 'starting level'}</td>`)));
+  tub.forEach((t, i) => tb.appendChild(el('tr', {}, `<th scope="row">${esc(t.label)}</th><td>${eur(t.end)}</td><td>${i ? signed(t.chg) : 'starting level'}</td>`)));
 
   // static drawing
   const g = svg('g');
@@ -518,7 +518,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
       clearLook();
       b.setAttribute('aria-pressed', 'true');
       lanes[t.layer].classList.add('is-look');
-      const note = el('p', { class: 'fixnote rise' }, `<strong>Fixed in ${t.layer}.</strong> ${esc(t.fix)} <span class="label" style="margin-top:4px">Caught by ${esc(t.test)}</span>`);
+      const note = el('p', { class: 'fixnote rise' }, `<strong>Fixed in ${esc(t.layer)}.</strong> ${esc(t.fix)} <span class="label" style="margin-top:4px">Caught by ${esc(t.test)}</span>`);
       body(t.layer).appendChild(note);
       say(live, `${t.label}: fixed in ${t.layer}. ${t.fix} Caught by ${t.test}.`);
     });
@@ -716,10 +716,10 @@ function makeTabs(list, items, onSelect, idPrefix) {
     if (e.target.checked) {
       line.animate([{ opacity: 1, maxHeight: '2em' }, { opacity: 0, maxHeight: '0em' }], { duration: T('--m-wall'), easing: EASE_CSS.out }).onfinish = () => line.classList.add('is-gone');
       if (!T('--m-wall')) line.classList.add('is-gone');
-      ddlLive.innerHTML = `<p class="broken stamp"><span><strong>Pooled churn is now impossible.</strong> You still see ${D.churn.pct} %, ${D.churn.pct} %, ${D.churn.pct} %, but nothing to weigh them by: ${D.churn.pooledChurned} of ${D.churn.pooledStart} cannot be recomputed, and nobody can tell 4 of 40 from 4 of 48.</span> ${failChip()}</p>`;
+      ddlLive.innerHTML = `<p class="broken stamp"><span><strong>Pooled churn is now impossible.</strong> You still see ${esc(D.churn.pct)} %, ${esc(D.churn.pct)} %, ${esc(D.churn.pct)} %, but nothing to weigh them by: ${esc(D.churn.pooledChurned)} of ${esc(D.churn.pooledStart)} cannot be recomputed, and nobody can tell 4 of 40 from 4 of 48.</span> ${failChip()}</p>`;
     } else {
       line.classList.remove('is-gone');
-      ddlLive.innerHTML = `<p class="fig__note">Restored: with <code>starting_accounts</code> beside the rate, the company figure is ${D.churn.pooledChurned} of ${D.churn.pooledStart} = ${D.churn.pct} %.</p>`;
+      ddlLive.innerHTML = `<p class="fig__note">Restored: with <code>starting_accounts</code> beside the rate, the company figure is ${esc(D.churn.pooledChurned)} of ${esc(D.churn.pooledStart)} = ${esc(D.churn.pct)} %.</p>`;
     }
   });
 
@@ -736,7 +736,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
   const reqs = D.requests, gatesEl = $('#m7-gates'), result = $('#m7-result'), packet = $('#m7-packet');
   const fs = $('#m7-reqs');
   reqs.forEach((r, i) => {
-    const lab = el('label', { class: 'req' }, `<input type="radio" name="m7req" value="${r.id}"${i === 0 ? ' checked' : ''}><span>${r.label}</span>`);
+    const lab = el('label', { class: 'req' }, `<input type="radio" name="m7req" value="${esc(r.id)}"${i === 0 ? ' checked' : ''}><span>${md(r.label)}</span>`);
     fs.appendChild(lab);
   });
   const gateNodes = D.gates.map(g => {
@@ -746,13 +746,13 @@ function makeTabs(list, items, onSelect, idPrefix) {
   const M = D.messages;
   function evaluate(id, o) {
     const S = (state, title, detail) => ({ state, title, detail });
-    const approved = `${D.tub.slice(4).map(t => eur(t.end)).join(' / ')}`;
+    const approved = esc(D.tub.slice(4).map(t => eur(t.end)).join(' / '));
     const roleLock = o.superuser;
     switch (id) {
       case 'ending': return {
         g: [S('pass', 'Routes', 'Approved question: ending_mrr 1.0.0 in analytics.mrr_summary_monthly.'), S('pass', 'Allows', 'One SELECT on an allowlisted, schema-qualified view.'), S('pass', 'Allows', 'Read-only session, 5 s timeout.'),
             roleLock ? S('nolock', 'No lock', 'Superuser: every privilege check is skipped.') : S('pass', 'Allows', "SELECT granted on 5 views. search_path is '', so an unqualified name fails with 42P01.")],
-        res: roleLock ? `<p><strong>Answer: ${approved}</strong> ${passChip()}</p><p style="margin:0">Same answer, no lock. Every other request now depends on instructions alone.</p>` : `<p><strong>Answer: ${approved}</strong> ${passChip()}</p><p style="margin:0">Trace: <code>ending_mrr</code> 1.0.0 · <code>analytics.mrr_summary_monthly</code> · loaded ${D.fresh.loaded}, ${D.fresh.clockAge} h old.</p>`,
+        res: roleLock ? `<p><strong>Answer: ${approved}</strong> ${passChip()}</p><p style="margin:0">Same answer, no lock. Every other request now depends on instructions alone.</p>` : `<p><strong>Answer: ${approved}</strong> ${passChip()}</p><p style="margin:0">Trace: <code>ending_mrr</code> 1.0.0 · <code>analytics.mrr_summary_monthly</code> · loaded ${esc(D.fresh.loaded)}, ${esc(D.fresh.clockAge)} h old.</p>`,
         nolock: roleLock };
       case 'howmuch': return o.ignore ? {
         g: [S('pass', 'Guesses', 'Instructions ignored: it picks a meaning instead of asking.'), S('pass', 'Allows', 'The SQL is a valid SELECT on an approved view.'), S('pass', 'Allows', 'Read-only SELECT.'), S('pass', 'Allows', 'The grant is fine; a database cannot see an ambiguous question.')],
@@ -832,8 +832,8 @@ function makeTabs(list, items, onSelect, idPrefix) {
   function showFile(name, btn) {
     const f = D.files[name];
     $$('.file', tree).forEach(b => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
-    excerpt.innerHTML = `<div class="fade"><h3><span>${esc(name)}</span><span class="badge badge--${f.badge} stamp">${badgeWord[f.badge]}</span></h3><p style="font-size:17px">${esc(f.job)}</p><p class="fig__note">Kit file: <a data-kit-file><code>${esc(f.src)}</code></a>. ${esc(f.dest)}.</p><pre class="code${/\.(txt|md)$/.test(name) ? ' prose' : ''}">${esc(f.excerpt)}</pre></div>`;
-    excerpt.querySelector('a[data-kit-file]').setAttribute('href', './data-readiness-kit/builder/' + f.src);
+    excerpt.innerHTML = `<div class="fade"><h3><span>${esc(name)}</span><span class="badge badge--${esc(f.badge)} stamp">${esc(badgeWord[f.badge])}</span></h3><p style="font-size:17px">${esc(f.job)}</p><p class="fig__note">Kit file: <a data-kit-file><code>${esc(f.src)}</code></a>. ${esc(f.dest)}.</p><pre class="code${/\.(txt|md)$/.test(name) ? ' prose' : ''}">${esc(f.excerpt)}</pre></div>`;
+    excerpt.querySelector('a[data-kit-file]').setAttribute('href', './data-readiness-kit/builder/' + f.src.split('/').map(segment => encodeURIComponent(segment)).join('/'));
   }
   let credOn = false;
   makeTabs($('#m8-tabs'), D.setups, (s, _i, user) => {
@@ -847,7 +847,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
         const f = D.files[fn];
         const fli = el('li');
         if (user) fli.style.animation = `rise var(--m-rise) var(--ease-out) ${k++ * STAGGER()}ms both`;
-        const b = el('button', { class: 'file', type: 'button', 'aria-pressed': 'false' }, `<span class="fname">${esc(fn.split('/').pop())}</span><span class="badge badge--${f.badge}">${badgeWord[f.badge]}</span>`);
+        const b = el('button', { class: 'file', type: 'button', 'aria-pressed': 'false' }, `<span class="fname">${esc(fn.split('/').pop())}</span><span class="badge badge--${esc(f.badge)}">${esc(badgeWord[f.badge])}</span>`);
         b.addEventListener('click', () => showFile(fn, b));
         fli.appendChild(b); ul.appendChild(fli);
         if (!first) first = [fn, b];
@@ -877,7 +877,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
   const tick = (h, cls) => { const t = el('span', { class: 'tick ' + cls }); t.style.left = `calc(${at(h)} - 1px)`; bar.appendChild(t); return t; };
   tick(F.clockAge, ''); const warnTick = tick(F.warn, 'warn'); tick(F.whatIf, '');
   const invTick = tick(F.invented, 'inv'); invTick.hidden = true;
-  const lab = (h, text) => { const s = el('span', {}, text); s.style.left = at(h); labels.appendChild(s); return s; };
+  const lab = (h, text) => { const s = el('span'); s.textContent = text; s.style.left = at(h); labels.appendChild(s); return s; };
   lab(F.clockAge, `${F.clockAge} h`); lab(F.warn, `${F.warn} h warn`); lab(F.whatIf, `${F.whatIf} h`);
   const invLab = lab(F.invented, `${F.invented} h?`); invLab.hidden = true;
   const fill = $('.fill', bar);
@@ -897,10 +897,10 @@ function makeTabs(list, items, onSelect, idPrefix) {
     let cls = '', head, extra = '', withheld = false;
     if (quality.checked) { cls = 'is-block'; withheld = true; head = `<span>Refuse: written rule.</span> ${failChip('Blocked')}`; extra = `<p style="margin:0">“${esc(D.messages.QUALITY)}”</p>`; }
     else if (q3.checked) { cls = 'is-block'; withheld = true; head = `<span>Refuse: written rule.</span> ${failChip('Blocked')}`; extra = `<p style="margin:0">“${esc(D.messages.Q3)}” Q3 2026 is not finished at this clock.</p>`; }
-    else if (invent.checked && h > F.invented) { cls = 'is-block'; withheld = true; head = `<span>Refused by an invented ${F.invented} h rule.</span> ${failChip()}`; extra = `<p class="antinote">Anti-pattern AP-F02. Nobody wrote or approved a ${F.invented} h rule, so the next run can behave differently and no test can be written. FOLDLINE's <code>hard_expiry_hours</code> is NULL: warn, answer, escalate.</p>`; }
-    else if (over) { cls = 'is-warn'; head = `<span>Answer with a warning.</span> ${gapChip('Stale, disclosed')}`; extra = `<p style="margin:0">“Data loaded at ${F.loaded}, ${h} h before the evaluation clock ${clk}. The warning threshold is ${F.warn} h.” Escalate to <code>revenue_analytics</code>; invent nothing.</p>`; }
-    else { head = `<span>Fresh: answer.</span> ${'<span class="chip chip--muted">Fresh</span>'}`; extra = `<p style="margin:0">Loaded ${F.loaded}, ${h} h before the clock ${clk}. Still stated in the trace.</p>`; }
-    const vals = D.tub.slice(4).map(t => eur(t.end)).join(' / ');
+    else if (invent.checked && h > F.invented) { cls = 'is-block'; withheld = true; head = `<span>Refused by an invented ${esc(F.invented)} h rule.</span> ${failChip()}`; extra = `<p class="antinote">Anti-pattern AP-F02. Nobody wrote or approved a ${esc(F.invented)} h rule, so the next run can behave differently and no test can be written. FOLDLINE's <code>hard_expiry_hours</code> is NULL: warn, answer, escalate.</p>`; }
+    else if (over) { cls = 'is-warn'; head = `<span>Answer with a warning.</span> ${gapChip('Stale, disclosed')}`; extra = `<p style="margin:0">“Data loaded at ${esc(F.loaded)}, ${esc(h)} h before the evaluation clock ${esc(clk)}. The warning threshold is ${esc(F.warn)} h.” Escalate to <code>revenue_analytics</code>; invent nothing.</p>`; }
+    else { head = `<span>Fresh: answer.</span> ${'<span class="chip chip--muted">Fresh</span>'}`; extra = `<p style="margin:0">Loaded ${esc(F.loaded)}, ${esc(h)} h before the clock ${esc(clk)}. Still stated in the trace.</p>`; }
+    const vals = esc(D.tub.slice(4).map(t => eur(t.end)).join(' / '));
     card.innerHTML = `<div class="answer-card__banner ${cls} rise">${head}</div><div class="answer-card__body${withheld ? ' is-withheld' : ''}"><p class="vals">${vals}</p>${withheld ? '<p class="fig__note">Not answered.</p>' : ''}${extra}</div>`;
   }
   [range, q3, quality, invent].forEach(i => i.addEventListener(i === range ? 'input' : 'change', render));
@@ -1013,7 +1013,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
   const done = new Set();
   const nodes = D.steps.map((s, i) => {
     const li = el('li', { class: 'step' });
-    li.innerHTML = `<span class="step__n" aria-hidden="true">${s.n}</span><details${i === 0 ? ' open' : ''}><summary><span><span class="sr-only">Step ${s.n}. </span>${esc(s.title)}</span><span class="who">${esc(s.who)}</span></summary><div class="step__body"><dl><dt>Output</dt><dd>${md(s.output)}</dd><dt>Done when</dt><dd>${md(s.done)}</dd><dt>FOLDLINE</dt><dd>${md(s.foldline)}</dd><dt>Prevents</dt><dd>${md(s.prevents)}</dd></dl><label class="toggle"><input type="checkbox" data-step="${s.n}"> Done when met</label>${i < D.steps.length - 1 ? ` <button class="btn btn--small no-print" type="button" data-next="${i + 1}">Next step</button>` : ''}</div></details>`;
+    li.innerHTML = `<span class="step__n" aria-hidden="true">${esc(s.n)}</span><details${i === 0 ? ' open' : ''}><summary><span><span class="sr-only">Step ${esc(s.n)}. </span>${esc(s.title)}</span><span class="who">${esc(s.who)}</span></summary><div class="step__body"><dl><dt>Output</dt><dd>${md(s.output)}</dd><dt>Done when</dt><dd>${md(s.done)}</dd><dt>FOLDLINE</dt><dd>${md(s.foldline)}</dd><dt>Prevents</dt><dd>${md(s.prevents)}</dd></dl><label class="toggle"><input type="checkbox" data-step="${esc(s.n)}"> Done when met</label>${i < D.steps.length - 1 ? ` <button class="btn btn--small no-print" type="button" data-next="${i + 1}">Next step</button>` : ''}</div></details>`;
     stepsEl.appendChild(li); return li;
   });
   const dets = nodes.map(n => $('details', n));
@@ -1051,7 +1051,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
   let group = 'All';
   const items = aps.map(a => {
     const li = el('li', { 'data-group': a.group });
-    li.innerHTML = `<details class="ap"><summary><span class="apid">${esc(a.id)}</span><span class="grp">${esc(a.group)}</span><span class="sym">${md(a.symptom)}</span></summary><div class="ap__body"><dl><dt>Bad</dt><dd class="ap__bad"><span>${md(a.instance)}</span></dd><dt>Why</dt><dd>${md(a.why)}</dd><dt>Good</dt><dd>${md(a.fix)}</dd><dt>Caught by</dt><dd>${md(a.caught)}</dd><dt>Module</dt><dd><a href="#${a.anchor}">${esc(a.module)}</a></dd></dl></div></details>`;
+    li.innerHTML = `<details class="ap"><summary><span class="apid">${esc(a.id)}</span><span class="grp">${esc(a.group)}</span><span class="sym">${md(a.symptom)}</span></summary><div class="ap__body"><dl><dt>Bad</dt><dd class="ap__bad"><span>${md(a.instance)}</span></dd><dt>Why</dt><dd>${md(a.why)}</dd><dt>Good</dt><dd>${md(a.fix)}</dd><dt>Caught by</dt><dd>${md(a.caught)}</dd><dt>Module</dt><dd><a href="#${esc(a.anchor)}">${esc(a.module)}</a></dd></dl></div></details>`;
     li._text = [a.id, a.group, a.symptom, a.instance, a.why, a.fix, a.caught].join(' ').toLowerCase();
     list.appendChild(li); return li;
   });

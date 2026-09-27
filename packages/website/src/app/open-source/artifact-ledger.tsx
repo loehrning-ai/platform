@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ExternalLink } from "lucide-react";
+import { cx } from "@/components/werk/cx";
 import {
   ArtifactPreviewStack,
   type ArtifactPreviewFrame,
@@ -81,9 +82,6 @@ export function ArtifactLedger({ locale }: { readonly locale: Locale }) {
         >
           {copy.heading}
         </h2>
-        <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
-          {copy.entryCount(OPEN_SOURCE_ARTIFACTS.length)}
-        </p>
       </div>
 
       <ol>
@@ -160,11 +158,10 @@ export function ArtifactLedger({ locale }: { readonly locale: Locale }) {
                       </p>
 
                       <dl
-                        className="mt-4 grid grid-cols-2 border-l border-t border-foreground text-sm sm:mt-5 sm:grid-cols-4"
+                        className="mt-4 grid grid-cols-2 border-l border-t border-foreground text-sm sm:mt-5 sm:grid-cols-3"
                         data-open-source-fact-rail
                       >
                         {[
-                          [copy.facts.kind, sharedCopy.kinds[artifact.kind]],
                           [
                             copy.facts.delivery,
                             artifactDelivery(artifact, locale),
@@ -174,7 +171,12 @@ export function ArtifactLedger({ locale }: { readonly locale: Locale }) {
                         ].map(([label, value], factIndex) => (
                           <div
                             key={label}
-                            className="min-w-0 border-b border-r border-foreground p-3"
+                            className={cx(
+                              "min-w-0 border-b border-r border-foreground p-3",
+                              // Three facts on a two-column phone rail: the
+                              // last spans the row so no empty cell remains.
+                              factIndex === 2 && "max-sm:col-span-2",
+                            )}
                             style={{
                               background: FACT_BACKGROUNDS[factIndex],
                             }}

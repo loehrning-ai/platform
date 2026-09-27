@@ -103,7 +103,7 @@ const COURSE_HUB_COPY: Readonly<Record<Locale, CourseHubCopy>> = {
     minutes: (count) => `${count} Min`,
     continue: "Weitermachen",
     startBlock: "Block starten",
-    workshopQuiz: "Workshop-Quiz",
+    workshopQuiz: "Abschlussquiz",
     quizDetails: (questions, threshold, minutes) =>
       `${questions} Praxisfragen · ${threshold}% zum Bestehen · ${minutes} Minuten`,
     startQuiz: "Quiz starten",
@@ -133,7 +133,7 @@ const COURSE_HUB_COPY: Readonly<Record<Locale, CourseHubCopy>> = {
     minutes: (count) => `${count} min`,
     continue: "Continue",
     startBlock: "Start block",
-    workshopQuiz: "Workshop quiz",
+    workshopQuiz: "Final quiz",
     quizDetails: (questions, threshold, minutes) =>
       `${questions} practical questions · ${threshold}% to pass · ${minutes} minutes`,
     startQuiz: "Start quiz",

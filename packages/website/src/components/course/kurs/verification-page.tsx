@@ -206,9 +206,7 @@ export function VerificationPage({
               className="mb-8 inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
               <ArrowLeft className="h-4 w-4" />
-              {config.language === "en"
-                ? `Back to ${config.title}`
-                : `Zurück zum ${config.title}`}
+              {config.language === "en" ? "Back to course" : "Zurück zum Kurs"}
             </Link>
 
             {/*
@@ -219,8 +217,8 @@ export function VerificationPage({
           */}
             <h1 className="sr-only">
               {config.language === "en"
-                ? "Verify certificate data"
-                : "Zertifikatdaten prüfen"}
+                ? "Read certificate data"
+                : "Zertifikatdaten lesen"}
             </h1>
 
             {data && (
@@ -290,10 +288,10 @@ export function VerificationPage({
                 <h2 className="mt-4 text-fluid-h2 font-bold">
                   {config.language === "en"
                     ? invalidReason === "course-mismatch"
-                      ? "Certificate code doesn't match this course."
+                      ? "Certificate code doesn't match this course"
                       : "Certificate code unreadable"
                     : invalidReason === "course-mismatch"
-                      ? "Zertifikatcode passt nicht zu diesem Kurs."
+                      ? "Zertifikatcode passt nicht zu diesem Kurs"
                       : "Zertifikatcode nicht lesbar"}
                 </h2>
                 <p className="mt-2 text-sm text-muted-foreground">

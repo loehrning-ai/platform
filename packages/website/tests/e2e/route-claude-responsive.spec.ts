@@ -612,7 +612,7 @@ test.describe("Claude locale continuity and record surfaces", () => {
       page.getByText("Navigations-Checkpoint gespeichert", { exact: true }),
     ).toBeVisible();
 
-    const englishLink = visibleLanguageSwitchLink(page, /Englische Oberfläche/);
+    const englishLink = visibleLanguageSwitchLink(page, /englische Oberfläche/);
     await englishLink.click();
     await expect(page).toHaveURL(
       /\/en\/kurse\/open-source\/claude\/kurs\/mental-model$/,
@@ -643,7 +643,7 @@ test.describe("Claude locale continuity and record surfaces", () => {
       await expect(header).toBeVisible({ timeout: 15_000 });
       await expect(
         header.getByText(
-          localeCase.locale === "de" ? "Workshop-Quiz" : "Workshop quiz",
+          localeCase.locale === "de" ? "Abschlussquiz" : "Final quiz",
           { exact: true },
         ),
       ).toBeVisible();
@@ -741,7 +741,7 @@ test.describe("Claude locale continuity and record surfaces", () => {
       waitUntil: "domcontentloaded",
     });
     await settleFullPage(page);
-    const englishLink = visibleLanguageSwitchLink(page, /Englische Oberfläche/);
+    const englishLink = visibleLanguageSwitchLink(page, /englische Oberfläche/);
     await expect(englishLink).toHaveAttribute(
       "href",
       `/en/kurse/open-source/claude/verifizierung#${hash}`,

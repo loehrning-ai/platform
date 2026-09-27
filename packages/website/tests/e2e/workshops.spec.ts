@@ -146,7 +146,7 @@ test.describe("workshop self-study journey", () => {
       const box = await row.boundingBox();
       expect(box, "row bounds").not.toBeNull();
       expect(box!.height).toBeLessThan(140);
-      await expect(row.locator("[data-workshop-question]")).toBeHidden();
+      await expect(row.locator("[data-workshop-question]")).toHaveCount(0);
       await expect(row.locator("h3 + p")).toBeHidden();
       await expect(row.locator("[data-workshop-tile]")).toBeVisible();
       // The one link covers the whole row on a phone.

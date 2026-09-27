@@ -126,7 +126,7 @@ describe("Claude technical-course locale registry", () => {
       questions: de.content.questions,
     }).join("\n");
 
-    expect(prose).toContain("Was Claude tatsächlich ist");
+    expect(prose).toContain("Was Claude ist");
     expect(prose).toContain("Agenten-Workflows und Tool-Nutzung");
     expect(prose).not.toMatch(/\b(?:Sie|Ihnen|Ihre|Ihrem|Ihren|Ihrer)\b/u);
     expect(prose).not.toMatch(/[–—]/u);

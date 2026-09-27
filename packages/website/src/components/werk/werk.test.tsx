@@ -22,6 +22,7 @@ import {
   routeStationState,
   SectionHead,
   StatRow,
+  WERK_FONT_SIZES,
 } from "./index";
 import { GERMANY_OUTLINE, graticulePath, outlinePath, projectPoint } from "./globe-geometry";
 
@@ -59,6 +60,19 @@ describe("cx", () => {
   it("keeps a Werkzeichnung type token next to a text colour", () => {
     expect(cx("text-label text-muted-foreground")).toBe("text-label text-muted-foreground");
     expect(cx("text-caption", "text-label")).toBe("text-label");
+    expect(cx("text-poster text-scene-ink")).toBe("text-poster text-scene-ink");
+  });
+
+  it("registers every @theme type step as a font size", () => {
+    const css = readFileSync(join(process.cwd(), "src/app/globals.css"), "utf8");
+    const theme = css.slice(css.indexOf("@theme {"), css.indexOf("@theme static"));
+    const steps = [...theme.matchAll(/^\s*--text-([a-z0-9-]+?):/gm)]
+      .map((match) => match[1])
+      .filter((name) => !name.includes("--"));
+    expect(steps.length).toBeGreaterThan(0);
+    for (const step of steps) {
+      expect(WERK_FONT_SIZES as readonly string[], step).toContain(step);
+    }
   });
 });
 

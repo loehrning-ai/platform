@@ -33,10 +33,10 @@ const lesson: ClaudeLesson = {
     },
     {
       id: "never-paste",
-      title: "Block unless explicitly approved",
+      title: "Block unless approved",
       readTimeMinutes: 1,
       content:
-        "Block unless an approved workflow explicitly permits it:\n\n- Secrets: API keys, tokens, credentials, passwords, session cookies.\n- Personal, customer, health, financial or authentication data beyond the authorized minimum.\n- Confidential product, security, legal, personnel or financial information.\n- Data under contractual, regulatory, export or residency restrictions.\n- Anything your organization's policy prohibits.\n\nIf a secret reaches an unauthorized system, follow the incident process and rotate or revoke it. Deleting the chat is not enough.",
+        "Block unless an approved workflow permits it:\n\n- Secrets: API keys, tokens, credentials, passwords, session cookies.\n- Personal, customer, health, financial or authentication data beyond the authorized minimum.\n- Confidential product, security, legal, personnel or financial information.\n- Data under contractual, regulatory, export or residency restrictions.\n- Anything your organization's policy prohibits.\n\nIf a secret reaches an unauthorized system, follow the incident process and rotate or revoke it. Deleting the chat is not enough.",
     },
     {
       id: "usually-fine",

@@ -185,9 +185,8 @@ export default async function DemosPage({ searchParams }: DemosPageProps) {
 
       {/* IDEA band (SPEC §3.12): four corner dots, the arrow caps line, the
           Himbeere poster H1, a 17px Kobalt lede and one halftone image, so
-          the band keeps three type sizes. Everything factual (the stats and
-          the check list) sits on paper right below. Below sm the lede is its
-          first sentence only, and the halftone is a 112px strip, so the first
+          the band keeps three type sizes. Everything factual (the stats) sits
+          on paper right below. Below sm the halftone is a 112px strip, so the first
           example still starts in the first screen. From lg the halftone
           sits beside the lede, so the catalogue heading reaches the first
           view, and the dots mark the content box, not the viewport corners.
@@ -215,17 +214,15 @@ export default async function DemosPage({ searchParams }: DemosPageProps) {
           <div className="lg:mt-8 lg:grid lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] lg:items-end lg:gap-12">
             <p className="mt-4 max-w-[46ch] text-[1.0625rem] leading-normal text-scene-ink text-pretty sm:mt-5 lg:mt-0">
               {copy.catalog.introduction}
-              <span className="max-sm:hidden"> {copy.catalog.introductionDetail}</span>
             </p>
             <Halftone field="demos" className={HALFTONE_CLASS} />
           </div>
         </PlakatBand>
       </header>
 
-      {/* Paper below the band: the registry-derived stats and the check list.
-          Below sm one caption line carries the same numbers and the check
-          list (which repeats the lede) is left out, so the first examples
-          start soon after the band. */}
+      {/* Paper below the band: the registry-derived stats. Below sm one
+          caption line carries the same numbers, so the first examples start
+          soon after the band. */}
       <div
         className="px-4 pb-5 pt-4 sm:px-6 sm:pb-12 sm:pt-10"
         data-demo-atlas-facts
@@ -241,7 +238,7 @@ export default async function DemosPage({ searchParams }: DemosPageProps) {
               data-demo-stats-line
             >
               {copy.catalog
-                .statsLine(stats[0].value, stats[1].value, stats[2].value)
+                .statsLine(stats[0].value, stats[2].value)
                 .map((item) => (
                   <li
                     key={item}
@@ -259,31 +256,6 @@ export default async function DemosPage({ searchParams }: DemosPageProps) {
               role="group"
             >
               <StatRow stats={stats} />
-            </div>
-            <div className="min-w-0" data-demo-scope>
-              <p
-                id="demo-scope-label"
-                className="text-label text-foreground"
-              >
-                {copy.catalog.scopeLabel}
-              </p>
-              <ul
-                aria-labelledby="demo-scope-label"
-                className="mt-3 border-t border-hairline"
-              >
-                {copy.catalog.scopeItems.map((item) => (
-                  <li
-                    key={item}
-                    className="flex items-baseline gap-3 border-b border-hairline py-3 text-body text-foreground"
-                  >
-                    <span
-                      className="size-2.5 shrink-0 translate-y-[-0.1em] bg-foreground"
-                      aria-hidden="true"
-                    />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
             </div>
           </div>
         </div>

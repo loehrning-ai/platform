@@ -110,7 +110,7 @@ const COPY: Readonly<Record<Locale, AiNativeOperatorCourseCopy>> = {
       moduleCount: (count) => `${count} modules`,
       lessonCount: (count) => `${count} lessons`,
       exerciseCount: (count) => `${count} exercises`,
-      durationShort: "About 14 hours",
+      durationShort: "About 4 hours",
       outcomesEyebrow: "Course outcomes",
       outcomesTitle: "Practices covered",
       syllabusEyebrow: "Syllabus",
@@ -154,7 +154,7 @@ const COPY: Readonly<Record<Locale, AiNativeOperatorCourseCopy>> = {
       notFoundTitle: "Lesson not found",
     },
     quizMetadata: {
-      title: "Workshop quiz: AI-Native Operator",
+      title: "Final quiz: AI-Native Operator",
       description:
         "Twenty-two questions from the nine module checks. Pass mark: 70 percent. Time limit: 28 minutes.",
     },
@@ -224,7 +224,7 @@ const COPY: Readonly<Record<Locale, AiNativeOperatorCourseCopy>> = {
       moduleCount: (count) => `${count} Module`,
       lessonCount: (count) => `${count} Lektionen`,
       exerciseCount: (count) => `${count} Übungen`,
-      durationShort: "Etwa 14 Stunden",
+      durationShort: "Etwa 4 Stunden",
       outcomesEyebrow: "Kursziele",
       outcomesTitle: "Behandelte Praktiken",
       syllabusEyebrow: "Lehrplan",

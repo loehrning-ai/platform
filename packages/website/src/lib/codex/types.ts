@@ -67,25 +67,25 @@ export const CODEX_TRACKS: readonly CodexTrack[] = [
     id: "fundamentals",
     label: "Track 01, Fundamentals",
     title: "The mental model",
-    hint: "Three lessons on task execution, sandbox boundaries, and repository context.",
+    hint: "How Codex runs and what it can reach in a repo.",
   },
   {
     id: "task-craft",
     label: "Track 02, Task Craft",
     title: "Writing reviewable tasks",
-    hint: "Specifications, scope, and acceptance evidence for bounded changes.",
+    hint: "Write tasks whose result you can check.",
   },
   {
     id: "in-the-loop",
     label: "Track 03, In the Loop",
     title: "Reviewing and revising changes",
-    hint: "Diff review, targeted iteration, and task-specific tools.",
+    hint: "Review the diff and steer the next run.",
   },
   {
     id: "advanced",
     label: "Track 04, Advanced",
     title: "Integrating the development workflow",
-    hint: "Parallel work, reusable task patterns, and a reviewable release flow.",
+    hint: "Run Codex in parallel and in the team workflow.",
   },
 ];
 
@@ -94,25 +94,25 @@ export const CODEX_TRACKS_DE: readonly CodexTrack[] = [
     id: "fundamentals",
     label: "Track 01, Grundlagen",
     title: "Das Arbeitsmodell",
-    hint: "Drei Lektionen zu Agentenlauf, Sandbox und Repository-Kontext.",
+    hint: "Wie Codex arbeitet und was es im Repository erreicht.",
   },
   {
     id: "task-craft",
     label: "Track 02, Auftragsgestaltung",
     title: "Prüfbare Aufgaben formulieren",
-    hint: "Spezifikation, Umfang und Akzeptanzkriterien für kontrollierbare Änderungen.",
+    hint: "Aufträge so schreiben, dass du das Ergebnis prüfen kannst.",
   },
   {
     id: "in-the-loop",
     label: "Track 03, Im Arbeitszyklus",
     title: "Ergebnisse prüfen und überarbeiten",
-    hint: "Diff-Review, gezielte Iteration und passende Werkzeuge für den Auftrag.",
+    hint: "Den Diff prüfen und gezielt nachsteuern.",
   },
   {
     id: "advanced",
     label: "Track 04, Fortgeschritten",
     title: "In den Entwicklungsablauf integrieren",
-    hint: "Parallele Arbeit, wiederverwendbare Muster und ein vollständiger Ablauf.",
+    hint: "Codex parallel und im Team-Ablauf einsetzen.",
   },
 ];
 

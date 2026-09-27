@@ -11,7 +11,7 @@ const LID = checkpointLessonId("batch-elt");
 const lesson: DataInfraLesson = {
   id: "batch-elt",
   number: 7,
-  title: "Batch ETL & Orchestration",
+  title: "Batch ELT and orchestration",
   subtitle: "Airflow · dbt · idempotent merges",
   durationMinutes: 13,
   trackId: "movement",

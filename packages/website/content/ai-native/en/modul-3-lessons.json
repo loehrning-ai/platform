@@ -748,7 +748,7 @@
               },
               {
                 "label": "Variant C: RCTFC + structured output",
-                "prompt": "Role: Chief of Staff, writing for management.\nContext: daily notes from 2026-04-14 to 2026-04-20 in the vault.\nTask: create a weekly report.\nFormat: Markdown, 3 sections (1. Highlights, 3 bullet points, max 15 words each; 2. Blockers with a proposed solution, max 3; 3. Next week, max 5 lines).\nOff-limits: adverbs like \"successful\", \"productive\", \"focused\".\nSource: facts from the notes only, no additions or opinions.\nConstraint: if the time frame has no data, say so and make nothing up.",
+                "prompt": "Role: Chief of Staff, writing for management.\nContext: daily notes from 2026-04-14 to 2026-04-20 in the vault.\nTask: create a weekly report.\n\nFormat: Markdown, 3 sections (1. Highlights, 3 bullet points, max 15 words each; 2. Blockers with a proposed solution, max 3; 3. Next week, max 5 lines).\nOff-limits: adverbs like \"successful\", \"productive\", \"focused\".\nSource: facts from the notes only, no additions or opinions.\nConstraint: if the time frame has no data, say so and make nothing up.",
                 "critique": "The brief sets RCTFC fields, an output schema, banned wording and a source rule. That makes repeated outputs comparable and reviewable.",
                 "rating": 5
               }

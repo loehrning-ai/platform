@@ -11,27 +11,20 @@ test.describe("Homepage learning-platform transparency", () => {
     await kurse.scrollIntoViewIfNeeded();
     await expect(kurse).toContainText("Vier Kurse");
     await expect(kurse).toContainText("KI-Führerschein");
-    const courseImages = kurse.locator("[data-course-artwork] img");
-    await expect(courseImages).toHaveCount(4);
-    // Below lg the course rows carry no artwork (course-artwork.tsx), so the
-    // lazy images are never requested there; from lg every one loads.
+    // Each course row carries its server-rendered poster (PosterArt,
+    // landscape; SPEC §3.5), an inline SVG with no image request.
+    const posters = kurse.locator("[data-course-artwork] svg[data-poster]");
+    await expect(posters).toHaveCount(4);
+    // Below lg the course rows carry no artwork (course-artwork.tsx); from
+    // lg every poster shows.
     const wide = (page.viewportSize()?.width ?? 1280) >= 1024;
-    for (const image of await courseImages.all()) {
+    for (const poster of await posters.all()) {
       if (!wide) {
-        await expect(image).toBeHidden();
+        await expect(poster).toBeHidden();
         continue;
       }
-      await expect(image).toHaveAttribute("src", /cover-v3\.webp/);
-      await expect
-        .poll(() =>
-          image.evaluate(
-            (node) =>
-              node instanceof HTMLImageElement &&
-              node.complete &&
-              node.naturalWidth > 0,
-          ),
-        )
-        .toBe(true);
+      await expect(poster).toBeVisible();
+      await expect(poster).toHaveAttribute("data-poster-format", "landscape");
     }
     // ...and the supporting resources in their own Ressourcen section.
     const ressourcen = page.getByTestId("ressourcen-section");
@@ -49,10 +42,10 @@ test.describe("Homepage learning-platform transparency", () => {
     await section.scrollIntoViewIfNeeded();
     await expect(section).toContainText("Keine Paywall");
     await expect(section).toContainText("Zwei vollständige Fassungen");
-    await expect(section).toContainText("Stand und Herkunft sichtbar");
+    await expect(section).toContainText("Quellen sind verlinkt");
     await expect(section).toContainText("Von Tim Löhr redigiert");
     await expect(section).toContainText(
-      "Kein Abo. Vier Reader benötigen ein kostenloses Lernkonto.",
+      "Vier Kurse brauchen ein kostenloses Lernkonto.",
     );
     await expect(section).toContainText(
       "Fakten verweisen auf Quellen. Annahmen und Simulationen sind markiert.",

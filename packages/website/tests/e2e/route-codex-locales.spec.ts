@@ -36,7 +36,7 @@ const LOCALES = [
     locale: "en",
     prefix: "/en",
     landingTitle: "Use Codex under explicit repository controls.",
-    firstLessonTitle: "What Codex Actually Is",
+    firstLessonTitle: "What Codex actually is",
     completed: "Navigation checkpoint saved",
   },
 ] as const;
@@ -384,7 +384,7 @@ test.describe("Codex locale continuity and record surfaces", () => {
 
     const switchToEnglish = visibleLanguageSwitchLink(
       page,
-      /Englische Oberfläche/,
+      /englische Oberfläche/,
     );
     await switchToEnglish.click();
     await expect(page).toHaveURL(/\/en\/kurse\/open-source\/codex\/kurs\/L01$/);
@@ -462,7 +462,7 @@ test.describe("Codex locale continuity and record surfaces", () => {
       waitUntil: "domcontentloaded",
     });
     await settle(page);
-    const englishLink = visibleLanguageSwitchLink(page, /Englische Oberfläche/);
+    const englishLink = visibleLanguageSwitchLink(page, /englische Oberfläche/);
     await expect(englishLink).toHaveAttribute(
       "href",
       `/en/kurse/open-source/codex/verifizierung#${hash}`,

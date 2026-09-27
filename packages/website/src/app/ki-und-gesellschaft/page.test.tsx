@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import type { AnchorHTMLAttributes, ReactNode } from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
@@ -107,14 +109,10 @@ describe("KI und Gesellschaft course landing page", () => {
       url: "https://loehrning.ai/en/ki-und-gesellschaft",
       locale: "en_GB",
       alternateLocale: ["de_DE"],
-      images: [
-        {
-          url: "https://loehrning.ai/course-covers/ki-und-gesellschaft-cover-v3.webp",
-          width: 1440,
-          height: 630,
-          alt: "Editorial Berlin collage with people, synthetic portraits, data grids, and a review decision",
-        },
-      ],
     });
+    // No page image: the route's opengraph-image.tsx (the Lemons card) is the
+    // share image, and an explicit one here would replace it (SPEC §3.15).
+    expect(metadata.openGraph).not.toHaveProperty("images");
+    expect(existsSync(join(__dirname, "opengraph-image.tsx"))).toBe(true);
   });
 });

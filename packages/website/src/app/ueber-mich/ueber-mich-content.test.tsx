@@ -145,7 +145,7 @@ describe("<UeberMichContent>", () => {
     const ledger = screen.getByRole("region", {
       name: "Professional timeline",
     });
-    expect(within(ledger).getByText(/biographical context only/)).toBeVisible();
+    expect(within(ledger).getByText(/only as past roles/)).toBeVisible();
     for (const employer of ["Apple", "Red Bull", "Meta"]) {
       expect(within(ledger).getByText(employer)).toBeVisible();
       expect(
@@ -187,7 +187,7 @@ describe("<UeberMichContent>", () => {
     ] as const) {
       expect(html, label).not.toMatch(pattern);
     }
-    // Every section after the header opens with a 2px ink Kopflinie.
+    // Every section after the header opens with a 2px Kopflinie in the scene line.
     const sections = container.querySelectorAll("article > section");
     expect(sections.length).toBe(3);
     // Section heads carry no kicker-like caption; the ledger's is a fact.
@@ -201,7 +201,7 @@ describe("<UeberMichContent>", () => {
     }
     expect(screen.getByText("2021 bis heute")).toBeInTheDocument();
     for (const section of sections) {
-      expect(section.querySelector("header.border-t-2.border-foreground")).not.toBeNull();
+      expect(section.querySelector("header.border-t-2.border-scene-line")).not.toBeNull();
     }
     // The portrait is the one framed object, square and unrotated.
     const portrait = screen.getByRole("img", { name: "Tim Löhr vor der Golden Gate Bridge" });

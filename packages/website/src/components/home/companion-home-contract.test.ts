@@ -289,7 +289,11 @@ describe("companion home: measured layout hooks stay in a vertical stack", () =>
     expect(artwork).not.toContain("(max-width: 639px) 72px");
     const offering = read("offering.tsx");
     expect(offering).toContain("max-lg:contents");
-    expect(offering).toContain("max-lg:grid-cols-[1.75rem_minmax(0,1fr)_auto]");
+    // The phone row is led by a 56px crop of the same server-rendered
+    // poster (PosterThumb), still no image request.
+    expect(offering).toContain("max-lg:grid-cols-[3.5rem_minmax(0,1fr)_auto]");
+    expect(offering).toContain("<PosterThumb");
+    expect(offering).not.toContain("next/image");
   });
 });
 

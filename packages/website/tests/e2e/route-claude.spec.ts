@@ -185,7 +185,7 @@ test.describe("Claude Course golden path", () => {
     const assessment = page.locator("#final-assessment");
     await expect(assessment).toHaveAttribute("data-assessment-state", "ready");
     const startQuiz = assessment.getByRole("link", {
-      name: "Start workshop quiz",
+      name: "Start quiz",
     });
     await expect(startQuiz).toHaveAttribute("href", QUIZ_ROUTE);
     await startQuiz.click();
@@ -206,7 +206,7 @@ test.describe("Claude Course golden path", () => {
     ).toHaveAttribute("href", QUIZ_ROUTE);
     const certificate = assessment.getByRole("link", {
       // Copy lock updated: English UI copy names completion documents "certificate of participation".
-      name: "Download Certificate of Participation",
+      name: "Download Certificate of participation",
     });
     await expect(certificate).toHaveAttribute("href", CERT_ROUTE);
     await certificate.click();

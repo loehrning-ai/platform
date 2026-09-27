@@ -281,7 +281,7 @@ describe("homeContinueCourses", () => {
     const slug = "ki-fuehrerschein" as CourseSlug;
 
     expect(de.find((c) => c.slug === slug)?.title).toBe("KI-Führerschein");
-    expect(en.find((c) => c.slug === slug)?.title).toBe("AI Fundamentals");
+    expect(en.find((c) => c.slug === slug)?.title).toBe("Everyday AI Literacy");
     expect(en.find((c) => c.slug === slug)?.duration).toBe("about 1 hr 40 min");
   });
 });

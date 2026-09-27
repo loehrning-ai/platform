@@ -149,8 +149,7 @@ const ENGLISH_REDACTION_COPY = {
   allScenariosCleanLabel: "Both scenarios are clean",
   scenarioOfWord: "of",
   safeHeadline: "Safe to paste.",
-  safeBodyTemplate:
-    "All {n} sensitive passages found, nothing harmless redacted.",
+  safeBodyTemplate: "All {n} sensitive passages found.",
   notSafeHeadline: "Do not paste this yet.",
   missingSingularTemplate: "{n} sensitive passage remains exposed.",
   missingPluralTemplate: "{n} sensitive passages remain exposed.",
@@ -235,7 +234,7 @@ const ENGLISH_RISK_REORDER_BLOCKS = [
 ] as const;
 
 const ENGLISH_RISK_REORDER_COPY = {
-  kindLabel: "Classification order",
+  kindLabel: "Classification",
   shuffleLabel: "Shuffle",
   moveUpSuffix: "move up",
   moveDownSuffix: "move down",

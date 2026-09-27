@@ -51,7 +51,7 @@ const EVAL_ROWS: readonly EvalRow[] = [
     autoScore: "mittel",
     humanScore: "niedrig",
     driftFlag: false,
-    note: "Auto-Eval bewertet Fluenz und Länge, nicht Rechtsgenauigkeit. Der Satz ist missverständlich, Anwalt notwendig.",
+    note: "Die automatische Bewertung misst nur Sprachfluss und Länge. Die Aussage ist zu pauschal und braucht eine juristische Prüfung.",
   },
   {
     id: "r3",

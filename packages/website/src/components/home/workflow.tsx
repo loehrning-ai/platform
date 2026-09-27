@@ -41,7 +41,6 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
       <div className={HOME_CONTAINER}>
         <HomeSectionHead
           note={copy.boardLabel(copy.resources.length)}
-          introduction={copy.introduction}
           title={copy.headline}
         />
 
@@ -56,7 +55,7 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
             >
               <Link
                 href={localizeHref(resource.href, locale)}
-                className="group grid min-h-16 min-w-0 grid-cols-[2.5rem_minmax(9rem,13rem)_minmax(0,1fr)_auto] items-center gap-x-6 border-b border-hairline py-3 transition-colors duration-[120ms] hover:bg-card-hover motion-reduce:transition-none max-lg:min-h-14 max-lg:grid-cols-[2rem_minmax(0,1fr)_auto] max-lg:gap-3 max-lg:py-2"
+                className="group grid min-h-16 min-w-0 grid-cols-[2.5rem_minmax(0,1fr)_auto] items-center gap-x-6 border-b border-hairline py-3 transition-colors duration-[120ms] hover:bg-card-hover motion-reduce:transition-none max-lg:min-h-14 max-lg:grid-cols-[2rem_minmax(0,1fr)_auto] max-lg:gap-3 max-lg:py-2"
                 data-home-resource-card
               >
                 <Pictogram
@@ -67,12 +66,9 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
                   <span className="block text-lg font-semibold leading-snug text-foreground underline decoration-transparent underline-offset-4 transition-colors duration-[120ms] group-hover:decoration-current motion-reduce:transition-none max-lg:text-base max-lg:leading-snug max-lg:no-underline">
                     {resource.label}
                   </span>
-                  <span className="block text-caption leading-snug text-muted-foreground lg:hidden">
+                  <span className="block text-caption leading-snug text-muted-foreground lg:mt-0.5 lg:text-body">
                     {resource.short}
                   </span>
-                </span>
-                <span className="min-w-0 text-body text-muted-foreground max-lg:hidden">
-                  {resource.body}
                 </span>
                 <ArrowGlyph className="mr-1 text-foreground" />
               </Link>

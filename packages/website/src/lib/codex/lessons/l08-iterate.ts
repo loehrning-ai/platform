@@ -10,7 +10,7 @@ import {
 const lesson: CodexLesson = {
   id: "L08",
   number: 8,
-  title: "Iteration Loops",
+  title: "Iteration loops",
   subtitle:
     "Correct, re-specify or restart, depending on the mismatch.",
   durationMinutes: 9,

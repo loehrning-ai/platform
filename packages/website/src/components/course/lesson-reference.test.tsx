@@ -161,7 +161,7 @@ describe("LessonReference", () => {
     const { container } = render(
       <LessonReference
         locale="de"
-        title="Was Claude tatsächlich ist"
+        title="Was Claude ist"
         objective="Kontext statt Gedächtnis."
         position="Lektion 1 von 12"
         objectiveRepeatedAbove
@@ -174,7 +174,7 @@ describe("LessonReference", () => {
     // Still the page's level-one heading, visible from sm.
     const heading = screen.getByRole("heading", {
       level: 1,
-      name: "Was Claude tatsächlich ist",
+      name: "Was Claude ist",
     });
     expect(container.querySelector("[data-lesson-reference-head]")).toHaveClass(
       "sr-only",

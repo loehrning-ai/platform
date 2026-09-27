@@ -842,20 +842,20 @@ function CourseProjectCheckpointStudio({
         header={
           // Below sm the band is one row with sentence-case labels, so the
           // collapsed phone frame is this band plus its toggle row.
-          <div className="flex min-w-0 flex-row items-center justify-between border-b-2 border-foreground bg-foreground text-background">
+          <div className="flex min-w-0 flex-row items-center justify-between border-t-2 border-b border-scene-line border-b-hairline bg-card text-foreground">
             <div className="min-w-0 px-4 py-3 max-sm:py-2 sm:px-5">
-              <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#ffc6aa] [overflow-wrap:anywhere] max-sm:font-sans max-sm:text-sm max-sm:font-semibold max-sm:normal-case max-sm:tracking-normal">
+              <p className="text-label text-foreground [overflow-wrap:anywhere]">
                 {copy.eyebrow}
               </p>
             </div>
             <div
-              className="flex shrink-0 items-center gap-2 border-l border-background/30 px-4 py-3 max-sm:py-2 font-mono text-xs font-bold uppercase tracking-[0.14em] max-sm:max-w-[45%] max-sm:font-sans max-sm:text-sm max-sm:font-semibold max-sm:normal-case max-sm:tracking-normal sm:px-5"
+              className="flex shrink-0 items-center gap-2 border-l border-hairline px-4 py-3 text-label text-muted-foreground max-sm:max-w-[45%] max-sm:py-2 sm:px-5"
               role="status"
               aria-live="polite"
             >
               <span
                 className={
-                  done ? "h-2 w-2 bg-risk-green" : "h-2 w-2 bg-brand-orange"
+                  done ? "h-2 w-2 shrink-0 bg-risk-green" : "h-2 w-2 shrink-0 bg-mennige"
                 }
                 aria-hidden="true"
               />
@@ -867,7 +867,7 @@ function CourseProjectCheckpointStudio({
           <header className="min-w-0 p-5">
             <div className="mb-4 flex items-start justify-between gap-4">
               <span
-                className="font-mono text-[32px] font-black leading-none tracking-[-0.08em] text-brand-orange"
+                className="text-num-lg font-bold tabular-nums text-scene-line"
                 aria-hidden="true"
               >
                 {String(currentStageIndex + 1).padStart(2, "0")}
@@ -875,13 +875,13 @@ function CourseProjectCheckpointStudio({
             </div>
             <h2
               id={`${config.id}-title`}
-              className="max-w-[20ch] text-balance text-[clamp(1.55rem,3vw,2.5rem)] font-black leading-[0.98] tracking-[-0.05em] text-foreground"
+              className="max-w-[20ch] text-balance text-fluid-h2 font-bold text-foreground"
             >
               {config.title[locale]}
             </h2>
-            <dl className="mt-5 border-t-2 border-foreground">
+            <dl className="mt-5 border-t-2 border-scene-line">
               <div className="grid min-w-0 gap-1 border-b border-border py-4 sm:grid-cols-[7rem_minmax(0,1fr)]">
-                <dt className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange-dark">
+                <dt className="text-label text-muted-foreground">
                   {copy.artifact}
                 </dt>
                 <dd className="min-w-0 text-sm font-semibold leading-relaxed [overflow-wrap:anywhere]">
@@ -890,7 +890,7 @@ function CourseProjectCheckpointStudio({
               </div>
             </dl>
             <details className="mt-4 border border-border bg-card/40">
-              <summary className="min-h-11 cursor-pointer px-3 py-3 font-mono text-xs font-black uppercase tracking-[0.12em] text-muted-foreground hover:text-foreground">
+              <summary className="min-h-11 cursor-pointer px-3 py-3 text-label text-muted-foreground hover:text-foreground">
                 {copy.briefDetails}
               </summary>
               <div className="border-t border-border p-4">
@@ -901,7 +901,7 @@ function CourseProjectCheckpointStudio({
                   {/* Once the engine is open it shows the case itself. */}
                   {!effectiveActivated ? (
                     <div>
-                      <dt className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange-dark">
+                      <dt className="text-label text-muted-foreground">
                         {copy.scenario}
                       </dt>
                       <dd className="mt-1 min-w-0 text-sm leading-snug text-muted-foreground [overflow-wrap:anywhere]">
@@ -909,8 +909,8 @@ function CourseProjectCheckpointStudio({
                       </dd>
                     </div>
                   ) : null}
-                  <div className="border-l-2 border-brand-orange pl-3">
-                    <dt className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange-dark">
+                  <div className="border-l-2 border-scene-line pl-3">
+                    <dt className="text-label text-muted-foreground">
                       {copy.safety}
                     </dt>
                     <dd className="mt-1 text-[13px] leading-snug text-foreground">
@@ -925,7 +925,7 @@ function CourseProjectCheckpointStudio({
         workspace={
           <div className="min-w-0 p-5">
             <details className="min-w-0 border border-border bg-card/30">
-              <summary className="min-h-11 cursor-pointer px-4 py-3 font-mono text-xs font-black uppercase tracking-[0.12em] text-muted-foreground hover:text-foreground">
+              <summary className="min-h-11 cursor-pointer px-4 py-3 text-label text-muted-foreground hover:text-foreground">
                 {copy.projectMap}
               </summary>
               <div
@@ -955,14 +955,14 @@ function CourseProjectCheckpointStudio({
                         }
                         className={`min-w-0 border-b border-r border-foreground p-3 ${
                           index === currentStageIndex
-                            ? "bg-brand-orange/[0.09] shadow-[inset_0_-3px_0_0_var(--color-brand-orange)]"
+                            ? "bg-card shadow-[inset_0_-3px_0_0_var(--color-scene-line)]"
                             : index < visibleCompletedStages.length
                               ? "bg-risk-green/10"
                               : ""
                         }`}
                       >
                         <div className="flex items-center justify-between gap-2">
-                          <span className="font-mono text-xs font-black tracking-[0.12em] text-brand-orange-dark">
+                          <span className="text-label tabular-nums text-muted-foreground">
                             {String(index + 1).padStart(2, "0")}
                           </span>
                           <span
@@ -970,13 +970,13 @@ function CourseProjectCheckpointStudio({
                             aria-hidden="true"
                           />
                         </div>
-                        <p className="mt-4 font-mono text-xs font-bold uppercase tracking-[0.08em]">
+                        <p className="mt-4 text-label text-foreground">
                           {COURSE_PROJECT_STAGE_LABELS[stage.id][locale]}
                         </p>
                         <p className="mt-2 text-xs leading-[1.45] text-muted-foreground">
                           {stage.evidence[locale]}
                         </p>
-                        <p className="mt-3 font-mono text-xs font-black uppercase tracking-[0.08em] text-foreground">
+                        <p className="mt-3 text-label text-foreground">
                           {index < visibleCompletedStages.length
                             ? copy.stageDone
                             : index > visibleCompletedStages.length
@@ -989,7 +989,7 @@ function CourseProjectCheckpointStudio({
                 </div>
 
                 <div className="min-w-0 border-2 border-border bg-card p-4">
-                  <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange-dark">
+                  <p className="text-label text-muted-foreground">
                     {copy.completion}
                   </p>
                   <ol className="mt-3 space-y-3">
@@ -999,7 +999,7 @@ function CourseProjectCheckpointStudio({
                         className="flex min-w-0 gap-3 text-[12px] leading-relaxed"
                       >
                         <span
-                          className="font-mono font-black text-brand-orange-dark"
+                          className="font-bold tabular-nums text-muted-foreground"
                           aria-hidden="true"
                         >
                           {index + 1}.
@@ -1016,9 +1016,9 @@ function CourseProjectCheckpointStudio({
 
             <section
               aria-labelledby={`${config.id}-current-stage`}
-              className="mt-4 min-w-0 border-2 border-foreground bg-card p-4"
+              className="mt-4 min-w-0 border-t-2 border-scene-line bg-card p-4"
             >
-              <p className="font-mono text-xs font-black uppercase tracking-[0.14em] text-brand-orange-dark">
+              <p className="text-label text-muted-foreground">
                 {copy.currentStage} ·{" "}
                 {String(currentStageIndex + 1).padStart(2, "0")}/05
               </p>
@@ -1029,8 +1029,8 @@ function CourseProjectCheckpointStudio({
                 {COURSE_PROJECT_STAGE_LABELS[currentStage.id][locale]}
               </h3>
               <dl className="mt-3 grid min-w-0 gap-3 md:grid-cols-2">
-                <div className="min-w-0 border-l-2 border-brand-orange pl-3">
-                  <dt className="font-mono text-xs font-black uppercase tracking-wide text-muted-foreground">
+                <div className="min-w-0 border-l-2 border-scene-line pl-3">
+                  <dt className="text-label text-muted-foreground">
                     {copy.objective}
                   </dt>
                   <dd className="mt-1 break-words text-sm leading-relaxed">
@@ -1038,7 +1038,7 @@ function CourseProjectCheckpointStudio({
                   </dd>
                 </div>
                 <div className="min-w-0 border-l-2 border-foreground/30 pl-3">
-                  <dt className="font-mono text-xs font-black uppercase tracking-wide text-muted-foreground">
+                  <dt className="text-label text-muted-foreground">
                     {copy.evidence}
                   </dt>
                   <dd className="mt-1 break-words text-sm font-semibold leading-relaxed">
@@ -1053,7 +1053,7 @@ function CourseProjectCheckpointStudio({
                 className="mt-6 border-2 border-risk-green bg-risk-green/10 p-4"
                 role="status"
               >
-                <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-risk-green">
+                <p className="text-label text-pass">
                   {copy.completedSummary}
                 </p>
                 <p className="mt-2 text-sm font-semibold leading-relaxed">
@@ -1066,9 +1066,9 @@ function CourseProjectCheckpointStudio({
             ) : null}
 
             {!effectiveActivated ? (
-              <div className="mt-6 flex min-w-0 flex-col gap-4 border-2 border-dashed border-foreground p-5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="mt-6 flex min-w-0 flex-col gap-4 border border-hairline p-5 sm:flex-row sm:items-center sm:justify-between">
                 <div className="min-w-0">
-                  <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange-dark">
+                  <p className="text-label text-muted-foreground">
                     {copy.ready}
                   </p>
                 </div>
@@ -1078,7 +1078,7 @@ function CourseProjectCheckpointStudio({
                   disabled={!currentStageUnlocked}
                   aria-controls={`${config.id}-workspace`}
                   aria-expanded={effectiveActivated}
-                  className="inline-flex min-h-11 shrink-0 items-center justify-center border-2 border-foreground bg-brand-orange px-5 py-3 font-mono text-xs font-black uppercase tracking-[0.12em] text-white shadow-[4px_4px_0_0_var(--color-foreground)] transition-[transform,box-shadow] hover:-translate-x-px hover:-translate-y-px hover:shadow-[6px_6px_0_0_var(--color-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:border-border disabled:bg-muted disabled:text-muted-foreground disabled:shadow-none"
+                  className="inline-flex min-h-11 shrink-0 items-center justify-center border-2 border-scene-line bg-scene-line px-5 py-3 text-[0.9375rem] font-semibold text-background underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:border-border disabled:bg-muted disabled:text-muted-foreground disabled:no-underline"
                 >
                   {copy.activate}
                 </button>
@@ -1106,7 +1106,8 @@ function CourseProjectCheckpointStudio({
               </div>
             )}
             {!verificationEnabled ? (
-              <p className="mt-4 border-l-4 border-brand-orange bg-brand-orange/10 p-3 text-xs font-semibold leading-snug">
+              <p className="mt-4 flex items-start gap-2 border-t border-hairline pt-3 text-xs font-semibold leading-snug">
+                <span className="mt-1 h-2 w-2 shrink-0 bg-mennige" aria-hidden="true" />
                 {copy.verifyLocked}
               </p>
             ) : null}

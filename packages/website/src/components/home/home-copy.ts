@@ -9,12 +9,14 @@ export const HOME_COPY = {
     },
     hero: {
       headline: ["KI", "verstehen.", "Sicher anwenden."],
+      /** The band's one caps line (SPEC §3.6). CSS sets the capitals. */
+      capsLine: "Frei · zweisprachig · quelloffen",
       // One sentence on phones (lead + "."), the full introduction from lg:
       // lead + detail + "." + facts. Below lg the facts sit above the
       // headline as the band's label instead.
       introduction: {
-        lead: "Wähle ein Ziel und prüfe deine Entscheidungen an einem Modell",
-        detail: " und nimm einen Arbeitsbeleg mit",
+        lead: "Freie Kurse, Praxisbeispiele und Workshops zu KI",
+        detail: " mit Übungen und Quellen",
         facts: "Frei, zweisprachig und quelloffen.",
       },
       primaryCta: "Lernroute wählen",
@@ -40,8 +42,7 @@ export const HOME_COPY = {
     offering: {
       headline: "Vier Kurse in fester Reihenfolge",
       // Section caption, from lg: facts only, never a restated heading.
-      routeSignal: (lessons: number) =>
-        `${lessons} Lektionen · kostenlos · DE + EN`,
+      routeSignal: (lessons: number) => `${lessons} Lektionen`,
       routeLabel: "Empfohlener Grundlagenpfad",
       lessonLabel: "Lektionen",
       deeperSummary: (count: number) =>
@@ -50,44 +51,37 @@ export const HOME_COPY = {
     },
     workflow: {
       headline: "Material zum Nachlesen und Ausprobieren",
-      // Empty: the rows name each task (see copy-diet requests).
-      introduction: "",
       // Section caption, from lg: facts only.
       boardLabel: (areas: number) => `${areas} Bereiche · ohne Konto`,
       boardAriaLabel: "Werkzeuge und Lernressourcen",
       resources: [
         {
           label: "Blog",
-          body: "KI und Recht, mit Primärquellen.",
-          // Phone rows: one line at 320px, never truncated.
+          // One line at 320px, never truncated; the same line at every width.
           short: "KI und Recht, mit Quellen",
           href: "/blog",
         },
         {
           label: "Lernbücher",
-          body: "Kapitel mit Quellen und Begriffen.",
-          // Phone rows: one line at 320px, never truncated.
+          // One line at 320px, never truncated; the same line at every width.
           short: "Kapitel mit Quellen",
           href: "/buecher",
         },
         {
           label: "Praxisbeispiele",
-          body: "Abläufe zum Ausprobieren, mit Annahmen und Grenzen.",
-          // Phone rows: one line at 320px, never truncated.
+          // One line at 320px, never truncated; the same line at every width.
           short: "Abläufe zum Ausprobieren",
           href: "/demos",
         },
         {
           label: "Workshops",
-          body: "Geführte Fälle für Entscheidungen im Team.",
-          // Phone rows: one line at 320px, never truncated.
+          // One line at 320px, never truncated; the same line at every width.
           short: "Fälle für Teams",
           href: "/workshops",
         },
         {
           label: "Open Source",
-          body: "Werkzeuge mit Quellcode, Version und Lizenz.",
-          // Phone rows: one line at 320px, never truncated.
+          // One line at 320px, never truncated; the same line at every width.
           short: "Code, Version, Lizenz",
           href: "/open-source",
         },
@@ -115,19 +109,17 @@ export const HOME_COPY = {
     },
     credibility: {
       headline: "Grundregeln",
-      // Empty: the four principles below say it (see copy-diet requests).
-      introduction: "",
       principles: [
         {
           title: "Keine Paywall",
-          body: "Kein Abo. Vier Reader benötigen ein kostenloses Lernkonto.",
+          body: "Vier Kurse brauchen ein kostenloses Lernkonto.",
         },
         {
           title: "Zwei vollständige Fassungen",
           body: "Alle Kurse gibt es auf Deutsch und Englisch.",
         },
         {
-          title: "Stand und Herkunft sichtbar",
+          title: "Quellen sind verlinkt",
           body: "Fakten verweisen auf Quellen. Annahmen und Simulationen sind markiert.",
         },
         {
@@ -145,9 +137,10 @@ export const HOME_COPY = {
     },
     hero: {
       headline: ["Understand", "AI.", "Apply it safely."],
+      capsLine: "Free · bilingual · open source",
       introduction: {
-        lead: "Choose a goal and test your decisions on a model",
-        detail: " and take away a record of your work",
+        lead: "Free courses, examples and workshops on AI",
+        detail: " with exercises and sources",
         facts: "Free, bilingual and open source.",
       },
       primaryCta: "Choose a learning route",
@@ -172,7 +165,7 @@ export const HOME_COPY = {
     },
     offering: {
       headline: "Four courses in a set order",
-      routeSignal: (lessons: number) => `${lessons} lessons · free · DE + EN`,
+      routeSignal: (lessons: number) => `${lessons} lessons`,
       routeLabel: "Recommended foundation path",
       lessonLabel: "lessons",
       deeperSummary: (count: number) =>
@@ -181,42 +174,36 @@ export const HOME_COPY = {
     },
     workflow: {
       headline: "Material to read and try",
-      introduction: "",
       boardLabel: (areas: number) => `${areas} areas · no account needed`,
       boardAriaLabel: "Tools and learning resources",
       resources: [
         {
           label: "Blog",
-          body: "AI and law, with primary sources.",
-          // Phone rows: one line at 320px, never truncated.
+          // One line at 320px, never truncated; the same line at every width.
           short: "AI and law, with sources",
           href: "/blog",
         },
         {
           label: "Learning books",
-          body: "Chapters with sources and definitions.",
-          // Phone rows: one line at 320px, never truncated.
+          // One line at 320px, never truncated; the same line at every width.
           short: "Chapters with sources",
           href: "/buecher",
         },
         {
           label: "Applied examples",
-          body: "Workflows to try, with assumptions and limits.",
-          // Phone rows: one line at 320px, never truncated.
+          // One line at 320px, never truncated; the same line at every width.
           short: "Workflows to try",
           href: "/demos",
         },
         {
           label: "Workshops",
-          body: "Guided cases for team decisions.",
-          // Phone rows: one line at 320px, never truncated.
+          // One line at 320px, never truncated; the same line at every width.
           short: "Cases for teams",
           href: "/workshops",
         },
         {
           label: "Open Source",
-          body: "Tools with source, version and licence.",
-          // Phone rows: one line at 320px, never truncated.
+          // One line at 320px, never truncated; the same line at every width.
           short: "Code, version, licence",
           href: "/open-source",
         },
@@ -244,18 +231,17 @@ export const HOME_COPY = {
     },
     credibility: {
       headline: "Ground rules",
-      introduction: "",
       principles: [
         {
           title: "No paywall",
-          body: "No subscription. Four readers require a free learning account.",
+          body: "Four courses need a free learning account.",
         },
         {
           title: "Two complete editions",
           body: "Every course is available in German and English.",
         },
         {
-          title: "Date and origin shown",
+          title: "Sources are linked",
           body: "Facts link to sources. Assumptions and simulations are labelled.",
         },
         {
@@ -302,7 +288,7 @@ export const HOME_COURSE_COPY: Readonly<
   },
   en: {
     "ki-fuehrerschein": {
-      title: "AI Fundamentals",
+      title: "Everyday AI Literacy",
       tagline: "Set task boundaries, protect data and verify responses.",
       duration: "about 1 hr 40 min",
     },

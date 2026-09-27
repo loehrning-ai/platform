@@ -43,7 +43,7 @@ describe("Updates locale content", () => {
     await renderPage("en");
 
     expect(
-      screen.getByRole("heading", { level: 1, name: "What is new" }),
+      screen.getByRole("heading", { level: 1, name: "What's new" }),
     ).toBeVisible();
     expect(
       screen.getByRole("heading", { name: /Blog published/ }),

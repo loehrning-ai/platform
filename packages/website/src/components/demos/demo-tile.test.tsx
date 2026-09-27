@@ -161,17 +161,15 @@ describe("<DemoTile>", () => {
     expect(phoneArrow).toHaveAttribute("aria-hidden", "true");
   });
 
-  it("renders the full description and the plain name as a one-colour heading", () => {
+  it("renders the teaser at every width and the plain name as a one-colour heading", () => {
     const demo = makeDemo();
     render(<DemoTile demo={demo} />);
-    const description = screen.getByText(demo.description);
-    // Full text from sm up; the phone row swaps in the one-sentence teaser.
-    // Neither is clamped at any width, so no row ends mid-sentence.
-    expect(description.className).not.toMatch(/line-clamp/);
-    expect(description).toHaveClass("max-sm:hidden");
+    // One card line at every width (the detail page carries the long
+    // description); it is never clamped, so no row ends mid-sentence.
+    expect(screen.queryByText(demo.description)).toBeNull();
     const teaser = screen.getByText(demo.teaser);
     expect(teaser.className).not.toMatch(/line-clamp|truncate/);
-    expect(teaser).toHaveClass("sm:hidden");
+    expect(teaser.className).not.toMatch(/(^|\s)(sm:hidden|max-sm:hidden)(\s|$)/);
     // Only the name, without its full stop; the task phrase is not repeated.
     const heading = screen.getByRole("heading", { level: 3 });
     expect(heading).toHaveTextContent(/^Claude in Excel$/);

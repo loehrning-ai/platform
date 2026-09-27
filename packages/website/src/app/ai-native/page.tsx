@@ -40,8 +40,6 @@ const LANDING_COPY = {
     graphDescription:
       "Arbeitskurs zu klaren Aufgaben, prüfbaren Claude-Workflows, Wissensorganisation und kontrollierter Automatisierung.",
     audience: "Berufstätige, Selbstständige und Studierende",
-    imageAlt:
-      "Editoriale Illustration eines modularen AI-Native-Arbeitsstudios mit Kontext, Werkzeugen und Prüfschleife",
     teaches: [
       "Aufgaben für KI-Unterstützung abgrenzen",
       "Kontext und Prüfkriterien dokumentieren",
@@ -101,8 +99,6 @@ const LANDING_COPY = {
     graphDescription:
       "A practical course on bounded tasks, reviewable Claude workflows, maintained knowledge and controlled automation.",
     audience: "Professionals, independent workers and students",
-    imageAlt:
-      "Editorial illustration of a modular AI-native studio with context, tools, and a review loop",
     teaches: [
       "define bounded tasks for AI assistance",
       "document context and review criteria",
@@ -175,14 +171,7 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
       locale: locale === "en" ? "en_GB" : "de_DE",
       alternateLocale: [locale === "en" ? "de_DE" : "en_GB"],
-      images: [
-        {
-          url: `${SITE_URL}/course-covers/ai-native-cover-v3.webp`,
-          width: 1440,
-          height: 630,
-          alt: copy.imageAlt,
-        },
-      ],
+      // The share image is this route's opengraph-image.tsx (the Lemons card, SPEC §3.15).
     },
   };
 }

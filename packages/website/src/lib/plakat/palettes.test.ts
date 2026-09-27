@@ -113,6 +113,7 @@ describe("palettes.ts matches the CSS scopes", () => {
       kalkweiss: theme.get("--color-background"),
       bogen: theme.get("--color-paper"),
       druckschwarz: theme.get("--color-foreground"),
+      schiefer: theme.get("--color-muted-foreground"),
       mennige: theme.get("--color-mennige"),
     });
   });
@@ -267,10 +268,44 @@ describe("static workshop materials use the same palette", () => {
     for (const count of counts) expect(count).toBe(anyLanded ? COVER_TOKENS.length : 0);
   });
 
-  // Lands with the deck covers and social cards (build group G5). The owner of
-  // this file turns both into assertions once public/workshops is regenerated.
-  it.todo("carries --cover-ground, --cover-ink and --cover-mid in every public/workshops/<slug>/lib/tokens.css");
-  it.todo("renders every public/workshops/<slug>/card-preview.webp at 1200 by 630");
+  it("carries --cover-ground, --cover-ink and --cover-mid in every public/workshops/<slug>/lib/tokens.css", () => {
+    for (const slug of Object.keys(WORKSHOP_PLAKAT)) {
+      const tokens = coverTokens(slug);
+      for (const name of COVER_TOKENS) expect(tokens.has(name), `${slug} ${name}`).toBe(true);
+    }
+  });
+
+  // Reads the canvas size from the RIFF header (VP8X, VP8L or lossy VP8).
+  function webpSize(bytes: Buffer): { width: number; height: number } {
+    expect(bytes.toString("ascii", 0, 4)).toBe("RIFF");
+    expect(bytes.toString("ascii", 8, 12)).toBe("WEBP");
+    const chunk = bytes.toString("ascii", 12, 16);
+    if (chunk === "VP8X") return { width: 1 + bytes.readUIntLE(24, 3), height: 1 + bytes.readUIntLE(27, 3) };
+    if (chunk === "VP8L") {
+      const bits = bytes.readUInt32LE(21);
+      return { width: (bits & 0x3fff) + 1, height: ((bits >> 14) & 0x3fff) + 1 };
+    }
+    expect(chunk).toBe("VP8 ");
+    return { width: bytes.readUInt16LE(26) & 0x3fff, height: bytes.readUInt16LE(28) & 0x3fff };
+  }
+
+  it("renders every public/workshops/<slug>/card-preview.webp at 1200 by 630", () => {
+    for (const slug of Object.keys(WORKSHOP_PLAKAT)) {
+      const card = readFileSync(join(WEBSITE, "public", "workshops", slug, "card-preview.webp"));
+      expect(webpSize(card), slug).toEqual({ width: 1200, height: 630 });
+    }
+  });
+
+  it("keeps the generated poster materials and social cards in step with their builders", () => {
+    // Both --check modes exit 1 (and execFileSync throws) on a stale file.
+    for (const builder of ["build-static.mjs", "build-cards.mjs"]) {
+      execFileSync(process.execPath, [join(WEBSITE, "scripts", "plakat", builder), "--check"], {
+        cwd: WEBSITE,
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "pipe"],
+      });
+    }
+  });
 });
 
 describe("docs/plakat-pairings.md", () => {

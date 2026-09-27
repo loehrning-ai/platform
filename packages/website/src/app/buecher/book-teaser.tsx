@@ -9,12 +9,6 @@ import { getBookById, getBookPreviewPages } from "@/lib/books";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import { BOOK_PAGE_COPY, getBookDisplay } from "./book-copy";
 
-const PREVIEW_TRANSFORMS = [
-  "sm:translate-y-4 sm:-rotate-2",
-  "sm:-translate-y-1",
-  "sm:translate-y-5 sm:rotate-2",
-] as const;
-
 export function BookTeaser({
   bookId,
   locale,
@@ -58,17 +52,13 @@ export function BookTeaser({
         className="absolute inset-0 cursor-default bg-foreground/65 backdrop-blur-sm"
       />
 
-      <div className="relative z-10 flex max-h-[92svh] w-full min-w-0 max-w-6xl flex-col overflow-hidden overscroll-contain bg-paper shadow-card ring-1 ring-foreground/40">
-        <div className="relative flex min-w-0 items-start justify-between gap-4 overflow-hidden border-b border-foreground/20 bg-brand-peach/60 px-4 py-4 sm:px-6">
-          <span
-            className="pointer-events-none absolute -bottom-8 right-20 h-16 w-36 -rotate-6 bg-brand-acid/75"
-            aria-hidden="true"
-          />
+      <div className="relative z-10 flex max-h-[92svh] w-full min-w-0 max-w-6xl flex-col overflow-hidden overscroll-contain bg-paper ring-1 ring-foreground/40">
+        <div className="relative flex min-w-0 items-start justify-between gap-4 overflow-hidden border-b border-border bg-paper px-4 py-4 sm:px-6">
           <div className="min-w-0">
-            <p className="mb-1 break-words font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
+            <p className="mb-1 break-words text-label text-muted-foreground">
               {copy.kicker(book.chapters)}
             </p>
-            <h2 className="break-words text-xl font-bold tracking-[-0.03em]">
+            <h2 className="break-words text-xl font-bold">
               {display.title}
             </h2>
             <p className="mt-1 break-words text-sm italic text-muted-foreground">
@@ -95,9 +85,9 @@ export function BookTeaser({
             {getBookPreviewPages(book).map((src, index) => (
               <div
                 key={src}
-                className={`relative min-w-0 border border-foreground bg-background p-1 ${PREVIEW_TRANSFORMS[index % PREVIEW_TRANSFORMS.length]}`}
+                className="relative min-w-0 border border-foreground bg-background p-1"
               >
-                <span className="absolute -right-2 -top-2 flex h-8 w-8 items-center justify-center border border-foreground bg-background font-mono text-xs font-bold text-brand-orange">
+                <span className="absolute -right-2 -top-2 flex h-8 w-8 items-center justify-center border border-foreground bg-background text-xs font-bold tabular-nums text-foreground">
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <Image
@@ -112,13 +102,13 @@ export function BookTeaser({
               </div>
             ))}
           </div>
-          <p className="mx-auto mt-3 max-w-2xl border-l-[3px] border-foreground bg-brand-acid/35 px-4 py-3 text-sm leading-relaxed text-muted-foreground">
+          <p className="mx-auto mt-3 max-w-2xl border-l-2 border-foreground px-4 py-1 text-sm leading-relaxed text-muted-foreground">
             {display.description}
           </p>
         </div>
 
         <div className="flex flex-col items-stretch gap-3 border-t border-border px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <span className="break-words font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
+          <span className="break-words text-xs text-muted-foreground">
             {copy.materialNote}
           </span>
           <BrandButton href={localizeHref(book.readerHref, locale)} size="sm">

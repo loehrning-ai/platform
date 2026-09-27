@@ -42,7 +42,7 @@ const lesson: ClaudeLesson = {
       title: "Move 3: ask for the critique before the rewrite",
       readTimeMinutes: 1,
       content:
-        "Review the draft against explicit criteria: unsupported claims, missing decisions, audience mismatch, structural defects. Ask for findings with quoted evidence, then request only the changes you approve. Anyone can read these findings; they need no private chain-of-thought.",
+        "Review the draft against written criteria: unsupported claims, missing decisions, audience mismatch, structural defects. Ask for findings with quoted evidence, then request only the changes you approve. Anyone can read these findings; they need no private chain-of-thought.",
     },
   ],
   widgets: [

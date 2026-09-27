@@ -2,7 +2,7 @@
 //
 // The certificate-verification screen decodes its payload from the URL hash on
 // the client. The a11y sweep added a stable, always-present <h1>
-// ("Zertifikatdaten prüfen") so the route never renders zero or two h1s,
+// ("Zertifikatdaten lesen") so the route never renders zero or two h1s,
 // regardless of the checking / valid / invalid state. These tests lock that
 // in plus the base64url decode happy + error paths.
 
@@ -45,7 +45,7 @@ describe("VerificationPage", () => {
     // The persistent page heading is always present.
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
     expect(
-      screen.getByRole("heading", { level: 1, name: "Zertifikatdaten prüfen" }),
+      screen.getByRole("heading", { level: 1, name: "Zertifikatdaten lesen" }),
     ).toBeInTheDocument();
 
     // The invalid card appears after the client-side effect runs.
@@ -144,7 +144,7 @@ describe("VerificationPage", () => {
 
     await waitFor(() =>
       expect(
-        screen.getByText("Zertifikatcode passt nicht zu diesem Kurs."),
+        screen.getByText("Zertifikatcode passt nicht zu diesem Kurs"),
       ).toBeInTheDocument(),
     );
     expect(screen.queryByText("QR-Daten gelesen")).toBeNull();
@@ -215,7 +215,7 @@ describe("VerificationPage", () => {
 
     await waitFor(() =>
       expect(
-        screen.getByText("Zertifikatcode passt nicht zu diesem Kurs."),
+        screen.getByText("Zertifikatcode passt nicht zu diesem Kurs"),
       ).toBeInTheDocument(),
     );
     expect(screen.queryByText("Zertifikatcode nicht lesbar")).toBeNull();
@@ -264,10 +264,10 @@ describe("VerificationPage", () => {
     );
     expect(
       // Copy lock updated: English UI copy names completion documents "certificate of participation".
-      screen.getByText("Certificate of Participation: Everyday AI Literacy"),
+      screen.getByText("Certificate of participation: Everyday AI Literacy"),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Back to Everyday AI Literacy" }),
+      screen.getByRole("link", { name: "Back to course" }),
     ).toHaveAttribute("href", "/en/ki-fuehrerschein");
     expect(screen.getByText(/not server-verified/)).toBeInTheDocument();
     expect(screen.queryByText("QR-Daten gelesen")).toBeNull();

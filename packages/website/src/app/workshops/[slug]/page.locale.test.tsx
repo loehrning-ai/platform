@@ -44,8 +44,8 @@ describe("workshop detail locale metadata", () => {
         images: [
           {
             url: "/workshops/ki-prognosen-einschaetzen/card-preview.webp",
-            width: 1024,
-            height: 576,
+            width: 1200,
+            height: 630,
             alt: title,
           },
         ],

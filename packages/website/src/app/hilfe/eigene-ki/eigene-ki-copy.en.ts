@@ -104,8 +104,6 @@ export const AGENT_HELP_COPY_EN: AgentHelpCopy = {
   --header "Authorization: Bearer lat_..."`,
     format:
       "A token starts with lat_. Only a verifier is stored, so not even the operator can show it again. If you lose it, revoke it and create a new one.",
-    limit: (maxActive) =>
-      `Up to ${maxActive} tokens can be active at once.`,
     bearerActive:
       "With a token, two more read-only tools appear: your progress and your next step. From the next request on, the server refuses a revoked token, even for the public tools.",
     bearerPending: "",

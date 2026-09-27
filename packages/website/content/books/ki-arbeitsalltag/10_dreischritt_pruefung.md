@@ -64,7 +64,7 @@ Ein LLM wiederholt seinen Fehler meistens, weil die wahrscheinlichste Antwort fa
 
 Aus Kapitel 6 sparst du 8 Minuten pro E-Mail. Investierst du 1 Minute in die Prüfung, bleibst du 7 Minuten vorne und hast ein zuverlässiges Ergebnis.
 
-> **Das Wichtigste:** Versende nie ungeprüft. Ein ungeprüfter KI-Text ist schlimmer als kein Text, weil du als Autor haftest, den Inhalt aber nicht kennst.
+> **Versende nie ungeprüft.** Für einen ungeprüften KI-Text haftest du als Autor, ohne seinen Inhalt zu kennen.
 
 ---
 

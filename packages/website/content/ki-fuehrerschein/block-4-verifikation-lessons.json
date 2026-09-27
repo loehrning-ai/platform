@@ -344,7 +344,7 @@
           "props": {
             "lessonId": "block_4_lesson_4",
             "cpId": "failure-tagger",
-            "scenario": "Fünf plausible Ausgaben aus dem Büroalltag enthalten unterschiedliche Fehler. Ordne Quellenfehler, fehlende Freigabe, falsche Zusage, Rechenfehler oder unzulässige Verallgemeinerung zu."
+            "scenario": "Fünf KI-Antworten aus dem Büroalltag, jede auf eine Art falsch. Ordne jeder ihren Fehlertyp zu."
           }
         }
       ]

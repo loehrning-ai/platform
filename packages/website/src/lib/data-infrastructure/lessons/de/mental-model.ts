@@ -4,7 +4,7 @@ import { localizeDataInfraLessonToGerman } from "../../translate-lesson";
 export default localizeDataInfraLessonToGerman(canonical, {
   title: "Der Daten-Stack von oben nach unten",
   subtitle: "Quelle → Log → Lake → Warehouse → Mart",
-  hook: "Daten von der Quelle bis zum Consumer verfolgen und den Vertrag an jeder Grenze benennen.",
+  hook: "Daten bis zum Consumer verfolgen und jede Grenze festlegen.",
   keyConcepts: [
     "Quelle",
     "Log",

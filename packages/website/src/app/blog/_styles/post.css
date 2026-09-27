@@ -24,6 +24,9 @@
   border-bottom: 1px solid var(--leinen);
   overflow-x: auto;
   scrollbar-width: none;
+  /* An item under the inner side padding counts as off-screen, so a focused
+     item scrolls fully into view (WCAG 2.4.11). */
+  scroll-padding-inline: 40px;
 }
 @media (min-width: 64rem) {
   .railbar {
@@ -117,7 +120,21 @@
 .railbar__item--active .railbar__num {
   color: var(--kupfer-light);
 }
+/* Desktop: the back link, kicker and nine sections fit one 1280 row. */
+@media (min-width: 701px) and (max-width: 1440px) {
+  .railbar__inner {
+    padding: 4px 24px;
+    gap: 2px;
+    letter-spacing: 0.08em;
+  }
+  .railbar__item {
+    padding: 6px 8px;
+  }
+}
 @media (max-width: 700px) {
+  .railbar {
+    scroll-padding-inline: 20px;
+  }
   .railbar__inner {
     padding: 4px 20px;
     gap: 3px;
@@ -695,6 +712,36 @@
   }
   .pipeline__num {
     font-size: 48px;
+  }
+}
+/* Smallest phones: stack number, budget and body in one column, so a long
+   German heading wraps inside 320px instead of being clipped. */
+.pipeline__body {
+  min-width: 0;
+}
+.pipeline__body h3,
+.pipeline__body p {
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+@media (max-width: 479px) {
+  .pipeline__step {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+  .pipeline__budget {
+    grid-column: 1;
+    grid-row: 2;
+    margin-top: 0;
+  }
+  .pipeline__body {
+    grid-row: 3;
+  }
+  .pipeline__num {
+    font-size: 40px;
+  }
+  .pipeline__body h3 {
+    font-size: 26px;
   }
 }
 

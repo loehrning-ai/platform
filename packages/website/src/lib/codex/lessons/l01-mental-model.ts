@@ -6,12 +6,12 @@ import { CODEX_QUIZ_COPY, CODEX_QUIZ_TITLE } from "../widget-copy";
 const lesson: CodexLesson = {
   id: "L01",
   number: 1,
-  title: "What Codex Actually Is",
+  title: "What Codex is",
   subtitle:
     "A task-oriented coding agent that inspects a repository, changes files, runs checks and returns work for review.",
   durationMinutes: 10,
   trackId: "fundamentals",
-  hook: "Agent, not assistant.",
+  hook: "How an agent runs commands on its own.",
   keyConcepts: [
     "Autonomous agent",
     "Sandbox",
@@ -139,6 +139,10 @@ const lesson: CodexLesson = {
       placement: "after-intro",
       courseSlug: "codex",
       props: {
+        idleHint: '# press "Run replay" to watch this session play out',
+        runLabel: "▶ Run replay",
+        resetLabel: "↺ Reset",
+        speedLabel: "speed",
         lessonId: "L01",
         cpId: "term-1",
         title: 'Session replay: "add rate limiting to /login"',

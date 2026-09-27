@@ -36,18 +36,6 @@ const PIPELINE_STEPS: readonly PipelineStep[] = [
     ],
   },
   {
-    label: "Scale Amount & Time",
-    icon: "⚖️",
-    log: [
-      "> StandardScaler on Amount and Time (not V1-V28)",
-      "> Amount mean: 88.35 → scaled: 0.00",
-      "> Amount std:  250.12",
-      "> Time mean:   94813 → scaled: 0.00",
-      "> Scaler fitted on train split only (no leakage)",
-      "✓ Scaling complete.",
-    ],
-  },
-  {
     label: "Train/Test Split",
     icon: "✂️",
     log: [
@@ -57,6 +45,18 @@ const PIPELINE_STEPS: readonly PipelineStep[] = [
       "> Fraud rate train: 0.173%  test: 0.172%",
       "> Stratification preserved class ratio ✓",
       "✓ Split complete.",
+    ],
+  },
+  {
+    label: "Scale Amount & Time",
+    icon: "⚖️",
+    log: [
+      "> StandardScaler on Amount and Time (not V1-V28)",
+      "> Amount mean: 88.35 → scaled: 0.00",
+      "> Amount std:  250.12",
+      "> Time mean:   94813 → scaled: 0.00",
+      "> Scaler fitted on train split only (no leakage)",
+      "✓ Scaling complete.",
     ],
   },
   {
@@ -113,18 +113,6 @@ const PIPELINE_STEPS_DE: readonly PipelineStep[] = [
     ],
   },
   {
-    label: "Amount und Time skalieren",
-    icon: "⚖️",
-    log: [
-      "> StandardScaler für Amount und Time (nicht V1-V28)",
-      "> Mittelwert Amount: 88.35 → skaliert: 0.00",
-      "> Standardabweichung Amount:  250.12",
-      "> Mittelwert Time:   94813 → skaliert: 0.00",
-      "> Scaler nur am Trainingssplit angepasst (kein Leakage)",
-      "✓ Skalierung abgeschlossen.",
-    ],
-  },
-  {
     label: "Train/Test-Split",
     icon: "✂️",
     log: [
@@ -134,6 +122,18 @@ const PIPELINE_STEPS_DE: readonly PipelineStep[] = [
       "> Betrugsquote Training: 0.173%  Test: 0.172%",
       "> Stratifizierung erhält das Klassenverhältnis ✓",
       "✓ Split abgeschlossen.",
+    ],
+  },
+  {
+    label: "Amount und Time skalieren",
+    icon: "⚖️",
+    log: [
+      "> StandardScaler für Amount und Time (nicht V1-V28)",
+      "> Mittelwert Amount: 88.35 → skaliert: 0.00",
+      "> Standardabweichung Amount:  250.12",
+      "> Mittelwert Time:   94813 → skaliert: 0.00",
+      "> Scaler nur am Trainingssplit angepasst (kein Leakage)",
+      "✓ Skalierung abgeschlossen.",
     ],
   },
   {
@@ -213,7 +213,7 @@ export function PipelineProgress() {
       )}
       meta={`${text("Step", "Schritt")} ${currentStep + 1} / ${steps.length}`}
       caption={text(
-        "Each step is a real decision point. Run them in order, the output of each step feeds the next.",
+        "Each step is a real decision point. Run them in order; each output feeds the next step.",
         "Jeder Schritt enthält eine konkrete Entscheidung. Die Schritte nacheinander ausführen; jede Ausgabe fließt in den nächsten Schritt.",
       )}
     >

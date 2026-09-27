@@ -192,14 +192,13 @@ describe("template count 12→8 fix", () => {
     expect(raw).not.toContain("brauchen zwölf");
   });
 
-  // keyTakeaway was removed by the lesson trim; see copy-diet requests.md. Until it
-  // returns, the section must still name the eight templates and say they prove no compliance.
-  it("block-6 L3 s1 references '8' or 'acht' (8 honest templates)", () => {
+  // The keyTakeaway names the eight templates and says they prove no compliance.
+  it("block-6 L3 s1 keyTakeaway references '8' or 'acht' (8 honest templates)", () => {
     const data = readJson("block-6-praxis-lessons.json") as {
-      lessons: { sections: { content?: string; keyTakeaway?: string }[] }[];
+      lessons: { sections: { keyTakeaway?: string }[] }[];
     };
     const s1 = data.lessons[2]?.sections[0];
-    const kt = `${s1?.keyTakeaway ?? ""} ${s1?.content ?? ""}`.toLowerCase();
+    const kt = s1?.keyTakeaway?.toLowerCase() ?? "";
     expect(/\bacht\b|\b8 /u.test(kt)).toBe(true);
     expect(kt).toContain("compliance");
   });

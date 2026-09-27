@@ -84,7 +84,7 @@ const translated = localizeCodexLessonToGerman(canonical, {
       canonical.subtitle,
       "Bring eine Änderung von der Anfrage bis zur Freigabe, mit ausdrücklichen Entscheidungen, begrenzten Aufgaben, unabhängigem Review und verifiziertem Deployment.",
     ],
-    [canonical.hook, "Absicht, Nachweis und Verantwortung bleiben verbunden."],
+    [canonical.hook, "Einen Auftrag von der Spezifikation bis zum Merge nachweisbar führen."],
     [
       canonical.keyConcepts[0],
       "Besprechen, planen, umsetzen, prüfen, ausliefern, lernen",

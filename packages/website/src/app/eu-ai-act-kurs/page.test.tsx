@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import type { AnchorHTMLAttributes, ReactNode } from "react";
 import { render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
@@ -98,14 +100,10 @@ describe("EU AI Act course landing page", () => {
       url: "https://loehrning.ai/en/eu-ai-act-kurs",
       locale: "en_GB",
       alternateLocale: ["de_DE"],
-      images: [
-        {
-          url: "https://loehrning.ai/course-covers/eu-ai-act-kurs-cover-v3.webp",
-          width: 1440,
-          height: 630,
-          alt: "Editorial process graphic showing image cards passing through review stages, colour-coded risk classes, and a final check",
-        },
-      ],
     });
+    // No page image: the route's opengraph-image.tsx (the Lemons card) is the
+    // share image, and an explicit one here would replace it (SPEC §3.15).
+    expect(metadata.openGraph).not.toHaveProperty("images");
+    expect(existsSync(join(__dirname, "opengraph-image.tsx"))).toBe(true);
   });
 });

@@ -284,7 +284,7 @@ export const COURSE_META: AiNativeOperatorCourseMeta = {
   title: "AI-Native Operator",
   subtitle:
     "Learn to pick, build and govern model-assisted workflows and measure their effect.",
-  duration: "About 14 hours of reading and 30 exercises",
+  duration: "About 4 hours of reading and 30 exercises",
   outcomes: [
     "Decide which tasks a model may take on",
     "Write specs, evaluations, release controls, and rollback criteria",
@@ -297,7 +297,7 @@ export const COURSE_META_DE: AiNativeOperatorCourseMeta = {
   title: "AI-Native Operator",
   subtitle:
     "Du lernst, modellgestützte Abläufe auszuwählen, zu bauen, zu steuern und ihre Wirkung zu messen.",
-  duration: "Etwa 14 Stunden Lesezeit und 30 Übungen",
+  duration: "Etwa 4 Stunden Lesezeit und 30 Übungen",
   outcomes: [
     "Entscheiden, welche Aufgaben ein Modell übernehmen darf",
     "Spezifikationen, Evaluationen, Freigaben und Rücknahmekriterien schreiben",

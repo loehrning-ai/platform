@@ -216,7 +216,7 @@ Free AI and data learning resources in German and English. Each page states its 
 
 Public content: landing pages, technical course readers, books, demos, workshops, the blog, open-source artifacts and machine-readable metadata. The four foundation-course readers require an account. Quiz, completion and verification pages may be reachable directly but are not indexed.
 
-## Sprachmodell / Language model
+## Sprachen und URLs / Languages and URLs
 
 Kanonische deutsche URLs haben kein Präfix, geprüfte englische Fassungen liegen unter /en. Eine /en-URL steht hier und in der Sitemap erst nach geprüfter Inhalts- und Routenparität. Nicht gelistete /en-Seiten gelten nicht als übersetzt.
 

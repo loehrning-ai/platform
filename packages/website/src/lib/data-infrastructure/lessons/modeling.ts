@@ -11,7 +11,7 @@ const LID = checkpointLessonId("modeling");
 const lesson: DataInfraLesson = {
   id: "modeling",
   number: 3,
-  title: "Modeling: OLTP vs OLAP vs Stream",
+  title: "Modeling: OLTP vs OLAP vs stream",
   subtitle: "3NF · Kimball · Wide-table · Vault",
   durationMinutes: 13,
   trackId: "foundations",

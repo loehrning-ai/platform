@@ -10,12 +10,12 @@ import {
 const lesson: CodexLesson = {
   id: "L10",
   number: 10,
-  title: "Parallel Tasks, One Repo",
+  title: "Parallel tasks, one repo",
   subtitle:
     "Isolate concurrent changes with worktrees, dependency order and file ownership.",
   durationMinutes: 12,
   trackId: "advanced",
-  hook: "Parallelize only independent change sets.",
+  hook: "Run only independent changes in parallel.",
   keyConcepts: [
     "Git worktrees",
     "Task decomposition",
@@ -64,7 +64,7 @@ const lesson: CodexLesson = {
             {
               eyebrow: "pattern 01",
               title: "Entity fan-out",
-              body: "One task per entity with its own code and data paths. A shared schema, helper or audit sink is an explicit dependency.",
+              body: "One task per entity with its own code and data paths. A shared schema, helper or audit sink is a declared dependency.",
             },
             {
               eyebrow: "pattern 02",

@@ -25,7 +25,7 @@ export const ORGMODEL_LESSONS: readonly AiNativeOperatorLesson[] = [
       },
       {
         id: "s2",
-        title: "Evaluate capacity options explicitly",
+        title: "Compare capacity options",
         readTimeMinutes: 1,
         content:
           "A capacity request shows workload, bottlenecks, service impact, control constraints and the options assessed: process or scope changes, better tooling, automation, training or more people. Decide each request on this evidence, without a standing rule to automate before hiring.",

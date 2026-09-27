@@ -4,7 +4,7 @@ import { localizeDataInfraLessonToGerman } from "../../translate-lesson";
 export default localizeDataInfraLessonToGerman(canonical, {
   title: "CDC, Lambda & Kappa",
   subtitle: "Change Data Capture · zwei Architekturen",
-  hook: "Commitete Zeilenänderungen erfassen, Bootstrap und Replay definieren und einen oder zwei Verarbeitungspfade aus Anforderungen wählen.",
+  hook: "Zeilenänderungen per CDC erfassen und den Verarbeitungspfad wählen.",
   keyConcepts: [
     "Change Data Capture",
     "WAL/binlog",

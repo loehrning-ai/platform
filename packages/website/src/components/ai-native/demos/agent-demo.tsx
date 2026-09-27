@@ -211,11 +211,12 @@ export function AgentDemo(): JSX.Element {
       <div>
         <DemoOverline>Multi-Agent Workflow</DemoOverline>
         <h3 className="mt-2 text-[24px] font-bold tracking-[-0.03em] text-foreground md:text-[26px]">
-          Vier Agenten. <span className="text-brand-orange">Ein Memo.</span>
+          Vier Agenten{" "}
+          <span className="text-brand-orange">schreiben ein Memo</span>
         </h3>
         <p className="mt-1.5 text-[13px] text-muted-foreground">
-          Spezialisierte Agenten arbeiten koordiniert, wie eine Redaktion. Am
-          Ende: ein strukturiertes Entscheidungs-Memo.
+          Vier Agenten recherchieren, bewerten, prüfen und schreiben
+          nacheinander ein Entscheidungs-Memo.
         </p>
       </div>
 

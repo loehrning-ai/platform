@@ -15,7 +15,7 @@ const lesson: DataInfraLesson = {
   subtitle: "Change data capture · two architectures",
   durationMinutes: 14,
   trackId: "movement",
-  hook: "Capture committed row changes, define bootstrap and replay, then choose one or two processing paths from requirements.",
+  hook: "Capture row changes with CDC and pick the processing path.",
   keyConcepts: [
     "Change Data Capture",
     "WAL/binlog",

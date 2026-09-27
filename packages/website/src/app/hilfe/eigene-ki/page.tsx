@@ -358,7 +358,6 @@ function AgentHelpContent({
           locale={locale}
         />
         <p className="max-w-[68ch]">{copy.tokens.format}</p>
-        <p className="max-w-[68ch]">{copy.tokens.limit(MAX_ACTIVE_TOKENS)}</p>
         <p className="max-w-[68ch]">{copy.tokens.bearerActive}</p>
         {copy.tokens.bearerPending ? (
           <p className="max-w-[68ch] border-l-[3px] border-brand-orange pl-3">

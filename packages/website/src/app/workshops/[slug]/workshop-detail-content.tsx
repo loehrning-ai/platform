@@ -467,20 +467,9 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
           <BackGlyph />
           {copy.workshopsShort}
         </Link>
-        <CapsLine className="mt-3 max-[359px]:mt-2 sm:mt-0">
-          {/* Each part stays whole and carries its separator, so a narrow
-              phone breaks the line before the dot ("· ESG-Berichte" opens
-              line two), never after it or inside "ESG-Berichte". */}
-          {workshop.eyebrow.split(" · ").map((part, index) => (
-            <span key={part}>
-              {index > 0 ? " " : null}
-              <span className="whitespace-nowrap">
-                {index > 0 ? "· " : null}
-                {part}
-              </span>
-            </span>
-          ))}
-        </CapsLine>
+        {/* CapsLine keeps each " · " part whole with its separator, so a
+            narrow phone never opens a line with a dot. */}
+        <CapsLine className="mt-3 max-[359px]:mt-2 sm:mt-0">{workshop.eyebrow}</CapsLine>
         <h1
           id="workshop-title"
           // Below 360px the poster step scales with the width (42px, as 50px
@@ -635,9 +624,11 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
             className="mt-4 sm:mt-6"
           />
           <div className="mt-2 flex flex-wrap items-center justify-between gap-x-6 sm:mt-4">
-            <p className="text-caption text-muted-foreground">
-              {copy.agendaSource[workshop.agendaSource]}
-            </p>
+            {copy.agendaSource[workshop.agendaSource] ? (
+              <p className="text-caption text-muted-foreground">
+                {copy.agendaSource[workshop.agendaSource]}
+              </p>
+            ) : null}
             {/* On a phone the lab starts right below, so the jump link
                 stays a tablet and desktop aid. */}
             <a
@@ -685,8 +676,10 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
                     />
                   ))}
                 </ul>
+                {/* A keyboard instruction: phones have no P key and open
+                    the presenter row above instead. */}
                 {group.phase === "during" && hasPresenter ? (
-                  <p className="mt-4 max-w-[64ch] text-caption text-muted-foreground">
+                  <p className="mt-4 max-w-[64ch] text-caption text-muted-foreground max-lg:hidden">
                     <span className="font-semibold text-foreground">
                       {copy.selfHostHeading}:
                     </span>{" "}

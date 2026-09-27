@@ -63,13 +63,13 @@ describe("<LanguageSwitch />", () => {
       within(group).getByRole("link", { name: /Deutsch/ }),
     ).toHaveAttribute("hreflang", "de");
     expect(
-      within(group).getByRole("link", { name: /Englische Oberfläche/ }),
+      within(group).getByRole("link", { name: /englische Oberfläche/ }),
     ).toHaveAttribute("href", "/en/kurse");
     expect(
-      within(group).getByRole("link", { name: /Englische Oberfläche/ }),
+      within(group).getByRole("link", { name: /englische Oberfläche/ }),
     ).toHaveAttribute("hreflang", "en");
     expect(
-      within(group).getByRole("link", { name: /Englische Oberfläche/ }),
+      within(group).getByRole("link", { name: /englische Oberfläche/ }),
     ).not.toHaveAttribute("lang");
   });
 
@@ -112,7 +112,7 @@ describe("<LanguageSwitch />", () => {
       within(group).getByRole("link", { name: /Deutsch/ }),
     ).toHaveAttribute("href", "/");
     expect(
-      within(group).getByRole("link", { name: /Englische Oberfläche/ }),
+      within(group).getByRole("link", { name: /englische Oberfläche/ }),
     ).toHaveAttribute("href", "/en");
   });
 
@@ -127,7 +127,7 @@ describe("<LanguageSwitch />", () => {
 
     const englishLink = within(
       screen.getByRole("group", { name: "Sprache" }),
-    ).getByRole("link", { name: /Englische Oberfläche/ });
+    ).getByRole("link", { name: /englische Oberfläche/ });
     await waitFor(() =>
       expect(englishLink).toHaveAttribute(
         "href",
@@ -152,7 +152,7 @@ describe("<LanguageSwitch />", () => {
 
     const englishLink = within(
       screen.getByRole("group", { name: "Sprache" }),
-    ).getByRole("link", { name: /Englische Oberfläche/ });
+    ).getByRole("link", { name: /englische Oberfläche/ });
     await waitFor(() =>
       expect(englishLink).toHaveAttribute(
         "href",
@@ -173,7 +173,7 @@ describe("<LanguageSwitch />", () => {
 
     const englishLink = within(
       screen.getByRole("group", { name: "Sprache" }),
-    ).getByRole("link", { name: /Englische Oberfläche/ });
+    ).getByRole("link", { name: /englische Oberfläche/ });
     await waitFor(() =>
       expect(englishLink).toHaveAttribute("href", "/en/kurse?goal=start"),
     );

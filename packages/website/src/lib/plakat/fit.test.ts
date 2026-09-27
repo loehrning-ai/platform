@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import { splitTitle } from "@/app/workshops/workshop-title";
 import { WORKSHOP_PAGE_COPY } from "@/app/workshops/workshop-copy";
 import { HOME_COPY } from "@/components/home/home-copy";
+import { COURSE_HUB_COPY } from "@/lib/courses/course-hub-copy";
 import { getAiNativeOperatorCourseCopy } from "@/lib/ai-native-operator/course-copy";
 import { getCodexCourseCopy } from "@/lib/codex/course-copy";
 import { getDataEngineeringFundamentalsCourseCopy } from "@/lib/data-engineering-fundamentals/course-copy";
@@ -15,8 +16,11 @@ import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { getWorkshops } from "@/lib/workshops";
 import {
   breakSegments,
+  fallbackFitEm,
   fitEm,
   longestSegment,
+  noBreakFirstLine,
+  POSTER_FALLBACK_HEADROOM,
   POSTER_FIT_SAFETY,
   POSTER_TITLE_SIZE,
   POSTER_TRACKING_EM,
@@ -62,7 +66,10 @@ function column(layout: Layout, viewport: number): number {
 
 interface PosterTitle {
   readonly id: string;
+  /** The text as the H1 sets it, no-break spaces and soft hyphens included. */
   readonly text: string;
+  /** `--fit` as the component writes it, when it adds the fallback headroom. */
+  readonly fit?: number;
   /** Copy that lives inside a page file (not exported): each part must still be a literal there. */
   readonly source?: { readonly file: string; readonly parts: readonly string[] };
 }
@@ -70,7 +77,7 @@ interface PosterTitle {
 interface Surface {
   readonly name: string;
   readonly layout: Layout;
-  /** Files whose H1 takes .poster-title; the surface joins the check once one does. */
+  /** Files that set the H1 as a .poster-title (one of them must). */
   readonly files: readonly string[];
   readonly titles: readonly PosterTitle[];
 }
@@ -83,7 +90,7 @@ function literal(id: string, file: string, parts: readonly string[]): PosterTitl
 }
 
 const COURSE_LITERALS = [
-  { file: "src/app/ki-fuehrerschein/page.tsx", de: ["KI im Alltag:", "Was du wissen solltest."], en: ["AI at work:", "what you need to know."] },
+  { file: "src/app/ki-fuehrerschein/page.tsx", de: ["Welche Daten", "ins KI-Tool dürfen."], en: ["Which data may go", "into an AI tool."] },
   { file: "src/app/eu-ai-act-kurs/page.tsx", de: ["Rollen, Risiken und", "Pflichten einordnen."], en: ["Map roles, risks,", "and duties."] },
   { file: "src/app/ki-und-gesellschaft/page.tsx", de: ["Arbeit, Deepfakes", "und Bias einordnen."], en: ["Assess work, deepfakes,", "and bias."] },
   { file: "src/app/ai-native/page.tsx", de: ["Routinearbeit mit Claude automatisieren."], en: ["Automate routine work with Claude."] },
@@ -93,7 +100,6 @@ const COURSE_LITERALS = [
 
 const PAGE_LITERALS = [
   { file: "src/app/blog/page.tsx", de: ["KI im Alltag, mit Quellen erklärt."], en: ["Everyday AI, explained with sources."] },
-  { file: "src/app/kurse/learning-atlas.tsx", de: ["Womit fängst du an?"], en: ["Where do you want to start?"] },
 ] as const;
 
 const SURFACES: readonly Surface[] = [
@@ -118,7 +124,12 @@ const SURFACES: readonly Surface[] = [
     name: "home hero band",
     layout: "band-art",
     files: ["src/components/home/hero.tsx", "src/components/home/phone-hero.css"],
-    titles: LOCALES.map((locale) => ({ id: `home ${locale}`, text: HOME_COPY[locale].hero.headline.join(" ") })),
+    // hero.tsx binds the first two parts ("KI verstehen.") with a no-break
+    // space and adds the fallback headroom, so that line never breaks.
+    titles: LOCALES.map((locale) => {
+      const text = noBreakFirstLine(HOME_COPY[locale].hero.headline);
+      return { id: `home ${locale}`, text, fit: fallbackFitEm(text) };
+    }),
   },
   {
     name: "demos hub band",
@@ -131,7 +142,11 @@ const SURFACES: readonly Surface[] = [
     layout: "band",
     files: ["src/components/demos/demo-detail-layout.tsx"],
     titles: LOCALES.flatMap((locale) =>
-      getDemosForLocale(locale).map((demo) => ({ id: `${demo.slug} ${locale}`, text: demoName(demo) })),
+      getDemosForLocale(locale).map((demo) => ({
+        id: `${demo.slug} ${locale}`,
+        text: demoName(demo),
+        fit: fallbackFitEm(demoName(demo)),
+      })),
     ),
   },
   {
@@ -143,8 +158,12 @@ const SURFACES: readonly Surface[] = [
   {
     name: "/kurse headline on paper",
     layout: "band",
-    files: ["src/app/kurse/learning-atlas.tsx"],
-    titles: LOCALES.map((locale) => literal(`kurse ${locale}`, PAGE_LITERALS[1].file, PAGE_LITERALS[1][locale])),
+    files: ["src/app/kurse/page.tsx"],
+    titles: LOCALES.map((locale) => ({
+      id: `kurse ${locale}`,
+      text: COURSE_HUB_COPY[locale].heading,
+      fit: fallbackFitEm(COURSE_HUB_COPY[locale].heading),
+    })),
   },
   {
     name: "course landing bands",
@@ -166,11 +185,6 @@ const SURFACES: readonly Surface[] = [
     ],
   },
 ];
-
-/** A surface joins the fit check once its headline is a .poster-title (SPEC §6, G1 to G4). */
-function adopted(surface: Surface): boolean {
-  return surface.files.some((file) => /\bposter-title\b|--text-poster\b/.test(read(file)));
-}
 
 // ─── Tests ─────────────────────────────────────────────────────────────────
 
@@ -243,6 +257,19 @@ describe("fitEm", () => {
     expect(posterTitleStyle("Geschäftsberichte mit KI lesen")).toEqual({ "--fit": String(fit) });
   });
 
+  it("adds the fallback headroom on top, and binds a no-break first line", () => {
+    const title = "Vertragsassistent.";
+    expect(fallbackFitEm(title)).toBeGreaterThanOrEqual(fitEm(title) * POSTER_FALLBACK_HEADROOM);
+    expect(fallbackFitEm(title) - fitEm(title) * POSTER_FALLBACK_HEADROOM).toBeLessThan(0.001);
+    expect(noBreakFirstLine(["KI", "verstehen.", "Sicher anwenden."])).toBe("KI\u00a0verstehen. Sicher anwenden.");
+    expect(breakSegments(noBreakFirstLine(["Understand", "AI.", "Use it safely."]))).toEqual([
+      "Understand\u00a0AI.",
+      "Use",
+      "it",
+      "safely.",
+    ]);
+  });
+
   it("gives the spec's reference sizes (SPEC §4)", () => {
     const report = fitEm("Geschäftsberichte mit KI lesen");
     // 36px at 320 and about 45px at 390: one line, never broken.
@@ -276,6 +303,15 @@ describe("the poster title registry", () => {
     }
   });
 
+  it("reads the H1 of a surface that sets it as a .poster-title", () => {
+    for (const surface of SURFACES) {
+      expect(
+        surface.files.some((file) => /\bposter-title\b|--text-poster\b/.test(read(file))),
+        `${surface.name}: none of ${surface.files.join(", ")} sets .poster-title`,
+      ).toBe(true);
+    }
+  });
+
   it("still matches the page-local copy it reads", () => {
     for (const surface of SURFACES) {
       for (const { id, source } of surface.titles) {
@@ -292,7 +328,9 @@ describe("the poster title registry", () => {
     for (const surface of SURFACES) {
       for (const title of surface.titles) {
         for (const character of title.text.normalize("NFC")) {
-          if (/\s/.test(character)) continue;
+          // A soft hyphen is no glyph: the font's "-" shows only at a break,
+          // and breakSegments() already counts it there.
+          if (/\s/.test(character) || character === "\u00ad") continue;
           expect(BOLD_ADVANCES[character], `${title.id}: "${character}"`).toBeDefined();
         }
       }
@@ -301,12 +339,12 @@ describe("the poster title registry", () => {
 });
 
 describe.each(SURFACES)("$name", (surface) => {
-  it.skipIf(!adopted(surface))(
+  it(
     `fits every title at ${VIEWPORTS.join(", ")}px, DE and EN`,
     () => {
       const overflows: string[] = [];
       for (const title of surface.titles) {
-        const fit = fitEm(title.text);
+        const fit = title.fit ?? fitEm(title.text);
         for (const viewport of VIEWPORTS) {
           const width = column(surface.layout, viewport);
           const size = posterTitleSize(fit, width, viewport);

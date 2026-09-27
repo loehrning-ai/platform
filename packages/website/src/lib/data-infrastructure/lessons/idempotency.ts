@@ -11,7 +11,7 @@ const LID = checkpointLessonId("idempotency");
 const lesson: DataInfraLesson = {
   id: "idempotency",
   number: 10,
-  title: "Idempotency, Backfills & Processing Guarantees",
+  title: "Idempotency, backfills and processing guarantees",
   subtitle: "Scope the source, state, sink, and failure model",
   durationMinutes: 14,
   trackId: "scale",

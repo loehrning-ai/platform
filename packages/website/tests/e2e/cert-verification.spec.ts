@@ -103,20 +103,20 @@ const COURSES = [
 /** Language-branched copy the verification page renders (post-i18n-fix). */
 const COPY = {
   de: {
-    h1: "Zertifikatdaten prüfen",
-    backLink: /Zurück zum/,
+    h1: "Zertifikatdaten lesen",
+    backLink: /Zurück zum Kurs/,
     unreadable: "Zertifikatcode nicht lesbar",
     read: "QR-Daten gelesen",
     score: "Ergebnis: 92%",
-    mismatch: "Zertifikatcode passt nicht zu diesem Kurs.",
+    mismatch: "Zertifikatcode passt nicht zu diesem Kurs",
   },
   en: {
-    h1: "Verify certificate data",
-    backLink: /Back to/,
+    h1: "Read certificate data",
+    backLink: /Back to course/,
     unreadable: "Certificate code unreadable",
     read: "QR data read",
     score: "Score: 92%",
-    mismatch: "Certificate code doesn't match this course.",
+    mismatch: "Certificate code doesn't match this course",
   },
 } as const;
 

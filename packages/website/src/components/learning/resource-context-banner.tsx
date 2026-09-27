@@ -39,16 +39,7 @@ export function ResourceContextBanner({ nodeId }: ResourceContextBannerProps) {
           ? "Lernbuch"
           : "Ressource";
 
-  const resourceArticleLabel =
-    node.type === "demo"
-      ? "Dieses Praxisbeispiel"
-      : node.type === "template"
-        ? "Diese Arbeitsvorlage"
-        : node.type === "book"
-          ? "Dieses Lernbuch"
-          : "Diese Ressource";
-
-  const courseText = courseNode ? `. Passend zum ${courseNode.title}` : "";
+  const courseText = courseNode ? `Passt zum Kurs ${courseNode.title}.` : null;
 
   return (
     <div
@@ -59,10 +50,12 @@ export function ResourceContextBanner({ nodeId }: ResourceContextBannerProps) {
       <span className="font-bold text-brand-orange">
         Stufe {stageNumber}: {stageDisplay.displayLabel}
       </span>
-      {" · "}
-      <span>
-        {resourceArticleLabel} gehört zu dieser Stufe{courseText}.
-      </span>
+      {courseText ? (
+        <>
+          {" · "}
+          <span>{courseText}</span>
+        </>
+      ) : null}
     </div>
   );
 }

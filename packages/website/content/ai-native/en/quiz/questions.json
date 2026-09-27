@@ -355,7 +355,7 @@
       { "id": "c", "text": "A participation certificate generated in your browser from your own assessment.", "isCorrect": true },
       { "id": "d", "text": "A paid add-on bought separately.", "isCorrect": false }
     ],
-    "explanation": "No authority or independent examiner issues it. Its assessment state comes from your capstone rubric or the workshop quiz.",
+    "explanation": "No authority or independent examiner issues it. Its assessment state comes from your capstone rubric or the final quiz.",
     "version": 1,
     "active": true
   }

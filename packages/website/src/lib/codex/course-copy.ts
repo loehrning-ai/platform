@@ -75,7 +75,7 @@ export const CODEX_COURSE_COPY = Object.freeze({
     },
     landing: {
       eyebrow: "Codex / Kurs",
-      title: "Codex kontrolliert im Repository einsetzen.",
+      title: "Codex im Repository steuern.",
       intro:
         "Du gibst Codex Kontext, grenzt die Änderung ab, verlangst Nachweise und liest den Diff vor dem Merge.",
       start: "Lektion 01 starten",
@@ -152,7 +152,7 @@ export const CODEX_COURSE_COPY = Object.freeze({
     },
     landing: {
       eyebrow: "Codex / course",
-      title: "Use Codex under explicit repository controls.",
+      title: "Steer Codex in your repo.",
       intro:
         "Give Codex context, bound the change, require evidence, and read the diff before merge.",
       start: "Start lesson 01",

@@ -62,7 +62,7 @@ export default async function AiNativeOperatorLandingPage() {
     name: bundle.config.title,
     description: courseMeta.subtitle,
     teaches: modules.map((module) => module.name),
-    timeRequired: "PT14H",
+    timeRequired: "PT4H",
   });
   const { "@context": _context, ...courseNode } = course;
   const courseJsonLd: JsonLdGraph = {

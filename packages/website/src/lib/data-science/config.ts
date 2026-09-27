@@ -34,7 +34,7 @@ export const DATA_SCIENCE_CONFIG = {
   workshopQuizPassThreshold: 0.7,
   certificateTitle: "Data Science Fundamentals",
   certificateSubtitle:
-    "Certificate of participation from loehrning.ai, an independent learning platform. Not an accredited qualification.",
+    "Locally generated certificate of participation from the independent learning platform loehrning.ai. Not a state-recognized or accredited qualification.",
   certificateModules: [
     "Fundamentals and exploration: sampling, the DS loop, EDA, and data cleaning",
     "Feature engineering and modeling: encoding, leakage, and the bias/variance tradeoff",
@@ -46,7 +46,7 @@ export const DATA_SCIENCE_CONFIG = {
   quizPassMessage: "Data Science Fundamentals is complete.",
   certificateFileStem: "Data-Science-Fundamentals",
   recordNoun: {
-    label: "Certificate of Participation",
+    label: "Certificate of participation",
     possessive: "Your certificate of participation",
     demonstrative: "This certificate of participation",
   },

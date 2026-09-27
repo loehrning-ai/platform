@@ -90,13 +90,13 @@ const DEFAULT_COPY: RedactionDrillWidgetCopy = {
   kindLabel: "Datenschutz-Drill",
   chooseScenarioAriaLabel: "Szenario wählen",
   scenarioWord: "Szenario",
-  redactedTag: "<REDIGIERT>",
-  redactedAriaPrefix: "Redigiert:",
+  redactedTag: "<GESCHWÄRZT>",
+  redactedAriaPrefix: "Geschwärzt:",
   redactedAriaSuffix: "(klicken zum Wiederherstellen)",
   riskyAriaPrefix: "Riskant:",
-  riskyAriaSuffix: "(klicken zum Redigieren)",
-  legendRiskyLabel: "riskant, zum Redigieren klicken",
-  legendRedactedChip: "redigiert",
+  riskyAriaSuffix: "(zum Schwärzen klicken)",
+  legendRiskyLabel: "Riskant: zum Schwärzen klicken",
+  legendRedactedChip: "geschwärzt",
   legendCleanedLabel: "bereinigt",
   countSuffix: "erfasst",
   submitLabel: "Einfügen prüfen",
@@ -110,8 +110,10 @@ const DEFAULT_COPY: RedactionDrillWidgetCopy = {
   notSafeHeadline: "Noch nicht abschicken.",
   missingSingularTemplate: "{n} sensible Stelle ist noch offen (rot markiert).",
   missingPluralTemplate: "{n} sensible Stellen sind noch offen (rot markiert).",
-  mistakesSingularTemplate: "{n} harmlose Stelle unnötig redigiert (gelb markiert).",
-  mistakesPluralTemplate: "{n} harmlose Stellen unnötig redigiert (gelb markiert).",
+  mistakesSingularTemplate:
+    "{n} harmlose Stelle unnötig geschwärzt (gelb markiert).",
+  mistakesPluralTemplate:
+    "{n} harmlose Stellen unnötig geschwärzt (gelb markiert).",
 };
 
 function fillCount(template: string, n: number): string {
@@ -201,7 +203,7 @@ const DEFAULT_SCENARIOS: readonly RedactionScenario[] = [
 export function RedactionDrillWidget({
   lessonId,
   cpId,
-  title = "Redigiere, bevor du einfügst",
+  title = "Schwärze, bevor du einfügst",
   scenario = "Prüfe jeden Text, bevor du ihn in ein KI-Tool kopierst.",
   scenarios = DEFAULT_SCENARIOS,
   copy,
@@ -291,46 +293,50 @@ export function RedactionDrillWidget({
       scenario={scenario}
       done={done}
     >
-      {/* Scenario tabs */}
-      <div
-        role="group"
-        aria-label={chrome.chooseScenarioAriaLabel}
-        className="mb-4 flex flex-wrap gap-2"
-      >
-        {scenarios.map((s, i) => {
-          const isActive = i === active;
-          const sDone =
-            submittedIds.has(s.id) &&
-            (() => {
-              const r = redacted[s.id] ?? new Set<number>();
-              const sens = s.segments
-                .map((seg, k) => (seg.sensitive ? k : -1))
-                .filter((k) => k >= 0);
-              const c = sens.filter((k) => r.has(k)).length;
-              const m = Array.from(r).filter(
-                (k) => !s.segments[k]?.sensitive,
-              ).length;
-              return c === sens.length && m === 0;
-            })();
-          return (
-            <button
-              key={s.id}
-              type="button"
-              aria-pressed={isActive}
-              onClick={() => setActive(i)}
-              className={cn(
-                "inline-flex min-h-11 items-center gap-1.5 border-2 px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-[0.12em] transition-colors",
-                isActive
-                  ? "border-brand-orange bg-brand-orange/10 text-foreground"
-                  : "border-border bg-background text-muted-foreground hover:border-brand-orange/60",
-              )}
-            >
-              {sDone && <CheckCircle2 size={12} className="text-risk-green" />}
-              {chrome.scenarioWord} {i + 1}
-            </button>
-          );
-        })}
-      </div>
+      {/* Scenario tabs: only when there is more than one scenario. */}
+      {scenarios.length > 1 ? (
+        <div
+          role="group"
+          aria-label={chrome.chooseScenarioAriaLabel}
+          className="mb-4 flex flex-wrap gap-2"
+        >
+          {scenarios.map((s, i) => {
+            const isActive = i === active;
+            const sDone =
+              submittedIds.has(s.id) &&
+              (() => {
+                const r = redacted[s.id] ?? new Set<number>();
+                const sens = s.segments
+                  .map((seg, k) => (seg.sensitive ? k : -1))
+                  .filter((k) => k >= 0);
+                const c = sens.filter((k) => r.has(k)).length;
+                const m = Array.from(r).filter(
+                  (k) => !s.segments[k]?.sensitive,
+                ).length;
+                return c === sens.length && m === 0;
+              })();
+            return (
+              <button
+                key={s.id}
+                type="button"
+                aria-pressed={isActive}
+                onClick={() => setActive(i)}
+                className={cn(
+                  "inline-flex min-h-11 items-center gap-1.5 border-2 px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-[0.12em] transition-colors",
+                  isActive
+                    ? "border-brand-orange bg-brand-orange/10 text-foreground"
+                    : "border-border bg-background text-muted-foreground hover:border-brand-orange/60",
+                )}
+              >
+                {sDone && (
+                  <CheckCircle2 size={12} className="text-risk-green" />
+                )}
+                {chrome.scenarioWord} {i + 1}
+              </button>
+            );
+          })}
+        </div>
+      ) : null}
 
       <p className="mb-3 text-[13.5px] leading-[1.55] text-muted-foreground">
         {sc.intro}
@@ -489,8 +495,12 @@ export function RedactionDrillWidget({
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
         <span className="font-mono text-xs tracking-[0.1em] text-muted-foreground">
           {allScenariosClean
-            ? chrome.allScenariosCleanLabel
-            : `${chrome.scenarioWord} ${active + 1} ${chrome.scenarioOfWord} ${scenarios.length}`}
+            ? scenarios.length > 1
+              ? chrome.allScenariosCleanLabel
+              : null
+            : scenarios.length > 1
+              ? `${chrome.scenarioWord} ${active + 1} ${chrome.scenarioOfWord} ${scenarios.length}`
+              : null}
         </span>
         {!submitted ? (
           <button

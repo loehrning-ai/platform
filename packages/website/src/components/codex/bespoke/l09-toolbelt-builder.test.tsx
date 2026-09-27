@@ -58,13 +58,13 @@ afterEach(() => {
 describe("L09ToolbeltBuilder", () => {
   it("starts with an empty belt", () => {
     render(<L09ToolbeltBuilder lessonId="L09" cpId="bespoke" />);
-    expect(screen.getByText("belt: 0 / 5")).toBeInTheDocument();
+    expect(screen.getByText("Selected: 0 / 5")).toBeInTheDocument();
   });
 
   it("picking a needed tool adds it to the belt permanently", () => {
     render(<L09ToolbeltBuilder lessonId="L09" cpId="bespoke" />);
     fireEvent.click(screen.getByText("vitest"));
-    expect(screen.getByText("belt: 1 / 5")).toBeInTheDocument();
+    expect(screen.getByText("Selected: 1 / 5")).toBeInTheDocument();
   });
 
   it("picking a mismatched tool shows that it is not required and reverts", () => {
@@ -80,7 +80,7 @@ describe("L09ToolbeltBuilder", () => {
     expect(
       screen.queryByText(/not required by this scenario/),
     ).not.toBeInTheDocument();
-    expect(screen.getByText("belt: 0 / 5")).toBeInTheDocument();
+    expect(screen.getByText("Selected: 0 / 5")).toBeInTheDocument();
   });
 
   it("awards the checkpoint once all 5 needed tools are placed", () => {

@@ -33,7 +33,9 @@ describe("CaseLab", () => {
   it("requires the full claim/privacy redline, valid evidence, and replacement note", () => {
     const onVerified = renderLab("ki-fuehrerschein");
     const verify = screen.getByRole("button", { name: "Verify project" });
-    expect(screen.getByText(/Claim and privacy redline/)).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Prompt Redline Desk" }),
+    ).toBeInTheDocument();
     expect(verify).toBeDisabled();
 
     fireEvent.click(screen.getByLabelText("Mark sensitive and remove"));
@@ -97,7 +99,9 @@ describe("CaseLab", () => {
 
   it("keeps the EU branch a dated dossier rather than a legal verdict", () => {
     renderLab("eu-ai-act-kurs");
-    expect(screen.getByText(/System and legal dossier/)).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Obligation Case File" }),
+    ).toBeInTheDocument();
     expect(
       screen.getByText(
         "Synthetic learning case · not a legal verdict or legal advice",
@@ -113,7 +117,9 @@ describe("CaseLab", () => {
 
   it("keeps the society branch focused on stakeholder and publication evidence", () => {
     renderLab("ki-und-gesellschaft");
-    expect(screen.getByText(/Stakeholder evidence map/)).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Provenance Newsroom" }),
+    ).toBeInTheDocument();
     expect(screen.getByLabelText("Unverified claim")).toBeInTheDocument();
     expect(
       screen.getAllByLabelText("Hold, cross-check, and plan correction"),

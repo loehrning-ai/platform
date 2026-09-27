@@ -36,7 +36,6 @@ interface FooterCopy {
   readonly linkedInLabel: string;
   readonly opensNewTab: string;
   readonly contentDate: string;
-  readonly lastUpdated: string;
   readonly homeLabel: string;
 }
 
@@ -72,7 +71,6 @@ const FOOTER_COPY: Readonly<Record<Locale, FooterCopy>> = {
     linkedInLabel: "LinkedIn",
     opensNewTab: "öffnet in einem neuen Tab",
     contentDate: "Datenstand",
-    lastUpdated: "Aktualisiert",
     homeLabel: "Startseite",
   },
   en: {
@@ -92,7 +90,7 @@ const FOOTER_COPY: Readonly<Record<Locale, FooterCopy>> = {
       learningBooks: "Learning books",
       workshops: "Workshops",
       appliedExamples: "Applied examples",
-      openSource: "Open Source",
+      openSource: "Open source",
       blog: "Blog",
       aboutTim: "About me",
       help: "Help",
@@ -106,7 +104,6 @@ const FOOTER_COPY: Readonly<Record<Locale, FooterCopy>> = {
     linkedInLabel: "LinkedIn",
     opensNewTab: "opens in a new tab",
     contentDate: "Content date",
-    lastUpdated: "Updated",
     homeLabel: "Home",
   },
 };
@@ -362,16 +359,13 @@ export async function Footer() {
               data-testid="footer-data-pill"
               className="contents sm:flex sm:min-w-0 sm:flex-wrap sm:gap-x-5 sm:gap-y-1"
             >
-              {/* Sentence-case labels. "Q3 2026" is a label and stays in the
-                  site face; mono is only for the ISO date, which is data. */}
+              {/* One date line at every width, sentence-case label. "Q3 2026"
+                  is a label and stays in the site face; the reviewed ISO date
+                  stays machine-readable on its <time>. */}
               <span className="whitespace-nowrap">
                 {`${copy.contentDate}: `}
-                <span className="tabular-nums">{STAND_DATE}</span>
-              </span>
-              <span className="hidden whitespace-nowrap sm:inline">
-                {`${copy.lastUpdated}: `}
-                <time dateTime={LAST_UPDATED} className="font-ui-mono tabular-nums">
-                  {LAST_UPDATED}
+                <time dateTime={LAST_UPDATED} className="tabular-nums">
+                  {STAND_DATE}
                 </time>
               </span>
             </span>

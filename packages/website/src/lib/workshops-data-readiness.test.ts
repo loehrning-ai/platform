@@ -53,12 +53,12 @@ describe("published Data Readiness workshop", () => {
     expect(de.accessNote).toContain("Material auf Englisch, Einführung auf Deutsch.");
     expect(en.accessNote).toContain("materials are in English, the live session is introduced in German.");
     expect(en.accessNote).toMatch(/^The deck, learner guide and demo need only a browser;/);
-    expect(de.accessNote).toMatch(/^Für Deck, Lernbegleiter und Demo brauchst du nur einen Browser;/);
+    expect(de.accessNote).toMatch(/^Für Deck, Lernbegleiter und Praxisbeispiel brauchst du nur einen Browser;/);
     for (const workshop of [de, en]) expect(workshop.accessNote).toMatch(/August 2026/);
     expect(de.duration).toBe("~90 Minuten");
     expect(en.duration).toBe("~90 minutes");
-    expect(de.materials[0]?.description).toMatch(/75 Minuten Programm und 15 Minuten Fragen/);
-    expect(en.materials[0]?.description).toMatch(/75 minutes of content and 15 minutes of questions/);
+    expect(de.materials[0]?.description).toMatch(/Plus 15 Minuten für Fragen/);
+    expect(en.materials[0]?.description).toMatch(/Plus 15 minutes for questions/);
     expect(en.materials.map((material) => material.label)).toEqual([
       "Deck · 26 scenes",
       "Presenter view",
@@ -71,7 +71,7 @@ describe("published Data Readiness workshop", () => {
     expect(de.materials.map((material) => material.label)).toEqual([
       "Deck · 26 Szenen",
       "Moderationsansicht",
-      "Interaktive Demo · 10 Min.",
+      "Praxisbeispiel · 10 Min.",
       "Readiness-Kit · .zip",
       "Lernbegleiter",
       "Browserlabor · 12 Min.",

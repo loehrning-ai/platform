@@ -8,7 +8,7 @@
 //
 // Unlike codex/data-infrastructure/data-engineering-fundamentals/
 // data-science, this course DOES have a real quiz gate: 9 module
-// knowledge-checks pooled into one 22-question workshop quiz (
+// knowledge-checks pooled into one 22-question final quiz (
 // stage 3), so it follows claude's quiz-gated `CourseConfig` shape rather
 // than generic "completion" fallback.
 
@@ -50,10 +50,10 @@ export const AI_NATIVE_OPERATOR_CONFIG = {
   ],
   certificateReferenceLabel:
     "Personal certificate of participation: model-assisted operations",
-  quizPassMessage: "You passed the AI-Native Operator workshop quiz.",
+  quizPassMessage: "You passed the AI-Native Operator final quiz.",
   certificateFileStem: "AI-Native-Operator",
   recordNoun: {
-    label: "Certificate of Participation",
+    label: "Certificate of participation",
     possessive: "Your certificate of participation",
     demonstrative: "This certificate of participation",
   },

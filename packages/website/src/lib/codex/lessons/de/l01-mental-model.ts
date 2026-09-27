@@ -3,12 +3,12 @@ import { localizeCodexLessonToGerman } from "../../translate-lesson";
 
 export default localizeCodexLessonToGerman(canonical, {
   translations: [
-    ["What Codex Actually Is", "Was Codex tatsächlich ist"],
+    ["What Codex is", "Was Codex ist"],
     [
       canonical.subtitle,
       "Ein auftragsorientierter Coding-Agent, der ein Repository untersucht, Dateien ändert, Prüfungen ausführt und dir die Arbeit zum Review vorlegt.",
     ],
-    ["Agent, not assistant.", "Agent statt Assistent."],
+    [canonical.hook, "Wie ein Agent eigenständig Befehle ausführt."],
     ["Autonomous agent", "Autonomer Agent"],
     ["Sandbox", "Sandbox"],
     ["Task contract", "Auftragsrahmen"],

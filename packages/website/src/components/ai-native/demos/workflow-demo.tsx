@@ -274,16 +274,13 @@ export function WorkflowDemo(): JSX.Element {
       <div>
         <DemoOverline>Signalbasierte Nachricht · Pipeline</DemoOverline>
         <h3 className="mt-2 text-[24px] font-bold tracking-[-0.03em] text-foreground md:text-[26px]">
-          Öffentliche Signale.{" "}
-          <span className="text-brand-orange">
-            Begründet schreiben. Vor Versand prüfen.
-          </span>
+          Nachrichtenentwurf aus{" "}
+          <span className="text-brand-orange">öffentlichen Signalen</span>
         </h3>
         <p className="mt-1.5 max-w-[620px] text-[13px] leading-[1.55] text-muted-foreground">
           Der simulierte Flow bewertet öffentliche Signale, priorisiert nach
-          Intent-Score und schreibt einen Entwurf mit Quellenbezug. Nicht
-          generisch, sondern prüfbar: Warum diese Nachricht, welche Quelle,
-          welche sensible Information muss raus?
+          Intent-Score und schreibt einen Entwurf mit Quelle. Vor dem Versand
+          prüfst du Anlass, Quelle und sensible Angaben.
         </p>
       </div>
 

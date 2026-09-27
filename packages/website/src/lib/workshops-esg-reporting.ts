@@ -145,7 +145,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     notNeeded: [
       "Programmierkenntnisse",
       "Vorwissen über die Begriffe Scope 1 und 2 hinaus",
-      "Ein KI-Konto für Deck, Demo und Übungen",
+      "Ein KI-Konto für Deck, Praxisbeispiel und Übungen",
       "Eigene Firmendaten",
     ],
     notCovered: [
@@ -299,7 +299,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         title: "Optional: die Fallen selbst schalten",
         description:
           "Du schaltest jede Falle einzeln ein und siehst, welche Belegzeile aus jeder Rechnung wird.",
-        tool: "Interaktive Demo · etwa 10 Minuten",
+        tool: "Praxisbeispiel · etwa 10 Minuten",
       },
     ],
     caseStudy: {
@@ -348,7 +348,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     materials: materials([
       [
         "Deck · 20 Szenen",
-        "Etwa 77 Minuten Programm und 13 Minuten Fragen. Pfeiltasten blättern, P öffnet die Moderationsansicht.",
+        "Plus 13 Minuten für Fragen. Pfeiltasten blättern, P öffnet die Moderationsansicht.",
       ],
       [
         "Moderationsansicht",
@@ -356,7 +356,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         "Für die Person, die moderiert: Notizen, Abstimmungsfragen und eine Uhr.",
       ],
       [
-        "Interaktive Demo · 10 Min.",
+        "Praxisbeispiel · 10 Min.",
         "Schalte jede Falle einzeln ein, öffne jede Rechnung und sieh die Zeile, die daraus in der Belegtabelle wird.",
         "Schalte jede Falle einzeln ein und sieh, was aus jeder Rechnung wird.",
       ],
@@ -684,7 +684,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     materials: materials([
       [
         "Deck · 20 scenes",
-        "About 77 minutes of content and 13 minutes of questions. Arrow keys move on; P opens the presenter view.",
+        "Plus 13 minutes for questions. Arrow keys move on; P opens the presenter view.",
       ],
       [
         "Presenter view",

@@ -26,7 +26,7 @@ vi.mock("@/components/demos/demo-grid", () => ({
 import DemosPage from "./page";
 
 describe("DemosPage URL filter boundary", () => {
-  it("renders the IDEA band, the check list and registry-derived stats", async () => {
+  it("renders the IDEA band and registry-derived stats, without a check-list box", async () => {
     const { container } = render(
       await DemosPage({ searchParams: Promise.resolve({}) }),
     );
@@ -59,10 +59,13 @@ describe("DemosPage URL filter boundary", () => {
     expect(band?.querySelectorAll("circle").length).toBe(4);
     expect(band?.querySelector(".text-caption, .text-label, [role=group]")).toBeNull();
     expectCapsInsideScene(container);
+    // The stat line says what runs and what is simulated; no scope box
+    // repeats it, and the lede is one sentence at every width.
+    expect(container.querySelector("[data-demo-scope]")).toBeNull();
+    expect(screen.queryByText("Eingaben und Annahmen")).toBeNull();
     expect(
-      screen.getByRole("list", { name: "Was du an jedem Beispiel prüfst" }),
-    ).toBeVisible();
-    expect(screen.getByText("Eingaben und Annahmen")).toBeVisible();
+      screen.getByText(DEMOS_PAGE_COPY.de.catalog.introduction).querySelector("span"),
+    ).toBeNull();
 
     const stats = screen.getByRole("group", { name: "Umfang der Sammlung" });
     const values = Array.from(stats.querySelectorAll("dd.text-num-lg")).map(
@@ -71,8 +74,7 @@ describe("DemosPage URL filter boundary", () => {
     // 12 demos, 3 execution modes in use, 0 actions that reach a real system.
     expect(values).toEqual(["12", "3", "0"]);
     // The stats sit on paper below the band. Below sm the StatRow gives way
-    // to one caption line with the same registry numbers, and the check list
-    // (which repeats the lead) hides.
+    // to one caption line with the same registry numbers.
     expect(stats.closest("[data-cover-band]")).toBeNull();
     expect(stats.parentElement).toHaveClass("max-sm:hidden");
     // One unbreakable item per entry and a CSS separator that a clipping
@@ -86,16 +88,12 @@ describe("DemosPage URL filter boundary", () => {
       ),
     ).toEqual([
       "12 Beispiele",
-      "3 Ausführungsarten",
       "nichts wird wirklich gesendet",
     ]);
     expect(statsLine?.textContent).not.toContain("·");
     expect(statsLine?.querySelector("li")).toHaveClass("whitespace-nowrap");
     expect(statsLine).toHaveClass("-ml-[1em]");
     expect(statsLine?.parentElement).toHaveClass("overflow-hidden", "sm:hidden");
-    expect(
-      container.querySelector("[data-demo-scope]")?.closest(".max-sm\\:hidden"),
-    ).toBeTruthy();
     expect(container.querySelector("[data-demo-atlas-hero]")).toBeTruthy();
   });
 

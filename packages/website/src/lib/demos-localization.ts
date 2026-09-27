@@ -141,7 +141,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     background: "Keyword search · 6 sample documents · answers with source cards",
     description:
       "Keyword search finds clauses in six company documents and quotes them with their location. Without a match, the system does not answer.",
-    teaser: "Quotes contract clauses with their location and stays silent without a match.",
+    teaser: "Quotes clauses with their location and stays silent without a match.",
     tags: ["Keyword search", "Rule-based", "DE / EN"],
     meta: [
       { label: "Learning objective", value: "Require sources" },

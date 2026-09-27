@@ -11,7 +11,7 @@ import {
 const lesson: CodexLesson = {
   id: "L04",
   number: 4,
-  title: "Anatomy of a Task Spec",
+  title: "Anatomy of a task spec",
   subtitle:
     "Goal, constraints, acceptance criteria, and excluded scope make the requested change reviewable.",
   durationMinutes: 12,
@@ -63,7 +63,7 @@ const lesson: CodexLesson = {
             },
             {
               eyebrow: "04 · out of scope",
-              title: "What are we explicitly not doing?",
+              title: "What are we not doing?",
               body: "Adjacent work that stays out, such as auth or the query builder, so implementer and reviewer share one boundary.",
             },
           ],
@@ -121,6 +121,9 @@ const lesson: CodexLesson = {
         desc: "Select each field that fixes an implementation or review decision.",
         goal: "Users can page through /users, 20 per page, via ?page=N.",
         tierLabels: CODEX_TASK_SPEC_TIER_LABELS,
+        fileName: "task.md",
+        goalHeading: "Goal",
+        signalsLabel: "signals",
         items: [
           {
             section: "Goal",
@@ -150,7 +153,7 @@ const lesson: CodexLesson = {
           },
           {
             section: "Out of scope",
-            hint: "Adjacent work explicitly excluded from this change.",
+            hint: "Adjacent work excluded from this change.",
             body: [
               "Don't change filtering logic.",
               "Don't touch /users/:id.",
@@ -161,7 +164,7 @@ const lesson: CodexLesson = {
             section: "Nice-to-haves",
             hint: "Optional work needs a scope decision too.",
             body: [
-              "A total-count field, only if explicitly accepted into scope.",
+              "A total-count field, only if accepted into scope.",
             ],
           },
           {
@@ -183,7 +186,7 @@ const lesson: CodexLesson = {
         goodLabel: "Strong, four parts",
         bad: "task:\nadd pagination to /users",
         good: "Goal\nUsers can page through GET /users results via ?page=N, 20 items per page.\n\nConstraints\n- Keep existing response schema; add a top-level \"pagination\" object.\n- Offset-based (?page=N), not cursor.\n- No new dependencies.\n\nAcceptance\n- Tests cover page 1, page 2, out-of-range (page=999 → empty).\n- make test && make lint pass.\n- Existing filters (?role, ?status) still work.\n\nOut of scope\n- Don't touch the single-user detail endpoint.\n- Don't refactor the filter builder.",
-        note: "Without constraints, a goal and tests still allow a schema change or an unrelated filter refactor. The four parts give review an explicit contract.",
+        note: "Without constraints, a goal and tests still allow a schema change or an unrelated filter refactor. The four parts give review a contract.",
       },
     },
     {

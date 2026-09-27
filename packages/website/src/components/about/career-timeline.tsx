@@ -39,7 +39,6 @@ export function CareerTimeline({ locale }: { readonly locale: Locale }) {
           id="career-heading"
           title={copy.title}
           caption={caption}
-          description={copy.intro}
           size="compact"
           className="max-sm:[&>div>p]:hidden"
         />

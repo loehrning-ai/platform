@@ -11,7 +11,7 @@ const LID = checkpointLessonId("lakehouse");
 const lesson: DataInfraLesson = {
   id: "lakehouse",
   number: 5,
-  title: "The Lakehouse: Iceberg, Delta, Hudi",
+  title: "The lakehouse: Iceberg, Delta, Hudi",
   subtitle: "ACID on object storage",
   durationMinutes: 15,
   trackId: "storage",

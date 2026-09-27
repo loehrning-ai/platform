@@ -1110,7 +1110,7 @@
               },
               "constraints": {
                 "minChars": 30,
-                "hint": "Hard limits: GDPR, internal data only redacted, costs < X €/month, build time < Y hours. Also what is explicitly not in scope."
+                "hint": "Hard limits: GDPR, internal data only redacted, costs < X €/month, build time < Y hours. Also what is not in scope."
               }
             }
           }

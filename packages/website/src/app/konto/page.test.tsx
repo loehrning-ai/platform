@@ -411,7 +411,7 @@ describe("KontoPage course resume integration", () => {
       screen.getByRole("heading", { name: "Covered course outcomes" }),
     ).toBeVisible();
     expect(document.body).not.toHaveTextContent(/competenc(?:y|ies) earned/i);
-    expect(screen.getAllByText("AI Fundamentals").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Everyday AI Literacy").length).toBeGreaterThan(0);
     expect(screen.getAllByRole("link", { name: "Start" })[0]).toHaveAttribute(
       "href",
       expect.stringMatching(/^\/en\//),

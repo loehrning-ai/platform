@@ -200,9 +200,11 @@ export default async function DataEngineeringFundamentalsLandingPage() {
                     { kind: "chapter", chapterId: chapter.id },
                   )}
                   prefetch={false}
-                  className={`${TECHNICAL_COURSE_LEDGER_LINK_CLASS} grid-cols-[5.75rem_minmax(0,1fr)_4rem_1rem]`}
+                  className={`${TECHNICAL_COURSE_LEDGER_LINK_CLASS} grid-cols-[6.75rem_minmax(0,1fr)_4rem_1rem]`}
                 >
-                  <p className="min-w-0 break-words font-mono text-xs font-bold uppercase tracking-[0.06em] text-brand-orange [overflow-wrap:anywhere]">
+                  {/* 6.75rem holds the longest label ("Kursüberblick") on one
+                      line; a word never breaks mid-way. */}
+                  <p className="min-w-0 break-words font-mono text-xs font-bold uppercase tracking-[0.06em] text-brand-orange">
                     {copy.chapterLabel(chapter.meta.displayNumber, chapter.id)}
                   </p>
                   <div className="min-w-0">

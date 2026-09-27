@@ -18,7 +18,7 @@ const TECHNICAL_COURSE_CASES = [
   {
     label: "Data Infrastructure",
     slug: "data-infrastructure",
-    phoneFoldHidden: false,
+    phoneFoldHidden: true,
     checkpoint: "/en/kurse/open-source/data-infrastructure/kurs/mental-model",
     nonCheckpoint: "/en/kurse/open-source/data-infrastructure/kurs/cap-pacelc",
   },
@@ -39,7 +39,7 @@ const TECHNICAL_COURSE_CASES = [
   {
     label: "AI-Native Operator",
     slug: "ai-native-operator",
-    phoneFoldHidden: false,
+    phoneFoldHidden: true,
     checkpoint: "/en/kurse/open-source/ai-native-operator/mindset/1",
     nonCheckpoint: "/en/kurse/open-source/ai-native-operator/mindset/2",
   },

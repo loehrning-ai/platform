@@ -94,7 +94,7 @@ const COPY = {
     heading: "◆ Exercise · Complete the task contract",
     source: "refactor our auth module",
     statuses: [
-      "undefined",
+      "nothing defined",
       "partial",
       "reviewable",
       "bounded",
@@ -107,7 +107,7 @@ const COPY = {
     heading: "◆ Praxis · Spezifikation präzisieren",
     source: "Unser Auth-Modul refaktorisieren",
     statuses: [
-      "undefiniert",
+      "noch leer",
       "teilweise",
       "prüfbar",
       "abgegrenzt",

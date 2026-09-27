@@ -46,7 +46,6 @@ interface LandingCopy {
   readonly heading: string;
   readonly headingAccent: string;
   readonly introduction: string;
-  readonly imageAlt: string;
   readonly start: string;
   readonly facts: readonly string[];
   readonly factsLabel: string;
@@ -82,12 +81,10 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
       audience: "Erwachsene ohne technische Vorkenntnisse",
     },
     eyebrow: "KI-Führerschein · Grundlagenkurs",
-    heading: "KI im Alltag:",
-    headingAccent: "Was du wissen solltest.",
+    heading: "Welche Daten",
+    headingAccent: "ins KI-Tool dürfen.",
     introduction:
-      "Du lernst, welche Daten in ein KI-Tool dürfen und wie du eine Antwort prüfst, bevor sie weitergeht. Technische Vorkenntnisse brauchst du keine.",
-    imageAlt:
-      "Editoriale Collage eines KI-Prüfpasses mit Lernkarten, Datenschutz und Prüfschritten",
+      "Und wie du eine KI-Antwort prüfst, bevor sie weitergeht. Ohne technische Vorkenntnisse.",
     start: "Kostenlos mit Lernkonto starten",
     facts: [
       "5 Blöcke, 18 Lektionen",
@@ -134,12 +131,10 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
       audience: "Adults without a technical background",
     },
     eyebrow: "Everyday AI Literacy · Foundation course",
-    heading: "AI at work:",
-    headingAccent: "what you need to know.",
+    heading: "Which data may go",
+    headingAccent: "into an AI tool.",
     introduction:
-      "Learn which data may go into an AI tool and how to check an answer before you pass it on. No technical background needed.",
-    imageAlt:
-      "Editorial collage of an AI review passport with learning cards, data protection, and verification steps",
+      "And how to check an AI answer before you pass it on. No technical background needed.",
     start: "Start with a free learning account",
     facts: [
       "5 blocks, 18 lessons",
@@ -192,14 +187,7 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
       locale: locale === "en" ? "en_GB" : "de_DE",
       alternateLocale: [locale === "en" ? "de_DE" : "en_GB"],
-      images: [
-        {
-          url: `${SITE_URL}/course-covers/ki-fuehrerschein-cover-v3.webp`,
-          width: 1440,
-          height: 630,
-          alt: copy.imageAlt,
-        },
-      ],
+      // The share image is this route's opengraph-image.tsx (the Lemons card, SPEC §3.15).
     },
   };
 }

@@ -69,7 +69,7 @@ const STAGES: readonly StageCard[] = [
     n: "08",
     title: "Experimente",
     tag: "Wirkung kontrolliert messen",
-    blurb: "Plane A/B-Tests, Power und MDE und werte 10k Besucher aus.",
+    blurb: "Plane A/B-Tests mit Power und MDE und werte 10.000 Besuche aus.",
   },
   {
     id: "causal",
@@ -83,7 +83,7 @@ const STAGES: readonly StageCard[] = [
     n: "10",
     title: "Peeking",
     tag: "wenn p-Werte täuschen",
-    blurb: "Führe 50 Experimente parallel aus und beobachte falsche Positive.",
+    blurb: "Führe 50 Experimente parallel aus und zähle die falsch-positiven Ergebnisse.",
   },
   {
     id: "deploy",
@@ -91,7 +91,7 @@ const STAGES: readonly StageCard[] = [
     title: "Betrieb",
     tag: "Modelle in Produktion",
     blurb:
-      "Überwache Drift und trainiere neu, wenn ein Signal es verlangt.",
+      "Überwache Drift und trainiere neu, wenn ein Signal anschlägt.",
   },
   {
     id: "cap",
@@ -118,11 +118,11 @@ const TOOLS = [
   { n: "statsmodels", r: "Inferenz und GLMs" },
   { n: "scipy.stats", r: "Tests und Verteilungen" },
   { n: "SHAP", r: "Interpretierbarkeit" },
-  { n: "Jupyter · Hex", r: "Notebooks" },
+  { n: "Jupyter", r: "Notebooks" },
   { n: "MLflow", r: "Experiment-Tracking" },
   { n: "Feast", r: "Feature Store" },
   { n: "Great Expectations", r: "Datenqualität" },
-  { n: "A/B platform", r: "Experimente" },
+  { n: "A/B-Testplattform", r: "Experimente" },
 ] as const;
 
 // Werkzeichnung (design direction 7.4): ink roman headings with no italic
@@ -136,7 +136,7 @@ export default function ChOverviewDe() {
         <div className="ov-hero-copy">
           <p className="ov-hero-eyebrow">Data-Science-Kurs · kostenlos</p>
           <h1 className="ov-hero-title">
-            Data Science bedeutet, aus Daten Entscheidungen abzuleiten.
+            Aus Daten entscheiden.
           </h1>
           <p className="ov-hero-hook">
             Zwölf Kapitel entlang eines Arbeitszyklus, jedes mit einer Simulation, an der du selbst drehst.
@@ -156,7 +156,7 @@ export default function ChOverviewDe() {
               <div className="v">Kapitel</div>
             </div>
             <div className="ov-stat">
-              <div className="k">22</div>
+              <div className="k">37</div>
               <div className="v">interaktive Simulationen</div>
             </div>
             <div className="ov-stat">
@@ -173,7 +173,7 @@ export default function ChOverviewDe() {
       <section className="section ov-outcomes-section">
         <div className="ov-section-head">
           <p className="ov-kicker">Ergebnisse</p>
-          <h2 className="ov-h2">Verfahren anwenden und ihre Aussagekraft prüfen.</h2>
+          <h2 className="ov-h2">Was du danach kannst</h2>
         </div>
         <ul className="ov-outcomes">
           {OUTCOMES.map((outcome) => (
@@ -187,7 +187,7 @@ export default function ChOverviewDe() {
       <section className="section ov-curriculum-section">
         <div className="ov-section-head">
           <p className="ov-kicker">Lehrplan</p>
-          <h2 className="ov-h2">Kapitel 1 bis 7 bauen ein Modell, Kapitel 8 bis 12 prüfen seine Wirkung.</h2>
+          <h2 className="ov-h2">Zwölf Kapitel</h2>
         </div>
         <div className="ov-curriculum">
           {STAGES.map((stage) => (
@@ -214,7 +214,7 @@ export default function ChOverviewDe() {
       <section className="section">
         <div className="ov-section-head ov-sh-tight">
           <p className="ov-kicker">Werkzeuge im Kurs</p>
-          <h2 className="ov-h2">Verbreitete Open-Source-Werkzeuge für den Data-Science-Alltag.</h2>
+          <h2 className="ov-h2">Werkzeuge, die im Kurs vorkommen.</h2>
         </div>
         <dl className="ov-tools">
           {TOOLS.map((tool) => (

@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { CourseArtwork } from "@/components/home/course-artwork";
+import { PosterThumb } from "@/components/plakat/poster-thumb";
+import { coursePlakat } from "@/lib/plakat/palettes";
 import { HOME_CONTAINER } from "@/components/home/home-container";
 import { HomeSectionHead } from "@/components/home/home-section-head";
 import { ArrowGlyph } from "@/components/werk/arrow-glyph";
@@ -30,7 +32,7 @@ const TECHNICAL_COURSE_COUNT = COURSE_CATALOG.filter(
  * poster (the Grundlagenpfad in Lemons, numbered 01 to 04; the poster's
  * numeral is the sheet's only number), the lesson count, the title, one
  * sentence and the duration. Below lg each course is one hairline row led by
- * its number, with the duration as its one meta line. The number is the only
+ * a 56px crop of its poster, with the duration as its one meta line. The number is the only
  * numbering on the page: these four are a sequence. No tints, no shadows and
  * no hover lift: hover underlines the title and nudges the arrow; focus is
  * the global Mennige ring.
@@ -59,20 +61,32 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
           {SPINE_HOME_COURSES.map((course, index) => {
             const courseCopy = homeCourseCopy(locale, course.slug);
             const number = String(index + 1).padStart(2, "0");
+            const poster = coursePlakat(course.slug);
             return (
               <li key={course.slug} className="min-w-0">
                 <Link
                   href={localizeHref(course.href, locale)}
-                  className="group flex h-full min-w-0 flex-col transition-colors duration-[120ms] motion-reduce:transition-none max-lg:grid max-lg:grid-cols-[1.75rem_minmax(0,1fr)_auto] max-lg:items-center max-lg:gap-3 max-lg:border-b max-lg:border-hairline max-lg:py-2 max-lg:hover:bg-card-hover"
+                  className="group flex h-full min-w-0 flex-col transition-colors duration-[120ms] motion-reduce:transition-none max-lg:grid max-lg:grid-cols-[3.5rem_minmax(0,1fr)_auto] max-lg:items-center max-lg:gap-4 max-lg:border-b max-lg:border-hairline max-lg:py-2 max-lg:hover:bg-card-hover"
                   data-home-course-card
                 >
-                  {/* Below lg the artwork steps out and the course number
-                      becomes the row's lead column. */}
+                  {/* Below lg the wide poster steps out and a 56px portrait
+                      crop of the same Lemons poster, numeral included, leads
+                      the row. */}
                   <span className="block max-lg:contents">
                     <CourseArtwork slug={course.slug} />
-                    <span className="text-sm font-semibold tabular-nums text-muted-foreground lg:hidden">
-                      {number}
-                    </span>
+                    {poster ? (
+                      <PosterThumb
+                        plakat={poster.plakat}
+                        motif={poster.motif}
+                        numeral={poster.numeral ?? number}
+                        size="xs"
+                        className="w-14 lg:hidden"
+                      />
+                    ) : (
+                      <span className="text-sm font-semibold tabular-nums text-muted-foreground lg:hidden">
+                        {number}
+                      </span>
+                    )}
                   </span>
 
                   <span className="mt-4 flex min-w-0 flex-1 flex-col max-lg:mt-0">

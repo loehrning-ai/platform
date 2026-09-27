@@ -382,7 +382,7 @@
               },
               {
                 "id": "taboo",
-                "label": "Explicit exclusion: no prices or promotional language",
+                "label": "Exclusion: no prices or promotional language",
                 "pattern": "(not|no|never|exclude|avoid)",
                 "regex": true
               }
@@ -731,7 +731,7 @@
       "sections": [
         {
           "id": "modul_2_lesson_6_section_1",
-          "title": "What Claude Code actually is",
+          "title": "What Claude Code is",
           "readTimeMinutes": 3,
           "content": "Claude Code is an agent in the terminal that reads and edits files and calls configured tools. It also handles approved file and document workflows: renaming, sorting, merging and extracting files, reading PDFs, cleaning spreadsheets, OCR, batch processing with a fixed schema and error log, note and SOP workflows, reports from local sources.\n\nWhat works depends on version, permissions and tools. Start in a copied test directory, limit access, keep backups and read every proposed action before approving it."
         },

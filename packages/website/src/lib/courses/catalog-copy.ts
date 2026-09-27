@@ -43,7 +43,7 @@ type LocalizedCatalogCourse<T extends CatalogCourse | ImportedCourse> = T &
 
 const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
   "ki-fuehrerschein": {
-    title: "AI Fundamentals",
+    title: "Everyday AI Literacy",
     eyebrow: "Step 01 · AI literacy",
     tagline: "Define tasks, protect data, and check model output.",
     description:
@@ -207,7 +207,7 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
       "Organize AI-supported work with ownership, controls, and measurement.",
     description:
       "Nine modules with 39 lessons on engineering, product work, operations, roles, organization design, data, governance and measurement. In 30 exercises you set who decides and reviews AI-supported work.",
-    duration: "about 14 hrs",
+    duration: "about 4 hrs",
     unitLabel: "modules",
     audience: "Specialists and managers",
     coverImageAlt: "The AI-Native Operator start page",

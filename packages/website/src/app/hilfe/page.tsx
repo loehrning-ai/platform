@@ -89,18 +89,6 @@ function signInAnswer(
   return answers.signInUnavailable;
 }
 
-function withLocalizedNewsLink(text: string, locale: Locale): ReactNode {
-  const marker = locale === "de" ? "/neuigkeiten" : "/en/neuigkeiten";
-  const [before, after = ""] = text.split(marker);
-  return (
-    <>
-      {before}
-      <Link href={localizeHref("/neuigkeiten", locale)}>{marker}</Link>
-      {after}
-    </>
-  );
-}
-
 function getLimitations(
   locale: Locale,
   features: RuntimeFeatures,
@@ -126,7 +114,7 @@ function getLimitations(
       id: "aktualitaet",
       title: copy.freshness.title,
       description: copy.freshness.description,
-      mitigation: withLocalizedNewsLink(copy.freshness.mitigation, locale),
+      mitigation: copy.freshness.mitigation,
     },
     {
       id: "fortschritt-lokal",

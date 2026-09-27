@@ -38,15 +38,19 @@ describe("demo atlas visual contract", () => {
 
   it("never tells a preview mark from the drawing by hue alone", () => {
     // SPEC §3.11 and §1.1: Kobalt and Himbeere are 1.37:1 under protanopia.
-    // A mark is a double frame, an outlined hatch, or a dashed or double
-    // line; never a plain Himbeere fill or a single solid frame.
+    // The previews are flat posters (SPEC §3.12): decorative, aria-hidden
+    // art with no text and no meaning-bearing mark, so nothing is told
+    // apart by hue. Himbeere is the scene's mid shape, never a mark fill.
     const previews = source("demo-gallery-previews.tsx");
-    expect(previews).not.toMatch(/\bbg-scene-mark\b/);
-    expect(previews).not.toMatch(/border-2 border-scene-mark bg-card px-/);
-    expect(previews).toContain("border-4 border-double border-scene-mark");
-    // Himbeere tief text only inside a Kreide card, never on the panel,
-    // whose hover tint would drop it to 3.98:1.
-    expect(previews).not.toMatch(/cx\(LABEL, "text-scene-accent-text"\)/);
+    const poster = readFileSync(join(__dirname, "demo-poster.tsx"), "utf8");
+    for (const text of [previews, poster]) {
+      expect(text).not.toMatch(/\bbg-scene-mark\b|\bfill-scene-mark\b/);
+      expect(text).not.toMatch(/text-scene-accent-text/);
+      expect(text).not.toMatch(/<text\b|font-mono|text-\[0\.75rem\]/);
+    }
+    expect(poster).toContain('aria-hidden="true"');
+    expect(poster).toContain("fill-scene-ink");
+    expect(poster).toContain("fill-scene-mid");
   });
 
   it("uses a uniform, preview-led grid with borderless tiles", () => {

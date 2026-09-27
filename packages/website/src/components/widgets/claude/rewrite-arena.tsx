@@ -108,10 +108,7 @@ export function RewriteArenaWidget({
       />
       <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
         <span className="min-w-0 flex-1 text-[12px] text-muted-foreground">
-          {german
-            ? "Prüfkriterien zur eigenen Prüfung"
-            : "Criteria for your review"}
-          : {criteria}
+          {german ? "Selbst prüfen:" : "Check yourself:"} {criteria}
         </span>
         <button
           type="button"

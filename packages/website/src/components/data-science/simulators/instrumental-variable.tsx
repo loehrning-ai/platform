@@ -132,7 +132,7 @@ export function InstrumentalVariable() {
   return (
     <Panel
       eyebrow={text("SIMULATION", "SIMULATION")}
-      title={text("Instrumental Variables", "Instrumentalvariablen")}
+      title={text("Instrumental Variables", "Instrumentvariablen")}
       meta={`${text("F-stat", "F-Statistik")}: ${s.fStat}`}
       caption={text(
         "This lookup table changes first stage and estimates together without fitting IV data. Relevance is one requirement; exogeneity, exclusion, the estimand and weak-instrument-robust inference need separate evidence.",

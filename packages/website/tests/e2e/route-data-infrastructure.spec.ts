@@ -291,7 +291,7 @@ test.describe("Data Infrastructure golden path", () => {
 
     const finalLessonCertificate = page.getByRole("link", {
       // Copy lock updated: English UI copy names completion documents "certificate of participation".
-      name: "Open Certificate of Participation",
+      name: "Open Certificate of participation",
     });
     await expect(finalLessonCertificate).toHaveAttribute("href", CERT_ROUTE);
     await finalLessonCertificate.click();
@@ -301,7 +301,7 @@ test.describe("Data Infrastructure golden path", () => {
     await page.goto(COURSE_PATH, { waitUntil: "domcontentloaded" });
     await expect(
       page.getByRole("link", {
-        name: "Open Certificate of Participation",
+        name: "Open Certificate of participation",
       }),
     ).toHaveAttribute("href", CERT_ROUTE);
   });

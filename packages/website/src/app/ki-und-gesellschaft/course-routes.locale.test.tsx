@@ -71,7 +71,7 @@ describe("KI und Gesellschaft locale propagation across the course lifecycle", (
     expect(
       screen.getByText(/not legal, career, or case-specific advice/),
     ).toBeInTheDocument();
-    expect(screen.getByText("Workshop quiz")).toBeInTheDocument();
+    expect(screen.getByText("Final quiz")).toBeInTheDocument();
     expect(screen.getByText(/15 practical questions/)).toBeInTheDocument();
   });
 
@@ -100,7 +100,7 @@ describe("KI und Gesellschaft locale propagation across the course lifecycle", (
 
   it("localizes quiz, completion-record, and public record-reader metadata", async () => {
     expect(await generateQuizMetadata()).toMatchObject({
-      title: "Workshop quiz: AI and Society",
+      title: "Final quiz: AI and Society",
       robots: { index: false, follow: false },
       alternates: { canonical: null },
     });

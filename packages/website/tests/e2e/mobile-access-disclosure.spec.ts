@@ -25,7 +25,7 @@ const COPY = {
     groupUnavailable: "unavailable here",
     overviewAction: "Unavailable here · Course overview",
     alternative: "Open alternative without an account: Claude Course",
-    foundation: "AI Fundamentals",
+    foundation: "Everyday AI Literacy",
   },
 } as const;
 

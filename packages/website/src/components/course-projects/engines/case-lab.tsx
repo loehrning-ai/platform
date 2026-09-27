@@ -684,12 +684,6 @@ export default function CaseLab({
   const copy =
     locale === "de"
       ? {
-          engine:
-            variant === "redline"
-              ? "Claim- und Datenschutz-Redline"
-              : variant === "stakeholder"
-                ? "Stakeholder-Evidenzkarte"
-                : "System- und Rechtsdossier",
           honest:
             variant === "dossier"
               ? "Synthetischer Lernfall · kein Rechtsurteil oder Rechtsrat"
@@ -739,12 +733,6 @@ export default function CaseLab({
                 : "Falldossier verifiziert: Systemgrenze und Rollen getrennt, offene Rechtsfragen mit datierten Quellen dokumentiert.",
         }
       : {
-          engine:
-            variant === "redline"
-              ? "Claim and privacy redline"
-              : variant === "stakeholder"
-                ? "Stakeholder evidence map"
-                : "System and legal dossier",
           honest:
             variant === "dossier"
               ? "Synthetic learning case · not a legal verdict or legal advice"
@@ -849,7 +837,7 @@ export default function CaseLab({
   }
 
   return (
-    <EngineFrame config={config} locale={locale} engineLabel={copy.engine}>
+    <EngineFrame config={config} locale={locale}>
       <p className="border-l-4 border-brand-orange bg-brand-orange/[0.07] px-3 py-2 font-mono text-xs font-bold uppercase tracking-wide">
         {copy.honest}
       </p>

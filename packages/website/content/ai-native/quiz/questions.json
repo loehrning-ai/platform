@@ -355,7 +355,7 @@
       { "id": "c", "text": "Eine lokal im Browser erstellte Teilnahmebestätigung auf Basis deiner Einschätzung.", "isCorrect": true },
       { "id": "d", "text": "Ein kostenpflichtiges Add-on, separat zu kaufen.", "isCorrect": false }
     ],
-    "explanation": "Keine Behörde und keine unabhängige Prüfstelle stellt sie aus. Der Bewertungsstand stammt aus deiner Capstone-Rubrik oder dem Workshop-Quiz.",
+    "explanation": "Keine Behörde und keine unabhängige Prüfstelle stellt sie aus. Der Bewertungsstand stammt aus deiner Capstone-Rubrik oder dem Abschlussquiz.",
     "version": 1,
     "active": true
   }

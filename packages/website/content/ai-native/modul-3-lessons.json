@@ -748,7 +748,7 @@
               },
               {
                 "label": "Variante C: RCTFC + Structured Output",
-                "prompt": "Rolle: Chief of Staff, schreibt für die Geschäftsführung.\nKontext: Daily-Notes 2026-04-14 bis 2026-04-20 im Vault.\nTask: Wochenbericht erstellen.\nFormat: Markdown, 3 Abschnitte (1. Highlights, 3 Bullet Points je max 15 Wörter; 2. Blocker mit Lösungsvorschlag, max 3; 3. Nächste Woche, max 5 Zeilen).\nTabu: Adverbien wie erfolgreich, produktiv, fokussiert.\nQuelle: nur Fakten aus den Notes, keine Ergänzungen oder Meinungen.\nConstraint: Hat der Zeitraum keine Daten, sag das und erfinde nichts.",
+                "prompt": "Rolle: Chief of Staff, schreibt für die Geschäftsführung.\nKontext: Daily-Notes 2026-04-14 bis 2026-04-20 im Vault.\nTask: Wochenbericht erstellen.\n\nFormat: Markdown, 3 Abschnitte (1. Highlights, 3 Bullet Points je max 15 Wörter; 2. Blocker mit Lösungsvorschlag, max 3; 3. Nächste Woche, max 5 Zeilen).\nTabu: Adverbien wie erfolgreich, produktiv, fokussiert.\nQuelle: nur Fakten aus den Notes, keine Ergänzungen oder Meinungen.\nConstraint: Hat der Zeitraum keine Daten, sag das und erfinde nichts.",
                 "critique": "Der Brief legt RCTFC-Felder, Ausgabeschema, verbotene Wörter und eine Quellenregel fest. So lassen sich wiederholte Ergebnisse vergleichen und prüfen.",
                 "rating": 5
               }

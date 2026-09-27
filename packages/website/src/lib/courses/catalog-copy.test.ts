@@ -41,7 +41,7 @@ describe("course catalogue locale copy", () => {
     const english = localizeCatalog(COURSE_CATALOG, "en");
 
     expect(english.slice(0, 4).map((course) => course.title)).toEqual([
-      "AI Fundamentals",
+      "Everyday AI Literacy",
       "AI and Society",
       "EU AI Act Course",
       "AI-Native Work Course",
@@ -83,7 +83,7 @@ describe("course catalogue locale copy", () => {
     expect(COURSE_HUB_COPY.en.metadataTitle).toContain("AI courses");
     // The access note gives the reason for the account in the same sentence.
     expect(COURSE_HUB_COPY.de.accessBody).toContain("damit dein Fortschritt");
-    expect(COURSE_HUB_COPY.en.accessBody).toContain("so your progress");
+    expect(COURSE_HUB_COPY.en.accessBody).toContain("to keep your progress");
     // Every course has a down-to-earth promise in both locales.
     for (const course of COURSE_CATALOG) {
       // The ledger intro states the frame once; a row opens with the action.
@@ -102,21 +102,20 @@ describe("course catalogue locale copy", () => {
         expect(short).not.toMatch(/…|\.$/);
       }
     }
-    // The phone cost note keeps the three facts in at most two sentences.
+    // The one cost note (every width) keeps the three facts in at most two
+    // sentences.
     for (const locale of ["de", "en"] as const) {
-      const short = COURSE_HUB_COPY[locale].accessBodyShort;
-      expect(short.split(/(?<=\.)\s/).length).toBeLessThanOrEqual(2);
-      expect(short.length).toBeLessThan(COURSE_HUB_COPY[locale].accessBody.length);
+      const note = COURSE_HUB_COPY[locale].accessBody;
+      expect(note.split(/(?<=\.)\s/).length).toBeLessThanOrEqual(2);
+      expect(Object.keys(COURSE_HUB_COPY[locale])).not.toContain("accessBodyShort");
     }
-    expect(COURSE_HUB_COPY.de.accessBodyShort).toContain("nicht akkreditiert");
-    expect(COURSE_HUB_COPY.en.accessBodyShort).toContain("not accredited");
+    expect(COURSE_HUB_COPY.de.accessBody).toContain("nicht akkreditiert");
+    expect(COURSE_HUB_COPY.en.accessBody).toContain("not accredited");
     for (const text of [
       ...Object.values(COURSE_PROMISES_SHORT.de),
       ...Object.values(COURSE_PROMISES_SHORT.en),
       ...Object.values(COURSE_DURATIONS_SHORT.de),
       ...Object.values(COURSE_DURATIONS_SHORT.en),
-      COURSE_HUB_COPY.de.accessBodyShort,
-      COURSE_HUB_COPY.en.accessBodyShort,
       ...Object.values(COURSE_PROMISES.de),
       ...Object.values(COURSE_PROMISES.en),
       COURSE_HUB_COPY.de.accessBody,
@@ -128,17 +127,17 @@ describe("course catalogue locale copy", () => {
     }
     expect(COURSE_HUB_COPY.de.metadataTitle).toContain("KI-Kurse");
     expect(COURSE_HUB_COPY.de.accessBody).toContain(
-      "und für das PDF des Lernbuchs",
+      "und für das Buch-PDF",
     );
     expect(COURSE_HUB_COPY.en.accessBody).toContain(
-      "and for the learning book's PDF",
+      "and the book PDF",
     );
     // The account is needed only in those two cases.
     expect(COURSE_HUB_COPY.de.accessBody).toContain(
       "nur für die vier Grundlagenkurse",
     );
     expect(COURSE_HUB_COPY.en.accessBody).toContain(
-      "only need a learning account for the four foundation courses",
+      "need an account only for the four foundation courses",
     );
     expect(COURSE_HUB_COPY.de.accessBody).not.toContain(
       "Downloads bleiben ohne Konto erreichbar",

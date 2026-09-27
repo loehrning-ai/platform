@@ -257,7 +257,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
   {
     slug: "claude",
     step: 5,
-    title: "Claude Course",
+    title: "Claude-Kurs",
     eyebrow: "Schritt 05 · Prompting",
     tagline:
       "Claude mit explizitem Kontext, Werkzeugen und Prüfungen einsetzen.",
@@ -575,8 +575,8 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     href: "/kurse/open-source/ai-native-operator",
     startHref: "/kurse/open-source/ai-native-operator/mindset/1",
     continueHref: "/kurse/open-source/ai-native-operator",
-    duration: "ca. 14 Std.",
-    durationMinutes: 840,
+    duration: "ca. 4 Std.",
+    durationMinutes: 240,
     totalLessons: 39,
     level: "fortg",
     unitLabel: "Module",

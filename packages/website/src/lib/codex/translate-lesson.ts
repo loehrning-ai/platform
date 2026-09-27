@@ -36,6 +36,16 @@ const COMMON_GERMAN_TRANSLATIONS = [
   ["incomplete", "unvollständig"],
   ["partial", "teilweise"],
   ["reviewable", "prüfbar"],
+  ["task.md", "auftrag.md"],
+  ["Goal", "Ziel"],
+  ["signals", "Signale"],
+  [
+    '# press "Run replay" to watch this session play out',
+    '# Starte den Ablauf mit "Ablauf starten"',
+  ],
+  ["▶ Run replay", "▶ Ablauf starten"],
+  ["↺ Reset", "↺ Zurücksetzen"],
+  ["speed", "Tempo"],
 ] as const satisfies readonly CodexTranslationPair[];
 
 const MACHINE_STRING_KEYS = new Set([

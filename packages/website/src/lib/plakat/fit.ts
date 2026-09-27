@@ -124,6 +124,35 @@ export function posterTitleStyle(text: string): CSSProperties {
   return { "--fit": String(fitEm(text)) } as CSSProperties;
 }
 
+/**
+ * Extra headroom over `fitEm()` for a title that runs to its column edge on a
+ * phone (the home hero, demo detail, /kurse). `font-display: optional` can
+ * leave a first visit on the Arial-metric fallback face, which sets poster
+ * words about 4.4% wider than Loehrning Sans (measured with Liberation Sans
+ * Bold in Chromium); 5% keeps those titles inside their column.
+ */
+export const POSTER_FALLBACK_HEADROOM = 1.05;
+
+/** `fitEm()` with the fallback headroom, rounded up to three decimals. */
+export function fallbackFitEm(text: string): number {
+  return Math.ceil(fitEm(text) * POSTER_FALLBACK_HEADROOM * 1000) / 1000;
+}
+
+/** `posterTitleStyle()` with the fallback headroom. */
+export function posterTitleFallbackStyle(text: string): CSSProperties {
+  return { "--fit": String(fallbackFitEm(text)) } as CSSProperties;
+}
+
+/**
+ * The text the fit rule measures for a headline set in parts whose first two
+ * parts are one unbreakable line (joined by a no-break space in the markup,
+ * as the home hero sets "KI verstehen." / "Understand AI.").
+ */
+export function noBreakFirstLine(parts: readonly string[]): string {
+  const [first = "", second = "", ...rest] = parts;
+  return [`${first}\u00a0${second}`, ...rest].join(" ");
+}
+
 /** `--text-poster` at a viewport width, in px. */
 export function posterSizeAt(viewport: number): number {
   const { min, max, base, perViewport } = POSTER_TITLE_SIZE;

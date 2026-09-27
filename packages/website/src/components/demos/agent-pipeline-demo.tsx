@@ -180,8 +180,8 @@ const MEMO_CONTENT: Readonly<Record<Scenario, MemoContent>> = {
       {
         title: ["§2 · Risiken", "§2 · Risks"],
         body: [
-          "These 3 benötigt einen Branchenvergleich. Der Kritiker markiert die Lücke, der Scout ergänzt Quellen.",
-          "Claim 3 requires an industry comparison. The critic marks the gap and the scout adds sources.",
+          "These 4 benötigt einen Branchenvergleich. Der Kritiker markiert die Lücke, der Scout ergänzt Quellen.",
+          "Claim 4 requires an industry comparison. The critic marks the gap and the scout adds sources.",
         ],
       },
       {

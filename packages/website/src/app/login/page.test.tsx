@@ -108,7 +108,7 @@ describe("login locale surface", () => {
       // Copy lock updated: the German platform issues two completion documents
       // (Teilnahmebestätigung, and a Lernnachweis for ki-und-gesellschaft), so the
       // login description names both instead of only the first.
-      "Optionales Lernkonto für Kursfortschritt, Teilnahmebestätigungen und Lernnachweise auf loehrning.ai.",
+      "Optionales Lernkonto für Kursfortschritt und Teilnahmebestätigungen auf loehrning.ai.",
     ],
     [
       "en",

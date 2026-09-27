@@ -19,7 +19,7 @@ export const OPEN_SOURCE_PAGE_COPY = {
       heading: "Jetzt veröffentlicht",
       entryCount: (count: number) =>
         count === 1 ? "1 offenes Werkzeug" : `${count} offene Werkzeuge`,
-      detail: "Detail ansehen",
+      detail: "Details ansehen",
       source: "Quellcode",
       previewGroup: "Produktansichten auswählen",
       previewCounter: (current: number, total: number) =>
@@ -27,7 +27,6 @@ export const OPEN_SOURCE_PAGE_COPY = {
       previewSelect: (label: string) => `${label} anzeigen`,
       previewLabels: ["Editor", "Formular", "YAML", "Darstellung", "PDF"],
       facts: {
-        kind: "Typ",
         delivery: "Betrieb",
         license: "Lizenz",
         status: "Status",
@@ -76,7 +75,6 @@ export const OPEN_SOURCE_PAGE_COPY = {
       previewSelect: (label: string) => `Show ${label}`,
       previewLabels: ["Editor", "Form", "YAML", "Display", "PDF"],
       facts: {
-        kind: "Type",
         delivery: "Run",
         license: "License",
         status: "Status",
@@ -333,7 +331,7 @@ const CV_ENGINE_ENGLISH_COPY = {
     },
     documentation: { label: "README in the repository" },
     screenshot: {
-      alt: "The two-column editor: YAML on the left, with opening comments that state the one-page rule, and the A4 preview on the right with a green 1 page badge.",
+      alt: "The editor: YAML on the left, the A4 preview with its 1 page badge on the right.",
     },
     demo: [
       {

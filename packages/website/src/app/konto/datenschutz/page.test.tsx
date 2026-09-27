@@ -150,7 +150,7 @@ describe("DatenschutzPage course-reset list", () => {
         name: "Delete account (Article 17 GDPR)",
       }),
     ).toBeVisible();
-    expect(screen.getByText("AI Fundamentals")).toBeVisible();
+    expect(screen.getByText("Everyday AI Literacy")).toBeVisible();
     expect(
       screen.getByRole("link", { name: "← Back to account" }),
     ).toHaveAttribute("href", "/en/konto");

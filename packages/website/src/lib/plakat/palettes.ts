@@ -191,12 +191,14 @@ export const UNSCENED_COURSE_IDS = [
 /**
  * The paper and ink of the chrome, for renderers that cannot read CSS tokens
  * (Satori OG images, static generators). Equal to `--color-background`,
- * `--color-paper`, `--color-foreground` and `--color-mennige` in globals.css.
+ * `--color-paper`, `--color-foreground`, `--color-muted-foreground` and
+ * `--color-mennige` in globals.css.
  */
 export const PAPER = {
   kalkweiss: "#f3f0e9",
   bogen: "#f9f7f2",
   druckschwarz: "#121212",
+  schiefer: "#4f4640",
   mennige: "#b73a15",
 } as const;
 

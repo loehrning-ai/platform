@@ -10,7 +10,7 @@ import {
 const lesson: CodexLesson = {
   id: "L02",
   number: 2,
-  title: "Execution Environments and Permissions",
+  title: "Execution environments and permissions",
   subtitle:
     "Local Codex follows the configured workspace sandbox and approval policy. Cloud tasks run in dedicated environments with separate network controls.",
   durationMinutes: 9,
@@ -165,6 +165,10 @@ const lesson: CodexLesson = {
       placement: "end",
       courseSlug: "codex",
       props: {
+        idleHint: '# press "Run replay" to watch this session play out',
+        runLabel: "▶ Run replay",
+        resetLabel: "↺ Reset",
+        speedLabel: "speed",
         lessonId: "L02",
         cpId: "term-1",
         title: "Illustrative session: unavailable network",

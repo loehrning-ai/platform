@@ -159,9 +159,9 @@ export default async function ClaudeCourseLandingPage() {
           aria-labelledby="prompt-lab-heading"
         >
           {/* The same Kopflinie head as the course plan below. Below lg the
-              heading and intro stay for assistive technology only: the
-              toggle row names the workbench and carries the intro as its
-              second line. */}
+              heading and intro stay for assistive technology only; the
+              toggle row names the workbench (no second line repeating the
+              intro). */}
           <div className="max-lg:sr-only">
             <TechnicalCourseSectionHeading
               headingId="prompt-lab-heading"
@@ -172,7 +172,6 @@ export default async function ClaudeCourseLandingPage() {
           <PhoneDisclosure
             id="prompt-lab-instruments"
             label={copy.demoToggle}
-            hint={copy.demoIntro}
           >
             <div className="lg:mt-5 [&_.font-mono]:!text-xs [&_button]:!min-h-11 [&_button]:!min-w-11">
               <HeroOrrery locale={locale} />

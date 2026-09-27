@@ -1,4 +1,4 @@
-# E-Mails, Meetings, Berichte: Die drei Zeitfresser
+# E-Mails, Meetings und Berichte schneller erledigen
 
 Bei Red Bull wollte der Teamleiter wissen, wo unsere Zeit hingeht, und ich habe gemessen: zwölf Minuten für eine Reklamationsantwort, und 40 Prozent des Arbeitstags steckten in E-Mails, Meeting-Zusammenfassungen und Berichten. Mit KI schrumpfen diese drei Aufgaben auf ein Drittel der Zeit.
 
@@ -98,7 +98,7 @@ Die Antwort ist ruhig und klar, und der Kunde fühlt sich gehört. Sandra prüft
 
 Ein Durchlauf spart 63 Minuten. Bei fünf Mails, drei Meetings und einem Bericht pro Woche sind das rund **2,5 Stunden pro Woche** und auf 46 Arbeitswochen **115 Stunden im Jahr**, mit einem Prompt-Fenster, das du schon hast.
 
-> **Das Wichtigste:** Diese drei Workflows mit Vorlage und Sicherheitsregel decken 80 Prozent deiner wöchentlichen Kommunikation ab.
+> **Drei Workflows reichen für den Großteil deiner Woche.** Mit Vorlage und Sicherheitsregel decken sie etwa 80 Prozent deiner Kommunikation ab.
 
 ---
 

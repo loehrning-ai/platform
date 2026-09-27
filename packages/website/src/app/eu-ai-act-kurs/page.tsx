@@ -55,8 +55,6 @@ const LANDING_COPY = {
       "Sie bestimmen für ein KI-Tool aus Ihrem Unternehmen die Risikoklasse, Ihre Rolle und Ihre Pflichten.",
     start: "Kurs mit Lernkonto starten",
     allCourses: "Alle Kurse",
-    imageAlt:
-      "Editoriale Prozessgrafik: Bildkarten durchlaufen Prüfstufen, farbige Risikoklassen und einen Abschlusscheck",
     imageLabel: "EU AI Act · 6 Blöcke · 24 Lektionen",
     facts: [
       "6 Blöcke",
@@ -123,8 +121,6 @@ const LANDING_COPY = {
       "For one AI tool your company uses, you work out its risk class, your role and your duties.",
     start: "Start with a learning account",
     allCourses: "All courses",
-    imageAlt:
-      "Editorial process graphic showing image cards passing through review stages, colour-coded risk classes, and a final check",
     imageLabel: "EU AI Act · 6 blocks · 24 lessons",
     facts: [
       "6 blocks",
@@ -187,14 +183,7 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
       locale: locale === "en" ? "en_GB" : "de_DE",
       alternateLocale: [locale === "en" ? "de_DE" : "en_GB"],
-      images: [
-        {
-          url: `${SITE_URL}/course-covers/eu-ai-act-kurs-cover-v3.webp`,
-          width: 1440,
-          height: 630,
-          alt: copy.imageAlt,
-        },
-      ],
+      // The share image is this route's opengraph-image.tsx (the Lemons card, SPEC §3.15).
     },
   };
 }

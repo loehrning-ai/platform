@@ -2,7 +2,7 @@
 
 Eine Bestenliste für KI-Tools veraltet schneller, als du sie liest. Preise, Modellnamen und Limits ändern sich ständig. Was bleibt, ist die Methode, mit der du auswählst.
 
-> **Prüfregel:** Preise und Funktionen kontrollierst du immer auf der offiziellen Produktseite. Bei Datenschutz und Sicherheit liest du zusätzlich die aktuellen Vertragsunterlagen, DPA/AVV, Unterauftragnehmerliste und technische Konfiguration. Standort, Zertifikat oder Herstellername beweisen für sich allein keine DSGVO-Konformität.
+> **Prüfregel:** Preise und Funktionen kontrollierst du immer auf der offiziellen Produktseite. Bei Datenschutz und Sicherheit liest du zusätzlich die aktuellen Vertragsunterlagen, DPA/AVV, Unterauftragnehmerliste und technische Konfiguration. Standort, Zertifizierung oder Herstellername beweisen für sich allein keine DSGVO-Konformität.
 
 ## Starte mit der Aufgabe
 

@@ -61,7 +61,7 @@ describe("knowledge-graph locale representations", () => {
     expect(course?.localizedPages.en).toMatchObject({
       url: "https://loehrning.ai/en/ki-fuehrerschein",
       pageLanguage: "en-GB",
-      title: "AI Fundamentals",
+      title: "Everyday AI Literacy",
     });
     // Copy lock updated: the English summary now leads with what the model
     // does and where it fails, rather than naming the topic.

@@ -50,7 +50,7 @@ interface AssessmentCopy {
     minutes: number,
   ) => string;
   readonly progress: (completed: number, total: number) => string;
-  readonly locked: (remaining: number, total: number) => string;
+  readonly locked: (total: number) => string;
   readonly ready: (total: number) => string;
   readonly passed: (recordPossessive: string) => string;
   readonly projectEligible: (recordPossessive: string) => string;
@@ -65,54 +65,47 @@ interface AssessmentCopy {
 const ASSESSMENT_COPY: Readonly<Record<"de" | "en", AssessmentCopy>> = {
   de: {
     eyebrow: "Abschluss",
-    heading: (recordLabel) => `Workshop-Quiz und ${recordLabel}`,
+    heading: (recordLabel) => `Abschlussquiz und ${recordLabel}`,
     loading: "Fortschritt wird geprüft…",
     details: (questions, passPercentage, minutes) =>
       `${questions} Fragen · ${passPercentage}% zum Bestehen · ${minutes} Minuten`,
     progress: (completed, total) =>
       `${completed} von ${total} Lektionen abgeschlossen`,
-    locked: (remaining, total) =>
-      `Schließe alle ${total} Lektionen ab, um das Workshop-Quiz freizuschalten. Noch ${remaining} ${
-        remaining === 1 ? "Lektion" : "Lektionen"
-      }.`,
-    ready: (total) =>
-      `Alle ${total} Lektionen sind abgeschlossen.`,
+    locked: (total) =>
+      `Schließe alle ${total} Lektionen ab, um das Quiz freizuschalten.`,
+    ready: () => "Das Abschlussquiz ist freigeschaltet.",
     passed: (recordPossessive) =>
       `Bestanden. ${recordPossessive} steht zum Download bereit.`,
     projectEligible: (recordPossessive) =>
       `Alle Lektionen und das angewandte Projekt sind abgeschlossen, doch das lokal gespeicherte Projekt ist kein serverbestätigter Abschlussnachweis. ${recordPossessive} schaltest du mit dem bestandenen Quiz frei.`,
     legacyCapstoneEligible: (recordPossessive) =>
-      `Alle Lektionen und deine frühere Capstone-Selbstprüfung sind abgeschlossen. ${recordPossessive} bleibt abrufbar; das neue angewandte Projekt ist damit nicht verifiziert.`,
+      `Alle Lektionen und deine frühere Capstone-Selbstprüfung sind abgeschlossen, doch die Selbstprüfung verifiziert das neue angewandte Projekt nicht. ${recordPossessive} bleibt abrufbar.`,
     localRecordNotice:
       "Die PDF entsteht lokal, ist nicht servergeprüft und kein akkreditierter Abschluss.",
     lockedLabel: "Quiz gesperrt",
-    startQuiz: "Workshop-Quiz starten",
+    startQuiz: "Quiz starten",
     retakeQuiz: "Quiz wiederholen",
     downloadRecord: (recordLabel) => `${recordLabel} herunterladen`,
   },
   en: {
     eyebrow: "Final assessment",
-    heading: (recordLabel) => `Workshop quiz and ${recordLabel}`,
+    heading: (recordLabel) => `Final quiz and ${recordLabel}`,
     loading: "Checking course progress…",
     details: (questions, passPercentage, minutes) =>
       `${questions} questions · ${passPercentage}% to pass · ${minutes} minutes`,
     progress: (completed, total) => `${completed} of ${total} lessons complete`,
-    locked: (remaining, total) =>
-      `Complete all ${total} lessons to unlock the workshop quiz. ${remaining} ${
-        remaining === 1 ? "lesson" : "lessons"
-      } remaining.`,
-    ready: (total) =>
-      `All ${total} lessons are complete.`,
+    locked: (total) => `Complete all ${total} lessons to unlock the quiz.`,
+    ready: () => "The final quiz is unlocked.",
     passed: (recordPossessive) =>
       `Passed. ${recordPossessive} is ready to download.`,
     projectEligible: (recordPossessive) =>
       `Every lesson and the applied project are complete, but the locally stored project is not a server-attested completion record. ${recordPossessive} unlocks when you pass the quiz.`,
     legacyCapstoneEligible: (recordPossessive) =>
-      `Every lesson and your earlier capstone self-review are complete. ${recordPossessive} stays available; this does not verify the new applied project.`,
+      `Every lesson and your earlier capstone self-review are complete, but the self-review does not verify the new applied project. ${recordPossessive} stays available.`,
     localRecordNotice:
       "The PDF is created locally, not server-verified and not an accredited qualification.",
     lockedLabel: "Quiz locked",
-    startQuiz: "Start workshop quiz",
+    startQuiz: "Start quiz",
     retakeQuiz: "Retake quiz",
     downloadRecord: (recordLabel) => `Download ${recordLabel}`,
   },
@@ -178,14 +171,10 @@ export function CourseAssessmentCta({
     };
   }, [courseSlug]);
 
-  const remainingLessons = progress
-    ? Math.max(0, totalLessons - progress.completedLessons)
-    : totalLessons;
-
   let stateCopy = copy.loading;
   if (progress) {
     if (!progress.courseCompleted) {
-      stateCopy = copy.locked(remainingLessons, totalLessons);
+      stateCopy = copy.locked(totalLessons);
     } else if (progress.quizPassed) {
       stateCopy = copy.passed(config.recordNoun.possessive);
     } else if (courseSlug === "ai-native" && progress.projectCompleted) {

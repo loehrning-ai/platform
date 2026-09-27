@@ -33,7 +33,7 @@ Anbieter und Betreiber müssen Maßnahmen ergreifen, um die Entwicklung der KI-K
 Die [Q&A der Europäischen Kommission](https://digital-strategy.ec.europa.eu/en/faqs/ai-literacy-questions-answers) stellt klar:
 
 - kein einheitliches Pflichttraining für alle Rollen
-- kein vorgeschriebenes Zertifikat
+- keine vorgeschriebene Zertifizierung
 - kein vorgeschriebener „KI-Beauftragter“
 - keine pauschale Mindeststundenzahl
 
@@ -74,4 +74,4 @@ DSGVO, Geheimnisschutz, Urheberrecht, Arbeits- und Mitbestimmungsrecht, Gleichbe
 6. Rollen- und risikogerechte Art.-4-Maßnahmen festlegen.
 7. Freigabe, Aufsicht, Logs, Eskalation, Vorfälle und Review dokumentieren.
 
-Der kostenlose Kurs auf `/ki-fuehrerschein` kann eine Lernmaßnahme sein. Sein Abschluss ist kein gesetzlich vorgeschriebenes Zertifikat und beweist für sich genommen nicht, dass Art. 4 für einen konkreten Use Case erfüllt ist.
+Der kostenlose Kurs auf `/ki-fuehrerschein` kann eine Lernmaßnahme sein. Sein Abschluss ist keine gesetzlich vorgeschriebene Zertifizierung und beweist für sich genommen nicht, dass Art. 4 für einen konkreten Use Case erfüllt ist.

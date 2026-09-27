@@ -35,7 +35,7 @@ const lesson: ClaudeLesson = {
       title: "A small evaluation set",
       readTimeMinutes: 2,
       content:
-        "A spreadsheet, JSON file or test module is enough; each case needs a realistic input and explicit acceptance criteria.\n\n```\neval_v1:\n  - input:    <common case>\n    expects:  <checkable requirements>\n  - input:    <hard edge case>\n    expects:  <…>\n  - input:    <known failure mode>\n    expects:  <…>\n  - input:    <missing or ambiguous data>\n    expects:  <abstention or clarification behavior>\n```\n\nRun the same cases before and after a change, and save raw outputs and grades for review.",
+        "A spreadsheet, JSON file or test module is enough; each case needs a realistic input and written acceptance criteria.\n\n```\neval_v1:\n  - input:    <common case>\n    expects:  <checkable requirements>\n  - input:    <hard edge case>\n    expects:  <…>\n  - input:    <known failure mode>\n    expects:  <…>\n  - input:    <missing or ambiguous data>\n    expects:  <abstention or clarification behavior>\n```\n\nRun the same cases before and after a change, and save raw outputs and grades for review.",
     },
     {
       id: "debugging",
@@ -143,7 +143,7 @@ const lesson: ClaudeLesson = {
         cpId: "grader",
         task: "Write a prompt for generating weekly status updates that a judge model can score.",
         rubric:
-          "Task and required context are explicit, constraints are testable, output format is defined, and missing data has a specified result.",
+          "Task and required context are stated, constraints are testable, output format is defined, and missing data has a specified result.",
       },
     },
     {

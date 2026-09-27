@@ -23,7 +23,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     format: "Live-Workshop mit Deck",
     duration: "~90 Minuten",
     accessNote:
-      "Für Deck, Lernbegleiter und Demo brauchst du nur einen Browser; Material auf Englisch, Einführung auf Deutsch. Die KI-Antworten sind Aufzeichnungen vom August 2026.",
+      "Für Deck, Lernbegleiter und Praxisbeispiel brauchst du nur einen Browser; Material auf Englisch, Einführung auf Deutsch. Die KI-Antworten sind Aufzeichnungen vom August 2026.",
     outcome: "Fünf-Felder-Vorlage",
     audience: [
       "Analystinnen und Controller, die Zahlen aus KI-Antworten weitergeben",
@@ -108,7 +108,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     ],
     notNeeded: [
       "SQL- oder Programmierkenntnisse",
-      "Ein KI-Konto für Deck, Demo und Labor",
+      "Ein KI-Konto für Deck, Praxisbeispiel und Labor",
       "Eigene Firmendaten",
     ],
     notCovered: [
@@ -252,7 +252,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         title: "Optional: die Daten hinter beiden Antworten ansehen",
         description:
           "Du stellst dieselbe Frage an Rohtabellen und freigegebene Sichten aus einem echten PostgreSQL-Lauf.",
-        tool: "Interaktive Demo · etwa 10 Minuten",
+        tool: "Praxisbeispiel · etwa 10 Minuten",
       },
     ],
     caseStudy: {
@@ -288,7 +288,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 75,
         primary: true,
         description:
-          "Etwa 75 Minuten Programm und 15 Minuten Fragen. Pfeiltasten blättern, P öffnet die Moderationsansicht.",
+          "Plus 15 Minuten für Fragen. Pfeiltasten blättern, P öffnet die Moderationsansicht.",
       },
       {
         label: "Moderationsansicht",
@@ -302,7 +302,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
           "Für die Person, die moderiert: Notizen, Abstimmungsfragen und eine Uhr. Verbindet sich mit dem Deck, sobald du dort P drückst.",
       },
       {
-        label: "Interaktive Demo · 10 Min.",
+        label: "Praxisbeispiel · 10 Min.",
         href: `${base}/demo.html`,
         kind: "html",
         language: "en",
@@ -637,7 +637,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 75,
         primary: true,
         description:
-          "About 75 minutes of content and 15 minutes of questions. Arrow keys move on; P opens the presenter view.",
+          "Plus 15 minutes for questions. Arrow keys move on; P opens the presenter view.",
       },
       {
         label: "Presenter view",

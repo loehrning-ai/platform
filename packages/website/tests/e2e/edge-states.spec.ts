@@ -167,7 +167,7 @@ test.describe("edge: provider-free /feedback fallback", () => {
       page.getByText(/serverseitige Speicherung ist .* nicht freigeschaltet/),
     ).toBeVisible();
     await expect(page.getByRole("status")).toContainText(
-      "Es werden keine Formulardaten gespeichert.",
+      "Hier wird nichts gespeichert.",
     );
     await expect(page.getByRole("textbox", { name: /Nachricht/i })).toHaveCount(0);
     await expect(page.getByRole("button", { name: /Rückmeldung senden/i })).toHaveCount(0);

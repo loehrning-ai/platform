@@ -98,7 +98,7 @@ const COPY: Record<
     scenario: "scenario: medium Node.js service, PG database, docker-based CI",
     fit: "selected for this scenario",
     overkill: "not required by this scenario",
-    belt: "belt",
+    belt: "Selected",
     ready: "TOOL SET RECORDED",
     readySuffix: "selected",
   },

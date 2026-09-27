@@ -362,7 +362,7 @@ describe("<AuthStatus>", () => {
       </LocaleProvider>,
     );
 
-    expect(screen.getByRole("link", { name: "Login" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Log in" })).toHaveAttribute(
       "href",
       "/en/login",
     );

@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 const push = vi.fn();
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push }),
+  usePathname: () => "/kurse/open-source/data-science/fund",
 }));
 
 import { DsReaderShell } from "./reader-shell";

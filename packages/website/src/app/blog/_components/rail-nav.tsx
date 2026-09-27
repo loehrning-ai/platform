@@ -72,12 +72,23 @@ export function RailNav({
       notifyUrlStateChanged();
     };
 
+  // Keep a keyboard-focused rail item fully visible inside the horizontal
+  // scroller (WCAG 2.4.11 Focus Not Obscured).
+  const revealOnFocus = (e: React.FocusEvent<HTMLElement>) => {
+    e.currentTarget.scrollIntoView({
+      block: "nearest",
+      inline: "nearest",
+      behavior: getMotionAwareScrollBehavior(),
+    });
+  };
+
   return (
     <nav className="railbar" aria-label={kicker}>
       <div className="railbar__inner">
         <Link
           href={localizeHref("/blog", locale)}
           className="railbar__back"
+          onFocus={revealOnFocus}
           aria-label={locale === "de" ? "Zurück zum Blog" : "Back to the blog"}
         >
           <span aria-hidden="true">←</span>{" "}
@@ -91,6 +102,7 @@ export function RailNav({
             className={`railbar__item${active === i.id ? " railbar__item--active" : ""}`}
             data-target={i.id}
             onClick={handleClick(i.id)}
+            onFocus={revealOnFocus}
           >
             <span className="railbar__num">{i.num}</span>
             {i.label}

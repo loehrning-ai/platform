@@ -4,7 +4,7 @@ import { localizeDataInfraLessonToGerman } from "../../translate-lesson";
 const lesson = localizeDataInfraLessonToGerman(canonical, {
   title: "Systemdesign-Review",
   subtitle: "Ein Händleranalyse-Szenario mit expliziten Annahmen",
-  hook: "Eine mehrdeutige Aufgabe in einen prüfbaren Entwurf mit Schätzungen, Fehlergrenzen und benannten Zielkonflikten überführen.",
+  hook: "Eine offene Aufgabe als prüfbaren Systementwurf ausarbeiten.",
   keyConcepts: [
     "Review-Struktur",
     "Überschlagsrechnung",

@@ -20,7 +20,7 @@ describe("Offering section", () => {
     // The caption states facts; it never restates the heading.
     const lessons = SPINE.reduce((sum, course) => sum + course.totalLessons, 0);
     expect(
-      screen.getByText(`${lessons} Lektionen · kostenlos · DE + EN`),
+      screen.getByText(`${lessons} Lektionen`),
     ).toBeInTheDocument();
     expect(screen.queryByText("Grundlagenpfad")).not.toBeInTheDocument();
   });
@@ -90,7 +90,8 @@ describe("Offering section", () => {
     expect(
       screen.getByRole("heading", { level: 2, name: "Four courses in a set order" }),
     ).toBeInTheDocument();
-    expect(screen.getByText(/lessons · free · DE \+ EN$/)).toBeInTheDocument();
+    const lessons = SPINE.reduce((sum, course) => sum + course.totalLessons, 0);
+    expect(screen.getByText(`${lessons} lessons`)).toBeInTheDocument();
     expect(screen.getByText("AI and Society").closest("a")).toHaveAttribute(
       "href",
       "/en/ki-und-gesellschaft",

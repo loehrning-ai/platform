@@ -265,7 +265,8 @@
           "id": "block_6_lesson_3_section_1",
           "title": "Das Governance-Paket nach Priorität",
           "readTimeMinutes": 2,
-          "content": "Bauen Sie die acht Dokumente des Governance-Pakets in dieser Reihenfolge: KI-Nutzungsrichtlinie, Risikoklassifizierung, Art.-4-Schulungsrahmen, DSFA-Arbeitshilfe, Anbieter-Due-Diligence, KI-Inventarliste, Pilot-Charter, zuletzt die Use-Case-Bewertungsmatrix.\n\nKeins davon ist ein gesetzliches Formular, und keins beweist Compliance. Eine DSFA ist nur unter den Voraussetzungen des Art. 35 DSGVO Pflicht; Risikoklasse und Betreiberpflichten folgen aus System und Rolle.\n\nBauen Sie jedes Dokument als Arbeitsgerüst: Fachrollen einbeziehen, Behauptungen belegen, Entscheidungen begründen, Rechtsstand prüfen, an den Use Case anpassen."
+          "content": "Bauen Sie die acht Dokumente des Governance-Pakets in dieser Reihenfolge: KI-Nutzungsrichtlinie, Risikoklassifizierung, Art.-4-Schulungsrahmen, DSFA-Arbeitshilfe, Anbieter-Due-Diligence, KI-Inventarliste, Pilot-Charter, zuletzt die Use-Case-Bewertungsmatrix.\n\nKeins davon ist ein gesetzliches Formular, und keins beweist Compliance. Eine DSFA ist nur unter den Voraussetzungen des Art. 35 DSGVO Pflicht; Risikoklasse und Betreiberpflichten folgen aus System und Rolle.\n\nBauen Sie jedes Dokument als Arbeitsgerüst: Fachrollen einbeziehen, Behauptungen belegen, Entscheidungen begründen, Rechtsstand prüfen, an den Use Case anpassen.",
+          "keyTakeaway": "Die acht Dokumente sind Arbeitsgerüste; keins ist ein gesetzliches Formular oder beweist Compliance."
         },
         {
           "id": "block_6_lesson_3_section_2",
@@ -395,7 +396,7 @@
           "id": "block_6_lesson_4_section_3",
           "title": "Beschaffung des fiktiven Systems: Prüffelder",
           "readTimeMinutes": 1,
-          "content": "Die Beschaffung muss die Informationen und Mitwirkung sichern, die der zulässige Betrieb braucht.\n\n**Mögliche Prüffelder (Umsetzungsentscheidungen, keine gesetzliche Klauselliste):**\n- vorgesehener Zweck, System- und Modellversion, Leistungsgrenzen und Gebrauchsanweisung nach Art. 13;\n- Nachweis der Anbieterrolle, CE-Kennzeichnung und EU-Konformitätserklärung, soweit einschlägig;\n- Qualitäts-, Bias-, Robustheits- und Sicherheitstests in risikogerechtem Umfang;\n- Ankündigung und Dokumentation wesentlicher Updates;\n- Zugriff auf Logs und Informationen für Art. 26 und den Datenschutz;\n- Unterstützung bei Risiken, Vorfällen, Betroffenenrechten, Behördenanfragen, Exit und Datenlöschung.\n\nBerichtstakt, Reaktionszeit, Audit-Recht, Haftung, Vertragsstrafe, Sprache, Rechtswahl und Gerichtsstand sind Verhandlungspunkte. Bei Vorfällen folgt die XY GmbH Art. 26 Abs. 5; die Meldepflicht nach Art. 73 erfüllt der Anbieter."
+          "content": "Die Beschaffung muss die Informationen und Mitwirkung sichern, die der zulässige Betrieb braucht.\n\n**Mögliche Prüffelder:**\n- vorgesehener Zweck, System- und Modellversion, Leistungsgrenzen und Gebrauchsanweisung nach Art. 13;\n- Nachweis der Anbieterrolle, CE-Kennzeichnung und EU-Konformitätserklärung, soweit einschlägig;\n- Qualitäts-, Bias-, Robustheits- und Sicherheitstests in risikogerechtem Umfang;\n- Ankündigung und Dokumentation wesentlicher Updates;\n- Zugriff auf Logs und Informationen für Art. 26 und den Datenschutz;\n- Unterstützung bei Risiken, Vorfällen, Betroffenenrechten, Behördenanfragen, Exit und Datenlöschung.\n\nBerichtstakt, Reaktionszeit, Audit-Recht, Haftung, Vertragsstrafe, Sprache, Rechtswahl und Gerichtsstand sind Verhandlungspunkte. Bei Vorfällen folgt die XY GmbH Art. 26 Abs. 5; die Meldepflicht nach Art. 73 erfüllt der Anbieter."
         }
       ],
       "quiz": [

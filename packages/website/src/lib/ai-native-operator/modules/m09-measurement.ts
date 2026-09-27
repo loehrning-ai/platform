@@ -243,7 +243,7 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "A review decides whether to continue, change, pause or stop. A consistent evidence packet, a named decision owner and an explicit next condition make it auditable and reusable.",
+          "A review decides whether to continue, change, pause or stop. A consistent evidence packet, a named decision owner and a stated next condition make it auditable and reusable.",
       },
     ],
     sections: [],

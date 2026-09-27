@@ -254,11 +254,9 @@ describe("EU AI Act English blocks 5 and 6", () => {
     ).join("\n");
 
     expect(english).toContain(
-      "an implementation control, not a statutory five-step format",
+      "Initial response plan (implementation aid)",
     );
-    expect(english).toContain(
-      "implementation choices rather than a statutory clause list",
-    );
+    expect(english).toContain("Possible review fields");
     expect(english).toContain(
       "implementation tools, not statutory forms",
     );

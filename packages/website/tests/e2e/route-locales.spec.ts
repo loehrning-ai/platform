@@ -35,7 +35,7 @@ test.describe("DE/EN locale-routing foundation", () => {
 
     const desktopNavigation = page.locator(".js-desktop-nav");
     await desktopNavigation
-      .getByRole("link", { name: "EN, Englische Oberfläche öffnen" })
+      .getByRole("link", { name: "EN, englische Oberfläche öffnen" })
       .click();
     await expect(page).toHaveURL(/\/en\/kurse$/);
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
@@ -119,14 +119,14 @@ test.describe("DE/EN locale-routing foundation", () => {
         await expect(dialog.getByRole("group", { name: "Language" })).toHaveCount(
           0,
         );
-        activeLogin = dialog.getByRole("link", { name: "Login" });
+        activeLogin = dialog.getByRole("link", { name: "Log in" });
       } else {
         const desktopNavigation = page.locator(".js-desktop-nav");
         const activeLanguageGroup = desktopNavigation.getByRole("group", {
           name: "Language",
         });
         await expect(activeLanguageGroup).toBeVisible();
-        activeLogin = desktopNavigation.getByRole("link", { name: "Login" });
+        activeLogin = desktopNavigation.getByRole("link", { name: "Log in" });
         for (const target of await activeLanguageGroup.getByRole("link").all()) {
           const box = await target.boundingBox();
           expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);

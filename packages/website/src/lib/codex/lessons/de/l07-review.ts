@@ -84,7 +84,7 @@ export default localizeCodexLessonToGerman(canonical, {
       canonical.subtitle,
       "Vor dem Merge prüfst du Verhalten, vollständigen Diff, Tests, Abhängigkeiten und Sicherheitsgrenzen.",
     ],
-    [canonical.hook, "Diff und Protokolle sind Nachweise, keine Freigabe."],
+    [canonical.hook, "Diff und Protokolle lesen, bevor du freigibst."],
     [canonical.keyConcepts[0], "Prüfliste für Reviews"],
     [canonical.keyConcepts[1], "Zirkuläre Tests"],
     [canonical.keyConcepts[2], "Sicherheitsprüfung"],

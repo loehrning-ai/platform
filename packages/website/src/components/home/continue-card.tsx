@@ -151,7 +151,9 @@ export function ContinueCard({
         : course.startHref;
 
   // One line names the decision and the course, one line states access and
-  // the time it takes: two lines at 3.5rem, docked above the tab bar.
+  // the time it takes: two lines at 3.5rem, docked above the tab bar, both in
+  // the band's 17px body size (SPEC §4). Below 22.5rem the arrow gives its
+  // 44px column back to the text; the whole row stays the target.
   const lead = resuming ? copy.resumeEyebrow : `${copy.startEyebrow}:`;
 
   return (
@@ -160,13 +162,13 @@ export function ContinueCard({
       prefetch={false}
       data-home-continue-card={target.mode}
       data-home-course-access={course.access}
-      className="group flex h-full w-full items-center gap-3 overflow-hidden bg-background pl-4 pr-1 outline-none transition-colors duration-150 hover:bg-card-hover focus-visible:bg-card-hover focus-visible:outline-2 focus-visible:outline-solid focus-visible:-outline-offset-2 focus-visible:outline-brand-orange motion-reduce:transition-none md:pl-8 md:pr-5"
+      className="group flex h-full w-full items-center gap-3 overflow-hidden max-[22.5rem]:gap-2 bg-background pl-4 pr-1 outline-none transition-colors duration-150 hover:bg-card-hover focus-visible:bg-card-hover focus-visible:outline-2 focus-visible:outline-solid focus-visible:-outline-offset-2 focus-visible:outline-brand-orange motion-reduce:transition-none md:pl-8 md:pr-5"
     >
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-base font-semibold leading-snug text-foreground">
+        <span className="block truncate text-[1.0625rem]/[1.35] font-semibold text-foreground">
           {lead} {course.title}
         </span>
-        <span className="flex min-w-0 gap-1 text-sm leading-snug text-muted">
+        <span className="flex min-w-0 gap-1 text-[1.0625rem]/[1.35] font-normal text-muted">
           <span data-home-access-label className="shrink-0">
             {copy.access[course.access]}
           </span>
@@ -180,7 +182,7 @@ export function ContinueCard({
       </span>
       <span
         aria-hidden="true"
-        className="flex size-11 shrink-0 items-center justify-center text-foreground"
+        className="flex size-11 shrink-0 items-center justify-center text-foreground max-[22.5rem]:w-6"
       >
         <ArrowGlyph />
       </span>

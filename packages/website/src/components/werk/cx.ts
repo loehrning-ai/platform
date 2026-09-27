@@ -17,6 +17,7 @@ export const WERK_FONT_SIZES = [
   "label",
   "caption",
   "num-lg",
+  "poster",
 ] as const;
 
 const merge = extendTailwindMerge({

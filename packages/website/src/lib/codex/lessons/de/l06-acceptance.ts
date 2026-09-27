@@ -3,7 +3,6 @@ import { localizeCodexLessonToGerman } from "../../translate-lesson";
 
 export default localizeCodexLessonToGerman(canonical, {
   translations: [
-    ["Acceptance Criteria", "Akzeptanzkriterien"],
     [
       "Define observable behavior, executable checks, and review evidence before implementation begins.",
       "Verhalten, Prüfungen und Nachweise stehen fest, bevor Codex die erste Zeile ändert.",

@@ -99,8 +99,12 @@ describe("Ressourcen section (Workflow)", () => {
       expect(rowFor(href)).not.toHaveClass("max-lg:hidden");
     }
     expect(container.innerHTML).not.toContain("max-lg:truncate");
-    // Phone rows carry their own short line, one line at 320px.
-    expect(screen.getByText("KI und Recht, mit Quellen")).toHaveClass("lg:hidden");
+    // Every row carries one short line at every width (one line at 320px);
+    // no desktop-only body repeats it.
+    const short = screen.getByText("KI und Recht, mit Quellen");
+    expect(short).not.toHaveClass("lg:hidden");
+    expect(short.className).not.toMatch(/truncate|line-clamp/);
+    expect(screen.queryByText("KI und Recht, mit Primärquellen.")).toBeNull();
     // Resource names sit a step under the course titles (18px, not 24px).
     const name = screen.getByText("Blog");
     expect(name).toHaveClass("text-lg");

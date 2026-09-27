@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getBookDisplay } from "@/app/buecher/book-copy";
+import { DemoPosterThumb } from "@/components/demos/demo-poster";
 import { HOME_CONTAINER } from "@/components/home/home-container";
 import { HOME_COPY } from "@/components/home/home-copy";
 import { HomeSectionHead } from "@/components/home/home-section-head";
@@ -32,7 +33,9 @@ import { localizeHref, type Locale } from "@/lib/i18n/locale";
  * book is publicly routed (BOOK_RAIL_SHOWN); until then the board's
  * Lernbücher row is the phone's path to the book.
  *
- * It ships zero client JavaScript and requests no image.
+ * Each demo tile leads with a 72px square crop of the demo's flat IDEA
+ * poster (server-rendered SVG). It ships zero client JavaScript and requests
+ * no image.
  */
 
 /** How many applied examples the rail carries. */
@@ -48,6 +51,12 @@ const RAIL_CLASS =
    hover and focus states change tone only. */
 const TILE_CLASS =
   "group flex h-full min-h-[6.25rem] flex-col justify-between gap-2 border border-hairline bg-card p-3 outline-none transition-colors duration-150 hover:border-foreground hover:bg-card-hover focus-visible:outline-2 focus-visible:outline-solid focus-visible:-outline-offset-2 focus-visible:outline-brand-orange motion-reduce:transition-none";
+
+/* The demo tile leads with its poster thumbnail, the title beside it. */
+const DEMO_TILE_CLASS = TILE_CLASS.replace(
+  "flex-col justify-between gap-2",
+  "flex-row items-start gap-3",
+);
 
 /* Sentence-case label for data (a book's edition) in Schiefer, never a
    mono all-caps eyebrow. Demos are not a sequence, so their tiles carry no
@@ -70,14 +79,15 @@ export function MobileRails({ locale = "de" }: { readonly locale?: Locale }) {
           {demos.map((demo) => (
             <li
               key={demo.slug}
-              className="w-[min(14rem,78vw)] shrink-0 snap-start"
+              className="w-[min(17rem,78vw)] shrink-0 snap-start"
             >
               <Link
                 href={localizeHref(`/demos/${demo.slug}`, locale)}
                 prefetch={false}
                 data-home-rail-tile="demo"
-                className={TILE_CLASS}
+                className={DEMO_TILE_CLASS}
               >
+                <DemoPosterThumb slug={demo.slug} className="w-[4.5rem]" />
                 <span className="min-w-0">
                   <span className="block text-base font-bold leading-snug text-foreground">
                     {demo.title}

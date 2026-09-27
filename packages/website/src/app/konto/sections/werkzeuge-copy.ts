@@ -49,7 +49,7 @@ export const WERKZEUGE_COPY = {
       "Diese Werkzeuge sind quelloffen: Du nutzt sie mit deinem Konto oder betreibst sie selbst.",
     cvEngineTitle: "CV Engine",
     cvEngineSourceBody:
-      "Macht aus einer YAML-Datei einen einseitigen Lebenslauf als PDF. Hier läuft das Werkzeug nicht gehostet: Du betreibst es auf deinem Rechner, und deine Daten bleiben dort.",
+      "Macht aus einer YAML-Datei einen einseitigen Lebenslauf als PDF. Hier wird es nicht gehostet: Du betreibst es auf deinem Rechner, und deine Daten bleiben dort.",
     cvEngineHostedBody:
       "Macht aus einer YAML-Datei einen einseitigen Lebenslauf als PDF. Deine Dokumente liegen im selben Konto wie dein Lernstand.",
     documentCount: (count) =>

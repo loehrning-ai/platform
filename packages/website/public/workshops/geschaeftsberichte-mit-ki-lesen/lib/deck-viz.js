@@ -40,7 +40,7 @@
       row.appendChild(val);
       wrap.appendChild(row);
     });
-    var cap = el('div', null, 'Revenue by line, September · CRAFT is #2 in revenue, #6 in volume, and worst on defects');
+    var cap = el('div', null, 'Revenue and defects (NCRs) by line, September');
     cap.style.cssText = 'font-family:var(--sans);font-size:20px;font-weight:600;letter-spacing:.01em;color:var(--muted);margin-top:18px';
     slot.appendChild(wrap); slot.appendChild(cap);
   }

@@ -61,8 +61,8 @@ export function FineTuneDemo(): JSX.Element {
       <div>
         <DemoOverline>Fine-Tuning Playground</DemoOverline>
         <h3 className="mt-2 text-[24px] font-bold tracking-[-0.03em] text-foreground md:text-[26px]">
-          Generisch vs.{" "}
-          <span className="text-brand-orange">Domänenbeispiel.</span>
+          Basismodell und angepasstes Modell{" "}
+          <span className="text-brand-orange">im Vergleich</span>
         </h3>
         <p className="mt-1.5 text-[13px] text-muted-foreground">
           Beispielantworten mit und ohne Domänenkontext. Kein echtes

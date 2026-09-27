@@ -37,6 +37,30 @@ const nextConfig: NextConfig = {
     "/api/mcp": ["./content/books/**"],
     "/blog/ki-in-der-ausbildung": ["./content/vorlagen/**"],
     "/en/blog/ki-in-der-ausbildung": ["./content/vorlagen/**"],
+    // Node-runtime share cards read the site face (and the demo halftone)
+    // with readFile(process.cwd() + ...) at request time, because they read
+    // the request locale; list the files so the trace never misses them.
+    // Keys are picomatch globs, so a dynamic segment's brackets are escaped.
+    "/kurse/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/en/kurse/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/kurse/twitter-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/en/kurse/twitter-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/ki-fuehrerschein/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/en/ki-fuehrerschein/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/ki-und-gesellschaft/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/en/ki-und-gesellschaft/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/eu-ai-act-kurs/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/en/eu-ai-act-kurs/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/ai-native/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/en/ai-native/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/kurse/open-source/data-engineering-fundamentals/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/en/kurse/open-source/data-engineering-fundamentals/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/open-source/\\[kind\\]/\\[slug\\]/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/en/open-source/\\[kind\\]/\\[slug\\]/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/blog/ki-in-der-ausbildung/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/en/blog/ki-in-der-ausbildung/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/demos/\\[slug\\]/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf", "./public/plakat/halftone-demos.png"],
+    "/en/demos/\\[slug\\]/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf", "./public/plakat/halftone-demos.png"],
   },
   // Drop the X-Powered-By: Next.js banner so we don't hand attackers a
   // free fingerprint of our stack version.

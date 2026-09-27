@@ -167,7 +167,7 @@ export const AI_NATIVE_FAQ_EN: readonly AiNativeFaqItem[] = [
   {
     question: "Do I need prior knowledge?",
     answer:
-      "No. The free AI Fundamentals course is recommended because this course builds on its data classification and prompt basics.",
+      "No. The free Everyday AI Literacy course is recommended because this course builds on its data classification and prompt basics.",
   },
   {
     question: "How long does the course take?",

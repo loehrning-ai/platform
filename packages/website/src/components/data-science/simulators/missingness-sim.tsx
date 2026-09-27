@@ -41,12 +41,12 @@ const COLORS: Record<Pattern, string> = {
   MNAR: "#FF6B80",
 };
 const DESC: Record<Pattern, string> = {
-  MCAR: "Sensor dropped a packet. Missingness is unrelated to any value, coin flip. Safe to drop rows or impute.",
+  MCAR: "Sensor dropped a packet. The missingness is purely random. Safe to drop rows or impute.",
   MAR: "Income & Score go missing more in the EU region (observed in other columns). Impute carefully; missingness is explainable.",
   MNAR: "High earners omit income; low scorers skip the score field. The missing value predicts its own absence. Dangerous, imputation will be biased.",
 };
 const DESC_DE: Record<Pattern, string> = {
-  MCAR: "Ein Sensor hat ein Paket verworfen. Das Fehlen hängt von keinem Wert ab, sondern ist zufällig. Zeilen können entfernt oder Werte imputiert werden.",
+  MCAR: "Ein Sensor hat ein Paket verworfen. Das Fehlen ist rein zufällig. Zeilen können entfernt oder Werte imputiert werden.",
   MAR: "Einkommen und Score fehlen in der EU-Region häufiger; diese Region ist in einer anderen Spalte beobachtet. Die Fehlwerte sind erklärbar, müssen aber gezielt imputiert werden.",
   MNAR: "Hohe Einkommen und niedrige Scores fehlen häufiger. Der unbeobachtete Wert beeinflusst sein eigenes Fehlen. Eine einfache Imputation erzeugt deshalb Bias.",
 };
@@ -226,7 +226,7 @@ export function MissingnessSim() {
                         }}
                       >
                         {isMissing
-                          ? ","
+                          ? <span aria-label={text("missing", "fehlt")}>·</span>
                           : c === "Income"
                             ? value.toLocaleString()
                             : value}

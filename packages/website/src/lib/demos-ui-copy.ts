@@ -22,18 +22,15 @@ export const DEMOS_PAGE_COPY = {
       // The soft hyphen lets the poster H1 break "KI-Arbeits-" / "abläufe"
       // on a phone instead of leaving "KI-" alone on the first line.
       heading: "KI-Arbeits\u00adabläufe prüfen",
-      // One sentence. introductionDetail stays empty until /demos drops its
-      // rendering (copy-diet request): the stat line already says what runs
-      // and what is simulated.
+      // One sentence: the stat line below says what runs and what is
+      // simulated.
       introduction:
         "Jedes Beispiel spielt einen KI-Arbeitsablauf mit erfundenen Daten durch.",
-      introductionDetail: "",
       statsLabel: "Umfang der Sammlung",
       // Phone stat line, one item per list entry so a wrap never strands a
       // separator; the StatRow carries the same numbers from sm up.
-      statsLine: (examples: number, modes: number, actions: number) => [
+      statsLine: (examples: number, actions: number) => [
         `${examples} Beispiele`,
-        `${modes} Ausführungsarten`,
         actions === 0
           ? "nichts wird wirklich gesendet"
           : `${actions} echte Außenaktionen`,
@@ -41,20 +38,14 @@ export const DEMOS_PAGE_COPY = {
       stats: {
         examples: { label: "Praxisbeispiele", note: "im Browser, ohne Konto" },
         modes: {
-          label: "Ausführungsarten",
+          label: "Simulationsarten",
           note: "synthetisch, regelbasiert, aufgezeichnet",
         },
         externalActions: {
           label: "Echte Außenaktionen",
-          note: "Versand, Buchung und Bestellung bleiben simuliert",
+          note: "nichts wird wirklich gesendet oder gebucht",
         },
       },
-      scopeLabel: "Was du an jedem Beispiel prüfst",
-      scopeItems: [
-        "Eingaben und Annahmen",
-        "Zwischenschritte und Quellen",
-        "Freigaben und Abbruchbedingungen",
-      ],
       galleryHeading: "Alle Beispiele",
       level: "Reifegrad",
       category: "Kategorie",
@@ -160,30 +151,22 @@ export const DEMOS_PAGE_COPY = {
       kickerDetail: "in the browser",
       heading: "Inspect AI workflows",
       introduction: "Each example runs one AI workflow on invented data.",
-      introductionDetail: "",
       statsLabel: "What the collection holds",
-      statsLine: (examples: number, modes: number, actions: number) => [
+      statsLine: (examples: number, actions: number) => [
         `${examples} examples`,
-        `${modes} execution modes`,
         actions === 0 ? "nothing is really sent" : `${actions} real external actions`,
       ],
       stats: {
         examples: { label: "Practice examples", note: "in the browser, no account" },
         modes: {
-          label: "Execution modes",
+          label: "Simulation types",
           note: "synthetic, rule-based, recorded",
         },
         externalActions: {
           label: "Real external actions",
-          note: "Sending, posting and ordering stay simulated",
+          note: "nothing is really sent or posted",
         },
       },
-      scopeLabel: "What you check in each example",
-      scopeItems: [
-        "Inputs and assumptions",
-        "Intermediate steps and sources",
-        "Approvals and stopping conditions",
-      ],
       galleryHeading: "All examples",
       level: "Level",
       category: "Category",

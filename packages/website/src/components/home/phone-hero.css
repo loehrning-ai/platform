@@ -281,17 +281,7 @@
     z-index: 4;
   }
 
-  /* The continue row sets in the band's body size (SPEC §4: caps, poster
-     title and 17px body are the band's three sizes): the decision at 600,
-     access and time at 400. */
-  [data-section="hero"] [data-home-continue-card] > span:first-child > span {
-    font-size: 1.0625rem;
-    line-height: 1.35;
-  }
-
-  [data-section="hero"] [data-home-continue-card] > span:first-child > span + span {
-    font-weight: 400;
-  }
+  /* The continue row sets its own 17px body size (continue-card.tsx). */
 
   /* The continue row is full-bleed: its ring is inset (SPEC §3.9), 3px in
      the scene ink, so it never crosses the band edge. */
@@ -391,20 +381,11 @@
 
 /* Narrow phones (320): the lead and the action keep the band's 17px; the
    lead takes the full column (at 320 that is about 34ch, one line less), a
-   tighter action and gap keep the label beside the pause control, and the
-   continue row's arrow gives its 44px column back to the text (the whole
-   row is the target). */
+   tighter action and gap keep the label beside the pause control (the
+   continue row narrows its own arrow column, continue-card.tsx). */
 @media (width < 22.5rem) {
   [data-section="hero"] [data-hero-lead] {
     max-width: none;
-  }
-
-  [data-section="hero"] [data-home-continue-card] {
-    gap: 0.5rem;
-  }
-
-  [data-section="hero"] [data-home-continue-card] > span:last-child {
-    width: 1.5rem;
   }
 
   [data-section="hero"] [data-hero-actions] {

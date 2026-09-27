@@ -35,7 +35,7 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Hand over something small first",
         readTimeMinutes: 1,
         content:
-          "Give the model a narrow task, a stopping condition and explicit constraints. Decisions, approvals and external effects stay with a named person until real outputs and failure cases show the controls hold.",
+          "Give the model a narrow task, a stopping condition and written constraints. Decisions, approvals and external effects stay with a named person until real outputs and failure cases show the controls hold.",
       },
     ],
     callout: {
@@ -100,7 +100,7 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "L3, Orchestrated portfolio",
         readTimeMinutes: 1,
         content:
-          "Independent tasks run in parallel with isolated workspaces, explicit permissions, release gates and named human owners, where dependencies are understood. A person accepts, rejects or releases every result.",
+          "Independent tasks run in parallel with isolated workspaces, scoped permissions, release gates and named human owners, where dependencies are understood. A person accepts, rejects or releases every result.",
       },
     ],
     callout: {
@@ -358,7 +358,7 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "L3 is bounded parallel work with isolation, permissions, evaluation gates and explicit acceptance ownership. Several tools running at once without those controls is not L3.",
+          "L3 is bounded parallel work with isolation, permissions, evaluation gates and named acceptance owners. Several tools running at once without those controls is not L3.",
       },
       {
         id: "ano-mindset-q3",

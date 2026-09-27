@@ -16,7 +16,7 @@ const lesson: ClaudeLesson = {
   id: "context",
   number: 3,
   title: "Context windows, tokens, and retrieval",
-  subtitle: "What enters a request, how it is tokenized, and what to verify.",
+  subtitle: "How tokens are counted and what to check in the context.",
   durationMinutes: 10,
   trackId: "foundations",
   hook: "The context window is limited, so choose relevant sources.",
@@ -80,9 +80,9 @@ const lesson: ClaudeLesson = {
       props: {
         lessonId: "context",
         cpId: "drop",
-        title: "Meaning map",
+        title: "Words in meaning space",
         scenario:
-          "This local illustration maps words to predefined topic groups. It does not call Claude or calculate embeddings.",
+          "Sorts words into fixed topic groups, without Claude or embeddings.",
         seed: CLAUDE_SEMANTIC_SPACE_SEED,
         clusterKeywords: CLAUDE_SEMANTIC_SPACE_KEYWORDS,
         clusterLabels: CLAUDE_SEMANTIC_SPACE_CLUSTER_LABELS,

@@ -64,7 +64,7 @@ const COPY = {
       tests: "Tests",
       net: "Netzwerk",
       env: "Umgebungsvariablen",
-      secrets: "Zugangsdaten",
+      secrets: "Secrets",
     },
     networkWarning:
       "NETZWERK AKTIV: Ziele begrenzen und geladene Eingaben prüfen",
@@ -181,12 +181,6 @@ export function L02SandboxBox({
           {warning}
         </p>
       )}
-
-      <p className="mt-3 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
-        {CAPABILITIES.map((c) => `${c.id} ${state[c.id] ? "y" : "n"}`).join(
-          " ",
-        )}
-      </p>
 
       {toggledOnce.size === CAPABILITIES.length && (
         <p className="mt-3 font-mono text-xs text-risk-green">

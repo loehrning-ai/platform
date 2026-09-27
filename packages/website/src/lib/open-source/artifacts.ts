@@ -1497,7 +1497,7 @@ const CV_ENGINE_TOOL_ARTIFACT = {
       // Rendered once and visibly: as the figure caption, which also labels
       // the figure (the img itself carries an empty alt so screen readers
       // hear the prose exactly once). Written as publishable prose.
-      alt: "Der Editor in zwei Spalten: links die YAML-Ansicht, deren erste Kommentarzeilen die Einseitenregel festhalten, rechts die A4-Vorschau mit der grünen Plakette 1 page.",
+      alt: "Der Editor: links YAML, rechts die A4-Vorschau mit der Plakette 1 page.",
       sha256: "8c402e73a3ac46498d5fbfe6f39e03eebf532e62fe4b5ae69941211e96492aff",
       sizeBytes: 132292,
       width: 1696,

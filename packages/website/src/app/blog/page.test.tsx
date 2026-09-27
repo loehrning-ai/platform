@@ -131,11 +131,11 @@ describe("BlogIndexPage", () => {
       BLOG_POSTS.length,
     );
     expect(
-      screen.getByRole("heading", { name: "Behauptungen mit Belegspur." }),
+      screen.getByRole("heading", { name: "Quellenstandard" }),
     ).toBeVisible();
-    expect(screen.getByText("Primärquellen")).toBeVisible();
-    expect(screen.getByText("Prüfdatum")).toBeVisible();
-    expect(screen.getByText(/Kein Redaktionsplan\./)).toBeVisible();
+    expect(screen.getByText(/verlinken auf Primärquellen/)).toBeVisible();
+    expect(screen.getByText(/Prüfdatum/)).toBeVisible();
+    expect(screen.getByText(/erscheint unregelmäßig/)).toBeVisible();
   });
 
   it("drops the risograph masthead, preview sheets and stacked panels", async () => {
@@ -158,11 +158,11 @@ describe("BlogIndexPage", () => {
     await renderPage("en");
 
     expect(
-      screen.getByRole("heading", { name: "Claims with an evidence trail." }),
+      screen.getByRole("heading", { name: "Source standard" }),
     ).toBeVisible();
-    expect(screen.getByText("Primary sources")).toBeVisible();
-    expect(screen.getByText(/No publishing quota\./)).toBeVisible();
-    expect(screen.queryByText("Prüfdatum")).not.toBeInTheDocument();
+    expect(screen.getByText(/link to primary sources/)).toBeVisible();
+    expect(screen.getByText(/published irregularly/)).toBeVisible();
+    expect(screen.queryByText(/Prüfdatum/)).not.toBeInTheDocument();
   });
 
   it.each([

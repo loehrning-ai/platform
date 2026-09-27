@@ -82,16 +82,18 @@ describe("<WorkshopsContent>", () => {
 
     const [, w03, w02, w01] = rows;
     expect(
-      within(w03).getByText("Workshop 03 · Live 90 min · Alone about 75 min"),
+      within(w03).getByText("Workshop 03 · Live 90 min · Self-paced about 75 min"),
     ).toBeInTheDocument();
     expect(
-      within(w01).getByText("Workshop 01 · Alone about 90 min"),
+      within(w01).getByText("Workshop 01 · Self-paced about 90 min"),
     ).toBeInTheDocument();
+    // The fixed question is the first thing on the workshop page; the hub
+    // row does not repeat it.
     expect(
-      within(w03).getByText(
+      within(w03).queryByText(
         "“Show ending MRR by month for the last complete quarter.”",
       ),
-    ).toBeInTheDocument();
+    ).toBeNull();
     expect(within(w03).getByText("A browser, no AI account")).toBeInTheDocument();
     expect(
       within(w02).getByText(
@@ -225,10 +227,7 @@ describe("<WorkshopsContent>", () => {
         "md:py-10",
       );
       // The details the workshop page repeats stay out of a phone row.
-      expect(row.querySelector("[data-workshop-question]")).toHaveClass(
-        "hidden",
-        "md:grid",
-      );
+      expect(row.querySelector("[data-workshop-question]")).toBeNull();
       expect(row.querySelector("[data-workshop-roles]")).toHaveClass(
         "hidden",
         "md:block",
@@ -237,7 +236,7 @@ describe("<WorkshopsContent>", () => {
       const summary = row.querySelector("h3 + p");
       expect(summary).toHaveClass("hidden", "md:block");
       expect(summary).not.toHaveClass("line-clamp-2");
-      // "Du gehst mit" is one flowing sentence over the full width.
+      // "Du nimmst mit" is one flowing sentence over the full width.
       const facts = row.querySelector("dl")!;
       expect(facts).toHaveClass("max-md:line-clamp-2", "grid");
       expect(facts.querySelector("dt")).toHaveClass(
@@ -269,7 +268,7 @@ describe("<WorkshopsContent>", () => {
     // The phone meta line is a short duration line; the row the cover
     // button recommends says so.
     expect(rows[0].querySelector("[data-workshop-meta]")).toHaveTextContent(
-      "Neu · Live 90 Min. · allein 80 Min.",
+      "Neu · Live 90 Min. · Selbstlernen 80 Min.",
     );
     expect(rows[1].querySelector("[data-workshop-meta]")).toHaveTextContent(
       /^Einstieg · /,
@@ -280,7 +279,7 @@ describe("<WorkshopsContent>", () => {
       );
     }
     expect(rows[3].querySelector("[data-workshop-meta]")).toHaveTextContent(
-      /^Allein \d+ Min\.$/,
+      /^Selbstlernen \d+ Min\.$/,
     );
     // A long title shows its head on a phone; the heading keeps the full name.
     const w04 = getWorkshops("de").find((w) => w.number === "04")!;
@@ -288,14 +287,11 @@ describe("<WorkshopsContent>", () => {
     expect(heading).toHaveAccessibleName(w04.title);
     expect(heading.querySelector("span")).toHaveClass("sr-only", "md:not-sr-only");
 
-    // Phones get a one-sentence lead; from sm the full lead returns.
-    expect(
-      screen.getByText(/^Du rechnest oder prüfst an den Daten/),
-    ).toHaveClass("sm:hidden");
-    expect(screen.getByText(/^Jeder Workshop dreht sich/)).toHaveClass(
-      "hidden",
-      "sm:block",
-    );
+    // One one-sentence lead at every width; no second lede from sm.
+    const lead = screen.getByText(/^Du rechnest oder prüfst an den Daten/);
+    expect(lead).not.toHaveClass("sm:hidden");
+    expect(lead).not.toHaveClass("hidden");
+    expect(screen.queryByText(/^Jeder Workshop dreht sich/)).toBeNull();
     // Phones skip the route (each workshop page shows its own agenda), so
     // the list follows the cover; from sm it is the reviewed row.
     const rail = screen.getByRole("group", {
@@ -325,6 +321,8 @@ describe("<WorkshopsContent>", () => {
       screen.getByText(/Workshops 03 und 04 haben eine Moderationsansicht mit Notizen/),
     ).toBeInTheDocument();
     expect(screen.getByText(/Öffne das Deck und drück P\./)).toBeInTheDocument();
+    // Phones have no P key: the keyboard hint shows from lg only.
+    expect(note.querySelector("[data-workshop-key-hint]")).toHaveClass("max-lg:hidden");
     expect(screen.getByText("Neueste zuerst")).toBeInTheDocument();
     expect(screen.getByText("Workshops · 4 Fälle")).toBeInTheDocument();
     expect(

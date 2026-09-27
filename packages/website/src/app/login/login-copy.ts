@@ -53,7 +53,6 @@ export interface LoginCopy {
     readonly configuration: string;
     readonly methodsUnavailable: string;
     readonly accountUnavailable: string;
-    readonly records: string;
   };
   readonly unavailable: Readonly<
     Record<LoginUnavailableReason, LoginUnavailableCopy>
@@ -114,7 +113,6 @@ export interface LoginCopy {
   };
   readonly accountValue: {
     readonly heading: string;
-    readonly lead: string;
     readonly items: readonly LoginAccountValueItem[];
     readonly records: string;
     readonly control: string;
@@ -123,7 +121,6 @@ export interface LoginCopy {
   };
   readonly publicAccess: {
     readonly heading: string;
-    readonly lead: string;
     readonly links: readonly LoginPublicLink[];
   };
   readonly turnstile: {
@@ -140,7 +137,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
     metadata: {
       title: "Login | Freie Lernplattform",
       description:
-        "Optionales Lernkonto für Kursfortschritt, Teilnahmebestätigungen und Lernnachweise auf loehrning.ai.",
+        "Optionales Lernkonto für Kursfortschritt und Teilnahmebestätigungen auf loehrning.ai.",
     },
     eyebrow: "Freie Lernplattform · Konto",
     heading: {
@@ -158,7 +155,6 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       methodsUnavailable:
         "Dein Fortschritt bleibt in diesem Browser.",
       accountUnavailable: "Dein Fortschritt bleibt in diesem Browser.",
-      records: "",
     },
     unavailable: {
       outage: {
@@ -254,15 +250,14 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       accountUnavailableNote:
         "Die meisten Inhalte sind auch ohne Konto offen.",
       unavailable: {
-        outage: "Der Anmeldedienst ist vorübergehend nicht erreichbar.",
+        outage: "Anmeldedienst nicht erreichbar.",
         configuration: "Anmeldung noch gesperrt.",
-        methods: "Keine Anmeldemethode ist hier vollständig konfiguriert.",
+        methods: "Keine Anmeldemethode verfügbar.",
         disabled: "Keine Anmeldemethode verfügbar.",
       },
     },
     accountValue: {
       heading: "Was ein Konto dazugibt",
-      lead: "",
       items: [
         {
           title: "Fortschritt auf allen Geräten",
@@ -288,7 +283,6 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
     },
     publicAccess: {
       heading: "Ohne Konto offen",
-      lead: "",
       links: [
         {
           path: "/kurse",
@@ -344,7 +338,6 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       methodsUnavailable:
         "Your progress stays in this browser.",
       accountUnavailable: "Your progress stays in this browser.",
-      records: "",
     },
     unavailable: {
       outage: {
@@ -432,15 +425,14 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       accountReadyNote: "No password needed.",
       accountUnavailableNote: "Most content is open without an account.",
       unavailable: {
-        outage: "The authentication service is temporarily unavailable.",
+        outage: "Sign-in service unreachable.",
         configuration: "Sign-in still locked.",
-        methods: "No sign-in method is fully configured here.",
+        methods: "No sign-in method available.",
         disabled: "No sign-in method available.",
       },
     },
     accountValue: {
       heading: "What an account adds",
-      lead: "",
       items: [
         {
           title: "Progress on every device",
@@ -465,7 +457,6 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
     },
     publicAccess: {
       heading: "Open without an account",
-      lead: "",
       links: [
         {
           path: "/kurse",

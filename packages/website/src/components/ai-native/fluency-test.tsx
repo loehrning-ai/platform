@@ -102,7 +102,7 @@ const DIMENSIONS_EN: readonly DimensionMeta[] = [
     label: "Governance",
     shortDesc: "Can you identify data and regulatory review points?",
     weakestRecommendation:
-      "Take AI Fundamentals first, then module 4, lesson 4.6. This is not legal advice.",
+      "Take Everyday AI Literacy first, then module 4, lesson 4.6. This is not legal advice.",
   },
 ];
 
@@ -927,7 +927,7 @@ function FluencyTestContent({ locale = "de" }: { readonly locale?: Locale }) {
               href={localizeHref("/ki-fuehrerschein", locale)}
               className="border-b border-brand-orange text-brand-orange transition-colors hover:text-brand-amber"
             >
-              {isEnglish ? "AI Fundamentals" : "KI-Führerschein"}
+              {isEnglish ? "Everyday AI Literacy" : "KI-Führerschein"}
             </Link>{" "}
             {isEnglish
               ? "is free and recommended before this course."

@@ -14,7 +14,7 @@ import { getDemoCopy } from "@/lib/demos-copy";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import { ArrowGlyph, SectionHead } from "@/components/werk";
 import { PlakatBand } from "@/components/plakat";
-import { fitEm } from "@/lib/plakat/fit";
+import { posterTitleFallbackStyle } from "@/lib/plakat/fit";
 import { DemoShell } from "./demo-shell";
 import { DemoCta } from "./demo-cta";
 import {
@@ -24,18 +24,15 @@ import {
 } from "./demo-notes-disclosure";
 
 /**
- * Extra headroom on the word fit for the demo title. Titles such as
- * "Vertragsassistent." are one long word that runs to the column edge; on a
- * first visit (font-display: optional) the Arial-metric fallback face sets
- * about 4.4% wider than Loehrning Sans and would be clipped by the band.
- * The same factor as the home title (hero.tsx). A wider system face still
- * cannot clip: the H1 breaks the word at the column edge (break-words).
+ * The demo title takes the fallback headroom (POSTER_FALLBACK_HEADROOM).
+ * Titles such as "Vertragsassistent." are one long word that runs to the
+ * column edge; on a first visit (font-display: optional) the Arial-metric
+ * fallback face sets about 4.4% wider than Loehrning Sans and would be
+ * clipped by the band. A wider system face still cannot clip: the H1 breaks
+ * the word at the column edge (break-words).
  */
-const FALLBACK_HEADROOM = 1.05;
-
 function demoTitleStyle(name: string): CSSProperties {
-  const fit = Math.ceil(fitEm(name) * FALLBACK_HEADROOM * 1000) / 1000;
-  return { "--fit": String(fit) } as CSSProperties;
+  return posterTitleFallbackStyle(name);
 }
 
 /**

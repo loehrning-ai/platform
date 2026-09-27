@@ -10,7 +10,7 @@ import {
 const lesson: CodexLesson = {
   id: "L05",
   number: 5,
-  title: "Scoping Coherent Changes",
+  title: "Scoping coherent changes",
   subtitle:
     "Separate work by behavior, dependency, and review boundary instead of relying on arbitrary time, file, or line limits.",
   durationMinutes: 12,
@@ -138,6 +138,10 @@ const lesson: CodexLesson = {
       placement: "end",
       courseSlug: "codex",
       props: {
+        idleHint: '# press "Run replay" to watch this session play out',
+        runLabel: "▶ Run replay",
+        resetLabel: "↺ Reset",
+        speedLabel: "speed",
         lessonId: "L05",
         cpId: "term-1",
         title: "Session replay: when a task is too big",

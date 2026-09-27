@@ -33,7 +33,16 @@ export function CapsLine({ children, arrow = false, as: Tag = "p", className }: 
           <path d="M0 5H62M57.5 1.5L62 5L57.5 8.5" strokeWidth="1.5" strokeLinecap="square" />
         </svg>
       ) : null}
-      <span>{children}</span>
+      <span>{typeof children === "string" ? keepSeparators(children) : children}</span>
     </Tag>
   );
+}
+
+/**
+ * A caps line breaks only after a " · " separator: the space before each dot
+ * is a no-break space, so a narrow phone never opens a line with a dot. The
+ * DOM text stays one text node, the same words and separators.
+ */
+function keepSeparators(text: string): string {
+  return text.replaceAll(" · ", "\u00a0· ");
 }

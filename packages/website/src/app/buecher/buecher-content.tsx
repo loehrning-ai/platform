@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, BookOpen, Eye, Lock } from "lucide-react";
 import { books, getBookCover, type Book } from "@/lib/books";
-import { HighlightedText } from "@/components/ui/highlighted-text";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import {
   BOOK_PAGE_COPY,
@@ -16,18 +15,6 @@ const PRIMARY_READER_CLASS =
 
 const SECONDARY_LINK_CLASS =
   "inline-flex min-h-11 max-w-full items-center gap-2 py-2 text-sm font-semibold text-brand-orange underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange";
-
-const BOOK_WASHES = [
-  "bg-brand-peach/55",
-  "bg-brand-sky/55",
-  "bg-brand-pink/50",
-] as const;
-
-const BOOK_BACKING_SHEETS = [
-  "bg-brand-acid/70",
-  "bg-brand-pink/65",
-  "bg-brand-teal/45",
-] as const;
 
 function formatReviewDate(value: string, locale: Locale): string {
   return new Intl.DateTimeFormat(locale === "de" ? "de-DE" : "en-GB", {
@@ -61,62 +48,33 @@ export function BuecherContent({
           compact companion values (tighter bands, a smaller display size, the
           cover shelf trimmed), and every `sm:`/`md:`/`lg:` variant restores the
           reviewed desktop layout unchanged. */}
-      <section className="relative isolate overflow-hidden border-b border-border bg-paper py-6 sm:py-14">
-        <span
-          className="pointer-events-none absolute -left-12 top-16 h-24 w-72 -rotate-3 bg-brand-acid/70"
-          aria-hidden="true"
-        />
-        <span
-          className="pointer-events-none absolute -right-16 bottom-8 h-28 w-80 rotate-6 bg-brand-peach/55"
-          aria-hidden="true"
-        />
+      <section className="border-b border-border bg-paper py-6 sm:py-14">
         <div
-          className="relative mx-auto grid max-w-6xl gap-5 px-4 sm:gap-8 sm:px-6 lg:grid-cols-12 lg:items-start lg:gap-10"
+          className="mx-auto grid max-w-6xl gap-5 px-4 sm:gap-8 sm:px-6 lg:grid-cols-12 lg:items-end lg:gap-10"
           data-book-editorial-spread
         >
-          <header className="relative min-w-0 py-1 sm:py-3 lg:col-span-8 lg:py-8">
-            <p className="flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
-              <span
-                className="h-3 w-3 bg-brand-cobalt"
-                aria-hidden="true"
-              />
-              {copy.kicker}
-            </p>
+          <header className="min-w-0 lg:col-span-8">
+            <p className="text-label text-muted-foreground">{copy.kicker}</p>
             <h1
-              className={`${headingFontClassName} relative mt-4 max-w-[14ch] text-[2.25rem] font-bold leading-[0.9] tracking-[-0.06em] text-foreground sm:mt-5 sm:text-[clamp(2.65rem,6vw,5.75rem)]`}
+              className={`${headingFontClassName} mt-3 max-w-[16ch] text-balance text-fluid-h1 font-bold text-foreground sm:mt-4 lg:text-display`}
             >
-              {copy.heading}{" "}
-              <HighlightedText colorVar="--color-brand-acid">
-                {copy.headingAccent}
-              </HighlightedText>
+              {copy.heading} {copy.headingAccent}
             </h1>
-            <p className="mt-4 max-w-2xl text-pretty text-sm leading-relaxed text-muted-foreground sm:mt-6 sm:text-lg">
+            <p className="mt-4 max-w-2xl text-pretty text-body text-muted-foreground sm:mt-6">
               {copy.introduction(catalogBooks.length)}
             </p>
           </header>
 
-          <aside className="relative min-w-0 pb-3 pr-3 lg:col-span-4 lg:mt-16 lg:rotate-1">
-            <span
-              className="absolute inset-0 translate-x-3 translate-y-3 bg-brand-pink/70"
-              aria-hidden="true"
-            />
-            <div className="relative border border-foreground/30 bg-paper p-4 shadow-card sm:p-6">
-              <span className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
-                {copy.collectionCountLabel}
-              </span>
-              <div className="mt-3 flex items-end justify-between gap-6 border-b border-foreground pb-4 sm:mt-7">
-                <strong className="text-4xl font-bold leading-[0.76] tracking-[-0.08em] text-foreground sm:text-[clamp(3.5rem,7vw,5.5rem)]">
-                  {String(catalogBooks.length).padStart(2, "0")}
-                </strong>
-                <span
-                  className="mb-1 h-7 w-7 bg-brand-acid"
-                  aria-hidden="true"
-                />
-              </div>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground sm:mt-4">
-                {copy.collectionDescription}
-              </p>
-            </div>
+          <aside className="min-w-0 border-t-2 border-foreground pt-3 lg:col-span-4">
+            <span className="text-label text-muted-foreground">
+              {copy.collectionCountLabel}
+            </span>
+            <strong className="mt-2 block text-num-lg font-bold text-foreground">
+              {String(catalogBooks.length).padStart(2, "0")}
+            </strong>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+              {copy.collectionDescription}
+            </p>
           </aside>
         </div>
       </section>
@@ -151,17 +109,13 @@ export function BuecherContent({
                   key={book.id}
                   id={book.id}
                   data-testid="book-card"
-                  className="group relative isolate grid min-w-0 bg-paper shadow-card ring-1 ring-foreground/20 md:grid-cols-[minmax(16rem,0.44fr)_minmax(0,1fr)]"
+                  className="group grid min-w-0 border border-border bg-paper md:grid-cols-[minmax(16rem,0.44fr)_minmax(0,1fr)]"
                   data-preview-shelf
                 >
-                  <span
-                    className={`absolute inset-0 -z-10 translate-x-2 translate-y-2 ${BOOK_BACKING_SHEETS[index % BOOK_BACKING_SHEETS.length]}`}
-                    aria-hidden="true"
-                  />
                   <div
-                    className={`relative flex min-w-0 items-center justify-center overflow-hidden border-b border-foreground/20 p-4 md:border-b-0 md:border-r sm:p-7 ${BOOK_WASHES[index % BOOK_WASHES.length]}`}
+                    className="relative flex min-w-0 items-center justify-center overflow-hidden border-b border-border bg-background p-4 md:border-b-0 md:border-r sm:p-7"
                   >
-                    <span className="absolute left-4 top-4 z-20 bg-paper px-2 py-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-foreground ring-1 ring-foreground/30">
+                    <span className="absolute left-4 top-4 z-20 text-label text-muted-foreground">
                       {copy.publicationNumber(index + 1)}
                     </span>
                     <button
@@ -173,17 +127,6 @@ export function BuecherContent({
                       aria-label={copy.coverPreviewAria(display.title)}
                       data-image-showcase
                     >
-                      {/* The backing sheets track the cover width: 3rem insets
-                          frame the 9rem phone cover, 1.5rem insets the wider
-                          covers from sm. */}
-                      <span
-                        className="absolute inset-x-12 bottom-7 top-9 translate-x-4 translate-y-4 bg-brand-acid/70 ring-1 ring-foreground/20 sm:inset-x-6"
-                        aria-hidden="true"
-                      />
-                      <span
-                        className="absolute inset-x-12 bottom-7 top-9 translate-x-2 translate-y-2 bg-paper ring-1 ring-foreground/40 sm:inset-x-6"
-                        aria-hidden="true"
-                      />
                       <Image
                         src={getBookCover(book)}
                         alt={copy.coverAlt(display.title)}
@@ -192,7 +135,7 @@ export function BuecherContent({
                         loading="lazy"
                         quality={70}
                         sizes="(max-width: 639px) 144px, (max-width: 767px) 224px, 256px"
-                        className="relative h-auto w-36 max-w-full bg-paper shadow-card ring-1 ring-foreground/40 transition-transform duration-300 ease-out group-hover:-translate-y-1 group-hover:-rotate-1 motion-reduce:transition-none sm:w-56 md:w-full"
+                        className="relative h-auto w-36 max-w-full bg-paper ring-1 ring-foreground/20 transition-transform duration-300 ease-out group-hover:-translate-y-1 motion-reduce:transition-none sm:w-56 md:w-full"
                       />
                       <span
                         aria-hidden="true"
@@ -214,7 +157,7 @@ export function BuecherContent({
                   <div className="flex min-w-0 flex-col bg-paper p-4 sm:p-7">
                     <div className="order-first flex min-w-0 flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-6 md:order-none">
                       <div className="min-w-0">
-                        <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
+                        <p className="text-label text-muted-foreground">
                           {copy.byAuthor(book.author)} · {display.edition}
                         </p>
                         <h3 className="mt-2 break-words text-xl font-bold leading-tight tracking-[-0.035em] sm:text-3xl">
@@ -224,13 +167,13 @@ export function BuecherContent({
                           {display.subtitle}
                         </p>
                       </div>
-                      <span className="w-fit bg-brand-acid/75 px-2 py-1 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground">
+                      <span className="w-fit border border-foreground px-2 py-1 text-label text-foreground">
                         {display.statusLabel}
                       </span>
                     </div>
 
                     <div className="mt-4 sm:mt-5">
-                      <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
+                      <p className="text-label text-muted-foreground">
                         {copy.contents}
                       </p>
                       <ol className="mt-3 divide-y divide-border border-y border-border">
@@ -239,7 +182,7 @@ export function BuecherContent({
                             key={highlight}
                             className="grid min-w-0 grid-cols-[2rem_minmax(0,1fr)] gap-3 py-3 text-sm leading-relaxed text-foreground"
                           >
-                            <span className="font-mono text-xs font-bold text-brand-orange">
+                            <span className="text-sm font-bold tabular-nums text-muted-foreground">
                               {String(highlightIndex + 1).padStart(2, "0")}
                             </span>
                             {highlight}
@@ -373,7 +316,7 @@ export function BuecherContent({
             })}
           </div>
 
-          <p className="mt-6 max-w-4xl border-l-[3px] border-foreground bg-brand-acid/35 px-4 py-3 text-xs leading-relaxed text-muted-foreground sm:ml-auto sm:mt-10">
+          <p className="mt-6 max-w-4xl border-l-2 border-foreground px-4 py-1 text-xs leading-relaxed text-muted-foreground sm:ml-auto sm:mt-10">
             {copy.sourceNote}
           </p>
         </div>

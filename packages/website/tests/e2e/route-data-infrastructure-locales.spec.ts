@@ -29,7 +29,7 @@ const LOCALES = [
     locale: "en",
     prefix: "/en",
     landingTitle: "Design data platforms from explicit system boundaries.",
-    firstLessonTitle: "The Stack, Top to Bottom",
+    firstLessonTitle: "The stack, top to bottom",
   },
 ] as const;
 
@@ -171,7 +171,7 @@ test("Data Infrastructure direct lesson deep links hydrate concurrently in DE an
     {
       locale: "en",
       path: "/en/kurse/open-source/data-infrastructure/kurs/mental-model",
-      title: "The Stack, Top to Bottom",
+      title: "The stack, top to bottom",
     },
   ] as const;
   const contexts = await Promise.all(

@@ -11,7 +11,7 @@ const LID = checkpointLessonId("mental-model");
 const lesson: DataInfraLesson = {
   id: "mental-model",
   number: 1,
-  title: "The Stack, Top to Bottom",
+  title: "The stack, top to bottom",
   subtitle: "Source → log → lake → warehouse → mart",
   durationMinutes: 12,
   trackId: "foundations",

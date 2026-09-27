@@ -576,8 +576,8 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         role: "card",
         phase: "after",
         description:
-          "Eine A4-Seite zum Ausdrucken: fünf Säulen einer Prognose, Servicelevel, Sicherheitsbestand und vier Ereignisarten, die kein Modell vorhersagt.",
-        short: "Eine A4-Seite mit den fünf Säulen einer Prognose, zum Ausdrucken.",
+          "Eine A4-Seite zum Ausdrucken: Newsvendor-Regel, Sicherheitsbestand und fünf Prüfungen, bevor du einer Prognose traust.",
+        short: "A4-Seite zum Ausdrucken: Newsvendor-Regel und Sicherheitsbestand.",
       },
       {
         label: "Übungsaufgabe",
@@ -1186,8 +1186,8 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         role: "card",
         phase: "after",
         description:
-          "One printable A4 page: five pillars of a forecast, service level, safety stock and four kinds of events no model predicts.",
-        short: "One printable A4 page with the five pillars of a forecast.",
+          "One printable A4 page: newsvendor rule, safety stock and five checks before you trust a forecast.",
+        short: "One printable A4 page with the newsvendor rule and safety stock.",
       },
       {
         label: "Take-home",

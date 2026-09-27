@@ -109,6 +109,7 @@ export function DataInfraLessonPage({
         title={lesson.title}
         objective={lesson.hook}
         headingLevel={isProjectCheckpoint ? 2 : 1}
+        objectiveRepeatedAbove={isProjectCheckpoint}
       >
         <DataInfraLessonReader
           locale={locale}

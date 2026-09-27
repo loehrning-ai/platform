@@ -119,7 +119,7 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 3,
     number: 3,
     kind: "reading",
-    title: "Manage freshness as an explicit contract",
+    title: "Manage freshness as a contract",
     subtitle:
       "Set staleness limits, propagate changes and deletions, show the data timestamp.",
     objective:

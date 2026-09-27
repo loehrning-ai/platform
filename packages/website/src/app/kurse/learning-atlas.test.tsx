@@ -67,7 +67,7 @@ describe("LearningAtlas", () => {
     expect(next).toHaveTextContent(
       locale === "de"
         ? "KI-Führerschein ist hier nicht verfügbar."
-        : "AI Fundamentals isn't available here.",
+        : "Everyday AI Literacy isn't available here.",
     );
     const stations = screen
       .getByTestId("selected-path-sequence")
@@ -469,7 +469,7 @@ describe("LearningAtlas", () => {
     const path = screen.getByTestId("selected-path-sequence");
     for (const title of [
       "AI-Native Arbeitskurs",
-      "Claude Course",
+      "Claude-Kurs",
       "Codex-Kurs",
       "The AI-Native Operator",
     ]) {

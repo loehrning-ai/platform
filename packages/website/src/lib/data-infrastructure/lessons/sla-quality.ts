@@ -11,7 +11,7 @@ const LID = checkpointLessonId("sla-quality");
 const lesson: DataInfraLesson = {
   id: "sla-quality",
   number: 11,
-  title: "SLAs, Observability & Data Quality",
+  title: "SLAs, observability and data quality",
   subtitle: "Freshness · volume · drift · lineage",
   durationMinutes: 16,
   trackId: "scale",

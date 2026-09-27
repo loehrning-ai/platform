@@ -72,7 +72,7 @@ const STAGES: readonly StageCard[] = [
     n: "08",
     title: "Experiment",
     tag: "measure effects under control",
-    blurb: "Plan A/B tests, power, and MDE, then read 10k visitors.",
+    blurb: "Plan A/B tests with power and MDE, then read 10,000 visits.",
   },
   {
     id: "causal",
@@ -93,7 +93,7 @@ const STAGES: readonly StageCard[] = [
     n: "11",
     title: "Deploy",
     tag: "models in production",
-    blurb: "Monitor drift and retrain when a signal calls for it.",
+    blurb: "Monitor drift and retrain when a signal fires.",
   },
   {
     id: "cap",
@@ -120,11 +120,11 @@ const TOOLS = [
   { n: "statsmodels", r: "inference + GLMs" },
   { n: "scipy.stats", r: "tests + distributions" },
   { n: "SHAP", r: "interpretability" },
-  { n: "Jupyter · Hex", r: "notebooks" },
+  { n: "Jupyter", r: "notebooks" },
   { n: "MLflow", r: "tracking" },
   { n: "Feast", r: "feature store" },
   { n: "Great Expectations", r: "data quality" },
-  { n: "A/B platform", r: "experiments" },
+  { n: "A/B testing platform", r: "experiments" },
 ] as const;
 
 // Werkzeichnung (design direction 7.4): ink roman headings with no italic
@@ -138,7 +138,7 @@ export default function ChOverview() {
         <div className="ov-hero-copy">
           <p className="ov-hero-eyebrow">Data science course · free</p>
           <h1 className="ov-hero-title">
-            Data Science means turning data into decisions.
+            Turn data into decisions.
           </h1>
           <p className="ov-hero-hook">
             Twelve chapters along one working loop, each built around a simulation you control.
@@ -158,7 +158,7 @@ export default function ChOverview() {
               <div className="v">chapters</div>
             </div>
             <div className="ov-stat">
-              <div className="k">22</div>
+              <div className="k">37</div>
               <div className="v">live simulations</div>
             </div>
             <div className="ov-stat">
@@ -175,7 +175,7 @@ export default function ChOverview() {
       <section className="section ov-outcomes-section">
         <div className="ov-section-head">
           <p className="ov-kicker">Outcomes</p>
-          <h2 className="ov-h2">Apply the methods and test how much they say.</h2>
+          <h2 className="ov-h2">What you can do afterwards</h2>
         </div>
         <ul className="ov-outcomes">
           {OUTCOMES.map((outcome) => (
@@ -189,7 +189,7 @@ export default function ChOverview() {
       <section className="section ov-curriculum-section">
         <div className="ov-section-head">
           <p className="ov-kicker">The curriculum</p>
-          <h2 className="ov-h2">Chapters 1 to 7 build a model; 8 to 12 test its effect.</h2>
+          <h2 className="ov-h2">Twelve chapters</h2>
         </div>
         <div className="ov-curriculum">
           {STAGES.map((stage) => (
@@ -216,7 +216,7 @@ export default function ChOverview() {
       <section className="section">
         <div className="ov-section-head ov-sh-tight">
           <p className="ov-kicker">Tools in the course</p>
-          <h2 className="ov-h2">Common open-source tools for day-to-day data science.</h2>
+          <h2 className="ov-h2">Tools used in the course.</h2>
         </div>
         <dl className="ov-tools">
           {TOOLS.map((tool) => (

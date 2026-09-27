@@ -48,7 +48,6 @@ type ProfileCopy = Readonly<{
   timeline: Readonly<{
     eyebrow: string;
     title: string;
-    intro: string;
     ariaLabel: string;
     currentLabel: string;
     milestones: readonly ProfileMilestone[];
@@ -56,7 +55,6 @@ type ProfileCopy = Readonly<{
   credentials: Readonly<{
     eyebrow: string;
     title: string;
-    intro: string;
     cards: readonly ProfileCredential[];
   }>;
   contact: Readonly<{
@@ -97,9 +95,9 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
       eyebrow: "Person und Arbeit",
       title: "Ich baue loehrning.ai, damit KI-Wissen prüfbar bleibt.",
       intro:
-        "Ich bin Tim Löhr. Beruflich habe ich als Data Scientist bei Apple und Red Bull sowie als Data Engineer bei Meta gearbeitet.",
+        "Ich bin Tim Löhr und habe als Data Scientist bei Apple und Red Bull und als Data Engineer bei Meta gearbeitet.",
       detail:
-        "Hier veröffentliche ich Kurse, Bücher, Demos, Workshops und technische Notizen. Vier Grundlagen-Reader benötigen ein kostenloses Lernkonto; alle anderen Lernmaterialien sind ohne Konto erreichbar.",
+        "Vier Grundlagen-Reader benötigen ein kostenloses Lernkonto, alles andere ist ohne Konto erreichbar.",
       portraitCaption: "Tim Löhr · loehrning.ai",
       roleLabel: "Rolle",
       roleValue: "Kurator und Entwickler",
@@ -113,12 +111,11 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
       eyebrow: "Berufliche Einordnung",
       title: "Frühere Arbeitgeber",
       notice:
-        "Die genannten Unternehmen dienen ausschließlich der biografischen Einordnung. Sie bestätigen oder unterstützen loehrning.ai nicht.",
+        "Die Unternehmen nenne ich nur als berufliche Stationen. Sie unterstützen oder empfehlen loehrning.ai nicht.",
     },
     timeline: {
       eyebrow: "Laufbahn",
       title: "Berufliche Stationen",
-      intro: "",
       ariaLabel: "Chronologie der beruflichen Stationen",
       currentLabel: "Aktuell",
       milestones: [
@@ -159,7 +156,6 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
     credentials: {
       eyebrow: "Ausbildung und Forschung",
       title: "Akademischer Hintergrund",
-      intro: "",
       cards: [
         {
           id: "degree",
@@ -173,7 +169,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
           title: "Internationale Ausbildung",
           subtitle: "Oxford ML Summer School · EELISA Pisa",
           detail:
-            "NLP × Finance in Oxford und Innovation Management an der SSSA.",
+            "NLP × Finance in Oxford und Innovation Management an der Scuola Superiore Sant'Anna in Pisa.",
         },
         {
           id: "research",
@@ -232,9 +228,9 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
       eyebrow: "Person and work",
       title: "I build loehrning.ai so AI knowledge stays verifiable.",
       intro:
-        "I am Tim Löhr. I previously worked as a data scientist at Apple and Red Bull and as a data engineer at Meta.",
+        "I am Tim Löhr; I worked as a data scientist at Apple and Red Bull and as a data engineer at Meta.",
       detail:
-        "Here I publish courses, books, demos, workshops and technical notes. Four foundation readers require a free learning account; all other learning materials are available without one.",
+        "Four foundation readers require a free learning account; everything else is open without one.",
       portraitCaption: "Tim Löhr · loehrning.ai",
       roleLabel: "Role",
       roleValue: "Curator and developer",
@@ -248,12 +244,11 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
       eyebrow: "Professional context",
       title: "Previous employers",
       notice:
-        "The companies named here provide biographical context only. They do not endorse or support loehrning.ai.",
+        "I name these companies only as past roles. They do not endorse or support loehrning.ai.",
     },
     timeline: {
       eyebrow: "Career",
       title: "Professional timeline",
-      intro: "",
       ariaLabel: "Chronology of professional roles",
       currentLabel: "Current",
       milestones: [
@@ -294,7 +289,6 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
     credentials: {
       eyebrow: "Education and research",
       title: "Academic background",
-      intro: "",
       cards: [
         {
           id: "degree",
@@ -307,7 +301,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
           id: "international",
           title: "International education",
           subtitle: "Oxford ML Summer School · EELISA Pisa",
-          detail: "NLP × Finance at Oxford and Innovation Management at SSSA.",
+          detail: "NLP × Finance at Oxford and Innovation Management at Scuola Superiore Sant'Anna, Pisa.",
         },
         {
           id: "research",
@@ -339,7 +333,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
       linkedIn: "Message me on LinkedIn",
       linkedInCompany: "loehrning.ai on LinkedIn",
       github: "Open GitHub profile",
-      feedbackPrefix: "Content errors can also be reported through",
+      feedbackPrefix: "You can also report content errors through",
       feedbackLabel: "the feedback form",
     },
   },

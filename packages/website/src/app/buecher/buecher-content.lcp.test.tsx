@@ -52,7 +52,8 @@ describe("BuecherContent visibility, loading, and locale behavior", () => {
     expect(screen.getAllByTestId("book-card")).toHaveLength(2);
     expect(screen.getAllByText(/von Tim Löhr/)).toHaveLength(2);
     expect(screen.getAllByText("Nach der Lektüre")).toHaveLength(2);
-    expect(screen.getAllByText(/Redaktion: editorial:books/)).toHaveLength(2);
+    expect(screen.getAllByText(/Geprüft: /)).toHaveLength(2);
+    expect(screen.queryByText(/editorial:books/)).toBeNull();
     expect(screen.getAllByText("Ausgabe, Quellen und Zugang")).toHaveLength(2);
     expect(
       container.querySelector("[data-book-editorial-spread]"),
@@ -209,11 +210,12 @@ describe("BuecherContent visibility, loading, and locale behavior", () => {
     expect(source).not.toContain("dark-section");
     expect(source).not.toContain("data-book-bento");
     expect(source).toContain("bg-paper");
-    // Direct band assertion, not file-scoped: the heading accent went through
-    // HighlightedText (an inline color-mix, not a bg-brand-acid utility
-    // class) since the pixel-overlap fix, so a bare `toContain("bg-brand-
-    // acid")` here would pass vacuously off an unrelated decorative accent
-    // elsewhere in the file rather than proving anything about the band.
-    expect(source).toMatch(/<HighlightedText colorVar="--color-brand-acid">/);
+    // Poster system (SPEC §2.3): /buecher is paper, and its printed covers
+    // are the only colour. No highlighter band, off-palette washes, offset
+    // sheets, rotations or card shadows.
+    expect(source).not.toContain("HighlightedText");
+    expect(source).not.toMatch(/\bbg-brand-(?:acid|peach|pink|sky|teal)\b/);
+    expect(source).not.toMatch(/\b-?rotate-\d/);
+    expect(source).not.toContain("shadow-card");
   });
 });

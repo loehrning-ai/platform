@@ -464,7 +464,7 @@ export function DocDemo(): JSX.Element {
                 exit={{ opacity: 0 }}
                 className="border border-dashed border-border bg-card/40 p-10 text-center text-[13px] text-muted-foreground"
               >
-                Klick „Extrahieren" um die Verarbeitung zu starten.
+                Klick „Extrahieren“, um die Verarbeitung zu starten.
               </m.div>
             )}
           </AnimatePresence>

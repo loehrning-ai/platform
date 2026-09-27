@@ -24,7 +24,7 @@ import { cx } from "@/components/werk/cx";
 import { BrandButton } from "@/components/ui/brand-button";
 import { withMotionProvider } from "@/components/motion/with-motion-provider";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
-import { fitEm } from "@/lib/plakat/fit";
+import { noBreakFirstLine, posterTitleFallbackStyle } from "@/lib/plakat/fit";
 import { HOME_SCENE } from "@/lib/plakat/palettes";
 import "./phone-hero.css";
 
@@ -35,33 +35,14 @@ import "./phone-hero.css";
 const LEMONS = HOME_SCENE === "lemons";
 
 /**
- * The text the poster title's fit rule measures: the first two headline
- * parts are one unbreakable line (joined by a no-break space in the
- * markup), so the title shrinks until that line fits its column.
+ * The poster title's fit: the first two headline parts are one unbreakable
+ * line (joined by a no-break space in the markup), so the title shrinks until
+ * that line fits its column. The line runs to the column edge at 320, so it
+ * takes the fallback headroom (the Arial-metric face sets about 4.4% wider).
  */
-function posterFitText(headline: readonly string[]): string {
-  const [first = "", second = "", ...rest] = headline;
-  return [`${first}\u00a0${second}`, ...rest].join(" ");
-}
-
-/**
- * Extra headroom on the fit for the home title only. Its first line is a
- * whole phrase bound by a no-break space, so it runs to the column edge at
- * 320; the Arial-metric fallback face (font-display: optional, first visit)
- * sets about 4.4% wider than Loehrning Sans and would clip it.
- */
-const FALLBACK_HEADROOM = 1.05;
-
 function heroTitleStyle(headline: readonly string[]): CSSProperties {
-  const fit = Math.ceil(fitEm(posterFitText(headline)) * FALLBACK_HEADROOM * 1000) / 1000;
-  return { "--fit": String(fit) } as CSSProperties;
+  return posterTitleFallbackStyle(noBreakFirstLine(headline));
 }
-
-/** The band's one caps line (SPEC §3.6). CSS sets the capitals. */
-const HERO_CAPS: Record<Locale, string> = {
-  de: "Frei · zweisprachig · quelloffen",
-  en: "Free · bilingual · open source",
-};
 
 const HeroNetwork = dynamic(
   () =>
@@ -298,7 +279,7 @@ function HeroSectionContent({
                 (graphit) opens the band at every width. */}
             {LEMONS ? (
               <div data-hero-kicker className="lg:mt-2">
-                <CapsLine>{HERO_CAPS[locale]}</CapsLine>
+                <CapsLine>{copy.capsLine}</CapsLine>
               </div>
             ) : (
               <p

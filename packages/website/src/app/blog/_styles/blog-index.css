@@ -104,13 +104,6 @@
   text-wrap: pretty;
 }
 
-/* Phones read the first sentence only. */
-@media (max-width: 39.99rem) {
-  .blog-root .blog-index__lead-detail {
-    display: none;
-  }
-}
-
 /* The halftone keeps a dot pitch of about 6 to 7px at every width (the
    mask's dots sit 16px apart at 1600px). Phones show a 112px strip cut
    from the field at 700px wide instead of shrinking the whole field. */
@@ -334,15 +327,6 @@
   transform: translateX(2px);
 }
 
-.blog-root .blog-index__note {
-  margin-top: 16px;
-  max-width: 64ch;
-  font-size: var(--text-caption, 0.8125rem);
-  line-height: 1.45;
-  color: var(--bi-slate-light);
-  text-wrap: pretty;
-}
-
 /* ---------- source standard ---------- */
 
 .blog-root .blog-index__body-text {
@@ -352,42 +336,6 @@
   line-height: 1.6;
   color: var(--bi-slate);
   text-wrap: pretty;
-}
-
-.blog-root .blog-index__marks {
-  list-style: none;
-  margin-top: 24px;
-  display: grid;
-  border-top: 1px solid var(--bi-hairline);
-}
-
-.blog-root .blog-index__marks li {
-  display: grid;
-  grid-template-columns: 2.5rem minmax(0, 1fr);
-  gap: 16px;
-  align-items: baseline;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--bi-hairline);
-  font-weight: 600;
-}
-
-@media (min-width: 40rem) {
-  .blog-root .blog-index__marks {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    border-bottom: 1px solid var(--bi-hairline);
-  }
-
-  .blog-root .blog-index__marks li {
-    grid-template-columns: 3rem minmax(0, 1fr);
-    gap: 24px;
-    padding: 16px 24px 16px 0;
-    border-bottom: 0;
-  }
-
-  .blog-root .blog-index__marks li + li {
-    padding-left: 24px;
-    border-left: 1px solid var(--bi-hairline);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

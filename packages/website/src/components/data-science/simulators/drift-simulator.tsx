@@ -360,7 +360,7 @@ export function DriftSimulator() {
             thresholdLabel={text("alert", "Alarm")}
             cursorDay={day}
             label={text(
-              "Model accuracy (AUC) over 60 days",
+              "Model AUC over 60 days",
               "Modellgüte (AUC) über 60 Tage",
             )}
             driftStartLabel={text(

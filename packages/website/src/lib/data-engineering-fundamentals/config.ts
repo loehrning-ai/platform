@@ -48,7 +48,7 @@ export const DATA_ENGINEERING_FUNDAMENTALS_CONFIG = {
   quizPassMessage: "Data Engineering Fundamentals is complete.",
   certificateFileStem: "Data-Engineering-Fundamentals",
   recordNoun: {
-    label: "Certificate of Participation",
+    label: "Certificate of participation",
     possessive: "Your certificate of participation",
     demonstrative: "This certificate of participation",
   },

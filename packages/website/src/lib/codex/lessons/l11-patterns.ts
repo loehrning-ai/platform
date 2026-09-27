@@ -10,7 +10,7 @@ import {
 const lesson: CodexLesson = {
   id: "L11",
   number: 11,
-  title: "Reusable Task Patterns",
+  title: "Reusable task patterns",
   subtitle:
     "Reviewed tests, repository exploration, bounded transformations and reproducible debugging reduce ambiguity.",
   durationMinutes: 13,
@@ -74,7 +74,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Define a behavior-preserving transformation. Specify:\n\n- old and new pattern, with code examples;\n- an authoritative repository example, if one exists;\n- included files and explicit exclusions;\n- public interfaces and behavior that must stay unchanged;\n- regression checks for callers, generated output, types and migrations where relevant.\n\n**Risk:** \"clean up the codebase\" hands over architecture and naming decisions nobody specified. A bounded transformation is easier to review, but repeating it across the codebase also spreads any flaw in the target pattern.",
+            "Define a behavior-preserving transformation. Specify:\n\n- old and new pattern, with code examples;\n- an authoritative repository example, if one exists;\n- included files and exclusions;\n- public interfaces and behavior that must stay unchanged;\n- regression checks for callers, generated output, types and migrations where relevant.\n\n**Risk:** \"clean up the codebase\" hands over architecture and naming decisions nobody specified. A bounded transformation is easier to review, but repeating it across the codebase also spreads any flaw in the target pattern.",
         },
       ],
     },

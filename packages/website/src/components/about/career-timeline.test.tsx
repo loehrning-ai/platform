@@ -84,7 +84,7 @@ describe("<CareerTimeline>", () => {
       expect(mark).toHaveAttribute("fill", "currentColor");
     }
     expect(
-      within(section).getByText(/ausschließlich der biografischen Einordnung/),
+      within(section).getByText(/nur als berufliche Stationen/),
     ).toBeVisible();
     expect(within(section).getByText("2021 bis heute")).toBeInTheDocument();
   });

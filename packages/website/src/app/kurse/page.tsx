@@ -9,6 +9,7 @@ import { LearningAtlas } from "./learning-atlas";
 import { getCourseAccess } from "@/lib/courses/access";
 import { ALL_COURSE_CATALOG } from "@/lib/courses/catalog";
 import { getWorkshops } from "@/lib/workshops";
+import { posterTitleFallbackStyle } from "@/lib/plakat/fit";
 import {
   ArrowGlyph,
   BUTTON_CLASSES,
@@ -64,17 +65,21 @@ export default async function KursePage() {
   return (
     <>
       <JsonLd data={createCoursesGraph(locale)} id="kurse-hub-jsonld" />
-      {/* Paper hero, no band: kicker, one ink headline, one lead sentence and
-          the KI-Check as a text link. On a phone the headline is 30px and
-          the lead 15px, so the goal rail and the recommended course share
-          the first screen with it; sm hands the reviewed sizes back. */}
+      {/* Paper hero, no band: kicker, the ink poster title (SPEC §4: fit to
+          its longest word, 36 to 50px on a phone), one lead sentence and the
+          KI-Check as a text link. Phones skip the lead (the kicker and the
+          grouped ledger say the same), so the goal rail and the recommended
+          course share the first screen with the poster title. */}
       <div className="mx-auto max-w-[75rem] px-4 pb-6 pt-4 sm:px-6 sm:pb-14 sm:pt-12 lg:pb-16 lg:pt-10">
-        <header className="max-w-[46rem]">
+        <header className="@container max-w-[46rem]">
           <Kicker>{copy.kicker(ALL_COURSE_CATALOG.length)}</Kicker>
-          <h1 className="mt-2 text-[1.875rem]/[1.08] font-bold tracking-[-0.012em] text-foreground text-balance sm:mt-3 sm:text-fluid-h1">
+          <h1
+            className="poster-title mt-2 max-w-[16ch] text-foreground sm:mt-3"
+            style={posterTitleFallbackStyle(copy.heading)}
+          >
             {copy.heading}
           </h1>
-          <p className="mt-2 max-w-[58ch] text-[0.9375rem]/[1.5] text-muted-foreground text-pretty sm:mt-4 sm:text-lead">
+          <p className="mt-4 max-w-[58ch] text-lead text-muted-foreground text-pretty max-sm:hidden">
             {copy.intro}
           </p>
           {/* Question and link share one line on every phone: under 430px
@@ -109,12 +114,8 @@ export default async function KursePage() {
             title={copy.accessHeading}
             size="compact"
           />
-          {/* Two sentences on a phone, the full note with its reasons
-              from sm. */}
-          <p className="mt-3 max-w-[64ch] text-[0.9375rem]/[1.5] text-muted-foreground text-pretty sm:hidden">
-            {copy.accessBodyShort}
-          </p>
-          <p className="mt-4 max-w-[64ch] text-body text-muted-foreground text-pretty max-sm:hidden">
+          {/* One cost note at every width. */}
+          <p className="mt-3 max-w-[64ch] text-[0.9375rem]/[1.5] text-muted-foreground text-pretty sm:mt-4 sm:text-body">
             {copy.accessBody}
           </p>
           <Link

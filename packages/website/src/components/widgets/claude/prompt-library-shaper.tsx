@@ -231,8 +231,8 @@ export function PromptLibraryShaperWidget({
       }
       scenario={
         german
-          ? "Fünf feste lokale Regeln aktualisieren sich direkt. Der Abschluss wird ab 80 Punkten registriert."
-          : "Five fixed local rules update immediately. Completion is recorded at 80 points."
+          ? "Fünf feste Regeln prüfen deinen Prompt beim Tippen. Ab 80 Punkten gilt die Übung als erledigt."
+          : "Five fixed rules check your prompt as you type. At 80 points the exercise counts as done."
       }
       done={done}
       doneLabel={german ? "Erledigt" : "Done"}

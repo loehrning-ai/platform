@@ -103,7 +103,7 @@ describe("<CompletionCertificateCta>", () => {
       certificateHref: "/en/kurse/open-source/codex/kurs/zertifikat",
       // Copy lock updated: English UI copy names completion documents "certificate of participation".
       heading: "Your certificate of participation is ready.",
-      link: "Open Certificate of Participation",
+      link: "Open Certificate of participation",
     },
     {
       courseSlug: "data-infrastructure",
@@ -111,7 +111,7 @@ describe("<CompletionCertificateCta>", () => {
       certificateHref:
         "/en/kurse/open-source/data-infrastructure/kurs/zertifikat",
       heading: "Your certificate of participation is ready.",
-      link: "Open Certificate of Participation",
+      link: "Open Certificate of participation",
     },
   ] as const)(
     "links eligible $courseSlug progress to its guarded certificate route",
@@ -140,7 +140,7 @@ describe("<CompletionCertificateCta>", () => {
     expect(
       screen.getByRole("link", {
         // Copy lock updated: English UI copy names completion documents "certificate of participation".
-        name: "Open Certificate of Participation",
+        name: "Open Certificate of participation",
       }),
     ).toBeInTheDocument();
 
@@ -154,7 +154,7 @@ describe("<CompletionCertificateCta>", () => {
 
     expect(
       screen.queryByRole("link", {
-        name: "Open Certificate of Participation",
+        name: "Open Certificate of participation",
       }),
     ).not.toBeInTheDocument();
   });

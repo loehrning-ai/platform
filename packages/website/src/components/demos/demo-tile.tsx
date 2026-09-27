@@ -11,6 +11,7 @@ import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import { ArrowGlyph } from "@/components/werk";
 import { getGalleryPreview } from "./demo-gallery-registry";
 import { DemoLocaleProvider } from "./demo-locale";
+import { DemoPosterThumb } from "./demo-poster";
 
 export function DemoTile({
   demo,
@@ -34,7 +35,7 @@ export function DemoTile({
       data-demo-tile={demo.slug}
       data-demo-size={demo.size}
       aria-label={copy.openAria(name)}
-      className="demo-gallery-tile group relative flex min-w-0 flex-col text-foreground max-sm:py-4 max-sm:[contain-intrinsic-size:auto_132px]!"
+      className="demo-gallery-tile group relative flex min-w-0 flex-col text-foreground max-sm:flex-row max-sm:items-start max-sm:gap-4 max-sm:py-4 max-sm:[contain-intrinsic-size:auto_132px]!"
     >
       {/* Schematic drawing on a small IDEA poster (SPEC §3.12): the panel
           takes the plakat-idea scene, so the drawing is Kobalt on Kreide and
@@ -43,8 +44,8 @@ export function DemoTile({
           the panel one tone (Kreide to the scene's card-hover, Kobalt on it
           5.83:1); no lift, no shadow. Decorative: the tile's aria-label and visible text carry the
           meaning, so screen readers skip the drawing's short labels. Below
-          sm the tile is a ledger row (blueprint 6.6): no drawing, a
-          one-sentence teaser, hairlines between rows. The whole row is the
+          sm the tile is a ledger row (blueprint 6.6): a 72px square crop
+          of the same poster, a one-sentence teaser, hairlines between rows. The whole row is the
           link, so the row drops the caption and the "open" line and carries
           one arrow beside the name instead. Its content-visibility
           placeholder matches the row height, not the 420px card, so the
@@ -66,6 +67,8 @@ export function DemoTile({
         </div>
       </div>
 
+      <DemoPosterThumb slug={demo.slug} className="w-[4.5rem] sm:hidden" />
+
       {/* The text block takes the row's slack so the link sits on one line
           across a row. */}
       <div className="flex min-w-0 flex-1 flex-col pt-4 max-sm:pt-0">
@@ -81,17 +84,14 @@ export function DemoTile({
           </h3>
           <ArrowGlyph className="mt-1 sm:hidden" />
         </div>
-        {/* The phone row carries the one-sentence teaser in full; the long
-            description returns from sm up. Neither is clamped, so no row
-            ends mid-sentence. */}
+        {/* One card line at every width: the one-sentence teaser, never
+            clamped, so no row ends mid-sentence. The detail page carries the
+            long description. */}
         <p
-          className="mt-1 break-words text-[0.9375rem] leading-normal text-muted-foreground sm:hidden"
+          className="mt-1 max-w-[60ch] break-words text-[0.9375rem] leading-normal text-muted-foreground sm:mt-3 sm:leading-relaxed"
           data-demo-tile-teaser
         >
           {demo.teaser}
-        </p>
-        <p className="mt-3 max-w-[60ch] break-words text-[0.9375rem] leading-relaxed text-muted-foreground max-sm:hidden">
-          {demo.description}
         </p>
         <p className="mt-auto pt-3 text-caption text-muted-foreground max-sm:hidden" data-demo-tile-meta>
           {evidenceLabel} · {levelLabel}

@@ -168,7 +168,7 @@ describe("<CertificatePage>", () => {
     fireEvent.click(
       screen.getByRole("button", {
         // Copy lock updated: English UI copy names completion documents "certificate of participation".
-        name: "Download Certificate of Participation",
+        name: "Download Certificate of participation",
       }),
     );
     await waitFor(() => expect(harness.generatePdf).toHaveBeenCalledTimes(1));
@@ -204,7 +204,7 @@ describe("<CertificatePage>", () => {
     fireEvent.click(
       screen.getByRole("button", {
         // Copy lock updated: English UI copy names completion documents "certificate of participation".
-        name: "Download Certificate of Participation",
+        name: "Download Certificate of participation",
       }),
     );
     await waitFor(() => expect(harness.generatePdf).toHaveBeenCalledTimes(1));

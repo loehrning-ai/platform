@@ -29,9 +29,8 @@ export interface WorkshopPageCopy {
     readonly hubKicker: (count: number) => string;
     /** The H1. Describes the format; not a slogan. */
     readonly hubHeading: string;
+    /** One-sentence lead at every width. */
     readonly hubLead: string;
-    /** One-sentence lead for phones, where the full lead would push the list below the fold. */
-    readonly hubLeadShort: string;
     /** The band's one action: into the recommended first workshop. */
     readonly hubStart: (number: string) => string;
     /** Line next to the cover-band button. */
@@ -45,10 +44,6 @@ export interface WorkshopPageCopy {
     readonly listCaption: string;
     /** "Workshop 03", the start of a row's kicker line. */
     readonly workshopNumber: (number: string) => string;
-    /** Label before the workshop's fixed question on a row. */
-    readonly questionLabel: string;
-    /** Wraps the fixed question in the locale's quotation marks. */
-    readonly quote: (text: string) => string;
     readonly leaveWith: string;
     /** Label of the limiting requirement on a row. */
     readonly requirementLabel: string;
@@ -70,9 +65,9 @@ export interface WorkshopPageCopy {
     readonly requirementShort: Readonly<Record<string, string>>;
     /** "Live 90 Min." */
     readonly minutesLive: (minutes: number) => string;
-    /** "Allein ca. 60 Min." */
+    /** "Selbstlernen ca. 60 Min." */
     readonly minutesSelfStudy: (minutes: number) => string;
-    /** Compact duration line of a phone row: "Live 90 Min. · allein 60 Min." */
+    /** Compact duration line of a phone row: "Live 90 Min. · Selbstlernen 60 Min." */
     readonly rowTimes: (live: number | undefined, self: number) => string;
     /** Takes an already formatted date. */
     readonly liveTested: (date: string) => string;
@@ -83,6 +78,8 @@ export interface WorkshopPageCopy {
     readonly teamsHeading: string;
     /** Takes the numbers of the workshops that ship a presenter view. */
     readonly teamsBody: (numbers: readonly string[]) => string;
+    /** Keyboard hint after teamsBody; shown from lg only, since phones have no P key. */
+    readonly teamsKeyHint: string;
     /** Shown once under the list. */
     readonly boundary: string;
   };
@@ -185,8 +182,6 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         `Workshops · ${count} ${count === 1 ? "Fall" : "Fälle"}`,
       hubHeading: "Workshops mit Fall und Vorlage.",
       hubLead:
-        "Jeder Workshop dreht sich um eine Frage an eine erfundene Firma, und du nimmst eine Vorlage für deine Arbeit mit.",
-      hubLeadShort:
         "Du rechnest oder prüfst an den Daten einer erfundenen Firma und nimmst eine Vorlage für deine Arbeit mit.",
       hubStart: (number) => `Mit Workshop ${number} beginnen`,
       hubAccess: "Alle Materialien kostenlos, ohne Anmeldung",
@@ -202,8 +197,6 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       listHeading: "Workshops",
       listCaption: "Neueste zuerst",
       workshopNumber: (number) => `Workshop ${number}`,
-      questionLabel: "Die Frage",
-      quote: (text) => `„${text}“`,
       leaveWith: "Du nimmst mit",
       requirementLabel: "Du brauchst",
       requirementBrowserOnly: "Einen Browser, kein KI-Konto",
@@ -215,11 +208,11 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
           "Claude-Desktop-App und ein Claude-Plan mit Claude Code",
       },
       minutesLive: (minutes) => `Live ${minutes} Min.`,
-      minutesSelfStudy: (minutes) => `Allein ca. ${minutes} Min.`,
+      minutesSelfStudy: (minutes) => `Selbstlernen ca. ${minutes} Min.`,
       rowTimes: (live, self) =>
         live === undefined
-          ? `Allein ${self} Min.`
-          : `Live ${live} Min. · allein ${self} Min.`,
+          ? `Selbstlernen ${self} Min.`
+          : `Live ${live} Min. · Selbstlernen ${self} Min.`,
       liveTested: (date) => `Live gehalten am ${date}`,
       newBadge: "Neu",
       startHere: "Einstieg",
@@ -232,8 +225,9 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
           numbers.length === 1
             ? `Workshop ${numbers[0]} hat`
             : `Workshops ${numbers.slice(0, -1).join(", ")} und ${numbers.at(-1)} haben`;
-        return `${list} eine Moderationsansicht mit Notizen und Abstimmungsfragen. Öffne das Deck und drück P.`;
+        return `${list} eine Moderationsansicht mit Notizen und Abstimmungsfragen.`;
       },
+      teamsKeyHint: "Öffne das Deck und drück P.",
       boundary:
         "Alle Übungsfirmen sind erfunden, echte Zahlen tragen eine Quelle. Gezeigte KI-Antworten sind aufgezeichnet oder für die Übung konstruiert, keine Live-Abfragen.",
     },
@@ -271,9 +265,9 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       agendaHeading: "Ablauf",
       minutes: (minutes) => `${minutes} Min.`,
       minutesLive: (minutes) => `Live ${minutes} Min.`,
-      minutesSelfStudy: (minutes) => `allein ca. ${minutes} Min.`,
+      minutesSelfStudy: (minutes) => `Selbstlernen ca. ${minutes} Min.`,
       agendaSource: {
-        deck: "Die Minuten stammen aus den Zeiten im Deck.",
+        deck: "",
         plan: "Geplante Minuten, noch nicht mit Testpersonen gemessen.",
       },
       liveOnly: "nur live",
@@ -367,9 +361,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         `Workshops · ${count} ${count === 1 ? "case" : "cases"}`,
       hubHeading: "Workshops with a case and a template.",
       hubLead:
-        "Each workshop centres on one question about an invented company, and you leave with a template for your own work.",
-      hubLeadShort:
-        "You calculate or check against the data of an invented company and leave with a template for your own work.",
+        "You work through an invented company's data and leave with a template for your own work.",
       hubStart: (number) => `Start with Workshop ${number}`,
       hubAccess: "All materials free, no sign-up",
       routeHeading: "How Workshops 03 and 04 run",
@@ -384,8 +376,6 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       listHeading: "Workshops",
       listCaption: "Newest first",
       workshopNumber: (number) => `Workshop ${number}`,
-      questionLabel: "The question",
-      quote: (text) => `“${text}”`,
       leaveWith: "You leave with",
       requirementLabel: "You need",
       requirementBrowserOnly: "A browser, no AI account",
@@ -397,9 +387,9 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
           "Claude desktop app and a Claude plan that includes Claude Code",
       },
       minutesLive: (minutes) => `Live ${minutes} min`,
-      minutesSelfStudy: (minutes) => `Alone about ${minutes} min`,
+      minutesSelfStudy: (minutes) => `Self-paced about ${minutes} min`,
       rowTimes: (live, self) =>
-        live === undefined ? `Alone ${self} min` : `Live ${live} min · alone ${self} min`,
+        live === undefined ? `Self-paced ${self} min` : `Live ${live} min · self-paced ${self} min`,
       liveTested: (date) => `Run live on ${date}`,
       newBadge: "New",
       startHere: "Start here",
@@ -411,8 +401,9 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
           numbers.length === 1
             ? `Workshop ${numbers[0]} has`
             : `Workshops ${numbers.slice(0, -1).join(", ")} and ${numbers.at(-1)} have`;
-        return `${list} a presenter view with notes and voting questions. Open the deck and press P.`;
+        return `${list} a presenter view with notes and voting questions.`;
       },
+      teamsKeyHint: "Open the deck and press P.",
       boundary:
         "All practice companies are invented, and real figures carry a source. AI answers shown are recorded or constructed for the exercise, not live requests.",
     },
@@ -452,7 +443,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       minutesLive: (minutes) => `Live ${minutes} min`,
       minutesSelfStudy: (minutes) => `on your own about ${minutes} min`,
       agendaSource: {
-        deck: "The minutes come from the timings in the deck.",
+        deck: "",
         plan: "Planned minutes, not yet measured with test readers.",
       },
       liveOnly: "live only",

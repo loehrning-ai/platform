@@ -500,7 +500,7 @@ export function WorkshopDecisionLab({
       id={id}
       aria-labelledby={`${decisionName}-title`}
       data-workshop-decision-lab
-      className="scroll-mt-20 border-t-2 border-foreground bg-inset"
+      className="scroll-mt-20 border-t-2 border-scene-line bg-inset"
     >
       <div className="mx-auto grid max-w-[75rem] gap-5 px-4 py-6 sm:gap-8 sm:px-6 sm:py-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-12">
         <header className="min-w-0">

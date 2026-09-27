@@ -11,7 +11,7 @@ const LID = checkpointLessonId("cap-pacelc");
 const lesson: DataInfraLesson = {
   id: "cap-pacelc",
   number: 2,
-  title: "CAP, PACELC & Coordination Cost",
+  title: "CAP, PACELC and coordination cost",
   subtitle: "Partition behavior and normal-operation trade-offs",
   durationMinutes: 14,
   trackId: "foundations",

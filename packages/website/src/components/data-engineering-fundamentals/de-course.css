@@ -788,7 +788,10 @@
   line-height: 1.02;
   margin: 0 0 14px;
   max-width: 980px;
-  color: var(--fg-1);
+  /* The lesson H1 follows the page scene's line (SPEC §3.13): Aubergine on
+     the Bloom routes, Druckschwarz where no scene is set. This sheet is
+     unlayered, so it has to say so itself. */
+  color: var(--color-scene-line);
 }
 .de-course .hero-title .accent {
   color: var(--theme-blue);
@@ -8257,7 +8260,7 @@
   line-height: 0.95;
   letter-spacing: -0.03em;
   font-weight: 800;
-  color: var(--fg-1);
+  color: var(--color-scene-line);
   margin: 0 0 22px;
   max-width: 12ch;
 }

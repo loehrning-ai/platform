@@ -104,8 +104,6 @@ export const AGENT_HELP_COPY_DE: AgentHelpCopy = {
   --header "Authorization: Bearer lat_..."`,
     format:
       "Ein Schlüssel beginnt mit lat_. Gespeichert wird nur ein Prüfwert, deshalb kann auch der Betreiber ihn nicht erneut anzeigen. Verlierst du ihn, widerrufst du ihn und legst einen neuen an.",
-    limit: (maxActive) =>
-      `Bis zu ${maxActive} Schlüssel können gleichzeitig aktiv sein.`,
     bearerActive:
       "Mit Schlüssel kommen zwei lesende Werkzeuge dazu: dein Lernstand und dein nächster Schritt. Ab der nächsten Anfrage weist der Server einen widerrufenen Schlüssel ab, auch für die öffentlichen Werkzeuge.",
     bearerPending: "",

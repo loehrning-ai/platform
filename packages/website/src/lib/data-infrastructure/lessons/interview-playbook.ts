@@ -11,11 +11,11 @@ const LID = checkpointLessonId("interview-playbook");
 const lesson: DataInfraLesson = {
   id: "interview-playbook",
   number: 12,
-  title: "System Design Review",
-  subtitle: "A seller analytics scenario with explicit assumptions",
+  title: "System design review",
+  subtitle: "A seller analytics scenario with stated assumptions",
   durationMinutes: 20,
   trackId: "scale",
-  hook: "Turn an ambiguous prompt into a reviewable design with estimates, failure boundaries, and stated trade-offs.",
+  hook: "Turn an open prompt into a reviewable system design.",
   keyConcepts: [
     "Review structure",
     "Back-of-envelope estimation",

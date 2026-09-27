@@ -11,7 +11,7 @@ const LID = checkpointLessonId("partitioning");
 const lesson: DataInfraLesson = {
   id: "partitioning",
   number: 6,
-  title: "Partitioning, Clustering, Small Files",
+  title: "Partitioning, clustering, small files",
   subtitle: "Lay out a petabyte to query a megabyte",
   durationMinutes: 12,
   trackId: "storage",

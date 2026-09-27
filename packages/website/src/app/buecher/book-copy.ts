@@ -126,13 +126,13 @@ const BOOK_DISPLAY_EN: Readonly<Record<string, LocalizedBookDisplay>> = {
   },
   "ki-arbeitsalltag": {
     title: "AI at Work",
-    subtitle: "Companion book for AI Fundamentals",
+    subtitle: "Companion book for Everyday AI Literacy",
     edition: "Working edition 2026",
     audience: "Employees and teams",
     resourceType: "HTML companion book",
     accessLabel: "Free online reader",
     statusLabel: "Reader available",
-    relatedResourceLabel: "Open the AI Fundamentals course",
+    relatedResourceLabel: "Open the Everyday AI Literacy course",
     description:
       "Core terms, common applications, prompting, data protection, and Article 4. Written for people who use AI at work and bring no technical background.",
     highlights: [

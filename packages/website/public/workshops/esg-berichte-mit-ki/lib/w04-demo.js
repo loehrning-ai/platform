@@ -200,7 +200,7 @@
   var CARRIER = { Strom: "electricity", Erdgas: "natural gas", Diesel: "diesel", AdBlue: "AdBlue", Herkunftsnachweis: "guarantee of origin" };
   var ROLE_NOTE = { "KI-Vorschlag": "AI proposal", "Regel Schlüssel": "unique-key rule", "Regel Abdeckung": "coverage rule",
     "Regel Grenze": "boundary rule", "Regel Produktfilter": "product-filter rule", "Regel Scope 2": "Scope 2 rule" };
-  var UNIT = { "kWh(Hs)": "kWh (Hs basis)", "kWh (abgedeckt)": "kWh covered by the certificate" };
+  var UNIT = { "kWh(Hs)": "kWh (Hs basis)", "kWh (abgedeckt)": "kWh covered by the guarantee of origin" };
   function withRaw(en, raw) { return en === raw ? en : en + " (CSV: " + raw + ")"; }
   function sourceText(r) {
     var p = r.source_page, m;
@@ -269,7 +269,7 @@
   function perText(id) { return F[id].unit.replace("CO2e", "CO₂e").replace("/", " per ").replace("(Hs)", " (Hs)").replace("(Hi)", " (Hi)"); }
   function arith(r) {
     if (r.status === "excluded") return el("p", { "class": "arith" }, ["Not counted in the total.", el("span", { text: GLOSS[r.row_id] || r.reason })]);
-    if (r.status === "instrument") return el("p", { "class": "arith" }, ["Certificate for " + n0(Number(r.qty_norm)) + " kWh. Market-based, those kWh count at " + f2("F-EL-GO") + ".", el("span", { text: GLOSS[r.row_id] || r.reason })]);
+    if (r.status === "instrument") return el("p", { "class": "arith" }, ["Guarantee of origin for " + n0(Number(r.qty_norm)) + " kWh. Market-based, those kWh count at " + f2("F-EL-GO") + ".", el("span", { text: GLOSS[r.row_id] || r.reason })]);
     var q = Number(r.qty_norm), u = unitText(r.unit_norm);
     var lb = q * F[r.factor_lb].value / 1000, mb = q * F[r.factor_mb].value / 1000;
     var line1 = n0(q) + " " + u + " × " + f2(r.factor_lb) + " " + perText(r.factor_lb) + " = " + C.num(lb) + " t location-based";
@@ -369,8 +369,8 @@
       var ids = ["F-EL-LB-2025", "F-EL-RM-2025", "F-EL-GO"];
       var unc = NUM.el_uncovered_kwh.value;
       return { title: "Market-based: which factor for which kWh", sub: "faktoren/faktoren_lehrwerte.csv", nodes: [
-        caught("the market-based order: a certificate first, then a supplier rate, then the residual mix."),
-        para("The certificate covers Werk Süd only. The other " + key("el_uncovered_kwh") + " have no certificate, so they take the residual mix."),
+        caught("the market-based order: a guarantee of origin first, then a supplier rate, then the residual mix."),
+        para("The guarantee of origin covers Werk Süd only. The other " + key("el_uncovered_kwh") + " have none, so they take the residual mix."),
         dtable(["Factor ID", "Label", "kg CO₂e per kWh"], ids.map(function (id) { return { cells: [id, F[id].label_en, f2(id)] }; }), { num: [2] }),
         el("p", { "class": "arith" }, [n0(unc) + " kWh × " + f2("F-EL-RM-2025") + " = " + key("s2mb_2025") + " (residual mix, right)",
           el("span", { text: n0(unc) + " kWh × " + f2("F-EL-LB-2025") + " = " + key("mb_grid_avg_wrong_s2_t") + " with the grid average, which is " + key("mb_grid_avg_too_low_t") + " too low." })]),
@@ -402,8 +402,8 @@
       var d = D.drivers.mb[0];
       return { title: "Guarantees of origin: " + key("drv_mb_cert_t"), sub: "drivers.mb · market-based", nodes: [
         el("p", { "class": "arith" }, [d.en + ": " + C.signed(d.t) + " t", el("span", { text: d.arithmetic.replace(/ x /g, " × ") + " kg" })]),
-        para("The certificate covers the " + key("el_ws_mwh") + " of Werk Süd since January 2025 and no other site. That is " + key("drv_mb_cert_share_pct") + " of the market-based decrease."),
-        openBtn("Open the certificate confirmation", "doc:" + docFileByTrap("scope2")),
+        para("The guarantee of origin covers the " + key("el_ws_mwh") + " of Werk Süd since January 2025 and no other site. That is " + key("drv_mb_cert_share_pct") + " of the market-based decrease."),
+        openBtn("Open the guarantee of origin", "doc:" + docFileByTrap("scope2")),
         rowsBlock([rowById("I-WS-GO"), rowById("E-WS-01")], "The rows behind it")
       ] };
     },

@@ -75,7 +75,7 @@ describe("machine course records", () => {
     const english = getMachineCourse("ki-fuehrerschein", "en");
 
     expect(german?.title).toBe("KI-Führerschein");
-    expect(english?.title).toBe("AI Fundamentals");
+    expect(english?.title).toBe("Everyday AI Literacy");
     expect(english?.level_label).toBe("Entry");
     expect(german?.level_label).toBe("Einstieg");
     expect(english?.description).not.toBe(german?.description);

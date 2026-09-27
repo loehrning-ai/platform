@@ -67,7 +67,7 @@ export default localizeCodexLessonToGerman(canonical, {
       canonical.subtitle,
       "Worktrees, Abhängigkeitsreihenfolge und klare Dateiverantwortung trennen gleichzeitige Änderungen.",
     ],
-    [canonical.hook, "Parallel läuft nur, was unabhängig ist."],
+    [canonical.hook, "Nur unabhängige Änderungen parallel laufen lassen."],
     [canonical.keyConcepts[0], "Git-Worktrees"],
     [canonical.keyConcepts[1], "Aufgabenzerlegung"],
     [canonical.keyConcepts[2], "Unabhängige und abhängige Aufgaben"],

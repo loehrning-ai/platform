@@ -184,7 +184,17 @@ const cards = workshopScenes().map((scene) => {
   return { scene, file: join(PUBLIC_WORKSHOPS, scene.slug, "card-preview.webp"), markup, input: inputHash(markup) };
 });
 
-const lock = existsSync(LOCK) ? JSON.parse(readFileSync(LOCK, "utf8")) : { version: 1, cards: {} };
+/** One read, no separate existence check: a missing lock (ENOENT) starts empty. */
+function readLock() {
+  try {
+    return JSON.parse(readFileSync(LOCK, "utf8"));
+  } catch (error) {
+    if (error?.code === "ENOENT") return { version: 1, cards: {} };
+    throw error;
+  }
+}
+
+const lock = readLock();
 
 if (CHECK) {
   const problems = [];

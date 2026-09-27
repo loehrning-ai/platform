@@ -122,10 +122,9 @@ describe("catalog surfaces below lg", () => {
     // becomes the two-column sheet (poster cover left), so nothing needs `order`.
     expect(row.indexOf("<figure")).toBeLessThan(row.indexOf("<h3"));
     expect(row.indexOf("data-workshop-meta")).toBeLessThan(row.indexOf("<h3"));
-    expect(row.indexOf("<h3")).toBeLessThan(row.indexOf("data-workshop-question"));
-    expect(row.indexOf("data-workshop-question")).toBeLessThan(
-      row.indexOf("<Link"),
-    );
+    expect(row.indexOf("<h3")).toBeLessThan(row.indexOf("<Link"));
+    // The fixed question lives on the workshop page, not on a hub row.
+    expect(row).not.toContain("data-workshop-question");
     // A phone row is an 80px poster thumb beside the text; md returns the
     // sheet with the poster cover at 14rem, 18rem from lg (SPEC §3.3).
     expect(row).toContain(
@@ -134,7 +133,7 @@ describe("catalog surfaces below lg", () => {
     expect(row).toContain(
       "md:grid-cols-[14rem_minmax(0,1fr)] md:items-start md:gap-10 md:py-10 lg:grid-cols-[18rem_minmax(0,1fr)]",
     );
-    // The summary is md-only; "Du gehst mit" is one clamped sentence.
+    // The summary is md-only; "Du nimmst mit" is one clamped sentence.
     expect(row).toContain('className="mt-3 hidden max-w-[56ch] text-body text-muted-foreground text-pretty md:block"');
     expect(row).toContain("max-md:line-clamp-2");
     // The link covers the row on a phone; the text keeps the full width.
@@ -211,15 +210,18 @@ describe("/kurse below lg", () => {
     const atlas = kurseSource("kurse/learning-atlas.tsx");
     const row = kurseSource("kurse/course-ledger-row.tsx");
 
-    // Hero: a 30px headline and a 15px lead, the fluid tokens from sm.
-    expect(page).toContain("text-[1.875rem]/[1.08]");
-    expect(page).toContain("sm:text-fluid-h1");
-    expect(page).toContain("text-[0.9375rem]/[1.5] text-muted-foreground text-pretty sm:mt-4 sm:text-lead");
+    // Hero: the poster title on paper (SPEC §4, fit to its column, 36 to
+    // 50px on a phone); the lead token from sm, and no lead on a phone,
+    // where the kicker and the grouped ledger carry it.
+    expect(page).toContain('className="poster-title mt-2 max-w-[16ch] text-foreground sm:mt-3"');
+    expect(page).toContain("style={posterTitleFallbackStyle(copy.heading)}");
+    expect(page).toContain("mt-4 max-w-[58ch] text-lead text-muted-foreground text-pretty max-sm:hidden");
     expect(page).toContain("px-4 pb-6 pt-4 sm:px-6 sm:pb-14 sm:pt-12 lg:pb-16 lg:pt-10");
-    // The "Unsicher?" line is the link's 44px target on a phone, and the
-    // short cost note trades places with the full one at sm.
+    // The "Unsicher?" line is the link's 44px target on a phone, and one
+    // cost note renders at every width (no phone/desktop swap).
     expect(page).toContain("max-sm:flex max-sm:flex-wrap max-sm:items-center");
-    expect(page).toMatch(/accessBodyShort[\s\S]*max-sm:hidden/);
+    expect(page).not.toContain("accessBodyShort");
+    expect(page).toMatch(/\{copy\.accessBody\}/);
     expect(page).toContain('size="compact"');
 
     // Atlas and ledger heads: 22px on a phone, the fluid h2 from sm.

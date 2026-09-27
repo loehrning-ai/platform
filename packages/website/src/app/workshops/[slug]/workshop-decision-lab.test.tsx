@@ -278,7 +278,8 @@ describe("<WorkshopDecisionLab>", () => {
       screen.getByRole("radio", { name: /Allocate proportionally/ }),
     ).toHaveClass("appearance-none", "border-2", "border-foreground");
     const lab = document.querySelector("[data-workshop-decision-lab]");
-    expect(lab).toHaveClass("border-t-2", "border-foreground", "bg-inset");
+    // The Kopflinie follows the scene line (SPEC §3.7), like every other one below the band.
+    expect(lab).toHaveClass("border-t-2", "border-scene-line", "bg-inset");
 
     const source = readFileSync(
       resolve(

@@ -61,21 +61,18 @@ export function PromptGraderWidget({
 
   return (
     <WidgetFrame
-      kindLabel={german ? "Lokale Prüfung" : "Local check"}
+      kindLabel={german ? "Lokale Regeln" : "Local rules"}
       title={
         german
-          ? "Prompt-Struktur mit festen Regeln prüfen"
-          : "Check prompt structure with fixed rules"
+          ? "Prompt-Struktur bewerten"
+          : "Rate prompt structure"
       }
       scenario={`${german ? "Aufgabe" : "Task"}: ${task}`}
       done={done}
       doneLabel={german ? "Erledigt" : "Done"}
     >
       <p className="mb-2 text-[13px] leading-[1.5] text-muted-foreground">
-        {german
-          ? "Rubrik zur eigenen Prüfung (nicht automatisch bewertet)"
-          : "Rubric for your review (not evaluated automatically)"}
-        : {rubric}
+        {german ? "Selbst prüfen:" : "Check yourself:"} {rubric}
       </p>
       <textarea
         rows={6}

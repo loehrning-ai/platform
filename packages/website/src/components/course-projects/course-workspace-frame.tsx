@@ -756,7 +756,7 @@ export function CourseWorkspaceFrame({
           <button
             ref={fullscreenButtonRef}
             type="button"
-            className="inline-flex min-h-11 max-w-full items-center text-center bg-foreground px-3 py-2 text-label text-background transition-colors duration-[120ms] hover:bg-muted-foreground motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:ml-auto"
+            className="inline-flex min-h-11 max-w-full items-center text-center border border-scene-line bg-transparent px-3 py-2 text-label text-foreground transition-colors duration-[120ms] hover:bg-card-hover motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:ml-auto"
             onClick={() => (fullscreen ? exitFullscreen() : enterFullscreen())}
           >
             {fullscreen ? copy.exitFullscreen : copy.enterFullscreen}

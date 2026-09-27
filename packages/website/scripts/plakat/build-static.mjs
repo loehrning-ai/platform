@@ -27,7 +27,7 @@
  *   node scripts/plakat/build-static.mjs          write every file that would change
  *   node scripts/plakat/build-static.mjs --check  write nothing; exit 1 when a file is stale
  */
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, relative } from "node:path";
 import {
   coverPosterSvg,
@@ -74,9 +74,19 @@ for (const scene of workshopScenes()) {
   }
 }
 
+/** One read, no separate existence check: a missing file (ENOENT) reads as null. */
+function readIfPresent(file) {
+  try {
+    return readFileSync(file, "utf8");
+  } catch (error) {
+    if (error?.code === "ENOENT") return null;
+    throw error;
+  }
+}
+
 const stale = [];
 for (const [file, text] of outputs) {
-  const current = existsSync(file) ? readFileSync(file, "utf8") : null;
+  const current = readIfPresent(file);
   if (current === text) continue;
   stale.push(relative(REPO, file));
   if (!CHECK) {

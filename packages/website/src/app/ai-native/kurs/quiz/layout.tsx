@@ -11,8 +11,8 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title:
       locale === "en"
-        ? "Workshop quiz: AI-Native Workflow Course"
-        : "Workshop-Quiz: AI-Native Arbeitskurs",
+        ? "Final quiz: AI-Native Workflow Course"
+        : "Abschlussquiz: AI-Native Arbeitskurs",
     description:
       locale === "en"
         ? "Twenty questions on bounded tasks, Claude workspaces, maintained knowledge and controlled automation. Pass mark: 70 percent. Time limit: 25 minutes."

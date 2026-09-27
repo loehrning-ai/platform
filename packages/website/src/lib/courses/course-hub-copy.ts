@@ -36,11 +36,9 @@ export const COURSE_HUB_COPY = {
     workshopsNote: "Material ohne Konto.",
     workshopsAction: "Workshops ansehen",
     accessHeading: "Kosten und Konto",
+    /** One cost note at every width: price, the two reasons for an account, the certificate status. */
     accessBody:
-      "Alle Kurse sind kostenlos. Ein Lernkonto brauchst du nur für die vier Grundlagenkurse, damit dein Fortschritt auf jedem Gerät gleich ist, und für das PDF des Lernbuchs. Die Teilnahmebestätigung stellt loehrning.ai selbst aus; sie ist nicht akkreditiert.",
-    /** The phone version of `accessBody`: the same three facts in two sentences. */
-    accessBodyShort:
-      "Alle Kurse sind kostenlos. Ein Konto brauchst du nur für die Grundlagenkurse und das Lernbuch-PDF; die Teilnahmebestätigung ist nicht akkreditiert.",
+      "Alle Kurse sind kostenlos und nicht akkreditiert. Ein Konto brauchst du nur für die vier Grundlagenkurse, damit dein Fortschritt bleibt, und für das Buch-PDF.",
     accessAction: "Lernkonto anlegen",
   },
   en: {
@@ -63,9 +61,7 @@ export const COURSE_HUB_COPY = {
     workshopsAction: "See the workshops",
     accessHeading: "Cost and account",
     accessBody:
-      "All courses are free. You only need a learning account for the four foundation courses, so your progress is the same on every device, and for the learning book's PDF. loehrning.ai issues the certificate of participation itself; it is not accredited.",
-    accessBodyShort:
-      "All courses are free. You only need an account for the foundation courses and the learning book's PDF; the certificate of participation is not accredited.",
+      "All courses are free and not accredited. You need an account only for the four foundation courses, to keep your progress, and the book PDF.",
     accessAction: "Create a learning account",
   },
 } as const satisfies Readonly<

@@ -11,7 +11,7 @@ const LID = checkpointLessonId("storage-formats");
 const lesson: DataInfraLesson = {
   id: "storage-formats",
   number: 4,
-  title: "Row vs Column: Inside Parquet",
+  title: "Row vs column: inside Parquet",
   subtitle: "Encodings · row groups · pushdown",
   durationMinutes: 13,
   trackId: "storage",

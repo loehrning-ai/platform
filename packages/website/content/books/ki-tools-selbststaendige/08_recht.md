@@ -1,4 +1,4 @@
-# DSGVO, Verträge, Steuern: KI im rechtlichen Rahmen
+# DSGVO, Verträge und Steuern beim KI-Einsatz
 
 Artikel 4 der EU-KI-Verordnung gilt seit 2. Februar 2025. Er betrifft auch die Freelancerin mit Einzelunternehmen, die ChatGPT nur für E-Mails nutzt. Das Risiko für die meisten Selbstständigen ist überschaubar, aber nicht null.
 
@@ -79,7 +79,7 @@ Der Satz "DSGVO-konform" trägt nichts. Belastbar ist eine nachprüfbare Beschre
 
 Die Verordnung (EU) 2024/1689, der AI Act, ist seit 1. August 2024 in Kraft. Artikel 4 (KI-Kompetenz) und Artikel 5 (verbotene Praktiken) gelten seit 2. Februar 2025.
 
-> **Rechtlicher Hinweis:** Art. 4 AI Act verlangt von Anbietern und Betreibern Maßnahmen, die die Entwicklung der KI-Kompetenz ihres Personals und anderer in ihrem Auftrag handelnder Personen unterstützen. Maßstab sind Wissen, Erfahrung, Ausbildung, Einsatzkontext und betroffene Personen oder Gruppen. Seit 27. Juli 2026 muss kein bestimmtes individuelles Kompetenzniveau garantiert werden. Es gibt weder ein vorgeschriebenes Einheitsformat noch ein erforderliches Zertifikat. Solo-Selbstständige sollten ihre Nutzung und angemessene Lern- und Kontrollmaßnahmen dokumentieren, statt einen Kursnachweis als automatische Erfüllung auszugeben.
+> **Rechtlicher Hinweis:** Art. 4 AI Act verlangt von Anbietern und Betreibern Maßnahmen, die die Entwicklung der KI-Kompetenz ihres Personals und anderer in ihrem Auftrag handelnder Personen unterstützen. Maßstab sind Wissen, Erfahrung, Ausbildung, Einsatzkontext und betroffene Personen oder Gruppen. Seit 27. Juli 2026 muss kein bestimmtes individuelles Kompetenzniveau garantiert werden. Es gibt weder ein vorgeschriebenes Einheitsformat noch eine erforderliche Zertifizierung. Solo-Selbstständige sollten ihre Nutzung und angemessene Lern- und Kontrollmaßnahmen dokumentieren, statt einen Kursnachweis als automatische Erfüllung auszugeben.
 
 ### Wo steht Deutschland? Die Aufsichtsbehörden
 

@@ -10,7 +10,7 @@ import {
 const lesson: CodexLesson = {
   id: "L06",
   number: 6,
-  title: "Acceptance Criteria",
+  title: "Acceptance criteria",
   subtitle:
     "Define observable behavior, executable checks, and review evidence before implementation begins.",
   durationMinutes: 10,
@@ -151,6 +151,9 @@ const lesson: CodexLesson = {
         desc: "Each row is a possible acceptance criterion. Switch on the useful ones.",
         goal: "Limit /login to 5 attempts per IP per minute.",
         tierLabels: CODEX_TASK_SPEC_TIER_LABELS,
+        fileName: "task.md",
+        goalHeading: "Goal",
+        signalsLabel: "signals",
         items: [
           {
             section: "Executable: test_login_rate_limit.py passes",

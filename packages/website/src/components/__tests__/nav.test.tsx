@@ -300,7 +300,7 @@ describe("<Nav />", () => {
     const single = within(compactSwitch as HTMLElement).getByRole("link");
     expect(single).toHaveClass("min-h-11", "min-w-11");
     expect(single).toHaveTextContent(/^EN$/);
-    expect(single).toHaveAccessibleName("EN, Englische Oberfläche öffnen");
+    expect(single).toHaveAccessibleName("EN, englische Oberfläche öffnen");
     expect(single).toHaveAttribute("href", "/en");
     expect(single).toHaveAttribute("hreflang", "en");
     expect(single).not.toHaveAttribute("aria-current");
@@ -762,7 +762,7 @@ describe("<Nav />", () => {
     ).getByRole("group", { name: "Sprache" });
     expect(
       within(compactLanguage).getByRole("link", {
-        name: "EN, Englische Oberfläche öffnen",
+        name: "EN, englische Oberfläche öffnen",
       }),
     ).toHaveAttribute("href", "/en");
 

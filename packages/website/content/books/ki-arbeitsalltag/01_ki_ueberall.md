@@ -94,7 +94,7 @@ Das ist das „überall" aus Block 1, Lektion 1.
 
 > **Begriff:** KI-System (EU AI Act, Art. 3). Ein maschinelles System, das mit unterschiedlichem Autonomiegrad arbeitet und aus Eingaben Vorhersagen, Inhalte, Empfehlungen oder Entscheidungen ableitet. Der Spamfilter fällt genauso darunter wie ChatGPT.
 
-> **Das Wichtigste:** KI läuft in deinem Alltag längst. Es kommt darauf an, wie bewusst du sie nutzt.
+> **KI läuft in deinem Alltag längst.** Entscheidend ist, wie bewusst du sie nutzt.
 
 ## Die ersten 5 Minuten
 

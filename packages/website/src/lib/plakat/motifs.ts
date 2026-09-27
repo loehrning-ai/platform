@@ -180,27 +180,32 @@ const PORTRAIT_MOTIFS = {
     shape("ink", rect(118, 484, 300, 18)),
     shape("ink", circle(66, 440, 30)),
   ],
-  // W04 ESG (autumn): two oak leaves, ink over mid, cut by the right and bottom edges.
+  // W04 ESG (autumn): two broad oak leaves, ink over mid, cut by the right and
+  // bottom edges. The ink leaf matches the mid leaf's mass and leans only 16
+  // degrees, so the pair never reads as a feather.
   leaves: () => [
     ...leafAt("mid", { cx: 196, cy: 402, rot: -30, len: 290, wid: 250, seed: 4 }),
-    ...leafAt("ink", { cx: 356, cy: 318, rot: 34, len: 268, wid: 232, seed: 1 }),
+    ...leafAt("ink", { cx: 334, cy: 338, rot: 16, len: 276, wid: 258, seed: 1 }),
   ],
   // Grundlagenpfad (lemons), numerals 01 to 04.
   disc: () => [shape("mid", circle(300, 392, 168)), shape("ink", circle(118, 300, 40))],
   pair: () => [shape("ink", circle(176, 402, 118)), shape("mid", circle(330, 402, 118))],
+  // The ring sits low enough that its bottom three dots bleed off the edge.
   ring: () => {
-    const shapes = [shape("mid", circle(236, 364, 58))];
+    const shapes = [shape("mid", circle(236, 388, 58))];
     for (let index = 0; index < 12; index++) {
       const angle = (index / 12) * Math.PI * 2 - Math.PI / 2;
-      shapes.push(shape("ink", circle(236 + 118 * Math.cos(angle), 364 + 118 * Math.sin(angle), 15)));
+      shapes.push(shape("ink", circle(236 + 118 * Math.cos(angle), 388 + 118 * Math.sin(angle), 15)));
     }
     return shapes;
   },
+  // Four steps of 72; the last bleeds 10 units off the right edge, so the
+  // landscape crop (portrait x up to about 379) still shows it whole.
   steps: () =>
     [0, 1, 2, 3].map((index) =>
       shape(
         index === 3 ? "ink" : "mid",
-        rect(96 + index * 82, 440 - index * 66, index === 3 ? 120 : 82, 80 + index * 66),
+        rect(96 + index * 72, 440 - index * 66, index === 3 ? 98 : 72, 80 + index * 66),
       ),
     ),
   // Technikkurse: one big flat shape plus one small counter shape, no numeral.
@@ -212,8 +217,10 @@ const PORTRAIT_MOTIFS = {
   halfdisc: () => [shape("ink", sector(0, 290, 250, 270, 450)), shape("mid", rect(262, 404, 110, 30))],
   // Data Infrastructure (bloom)
   slab: () => [shape("ink", rect(40, 300, 380, 220)), shape("mid", circle(250, 236, 64))],
-  // Data Engineering Fundamentals (bloom)
-  band: () => [shape("mid", rect(-10, 250, 420, 120)), shape("ink", circle(130, 310, 40))],
+  // Data Engineering Fundamentals (bloom): the band starts inside the canvas
+  // and bleeds off the right edge only, so a full-height band art shows no
+  // cut next to the text; the counter dot sits below it, never on it.
+  band: () => [shape("mid", rect(40, 250, 370, 120)), shape("ink", circle(112, 436, 36))],
   // Data Science Fundamentals (bloom)
   sun: () => [shape("mid", circle(330, 150, 190)), shape("ink", circle(92, 392, 34))],
 } as const satisfies Record<MotifId, () => PosterShape[]>;
@@ -364,17 +371,17 @@ export const LANDSCAPE_MOTIF_VIEWPORT: PosterViewport = {
  * highest shape, so no shape is cut by the strip's top edge, which sits
  * inside the band; shapes bleed off the right and bottom edges, which are the
  * band's own. Designed for the four workshop motifs (the phone band art);
- * a motif that bleeds off the portrait's left edge (quarter, halfdisc, band)
+ * a motif that bleeds off the portrait's left edge (quarter, halfdisc)
  * shows that cut inside a strip.
  */
 const STRIP_WINDOWS: Record<MotifId, readonly [top: number, bottom: number]> = {
   fan: [98, 440],
   pie: [228, 440],
   dome: [196, 500],
-  leaves: [155, 380],
+  leaves: [168, 380],
   disc: [212, 500],
   pair: [272, 500],
-  ring: [219, 500],
+  ring: [243, 500],
   steps: [230, 500],
   quarter: [72, 500],
   wedge: [84, 500],

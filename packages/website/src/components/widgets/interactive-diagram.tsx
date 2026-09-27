@@ -121,7 +121,7 @@ const DEFAULT_CAPTION: Record<DiagramVariant, string> = {
 
 const DEFAULT_COPY: Omit<InteractiveDiagramCopy, "kindLabel"> = {
   inspectHeading: "Schicht antippen",
-  inspectBody: "",
+  inspectBody: "Was sie tut und was passiert, wenn sie fehlt.",
   consequencePrefix: "Wenn diese Schicht fehlt:",
   traceComplete: "Durchlauf komplett.",
   tracing: "Impuls läuft …",

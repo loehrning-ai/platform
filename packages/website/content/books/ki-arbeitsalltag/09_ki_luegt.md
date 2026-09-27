@@ -72,7 +72,7 @@ Auch zukünftige Modelle der GPT-, Claude- und Gemini-Reihen werden halluziniere
 
 Bei Meta lese ich KI-Output gegen, obwohl dort die Leute arbeiten, die die Modelle bauen. Mach das auch.
 
-> **Das Wichtigste:** Je überzeugender der KI-Output klingt, desto sorgfältiger musst du prüfen, denn subtile, plausible Fehler fallen nicht auf.
+> **Je überzeugender der KI-Output klingt, desto sorgfältiger prüfst du.** Subtile, plausible Fehler fallen sonst nicht auf.
 
 ---
 

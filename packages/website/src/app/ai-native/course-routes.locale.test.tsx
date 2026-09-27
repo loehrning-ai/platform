@@ -154,16 +154,11 @@ describe("AI-Native locale propagation across the complete course lifecycle", ()
         url: "https://loehrning.ai/en/ai-native",
         locale: "en_GB",
         alternateLocale: ["de_DE"],
-        images: [
-          {
-            url: "https://loehrning.ai/course-covers/ai-native-cover-v3.webp",
-            width: 1440,
-            height: 630,
-            alt: "Editorial illustration of a modular AI-native studio with context, tools, and a review loop",
-          },
-        ],
       },
     });
+    // No page image: the route's opengraph-image.tsx (the Lemons card) is the
+    // share image, and an explicit one here would replace it (SPEC §3.15).
+    expect((await generateLandingMetadata()).openGraph).not.toHaveProperty("images");
 
     expect(await generateCourseMetadata()).toMatchObject({
       title: "AI-Native Workflow Course: tasks, knowledge and automation",
@@ -203,7 +198,7 @@ describe("AI-Native locale propagation across the complete course lifecycle", ()
 
   it("localizes quiz, completion-record, and public record-reader metadata", async () => {
     expect(await generateQuizMetadata()).toMatchObject({
-      title: "Workshop quiz: AI-Native Workflow Course",
+      title: "Final quiz: AI-Native Workflow Course",
       robots: { index: false, follow: false },
       alternates: { canonical: null },
     });

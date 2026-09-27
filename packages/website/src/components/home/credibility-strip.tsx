@@ -24,10 +24,7 @@ export function CredibilityStrip({
       data-testid="platform-principles"
     >
       <div className={HOME_CONTAINER}>
-        <HomeSectionHead
-          introduction={copy.introduction}
-          title={copy.headline}
-        />
+        <HomeSectionHead title={copy.headline} />
 
         <dl className="mt-8 grid grid-cols-4 max-lg:mt-4 max-lg:grid-cols-1 max-lg:border-t max-lg:border-hairline max-lg:sm:grid-cols-2 max-lg:sm:gap-x-6">
           {copy.principles.map((item) => (

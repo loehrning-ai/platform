@@ -61,7 +61,7 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 2,
     number: 2,
     kind: "reading",
-    title: "Draft documents from explicit briefs",
+    title: "Draft documents from written briefs",
     subtitle:
       "Give a drafting tool audience, purpose, evidence, constraints and an owner.",
     objective:

@@ -7,7 +7,7 @@ export type ButtonVariant = "primary" | "ink" | "secondary" | "text";
 export type ButtonTone = "paper" | "dark" | "scene";
 
 const BUTTON_BASE =
-  "group inline-flex min-h-11 items-center gap-2 px-5 text-[0.9375rem] font-semibold transition-colors duration-[120ms] motion-reduce:transition-none";
+  "group inline-flex min-h-11 items-center gap-2 px-5 text-[0.9375rem] font-semibold transition-colors duration-[120ms] focus-visible:transition-none motion-reduce:transition-none";
 
 const SCENE_PRIMARY =
   "min-h-12 border-2 border-scene-ink bg-scene-ink text-[1.0625rem] text-scene-ground [&>span:first-child]:decoration-2 [&>span:first-child]:underline-offset-4 hover:[&>span:first-child]:underline";
@@ -33,7 +33,10 @@ const SCENE_PRIMARY =
  * tall, with a 2px ink edge. Hover never tints (a Rost tint would drop Creme
  * below AA): primary underlines its label, secondary inverts the pair, text
  * thickens its underline. The focus ring is the ink through the scope's
- * --color-brand-orange, 2px off the fill. Never Mennige or text-paper here.
+ * --color-brand-orange, 2px off the fill. It appears at once: the colour
+ * transition also animates outline-color, so focus-visible:transition-none
+ * keeps the ring from fading in from the ground. Never Mennige or text-paper
+ * here.
  */
 export const BUTTON_CLASSES: Record<ButtonTone, Record<ButtonVariant, string>> = {
   paper: {
@@ -43,7 +46,7 @@ export const BUTTON_CLASSES: Record<ButtonTone, Record<ButtonVariant, string>> =
       BUTTON_BASE,
       "border border-foreground bg-transparent text-foreground hover:bg-card-hover",
     ),
-    text: "group inline-flex min-h-11 items-center gap-1.5 font-semibold text-foreground underline decoration-border underline-offset-4 transition-colors duration-[120ms] hover:decoration-foreground motion-reduce:transition-none",
+    text: "group inline-flex min-h-11 items-center gap-1.5 font-semibold text-foreground underline decoration-border underline-offset-4 transition-colors duration-[120ms] hover:decoration-foreground focus-visible:transition-none motion-reduce:transition-none",
   },
   dark: {
     primary: cx(BUTTON_BASE, "bg-dark-fg text-dark-bg hover:bg-[#e8e5de]"),
@@ -52,7 +55,7 @@ export const BUTTON_CLASSES: Record<ButtonTone, Record<ButtonVariant, string>> =
       BUTTON_BASE,
       "border border-dark-border bg-transparent text-dark-fg hover:bg-[#242321]",
     ),
-    text: "group inline-flex min-h-11 items-center gap-1.5 font-semibold text-dark-fg underline decoration-dark-border underline-offset-4 transition-colors duration-[120ms] hover:decoration-dark-fg motion-reduce:transition-none",
+    text: "group inline-flex min-h-11 items-center gap-1.5 font-semibold text-dark-fg underline decoration-dark-border underline-offset-4 transition-colors duration-[120ms] hover:decoration-dark-fg focus-visible:transition-none motion-reduce:transition-none",
   },
   scene: {
     primary: cx(BUTTON_BASE, SCENE_PRIMARY),
@@ -61,7 +64,7 @@ export const BUTTON_CLASSES: Record<ButtonTone, Record<ButtonVariant, string>> =
       BUTTON_BASE,
       "min-h-12 border-2 border-scene-ink bg-transparent text-[1.0625rem] text-scene-ink hover:bg-scene-ink hover:text-scene-ground",
     ),
-    text: "group inline-flex min-h-11 items-center gap-1.5 text-[1.0625rem] font-semibold text-scene-ink underline decoration-scene-ink decoration-1 underline-offset-4 transition-colors duration-[120ms] hover:decoration-2 motion-reduce:transition-none",
+    text: "group inline-flex min-h-11 items-center gap-1.5 text-[1.0625rem] font-semibold text-scene-ink underline decoration-scene-ink decoration-1 underline-offset-4 transition-colors duration-[120ms] hover:decoration-2 focus-visible:transition-none motion-reduce:transition-none",
   },
 };
 

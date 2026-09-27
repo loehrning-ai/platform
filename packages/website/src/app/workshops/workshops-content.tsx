@@ -12,7 +12,6 @@ import {
   Chip,
   cx,
   Kicker,
-  Pictogram,
   Route,
   SectionHead,
 } from "@/components/werk";
@@ -204,10 +203,7 @@ export function WorkshopsContent({ workshops, locale }: Props) {
         >
           {copy.hubHeading}
         </h1>
-        <p className="mt-3 max-w-[40ch] text-body text-scene-ink text-pretty sm:hidden">
-          {copy.hubLeadShort}
-        </p>
-        <p className="mt-5 hidden max-w-[52ch] text-body text-scene-ink text-pretty sm:block">
+        <p className="mt-3 max-w-[40ch] text-body text-scene-ink text-pretty sm:mt-5 sm:max-w-[52ch]">
           {copy.hubLead}
         </p>
         {/* Below 360px the button spans the column, so it never breaks into
@@ -266,6 +262,12 @@ export function WorkshopsContent({ workshops, locale }: Props) {
               {copy.teamsHeading}.
             </strong>{" "}
             {copy.teamsBody(withPresenter)}
+            {withPresenter.length > 0 ? (
+              <span data-workshop-key-hint="" className="max-lg:hidden">
+                {" "}
+                {copy.teamsKeyHint}
+              </span>
+            ) : null}
           </p>
         </div>
       </section>
@@ -343,8 +345,8 @@ function WorkshopRow({
 
   // Below md a row is a list line, not a card: an 80px poster thumb with the
   // number, a duration line, the title head and one flowing "you leave with"
-  // sentence, with an arrow top right. The summary, the question, the need,
-  // the materials and the live date live on the workshop page. The row bleeds
+  // sentence, with an arrow top right. The summary, the need, the
+  // materials and the live date live on the workshop page. The row bleeds
   // to the screen edge so the tap highlight and hairline run full width. From
   // md the same DOM is the two-column sheet with the poster cover left.
   return (
@@ -432,25 +434,6 @@ function WorkshopRow({
         <p className="mt-3 hidden max-w-[56ch] text-body text-muted-foreground text-pretty md:block">
           <AmountText text={workshop.summary} />
         </p>
-
-        <figure
-          data-workshop-question=""
-          className="hidden max-w-[56ch] grid-cols-[1.25rem_minmax(0,1fr)] gap-x-3 md:mt-5 md:grid"
-        >
-          <Pictogram
-            name="question"
-            strokeWidth={2}
-            className="mt-0.5 size-5 text-foreground"
-          />
-          <div className="min-w-0">
-            <figcaption className="text-caption text-muted-foreground">
-              {copy.questionLabel}
-            </figcaption>
-            <blockquote className="text-body font-semibold text-foreground text-pretty">
-              <AmountText text={copy.quote(workshop.question)} />
-            </blockquote>
-          </div>
-        </figure>
 
         {/* 73ch at 13px is the 56ch measure of the 17px summary above, so
             the facts line up with the prose instead of wrapping early. On a

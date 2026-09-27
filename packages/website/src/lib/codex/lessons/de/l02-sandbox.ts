@@ -4,7 +4,7 @@ import { localizeCodexLessonToGerman } from "../../translate-lesson";
 export default localizeCodexLessonToGerman(canonical, {
   translations: [
     [
-      "Execution Environments and Permissions",
+      "Execution environments and permissions",
       "Ausführungsumgebungen und Berechtigungen",
     ],
     [

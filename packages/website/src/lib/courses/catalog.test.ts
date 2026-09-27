@@ -378,7 +378,7 @@ describe("course catalog (shared course architecture)", () => {
 
   it("getCatalogCourse resolves by slug and returns undefined for unknown", () => {
     expect(getCatalogCourse("ai-native")?.title).toBe("AI-Native Arbeitskurs");
-    expect(getCatalogCourse("claude")?.title).toBe("Claude Course");
+    expect(getCatalogCourse("claude")?.title).toBe("Claude-Kurs");
     expect(getCatalogCourse("codex")?.title).toBe("Codex-Kurs");
     expect(getCatalogCourse("codex")?.language).toBe("Deutsch + Englisch");
     // @ts-expect-error — exercising the not-found branch with an invalid slug

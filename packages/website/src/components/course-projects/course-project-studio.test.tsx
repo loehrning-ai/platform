@@ -460,11 +460,14 @@ describe("CourseProjectStudio", () => {
     expect(
       screen.getByRole("heading", { name: "Einordnen" }).closest("section"),
     ).toHaveTextContent("Versiegelte Ausgangsnotiz");
+    // Paper project bar in the scene line (SPEC §3.13): sans labels, no
+    // graphit strip, no Mennige type.
     expect(screen.getByText(/Angewandtes Kursprojekt/)).toHaveClass(
-      "text-[#ffc6aa]",
+      "text-label",
     );
     expect(screen.getByText("Lieferobjekt")).toHaveClass(
-      "text-brand-orange-dark",
+      "text-label",
+      "text-muted-foreground",
     );
     expect(container.querySelector("#course-project-studio")).not.toBeNull();
     expect(

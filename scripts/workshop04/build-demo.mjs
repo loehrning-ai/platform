@@ -143,7 +143,7 @@ const STEP = {
   3: { act: `Also switch it on for the MWh misread (T4).`,
        why: `A fall of ${nAbs(stepN(3).keys[1])} looks plausible again, so nobody asks.` },
   4: { act: `Switch the method to market-based; the MWh row now shows 0 t.`,
-       why: `Market-based hides the unit error, because the certificate prices Werk Süd's power at zero. A fall of ${nAbs(stepN(4).keys[1])} looks fine with the Talbrück bill still inside.` },
+       why: `Market-based hides the unit error, because the guarantee of origin prices Werk Süd's power at zero. A fall of ${nAbs(stepN(4).keys[1])} looks fine with the Talbrück bill still inside.` },
   5: { act: `Switch back to location-based, then switch it on only for the duplicate March (T1) and October (T2).`,
        why: `Together they move the total by only ${n(stepN(5).keys[0])}, so a check on the total misses both. In market-based the pair moves it by ${n(stepN(5).keys[1])}.` },
   6: { act: `Open the evidence drawer from “${nAbs(stepN(6).keys[0])}” in the rewritten sentence in section 4.`,
@@ -295,7 +295,7 @@ for (const m of ["lb", "mb"]) {
 for (const k of Object.keys(D.combinations)) for (const m of ["lb", "mb"]) assert(C.state(D, Number(k), m).checkOk, `chart ends differ from the stored totals for mask ${k} ${m}`);
 
 /* ------------------------------------------------ section 3: folder tree */
-const TAG = { T1: "T1 duplicate", T3: "T3 outside", T4: "T4 unit", T5: "T5 Hs basis", "real-dip": "August dip", "two-month": "two months", scope2: "certificate" };
+const TAG = { T1: "T1 duplicate", T3: "T3 outside", T4: "T4 unit", T5: "T5 Hs basis", "real-dip": "August dip", "two-month": "two months", scope2: "guarantee of origin" };
 const folders = [];
 function folderOf(p) { return p.split("/").slice(1, -1).join("/"); }
 for (const d of D.documents) {
@@ -365,7 +365,7 @@ const rankRows = [0, 1, 2].map((i) => {
 const ranking = `<details class="more rank" id="rank" open>
   <summary>Largest sources depend on the method</summary>
   <table><thead><tr><th scope="col">#</th><th scope="col">Location-based</th><th scope="col" class="n">t · share</th><th scope="col">Market-based</th><th scope="col" class="n">t · share</th></tr></thead><tbody>${rankRows}</tbody></table>
-  <p class="caption">Werk Süd drops out of the market-based ranking because of the certificate, not lower use. ${esc(D.ranking.shareNote_en)}</p>
+  <p class="caption">Werk Süd drops out of the market-based ranking because of the guarantee of origin, not lower use. ${esc(D.ranking.shareNote_en)}</p>
 </details>`;
 
 /* ------------------------------------------------ section 5: coverage grid and control total */

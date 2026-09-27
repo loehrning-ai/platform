@@ -348,7 +348,7 @@
           "props": {
             "lessonId": "block_4_lesson_4",
             "cpId": "failure-tagger",
-            "scenario": "Five plausible outputs from everyday office work contain different failures. Classify each as a source error, missing approval, false commitment, calculation error, or invalid generalization."
+            "scenario": "Five AI answers from office work, each wrong in one way. Assign each its failure type."
           }
         }
       ]

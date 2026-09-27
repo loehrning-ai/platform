@@ -566,9 +566,21 @@ export const DEMO_LEVEL_LABELS: Readonly<Record<DemoLevel, string>> = {
   fortg: "Fortgeschritten",
 };
 
+/**
+ * Soft hyphens for heading words too long for the 320px poster column (SPEC §4
+ * fit rule): at the 36px floor the Arial-metric fallback face would set
+ * "Vertragsassistent" 1px wider than the column. Headings only; metadata,
+ * JSON-LD and share cards read `title` and keep the plain word.
+ */
+const HEADING_SOFT_HYPHENS: Readonly<Record<string, string>> = {
+  Vertragsassistent: "Vertrags\u00adassistent",
+};
+
 /** The plain demo name for headings: the title without its full stop. */
 export function demoName(demo: Pick<Demo, "title">): string {
-  return demo.title.replace(/\.$/, "");
+  return demo.title
+    .replace(/\.$/, "")
+    .replace(/\p{L}+/gu, (word) => HEADING_SOFT_HYPHENS[word] ?? word);
 }
 
 export function getDemoBySlug(slug: string): Demo | undefined {

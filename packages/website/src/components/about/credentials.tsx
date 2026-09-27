@@ -31,7 +31,6 @@ export function Credentials({ locale }: { readonly locale: Locale }) {
         <SectionHead
           id="credentials-heading"
           title={copy.title}
-          description={copy.intro}
           size="compact"
         />
 

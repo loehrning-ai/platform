@@ -237,7 +237,7 @@ describe("localized machine discovery", () => {
         en: {
           url: "https://loehrning.ai/en/ki-fuehrerschein",
           pageLanguage: "en-GB",
-          title: "AI Fundamentals",
+          title: "Everyday AI Literacy",
         },
       },
     });

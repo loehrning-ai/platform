@@ -42,7 +42,10 @@ describe("/einstieg locale content", () => {
       .getByRole("heading", { level: 3, name: "KI-Check" })
       .closest("article");
     expect(primaryCard).not.toBeNull();
-    expect(primaryCard).toHaveClass("dark-section", "bg-background");
+    // Paper surface (SPEC §2.3): the KI-Check card is a paper card with the
+    // page's one Mennige primary, not a graphit block.
+    expect(primaryCard).not.toHaveClass("dark-section");
+    expect(primaryCard).toHaveClass("bg-card");
     expect(primaryCard?.querySelector('a[href="/ki-check"]')).not.toBeNull();
   });
 
@@ -62,7 +65,7 @@ describe("/einstieg locale content", () => {
         Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
     expect(
-      document.querySelectorAll("[data-orientation-checklist] dd"),
+      document.querySelectorAll("[data-orientation-checklist] li"),
     ).toHaveLength(3);
     expect(
       document.querySelector("[data-orientation-bento]"),

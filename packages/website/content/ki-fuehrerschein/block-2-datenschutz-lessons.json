@@ -262,7 +262,7 @@
             "lessonId": "block_2_lesson_3",
             "cpId": "redaction-drill",
             "title": "Schwärzen vor dem Einfügen",
-            "scenario": "Prüfe vor dem Einfügen eines Protokolls oder einer Kunden-E-Mail jede Information: Ist sie für den Zweck nötig, vom freigegebenen Arbeitsablauf umfasst oder zu entfernen? Zwei Durchgänge, der zweite enthält weniger offensichtliche Risiken."
+            "scenario": "Prüfe jede Angabe: Ist sie für den Zweck nötig? Wenn nicht, schwärze sie."
           }
         }
       ]

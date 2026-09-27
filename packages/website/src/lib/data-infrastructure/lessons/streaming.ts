@@ -11,11 +11,11 @@ const LID = checkpointLessonId("streaming");
 const lesson: DataInfraLesson = {
   id: "streaming",
   number: 8,
-  title: "Streaming: Kafka, Watermarks, Windows",
+  title: "Streaming: Kafka, watermarks, windows",
   subtitle: "Partitions · groups · event time",
   durationMinutes: 15,
   trackId: "movement",
-  hook: "Why event time ≠ processing time, and how watermarks let you reason about late data.",
+  hook: "Event time differs from processing time. Watermarks handle late data.",
   keyConcepts: [
     "Event time vs processing time",
     "Watermark",

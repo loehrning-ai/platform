@@ -10,7 +10,7 @@ import {
 const lesson: CodexLesson = {
   id: "L09",
   number: 9,
-  title: "Choosing a Coding-Agent Workflow",
+  title: "Choosing a coding-agent workflow",
   subtitle:
     "Compare interaction model, execution boundary, provider limits and review path before you pick a tool.",
   durationMinutes: 11,
@@ -152,7 +152,7 @@ const lesson: CodexLesson = {
         ],
         correct: 1,
         explanation:
-          "Read-only exploration avoids accidental changes and yields verifiable evidence. Once the authentication path and trust boundaries are known, scope a separate task with explicit checks.",
+          "Read-only exploration avoids accidental changes and yields verifiable evidence. Once the authentication path and trust boundaries are known, scope a separate task with named checks.",
       },
     },
     {

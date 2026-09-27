@@ -66,7 +66,8 @@ describe("ResourceContextBanner", () => {
     render(<ResourceContextBanner nodeId="template:ki-inventarliste" />);
     expect(screen.getByRole("note")).toBeInTheDocument();
     expect(screen.getAllByText(/Stufe 5: Belegen/).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/Arbeitsvorlage/).length).toBeGreaterThan(0);
+    // The resource type is named in the note's accessible name.
+    expect(screen.getByRole("note")).toHaveAccessibleName(/Arbeitsvorlage/);
   });
 
   it("shows related course context", () => {
@@ -81,7 +82,8 @@ describe("ResourceContextBanner", () => {
 
   it("renders for a demo nodeId with correct label", () => {
     render(<ResourceContextBanner nodeId="demo:ki-check" />);
-    expect(screen.getAllByText(/Praxisbeispiel/).length).toBeGreaterThan(0);
+    // The resource type is named in the note's accessible name.
+    expect(screen.getByRole("note")).toHaveAccessibleName(/Praxisbeispiel/);
     expect(screen.getAllByText(/Stufe 4: Umsetzen/).length).toBeGreaterThan(0);
   });
 });

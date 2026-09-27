@@ -19,8 +19,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const image = {
     url: "/workshops/ki-prognosen-einschaetzen/card-preview.webp",
-    width: 1024,
-    height: 576,
+    width: 1200,
+    height: 630,
     alt: copy.imageAlt,
   };
 

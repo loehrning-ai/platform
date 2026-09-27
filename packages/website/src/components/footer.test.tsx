@@ -240,8 +240,9 @@ describe("Footer semantics and stable public dates", () => {
     const pill = screen.getByTestId("footer-data-pill");
 
     expect(pill).toHaveTextContent("Content date: Q3 2026");
-    expect(pill).toHaveTextContent(/Updated: \d{4}-\d{2}-\d{2}/);
-    expect(within(pill).getByText(/\d{4}-\d{2}-\d{2}/)).toHaveAttribute(
+    // One date line: no second "Updated" date beside it.
+    expect(pill).not.toHaveTextContent(/Updated/);
+    expect(within(pill).getByText("Q3 2026")).toHaveAttribute(
       "datetime",
       expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
     );
@@ -393,7 +394,7 @@ describe("Footer link disclosure below lg", () => {
     }
   });
 
-  it("keeps the phone caption to the holder and one date, and restores both from sm", async () => {
+  it("keeps the phone caption to the holder and one date, and restores the domain from sm", async () => {
     await renderFooter("de");
 
     const copyright = screen.getByTestId("footer-copyright");
@@ -406,18 +407,14 @@ describe("Footer link disclosure below lg", () => {
     expect(pill).toHaveClass("contents", "sm:flex");
 
     // Below sm the caption reads "© 2026 Tim Löhr  Datenstand: Q3 2026": the
-    // domain repeats the wordmark and the second date repeats the first.
+    // domain repeats the wordmark. One date line at every width.
     const domain = within(copyright).getByText("loehrning.ai").parentElement;
     expect(domain).toHaveClass("hidden", "sm:inline");
-    const updated = within(pill).getByText(/\d{4}-\d{2}-\d{2}/).parentElement;
-    expect(updated).toHaveClass("hidden", "sm:inline");
+    expect(pill).not.toHaveTextContent(/Aktualisiert|\d{4}-\d{2}-\d{2}/);
 
     // "Q3 2026" is a label in the site face; mono would widen its space.
     const stand = within(pill).getByText("Q3 2026");
     expect(stand).not.toHaveClass("font-ui-mono");
-    expect(within(pill).getByText(/\d{4}-\d{2}-\d{2}/)).toHaveClass(
-      "font-ui-mono",
-    );
   });
 
   it("sizes the phone wordmark like the header's lockup and restores it from sm", async () => {

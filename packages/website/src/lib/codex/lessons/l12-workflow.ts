@@ -9,12 +9,12 @@ import { CODEX_QUIZ_COPY, CODEX_QUIZ_TITLE } from "../widget-copy";
 const lesson: CodexLesson = {
   id: "L12",
   number: 12,
-  title: "A Reviewable Development Workflow",
+  title: "A reviewable development workflow",
   subtitle:
-    "Take one change from request to release with explicit decisions, bounded tasks, independent review and verified deployment.",
+    "Take one change from request to release with recorded decisions, bounded tasks, independent review and verified deployment.",
   durationMinutes: 15,
   trackId: "advanced",
-  hook: "Keep intent, evidence, and accountability connected.",
+  hook: "Take one task from spec to merge with evidence.",
   keyConcepts: [
     "Discuss-plan-implement-review-ship-learn",
     "Workflow chain",
@@ -43,7 +43,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Adapt the six phases to the change; ownership stays explicit from request to post-deployment checks.",
+            "Adapt the six phases to the change; ownership stays named from request to post-deployment checks.",
         },
         {
           kind: "card-grid",

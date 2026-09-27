@@ -11,7 +11,7 @@
 | **DPIA**               | Data protection impact assessment under Art. 35 GDPR when processing is likely to result in a high risk.                                      |
 | **FRIA**               | Fundamental rights impact assessment under Art. 27 AI Act for the addressees and high-risk deployment specified there.                        |
 | **High-risk AI**       | AI systems that fall under Art. 6 with Annex I or III; exceptions and the specific intended purpose have to be checked.                       |
-| **AI literacy**        | Skills, knowledge, and understanding under Art. 3 No. 56; Art. 4 requires context-appropriate measures, not a specific certificate.           |
+| **AI literacy**        | Skills, knowledge, and understanding under Art. 3 No. 56; Art. 4 requires context-appropriate measures, not a specific credential.            |
 | **Human oversight**    | The organizational and technical ability of competent, authorized people to understand, monitor, override, or stop a system.                  |
 | **Pilot**              | Limited, measurable test with defined data, users, controls, stop criteria, and evaluation.                                                   |
 | **Technical exposure** | Overlap between tasks and technical system capabilities; not the same thing as adoption, automation, or job displacement.                     |

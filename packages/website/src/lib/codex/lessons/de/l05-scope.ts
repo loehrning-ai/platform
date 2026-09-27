@@ -3,7 +3,7 @@ import { localizeCodexLessonToGerman } from "../../translate-lesson";
 
 export default localizeCodexLessonToGerman(canonical, {
   translations: [
-    ["Scoping Coherent Changes", "Zusammenhängende Änderungen abgrenzen"],
+    ["Scoping coherent changes", "Zusammenhängende Änderungen abgrenzen"],
     [
       "Separate work by behavior, dependency, and review boundary instead of relying on arbitrary time, file, or line limits.",
       "Trenne Arbeit nach Verhalten, Abhängigkeiten und Review-Grenzen statt nach pauschalen Zeit-, Datei- oder Zeilenlimits.",

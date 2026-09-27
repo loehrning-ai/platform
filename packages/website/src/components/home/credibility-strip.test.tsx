@@ -27,7 +27,7 @@ describe("CredibilityStrip", () => {
     expect(screen.getByText("Ground rules")).toBeInTheDocument();
     expect(screen.getByText("No paywall")).toBeInTheDocument();
     expect(
-      screen.getByText(/Four readers require a free learning account/),
+      screen.getByText(/Four courses need a free learning account/),
     ).toBeInTheDocument();
     expect(container.textContent).not.toMatch(
       /\b(?:Betriebsprinzipien|Zugang|Sprachen|Quellen|Redaktion|Deutsch|öffentlich|Konto)\b/,
@@ -42,7 +42,7 @@ describe("CredibilityStrip", () => {
     expect(titles).toEqual([
       "Keine Paywall",
       "Zwei vollständige Fassungen",
-      "Stand und Herkunft sichtbar",
+      "Quellen sind verlinkt",
       "Von Tim Löhr redigiert",
     ]);
     // The four have no order: no "01 ·" numbering anywhere.
@@ -59,9 +59,9 @@ describe("CredibilityStrip", () => {
 
   it("states the commercial and account boundary directly", () => {
     render(<CredibilityStrip />);
-    expect(screen.getByText(/Kein Abo/)).toBeInTheDocument();
+    expect(screen.getByText("Keine Paywall")).toBeInTheDocument();
     expect(
-      screen.getByText(/Vier Reader benötigen ein kostenloses Lernkonto/),
+      screen.getByText(/Vier Kurse brauchen ein kostenloses Lernkonto/),
     ).toBeInTheDocument();
   });
 

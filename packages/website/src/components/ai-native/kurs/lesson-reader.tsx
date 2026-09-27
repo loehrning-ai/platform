@@ -150,12 +150,12 @@ function AiNativeLessonReaderContent({
           proofPrerequisite: "Confirm every section as reviewed first.",
           capstoneQuestion: "Applied project recorded?",
           capstoneComplete:
-            "Your project evidence is saved in your progress. It is not a server-attested record and does not replace the workshop quiz.",
+            "Your project evidence is saved in your progress. It is not a server-attested record and does not replace the final quiz.",
           legacyCapstoneQuestion: "Historical capstone self-review recorded",
           legacyCapstoneComplete:
             "Once every lesson is complete, your earlier capstone self-review remains a valid route to completion. It does not verify the new project artifact.",
           downloadRecord: "Download completion record",
-          takeQuiz: "Complete workshop quiz",
+          takeQuiz: "Complete final quiz",
           capstonePrompt:
             "Complete the course workspace and its check. Reading or self-reporting does not count; the status changes once the project produces a checked artifact.",
           markRubric: "Open applied project",
@@ -188,12 +188,12 @@ function AiNativeLessonReaderContent({
           proofPrerequisite: "Bestätige zuerst jeden Abschnitt als geprüft.",
           capstoneQuestion: "Angewandtes Projekt gespeichert?",
           capstoneComplete:
-            "Deine Projektnachweise sind im Fortschritt gespeichert. Sie sind kein serverbestätigter Nachweis und ersetzen das Workshop-Quiz nicht.",
+            "Deine Projektnachweise sind im Fortschritt gespeichert. Sie sind kein serverbestätigter Nachweis und ersetzen das Abschlussquiz nicht.",
           legacyCapstoneQuestion: "Frühere Capstone-Selbstprüfung gespeichert",
           legacyCapstoneComplete:
             "Nach Abschluss aller Lektionen gilt deine frühere Capstone-Selbstprüfung weiter als Abschlussweg. Sie bestätigt das neue Projektartefakt nicht.",
           downloadRecord: "Teilnahmebestätigung herunterladen",
-          takeQuiz: "Workshop-Quiz abschließen",
+          takeQuiz: "Abschlussquiz abschließen",
           capstonePrompt:
             "Schließ den Kurs-Workspace mit seiner Prüfung ab. Lesen oder Selbstbestätigung zählen nicht; der Status ändert sich, wenn das Projekt ein geprüftes Artefakt erzeugt.",
           markRubric: "Angewandtes Projekt öffnen",

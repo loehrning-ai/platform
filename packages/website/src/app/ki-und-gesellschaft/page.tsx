@@ -48,7 +48,6 @@ interface LandingCopy {
   readonly introduction: string;
   readonly start: string;
   readonly allCourses: string;
-  readonly imageAlt: string;
   readonly imageLabel: string;
   readonly facts: readonly string[];
   readonly whyHeading: string;
@@ -97,8 +96,6 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
       "Du führst eine Jobschlagzeile auf ihre Daten zurück, prüfst ein verdächtiges Video und findest, wo Bias in eine Entscheidung gelangt. Technikwissen brauchst du nicht.",
     start: "Mit Lernkonto starten",
     allCourses: "Alle Kurse",
-    imageAlt:
-      "Editoriale Berlin-Collage mit Menschen, synthetischen Porträts, Datenrastern und einem Prüfentscheid",
     imageLabel: "3 Blöcke · 9 Lektionen",
     facts: [
       "3 Blöcke, 9 Lektionen",
@@ -166,8 +163,6 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
       "You trace a jobs headline back to its data, check a suspicious video and find where bias enters a decision. No technical background needed.",
     start: "Start with a learning account",
     allCourses: "All courses",
-    imageAlt:
-      "Editorial Berlin collage with people, synthetic portraits, data grids, and a review decision",
     imageLabel: "3 blocks · 9 lessons",
     facts: [
       "3 blocks, 9 lessons",
@@ -230,14 +225,7 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
       locale: locale === "en" ? "en_GB" : "de_DE",
       alternateLocale: [locale === "en" ? "de_DE" : "en_GB"],
-      images: [
-        {
-          url: `${SITE_URL}/course-covers/ki-und-gesellschaft-cover-v3.webp`,
-          width: 1440,
-          height: 630,
-          alt: copy.imageAlt,
-        },
-      ],
+      // The share image is this route's opengraph-image.tsx (the Lemons card, SPEC §3.15).
     },
   };
 }

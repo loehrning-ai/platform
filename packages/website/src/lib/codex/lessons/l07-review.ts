@@ -11,7 +11,7 @@ const lesson: CodexLesson = {
     "Before merge, check behavior, the full diff, tests, dependencies and security boundaries.",
   durationMinutes: 14,
   trackId: "in-the-loop",
-  hook: "The diff and logs are evidence, not approval.",
+  hook: "Read the diff and logs before you approve.",
   keyConcepts: [
     "Review checklist",
     "Circular tests",

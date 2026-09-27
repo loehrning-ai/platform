@@ -214,7 +214,7 @@ describe("<LoginForm>", () => {
     );
 
     expect(
-      screen.getByText("Der Anmeldedienst ist vorübergehend nicht erreichbar."),
+      screen.getByText("Anmeldedienst nicht erreichbar."),
     ).toBeVisible();
     expect(
       screen.getByRole("textbox", { name: "E-Mail-Adresse" }),
@@ -268,7 +268,7 @@ describe("<LoginForm>", () => {
       screen.queryByRole("button", { name: "Mit Google anmelden" }),
     ).toBeNull();
     expect(
-      screen.getByText(/Keine Anmeldemethode ist .* vollständig konfiguriert/),
+      screen.getByText(/Keine Anmeldemethode verfügbar/),
     ).toBeVisible();
   });
 

@@ -9,7 +9,7 @@ import { CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE } from "../widget-copy";
 const lesson: ClaudeLesson = {
   id: "mental-model",
   number: 1,
-  title: "What Claude actually is",
+  title: "What Claude is",
   subtitle: "The model that holds up when an answer sounds confident.",
   durationMinutes: 8,
   trackId: "foundations",

@@ -19,7 +19,7 @@ describe("GET /llms.txt", () => {
 
     expect(body).toContain("## Grundlagenpfad");
     expect(body).toContain("## Technische Kurse");
-    expect(body).toContain("## Sprachmodell / Language model");
+    expect(body).toContain("## Sprachen und URLs / Languages and URLs");
     expect(body).not.toContain("## Englische technische Vertiefung");
     expect(
       COURSE_CATALOG.filter(

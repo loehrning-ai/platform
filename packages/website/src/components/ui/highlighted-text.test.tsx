@@ -7,7 +7,7 @@ import {
 } from "./highlighted-text";
 
 // The line-height every consumer currently pairs this component with
-// (leading-[0.9] on buecher-content.tsx and workshops-content.tsx h1s).
+// (leading-[0.9] on the workshops-content.tsx h1).
 // jsdom does not implement layout, so getClientRects() cannot verify real
 // non-overlap the way a Playwright spec can -- this asserts the geometry
 // invariant that makes overlap impossible regardless of exact rendering:

@@ -23,8 +23,6 @@ export const ENTRY_COPY = {
       "Die rechtliche Definition steht in Artikel 3 der EU-KI-Verordnung und gilt bei Rechtsfragen.",
     examplesHeading: "Drei Anwendungen aus dem Alltag",
     examplesIndex: "03 / Beispiele",
-    examplesIntro:
-      "Drei KI-Verfahren, die du täglich nutzt.",
     examples: [
       {
         id: "gesicht",
@@ -70,8 +68,6 @@ export const ENTRY_COPY = {
     ],
     nextHeading: "Nächster Schritt",
     nextIndex: "01 / Auswahl",
-    nextIntro:
-      "Wähle nach deinem Ziel.",
     primaryLabel: "Stand einordnen",
     primaryTitle: "KI-Check",
     primaryMeta: "ca. 5 Minuten",
@@ -109,8 +105,6 @@ export const ENTRY_COPY = {
       "The legal definition is in Article 3 of the EU AI Act and governs legal questions.",
     examplesHeading: "Three everyday applications",
     examplesIndex: "03 / Examples",
-    examplesIntro:
-      "Three AI methods you use every day.",
     examples: [
       {
         id: "gesicht",
@@ -156,8 +150,6 @@ export const ENTRY_COPY = {
     ],
     nextHeading: "Next step",
     nextIndex: "01 / Selection",
-    nextIntro:
-      "Choose by your goal.",
     primaryLabel: "Assess your level",
     primaryTitle: "AI check",
     primaryMeta: "about 5 minutes",
@@ -165,7 +157,7 @@ export const ENTRY_COPY = {
       "{count} questions, then a reasoned course recommendation that stays in your browser.",
     primaryCta: "Start the AI check",
     courseLabel: "Review a foundation course",
-    courseTitle: "AI Fundamentals",
+    courseTitle: "Everyday AI Literacy",
     courseBody:
       "Which data may go into an AI tool and how to check answers.",
     courseCta: "Open the course",
@@ -397,23 +389,23 @@ export const HELP_LIMITATIONS_COPY = {
       record: {
         title: "Selbst ausgestellte Abschlussdokumente",
         description:
-          "Abschlussdokumente entstehen in deinem Browser, ohne Serverprüfung, digitale Signatur oder externe Zertifizierungsstelle. Für sich allein belegen sie nicht, dass eine Organisation Artikel 4 der EU-KI-Verordnung erfüllt.",
+          "Abschlussdokumente entstehen in deinem Browser, ohne Serverprüfung, Signatur oder Zertifizierungsstelle. Allein belegen sie nicht, dass eine Organisation Artikel 4 der KI-Verordnung erfüllt.",
         mitigation:
-          "Behandle das Dokument als persönliche Lernaufzeichnung. Artikel 4 verlangt Maßnahmen zur Förderung von KI-Kompetenz, abhängig von Kenntnissen, Erfahrung, Bildung, Nutzungskontext und betroffenen Personen, aber kein garantiertes individuelles Kompetenzniveau. Maßnahmen und Nachweise legt jede Organisation selbst fest und lässt sie rechtlich prüfen.",
+          "Behandle es als persönliche Lernaufzeichnung. Welche Maßnahmen und Nachweise Artikel 4 genügen, legt deine Organisation fest und lässt es rechtlich prüfen.",
       },
       simulations: {
         title: "Simulierte Praxisbeispiele",
         description:
-          "Praxisbeispiele und Sandboxen laufen mit synthetischen Daten und simulierten Schnittstellen. Sie verschicken keine echten E-Mails, rufen keine produktiven Drittanbieter-APIs auf und verarbeiten keine echten Kundendaten.",
+          "Praxisbeispiele und Sandboxen nutzen synthetische Daten und simulierte Schnittstellen. Sie senden keine echten E-Mails und berühren keine Produktivsysteme oder Kundendaten.",
         mitigation:
-          "Nutze die Beispiele, um den Ablauf zu verstehen. Vor echtem Einsatz prüfst du Anbieter-Dokumentation, Datenflüsse, Berechtigungen, Protokollierung und interne Freigaben einzeln.",
+          "Nutze die Beispiele, um den Ablauf zu verstehen. Vor echtem Einsatz prüfst du Anbieter-Doku, Datenflüsse, Berechtigungen, Protokolle und interne Freigaben.",
       },
       freshness: {
         title: "Keine Echtzeit-Aktualisierung",
         description:
-          "Rechtslage, Produkte, Preise und Statistiken ändern sich auch zwischen zwei Prüfungen, und die Plattform überwacht externe Quellen nicht laufend. Ein Prüfdatum sagt nur, wann geprüft wurde.",
+          "Recht, Produkte, Preise und Statistiken ändern sich, und die Plattform überwacht Quellen nicht laufend. Ein Prüfdatum sagt nur, wann geprüft wurde.",
         mitigation:
-          "Prüfe vor Entscheidungen die aktuelle Primärquelle, für EU-Recht EUR-Lex und das Amtsblatt. Inhaltliche Änderungen stehen unter /neuigkeiten.",
+          "Prüfe vor Entscheidungen die aktuelle Primärquelle, für EU-Recht EUR-Lex und das Amtsblatt.",
       },
       progress: {
         title: "Lokaler Lernfortschritt ohne Anmeldung",
@@ -447,23 +439,23 @@ export const HELP_LIMITATIONS_COPY = {
       record: {
         title: "Self-issued completion documents",
         description:
-          "Completion documents are created in your browser, without a server-side check, digital signature or external certification body. On their own they do not establish that an organisation complies with Article 4 of the EU AI Act.",
+          "Completion documents are made in your browser, with no server check, signature or certification body. Alone they do not show that an organisation meets Article 4 of the AI Act.",
         mitigation:
-          "Treat the document as a personal learning record. Article 4 requires measures that support AI literacy, taking knowledge, experience, education, use context and affected persons into account, but no guaranteed individual level of AI literacy. Each organisation defines its own measures and evidence and has them legally reviewed.",
+          "Treat it as a personal learning record. Your organisation decides which measures and evidence meet Article 4 and has that legally reviewed.",
       },
       simulations: {
         title: "Simulated practical examples",
         description:
-          "Practical examples and sandboxes use synthetic data and simulated interfaces. They do not send real email, call production third-party APIs or process real customer data.",
+          "Practical examples and sandboxes use synthetic data and simulated interfaces. They send no real email and touch no production systems or customer data.",
         mitigation:
-          "Use the examples to understand the process. Before real use, review provider documentation, data flows, permissions, logging and internal approvals separately.",
+          "Use the examples to understand the process. Before real use, check provider docs, data flows, permissions, logs and internal approvals.",
       },
       freshness: {
         title: "No real-time updates",
         description:
-          "Law, products, prices and statistics also change between two reviews, and the platform does not monitor external sources continuously. A review date only says when the check happened.",
+          "Law, products, prices and statistics change, and the platform does not monitor sources continuously. A review date only says when the check happened.",
         mitigation:
-          "Check the current primary source before a decision, for EU law EUR-Lex and the Official Journal. Content changes are listed under /en/neuigkeiten.",
+          "Check the current primary source before a decision, for EU law EUR-Lex and the Official Journal.",
       },
       progress: {
         title: "Local learning progress without sign-in",
@@ -511,7 +503,7 @@ export const NEWS_COPY = {
         "Dated releases, content changes, and corrections on loehrning.ai.",
     },
     eyebrow: "Change log",
-    title: "What is new",
+    title: "What's new",
     intro:
       "Dated notes on new material and changes.",
     statusLabel: "Entries",
@@ -536,7 +528,7 @@ export const FEEDBACK_COPY = {
     introUnavailable:
       "Das Formular ist hier nicht freigeschaltet.",
     emailBefore: "Direkter Kontakt: ",
-    boundaryHeading: "Datenumfang",
+    boundaryHeading: "Was gesendet wird",
     boundaryEyebrow: "01 / Datenumfang",
     boundaryItems: [
       "Kategorie und Nachricht",
@@ -545,7 +537,7 @@ export const FEEDBACK_COPY = {
       "Keine Anfrageparameter oder URL-Fragmente im Seitenpfad",
     ],
     disabledStatus:
-      "Es werden keine Formulardaten gespeichert. Schreib stattdessen an tim@loehrning.ai.",
+      "Hier wird nichts gespeichert. Schick deine Rückmeldung per E-Mail.",
     disabledCodeLabel: "Status / Formular deaktiviert",
     form: {
       categoryLegend: "Art der Rückmeldung",
@@ -593,7 +585,7 @@ export const FEEDBACK_COPY = {
       "No query parameters or URL fragments in the page path",
     ],
     disabledStatus:
-      "No form data is stored. Email tim@loehrning.ai instead.",
+      "Nothing is stored here. Send your feedback by email.",
     disabledCodeLabel: "Status / Form disabled",
     form: {
       categoryLegend: "Feedback category",

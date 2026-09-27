@@ -9,7 +9,7 @@ const lesson: ClaudeLesson = {
   number: 7,
   title: "Agentic workflows and tool use",
   subtitle:
-    "Design tool loops with explicit authority, limits, and verification.",
+    "Design tool loops with bounded authority, limits, and verification.",
   durationMinutes: 11,
   trackId: "advanced",
   hook: "An agent works in loops and needs enforced limits.",
@@ -28,7 +28,7 @@ const lesson: ClaudeLesson = {
     },
     {
       id: "the-loop-explicit",
-      title: "The loop, explicitly",
+      title: "The loop, step by step",
       readTimeMinutes: 2,
       content:
         "```\n// one agent turn\nrequest   ← model receives goal + allowed state\npropose   ← model returns a response or tool request\nvalidate  ← harness checks schema, permission, and policy\nexecute   ← approved tool runs\nrecord    ← result and side effects are logged\ndecide    ← continue, stop, or request human input\n\n// until\n  acceptance checks pass | a limit is reached | a person intervenes\n```\n\nDefine termination, retries, idempotency and recovery before granting write access; a stop request in the prompt enforces nothing.",

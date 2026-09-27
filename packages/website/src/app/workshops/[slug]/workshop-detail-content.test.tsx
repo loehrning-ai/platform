@@ -43,8 +43,8 @@ describe("<WorkshopDetailContent>", () => {
     expect(questionCards[0]).toHaveAttribute("data-question-card", "paper");
     expect(questionCards[0]).toHaveTextContent(workshop.question);
     expect(agenda).toContainElement(questionCards[0] as HTMLElement);
-    expect(cover).not.toHaveTextContent("Allein ca. 90 Min.");
-    expect(agenda).toHaveTextContent("Allein ca. 90 Min.");
+    expect(cover).not.toHaveTextContent("Selbstlernen ca. 90 Min.");
+    expect(agenda).toHaveTextContent("Selbstlernen ca. 90 Min.");
     expect(agenda).toHaveTextContent("Du nimmst mitGo/No-Go-Regel");
     expect(agenda).toHaveTextContent("Du brauchsteinen Browser, kein KI-Konto");
     // The brief comes first in the agenda section, before its Kopflinie.
@@ -549,7 +549,7 @@ describe("phoneDescription", () => {
     );
     const deck = container.querySelector('[data-material-role="deck"]')!;
     const short = deck.querySelector("[data-material-short]")!;
-    expect(short).toHaveTextContent("Etwa 77 Minuten Programm und 13 Minuten Fragen.");
+    expect(short).toHaveTextContent("Plus 13 Minuten für Fragen.");
     expect(short).toHaveClass("sm:hidden");
     expect(short.nextElementSibling).toHaveClass("hidden", "sm:block");
     expect(deck).toHaveClass("has-[a:active]:bg-card-hover", "grid-cols-[1.5rem_minmax(0,1fr)]");

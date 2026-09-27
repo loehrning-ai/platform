@@ -95,7 +95,7 @@ interface QuizCopy {
 
 const QUIZ_COPY: Readonly<Record<"de" | "en", QuizCopy>> = {
   de: {
-    title: "Workshop-Quiz",
+    title: "Abschlussquiz",
     loading: "Quiz wird geladen…",
     loadErrorTitle: "Quiz konnte nicht geladen werden.",
     loadErrorBody:
@@ -132,7 +132,7 @@ const QUIZ_COPY: Readonly<Record<"de" | "en", QuizCopy>> = {
       `Quiz abgeschlossen: ${score} von ${total} Fragen richtig, ${percentage} Prozent.`,
   },
   en: {
-    title: "Workshop quiz",
+    title: "Final quiz",
     loading: "Quiz is loading…",
     loadErrorTitle: "Quiz couldn't be loaded.",
     loadErrorBody:
@@ -918,8 +918,10 @@ export function WorkshopQuizPage({
                         optionClass,
                       )}
                     >
+                      {/* Letters follow the shown order, not the stored id,
+                          so shuffled options still read A, B, C, D. */}
                       <span className="shrink-0 font-mono text-xs font-bold uppercase text-muted-foreground">
-                        {option.id}
+                        {String.fromCharCode(65 + optionIndex)}
                       </span>
                       <span className="min-w-0 flex-1 break-words">
                         {option.text}
