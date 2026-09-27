@@ -56,35 +56,35 @@ export interface KiCheckRecommendation {
 /** Reason lines per focus dimension for the gap case (du-form, warm). */
 const GAP_REASONING: Record<DimensionId, string> = {
   grundlagen:
-    "Beim Verstehen der KI-Grundlagen liegt der niedrigste Wert. Der {title} behandelt Funktionsweise, Fehlertypen und Prüfung.",
+    "„KI verstehen“ ist dein schwächstes Feld. Der {title} behandelt Funktionsweise, Fehlertypen und Prüfung.",
   urteil:
-    "Beim kritischen Einordnen liegt der niedrigste Wert. Der {title} behandelt Deepfakes, Verzerrungen und Quellenprüfung.",
+    "„Kritisch einordnen“ ist dein schwächstes Feld. Der {title} behandelt Deepfakes, Verzerrungen und Quellenprüfung.",
   recht:
-    "Beim Anwenden von KI-Regeln liegt der niedrigste Wert. Der {title} ordnet Rollen, Risikoklassen und Pflichten des AI Act ein.",
+    "„Regeln kennen“ ist dein schwächstes Feld. Der {title} ordnet Rollen, Risikoklassen und Pflichten des AI Act ein.",
   verantwortung:
-    "Beim verantwortungsvollen Einsatz liegt der niedrigste Wert. Der {title} behandelt Datenschutz, Transparenz und nachvollziehbare Nachweise.",
+    "„Verantwortung tragen“ ist dein schwächstes Feld. Der {title} behandelt Datenschutz, Transparenz und Nachweise.",
   praxis:
-    "Bei der Anwendung im Arbeitsalltag liegt der niedrigste Wert. Der {title} vermittelt eine Methode für Prompts, Werkzeuge und Prüfung.",
+    "„In der Arbeit anwenden“ ist dein schwächstes Feld. Der {title} zeigt eine Methode für Prompts, Werkzeuge und Prüfung.",
 };
 
 const FOUNDATION_REASONING =
-  "Beginne mit den Grundbegriffen, bevor du Spezialthemen vertiefst. Der {title} erklärt Funktionsweise, Fehlertypen, Datenschutz und Prüfung ohne vorausgesetztes Vorwissen.";
+  "Beginne mit den Grundlagen. Der {title} erklärt Funktionsweise, Fehlertypen, Datenschutz und Prüfung ohne Vorwissen.";
 
 const GAP_REASONING_EN: Record<DimensionId, string> = {
   grundlagen:
-    "Your basics score is the main gap. {title} explains how AI works, where it fails, and how to check its output.",
+    "“Understand AI” is your weakest field. {title} covers how AI works, typical errors and checks.",
   urteil:
-    "Judging model output is the main gap, including synthetic media and bias. {title} addresses those cases directly.",
+    "“Judge outputs” is your weakest field. {title} covers deepfakes, bias and source checks.",
   recht:
-    "Applying AI rules is the main gap. {title} turns the AI Act's roles and risk classes into concrete decisions.",
+    "“Know the rules” is your weakest field. {title} explains the AI Act's roles, risk classes and duties.",
   verantwortung:
-    "Responsible use is the main gap. {title} covers data protection, transparency, and traceable records.",
+    "“Work responsibly” is your weakest field. {title} covers data protection, transparency and records.",
   praxis:
-    "Applying AI in daily work is the main gap. {title} provides a method for prompts, tools, and review steps.",
+    "“Apply AI at work” is your weakest field. {title} shows a method for prompts, tools and checks.",
 };
 
 const FOUNDATION_REASONING_EN =
-  "Build the basic model before adding specialist detail. {title} explains how AI works, common failures, data protection, and verification without assuming prior knowledge.";
+  "Start with the basics. {title} explains how AI works, typical errors, data protection and checks, with no prior knowledge needed.";
 
 function build(
   focus: DimensionResult,

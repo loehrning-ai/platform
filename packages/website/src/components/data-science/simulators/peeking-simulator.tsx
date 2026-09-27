@@ -154,8 +154,8 @@ export function PeekingSimulator() {
         "Wie Peeking die Falsch-Positiv-Rate erhöht",
       )}
       caption={text(
-        "Monte Carlo estimate from 1 000 seeded normal-approximation A/A runs, capped at 5 000 observations per arm. It counts runs that cross p < α at any configured look; it is not a universal optional-stopping rate.",
-        "Monte-Carlo-Schätzung aus 1 000 initialisierten A/A-Läufen mit Normalapproximation und höchstens 5 000 Beobachtungen je Gruppe. Gezählt werden Läufe mit p < α bei einer konfigurierten Prüfung; dies ist keine allgemeine Rate für optionales Stoppen.",
+        "Monte Carlo estimate from 1 000 seeded A/A runs (normal approximation, at most 5 000 observations per arm), counting runs with p < α at any look. It is no universal optional-stopping rate.",
+        "Monte-Carlo-Schätzung aus 1 000 initialisierten A/A-Läufen (Normalapproximation, höchstens 5 000 Beobachtungen je Gruppe), gezählt werden Läufe mit p < α bei irgendeiner Prüfung. Das ist keine allgemeine Rate für optionales Stoppen.",
       )}
     >
       <div className="ds-responsive-split">

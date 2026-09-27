@@ -14,12 +14,7 @@ export interface CodexCourseCopy {
     readonly facts: readonly string[];
     readonly courseEyebrow: string;
     readonly courseTitle: string;
-    readonly courseIntro: string;
     readonly lessonLabel: (number: number) => string;
-    readonly finalEyebrow: string;
-    readonly finalTitle: string;
-    readonly finalBody: string;
-    readonly finalCta: string;
     readonly breadcrumbs: readonly [string, string, string];
     readonly jsonLdDescription: string;
   };
@@ -76,45 +71,37 @@ export const CODEX_COURSE_COPY = Object.freeze({
     landingMetadata: {
       title: "Codex-Kurs: Aufträge für den Coding-Agenten präzise steuern",
       description:
-        "Zwölf Lektionen zu Arbeitsmodell, Sandbox, AGENTS.md, Spezifikation, Review, Iteration, Werkzeugen und paralleler Arbeit mit Codex.",
+        "Zwölf Lektionen zu Sandbox, AGENTS.md, Spezifikation, Review und paralleler Arbeit mit Codex.",
     },
     landing: {
       eyebrow: "Codex / Kurs",
       title: "Codex kontrolliert im Repository einsetzen.",
       intro:
-        "Der Kurs behandelt Codex als auftragsorientierten Coding-Agenten: Kontext bereitstellen, Änderungen abgrenzen, Nachweise verlangen und den Diff vor dem Merge lesen.",
+        "Du gibst Codex Kontext, grenzt die Änderung ab, verlangst Nachweise und liest den Diff vor dem Merge.",
       start: "Lektion 01 starten",
       map: "Kursübersicht",
       facts: [
         "12 Lektionen",
-        "4 aufeinander aufbauende Tracks",
+        "4 Tracks",
         "Abschlussfall in Lektion 12",
         "eine Übung pro Lektion",
       ],
       courseEyebrow: "Kursaufbau",
-      courseTitle: "Vier Tracks. Zwölf Lektionen. Ein Abschlussfall.",
-      courseIntro:
-        "Erst das Arbeitsmodell. Dann Spezifikation, Umfang und Akzeptanz. Am Ende ein vollständiger, prüfbarer Ablauf.",
+      courseTitle: "Zwölf Lektionen in vier Tracks.",
       lessonLabel: (number) => `Lektion ${number}`,
-      finalEyebrow: "Einstieg",
-      finalTitle: "Lektion 01: das Arbeitsmodell",
-      finalBody:
-        "Die erste Lektion trennt begrenzte Repository-Aufträge von Autovervollständigung und Chat. Danach betrachtest du Aufgabe, Repository-Kontext und Ausführungsgrenze als einen zusammenhängenden Rahmen.",
-      finalCta: "Beginnen",
       breadcrumbs: ["Start", "Kurse", "Codex-Kurs"],
       jsonLdDescription:
-        "Zwölf Lektionen zur kontrollierten Arbeit mit Codex über vier Tracks.",
+        "Zwölf Lektionen zur kontrollierten Arbeit mit Codex.",
     },
     indexMetadata: {
       title: "Lektionen: Codex-Kurs",
       description:
-        "Alle zwölf Lektionen des Codex-Kurses in vier Tracks: Grundlagen, Auftragsgestaltung, Arbeitszyklus und fortgeschrittene Integration.",
+        "Die zwölf Lektionen des Codex-Kurses in vier Tracks.",
     },
     index: {
       eyebrow: "Kursübersicht",
-      title: "Vier Tracks. Zwölf Lektionen.",
-      intro:
-        "Arbeite die Lektionen in Reihenfolge durch. Der Abschlussfall verbindet Spezifikation, Lauf, Review und Iteration.",
+      title: "Zwölf Lektionen in vier Tracks.",
+      intro: "Arbeite der Reihe nach. Lektion 12 ist der Abschlussfall.",
       trackLabel: (number) => `Track ${String(number).padStart(2, "0")}`,
       lessonLabel: (number) => `Lektion ${number}`,
       duration: (minutes) => `${minutes} Min. Lesedauer`,
@@ -128,7 +115,7 @@ export const CODEX_COURSE_COPY = Object.freeze({
       markRead: "Als gelesen markieren",
       practiceTitle: "Praxisübung",
       practiceBody:
-        "Bearbeite die Simulation. Sie speichert nur den zugehörigen lokalen Checkpoint.",
+        "Die Simulation speichert nur ihren lokalen Checkpoint.",
       complete: "Lektion abschließen",
       completed: "Lektion abgeschlossen",
       next: "Nächste Lektion →",
@@ -138,22 +125,22 @@ export const CODEX_COURSE_COPY = Object.freeze({
     certificateMetadata: {
       title: "Teilnahmebestätigung: Codex-Kurs",
       description:
-        "Lokale Teilnahmebestätigung für den abgeschlossenen Codex-Kurs herunterladen.",
+        "Lokale Teilnahmebestätigung für den Codex-Kurs herunterladen.",
     },
     verificationMetadata: {
       title: "Teilnahmebestätigungsdaten prüfen: Codex-Kurs",
       description:
-        "Lokal kodierte Daten einer Codex-Kurs-Teilnahmebestätigung lesen. Die Daten sind nicht servergeprüft oder kryptografisch signiert.",
+        "Lokal kodierte Daten einer Codex-Teilnahmebestätigung lesen, nicht servergeprüft oder signiert.",
     },
     error: {
       title: "Codex-Kurs konnte nicht geladen werden",
-      body: "Die Kursansicht ist in diesem Browserlauf fehlgeschlagen. Es wurde kein Lernstand verändert.",
+      body: "Die Kursansicht ist fehlgeschlagen. Dein Lernstand ist unverändert.",
       retry: "Erneut laden",
       back: "Zur Kursübersicht",
     },
     notFound: {
       title: "Codex-Lektion nicht gefunden",
-      body: "Die angeforderte Lektions-ID gehört nicht zu diesem Kurs.",
+      body: "Diese Lektion gibt es im Kurs nicht.",
       back: "Alle Lektionen anzeigen",
     },
   },
@@ -161,45 +148,37 @@ export const CODEX_COURSE_COPY = Object.freeze({
     landingMetadata: {
       title: "Codex Course: precise task control for the coding agent",
       description:
-        "Twelve lessons on the Codex operating model, sandbox, AGENTS.md, specifications, review, iteration, tools, and parallel work.",
+        "Twelve lessons on the Codex sandbox, AGENTS.md, specifications, review, and parallel work.",
     },
     landing: {
       eyebrow: "Codex / course",
       title: "Use Codex under explicit repository controls.",
       intro:
-        "Codex is treated here as a task-oriented coding agent. Supply the context, bound the change, require evidence, read the diff before merge.",
+        "Give Codex context, bound the change, require evidence, and read the diff before merge.",
       start: "Start lesson 01",
       map: "Course map",
       facts: [
         "12 lessons",
-        "4 sequential tracks",
+        "4 tracks",
         "capstone in lesson 12",
         "one exercise per lesson",
       ],
       courseEyebrow: "Course structure",
-      courseTitle: "Four tracks. Twelve lessons. One capstone.",
-      courseIntro:
-        "Start with the operating model. Then define specification, scope, and acceptance. Finish with a complete, reviewable workflow.",
+      courseTitle: "Twelve lessons in four tracks.",
       lessonLabel: (number) => `Lesson ${number}`,
-      finalEyebrow: "Entry point",
-      finalTitle: "Lesson 01: the operating model",
-      finalBody:
-        "The first lesson separates bounded repository tasks from autocomplete and chat. After that, task, repository context and execution boundary read as one operating contract.",
-      finalCta: "Begin",
       breadcrumbs: ["Home", "Courses", "Codex Course"],
       jsonLdDescription:
-        "Twelve lessons on controlled work with Codex across four tracks.",
+        "Twelve lessons on controlled work with Codex.",
     },
     indexMetadata: {
       title: "Lessons: Codex Course",
       description:
-        "All twelve Codex Course lessons across four tracks: fundamentals, task craft, the review loop, and advanced integration.",
+        "The twelve Codex Course lessons in four tracks.",
     },
     index: {
       eyebrow: "Course map",
-      title: "Four tracks. Twelve lessons.",
-      intro:
-        "Work through the lessons in order. The capstone combines specification, execution, review, and iteration.",
+      title: "Twelve lessons in four tracks.",
+      intro: "Work in order. Lesson 12 is the capstone.",
       trackLabel: (number) => `Track ${String(number).padStart(2, "0")}`,
       lessonLabel: (number) => `Lesson ${number}`,
       duration: (minutes) => `${minutes} min read`,
@@ -213,7 +192,7 @@ export const CODEX_COURSE_COPY = Object.freeze({
       markRead: "Mark as read",
       practiceTitle: "Practice exercise",
       practiceBody:
-        "Work through the simulation. It stores only the corresponding local checkpoint.",
+        "The simulation stores only its local checkpoint.",
       complete: "Complete lesson",
       completed: "Lesson complete",
       next: "Next lesson →",
@@ -223,22 +202,22 @@ export const CODEX_COURSE_COPY = Object.freeze({
     certificateMetadata: {
       title: "Certificate of participation: Codex Course",
       description:
-        "Download the locally generated completion record for the Codex Course.",
+        "Download the local completion record for the Codex Course.",
     },
     verificationMetadata: {
       title: "Read completion-record data: Codex Course",
       description:
-        "Read locally encoded Codex Course completion data. The data is not server-verified or cryptographically signed.",
+        "Read locally encoded Codex completion data, not server-verified or signed.",
     },
     error: {
       title: "The Codex Course could not load",
-      body: "The course view failed in this browser session. No learning progress was changed.",
+      body: "The course view failed. Your progress is unchanged.",
       retry: "Reload",
       back: "Back to course map",
     },
     notFound: {
       title: "Codex lesson not found",
-      body: "The requested lesson ID does not belong to this course.",
+      body: "This course has no such lesson.",
       back: "View all lessons",
     },
   },

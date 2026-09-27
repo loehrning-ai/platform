@@ -5,8 +5,9 @@ import { describe, expect, it, vi } from "vitest";
 import { PAPER, PLAKAT } from "@/lib/plakat/palettes";
 // The edge route bundles its font by URL (fetch(new URL(..., import.meta.url))).
 // Node's fetch has no file: scheme, so the test serves those URLs from disk;
-// every other request still goes to the real fetch.
-vi.hoisted(async () => {
+// every other request still goes to the real fetch. Awaited, so the patch is
+// in place before the route module's top-level fetch runs on import.
+await vi.hoisted(async () => {
   const { readFile } = await import("node:fs/promises");
   const { fileURLToPath } = await import("node:url");
   const realFetch = globalThis.fetch;
@@ -18,6 +19,11 @@ vi.hoisted(async () => {
     return realFetch(input, init);
   }) as typeof fetch;
 });
+
+const locale = vi.hoisted(() => ({ current: "de" as "de" | "en" }));
+vi.mock("@/lib/i18n/request-locale", () => ({
+  getRequestLocale: async () => locale.current,
+}));
 
 import Image, {
   alt,
@@ -39,7 +45,8 @@ const ULTRAMARIN = rgb(PLAKAT.lemons.ground);
 const BUTTER = rgb(PLAKAT.lemons.ink);
 const KALKWEISS = rgb(PAPER.kalkweiss);
 
-async function renderPixels() {
+async function renderPixels(requestLocale: "de" | "en" = "de") {
+  locale.current = requestLocale;
   const response = await Image();
   expect(response.status).toBe(200);
   expect(response.headers.get("content-type")).toBe("image/png");
@@ -94,11 +101,22 @@ describe("root social image", () => {
     expect(at(size.width - 8, size.height - 8)).toEqual([...MENNIGE]);
   });
 
+  it("renders the English card for the /en mirror with the same poster layout", async () => {
+    const [de, en] = [await renderPixels("de"), await renderPixels("en")];
+    // The English headline is set smaller (96px), so it covers fewer Butter
+    // pixels, but the card keeps the same ground, globe and strip.
+    expect(en.count(BUTTER)).toBeGreaterThan(20_000);
+    expect(en.count(BUTTER)).not.toBe(de.count(BUTTER));
+    expect(en.count(MENNIGE)).toBe(de.count(MENNIGE));
+    expect(en.at(8, size.height - 8)).toEqual([...KALKWEISS]);
+  });
+
   it("keeps metadata aligned with the rendered subject", () => {
     expect(runtime).toBe("edge");
     expect(size).toEqual({ width: 1200, height: 630 });
     expect(contentType).toBe("image/png");
     expect(alt).toContain("KI verstehen. Sicher anwenden.");
+    expect(alt).toContain("Understand AI. Apply it safely.");
     expect(alt).toContain("loehrning.ai");
   });
 });

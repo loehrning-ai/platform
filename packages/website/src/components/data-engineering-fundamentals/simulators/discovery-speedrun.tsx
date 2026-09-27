@@ -40,8 +40,8 @@ export const DISC_QUESTIONS: readonly Question[] = [
     hint: "You need owner · contact · oncall",
     shortcut: "ht dim_users",
     accept: /^\s*ht\s+dim_users\s*$/i,
-    tip: 'The "home table" shortcut is <code>ht</code>. Pass it the table name: <code>ht &lt;table&gt;</code>.',
-    why: '<code>ht</code> returns the course metadata page for one table: owner, partition, freshness, and schema.',
+    tip: 'Use the "home table" shortcut with the table name: <code>ht &lt;table&gt;</code>.',
+    why: '<code>ht</code> shows a table&apos;s owner, partition, freshness and schema.',
     result: {
       kind: "ht",
       title: "dim_users",
@@ -59,8 +59,8 @@ export const DISC_QUESTIONS: readonly Question[] = [
     hint: "Find the producing pipeline",
     shortcut: "fpl fct_events",
     accept: /^\s*fpl\s+fct_events\s*$/i,
-    tip: 'The "find pipeline" shortcut is <code>fpl</code>. Pass it the table whose producer you want: <code>fpl &lt;table&gt;</code>.',
-    why: '<code>fpl</code> opens the course record for the job that writes a table: cadence, input, and owner.',
+    tip: 'Use the "find pipeline" shortcut with the table: <code>fpl &lt;table&gt;</code>.',
+    why: '<code>fpl</code> shows the job that writes a table, with cadence, input and owner.',
     result: {
       kind: "fpl",
       title: "Pipeline producing fct_events",
@@ -77,8 +77,8 @@ export const DISC_QUESTIONS: readonly Question[] = [
     hint: "Search the UDF catalog",
     shortcut: "udf cidr_parse",
     accept: /^\s*udf\s+\S+/i,
-    tip: "The UDF-catalog shortcut is <code>udf</code>. Try a likely symbolic name: <code>udf cidr_parse</code> or <code>udf parse_cidr</code>.",
-    why: "<code>udf &lt;name&gt;</code> looks up the UDF catalog by symbolic name. The catalog tells you who maintains the function and how often it is called, both matter before you take a runtime dependency.",
+    tip: "Search the UDF catalog by a likely name: <code>udf cidr_parse</code> or <code>udf parse_cidr</code>.",
+    why: "<code>udf &lt;name&gt;</code> looks up a function by name. Check who maintains it and how often it is called before you depend on it.",
     result: {
       kind: "udf",
       title: "cidr_parse(STRING cidr) → STRUCT<net, mask, first, last>",
@@ -94,12 +94,12 @@ export const DISC_QUESTIONS: readonly Question[] = [
     hint: "Look it up in the glossary",
     shortcut: "wut dataset_acl",
     accept: /^\s*wut\s+\S+/i,
-    tip: 'The glossary shortcut is <code>wut</code> ("what is this thing"). Pass the term: <code>wut &lt;term&gt;</code>.',
-    why: '<code>wut &lt;term&gt;</code> opens the course glossary entry for a term.',
+    tip: 'Use the glossary shortcut ("what is this thing") with the term: <code>wut &lt;term&gt;</code>.',
+    why: '<code>wut &lt;term&gt;</code> opens the glossary entry for a term.',
     result: {
       kind: "wut",
       title: "dataset_acl",
-      body: "Per-project access-control list. Scopes which engineers can read/write a dataset. Paired with actor annotations (Canonical_*) that tag the PII/identity nature of columns. Enforced at deploy by the Access Gateway.",
+      body: "Per-project access list of who may read or write a dataset. The Access Gateway checks it at deploy, together with actor annotations (Canonical_*) that mark PII and identity columns.",
     },
   },
   {
@@ -107,8 +107,8 @@ export const DISC_QUESTIONS: readonly Question[] = [
     hint: "Walk one hop down the lineage",
     shortcut: "ds produce dim_accounts",
     accept: /^\s*ds\s+produce\s+\S+/i,
-    tip: "The lineage shortcut is <code>ds</code>, with a <code>produce</code> subcommand for downstream: <code>ds produce &lt;table&gt;</code>.",
-    why: "<code>ds produce &lt;table&gt;</code> shows registered one-hop consumers. Verify graph completeness before a deprecation or schema change.",
+    tip: "Use the lineage shortcut with its downstream subcommand: <code>ds produce &lt;table&gt;</code>.",
+    why: "<code>ds produce &lt;table&gt;</code> shows registered one-hop consumers. Check that the graph is complete before a deprecation or schema change.",
     result: {
       kind: "lineage",
       title: "dim_accounts · downstream (1 hop)",
@@ -127,8 +127,8 @@ export const DISC_QUESTIONS_DE: readonly Question[] = [
     ...DISC_QUESTIONS[0],
     q: "Wem gehört <b>dim_users</b>?",
     hint: "Du brauchst Verantwortliche · Kontakt · Bereitschaftsdienst",
-    tip: 'Das Kürzel für die Tabellenseite lautet <code>ht</code>. Übergib den Tabellennamen: <code>ht &lt;table&gt;</code>.',
-    why: '<code>ht</code> öffnet im Kurs die Metadatenseite einer Tabelle mit Zuständigkeit, Partitionierung, Aktualität und Schema.',
+    tip: 'Nutz das Kürzel für die Tabellenseite mit dem Tabellennamen: <code>ht &lt;table&gt;</code>.',
+    why: '<code>ht</code> zeigt Zuständigkeit, Partitionierung, Aktualität und Schema einer Tabelle.',
     result: {
       ...DISC_QUESTIONS[0].result,
       rows: [
@@ -143,8 +143,8 @@ export const DISC_QUESTIONS_DE: readonly Question[] = [
     ...DISC_QUESTIONS[1],
     q: "Welcher Job schreibt <b>fct_events</b>?",
     hint: "Finde die erzeugende Pipeline",
-    tip: 'Das Kürzel zum Auffinden einer Pipeline lautet <code>fpl</code>. Übergib die Tabelle, deren Erzeuger du suchst: <code>fpl &lt;table&gt;</code>.',
-    why: '<code>fpl</code> öffnet im Kurs den Job, der eine Tabelle schreibt, einschließlich Takt, Eingabe und Zuständigkeit.',
+    tip: 'Nutz das Kürzel zum Auffinden einer Pipeline mit der Tabelle: <code>fpl &lt;table&gt;</code>.',
+    why: '<code>fpl</code> zeigt den Job, der eine Tabelle schreibt, mit Takt, Eingabe und Zuständigkeit.',
     result: {
       ...DISC_QUESTIONS[1].result,
       title: "Pipeline, die fct_events erzeugt",
@@ -160,8 +160,8 @@ export const DISC_QUESTIONS_DE: readonly Question[] = [
     ...DISC_QUESTIONS[2],
     q: "Finde die UDF, die <b>CIDR-Bereiche</b> verarbeitet.",
     hint: "Durchsuche den UDF-Katalog",
-    tip: "Das Kürzel für den UDF-Katalog lautet <code>udf</code>. Probiere einen wahrscheinlichen symbolischen Namen: <code>udf cidr_parse</code> oder <code>udf parse_cidr</code>.",
-    why: "<code>udf &lt;name&gt;</code> sucht im UDF-Katalog nach einem symbolischen Namen. Vor einer Laufzeitabhängigkeit brauchst du zwei Angaben aus dem Katalog: wer die Funktion pflegt und wie häufig sie aufgerufen wird.",
+    tip: "Such im UDF-Katalog nach einem naheliegenden Namen: <code>udf cidr_parse</code> oder <code>udf parse_cidr</code>.",
+    why: "<code>udf &lt;name&gt;</code> sucht eine Funktion nach Namen. Prüf, wer sie pflegt und wie oft sie aufgerufen wird, bevor du von ihr abhängst.",
     result: {
       ...DISC_QUESTIONS[2].result,
       rows: [
@@ -175,19 +175,19 @@ export const DISC_QUESTIONS_DE: readonly Question[] = [
     ...DISC_QUESTIONS[3],
     q: "Was ist eine <b>dataset_acl</b>?",
     hint: "Schlage den Begriff im Glossar nach",
-    tip: 'Das Glossarkürzel lautet <code>wut</code>. Übergib den Begriff: <code>wut &lt;term&gt;</code>.',
-    why: '<code>wut &lt;term&gt;</code> öffnet im Kurs den Glossareintrag eines Begriffs.',
+    tip: 'Nutz das Glossarkürzel mit dem Begriff: <code>wut &lt;term&gt;</code>.',
+    why: '<code>wut &lt;term&gt;</code> öffnet den Glossareintrag eines Begriffs.',
     result: {
       ...DISC_QUESTIONS[3].result,
-      body: "Projektbezogene Zugriffsliste. Sie legt im Kursszenario fest, welche Personen einen Datensatz lesen oder schreiben dürfen. Zusammen mit Akteur-Annotationen wird sie durch die Referenzschranke geprüft.",
+      body: "Projektbezogene Liste, wer einen Datensatz lesen oder schreiben darf. Access Gateway prüft sie beim Deployment, zusammen mit Akteur-Annotationen (Canonical_*), die PII- und Identitätsspalten markieren.",
     },
   },
   {
     ...DISC_QUESTIONS[4],
     q: "Zeige die <b>nachgelagerten Verbraucher</b> von dim_accounts.",
     hint: "Gehe im Lineage-Graphen einen Schritt abwärts",
-    tip: "Das Lineage-Kürzel lautet <code>ds</code>. Der Unterbefehl <code>produce</code> zeigt nachgelagerte Verbraucher: <code>ds produce &lt;table&gt;</code>.",
-    why: "<code>ds produce &lt;table&gt;</code> zeigt registrierte Verbraucher einen Schritt nachgelagert. Vor Abschaltung oder Schemaänderung die Vollständigkeit des Graphen prüfen.",
+    tip: "Nutz das Lineage-Kürzel mit dem Unterbefehl für nachgelagerte Verbraucher: <code>ds produce &lt;table&gt;</code>.",
+    why: "<code>ds produce &lt;table&gt;</code> zeigt registrierte Verbraucher einen Schritt nachgelagert. Prüf vor Abschaltung oder Schemaänderung, ob der Graph vollständig ist.",
     result: {
       ...DISC_QUESTIONS[4].result,
       title: "dim_accounts · nachgelagert (1 Schritt)",
@@ -294,7 +294,7 @@ export function DiscoverySpeedrun() {
         eyebrow={text("timed · 5 questions · 6 shortcuts", "mit Zeitmessung · 5 Fragen · 6 Kürzel")}
         title={text("Catalog command practice", "Katalogbefehle üben")}
         meta={text("practice round", "Übungsrunde")}
-        caption={text("Practice five lookups in the course's fictional command palette. Timing is local feedback, not a benchmark or proficiency threshold.", "Fünf Abfragen in der fiktiven Befehlspalette des Kurses üben. Die Zeitmessung ist lokales Feedback und kein Benchmark oder Kompetenznachweis.")}
+        caption={text("Five lookups in a fictional command palette. The timer is feedback, not a benchmark.", "Fünf Abfragen in einer fiktiven Befehlspalette. Die Zeit ist Feedback, kein Benchmark.")}
       >
         <div className="ds-intro">
           <div className="ds-intro-grid">
@@ -331,7 +331,7 @@ export function DiscoverySpeedrun() {
         eyebrow={text("run complete", "Durchlauf abgeschlossen")}
         title={`${text("Finished in", "Abgeschlossen in")} ${final.toFixed(1)}s`}
         meta={`${solvedCount}/${questions.length} ${text("solved", "gelöst")}${revealedCount ? ` · ${revealedCount} ${text("revealed", "aufgedeckt")}` : ""} · +${penalty}s ${text("penalty", "Zeitstrafe")}`}
-        caption={text("Local practice result. No comparison baseline or pass threshold is applied.", "Lokales Übungsergebnis ohne Vergleichsbasis oder Bestehensgrenze.")}
+        caption={text("Practice result, with no baseline or pass mark.", "Übungsergebnis ohne Vergleichswert oder Bestehensgrenze.")}
       >
         <div className="ds-leaderboard">
           <div className="ds-lb-row you">

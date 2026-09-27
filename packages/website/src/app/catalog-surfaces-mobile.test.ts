@@ -142,7 +142,7 @@ describe("catalog surfaces below lg", () => {
     expect(row).not.toContain("grid-cols-[minmax(0,1fr)_2.75rem]");
     // The list is the index: the band carries no anchor row at any width.
     expect(workshops).not.toContain("data-workshop-index");
-    expect(workshops).toContain("pb-10 pt-7 sm:pb-24 sm:pt-20");
+    expect(workshops).toContain("pb-10 pt-5 sm:pb-24 sm:pt-20");
     expect(workshops).toContain('layout="rail"');
     // The route section starts at sm, so the list follows the cover.
     expect(workshops).toContain('className="hidden pt-6 sm:block sm:pt-20"');

@@ -20,14 +20,14 @@ export default function KursError({
       ? {
           eyebrow: "Error",
           title: "The course could not be loaded",
-          body: "The course overview did not load. Retry the request.",
+          body: "Your progress is kept.",
           retry: "Try again",
           back: "Back to course page",
         }
       : {
           eyebrow: "Fehler",
           title: "Der Kurs konnte nicht geladen werden",
-          body: "Die Kursübersicht wurde nicht geladen. Versuche die Anfrage erneut.",
+          body: "Der Fortschritt bleibt erhalten.",
           retry: "Erneut versuchen",
           back: "Zur Kursseite",
         };

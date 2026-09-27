@@ -29,7 +29,7 @@ export const CLAUDE_TRACKS_EN: readonly ClaudeTrack[] = [
   {
     id: "foundations",
     label: "Foundations",
-    hint: "Start here. Mental model and the craft of prompting.",
+    hint: "Mental model and structured prompts.",
   },
   {
     id: "workflows",
@@ -44,7 +44,7 @@ export const CLAUDE_TRACKS_EN: readonly ClaudeTrack[] = [
   {
     id: "team",
     label: "Team and rigor",
-    hint: "Share it safely, measure it honestly.",
+    hint: "Share prompts safely and check their results.",
   },
 ];
 
@@ -52,12 +52,12 @@ export const CLAUDE_TRACKS_DE: readonly ClaudeTrack[] = [
   {
     id: "foundations",
     label: "Grundlagen",
-    hint: "Beginne mit dem mentalen Modell und klar strukturierten Prompts.",
+    hint: "Mentales Modell und klar strukturierte Prompts.",
   },
   {
     id: "workflows",
     label: "Arbeitsabläufe",
-    hint: "Wiederverwendbare Muster für regelmäßig anfallende Aufgaben.",
+    hint: "Wiederverwendbare Muster für wiederkehrende Aufgaben.",
   },
   {
     id: "advanced",
@@ -67,7 +67,7 @@ export const CLAUDE_TRACKS_DE: readonly ClaudeTrack[] = [
   {
     id: "team",
     label: "Team und Qualität",
-    hint: "Prompts sicher teilen und ihre Ergebnisse nachvollziehbar prüfen.",
+    hint: "Prompts sicher teilen und ihre Ergebnisse prüfen.",
   },
 ];
 

@@ -26,7 +26,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "The EU AI Act is officially Regulation (EU) 2024/1689. A regulation is directly applicable in every Member State; a directive must first be transposed into national law.",
+    "explanation": "A regulation applies directly in every Member State; a directive must first be transposed into national law.",
     "version": 1,
     "active": true
   },
@@ -57,7 +57,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 113 point (a) makes Art. 4 and the prohibitions in Art. 5 applicable from 2 February 2025. The Commission FAQ identifies 2 August 2026 as the start of national supervision and enforcement of Art. 4. This does not automatically mean that the same fine applies to every infringement. (Source: claimId ai-literacy-supervision-2026-08-02)",
+    "explanation": "Art. 113 point (a) makes Art. 4 and the prohibitions in Art. 5 applicable from 2 February 2025; per the Commission FAQ, national supervision and enforcement of Art. 4 start on 2 August 2026. This does not automatically mean that the same fine applies to every infringement. (Source: claimId ai-literacy-supervision-2026-08-02)",
     "version": 1,
     "active": true,
     "claimId": "ai-literacy-supervision-2026-08-02"
@@ -75,7 +75,7 @@
       },
       {
         "id": "b",
-        "text": "Deployer, because it uses a finished AI system under its own authority",
+        "text": "Deployer, because it uses a finished AI system under its authority",
         "isCorrect": true
       },
       {
@@ -89,7 +89,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Under Art. 3(4), a deployer is a person that uses an AI system under its authority. The provider is the producer, in this case Microsoft, not the user. An SME is almost always a deployer.",
+    "explanation": "Under Art. 3(4), a deployer uses an AI system under its own authority, as SMEs almost always do. The provider is the producer, here Microsoft.",
     "version": 1,
     "active": true
   },
@@ -97,7 +97,7 @@
     "id": "q_w04",
     "questionType": "single_choice",
     "difficulty": "hard",
-    "questionText": "A US SaaS provider sells its AI platform to a company in Berlin. Does the EU AI Act apply to the US provider?",
+    "questionText": "A US SaaS provider sells its AI platform to a company in Berlin. Does the EU AI Act apply to it?",
     "answerOptions": [
       {
         "id": "a",
@@ -106,12 +106,12 @@
       },
       {
         "id": "b",
-        "text": "Only if it has an EU subsidiary",
+        "text": "Only with an EU subsidiary",
         "isCorrect": false
       },
       {
         "id": "c",
-        "text": "Yes. Under Art. 2(1)(a), the Regulation also covers providers from third countries that place AI systems on the EU market",
+        "text": "Yes, Art. 2(1)(a) also covers providers from third countries",
         "isCorrect": true
       },
       {
@@ -120,7 +120,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "The extraterritorial scope covers providers and deployers from third countries through two triggers: Art. 2(1)(a), when an AI system is placed on the market or put into service in the EU, and Art. 2(1)(c), when the output produced by the AI system is used in the EU. Block 1 L3 emphasises point (c) because it is the more common case with foreign SaaS providers: the provider sits in the United States, the output lands with a user in Germany. Location and nationality of the provider are irrelevant; either trigger establishes the Regulation's applicability independently.",
+    "explanation": "Art. 2(1)(a) applies because the provider places the platform on the EU market; under Art. 2(1)(c), EU use of the output would suffice. Location is irrelevant, and either trigger establishes the Regulation's applicability independently.",
     "version": 1,
     "active": true
   },
@@ -128,7 +128,7 @@
     "id": "q_w05",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "How many prohibited AI practices are listed in Article 5 of the AI Act?",
+    "questionText": "How many prohibited practices does Article 5 of the AI Act list?",
     "answerOptions": [
       {
         "id": "a",
@@ -151,7 +151,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 5(1), points (a) to (h), lists eight prohibited practices. Among them social scoring, manipulative techniques, real-time remote biometric identification in publicly accessible spaces, and emotion recognition in the workplace.",
+    "explanation": "Art. 5(1), points (a) to (h), lists eight, including social scoring, manipulative techniques, real-time remote biometric identification in public spaces and emotion recognition at work.",
     "version": 1,
     "active": true
   },
@@ -182,7 +182,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Annex III, point 4(a), classifies AI systems intended for the recruitment or selection of natural persons, in particular systems that evaluate applications, as high-risk. Every high-risk obligation in Chapter III, Section 2 then applies.",
+    "explanation": "Annex III, point 4(a), classifies AI for recruiting or selecting people, such as evaluating applications, as high-risk. Every obligation in Chapter III, Section 2 then applies.",
     "version": 1,
     "active": true
   },
@@ -213,7 +213,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Spam filters fall under neither Annex I nor Annex III and do not trigger a transparency obligation under Art. 50. They are therefore minimal-risk systems. Only the voluntary codes of conduct under Art. 95 apply.",
+    "explanation": "Spam filters fall under neither Annex I nor Annex III and trigger no transparency obligation under Art. 50. Only voluntary codes of conduct under Art. 95 apply.",
     "version": 1,
     "active": true
   },
@@ -244,7 +244,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 5(1)(f) prohibits the use of emotion-recognition systems in the workplace and in educational institutions, except for medical or safety reasons. Employee consent or works-council approval does not remove the prohibition.",
+    "explanation": "Art. 5(1)(f) prohibits emotion recognition in workplaces and educational institutions, except for medical or safety reasons. Consent or works-council approval does not lift the prohibition.",
     "version": 1,
     "active": true
   },
@@ -261,7 +261,7 @@
       },
       {
         "id": "b",
-        "text": "A notice that the user is interacting with an AI system",
+        "text": "A notice that users are interacting with an AI system",
         "isCorrect": true
       },
       {
@@ -275,7 +275,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 50(1) requires providers to design chatbots so that users are clearly informed that they are interacting with an AI system, unless this is obvious. The information must be clear, distinguishable and accessible.",
+    "explanation": "Art. 50(1) requires providers to design chatbots so users are clearly informed they are interacting with AI, unless this is obvious. The notice must be clear, distinguishable and accessible.",
     "version": 1,
     "active": true
   },
@@ -283,7 +283,7 @@
     "id": "q_w10",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "What is the minimum retention period for the automatically generated logs of a high-risk AI system?",
+    "questionText": "What is the minimum retention period for the automatic logs of a high-risk AI system?",
     "answerOptions": [
       {
         "id": "a",
@@ -306,7 +306,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 19(1) requires providers to retain automatically generated logs for at least 6 months, unless applicable Union or national law requires a longer period. Art. 26(6) establishes the corresponding rule for deployers.",
+    "explanation": "Art. 19(1) requires providers to keep them for at least 6 months, unless applicable Union or national law requires a longer period. Art. 26(6) sets the same for deployers.",
     "version": 1,
     "active": true
   },
@@ -314,7 +314,7 @@
     "id": "q_w11",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Which Article sets the requirements for training, validation and testing data used by high-risk AI systems?",
+    "questionText": "Which Article sets the requirements for training, validation and testing data of high-risk AI?",
     "answerOptions": [
       {
         "id": "a",
@@ -337,7 +337,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 10 requires appropriate data-governance practices for high-risk systems and data sets that are relevant, sufficiently representative, and to the best extent possible free of errors and complete. Art. 9 governs the risk-management system; Art. 13 concerns transparency towards deployers.",
+    "explanation": "Art. 10 requires data governance and data sets that are relevant, sufficiently representative and, as far as possible, error-free and complete. Art. 9 covers risk management, Art. 13 transparency towards deployers.",
     "version": 1,
     "active": true
   },
@@ -345,16 +345,16 @@
     "id": "q_w12",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "A high-risk system under Annex III, point 4, for selecting job applicants is to be placed on the market. Which conformity-assessment route applies?",
+    "questionText": "A high-risk system under Annex III, point 4 (applicant selection) is to be placed on the market. Which conformity-assessment route applies?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "Only assessment by a notified body under Annex VII",
+        "text": "Only a notified body under Annex VII",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Internal control under Annex VI (Art. 43(2)); a notified body is not provided for",
+        "text": "Internal control under Annex VI (Art. 43(2)), without a notified body",
         "isCorrect": true
       },
       {
@@ -368,7 +368,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 43(2) requires systems listed in Annex III, points 2 to 8, including point 4 on applicant selection, to follow the internal-control procedure in Annex VI; a notified body is not provided for here. Only for biometric systems listed in Annex III, point 1, does the route under Art. 43(1) depend on whether harmonised standards have been applied in full: Annex VI if they have, otherwise Annex VII with a notified body.",
+    "explanation": "Art. 43(2) requires internal control under Annex VI for Annex III, points 2 to 8; a notified body is not provided for here. Only biometrics under point 1 can fall under Annex VII if harmonised standards were not applied in full.",
     "version": 1,
     "active": true
   },
@@ -380,12 +380,12 @@
     "answerOptions": [
       {
         "id": "a",
-        "text": "A general description of the AI system, including its intended purpose",
+        "text": "A general description of the AI system and its intended purpose",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "A description of the system's elements and development process",
+        "text": "A description of elements and development process",
         "isCorrect": false
       },
       {
@@ -399,7 +399,7 @@
         "isCorrect": true
       }
     ],
-    "explanation": "Annex IV lists nine categories of information, including the system description, development process, monitoring, performance metrics, risk-management system and changes. The provider's financial reports are not part of the technical documentation.",
+    "explanation": "Annex IV lists nine categories, such as system description, development, monitoring, performance metrics, risk management and changes. Financial reports are not among them.",
     "version": 1,
     "active": true
   },
@@ -430,7 +430,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 48 requires CE marking for high-risk AI systems. It records that the provider has completed the conformity assessment under Art. 43 and drawn up the EU declaration of conformity.",
+    "explanation": "Art. 48 requires CE marking. It shows that the conformity assessment under Art. 43 is done and the EU declaration of conformity drawn up.",
     "version": 1,
     "active": true
   },
@@ -461,7 +461,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 51(2) sets the threshold at 10^25 floating-point operations. The Commission may adjust that figure through delegated acts. Models in the GPT-4, Claude 3 and Gemini Ultra capability class are above it.",
+    "explanation": "Art. 51(2) sets the threshold at 10^25 floating-point operations, and the Commission may adjust it by delegated act. Models in the GPT-4, Claude 3 and Gemini Ultra class are above it.",
     "version": 1,
     "active": true
   },
@@ -478,7 +478,7 @@
       },
       {
         "id": "b",
-        "text": "Providers and deployers of AI systems, as an organisational duty",
+        "text": "Providers and deployers of AI systems, as organisations",
         "isCorrect": true
       },
       {
@@ -492,7 +492,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 4(1) addresses providers and deployers as organisations. They must take measures to support the development of AI literacy among their staff and other persons dealing with the operation and use of AI systems on their behalf, while considering the context named in the provision. Since Regulation (EU) 2026/1744, they do not have to guarantee that each person reaches a particular level of proficiency.",
+    "explanation": "Art. 4(1) requires providers and deployers to support AI literacy among staff and others acting on their behalf, considering the named context. Since Regulation (EU) 2026/1744, they do not have to guarantee that each person reaches a particular level of proficiency.",
     "version": 1,
     "active": true
   },
@@ -523,7 +523,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "The AI Office published the GPAI Code of Practice on 10 July 2025. Signatories such as OpenAI, Anthropic, Google and Mistral may use adherence to the Code as a means of demonstrating compliance (Art. 53(4), Art. 55(2)), but this does not create a presumption of conformity in the legal sense. Harmonised standards under Art. 40 and 41 would create a presumption of conformity; the Code does not. (Source: AI Office, GPAI Code of Practice, 10 July 2025; Art. 53(4) of Regulation (EU) 2024/1689)",
+    "explanation": "The AI Office published the Code on 10 July 2025. Signatories such as OpenAI, Anthropic, Google and Mistral may use adherence as a means of demonstrating compliance (Art. 53(4), Art. 55(2)), but this does not create a presumption of conformity in the legal sense; only harmonised standards under Art. 40 and 41 would. (Source: AI Office, GPAI Code of Practice, 10 July 2025; Art. 53(4) of Regulation (EU) 2024/1689)",
     "version": 1,
     "active": true,
     "claimId": "gpai-code-compliance-demonstration-only"
@@ -532,30 +532,30 @@
     "id": "q_w18",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Which obligation applies to you as a deployer when you use a generative AI tool to produce marketing copy for your website?",
+    "questionText": "Which obligation do you have as a deployer when you use generative AI to write marketing copy for your website?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "None. Deployers have no transparency obligations",
+        "text": "None; deployers have no transparency obligations",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Under Art. 50(4), AI-generated text must be disclosed as such when it is published to inform the public on matters of public interest",
+        "text": "Disclosure under Art. 50(4) for public text on matters of public interest",
         "isCorrect": true
       },
       {
         "id": "c",
-        "text": "You must carry out a conformity assessment",
+        "text": "Carry out a conformity assessment",
         "isCorrect": false
       },
       {
         "id": "d",
-        "text": "You must place CE marking on every page",
+        "text": "Place CE marking on every page",
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 50(4) requires deployers using an AI system to generate or manipulate text published to inform the public on matters of public interest to disclose that the text was artificially generated or manipulated, unless the content has undergone human review or editorial control. Ordinary product marketing falls within this rule only in limited circumstances.",
+    "explanation": "Art. 50(4) requires disclosure of AI-generated text published to inform the public on matters of public interest, unless the content has undergone human review or editorial control. Ordinary product marketing is covered only in limited cases.",
     "version": 1,
     "active": true
   },
@@ -586,7 +586,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 99(3) provides for fines of up to EUR 35 million or 7% of worldwide annual turnover for infringements of Art. 5 on prohibited practices, whichever is higher. The tiers for other infringements are 3% and 1%, respectively.",
+    "explanation": "Art. 99(3) sets up to EUR 35 million or 7% of worldwide annual turnover for infringements of Art. 5, whichever is higher. The other tiers are 3% and 1%.",
     "version": 1,
     "active": true
   },
@@ -617,7 +617,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "The KI-MIG has been in force since 29 July 2026. It makes the Federal Network Agency the market-surveillance authority, single point of contact and complaints body for the AI Act, unless a sectoral authority is responsible. The specific complaints route is on the official Federal Network Agency website.",
+    "explanation": "The KI-MIG, in force since 29 July 2026, makes the Federal Network Agency the market-surveillance authority, single point of contact and complaints body, unless a sectoral authority is responsible. Its official website sets out the complaints route.",
     "version": 1,
     "active": true
   },
@@ -634,7 +634,7 @@
       },
       {
         "id": "b",
-        "text": "Immediately and no later than 15 days after becoming aware of it",
+        "text": "Immediately, no later than 15 days after becoming aware",
         "isCorrect": true
       },
       {
@@ -648,7 +648,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 73(2) requires serious incidents to be reported immediately and no later than 15 days after the provider or deployer becomes aware of them. The period is reduced to 10 days in the event of death and to 2 days for widespread infringements or serious incidents involving critical infrastructure.",
+    "explanation": "Art. 73(2) requires reporting immediately and no later than 15 days after becoming aware. In the event of death the period is 10 days; for widespread infringements or critical infrastructure, 2 days.",
     "version": 1,
     "active": true
   },
@@ -675,11 +675,11 @@
       },
       {
         "id": "d",
-        "text": "Only through a lawyer who supplies proof of authority",
+        "text": "Only through a lawyer with proof of authority",
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 85 gives any natural or legal person the right to lodge a complaint with the relevant market-surveillance authority. Being directly affected is not required. The authority assesses the complaint and decides how to proceed.",
+    "explanation": "Art. 85 gives any natural or legal person the right to complain to the relevant market-surveillance authority, even without being directly affected. The authority decides how to proceed.",
     "version": 1,
     "active": true
   },
@@ -687,7 +687,7 @@
     "id": "q_w23",
     "questionType": "single_choice",
     "difficulty": "hard",
-    "questionText": "A private SME uses an AI-powered CV-screening tool, which is high-risk under Annex III, point 4. Must it perform a fundamental-rights impact assessment under Art. 27?",
+    "questionText": "A private SME uses an AI CV-screening tool, high-risk under Annex III, point 4. Must it carry out a fundamental-rights impact assessment under Art. 27?",
     "answerOptions": [
       {
         "id": "a",
@@ -701,7 +701,7 @@
       },
       {
         "id": "c",
-        "text": "No. Art. 27 applies only to public bodies and to systems under Annex III, points 5(b) and 5(c)",
+        "text": "No, only public bodies and Annex III, points 5(b) and 5(c)",
         "isCorrect": true
       },
       {
@@ -710,7 +710,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 27(1) limits the fundamental-rights impact assessment to deployers that are bodies governed by public law or private entities providing public services, and to deployers of systems listed in Annex III, points 5(b) and 5(c). A private HR use listed under point 4 is outside that scope. A data protection impact assessment under GDPR Art. 35 must be considered separately; it is required only where the processing is likely to result in a high risk.",
+    "explanation": "Art. 27(1) covers public bodies, private providers of public services and Annex III, points 5(b) and 5(c). A private HR use listed under point 4 is outside that scope. A DPIA under GDPR Art. 35 is separate, required only where the processing is likely to result in a high risk.",
     "version": 1,
     "active": true
   },
@@ -741,7 +741,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "AI Act Art. 26(9) expressly refers to the data protection impact assessment under GDPR Art. 35. Deployers of high-risk systems can use existing DPIAs as a basis and add AI-specific matters such as training data, human oversight and logging.",
+    "explanation": "AI Act Art. 26(9) expressly refers to the DPIA under GDPR Art. 35. Deployers can extend existing DPIAs with AI matters such as training data, human oversight and logging.",
     "version": 1,
     "active": true
   },
@@ -758,7 +758,7 @@
       },
       {
         "id": "b",
-        "text": "Create an AI inventory covering every AI system used in the organisation",
+        "text": "Build an inventory of every AI system in use",
         "isCorrect": true
       },
       {
@@ -772,7 +772,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "No inventory, no classification. No classification, no way to name the obligations that apply. Step 1 is a complete AI inventory covering provider, purpose and data flows. Risk classification, documentation, gap analysis and remediation come after that.",
+    "explanation": "Only an inventory with provider, purpose and data flows makes risk classification possible. Documentation, gap analysis and remediation follow.",
     "version": 1,
     "active": true
   },
@@ -784,7 +784,7 @@
     "answerOptions": [
       {
         "id": "a",
-        "text": "From 2 August 2026, before or when the interaction starts (Art. 50(1))",
+        "text": "From 2 August 2026, before or at the start of the interaction",
         "isCorrect": true
       },
       {
@@ -803,7 +803,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 50(1) generally requires providers to design systems intended to interact directly with natural persons so that those persons are informed that they are interacting with an AI system, before or at the time of their first interaction, unless this is obvious. The obligation becomes applicable on 2 August 2026. (Source: Art. 50(1), Art. 113 of Regulation (EU) 2024/1689)",
+    "explanation": "Providers must design systems that interact directly with people so that those people are told at the latest at the first interaction, unless this is obvious. The obligation applies from 2 August 2026. (Source: Art. 50(1), Art. 113 of Regulation (EU) 2024/1689)",
     "claimId": "ai-act-transparency-application-2026-08-02",
     "version": 1,
     "active": true
@@ -816,12 +816,12 @@
     "answerOptions": [
       {
         "id": "a",
-        "text": "No one. The Regulation applies to every natural person",
+        "text": "No one; the Regulation applies to every natural person",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Natural persons using AI solely for private purposes: they are not deployers within the meaning of Art. 2(10)",
+        "text": "Natural persons using AI purely privately (Art. 2(10))",
         "isCorrect": true
       },
       {
@@ -835,7 +835,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 2(10) of Regulation (EU) 2024/1689 expressly excludes obligations of deployers who are natural persons using AI systems in the course of a purely personal, non-professional activity. A person using ChatGPT at home for their own writing is not a deployer in the legal sense. The Regulation applies once the use takes place in a professional context.",
+    "explanation": "Art. 2(10) of Regulation (EU) 2024/1689 excludes deployer obligations for natural persons in a purely personal, non-professional activity. Using ChatGPT at home for your own writing is not covered; professional use is.",
     "version": 1,
     "active": true
   }

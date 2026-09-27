@@ -56,4 +56,4 @@ Open an empty inventory and document, for one process:
 - measurable error types
 - fallback and stop criterion
 
-This is not a company ranking. It is the ground under a decision you can defend.
+These records are the ground under a decision you can defend.

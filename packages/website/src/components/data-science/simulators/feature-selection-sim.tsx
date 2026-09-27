@@ -99,8 +99,8 @@ export function FeatureSelectionSim() {
         `${keptCount}/8 Merkmale behalten`,
       )}
       caption={text(
-        "The scores, thresholds, and keep/drop decisions are fixed teaching values, not estimates from a dataset. Compare what each method can represent and validate selection stability inside the full modeling procedure.",
-        "Scores, Schwellenwerte und Behalten/Entfernen-Entscheidungen sind feste Lehrwerte, keine Schätzungen aus einem Datensatz. Die darstellbaren Beziehungen vergleichen und die Auswahlstabilität innerhalb des vollständigen Modellverfahrens validieren.",
+        "Scores, thresholds and keep/drop decisions are fixed teaching values. Validate selection stability inside the full modeling procedure.",
+        "Scores, Schwellenwerte und Behalten/Entfernen-Entscheidungen sind feste Lehrwerte. Validier die Auswahlstabilität innerhalb des vollständigen Modellverfahrens.",
       )}
     >
       <div className="sim-controls" style={{ marginBottom: 14 }}>

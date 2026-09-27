@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, type ReactNode } from "react";
+import { useId, type CSSProperties, type ReactNode } from "react";
 import { ArrowGlyph, cx, Pictogram, type PictogramName } from "@/components/werk";
 import { useDemoLocale } from "./demo-locale";
 
@@ -12,9 +12,14 @@ import { useDemoLocale } from "./demo-locale";
  * - ink     = the processing step or an approved result
  * - dashed  = a gate that is still open (review, sign-off, a known gap)
  * - mark    = the one thing to look at; at most one mark per drawing. It is
- *             drawn in the scene mark (border, fill, line) and the scene
- *             accent text: Himbeere and Himbeere tief on the IDEA tile panel
- *             (3.67 and 4.62:1 on Kreide), Mennige and Mennige tief on paper.
+ *             drawn in the scene mark and the scene accent text: Himbeere
+ *             and Himbeere tief on the IDEA tile panel (3.67 and 4.62:1 on
+ *             Kreide), Mennige and Mennige tief on paper. Hue is never its
+ *             only cue (SPEC §3.11: Kobalt and Himbeere are 1.37:1 under
+ *             protanopia), so a mark also differs in shape: a frame is a
+ *             double rule, a fill is an outlined Himbeere hatch on Kreide,
+ *             a line is dashed or double. A Kreide gap of at least 2px keeps
+ *             every Himbeere shape off the Kobalt drawing.
  *
  * Every preview renders inside the tile's aria-hidden band, so its short
  * labels are decoration for sighted readers only. Labels stay at 12px or
@@ -24,7 +29,16 @@ import { useDemoLocale } from "./demo-locale";
 const LABEL = "text-[0.75rem] font-semibold leading-tight text-foreground";
 const DATA = "font-mono text-[0.75rem] leading-tight text-foreground tabular-nums";
 
-function Hatch({ className }: { readonly className?: string }) {
+function Hatch({
+  className,
+  pitch = 10,
+  stroke = 1.5,
+}: {
+  readonly className?: string;
+  /** Distance between the lines, in px. */
+  readonly pitch?: number;
+  readonly stroke?: number;
+}) {
   const raw = useId();
   const id = `pv-hatch-${raw.replace(/[^a-zA-Z0-9_-]/g, "")}`;
   return (
@@ -38,18 +52,39 @@ function Hatch({ className }: { readonly className?: string }) {
       <defs>
         <pattern
           id={id}
-          width="10"
-          height="10"
+          width={pitch}
+          height={pitch}
           patternUnits="userSpaceOnUse"
           patternTransform="rotate(45)"
         >
-          <line x1="0" y1="0" x2="0" y2="10" stroke="currentColor" strokeWidth="1.5" />
+          <line x1="0" y1="0" x2="0" y2={pitch} stroke="currentColor" strokeWidth={stroke} />
         </pattern>
       </defs>
       <rect width="100%" height="100%" fill={`url(#${id})`} />
     </svg>
   );
 }
+
+/** A marked fill: a 2px Himbeere outline around a Himbeere hatch on Kreide. */
+function MarkFill({
+  className,
+  style,
+}: {
+  readonly className?: string;
+  readonly style?: CSSProperties;
+}) {
+  return (
+    <span
+      className={cx("relative block overflow-hidden border-2 border-scene-mark bg-card", className)}
+      style={style}
+    >
+      <Hatch className="text-scene-mark" pitch={5} stroke={2} />
+    </span>
+  );
+}
+
+/** A marked frame: a double rule in the scene mark, on Kreide. */
+const MARK_FRAME = "border-4 border-double border-scene-mark bg-card";
 
 type NodeTone = "plain" | "raw" | "ink" | "gate" | "mark";
 
@@ -58,7 +93,7 @@ const NODE_TONES: Record<NodeTone, string> = {
   raw: "border border-foreground bg-card text-foreground",
   ink: "border border-foreground bg-foreground text-background",
   gate: "border border-dashed border-foreground bg-transparent text-foreground",
-  mark: "border-2 border-scene-mark bg-card text-scene-accent-text",
+  mark: cx(MARK_FRAME, "text-scene-accent-text"),
 };
 
 /** A square station with a pictogram and a label underneath. */
@@ -174,9 +209,12 @@ export function ExcelPreview() {
                 key={row[0]}
                 className="relative grid grid-cols-[auto_minmax(0,1fr)] border-b border-hairline last:border-b-0"
               >
-                <span className={cx(DATA, "w-9 px-2 py-1")}>{row[0]}</span>
+                {/* The hatch shows around the values, never behind a glyph. */}
+                <span className={cx(DATA, "w-9 px-2 py-1")}>
+                  <span className="bg-card">{row[0]}</span>
+                </span>
                 <span className={cx(DATA, "whitespace-nowrap px-2 py-1 text-right")}>
-                  {row[1]}
+                  <span className="bg-card">{row[1]}</span>
                 </span>
               </div>
             ))}
@@ -194,7 +232,7 @@ export function ExcelPreview() {
           {bars.map((height, index) => (
             <span key={index} className="w-full bg-foreground" style={{ height: `${height}%` }} />
           ))}
-          <span className="w-full bg-scene-mark" style={{ height: "56%" }} />
+          <MarkFill className="w-full" style={{ height: "56%" }} />
         </div>
         <p className={cx(LABEL, "mt-2")}>
           {text("Prognose KW 19, zu prüfen", "Week 19 forecast, to check")}
@@ -257,7 +295,7 @@ export function OutboundWorkflowPreview() {
       <Sheet lines={3} className="demo-pv-rise border-dashed">
         <span className={LABEL}>{text("Entwurf", "Draft")}</span>
       </Sheet>
-      <div className="demo-pv-rise flex items-center gap-2 border-2 border-scene-mark bg-card px-3 py-2">
+      <div className={cx("demo-pv-rise flex items-center gap-2 px-3 py-1.5", MARK_FRAME)}>
         <Pictogram name="person" className="size-5 text-scene-accent-text" />
         <span className={LABEL}>{text("Review vor Versand", "Review before sending")}</span>
       </div>
@@ -284,7 +322,7 @@ export function AgentPipelinePreview() {
               className={cx(
                 "grid size-6 place-items-center border-2 text-[0.75rem] font-bold tabular-nums",
                 index === 2
-                  ? "border-scene-mark bg-card text-scene-accent-text"
+                  ? "border-scene-mark bg-card text-scene-accent-text ring-2 ring-card"
                   : "border-foreground bg-foreground text-background",
               )}
             >
@@ -327,7 +365,7 @@ export function RagVertragsassistentPreview() {
       <Sheet lines={3} className="demo-pv-rise">
         <span className="flex items-baseline gap-2">
           <span className={cx(DATA, "font-bold")}>§ 5 (2)</span>
-          <span className="block h-1.5 flex-1 border-b-2 border-scene-mark" />
+          <span className="block h-2 flex-1 border-b-4 border-double border-scene-mark" />
         </span>
       </Sheet>
       <div className="demo-pv-rise flex items-center gap-2 self-end border border-foreground bg-card px-3 py-2">
@@ -361,7 +399,7 @@ export function RechnungZuSapPreview() {
           ))}
         </div>
       </div>
-      <div className="demo-pv-rise flex items-center gap-2 border-2 border-scene-mark bg-card px-3 py-1.5">
+      <div className={cx("demo-pv-rise flex items-center gap-2 px-3 py-1", MARK_FRAME)}>
         <Pictogram name="person" className="size-4 text-scene-accent-text" />
         <span className={LABEL}>{text("Review vor SAP-Import", "Review before SAP import")}</span>
       </div>
@@ -378,7 +416,7 @@ export function PromptScannerPreview() {
           <span className="h-3 w-10 bg-hairline" />
           <span className="demo-pv-snap h-3 w-16 bg-foreground" />
           <span className="h-3 w-6 bg-hairline" />
-          <span className={cx(DATA, "border-b-2 border-scene-mark px-0.5")}>IBAN</span>
+          <span className={cx(DATA, "border-b-4 border-double border-scene-mark px-0.5")}>IBAN</span>
           <span className="h-3 w-12 bg-hairline" />
         </span>
         <span className="flex flex-wrap items-center gap-1.5">
@@ -432,7 +470,12 @@ export function CostDriftObservabilityPreview() {
       </svg>
       <div className="flex items-baseline justify-between gap-3">
         <span className={LABEL}>{text("Kosten pro Tag", "Cost per day")}</span>
-        <span className={cx(LABEL, "text-scene-accent-text")}>{text("Budgetgrenze", "Budget line")}</span>
+        {/* A legend key: the dashed line carries the mark, the label stays
+            Kobalt (Himbeere tief would fall to 3.98:1 on the hover tint). */}
+        <span className={cx(LABEL, "inline-flex items-center gap-1.5")}>
+          <span aria-hidden="true" className="w-4 border-t-2 border-dashed border-scene-mark" />
+          {text("Budgetgrenze", "Budget line")}
+        </span>
       </div>
     </div>
   );
@@ -451,11 +494,12 @@ export function FineTunePlaygroundPreview() {
           <Sheet lines={3} className="p-2.5">
             <span className={LABEL}>{column.label}</span>
           </Sheet>
-          <span className="block h-2 bg-hairline">
-            <span
-              className={cx("block h-2", column.mark ? "bg-scene-mark" : "bg-foreground")}
-              style={{ width: `${column.score}%` }}
-            />
+          <span className="block h-3 bg-hairline">
+            {column.mark ? (
+              <MarkFill className="h-3" style={{ width: `${column.score}%` }} />
+            ) : (
+              <span className="block h-3 bg-foreground" style={{ width: `${column.score}%` }} />
+            )}
           </span>
           <span className={cx(DATA, "text-muted-foreground")}>
             {text("Holdout", "Holdout")} {column.score}
@@ -489,7 +533,7 @@ export function RoiRechnerPreview() {
       <div className="demo-pv-rise">
         <div className="relative h-4 border-x-2 border-foreground">
           <span className="absolute inset-x-0 top-1/2 h-0.5 -translate-y-1/2 bg-foreground" />
-          <span className="absolute left-[46%] top-0 h-4 w-2 bg-scene-mark" />
+          <span className="absolute left-[46%] top-0 h-4 w-2.5 border-2 border-scene-mark bg-card ring-2 ring-card" />
         </div>
         <div className="mt-2 flex justify-between">
           <span className={DATA}>{text("niedrig", "low")}</span>
@@ -523,7 +567,7 @@ export function LlmObservabilityPreview() {
             key={index}
             className={cx(
               "demo-pv-rise grid grid-cols-[minmax(0,1fr)_3.5rem_3.5rem] items-center gap-2 px-1 py-1",
-              disagree ? "border-2 border-scene-mark" : "border-b border-hairline",
+              disagree ? MARK_FRAME : "border-b border-hairline",
             )}
           >
             <span className={DATA}>

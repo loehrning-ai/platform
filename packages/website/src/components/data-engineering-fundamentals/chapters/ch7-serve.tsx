@@ -1,4 +1,4 @@
-import { Hero, SectionLabel, AntiPatterns, BestPractices, Takeaway } from "../primitives";
+import { Hero, SectionLabel, AntiPatterns, BestPractices } from "../primitives";
 import { MetricsSim } from "../simulators/metrics-sim";
 import type { ChapterMeta } from "@/lib/data-engineering-fundamentals/types";
 
@@ -47,7 +47,7 @@ export function Ch7Serve({ chapter }: Ch7ServeProps) {
         accent={chapter.inkHex}
         eyebrow={`Chapter ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Serve: <span class='accent'>versioned metrics</span> across consumer surfaces."
-        hook="Two dashboards, one metric name, two numbers. Independent SQL can encode different grains, filters, and source cutoffs. A shared registry cuts that drift when consumers resolve the registered version."
+        hook="Two dashboards can show two numbers for one metric name because their SQL uses different grains, filters and cutoffs. A shared registry reduces that drift."
         meta={[
           { k: "Contract", v: "versioned definition per metric" },
           { k: "Owner", v: "declared steward" },
@@ -56,65 +56,55 @@ export function Ch7Serve({ chapter }: Ch7ServeProps) {
       />
 
       <section className="section">
-        <SectionLabel n="8.1">What a metrics layer actually is</SectionLabel>
+        <SectionLabel n="8.1">What a metrics layer is</SectionLabel>
         <h2 className="h2">Declare the metric version and execution context.</h2>
-        <p className="prose">A metrics layer is a <b>registry</b>: names, versions, owners, grains, sources, formulas, allowed filters. Consumers that resolve a registered metric share one definition. The query service still owes you explicit authentication, authorization, source selection, and execution logging.</p>
+        <p className="prose">A metrics layer is a <b>registry</b> of names, versions, owners, grains, sources, formulas and allowed filters. Consumers that resolve a registered metric share one definition. Authentication, authorization, source selection and execution logging remain the query service&apos;s job.</p>
         <MetricsRegistry />
-        <p className="prose" style={{ marginTop: 18 }}>A metrics service can be an <b>access surface</b>. A registry alone enforces no row-level security, no masking, no regional placement. Build those controls into the query and data layers, propagate identity, and test every consumer path.</p>
+        <p className="prose" style={{ marginTop: 18 }}>A registry alone enforces no row-level security, masking or regional placement. Build those controls into the query and data layers, pass identity through and test every consumer path.</p>
       </section>
 
       <section className="section">
         <SectionLabel n="8.2">The query story</SectionLabel>
         <h2 className="h2">Same question. Different warehouse.</h2>
         <p className="prose">
-          Ask any analyst <em>&quot;what was DAU in the US last week?&quot;</em> Without a metrics layer, they search the warehouse for table
-          names that look related, pick one based on intuition, and write ad-hoc SQL. Often they land on a table that looks current but was
-          deprecated two years ago. Sometimes they reference column names from memory that have since been renamed.
-          <b> You cannot tell from the answer</b>.
+          Ask <em>&quot;what was DAU in the US last week?&quot;</em> Without a metrics layer, an analyst searches for related-looking tables,
+          picks one and writes ad-hoc SQL, sometimes on a table deprecated two years ago or with a renamed column.
+          <b> The answer does not show the error.</b>
         </p>
-        <p className="prose">With a registry the consumer resolves a metric version, binds supported filters, and runs the stored definition against its declared sources. Record the version, the filters, the source snapshot or partitions, and the execution identity next to the result.</p>
+        <p className="prose">With a registry the consumer resolves a metric version, binds supported filters and runs the stored definition against its declared sources. Log version, filters, source snapshot or partitions and execution identity with the result.</p>
         <MetricsSim />
       </section>
 
       <section className="section">
-        <SectionLabel n="8.3">What the consumer actually sees</SectionLabel>
+        <SectionLabel n="8.3">What the consumer sees</SectionLabel>
         <h2 className="h2">One metric, many surfaces.</h2>
-        <p className="prose">A shared registry removes exactly one source of variation, the metric formula. Results still diverge on source freshness, filter bindings, timezone, permissions, cache state, or definition version. Carry that context whenever you compare consumer outputs.</p>
+        <p className="prose">A shared registry removes one source of variation, the formula. Results still differ by source freshness, filter bindings, timezone, permissions, cache state and definition version, so include that context in every comparison.</p>
         <div className="cards-2">
           <div className="ccard">
             <div className="ccard-t">Dashboards</div>
             <div className="ccard-n">Hex · Mode · Superset · Trino-backed</div>
-            <div className="ccard-d">Dashboards resolve the registered metric version and record filters, source cutoff, and cache state.</div>
+            <div className="ccard-d">Resolve the registered version and record filters, source cutoff and cache state.</div>
           </div>
           <div className="ccard">
             <div className="ccard-t">Notebooks &amp; APIs</div>
             <div className="ccard-n">One resolver, many callers</div>
-            <div className="ccard-d">Notebooks and APIs can call the same resolver while retaining caller-specific authorization and audit context.</div>
+            <div className="ccard-d">Call the same resolver and keep caller-specific authorization and audit context.</div>
           </div>
         </div>
       </section>
 
       <AntiPatterns
         items={[
-          "<b>Copying metric SQL into multiple surfaces.</b> Register and version the definition, then track which consumers still use ad-hoc copies.",
-          "<b>Publishing ad-hoc table output as a governed metric.</b> Exploration can use raw tables; published metrics need named definitions and execution context.",
-          "<b>Registering a metric without a steward.</b> Assign responsibility for definition changes, source changes, and deprecation.",
-          "<b>Assuming metric-level authorization replaces source controls.</b> Enforce least privilege across the resolver, query engine, and underlying data.",
+          "<b>Copying metric SQL into multiple surfaces.</b> Register and version the definition and track remaining ad-hoc copies.",
+          "<b>Publishing ad-hoc table output as a governed metric.</b> Exploration may use raw tables; published metrics need a named definition and execution context.",
+          "<b>Registering a metric without a steward.</b> Assign responsibility for definition changes, source changes and deprecation.",
+          "<b>Assuming metric-level authorization replaces source controls.</b> Enforce least privilege across resolver, query engine and data.",
         ]}
       />
       <BestPractices
         items={[
-          "Each metric version records <b>name, steward, grain, source set, formula, filters, and effective date</b>.",
-          "Expose the metric layer as an <b>API</b>: let dashboards, notebooks, and external callers all resolve the same way. UI-only metric tools create dashboard/SQL mismatches.",
-          "Treat metric changes as <b>breaking changes</b>. Version, announce, deprecate. Don't mutate a live formula.",
-          "Record a <b>trace</b> with metric version, filters, caller, source partitions or snapshot, and execution time.",
-        ]}
-      />
-      <Takeaway
-        items={[
-          "A metrics layer provides a stable interface between datasets and consumer tools.",
-          "A registry reduces definition drift only when consumers use it and source, authorization, and version context are preserved.",
-          "Declare the metric version, steward, grain, source set, filters, and effective period.",
+          "Expose the metric layer as an <b>API</b> so dashboards, notebooks and external callers resolve metrics the same way.",
+          "Treat metric changes as <b>breaking changes</b>: version and announce them and deprecate the old definition.",
         ]}
       />
     </>

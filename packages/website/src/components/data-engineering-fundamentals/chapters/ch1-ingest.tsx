@@ -1,4 +1,4 @@
-import { Hero, SectionLabel, CodeBlock, AntiPatterns, BestPractices, Takeaway } from "../primitives";
+import { Hero, SectionLabel, CodeBlock, AntiPatterns, BestPractices } from "../primitives";
 import { WatermarkSim } from "../simulators/watermark-sim";
 import type { ChapterMeta } from "@/lib/data-engineering-fundamentals/types";
 
@@ -12,14 +12,13 @@ function IngestStreams() {
         <div className="ccard-t">ClickHouse</div>
         <div className="ccard-n">Sampled · operational view</div>
         <div className="ccard-d">
-          The course scenario keeps one of every N events for an operational view. Any estimate from that sample needs the declared
-          sampling design and estimator.
+          Keeps one of every N events. Estimates from it need the declared sampling design and estimator.
         </div>
       </div>
       <div className="ccard">
         <div className="ccard-t">Snowflake</div>
         <div className="ccard-n">Complete · scheduled batch</div>
-        <div className="ccard-d">The course batch retains all accepted raw events and rebuilds a partition from fixed inputs. Completeness still depends on source capture and late-data policy.</div>
+        <div className="ccard-d">Keeps all accepted raw events and rebuilds a partition from fixed inputs. Completeness still depends on source capture and late-data policy.</div>
       </div>
     </div>
   );
@@ -47,7 +46,7 @@ export function Ch1Ingest({ chapter }: Ch1IngestProps) {
         accent={chapter.inkHex}
         eyebrow={`Chapter ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Ingest: <span class='accent'>event time, processing time, and late data.</span>"
-        hook="The course pipeline writes a sampled operational projection to ClickHouse and a complete scheduled batch to Snowflake. A watermark closes each event-time window. The late-data policy decides what happens after that."
+        hook="A watermark closes each event-time window. The late-data policy decides what happens to records that arrive after it."
         meta={[
           { k: "Source", v: '<span class="chip">ClickHouse</span><span class="chip">Loggers</span><span class="chip">CDC</span>' },
           { k: "Sink", v: "Snowflake · Iceberg tables" },
@@ -59,23 +58,23 @@ export function Ch1Ingest({ chapter }: Ch1IngestProps) {
         <SectionLabel n="1.1">Two clocks, one event</SectionLabel>
         <h2 className="h2">Event time vs processing time.</h2>
         <p className="prose">
-          Every event carries two timestamps. <b>Event time</b> is when it happened: a tap on a phone, an ad impression rendered.{" "}
-          <b>Processing time</b> is when your stream actually saw it. Mobile clients, retries, weak cell signal, and simple clock skew make these
-          diverge. Any system that pretends they&apos;re the same ships the wrong numbers.
+          Every event carries two timestamps. <b>Event time</b> is when it happened, such as a tap on a phone or a rendered ad.{" "}
+          <b>Processing time</b> is when your stream saw it. Mobile clients, retries, weak signal and clock skew pull them apart, and treating
+          them as equal gives wrong numbers.
         </p>
-        <p className="prose">In the course architecture Kafka transports events and a Flink job processes them, then the operational and batch writes split. The
-          <b> watermark</b> says how far event-time processing has come. From there the configured policy updates a window, reroutes late records,
+        <p className="prose">In the course architecture Kafka transports events and a Flink job processes them before the operational and batch
+          writes split. The <b>watermark</b> marks event-time progress. After it, the configured policy updates a window, reroutes late records
           or drops them.</p>
       </section>
 
       <section className="section">
         <SectionLabel n="1.2">The compromise, visualized</SectionLabel>
         <h2 className="h2">When do you stop waiting?</h2>
-        <p className="prose">Drag the blue line. Green dots arrive before the simulated watermark, amber dots after it. This simulator discards late records. A production pipeline can instead keep the raw input and route or reprocess them. That choice moves publication delay and completeness at the same time.</p>
+        <p className="prose">Drag the blue line. This simulator drops late records; a production pipeline can keep the raw input and reroute or reprocess them. Either way you trade publication delay against completeness.</p>
         <WatermarkSim />
         <p className="prose" style={{ marginTop: 22 }}>
-          Set the watermark from observed lateness distributions and the consumer&apos;s publication tolerance. Record how much data arrives after
-          closure and revise the policy when that distribution changes.
+          Set the watermark from observed lateness and the consumer&apos;s delay tolerance. Track how much data arrives after closure and
+          revise the policy when that changes.
         </p>
       </section>
 
@@ -85,8 +84,8 @@ export function Ch1Ingest({ chapter }: Ch1IngestProps) {
           Separate the operational projection from the complete batch.
         </h2>
         <p className="prose">
-          These roles belong to this reference architecture, not to the vendor names themselves. The sampled projection supports operational
-          inspection. The scheduled batch supports reproducible reporting once its source, completeness checks, and late-data policy are known.
+          These roles belong to this reference architecture, not to the vendors. The sample serves operational inspection. The batch serves
+          reproducible reporting once source, completeness checks and late-data policy are known.
         </p>
         <IngestStreams />
       </section>
@@ -98,24 +97,15 @@ export function Ch1Ingest({ chapter }: Ch1IngestProps) {
 
       <AntiPatterns
         items={[
-          "<b>Using raw sample counts as population counts.</b> A 1:1000 sample needs a declared weighting or estimator, plus assumptions about how the sample was selected.",
-          "<b>Closing a window without measuring lateness.</b> Use observed event-time and processing-time gaps to choose and monitor the watermark.",
-          "<b>Discarding late events without retaining a recovery path.</b> Preserve an immutable raw log or a side output when later correction is required.",
+          "<b>Treating sample counts as population counts.</b> A 1:1000 sample needs a declared weighting or estimator and selection assumptions.",
+          "<b>Dropping late events with no recovery path.</b> Keep an immutable raw log or a side output when later correction is needed.",
           "<b>Reading <code>NOW()</code> inside an ingest job.</b> A backfill in May for last Tuesday becomes unreproducible. Use <code>&lt;DATEID&gt;</code>.",
         ]}
       />
       <BestPractices
         items={[
-          "Emit <b>both timestamps</b> on every event: <code>event_time</code> (device) and <code>processing_time</code> (server). The gap between them is your watermark budget.",
-          "Choose the watermark from the <b>observed lateness distribution</b> and a documented completeness-versus-delay requirement.",
-          'Label sampled outputs with their sample design. Label scheduled outputs with their cutoff, source coverage, and correction policy.',
-        ]}
-      />
-      <Takeaway
-        items={[
-          "Every event has two clocks: <b>event time</b> and <b>processing time</b>. Late arrivals live in the gap between them.",
-          "A <b>watermark</b> marks event-time progress. The late-data policy decides whether later records update, reroute, or drop.",
-          "Vendor choice does not establish freshness or completeness. State those properties for each pipeline output.",
+          "Emit <b>both timestamps</b> on every event: <code>event_time</code> (device) and <code>processing_time</code> (server). The gap is your watermark budget.",
+          "Label sampled outputs with their sample design, scheduled outputs with cutoff, source coverage and correction policy.",
         ]}
       />
     </>

@@ -127,8 +127,8 @@ export function PostDeployChecklist() {
       )}
       meta={`${checked.size} / ${checklistItems.length} ${text("complete", "abgeschlossen")}`}
       caption={text(
-        "Illustrative review prompts, not a certification. Checking every item records local UI state only; production readiness requires system-specific evidence, named owners, and approval outside this page.",
-        "Illustrative Prüffragen, keine Zertifizierung. Alle Häkchen speichern nur lokalen UI-Zustand; Produktionsreife benötigt systemspezifische Evidenz, benannte Verantwortliche und eine Freigabe außerhalb dieser Seite.",
+        "Review prompts, no certification. Ticks stay in this page; production readiness needs system-specific evidence, named owners and approval elsewhere.",
+        "Prüffragen, keine Zertifizierung. Häkchen bleiben auf dieser Seite; Produktionsreife braucht systemspezifische Evidenz, benannte Verantwortliche und eine Freigabe an anderer Stelle.",
       )}
     >
       <div style={{ marginBottom: 20 }}>

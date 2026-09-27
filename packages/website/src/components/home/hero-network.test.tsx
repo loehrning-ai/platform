@@ -179,4 +179,30 @@ describe("HeroNetwork render branches", () => {
     );
     expect(container.querySelector("[data-hero-network-shell]")).toBeNull();
   });
+
+  it("paints the lemons scene as a flat Mennige disc: knockout graticule, one Butter country, no gradient", () => {
+    for (const props of [{ reducedMotion: true }, {}] as const) {
+      const { container, unmount } = render(
+        <HeroNetwork scrollProgress={motionValue(0)} scene="lemons" {...props} />,
+      );
+      const disc = container.querySelector("circle[data-hero-globe-disc]");
+      expect(disc).toHaveAttribute("fill", "#b73a15");
+      // SPEC §3.6: no sphere volume, glow, hatch or limb stroke.
+      expect(container.querySelector("radialGradient, pattern")).toBeNull();
+      expect(container.querySelector('[fill^="url("]')).toBeNull();
+      const lines = container.querySelectorAll('path[stroke="#152a79"]');
+      expect(lines.length).toBeGreaterThan(0);
+      for (const line of lines) {
+        expect(line).toHaveAttribute("stroke-width", "1.5");
+        expect(line).toHaveAttribute("vector-effect", "non-scaling-stroke");
+      }
+      // Germany alone, as a flat Butter shape; the typing word in Butter.
+      expect(container.querySelectorAll('path[fill="#fceeaf"]').length).toBeGreaterThan(0);
+      expect(container.querySelector('path[stroke="#e07050"]')).toBeNull();
+      for (const text of container.querySelectorAll("text")) {
+        expect(text).toHaveAttribute("fill", "#fceeaf");
+      }
+      unmount();
+    }
+  });
 });

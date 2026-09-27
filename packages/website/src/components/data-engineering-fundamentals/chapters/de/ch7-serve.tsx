@@ -1,12 +1,6 @@
 import { METRICS } from "../ch7-serve";
 import { DataEngineeringFundamentalsLocaleProvider } from "../../locale-context";
-import {
-  AntiPatterns,
-  BestPractices,
-  Hero,
-  SectionLabel,
-  Takeaway,
-} from "../../primitives";
+import { AntiPatterns, BestPractices, Hero, SectionLabel } from "../../primitives";
 import { MetricsSim } from "../../simulators/metrics-sim";
 import type { ChapterMeta } from "@/lib/data-engineering-fundamentals/types";
 
@@ -51,7 +45,7 @@ export function Ch7ServeDe({ chapter }: Ch7ServeDeProps) {
         accent={chapter.inkHex}
         eyebrow={`Kapitel ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Bereitstellung: <span class='accent'>Versionierte Metriken</span> über mehrere Schnittstellen."
-        hook="Drei Dashboards, derselbe Metrikname, drei verschiedene Granularitäten, Filter und Quellenstichtage. Ein gemeinsames Register drückt diese Abweichung, sobald Verbraucher die registrierte Version auflösen."
+        hook="Zwei Dashboards können für denselben Metriknamen zwei Zahlen zeigen, weil ihr SQL andere Granularitäten, Filter und Stichtage nutzt. Ein gemeinsames Register verringert diese Abweichung."
         meta={[
           { k: "Vertrag", v: "versionierte Definition pro Metrik" },
           { k: "Verantwortlich", v: "deklarierte fachliche Zuständigkeit" },
@@ -64,14 +58,13 @@ export function Ch7ServeDe({ chapter }: Ch7ServeDeProps) {
         <h2 className="h2">Metrikversion und Ausführungskontext deklarieren.</h2>
         <p className="prose">
           Eine Metrikschicht ist ein <b>Register</b> aus Namen, Versionen, Zuständigkeiten, Granularitäten, Quellen, Formeln und zulässigen Filtern.
-          Wer eine registrierte Metrik abfragt, bekommt dieselbe Definition wie alle anderen. Authentifizierung, Autorisierung, Quellauswahl und
-          Ausführungsprotokollierung bleiben trotzdem Aufgabe des Abfragedienstes.
+          Wer eine registrierte Metrik abfragt, bekommt dieselbe Definition. Authentifizierung, Autorisierung, Quellauswahl und
+          Ausführungsprotokoll bleiben Aufgabe des Abfragedienstes.
         </p>
         <MetricsRegistryDe />
         <p className="prose" style={{ marginTop: 18 }}>
-          Ein Metrikdienst kann eine <b>Zugriffsschnittstelle</b> sein, doch ein Register erzwingt keine zeilenbasierten Berechtigungen,
-          PII-Maskierung oder regionale Datenhaltung. Diese Kontrollen müssen in Abfrage- und Datenschicht umgesetzt, mit Identität versorgt und
-          auf jeder Verbraucherschnittstelle getestet werden.
+          Ein Register allein erzwingt keine zeilenbasierten Berechtigungen, Maskierung oder regionale Datenhaltung. Bau diese Kontrollen in
+          Abfrage- und Datenschicht ein, reich die Identität durch und teste jeden Verbraucherpfad.
         </p>
       </section>
 
@@ -79,16 +72,15 @@ export function Ch7ServeDe({ chapter }: Ch7ServeDeProps) {
         <SectionLabel n="8.2">Der Weg einer Abfrage</SectionLabel>
         <h2 className="h2">Dieselbe Frage darf nicht zu unterschiedlichem SQL führen.</h2>
         <p className="prose">
-          Ohne Metrikschicht sucht die Analystin nach ähnlich benannten
-          Tabellen, wählt eine nach Erfahrung und schreibt Ad-hoc-SQL. Getroffen
-          hat sie vielleicht eine seit Jahren abgekündigte Tabelle oder einen
-          längst umbenannten Spaltennamen. <b>Am Ergebnis allein ist dieser
-          Fehler nicht erkennbar.</b>
+          Frag <em>„Wie hoch war die DAU in den USA letzte Woche?“</em> Ohne
+          Metrikschicht sucht die Analystin ähnlich benannte Tabellen, wählt
+          eine und schreibt Ad-hoc-SQL, manchmal auf einer seit zwei Jahren
+          abgekündigten Tabelle oder mit umbenannter Spalte. <b>Am Ergebnis
+          ist der Fehler nicht erkennbar.</b>
         </p>
         <p className="prose">
-          Mit einem Register bekommt die Frage eine Metrikversion, die unterstützten Filter werden gebunden und die gespeicherte Definition läuft
-          gegen ihre deklarierte Quelle oder Quellmenge. Metrikversion, Filter, Quellen-Snapshot oder Partitionen und Ausführungsidentität landen
-          zusammen mit dem Ergebnis im Protokoll.
+          Mit einem Register löst der Verbraucher eine Metrikversion auf, bindet unterstützte Filter und führt die gespeicherte Definition gegen
+          ihre deklarierten Quellen aus. Protokollier Version, Filter, Quellen-Snapshot oder Partitionen und Ausführungsidentität mit dem Ergebnis.
         </p>
         <MetricsSim />
       </section>
@@ -97,22 +89,22 @@ export function Ch7ServeDe({ chapter }: Ch7ServeDeProps) {
         <SectionLabel n="8.3">Was Verbraucher sehen</SectionLabel>
         <h2 className="h2">Eine Metrik, mehrere Schnittstellen.</h2>
         <p className="prose">
-          Ein gemeinsames Register räumt genau eine Abweichungsquelle weg: die Metrikformel. Quellenaktualität, Filterbindung, Zeitzone,
-          Berechtigung, Cache und Definitionsversion trennen die Ergebnisse weiterhin. Dieser Kontext gehört in jeden Vergleich.
+          Ein gemeinsames Register beseitigt eine Abweichungsquelle, die Formel. Quellenaktualität, Filterbindung, Zeitzone, Berechtigung, Cache
+          und Definitionsversion trennen die Ergebnisse weiter, also gehört dieser Kontext in jeden Vergleich.
         </p>
         <div className="cards-2">
           <div className="ccard">
             <div className="ccard-t">Dashboards</div>
             <div className="ccard-n">Hex · Mode · Superset · Trino-Backend</div>
             <div className="ccard-d">
-              Dashboards lösen die registrierte Metrikversion auf und erfassen Filter, Quellenstichtag und Cache-Zustand.
+              Lösen die registrierte Version auf und erfassen Filter, Quellenstichtag und Cache-Zustand.
             </div>
           </div>
           <div className="ccard">
             <div className="ccard-t">Notebooks und APIs</div>
             <div className="ccard-n">Ein Resolver, mehrere Aufrufer</div>
             <div className="ccard-d">
-              Notebooks und APIs können denselben Resolver verwenden und behalten aufruferspezifische Autorisierung und Audit-Kontext.
+              Nutzen denselben Resolver und behalten aufruferspezifische Autorisierung und Audit-Kontext.
             </div>
           </div>
         </div>
@@ -121,27 +113,17 @@ export function Ch7ServeDe({ chapter }: Ch7ServeDeProps) {
       <AntiPatterns
         title="Fehlmuster"
         items={[
-          "<b>Metrik-SQL in mehrere Schnittstellen kopieren.</b> Die Definition registrieren und versionieren; verbleibende Ad-hoc-Kopien erfassen.",
-          "<b>Ad-hoc-Tabellenausgaben als geregelte Metrik veröffentlichen.</b> Exploration darf Rohdaten verwenden; veröffentlichte Metriken benötigen benannte Definition und Ausführungskontext.",
+          "<b>Metrik-SQL in mehrere Schnittstellen kopieren.</b> Die Definition registrieren und versionieren und verbleibende Ad-hoc-Kopien erfassen.",
+          "<b>Ad-hoc-Tabellenausgaben als geregelte Metrik veröffentlichen.</b> Exploration darf Rohdaten nutzen; veröffentlichte Metriken brauchen benannte Definition und Ausführungskontext.",
           "<b>Eine Metrik ohne Zuständigkeit registrieren.</b> Verantwortung für Definitionsänderung, Quellenwechsel und Abkündigung zuweisen.",
-          "<b>Metrik-Autorisierung als Ersatz für Quellkontrollen behandeln.</b> Geringste Rechte über Resolver, Abfrage-Engine und zugrunde liegende Daten erzwingen.",
+          "<b>Metrik-Autorisierung als Ersatz für Quellkontrollen behandeln.</b> Geringste Rechte über Resolver, Abfrage-Engine und Daten erzwingen.",
         ]}
       />
       <BestPractices
         title="Saubere Umsetzung"
         items={[
-          "Jede Metrikversion erfasst <b>Name, Zuständigkeit, Granularität, Quellmenge, Formel, Filter und Gültigkeitsbeginn</b>.",
-          "Die Metrikschicht wird als <b>API</b> bereitgestellt. Dashboards, Notebooks und externe Aufrufer lösen Metriken über denselben Weg auf.",
-          "Änderungen an einer Metrik werden als <b>Breaking Change</b> behandelt: versionieren, ankündigen und die alte Definition geordnet abkündigen.",
-          "Jede Antwort erfasst einen <b>Trace</b> aus Metrikversion, Filtern, Aufrufer, Quellpartitionen oder Snapshot und Ausführungszeit.",
-        ]}
-      />
-      <Takeaway
-        title="Kernaussagen"
-        items={[
-          "Eine Metrikschicht ist die stabile Schnittstelle zwischen Datensätzen und Verbraucherwerkzeugen.",
-          "Ein Register reduziert Definitionsabweichung nur, wenn Verbraucher es verwenden und Quellen-, Autorisierungs- und Versionskontext erhalten bleiben.",
-          "Deklarier Metrikversion, Zuständigkeit, Granularität, Quellmenge, Filter und Gültigkeitszeitraum.",
+          "Die Metrikschicht als <b>API</b> bereitstellen, damit Dashboards, Notebooks und externe Aufrufer Metriken gleich auflösen.",
+          "Metrikänderungen als <b>Breaking Change</b> behandeln: versionieren, ankündigen und die alte Definition abkündigen.",
         ]}
       />
     </DataEngineeringFundamentalsLocaleProvider>

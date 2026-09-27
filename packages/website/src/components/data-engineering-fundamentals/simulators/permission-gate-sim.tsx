@@ -147,7 +147,7 @@ export function PermissionGateSim() {
       eyebrow={text("live simulator · deploy gate", "Live-Simulator · Deployment-Schranke")}
       title={text("Permission Gate", "Berechtigungsschranke")}
       meta={shipState === "shipped" ? text("✓ shipped", "✓ ausgeliefert") : shipState === "blocked" ? text("✕ blocked", "✕ blockiert") : shipState === "deploying" ? text("deploying…", "Deployment läuft …") : text("ready to ship", "bereit zur Auslieferung")}
-      caption={text("Course reference gate. It checks declared actor, classification, and ACL metadata; passing does not establish privacy or legal compliance.", "Referenzschranke des Kurses. Sie prüft deklarierte Akteur-, Klassifikations- und ACL-Metadaten; eine bestandene Prüfung belegt keine Datenschutz- oder Rechtskonformität.")}
+      caption={text("Passing this gate does not establish privacy or legal compliance.", "Eine bestandene Prüfung belegt keine Datenschutz- oder Rechtskonformität.")}
     >
       <div className="pg-layout">
         <div className="pg-chip-rail">
@@ -169,7 +169,7 @@ export function PermissionGateSim() {
             </button>
           ))}
           <div className="pg-rail-hint">
-            {text("Select a chip, then use a column's assign button, or drag.", "Chip auswählen und über die Zuweisen-Schaltfläche oder per Drag-and-drop einer Spalte zuordnen.")}
+            {text("Pick a chip, then tap a column's assign button or drag.", "Chip wählen, dann bei einer Spalte auf Zuweisen tippen oder ziehen.")}
           </div>
           <label className="pg-zone-toggle">
             <input type="checkbox" checked={zoneRequired} onChange={(e) => setZoneRequired(e.target.checked)} />

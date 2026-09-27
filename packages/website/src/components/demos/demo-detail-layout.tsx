@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import Link from "next/link";
 import { demoName, type Demo } from "@/lib/demos";
 import {
@@ -13,7 +14,7 @@ import { getDemoCopy } from "@/lib/demos-copy";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import { ArrowGlyph, SectionHead } from "@/components/werk";
 import { PlakatBand } from "@/components/plakat";
-import { posterTitleStyle } from "@/lib/plakat/fit";
+import { fitEm } from "@/lib/plakat/fit";
 import { DemoShell } from "./demo-shell";
 import { DemoCta } from "./demo-cta";
 import {
@@ -21,6 +22,21 @@ import {
   DemoNotesPanel,
   DemoNotesToggle,
 } from "./demo-notes-disclosure";
+
+/**
+ * Extra headroom on the word fit for the demo title. Titles such as
+ * "Vertragsassistent." are one long word that runs to the column edge; on a
+ * first visit (font-display: optional) the Arial-metric fallback face sets
+ * about 4.4% wider than Loehrning Sans and would be clipped by the band.
+ * The same factor as the home title (hero.tsx). A wider system face still
+ * cannot clip: the H1 breaks the word at the column edge (break-words).
+ */
+const FALLBACK_HEADROOM = 1.05;
+
+function demoTitleStyle(name: string): CSSProperties {
+  const fit = Math.ceil(fitEm(name) * FALLBACK_HEADROOM * 1000) / 1000;
+  return { "--fit": String(fit) } as CSSProperties;
+}
 
 /**
  * Derive a human-readable lesson label from a lessonId string.
@@ -127,38 +143,43 @@ export function DemoDetailLayout({
         paint. A dark engine only turns its own frame graphit (DemoShell).
       */}
       <div data-demo-detail-hero>
-        <PlakatBand plakat="idea" contentClassName="pt-1 sm:pt-6 lg:pb-12 lg:pt-8">
+        <PlakatBand plakat="idea" contentClassName="pt-0 max-[359px]:-mb-4 sm:pt-6 lg:pb-12 lg:pt-8">
+          {/* Below sm the back link is a 44px arrow and shares one row with
+              the caps line, so the engine starts inside the first screen even
+              at 320. It touches the band top there, so its focus ring is
+              drawn inset (SPEC §3.9 edge rule): the band clips anything
+              outside it. From sm up the link reads "Alle Praxisbeispiele" on its
+              own line above the caps line. */}
           <div
-            className="flex flex-wrap items-center gap-x-3 sm:block"
+            className="flex flex-wrap items-center gap-x-2 sm:block"
             data-demo-detail-top
           >
             <nav aria-label={pageCopy.catalog}>
               <Link
                 href={catalogHref}
                 aria-label={pageCopy.allExamples}
-                className="inline-flex min-h-11 items-center gap-2 text-[1.0625rem] font-semibold text-scene-ink underline decoration-1 underline-offset-4 hover:decoration-2"
+                className="-ml-3 inline-flex min-h-11 min-w-11 max-sm:focus-visible:outline-offset-[-3px] items-center justify-center gap-2 text-[1.0625rem] font-semibold text-scene-ink underline decoration-1 underline-offset-4 hover:decoration-2 sm:ml-0 sm:justify-start"
               >
                 <ArrowGlyph className="rotate-180" />
-                <span className="sm:hidden">{pageCopy.catalog}</span>
                 <span className="max-sm:hidden">{pageCopy.allExamples}</span>
               </Link>
             </nav>
+            <p className="plakat-caps min-w-0 sm:mt-5">
+              <span className="max-sm:hidden">{pageCopy.example} </span>
+              {demo.n} · {categoryLabel}
+              {/* The level returns from sm up, so the phone row stays one line. */}
+              <span className="max-sm:hidden"> · {levelLabel}</span>
+            </p>
           </div>
-          <p className="plakat-caps mt-2 sm:mt-5">
-            <span className="max-sm:hidden">{pageCopy.example} </span>
-            {demo.n} · {categoryLabel}
-            {/* Under 360px the level drops so the line stays one row. */}
-            <span className="max-[359px]:hidden"> · {levelLabel}</span>
-          </p>
           <h1
             id="demo-title"
-            className="poster-title mt-3 break-words text-scene-mid hyphens-manual sm:mt-4"
-            style={posterTitleStyle(name)}
+            className="poster-title mt-0.5 break-words text-scene-mid hyphens-manual max-[359px]:text-[2.25rem]! sm:mt-4"
+            style={demoTitleStyle(name)}
           >
             {name}
           </h1>
           <p
-            className="mt-3 text-[1.0625rem] leading-normal text-scene-ink text-pretty sm:hidden"
+            className="mt-1.5 text-[1.0625rem] leading-normal text-scene-ink text-pretty sm:hidden"
             data-demo-detail-teaser
           >
             {demo.teaser}
@@ -171,7 +192,7 @@ export function DemoDetailLayout({
 
       <section
         data-demo-instrument
-        className="px-4 pb-10 pt-4 sm:px-6 sm:pb-12 sm:pt-8"
+        className="px-4 pb-10 pt-2 sm:px-6 sm:pb-12 sm:pt-8"
       >
         <div className="mx-auto max-w-6xl">
           <DemoShell demo={demo} locale={locale} />

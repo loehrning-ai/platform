@@ -88,7 +88,7 @@ export const MODULE_META: Record<ModuleId, AiNativeOperatorModuleMeta> = {
     code: "M02",
     name: "Engineering Practices",
     tagline:
-      "Use specifications, isolated work, evaluations, release criteria, and accountable review.",
+      "Specs, isolated work, evaluations, release criteria, and accountable review.",
     duration: "110 min",
     difficulty: "Core",
     lessonCount: 5,
@@ -118,7 +118,7 @@ export const MODULE_META: Record<ModuleId, AiNativeOperatorModuleMeta> = {
     code: "M05",
     name: "Talent & Skills",
     tagline:
-      "Use work samples, role-specific capability expectations, and defensible compensation evidence.",
+      "Work samples, role expectations, and defensible compensation evidence.",
     duration: "88 min",
     difficulty: "Leadership",
     lessonCount: 4,
@@ -128,7 +128,7 @@ export const MODULE_META: Record<ModuleId, AiNativeOperatorModuleMeta> = {
     code: "M06",
     name: "Org Structure",
     tagline:
-      "Set team boundaries, specialist checkpoints, and decision authority from workload and risk.",
+      "Team boundaries, checkpoints, and decision authority from workload and risk.",
     duration: "90 min",
     difficulty: "Leadership",
     lessonCount: 4,
@@ -181,7 +181,7 @@ export const MODULE_META_DE: Record<ModuleId, AiNativeOperatorModuleMeta> = {
     code: "M02",
     name: "Technische Praxis",
     tagline:
-      "Spezifikationen, isolierte Arbeit, Evaluationen, Freigabekriterien und verantwortliche Prüfung einsetzen.",
+      "Spezifikationen, isolierte Arbeit, Evaluationen, Freigabekriterien und verantwortliche Prüfung.",
     duration: "110 Min.",
     difficulty: "Kern",
     lessonCount: 5,
@@ -211,7 +211,7 @@ export const MODULE_META_DE: Record<ModuleId, AiNativeOperatorModuleMeta> = {
     code: "M05",
     name: "Personal und Kompetenzen",
     tagline:
-      "Arbeitsproben, rollenspezifische Kompetenzerwartungen und belastbare Vergütungsbelege einsetzen.",
+      "Arbeitsproben, Rollenerwartungen und belastbare Vergütungsbelege.",
     duration: "88 Min.",
     difficulty: "Führung",
     lessonCount: 4,
@@ -221,7 +221,7 @@ export const MODULE_META_DE: Record<ModuleId, AiNativeOperatorModuleMeta> = {
     code: "M06",
     name: "Organisationsstruktur",
     tagline:
-      "Teamgrenzen, fachliche Prüfpunkte und Entscheidungsbefugnisse aus Arbeitslast und Risiko ableiten.",
+      "Teamgrenzen, Prüfpunkte und Entscheidungsbefugnisse aus Arbeitslast und Risiko.",
     duration: "90 Min.",
     difficulty: "Führung",
     lessonCount: 4,
@@ -283,26 +283,26 @@ export interface AiNativeOperatorCourseMeta {
 export const COURSE_META: AiNativeOperatorCourseMeta = {
   title: "AI-Native Operator",
   subtitle:
-    "A nine-module course on selecting, building, operating, governing, and measuring model-assisted workflows.",
+    "Choose, build, run, govern, and measure model-assisted workflows.",
   duration: "About 14 hours of reading and 30 exercises",
   outcomes: [
-    "Select model-assisted tasks using error cost, evidence, and review requirements.",
-    "Write specifications, evaluations, release controls, and rollback criteria.",
-    "Design workflow, team, retrieval, authorization, and decision boundaries.",
-    "Maintain registries, audit trails, guardrails, and credible outcome comparisons.",
+    "Pick tasks by error cost, evidence, and review needs",
+    "Write specs, evaluations, release controls, and rollback criteria",
+    "Set workflow, team, retrieval, and authorization boundaries",
+    "Keep registries, audit trails, and credible outcome comparisons",
   ],
 };
 
 export const COURSE_META_DE: AiNativeOperatorCourseMeta = {
   title: "AI-Native Operator",
   subtitle:
-    "Ein Kurs in neun Modulen zur Auswahl, Entwicklung, zum Betrieb, zur Steuerung und zur Messung modellgestützter Abläufe.",
+    "Modellgestützte Abläufe auswählen, bauen, betreiben, steuern und messen.",
   duration: "Etwa 14 Stunden Lesezeit und 30 Übungen",
   outcomes: [
-    "Modellgestützte Aufgaben anhand von Fehlerkosten, Belegen und Prüfanforderungen auswählen.",
-    "Spezifikationen, Evaluationen, Freigabekontrollen und Rücknahmekriterien schreiben.",
-    "Grenzen für Abläufe, Teams, Abruf, Berechtigungen und Entscheidungen gestalten.",
-    "Register, Prüfpfade, Schutzgrößen und belastbare Ergebnisvergleiche führen.",
+    "Aufgaben nach Fehlerkosten, Belegen und Prüfbedarf auswählen",
+    "Spezifikationen, Evaluationen, Freigaben und Rücknahmekriterien schreiben",
+    "Grenzen für Abläufe, Teams, Abruf und Berechtigungen setzen",
+    "Register, Prüfpfade und belastbare Ergebnisvergleiche führen",
   ],
 };
 

@@ -41,6 +41,8 @@ interface Props {
 type DetailCopy = (typeof WORKSHOP_PAGE_COPY)[Locale]["detail"];
 
 const CONTAINER = "mx-auto max-w-[75rem] px-4 sm:px-6";
+/** Phones: a tighter inset, so both band buttons share one row from 360px. */
+const PHONE_BUTTON = "max-sm:gap-1.5 max-sm:px-3";
 // Phones get a tighter rhythm; sm hands back the reviewed spacing.
 const SECTION = "pt-10 sm:pt-20";
 const MATERIAL_ANCHOR = "material";
@@ -310,6 +312,8 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
   );
   const need = limitingNeed(workshop, copy);
   const title = splitTitle(workshop.title);
+  // The leading minute facts, which the agenda caption repeats right below.
+  const minuteFacts = (workshop.minutesLive ? 1 : 0) + 1;
   const scene = workshopPlakat(workshop.slug) ?? FALLBACK_SCENE;
 
   const coverFacts = [
@@ -422,9 +426,17 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
       <PlakatBand
         plakat={scene.plakat}
         labelledBy="workshop-title"
+        // Phones: a 96px strip (SPEC §3.2 phone budget), so the lab still
+        // starts within 1.7 viewports at 390x664.
+        // From sm the strip grows with the width, so a tablet band still
+        // reads as a poster (numeral left, motif right).
+        className="[&>[data-plakat-art-phone]]:mt-4 [&>[data-plakat-art-phone]]:h-24 sm:[&>[data-plakat-art-phone]]:h-40 md:[&>[data-plakat-art-phone]]:h-48"
         // IDEA marks the band's own corners, as on the reference poster; the
-        // art inside then carries no dots of its own.
+        // art inside then carries no dots of its own. Phones start the
+        // content at the same 20px on every band: the back link sits clear
+        // of the dots, so the band rhythm does not change per workshop.
         cornerDots={PLAKAT[scene.plakat].cornerDots}
+        contentClassName="max-sm:pt-5"
         art={
           <PosterArt
             plakat={scene.plakat}
@@ -450,15 +462,30 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
           href={localizeHref("/workshops", locale)}
           aria-label={copy.backAria}
           data-cover-back=""
-          className="-my-1 inline-flex min-h-11 items-center gap-2 text-[1.0625rem] font-semibold text-scene-ink underline decoration-transparent decoration-2 underline-offset-4 [-webkit-tap-highlight-color:transparent] hover:decoration-scene-ink sm:hidden"
+          className="-my-2 inline-flex min-h-11 items-center gap-2 text-[1.0625rem] font-semibold text-scene-ink underline decoration-transparent decoration-2 underline-offset-4 [-webkit-tap-highlight-color:transparent] hover:decoration-scene-ink sm:hidden"
         >
           <BackGlyph />
           {copy.workshopsShort}
         </Link>
-        <CapsLine className="mt-3 sm:mt-0">{workshop.eyebrow}</CapsLine>
+        <CapsLine className="mt-3 sm:mt-0">
+          {/* Each part stays whole and carries its separator, so a narrow
+              phone breaks the line before the dot ("· ESG-Berichte" opens
+              line two), never after it or inside "ESG-Berichte". */}
+          {workshop.eyebrow.split(" · ").map((part, index) => (
+            <span key={part}>
+              {index > 0 ? " " : null}
+              <span className="whitespace-nowrap">
+                {index > 0 ? "· " : null}
+                {part}
+              </span>
+            </span>
+          ))}
+        </CapsLine>
         <h1
           id="workshop-title"
-          className="poster-title mt-3 max-w-[16ch] text-scene-ink sm:mt-4"
+          // Below 360px the poster step scales with the width (42px, as 50px
+          // at 390), so the start button stays above the tab bar at 320x568.
+          className="poster-title mt-3 max-w-[16ch] text-scene-ink max-[359px]:[--text-poster:2.625rem] sm:mt-4"
           style={posterTitleStyle(title.head)}
         >
           {title.head}
@@ -470,23 +497,23 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
               :{" "}
               <span
                 data-title-subtitle=""
-                className="mt-3 block text-[1.0625rem] font-semibold leading-snug tracking-normal"
+                className="mt-3 block text-[1.0625rem] font-semibold leading-snug tracking-normal max-[359px]:mt-2"
               >
                 {title.subtitle}
               </span>
             </>
           ) : null}
         </h1>
-        <p className="mt-4 max-w-[40ch] text-body text-scene-ink text-pretty sm:mt-5 lg:max-w-[46ch]">
+        <p className="mt-4 max-w-[40ch] text-body text-scene-ink text-pretty max-[359px]:mt-3 sm:mt-5 lg:max-w-[46ch]">
           {keepAmountsTogether(workshop.summary)}
         </p>
         {/* Below 360px both buttons span the column in one even stack. */}
-        <div className="mt-6 flex flex-wrap items-center gap-3 max-[359px]:grid max-[359px]:grid-cols-1 max-[359px]:[&>*]:w-full max-[359px]:[&>*]:justify-between sm:mt-8">
+        <div className="mt-5 flex flex-wrap items-center gap-2 max-[359px]:mt-4 max-[359px]:grid max-[359px]:grid-cols-1 max-[359px]:[&>*]:w-full max-[359px]:[&>*]:justify-between sm:mt-8 sm:gap-3">
           {primary ? (
             <WorkshopMaterialLink
               workshopSlug={workshop.slug}
               material={primary}
-              className={BUTTON_CLASSES.scene.primary}
+              className={cx(BUTTON_CLASSES.scene.primary, PHONE_BUTTON)}
             >
               <span>{copy.primaryAction[primary.role]}</span>
               <ArrowGlyph
@@ -498,7 +525,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
             <WorkshopMaterialLink
               workshopSlug={workshop.slug}
               material={secondary}
-              className={BUTTON_CLASSES.scene.secondary}
+              className={cx(BUTTON_CLASSES.scene.secondary, PHONE_BUTTON)}
             >
               <span>{copy.primaryAction[secondary.role]}</span>
               <ArrowGlyph
@@ -508,7 +535,9 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
           ) : (
             <a
               href={`#${MATERIAL_ANCHOR}`}
-              className={BUTTON_CLASSES.scene.secondary}
+              // A jump to the list below: a phone reaches it by scrolling,
+              // so the band keeps its one start button there.
+              className={cx(BUTTON_CLASSES.scene.secondary, "max-sm:hidden")}
             >
               <span>{copy.seeMaterials}</span>
               <ArrowGlyph direction="down" />
@@ -527,7 +556,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
               the question and the facts sit side by side. */}
           <div
             data-workshop-brief=""
-            className="grid gap-4 sm:gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-center lg:gap-12"
+            className="grid gap-3 sm:gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-center lg:gap-12"
           >
             <QuestionCard
               tone="paper"
@@ -541,16 +570,31 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
                 data-workshop-facts=""
                 className="text-caption text-muted-foreground tabular-nums"
               >
-                {coverFacts.map((fact, index) => (
-                  <span key={fact}>
-                    {index > 0 ? " · " : null}
-                    <span className="whitespace-nowrap">
-                      {index === 0 ? sentenceStart(fact) : fact}
+                {/* Phones leave the minutes to the agenda caption right
+                    below; the line then starts with its first other fact. */}
+                {coverFacts.map((fact, index) => {
+                  const minutes = index < minuteFacts;
+                  const lead = index === minuteFacts;
+                  return (
+                    <span key={fact} className={minutes ? "max-sm:hidden" : undefined}>
+                      {index > 0 ? (
+                        <span className={lead ? "max-sm:hidden" : undefined}>{" · "}</span>
+                      ) : null}
+                      <span
+                        className={cx(
+                          "whitespace-nowrap",
+                          lead && "max-sm:inline-block max-sm:first-letter:uppercase",
+                        )}
+                      >
+                        {index === 0 ? sentenceStart(fact) : fact}
+                      </span>
                     </span>
-                  </span>
-                ))}
+                  );
+                })}
               </p>
-              <dl className="mt-2 grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1 text-caption text-muted-foreground">
+              {/* Phones keep the brief to the question and one facts line:
+                  the needs and the outcome follow in full further down. */}
+              <dl className="mt-2 hidden grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1 text-caption text-muted-foreground sm:grid">
                 {need ? (
                   <div className="contents">
                     <dt className="font-semibold text-foreground">
@@ -569,7 +613,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
             </div>
           </div>
           <SectionHead
-            className="mt-8 sm:mt-14"
+            className="mt-6 sm:mt-14"
             id="workshop-agenda-heading"
             title={copy.agendaHeading}
             caption={agendaCaptionLine || copy.minutes(agendaMinutes)}
@@ -590,13 +634,15 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
             railUntil={stations.length > 6 ? "lg" : "sm"}
             className="mt-4 sm:mt-6"
           />
-          <div className="mt-1 flex flex-wrap items-center justify-between gap-x-6 sm:mt-4">
+          <div className="mt-2 flex flex-wrap items-center justify-between gap-x-6 sm:mt-4">
             <p className="text-caption text-muted-foreground">
               {copy.agendaSource[workshop.agendaSource]}
             </p>
+            {/* On a phone the lab starts right below, so the jump link
+                stays a tablet and desktop aid. */}
             <a
               href={`#${LAB_ANCHOR}`}
-              className="inline-flex min-h-11 items-center gap-1.5 text-caption font-semibold text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground"
+              className="inline-flex min-h-11 items-center gap-1.5 max-sm:hidden text-caption font-semibold text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground"
             >
               {copy.tryBelow(labStationItem?.label)}
               <ArrowGlyph direction="down" className="size-3.5" />

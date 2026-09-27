@@ -49,6 +49,8 @@ export const HORIZON_INK = {
   line: "242,241,238",
   /** Mennige on graphit (#e07050, the band's accent). */
   accent: "224,112,80",
+  /** The graphit ground (#141414): the station inset. */
+  ground: "20,20,20",
 } as const;
 
 /** Stroke alphas before the depth fade. */
@@ -134,10 +136,15 @@ function rgbOf(hex: string): string {
   return `${(value >> 16) & 255},${(value >> 8) & 255},${value & 255}`;
 }
 
+/** The inverse of rgbOf: an "r,g,b" triple as a #rrggbb string. */
+function hexOf(rgb: string): string {
+  return `#${rgb
+    .split(",")
+    .map((part) => Number(part).toString(16).padStart(2, "0"))
+    .join("")}`;
+}
+
 const LEMONS = PLAKAT.lemons;
-const GRAPHIT_LINE = "#f2f1ee";
-const GRAPHIT_ACCENT = "#e07050";
-const GRAPHIT_GROUND = "#141414";
 
 export const HORIZON_SCENE: Readonly<Record<HorizonSceneKey, HorizonScene>> = {
   lemons: {
@@ -165,29 +172,35 @@ export const HORIZON_SCENE: Readonly<Record<HorizonSceneKey, HorizonScene>> = {
   graphit: {
     disc: null,
     grid: {
-      hex: GRAPHIT_LINE,
-      rgb: rgbOf(GRAPHIT_LINE),
-      alpha: 0.26,
+      hex: hexOf(HORIZON_INK.line),
+      rgb: HORIZON_INK.line,
+      alpha: HORIZON_ALPHA.grid,
       width: null,
       step: HORIZON_GRID_STEP,
       depthFade: true,
     },
-    coast: { alpha: 0.66 },
+    coast: { alpha: HORIZON_ALPHA.coast },
     sky: true,
     germany: {
-      hex: GRAPHIT_ACCENT,
-      rgb: rgbOf(GRAPHIT_ACCENT),
-      fillAlpha: 0.12,
-      strokeAlpha: 0.95,
+      hex: hexOf(HORIZON_INK.accent),
+      rgb: HORIZON_INK.accent,
+      fillAlpha: HORIZON_ALPHA.germanyFill,
+      strokeAlpha: HORIZON_ALPHA.germanyStroke,
     },
     route: {
-      hex: GRAPHIT_ACCENT,
-      rgb: rgbOf(GRAPHIT_ACCENT),
+      hex: hexOf(HORIZON_INK.accent),
+      rgb: HORIZON_INK.accent,
       alpha: 0.9,
       width: 1,
     },
-    station: { outer: GRAPHIT_ACCENT, inner: GRAPHIT_GROUND },
-    berlin: { outer: GRAPHIT_ACCENT, inner: GRAPHIT_LINE },
+    station: {
+      outer: hexOf(HORIZON_INK.accent),
+      inner: hexOf(HORIZON_INK.ground),
+    },
+    berlin: {
+      outer: hexOf(HORIZON_INK.accent),
+      inner: hexOf(HORIZON_INK.line),
+    },
   },
 };
 
@@ -378,9 +391,13 @@ export function tracePolylines(
   latMin: number,
   from = 0,
   to = lines.start.length,
+  zMin = 0,
 ): boolean {
   const { v } = lines;
   const R = frame.radius;
+  // Points at or under depth zMin are hidden; a crossing ends on the circle
+  // of that depth (the limb itself when zMin is 0).
+  const Rc = R * Math.sqrt(1 - zMin * zMin);
   const CX = frame.centerX;
   const CY = frame.centerY;
   const cut = frame.yCut;
@@ -408,14 +425,14 @@ export function tracePolylines(
       const x = X * e0 + Y * e1;
       const y = X * n0 + Y * n1 + Z * n2;
       const z = X * o0 + Y * o1 + Z * o2;
-      if (z <= 0) {
+      if (z <= zMin) {
         whole = false;
         if (pen) {
-          const t = pz / (pz - z);
+          const t = (pz - zMin) / (pz - z);
           const lx = px + (x - px) * t;
           const ly = py + (y - py) * t;
           const h = Math.sqrt(lx * lx + ly * ly) || 1;
-          sink.lineTo(CX + (lx / h) * R, CY - (ly / h) * R);
+          sink.lineTo(CX + (lx / h) * Rc, CY - (ly / h) * Rc);
           pen = false;
         }
       } else if (y < cut || x < xl || x > xr) {
@@ -428,12 +445,12 @@ export function tracePolylines(
         if (!pen) {
           if (i === first) {
             sink.moveTo(CX + x * R, CY - y * R);
-          } else if (pz <= 0) {
-            const t = pz / (pz - z);
+          } else if (pz <= zMin) {
+            const t = (pz - zMin) / (pz - z);
             const mx = px + (x - px) * t;
             const my = py + (y - py) * t;
             const h = Math.sqrt(mx * mx + my * my) || 1;
-            sink.moveTo(CX + (mx / h) * R, CY - (my / h) * R);
+            sink.moveTo(CX + (mx / h) * Rc, CY - (my / h) * Rc);
           } else {
             sink.moveTo(CX + px * R, CY - py * R);
           }
@@ -448,6 +465,59 @@ export function tracePolylines(
     }
   }
   return whole && any;
+}
+
+/**
+ * Limb fade for the flat disc's knockout graticule, as the peak view depth
+ * of a line: [gone below, whole from]. A great circle whose peak depth is
+ * small runs along the silhouette, a hair inside it; on a flat poster disc
+ * the edge is the only contour, so such a line would read as a notch or a
+ * sliver of the disc outside the grid. It fades out as it nears the limb
+ * (never popping) and is gone before it can touch it.
+ */
+export const HORIZON_LIMB_FADE = [0.08, 0.24] as const;
+
+/**
+ * The flat disc's rim, CSS px: the knockout graticule stops this far inside
+ * the silhouette. In an orthographic view every great circle meets the limb
+ * tangentially, so a line drawn right up to the edge runs along it for a
+ * stretch and, as a polyline, cuts steps into the disc's one contour. Ending
+ * every line on a slightly smaller circle keeps the edge one clean arc.
+ */
+export const HORIZON_RIM_PX = 3;
+
+/** The view depth whose circle lies `rimPx` inside a limb of `radiusPx`. */
+export function rimDepth(radiusPx: number, rimPx = HORIZON_RIM_PX): number {
+  if (radiusPx <= rimPx) return 0;
+  const r = 1 - rimPx / radiusPx;
+  return Math.sqrt(1 - r * r);
+}
+
+/** Peak view depth (the largest z) of polyline `k` for a basis. */
+export function polylinePeakDepth(
+  lines: SpherePolylines,
+  k: number,
+  basis: ViewBasis,
+): number {
+  const { v } = lines;
+  const o0 = basis[5];
+  const o1 = basis[6];
+  const o2 = basis[7];
+  let peak = -1;
+  const end = (lines.start[k] + lines.length[k]) * 3;
+  for (let i = lines.start[k] * 3; i < end; i += 3) {
+    const z = v[i] * o0 + v[i + 1] * o1 + v[i + 2] * o2;
+    if (z > peak) peak = z;
+  }
+  return peak;
+}
+
+/** Stroke alpha multiplier for a line of peak depth `peak` (HORIZON_LIMB_FADE). */
+export function limbFade(peak: number): number {
+  const [gone, whole] = HORIZON_LIMB_FADE;
+  if (peak <= gone) return 0;
+  if (peak >= whole) return 1;
+  return (peak - gone) / (whole - gone);
 }
 
 /**

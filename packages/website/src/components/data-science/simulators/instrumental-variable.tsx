@@ -135,8 +135,8 @@ export function InstrumentalVariable() {
       title={text("Instrumental Variables", "Instrumentalvariablen")}
       meta={`F-stat: ${s.fStat}`}
       caption={text(
-        "This lookup-table demo changes the displayed first stage and estimates together; it does not fit IV data. Relevance is only one requirement. Exogeneity, exclusion, the estimand, and weak-instrument-robust inference need separate design evidence.",
-        "Diese Lookup-Table-Simulation verändert die angezeigte erste Stufe und die Schätzungen gemeinsam; sie passt keine IV-Daten an. Relevanz ist nur eine Anforderung. Exogenität, Exklusion, Estimand und Weak-IV-robuste Inferenz benötigen separate Designevidenz.",
+        "This lookup table changes first stage and estimates together without fitting IV data. Relevance is one requirement; exogeneity, exclusion, the estimand and weak-instrument-robust inference need separate evidence.",
+        "Diese Lookup-Tabelle verändert erste Stufe und Schätzungen gemeinsam, ohne IV-Daten anzupassen. Relevanz ist eine Anforderung; Exogenität, Exklusion, Estimand und Weak-IV-robuste Inferenz brauchen eigene Evidenz.",
       )}
     >
       <div className="sim-row" style={{ gridTemplateColumns: "220px 1fr" }}>

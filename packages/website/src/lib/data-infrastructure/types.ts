@@ -75,25 +75,25 @@ export const DATA_INFRA_TRACKS: readonly DataInfraTrack[] = [
     id: "foundations",
     label: "01 · foundations",
     title: "Reason about data-system boundaries.",
-    hint: "Map the data flow, state the CAP and PACELC trade-offs, and select a data model from concrete access and history requirements.",
+    hint: "Data flow, CAP and PACELC trade-offs, and choosing a data model.",
   },
   {
     id: "storage",
     label: "02 · storage",
     title: "Choose storage layouts from access patterns.",
-    hint: "Compare row and column layouts, inspect Parquet metadata, evaluate open table formats, and design partitioning from measured queries.",
+    hint: "Row and column layouts, Parquet, open table formats, and partitioning.",
   },
   {
     id: "movement",
     label: "03 · movement",
     title: "Move bounded and unbounded data.",
-    hint: "Compare batch and stream processing, watermarks, change data capture, orchestration, and replay requirements without assuming one architecture fits every workload.",
+    hint: "Batch and stream processing, watermarks, change data capture, orchestration, and replay.",
   },
   {
     id: "scale",
     label: "04 · operations",
     title: "Operate and review data pipelines.",
-    hint: "Define idempotency boundaries, safe backfills, scoped processing guarantees, quality signals, and an evidence-based system-design review.",
+    hint: "Idempotency, safe backfills, processing guarantees, quality signals, and a system-design review.",
   },
 ];
 
@@ -103,25 +103,25 @@ export const DATA_INFRA_TRACKS_DE: readonly DataInfraTrack[] = [
     id: "foundations",
     label: "01 · grundlagen",
     title: "Grenzen von Datensystemen begründet beurteilen.",
-    hint: "Datenfluss abbilden, Zielkonflikte nach CAP und PACELC benennen und das Datenmodell aus Zugriffs- und Verlaufsanforderungen ableiten.",
+    hint: "Datenfluss, Zielkonflikte nach CAP und PACELC und die Wahl des Datenmodells.",
   },
   {
     id: "storage",
     label: "02 · speicherung",
     title: "Speicherlayouts aus Zugriffsmustern ableiten.",
-    hint: "Zeilen- und Spaltenlayouts vergleichen, Parquet-Metadaten untersuchen, offene Tabellenformate bewerten und Partitionierung anhand gemessener Abfragen entwerfen.",
+    hint: "Zeilen- und Spaltenlayouts, Parquet, offene Tabellenformate und Partitionierung.",
   },
   {
     id: "movement",
     label: "03 · transport",
     title: "Begrenzte und unbegrenzte Daten verarbeiten.",
-    hint: "Batch- und Stream-Verarbeitung, Watermarks, Change Data Capture, Orchestrierung und Replay-Anforderungen vergleichen, ohne eine Architektur pauschal vorzuziehen.",
+    hint: "Batch- und Stream-Verarbeitung, Watermarks, Change Data Capture, Orchestrierung und Replay.",
   },
   {
     id: "scale",
     label: "04 · betrieb",
     title: "Datenpipelines betreiben und prüfen.",
-    hint: "Idempotenzgrenzen, sichere Backfills, klar begrenzte Verarbeitungsgarantien, Qualitätssignale und eine belegbare Systemdesign-Prüfung definieren.",
+    hint: "Idempotenz, sichere Backfills, Verarbeitungsgarantien, Qualitätssignale und eine Systemdesign-Prüfung.",
   },
 ];
 

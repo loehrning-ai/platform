@@ -90,8 +90,8 @@ export function GlobalVsLocal() {
             )
       }
       caption={text(
-        "This fixed linear construction compares absolute coefficients with per-point coefficient × value contributions. It does not compute global importance or SHAP from a fitted model. Click a dot to inspect the constructed local contribution.",
-        "Diese feste lineare Konstruktion vergleicht absolute Koeffizienten mit punktweisen Beiträgen aus Koeffizient × Wert. Sie berechnet weder globale Wichtigkeit noch SHAP aus einem angepassten Modell. Wähle einen Punkt, um den konstruierten lokalen Beitrag zu prüfen.",
+        "This fixed linear construction compares absolute coefficients with per-point coefficient × value contributions, not SHAP from a fitted model. Click a dot to see its local contribution.",
+        "Diese feste lineare Konstruktion vergleicht absolute Koeffizienten mit punktweisen Beiträgen aus Koeffizient × Wert, kein SHAP aus einem angepassten Modell. Wähle einen Punkt, um seinen lokalen Beitrag zu sehen.",
       )}
     >
       <div className="sim-row">

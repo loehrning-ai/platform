@@ -300,7 +300,7 @@ export function ConveyorSim() {
       eyebrow={text("live simulator · streaming boundary", "Live-Simulator · Streaming-Grenze")}
       title={text("The Ingestion Conveyor Belt", "Das Förderband der Datenaufnahme")}
       meta={`${rate}/s · ${text("dup", "Duplikate")} ${dupPct}% · ${text("late", "verspätet")} ${latePct}%`}
-      caption={text(`The simulation uses a fixed ${CV_WATERMARK_LAG}-second watermark lag and a discard-late policy. Deduplication and late-data handling are two separate modeled controls.`, `Die Simulation verwendet eine feste Watermark-Verzögerung von ${CV_WATERMARK_LAG} Sekunden und verwirft Nachzügler. Deduplizierung und Nachzüglerbehandlung sind zwei getrennte modellierte Kontrollen.`)}
+      caption={text(`Fixed ${CV_WATERMARK_LAG}-second watermark lag; late events are dropped.`, `Feste Watermark-Verzögerung von ${CV_WATERMARK_LAG} Sekunden; Nachzügler werden verworfen.`)}
     >
       <div className="cv-stage" ref={stageRef}>
         <div className="cv-field">

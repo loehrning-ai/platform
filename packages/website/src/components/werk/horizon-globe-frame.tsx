@@ -17,8 +17,13 @@ import {
   horizonCenterLon,
   horizonFrame,
   limbExit,
+  limbFade,
   limbPoint,
+  meridianLines,
+  parallelLines,
+  polylinePeakDepth,
   projectHorizonPoint,
+  rimDepth,
   routeLine,
   routeStations,
   scaleTicks,
@@ -112,6 +117,56 @@ function germanyPath(): string {
 
 const r1 = (value: number): string => String(Math.round(value * 10) / 10);
 
+/** The phone slot width the server frame's rim is sized for, CSS px. */
+const PHONE_SLOT_PX = 390;
+
+/** Path writer at 0.1 unit: the flat disc's long knockout curves stay smooth. */
+class FinePathWriter implements PathSink {
+  d = "";
+
+  moveTo(x: number, y: number): void {
+    this.d += `M${r1(x)} ${r1(y)}`;
+  }
+
+  lineTo(x: number, y: number): void {
+    this.d += `L${r1(x)} ${r1(y)}`;
+  }
+}
+
+/**
+ * The flat disc's graticule in frame units, as the canvas draws it at
+ * theta 0: parallels and meridians ending on the rim circle
+ * (HORIZON_RIM_PX) and faded by peak depth (HORIZON_LIMB_FADE), so no line
+ * runs along the silhouette. `whole` holds
+ * the lines at full alpha, `faded` the few near the limb.
+ */
+function flatGrid(step: number): {
+  whole: string;
+  faded: readonly { d: string; alpha: number }[];
+} {
+  const whole = new FinePathWriter();
+  const faded: { d: string; alpha: number }[] = [];
+  // The rim as the canvas draws it on a 390px phone slot at k = 1.
+  const rim = rimDepth(HORIZON.r * PHONE_SLOT_PX);
+  for (const lines of [
+    toSpherePolylines(parallelLines(step)),
+    toSpherePolylines(meridianLines(step)),
+  ]) {
+    for (let k = 0; k < lines.start.length; k++) {
+      const alpha = limbFade(polylinePeakDepth(lines, k, BASIS));
+      if (alpha <= 0) continue;
+      if (alpha >= 1) {
+        tracePolylines(whole, lines, BASIS, FRAME, FRAME.latMin, k, k + 1, rim);
+        continue;
+      }
+      const writer = new FinePathWriter();
+      tracePolylines(writer, lines, BASIS, FRAME, FRAME.latMin, k, k + 1, rim);
+      if (writer.d) faded.push({ d: writer.d, alpha });
+    }
+  }
+  return { whole: whole.d, faded };
+}
+
 /** Limb arc between two angles from the apex (degrees, clockwise positive). */
 function limbArc(from: number, to: number): string {
   const [x0, y0] = limbPoint(FRAME, from);
@@ -146,6 +201,8 @@ const VIEWBOX = { viewBox: "0 0 1000 100", preserveAspectRatio: "xMidYMin meet" 
 
 type FrameData = {
   grid: string;
+  /** The flat disc's graticule (absolute frame units), or null on the line globe. */
+  flatGrid: ReturnType<typeof flatGrid> | null;
   coast: string;
   germany: string;
   berlin: { x: number; y: number };
@@ -179,14 +236,17 @@ function frameData(sceneKey: HorizonSceneKey): FrameData {
   const right = limbExit(FRAME, 1);
   const ticks = scaleTicks(FRAME);
   const data: FrameData = {
-    grid: graticulePath(
-      {
-        centerLat: HORIZON.viewLat,
-        centerLon: horizonCenterLon(0),
-        radius: FRAME.radius,
-      },
-      scene.grid.step,
-    ),
+    grid: scene.disc
+      ? ""
+      : graticulePath(
+          {
+            centerLat: HORIZON.viewLat,
+            centerLon: horizonCenterLon(0),
+            radius: FRAME.radius,
+          },
+          scene.grid.step,
+        ),
+    flatGrid: scene.disc ? flatGrid(scene.grid.step) : null,
     coast: scene.coast ? coastPath() : "",
     germany: germanyPath(),
     berlin: { x: berlin.x, y: berlin.y },
@@ -286,16 +346,37 @@ export function HorizonGlobeFrame({
             fill={scene.disc}
           />
         ) : null}
-        <path
-          className="hz-grid"
-          d={data.grid}
-          transform={`translate(${r1(FRAME.centerX)} ${r1(FRAME.centerY)})`}
-          stroke={scene.grid.hex}
-          strokeOpacity={scene.grid.alpha}
-          strokeWidth={gridWidth}
-          strokeLinecap="round"
-          vectorEffect="non-scaling-stroke"
-        />
+        {data.flatGrid ? (
+          <g
+            className="hz-grid"
+            stroke={scene.grid.hex}
+            strokeOpacity={scene.grid.alpha}
+            strokeWidth={gridWidth}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d={data.flatGrid.whole} vectorEffect="non-scaling-stroke" />
+            {data.flatGrid.faded.map((line) => (
+              <path
+                key={line.d}
+                d={line.d}
+                strokeOpacity={Math.round(scene.grid.alpha * line.alpha * 100) / 100}
+                vectorEffect="non-scaling-stroke"
+              />
+            ))}
+          </g>
+        ) : (
+          <path
+            className="hz-grid"
+            d={data.grid}
+            transform={`translate(${r1(FRAME.centerX)} ${r1(FRAME.centerY)})`}
+            stroke={scene.grid.hex}
+            strokeOpacity={scene.grid.alpha}
+            strokeWidth={gridWidth}
+            strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
+          />
+        )}
         {scene.coast ? (
           <path
             d={data.coast}

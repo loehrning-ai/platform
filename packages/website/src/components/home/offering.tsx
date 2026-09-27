@@ -27,8 +27,9 @@ const TECHNICAL_COURSE_COUNT = COURSE_CATALOG.filter(
  * full atlas.
  *
  * From lg the route reads left to right as four flat sheets: the course
- * poster (the Grundlagenpfad in Lemons, numbered 01 to 04), its number and
- * lesson count, the title, one sentence and the duration. Below lg each course is one hairline row led by
+ * poster (the Grundlagenpfad in Lemons, numbered 01 to 04; the poster's
+ * numeral is the sheet's only number), the lesson count, the title, one
+ * sentence and the duration. Below lg each course is one hairline row led by
  * its number, with the duration as its one meta line. The number is the only
  * numbering on the page: these four are a sequence. No tints, no shadows and
  * no hover lift: hover underlines the title and nudges the arrow; focus is
@@ -77,11 +78,12 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
 
                   <span className="mt-4 flex min-w-0 flex-1 flex-col max-lg:mt-0">
                     {/* Below lg: title first, then the duration as the one
-                        meta line. From lg: number and lesson count above
-                        the title, the duration at the foot of the sheet. */}
+                        meta line. From lg: the lesson count above the
+                        title (the poster carries the number), the duration
+                        at the foot of the sheet. */}
                     <span className="order-1 text-label text-muted-foreground tabular-nums max-lg:order-2 max-lg:mt-0.5 max-lg:text-caption max-lg:font-normal max-lg:leading-snug max-lg:tracking-normal">
                       <span className="max-lg:hidden">
-                        {number} · {course.totalLessons} {copy.lessonLabel}
+                        {course.totalLessons} {copy.lessonLabel}
                       </span>
                       <span className="whitespace-nowrap lg:hidden">
                         {courseCopy.duration}

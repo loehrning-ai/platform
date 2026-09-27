@@ -30,8 +30,10 @@ const DETAIL_ARTIFACTS = [
 
 const INSET = 64;
 
-// The site face from src/fonts, read on the Node runtime (these cards are
-// prerendered for every published artifact). Open source stays paper
+// The site face from src/fonts, read on the Node runtime. The card reads the
+// request locale, so it renders per request, not at build time; the font
+// files reach the deployed function through outputFileTracingIncludes in
+// next.config.ts (see requests.md G5a-fix). Open source stays paper
 // (SPEC §2.3): Kalkweiß, Druckschwarz type, one Mennige label and the shared
 // colophon strip with the header's L tile.
 let fontData: Promise<{ bold: Buffer; regular: Buffer }> | undefined;

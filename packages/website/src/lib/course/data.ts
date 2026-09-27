@@ -131,31 +131,31 @@ const KI_FUEHRERSCHEIN: CourseData = {
     block_1: {
       title: "KI ist schon da",
       description:
-        "Erkenne, welche KI-Systeme du bereits täglich nutzt — und warum das der erste Schritt ist.",
+        "Welche KI-Funktionen du schon täglich nutzt.",
       durationMinutes: 10,
     },
     block_2: {
       title: "Datenschutz und KI",
       description:
-        "4-Stufen-Datenklassifikation für KI-Tools. Wissen, welche Daten in welches Tool gehören.",
+        "Welche Daten in welches Tool dürfen, in vier Stufen.",
       durationMinutes: 15,
     },
     block_3: {
       title: "KI anwenden",
       description:
-        "4 praktische Aufgaben: E-Mail, Meeting-Protokoll, Datenanalyse, Bericht.",
+        "Vier Übungen zu Mail, Protokoll, Datenanalyse und Bericht.",
       durationMinutes: 30,
     },
     block_4: {
       title: "KI-Output prüfen",
       description:
-        "3-Schritt-Prüfung, Halluzinationen erkennen, Vertrauensgrenzen kennen.",
+        "KI-Antworten in drei Schritten prüfen und Halluzinationen erkennen.",
       durationMinutes: 20,
     },
     block_5: {
       title: "KI-Richtlinie Schritt für Schritt",
       description:
-        "So entsteht eine KI-Nutzungsrichtlinie Schritt für Schritt. Was Art. 4 dazu zu sagen hat.",
+        "Eine KI-Richtlinie in sechs Bausteinen.",
       durationMinutes: 25,
     },
   },
@@ -177,31 +177,31 @@ const KI_FUEHRERSCHEIN_EN: CourseData = {
     block_1: {
       title: "AI is already here",
       description:
-        "Identify the AI systems you already use and the decisions they influence.",
+        "Which AI features you already use every day.",
       durationMinutes: 10,
     },
     block_2: {
       title: "Data protection and AI",
       description:
-        "Classify data before it enters an AI tool and assess the product, contract, and configuration.",
+        "Which data may go into which tool, in four levels.",
       durationMinutes: 15,
     },
     block_3: {
       title: "Applying AI at work",
       description:
-        "Work through four concrete tasks: email, meeting notes, data analysis, and reporting.",
+        "Four exercises on email, meeting notes, data analysis and reports.",
       durationMinutes: 30,
     },
     block_4: {
       title: "Checking AI output",
       description:
-        "Use a three-step review, identify hallucinations, and set clear trust boundaries.",
+        "Check AI answers in three steps and spot hallucinations.",
       durationMinutes: 20,
     },
     block_5: {
       title: "Building an AI use policy",
       description:
-        "Define approved tools, data rules, review duties, and incident handling for an organization.",
+        "An AI policy in six building blocks.",
       durationMinutes: 25,
     },
   },
@@ -225,13 +225,13 @@ const EU_AI_ACT_KURS: CourseData = {
     block_1: {
       title: "Warum & Für wen",
       description:
-        "Weshalb die KI-Verordnung existiert, wer betroffen ist und welche Fristen jetzt zählen.",
+        "Wer als Anbieter oder Betreiber erfasst ist und welche Fristen gelten.",
       durationMinutes: 16,
     },
     block_2: {
       title: "Die 4 Risikoklassen",
       description:
-        "Verboten, hochriskant, begrenzt oder minimal: so klassifizierst du KI-Systeme sicher.",
+        "KI-Systeme als verboten, hochriskant, begrenzt oder minimal einordnen.",
       durationMinutes: 18,
     },
     block_3: {
@@ -243,7 +243,7 @@ const EU_AI_ACT_KURS: CourseData = {
     block_4: {
       title: "GPAI, Art. 4 & Transparenz",
       description:
-        "Basismodelle, KI-Kompetenz als Organisationspflicht und Regeln für generative KI.",
+        "Basismodelle, KI-Kompetenz nach Art. 4 und Transparenz nach Art. 50.",
       durationMinutes: 20,
     },
     block_5: {
@@ -278,37 +278,37 @@ const EU_AI_ACT_KURS_EN: CourseData = {
     block_1: {
       title: "Scope, roles, and application dates",
       description:
-        "Identify who the Regulation covers, distinguish provider and deployer roles, and map the dates that apply.",
+        "Who is covered as provider or deployer, and which dates apply.",
       durationMinutes: 16,
     },
     block_2: {
       title: "Risk categories and classification",
       description:
-        "Work through prohibited practices, high-risk systems, transparency duties, and minimal-risk uses.",
+        "Classify AI systems as prohibited, high-risk, limited or minimal risk.",
       durationMinutes: 18,
     },
     block_3: {
       title: "High-risk system obligations",
       description:
-        "Separate provider and deployer duties for risk management, documentation, oversight, and conformity assessment.",
+        "Risk management, documentation, oversight and conformity assessment (Art. 9-43).",
       durationMinutes: 20,
     },
     block_4: {
       title: "GPAI, AI literacy, and transparency",
       description:
-        "Assess general-purpose AI duties, Article 4 measures, and Article 50 disclosure requirements.",
+        "Foundation models, AI literacy under Article 4, transparency under Article 50.",
       durationMinutes: 20,
     },
     block_5: {
       title: "Governance and penalties",
       description:
-        "Understand the roles of EU and national authorities, enforcement routes, sandboxes, and penalty limits.",
+        "AI Office, national authorities, fines up to EUR 35 million, sandboxes, reporting routes.",
       durationMinutes: 16,
     },
     block_6: {
       title: "Implementation for smaller organizations",
       description:
-        "Build an evidence-based inventory, connect AI Act and GDPR work, and assign accountable next steps.",
+        "Five-step audit, GDPR bridge, templates and an SME case study.",
       durationMinutes: 20,
     },
   },
@@ -362,19 +362,19 @@ const KI_UND_GESELLSCHAFT: CourseData = {
     block_1: {
       title: "KI und Arbeit",
       description:
-        "Ordne Befunde zu Automatisierung ein: Aufgaben statt ganzer Berufe, Datenbasis, Zeithorizont und konkrete Handlungsoptionen.",
+        "Wie KI einzelne Aufgaben verändert und was Studien dazu belegen.",
       durationMinutes: 16,
     },
     block_2: {
       title: "Deepfakes erkennen",
       description:
-        "Verstehe, wie synthetische Medien entstehen, und kombiniere Quellen-, Kontext- und Werkzeugprüfung.",
+        "Wie Deepfakes entstehen und wie du Quelle, Kontext und Werkzeuge prüfst.",
       durationMinutes: 14,
     },
     block_3: {
       title: "Ethik und Bias",
       description:
-        "Untersuche dokumentierte Bias-Fälle und trenne Probleme in Daten, Modellen, Entscheidungen und Verantwortlichkeit.",
+        "Wie Bias in Daten, Modelle und Entscheidungen gerät, an dokumentierten Fällen.",
       durationMinutes: 16,
     },
   },
@@ -394,19 +394,19 @@ const KI_UND_GESELLSCHAFT_EN: CourseData = {
     block_1: {
       title: "AI and work",
       description:
-        "Separate changes to individual tasks from changes to entire occupations, examine the available evidence, and identify practical responses.",
+        "How AI changes individual tasks and what studies show.",
       durationMinutes: 16,
     },
     block_2: {
       title: "Assessing deepfakes",
       description:
-        "Understand how synthetic media is made, apply source and context checks, and decide what to do when media appears manipulated.",
+        "How deepfakes are made and how to check source, context and tools.",
       durationMinutes: 14,
     },
     block_3: {
       title: "Bias, ethics, and accountability",
       description:
-        "Trace how bias enters data and decisions, examine documented cases, and identify action at individual, organizational, and public levels.",
+        "How bias enters data, models and decisions, shown with documented cases.",
       durationMinutes: 16,
     },
   },

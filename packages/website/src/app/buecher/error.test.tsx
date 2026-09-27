@@ -30,7 +30,7 @@ describe("src/app/buecher/error.tsx", () => {
     );
     expect(
       screen.getByText(
-        "Der Buchbestand wurde nicht ersetzt. Lade die geprüfte Fassung erneut.",
+        "Lade die Seite erneut.",
       ),
     ).toBeInTheDocument();
     expect(

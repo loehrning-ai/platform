@@ -59,7 +59,7 @@ describe("KI und Gesellschaft course landing page", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("AI and work")).toBeInTheDocument();
     expect(
-      screen.getByText(/cannot be assessed with one checklist/),
+      screen.getByText(/Each of the three topics has its own checks/),
     ).toBeInTheDocument();
 
     const startLinks = screen.getAllByRole("link", {

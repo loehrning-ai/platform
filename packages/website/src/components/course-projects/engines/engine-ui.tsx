@@ -38,9 +38,6 @@ export function EngineFrame({
   engineLabel,
   children,
 }: EngineFrameProps) {
-  const scenarioLabel = locale === "de" ? "Szenario" : "Scenario";
-  const safetyLabel = locale === "de" ? "Sicherheitsgrenze" : "Safety boundary";
-
   return (
     <EngineLocaleContext.Provider value={locale}>
       <section
@@ -57,29 +54,11 @@ export function EngineFrame({
           >
             {projectText(config.title, locale)}
           </h2>
-          <p className="mt-2 max-w-4xl text-sm leading-relaxed text-background/85">
-            {projectText(config.mission, locale)}
-          </p>
         </header>
 
-        <div className="grid min-w-0 border-b border-foreground/20 lg:grid-cols-2">
-          <div className="min-w-0 border-b border-foreground/20 p-4 lg:border-b-0 lg:border-r sm:p-5">
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.15em] text-muted-foreground">
-              {scenarioLabel}
-            </p>
-            <p className="mt-2 break-words text-sm leading-relaxed">
-              {projectText(config.scenario, locale)}
-            </p>
-          </div>
-          <div className="min-w-0 bg-brand-orange/[0.06] p-4 sm:p-5">
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.15em] text-brand-orange-dark">
-              {safetyLabel}
-            </p>
-            <p className="mt-2 break-words text-sm leading-relaxed">
-              {projectText(config.safety, locale)}
-            </p>
-          </div>
-        </div>
+        <p className="min-w-0 break-words border-b border-foreground/20 bg-brand-orange/[0.06] p-4 text-sm leading-relaxed sm:px-6">
+          {projectText(config.safety, locale)}
+        </p>
 
         <div className="min-w-0 p-4 sm:p-6">{children}</div>
       </section>

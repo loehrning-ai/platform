@@ -12,7 +12,7 @@
       "blockId": "block_3",
       "number": 1,
       "title": "E-Mail beantworten mit KI",
-      "subtitle": "Eine Reklamation, ein Entwurf, und was vor dem Senden passiert",
+      "subtitle": "Eine Reklamation, ein Entwurf und die Prüfung vor dem Senden",
       "durationMinutes": 8,
       "keyConcepts": [
         "Prompt Engineering",
@@ -25,15 +25,13 @@
           "id": "block_3_lesson_1_section_1",
           "title": "Die Reklamation von Firma Bergmann",
           "readTimeMinutes": 4,
-          "content": "Firma Bergmann ist sauer. Der Stammkunde bestellt regelmäßig Hydraulikkomponenten, die letzte Lieferung kam acht Arbeitstage zu spät, und der Einkauf will zwei Dinge: eine Erklärung und Gegenmaßnahmen, die halten. Die Mail liegt in deinem Posteingang.\n\nHat deine Organisation eine Assistenzfunktion für genau diesen Zweck freigegeben? Dann lass sie einen Entwurf schreiben. Wie die Oberfläche aussieht, hängt von Produkt und Version ab. Der Auftrag sieht so aus:\n\n\"Entwirf eine Antwort auf die Reklamation. Verwende nur die unten genannten Fakten. Ton: respektvoll und sachlich. Maximal 150 Wörter. Erfinde keine Ursache, Frist, Entschädigung oder Gegenmaßnahme. Markiere fehlende Angaben in eckigen Klammern.\"\n\nIn den Prompt kommt nur, was der Zweck braucht und was der freigegebene Arbeitsablauf abdeckt. Schwärzen und Pseudonymisieren senken das Risiko. Einen nicht freigegebenen Dienst machen sie nicht zulässig.\n\nKein freigegebenes System? Dann schreibst du den Entwurf selbst oder übst mit einem komplett synthetischen Beispiel. Die echte Kundenmail wandert nicht in irgendein Verbraucherangebot.",
-          "keyTakeaway": "Der Assistent liefert einen Entwurf, mehr nicht. Belegte Fakten rein, Lücken markieren, und nur im freigegebenen Arbeitsablauf."
+          "content": "Firma Bergmann, ein Stammkunde für Hydraulikkomponenten, hat die letzte Lieferung acht Arbeitstage zu spät bekommen. Der Einkauf will eine Erklärung und Gegenmaßnahmen, die halten.\n\nHat deine Organisation eine Assistenzfunktion für genau diesen Zweck freigegeben, lässt du sie einen Entwurf schreiben:\n\n\"Entwirf eine respektvolle, sachliche Antwort auf die Reklamation, maximal 150 Wörter. Verwende nur die unten genannten Fakten und erfinde keine Ursache, Frist, Entschädigung oder Gegenmaßnahme. Markiere fehlende Angaben in eckigen Klammern.\"\n\nIn den Prompt kommt nur, was der Zweck braucht. Schwärzen und Pseudonymisieren senken das Risiko, machen einen nicht freigegebenen Dienst aber nicht zulässig; ohne freigegebenes System schreibst du selbst oder übst mit einem synthetischen Beispiel."
         },
         {
           "id": "block_3_lesson_1_section_2",
           "title": "Fünf Fragen vor dem Senden",
           "readTimeMinutes": 4,
-          "content": "Der Entwurf steht. Jetzt liest du ihn wie jeden anderen geschäftlichen Text, den du unterschreiben würdest:\n\n1. **Fakten und Quelle:** Stimmen Bestellung, Verzögerung und bisherige Kommunikation mit den Primärquellen überein?\n2. **Befugnis:** Enthält der Entwurf Fristen, Rabatte, Haftungsanerkenntnisse oder andere Zusagen, die du nicht geben darfst?\n3. **Empfängerkreis:** Enthält er interne Ursachen, Namen oder vertrauliche Angaben, die nicht nach außen gehören?\n4. **Vollständigkeit:** Sind offene Punkte sichtbar markiert, statt mit plausibel klingenden Angaben gefüllt?\n5. **Ton und Sprache:** Ist der Text klar, respektvoll und frei von unbelegten Bewertungen?\n\nDer Prompt steuert Format und Grenzen. Ein korrektes Ergebnis garantiert er nicht. \"Verwende nur diese Fakten\" und \"markiere Lücken\" machen dir die Prüfung leichter. Abnehmen tun sie sie dir nicht.\n\nUnd die Zeitersparnis? Miss sie in deinem eigenen Prozess. Ohne wiederholte Messung gibt es keine belastbare Minutenangabe, von niemandem.",
-          "keyTakeaway": "Fakten, Befugnis, Empfängerkreis, Vollständigkeit, Ton. Prompt-Grenzen machen die Kontrolle leichter, garantieren tun sie nichts."
+          "content": "Lies den Entwurf wie jeden Text, den du unterschreiben würdest:\n\n1. **Fakten und Quelle:** Stimmen Bestellung, Verzögerung und bisherige Kommunikation mit den Primärquellen überein?\n2. **Befugnis:** Enthält der Entwurf Fristen, Rabatte, Haftungsanerkenntnisse oder andere Zusagen, die du nicht geben darfst?\n3. **Empfängerkreis:** Stehen interne Ursachen, Namen oder vertrauliche Angaben drin?\n4. **Vollständigkeit:** Sind offene Punkte markiert statt mit plausiblen Angaben gefüllt?\n5. **Ton und Sprache:** Ist der Text klar, respektvoll und frei von unbelegten Bewertungen?\n\nGrenzen im Prompt wie \"Verwende nur diese Fakten\" erleichtern die Prüfung, garantieren aber kein korrektes Ergebnis."
         }
       ],
       "quiz": [
@@ -48,7 +46,7 @@
             },
             {
               "id": "b",
-              "text": "Ob die KI konkrete Zusagen gemacht hat, die du nicht autorisiert bist zu geben",
+              "text": "Ob die KI Zusagen macht, die du nicht geben darfst",
               "isCorrect": true
             },
             {
@@ -62,11 +60,11 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Der Assistent bietet gern Lösungen an: Rabatt, Expresslieferung, Gutschrift. Autorisiert hat die niemand. Vor dem Senden prüfst du deshalb den Ton, jede Zusage und jede vertrauliche Angabe."
+          "explanation": "Assistenten bieten gern Rabatt, Expresslieferung oder Gutschrift an, die niemand autorisiert hat. Vor dem Senden prüfst du deshalb Ton, jede Zusage und jede vertrauliche Angabe."
         },
         {
           "id": "block_3_lesson_1_q2",
-          "questionText": "Welches Steuerungselement im Prompt ist laut dem Kurs das wichtigste bei einer Reklamationsantwort?",
+          "questionText": "Welches Steuerungselement im Prompt ist bei einer Reklamationsantwort am wichtigsten?",
           "answerOptions": [
             {
               "id": "a",
@@ -89,7 +87,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "\"Mache keine Zusagen ohne Rücksprache mit dem Vertrieb\" ist die wichtigste Grenze, weil der Assistent gern konkrete Lösungen anbietet: Rabatte, Expresslieferungen, Gutschriften. Autorisiert hast du davon nichts. Ton und Länge kannst du nachbessern, ein Versprechen an den Kunden nicht."
+          "explanation": "Diese Grenze verhindert Zusagen wie Rabatte oder Gutschriften, die niemand autorisiert hat. Ton und Länge kannst du nachbessern, ein Versprechen an den Kunden nicht."
         }
       ],
       "widgets": [
@@ -113,7 +111,7 @@
       "blockId": "block_3",
       "number": 2,
       "title": "Meeting zusammenfassen",
-      "subtitle": "Beschluss oder beiläufige Bemerkung: das Protokoll muss den Unterschied kennen",
+      "subtitle": "Beschlüsse von Bemerkungen trennen",
       "durationMinutes": 7,
       "keyConcepts": [
         "KI-Assistent",
@@ -126,15 +124,13 @@
           "id": "block_3_lesson_2_section_1",
           "title": "Variante A: Copilot in Microsoft Teams",
           "readTimeMinutes": 3,
-          "content": "Die Lizenz ist da, der Knopf auch. Reicht nicht. Bevor jemand aufzeichnet oder transkribiert, müssen Zweck, Information der Beteiligten, Rechtsgrundlage oder Einwilligung, Mitbestimmung, Aufbewahrung, Zugriffsrechte und der konkrete Dienst geklärt sein.\n\nIst der Arbeitsablauf freigegeben und die Funktion im Produkt vorhanden, bekommst du einen Entwurf mit Themen, Aufgaben und Zeitmarken. Wo genau der Knopf sitzt, hängt von Version und Lizenz ab.\n\nDann vergleichst du den Entwurf mit der Aufzeichnung, dem Transkript oder bestätigten Notizen. Wer hat gesprochen? Wer ist verantwortlich? Welche Frist steht wirklich? Und was war Vorschlag, was Beschluss? \"Das könnten wir prüfen\" ist keine Entscheidung.\n\nDas freigegebene Protokoll geht an die Beteiligten. Und sie brauchen einen festen Weg, Fehler korrigieren zu lassen.",
-          "keyTakeaway": "Aufzeichnen und transkribieren braucht einen freigegebenen Rechts- und Betriebsrahmen. Das automatische Protokoll ist ein Entwurf und wird gegen die Primärquellen gelesen."
+          "content": "Lizenz und Knopf reichen nicht. Bevor jemand aufzeichnet oder transkribiert, müssen Zweck, Information der Beteiligten, Rechtsgrundlage oder Einwilligung, Mitbestimmung, Aufbewahrung, Zugriffsrechte und der genutzte Dienst geklärt sein.\n\nIst der Arbeitsablauf freigegeben, liefert die Funktion je nach Version und Lizenz einen Entwurf mit Themen, Aufgaben und Zeitmarken. Vergleiche ihn mit Aufzeichnung, Transkript oder bestätigten Notizen: Wer hat gesprochen, wer ist verantwortlich, welche Frist steht, und was war Vorschlag, was Beschluss? \"Das könnten wir prüfen\" ist keine Entscheidung.\n\nDas freigegebene Protokoll geht an die Beteiligten, mit einem festen Weg für Korrekturen."
         },
         {
           "id": "block_3_lesson_2_section_2",
           "title": "Variante B: Manuell mit Prompt",
           "readTimeMinutes": 4,
-          "content": "Keine Aufzeichnung, nur deine Notizen? Auch daraus kann ein Assistent eine Struktur vorschlagen, wenn die Notizen freigegeben sind:\n\n\"Ordne die Notizen in: bestätigte Entscheidungen, Aufgaben mit ausdrücklich genannten Verantwortlichen und Fristen, offene Fragen. Erfinde keine Namen, Daten oder Beschlüsse. Markiere fehlende Angaben.\"\n\n**Ausgangsnotizen:**\n- Pipeline 1,2 Mio. offen, 400 Tsd. priorisiert\n- Pilot für vorausschauende Wartung angefragt, 35 Tsd.\n- Wartungsvertrag für zweites Werk, genannte Frist 15.04.\n- CRM-Daten teilweise veraltet\n- technisches Datenblatt benötigt\n\nMacht der Entwurf daraus Namen, neue Fristen oder eine genehmigte CRM-Bereinigung, hat er erfunden. Nichts davon steht in den Notizen. Solche Punkte wandern unter \"offen\", nicht unter \"beschlossen\".\n\nUnd eigene Notizen sind nicht automatisch harmlos. Sie können personenbezogene, vertrauliche oder mitbestimmungspflichtige Inhalte enthalten, also nur im freigegebenen Arbeitsablauf. Für Personal-, Betriebsrats- und Disziplinarthemen gelten die besonderen Regeln deiner Organisation. Handschrift macht nichts rechtmäßig. Lokale Verarbeitung auch nicht.",
-          "keyTakeaway": "Der Entwurf darf keine Verantwortlichen, Fristen oder Beschlüsse dazuerfinden. Und auch deine eigenen Notizen unterliegen Daten-, Arbeits- und Mitbestimmungsregeln."
+          "content": "Ohne Aufzeichnung kann ein Assistent auch aus freigegebenen Notizen eine Struktur vorschlagen:\n\n\"Ordne die Notizen in: bestätigte Entscheidungen, Aufgaben mit ausdrücklich genannten Verantwortlichen und Fristen, offene Fragen. Erfinde keine Namen, Daten oder Beschlüsse. Markiere fehlende Angaben.\"\n\n**Ausgangsnotizen:**\n- Pipeline 1,2 Mio. offen, 400 Tsd. priorisiert\n- Pilot für vorausschauende Wartung angefragt, 35 Tsd.\n- Wartungsvertrag für zweites Werk, genannte Frist 15.04.\n- CRM-Daten teilweise veraltet\n- technisches Datenblatt benötigt\n\nNennt der Entwurf Namen, neue Fristen oder eine genehmigte CRM-Bereinigung, hat er sie erfunden. Solche Punkte gehören unter \"offen\".\n\nAuch eigene Notizen können personenbezogene, vertrauliche oder mitbestimmungspflichtige Inhalte enthalten. Für Personal-, Betriebsrats- und Disziplinarthemen gelten besondere Regeln, auch bei Handschrift oder lokaler Verarbeitung."
         }
       ],
       "quiz": [
@@ -163,7 +159,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Zwei ähnliche Stimmen, und manchmal steht der falsche Name am Satz. Und \"Wäre schön, wenn wir das mal angehen\" wird im Entwurf zum Beschluss. Beides korrigierst du von Hand."
+          "explanation": "Bei ähnlichen Stimmen steht manchmal der falsche Name am Satz, und \"Wäre schön, wenn wir das mal angehen\" wird zum Beschluss. Beides korrigierst du von Hand."
         },
         {
           "id": "block_3_lesson_2_q2",
@@ -181,7 +177,7 @@
             },
             {
               "id": "c",
-              "text": "Sie darf nur in einem ausdrücklich freigegebenen Arbeitsablauf erfolgen, der Zweck, Rechtsgrundlage, Mitbestimmung, Zugriff und Aufbewahrung abdeckt",
+              "text": "Nur in einem freigegebenen Ablauf mit geklärter Rechtsgrundlage und Mitbestimmung",
               "isCorrect": true
             },
             {
@@ -190,7 +186,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Personal, Betriebsrat, Disziplinarfall: da reicht kein Produktname und keine lokale Installation. Die Organisation gibt den konkreten Zweck und Arbeitsablauf rechtlich, technisch und organisatorisch frei. Sonst läuft keine KI-Verarbeitung. Gar keine."
+          "explanation": "Bei Personal-, Betriebsrats- und Disziplinarthemen reichen weder Produktname noch lokale Installation. Ohne rechtliche, technische und organisatorische Freigabe von Zweck und Ablauf läuft keine KI-Verarbeitung."
         }
       ]
     },
@@ -199,7 +195,7 @@
       "blockId": "block_3",
       "number": 3,
       "title": "Daten analysieren mit KI",
-      "subtitle": "Eine Zahl ist eine Zahl. Eine Ursache ist sie nicht.",
+      "subtitle": "Veränderung von Ursache trennen",
       "durationMinutes": 8,
       "keyConcepts": [
         "Datenanalyse",
@@ -210,17 +206,15 @@
       "sections": [
         {
           "id": "block_3_lesson_3_section_1",
-          "title": "Vier Produktlinien, vier Quartale",
+          "title": "Definitionen vor der Rechnung",
           "readTimeMinutes": 4,
-          "content": "Vier Produktlinien, vier Quartale, eine Tabelle. Bevor du irgendetwas rechnen lässt, klärst du die Definitionen: Welche Spalte ist der Umsatz? In welcher Einheit? Netto oder brutto? Welche Währung? Und was soll \"Ausreißer\" hier überhaupt heißen?\n\nIn einem Analysewerkzeug, das für diese Daten freigegeben ist, forderst du dann einen Entwurf an:\n\n\"Berechne je Produktlinie den Gesamtumsatz und die prozentuale Veränderung von Q2 zu Q4. Zeige Formel, Bezugswerte und Rundung. Nenne keine Ursache. Markiere Werte nur dann als Ausreißer, wenn du Methode und Schwelle angibst.\"\n\nFür die Übung nimmst du synthetische Daten. Echte Finanzdaten gehören nur in den Arbeitsablauf, der dafür freigegeben ist. Der Unternehmens-Tenant allein ist keine Freigabe, die lokale Installation auch nicht.\n\nLA-500 fällt von 395 auf 290. Das ist ein Rückgang von rund -26,6 Prozent, und erst einmal nichts weiter. Ob der Wert statistisch auffällig ist, hängt von Vergleichsreihe, Methode und Schwelle ab. Warum er fällt, sagen dir vier Quartale nicht.",
-          "keyTakeaway": "Formel, Bezugswerte, Rundung, Ausreißermethode: das lässt du dir zeigen. Eine Veränderung ist keine Ursache und nicht automatisch ein statistischer Ausreißer."
+          "content": "Vor jeder Rechnung klärst du die Definitionen: Welche Spalte ist der Umsatz, in welcher Einheit und Währung, netto oder brutto? Und was heißt hier \"Ausreißer\"?\n\nIn einem für diese Daten freigegebenen Analysewerkzeug forderst du dann einen Entwurf an:\n\n\"Berechne je Produktlinie den Gesamtumsatz und die prozentuale Veränderung von Q2 zu Q4. Zeige Formel, Bezugswerte und Rundung. Nenne keine Ursache. Markiere Werte nur dann als Ausreißer, wenn du Methode und Schwelle angibst.\"\n\nÜbe mit synthetischen Daten zu vier Produktlinien über vier Quartale. Echte Finanzdaten gehören nur in den dafür freigegebenen Arbeitsablauf.\n\nLA-500 fällt von 395 auf 290, ein Rückgang von rund -26,6 Prozent. Ob das statistisch auffällig ist, hängt von Vergleichsreihe, Methode und Schwelle ab, und warum der Wert fällt, sagen vier Quartale nicht."
         },
         {
           "id": "block_3_lesson_3_section_2",
-          "title": "Fünf Prüfungen, bevor die Zahl in den Bericht darf",
+          "title": "Fünf Prüfungen vor dem Bericht",
           "readTimeMinutes": 4,
-          "content": "**Bevor eine Zahl den Bericht erreicht:**\n\n1. **Schema prüfen:** Stimmen Spalten, Einheiten, fehlende Werte, Datentypen und Filter?\n2. **Berechnungen reproduzieren:** Kritische Kennzahlen rechnest du mit einer unabhängigen Formel oder einem zweiten Werkzeug nach. Zwei bis drei Stichproben reichen nicht für jede Hochrisikoentscheidung.\n3. **Definitionen festhalten:** Dokumentiere Nenner, Zeitraum, Rundung, Ausschlüsse und Ausreißermethode.\n4. **Aussage begrenzen:** Trenne beobachtete Veränderung, Hypothese, Prognose und belegte Ursache.\n5. **Freigabe prüfen:** Kontrolliere Datenklasse, Zweck, Berechtigungen, Vertrag, Aufbewahrung, Region und Exportfunktionen des konkreten Systems.\n\nDer Assistent schlägt Formeln vor, manchmal auch Deutungen. Prüfen musst du. Dafür brauchst du genug Fachkenntnis oder jemanden, der sie hat und zuständig ist. Eine Begründung, die gut klingt, ist kein Beleg.",
-          "keyTakeaway": "Schema, Berechnung, Definition, Aussagegrenze: alle vier werden geprüft. Echte Finanzdaten nur im konkret freigegebenen System und Arbeitsablauf."
+          "content": "1. **Schema prüfen:** Stimmen Spalten, Einheiten, fehlende Werte, Datentypen und Filter?\n2. **Berechnungen reproduzieren:** Kritische Kennzahlen rechnest du mit einer unabhängigen Formel oder einem zweiten Werkzeug nach. Zwei bis drei Stichproben reichen nicht für jede Hochrisikoentscheidung.\n3. **Definitionen festhalten:** Dokumentiere Nenner, Zeitraum, Rundung, Ausschlüsse und Ausreißermethode.\n4. **Aussage begrenzen:** Trenne beobachtete Veränderung, Hypothese, Prognose und belegte Ursache.\n5. **Freigabe prüfen:** Kontrolliere Datenklasse, Zweck, Berechtigungen, Vertrag, Aufbewahrung, Region und Exportfunktionen des Systems.\n\nDer Assistent schlägt Formeln und manchmal Deutungen vor. Prüfen musst du, mit eigener Fachkenntnis oder mit einer zuständigen Person, die sie hat, denn eine gut klingende Begründung ist kein Beleg."
         }
       ],
       "quiz": [
@@ -249,7 +243,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "23 Prozent, bezogen worauf? Der Assistent kann einen anderen Bezugspunkt gewählt haben als du, Q1 statt Q2 zum Beispiel, und schon stimmt der Prozentwert nicht mehr. Stichproben nachrechnen, Bezugspunkt prüfen, bei Abweichung nachfragen."
+          "explanation": "Der Assistent kann einen anderen Bezugspunkt gewählt haben, etwa Q1 statt Q2, dann stimmt der Prozentwert nicht. Rechne Stichproben nach, prüf den Bezugspunkt und frag bei Abweichung nach."
         },
         {
           "id": "block_3_lesson_3_q2",
@@ -262,7 +256,7 @@
             },
             {
               "id": "b",
-              "text": "Für das Verbraucherangebot fehlen dem Betrieb ein geprüfter Vertrag, eine Freigabe und verbindliche Datenkontrollen",
+              "text": "Dem Betrieb fehlen dafür geprüfter Vertrag, Freigabe und verbindliche Datenkontrollen",
               "isCorrect": true
             },
             {
@@ -276,7 +270,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Dem nicht freigegebenen Verbraucherangebot fehlt der betrieblich geprüfte Vertrags- und Konfigurationsrahmen. Vertrauliche Finanzdaten gehören nur in ein ausdrücklich freigegebenes Unternehmensprodukt. Und auch dort sind Datenklasse, Vertrag, Berechtigungen und Region vorher geprüft."
+          "explanation": "Vertrauliche Finanzdaten gehören nur in ein ausdrücklich freigegebenes Unternehmensprodukt. Auch dort werden Datenklasse, Vertrag, Berechtigungen und Region vorher geprüft."
         }
       ]
     },
@@ -285,7 +279,7 @@
       "blockId": "block_3",
       "number": 4,
       "title": "Bericht schreiben",
-      "subtitle": "Aus Stichpunkten wird ein Bericht, aus Plänen werden keine Beschlüsse",
+      "subtitle": "Stichpunkte ordnen, ohne Pläne zu Beschlüssen zu machen",
       "durationMinutes": 7,
       "keyConcepts": [
         "Statusbericht",
@@ -298,21 +292,19 @@
           "id": "block_3_lesson_4_section_1",
           "title": "Vom Stichpunkt zum Entwurf",
           "readTimeMinutes": 4,
-          "content": "Der Statusbericht ist fällig und du hast nur Stichpunkte. Ein Assistent kann sie nach einem festen Schema ordnen, wenn sie freigegeben sind. Und nur im Arbeitsablauf, der für diese Daten und diese Empfänger freigegeben ist.\n\nSo sieht ein Auftrag aus, dessen Ergebnis du prüfen kannst:\n\n\"Ordne die Stichpunkte in Status, belegte Risiken, bestätigte Entscheidungen, Aufgaben mit ausdrücklich genannten Verantwortlichen und Fristen sowie offene Punkte. Verwende nur Angaben aus der Quelle. Markiere fehlende Besitzer, Termine und Belege.\"\n\nJede Aussage im Entwurf muss sich auf eine Zeile in den Notizen zurückführen lassen. \"Agentur-Angebot: 1.800 EUR, fünf Werktage\" ist ein Angebot. Im Entwurf darf daraus keine freigegebene Ausgabe werden. Und aus einem geplanten Datum kein bestätigter Termin.\n\nEin interner Bericht kann personenbezogene, finanzielle oder geheimhaltungsbedürftige Angaben enthalten. \"Intern\" ist keine Freigabe für ein Verbraucherangebot. Geprüft werden der konkrete Dienst und der konkrete Arbeitsablauf.",
-          "keyTakeaway": "Aus losen Stichpunkten macht der Assistent einen lesbaren Entwurf mit Zusammenfassung, Details, Risiken und nächsten Schritten. Belegt ist davon nur, was in den Notizen steht."
+          "content": "Im Arbeitsablauf, der für diese Daten und Empfänger freigegeben ist, kann ein Assistent deine Stichpunkte nach festem Schema zum Statusbericht ordnen. Auch ein interner Bericht kann personenbezogene, finanzielle oder geheime Angaben enthalten. Ein Auftrag, dessen Ergebnis du prüfen kannst:\n\n\"Ordne die Stichpunkte in Status, belegte Risiken, bestätigte Entscheidungen, Aufgaben mit ausdrücklich genannten Verantwortlichen und Fristen sowie offene Punkte. Verwende nur Angaben aus der Quelle. Markiere fehlende Besitzer, Termine und Belege.\"\n\nJede Aussage im Entwurf muss sich auf eine Zeile in den Notizen zurückführen lassen. Aus \"Agentur-Angebot: 1.800 EUR, fünf Werktage\" darf keine freigegebene Ausgabe werden, aus einem geplanten Datum kein bestätigter Termin."
         },
         {
           "id": "block_3_lesson_4_section_2",
           "title": "Was du anpassen musst",
           "readTimeMinutes": 3,
-          "content": "Vier Ebenen, auf denen der Entwurf falsch sein kann:\n\n1. **Quelle:** Ist jede Zahl, Frist, Person und Entscheidung in den Notizen belegt?\n2. **Status:** Sind Fakt, Plan, Annahme, Risiko und offene Frage klar getrennt?\n3. **Priorität:** Hat eine verantwortliche Person die Reihenfolge festgelegt, oder hat der Assistent sie aus Formulierungen erraten?\n4. **Freigabe:** Dürfen Inhalt und Empfängerkreis zusammengebracht werden, und ist die zuständige Person mit dem finalen Text einverstanden?\n\nOb sich das lohnt, misst du selbst: mit eigenen Vergleichsfällen, mit der Bearbeitungszeit, der Zahl der sachlichen Korrekturen und den Risiken, die der Entwurf ausgelassen hat. Ein Prozentwert ohne Messreihe ist eine Behauptung, keine Produktivitätsaussage.",
-          "keyTakeaway": "Ein Berichtsentwurf braucht Quellenabgleich, klare Statusarten, verantwortete Priorisierung und Freigabe. Produktivität wird gemessen, nicht behauptet."
+          "content": "Prüfe den Entwurf auf vier Ebenen:\n\n1. **Quelle:** Ist jede Zahl, Frist, Person und Entscheidung in den Notizen belegt?\n2. **Status:** Sind Fakt, Plan, Annahme, Risiko und offene Frage getrennt?\n3. **Priorität:** Hat eine verantwortliche Person die Reihenfolge festgelegt, oder hat der Assistent sie aus Formulierungen erraten?\n4. **Freigabe:** Dürfen Inhalt und Empfängerkreis zusammenkommen, und hat die zuständige Person den finalen Text freigegeben?\n\nOb sich das lohnt, misst du an eigenen Vergleichsfällen: Bearbeitungszeit, sachliche Korrekturen und ausgelassene Risiken. Ein Prozentwert ohne Messreihe ist eine Behauptung."
         }
       ],
       "quiz": [
         {
           "id": "block_3_lesson_4_q1",
-          "questionText": "Ein KI-Assistent erstellt einen Statusbericht aus deinen Stichpunkten. Was ist die wichtigste Korrektur, die du vornehmen musst?",
+          "questionText": "Ein KI-Assistent erstellt einen Statusbericht aus deinen Stichpunkten. Was musst du am dringendsten korrigieren?",
           "answerOptions": [
             {
               "id": "a",
@@ -321,7 +313,7 @@
             },
             {
               "id": "b",
-              "text": "Priorisierung anpassen, weil die KI nicht weiß, was dringend ist",
+              "text": "Die Prioritäten, denn die KI kennt die Dringlichkeit nicht",
               "isCorrect": true
             },
             {
@@ -335,7 +327,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Der Assistent weiß nicht, was dringend ist. Woher auch. Risiken und Entscheidungen, die anstehen, schiebst du nach oben. Unbelegte Bewertungen und fehlender Kontext bleiben deine Arbeit."
+          "explanation": "Der Assistent weiß nicht, was dringend ist. Anstehende Risiken und Entscheidungen schiebst du nach oben, unbelegte Bewertungen und fehlenden Kontext korrigierst du."
         },
         {
           "id": "block_3_lesson_4_q2",
@@ -362,7 +354,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Zeitgewinn und Qualität hängen von Aufgabe, Ausgangsdaten, Werkzeug und Prüfaufwand ab. Wiederholte Vergleichsfälle liefern eine Grundlage, die hält. Eine Minutenangabe aus dem Prospekt nicht."
+          "explanation": "Zeitgewinn und Qualität hängen von Aufgabe, Daten, Werkzeug und Prüfaufwand ab. Den Nutzen zeigen wiederholte Vergleichsfälle, eine Prospektangabe zeigt ihn nicht."
         }
       ]
     }

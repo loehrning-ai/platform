@@ -17,7 +17,7 @@ export default function Ch05Model() {
       <Hero
         eyebrow="Chapter 05 · Model"
         title="Model flexibility changes <em>bias and variance.</em>"
-        hook="Model flexibility moves approximation error, estimation variance, compute, and interpretability at once. <strong>Compare those tradeoffs in a validation design that matches deployment.</strong>"
+        hook="More flexibility lowers approximation error, raises estimation variance and costs compute and interpretability. <strong>A validation design that matches deployment decides which trade pays off.</strong>"
         meta={[
           { k: "Read", v: "9 min" },
           { k: "Focus", v: "Fit · CV · tune" },
@@ -31,11 +31,10 @@ export default function Ch05Model() {
           Slide the knob. Reshuffle the data. <em>Watch the cloud fan out.</em>
         </h2>
         <p className="prose">
-          In this fixed polynomial generator, low degrees give similar curves,
-          all wrong in the same way. Higher degrees hug the sampled points
-          and swing further across seeded resamples. The picture guarantees
-          nothing about how complexity moves bias and variance for another
-          model, regularizer, dataset, or loss.
+          In this fixed polynomial generator, low degrees give similar curves
+          that miss in the same way. Higher degrees hug the sampled points and
+          swing more across resamples. With other models, data or losses the
+          pattern need not be monotonic.
         </p>
         <BiasVarianceSim />
       </section>
@@ -47,40 +46,37 @@ export default function Ch05Model() {
         </h2>
         <ul className="prose" style={{ paddingLeft: 20 }}>
           <li>
-            <strong>Logistic / linear regression</strong>, interpretable, fast,
-            hard to beat as a baseline on tabular data when the functional form
-            fits.
+            <strong>Logistic or linear regression:</strong> interpretable, fast
+            baselines for tabular data when the functional form fits.
           </li>
           <li>
-            <strong>Gradient-boosted trees (XGBoost, LightGBM)</strong>, the
-            tabular workhorse, a strong candidate for many tabular tasks, tuning
-            and calibration still on you.
+            <strong>Gradient-boosted trees (XGBoost, LightGBM):</strong> a
+            strong default for tabular data; tuning and calibration stay on
+            you.
           </li>
           <li>
-            <strong>Random forest</strong>, a nonlinear ensemble baseline with
-            its own calibration, latency, and extrapolation limits.
+            <strong>Random forest:</strong> a nonlinear ensemble baseline with
+            limits in calibration, latency and extrapolation.
           </li>
           <li>
-            <strong>Deep nets</strong>, the standard for text, images, and
-            audio. On tabular data, make them beat simpler baselines under the
-            same budget and split.
+            <strong>Deep nets:</strong> the standard for text, images and
+            audio; on tabular data, compare them with simpler baselines under
+            the same budget and split.
           </li>
         </ul>
       </section>
 
       <AntiPatterns
         items={[
-          "<b>Tuning on the test set.</b> That's just a slower way to overfit.",
-          "<b>Leaderboard chasing.</b> A 0.01 AUC difference decides nothing without fold-level uncertainty, leakage checks, and an untouched confirmation set.",
-          "<b>Choosing an architecture by reputation.</b> Compare linear, tree, and neural candidates under the same data, compute budget, latency, calibration, and interpretability requirements.",
+          "<b>Tuning on the test set.</b> That is overfitting with extra steps.",
+          "<b>Leaderboard chasing.</b> A 0.01 AUC difference decides nothing without fold-level uncertainty, leakage checks and an untouched confirmation set.",
         ]}
       />
 
       <Takeaway
         items={[
-          "<b>Generalization is the goal.</b> Keep evaluation data out of model fitting, and build the split to reproduce future entities, groups, or time.",
-          "<b>Resampling quantifies split sensitivity.</b> Cross-validation helps when folds respect the data structure; grouped, temporal, or nested designs may be required.",
-          "<b>Bias² + variance + noise is a squared-error decomposition.</b> It is a teaching lens under a specified data-generating process, not a universal formula for every metric.",
+          "<b>Resampling measures split sensitivity.</b> Cross-validation helps only when folds match the data structure; grouped, temporal or nested designs are often needed.",
+          "<b>Bias² + variance + noise decomposes squared error.</b> It holds under a specified data-generating process and does not apply to every metric.",
         ]}
       />
     </>

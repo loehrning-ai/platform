@@ -44,6 +44,12 @@ describe("DemosPage URL filter boundary", () => {
     // The caps line names the collection; the count lives in the stats below.
     expect(h1.previousElementSibling).toHaveClass("plakat-caps");
     expect(h1.previousElementSibling).toHaveTextContent("Praxisbeispiele · im Browser");
+    // Below sm the caps line keeps one row: the detail drops.
+    expect(
+      Array.from(h1.previousElementSibling?.querySelectorAll("span") ?? []).some(
+        (span) => span.classList.contains("max-sm:hidden") && span.textContent === " · im Browser",
+      ),
+    ).toBe(true);
     // The band: IDEA scope, one halftone image, four corner dots, and no
     // caption or label type inside it (SPEC §3.1 type budget).
     const band = h1.closest("[data-cover-band]");

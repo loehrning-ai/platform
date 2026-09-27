@@ -17,7 +17,7 @@ export default function Ch08Experiment() {
       <Hero
         eyebrow="Chapter 08 · Experiment"
         title='Design the experiment <em>before</em> collecting data. <span class="accent">Interpret it</span> against that design.'
-        hook="Assignment, estimand, primary metric, minimum relevant effect, analysis plan, stopping rule. Fixed before a single outcome arrives."
+        hook="Fix assignment, estimand, primary metric, minimum relevant effect, analysis plan and stopping rule before the first outcome arrives."
         meta={[
           { k: "Read", v: "9 min" },
           { k: "Focus", v: "Power · CI · MDE" },
@@ -32,10 +32,10 @@ export default function Ch08Experiment() {
         </h2>
         <p className="prose">
           Move the data-generating lift between zero and +2 percentage points
-          and watch the interim estimates. One synthetic Bernoulli stream, whose
-          interval crosses zero and crosses back. A crossing at an interim look
-          is no stopping rule. You are seeing sampling variability, not the
-          result of a planned production test.
+          and watch the interim estimates. In this one synthetic Bernoulli
+          stream the interval can cross zero several times, and a crossing is
+          no valid stopping rule. You see sampling variability, not a planned
+          production test.
         </p>
         <ABSim />
       </section>
@@ -49,13 +49,13 @@ export default function Ch08Experiment() {
           </li>
           <li>
             <strong>Minimum relevant effect:</strong> the smallest effect that
-            would change a decision. Smaller targets cost more information, all
+            would change a decision; smaller targets need more information, all
             else fixed.
           </li>
           <li>
             <strong>Power:</strong> set the target from the cost of missed
-            effects, false positives, and sample acquisition, then report the
-            assumptions behind the calculation.
+            effects, false positives and data collection, and document the
+            assumptions.
           </li>
           <li>
             <strong>Duration and stopping:</strong> cover relevant operating
@@ -65,17 +65,15 @@ export default function Ch08Experiment() {
         </ol>
         <AntiPatterns
           items={[
-            "<b>Unadjusted optional stopping.</b> Check a fixed-horizon p-value repeatedly, stop at the first crossing, and the error rate is no longer the one you quoted. How far off depends on the look schedule and stopping rule. See Chapter 10.",
-            "<b>HARKing.</b> Hypothesizing after results are known, slicing until something pops.",
-            "<b>Multiple comparisons without correction.</b> For 20 independent, valid null p-values at α=0.05, the chance of at least one false positive is 1 − 0.95²⁰ ≈ 64%. Dependence changes that calculation.",
+            "<b>Unadjusted optional stopping.</b> Checking a fixed-horizon p-value repeatedly and stopping at the first crossing changes the error rate, by an amount that depends on look schedule and stopping rule (see Chapter 10).",
           ]}
         />
       </section>
 
       <Takeaway
         items={[
-          "<b>Sample size scales roughly with 1 / effect².</b> With variance, allocation, α, and power held fixed, halving the target effect costs about four times the sample.",
-          "<b>Intervals and p-values are two summaries of one model.</b> Report effect magnitude and uncertainty. Neither repairs a weak design.",
+          "<b>Sample size scales roughly with 1 / effect².</b> With variance, allocation, α and power fixed, halving the target effect needs about four times the sample.",
+          "<b>Intervals and p-values summarize one model.</b> Report effect size and uncertainty; neither repairs a weak design.",
           '<b>State what the data exclude.</b> "No effect detected" is not "no effect"; compare the interval with the prespecified relevant-effect range.',
         ]}
       />

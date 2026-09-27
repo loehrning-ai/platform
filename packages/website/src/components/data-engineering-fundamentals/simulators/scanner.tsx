@@ -96,7 +96,7 @@ export function Scanner() {
       eyebrow={text("live simulator", "Live-Simulator")}
       title={text("Row vs columnar scanner", "Zeilen- und Spaltenscan im Vergleich")}
       meta="SELECT SUM(revenue) FROM sales"
-      caption={text("Normalized teaching model: 100 columns, 40 visual rows, and illustrative size and throughput assumptions.", "Normiertes Lernmodell: 100 Spalten, 40 sichtbare Zeilen sowie beispielhafte Größen- und Durchsatzannahmen.")}
+      caption={text("Teaching model: 100 columns, 40 visible rows, illustrative sizes and throughput.", "Lernmodell: 100 Spalten, 40 sichtbare Zeilen, beispielhafte Größen und Durchsatz.")}
     >
       <div className="sc-query">
         <div className="sc-q-ln">

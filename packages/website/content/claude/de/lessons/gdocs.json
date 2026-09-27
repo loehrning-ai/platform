@@ -6,32 +6,36 @@
   "durationMinutes": 8,
   "trackId": "workflows",
   "hook": "Das Dokument ist das Arbeitsergebnis. Der Prompt legt die Form fest.",
-  "keyConcepts": ["Struktur", "Stilübertragung", "Kritik vor Überarbeitung"],
+  "keyConcepts": [
+    "Struktur",
+    "Stilübertragung",
+    "Kritik vor Überarbeitung"
+  ],
   "quiz": [],
   "sections": [
     {
       "id": "why-gdocs",
-      "title": "Google Docs als gemeinsame Arbeitsfläche",
+      "title": "Warum gemeinsame Dokumente zählen",
       "readTimeMinutes": 1,
-      "content": "Teams entscheiden in Dokumenten. Spezifikationen, Incident-Reviews, Rollout-Pläne landen im gemeinsamen Doc. Ein brauchbarer Entwurf behält die gelieferten Fakten, markiert Lücken und folgt einer vertrauten Struktur.\n\nDrei Hebel: Struktur vorgeben, ein freigegebenes Stilbeispiel mitgeben, Aussagen vor dem Feinschliff prüfen."
+      "content": "Teams halten Entscheidungen, Spezifikationen, Incident-Reviews und Rollout-Pläne in gemeinsamen Dokumenten fest. Ein brauchbarer Entwurf behält die gelieferten Fakten, markiert Lücken und folgt einer Struktur, die Reviewer kennen."
     },
     {
       "id": "move-1-skeleton",
       "title": "Schritt 1: Gib Claude die Struktur vor",
       "readTimeMinutes": 2,
-      "content": "Jede Dokumentsorte hat Konventionen. Design-Dokumente haben ein TL;DR. PRDs haben Erfolgsmetriken. Post-Mortems haben eine Zeitleiste. Ohne vorgegebene Struktur liefert Claude einen generischen „Artikel“.\n\n```\nOutput structure:\n# Titel\n## TL;DR (3 Stichpunkte, jeweils <15 Wörter)\n## Kontext\n## Vorschlag\n## Risiken & Gegenmaßnahmen\n## Erfolgsmetriken\n## Offene Fragen\n```"
+      "content": "Jede Dokumentsorte hat Konventionen, etwa das TL;DR im Design-Dokument oder die Zeitleiste im Post-Mortem. Gib die nötigen Abschnitte vor:\n\n```\nOutput structure:\n# Titel\n## TL;DR (3 Stichpunkte, jeweils <15 Wörter)\n## Kontext\n## Vorschlag\n## Risiken & Gegenmaßnahmen\n## Erfolgsmetriken\n## Offene Fragen\n```\n\nNenn für jeden Abschnitt die nötigen Belege und lass Lücken markieren, damit Claude nicht rät."
     },
     {
       "id": "move-2-voice",
       "title": "Schritt 2: Gib Claude den Stil vor",
       "readTimeMinutes": 2,
-      "content": "Zählen Terminologie und Satzbau, gib eine kurze, freigegebene Referenz mit und benenne, was übernommen werden soll. Vertrauliche Details raus. Und verbiete ausdrücklich, Fakten aus dem Stilbeispiel zu übernehmen.\n\n> Das Stilbeispiel zeigt das Ziel. Ob die Ausgabe es trifft, prüft ein Eval."
+      "content": "Zählen Terminologie und Stil, gib eine kurze, freigegebene Referenz mit und benenne, was übernommen werden soll. Entferne vertrauliche Details, verbiete die Übernahme ihrer Fakten und prüfe mit einem Eval, ob die Ausgabe den Stil trifft."
     },
     {
       "id": "move-3-critique",
       "title": "Schritt 3: Bitte um Kritik vor der Überarbeitung",
       "readTimeMinutes": 2,
-      "content": "Erst Kritik, dann Überarbeitung. Prüfe den ersten Entwurf an expliziten Kriterien: unbelegte Aussagen, fehlende Entscheidungen, falsche Zielgruppe, Strukturfehler. Fordere eine kurze Befundliste mit zitierten Belegen an und beauftrage danach nur freigegebene Änderungen.\n\nDas ergibt einen Prüfschritt, den jemand nachlesen kann. Private Chain-of-Thought-Texte sind dafür weder nötig noch vorgesehen."
+      "content": "Prüfe den Entwurf an expliziten Kriterien: unbelegte Aussagen, fehlende Entscheidungen, falsche Zielgruppe, Strukturfehler. Fordere Befunde mit zitierten Belegen an und beauftrage danach nur freigegebene Änderungen. Diesen Prüfschritt kann jemand nachlesen, und er braucht keine privaten Chain-of-Thought-Texte."
     }
   ],
   "widgets": [
@@ -78,11 +82,11 @@
       "props": {
         "lessonId": "gdocs",
         "cpId": "q1",
-        "question": "Dein erster Entwurf eines Google Docs ist fast fertig, aber der Stil entspricht nicht den Anforderungen. Was ist der effektivste nächste Schritt?",
+        "question": "Dein erster Entwurf im Google Doc ist fast fertig, aber der Stil passt nicht. Was ist der beste nächste Schritt?",
         "options": [
           "Bitte um „einen professionelleren Ton“.",
           "Beginne von vorne mit einem neuen Prompt.",
-          "Füge 2-3 Absätze eines Referenzdokuments mit dem gewünschten Stil ein und sage: „Überarbeite dies passend zu diesem Stil.“",
+          "Füge 2-3 Referenzabsätze ein und bitte um eine Überarbeitung in diesem Stil.",
           "Bitte Claude, „weniger wie eine KI zu sein“."
         ],
         "correct": 2,

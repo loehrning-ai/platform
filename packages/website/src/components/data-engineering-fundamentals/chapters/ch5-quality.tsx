@@ -1,4 +1,4 @@
-import { Hero, SectionLabel, CodeBlock, AntiPatterns, BestPractices, Takeaway } from "../primitives";
+import { Hero, SectionLabel, CodeBlock, AntiPatterns, BestPractices } from "../primitives";
 import { TrustMeterSim } from "../simulators/trust-meter-sim";
 import type { ChapterMeta } from "@/lib/data-engineering-fundamentals/types";
 
@@ -41,7 +41,7 @@ export function Ch5Quality({ chapter }: Ch5QualityProps) {
         accent={chapter.inkHex}
         eyebrow={`Chapter ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Quality: a pipeline that <span class='accent'>ran</span> is not a pipeline that's <span class='accent'>right</span>."
-        hook="A successful task can still write incomplete, stale, duplicated, or schema-incompatible data. Quality checks record evidence about selected properties. They do not prove that every value or business definition is correct."
+        hook="A successful task can still write incomplete, stale, duplicated or schema-incompatible data. Checks give evidence about selected properties."
         meta={[
           { k: "Primitive", v: "ExpectationSuite" },
           { k: "Barrier", v: "signal table + ExternalTaskSensor" },
@@ -50,17 +50,17 @@ export function Ch5Quality({ chapter }: Ch5QualityProps) {
       />
 
       <section className="section">
-        <SectionLabel n="6.1">Checks are cheap, bugs are expensive</SectionLabel>
+        <SectionLabel n="6.1">The core checks</SectionLabel>
         <h2 className="h2">Four checks for distinct failure modes.</h2>
         <p className="prose">
-          <b>Row-count band:</b> compare the current partition with a table-specific baseline and threshold. This can detect empty writes,
-          partial writes, or upstream changes.
+          <b>Row-count band:</b> compare the partition with a table-specific baseline and threshold to catch empty or partial writes and
+          upstream changes.
           <br />
-          <b>Schema check:</b> compare the observed schema with the versioned contract and its declared compatibility policy.
+          <b>Schema check:</b> compare the observed schema with the versioned contract and its compatibility policy.
           <br />
-          <b>Freshness:</b> verify the named partition or event-time cutoff against the dataset&apos;s target.
+          <b>Freshness:</b> check the named partition or event-time cutoff against the dataset&apos;s target.
           <br />
-          <b>Uniqueness:</b> verify the declared key at the declared grain. Not every fact table has a single-row primary key.
+          <b>Uniqueness:</b> check the declared key at the declared grain. Not every fact table has a single-row primary key.
         </p>
         <TrustMeterSim />
       </section>
@@ -69,21 +69,20 @@ export function Ch5Quality({ chapter }: Ch5QualityProps) {
         <SectionLabel n="6.2">The signal-table barrier</SectionLabel>
         <h2 className="h2">Gate configured consumers on a named quality signal.</h2>
         <p className="prose">
-          In this reference design, checks run after a partition write, before dependent tasks proceed. Passing the selected checks writes a
-          row to a <b>signal table</b>. Consumers explicitly configured with an <code>ExternalTaskSensor</code> can wait on that signal. The data
-          table may still be technically readable. Visibility and access controls need separate enforcement, and alert routing has to be
-          configured and tested.
+          Here, checks run after a partition write and before dependent tasks. If they pass, a row lands in a <b>signal table</b>, and consumers
+          with an <code>ExternalTaskSensor</code> wait on it. The data table stays readable, so access control needs separate enforcement, and
+          alert routing must be configured and tested.
         </p>
         <div className="cards-2">
           <div className="ccard">
             <div className="ccard-t">Without the barrier</div>
             <div className="ccard-n">Downstream waits on the data table</div>
-            <div className="ccard-d">Partial or corrupt data is readable the moment the write commits. A retry is too late: consumers already ran.</div>
+            <div className="ccard-d">Partial or corrupt data is readable once the write commits. A retry comes after consumers already ran.</div>
           </div>
           <div className="ccard">
             <div className="ccard-t">With the barrier</div>
             <div className="ccard-n">Downstream waits on the signal table</div>
-            <div className="ccard-d">Configured tasks wait until the selected checks pass. Other readers remain possible unless access is enforced separately.</div>
+            <div className="ccard-d">Configured tasks wait until the checks pass. Other readers still get through without separate access control.</div>
           </div>
         </div>
       </section>
@@ -95,25 +94,17 @@ export function Ch5Quality({ chapter }: Ch5QualityProps) {
 
       <AntiPatterns
         items={[
-          `<b>Adding checks without a dataset contract.</b> A threshold has no meaning until its grain, baseline, exception policy, and owner are defined.`,
-          "<b>Publishing a signal that consumers do not require.</b> Verify dependency wiring; a signal row does not restrict direct table reads.",
-          "<b>Declaring a freshness target without alert ownership.</b> Record the target, measurement point, routing path, and expected response.",
-          "<b>Using only <code>assert len(df) &gt; 0</code>.</b> One row satisfies it. Add checks that match plausible source and transformation failures.",
+          `<b>Adding checks without a dataset contract.</b> A threshold needs grain, baseline, exception policy and owner.`,
+          "<b>Publishing a signal that consumers do not require.</b> Check the dependency wiring; a signal row does not block direct table reads.",
+          "<b>Declaring a freshness target without alert ownership.</b> Record target, measurement point, routing and expected response.",
+          "<b>Using only <code>assert len(df) &gt; 0</code>.</b> One row passes it, even after a source outage. Use row-count bands and checks that match likely failures.",
         ]}
       />
       <BestPractices
         items={[
-          "Select checks from the table&apos;s <b>grain, key, freshness target, source behavior, and consumer risk</b>.",
-          "<b>Signal tables are first-class citizens.</b> Name them <code>&lt;table&gt;__signal</code>. They outlive the pipeline: replays, backfills, and audits all read them.",
-          "Set freshness and response targets per dataset, with an owner and tested alert route.",
-          "<b>DQ config in version control, not UI.</b> Checks drift. Code reviews catch drift. Dashboards don't.",
-        ]}
-      />
-      <Takeaway
-        items={[
-          "Quality checks provide evidence about named properties; they do not certify the full business meaning of a dataset.",
-          "Row-count, schema, freshness, and uniqueness address different risks and require table-specific configuration.",
-          "A signal is useful only when it names the checks that passed and dependent consumers are configured to require it.",
+          "Select checks from the table&apos;s <b>grain, key, freshness target, source behavior and consumer risk</b>.",
+          "<b>Treat signal tables as lasting interfaces.</b> Name them <code>&lt;table&gt;__signal</code>; replays, backfills and audits read them.",
+          "<b>Keep DQ config in version control.</b> Changes get reviewed like code; a rule kept only in a UI drifts unnoticed.",
         ]}
       />
     </>

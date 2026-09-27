@@ -43,28 +43,27 @@ describe("Offering section", () => {
   it("removes duplicated persona shortcuts and gives every route step owned artwork", () => {
     render(<Offering />);
     expect(screen.queryByTestId("persona-filter")).not.toBeInTheDocument();
-    const images = Array.from(document.querySelectorAll("img"));
-    expect(images).toHaveLength(4);
-    const decodedSources = images.map((image) =>
-      decodeURIComponent(image.getAttribute("src") ?? ""),
+    // Every step owns its poster (SPEC §3.5): the Grundlagenpfad in Lemons,
+    // numbered 01 to 04, drawn as decorative inline SVG with no image request.
+    expect(document.querySelectorAll("img")).toHaveLength(0);
+    const posters = Array.from(
+      document.querySelectorAll("[data-course-artwork] svg[data-poster]"),
     );
-    for (const source of [
-      "/course-covers/ki-fuehrerschein-cover-v3.webp",
-      "/course-covers/ki-und-gesellschaft-cover-v3.webp",
-      "/course-covers/eu-ai-act-kurs-cover-v3.webp",
-      "/course-covers/ai-native-cover-v3.webp",
-    ]) {
-      expect(
-        decodedSources.some((candidate) => candidate.includes(source)),
-      ).toBe(true);
-    }
-    for (const image of images) {
-      expect(image).toHaveAttribute("alt", "");
-      expect(image).toHaveAttribute("loading", "lazy");
-      expect(image).toHaveAttribute("decoding", "async");
-      expect(image).toHaveAttribute("fetchpriority", "low");
-      expect(image).toHaveAttribute("width", "1440");
-      expect(image).toHaveAttribute("height", "630");
+    expect(posters).toHaveLength(4);
+    expect(posters.map((poster) => poster.getAttribute("data-poster-motif"))).toEqual([
+      "disc",
+      "pair",
+      "ring",
+      "steps",
+    ]);
+    for (const [index, poster] of posters.entries()) {
+      expect(poster).toHaveClass("plakat-lemons");
+      expect(poster).toHaveAttribute("aria-hidden", "true");
+      expect(poster).toHaveAttribute("focusable", "false");
+      expect(poster).toHaveAttribute("data-poster-format", "landscape");
+      expect(poster.querySelector("[data-poster-numeral-text]")?.textContent).toBe(
+        `0${index + 1}`,
+      );
     }
     expect(
       screen.getByRole("list", { name: "Empfohlener Grundlagenpfad" }),
@@ -110,13 +109,14 @@ describe("Offering section", () => {
     const heading = screen.getByRole("heading", { level: 2 });
     expect(heading.querySelector("span")).toBeNull();
     expect(heading.className).not.toMatch(/text-(?:muted|brand)/);
-    // From lg the sheet names its number and lesson count; below lg that
+    // From lg the sheet names its lesson count (the poster numeral is the
+    // sheet's only number, SPEC D9); below lg that
     // steps out and the duration is the row's one meta line, never wrapped,
     // so no row orphans "Min.". No unit count: the catalog's units differ
     // per course (Blöcke, Module).
     const counts = Array.from(
       container.querySelectorAll("[data-home-course-card] span"),
-    ).filter((span) => /^0\d · \d+ Lektionen$/.test(span.textContent ?? ""));
+    ).filter((span) => /^\d+ Lektionen$/.test(span.textContent ?? ""));
     expect(counts).toHaveLength(4);
     for (const count of counts) expect(count).toHaveClass("max-lg:hidden");
     const durations = container.querySelectorAll(
@@ -135,13 +135,12 @@ describe("Offering section", () => {
     const html = container.innerHTML;
     expect(html).not.toMatch(/bg-brand-(?:acid|sky|pink|peach|cobalt)/);
     expect(html).not.toMatch(/shadow-card|rounded-\[|hover:-translate/);
-    // The cover is the framed object; the card itself carries no box.
-    for (const artwork of container.querySelectorAll("[data-course-artwork]")) {
-      expect(artwork).toHaveClass("border", "border-foreground");
-    }
-    // The covers print in ink: greyscale, multiplied onto the sheet.
-    for (const image of container.querySelectorAll("[data-course-artwork] img")) {
-      expect(image).toHaveClass("grayscale", "mix-blend-multiply");
+    // The poster is a flat printed object: no frame, no filter, and the
+    // card itself carries no box.
+    const artworks = container.querySelectorAll("[data-course-artwork]");
+    expect(artworks).toHaveLength(4);
+    for (const artwork of artworks) {
+      expect(artwork.className).not.toMatch(/\bborder\b|grayscale|mix-blend|shadow/);
     }
     // No Mennige text on a tint: meta and durations are Schiefer on paper.
     for (const card of container.querySelectorAll("[data-home-course-card]")) {

@@ -116,8 +116,8 @@ export function EncodingComparison() {
       )}
       meta={text("City column · 5 categories", "Stadtspalte · 5 Kategorien")}
       caption={text(
-        "Fixed five-city lookup, not a fitted encoder. Compare representation shape and assumptions here; choose and fit the real encoder inside validation with explicit missing and unknown-category behavior.",
-        "Feste Lookup-Tabelle für fünf Städte, kein angepasster Encoder. Hier werden Form und Annahmen verglichen; den realen Encoder innerhalb der Validierung mit expliziter Behandlung fehlender und unbekannter Kategorien wählen und anpassen.",
+        "Fixed five-city lookup, not a fitted encoder. Fit the real encoder inside validation, with explicit handling of missing and unknown categories.",
+        "Feste Lookup-Tabelle für fünf Städte, kein angepasster Encoder. Den realen Encoder passt du innerhalb der Validierung an, mit expliziter Behandlung fehlender und unbekannter Kategorien.",
       )}
     >
       <div className="sim-row">

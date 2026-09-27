@@ -2,71 +2,57 @@
 
 # Warum KI dein wichtigstes Werkzeug ist
 
-4,2 Millionen Selbstständige in Deutschland (Statistisches Bundesamt, 2024). Die meisten arbeiten mehr als jeder Angestellte. Die wenigsten verdienen mehr.
+In Deutschland gibt es 4,2 Millionen Selbstständige (Statistisches Bundesamt, 2024). Die meisten arbeiten mehr als jeder Angestellte, die wenigsten verdienen mehr, und das liegt an der Struktur ihrer Arbeit.
 
-Das ist kein Motivationsproblem. Das ist ein Strukturproblem.
-
-Dazu kommt: 59 Prozent der deutschen Unternehmen ab 20 Mitarbeitern nutzen KI noch nicht aktiv (Bitkom, Q1 2026). Vier von zehn haben den Sprung gewagt, die Mehrheit wartet ab. Wettbewerber in den USA, in Skandinavien und im eigenen Land automatisieren, personalisieren und skalieren längst.
+Dazu kommt: 59 Prozent der deutschen Unternehmen ab 20 Mitarbeitern nutzen KI noch nicht aktiv (Bitkom, Q1 2026). Vier von zehn haben den Sprung gewagt, die Mehrheit wartet ab. Wettbewerber in den USA, in Skandinavien und im eigenen Land automatisieren längst.
 
 Der deutsche KI-Markt wächst von 9,9 Milliarden Euro (2025) auf über 40 Milliarden bis 2031 (Mordor Intelligence). Wer jetzt einsteigt, hat einen Wissensvorsprung vor 3,5 Millionen KMU, die noch suchen.
 
-Du bist Geschäftsführer, Vertrieblerin, Marketingleiter, Buchhalterin, IT-Support und Praktikant, in einer Person. Und du bezahlst jede dieser Rollen mit deiner eigenen Zeit. Zeit, die du nicht abrechnen kannst.
+Du bist Geschäftsführer, Vertrieblerin, Marketingleiter, Buchhalterin, IT-Support und Praktikant in einer Person. Jede dieser Rollen bezahlst du mit Zeit, die du nicht abrechnen kannst.
 
-Bei Meta sehe ich Teams von 20 Leuten, die das machen, was du alleine schaffst. Der Unterschied: Sie haben Infrastruktur. Du hast dich.
-
-Das ändert sich gerade.
+Bei Meta sehe ich Teams von 20 Leuten, die das machen, was du alleine schaffst. Sie haben Infrastruktur, du hast dich. Das ändert sich gerade.
 
 ## Das Eisberg-Paradoxon
 
-Das MIT hat 2025 etwas Unbequemes ausgerechnet. 151 Millionen amerikanische Arbeitnehmer, 923 Berufe, 13.000 KI-Tools, alles simuliert und zusammengezählt. Was jeder sieht, Software-Entwickler, Data Scientists, Programmierer, macht 2,2 Prozent der Arbeitsmarkt-Wertschöpfung aus. Daraus werden die Schlagzeilen.
+Das MIT hat 2025 für 151 Millionen amerikanische Arbeitnehmer, 923 Berufe und 13.000 KI-Tools simuliert, welche Arbeit KI erreichen kann. Was jeder sieht, also Software-Entwickler, Data Scientists und Programmierer, macht 2,2 Prozent der Arbeitsmarkt-Wertschöpfung aus. Daraus werden die Schlagzeilen.
 
-Darunter liegen 11,7 Prozent. Fünfmal so groß. Verwaltung, Buchhaltung, Kundenservice, Einkauf. Die Berufe, die niemand mit KI assoziiert (Chopra et al., arXiv:2510.25137, November 2025).
+Darunter liegen 11,7 Prozent, fünfmal so viel: Verwaltung, Buchhaltung, Kundenservice, Einkauf. Diese Berufe assoziiert niemand mit KI (Chopra et al., arXiv:2510.25137, November 2025).
 
-Für dich als Selbstständige heißt das: Die 22 Stunden Admin pro Woche, die du dir nicht berechnest, sind genau der Teil des Eisbergs, den KI bereits erreichen kann. Nicht die spektakuläre Kundenarbeit. Die unsichtbare Verwaltung.
+Für dich als Selbstständige heißt das: Die 22 Stunden Admin pro Woche, die du nicht berechnest, sind genau der Teil des Eisbergs, den KI bereits erreichen kann. Die Kundenarbeit gehört nicht dazu.
 
 ## Die 60-Stunden-Falle
 
-Bei meiner eigenen Beratung habe ich mal eine Woche getrackt, was ich wirklich mache. Nicht geschätzt, sondern getrackt, jede Viertelstunde. Wie ein besessener Data Engineer, der plötzlich seine eigenen Daten analysiert.
+Bei meiner eigenen Beratung habe ich eine Woche lang jede Viertelstunde getrackt, was ich wirklich mache.
 
-Das Ergebnis: 38 Stunden Kundenarbeit, Strategie, Recherche. Die Dinge, für die mich Klienten bezahlen. Die Dinge, für die ich mich selbstständig gemacht habe.
+38 Stunden gingen in Kundenarbeit, Strategie und Recherche, also in das, wofür mich Klienten bezahlen.
 
-Und 22 Stunden für E-Mails, Angebote, Rechnungen, Social Media, Finanzamt. Eine Datenschutzerklärung aktualisieren. Dem Webhosting-Anbieter schreiben, warum die SSL-Zertifikats-Erneuerung nicht funktioniert hat.
+22 Stunden gingen in E-Mails, Angebote, Rechnungen, Social Media und das Finanzamt. Dazu kamen eine aktualisierte Datenschutzerklärung und eine Mail an den Webhosting-Anbieter, warum die SSL-Erneuerung nicht funktioniert hat. Das passiert Woche für Woche, und als Data Engineer hätte ich es wissen müssen.
 
-22 Stunden Admin. Woche für Woche.
+Damit bin ich nicht allein. Der VGSD (Verband der Gründer und Selbstständigen Deutschland, 2023) schätzt, dass rund 40 Prozent der Arbeitszeit von Selbstständigen in Verwaltung fließen. McKinsey beziffert das technische Automatisierungspotenzial bei Wissensarbeit auf 60-70 Prozent (McKinsey Global Institute, "The economic potential of generative AI," Juni 2023). Das heißt: 60 Prozent der Aufgaben lassen sich teilweise automatisieren, KI ersetzt deshalb noch keine 60 Prozent deiner Arbeit. OECD-Erhebungen zeigen, dass US-KMU dieses Potenzial konsequenter nutzen als deutsche.
 
-Ich war erschrocken. Und ich bin Data Engineer, ich hätte es wissen müssen.
+Die meisten Freelancer, die ich berate, kennen das. Du arbeitest 60 Stunden die Woche und rechnest am Ende 20 Stunden ab, vielleicht 25, wenn es gut läuft.
 
-Damit bin ich nicht allein. Der VGSD (Verband der Gründer und Selbstständigen Deutschland, 2023) schätzt, dass rund 40 Prozent der Arbeitszeit von Selbstständigen in Verwaltung fließen. McKinsey beziffert das technische Automatisierungspotenzial bei Wissensarbeit auf 60-70 Prozent (McKinsey Global Institute, "The economic potential of generative AI," Juni 2023). Das heißt nicht, dass KI 60 Prozent deiner Arbeit ersetzt, sondern dass 60 Prozent der Aufgaben Automatisierungs-Substanz haben. OECD-Erhebungen zeigen zudem: US-KMU nutzen diese Substanz konsequenter als deutsche. Diese Lücke ist dein Hebel.
-
-Die meisten Freelancer, die ich berate, kennen das Gefühl. Du arbeitest 60 Stunden die Woche, du bist müde, du bist stolz auf deine Arbeit. Aber wenn du die Zahlen anschaust, rechnest du dir aus: 20 abrechenbare Stunden. Vielleicht 25, wenn es gut läuft.
-
-Und der Rest? CEO spielen, Marketing machen, dem Finanzamt antworten. Einen LinkedIn-Post basteln, weil du irgendwo gelesen hast, dass man das heute muss. Die IHK-Beiträge überweisen, die Gewerbeanmeldung der neuen Nebentätigkeit recherchieren.
-
-Das ist nicht Jammern. Das ist die Realität von 4,2 Millionen Menschen.
-
-Und es ist ein lösbares Problem.
+Der Rest geht in CEO-Aufgaben, Marketing und Antworten ans Finanzamt. Du bastelst einen LinkedIn-Post, überweist IHK-Beiträge und recherchierst die Gewerbeanmeldung der neuen Nebentätigkeit. So sieht der Alltag von 4,2 Millionen Menschen aus, und das Problem ist lösbar.
 
 ## KI als virtuelles Team
 
-Denk an ein kleines Team. Nicht zehn Leute, nicht mal fünf. Eine Handvoll Spezialisten, die dir die Arbeit abnehmen, die dich am meisten Zeit kostet.
+Denk an eine Handvoll Spezialisten, die dir die Arbeit abnehmen, die dich am meisten Zeit kostet.
 
-Eine Texterin, die deine E-Mails, Angebote und Social-Media-Posts schreibt. Nicht perfekt, aber als Entwurf, den du in fünf Minuten anpasst, statt in einer Stunde von Null zu starten.
+Eine Texterin schreibt deine E-Mails, Angebote und Social-Media-Posts als Entwurf, den du in fünf Minuten anpasst, statt in einer Stunde bei Null zu starten.
 
-Du brauchst eine Marktanalyse? ChatGPT stellt sie dir in 30 Sekunden zusammen. Wettbewerber vergleichen, Trends aufbereiten, nicht mit der Tiefe einer McKinsey-Beraterin, aber mit dem Großteil der Substanz in einem Bruchteil der Zeit.
+Eine Marktanalyse stellt dir ChatGPT in 30 Sekunden zusammen. Sie vergleicht Wettbewerber und bereitet Trends auf, ohne die Tiefe einer McKinsey-Beraterin, aber in einem Bruchteil der Zeit.
 
-Meetings zusammenfassen, To-do-Listen erstellen, Terminvorbereitungen machen, das erledigt die KI nebenbei. Keine geniale Strategin, aber zuverlässig, schnell, und sie beschwert sich nie.
+Meetings zusammenfassen, To-do-Listen erstellen und Termine vorbereiten erledigt die KI nebenbei, zuverlässig und schnell.
 
-Und um 23 Uhr, wenn du endlich Zeit zum Nachdenken hast, kommt der Sparringspartner. Er geht Pricing-Strategien durch, hinterfragt Businesspläne, diskutiert Positionierung. Kein Ersatz für einen guten Berater, aber immer verfügbar.
+Um 23 Uhr, wenn du endlich Zeit zum Nachdenken hast, wird sie zum Sparringspartner. Sie geht Pricing-Strategien durch, hinterfragt Businesspläne und diskutiert Positionierung. Einen guten Berater ersetzt sie nicht, aber sie ist immer verfügbar.
 
-109.000 IT-Stellen sind in Deutschland unbesetzt (Bitkom, 2025). Deine Kunden finden keine Festangestellten, sie brauchen Freelancer, die KI mitbringen. Wenn du KI-Kompetenz mitbringst, bist du nicht nur schneller. Du bist relevanter.
+109.000 IT-Stellen sind in Deutschland unbesetzt (Bitkom, 2025). Deine Kunden finden keine Festangestellten und brauchen Freelancer, die KI mitbringen. Mit KI-Kompetenz bist du schneller und für sie relevanter.
 
-Das ist KI für Selbstständige. Kein Roboter, der deine Arbeit übernimmt, sondern ein Werkzeugkasten, der dir die langweiligen 40 Prozent abnimmt, damit du dich auf die wichtigen 60 Prozent konzentrieren kannst.
+KI nimmt dir die langweiligen 40 Prozent ab, damit du dich auf die wichtigen 60 Prozent konzentrieren kannst. Die Meta-Teams für Content, Research, Business-Ops und Strategy ersetzt sie nicht, gibt dir aber ihre Werkzeuge.
 
-Bei Meta gibt es für jede Rolle spezialisierte Teams. Content, Research, Business-Ops, Strategy. 20 Leute für das, was du alleine machst. KI ersetzt das Team nicht, aber sie gibt dir die Werkzeuge des Teams.
+Bei Red Bull mit 13.000 Mitarbeitern war die größte Hürde die Frage "Wo liegen unsere Daten?". Die Antwort waren 47 Excel-Tabellen auf Netzlaufwerken, keine davon aktuell oder verknüpft. Die Technik war lösbar, schwer fiel das Loslassen alter Prozesse.
 
-Ich sage das nicht, um anzugeben. Ich kenne den Kontrast. Bei Red Bull, 13.000 Mitarbeiter, war die größte Hürde nie die Technologie, sondern die Frage "Wo liegen unsere Daten?" Antwort: 47 Excel-Tabellen auf Netzlaufwerken. Keine davon aktuell, keine verknüpft. Die Hürde war die Bereitschaft, alte Prozesse loszulassen.
-
-Genau da stehen die meisten Freelancer. Nicht weil sie technisch nicht können. Sondern weil "Mach ich schon immer so" das mächtigste Gegenargument der Welt ist.
+Genau da stehen die meisten Freelancer. Technisch können sie es, aber "Mach ich schon immer so" ist ein starkes Gegenargument.
 
 | Aufgabe | Ohne KI | Mit KI | Ersparnis |
 |---------|---------|--------|-----------|
@@ -79,19 +65,15 @@ Genau da stehen die meisten Freelancer. Nicht weil sie technisch nicht können. 
 | Rechnung + Begleittext | 15 Min. | 3 Min. | 12 Min. |
 | Steuervorbereitung (Belege sortieren) | 4 Std./Quartal | 1 Std./Quartal | 3 Std./Quartal |
 
-Die Zeitangaben sind keine Fantasie, sie stammen aus der Praxis. Dein Ergebnis kann abweichen, je nachdem, wie schnell du schreibst, wie komplex deine Branche ist und wie gut du die Tools einsetzt.
-
-Aber jetzt der wichtigste Teil.
+Die Zeitangaben stammen aus der Praxis, dein Ergebnis hängt von Schreibtempo, Branche und Übung ab.
 
 **Was KI nicht kann.**
 
-Echte Beziehungen aufbauen. KI kann keinen Händedruck ersetzen, kein Vertrauensverhältnis entwickeln, nicht spüren, wann ein Kunde unsicher ist. Die Beraterin, die nach dem Workshop-Tag beim dritten Kaffee das echte Problem hört, ersetzt keine Maschine.
+Echte Beziehungen aufbauen. KI ersetzt keinen Händedruck, entwickelt kein Vertrauensverhältnis und spürt nicht, wann ein Kunde unsicher ist. Die Beraterin, die nach dem Workshop-Tag beim dritten Kaffee das echte Problem hört, ersetzt keine Maschine.
 
-Kreative Vision entwickeln. Sie generiert Varianten, findet Muster, schlägt Optionen vor. Aber die Idee, die dein Geschäft von der Konkurrenz unterscheidet? Die kommt von dir.
+Kreative Vision entwickeln. KI generiert Varianten, findet Muster und schlägt Optionen vor. Die Idee, die dein Geschäft von der Konkurrenz unterscheidet, kommt von dir.
 
-Unterschreiben musst am Ende immer noch du. KI liefert Vor- und Nachteile, rechnet Szenarien durch. Die Entscheidung bleibt deine.
-
-Das ist kein Nachteil, das ist die Arbeitsteilung. Du machst das, was nur du kannst. KI macht den Rest.
+Unterschreiben musst am Ende immer noch du. KI liefert Vor- und Nachteile und rechnet Szenarien durch, die Entscheidung bleibt deine. Du machst, was nur du kannst, und KI macht den Rest.
 
 > **Dein erster KRAFT-Prompt**
 >
@@ -105,9 +87,9 @@ Das ist kein Nachteil, das ist die Arbeitsteilung. Du machst das, was nur du kan
 > Ton: Direkt und pragmatisch. Keine Buzzwords.
 > ```
 >
-> Kopiere diesen Prompt, ersetze die [PLATZHALTER] und probiere ihn aus. Was KRAFT bedeutet, lernst du in Kapitel 3. Das Format kannst du schon jetzt nutzen.
+> Kopiere diesen Prompt, ersetze die [PLATZHALTER] und probiere ihn aus. Was KRAFT bedeutet, lernst du in Kapitel 3.
 
-Hier ist, was ich bekomme, wenn ich den Prompt mit meinen eigenen Daten füttere:
+Mit meinen eigenen Daten bekomme ich:
 
 > | Aufgabe | Aktuelle Zeit | Mit KI | Ersparnis |
 > |---------|--------------|--------|-----------|
@@ -119,15 +101,13 @@ Hier ist, was ich bekomme, wenn ich den Prompt mit meinen eigenen Daten füttere
 >
 > *Geschätzte Gesamtersparnis: 9,4 Stunden/Woche*
 
-Perfekt ist das nicht. Die KI schätzt meinen Blogartikel-Aufwand zu niedrig (ich brauche 45 Minuten für den Entwurf, aber nochmal 30 für die Überarbeitung). Als Ausgangspunkt für deine eigene Analyse: Gold.
+Die KI schätzt meinen Blogartikel-Aufwand zu niedrig: Ich brauche 45 Minuten für den Entwurf und nochmal 30 für die Überarbeitung. Als Ausgangspunkt für deine eigene Analyse taugt die Tabelle trotzdem.
 
 ## Der ehrliche ROI
 
-Jetzt rechnen wir.
+Nimm einen Freelancer mit 75 Euro Stundensatz, ein solider Mittelwert für erfahrene Selbstständige in Deutschland.
 
-Nimm einen durchschnittlichen Freelancer mit 75 Euro Stundensatz. Nicht der günstigste, nicht der teuerste, ein solider Mittelwert für erfahrene Selbstständige in Deutschland.
-
-Sagen wir, du sparst durch KI-Tools 10 Stunden pro Woche. Nicht bei der Kundenarbeit, die bleibt gleich, sondern bei dem Admin-Kram, der 40 Prozent deiner Zeit frisst.
+Sagen wir, du sparst durch KI-Tools 10 Stunden pro Woche beim Admin-Kram, der 40 Prozent deiner Zeit frisst. Die Kundenarbeit bleibt gleich.
 
 10 Stunden pro Woche × 75 Euro = 750 Euro pro Woche.
 
@@ -135,9 +115,7 @@ Sagen wir, du sparst durch KI-Tools 10 Stunden pro Woche. Nicht bei der Kundenar
 
 3.000 Euro × 12 Monate = 36.000 Euro im Jahr.
 
-Das ist keine "potenzielle Wertschöpfung." Das ist Zeit, die du entweder abrechnest oder ins Wochenende steckst.
-
-Jetzt die Kosten.
+Diese Zeit rechnest du entweder ab oder steckst sie ins Wochenende. Dem stehen folgende Kosten gegenüber:
 
 | Tool | Monatliche Kosten |
 |------|-------------------|
@@ -145,27 +123,25 @@ Jetzt die Kosten.
 | Claude Pro | 20 EUR |
 | **Gesamt** | **40 EUR** |
 
-Vierzig Euro im Monat. Weniger als ein Mittagessen pro Woche. Weniger als Spotify-Familien-Abo und Netflix zusammen.
+Vierzig Euro im Monat sind weniger als ein Mittagessen pro Woche.
 
-Das Verhältnis: 3.000 Euro Kapazitätsgewinn bei 40 Euro Kosten. Ich arbeite bei Meta und sehe täglich, was Unternehmen für KI-Infrastruktur bezahlen. Wenige Investments haben ein besseres Verhältnis von Aufwand zu Ertrag.
+Das Verhältnis liegt bei 3.000 Euro Kapazitätsgewinn zu 40 Euro Kosten, und wenige Investments haben ein besseres Verhältnis von Aufwand zu Ertrag.
 
-Aber ehrlich: Die 3.000 Euro sind der Best Case, wenn dein Kalender voll ist und jede freie Stunde sofort in bezahlte Arbeit fließt. Viele Freelancer haben nicht unbegrenzt Aufträge. Dann investierst du die gesparte Zeit in Akquise, Strategie oder Erholung, was auch zählt, nur nicht 3.000 Euro. Rechne konservativ mit 50-70 Prozent Auslastung, also 1.500 bis 2.100 Euro im Monat bei 40 Euro Toolkosten.
+Die 3.000 Euro sind der Best Case, wenn dein Kalender voll ist und jede freie Stunde sofort in bezahlte Arbeit fließt. Viele Freelancer haben nicht unbegrenzt Aufträge und investieren die gesparte Zeit in Akquise, Strategie oder Erholung. Rechne konservativ mit 50-70 Prozent Auslastung, also 1.500 bis 2.100 Euro im Monat bei 40 Euro Toolkosten.
 
-Aber.
+Die 10 Stunden kommen nicht geschenkt. Du musst lernen, gute Prompts zu schreiben (Kapitel 3), und wissen, welche Aufgaben sich eignen. Prüfen musst du immer.
 
-Die 10 Stunden kommen nicht geschenkt. Du musst lernen, die Tools richtig einzusetzen, verstehen, wie du gute Prompts schreibst (Kapitel 3), und wissen, welche Aufgaben sich eignen und welche nicht. Und prüfen musst du immer.
+Bei Meta vertraut niemand KI-Output blind, auch nicht die Leute, die die Modelle selbst gebaut haben. Wenn die jede Antwort gegenlesen, solltest du es auch tun.
 
-Bei Meta vertraut niemand KI-Output blind, und dort arbeiten Leute, die die Modelle selbst gebaut haben. Wenn die jede Antwort gegenlesen, solltest du es auch tun.
+Meine ersten Versuche mit KI für meine eigene Beratung waren miserabel. "Schreib mir ein Angebot" ergab generischen Unsinn, den kein Kunde ernst genommen hätte. Nach drei Wochen schlechter Prompts habe ich verstanden: Die Qualität des Outputs hängt von der Qualität des Inputs ab, und "Schreib mir ein Angebot" ist so nutzlos wie "Mach mal was" als Briefing für einen Praktikanten.
 
-Und hier muss ich ehrlich sein: Meine ersten Versuche mit KI für meine eigene Beratung waren miserabel. "Schreib mir ein Angebot" ergab generischen Unsinn, den kein Kunde ernst genommen hätte. Drei Wochen schlechte Prompts bis zum Wendepunkt: KI ist ein Werkzeug, kein Mitarbeiter. Die Qualität des Outputs hängt von der Qualität des Inputs ab, und "Schreib mir ein Angebot" ist so nutzlos wie "Mach mal was" als Briefing für einen Praktikanten.
+In den ersten zwei Wochen investierst du mehr Zeit, als du sparst, und fluchst, wenn ChatGPT zum dritten Mal etwas Unbrauchbares ausspuckt. Das ist normal. Eine Stanford/NBER-Studie mit Customer-Support-Agents (Brynjolfsson, Li, Raymond, NBER WP 31161, 2023) misst +14 Prozent Produktivität im Schnitt, bei Einsteigern +34 Prozent und bei erfahrenen Profis kaum etwas. Wenn du gerade erst anfängst, ist dein Hebel am größten.
 
-Die realistische Erwartung: In den ersten zwei Wochen investierst du mehr Zeit, als du sparst. Du lernst, du experimentierst, du fluchst, weil ChatGPT zum dritten Mal etwas Unbrauchbares ausspuckt. Das ist normal. Eine Stanford/NBER-Studie mit Customer-Support-Agents (Brynjolfsson, Li, Raymond, NBER WP 31161, 2023) misst +14 Prozent Produktivität im Schnitt, bei Einsteigern +34 Prozent und bei erfahrenen Profis kaum etwas. Wenn du gerade erst anfängst, ist dein Hebel am größten.
-
-Ab Woche drei kippt es. Du hast deine Prompts, du kennst die Grenzen, du weißt, was funktioniert. Dann sparst du, konservativ gerechnet, 5 bis 15 Stunden pro Woche. Je nach Branche, Aufgabenprofil und Bereitschaft, alte Gewohnheiten zu ändern.
+Ab Woche drei kippt es, weil du deine Prompts und die Grenzen der Tools kennst. Dann sparst du, konservativ gerechnet, 5 bis 15 Stunden pro Woche, je nach Branche, Aufgabenprofil und Bereitschaft, alte Gewohnheiten zu ändern.
 
 > **Infobox: KI-Kosten als Betriebsausgabe**
 >
-> ChatGPT Plus, Claude Pro, Perplexity, alles Betriebsausgaben. Wie dein Office-365-Abo oder dein Telefonvertrag. Absetzbar. Mehr dazu in Kapitel 8.
+> ChatGPT Plus, Claude Pro und Perplexity sind Betriebsausgaben wie dein Office-365-Abo oder dein Telefonvertrag und damit absetzbar. Mehr dazu in Kapitel 8.
 
 > **Dein ROI-Prompt**
 >
@@ -184,13 +160,9 @@ Ab Woche drei kippt es. Du hast deine Prompts, du kennst die Grenzen, du weißt,
 
 ## Dein Zeitgewinn-Tracker
 
-Zahlen sind gut. Laufende Zahlen sind besser.
+Ab jetzt endet jedes Kapitel mit einem Zeitgewinn-Tracker. Die Tabelle zeigt, wie viel Zeit du durch die Workflows des Kapitels sparst, wie viel das kumuliert ist und was die Tools kosten.
 
-Ab jetzt endet jedes Kapitel mit einem Zeitgewinn-Tracker. Eine simple Tabelle. Wie viel Zeit sparst du durch die Workflows in diesem Kapitel? Wie viel ist das kumuliert? Was kosten die Tools?
-
-Der Tracker rechnet mit 75 Euro Stundensatz, ein solider Mittelwert für erfahrene Selbstständige. Bei höherem Stundensatz rechnest du hoch, bei niedrigerem bleibt es ein Vielfaches deiner Toolkosten.
-
-Am Ende von Kapitel 13 steht die Gesamtrechnung. Wie sie ausgeht, verrate ich nicht. Nur so viel: Sie geht auf.
+Der Tracker rechnet mit 75 Euro Stundensatz. Bei höherem Stundensatz rechnest du hoch, bei niedrigerem bleibt es ein Vielfaches deiner Toolkosten. Am Ende von Kapitel 13 steht die Gesamtrechnung.
 
 > **Praxisprojekt 1: Dein KI-Audit in 30 Minuten**
 >
@@ -198,11 +170,11 @@ Am Ende von Kapitel 13 steht die Gesamtrechnung. Wie sie ausgeht, verrate ich ni
 > **Zeitaufwand:** 30 Minuten
 > **Was du danach hast:** Eine persönliche Zeitanalyse-Tabelle mit deinen Top-5-automatisierbaren Aufgaben, geschätzter Ersparnis und EUR-Gegenwert
 >
-> **Schritt 1:** Nimm dir 5 Minuten. Schreib alle Aufgaben auf, die du in einer typischen Woche erledigst. Nicht nachdenken, nicht priorisieren, einfach auflisten. Kundenarbeit, Admin, E-Mails, Buchhaltung, Social Media, Recherche, alles.
+> **Schritt 1:** Schreib in 5 Minuten alle Aufgaben auf, die du in einer typischen Woche erledigst, ohne zu priorisieren: Kundenarbeit, Admin, E-Mails, Buchhaltung, Social Media, Recherche.
 >
 > **Schritt 2:** Kopiere deine Liste in ChatGPT zusammen mit dem KRAFT-Prompt unten. Ersetze die Platzhalter mit deinen echten Daten.
 >
-> **Schritt 3:** Lies die Analyse. Wo schätzt die KI zu optimistisch? Wo zu konservativ? Passe die Zahlen an deine Realität an. Du kennst deinen Alltag besser als jedes Sprachmodell.
+> **Schritt 3:** Lies die Analyse. Wo schätzt die KI zu optimistisch, wo zu konservativ? Passe die Zahlen an deine Realität an.
 >
 > **Schritt 4:** Rechne deine persönliche Monatsersparnis aus: Wöchentliche Ersparnis in Stunden × 4 × dein Stundensatz. Das ist dein KI-ROI.
 >
@@ -218,15 +190,11 @@ Am Ende von Kapitel 13 steht die Gesamtrechnung. Wie sie ausgeht, verrate ich ni
 > Ton: Direkt, pragmatisch, keine Buzzwords.
 > ```
 >
-> **Das Ergebnis:** schwarz auf weiß, wo dein größter Zeitgewinn liegt, und welche Kapitel dieses Buches dich am weitesten bringen.
+> Am Ende siehst du, wo dein größter Zeitgewinn liegt und welche Kapitel dieses Buches dich am weitesten bringen.
 
 ## Der 7-Tage-Selbstversuch
 
-Genug Theorie, genug Zahlen, genug Versprechen.
-
-Mach folgenden Test: Gib dir 7 Tage.
-
-Falls du noch keinen Account hast, erklärt dir Kapitel 2 in 10 Minuten, wie du ChatGPT und Claude einrichtest. Wenn du das schon hast, leg los.
+Gib dir 7 Tage. Falls du noch keinen Account hast, erklärt dir Kapitel 2 in 10 Minuten, wie du ChatGPT und Claude einrichtest.
 
 | Tag | Aufgabe | Zeitaufwand | Was du lernst |
 |-----|---------|-------------|---------------|
@@ -238,33 +206,21 @@ Falls du noch keinen Account hast, erklärt dir Kapitel 2 in 10 Minuten, wie du 
 | 6 | Eine Excel-Tabelle analysieren | 15 Min. | KI versteht Daten, wenn du die richtigen Fragen stellst. |
 | 7 | Reflektieren: Was hat funktioniert? | 10 Min. | Du weißt jetzt, wo dein größter Hebel liegt. |
 
-**Tag 1:** Nimm eine echte E-Mail aus deinem Posteingang. Eine, die du beantworten musst, aber vor dir herschiebst. Kopiere sie in ChatGPT und schreibe: "Ich bin [dein Beruf]. Formuliere eine professionelle Antwort auf diese E-Mail. Halte den Ton freundlich aber bestimmt." Lies das Ergebnis, passe an, was nicht passt, und schick sie ab.
+**Tag 1:** Nimm eine echte E-Mail, die du vor dir herschiebst, und kopiere sie mit diesem Prompt in ChatGPT. "Ich bin [dein Beruf]. Formuliere eine professionelle Antwort auf diese E-Mail. Halte den Ton freundlich aber bestimmt." Passe an, was nicht passt, und schick sie ab.
 
-**Tag 2:** Hattest du ein Meeting? Oder einen Anruf mit einem Kunden? Schreibe aus dem Gedächtnis die wichtigsten Punkte auf, Stichworte reichen. Dann: "Erstelle aus diesen Notizen ein strukturiertes Meeting-Protokoll mit Action Items und Verantwortlichkeiten." Du wirst überrascht sein, wie gut das klappt.
+**Tag 2:** Schreibe nach einem Meeting oder Kundenanruf die wichtigsten Punkte als Stichworte auf. Dann: "Erstelle aus diesen Notizen ein strukturiertes Meeting-Protokoll mit Action Items und Verantwortlichkeiten."
 
-**Tag 3:** Schreibe einen LinkedIn-Post über etwas, das du letzte Woche gelernt oder erledigt hast. Nutze den Prompt: "Schreibe einen LinkedIn-Post über [THEMA]. 150 Wörter. Hook in der ersten Zeile. Professionell aber persönlich." Der Output wird nicht perfekt sein, und das ist der Punkt. Ab Tag 3 merkst du: Das Problem ist nicht die KI, das Problem ist das Briefing. Dafür gibt es Kapitel 3.
+**Tag 3:** Lass die KI einen LinkedIn-Post über etwas schreiben, das du letzte Woche gelernt oder erledigt hast. "Schreibe einen LinkedIn-Post über [THEMA]. 150 Wörter, Hook in der ersten Zeile, professionell aber persönlich." Der Output wird nicht perfekt sein, und daran merkst du, dass es am Briefing hängt (Kapitel 3).
 
-**Tag 4:** Ein Angebot, der größte Zeitfresser der meisten Freelancer. Gib der KI den Kontext. Wer ist der Kunde, was will er, was kannst du liefern, welchen Umfang? Dann lass sie einen Entwurf schreiben. 20 Minuten statt 90. Den Feinschliff machst du, das Gerüst steht.
+**Tag 4:** Das Angebot ist der größte Zeitfresser der meisten Freelancer. Gib der KI den Kontext: Kunde, Bedarf, dein Leistungsumfang. Dann lass sie einen Entwurf schreiben, 20 Minuten statt 90, und mach den Feinschliff selbst.
 
-**Tag 5:** Recherche. "Analysiere den Markt für [DEINE BRANCHE] in Deutschland. Wer sind die Top-5-Wettbewerber? Was sind aktuelle Trends? Welche Chancen siehst du für einen Freelancer mit [DEINEM PROFIL]?" Prüfe jede Zahl, jede Aussage, jeden Namen. KI halluziniert, sie erfindet überzeugend klingende Fakten. Als Startpunkt für deine eigene Recherche ist sie Gold wert.
+**Tag 5:** Lass die KI recherchieren. "Analysiere den Markt für [DEINE BRANCHE] in Deutschland mit den Top-5-Wettbewerbern, aktuellen Trends und Chancen für einen Freelancer mit [DEINEM PROFIL]." Prüfe jede Zahl und jeden Namen, denn KI erfindet überzeugend klingende Fakten; als Startpunkt für deine eigene Recherche taugt sie.
 
-**Tag 6:** Hast du eine Excel-Tabelle, die du seit Wochen ignorierst? Kundenliste, Umsatzübersicht, Projekttracking? Lade sie hoch und frag: "Analysiere diese Daten. Welche Muster siehst du? Welche 3 Insights sind für einen Freelancer am wichtigsten?" ChatGPT liest Tabellen, erkennt Trends und schreibt Zusammenfassungen, die dir Stunden sparen.
+**Tag 6:** Nimm eine Excel-Tabelle, die du seit Wochen ignorierst, etwa Kundenliste, Umsatzübersicht oder Projekttracking. Lade sie hoch und frag: "Analysiere diese Daten. Welche Muster siehst du? Welche 3 Insights sind für einen Freelancer am wichtigsten?" ChatGPT liest Tabellen, erkennt Trends und schreibt Zusammenfassungen.
 
-**Tag 7:** Kein Prompt heute. Nur eine Frage: Was hat funktioniert, was nicht?
+**Tag 7:** Kein Prompt heute. Schreib dir auf, bei welchen Aufgaben du am meisten Zeit gespart hast, wo die Qualität überrascht hat und wo du es besser kannst. Die Aufgaben mit dem größten Hebel sind deine Einstiegspunkte in die Kapitel 4 bis 11.
 
-Schreib dir auf, bei welchen Aufgaben du den größten Zeitgewinn hattest. Bei welchen die Qualität überrascht hat. Und bei welchen du gedacht hast: Das kann ich besser. Die Aufgaben mit dem größten Hebel sind deine Einstiegspunkte. Dafür hat dieses Buch die Kapitel 4 bis 11.
-
-Wenn es beim ersten Mal nicht klappt, liegt das am Prompt. Nicht an dir. Und nicht an der KI. Kapitel 3 zeigt dir, wie du Prompts schreibst, die funktionieren, mit einem System, das ich KRAFT nenne.
-
-> **Woche 1 Checkliste**
->
-> - [ ] Tag 1: ChatGPT-Account einrichten, Custom Instructions ausfüllen (Kapitel 2)
-> - [ ] Tag 2: Ersten KRAFT-Prompt schreiben, eine echte Aufgabe, nicht "Hallo Welt" (Kapitel 3)
-> - [ ] Tag 3: Eine E-Mail mit KI beantworten (Kapitel 6)
-> - [ ] Tag 4: Einen LinkedIn-Post erstellen, 50% du, 50% KI (Kapitel 5)
-> - [ ] Tag 5: Ein Angebot oder eine Rechnung formulieren lassen (Kapitel 7)
-> - [ ] Tag 6: Deinen Branchen-Fahrplan lesen und 1 Prompt testen (Kapitel 9)
-> - [ ] Tag 7: Reflektieren, was hat funktioniert? Was nicht? Was kommt als nächstes?
+Wenn es beim ersten Mal nicht klappt, liegt das meist am Prompt. Kapitel 3 zeigt dir mit dem KRAFT-System, wie du Prompts schreibst, die funktionieren.
 
 > **Zeitgewinn-Tracker**
 >
@@ -274,4 +230,4 @@ Wenn es beim ersten Mal nicht klappt, liegt das am Prompt. Nicht an dir. Und nic
 > | Bewusstseins-Kapitel. Du weißt jetzt, wo dein Hebel liegt. | Start |
 > | Toolkosten: 0 EUR | Gesamt: 0 EUR/Mo |
 
-Aber erst mal: Account einrichten. Nächstes Kapitel.
+Im nächsten Kapitel richtest du deinen Account ein.

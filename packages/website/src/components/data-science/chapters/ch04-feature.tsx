@@ -22,7 +22,7 @@ export default function Ch04Feature() {
       <Hero
         eyebrow="Chapter 04 · Feature Engineering"
         title="Feature design defines <em>the model input.</em>"
-        hook="Feature design decides what information reaches a model, and whether those values exist at inference. Compare encoding, nonlinear terms, selection, and interactions under one leakage-safe validation plan."
+        hook="Features decide what information reaches the model, and each one must still exist at inference. Compare encoding, nonlinear terms, selection and interactions under one leakage-safe validation plan."
         meta={[
           { k: "Read", v: "12 min" },
           { k: "Focus", v: "Encode · Expand · Select · Interact" },
@@ -32,53 +32,46 @@ export default function Ch04Feature() {
 
       <section className="section">
         <SectionLabel n="04.1">Encoding categorical features</SectionLabel>
-        <h2 className="h2">Four strategies. One common mistake.</h2>
+        <h2 className="h2">Four encodings and one common mistake</h2>
         <p className="prose">
-          Every model eats numbers. Your data is full of strings. How you
-          encode a categorical feature decides what the model can learn.{" "}
-          <strong>One-hot</strong> handles low-cardinality nominal values
-          without an ordering, at the price of many columns.
-          <strong> Target encoding</strong> touches labels, so it needs
-          fold-local estimation, smoothing, and a rule for unknown categories.
-          Integer codes impose an ordering on models that read numeric distance.
-          Frequency encoding merges equally frequent categories.
+          <strong>One-hot</strong> maps nominal values without an order and
+          costs a column per category. <strong>Target encoding</strong> uses
+          labels, so it needs fold-local estimation, smoothing and a rule for
+          unknown categories. Integer codes impose an order on models that read
+          numeric distance; frequency encoding merges equally frequent
+          categories.
         </p>
         <EncodingComparison />
       </section>
 
       <AntiPatterns
         items={[
-          "<b>Label encoding nominals.</b> Berlin (5) is not 5× New York (1). Breaks linear models silently: training runs without error, the model learns nonsense.",
-          "<b>Target encoding before fold construction.</b> Each validation row can leak its own or neighboring labels. Estimate the encoder inside each training fold and define smoothing plus unseen-category behavior.",
-          "<b>One-hot encoding high-cardinality identifiers without a resource plan.</b> Compare hashing, grouped categories, learned encoders, or target and frequency methods under memory and validation constraints. No category-count cutoff is universal.",
+          "<b>Label encoding nominals.</b> Berlin (5) is not 5× New York (1); training runs without error and the model learns nonsense.",
+          "<b>Target encoding before fold construction.</b> Validation rows then see their own or neighboring labels. Estimate the encoder in each training fold, with smoothing and a rule for unseen categories.",
+          "<b>One-hot encoding high-cardinality IDs without a resource plan.</b> Compare hashing, grouped categories and learned encoders under your memory and validation limits; no category count works as a universal cutoff.",
         ]}
       />
       <BestPractices
         items={[
-          "<b>Consider one-hot encoding</b> for nominal features when cardinality and memory are manageable. It avoids an ordinal-distance assumption but still needs unknown-category handling.",
-          "<b>Use fold-local target encoding</b> only when label information is justified. Apply smoothing and compute each validation row from its training fold.",
-          "<b>Frequency encoding</b> when you need the cardinality signal but cannot risk target leakage.",
+          "<b>Frequency encoding</b> when frequency is informative and target leakage must be ruled out.",
         ]}
       />
 
       <section className="section">
         <SectionLabel n="04.2">Polynomial feature expansion</SectionLabel>
-        <h2 className="h2">Adding x² teaches the model to bend.</h2>
+        <h2 className="h2">With x², a linear model can bend.</h2>
         <p className="prose">
-          A linear model draws straight lines, nothing more. Add{" "}
-          <code>x²</code> or <code>x³</code> as explicit features and it fits
-          curves, with the model itself untouched. The price is the
-          bias-variance knife edge. Too few terms and you underfit. Too many and
-          you chase the noise.
+          A linear model draws straight lines. Add <code>x²</code> and{" "}
+          <code>x³</code> as features and it fits curves without a model
+          change. Too few terms underfit, too many learn noise.
         </p>
         <PolynomialExpansion />
       </section>
 
       <BestPractices
         items={[
-          "<b>Select degree on held-out or cross-validated performance.</b> For nested unregularized least-squares models on the same rows, training R² cannot decrease as terms are added; generalization can.",
+          "<b>Pick the degree on held-out or cross-validated performance.</b> For nested unregularized least-squares models on the same rows, training R² cannot drop as terms are added; generalization can.",
           "<b>Center or scale when magnitude affects conditioning or regularization.</b> Polynomial terms can differ by many orders of magnitude.",
-          "<b>Test polynomial terms where the model needs an explicit basis.</b> Trees can approximate nonlinearities through splits, but depth, sample size, and regularization determine whether they learn an interaction effectively.",
         ]}
       />
 
@@ -86,19 +79,18 @@ export default function Ch04Feature() {
         <SectionLabel n="04.3">Feature selection</SectionLabel>
         <h2 className="h2">More features ≠ better model.</h2>
         <p className="prose">
-          Irrelevant features add noise. Correlated duplicates dilute
-          coefficients. Dimensions cost memory, slow training, and can genuinely
-          hurt generalization. Pick a selection method with a reason instead of
-          throwing everything in and hoping regularization sorts it out.
+          Irrelevant features add noise and correlated duplicates dilute
+          coefficients. More dimensions cost memory and training time and can
+          hurt generalization.
         </p>
         <FeatureSelectionSim />
       </section>
 
       <AntiPatterns
         items={[
-          "<b>Selecting features on the full dataset before train/test split.</b> You have used future information. The selected subset will look better than it is.",
-          "<b>Dropping features because they have low correlation.</b> Correlation is linear only. A feature with r=0.04 can have high mutual information (e.g. day_of_week vs. weekend_sales).",
-          "<b>Engineering 300 features then hoping LASSO handles it.</b> Add, measure, keep, one or a small batch at a time. Pure noise features still survive regularization now and then.",
+          "<b>Selecting features on the full dataset before the train/test split.</b> That uses test information, and the subset looks better than it is.",
+          "<b>Dropping features for low correlation.</b> Correlation is linear only; a feature with r=0.04 can have high mutual information (e.g. day_of_week vs. weekend_sales).",
+          "<b>Building 300 features and hoping LASSO sorts them.</b> Add features in small, measured batches; pure noise can survive regularization.",
         ]}
       />
 
@@ -106,30 +98,24 @@ export default function Ch04Feature() {
         <SectionLabel n="04.4">Interaction terms</SectionLabel>
         <h2 className="h2">When A × B is not A + B.</h2>
         <p className="prose">
-          Interaction effects are everywhere in real data. How much an
-          ad&apos;s relevance matters depends on who sees it. How much a drug
-          works depends on patient age. A linear model cannot see that, so the
-          A×B term has to be built as a new feature. Tree models find
-          interactions themselves. Linear models need your help.
+          In an interaction, the effect of A depends on B: an ad&apos;s
+          relevance matters differently for different viewers, and a drug
+          works differently by patient age. Linear models need an explicit A×B
+          feature; tree models learn interactions themselves.
         </p>
         <InteractionTerms />
       </section>
 
       <BestPractices
         items={[
-          "<b>Hypothesize before you compute.</b> A×B earns its place only when domain knowledge predicts the interaction. Mining every pair is expensive and mostly noise.",
-          "<b>Center or scale interactions when interpretation, conditioning, or regularization requires it.</b> This is a modeling choice, not a universal prerequisite.",
-          "<b>Use interaction-specific diagnostics.</b> Two-way partial dependence, SHAP interaction values, or explicit nested-model comparisons can suggest candidates; ordinary split importance does not identify a pair by itself.",
+          "<b>Use interaction-specific diagnostics.</b> Two-way partial dependence, SHAP interaction values or nested-model comparisons can suggest candidates; split importance alone does not identify a pair.",
         ]}
       />
 
       <Takeaway
         items={[
-          "<b>Encoding is a model choice, not a preprocessing step.</b> Target encoding with leakage is a silent bug: it inflates cross-validation scores and fails in production.",
-          "<b>Polynomial expansion changes bias and variance.</b> The local 40-point demo makes higher degrees unstable; select the basis and regularization with fold-local validation on the real design.",
-          "<b>Feature selection belongs inside cross-validation.</b> Selecting before splitting is leakage, the same kind as target encoding on the full set.",
-          "<b>Interaction searches create multiplicity.</b> Use domain hypotheses, control the search inside validation, and confirm retained terms on untouched data.",
-          "<b>Inference parity is the hard constraint.</b> Every feature, encoding, and interaction has to be computable at serve time from the data you will actually have, before the label is known.",
+          "<b>Polynomial expansion changes bias and variance.</b> The 40-point demo makes higher degrees unstable; pick basis and regularization fold-locally on the real design.",
+          "<b>Interaction searches create multiplicity.</b> Start from domain hypotheses, control the search inside validation and confirm kept terms on untouched data.",
         ]}
       />
     </>

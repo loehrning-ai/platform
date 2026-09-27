@@ -97,7 +97,7 @@ export function ByteTrace() {
       eyebrow={text("live · trace", "live · Ablauf")}
       title={text("A byte's journey", "Der Weg eines Bytes")}
       meta={`dim_users.user_email · ${text("warm vs cold cache", "warmer und kalter Cache")}`}
-      caption={text("Illustrative latency model for two cache states; values are not vendor benchmarks.", "Beispielhaftes Latenzmodell für zwei Cache-Zustände; die Werte sind keine Anbieter-Benchmarks.")}
+      caption={text("Illustrative latencies for two cache states, not vendor benchmarks.", "Beispiellatenzen für zwei Cache-Zustände, keine Anbieter-Benchmarks.")}
     >
       <div className="bt-headline">
         <div className={`bt-headline-cell ${cache === "warm" ? "is-active" : ""}`}>

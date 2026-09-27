@@ -226,8 +226,8 @@ export function DriftSimulator() {
       title={text("Drift simulator", "Drift-Simulator")}
       meta={`${text("Day", "Tag")} ${day} / 60`}
       caption={text(
-        "Constructed scenario: days 1–30 use a fixed baseline and days 31–60 add deterministic input and concept shift. The 0.2 PSI line is a demo threshold. Production PSI depends on bins and sample size, does not measure model quality, and must be calibrated with outcome evidence.",
-        "Konstruiertes Szenario: Tage 1–30 verwenden eine feste Basis; Tage 31–60 ergänzen deterministischen Eingabe- und Konzeptdrift. Die PSI-Linie bei 0.2 ist eine Demogrenze. PSI hängt in Produktion von Buckets und Stichprobengröße ab, misst keine Modellgüte und muss mit Ergebnisevidenz kalibriert werden.",
+        "Days 1–30 use a fixed baseline; days 31–60 add input and concept shift. The 0.2 PSI line is a demo threshold: real PSI depends on bins and sample size, measures no model quality and needs calibration against outcomes.",
+        "Tage 1–30 nutzen eine feste Basis; Tage 31–60 ergänzen Eingabe- und Konzeptdrift. Die PSI-Linie bei 0.2 ist eine Demogrenze: Realer PSI hängt von Buckets und Stichprobengröße ab, misst keine Modellgüte und muss an Ergebnissen kalibriert werden.",
       )}
     >
       <div

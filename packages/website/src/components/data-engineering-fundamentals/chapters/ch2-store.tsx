@@ -1,4 +1,4 @@
-import { Hero, SectionLabel, CodeBlock, AntiPatterns, BestPractices, Takeaway } from "../primitives";
+import { Hero, SectionLabel, CodeBlock, AntiPatterns, BestPractices } from "../primitives";
 import { CumulativeSim } from "../simulators/cumulative-sim";
 import type { ChapterMeta } from "@/lib/data-engineering-fundamentals/types";
 
@@ -24,7 +24,7 @@ export function Ch2Store({ chapter }: Ch2StoreProps) {
         accent={chapter.inkHex}
         eyebrow={`Chapter ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Store: <span class='accent'>cumulative state</span> carries errors forward."
-        hook="Each partition in this additive example combines yesterday's state with today's deltas. One bad partition poisons every partition after it until the affected range is rebuilt."
+        hook="Each partition combines yesterday's state with today's deltas. One bad partition corrupts every later one until the range is rebuilt."
         meta={[
           { k: "Pattern", v: "state-carrying" },
           { k: "Engine", v: "Spark (FULL OUTER JOIN)" },
@@ -35,18 +35,18 @@ export function Ch2Store({ chapter }: Ch2StoreProps) {
       <section className="section">
         <SectionLabel n="3.1">The pattern</SectionLabel>
         <h2 className="h2">Yesterday + today = today&apos;s cumulative.</h2>
-        <p className="prose">The additive course example joins the prior partition to today&apos;s deltas with a <code>FULL OUTER JOIN</code>, then sends
-          <code> COALESCE</code> after it. Keys on either side survive. Other cumulative models need merge rules, deletions, validity intervals,
-          or different conflict handling on top.</p>
-        <p className="prose">Day 7 rests on day 6, which already carries everything before it. If day 3 is wrong, rebuild from the earliest affected partition through every dependent partition. A code fix rewrites no stored history.</p>
+        <p className="prose">The additive example joins the prior partition to today&apos;s deltas with a <code>FULL OUTER JOIN</code> and
+          <code> COALESCE</code>, so keys from either side survive. Other cumulative models add merge rules, deletions, validity intervals
+          or conflict handling.</p>
+        <p className="prose">Day 7 rests on day 6, which already carries everything before it. If day 3 is wrong, rebuild from the earliest affected partition onward; a code fix alone rewrites no stored history.</p>
       </section>
 
       <section className="section">
         <SectionLabel n="3.2">Scrub the week</SectionLabel>
         <h2 className="h2">A bug on Day 3. Caught on Day 4. Backfilled on Day 5.</h2>
         <p className="prose">
-          Step through the scrubber below. Day 3 halves every user&apos;s points: a classic unit mix-up. By Day 5 the drift is baked into every
-          aggregate. Hit <em>Patch &amp; backfill</em> and watch the bug days replay with the corrected logic.
+          Step through the days. On Day 3 a unit mix-up halves every user&apos;s points, and by Day 5 the drift is in every aggregate.
+          <em> Patch &amp; backfill</em> replays the bad days with the corrected logic.
         </p>
         <CumulativeSim />
       </section>
@@ -58,24 +58,16 @@ export function Ch2Store({ chapter }: Ch2StoreProps) {
 
       <AntiPatterns
         items={[
-          "<b>Using a left join in this additive pattern.</b> Keys that first appear in today's delta would be omitted. Test new, existing, and missing-key cases.",
-          "<b>Deploying a fix without rebuilding dependent partitions.</b> Determine the earliest affected date and recompute the downstream range.",
-          "<b>Reading wall-clock time inside a backfill.</b> Pass the logical partition and other run inputs explicitly so the same input selects the same source range.",
-          "<b>Publishing partial state.</b> Use the table format's supported atomic replace, merge, or snapshot operation so readers do not observe an incomplete partition.",
+          "<b>Using a left join here.</b> Keys that first appear in today's delta get dropped. Test new, existing and missing keys.",
+          "<b>Deploying a fix without rebuilding dependent partitions.</b> Find the earliest affected date and recompute everything after it.",
+          "<b>Reading wall-clock time inside a backfill.</b> Pass <code>&lt;DATEID&gt;</code> and other run inputs explicitly so the same input selects the same source range.",
+          "<b>Publishing partial state.</b> Use the table format's atomic replace, merge or snapshot so readers never see an incomplete partition.",
         ]}
       />
       <BestPractices
         items={[
-          "Pass <code>&lt;DATEID&gt;</code> as the logical partition for this daily model instead of deriving it from the wall clock.",
           "Version cumulative logic and record which version produced each partition. Rebuild the range whose semantics changed.",
-          "Define <b>invariants from the business model</b>. Row count may decrease legitimately under deletion or retention, so test expected key transitions rather than assuming monotonic growth.",
-        ]}
-      />
-      <Takeaway
-        items={[
-          "In this model, cumulative state is <b>prior partition plus current delta</b>. Rebuild every dependent partition after a faulty input or rule.",
-          "<code>FULL OUTER JOIN</code> and <code>COALESCE</code> implement the additive example; choose merge semantics from the actual entity lifecycle.",
-          "Use an explicit logical date and stable inputs so backfills select the intended source range.",
+          "Take <b>invariants from the business model</b>. Deletion or retention can lower the row count, so test expected key transitions instead of steady growth.",
         ]}
       />
     </>

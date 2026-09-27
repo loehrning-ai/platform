@@ -19,7 +19,6 @@
       "durationMinutes": 8,
       "premiumGated": false,
       "refreshCadence": "EVERGREEN",
-      "voiceAnchor": "Entscheidungen gehören in gepflegte Aufzeichnungen; Erinnerung dient nicht als verlässliches Register.",
       "keyConcepts": [
         "Externe Wissensbasis",
         "BI",
@@ -36,15 +35,13 @@
           "id": "modul_3_lesson_1_section_1",
           "title": "Das Dokumentations-Paradox",
           "readTimeMinutes": 2,
-          "content": "\"Wir hatten das besprochen. Ich finde den Beschluss nur nicht.\" Das ist kein Gedächtnisproblem. Das ist ein Aufzeichnungsproblem. Die Suche kostet Zeit, die Entscheidung wartet.\n\nEin CRM oder Entscheidungsprotokoll hält Beschluss, Verantwortliche und Quellen fest. Einordnen, Konflikte klären, freigeben: das bleibt bei dir.",
-          "keyTakeaway": "Die Aufzeichnung hält die Fakten. Das Urteil hältst du."
+          "content": "\"Wir hatten das besprochen. Ich finde den Beschluss nur nicht.\" Hier fehlt eine Aufzeichnung: Die Suche kostet Zeit, und die Entscheidung wartet.\n\nEin CRM oder Entscheidungsprotokoll hält Beschluss, Verantwortliche und Quellen fest. Einordnen, Konflikte klären und freigeben bleibt bei dir."
         },
         {
           "id": "modul_3_lesson_1_section_2",
           "title": "BI für eine Person",
           "readTimeMinutes": 3,
-          "content": "Ein BI-System beantwortet der Controllerin definierte Fragen aus gepflegten Daten. Deine Notizen liegen verteilt, also suchst du dieselbe Antwort von Hand in mehreren Ablagen.\n\nEin Obsidian-Vault mit Smart Connections oder Copilot hilft einer Person bei genau dieser Suche. Du fragst: \"Welche Entscheidungen zu Kunde Y sind in den letzten 90 Tagen dokumentiert?\" Die Antwort muss Quellenpfade enthalten, und die prüfst du, bevor du irgendetwas glaubst.\n\nDer Nutzen hängt nicht an der Zahl deiner Notizen. Er hängt an Pflege, Metadaten, Herkunft und der Qualität der Suche. Preise, Modellzugriff und Datenflüsse richten sich nach der aktuellen Plugin- und Providerkonfiguration.",
-          "keyTakeaway": "KI-Suche macht eine gepflegte Wissensbasis alltagstauglich. Jedes Ergebnis wird trotzdem an der Quelle geprüft."
+          "content": "Ein BI-System beantwortet der Controllerin definierte Fragen aus gepflegten Daten. Deine Notizen liegen verteilt, und du suchst von Hand. Ein Obsidian-Vault mit Smart Connections oder Copilot übernimmt diese Suche für eine Person.\n\nDu fragst: \"Welche Entscheidungen zu Kunde Y sind in den letzten 90 Tagen dokumentiert?\" Die Antwort muss Quellenpfade enthalten, und die prüfst du, bevor du ihr glaubst.\n\nMehr Notizen helfen erst, wenn Pflege, Metadaten, Herkunft und Suchqualität stimmen."
         }
       ],
       "quiz": [
@@ -73,7 +70,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Embeddings finden Notizen, die inhaltlich passen, nicht nur wortgleiche. Qualität, Kosten und Datenfluss entscheiden Modell, Index und Konfiguration."
+          "explanation": "Embeddings finden Notizen, die inhaltlich passen, auch ohne gleiche Wörter. Qualität, Kosten und Datenfluss hängen von Modell, Index und Konfiguration ab."
         }
       ]
     },
@@ -86,7 +83,6 @@
       "durationMinutes": 25,
       "premiumGated": false,
       "refreshCadence": "QUARTERLY",
-      "voiceAnchor": "Führe jeden Einrichtungsschritt aus und prüfe ihn, bevor du den Ablauf im Alltag verwendest.",
       "keyConcepts": [
         "Obsidian",
         "Templater",
@@ -100,22 +96,19 @@
           "id": "modul_3_lesson_0_section_1",
           "title": "Obsidian installieren",
           "readTimeMinutes": 3,
-          "content": "Kein Zeitlimit für diese Lektion. Jeder Schritt wird abgeschlossen und geprüft, bevor der nächste dran ist.\n\n**Schritt 1:** Öffne `obsidian.md`, lade die aktuelle Version für dein Betriebssystem herunter, prüfe die Quelle und installiere die Anwendung.\n\n**Schritt 2: Synchronisierung entscheiden.** Ein lokaler Vault heißt nicht, dass keine Daten das Gerät verlassen. Vor jedem Sync-Dienst prüfst du Verschlüsselung, Konten, Gerätezugriff, Wiederherstellung und die Freigabe deiner Organisation.\n\n**Schritt 3: Vault-Template importieren.**\n\nOption A: Erstelle einen leeren Übungs-Vault, entpacke `vault-template.zip` und kopiere den Inhalt hinein.\n\nOption B: Sichere einen vorhandenen Vault und kopiere nur die benötigten Verzeichnisse. Ohne Diff und Backup wird keine bestehende Datei überschrieben.",
-          "keyTakeaway": "Einmal komplett einrichten, einmal prüfen, dann erst in den Alltag."
+          "content": "Diese Lektion hat kein Zeitlimit.\n\n**Schritt 1:** Lade die aktuelle Version für dein Betriebssystem von `obsidian.md`, prüfe die Quelle und installiere sie.\n\n**Schritt 2: Synchronisierung entscheiden.** Auch aus einem lokalen Vault können Daten das Gerät verlassen. Vor jedem Sync-Dienst prüfst du Verschlüsselung, Konten, Gerätezugriff, Wiederherstellung und die Freigabe deiner Organisation.\n\n**Schritt 3: Vault-Template importieren.**\n\nOption A: Leeren Übungs-Vault anlegen, `vault-template.zip` entpacken und den Inhalt hineinkopieren.\n\nOption B: Vorhandenen Vault sichern und nur die benötigten Verzeichnisse kopieren. Überschreibe keine Datei ohne Diff und Backup."
         },
         {
           "id": "modul_3_lesson_0_section_2",
           "title": "Die 5 Core-Plugins",
           "readTimeMinutes": 8,
-          "content": "Ein Community-Plugin ist fremder Code mit Zugriff auf deinen Vault. Vor jeder Installation prüfst du Herausgeber, Repository, aktuelle Version, Änderungsverlauf, angeforderte Rechte, Datenfluss und Wartungszustand. Aktiviert wird nur, was der Übungsablauf braucht.\n\n**Kurskonfiguration:**\n1. **Templater:** Vorlagenordner `_System/Templates`; JavaScript nur bei geprüftem Bedarf\n2. **Dataview:** Abfragen zunächst ohne JavaScript; JavaScript-Abfragen nur nach Codeprüfung\n3. **Smart Connections:** Embedding-Modell und Netzwerkzugriff in der aktuellen Dokumentation prüfen\n4. **Obsidian Copilot:** Provider, Modell, Abrechnung, Aufbewahrung und API-Key-Speicherort prüfen\n5. **Note Companion:** optional; automatische Verschiebungen zunächst deaktivieren\n\nJedes Plugin bekommt einen Test mit fiktiven Daten. Modellnamen, Preise, Menüs und Funktionen ändern sich; die aktuelle Dokumentation schlägt jede Kursbehauptung.",
-          "keyTakeaway": "Installiere nur geprüfte Plugins und dokumentiere Version, Rechte, Datenfluss und Rückbau."
+          "content": "Ein Community-Plugin ist fremder Code mit Zugriff auf deinen Vault. Prüfe vorher Herausgeber, Repository, Version, Änderungsverlauf, Rechte, Datenfluss und Wartung. Aktiviere nur, was die Übung braucht, und notiere Version, Rechte und Rückbauweg.\n\n**Kurskonfiguration:**\n1. **Templater:** Vorlagenordner `_System/Templates`, JavaScript nur bei geprüftem Bedarf\n2. **Dataview:** JavaScript-Abfragen erst nach Codeprüfung\n3. **Smart Connections:** Embedding-Modell und Netzwerkzugriff prüfen\n4. **Obsidian Copilot:** Provider, Modell, Abrechnung, Aufbewahrung und Ablage des API-Keys prüfen\n5. **Note Companion:** optional, automatische Verschiebungen aus\n\nTeste jedes Plugin mit fiktiven Daten. Für Modelle, Preise und Menüs gilt die aktuelle Dokumentation."
         },
         {
           "id": "modul_3_lesson_0_section_3",
           "title": "Web Clipper + erste Daily-Note",
           "readTimeMinutes": 8,
-          "content": "**Obsidian Web Clipper im Browser:**\n1. Öffne die offizielle Clipper-Seite und installiere die Erweiterung aus der offiziellen Browser-Quelle.\n2. Wähle den Übungs-Vault und `00 Inbox/` als Ziel.\n3. Lass den AI Interpreter zunächst aus. Schaltest du ihn ein, prüfst du vorher, welcher Provider die Inhalte bekommt, wo der Schlüssel liegt und was aufbewahrt wird.\n\nTeste mit einer unkritischen öffentlichen Seite. Kontrolliere Titel, URL, Abrufdatum und Inhalt der neuen Notiz.\n\n**Erste Daily Note:**\nCmd/Ctrl+P → `Templater: insert template` → `_System/Templates/daily-note.md`.\n\nPrüfe anschließend:\n- erwartete Plugins und Versionen sind sichtbar\n- der Clipper speichert in den richtigen Übungsordner\n- das Template erzeugt den erwarteten Dateinamen und die Felder\n- Verknüpfungs- oder Chatfunktionen arbeiten nur mit der dokumentierten Konfiguration\n\nEin Fehler stoppt den Ablauf an genau diesem Schritt. Fehlermeldung dokumentieren, beheben, dann erst reale Daten.",
-          "keyTakeaway": "Prüfe Clipper, Template, Datenfluss und Fehlerpfad mit unkritischen Testdaten."
+          "content": "**Obsidian Web Clipper im Browser:**\n1. Installiere die Erweiterung über die offizielle Clipper-Seite aus der offiziellen Browser-Quelle.\n2. Wähle den Übungs-Vault und `00 Inbox/` als Ziel.\n3. Lass den AI Interpreter vorerst aus. Er schickt Inhalte an einen Modellanbieter.\n\nTeste mit einer unkritischen öffentlichen Seite und kontrolliere Titel, URL, Abrufdatum und Inhalt der neuen Notiz.\n\n**Erste Daily Note:**\nCmd/Ctrl+P → `Templater: insert template` → `_System/Templates/daily-note.md`.\n\nPrüfe danach:\n- Plugins und Versionen wie erwartet\n- Clipper speichert in den Übungsordner\n- Template erzeugt Dateinamen und Felder\n- Chatfunktionen nutzen nur die dokumentierte Konfiguration\n\nSchlägt ein Schritt fehl, hältst du dort an, behebst den Fehler und nimmst erst dann reale Daten."
         }
       ],
       "quiz": []
@@ -129,7 +122,6 @@
       "durationMinutes": 12,
       "premiumGated": false,
       "refreshCadence": "EVERGREEN",
-      "voiceAnchor": "Vier Ablagekategorien und gepflegte Übersichtsnotizen reichen als prüfbarer Ausgangspunkt.",
       "keyConcepts": [
         "PARA",
         "MOC",
@@ -145,7 +137,7 @@
             "lessonId": "modul_3_lesson_2",
             "moduleId": "modul_3",
             "title": "Wo platzierst du die Notiz?",
-            "scenario": "Wähle deine Rolle. Für jede Notiz entscheidest du: Projects, Areas, Resources oder Archive? Die Regel: Projects haben Deadline. Areas sind laufende Verantwortungen. Resources sind Nachschlagewerke. Archive ist alles Erledigte.",
+            "scenario": "Wähle deine Rolle und ordne jede Notiz zu. Projects haben eine Deadline, Areas sind laufende Verantwortungen, Resources sind Nachschlagewerke, Archive ist Erledigtes.",
             "roles": [
               {
                 "id": "fuehrung",
@@ -160,25 +152,25 @@
                         "id": "a",
                         "label": "Projects: hat klare Deadline",
                         "correct": true,
-                        "explanation": "Deadline = Project. Sobald der Kunde entschieden hat, wandert die Notiz in Archive oder in Areas/Kundenbeziehung-XYZ."
+                        "explanation": "Deadline heißt Project. Nach der Entscheidung kommt die Notiz ins Archive."
                       },
                       {
                         "id": "b",
                         "label": "Areas: Vertrieb ist laufend",
                         "correct": false,
-                        "explanation": "Vertrieb generell wäre Area. Ein konkretes Angebot MIT Deadline ist Project."
+                        "explanation": "Vertrieb allgemein ist eine Area, dieses Angebot hat eine Deadline."
                       },
                       {
                         "id": "c",
                         "label": "Resources: Angebots-Templates nachschlagen",
                         "correct": false,
-                        "explanation": "Das wäre das Template, nicht dieses konkrete Angebot."
+                        "explanation": "Das gilt für die Vorlage, dieses Angebot ist ein Project."
                       },
                       {
                         "id": "d",
                         "label": "Archive: nach Abgabe",
                         "correct": false,
-                        "explanation": "Nach Abgabe ja. Heute ist es ein aktives Project."
+                        "explanation": "Erst nach der Abgabe. Heute ist es ein aktives Project."
                       }
                     ]
                   },
@@ -190,25 +182,25 @@
                         "id": "a",
                         "label": "Projects: du hast ja Jahresgespräche",
                         "correct": false,
-                        "explanation": "Das Framework ist nicht das Projekt. Jedes Gespräch ist ein Projekt, aber das Framework ist wiederverwendbar."
+                        "explanation": "Jedes Gespräch ist ein Project, das Framework nutzt du wieder."
                       },
                       {
                         "id": "b",
                         "label": "Areas: laufende Führungsverantwortung",
                         "correct": false,
-                        "explanation": "Halb richtig. Wenn du das Framework aktiv weiterentwickelst, ja. Sonst eher Resource."
+                        "explanation": "Nur wenn du es laufend weiterentwickelst. Sonst ist es eine Resource."
                       },
                       {
                         "id": "c",
                         "label": "Resources: Nachschlagewerk für immer wiederkehrende Aufgaben",
                         "correct": true,
-                        "explanation": "Frameworks, Templates, Checklisten = Resources. Zeitunabhängig wiederverwendbar."
+                        "explanation": "Frameworks, Templates und Checklisten sind Resources."
                       },
                       {
                         "id": "d",
                         "label": "Archive: war wichtig im April",
                         "correct": false,
-                        "explanation": "Wird jede Woche gebraucht. Nicht Archive."
+                        "explanation": "Du brauchst es jede Woche, also gehört es nicht ins Archive."
                       }
                     ]
                   },
@@ -220,25 +212,25 @@
                         "id": "a",
                         "label": "Projects: könnte noch kommen",
                         "correct": false,
-                        "explanation": "Keine aktive Deadline. Nicht Project."
+                        "explanation": "Ohne aktive Deadline ist es kein Project."
                       },
                       {
                         "id": "b",
                         "label": "Areas: Finanzen ist laufend",
                         "correct": false,
-                        "explanation": "Deine laufenden Finanzen sind Area. Ein abgeschlossenes 2023-Protokoll ist historisch."
+                        "explanation": "Laufende Finanzen sind eine Area, das Protokoll von 2023 ist abgeschlossen."
                       },
                       {
                         "id": "c",
                         "label": "Resources: zur Vorbereitung der nächsten Verhandlung",
                         "correct": false,
-                        "explanation": "Möglich, aber Resources sind eher Templates / Frameworks. Historische Einzelfälle gehören ins Archive mit Verweis aus dem nächsten Verhandlungs-Projekt."
+                        "explanation": "Resources sind Vorlagen. Den Einzelfall verlinkst du aus der nächsten Verhandlung."
                       },
                       {
                         "id": "d",
                         "label": "Archive: abgeschlossen, aber auffindbar",
                         "correct": true,
-                        "explanation": "Abgeschlossene Einzelfälle = Archive. Über Obsidian-Suche / Copilot trotzdem auffindbar. Spart visuelles Rauschen im Alltag."
+                        "explanation": "Abgeschlossen heißt Archive. Suche und Copilot finden die Notiz trotzdem."
                       }
                     ]
                   }
@@ -257,25 +249,25 @@
                         "id": "a",
                         "label": "Projects: Bestellung im Juli = Deadline",
                         "correct": true,
-                        "explanation": "Klare Deadline, klares Ergebnis. Im Juli wird das Projekt entweder erfolgreich (Archive) oder abgesagt (Archive + Lessons)."
+                        "explanation": "Deadline und Ergebnis sind klar. Im Juli geht die Notiz ins Archive."
                       },
                       {
                         "id": "b",
                         "label": "Areas: Kundenbeziehung XYZ",
                         "correct": false,
-                        "explanation": "Die Beziehung ist Area. Dieses konkrete Commitment ist Project."
+                        "explanation": "Die Beziehung ist eine Area, diese Zusage ein Project."
                       },
                       {
                         "id": "c",
                         "label": "Resources: Gesprächsprotokoll-Vorlage",
                         "correct": false,
-                        "explanation": "Das Protokoll selbst ist Teil der Beziehung, nicht die Vorlage."
+                        "explanation": "Das Protokoll gehört zur Kundenbeziehung, die Vorlage wäre eine Resource."
                       },
                       {
                         "id": "d",
                         "label": "Archive: schon passiert",
                         "correct": false,
-                        "explanation": "Die Zusage wartet noch auf Einlösung. Nicht Archive."
+                        "explanation": "Die Zusage ist noch nicht eingelöst."
                       }
                     ]
                   },
@@ -287,25 +279,25 @@
                         "id": "a",
                         "label": "Projects: jeder Kunde ist ein Projekt",
                         "correct": false,
-                        "explanation": "Laufende Beziehung ohne festes Ende = Area."
+                        "explanation": "Eine laufende Beziehung ohne festes Ende ist eine Area."
                       },
                       {
                         "id": "b",
                         "label": "Areas/Kunden/Kunde Alpha (fiktiv): laufende Beziehung",
                         "correct": true,
-                        "explanation": "Langfristige Kundenbeziehung ohne Deadline = Area. Wächst mit jedem Kontakt."
+                        "explanation": "Die Kundenbeziehung hat keine Deadline und wächst mit jedem Kontakt."
                       },
                       {
                         "id": "c",
                         "label": "Resources: Kundenliste",
                         "correct": false,
-                        "explanation": "Resources wäre ein allgemeiner Key-Account-Leitfaden. Der spezifische, fiktive Kontext von Kunde Alpha ist Area."
+                        "explanation": "Eine Resource wäre ein allgemeiner Key-Account-Leitfaden."
                       },
                       {
                         "id": "d",
                         "label": "Archive: Kunde kauft ja schon",
                         "correct": false,
-                        "explanation": "Aktiv = Area, nicht Archive."
+                        "explanation": "Aktive Kunden gehören in Areas."
                       }
                     ]
                   },
@@ -317,25 +309,25 @@
                         "id": "a",
                         "label": "Projects: soll noch erweitert werden",
                         "correct": false,
-                        "explanation": "Erweitern ist ein Pflege-Task, kein Project mit Deadline."
+                        "explanation": "Erweitern ist Pflege ohne Deadline."
                       },
                       {
                         "id": "b",
                         "label": "Areas: Vertriebsqualifikation laufend",
                         "correct": false,
-                        "explanation": "Der Katalog wird nachgeschlagen, nicht laufend betrieben."
+                        "explanation": "Den Katalog schlägst du nur nach."
                       },
                       {
                         "id": "c",
                         "label": "Resources: zeit- und kundenunabhängig wiederverwendbar",
                         "correct": true,
-                        "explanation": "Wiederverwendbare Nachschlagewerke = Resources. Genau dafür gebaut."
+                        "explanation": "Wiederverwendbare Nachschlagewerke sind Resources."
                       },
                       {
                         "id": "d",
                         "label": "Archive: alte Einwände tauchen selten auf",
                         "correct": false,
-                        "explanation": "Aktiv genutzt = nicht Archive."
+                        "explanation": "Du nutzt ihn aktiv, also gehört er nicht ins Archive."
                       }
                     ]
                   }
@@ -354,25 +346,25 @@
                         "id": "a",
                         "label": "Projects: Start 1. Juni ist Deadline",
                         "correct": true,
-                        "explanation": "Klares Ende, klares Ergebnis. Nach dem Onboarding wandert die Notiz in Archive + Verweis aus dem generischen Onboarding-Template (Resources)."
+                        "explanation": "Ende und Ergebnis sind klar. Danach geht die Notiz ins Archive."
                       },
                       {
                         "id": "b",
                         "label": "Areas: Onboarding allgemein",
                         "correct": false,
-                        "explanation": "Das GENERISCHE Onboarding ist Area. Dieses spezifische ist Project."
+                        "explanation": "Onboarding allgemein ist eine Area, dieses hier ein Project."
                       },
                       {
                         "id": "c",
                         "label": "Resources: Onboarding-Template",
                         "correct": false,
-                        "explanation": "Das Template ja. Aber dieses individuelle Onboarding ist Project."
+                        "explanation": "Das gilt für das Template, dieses Onboarding ist ein Project."
                       },
                       {
                         "id": "d",
                         "label": "Archive: wird ja eh gelöscht",
                         "correct": false,
-                        "explanation": "Noch nicht gestartet, nicht Archive."
+                        "explanation": "Es hat noch nicht begonnen."
                       }
                     ]
                   },
@@ -384,25 +376,25 @@
                         "id": "a",
                         "label": "Projects: jede Einstellung ist Project",
                         "correct": false,
-                        "explanation": "Konkrete Einstellung ja. Der laufende Pool selbst ist Area."
+                        "explanation": "Eine einzelne Einstellung ja, der laufende Pool ist eine Area."
                       },
                       {
                         "id": "b",
                         "label": "Areas: Recruiting Engineering",
                         "correct": true,
-                        "explanation": "Laufend, ohne einzelnen Endpunkt. Area. Pro Bewerbung / Einstellung darunter ein Project."
+                        "explanation": "Laufend ohne Endpunkt heißt Area, mit einem Project pro Einstellung."
                       },
                       {
                         "id": "c",
                         "label": "Resources: Maschinenbau-JD-Template",
                         "correct": false,
-                        "explanation": "Templates ja. Aktuelle Bewerbungen nicht."
+                        "explanation": "Templates ja, aktuelle Bewerbungen nein."
                       },
                       {
                         "id": "d",
                         "label": "Archive: Bewerber-Pool schrumpft eh",
                         "correct": false,
-                        "explanation": "Aktiv = nicht Archive."
+                        "explanation": "Aktive Bewerbungen gehören nicht ins Archive."
                       }
                     ]
                   },
@@ -414,25 +406,25 @@
                         "id": "a",
                         "label": "Projects: Entscheidung bis Q3",
                         "correct": true,
-                        "explanation": "Entscheidung mit Ziel-Datum = Project. Recherche + Pro/Contra-Liste + finale Empfehlung."
+                        "explanation": "Eine Entscheidung mit Zieldatum ist ein Project."
                       },
                       {
                         "id": "b",
                         "label": "Areas: laufend, ohne Entscheidung",
                         "correct": false,
-                        "explanation": "Aktive Entscheidungsfindung mit Deadline = Project. Ohne Deadline wäre es Area/Scouting."
+                        "explanation": "Mit Deadline ist es ein Project, ohne Deadline eine Area."
                       },
                       {
                         "id": "c",
                         "label": "Resources: Nachschlagewerk Arbeitszeit-Modelle",
                         "correct": false,
-                        "explanation": "Nachschlagewerk allgemein wäre Resource. Deine AKTIVE Entscheidung ist Project."
+                        "explanation": "Allgemeines Material wäre eine Resource, deine aktive Entscheidung ist ein Project."
                       },
                       {
                         "id": "d",
                         "label": "Archive: wurde mal diskutiert",
                         "correct": false,
-                        "explanation": "Aktiv = nicht Archive."
+                        "explanation": "Die Entscheidung läuft noch."
                       }
                     ]
                   }
@@ -447,29 +439,25 @@
           "id": "modul_3_lesson_2_section_1",
           "title": "PARA als vierteilige Ablagestruktur",
           "readTimeMinutes": 2,
-          "content": "PARA = **Projects, Areas, Resources, Archive.**\n\n**P. Projects:** alles mit Endpunkt, etwa das ausdrücklich fiktive Projekt \"Angebot Kunde Alpha abschließen\".\n\n**A. Areas:** laufende Verantwortlichkeiten ohne Endpunkt, etwa Vertrieb, Finanzen oder Team.\n\n**R. Resources:** Referenzmaterial wie Artikel, PDFs und Vorlagen.\n\n**A. Archive:** abgeschlossene Projekte und nicht mehr aktive Ressourcen.\n\n**Entscheidungsbaum pro Notiz:**\n- aktives Projekt → Projects\n- laufende Verantwortung → Areas\n- Referenzmaterial → Resources\n- abgeschlossen oder inaktiv → Archive\n\nPARA ist eine Arbeitskonvention, kein Gesetz. Wo Auffindbarkeit, Aufbewahrung oder Datenschutz etwas anderes verlangen, gewinnen die.",
-          "keyTakeaway": "Vier Ablagen, eine Frage pro Notiz: befristet, laufend, Referenz oder erledigt?"
+          "content": "PARA = **Projects, Areas, Resources, Archive.**\n\n- **Projects:** alles mit Endpunkt, etwa das fiktive Projekt \"Angebot Kunde Alpha abschließen\"\n- **Areas:** laufende Verantwortung ohne Endpunkt, etwa Vertrieb, Finanzen oder Team\n- **Resources:** Referenzmaterial wie Artikel, PDFs und Vorlagen\n- **Archive:** abgeschlossene Projekte und inaktive Ressourcen\n\nVerlangen Auffindbarkeit, Aufbewahrung oder Datenschutz etwas anderes, gehen sie PARA vor."
         },
         {
           "id": "modul_3_lesson_2_section_2",
           "title": "Das Skelett im Vault",
           "readTimeMinutes": 3,
-          "content": "```\nvault-root/\n├── 00 Inbox/              ← neue Eingänge\n├── 10 Projects/\n│   └── Projekt-Angebot-Mueller/\n│       └── _MOC.md       ← Übersichtsnotiz\n├── 20 Areas/\n│   ├── Vertrieb/\n│   ├── Finanzen/\n│   ├── Team/\n│   └── Strategie/\n├── 30 Resources/\n│   ├── Branche/\n│   ├── KI-Tools/\n│   └── Vorlagen/\n├── 40 Archive/\n├── 50 Daily/\n└── _System/\n    ├── Templates/\n    └── Dashboards/\n```\n\nWenn du das Kurs-Template in Lektion 3.0 importiert hast, ist die Struktur bereits vorhanden.\n\n**Begrenzte Migrationsübung:**\n1. Inbox prüfen\n2. drei bis fünf aktive Projects übernehmen\n3. nur die aktuell benötigten Areas anlegen\n4. eine kleine, repräsentative Auswahl von Referenzen einsortieren\n5. abgeschlossene Inhalte ins Archive verschieben\n\nDer Rest bleibt liegen, bis Suche, Links und Backup mit dieser Stichprobe funktionieren.",
-          "keyTakeaway": "Erst die Stichprobe, dann der Bestand."
+          "content": "```\nvault-root/\n├── 00 Inbox/              ← neue Eingänge\n├── 10 Projects/\n│   └── Projekt-Angebot-Mueller/\n│       └── _MOC.md       ← Übersichtsnotiz\n├── 20 Areas/\n│   ├── Vertrieb/\n│   ├── Finanzen/\n│   ├── Team/\n│   └── Strategie/\n├── 30 Resources/\n│   ├── Branche/\n│   ├── KI-Tools/\n│   └── Vorlagen/\n├── 40 Archive/\n├── 50 Daily/\n└── _System/\n    ├── Templates/\n    └── Dashboards/\n```\n\nHast du das Template in Lektion 3.0 importiert, steht die Struktur schon.\n\n**Begrenzte Migrationsübung:**\n1. Inbox prüfen\n2. drei bis fünf aktive Projects übernehmen\n3. nur die jetzt nötigen Areas anlegen\n4. eine kleine, repräsentative Auswahl an Referenzen einsortieren\n5. Abgeschlossenes ins Archive verschieben\n\nAlles Weitere wartet, bis Suche, Links und Backup mit dieser Stichprobe funktionieren."
         },
         {
           "id": "modul_3_lesson_2_section_3",
           "title": "MOC: das Master-Notiz-Konzept",
           "readTimeMinutes": 4,
-          "content": "**MOC = Map of Content.** Eine Master-Notiz pro Projekt, die als Hub alles zusammenhält.\n\nFiktive Struktur von `10 Projects/Projekt-Kunde-Alpha/_MOC.md`:\n\n```markdown\n---\nstatus: aktiv\nprojekt: Kunde-Alpha-Fiktivfall\n---\n\n# Angebot Kunde Alpha (fiktiv)\n\n## Ziel\nEntwurf für drei fiktive Beispielmaschinen; Preis und Liefertermin sind ungeprüfte Platzhalter.\n\n## Status\n- [x] fiktive Anfrage erfasst\n- [ ] fachliche Angaben prüfen\n- [ ] Angebot intern freigeben\n\n## Beteiligte\n- Fiktiv-Rolle Alpha: Entscheidung\n- Fiktiv-Rolle Beta: Preisfreigabe\n\n## Offene Fragen\n- Preis, Lieferbarkeit und Rabatt bestätigt?\n```\n\nDie MOC ist ein Status-Board, kein Datengrab. In eine echte Notiz kommen nur notwendige, freigegebene Daten mit passenden Zugriffsrechten.",
-          "keyTakeaway": "Eine Project-MOC hält Status, nächste Aktionen, Beteiligte und Links in einer prüfbaren Übersichtsnotiz zusammen."
+          "content": "**MOC = Map of Content.** Eine Master-Notiz pro Projekt dient als Status-Hub für alles andere.\n\nFiktive Struktur von `10 Projects/Projekt-Kunde-Alpha/_MOC.md`:\n\n```markdown\n---\nstatus: aktiv\nprojekt: Kunde-Alpha-Fiktivfall\n---\n\n# Angebot Kunde Alpha (fiktiv)\n\n## Ziel\nEntwurf für drei fiktive Beispielmaschinen; Preis und Liefertermin sind ungeprüfte Platzhalter.\n\n## Status\n- [x] fiktive Anfrage erfasst\n- [ ] fachliche Angaben prüfen\n- [ ] Angebot intern freigeben\n\n## Beteiligte\n- Fiktiv-Rolle Alpha: Entscheidung\n- Fiktiv-Rolle Beta: Preisfreigabe\n\n## Offene Fragen\n- Preis, Lieferbarkeit und Rabatt bestätigt?\n```\n\nIn eine echte MOC kommen nur notwendige, freigegebene Daten mit passenden Zugriffsrechten."
         },
         {
           "id": "modul_3_lesson_2_section_4",
           "title": "Tagging-Politik",
           "readTimeMinutes": 3,
-          "content": "Beginne mit einem kleinen dokumentierten Tag-Satz, zum Beispiel:\n- `#todo`: offene Aktion\n- `#entscheidung`: dokumentierte Entscheidung\n- `#warten-auf`: blockierte Aktion\n- `#idee`: ungeprüfter Vorschlag\n- `#followup`: erneut zu prüfender Punkt\n- `#archivieren`: Archivkandidat\n\nOrdner für die grobe Ablage. MOCs für den Project-Kontext. Tags nur für wenige Zustände, die quer durch alles laufen. Personennamen oder sensible Merkmale gehören ohne Datenkonzept nicht in Tags.\n\nZehn Tags sind eine Startgrenze, kein Naturgesetz. Wächst der Satz, prüfst du Überschneidungen, schreibst die Bedeutungen auf und testest, ob deine Abfragen noch vorhersehbar antworten.",
-          "keyTakeaway": "Halte Tags klein und dokumentiert; nutze Ordner für Ablage und MOCs für Project-Kontext."
+          "content": "Starte mit einem kleinen, dokumentierten Tag-Satz, zum Beispiel:\n- `#todo`: offene Aktion\n- `#entscheidung`: dokumentierte Entscheidung\n- `#warten-auf`: blockierte Aktion\n- `#idee`: ungeprüfter Vorschlag\n- `#followup`: erneut zu prüfender Punkt\n- `#archivieren`: Archivkandidat\n\nOrdner nutzt du für die grobe Ablage, MOCs für den Project-Kontext und Tags für die wenigen Zustände, die quer durch alles laufen. Personennamen und sensible Merkmale kommen ohne Datenkonzept in keinen Tag.\n\nZehn Tags sind eine Startgrenze. Wächst der Satz, prüfst du Überschneidungen, schreibst die Bedeutungen auf und testest, ob deine Abfragen noch vorhersehbar antworten."
         }
       ],
       "quiz": [
@@ -498,7 +486,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "PARA ist Tiago Fortes PKM-Framework: Projects (klares Ende), Areas (laufend), Resources (Referenz), Archive (erledigt)."
+          "explanation": "PARA stammt von Tiago Forte: Projects haben ein klares Ende, Areas laufen weiter, Resources dienen als Referenz, Archive hält Erledigtes."
         },
         {
           "id": "modul_3_lesson_2_q2",
@@ -525,7 +513,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "MOC bedeutet Map of Content. Eine gepflegte Übersichtsnotiz bündelt Ziel, Status, nächste Aktion, Beteiligte und Links eines Projects."
+          "explanation": "Eine gepflegte Übersichtsnotiz bündelt Ziel, Status, nächste Aktion, Beteiligte und Links eines Projects."
         }
       ]
     },
@@ -538,7 +526,6 @@
       "durationMinutes": 10,
       "premiumGated": false,
       "refreshCadence": "QUARTERLY",
-      "voiceAnchor": "Der erste belastbare Test ist, ob eine relevante ältere Notiz mit prüfbarer Quelle gefunden wird.",
       "keyConcepts": [
         "Smart Connections",
         "Copilot for Obsidian",
@@ -555,22 +542,19 @@
           "id": "modul_3_lesson_3_section_1",
           "title": "Smart Connections in Aktion",
           "readTimeMinutes": 3,
-          "content": "Du legst eine neue Notiz an, fiktiv: Mengenrabatt für Kunde Alpha, ja oder nein? Smart Connections legt dir dazu ältere Rabattnotizen und eine aktuelle Richtlinie vor.\n\nEin Ähnlichkeitswert beweist nichts. Ob die aktuelle Freigaberegel dieselben Konditionen noch erlaubt, siehst du erst in der Quellnotiz, mit Datum und Kontext.\n\nTechnisch arbeitet Smart Connections mit Embeddings, also Vektoren für semantische Ähnlichkeit. Welches Modell die Vektoren erzeugt, wo es läuft, ob Netzwerkzugriff stattfindet und was es kostet, steht in deiner Plugin-Konfiguration, nicht in diesem Kurs.",
-          "keyTakeaway": "Ein Vorschlag ist ein Suchhinweis, kein Beleg. Modell, Datenfluss und jede Quellnotiz prüfst du selbst."
+          "content": "Du legst eine neue, fiktive Notiz an: Mengenrabatt für Kunde Alpha, ja oder nein? Smart Connections schlägt ältere Rabattnotizen und eine aktuelle Richtlinie vor.\n\nEin Ähnlichkeitswert beweist nichts. Ob die aktuelle Freigaberegel diese Konditionen noch erlaubt, zeigt erst die Quellnotiz mit Datum und Kontext.\n\nSmart Connections arbeitet mit Embeddings, also Vektoren für semantische Ähnlichkeit. Modell, Ausführungsort, Netzwerkzugriff und Kosten stehen in deiner Plugin-Konfiguration."
         },
         {
           "id": "modul_3_lesson_3_section_2",
           "title": "Copilot als Suchoberfläche für den Vault",
           "readTimeMinutes": 4,
-          "content": "Im isolierten Übungs-Vault fragst du Copilot: \"Welche fiktiven Rabattentscheidungen sind in den letzten 90 Tagen dokumentiert? Nenne für jede Aussage Dateipfad und Datum.\"\n\nZurück kommt eine Liste, etwa zu Kunde Alpha, Beta oder Gamma. Ein Suchentwurf, mehr nicht. Du öffnest jede verlinkte Notiz, prüfst den Kontext und suchst, was fehlt oder sich widerspricht.\n\nZweite Übungsfrage: \"Fasse die freigegebenen Übungsnotizen zu Kunde Alpha zusammen und markiere jede Aussage ohne Quelle.\"\n\nGarantiert ist nichts, weder Tempo noch Faktentreue. Quellenlinks machen das Ergebnis prüfbar. Geprüft ist es damit nicht.",
-          "keyTakeaway": "Copilot liefert Suchentwürfe mit Quellenpfaden. Die Prüfung liefert er nicht."
+          "content": "Im isolierten Übungs-Vault fragst du Copilot: \"Welche fiktiven Rabattentscheidungen sind in den letzten 90 Tagen dokumentiert? Nenne für jede Aussage Dateipfad und Datum.\"\n\nZurück kommt ein Suchentwurf, etwa zu Kunde Alpha, Beta und Gamma. Du öffnest jede verlinkte Notiz, prüfst den Kontext und suchst Lücken und Widersprüche.\n\nZweite Übungsfrage: \"Fasse die freigegebenen Übungsnotizen zu Kunde Alpha zusammen und markiere jede Aussage ohne Quelle.\"\n\nCopilot garantiert weder Tempo noch Faktentreue. Quellenlinks machen das Ergebnis prüfbar; prüfen musst du selbst."
         },
         {
           "id": "modul_3_lesson_3_section_3",
           "title": "Die richtigen Fragen stellen",
           "readTimeMinutes": 3,
-          "content": "Copilot antwortet so gut wie deine Frage und dein Index. Drei Einschränkungen helfen:\n\n**Konkret statt abstrakt.** Nicht \"Was denke ich über Preispolitik?\", sondern \"Welche Rabattentscheidungen sind in den letzten 90 Tagen dokumentiert?\"\n\n**Zeitlich begrenzt.** Ein Zeitraum wie \"Q1 2026\" oder \"seit März 2026\", sobald er fachlich Sinn ergibt.\n\n**Mit Quellen.** Für jede Aussage Dateipfad, Datum und die relevante Textstelle.\n\nSmart Connections schlägt verwandte Notizen vor. Copilot beantwortet eine Abfrage über indexiertes Material. Beides sind Recherchehilfen, keine maßgeblichen Aufzeichnungen.\n\nMiss Suchzeit, Anteil fehlender Quellen und Korrekturaufwand gegen deinen alten Ablauf. Werden die Werte für deine Aufgabe nicht besser, fliegt die Konfiguration wieder raus.",
-          "keyTakeaway": "Drei Prinzipien: konkret, zeit-beschränkt, mit Quellenangabe."
+          "content": "Copilot antwortet so gut, wie deine Frage und dein Index es erlauben. Drei Regeln helfen:\n\n**Konkret:** \"Welche Rabattentscheidungen sind in den letzten 90 Tagen dokumentiert?\" statt \"Was denke ich über Preispolitik?\"\n\n**Zeitlich begrenzt:** ein Zeitraum wie \"Q1 2026\" oder \"seit März 2026\", wenn er zur Aufgabe passt.\n\n**Mit Quellen:** für jede Aussage Dateipfad, Datum und Textstelle.\n\nMiss Suchzeit, Anteil fehlender Quellen und Korrekturaufwand gegen deinen alten Ablauf. Werden die Werte nicht besser, schaltest du die Konfiguration wieder ab."
         }
       ],
       "quiz": [
@@ -585,7 +569,7 @@
             },
             {
               "id": "b",
-              "text": "Embeddings, vektorisierte Notizen und semantische Ähnlichkeit; Modell und Datenfluss hängen von der Konfiguration ab",
+              "text": "Embeddings: Notizen als Vektoren, verglichen nach Bedeutung",
               "isCorrect": true
             },
             {
@@ -599,7 +583,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Embeddings, keine Stichwortsuche. Welches Modell rechnet und wohin deine Notizinhalte dabei wandern, steht nur in deiner aktuellen Konfiguration."
+          "explanation": "Smart Connections vergleicht Bedeutung, keine Stichwörter. Welches Modell rechnet und wohin deine Notizinhalte dabei gehen, steht in deiner aktuellen Konfiguration."
         },
         {
           "id": "modul_3_lesson_3_q2",
@@ -626,7 +610,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Konkret, zeitlich begrenzt, mit Quellenanforderung: so werden Treffer enger und prüfbar. Faktentreue garantiert das nicht."
+          "explanation": "So werden Treffer enger und prüfbar. Faktentreue garantiert das trotzdem nicht."
         }
       ]
     },
@@ -639,7 +623,6 @@
       "durationMinutes": 8,
       "premiumGated": false,
       "refreshCadence": "QUARTERLY",
-      "voiceAnchor": "Eine gespeicherte Notiz hat Quelle, Metadaten und einen Wiederauffindbarkeitspfad; ein offener Tab nicht.",
       "keyConcepts": [
         "Obsidian Web Clipper",
         "AI Interpreter"
@@ -653,7 +636,7 @@
             "lessonId": "modul_3_lesson_4",
             "moduleId": "modul_3",
             "title": "PII aus dem Clipping entfernen, bevor es ins Vault wandert",
-            "scenario": "Alle Angaben im folgenden Text sind erfundene Dummy-Daten. Markiere trotzdem alle Tokens, die in einem realen Clipping nicht dauerhaft gespeichert werden dürften: Namen, Mail, Telefon, interner Umsatz und Kundendaten.",
+            "scenario": "Alle Angaben sind erfundene Dummy-Daten. Markiere trotzdem jedes Token, das ein echtes Clipping nicht dauerhaft speichern dürfte: Namen, Mail, Telefon, interner Umsatz und Kundendaten.",
             "text": "Fiktive Person schrieb gestern auf LinkedIn: Unsere Fiktivwerk GmbH hat 2.4 Mio Euro Umsatz Q1 gemacht, der Vertriebsleiter Fiktiver Kontakt berichtete von einem Deal mit Kunde Beta im Wert von 450000 Euro. Kontakt bei Fiktivwerk: demo.person@example.invalid oder +49-000-000000-DUMMY. Die Analyse: wir sollten in Q2 auch mit Kunde Gamma sprechen.",
             "piiIndices": [
               0,
@@ -680,22 +663,19 @@
           "id": "modul_3_lesson_4_section_1",
           "title": "Die Browser-Tab-Realität",
           "readTimeMinutes": 2,
-          "content": "Zähl deine offenen Tabs. Die für \"später lesen\", die für \"als Referenz\". Ein offener Tab ist keine Aufzeichnung: kein fester Ablageort, keine Metadaten, keine Wiederauffindbarkeit.\n\nDer Ablauf dieser Lektion: Web Clipper speichert den Artikel, der AI Interpreter schlägt Metadaten vor, Obsidian indexiert die Notiz. Stoppe die Zeit pro Artikel selbst, statt eine Beispielzahl zu übernehmen.",
-          "keyTakeaway": "Eine Notiz bleibt und lässt sich durchsuchen. Ein Tab nicht."
+          "content": "Zähl deine offenen Tabs, die zum späteren Lesen und die als Referenz. Ein Tab hat keinen festen Ablageort, keine Metadaten und keinen Weg zurück.\n\nDer Ablauf: Web Clipper speichert den Artikel, der AI Interpreter schlägt Metadaten vor, Obsidian indexiert die Notiz. Die Zeit pro Artikel stoppst du selbst."
         },
         {
           "id": "modul_3_lesson_4_section_2",
           "title": "Einen Clip mit AI Interpreter prüfen",
           "readTimeMinutes": 3,
-          "content": "Nimm einen unkritischen öffentlichen Artikel und starte Web Clipper. Das Panel kann Titel, Zielordner, Tags, Template und wahlweise eine Zusammenfassung anbieten.\n\nVor dem Speichern:\n- Titel, kanonische URL und Abrufdatum stimmen\n- der vorgeschlagene Ordner entspricht der Ablageregel\n- Tags stammen aus dem dokumentierten Tag-Satz\n- die Zusammenfassung ist durch den Artikel belegt\n- eingebettete persönliche oder vertrauliche Angaben wurden entfernt\n\nIst der AI Interpreter aktiv, geht der Artikelinhalt an den konfigurierten Modellanbieter. Also Provider, Modell, Schlüsselablage, Aufbewahrung und Kosten in der aktuellen Erweiterung prüfen. Jede erzeugte Zusammenfassung wird mit ihrer Quelle gespeichert, nie ohne.",
-          "keyTakeaway": "Der AI Interpreter schlägt Zusammenfassung, Tags und Ordner vor. Datenfluss und jedes Feld prüfst du vor dem Speichern."
+          "content": "Nimm einen unkritischen öffentlichen Artikel und starte Web Clipper. Das Panel bietet Titel, Zielordner, Tags, Template und wahlweise eine Zusammenfassung an.\n\nPrüfe vor dem Speichern:\n- Titel, kanonische URL und Abrufdatum\n- Zielordner gegen die Ablageregel\n- Tags gegen den dokumentierten Tag-Satz\n- jede Aussage der Zusammenfassung gegen den Artikel\n- ob eingebettete persönliche oder vertrauliche Angaben entfernt sind\n\nMit aktivem AI Interpreter geht der Artikel an den konfigurierten Modellanbieter. Prüfe daher Provider, Modell, Schlüsselablage, Aufbewahrung und Kosten, und speichere jede Zusammenfassung mit ihrer Quelle."
         },
         {
           "id": "modul_3_lesson_4_section_3",
           "title": "Ein Kriterium für die Aufnahme",
           "readTimeMinutes": 3,
-          "content": "Rein kommt ein Artikel, wenn er ein aktives Project betrifft, regelmäßig gebrauchtes Referenzmaterial liefert oder eine belegte, schwer ersetzbare Quelle ist.\n\nDraußen bleibt er als Duplikat, ohne absehbaren Verwendungszweck oder wenn er nur unbelegte Behauptungen wiederholt.\n\nDer Test vor dem Speichern ist ein Satz: \"Ich werde diese Quelle für [Project oder Area] verwenden, um [konkrete Frage] zu beantworten.\" Bekommst du ihn nicht belastbar hin, schließt du den Tab.\n\n**Übung:** Höchstens drei deiner vorhandenen Tabs. Speichere Quelle, Abrufdatum und Verwendungszweck, prüfe die erzeugten Felder und verarbeite die Notizen in der nächsten geplanten Inbox-Sitzung.",
-          "keyTakeaway": "Ohne konkreten Verwendungszweck und nachvollziehbare Metadaten wird nichts gespeichert."
+          "content": "Speichere einen Artikel, wenn er ein aktives Project betrifft, regelmäßig gebrauchtes Referenzmaterial liefert oder eine belegte, schwer ersetzbare Quelle ist. Duplikate, Artikel ohne absehbaren Zweck und unbelegte Behauptungen bleiben draußen.\n\nDer Test vor dem Speichern: \"Ich verwende diese Quelle für [Project oder Area], um [konkrete Frage] zu beantworten.\" Hält der Satz nicht, schließt du den Tab.\n\n**Übung:** Nimm höchstens drei offene Tabs. Speichere Quelle, Abrufdatum und Zweck, prüfe die erzeugten Felder und verarbeite die Notizen in der nächsten geplanten Inbox-Sitzung."
         }
       ],
       "quiz": [
@@ -724,7 +704,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Vor dem Import schlägt er Zusammenfassung, Tags und Ordner vor. Welcher Provider die Inhalte dafür sieht, steht in deiner Konfiguration."
+          "explanation": "Er schlägt vor dem Import Zusammenfassung, Tags und Ordner vor. Welcher Provider die Inhalte dafür sieht, steht in deiner Konfiguration."
         }
       ]
     },
@@ -737,7 +717,6 @@
       "durationMinutes": 12,
       "premiumGated": false,
       "refreshCadence": "EVERGREEN",
-      "voiceAnchor": "Ein begrenzter Pflegeablauf hält Inbox, MOCs und Daily Notes aktuell; Dauer und Frequenz werden gemessen.",
       "keyConcepts": [
         "RCTFC",
         "Structured Output",
@@ -753,24 +732,24 @@
             "lessonId": "modul_3_lesson_5",
             "moduleId": "modul_3",
             "title": "Welcher Daily-Obsidian-Prompt ist prüfbar?",
-            "scenario": "Ein Wochenbericht ist fällig. Du willst die letzte Arbeitswoche aus dem Übungs-Vault zusammenfassen. Welcher Prompt definiert Quellen, Format und Grenzen?",
+            "scenario": "Du willst die letzte Arbeitswoche aus dem Übungs-Vault für den Wochenbericht zusammenfassen. Welcher Prompt legt Quellen, Format und Grenzen fest?",
             "candidates": [
               {
                 "label": "Variante A: die Pauschale",
                 "prompt": "Fasse mir diese Woche zusammen.",
-                "critique": "Keine Rolle, kein Zeitraum, kein Format. Copilot rät, das Ergebnis ist oft ein generischer Stichpunkt-Dump oder eine Absage (zu wenig Kontext).",
+                "critique": "Rolle, Zeitraum und Format fehlen. Copilot rät und liefert oft generische Stichpunkte oder mangels Kontext eine Absage.",
                 "rating": 1
               },
               {
                 "label": "Variante B: strukturiert, aber offen",
                 "prompt": "Basierend auf den Daily-Notes der letzten 7 Tage: Zusammenfassung der Kernentscheidungen und Blocker für Wochenbericht.",
-                "critique": "Zeitraum + Quelle + Ziel sind da. Aber ohne Format-Spec (Struktur, Wort-Limit) und ohne Rolle (wem schreibe ich?) variiert das Ergebnis stark.",
+                "critique": "Zeitraum, Quelle und Ziel stehen drin. Ohne Format (Struktur, Wortlimit) und Rolle (für wen?) schwankt das Ergebnis stark.",
                 "rating": 3
               },
               {
                 "label": "Variante C: RCTFC + Structured Output",
-                "prompt": "Rolle: Chief of Staff, schreibt für Geschäftsführung. Kontext: Analysiere Daily-Notes 2026-04-14 bis 2026-04-20 im Vault. Task: Generiere Wochenbericht. Format: Markdown, 3 Abschnitte (1. Highlights, 3 Bullet Points je max 15 Wörter, 2. Blocker mit Lösungsvorschlag, max 3, 3. Nächste Woche, max 5 Zeilen). Tabu: Keine Adverbien wie erfolgreich, produktiv, fokussiert. Quelle: Nur Fakten aus den Notes, keine Ergänzungen, keine Meinungen. Constraint: Wenn Zeitraum keine Daten hat, sag bescheid, erfinde nichts.",
-                "critique": "Der Brief definiert RCTFC-Felder, Output-Schema, ausgeschlossene Sprache und eine Quellenregel. Wiederholte Ergebnisse lassen sich dadurch leichter vergleichen und prüfen.",
+                "prompt": "Rolle: Chief of Staff, schreibt für die Geschäftsführung.\nKontext: Daily-Notes 2026-04-14 bis 2026-04-20 im Vault.\nTask: Wochenbericht erstellen.\nFormat: Markdown, 3 Abschnitte (1. Highlights, 3 Bullet Points je max 15 Wörter; 2. Blocker mit Lösungsvorschlag, max 3; 3. Nächste Woche, max 5 Zeilen).\nTabu: Adverbien wie erfolgreich, produktiv, fokussiert.\nQuelle: nur Fakten aus den Notes, keine Ergänzungen oder Meinungen.\nConstraint: Hat der Zeitraum keine Daten, sag das und erfinde nichts.",
+                "critique": "Der Brief legt RCTFC-Felder, Ausgabeschema, verbotene Wörter und eine Quellenregel fest. So lassen sich wiederholte Ergebnisse vergleichen und prüfen.",
                 "rating": 5
               }
             ]
@@ -782,22 +761,19 @@
           "id": "modul_3_lesson_5_section_1",
           "title": "Ein begrenzter Pflegeablauf",
           "readTimeMinutes": 3,
-          "content": "Eine Wissensbasis, die niemand pflegt, wird wieder zu einem Haufen Dateien. Dagegen hilft eine feste, begrenzte Sitzung mit vier Schritten:\n\n1. **Inbox prüfen:** neue Clips, Transkripte und Notizen zählen; keine automatische Weiterleitung realer Daten ohne Freigabe.\n2. **Einordnen:** jedem Eintrag Project, Area, Resource oder Archive zuweisen. Unklare Einträge bleiben markiert in der Inbox statt blind im Archive zu landen.\n3. **MOCs aktualisieren:** bei berührten Projects Status, nächste Aktion und Quelllink ergänzen.\n4. **Daily Note erstellen:** Prioritäten und offene Punkte aus den geprüften Aufzeichnungen übernehmen.\n\nDas Zeitlimit richtet sich nach deinem Volumen. Rückstand und Fehlzuordnungen schreibst du mit. Eine leere Inbox beweist nichts, wenn die Einträge falsch liegen.",
-          "keyTakeaway": "Ein begrenzter Ablauf für Inbox, MOCs und Daily Note. Gemessen werden Rückstand und Fehlzuordnungen."
+          "content": "Ohne Pflege wird eine Wissensbasis wieder zum Dateihaufen. Dagegen hilft eine feste, begrenzte Sitzung in vier Schritten:\n\n1. **Inbox prüfen:** neue Einträge zählen; reale Daten nie ohne Freigabe automatisch weiterleiten.\n2. **Einordnen:** jedem Eintrag Project, Area, Resource oder Archive zuweisen; Unklares bleibt markiert in der Inbox.\n3. **MOCs aktualisieren:** Status, nächste Aktion und Quelllink der berührten Projects ergänzen.\n4. **Daily Note erstellen:** Prioritäten und offene Punkte aus geprüften Aufzeichnungen übernehmen.\n\nDas Zeitlimit richtet sich nach deinem Volumen. Notiere Rückstand und Fehlzuordnungen, denn eine leere Inbox beweist nichts, wenn Einträge falsch liegen."
         },
         {
           "id": "modul_3_lesson_5_section_2",
           "title": "RCTFC: das Prompt-Schema",
           "readTimeMinutes": 3,
-          "content": "**RCTFC** heißt **Role, Context, Task, Format, Constraints.**\n\nOffene Anfrage:\n> \"Schreibe eine Absage-E-Mail an einen Kunden.\"\n\nStrukturierter Brief:\n- **Role:** Vertriebsmitarbeiter eines mittelständischen Maschinenbauunternehmens\n- **Context:** fiktiver Stammkunde Alpha; eine dokumentierte Anfrage kann nicht erfüllt werden\n- **Task:** internen Absageentwurf erstellen\n- **Format:** Betreff, Anrede, zwei Absätze, Signatur\n- **Constraints:** weniger als 120 Wörter, keine erfundenen Gründe oder Zusagen, alternative Option nur als geprüften Platzhalter angeben\n\nJedes Feld nimmt dem Modell eine Entscheidung ab, die es sonst aus allgemeinen Mustern raten würde. Prüfpflichtig bleibt der Entwurf trotzdem. Das Kursmaterial `P020-rctfc-template` ist die Vorlage dafür.",
-          "keyTakeaway": "Rolle, Kontext, Aufgabe, Format und Grenzen machen Entwürfe vergleichbarer und leichter prüfbar."
+          "content": "**RCTFC** heißt **Role, Context, Task, Format, Constraints.**\n\nOffene Anfrage:\n> \"Schreibe eine Absage-E-Mail an einen Kunden.\"\n\nStrukturierter Brief:\n- **Role:** Vertriebsmitarbeiter eines mittelständischen Maschinenbauunternehmens\n- **Context:** fiktiver Stammkunde Alpha; eine dokumentierte Anfrage kann nicht erfüllt werden\n- **Task:** internen Absageentwurf erstellen\n- **Format:** Betreff, Anrede, zwei Absätze, Signatur\n- **Constraints:** weniger als 120 Wörter, keine erfundenen Gründe oder Zusagen, eine Alternative nur als geprüfter Platzhalter\n\nJedes Feld nimmt dem Modell eine Entscheidung ab, die es sonst raten würde. Den Entwurf prüfst du trotzdem. Die Vorlage ist `P020-rctfc-template` in den Kursmaterialien."
         },
         {
           "id": "modul_3_lesson_5_section_3",
           "title": "Structured Output (JSON) + Few-shot + CoT",
           "readTimeMinutes": 4,
-          "content": "**Strukturierte Ausgabe als JSON:** Sobald eine Maschine weiterverarbeitet, braucht die Antwort ein festes Schema und eine technische Validierung.\n\n```\nAnalysiere dieses fiktive Meeting-Transkript. Gib strikt valides JSON zurück:\n{\n  \"entscheidungen\": [{\"text\": \"...\", \"verantwortlich\": null}],\n  \"action_items\": [{\"text\": \"...\", \"fälligkeit\": null, \"verantwortlich\": null}],\n  \"offene_fragen\": [{\"text\": \"...\", \"wer_antwortet\": null}]\n}\nNutze null für unbekannte Werte. Erfinde keine Angaben.\n```\n\nParse das Ergebnis und validiere es gegen das Schema, bevor n8n oder Python es anfassen. Kaputtes JSON landet in einem dokumentierten Fehlerpfad, nicht im nächsten Schritt.\n\n**Beispiele:** Zwei oder drei repräsentative Ein- und Ausgaben zeigen dem Modell das Muster. Genauigkeit beweisen sie nicht.\n\n**Prüfbare Zwischenergebnisse:** Bei komplexen Aufgaben verlangst du kurze Belege, Annahmen und Schlussfolgerungen. Verborgene Gedankengänge forderst du nicht an. Bei einer einfachen Textaufgabe bringen Zwischenschritte nichts außer Länge.\n\nOb Routine, Schema oder Beispiele etwas bringen, entscheidet die konkrete Aufgabe. Einen festen Produktivitätsgewinn gibt es nicht.",
-          "keyTakeaway": "Wiederholbare Abläufe, explizite Schemata, technische Validierung. Den Nutzen misst du an der Aufgabe."
+          "content": "**Strukturierte Ausgabe (JSON):** Verarbeitet eine Maschine die Antwort weiter, braucht sie ein festes Schema und eine technische Validierung.\n\n```\nAnalysiere dieses fiktive Meeting-Transkript. Gib strikt valides JSON zurück:\n{\n  \"entscheidungen\": [{\"text\": \"...\", \"verantwortlich\": null}],\n  \"action_items\": [{\"text\": \"...\", \"fälligkeit\": null, \"verantwortlich\": null}],\n  \"offene_fragen\": [{\"text\": \"...\", \"wer_antwortet\": null}]\n}\nNutze null für unbekannte Werte. Erfinde keine Angaben.\n```\n\nValidiere das Ergebnis gegen das Schema, bevor n8n oder Python es nutzen; ungültiges JSON geht in einen dokumentierten Fehlerpfad.\n\n**Few-shot:** Zwei oder drei repräsentative Beispiele zeigen dem Modell das Muster, beweisen aber keine Genauigkeit.\n\n**Prüfbare Zwischenergebnisse (CoT):** Bei komplexen Aufgaben verlangst du kurze Belege und Annahmen. Verborgene Gedankengänge forderst du nicht an, und bei einfachen Texten lässt du Zwischenschritte weg.\n\nOb sich Routine, Schema oder Beispiele lohnen, misst du an der jeweiligen Aufgabe."
         }
       ],
       "quiz": [
@@ -826,7 +802,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "RCTFC in fünf Feldern: Rolle definieren, Kontext geben, Task benennen, Format festlegen, Constraints setzen."
+          "explanation": "Jedes der fünf Felder nimmt dem Modell eine Entscheidung ab, die es sonst aus allgemeinen Mustern raten würde."
         },
         {
           "id": "modul_3_lesson_5_q2",
@@ -839,7 +815,7 @@
             },
             {
               "id": "b",
-              "text": "Kurze, prüfbare Belege und Annahmen anfordern; bei einfachen Texten unnötige Zwischenschritte weglassen",
+              "text": "Kurze, prüfbare Belege und Annahmen anfordern",
               "isCorrect": true
             },
             {
@@ -853,7 +829,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Knappe, prüfbare Belege und Annahmen reichen. Verborgene Gedankengänge brauchst du nicht, und Qualität beweisen sie auch nicht."
+          "explanation": "Belege und Annahmen machen die Analyse prüfbar. Verborgene Gedankengänge brauchst du dafür nicht, und Qualität beweisen sie auch nicht."
         }
       ]
     },
@@ -866,7 +842,6 @@
       "durationMinutes": 14,
       "premiumGated": false,
       "refreshCadence": "QUARTERLY",
-      "voiceAnchor": "Ein MCP-Server kann freigegebene Vault-Operationen über eine definierte Schnittstelle für Claude Code bereitstellen.",
       "keyConcepts": [
         "obsidian-claude-code-mcp",
         "WebSocket-Bridge"
@@ -882,29 +857,25 @@
           "id": "modul_3_lesson_6_section_1",
           "title": "Die dritte Verbindung",
           "readTimeMinutes": 3,
-          "content": "Zwei Wege in den Vault kennst du: das Plugin in Obsidian und Copy-and-paste von Hand. Der dritte ist MCP, eine programmgesteuerte Schnittstelle. Damit wächst, was Claude darf, und damit wächst der Prüfbereich.\n\nDie Kursreferenz `obsidian-claude-code-mcp` beschreibt eine WebSocket-Bridge. Bevor du sie verwendest, prüfst du Repository, aktuelle Version, Maintainer, Lizenz, Abhängigkeiten, bekannte Sicherheitsmeldungen und Kompatibilität.\n\nJe nachdem, welche Tools der Server implementiert, liest, sucht, erstellt oder verändert er Notizen. Den ganzen Vault gibst du nicht frei. Du fängst mit einer Kopie des Übungs-Vaults an, nur lesend, nur ein Ordner.",
-          "keyTakeaway": "MCP öffnet den Vault für Programme. Rechte eng halten, erst lesend testen."
+          "content": "Zwei Wege in den Vault kennst du: das Plugin in Obsidian und Copy-and-paste. Der dritte ist MCP, eine programmgesteuerte Schnittstelle. Damit darf Claude mehr, und du musst mehr prüfen.\n\nDie Kursreferenz `obsidian-claude-code-mcp` beschreibt eine WebSocket-Bridge. Prüfe vor dem Einsatz Repository, Version, Maintainer, Lizenz, Abhängigkeiten, Sicherheitsmeldungen und Kompatibilität.\n\nJe nach implementierten Tools liest, sucht, erstellt oder ändert der Server Notizen. Starte mit einer Kopie des Übungs-Vaults, nur lesend und nur mit einem Ordner."
         },
         {
           "id": "modul_3_lesson_6_section_2",
           "title": "Setup",
           "readTimeMinutes": 4,
-          "content": "Im Kurs-Bundle liegt `install-obsidian-claude-code-mcp.sh`. Ungelesen wird kein Setup-Skript ausgeführt.\n\n**Vor der Ausführung:**\n1. Skript und festgelegte Abhängigkeitsversionen lesen\n2. Repository-URL und Commit prüfen\n3. Claude-Code-Konfiguration sichern\n4. expliziten Pfad zu einem kopierten Übungs-Vault festlegen\n5. Loopback-Bindung, Port und Authentifizierung der Bridge prüfen\n6. sicherstellen, dass das Skript vorhandene MCP-Einträge nicht überschreibt\n7. keine Secrets als Befehlsargumente übergeben\n\nDanach ein Start- und ein Stopptest. Geänderte Dateien, laufende Prozesse und der vollständige Rückbau werden dokumentiert.",
-          "keyTakeaway": "Quelle, Änderungen, Netzwerkbindung, Rückbau: alles geprüft, und zwar am kopierten Übungs-Vault."
+          "content": "Im Kurs-Bundle liegt `install-obsidian-claude-code-mcp.sh`. Lies jedes Setup-Skript, bevor du es ausführst.\n\n**Vor der Ausführung:**\n1. Skript und festgelegte Abhängigkeitsversionen lesen\n2. Repository-URL und Commit prüfen\n3. Claude-Code-Konfiguration sichern\n4. expliziten Pfad zu einem kopierten Übungs-Vault festlegen\n5. Loopback-Bindung, Port und Authentifizierung der Bridge prüfen\n6. sicherstellen, dass das Skript vorhandene MCP-Einträge nicht überschreibt\n7. keine Secrets als Befehlsargumente übergeben\n\nDanach testest du Start und Stopp und dokumentierst geänderte Dateien, laufende Prozesse und den vollständigen Rückbau."
         },
         {
           "id": "modul_3_lesson_6_section_3",
           "title": "Erste Abfrage",
           "readTimeMinutes": 4,
-          "content": "Der erste Test ist schreibgeschützt und läuft im kopierten Übungs-Vault:\n\n> \"Liste die obersten Verzeichnisse und die Zahl der Markdown-Dateien pro Verzeichnis. Öffne keine Dateiinhalte und führe keine Schreibaktion aus.\"\n\nVergleiche die Ausgabe mit einer lokalen Dateiliste. Taucht ein nicht freigegebenes Verzeichnis auf, ist der Test gescheitert.\n\nErweitere danach auf eine begrenzte Aufgabe:\n> \"Lies ausschließlich freigegebene MOCs in `10 Projects/` mit `status: aktiv`. Erstelle einen internen Statusentwurf mit Quellpfad und Datum für jede Aussage. Schreibe noch keine Datei.\"\n\nEine neue Datei in ein separates Ausgabeverzeichnis schreiben darf Claude erst, wenn Quellen, Berechtigungen und Output geprüft sind. Laufzeit und Korrekturaufwand misst du in deinem eigenen Test.",
-          "keyTakeaway": "Erst lesen, dann Sichtbarkeit abgleichen, dann Schreibzugriff."
+          "content": "Der erste Test läuft schreibgeschützt im kopierten Übungs-Vault:\n\n> \"Liste die obersten Verzeichnisse und die Zahl der Markdown-Dateien pro Verzeichnis. Öffne keine Dateiinhalte und führe keine Schreibaktion aus.\"\n\nVergleiche die Ausgabe mit einer lokalen Dateiliste. Taucht ein nicht freigegebenes Verzeichnis auf, ist der Test gescheitert.\n\nDanach eine begrenzte Aufgabe:\n> \"Lies ausschließlich freigegebene MOCs in `10 Projects/` mit `status: aktiv`. Erstelle einen internen Statusentwurf mit Quellpfad und Datum für jede Aussage. Schreibe noch keine Datei.\"\n\nSchreiben darf Claude erst, wenn Quellen, Berechtigungen und Output geprüft sind, und dann nur in ein separates Ausgabeverzeichnis. Laufzeit und Korrekturaufwand misst du selbst."
         },
         {
           "id": "modul_3_lesson_6_section_4",
           "title": "Weitere Anwendungsfälle",
           "readTimeMinutes": 3,
-          "content": "**Follow-up-Extraktion:**\n> \"Finde in freigegebenen Übungsnotizen alle offenen `#warten-auf`-Einträge. Erstelle interne Entwürfe und nenne pro Aussage die Quelldatei. Kein Versand.\"\n\n**Entscheidungsübersicht:**\n> \"Liste Übungsnotizen mit Tag `#entscheidung`. Nenne Datum, Thema, Entscheidung, Folgeaktion und Quelldatei. Markiere Widersprüche.\"\n\n**Fiktives Kundenprofil:**\n> \"Erstelle aus freigegebenen Übungsnotizen ein Profil für Kunde Alpha (fiktiv). Verwende keine echten Personen- oder Kontaktdaten.\"\n\nMCP gibt dir kontrollierten Zugriff auf einen Vault. Eine korrekte Datenbank macht es aus deinen Notizen nicht. Berechtigungen, Datenminimierung, Quellenprüfung und schreibgeschützte Tests bleiben. Roadmaps und Integrationen ändern sich; lies die aktuelle offizielle Dokumentation, statt einer Datumsprognose zu glauben.",
-          "keyTakeaway": "MCP macht Notizen nicht richtiger. Berechtigungen, Datenminimierung und Quellenprüfung bleiben."
+          "content": "**Follow-up-Extraktion:**\n> \"Finde in freigegebenen Übungsnotizen alle offenen `#warten-auf`-Einträge. Erstelle interne Entwürfe und nenne pro Aussage die Quelldatei. Kein Versand.\"\n\n**Entscheidungsübersicht:**\n> \"Liste Übungsnotizen mit Tag `#entscheidung`. Nenne Datum, Thema, Entscheidung, Folgeaktion und Quelldatei. Markiere Widersprüche.\"\n\n**Fiktives Kundenprofil:**\n> \"Erstelle aus freigegebenen Übungsnotizen ein Profil für Kunde Alpha (fiktiv). Verwende keine echten Personen- oder Kontaktdaten.\"\n\nRichtiger werden deine Notizen durch MCP nicht. Berechtigungen, Datenminimierung, Quellenprüfung und schreibgeschützte Tests bleiben, und für Roadmaps und Integrationen gilt die aktuelle offizielle Dokumentation."
         }
       ],
       "quiz": [
@@ -914,7 +885,7 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Eine konfigurierte MCP-Schnittstelle stellt programmgesteuerte Tools bereit; Copilot arbeitet als Oberfläche innerhalb von Obsidian",
+              "text": "MCP stellt Tools bereit, Copilot ist eine Oberfläche in Obsidian",
               "isCorrect": true
             },
             {
@@ -933,7 +904,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Copilot ist eine Oberfläche in Obsidian. MCP ist eine Werkzeugschnittstelle für kompatible Clients; Transport und Aktionen hängen vom konkreten Server ab."
+          "explanation": "MCP ist eine Werkzeugschnittstelle für kompatible Clients. Transport und verfügbare Aktionen hängen vom jeweiligen Server ab."
         }
       ]
     }

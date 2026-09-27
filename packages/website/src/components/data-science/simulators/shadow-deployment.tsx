@@ -93,8 +93,8 @@ export function ShadowDeployment() {
         "Shadow- und Canary-Deployment",
       )}
       caption={text(
-        "The slider changes a synthetic v2 score shift; it does not route requests. The eight fixed rows and the 0.30 discrepancy line are illustrative. Real promotion criteria need representative traffic, outcome guardrails, uncertainty, and a tested abort path.",
-        "Der Regler verändert eine synthetische Verschiebung der v2-Scores; er leitet keine Anfragen weiter. Die acht festen Zeilen und die Abweichungsgrenze von 0.30 sind illustrativ. Reale Freigabekriterien benötigen repräsentativen Verkehr, Ergebnisleitplanken, Unsicherheit und einen getesteten Abbruchpfad.",
+        "The slider shifts synthetic v2 scores; the eight rows and the 0.30 discrepancy line are illustrative. Real promotion needs representative traffic, outcome guardrails, uncertainty and a tested abort path.",
+        "Der Regler verschiebt synthetische v2-Scores; die acht Zeilen und die Abweichungsgrenze von 0.30 sind illustrativ. Reale Freigaben brauchen repräsentativen Verkehr, Ergebnisleitplanken, Unsicherheit und einen getesteten Abbruchpfad.",
       )}
     >
       <div

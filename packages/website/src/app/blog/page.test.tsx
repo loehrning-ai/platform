@@ -105,6 +105,10 @@ describe("BlogIndexPage", () => {
     // halftone image instead of random dots, with three type sizes only.
     const hero = h1.closest(".blog-index__hero");
     expect(hero).toHaveClass("plakat-idea");
+    // The band checks (contrast, focus) find it like every other band.
+    expect(hero).toHaveAttribute("data-cover-band");
+    // The IDEA poster's caps line carries the hairline arrow, as on /demos.
+    expect(hero?.querySelector(".plakat-caps [data-caps-arrow]")).toBeTruthy();
     expect(document.querySelector("[data-blog-index]")).toHaveAttribute(
       "data-plakat-page",
       "idea",

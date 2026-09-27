@@ -80,13 +80,16 @@
   const VALIDATE_ATTR = 'no_overflowing_text,no_overlapping_text,slide_sized_text';
 
   const pad2 = (n) => String(n).padStart(2, '0');
+  const COVER_STRIP_W = 1056; // the cover's colophon strip width on the 1920 canvas (slides.html #cover)
 
   const stylesheet = `
+    /* The letterbox takes the active slide's own ground (set as --deck-letterbox in _applyIndex), so
+       a poster cover or a paper slide never sits in a black frame. */
     :host {
       position: fixed;
       inset: 0;
       display: block;
-      background: #000;
+      background: var(--deck-letterbox, #f3f0e9);
       color: #fff;
       font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
       overflow: hidden;
@@ -177,6 +180,9 @@
       pointer-events: auto;
       transform: translate(-50%, 0);
     }
+    /* On the poster cover the toolbar centres on the colophon strip under the text column
+       (--deck-cover-nav-x, set in _fit), clear of the poster and its corner dots. */
+    :host([data-cover]) .overlay { left: var(--deck-cover-nav-x, 50%); }
 
     .btn {
       appearance: none;
@@ -587,6 +593,14 @@
         if (i === curr) s.setAttribute('data-deck-active', '');
         else s.removeAttribute('data-deck-active');
       });
+      const active = this._slides[curr];
+      this.toggleAttribute('data-cover', active.id === 'cover');
+      try {
+        const ground = getComputedStyle(active).backgroundColor;
+        if (ground && ground !== 'rgba(0, 0, 0, 0)' && ground !== 'transparent') this.style.setProperty('--deck-letterbox', ground);
+        else this.style.removeProperty('--deck-letterbox');
+      } catch (e) { /* ignore */ }
+      this._fit();
       if (this._countEl) this._countEl.textContent = String(curr + 1);
       this._persistIndex();
 
@@ -640,6 +654,14 @@
       const vh = window.innerHeight;
       const s = Math.min(vw / this.designWidth, vh / this.designHeight);
       this._canvas.style.transform = `scale(${s})`;
+      // Cover toolbar: centre of the colophon strip (x 0 to COVER_STRIP_W on the canvas), clamped
+      // so the whole toolbar stays in the viewport on narrow screens (there it sits in the letterbox).
+      if (this._overlay) {
+        const half = (this._overlay.offsetWidth || 280) / 2 + 8;
+        const left = (vw - this.designWidth * s) / 2;
+        const x = Math.min(Math.max(left + (COVER_STRIP_W / 2) * s, half), vw - half);
+        this.style.setProperty('--deck-cover-nav-x', `${Math.round(x)}px`);
+      }
     }
 
     _onResize() { this._fit(); }

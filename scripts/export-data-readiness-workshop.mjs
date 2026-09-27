@@ -30,7 +30,7 @@ function copyText(name) {
   sourceHashes[name] = sha256(bytes);
   put(name, safeText(bytes.toString()));
 }
-const libFiles = ["cover-globe.css", "deck-runtime.js", "deck-stage.js", "demo-adapter.js", "model-capture-data.js", "presenter-notes.js", "presenter.css", "presenter.js", "replay-data.js", "story.css", "tokens.css"];
+const libFiles = ["deck-runtime.js", "deck-stage.js", "demo-adapter.js", "model-capture-data.js", "presenter-notes.js", "presenter.css", "presenter.js", "replay-data.js", "story.css", "tokens.css"];
 const sceneNames = ["appendix-access-controls", "appendix-architecture", "appendix-ask-boundary", "appendix-evaluation", "appendix-lineage-freshness", "appendix-research", "appendix-run-metadata", "appendix-semantic-contract", "bad-architecture", "bad-ask", "contract-consumers", "controlled-comparison", "cover", "evaluation", "failure-anatomy", "freshness", "generalization", "honest-no", "host", "ready-architecture", "ready-rematch", "resolution", "semantic-contract", "the-arc", "the-case", "your-data"];
 for (const name of [...libFiles, ...sceneNames.map((name) => `scenes/${name}.css`), "scenes/failure-anatomy.js", "scenes/resolution.js"]) copyText(`lib/${name}`);
 put("lib/presenter-notes.js", written.get("lib/presenter-notes.js").toString().replaceAll("release gate BLOCKED", "AI deployment BLOCKED").replaceAll("release gate is BLOCKED", "AI deployment is BLOCKED"));
@@ -59,7 +59,7 @@ adapter = adapter.replace(/async initialize\(\) \{[\s\S]*?\n    useReplay\(reaso
 if (!adapter.includes("public teaching edition; recorded evidence only")) throw new Error("Replay adapter transform no longer matches");
 put("lib/demo-adapter.js", adapter);
 
-for (const name of ["favicon.svg", "globe.svg", "mark-black.svg", "lockup-horizontal.svg", "lockup-horizontal-dark.svg"]) {
+for (const name of ["favicon.svg", "mark-black.svg", "lockup-horizontal.svg", "lockup-horizontal-dark.svg"]) {
   put(`assets/${name}`, readFileSync(path.join(source, "assets", name)));
 }
 for (const weight of [400, 500, 600, 700]) {
@@ -103,7 +103,11 @@ put("demo.html", readFileSync(path.join(root, DEMO_PAGE_SOURCE)));
 put("guide.html", readFileSync(path.join(root, GUIDE_SOURCE)));
 put("PUBLICATION.md", PUBLICATION);
 put("data-readiness-kit.zip", buildKitArchive(kitArchiveFiles(builderFiles).map((name) => [name, written.get(`data-readiness-kit/${name}`)])));
-if (existsSync(path.join(target, "card-preview.webp"))) put("card-preview.webp", readFileSync(path.join(target, "card-preview.webp")));
+// Poster files generated in this repository from src/lib/plakat (packages/website/scripts/plakat/
+// build-cards.mjs and build-static.mjs, each with --check); the export keeps the published copies.
+for (const name of ["card-preview.webp", "assets/plakat-cover.svg"]) {
+  if (existsSync(path.join(target, name))) put(name, readFileSync(path.join(target, name)));
+}
 for (const [name, bytes] of written) {
   if (/\.(?:css|csv|html|js|json|md|py|sql|txt|yml)$/.test(name) && /(?:\/Users|\/home)\//.test(bytes.toString())) throw new Error(`Local authoring path in ${name}`);
 }

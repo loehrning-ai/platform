@@ -103,30 +103,11 @@ const STAGES: readonly StageCard[] = [
 ];
 
 const OUTCOMES = [
-  {
-    t: "Einen unbekannten Datensatz systematisch untersuchen",
-    d: "Verteilungen, Fehlwerte und Korrelationen prüfen, mit einer klaren Checkliste für die ersten 30 Minuten.",
-  },
-  {
-    t: "Ein Modell ohne verstecktes Leakage trainieren",
-    d: "Leakage erkennen, Daten sauber aufteilen und die Kennzahl vor dem Algorithmus festlegen.",
-  },
-  {
-    t: "Eine Konfusionsmatrix korrekt auswerten",
-    d: "Schwellenwerte, Precision und Recall, Kalibrierung und Klassenungleichgewicht einordnen.",
-  },
-  {
-    t: "Einen belastbaren A/B-Test entwerfen",
-    d: "Power, MDE, Stichprobengröße, Neuheitseffekte, SRM-Prüfungen und CUPED berücksichtigen.",
-  },
-  {
-    t: "Korrelation und Kausalität unterscheiden",
-    d: "DAGs, Confounder und Backdoor-Pfade prüfen und Regression gezielt einsetzen.",
-  },
-  {
-    t: "Ein Modell in Produktion stabil betreiben",
-    d: "Drift überwachen, Retraining auslösen, Shadow Mode nutzen und Rollbacks vorbereiten.",
-  },
+  "Datensätze prüfen und ohne verstecktes Leakage trainieren",
+  "Konfusionsmatrix, Schwellenwerte und Kalibrierung auswerten",
+  "A/B-Tests mit Power, MDE und CUPED planen",
+  "Korrelation und Kausalität mit DAGs unterscheiden",
+  "Drift überwachen, neu trainieren und Rollbacks vorbereiten",
 ] as const;
 
 const TOOLS = [
@@ -158,7 +139,7 @@ export default function ChOverviewDe() {
             Data Science bedeutet, aus Daten Entscheidungen abzuleiten.
           </h1>
           <p className="ov-hero-hook">
-            Zwölf Kapitel, ein Arbeitszyklus. Jedes Kapitel beginnt mit einer Simulation, an der du drehst, und erklärt Begriffe, Verfahren und Grenzen daran.
+            Zwölf Kapitel entlang eines Arbeitszyklus, jedes mit einer Simulation, an der du selbst drehst.
           </p>
           <div className="ov-hero-cta">
             <Link
@@ -196,9 +177,8 @@ export default function ChOverviewDe() {
         </div>
         <ul className="ov-outcomes">
           {OUTCOMES.map((outcome) => (
-            <li className="ov-outcome" key={outcome.t}>
-              <p className="ov-outcome-t">{outcome.t}</p>
-              <p className="ov-outcome-d">{outcome.d}</p>
+            <li className="ov-outcome" key={outcome}>
+              <p className="ov-outcome-t">{outcome}</p>
             </li>
           ))}
         </ul>
@@ -208,9 +188,6 @@ export default function ChOverviewDe() {
         <div className="ov-section-head">
           <p className="ov-kicker">Lehrplan</p>
           <h2 className="ov-h2">Zwölf Kapitel: Modell entwickeln, Wirkung nachweisen.</h2>
-          <p className="ov-lede">
-            Die erste Hälfte behandelt den Modellaufbau. Die zweite Hälfte prüft, ob das Ergebnis trägt: Evaluation, Interpretation, Experimente und Betrieb.
-          </p>
         </div>
         <div className="ov-curriculum">
           {STAGES.map((stage) => (
@@ -238,9 +215,6 @@ export default function ChOverviewDe() {
         <div className="ov-section-head ov-sh-tight">
           <p className="ov-kicker">Werkzeuge im Kurs</p>
           <h2 className="ov-h2">Verbreitete Open-Source-Werkzeuge für den Data-Science-Alltag.</h2>
-          <p className="ov-lede">
-            Die Simulationen zeigen das Verhalten dieser Werkzeuge. Die Konzepte tragen auch auf anderen Stacks.
-          </p>
         </div>
         <dl className="ov-tools">
           {TOOLS.map((tool) => (

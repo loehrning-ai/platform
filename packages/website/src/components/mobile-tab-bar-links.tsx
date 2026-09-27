@@ -75,14 +75,16 @@ export function MobileTabBarLinks({
                 takes the scene line: Druckschwarz on paper routes, the page's
                 poster ink below a band (globals.css :root:has()). Weight
                 (label and icon stroke) and aria-current carry the same state
-                without colour, so the current tab reads at a glance. */}
+                without colour, so the current tab reads at a glance. The
+                focus ring is inset (SPEC §3.9 edge rule): every tab touches
+                the bottom edge, Start and Konto the sides. */}
             <Link
               href={tab.href}
               prefetch={false}
               aria-current={active ? "page" : undefined}
               data-mobile-tab={tab.id}
               data-active={active ? "true" : "false"}
-              className={`flex h-full min-h-11 w-full min-w-11 flex-col items-center justify-center gap-1 border-t-2 px-1 transition-colors duration-[120ms] motion-reduce:transition-none ${
+              className={`flex h-full min-h-11 w-full min-w-11 flex-col items-center justify-center gap-1 border-t-2 px-1 transition-colors duration-[120ms] focus-visible:outline-offset-[-3px] motion-reduce:transition-none ${
                 active
                   ? "border-scene-line font-semibold text-foreground [&_svg]:stroke-[2.5]"
                   : "border-transparent text-muted-foreground hover:text-foreground"

@@ -12,7 +12,7 @@
       "blockId": "block_2",
       "number": 1,
       "title": "Wo deine Daten hingehen",
-      "subtitle": "Was mit einem Prompt passiert, bevor die Antwort kommt",
+      "subtitle": "Sechs Prüffelder für jedes Tool",
       "durationMinutes": 5,
       "keyConcepts": [
         "Produktedition",
@@ -25,15 +25,13 @@
           "id": "block_2_lesson_1_section_1",
           "title": "Produkt und Betrieb gemeinsam prüfen",
           "readTimeMinutes": 3,
-          "content": "Du tippst einen Prompt. Wo landet er? Das entscheidet nicht die Marke, sondern die Produktedition, der Vertrag, die Konfiguration und der Arbeitsablauf. Sechs Felder, die du mindestens prüfst:\n\n| Prüffeld | Konkrete Fragen |\n|---|---|\n| **Rollen** | Wer ist Verantwortlicher, Auftragsverarbeiter oder weiterer Empfänger? Ist ein Vertrag zur Auftragsverarbeitung erforderlich und abgeschlossen? |\n| **Datenflüsse** | Welche Inhalte, Metadaten und Protokolle verlassen welches System? In welchen Regionen werden sie gespeichert oder verarbeitet? |\n| **Nutzung durch den Anbieter** | Werden Eingaben oder Ausgaben zur Modellentwicklung, Qualitätsprüfung oder Missbrauchserkennung verwendet? Welche Einstellungen und vertraglichen Zusagen gelten? |\n| **Zugriff und Funktionen** | Welche Rollen, Berechtigungen, Konnektoren, Erweiterungen und Freigabelinks sind aktiv? |\n| **Lebenszyklus** | Wie lange bleiben Eingaben, Ausgaben, Protokolle und Sicherungen erhalten? Wie funktionieren Auskunft, Löschung und Export? |\n| **Betriebliche Freigabe** | Für welche Zwecke, Datenklassen, Nutzergruppen und Konfigurationen gilt die Genehmigung? |\n\nCloud oder lokal, kostenlos oder bezahlt, Verbraucher- oder Unternehmensprodukt: das sind Vertriebskategorien, keine Datenschutzklassen. Ein lokales System kann Telemetrie senden, Erweiterungen laden und ins Netz gehen. Ein Unternehmensvertrag deckt nicht automatisch jede Funktion und jede Datenklasse ab. Darum liest du die aktuellen Vertrags- und Produktunterlagen bei der Beschaffung und nach jeder wesentlichen Änderung noch einmal.",
-          "keyTakeaway": "Rollen, Datenflüsse, Anbieternutzung, Zugriffe, Aufbewahrung, freigegebener Zweck: das prüfst du. Produktkategorie und Markenname prüfen nichts."
+          "content": "Wohin ein Prompt geht, bestimmen Produktedition, Vertrag, Konfiguration und Arbeitsablauf. Prüfe mindestens diese sechs Felder:\n\n| Prüffeld | Fragen |\n|---|---|\n| **Rollen** | Wer ist Verantwortlicher, Auftragsverarbeiter oder weiterer Empfänger? Ist ein AVV nötig und abgeschlossen? |\n| **Datenflüsse** | Welche Inhalte, Metadaten und Protokolle verlassen welches System, und in welchen Regionen werden sie gespeichert oder verarbeitet? |\n| **Nutzung durch den Anbieter** | Nutzt der Anbieter Ein- oder Ausgaben für Modellentwicklung, Qualitätsprüfung oder Missbrauchserkennung? Welche Einstellungen und Zusagen gelten? |\n| **Zugriff und Funktionen** | Welche Rollen, Berechtigungen, Konnektoren, Erweiterungen und Freigabelinks sind aktiv? |\n| **Lebenszyklus** | Wie lange bleiben Eingaben, Ausgaben, Protokolle und Sicherungen erhalten? Wie laufen Auskunft, Löschung und Export? |\n| **Betriebliche Freigabe** | Für welche Zwecke, Datenklassen, Nutzergruppen und Konfigurationen gilt die Genehmigung? |\n\nCloud oder lokal, kostenlos oder bezahlt, Verbraucher- oder Unternehmensprodukt sind Vertriebskategorien. Ein lokales System kann Telemetrie senden und ins Netz gehen, ein Unternehmensvertrag deckt nicht jede Funktion und Datenklasse ab. Prüfe die Unterlagen bei der Beschaffung und nach jeder wesentlichen Änderung."
         },
         {
           "id": "block_2_lesson_1_section_2",
           "title": "Shadow AI und was dagegen hilft",
           "readTimeMinutes": 2,
-          "content": "Shadow AI ist jede KI-Nutzung für betriebliche Aufgaben, die niemand genehmigt hat. Das private Chatkonto ist der bekannteste Fall. Die Browser-Erweiterung zählt genauso, die neue Funktion in längst beschaffter Software, der eigene API-Schlüssel und das lokale Modell außerhalb des Betriebsprozesses.\n\nWas bei einem nicht freigegebenen Arbeitsablauf fehlen kann: Vertrag, Rechtsgrundlage, Berechtigungen, Datenregion, Aufbewahrung, Protokollierung, technische Kontrollen. Der Schalter \"Trainingsnutzung aus\" beantwortet davon keine einzige Frage allein.\n\nWas dagegen hilft, muss im Alltag funktionieren. Eine Freigabematrix, die aktuell ist. Datenregeln, die man versteht. Ansprechpartner, die man erreicht. Ein Beschaffungsweg, den man prüfen kann. Und genehmigte Alternativen, die für die Aufgabe taugen. Technisch kommen je nach Risiko Zugriffssteuerung, Konfigurationsrichtlinien, Protokollierung oder Sperren dazu.\n\nUnd du selbst? Vor jeder beruflichen Verarbeitung schaust du in den veröffentlichten Freigabestatus. Für genau diesen Zweck, diese Datenklasse, diese Produktedition und die Konfiguration, die gerade aktiv ist.",
-          "keyTakeaway": "Shadow AI ist jeder KI-Arbeitsablauf ohne Genehmigung. Klare Freigaben, brauchbare Alternativen und technische Kontrollen drücken das Risiko."
+          "content": "Shadow AI ist jede KI-Nutzung für die Arbeit, die niemand genehmigt hat. Am bekanntesten ist das private Chatkonto; genauso zählen Browser-Erweiterungen, neue Funktionen in längst gekaufter Software, eigene API-Schlüssel und lokale Modelle außerhalb des Betriebsprozesses.\n\nSolchen Abläufen können Vertrag, Rechtsgrundlage, Berechtigungen, Datenregion, Aufbewahrung, Protokollierung und technische Kontrollen fehlen. Der Schalter \"Trainingsnutzung aus\" klärt davon nichts allein.\n\nEs helfen eine aktuelle Freigabematrix, verständliche Datenregeln, erreichbare Ansprechpartner, ein prüfbarer Beschaffungsweg und taugliche genehmigte Alternativen, je nach Risiko auch Zugriffssteuerung, Konfigurationsrichtlinien, Protokollierung oder Sperren.\n\nVor jeder beruflichen Nutzung prüfst du den veröffentlichten Freigabestatus für Zweck, Datenklasse, Produktedition und aktive Konfiguration."
         }
       ],
       "quiz": [
@@ -62,25 +60,25 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Sicher ist, was geprüft wurde: Produkt, Vertrag, Berechtigungen, Datenklassen und die Konfiguration von Tenant und Datenregion. Ein Markenname prüft nichts, ein europäischer Firmensitz auch nicht."
+          "explanation": "Sicher ist, was geprüft wurde: Produkt, Vertrag, Berechtigungen, Datenklassen, Tenant und Datenregion. Markenname und europäischer Firmensitz prüfen nichts davon."
         },
         {
           "id": "block_2_lesson_1_q2",
-          "questionText": "Was versteht man unter \"Shadow AI\" im Unternehmenskontext?",
+          "questionText": "Was ist Shadow AI?",
           "answerOptions": [
             {
               "id": "a",
-              "text": "Eine besonders sichere KI, die im Hintergrund arbeitet",
+              "text": "Eine besonders sichere KI, die im Hintergrund läuft",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Die Nutzung von KI-Tools durch die IT-Abteilung",
+              "text": "KI-Tools, die die IT-Abteilung selbst nutzt",
               "isCorrect": false
             },
             {
               "id": "c",
-              "text": "Die unautorisierte Nutzung von KI-Tools durch Mitarbeitende ohne Wissen des Unternehmens",
+              "text": "KI-Nutzung für die Arbeit, die niemand genehmigt hat",
               "isCorrect": true
             },
             {
@@ -89,7 +87,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Shadow AI heißt: KI-Arbeitsablauf ohne Genehmigung. Das kann ein Verbraucherangebot sein, eine Erweiterung, ein persönlicher API-Schlüssel, ein lokales Modell oder eine neue Funktion in Software, die längst gekauft ist."
+          "explanation": "Es zählt jede KI-Nutzung für die Arbeit ohne Genehmigung, auch eine Erweiterung oder ein eigener API-Schlüssel. Wer sie nutzt oder wie sicher sie wirkt, ändert daran nichts."
         }
       ]
     },
@@ -111,15 +109,13 @@
           "id": "block_2_lesson_2_section_1",
           "title": "Ein Beispielmodell mit vier Stufen",
           "readTimeMinutes": 3,
-          "content": "Welche Daten in welches System dürfen, legt deine Organisation fest. Nicht dieser Kurs. Die vier Stufen hier sind ein Beispiel, keine Zuordnung zu Produktnamen, die überall gilt.\n\n**Stufe 1: Öffentlich**\nWas schon veröffentlicht ist: der freigegebene Website-Text, der Produktkatalog. Trotzdem prüfst du Urheberrecht, Lizenzen, eingebettete personenbezogene Daten, Integrität und die betriebliche Tool-Freigabe. Öffentlich heißt nicht frei verwendbar.\n\n**Stufe 2: Intern**\nWas nicht nach draußen soll: Projektpläne, Protokolle. Sie gehören nur in einen Arbeitsablauf, der für diesen Zweck und diese Datenklasse freigegeben ist.\n\n**Stufe 3: Vertraulich**\nWas geschäftlich, vertraglich oder datenschutzrechtlich mehr Schutz braucht: unveröffentlichte Kennzahlen, Kundenlisten, Lieferantenkonditionen. Hier brauchst du eine konkrete Freigabe, dazu geprüfte Verträge, Konfiguration, Berechtigungen und Aufbewahrung. Je nach Fall kommen Rechtsgrundlage oder Datenschutz-Folgenabschätzung dazu.\n\n**Stufe 4: Besonders geschützt**\nWas bei Verlust oder Fehlverarbeitung schweren Schaden anrichten kann: Gesundheitsdaten, Gehaltsdaten, Bewerbungsunterlagen, unveröffentlichte Erfindungen. In allgemeinen Assistenten ist das standardmäßig gesperrt. Verarbeitet wird nur in einem ausdrücklich genehmigten, eng begrenzten System und Arbeitsablauf. Passwörter, API-Schlüssel und andere Zugangsdaten gehören in keinen Prompt, egal welche Stufe.\n\nDeine Organisation nennt die Stufen vielleicht anders und zieht die Grenzen woanders. Das ist in Ordnung. Was zählt, ist die veröffentlichte Richtlinie, nicht der Markenname des Tools.",
-          "keyTakeaway": "Datenklasse und Tool-Freigabe legt deine Organisation fest. Zweck, Rechte, Vertrag, Konfiguration und Berechtigungen prüfst du; ein Produktname erteilt keine Freigabe."
+          "content": "Welche Daten in welches System dürfen, legt deine Organisation fest. Die vier Stufen hier sind ein Beispiel ohne Zuordnung zu Produktnamen.\n\n**Stufe 1, öffentlich:** Was schon veröffentlicht ist, etwa freigegebener Website-Text und Produktkatalog. Urheberrecht, Lizenzen, eingebettete personenbezogene Daten, Integrität und Tool-Freigabe prüfst du trotzdem.\n\n**Stufe 2, intern:** Was nicht nach draußen soll, etwa Projektpläne und Protokolle. Es gehört nur in einen Arbeitsablauf, der für diesen Zweck und diese Datenklasse freigegeben ist.\n\n**Stufe 3, vertraulich:** Was geschäftlich, vertraglich oder datenschutzrechtlich mehr Schutz braucht, etwa unveröffentlichte Kennzahlen, Kundenlisten und Lieferantenkonditionen. Nötig sind eine Freigabe sowie geprüfte Verträge, Konfiguration, Berechtigungen und Aufbewahrung, je nach Fall auch Rechtsgrundlage oder Datenschutz-Folgenabschätzung.\n\n**Stufe 4, besonders geschützt:** Was bei Verlust oder Fehlverarbeitung schwer schadet, etwa Gesundheits- und Gehaltsdaten, Bewerbungsunterlagen und unveröffentlichte Erfindungen. Allgemeine Assistenten sind dafür standardmäßig gesperrt; verarbeitet wird nur in einem ausdrücklich genehmigten, eng begrenzten System und Arbeitsablauf.\n\nPasswörter, API-Schlüssel und andere Zugangsdaten gehören auf keiner Stufe in einen Prompt."
         },
         {
           "id": "block_2_lesson_2_section_2",
           "title": "Der Entscheidungsbaum",
           "readTimeMinutes": 2,
-          "content": "Fünf Fragen vor jeder Eingabe. Jede einzelne, jedes Mal:\n\n1. **Zweck:** Welche konkrete Aufgabe soll das System erledigen?\n2. **Daten und Rechte:** Welche Datenarten, Personen, Urheberrechte, Geschäftsgeheimnisse oder vertraglichen Pflichten sind betroffen?\n3. **Interne Einstufung:** Welche Datenklasse nennt die Richtlinie deiner Organisation?\n4. **Freigabe:** Ist genau dieses Produkt mit dieser Konfiguration, diesen Erweiterungen und diesem Arbeitsablauf dafür genehmigt?\n5. **Minimierung:** Was kannst du weglassen, anonymisieren oder durch ein synthetisches Beispiel ersetzen?\n\nFehlt eine Antwort, gibst du nichts ein. Punkt. Dann geht es über den veröffentlichten Freigabe- oder Eskalationsweg deiner Organisation. Eine bezahlte Lizenz beantwortet keine der fünf Fragen allein. Ein Unternehmens-Tenant auch nicht. Eine ausgeschaltete Trainingsnutzung erst recht nicht.\n\nVorsichtig einstufen senkt das Risiko. Rechtsgrundlage, Zweckbindung, Berechtigung und Vertrag ersetzt es nicht.",
-          "keyTakeaway": "Zweck, Daten und Rechte, interne Einstufung, konkrete Systemfreigabe, Datenminimierung. Fehlt eine Antwort, stoppst du und gehst den betrieblichen Klärungsweg."
+          "content": "Vor jeder Eingabe beantwortest du fünf Fragen:\n\n1. **Zweck:** Welche Aufgabe soll das System erledigen?\n2. **Daten und Rechte:** Welche Datenarten, Personen, Urheberrechte, Geschäftsgeheimnisse oder vertraglichen Pflichten sind betroffen?\n3. **Interne Einstufung:** Welche Datenklasse nennt die Richtlinie deiner Organisation?\n4. **Freigabe:** Sind Produkt, Konfiguration, Erweiterungen und Arbeitsablauf genau dafür genehmigt?\n5. **Minimierung:** Was kannst du weglassen, anonymisieren oder durch ein synthetisches Beispiel ersetzen?\n\nFehlt eine Antwort, gibst du nichts ein und gehst den veröffentlichten Freigabe- oder Eskalationsweg. Bezahlte Lizenz, Unternehmens-Tenant und ausgeschaltete Trainingsnutzung beantworten keine der Fragen allein. Vorsichtiges Einstufen senkt das Risiko, ersetzt aber weder Rechtsgrundlage noch Zweckbindung, Berechtigung oder Vertrag."
         }
       ],
       "quiz": [
@@ -139,7 +135,7 @@
             },
             {
               "id": "c",
-              "text": "Die Verarbeitung muss bis zur Klärung von Zweck, Rechtsgrundlage, Datenklasse und konkreter Tool-Freigabe unterbleiben",
+              "text": "Keine Verarbeitung, bis Zweck, Rechtsgrundlage, Datenklasse und Tool-Freigabe geklärt sind",
               "isCorrect": true
             },
             {
@@ -148,11 +144,11 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Namen und E-Mail-Adressen können personenbezogene Daten sein. Ob die Verarbeitung zulässig ist, hängt von Zweck, Rechtsgrundlage, interner Einstufung, Vertrag, Konfiguration und Datenminimierung ab, und je nach Fall von mehr. Der Produktname entscheidet das nicht. Das Preismodell auch nicht."
+          "explanation": "Namen und E-Mail-Adressen können personenbezogene Daten sein. Über die Zulässigkeit entscheiden unter anderem Zweck, Rechtsgrundlage, Einstufung, Vertrag, Konfiguration und Minimierung."
         },
         {
           "id": "block_2_lesson_2_q2",
-          "questionText": "Was solltest du tun, wenn du unsicher bist, welche Vertraulichkeitsstufe ein Datenelement hat?",
+          "questionText": "Was tust du, wenn die Vertraulichkeitsstufe eines Datenelements unklar ist?",
           "answerOptions": [
             {
               "id": "a",
@@ -175,7 +171,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Vorsichtig einstufen ist gut, aber keine Freigabe. Ist die Datenklasse unklar oder der zulässige Arbeitsablauf, wird erst geklärt und dann eingegeben. Nicht umgekehrt."
+          "explanation": "Vorsichtiges Einstufen ersetzt keine Freigabe. Sind Datenklasse oder zulässiger Arbeitsablauf unklar, klärst du erst und gibst dann ein."
         }
       ]
     },
@@ -184,7 +180,7 @@
       "blockId": "block_2",
       "number": 3,
       "title": "Übung: 10 Datenelemente klassifizieren",
-      "subtitle": "Zehn Datenelemente, und was neben der Stufe noch zählt",
+      "subtitle": "Was neben der Stufe zählt",
       "durationMinutes": 5,
       "keyConcepts": ["Datenklassifizierung", "Praxisübung", "DSGVO Art. 28"],
       "sections": [
@@ -192,15 +188,13 @@
           "id": "block_2_lesson_3_section_1",
           "title": "Die Übung",
           "readTimeMinutes": 3,
-          "content": "Nimm das Beispielmodell aus der letzten Lektion. Die Stufen unten sind Annahmen für ein fiktives Unternehmen. Bei dir gilt deine Richtlinie, nicht diese Tabelle.\n\n| Nr. | Datenelement | Beispielstufe | Zusätzliche Prüfung |\n|-----|-------------|---------------|----------------------|\n| 1 | Freigegebener Website-Text | Öffentlich | Nutzungsrechte, personenbezogene Angaben und Aktualität |\n| 2 | Internes Meeting-Protokoll | Intern | Teilnehmende, Themen, Einwilligung oder Rechtsgrundlage, freigegebener Arbeitsablauf |\n| 3 | Quartalsumsatz vor Veröffentlichung | Vertraulich | Kapitalmarkt-, Geheimhaltungs- und Zugriffsregeln |\n| 4 | Kundenliste mit Kontaktdaten | Vertraulich | Zweck, Rechtsgrundlage, Auftragsverarbeitung und Datenminimierung |\n| 5 | Gehaltsabrechnung | Besonders geschützt | Nur ausdrücklich genehmigte Fachverfahren; keine allgemeinen Assistenten |\n| 6 | Veröffentlichter Produktkatalog | Öffentlich | Rechte, Version und freigegebene Verwendung |\n| 7 | Bewerbungsunterlagen | Besonders geschützt | Zweckbindung, Zugriffsrechte, Aufbewahrung und mögliche Folgen für Betroffene |\n| 8 | Erfindungsbeschreibung vor Anmeldung | Besonders geschützt | Patent- und Geheimnisschutz; nur mit ausdrücklicher Freigabe |\n| 9 | Pressemitteilung im Entwurf | Intern oder vertraulich | Inhalt und geplanter Veröffentlichungszeitpunkt |\n| 10 | Lieferantenkonditionen | Vertraulich | Vertragliche Geheimhaltung und Berechtigungen |\n\nEine Stufe zuordnen ist der leichte Teil. Schreib zu jeder Zeile auch Zweck, Datenminimierung, erforderliche Freigabe und zuständige Stelle dazu.",
-          "keyTakeaway": "Die Datenklasse ist ein Teil der Entscheidung, mehr nicht. Zweck, Rechte, konkrete Systemfreigabe, Konfiguration und Minimierung bestimmen, ob der Arbeitsablauf zulässig ist."
+          "content": "Die Stufen unten sind Annahmen für ein fiktives Unternehmen; bei dir gilt deine Richtlinie.\n\n| Nr. | Datenelement | Beispielstufe | Zusätzliche Prüfung |\n|-----|-------------|---------------|----------------------|\n| 1 | Freigegebener Website-Text | Öffentlich | Nutzungsrechte, personenbezogene Angaben, Aktualität |\n| 2 | Internes Meeting-Protokoll | Intern | Teilnehmende, Themen, Einwilligung oder Rechtsgrundlage, freigegebener Arbeitsablauf |\n| 3 | Quartalsumsatz vor Veröffentlichung | Vertraulich | Kapitalmarkt-, Geheimhaltungs- und Zugriffsregeln |\n| 4 | Kundenliste mit Kontaktdaten | Vertraulich | Zweck, Rechtsgrundlage, Auftragsverarbeitung, Datenminimierung |\n| 5 | Gehaltsabrechnung | Besonders geschützt | Nur ausdrücklich genehmigte Fachverfahren, keine allgemeinen Assistenten |\n| 6 | Veröffentlichter Produktkatalog | Öffentlich | Rechte, Version, freigegebene Verwendung |\n| 7 | Bewerbungsunterlagen | Besonders geschützt | Zweckbindung, Zugriffsrechte, Aufbewahrung, Folgen für Betroffene |\n| 8 | Erfindungsbeschreibung vor Anmeldung | Besonders geschützt | Patent- und Geheimnisschutz, nur mit ausdrücklicher Freigabe |\n| 9 | Pressemitteilung im Entwurf | Intern oder vertraulich | Inhalt und geplanter Veröffentlichungszeitpunkt |\n| 10 | Lieferantenkonditionen | Vertraulich | Vertragliche Geheimhaltung und Berechtigungen |\n\nSchreib zu jeder Zeile auch Zweck, Datenminimierung, erforderliche Freigabe und zuständige Stelle dazu."
         },
         {
           "id": "block_2_lesson_3_section_2",
           "title": "Was die Tabelle zeigt",
           "readTimeMinutes": 2,
-          "content": "**So löst das Beispielmodell die zehn Zeilen auf:**\n\n- **Öffentlich (Nr. 1, 6):** Schon freigegeben. Rechte, personenbezogene Angaben, Aktualität und die betrieblichen Tool-Regeln prüfst du trotzdem.\n- **Intern (Nr. 2, teilweise Nr. 9):** Bleibt im vorgesehenen Empfängerkreis. Nur der dafür freigegebene Arbeitsablauf, und alles raus, was der Zweck nicht braucht.\n- **Vertraulich (Nr. 3, 4, 10; je nach Inhalt Nr. 9):** Vertrag, Rechtsgrundlage, Berechtigungen, Datenregion, Aufbewahrung und Systemkonfiguration müssen zum Zweck passen. \"Ist doch ein Unternehmensprodukt\" ist kein Argument.\n- **Besonders geschützt (Nr. 5, 7, 8):** Allgemeine Assistenten sind im Beispiel gesperrt. Eine Ausnahme gibt es nur mit einem dokumentierten, fachlich und rechtlich geprüften Arbeitsablauf.\n\nEine echte Richtlinie braucht mehr als diese vier Stufen: Verantwortliche, freigegebene Produkte und Funktionen, verbotene Daten, einen Meldeweg für Vorfälle und einen Prozess für neue Anwendungsfälle.",
-          "keyTakeaway": "Die Stufe allein dokumentiert nichts. Dazu gehören Zweck, freigegebenes System, zulässige Funktionen, Verantwortliche und Eskalationsweg."
+          "content": "- **Öffentlich (Nr. 1, 6):** Rechte, personenbezogene Angaben, Aktualität und Tool-Regeln prüfst du trotzdem.\n- **Intern (Nr. 2, teilweise Nr. 9):** Bleibt im vorgesehenen Empfängerkreis, nur im freigegebenen Arbeitsablauf und ohne Angaben, die der Zweck nicht braucht.\n- **Vertraulich (Nr. 3, 4, 10; je nach Inhalt Nr. 9):** Vertrag, Rechtsgrundlage, Berechtigungen, Datenregion, Aufbewahrung und Konfiguration müssen zum Zweck passen, auch bei einem Unternehmensprodukt.\n- **Besonders geschützt (Nr. 5, 7, 8):** Allgemeine Assistenten sind gesperrt. Eine Ausnahme braucht einen dokumentierten, fachlich und rechtlich geprüften Arbeitsablauf.\n\nEine echte Richtlinie braucht außerdem Verantwortliche, freigegebene Produkte und Funktionen, verbotene Daten, einen Meldeweg für Vorfälle und einen Prozess für neue Anwendungsfälle."
         }
       ],
       "quiz": [
@@ -225,11 +219,11 @@
             },
             {
               "id": "d",
-              "text": "Als besonders geschützt; ohne ausdrücklich genehmigten Arbeitsablauf nicht eingeben, weil eine Offenlegung Patent- oder Geheimnisschutz gefährden kann",
+              "text": "Als besonders geschützt; nur in einem ausdrücklich genehmigten Arbeitsablauf",
               "isCorrect": true
             }
           ],
-          "explanation": "Eine unkontrollierte Offenlegung kann die Neuheit kosten oder den Schutz als Geschäftsgeheimnis. Ob eine konkrete Verarbeitung zulässig ist, entscheidet der genehmigte Patent-, Sicherheits- und Datenschutzprozess. Weder Cloud noch lokal ist automatisch richtig."
+          "explanation": "Eine unkontrollierte Offenlegung kann die Neuheit oder den Geheimnisschutz kosten. Ob eine Verarbeitung zulässig ist, entscheidet der genehmigte Patent-, Sicherheits- und Datenschutzprozess, in der Cloud wie lokal."
         },
         {
           "id": "block_2_lesson_3_q2",
@@ -242,7 +236,7 @@
             },
             {
               "id": "b",
-              "text": "Nur ein für Protokolle, beteiligte Datenarten und konkrete Konfiguration freigegebener Arbeitsablauf; nicht benötigte Angaben werden entfernt",
+              "text": "Nur ein dafür freigegebener Arbeitsablauf, unnötige Angaben vorher entfernen",
               "isCorrect": true
             },
             {
@@ -256,7 +250,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Ein Protokoll sieht harmlos aus und kann personenbezogene, vertrauliche oder besonders geschützte Inhalte tragen. Produkt, Vertrag, Funktionen wie Aufzeichnung und Transkription, Berechtigungen, Aufbewahrung und Zweck müssen ausdrücklich freigegeben sein. Lokal installiert heißt nicht freigegeben."
+          "explanation": "Ein Protokoll kann personenbezogene, vertrauliche oder besonders geschützte Inhalte tragen. Produkt, Vertrag, Aufzeichnung und Transkription, Berechtigungen, Aufbewahrung und Zweck müssen freigegeben sein, auch bei lokaler Installation."
         }
       ],
       "widgets": [

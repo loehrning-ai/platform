@@ -23,7 +23,7 @@ export default function Ch09Causal() {
       <Hero
         eyebrow="Chapter 09 · Causal"
         title='Correlation is a <em>hypothesis.</em><br/>Causation takes <span class="accent">work.</span>'
-        hook="No experiment available? Then causal inference. DAGs, backdoor adjustment, difference-in-differences, instrumental variables. The math is harder, and the judgment is harder still."
+        hook="Without an experiment, causal claims rest on DAGs, backdoor adjustment, difference-in-differences and instrumental variables, and on your judgment about their assumptions."
         meta={[
           { k: "Read", v: "14 min" },
           { k: "Focus", v: "DAGs · DiD · IV" },
@@ -37,12 +37,11 @@ export default function Ch09Causal() {
           The correlation that <em>looks</em> causal.
         </h2>
         <p className="prose">
-          The synthetic example ties temperature to ice-cream sales and to
-          drowning deaths at once. A positive aggregate association appears,
-          with no ice-cream effect anywhere in it. Inside the three constructed
-          temperature bands the association shrinks. Real data need a causal
-          model, measurement checks, and uncertainty. Stratification alone is
-          no proof that all confounding is gone.
+          In the synthetic example, temperature drives both ice-cream sales and
+          drowning deaths, so a positive association appears although ice cream
+          has no effect. Inside the three temperature bands it shrinks. Real
+          data need a causal model, measurement checks and uncertainty;
+          stratification alone does not prove all confounding is gone.
         </p>
         <ConfoundingSimulator />
       </section>
@@ -53,11 +52,11 @@ export default function Ch09Causal() {
           Draw the DAG <em>before</em> the regression.
         </h2>
         <p className="prose">
-          A Directed Acyclic Graph (DAG) writes down the causal relations you
-          assume. Nodes are variables, arrows are direct-effect assumptions.
-          With a correct graph and an explicit estimand, the structure hands you
-          candidate adjustment sets. Data verify no arrow on their own, and the
-          four teaching patterns are no complete causal model.
+          A Directed Acyclic Graph (DAG) records the causal relations you
+          assume: nodes are variables, arrows are direct-effect assumptions.
+          With a correct graph and an explicit estimand, it yields candidate
+          adjustment sets. Data alone verify no arrow, and four teaching
+          patterns are no complete causal model.
         </p>
         <DAGBuilder />
       </section>
@@ -66,9 +65,9 @@ export default function Ch09Causal() {
         <SectionLabel n="09.3">Classic DAG patterns</SectionLabel>
         <h2 className="h2">Confounder. Collider. Mediator.</h2>
         <p className="prose">
-          Confounders, colliders, and mediators demand different adjustment
-          decisions. Regression software reads no causal role out of a
-          table. The roles come from the stated graph and domain assumptions.
+          Confounders, colliders and mediators need different adjustment
+          decisions. No software reads a causal role from a table; the roles
+          come from the stated graph and domain assumptions.
         </p>
         <DAGViewer />
       </section>
@@ -80,13 +79,12 @@ export default function Ch09Causal() {
           <em>natural experiment.</em>
         </h2>
         <p className="prose">
-          Difference-in-Differences (DiD) compares the change in a treated group
-          against the change in an untreated control group. Under parallel
-          trends, no anticipation, no interference, and stable composition or an
-          analysis that accounts for the changes, the control trend identifies
-          the treated group&apos;s counterfactual change. Similar pre-trends
-          support the design. They prove nothing about the unobserved
-          post-treatment counterfactual.
+          Difference-in-Differences (DiD) compares the change in a treated
+          group with the change in an untreated control group. Under parallel
+          trends, no anticipation, no interference and stable composition, the
+          control trend gives the treated group&apos;s counterfactual change.
+          Similar pre-trends support the design but prove nothing about the
+          unobserved post-treatment trend.
         </p>
         <DifferenceInDifferences />
       </section>
@@ -99,40 +97,33 @@ export default function Ch09Causal() {
         </h2>
         <p className="prose">
           When unmeasured confounders bias OLS, an instrumental-variable design
-          identifies an effect only under strong assumptions. Z has to affect X
-          (relevance), reach Y through no path except X (exclusion), and stay
-          independent of unobserved causes of Y (exogeneity). With heterogeneous
-          effects the estimand rests on monotonicity as well. You argue these
-          assumptions from design and domain knowledge. The first stage settles
-          relevance at most.
+          identifies an effect only under strong assumptions: Z affects X
+          (relevance), reaches Y only through X (exclusion) and is independent
+          of unobserved causes of Y (exogeneity). Heterogeneous effects also
+          need monotonicity. You argue these from design and domain knowledge;
+          the first stage settles relevance at most.
         </p>
         <InstrumentalVariable />
       </section>
 
       <AntiPatterns
         items={[
-          "<b>Controlling for a collider under the assumed DAG.</b> This can open a non-causal association between its causes and introduce selection bias.",
-          "<b>Controlling for a mediator when estimating the total effect.</b> That blocks part of the pathway. Mediation analysis needs a different estimand and further assumptions.",
-          "<b>Regressing on everything.</b> More controls ≠ better estimate. The DAG determines the adjustment set.",
-          "<b>Treating the first-stage F-statistic as an IV validity test.</b> Strength does not establish exclusion or exogeneity, and the conventional value 10 is only a context-dependent weak-instrument screen.",
-          "<b>Ignoring pre-treatment dynamics in DiD.</b> Plot event-time estimates and dig into composition changes, anticipation, and other shocks before you read the design.",
+          "<b>Regressing on everything.</b> More controls ≠ better estimate; the DAG sets the adjustment set.",
+          "<b>Treating the first-stage F-statistic as an IV validity test.</b> Strength shows neither exclusion nor exogeneity, and the value 10 is only a context-dependent weak-instrument screen. Report weak-IV-robust inference.",
+          "<b>Ignoring pre-treatment dynamics in DiD.</b> Plot event-time estimates and check composition changes, anticipation and other shocks first.",
         ]}
       />
       <BestPractices
         items={[
-          "<b>Draw the DAG first.</b> On paper, before any code. Share it with domain experts, they'll spot wrong arrows.",
-          "<b>Use the backdoor criterion on the assumed graph.</b> Find a sufficient adjustment set and run sensitivity analysis for plausible omitted structure.",
-          "<b>Diagnose pre-period behavior for DiD.</b> Divergence is a warning. Apparent similarity is no proof of post-treatment parallel trends.",
-          "<b>Report first-stage diagnostics and weak-IV-robust inference.</b> An F-statistic above 10 does not validate the instrument, and the relevant diagnostic depends on the design.",
+          "<b>Draw the DAG first,</b> before any code, and show it to domain experts; they spot wrong arrows.",
+          "<b>Use the backdoor criterion on the assumed graph.</b> Find a sufficient adjustment set and test plausible omitted structure with sensitivity analysis.",
           "<b>Be explicit about which effect you want.</b> Total effect? Direct effect? Local Average Treatment Effect (LATE)?",
         ]}
       />
       <Takeaway
         items={[
-          "<b>Draw the DAG before the regression.</b> Use it to expose assumptions and propose an adjustment set. The graph is no evidence that its own arrows are right.",
-          `<b>"Controlling for X" is not harmless.</b> It depends entirely on X's structural role.`,
-          "<b>Causal inference from observational data requires strong assumptions.</b> State them. Defend them.",
-          "<b>Prefer randomization when it is feasible, ethical, and implemented correctly.</b> Otherwise choose the design whose identification assumptions are most defensible and testable.",
+          "<b>Causal inference from observational data needs strong assumptions.</b> Write them down and defend them.",
+          "<b>Prefer randomization when it is feasible, ethical and done correctly.</b> Otherwise pick the design with the most defensible and testable identification assumptions.",
         ]}
       />
     </>

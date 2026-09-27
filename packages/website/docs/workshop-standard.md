@@ -2,7 +2,7 @@
 
 How every loehrning.ai workshop is built, what it publishes, and when it is done. It applies to Workshops 01 to 04 and to every new one. The registry in `src/lib/workshops.ts` carries the fields named here, and `src/lib/workshops.test.ts` enforces the parts a test can check.
 
-Visual design follows the Werkzeichnung direction taken from the Workshop 03 deck (paper, ink, one Mennige accent, hairlines). Copy follows the voice rules enforced by `bun run content:lint` (du-form, concrete nouns, no staged contrasts, no dashes). This document covers structure only.
+Visual design follows the Werkzeichnung direction taken from the Workshop 03 deck (paper, ink, one Mennige accent, hairlines), with the poster layer on top: each workshop has its own poster palette (section 5.1, `docs/experience-system.md`). Copy follows the voice rules enforced by `bun run content:lint` (du-form, concrete nouns, no staged contrasts, no dashes). This document covers structure only.
 
 ## 1. Principles
 
@@ -81,9 +81,17 @@ Each bar is written so a person or a test can check it.
 
 ## 5. The detail page
 
-Above the fold (1440 by 900 and 390 by 844) the page answers six questions: what problem (kicker, title, summary), which question (the q-card with `question`), how long (`minutesLive`, `minutesSelfStudy`), what I need (the most limiting item from `needs`), what I leave with (`outcome`), where I start (one primary button for the `primary` material, one secondary button "Material ansehen").
+The page opens with the workshop's poster band, then the brief on paper. Together they answer six questions: what problem (caps line, title, summary), where I start (one primary button for the `primary` material, one secondary button for a demo or lab, else "Material ansehen"), which question (the q-card with `question`), how long (`minutesLive`, `minutesSelfStudy`), what I need (the most limiting item from `needs`) and what I leave with (`outcome`). On a 390 by 664 phone the start button sits in the first screen and the decision lab starts within 1.7 screens.
 
-Below the fold, in this order:
+### 5.1 The poster band and the brief
+
+- **One palette per workshop.** `WORKSHOP_PLAKAT` in `src/lib/plakat/palettes.ts` is the only mapping: 01 Lemons, 02 IDEA, 03 Bloom, 04 Autumn. The band, the hub poster, the social card, the deck cover and the static materials all read it. Four workshops, four palettes; a fifth workshop needs a new decision, never a second mapping.
+- **The band** (`PlakatBand`, scope `plakat-<key>`, and `data-plakat-page` on the page wrapper) holds only this, in order: on phones the back link, the caps line (`workshop.eyebrow`), the poster title (the title head at poster size through the fit rule, the subtitle inside the h1 at 17px), the summary at 17px and the scene buttons. The art is the workshop's poster with its numeral: the right column from lg, a strip after the buttons below lg. Three type sizes at most. No q-card, meta line, chip, `text-caption` or `text-label` inside the band.
+- **The brief on paper.** The q-card (paper tone, Mennige bar) and the facts line (minutes, invented case, material language, free) open the agenda section, before its Kopflinie, so the order band, agenda, lab holds. The need and the outcome follow as a short list from sm; on phones the sections below carry them.
+- **Rost rules (Autumn, Workshop 04 today).** Creme on Rost is 4.80:1, just above AA, so inside an autumn scene all text is 17px or larger at weight 400 or more, there is no muted tier and no reduced opacity, hover underlines or inverts and never tints, and no q-card, status chip, badge, form field or progress bar sits in the band. A meaningful shape uses Ocker hell; Ocker is decoration only.
+- **Below the band** the Kopflinien and the tab marker take the scene's paper ink. Headings stay Druckschwarz. The result chart (`caseStudy.resultChart`, section 7 of the page) sits on Kalkweiß: bars from zero on one scale, the unchecked AI answer hatched, every value a direct label printed elsewhere in the workshop's copy.
+
+Below the brief, in this order:
 
 1. **Danach kannst du / After this you can**: the `outcomes`, visible, not in an accordion.
 2. **Ablauf / Agenda**: one station per `agenda` item with its label, minutes and activity mark; a toggle between live and self-study where both exist.
@@ -91,7 +99,7 @@ Below the fold, in this order:
 4. **Material**: grouped by phase (Vor dem Workshop, Im Workshop, Danach). Each row shows role, label, a one-line purpose, minutes, format, language and size, "optional" where it applies, and an action. One row is marked "Hier starten".
 5. **Das brauchst du / Das brauchst du nicht**: `needs` and `notNeeded` in two columns.
 6. **Nicht Teil dieses Workshops**: `notCovered`.
-7. **Der Fall**: company, invented label, narrative, stat row, decision question, what the data cannot answer, and the real case with source and dates if there is one.
+7. **Der Fall**: company, invented label, narrative, stat row, the result chart where the registry has one, decision question, what the data cannot answer, and the real case with source and dates if there is one.
 8. **Für wen**: `audience` plus the `notForYou` line.
 9. **Selbst moderieren** (only with a presenter view): how to open it, what to print.
 10. **Stand und Herkunft**: the `provenance` fields.
@@ -100,9 +108,9 @@ The four collapsed "Referenz" accordions, the steps list with tool chips, and th
 
 ## 6. The hub
 
-1. **Cover band**: kicker with the count, an H1 that describes the format, one lead sentence, one button, and an index row of anchor links (it must work for three and for four workshops).
+1. **Poster band** in the newest workshop's palette (`hubPlakat`): the caps line with the count, an H1 that describes the format, one lead sentence, one button into the recommended start (Workshop 03) and the access line, all at 17px or more. The one poster object is the key numeral, the workshop count, in the scene's mark colour. The list below is the index, so the band carries no anchor row.
 2. **So läuft jeder Workshop**: the spine as a static route with five stations (the question, the wrong answer, why it is wrong, the fix, your template).
-3. **Workshop list**: one row per workshop with number and topic, title, summary, the question in quotes, "Du gehst mit", live and self-study minutes, the limiting need, "Live gehalten am" where true, the deck cover, and one link.
+3. **Workshop list**: one row per workshop with number and topic, title, summary, the question in quotes, "Du gehst mit", live and self-study minutes, the limiting need, "Live gehalten am" where true, the workshop's poster (an 80 by 100 thumb on phones, the 4:5 cover from md) and one link. The four posters show four palettes; the rows stay paper with a hairline and no tint.
 4. **Boundary line**: all practice companies are invented; AI answers shown are dated recordings.
 
 UI strings for both pages live in `src/app/workshops/workshop-copy.ts`.
@@ -132,5 +140,6 @@ A workshop is done when all of these hold:
 1. Write the alignment first: for each on-the-job action, the outcome, where the learner shows it, the act, and the material.
 2. Build the deck on the Workshop 03 runtime (`story.css`, route bar, per-scene metadata, presenter console).
 3. Add a registry module next to `workshops-data-readiness.ts` and append it after the existing workshops in `WORKSHOPS_BY_LOCALE`. Extend `WorkshopNumber` if needed.
-4. Add the slug to `src/lib/analytics/registry.ts` and `src/lib/i18n/content-parity.ts`, the card preview and every binary file to `ASSET_MANIFEST.json`, and the route to the e2e lists in `tests/e2e/route-workshops-locales.spec.ts`.
-5. Run `bunx vitest run src/lib/workshops*.test.ts src/lib/machine-surfaces/workshops.test.ts` and `bun run content:lint`.
+4. Give the workshop its palette and motif in `WORKSHOP_PLAKAT` (`src/lib/plakat/palettes.ts`) and check that its title head fits at 320px (`src/lib/plakat/fit.test.ts`).
+5. Add the slug to `src/lib/analytics/registry.ts` and `src/lib/i18n/content-parity.ts`, the card preview and every binary file to `ASSET_MANIFEST.json`, and the route to the e2e lists in `tests/e2e/route-workshops-locales.spec.ts`.
+6. Run `bunx vitest run src/lib/workshops*.test.ts src/lib/machine-surfaces/workshops.test.ts` and `bun run content:lint`.

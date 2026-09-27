@@ -15,7 +15,7 @@
       "blockId": "block_2",
       "number": 1,
       "title": "Prohibited practices (Article 5)",
-      "subtitle": "Eight AI practices that have not been allowed to exist in the EU since 2 February 2025",
+      "subtitle": "Eight AI practices prohibited in the EU since 2 February 2025",
       "durationMinutes": 4,
       "keyConcepts": [
         "Article 5 AI Act",
@@ -29,28 +29,25 @@
           "id": "block_2_lesson_1_section_1",
           "title": "The risk-based approach and the off switch",
           "readTimeMinutes": 2,
-          "content": "The AI Act bans very little. Eight practices, listed in **Article 5**, the unacceptable-risk level. Below it Regulation (EU) 2024/1689 stacks high risk (Article 6 in conjunction with Annexes I and III), limited risk with a transparency duty (Article 50), and the remainder at minimal risk. Four levels.\n\nArticle 5 is the only level without a compliance path. Either the system is one of the eight prohibited patterns, and then it goes. Or it is not. The prohibitions have applied since **2 February 2025** (Article 113, point (a)). No transition period, no SME exemption.\n\nProhibited means what it says. Not placed on the market, not put into service, not used (Article 5(1)). The penalty frame is the harshest in the whole Regulation: **up to EUR 35 million or 7% of total worldwide annual turnover** (Article 99(3)), whichever figure is higher.\n\nThe authoritative reading of Article 5 is the Commission's **Guidelines on prohibited artificial intelligence practices** of 4 February 2025. They work through each of the eight categories in points (a) to (h) with concrete case groups.",
-          "keyTakeaway": "Article 5 knows no middle way. Eight practices have been prohibited since 2 February 2025, under the harshest fine frame in the Regulation: up to EUR 35 million or 7% of annual turnover (Article 99(3))."
+          "content": "The AI Act (Regulation (EU) 2024/1689) has four levels: unacceptable risk with eight prohibited practices (**Article 5**), high risk (Article 6 in conjunction with Annexes I and III), limited risk with a transparency duty (Article 50) and the minimal-risk remainder.\n\nOnly Article 5 has no compliance path: if a system matches one of the eight prohibited patterns, it has to go. Placing on the market, putting into service and use are prohibited (Article 5(1)) since **2 February 2025** (Article 113, point (a)), with no transition period and no SME exemption.\n\nFines reach the Regulation's highest tier, **up to EUR 35 million or 7% of total worldwide annual turnover**, whichever is higher (Article 99(3)).\n\nThe Commission's **Guidelines on prohibited artificial intelligence practices** of 4 February 2025 interpret points (a) to (h)."
         },
         {
           "id": "block_2_lesson_1_section_2",
           "title": "The eight prohibited practices in Article 5(1), points (a) to (h)",
           "readTimeMinutes": 3,
-          "content": "Article 5(1) lists eight categories, and every one of them hits a real use case:\n\n- **Point (a):** manipulative or subliminal techniques that cause significant harm. A dark-pattern bot that talks consumers into insurance.\n- **Point (b):** exploiting vulnerability arising from age, disability, or a specific social or economic situation. AI marketing that targets people in debt with credit offers.\n- **Point (c):** social scoring with detrimental treatment in an unrelated context. A supplier score that couples the managing directors' social-media activity to payment terms.\n- **Point (d):** predictive policing based solely on profiling.\n- **Point (e):** untargeted scraping of facial images to build databases, the Clearview AI prohibition.\n- **Point (f):** emotion recognition in the workplace and in education institutions. The exception covers medical or safety reasons only. Software that reads facial expressions in interview videos has been prohibited since February 2025.\n- **Point (g):** biometric categorisation by race, political opinion, religion, trade-union membership, or sex life.\n- **Point (h):** real-time remote biometric identification in publicly accessible spaces. Narrowly drawn exceptions for law enforcement only (Article 5(2) to (7), Annex II).",
-          "keyTakeaway": "The eight categories in points (a) to (h) are exhaustive. Emotion recognition at work (point (f)) and biometric categorisation (point (g)) hit SMEs most often."
+          "content": "Article 5(1) lists eight categories exhaustively. Points (f) and (g) hit SMEs most often.\n\n- **Point (a):** manipulative or subliminal techniques that cause significant harm, such as a dark-pattern bot that talks consumers into insurance.\n- **Point (b):** exploiting vulnerability due to age, disability or a specific social or economic situation, such as AI marketing that targets people in debt with credit offers.\n- **Point (c):** social scoring with detrimental treatment in an unrelated context, such as a supplier score that links the managing directors' social-media activity to payment terms.\n- **Point (d):** predictive policing based solely on profiling.\n- **Point (e):** untargeted scraping of facial images to build databases (the Clearview AI prohibition).\n- **Point (f):** emotion recognition in the workplace and in education institutions, except for medical or safety reasons. Software that reads facial expressions or personality in interview videos has been prohibited since February 2025, even if vendors still advertise it in 2026.\n- **Point (g):** biometric categorisation by race, political opinion, religion, trade-union membership or sex life.\n- **Point (h):** real-time remote biometric identification in publicly accessible spaces, with narrow exceptions for law enforcement (Article 5(2) to (7), Annex II)."
         },
         {
           "id": "block_2_lesson_1_section_3",
-          "title": "What an SME really has to examine",
+          "title": "What an SME has to check",
           "readTimeMinutes": 2,
-          "content": "The rule of thumb: **if a tool measures emotions, biometrics, or social behaviour and attaches consequences to the result, it needs checking against Article 5.**\n\nTypical cases from the working week.\n\n- A plastics manufacturer wants to spot stress in machine operators by webcam and optimise shifts. Prohibited under point (f).\n- Recruitment vendors are still advertising personality analysis from interview videos in 2026. A textbook point (f) infringement.\n- An insurer scores applicants on public social-media posts. Prohibited under point (c), as soon as the detrimental treatment is unrelated to the context.\n\nThe check. Go through every piece of software with one question. Does it measure emotions, biometrics, or social behaviour, or does it steer decisions? Allow 30 to 60 minutes per system.\n\nFree initial information has come from the Federal Network Agency's AI Service Desk since July 2025. Consent from the person affected, or approval from the works council, does not cure an Article 5 infringement. The prohibition holds regardless.\n\n**Your next step:** if a tool like that turns up in your organisation, stop the use and get legal advice. Article 5 infringements cost up to EUR 35 million or 7% of turnover.",
-          "keyTakeaway": "A simple check, 60 minutes per tool. Consent cures nothing: Article 5 is an outright prohibition, not a consent-based legal basis."
+          "content": "**If a tool measures emotions, biometrics or social behaviour and attaches consequences to the result, check it against Article 5.** Typical cases:\n\n- A plastics manufacturer wants to spot stress in machine operators by webcam to optimise shifts: prohibited under point (f).\n- An insurer scores applicants on public social-media posts: prohibited under point (c) once the detrimental treatment is unrelated to the context.\n\nAlso check every tool for steering decisions, and allow 30 to 60 minutes per system. Consent from the people affected or approval from the works council does not cure an Article 5 infringement. The Federal Network Agency's AI Service Desk has given free initial information since July 2025.\n\nIf you find such a tool, stop using it and get legal advice."
         }
       ],
       "quiz": [
         {
           "id": "block_2_lesson_1_q1",
-          "questionText": "A plastics manufacturer with 120 employees wants to use webcams to detect whether machine operators are stressed and optimise shifts. Is this permitted?",
+          "questionText": "A plastics manufacturer with 120 employees wants webcams to detect stressed machine operators and optimise shifts. Is this permitted?",
           "answerOptions": [
             {
               "id": "a",
@@ -59,12 +56,12 @@
             },
             {
               "id": "b",
-              "text": "Yes, with the employees' and works council's consent",
+              "text": "Yes, with employee and works council consent",
               "isCorrect": false
             },
             {
               "id": "c",
-              "text": "No. Article 5(1), point (f), prohibits emotion recognition in the workplace",
+              "text": "No, Article 5(1), point (f), prohibits workplace emotion recognition",
               "isCorrect": true
             },
             {
@@ -73,7 +70,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Article 5(1), point (f), prohibits emotion recognition in workplaces and education institutions. Consent, or a works council, does not cure the infringement. The only exception covers medical or safety purposes, such as fatigue detection in professional drivers."
+          "explanation": "Article 5(1), point (f), prohibits workplace emotion recognition, and consent or a works council does not cure it. Only medical or safety purposes, such as fatigue detection in professional drivers, are exempt."
         },
         {
           "id": "block_2_lesson_1_q2",
@@ -81,30 +78,30 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Up to EUR 7.5 million or 1% of annual turnover",
+              "text": "Up to EUR 7.5 million or 1% of turnover",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Up to EUR 15 million or 3% of annual turnover",
+              "text": "Up to EUR 15 million or 3% of turnover",
               "isCorrect": false
             },
             {
               "id": "c",
-              "text": "Up to EUR 35 million or 7% of total worldwide annual turnover",
+              "text": "Up to EUR 35 million or 7% of worldwide turnover",
               "isCorrect": true
             },
             {
               "id": "d",
-              "text": "Up to EUR 50 million or 10% of annual turnover",
+              "text": "Up to EUR 50 million or 10% of turnover",
               "isCorrect": false
             }
           ],
-          "explanation": "Article 99(3) sets the highest level of administrative fines for infringements of Article 5: up to EUR 35 million or 7% of total worldwide annual turnover, whichever is higher. The level for infringements listed in Article 99(4) is one step lower at EUR 15 million or 3%."
+          "explanation": "Article 99(3) sets the highest tier for Article 5 infringements; the obligations in Article 99(4) sit lower at EUR 15 million or 3%."
         },
         {
           "id": "block_2_lesson_1_q3",
-          "questionText": "An insurer scores applicants using public social-media posts and treats them less favourably in a way unrelated to the insurance context. Which practice is this?",
+          "questionText": "An insurer scores applicants on public social-media posts and treats them worse without any link to the insurance line. Which practice is this?",
           "answerOptions": [
             {
               "id": "a",
@@ -127,7 +124,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Article 5(1), point (c), prohibits assessments based on social behaviour where they lead to detrimental treatment in an unrelated context. Using social-media data in insurance pricing is the standard example of such a context mismatch. The public availability of the data does not alter the classification."
+          "explanation": "Article 5(1), point (c), prohibits scoring by social behaviour that leads to detrimental treatment in an unrelated context. Public availability of the data changes nothing."
         }
       ]
     },
@@ -136,7 +133,7 @@
       "blockId": "block_2",
       "number": 2,
       "title": "High risk: Annex I and Annex III",
-      "subtitle": "Two routes into the high-risk class, eight use areas, and one exception you have to document",
+      "subtitle": "Two routes into the high-risk class and one exception",
       "durationMinutes": 5,
       "keyConcepts": [
         "Article 6(1) and Annex I",
@@ -150,32 +147,29 @@
           "id": "block_2_lesson_2_section_1",
           "title": "Route 1: a safety component of a regulated product under Article 6(1)",
           "readTimeMinutes": 2,
-          "content": "AI in a lift control is high-risk. Not because of Annex III, but because the first route into the high-risk class runs through **Annex I**. There the Regulation lists around 20 EU harmonisation acts. Machinery Regulation 2023/1230, Medical Devices Regulation 2017/745, IVDR 2017/746, Toy Safety Directive 2009/48/EC, Radio Equipment Directive 2014/53/EU, Lifts Directive 2014/33/EU, motor-vehicle type approval, aviation under EASA, rail, and marine equipment.\n\nThe test in **Article 6(1)** has two steps. An AI system is high-risk where it is either the safety component of an Annex I product or is itself such a product, **and** the sectoral legislation requires a third-party conformity assessment.\n\nExamples from the SME world.\n\n- A machinery builder puts an AI module into a plant control with a protective shutdown. Safety component under the Machinery Regulation, therefore high-risk.\n- AI in a lift control under Lifts Directive 2014/33/EU.\n- A medical AI device under the Medical Devices Regulation.\n\nLegal consequence: the sectoral conformity assessment applies **together with** the AI Act obligations in Articles 8 to 15.",
-          "keyTakeaway": "Build AI into an Annex I product and it is high-risk once the Article 6(1) conditions are met, the third-party conformity assessment included. The assessment runs through the sectoral act plus Articles 8 to 15 of the AI Act."
+          "content": "AI in a lift control is high-risk through **Annex I**, the first route into the high-risk class. It lists around 20 EU harmonisation acts, among them Machinery Regulation 2023/1230, Medical Devices Regulation 2017/745, IVDR 2017/746, Toy Safety Directive 2009/48/EC, Radio Equipment Directive 2014/53/EU, Lifts Directive 2014/33/EU, motor-vehicle type approval, aviation (EASA), rail and marine equipment.\n\nUnder **Article 6(1)** an AI system is high-risk where it is the safety component of an Annex I product or is itself such a product, **and** the sectoral act requires a third-party conformity assessment. Examples are an AI module in a plant control with a protective shutdown (Machinery Regulation) and a medical AI device (Medical Devices Regulation).\n\nLegal consequence: the sectoral conformity assessment **plus** the obligations in Articles 8 to 15, covered in block 3."
         },
         {
           "id": "block_2_lesson_2_section_2",
           "title": "Route 2: stand-alone high-risk systems under Article 6(2) and the eight Annex III areas",
           "readTimeMinutes": 3,
-          "content": "**Article 6(2)** is the second route, independent of the first. An AI system is high-risk where it is used in one of the **eight Annex III areas**. Paragraphs 1 and 2 stand side by side, and paragraph 3 holds a narrow counter-exception for pure support functions:\n\n1. **Biometrics:** remote biometric identification, categorisation by sensitive attributes, emotion recognition where Article 5 does not prohibit it outright.\n2. **Critical infrastructure:** AI as a safety component in the operation of critical digital infrastructure, road traffic, water, gas, heating, electricity. The SME case: municipal utilities and regional energy suppliers.\n3. **Education and vocational training:** admission and assessment AI, examination monitoring. Training firms with e-learning, vocational schools with examination software.\n4. **Employment and HR:** recruitment, **CV screening**, and candidate evaluation (point 4(a)), plus work relationships, promotion, termination, task allocation, performance monitoring (point 4(b)). CV ranking in an applicant-tracking system can fall under point 4(a). The concrete intended purpose still has to be examined.\n5. **Essential services:** eligibility for public assistance, creditworthiness assessment and credit scoring, life and health insurance pricing, emergency-call prioritisation. The SME case: insurance brokers, financial-service providers.\n6. **Law enforcement** and 7. **migration, asylum, border control:** public-authority territory, rarely relevant to an SME.\n8. **Administration of justice and democratic processes:** assistants used to research and interpret facts and law (Annex III, point 8(a)), AI intended to influence elections (point 8(b)). The SME case: legal tech supplied to courts.\n\nProviders meet Article 16 together with Articles 9 to 15. Risk management, data quality under Article 10, technical documentation under Article 11, logging under Article 12, transparency under Article 13, human oversight under Article 14, accuracy, robustness, and cybersecurity under Article 15. Deployers meet Article 26. The fundamental rights impact assessment in Article 27 binds only the addressees named there, not every private deployer of a high-risk system. Regulation (EU) 2026/1744, in force since 27 July 2026, sets **2 December 2027** for stand-alone Annex III systems and **2 August 2028** for product-embedded high-risk systems.",
-          "keyTakeaway": "Annex III names eight areas with concrete sub-cases. HR ranking can fall under point 4. The high-risk dates in 2027 and 2028 have been law since 27 July 2026, and the Article 27 impact assessment binds only the addressees named there."
+          "content": "Under **Article 6(2)**, independent of paragraph 1, an AI system is high-risk where it is used in one of the **eight Annex III areas**. Paragraph 3 holds a narrow counter-exception for pure support functions.\n\n1. **Biometrics:** remote identification, categorisation by sensitive attributes, emotion recognition where Article 5 does not prohibit it.\n2. **Critical infrastructure:** AI as a safety component in digital infrastructure, road traffic, water, gas, heating and electricity, for example at municipal utilities.\n3. **Education and vocational training:** admission and assessment AI, exam monitoring, for example exam software at vocational schools.\n4. **Employment and HR:** recruitment, **CV screening** and candidate evaluation (point 4(a)), plus promotion, termination, task allocation and performance monitoring (point 4(b)). CV ranking in an applicant-tracking system can fall under point 4(a); the intended purpose decides.\n5. **Essential services:** public assistance, creditworthiness assessment and credit scoring, life and health insurance pricing, emergency-call prioritisation, for example at insurance brokers.\n6. **Law enforcement** and 7. **migration, asylum, border control:** public-authority territory, rarely relevant to an SME.\n8. **Justice and democratic processes:** assistants to research and interpret facts and law (Annex III, point 8(a)), AI intended to influence elections (point 8(b)).\n\nProviders meet Article 16 and the requirements in Articles 9 to 15 (block 3), deployers Article 26. The fundamental rights impact assessment in Article 27 binds only the addressees named there. The rules apply from **2 December 2027** for stand-alone Annex III systems and from **2 August 2028** for product-embedded systems (Regulation (EU) 2026/1744, in force since 27 July 2026)."
         },
         {
           "id": "block_2_lesson_2_section_3",
           "title": "The exception in Article 6(3)",
           "readTimeMinutes": 2,
-          "content": "**Article 6(3)** lets a system used in an Annex III area fall outside the high-risk class where it poses no significant risk of harm to health, safety, or fundamental rights and does not materially influence the outcome of decision-making. The exception can apply where the AI system:\n\n- **(a)** performs a narrow procedural task;\n- **(b)** only improves the result of a human activity already completed;\n- **(c)** detects decision patterns or deviations from earlier patterns without replacing or influencing the completed human assessment without proper human review; or\n- **(d)** performs a preparatory task for an assessment relevant to an Annex III use case.\n\n**Profiling rules the exception out.** Whoever relies on Article 6(3) documents the self-assessment under Article 6(4) and registers the system in the EU database under Article 49(2).\n\nIn practice: an applicant-tracking vendor might take its pre-sorting module out of the high-risk class through Article 6(3). Whether that classification holds is something the **deployer** checks independently. Trust the provider blindly and you answer for the misjudgement.\n\nMarket surveillance may examine at any time whether the exception applies. Article 6(3) is no free pass. It is a self-assessment you have to document.",
-          "keyTakeaway": "Article 6(3) can take pure support functions that meet every statutory condition out of the high-risk class, but it demands documentation under Article 6(4) and registration under Article 49(2). Profiling always rules it out."
+          "content": "Under **Article 6(3)** a system used in an Annex III area is not high-risk where it poses no significant risk of harm to health, safety or fundamental rights and does not materially influence the outcome of decision-making. That can apply where the AI system:\n\n- **(a)** performs a narrow procedural task;\n- **(b)** improves the result of a completed human activity;\n- **(c)** detects decision patterns or deviations without replacing or influencing the completed human assessment without proper human review; or\n- **(d)** performs a preparatory task for an assessment relevant to an Annex III use case.\n\n**Profiling rules the exception out.** Whoever relies on it documents the assessment under Article 6(4) and registers the system in the EU database under Article 49(2).\n\nMarket surveillance may check at any time whether the exception applies. If an applicant-tracking vendor takes its pre-sorting module out of the high-risk class this way, the **deployer** still checks the classification; trust it blindly and you answer for the misjudgement."
         }
       ],
       "quiz": [
         {
           "id": "block_2_lesson_2_q1",
-          "questionText": "An SME uses Personio. Its AI Performance Summaries feature automatically summarises 360-degree feedback before a manager reads it. How should this use be classified?",
+          "questionText": "Personio's AI Performance Summaries condense 360-degree feedback before the manager reads it. How is this use classified?",
           "answerOptions": [
             {
               "id": "a",
-              "text": "Limited risk because the system only produces a summary",
+              "text": "Limited risk, because it only summarises",
               "isCorrect": false
             },
             {
@@ -194,61 +188,61 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Annex III, point 4(b), covers AI used to evaluate performance in employment. AI that decides which parts of the feedback stand out shapes the evaluation. A human deciding at the end does not settle the question once the AI forms the input."
+          "explanation": "Annex III, point 4(b), covers AI for performance evaluation. Choosing what stands out shapes the evaluation, even if a human decides."
         },
         {
           "id": "block_2_lesson_2_q2",
-          "questionText": "Which system is high-risk through Article 6(1) and Annex I rather than Annex III?",
+          "questionText": "Which system is high-risk through Article 6(1) and Annex I, not Annex III?",
           "answerOptions": [
             {
               "id": "a",
-              "text": "AI in a lift-control system as a safety component under Directive 2014/33/EU",
+              "text": "AI as a safety component of a lift control (Directive 2014/33/EU)",
               "isCorrect": true
             },
             {
               "id": "b",
-              "text": "An applicant-management system that ranks candidates",
+              "text": "An applicant-management system with ranking",
               "isCorrect": false
             },
             {
               "id": "c",
-              "text": "Credit scoring used by a cooperative bank",
+              "text": "Credit scoring at a cooperative bank",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "AI used by a vocational school to monitor examinations",
+              "text": "Exam-monitoring AI at a vocational school",
               "isCorrect": false
             }
           ],
-          "explanation": "A lift-control system is a standard Annex I case: AI as a safety component of a product covered by EU harmonisation law under Article 6(1). HR ranking falls under Annex III, point 4; credit scoring under Annex III, point 5(b); and examination monitoring under Annex III, point 3. Those three use Article 6(2)."
+          "explanation": "The lift control is a safety component of an Annex I product (Article 6(1)); the other three cases are in Annex III."
         },
         {
           "id": "block_2_lesson_2_q3",
-          "questionText": "What must a provider do when relying on Article 6(3) to classify an Annex III system outside the high-risk category?",
+          "questionText": "What must a provider do when it uses Article 6(3) to keep an Annex III system out of the high-risk class?",
           "answerOptions": [
             {
               "id": "a",
-              "text": "Nothing needs to be documented",
+              "text": "Nothing needs documenting",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Document the assessment under Article 6(4) and register the system under Article 49(2)",
+              "text": "Document the assessment (Article 6(4)) and register the system (Article 49(2))",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "The system is exempt from every AI Act obligation",
+              "text": "Nothing, the system is exempt from every AI Act obligation",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Profiling is permitted as long as it is preparatory",
+              "text": "Use profiling, as long as it is preparatory",
               "isCorrect": false
             }
           ],
-          "explanation": "Article 6(3) is not a blanket exemption. The assessment must be documented under Article 6(4), and the system must be registered in the EU database under Article 49(2). Market-surveillance authorities may review the assessment. Profiling prevents reliance on the exception."
+          "explanation": "The assessment must be documented (Article 6(4)) and the system registered (Article 49(2)); profiling rules out the exception."
         }
       ]
     },
@@ -257,7 +251,7 @@
       "blockId": "block_2",
       "number": 3,
       "title": "Limited risk: transparency under Article 50",
-      "subtitle": "Where AI interacts with people or generates content, a disclosure duty applies from 2 August 2026",
+      "subtitle": "Disclosure duties for chatbots and AI content from 2 August 2026",
       "durationMinutes": 4,
       "keyConcepts": [
         "Article 50 AI Act",
@@ -271,30 +265,27 @@
           "id": "block_2_lesson_3_section_1",
           "title": "Who is responsible, and from when",
           "readTimeMinutes": 2,
-          "content": "How does a customer know she is chatting with a machine? From 2 August 2026 that stops being a question of courtesy and becomes Article 50. The transparency level hits **providers** (paragraphs 1 and 2) and **deployers** (paragraphs 3 and 4). Providers build the system, deployers put it to work in their own house.\n\nApplication: from **2 August 2026** (Article 113, point (c)). The rationale sits in Recital 132. People need to know when they are talking to a machine or looking at artificial content. Transparency is the price of the mass market.\n\nFine for an infringement: **up to EUR 15 million or 3% of total worldwide annual turnover** (Article 99(4), point (g)), whichever figure is higher. One level below Article 5, and still enough to finish off an SME.\n\nTransparency here is no formality. One of the four cases is enough, and a parallel high-risk classification does not lift the duty.",
-          "keyTakeaway": "Article 50 applies from 2 August 2026 and hits providers as well as deployers. Fines run up to EUR 15 million or 3% of annual turnover under Article 99(4), point (g)."
+          "content": "From **2 August 2026** (Article 113, point (c)), Article 50 binds **providers** (paragraphs 1 and 2), who build the system, and **deployers** (paragraphs 3 and 4), who use it in their own organisation. Recital 132 gives the reason: people need to know when they are talking to a machine or looking at artificial content.\n\nInfringements cost **up to EUR 15 million or 3% of total worldwide annual turnover**, whichever is higher (Article 99(4), point (g))."
         },
         {
           "id": "block_2_lesson_3_section_2",
           "title": "The four transparency cases",
           "readTimeMinutes": 3,
-          "content": "Article 50 counts four cases:\n\n- **Paragraph 1, AI interaction:** providers must generally design systems for direct interaction with natural persons so that the person recognises she is interacting with an AI system. Exceptions: an obvious AI nature, and, under narrow conditions, law enforcement.\n- **Paragraph 2, synthetic content:** providers of generative systems for audio, image, video, or text must mark covered outputs in **machine-readable** form. The solution has to be effective, interoperable, robust, and reliable as far as technically feasible and in line with the state of the art. The Regulation prescribes no single technology.\n- **Paragraph 3, emotion recognition and biometric categorisation:** deployers must inform the people affected, where the system is permitted under Article 5 at all.\n- **Paragraph 4, deepfakes and AI text on matters of public interest:** deployers must generally disclose deepfakes visibly, in an adapted form for artistic, creative, satirical, or fictional works. Certain AI-generated text on matters of public interest has to be disclosed unless a natural or legal person carries editorial responsibility.\n\nAn ordinary synthetic product photo is not automatically a deepfake. The provider of the generative system can still be caught by the machine-readable marking duty in paragraph 2. For an AI blog article about public affairs with nobody taking editorial responsibility, paragraph 4 can bite.",
-          "keyTakeaway": "Four cases: the chatbot notice, machine-readable marking of synthetic content, information where emotions or biometrics are read, and visible deepfake disclosure plus AI-text disclosure where no one edits."
+          "content": "Article 50 has four cases:\n\n- **Paragraph 1, AI interaction:** providers design systems for direct interaction so that people recognise they are interacting with AI. Exceptions cover obvious cases and, under narrow conditions, law enforcement.\n- **Paragraph 2, synthetic content:** providers of generative systems for audio, image, video or text mark covered outputs in **machine-readable** form. The solution has to be effective, interoperable, robust and reliable as far as technically feasible and in line with the state of the art; the Regulation prescribes no single technology.\n- **Paragraph 3, emotion recognition and biometric categorisation:** deployers inform the people affected, where Article 5 permits the system at all.\n- **Paragraph 4, deepfakes and AI text:** deployers disclose deepfakes visibly, in an adapted form for artistic, creative, satirical or fictional works. AI-generated text on matters of public interest has to be disclosed unless a natural or legal person holds editorial responsibility. A synthetic product photo is not automatically a deepfake."
         },
         {
           "id": "block_2_lesson_3_section_3",
           "title": "What limited risk does not mean",
           "readTimeMinutes": 2,
-          "content": "Article 50 demands **no** technical high-risk duties. No risk-management system, no technical documentation, no conformity assessment. Only visible or machine-readable disclosure.\n\nBut Article 50 **does not fall away** where a system is high-risk at the same time. An HR chatbot that screens applicants sits under two regimes at once: Article 50(1) for the chatbot notice **and** Article 6(2) in conjunction with Annex III, point 4, for risk management, logging, and human oversight.\n\nArticle 50 always hits the specific role holder. For chatbots and synthetic content the **provider**, for emotion recognition, biometric categorisation, deepfakes, and AI text the **deployer**. Platforms on which the content appears fall under separate Digital Services Act rules.\n\nA blanket footer notice is not enough. The disclosure belongs where the person meets the content.",
-          "keyTakeaway": "Limited risk means disclosure, not the technical duties. Article 50 and the high-risk regime run in parallel where both sets of conditions are met."
+          "content": "Article 50 demands **no** high-risk duties such as a risk-management system, technical documentation or conformity assessment, only visible or machine-readable disclosure.\n\nIf a system is also high-risk, Article 50 still applies. An HR chatbot that screens applicants needs the notice under Article 50(1) **and** risk management, logging and human oversight under Article 6(2) in conjunction with Annex III, point 4.\n\nPlatforms on which the content appears fall under separate Digital Services Act rules. The disclosure belongs where the person meets the content; a blanket footer notice is not enough."
         },
         {
           "id": "block_2_lesson_3_section_4",
           "title": "Your rights as an AI user",
           "_claimRef": "ai-act-transparency-application-2026-08-02",
           "readTimeMinutes": 4,
-          "content": "Article 50 binds providers and deployers. You are the one who benefits.\n\n**From 2 August 2026 the AI interaction generally has to be recognisable.** Providers of systems built for direct interaction must design them so that the person is informed before or at the first interaction, unless the AI nature is obvious anyway (Article 50(1)).\n\n**Deepfake disclosure and technical marking are two different duties.** Providers of covered generative systems mark outputs in machine-readable form under paragraph 2. Deployers who publish deepfakes generally disclose the artificial generation or manipulation visibly under paragraph 4, in an adapted form for artistic, creative, satirical, or fictional works.\n\n**Code of Practice on transparency (10 June 2026):** the voluntary code supports the implementation of Article 50(2), (4), and (5). It is a compliance aid, not a substitute for the statutory text, and no automatic proof of conformity.\n\n**What can you actually do?**\n\n1. **Report:** send suspicious or misleading content through the published reporting channel of the platform in question.\n2. **Check:** examine origin, context, and the original source. Detection tools give indications, not proof of authenticity.\n3. **Check the complaint route:** Article 85 provides for complaints to the competent market-surveillance authority. Germany's KI-MIG entered into force on 29 July 2026 and gives the Federal Network Agency the role of market-surveillance authority, single point of contact, and complaints office, as far as no specialised authority is competent. For the filing itself, use the currently published route.\n\nTechnical detection methods for AI-generated content go deeper in the deepfakes module of the learning path.\n\n(Source: Articles 50 and 85 of Regulation (EU) 2024/1689; European Commission, Code of Practice on Transparency of AI-Generated Content, 10 June 2026; German Bundestag decision on the KI-MIG, 11 June 2026)",
-          "keyTakeaway": "The role-based duties in Article 50 bite from 2 August 2026. Technical marking and visible disclosure are assessed separately, and for a complaint, check the current route directly with the Federal Network Agency.",
+          "content": "From 2 August 2026 you have to be told before or at the first interaction that you are dealing with AI, unless that is obvious anyway (Article 50(1)).\n\nThe voluntary **Code of Practice on transparency** of 10 June 2026 supports the implementation of Article 50(2), (4) and (5). It is a compliance aid, does not replace the statutory text and is no automatic proof of conformity.\n\n**What you can do:**\n\n1. **Report:** send suspicious or misleading content through the platform's reporting channel.\n2. **Check:** origin, context and original source. Detection tools give indications, not proof of authenticity.\n3. **Complain:** Article 85 provides for complaints to the competent market-surveillance authority. Germany's KI-MIG entered into force on 29 July 2026 and makes the Federal Network Agency (Bundesnetzagentur) the market-surveillance authority, single point of contact and complaints office, as far as no specialised authority is competent. Use the currently published filing routes.\n\n(Source: Articles 50 and 85 of Regulation (EU) 2024/1689; European Commission, Code of Practice on Transparency of AI-Generated Content, 10 June 2026; German Bundestag decision on the KI-MIG, 11 June 2026)",
+          "keyTakeaway": "The role-based duties in Article 50 apply from 2 August 2026. Technical marking (providers, paragraph 2) and visible deepfake disclosure (deployers, paragraph 4) are separate duties.",
           "sources": [
             {
               "claimId": "ai-act-transparency-application-2026-08-02"
@@ -305,7 +296,7 @@
       "quiz": [
         {
           "id": "block_2_lesson_3_q1",
-          "questionText": "A print company's marketing team publishes blog articles written independently by an AI system. No person reviews or edits them. Which obligation applies?",
+          "questionText": "A print company's marketing team publishes blog articles that an AI writes alone. Nobody edits them. Which obligation applies?",
           "answerOptions": [
             {
               "id": "a",
@@ -319,7 +310,7 @@
             },
             {
               "id": "c",
-              "text": "Visible disclosure on each article as AI-generated under Article 50(4), second subparagraph",
+              "text": "Visible disclosure on each article under Article 50(4), second subparagraph",
               "isCorrect": true
             },
             {
@@ -328,11 +319,11 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Article 50(4), second subparagraph, requires disclosure for AI-generated or manipulated text published to inform the public on matters of public interest where no person assumes editorial responsibility. A generic footer notice is insufficient; the disclosure must be visible with the content."
+          "explanation": "Article 50(4), second subparagraph, requires visible disclosure on the text itself where nobody holds editorial responsibility."
         },
         {
           "id": "block_2_lesson_3_q2",
-          "questionText": "A construction company uses a chatbot on its careers page. It answers applicants' questions and pre-sorts CVs by experience. Which regime applies?",
+          "questionText": "A chatbot on a construction firm's careers page answers applicant questions and pre-sorts CVs by experience. Which regime applies?",
           "answerOptions": [
             {
               "id": "a",
@@ -341,21 +332,21 @@
             },
             {
               "id": "b",
-              "text": "Only Article 6(2) in conjunction with Annex III, point 4",
+              "text": "Only Article 6(2) with Annex III, point 4",
               "isCorrect": false
             },
             {
               "id": "c",
-              "text": "Both in parallel: Article 50(1) and Article 6(2) in conjunction with Annex III, point 4(a)",
+              "text": "Both: Article 50(1) and Annex III, point 4(a)",
               "isCorrect": true
             },
             {
               "id": "d",
-              "text": "Neither Article 50 nor Annex III because the system only pre-sorts applications",
+              "text": "Neither, because it only pre-sorts",
               "isCorrect": false
             }
           ],
-          "explanation": "The risk categories are not mutually exclusive. Once a system performs an Annex III function, the high-risk obligations apply in addition to Article 50. The construction company needs the AI-interaction notice as well as risk management, logging, and human oversight."
+          "explanation": "The risk classes are not mutually exclusive. Pre-sorting is an Annex III function, so the firm needs risk management, logging and human oversight on top of the chatbot notice."
         },
         {
           "id": "block_2_lesson_3_q3",
@@ -382,7 +373,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Article 50(4) expressly addresses the deployer that uses and discloses the deepfake. Providers have a separate machine-readable marking obligation under paragraph 2. Platforms are subject to the Digital Services Act."
+          "explanation": "Article 50(4) addresses the deployer that uses and publishes the deepfake. Providers mark outputs machine-readably under paragraph 2, and platforms fall under the Digital Services Act."
         }
       ]
     },
@@ -391,7 +382,7 @@
       "blockId": "block_2",
       "number": 4,
       "title": "Minimal risk and the decision tree",
-      "subtitle": "Most AI in an SME lands here. Six questions decide whether yours does.",
+      "subtitle": "How six questions settle the risk class",
       "durationMinutes": 5,
       "keyConcepts": [
         "Minimal risk as the residual category",
@@ -405,51 +396,48 @@
           "id": "block_2_lesson_4_section_1",
           "title": "What minimal risk means in practice",
           "readTimeMinutes": 2,
-          "content": "The biggest risk class in an SME is the one the Regulation never names. **Minimal risk** is the remainder: everything that falls neither under Article 5, nor under Article 6 (Annex I or III), nor under Article 50.\n\nTypical SME examples:\n\n- ChatGPT for internal email drafts\n- DeepL for translations with no personal data\n- quality-control image recognition on the production line with no personal data\n- spam filtering on the mail server\n- predictive maintenance on machine data\n- route planning, warehouse management\n- GitHub Copilot for code completion\n\nObligations: **no risk-class-specific AI Act duties**. But **Article 4 on AI literacy** applies to every class, the minimal one included. Article 95 encourages voluntary codes of conduct on top.\n\nMinimal risk does not mean: no AI system. Where the tool meets the definition in Article 3(1), a machine-based system with a degree of autonomy that generates outputs such as predictions, recommendations, or decisions, it stays an AI system. Only in the lowest class.",
-          "keyTakeaway": "Minimal risk is the residual class. No specific duties, but Article 4 on AI literacy has applied since 2 February 2025 regardless."
+          "content": "**Minimal risk** is the remainder and the largest class in an SME: everything that falls neither under Article 5, nor under Article 6 (Annex I or III), nor under Article 50. Typical examples:\n\n- ChatGPT for internal email drafts\n- DeepL for translations with no personal data\n- quality-control image recognition on the production line with no personal data\n- spam filtering on the mail server\n- predictive maintenance on machine data\n- route planning, warehouse management\n- GitHub Copilot for code completion\n\nThere are no risk-class-specific AI Act duties here, but **Article 4 on AI literacy** applies to every class, and Article 95 encourages voluntary codes of conduct. The tools are still AI systems under Article 3(1)."
         },
         {
           "id": "block_2_lesson_4_section_2",
-          "title": "The decision tree: six questions in order",
+          "title": "The decision tree in six questions",
           "readTimeMinutes": 3,
-          "content": "Work through these six questions in order, for each use case rather than each tool.\n\n1. **Is it an AI system under Article 3(1)?** If not, a hard-coded Excel formula for instance, the AI Act does not apply.\n2. **Does it fall under Article 5(1), the prohibitions?** If yes, switch it off or rebuild it. Done.\n3. **Is it a safety component under Annex I (Article 6(1))?** If yes, high-risk. Sectoral conformity assessment plus Articles 8 to 15.\n4. **Does it influence a decision in one of the eight Annex III areas (Article 6(2))?** If yes, high-risk. Articles 8 to 15 plus Articles 26 and 27. Examine the exception in Article 6(3), which has to be documented.\n5. **Does it fall under one of the four Article 50 cases?** Chatbot, synthetic content, emotion or biometrics, deepfake or AI text with no editorial responsibility. If yes, limited risk with a transparency duty.\n6. **All of them no?** Minimal risk. The duties are Article 4 plus voluntary codes of conduct under Article 95.\n\nThe tree runs **per use case**, not per tool. ChatGPT for the meeting summary: minimal. ChatGPT for pre-sorting applications: Annex III, point 4, and therefore high-risk. Same tool, different class.",
-          "keyTakeaway": "Six questions, in this order, per use case. The same ChatGPT is minimal for emails and high-risk for pre-sorting applicants."
+          "content": "Work through these questions in order, per use case rather than per tool:\n\n1. **Is it an AI system under Article 3(1)**, a machine-based system with a degree of autonomy that generates predictions, recommendations or decisions? If not, as with a hard-coded Excel formula, the AI Act does not apply.\n2. **Does it fall under the prohibitions in Article 5(1)?** If yes, switch it off or rebuild it.\n3. **Is it a safety component under Annex I (Article 6(1))?** If yes, high risk: sectoral conformity assessment plus Articles 8 to 15.\n4. **Does it influence a decision in one of the eight Annex III areas (Article 6(2))?** If yes, high risk: Articles 8 to 15 plus Article 26 and, for the deployers named there, Article 27. Examine and document the exception in Article 6(3).\n5. **Does one of the four Article 50 cases apply** (chatbot, synthetic content, emotion or biometrics, deepfake or AI text with no editorial responsibility)? If yes, limited risk with a transparency duty.\n6. **All no:** minimal risk, with Article 4 and voluntary codes of conduct under Article 95.\n\nChatGPT for a meeting summary is minimal risk; ChatGPT for pre-sorting applications falls under Annex III, point 4, and is high-risk."
         },
         {
           "id": "block_2_lesson_4_section_3",
           "title": "The asymmetry of misclassification",
           "readTimeMinutes": 2,
-          "content": "Classify wrongly and you either miss the controls you need or pay for controls you do not.\n\n**Too low** (treating high risk as minimal): risk management, logging, or human oversight can be missing. Once the relevant duties apply, market-surveillance measures and the penalty frame in Article 99 come into play. Parallel law such as the General Equal Treatment Act or the GDPR can bite earlier.\n\n**Too high** (treating minimal as high risk): unnecessary compliance work, system by system.\n\n**How to do it:** document the purpose, the role, and the Article 6 assessment against the annexes. Where a legal question stays open, write it down and set a risk-appropriate interim control, instead of a label picked from the gut.\n\nRegulation (EU) 2026/1744, in force since 27 July 2026, sets 2 December 2027 as the application date for stand-alone Annex III systems. Waiting until then would be a mistake.\n\n**Apply it now:** take your most important AI system and work through the six questions. Risk class plus reasoning belong in your AI inventory, in the risk-classification column.",
-          "keyTakeaway": "A wrong classification costs in both directions. Where doubt remains, document the open legal question and set a risk-appropriate interim control."
+          "content": "**Too low** (high risk treated as minimal): risk management, logging or human oversight can be missing. Once the duties apply, market-surveillance measures and penalties under Article 99 come into play; parallel law such as the General Equal Treatment Act or the GDPR can bite earlier.\n\n**Too high** (minimal treated as high risk): unnecessary compliance work, system by system.\n\nDocument the purpose, the role and the Article 6 assessment against the annexes. If a legal question stays open, write it down and set a risk-appropriate interim control. Do not wait for 2 December 2027.\n\n**Apply it now:** work through the six questions for your most important AI system and enter the risk class and reasoning in your AI inventory (risk-classification column)."
         }
       ],
       "quiz": [
         {
           "id": "block_2_lesson_4_q1",
-          "questionText": "A tax adviser uses DATEV's AI-assisted receipt capture to identify invoice amounts and assign accounts. What is the risk profile?",
+          "questionText": "A tax adviser uses DATEV's AI receipt capture to read invoice amounts and assign accounts. What is the risk profile?",
           "answerOptions": [
             {
               "id": "a",
-              "text": "Prohibited under Article 5 because it involves profiling",
+              "text": "Prohibited under Article 5 (profiling)",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "High-risk under Annex III, point 5, because it concerns creditworthiness",
+              "text": "High risk under Annex III, point 5 (creditworthiness)",
               "isCorrect": false
             },
             {
               "id": "c",
-              "text": "Minimal risk: it makes no decision about a person and triggers neither Annex III nor Article 50",
+              "text": "Minimal risk: no decision about people, no Annex III, no Article 50",
               "isCorrect": true
             },
             {
               "id": "d",
-              "text": "Limited risk because the account assignment is automated",
+              "text": "Limited risk, because the assignment is automated",
               "isCorrect": false
             }
           ],
-          "explanation": "Receipt capture assigns data to accounts. It does not involve a prohibited practice under Article 5, a safety component under Article 6(1), an Annex III area under Article 6(2), or an Article 50 trigger. It therefore falls into the minimal-risk remainder. Article 4 on AI literacy still applies."
+          "explanation": "Receipt capture meets no case under Article 5, 6 or 50 and is minimal risk; Article 4 still applies."
         },
         {
           "id": "block_2_lesson_4_q2",
@@ -476,34 +464,34 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Article 4 on AI literacy applies across the risk classes and has done since 2 February 2025 (Article 113, point (a)). Article 14 bites only for high risk, Article 50 only where a transparency case is present, and Article 27 only for the deployers and high-risk cases named there."
+          "explanation": "Article 4 has applied to every risk class since 2 February 2025; Articles 14, 50 and 27 apply only to high risk, transparency cases or specific deployers."
         },
         {
           "id": "block_2_lesson_4_q3",
-          "questionText": "An IT service provider with 40 employees uses ChatGPT for (a) meeting summaries, (b) email drafts, and (c) pre-selecting freelancer profiles. How should each use be classified?",
+          "questionText": "An IT service firm with 40 employees uses ChatGPT for (a) meeting summaries, (b) email drafts and (c) pre-selecting freelancer profiles. How is each use classified?",
           "answerOptions": [
             {
               "id": "a",
-              "text": "All three are minimal risk because they use the same tool",
+              "text": "All three minimal, because it is the same tool",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Uses (a) and (b) are minimal risk; use (c) is high-risk under Annex III, point 4(a)",
+              "text": "(a) and (b) minimal, (c) high-risk under Annex III, point 4(a)",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "All three are high-risk because ChatGPT is a general-purpose AI model",
+              "text": "All three high-risk, because ChatGPT is a general-purpose AI model",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "All three are limited risk because Article 50 always applies to ChatGPT",
+              "text": "All three limited risk, because Article 50 always applies to ChatGPT",
               "isCorrect": false
             }
           ],
-          "explanation": "The decision tree applies to each use case rather than each tool. Meeting summaries and email drafts do not make employment decisions and are minimal risk. Pre-selecting freelancer profiles filters candidates for employment and falls under Annex III, point 4(a). When a general-purpose AI model is used in a high-risk system, the obligations attach according to the concrete use and the relevant role."
+          "explanation": "Classification runs per use case: pre-selecting freelancers filters candidates for work (Annex III, point 4(a)); summaries and emails do not."
         }
       ],
       "widgets": [
@@ -515,7 +503,7 @@
             "lessonId": "block_2_lesson_4",
             "cpId": "risikopyramide",
             "title": "The risk pyramid in Regulation (EU) 2024/1689",
-            "caption": "Play the sequence, from the strictest level at the top (prohibited) to the freest at the bottom (minimal). These four levels are exactly what the decision tree checks."
+            "caption": "Play the sequence from the strictest level at the top (prohibited) to the freest at the bottom (minimal)."
           }
         },
         {
@@ -526,7 +514,7 @@
             "lessonId": "block_2_lesson_4",
             "cpId": "risikostufen-ordnen",
             "title": "Order the four risk levels",
-            "prompt": "Sort the risk classes in Regulation (EU) 2024/1689 from the deepest regulatory intervention at the top to the lowest at the bottom. Drag the cards or use the arrow buttons.",
+            "prompt": "Sort the four risk classes from the deepest intervention at the top to the lowest at the bottom. Drag the cards or use the arrow buttons.",
             "hint": "First question: is it prohibited? Then: high-risk? Then: does a transparency duty apply? What is left over is minimal risk."
           }
         }

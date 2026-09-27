@@ -71,8 +71,8 @@ export const LESSON_MISSION_PROFILES = {
     courseSlug: "ki-fuehrerschein",
     instrument: text("Prompt-Redline-Pult", "Prompt Redline Desk"),
     predictionPrompt: text(
-      "Welche Schwachstelle wird den synthetischen Mail-Entwurf wahrscheinlich zuerst unzuverlässig machen?",
-      "Which weakness is most likely to make the synthetic email draft unreliable first?",
+      "Welche Schwachstelle macht den Mail-Entwurf zuerst unzuverlässig?",
+      "Which weakness makes the email draft unreliable first?",
     ),
     predictionChoices: choices(
       choice("vague-goal", "Ein unscharfes Ziel", "An ambiguous goal"),
@@ -88,17 +88,17 @@ export const LESSON_MISSION_PROFILES = {
       ),
     ),
     revealedSignal: text(
-      "Der Entwurf behauptet eine nachgewiesene Energieersparnis. Im synthetischen Quellenpaket steht nur eine Herstellerschätzung ohne Messmethode.",
-      "The draft claims proven energy savings. The synthetic source packet contains only a manufacturer estimate with no measurement method.",
+      "Der Entwurf behauptet eine nachgewiesene Energieersparnis. Die Quellen enthalten nur eine Herstellerschätzung ohne Messmethode.",
+      "The draft claims proven energy savings. The sources hold only a manufacturer estimate with no measurement method.",
     ),
     manipulation: text(
-      "Öffne das Redline-Pult, ändere Datenklasse oder Quellenregel und beobachte, welche Claims die Prüfung passieren.",
-      "Open the redline desk, change a data class or grounding rule, and observe which claims pass review.",
+      "Ändere im Redline-Pult Datenklasse oder Quellenregel und sieh, welche Claims die Prüfung passieren.",
+      "In the redline desk, change a data class or grounding rule and see which claims pass review.",
     ),
     evidence: probe(
       text(
-        "Wie ist die Herstellerschätzung zu klassifizieren?",
-        "How should the manufacturer estimate be classified?",
+        "Was ist die Herstellerschätzung?",
+        "What is the manufacturer estimate?",
       ),
       choices(
         choice(
@@ -119,14 +119,14 @@ export const LESSON_MISSION_PROFILES = {
       ),
       "bounded-source",
       text(
-        "Die Quelle ist relevant, belegt aber weder Messung noch Kausalität. Der Claim muss als Schätzung markiert oder entfernt werden.",
-        "The source is relevant but proves neither measurement nor causality. The claim must be labeled as an estimate or removed.",
+        "Sie ist relevant, belegt aber weder Messung noch Kausalität. Markiere den Claim als Schätzung oder streiche ihn.",
+        "It is relevant but proves neither measurement nor causality. Label the claim as an estimate or remove it.",
       ),
     ),
     retrieval: probe(
       text(
-        "Welche Prompt-Grenze verhindert, dass fehlende Belege sprachlich versteckt werden?",
-        "Which prompt boundary prevents missing evidence from being hidden by fluent wording?",
+        "Welche Prompt-Regel verhindert, dass glatte Sprache fehlende Belege versteckt?",
+        "Which prompt rule stops fluent wording from hiding missing evidence?",
       ),
       choices(
         choice("more-tone", "Mehr Tonalitätsbeispiele", "More tone examples"),
@@ -139,24 +139,24 @@ export const LESSON_MISSION_PROFILES = {
       ),
       "claim-rule",
       text(
-        "Eine prüfbare Claim-Regel macht Evidenzlücken sichtbar; Stil- und Längenvorgaben tun das nicht.",
-        "A testable claim rule exposes evidence gaps; style and length instructions do not.",
+        "Eine prüfbare Claim-Regel macht Evidenzlücken sichtbar, Stil- und Längenvorgaben leisten das nicht.",
+        "A testable claim rule exposes evidence gaps; style and length rules do not.",
       ),
       {
         "more-tone": text(
-          "Tonalitätsbeispiele steuern nur die Form, nicht die Beleglage. Ein perfekt markengerechter Satz kann weiterhin eine erfundene Wirkungszahl enthalten; jeder Claim braucht daher eine Quelle oder sichtbare Unsicherheit.",
-          "Tone examples constrain form, not evidentiary support. A perfectly on-brand sentence can still contain an invented impact figure, so each claim needs a source or visible uncertainty.",
+          "Tonalitätsbeispiele steuern nur die Form. Auch ein markengerechter Satz kann eine erfundene Wirkungszahl enthalten, also braucht jeder Claim eine Quelle oder sichtbare Unsicherheit.",
+          "Tone examples shape only form. An on-brand sentence can still contain an invented impact figure, so each claim needs a source or visible uncertainty.",
         ),
         "longer-output": text(
-          "Länge erzeugt keine Evidenz und vergrößert die Angriffsfläche. Ein ausführlicher Entwurf kann denselben unbelegten Nutzen mehrfach wiederholen; binde Claims einzeln an Quellen.",
-          "Length creates no evidence and increases the claim surface. A detailed draft can repeat the same unsupported benefit several times, so bind claims to sources individually.",
+          "Länge erzeugt keine Evidenz, nur mehr Claims. Ein langer Entwurf kann denselben unbelegten Nutzen mehrfach wiederholen; binde jeden Claim an eine Quelle.",
+          "Length creates no evidence, only more claims. A long draft can repeat the same unsupported benefit several times; bind each claim to a source.",
         ),
       },
     ),
     revision: probe(
       text(
         "Wie revidierst du den Auftrag nach dem Signal?",
-        "How do you revise the task after seeing the signal?",
+        "How do you revise the task after the signal?",
       ),
       choices(
         choice(
@@ -166,8 +166,8 @@ export const LESSON_MISSION_PROFILES = {
         ),
         choice(
           "qualify-review",
-          "Schätzung kennzeichnen, Quelle nennen und menschlich prüfen",
-          "Label the estimate, cite the source, and require human review",
+          "Schätzung markieren, Quelle nennen, Mensch prüft",
+          "Label estimate, cite source, add human review",
         ),
         choice(
           "stronger-tone",
@@ -177,13 +177,13 @@ export const LESSON_MISSION_PROFILES = {
       ),
       "qualify-review",
       text(
-        "Die Revision erhält nutzbare Information, ohne eine Schätzung in einen Beweis umzudeuten.",
-        "The revision preserves useful information without turning an estimate into proof.",
+        "So bleibt die Information nutzbar, ohne dass die Schätzung zum Beweis wird.",
+        "The information stays usable without turning an estimate into proof.",
       ),
     ),
     transferScenario: text(
-      "Ein freigegebener interner Entwurf fasst eine synthetische Lieferantenstudie mit fehlendem Stichprobenumfang zusammen.",
-      "An approved internal draft summarizes a synthetic supplier study with no sample size.",
+      "Ein freigegebener interner Entwurf fasst eine Lieferantenstudie ohne Stichprobenumfang zusammen.",
+      "An approved internal draft summarizes a supplier study with no sample size.",
     ),
     transfer: probe(
       text("Welche Regel muss mitwandern?", "Which rule must transfer?"),
@@ -195,8 +195,8 @@ export const LESSON_MISSION_PROFILES = {
         ),
         choice(
           "source-boundary",
-          "Evidenzgrenze, Unsicherheitslabel und Freigabe an den neuen Claim anpassen",
-          "Adapt the evidence boundary, uncertainty label, and approval to the new claim",
+          "Evidenzgrenze, Unsicherheitslabel und Freigabe anpassen",
+          "Adapt evidence boundary, uncertainty label and approval",
         ),
         choice(
           "remove-review",
@@ -206,8 +206,8 @@ export const LESSON_MISSION_PROFILES = {
       ),
       "source-boundary",
       text(
-        "Übertragbar ist die Kontrolllogik, nicht der Wortlaut eines Prompts.",
-        "The control logic transfers, not the wording of a prompt.",
+        "Die Kontrolllogik wandert mit; den Wortlaut passt du an den neuen Claim an.",
+        "The control logic transfers; you adapt the wording to the new claim.",
       ),
     ),
   },
@@ -215,15 +215,15 @@ export const LESSON_MISSION_PROFILES = {
     courseSlug: "eu-ai-act-kurs",
     instrument: text("Pflichten-Fallarchiv", "Obligation Case File"),
     predictionPrompt: text(
-      "Welche fehlende Tatsache kippt die erste rechtliche Einordnung des synthetischen Vorsortiersystems am ehesten?",
-      "Which missing fact is most likely to change the initial classification of the synthetic screening system?",
+      "Welche fehlende Tatsache kippt die erste Einordnung des Vorsortiersystems am ehesten?",
+      "Which missing fact is most likely to change the first classification of the screening system?",
     ),
     predictionChoices: choices(
       choice("logo", "Die Farbe des Anbieterlogos", "The provider logo color"),
       choice(
         "decision-role",
-        "Wer die relevante Entscheidung trifft und wofür",
-        "Who makes the affected decision and for what purpose",
+        "Wer entscheidet und wofür",
+        "Who decides, and for what",
       ),
       choice(
         "model-size",
@@ -232,12 +232,12 @@ export const LESSON_MISSION_PROFILES = {
       ),
     ),
     revealedSignal: text(
-      "Die Rangliste löst keine automatische Ablehnung aus, bestimmt aber, welche Profile Menschen überhaupt sehen. Anbieter- und Betreiberrolle sind noch ungeklärt.",
-      "The ranking triggers no automatic rejection, but determines which profiles humans ever see. Provider and deployer roles remain unresolved.",
+      "Die Rangliste lehnt niemanden automatisch ab, bestimmt aber, welche Profile Menschen überhaupt sehen. Anbieter- und Betreiberrolle sind ungeklärt.",
+      "The ranking rejects no one automatically but decides which profiles humans ever see. Provider and deployer roles are unresolved.",
     ),
     manipulation: text(
-      "Öffne die Fallakte, ändere Zweck, Entscheidungseinfluss oder Akteursrolle und verfolge, wie der Pflichtenpfad reagiert.",
-      "Open the case file, change purpose, decision influence, or actor role, and trace how the obligation path responds.",
+      "Ändere in der Fallakte Zweck, Entscheidungseinfluss oder Rolle und verfolge den Pflichtenpfad.",
+      "In the case file, change purpose, decision influence or role and trace the obligation path.",
     ),
     evidence: probe(
       text(
@@ -257,14 +257,14 @@ export const LESSON_MISSION_PROFILES = {
         ),
         choice(
           "workflow-facts",
-          "Datierter Workflow mit Zweck, Einfluss und Rollen",
-          "A dated workflow showing purpose, influence, and roles",
+          "Datierter Ablauf mit Zweck, Einfluss, Rollen",
+          "Dated workflow with purpose, influence, roles",
         ),
       ),
       "workflow-facts",
       text(
-        "Pflichten hängen an Tatsachen, Rollen und Rechtsstand; Produktbezeichnungen ersetzen diese Prüfung nicht.",
-        "Obligations attach to facts, roles, and the applicable legal date; product labels do not replace that analysis.",
+        "Pflichten hängen an Tatsachen, Rollen und Rechtsstand. Ein Produktname ersetzt diese Prüfung nicht.",
+        "Obligations attach to facts, roles and the applicable legal date. A product label does not replace that check.",
       ),
     ),
     retrieval: probe(
@@ -276,7 +276,7 @@ export const LESSON_MISSION_PROFILES = {
         choice(
           "label-first",
           "Kategorie wählen, dann passende Tatsachen suchen",
-          "Choose a category, then find matching facts",
+          "Pick a category, then find facts",
         ),
         choice(
           "boundary-roles-path",
@@ -291,24 +291,24 @@ export const LESSON_MISSION_PROFILES = {
       ),
       "boundary-roles-path",
       text(
-        "Die System- und Rollenklärung muss vor der Pflichtenmatrix stehen.",
-        "System and role clarification must precede the obligation matrix.",
+        "Erst System und Rollen klären, dann die Pflichten.",
+        "Clarify system and roles before the obligations.",
       ),
       {
         "label-first": text(
-          "Wer zuerst die Kategorie festlegt, sucht anschließend bestätigende Tatsachen und kann Systemgrenzen oder Rollen übersehen. Eine menschliche Freigabe macht etwa einen entscheidungsbeeinflussenden Einsatz nicht automatisch risikoarm.",
-          "Choosing the category first invites confirmatory fact-finding and can hide system boundaries or roles. Human approval, for example, does not automatically make a decision-influencing use low risk.",
+          "Wer zuerst die Kategorie wählt, sucht danach bestätigende Tatsachen und übersieht leicht Systemgrenzen oder Rollen. Eine menschliche Freigabe macht einen entscheidungsbeeinflussenden Einsatz nicht automatisch risikoarm.",
+          "Picking the category first invites confirming facts and can hide system boundaries or roles. Human approval does not automatically make a decision-influencing use low risk.",
         ),
         "model-first": text(
-          "Das Modell allein bestimmt die Pflicht nicht; derselbe Modelltyp kann in Rechtschreibprüfung und Bewerberauswahl unterschiedliche Rollen und Risikopfade haben. Prüfe zuerst den konkreten Einsatz.",
-          "The model alone does not determine the obligation; the same model type can have different roles and risk paths in spell-checking and applicant selection. Examine the concrete use first.",
+          "Das Modell allein bestimmt keine Pflicht. Derselbe Modelltyp hat in Rechtschreibprüfung und Bewerberauswahl andere Rollen und Risikopfade; prüfe zuerst den Einsatz.",
+          "The model alone sets no obligation. The same model type has different roles and risk paths in spell-checking and applicant selection; check the use first.",
         ),
       },
     ),
     revision: probe(
       text(
         "Wie wird die Fallakte nach dem Signal revidiert?",
-        "How should the case file be revised after the signal?",
+        "How do you revise the case file after the signal?",
       ),
       choices(
         choice(
@@ -323,19 +323,19 @@ export const LESSON_MISSION_PROFILES = {
         ),
         choice(
           "map-influence",
-          "Entscheidungseinfluss und Rollen belegen, dann beide Klassifikationspfade testen",
-          "Evidence decision influence and roles, then test both classification paths",
+          "Einfluss und Rollen belegen, beide Pfade testen",
+          "Evidence influence and roles, test both paths",
         ),
       ),
       "map-influence",
       text(
-        "Menschliche Beteiligung ist kein pauschaler Ausweg; der konkrete Einfluss und die Rollen müssen belegt werden.",
-        "Human involvement is not a blanket exemption; the actual influence and roles must be evidenced.",
+        "Ein beteiligter Mensch befreit nicht pauschal. Einfluss und Rollen müssen belegt sein.",
+        "A human in the loop is no blanket exemption. Influence and roles must be evidenced.",
       ),
     ),
     transferScenario: text(
-      "Dasselbe Modell wird später für eine synthetische Schulungs-Empfehlung ohne Rangfolge eingesetzt.",
-      "The same model is later used for synthetic training recommendations without ranking people.",
+      "Dasselbe Modell empfiehlt später Schulungen, ohne Personen zu ranken.",
+      "The same model later recommends training without ranking people.",
     ),
     transfer: probe(
       text(
@@ -345,8 +345,8 @@ export const LESSON_MISSION_PROFILES = {
       choices(
         choice(
           "old-classification",
-          "Die alte Risikoeinstufung allein aufgrund desselben Modells",
-          "The old risk classification solely because the model is the same",
+          "Die alte Risikoeinstufung, weil das Modell gleich ist",
+          "The old risk class, because the model is the same",
         ),
         choice(
           "dated-sources",
@@ -361,8 +361,8 @@ export const LESSON_MISSION_PROFILES = {
       ),
       "old-classification",
       text(
-        "Der konkrete Zweck und Einsatzkontext werden neu bewertet; der Modellname entscheidet die Kategorie nicht allein.",
-        "Purpose and deployment context must be reassessed; the model name alone does not determine the category.",
+        "Zweck und Einsatzkontext werden neu bewertet. Der Modellname allein bestimmt keine Kategorie.",
+        "Purpose and deployment context are reassessed. The model name alone sets no category.",
       ),
     ),
   },
@@ -370,8 +370,8 @@ export const LESSON_MISSION_PROFILES = {
     courseSlug: "ai-native",
     instrument: text("Workflow-Konsole", "Workflow Console"),
     predictionPrompt: text(
-      "Wo wird der synthetische Wochenbericht ohne zusätzliche Kontrolle zuerst entgleisen?",
-      "Where will the synthetic weekly-report workflow fail first without another control?",
+      "Wo entgleist der Wochenbericht ohne weitere Kontrolle zuerst?",
+      "Where does the weekly-report workflow fail first without another control?",
     ),
     predictionChoices: choices(
       choice("context", "Im Kontextbudget", "At the context budget"),
@@ -383,12 +383,12 @@ export const LESSON_MISSION_PROFILES = {
       choice("format", "Beim Ausgabeformat", "At the output format"),
     ),
     revealedSignal: text(
-      "Zwei Projektmeldungen widersprechen sich. Der Agent kann den Bericht veröffentlichen, ohne den Konflikt zu eskalieren oder eine Quellenlücke zu markieren.",
+      "Zwei Projektmeldungen widersprechen sich. Der Agent kann den Bericht veröffentlichen, ohne den Konflikt zu eskalieren oder die Quellenlücke zu markieren.",
       "Two project updates conflict. The agent can publish the report without escalating the conflict or marking an evidence gap.",
     ),
     manipulation: text(
-      "Öffne die Workflow-Konsole, verschiebe Freigabegate oder Abbruchregel und beobachte den synthetischen Laufpfad.",
-      "Open the workflow console, move an approval gate or stop rule, and observe the synthetic run path.",
+      "Verschiebe in der Workflow-Konsole Freigabegate oder Abbruchregel und sieh dir den Laufpfad an.",
+      "In the workflow console, move an approval gate or stop rule and watch the run path.",
     ),
     evidence: probe(
       text(
@@ -410,14 +410,14 @@ export const LESSON_MISSION_PROFILES = {
       ),
       "blocked-conflict",
       text(
-        "Kontrollwirksamkeit zeigt sich am beobachteten Stopp, nicht an Stil oder Geschwindigkeit.",
-        "Control effectiveness is demonstrated by the observed stop, not by style or speed.",
+        "Ob die Kontrolle wirkt, zeigt der beobachtete Stopp. Stil und Tempo sagen darüber nichts.",
+        "The observed stop shows the control works. Style and speed say nothing about it.",
       ),
     ),
     retrieval: probe(
       text(
-        "Was gehört zwingend in einen kontrollierten KI-Arbeitsauftrag?",
-        "What is mandatory in a controlled AI work order?",
+        "Was muss in einen kontrollierten KI-Arbeitsauftrag?",
+        "What must a controlled AI work order contain?",
       ),
       choices(
         choice(
@@ -427,8 +427,8 @@ export const LESSON_MISSION_PROFILES = {
         ),
         choice(
           "boundary-gates",
-          "Ziel, Nicht-Ziele, Werkzeuggrenzen, Freigaben und Abbruch",
-          "Goal, non-goals, tool boundaries, approvals, and stop conditions",
+          "Ziel, Nicht-Ziele, Werkzeuggrenzen, Freigaben, Abbruch",
+          "Goal, non-goals, tool limits, approvals, stop rules",
         ),
         choice(
           "persona",
@@ -443,12 +443,12 @@ export const LESSON_MISSION_PROFILES = {
       ),
       {
         "goal-only": text(
-          "Ein präzises Ziel begrenzt weder Mittel noch Freigaben. Der Auftrag „Veröffentliche die Zusammenfassung“ ist eindeutig, erlaubt ohne Werkzeug- und Stoppgrenze aber weiterhin eine Veröffentlichung trotz Quellenkonflikt.",
-          "A precise goal bounds neither means nor approvals. The task “Publish the summary” is unambiguous, yet without tool and stop boundaries it still permits publishing through a source conflict.",
+          "Ein präzises Ziel begrenzt weder Mittel noch Freigaben. „Veröffentliche die Zusammenfassung“ ist eindeutig, erlaubt ohne Werkzeug- und Stoppgrenze aber die Veröffentlichung trotz Quellenkonflikt.",
+          "A precise goal bounds neither means nor approvals. “Publish the summary” is clear, yet without tool and stop limits it still allows publishing through a source conflict.",
         ),
         persona: text(
-          "Eine Persona beschreibt Verhalten, verleiht aber keine Berechtigung und erzwingt keinen Stopp. Auch ein Agent mit der Persona „Compliance-Prüfer“ kann ohne Gate einen widersprüchlichen Entwurf veröffentlichen.",
-          "A persona describes behavior but grants no authority and enforces no stop. Even an agent cast as a compliance reviewer can publish a conflicting draft when no gate blocks it.",
+          "Eine Persona beschreibt Verhalten, gibt aber keine Berechtigung und erzwingt keinen Stopp. Auch ein „Compliance-Prüfer“ kann ohne Gate einen widersprüchlichen Entwurf veröffentlichen.",
+          "A persona describes behavior but grants no authority and enforces no stop. Even a “compliance reviewer” agent can publish a conflicting draft when no gate blocks it.",
         ),
       },
     ),
@@ -460,8 +460,8 @@ export const LESSON_MISSION_PROFILES = {
       choices(
         choice(
           "conflict-gate",
-          "Konflikterkennung vor Veröffentlichung mit menschlicher Entscheidung",
-          "Conflict detection before publishing with a human decision",
+          "Konflikt vor Veröffentlichung einem Menschen vorlegen",
+          "Route conflicts to a human before publishing",
         ),
         choice(
           "more-context",
@@ -476,13 +476,13 @@ export const LESSON_MISSION_PROFILES = {
       ),
       "conflict-gate",
       text(
-        "Der Konflikt braucht eine sichtbare Entscheidungsgrenze, keinen größeren Kontext oder blinden Retry.",
-        "The conflict needs a visible decision boundary, not more context or a blind retry.",
+        "Der Konflikt braucht eine sichtbare Entscheidungsgrenze. Mehr Kontext oder ein blinder Retry lösen ihn nicht.",
+        "The conflict needs a visible decision point. More context or a blind retry does not resolve it.",
       ),
     ),
     transferScenario: text(
-      "Der Ablauf wird auf einen synthetischen Lieferstatus übertragen, der externe Benachrichtigungen auslösen könnte.",
-      "The workflow is transferred to a synthetic delivery status that could trigger external notifications.",
+      "Derselbe Ablauf meldet nun einen Lieferstatus, der externe Benachrichtigungen auslösen kann.",
+      "The same workflow now reports a delivery status that can trigger external notifications.",
     ),
     transfer: probe(
       text(
@@ -493,7 +493,7 @@ export const LESSON_MISSION_PROFILES = {
         choice(
           "same-gates",
           "Keine; derselbe Ablauf reicht",
-          "None; the same workflow is sufficient",
+          "None; the same workflow suffices",
         ),
         choice(
           "longer-prompt",
@@ -502,14 +502,14 @@ export const LESSON_MISSION_PROFILES = {
         ),
         choice(
           "external-action",
-          "Separates Freigabegate für die externe Aktion und ein Rückfallweg",
-          "A separate approval gate for the external action and a fallback path",
+          "Eigenes Freigabegate und Rückfallweg für die Außenaktion",
+          "Own approval gate and fallback for the external action",
         ),
       ),
       "external-action",
       text(
-        "Eine neue Außenwirkung verlangt eine eigene Autorisierungs- und Rückfallgrenze.",
-        "A new external effect requires its own authorization and fallback boundary.",
+        "Eine neue Außenwirkung braucht eine eigene Freigabe und einen Rückfallweg.",
+        "A new external effect needs its own authorization and fallback.",
       ),
     ),
   },
@@ -517,8 +517,8 @@ export const LESSON_MISSION_PROFILES = {
     courseSlug: "ki-und-gesellschaft",
     instrument: text("Provenienz-Redaktion", "Provenance Newsroom"),
     predictionPrompt: text(
-      "Welches Indiz wird bei dem synthetischen Video am leichtesten mit einem Echtheitsbeweis verwechselt?",
-      "Which signal in the synthetic video is easiest to mistake for proof of authenticity?",
+      "Welches Indiz im Video hält man am leichtesten für einen Echtheitsbeweis?",
+      "Which signal in the video is easiest to mistake for proof of authenticity?",
     ),
     predictionChoices: choices(
       choice(
@@ -538,43 +538,43 @@ export const LESSON_MISSION_PROFILES = {
       ),
     ),
     revealedSignal: text(
-      "Der Zeitstempel passt zur Behauptung, stammt aber aus einer neu exportierten Kopie. Zwei Accounts teilen denselben Ausschnitt und verweisen aufeinander.",
+      "Der Zeitstempel passt zur Behauptung, stammt aber aus einer neu exportierten Kopie. Zwei Accounts teilen denselben Ausschnitt und zitieren sich gegenseitig.",
       "The timestamp matches the claim but comes from a newly exported copy. Two accounts share the same clip and cite each other.",
     ),
     manipulation: text(
-      "Öffne die Provenienz-Redaktion, ändere Quellenunabhängigkeit oder Signalgewicht und verfolge die Publikationsentscheidung.",
-      "Open the provenance newsroom, change source independence or signal weight, and trace the publication decision.",
+      "Ändere in der Provenienz-Redaktion Quellenunabhängigkeit oder Signalgewicht und verfolge die Publikationsentscheidung.",
+      "In the provenance newsroom, change source independence or signal weight and trace the publication decision.",
     ),
     evidence: probe(
       text(
-        "Wie ist der Zeitstempel einzuordnen?",
-        "How should the timestamp be classified?",
+        "Was ist der Zeitstempel?",
+        "What is the timestamp?",
       ),
       choices(
         choice("proof", "Echtheitsbeweis", "Proof of authenticity"),
         choice(
           "signal",
-          "Schwaches Provenienzsignal mit offenem Ursprung",
-          "Weak provenance signal with unresolved origin",
+          "Schwaches Signal, Ursprung offen",
+          "Weak signal, origin unresolved",
         ),
         choice("fabrication", "Beweis für Fälschung", "Proof of fabrication"),
       ),
       "signal",
       text(
-        "Metadaten einer Kopie sind ein prüfbares Signal, aber kein Beweis für Aufnahmezeit oder Echtheit.",
-        "Metadata from a copy is a testable signal, not proof of capture time or authenticity.",
+        "Metadaten einer Kopie lassen sich prüfen, beweisen aber weder Aufnahmezeit noch Echtheit.",
+        "Metadata from a copy can be checked but proves neither capture time nor authenticity.",
       ),
     ),
     retrieval: probe(
       text(
-        "Welche Trennung schützt vor überzogenen Schlussfolgerungen?",
+        "Welche Trennung schützt vor überzogenen Schlüssen?",
         "Which separation prevents overclaiming?",
       ),
       choices(
         choice(
           "observe-infer",
-          "Beobachtung, abgeleitete Interpretation und offene Unsicherheit",
-          "Observation, inferred interpretation, and unresolved uncertainty",
+          "Beobachtung, Deutung, offene Unsicherheit",
+          "Observation, interpretation, open uncertainty",
         ),
         choice("true-false", "Nur wahr oder falsch", "Only true or false"),
         choice(
@@ -585,17 +585,17 @@ export const LESSON_MISSION_PROFILES = {
       ),
       "observe-infer",
       text(
-        "Der Befund muss sichtbar von seiner Interpretation und der verbleibenden Unsicherheit getrennt bleiben.",
-        "The observation must remain visibly separate from its interpretation and residual uncertainty.",
+        "Befund, Deutung und Restunsicherheit bleiben sichtbar getrennt.",
+        "Observation, interpretation and residual uncertainty stay visibly apart.",
       ),
       {
         "true-false": text(
-          "Die Zweiteilung erzwingt Gewissheit, wo das Signal mehrere Ursachen zulässt. Ein Zeitstempel einer Kopie beweist weder den Aufnahmezeitpunkt noch eine Fälschung; Beobachtung und Restunsicherheit müssen getrennt bleiben.",
-          "A binary verdict forces certainty where the signal permits several causes. A copied file's timestamp proves neither capture time nor fabrication, so observation and residual uncertainty must remain separate.",
+          "Wahr oder falsch erzwingt Gewissheit, wo das Signal mehrere Ursachen zulässt. Der Zeitstempel einer Kopie beweist weder Aufnahmezeit noch Fälschung.",
+          "A binary verdict forces certainty where the signal allows several causes. A copy's timestamp proves neither capture time nor fabrication.",
         ),
         "popular-unpopular": text(
-          "Popularität misst Verbreitung, nicht Herkunft oder Echtheit. Eine dekontextualisierte Kopie kann viral und weithin akzeptiert sein, obwohl ihre Provenienz ungeklärt bleibt.",
-          "Popularity measures circulation, not origin or authenticity. A decontextualized copy can go viral and gain broad acceptance while its provenance remains unresolved.",
+          "Popularität misst Verbreitung. Eine aus dem Kontext gerissene Kopie kann viral gehen, obwohl ihre Herkunft ungeklärt ist.",
+          "Popularity measures spread. A copy stripped of context can go viral while its origin stays unresolved.",
         ),
       },
     ),
@@ -617,19 +617,19 @@ export const LESSON_MISSION_PROFILES = {
         ),
         choice(
           "hold-verify",
-          "Veröffentlichung halten, Ursprung suchen und Unsicherheit dokumentieren",
-          "Hold publication, seek the origin, and document uncertainty",
+          "Zurückhalten, Ursprung suchen, Unsicherheit notieren",
+          "Hold, trace the origin, log uncertainty",
         ),
       ),
       "hold-verify",
       text(
-        "Weder Echtheit noch Fälschung ist belegt; die verantwortbare Aktion ist weitere Verifikation.",
-        "Neither authenticity nor fabrication is established; further verification is the defensible action.",
+        "Weder Echtheit noch Fälschung ist belegt, also wird weiter geprüft.",
+        "Neither authenticity nor fabrication is established, so verification continues.",
       ),
     ),
     transferScenario: text(
-      "Ein synthetisches Audiozitat liegt als Originaldatei vor, aber die Sprecherzuordnung stammt nur aus einem anonymen Post.",
-      "A synthetic audio quote is available as an original file, but speaker attribution comes only from an anonymous post.",
+      "Ein Audiozitat liegt als Originaldatei vor; wer spricht, behauptet nur ein anonymer Post.",
+      "An audio quote exists as an original file; only an anonymous post names the speaker.",
     ),
     transfer: probe(
       text("Was wird neu bewertet?", "What must be reassessed?"),
@@ -641,15 +641,15 @@ export const LESSON_MISSION_PROFILES = {
         ),
         choice(
           "provenance-chain",
-          "Die Provenienzkette und unabhängige Sprecherzuordnung",
-          "The provenance chain and independent speaker attribution",
+          "Provenienzkette und unabhängige Sprecherzuordnung",
+          "Provenance chain and independent speaker check",
         ),
         choice("file-size", "Nur die Dateigröße", "Only the file size"),
       ),
       "provenance-chain",
       text(
-        "Das Medium ändert sich, die Pflicht zu unabhängiger Provenienz- und Claimprüfung bleibt.",
-        "The medium changes, but independent provenance and claim verification remain necessary.",
+        "Das Medium wechselt, die unabhängige Prüfung von Herkunft und Claim bleibt.",
+        "The medium changes; independent checks of origin and claim remain.",
       ),
     ),
   },
@@ -657,8 +657,8 @@ export const LESSON_MISSION_PROFILES = {
     courseSlug: "data-engineering-fundamentals",
     instrument: text("Pipeline-Störstand", "Pipeline Failure Bench"),
     predictionPrompt: text(
-      "Welche Invariante bricht beim ersten Replay des synthetischen Auftrags am ehesten?",
-      "Which invariant is most likely to fail on the first replay of the synthetic job?",
+      "Welche Invariante bricht beim ersten Replay am ehesten?",
+      "Which invariant is most likely to break on the first replay?",
     ),
     predictionChoices: choices(
       choice("schema", "Schema-Vertrag", "Schema contract"),
@@ -670,13 +670,13 @@ export const LESSON_MISSION_PROFILES = {
       "After a timeout, batch 42 is delivered again. Three events have the same event ID but a later ingestion timestamp.",
     ),
     manipulation: text(
-      "Öffne den Störstand, aktiviere Replay und ändere Deduplikations- oder Late-Data-Regeln. Vergleiche Zeilenzahl und Reconciliation.",
-      "Open the failure bench, trigger replay, and change deduplication or late-data rules. Compare row counts and reconciliation.",
+      "Aktiviere im Störstand Replay, ändere Deduplikations- oder Late-Data-Regeln und vergleiche Zeilenzahl und Reconciliation.",
+      "On the failure bench, trigger replay, change deduplication or late-data rules and compare row counts and reconciliation.",
     ),
     evidence: probe(
       text(
-        "Welches Signal belegt korrekte Wiederholung?",
-        "Which signal demonstrates a correct replay?",
+        "Was belegt ein korrektes Replay?",
+        "What shows a correct replay?",
       ),
       choices(
         choice(
@@ -691,20 +691,20 @@ export const LESSON_MISSION_PROFILES = {
         ),
         choice(
           "reconciled-keys",
-          "Eindeutige Ereignisschlüssel und ausgeglichene Reconciliation",
-          "Unique event keys and a balanced reconciliation",
+          "Eindeutige Schlüssel, ausgeglichene Reconciliation",
+          "Unique keys, balanced reconciliation",
         ),
       ),
       "reconciled-keys",
       text(
-        "Ein erfolgreicher Prozessstatus beweist keine Datenkorrektheit; Schlüssel- und Mengenabgleich tun es.",
-        "A successful process status does not prove data correctness; key and count reconciliation do.",
+        "Ein grüner Status beweist keine korrekten Daten. Das leisten Schlüssel- und Mengenabgleich.",
+        "A green status does not prove correct data. Key and count reconciliation do.",
       ),
     ),
     retrieval: probe(
       text(
-        "Welche Zeit muss für verspätete Ereignisse getrennt werden?",
-        "Which notions of time must be separated for late events?",
+        "Welche Zeiten trennst du bei verspäteten Ereignissen?",
+        "Which times do you separate for late events?",
       ),
       choices(
         choice("clock-only", "Nur aktuelle Uhrzeit", "Current clock time only"),
@@ -717,24 +717,24 @@ export const LESSON_MISSION_PROFILES = {
       ),
       "event-ingest",
       text(
-        "Late-Data-Logik braucht die Trennung zwischen dem Zeitpunkt des Ereignisses und seiner Verarbeitung.",
-        "Late-data logic requires separating when an event occurred from when it was processed.",
+        "Late-Data-Logik trennt, wann ein Ereignis geschah und wann es verarbeitet wurde.",
+        "Late-data logic separates when an event occurred from when it was processed.",
       ),
       {
         "clock-only": text(
-          "Die aktuelle Uhrzeit zeigt nur, wann verarbeitet wird, nicht wann das Ereignis entstand. Ein heute erneut eingespieltes Ereignis kann von gestern stammen und wäre ohne Ereigniszeit fälschlich pünktlich.",
-          "The current clock shows only when processing happens, not when the event occurred. An event replayed today may be from yesterday and would look falsely on time without event time.",
+          "Die Uhrzeit zeigt nur, wann verarbeitet wird. Ein heute eingespieltes Ereignis von gestern sähe ohne Ereigniszeit pünktlich aus.",
+          "The clock shows only when processing happens. Yesterday's event replayed today would look on time without event time.",
         ),
         "deploy-time": text(
-          "Deployment-Zeit datiert Code, nicht Daten. Ein Ereignis kann vor dem Release auftreten und erst danach eintreffen; nur Ereignis- und Verarbeitungszeit machen diese Verspätung sichtbar.",
-          "Deployment time dates code, not data. An event can occur before a release and arrive after it; only event and processing time expose that delay.",
+          "Deployment-Zeit datiert Code. Ein Ereignis kann vor dem Release entstehen und danach eintreffen; nur Ereignis- und Verarbeitungszeit zeigen diese Verspätung.",
+          "Deployment time dates code. An event can occur before a release and arrive after it; only event and processing time expose that delay.",
         ),
       },
     ),
     revision: probe(
       text(
-        "Welche Änderung behebt den beobachteten Fehlerpfad?",
-        "Which change addresses the observed failure path?",
+        "Welche Änderung behebt den Fehlerpfad?",
+        "Which change fixes the failure path?",
       ),
       choices(
         choice(
@@ -745,19 +745,19 @@ export const LESSON_MISSION_PROFILES = {
         choice("bigger-batch", "Größere Batches", "Larger batches"),
         choice(
           "stable-key-upsert",
-          "Stabiler Ereignisschlüssel, idempotenter Upsert und Reconciliation",
-          "Stable event key, idempotent upsert, and reconciliation",
+          "Stabiler Schlüssel, idempotenter Upsert, Abgleich",
+          "Stable key, idempotent upsert, reconciliation",
         ),
       ),
       "stable-key-upsert",
       text(
-        "Replay-Sicherheit entsteht durch deterministische Identität und Prüfung, nicht durch weniger oder mehr Wiederholungen.",
-        "Replay safety comes from deterministic identity and verification, not from fewer or more retries.",
+        "Replay-Sicherheit entsteht durch feste Identität und Prüfung. Die Zahl der Retries ändert daran nichts.",
+        "Replay safety comes from fixed identity and checks. The number of retries does not change that.",
       ),
     ),
     transferScenario: text(
-      "Die Pipeline verarbeitet nun synthetische Korrekturereignisse, die bestehende Werte rückwirkend ändern.",
-      "The pipeline now handles synthetic correction events that retroactively change existing values.",
+      "Die Pipeline verarbeitet nun Korrekturereignisse, die bestehende Werte rückwirkend ändern.",
+      "The pipeline now handles correction events that change existing values retroactively.",
     ),
     transfer: probe(
       text(
@@ -783,8 +783,8 @@ export const LESSON_MISSION_PROFILES = {
       ),
       "append-only",
       text(
-        "Korrekturereignisse brechen die Append-only-Annahme; Identität und Reconciliation bleiben gültig.",
-        "Correction events break the append-only assumption; identity and reconciliation still apply.",
+        "Korrekturen brechen die Append-only-Annahme; Identität und Reconciliation gelten weiter.",
+        "Corrections break the append-only assumption; identity and reconciliation still apply.",
       ),
     ),
   },
@@ -792,8 +792,8 @@ export const LESSON_MISSION_PROFILES = {
     courseSlug: "data-science",
     instrument: text("Experiment-Prüffeld", "Experiment Test Rig"),
     predictionPrompt: text(
-      "Welcher Fehler lässt den synthetischen Modelleffekt am wahrscheinlichsten besser aussehen, als er ist?",
-      "Which defect is most likely to make the synthetic model effect look better than it is?",
+      "Welcher Fehler lässt den Modelleffekt am ehesten besser aussehen, als er ist?",
+      "Which defect most likely makes the model effect look better than it is?",
     ),
     predictionChoices: choices(
       choice("small-sample", "Kleine Stichprobe", "Small sample"),
@@ -801,24 +801,24 @@ export const LESSON_MISSION_PROFILES = {
       choice("rounding", "Gerundete Anzeige", "Rounded display"),
     ),
     revealedSignal: text(
-      "Die Variable `resolved_at` wird vor dem Split berechnet. Sie ist im Training und in der Auswertung enthalten, steht bei einer realen Vorhersage aber noch nicht fest.",
-      "The `resolved_at` feature is computed before the split. It is present in training and evaluation but unavailable at real prediction time.",
+      "Die Variable `resolved_at` wird vor dem Split berechnet. Sie steckt in Training und Auswertung, ist bei einer echten Vorhersage aber noch unbekannt.",
+      "The `resolved_at` feature is computed before the split. It is in training and evaluation but unknown at real prediction time.",
     ),
     manipulation: text(
-      "Öffne das Prüffeld, schalte Leakage und Zwischenanalysen um und vergleiche Effekt, Unsicherheit und Holdout-Verhalten.",
-      "Open the test rig, toggle leakage and interim looks, and compare effect, uncertainty, and holdout behavior.",
+      "Schalte im Prüffeld Leakage und Zwischenanalysen um und vergleiche Effekt, Unsicherheit und Holdout-Verhalten.",
+      "In the test rig, toggle leakage and interim looks and compare effect, uncertainty and holdout behavior.",
     ),
     evidence: probe(
       text(
-        "Welche Evidenz zeigt Leakage am direktesten?",
-        "Which evidence most directly demonstrates leakage?",
+        "Was zeigt Leakage am direktesten?",
+        "What shows leakage most directly?",
       ),
       choices(
         choice("high-score", "Ein hoher Gesamtscore", "A high aggregate score"),
         choice(
           "time-audit",
-          "Ein Feature-Verfügbarkeitsaudit zum Vorhersagezeitpunkt",
-          "A feature-availability audit at prediction time",
+          "Ein Verfügbarkeitsaudit zum Vorhersagezeitpunkt",
+          "An availability audit at prediction time",
         ),
         choice(
           "pretty-chart",
@@ -828,8 +828,8 @@ export const LESSON_MISSION_PROFILES = {
       ),
       "time-audit",
       text(
-        "Entscheidend ist, ob die Information zum Einsatzzeitpunkt existiert, nicht wie überzeugend die Metrik aussieht.",
-        "The decisive question is whether the information exists at serving time, not how convincing the metric looks.",
+        "Entscheidend ist, ob die Information zum Einsatzzeitpunkt existiert. Wie gut die Metrik aussieht, zählt nicht.",
+        "What matters is whether the information exists at serving time. How good the metric looks does not.",
       ),
     ),
     retrieval: probe(
@@ -844,17 +844,17 @@ export const LESSON_MISSION_PROFILES = {
       ),
       "final-holdout",
       text(
-        "Der finale Holdout bleibt bis zur festgelegten Endbewertung unangetastet; wiederholtes Nachsteuern macht ihn zur Validierung.",
-        "The final holdout remains untouched until the predefined final evaluation; repeated tuning turns it into validation data.",
+        "Der finale Holdout bleibt bis zur geplanten Endbewertung unberührt. Wer mehrfach daran nachsteuert, macht ihn zu Validierungsdaten.",
+        "The final holdout stays untouched until the planned final evaluation. Repeated tuning on it turns it into validation data.",
       ),
       {
         training: text(
-          "Trainingsdaten dürfen das Fitten steuern; sonst kann das Modell keine Parameter lernen. Dass Koeffizienten aus Trainingsbeispielen gelernt werden, verbraucht nicht den versiegelten finalen Holdout.",
-          "Training data must steer fitting or the model cannot learn parameters. Learning coefficients from training examples does not consume the sealed final holdout.",
+          "Trainingsdaten müssen das Fitten steuern, sonst lernt das Modell keine Parameter. Das verbraucht den versiegelten Holdout nicht.",
+          "Training data must steer fitting or the model learns no parameters. That does not consume the sealed holdout.",
         ),
         validation: text(
-          "Validierungsdaten sind für Modell- und Hyperparameterentscheidungen vorgesehen, auch wenn ihr Übergebrauch kontrolliert werden muss. Eine Lernrate darf anhand der Validierung gewählt werden; der finale Holdout wird erst danach einmalig geöffnet.",
-          "Validation data is intended for model and hyperparameter decisions, although overuse must be controlled. A learning rate may be chosen on validation; the final holdout is opened once afterward.",
+          "Validierungsdaten sind für Modell- und Hyperparameterentscheidungen da, solange du sie nicht übernutzt. Die Lernrate wählst du auf der Validierung; den finalen Holdout öffnest du danach einmal.",
+          "Validation data is for model and hyperparameter decisions, as long as you do not overuse it. You pick the learning rate on validation and open the final holdout once afterward.",
         ),
       },
     ),
@@ -863,8 +863,8 @@ export const LESSON_MISSION_PROFILES = {
       choices(
         choice(
           "drop-audit-resplit",
-          "Leakage-Feature entfernen, zeitgerecht neu splitten und Unsicherheit neu berechnen",
-          "Remove the leaking feature, re-split by time, and recompute uncertainty",
+          "Leck-Feature entfernen, zeitlich neu splitten, Unsicherheit neu rechnen",
+          "Drop the leaking feature, re-split by time, recompute uncertainty",
         ),
         choice(
           "hide-feature",
@@ -879,21 +879,21 @@ export const LESSON_MISSION_PROFILES = {
       ),
       "drop-audit-resplit",
       text(
-        "Die Datenentstehung und Evaluation müssen repariert werden; kosmetische Berichtsänderungen reichen nicht.",
-        "The data-generating and evaluation process must be repaired; cosmetic reporting changes are insufficient.",
+        "Datenentstehung und Auswertung müssen repariert werden. Ein geänderter Bericht reicht nicht.",
+        "Data generation and evaluation must be repaired. Changing the report is not enough.",
       ),
     ),
     transferScenario: text(
-      "Ein neues synthetisches Prognoseprojekt nutzt ein Merkmal, das erst zwei Stunden nach dem Zielereignis aktualisiert wird.",
-      "A new synthetic forecasting project uses a feature updated two hours after the target event.",
+      "Ein neues Prognoseprojekt nutzt ein Merkmal, das erst zwei Stunden nach dem Zielereignis aktualisiert wird.",
+      "A new forecasting project uses a feature updated two hours after the target event.",
     ),
     transfer: probe(
       text("Welche Prüfung wird übertragen?", "Which check transfers?"),
       choices(
         choice(
           "feature-timeline",
-          "Eine Feature-Zeitlinie relativ zum Vorhersagezeitpunkt",
-          "A feature timeline relative to prediction time",
+          "Feature-Zeitlinie zum Vorhersagezeitpunkt",
+          "Feature timeline against prediction time",
         ),
         choice(
           "same-threshold",
@@ -904,7 +904,7 @@ export const LESSON_MISSION_PROFILES = {
       ),
       "feature-timeline",
       text(
-        "Übertragbar ist das Verfügbarkeitsaudit; Modell und Grenzwert hängen vom neuen Problem ab.",
+        "Das Verfügbarkeitsaudit wandert mit; Modell und Grenzwert hängen vom neuen Problem ab.",
         "The availability audit transfers; the model and threshold depend on the new problem.",
       ),
     ),
@@ -913,8 +913,8 @@ export const LESSON_MISSION_PROFILES = {
     courseSlug: "data-infrastructure",
     instrument: text("Streaming-Kontrollraum", "Streaming Control Room"),
     predictionPrompt: text(
-      "Welches SLO-Signal verschlechtert sich beim synthetischen Netzschnitt zuerst?",
-      "Which SLO signal degrades first during the synthetic network partition?",
+      "Welches SLO-Signal leidet beim Netzschnitt zuerst?",
+      "Which SLO signal degrades first during the network partition?",
     ),
     predictionChoices: choices(
       choice("latency", "Ende-zu-Ende-Latenz", "End-to-end latency"),
@@ -926,13 +926,13 @@ export const LESSON_MISSION_PROFILES = {
       "Consumer lag rises. After rebalancing, latency recovers while some sequences are processed twice.",
     ),
     manipulation: text(
-      "Öffne den Kontrollraum, injiziere Partition oder Rückstau und verändere Replikation, Wasserzeichen oder Replay-Strategie.",
-      "Open the control room, inject a partition or backlog, and change replication, watermark, or replay strategy.",
+      "Erzeuge im Kontrollraum Partition oder Rückstau und ändere Replikation, Wasserzeichen oder Replay-Strategie.",
+      "In the control room, inject a partition or backlog and change replication, watermark or replay strategy.",
     ),
     evidence: probe(
       text(
-        "Welche Evidenz trennt Erholung von bloßem Aufholen?",
-        "Which evidence distinguishes recovery from merely catching up?",
+        "Was unterscheidet Erholung von bloßem Aufholen?",
+        "What separates recovery from merely catching up?",
       ),
       choices(
         choice(
@@ -942,21 +942,21 @@ export const LESSON_MISSION_PROFILES = {
         ),
         choice(
           "invariant-slo",
-          "Lag, Duplikate, Verlust und Reihenfolge gegen definierte Grenzen",
-          "Lag, duplicates, loss, and ordering against defined limits",
+          "Lag, Duplikate, Verlust, Reihenfolge gegen Grenzwerte",
+          "Lag, duplicates, loss, ordering against limits",
         ),
         choice("cpu-low", "CPU-Auslastung sinkt", "CPU utilization falls"),
       ),
       "invariant-slo",
       text(
-        "Ein leerer Rückstand kann mit Duplikaten oder Verlust erkauft sein; Erholung muss Korrektheit und SLO gemeinsam prüfen.",
-        "An empty backlog can be bought with duplicates or loss; recovery must verify correctness and SLOs together.",
+        "Ein leerer Rückstand kann mit Duplikaten oder Verlust erkauft sein. Erholung prüft Korrektheit und SLO zusammen.",
+        "An empty backlog can be bought with duplicates or loss. Recovery checks correctness and SLOs together.",
       ),
     ),
     retrieval: probe(
       text(
-        "Welche Größe steuert, wann verspätete Ereignisse als vollständig gelten?",
-        "Which mechanism controls when late events are considered complete?",
+        "Was steuert, wann verspätete Ereignisse als vollständig gelten?",
+        "What controls when late events count as complete?",
       ),
       choices(
         choice("watermark", "Wasserzeichen", "Watermark"),
@@ -965,24 +965,24 @@ export const LESSON_MISSION_PROFILES = {
       ),
       "watermark",
       text(
-        "Wasserzeichen modellieren den Fortschritt der Ereigniszeit und die tolerierte Verspätung.",
+        "Wasserzeichen bilden den Fortschritt der Ereigniszeit und die tolerierte Verspätung ab.",
         "Watermarks model event-time progress and tolerated lateness.",
       ),
       {
         "partition-count": text(
-          "Die Partitionszahl steuert Parallelität und Datenverteilung, nicht den Fortschritt der Ereigniszeit. Auch bei zehn Partitionen kann in einer davon noch ein älteres Ereignis eintreffen.",
-          "Partition count controls parallelism and data distribution, not event-time progress. Even with ten partitions, an older event can still arrive in one of them.",
+          "Die Partitionszahl steuert Parallelität und Datenverteilung. Auch bei zehn Partitionen kann in einer davon noch ein älteres Ereignis eintreffen.",
+          "Partition count controls parallelism and data distribution. Even with ten partitions, an older event can still arrive in one of them.",
         ),
         "replica-count": text(
-          "Replikas erhöhen Verfügbarkeit, kopieren aber denselben Vollständigkeitsstand. Drei Replikas können dasselbe unvollständige Ereignisfenster enthalten; nur ein Wasserzeichen modelliert tolerierte Verspätung.",
-          "Replicas improve availability but copy the same completeness state. Three replicas can contain the same incomplete event window; only a watermark models tolerated lateness.",
+          "Replikas erhöhen die Verfügbarkeit, kopieren aber denselben Stand. Drei Replikas können dasselbe unvollständige Ereignisfenster enthalten.",
+          "Replicas raise availability but copy the same state. Three replicas can hold the same incomplete event window.",
         ),
       },
     ),
     revision: probe(
       text(
-        "Welche Reaktion adressiert beide beobachteten Signale?",
-        "Which response addresses both observed signals?",
+        "Welche Reaktion behebt beide Signale?",
+        "Which response fixes both signals?",
       ),
       choices(
         choice(
@@ -997,19 +997,19 @@ export const LESSON_MISSION_PROFILES = {
         ),
         choice(
           "controlled-replay",
-          "Kontrolliert skalieren, idempotent replayen und Korrektheit reconciliieren",
-          "Scale deliberately, replay idempotently, and reconcile correctness",
+          "Kontrolliert skalieren, idempotent replayen, abgleichen",
+          "Scale deliberately, replay idempotently, reconcile",
         ),
       ),
       "controlled-replay",
       text(
-        "Durchsatz und Korrektheit brauchen eine gekoppelte Wiederherstellung; Skalierung allein löst Duplikate nicht.",
-        "Throughput and correctness need a coupled recovery; scaling alone does not address duplicates.",
+        "Durchsatz und Korrektheit werden zusammen wiederhergestellt. Skalieren allein beseitigt keine Duplikate.",
+        "Throughput and correctness recover together. Scaling alone removes no duplicates.",
       ),
     ),
     transferScenario: text(
-      "Der Stream trägt nun synthetische Alarmereignisse, bei denen ein spätes Ereignis eine menschliche Eskalation auslösen kann.",
-      "The stream now carries synthetic alert events where a late event may trigger human escalation.",
+      "Der Stream trägt nun Alarme; ein spätes Ereignis kann eine menschliche Eskalation auslösen.",
+      "The stream now carries alerts; a late event can trigger human escalation.",
     ),
     transfer: probe(
       text(
@@ -1019,8 +1019,8 @@ export const LESSON_MISSION_PROFILES = {
       choices(
         choice(
           "lateness-action",
-          "Tolerierte Verspätung plus Verhalten nach dem Wasserzeichen",
-          "Tolerated lateness plus behavior after the watermark",
+          "Tolerierte Verspätung und Verhalten danach",
+          "Tolerated lateness and what happens after",
         ),
         choice(
           "same-watermark",
@@ -1035,8 +1035,8 @@ export const LESSON_MISSION_PROFILES = {
       ),
       "lateness-action",
       text(
-        "Die neue Außenwirkung ändert die Kosten von Verspätung; Zeitgrenze und Kompensationsweg müssen neu bestimmt werden.",
-        "The new external effect changes the cost of lateness; the time boundary and compensation path must be redefined.",
+        "Die Außenwirkung macht Verspätung teurer. Zeitgrenze und Ausgleichsweg werden neu bestimmt.",
+        "The external effect makes lateness costlier. Time limit and compensation path are set anew.",
       ),
     ),
   },
@@ -1044,8 +1044,8 @@ export const LESSON_MISSION_PROFILES = {
     courseSlug: "codex",
     instrument: text("Repository-Werkbank", "Repository Workbench"),
     predictionPrompt: text(
-      "Welcher Beleg wird die Ursache des synthetischen Retry-Fehlers am schnellsten eingrenzen?",
-      "Which evidence will narrow the cause of the synthetic retry defect fastest?",
+      "Welcher Beleg grenzt die Ursache des Retry-Fehlers am schnellsten ein?",
+      "Which evidence narrows the cause of the retry defect fastest?",
     ),
     predictionChoices: choices(
       choice(
@@ -1055,8 +1055,8 @@ export const LESSON_MISSION_PROFILES = {
       ),
       choice(
         "failing-test",
-        "Der kleinste reproduzierende Test mit konkretem Exit-Code",
-        "The smallest reproducing test with a concrete exit code",
+        "Kleinster reproduzierender Test mit Exit-Code",
+        "Smallest reproducing test with an exit code",
       ),
       choice(
         "dependency-update",
@@ -1065,17 +1065,17 @@ export const LESSON_MISSION_PROFILES = {
       ),
     ),
     revealedSignal: text(
-      "Der fokussierte Test erwartet drei Versuche, beobachtet aber vier. Der Diff zeigt, dass der Zähler vor statt nach der Abbruchprüfung erhöht wird.",
-      "The focused test expects three attempts but observes four. The diff shows the counter increments before rather than after the stop check.",
+      "Der Test erwartet drei Versuche und sieht vier. Laut Diff steigt der Zähler vor statt nach der Abbruchprüfung.",
+      "The test expects three attempts and sees four. The diff shows the counter rising before the stop check instead of after.",
     ),
     manipulation: text(
-      "Öffne die Repository-Werkbank, inspiziere die synthetischen Dateien, wende den begrenzten Patch an und führe die erlaubten Checks aus.",
-      "Open the repository workbench, inspect the synthetic files, apply the bounded patch, and run the allowed checks.",
+      "Sieh dir in der Werkbank die Dateien an, wende den begrenzten Patch an und führe die erlaubten Checks aus.",
+      "In the workbench, inspect the files, apply the bounded patch and run the allowed checks.",
     ),
     evidence: probe(
       text(
-        "Welche Evidenz ist für die Reparatur am stärksten?",
-        "Which evidence is strongest for the repair?",
+        "Was belegt die Reparatur am stärksten?",
+        "What proves the repair best?",
       ),
       choices(
         choice(
@@ -1085,27 +1085,27 @@ export const LESSON_MISSION_PROFILES = {
         ),
         choice(
           "focused-plus-suite",
-          "Reproduzierender Test, grüner Fokuscheck und grüne vollständige Prüfkette",
-          "Reproducing test, passing focused check, and passing full verification chain",
+          "Reproduktion, grüner Fokuscheck, grüne Prüfkette",
+          "Reproducer, green focused check, green full chain",
         ),
         choice("large-diff", "Ein umfangreicher Diff", "A large diff"),
       ),
       "focused-plus-suite",
       text(
-        "Der reproduzierende Fehler und die fokussierte sowie breite Regression verbinden Ursache, Fix und Nebenwirkungsprüfung.",
-        "The reproducer plus focused and broad regression checks connect cause, fix, and side-effect coverage.",
+        "Reproduktion, Fokuscheck und volle Regression verbinden Ursache, Fix und Prüfung auf Nebenwirkungen.",
+        "Reproducer, focused check and full regression connect cause, fix and side-effect coverage.",
       ),
     ),
     retrieval: probe(
       text(
-        "Was begrenzt einen agentischen Codeauftrag vor der Änderung?",
+        "Was begrenzt einen Agenten-Codeauftrag vor der ersten Änderung?",
         "What bounds an agentic coding task before edits begin?",
       ),
       choices(
         choice(
           "task-contract",
-          "Scope, Nicht-Ziele, Akzeptanzkriterien und erlaubte Checks",
-          "Scope, non-goals, acceptance criteria, and allowed checks",
+          "Scope, Nicht-Ziele, Akzeptanzkriterien, erlaubte Checks",
+          "Scope, non-goals, acceptance criteria, allowed checks",
         ),
         choice("branch-name", "Nur der Branchname", "Only the branch name"),
         choice(
@@ -1121,12 +1121,12 @@ export const LESSON_MISSION_PROFILES = {
       ),
       {
         "branch-name": text(
-          "Ein Branchname benennt Absicht, aber weder erlaubte Dateien noch Abnahmekriterien. Der Branch „fix-retry“ verhindert nicht, dass ein Agent zusätzlich Datenbankcode ändert.",
-          "A branch name states intent but defines neither allowed files nor acceptance criteria. A branch named “fix-retry” does not prevent an agent from also changing database code.",
+          "Ein Branchname nennt die Absicht, aber weder erlaubte Dateien noch Abnahmekriterien. „fix-retry“ hindert keinen Agenten daran, auch Datenbankcode zu ändern.",
+          "A branch name states intent but defines neither allowed files nor acceptance criteria. “fix-retry” does not stop an agent from also changing database code.",
         ),
         "more-tools": text(
-          "Mehr Werkzeuge erweitern Fähigkeit und Schadensradius, setzen aber keine Grenze. Ein Agent mit Repository- und Datenbankzugriff weiß ohne Task-Vertrag nicht, ob Schemaänderungen erlaubt sind.",
-          "More tools expand capability and blast radius but set no boundary. An agent with repository and database access cannot know whether schema changes are allowed without a task contract.",
+          "Mehr Werkzeuge erweitern Fähigkeit und Schadensradius, setzen aber keine Grenze. Ohne Task-Vertrag weiß ein Agent mit Datenbankzugriff nicht, ob er das Schema ändern darf.",
+          "More tools expand capability and blast radius but set no boundary. Without a task contract, an agent with database access cannot know if schema changes are allowed.",
         ),
       },
     ),
@@ -1138,8 +1138,8 @@ export const LESSON_MISSION_PROFILES = {
       choices(
         choice(
           "bounded-order-fix",
-          "Reihenfolge der Abbruchprüfung korrigieren und den Grenzfall testen",
-          "Correct the stop-check order and test the boundary case",
+          "Prüfreihenfolge korrigieren, Grenzfall testen",
+          "Fix the check order, test the edge case",
         ),
         choice(
           "rewrite-module",
@@ -1154,13 +1154,13 @@ export const LESSON_MISSION_PROFILES = {
       ),
       "bounded-order-fix",
       text(
-        "Der kleinste kohärente Fix adressiert die belegte Off-by-one-Ursache und schützt den Grenzfall.",
-        "The smallest coherent fix addresses the evidenced off-by-one cause and protects the boundary case.",
+        "Der kleinste Fix behebt die belegte Off-by-one-Ursache und sichert den Grenzfall ab.",
+        "The smallest fix removes the evidenced off-by-one cause and guards the edge case.",
       ),
     ),
     transferScenario: text(
-      "Ein anderer synthetischer Worker zählt Timeouts statt Versuche und besitzt eine Backoff-Grenze.",
-      "Another synthetic worker counts timeouts rather than attempts and has a backoff boundary.",
+      "Ein anderer Worker zählt Timeouts statt Versuche und hat eine Backoff-Grenze.",
+      "Another worker counts timeouts instead of attempts and has a backoff limit.",
     ),
     transfer: probe(
       text("Was wird übertragen?", "What transfers?"),
@@ -1177,14 +1177,14 @@ export const LESSON_MISSION_PROFILES = {
         ),
         choice(
           "contract-reproducer",
-          "Instruktionen lesen, Grenze reproduzieren und minimal gegen Kriterien ändern",
-          "Read instructions, reproduce the boundary, and make the smallest criteria-based change",
+          "Anleitung lesen, Grenze reproduzieren, minimal ändern",
+          "Read instructions, reproduce the limit, change minimally",
         ),
       ),
       "contract-reproducer",
       text(
-        "Die Methode überträgt sich; Zählersemantik und konkreter Patch müssen neu geprüft werden.",
-        "The method transfers; counter semantics and the concrete patch must be reassessed.",
+        "Die Methode wandert mit; Zählerlogik und Patch werden neu geprüft.",
+        "The method transfers; counter logic and patch are checked anew.",
       ),
     ),
   },
@@ -1192,8 +1192,8 @@ export const LESSON_MISSION_PROFILES = {
     courseSlug: "claude",
     instrument: text("Grounding-Komparator", "Grounding Comparator"),
     predictionPrompt: text(
-      "Welche Promptvariante wird im synthetischen Museumsfall wahrscheinlich weniger unbelegte Claims erzeugen?",
-      "Which prompt variant is likely to produce fewer unsupported claims in the synthetic museum case?",
+      "Welche Promptvariante erzeugt im Museumsfall weniger unbelegte Claims?",
+      "Which prompt variant produces fewer unsupported claims in the museum case?",
     ),
     predictionChoices: choices(
       choice(
@@ -1204,22 +1204,22 @@ export const LESSON_MISSION_PROFILES = {
       choice("long", "Eine maximal lange Antwort", "A maximally long answer"),
       choice(
         "grounded",
-        "Claim-Quelle-Zuordnung mit Verweigerungsregel",
-        "Claim-to-source mapping with a refusal rule",
+        "Quelle je Claim, sonst verweigern",
+        "Source per claim, else refuse",
       ),
     ),
     revealedSignal: text(
-      "Quelle B widerspricht Quelle C beim Ausstellungsjahr. Eine attraktive Besucherzahl steht in keiner Quelle, erscheint aber in der Basisantwort.",
-      "Source B conflicts with Source C on the exhibition year. An attractive visitor count appears in no source but is present in the baseline answer.",
+      "Quelle B widerspricht Quelle C beim Ausstellungsjahr. Eine attraktive Besucherzahl steht in keiner Quelle, aber in der Basisantwort.",
+      "Source B conflicts with Source C on the exhibition year. An attractive visitor count is in no source but in the baseline answer.",
     ),
     manipulation: text(
-      "Öffne den Komparator, ändere Grounding- und Verweigerungsregeln und führe beide Promptvarianten gegen dasselbe Quellenpaket aus.",
-      "Open the comparator, change grounding and refusal rules, and run both prompt variants against the same source packet.",
+      "Ändere im Komparator Grounding- und Verweigerungsregeln und führe beide Varianten gegen dasselbe Quellenpaket aus.",
+      "In the comparator, change grounding and refusal rules and run both variants against the same source packet.",
     ),
     evidence: probe(
       text(
-        "Wie wird die Besucherzahl klassifiziert?",
-        "How should the visitor count be classified?",
+        "Was ist die Besucherzahl?",
+        "What is the visitor count?",
       ),
       choices(
         choice("supported", "Direkt belegt", "Directly supported"),
@@ -1228,14 +1228,14 @@ export const LESSON_MISSION_PROFILES = {
       ),
       "unsupported",
       text(
-        "Ein Konflikt setzt mindestens zwei widersprechende Belege voraus; hier fehlt jede Quelle.",
-        "A conflict requires at least two contradictory sources; here there is no source at all.",
+        "Ein Konflikt braucht mindestens zwei widersprechende Belege. Hier fehlt jede Quelle.",
+        "A conflict needs at least two contradicting sources. Here there is none.",
       ),
     ),
     retrieval: probe(
       text(
-        "Welche Eval-Dimension prüft sichtbare Unsicherheit bei einem Quellenkonflikt?",
-        "Which evaluation dimension checks visible uncertainty under source conflict?",
+        "Welche Eval-Dimension prüft sichtbare Unsicherheit bei Quellenkonflikten?",
+        "Which eval dimension checks visible uncertainty under source conflict?",
       ),
       choices(
         choice("format", "Format", "Format"),
@@ -1244,24 +1244,24 @@ export const LESSON_MISSION_PROFILES = {
       ),
       "calibration",
       text(
-        "Kalibrierung prüft, ob sprachliche Sicherheit zur vorhandenen Evidenz passt.",
-        "Calibration checks whether expressed confidence matches the available evidence.",
+        "Kalibrierung prüft, ob die geäußerte Sicherheit zur Evidenz passt.",
+        "Calibration checks whether stated confidence matches the evidence.",
       ),
       {
         format: text(
-          "Format prüft Struktur, nicht das Verhältnis von Sicherheit zu Evidenz. Eine sauber formatierte Tabelle kann eine widersprüchliche Zahl weiterhin als sicher ausgeben.",
-          "Format tests structure, not whether confidence matches evidence. A neatly formatted table can still present a disputed figure as certain.",
+          "Format prüft nur die Struktur. Eine sauber formatierte Tabelle kann eine umstrittene Zahl trotzdem als sicher ausgeben.",
+          "Format tests only structure. A neatly formatted table can still present a disputed figure as certain.",
         ),
         length: text(
-          "Länge misst Umfang, nicht Kalibrierung. Der kurze Satz „42 ist bestätigt“ kann trotz Quellenkonflikt übermäßig sicher sein; mehr Wörter würden die Evidenzlücke ebenfalls nicht beheben.",
-          "Length measures volume, not calibration. The short sentence “42 is confirmed” can be overconfident despite a source conflict, and more words would not repair the evidence gap.",
+          "Länge misst nur den Umfang. Der kurze Satz „42 ist bestätigt“ ist trotz Quellenkonflikt zu sicher, und mehr Wörter schließen die Evidenzlücke nicht.",
+          "Length measures only volume. The short sentence “42 is confirmed” is overconfident despite a source conflict, and more words would not close the evidence gap.",
         ),
       },
     ),
     revision: probe(
       text(
         "Wie wird der Grounding-Prompt revidiert?",
-        "How should the grounding prompt be revised?",
+        "How do you revise the grounding prompt?",
       ),
       choices(
         choice(
@@ -1271,8 +1271,8 @@ export const LESSON_MISSION_PROFILES = {
         ),
         choice(
           "cite-refuse-conflict",
-          "Jeden Claim belegen, Lücken verweigern und Konflikte getrennt ausweisen",
-          "Ground each claim, refuse gaps, and report conflicts separately",
+          "Claims belegen, Lücken verweigern, Konflikte ausweisen",
+          "Ground claims, refuse gaps, flag conflicts",
         ),
         choice(
           "remove-sources",
@@ -1282,13 +1282,13 @@ export const LESSON_MISSION_PROFILES = {
       ),
       "cite-refuse-conflict",
       text(
-        "Die Revision unterscheidet unbelegte Information von widersprüchlicher Information und macht beides sichtbar.",
-        "The revision distinguishes unsupported information from conflicting information and exposes both.",
+        "So bleiben unbelegte und widersprüchliche Angaben unterscheidbar und beide sichtbar.",
+        "This keeps unsupported and conflicting information apart and shows both.",
       ),
     ),
     transferScenario: text(
-      "Ein synthetisches Policy-Paket enthält eine veraltete Richtlinie und eine neuere Änderung mit engerem Geltungsbereich.",
-      "A synthetic policy packet contains an old policy and a newer amendment with narrower scope.",
+      "Ein Policy-Paket enthält eine veraltete Richtlinie und eine neuere Änderung mit engerem Geltungsbereich.",
+      "A policy packet holds an old policy and a newer amendment with narrower scope.",
     ),
     transfer: probe(
       text(
@@ -1314,8 +1314,8 @@ export const LESSON_MISSION_PROFILES = {
       ),
       "date-scope",
       text(
-        "Bei normativen Quellen müssen Aktualität und Geltungsbereich zusätzlich zur reinen Fundstelle geprüft werden.",
-        "Normative sources require checking applicability date and scope in addition to mere citation.",
+        "Bei Regelwerken prüfst du neben der Fundstelle auch Datum und Geltungsbereich.",
+        "For rule sets, check date and scope as well as the citation.",
       ),
     ),
   },
@@ -1323,8 +1323,8 @@ export const LESSON_MISSION_PROFILES = {
     courseSlug: "ai-native-operator",
     instrument: text("Agenten-Kontrollstand", "Agent Control Plane"),
     predictionPrompt: text(
-      "An welcher Grenze wird der synthetische Agentenlauf ohne Intervention am ehesten teuer oder falsch?",
-      "At which boundary is the synthetic agent run most likely to become costly or wrong without intervention?",
+      "Wo wird der Agentenlauf ohne Eingriff am ehesten teuer oder falsch?",
+      "Where does the agent run most likely turn costly or wrong without intervention?",
     ),
     predictionChoices: choices(
       choice(
@@ -1340,17 +1340,17 @@ export const LESSON_MISSION_PROFILES = {
       choice("format", "Beim Berichtslayout", "At the report layout"),
     ),
     revealedSignal: text(
-      "Der Scout liefert doppelte Tickets. Der Analyst überschreitet sein Budget, der Kritiker erkennt die Dubletten, darf den Lauf aber nicht stoppen.",
+      "Der Scout liefert doppelte Tickets. Der Analyst überzieht sein Budget, der Kritiker erkennt die Dubletten, darf den Lauf aber nicht stoppen.",
       "The scout returns duplicate tickets. The analyst exceeds its budget, the critic detects duplicates but cannot stop the run.",
     ),
     manipulation: text(
-      "Öffne den Kontrollstand, verändere Budget, Freigabegate oder Interventionspunkt und beobachte Trace, Kosten und Ergebnisqualität.",
-      "Open the control plane, change the budget, approval gate, or intervention point, and observe trace, cost, and output quality.",
+      "Ändere im Kontrollstand Budget, Freigabegate oder Eingriffspunkt und beobachte Trace, Kosten und Ergebnisqualität.",
+      "In the control plane, change budget, approval gate or intervention point and watch trace, cost and output quality.",
     ),
     evidence: probe(
       text(
-        "Welches Signal belegt, dass das Gate wirksam ist?",
-        "Which signal demonstrates that the gate is effective?",
+        "Was belegt, dass das Gate wirkt?",
+        "What shows the gate works?",
       ),
       choices(
         choice(
@@ -1360,8 +1360,8 @@ export const LESSON_MISSION_PROFILES = {
         ),
         choice(
           "trace-stop",
-          "Der Trace stoppt vor Veröffentlichung mit benanntem Grund",
-          "The trace stops before publishing with a named reason",
+          "Trace stoppt vor Veröffentlichung, mit Grund",
+          "Trace stops before publishing, with a reason",
         ),
         choice(
           "more-tokens",
@@ -1371,8 +1371,8 @@ export const LESSON_MISSION_PROFILES = {
       ),
       "trace-stop",
       text(
-        "Ein Gate ist nur beobachtbar wirksam, wenn es die verbotene Aktion tatsächlich stoppt und den Grund protokolliert.",
-        "A gate is demonstrably effective only when it actually stops the prohibited action and records why.",
+        "Ein Gate wirkt nachweislich nur, wenn es die verbotene Aktion stoppt und den Grund protokolliert.",
+        "A gate provably works only when it stops the prohibited action and logs why.",
       ),
     ),
     retrieval: probe(
@@ -1393,23 +1393,23 @@ export const LESSON_MISSION_PROFILES = {
         ),
         choice(
           "bounded-contract",
-          "Ergebnis, Evidenz, offene Unsicherheit und erlaubter nächster Schritt",
-          "Result, evidence, unresolved uncertainty, and allowed next action",
+          "Ergebnis, Evidenz, Unsicherheit, erlaubter nächster Schritt",
+          "Result, evidence, uncertainty, allowed next step",
         ),
       ),
       "bounded-contract",
       text(
-        "Eine begrenzte Übergabe erhält Entscheidungsrelevanz, ohne Kontext und Berechtigung unkontrolliert auszuweiten.",
-        "A bounded handoff preserves decision-relevant context without expanding context and authority indiscriminately.",
+        "Eine begrenzte Übergabe gibt weiter, was für die Entscheidung zählt, ohne Kontext und Rechte auszuweiten.",
+        "A bounded handoff passes on what the decision needs without widening context and authority.",
       ),
       {
         "full-history": text(
-          "Vollständige Historie maximiert Kontext, vermischt aber veraltete, abgelehnte und womöglich sensible Anweisungen. Eine früh verworfene Aktion kann dadurch wie ein noch erlaubter nächster Schritt erscheinen; übergib nur Ergebnis, Evidenz, Unsicherheit und Grenze.",
-          "Full history maximizes context but mixes stale, rejected, and potentially sensitive instructions. An action rejected earlier can then appear to remain authorized, so hand off only result, evidence, uncertainty, and boundary.",
+          "Die ganze Historie mischt veraltete, abgelehnte und womöglich sensible Anweisungen. Eine früh verworfene Aktion wirkt dann wie ein erlaubter nächster Schritt.",
+          "Full history mixes stale, rejected and possibly sensitive instructions. An action rejected earlier can then look authorized.",
         ),
         "role-only": text(
-          "Ein Rollenname klärt weder belegtes Ergebnis noch Handlungsspielraum. „Nächster Agent: Prüfer“ sagt nicht, welcher Claim offen ist oder ob eine Veröffentlichung erlaubt ist.",
-          "A role name identifies neither the supported result nor the action boundary. “Next agent: reviewer” says neither which claim remains open nor whether publishing is allowed.",
+          "Ein Rollenname klärt weder Ergebnis noch Spielraum. „Nächster Agent: Prüfer“ sagt nicht, welcher Claim offen ist oder ob veröffentlicht werden darf.",
+          "A role name states neither result nor scope. “Next agent: reviewer” says neither which claim is open nor whether publishing is allowed.",
         ),
       },
     ),
@@ -1421,8 +1421,8 @@ export const LESSON_MISSION_PROFILES = {
       choices(
         choice(
           "critic-stop-dedupe",
-          "Deduplizieren, Kritiker-Stopprecht setzen und Budget vor Analyse prüfen",
-          "Deduplicate, give the critic stop authority, and check budget before analysis",
+          "Deduplizieren, Kritiker darf stoppen, Budget vorab prüfen",
+          "Deduplicate, let the critic stop, check budget first",
         ),
         choice(
           "add-agent",
@@ -1437,13 +1437,13 @@ export const LESSON_MISSION_PROFILES = {
       ),
       "critic-stop-dedupe",
       text(
-        "Die Intervention adressiert Datenqualität, Budget und fehlende Autorität an ihren jeweiligen Grenzen.",
-        "The intervention addresses data quality, budget, and missing authority at their respective boundaries.",
+        "Der Eingriff behebt Datenqualität, Budget und fehlendes Stopprecht jeweils an ihrer Stelle.",
+        "The intervention fixes data quality, budget and missing stop authority each where it occurs.",
       ),
     ),
     transferScenario: text(
-      "Der Agentengraph soll nun einen synthetischen Bericht vorbereiten, dessen Versand weiterhin ausschließlich ein Mensch auslösen darf.",
-      "The agent graph now prepares a synthetic report whose delivery must remain exclusively human-triggered.",
+      "Der Agentengraph bereitet nun einen Bericht vor, den nur ein Mensch versenden darf.",
+      "The agent graph now prepares a report that only a human may send.",
     ),
     transfer: probe(
       text(
@@ -1453,8 +1453,8 @@ export const LESSON_MISSION_PROFILES = {
       choices(
         choice(
           "human-send",
-          "Die Sendeberechtigung liegt außerhalb des Agentengraphen beim Menschen",
-          "Send authority remains outside the agent graph with a human",
+          "Nur ein Mensch außerhalb des Graphen darf senden",
+          "Only a human outside the graph can send",
         ),
         choice(
           "agent-send",
@@ -1469,8 +1469,8 @@ export const LESSON_MISSION_PROFILES = {
       ),
       "human-send",
       text(
-        "Eine menschliche Freigabe ist nur real, wenn der Agentenlauf die geschützte Aktion technisch nicht selbst auslösen kann.",
-        "Human approval is real only when the agent run cannot technically trigger the protected action itself.",
+        "Eine menschliche Freigabe zählt nur, wenn der Agentenlauf die geschützte Aktion technisch nicht selbst auslösen kann.",
+        "Human approval counts only if the agent run cannot technically trigger the protected action itself.",
       ),
     ),
   },

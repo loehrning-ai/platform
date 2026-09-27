@@ -94,7 +94,7 @@ const DAGS: readonly DagPattern[] = [
     adjustZ: false,
     adjustIcon: "✗ Do not adjust for Z",
     explanation:
-      "Z is on the causal path from X to Y. Conditioning on it blocks the indirect pathway and you measure only the direct effect, not the total. Control for Z only when you explicitly want the direct effect.",
+      "Z is on the causal path from X to Y. Conditioning on it blocks the indirect pathway, so you measure only the direct effect; control for Z only when that is what you want.",
   },
   {
     title: "Collider",
@@ -140,7 +140,7 @@ const DAGS_DE = [
     answer: "Ja, aber NICHT für Z kontrollieren.",
     adjustIcon: "✗ Nicht für Z adjustieren",
     explanation:
-      "Z liegt auf dem kausalen Pfad von X nach Y. Eine Konditionierung auf Z blockiert den indirekten Pfad und misst nur den direkten statt des gesamten Effekts. Für Z nur kontrollieren, wenn ausdrücklich der direkte Effekt gesucht ist.",
+      "Z liegt auf dem kausalen Pfad von X nach Y. Eine Konditionierung auf Z blockiert den indirekten Pfad, sodass nur der direkte Effekt bleibt; kontrollier für Z nur, wenn du genau den suchst.",
   },
   {
     title: "Collider",
@@ -219,8 +219,8 @@ export function DAGBuilder() {
       )}
       meta={dag.tag}
       caption={text(
-        "Four simplified graphs. Adjustment depends on the displayed estimand and assumed arrows; the data do not choose or validate the DAG, and omitted variables can change the answer.",
-        "Vier vereinfachte Graphen. Die Anpassung hängt vom gezeigten Estimand und den angenommenen Pfeilen ab; Daten wählen oder validieren den DAG nicht, und ausgelassene Variablen können die Antwort ändern.",
+        "Four simplified graphs. Adjustment depends on the estimand and the assumed arrows; data do not validate the DAG, and omitted variables can change the answer.",
+        "Vier vereinfachte Graphen. Die Anpassung hängt von Estimand und angenommenen Pfeilen ab; Daten validieren den DAG nicht, und ausgelassene Variablen können die Antwort ändern.",
       )}
     >
       <div className="sim-row" style={{ gridTemplateColumns: "1fr 1fr" }}>

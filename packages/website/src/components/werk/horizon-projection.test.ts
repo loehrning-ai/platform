@@ -16,10 +16,19 @@ import {
   greatCircle,
   horizonFrame,
   horizonPush,
+  horizonCenterLon,
+  limbFade,
   limbPoint,
+  meridianLines,
+  parallelLines,
+  rimDepth,
   routeLine,
   routeStations,
   scaleTicks,
+  toSpherePolylines,
+  tracePolylines,
+  viewBasis,
+  HORIZON_RIM_PX,
 } from "./horizon-projection";
 
 describe("horizon push-in", () => {
@@ -172,5 +181,36 @@ describe("horizon land data", () => {
     });
     expect(out).toContain("162 rings, 4063 points");
     expect(out).toContain("(up to date)");
+  });
+});
+
+describe("flat disc rim", () => {
+  it("ends every knockout line on the rim circle, never on the limb", () => {
+    const frame = horizonFrame(390, 600, 1);
+    const basis = viewBasis(HORIZON.viewLat, horizonCenterLon(0));
+    const zMin = rimDepth(frame.radius);
+    const inner = frame.radius - HORIZON_RIM_PX;
+    let max = 0;
+    const sink = {
+      moveTo(x: number, y: number) {
+        max = Math.max(max, Math.hypot(x - frame.centerX, y - frame.centerY));
+      },
+      lineTo(x: number, y: number) {
+        max = Math.max(max, Math.hypot(x - frame.centerX, y - frame.centerY));
+      },
+    };
+    for (const lines of [meridianLines(30), parallelLines(30)]) {
+      tracePolylines(sink, toSpherePolylines(lines), basis, frame, frame.latMin, 0, lines.length, zMin);
+    }
+    expect(max).toBeGreaterThan(inner - 1);
+    expect(max).toBeLessThanOrEqual(inner + 1e-6);
+  });
+
+  it("fades a line out as its peak depth nears the limb", () => {
+    expect(limbFade(0.02)).toBe(0);
+    expect(limbFade(0.16)).toBeGreaterThan(0);
+    expect(limbFade(0.16)).toBeLessThan(1);
+    expect(limbFade(0.5)).toBe(1);
+    expect(rimDepth(2)).toBe(0);
   });
 });

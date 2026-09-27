@@ -159,7 +159,7 @@ export function SqlDecoderStage() {
       eyebrow={text("live · compiler", "live · Compiler")}
       title={text("SQL → AST → logical → physical → stages", "SQL → AST → logisch → physisch → Stages")}
       meta={text("click a preset · run plan · poke skew", "Vorlage wählen · Plan ausführen · Skew auslösen")}
-      caption={text("Five transformations between your text and your bytes. Engine chooses the exchange, you get the stages.", "Fünf Transformationen liegen zwischen Text und Bytes. Die Engine wählt den Exchange; daraus entstehen die Stages.")}
+      caption={text("The engine chooses the exchange; the stages follow from it.", "Die Engine wählt den Exchange; daraus ergeben sich die Stages.")}
     >
       <div className="sd-top">
         <div className="sd-presets">

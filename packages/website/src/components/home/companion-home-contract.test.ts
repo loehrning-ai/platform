@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { HOME_SCENE } from "@/lib/plakat/palettes";
 
 /**
  * The companion home is one document with two layouts, not two documents.
@@ -85,7 +86,9 @@ describe("companion home: the wide layout stays separate", () => {
         /^@media \(width >= 64rem\)/.test(prelude) ||
         /^@keyframes hz-/.test(prelude) ||
         /^\.globe-toggle/.test(prelude) ||
+        /^\[data-home-scene="graphit"\] \.globe-toggle/.test(prelude) ||
         prelude === '[data-section="hero"]' ||
+        /^\[data-section="hero"\]\[data-home-scene="graphit"\]( \[data-hero-actions\] > a)?/.test(prelude) ||
         /^\[data-section="hero"\] \[data-hero-actions\] > a/.test(prelude);
       expect(allowed, `unscoped phone hero rule: ${prelude}`).toBe(true);
     }
@@ -155,15 +158,36 @@ describe("companion home: the wide layout stays separate", () => {
     ]) {
       expect(hero, `hero still carries ${retired}`).not.toContain(retired);
     }
-    // The band's graphit tokens hold at every width.
-    const band = css
-      .replace(/\/\*[\s\S]*?\*\//g, "")
-      .match(/^\[data-section="hero"\]\s*\{[^}]*\}/m)?.[0];
-    expect(band).toContain("--color-background: #141414;");
+    // The band's tokens hold at every width: the lemons scene (SPEC §3.6)
+    // on the section, the graphit fallback behind HOME_SCENE.
+    const source = css.replace(/\/\*[\s\S]*?\*\//g, "");
+    const band = source.match(/^\[data-section="hero"\]\s*\{[^}]*\}/m)?.[0];
+    const graphit = source.match(
+      /^\[data-section="hero"\]\[data-home-scene="graphit"\]\s*\{[^}]*\}/m,
+    )?.[0];
+    expect(band).toContain("--color-background: #152a79;");
+    expect(band).toContain("--color-foreground: #fceeaf;");
+    expect(band).toContain("--color-scene-ink: #fceeaf;");
     expect(band).toContain("background: var(--color-background);");
-    // The action is the square paper button with no lift.
+    expect(graphit).toContain("--color-background: #141414;");
+    expect(graphit).toContain("--color-scene-line: #f2f1ee;");
+    expect(hero).toContain("data-home-scene={HOME_SCENE}");
+    if (HOME_SCENE === "lemons") {
+      expect(hero).toContain('"poster-title text-foreground"');
+      expect(hero).toContain("<CapsLine>");
+    }
+    // The action is the square button with no lift: Butter with an
+    // Ultramarin label on lemons, the paper button on graphit.
     expect(css).toMatch(
-      /\[data-section="hero"\] \[data-hero-actions\] > a \{[^}]*border-radius: 0;[^}]*translate: none;/,
+      /\[data-section="hero"\] \[data-hero-actions\] > a \{[^}]*border-radius: 0;[^}]*background: var\(--color-scene-ink\);[^}]*color: var\(--color-scene-ground\);[^}]*translate: none;/,
+    );
+    expect(css).toMatch(
+      /\[data-section="hero"\]\[data-home-scene="graphit"\] \[data-hero-actions\] > a \{[^}]*background: #f2f1ee;[^}]*color: #141414;/,
+    );
+    // A flat poster: no gradient on the lemons band (the graphit ground
+    // shade is scoped to the fallback).
+    expect(source).not.toMatch(
+      /^\s*\[data-home-globe\]::after/m,
     );
   });
 
@@ -254,13 +278,14 @@ describe("companion home: measured layout hooks stay in a vertical stack", () =>
     }
   });
 
-  it("keeps the course artwork a lazy, wide-layout-only plate", () => {
+  it("keeps the course artwork a wide-layout-only poster with no image request", () => {
     const artwork = read("course-artwork.tsx");
     // Below lg the course rows are hairline rows led by their number: the
-    // risograph plate is not rendered, so its lazy image is never requested
-    // on a phone. From lg it is the reviewed plate, loaded lazily.
+    // poster is not rendered on a phone. From lg it is the course's
+    // server-rendered PosterArt (SPEC §3.5), so no image is requested at all.
     expect(artwork).toContain("max-lg:hidden");
-    expect(artwork).toContain('loading="lazy"');
+    expect(artwork).toContain('format="landscape"');
+    expect(artwork).not.toContain("next/image");
     expect(artwork).not.toContain("(max-width: 639px) 72px");
     const offering = read("offering.tsx");
     expect(offering).toContain("max-lg:contents");

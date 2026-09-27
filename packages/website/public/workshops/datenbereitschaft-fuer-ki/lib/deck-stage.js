@@ -81,10 +81,11 @@
       touch-action: auto;
     }
 
-    /* The letterbox follows the active scene, so the dark cover never sits between paper bands. */
+    /* The letterbox follows the active scene, so the cover never sits between paper bands. The cover's
+       ground is the workshop's poster scene (--cover-ground in lib/tokens.css); graphit without it. */
     :host([data-dark]),
     :host([data-dark]) .canvas {
-      background: #141414;
+      background: var(--cover-ground, #141414);
     }
 
     .stage {

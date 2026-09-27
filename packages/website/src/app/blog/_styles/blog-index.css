@@ -88,7 +88,9 @@
   line-height: var(--text-poster--line-height);
   letter-spacing: var(--text-poster--letter-spacing);
   font-weight: 700;
-  color: var(--color-scene-ink);
+  /* Himbeere, the IDEA poster's display colour (3.67:1 on Kreide; the
+     title is 36px or more, display size only). Body text stays Kobalt. */
+  color: var(--color-scene-mid);
   text-wrap: balance;
   padding-bottom: 0.06em;
 }
@@ -109,13 +111,50 @@
   }
 }
 
+/* The halftone keeps a dot pitch of about 6 to 7px at every width (the
+   mask's dots sit 16px apart at 1600px). Phones show a 112px strip cut
+   from the field at 700px wide instead of shrinking the whole field. */
 .blog-root .blog-index__halftone {
-  margin-top: 28px;
+  margin-top: 20px;
+  height: 112px;
+  mask-size: 700px auto;
 }
 
 @media (min-width: 40rem) {
   .blog-root .blog-index__halftone {
     margin-top: 40px;
+    height: 224px;
+    mask-size: cover;
+  }
+}
+
+/* From lg the lede and the halftone share one row, so the band stays
+   short enough for the first article to reach the first view. */
+@media (min-width: 64rem) {
+  .blog-root .blog-index__hero-row {
+    display: grid;
+    grid-template-columns: minmax(0, 24rem) minmax(0, 1fr);
+    align-items: end;
+    gap: 48px;
+    margin-top: 28px;
+  }
+
+  .blog-root .blog-index__hero-row .blog-index__lead,
+  .blog-root .blog-index__hero-row .blog-index__halftone {
+    margin-top: 0;
+  }
+
+  .blog-root .blog-index__halftone {
+    height: 176px;
+  }
+
+  /* The corner dots frame the 75rem content box, not the viewport. */
+  .blog-root .blog-index__hero > [data-corner$="left"] {
+    left: max(12px, calc(50% - 37.5rem + 12px));
+  }
+
+  .blog-root .blog-index__hero > [data-corner$="right"] {
+    right: max(12px, calc(50% - 37.5rem + 12px));
   }
 }
 

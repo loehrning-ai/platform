@@ -23,17 +23,15 @@
       "sections": [
         {
           "id": "block_4_lesson_1_section_1",
-          "title": "Three different controls",
+          "title": "Each failure needs its own control",
           "readTimeMinutes": 3,
-          "content": "Three cases, all invented for this course. Each needs a different control:\n\n**1. Unsupported source:** The draft cites a court decision, with file number and verbatim quotation. Sounds serious. In the official case database neither the file number nor the quotation exists. The text waits for the primary source.\n\n**2. Unauthorized input:** A developer pastes source code and internal test data into an unapproved assistant. The answer may be linguistically perfect. Does not matter. The incident already happened, at the input, and belongs in the internal reporting channel.\n\n**3. Unauthorized commitment:** The customer assistant promises a refund that neither the policy nor an accountable person approved. Responsible for the channel and what it says, the organization remains.\n\nThree cases, three controls: source verification, data and system approval, authority and policy review. A general \"fact check\" covers one at best.",
-          "keyTakeaway": "The output is one control point. Sources, input data, system approval and authority are the others."
+          "content": "Three invented cases:\n\n**1. Unsupported source:** The draft cites a court decision with file number and verbatim quotation, but the official case database contains neither. The text waits until the primary source is in hand.\n\n**2. Unauthorized input:** A developer pastes source code and internal test data into an unapproved assistant. The incident happened at the input, however good the answer is, and belongs in the internal reporting channel.\n\n**3. Unauthorized commitment:** The customer assistant promises a refund that neither the policy nor an accountable person approved. The organization remains responsible for the channel and what it says.\n\nThe matching controls are source verification, data and system approval, and authority and policy review. A general \"fact check\" does not cover all three."
         },
         {
           "id": "block_4_lesson_1_section_2",
           "title": "Why review depth follows risk",
           "readTimeMinutes": 2,
-          "content": "The three cases share little. An unsupported source can come from generative modeling, faulty retrieval or a poor knowledge base. Unauthorized input is a governance and security failure. A false commitment can sit in rules, data, integration or missing approval boundaries.\n\nSo no single check. Review follows risk. An internal draft may need only a short source comparison. Legal citations, financial figures, decisions about people and external commitments need primary sources and accountable approval.\n\nBetter models and technical controls can lower the error rate. Can. No model generation is evidence of truth or permission.",
-          "keyTakeaway": "Different cause, different control. Depth follows the impact, and model output is no evidence."
+          "content": "An unsupported source can come from generative modeling, faulty retrieval or a poor knowledge base. Unauthorized input is a governance and security failure, and a false commitment can sit in rules, data, integration or missing approval boundaries.\n\nSo review follows risk. An internal draft may need only a short source comparison; legal citations, financial figures, decisions about people and external commitments need primary sources and accountable approval. Better models and technical controls can lower the error rate, but they are evidence of neither truth nor permission."
         }
       ],
       "quiz": [
@@ -62,7 +60,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "A generated citation proves nothing, however legal it sounds. Existence, wording, currency and applicability you check in an official or suitable primary source."
+          "explanation": "A generated citation proves nothing. You check existence, wording, currency and applicability in an official or otherwise suitable primary source, and a second language model is not one."
         },
         {
           "id": "block_4_lesson_1_q2",
@@ -80,7 +78,7 @@
             },
             {
               "id": "c",
-              "text": "Model and system improvements can lower errors; decision-relevant claims still need suitable evidence",
+              "text": "Better models can lower errors; key claims still need evidence",
               "isCorrect": true
             },
             {
@@ -89,7 +87,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "The error rate depends on model, system, data, retrieval, task and evaluation. A plausible output stays unsupported while the source is missing."
+          "explanation": "The error rate depends on model, system, data, retrieval, task and evaluation and can fall with new versions. A plausible output without a source still stays unsupported."
         }
       ]
     },
@@ -98,7 +96,7 @@
       "blockId": "block_4",
       "number": 2,
       "title": "The three-step review",
-      "subtitle": "Three questions, then depth by risk",
+      "subtitle": "Three questions, depth by risk",
       "durationMinutes": 7,
       "keyConcepts": [
         "Three-step review",
@@ -111,15 +109,13 @@
           "id": "block_4_lesson_2_section_1",
           "title": "Steps 1 and 2: correct and complete?",
           "readTimeMinutes": 4,
-          "content": "Start with three questions. They screen, they do not review. Depth comes from impact, reversibility and audience.\n\n**Step 1: Is every decision-relevant claim supported?**\n- Figures: Check definition, period, unit, denominator, rounding, and primary source.\n- Quotations: Open the original document and verify exact wording, context, and version.\n- People and organizations: Verify identity, role, and authority in an authoritative source.\n- Law: Check the consolidated or official text and its temporal scope; EUR-Lex is a primary source for EU law.\n\n**Step 2: Is the output complete for its purpose?**\n- Which assumptions, exceptions, uncertainties, and counterevidence are missing?\n- Are plans, forecasts, opinions, and confirmed facts separated?\n- Does the source apply to the country, period, product version, and audience?\n- Is the information date and source visible?\n\nA model can reach current information through retrieval or tools and still pick or repeat it wrong. You check the evidence in front of you, not an assumed cutoff.",
-          "keyTakeaway": "Step 1 checks the facts. Figures, quotations, people, legal references. Step 2 checks completeness. What is missing, simplified or out of date?"
+          "content": "The three questions are a first screen. Impact, reversibility and audience decide how deep you go.\n\n**Step 1: Is every decision-relevant claim supported?**\n- Figures: Check definition, period, unit, denominator, rounding and primary source.\n- Quotations: Open the original document and verify wording, context and version.\n- People and organizations: Verify identity, role and authority in an authoritative source.\n- Law: Check the consolidated or official text and its temporal scope; EUR-Lex is a primary source for EU law.\n\n**Step 2: Is the output complete for its purpose?**\n- Which assumptions, exceptions, uncertainties and counterevidence are missing?\n- Are plans, forecasts, opinions and confirmed facts separated?\n- Does the source apply to the country, period, product version and audience?\n- Are the date and source of the information visible?\n\nA model with retrieval or tools can still repeat current information wrongly, so you check the evidence in front of you."
         },
         {
           "id": "block_4_lesson_2_section_2",
           "title": "Step 3: are you even allowed?",
           "readTimeMinutes": 3,
-          "content": "**Step 3: Is the use permitted and appropriate?**\nFive questions:\n- Are you authorized to make the commitment, recommendation, or decision?\n- May the input and output reach the intended recipients?\n- Are tone, language, and presentation appropriate for the purpose and audience?\n- Are there discrimination, security, legal, or reputational risks?\n- Does the policy require specialist review, dual control, or a prohibition on automated use?\n\nFor the customer complaint you match order number, delivery date and commitments against the primary records, tick off every customer point, check your authority. For legal guidance or an employment decision this list is not enough; the defined specialist process applies.\n\nWhere the impact demands it, you document the review. How long? Any fixed minute figure would be invented. An internal wording suggestion you check differently from a legal claim going outside.",
-          "keyTakeaway": "Step 3 checks authority, data flow, recipients, impact and approval. Depth follows the risk."
+          "content": "**Step 3: Is the use permitted and appropriate?**\n- Are you authorized to make the commitment, recommendation or decision?\n- May the input and output reach the intended recipients?\n- Are tone, language and presentation appropriate for the purpose and audience?\n- Are there discrimination, security, legal or reputational risks?\n- Does the policy require specialist review, dual control or a prohibition on automated use?\n\nFor the customer complaint you check order number, delivery date and commitments against the primary records, tick off every customer point and confirm your authority. Legal guidance or an employment decision goes through the defined specialist process.\n\nWhere the impact demands it, you document the review. There is no fixed review time."
         }
       ],
       "quiz": [
@@ -148,7 +144,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Evidence, completeness, permitted use. The greater the impact and the harder the reversal, the deeper the source, specialist and approval checks go."
+          "explanation": "The three questions are the first screen. The greater the impact and the harder the reversal, the deeper the source, specialist and approval checks go."
         },
         {
           "id": "block_4_lesson_2_q2",
@@ -161,7 +157,7 @@
             },
             {
               "id": "b",
-              "text": "Obvious errors stand out; subtle, plausible-sounding ones cost you",
+              "text": "Crude errors stand out, plausible ones slip through",
               "isCorrect": true
             },
             {
@@ -175,7 +171,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "The more plausible, the closer you look. Models produce convincing but false information: the invented association, the wrong company figure, the person who does not exist. The fine error costs you."
+          "explanation": "Models produce convincing but false details such as an invented association, a wrong company figure or a person who does not exist. Crude errors stand out at once, subtle ones do not."
         }
       ]
     },
@@ -196,15 +192,13 @@
           "id": "block_4_lesson_3_section_1",
           "title": "Source pack and draft",
           "readTimeMinutes": 3,
-          "content": "Everything here is synthetic. Compare against the source pack, not against what strikes you as plausible.\n\n**Source A, decision record:** \"Pilot budget: EUR 1.8m. Approved on 12 May.\"\n\n**Source B, project status:** \"July is a target window. No binding start date has been approved. Owner: open.\"\n\n**Source C, security approval:** \"Approval applies only to the EU customer portal, version 2.4, without file upload. Other products and features are out of scope.\"\n\n**Generated draft:**\n\n\"The board approved EUR 18m for the full program. The project will start on 1 July under Ms Keller. Security approval covers every customer product, including file upload.\"\n\nThree errors is the task. There are more: wrong amount, wrong scope, invented date, invented owner, and a security approval stretched to products and features the source pack excludes.",
-          "keyTakeaway": "Amount, status, owner, scope: each checked separately. Plausible additions stay unsupported."
+          "content": "Sources, draft and names are synthetic. Compare only against the source pack.\n\n**Source A, decision record:** \"Pilot budget of EUR 1.8m approved on 12 May.\"\n\n**Source B, project status:** \"July is a target window. No binding start date has been approved. Owner open.\"\n\n**Source C, security approval:** \"Approval applies only to the EU customer portal, version 2.4, without file upload. Other products and features are out of scope.\"\n\n**Generated draft:**\n\n\"The board approved EUR 18m for the full program. The project will start on 1 July under Ms Keller. Security approval covers every customer product, including file upload.\"\n\nThe task asks for three errors, and there are more. Amount and scope are wrong, date and owner are invented, and the security approval is stretched to products and features the source pack excludes."
         },
         {
           "id": "block_4_lesson_3_section_2",
           "title": "Your task",
           "readTimeMinutes": 2,
-          "content": "Build a correction table with four columns:\n\n1. Claim in the draft\n2. Status: supported, contradicted, or absent from the sources\n3. Correct wording\n4. Source ID and exact evidence\n\nThe short version, correct:\n\n\"EUR 1.8m was approved for the pilot on 12 May. July is a target window; the start date and owner are open. Security approval covers the EU customer portal 2.4 without file upload.\"\n\nThat trains source binding and status discipline. Article 4 prescribes no such method. It can be one building block of context-specific AI literacy measures.",
-          "keyTakeaway": "Every claim gets a label. Supported, contradicted, unsupported. Each label hangs on exact source evidence."
+          "content": "Build a correction table with four columns:\n\n1. Claim in the draft\n2. Status: supported, contradicted, or absent from the sources\n3. Correct wording\n4. Source ID and exact evidence\n\nThe correct short version:\n\n\"EUR 1.8m was approved for the pilot on 12 May. July is a target window; the start date and owner are open. Security approval covers the EU customer portal 2.4 without file upload.\"\n\nThis trains source binding and status discipline. Article 4 prescribes no such method, but it can be one building block of context-specific AI literacy measures."
         }
       ],
       "quiz": [
@@ -233,7 +227,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "A serious-sounding name proves nothing, a search hit neither. You open an authoritative source and check whether it carries identity, authority and exactly this claim in context."
+          "explanation": "A serious name or a search hit proves nothing. An authoritative source has to carry identity, authority and exactly this claim in context."
         },
         {
           "id": "block_4_lesson_3_q2",
@@ -260,7 +254,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "EUR-Lex is the official source for EU law. There you check identifier, consolidated text, version, entry into force and application date. Asking the model again is no legal evidence."
+          "explanation": "EUR-Lex is the official source for EU law. There you check identifier, consolidated text, version, entry into force and application date; the model or a colleague is no legal evidence."
         }
       ]
     },
@@ -279,17 +273,15 @@
       "sections": [
         {
           "id": "block_4_lesson_4_section_1",
-          "title": "Four things",
+          "title": "Controls before the output",
           "readTimeMinutes": 1,
-          "content": "Four things stay:\n\n1. Plausible language is not evidence.\n2. Input approval, source checking, authority, and output quality are separate controls.\n3. Review depth follows impact, reversibility, and audience.\n4. The person at the screen does not carry it alone. Product ownership, procurement, engineering, data protection, security and domain approval work together.\n\nThe best error never happens. A well-built process arranges that before the output: limited data access, approved sources, structured fields, technical validation, clear approval rights.",
-          "keyTakeaway": "Controls start before the prompt and reach through to use. Depth and owners follow the risk."
+          "content": "The person at the screen does not carry it alone. Product ownership, procurement, engineering, data protection, security and domain approval work together.\n\nThe process prevents many errors before the output, with limited data access, approved sources, structured fields, technical validation and clear approval rights."
         },
         {
           "id": "block_4_lesson_4_section_2",
           "title": "The rule",
           "readTimeMinutes": 2,
-          "content": "One rule for anything from a model:\n\n**Use an AI output only once the controls for its purpose and impact are complete.**\n\nFor an internal wording suggestion, a short check of source and tone can do. Figures, legal statements, employment decisions, security changes and external commitments need reproducible calculation, primary source, specialist review, documented approval. All of it.\n\nEvidence missing? Mark the claim open or delete it. A search engine is no source by default, nor a colleague, and the second model least of all. What counts is independence, authority, currency.\n\nAnd count honestly: benefit minus review effort minus error consequences. A process is not better because the first draft arrives sooner.",
-          "keyTakeaway": "Use output only after the controls provided. Evidence, specialist review and approval follow the impact."
+          "content": "**Use an AI output only once the controls for its purpose and impact are complete.**\n\nFor an internal wording suggestion, a short check of source and tone can do. Figures, legal statements, employment decisions, security changes and external commitments need reproducible calculation, primary source, specialist review and documented approval.\n\nIf evidence is missing, mark the claim open or delete it. A search engine, a colleague or a second model is not a source by default; independence, authority and currency count.\n\nCount honestly: benefit of the AI step minus review effort minus error consequences."
         }
       ],
       "quiz": [
@@ -304,7 +296,7 @@
             },
             {
               "id": "b",
-              "text": "Because risk follows content, purpose, evidence, controls and impact; both kinds of text can carry errors",
+              "text": "Because risk follows content, purpose, evidence, controls and impact",
               "isCorrect": true
             },
             {
@@ -318,7 +310,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Human or model, that says little about the risk. Claim, data, recipients, impact, evidence and completed controls decide."
+          "explanation": "Humans and models both make errors. Claim, data, recipients, impact, evidence and completed controls decide the risk."
         },
         {
           "id": "block_4_lesson_4_q2",
@@ -336,7 +328,7 @@
             },
             {
               "id": "c",
-              "text": "Check a source suitable for the specific claim, preferably primary or authoritative",
+              "text": "Check a suitable source for the claim, primary where possible",
               "isCorrect": true
             },
             {
@@ -345,7 +337,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Asking again gets a second answer, not evidence. A search hit neither. You look for a source carrying identity, authority, time period and exactly this claim."
+          "explanation": "Asking again gets a second answer, not evidence. You look for a source that carries identity, authority, time period and exactly this claim."
         }
       ],
       "widgets": [

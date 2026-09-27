@@ -273,9 +273,6 @@ export default async function BookOverviewPage({ params }: Params) {
                 </span>
               )
             ) : null}
-            <p className="mt-3 break-words text-xs text-muted-foreground">
-              {copy.detail.onlineAccessNote}
-            </p>
           </div>
         </header>
 

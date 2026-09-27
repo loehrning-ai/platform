@@ -50,7 +50,7 @@ const LANDING_COPY = {
     eyebrow: "AI-Native Arbeitskurs · kostenlos",
     heading: "Routinearbeit mit Claude automatisieren.",
     intro:
-      "Der Kurs ist für Menschen, die jede Woche dieselben Mails, Notizen und Berichte bearbeiten. Im Abschlussprojekt baust du einen Ablauf aus deiner eigenen Arbeit als Pilot und legst fest, wie du ihn prüfst. Programmieren musst du dafür nicht.",
+      "Für alle, die jede Woche dieselben Mails, Notizen und Berichte bearbeiten. Im Abschlussprojekt baust du ohne Programmieren einen Ablauf aus deiner Arbeit und legst fest, wie du ihn prüfst.",
     start: "Mit Modul 1 beginnen",
     workspace: "Kursstand öffnen",
     factsLabel: "Auf einen Blick",
@@ -58,22 +58,10 @@ const LANDING_COPY = {
     lessonsLabel: "Lektionen",
     outcomesHeading: "Was du danach kannst",
     outcomes: [
-      {
-        title: "Eine Aufgabe so beschreiben, dass Claude sie ohne Rückfragen bearbeitet",
-        detail: "Mit Ziel, Kontext, Beispiel und dem Kriterium, an dem du das Ergebnis prüfst.",
-      },
-      {
-        title: "Claude für ein festes Projekt einrichten",
-        detail: "In einem Claude-Projekt mit festen Anweisungen, Beispieldateien und Skills.",
-      },
-      {
-        title: "Material aus Mails, Notizen und Ordnern durchsuchbar ablegen",
-        detail: "In Modul 3 legst du dafür eine Wissensbasis in Obsidian an.",
-      },
-      {
-        title: "Prüfen, ob sich eine wiederkehrende Aufgabe als n8n-Ablauf eignet",
-        detail: "Du legst die Kontrollen fest, bevor etwas automatisch läuft.",
-      },
+      { title: "Aufgaben mit Ziel, Kontext, Beispiel und Prüfkriterium beschreiben" },
+      { title: "Ein Claude-Projekt mit Anweisungen, Beispieldateien und Skills einrichten" },
+      { title: "Mails, Notizen und Ordner in einer Obsidian-Wissensbasis ablegen" },
+      { title: "Wiederkehrende Aufgaben für n8n prüfen und Kontrollen vorab festlegen" },
     ],
     modulesHeading: "Module",
     topicsLabel: "Themen im Modul",
@@ -98,9 +86,9 @@ const LANDING_COPY = {
     ],
     boundarySummary: "Zugang, Nachweis und Herkunft",
     boundary: [
-      "Alle vier Module und 27 Lektionen sind kostenlos. Der geschützte Reader benötigt ein kostenloses Lernkonto; Zahlungsdaten werden nicht verlangt.",
-      "Der lokale Teilnahmenachweis basiert auf gespeichertem Fortschritt und Selbstprüfung. Er ist keine externe Prüfung, Akkreditierung oder Konformitätsbestätigung.",
-      "Der KI-Führerschein wird empfohlen, aber nicht vorausgesetzt. Werkzeugspezifische Hinweise können nach Anbieteränderungen veralten.",
+      "Der Reader braucht ein kostenloses Lernkonto, ohne Zahlungsdaten.",
+      "Der lokale Teilnahmenachweis beruht auf gespeichertem Fortschritt und Selbstprüfung und ist keine externe Prüfung, Akkreditierung oder Konformitätsbestätigung.",
+      "Der KI-Führerschein wird empfohlen, ist aber keine Voraussetzung. Hinweise zu Werkzeugen können nach Anbieteränderungen veralten.",
     ],
   },
   en: {
@@ -123,7 +111,7 @@ const LANDING_COPY = {
     eyebrow: "AI-Native Workflow Course · free",
     heading: "Automate routine work with Claude.",
     intro:
-      "The course is for people who handle the same emails, notes and reports every week. In the final project you build a pilot workflow from your own work and decide how you check it. You do not need to write code.",
+      "For people who handle the same emails, notes and reports every week. In the final project you build a workflow from your own work, without code, and decide how to check it.",
     start: "Start with module 1",
     workspace: "Open course progress",
     factsLabel: "At a glance",
@@ -131,22 +119,10 @@ const LANDING_COPY = {
     lessonsLabel: "lessons",
     outcomesHeading: "What you can do afterwards",
     outcomes: [
-      {
-        title: "Describe a task so that Claude can work on it without follow-up questions",
-        detail: "With goal, context, an example and the criterion you check the result against.",
-      },
-      {
-        title: "Set Claude up for one fixed project",
-        detail: "In a Claude project with fixed instructions, sample files and skills.",
-      },
-      {
-        title: "Keep material from emails, notes and folders in one searchable place",
-        detail: "In module 3 you set up a knowledge base in Obsidian for this.",
-      },
-      {
-        title: "Check whether a recurring task fits an n8n workflow",
-        detail: "You set the checks before anything runs on its own.",
-      },
+      { title: "Brief tasks with goal, context, example and review criterion" },
+      { title: "Set up a Claude project with instructions, sample files and skills" },
+      { title: "Keep emails, notes and folders in an Obsidian knowledge base" },
+      { title: "Test recurring tasks for n8n and set controls first" },
     ],
     modulesHeading: "Modules",
     topicsLabel: "Topics in this module",
@@ -171,8 +147,8 @@ const LANDING_COPY = {
     ],
     boundarySummary: "Access, record, and provenance",
     boundary: [
-      "All four modules and 27 lessons are free. The protected reader requires a free learning account; no payment details are requested.",
-      "The local completion record is based on stored progress and self-review. It is not an external examination, accreditation, or compliance finding.",
+      "The reader needs a free learning account, with no payment details.",
+      "The local completion record rests on stored progress and self-review and is not an external examination, accreditation or compliance finding.",
       "AI Fundamentals is recommended but not required. Tool-specific guidance can become outdated after provider changes.",
     ],
   },
@@ -317,7 +293,6 @@ export default async function AiNativePage() {
             locale === "de"
               ? `ca. ${lessonHours} Std. Lesezeit, ca. ${meta.targetDurationHours} Std. mit Übungen`
               : `About ${lessonHours} hrs of reading, about ${meta.targetDurationHours} hrs with exercises`,
-            locale === "de" ? "Kostenlos, mit Lernkonto" : "Free, with a learning account",
           ]}
           factsLabel={copy.factsLabel}
           progress={

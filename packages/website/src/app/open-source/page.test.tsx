@@ -129,7 +129,7 @@ describe("OpenSourcePage", () => {
         name: "Freie Open-Source-Projekte.",
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText(/Echte Ansichten zuerst/)).toBeInTheDocument();
+    expect(screen.getByText(/Prüfe an echten Ansichten/)).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { level: 2, name: "Jetzt veröffentlicht" }),
     ).toBeInTheDocument();

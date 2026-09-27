@@ -22,7 +22,7 @@ describe("demo cover below lg", () => {
     expect(band).toBeGreaterThan(-1);
     expect(statRow).toBeGreaterThan(demos.indexOf("</PlakatBand>"));
     expect(demos).toContain(
-      'className="px-4 pb-6 pt-5 sm:px-6 sm:pb-12 sm:pt-10"',
+      'className="px-4 pb-5 pt-4 sm:px-6 sm:pb-12 sm:pt-10"',
     );
     // Stats and check list stack on a phone and sit side by side from lg.
     expect(demos).toContain(

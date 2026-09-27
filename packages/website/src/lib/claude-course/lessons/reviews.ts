@@ -7,7 +7,7 @@ import { CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE } from "../widget-copy";
 const lesson: ClaudeLesson = {
   id: "reviews",
   number: 8,
-  title: "Claude for Code Review and PRs",
+  title: "Claude for code review and PRs",
   subtitle: "A structured review pass that still requires human verification.",
   durationMinutes: 9,
   trackId: "advanced",
@@ -20,7 +20,7 @@ const lesson: ClaudeLesson = {
       title: "Why it works",
       readTimeMinutes: 2,
       content:
-        "What can a human reviewer see that a pasted diff cannot? Everything around it. A model analyzes the supplied diff for candidate defects, convention violations, and missing tests. It cannot inspect files, callers, runtime behavior, or repository rules it never received.\n\nGive the author's stated goal, surrounding code, project conventions, and a severity definition. Require every finding to cite file and line, explain the failure path, and separate evidence from guesswork.\n\nModel behavior shifts across versions. Keep a review eval set and rerun it when model, prompt, or tool access changes.",
+        "A model checks the supplied diff for candidate defects, convention violations and missing tests. It cannot see files, callers, runtime behavior or rules that neither the prompt nor a tool supplied.\n\nGive the author's goal, surrounding code, conventions and a severity definition. Every finding needs file and line, a failure path and evidence kept apart from guesswork.\n\nModel behavior shifts across versions, so rerun a review eval set whenever model, prompt or tool access changes.",
     },
     {
       id: "review-template",
@@ -31,10 +31,10 @@ const lesson: ClaudeLesson = {
     },
     {
       id: "when-it-earns-its-keep",
-      title: "Three times it earns its keep",
+      title: "Where it helps",
       readTimeMinutes: 2,
       content:
-        "- **Before review.** Run a focused pass over your diff, verify each finding, run the checks.\n- **For a large change.** Generate a candidate map of changed behavior and affected call paths; compare it with code search and tests.\n- **Across the repository.** Enumerate callers with repository tools first, then analyze the concrete results for compatibility risks.",
+        "- **Before review.** Run a focused pass over your diff, verify each finding and run the checks.\n- **For a large change.** Generate a candidate map of changed behavior and affected call paths, then compare it with code search and tests.\n- **Across the repository.** Enumerate callers with repository tools first, then analyze the results for compatibility risks.",
     },
   ],
   widgets: [
@@ -62,7 +62,7 @@ const lesson: ClaudeLesson = {
           "Your review prompt produces 40 style nits and misses a real correctness bug. What's the fix?",
         options: [
           "Use a larger model.",
-          "Tell Claude explicitly to ignore style and focus on correctness and behavior changes.",
+          "Tell Claude to ignore style and focus on correctness and behavior.",
           "Shorten the diff randomly.",
           "Ask twice in different wording.",
         ],

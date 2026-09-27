@@ -173,9 +173,17 @@ export function WorkshopsContent({ workshops, locale }: Props) {
       <PlakatBand
         plakat={scene}
         labelledBy="workshops-hub-heading"
+        // Phones: a 96px strip with a 10rem glyph, so the first row still
+        // starts inside the first screen with the wider fallback face.
+        className="[&>[data-plakat-art-phone]]:mt-4 [&>[data-plakat-art-phone]]:h-24"
         art={<PosterNumeral value={workshops.length} plakat={scene} />}
         artPhone={
-          <PosterNumeral value={workshops.length} plakat={scene} format="strip" />
+          <PosterNumeral
+            value={workshops.length}
+            plakat={scene}
+            format="strip"
+            className="[&_text]:text-[10rem]"
+          />
         }
       >
         <CapsLine>{copy.hubKicker(workshops.length)}</CapsLine>
@@ -186,7 +194,7 @@ export function WorkshopsContent({ workshops, locale }: Props) {
         >
           {copy.hubHeading}
         </h1>
-        <p className="mt-4 max-w-[40ch] text-body text-scene-ink text-pretty sm:hidden">
+        <p className="mt-3 max-w-[40ch] text-body text-scene-ink text-pretty sm:hidden">
           {copy.hubLeadShort}
         </p>
         <p className="mt-5 hidden max-w-[52ch] text-body text-scene-ink text-pretty sm:block">
@@ -194,7 +202,7 @@ export function WorkshopsContent({ workshops, locale }: Props) {
         </p>
         {/* Below 360px the button spans the column, so it never breaks into
             two lines beside a ragged line. */}
-        <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 max-[359px]:grid max-[359px]:grid-cols-1 max-[359px]:[&>a]:w-full max-[359px]:[&>a]:justify-between sm:mt-8">
+        <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 max-[359px]:grid max-[359px]:grid-cols-1 max-[359px]:[&>a]:w-full max-[359px]:[&>a]:justify-between sm:mt-8">
           {first ? (
             <ButtonLink
               href={localizeHref(`/workshops/${first.slug}`, locale)}
@@ -245,7 +253,7 @@ export function WorkshopsContent({ workshops, locale }: Props) {
 
       <section
         aria-labelledby="workshop-list-heading"
-        className="pb-10 pt-7 sm:pb-24 sm:pt-20"
+        className="pb-10 pt-5 sm:pb-24 sm:pt-20"
       >
         <div className={CONTAINER}>
           <SectionHead

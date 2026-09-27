@@ -207,7 +207,7 @@ export async function Footer() {
       {/* The 75rem page container: with sm:px-6 the content runs 144..1296 at
           1440, the same column as the header's wordmark and Login edge. */}
       <div className="mx-auto w-full max-w-[75rem] px-4 py-6 sm:px-6 sm:py-12">
-        <div className="grid min-w-0 gap-2 border-b border-hairline sm:gap-6 sm:pb-8 lg:grid-cols-[minmax(13rem,0.55fr)_minmax(0,2fr)] lg:gap-8">
+        <div className="grid min-w-0 gap-2 border-b border-hairline sm:gap-6 lg:grid-cols-[minmax(13rem,0.55fr)_minmax(0,2fr)] lg:gap-8">
           {/* From lg the brand column starts on the same hairline as the link
               groups, so the whole row hangs from one continuous rule. Below
               sm it is a single row: the wordmark, then the profile squares
@@ -279,8 +279,10 @@ export async function Footer() {
               {/* Open on a phone: Lernen and Praxis side by side, and the
                   three contact links as one row under them, so the open
                   footer stays near one screen. From sm the columns are the
-                  ones they always were. */}
-              <div className="grid min-w-0 grid-cols-2 gap-x-4 gap-y-2 pb-2 sm:gap-y-6 sm:pb-0 sm:pt-4 md:grid-cols-3 md:gap-x-6 lg:pt-0">
+                  ones they always were. The 32px space above the legal
+                  hairline lives here, so a closed disclosure (sm to lg) ends
+                  on its summary row with no empty band below it. */}
+              <div className="grid min-w-0 grid-cols-2 gap-x-4 gap-y-2 pb-2 sm:gap-y-6 sm:pb-8 sm:pt-4 md:grid-cols-3 md:gap-x-6 lg:pt-0">
                 {FOOTER_GROUPS.map((group) => (
                   <section
                     key={group.id}
@@ -348,7 +350,7 @@ export async function Footer() {
               content date. The domain (the wordmark says it two rows up) and
               the second date return from sm, where the caption is two lines
               again, and from md the two ends of one row. */}
-          <div className="mt-1 flex min-w-0 flex-wrap gap-x-5 gap-y-1 border-t border-hairline pt-3 text-caption text-muted-foreground sm:mt-3 sm:flex-col sm:flex-nowrap sm:gap-2 md:flex-row md:items-end md:justify-between">
+          <div className="mt-1 flex min-w-0 flex-wrap gap-x-5 gap-y-1 border-t border-hairline pt-3 text-caption text-muted-foreground sm:mt-3 sm:flex-col sm:flex-nowrap sm:gap-2 md:flex-row md:items-baseline md:justify-between">
             <span data-testid="footer-copyright" className="break-words">
               &copy; {year}{" "}
               <span className="hidden sm:inline">

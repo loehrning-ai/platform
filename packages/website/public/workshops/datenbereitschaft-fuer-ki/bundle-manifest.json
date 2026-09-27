@@ -120,11 +120,6 @@
       "sha256": "762229d8e1bcb0000852b2bb6f2ae9ae72b4e71c81986fc7d10f0defb85227c3"
     },
     {
-      "path": "assets/globe.svg",
-      "sizeBytes": 158411,
-      "sha256": "b77a3581fe56ed9cb53bacaf88e5af451176f962cecec5129c5b6b33ac70f980"
-    },
-    {
       "path": "assets/lockup-horizontal-dark.svg",
       "sizeBytes": 4645,
       "sha256": "13ff70fa608cdf421a8b3ff3046e22cda7ba8d5e72271b4ad64c659bb1bfe1e2"
@@ -140,19 +135,24 @@
       "sha256": "ca6b5b231a7d577fcfddea82d63300f9652e4da0c4e39fa1c596bc58ad8d1384"
     },
     {
+      "path": "assets/plakat-cover.svg",
+      "sizeBytes": 1720,
+      "sha256": "a3fc0486063c650ce8e3a41104b125607147c94991190b8a487f575194203b7d"
+    },
+    {
       "path": "assets/tim-loehr.jpg",
       "sizeBytes": 112101,
       "sha256": "3df97f11e0ccc2cc6ada1216eeec12c80725764857b011bd3f9ce79e792401c4"
     },
     {
       "path": "builder.html",
-      "sizeBytes": 256759,
-      "sha256": "e6b2089243b291de04c68bb19aea9385a6f090b7dc5ca93493a263adcf131dc0"
+      "sizeBytes": 257094,
+      "sha256": "3ac261544d51d48f37cd2301424dea79a3fbf5d44149501d0f310ed1bab88b4b"
     },
     {
       "path": "card-preview.webp",
-      "sizeBytes": 24874,
-      "sha256": "9c4d52f05d2862fcacdbf6a7a40fcfa42a8b9418a45f0002f7822780c961a726"
+      "sizeBytes": 29462,
+      "sha256": "cd0e9878a470b9c8625e15aabb0c403f15f08964e538fc04c4a6df8bc4ccd140"
     },
     {
       "path": "data-readiness-kit.zip",
@@ -536,8 +536,8 @@
     },
     {
       "path": "data-readiness-kit/readiness-lab.html",
-      "sizeBytes": 87315,
-      "sha256": "78cda040f7abd998af1a6e7f4f283c02044d36b72ecc07fde9e59620a659195d"
+      "sizeBytes": 87594,
+      "sha256": "aff289390bf745bae0d144eed9a19828c8d39c639ababe2884b7a02e5431520a"
     },
     {
       "path": "data-readiness-kit/semantic-template/metric.yml",
@@ -561,18 +561,13 @@
     },
     {
       "path": "demo.html",
-      "sizeBytes": 103316,
-      "sha256": "f75f08ef202324193659cecf6197f4946f023191d714076d7b28e5267492fa9d"
+      "sizeBytes": 103669,
+      "sha256": "c9a0224cf1bfee4fd7e02cdb4c132139428b67ad06127bda63351d25e4838292"
     },
     {
       "path": "guide.html",
-      "sizeBytes": 31810,
-      "sha256": "ea4ee92795040d46c1126ead7e62fb6563e6ebdcacc4b083a391c89bfcf4b329"
-    },
-    {
-      "path": "lib/cover-globe.css",
-      "sizeBytes": 935,
-      "sha256": "7839494bf8bfca0d572403907aef78b9d11f5c0ce05cad69d332ee68d008571e"
+      "sizeBytes": 32163,
+      "sha256": "64baebd54fe7a90200d02553c6837780fe326466c89da2e2fc53b75239f6a321"
     },
     {
       "path": "lib/deck-runtime.js",
@@ -581,8 +576,8 @@
     },
     {
       "path": "lib/deck-stage.js",
-      "sizeBytes": 49205,
-      "sha256": "9f2e022a9b62e0e387b9743e779c82ae3d9561fc6cea60b02222afe9fe6ba351"
+      "sizeBytes": 49334,
+      "sha256": "5ef1d7029a79844a74dae2ee20c854e58e3682b01ee7ca1880c4431500924f8f"
     },
     {
       "path": "lib/demo-adapter.js",
@@ -676,8 +671,8 @@
     },
     {
       "path": "lib/scenes/cover.css",
-      "sizeBytes": 3096,
-      "sha256": "e7236e163f951d41bfe3799ee8beb04a0316171392b8f918b5e3a26004c712c0"
+      "sizeBytes": 4897,
+      "sha256": "914187987ac57dd11e8a2da6c8db4521d9b35df864a655a08664eb36c4811cd8"
     },
     {
       "path": "lib/scenes/evaluation.css",
@@ -756,13 +751,13 @@
     },
     {
       "path": "lib/story.css",
-      "sizeBytes": 30176,
-      "sha256": "04d275a7d13c0d9b7a9268c841b9fce14c87183b7680876cee490e25de78b150"
+      "sizeBytes": 29423,
+      "sha256": "4100114b2991af1e8a94a761867bb3d3b96a9aa459cdca50a16f23c63c5ffd8d"
     },
     {
       "path": "lib/tokens.css",
-      "sizeBytes": 3855,
-      "sha256": "e871354d871766d2fa0adacd23b5ae4ccb0cb929d9807bcba2c361b41ea0b694"
+      "sizeBytes": 4116,
+      "sha256": "b5c2131e80906e59466b8eb8a22b167d66a15847c9f0b688ac1d988f3cfa63a9"
     },
     {
       "path": "presenter.html",
@@ -771,8 +766,8 @@
     },
     {
       "path": "slides.html",
-      "sizeBytes": 180348,
-      "sha256": "a2e098c003a83655632dd135d06b46cd7ef74869ab79b5a122a8fe182e0faed7"
+      "sizeBytes": 180000,
+      "sha256": "db70026f1ca469d469e063c0192b850d49dc0247dd091280964f4bdf68cf4597"
     }
   ]
 }

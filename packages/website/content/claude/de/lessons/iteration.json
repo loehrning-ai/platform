@@ -17,25 +17,25 @@
       "id": "the-loop",
       "title": "Die Schleife",
       "readTimeMinutes": 1,
-      "content": "Ein Treffer ist kein Trend. Lass den Prompt über repräsentative Eingaben laufen, benenne die Fehler, ändere eine Variable und miss wieder an denselben Kriterien.\n\nModellupdates und Sampling verändern Ausgaben ebenfalls. Soll etwas reproduzierbar sein, dokumentiere Modell, Einstellungen, Prompt-Version und Testfälle.\n\n> Iteriere an Belegen, nicht an der Antwort, die dir am besten gefällt."
+      "content": "Lass den Prompt über repräsentative Eingaben laufen, benenne die Fehler, ändere eine Variable und miss an denselben Kriterien. Modellupdates und Sampling verändern Ausgaben ebenfalls, also dokumentiere Modell, Einstellungen, Prompt-Version und Testfälle."
     },
     {
       "id": "three-turn-loop",
       "title": "Die Drei-Runden-Schleife",
       "readTimeMinutes": 2,
-      "content": "- **Runde 1 · Basiswert erfassen.** Erster Prompt, kleines Testset. Notiere, welche Anforderungen erfüllt sind und welche nicht.\n- **Runde 2 · einen Fehler korrigieren.** Eine prüfbare Änderung wie „Entferne den ersten Absatz“. Alles andere bleibt, wie es war.\n- **Runde 3 · getestete Version sichern.** Speichere Prompt, Einsatzzweck, Modellannahmen und Eval-Fälle. Nach jeder späteren Änderung laufen die Fälle erneut.\n\nAus einer akzeptierten Ausgabe kann ein Modell einen wiederverwendbaren Prompt entwerfen. Der Entwurf ist ein Kandidat. Mehr nicht, bis andere Eingaben ihn bestätigt haben."
+      "content": "- **Runde 1 · Basiswert.** Lass einen ersten Prompt über ein kleines Testset laufen und notiere, welche Anforderungen erfüllt sind.\n- **Runde 2 · eine Korrektur.** Mach eine prüfbare Änderung wie „Entferne den ersten Absatz“ und lass alles andere gleich.\n- **Runde 3 · getestete Version sichern.** Speichere Prompt, Einsatzzweck, Modellannahmen und Eval-Fälle. Lass die Fälle nach späteren Änderungen oder Modellwechseln erneut laufen.\n\nAus einer akzeptierten Ausgabe kann ein Modell einen wiederverwendbaren Prompt entwerfen. Er bleibt ein Kandidat, bis er an neuen Eingaben besteht."
     },
     {
       "id": "show-dont-tell",
       "title": "Zeigen, nicht erzählen",
       "readTimeMinutes": 2,
-      "content": "„Professioneller Ton“ ist keine Anforderung, sondern eine Hoffnung. Eine kurze, freigegebene Referenz plus die Merkmale, die übernommen werden sollen, ist eine. Für strukturierte Aufgaben helfen repräsentative Ein- und Ausgabepaare und ein paar Grenzfälle.\n\nBeispiele haben eine Kehrseite: Überanpassung und Details, die niemand wollte. Vertrauliches raus, Beispiele variieren, an zurückgehaltenen Fällen prüfen."
+      "content": "Ein Beispiel macht eine unklare Anforderung sichtbar. Statt „professioneller Ton“ gib eine kurze, freigegebene Referenz mit und nenne die Merkmale, die bleiben sollen; für strukturierte Aufgaben helfen repräsentative Ein- und Ausgabepaare und Grenzfälle. Beispiele können zu Überanpassung führen und ungewollte Details mitschleppen, also entferne Vertrauliches, variiere sie und prüfe an zurückgehaltenen Fällen."
     },
     {
       "id": "turn-2-vocabulary",
       "title": "Was du in Runde 2 sagen solltest",
       "readTimeMinutes": 2,
-      "content": "Eine vage Korrektur ist eine verschenkte Runde. Was in der zweiten Runde funktioniert, und was nicht.\n\n**Tun:** „Kürze den ersten Absatz.“ · „Nimm die Stimme aus diesem Beispiel: …“ · „Mach die Aufzählungspunkte parallel, jeder beginnt mit einem Verb.“ · „Der Leser kennt X bereits; überspring die Einleitung.“\n\n**Nicht tun:** „Mache es besser.“ · „Weniger nach KI klingend.“ · „Prägnanter.“ · „Du weißt, was ich meine.“"
+      "content": "Schreib Korrekturen, die ein Reviewer an der Ausgabe prüfen kann.\n\n**Prüfbar:** „Entferne den ersten Absatz.“ · „Übernimm Satzlänge und Begriffe aus diesem freigegebenen Beispiel.“ · „Beginne jeden Aufzählungspunkt mit einem Verb.“ · „Der Leser kennt X; lass die Definition weg.“\n\n**Nicht prüfbar:** „Mach es besser.“ · „Weniger nach KI klingend.“ · „Prägnanter.“ · „Du weißt, was ich meine.“"
     }
   ],
   "widgets": [
@@ -46,7 +46,7 @@
       "props": {
         "weak": "mache es bitte besser und kürzer",
         "strong": "Kürze den Eröffnungsabsatz. Beginne mit dem Status in einem Satz, dann drei Aufzählungspunkte in der Stimme des angehängten Beispiels. Keine abschließenden Höflichkeiten.",
-        "takeaway": "Die stärkere Korrektur benennt eine prüfbare Änderung und zeigt auf ein konkretes Beispiel. Das Ergebnis lässt sich gegen Quellenfakten und Beispiel halten."
+        "takeaway": "Die stärkere Korrektur benennt eine prüfbare Änderung und zeigt auf ein Beispiel; das Ergebnis lässt sich an Quellenfakten und Beispiel prüfen."
       }
     },
     {
@@ -57,7 +57,7 @@
         "lessonId": "iteration",
         "cpId": "loop",
         "title": "Runde 1 laufen lassen, dann iterieren",
-        "hint": "Fordere einen schnellen Entwurf an. Dann die Ausgabe mit einer konkreten Korrektur wieder einfügen und erneut fragen.",
+        "hint": "Fordere einen schnellen Entwurf an. Füge die Ausgabe dann mit einer genauen Korrektur wieder ein und frag erneut.",
         "placeholder": "Prompt für Runde 1 hier eingeben. Dann dieses Feld aktualisieren und für Runde 2 erneut ausführen."
       }
     },
@@ -76,7 +76,7 @@
           "\"Versuche es erneut.\""
         ],
         "correct": 2,
-        "explanation": "Nur diese Anweisung benennt eine Änderung, die sich prüfen lässt. Die anderen haben kein Abnahmekriterium.",
+        "explanation": "Nur diese Anweisung benennt eine Änderung, die sich prüfen lässt. Die anderen nennen kein Abnahmekriterium.",
         "title": "Schnellprüfung",
         "copy": {
           "kindLabel": "Schnellprüfung",

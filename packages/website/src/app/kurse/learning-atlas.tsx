@@ -39,6 +39,8 @@ import { BUTTON_CLASSES } from "@/components/werk/button-link";
 import { FILTER_CHIP_CLASS } from "@/components/werk/chip";
 import { cx } from "@/components/werk/cx";
 import { notifyUrlStateChanged } from "@/lib/navigation/url-state";
+import { PosterThumb } from "@/components/plakat";
+import { coursePlakat, PLAKAT_KEYS } from "@/lib/plakat/palettes";
 import type { CourseAccess, CourseAccessBySlug } from "@/lib/courses/access";
 import {
   CourseLedgerRow,
@@ -52,6 +54,22 @@ import {
 } from "./course-ledger-row";
 
 const LIVE_COURSES = ALL_COURSE_CATALOG.filter(isLiveCourse);
+
+/**
+ * Colour groups by track (SPEC §2.2, D8): inside a group the rows keep the
+ * catalogue order within each scene, and the scenes follow the series order
+ * (Lemons, IDEA, Bloom), so the Technikkurse read IDEA ×3 then Bloom ×3.
+ */
+function byTrackScene(courses: readonly Course[]): Course[] {
+  const rank = (course: Course) => {
+    const scene = coursePlakat(course.slug)?.plakat;
+    return scene ? PLAKAT_KEYS.indexOf(scene) : PLAKAT_KEYS.length;
+  };
+  return courses
+    .map((course, index) => ({ course, index }))
+    .sort((a, b) => rank(a.course) - rank(b.course) || a.index - b.index)
+    .map(({ course }) => course);
+}
 
 /**
  * Level filter for the phone ledger. "alle" is the default on both the server
@@ -287,6 +305,7 @@ export function LearningAtlas({
       : undefined;
   const nextCourse =
     openDefault && isLiveCourse(openDefault) ? openDefault : pathNextCourse;
+  const nextPoster = nextCourse ? coursePlakat(nextCourse.slug) : undefined;
   const nextStat = nextCourse
     ? (stats[nextCourse.slug] ?? defaultStat(nextCourse))
     : null;
@@ -329,16 +348,16 @@ export function LearningAtlas({
       id: "lernpfad",
       title: sections.spine.title,
       eyebrow: sections.spine.eyebrow,
-      courses: courses.filter(
-        (course) => courseGroupFor(course.slug) !== "deeper",
+      courses: byTrackScene(
+        courses.filter((course) => courseGroupFor(course.slug) !== "deeper"),
       ),
     },
     {
       id: "tiefer-gehen",
       title: sections.deeper.title,
       eyebrow: sections.deeper.eyebrow,
-      courses: courses.filter(
-        (course) => courseGroupFor(course.slug) === "deeper",
+      courses: byTrackScene(
+        courses.filter((course) => courseGroupFor(course.slug) === "deeper"),
       ),
     },
   ] as const;
@@ -362,7 +381,7 @@ export function LearningAtlas({
             the accessibility tree only: the goal chips read as the question
             on their own, so the phone hero is followed directly by the
             choice and the recommended course's action. */}
-        <header className="border-t-2 border-foreground pt-3 max-sm:border-t-0 max-sm:pt-0 sm:pt-4">
+        <header className="border-t-2 border-scene-line pt-3 max-sm:border-t-0 max-sm:pt-0 sm:pt-4">
           <h2
             id="learning-atlas-heading"
             className="text-[1.375rem]/[1.15] font-bold text-foreground max-sm:sr-only sm:text-fluid-h2"
@@ -553,21 +572,38 @@ export function LearningAtlas({
                     </span>
                   </span>
                 </p>
-                <h3 className="mt-1 text-[1.25rem]/[1.2] font-bold text-foreground sm:mt-2 sm:text-fluid-h3">
-                  {nextCourse.title}
-                </h3>
-                {/* Under 390px the sheet prints the short promise, so the
-                    Mennige action clears the tab bar on a 568px screen; the
-                    full promise stays in the accessibility tree. */}
-                <p className="mt-1.5 max-w-[52ch] text-[0.9375rem]/[1.5] text-foreground sm:mt-2 sm:text-body">
-                  <PhonePromise
-                    full={
-                      coursePromise(nextCourse.slug, locale) ??
-                      nextCourse.tagline
-                    }
-                    short={coursePromiseShort(nextCourse.slug, locale)}
-                  />
-                </p>
+                {/* The recommended course's poster, 64 x 80, beside its
+                    title (SPEC §3.4). Decorative and without its numeral:
+                    the sequence numerals belong to the Grundlagenpfad rows
+                    below, so "01" prints once on the page (D9); the line
+                    above states the position as text. */}
+                <div className="mt-1 flex min-w-0 items-start gap-3 sm:mt-3 sm:gap-4">
+                  {nextPoster ? (
+                    <PosterThumb
+                      plakat={nextPoster.plakat}
+                      motif={nextPoster.motif}
+                      numeral={null}
+                      size="xs"
+                    />
+                  ) : null}
+                  <div className="min-w-0">
+                    <h3 className="text-[1.25rem]/[1.2] font-bold text-foreground sm:text-fluid-h3">
+                      {nextCourse.title}
+                    </h3>
+                    {/* Under 390px the sheet prints the short promise, so the
+                        Mennige action clears the tab bar on a 568px screen; the
+                        full promise stays in the accessibility tree. */}
+                    <p className="mt-1.5 max-w-[52ch] text-[0.9375rem]/[1.5] text-foreground sm:mt-2 sm:text-body">
+                      <PhonePromise
+                        full={
+                          coursePromise(nextCourse.slug, locale) ??
+                          nextCourse.tagline
+                        }
+                        short={coursePromiseShort(nextCourse.slug, locale)}
+                      />
+                    </p>
+                  </div>
+                </div>
                 <p className="mt-2 hidden text-caption text-muted-foreground tabular-nums sm:block">
                   {nextCourse.duration}
                 </p>
@@ -578,7 +614,7 @@ export function LearningAtlas({
                   prefetch={false}
                   className={cx(
                     BUTTON_CLASSES.paper.primary,
-                    "mt-3 w-full max-w-full justify-between py-2 sm:mt-5 sm:w-auto sm:justify-start",
+                    "mt-2.5 w-full max-w-full justify-between py-2 sm:mt-5 sm:w-auto sm:justify-start",
                   )}
                 >
                   <span className="min-w-0 break-words">
@@ -614,7 +650,7 @@ export function LearningAtlas({
       </section>
 
       <section aria-labelledby="all-courses-heading" className="mt-12 sm:mt-16 lg:mt-20">
-        <header className="border-t-2 border-foreground pt-3 sm:pt-4">
+        <header className="border-t-2 border-scene-line pt-3 sm:pt-4">
           <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
             <h2
               id="all-courses-heading"
@@ -705,7 +741,7 @@ export function LearningAtlas({
             >
               {/* One step below the h2 at every width: 22px on phones, where
                   the fluid h2 bottoms out at 26px, 26px from sm up. */}
-              <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-0.5 border-t-2 border-foreground pb-1 pt-2.5 sm:gap-y-1 sm:pb-2 sm:pt-3">
+              <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-0.5 border-t-2 border-scene-line pb-1 pt-2.5 sm:gap-y-1 sm:pb-2 sm:pt-3">
                 <h3
                   id={`${group.id}-heading`}
                   className="text-[1.375rem] font-bold leading-tight text-foreground sm:text-[1.625rem]"
@@ -750,11 +786,10 @@ export function LearningAtlas({
                 ) : null}
               </div>
               <ol>
-                {group.courses.map((course, index) => (
+                {group.courses.map((course) => (
                   <CourseLedgerRow
                     key={course.slug}
                     course={course}
-                    index={index}
                     inPath={selectedSlugs.has(course.slug)}
                     visible={matchesLevel(course, levelFilter)}
                     stat={stats[course.slug]}

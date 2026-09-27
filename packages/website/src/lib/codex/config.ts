@@ -29,7 +29,7 @@ export const CODEX_CONFIG = {
   workshopQuizPassThreshold: 0.7,
   certificateTitle: "Codex Course",
   certificateSubtitle:
-    "Certificate of participation. Issued by loehrning.ai, an independent education platform. This confirmation is not an accredited qualification.",
+    "Certificate of participation from loehrning.ai, an independent learning platform. Not an accredited qualification.",
   certificateModules: [
     "Fundamentals: mental model, the sandbox contract, AGENTS.md",
     "Task craft: task specs, scoping, acceptance criteria",

@@ -16,8 +16,8 @@ export async function generateMetadata(): Promise<Metadata> {
       : "Workflow-Selbsttest: AI-Native Arbeitskurs";
   const description =
     locale === "en"
-      ? "Ten workplace scenarios across drafting, delegation, automation, knowledge and governance. A local self-assessment, not a standardized test."
-      : "Zehn Arbeitsszenarien zu Entwurf, Delegation, Automatisierung, Wissen und Governance. Lokale Selbstprüfung, kein standardisierter Test.";
+      ? "Ten workplace scenarios in five dimensions. A local self-assessment, not a standardized test."
+      : "Zehn Arbeitsszenarien in fünf Dimensionen. Lokale Selbstprüfung, kein standardisierter Test.";
   const localizedPath = localizeHref("/ai-native/fluency-test", locale);
   const url = `${SITE_URL}${localizedPath}`;
   const alternates = buildLocaleAlternates("/ai-native/fluency-test", ["de", "en"]);

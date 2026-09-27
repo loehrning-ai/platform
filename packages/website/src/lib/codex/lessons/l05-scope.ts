@@ -15,7 +15,7 @@ const lesson: CodexLesson = {
     "Separate work by behavior, dependency, and review boundary instead of relying on arbitrary time, file, or line limits.",
   durationMinutes: 12,
   trackId: "task-craft",
-  hook: "One change, one reviewable purpose.",
+  hook: "Keep each change to one reviewable purpose.",
   keyConcepts: [
     "Task sizing",
     "Slicing moves",
@@ -32,11 +32,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "File counts, line counts and time limits are the wrong instrument. Scope by **cohesion and evidence** instead. A useful task usually:\n\n- changes one observable behavior or one enabling structure;\n- has dependencies that can be named before implementation;\n- has a diff that a reviewer can understand as one decision;\n- includes checks that exercise the changed behavior; and\n- can be reverted without also removing unrelated work.\n\nSplit the task when parts can be implemented, verified, deployed, or rolled back independently. Keep coupled changes together when separating them would create an invalid intermediate state.",
-        },
-        {
-          kind: "pull-quote",
-          text: "A planning ticket describes an initiative. An implementation task describes one coherent, reviewable change.",
+            "Scope by **cohesion and evidence**, whatever the file count, line count or time. A useful task usually:\n\n- changes one observable behavior or one enabling structure;\n- has dependencies you can name before implementation;\n- has a diff a reviewer can understand as one decision;\n- includes checks that exercise the changed behavior;\n- can be reverted without removing unrelated work.\n\nSplit a task when its parts can be implemented, verified, deployed or rolled back independently. Keep coupled changes together when splitting them would create an invalid intermediate state.",
         },
       ],
     },
@@ -48,7 +44,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Three decomposition patterns cover many broad changes. Pick the one that keeps intermediate states valid and ownership clear.",
+            "Pick the pattern that keeps intermediate states valid and ownership clear.",
         },
         {
           kind: "card-grid",
@@ -56,17 +52,17 @@ const lesson: CodexLesson = {
             {
               eyebrow: "move 01 · horizontal",
               title: "Split by layer",
-              body: "Separate schema, API, and interface changes when each layer can be introduced compatibly. State the dependency order and the temporary contract between layers.",
+              body: "Separate schema, API and interface changes when each layer can land compatibly. State the order and the temporary contract between layers.",
             },
             {
               eyebrow: "move 02 · vertical",
               title: "Split by entity",
-              body: "Apply the same behavior to Users, Projects, and Teams as separate tasks when their code and rollout paths are independent. Shared infrastructure should land first.",
+              body: "Apply the same behavior to Users, Projects and Teams as separate tasks when their code and rollout are independent. Shared infrastructure lands first.",
             },
             {
               eyebrow: "move 03 · prep/do",
               title: "Do the plumbing first",
-              body: "First introduce a behavior-preserving structural change with its own checks. Then implement the feature against that reviewed structure. Do not separate them if the first change has no standalone value or safe state.",
+              body: "First a behavior-preserving structural change with its own checks, then the feature on top. Keep both in one task if the first has no standalone value or safe state.",
             },
           ],
         },
@@ -80,27 +76,12 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "**Change only what the current task requires.** That is the rule. Record independent defects and cleanup opportunities without implementing them in the same diff.\n\nAmbiguous boundaries mix the requested behavior with unrelated refactoring, dependency changes and test rewrites. The diff then carries several decisions, and nobody can accept, reject or revert them separately.\n\nThat is *scope creep*. Catch it by comparing changed files and behaviors against the task's goal, constraints and exclusions. Usefulness of the extra code is not the test.",
-        },
-        {
-          kind: "card-grid",
-          cards: [
-            {
-              eyebrow: "cost 01",
-              title: "Review concerns become coupled",
-              body: "Interleaved feature work and refactoring require the reviewer to reason about their interactions. Line count alone does not measure that burden; independent decisions do.",
-            },
-            {
-              eyebrow: "cost 02",
-              title: "Rollback becomes entangled",
-              body: "A revert removes every change in the pull request, including unrelated refactoring and test updates. Narrow scope reduces that coupling but does not by itself make a rollback safe.",
-            },
-          ],
+            "**Change only what the current task requires.** Record independent defects and cleanup ideas for a separate diff.\n\nWith unclear boundaries, the requested behavior gets mixed with unrelated refactoring, dependency changes and test rewrites. The reviewer then has to reason about their interactions, and a revert removes all of them together. Narrow scope reduces that coupling, though it alone does not make a rollback safe.\n\nThat is *scope creep*. Catch it by comparing changed files and behaviors with the task's goal, constraints and exclusions, however useful the extra code looks.",
         },
         {
           kind: "prose",
           markdown:
-            'Say the boundary out loud. *"Change only files required for this task. Record unrelated issues in the pull-request description without fixing them."* That makes extra work visible in review without replacing a concrete scope. Compare:\n\n```\n# Too open\n## Goal\nAdd pagination to the users list endpoint. The current implementation\nreturns all users; we need page-based results.\n\n# Explicit behavior and scope\n## Goal\nAdd page and page_size query params to GET /users in api/users.py.\nDefault: page=1, page_size=20. Max page_size=100 (return 400 if exceeded).\nReturn {"items": [...], "total": N, "page": N, "pages": N}.\n\n## Scope\nChange api/users.py and tests/api/test_users.py. If another file is required,\nexplain why before changing it.\n```',
+            "Name the boundary in the task: *\"Change only files required for this task. Record unrelated issues in the pull-request description without fixing them.\"* Extra work then shows up in review. Compare:\n\n```\n# Too open\n## Goal\nAdd pagination to the users list endpoint. The current implementation\nreturns all users; we need page-based results.\n\n# Explicit behavior and scope\n## Goal\nAdd page and page_size query params to GET /users in api/users.py.\nDefault: page=1, page_size=20. Max page_size=100 (return 400 if exceeded).\nReturn {\"items\": [...], \"total\": N, \"page\": N, \"pages\": N}.\n\n## Scope\nChange api/users.py and tests/api/test_users.py. If another file is required,\nexplain why before changing it.\n```",
         },
       ],
     },
@@ -112,7 +93,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            'The words "also," "while there," and "as needed" hide a second decision. Name it, then decide whether it belongs in this change.',
+            "The words \"also\", \"while there\" and \"as needed\" hide a second decision. Name it and decide whether it belongs in this change.",
         },
       ],
     },
@@ -124,7 +105,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Schema, query, endpoint, audit and migration work in one task. Watch how hard it becomes to attribute a failure.",
+            "The replay at the end puts schema, query, endpoint, audit and migration work into one task. Failures become hard to attribute.",
         },
       ],
     },
@@ -133,7 +114,7 @@ const lesson: CodexLesson = {
       title: "Quick check",
       readTimeMinutes: 1,
       blocks: [
-        { kind: "prose", markdown: "One question on scoping and scope creep." },
+        { kind: "prose", markdown: "One question follows." },
       ],
     },
   ]),
@@ -149,7 +130,7 @@ const lesson: CodexLesson = {
         goodLabel: "Sliced, three tasks",
         bad: 'Goal\nAdd soft-delete to Users, Projects, and Teams.\nInclude a "restore" endpoint for each.\nAlso add an audit log of who deleted what.\nMigrate existing hard-deletes we\'ve been stashing in cold storage.',
         good: "Task A: schema\nAdd deleted_at and deleted_by to users, projects, teams.\nAdd migration. Don't touch queries yet.\n\nTask B: API\nUpdate list/get endpoints to filter deleted_at IS NULL.\nAdd DELETE → sets deleted_at. Add POST /restore.\n\nTask C: audit\nLog soft-deletes to the audit_events table.\nMigrate cold-storage rows in a separate PR.",
-        note: "The broad version couples schema, API, audit, and data migration. The decomposed version states dependencies and gives each concern a separate review and rollback boundary.",
+        note: "The broad version couples schema, API, audit and data migration. The sliced version states dependencies and gives each concern its own review and rollback boundary.",
       },
     },
     {
@@ -285,16 +266,16 @@ const lesson: CodexLesson = {
         title: CODEX_QUIZ_TITLE,
         copy: CODEX_QUIZ_COPY,
         question:
-          'You catch yourself writing: "Add feature X, and while we\'re in there, fix the existing pagination bug, and refactor the error handler." What should you do?',
+          "You write: \"Add feature X, and while we're in there, fix the pagination bug and refactor the error handler.\" What should you do?",
         options: [
           "Keep it as one task because the changes share a ticket.",
-          "Split into three tasks. Sequence them so each builds on the last, and each can be reviewed in isolation.",
+          "Split it into three tasks, ordered by dependency, each reviewable alone.",
           'Add "please be careful" to the spec.',
           "Remove the acceptance criteria to shorten the task.",
         ],
         correct: 1,
         explanation:
-          "The sentence contains a feature, an independent defect fix, and a refactor. Give each concern its own behavior, evidence, and review boundary, then order them only where a real dependency exists.",
+          "The sentence holds a feature, an independent bug fix and a refactor. Each needs its own behavior, evidence and review boundary, ordered only where a real dependency exists.",
       },
     },
   ],

@@ -30,9 +30,10 @@ describe("<WorkshopDetailContent>", () => {
     const cover = h1.closest("[data-cover-band]");
     expect(cover).not.toBeNull();
     expect(cover).toHaveClass("plakat-lemons");
-    expect(within(cover as HTMLElement).getByText(workshop.eyebrow)).toHaveTextContent(
-      "Workshop 01 · Prognosen",
-    );
+    // The caps line: the eyebrow as one line of text, its parts kept whole.
+    const caps = (cover as HTMLElement).querySelector(".plakat-caps");
+    expect(caps?.textContent).toBe(workshop.eyebrow);
+    expect(caps).toHaveTextContent("Workshop 01 · Prognosen");
     expect(within(cover as HTMLElement).getByText(workshop.summary)).toBeInTheDocument();
     // The fixed question sits in the paper q-card at the top of the agenda,
     // once per page; the facts and the need follow it there (SPEC D11).

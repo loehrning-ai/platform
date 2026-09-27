@@ -36,7 +36,7 @@ export const AI_NATIVE_OPERATOR_CONFIG = {
   workshopQuizPassThreshold: 0.7,
   certificateTitle: "Certificate of participation: AI-Native Operator",
   certificateSubtitle:
-    "Locally generated certificate of participation from the independent learning platform loehrning.ai. It is not server-verified, externally assessed, accredited, or evidence of regulatory compliance.",
+    "Local certificate of participation from the independent learning platform loehrning.ai. Not server-verified, externally assessed, or accredited, and no evidence of regulatory compliance.",
   certificateModules: [
     "Mindset & Culture",
     "Engineering Practices",
@@ -49,7 +49,7 @@ export const AI_NATIVE_OPERATOR_CONFIG = {
     "Measurement & ROI",
   ],
   certificateReferenceLabel:
-    "Personal certificate of participation: model-assisted operations across task selection, engineering, product, workflows, people, organization, data, governance, and measurement",
+    "Personal certificate of participation: model-assisted operations",
   quizPassMessage: "You passed the AI-Native Operator workshop quiz.",
   certificateFileStem: "AI-Native-Operator",
   recordNoun: {
@@ -64,7 +64,7 @@ export const AI_NATIVE_OPERATOR_CONFIG_DE =
     title: "AI-Native Operator: Praxiskurs",
     certificateTitle: "Teilnahmebestätigung: AI-Native Operator",
     certificateSubtitle:
-      "Lokal erzeugte Teilnahmebestätigung der unabhängigen Lernplattform loehrning.ai. Sie ist nicht servergeprüft, nicht fremdbewertet, nicht akkreditiert und kein Nachweis regulatorischer Konformität.",
+      "Lokal erzeugte Teilnahmebestätigung der unabhängigen Lernplattform loehrning.ai. Nicht servergeprüft, fremdbewertet oder akkreditiert und kein Nachweis regulatorischer Konformität.",
     certificateModules: [
       "Mindset und Arbeitskultur",
       "Technische Praxis",
@@ -77,7 +77,7 @@ export const AI_NATIVE_OPERATOR_CONFIG_DE =
       "Messung und Wirtschaftlichkeit",
     ],
     certificateReferenceLabel:
-      "Persönliche Teilnahmebestätigung: modellgestützte Arbeit über Aufgabenauswahl, Technik, Produkt, Abläufe, Personal, Organisation, Daten, Steuerung und Messung",
+      "Persönliche Teilnahmebestätigung: modellgestützte Arbeit",
     quizPassMessage:
       "Das Abschlussquiz des Kurses AI-Native Operator ist bestanden.",
     certificateFileStem: "AI-Native-Operator-Praxiskurs",

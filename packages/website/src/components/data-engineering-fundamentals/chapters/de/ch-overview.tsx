@@ -35,17 +35,15 @@ export function ChOverviewDe() {
           <span>Kurs von der Quelle bis zur Bereitstellung</span>
         </div>
         <h1 className="ov2-title">
-          Eine <em>Datenpipeline</em> von der Quelle bis zur Bereitstellung,
-          Stufe für Stufe.
+          Eine <em>Datenpipeline</em> von der Quelle bis zur Bereitstellung.
         </h1>
         <p className="ov2-sub">
-          Entscheidend ist das System, nicht die Werkzeugliste.{" "}
           <b>
             12 Kapitel · 17 interaktive Simulationen · ein Abschlussprojekt mit
             kontrollierten Fehlerfällen.
           </b>{" "}
-          Jedes Kapitel verbindet eine technische Entscheidung mit ihrer Wirkung
-          auf nachgelagerte Datenprodukte.
+          Jedes Kapitel zeigt, was eine technische Entscheidung nachgelagert
+          kaputt macht.
         </p>
         <div className="ov2-cta">
           <Link
@@ -77,13 +75,12 @@ export function ChOverviewDe() {
         <div className="ov2-flow-head">
           <div className="ov2-kicker">Die Verarbeitungskette</div>
           <h2 className="ov2-h2">
-            Eine Pipeline. Zehn Betriebsstufen. Jeder Punkt steht für eine
-            simulierte Datenzeile.
+            Zehn Stufen einer Pipeline. Jeder Punkt ist eine simulierte
+            Datenzeile.
           </h2>
           <p className="ov2-lede">
-            Wähl eine Stufe, lies ihren Vertrag, öffne das Kapitel dazu. Im
-            Abschlussprojekt laufen alle zehn Stufen in einem Szenario
-            zusammen.
+            Wähl eine Stufe, um ihren Vertrag zu lesen. Das Abschlussprojekt
+            führt alle zehn in einem Szenario zusammen.
           </p>
         </div>
         <PipelineBar

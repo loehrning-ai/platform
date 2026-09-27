@@ -12,33 +12,31 @@
 <link rel="stylesheet" href="lib/workshop-frame.css" />
 <style>
   /* page layer: layout only; colour and type come from lib/workshop-frame.css */
-  .hub-cover-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:clamp(28px,5vw,72px);align-items:end}
-  .hub-cover-grid .wf-h1{max-width:14ch}
+  .wf-cover .wf-h1{max-width:14ch}
+  .hub-question{padding-top:40px}
+  .hub-question .wf-qcard{max-width:var(--wf-measure)}
   .hub-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
   .hub-body{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:clamp(32px,5vw,72px);padding-top:56px}
   .hub-body .wf-section:first-child{margin-top:0}
   .hub-lenses td:first-child{font-weight:600;white-space:nowrap}
   .hub-data code{font-size:14px}
   .hub-short{display:none}
-  @media (max-width:900px){.hub-cover-grid,.hub-body{grid-template-columns:1fr}.hub-body{padding-top:40px}.hub-aside .wf-section:first-child{margin-top:16px}}
-  /* phones: a shorter cover so the materials start in the first screen; no globe (as on the site) */
+  @media (max-width:900px){.hub-body{grid-template-columns:1fr}.hub-body{padding-top:40px}.hub-aside .wf-section:first-child{margin-top:16px}}
+  /* phones: a short poster band (caps line, title, one lead sentence, two actions, the strip),
+     then the question on paper, so the materials start early */
   @media (max-width:600px){
-    .wf-cover__globe{display:none}
-    .wf-cover__body{padding-top:20px;padding-bottom:24px}
-    .hub-cover-grid{gap:20px}
-    .wf-cover .wf-h1--hero{font-size:34px}
-    .wf-cover .wf-lead{margin-top:12px;font-size:16px;line-height:1.5}
+    .wf-cover__body{padding-top:24px}
+    .wf-cover .wf-h1--hero{font-size:clamp(36px,calc(1.9rem + 5.2vw),50px)}
+    .wf-cover .wf-lead{margin-top:14px}
     .hub-lead-more{display:none}
     .hub-ctas{flex-wrap:nowrap;gap:8px}
-    .hub-ctas .wf-btn{flex:1 1 0;min-width:0;min-height:44px;padding:8px 12px;font-size:14px;text-align:center;white-space:nowrap}
+    .hub-ctas .wf-btn{flex:1 1 0;min-width:0;padding:8px 12px;text-align:center;white-space:nowrap}
     .hub-long{display:none}.hub-short{display:inline}
-    .wf-cover .wf-meta{margin-top:12px;font-size:14px}
-    /* the question is a ruled quote in the band, not a box: only the Mennige bar stays */
-    .wf-cover .wf-qcard{padding:0 0 0 14px;border:0;background:none}
-    .wf-cover .wf-qcard::before{top:0;bottom:0;left:0;width:3px}
-    .wf-cover .wf-qcard p{font-size:16px}
-    .wf-cover .wf-qcard .wf-kicker{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
-    .hub-ctas{margin-top:16px}
+    .wf-cover .wf-meta{margin-top:14px}
+    .hub-ctas{margin-top:20px}
+    .hub-question{padding-top:28px}
+    .hub-question .wf-qcard{padding:14px 16px 14px calc(16px + var(--wf-bar))}
+    .hub-question .wf-qcard p{font-size:17px}
     .hub-body{padding-top:28px;gap:0}
     .hub-body .wf-section{margin-top:36px}
     .hub-aside .wf-section:first-child{margin-top:36px}
@@ -75,27 +73,27 @@
 </header>
 
 <main id="main" tabindex="-1">
-  <section class="wf-cover" aria-labelledby="hub-title">
-    <div class="wf-cover__globe" aria-hidden="true"><img src="assets/globe.svg" alt="" width="1100" height="1033" decoding="async"></div>
+  <section class="wf-cover" data-plakat="lemons" aria-labelledby="hub-title">
+    <div class="wf-cover__art" aria-hidden="true"><img src="assets/plakat-cover.svg" alt="" width="400" height="500" decoding="async"></div>
     <div class="wf-wrap wf-cover__body">
-      <div class="hub-cover-grid">
-        <div>
-          <p class="wf-kicker">Workshop 01 · Forecasting decisions</p>
-          <h1 class="wf-h1 wf-h1--hero" id="hub-title">Turn a forecast into a decision</h1>
-          <p class="wf-lead">In about 90 minutes you work out what a wrong forecast costs, how big the buffer should be, and when a person has to approve.<span class="hub-lead-more"> You work through three practice companies and a demand simulator that runs in your browser.</span></p>
-          <div class="hub-ctas">
-            <a class="wf-btn wf-btn--primary" href="./hands-on.html"><span class="hub-long">Open the hands-on lab</span><span class="hub-short">Hands-on lab</span></a>
-            <a class="wf-btn" href="./case-study/index.html"><span class="hub-long">Read the business case</span><span class="hub-short">Business case</span></a>
-          </div>
-          <p class="wf-meta"><b>About 90 minutes</b><span class="hub-long"> · self-study</span> · runs in your browser<span class="hub-long"> · English</span></p>
-        </div>
-        <figure class="wf-qcard">
-          <figcaption class="wf-kicker">The question you answer</figcaption>
-          <p>A missed sale costs one amount and a leftover unit another. How much buffer do you carry, and when does a person make the call?</p>
-        </figure>
+      <p class="wf-kicker">Workshop 01 · <span class="hub-long">Forecasting decisions</span><span class="hub-short">Forecasts</span></p>
+      <h1 class="wf-h1 wf-h1--hero" id="hub-title">Turn a forecast into a decision</h1>
+      <p class="wf-lead">In about 90 minutes you work out what a wrong forecast costs, how big the buffer should be, and when a person has to approve.<span class="hub-lead-more"> You work through three practice companies and a demand simulator that runs in your browser.</span></p>
+      <div class="hub-ctas">
+        <a class="wf-btn wf-btn--primary" href="./hands-on.html"><span class="hub-long">Open the hands-on lab</span><span class="hub-short">Hands-on lab</span></a>
+        <a class="wf-btn" href="./case-study/index.html"><span class="hub-long">Read the business case</span><span class="hub-short">Business case</span></a>
       </div>
+      <p class="wf-meta"><b>About 90 minutes</b><span class="hub-long"> · self-study</span> · runs in your browser<span class="hub-long"> · English</span></p>
     </div>
+    <div class="wf-cover__strip" aria-hidden="true"><img src="assets/plakat-strip.svg" alt="" decoding="async"></div>
   </section>
+
+  <div class="wf-wrap hub-question">
+    <figure class="wf-qcard">
+      <figcaption class="wf-kicker">The question you answer</figcaption>
+      <p>A missed sale costs one amount and a leftover unit another. How much buffer do you carry, and when does a person make the call?</p>
+    </figure>
+  </div>
 
   <div class="wf-wrap hub-body">
     <div>

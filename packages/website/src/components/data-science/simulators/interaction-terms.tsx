@@ -56,8 +56,8 @@ export function InteractionTerms() {
       )}
       meta={`A=${featureA}, B=${featureB}`}
       caption={text(
-        "This fixed arithmetic example contrasts an additive score A+B with a product term A×B. A product term lets a specified linear model represent one form of interaction; its usefulness and interpretation depend on scale, model family, data, and validation.",
-        "Dieses feste Rechenbeispiel vergleicht den additiven Score A+B mit dem Produktterm A×B. Ein Produktterm bildet in einem festgelegten linearen Modell eine Form der Interaktion ab; Nutzen und Interpretation hängen von Skala, Modellfamilie, Daten und Validierung ab.",
+        "This fixed example compares the additive score A+B with the product term A×B, which lets a linear model represent one form of interaction. Its value depends on scale, model family, data and validation.",
+        "Dieses feste Beispiel vergleicht den additiven Score A+B mit dem Produktterm A×B, mit dem ein lineares Modell eine Form der Interaktion abbildet. Sein Nutzen hängt von Skala, Modellfamilie, Daten und Validierung ab.",
       )}
     >
       <div className="sim-row">

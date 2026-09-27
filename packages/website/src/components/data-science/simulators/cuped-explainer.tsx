@@ -115,8 +115,8 @@ export function CUPEDExplainer() {
         "CUPED: Varianzreduktion durch Kovariaten",
       )}
       caption={text(
-        "Toggle the adjustment for this fixed synthetic sample. The pooled linear coefficient reduces the displayed variance here; the group estimate can move in finite samples. Real analyses need a pre-treatment covariate, assignment-aware standard errors, and validation of the adjustment model.",
-        "Schalte die Anpassung für diese feste synthetische Stichprobe um. Der gepoolte lineare Koeffizient senkt hier die angezeigte Varianz; die Gruppenschätzung kann sich in endlichen Stichproben verändern. Reale Analysen benötigen eine Vorbehandlungsvariable, zur Zuweisung passende Standardfehler und eine Prüfung des Anpassungsmodells.",
+        "Toggle the adjustment on this fixed synthetic sample: the pooled coefficient lowers the variance, and the group estimate can move. Real analyses need a pre-treatment covariate, assignment-aware standard errors and a validated adjustment model.",
+        "Schalte die Anpassung für diese feste synthetische Stichprobe um: Der gepoolte Koeffizient senkt die Varianz, und die Gruppenschätzung kann sich verschieben. Reale Analysen brauchen eine Vorbehandlungsvariable, zur Zuweisung passende Standardfehler und ein geprüftes Anpassungsmodell.",
       )}
     >
       <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>

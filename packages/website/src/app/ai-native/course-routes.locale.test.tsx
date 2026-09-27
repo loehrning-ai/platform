@@ -122,10 +122,10 @@ describe("AI-Native locale propagation across the complete course lifecycle", ()
       (lessonReference?.props as { children?: ReactNode }).children,
     );
     expect(lessonReferenceText).toContain(
-      "Start with the tools you already use. Connect them through explicit instructions, review points and repeatable handoffs.",
+      "Describe the task precisely, check the result and answer for its use.",
     );
     expect(lessonReferenceText).toContain(
-      "You already have tools. The relevant question is how to combine them.",
+      "You already have the tools and learn to combine them.",
     );
 
     expect((await QuizPage()).props).toMatchObject({

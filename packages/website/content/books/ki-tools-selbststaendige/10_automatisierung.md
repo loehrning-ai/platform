@@ -1,10 +1,6 @@
 # Automatisierung: Abläufe kontrolliert ausführen
 
-Die ersten 9 Kapitel waren Handarbeit. Du gibst einen Prompt ein, du bekommst ein Ergebnis, du nutzt es.
-
-Das ist gut. Aber es ist nicht genug.
-
-Jeder Schritt, den du wöchentlich von Hand wiederholst, ist ein Automatisierungskandidat. Was bei dir technisch, wirtschaftlich und rechtlich automatisierbar ist, sagt kein allgemeiner Studienwert. Miss deinen eigenen Prozess und beginne mit einem begrenzten Pilot.
+In den ersten 9 Kapiteln hast du jeden Prompt von Hand eingegeben. Jeder Schritt, den du wöchentlich von Hand wiederholst, ist ein Automatisierungskandidat. Was bei dir technisch, wirtschaftlich und rechtlich automatisierbar ist, sagt kein allgemeiner Studienwert. Miss deinen eigenen Prozess und beginne mit einem begrenzten Pilot.
 
 Low-Code- und No-Code-Plattformen wie Zapier, Make und n8n verbinden solche Abläufe. Auch ohne klassische Programmierung brauchst du Kenntnisse zu Datenflüssen, Berechtigungen, Fehlerbehandlung, Tests und Betrieb.
 
@@ -16,11 +12,11 @@ Das Grundprinzip jeder Automation ist simpel:
 
 **Trigger** → **Aktion** → **Ergebnis**
 
-Trigger: Etwas passiert. Eine Mail kommt rein. Ein Formular wird ausgefüllt. Ein Termin steht an. Eine Rechnung wird fällig.
+Trigger: Eine Mail kommt rein, ein Formular wird ausgefüllt, ein Termin steht an oder eine Rechnung wird fällig.
 
 Aktion: Das System kategorisiert, fasst zusammen oder erstellt einen internen Entwurf. Schreibende oder externe Aktionen brauchen eine gesonderte Freigabe und technische Grenze.
 
-Ergebnis: Du hast weniger zu tun. Oder bessere Ergebnisse. Oder beides.
+Ergebnis: Du hast weniger zu tun, bessere Ergebnisse oder beides.
 
 Eine Automation läuft zeitgesteuert oder ereignisbasiert. Sie kann trotzdem ausfallen, Daten doppelt verarbeiten, falsche Ergebnisse erzeugen oder Zugriffsrechte verlieren. Monitoring, Wiederholbarkeit, Idempotenz, Alarmierung und ein manueller Rückfallweg gehören ins Design.
 
@@ -54,7 +50,7 @@ Eine Automation läuft zeitgesteuert oder ereignisbasiert. Sie kann trotzdem aus
 
 ## Zapier, Make und die No-Code-Revolution
 
-Du musst nicht programmieren können, um Workflows zu automatisieren. Dafür gibt es Tools, die Trigger und Aktionen per Drag-and-Drop verbinden.
+Diese Tools verbinden Trigger und Aktionen per Drag-and-Drop.
 
 **Zapier** bietet viele vorgefertigte Integrationen. Prüfe den aktuellen Tarif, unterstützte Aktionen, Datenregionen, Limits und Kosten für dein reales Volumen.
 
@@ -79,8 +75,6 @@ Das Prinzip ist bei allen gleich: Du wählst einen Trigger (z.B. "Neue E-Mail in
 Klassische Workflows folgen vorab festgelegten Schritten. Agentische Systeme wählen innerhalb gesetzter Grenzen Werkzeuge aus und planen mehrere Schritte. Diese Grenze muss durch Berechtigungen, Budgets, erlaubte Aktionen und Abbruchregeln technisch erzwungen werden.
 
 Ein mögliches Testszenario lautet: „Lies einen fiktiven Rechnungsdatensatz, markiere nach einer vorgegebenen Regel mögliche Fälle und erstelle ausschließlich interne Entwürfe." Reale Mahnungen erfordern geprüfte Daten, Vertragsregeln, Fristen, Zuständigkeit und Freigabe.
-
-**Was können KI-Agenten für Freelancer?**
 
 Ein menschlicher Prüfschritt ist wichtig, reicht aber nicht allein. Eingaben, Berechtigungen, erlaubte Werkzeuge, Tests, Protokollierung und technische Stopps müssen verhindern, dass ein fehlerhaftes System schon vor deiner Prüfung Schaden anrichtet. Miss den Umfang der Nacharbeit.
 
@@ -111,13 +105,7 @@ Ein menschlicher Prüfschritt ist wichtig, reicht aber nicht allein. Eingaben, B
 
 ## MCP: Das neue Automatisierungsprotokoll
 
-MCP standardisiert, wie kompatible KI-Anwendungen Werkzeuge und Datenquellen ansprechen. Ob ein konkreter CRM-, Rechnungs- oder Kalenderzugriff möglich ist, hängt von Client, Server, Autorisierung und verfügbarer Integration ab.
-
-MCP heißt ausgeschrieben **Model Context Protocol**. Ein offener Standard, der KI-Modelle direkt mit Datenquellen verbindet.
-
-**Die Analogie:** USB-C für KI. Vor USB-C hatte jedes Gerät einen eigenen Stecker. MCP macht dasselbe für KI-Integrationen: ein Standard, der überall funktioniert. Unterstützt von OpenAI, Google, Microsoft und Anthropic.
-
-**Was bedeutet das für dich?**
+MCP (**Model Context Protocol**) ist ein offener Standard, der festlegt, wie kompatible KI-Anwendungen Werkzeuge und Datenquellen ansprechen, vergleichbar mit USB-C als einheitlichem Stecker. OpenAI, Google, Microsoft und Anthropic unterstützen ihn. Ob ein konkreter CRM-, Rechnungs- oder Kalenderzugriff möglich ist, hängt von Client, Server, Autorisierung und verfügbarer Integration ab.
 
 Ein MCP-Server ist selbst eine sicherheitskritische Integrationsschicht. Prüfe Herkunft, Authentisierung, Berechtigungsumfang, Datenweitergabe, Logs und jede schreibende Aktion. Ein Protokoll ersetzt keine vorhandene API oder Freigabe des Zielsystems.
 
@@ -144,18 +132,18 @@ Eine API ist eine Schnittstelle, über die Software ein Modell anspricht. Abrech
 - Du hast weniger als 3 Workflows
 - Du willst nicht technisch werden
 
-Für die meisten Freelancer reicht Zapier oder Make mit den eingebauten KI-Integrationen. API ist die Kür, nicht die Pflicht.
+Für die meisten Freelancer reichen Zapier oder Make mit den eingebauten KI-Integrationen.
 
 Berechne Kosten mit der aktuellen offiziellen Preisseite und gemessenen Ein- und Ausgabetokens. Ergänze Wiederholungen, Fehlversuche, Werkzeuge, Speicherung, Entwicklung, Prüfung und Monitoring. Ein Preis pro „Anfrage" ohne Längen- und Modellannahmen ist nicht belastbar.
 
 ## Drei Automatisierungen für den Sofort-Start
 
-Nicht reden. Machen. Hier sind drei Automationen, die du heute einrichten kannst.
+Diese drei Automationen kannst du heute einrichten.
 
 ### Automation 1: Lead-Qualifizierung
 
-**Trigger:** Neues Kontaktformular auf deiner Website
-**Aktion:** Zapier/Make sendet den Inhalt an ChatGPT API mit folgendem KRAFT-Prompt:
+- **Trigger:** Neues Kontaktformular auf deiner Website
+- **Aktion:** Zapier oder Make sendet den Inhalt mit diesem KRAFT-Prompt an die ChatGPT API
 
 ```
 Kontext: Ich bin [BRANCHE]-Freelancer mit Spezialisierung auf [BEREICH].
@@ -179,8 +167,8 @@ Ton: Professionell, freundlich, verbindlich.
 
 ### Automation 2: Wöchentlicher Content-Entwurf
 
-**Trigger:** Jeden Montag um 8:00 Uhr
-**Aktion:** ChatGPT API bekommt folgenden KRAFT-Prompt:
+- **Trigger:** Jeden Montag um 8:00 Uhr
+- **Aktion:** Die ChatGPT API bekommt diesen KRAFT-Prompt
 
 ```
 Kontext: Ich poste wöchentlich auf LinkedIn. Meine Zielgruppe sind
@@ -201,12 +189,12 @@ Keine Hashtags im Text, 3-5 Hashtags am Ende.
 Ton: Authentisch, meinungsstark, keine Buzzwords.
 ```
 
-**Ergebnis:** Montags morgens liegen Post-Entwürfe in deinem Posteingang. Überarbeiten, planen, posten.
+**Ergebnis:** Montags morgens liegen Post-Entwürfe in deinem Posteingang, die du überarbeitest und einplanst.
 
 ### Automation 3: Meeting-Zusammenfassung
 
-**Trigger:** Neues Transkript in einem Ordner (z.B. von Otter.ai, Fathom oder Whisper)
-**Aktion:** KI bekommt folgenden KRAFT-Prompt:
+- **Trigger:** Neues Transkript in einem Ordner, etwa von Otter.ai, Fathom oder Whisper
+- **Aktion:** Die KI bekommt diesen KRAFT-Prompt
 
 ```
 Kontext: Ich hatte gerade ein [MEETING-TYP]-Gespräch mit
@@ -226,13 +214,11 @@ To-dos als Checkliste.
 Ton: Sachlich, präzise, keine Interpretation.
 ```
 
-**Ergebnis:** Strukturiertes Protokoll in deiner Ablage, automatisch, jedes Mal.
+**Ergebnis:** Nach jedem Meeting liegt ein strukturiertes Protokoll in deiner Ablage.
 
 ## Fehler vermeiden: Die Automatisierungs-Falle
 
-Die häufigste Falle: Alles automatisieren wollen.
-
-Automatisierung ist kein Selbstzweck. Ein vereinfachtes Rechenbeispiel: 3 Stunden Einrichtung und 10 Minuten gemessene Nettoersparnis pro Woche ergeben rechnerisch 18 Wochen bis zum Zeit-Break-even. Wartung, Fehler und Kapitalkosten verlängern ihn.
+Die häufigste Falle ist, alles automatisieren zu wollen. Ein vereinfachtes Rechenbeispiel: 3 Stunden Einrichtung und 10 Minuten gemessene Nettoersparnis pro Woche ergeben rechnerisch 18 Wochen bis zum Zeit-Break-even. Wartung, Fehler und Kapitalkosten verlängern ihn.
 
 **Die Automatisierungs-Formel:**
 
@@ -242,11 +228,9 @@ Fiktives Beispiel: 2 Stunden Einrichtung ÷ (10 Minuten Nettoersparnis × 4 Durc
 
 Fiktives Beispiel: 5 Stunden Einrichtung ÷ (5 Minuten Nettoersparnis × 1 Durchlauf pro Monat) = rechnerischer Zeit-Break-even nach 60 Monaten, vor Wartung und Fehlerkosten.
 
-**Zweite Falle:** Automationen ohne Qualitätskontrolle. Jede Automation, die direkt an Kunden geht, E-Mails, Angebote, Social-Media-Posts, braucht einen Prüfschritt. Du bist der letzte Checkpoint. Nicht optional.
+**Zweite Falle:** Automationen ohne Qualitätskontrolle. Jede Automation, die E-Mails, Angebote oder Posts an Kunden schickt, braucht deinen Prüfschritt.
 
-**Dritte Falle:** Zu komplex starten. Beginne mit einer Automation. Lass sie 2 Wochen laufen. Wenn sie funktioniert: die nächste. Wenn nicht: anpassen oder verwerfen.
-
-Beginne mit einem risikoarmen Pilot. Definiere vorab Erfolg, Abbruch, Testdauer und Rückfallweg. Erweitere erst nach dokumentierter Auswertung.
+**Dritte Falle:** Zu komplex starten. Lass eine Automation 2 Wochen laufen, bevor du die nächste baust, und passe sie an oder verwirf sie, wenn sie nicht funktioniert. Beginne mit einem risikoarmen Pilot. Definiere vorab Erfolg, Abbruch, Testdauer und Rückfallweg. Erweitere erst nach dokumentierter Auswertung.
 
 > **Praxisprojekt 7: Einen kontrollierten Automationstest bauen**
 >
@@ -254,7 +238,7 @@ Beginne mit einem risikoarmen Pilot. Definiere vorab Erfolg, Abbruch, Testdauer 
 > **Zeitaufwand:** selbst messen; Sicherheits- und Funktionstests gehören dazu
 > **Was du danach hast:** einen Test mit fiktiver Anfrage --> regelgebundener Entwurf --> interne Testablage
 >
-> **Schritt 1:** Erstelle einen kostenlosen Account bei make.com. Oder installiere n8n lokal: `npx n8n`. Beides reicht für den Start. (5 Min.)
+> **Schritt 1:** Erstelle einen kostenlosen Account bei make.com oder installiere n8n lokal mit `npx n8n`. (5 Min.)
 >
 > **Schritt 2:** Erstelle ein Szenario mit 3 Modulen: manueller Testtrigger --> KI-Modul mit fiktiver Anfrage --> interne Testablage ohne echte Kontakt- oder Kundendaten. Begrenze Berechtigungen auf diesen Test.
 >
@@ -262,7 +246,7 @@ Beginne mit einem risikoarmen Pilot. Definiere vorab Erfolg, Abbruch, Testdauer 
 >
 > **Schritt 4:** Lass den Workflow im Entwurfs- und Testmodus. Keine automatische Nachricht, kein produktiver CRM-Schreibzugriff, bis Datenfluss, Rechtsgrundlage, Fehlerpfade und Freigabe geklärt sind.
 >
-> **Schritt 5:** Lass ihn eine Woche laufen. Dann bewerte: Wie viele Leads wurden korrekt eingestuft? Wie gut waren die Entwürfe? Wo musst du nachjustieren? (5 Min.)
+> **Schritt 5:** Lass ihn eine Woche laufen und bewerte dann, wie viele Leads korrekt eingestuft wurden, wie gut die Entwürfe waren und wo du nachjustierst. (5 Min.)
 >
 > **Du hast jetzt:** einen begrenzten, reversiblen Testworkflow mit fiktiven Daten und dokumentierten Prüfpunkten.
 
@@ -275,4 +259,4 @@ Beginne mit einem risikoarmen Pilot. Definiere vorab Erfolg, Abbruch, Testdauer 
 > | Fehler- und Wartungszeit | ___ |
 > | Aktuelle Gesamtbetriebskosten | ___ |
 
-Du automatisierst jetzt. Kapitel 11 zeigt dir, wie du damit skalierst, vom Freelancer zum Unternehmer.
+Kapitel 11 zeigt, wie du damit vom Freelancer zum Unternehmer skalierst.

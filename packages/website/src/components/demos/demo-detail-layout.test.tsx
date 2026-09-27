@@ -216,8 +216,15 @@ describe("<DemoDetailLayout>", () => {
     // One colour: the poster title in the scene mid, balanced by .poster-title.
     expect(h1).toHaveClass("poster-title", "text-scene-mid", "hyphens-manual");
     expect(h1.getAttribute("style")).toMatch(/--fit:\s*\d/);
+    // A face wider than the fit (a first visit on a system fallback) wraps
+    // the word inside the band instead of being clipped by it.
+    expect(h1).toHaveClass("break-words");
     expect(h1.querySelector("span")).toBeNull();
     const hero = container.querySelector("[data-demo-detail-hero]");
+    // The phone back link touches the band top, which clips overflow: its
+    // focus ring is drawn inset there (SPEC §3.9 edge rule).
+    const back = hero?.querySelector("nav a");
+    expect(back?.className).toContain("max-sm:focus-visible:outline-offset-[-3px]");
     const band = hero?.querySelector("[data-cover-band]");
     expect(band).toHaveClass("plakat-idea");
     expect(band?.contains(h1)).toBe(true);

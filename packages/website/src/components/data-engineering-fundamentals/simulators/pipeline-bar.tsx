@@ -40,7 +40,7 @@ export const OV_STAGES: readonly OverviewStage[] = [
     hex: "#7C5CFF",
     ink: "#6E4BFF",
     icon: "ingest",
-    body: "Each event has event time and processing time. The configured late-data policy determines whether records update, reroute, or drop.",
+    body: "Events carry event time and processing time. The late-data policy decides whether late records update, reroute or drop.",
   },
   {
     id: "stream",
@@ -51,7 +51,7 @@ export const OV_STAGES: readonly OverviewStage[] = [
     hex: "#22D3EE",
     ink: "#0B798A",
     icon: "stream",
-    body: "Kafka transports events in the course scenario; Flink applies window and delivery semantics before publication.",
+    body: "Kafka transports events; Flink applies window and delivery semantics before publication.",
   },
   {
     id: "store",
@@ -62,7 +62,7 @@ export const OV_STAGES: readonly OverviewStage[] = [
     hex: "#2D7DFF",
     ink: "#0060FD",
     icon: "store",
-    body: "In the additive example, each partition depends on prior state. Rebuild the affected range after a faulty input or rule.",
+    body: "Each partition depends on prior state. Rebuild the affected range after a faulty input or rule.",
   },
   {
     id: "comp",
@@ -73,7 +73,7 @@ export const OV_STAGES: readonly OverviewStage[] = [
     hex: "#FF7A59",
     ink: "#D32A00",
     icon: "comp",
-    body: "Statistics and configuration guide join planning. Skew can concentrate work on one worker while others finish earlier.",
+    body: "Statistics guide join planning. Skew piles work onto one worker while others idle.",
   },
   {
     id: "orch",
@@ -84,7 +84,7 @@ export const OV_STAGES: readonly OverviewStage[] = [
     hex: "#31A24C",
     ink: "#267E3B",
     icon: "orch",
-    body: "Airflow may repeat tasks through retries or backfills. Write semantics and stable inputs determine idempotency.",
+    body: "Airflow repeats tasks on retries and backfills. Write semantics and stable inputs decide idempotency.",
   },
   {
     id: "qual",
@@ -95,7 +95,7 @@ export const OV_STAGES: readonly OverviewStage[] = [
     hex: "#E41E3F",
     ink: "#D81A39",
     icon: "qual",
-    body: "Row-count, freshness, schema, and uniqueness checks provide evidence about selected dataset properties.",
+    body: "Row-count, freshness, schema and uniqueness checks give evidence about selected properties.",
   },
   {
     id: "disc",
@@ -106,7 +106,7 @@ export const OV_STAGES: readonly OverviewStage[] = [
     hex: "#B8770A",
     ink: "#986308",
     icon: "disc",
-    body: "The course palette, DatasetSpec, and lineage graph expose declared ownership and known dependencies.",
+    body: "Palette, DatasetSpec and lineage graph show declared ownership and known dependencies.",
   },
   {
     id: "serve",
@@ -117,7 +117,7 @@ export const OV_STAGES: readonly OverviewStage[] = [
     hex: "#0091FF",
     ink: "#0070C5",
     icon: "serve",
-    body: "A versioned metric registry reduces formula drift when consumers resolve the same registered definition.",
+    body: "A versioned metric registry reduces formula drift across consumers.",
   },
   {
     id: "gov",
@@ -128,7 +128,7 @@ export const OV_STAGES: readonly OverviewStage[] = [
     hex: "#8B5CF6",
     ink: "#7D48F5",
     icon: "gov",
-    body: "The reference gate blocks metadata that violates its configured classification and ACL rules.",
+    body: "The gate blocks metadata that breaks its classification and ACL rules.",
   },
   {
     id: "cap",
@@ -139,7 +139,7 @@ export const OV_STAGES: readonly OverviewStage[] = [
     hex: "#E85D04",
     ink: "#BB4B03",
     icon: "cap",
-    body: "Six modeled controls connect input, state, checks, and serving. Compare outputs with their recorded evidence.",
+    body: "Six controls link input, state, checks and serving. Compare outputs with their evidence.",
   },
 ];
 
@@ -153,7 +153,7 @@ export const OV_STAGES_DE: readonly OverviewStage[] = [
     hex: "#7C5CFF",
     ink: "#6E4BFF",
     icon: "ingest",
-    body: "Jedes Ereignis hat Ereignis- und Verarbeitungszeit. Die konfigurierte Nachzüglerregel bestimmt Aktualisierung, Umleitung oder Verwerfen.",
+    body: "Ereignisse tragen Ereignis- und Verarbeitungszeit. Die Nachzüglerregel entscheidet über Aktualisieren, Umleiten oder Verwerfen.",
   },
   {
     id: "stream",
@@ -164,7 +164,7 @@ export const OV_STAGES_DE: readonly OverviewStage[] = [
     hex: "#22D3EE",
     ink: "#0B798A",
     icon: "stream",
-    body: "Im Kursszenario transportiert Kafka Ereignisse; Flink wendet Fenster- und Zustellungssemantik vor der Veröffentlichung an.",
+    body: "Kafka transportiert Ereignisse; Flink wendet vor der Veröffentlichung Fenster- und Zustellungssemantik an.",
   },
   {
     id: "store",
@@ -175,7 +175,7 @@ export const OV_STAGES_DE: readonly OverviewStage[] = [
     hex: "#2D7DFF",
     ink: "#0060FD",
     icon: "store",
-    body: "Im additiven Beispiel hängt jede Partition vom vorherigen Zustand ab. Nach einer fehlerhaften Eingabe oder Regel wird der betroffene Bereich neu aufgebaut.",
+    body: "Jede Partition hängt vom vorherigen Zustand ab. Nach fehlerhafter Eingabe oder Regel den betroffenen Bereich neu aufbauen.",
   },
   {
     id: "comp",
@@ -186,7 +186,7 @@ export const OV_STAGES_DE: readonly OverviewStage[] = [
     hex: "#FF7A59",
     ink: "#D32A00",
     icon: "comp",
-    body: "Statistiken und Konfiguration steuern die Join-Planung. Skew kann Arbeit auf einen Worker konzentrieren, während andere früher fertig sind.",
+    body: "Statistiken steuern die Join-Planung. Skew häuft Arbeit auf einem Worker, während andere warten.",
   },
   {
     id: "orch",
@@ -197,7 +197,7 @@ export const OV_STAGES_DE: readonly OverviewStage[] = [
     hex: "#31A24C",
     ink: "#267E3B",
     icon: "orch",
-    body: "Airflow kann Tasks durch Wiederholungen oder Backfills mehrfach ausführen. Schreibsemantik und stabile Eingaben bestimmen die Idempotenz.",
+    body: "Airflow wiederholt Tasks bei Retries und Backfills. Schreibsemantik und stabile Eingaben entscheiden über Idempotenz.",
   },
   {
     id: "qual",
@@ -208,7 +208,7 @@ export const OV_STAGES_DE: readonly OverviewStage[] = [
     hex: "#E41E3F",
     ink: "#D81A39",
     icon: "qual",
-    body: "Prüfungen für Zeilenzahl, Aktualität, Schema und Eindeutigkeit liefern Nachweise zu ausgewählten Datensatzeigenschaften.",
+    body: "Prüfungen für Zeilenzahl, Aktualität, Schema und Eindeutigkeit belegen ausgewählte Eigenschaften.",
   },
   {
     id: "disc",
@@ -219,7 +219,7 @@ export const OV_STAGES_DE: readonly OverviewStage[] = [
     hex: "#B8770A",
     ink: "#986308",
     icon: "disc",
-    body: "Kurspalette, DatasetSpec und Lineage-Graph zeigen deklarierte Zuständigkeit und bekannte Abhängigkeiten.",
+    body: "Palette, DatasetSpec und Lineage-Graph zeigen deklarierte Zuständigkeit und bekannte Abhängigkeiten.",
   },
   {
     id: "serve",
@@ -230,7 +230,7 @@ export const OV_STAGES_DE: readonly OverviewStage[] = [
     hex: "#0091FF",
     ink: "#0070C5",
     icon: "serve",
-    body: "Ein versioniertes Metrikregister reduziert Formelabweichung, wenn Verbraucher dieselbe registrierte Definition auflösen.",
+    body: "Ein versioniertes Metrikregister verringert Formelabweichungen zwischen Verbrauchern.",
   },
   {
     id: "gov",
@@ -241,7 +241,7 @@ export const OV_STAGES_DE: readonly OverviewStage[] = [
     hex: "#8B5CF6",
     ink: "#7D48F5",
     icon: "gov",
-    body: "Die Referenzschranke blockiert Metadaten, die gegen konfigurierte Klassifikations- und ACL-Regeln verstoßen.",
+    body: "Die Schranke blockiert Metadaten, die gegen ihre Klassifikations- und ACL-Regeln verstoßen.",
   },
   {
     id: "cap",
@@ -252,7 +252,7 @@ export const OV_STAGES_DE: readonly OverviewStage[] = [
     hex: "#E85D04",
     ink: "#BB4B03",
     icon: "cap",
-    body: "Sechs modellierte Kontrollen verbinden Eingabe, Zustand, Prüfungen und Bereitstellung. Ausgaben werden mit ihren Nachweisen verglichen.",
+    body: "Sechs Kontrollen verbinden Eingabe, Zustand, Prüfungen und Bereitstellung. Vergleich Ausgaben mit ihren Nachweisen.",
   },
 ];
 

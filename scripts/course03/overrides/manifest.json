@@ -10,7 +10,6 @@
     "assets/fonts/Typing-Static-500.ttf": "d88596e9745ddfa95b1b5516cbf1d47bc541a7bd19a25970549aa6fe0c3ef2c8",
     "assets/fonts/Typing-Static-600.ttf": "d097fe311c80163e77ea6f7398414ad7276d7fa86bdf57d16a41e12540e6d380",
     "assets/fonts/Typing-Static-700.ttf": "762229d8e1bcb0000852b2bb6f2ae9ae72b4e71c81986fc7d10f0defb85227c3",
-    "assets/globe.svg": "b77a3581fe56ed9cb53bacaf88e5af451176f962cecec5129c5b6b33ac70f980",
     "assets/lockup-horizontal-dark.svg": "13ff70fa608cdf421a8b3ff3046e22cda7ba8d5e72271b4ad64c659bb1bfe1e2",
     "assets/lockup-horizontal.svg": "477a5b796f82ea5afb453b6ab03e6dbdf5abc066aa11cd710e4fbdec079d75ed",
     "assets/mark-black.svg": "ca6b5b231a7d577fcfddea82d63300f9652e4da0c4e39fa1c596bc58ad8d1384",
@@ -25,7 +24,6 @@
     "data-readiness-kit/semantic-template/model.yml": "dfc94d00ae7b94c13c88ee0ced415428356d22a8bf97d085c82bf0db4990d515",
     "data-readiness-kit/semantic-template/policy.yml": "cb209aaeca81c16a857ee3beaa8846b9a483e479987e49bf3c8c78a2a87c296a",
     "data-readiness-kit/semantic-template/verified-questions.yml": "a899e9e7b31315004b87fd56f28efe6b88eb7f58004ba600af6a59c2cdb97249",
-    "lib/cover-globe.css": "6e8ce0bbbc03f9807853472202af2f29a00d3683f2c08d653437a62fcdd36cba",
     "lib/deck-runtime.js": "c44c12bfedf1136655fe2289b907149e8abf20241a052bd75af440dca07b1e6c",
     "lib/deck-stage.js": "de4da3214d3cb262b7776606fbbab1b74cb87928f0044b95de51b6523fb0f5dd",
     "lib/demo-adapter.js": "50fa9b643d17a25e3b2b33cc1b14e785bef1d129128f4642cb5f6a5d00134c5e",
@@ -90,7 +88,7 @@
     },
     "data-readiness-kit/readiness-lab.html": {
       "original": "b779d2d693282a2a6c6025921e5537bb435ba264d2fe67aec0d59511ffeffad8",
-      "override": "78cda040f7abd998af1a6e7f4f283c02044d36b72ecc07fde9e59620a659195d"
+      "override": "aff289390bf745bae0d144eed9a19828c8d39c639ababe2884b7a02e5431520a"
     },
     "data-readiness-kit/semantic-template/metric.yml": {
       "original": "b48caed51267d39a779d14258dc6243091c8ce19c1da132b14f1b1eddc381842",
@@ -108,17 +106,13 @@
       "original": "a899e9e7b31315004b87fd56f28efe6b88eb7f58004ba600af6a59c2cdb97249",
       "override": "8b3a3a60cef09884f53b0c56eb9a8e6f9b82d5f410c0aec2b351e4c6e8c400de"
     },
-    "lib/cover-globe.css": {
-      "original": "6e8ce0bbbc03f9807853472202af2f29a00d3683f2c08d653437a62fcdd36cba",
-      "override": "7839494bf8bfca0d572403907aef78b9d11f5c0ce05cad69d332ee68d008571e"
-    },
     "lib/deck-runtime.js": {
       "original": "c44c12bfedf1136655fe2289b907149e8abf20241a052bd75af440dca07b1e6c",
       "override": "c5e5fd894634e8eb6c04de7b8e597da7cab8ece3325452517728c6cfce06b6e0"
     },
     "lib/deck-stage.js": {
       "original": "de4da3214d3cb262b7776606fbbab1b74cb87928f0044b95de51b6523fb0f5dd",
-      "override": "9f2e022a9b62e0e387b9743e779c82ae3d9561fc6cea60b02222afe9fe6ba351"
+      "override": "5ef1d7029a79844a74dae2ee20c854e58e3682b01ee7ca1880c4431500924f8f"
     },
     "lib/presenter-notes.js": {
       "original": "a446b5d1620dc0c797561637d574554700fc482c9668a2309dd7aec8293460e8",
@@ -182,7 +176,7 @@
     },
     "lib/scenes/cover.css": {
       "original": "b9ab6a8cf8b53a8bd8163cffe5417276ef4d721e68148615914fd4017401456b",
-      "override": "e7236e163f951d41bfe3799ee8beb04a0316171392b8f918b5e3a26004c712c0"
+      "override": "914187987ac57dd11e8a2da6c8db4521d9b35df864a655a08664eb36c4811cd8"
     },
     "lib/scenes/evaluation.css": {
       "original": "558032cc89d7502e43948d50e0c027464a8d8243300ab2380be456df8a22d44d",
@@ -238,11 +232,11 @@
     },
     "lib/story.css": {
       "original": "3c33a71d5a80d2cc420ebccace57ffb47cf4373e42708b430148b974eb7284fc",
-      "override": "04d275a7d13c0d9b7a9268c841b9fce14c87183b7680876cee490e25de78b150"
+      "override": "4100114b2991af1e8a94a761867bb3d3b96a9aa459cdca50a16f23c63c5ffd8d"
     },
     "lib/tokens.css": {
       "original": "65d4509f960200a581547060664ee4e99adda7310e7f2beda2dcebeb64401134",
-      "override": "e871354d871766d2fa0adacd23b5ae4ccb0cb929d9807bcba2c361b41ea0b694"
+      "override": "b5c2131e80906e59466b8eb8a22b167d66a15847c9f0b688ac1d988f3cfa63a9"
     },
     "presenter.html": {
       "original": "7779628c833430709a4a5c1d5eb39aa31b7694ed7a516ce150eec0eaa09634db",
@@ -250,7 +244,7 @@
     },
     "slides.html": {
       "original": "7da1ad2f4e46b636302a970a0ca822253861ebab40465fc5d004311a1c96c783",
-      "override": "a2e098c003a83655632dd135d06b46cd7ef74869ab79b5a122a8fe182e0faed7"
+      "override": "db70026f1ca469d469e063c0192b850d49dc0247dd091280964f4bdf68cf4597"
     }
   }
 }

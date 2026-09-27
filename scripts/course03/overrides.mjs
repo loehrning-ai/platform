@@ -48,6 +48,7 @@ export function isRepositoryAuthored(name) {
     name === "demo.html" ||
     /^assets\/fonts\/Typing-(?:Regular|Medium|Bold)\.woff2$/.test(name) ||
     name === "card-preview.webp" ||
+    name === "assets/plakat-cover.svg" ||
     name === "bundle-manifest.json" ||
     name === "PUBLICATION.md" ||
     name === "data-readiness-kit.zip" ||

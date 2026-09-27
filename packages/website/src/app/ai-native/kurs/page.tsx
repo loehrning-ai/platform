@@ -56,8 +56,8 @@ export default async function AiNativeCourseIndexPage() {
         </h1>
         <p className="mt-3 text-muted-foreground">
           {isEnglish
-            ? "Four modules and 27 lessons. Work at your own pace. Start with module 1."
-            : "Vier Module und 27 Lektionen. Bearbeitung im eigenen Tempo. Beginne mit Modul 1."}
+            ? "Four modules, 27 lessons. Start with module 1."
+            : "Vier Module, 27 Lektionen. Beginne mit Modul 1."}
         </p>
       </header>
 
@@ -77,9 +77,6 @@ export default async function AiNativeCourseIndexPage() {
                     <h2 className="text-lg font-semibold text-foreground">
                       {mod.title}
                     </h2>
-                    <span className="rounded-none bg-brand-sand/15 px-2 py-0.5 text-xs font-medium text-brand-sand">
-                      {isEnglish ? "Free" : "Kostenlos"}
-                    </span>
                   </div>
                   <p className="mt-1 text-sm text-muted-foreground">
                     {mod.subtitle}

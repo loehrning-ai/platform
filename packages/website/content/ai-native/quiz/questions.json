@@ -3,14 +3,14 @@
     "id": "an_w01",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Im AI-Native Arbeitskurs bezeichnet RCTFC fünf Teile eines klaren Modell-Briefings. Wofür steht das erste \"R\"?",
+    "questionText": "RCTFC nennt fünf Teile eines klaren Modell-Briefings. Wofür steht das erste \"R\"?",
     "answerOptions": [
-      { "id": "a", "text": "Rolle. Du definierst eine für die Aufgabe nützliche Perspektive, etwa die eines erfahrenen Vertriebsleiters.", "isCorrect": true },
+      { "id": "a", "text": "Rolle. Du gibst eine nützliche Perspektive vor, etwa Vertriebsleitung.", "isCorrect": true },
       { "id": "b", "text": "Recherche. Claude soll zuerst das Internet durchsuchen.", "isCorrect": false },
       { "id": "c", "text": "Report. Claude soll die Antwort als Bericht formatieren.", "isCorrect": false },
       { "id": "d", "text": "Review. Du überprüfst die Antwort am Ende selbst.", "isCorrect": false }
     ],
-    "explanation": "RCTFC steht für Rolle, Kontext, Auftrag, Format und Constraints. Die Rolle definiert eine nützliche Perspektive; die weiteren Felder bestimmen Arbeit, Ausgabe und Grenzen.",
+    "explanation": "RCTFC steht für Rolle, Kontext, Auftrag, Format und Constraints. Die weiteren Felder bestimmen Arbeit, Ausgabe und Grenzen.",
     "version": 1,
     "active": true
   },
@@ -21,11 +21,11 @@
     "questionText": "Welcher Wechsel prägt Modul 1 \"Von der Aufgabe zum Workflow\"?",
     "answerOptions": [
       { "id": "a", "text": "Du ersetzt jeden Mitarbeiter durch KI.", "isCorrect": false },
-      { "id": "b", "text": "Du wechselst von rein manueller Ausführung zur Orchestrierung: Arbeit definieren, begrenzte Schritte delegieren und Ergebnisse prüfen.", "isCorrect": true },
+      { "id": "b", "text": "Du orchestrierst: Arbeit definieren, begrenzte Schritte delegieren, Ergebnisse prüfen.", "isCorrect": true },
       { "id": "c", "text": "Du lernst, selbst Code zu schreiben.", "isCorrect": false },
       { "id": "d", "text": "Du nutzt KI nur für E-Mails, sonst nichts.", "isCorrect": false }
     ],
-    "explanation": "Orchestrierung bedeutet, geeignete Arbeit auszuwählen, sie präzise zu beschreiben, Kontrollen festzulegen und den Output zu prüfen. Urteilskraft und Verantwortung bleiben bei dir.",
+    "explanation": "Orchestrierung heißt, geeignete Arbeit auswählen, präzise beschreiben, Kontrollen setzen und prüfen. Urteil und Verantwortung bleiben bei dir.",
     "version": 1,
     "active": true
   },
@@ -37,7 +37,7 @@
     "answerOptions": [
       { "id": "a", "text": "Das manuelle Tippen jeder einzelnen Zeile.", "isCorrect": false },
       { "id": "b", "text": "Ausschließlich die Rechtschreibkorrektur.", "isCorrect": false },
-      { "id": "c", "text": "Urteilskraft anwenden, die Eignung des Ergebnisses bewerten und die Verantwortung für seine Nutzung tragen.", "isCorrect": true },
+      { "id": "c", "text": "Urteilen, die Eignung des Ergebnisses bewerten und seine Nutzung verantworten.", "isCorrect": true },
       { "id": "d", "text": "Nichts mehr, Claude übernimmt alle Entscheidungen.", "isCorrect": false }
     ],
     "explanation": "Delegieren nimmt dir keine Verantwortung ab. Briefing, Berechtigungen, Fakten- und Fachprüfung und die Entscheidung über die Nutzung bleiben bei dir.",
@@ -55,7 +55,7 @@
       { "id": "c", "text": "Kompilieren, Testen und Deployen.", "isCorrect": false },
       { "id": "d", "text": "Lesen, Schreiben und Rechnen.", "isCorrect": false }
     ],
-    "explanation": "Die drei Muster: ein erster Entwurf, die Analyse von Material, das du bereitstellst, und Recherche anhand definierter Fragen. Jedes braucht passende Quellen- und Outputprüfungen.",
+    "explanation": "Entwurf, Analyse bereitgestellten Materials und Recherche entlang definierter Fragen brauchen jeweils passende Quellen- und Outputprüfungen.",
     "version": 1,
     "active": true
   },
@@ -70,7 +70,7 @@
       { "id": "c", "text": "Marketing, Vertrieb, Finanzen, HR und IT.", "isCorrect": false },
       { "id": "d", "text": "Drafting, Delegation, Automation, Knowledge und Governance.", "isCorrect": true }
     ],
-    "explanation": "Das Selbstassessment deckt Drafting, Delegation, Automation, Knowledge und Governance in zehn Szenarien ab. Es ist eine diagnostische Übung, keine benotete Qualifikation.",
+    "explanation": "Das Selbstassessment prüft diese fünf Dimensionen in zehn Szenarien und ist keine benotete Qualifikation.",
     "version": 1,
     "active": true
   },
@@ -82,10 +82,10 @@
     "answerOptions": [
       { "id": "a", "text": "Claude ist eine reine Suchmaschine.", "isCorrect": false },
       { "id": "b", "text": "Claude ist ein Ersatz für dein gesamtes Team.", "isCorrect": false },
-      { "id": "c", "text": "Als konfigurierbares System mit definiertem Kontext, begrenzten Aufgaben, Rechten und Review.", "isCorrect": true },
+      { "id": "c", "text": "Als konfigurierbares System mit Kontext, begrenzten Aufgaben, Rechten und Review.", "isCorrect": true },
       { "id": "d", "text": "Claude ist nur ein Chatbot für Smalltalk.", "isCorrect": false }
     ],
-    "explanation": "Projects, Skills, Plugins und MCP konfigurieren Kontext und Zugriffe. Du begrenzt Rechte, prüfst Ergebnisse und verantwortest Entscheidungen.",
+    "explanation": "Projects, Skills, Plugins und MCP setzen Kontext und Zugriffe. Du begrenzt Rechte, prüfst Ergebnisse und entscheidest.",
     "version": 1,
     "active": true
   },
@@ -95,12 +95,12 @@
     "difficulty": "medium",
     "questionText": "Wozu dient ein Claude Project mit dauerhaften Anweisungen?",
     "answerOptions": [
-      { "id": "a", "text": "Es bündelt relevanten Kontext, Anweisungen und Arbeitsergebnisse in einem wiederverwendbaren Arbeitsbereich für ein definiertes Thema.", "isCorrect": true },
+      { "id": "a", "text": "Ein wiederverwendbarer Arbeitsbereich mit Kontext, Anweisungen und Ergebnissen zu einem Thema.", "isCorrect": true },
       { "id": "b", "text": "Es ist ein statisches Datei-Backup ohne Arbeitskontext.", "isCorrect": false },
       { "id": "c", "text": "Es löscht automatisch alle Chats nach 24 Stunden.", "isCorrect": false },
       { "id": "d", "text": "Es ist ein reines Datei-Backup ohne KI-Funktion.", "isCorrect": false }
     ],
-    "explanation": "Ein Project hält Anweisungen und Referenzmaterial zusammen, damit du den Kontext nicht für jede Aufgabe neu eingibst. Funktionen und Aufbewahrung hängen vom aktuellen Produkt und den Kontoeinstellungen ab.",
+    "explanation": "So gibst du den Kontext nicht für jede Aufgabe neu ein. Funktionen und Aufbewahrung hängen von Produkt und Kontoeinstellungen ab.",
     "version": 1,
     "active": true
   },
@@ -108,14 +108,14 @@
     "id": "an_w08",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Connectors können Claude mit Diensten wie Gmail, Kalender und Drive verbinden. Wie wird der Zugriff typischerweise autorisiert?",
+    "questionText": "Connectors verbinden Claude etwa mit Gmail, Kalender und Drive. Wie wird der Zugriff typischerweise autorisiert?",
     "answerOptions": [
       { "id": "a", "text": "Indem man Claude sein E-Mail-Passwort im Klartext nennt.", "isCorrect": false },
       { "id": "b", "text": "Über einen physischen USB-Stick.", "isCorrect": false },
       { "id": "c", "text": "Connectors brauchen gar keine Autorisierung.", "isCorrect": false },
-      { "id": "d", "text": "Über OAuth, das definierte Zugriffsrechte ohne Weitergabe des Kontopassworts erteilt.", "isCorrect": true }
+      { "id": "d", "text": "Über OAuth, mit definierten Rechten ohne Weitergabe des Passworts.", "isCorrect": true }
     ],
-    "explanation": "OAuth vergibt begrenzte Zugriffsrechte, ohne dass die Anwendung das Passwort des verbundenen Kontos sieht. Beschränke Freigaben auf die nötigen Scopes; beim Anbieter lassen sie sich normalerweise widerrufen.",
+    "explanation": "OAuth vergibt begrenzte Rechte, ohne dass die Anwendung das Passwort sieht. Gib nur nötige Scopes frei; beim Anbieter lassen sie sich normalerweise widerrufen.",
     "version": 1,
     "active": true
   },
@@ -128,9 +128,9 @@
       { "id": "a", "text": "Ein Zertifikat, das man nach einem Kurs erhält.", "isCorrect": false },
       { "id": "b", "text": "Ein kostenpflichtiges Abo-Upgrade.", "isCorrect": false },
       { "id": "c", "text": "Eine Hardware-Komponente von Anthropic.", "isCorrect": false },
-      { "id": "d", "text": "Ein wiederverwendbares Anweisungspaket für eine wiederkehrende Aufgabe, etwa mit SKILL.md und ergänzenden Ressourcen.", "isCorrect": true }
+      { "id": "d", "text": "Ein wiederverwendbares Anweisungspaket für eine wiederkehrende Aufgabe, etwa mit SKILL.md.", "isCorrect": true }
     ],
-    "explanation": "Ein Skill bündelt Anweisungen und optionale Ressourcen für einen wiederkehrenden Ablauf. Die genaue Struktur hängt vom Produkt ab; Berechtigungen und enthaltene Dateien prüfst du vor der Nutzung.",
+    "explanation": "Die Struktur hängt vom Produkt ab. Berechtigungen und enthaltene Dateien prüfst du vor der Nutzung.",
     "version": 1,
     "active": true
   },
@@ -141,11 +141,11 @@
     "questionText": "Wofür steht MCP?",
     "answerOptions": [
       { "id": "a", "text": "Manual Copy Protocol.", "isCorrect": false },
-      { "id": "b", "text": "Model Context Protocol, ein offenes Protokoll zur Verbindung von KI-Anwendungen mit externen Tools und Datenquellen.", "isCorrect": true },
+      { "id": "b", "text": "Model Context Protocol, ein offenes Protokoll für Tools und Datenquellen.", "isCorrect": true },
       { "id": "c", "text": "Managed Cloud Platform.", "isCorrect": false },
       { "id": "d", "text": "Multi-Channel-Posting.", "isCorrect": false }
     ],
-    "explanation": "Ein MCP-Server stellt einem kompatiblen Client definierte Tools oder Ressourcen bereit. Die Verbindung erweitert Funktionen und Risiken; Code, Transport, Herkunft und Berechtigungen prüfst du vorher.",
+    "explanation": "Ein MCP-Server stellt einem Client Tools oder Ressourcen bereit und erweitert damit Funktionen und Risiken. Code, Transport, Herkunft und Berechtigungen prüfst du vorher.",
     "version": 1,
     "active": true
   },
@@ -157,10 +157,10 @@
     "answerOptions": [
       { "id": "a", "text": "README.txt im Download-Ordner.", "isCorrect": false },
       { "id": "b", "text": "Eine Excel-Tabelle mit Makros.", "isCorrect": false },
-      { "id": "c", "text": "CLAUDE.md, die gepflegten Projektkontext, Anweisungen und Konventionen festhält.", "isCorrect": true },
+      { "id": "c", "text": "CLAUDE.md mit gepflegtem Projektkontext und Konventionen.", "isCorrect": true },
       { "id": "d", "text": "Die Windows-Registry.", "isCorrect": false }
     ],
-    "explanation": "Claude Code kann eine CLAUDE.md aus der Projekthierarchie als Anweisungsdatei laden. Halte sie knapp und aktuell, und leg dort keine Secrets ab.",
+    "explanation": "Claude Code kann CLAUDE.md aus der Projekthierarchie laden. Halte sie knapp, aktuell und frei von Secrets.",
     "version": 1,
     "active": true
   },
@@ -168,14 +168,14 @@
     "id": "an_w12",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Welche Funktion von Claude Code ist für Arbeit mit vielen lokalen Dateien besonders relevant?",
+    "questionText": "Welche Funktion von Claude Code ist bei vielen lokalen Dateien besonders relevant?",
     "answerOptions": [
-      { "id": "a", "text": "Kontrollierter Dateizugriff und Batch-Operationen über mehrere Dateien, jeweils mit Berechtigungs- und Ergebnisprüfung.", "isCorrect": true },
+      { "id": "a", "text": "Kontrollierte Batch-Operationen über viele Dateien, mit Rechte- und Ergebnisprüfung.", "isCorrect": true },
       { "id": "b", "text": "Es spielt während der Arbeit Musik ab.", "isCorrect": false },
       { "id": "c", "text": "Es ist nur für Software-Entwickler nutzbar.", "isCorrect": false },
       { "id": "d", "text": "Es ersetzt das Betriebssystem.", "isCorrect": false }
     ],
-    "explanation": "Claude Code kann genehmigte Operationen über mehrere Dateien ausführen. Vor der Annahme prüfst du Zielpfade, geplante Änderungen und den resultierenden Diff.",
+    "explanation": "Vor der Annahme prüfst du Zielpfade, geplante Änderungen und den Diff.",
     "version": 1,
     "active": true
   },
@@ -188,9 +188,9 @@
       { "id": "a", "text": "Weil eine Wissensbasis die eigene Urteilskraft ersetzt.", "isCorrect": false },
       { "id": "b", "text": "Weil Obsidian dein Gedächtnis löscht.", "isCorrect": false },
       { "id": "c", "text": "Weil jede KI eine bestimmte Ordnerstruktur voraussetzt.", "isCorrect": false },
-      { "id": "d", "text": "Weil Arbeitswissen oft über Nachrichten, Notizen und Ordner verteilt ist und in einem gepflegten, durchsuchbaren System besser genutzt werden kann.", "isCorrect": true }
+      { "id": "d", "text": "Weil verstreutes Arbeitswissen in einem gepflegten, durchsuchbaren System besser nutzbar ist.", "isCorrect": true }
     ],
-    "explanation": "Eine externe Wissensbasis ordnet Quellen, Links und Pflegezuständigkeiten. Obsidian und Retrieval-Werkzeuge können die Suche unterstützen, ersetzen aber weder Quellenprüfung noch fachliche Verantwortung.",
+    "explanation": "Obsidian und Retrieval-Werkzeuge unterstützen die Suche, ersetzen aber weder Quellenprüfung noch fachliche Verantwortung.",
     "version": 1,
     "active": true
   },
@@ -203,9 +203,9 @@
       { "id": "a", "text": "Plan, Act, Review, Adjust.", "isCorrect": false },
       { "id": "b", "text": "People, Assets, Risks, Audits.", "isCorrect": false },
       { "id": "c", "text": "Print, Archive, Read, Approve.", "isCorrect": false },
-      { "id": "d", "text": "Projects, Areas, Resources, Archives, eine einfache Ordnerstruktur für dein Wissen.", "isCorrect": true }
+      { "id": "d", "text": "Projects, Areas, Resources, Archives.", "isCorrect": true }
     ],
-    "explanation": "PARA steht für Projects, Areas, Resources und Archives. Maps of Content können die Navigation über diese Ordner ergänzen, ohne ein komplexes Notizsystem vorauszusetzen.",
+    "explanation": "Maps of Content können die Navigation über diese vier Ordner ergänzen, ohne ein komplexes Notizsystem vorauszusetzen.",
     "version": 1,
     "active": true
   },
@@ -215,12 +215,12 @@
     "difficulty": "medium",
     "questionText": "Wie können Smart Connections und Copilot Vault-Inhalte nach Bedeutung durchsuchbar machen?",
     "answerOptions": [
-      { "id": "a", "text": "Über Embeddings, die Text numerisch darstellen, damit semantisch verwandte Passagen abgerufen werden können.", "isCorrect": true },
+      { "id": "a", "text": "Über Embeddings, die Text als Zahlen darstellen und verwandte Passagen finden.", "isCorrect": true },
       { "id": "b", "text": "Nur über exakte Wort-für-Wort-Suche wie bei Strg+F.", "isCorrect": false },
       { "id": "c", "text": "Gar nicht, der Vault bleibt eine reine Sammlung.", "isCorrect": false },
       { "id": "d", "text": "Durch Ausdrucken und Einscannen.", "isCorrect": false }
     ],
-    "explanation": "Embeddings erlauben die Suche nach ähnlicher Bedeutung statt nur nach identischen Wörtern. Qualität und Datenfluss hängen von Modell, Index und Konfiguration ab.",
+    "explanation": "So findest du ähnliche Bedeutung statt nur gleicher Wörter. Qualität und Datenfluss hängen von Modell, Index und Konfiguration ab.",
     "version": 1,
     "active": true
   },
@@ -228,14 +228,14 @@
     "id": "an_w16",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Wofür ist der Obsidian Web Clipper gedacht (Modul 3)?",
+    "questionText": "Wofür ist der Obsidian Web Clipper gedacht?",
     "answerOptions": [
       { "id": "a", "text": "Videos zu schneiden.", "isCorrect": false },
       { "id": "b", "text": "Bilder aus dem Vault zu löschen.", "isCorrect": false },
       { "id": "c", "text": "Den Browser-Verlauf zu leeren.", "isCorrect": false },
-      { "id": "d", "text": "Webinhalte im Vault zu speichern und sie optional mit einem Template oder KI-gestützten Interpreter aufzubereiten.", "isCorrect": true }
+      { "id": "d", "text": "Webinhalte im Vault speichern, optional per Template oder KI-Interpreter aufbereitet.", "isCorrect": true }
     ],
-    "explanation": "Der Web Clipper überträgt ausgewählte Webinhalte in den Vault. Ein Template oder Interpreter kann sie strukturieren; die gespeicherte Notiz sollte Quelle und Erfassungsdatum behalten.",
+    "explanation": "Die gespeicherte Notiz sollte Quelle und Erfassungsdatum behalten.",
     "version": 1,
     "active": true
   },
@@ -246,11 +246,11 @@
     "questionText": "Warum untersucht Modul 4 das Self-Hosting von n8n?",
     "answerOptions": [
       { "id": "a", "text": "Weil Self-Hosting immer kostenlos ist.", "isCorrect": false },
-      { "id": "b", "text": "Weil Self-Hosting mehr Kontrolle über Infrastruktur und Datenflüsse geben kann, während Datenschutzkonformität weiterhin von Verträgen, Konfiguration, Zugriff und Betrieb abhängt.", "isCorrect": true },
+      { "id": "b", "text": "Weil es mehr Kontrolle über Infrastruktur und Datenflüsse geben kann.", "isCorrect": true },
       { "id": "c", "text": "Weil n8n in der Cloud nicht funktioniert.", "isCorrect": false },
       { "id": "d", "text": "Weil man dafür kein Docker braucht.", "isCorrect": false }
     ],
-    "explanation": "Self-Hosting kann ausgewählte Verarbeitung auf kontrollierter Infrastruktur halten. Es ist keine Compliance-Abkürzung: Updates, Zugriffsschutz, Backups, Logging, Rechtsgrundlage und Auftragsverarbeitung bleiben zu prüfen. Der Kurs ersetzt keine Rechtsberatung.",
+    "explanation": "Es ist keine Compliance-Abkürzung: Updates, Zugriffsschutz, Backups, Logging, Rechtsgrundlage, Verträge und Auftragsverarbeitung bleiben zu prüfen. Der Kurs ersetzt keine Rechtsberatung.",
     "version": 1,
     "active": true
   },
@@ -258,14 +258,14 @@
     "id": "an_w18",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Im Sandbox-Build \"E-Mail-Triage → Review-Liste\" (Modul 4): welche Komponente entscheidet, in welchen Pfad eine eingehende Mail läuft?",
+    "questionText": "Im Sandbox-Build \"E-Mail-Triage → Review-Liste\" (Modul 4): Welche Komponente leitet eine eingehende Mail in den passenden Pfad?",
     "answerOptions": [
       { "id": "a", "text": "Der Drucker-Treiber.", "isCorrect": false },
       { "id": "b", "text": "Eine zufällige Auswahl.", "isCorrect": false },
-      { "id": "c", "text": "Ein Switch Node, der die Nachricht anhand des Klassifikationsergebnisses in den passenden Zweig leitet.", "isCorrect": true },
+      { "id": "c", "text": "Ein Switch Node, der nach dem Klassifikationsergebnis routet.", "isCorrect": true },
       { "id": "d", "text": "Der Nutzer muss jede Mail manuell zuordnen.", "isCorrect": false }
     ],
-    "explanation": "Die Übung verwendet einen Beispiel-Mail-Trigger, einen Modellaufruf zur Klassifikation und einen Switch Node zum Routing. Eine Produktivversion braucht zusätzlich Tests, Unsicherheitsbehandlung, Review-Warteschlange und Fehlerpfade.",
+    "explanation": "Die Übung nutzt Beispiel-Mail-Trigger, Modellaufruf zur Klassifikation und Switch Node. Produktiv braucht es zusätzlich Tests, Unsicherheitsbehandlung, Review-Warteschlange und Fehlerpfade.",
     "version": 1,
     "active": true
   },
@@ -278,9 +278,9 @@
       { "id": "a", "text": "Immer, weil lokale Modelle Claude qualitativ überlegen sind.", "isCorrect": false },
       { "id": "b", "text": "Nie, lokale Modelle sind im Kurs verboten.", "isCorrect": false },
       { "id": "c", "text": "Nur für das Abspielen von Videos.", "isCorrect": false },
-      { "id": "d", "text": "Wenn eine geprüfte Architektur Dokumente auf kontrollierter lokaler Infrastruktur halten soll und ein geeignetes Modell samt Sicherheitskontrollen vorhanden ist.", "isCorrect": true }
+      { "id": "d", "text": "Wenn Dokumente lokal bleiben sollen und Modell und Sicherheitskontrollen passen.", "isCorrect": true }
     ],
-    "explanation": "LM Studio kann unterstützte Modelle auf lokaler Hardware ausführen und dadurch Transfers an eine gehostete API vermeiden. Zugriffe, Modelldateien, Logs, Gerätesicherheit, Outputqualität und interne Richtlinien bleiben zu prüfen.",
+    "explanation": "LM Studio führt unterstützte Modelle lokal aus und vermeidet so Transfers an eine gehostete API. Zugriffe, Modelldateien, Logs, Gerätesicherheit, Outputqualität und Richtlinien bleiben zu prüfen.",
     "version": 1,
     "active": true
   },
@@ -288,14 +288,14 @@
     "id": "an_w20",
     "questionType": "single_choice",
     "difficulty": "hard",
-    "questionText": "Der EU-AI-Act-Abschnitt in Modul 4 unterscheidet Anbieter und Betreiber. Was bezeichnet ein \"Deployer\" beziehungsweise Betreiber?",
+    "questionText": "Modul 4 unterscheidet nach dem EU AI Act Anbieter und Betreiber. Was ist ein Betreiber (Deployer)?",
     "answerOptions": [
       { "id": "a", "text": "Wer die Server-Hardware im Rechenzentrum verkabelt.", "isCorrect": false },
-      { "id": "b", "text": "Eine Person oder Organisation, die ein KI-System unter eigener Verantwortung verwendet, ausgenommen rein persönliche, nicht berufliche Tätigkeiten.", "isCorrect": true },
+      { "id": "b", "text": "Wer ein KI-System eigenverantwortlich nutzt, außer rein persönlich, nicht beruflich.", "isCorrect": true },
       { "id": "c", "text": "Ein Synonym für Endkunde ohne jede Pflicht.", "isCorrect": false },
       { "id": "d", "text": "Eine Behörde, die KI verbietet.", "isCorrect": false }
     ],
-    "explanation": "Der EU AI Act definiert getrennte Rollen, darunter Anbieter und Betreiber. Welche Pflichten greifen, hängt von System, Risikoklasse, Rolle und Einsatz ab. Eine Organisation, die ein System unter eigener Verantwortung verwendet, ist grundsätzlich Betreiber.",
+    "explanation": "Welche Pflichten greifen, hängt von System, Risikoklasse, Rolle und Einsatz ab.",
     "version": 1,
     "active": true
   },
@@ -307,10 +307,10 @@
     "answerOptions": [
       { "id": "a", "text": "Free Risk Insurance Agreement.", "isCorrect": false },
       { "id": "b", "text": "Federal Reporting Information Act.", "isCorrect": false },
-      { "id": "c", "text": "Fundamental Rights Impact Assessment, eine Grundrechte-Folgenabschätzung für bestimmte Betreiber und qualifizierende Hochrisiko-Einsätze.", "isCorrect": true },
+      { "id": "c", "text": "Fundamental Rights Impact Assessment, Grundrechte-Folgenabschätzung für bestimmte Betreiber und Hochrisiko-Einsätze.", "isCorrect": true },
       { "id": "d", "text": "Final Review Internal Audit.", "isCorrect": false }
     ],
-    "explanation": "FRIA steht für Fundamental Rights Impact Assessment. Art. 27 des EU AI Act verpflichtet bestimmte Betreiber bei bestimmten Hochrisiko-Systemen; eine FRIA ist keine allgemeine Pflicht für jedes KI-System.",
+    "explanation": "Art. 27 des EU AI Act verlangt sie von bestimmten Betreibern bei bestimmten Hochrisiko-Systemen, nicht für jedes KI-System.",
     "version": 1,
     "active": true
   },
@@ -320,12 +320,12 @@
     "difficulty": "easy",
     "questionText": "Welchen Umfang setzt der Capstone-Brief in Modul 4?",
     "answerOptions": [
-      { "id": "a", "text": "Einen begrenzten Workflow als Pilot planen, dokumentieren und mit freigegebenen Daten testen; Produktivbetrieb folgt erst nach den erforderlichen Kontrollen und Freigaben.", "isCorrect": true },
+      { "id": "a", "text": "Einen begrenzten Workflow als Pilot mit freigegebenen Daten planen, dokumentieren und testen.", "isCorrect": true },
       { "id": "b", "text": "Eine 100-seitige theoretische Hausarbeit zu schreiben.", "isCorrect": false },
       { "id": "c", "text": "Ein börsenreifes Startup zu gründen.", "isCorrect": false },
       { "id": "d", "text": "Nichts zu liefern, der Capstone ist optional und ohne Kriterien.", "isCorrect": false }
     ],
-    "explanation": "Der Capstone ist ein kleiner, prüfbarer Workflow. Zeitbudget und Umfang richten sich nach Verfügbarkeit und Risiko; die Rubrik prüft Dokumentation, Messung, Fehlerbehandlung und Kontrollen, kein garantiertes Deployment-Datum.",
+    "explanation": "Produktivbetrieb folgt erst nach den nötigen Kontrollen und Freigaben, der Umfang richtet sich nach Zeit und Risiko. Die Rubrik prüft Dokumentation, Messung, Fehlerbehandlung und Kontrollen, kein Deployment-Datum.",
     "version": 1,
     "active": true
   },
@@ -338,9 +338,9 @@
       { "id": "a", "text": "Mit einer Schulnote von 1 bis 6 durch eine externe Jury.", "isCorrect": false },
       { "id": "b", "text": "Per Publikums-Voting auf Social Media.", "isCorrect": false },
       { "id": "c", "text": "Gar nicht, es gibt kein Bewertungsschema.", "isCorrect": false },
-      { "id": "d", "text": "Anhand von sieben binären Rubrik-Kriterien als Selbsteinschätzung, ohne externe Beurteilung; eine mögliche Veröffentlichung ist eine getrennte Freigabeentscheidung.", "isCorrect": true }
+      { "id": "d", "text": "Selbsteinschätzung anhand von sieben binären Rubrik-Kriterien, ohne externe Beurteilung.", "isCorrect": true }
     ],
-    "explanation": "Du dokumentierst die sieben Kriterien mit erfüllt oder nicht erfüllt. Eine unabhängige Prüfung gibt es nicht. Falls eine Beispielsammlung angeboten wird, braucht die Veröffentlichung ausdrückliches Opt-in und Datenschutz-, Geheimhaltungs- und Sicherheitsprüfung.",
+    "explanation": "Du markierst jedes Kriterium als erfüllt oder nicht erfüllt. Eine Veröffentlichung in einer Beispielsammlung ist eine eigene Entscheidung mit Opt-in und Datenschutz-, Geheimhaltungs- und Sicherheitsprüfung.",
     "version": 1,
     "active": true
   },
@@ -350,12 +350,12 @@
     "difficulty": "medium",
     "questionText": "Welchen Status hat die Capstone-Teilnahmebestätigung des AI-Native Arbeitskurses?",
     "answerOptions": [
-      { "id": "a", "text": "Es ist eine behördlich anerkannte Qualifikation, die von einer externen Stelle ausgestellt wird.", "isCorrect": false },
-      { "id": "b", "text": "Es wird automatisch nach jeder abgeschlossenen Lektion per E-Mail versandt.", "isCorrect": false },
-      { "id": "c", "text": "Es ist eine Teilnahmebestätigung, die lokal im Browser erstellt wird und auf deiner eigenen Einschätzung basiert, nicht auf einer externen Prüfung.", "isCorrect": true },
-      { "id": "d", "text": "Es ist ein kostenpflichtiges Add-on, das separat erworben werden muss.", "isCorrect": false }
+      { "id": "a", "text": "Eine behördlich anerkannte Qualifikation einer externen Stelle.", "isCorrect": false },
+      { "id": "b", "text": "Eine automatische E-Mail nach jeder abgeschlossenen Lektion.", "isCorrect": false },
+      { "id": "c", "text": "Eine lokal im Browser erstellte Teilnahmebestätigung auf Basis deiner Einschätzung.", "isCorrect": true },
+      { "id": "d", "text": "Ein kostenpflichtiges Add-on, separat zu kaufen.", "isCorrect": false }
     ],
-    "explanation": "Das Dokument entsteht lokal in deinem Browser und bestätigt Teilnahme und Abschluss. Keine Behörde und keine unabhängige Prüfstelle stellt es aus; der Bewertungsstand stammt aus deiner Capstone-Rubrik oder dem Workshop-Quiz.",
+    "explanation": "Keine Behörde und keine unabhängige Prüfstelle stellt sie aus. Der Bewertungsstand stammt aus deiner Capstone-Rubrik oder dem Workshop-Quiz.",
     "version": 1,
     "active": true
   }

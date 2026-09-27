@@ -23,17 +23,15 @@
       "sections": [
         {
           "id": "block_4_lesson_1_section_1",
-          "title": "Drei Fälle, drei verschiedene Kontrollen",
+          "title": "Jeder Fehler braucht eine eigene Kontrolle",
           "readTimeMinutes": 3,
-          "content": "Drei Fälle, alle erfunden für diesen Kurs. Jeder braucht eine andere Kontrolle:\n\n**1. Unbelegte Quelle:** Der Entwurf zitiert ein Urteil, mit Aktenzeichen und wörtlichem Zitat. Klingt seriös. In der offiziellen Rechtsprechungsdatenbank gibt es weder das Aktenzeichen noch das Zitat. Der Text bleibt liegen, bis die Primärquelle auf dem Tisch liegt.\n\n**2. Unzulässige Eingabe:** Ein Entwickler kopiert Quellcode und interne Testdaten in einen nicht freigegebenen Assistenten. Die Antwort mag sprachlich perfekt sein. Egal. Der Vorfall ist schon passiert, in der Eingabe, und gehört in den internen Meldekanal.\n\n**3. Nicht autorisierte Zusage:** Der Kundenassistent verspricht eine Erstattung, die weder die Richtlinie noch eine zuständige Person freigegeben hat. Verantwortlich für den Kanal und für das, was er sagt, bleibt die Organisation.\n\nDrei Fälle, drei Kontrollen: Quellenprüfung, Daten- und Systemfreigabe, Befugnis- und Richtlinienprüfung. Ein allgemeiner \"Faktencheck\" deckt nicht alle drei ab.",
-          "keyTakeaway": "Die Ausgabe ist nur ein Kontrollpunkt. Quellen, Eingabedaten, Systemfreigabe und Handlungsbefugnis sind die anderen, jeder für sich."
+          "content": "Drei erfundene Fälle:\n\n**1. Unbelegte Quelle:** Der Entwurf zitiert ein Urteil mit Aktenzeichen und wörtlichem Zitat, doch die offizielle Rechtsprechungsdatenbank kennt beides nicht. Der Text bleibt liegen, bis die Primärquelle vorliegt.\n\n**2. Unzulässige Eingabe:** Ein Entwickler kopiert Quellcode und interne Testdaten in einen nicht freigegebenen Assistenten. Der Vorfall ist mit der Eingabe passiert, egal wie gut die Antwort ist, und gehört in den internen Meldekanal.\n\n**3. Nicht autorisierte Zusage:** Der Kundenassistent verspricht eine Erstattung, die weder Richtlinie noch zuständige Person freigegeben hat. Für den Kanal und seine Aussagen bleibt die Organisation verantwortlich.\n\nDie passenden Kontrollen sind Quellenprüfung, Daten- und Systemfreigabe sowie Befugnis- und Richtlinienprüfung. Ein allgemeiner \"Faktencheck\" deckt nicht alle drei ab."
         },
         {
           "id": "block_4_lesson_1_section_2",
           "title": "Warum die Prüftiefe dem Risiko folgt",
           "readTimeMinutes": 2,
-          "content": "Gemeinsam haben die drei Fälle wenig. Die unbelegte Quelle kann aus der generativen Modellierung kommen, aus fehlerhaftem Retrieval oder aus einer schlechten Wissensbasis. Die unzulässige Eingabe ist ein Governance- und Sicherheitsfehler. Die falsche Zusage kann an Regeln liegen, an Daten, an der Integration oder an fehlenden Freigabegrenzen.\n\nDarum gibt es keine Einheitsprüfung. Die Prüfung folgt dem Risiko. Für einen internen Entwurf kann ein kurzer Textvergleich reichen. Rechtliche Zitate, Finanzzahlen, Entscheidungen über Personen und Zusagen nach außen brauchen Primärquellen und die zuständige Freigabe.\n\nBessere Modelle und technische Kontrollen können die Fehlerrate senken. Können. Keine Modellgeneration belegt für sich Wahrheit oder Zulässigkeit.",
-          "keyTakeaway": "Andere Ursache, andere Kontrolle. Die Prüftiefe richtet sich nach der Auswirkung, und Modelloutput ist kein Beleg."
+          "content": "Die unbelegte Quelle kann aus der generativen Modellierung, fehlerhaftem Retrieval oder einer schlechten Wissensbasis kommen. Die unzulässige Eingabe ist ein Governance- und Sicherheitsfehler, die falsche Zusage kann an Regeln, Daten, Integration oder fehlenden Freigabegrenzen liegen.\n\nDeshalb folgt die Prüfung dem Risiko. Für einen internen Entwurf kann ein kurzer Textvergleich reichen; rechtliche Zitate, Finanzzahlen, Entscheidungen über Personen und Zusagen nach außen brauchen Primärquellen und die zuständige Freigabe. Bessere Modelle und technische Kontrollen können die Fehlerrate senken, belegen aber weder Wahrheit noch Zulässigkeit."
         }
       ],
       "quiz": [
@@ -48,7 +46,7 @@
             },
             {
               "id": "b",
-              "text": "Die Aussage bleibt unbelegt und darf erst nach Prüfung einer geeigneten Primärquelle verwendet werden",
+              "text": "Die Aussage bleibt unbelegt, bis eine geeignete Primärquelle geprüft ist",
               "isCorrect": true
             },
             {
@@ -62,7 +60,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Eine erzeugte Fundstelle beweist nichts, auch wenn sie juristisch klingt. Existenz, Wortlaut, Stand und Anwendbarkeit prüfst du in einer offiziellen oder sonst geeigneten Primärquelle. Ein zweites Sprachmodell ist keine."
+          "explanation": "Eine erzeugte Fundstelle beweist nichts. Existenz, Wortlaut, Stand und Anwendbarkeit prüfst du in einer offiziellen oder sonst geeigneten Primärquelle, und ein zweites Sprachmodell ist keine."
         },
         {
           "id": "block_4_lesson_1_q2",
@@ -80,7 +78,7 @@
             },
             {
               "id": "c",
-              "text": "Modell- und Systemverbesserungen können Fehler senken; entscheidungsrelevante Angaben brauchen trotzdem geeignete Belege",
+              "text": "Bessere Modelle können Fehler senken, wichtige Angaben brauchen trotzdem Belege",
               "isCorrect": true
             },
             {
@@ -89,7 +87,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Die Fehlerrate hängt von Modell, System, Daten, Retrieval, Aufgabe und Evaluation ab. Sie sinkt vielleicht mit der nächsten Version. Unbelegt bleibt eine plausible Ausgabe trotzdem, solange die Quelle fehlt."
+          "explanation": "Die Fehlerrate hängt von Modell, System, Daten, Retrieval, Aufgabe und Evaluation ab und kann mit neuen Versionen sinken. Eine plausible Ausgabe ohne Quelle bleibt trotzdem unbelegt."
         }
       ]
     },
@@ -98,7 +96,7 @@
       "blockId": "block_4",
       "number": 2,
       "title": "Die 3-Schritt-Prüfung",
-      "subtitle": "Drei Fragen als Grundsichtung, die Tiefe kommt vom Risiko",
+      "subtitle": "Drei Grundfragen, Prüftiefe nach Risiko",
       "durationMinutes": 7,
       "keyConcepts": [
         "3-Schritt-Prüfung",
@@ -111,15 +109,13 @@
           "id": "block_4_lesson_2_section_1",
           "title": "Schritt 1 und 2: Sachlich korrekt und vollständig?",
           "readTimeMinutes": 4,
-          "content": "Drei Fragen. Sie sind die Grundsichtung, nicht die ganze Prüfung. Wie tief du gehst, bestimmen Auswirkung, Umkehrbarkeit und Empfängerkreis.\n\n**Schritt 1: Ist jede entscheidungsrelevante Aussage belegt?**\n- Zahlen: Definition, Zeitraum, Einheit, Nenner, Rundung und Primärquelle prüfen.\n- Zitate: Originaldokument, exakten Wortlaut, Kontext und Fassung öffnen.\n- Personen und Organisationen: Identität, Rolle und Zuständigkeit in einer autoritativen Quelle prüfen.\n- Recht: Den konsolidierten oder amtlichen Text und seinen zeitlichen Anwendungsbereich prüfen; für EU-Recht ist EUR-Lex eine Primärquelle.\n\n**Schritt 2: Ist die Ausgabe für den Zweck vollständig?**\n- Welche Annahmen, Ausnahmen, Unsicherheiten und Gegenbelege fehlen?\n- Wurden Plan, Prognose, Meinung und bestätigter Fakt getrennt?\n- Gilt die Quelle für Land, Zeitraum, Produktversion und Zielgruppe?\n- Ist der Stand mit Datum und Quelle ausgewiesen?\n\nEin Modell kann über Retrieval oder Werkzeuge an aktuelle Informationen kommen. Es kann sie trotzdem falsch auswählen oder falsch wiedergeben. Du prüfst den Beleg, der da steht, nicht einen Trainingsstichtag, den du vermutest.",
-          "keyTakeaway": "Schritt 1 prüft Fakten: Zahlen, Zitate, Personen, Rechtsverweise. Schritt 2 prüft Vollständigkeit: Was fehlt, was ist vereinfacht, was ist veraltet?"
+          "content": "Die drei Fragen sind eine Grundsichtung. Wie tief du prüfst, bestimmen Auswirkung, Umkehrbarkeit und Empfängerkreis.\n\n**Schritt 1: Ist jede entscheidungsrelevante Aussage belegt?**\n- Zahlen: Definition, Zeitraum, Einheit, Nenner, Rundung und Primärquelle prüfen.\n- Zitate: Originaldokument öffnen, Wortlaut, Kontext und Fassung prüfen.\n- Personen und Organisationen: Identität, Rolle und Zuständigkeit in einer autoritativen Quelle prüfen.\n- Recht: Den konsolidierten oder amtlichen Text und seinen zeitlichen Anwendungsbereich prüfen; für EU-Recht ist EUR-Lex eine Primärquelle.\n\n**Schritt 2: Ist die Ausgabe für den Zweck vollständig?**\n- Welche Annahmen, Ausnahmen, Unsicherheiten und Gegenbelege fehlen?\n- Sind Plan, Prognose, Meinung und bestätigter Fakt getrennt?\n- Gilt die Quelle für Land, Zeitraum, Produktversion und Zielgruppe?\n- Ist der Stand mit Datum und Quelle ausgewiesen?\n\nAuch ein Modell mit Retrieval oder Werkzeugen kann aktuelle Informationen falsch wiedergeben, deshalb prüfst du den vorliegenden Beleg."
         },
         {
           "id": "block_4_lesson_2_section_2",
           "title": "Schritt 3: Darfst du das überhaupt?",
           "readTimeMinutes": 3,
-          "content": "**Schritt 3: Ist die Verwendung zulässig und angemessen?**\nFünf Fragen:\n- Darfst du die Zusage, Empfehlung oder Entscheidung treffen?\n- Dürfen Eingabedaten und Ausgabe an den vorgesehenen Empfängerkreis gelangen?\n- Sind Ton, Sprache und Darstellung für Zweck und Zielgruppe geeignet?\n- Gibt es Benachteiligungs-, Sicherheits-, Rechts- oder Reputationsrisiken?\n- Ist eine fachliche Zweitprüfung, Vier-Augen-Freigabe oder ein Verbot automatisierter Nutzung vorgesehen?\n\nBei der Kundenreklamation heißt das: Bestellnummer, Lieferdatum und Zusagen gegen die Primärquellen, alle Punkte des Kunden abgehakt, eigene Befugnis geprüft. Bei einer Rechtsauskunft oder einer Personalentscheidung reicht diese Kurzliste nicht. Dort gilt der Fachprozess, der dafür definiert ist.\n\nVerlangt die Auswirkung es, dokumentierst du die Prüfung. Wie lange das dauert? Kommt darauf an, und jede feste Minutenangabe wäre erfunden. Einen internen Formulierungsvorschlag prüfst du anders als eine Rechtsbehauptung, die nach draußen geht.",
-          "keyTakeaway": "Schritt 3 prüft Befugnis, Datenfluss, Empfänger, Wirkung und erforderliche Freigabe. Die Prüftiefe folgt dem Risiko."
+          "content": "**Schritt 3: Ist die Verwendung zulässig und angemessen?**\n- Darfst du die Zusage, Empfehlung oder Entscheidung treffen?\n- Dürfen Eingabedaten und Ausgabe an den vorgesehenen Empfängerkreis gelangen?\n- Sind Ton, Sprache und Darstellung für Zweck und Zielgruppe geeignet?\n- Gibt es Benachteiligungs-, Sicherheits-, Rechts- oder Reputationsrisiken?\n- Ist eine fachliche Zweitprüfung, Vier-Augen-Freigabe oder ein Verbot automatisierter Nutzung vorgesehen?\n\nBei der Kundenreklamation prüfst du Bestellnummer, Lieferdatum und Zusagen gegen die Primärquellen, hakst alle Punkte des Kunden ab und klärst deine Befugnis. Für Rechtsauskünfte oder Personalentscheidungen gilt der dafür definierte Fachprozess.\n\nVerlangt die Auswirkung es, dokumentierst du die Prüfung. Eine feste Prüfdauer gibt es nicht."
         }
       ],
       "quiz": [
@@ -148,7 +144,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Belege, Vollständigkeit, zulässige Verwendung: das ist die Grundsichtung. Je größer die Auswirkung und je schwerer die Umkehr, desto tiefer gehen Quellen-, Fach- und Freigabeprüfung."
+          "explanation": "Die drei Fragen sind die Grundsichtung. Je größer die Auswirkung und je schwerer die Umkehr, desto tiefer gehen Quellen-, Fach- und Freigabeprüfung."
         },
         {
           "id": "block_4_lesson_2_q2",
@@ -161,7 +157,7 @@
             },
             {
               "id": "b",
-              "text": "Offensichtliche Fehler fallen auf, aber subtile, plausibel klingende Fehler kosten dich",
+              "text": "Grobe Fehler fallen auf, plausible rutschen durch",
               "isCorrect": true
             },
             {
@@ -175,7 +171,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Je plausibler, desto genauer hinsehen. Modelle erzeugen überzeugende, aber falsche Informationen: der erfundene Verband, die falsche Unternehmenszahl, die Person, die es nicht gibt. Alles klingt oft völlig glaubwürdig. Den groben Fehler siehst du sofort. Der feine kostet dich."
+          "explanation": "Modelle erzeugen überzeugende, aber falsche Angaben, etwa einen erfundenen Verband, eine falsche Unternehmenszahl oder eine Person, die es nicht gibt. Grobe Fehler fallen sofort auf, feine nicht."
         }
       ]
     },
@@ -192,15 +188,13 @@
           "id": "block_4_lesson_3_section_1",
           "title": "Quellenpaket und Entwurf",
           "readTimeMinutes": 3,
-          "content": "Alles hier ist synthetisch: die Quellen, der Entwurf, die Namen. Verglichen wird nur mit dem Quellenpaket. Nicht mit dem, was dir plausibel vorkommt.\n\n**Quelle A, Beschlussprotokoll:** \"Budget für den Pilotbetrieb: 1,8 Mio. EUR. Freigegeben am 12. Mai.\"\n\n**Quelle B, Projektstatus:** \"Juli ist ein Zielkorridor. Ein verbindlicher Starttermin wurde nicht beschlossen. Verantwortliche Person: offen.\"\n\n**Quelle C, Sicherheitsfreigabe:** \"Die Freigabe gilt nur für das EU-Kundenportal, Version 2.4, ohne Datei-Upload. Andere Produkte und Funktionen sind nicht umfasst.\"\n\n**Erzeugter Entwurf:**\n\n\"Der Vorstand hat 18 Mio. EUR für das Gesamtprogramm freigegeben. Das Projekt startet verbindlich am 1. Juli unter Leitung von Frau Keller. Die Sicherheitsfreigabe gilt für alle Kundenprodukte einschließlich Datei-Upload.\"\n\nDrei Fehler sollst du finden. Es sind mehr: der Betrag stimmt nicht, der Umfang stimmt nicht, der Termin ist erfunden, die verantwortliche Person ist erfunden, und die Sicherheitsfreigabe wurde auf Produkte und Funktionen ausgeweitet, die das Quellenpaket ausdrücklich ausschließt.",
-          "keyTakeaway": "Zahl, Status, verantwortliche Person, Geltungsbereich: jedes einzeln prüfen. Was plausibel ergänzt wurde, bleibt unbelegt."
+          "content": "Quellen, Entwurf und Namen sind synthetisch. Vergleiche nur mit dem Quellenpaket.\n\n**Quelle A, Beschlussprotokoll:** \"Pilotbetrieb mit einem Budget von 1,8 Mio. EUR am 12. Mai freigegeben.\"\n\n**Quelle B, Projektstatus:** \"Juli ist ein Zielkorridor. Ein verbindlicher Starttermin wurde nicht beschlossen. Verantwortliche Person offen.\"\n\n**Quelle C, Sicherheitsfreigabe:** \"Die Freigabe gilt nur für das EU-Kundenportal, Version 2.4, ohne Datei-Upload. Andere Produkte und Funktionen sind nicht umfasst.\"\n\n**Erzeugter Entwurf:**\n\n\"Der Vorstand hat 18 Mio. EUR für das Gesamtprogramm freigegeben. Das Projekt startet verbindlich am 1. Juli unter Leitung von Frau Keller. Die Sicherheitsfreigabe gilt für alle Kundenprodukte einschließlich Datei-Upload.\"\n\nGesucht sind drei Fehler, es gibt mehr. Betrag und Umfang stimmen nicht, Termin und verantwortliche Person sind erfunden, und die Sicherheitsfreigabe wurde auf Produkte und Funktionen ausgeweitet, die das Quellenpaket ausschließt."
         },
         {
           "id": "block_4_lesson_3_section_2",
           "title": "Deine Aufgabe",
           "readTimeMinutes": 2,
-          "content": "Bau eine Korrekturtabelle. Vier Spalten:\n\n1. Aussage im Entwurf\n2. Status: belegt, widersprochen oder nicht in den Quellen enthalten\n3. Korrekte Formulierung\n4. Quellen-ID und exakter Beleg\n\nSo liest sich die Kurzfassung, wenn sie stimmt:\n\n\"Für den Pilotbetrieb wurden 1,8 Mio. EUR am 12. Mai freigegeben. Juli ist ein Zielkorridor; Starttermin und verantwortliche Person sind offen. Die Sicherheitsfreigabe gilt für das EU-Kundenportal 2.4 ohne Datei-Upload.\"\n\nDas trainiert zwei Dinge: Quellenbindung und Statusdisziplin. Artikel 4 schreibt diese Methode nicht vor. Sie kann aber ein Baustein kontextbezogener KI-Kompetenzmaßnahmen sein.",
-          "keyTakeaway": "Jede Aussage bekommt ein Etikett: belegt, widersprochen oder unbelegt. Und jedes Etikett hängt am exakten Quellenbeleg."
+          "content": "Bau eine Korrekturtabelle mit vier Spalten:\n\n1. Aussage im Entwurf\n2. Status: belegt, widersprochen oder nicht in den Quellen enthalten\n3. Korrekte Formulierung\n4. Quellen-ID und exakter Beleg\n\nDie korrekte Kurzfassung:\n\n\"Für den Pilotbetrieb wurden 1,8 Mio. EUR am 12. Mai freigegeben. Juli ist ein Zielkorridor; Starttermin und verantwortliche Person sind offen. Die Sicherheitsfreigabe gilt für das EU-Kundenportal 2.4 ohne Datei-Upload.\"\n\nDas trainiert Quellenbindung und Statusdisziplin. Artikel 4 schreibt diese Methode nicht vor, sie kann aber ein Baustein kontextbezogener KI-Kompetenzmaßnahmen sein."
         }
       ],
       "quiz": [
@@ -229,11 +223,11 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Ein seriöser Name belegt nichts, ein Suchtreffer auch nicht. Du öffnest eine autoritative Quelle und prüfst, ob sie Identität, Zuständigkeit und genau diese Aussage im passenden Kontext trägt."
+          "explanation": "Ein seriöser Name oder Suchtreffer belegt nichts. Eine autoritative Quelle muss Identität, Zuständigkeit und genau diese Aussage im passenden Kontext tragen."
         },
         {
           "id": "block_4_lesson_3_q2",
-          "questionText": "Mit welcher Methode lässt sich am zuverlässigsten prüfen, ob eine EU-Verordnungsnummer in einem KI-generierten Text korrekt ist?",
+          "questionText": "Wie prüfst du eine EU-Verordnungsnummer in einem KI-generierten Text am zuverlässigsten?",
           "answerOptions": [
             {
               "id": "a",
@@ -256,7 +250,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "EUR-Lex ist die amtliche Quelle für EU-Recht. Dort prüfst du Kennung, konsolidierten Text, Fassung, Inkrafttreten und Anwendungsdatum. Das Modell noch einmal fragen ist kein Rechtsbeleg. Den Kollegen fragen auch nicht."
+          "explanation": "EUR-Lex ist die amtliche Quelle für EU-Recht. Dort prüfst du Kennung, konsolidierten Text, Fassung, Inkrafttreten und Anwendungsdatum; Modell oder Kollege liefern keinen Rechtsbeleg."
         }
       ]
     },
@@ -275,17 +269,15 @@
       "sections": [
         {
           "id": "block_4_lesson_4_section_1",
-          "title": "Vier Dinge, die bleiben",
+          "title": "Kontrollen vor der Ausgabe",
           "readTimeMinutes": 1,
-          "content": "Vier Dinge bleiben aus diesem Block:\n\n1. Plausible Sprache ist kein Beleg.\n2. Eingabefreigabe, Quellenprüfung, Befugnis und Ausgabequalität sind getrennte Kontrollen.\n3. Die Prüftiefe richtet sich nach Auswirkung, Umkehrbarkeit und Empfängerkreis.\n4. Die Person am Bildschirm trägt nicht alles allein. Produktverantwortung, Beschaffung, Technik, Datenschutz, Sicherheit und Fachfreigabe müssen zusammenspielen.\n\nDer beste Fehler ist der, der gar nicht erst entsteht. Ein gut gebauter Prozess sorgt dafür, vor der Ausgabe: begrenzte Datenzugriffe, freigegebene Quellen, strukturierte Felder, technische Validierung, klare Freigaberechte.",
-          "keyTakeaway": "Kontrollen beginnen vor dem Prompt und reichen bis zur Verwendung. Tiefe und Verantwortliche folgen dem konkreten Risiko."
+          "content": "Die Person am Bildschirm trägt nicht alles allein. Produktverantwortung, Beschaffung, Technik, Datenschutz, Sicherheit und Fachfreigabe wirken zusammen.\n\nViele Fehler verhindert der Prozess schon vor der Ausgabe, mit begrenzten Datenzugriffen, freigegebenen Quellen, strukturierten Feldern, technischer Validierung und klaren Freigaberechten."
         },
         {
           "id": "block_4_lesson_4_section_2",
           "title": "Die Regel",
           "readTimeMinutes": 2,
-          "content": "Eine Regel für alles, was du aus einem Modell übernimmst:\n\n**Verwende eine KI-Ausgabe erst, wenn die für Zweck und Auswirkung vorgesehenen Kontrollen abgeschlossen sind.**\n\nBeim internen Formulierungsvorschlag kann das ein kurzer Abgleich von Quelle und Ton sein. Bei Zahlen, Rechtsaussagen, Personalentscheidungen, Sicherheitsänderungen und Zusagen nach außen heißt es: reproduzierbare Berechnung, Primärquelle, Fachprüfung, dokumentierte Freigabe. Alles davon.\n\nFehlt der Beleg, markierst du die Aussage als offen oder streichst sie. Die Suchmaschine ist nicht automatisch eine Quelle. Die Kollegin nicht. Das zweite Modell erst recht nicht. Was zählt, sind Unabhängigkeit, Autorität und Aktualität.\n\nUnd rechne ehrlich: Nutzen des KI-Schritts minus Prüfaufwand minus Fehlerfolgen. Ein Prozess ist nicht besser, nur weil der erste Entwurf schneller da ist.",
-          "keyTakeaway": "Verwende Ausgaben erst nach den vorgesehenen Kontrollen. Belege, Fachprüfung und Freigabe richten sich nach der Wirkung."
+          "content": "**Verwende eine KI-Ausgabe erst, wenn die für Zweck und Auswirkung vorgesehenen Kontrollen abgeschlossen sind.**\n\nBeim internen Formulierungsvorschlag kann das ein kurzer Abgleich von Quelle und Ton sein. Zahlen, Rechtsaussagen, Personalentscheidungen, Sicherheitsänderungen und Zusagen nach außen brauchen reproduzierbare Berechnung, Primärquelle, Fachprüfung und dokumentierte Freigabe.\n\nFehlt der Beleg, markierst du die Aussage als offen oder streichst sie. Suchmaschine, Kollegin oder zweites Modell sind nicht automatisch Quellen, es zählen Unabhängigkeit, Autorität und Aktualität.\n\nRechne ehrlich: Nutzen des KI-Schritts minus Prüfaufwand minus Fehlerfolgen."
         }
       ],
       "quiz": [
@@ -300,7 +292,7 @@
             },
             {
               "id": "b",
-              "text": "Weil Risiko von Inhalt, Zweck, Belegen, Kontrolle und Wirkung abhängt; beide Arten von Text können Fehler enthalten",
+              "text": "Weil Risiko von Inhalt, Zweck, Belegen, Kontrolle und Wirkung abhängt",
               "isCorrect": true
             },
             {
@@ -314,7 +306,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Ob ein Mensch oder ein Modell den Text geschrieben hat, sagt über das Risiko wenig. Aussage, Daten, Empfänger, Auswirkung, Nachweise und abgeschlossene Kontrollen entscheiden."
+          "explanation": "Menschen und Modelle machen Fehler. Über das Risiko entscheiden Aussage, Daten, Empfänger, Auswirkung, Nachweise und abgeschlossene Kontrollen."
         },
         {
           "id": "block_4_lesson_4_q2",
@@ -332,7 +324,7 @@
             },
             {
               "id": "c",
-              "text": "Eine für die konkrete Behauptung geeignete, möglichst primäre oder autoritative Quelle prüfen",
+              "text": "Eine für die Behauptung geeignete, möglichst primäre Quelle prüfen",
               "isCorrect": true
             },
             {
@@ -341,7 +333,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Noch einmal fragen bringt eine zweite Antwort, keinen Beleg. Ein Suchtreffer auch nicht. Du suchst eine Quelle, die Identität, Zuständigkeit, Zeitraum und genau diese Aussage trägt."
+          "explanation": "Noch einmal fragen bringt eine zweite Antwort, keinen Beleg. Du suchst eine Quelle, die Identität, Zuständigkeit, Zeitraum und genau diese Aussage trägt."
         }
       ],
       "widgets": [

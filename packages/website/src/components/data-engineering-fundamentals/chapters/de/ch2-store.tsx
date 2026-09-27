@@ -1,4 +1,4 @@
-import { Hero, SectionLabel, CodeBlock, AntiPatterns, BestPractices, Takeaway } from "../../primitives";
+import { Hero, SectionLabel, CodeBlock, AntiPatterns, BestPractices } from "../../primitives";
 import { CumulativeSim } from "../../simulators/cumulative-sim";
 import { DataEngineeringFundamentalsLocaleProvider } from "../../locale-context";
 import { CUMULATIVE_SQL } from "../ch2-store";
@@ -15,7 +15,7 @@ export function Ch2StoreDe({ chapter }: Ch2StoreDeProps) {
         accent={chapter.inkHex}
         eyebrow={`Kapitel ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Speicherung: <span class='accent'>Ein fehlerhafter Tag</span> verfälscht alle Folgetage."
-        hook="Viele Tabellen zeigen nur den Vortag. <strong>Kumulative Tabellen</strong> tragen die ganze bisherige Entwicklung mit: Der Zustand von gestern wird fortgeschrieben und mit den heutigen Änderungen zusammengeführt. Kompakt und empfindlich zugleich. Ein fehlerhafter Tag steckt in jedem Folgetag, bis ein Backfill ihn ersetzt."
+        hook="Jede Partition verbindet den Zustand von gestern mit den Änderungen von heute. Ein fehlerhafter Tag steckt in jedem Folgetag, bis der Bereich neu berechnet ist."
         meta={[
           { k: "Muster", v: "zustandsfortschreibend" },
           { k: "Engine", v: "Spark (FULL OUTER JOIN)" },
@@ -26,14 +26,14 @@ export function Ch2StoreDe({ chapter }: Ch2StoreDeProps) {
       <section className="section">
         <SectionLabel n="3.1">Das Muster</SectionLabel>
         <h2 className="h2">Gestern + heute = heutiger kumulativer Zustand.</h2>
-        <p className="prose">Das additive Kursbeispiel verbindet die vorherige Partition und die heutigen Änderungen mit einem <code>FULL OUTER JOIN</code> und schickt <code>COALESCE</code> hinterher. So überleben Schlüssel von beiden Seiten. Andere kumulative Modelle brauchen zusätzlich Merge-Regeln, Löschungen oder Gültigkeitsintervalle.</p>
-        <p className="prose">Die Fortschreibung erzeugt den Nutzen: Der kumulative Wert von Tag 7 besteht aus Tag 6 plus heute; Tag 6 enthält bereits Tag 5 und dessen Änderungen. Dieselbe Eigenschaft überträgt Fehler. Ein Fehler an Tag 3 bleibt in jedem Folgetag, bis er erkannt und rückwirkend neu berechnet wird.</p>
+        <p className="prose">Das additive Beispiel verbindet die vorherige Partition mit den heutigen Änderungen per <code>FULL OUTER JOIN</code> und <code>COALESCE</code>, sodass Schlüssel von beiden Seiten überleben. Andere kumulative Modelle ergänzen Merge-Regeln, Löschungen, Gültigkeitsintervalle oder Konfliktregeln.</p>
+        <p className="prose">Tag 7 baut auf Tag 6 auf, der schon alles davor enthält. Ist Tag 3 falsch, berechnest du ab der frühesten betroffenen Partition alles neu; eine Code-Korrektur allein schreibt keine gespeicherte Historie um.</p>
       </section>
 
       <section className="section">
         <SectionLabel n="3.2">Die Woche prüfen</SectionLabel>
         <h2 className="h2">Fehler an Tag 3. Erkannt an Tag 4. Backfill an Tag 5.</h2>
-        <p className="prose">Klick dich im Simulator durch die Tage. An Tag 3 halbiert eine Einheitenverwechslung die Punkte aller Nutzer. Bis Tag 5 steckt die Abweichung in jeder Aggregation. <em>Korrigieren und neu berechnen</em> verarbeitet die fehlerhaften Tage mit der korrigierten Logik erneut.</p>
+        <p className="prose">Klick dich durch die Tage. An Tag 3 halbiert eine Einheitenverwechslung die Punkte aller Nutzer, bis Tag 5 steckt die Abweichung in jeder Aggregation. <em>Korrigieren und neu berechnen</em> verarbeitet die fehlerhaften Tage mit der korrigierten Logik neu.</p>
         <CumulativeSim />
       </section>
 
@@ -45,26 +45,17 @@ export function Ch2StoreDe({ chapter }: Ch2StoreDeProps) {
       <AntiPatterns
         title="Fehlmuster"
         items={[
-          "<b>In diesem additiven Muster einen Left Join verwenden.</b> Schlüssel, die erstmals in der heutigen Änderung erscheinen, würden fehlen. Fälle mit neuen, bestehenden und fehlenden Schlüsseln testen.",
-          "<b>Eine Korrektur ohne Neuberechnung abhängiger Partitionen veröffentlichen.</b> Such das früheste betroffene Datum und bau den Bereich dahinter neu auf.",
-          "<b>Die Wanduhr in einem Backfill lesen.</b> Logische Partition und weitere Laufparameter explizit übergeben, damit dieselbe Eingabe denselben Quellenbereich wählt.",
-          "<b>Unvollständigen Zustand veröffentlichen.</b> Die vom Tabellenformat unterstützte atomare Replace-, Merge- oder Snapshot-Operation verwenden.",
+          "<b>Hier einen Left Join verwenden.</b> Schlüssel, die erstmals in der heutigen Änderung auftauchen, fehlen dann. Neue, bestehende und fehlende Schlüssel testen.",
+          "<b>Eine Korrektur ohne Neuberechnung abhängiger Partitionen veröffentlichen.</b> Such das früheste betroffene Datum und berechne alles danach neu.",
+          "<b>Die Wanduhr in einem Backfill lesen.</b> <code>&lt;DATEID&gt;</code> und weitere Laufparameter explizit übergeben, damit dieselbe Eingabe denselben Quellenbereich wählt.",
+          "<b>Unvollständigen Zustand veröffentlichen.</b> Atomares Replace, Merge oder Snapshot des Tabellenformats nutzen, damit niemand eine halbe Partition liest.",
         ]}
       />
       <BestPractices
         title="Saubere Umsetzung"
         items={[
-          "Für dieses Tagesmodell <code>&lt;DATEID&gt;</code> als logische Partition übergeben, statt sie aus der Wanduhr abzuleiten.",
           "Kumulative Logik versionieren und die erzeugende Version pro Partition erfassen. Den Bereich neu aufbauen, dessen Semantik sich geändert hat.",
-          "<b>Invarianten aus dem Fachmodell</b> ableiten. Löschung oder Aufbewahrung kann die Zeilenzahl rechtmäßig senken; erwartete Schlüsselübergänge statt monotones Wachstum testen.",
-        ]}
-      />
-      <Takeaway
-        title="Kernaussagen"
-        items={[
-          "Kumulativ = <b>gestern ⊕ heute</b>. Jeder fehlerhafte Tag verfälscht alle Folgetage bis zum Backfill.",
-          "<code>FULL OUTER JOIN</code> und <code>COALESCE</code> setzen das additive Beispiel um. Merge-Semantik aus dem tatsächlichen Lebenszyklus der Entität ableiten.",
-          "Ein explizites logisches Datum und stabile Eingaben verwenden, damit Backfills den beabsichtigten Quellenbereich auswählen.",
+          "<b>Invarianten aus dem Fachmodell</b> ableiten. Löschung oder Aufbewahrung kann die Zeilenzahl senken, also erwartete Schlüsselübergänge testen, kein stetiges Wachstum.",
         ]}
       />
     </DataEngineeringFundamentalsLocaleProvider>

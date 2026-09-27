@@ -69,7 +69,7 @@ export const allBooks: readonly Book[] = [
     relatedResourceHref: "/eu-ai-act-kurs",
     relatedResourceLabel: "EU AI Act Kurs öffnen",
     description:
-      "Das Datenfundament entscheidet, nicht die Tool-Auswahl. Das Buch zeigt, wie ein Team seinen Ausgangspunkt ohne Score qualitativ erfasst, was fünf Arbeitsfelder digitaler und KI-bezogener Reife verlangen und wie du einen Benchmark liest, ohne mehr hineinzulesen, als drinsteht.",
+      "Warum das Datenfundament mehr zählt als die Tool-Auswahl, wie ein Team seinen Ausgangspunkt ohne Score erfasst und wie du einen Benchmark liest, ohne ihn zu überdehnen.",
     highlights: [
       "Qualitative Selbstprüfung ohne proprietären Score",
       "Fünf Arbeitsfelder für digitale und KI-bezogene Reife",

@@ -137,7 +137,7 @@ const COPY: Readonly<Record<Locale, AiNativeOperatorCourseCopy>> = {
       reading: "Reading",
       minutes: (minutes) => `${minutes} min`,
       quizIntro:
-        "One best answer per question. Your answers stay in this browser's course progress, nowhere else.",
+        "Pick the best answer to each question. Answers stay in this browser only.",
       quickCheck: "Knowledge check",
       check: "Check",
       answerOptions: "Answer options",
@@ -253,7 +253,7 @@ const COPY: Readonly<Record<Locale, AiNativeOperatorCourseCopy>> = {
       reading: "Lektüre",
       minutes: (minutes) => `${minutes} Min.`,
       quizIntro:
-        "Wähle zu jeder Frage die beste Antwort. Die Antworten liegen nur im Kursfortschritt dieses Browsers.",
+        "Wähle zu jeder Frage die beste Antwort. Sie bleibt nur in diesem Browser.",
       quickCheck: "Wissensprüfung",
       check: "Prüfen",
       answerOptions: "Antwortmöglichkeiten",

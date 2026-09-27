@@ -54,7 +54,7 @@ describe("data-science shared primitives ", () => {
     expect(screen.getByText("A caption.")).toBeInTheDocument();
     expect(screen.getByText("sim content")).toBeInTheDocument();
     expect(
-      screen.getByText(/This local teaching model uses fixed synthetic inputs/),
+      screen.getByText(/Local teaching model on fixed synthetic or seeded pseudorandom data/),
     ).toBeInTheDocument();
   });
 

@@ -99,8 +99,8 @@ export function LeakageDetector() {
         `${selected.size} Merkmale ausgewählt · ${leakyCount} mit Leakage`,
       )}
       caption={text(
-        "Pick up to five entries, then compare them with this fixed teaching answer key. The checklist flags predefined timing and target-leakage examples; it cannot audit an actual feature pipeline.",
-        "Wähle bis zu fünf Einträge und vergleiche sie mit diesem festen Lösungsschlüssel. Die Checkliste markiert vordefinierte Beispiele für Zeit- und Zielwert-Leakage; sie prüft keine reale Feature-Pipeline.",
+        "Pick up to five entries and compare them with the fixed answer key. It covers predefined examples and cannot audit a real pipeline.",
+        "Wähle bis zu fünf Einträge und vergleiche sie mit dem festen Lösungsschlüssel. Er deckt vordefinierte Beispiele ab und prüft keine reale Pipeline.",
       )}
     >
       <div className="sim-row" style={{ flexDirection: "column", gap: 16 }}>

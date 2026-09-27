@@ -1,4 +1,4 @@
-import { Hero, SectionLabel, CodeBlock, AntiPatterns, BestPractices, Takeaway } from "../primitives";
+import { Hero, SectionLabel, CodeBlock, AntiPatterns, BestPractices } from "../primitives";
 import { BackfillSim } from "../simulators/backfill-sim";
 import { DAGDiagram } from "../simulators/dag-diagram";
 import type { ChapterMeta } from "@/lib/data-engineering-fundamentals/types";
@@ -28,8 +28,8 @@ export function Ch4Orchestrate({ chapter }: Ch4OrchestrateProps) {
       <Hero
         accent={chapter.inkHex}
         eyebrow={`Chapter ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
-        title="Orchestrate: <span class='accent'>retries are a feature.</span> Only if the write is idempotent."
-        hook="Airflow is the scheduler here. A task runs again for plenty of reasons: retries, manual restarts, backfills. Every task owes an answer to what a repeat run does to its outputs and side effects."
+        title="Orchestrate: <span class='accent'>retries need idempotent writes.</span>"
+        hook="Airflow reruns tasks on retries, manual restarts and backfills. Each task must define what a rerun does to its outputs and side effects."
         meta={[
           { k: "Scheduler", v: "Airflow · cron + DAG" },
           { k: "Unit", v: "task (op on 1 partition)" },
@@ -40,15 +40,15 @@ export function Ch4Orchestrate({ chapter }: Ch4OrchestrateProps) {
       <section className="section">
         <SectionLabel n="5.1">Pipelines are graphs</SectionLabel>
         <h2 className="h2">A DAG of tasks, one partition at a time.</h2>
-        <p className="prose">A scheduled pipeline is a <b>directed acyclic graph</b>. Nodes are tasks, edges are declared dependencies, and Airflow schedules whatever is ready. Retry, clearing, backfill, and downstream behavior all follow the DAG configuration and the operator semantics.</p>
+        <p className="prose">A scheduled pipeline is a <b>directed acyclic graph</b>. Nodes are tasks, edges are declared dependencies, and Airflow schedules whatever is ready. Retries, clearing and backfills follow the DAG configuration and operator semantics.</p>
         <DAGDiagram />
-        <p className="prose" style={{ marginTop: 18 }}>Idempotency is a task contract, not a scheduler guarantee. Run a task twice on the same logical inputs and it either converges on the intended state or makes the duplicate side effects detectable and suppressible.</p>
+        <p className="prose" style={{ marginTop: 18 }}>Idempotency is the task&apos;s job; the scheduler does not guarantee it. Run twice on the same logical inputs, an idempotent task reaches the same state or makes duplicate side effects detectable and suppressible.</p>
       </section>
 
       <section className="section">
         <SectionLabel n="5.2">Idempotency, visualized</SectionLabel>
         <h2 className="h2">Flip OVERWRITE → INSERT. Watch the rows double.</h2>
-        <p className="prose">The simulator runs a seven-day backfill with repeated attempts. The deterministic <code>INSERT OVERWRITE</code> branch replaces the modeled partition. The append branch keeps rows from every earlier attempt. Real idempotency also rests on stable inputs, transaction boundaries, and the table format&apos;s publish semantics.</p>
+        <p className="prose">The simulator runs a seven-day backfill with repeated attempts. <code>INSERT OVERWRITE</code> replaces the partition; append keeps rows from every earlier attempt. Real idempotency also needs stable inputs, transaction boundaries and the table format&apos;s publish semantics.</p>
         <BackfillSim />
       </section>
 
@@ -59,25 +59,17 @@ export function Ch4Orchestrate({ chapter }: Ch4OrchestrateProps) {
 
       <AntiPatterns
         items={[
-          "<b>Appending on a retryable path without a stable key.</b> Repeated attempts can preserve duplicate rows unless the sink provides an idempotent merge or deduplication contract.",
-          "<b>Mixing external side effects into a data write.</b> Isolate notifications and API writes, then use an idempotency key or delivery ledger.",
-          "<b>Reading <code>CURRENT_DATE</code> or <code>NOW()</code> for logical partition selection.</b> Pass the scheduled partition explicitly so backfills target the requested interval.",
-          "<b>Assuming alerts exist.</b> Configure deadlines, callbacks, ownership, and routing explicitly, then test the failure path.",
+          "<b>Appending on a retryable path without a stable key.</b> Retries keep duplicate rows unless the sink merges or deduplicates idempotently.",
+          "<b>Mixing external side effects into a data write.</b> Move notifications and API writes out and protect them with an idempotency key or delivery ledger.",
+          "<b>Selecting the partition with <code>CURRENT_DATE</code> or <code>NOW()</code>.</b> Pass the scheduled partition explicitly so backfills hit the requested interval.",
+          "<b>Assuming alerts exist.</b> Configure deadlines, callbacks, ownership and routing, then test the failure path.",
         ]}
       />
       <BestPractices
         items={[
-          "Choose <b>overwrite, merge, or upsert</b> from the table's key and partition semantics. Test a repeated attempt against the same logical input.",
-          "Pass the logical partition as a run parameter. Also pin code, source snapshots, and nondeterministic inputs when byte-for-byte reproduction is required.",
-          "Define deadlines and alerts at the appropriate DAG or task level. Verify that the configured Airflow version and notification path produce the expected escalation.",
-          "For unavoidable side effects (emails, pushes, external API writes), <b>isolate them in a dedicated terminal task</b> and maintain an external ledger so replays can skip already-sent work.",
-        ]}
-      />
-      <Takeaway
-        items={[
-          "Airflow can repeat tasks through retries, clearing, and backfills. Design for that execution model.",
-          "A logical date plus deterministic input selection and suitable sink semantics can make a partition write idempotent.",
-          "Isolate external side effects and protect them with stable idempotency keys or a delivery ledger.",
+          "Choose <b>overwrite, merge or upsert</b> from the table's key and partition semantics, and test a repeated attempt on the same logical input.",
+          "For byte-for-byte reproduction, also pin code, source snapshots and nondeterministic inputs.",
+          "Put unavoidable side effects (emails, pushes, external API writes) in <b>a dedicated terminal task</b> with an external ledger, so replays skip work already sent.",
         ]}
       />
     </>

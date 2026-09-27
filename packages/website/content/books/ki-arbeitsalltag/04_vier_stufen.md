@@ -1,8 +1,6 @@
 # Die vier Stufen der Datenklassifizierung im Detail
 
-Public, Internal, Confidential, Restricted. Der Reflex aus Kapitel 3, hier in der Langfassung.
-
-Pro Stufe bekommst du Definition, Beispiele, KI-Regel und je ein gutes und ein schlechtes Beispiel. Schlag nach, wenn dir ein Grenzfall auf dem Schreibtisch liegt. Einmal richtig gelernt, für immer anwendbar.
+Dieses Kapitel ist die Langfassung der vier Stufen aus Kapitel 3. Pro Stufe findest du Definition, Beispiele, KI-Regel und Beispiel-Prompts zum Nachschlagen im Grenzfall.
 
 ## Stufe 1: Public
 
@@ -21,7 +19,7 @@ Pro Stufe bekommst du Definition, Beispiele, KI-Regel und je ein gutes und ein s
 
 > „Schreibe einen Blogpost über Machine Learning für einen produzierenden Mittelständler."
 
-Okay. Keine firmeninternen Infos drin.
+Das ist in Ordnung, weil keine firmeninternen Infos drinstehen.
 
 ## Stufe 2: Internal
 
@@ -35,17 +33,17 @@ Okay. Keine firmeninternen Infos drin.
 - Interne Newsletter
 - HR-Leitlinien (allgemeine Version)
 
-**Regel für KI:** In Enterprise-Tools mit AVV (Copilot, ChatGPT Business, Claude Team) okay. In der Free-Version nur, wenn dein Unternehmen explizit zustimmt, und selbst dann besser nicht.
+**Regel für KI:** In Enterprise-Tools mit AVV (Copilot, ChatGPT Business, Claude Team) erlaubt. In der Free-Version nur mit ausdrücklicher Zustimmung deines Unternehmens, und selbst dann besser nicht.
 
 **Beispiel-Prompt:**
 
 > „Unsere IT-Policy sagt, dass Mitarbeitende ihre Notebooks verschlüsseln müssen. Schreib eine Erinnerungs-Mail für mein Team."
 
-Grenzfall. Frag dich, ob OpenAI unsere Policy sehen und daraus womöglich Trainingsdaten machen darf. Ohne AVV lautet die Antwort: eher nein.
+Im Grenzfall fragst du, ob OpenAI die Policy sehen und daraus womöglich Trainingsdaten machen darf. Ohne AVV eher nicht.
 
 ## Stufe 3: Confidential
 
-**Definition:** Sensibel. Nur Leute, die diese Infos wirklich brauchen, sollten sie sehen.
+**Definition:** Sensible Infos, die nur sehen sollte, wer sie wirklich braucht.
 
 **Beispiele:**
 
@@ -63,19 +61,19 @@ Grenzfall. Frag dich, ob OpenAI unsere Policy sehen und daraus womöglich Traini
 
 > „Unser Kunde Alpha macht 30 Prozent unseres Umsatzes. Welche Fragen müssen wir prüfen, bevor wir Unterstützungsmaßnahmen ableiten?"
 
-Kundennamen, Umsatzabhängigkeit, doppelt Confidential.
+Kundenname und Umsatzabhängigkeit sind beide Confidential.
 
 **Beispiel (richtig):**
 
 > „Ein Kunde macht rund 30 Prozent unseres Umsatzes. Wir möchten ihn besser unterstützen. Welche Ideen hast du?"
 
-Keine Namen, generisches Szenario. KI hilft trotzdem.
+Das Szenario ist generisch, und die KI hilft trotzdem.
 
-> **Achtung:** Die Versuchung ist groß, „nur den einen Kundennamen" einzutippen, weil die Antwort dann besser klingt. Genau dieser eine Name ist das Problem. Free-ChatGPT kann Daten für Training nutzen, solange du Opt-out nicht aktiv gesetzt hast.
+> **Achtung:** Auch „nur der eine Kundenname", mit dem die Antwort besser klingt, ist ein Verstoß. Free-ChatGPT kann Daten für Training nutzen, solange du Opt-out nicht aktiv gesetzt hast.
 
 ## Stufe 4: Restricted
 
-**Definition:** Höchste Stufe. Nur Menschen mit expliziter Freigabe, oft schriftlich, oft namentlich benannt.
+**Definition:** Die höchste Stufe, nur für Menschen mit ausdrücklicher, oft schriftlicher und namentlicher Freigabe.
 
 **Beispiele:**
 
@@ -86,7 +84,7 @@ Keine Namen, generisches Szenario. KI hilft trotzdem.
 - Geheime Verträge oder Patente
 - M&A-Pläne, interne Due-Diligence-Dokumente
 
-**Regel für KI:** Niemals. Auch nicht in Enterprise-Varianten, außer mit dediziertem Freigabeprozess.
+**Regel für KI:** Niemals, auch nicht in Enterprise-Varianten, außer mit eigenem Freigabeprozess.
 
 **Beispiel (niemals):**
 
@@ -105,7 +103,7 @@ Allein das Eingeben des Passworts ist ein Security-Incident, unabhängig von der
 
 ## Vier Abgrenzungsfragen
 
-Unsicher, welche Stufe? Frag dich der Reihe nach:
+Bist du unsicher, fragst du der Reihe nach:
 
 1. **Darf diese Info auf unserer Website stehen?** Nein → nicht Public.
 2. **Würde es der Konkurrenz helfen, wenn sie es wüsste?** Ja → mindestens Confidential.
@@ -114,13 +112,13 @@ Unsicher, welche Stufe? Frag dich der Reihe nach:
 
 ## Dein Unternehmen kann abweichen
 
-Die vier Stufen sind Standard nach ISO 27001 und in den meisten großen Unternehmen üblich. Dein Arbeitgeber darf trotzdem abweichen. Er kann:
+Die vier Stufen sind Standard nach ISO 27001 und in den meisten großen Unternehmen üblich. Dein Arbeitgeber kann trotzdem:
 
 - Confidential in „Confidential" und „Highly Confidential" aufteilen
 - Die Stufen anders nennen (Level 1 bis 4, oder Rot/Gelb/Grün)
 - Zusätzliche Regeln haben („Kundennamen sind bei uns immer Confidential, egal was")
 
-> **Tipp:** Frag deine IT- oder Compliance-Abteilung nach der aktuellen Klassifizierungs-Tabelle. Die existiert in 95 Prozent der Unternehmen ab 50 Mitarbeitenden. Du musst sie nur finden.
+> **Tipp:** Frag deine IT- oder Compliance-Abteilung nach der aktuellen Klassifizierungs-Tabelle. Die existiert in 95 Prozent der Unternehmen ab 50 Mitarbeitenden.
 
 ## Checkliste
 

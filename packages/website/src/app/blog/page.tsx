@@ -122,23 +122,33 @@ function BlogIndexContent({ locale }: { readonly locale: Locale }) {
   return (
     <div className="blog-index" data-blog-index data-plakat-page="idea">
       {/* IDEA band (SPEC §2.3, §3.12): the plakat-idea scope on the hero,
-          four corner dots, the caps line, the Kobalt poster title, a 17px
-          lede and the cloud halftone. Three type sizes; the update date
-          moves to paper under the section head. The blog reset in blog.css
-          zeroes Tailwind spacing, so every gap here is set in
-          blog-index.css. */}
-      <header className="blog-index__hero plakat-idea" data-blog-hero>
+          four corner dots, the arrow caps line, the Himbeere poster title,
+          a 17px Kobalt lede and the Kobalt cloud halftone: the three colours
+          of the IDEA poster, as on /demos. Three type sizes; the update date
+          moves to paper under the section head. From lg the halftone sits
+          beside the lede, so the first article reaches the first view. The
+          blog reset in blog.css zeroes Tailwind spacing, so every gap here
+          is set in blog-index.css. data-cover-band lets the band checks
+          (contrast, focus) find it like every other band. */}
+      <header
+        className="blog-index__hero plakat-idea"
+        data-blog-hero
+        data-cover-band=""
+        data-plakat="idea"
+      >
         <CornerDots />
         <div className="blog-index__container blog-index__hero-inner">
-          <CapsLine>{copy.kicker(BLOG_POSTS.length)}</CapsLine>
+          <CapsLine arrow>{copy.kicker(BLOG_POSTS.length)}</CapsLine>
           <h1 className="blog-index__title" style={posterTitleStyle(copy.title)}>
             {copy.title}
           </h1>
-          <p className="blog-index__lead">
-            {copy.intro}
-            <span className="blog-index__lead-detail"> {copy.introDetail}</span>
-          </p>
-          <Halftone field="blog" className="blog-index__halftone" />
+          <div className="blog-index__hero-row">
+            <p className="blog-index__lead">
+              {copy.intro}
+              <span className="blog-index__lead-detail"> {copy.introDetail}</span>
+            </p>
+            <Halftone field="blog" className="blog-index__halftone" />
+          </div>
         </div>
       </header>
 

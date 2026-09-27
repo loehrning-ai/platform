@@ -4,7 +4,13 @@ import { m, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 import { HOME_COPY } from "@/components/home/home-copy";
 import { GlobeToggle } from "@/components/home/globe-toggle";
 import {
@@ -18,7 +24,7 @@ import { cx } from "@/components/werk/cx";
 import { BrandButton } from "@/components/ui/brand-button";
 import { withMotionProvider } from "@/components/motion/with-motion-provider";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
-import { posterTitleStyle } from "@/lib/plakat/fit";
+import { fitEm } from "@/lib/plakat/fit";
 import { HOME_SCENE } from "@/lib/plakat/palettes";
 import "./phone-hero.css";
 
@@ -27,6 +33,29 @@ import "./phone-hero.css";
  * behind the one constant in src/lib/plakat/palettes.ts.
  */
 const LEMONS = HOME_SCENE === "lemons";
+
+/**
+ * The text the poster title's fit rule measures: the first two headline
+ * parts are one unbreakable line (joined by a no-break space in the
+ * markup), so the title shrinks until that line fits its column.
+ */
+function posterFitText(headline: readonly string[]): string {
+  const [first = "", second = "", ...rest] = headline;
+  return [`${first}\u00a0${second}`, ...rest].join(" ");
+}
+
+/**
+ * Extra headroom on the fit for the home title only. Its first line is a
+ * whole phrase bound by a no-break space, so it runs to the column edge at
+ * 320; the Arial-metric fallback face (font-display: optional, first visit)
+ * sets about 4.4% wider than Loehrning Sans and would clip it.
+ */
+const FALLBACK_HEADROOM = 1.05;
+
+function heroTitleStyle(headline: readonly string[]): CSSProperties {
+  const fit = Math.ceil(fitEm(posterFitText(headline)) * FALLBACK_HEADROOM * 1000) / 1000;
+  return { "--fit": String(fit) } as CSSProperties;
+}
 
 /** The band's one caps line (SPEC §3.6). CSS sets the capitals. */
 const HERO_CAPS: Record<Locale, string> = {
@@ -106,11 +135,13 @@ function DesktopHeroGlobe({
         // Lemons: the flat disc starts 2rem right of the 40rem text column
         // and bleeds off the right edge, never by more than half, so Germany
         // (near its centre) stays in view from 1024 up; the band's foot strip
-        // cuts it below, so on wide screens it rises as a dome. No fade (a
-        // fade is off-poster).
+        // cuts it below, so on wide screens it rises as a dome. Its width is
+        // the section's --hero-globe-w, which also sets the band body's
+        // min-height, so the strip never rises over the country (a shorter
+        // English lead included). No fade (a fade is off-poster).
         // Graphit: the masked line globe of the fallback scene.
         LEMONS
-          ? "left-[calc(max(3rem,50vw_-_36rem)_+_42rem)] top-24 aspect-square w-[min(62vw,56rem,calc(2*(100vw_-_max(3rem,50vw_-_36rem)_-_46rem)))]"
+          ? "left-[calc(max(3rem,50vw_-_36rem)_+_42rem)] top-24 aspect-square w-(--hero-globe-w)"
           : "home-hero-network-mask bottom-0 right-0 h-[110%] w-[70vw]",
       )}
     >
@@ -206,7 +237,11 @@ function HeroSectionContent({
       data-home-scene={HOME_SCENE}
       ref={sectionRef}
       data-section="hero"
-      className="relative -mt-16 flex flex-col overflow-hidden px-6 pb-6 pt-24 max-lg:mt-0 max-lg:p-0 md:px-12 md:pb-10 md:pt-24 lg:min-h-[38rem] lg:pb-12"
+      className={cx(
+        "relative -mt-16 flex flex-col overflow-hidden px-6 pb-6 pt-24 max-lg:mt-0 max-lg:p-0 md:px-12 md:pb-10 md:pt-24 lg:min-h-[38rem] lg:pb-12",
+        LEMONS &&
+          "[--hero-globe-w:min(62vw,56rem,calc(2*(100vw_-_max(3rem,50vw_-_36rem)_-_46rem)))]",
+      )}
     >
       {/* The globe is the hero's only animated signal.
 
@@ -243,7 +278,17 @@ function HeroSectionContent({
         />
       ) : null}
 
-      <div data-hero-body className="relative z-10 mx-auto w-full max-w-6xl">
+      {/* Lemons from lg: the body starts level with the disc (both 6rem
+          under the band top) and is at least half the disc tall, so the
+          foot strip (2.5rem below the body) starts under the disc's centre
+          and never cuts the country framed above it. */}
+      <div
+        data-hero-body
+        className={cx(
+          "relative z-10 mx-auto w-full max-w-6xl",
+          LEMONS && "lg:min-h-[calc(var(--hero-globe-w)*0.5)]",
+        )}
+      >
         <div
           data-hero-grid
           className="grid grid-cols-1 items-start gap-0 lg:grid-cols-[minmax(0,40rem)_1fr]"
@@ -274,7 +319,7 @@ function HeroSectionContent({
                   ? "poster-title text-foreground"
                   : "font-bold leading-none tracking-[-0.015em] text-foreground"
               }
-              style={LEMONS ? posterTitleStyle(copy.headline.join(" ")) : undefined}
+              style={LEMONS ? heroTitleStyle(copy.headline) : undefined}
             >
               {/* One lockup for every width: the first two parts joined on
                   the first line, the last on the second, in one colour. The
@@ -283,7 +328,9 @@ function HeroSectionContent({
                 <span key={line}>
                   <span>{line}</span>
                   {index === 0 ? (
-                    " "
+                    // Lemons: the first line never breaks ("KI verstehen.",
+                    // "Understand AI."), so no word is stranded at 320.
+                    LEMONS ? "\u00a0" : " "
                   ) : index < copy.headline.length - 1 ? (
                     <br />
                   ) : null}
@@ -416,7 +463,7 @@ function HeroSectionContent({
                 <Link
                   href={localizeHref(href, locale)}
                   prefetch={false}
-                  className="group block h-full py-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
+                  className="group block h-full py-4 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
                 >
                   {entry}
                 </Link>

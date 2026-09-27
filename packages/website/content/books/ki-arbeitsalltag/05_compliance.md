@@ -1,10 +1,6 @@
 # AVV, DSGVO, Shadow AI: Was du wissen musst
 
-Datenschutz war mal Sache der IT. Seit du KI nutzt, sitzt du mit am Tisch.
-
-Du musst kein Jurist werden. Artikel 4 der EU-KI-Verordnung verlangt seit dem 2. Februar 2025 von Anbietern und Betreibern kontextgerechte Maßnahmen, die die Entwicklung der KI-Kompetenz ihres Personals und weiterer in ihrem Auftrag handelnder Personen unterstützen. Seit dem 27. Juli 2026 muss die Organisation kein bestimmtes Kompetenzniveau einzelner Personen garantieren. Reines Bewusstsein ohne konkrete Maßnahme reicht trotzdem nicht.
-
-Vier Regeln, vereinfacht.
+Seit du KI nutzt, ist Datenschutz auch deine Sache. Artikel 4 der EU-KI-Verordnung verlangt seit dem 2. Februar 2025 von Anbietern und Betreibern kontextgerechte Maßnahmen, die die Entwicklung der KI-Kompetenz ihres Personals und weiterer in ihrem Auftrag handelnder Personen unterstützen. Seit dem 27. Juli 2026 muss die Organisation kein bestimmtes Kompetenzniveau einzelner Personen garantieren. Reines Bewusstsein ohne konkrete Maßnahme reicht trotzdem nicht.
 
 ## Regel 1: DSGVO (Datenschutz-Grundverordnung)
 
@@ -35,17 +31,16 @@ Vier Regeln, vereinfacht.
 - Unternehmen hat einen AVV mit dem Anbieter? Dann darfst du die Enterprise-Variante im Rahmen der Klassifizierung nutzen.
 - Kein AVV? Dann nur Public-Daten, auch wenn der Kollege das anders macht.
 
-Der AVV-Status ist meist in der IT-Policy oder bei Compliance bekannt. Du musst nicht raten. Du fragst. Eine einzige Mail mit drei Fragen gibt dir Klarheit für alle künftigen Prompts. Kopier sie, trag den Empfänger ein, fertig:
+Den AVV-Status kennen meist IT-Policy oder Compliance. Frag mit dieser Mail nach, statt zu raten:
 
 > **Prompt-Vorlage:** Betreff: AVV-Status unserer KI-Tools
 >
 > Hallo [IT / Datenschutz / Compliance],
 >
-> ich nutze KI-Tools im Arbeitsalltag und möchte sichergehen, dass ich mich an unsere Vorgaben halte. Drei kurze Fragen:
+> ich nutze KI-Tools im Arbeitsalltag und möchte sichergehen, dass ich mich an unsere Vorgaben halte. Zwei kurze Fragen:
 >
 > 1. Haben wir einen Auftragsverarbeitungsvertrag (AVV / DPA) mit OpenAI, Anthropic oder Microsoft?
-> 2. Seit wann läuft er?
-> 3. Für welche Produktvariante gilt er (z. B. ChatGPT Business, Copilot, Claude Team)?
+> 2. Seit wann läuft er, und für welche Produktvariante gilt er (z. B. ChatGPT Business, Copilot, Claude Team)?
 >
 > Damit weiß ich, welche Daten ich in welchem Tool eingeben darf. Danke dir.
 
@@ -57,7 +52,7 @@ Der AVV-Status ist meist in der IT-Policy oder bei Compliance bekannt. Du musst 
 
 „Ich finde ein cooles Tool, `DataAnalyzerAI.com`. Ich lade meine Kundenliste hoch. Das Tool analysiert die Daten. Drei Monate später stellt die IT beim Audit fest, dass Kundendaten bei einem unbekannten Anbieter in den USA liegen."
 
-Das ist Shadow AI, aktuell eines der größten Governance-Risiken. Etwa jeder Zehnte nutzt KI ohne Wissen des Arbeitgebers, und rund vier von zehn Unternehmen vermuten private KI-Nutzung im Team (Bitkom 2025).
+Shadow AI ist eines der größten Governance-Risiken. Etwa jeder Zehnte nutzt KI ohne Wissen des Arbeitgebers, und rund vier von zehn Unternehmen vermuten private KI-Nutzung im Team (Bitkom 2025).
 
 **Warum das ein Problem ist:**
 
@@ -66,15 +61,13 @@ Das ist Shadow AI, aktuell eines der größten Governance-Risiken. Etwa jeder Ze
 - Er nutzt sie eventuell für Modelltraining.
 - Niemand im Unternehmen weiß, dass es passiert ist.
 
-**Regel:** Nur KI-Tools nutzen, die IT oder Compliance freigegeben hat. Neues Tool entdeckt? Kurze Mail an die IT mit dem Link. Zwei Minuten Arbeit, die potenziell ein Bußgeld sparen.
+**Regel:** Nutze nur KI-Tools, die IT oder Compliance freigegeben hat. Schick der IT bei einem neuen Tool eine kurze Mail mit dem Link.
 
-> **Achtung:** Shadow AI ist fast nie böser Wille. Leute wollen produktiv sein. Die Lösung heißt nicht Verbot, sondern eine klare Liste freigegebener Tools plus ein kurzer Weg, neue vorzuschlagen.
+> **Achtung:** Hinter Shadow AI steckt fast nie böser Wille, die Leute wollen produktiv sein. Dagegen hilft eine klare Liste freigegebener Tools mit einem kurzen Weg, neue vorzuschlagen.
 
 ## Regel 4: EU AI Act, Artikel 4
 
 Seit 2. Februar 2025 greift Artikel 4 der Verordnung (EU) 2024/1689. Anbieter und Betreiber von KI-Systemen müssen Maßnahmen ergreifen, die die Entwicklung der KI-Kompetenz ihres Personals und anderer in ihrem Auftrag handelnder Personen unterstützen. Die seit 27. Juli 2026 geltende Fassung verlangt nicht, dass ein bestimmtes individuelles Kompetenzniveau garantiert wird.
-
-Drei Punkte in Klartext:
 
 - **Wer ist betroffen?** Jeder, der KI im beruflichen Kontext nutzt, nicht nur KI-Entwickler.
 - **Was ist zu berücksichtigen?** Vorwissen, Erfahrung, Ausbildung, Einsatzkontext sowie betroffene Personen oder Gruppen.
@@ -82,34 +75,25 @@ Drei Punkte in Klartext:
 
 Ein eigener Bußgeldtatbestand nur für Art. 4 ist im EU-Sanktionskatalog nicht ausdrücklich ausgewiesen (Stand: 28. Juli 2026). Die Kommissions-FAQ nennt Anfang August 2026 für den Beginn der nationalen Aufsicht und Durchsetzung. Welche Maßnahme oder nationale Sanktion bei einem konkreten Art.-4-Verstoß greift, muss anhand des geltenden deutschen Rechts geprüft werden. Für andere, in Art. 99 ausdrücklich genannte Pflichtverletzungen gelten eigene Höchstbeträge.
 
-> **Rechtlicher Hinweis:** Wenn dein Unternehmen einen Betriebsrat hat, ist ein KI-Tool-Rollout oft zustimmungspflichtig, Grundlage ist §87 BetrVG (Verhalten im Betrieb, Kontrolleinrichtungen). Klärt das früh. Ein nachträgliches Einspruchsverfahren kostet Monate.
+> **Rechtlicher Hinweis:** Wenn dein Unternehmen einen Betriebsrat hat, ist ein KI-Tool-Rollout oft zustimmungspflichtig, Grundlage ist §87 BetrVG (Verhalten im Betrieb, Kontrolleinrichtungen). Klärt das früh, denn ein nachträgliches Einspruchsverfahren kostet Monate.
 
 ## Was heißt das praktisch?
 
-**Tu:**
-
-- Personenbezogene Daten nicht in Free-ChatGPT.
-- Firmen-Confidential nicht in Free-ChatGPT.
-- Neues KI-Tool vor der ersten Nutzung mit IT abklären.
-- Nur freigegebene Tools einsetzen.
-- KI-Richtlinie des Unternehmens lesen und befolgen.
-
-**Lass:**
-
-- „Ist ja klein, wird keiner merken."
-- „Andere tun das auch."
-- Shadow AI.
-- Passwörter oder API-Keys irgendwohin tippen.
+- Personenbezogene Daten und Firmen-Confidential gehören nicht in Free-ChatGPT.
+- Du nutzt nur freigegebene Tools und klärst neue vor der ersten Nutzung mit der IT.
+- Du liest und befolgst die KI-Richtlinie des Unternehmens.
+- Passwörter und API-Keys tippst du nirgendwo ein.
+- „Ist ja klein" und „Andere tun das auch" sind keine Ausnahmen.
 
 ## Wer ist verantwortlich?
 
-Nicht du allein. Aber du bist ein Glied der Kette:
+Du bist ein Glied der Kette:
 
 - **Dein Unternehmen** ist primär verantwortlich für DSGVO und AVV, als verantwortliche Stelle nach Art. 4 DSGVO.
 - **Geschäftsführung, Datenschutzbeauftragte, CISO** setzen Richtlinien und AVV-Prozesse auf.
 - **Du** bist verantwortlich, diese Richtlinien einzuhalten, und bei Unsicherheit zu fragen, statt zu raten.
 
-Schludert dein Unternehmen, sprich mit Compliance oder dem Datenschutzbeauftragten. Beide haben ein Eigeninteresse an sauberer Dokumentation.
+Fehlen diese Prozesse, sprich mit Compliance oder dem Datenschutzbeauftragten.
 
 ## Konsequenz-Beispiel
 
@@ -118,8 +102,6 @@ Was passiert konkret, wenn du einen Kundennamen in Free-ChatGPT tippst?
 1. **DSGVO-Verstoß** durch fehlende Rechtsgrundlage (kein AVV).
 2. **Mögliche Integration in Trainingsdaten**, falls Opt-out nicht aktiv gesetzt ist.
 3. **Haftungsfrage bei einem späteren Datenleak**, dein Unternehmen muss beweisen, wer wann was eingegeben hat.
-
-Ein einzelner Name, ein einzelner Prompt, drei potenzielle rechtliche Probleme.
 
 ## Checkliste
 

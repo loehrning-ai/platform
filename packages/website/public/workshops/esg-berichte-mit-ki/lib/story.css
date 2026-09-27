@@ -1106,26 +1106,7 @@ html[data-motion="static"] .route__bar {
 
 /* ---------------------------------------------------------------- cover */
 
-/* The globe box spans the slide so nothing crops the sphere mid-canvas; the drawing starts at x 900, and
-   its own left edge (where the SVG viewBox cuts the atmosphere) fades out over 200 px, so there is no seam.
-   Opacity 0.72 lifts the grid lines to about #3a3a3a on the #141414 ground, visible on a projector. */
-#cover .workshop-globe {
-  top: 0;
-  right: 0;
-  left: 0;
-  width: 1920px;
-  height: 1080px;
-  overflow: hidden;
-  opacity: 0.72;
-  background: url("../assets/globe.svg") 900px center / 1280px auto no-repeat;
-  -webkit-mask-image: linear-gradient(to right, transparent 900px, #000 1100px);
-  mask-image: linear-gradient(to right, transparent 900px, #000 1100px);
-  transform: none;
-}
-
-#cover .workshop-globe img {
-  display: none;
-}
+/* The cover's poster, scene and colophon live in lib/scenes/cover.css. */
 
 #cover > .body {
   z-index: 1;

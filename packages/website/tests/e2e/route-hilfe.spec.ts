@@ -50,7 +50,7 @@ test.describe("/hilfe Help & FAQ", () => {
       // Copy lock updated: the heading names both documents the platform issues.
       // Narrowing it to one was a confirmed finding of the fidelity audit: the
       // Article 4 disclaimer has to cover the Lernnachweis as well.
-      "Was bedeuten Teilnahmebestätigung und Lernnachweis?",
+      "Was bedeuten die Abschlussdokumente?",
     ] as const) {
       await expect(
         page.getByText(question, { exact: true }),

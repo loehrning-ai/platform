@@ -52,7 +52,7 @@ const LANDING_COPY = {
     heading: "Rollen, Risiken und",
     headingAccent: "Pflichten einordnen.",
     introduction:
-      "Sie nehmen ein KI-Tool aus Ihrem Unternehmen und bestimmen seine Risikoklasse, Ihre Rolle als Anbieter oder Betreiber und die Pflichten, die daraus folgen.",
+      "Sie bestimmen für ein KI-Tool aus Ihrem Unternehmen die Risikoklasse, Ihre Rolle und Ihre Pflichten.",
     start: "Kurs mit Lernkonto starten",
     allCourses: "Alle Kurse",
     imageAlt:
@@ -68,34 +68,18 @@ const LANDING_COPY = {
     legalHeading: "Was Artikel 4 verlangt",
     legalBody:
       "Artikel 4 gilt seit 2.\u00a0Februar\u00a02025. Anbieter und Betreiber von KI-Systemen müssen Maßnahmen treffen, die die KI-Kompetenz ihrer Beschäftigten und weiterer Personen unterstützen, die in ihrem Auftrag mit den Systemen arbeiten. Vorwissen, Erfahrung, Ausbildung, Nutzungskontext und betroffene Personengruppen sind zu berücksichtigen. Die seit 27.\u00a0Juli\u00a02026 geltende Fassung verlangt kein garantiertes individuelles Kompetenzniveau.",
-    tracks: [
-      {
-        title: "Blöcke 1 und 2 · Orientierung",
-        body: "Rollen, Geltungsbereich, Fristen, verbotene Praktiken und Risikoklassen. Geeignet ohne juristische Vorkenntnisse.",
-      },
-      {
-        title: "Blöcke 3 bis 6 · Umsetzung",
-        body: "Hochrisiko-Pflichten, GPAI, Transparenz, Governance und eine dokumentierbare Arbeitsmethode für Organisationen.",
-      },
-    ],
     curriculumHeading: "Lehrplan",
     minutes: (count: number) => `${count} Min.`,
     audienceHeading: "Für wen",
-    audienceBody:
-      "Der Einstieg setzt weder Programmierkenntnisse noch ein Jurastudium voraus. Die späteren Blöcke richten sich besonders an Datenschutz, IT, Compliance, Einkauf, Personal und Fachverantwortliche.",
+    audience: [
+      { title: "Alle, die im Unternehmen KI-Tools auswählen oder nutzen" },
+      { title: "Ab Block 3: Datenschutz, IT, Compliance, Einkauf, Personal, Fachbereiche" },
+      { title: "Ohne Programmier- oder Jura-Vorkenntnisse" },
+    ],
     outcomes: [
-      {
-        title: "Eine konkrete Nutzung einer Rolle zuordnen",
-        detail: "Anbieter, Betreiber, Einführer oder Händler.",
-      },
-      {
-        title: "Verbotene Praktiken, Hochrisiko-Systeme und Transparenzfälle auseinanderhalten",
-        detail: "Für jeden Fall gilt eine eigene Liste von Pflichten.",
-      },
-      {
-        title: "Eine Pflichtenliste mit Zuständigen und Fristen anlegen",
-        detail: "Mit Rechtsstand und Quelle zu jeder Frist.",
-      },
+      { title: "Ihre Rolle als Anbieter, Betreiber, Einführer oder Händler bestimmen" },
+      { title: "Verbotene Praktiken, Hochrisiko-Systeme und Transparenzfälle unterscheiden" },
+      { title: "Pflichten mit Zuständigen, Fristen und Rechtsquelle auflisten" },
     ],
     // The EU AI Act course addresses the reader with "Sie" (CONTENT_GUIDE).
     outcomesHeading: "Was Sie danach können",
@@ -136,7 +120,7 @@ const LANDING_COPY = {
     heading: "Map roles, risks,",
     headingAccent: "and duties.",
     introduction:
-      "You take one AI tool your company uses and work out its risk class, your role as provider or deployer, and the duties that follow.",
+      "For one AI tool your company uses, you work out its risk class, your role and your duties.",
     start: "Start with a learning account",
     allCourses: "All courses",
     imageAlt:
@@ -152,34 +136,18 @@ const LANDING_COPY = {
     legalHeading: "What Article 4 requires",
     legalBody:
       "Article 4 has applied since 2 February 2025. Providers and deployers of AI systems must take measures that support the development of AI literacy among staff and other people who work with those systems on their behalf. Prior knowledge, experience, education, context of use, and affected groups must be considered. The version in force since 27 July 2026 does not require a guaranteed level of individual AI literacy.",
-    tracks: [
-      {
-        title: "Blocks 1 and 2 · Orientation",
-        body: "Roles, scope, application dates, prohibited practices, and risk categories. No legal background required.",
-      },
-      {
-        title: "Blocks 3 to 6 · Implementation",
-        body: "High-risk duties, GPAI, transparency, governance, and a documented working method for organizations.",
-      },
-    ],
     curriculumHeading: "Course plan",
     minutes: (count: number) => `${count} min`,
     audienceHeading: "Who it is for",
-    audienceBody:
-      "The opening blocks require neither programming skills nor legal training. The later blocks are especially relevant to data protection, IT, compliance, procurement, HR, and operational owners.",
+    audience: [
+      { title: "Anyone choosing or using AI tools at work" },
+      { title: "From block 3: data protection, IT, compliance, procurement, HR, owners" },
+      { title: "No coding or legal background needed" },
+    ],
     outcomes: [
-      {
-        title: "Assign a specific use to a role",
-        detail: "Provider, deployer, importer or distributor.",
-      },
-      {
-        title: "Tell prohibited practices, high-risk systems and transparency cases apart",
-        detail: "Each case comes with its own list of duties.",
-      },
-      {
-        title: "Set up a list of duties with owners and deadlines",
-        detail: "With the legal state and source for every deadline.",
-      },
+      { title: "Identify your role as provider, deployer, importer or distributor" },
+      { title: "Tell prohibited practices, high-risk systems and transparency cases apart" },
+      { title: "List duties with owners, deadlines and legal source" },
     ],
     outcomesHeading: "What you can do afterwards",
     evidenceHeading: "What the completion record establishes",
@@ -327,16 +295,8 @@ export default async function EuAiActKursLandingPage() {
           <CourseOutcomeList items={copy.outcomes} />
         </CourseLandingSection>
 
-        <CourseLandingSection
-          title={copy.audienceHeading}
-          intro={copy.audienceBody}
-        >
-          <CourseOutcomeList
-            items={copy.tracks.map((track) => ({
-              title: track.title,
-              detail: track.body,
-            }))}
-          />
+        <CourseLandingSection title={copy.audienceHeading}>
+          <CourseOutcomeList items={copy.audience} />
         </CourseLandingSection>
 
         <CourseLandingSection title={copy.curriculumHeading}>

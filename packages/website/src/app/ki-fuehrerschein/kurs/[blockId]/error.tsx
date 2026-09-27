@@ -20,14 +20,14 @@ export default function BlockError({
       ? {
           eyebrow: "Lesson unavailable",
           title: "The lesson could not be loaded",
-          body: "Progress data was not changed. Reload the lesson or return to the course overview.",
+          body: "Your progress is kept.",
           retry: "Reload",
           back: "Course overview",
         }
       : {
           eyebrow: "Lektion nicht verfügbar",
           title: "Die Lektion konnte nicht geladen werden",
-          body: "Fortschrittsdaten wurden nicht verändert. Lade die Lektion erneut oder kehre zur Kursübersicht zurück.",
+          body: "Der Fortschritt bleibt erhalten.",
           retry: "Erneut laden",
           back: "Kursübersicht",
         };

@@ -17,7 +17,7 @@ export default function Ch11DeployDe() {
       <Hero
         eyebrow="Kapitel 11 · Betrieb"
         title="Ein bereitgestelltes Modell ist ein <em>gewartetes System.</em>"
-        hook="Nach dem Deployment hört die Arbeit nicht auf, sie wechselt die Form. Request-Verarbeitung, Merkmalsberechnung, Model Serving, Monitoring, Rollback. Jede Kontrolle senkt ein benanntes Risiko. Keine zertifiziert das System."
+        hook="Produktion verbindet Request-Verarbeitung, Merkmalsberechnung, Model Serving, Monitoring und Rollback. Jede Kontrolle senkt ein benanntes Risiko, keine zertifiziert das System."
         meta={[
           { k: "Lesezeit", v: "12 min" },
           {
@@ -35,11 +35,10 @@ export default function Ch11DeployDe() {
           zuordnen.
         </h2>
         <p className="prose">
-          Produktions-ML ist kein Modell, sondern ein System aus
-          Request-Routing, Merkmalsabruf, Modellbereitstellung und Monitoring.
-          Solange auch nur eine Komponente ohne Eigentümerschaft, Timeouts,
-          Fallbacks, Beobachtbarkeit und Rollback-Verhalten läuft, ist der
-          Gesamtpfad nicht belastbar.
+          Produktions-ML ist ein System aus Request-Routing, Merkmalsabruf,
+          Modellbereitstellung und Monitoring. Gib jeder Komponente
+          Verantwortliche, Timeouts, Fallbacks, Beobachtbarkeit und
+          Rollback-Verhalten, bevor du dem Gesamtpfad vertraust.
         </p>
         <ModelServingArchitecture />
       </section>
@@ -50,22 +49,21 @@ export default function Ch11DeployDe() {
           Datendrift und Konzeptdrift benötigen unterschiedliche Evidenz.
         </h2>
         <p className="prose">
-          <strong>Datendrift</strong> bedeutet, dass sich die Eingabeverteilung
-          verschiebt. Das Modell wurde mit Nutzern aus 2023 trainiert, sieht
-          aber 2025 anderes Verhalten. Gemessen wird dies mit dem PSI
-          (Population Stability Index): Summe von (actual − expected) ×
-          ln(actual/expected) über alle Buckets. PSI hängt von Buckets und
-          Stichprobengröße ab. Ein Grenzwert wie 0.2 ist eine kontextabhängige
-          Heuristik, keine allgemeine Retraining-Regel; Eingabedrift beweist
-          keinen Leistungsverlust.
+          <strong>Datendrift</strong> heißt, die Eingabeverteilung verschiebt
+          sich: Das Modell lernte auf Nutzern aus 2023 und sieht 2025 anderes
+          Verhalten. Der PSI (Population Stability Index) summiert (actual −
+          expected) × ln(actual/expected) über alle Buckets und hängt von
+          Buckets und Stichprobengröße ab. Ein Grenzwert wie 0.2 ist eine
+          kontextabhängige Heuristik, keine Retraining-Regel, und Eingabedrift
+          beweist keinen Leistungsverlust.
         </p>
         <p className="prose">
-          <strong>Konzeptdrift</strong> sieht man schlechter. Hier verschiebt
-          sich die Beziehung zwischen Merkmalen und Labels: Die Eingaben bleiben
-          gleich, die Entscheidungsgrenze des Modells stimmt trotzdem nicht
-          mehr. Erkennen lässt sich das nur mit Ergebnislabels oder einem
-          begründeten Proxy. Die Label-Verzögerung reicht je nach Produkt von
-          sofort bis zu Monaten und gehört ins Monitoring-Design geschrieben.
+          <strong>Konzeptdrift</strong> sieht man schlechter: Die Beziehung
+          zwischen Merkmalen und Labels verschiebt sich, die Eingaben bleiben
+          gleich, und die Entscheidungsgrenze stimmt nicht mehr. Erkennen lässt
+          sich das nur mit Ergebnislabels oder einem begründeten Proxy; die
+          Label-Verzögerung, von sofort bis zu Monaten, gehört ins
+          Monitoring-Design.
         </p>
         <DriftSimulator />
       </section>
@@ -76,14 +74,13 @@ export default function Ch11DeployDe() {
           Das Rollout-Muster aus Fehlerkosten und Reversibilität wählen.
         </h2>
         <p className="prose">
-          Shadow-Auswertung vergleicht Kandidatenausgaben, ohne sie für
-          Entscheidungen zu verwenden, und kostet trotzdem Kapazität,
-          Protokollierung, Datenschutz und Latenz. Canary setzt einen geeigneten
-          Teil des Live-Verkehrs dem Kandidaten aus. Blue-Green hält zwei
-          Umgebungen vor, und wie schnell der Rollback wirklich greift,
-          entscheiden Zustand, Schemas, Caches und Folgewirkungen. Die Muster
-          lassen sich kombinieren; eine vorgeschriebene Reihenfolge gibt es
-          nicht.
+          Shadow-Auswertung vergleicht Kandidatenausgaben, ohne danach zu
+          handeln, und kostet trotzdem Kapazität und bringt Risiken bei
+          Protokollierung, Datenschutz und Latenz. Canary setzt einen
+          geeigneten Teil des Live-Verkehrs dem Kandidaten aus. Blue-Green hält
+          zwei Umgebungen vor, aber Zustand, Schemas, Caches und Folgewirkungen
+          entscheiden, wie schnell der Rollback greift; die Muster lassen sich
+          in beliebiger Reihenfolge kombinieren.
         </p>
         <ShadowDeployment />
       </section>
@@ -96,14 +93,13 @@ export default function Ch11DeployDe() {
           Training und Serving benötigen einen geprüften Merkmalsvertrag.
         </h2>
         <p className="prose">
-          Training-Serving-Skew entsteht, wenn Trainings- und
-          Bereitstellungspipeline dasselbe Merkmal unterschiedlich rechnen. Das
-          Modell hat auf einer Darstellung gelernt und bekommt eine andere
-          serviert. Gemeinsame Definitionen, versionierte Transformationen,
-          zeitpunktkorrekte Trainings-Joins und Paritätstests drücken dieses
-          Risiko. Ein Feature Store trägt den Vertrag mit, garantiert aber weder
-          Datenfrische und Backfills noch Abhängigkeiten oder gleiche
-          Online-/Offline-Semantik.
+          Training-Serving-Skew entsteht, wenn Training und Bereitstellung
+          dasselbe Merkmal unterschiedlich rechnen: Das Modell lernte eine
+          Darstellung und bekommt eine andere. Gemeinsame Definitionen,
+          versionierte Transformationen, zeitpunktkorrekte Trainings-Joins und
+          Paritätstests senken dieses Risiko. Ein Feature Store trägt den
+          Vertrag mit, garantiert aber weder Datenfrische und Backfills noch
+          Abhängigkeiten oder gleiche Online-/Offline-Semantik.
         </p>
         <FeatureStoreDiagram />
       </section>
@@ -112,29 +108,23 @@ export default function Ch11DeployDe() {
         title="Fehlmuster"
         items={[
           "<b>Kein getesteter Rollback-Pfad.</b> Das alte Artefakt hilft nichts, wenn Schemas, Zustand, Caches oder Folgewirkungen nicht mit zurückgehen.",
-          "<b>Merkmalslogik, die zweimal getrennt entsteht.</b> Unterschiedliche SQL-Abfragen, Scaler, Zeitfenster oder Imputationsregeln erzeugen Skew, sobald niemand ihre Parität prüft.",
           "<b>Unbeobachtetes Kandidatenverhalten.</b> Vor der Freigabe den Kandidaten mit repräsentativen Eingaben über Replay, Shadow, Batch oder eine gestufte Route prüfen.",
           "<b>Nur eine verzögerte Ergebnismetrik überwachen.</b> Eingabequalität, Merkmals- und Vorhersageverteilungen, Latenz, Fehler und fachliche Leitplanken ergänzen, ohne Proxys als Leistungsnachweis zu behandeln.",
-          "<b>Ein Modellartefakt direkt überschreiben.</b> Retraining benötigt unveränderliche Versionen, Evaluation, Freigabe, gestufte Bereitstellung und einen wiederherstellbaren Rollback-Pfad.",
+          "<b>Ein Modellartefakt direkt überschreiben.</b> Retraining braucht unveränderliche Versionen, Evaluation, Freigabe, gestufte Bereitstellung und einen wiederherstellbaren Rollback-Pfad.",
         ]}
       />
       <BestPractices
         title="Bewährte Verfahren"
         items={[
           "<b>Einen Rollout-Vertrag schreiben.</b> Geeigneten Verkehr, Beobachtungsfenster, Akzeptanzmetriken, Leitplanken, Label-Verzögerung, Abbruchverantwortung und Rollback aus dem Systemrisiko ableiten.",
-          "<b>Retraining-Auslöser kalibrieren.</b> Baselines und Fehlerbudgets festlegen, die Handlungsfähigkeit eines Alarms prüfen und bei verfügbaren Labels Ergebnisevidenz verlangen.",
-          "<b>Daten, Code, Konfiguration und Modell versionieren.</b> Datenschutzkonforme Herkunftsnachweise für Training und Evaluation aufbewahren.",
-          "<b>Merkmalsdefinitionen teilen und prüfen.</b> Einen Feature Store nur einsetzen, wenn Konsistenz, Latenz, Eigentümerschaft und Betriebskosten zum System passen.",
-          "<b>Wiederherstellung nach wesentlichen Änderungen und in einem risikobasierten Rhythmus üben.</b> Dokumentieren, ob Artefakte, Schemas, Zustand und abhängige Dienste tatsächlich wiederhergestellt werden.",
+          "<b>Retraining-Auslöser kalibrieren.</b> Baselines und Fehlerbudgets festlegen, prüfen, ob aus einem Alarm eine Maßnahme folgt, und bei verfügbaren Labels Ergebnisevidenz verlangen.",
+          "<b>Daten, Code, Konfiguration und Modell versionieren.</b> Datenschutzkonforme Herkunftsnachweise aufbewahren, die Training und Evaluation reproduzieren.",
         ]}
       />
       <Takeaway
         title="Kernaussagen"
         items={[
-          "<b>Modellverhalten hängt von Code, Daten, Konfiguration und Kontext ab.</b> Jede Ebene überwachen und Alarme mit Verantwortlichen und Reaktion verbinden.",
-          "<b>Deployment-Strategie ist Risikosteuerung.</b> Shadow, Replay, Canary, Blue-Green oder ein anderes Muster nach Exposition, Evidenzbedarf und Reversibilität auswählen.",
-          "<b>Merkmalsparität benötigt Kontrollen.</b> Gemeinsame Definitionen helfen; Versionierung, zeitpunktkorrekte Joins, Frischeprüfungen und Online-/Offline-Paritätstests bleiben erforderlich.",
-          "<b>Retraining ist ein Freigabeprozess, kein Cronjob.</b> Unveränderliche Kandidaten bauen, gegen einen Vertrag evaluieren, Freigabe bestätigen, getesteten Wiederherstellungspfad behalten.",
+          "<b>Modellverhalten hängt von Code, Daten, Konfiguration und Kontext ab.</b> Überwach jede Ebene und gib jedem Alarm Verantwortliche und eine Reaktion.",
         ]}
       />
     </DataScienceLocaleProvider>

@@ -46,12 +46,11 @@ export function ChOverview() {
           Trace a <em>data pipeline</em> from source to serving.
         </h1>
         <p className="ov2-sub">
-          The system is what matters, not the tool list.{" "}
           <b>
             12 chapters · 17 interactive simulations · one capstone with
             controlled failure cases.
           </b>{" "}
-          Every chapter ties one engineering decision to its downstream damage.
+          Each chapter shows what one engineering decision breaks downstream.
         </p>
         <div className="ov2-cta">
           <Link
@@ -83,12 +82,11 @@ export function ChOverview() {
         <div className="ov2-flow-head">
           <div className="ov2-kicker">The conveyor</div>
           <h2 className="ov2-h2">
-            One pipeline. Ten operating stages. Each point represents a
-            simulated data row.
+            Ten stages of one pipeline. Each dot is a simulated data row.
           </h2>
           <p className="ov2-lede">
-            Pick a stage, read its contract, open its chapter. The capstone runs
-            all ten stages in a single scenario.
+            Pick a stage to read its contract. The capstone runs all ten in one
+            scenario.
           </p>
         </div>
         <PipelineBar

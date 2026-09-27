@@ -284,48 +284,48 @@ export const TUTORIAL: readonly TutorialStep[] = [
     stage: null,
     title: "Modeled controls enabled",
     caption:
-      "All six modeled controls are enabled. Compare the output with its recorded source and check context.",
+      "All six controls are on. Compare the output with its source and check context.",
   },
   {
     stage: "merge",
     title: "Break the MERGE contract",
     caption:
-      "In this additive example, LEFT JOIN omits yesterday-only users. Watch those (×) rows stop at control 1.",
+      "LEFT JOIN drops yesterday-only users. Those (×) rows stop at control 1.",
   },
   {
     stage: "write",
     title: "Break the WRITE contract",
     caption:
-      "The modeled append retains rows from an earlier attempt. Duplicate scenario rows appear after control 2.",
+      "Append keeps rows from an earlier attempt. Duplicates appear after control 2.",
   },
   {
     stage: "watermark",
     title: "Break the WATERMARK contract",
     caption:
-      "The scenario bypasses its configured late-data route, so late records enter the main output.",
+      "The late-data route is bypassed, so late records enter the main output.",
   },
   {
     stage: "dq",
     title: "Break the DQ contract",
     caption:
-      "The selected checks are bypassed. The modeled signal remains absent and configured consumers wait.",
+      "The checks are bypassed. No signal lands, so consumers wait.",
   },
   {
     stage: "govern",
     title: "Break the GOVERN contract",
     caption:
-      "The reference Access Gateway rejects the metadata. The scenario stops publication at control 5.",
+      "Access Gateway rejects the metadata and stops publication at control 5.",
   },
   {
     stage: "semantic",
     title: "Break the SEMANTIC contract",
     caption:
-      "The registered metric binding is removed. The downstream query references an unbound column and fails.",
+      "The metric binding is removed. The downstream query hits an unbound column and fails.",
   },
   {
     stage: null,
     title: "Modeled controls restored",
-    caption: "The scenario returns to its reference state. These six controls are a selected teaching set, not an exhaustive architecture.",
+    caption: "Back to the reference state. These six controls are a teaching set, not a full architecture.",
   },
 ];
 
@@ -333,42 +333,42 @@ export const TUTORIAL_DE: readonly TutorialStep[] = [
   {
     ...TUTORIAL[0],
     title: "Modellierte Kontrollen aktiv",
-    caption: "Alle sechs modellierten Kontrollen sind aktiv. Ausgabe mit erfasstem Quellen- und Prüfungskontext vergleichen.",
+    caption: "Alle sechs Kontrollen sind aktiv. Vergleich die Ausgabe mit Quellen- und Prüfungskontext.",
   },
   {
     ...TUTORIAL[1],
     title: "MERGE-Vertrag brechen",
-    caption: "Im additiven Beispiel lässt LEFT JOIN Nutzer aus, die nur im Vortag vorkommen. Diese Zeilen (×) stoppen an Kontrolle 1.",
+    caption: "LEFT JOIN verliert Nutzer, die nur im Vortag vorkommen. Diese Zeilen (×) stoppen an Kontrolle 1.",
   },
   {
     ...TUTORIAL[2],
     title: "WRITE-Vertrag brechen",
-    caption: "Der modellierte Append behält Zeilen eines früheren Versuchs. Hinter Kontrolle 2 erscheinen doppelte Szenariozeilen.",
+    caption: "Append behält Zeilen eines früheren Versuchs. Hinter Kontrolle 2 erscheinen Duplikate.",
   },
   {
     ...TUTORIAL[3],
     title: "WATERMARK-Vertrag brechen",
-    caption: "Das Szenario umgeht die konfigurierte Nachzüglerroute. Verspätete Datensätze gelangen in die Hauptausgabe.",
+    caption: "Die Nachzüglerroute wird umgangen, also landen verspätete Datensätze in der Hauptausgabe.",
   },
   {
     ...TUTORIAL[4],
     title: "DQ-Vertrag brechen",
-    caption: "Die ausgewählten Prüfungen werden umgangen. Das modellierte Signal bleibt aus und konfigurierte Verbraucher warten.",
+    caption: "Die Prüfungen werden umgangen. Es kommt kein Signal, also warten die Verbraucher.",
   },
   {
     ...TUTORIAL[5],
     title: "GOVERN-Vertrag brechen",
-    caption: "Das Referenz-Access-Gateway lehnt die Metadaten ab. Das Szenario stoppt die Veröffentlichung an Kontrolle 5.",
+    caption: "Access Gateway lehnt die Metadaten ab und stoppt die Veröffentlichung an Kontrolle 5.",
   },
   {
     ...TUTORIAL[6],
     title: "SEMANTIC-Vertrag brechen",
-    caption: "Die registrierte Metrikbindung wird entfernt. Die nachgelagerte Abfrage verweist auf eine ungebundene Spalte und scheitert.",
+    caption: "Die Metrikbindung wird entfernt. Die nachgelagerte Abfrage trifft eine ungebundene Spalte und scheitert.",
   },
   {
     ...TUTORIAL[7],
     title: "Modellierte Kontrollen wiederhergestellt",
-    caption: "Das Szenario kehrt in seinen Referenzzustand zurück. Diese sechs Kontrollen sind eine ausgewählte Lernmenge und keine vollständige Architektur.",
+    caption: "Zurück im Referenzzustand. Diese sechs Kontrollen sind eine Lernauswahl, keine vollständige Architektur.",
   },
 ];
 
@@ -387,28 +387,28 @@ export const BREAKAGE_COPY: Record<
   { good: string; bad: string; code: string }
 > = {
   merge: {
-    good: "FULL OUTER preserves keys from both inputs in this example",
-    bad: "LEFT JOIN omits yesterday-only keys in this example",
+    good: "FULL OUTER keeps keys from both inputs",
+    bad: "LEFT JOIN drops yesterday-only keys",
     code: "FULL OUTER JOIN → LEFT JOIN",
   },
   write: {
-    good: "deterministic partition replacement in this model",
-    bad: "modeled append retains rows from earlier attempts",
+    good: "deterministic partition replacement",
+    bad: "append keeps rows from earlier attempts",
     code: "INSERT OVERWRITE → INSERT INTO",
   },
   watermark: {
     good: "late rows spill to __late table · dedup by event_id",
-    bad: "late and replayed rows enter the main scenario output",
+    bad: "late and replayed rows enter the main output",
     code: "WHERE event_ts ≥ ds → (removed)",
   },
   dq: {
     good: "row-count · freshness · unique: then signal",
-    bad: "selected checks bypassed · modeled signal absent · configured consumers wait",
+    bad: "checks bypassed · no signal · consumers wait",
     code: 'on_failure="block_downstream"',
   },
   govern: {
-    good: "declared actors satisfy the reference metadata rule",
-    bad: "metadata violates the reference actor rule",
+    good: "declared actors satisfy the metadata rule",
+    bad: "metadata violates the actor rule",
     code: "actors: [PII_Person]",
   },
   semantic: {
@@ -423,28 +423,28 @@ export const BREAKAGE_COPY_DE: Record<
   { good: string; bad: string; code: string }
 > = {
   merge: {
-    good: "FULL OUTER erhält abgewanderte und neue Nutzer",
-    bad: "LEFT JOIN entfernt unbemerkt jeden abgewanderten Nutzer",
+    good: "FULL OUTER behält Schlüssel aus beiden Eingaben",
+    bad: "LEFT JOIN verliert Schlüssel, die nur im Vortag stehen",
     code: BREAKAGE_COPY.merge.code,
   },
   write: {
-    good: "deterministischer Partitionsersatz in diesem Modell",
-    bad: "modellierter Append behält Zeilen früherer Versuche",
+    good: "deterministischer Partitionsersatz",
+    bad: "Append behält Zeilen früherer Versuche",
     code: BREAKAGE_COPY.write.code,
   },
   watermark: {
     good: "verspätete Zeilen landen in der __late-Tabelle · Deduplizierung nach event_id",
-    bad: "verspätete und doppelte Zeilen laufen unbemerkt weiter",
+    bad: "verspätete und wiederholte Zeilen landen in der Hauptausgabe",
     code: BREAKAGE_COPY.watermark.code,
   },
   dq: {
-    good: "Zeilenzahl · Aktualität · Eindeutigkeit; danach folgt das Signal",
-    bad: "Prüfungen übersprungen · Signal fehlt · nachgelagerte Verbraucher warten",
+    good: "Zeilenzahl · Aktualität · Eindeutigkeit, dann Signal",
+    bad: "Prüfungen umgangen · kein Signal · Verbraucher warten",
     code: BREAKAGE_COPY.dq.code,
   },
   govern: {
-    good: "deklarierte Akteure erfüllen die Referenz-Metadatenregel",
-    bad: "Metadaten verstoßen gegen die Referenz-Akteurregel",
+    good: "deklarierte Akteure erfüllen die Metadatenregel",
+    bad: "Metadaten verstoßen gegen die Akteurregel",
     code: BREAKAGE_COPY.govern.code,
   },
   semantic: {
@@ -828,8 +828,8 @@ export function LivingPipeline() {
         kind: "err" as const,
         v: "ERROR",
         caption: text(
-          "metric unbound · downstream query references a column that no longer exists",
-          "Metrik nicht gebunden · nachgelagerte Abfrage verweist auf eine nicht mehr vorhandene Spalte",
+          "metric unbound · query references a column that no longer exists",
+          "Metrik nicht gebunden · Abfrage verweist auf eine nicht mehr vorhandene Spalte",
         ),
       };
     if (brk.dq)
@@ -837,8 +837,8 @@ export function LivingPipeline() {
         kind: "wait" as const,
         v: "-",
         caption: text(
-          "selected checks bypassed · modeled signal absent · configured dashboard retains its prior value",
-          "ausgewählte Prüfungen umgangen · modelliertes Signal fehlt · konfiguriertes Dashboard behält den vorherigen Wert",
+          "checks bypassed · no signal · dashboard keeps its prior value",
+          "Prüfungen umgangen · kein Signal · Dashboard behält den vorherigen Wert",
         ),
       };
     if (brk.govern)
@@ -846,8 +846,8 @@ export function LivingPipeline() {
         kind: "wait" as const,
         v: "-",
         caption: text(
-          "Access Gateway blocked the deploy · no fresh data reached the consumer",
-          "Access Gateway blockierte das Deployment · der Verbraucher erhielt keine aktuellen Daten",
+          "Access Gateway blocked the deploy · no fresh data",
+          "Access Gateway blockierte das Deployment · keine aktuellen Daten",
         ),
       };
     if (brk.merge)
@@ -881,8 +881,8 @@ export function LivingPipeline() {
       kind: "good" as const,
       v: "94.2%",
       caption: text(
-        "scenario source: analytics.conversion_7d · recorded cutoff and metric version available",
-        "Szenarioquelle: analytics.conversion_7d · erfasster Stichtag und Metrikversion verfügbar",
+        "cutoff and metric version recorded",
+        "Stichtag und Metrikversion erfasst",
       ),
     };
   })();
@@ -1054,7 +1054,7 @@ export function LivingPipeline() {
             style={{ left: `${GATE_X.watermark - 2}%` }}
           >
             <div>fct_users_late</div>
-            <div className="sub">{text("scenario route for late arrivals retained for correction", "Szenarioroute für Nachzügler zur späteren Korrektur")}</div>
+            <div className="sub">{text("late arrivals kept for correction", "Nachzügler für spätere Korrektur behalten")}</div>
           </div>
 
           <div className="lp-dataset">

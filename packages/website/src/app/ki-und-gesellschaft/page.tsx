@@ -95,7 +95,7 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
     heading: "Arbeit, Deepfakes",
     headingAccent: "und Bias einordnen.",
     introduction:
-      "Du führst eine Schlagzeile über KI und Jobs auf ihre Datenbasis zurück, prüfst ein verdächtiges Video, bevor du es teilst, und findest die Stelle, an der Bias in eine automatisierte Entscheidung gelangt. Technikwissen brauchst du nicht.",
+      "Du führst eine Jobschlagzeile auf ihre Daten zurück, prüfst ein verdächtiges Video und findest, wo Bias in eine Entscheidung gelangt. Technikwissen brauchst du nicht.",
     start: "Mit Lernkonto starten",
     allCourses: "Alle Kurse",
     imageAlt:
@@ -104,24 +104,23 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
     facts: [
       "3 Blöcke, 9 Lektionen",
       "46 Min. Lernzeit",
-      "Kostenlos, mit Lernkonto",
       "Lernnachweis als PDF",
     ],
     whyHeading: "Was du prüfst",
     whyBody:
-      "Prognosen zum Arbeitsmarkt, die Echtheit eines Videos und die Fairness einer automatisierten Entscheidung lassen sich nicht mit derselben Checkliste bewerten. Der Kurs ordnet für jedes Thema die relevante Datenbasis, typische Fehlschlüsse und konkrete Prüfschritte. Quellen und Prüfstände stehen direkt in den Lektionen.",
+      "Jedes der drei Themen hat eigene Prüfschritte.",
     curriculumHeading: "Lehrplan",
     minutes: (count) => `${count} Min.`,
     methods: [
       {
         number: "01",
         title: "Arbeit",
-        body: "Aufgaben, Berufsprofile, Datenbasis und betrachteten Zeitraum getrennt bewerten.",
+        body: "Aufgaben, Berufe, Datenbasis und Zeitraum getrennt bewerten.",
       },
       {
         number: "02",
         title: "Medien",
-        body: "Quelle, Veröffentlichungskontext, technische Auffälligkeiten und Gegenprüfung dokumentieren.",
+        body: "Quelle, Kontext, technische Auffälligkeiten und Gegenprüfung festhalten.",
       },
       {
         number: "03",
@@ -167,7 +166,7 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
     heading: "Assess work, deepfakes,",
     headingAccent: "and bias.",
     introduction:
-      "You trace a headline about AI and jobs back to its data, check a suspicious video before you share it, and find the point where bias enters an automated decision. No technical background needed.",
+      "You trace a jobs headline back to its data, check a suspicious video and find where bias enters a decision. No technical background needed.",
     start: "Start with a learning account",
     allCourses: "All courses",
     imageAlt:
@@ -176,29 +175,28 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
     facts: [
       "3 blocks, 9 lessons",
       "46 min of study",
-      "Free, with a learning account",
       "Completion record as a PDF",
     ],
     whyHeading: "What you check",
     whyBody:
-      "A labour-market forecast, the authenticity of a video, and the fairness of an automated decision cannot be assessed with one checklist. For each topic, the course identifies the relevant evidence, common reasoning errors, and concrete review steps. Sources and review dates appear in the lessons.",
+      "Each of the three topics has its own checks.",
     curriculumHeading: "Course plan",
     minutes: (count) => `${count} min`,
     methods: [
       {
         number: "01",
         title: "Work",
-        body: "Assess tasks, occupations, the evidence base, and the time period separately.",
+        body: "Assess tasks, occupations, evidence and time period separately.",
       },
       {
         number: "02",
         title: "Media",
-        body: "Document the source, publication context, technical anomalies, and independent checks.",
+        body: "Record source, context, technical anomalies and independent checks.",
       },
       {
         number: "03",
         title: "Decisions",
-        body: "Check training data, the target measure, error costs, accountable owners, and the appeal route.",
+        body: "Check training data, target measure, error costs, owners and appeal route.",
       },
     ],
     evidenceHeading: "What the completion record establishes",

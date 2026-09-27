@@ -8,7 +8,6 @@
   <meta name="description" content="An interactive workshop showing how governed data interfaces turn plausible analytics answers into correct, bounded and testable ones." />
   <link rel="icon" href="./assets/favicon.svg" />
   <link rel="stylesheet" href="./lib/tokens.css" />
-  <link rel="stylesheet" href="./lib/cover-globe.css" />
   <link rel="stylesheet" href="./lib/story.css" />
   <!-- generated:scene-styles -->
   <link rel="stylesheet" href="./lib/scenes/cover.css" />
@@ -86,19 +85,13 @@
 </svg>
 <deck-stage id="stage" width="1920" height="1080">
 
-  <section class="slide dark" id="cover" data-cover-pattern="loehrning-globe-v1" data-act="0" data-kind="main" data-label="Data Readiness for AI" data-section="Workshop 03 · 25 September 2026" data-track="" data-seconds="45" data-note-key="cover" data-note="One business question, asked twice. The data never changes; only what the AI can see changes. Keep the opening short." data-design="v3" data-route="none">
+  <section class="slide dark" id="cover" data-cover-pattern="plakat-bloom-v1" data-act="0" data-kind="main" data-label="Data Readiness for AI" data-section="Workshop 03 · 25 September 2026" data-track="" data-seconds="45" data-note-key="cover" data-note="One business question, asked twice. The data never changes; only what the AI can see changes. Keep the opening short." data-design="v3" data-route="none">
   <!-- scene:cover -->
-    <div class="workshop-globe" aria-hidden="true"><img src="./assets/globe.svg" width="660" height="620" alt="" aria-hidden="true" /></div>
-    <div class="cover-brand" id="cover-brand"><img class="cover-brand__lockup" src="./assets/lockup-horizontal-dark.svg" width="206" height="40" alt="loehrning.ai" /></div>
+    <img class="cover-poster" src="./assets/plakat-cover.svg" width="864" height="1080" alt="" aria-hidden="true" />
+    <div class="cover-brand" id="cover-brand"><img class="cover-brand__lockup" src="./assets/lockup-horizontal.svg" width="206" height="40" alt="loehrning.ai" /></div>
     <p class="cover-date" id="cover-date" data-motion="rise" style="--order:0">Workshop 03 · 25 September 2026</p>
     <h1 class="scene-title" id="cover-title" data-motion="rise" style="--order:0">Data Readiness<br />for AI.</h1>
-    <div class="q-card q-card--dark q-card--hero cover-question" id="cover-question" data-focus data-motion="fade" style="--order:1">
-      <svg class="icon" aria-hidden="true"><use href="#i-question" /></svg>
-      <div>
-        <span class="q-card__label">One question, held fixed</span>
-        <p class="q-card__text">Show ending MRR by month for the last complete quarter.</p>
-      </div>
-    </div>
+    <p class="cover-question" id="cover-question" data-motion="fade" style="--order:1">Show ending MRR by month for the last complete quarter.</p>
     <div class="cover-experiment" id="cover-experiment" data-step="1" data-visual>
       <span class="cover-fixed" role="group" aria-labelledby="cover-fixed-label">
         <span class="stamp cover-stamp" data-motion="stamp" style="--order:0">Same question</span>

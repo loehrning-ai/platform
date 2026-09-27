@@ -178,7 +178,7 @@ export function BackfillSim() {
       eyebrow={text("live simulator · retry semantics", "Live-Simulator · Wiederholungssemantik")}
       title={mode === "overwrite" ? text("Backfill with INSERT OVERWRITE (idempotent in this model)", "Backfill mit INSERT OVERWRITE (in diesem Modell idempotent)") : text("Backfill with INSERT (non-idempotent in this model)", "Backfill mit INSERT (in diesem Modell nicht idempotent)")}
       meta={`${concurrency} Worker · ${failureRate}% ${text("fail rate", "Fehlerrate")}`}
-      caption={text("This simulator uses deterministic partition replacement for overwrite and row retention for append. Real idempotency also depends on stable inputs and transaction semantics.", "Dieser Simulator verwendet deterministischen Partitionsersatz für Overwrite und Zeilenbeibehaltung für Append. Reale Idempotenz hängt zusätzlich von stabilen Eingaben und Transaktionssemantik ab.")}
+      caption={text("Overwrite replaces the partition; append keeps earlier rows.", "Overwrite ersetzt die Partition; Append behält frühere Zeilen.")}
     >
       <div className="bf-parts">
         {parts.map((p) => (

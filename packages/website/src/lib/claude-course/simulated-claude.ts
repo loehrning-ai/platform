@@ -41,7 +41,7 @@ export function genericAnswer(prompt: string, locale: Locale = "en"): string {
       /constraints|format|audience|context|role/.test(p) || prompt.length > 240;
     if (structured) {
       if (german) {
-        return `Betreff: Authentifizierungsumstellung: Aktion erforderlich
+        return `Betreff: Aktion erforderlich für die Authentifizierungsumstellung
 
 Wir ersetzen [bisheriges System] durch [neues System]. Das Migrationsfenster läuft vom [Startdatum] bis [Enddatum]. Die verpflichtende Umstellung erfolgt am [Datum].
 
@@ -53,7 +53,7 @@ Support: [Kanal oder Kontakt]. Runbook: [Link].
 
 Ersetze die Platzhalter vor dem Versand mit Angaben aus dem freigegebenen Rollout-Plan.`;
       }
-      return `Subject: Authentication migration: action required
+      return `Subject: Action required for the authentication migration
 
 We are replacing [current system] with [new system]. The migration window runs from [start date] to [end date]. Mandatory cutover is [date].
 
@@ -219,7 +219,7 @@ export function gradePrompt(
   if (strengths.length === 0) {
     strengths.push(
       german
-        ? "Die grundlegende Absicht ist erkennbar."
+        ? "Die Absicht ist erkennbar."
         : "Gets the basic intent across.",
     );
   }
@@ -399,8 +399,8 @@ export function socraticReply(
       Math.abs(hash(lastUserMessage + String(turnCount))) % questions.length
     ];
   return locale === "de"
-    ? `${opener} Kurzfassung: Claude setzt Text anhand des aktuellen Kontexts fort; Claude ruft dabei nicht automatisch Projektwissen ab. ${question}`
-    : `${opener} In short: Claude continues text from the current context; it does not automatically retrieve project knowledge. ${question}`;
+    ? `${opener} Claude setzt Text anhand des aktuellen Kontexts fort und ruft dabei nicht automatisch Projektwissen ab. ${question}`
+    : `${opener} Claude continues text from the current context and does not automatically retrieve project knowledge. ${question}`;
 }
 
 // ─── CLAUDE.md builder (ClaudeMdBuilder) ────────────────────────────

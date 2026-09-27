@@ -20,14 +20,14 @@ export default function BlockError({
       ? {
           eyebrow: "Error",
           title: "The lesson could not be loaded",
-          body: "This block did not load. Retry the request.",
+          body: "Your progress is kept.",
           retry: "Try again",
           back: "Back to course overview",
         }
       : {
           eyebrow: "Fehler",
           title: "Die Lektion konnte nicht geladen werden",
-          body: "Dieser Block wurde nicht geladen. Versuche die Anfrage erneut.",
+          body: "Der Fortschritt bleibt erhalten.",
           retry: "Erneut versuchen",
           back: "Zurück zur Übersicht",
         };

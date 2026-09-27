@@ -26,15 +26,13 @@
           "id": "block_1_lesson_1_section_1",
           "title": "Funktionen statt Etiketten prüfen",
           "readTimeMinutes": 2,
-          "content": "Dein Spamfilter sortiert. Deine Tastatur schlägt das nächste Wort vor. Dein Navi rechnet den Stau ein. Jede dieser Funktionen kann mit maschinellem Lernen oder einem anderen KI-Verfahren arbeiten, je nach Produkt und Version. Dasselbe gilt für Bildgruppierung, Spracherkennung und das Ranking in einer Suche.\n\nDer Produktname sagt dir dabei nichts. Ein Spamfilter kann mit festen Regeln arbeiten, mit Statistik, mit maschinellem Lernen oder mit allem zusammen. Zwei Funktionen mit demselben Namen können technisch völlig verschieden gebaut sein.\n\nWas du also festhältst: die konkrete Funktion, ihre Version, ihre Konfiguration. Dann den Zweck, die betroffenen Daten und die Stelle, die dafür geradesteht. Was du technisch nicht weißt, schreibst du als offen auf. Es bleibt offen, bis Produktverantwortliche, die Anbieterunterlagen oder eine technische Prüfung die Antwort liefern. Raten gilt nicht.",
-          "keyTakeaway": "Funktion und Version zählen. Aus dem Produktnamen folgt weder die technische noch die rechtliche Einordnung als KI-System."
+          "content": "Spamfilter, Wortvorhersage auf der Tastatur, Stauprognose im Navi, Bildgruppierung, Spracherkennung und Suchranking können je nach Produkt und Version mit maschinellem Lernen oder einem anderen KI-Verfahren arbeiten. Ein Spamfilter kann auch mit festen Regeln oder Statistik laufen. Aus dem Produktnamen folgt deshalb weder die technische noch die rechtliche Einordnung als KI-System.\n\nHalte Funktion, Version, Konfiguration, Zweck, betroffene Daten und verantwortliche Stelle fest. Was du technisch nicht weißt, bleibt offen, bis Produktverantwortliche, Anbieterunterlagen oder eine technische Prüfung es klären."
         },
         {
           "id": "block_1_lesson_1_section_2",
           "title": "KI-gestützte Funktionen im Arbeitsablauf",
           "readTimeMinutes": 2,
-          "content": "Die Sachbearbeiterin lässt Dokumente automatisch auslesen. Der Projektleiter lässt das Meeting transkribieren. Die Einkäuferin übersetzt eine Lieferantenmail mit einem Klick. Dokumentenverarbeitung, Transkription, Übersetzung, Suche, Prognosen, Assistenzsysteme: überall können KI-gestützte Funktionen stecken. Ob eine davon ein KI-System im Sinne der Verordnung ist, entscheiden ihre Funktionsweise und der konkrete Einsatz. Nicht das Bauchgefühl.\n\nOhne Inventar steuerst du nichts. Du brauchst eine Liste, die hält: Funktion und Version, Zweck, betroffene Daten, wer sie nutzt, wer verantwortlich ist, ob sie freigegeben ist. Erst dann kannst du Datenregeln, Prüfpflichten und Schulungsbedarf zuordnen.\n\nArtikel 4 der EU-KI-Verordnung verpflichtet Anbieter und Betreiber in der geltenden Fassung, Maßnahmen zu ergreifen, um die Entwicklung der KI-Kompetenz der Personen zu unterstützen, die in ihrem Auftrag mit Betrieb und Nutzung von KI-Systemen befasst sind. Zu berücksichtigen sind technische Kenntnisse, Erfahrung, Aus- und Fortbildung, der Einsatzkontext und die betroffenen Personen oder Personengruppen. Ein Inventar schreibt der Artikel nicht vor. Aber ohne Inventar weißt du nicht, für welchen Kontext du überhaupt planst.",
-          "keyTakeaway": "Das Inventar trägt die rollen- und risikobezogene Planung von KI-Kompetenzmaßnahmen. Die rechtliche und technische Prüfung im Einzelfall nimmt es dir nicht ab.",
+          "content": "Beim Auslesen von Dokumenten, Transkribieren, Übersetzen, Suchen, Prognostizieren und in Assistenzsystemen können KI-gestützte Funktionen stecken. Ob eine davon ein KI-System im Sinne der Verordnung ist, entscheiden Funktionsweise und Einsatz. Das Inventar hält Funktion und Version, Zweck, Daten, Nutzende, Verantwortliche und Freigabestatus fest, damit du Datenregeln, Prüfpflichten und Schulungsbedarf zuordnen kannst.\n\nArtikel 4 der EU-KI-Verordnung verpflichtet Anbieter und Betreiber in der geltenden Fassung, Maßnahmen zu ergreifen, um die Entwicklung der KI-Kompetenz der Personen zu unterstützen, die in ihrem Auftrag mit Betrieb und Nutzung von KI-Systemen befasst sind. Zu berücksichtigen sind technische Kenntnisse, Erfahrung, Aus- und Fortbildung, der Einsatzkontext und die betroffenen Personen oder Personengruppen.\n\nEin Inventar schreibt der Artikel nicht vor, es zeigt dir aber, für welchen Kontext du planst.",
           "sources": [
             {
               "claimId": "ai-act-article-4-literacy-2025-02-02",
@@ -55,7 +53,7 @@
             },
             {
               "id": "b",
-              "text": "Die drei Funktionen gehören mit Produktversion, Zweck und Daten ins Inventar; ihre technische und rechtliche Einordnung bleibt zu prüfen",
+              "text": "Alle drei mit Version und Zweck erfassen, Einordnung prüfen",
               "isCorrect": true
             },
             {
@@ -65,15 +63,15 @@
             },
             {
               "id": "d",
-              "text": "Die Funktionen dürfen erst erfasst werden, wenn ihre rechtliche Einordnung abgeschlossen ist",
+              "text": "Die Funktionen erst nach abgeschlossener rechtlicher Einordnung erfassen",
               "isCorrect": false
             }
           ],
-          "explanation": "Erst die Liste: Funktion, Version, Zweck, Daten. Dann die Prüfung. Welche Einträge KI-Systeme im Sinne der Verordnung sind und welche Maßnahmen daraus folgen, klärt die technische und rechtliche Prüfung, nicht der Produktname."
+          "explanation": "Erst kommt die Liste mit Funktion, Version, Zweck und Daten. Ob ein Eintrag ein KI-System ist, klärt danach die technische und rechtliche Prüfung."
         },
         {
           "id": "block_1_lesson_1_q2",
-          "questionText": "Was verlangt Artikel 4 der EU-KI-Verordnung von Anbietern und Betreibern von KI-Systemen?",
+          "questionText": "Was verlangt Artikel 4 der EU-KI-Verordnung von Anbietern und Betreibern?",
           "answerOptions": [
             {
               "id": "a",
@@ -87,7 +85,7 @@
             },
             {
               "id": "c",
-              "text": "Anbieter und Betreiber müssen Maßnahmen ergreifen, um die Entwicklung der KI-Kompetenz der in ihrem Auftrag befassten Personen zu unterstützen",
+              "text": "Maßnahmen, die die Entwicklung der KI-Kompetenz der in ihrem Auftrag befassten Personen unterstützen",
               "isCorrect": true
             },
             {
@@ -96,7 +94,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Kein Informatikstudium, keine eigene KI, kein IT-Monopol. Artikel 4 verlangt Maßnahmen, die die Entwicklung der KI-Kompetenz der Personen unterstützen, die im Auftrag von Anbietern oder Betreibern mit Betrieb und Nutzung von KI-Systemen befasst sind. Wie diese Maßnahmen aussehen, richtet sich nach technischen Kenntnissen, Erfahrung, Aus- und Fortbildung, Einsatzkontext und den betroffenen Personen oder Personengruppen."
+          "explanation": "Studium, eigene KI oder IT-Monopol verlangt Artikel 4 nicht. Er verlangt Maßnahmen, die die Entwicklung der KI-Kompetenz der in ihrem Auftrag befassten Personen unterstützen, passend zu Kenntnissen, Erfahrung, Einsatzkontext und Betroffenen."
         }
       ]
     },
@@ -105,7 +103,7 @@
       "blockId": "block_1",
       "number": 2,
       "title": "KI-Werkzeuge auswählen",
-      "subtitle": "Edition, Vertrag und Konfiguration entscheiden, nicht die Marke",
+      "subtitle": "Edition, Vertrag und Konfiguration prüfen",
       "durationMinutes": 3,
       "keyConcepts": [
         "Produktauswahl",
@@ -119,15 +117,13 @@
           "id": "block_1_lesson_2_section_1",
           "title": "Vier Betriebsmodelle vergleichen",
           "readTimeMinutes": 2,
-          "content": "Marken vergleichen bringt nichts. Vergleiche die Produktedition und den Betrieb dahinter:\n\n| Betriebsmodell | Mindestens zu prüfen | Typischer Fehlschluss |\n|---|---|---|\n| **Verbraucherdienst** | Nutzungsbedingungen, Kontoeinstellungen, Aufbewahrung, Trainingsnutzung, Rechtsgrundlage und zulässige Inhalte | Bekannt oder kostenpflichtig heißt automatisch freigegeben für Firmendaten |\n| **Unternehmens-SaaS** | Vertrag und AVV, Rollen und Berechtigungen, Datenregion, Aufbewahrung, Protokollierung, Konnektoren und Trainingsnutzung | Der Enterprise-Vertrag deckt jede Konfiguration und jede Datenklasse ab |\n| **Lokal oder selbst gehostet** | Modellquelle, Endgerät oder Infrastruktur, Patches, Telemetrie, Erweiterungen, Zugriffe und Protokollierung | Lokal heißt offline, aktuell und sicher |\n| **Eingebettete Funktion** | konkrete Funktion und Version, Aktivierung, Datenflüsse, Berechtigungsvererbung und verantwortliche Stelle | Die Freigabe des Hauptprodukts gilt auch für jede neue KI-Funktion |\n\nAnbieterunterlagen ändern sich. Vertragsbedingungen auch. Prüfe beides bei der Beschaffung, bei jeder wesentlichen Funktionsänderung und bei den Review-Auslösern, die deine Organisation festgelegt hat.",
-          "keyTakeaway": "Edition, Konfiguration und Freigabe bestimmen, was du einsetzen darfst. Betriebsmodell und Markenname bewerten gar nichts."
+          "content": "Vergleiche Produktedition und Betrieb:\n\n| Betriebsmodell | Mindestens zu prüfen | Typischer Fehlschluss |\n|---|---|---|\n| **Verbraucherdienst** | Nutzungsbedingungen, Kontoeinstellungen, Aufbewahrung, Trainingsnutzung, Rechtsgrundlage, zulässige Inhalte | Bekannt oder bezahlt heißt freigegeben für Firmendaten |\n| **Unternehmens-SaaS** | Vertrag und AVV, Rollen und Berechtigungen, Datenregion, Aufbewahrung, Protokollierung, Konnektoren, Trainingsnutzung | Der Enterprise-Vertrag deckt jede Konfiguration und Datenklasse ab |\n| **Lokal oder selbst gehostet** | Modellquelle, Endgerät oder Infrastruktur, Patches, Telemetrie, Erweiterungen, Zugriffe, Protokollierung | Lokal heißt offline, aktuell und sicher |\n| **Eingebettete Funktion** | Funktion und Version, Aktivierung, Datenflüsse, Berechtigungsvererbung, verantwortliche Stelle | Die Freigabe des Hauptprodukts gilt für jede neue KI-Funktion |\n\nPrüfe Anbieterunterlagen und Vertrag bei der Beschaffung, nach jeder wesentlichen Funktionsänderung und bei den Review-Auslösern deiner Organisation."
         },
         {
           "id": "block_1_lesson_2_section_2",
           "title": "Welches Tool passt wann?",
           "readTimeMinutes": 1,
-          "content": "Die Frage ist nie: Welches Tool ist das beste? Die Frage ist: Wofür?\n\n- **Private Lern- und Schreibaufgaben:** Ein Verbraucherangebot kann passen, wenn du den Inhalt rechtmäßig teilen darfst und Datenkontrollen, Aufbewahrung und Bedingungen für deinen Zweck in Ordnung sind. Andere Personen kommen nicht hinein, dafür gibt es Platzhalter. Zugangsdaten gehören nie in einen Prompt. Nie.\n\n- **Berufliche Aufgaben:** Nur das Produkt, die Konfiguration und der Arbeitsablauf, die für diesen Zweck und diese Datenklassen freigegeben sind. Ein Business-Abo ist keine Freigabe. Ein vorhandenes Firmenkonto auch nicht.\n\n- **Lokale Modelle:** Lokale Inferenz kann Datenflüsse begrenzen. Kann. Erweiterungen, Telemetrie, Modell-Downloads, geteilte Rechner und fehlende Zugriffskontrollen holen das Risiko durch die Hintertür zurück.\n\nDie ganze Prüfung, von Zweck über Daten und Rechte bis zu System und Freigabe, kommt in Block 2.",
-          "keyTakeaway": "Kostenlos, bezahlt, Cloud, lokal: keines davon ist eine Sicherheitsklasse. Zweck, Daten, Rechte, Vertrag, Konfiguration und die konkrete Freigabe entscheiden."
+          "content": "- **Privat lernen und schreiben:** Ein Verbraucherangebot kann passen, wenn du den Inhalt teilen darfst und Datenkontrollen, Aufbewahrung und Bedingungen zum Zweck passen. Andere Personen ersetzt du durch Platzhalter, Zugangsdaten kommen in keinen Prompt.\n- **Beruflich:** Nur Produkt, Konfiguration und Arbeitsablauf, die für diesen Zweck und diese Datenklasse freigegeben sind. Ein Business-Abo oder Firmenkonto ist noch keine Freigabe.\n- **Lokale Modelle:** Sie können Datenflüsse begrenzen. Erweiterungen, Telemetrie, Modell-Downloads, geteilte Rechner und fehlende Zugriffskontrollen bringen das Risiko zurück.\n\nDie vollständige Prüfung folgt in Block 2."
         }
       ],
       "quiz": [
@@ -142,7 +138,7 @@
             },
             {
               "id": "b",
-              "text": "Ein Verbraucherangebot kann geeignet sein, wenn du die Inhalte teilen darfst und Datenkontrollen, Aufbewahrung und Bedingungen zum Zweck passen",
+              "text": "Ein Verbraucherangebot, wenn du teilen darfst und Datenkontrollen, Aufbewahrung, Bedingungen passen",
               "isCorrect": true
             },
             {
@@ -156,7 +152,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Privat heißt nicht egal. Inhalt, Rechte, Datenkontrollen, Aufbewahrung und Bedingungen entscheiden auch hier. Für Beispiele nimmst du Platzhalter, Zugangsdaten tippst du nirgends ein."
+          "explanation": "Auch privat entscheiden Inhalt, Rechte, Datenkontrollen, Aufbewahrung und Bedingungen. Für Beispiele nimmst du Platzhalter, Zugangsdaten tippst du nirgends ein."
         },
         {
           "id": "block_1_lesson_2_q2",
@@ -169,7 +165,7 @@
             },
             {
               "id": "b",
-              "text": "Die Freigabe bezieht Zweck, Datenklassen, Vertrag, Konfiguration, Berechtigungen und Verantwortlichkeiten ein; ein Abonnement allein tut das nicht",
+              "text": "Die Freigabe umfasst Zweck, Datenklassen, Vertrag, Konfiguration, Berechtigungen und Zuständigkeiten",
               "isCorrect": true
             },
             {
@@ -179,11 +175,11 @@
             },
             {
               "id": "d",
-              "text": "Entscheidend ist nur, ob der Anbieter seinen Sitz in der EU hat",
+              "text": "Nur der EU-Sitz des Anbieters zählt",
               "isCorrect": false
             }
           ],
-          "explanation": "Eine Freigabe ist immer konkret: dieser Zweck, diese Produktedition, diese Konfiguration, diese Datenklasse, diese Rollen. Preis, Marke und Firmensitz prüfen davon nichts."
+          "explanation": "Eine Freigabe gilt für einen Zweck, eine Produktedition, eine Konfiguration, eine Datenklasse und bestimmte Rollen. Preis, Marke und Firmensitz prüfen davon nichts."
         }
       ]
     },
@@ -200,15 +196,13 @@
           "id": "block_1_lesson_3_section_1",
           "title": "Das KI-Inventar",
           "readTimeMinutes": 1,
-          "content": "Nimm dir die Tabelle vor und füll die letzten Spalten aus. Der Produktname allein ist keine Zeile wert. Notiere die Funktion, den Anbieter oder Betreiber, den Zweck, die betroffenen Daten und die verantwortliche Stelle. Ob eine Funktion rechtlich ein KI-System ist, klärt sich an der konkreten Version und ihrer Funktionsweise, nicht an dieser Tabelle.\n\n| Nr. | Produkt und Funktion | Zweck | Betroffene Daten | Freigabe bekannt? |\n|-----|----------------------|-------|------------------|-------------------|\n| 1 | E-Mail: vorgeschlagene Antworten | | | |\n| 2 | Tabellenkalkulation: Assistenz oder Mustererkennung | | | |\n| 3 | Konferenzsoftware: Transkription oder Assistenz | | | |\n| 4 | Suchmaschine: KI-Zusammenfassung | | | |\n| 5 | E-Mail: Spamfilter | | | |\n| 6 | Smartphone-Tastatur: Wortvorhersage | | | |\n| 7 | Navigation: Routen- oder Verkehrsprognose | | | |\n| 8 | | | | |\n| 9 | | | | |\n| 10 | | | | |\n\nIn die leeren Zeilen kommt, was du tatsächlich nutzt. Und erfinde keine technische Einordnung. Was du nicht weißt, markierst du; Produktverantwortliche, IT oder Beschaffung klären es.",
-          "keyTakeaway": "Funktion, Zweck, Daten, Freigabe, Verantwortung: das macht ein Inventar brauchbar. Und es trägt die rollen- und risikobezogene Planung von KI-Kompetenzmaßnahmen nach Artikel 4."
+          "content": "Notiere je Zeile Funktion, Anbieter oder Betreiber, Zweck, betroffene Daten und verantwortliche Stelle. Ob eine Funktion rechtlich ein KI-System ist, klären Version und Funktionsweise.\n\n| Nr. | Produkt und Funktion | Zweck | Betroffene Daten | Freigabe bekannt? |\n|-----|----------------------|-------|------------------|-------------------|\n| 1 | E-Mail: vorgeschlagene Antworten | | | |\n| 2 | Tabellenkalkulation: Assistenz oder Mustererkennung | | | |\n| 3 | Konferenzsoftware: Transkription oder Assistenz | | | |\n| 4 | Suchmaschine: KI-Zusammenfassung | | | |\n| 5 | E-Mail: Spamfilter | | | |\n| 6 | Smartphone-Tastatur: Wortvorhersage | | | |\n| 7 | Navigation: Routen- oder Verkehrsprognose | | | |\n| 8 | | | | |\n| 9 | | | | |\n| 10 | | | | |\n\nTrag in die leeren Zeilen ein, was du tatsächlich nutzt. Unbekanntes markierst du, Produktverantwortliche, IT oder Beschaffung klären es."
         },
         {
           "id": "block_1_lesson_3_section_2",
           "title": "Auswertung",
           "readTimeMinutes": 2,
-          "content": "Geh jede Zeile noch einmal durch. Funktion und Version, Zweck, Daten, Nutzerrollen, verantwortliche Stelle, Freigabestatus: fehlt eines, ist die Zeile nicht fertig. Unbekanntes bleibt als unbekannt markiert. Eine Vermutung ist kein Inventareintrag.\n\nDann die offenen Punkte. Jeder bekommt eine zuständige Stelle und einen nächsten Prüfschritt. Was du am Ende in der Hand hast, ist ein Arbeitsdokument. Kein vollständiges Verzeichnis aller KI-Systeme, und das behauptet es auch nicht.\n\nArtikel 4 schreibt kein Inventarformat vor. Trotzdem: Ein gepflegtes Inventar hilft dir, Kompetenzmaßnahmen, Datenregeln und Prüfroutinen genau den Funktionen zuzuordnen, die wirklich im Einsatz sind. Datenklassen, Rechte und Systemfreigaben kommen in Block 2 dazu.",
-          "keyTakeaway": "Offene Angaben sichtbar, Verantwortliche benannt, Änderungen nachgeführt: so bleibt ein Inventar belastbar. Es steuert. Ein vollständiger Artikel-4-Nachweis ist es nicht."
+          "content": "Eine Zeile ist fertig, wenn Funktion und Version, Zweck, Daten, Nutzerrollen, verantwortliche Stelle und Freigabestatus drinstehen. Unbekanntes bleibt als unbekannt markiert, denn eine Vermutung ist kein Eintrag. Jeder offene Punkt bekommt eine zuständige Stelle und einen nächsten Prüfschritt.\n\nDas Ergebnis ist ein Arbeitsdokument, weder vollständiges KI-Verzeichnis noch vollständiger Artikel-4-Nachweis. Artikel 4 schreibt kein Inventarformat vor. Mit dem Inventar ordnest du Kompetenzmaßnahmen, Datenregeln und Prüfroutinen den Funktionen zu, die im Einsatz sind."
         }
       ],
       "quiz": [
@@ -233,11 +227,11 @@
             },
             {
               "id": "d",
-              "text": "Die Funktionen gehören ins Inventar; ihre konkrete technische und rechtliche Einordnung muss anhand von Produkt und Version geprüft werden",
+              "text": "Die Funktionen ins Inventar, Einordnung anhand von Produkt und Version prüfen",
               "isCorrect": true
             }
           ],
-          "explanation": "Drei Funktionen, drei Produktnamen, null Gewissheit. KI-gestützte Funktionen stecken oft unsichtbar in Alltagsprodukten, aber wie viele eigenständige KI-Systeme im rechtlichen Sinn dahinterstehen, verrät der Name nicht. Ins Inventar kommen Funktion und Version, geprüft wird danach."
+          "explanation": "Der Produktname verrät nicht, wie viele eigenständige KI-Systeme im rechtlichen Sinn dahinterstehen. Du erfasst Funktion und Version und prüfst danach."
         },
         {
           "id": "block_1_lesson_3_q2",
@@ -250,7 +244,7 @@
             },
             {
               "id": "b",
-              "text": "Ohne Inventar kannst du nicht beurteilen, welche Risiken bestehen und welche Regeln gelten",
+              "text": "Ohne Inventar sind Risiken und geltende Regeln nicht beurteilbar",
               "isCorrect": true
             },
             {
@@ -264,7 +258,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Ohne Inventar rätst du. Mit Inventar hast du die Grundlage für Risikobewertung, Datenregeln und Zuständigkeiten. Es stützt Governance und KI-Kompetenzmaßnahmen; die Anforderungen der EU-KI-Verordnung erfüllt es allein nicht."
+          "explanation": "Es ist die Grundlage für Risikobewertung, Datenregeln und Zuständigkeiten und stützt KI-Kompetenzmaßnahmen. Die Anforderungen der KI-Verordnung erfüllt es allein nicht."
         }
       ]
     }

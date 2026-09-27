@@ -1,5 +1,6 @@
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
+import { expectCapsInsideScene, expectNoMennigeInScene } from "@/test/plakat-scene";
 import {
   TECHNICAL_COURSE_LEDGER_LINK_CLASS,
   TECHNICAL_COURSE_LESSON_ROW_COLUMNS,
@@ -73,7 +74,8 @@ describe("TechnicalCourseLanding", () => {
     const sectionHeading = document.querySelector(
       "[data-technical-section-heading]",
     );
-    expect(sectionHeading).toHaveClass("border-t-2", "border-foreground");
+    // The Kopflinie takes the page's scene line (Druckschwarz on paper).
+    expect(sectionHeading).toHaveClass("border-t-2", "border-scene-line");
     expect(sectionHeading?.innerHTML).not.toMatch(/uppercase|font-mono|bg-brand-orange/);
   });
 
@@ -105,7 +107,9 @@ describe("TechnicalCourseLanding", () => {
       />,
     );
     const facts = screen.getByRole("complementary", { name: "Auf einen Blick" });
-    expect(facts).toHaveClass("border-t-2", "border-foreground", "max-lg:border-t");
+    // Inside the band the phone facts are one plain line with no hairline
+    // (SPEC §3.1); from lg they keep the 2px ruled column.
+    expect(facts).toHaveClass("border-t-2", "border-foreground", "max-lg:border-t-0");
     // The visible label repeats the landmark name, so it is visually hidden
     // below lg only.
     expect(within(facts).getByText("Auf einen Blick")).toHaveClass("max-lg:sr-only");
@@ -115,9 +119,105 @@ describe("TechnicalCourseLanding", () => {
     expect(rows).toHaveLength(2);
     for (const row of rows) {
       // Desktop rows keep their hairline and 17px body; phones drop both.
-      expect(row).toHaveClass("border-b", "py-2.5", "text-body", "max-lg:border-0", "max-lg:py-0");
+      // Desktop rows keep their hairline and 17px body; phones drop both and
+      // set the line at 14px, the caps line's size (SPEC §3.13).
+      expect(row).toHaveClass("border-b", "py-2.5", "text-body", "max-lg:border-0", "max-lg:py-0", "max-lg:text-[0.875rem]");
     }
-    expect(screen.getByText("Intro")).toHaveClass("text-lead", "max-sm:text-[1.0625rem]");
+    // The band's one body size: a 17px lead at every width (SPEC §3.1).
+    expect(screen.getByText("Intro")).toHaveClass("text-[1.0625rem]/[1.5]");
+  });
+
+  it("renders the header as a full-bleed band in the course's track scene", () => {
+    const { container } = render(
+      <TechnicalCourseFrame courseId="claude" lang="de">
+        <>
+          <TechnicalCourseHeader
+            eyebrow="Claude Course · Technikkurs"
+            title={
+              <>
+                Claude mit klarer <span className="sm:inline-block">Struktur einsetzen.</span>
+              </>
+            }
+            intro="Intro"
+            primaryAction={
+              <a href="/a" className={TECHNICAL_COURSE_PRIMARY_ACTION_CLASS}>
+                Start
+              </a>
+            }
+            facts={["12 Lektionen"]}
+            factsLabel="Kursdaten"
+          />
+        </>
+        <TechnicalCourseSectionHeading title="Lektionen" />
+      </TechnicalCourseFrame>,
+    );
+    const frame = container.querySelector('[data-technical-course="claude"]');
+    // The page names its scene; the frame is a three-track grid with the
+    // 72rem column in the middle (no viewport units, no negative margins).
+    expect(frame).toHaveAttribute("data-plakat-page", "idea");
+    expect(frame?.className).toContain("grid-cols-[minmax(1rem,1fr)_minmax(0,72rem)_minmax(1rem,1fr)]");
+    expect(frame?.className).not.toMatch(/\b-mx-|\bw-screen\b|\d+vw/);
+
+    const header = frame?.querySelector("[data-technical-course-header]");
+    expect(header).toHaveAttribute("data-plakat-band", "");
+    expect(header).toHaveClass("col-span-full", "grid-cols-subgrid");
+    // One caps line, the poster title with its fit value, a 17px lead.
+    expect(header?.querySelectorAll(".plakat-caps")).toHaveLength(1);
+    const title = screen.getByRole("heading", { level: 1 });
+    expect(title).toHaveClass("poster-title");
+    expect(title.getAttribute("style")).toMatch(/--fit:\s*\d/);
+    expect(title.parentElement).toHaveClass("@container");
+    // The course poster, from lg only, aria-hidden and without a numeral
+    // (Technikkurse carry none, D9); never an <img>.
+    const art = header?.querySelector("[data-plakat-art]");
+    expect(art).toHaveAttribute("aria-hidden", "true");
+    expect(art).toHaveClass("hidden", "lg:block");
+    expect(art?.querySelector("svg[data-poster='idea']")).not.toBeNull();
+    expect(art?.querySelector("[data-poster-numeral-text]")).toBeNull();
+    expect(header?.querySelector("img")).toBeNull();
+    // No caption or label sizes in the band beyond the lg facts label.
+    expect(header?.querySelectorAll(".text-caption")).toHaveLength(0);
+    expectCapsInsideScene(container);
+    expectNoMennigeInScene(container);
+  });
+
+  it("puts the Grundlagenpfad numeral on the Lemons band art and keeps unscened frames paper", () => {
+    const { container, unmount } = render(
+      <TechnicalCourseFrame courseId="ki-fuehrerschein">
+        <TechnicalCourseHeader
+          eyebrow="Kurs"
+          title="Titel"
+          intro="Intro"
+          primaryAction={<a href="/a" className={TECHNICAL_COURSE_PRIMARY_ACTION_CLASS}>Start</a>}
+          facts={["5 Blöcke"]}
+          factsLabel="Auf einen Blick"
+        />
+      </TechnicalCourseFrame>,
+    );
+    expect(container.firstElementChild).toHaveAttribute("data-plakat-page", "lemons");
+    expect(
+      container.querySelector("[data-plakat-art] [data-poster-numeral-text]"),
+    ).toHaveTextContent("01");
+    expectNoMennigeInScene(container);
+    unmount();
+
+    const paper = render(
+      <TechnicalCourseFrame courseId="ai-native-glossary">
+        <TechnicalCourseHeader
+          eyebrow="Glossar"
+          title="Titel"
+          intro="Intro"
+          primaryAction={<a href="/a">Start</a>}
+          facts={["40 Begriffe"]}
+          factsLabel="Auf einen Blick"
+        />
+      </TechnicalCourseFrame>,
+    );
+    const frame = paper.container.firstElementChild;
+    expect(frame).not.toHaveAttribute("data-plakat-page");
+    // Without a scene there is no caps line and no poster.
+    expect(frame?.querySelector(".plakat-caps")).toBeNull();
+    expect(frame?.querySelector("[data-plakat-art]")).toBeNull();
   });
 
   it("shows a two-digit lesson number on phones and the full label from sm", () => {
@@ -147,7 +247,10 @@ describe("TechnicalCourseLanding", () => {
   it("locks the shared action and ledger classes to the target-size and flat-motion contract", () => {
     expect(TECHNICAL_COURSE_PRIMARY_ACTION_CLASS).toContain("min-h-12");
     expect(TECHNICAL_COURSE_PRIMARY_ACTION_CLASS).toContain("bg-brand-orange");
-    expect(TECHNICAL_COURSE_PRIMARY_ACTION_CLASS).toContain("text-paper");
+    // The label is the ground (Kalkweiß on Mennige on paper, the ground on
+    // the ink in a scene); never a fixed paper or white label (SPEC §3.8).
+    expect(TECHNICAL_COURSE_PRIMARY_ACTION_CLASS).toContain("text-background");
+    expect(TECHNICAL_COURSE_PRIMARY_ACTION_CLASS).not.toContain("text-paper");
     expect(TECHNICAL_COURSE_PRIMARY_ACTION_CLASS).not.toContain("text-white");
     expect(TECHNICAL_COURSE_SECONDARY_ACTION_CLASS).toContain("min-h-12");
     expect(TECHNICAL_COURSE_LEDGER_LINK_CLASS).toContain("min-h-14");

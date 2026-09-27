@@ -1,16 +1,12 @@
 # KI ist überall: Das vollständige Inventar
 
-Du nutzt KI schon. Jeden Tag. Seit Jahren.
+Du nutzt KI seit Jahren jeden Tag, oft ohne es zu wissen. Durch den Tag eines durchschnittlichen Büroarbeitsplatzes im deutschen Mittelstand laufen zwischen 8 und 15 KI-Systeme.
 
-Du wusstest es nur nicht.
+Der Spamfilter sortiert 200 Mails am Tag aus, Outlook schlägt den nächsten Satz vor, und Teams transkribiert dein Meeting. Excel rät die Formel, DeepL übersetzt, und OCR macht die PDF durchsuchbar. Das iPhone erkennt dein Gesicht, und die Navi-App sagt den Stau vorher.
 
-Zwischen 8 und 15 KI-Systeme laufen durch den Tag eines durchschnittlichen Büroarbeitsplatzes im deutschen Mittelstand.
+Bei Meta habe ich gelernt, dass KI selten als „KI" daherkommt. Sie steckt im Autocomplete, im Ranking und in der Gesichtserkennung, und gut funktioniert sie, wenn du sie nicht bemerkst.
 
-Der Spamfilter, der 200 Mails am Tag aussortiert. Outlook, das den nächsten Satz vorschlägt. Teams, das dein Meeting transkribiert. Excel, das die Formel rät. DeepL, das den englischen Satz übersetzt. OCR, das die PDF durchsuchbar macht. Das iPhone, das dein Gesicht erkennt. Die Navi-App, die den Stau vorhersagt.
-
-Bei Meta habe ich gelernt: KI kommt selten als „KI" daher. Sie steckt im Autocomplete, im Ranking, in der Gesichtserkennung. Je unsichtbarer, desto besser. Merkst du die KI, macht sie etwas falsch.
-
-Machen wir Inventur. Geh die Liste durch und hak ab, wo du KI längst nutzt, ohne es zu wissen.
+Geh die Liste durch und hak ab, wo du KI längst nutzt.
 
 ## KI in deinem Posteingang (E-Mail)
 
@@ -27,8 +23,6 @@ Machen wir Inventur. Geh die Liste durch und hak ab, wo du KI längst nutzt, ohn
 **Andere E-Mail-Dienste**
 - [ ] Jeder moderne Anbieter hat KI-Spam-Filter
 
-Dein Postfach arbeitet den ganzen Tag mit KI. So normal, dass es keiner mehr erwähnt.
-
 ## KI in deinem Chat (Slack / Teams)
 
 - [ ] Automatische Nachrichtenübersetzung
@@ -41,8 +35,6 @@ Dein Postfach arbeitet den ganzen Tag mit KI. So normal, dass es keiner mehr erw
 - [ ] Automatisches Protokoll (Teams schreibt das Meeting mit)
 - [ ] Background-Filter (entfernt oder verwischt deinen Hintergrund)
 - [ ] Noise-Cancellation (nimmt störende Geräusche raus)
-
-Alles davon ist KI.
 
 ## KI in deinen Dokumenten (Google Docs / Word / Office)
 
@@ -78,8 +70,6 @@ Alles davon ist KI.
 - [ ] Smart HDR (kombiniert mehrere Fotos für bessere Qualität)
 - [ ] Night Mode (macht dunkle Fotos heller)
 
-Alles Machine Learning.
-
 ## KI in deinen Videos (YouTube / TikTok / Reels)
 
 - [ ] Empfehlungen („Was du als nächstes schauen könntest")
@@ -94,11 +84,11 @@ Alles Machine Learning.
 
 ## Die Erkenntnis
 
-Zähl deine Häkchen. Du lebst längst in einer KI-durchdrungenen Welt, und die hat drei Merkmale:
+Zähl deine Häkchen. Die KI in deinem Alltag ist:
 
-- **Unsichtbar.** Du merkst es nicht, weil es da war, bevor du angefangen hast, darauf zu achten.
-- **Normal.** Teil des Alltags. Wie Strom aus der Steckdose.
-- **Oft kostenlos.** Weil du selbst das Produkt bist, deine Daten finanzieren den Service.
+- **Unsichtbar**, weil sie da war, bevor du darauf geachtet hast.
+- **Normal** wie Strom aus der Steckdose.
+- **Oft kostenlos**, weil deine Daten den Service finanzieren.
 
 Das ist das „überall" aus Block 1, Lektion 1.
 
@@ -106,39 +96,21 @@ Das ist das „überall" aus Block 1, Lektion 1.
 
 ## Checkliste: Wo nutzt du KI bereits?
 
-Hak alles ab, was du mindestens einmal pro Woche berührst:
+Zähl die Bereiche oben, die du mindestens einmal pro Woche berührst. Bei fünf oder mehr bist du unbewusst längst Power-User.
 
-- [ ] E-Mail (Smart Reply, Spam-Filter)
-- [ ] Chat (Slack, Teams)
-- [ ] Meetings (Untertitel, Protokoll)
-- [ ] Dokumente (Rechtschreibung, Grammatik)
-- [ ] Suche (Google)
-- [ ] Shopping (Empfehlungen, Preise)
-- [ ] Banking (Betrugserkennung)
-- [ ] Fotos (Gesichtserkennung, Filter)
-- [ ] Videos (Empfehlungen)
-- [ ] Musik (Playlisten)
-- [ ] Andere: _______
-
-Fünf Häkchen oder mehr? Dann bist du längst Power-User. Nur eben unbewusst.
-
-> **Das Wichtigste:** KI ist kein Tool, das du ab morgen „einführst". Sie läuft längst. Die Frage ist nicht, *ob* du sie nutzt, sondern *wie bewusst*.
+> **Das Wichtigste:** KI läuft in deinem Alltag längst. Es kommt darauf an, wie bewusst du sie nutzt.
 
 ## Die ersten 5 Minuten
 
-Bis hierher lief KI im Hintergrund. Jetzt holst du sie nach vorne. Kein neues Programm, keine Freigabe von der IT, fünf Minuten deiner Zeit.
+Jetzt nutzt du KI bewusst, ohne neues Programm und ohne IT-Freigabe, in fünf Minuten. Such dir eins von zwei Werkzeugen aus.
 
-Such dir eins von zwei Werkzeugen aus. Eins reicht für den Anfang.
+**Variante 1: ChatGPT.** Tippe im Browser `chat.com` in die Adresszeile. Wenn du gefragt wirst, klick auf „Sign up" und leg mit E-Mail und Passwort ein Konto an. Auf dem Handy nimmst du die App „ChatGPT" aus dem App Store oder Play Store. Schreib einen Satz ins Textfeld unten und drück Enter, dann erscheint die Antwort Zeile für Zeile.
 
-**Variante 1: ChatGPT.** Öffne deinen Browser. Tippe oben in die Adresszeile `chat.com` und drück Enter. Du landest auf einer Seite mit einem großen leeren Textfeld unten. Wenn du gefragt wirst, klick auf „Sign up" und leg ein Konto an: E-Mail rein, Passwort wählen, fertig. Auf dem Handy geht es genauso über die App „ChatGPT" aus dem App Store oder Play Store. Dann klickst du in das Textfeld unten, schreibst einen Satz, drückst Enter. Die Antwort erscheint Zeile für Zeile, als würde jemand mittippen.
+**Variante 2: Microsoft Copilot.** In Word, Excel oder Teams ist Copilot oft schon eingebaut. In Word sitzt oben rechts ein buntes Symbol aus vier kleinen Schlaufen in Blau und Lila. Klickst du es an, klappt rechts eine Seitenleiste mit Textfeld auf. In Teams findest du dasselbe Symbol oben neben deinen Chats.
 
-**Variante 2: Microsoft Copilot.** Wenn du Word, Excel oder Teams nutzt, ist Copilot oft schon eingebaut. Öffne Word und schau oben rechts in die Leiste: Dort sitzt ein buntes Copilot-Symbol, vier kleine Schlaufen in Blau und Lila. Klick das Symbol an. Rechts klappt eine Seitenleiste auf, mit einem Textfeld am unteren Rand. In Teams findest du dasselbe Symbol oben in der Leiste neben deinen Chats. Klick rein, schreib, Enter.
+> **Tipp:** Fehlt das Copilot-Symbol, hat deine Firma es noch nicht freigeschaltet. Dann nimm `chat.com`, die Grundversion kostet nichts.
 
-Beide machen dasselbe: Du schreibst einen Satz, die KI antwortet.
-
-> **Tipp:** Findest du das Copilot-Symbol nicht? Dann hat deine Firma es noch nicht freigeschaltet. Kein Drama, nimm `chat.com`. Funktioniert immer, kostet in der Grundversion nichts.
-
-> **Jetzt bist du dran:** Öffne eins der beiden Werkzeuge. Klick ins Textfeld. Schreib genau diesen Satz: „Erklär mir in drei Sätzen, was du für mich tun kannst." Drück Enter. Lies die Antwort. Das ist dein erster Prompt. Mehr passiert beim Start nicht, und mehr musst du heute nicht können.
+> **Jetzt bist du dran:** Öffne eins der beiden Werkzeuge und schreib genau diesen Satz ins Textfeld: „Erklär mir in drei Sätzen, was du für mich tun kannst." Drück Enter und lies die Antwort. Das war dein erster Prompt.
 
 ---
 

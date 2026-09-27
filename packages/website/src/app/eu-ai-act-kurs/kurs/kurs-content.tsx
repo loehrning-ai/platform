@@ -88,9 +88,9 @@ const COURSE_HUB_COPY: Readonly<Record<Locale, CourseHubCopy>> = {
     noticeLabel: "Rechtsstand",
     notice:
       "Dieser Kurs behandelt die Verordnung (EU) 2024/1689 in der durch die Verordnung (EU) 2026/1744 geänderten Fassung. Er ersetzt keine Rechtsberatung oder fallbezogene Compliance-Prüfung. Zeitabhängige Angaben wurden zuletzt am 28. Juli 2026 geprüft.",
-    importSuccess: "Fortschritt erfolgreich importiert.",
+    importSuccess: "Fortschritt importiert.",
     importError:
-      "Dieser Fortschrittslink ist ungültig oder veraltet. Es wurde kein Fortschritt importiert.",
+      "Der Fortschrittslink ist ungültig oder veraltet. Nichts wurde importiert.",
     overall: "Gesamtfortschritt",
     lessons: "Lektionen",
     blocks: "Blöcke",
@@ -98,7 +98,7 @@ const COURSE_HUB_COPY: Readonly<Record<Locale, CourseHubCopy>> = {
     progressAria: "Gesamtfortschritt",
     shareCopied: "Link kopiert, auf anderem Gerät öffnen",
     share: "Fortschritt auf anderem Gerät fortsetzen",
-    shareError: "Link konnte nicht kopiert werden. Versuche es erneut.",
+    shareError: "Link konnte nicht kopiert werden.",
     blockLabel: (number) => `Block ${number}`,
     minutes: (count) => `${count} Min`,
     continue: "Weitermachen",
@@ -120,7 +120,7 @@ const COURSE_HUB_COPY: Readonly<Record<Locale, CourseHubCopy>> = {
       "This course covers Regulation (EU) 2024/1689 as amended by Regulation (EU) 2026/1744. It is not legal advice or a case-specific compliance assessment. Time-dependent statements were last reviewed on 28 July 2026.",
     importSuccess: "Progress imported.",
     importError:
-      "This progress link is invalid or outdated. No progress was imported.",
+      "The progress link is invalid or outdated. Nothing was imported.",
     overall: "Overall progress",
     lessons: "Lessons",
     blocks: "Blocks",
@@ -128,7 +128,7 @@ const COURSE_HUB_COPY: Readonly<Record<Locale, CourseHubCopy>> = {
     progressAria: "Overall course progress",
     shareCopied: "Link copied; open it on the other device",
     share: "Continue on another device",
-    shareError: "The link could not be copied. Try again.",
+    shareError: "The link could not be copied.",
     blockLabel: (number) => `Block ${number}`,
     minutes: (count) => `${count} min`,
     continue: "Continue",

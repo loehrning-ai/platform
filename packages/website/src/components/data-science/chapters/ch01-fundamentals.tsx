@@ -18,7 +18,7 @@ export default function Ch01Fundamentals() {
       <Hero
         eyebrow="Chapter 01 · Fundamentals"
         title='The data scientist <em>turns noise</em> <span class="accent">into decisions.</span>'
-        hook="Before any model, any SQL query, any dashboard, three distinctions come first. <strong>Sample vs population.</strong> <strong>Signal vs noise.</strong> <strong>Correlation vs causation.</strong> Get those three and the rest falls into place."
+        hook="Three distinctions come before any model, SQL query or dashboard: <strong>sample vs population</strong>, <strong>signal vs noise</strong> and <strong>correlation vs causation</strong>."
         meta={[
           { k: "Read", v: "7 min" },
           { k: "Focus", v: "CLT · sampling · the DS loop" },
@@ -32,27 +32,25 @@ export default function Ch01Fundamentals() {
           A sample is evidence about a population. It is not the population.
         </h2>
         <p className="prose">
-          A hypothetical service with <strong>44 million users</strong>, and
-          inside it an A/B test with <strong>180,000</strong> eligible
-          observations. The reported 2.3% retention difference estimates a
-          quantity of the population. What it means depends on assignment,
-          missing data, measurement, sampling, and uncertainty.
+          A hypothetical service has <strong>44 million users</strong> and runs
+          an A/B test on <strong>180,000</strong> eligible observations. The
+          2.3% retention difference estimates a population quantity; its
+          meaning depends on assignment, missing data, measurement, sampling
+          and uncertainty.
         </p>
         <p className="prose">
           Data science computes on <code>samples</code> and talks about{" "}
-          <code>populations</code> or future cases. Confidence intervals, tests,
-          validation, and experimental design quantify different parts of that
-          uncertainty. None of them repairs a biased sample or an invalid
-          measurement.
+          <code>populations</code> or future cases. Intervals, tests,
+          validation and experimental design quantify parts of that
+          uncertainty; none repairs a biased sample or an invalid measurement.
         </p>
         <GaltonSim />
         <p className="prose" style={{ marginTop: 22 }}>
           Push <code>n</code> from 2 to 100. In this independent,
           finite-variance generator the standard error of the mean scales with{" "}
-          <code>1/√n</code>, and the sampling distribution approaches a normal
-          shape as n grows. The central limit theorem has conditions.
-          Dependence, heavy tails, small samples, and shifting populations
-          degrade the approximation.
+          <code>1/√n</code> and the sampling distribution approaches a normal
+          shape. Dependence, heavy tails, small samples and shifting
+          populations weaken this central-limit approximation.
         </p>
       </section>
 
@@ -62,9 +60,9 @@ export default function Ch01Fundamentals() {
           Six recurring stages. <em>The order depends on the problem.</em>
         </h2>
         <p className="prose">
-          The working loop reads
-          <strong> Data → Explore → Clean → Feature → Model → Evaluate</strong>,
-          then starts over. Experiments, causal reasoning, and operations come
+          The loop runs
+          <strong> Data → Explore → Clean → Feature → Model → Evaluate</strong>{" "}
+          and starts over. Experiments, causal reasoning and operations come
           later.
         </p>
         <div className="loop-mini">
@@ -81,7 +79,7 @@ export default function Ch01Fundamentals() {
         </div>
         <AntiPatterns
           items={[
-            "<b>Fitting before looking.</b> Run <code>model.fit()</code> on a dataset you never <em>plotted</em> and you ship a model that learned the index column.",
+            "<b>Fitting before looking.</b> Run <code>model.fit()</code> on data you never <em>plotted</em> and the model can learn the index column.",
             "<b>Optimizing a number nobody asked for.</b> Great accuracy on the wrong metric is worse than decent accuracy on the right one.",
             '<b>Confusing correlation with causation.</b> "Users who see feature X retain better" does not mean X causes retention.',
           ]}
@@ -90,9 +88,8 @@ export default function Ch01Fundamentals() {
 
       <Takeaway
         items={[
-          "<b>Name the target population.</b> And how sampling, assignment, missingness, and measurement limit the estimate.",
-          "<b>The CLT has conditions.</b> In many independent, finite-variance settings sample means become approximately normal as n grows. Check that the approximation fits.",
-          "<b>Use the loop as a control system.</b> Explore, validate, and monitor where new data or transformations can invalidate old evidence.",
+          "<b>Name the target population</b> and how sampling, assignment, missingness and measurement limit the estimate.",
+          "<b>Use the loop as a control system.</b> Explore, validate and monitor wherever new data or transformations can invalidate old evidence.",
         ]}
       />
     </>

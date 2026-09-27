@@ -1,9 +1,13 @@
 import { ImageResponse } from "next/og";
+import { getRequestLocale } from "@/lib/i18n/request-locale";
+import type { Locale } from "@/lib/i18n/locale";
 import { OG_FONT_FAMILY, OgColophon } from "@/lib/plakat/og";
 import { PAPER } from "@/lib/plakat/palettes";
 
 export const runtime = "edge";
-export const alt = "Was ist KI? Ein Einstieg ohne Vorwissen. loehrning.ai";
+// One alt serves both locales: the /en mirror re-exports this module.
+export const alt =
+  "Was ist KI? Ein Einstieg ohne Vorwissen. / What is AI? No prior knowledge needed. loehrning.ai";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -15,12 +19,35 @@ const boldFont = fetch(
 
 const INSET = 64;
 
+// The second headline line stays one line at 84px in the 1072px column
+// (German 1066px, English 1045px, measured with type-metrics.ts).
+const COPY: Record<
+  Locale,
+  {
+    readonly step: string;
+    readonly lines: readonly [string, string];
+    readonly meta: string;
+  }
+> = {
+  de: {
+    step: "Stufe 1: Orientierung",
+    lines: ["Was ist KI?", "Ein Einstieg ohne Vorwissen."],
+    meta: "10 Minuten. Kein Login.",
+  },
+  en: {
+    step: "Level 1: orientation",
+    lines: ["What is AI?", "No prior knowledge needed."],
+    meta: "10 minutes. No login.",
+  },
+};
+
 /**
  * /einstieg stays paper (SPEC §2.3): Kalkweiß, Druckschwarz type, Mennige
  * only for the one step label, a 2px Kopflinie above the shared colophon
  * strip with the header's L tile.
  */
 export default async function Image() {
+  const copy = COPY[await getRequestLocale()];
   return new ImageResponse(
     (
       <div
@@ -52,7 +79,7 @@ export default async function Image() {
               color: PAPER.mennige,
             }}
           >
-            Stufe 1: Orientierung
+            {copy.step}
           </div>
           <div
             style={{
@@ -65,8 +92,8 @@ export default async function Image() {
               letterSpacing: "-0.015em",
             }}
           >
-            <div style={{ display: "flex" }}>Was ist KI?</div>
-            <div style={{ display: "flex" }}>Ein Einstieg ohne Vorwissen.</div>
+            <div style={{ display: "flex" }}>{copy.lines[0]}</div>
+            <div style={{ display: "flex" }}>{copy.lines[1]}</div>
           </div>
           <div
             style={{
@@ -77,7 +104,7 @@ export default async function Image() {
               lineHeight: 1.35,
             }}
           >
-            10 Minuten. Kein Login.
+            {copy.meta}
           </div>
         </div>
         <div

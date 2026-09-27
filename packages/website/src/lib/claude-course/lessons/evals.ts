@@ -11,7 +11,7 @@ import {
 const lesson: ClaudeLesson = {
   id: "evals",
   number: 11,
-  title: "Prompt Debugging and Evals",
+  title: "Prompt debugging and evals",
   subtitle: "How to know a prompt is actually better.",
   durationMinutes: 12,
   trackId: "team",
@@ -28,28 +28,28 @@ const lesson: ClaudeLesson = {
       title: "Why evals",
       readTimeMinutes: 1,
       content:
-        "Two prompts, same task. Which one ships? A prompt change can improve one example and regress another. An evaluation defines inputs, success criteria, and grading logic so versions compare under the same conditions.\n\nStart with a small representative set: common cases, edge cases, known failures. Grow it from production evidence. Model output varies, so use repeated trials when the decision rests on pass rates rather than deterministic checks.\n\n> Record the model, settings, prompt version, inputs, outputs, and grades.",
+        "A prompt change can fix one example and break another. An evaluation fixes inputs, success criteria and grading logic so versions compare under the same conditions.\n\nStart small with common cases, edge cases and known failures, and add cases from production. Output varies, so use repeated trials when a decision rests on pass rates. Record model, settings, prompt version, inputs, outputs and grades.",
     },
     {
       id: "mvp-eval",
       title: "A small evaluation set",
       readTimeMinutes: 2,
       content:
-        "A spreadsheet, JSON file, or test module is enough to start. Each case needs a realistic input and explicit acceptance criteria.\n\n```\neval_v1:\n  - input:    <common case>\n    expects:  <checkable requirements>\n  - input:    <hard edge case>\n    expects:  <…>\n  - input:    <known failure mode>\n    expects:  <…>\n  - input:    <missing or ambiguous data>\n    expects:  <abstention or clarification behavior>\n```\n\nRun the same cases before and after a change. Save raw outputs and grader results so a reviewer can inspect disagreements.",
+        "A spreadsheet, JSON file or test module is enough; each case needs a realistic input and explicit acceptance criteria.\n\n```\neval_v1:\n  - input:    <common case>\n    expects:  <checkable requirements>\n  - input:    <hard edge case>\n    expects:  <…>\n  - input:    <known failure mode>\n    expects:  <…>\n  - input:    <missing or ambiguous data>\n    expects:  <abstention or clarification behavior>\n```\n\nRun the same cases before and after a change, and save raw outputs and grades for review.",
     },
     {
       id: "debugging",
       title: "Debugging a broken prompt",
       readTimeMinutes: 2,
       content:
-        "When a prompt regresses, reproduce the failure first with a fixed input, model, settings, and tool state. Then simplify or disable prompt sections until the conflict shows. Reintroduce one section at a time and rerun the same cases.\n\nThis is delta debugging with a caveat. Model variance means one pass proves nothing about cause. Repeat trials and read the transcripts before naming a cause.",
+        "Reproduce the failure with fixed input, model, settings and tool state. Disable or simplify prompt sections until the conflict shows, then reintroduce them one at a time on the same cases.\n\nThis is delta debugging, but model variance means one pass proves no cause. Repeat trials and read the transcripts first.",
     },
     {
       id: "llm-as-judge",
       title: "Judging quality with a second model",
       readTimeMinutes: 2,
       content:
-        "A model-based grader applies a rubric to open-ended output and brings its own errors and preferences. Calibrate it against human-reviewed examples, randomize presentation order for pairwise comparisons, keep the grader justification, and track disagreement.\n\nUse deterministic graders for properties such as schema, required fields, citations, and executable tests. Combine graders only when each measures a defined requirement.",
+        "A model grader applies a rubric to open-ended output and brings its own errors and preferences. Calibrate it on human-reviewed examples, randomize pairwise order, keep its justification and track disagreement.\n\nSchema, required fields, citations and executable tests belong to deterministic graders. Combine graders only when each measures a defined requirement.",
     },
   ],
   widgets: [
@@ -62,7 +62,7 @@ const lesson: ClaudeLesson = {
         cpId: "tagger",
         title: "Name the failure mode",
         scenario:
-          "Five simulated outputs contain different failure modes. Tag each one. The examples are fixed course data, not live Claude responses.",
+          "Tag the failure mode in each of five simulated outputs. The examples are fixed course data.",
         modes: [
           {
             id: "halluzination",
@@ -101,7 +101,7 @@ const lesson: ClaudeLesson = {
             output:
               "I can't generate sample data with emails as that could be confused with a real person. Could you clarify your use case?",
             correct: "verweigerung",
-            why: "The request is benign, sample and synthetic data. A classic over-cautious refusal.",
+            why: "Synthetic sample data is a benign request, so refusing it is over-cautious.",
           },
           {
             id: "c3",
@@ -110,15 +110,15 @@ const lesson: ClaudeLesson = {
             output:
               "Sure! Here are three important terms:\n\n1. Context window: the range of text the model can consider at once.\n2. Token: a unit of text the model processes.\n3. Temperature: sampling randomness parameter.",
             correct: "formatdrift",
-            why: "Explicitly asked for a JSON array, no prose. Got prose with numbered bullets.",
+            why: "It asked for a JSON array without prose and got prose with numbered bullets.",
           },
           {
             id: "c4",
             prompt: "Summarize the attached incident report in one sentence.",
             output:
-              "Incidents are common in fast-moving teams. Here are seven best practices for post-mortems: 1. Blameless culture 2. Clear timeline 3. Root cause analysis...",
+              "Incidents are common in fast-moving teams. Here are seven best practices for post-mortems, starting with a blameless culture, a clear timeline and root cause analysis...",
             correct: "themaverfehlung",
-            why: "Didn't summarize the specific report, pivoted to generic advice about post-mortems.",
+            why: "It never summarized the report and pivoted to generic post-mortem advice.",
           },
           {
             id: "c5",
@@ -154,10 +154,10 @@ const lesson: ClaudeLesson = {
         lessonId: "evals",
         cpId: "q1",
         question:
-          'You change a prompt. The new output "feels better." The right next step?',
+          "You change a prompt and the new output \"feels better.\" What next?",
         options: [
           "Ship it.",
-          "Run both prompt versions against the same representative evaluation cases and compare.",
+          "Compare both versions on the same evaluation cases.",
           "Ask a colleague if they like it.",
           "Ask Claude to grade itself.",
         ],
@@ -179,13 +179,13 @@ const lesson: ClaudeLesson = {
           "A prompt regresses after several edits. Which step best isolates conflicting instructions?",
         options: [
           "Add more instructions to counteract the weirdness.",
-          "Disable prompt sections, rerun the same evaluation trials, and reintroduce sections one at a time.",
+          "Disable sections, rerun the same trials, reintroduce them one at a time.",
           "Switch to a different model.",
           "Ask Claude to rewrite the prompt from scratch.",
         ],
         correct: 1,
         explanation:
-          "Remove or disable sections to isolate conflicts, then repeat the same evaluation trials before assigning a cause.",
+          "Disabling sections isolates the conflict. Repeated trials on the same cases keep model variance from posing as the cause.",
         title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },

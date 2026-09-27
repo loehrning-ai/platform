@@ -10,6 +10,7 @@ import {
   type Ref,
 } from "react";
 import { m } from "framer-motion";
+import { usePathname } from "next/navigation";
 import { Menu, PanelLeftClose, PanelLeftOpen, X } from "lucide-react";
 import { MotionProvider } from "@/components/motion-provider";
 import {
@@ -23,6 +24,40 @@ import {
   setSharedInertOwner,
 } from "@/lib/a11y/shared-inert";
 import { cn } from "@/lib/utils";
+import { coursePlakat, type PlakatKey } from "@/lib/plakat/palettes";
+
+/**
+ * Course routes and their `COURSE_PLAKAT` ids, longest prefix first. Lessons
+ * stay paper; only the lesson H1 and the Kopflinien take the track's scene
+ * line (SPEC §2.3, §3.13). The shell's slots are opaque, so the scene comes
+ * from the route unless a reader passes `courseId`.
+ */
+const LESSON_COURSE_ROUTES: readonly (readonly [prefix: string, courseId: string])[] = [
+  ["/kurse/open-source/ai-native-operator", "ai-native-operator"],
+  ["/kurse/open-source/data-engineering-fundamentals", "data-engineering-fundamentals"],
+  ["/kurse/open-source/data-infrastructure", "data-infrastructure"],
+  ["/kurse/open-source/data-science", "data-science"],
+  ["/kurse/open-source/claude", "claude"],
+  ["/kurse/open-source/codex", "codex"],
+  ["/ki-fuehrerschein", "ki-fuehrerschein"],
+  ["/ki-und-gesellschaft", "ki-und-gesellschaft"],
+  ["/eu-ai-act-kurs", "eu-ai-act-kurs"],
+  ["/ai-native/kurs", "ai-native"],
+];
+
+/** The track scene of a lesson route (with or without the /en prefix), if any. */
+export function lessonScene(
+  pathname: string | null | undefined,
+  courseId?: string,
+): PlakatKey | undefined {
+  if (courseId) return coursePlakat(courseId)?.plakat;
+  if (!pathname) return undefined;
+  const path = pathname.replace(/^\/en(?=\/|$)/, "") || "/";
+  const match = LESSON_COURSE_ROUTES.find(
+    ([prefix]) => path === prefix || path.startsWith(`${prefix}/`),
+  );
+  return match ? coursePlakat(match[1])?.plakat : undefined;
+}
 
 export const LESSON_SHELL_SIDEBAR_STORAGE_KEY =
   "loehrning:lesson-shell:sidebar:v1";
@@ -177,6 +212,12 @@ export interface LessonShellProps {
    * list is the navigation there. From lg the rail is unchanged.
    */
   readonly readerFocus?: boolean;
+  /**
+   * The `COURSE_PLAKAT` id whose scene line colours the lesson H1 and the
+   * Kopflinien. Optional: without it the shell reads the course from the
+   * route; a route outside the course families stays Druckschwarz.
+   */
+  readonly courseId?: string;
 }
 
 export function LessonShell({
@@ -195,7 +236,9 @@ export function LessonShell({
   readerBar,
   contentRef,
   readerFocus = true,
+  courseId,
 }: LessonShellProps) {
+  const scene = lessonScene(usePathname(), courseId);
   const shellRef = useRef<HTMLDivElement>(null);
   const lastNavOpenerRef = useRef<HTMLElement | null>(null);
   const previousNavOpenRef = useRef(navOpen);
@@ -331,6 +374,7 @@ export function LessonShell({
       data-lesson-shell
       data-content-mode={contentMode}
       data-reader={readerFocus ? "focus" : undefined}
+      data-plakat-page={scene}
     >
       {/* Desktop sidebar */}
       <aside
@@ -451,8 +495,12 @@ export function LessonShell({
           data-lesson-shell-content
           data-content-mode={contentMode}
           data-lesson-stage
+          // The lesson H1 (an <h1>, or the lesson reference's level-1
+          // heading) and the 2px Kopflinien take the scene line (Ultramarin
+          // 11.26, Kobalt 7.15, Aubergine 12.57 on Kalkweiß); body, widgets
+          // and callouts stay paper and ink. Druckschwarz without a scene.
           className={cn(
-            "mx-auto w-full min-w-0 overflow-x-clip lg:pt-2 [&>*]:min-w-0",
+            "mx-auto w-full min-w-0 overflow-x-clip lg:pt-2 [&>*]:min-w-0 [&_h1]:text-scene-line [&_[role=heading][aria-level='1']]:text-scene-line [&_.border-t-2.border-foreground]:border-scene-line",
             CONTENT_WIDTH_CLASS[contentMode],
           )}
         >

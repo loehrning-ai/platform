@@ -10,6 +10,7 @@ import {
 import { heroNetworkSteps, STEPS } from "@/components/home/hero-network-steps";
 import type { Locale } from "@/lib/i18n/locale";
 import { PLAKAT } from "@/lib/plakat/palettes";
+import { limbFade, rimDepth } from "@/components/werk/horizon-projection";
 
 // Re-exported for backward compatibility while the homepage parent loads this
 // heavy projection module only for desktop viewports.
@@ -68,6 +69,10 @@ const PAINT: Readonly<Record<HeroGlobeScene, GlobePaint>> = {
 
 /** Knockout graticule width on the flat disc, CSS px. */
 const FLAT_GRID_WIDTH = 1.5;
+
+/** The flat disc's rim: the grid stops 3.5 of 1000 units (2 to 3 px) inside the limb. */
+const FLAT_RIM_Z = rimDepth(R, 3.5);
+const FLAT_RIM_R = R - 3.5;
 
 // ─── Locations (dramatic cross-globe panning) ───────────────────────────────
 // Step/journey data (Step type + STEPS constant) now lives in
@@ -180,6 +185,8 @@ interface Seg {
   d: string;
   dp: number;
   len?: number;
+  /** Stroke opacity of a flat-disc grid line (its limb fade). */
+  op?: number;
 }
 
 /** Project a set of [lat, lon] polylines onto the sphere at (rLon, rLat),
@@ -431,6 +438,53 @@ function buildGrid(
   return { front, back };
 }
 
+/**
+ * The flat disc's knockout graticule: front-facing sub-paths only, each
+ * ending on the rim circle a few units inside the limb. In an orthographic
+ * view every great circle meets the limb tangentially, so a line drawn up to
+ * the edge would run along it and cut steps into the disc's one contour. A
+ * line whose peak depth is small would hug the silhouette a hair inside it,
+ * so it fades out by that depth (werk/horizon-projection HORIZON_LIMB_FADE).
+ * The disc edge stays one clean circle.
+ */
+function buildFlatGrid(project: Projector, lines: GridLines): Seg[] {
+  const out: Seg[] = [];
+  const at = (p: ProjectedPoint) => `${p.sx.toFixed(1)},${p.sy.toFixed(1)}`;
+  // Where the segment a (front) to b (back) meets the rim depth, pushed onto
+  // the rim circle.
+  const limb = (a: ProjectedPoint, b: ProjectedPoint) => {
+    const t = (a.z - FLAT_RIM_Z) / (a.z - b.z);
+    const x = a.sx + (b.sx - a.sx) * t - CX;
+    const y = a.sy + (b.sy - a.sy) * t - CY;
+    const h = Math.hypot(x, y) || 1;
+    return `${(CX + (x / h) * FLAT_RIM_R).toFixed(1)},${(CY + (y / h) * FLAT_RIM_R).toFixed(1)}`;
+  };
+  for (const line of lines) {
+    const points = line.map(project);
+    let peak = -1;
+    for (const p of points) if (p.z > peak) peak = p.z;
+    const op = limbFade(peak);
+    if (op <= 0) continue;
+    let d = "";
+    let live = false;
+    let prev: ProjectedPoint | null = null;
+    for (const p of points) {
+      if (p.z > FLAT_RIM_Z) {
+        if (live) d += ` L${at(p)}`;
+        else if (prev) d += `M${limb(p, prev)} L${at(p)}`;
+        else d += `M${at(p)}`;
+        live = true;
+      } else if (live && prev) {
+        d += ` L${limb(prev, p)}`;
+        live = false;
+      }
+      prev = p;
+    }
+    if (d) out.push({ d, dp: 0, op: Math.round(op * 1000) / 1000 });
+  }
+  return out;
+}
+
 // The complete animated projection is intentionally not serialized into the
 // document. This sparse frame uses the exact same Berlin projection and ink
 // values, so the real globe is visible in the first HTML paint without a
@@ -462,7 +516,7 @@ function initialShell(scene: HeroGlobeScene): Shell {
   let shell: Shell;
   if (paint.disc) {
     shell = {
-      grid: { back: [], front: buildGrid(berlinProjector, gridLines(paint.gridStep)).front },
+      grid: { back: [], front: buildFlatGrid(berlinProjector, gridLines(paint.gridStep)) },
       country: projectRingsClosed(COUNTRY_RINGS_3D.BERLIN, berlinProjector),
     };
   } else {
@@ -634,9 +688,10 @@ export function HeroNetwork({
 
     // ── Grid ────────────────────────────────────────────────────────────
     const project = createProjector(targetLon, targetLat);
-    const grid = buildGrid(project, gridLines(paint.gridStep));
     // The flat disc hides the far side and draws one knockout line weight.
-    if (flat) grid.back.length = 0;
+    const grid = flat
+      ? { front: buildFlatGrid(project, gridLines(paint.gridStep)), back: [] }
+      : buildGrid(project, gridLines(paint.gridStep));
 
     // Back grid
     const gbEl = gridBackRef.current;
@@ -698,6 +753,7 @@ export function HeroNetwork({
         p.setAttribute("stroke", paint.line);
         if (flat) {
           p.setAttribute("stroke-width", String(FLAT_GRID_WIDTH));
+          p.setAttribute("stroke-opacity", String(s.op ?? 1));
           p.setAttribute("vector-effect", "non-scaling-stroke");
           return;
         }
@@ -847,10 +903,13 @@ export function HeroNetwork({
         // Build displayed text
         const displayedWord = word.slice(0, Math.min(charsToShow, word.length));
 
-        // Overall text opacity for fade-out
-        let textOp = 0.85;
+        // Overall text opacity for fade-out. The flat disc holds the word
+        // at one flat Butter (4.96:1 on Mennige); the line globe keeps its
+        // softer 0.85.
+        const holdOp = flat ? 1 : 0.85;
+        let textOp = holdOp;
         if (dwellT >= holdEnd) {
-          textOp = 0.85 * (1 - (dwellT - holdEnd) / (1 - holdEnd));
+          textOp = holdOp * (1 - (dwellT - holdEnd) / (1 - holdEnd));
         } else if (dwellT < fadeInStart) {
           textOp = 0;
         }
@@ -999,8 +1058,9 @@ export function HeroNetwork({
   // reduced-motion / mobile flags.
   const staticGrid = useMemo(() => {
     if (!prefersReduced && !mobile) return null;
-    const grid = buildGrid(berlinProjector, gridLines(paint.gridStep));
-    return flat ? { front: grid.front, back: [] } : grid;
+    return flat
+      ? { front: buildFlatGrid(berlinProjector, gridLines(paint.gridStep)), back: [] }
+      : buildGrid(berlinProjector, gridLines(paint.gridStep));
   }, [prefersReduced, mobile, paint, flat]);
   // Outlines: open per-arc paths (the line globe only).
   const staticCountry = useMemo(
@@ -1013,6 +1073,16 @@ export function HeroNetwork({
     [prefersReduced, mobile, flat],
   );
   const shell = !staticGrid ? initialShell(scene) : null;
+  // On the flat disc the typing word sits on a Mennige halo (the stroke is
+  // painted under the fill), so no knockout grid line runs through a glyph.
+  const wordKnockout = paint.disc
+    ? {
+        stroke: paint.disc,
+        strokeWidth: 14,
+        strokeLinejoin: "round" as const,
+        paintOrder: "stroke",
+      }
+    : {};
 
   // Fills: closed paths with limb-arc closures (no chord across the disc).
   const staticCountryFill = useMemo(
@@ -1144,6 +1214,7 @@ export function HeroNetwork({
                     key={`if${i}`}
                     d={s.d}
                     stroke={paint.line}
+                    strokeOpacity={s.op ?? 1}
                     strokeWidth={FLAT_GRID_WIDTH}
                     vectorEffect="non-scaling-stroke"
                     fill="none"
@@ -1216,6 +1287,7 @@ export function HeroNetwork({
                   key={`sf${i}`}
                   d={s.d}
                   stroke={paint.line}
+                  strokeOpacity={s.op ?? 1}
                   strokeWidth={FLAT_GRID_WIDTH}
                   vectorEffect="non-scaling-stroke"
                   fill="none"
@@ -1307,6 +1379,7 @@ export function HeroNetwork({
               fill={paint.accent}
               textAnchor="middle"
               opacity="0"
+              {...wordKnockout}
             />
             <text
               ref={cursorRef}
@@ -1317,6 +1390,7 @@ export function HeroNetwork({
               fontWeight="300"
               fill={paint.accent}
               opacity="0"
+              {...wordKnockout}
             >
               _
             </text>

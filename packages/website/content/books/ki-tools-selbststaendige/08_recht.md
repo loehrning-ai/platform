@@ -1,24 +1,14 @@
 # DSGVO, Verträge, Steuern: KI im rechtlichen Rahmen
 
-Artikel 4 der EU-KI-Verordnung gilt seit 2. Februar 2025. Nicht seit gestern. Seit über einem Jahr.
+Artikel 4 der EU-KI-Verordnung gilt seit 2. Februar 2025. Er betrifft auch die Freelancerin mit Einzelunternehmen, die ChatGPT nur für E-Mails nutzt. Das Risiko für die meisten Selbstständigen ist überschaubar, aber nicht null.
 
-Er betrifft auch dich. Ja, dich, die Freelancerin mit dem Einzelunternehmen. Auch wenn du nur ChatGPT für E-Mails nutzt.
-
-Das Risiko für die meisten Selbstständigen ist überschaubar. "Überschaubar" heißt aber nicht "null". Und Unwissenheit schützt bekanntlich vor Strafe nicht, auch nicht vor KI-Strafen.
-
-Was hier steht, sind die Prüffelder. Kein Ersatz für den aktuellen Gesetzestext und keiner für die Einzelfallprüfung.
+Dieses Kapitel nennt die Prüffelder. Den aktuellen Gesetzestext und die Einzelfallprüfung ersetzt es nicht.
 
 > **Rechtlicher Hinweis:** Dieses Kapitel gibt allgemeine Orientierung, keine Rechtsberatung im Sinne des Rechtsdienstleistungsgesetzes (RDG). Für deine individuelle Situation konsultiere einen Fachanwalt oder Datenschutzbeauftragten. Rechtsstand der überprüften AI-Act-Angaben: 28. Juli 2026.
 
 > **Wissens-Vertiefung: KI-Führerschein**
 >
-> Du willst tiefer einsteigen? Der **KI-Führerschein** ist ein kostenloser 5-Block-Kurs bei loehrning.ai, der alle regulatorischen Anforderungen detailliert behandelt:
-> 
-> - **Block 1:** Entdeckung, wo du KI bereits nutzt
-> - **Block 2:** Datenschutz, DSGVO und deine Daten (★ wichtig für dieses Kapitel)
-> - **Block 3:** Anwendung, praktische KI-Tools
-> - **Block 4:** Verifikation, wie du KI-Fehler erkennst
-> - **Block 5:** Richtlinie, wie du KI im Unternehmen verantwortungsvoll einsetzt
+> Der **KI-Führerschein** ist ein kostenloser 5-Block-Kurs bei loehrning.ai (Entdeckung, Datenschutz, Anwendung, Verifikation, Richtlinie) zu den regulatorischen Anforderungen.
 >
 > **Kursdauer:** 5 × 30 Minuten + Praxisübungen
 > **Abschluss:** Der Kurs dokumentiert deinen Lernfortschritt. Die Teilnahmebestätigung ist kein behördlicher Nachweis und belegt allein keine organisationsbezogene Erfüllung von Art. 4.
@@ -28,15 +18,11 @@ Was hier steht, sind die Prüffelder. Kein Ersatz für den aktuellen Gesetzestex
 
 ## DSGVO und KI: was darfst du?
 
-Bei Apple habe ich Privacy by Design gelernt. Nicht als Konzept, als tägliche Praxis.
+Bei Apple habe ich Privacy by Design als tägliche Praxis gelernt. Datenklassifizierung in Public, Internal, Confidential und Restricted war ab Tag 1 Pflicht. In meinem ersten Projekt wollte ich aggregierte, anonymisierte Nutzerdaten für ein ML-Modell verwenden. Mein Lead hat den Antrag dreimal zurückgeschickt, weil die Dokumentation nicht lückenlos nachwies, dass die Daten unproblematisch sind.
 
-Datenklassifizierung war dort Pflicht, Public, Internal, Confidential, Restricted, ab Tag 1. In meinem ersten Projekt wollte ich Nutzerdaten für ein ML-Modell verwenden, aggregiert, anonymisiert, harmlos, dachte ich. Mein Lead hat den Antrag zurückgeschickt. Dreimal. Nicht weil die Daten problematisch waren, sondern weil die Dokumentation nicht lückenlos nachweisen konnte, dass sie es nicht sind. Ich war frustriert. Und dann habe ich verstanden: Datenschutz ist kein Hindernis. Gute Hygiene, egal ob mit KI oder ohne.
-
-Als Freelancer denkst du vielleicht: Apple hat eine ganze Datenschutzabteilung, ich habe mich. Der Einwand stimmt. Dein Risiko ist trotzdem kleiner und die Regeln sind einfacher. Das Prinzip bleibt dasselbe.
+Du hast keine Datenschutzabteilung, aber dein Risiko ist kleiner und die Regeln sind einfacher. Das Prinzip bleibt dasselbe.
 
 **Was du nicht ohne dokumentierte Freigabe in KI-Tools eingeben solltest:**
-
-Kapitel 2 hat das angerissen. Hier die vollständige Liste:
 
 1. **Personenbezogene Daten deiner Kunden:** Namen, Adressen, Telefonnummern, E-Mail-Adressen
 2. **Gesundheitsdaten:** besonders relevant für Therapeuten, Coaches, Heilpraktiker (DSGVO Art. 9)
@@ -56,7 +42,7 @@ OpenAI und Anthropic veröffentlichen Vertragsunterlagen für bestimmte kommerzi
 
 **Kommerziell vs. Consumer:** Vertrags- und Datenkontrollen unterscheiden sich nach Anbieter und Produktstufe. Anthropic dokumentiert für Claude for Work und die API standardmäßig keine Nutzung kommerzieller Kundendaten zum Modelltraining, außer bei bestimmten Opt-ins oder übermitteltem Feedback; Verbraucherprodukte folgen anderen Regeln. Prüfe diese Regeln am Entscheidungstag. Kein Tarif ersetzt die Freigabe einer konkreten Datenklasse.
 
-**Datenschutzerklärung prüfen:** Verarbeitet eine Website-Funktion personenbezogene Daten, müssen die Informationen nach Art. 13 beziehungsweise 14 DSGVO den tatsächlichen Prozess abbilden: Zwecke, Daten, Empfänger, Rechtsgrundlage, Speicherdauer und gegebenenfalls Transfers. Server- und Verarbeitungsorte ermittelst du aus der aktuellen Konfiguration und den Anbieterunterlagen, nicht aus dem Bauchgefühl.
+**Datenschutzerklärung prüfen.** Verarbeitet eine Website-Funktion personenbezogene Daten, müssen die Informationen nach Art. 13 beziehungsweise 14 DSGVO den tatsächlichen Prozess abbilden: Zwecke, Daten, Empfänger, Rechtsgrundlage, Speicherdauer und gegebenenfalls Transfers. Server- und Verarbeitungsorte ermittelst du aus der aktuellen Konfiguration und den Anbieterunterlagen, nicht aus dem Bauchgefühl.
 
 > **KRAFT-Prompt: DSGVO-Check**
 >
@@ -91,9 +77,7 @@ Der Satz "DSGVO-konform" trägt nichts. Belastbar ist eine nachprüfbare Beschre
 
 ## EU AI Act: betrifft dich das?
 
-Die Verordnung (EU) 2024/1689, der AI Act, ist seit 1. August 2024 in Kraft. Artikel 4 (KI-Kompetenz) und Artikel 5 (verbotene Praktiken) gelten seit 2. Februar 2025. Was bedeutet das für dich?
-
-Kurze Antwort: Mehr als du denkst. Weniger als du befürchtest.
+Die Verordnung (EU) 2024/1689, der AI Act, ist seit 1. August 2024 in Kraft. Artikel 4 (KI-Kompetenz) und Artikel 5 (verbotene Praktiken) gelten seit 2. Februar 2025.
 
 > **Rechtlicher Hinweis:** Art. 4 AI Act verlangt von Anbietern und Betreibern Maßnahmen, die die Entwicklung der KI-Kompetenz ihres Personals und anderer in ihrem Auftrag handelnder Personen unterstützen. Maßstab sind Wissen, Erfahrung, Ausbildung, Einsatzkontext und betroffene Personen oder Gruppen. Seit 27. Juli 2026 muss kein bestimmtes individuelles Kompetenzniveau garantiert werden. Es gibt weder ein vorgeschriebenes Einheitsformat noch ein erforderliches Zertifikat. Solo-Selbstständige sollten ihre Nutzung und angemessene Lern- und Kontrollmaßnahmen dokumentieren, statt einen Kursnachweis als automatische Erfüllung auszugeben.
 
@@ -112,7 +96,7 @@ Einzelne AI-Act-Pflichten gelten für dich bereits, weitere greifen nach dem ges
 
 Am **2. August 2026** greifen weitere allgemeine Anwendungspunkte des AI Act, darunter Art. 50. Die Transparenzpflichten unterscheiden zwischen Anbieterpflichten zur maschinenlesbaren Markierung und Betreiberpflichten, etwa bei direkter Interaktion, Deepfakes oder bestimmten Texten zu Angelegenheiten von öffentlichem Interesse. Sie sind keine pauschale Kennzeichnungspflicht für jedes KI-unterstützte Werk. Die am 27. Juli 2026 in Kraft getretene Verordnung (EU) 2026/1744 verschiebt die Hochrisiko-Regeln auf den **2. Dezember 2027** für eigenständige Anhang-III-Systeme und den **2. August 2028** für produktintegrierte Anhang-I-Systeme.
 
-Die Bußgelder sind kein Spaß:
+Die Bußgelder:
 
 | Verstoß | Maximalstrafe |
 |---------|---------------|
@@ -126,17 +110,13 @@ Wer E-Mails oder Angebote formulieren lässt, landet damit regelmäßig nicht im
 
 ### Die Bewusstseinslücke (und deine Chance)
 
-Bei neuer Regulierung hinkt die Bekanntheit den Pflichten hinterher. Die DSGVO hat 2018 gezeigt, was dann passiert. Panik, überteuerte Berater, Schnellschüsse. Beim AI Act läuft gerade derselbe Film, in Zeitlupe.
+Bei neuer Regulierung hinkt die Bekanntheit den Pflichten hinterher. Nach der DSGVO 2018 folgten Panik, überteuerte Berater und Schnellschüsse, und beim AI Act wiederholt sich das langsamer.
 
-Für dich als Freelancer bedeutet das zwei Dinge:
-
-**Erstens:** Du liest gerade dieses Buch. Damit bist du weiter als die meisten Selbstständigen. Das ist kein Marketingspruch, das ist Empirie.
-
-**Zweitens:** Bei Kunden in regulierten Branchen können dokumentierte, rollen- und risikogerechte Lernmaßnahmen relevant sein. Du kannst solche Maßnahmen unterstützen. Weder du selbst noch ein einzelner Kurs noch ein Zertifikat sind automatisch der gesetzliche Nachweis für die Organisation.
+Bei Kunden in regulierten Branchen können dokumentierte, rollen- und risikogerechte Lernmaßnahmen relevant sein, und du kannst sie unterstützen. Weder du selbst noch ein einzelner Kurs noch eine Teilnahmebestätigung sind automatisch der gesetzliche Nachweis für die Organisation.
 
 ### Compliance als echtes Geschäftsargument
 
-Der Markt für KI-Compliance-Beratung wächst. Viele Unternehmen brauchen externe Hilfe beim AI Act. Das ist kein Hindernis. Das ist ein Geschäftsmodell.
+Der Markt für KI-Compliance-Beratung wächst, weil viele Unternehmen beim AI Act externe Hilfe brauchen.
 
 Positioniere dich mit überprüfbaren Aussagen: "Meine KI-Nutzung ist nach Zweck und Datenklasse dokumentiert; Verträge, Datenflüsse und Kontrollen werden regelmäßig geprüft." Vermeide die pauschale Behauptung, ein Tool oder der gesamte Prozess sei "datenschutzkonform", solange Umfang und Nachweise nicht benannt sind.
 
@@ -158,7 +138,7 @@ Eine freiwillige Formulierung wie "Dieser Text wurde mit KI-Unterstützung erste
 
 ### Reglementierte Berufe: Warum §203 StGB und KI nicht zusammenpassen
 
-Wenn du Rechtsanwalt, Steuerberater, Arzt, Psychotherapeut oder Heilpraktiker bist, hast du ein Problem, das andere Freelancer nicht haben: §203 StGB. Verletzung von Privatgeheimnissen. Straftat. Nicht Ordnungswidrigkeit, Straftat.
+Als Rechtsanwalt, Steuerberater, Arzt, Psychotherapeut oder Heilpraktiker gilt für dich zusätzlich §203 StGB (Verletzung von Privatgeheimnissen), und ein Verstoß ist eine Straftat.
 
 > **Rechtlicher Hinweis:** §203 StGB stellt die Offenbarung fremder Geheimnisse unter Strafe. Die Übertragung mandanten- oder patientenbezogener Daten in Cloud-KI-Systeme ohne ausreichende vertragliche und technische Absicherung kann diesen Tatbestand erfüllen.
 
@@ -166,7 +146,7 @@ Mandanten- oder patientenbezogene Daten in einem Cloud-Dienst können Verschwieg
 
 Spezialisierte Legal-AI-Angebote können andere Betriebs- und Vertragsmodelle bieten. Auch dort prüfen Kanzlei, Berufsgeheimnisträger und Datenschutzverantwortliche die konkrete Konfiguration. Ein europäischer Anbieter oder Hostingort erteilt keine automatische Freigabe für Mandantendaten.
 
-Was für Kanzleien gilt, gilt auch für dich als Freiberufler mit Schweigepflicht. Deine Optionen:
+Für dich als Freiberufler mit Schweigepflicht gibt es drei Optionen:
 
 1. **Anonymisieren:** konsequent und auf Re-Identifizierbarkeit prüfen. Nutze für Übungen vollständig fiktive Angaben wie „Fall Alpha, erwachsene Person, allgemeine zivilrechtliche Fragestellung" statt realistisch kombinierter Namen, Orte und Verfahrensdetails.
 2. **Lokale KI prüfen:** Eine vollständig lokale, abgesicherte Konfiguration kann externe Datenflüsse reduzieren. Updates, Telemetrie, Erweiterungen, Backups, Zugriffe und das Endgerät bleiben Teil der Prüfung.
@@ -180,11 +160,9 @@ Kurze Antwort: Das hängt vom menschlichen Schöpfungsanteil, dem konkreten Erge
 
 > **Rechtlicher Hinweis:** § 2 Abs. 2 UrhG verlangt für ein geschütztes Werk eine persönliche geistige Schöpfung. Bei rein maschinell erzeugten Bestandteilen kann dieser menschliche Beitrag fehlen. Daraus folgt aber weder automatisch freie Nutzbarkeit noch die Abwesenheit fremder Rechte oder vertraglicher Beschränkungen.
 
-Für dich heißt das drei Dinge:
-
 1. **Kommerzielle Nutzung prüfen:** Nutzungsbedingungen, Rechte Dritter, Marken, Persönlichkeitsrechte, Open-Source-Lizenzen und den konkreten Output kontrollieren.
 2. **Menschlichen Beitrag dokumentieren:** Auswahl, Gestaltung und Bearbeitung können relevant sein; bloßer Aufwand oder viele Prompt-Schritte garantieren keinen Schutz.
-3. **Sag es deinen Kunden ehrlich**, wenn du reinen KI-Output lieferst und der Kunde Exklusivität braucht, kläre das vorab. Sonst ist es ein Konflikt, der später aufkommt.
+3. **Kläre es vorab mit deinen Kunden**, wenn du reinen KI-Output lieferst und der Kunde Exklusivität braucht.
 
 ## Impressum und Website-Pflichten
 
@@ -207,11 +185,11 @@ Was du nicht sagen solltest:
 - "Handgeschrieben, jeder Text ein Unikat", bei KI-Output zweifelhaft
 - "100 Prozent menschlich", wenn KI den Entwurf gemacht hat, falsch
 
-Der paradoxe Punkt: Ehrliche KI-Kommunikation ist ein Verkaufsargument. "Ich nutze KI für Recherche und Struktur, die Schöpfung bleibt bei mir" wirkt professioneller als verschleierte KI-Nutzung, die irgendwann auffliegt.
+Ehrliche KI-Kommunikation hilft beim Verkaufen. "Ich nutze KI für Recherche und Struktur, die Schöpfung bleibt bei mir" wirkt professioneller als verschleierte KI-Nutzung, die irgendwann auffliegt.
 
 ## Verträge und AGB mit KI-Unterstützung
 
-KI kann Verträge analysieren und Entwürfe erstellen. Rechtsberatung kann sie nicht leisten. Diesen Unterschied musst du kennen, und respektieren.
+KI kann Verträge analysieren und Entwürfe erstellen, aber keine Rechtsberatung leisten.
 
 **Was KI kann:**
 - Vertragsentwürfe als Ausgangspunkt erstellen
@@ -224,8 +202,6 @@ KI kann Verträge analysieren und Entwürfe erstellen. Rechtsberatung kann sie n
 - Garantieren, dass ein Vertrag rechtssicher ist
 - Aktuelle Rechtsprechung zuverlässig kennen
 - Dein spezifisches Risikoprofil einschätzen
-
-Die goldene Regel: KI für den Entwurf. Anwalt für die Prüfung.
 
 Plane für rechtlich relevante Vertragswerke eine fachkundige Prüfung ein. Kosten und Umfang hängen von Geschäftsmodell, Klauseln und Beratungsbedarf ab; ein pauschaler Betrag taugt nicht als Entscheidungsgrundlage.
 
@@ -242,7 +218,7 @@ Format: Nummerierte Paragraphen. Verständliche Sprache.
 Ton: Juristisch korrekt, aber nicht unlesbar.
 ```
 
-Ergebnis: Ein Entwurf, den du deinem Anwalt zeigst. Nicht deinem Kunden. Erst nach der juristischen Prüfung.
+Den Entwurf zeigst du erst deinem Anwalt und nach der juristischen Prüfung deinem Kunden.
 
 ## Steuern und Betriebsausgaben
 
@@ -255,8 +231,6 @@ Kosten für KI-Tools können Betriebsausgaben sein, soweit sie betrieblich veran
 | Hardware für lokale KI | Nutzung, Zuordnung und Abschreibungsregeln | Anlagevermögen/AfA oder laufender Aufwand |
 
 Bei gemischter Nutzung dokumentierst du eine nachvollziehbare Aufteilung. Die amtliche Anlage EÜR weist darauf hin, dass bei gemischten Aufwendungen nur der betrieblich oder beruflich veranlasste Anteil anzusetzen ist. Welche Aufzeichnung genügt, klärst du für deinen Fall mit aktueller BMF-Hilfe oder Steuerberatung.
-
-Dein Steuerberater wird sich freuen. Ordentliche Dokumentation ist das, was ihn nachts ruhig schlafen lässt.
 
 > **Checkliste: KI rechtskonform nutzen**
 >
@@ -278,7 +252,7 @@ Dein Steuerberater wird sich freuen. Ordentliche Dokumentation ist das, was ihn 
 > 5. Erstelle ein Dokument: "Welche KI-Tools nutze ich für welchen Zweck und welche Datenklasse?"
 > 6. Prüfe Anbieterinformationen nach § 5 DDG und weitere branchenspezifische Pflichten.
 >
-> Das Ergebnis ist eine offene Prüfliste, kein Compliance-Zertifikat. Dokumentiere ungeklärte Punkte und stoppe sensible Verarbeitung bis zur Freigabe.
+> Das Ergebnis ist eine offene Prüfliste und keine Bestätigung, dass alles rechtskonform ist. Dokumentiere ungeklärte Punkte und stoppe sensible Verarbeitung bis zur Freigabe.
 
 ---
 
@@ -292,4 +266,4 @@ Das ist kein Rechtsrat. Wie tief du prüfen musst, hängt von Tätigkeit, Daten,
 > | Gegenwert | Im eigenen Prozess messen |
 > | Toolkosten | Aktuelle Anbieterpreise und Beratungskosten separat prüfen |
 
-Abgesichert bist du nicht vom Lesen. Fang heute an.
+Fang heute mit dem Compliance-Check an.

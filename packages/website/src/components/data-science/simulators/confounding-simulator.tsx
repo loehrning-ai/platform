@@ -176,8 +176,8 @@ export function ConfoundingSimulator() {
       )}
       meta={display.label}
       caption={text(
-        "The seeded generator makes group membership shift both variables, so the aggregate association is larger than the within-group associations. This demonstrates one known confounder; stratification does not establish that a real dataset has no residual confounding.",
-        "Der initialisierte Generator verschiebt über die Gruppenzugehörigkeit beide Variablen, daher ist die Gesamtassoziation größer als die Assoziationen innerhalb der Gruppen. Das zeigt einen bekannten Confounder; Stratifizierung belegt bei realen Daten keine vollständige Entzerrung.",
+        "Group membership shifts both variables, so the overall association exceeds the within-group ones. This shows one known confounder; stratification does not prove a real dataset free of residual confounding.",
+        "Die Gruppenzugehörigkeit verschiebt beide Variablen, daher ist die Gesamtassoziation größer als innerhalb der Gruppen. Das zeigt einen bekannten Confounder; Stratifizierung belegt bei realen Daten keine vollständige Entzerrung.",
       )}
     >
       <div className="sim-row" style={{ gridTemplateColumns: "220px 1fr" }}>

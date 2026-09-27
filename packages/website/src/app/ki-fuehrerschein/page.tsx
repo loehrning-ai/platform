@@ -85,35 +85,22 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
     heading: "KI im Alltag:",
     headingAccent: "Was du wissen solltest.",
     introduction:
-      "Du lernst, wo dir KI im Alltag und bei der Arbeit begegnet, welche Daten nicht in ein KI-Tool gehören und wie du eine Antwort prüfst, bevor sie in eine Mail oder einen Bericht geht. Technische Vorkenntnisse brauchst du nicht.",
+      "Du lernst, welche Daten in ein KI-Tool dürfen und wie du eine Antwort prüfst, bevor sie weitergeht. Vorkenntnisse brauchst du keine.",
     imageAlt:
       "Editoriale Collage eines KI-Prüfpasses mit Lernkarten, Datenschutz und Prüfschritten",
     start: "Kostenlos mit Lernkonto starten",
     facts: [
       "5 Blöcke, 18 Lektionen",
       "ca. 1 Std. 40 Min. Lernzeit",
-      "Kostenlos, mit Lernkonto",
       "Teilnahmebestätigung als PDF",
     ],
     factsLabel: "Auf einen Blick",
     outcomesHeading: "Was du danach kannst",
     outcomes: [
-      {
-        title: "Daten einordnen, bevor du sie in ein KI-Tool gibst",
-        detail: "Vier Stufen von öffentlich bis vertraulich, mit Beispielen aus dem Büro.",
-      },
-      {
-        title: "Eine Mail, ein Protokoll, eine Auswertung und einen Bericht mit KI entwerfen",
-        detail: "Das sind die vier Übungen aus Block 3.",
-      },
-      {
-        title: "Eine KI-Antwort prüfen, bevor sie weitergeht",
-        detail: "Quelle suchen, gegenprüfen und erfundene Angaben erkennen.",
-      },
-      {
-        title: "Klären, wer entscheidet, wenn ein Ergebnis Folgen hat",
-        detail: "Block 5 zeigt, wie im Team eine KI-Nutzungsrichtlinie entsteht.",
-      },
+      { title: "Daten in vier Stufen einordnen, bevor sie ins Tool gehen" },
+      { title: "Mail, Protokoll, Auswertung und Bericht mit KI entwerfen" },
+      { title: "Eine KI-Antwort gegen die Quelle prüfen" },
+      { title: "Festlegen, wer bei folgenreichen Ergebnissen entscheidet" },
     ],
     curriculumHeading: "Lehrplan",
     minutes: (count) => `${count} Min.`,
@@ -150,35 +137,22 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
     heading: "AI at work:",
     headingAccent: "what you need to know.",
     introduction:
-      "Learn where AI shows up in daily life and at work, which data must stay out of an AI tool, and how to check an answer before it goes into an email or a report. No technical background required.",
+      "Learn which data may go into an AI tool and how to check an answer before you pass it on. No technical background needed.",
     imageAlt:
       "Editorial collage of an AI review passport with learning cards, data protection, and verification steps",
     start: "Start with a free learning account",
     facts: [
       "5 blocks, 18 lessons",
       "About 1 hr 40 min of study",
-      "Free, with a learning account",
       "Completion record as a PDF",
     ],
     factsLabel: "At a glance",
     outcomesHeading: "What you can do afterwards",
     outcomes: [
-      {
-        title: "Classify data before it goes into an AI tool",
-        detail: "Four levels from public to confidential, with office examples.",
-      },
-      {
-        title: "Draft an email, meeting minutes, a small analysis and a report with AI",
-        detail: "These are the four exercises in block 3.",
-      },
-      {
-        title: "Check an AI answer before you pass it on",
-        detail: "Find the source, cross-check it and spot invented details.",
-      },
-      {
-        title: "Settle who decides when a result has consequences",
-        detail: "Block 5 shows how a team writes an AI usage policy.",
-      },
+      { title: "Sort data into four levels before it enters a tool" },
+      { title: "Draft email, minutes, analysis and report with AI" },
+      { title: "Check an AI answer against its source" },
+      { title: "Decide who signs off results with consequences" },
     ],
     curriculumHeading: "Course plan",
     minutes: (count) => `${count} min`,

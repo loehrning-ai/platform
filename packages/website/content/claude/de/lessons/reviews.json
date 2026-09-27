@@ -17,7 +17,7 @@
       "id": "why-it-works",
       "title": "Welche Prüfaufgaben sich eignen",
       "readTimeMinutes": 2,
-      "content": "Was kann ein Reviewer prüfen, der nur den Diff sieht? Mögliche Fehler, Konventionsverstöße, fehlende Tests. Dateien, Aufrufer, Laufzeitverhalten und Repository-Regeln, die weder beigefügt noch über Tools erreichbar sind, bleiben außen vor.\n\nGib Änderungsziel, relevanten Umgebungscode, Projektkonventionen und Schweregrade mit. Verlange für jeden Befund Datei und Zeile, einen konkreten Fehlerpfad und eine saubere Trennung von Beleg und Vermutung.\n\nModellverhalten ändert sich von Version zu Version. Ein Review-Eval-Set läuft deshalb nach jeder Änderung an Modell, Prompt oder Tool-Zugriff erneut."
+      "content": "Ein Modell prüft den gelieferten Diff auf mögliche Fehler, Konventionsverstöße und fehlende Tests. Dateien, Aufrufer, Laufzeitverhalten und Regeln, die weder der Prompt noch ein Tool liefert, sieht es nicht.\n\nGib Änderungsziel, Umgebungscode, Konventionen und Schweregrade mit. Jeder Befund braucht Datei und Zeile, einen Fehlerpfad und eine Trennung von Beleg und Vermutung.\n\nModellverhalten ändert sich von Version zu Version, also lass ein Review-Eval-Set nach jeder Änderung an Modell, Prompt oder Tool-Zugriff erneut laufen."
     },
     {
       "id": "review-template",
@@ -27,9 +27,9 @@
     },
     {
       "id": "when-it-earns-its-keep",
-      "title": "Drei geeignete Einsatzsituationen",
+      "title": "Wo es hilft",
       "readTimeMinutes": 2,
-      "content": "- **Vor dem Review.** Ein fokussierter Durchlauf über den Diff, jeden Befund verifizieren, die relevanten Checks starten.\n- **Bei großen Änderungen.** Lass eine vorläufige Karte des geänderten Verhaltens und der betroffenen Aufrufpfade erzeugen, dann gegen Codesuche und Tests halten.\n- **Repository-weit.** Erst die Aufrufer mit Repository-Tools ermitteln, dann die konkreten Treffer auf Kompatibilitätsrisiken analysieren."
+      "content": "- **Vor dem Review.** Lass einen fokussierten Durchlauf über deinen Diff laufen, prüfe jeden Befund und starte die Checks.\n- **Bei großen Änderungen.** Lass eine vorläufige Karte des geänderten Verhaltens und der betroffenen Aufrufpfade erzeugen und halte sie gegen Codesuche und Tests.\n- **Repository-weit.** Ermittle erst die Aufrufer mit Repository-Tools und analysiere dann die Treffer auf Kompatibilitätsrisiken."
     }
   ],
   "widgets": [
@@ -55,7 +55,7 @@
         "question": "Dein Review-Prompt erzeugt 40 Stil-Nits und übersieht einen echten Korrektheitsfehler. Was ist die Lösung?",
         "options": [
           "Ein größeres Modell verwenden.",
-          "Claude explizit anweisen, Stil zu ignorieren und sich auf Korrektheit und Verhaltensänderungen zu konzentrieren.",
+          "Claude anweisen, Stil zu ignorieren und auf Korrektheit und Verhalten zu achten.",
           "Den Diff zufällig kürzen.",
           "Zweimal mit unterschiedlicher Formulierung fragen."
         ],

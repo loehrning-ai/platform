@@ -85,6 +85,22 @@ const ACTION_REACHES_SYSTEM: Readonly<Record<DemoExternalActionMode, boolean>> =
   real_disabled: false,
 };
 
+/**
+ * From lg the band's corner dots sit 12px inside the 75rem content box
+ * instead of the viewport corners, so they frame the text column on wide
+ * screens (below 75rem both edges are the same).
+ */
+const CONTENT_BOX_DOTS =
+  "lg:[&>[data-corner$=left]]:left-[max(0.75rem,calc(50%-36.75rem))] lg:[&>[data-corner$=right]]:right-[max(0.75rem,calc(50%-36.75rem))]";
+
+/**
+ * The halftone keeps a dot pitch of about 6 to 7px (its mask's dots sit 16px
+ * apart at 1600px): phones show a 112px strip cut from the field at 700px
+ * wide, and from lg the field fills a column beside the lede at 176px high.
+ */
+const HALFTONE_CLASS =
+  "mt-4 max-sm:h-28 max-sm:[mask-size:700px_auto] sm:mt-8 lg:mt-0 lg:h-44";
+
 function singleValue(
   value: string | readonly string[] | undefined,
 ): string | undefined {
@@ -171,15 +187,23 @@ export default async function DemosPage({ searchParams }: DemosPageProps) {
           Himbeere poster H1, a 17px Kobalt lede and one halftone image, so
           the band keeps three type sizes. Everything factual (the stats and
           the check list) sits on paper right below. Below sm the lede is its
-          first sentence only. */}
+          first sentence only, and the halftone is a 112px strip, so the first
+          example still starts in the first screen. From lg the halftone
+          sits beside the lede, so the catalogue heading reaches the first
+          view, and the dots mark the content box, not the viewport corners.
+          The halftone keeps a dot pitch of about 6 to 7px at every width:
+          phones show a 700px crop of the field instead of shrinking it. */}
       <header data-demo-atlas-hero>
         <PlakatBand
           plakat="idea"
           labelledBy="demo-atlas-title"
           cornerDots
+          className={CONTENT_BOX_DOTS}
         >
           <CapsLine arrow>
-            {copy.catalog.kicker} · {copy.catalog.kickerDetail}
+            {copy.catalog.kicker}
+            {/* Below sm the detail drops, so the caps line stays one row. */}
+            <span className="max-sm:hidden"> · {copy.catalog.kickerDetail}</span>
           </CapsLine>
           <h1
             id="demo-atlas-title"
@@ -188,11 +212,13 @@ export default async function DemosPage({ searchParams }: DemosPageProps) {
           >
             {copy.catalog.heading}
           </h1>
-          <p className="mt-4 max-w-[46ch] text-[1.0625rem] leading-normal text-scene-ink text-pretty sm:mt-5">
-            {copy.catalog.introduction}
-            <span className="max-sm:hidden"> {copy.catalog.introductionDetail}</span>
-          </p>
-          <Halftone field="demos" className="mt-6 sm:mt-8" />
+          <div className="lg:mt-8 lg:grid lg:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] lg:items-end lg:gap-12">
+            <p className="mt-4 max-w-[46ch] text-[1.0625rem] leading-normal text-scene-ink text-pretty sm:mt-5 lg:mt-0">
+              {copy.catalog.introduction}
+              <span className="max-sm:hidden"> {copy.catalog.introductionDetail}</span>
+            </p>
+            <Halftone field="demos" className={HALFTONE_CLASS} />
+          </div>
         </PlakatBand>
       </header>
 
@@ -201,7 +227,7 @@ export default async function DemosPage({ searchParams }: DemosPageProps) {
           list (which repeats the lede) is left out, so the first examples
           start soon after the band. */}
       <div
-        className="px-4 pb-6 pt-5 sm:px-6 sm:pb-12 sm:pt-10"
+        className="px-4 pb-5 pt-4 sm:px-6 sm:pb-12 sm:pt-10"
         data-demo-atlas-facts
       >
         <div className="mx-auto max-w-6xl">

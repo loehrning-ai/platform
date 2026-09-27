@@ -344,6 +344,67 @@ describe("LearningAtlas", () => {
     expect(screen.queryByText("Fakten und Zugang")).toBeNull();
   });
 
+  it("puts colour only in poster thumbnails, grouped by track, with numerals only on the Grundlagenpfad", () => {
+    const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);
+    const foundation = document.getElementById("lernpfad") as HTMLElement;
+    const technical = document.getElementById("tiefer-gehen") as HTMLElement;
+
+    // Grundlagenpfad: four Lemons posters numbered 01 to 04.
+    const foundationPosters = Array.from(
+      foundation.querySelectorAll<SVGElement>("[data-poster-thumb] svg[data-poster]"),
+    );
+    expect(foundationPosters.map((svg) => svg.dataset.poster)).toEqual([
+      "lemons",
+      "lemons",
+      "lemons",
+      "lemons",
+    ]);
+    expect(
+      foundationPosters.map((svg) => svg.querySelector("[data-poster-numeral-text]")?.textContent),
+    ).toEqual(["01", "02", "03", "04"]);
+
+    // Technikkurse: IDEA ×3 then Bloom ×3, no numeral (D9).
+    const technicalPosters = Array.from(
+      technical.querySelectorAll<SVGElement>("[data-poster-thumb] svg[data-poster]"),
+    );
+    expect(technicalPosters.map((svg) => svg.dataset.poster)).toEqual([
+      "idea",
+      "idea",
+      "idea",
+      "bloom",
+      "bloom",
+      "bloom",
+    ]);
+    expect(technical.querySelector("[data-poster-numeral-text]")).toBeNull();
+
+    // "01" prints once on the page: the next-proof poster has no numeral.
+    const numerals = Array.from(
+      container.querySelectorAll("[data-poster-numeral-text]"),
+      (node) => node.textContent,
+    );
+    expect(numerals.filter((text) => text === "01")).toHaveLength(1);
+    const next = screen.getByTestId("next-proof");
+    const nextThumb = next.querySelector("[data-poster-thumb]");
+    expect(nextThumb).toHaveAttribute("aria-hidden", "true");
+    expect(nextThumb).toHaveClass("w-16");
+    expect(nextThumb?.querySelector("[data-poster-numeral-text]")).toBeNull();
+
+    // Posters are decorative SVGs, never images or focus stops.
+    for (const svg of container.querySelectorAll("svg[data-poster]")) {
+      expect(svg).toHaveAttribute("aria-hidden", "true");
+      expect(svg).toHaveAttribute("focusable", "false");
+      expect(svg.closest("a, button")).toBeNull();
+    }
+    expect(container.querySelectorAll("img")).toHaveLength(0);
+
+    // No row tints, coloured rules or palette fills on paper (SPEC §2.4).
+    for (const row of container.querySelectorAll<HTMLElement>("[data-course-slug]")) {
+      expect(row.className).not.toMatch(
+        /\bbg-(?:ultramarin|butter|kreide|kobalt|himbeere|sand|aubergine|terrakotta|rost|creme|ocker|scene-|kupfer-mist)|\bborder-l-|plakat-/,
+      );
+    }
+  });
+
   it("shows the declared relationship between foundation and technical courses", () => {
     const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);
     const foundation = document.getElementById("lernpfad") as HTMLElement;
@@ -362,7 +423,8 @@ describe("LearningAtlas", () => {
       name: "Grundlagenpfad",
     });
     expect(groupHead).toHaveClass("text-[1.375rem]", "sm:text-[1.625rem]");
-    expect(groupHead.parentElement).toHaveClass("border-t-2", "border-foreground");
+    // The Kopflinie is the scene line (Druckschwarz on this paper page).
+    expect(groupHead.parentElement).toHaveClass("border-t-2", "border-scene-line");
     for (const title of within(foundation).getAllByRole("heading", { level: 4 })) {
       expect(title).toHaveClass("text-[1.0625rem]", "sm:text-[1.25rem]");
     }
@@ -633,9 +695,12 @@ describe("LearningAtlas phone ledger", () => {
       expect(meta).toHaveTextContent(course.duration);
       expect(meta?.querySelector("[class*='border']")).toBeNull();
 
-      const number = row?.querySelector<HTMLElement>("[data-course-number]");
-      expect(number).toHaveAttribute("aria-hidden", "true");
-      expect(row?.querySelector("[aria-hidden='true']")).toBe(number);
+      // The poster thumbnail replaced the number column: it is the row's
+      // first element and out of the accessibility tree.
+      const thumb = row?.querySelector<HTMLElement>("[data-poster-thumb]");
+      expect(thumb, course.slug).toHaveAttribute("aria-hidden", "true");
+      expect(row?.querySelector("[aria-hidden='true']")).toBe(thumb);
+      expect(row?.querySelector("[data-course-number]")).toBeNull();
     }
   });
   it("keeps the full repository path and commit in the attribution's accessible name", () => {
@@ -852,15 +917,16 @@ describe("LearningAtlas phone ledger", () => {
       const marker = within(row).getByText("Teil deines Pfads");
       expect(marker, row.dataset.courseSlug).toHaveClass("sr-only");
       expect(marker).not.toHaveClass("lg:not-sr-only");
-      // Ink square instead of an orange left edge.
-      expect(row.querySelector("[data-path-marker]")).toHaveClass("bg-foreground");
+      // Ink square instead of an orange left edge, inline before the title
+      // now that the thumbnail holds the first column (SPEC §3.4).
+      const square = row.querySelector("[data-path-marker]");
+      expect(square).toHaveClass("bg-foreground", "size-2.5");
+      expect(square?.parentElement?.tagName).toBe("H4");
       expect(row.className).not.toMatch(/border-l-/);
     }
     const outside = container.querySelector<HTMLElement>('[data-in-path="false"]');
     expect(outside).not.toHaveTextContent("Teil deines Pfads");
-    expect(outside?.querySelector("[data-path-marker]")).not.toHaveClass(
-      "bg-foreground",
-    );
+    expect(outside?.querySelector("[data-path-marker]")).toBeNull();
 
     const intro = screen.getByText(
       "Jede Zeile sagt, was du nach dem Kurs kannst. Jeden Kurs kannst du auch ohne Pfad direkt öffnen.",

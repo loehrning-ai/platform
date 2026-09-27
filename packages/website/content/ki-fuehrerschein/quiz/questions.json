@@ -3,30 +3,30 @@
     "id": "q_w01",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Wie erfasst du einen Spamfilter korrekt im KI-Inventar?",
+    "questionText": "Wie erfasst du einen Spamfilter im KI-Inventar?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "Produkt, konkrete Filterfunktion, Version, Zweck, Daten und verantwortliche Stelle erfassen; die technische und rechtliche Einordnung anhand von Unterlagen prüfen.",
+        "text": "Funktion, Version, Zweck und Zuständige erfassen, Einordnung mit Unterlagen prüfen",
         "isCorrect": true
       },
       {
         "id": "b",
-        "text": "Jeden Spamfilter ohne Prüfung als eigenständiges KI-System zählen.",
+        "text": "Jeden Spamfilter ungeprüft als eigenes KI-System zählen",
         "isCorrect": false
       },
       {
         "id": "c",
-        "text": "Nur den Anbieter notieren; Funktion und Version sind unwichtig.",
+        "text": "Nur den Anbieter notieren, Funktion und Version weglassen",
         "isCorrect": false
       },
       {
         "id": "d",
-        "text": "Spamfilter nie erfassen, weil E-Mail kein KI-Anwendungsfall sein kann.",
+        "text": "Spamfilter nie erfassen, weil E-Mail kein KI-Fall ist",
         "isCorrect": false
       }
     ],
-    "explanation": "Der Produktname sagt weder, wie die Version technisch arbeitet, noch, wie sie rechtlich einzuordnen ist. Ins Inventar kommt die Funktion, dazu der Verweis auf die Herstellerunterlagen und auf die Stelle, die bewertet.",
+    "explanation": "Der Produktname sagt nicht, wie die Version arbeitet oder rechtlich einzuordnen ist. Dafür verweist du auf Herstellerunterlagen und die bewertende Stelle.",
     "version": 1,
     "active": true
   },
@@ -34,30 +34,30 @@
     "id": "q_w02",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Du möchtest privat einen Text mit einem KI-Assistenten entwerfen. Welche Auswahlregel ist richtig?",
+    "questionText": "Du willst privat einen Text mit einem KI-Assistenten entwerfen. Welche Auswahlregel stimmt?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "Nur kostenpflichtige Business-Tools dürfen für Texte genutzt werden.",
+        "text": "Nur bezahlte Business-Tools sind für Texte erlaubt",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Ein Dienst kann geeignet sein, wenn du die Inhalte teilen darfst und Datenkontrollen, Aufbewahrung und Bedingungen zum Zweck passen.",
+        "text": "Wenn du die Inhalte teilen darfst und Datenkontrollen, Aufbewahrung und Bedingungen passen",
         "isCorrect": true
       },
       {
         "id": "c",
-        "text": "Nur das bekannteste Produkt, weil eine Marke die Sicherheit bestimmt.",
+        "text": "Nur das bekannteste Produkt, weil die Marke Sicherheit garantiert",
         "isCorrect": false
       },
       {
         "id": "d",
-        "text": "Kein KI-Tool darf für das Schreiben von Texten genutzt werden.",
+        "text": "Für Texte darf gar kein KI-Tool genutzt werden",
         "isCorrect": false
       }
     ],
-    "explanation": "Privat gelten dieselben Fragen: Inhalt, Rechte, Datenkontrollen, Aufbewahrung, Bedingungen. Preis und Marke sind keine Sicherheitsklassen. Und Zugangsdaten gehören in keinen Prompt.",
+    "explanation": "Privat zählen dieselben Fragen wie im Job. Preis und Marke sagen nichts über Sicherheit, und Zugangsdaten gehören in keinen Prompt.",
     "version": 2,
     "active": true
   },
@@ -79,16 +79,16 @@
       },
       {
         "id": "c",
-        "text": "Es sind automatisch genau drei eigenständige KI-Systeme im rechtlichen Sinn.",
+        "text": "Es sind automatisch drei eigenständige KI-Systeme im Rechtssinn",
         "isCorrect": false
       },
       {
         "id": "d",
-        "text": "Die konkreten Funktionen und Versionen gehören ins Inventar; ihre technische und rechtliche Einordnung muss geprüft werden.",
+        "text": "Funktionen und Versionen ins Inventar, ihre Einordnung prüfen",
         "isCorrect": true
       }
     ],
-    "explanation": "Drei Produktnamen, und trotzdem weißt du noch nicht, wie viele eigenständige KI-Systeme dahinterstehen. KI-gestützte Funktionen stecken oft eingebettet in Alltagsprodukten. Erfasst werden Funktion und Version, geprüft wird danach.",
+    "explanation": "KI-Funktionen stecken oft in Alltagsprodukten. Du erfasst Funktion und Version und prüfst danach, wie viele eigenständige Systeme es sind.",
     "version": 1,
     "active": true
   },
@@ -105,7 +105,7 @@
       },
       {
         "id": "b",
-        "text": "Ein gepflegtes Inventar schafft eine prüfbare Grundlage für Risikobewertung, Regeln und Zuständigkeiten.",
+        "text": "Es ist die prüfbare Grundlage für Risikobewertung, Regeln und Zuständigkeiten",
         "isCorrect": true
       },
       {
@@ -119,7 +119,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Ohne Inventar keine Risikobewertung, keine Zuständigkeit, keine Freigabe, die hält. Es ist ein Governance-Baustein. Ob und in welcher Form es rechtlich verlangt ist, hängt vom konkreten System und von der Rolle der Organisation ab.",
+    "explanation": "Ohne Inventar gibt es keine belastbare Risikobewertung, Zuständigkeit oder Freigabe. Ob und wie es rechtlich verlangt ist, hängt von System und Rolle ab.",
     "version": 1,
     "active": true
   },
@@ -127,7 +127,7 @@
     "id": "q_w05",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Ein Mitarbeiter will eine Kundenliste mit Namen und E-Mail-Adressen in einem nicht freigegebenen KI-Dienst verarbeiten. Welche Aussage ist richtig?",
+    "questionText": "Ein Mitarbeiter will eine Kundenliste mit Namen und E-Mail-Adressen in einem nicht freigegebenen KI-Dienst verarbeiten. Was stimmt?",
     "answerOptions": [
       {
         "id": "a",
@@ -141,7 +141,7 @@
       },
       {
         "id": "c",
-        "text": "Die Verarbeitung stoppt, bis Zweck, Rechtsgrundlage, Datenklasse, Minimierung und konkrete Systemfreigabe geklärt sind.",
+        "text": "Stopp, bis Zweck, Rechtsgrundlage, Datenklasse, Minimierung und Systemfreigabe geklärt sind",
         "isCorrect": true
       },
       {
@@ -150,7 +150,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Namen und E-Mail-Adressen können personenbezogene Daten sein. Ein AVV allein macht die Verarbeitung nicht zulässig. Dazu gehören Zweck, Rechtsgrundlage, Datenminimierung, Vertrag, Konfiguration und die betriebliche Freigabe, und je nach Fall mehr.",
+    "explanation": "Namen und E-Mail-Adressen können personenbezogene Daten sein. Ein AVV allein macht die Verarbeitung nicht zulässig.",
     "version": 1,
     "active": true
   },
@@ -167,12 +167,12 @@
       },
       {
         "id": "b",
-        "text": "Die dokumentierte Prüfung von Zweck, Datenklasse, Produktfunktion, Vertrag, Konfiguration, Berechtigungen und Aufbewahrung.",
+        "text": "Dokumentierte Prüfung von Zweck, Datenklasse, Funktion, Vertrag, Konfiguration, Berechtigungen, Aufbewahrung",
         "isCorrect": true
       },
       {
         "id": "c",
-        "text": "Der Anbieter nutzt Kundendaten nicht standardmäßig für Training.",
+        "text": "Der Anbieter nutzt Kundendaten standardmäßig nicht fürs Training",
         "isCorrect": false
       },
       {
@@ -181,7 +181,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Eine Freigabe gilt für eine konkrete Kombination: Zweck, Daten, Funktion, Konfiguration. Vertrag, Berechtigungen, Aufbewahrung, Region und weitere Pflichten müssen dazu passen. \"Enterprise\" im Produktnamen prüft nichts. Ein lokaler Rechner auch nicht.",
+    "explanation": "Eine Freigabe gilt für eine Kombination aus Zweck, Daten, Funktion und Konfiguration. \"Enterprise\" im Namen oder ein lokaler Rechner prüft davon nichts.",
     "version": 1,
     "active": true
   },
@@ -198,7 +198,7 @@
       },
       {
         "id": "b",
-        "text": "Weil meist ein betrieblich geprüfter Vertrag, verbindliche Datenkontrollen und eine dokumentierte Freigabe fehlen.",
+        "text": "Weil meist geprüfter Vertrag, Datenkontrollen und dokumentierte Freigabe fehlen",
         "isCorrect": true
       },
       {
@@ -212,7 +212,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Dem Betrieb fehlen bei nicht freigegebenen Verbraucherangeboten meist ein geprüfter AVV, verbindliche Datenkontrollen und eine zugesagte Datenregion. Mit personenbezogenen Firmendaten kann die Nutzung deshalb unzulässig sein. Wie es konkret aussieht, hängt von Zweck, Rechtsgrundlage, Vertrag und Konfiguration ab.",
+    "explanation": "Ohne geprüften AVV, verbindliche Datenkontrollen und zugesagte Datenregion kann die Nutzung mit personenbezogenen Firmendaten unzulässig sein.",
     "version": 1,
     "active": true
   },
@@ -220,30 +220,30 @@
     "id": "q_w08",
     "questionType": "single_choice",
     "difficulty": "hard",
-    "questionText": "Eine Kollegin möchte eine Lieferantenliste mit Firmennamen, Ansprechpartnern und Einkaufskonditionen analysieren. Was ist korrekt?",
+    "questionText": "Eine Kollegin will eine Lieferantenliste mit Firmennamen, Ansprechpartnern und Einkaufskonditionen analysieren. Was stimmt?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "Das ist erlaubt, sobald ein Unternehmensprodukt verwendet wird.",
+        "text": "Erlaubt, sobald ein Unternehmensprodukt verwendet wird",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Das ist immer verboten, unabhängig von Zweck und freigegebenem Fachverfahren.",
+        "text": "Immer verboten, egal welcher Zweck und welches freigegebene Verfahren",
         "isCorrect": false
       },
       {
         "id": "c",
-        "text": "Zweck, personenbezogene Daten, Geheimhaltung, Datenminimierung und der konkrete freigegebene Arbeitsablauf müssen vor der Eingabe geprüft werden.",
+        "text": "Vor der Eingabe Zweck, Personendaten, Geheimhaltung, Minimierung und Freigabe prüfen",
         "isCorrect": true
       },
       {
         "id": "d",
-        "text": "Lieferantendaten dürfen nie in ein KI-Tool eingegeben werden.",
+        "text": "Lieferantendaten dürfen nie in ein KI-Tool",
         "isCorrect": false
       }
     ],
-    "explanation": "Eine Liste, drei Datenarten. Der Firmenname kann öffentlich sein. Der Ansprechpartner kann personenbezogene Daten bedeuten. Die Konditionen können Geschäftsgeheimnis oder vertraglich geschützt sein. Ob die Verarbeitung zulässig ist, entscheidet die konkrete Freigabe von Zweck, Daten und System.",
+    "explanation": "Der Firmenname kann öffentlich sein, der Ansprechpartner personenbezogen, die Konditionen ein Geschäftsgeheimnis. Deshalb entscheidet die Freigabe von Zweck, Daten und System.",
     "version": 1,
     "active": true
   },
@@ -260,7 +260,7 @@
       },
       {
         "id": "b",
-        "text": "Ein brauchbarer Prompt nennt Aufgabe, relevante Eingaben, gewünschtes Format, Grenzen und den Umgang mit fehlenden Angaben.",
+        "text": "Er nennt Aufgabe, Eingaben, Format, Grenzen und den Umgang mit Lücken",
         "isCorrect": true
       },
       {
@@ -274,7 +274,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Klare Eingaben und klare Grenzen machen die Ausgabe prüfbar. Die Rollenbeschreibung ist optional, und auch der präziseste Prompt garantiert weder Richtigkeit noch Vollständigkeit.",
+    "explanation": "Klare Eingaben und Grenzen machen die Ausgabe prüfbar; eine Rolle ist optional. Auch der präziseste Prompt garantiert weder Richtigkeit noch Vollständigkeit.",
     "version": 1,
     "active": true
   },
@@ -282,16 +282,16 @@
     "id": "q_w10",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Du nutzt einen KI-Assistenten, um eine E-Mail an einen wichtigen Kunden zu verfassen. Der generierte Text klingt professionell. Was ist dein nächster Schritt?",
+    "questionText": "Ein KI-Assistent entwirft dir eine E-Mail an einen wichtigen Kunden. Sie klingt professionell. Was tust du als Nächstes?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "Sofort absenden, KI-Assistenten machen keine Fehler bei E-Mails.",
+        "text": "Sofort absenden, KI-Assistenten machen bei E-Mails keine Fehler",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Fakten und Quellen, Vollständigkeit, eigene Befugnis, Empfängerkreis und erforderliche Freigabe prüfen.",
+        "text": "Fakten, Quellen, Vollständigkeit, deine Befugnis, Empfänger und nötige Freigabe prüfen",
         "isCorrect": true
       },
       {
@@ -301,11 +301,11 @@
       },
       {
         "id": "d",
-        "text": "Die E-Mail erst nächste Woche senden, um Abstand zu gewinnen.",
+        "text": "Erst nächste Woche senden, um Abstand zu gewinnen",
         "isCorrect": false
       }
     ],
-    "explanation": "Professionell klingen kann jeder Entwurf. Belegt ist damit nichts, befugt bist du damit auch nicht. Die Kontrolle richtet sich nach der Auswirkung: Primärquellen, fehlende Angaben, Zusagen, Daten, vorgesehener Empfängerkreis. Ein zweites KI-Tool ist keine Prüfung.",
+    "explanation": "Professioneller Klang belegt nichts. Du prüfst je nach Auswirkung Quellen, Lücken, Zusagen und Empfänger, und ein zweites KI-Tool ist keine Prüfung.",
     "version": 1,
     "active": true
   },
@@ -313,11 +313,11 @@
     "id": "q_w11",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Welche Einschränkung sollte ein guter Prompt für eine E-Mail-Vorlage enthalten?",
+    "questionText": "Welche Einschränkung gehört in einen guten Prompt für eine E-Mail-Vorlage?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "'Nur die angegebenen Fakten verwenden, Lücken markieren und keine nicht autorisierten Zusagen ergänzen'.",
+        "text": "'Nur gegebene Fakten, Lücken markieren, keine unautorisierten Zusagen'",
         "isCorrect": true
       },
       {
@@ -336,7 +336,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Die Einschränkung macht sichtbar, was der Assistent dazuerfunden hat, und hält Zusagen klein. Die Freigabe der Eingabedaten ersetzt sie nicht. Die fachliche Prüfung der Ausgabe auch nicht.",
+    "explanation": "So siehst du, was der Assistent dazuerfunden hat, und Zusagen bleiben klein. Die fachliche Prüfung ersetzt das nicht.",
     "version": 1,
     "active": true
   },
@@ -344,30 +344,30 @@
     "id": "q_w12",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Du bittest einen KI-Assistenten, aus deinen Meeting-Notizen ein Protokoll zu erstellen. Der Output enthält einen Punkt, der so nicht besprochen wurde. Was tust du?",
+    "questionText": "Du lässt einen KI-Assistenten aus deinen Meeting-Notizen ein Protokoll erstellen. Es enthält einen Punkt, der so nicht besprochen wurde. Was tust du?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "Den Punkt übernehmen, weil der KI-Assistent vielleicht etwas erkannt hat, das du übersehen hast.",
+        "text": "Übernehmen, die KI hat vielleicht etwas erkannt, das du übersehen hast",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Den Punkt gegen die Primärquelle prüfen, unbelegte Angaben entfernen und den Prompt für den nächsten Entwurf enger fassen.",
+        "text": "Gegen die Primärquelle prüfen, Unbelegtes streichen, Prompt enger fassen",
         "isCorrect": true
       },
       {
         "id": "c",
-        "text": "Das gesamte Protokoll verwerfen und von Hand schreiben.",
+        "text": "Das ganze Protokoll verwerfen und von Hand schreiben",
         "isCorrect": false
       },
       {
         "id": "d",
-        "text": "Den Punkt mit einem Fragezeichen versehen und so an alle senden.",
+        "text": "Mit Fragezeichen versehen und so an alle senden",
         "isCorrect": false
       }
     ],
-    "explanation": "Modelle ergänzen manchmal, was in der Quelle nicht steht. Eine engere Anweisung macht das seltener, aber nicht unmöglich. Der Quellenabgleich bleibt. Ein Fragezeichen an alle senden ist kein Abgleich.",
+    "explanation": "Modelle ergänzen manchmal, was nicht in der Quelle steht. Eine engere Anweisung macht das nur seltener, der Quellenabgleich bleibt.",
     "version": 1,
     "active": true
   },
@@ -398,7 +398,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Ein Sprachmodell erzeugt Tokenfolgen. Eine Faktenprüfung läuft dabei nicht automatisch mit. Deshalb führst du jede Aussage, an der eine Entscheidung hängt, auf eine geeignete Quelle zurück.",
+    "explanation": "Ein Sprachmodell erzeugt Tokenfolgen, ohne automatisch Fakten zu prüfen. Deshalb führst du jede Aussage, an der eine Entscheidung hängt, auf eine geeignete Quelle zurück.",
     "version": 1,
     "active": true
   },
@@ -406,7 +406,7 @@
     "id": "q_w14",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Copilot erstellt dir eine Marktanalyse mit der Aussage: 'Der deutsche KI-Markt wuchs 2025 um 34,2% auf 12,8 Milliarden Euro (Quelle: Bitkom 2025).' Wie prüfst du das?",
+    "questionText": "Copilot schreibt in einer Marktanalyse, der deutsche KI-Markt sei 2025 um 34,2% auf 12,8 Milliarden Euro gewachsen (Quelle: Bitkom 2025). Wie prüfst du das?",
     "answerOptions": [
       {
         "id": "a",
@@ -415,7 +415,7 @@
       },
       {
         "id": "b",
-        "text": "Die Bitkom-Website aufrufen und nach der genannten Studie suchen.",
+        "text": "Die Bitkom-Website aufrufen und die genannte Studie suchen",
         "isCorrect": true
       },
       {
@@ -429,7 +429,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Zahl, Prozentwert, Quellenangabe: alles kann erzeugt sein, ohne dass es die Studie gibt. Du rufst die genannte Primärquelle auf und prüfst Definition, Zeitraum und Rechenweg. ChatGPT zu fragen ist keine zweite Quelle, es ist dieselbe Fehlerquelle noch einmal.",
+    "explanation": "Zahl und Quellenangabe können erzeugt sein, ohne dass es die Studie gibt. Du prüfst Definition, Zeitraum und Rechenweg in der Primärquelle, nicht bei ChatGPT.",
     "version": 1,
     "active": true
   },
@@ -437,7 +437,7 @@
     "id": "q_w15",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Welche Nutzung verlangt zusätzliche fachliche und organisatorische Kontrollen statt einer einfachen Ausgabeprüfung?",
+    "questionText": "Welche Nutzung verlangt fachliche und organisatorische Kontrollen über eine einfache Ausgabeprüfung hinaus?",
     "answerOptions": [
       {
         "id": "a",
@@ -446,7 +446,7 @@
       },
       {
         "id": "b",
-        "text": "Bei rechtlichen Einschätzungen, medizinischen Empfehlungen oder Entscheidungen mit erheblichen Konsequenzen für Personen.",
+        "text": "Bei rechtlichen Einschätzungen, medizinischen Empfehlungen oder folgenreichen Entscheidungen über Personen",
         "isCorrect": true
       },
       {
@@ -460,7 +460,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Newsletter, Übersetzung, Agenda: da reicht die einfache Ausgabeprüfung. Rechtliche, medizinische und beschäftigungsbezogene Entscheidungen können erhebliche Folgen haben. Dafür braucht es qualifizierte Verantwortung, geeignete Quellen und je nach Fall besondere Rechts-, Dokumentations- und Aufsichtskontrollen.",
+    "explanation": "Rechtliche, medizinische und beschäftigungsbezogene Entscheidungen können erhebliche Folgen haben. Sie brauchen qualifizierte Verantwortung, geeignete Quellen und je nach Fall besondere Kontrollen.",
     "version": 1,
     "active": true
   },
@@ -468,21 +468,21 @@
     "id": "q_w16",
     "questionType": "single_choice",
     "difficulty": "hard",
-    "questionText": "Copilot fasst ein 45-minütiges Teams-Meeting zusammen. Die Zusammenfassung nennt als Ergebnis: 'Das Team hat sich auf einen Projektstart am 1. Juni geeinigt.' Du erinnerst dich, dass der Termin offen blieb. Was schließt du daraus?",
+    "questionText": "Copilots Zusammenfassung eines 45-minütigen Teams-Meetings nennt als Ergebnis einen Projektstart am 1. Juni. Du erinnerst dich, dass der Termin offen blieb. Was folgt?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "Copilot hat wahrscheinlich recht, weil es das gesamte Audio analysiert hat.",
+        "text": "Copilot hat wohl recht, weil es das ganze Audio analysiert hat",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Die Datumsangabe ist unbelegt; du vergleichst sie mit Transkript oder bestätigten Notizen und führst den Termin bis zur Klärung als offen.",
+        "text": "Das Datum bleibt offen, bis Transkript oder bestätigte Notizen es belegen",
         "isCorrect": true
       },
       {
         "id": "c",
-        "text": "Der Termin wurde wahrscheinlich besprochen, als du kurz abgelenkt warst.",
+        "text": "Der Termin fiel wohl, als du kurz abgelenkt warst",
         "isCorrect": false
       },
       {
@@ -491,7 +491,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Zwei Aussagen widersprechen sich: deine Erinnerung und die Zusammenfassung. Keine von beiden ist ein Primärbeleg. Du prüfst die zugelassene Quelle, Transkript oder bestätigte Notizen, und lässt das Protokoll von den zuständigen Beteiligten bestätigen. Bis dahin bleibt der Termin offen.",
+    "explanation": "Weder Erinnerung noch Zusammenfassung ist ein Primärbeleg. Die Beteiligten bestätigen das Protokoll anhand von Transkript oder Notizen.",
     "version": 1,
     "active": true
   },
@@ -508,7 +508,7 @@
       },
       {
         "id": "b",
-        "text": "Eine Freigabematrix mit Zweck, Produktversion und Funktion, Datenklassen, Konfiguration, Verantwortlichen und Review-Status.",
+        "text": "Eine Freigabematrix mit Zweck, Version, Funktion, Datenklassen, Konfiguration, Verantwortlichen, Review-Status",
         "isCorrect": true
       },
       {
@@ -522,7 +522,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Keine Vorlesung über neuronale Netze, kein Gesetzestext, kein Programmierkurs. Eine Richtlinie beschreibt Freigaben als konkrete Kombination aus Zweck, Funktion, Daten und Konfiguration. Dazu kommen Prüfpflichten, Vorfallsmeldung, Zuständigkeiten und Review-Auslöser.",
+    "explanation": "Eine Richtlinie regelt Freigaben samt Prüfpflichten, Vorfallsmeldung, Zuständigkeiten und Review-Auslösern.",
     "version": 1,
     "active": true
   },
@@ -534,26 +534,26 @@
     "answerOptions": [
       {
         "id": "a",
-        "text": "Dass alle Mitarbeitenden einen Hochschulabschluss in Informatik haben.",
+        "text": "Einen Informatikabschluss für alle Mitarbeitenden",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Dass Anbieter und Betreiber Maßnahmen ergreifen, um die Entwicklung der KI-Kompetenz der in ihrem Auftrag befassten Personen zu unterstützen, und den vorgeschriebenen Kontext berücksichtigen.",
+        "text": "Maßnahmen, die die KI-Kompetenz der in ihrem Auftrag tätigen Personen unterstützen",
         "isCorrect": true
       },
       {
         "id": "c",
-        "text": "Dass nur die IT-Abteilung KI-Systeme nutzen darf.",
+        "text": "KI-Nutzung nur durch die IT-Abteilung",
         "isCorrect": false
       },
       {
         "id": "d",
-        "text": "Dass Unternehmen eine jährliche KI-Prüfung durch externe Auditoren durchführen lassen.",
+        "text": "Ein jährliches KI-Audit durch externe Prüfer",
         "isCorrect": false
       }
     ],
-    "explanation": "Artikel 4 ist seit dem 2. Februar 2025 anwendbar. In der durch Verordnung (EU) 2026/1744 geänderten Fassung geht es um Maßnahmen, die die Entwicklung von KI-Kompetenz unterstützen, unter Berücksichtigung von technischen Kenntnissen, Erfahrung, Aus- und Fortbildung, Einsatzkontext und den betroffenen Personen oder Personengruppen. Kein Informatikabschluss, kein IT-Monopol, kein externes Jahresaudit, und auch keine vorgeschriebene Bescheinigung.",
+    "explanation": "Artikel 4 gilt seit dem 2. Februar 2025; die Fassung nach Verordnung (EU) 2026/1744 verlangt unterstützende Maßnahmen je nach Kenntnissen, Erfahrung, Ausbildung, Einsatzkontext und Betroffenen. Eine Bescheinigung schreibt sie nicht vor.",
     "version": 1,
     "active": true
   },
@@ -561,7 +561,7 @@
     "id": "q_w19",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Ein Mitarbeiter gibt versehentlich Gehaltsdaten in einen KI-Dienst ein. Was ist der korrekte erste Umgang?",
+    "questionText": "Ein Mitarbeiter gibt versehentlich Gehaltsdaten in einen KI-Dienst ein. Was ist der richtige erste Schritt?",
     "answerOptions": [
       {
         "id": "a",
@@ -575,16 +575,16 @@
       },
       {
         "id": "c",
-        "text": "Unverzüglich den veröffentlichten Vorfallskanal nutzen, Fakten und Belege sichern und den zuständigen Funktionen die Risikobewertung überlassen.",
+        "text": "Sofort über den Vorfallskanal melden, Belege sichern, Zuständige bewerten lassen",
         "isCorrect": true
       },
       {
         "id": "d",
-        "text": "Den Anbieter selbst um eine rechtliche Bewertung bitten und intern nichts melden.",
+        "text": "Den Anbieter um rechtliche Bewertung bitten, intern nichts melden",
         "isCorrect": false
       }
     ],
-    "explanation": "Melden, sofort, über den internen Kanal. Belege bleiben, wie sie sind. Ob eine Datenschutzverletzung vorliegt und ob sie meldepflichtig ist, prüft der Verantwortliche. Interne Vier- oder 24-Stunden-Stufen sind Sache der Organisation, das Gesetz gibt sie nicht vor.",
+    "explanation": "Ob eine meldepflichtige Datenschutzverletzung vorliegt, prüft der Verantwortliche. Vier- oder 24-Stunden-Stufen legt die Organisation fest, das Gesetz gibt sie nicht vor.",
     "version": 1,
     "active": true
   },
@@ -592,30 +592,30 @@
     "id": "q_w20",
     "questionType": "single_choice",
     "difficulty": "hard",
-    "questionText": "Ein neues KI-Tool (z.B. ein branchenspezifischer Chatbot) soll eingeführt werden. Die KI-Nutzungsrichtlinie existiert bereits. Was muss passieren?",
+    "questionText": "Ein neues KI-Tool, etwa ein Branchen-Chatbot, soll eingeführt werden. Eine KI-Nutzungsrichtlinie gibt es schon. Was muss passieren?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "Nichts, die bestehende Richtlinie gilt automatisch für alle neuen Tools.",
+        "text": "Nichts, die Richtlinie gilt automatisch für alle neuen Tools",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Vor Nutzung werden Zweck, Funktionen, Daten, Vertrag, Konfiguration, Risiken und Verantwortliche geprüft und Inventar sowie Freigabematrix aktualisiert.",
+        "text": "Vorab Zweck, Daten, Vertrag, Konfiguration, Risiken prüfen; Inventar und Freigabematrix aktualisieren",
         "isCorrect": true
       },
       {
         "id": "c",
-        "text": "Das Tool darf bis zum nächsten regulären Review testweise mit Echtdaten genutzt werden.",
+        "text": "Bis zum nächsten Review testweise mit Echtdaten nutzen",
         "isCorrect": false
       },
       {
         "id": "d",
-        "text": "Nur die IT-Abteilung muss informiert werden, die Richtlinie bleibt unverändert.",
+        "text": "Nur die IT informieren, die Richtlinie bleibt unverändert",
         "isCorrect": false
       }
     ],
-    "explanation": "Ein neues Produkt ist ein Review-Auslöser. Eine neue Funktion auch. Die Organisation bewertet den konkreten Arbeitsablauf und dokumentiert die Entscheidung, bevor echte Daten hineingehen. Nicht danach.",
+    "explanation": "Ein neues Produkt oder eine neue Funktion löst ein Review aus. Die Entscheidung wird dokumentiert, bevor echte Daten hineingehen.",
     "version": 1,
     "active": true
   }

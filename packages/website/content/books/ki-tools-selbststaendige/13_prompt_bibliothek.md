@@ -1,6 +1,6 @@
 # Anhang: 50+ Prompts nach Kategorie
 
-Kopieren, anpassen, einsetzen. Alle Prompts aus diesem Buch plus ein paar Extras, im KRAFT-Format, mit [PLATZHALTERN] zum Ersetzen.
+Hier stehen alle Prompts aus diesem Buch und einige Extras im KRAFT-Format, mit [PLATZHALTERN] zum Ersetzen.
 
 ---
 

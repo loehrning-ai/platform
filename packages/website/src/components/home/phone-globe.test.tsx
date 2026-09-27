@@ -25,6 +25,11 @@ vi.mock("@/components/home/hero-network", () => ({
 
 import { HeroSection } from "./hero";
 import { HorizonGlobeFrame } from "@/components/werk/horizon-globe-frame";
+import { HORIZON_SCENE } from "@/components/werk/horizon-projection";
+import { HOME_SCENE } from "@/lib/plakat/palettes";
+
+/** Layers of the server frame: the lemons disc has no sky (its edge is the limb). */
+const LAYERS = HOME_SCENE === "lemons" ? ["lines", "focus"] : ["lines", "focus", "sky"];
 
 type Env = {
   desktop?: boolean;
@@ -100,9 +105,9 @@ describe("phone hero globe: server frame", () => {
     expect(html).toContain("data-home-globe=");
     expect(html).toContain('data-home-globe-motion="static"');
     expect(html).toContain("data-home-globe-ssr");
-    expect(html).toContain('data-home-globe-layer="lines"');
-    expect(html).toContain('data-home-globe-layer="focus"');
-    expect(html).toContain('data-home-globe-layer="sky"');
+    for (const layer of LAYERS) {
+      expect(html).toContain(`data-home-globe-layer="${layer}"`);
+    }
     // The desktop projection namespace never appears in the phone band.
     expect(html).not.toContain("data-hero-globe-poster");
     expect(html).not.toContain("data-hero-network-shell");
@@ -112,7 +117,7 @@ describe("phone hero globe: server frame", () => {
 
     const { container } = render(<HorizonGlobeFrame />);
     const svgs = container.querySelectorAll("svg");
-    expect(svgs.length).toBe(3);
+    expect(svgs.length).toBe(LAYERS.length);
     for (const svg of svgs) {
       expect(svg).toHaveAttribute("aria-hidden", "true");
       expect(svg).toHaveAttribute("focusable", "false");
@@ -120,11 +125,50 @@ describe("phone hero globe: server frame", () => {
     expect(container.querySelector("[id]")).toBeNull();
   });
 
-  it("keeps the first frame lean and draws Europe with Germany in Mennige", () => {
-    const html = renderToString(<HorizonGlobeFrame />);
+  it("keeps the lemons frame lean: a flat Mennige disc, a 30 degree knockout graticule and Germany in Butter", () => {
+    const html = renderToString(<HorizonGlobeFrame scene="lemons" />);
+    expect(html.length).toBeLessThan(16_000);
+    const { container } = render(<HorizonGlobeFrame scene="lemons" />);
+    const scene = HORIZON_SCENE.lemons;
+    const disc = container.querySelector("circle.hz-disc");
+    expect(disc).toHaveAttribute("fill", "#b73a15");
+    const grid = container.querySelector(".hz-grid");
+    expect(grid).toHaveAttribute("stroke", "#152a79");
+    expect(grid).toHaveAttribute("stroke-width", "1.5");
+    expect(grid).toHaveAttribute("stroke-opacity", "1");
+    expect(scene.grid.step).toBe(30);
+    // No coastlines, no limb, glint, scale or depth-fade mask: the disc edge is the limb.
+    // Every path in the lines layer is graticule; lines that would run along
+    // the limb fade out by peak depth, so none hugs the disc edge.
+    const linePaths = container.querySelectorAll('[data-home-globe-layer="lines"] path');
+    expect(linePaths.length).toBeGreaterThan(0);
+    for (const path of linePaths) expect(path.closest(".hz-grid")).not.toBeNull();
+    for (const path of container.querySelectorAll(".hz-grid path[stroke-opacity]")) {
+      expect(Number(path.getAttribute("stroke-opacity"))).toBeLessThan(1);
+    }
+    expect(container.querySelector(".hz-limb, .hz-glint, .hz-scale, .hz-sweep")).toBeNull();
+    expect(html).not.toContain("mask-image");
+    // Germany: a flat Butter fill, no stroke.
+    const germany = container.querySelector(".hz-de-fill");
+    expect(germany?.getAttribute("d")).toMatch(/Z$/);
+    expect(germany).toHaveAttribute("fill", "#fceeaf");
+    expect(container.querySelector(".hz-de")).toBeNull();
+    // Berlin: Ultramarin with a Butter inset; stations: Butter with a Mennige inset.
+    const [berlinOuter, berlinInner] = container.querySelectorAll(".hz-berlin rect");
+    expect(berlinOuter).toHaveAttribute("fill", "#152a79");
+    expect(berlinInner).toHaveAttribute("fill", "#fceeaf");
+    const [stationOuter, stationInner] = container.querySelectorAll(".hz-stations > g rect");
+    expect(stationOuter).toHaveAttribute("fill", "#fceeaf");
+    expect(stationInner).toHaveAttribute("fill", "#b73a15");
+    expect(container.querySelector(".hz-route")).toHaveAttribute("stroke", "#fceeaf");
+    expect(container.querySelector(".hz-route")).toHaveAttribute("stroke-width", "2");
+  });
+
+  it("keeps the graphit fallback frame lean and draws Europe with Germany in Mennige", () => {
+    const html = renderToString(<HorizonGlobeFrame scene="graphit" />);
     // Graticule, coastlines, Germany and the limb stay a few kilobytes.
     expect(html.length).toBeLessThan(16_000);
-    const { container } = render(<HorizonGlobeFrame />);
+    const { container } = render(<HorizonGlobeFrame scene="graphit" />);
     const germany = container.querySelector(".hz-de");
     expect(germany).not.toBeNull();
     expect(germany?.getAttribute("d")).toMatch(/Z$/);
@@ -133,8 +177,8 @@ describe("phone hero globe: server frame", () => {
     expect(html).toMatch(/mask-image:radial-gradient\(circle 130cqw at 58cqw 140cqw/);
   });
 
-  it("draws the Lernroute from Berlin in Mennige, with its stations", () => {
-    const { container } = render(<HorizonGlobeFrame />);
+  it("draws the graphit Lernroute from Berlin in Mennige, with its stations", () => {
+    const { container } = render(<HorizonGlobeFrame scene="graphit" />);
     const route = container.querySelector(".hz-route");
     expect(route).not.toBeNull();
     expect(route).toHaveAttribute("stroke", "#e07050");

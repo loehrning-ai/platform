@@ -28,7 +28,7 @@ export const DATA_INFRASTRUCTURE_CONFIG = {
   workshopQuizPassThreshold: 0.7,
   certificateTitle: "Data Infrastructure",
   certificateSubtitle:
-    "Certificate of participation. Issued by loehrning.ai, an independent education platform. This confirmation is not an accredited qualification.",
+    "Certificate of participation from loehrning.ai, an independent learning platform. Not an accredited qualification.",
   certificateModules: [
     "Foundations: mental model, CAP/PACELC, modeling",
     "Storage: row vs columnar, Parquet internals, the lakehouse, partitioning",

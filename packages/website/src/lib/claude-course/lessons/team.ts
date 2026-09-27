@@ -7,7 +7,7 @@ import { CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE } from "../widget-copy";
 const lesson: ClaudeLesson = {
   id: "team",
   number: 10,
-  title: "Team Workflows",
+  title: "Team workflows",
   subtitle:
     "Version prompts, document their scope, and test changes as a team.",
   durationMinutes: 10,
@@ -26,28 +26,28 @@ const lesson: ClaudeLesson = {
       title: "Why share",
       readTimeMinutes: 1,
       content:
-        "You drop your best prompt in the team channel. Nothing happens. A prompt written by one person carries hidden context: local paths, team names, unstated source access, an output format only its author reads. The text alone is not the workflow.\n\nTreat recurring prompts as maintained artifacts. Record the task, required inputs, model and tool assumptions, expected output, owner, and evaluation cases.",
+        "A one-person prompt carries hidden context: local paths, team names, unstated source access, an output format only its author reads. Treat recurring prompts as maintained artifacts and record task, inputs, model and tool assumptions, expected output, owner and evaluation cases.",
     },
     {
       id: "three-artifacts",
       title: "Three team artifacts worth maintaining",
       readTimeMinutes: 2,
       content:
-        "- **01 · Prompt library.** A repo or Gdoc with named, tested prompts for recurring tasks: PR review, standup summary, post-mortem draft, release notes.\n- **02 · CLAUDE.md.** Checked into the repo. Reviewed like code. Updated when conventions drift.\n- **03 · Eval set.** A handful of realistic examples, input plus the expected flavor of output. Run it to catch a regression.",
+        "- **01 · Prompt library.** A repo or Gdoc of named, tested prompts for recurring tasks: PR review, standup summary, post-mortem draft, release notes.\n- **02 · CLAUDE.md.** In the repo, reviewed like code, updated when conventions drift.\n- **03 · Eval set.** A handful of realistic inputs with the expected kind of output, rerun after each prompt change.",
     },
     {
       id: "sharing-well",
       title: "How to share a prompt well",
       readTimeMinutes: 2,
       content:
-        "Four checks before you publish.\n\n- **Parameterize local details.** Replace hardcoded project names and paths with named inputs such as `<PROJECT>`.\n- **State scope and prerequisites.** Explain when to use it, which sources it needs, and which actions it may take.\n- **Provide a reviewed example.** Mark it illustrative and strip sensitive data.\n- **Document known failures.** Link each material failure to an evaluation case or operational control.",
+        "Before you publish:\n\n- **Parameterize local details** such as project names and paths, for example as `<PROJECT>`.\n- **State scope and prerequisites:** when to use it, which sources it needs, which actions it may take.\n- **Add a reviewed example,** marked illustrative and stripped of sensitive data.\n- **Document known failures** and link each material one to an evaluation case or control.",
     },
     {
       id: "rituals",
-      title: "Rituals that compound",
+      title: "Short recurring reviews",
       readTimeMinutes: 1,
       content:
-        "Run a short recurring review over one workflow, its evidence, and one failure case. It joins the shared library only after a teammate runs it from the documentation alone and reproduces the result.",
+        "Review one workflow, its evidence and one failure case in a short recurring slot. A prompt joins the shared library once a teammate reproduces its result from the documentation alone.",
     },
   ],
   widgets: [

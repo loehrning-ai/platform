@@ -1,4 +1,4 @@
-import { Hero, SectionLabel, CodeBlock, AntiPatterns, BestPractices, Takeaway } from "../primitives";
+import { Hero, SectionLabel, CodeBlock, AntiPatterns, BestPractices } from "../primitives";
 import { ConveyorSim } from "../simulators/conveyor-sim";
 import type { ChapterMeta } from "@/lib/data-engineering-fundamentals/types";
 
@@ -32,7 +32,7 @@ export function Ch15Streaming({ chapter }: Ch15StreamingProps) {
         accent={chapter.inkHex}
         eyebrow={`Chapter ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Streaming: <span class='accent'>delivery, windows, and publication.</span>"
-        hook="Kafka transports events. Flink processes them. Kafka Streams is an alternative processing library, not a layer beneath Flink, and a published result still needs explicit delivery, window, and completeness semantics."
+        hook="Kafka transports events and Flink processes them. Kafka Streams is an alternative library, not a layer beneath Flink."
         meta={[
           { k: "Streaming engine", v: "Flink" },
           { k: "Bus", v: "Kafka" },
@@ -43,22 +43,22 @@ export function Ch15Streaming({ chapter }: Ch15StreamingProps) {
       <section className="section">
         <SectionLabel n="2.1">Continuous processing</SectionLabel>
         <h2 className="h2">Micro-batch vs continuous, exactly-once vs at-least-once.</h2>
-        <p className="prose">Batch engines process bounded inputs on a schedule. Streaming engines process an unbounded input and carry state as records arrive. Either one produces correct results, or wrong ones. What separates them is the contract: when a result publishes, when it goes final, and what happens to replays, duplicates, and late records.</p>
+        <p className="prose">Batch engines process bounded inputs on a schedule. Streaming engines process unbounded input and carry state. Both can be right or wrong; the contract says when a result publishes, when it is final, and how replays, duplicates and late records are handled.</p>
         <div className="cards-3">
           <div className="ccard">
             <div className="ccard-t">Latency</div>
             <div className="ccard-n">Publication cadence</div>
-            <div className="ccard-d">Set and measure separate freshness targets for operational views and settled reports.</div>
+            <div className="ccard-d">Separate freshness targets for operational views and settled reports.</div>
           </div>
           <div className="ccard">
             <div className="ccard-t">Delivery</div>
-            <div className="ccard-n">Define the processing boundary</div>
+            <div className="ccard-n">Processing boundary</div>
             <div className="ccard-d">Exactly-once claims depend on source offsets, state checkpoints, and transactional or idempotent sinks.</div>
           </div>
           <div className="ccard">
             <div className="ccard-t">Window</div>
             <div className="ccard-n">Tumbling · sliding · session</div>
-            <div className="ccard-d">Define how late records update a window, enter a later window, reach a side output, or get discarded.</div>
+            <div className="ccard-d">Late records update a window, enter a later one, go to a side output or get dropped.</div>
           </div>
         </div>
       </section>
@@ -66,7 +66,7 @@ export function Ch15Streaming({ chapter }: Ch15StreamingProps) {
       <section className="section">
         <SectionLabel n="2.2">The boundary problem</SectionLabel>
         <h2 className="h2">The course boundary models replay protection and a watermark.</h2>
-        <p className="prose">Retries and recovery repeat delivery. Event time drifts from arrival time. At the warehouse boundary an idempotent write or a deterministic dedup key absorbs the replay, while a watermark and late-data policy decide when event-time windows publish and what happens to records arriving after. Toggle the two modeled controls below and watch each effect on its own.</p>
+        <p className="prose">Retries and recovery deliver records again, and event time drifts from arrival time. At the warehouse boundary an idempotent write or deterministic dedup key absorbs replays. A watermark and late-data policy decide when windows publish and what happens to later records. Toggle each control to see its effect alone.</p>
         <ConveyorSim />
       </section>
 
@@ -77,23 +77,15 @@ export function Ch15Streaming({ chapter }: Ch15StreamingProps) {
 
       <AntiPatterns
         items={[
-          '<b>Publishing an early estimate without its status.</b> Mark whether a result is sampled, provisional, or final and record its source cutoff.',
-          '<b>Treating a producer-side delivery claim as an end-to-end guarantee.</b> Verify source, processor, state, and sink behavior across retries and recovery.',
+          '<b>Publishing an early estimate without its status.</b> Mark it as sampled, provisional or final and record its source cutoff.',
+          '<b>Treating a producer delivery claim as an end-to-end guarantee.</b> Verify source, processor, state and sink across retries and recovery.',
           "<b>Scheduling a rollup independently of event-time progress.</b> Trigger publication from the documented watermark or completeness signal.",
         ]}
       />
       <BestPractices
         items={[
-          "<b>Signal table per stream.</b> A separate tiny table that records when a watermark closed for a (source, ds) pair. Downstream ExternalTaskSensor waits on the <em>signal</em>, not the data.",
-          "<b>Protect replay-sensitive writes.</b> Use a stable event key with idempotent upsert or deterministic dedup where duplicates are possible.",
-          "<b>Reconcile provisional and settled outputs.</b> Define the cadence and tolerance from the dataset SLO, then investigate sustained differences.",
-        ]}
-      />
-      <Takeaway
-        items={[
-          "Streaming and batch outputs need explicit <b>freshness, completeness, and finality</b> semantics.",
-          "Replay protection and late-data handling solve different failure modes. Configure each where the pipeline requires it.",
-          "Publish a completion signal only after its named checks and watermark conditions pass.",
+          "<b>Signal table per stream.</b> A tiny table records when a watermark closed for a (source, ds) pair. A downstream ExternalTaskSensor waits on the <em>signal</em>, not the data.",
+          "<b>Reconcile provisional and settled outputs.</b> Take cadence and tolerance from the dataset SLO and investigate sustained differences.",
         ]}
       />
     </>

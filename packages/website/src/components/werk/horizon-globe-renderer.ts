@@ -53,9 +53,12 @@ import {
   horizonFrame,
   horizonPush,
   limbExit,
+  limbFade,
   meridianLines,
   parallelLines,
+  polylinePeakDepth,
   projectHorizonPoint,
+  rimDepth,
   routeLine,
   routeStations,
   scaleTicks,
@@ -63,6 +66,8 @@ import {
   tracePolylines,
   viewBasis,
   type HorizonFrame,
+  type SpherePolylines,
+  type ViewBasis,
   type HorizonScene,
   type HorizonSceneKey,
 } from "./horizon-projection";
@@ -346,6 +351,43 @@ export function createHorizonRenderer(
   }
 
   /**
+   * Strokes graticule lines. On the flat disc every line ends on the rim
+   * circle HORIZON_RIM_PX inside the limb, and a line that runs close along
+   * the limb fades out by its peak depth (HORIZON_LIMB_FADE), so no line
+   * ever hugs the silhouette: the disc edge stays one clean arc.
+   */
+  function strokeGrid(
+    c: CanvasRenderingContext2D,
+    lines: SpherePolylines,
+    basis: ViewBasis,
+    f: HorizonFrame,
+  ): void {
+    c.beginPath();
+    if (!scene.disc) {
+      tracePolylines(c, lines, basis, f, f.latMin);
+      c.strokeStyle = gridStroke;
+      c.stroke();
+      return;
+    }
+    const rim = rimDepth(f.radius);
+    const faded: (readonly [number, number])[] = [];
+    for (let k = 0; k < lines.start.length; k++) {
+      const alpha = limbFade(polylinePeakDepth(lines, k, basis));
+      if (alpha >= 1) {
+        tracePolylines(c, lines, basis, f, f.latMin, k, k + 1, rim);
+      } else if (alpha > 0) faded.push([k, alpha]);
+    }
+    c.strokeStyle = gridStroke;
+    c.stroke();
+    for (const [k, alpha] of faded) {
+      c.beginPath();
+      tracePolylines(c, lines, basis, f, f.latMin, k, k + 1, rim);
+      c.strokeStyle = rgba(scene.grid.rgb, scene.grid.alpha * alpha);
+      c.stroke();
+    }
+  }
+
+  /**
    * The disc, the parallels (invariant under the polar spin) and the sky
    * around the limb. On the lemons scene this layer sits under the moving
    * one (phone-hero.css), so Germany and the route cover the parallels.
@@ -363,10 +405,7 @@ export function createHorizonRenderer(
     c.lineJoin = "round";
     c.lineCap = "round";
     c.lineWidth = scene.grid.width ?? hair;
-    c.beginPath();
-    tracePolylines(c, geo.parallels, fixedBasis, f, f.latMin);
-    c.strokeStyle = gridStroke;
-    c.stroke();
+    strokeGrid(c, geo.parallels, fixedBasis, f);
     if (!scene.sky) return;
 
     // Limb, glint and degree scale: the server frame's sky layer, redrawn
@@ -432,10 +471,7 @@ export function createHorizonRenderer(
     c.lineJoin = "round";
     c.lineCap = "round";
 
-    c.beginPath();
-    tracePolylines(c, geo.meridians, basis, f, f.latMin);
-    c.strokeStyle = gridStroke;
-    c.stroke();
+    strokeGrid(c, geo.meridians, basis, f);
 
     if (geo.land) {
       c.lineWidth = hair;

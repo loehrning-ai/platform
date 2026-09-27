@@ -293,8 +293,8 @@ export function GaltonSim() {
         `n = ${n} · ${totalSamples} Stichproben · ${totalBalls} Kugeln`,
       )}
       caption={text(
-        "Top: balls drop through a peg grid, stacking into the population shape. Bottom: every n balls, their mean drops into the sampling distribution. Watch the bottom curve narrow and become bell-shaped, that's the CLT, live.",
-        "Oben fallen Kugeln durch ein Raster und bilden die Grundgesamtheit. Unten wird nach jeweils n Kugeln ihr Mittelwert in die Stichprobenverteilung eingetragen. Mit wachsendem n wird diese Verteilung schmaler und glockenförmig: der zentrale Grenzwertsatz in der Simulation.",
+        "Top: balls fall through a peg grid into the population shape. Bottom: the mean of every n balls enters the sampling distribution, which narrows into a bell shape as n grows.",
+        "Oben fallen Kugeln durch ein Raster und bilden die Grundgesamtheit. Unten geht der Mittelwert von je n Kugeln in die Stichprobenverteilung ein, die mit wachsendem n schmaler und glockenförmig wird.",
       )}
     >
       <div className="sim-row galton-row">

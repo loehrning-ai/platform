@@ -57,44 +57,44 @@ export const COURSE_PROJECT_CONFIGS = {
     courseSlug: "ki-fuehrerschein",
     title: text("Die sichere Prompt-Redaktion", "The Safe Prompt Desk"),
     mission: text(
-      "Verwandle einen unsicheren Arbeitsauftrag in ein begrenztes, prüfbares KI-Briefing und redliniere den erzeugten Entwurf.",
-      "Turn an unsafe work request into a bounded, testable AI brief and redline the resulting draft.",
+      "Mach aus einem unsicheren Arbeitsauftrag ein begrenztes, prüfbares KI-Briefing und redliniere den Entwurf.",
+      "Turn an unsafe work request into a bounded, testable AI brief and redline the draft.",
     ),
     artifact: text(
-      "Freigegebenes Prompt-Briefing mit Datenklassifikation, Quellenplan und Output-Redline",
-      "Approved prompt brief with data classification, source plan, and output redline",
+      "Prompt-Briefing mit Datenklassen, Quellenplan und Output-Redline",
+      "Prompt brief with data classes, source plan and output redline",
     ),
     scenario: text(
-      "Ein fiktiver Büroausstatter will aus synthetischen Produktnotizen eine Kundenmail erstellen. Die Rohfassung vermischt interne Hinweise, ungesicherte Behauptungen und fehlende Prüfschritte.",
-      "A fictional office-supply company wants a customer email from synthetic product notes. The draft mixes internal guidance, unsupported claims, and missing review steps.",
+      "Ein fiktiver Büroausstatter will aus Produktnotizen eine Kundenmail machen. Der Entwurf mischt interne Hinweise und unbelegte Behauptungen und hat keine Prüfschritte.",
+      "A fictional office-supply company wants a customer email from product notes. The draft mixes internal notes and unsupported claims and has no review steps.",
     ),
     safety: text(
-      "Nur die bereitgestellten Fantasiedaten verwenden. Keine Namen, Kontaktdaten, vertraulichen Dokumente oder realen Geschäftsvorgänge eingeben.",
-      "Use only the supplied fictional data. Do not enter names, contact details, confidential documents, or real business matters.",
+      "Nur die mitgelieferten Fantasiedaten verwenden, keine Namen, Kontaktdaten, vertraulichen Dokumente oder echten Geschäftsvorgänge.",
+      "Use only the supplied fictional data: no names, contact details, confidential documents or real business matters.",
     ),
     completionCriteria: [
       text(
-        "Jedes Eingabefeld ist einer Datenklasse zugeordnet und unzulässiger Kontext wurde entfernt.",
-        "Every input is assigned a data class and disallowed context is removed.",
+        "Jede Eingabe hat eine Datenklasse, unzulässiger Kontext ist entfernt.",
+        "Every input has a data class; disallowed context is removed.",
       ),
       text(
-        "Das Briefing nennt Ziel, Kontext, Grenzen, Ausgabeformat und einen menschlichen Prüfschritt.",
-        "The brief states the goal, context, boundaries, output format, and a human review step.",
+        "Das Briefing nennt Ziel, Kontext, Grenzen, Ausgabeformat und menschliche Prüfung.",
+        "The brief states goal, context, boundaries, output format and human review.",
       ),
       text(
-        "Die Redline markiert unbelegte Aussagen und ersetzt sie durch belegte oder ausdrücklich unsichere Formulierungen.",
-        "The redline flags unsupported claims and replaces them with supported or explicitly uncertain wording.",
+        "Die Redline ersetzt unbelegte Aussagen durch belegte oder als unsicher markierte.",
+        "The redline replaces unsupported claims with supported or clearly uncertain wording.",
       ),
     ],
     stages: stages({
       ground: [
         text(
-          "Ordne Aufgabe, Datenklassen und mögliche Schäden vor der Modellauswahl ein.",
-          "Classify the task, data classes, and possible harm before choosing a model.",
+          "Ordne Aufgabe, Datenklassen und mögliche Schäden ein, bevor du ein Modell wählst.",
+          "Classify task, data classes and possible harm before choosing a model.",
         ),
         text(
-          "Ausgefüllte Auftragsgrenze und Datenfreigabe",
-          "Completed task boundary and data clearance",
+          "Auftragsgrenze und Datenfreigabe",
+          "Task boundary and data clearance",
         ),
       ],
       build: [
@@ -106,8 +106,8 @@ export const COURSE_PROJECT_CONFIGS = {
       ],
       run: [
         text(
-          "Führe das Briefing gegen den synthetischen Fall aus und protokolliere Annahmen.",
-          "Run the brief against the synthetic case and record assumptions.",
+          "Führe das Briefing am Übungsfall aus und notiere Annahmen.",
+          "Run the brief on the practice case and note assumptions.",
         ),
         text("Entwurf mit Annahmenprotokoll", "Draft with assumption log"),
       ],
@@ -117,18 +117,18 @@ export const COURSE_PROJECT_CONFIGS = {
           "Check every factual claim, data reference, and call to action.",
         ),
         text(
-          "Abgeschlossene Claim- und Datenschutz-Redline",
-          "Completed claim and privacy redline",
+          "Claim- und Datenschutz-Redline",
+          "Claim and privacy redline",
         ),
       ],
       transfer: [
         text(
-          "Formuliere eine wiederverwendbare Checkliste für einen eigenen, freigegebenen Arbeitsablauf.",
-          "Write a reusable checklist for one approved workflow of your own.",
+          "Schreib eine Checkliste für einen eigenen, freigegebenen Arbeitsablauf.",
+          "Write a checklist for one approved workflow of your own.",
         ),
         text(
-          "Übertragbare Fünf-Punkte-Checkliste",
-          "Transferable five-point checklist",
+          "Fünf-Punkte-Checkliste",
+          "Five-point checklist",
         ),
       ],
     }),
@@ -138,64 +138,64 @@ export const COURSE_PROJECT_CONFIGS = {
     courseSlug: "eu-ai-act-kurs",
     title: text("Das AI-Act-Fallarchiv", "The AI Act Case File"),
     mission: text(
-      "Klassifiziere einen fiktiven KI-Einsatz, trenne Rollen und Pflichten und baue eine datierte Evidenzakte statt eines pauschalen Rechtsurteils.",
-      "Classify a fictional AI use, separate roles and duties, and build a dated evidence file instead of issuing a blanket legal verdict.",
+      "Ordne einen fiktiven KI-Einsatz ein, trenne Rollen und Pflichten und lege eine datierte Evidenzakte an statt eines pauschalen Rechtsurteils.",
+      "Classify a fictional AI use, separate roles and duties, and build a dated evidence file instead of a blanket legal verdict.",
     ),
     artifact: text(
-      "Datierte Fallakte mit Systemgrenze, Rollenkarte, Risikopfad, Pflichten und offenen Rechtsfragen",
-      "Dated case file with system boundary, role map, risk path, duties, and open legal questions",
+      "Datierte Fallakte: Systemgrenze, Rollen, Risikopfad, Pflichten, offene Rechtsfragen",
+      "Dated case file: system boundary, roles, risk path, duties, open legal questions",
     ),
     scenario: text(
-      "Die fiktive Lernstadt Nordhafen prüft ein System, das synthetische Bewerbungsprofile für Ausbildungsangebote vorsortiert. Anbieter, Betreiber, Zweck und menschliche Entscheidung sind absichtlich unvollständig beschrieben.",
-      "The fictional city of Northhaven is assessing a system that pre-sorts synthetic apprenticeship profiles. Provider, deployer, purpose, and human decision details are intentionally incomplete.",
+      "Die fiktive Stadt Nordhafen prüft ein System, das synthetische Bewerbungen auf Ausbildungsplätze vorsortiert. Anbieter, Betreiber, Zweck und menschliche Entscheidung sind absichtlich lückenhaft beschrieben.",
+      "The fictional city of Northhaven is assessing a system that pre-sorts synthetic apprenticeship applications. Provider, deployer, purpose and human decision are deliberately incomplete.",
     ),
     safety: text(
-      "Der Fall enthält keine realen Personen oder Rechtsberatung. Ergebnisse bleiben Lernhypothesen und müssen an datierten Primärquellen geprüft werden.",
-      "The case contains no real people and is not legal advice. Results remain learning hypotheses that must be checked against dated primary sources.",
+      "Keine echten Personen, keine Rechtsberatung. Ergebnisse sind Lernhypothesen, die an datierten Primärquellen zu prüfen sind.",
+      "No real people, not legal advice. Results are learning hypotheses to check against dated primary sources.",
     ),
     completionCriteria: [
       text(
-        "Systemzweck, betroffene Entscheidung und Akteursrollen sind getrennt dokumentiert.",
-        "System purpose, affected decision, and actor roles are documented separately.",
+        "Zweck, betroffene Entscheidung und Rollen sind getrennt dokumentiert.",
+        "Purpose, affected decision and roles are documented separately.",
       ),
       text(
-        "Der Risikopfad nennt die entscheidenden Tatsachen, Gegenargumente und fehlenden Informationen.",
-        "The risk path states decisive facts, counterarguments, and missing information.",
+        "Der Risikopfad nennt entscheidende Tatsachen, Gegenargumente und Lücken.",
+        "The risk path states decisive facts, counterarguments and gaps.",
       ),
       text(
-        "Jede Pflicht ist einer Rolle, einem Zeitpunkt und einer datierten Quelle zugeordnet.",
-        "Every duty is mapped to a role, date, and dated source.",
+        "Jede Pflicht hat Rolle, Zeitpunkt und datierte Quelle.",
+        "Every duty has a role, a date and a dated source.",
       ),
     ],
     stages: stages({
       ground: [
         text(
-          "Ziehe die Systemgrenze und identifiziere Zweck, Betroffene und Entscheidung.",
-          "Draw the system boundary and identify purpose, affected people, and decision.",
+          "Zieh die Systemgrenze und benenne Zweck, Betroffene und Entscheidung.",
+          "Draw the system boundary; name purpose, affected people and decision.",
         ),
         text("System- und Entscheidungskarte", "System and decision map"),
       ],
       build: [
         text(
-          "Ordne Anbieter-, Betreiber- und weitere Rollen mit Begründung zu.",
-          "Assign provider, deployer, and other roles with reasons.",
+          "Ordne Anbieter, Betreiber und weitere Rollen begründet zu.",
+          "Assign provider, deployer and other roles with reasons.",
         ),
         text("Begründete Rollenmatrix", "Reasoned role matrix"),
       ],
       run: [
         text(
-          "Durchlaufe Verbot, Hochrisiko, Transparenz und sonstige Pfade ohne Abkürzung.",
-          "Walk through prohibited, high-risk, transparency, and other paths without shortcuts.",
+          "Prüfe Verbot, Hochrisiko, Transparenz und sonstige Pfade, ohne einen auszulassen.",
+          "Check prohibited, high-risk, transparency and other paths without skipping one.",
         ),
         text(
-          "Vollständiger Klassifikationspfad",
-          "Complete classification path",
+          "Klassifikationspfad",
+          "Classification path",
         ),
       ],
       verify: [
         text(
-          "Fordere Gegenbelege an und verknüpfe Aussagen mit Rechtsstand und Primärquelle.",
-          "Demand counter-evidence and link claims to legal date and primary source.",
+          "Hol Gegenbelege ein und verknüpfe Aussagen mit Rechtsstand und Primärquelle.",
+          "Seek counter-evidence and link claims to legal date and primary source.",
         ),
         text(
           "Quellen- und Unsicherheitsprotokoll",
@@ -204,12 +204,12 @@ export const COURSE_PROJECT_CONFIGS = {
       ],
       transfer: [
         text(
-          "Erzeuge eine wiederverwendbare Intake-Liste für neue KI-Anwendungsfälle.",
-          "Create a reusable intake list for new AI use cases.",
+          "Erstelle eine Aufnahmeliste für neue KI-Anwendungsfälle.",
+          "Create an intake list for new AI use cases.",
         ),
         text(
-          "Fallaufnahme-Vorlage mit Eskalationspunkten",
-          "Case-intake template with escalation points",
+          "Aufnahmevorlage mit Eskalationspunkten",
+          "Intake template with escalation points",
         ),
       ],
     }),
@@ -219,74 +219,74 @@ export const COURSE_PROJECT_CONFIGS = {
     courseSlug: "ai-native",
     title: text("Die kontrollierte Arbeitsstrecke", "The Controlled Work Run"),
     mission: text(
-      "Formuliere aus einem unscharfen Auftrag einen begrenzten Prompt, fordere genau eine Modellantwort an und bewerte sie mit lokal gesetzten Freigabe-, Abbruch- und Übergabekontrollen. Es werden keine Werkzeuge oder Workflows ausgeführt.",
-      "Turn an ambiguous request into a bounded prompt, request exactly one model completion, and assess it with locally selected approval, stop, and handoff controls. No tools or workflows are executed.",
+      "Mach aus einem unscharfen Auftrag einen begrenzten Prompt, hol genau eine Modellantwort ein und bewerte sie mit lokal gesetzten Freigabe-, Abbruch- und Übergabekontrollen. Werkzeuge oder Workflows laufen nicht.",
+      "Turn a vague request into a bounded prompt, request exactly one model completion, and assess it with local approval, stop and handoff controls. No tools or workflows are executed.",
     ),
     artifact: text(
-      "Lokal validierter Projektnachweis zu einer einzelnen Provider-Antwort mit Kontroll- und Übergabeplan",
-      "Locally validated project evidence for one provider completion with a control and handoff plan",
+      "Lokal validierter Projektnachweis: eine Provider-Antwort mit Kontroll- und Übergabeplan",
+      "Locally validated project evidence: one provider completion with a control and handoff plan",
     ),
     scenario: text(
-      "Ein fiktives Energiegenossenschafts-Team muss aus synthetischen Projektmeldungen einen Wochenüberblick erstellen. Eingangsdaten sind widersprüchlich und manche Schritte benötigen menschliche Freigabe.",
-      "A fictional energy cooperative must create a weekly overview from synthetic project updates. Inputs conflict and some steps require human approval.",
+      "Eine fiktive Energiegenossenschaft braucht aus synthetischen Projektmeldungen einen Wochenüberblick. Die Meldungen widersprechen sich, manche Schritte brauchen menschliche Freigabe.",
+      "A fictional energy cooperative needs a weekly overview from synthetic project updates. The updates conflict; some steps need human approval.",
     ),
     safety: text(
-      "Der Workspace akzeptiert nur die mitgelieferten Projektdaten. Keine realen Kunden-, Beschäftigten-, Finanz- oder Zugangsdaten verwenden.",
-      "The workspace accepts only the supplied project data. Do not use real customer, employee, financial, or credential data.",
+      "Nur die mitgelieferten Projektdaten, keine echten Kunden-, Beschäftigten-, Finanz- oder Zugangsdaten.",
+      "Only the supplied project data: no real customer, employee, financial or credential data.",
     ),
     completionCriteria: [
       text(
-        "Ziel, Kontext, Ausgabeformat und harte Grenzen sind im Prompt explizit.",
-        "The prompt explicitly states the goal, context, output format, and hard boundaries.",
+        "Der Prompt nennt Ziel, Kontext, Ausgabeformat und harte Grenzen.",
+        "The prompt states goal, context, output format and hard limits.",
       ),
       text(
-        "Eine echte Provider-Antwort liegt vor; Freigabe, Abbruch und Übergabe sind als lokale Plankontrollen gesetzt.",
-        "A real provider completion exists; approval, stop, and handoff are recorded as local planning controls.",
+        "Eine echte Provider-Antwort liegt vor; Freigabe, Abbruch und Übergabe sind als lokale Kontrollen gesetzt.",
+        "A real provider completion exists; approval, stop and handoff are set as local controls.",
       ),
       text(
-        "Die Übergabe nennt Eigentümer, Fallback, Messgröße und Wiederanlauf.",
-        "The handoff names the owner, fallback, measure, and restart procedure.",
+        "Die Übergabe nennt Verantwortliche, Fallback, Messgröße und Wiederanlauf.",
+        "The handoff names owner, fallback, measure and restart.",
       ),
     ],
     stages: stages({
       ground: [
         text(
-          "Definiere Ergebnis, Nicht-Ziele, Datenfreigabe und Erfolgssignal.",
-          "Define the outcome, non-goals, data clearance, and success signal.",
+          "Lege Ergebnis, Nicht-Ziele, Datenfreigabe und Erfolgssignal fest.",
+          "Define outcome, non-goals, data clearance and success signal.",
         ),
         text("Abgegrenzter Arbeitsauftrag", "Bounded work order"),
       ],
       build: [
         text(
-          "Schreibe Kontext und Prompt und setze lokale Freigabe-, Abbruch-, Übergabe- und Fallback-Kontrollen.",
-          "Write the context and prompt and select local approval, stop, handoff, and fallback controls.",
+          "Schreib Kontext und Prompt und setze Freigabe, Abbruch, Übergabe und Fallback.",
+          "Write context and prompt; set approval, stop, handoff and fallback.",
         ),
         text("Prompt- und Kontrollplan", "Prompt and control plan"),
       ],
       run: [
         text(
-          "Fordere für den synthetischen Auftrag genau eine Antwort vom freigegebenen Provider an.",
-          "Request exactly one completion from the allowed provider for the synthetic task.",
+          "Hol genau eine Antwort vom freigegebenen Provider ein.",
+          "Request exactly one completion from the allowed provider.",
         ),
         text(
-          "Provider-Antwort im aktuellen Browserlauf",
-          "Provider completion in the current browser session",
+          "Provider-Antwort in dieser Sitzung",
+          "Provider completion in this session",
         ),
       ],
       verify: [
         text(
-          "Bewerte die einzelne Antwort gegen Auftrag, Freigabe, Abbruchregel, Eigentum und Fallback.",
-          "Assess the single completion against the task, approval, stop rule, ownership, and fallback.",
+          "Bewerte die Antwort gegen Auftrag, Freigabe, Abbruchregel, Verantwortung und Fallback.",
+          "Assess the completion against task, approval, stop rule, ownership and fallback.",
         ),
         text(
-          "Lokale Output- und Kontrollbewertung",
-          "Local output and control assessment",
+          "Output- und Kontrollbewertung",
+          "Output and control assessment",
         ),
       ],
       transfer: [
         text(
-          "Schreibe Eigentum, Ausnahmeweg, Fallback und Wiederanlauf für einen künftigen echten Arbeitsprozess.",
-          "Document ownership, exception path, fallback, and restart for a future real work process.",
+          "Plane Verantwortung, Ausnahmeweg, Fallback und Wiederanlauf für einen echten Arbeitsprozess.",
+          "Plan ownership, exception path, fallback and restart for a real work process.",
         ),
         text("Geplanter Übergabevertrag", "Planned handoff contract"),
       ],
@@ -297,74 +297,74 @@ export const COURSE_PROJECT_CONFIGS = {
     courseSlug: "ki-und-gesellschaft",
     title: text("Die Evidenzredaktion", "The Evidence Newsroom"),
     mission: text(
-      "Untersuche einen synthetischen Medienfund, trenne Beobachtung von Behauptung und entscheide nachvollziehbar über Veröffentlichung und Korrektur.",
-      "Investigate a synthetic media item, separate observation from claim, and make an auditable publication and correction decision.",
+      "Untersuche einen Medienfund, trenne Beobachtung von Behauptung und entscheide nachvollziehbar über Veröffentlichung und Korrektur.",
+      "Investigate a media item, separate observation from claim, and decide traceably on publication and correction.",
     ),
     artifact: text(
-      "Verifikationsdossier mit Provenienz, Quellenvergleich, Betroffenenkarte und Publikationsentscheidung",
-      "Verification dossier with provenance, source comparison, stakeholder map, and publication decision",
+      "Verifikationsdossier: Herkunft, Quellenvergleich, Betroffene, Publikationsentscheidung",
+      "Verification dossier: provenance, source comparison, stakeholders, publication decision",
     ),
     scenario: text(
-      "Im fiktiven Ort Sonnenbrück kursiert ein vollständig synthetisches Video über die Schließung eines erfundenen Werks. Mehrere erfundene Accounts verbreiten widersprüchliche Ausschnitte.",
-      "In the fictional town of Sunbridge, a fully synthetic video claims an invented factory will close. Several fictional accounts spread conflicting clips.",
+      "Im fiktiven Sonnenbrück kursiert ein synthetisches Video über die Schließung eines erfundenen Werks. Mehrere Accounts verbreiten widersprüchliche Ausschnitte.",
+      "In the fictional town of Sunbridge, a synthetic video claims an invented factory will close. Several accounts spread conflicting clips.",
     ),
     safety: text(
-      "Keine realen Medien, Personen oder Accounts hochladen. Werkzeuge liefern Indizien, keinen Echtheitsbeweis; Unsicherheit muss sichtbar bleiben.",
-      "Do not upload real media, people, or accounts. Tools provide signals, not proof of authenticity; uncertainty must remain visible.",
+      "Keine echten Medien, Personen oder Accounts hochladen. Werkzeuge liefern Indizien, keinen Echtheitsbeweis; halte Unsicherheit sichtbar.",
+      "Do not upload real media, people or accounts. Tools give signals, not proof of authenticity; keep uncertainty visible.",
     ),
     completionCriteria: [
       text(
-        "Originalbehauptung, beobachtbare Merkmale und abgeleitete Interpretation sind getrennt.",
-        "Original claim, observable signals, and inferred interpretation are separated.",
+        "Behauptung, beobachtbare Merkmale und Deutung sind getrennt.",
+        "Claim, observable signals and interpretation are kept apart.",
       ),
       text(
-        "Mindestens zwei unabhängige Quellenpfade und die verbleibende Unsicherheit sind dokumentiert.",
-        "At least two independent source paths and remaining uncertainty are documented.",
+        "Mindestens zwei unabhängige Quellenpfade und die Restunsicherheit sind dokumentiert.",
+        "At least two independent source paths and the remaining uncertainty are documented.",
       ),
       text(
-        "Die Publikationsentscheidung berücksichtigt Schaden, Betroffene, Korrektur und Eskalation.",
+        "Die Publikationsentscheidung wägt Schaden, Betroffene, Korrektur und Eskalation ab.",
         "The publication decision addresses harm, affected parties, correction, and escalation.",
       ),
     ],
     stages: stages({
       ground: [
         text(
-          "Sichere Behauptung, Zeitpunkt, Quelle und mögliche Betroffene getrennt.",
-          "Capture the claim, time, source, and potentially affected parties separately.",
+          "Halte Behauptung, Zeitpunkt, Quelle und Betroffene getrennt fest.",
+          "Record claim, time, source and affected parties separately.",
         ),
         text("Versiegelte Ausgangsnotiz", "Sealed intake note"),
       ],
       build: [
         text(
-          "Baue eine Provenienzlinie und einen Plan für unabhängige Gegenprüfungen.",
-          "Build a provenance chain and a plan for independent cross-checks.",
+          "Rekonstruiere die Herkunft und plane unabhängige Gegenprüfungen.",
+          "Trace the provenance and plan independent cross-checks.",
         ),
         text("Quellen- und Prüfplan", "Source and verification plan"),
       ],
       run: [
         text(
-          "Vergleiche die synthetischen Ausschnitte, Metadaten und Aussagen.",
-          "Compare the synthetic clips, metadata, and statements.",
+          "Vergleiche Ausschnitte, Metadaten und Aussagen.",
+          "Compare clips, metadata and statements.",
         ),
         text(
-          "Beobachtungsmatrix ohne vorzeitiges Urteil",
-          "Observation matrix without premature verdict",
+          "Beobachtungsmatrix ohne Urteil",
+          "Observation matrix without verdict",
         ),
       ],
       verify: [
         text(
-          "Teste alternative Erklärungen und bewerte Sicherheit sowie Schadensrisiko.",
-          "Test alternative explanations and rate confidence and harm risk.",
+          "Prüfe andere Erklärungen und bewerte Sicherheit und Schadensrisiko.",
+          "Test other explanations; rate confidence and harm risk.",
         ),
         text(
-          "Begründete Konfidenz- und Schadensbewertung",
-          "Reasoned confidence and harm assessment",
+          "Konfidenz- und Schadensbewertung",
+          "Confidence and harm assessment",
         ),
       ],
       transfer: [
         text(
-          "Verfasse Publikations-, Korrektur- und Eskalationsregeln für den nächsten Fall.",
-          "Write publication, correction, and escalation rules for the next case.",
+          "Schreib Regeln für Veröffentlichung, Korrektur und Eskalation im nächsten Fall.",
+          "Write publication, correction and escalation rules for the next case.",
         ),
         text(
           "Redaktionelles Verifikationsprotokoll",
@@ -381,70 +381,70 @@ export const COURSE_PROJECT_CONFIGS = {
       "The Fault-Tolerant Parcel Pipeline",
     ),
     mission: text(
-      "Registriere einen begrenzten, browserseitigen Pipelineplan, aktiviere die feste Fehlerfixture und führe das serverseitig vorgegebene Node-Programm mit Invariantentests aus.",
-      "Preregister a bounded browser-side pipeline plan, enable the fixed failure fixture, and run the server-supplied Node program with invariant tests.",
+      "Lege vorab einen begrenzten Pipelineplan im Browser fest, aktiviere die feste Fehlerfixture und führe das vorgegebene Node-Programm mit Invariantentests auf dem Server aus.",
+      "Preregister a bounded pipeline plan in the browser, enable the fixed failure fixture, and run the server-supplied Node program with invariant tests.",
     ),
     artifact: text(
-      "Lokal validierter Projektnachweis zum festen Node-Lauf mit Mengenabgleich, 102→102-Replay und Backfill-Entscheidung",
-      "Locally validated project evidence for the fixed Node run with reconciliation, 102→102 replay, and a backfill decision",
+      "Lokal validierter Projektnachweis: fester Node-Lauf mit Mengenabgleich, 102→102-Replay und Backfill-Entscheidung",
+      "Locally validated project evidence: fixed Node run with reconciliation, 102→102 replay and a backfill decision",
     ),
     scenario: text(
-      "Ein fiktiver Paketdienst liefert synthetische Scan-Ereignisse aus drei Depots. Einige Ereignisse kommen verspätet, doppelt oder mit ungültigem Status an.",
-      "A fictional parcel service supplies synthetic scan events from three depots. Some arrive late, duplicated, or with an invalid status.",
+      "Ein fiktiver Paketdienst liefert synthetische Scan-Ereignisse aus drei Depots, manche verspätet, doppelt oder mit ungültigem Status.",
+      "A fictional parcel service supplies synthetic scan events from three depots, some late, duplicated or with an invalid status.",
     ),
     safety: text(
-      "Alle IDs, Zeiten und Orte sind generierte Übungsdaten. Keine externen Tabellen, Zugangsdaten oder Produktionsendpunkte anbinden.",
-      "All IDs, times, and locations are generated training data. Do not connect external tables, credentials, or production endpoints.",
+      "Alle IDs, Zeiten und Orte sind generiert. Keine externen Tabellen, Zugangsdaten oder Produktionsendpunkte anbinden.",
+      "All IDs, times and locations are generated. Do not connect external tables, credentials or production endpoints.",
     ),
     completionCriteria: [
       text(
-        "Der browserseitige Plan nennt Schlüssel und Zeitsemantik; er ist keine ausführbare SQL-Anweisung.",
-        "The browser-side plan states keys and time semantics; it is not an executable SQL statement.",
+        "Der Browserplan nennt Schlüssel und Zeitsemantik; er ist kein ausführbares SQL.",
+        "The browser plan states keys and time semantics; it is not executable SQL.",
       ),
       text(
-        "Der ausgeführte Backfill verarbeitet acht Late Events; Wiederholung endet erneut bei exakt 102 fachlichen Ergebnissen.",
-        "The executed backfill processes eight late events; replay ends at exactly 102 business results again.",
+        "Der Backfill verarbeitet acht Late Events; ein Replay endet wieder bei genau 102 fachlichen Ergebnissen.",
+        "The backfill processes eight late events; a replay again ends at exactly 102 business results.",
       ),
       text(
-        "Backfill und verspätete Ereignisse bestehen die vorgegebenen Qualitätsprüfungen.",
-        "The backfill and late events pass the supplied quality checks.",
+        "Backfill und Late Events bestehen die vorgegebenen Qualitätsprüfungen.",
+        "Backfill and late events pass the supplied quality checks.",
       ),
     ],
     stages: stages({
       ground: [
         text(
-          "Halte erwartete Ereignisfelder, Schlüssel, Zeitsemantik und Qualitätsrisiken als Plan fest.",
-          "Record expected event fields, keys, time semantics, and quality risks as a plan.",
+          "Plane Ereignisfelder, Schlüssel, Zeitsemantik und Qualitätsrisiken.",
+          "Plan event fields, keys, time semantics and quality risks.",
         ),
         text(
-          "Geplantes Quellprofil und Datenvertrag",
-          "Planned source profile and data contract",
+          "Quellprofil und Datenvertrag",
+          "Source profile and data contract",
         ),
       ],
       build: [
         text(
-          "Spezifiziere Deduplizierung und Event-Time-Regeln im begrenzten Browserplan; der Plan wird nicht ausgeführt oder an die Sandbox gesendet.",
-          "Specify deduplication and event-time rules in the bounded browser plan; the plan is neither executed nor sent to Sandbox.",
+          "Lege Deduplizierung und Event-Time-Regeln im Browserplan fest; der Plan wird weder ausgeführt noch an die Sandbox gesendet.",
+          "Specify deduplication and event-time rules in the browser plan; the plan is neither executed nor sent to Sandbox.",
         ),
         text(
-          "Vorregistrierter Pipelinevertrag",
+          "Vorab festgelegter Pipelinevertrag",
           "Preregistered pipeline contract",
         ),
       ],
       run: [
         text(
-          "Starte das feste serverseitige Programm für 117 generierte Events mit Duplikaten, Verspätung und Statusfehlern.",
-          "Start the fixed server-side program for 117 generated events with duplicates, lateness, and a status error.",
+          "Starte das feste Serverprogramm für 117 generierte Events mit Duplikaten, Verspätung und Statusfehlern.",
+          "Start the fixed server program for 117 generated events with duplicates, lateness and a status error.",
         ),
         text(
-          "Session-Laufprotokoll mit Exit-Codes",
-          "Session run transcript with exit codes",
+          "Laufprotokoll mit Exit-Codes",
+          "Run transcript with exit codes",
         ),
       ],
       verify: [
         text(
           "Prüfe Idempotenz, Mengenabgleich, Wasserzeichen und Wiederanlauf.",
-          "Verify idempotency, reconciliation, watermarks, and restart behavior.",
+          "Verify idempotency, reconciliation, watermarks and restart.",
         ),
         text(
           "Grüner Qualitäts- und Wiederanlauftest",
@@ -454,7 +454,7 @@ export const COURSE_PROJECT_CONFIGS = {
       transfer: [
         text(
           "Dokumentiere Backfill-Fenster, Eigentum, Alarm und Rückbau.",
-          "Document the backfill window, ownership, alert, and rollback.",
+          "Document backfill window, ownership, alert and rollback.",
         ),
         text(
           "Backfill- und Betriebsrunbook",
@@ -468,67 +468,67 @@ export const COURSE_PROJECT_CONFIGS = {
     courseSlug: "data-science",
     title: text("Das belastbare Experiment", "The Defensible Experiment"),
     mission: text(
-      "Registriere einen begrenzten, browserseitigen Analyseplan, aktiviere die feste Leakage-Fixture und führe das serverseitig vorgegebene Experimentprogramm mit Invariantentests aus.",
-      "Preregister a bounded browser-side analysis plan, enable the fixed leakage fixture, and run the server-supplied experiment program with invariant tests.",
+      "Lege vorab einen begrenzten Analyseplan im Browser fest, aktiviere die feste Leakage-Fixture und führe das vorgegebene Experimentprogramm mit Invariantentests auf dem Server aus.",
+      "Preregister a bounded analysis plan in the browser, enable the fixed leakage fixture, and run the server-supplied experiment program with invariant tests.",
     ),
     artifact: text(
-      "Lokal validierter Projektnachweis zum festen Experimentlauf mit sicherem/geleaktem Metrikvergleich und Model-Card-Entscheidung",
-      "Locally validated project evidence for the fixed experiment run with safe/leaked metric comparison and a model-card decision",
+      "Lokal validierter Projektnachweis: fester Experimentlauf mit sicherem/geleaktem Metrikvergleich und Model-Card-Entscheidung",
+      "Locally validated project evidence: fixed experiment run with safe/leaked metric comparison and a model-card decision",
     ),
     scenario: text(
-      "Eine fiktive Lern-App testet zwei synthetische Onboarding-Varianten. Der Datensatz enthält absichtlich fehlende Werte, eine nachgelagerte Leakage-Spalte und wiederholte Zwischenanalysen.",
-      "A fictional learning app tests two synthetic onboarding variants. The dataset intentionally contains missing values, a downstream leakage column, and repeated interim analyses.",
+      "Eine fiktive Lern-App testet zwei synthetische Onboarding-Varianten. Der Datensatz hat absichtlich fehlende Werte, eine nachgelagerte Leakage-Spalte und wiederholte Zwischenanalysen.",
+      "A fictional learning app tests two synthetic onboarding variants. The dataset has deliberate missing values, a downstream leakage column and repeated interim analyses.",
     ),
     safety: text(
-      "Der Datensatz ist vollständig generiert und beschreibt keine Personen. Keine eigenen Personen-, Gesundheits-, Finanz- oder Beschäftigtendaten laden.",
-      "The dataset is entirely generated and describes no people. Do not load personal, health, financial, or employment data.",
+      "Der Datensatz ist generiert und beschreibt keine Personen. Lade keine eigenen Personen-, Gesundheits-, Finanz- oder Beschäftigtendaten.",
+      "The dataset is generated and describes no people. Do not load personal, health, financial or employment data.",
     ),
     completionCriteria: [
       text(
-        "Hypothese, primäre Metrik und Leakage-Ausschluss wurden im browserseitigen Plan festgelegt; der Text ist kein ausführbares SQL.",
-        "The hypothesis, primary metric, and leakage exclusion are fixed in the browser-side plan; the text is not executable SQL.",
+        "Hypothese, primäre Metrik und Leakage-Ausschluss stehen im Browserplan; der Text ist kein ausführbares SQL.",
+        "Hypothesis, primary metric and leakage exclusion are fixed in the browser plan; the text is not executable SQL.",
       ),
       text(
-        "Der ausgeführte Vergleich trennt den sicheren +5-pp-Effekt vom geleakten +22-pp-Effekt und erkennt fünf Zwischenanalysen.",
-        "The executed comparison separates the safe +5 pp effect from the leaked +22 pp effect and identifies five interim looks.",
+        "Der Vergleich trennt den sicheren +5-pp-Effekt vom geleakten +22-pp-Effekt und erkennt fünf Zwischenanalysen.",
+        "The comparison separates the safe +5 pp effect from the leaked +22 pp effect and finds five interim looks.",
       ),
       text(
-        "Ergebnis, Unsicherheit, Grenzen und Reproduktionsschritte sind vollständig dokumentiert.",
-        "Result, uncertainty, limitations, and reproduction steps are fully documented.",
+        "Ergebnis, Unsicherheit, Grenzen und Reproduktionsschritte sind dokumentiert.",
+        "Result, uncertainty, limits and reproduction steps are documented.",
       ),
     ],
     stages: stages({
       ground: [
         text(
           "Fixiere Frage, Schätzwert, Metrik, Segment und Stoppregel.",
-          "Lock the question, estimand, metric, segment, and stopping rule.",
+          "Lock question, estimand, metric, segment and stopping rule.",
         ),
         text("Vorab festgelegter Analyseplan", "Pre-specified analysis plan"),
       ],
       build: [
         text(
-          "Spezifiziere Metrik und Leakage-Ausschluss im begrenzten Browserplan; der Plan wird nicht ausgeführt oder an die Sandbox gesendet.",
-          "Specify the metric and leakage exclusion in the bounded browser plan; the plan is neither executed nor sent to Sandbox.",
+          "Lege Metrik und Leakage-Ausschluss im Browserplan fest; der Plan wird weder ausgeführt noch an die Sandbox gesendet.",
+          "Specify metric and leakage exclusion in the browser plan; the plan is neither executed nor sent to Sandbox.",
         ),
         text(
-          "Vorregistrierter Analysevertrag",
+          "Vorab festgelegter Analysevertrag",
           "Preregistered analysis contract",
         ),
       ],
       run: [
         text(
-          "Starte das feste serverseitige Programm für 249 generierte Zeilen sowie die vorgegebenen Leakage-, Missingness- und Stoppregeltests.",
-          "Start the fixed server-side program for 249 generated rows and the supplied leakage, missingness, and stop-rule tests.",
+          "Starte das feste Serverprogramm für 249 generierte Zeilen mit den vorgegebenen Leakage-, Missingness- und Stoppregeltests.",
+          "Start the fixed server program for 249 generated rows with the supplied leakage, missingness and stop-rule tests.",
         ),
         text(
-          "Session-Laufprotokoll mit zwei grünen Invariantentests",
-          "Session run transcript with two passing invariant tests",
+          "Laufprotokoll mit zwei grünen Invariantentests",
+          "Run transcript with two passing invariant tests",
         ),
       ],
       verify: [
         text(
-          "Suche aktiv nach Leakage, Peeking, Confounding und instabilen Segmenten.",
-          "Actively test for leakage, peeking, confounding, and unstable segments.",
+          "Suche nach Leakage, Peeking, Confounding und instabilen Segmenten.",
+          "Test for leakage, peeking, confounding and unstable segments.",
         ),
         text(
           "Diagnostik- und Unsicherheitsbericht",
@@ -537,8 +537,8 @@ export const COURSE_PROJECT_CONFIGS = {
       ],
       transfer: [
         text(
-          "Formuliere Entscheidung, Grenzen, Monitoring und Reproduktionsweg.",
-          "State the decision, limitations, monitoring, and reproduction path.",
+          "Halte Entscheidung, Grenzen, Monitoring und Reproduktionsweg fest.",
+          "State decision, limits, monitoring and reproduction path.",
         ),
         text(
           "Model Card und Experimentübergabe",
@@ -552,67 +552,67 @@ export const COURSE_PROJECT_CONFIGS = {
     courseSlug: "data-infrastructure",
     title: text("Der Streaming-Kontrollraum", "The Streaming Control Room"),
     mission: text(
-      "Registriere einen begrenzten, browserseitigen Telemetrieplan, aktiviere die feste Partitionsfixture und führe das serverseitig vorgegebene Recovery-Programm mit Invariantentests aus.",
-      "Preregister a bounded browser-side telemetry plan, enable the fixed partition fixture, and run the server-supplied recovery program with invariant tests.",
+      "Lege vorab einen begrenzten Telemetrieplan im Browser fest, aktiviere die feste Partitionsfixture und führe das vorgegebene Recovery-Programm mit Invariantentests auf dem Server aus.",
+      "Preregister a bounded telemetry plan in the browser, enable the fixed partition fixture, and run the server-supplied recovery program with invariant tests.",
     ),
     artifact: text(
-      "Lokal validierter Projektnachweis zum festen Incidentlauf mit 684-ms-Bruch, 210-ms-Zero-Loss-Recovery und Wiederherstellungsentscheidung",
-      "Locally validated project evidence for the fixed incident run with a 684 ms breach, 210 ms zero-loss recovery, and a recovery decision",
+      "Lokal validierter Projektnachweis: fester Incidentlauf mit 684-ms-Bruch, 210-ms-Recovery ohne Verlust und Wiederherstellungsentscheidung",
+      "Locally validated project evidence: fixed incident run with a 684 ms breach, 210 ms zero-loss recovery and a recovery decision",
     ),
     scenario: text(
-      "Die fiktive Orbit-Werkstatt streamt synthetische Sensormeldungen. Ein Netzschnitt trennt Replikate, danach entstehen Rückstau, Rebalance und verspätete Ereignisse.",
+      "Die fiktive Orbit-Werkstatt streamt synthetische Sensormeldungen. Ein Netzschnitt trennt Replikate; es folgen Rückstau, Rebalance und verspätete Ereignisse.",
       "The fictional Orbit Works streams synthetic sensor events. A network cut separates replicas, followed by backlog, rebalance, and late events.",
     ),
     safety: text(
-      "Infrastruktur und Telemetrie sind generierte Übungsfixtures. Der Code läuft isoliert ohne Netz; es bestehen keine Verbindungen zu Cloud-Konten, Clustern oder externen Nachrichtensystemen.",
-      "Infrastructure and telemetry are generated exercise fixtures. Code runs in network-denied isolation with no cloud-account, cluster, or external-message-system connection.",
+      "Infrastruktur und Telemetrie sind generiert. Der Code läuft isoliert ohne Netz, ohne Verbindung zu Cloud-Konten, Clustern oder externen Nachrichtensystemen.",
+      "Infrastructure and telemetry are generated. Code runs isolated without network, with no link to cloud accounts, clusters or external message systems.",
     ),
     completionCriteria: [
       text(
-        "Partitionierung, Konsistenz, Wasserzeichen und Wiederholung sind als explizite Designentscheidungen begründet.",
-        "Partitioning, consistency, watermarks, and replay are justified as explicit design decisions.",
+        "Partitionierung, Konsistenz, Wasserzeichen und Replay sind als Designentscheidungen begründet.",
+        "Partitioning, consistency, watermarks and replay are justified as design decisions.",
       ),
       text(
-        "Der ausgeführte Recovery-Lauf unterschreitet das 250-ms-SLO bei null Datenverlust und weist Kosten sowie Duplikatrate aus.",
-        "The executed recovery run returns below the 250 ms SLO with zero data loss and reports cost and duplicate rate.",
+        "Der Recovery-Lauf bleibt ohne Datenverlust unter dem 250-ms-SLO und weist Kosten und Duplikatrate aus.",
+        "The recovery run gets below the 250 ms SLO with zero data loss and reports cost and duplicate rate.",
       ),
       text(
-        "Wiederherstellung enthält Reihenfolge, Validierung, Rückfall und verantwortliche Rolle.",
-        "Recovery includes order, validation, rollback, and an accountable role.",
+        "Die Wiederherstellung nennt Reihenfolge, Validierung, Rückfall und verantwortliche Rolle.",
+        "Recovery names order, validation, rollback and an accountable role.",
       ),
     ],
     stages: stages({
       ground: [
         text(
           "Lege Datenfluss, Zuständigkeiten, Korrektheitsinvariante und SLO fest.",
-          "Define data flow, ownership, correctness invariant, and SLO.",
+          "Define data flow, ownership, correctness invariant and SLO.",
         ),
         text("Systemkarte mit Invarianten", "System map with invariants"),
       ],
       build: [
         text(
-          "Spezifiziere Backlog-, Latenz- und Kostenfelder im begrenzten Browserplan; der Plan wird nicht ausgeführt oder an die Sandbox gesendet.",
-          "Specify backlog, latency, and cost fields in the bounded browser plan; the plan is neither executed nor sent to Sandbox.",
+          "Lege Backlog-, Latenz- und Kostenfelder im Browserplan fest; der Plan wird weder ausgeführt noch an die Sandbox gesendet.",
+          "Specify backlog, latency and cost fields in the browser plan; the plan is neither executed nor sent to Sandbox.",
         ),
         text(
-          "Vorregistrierter Telemetrievertrag",
+          "Vorab festgelegter Telemetrievertrag",
           "Preregistered telemetry contract",
         ),
       ],
       run: [
         text(
-          "Starte das feste serverseitige Programm für Partitionsbruch, Rückstau und kontrollierten Replay.",
-          "Start the fixed server-side program for partition failure, backlog, and controlled replay.",
+          "Starte das feste Serverprogramm für Partitionsbruch, Rückstau und kontrollierten Replay.",
+          "Start the fixed server program for partition failure, backlog and controlled replay.",
         ),
         text(
-          "Session-Timeline für Incident und Recovery",
-          "Session incident and recovery timeline",
+          "Timeline für Incident und Recovery",
+          "Incident and recovery timeline",
         ),
       ],
       verify: [
         text(
           "Prüfe Verlust, Duplikate, Latenz, Kosten und Wiederholbarkeit.",
-          "Check loss, duplicates, latency, cost, and replayability.",
+          "Check loss, duplicates, latency, cost and replayability.",
         ),
         text(
           "SLO- und Korrektheitsbewertung",
@@ -622,7 +622,7 @@ export const COURSE_PROJECT_CONFIGS = {
       transfer: [
         text(
           "Schreibe Wiederherstellungsfolge, Alarmgrenzen und Postmortem-Aktion.",
-          "Write the recovery sequence, alert thresholds, and postmortem action.",
+          "Write recovery sequence, alert thresholds and postmortem action.",
         ),
         text(
           "Incident-Runbook und Designentscheidung",
@@ -636,40 +636,40 @@ export const COURSE_PROJECT_CONFIGS = {
     courseSlug: "codex",
     title: text("Die Repository-Mission", "The Repository Mission"),
     mission: text(
-      "Spezifiziere eine begrenzte Reparatur, erprobe `queue-kit` in der nicht verifizierenden Browser-Simulation und starte danach die feste serverseitige Sandbox-Prüfkette.",
-      "Specify a bounded repair, rehearse `queue-kit` in the non-verifying browser simulation, then start the fixed server-side Sandbox verification pipeline.",
+      "Beschreibe eine begrenzte Reparatur, probe `queue-kit` in der nicht verifizierenden Browser-Simulation und starte dann die feste Sandbox-Prüfkette auf dem Server.",
+      "Specify a bounded repair, rehearse `queue-kit` in the non-verifying browser simulation, then start the fixed server-side Sandbox check chain.",
     ),
     artifact: text(
-      "Lokal validierter Projektnachweis mit Task-Spec und Session-Beleg der festen Sandbox-Patch- und Prüfkette",
-      "Locally validated project evidence with a task spec and session evidence from the fixed Sandbox patch-and-check pipeline",
+      "Lokal validierter Projektnachweis: Task-Spec und Beleg der festen Sandbox-Patch- und Prüfkette",
+      "Locally validated project evidence: task spec and receipt from the fixed Sandbox patch-and-check chain",
     ),
     scenario: text(
-      "Das fiktive Paket queue-kit enthält eine absichtlich fehlerhafte Retry-Funktion, lokale Tests und eine kleine AGENTS.md. Der Workspace enthält keine Netzwerke, Secrets oder fremden Repositories.",
-      "The fictional queue-kit package contains an intentionally faulty retry function, local tests, and a small AGENTS.md. The workspace contains no network, secrets, or third-party repositories.",
+      "Das fiktive Paket queue-kit hat eine absichtlich fehlerhafte Retry-Funktion, lokale Tests und eine kleine AGENTS.md. Netzwerk, Secrets und fremde Repositories gibt es nicht.",
+      "The fictional queue-kit package has a deliberately faulty retry function, local tests and a small AGENTS.md. There is no network, no secrets and no third-party repository.",
     ),
     safety: text(
-      "Die Browser-Konsole simuliert `queue-kit` lokal. Der echte Lauf verwendet nur serverseitig erzeugte Dateien und eine feste Zehn-Schritt-Sequenz; Lernenden-Code, freie Befehle und Repositories werden nicht angenommen.",
-      "The browser console simulates `queue-kit` locally. The real run uses only server-generated files and a fixed ten-step sequence; learner code, free-form commands, and repositories are not accepted.",
+      "Die Browser-Konsole simuliert `queue-kit` lokal. Der echte Lauf nutzt nur Dateien vom Server und eine feste Zehn-Schritt-Sequenz; eigener Code, freie Befehle und Repositories sind ausgeschlossen.",
+      "The browser console simulates `queue-kit` locally. The real run uses only server-generated files and a fixed ten-step sequence; your own code, free commands and repositories are not accepted.",
     ),
     completionCriteria: [
       text(
-        "Task-Spec nennt Scope, Nicht-Ziele, Akzeptanzkriterien und erlaubte Checks.",
-        "The task spec states scope, non-goals, acceptance criteria, and allowed checks.",
+        "Die Task-Spec nennt Scope, Nicht-Ziele, Akzeptanzkriterien und erlaubte Checks.",
+        "The task spec states scope, non-goals, acceptance criteria and allowed checks.",
       ),
       text(
-        "Die feste serverseitige Sequenz zeigt den erwarteten roten Test, wendet den vorgegebenen begrenzten Fix an und besteht die nachfolgenden Checks.",
-        "The fixed server-side sequence shows the expected failing test, applies the supplied bounded fix, and passes the subsequent checks.",
+        "Die feste Serversequenz zeigt den erwarteten roten Test, wendet den vorgegebenen Fix an und besteht die folgenden Checks.",
+        "The fixed server sequence shows the expected failing test, applies the supplied fix and passes the following checks.",
       ),
       text(
-        "Der finale Diff enthält keine Nebenänderungen und wird gegen jedes Kriterium geprüft.",
-        "The final diff contains no unrelated changes and is checked against every criterion.",
+        "Der finale Diff hat keine Nebenänderungen und ist gegen jedes Kriterium geprüft.",
+        "The final diff has no unrelated changes and is checked against every criterion.",
       ),
     ],
     stages: stages({
       ground: [
         text(
-          "Lies Instruktionen, kartiere den Fehler und begrenze den zulässigen Scope.",
-          "Read the instructions, map the defect, and bound the permitted scope.",
+          "Lies die Anleitung, lokalisiere den Fehler und begrenze den Scope.",
+          "Read the instructions, locate the defect and bound the scope.",
         ),
         text(
           "Task-Spec mit Akzeptanzkriterien",
@@ -678,8 +678,8 @@ export const COURSE_PROJECT_CONFIGS = {
       ],
       build: [
         text(
-          "Erprobe den vorgegebenen Fix in der Browser-Simulation; diese lokale Queue-Kit-Übung erzeugt keine Abnahme-Evidenz.",
-          "Rehearse the supplied fix in the browser simulation; this local queue-kit exercise produces no acceptance evidence.",
+          "Probe den vorgegebenen Fix in der Browser-Simulation; diese Übung zählt nicht als Abnahmebeleg.",
+          "Rehearse the supplied fix in the browser simulation; this exercise does not count as acceptance evidence.",
         ),
         text(
           "Nicht verifizierende Patch-Probe",
@@ -688,25 +688,25 @@ export const COURSE_PROJECT_CONFIGS = {
       ],
       run: [
         text(
-          "Starte die feste Zehn-Schritt-Sequenz im frischen serverseitigen Sandbox-Repository.",
-          "Start the fixed ten-step sequence in the fresh server-side Sandbox repository.",
+          "Starte die feste Zehn-Schritt-Sequenz im frischen Sandbox-Repository auf dem Server.",
+          "Start the fixed ten-step sequence in a fresh server-side Sandbox repository.",
         ),
         text(
-          "Session-Befehlsprotokoll mit Exit-Codes",
-          "Session command transcript with exit codes",
+          "Befehlsprotokoll mit Exit-Codes",
+          "Command transcript with exit codes",
         ),
       ],
       verify: [
         text(
           "Prüfe Diff, Grenzfälle, Fehlermeldungen und Akzeptanzkriterien.",
-          "Review the diff, edge cases, failure messages, and acceptance criteria.",
+          "Review diff, edge cases, failure messages and acceptance criteria.",
         ),
         text("Kriterienbasierter Diff-Review", "Criteria-based diff review"),
       ],
       transfer: [
         text(
-          "Schreibe eine knappe Übergabe mit Änderung, Beleg, Risiko und offenem Punkt.",
-          "Write a concise handoff covering change, evidence, risk, and open issue.",
+          "Schreib eine kurze Übergabe mit Änderung, Beleg, Risiko und offenem Punkt.",
+          "Write a short handoff: change, evidence, risk, open issue.",
         ),
         text("Reviewfähige Übergabenotiz", "Review-ready handoff note"),
       ],
@@ -717,46 +717,46 @@ export const COURSE_PROJECT_CONFIGS = {
     courseSlug: "claude",
     title: text("Das Grounding-Labor", "The Grounding Lab"),
     mission: text(
-      "Entwickle zwei Promptvarianten für ein synthetisches Quellenpaket, vergleiche die Antworten und redliniere jede unbelegte Aussage.",
-      "Develop two prompt variants for a synthetic source packet, compare their answers, and redline every unsupported claim.",
+      "Schreib zwei Promptvarianten für ein Quellenpaket, vergleiche die Antworten und redliniere jede unbelegte Aussage.",
+      "Write two prompt variants for a source packet, compare the answers and redline every unsupported claim.",
     ),
     artifact: text(
-      "Provider-gestütztes Prompt-Paket mit zwei echten Antworten, Claim-Evidenz-Redlining und vierdimensionaler Eval-Rubrik",
-      "Provider-backed prompt package with two real responses, claim-evidence redlining, and a four-dimension evaluation rubric",
+      "Prompt-Paket mit zwei echten Provider-Antworten, Claim-Evidenz-Redline und Eval-Rubrik in vier Dimensionen",
+      "Prompt package with two real provider responses, claim-evidence redline and a four-dimension eval rubric",
     ),
     scenario: text(
-      "Ein fiktives Museum plant eine Ausstellung aus einem synthetischen Quellenpaket. Einige Notizen widersprechen sich; eine attraktive Behauptung wird von keiner Quelle getragen.",
-      "A fictional museum is planning an exhibition from a synthetic source packet. Some notes conflict, and one attractive claim is unsupported by any source.",
+      "Ein fiktives Museum plant eine Ausstellung aus einem synthetischen Quellenpaket. Einige Notizen widersprechen sich, eine attraktive Behauptung hat keine Quelle.",
+      "A fictional museum plans an exhibition from a synthetic source packet. Some notes conflict, and one attractive claim has no source.",
     ),
     safety: text(
-      "Nur das bereitgestellte Fantasiearchiv verwenden. Das Labor ist kein vertraulicher Dokumentenkanal und behauptet keine automatische Faktengarantie.",
-      "Use only the supplied fictional archive. The lab is not a channel for confidential documents and makes no automatic factual-guarantee claim.",
+      "Nur das mitgelieferte Fantasiearchiv verwenden. Lade keine vertraulichen Dokumente hoch; das Labor garantiert keine Fakten.",
+      "Use only the supplied fictional archive. Do not upload confidential documents; the lab guarantees no facts.",
     ),
     completionCriteria: [
       text(
-        "Basis- und Grounding-Prompt laufen mit identischem Quellenpaket; nur der Grounding-Vertrag erzwingt Quellenbindung, Unsicherheitsformat und Verweigerung.",
-        "Baseline and grounded prompts run against the same source packet; only the grounded contract enforces source binding, uncertainty format, and refusal behavior.",
+        "Basis- und Grounding-Prompt laufen mit demselben Quellenpaket; nur der Grounding-Prompt erzwingt Quellenbindung, Unsicherheitsformat und Verweigerung.",
+        "Baseline and grounded prompts run on the same source packet; only the grounded prompt enforces source binding, uncertainty format and refusal.",
       ),
       text(
-        "Drei feste Claims sind einer Quelle, einem Konflikt oder einer Beleglücke zugeordnet und als beibehalten, eingeschränkt oder entfernt redigiert.",
-        "Three fixed claims map to a source, conflict, or evidence gap and are redlined as retained, qualified, or removed.",
+        "Drei feste Claims sind Quelle, Konflikt oder Beleglücke zugeordnet und als beibehalten, eingeschränkt oder entfernt markiert.",
+        "Three fixed claims map to a source, conflict or evidence gap and are marked retained, qualified or removed.",
       ),
       text(
-        "Die Eval-Rubrik bewertet Faktentreue, Vollständigkeit, Kalibrierung und Format mit getrennten verankerten Punktwerten von 1 bis 4.",
-        "The evaluation rubric scores factuality, completeness, calibration, and format separately on anchored scales from 1 to 4.",
+        "Die Rubrik bewertet Faktentreue, Vollständigkeit, Kalibrierung und Format getrennt mit verankerten Werten von 1 bis 4.",
+        "The rubric scores factuality, completeness, calibration and format separately on anchored scales from 1 to 4.",
       ),
     ],
     stages: stages({
       ground: [
         text(
-          "Inventarisiere Quellen, Konflikte, fehlende Belege und zulässige Schlussfolgerungen.",
-          "Inventory sources, conflicts, missing evidence, and permitted inferences.",
+          "Erfasse Quellen, Konflikte, fehlende Belege und zulässige Schlüsse.",
+          "List sources, conflicts, missing evidence and permitted inferences.",
         ),
         text("Quellen- und Konfliktkarte", "Source and conflict map"),
       ],
       build: [
         text(
-          "Baue Basis- und Grounding-Prompt mit identischem Auftrag.",
+          "Baue Basis- und Grounding-Prompt für denselben Auftrag.",
           "Build baseline and grounded prompts for the same task.",
         ),
         text(
@@ -766,18 +766,18 @@ export const COURSE_PROJECT_CONFIGS = {
       ],
       run: [
         text(
-          "Führe beide Varianten gegen dasselbe synthetische Quellenpaket aus.",
-          "Run both variants against the same synthetic source packet.",
+          "Führe beide Varianten mit demselben Quellenpaket aus.",
+          "Run both variants on the same source packet.",
         ),
         text(
-          "Paralleler Antwort- und Nutzungsvergleich",
-          "Side-by-side response and usage comparison",
+          "Antwort- und Nutzungsvergleich",
+          "Response and usage comparison",
         ),
       ],
       verify: [
         text(
-          "Ordne Claims, Zitate, Auslassungen und Unsicherheit mit einer Rubrik zu.",
-          "Map claims, citations, omissions, and uncertainty with a rubric.",
+          "Bewerte Claims, Zitate, Auslassungen und Unsicherheit mit einer Rubrik.",
+          "Rate claims, citations, omissions and uncertainty with a rubric.",
         ),
         text(
           "Claim-Evidenz-Matrix und Eval",
@@ -786,7 +786,7 @@ export const COURSE_PROJECT_CONFIGS = {
       ],
       transfer: [
         text(
-          "Extrahiere ein wiederverwendbares Grounding-Muster samt Abbruchregel.",
+          "Leite ein wiederverwendbares Grounding-Muster mit Abbruchregel ab.",
           "Extract a reusable grounding pattern with a stop rule.",
         ),
         text(
@@ -804,77 +804,77 @@ export const COURSE_PROJECT_CONFIGS = {
       "The Delegation Control Brief",
     ),
     mission: text(
-      "Formuliere einen begrenzten Delegationsprompt, fordere genau eine Modellantwort an und bewerte sie mit lokal gesetzten Budget-, Freigabe-, Abbruch- und Übergabekontrollen. Es werden keine Agenten oder Werkzeuge ausgeführt.",
-      "Write a bounded delegation prompt, request exactly one model completion, and assess it with locally selected budget, approval, stop, and handoff controls. No agents or tools are executed.",
+      "Schreib einen begrenzten Delegationsprompt, hol genau eine Modellantwort ein und bewerte sie mit lokal gesetzten Budget-, Freigabe-, Abbruch- und Übergabekontrollen. Agenten oder Werkzeuge laufen nicht.",
+      "Write a bounded delegation prompt, request exactly one model completion, and assess it with local budget, approval, stop and handoff controls. No agents or tools are executed.",
     ),
     artifact: text(
-      "Lokal validierter Projektnachweis zu einer einzelnen Provider-Antwort mit Delegations-, Kontroll- und Interventionsplan",
-      "Locally validated project evidence for one provider completion with a delegation, control, and intervention plan",
+      "Lokal validierter Projektnachweis: eine Provider-Antwort mit Delegations-, Kontroll- und Eingriffsplan",
+      "Locally validated project evidence: one provider completion with a delegation, control and intervention plan",
     ),
     scenario: text(
-      "Das fiktive Unternehmen Lumen Tools plant aus synthetischen Support-Tickets einen Verbesserungsbericht. Scout, Analyst, Kritiker und Redakteur sind Rollen im lokalen Delegationsplan, keine ausgeführten Agenten.",
-      "The fictional company Lumen Tools plans an improvement report from synthetic support tickets. Scout, analyst, critic, and editor are roles in the local delegation plan, not executed agents.",
+      "Die fiktive Firma Lumen Tools plant aus synthetischen Support-Tickets einen Verbesserungsbericht. Scout, Analyst, Kritiker und Redakteur sind Rollen im lokalen Plan; kein Agent läuft.",
+      "The fictional company Lumen Tools plans an improvement report from synthetic support tickets. Scout, analyst, critic and editor are roles in the local plan; no agent runs.",
     ),
     safety: text(
-      "Alle Tickets und Organisationen sind erfunden. Kein autonomer Versand, keine externen Tools und keine echten Kunden-, Team- oder Betriebsdaten.",
-      "All tickets and organizations are fictional. No autonomous sending, external tools, or real customer, team, or operational data.",
+      "Alle Tickets und Firmen sind erfunden. Kein autonomer Versand, keine externen Tools, keine echten Kunden-, Team- oder Betriebsdaten.",
+      "All tickets and companies are fictional. No autonomous sending, no external tools, no real customer, team or operational data.",
     ),
     completionCriteria: [
       text(
-        "Der Prompt begrenzt Auftrag, zulässigen Kontext, Ausgabeformat und verbotene Aktionen.",
-        "The prompt bounds the task, allowed context, output format, and prohibited actions.",
+        "Der Prompt begrenzt Auftrag, Kontext, Ausgabeformat und verbotene Aktionen.",
+        "The prompt bounds task, allowed context, output format and prohibited actions.",
       ),
       text(
-        "Eine echte Provider-Antwort liegt vor; Budget, Freigabe, Abbruch und Übergabe sind als lokale Plankontrollen gesetzt.",
-        "A real provider completion exists; budget, approval, stop, and handoff are recorded as local planning controls.",
+        "Eine echte Provider-Antwort liegt vor; Budget, Freigabe, Abbruch und Übergabe sind als lokale Kontrollen gesetzt.",
+        "A real provider completion exists; budget, approval, stop and handoff are set as local controls.",
       ),
       text(
-        "Die lokale Auswertung wählt eine Intervention und trennt Ergebnisqualität, Fehler, Reviewaufwand und geschätzten Aufwand.",
-        "The local assessment selects an intervention and separates output quality, errors, review effort, and estimated effort.",
+        "Die Auswertung wählt einen Eingriff und trennt Ergebnisqualität, Fehler, Reviewaufwand und geschätzten Aufwand.",
+        "The assessment picks an intervention and separates output quality, errors, review effort and estimated effort.",
       ),
     ],
     stages: stages({
       ground: [
         text(
-          "Definiere Ziel, geplante Rollen, Nicht-Ziele, Budgetgrenze und menschliche Verantwortung.",
-          "Define the goal, planned roles, non-goals, budget limit, and human accountability.",
+          "Lege Ziel, Rollen, Nicht-Ziele, Budgetgrenze und menschliche Verantwortung fest.",
+          "Define goal, roles, non-goals, budget limit and human accountability.",
         ),
         text("Begrenzter Delegationsauftrag", "Bounded delegation brief"),
       ],
       build: [
         text(
-          "Schreibe Kontext und Prompt und setze die lokalen Budget-, Freigabe-, Abbruch- und Übergabekontrollen.",
-          "Write the context and prompt and select the local budget, approval, stop, and handoff controls.",
+          "Schreib Kontext und Prompt und setze Budget, Freigabe, Abbruch und Übergabe.",
+          "Write context and prompt; set budget, approval, stop and handoff.",
         ),
         text(
-          "Delegationsprompt und lokaler Kontrollplan",
-          "Delegation prompt and local control plan",
+          "Delegationsprompt und Kontrollplan",
+          "Delegation prompt and control plan",
         ),
       ],
       run: [
         text(
-          "Fordere für den synthetischen Auftrag genau eine Antwort vom freigegebenen Provider an.",
-          "Request exactly one completion from the allowed provider for the synthetic task.",
+          "Hol genau eine Antwort vom freigegebenen Provider ein.",
+          "Request exactly one completion from the allowed provider.",
         ),
         text(
-          "Provider-Antwort im aktuellen Browserlauf",
-          "Provider completion in the current browser session",
+          "Provider-Antwort in dieser Sitzung",
+          "Provider completion in this session",
         ),
       ],
       verify: [
         text(
-          "Bewerte die einzelne Antwort gegen Evidenz, Budgetgrenze, Freigaberegel und menschlichen Reviewaufwand.",
-          "Assess the single completion against evidence, the budget limit, approval rule, and human review effort.",
+          "Bewerte die Antwort gegen Evidenz, Budgetgrenze, Freigaberegel und Reviewaufwand.",
+          "Assess the completion against evidence, budget limit, approval rule and review effort.",
         ),
         text(
-          "Lokale Output- und Interventionsbewertung",
-          "Local output and intervention assessment",
+          "Output- und Eingriffsbewertung",
+          "Output and intervention assessment",
         ),
       ],
       transfer: [
         text(
-          "Plane Eigentum, Monitoring, Incident-Weg, Abschaltung und nächste Iteration für einen künftigen echten Prozess.",
-          "Plan ownership, monitoring, incident path, shutdown, and the next iteration for a future real process.",
+          "Plane Verantwortung, Monitoring, Incident-Weg, Abschaltung und nächste Iteration für einen echten Prozess.",
+          "Plan ownership, monitoring, incident path, shutdown and next iteration for a real process.",
         ),
         text("Geplantes Delegationsrunbook", "Planned delegation runbook"),
       ],

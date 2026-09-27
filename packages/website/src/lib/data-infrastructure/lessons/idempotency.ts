@@ -31,46 +31,46 @@ const lesson: DataInfraLesson = {
       title: "Three guarantees",
       readTimeMinutes: 2,
       content:
-        "A messaging guarantee means nothing until someone names the boundary and the failure model:\n\n- **At-most-once.** The protocol can omit an effect after an uncertain failure while avoiding replay within its scope.\n- **At-least-once.** Work gets retried or replayed, so duplicate effects are possible unless the consumer controls them. Source durability and retention still bound any loss claim.\n- **Exactly-once.** The committed state inside a defined source-process-sink path looks as if each input affected it once. Implementations use transactions, checkpoints, coordinated offsets, or idempotent effects.\n\nIdempotency is one important mechanism. It is not a universal translation of exactly-once. A Kafka-to-Kafka transaction atomically commits output and consumed offsets under participating configuration. An HTTP payment call needs a stable idempotency contract at the provider, request-identity retention, and reconciliation for unknown outcomes.",
+        "A delivery guarantee needs a named boundary and failure model:\n\n- **At-most-once** can omit an effect after an uncertain failure.\n- **At-least-once** can duplicate effects unless the consumer controls them; source durability and retention still bound any loss claim.\n- **Exactly-once** means committed state on a defined source-process-sink path looks as if each input affected it once, through transactions, checkpoints, coordinated offsets or idempotent effects.\n\nIdempotency is one of these mechanisms. An HTTP payment call, for example, needs the provider's idempotency contract, retained request identities and reconciliation for unknown outcomes.",
       keyTakeaway:
-        "Never accept an exactly-once claim without its source, state, sink, configuration, and failure boundary.",
+        "An exactly-once claim is incomplete without source, state, sink, configuration and failure boundary.",
     },
     {
       id: "s2",
       title: "Idempotency patterns",
       readTimeMinutes: 3,
       content:
-        "Three patterns make a bounded effect replay-safe while their assumptions hold:\n\n**01 · UPSERT by key.** The source must carry one deterministic winning row per key, and older events must not overwrite newer state by accident.\n\n```sql\nMERGE INTO fact_orders dst\nUSING new_orders src\n  ON dst.order_id = src.order_id\nWHEN MATCHED THEN UPDATE SET ...\nWHEN NOT MATCHED THEN INSERT ...\n```\n\n**02 · Window replacement.** The transaction or table-format commit must publish a complete deterministic replacement for the window. External readers must never observe the delete without the insert.\n\n```sql\nBEGIN;\nDELETE FROM agg_daily WHERE day = '2026-04-15';\nINSERT INTO agg_daily SELECT ... WHERE day = '2026-04-15';\nCOMMIT;\n```\n\n**03 · Deduplication by event identity.** The producer must emit a stable identity for the logical event, and the sink must enforce uniqueness for at least the retry horizon.\n\n```sql\nINSERT INTO sink (event_id, ...)\nVALUES (...)\nON CONFLICT (event_id) DO NOTHING;\n```\n\nNot one of these patterns makes unrelated API calls, notifications, files, or nondeterministic transformations idempotent.",
+        "Three patterns make a bounded effect replay-safe while their assumptions hold:\n\n**01 · UPSERT by key.** The source needs one deterministic winning row per key, and older events must not overwrite newer state.\n\n```sql\nMERGE INTO fact_orders dst\nUSING new_orders src\n  ON dst.order_id = src.order_id\nWHEN MATCHED THEN UPDATE SET ...\nWHEN NOT MATCHED THEN INSERT ...\n```\n\n**02 · Window replacement.** One transaction or table commit publishes a complete, deterministic replacement; readers never see the delete without the insert.\n\n```sql\nBEGIN;\nDELETE FROM agg_daily WHERE day = '2026-04-15';\nINSERT INTO agg_daily SELECT ... WHERE day = '2026-04-15';\nCOMMIT;\n```\n\n**03 · Deduplication by event identity.** The producer emits a stable event identity, and the sink enforces uniqueness for at least the retry horizon.\n\n```sql\nINSERT INTO sink (event_id, ...)\nVALUES (...)\nON CONFLICT (event_id) DO NOTHING;\n```\n\nNone of them makes API calls, notifications, files or nondeterministic transformations idempotent.",
     },
     {
       id: "s3",
       title: "Backfill, properly",
       readTimeMinutes: 2,
       content:
-        "A backfill reprocesses historical input after a logic change, data correction, or schema addition. Write down six things before you run one: (1) an explicit input window and immutable source version; (2) the operation identity and duplicate-effect policy; (3) dependencies between adjacent windows; (4) interaction with live writes; (5) output validation and rollback; and (6) resource and rate limits.\n\nParallel and repeated windows are safe only when the job's stated invariants prove they commute. When they do not, serialize them, or isolate the output and reconcile before promotion.",
+        "A backfill reprocesses historical input after a logic change, data correction or schema addition. Before you run one, write down:\n\n1. input window and immutable source version\n2. operation identity and duplicate-effect policy\n3. dependencies between adjacent windows\n4. interaction with live writes\n5. output validation and rollback\n6. resource and rate limits\n\nRun windows in parallel or repeatedly only when the job's invariants prove they commute. Otherwise serialize them, or isolate the output and reconcile before promotion.",
     },
     {
       id: "s4",
       title: "Kafka exactly-once",
       readTimeMinutes: 3,
       content:
-        "Kafka provides primitives for a scoped transactional read-process-write path:\n\n1. **Idempotent production.** Producer sequence numbers let brokers deduplicate eligible retries within the producer protocol and configuration.\n2. **Transactions across Kafka partitions.** A transactional producer commits or aborts records atomically. Consumers configured for `read_committed` hide aborted transactional records.\n3. **Consumed offsets in the output transaction.** The application commits consumed offsets together with produced records, so visible Kafka output and progress advance together.\n\nThat delivers exactly-once processing for Kafka input and Kafka output when the application follows the transaction protocol and broker and consumer settings participate. It covers no source before Kafka and no sink outside Kafka.\n\nFlink likewise separates exactly-once managed state from end-to-end output. Its official fault-tolerance documentation requires replayable sources and transactional or idempotent sinks for end-to-end exactly-once. Connector guarantees vary by connector and version. Build a matrix for the exact source, state, sink, and configuration, then inject failures before and after each commit boundary.",
+        "Kafka offers three building blocks for a transactional read-process-write path:\n\n1. **Idempotent production.** Producer sequence numbers let brokers deduplicate eligible retries.\n2. **Transactions across partitions.** A transactional producer commits or aborts records atomically; `read_committed` consumers hide aborted records.\n3. **Offsets in the output transaction.** Consumed offsets commit with the produced records, so output and progress advance together.\n\nTogether they give exactly-once from Kafka input to Kafka output if the application follows the protocol; sources before Kafka and sinks outside it are not covered.\n\nFlink separates exactly-once managed state from end-to-end output, which needs replayable sources and transactional or idempotent sinks. Guarantees vary by connector and version, so build a matrix of source, state, sink and configuration and inject failures around each commit boundary.",
     },
     {
       id: "s4b",
       title: "Dead-letter queues",
       readTimeMinutes: 2,
       content:
-        "A **dead-letter path** catches records that cannot be processed under the current contract. It preserves failure evidence without blocking all valid records. It also changes completeness and ordering, which puts it inside the processing guarantee.\n\nStore only what you need: a protected reference or encrypted payload, a safe error code, source identity and position, schema version, first-seen time, retry count, and ownership. Raw records and exception messages carry personal data, credentials, or internal details. Apply access control, minimization, retention, and redaction instead of copying them blindly.\n\nDefine which failures are retryable, which are quarantined, whether a record can bypass ordering, how replay is authorized, and how repaired output is reconciled. Set alert thresholds from expected invalid-input rates and user impact. Non-zero traffic is not automatically an incident.",
+        "A **dead-letter path** holds records the current contract cannot process, without blocking valid ones. It changes completeness and ordering, so it is part of the processing guarantee.\n\nStore only a protected reference or encrypted payload, a safe error code, source identity and position, schema version, first-seen time, retry count and owner. Raw records and exception messages can carry personal data, credentials or internal details, so apply access control, minimization, retention and redaction.\n\nDefine which failures are retried or quarantined, whether a record may bypass ordering, who authorizes replay and how repaired output is reconciled. Set alert thresholds from expected invalid-input rates and user impact.",
       keyTakeaway:
-        "A DLQ doesn't fix the bug, it makes failure observable and recoverable instead of invisible and permanent.",
+        "A DLQ makes failures visible and recoverable; fixing the bug stays your job.",
     },
     {
       id: "s5",
       title: "Schema evolution",
       readTimeMinutes: 2,
       content:
-        "Schema registries expose **backward**, **forward**, and **full** compatibility modes. What each one means depends on the serialization format, transitive setting, subject strategy, and registry implementation. A syntactically compatible schema can still break business logic.\n\nSelect compatibility from deployment order, replay requirements, retention, and consumer diversity. Test old data with new readers, and new data with the old readers you must support. A strict mode blocks some incompatible registrations. It cannot populate new historical fields, validate semantics, or coordinate a downstream rollout.",
+        "Schema registries offer **backward**, **forward** and **full** compatibility. Their exact meaning depends on format, transitive setting, subject strategy and registry, and a compatible schema can still break business logic.\n\nChoose the mode from deployment order, replay needs, retention and consumer variety. Test old data with new readers and new data with the old readers you support. A strict mode blocks some incompatible registrations; it does not backfill new fields, check semantics or coordinate downstream rollouts.",
     },
     {
       id: "s6",
@@ -83,7 +83,7 @@ const lesson: DataInfraLesson = {
       title: "Vocab",
       readTimeMinutes: 2,
       content:
-        "- **Idempotency key**, a stable identity for one logical operation. Server retention, parameter matching, concurrent requests, response replay, and expiry define its real contract.\n- **Two-phase commit**, coordinates prepare and commit across participating resources. It buys a specific atomicity model and costs availability and recovery work; support varies.\n- **Outbox**, commits business state and an outbox row in one database transaction, then publishes asynchronously with retry and deduplication.\n- **Hot backfill**, overlaps live writes and therefore needs conflict policy, resource isolation, ordering, and reconciliation, not only row-level idempotency.\n- **High-water mark in batch**, a recorded source position for incremental selection. Timestamps alone miss late or corrected data; choose a token and overlap policy from source semantics.",
+        "- **Idempotency key**, a stable identity for one logical operation.\n- **Two-phase commit**, coordinates prepare and commit across participating resources.\n- **Outbox**, business state and an outbox row in one transaction, published asynchronously.\n- **Hot backfill**, a backfill that overlaps live writes.\n- **High-water mark in batch**, a recorded source position for incremental selection.",
     },
   ],
   widgets: [
@@ -99,13 +99,13 @@ const lesson: DataInfraLesson = {
           'A vendor states "exactly-once delivery." Which response identifies the missing engineering information?',
         options: [
           '"Great, that solves duplicates."',
-          '"Name the source, committed state, sink, configuration, failure model, and behavior for external side effects."',
+          '"Which source, state, sink, config, failures and side effects does it cover?"',
           '"Does it support TLS?"',
           '"How does it compare to at-most-once?"',
         ],
         correct: 1,
         explanation:
-          "Exactly-once can be a valid scoped committed-output property. The claim stays incomplete until it identifies the participating source, processing state, sink, transaction or idempotency mechanism, configuration, and covered failures. External APIs and other non-participating effects need their own contracts and reconciliation.",
+          "Exactly-once holds only within a named source, state, sink, mechanism, configuration and failure set. External APIs and other effects outside that scope need their own contracts and reconciliation.",
       },
     },
     {
@@ -117,16 +117,16 @@ const lesson: DataInfraLesson = {
         title: "Backfill design",
         copy: DATA_INFRA_QUIZ_COPY,
         question:
-          'You wrote a job that runs daily for "yesterday\'s data." A bug is found, going back 90 days. What change do you make to the job before backfilling?',
+          'A daily job processes "yesterday\'s data." A bug affects the last 90 days. What do you change before backfilling?',
         options: [
           "Just run it 90 times.",
-          "Parameterize the date window, pin the source version, verify repeated and parallel-window behavior, isolate live writes, and define validation and rollback before execution.",
+          "Parameterize the window, pin the source, test reruns, isolate live writes, plan rollback.",
           "Restore from snapshot.",
           "Add more logging.",
         ],
         correct: 1,
         explanation:
-          "An explicit window is necessary and not sufficient. Historical input changes, adjacent windows share state, live writes conflict, and external effects escape rollback. Pin inputs and code, test the invariants, publish atomically, reconcile output, and keep a recovery path.",
+          "A date parameter alone is not enough: historical input changes, adjacent windows share state, live writes conflict and external effects escape rollback. Pin inputs and code, publish atomically and reconcile the output.",
       },
     },
     {
@@ -141,27 +141,27 @@ const lesson: DataInfraLesson = {
           {
             term: "Idempotency key",
             q: "How do APIs do it?",
-            a: "The client sends a stable operation identity. The server defines parameter matching, concurrent-request behavior, result retention, expiry, and whether it replays a response or only suppresses an effect.",
+            a: "The client sends a stable operation identity. The server defines parameter matching, concurrent requests, retention, expiry and whether it replays the response.",
           },
           {
             term: "Two-phase commit",
             q: "When and why",
-            a: "2PC coordinates prepare and commit across participating resources. It buys atomicity and costs coordination and recovery complexity. An outbox is an alternative for a database-plus-message workflow, not a universal replacement.",
+            a: "2PC buys atomicity across participating resources at the cost of availability, coordination and recovery work; support varies. For database-plus-message flows, an outbox is the usual alternative.",
           },
           {
             term: "Outbox",
             q: "Why it beats 2PC",
-            a: "One database transaction writes business state and an outbox row. A publisher delivers the outbox asynchronously with retries. That removes the application-level dual write and still needs deduplication, retention, and monitoring.",
+            a: "One database transaction writes state and outbox row; a publisher delivers the row with retries. No dual write, but deduplication, retention and monitoring remain.",
           },
           {
             term: "Hot backfill",
             q: "When is it OK?",
-            a: 'When backfill runs touch the same partitions as live writes, you risk lock contention or version conflicts. "Cold" backfills run during off-peak. "Hot" backfills require row-level idempotency + ability to reconcile concurrent writes.',
+            a: 'When a backfill touches partitions with live writes, locks and version conflicts follow. Cold backfills run off-peak; hot ones need conflict rules, resource isolation, row-level idempotency and reconciliation.',
           },
           {
             term: "Watermark in batch",
             q: "Yes, batch has them too",
-            a: "An incremental job records a source position. A max timestamp alone misses late or corrected rows; use a source-defined change token or overlap window and deterministic deduplication where needed.",
+            a: "An incremental job records a source position. A max timestamp misses late or corrected rows; use a change token or an overlap window with deterministic deduplication.",
           },
         ],
       },

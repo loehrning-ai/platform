@@ -18,7 +18,7 @@ export default function Ch06Evaluate() {
       <Hero
         eyebrow="Chapter 06 · Evaluate"
         title='Pick the metric <em>before</em> <span class="accent">you pick the model.</span>'
-        hook="Metric and threshold encode error costs, class prevalence, calibration needs, and review capacity. Use the synthetic score distribution to see those tradeoffs."
+        hook="Metric and threshold encode error costs, class prevalence, calibration needs and review capacity. The synthetic score distribution shows these tradeoffs."
         meta={[
           { k: "Read", v: "8 min" },
           { k: "Focus", v: "Confusion · ROC · PR" },
@@ -45,7 +45,7 @@ export default function Ch06Evaluate() {
         <ul className="prose" style={{ paddingLeft: 20 }}>
           <li>
             <strong>Fraud or screening:</strong> when missed cases dominate,
-            demand high recall and cap review load and harm from false positives.
+            demand high recall and cap review load and false-positive harm.
           </li>
           <li>
             <strong>Spam filtering:</strong> when flagging legitimate mail is
@@ -54,20 +54,20 @@ export default function Ch06Evaluate() {
           </li>
           <li>
             <strong>Balanced classes:</strong> prevalence alone selects no
-            metric. Choose between ranking, probability accuracy, calibration,
+            metric; choose between ranking, probability accuracy, calibration
             and decision cost.
           </li>
           <li>
             <strong>Rare events:</strong> PR curves expose precision at
-            attainable recall and are sensitive to prevalence. Report the base
-            rate and compare both ranking and threshold metrics.
+            attainable recall and depend on prevalence; report base rate,
+            ranking and threshold metrics together.
           </li>
         </ul>
         <AntiPatterns
           items={[
-            "<b>Reporting accuracy alone on rare events.</b> At a 0.1% event rate, predicting every case as negative yields 99.9% accuracy while detecting no events.",
-            "<b>Mixing training and decision objectives without checking them.</b> A model optimized for log loss can still be thresholded for a cost target, but calibration and operating metrics both need validating.",
-            "<b>Default τ=0.5.</b> The threshold belongs to your cost ratio, not a library default.",
+            "<b>Reporting accuracy alone on rare events.</b> At a 0.1% event rate, always predicting negative gives 99.9% accuracy and detects nothing.",
+            "<b>Mixing training and decision objectives unchecked.</b> A log-loss model can be thresholded for a cost target; then validate calibration and operating metrics separately.",
+            "<b>Default τ=0.5.</b> Set the threshold from your cost ratio.",
           ]}
         />
       </section>
@@ -75,8 +75,7 @@ export default function Ch06Evaluate() {
       <Takeaway
         items={[
           "<b>Metric = value judgement.</b> You're saying which mistake is worse.",
-          "<b>Threshold is a lever, not a default.</b> Move it.",
-          `<b>Calibration concerns groups of predictions.</b> Among cases assigned about 0.7, roughly 70% should be positive over the stated population and time window; it is not a guarantee for one case.`,
+          `<b>Calibration concerns groups of predictions.</b> Among cases scored about 0.7, roughly 70% should be positive over the stated population and time window; it guarantees nothing for one case.`,
         ]}
       />
     </>

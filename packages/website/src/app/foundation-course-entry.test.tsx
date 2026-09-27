@@ -32,6 +32,7 @@ import KiUndGesellschaftPage from "./ki-und-gesellschaft/page";
 import { getModules } from "@/lib/ai-native/data";
 import { getBlocks } from "@/lib/course/data";
 import { __resetCacheForTests } from "@/lib/progress";
+import { expectCapsInsideScene, expectNoMennigeInScene } from "@/test/plakat-scene";
 
 beforeEach(() => {
   localeState.value = "en";
@@ -85,6 +86,14 @@ describe("foundation course entry contract", () => {
       ).filter((link) => link.classList.contains("bg-brand-orange"));
       expect(emphasizedLinks).toEqual([primary]);
       expect(frame?.querySelector("header")?.contains(primary)).toBe(true);
+      // The Grundlagenpfad band is Lemons (SPEC §2.2, §3.13): the header
+      // picks the scene up from the page, and the primary keeps its
+      // bg-brand-orange hook while reading Butter with an Ultramarin label.
+      expect(frame).toHaveAttribute("data-plakat-page", "lemons");
+      expect(frame?.querySelector("header")).toHaveAttribute("data-plakat-band", "");
+      expect(primary).toHaveClass("text-background");
+      expectNoMennigeInScene(container);
+      expectCapsInsideScene(container);
       // The hero reserves a progress slot, but a first-time visitor sees no
       // empty "0 / N · 0%" bar; it appears once a lesson is recorded
       // (covered in technical-course-progress.test.tsx).

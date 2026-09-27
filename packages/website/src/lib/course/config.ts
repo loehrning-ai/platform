@@ -62,7 +62,7 @@ export const KI_FUEHRERSCHEIN_CONFIG: CourseConfig = {
   certificateReferenceLabel:
     "Persönliche Teilnahmebestätigung: KI im Alltag verstehen",
   quizPassMessage:
-    "Herzlichen Glückwunsch! Du hast den KI-Führerschein bestanden.",
+    "Du hast den KI-Führerschein bestanden.",
   certificateFileStem: "KI-Fuehrerschein",
   recordNoun: {
     label: "Teilnahmebestätigung",
@@ -120,7 +120,7 @@ export const EU_AI_ACT_KURS_CONFIG: CourseConfig = {
   ],
   certificateReferenceLabel: "Kursinhalt: Verordnung (EU) 2024/1689",
   quizPassMessage:
-    "Herzlichen Glückwunsch! Du hast den EU AI Act Kurs bestanden.",
+    "Sie haben den EU AI Act Kurs bestanden.",
   certificateFileStem: "EU-AI-Act-Kurs",
   recordNoun: {
     label: "Teilnahmebestätigung",
@@ -185,7 +185,7 @@ export const AI_NATIVE_CONFIG: CourseConfig = {
   certificateReferenceLabel:
     "Capstone selbst eingereicht (nicht fremdbeurteilt)",
   quizPassMessage:
-    "Herzlichen Glückwunsch! Du hast den AI-Native Arbeitskurs bestanden.",
+    "Du hast den AI-Native Arbeitskurs bestanden.",
   certificateFileStem: "AI-Native-Arbeitskurs",
   recordNoun: {
     label: "Teilnahmebestätigung",
@@ -238,7 +238,7 @@ export const KI_UND_GESELLSCHAFT_CONFIG: CourseConfig = {
   certificateReferenceLabel:
     "Selbst ausgestellt: lokal generiert, nicht servergeprüft",
   quizPassMessage:
-    "Herzlichen Glückwunsch! Du hast KI und Gesellschaft abgeschlossen.",
+    "Du hast KI und Gesellschaft abgeschlossen.",
   certificateFileStem: "lernnachweis-ki-gesellschaft",
   recordNoun: {
     label: "Lernnachweis",

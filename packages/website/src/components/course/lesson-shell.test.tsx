@@ -82,6 +82,7 @@ vi.mock("framer-motion", async () => {
 import {
   LESSON_SHELL_SIDEBAR_STORAGE_KEY,
   LessonShell,
+  lessonScene,
   type LessonShellContentMode,
   type LessonShellReaderBar,
 } from "./lesson-shell";
@@ -645,5 +646,48 @@ describe("<LessonShell> reader focus mode", () => {
 
     fireEvent.keyDown(document, { key: "Escape" });
     expect(bar).not.toHaveAttribute("inert");
+  });
+});
+
+describe("<LessonShell> track scene", () => {
+  it("reads the track scene from the course route, with or without /en", () => {
+    expect(lessonScene("/kurse/open-source/claude/kurs/anatomy")).toBe("idea");
+    expect(lessonScene("/en/kurse/open-source/codex/kurs/L01")).toBe("idea");
+    expect(lessonScene("/kurse/open-source/ai-native-operator/mindset/2")).toBe("idea");
+    expect(lessonScene("/kurse/open-source/data-infrastructure/kurs/cap-pacelc")).toBe("bloom");
+    expect(lessonScene("/en/kurse/open-source/data-science/fund")).toBe("bloom");
+    expect(lessonScene("/kurse/open-source/data-engineering-fundamentals/home")).toBe("bloom");
+    expect(lessonScene("/ki-fuehrerschein/kurs/b1")).toBe("lemons");
+    expect(lessonScene("/en/ai-native/kurs/modul_1")).toBe("lemons");
+    // Book readers and unknown routes stay Druckschwarz; an explicit id wins.
+    expect(lessonScene("/buecher/ki-landschaft/01")).toBeUndefined();
+    expect(lessonScene("/kurse/open-source/claudette")).toBeUndefined();
+    expect(lessonScene(null)).toBeUndefined();
+    expect(lessonScene("/buecher/x", "data-science")).toBe("bloom");
+  });
+
+  it("marks the page scene and gives only the lesson H1 and Kopflinien the scene line", () => {
+    render(
+      <LessonShell
+        sidebar={<nav>Lektionen</nav>}
+        navOpen={false}
+        onNavOpenChange={() => {}}
+        navLabel="Testnavigation"
+        courseId="claude"
+      >
+        <h1>Anatomie eines Prompts</h1>
+      </LessonShell>,
+    );
+    const shell = document.querySelector("[data-lesson-shell]");
+    expect(shell).toHaveAttribute("data-plakat-page", "idea");
+    // Paper stays paper: the wrapper keeps the paper ground, never a scope.
+    expect(shell).toHaveClass("bg-background");
+    expect(shell?.className).not.toMatch(/plakat-/);
+    const content = document.querySelector("[data-lesson-shell-content]");
+    expect(content).toHaveClass(
+      "[&_h1]:text-scene-line",
+      "[&_[role=heading][aria-level='1']]:text-scene-line",
+      "[&_.border-t-2.border-foreground]:border-scene-line",
+    );
   });
 });

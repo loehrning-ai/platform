@@ -133,9 +133,6 @@ export function BuecherContent({
             >
               {copy.collectionHeading}
             </h2>
-            <p className="max-w-xl text-sm leading-relaxed text-muted-foreground sm:justify-self-end sm:text-right">
-              {copy.collectionDescription}
-            </p>
           </header>
 
           <div className="grid gap-6 sm:gap-12">
