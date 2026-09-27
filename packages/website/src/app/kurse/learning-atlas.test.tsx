@@ -756,9 +756,10 @@ describe("LearningAtlas phone ledger", () => {
     expect(goals).toHaveClass("flex", "w-max", "gap-2", "lg:grid", "lg:grid-cols-4", "lg:gap-0");
     const rail = goals.closest("[data-learning-goal-rail]");
     expect(rail).toHaveClass("-mx-4", "overflow-x-auto", "snap-x", "lg:mx-0", "lg:overflow-visible");
-    // The scrolling rail is exactly one chip row: no vertical padding or
-    // margin for ring room, because the chips draw their ring inset below lg.
-    expect(rail?.className).not.toMatch(/(?:^|\s)(?:[a-z]+:)*-?(?:p|m)[ytb]-/);
+    // The scrolling rail is exactly one chip row: no vertical padding (nor a
+    // negative margin hiding it) for ring room, because the chips draw their
+    // ring inset below lg.
+    expect(rail?.className).not.toMatch(/(?:^|\s)(?:[a-z0-9-]+:)*(?:p[ytb]|-m[ytb])-/);
 
     const buttons = within(goals).getAllByRole("button");
     expect(buttons).toHaveLength(4);
