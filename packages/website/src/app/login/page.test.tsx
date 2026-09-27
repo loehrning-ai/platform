@@ -289,6 +289,48 @@ describe("login locale surface", () => {
     ).rejects.toBe(REDIRECT);
     expect(mocks.redirect).toHaveBeenCalledWith("/en/kurse");
   });
+
+  // Open redirect: a signed-in learner opening
+  // /login?next=/en//evil.example was answered with Location //evil.example.
+  it.each(
+    (["de", "en"] as const).flatMap((locale) =>
+      [
+        "/en//evil.example/fake-login",
+        "/de//evil.example",
+        "/en/%2e//evil.example",
+        "/en/.//evil.example",
+        "/en/x/..//evil.example",
+      ].map((next) => [locale, next] as const),
+    ),
+  )(
+    "keeps a signed-in %s visitor on this origin for next=%s",
+    async (locale, next) => {
+      mocks.getRequestLocale.mockResolvedValue(locale);
+      mocks.getAuthenticatedUser.mockResolvedValue({
+        configured: true,
+        user: { id: "user-redirect" },
+        error: null,
+      });
+      mocks.getRuntimeFeatures.mockReturnValue({
+        account: true,
+        magicLink: false,
+        google: true,
+        github: false,
+        turnstileSiteKey: null,
+      });
+
+      await expect(
+        LoginPage({ searchParams: Promise.resolve({ next }) }),
+      ).rejects.toBe(REDIRECT);
+      expect(mocks.redirect).toHaveBeenCalledTimes(1);
+      const target = mocks.redirect.mock.calls[0]?.[0] as string;
+      expect(target).toBe(locale === "de" ? "/konto" : "/en/konto");
+      expect(target.startsWith("//")).toBe(false);
+      expect(new URL(target, "https://loehrning.invalid").origin).toBe(
+        "https://loehrning.invalid",
+      );
+    },
+  );
 });
 
 describe("login layout branches", () => {

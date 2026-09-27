@@ -4,6 +4,7 @@ import { withSentryConfig } from "@sentry/nextjs/config";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { normalizeSupabaseOrigin } from "./src/lib/supabase/config.ts";
+import { buildResourcePolicyHeaderRules } from "./src/lib/security/resource-policy.ts";
 import { buildSecurityHeaders } from "./security-headers.ts";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -80,6 +81,12 @@ const nextConfig: NextConfig = {
       source: "/:path*",
       headers: SECURITY_HEADERS,
     },
+    // Cross-Origin-Resource-Policy: same-origin on the per-session surfaces
+    // (/api, the account and the OAuth consent trees). Not site-wide: social
+    // preview images, covers and fonts must stay loadable by other origins.
+    // See src/lib/security/resource-policy.ts for why CORS reads of the public
+    // machine JSON under /api are unaffected.
+    ...buildResourcePolicyHeaderRules(),
     {
       // Font filenames are explicitly versioned, so they can use immutable
       // caching without trapping a future face revision behind the same URL.

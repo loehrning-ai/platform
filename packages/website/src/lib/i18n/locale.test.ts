@@ -73,6 +73,53 @@ describe("locale path contract", () => {
     expect(parseLocalePathname("/%2fadmin").valid).toBe(false);
   });
 
+  // Stripping the locale prefix must never expose a scheme-relative path:
+  // `/en//evil.example` would otherwise parse to `//evil.example`, and
+  // localizeHref(…, "de") would return it as a navigation target.
+  it("rejects a locale prefix followed by a scheme-relative path", () => {
+    for (const value of [
+      "/de//evil.com",
+      "/en//evil.com",
+      "/en//evil.com/path?x=1#y",
+      "/de///evil.com",
+    ]) {
+      expect(parseLocalePathname(value), value).toMatchObject({
+        valid: false,
+        explicitLocale: null,
+      });
+      expect(parseLocalePathname(value).pathname.startsWith("//")).toBe(false);
+      expect(canonicalLocalePathname(value), value).toBeNull();
+      expect(localizeHref(value, "de"), value).toBe("/");
+      expect(localizeHref(value, "en"), value).toBe("/en");
+    }
+    expect(localizeHref("/en//evil.com", "de")).toBe("/");
+    // Single-slash locale paths keep working.
+    expect(parseLocalePathname("/en/kurse")).toMatchObject({
+      pathname: "/kurse",
+      valid: true,
+    });
+    expect(parseLocalePathname("/de/")).toMatchObject({
+      pathname: "/",
+      valid: true,
+    });
+  });
+
+  it("never returns a scheme-relative href for dot-segment variants", () => {
+    for (const value of [
+      "/en/%2e//evil.com",
+      "/en/.//evil.com",
+      "/en/x/..//evil.com",
+      "/de/%2E//evil.com",
+    ]) {
+      for (const locale of ["de", "en"] as const) {
+        const href = localizeHref(value, locale);
+        expect(href.startsWith("//"), `${value} ${locale}`).toBe(false);
+        expect(href.startsWith("/\\"), `${value} ${locale}`).toBe(false);
+        expect(href).toBe(locale === "de" ? "/" : "/en");
+      }
+    }
+  });
+
   it("keeps APIs, auth callbacks, and machine endpoints unprefixed", () => {
     for (const path of [
       "/api/progress",

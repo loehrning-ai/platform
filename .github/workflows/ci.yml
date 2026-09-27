@@ -305,7 +305,8 @@ jobs:
   # `pull-requests: write` is scoped to this job alone; the job skips itself
   # when no learner-facing file changed. Fork pull requests get a read-only
   # token, so the comment step is limited to same-repository heads and the
-  # report stays visible in the job log.
+  # report stays visible in the job log. The upsert edits only a comment that
+  # github-actions[bot] wrote; a marker comment from anyone else is ignored.
   # ---------------------------------------------------------------------------
   voice-report:
     name: voice report
@@ -370,7 +371,16 @@ jobs:
               issue_number,
               per_page: 100,
             });
-            const existing = comments.find((comment) => comment.body?.startsWith(marker));
+            // Anyone can post a comment that starts with the marker, so only
+            // a comment this job's token wrote counts as the report. The
+            // "[bot]" login suffix is reserved for GitHub Apps, so no user
+            // account can hold this login.
+            const existing = comments.find(
+              (comment) =>
+                comment.user?.type === "Bot" &&
+                comment.user?.login === "github-actions[bot]" &&
+                comment.body?.startsWith(marker),
+            );
             if (existing) {
               await github.rest.issues.updateComment({ owner, repo, comment_id: existing.id, body });
             } else {

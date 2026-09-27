@@ -3,6 +3,7 @@ import { recordAgentAccessEvent } from "@/lib/agent-access/record";
 import { readAgentProgressSnapshot } from "@/lib/agent-access/progress-snapshot";
 import { reportApiError } from "@/lib/observability/api-error";
 import { isAgentAccessReady } from "@/lib/provider-readiness";
+import { withPrivateNoStore } from "@/lib/security/private-response";
 import {
   consumeRateLimit,
   hashedClientRateLimitKey,
@@ -244,7 +245,15 @@ export async function POST(request: Request): Promise<Response> {
       ? createHandler(authenticated)
       : handleMcpRequest;
     const response = await handle(withReplayedBody(request, body.text));
-    return finish(response, "served", startedAt);
+    // The SDK sets only Content-Type, or `no-cache, no-transform` on an event
+    // stream. An authenticated answer carries one learner's progress, so every
+    // transport answer is marked private and uncacheable and varies on the
+    // credential; the body streams through untouched.
+    return finish(
+      withPrivateNoStore(response, { vary: ["Authorization"] }),
+      "served",
+      startedAt,
+    );
   } catch (error) {
     reportApiError({
       route: ROUTE,

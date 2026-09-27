@@ -113,7 +113,10 @@ function chatRequest(
   });
 }
 
+// The owner binding is required, as on every other account route; the chat
+// panel always sends the account id it rendered for.
 const CONVERSATION = {
+  expectedOwnerId: USER_ID,
   messages: [{ role: "user", content: "Welche Kurse gibt es?" }],
 };
 
@@ -251,6 +254,7 @@ describe("POST /api/account/chat gates", () => {
   it("refuses a body over the payload ceiling", async () => {
     const response = await POST(
       chatRequest({
+        ...CONVERSATION,
         messages: [{ role: "user", content: "a".repeat(300_000) }],
       }),
     );
@@ -261,6 +265,7 @@ describe("POST /api/account/chat gates", () => {
   it("refuses one message over the per-message ceiling", async () => {
     const response = await POST(
       chatRequest({
+        ...CONVERSATION,
         messages: [{ role: "user", content: "a".repeat(40_000) }],
       }),
     );
@@ -283,6 +288,18 @@ describe("POST /api/account/chat gates", () => {
     expect(response.status).toBe(409);
     expect(await jsonOf(response)).toEqual({ error: "chat_owner_mismatch" });
     expect(mockFetchSealed).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ["no owner binding", { messages: CONVERSATION.messages }],
+    ["an empty owner binding", { ...CONVERSATION, expectedOwnerId: "   " }],
+    ["a non-string owner binding", { ...CONVERSATION, expectedOwnerId: 7 }],
+  ])("refuses a transcript with %s before touching the key", async (_label, body) => {
+    const response = await POST(chatRequest(body));
+    expect(response.status).toBe(400);
+    expect(await jsonOf(response)).toEqual({ error: "invalid_chat_request" });
+    expect(mockFetchSealed).not.toHaveBeenCalled();
+    expect(mockAnthropicConstructor).not.toHaveBeenCalled();
   });
 
   it("refuses a model outside the allowlist", async () => {

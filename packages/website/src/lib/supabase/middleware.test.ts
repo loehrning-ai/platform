@@ -29,24 +29,55 @@ type MiddlewareCookieAdapter = {
   ) => void;
 };
 
-const { createServerClientMock, getUserMock } = vi.hoisted(() => {
-  const getUserMock = vi.fn<
-    () => Promise<{
-      data: { user: { id: string } | null };
-      error?: Error;
-    }>
-  >(async () => ({ data: { user: null } }));
-  const createServerClientMock = vi.fn<
-    (
-      url: string,
-      key: string,
-      options: { readonly cookies: MiddlewareCookieAdapter },
-    ) => { auth: { getUser: typeof getUserMock } }
-  >(() => ({
-    auth: { getUser: getUserMock },
-  }));
-  return { createServerClientMock, getUserMock };
-});
+type ClaimsResult = {
+  data: { claims: Record<string, unknown> } | null;
+  error: unknown;
+};
+
+const { createServerClientMock, getUserMock, getClaimsMock, signOutMock } =
+  vi.hoisted(() => {
+    const getUserMock = vi.fn<
+      () => Promise<{
+        data: { user: { id: string } | null };
+        error?: Error;
+      }>
+    >(async () => ({ data: { user: null } }));
+    // Verified claims of an ordinary first-party session for user-7, the user
+    // the happy-path test signs in.
+    const getClaimsMock = vi.fn<() => Promise<ClaimsResult>>(async () => ({
+      data: {
+        claims: {
+          sub: "user-7",
+          aud: "authenticated",
+          role: "authenticated",
+        },
+      },
+      error: null,
+    }));
+    const signOutMock = vi.fn<
+      (options: { scope: string }) => Promise<{ error: null }>
+    >(async () => ({ error: null }));
+    const createServerClientMock = vi.fn<
+      (
+        url: string,
+        key: string,
+        options: { readonly cookies: MiddlewareCookieAdapter },
+      ) => {
+        auth: {
+          getUser: typeof getUserMock;
+          getClaims: typeof getClaimsMock;
+          signOut: typeof signOutMock;
+        };
+      }
+    >(() => ({
+      auth: {
+        getUser: getUserMock,
+        getClaims: getClaimsMock,
+        signOut: signOutMock,
+      },
+    }));
+    return { createServerClientMock, getUserMock, getClaimsMock, signOutMock };
+  });
 
 vi.mock("@supabase/ssr", () => ({ createServerClient: createServerClientMock }));
 
@@ -216,5 +247,94 @@ describe("refreshAuthSession", () => {
     expect(request.cookies.get("sb-access")?.value).toBe("tok");
     expect(response.cookies.get("sb-access")?.value).toBe("tok");
     expect(response.headers.get("x-mw-flag")).toBe("on");
+  });
+});
+
+// An OAuth 2.1 access token issued to a third-party client passes getUser()
+// just like a first-party session. The proxy must not let it through the
+// protected pages and account APIs as a signed-in learner.
+describe("refreshAuthSession first-party session boundary", () => {
+  function claimsFor(overrides: Record<string, unknown>): ClaimsResult {
+    return {
+      data: {
+        claims: {
+          sub: "user-7",
+          aud: "authenticated",
+          role: "authenticated",
+          ...overrides,
+        },
+      },
+      error: null,
+    };
+  }
+
+  it("keeps a verified first-party session signed in", async () => {
+    configure();
+    getUserMock.mockResolvedValueOnce({ data: { user: { id: "user-7" } } });
+
+    const result = await refreshAuthSession(makeRequest(), new Headers());
+
+    expect(result.user).toEqual({ id: "user-7" });
+    expect(result.error).toBeNull();
+    expect(getClaimsMock).toHaveBeenCalledTimes(1);
+    expect(signOutMock).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ["an OAuth client_id", { client_id: "9a1b7c3d-client" }],
+    ["the MCP resource audience", { aud: "https://loehrning.ai/api/mcp" }],
+    ["a widened audience", { aud: ["authenticated", "https://loehrning.ai/api/mcp"] }],
+    ["another role", { role: "anon" }],
+    ["another subject", { sub: "user-8" }],
+  ])("treats a session with %s as signed out and clears its cookie", async (_label, overrides) => {
+    configure();
+    getUserMock.mockResolvedValueOnce({ data: { user: { id: "user-7" } } });
+    getClaimsMock.mockResolvedValueOnce(claimsFor(overrides));
+    signOutMock.mockImplementationOnce(async () => {
+      // What auth-js does on a local sign-out: it removes the session cookie
+      // through the adapter this module handed to createServerClient.
+      capturedCookieAdapter().setAll(
+        [{ name: "sb-proj-auth-token", value: "", options: { maxAge: 0 } }],
+        {},
+      );
+      return { error: null };
+    });
+
+    const request = makeRequest("sb-proj-auth-token=oauth-client-token");
+    const result = await refreshAuthSession(request, new Headers());
+
+    expect(result.user).toBeNull();
+    expect(result.error).toBeNull();
+    expect(signOutMock).toHaveBeenCalledWith({ scope: "local" });
+    expect(result.response.cookies.get("sb-proj-auth-token")?.value).toBe("");
+  });
+
+  it("fails closed as an outage when the claims cannot be verified", async () => {
+    configure();
+    getUserMock.mockResolvedValueOnce({ data: { user: { id: "user-7" } } });
+    const outage = Object.assign(new Error("jwks unreachable"), {
+      name: "AuthRetryableFetchError",
+      status: 503,
+    });
+    getClaimsMock.mockResolvedValueOnce({ data: null, error: outage });
+
+    const result = await refreshAuthSession(makeRequest(), new Headers());
+
+    expect(result.user).toBeNull();
+    expect(result.error).toBe(outage);
+    expect(signOutMock).not.toHaveBeenCalled();
+  });
+
+  it("does not verify claims for an anonymous request or an auth outage", async () => {
+    configure();
+    getUserMock.mockResolvedValueOnce({ data: { user: null } });
+    await refreshAuthSession(makeRequest(), new Headers());
+
+    const authError = new Error("auth backend unavailable");
+    getUserMock.mockResolvedValueOnce({ data: { user: null }, error: authError });
+    const outage = await refreshAuthSession(makeRequest(), new Headers());
+
+    expect(outage.error).toBe(authError);
+    expect(getClaimsMock).not.toHaveBeenCalled();
   });
 });

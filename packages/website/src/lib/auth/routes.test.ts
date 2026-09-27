@@ -5,6 +5,7 @@ import {
   isPublicPlatformPath,
   sanitizeNextPath,
 } from "./routes";
+import { localizeHref } from "@/lib/i18n/locale";
 
 describe("platform route access model", () => {
   it("treats course previews and verification readers as public", () => {
@@ -219,5 +220,43 @@ describe("platform route access model", () => {
     expect(sanitizeNextPath("/kurse?persona=einsteiger#start")).toBe(
       "/kurse?persona=einsteiger#start",
     );
+  });
+
+  // A locale prefix in front of a double slash used to survive: the value
+  // stayed `/en//evil.example`, and localizeHref for German stripped it to the
+  // scheme-relative `//evil.example`, which the login page then redirected to.
+  it.each([
+    "/en//evil.example",
+    "/de//evil.example",
+    "/en//evil.example/fake-login?x=1#y",
+    "/en/%2e//evil.example",
+    "/en/%2E//evil.example",
+    "/en/.//evil.example",
+    "/en/x/..//evil.example",
+    "/en/x/%2e%2e//evil.example",
+    "/de/%2e//evil.example",
+    "/en",
+  ])("never yields a scheme-relative target for %s", (value) => {
+    const sanitized = sanitizeNextPath(value);
+    expect(sanitized.startsWith("//")).toBe(false);
+    expect(sanitized.startsWith("/\\")).toBe(false);
+    for (const locale of ["de", "en"] as const) {
+      const target = localizeHref(sanitized, locale);
+      expect(target.startsWith("/")).toBe(true);
+      expect(target.startsWith("//")).toBe(false);
+      expect(new URL(target, "https://loehrning.invalid").origin).toBe(
+        "https://loehrning.invalid",
+      );
+    }
+  });
+
+  it.each([
+    "/en//evil.example",
+    "/de//evil.example",
+    "/en/%2e//evil.example",
+    "/en/.//evil.example",
+    "/en/x/..//evil.example",
+  ])("falls back to /konto for %s", (value) => {
+    expect(sanitizeNextPath(value)).toBe("/konto");
   });
 });

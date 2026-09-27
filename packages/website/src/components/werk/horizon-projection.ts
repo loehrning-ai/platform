@@ -187,57 +187,31 @@ export function toSpherePolylines(
   return { v, start, length, maxLat };
 }
 
-const END_DIGITS = "0123456789abcdefghijklmnopqrstuv";
-const CONTINUATION_DIGITS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&(";
-
 /**
- * Decodes the packed rings written by scripts/extract-horizon-land.mjs into
- * [lat, lon] polylines.
+ * Decodes the delta rings written by scripts/extract-horizon-land.mjs into
+ * [lat, lon] polylines. Each ring is [lon0, lat0, dLon1, dLat1, ...] in
+ * integer units of 1/scale degree: every pair is the delta from the previous
+ * point of the same ring, the first from 0. Sums stay integers until the one
+ * division by `scale`, so the degrees are exact to the encoding. A trailing
+ * unpaired value is ignored, and rings with fewer than two points are dropped.
  */
 export function decodeRings(
-  packed: string,
+  deltaRings: readonly (readonly number[])[],
   scale: number,
 ): (readonly [number, number])[][] {
-  const lut = new Int8Array(128);
-  for (let i = 0; i < 32; i++) {
-    lut[END_DIGITS.charCodeAt(i)] = i + 1;
-    lut[CONTINUATION_DIGITS.charCodeAt(i)] = i + 33;
+  const rings: (readonly [number, number])[][] = [];
+  for (const deltas of deltaRings) {
+    const ring: (readonly [number, number])[] = [];
+    let lon = 0;
+    let lat = 0;
+    for (let i = 0; i + 1 < deltas.length; i += 2) {
+      lon += deltas[i];
+      lat += deltas[i + 1];
+      ring.push([lat / scale, lon / scale]);
+    }
+    if (ring.length > 1) rings.push(ring);
   }
-  const rings: (readonly [number, number])[][] = [[]];
-  let acc = 0;
-  let mul = 1;
-  let lon = 0;
-  let lat = 0;
-  let odd = false;
-  for (let i = 0; i < packed.length; i++) {
-    const k = lut[packed.charCodeAt(i)] ?? 0;
-    if (!k) {
-      rings.push([]);
-      lon = 0;
-      lat = 0;
-      odd = false;
-      acc = 0;
-      mul = 1;
-      continue;
-    }
-    if (k > 32) {
-      acc += (k - 33) * mul;
-      mul *= 32;
-      continue;
-    }
-    acc += (k - 1) * mul;
-    const delta = acc % 2 ? -(acc + 1) / 2 : acc / 2;
-    acc = 0;
-    mul = 1;
-    if (odd) {
-      lat += delta;
-      rings[rings.length - 1].push([lat / scale, lon / scale]);
-    } else {
-      lon += delta;
-    }
-    odd = !odd;
-  }
-  return rings.filter((ring) => ring.length > 1);
+  return rings;
 }
 
 /** Graticule polylines: meridians every `step` degrees, sampled every 3 degrees. */

@@ -630,8 +630,23 @@ const HTML_NON_PROSE = /<(script|style|svg|pre|code|template|noscript|math|texta
 const HTML_PROSE_BLOCK = /<(p|li|h[1-6]|td|th|figcaption|blockquote|dd|dt|summary|caption)\b[^>]*>([\s\S]*?)<\/\1\s*>/gi;
 // Inline tags vanish without a gap ("<em>Hallo</em>," stays "Hallo,"); every
 // other tag (div, span blocks, br, nested lists) separates words.
-const HTML_INLINE_TAG = /<\/?(?:a|abbr|b|bdi|cite|data|dfn|em|i|mark|q|s|small|strong|sub|sup|time|u|var|wbr)\b[^>]*>/gi;
+const HTML_INLINE_TAG = /^<\/?(?:a|abbr|b|bdi|cite|data|dfn|em|i|mark|q|s|small|strong|sub|sup|time|u|var|wbr)\b[^>]*>$/i;
 const HTML_DASH_PLACEHOLDER = /^[\u2013\u2014\u2212-]$/;
+
+/**
+ * Text of one prose block, its tags removed in a single pass: an inline tag
+ * leaves nothing, any other tag leaves a space. (Deleting the inline tags in a
+ * pass of their own first could join the text on either side into a new tag.)
+ */
+function proseBlockText(html) {
+  let text = "";
+  let last = 0;
+  for (const tag of html.matchAll(/<[^>]+>/g)) {
+    text += html.slice(last, tag.index) + (HTML_INLINE_TAG.test(tag[0]) ? "" : " ");
+    last = tag.index + tag[0].length;
+  }
+  return text + html.slice(last);
+}
 
 /**
  * Visible prose of a static HTML page: the text of paragraphs, list items,
@@ -647,7 +662,7 @@ export function extractHtmlUnits(raw) {
   for (const match of cleaned.matchAll(HTML_PROSE_BLOCK)) {
     // Angle brackets are dropped after decoding: an encoded "&lt;tag" must
     // never turn back into markup. The result is lint text, never HTML.
-    const text = decodeHtmlEntities(match[2].replace(HTML_INLINE_TAG, "").replace(/<[^>]+>/g, " "))
+    const text = decodeHtmlEntities(proseBlockText(match[2]))
       .replace(/[<>]/g, " ")
       .replace(/\s+/g, " ")
       .trim();

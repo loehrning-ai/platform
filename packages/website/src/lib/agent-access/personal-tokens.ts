@@ -121,6 +121,15 @@ function touchLastUsedAt(tokenId: string, at: Date): void {
  * select names its columns so `token_hash` stays out of the result set even
  * for the service role, which means a verifier value cannot be read back out
  * of the table by this path at all.
+ *
+ * A token stays valid until its owner revokes it or deletes the account:
+ * `agent_access_tokens` has no expiry column, so there is nothing to check
+ * here yet. Recommended follow-up (security audit F5): add a nullable
+ * `expires_at`, backfill it, then make it NOT NULL with
+ * `CHECK (expires_at > created_at AND expires_at <= created_at + interval
+ * '366 days')` and add it to the column grant; let the mint route offer 30,
+ * 90 or 365 days (default 90); refuse expired rows here; count only unexpired,
+ * unrevoked tokens toward the five-token limit; show the expiry on /konto/ki.
  */
 export async function lookupPersonalAccessToken(
   token: string,

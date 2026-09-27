@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { NextRequest } from "next/server";
+import { readInterstitialHtml } from "@/test/redirect-interstitial";
 
 const {
   consumeRateLimit,
@@ -82,6 +83,34 @@ function formRequest(
   return new Request(url, { method: "POST", headers }) as NextRequest;
 }
 
+/**
+ * The onward trip to the hosted tool is a same-origin page, not a 303: the
+ * enforced `form-action 'self'` makes Chromium refuse a cross-origin redirect
+ * after this form POST. Asserts the page navigates to exactly `destination`,
+ * by refresh and by link, carries every privacy header the 303 carried, and
+ * shows only the hosted host. Returns the raw body for leak checks.
+ */
+async function expectContinuationTo(
+  response: Response,
+  destination: string,
+): Promise<string> {
+  expect(response.status).toBe(200);
+  expect(response.headers.get("location")).toBeNull();
+  expect(response.headers.get("content-type")).toBe("text/html; charset=utf-8");
+  expect(response.headers.get("cache-control")).toBe("private, no-store");
+  expect(response.headers.get("referrer-policy")).toBe("no-referrer");
+  expect(response.headers.get("x-robots-tag")).toBe(
+    "noindex, nofollow, noarchive",
+  );
+  const html = await response.text();
+  const page = readInterstitialHtml(html);
+  expect(page.refreshes).toEqual([{ delay: 0, url: destination }]);
+  expect(page.linkHrefs).toEqual([destination]);
+  expect(page.title).toBe("Weiter zu cv.loehrning.ai");
+  expect(page.document.querySelectorAll("script, form")).toHaveLength(0);
+  return html;
+}
+
 /** Everything this route handed to the reporter, flattened for leak checks. */
 function reportedText(): string {
   return reportApiError.mock.calls
@@ -125,16 +154,14 @@ describe("hosted cv-engine handoff", () => {
       type: "magiclink",
       email: EMAIL,
     });
-    expect(response.status).toBe(303);
-    expect(response.headers.get("location")).toBe(
+    const html = await expectContinuationTo(
+      response,
       `${HOSTED_ORIGIN}/auth/handoff#token_hash=${FIRST_TOKEN}&type=magiclink`,
     );
-    expect(response.headers.get("cache-control")).toBe("private, no-store");
-    expect(response.headers.get("referrer-policy")).toBe("no-referrer");
-    expect(response.headers.get("x-robots-tag")).toBe(
-      "noindex, nofollow, noarchive",
-    );
-    expect(await response.text()).toBe("");
+    // The token is in the two attributes that navigate and nowhere else: not
+    // in the title, not in the visible text.
+    expect(html.split(FIRST_TOKEN)).toHaveLength(3);
+    expect(readInterstitialHtml(html).visibleText).not.toContain(FIRST_TOKEN);
     expect(reportApiError).not.toHaveBeenCalled();
   });
 
@@ -174,8 +201,7 @@ describe("hosted cv-engine handoff", () => {
 
     const response = await POST(formRequest());
 
-    expect(response.status).toBe(303);
-    expect(response.headers.get("location")).toBe(SIGN_IN_FALLBACK);
+    await expectContinuationTo(response, SIGN_IN_FALLBACK);
     expect(response.headers.get("cache-control")).toBe("private, no-store");
     expect(reportApiError).toHaveBeenCalledTimes(1);
     expect(reportApiError.mock.calls[0]?.[0]).toMatchObject({
@@ -190,8 +216,7 @@ describe("hosted cv-engine handoff", () => {
 
     const response = await POST(formRequest());
 
-    expect(response.status).toBe(303);
-    expect(response.headers.get("location")).toBe(SIGN_IN_FALLBACK);
+    await expectContinuationTo(response, SIGN_IN_FALLBACK);
     expect(reportApiError).toHaveBeenCalledTimes(1);
   });
 
@@ -202,8 +227,7 @@ describe("hosted cv-engine handoff", () => {
 
     const response = await POST(formRequest());
 
-    expect(response.status).toBe(303);
-    expect(response.headers.get("location")).toBe(SIGN_IN_FALLBACK);
+    await expectContinuationTo(response, SIGN_IN_FALLBACK);
     expect(generateLink).not.toHaveBeenCalled();
     expect(reportApiError.mock.calls[0]?.[0]).toMatchObject({
       step: "auth-create-client",
@@ -219,8 +243,7 @@ describe("hosted cv-engine handoff", () => {
     await vi.advanceTimersByTimeAsync(5_000);
     const response = await pending;
 
-    expect(response.status).toBe(303);
-    expect(response.headers.get("location")).toBe(SIGN_IN_FALLBACK);
+    await expectContinuationTo(response, SIGN_IN_FALLBACK);
     expect(reportedText()).toContain("CvEngineHandoffTimeoutError");
   });
 
@@ -238,8 +261,7 @@ describe("hosted cv-engine handoff", () => {
 
     const response = await POST(formRequest());
 
-    expect(response.status).toBe(303);
-    expect(response.headers.get("location")).toBe(SIGN_IN_FALLBACK);
+    await expectContinuationTo(response, SIGN_IN_FALLBACK);
     expect(reportedText()).toContain("CvEngineHandoffPayloadError");
   });
 
@@ -263,11 +285,13 @@ describe("hosted cv-engine handoff", () => {
       POST(formRequest()),
     ]);
 
-    expect(first.status).toBe(303);
-    expect(second.status).toBe(303);
-    expect(
-      [first.headers.get("location"), second.headers.get("location")].sort(),
-    ).toEqual(
+    const destinations = await Promise.all(
+      [first, second].map(async (response) => {
+        expect(response.status).toBe(200);
+        return readInterstitialHtml(await response.text()).refreshes[0]?.url;
+      }),
+    );
+    expect(destinations.sort()).toEqual(
       [
         `${HOSTED_ORIGIN}/auth/handoff#token_hash=${FIRST_TOKEN}&type=magiclink`,
         `${HOSTED_ORIGIN}/auth/handoff#token_hash=${SECOND_TOKEN}&type=magiclink`,
@@ -374,8 +398,9 @@ describe("hosted cv-engine handoff", () => {
       formRequest({ "Content-Type": "multipart/form-data; boundary=x" }),
     );
 
-    expect(response.status).toBe(303);
-    expect(response.headers.get("location")).toContain("token_hash=");
+    expect(response.status).toBe(200);
+    const page = readInterstitialHtml(await response.text());
+    expect(page.refreshes[0]?.url).toContain("#token_hash=");
   });
 
   it("sends an anonymous submission to the login page, not to the tool", async () => {
@@ -423,8 +448,7 @@ describe("hosted cv-engine handoff", () => {
 
     const response = await POST(formRequest());
 
-    expect(response.status).toBe(303);
-    expect(response.headers.get("location")).toBe(SIGN_IN_FALLBACK);
+    await expectContinuationTo(response, SIGN_IN_FALLBACK);
     expect(consumeRateLimit).not.toHaveBeenCalled();
     expect(generateLink).not.toHaveBeenCalled();
     expect(reportApiError).not.toHaveBeenCalled();

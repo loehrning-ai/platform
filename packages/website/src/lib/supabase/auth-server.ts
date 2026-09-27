@@ -6,6 +6,10 @@ import {
   boundAuthCookieOptions,
   getSupabasePublicConfig,
 } from "./config";
+import {
+  discardNonFirstPartySession,
+  verifyFirstPartySession,
+} from "./first-party-session";
 
 export async function createAuthServerClient(): Promise<SupabaseClient | null> {
   const config = getSupabasePublicConfig();
@@ -69,6 +73,19 @@ export async function getAuthenticatedUser(): Promise<{
   // anonymous request instead of just answering "not logged in").
   if (error && error.name !== "AuthSessionMissingError") {
     return { configured: true, user, error };
+  }
+  if (!user) return { configured: true, user: null };
+
+  // getUser() proves the token is genuine, not that this site issued it. An
+  // OAuth client's access token passes getUser() too; only a first-party
+  // session may act as the learner here (see ./first-party-session).
+  const session = await verifyFirstPartySession(supabase, user.id);
+  if (session.status === "unavailable") {
+    return { configured: true, user: null, error: session.error };
+  }
+  if (session.status === "not-first-party") {
+    await discardNonFirstPartySession(supabase);
+    return { configured: true, user: null };
   }
   return { configured: true, user };
 }

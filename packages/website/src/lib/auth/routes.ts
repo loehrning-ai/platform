@@ -70,6 +70,17 @@ export function sanitizeNextPath(value: unknown): string {
     }
     const localePath = parseLocalePathname(parsed.pathname);
     if (!localePath.valid) return fallback;
+    // Stripping a locale prefix can expose a scheme-relative path:
+    // `/en//evil.example` (also reached through `/en/%2e//`, `/en/.//` and
+    // `/en/x/..//`) becomes `//evil.example`, which localizeHref would hand to
+    // redirect() as an off-site target. The parser already rejects this; the
+    // check stays here too so the redirect contract never depends on it alone.
+    if (
+      localePath.pathname.startsWith("//") ||
+      localePath.pathname.startsWith("/\\")
+    ) {
+      return fallback;
+    }
     if (
       localePath.pathname === "/login" ||
       localePath.pathname.startsWith("/login/")

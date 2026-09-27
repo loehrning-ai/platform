@@ -13,6 +13,7 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import path from "node:path";
 import vm from "node:vm";
 import { fileURLToPath } from "node:url";
+import { outputProblems } from "./html-guards.mjs";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, "../..");
@@ -450,9 +451,9 @@ const appOut = GEN.replace("%s", "demo-app.js") + appSrc.trim() + "\n";
 /* ------------------------------------------------ page-level checks */
 assert(!/\{\{[^}]*\}\}/.test(html), "unresolved placeholder in output");
 assert(!/[–—]/.test(html), "en or em dash in output");
-assert(!/\son[a-z]+\s*=\s*["']/i.test(html.replace(/<script[\s\S]*?<\/script>/g, "")), "inline event handler attribute in output");
-// no inline executable script: every <script> either has a src or is JSON data
-for (const tag of html.match(/<script\b[^>]*>/g) || []) assert(/\ssrc="/.test(tag) || /type="application\/json"/.test(tag), "inline executable script in output: " + tag);
+// No inline executable script (every <script>, in any case, has a src or is JSON data that
+// parses) and no event handler attribute anywhere in the page, the JSON data included.
+for (const problem of outputProblems(html)) assert(false, problem);
 for (const [name, src] of [["w04-demo-core.js", coreOut], ["w04-demo.js", appOut]]) {
   assert(!/[–—]/.test(src), name + ": en or em dash");
   assert(!/innerHTML|insertAdjacentHTML|document\.write|localStorage|fetch\(|XMLHttpRequest/.test(src), name + ": forbidden API");

@@ -113,9 +113,9 @@ const DE: ConsentPageCopy = {
   noScopes:
     "Die App fragt keine zusätzlichen Profildaten an. Es bleibt bei dem Zugriff, den eine Freigabe ohnehin erlaubt.",
   platformAccess:
-    "Mit einer Freigabe darf die App über die Agenten-Schnittstelle deinen Lernfortschritt und deinen nächsten Schritt lesen. Schreiben oder löschen kann sie nichts.",
+    "Mit einer Freigabe darf die App über die Agenten-Schnittstelle deinen Lernfortschritt und deinen nächsten Schritt lesen. Mehr erreicht sie auf loehrning.ai nicht: Schreiben oder löschen kann sie hier nichts.",
   tokenPower:
-    "Ein Zugriffstoken für diese App liest dein Konto mit denselben Rechten wie deine eigene Anmeldung. Gib die Freigabe nur Programmen, die du selbst installiert hast.",
+    "Unsere Kontoseiten und Kontoeinstellungen lehnen das Zugriffstoken dieser App ab. Unser Anmeldedienst Supabase akzeptiert es bis zu seinem Ablauf trotzdem wie deine eigene Anmeldung, etwa um deine E-Mail-Adresse zu lesen. Gib die Freigabe nur Programmen, die du selbst installiert hast.",
   approve: "Zugriff erlauben",
   deny: "Ablehnen",
   denyNote:
@@ -174,9 +174,9 @@ const EN: ConsentPageCopy = {
   noScopes:
     "The app requests no extra profile data. Access stays at what an approval grants anyway.",
   platformAccess:
-    "With an approval the app may read your learning progress and your next step through the agent interface. It can never write or delete anything.",
+    "With an approval the app may read your learning progress and your next step through the agent interface. That is all it reaches on loehrning.ai: it can never write or delete anything here.",
   tokenPower:
-    "An access token for this app reads your account with the same rights as your own sign-in. Only approve programs you installed yourself.",
+    "Our account pages and account settings refuse this app's access token. Our sign-in service Supabase still accepts it like your own sign-in until it expires, for example to read your email address. Only approve programs you installed yourself.",
   approve: "Allow access",
   deny: "Deny",
   denyNote:

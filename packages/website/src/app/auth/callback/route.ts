@@ -5,28 +5,33 @@ import { sanitizeNextPath } from "@/lib/auth/routes";
 import { localizeHref, parseLocalePathname } from "@/lib/i18n/locale";
 import {
   isAccountRuntimeReady,
+  isGithubOAuthRuntimeReady,
   isGoogleOAuthRuntimeReady,
   isMagicLinkRuntimeReady,
 } from "@/lib/provider-readiness";
 import { SITE_ORIGIN } from "@/lib/seo/entity";
 import { createAuthServerClient } from "@/lib/supabase/auth-server";
+import { isFirstPartySessionClaims } from "@/lib/supabase/first-party-session";
 
 const CANONICAL_ORIGIN = new URL(SITE_ORIGIN);
 const MAX_AUTHORIZATION_CODE_LENGTH = 2_048;
 const NON_OAUTH_IDENTITY_PROVIDERS = new Set(["email", "phone"]);
 
-type SupportedLoginMethod = "google" | "magic-link";
+type SupportedOAuthProvider = "google" | "github";
+type SupportedLoginMethod = SupportedOAuthProvider | "magic-link";
 
 /**
- * Attributes an `oauth` authentication event to Google.
+ * Attributes an `oauth` authentication event to Google or GitHub.
  *
  * The signed `amr` claim already proves this session was created through OAuth.
  * What it does not carry is which provider, and the user object has no
  * per-event provider field either — `app_metadata.provider` records the
- * original sign-up method. Google is therefore inferred from the linked
+ * original sign-up method. The provider is therefore inferred from the linked
  * identities, and only when it is the account's sole OAuth identity. With a
  * second one present the event cannot be attributed to either, so it is
- * refused rather than guessed.
+ * refused rather than guessed. Each provider is then accepted only while its
+ * own attestation holds, the same one that shows its button on /login, so the
+ * login page never offers a method this callback refuses.
  *
  * An earlier revision instead required the Google identity's `last_sign_in_at`
  * to fall within five seconds of the `amr` timestamp. GoTrue does not advance
@@ -37,15 +42,14 @@ type SupportedLoginMethod = "google" | "magic-link";
  * project, an existing account's identity timestamp trailed its user timestamp
  * by 41,670 seconds against that five-second tolerance.
  */
-function isGoogleOAuthEvent(user: User): boolean {
+function soleOAuthProvider(user: User): SupportedOAuthProvider | null {
   const providers = user.app_metadata?.providers;
   if (
     !Array.isArray(providers) ||
     !providers.every((provider) => typeof provider === "string") ||
-    !providers.includes("google") ||
     !Array.isArray(user.identities)
   ) {
-    return false;
+    return null;
   }
 
   const oauthIdentities = user.identities.filter(
@@ -53,9 +57,10 @@ function isGoogleOAuthEvent(user: User): boolean {
       typeof identity.provider === "string" &&
       !NON_OAUTH_IDENTITY_PROVIDERS.has(identity.provider),
   );
-  return (
-    oauthIdentities.length === 1 && oauthIdentities[0]?.provider === "google"
-  );
+  if (oauthIdentities.length !== 1) return null;
+  const provider = oauthIdentities[0]?.provider;
+  if (provider !== "google" && provider !== "github") return null;
+  return providers.includes(provider) ? provider : null;
 }
 
 function supportedLoginMethodFromClaims(
@@ -79,8 +84,8 @@ function supportedLoginMethodFromClaims(
       continue;
     }
     const method: SupportedLoginMethod | null =
-      rawMethod === "oauth" && isGoogleOAuthEvent(user)
-        ? "google"
+      rawMethod === "oauth"
+        ? soleOAuthProvider(user)
         : rawMethod === "magiclink" ||
             rawMethod === "otp" ||
             rawMethod === "email/signup"
@@ -180,7 +185,8 @@ export async function GET(request: NextRequest) {
   const accountReady = isAccountRuntimeReady();
   const magicLinkReady = isMagicLinkRuntimeReady();
   const googleReady = isGoogleOAuthRuntimeReady();
-  if (!accountReady || (!magicLinkReady && !googleReady)) {
+  const githubReady = isGithubOAuthRuntimeReady();
+  if (!accountReady || (!magicLinkReady && !googleReady && !githubReady)) {
     return failureRedirect("auth-not-configured");
   }
 
@@ -240,16 +246,26 @@ export async function GET(request: NextRequest) {
         : "auth-unavailable",
     );
   }
+  const claims = claimsResult.data.claims as Record<string, unknown>;
+  // This callback only ever completes this site's own sign-in. A session
+  // minted for an OAuth client (it carries client_id) or for another audience
+  // is not one, whatever login method its AMR names.
+  if (!isFirstPartySessionClaims(claims, verification.data.user.id)) {
+    await supabase.auth.signOut({ scope: "local" }).catch(() => undefined);
+    return failureRedirect("invalid-link");
+  }
   const loginMethod = supportedLoginMethodFromClaims(
-    claimsResult.data.claims as Record<string, unknown>,
+    claims,
     verification.data.user,
   );
   const methodReady =
     loginMethod === "google"
       ? googleReady
-      : loginMethod === "magic-link"
-        ? magicLinkReady
-        : false;
+      : loginMethod === "github"
+        ? githubReady
+        : loginMethod === "magic-link"
+          ? magicLinkReady
+          : false;
   if (!methodReady) {
     await supabase.auth.signOut({ scope: "local" }).catch(() => undefined);
     return failureRedirect("auth-not-configured");

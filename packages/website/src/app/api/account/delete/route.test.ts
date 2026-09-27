@@ -213,4 +213,42 @@ describe("DELETE /api/account/delete pre-delete ordering", () => {
     expect(mockRunPreDeleteSteps).not.toHaveBeenCalled();
     expect(mockCreateAdminClient).not.toHaveBeenCalled();
   });
+
+  // An OAuth client's access token wrapped in a session cookie is signed,
+  // current and names the owner, but it is not the learner signing in. It
+  // never proves a recent authentication, whatever its AMR says.
+  it.each([
+    ["an OAuth client_id", { client_id: "b7f0c2d4-client" }],
+    [
+      "an OAuth-server authorization code",
+      {
+        client_id: "b7f0c2d4-client",
+        amr: [
+          {
+            method: "oauth_provider/authorization_code",
+            timestamp: Math.floor(Date.now() / 1000),
+          },
+        ],
+      },
+    ],
+    ["another audience", { aud: "https://loehrning.ai/api/mcp" }],
+  ])("never deletes an account for a session with %s", async (_label, overrides) => {
+    authClient.auth.getClaims.mockResolvedValueOnce({
+      data: {
+        claims: { ...validClaims(), ...overrides },
+        header: { alg: "RS256", kid: "22222222-2222-4222-8222-222222222222" },
+        signature: new Uint8Array([1, 2, 3]),
+      },
+      error: null,
+    });
+
+    const response = await DELETE(deleteRequest());
+
+    expect(response.status).toBe(403);
+    expect(await response.json()).toEqual({
+      error: "reauthentication_required",
+    });
+    expect(mockRunPreDeleteSteps).not.toHaveBeenCalled();
+    expect(mockCreateAdminClient).not.toHaveBeenCalled();
+  });
 });

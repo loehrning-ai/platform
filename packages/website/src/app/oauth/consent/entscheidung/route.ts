@@ -3,6 +3,7 @@ import { externalRequestUrl, trustedRequestOrigin } from "@/lib/auth/origin";
 import { isLocale, localizeHref, type Locale } from "@/lib/i18n/locale";
 import { reportApiError } from "@/lib/observability/api-error";
 import { isOAuthServerReady } from "@/lib/provider-readiness";
+import { redirectInterstitialResponse } from "@/lib/security/redirect-interstitial";
 import {
   consumeRateLimit,
   hashedAuthenticatedRateLimitKey,
@@ -37,10 +38,37 @@ function textResponse(body: string, status: number): NextResponse {
   });
 }
 
+/**
+ * Same-origin only: back to our own consent page. A 303 to another origin
+ * after a form POST is refused by the enforced `form-action 'self'`, so the
+ * onward trip to the OAuth client goes through `continueToClient` instead.
+ */
 function privateRedirect(url: URL | string): NextResponse {
   // 303 so the browser follows with GET: the decision has been recorded, and
   // a reload must never replay the POST against a consumed authorization.
   const response = NextResponse.redirect(url, 303);
+  for (const [key, value] of Object.entries(PRIVATE_HEADERS)) {
+    response.headers.set(key, value);
+  }
+  return response;
+}
+
+/**
+ * The decision is recorded; hand the browser to the OAuth client.
+ *
+ * Not a redirect: Chromium applies the enforced `form-action 'self'` to every
+ * redirect a form submission follows, so a 303 to the client's `redirect_uri`
+ * would be refused and the client would never receive its code. This answers
+ * with a private same-origin page that continues by a zero-delay refresh and
+ * a visible link instead, both ordinary navigations `form-action` does not
+ * govern. The refresh replaces this POST result in history, so Back returns
+ * to the consent page and never offers to replay the consumed decision.
+ *
+ * `url` is the authorization server's own redirect, already validated by
+ * `safeClientRedirect` as an absolute HTTP(S) URL without credentials.
+ */
+function continueToClient(url: string, locale: Locale): Response {
+  const response = redirectInterstitialResponse(url, locale);
   for (const [key, value] of Object.entries(PRIVATE_HEADERS)) {
     response.headers.set(key, value);
   }
@@ -74,7 +102,7 @@ function consentPageUrl(
   return url;
 }
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
+export async function POST(request: NextRequest): Promise<Response> {
   // Fail closed before anything else: with the OAuth server unconfirmed the
   // platform has no authorization surface at all, so this path does not exist.
   if (!isOAuthServerReady()) {
@@ -201,7 +229,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       ),
     );
   }
-  return privateRedirect(result.url);
+  return continueToClient(result.url, locale);
 }
 
 export function GET(): NextResponse {

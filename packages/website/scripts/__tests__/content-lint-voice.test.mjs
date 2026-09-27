@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
@@ -760,4 +761,21 @@ test("discovery covers workshop HTML, locale copy modules and the workshop regis
   assert.ok(real.includes("src/lib/workshops-data-readiness.ts"));
   assert.ok(real.includes("public/workshops/datenbereitschaft-fuer-ki/slides.html"));
   assert.ok(real.includes("src/app/hilfe/eigene-ki/eigene-ki-copy.de.ts"));
+});
+
+test("prose tags are removed in one pass, so the text around a removed inline tag never becomes a tag", () => {
+  const [lesson] = extractHtmlUnits(
+    [
+      "<p>Ein<em>Wort</em>, dann<a href=\"#x\">zwei</a>.</p>",
+      "<p>x<scr<em>ipt>alert(1)</p>",
+      "<p>a <</em>img src=x onerror=alert(1)> b</p>",
+      "<li>&lt;script&gt;alert(1)&lt;/script&gt;</li>",
+    ].join("\n"),
+  );
+  const texts = lesson.segments.map((s) => s.text);
+  assert.equal(texts[0], "EinWort, dannzwei.", "inline tags still leave no gap");
+  for (const text of texts) assert.doesNotMatch(text, /[<>]/, text);
+  assert.doesNotMatch(texts.join(" "), /<script|<img/i);
+  const source = readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)), "../content-prose.mjs"), "utf8");
+  assert.doesNotMatch(source, /\.replace\(HTML_INLINE_TAG, ""\)/, "inline tags are dropped while tokenizing, not by a separate replace");
 });

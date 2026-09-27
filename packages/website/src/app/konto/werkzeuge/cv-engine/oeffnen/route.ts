@@ -19,6 +19,13 @@
  * handoff bridge with that token in the URL fragment. The fragment never
  * reaches any server, so the credential cannot land in an access log.
  *
+ * "Sent" is not a redirect. The enforced policy's `form-action 'self'` covers
+ * every redirect a form submission follows, and Chromium refuses a 303 from
+ * this POST to the hosted origin. Every cross-origin answer is therefore a
+ * private, uncacheable same-origin page that continues by a zero-delay refresh
+ * and a visible link (see src/lib/security/redirect-interstitial.ts). The only
+ * 303 left is the same-origin one to our own login page.
+ *
  * What happens otherwise: every failure that is not a security refusal ends in
  * the same place, the hosted tool's own sign-in with a short notice. The admin
  * API may decline to mint a magic link for an account that only ever signed in
@@ -33,7 +40,10 @@
  * authentication backend that is down (503). Handing a redirect to those would
  * turn the refusal into a usable side effect.
  *
- * The token is never logged, never reported, and never returned in a body.
+ * The token is never logged and never reported. The one body it appears in is
+ * the interstitial that hands it to this learner's browser: a response marked
+ * `private, no-store` and `Referrer-Policy: no-referrer`, whose refresh and
+ * link carry the fragment exactly as the Location header used to.
  */
 import { NextResponse, type NextRequest } from "next/server";
 import { externalRequestUrl, trustedRequestOrigin } from "@/lib/auth/origin";
@@ -43,6 +53,7 @@ import {
   hashedAuthenticatedRateLimitKey,
   hashedClientRateLimitKey,
 } from "@/lib/security/rate-limit";
+import { redirectInterstitialResponse } from "@/lib/security/redirect-interstitial";
 // Route handlers are the sanctioned context for the privileged Supabase
 // client. This file is a route handler, never a page or a component, and the
 // client it constructs is used for exactly one call.
@@ -115,12 +126,11 @@ function plainText(body: string, status: number, extra?: Record<string, string>)
 }
 
 /**
- * A 303 rather than the default 307: the browser must follow the destination
- * with a GET. A 307 would replay this POST against the hosted tool.
+ * Same-origin only. A 303 rather than the default 307: the browser must follow
+ * the destination with a GET, and a 307 would replay this POST.
  *
  * `Referrer-Policy: no-referrer` keeps the account URL the learner came from
- * out of the request to the hosted host. The token itself is already safe from
- * a Referer header, which never carries a fragment.
+ * out of the follow-up request.
  */
 function seeOther(location: string) {
   return new NextResponse(null, {
@@ -130,6 +140,27 @@ function seeOther(location: string) {
       "Referrer-Policy": "no-referrer",
     }),
   });
+}
+
+/**
+ * Onward to the hosted tool, which is another origin.
+ *
+ * Not a 303: the enforced `form-action 'self'` makes Chromium refuse any
+ * cross-origin redirect after this form POST. The interstitial is a
+ * same-origin 200 whose zero-delay refresh and fallback link are ordinary
+ * navigations. It replaces this POST result in history, so Back returns to
+ * the account page instead of offering to resubmit and mint another token.
+ *
+ * `Referrer-Policy: no-referrer` keeps the account URL out of the request to
+ * the hosted host. The token itself is already safe from a Referer header,
+ * which never carries a fragment.
+ */
+function continueToHostedTool(destination: string) {
+  const response = redirectInterstitialResponse(destination, "de");
+  for (const [key, value] of privateHeaders({ "Referrer-Policy": "no-referrer" })) {
+    response.headers.set(key, value);
+  }
+  return response;
 }
 
 function hasAcceptedContentType(request: Request): boolean {
@@ -250,7 +281,7 @@ export async function POST(request: NextRequest) {
     // An account without a usable address can never receive a magic link. That
     // is not a failure worth reporting, it is a permanent property of the
     // account, so it takes the sign-in fallback directly.
-    return seeOther(cvEngineSignInUrl(hostedOrigin));
+    return continueToHostedTool(cvEngineSignInUrl(hostedOrigin));
   }
 
   // The per-account budget is charged first, then the independent client
@@ -305,7 +336,7 @@ export async function POST(request: NextRequest) {
     adminClient = createAdminClient();
   } catch (error) {
     reportApiError({ route: ROUTE, step: "auth-create-client", error });
-    return seeOther(cvEngineSignInUrl(hostedOrigin));
+    return continueToHostedTool(cvEngineSignInUrl(hostedOrigin));
   }
 
   let handoffUrl: string;
@@ -329,10 +360,10 @@ export async function POST(request: NextRequest) {
     // route's own named errors. None of them is ever the response payload, so
     // no token can reach the reporter.
     reportApiError({ route: ROUTE, step: "auth-generate-link", error });
-    return seeOther(cvEngineSignInUrl(hostedOrigin));
+    return continueToHostedTool(cvEngineSignInUrl(hostedOrigin));
   }
 
-  return seeOther(handoffUrl);
+  return continueToHostedTool(handoffUrl);
 }
 
 export function GET() {

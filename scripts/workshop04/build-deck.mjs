@@ -16,12 +16,14 @@
 // Lint (fails the build): a number in visible slide text that is not in the JSON (allowlist: years,
 // day and scene counters up to 31, the 1920 × 1080 canvas and the legal references in LEGAL), an
 // en or em dash anywhere in the deck files, a question card that is not the fixed question, an
-// unresolved binding, a scene without presenter notes.
+// unresolved binding, a scene without presenter notes, and in slides.html or presenter.html an
+// inline executable script or an event handler attribute (scripts/workshop04/html-guards.mjs).
 
-import { readFileSync, writeFileSync, readdirSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import vm from "node:vm";
+import { outputProblems, stripTags, withoutCodeAndComments } from "./html-guards.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, "..", "..");
@@ -53,9 +55,18 @@ const fillApi = context.W04Fill;
 const findings = [];
 const changed = [];
 
+function readIfPresent(target) {
+  try {
+    return readFileSync(target, "utf8");
+  } catch (error) {
+    if (error.code === "ENOENT") return null;
+    throw error;
+  }
+}
+
 function write(file, content) {
   const target = path.join(DECK, file);
-  const before = existsSync(target) ? readFileSync(target, "utf8") : null;
+  const before = readIfPresent(target);
   if (before === content) return;
   changed.push(file);
   if (!CHECK) writeFileSync(target, content);
@@ -478,10 +489,7 @@ const LEGAL = new Set(["825", "470", "1000", "450", "15", "13", "42", "5", "1920
 // grid factor 2022 (433 g CO2/kWh; 386 and 363 are in the factor notes of the dataset) and the two
 // published extraction accuracies (ESGReveal 76.9%, ESG Insight 78.2%).
 for (const ref of ["1560", "1563", "2015", "433", "76.9", "78.2"]) LEGAL.add(ref);
-const visible = html
-  .replace(/<script[\s\S]*?<\/script>/g, " ")
-  .replace(/<style[\s\S]*?<\/style>/g, " ")
-  .replace(/<!--[\s\S]*?-->/g, " ")
+const visible = withoutCodeAndComments(html)
   .replace(/<symbol[\s\S]*?<\/symbol>/g, " ")
   .replace(/<(\w+)\b[^>]*\bdata-(?:num|j)="[^"]*"[^>]*>[^<]*<\/\1>/g, " ")
   .replace(/<[^>]+>/g, " ")
@@ -500,9 +508,10 @@ for (const m of visible.matchAll(/[+−-]?\d[\d.,]*%?/g)) {
 for (const file of ["slides.html", "presenter.html"]) {
   const text = file === "slides.html" ? html : readFileSync(path.join(DECK, file), "utf8");
   if (/[\u2013\u2014]/.test(text)) findings.push(`${file}: en or em dash`);
+  for (const problem of outputProblems(text)) findings.push(`${file}: ${problem}`);
 }
 for (const m of html.matchAll(/<p class="q-card__text"[^>]*>([\s\S]*?)<\/p>/g)) {
-  const text = m[1].replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+  const text = stripTags(m[1]).replace(/\s+/g, " ").trim();
   if (text !== data.question.en) findings.push(`q-card text differs from question.en: "${text}"`);
 }
 
@@ -523,7 +532,7 @@ const sub = (text) => String(text).replace(/\{(\w+)(?:\|(\w+))?\}/g, (all, key, 
   return t;
 });
 const deep = (value) => (typeof value === "string" ? sub(value) : Array.isArray(value) ? value.map(deep) : value && typeof value === "object" ? Object.fromEntries(Object.entries(value).map(([k, v]) => [k, deep(v)])) : value);
-const sections = [...html.matchAll(/<section class="slide[^"]*" id="([^"]+)"([^>]*)>/g)].map((m) => ({ id: m[1], attrs: m[2] }));
+const sections = [...html.matchAll(/<section class="slide[^"]*" id="([^"]+)"([^>]*)>/g)].map((m) => ({ id: m[1], attrs: m[2], at: m.index }));
 const ordered = {};
 for (const s of sections) {
   const key = (/data-note-key="([^"]+)"/.exec(s.attrs) || [])[1] || s.id;
@@ -533,7 +542,7 @@ for (const s of sections) {
   for (const field of ["say", "sayAt", "ask", "expectedAudience", "revealOrder", "cut", "appendixRoutes"]) {
     if (!(field in note)) findings.push(`notes ${key}: missing ${field}`);
   }
-  const stepMax = Math.max(0, ...[...html.slice(html.indexOf(`id="${s.id}"`)).split(/<section class="slide/)[0].matchAll(/data-step(?:-until)?="(\d+)"/g)].map((m, i, all) => (m[0].includes("until") ? Number(m[1]) - 1 : Number(m[1]))));
+  const stepMax = Math.max(0, ...[...html.slice(s.at + 1).split(/<section class="slide/)[0].matchAll(/data-step(?:-until)?="(\d+)"/g)].map((m, i, all) => (m[0].includes("until") ? Number(m[1]) - 1 : Number(m[1]))));
   if (note.revealOrder && note.revealOrder.length !== stepMax + 1) findings.push(`notes ${key}: revealOrder has ${note.revealOrder.length} entries, scene has ${stepMax + 1} states`);
   if (/[\u2013\u2014]/.test(JSON.stringify(note))) findings.push(`notes ${key}: en or em dash`);
   ordered[key] = { ...note, clock: { ...(note.clock || {}), budget_seconds: seconds } };

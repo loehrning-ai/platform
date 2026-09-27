@@ -5,6 +5,7 @@ import {
   lookupPersonalAccessToken,
   PERSONAL_ACCESS_TOKEN_PREFIX,
 } from "@/lib/agent-access/personal-tokens";
+import { checkOAuthSessionLive } from "@/lib/agent-access/oauth-sessions";
 import { oauthClientLabel } from "@/lib/agent-access/record";
 import {
   isAgentAccessReady,
@@ -134,6 +135,41 @@ async function resolvePersonalAccessToken(
   };
 }
 
+const SESSION_ID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const BASE64URL_SEGMENT = /^[A-Za-z0-9_-]+$/;
+const MAX_PAYLOAD_SEGMENT_LENGTH = 16_384;
+
+/**
+ * The `session_id` claim of a token whose signature has already been
+ * verified over exactly these bytes. Only ever called after
+ * `verifyOAuthAccessToken` accepted the token, so the payload is authentic.
+ */
+function verifiedSessionId(token: string): string | null {
+  const payloadSegment = token.split(".")[1] ?? "";
+  if (
+    payloadSegment.length === 0 ||
+    payloadSegment.length > MAX_PAYLOAD_SEGMENT_LENGTH ||
+    !BASE64URL_SEGMENT.test(payloadSegment)
+  ) {
+    return null;
+  }
+  try {
+    const claims: unknown = JSON.parse(
+      Buffer.from(payloadSegment, "base64url").toString("utf8"),
+    );
+    if (!claims || typeof claims !== "object" || Array.isArray(claims)) {
+      return null;
+    }
+    const sessionId = Reflect.get(claims, "session_id");
+    return typeof sessionId === "string" && SESSION_ID_PATTERN.test(sessionId)
+      ? sessionId
+      : null;
+  } catch {
+    return null;
+  }
+}
+
 async function resolveOAuthAccessToken(
   token: string,
   now: Date,
@@ -163,6 +199,26 @@ async function resolveOAuthAccessToken(
       default:
         return refuse("invalid_token");
     }
+  }
+
+  // A valid signature says the token was issued, not that the grant behind
+  // it still stands. Revoking the grant, a global sign-out, a ban, or deleting
+  // the account ends the token's Auth session; the token itself stays
+  // verifiable until it expires. Without a session to check against, the
+  // token cannot be tied to a grant the learner can withdraw, so it is
+  // refused.
+  const sessionId = verifiedSessionId(token);
+  if (sessionId === null) return refuse("invalid_token");
+  const liveness = await checkOAuthSessionLive(
+    sessionId,
+    verification.token.subject,
+    now,
+    verification.token.expiresAt,
+  );
+  if (!liveness.ok) {
+    return refuse(
+      liveness.reason === "revoked" ? "revoked_token" : "verifier_unavailable",
+    );
   }
 
   return {
@@ -247,7 +303,8 @@ const REJECTION_DESCRIPTION: Readonly<Record<BearerRejection, string>> = {
   invalid_audience: "The access token was not issued for this resource.",
   invalid_issuer:
     "The access token was not issued by the authorization server of this resource.",
-  revoked_token: "The personal access token has been revoked.",
+  revoked_token:
+    "The credential has been revoked, or the access it was issued for has ended.",
   verifier_unavailable:
     "The credential could not be verified because token verification is unavailable.",
   not_configured: "This deployment does not serve an agent endpoint.",

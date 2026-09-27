@@ -393,3 +393,103 @@ describe("POST /api/mcp bearer handling", () => {
     });
   });
 });
+
+describe("POST /api/mcp cache policy", () => {
+  function cacheDirectives(response: Response): string[] {
+    return (response.headers.get("Cache-Control") ?? "")
+      .split(",")
+      .map((directive) => directive.trim().toLowerCase());
+  }
+
+  function varyFields(response: Response): string[] {
+    return (response.headers.get("Vary") ?? "")
+      .split(",")
+      .map((field) => field.trim().toLowerCase());
+  }
+
+  it("marks an authenticated tool result private and uncacheable per credential", async () => {
+    enableAgentAccess();
+    mockLookupToken.mockImplementation(async () => ({
+      ok: true,
+      userId: "11111111-2222-3333-4444-555555555555",
+      client: "pat:laptop",
+    }));
+    const response = await POST(
+      jsonRequest(
+        {
+          jsonrpc: "2.0",
+          id: 20,
+          method: "tools/call",
+          params: { name: "get_my_progress", arguments: { locale: "en" } },
+        },
+        { Authorization: `Bearer ${PERSONAL_TOKEN}` },
+      ),
+    );
+
+    expect(response.status).toBe(200);
+    const directives = cacheDirectives(response);
+    expect(directives.slice(0, 2)).toEqual(["private", "no-store"]);
+    expect(directives).not.toContain("public");
+    expect(directives.some((directive) => directive.startsWith("max-age"))).toBe(
+      false,
+    );
+    expect(varyFields(response)).toContain("authorization");
+    // The body still streams the tool result through unchanged.
+    expect(await response.text()).toContain("has_stored_progress");
+  });
+
+  it("marks an authenticated tools/list private and uncacheable per credential", async () => {
+    enableAgentAccess();
+    mockLookupToken.mockImplementation(async () => ({
+      ok: true,
+      userId: "11111111-2222-3333-4444-555555555555",
+      client: "pat:laptop",
+    }));
+    const response = await POST(
+      jsonRequest(
+        { jsonrpc: "2.0", id: 21, method: "tools/list", params: {} },
+        { Authorization: `Bearer ${PERSONAL_TOKEN}` },
+      ),
+    );
+
+    expect(response.status).toBe(200);
+    expect(cacheDirectives(response).slice(0, 2)).toEqual(["private", "no-store"]);
+    expect(varyFields(response)).toContain("authorization");
+    expect(await response.text()).toContain("get_my_progress");
+  });
+
+  it("gives the anonymous transport answer the same policy", async () => {
+    enableAgentAccess();
+    const response = await POST(jsonRequest(INITIALIZE));
+
+    expect(response.status).toBe(200);
+    expect(cacheDirectives(response).slice(0, 2)).toEqual(["private", "no-store"]);
+    expect(varyFields(response)).toContain("authorization");
+    expect(await response.text()).toContain("protocolVersion");
+  });
+
+  it("keeps the transport's event-stream type and its no-transform", async () => {
+    enableAgentAccess();
+    const response = await POST(
+      jsonRequest({ jsonrpc: "2.0", id: 22, method: "tools/list", params: {} }),
+    );
+
+    // The SDK answers as Server-Sent Events with `no-cache, no-transform`.
+    // no-transform survives so no intermediary buffers the stream.
+    expect(response.headers.get("Content-Type")).toMatch(/^text\/event-stream/);
+    expect(response.headers.get("Cache-Control")).toBe(
+      "private, no-store, no-transform",
+    );
+    expect(response.headers.get("Vary")).toBe("Authorization");
+    expect(await response.text()).toContain("list_courses");
+  });
+
+  it("leaves the public explainer page publicly cacheable", async () => {
+    enableAgentAccess();
+    const response = await GET(new Request(ENDPOINT));
+
+    expect(response.headers.get("Cache-Control")).toBe(
+      "public, max-age=600, s-maxage=600",
+    );
+  });
+});

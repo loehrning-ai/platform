@@ -46,6 +46,31 @@ describe("recent account-deletion authentication", () => {
     ).toBe(false);
   });
 
+  // Google sign-in records `oauth`; a token the Supabase OAuth server issued
+  // to a third-party client carries client_id. Only the first is first-party.
+  it("keeps accepting a recent first-party Google sign-in", () => {
+    expect(hasRecentSessionAuthentication(claims("oauth"), "user-1", NOW)).toBe(
+      true,
+    );
+  });
+
+  it.each([
+    ["OAuth client token with an app method", claims("oauth", NOW, { client_id: "b7f0c2d4-client" })],
+    ["OAuth client token with a magic-link method", claims("magiclink", NOW, { client_id: "b7f0c2d4-client" })],
+    ["OAuth client token with an empty client_id", claims("oauth", NOW, { client_id: "" })],
+    [
+      "OAuth-server authorization code",
+      claims("oauth_provider/authorization_code", NOW, { client_id: "b7f0c2d4-client" }),
+    ],
+    ["foreign audience", claims("oauth", NOW, { aud: "https://loehrning.ai/api/mcp" })],
+    ["widened audience", claims("oauth", NOW, { aud: ["authenticated", "https://loehrning.ai/api/mcp"] })],
+  ])("rejects %s claims", (_label, value) => {
+    expect(hasRecentSessionAuthentication(value, "user-1", NOW)).toBe(false);
+    expect(
+      hasRecentSessionAuthentication(value, "user-1", NOW, 24 * 60 * 60),
+    ).toBe(false);
+  });
+
   it.each([
     ["refresh", claims("token_refresh")],
     ["different subject", claims("oauth", NOW, { sub: "user-2" })],

@@ -4,7 +4,7 @@
 // Usage: node scripts/workshops/sync-frame.mjs [--check]
 // --check exits 1 when a copy differs from the source (no files are written).
 // Never copy into assets/: that path is served immutable for a year.
-import { readFileSync, writeFileSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -19,13 +19,23 @@ export function frameCopyPath(slug) {
   return path.join(repo, "packages/website/public/workshops", slug, "lib/workshop-frame.css");
 }
 
+/** The copy's bytes, or null when there is no copy yet. Read once, without a separate exists check. */
+export function readCopy(target) {
+  try {
+    return readFileSync(target);
+  } catch (error) {
+    if (error.code === "ENOENT") return null;
+    throw error;
+  }
+}
+
 function main() {
   const check = process.argv.includes("--check");
   const bytes = readFileSync(source);
   let drift = 0;
   for (const slug of FRAME_WORKSHOPS) {
     const target = frameCopyPath(slug);
-    const same = existsSync(target) && readFileSync(target).equals(bytes);
+    const same = readCopy(target)?.equals(bytes) ?? false;
     if (same) continue;
     if (check) {
       drift += 1;

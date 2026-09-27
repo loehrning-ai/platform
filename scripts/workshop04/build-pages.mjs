@@ -31,6 +31,7 @@
 import { readFileSync, writeFileSync, existsSync, statSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { hasAngleBracket, outputProblems, stripTags, withoutCodeAndComments } from "./html-guards.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repo = resolve(here, "..", "..");
@@ -418,12 +419,9 @@ const ALLOWED_TOKEN = [/^20\d\d$/];                  // years
 const ALLOWED_AFTER = /(Scope|prompt|Prompt|page)\s$/;  // "Scope 1", "prompt 01", "page 2"
 
 function auditTemplate(name, tpl) {
-  let text = tpl
-    .replace(/<style[\s\S]*?<\/style>/g, " ")
-    .replace(/<script[\s\S]*?<\/script>/g, " ")
+  let text = withoutCodeAndComments(tpl)
     .replace(/<code>[\s\S]*?<\/code>/g, " ")
     .replace(/\{\{[^}]+\}\}/g, " ")
-    .replace(/<!--[\s\S]*?-->/g, " ")
     .replace(/<[^>]+>/g, " ")
     .replace(/&[a-z]+;/g, " ");
   for (const p of ALLOWED_PHRASES) text = text.split(p).join(" ");
@@ -449,8 +447,9 @@ function folds(name, html) {
   return html.replace(/<section class="g-sec" aria-labelledby="([^"]+)">[\s\S]*?<\/section>/g, (sec, id) => {
     if (!sec.includes("{{fold")) return sec;
     const h2 = new RegExp(`<h2 id="${id}"[^>]*>([\\s\\S]*?)</h2>`).exec(sec);
-    const title = h2 ? h2[1].replace(/<span class="g-n">[^<]*<\/span>/, "").replace(/<[^>]+>/g, "").trim() : "";
+    const title = h2 ? stripTags(h2[1].replace(/<span class="g-n">[^<]*<\/span>/, "")).trim() : "";
     if (!title) fail(`${name}: fold in section ${id} without a heading`);
+    if (hasAngleBracket(title)) fail(`${name}: heading of section ${id} leaves "<" or ">" after its tags are removed`);
     const opens = sec.match(/\{\{fold(?::[a-z]+)?\}\}/g) || [];
     const closes = sec.match(/\{\{endfold\}\}/g) || [];
     if (opens.length !== 1 || closes.length !== 1) fail(`${name}: section ${id} needs exactly one {{fold}} and one {{endfold}}`);
@@ -484,7 +483,11 @@ function render(name, tpl) {
   });
   if (html.includes("{{toc}}")) {
     const items = [...html.matchAll(/<h2 id="([^"]+)"[^>]*><span class="g-n">(\d+)<\/span>([\s\S]*?)<\/h2>/g)];
-    const list = items.map(([, id, n, title]) => `<li><a href="#${id}"><span>${n.padStart(2, "0")}</span>${title.replace(/<[^>]+>/g, "")}</a></li>`).join("");
+    const list = items.map(([, id, n, title]) => {
+      const text = stripTags(title);
+      if (hasAngleBracket(text)) fail(`${name}: heading ${id} leaves "<" or ">" after its tags are removed`);
+      return `<li><a href="#${id}"><span>${n.padStart(2, "0")}</span>${text}</a></li>`;
+    }).join("");
     html = html.split("{{toc}}").join(`<ol>${list}</ol>`).replace("{{toccount}}", String(items.length));
   }
   if (html.includes("{{fold")) html = folds(name, html);
@@ -492,13 +495,14 @@ function render(name, tpl) {
   html = html.replace(/<code>([A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+)<\/code>/g, '<code class="nowrap">$1</code>');
   // output checks
   if (/[\u2013\u2014]/.test(html)) fail(`${name}: en or em dash in output`);
-  if (/\son[a-z]+\s*=/i.test(html.replace(/<script[\s\S]*?<\/script>/g, ""))) fail(`${name}: inline event handler attribute`);
+  // No inline executable script and no event handler attribute, anywhere in the page.
+  for (const problem of outputProblems(html)) fail(`${name}: ${problem}`);
   if (/\b(fetch|localStorage|innerHTML|outerHTML|insertAdjacentHTML|document\.write|eval)\b/.test(html)) fail(`${name}: forbidden sink`);
   if (/<iframe/i.test(html)) fail(`${name}: iframe`);
   for (const [, href] of html.matchAll(/href="([^"]*)"/g)) if (href.endsWith("/")) fail(`${name}: href ends in "/": ${href}`);
   for (const [tok] of html.matchAll(/[A-Za-z0-9_+/=-]{40,}/g)) if (/[a-z]/.test(tok) && /[A-Z]/.test(tok)) fail(`${name}: mixed-case token of 40+ chars: ${tok.slice(0, 50)}`);
   if (/\{\{|\?\?[a-z_.]+\?\?/.test(html)) fail(`${name}: unresolved placeholder`);
-  if (/esg-kit\.zip/.test(html.replace(new RegExp(KIT.replace(/\./g, "\\."), "g"), ""))) fail(`${name}: stale kit file name`);
+  if (html.split(KIT).join(" ").includes("esg-kit.zip")) fail(`${name}: stale kit file name`);
   if (!html.includes(`href="./${KIT}"`)) fail(`${name}: no link to the kit`);
   if (!/[Ii]llustrative teaching/.test(html)) fail(`${name}: the factors are not labelled illustrative teaching values`);
   for (const [, href] of html.matchAll(/(?:href|src)="\.\/([^"#?]+)"/g)) {
