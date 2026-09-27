@@ -19,9 +19,6 @@ const surfaceMock = vi.mocked(trackAgentTokenSurface);
 
 const COPY = AGENT_ACCOUNT_COPY.de;
 
-/** The server render instant every panel below is judged against. */
-const RENDERED_AT = "2026-09-10T12:00:00.000Z";
-
 const TOKEN: AgentTokenView = {
   id: "9a4c2f4a-1111-4222-8333-444455556666",
   name: "Claude Desktop",
@@ -29,7 +26,6 @@ const TOKEN: AgentTokenView = {
   createdAt: "2026-09-01T09:00:00.000Z",
   lastUsedAt: null,
   revokedAt: null,
-  expiresAt: "2026-11-30T09:00:00.000Z",
 };
 
 function ok(items: readonly AgentTokenView[]): RegionOutcome<AgentTokenView> {
@@ -46,7 +42,6 @@ function renderPanel(
       ownerId="owner-1"
       initial={initial}
       agentAccessReady={agentAccessReady}
-      renderedAt={RENDERED_AT}
     />,
   );
 }
@@ -112,7 +107,6 @@ describe("personal access token panel", () => {
           name: "Codex",
           prefix: "lat_zzzzzzzz",
           createdAt: "2026-09-05T10:00:00.000Z",
-          expiresAt: "2026-12-04T10:00:00.000Z",
         },
         201,
       ),
@@ -134,14 +128,10 @@ describe("personal access token panel", () => {
     expect(JSON.parse(String(init.body))).toEqual({
       expectedOwnerId: "owner-1",
       name: "Codex",
-      expiresInDays: 90,
     });
     expect(screen.getByText("lat_" + "z".repeat(43))).toBeInTheDocument();
     expect(screen.getByText("Codex")).toBeInTheDocument();
     expect(screen.getByText("1 von 5 aktiv")).toBeInTheDocument();
-    expect(
-      screen.getByText(/Gültig bis: 04\.12\.2026, 10:00 UTC/),
-    ).toBeInTheDocument();
   });
 
   it("hides the clear token again on request", async () => {
@@ -156,7 +146,6 @@ describe("personal access token panel", () => {
             name: "Codex",
             prefix: "lat_yyyyyyyy",
             createdAt: "2026-09-05T10:00:00.000Z",
-            expiresAt: "2026-12-04T10:00:00.000Z",
           },
           201,
         ),
@@ -221,7 +210,6 @@ describe("personal access token panel", () => {
     renderPanel(ok([]), false);
     expect(screen.getByRole("button", { name: COPY.tokenCreate })).toBeDisabled();
     expect(screen.getByLabelText(COPY.tokenNameLabel)).toBeDisabled();
-    expect(screen.getByLabelText(COPY.tokenLifetimeLabel)).toBeDisabled();
   });
 
   it("blocks minting at the active ceiling", () => {
@@ -235,177 +223,12 @@ describe("personal access token panel", () => {
     expect(screen.getByText(COPY.tokenLimitReached)).toBeInTheDocument();
   });
 
-  it("shows when a live token stops working", () => {
-    renderPanel(ok([TOKEN]));
-    expect(
-      screen.getByText(/Gültig bis: 30\.11\.2026, 09:00 UTC/),
-    ).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: COPY.tokenRevoke })).toBeEnabled();
-    expect(screen.getByText("1 von 5 aktiv")).toBeInTheDocument();
-  });
-
-  it("marks an expired token as expired and does not count it as active", () => {
-    renderPanel(
-      ok([{ ...TOKEN, expiresAt: "2026-09-10T11:59:59.000Z" }]),
-    );
-    expect(
-      screen.getByText(/Abgelaufen: 10\.09\.2026, 11:59 UTC/),
-    ).toBeInTheDocument();
-    expect(
-      screen.queryByRole("button", { name: COPY.tokenRevoke }),
-    ).not.toBeInTheDocument();
-    expect(screen.queryByText(/Gültig bis/)).not.toBeInTheDocument();
-    expect(screen.getByText("0 von 5 aktiv")).toBeInTheDocument();
-  });
-
-  it("treats a token expiring at the render instant as expired", () => {
-    renderPanel(ok([{ ...TOKEN, expiresAt: RENDERED_AT }]));
-    expect(screen.getByText("0 von 5 aktiv")).toBeInTheDocument();
-    expect(screen.getByText(/Abgelaufen:/)).toBeInTheDocument();
-  });
-
-  it("does not count a token with an unreadable expiry as active", () => {
-    renderPanel(ok([{ ...TOKEN, expiresAt: null }]));
-    expect(screen.getByText("0 von 5 aktiv")).toBeInTheDocument();
-    expect(screen.queryByText(/Gültig bis/)).not.toBeInTheDocument();
-  });
-
-  it("keeps showing a revoked token as revoked after it has also expired", () => {
-    renderPanel(
-      ok([
-        {
-          ...TOKEN,
-          revokedAt: "2026-09-02T08:00:00.000Z",
-          expiresAt: "2026-09-03T08:00:00.000Z",
-        },
-      ]),
-    );
-    expect(
-      screen.getByText(/Zurückgezogen: 02\.09\.2026, 08:00 UTC/),
-    ).toBeInTheDocument();
-    expect(screen.queryByText(/Abgelaufen/)).not.toBeInTheDocument();
-  });
-
-  it("lets five expired tokens leave room for a new one", () => {
-    const tokens = Array.from({ length: 5 }, (_, index) => ({
-      ...TOKEN,
-      id: `token-${index}`,
-      name: `Token ${index}`,
-      expiresAt: "2026-09-09T12:00:00.000Z",
-    }));
-    renderPanel(ok(tokens));
-    expect(screen.getByRole("button", { name: COPY.tokenCreate })).toBeEnabled();
-    expect(screen.queryByText(COPY.tokenLimitReached)).not.toBeInTheDocument();
-  });
-
-  it("offers 30, 90 and 365 days, preselects 90, and sends the choice", async () => {
-    const fetchMock = vi.fn(async () =>
-      jsonResponse(
-        {
-          ok: true,
-          id: "year-token",
-          token: "lat_" + "w".repeat(43),
-          name: "Server",
-          prefix: "lat_wwwwwwww",
-          createdAt: "2026-09-10T12:00:00.000Z",
-          expiresAt: "2027-09-10T12:00:00.000Z",
-        },
-        201,
-      ),
-    );
-    vi.stubGlobal("fetch", fetchMock);
-    renderPanel(ok([]));
-
-    const lifetime = screen.getByLabelText(
-      COPY.tokenLifetimeLabel,
-    ) as HTMLSelectElement;
-    expect(
-      Array.from(lifetime.options).map((option) => [option.value, option.text]),
-    ).toEqual([
-      ["30", "30 Tage"],
-      ["90", "90 Tage"],
-      ["365", "365 Tage"],
-    ]);
-    expect(lifetime.value).toBe("90");
-    expect(lifetime.className).toContain("min-h-11");
-
-    fireEvent.change(lifetime, { target: { value: "365" } });
-    fireEvent.change(screen.getByLabelText(COPY.tokenNameLabel), {
-      target: { value: "Server" },
-    });
-    fireEvent.click(screen.getByRole("button", { name: COPY.tokenCreate }));
-
-    await waitFor(() =>
-      expect(screen.getByText(COPY.tokenOnceTitle)).toBeInTheDocument(),
-    );
-    const [, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
-    expect(JSON.parse(String(init.body))).toEqual({
-      expectedOwnerId: "owner-1",
-      name: "Server",
-      expiresInDays: 365,
-    });
-    expect(
-      screen.getByText(/Gültig bis: 10\.09\.2027, 12:00 UTC/),
-    ).toBeInTheDocument();
-  });
-
-  it("refuses a mint answer that carries no expiry", async () => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn(async () =>
-        jsonResponse(
-          {
-            ok: true,
-            id: "no-expiry",
-            token: "lat_" + "v".repeat(43),
-            name: "Codex",
-            prefix: "lat_vvvvvvvv",
-            createdAt: "2026-09-10T12:00:00.000Z",
-          },
-          201,
-        ),
-      ),
-    );
-    renderPanel(ok([]));
-    fireEvent.change(screen.getByLabelText(COPY.tokenNameLabel), {
-      target: { value: "Codex" },
-    });
-    fireEvent.click(screen.getByRole("button", { name: COPY.tokenCreate }));
-
-    await waitFor(() =>
-      expect(screen.getByRole("alert")).toHaveTextContent(
-        COPY.tokenUnknownError,
-      ),
-    );
-    expect(screen.queryByText(COPY.tokenOnceTitle)).not.toBeInTheDocument();
-  });
-
-  it("names a refused lifetime in a sentence", async () => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn(async () =>
-        jsonResponse({ error: "invalid_token_lifetime" }, 400),
-      ),
-    );
-    renderPanel(ok([]));
-    fireEvent.change(screen.getByLabelText(COPY.tokenNameLabel), {
-      target: { value: "Codex" },
-    });
-    fireEvent.click(screen.getByRole("button", { name: COPY.tokenCreate }));
-    await waitFor(() =>
-      expect(screen.getByRole("alert")).toHaveTextContent(
-        /Gültigkeitsdauer/,
-      ),
-    );
-  });
-
   it("keeps every control at the minimum target height", () => {
     renderPanel(ok([TOKEN]));
     for (const control of [
       screen.getByRole("button", { name: COPY.tokenCreate }),
       screen.getByRole("button", { name: COPY.tokenRevoke }),
       screen.getByLabelText(COPY.tokenNameLabel),
-      screen.getByLabelText(COPY.tokenLifetimeLabel),
     ]) {
       expect(control.className).toContain("min-h-11");
     }
@@ -420,7 +243,6 @@ describe("personal access token panel product events", () => {
     name: "Mein privater Laptop",
     prefix: "lat_qqqqqqqq",
     createdAt: "2026-09-05T10:00:00.000Z",
-    expiresAt: "2026-12-04T10:00:00.000Z",
   };
 
   beforeEach(() => {
@@ -451,7 +273,6 @@ describe("personal access token panel product events", () => {
         ownerId="owner-1"
         initial={ok([TOKEN])}
         agentAccessReady
-        renderedAt={RENDERED_AT}
       />,
     );
 
@@ -483,7 +304,6 @@ describe("personal access token panel product events", () => {
       MINT_RESPONSE.id,
       MINT_RESPONSE.prefix,
       MINT_RESPONSE.createdAt,
-      MINT_RESPONSE.expiresAt,
       "owner-1",
     ]) {
       expect(sent).not.toContain(secret);

@@ -18,7 +18,6 @@ import { MCP_ENDPOINT_PATH } from "@/lib/mcp/config";
 import { MCP_TOOLS } from "@/lib/mcp/tools/registry";
 import { parseResourceUri } from "@/lib/mcp/uris";
 import { PERSONAL_ACCESS_TOKEN_PREFIX } from "@/lib/agent-access/personal-tokens";
-import { AGENT_ACCESS_TOKEN_LIFETIME_DAYS } from "@/app/api/account/agent-tokens/mint";
 import { AGENT_HELP_PATH } from "@/components/course/open-with-your-ai-copy";
 import { absoluteUrl } from "@/lib/seo/entity";
 import { SUPPORTED_LOCALES } from "@/lib/i18n/locale";
@@ -198,19 +197,6 @@ describe("agent help walkthroughs", () => {
     for (const locale of SUPPORTED_LOCALES) {
       expect(AGENT_HELP_COPY[locale].tokens.format).toContain(
         PERSONAL_ACCESS_TOKEN_PREFIX,
-      );
-    }
-  });
-
-  it("names exactly the token lifetimes the mint route offers, and that tokens expire", () => {
-    for (const locale of SUPPORTED_LOCALES) {
-      const steps = AGENT_HELP_COPY[locale].tokens.steps.join(" ");
-      const offered = [...steps.matchAll(/\b(\d+)\b/g)].map(([, days]) =>
-        Number(days),
-      );
-      expect(offered).toEqual([...AGENT_ACCESS_TOKEN_LIFETIME_DAYS]);
-      expect(AGENT_HELP_COPY[locale].tokens.limit(5)).toMatch(
-        locale === "de" ? /abgelaufen/ : /expired/,
       );
     }
   });

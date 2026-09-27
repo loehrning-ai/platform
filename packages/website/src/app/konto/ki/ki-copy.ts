@@ -86,8 +86,6 @@ export interface AgentAccountCopy {
   readonly tokensIntro: string;
   readonly tokenNameLabel: string;
   readonly tokenNamePlaceholder: string;
-  readonly tokenLifetimeLabel: string;
-  readonly tokenLifetimeOption: (days: number) => string;
   readonly tokenCreate: string;
   readonly tokenCreating: string;
   readonly tokenOnceTitle: string;
@@ -100,8 +98,6 @@ export interface AgentAccountCopy {
   readonly tokenLastUsed: (moment: string) => string;
   readonly tokenNeverUsed: string;
   readonly tokenRevokedAt: (moment: string) => string;
-  readonly tokenExpiresAt: (moment: string) => string;
-  readonly tokenExpiredAt: (moment: string) => string;
   readonly tokenRevoke: string;
   readonly tokenRevoking: string;
   readonly tokenActiveCount: (active: number, limit: number) => string;

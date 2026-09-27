@@ -85,11 +85,9 @@ export const AGENT_ACCOUNT_COPY_DE: AgentAccountCopy = {
 
   tokensHeading: "Zugriffsschlüssel",
   tokensIntro:
-    "Für Programme, die keine Freigabe im Browser durchlaufen können. Ein Schlüssel wird genau einmal angezeigt und gilt nur für die Dauer, die du wählst.",
+    "Für Programme, die keine Freigabe im Browser durchlaufen können. Ein Schlüssel wird genau einmal angezeigt.",
   tokenNameLabel: "Name",
   tokenNamePlaceholder: "Claude Desktop auf dem Laptop",
-  tokenLifetimeLabel: "Gültig für",
-  tokenLifetimeOption: (days) => `${days} Tage`,
   tokenCreate: "Schlüssel erzeugen",
   tokenCreating: "Wird erzeugt",
   tokenOnceTitle: "Dein neuer Zugriffsschlüssel",
@@ -103,8 +101,6 @@ export const AGENT_ACCOUNT_COPY_DE: AgentAccountCopy = {
   tokenLastUsed: (moment) => `Zuletzt benutzt: ${moment}`,
   tokenNeverUsed: "Noch nicht benutzt",
   tokenRevokedAt: (moment) => `Zurückgezogen: ${moment}`,
-  tokenExpiresAt: (moment) => `Gültig bis: ${moment}`,
-  tokenExpiredAt: (moment) => `Abgelaufen: ${moment}`,
   tokenRevoke: "Zurückziehen",
   tokenRevoking: "Wird zurückgezogen",
   tokenActiveCount: (active, limit) => `${active} von ${limit} aktiv`,
@@ -125,7 +121,7 @@ export const AGENT_ACCOUNT_COPY_DE: AgentAccountCopy = {
   grantRevoke: "Freigabe zurückziehen",
   grantRevoking: "Wird zurückgezogen",
   grantRevokedNotice:
-    "Freigabe zurückgezogen. Das Programm verliert den Zugriff auf die Agenten-Schnittstelle innerhalb einer Minute. Ein Zugriffstoken, das es schon hat, akzeptiert unser Anmeldedienst Supabase noch bis zu seinem Ablauf.",
+    "Freigabe zurückgezogen. Ein Zugriffstoken, das das Programm schon hat, gilt bis zu seinem Ablauf weiter, auch an der Agenten-Schnittstelle.",
   grantUnknownError: "Die Freigabe konnte nicht zurückgezogen werden.",
   grantsSetupTitle: "Freigaben sind noch nicht eingerichtet.",
   grantsSetupBody:

@@ -19,12 +19,7 @@ type PersonalTokenLookup =
   | { readonly ok: true; readonly userId: string; readonly client: string }
   | {
       readonly ok: false;
-      readonly reason:
-        | "unknown"
-        | "revoked"
-        | "expired"
-        | "account_inactive"
-        | "unavailable";
+      readonly reason: "unknown" | "revoked" | "unavailable";
     };
 
 const mockIsAgentAccessReady = vi.fn<() => boolean>(() => true);
@@ -35,17 +30,6 @@ const mockVerifyOAuthAccessToken = vi.fn<
 const mockLookupPersonalAccessToken = vi.fn<
   (token: string, now: Date) => Promise<PersonalTokenLookup>
 >(async () => ({ ok: false, reason: "unknown" }));
-type SessionLiveness =
-  | { readonly ok: true }
-  | { readonly ok: false; readonly reason: "revoked" | "unavailable" };
-const mockCheckOAuthSessionLive = vi.fn<
-  (
-    sessionId: string,
-    userId: string,
-    now: Date,
-    tokenExpiresAtSeconds: number,
-  ) => Promise<SessionLiveness>
->(async () => ({ ok: true }));
 
 // api-error.ts imports @sentry/nextjs at module scope, and loading that in
 // the test runtime is not possible; every test that reaches it replaces it.
@@ -66,14 +50,6 @@ vi.mock("@/lib/agent-access/personal-tokens", async (importOriginal) => {
       mockLookupPersonalAccessToken(token, now),
   };
 });
-vi.mock("@/lib/agent-access/oauth-sessions", () => ({
-  checkOAuthSessionLive: (
-    sessionId: string,
-    userId: string,
-    now: Date,
-    tokenExpiresAtSeconds: number,
-  ) => mockCheckOAuthSessionLive(sessionId, userId, now, tokenExpiresAtSeconds),
-}));
 vi.mock("./oauth-jwt", () => ({
   verifyOAuthAccessToken: (token: string, options: unknown) =>
     mockVerifyOAuthAccessToken(token, options),
@@ -90,19 +66,6 @@ import {
 const OWNER = "3f1a2b4c-5d6e-4f70-8a9b-0c1d2e3f4a5b";
 const PERSONAL_TOKEN = "lat_obviously-fake-personal-access-token-abcdef";
 const JWT_SHAPED_CREDENTIAL = "header.payload.signature";
-const SESSION_ID = "7c9e6679-7425-40de-944b-e07fc1f90ae7";
-/**
- * Three segments whose payload carries a session id. The signature check is
- * mocked, so only the payload has to decode; the resolver reads session_id
- * from it after the verifier accepted the token.
- */
-function oauthToken(claims: Record<string, unknown>): string {
-  const payload = Buffer.from(JSON.stringify(claims), "utf8").toString(
-    "base64url",
-  );
-  return `header.${payload}.signature`;
-}
-const OAUTH_ACCESS_TOKEN = oauthToken({ session_id: SESSION_ID });
 const NOW = new Date("2026-09-05T12:00:00.000Z");
 const METADATA_URL =
   "https://loehrning.ai/.well-known/oauth-protected-resource/api/mcp";
@@ -124,7 +87,6 @@ beforeEach(() => {
     ok: false,
     reason: "unknown",
   }));
-  mockCheckOAuthSessionLive.mockImplementation(async () => ({ ok: true }));
 });
 
 describe("readBearerCredential", () => {
@@ -220,10 +182,6 @@ describe("resolveAgentPrincipal", () => {
   it.each([
     ["unknown", "invalid_token"],
     ["revoked", "revoked_token"],
-    ["expired", "expired_token"],
-    // A banned or soft-deleted owner: the access the token stood for has
-    // ended, and the answer says nothing more about the account.
-    ["account_inactive", "revoked_token"],
     ["unavailable", "verifier_unavailable"],
   ] as const)(
     "maps the %s personal token lookup to %s",
@@ -254,7 +212,7 @@ describe("resolveAgentPrincipal", () => {
     });
 
     const result = await resolveAgentPrincipal(
-      requestWith(`Bearer ${OAUTH_ACCESS_TOKEN}`),
+      requestWith(`Bearer ${JWT_SHAPED_CREDENTIAL}`),
       NOW,
     );
 
@@ -267,13 +225,7 @@ describe("resolveAgentPrincipal", () => {
         scopes: ["openid", "email"],
       },
     });
-    expect(mockCheckOAuthSessionLive).toHaveBeenCalledWith(
-      SESSION_ID,
-      OWNER,
-      NOW,
-      4102444800,
-    );
-    expect(mockVerifyOAuthAccessToken).toHaveBeenCalledWith(OAUTH_ACCESS_TOKEN, {
+    expect(mockVerifyOAuthAccessToken).toHaveBeenCalledWith(JWT_SHAPED_CREDENTIAL, {
       issuer: "https://project.supabase.co/auth/v1",
       audience: "https://loehrning.ai/api/mcp",
       jwksUrl: "https://project.supabase.co/auth/v1/.well-known/jwks.json",
@@ -293,89 +245,11 @@ describe("resolveAgentPrincipal", () => {
     });
 
     const result = await resolveAgentPrincipal(
-      requestWith(`Bearer ${OAUTH_ACCESS_TOKEN}`),
+      requestWith(`Bearer ${JWT_SHAPED_CREDENTIAL}`),
       NOW,
     );
 
     expect(result.ok && result.principal.client).toBe("oauth:unknown");
-  });
-
-  // A verified signature says the token was issued, not that the grant still
-  // stands. Revoking the grant, signing out everywhere, or deleting the
-  // account ends the token's Auth session before the token expires.
-  describe("the grant behind a verified access token", () => {
-    function verified(): void {
-      mockVerifyOAuthAccessToken.mockResolvedValue({
-        ok: true,
-        token: {
-          subject: OWNER,
-          clientId: "claude-desktop",
-          scopes: [],
-          expiresAt: 4102444800,
-        },
-      });
-    }
-
-    it.each([
-      ["no session_id", oauthToken({ sub: OWNER })],
-      ["a session_id that is not a UUID", oauthToken({ session_id: "session-1" })],
-      ["a numeric session_id", oauthToken({ session_id: 42 })],
-      ["a payload that is not JSON", "header.bm90LWpzb24.signature"],
-      ["a payload that is not an object", oauthToken([SESSION_ID] as unknown as Record<string, unknown>)],
-    ])("refuses a token with %s", async (_label, token) => {
-      verified();
-
-      expect(await resolveAgentPrincipal(requestWith(`Bearer ${token}`), NOW))
-        .toEqual({ ok: false, rejection: "invalid_token" });
-      expect(mockCheckOAuthSessionLive).not.toHaveBeenCalled();
-    });
-
-    it("refuses a token whose session has ended", async () => {
-      verified();
-      mockCheckOAuthSessionLive.mockResolvedValueOnce({
-        ok: false,
-        reason: "revoked",
-      });
-
-      expect(
-        await resolveAgentPrincipal(requestWith(`Bearer ${OAUTH_ACCESS_TOKEN}`), NOW),
-      ).toEqual({ ok: false, rejection: "revoked_token" });
-    });
-
-    it("fails closed when the session cannot be checked", async () => {
-      verified();
-      mockCheckOAuthSessionLive.mockResolvedValueOnce({
-        ok: false,
-        reason: "unavailable",
-      });
-
-      expect(
-        await resolveAgentPrincipal(requestWith(`Bearer ${OAUTH_ACCESS_TOKEN}`), NOW),
-      ).toEqual({ ok: false, rejection: "verifier_unavailable" });
-    });
-
-    it("never checks a session for a token the verifier refused", async () => {
-      mockVerifyOAuthAccessToken.mockResolvedValue({
-        ok: false,
-        reason: "invalid_signature",
-      });
-
-      await resolveAgentPrincipal(requestWith(`Bearer ${OAUTH_ACCESS_TOKEN}`), NOW);
-
-      expect(mockCheckOAuthSessionLive).not.toHaveBeenCalled();
-    });
-
-    it("never checks an OAuth session for a personal access token", async () => {
-      mockLookupPersonalAccessToken.mockResolvedValueOnce({
-        ok: true,
-        userId: OWNER,
-        client: "pat:Laptop",
-      });
-
-      await resolveAgentPrincipal(requestWith(`Bearer ${PERSONAL_TOKEN}`), NOW);
-
-      expect(mockCheckOAuthSessionLive).not.toHaveBeenCalled();
-    });
   });
 
   it.each([

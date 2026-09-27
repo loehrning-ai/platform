@@ -65,12 +65,8 @@ vi.mock("./chat-workbench", () => ({
   ),
 }));
 vi.mock("./tokens-panel", () => ({
-  TokensPanel: (props: {
-    agentAccessReady: boolean;
-    ownerId: string;
-    renderedAt: string;
-  }) => (
-    <div data-testid="tokens-panel" data-rendered-at={props.renderedAt}>
+  TokensPanel: (props: { agentAccessReady: boolean; ownerId: string }) => (
+    <div data-testid="tokens-panel">
       {String(props.agentAccessReady)}:{props.ownerId}
     </div>
   ),
@@ -196,17 +192,6 @@ describe("/konto/ki", () => {
       COPY.grantsHeading,
       COPY.activityHeading,
     ]);
-  });
-
-  it("hands the token list the server's render instant to judge expiry by", async () => {
-    const before = Date.now();
-    await renderPage();
-    const after = Date.now();
-    const renderedAt =
-      screen.getByTestId("tokens-panel").getAttribute("data-rendered-at") ?? "";
-    expect(renderedAt).toBe(new Date(Date.parse(renderedAt)).toISOString());
-    expect(Date.parse(renderedAt)).toBeGreaterThanOrEqual(before);
-    expect(Date.parse(renderedAt)).toBeLessThanOrEqual(after);
   });
 
   it("gives the section navigation its own accessible name", async () => {

@@ -100,24 +100,22 @@ describe("agent account copy", () => {
     expect(AGENT_ACCOUNT_COPY.en.tokenOnceBody).toContain("not stored");
   });
 
-  it("says how fast a grant revocation takes effect, and where it does not", () => {
-    // The agent interface re-checks the grant's session at most a minute
-    // later; the Supabase access token itself lives until it expires, which
-    // the consent screen already says. "Access revoked." alone promised more.
+  it("does not promise that revoking a grant stops a token already issued", () => {
+    // The agent interface verifies an OAuth access token by signature and
+    // expiry only, so a token issued before the revocation keeps working
+    // there until it expires. "Access revoked." alone promised more.
     expect(AGENT_ACCOUNT_COPY.de.grantRevokedNotice).toContain(
-      "innerhalb einer Minute",
+      "bis zu seinem Ablauf",
     );
-    expect(AGENT_ACCOUNT_COPY.de.grantRevokedNotice).toContain("Ablauf");
-    expect(AGENT_ACCOUNT_COPY.en.grantRevokedNotice).toContain(
-      "within a minute",
+    expect(AGENT_ACCOUNT_COPY.de.grantRevokedNotice).toContain(
+      "Agenten-Schnittstelle",
     );
     expect(AGENT_ACCOUNT_COPY.en.grantRevokedNotice).toContain("until it expires");
-  });
-
-  it("names a token's expiry in both locales", () => {
-    expect(AGENT_ACCOUNT_COPY.de.tokenLifetimeOption(90)).toBe("90 Tage");
-    expect(AGENT_ACCOUNT_COPY.en.tokenLifetimeOption(90)).toBe("90 days");
-    expect(AGENT_ACCOUNT_COPY.de.tokenExpiredAt("X")).toContain("Abgelaufen");
-    expect(AGENT_ACCOUNT_COPY.en.tokenExpiredAt("X")).toContain("Expired");
+    expect(AGENT_ACCOUNT_COPY.en.grantRevokedNotice).toContain("agent interface");
+    for (const locale of ["de", "en"] as const) {
+      expect(AGENT_ACCOUNT_COPY[locale].grantRevokedNotice).not.toMatch(
+        /Minute|minute/,
+      );
+    }
   });
 });

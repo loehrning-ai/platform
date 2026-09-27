@@ -18,10 +18,6 @@ export const OAUTH_GRANTS_ENDPOINT = "/api/account/oauth-grants";
 export const MAX_ACTIVE_TOKENS = 5;
 /** Mirrors AGENT_ACCESS_TOKEN_NAME_MAX_LENGTH and the column CHECK. */
 export const TOKEN_NAME_MAX_LENGTH = 64;
-/** Mirrors AGENT_ACCESS_TOKEN_LIFETIME_DAYS: the lifetimes the route grants. */
-export const TOKEN_LIFETIME_DAYS = [30, 90, 365] as const;
-/** Mirrors DEFAULT_AGENT_ACCESS_TOKEN_LIFETIME_DAYS. */
-export const DEFAULT_TOKEN_LIFETIME_DAYS: (typeof TOKEN_LIFETIME_DAYS)[number] = 90;
 /** Mirrors ACCOUNT_CHAT_MAX_MESSAGE_BYTES; used as a cheap length gate. */
 export const CHAT_MESSAGE_MAX_BYTES = 32 * 1024;
 /** Mirrors ACCOUNT_CHAT_MAX_HISTORY_MESSAGES. */

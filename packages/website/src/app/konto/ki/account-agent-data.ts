@@ -22,7 +22,7 @@ export const AGENT_ACCESS_TOKENS_TABLE = "agent_access_tokens";
 
 /** The account page shows the most recent 50 accesses and no more. */
 export const AGENT_ACCESS_EVENT_LIMIT = 50;
-/** An account may hold five active tokens; revoked and expired rows are retained. */
+/** An account may hold five active tokens; revoked rows are retained. */
 const AGENT_TOKEN_ROW_LIMIT = 50;
 /** A registered client list this long is already pathological. */
 const OAUTH_GRANT_LIMIT = 50;
@@ -34,7 +34,7 @@ const GRANT_TEXT_MAX_LENGTH = 200;
  * refuses `select *` by design, so naming them is required, not stylistic.
  */
 const AGENT_TOKEN_COLUMNS =
-  "id, name, prefix, created_at, last_used_at, revoked_at, expires_at";
+  "id, name, prefix, created_at, last_used_at, revoked_at";
 const AGENT_EVENT_COLUMNS = "id, client, tool, ok, duration_ms, created_at";
 
 export interface AgentAccessEventView {
@@ -53,12 +53,6 @@ export interface AgentTokenView {
   readonly createdAt: string;
   readonly lastUsedAt: string | null;
   readonly revokedAt: string | null;
-  /**
-   * When the token stops working. The column is NOT NULL; null here means the
-   * value could not be read, and the panel then treats the token as not live,
-   * exactly as the bearer resolver refuses it.
-   */
-  readonly expiresAt: string | null;
 }
 
 export interface OAuthGrantView {
@@ -138,7 +132,6 @@ function toToken(row: unknown): AgentTokenView | null {
     createdAt,
     lastUsedAt: instant(field(row, "last_used_at")),
     revokedAt: instant(field(row, "revoked_at")),
-    expiresAt: instant(field(row, "expires_at")),
   };
 }
 

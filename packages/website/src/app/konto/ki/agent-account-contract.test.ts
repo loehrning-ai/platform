@@ -13,9 +13,7 @@ import {
 } from "@/lib/anthropic-chat/config";
 import { ACCOUNT_LLM_PROVIDERS } from "@/lib/llm-keys/providers";
 import {
-  AGENT_ACCESS_TOKEN_LIFETIME_DAYS,
   AGENT_ACCESS_TOKEN_NAME_MAX_LENGTH,
-  DEFAULT_AGENT_ACCESS_TOKEN_LIFETIME_DAYS,
   MAX_ACTIVE_AGENT_ACCESS_TOKENS,
 } from "@/app/api/account/agent-tokens/mint";
 import {
@@ -23,9 +21,7 @@ import {
   ACCOUNT_CHAT_PROVIDER,
   CHAT_MAX_HISTORY_MESSAGES,
   CHAT_MESSAGE_MAX_BYTES,
-  DEFAULT_TOKEN_LIFETIME_DAYS,
   MAX_ACTIVE_TOKENS,
-  TOKEN_LIFETIME_DAYS,
   TOKEN_NAME_MAX_LENGTH,
 } from "./agent-account-contract";
 import {
@@ -44,13 +40,6 @@ describe("agent account client contract", () => {
   it("mirrors the personal access token limits", () => {
     expect(MAX_ACTIVE_TOKENS).toBe(MAX_ACTIVE_AGENT_ACCESS_TOKENS);
     expect(TOKEN_NAME_MAX_LENGTH).toBe(AGENT_ACCESS_TOKEN_NAME_MAX_LENGTH);
-  });
-
-  it("offers exactly the lifetimes the mint route grants, with its default", () => {
-    expect(TOKEN_LIFETIME_DAYS).toEqual(AGENT_ACCESS_TOKEN_LIFETIME_DAYS);
-    expect(DEFAULT_TOKEN_LIFETIME_DAYS).toBe(
-      DEFAULT_AGENT_ACCESS_TOKEN_LIFETIME_DAYS,
-    );
   });
 
   it("mirrors the chat ceilings and endpoint", () => {

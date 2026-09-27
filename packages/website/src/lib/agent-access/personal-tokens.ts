@@ -1,7 +1,6 @@
 import "server-only";
 
 import { after } from "next/server";
-import type { SupabaseClient } from "@supabase/supabase-js";
 import { reportApiError } from "@/lib/observability/api-error";
 import { tryCreateServiceClient } from "@/lib/supabase/server";
 import { personalTokenClientLabel } from "./record";
@@ -23,14 +22,6 @@ import { personalTokenClientLabel } from "./record";
  */
 
 export const AGENT_ACCESS_TOKENS_TABLE = "agent_access_tokens";
-
-/**
- * Service-role function that answers whether a token owner may still use
- * one: the account exists, is not banned, and is not soft-deleted. Defined in
- * supabase/migrations/20260927100200_add_agent_access_token_expiry.sql.
- */
-export const AGENT_ACCESS_TOKEN_OWNER_ACTIVE_RPC =
-  "agent_access_token_owner_active";
 
 /** Every minted token begins with this. */
 export const PERSONAL_ACCESS_TOKEN_PREFIX = "lat_";
@@ -80,58 +71,14 @@ export type PersonalTokenLookup =
     }
   | {
       readonly ok: false;
-      /**
-       * `unknown`: no such token. `revoked`: its owner withdrew it.
-       * `expired`: its expiry has passed. `account_inactive`: the owning
-       * account is banned or soft-deleted. `unavailable`: the store could not
-       * answer, which is never read as a yes.
-       */
-      readonly reason:
-        | "unknown"
-        | "revoked"
-        | "expired"
-        | "account_inactive"
-        | "unavailable";
+      readonly reason: "unknown" | "revoked" | "unavailable";
     };
-
-export type PersonalTokenRefusal = Extract<
-  PersonalTokenLookup,
-  { readonly ok: false }
->["reason"];
 
 interface AgentAccessTokenRow {
   readonly id: string;
   readonly user_id: string;
   readonly name: string;
   readonly revoked_at: string | null;
-  readonly expires_at: string | null;
-}
-
-/**
- * Ask the database whether the token owner's account is still in good
- * standing. Only a boolean is an answer; an error, a throw, or any other value
- * is `unavailable`, and the caller refuses the token.
- */
-async function ownerStanding(
-  client: SupabaseClient,
-  userId: string,
-): Promise<"active" | "inactive" | "unavailable"> {
-  try {
-    const { data, error } = await client.rpc(
-      AGENT_ACCESS_TOKEN_OWNER_ACTIVE_RPC,
-      { p_user_id: userId },
-    );
-    if (error) {
-      reportApiError({ step: "supabase-read", error });
-      return "unavailable";
-    }
-    if (data === true) return "active";
-    if (data === false) return "inactive";
-    return "unavailable";
-  } catch (error) {
-    reportApiError({ step: "supabase-read", error });
-    return "unavailable";
-  }
 }
 
 /**
@@ -175,18 +122,10 @@ function touchLastUsedAt(tokenId: string, at: Date): void {
  * for the service role, which means a verifier value cannot be read back out
  * of the table by this path at all.
  *
- * A recognised token is accepted only while all of this holds, checked in
- * this order and each refused with its own reason:
- *
- * 1. its owner has not revoked it;
- * 2. its `expires_at` lies after `now` (the column is NOT NULL and capped at
- *    366 days after creation; an unreadable value fails closed);
- * 3. the owning account is neither banned nor soft-deleted, asked through
- *    `public.agent_access_token_owner_active`. Deleting the account removes
- *    the row itself through `ON DELETE CASCADE`.
- *
- * Nothing is cached, so a revocation, an expiry, or a ban takes effect on the
- * next call. `last_used_at` is touched only for an accepted token.
+ * A token stays valid until its owner revokes it or deletes the account. The
+ * table has no expiry yet, and the owner's account standing (banned or
+ * soft-deleted) is not asked here: both belong to the security audit F5
+ * database follow-up, which ships once its migration has been applied.
  */
 export async function lookupPersonalAccessToken(
   token: string,
@@ -208,7 +147,7 @@ export async function lookupPersonalAccessToken(
   try {
     const { data, error } = await client
       .from(AGENT_ACCESS_TOKENS_TABLE)
-      .select("id, user_id, name, revoked_at, expires_at")
+      .select("id, user_id, name, revoked_at")
       .eq("token_hash", digest)
       .maybeSingle();
     if (error) {
@@ -223,17 +162,6 @@ export async function lookupPersonalAccessToken(
 
   if (!row) return { ok: false, reason: "unknown" };
   if (row.revoked_at !== null) return { ok: false, reason: "revoked" };
-
-  const expiresAt =
-    typeof row.expires_at === "string" ? Date.parse(row.expires_at) : Number.NaN;
-  if (Number.isNaN(expiresAt)) return { ok: false, reason: "unavailable" };
-  if (expiresAt <= now.getTime()) return { ok: false, reason: "expired" };
-
-  const standing = await ownerStanding(client, row.user_id);
-  if (standing === "inactive") {
-    return { ok: false, reason: "account_inactive" };
-  }
-  if (standing !== "active") return { ok: false, reason: "unavailable" };
 
   touchLastUsedAt(row.id, now);
 

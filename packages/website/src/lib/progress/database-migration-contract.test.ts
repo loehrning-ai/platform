@@ -32,9 +32,6 @@ describe("production database migration contract", () => {
       "20260905120000_add_agent_access_tokens.sql",
       "20260905120100_add_agent_access_events.sql",
       "20260905120200_add_account_llm_keys.sql",
-      "20260927100000_restrict_oauth_client_tokens_on_account_tables.sql",
-      "20260927100100_add_agent_oauth_session_liveness.sql",
-      "20260927100200_add_agent_access_token_expiry.sql",
     ]);
   });
 

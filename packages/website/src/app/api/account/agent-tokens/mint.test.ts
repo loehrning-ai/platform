@@ -21,25 +21,14 @@ import {
   PERSONAL_ACCESS_TOKEN_PREFIX,
 } from "@/lib/agent-access/personal-tokens";
 import {
-  AGENT_ACCESS_TOKEN_LIFETIME_DAYS,
-  DEFAULT_AGENT_ACCESS_TOKEN_LIFETIME_DAYS,
-  isAgentAccessTokenLifetime,
   MAX_ACTIVE_AGENT_ACCESS_TOKENS,
   mintPersonalAccessToken,
-  personalAccessTokenExpiry,
 } from "./mint";
 
 const MIGRATION = readFileSync(
   resolve(
     process.cwd(),
     "supabase/migrations/20260905120000_add_agent_access_tokens.sql",
-  ),
-  "utf8",
-);
-const EXPIRY_MIGRATION = readFileSync(
-  resolve(
-    process.cwd(),
-    "supabase/migrations/20260927100200_add_agent_access_token_expiry.sql",
   ),
   "utf8",
 );
@@ -88,53 +77,5 @@ describe("mintPersonalAccessToken", () => {
 
   it("caps an account at five live credentials", () => {
     expect(MAX_ACTIVE_AGENT_ACCESS_TOKENS).toBe(5);
-  });
-});
-
-describe("personal access token lifetimes", () => {
-  const DAY_MS = 24 * 60 * 60 * 1000;
-
-  it("offers 30, 90 and 365 days and defaults to 90", () => {
-    expect(AGENT_ACCESS_TOKEN_LIFETIME_DAYS).toEqual([30, 90, 365]);
-    expect(DEFAULT_AGENT_ACCESS_TOKEN_LIFETIME_DAYS).toBe(90);
-    expect(AGENT_ACCESS_TOKEN_LIFETIME_DAYS).toContain(
-      DEFAULT_AGENT_ACCESS_TOKEN_LIFETIME_DAYS,
-    );
-  });
-
-  it("stays inside the column CHECK and matches the column default", () => {
-    // The CHECK is the ceiling; every offered lifetime keeps a day of
-    // headroom under it for clock drift between app and database.
-    expect(EXPIRY_MIGRATION).toContain(
-      "expires_at <= created_at + interval '366 days'",
-    );
-    expect(EXPIRY_MIGRATION).toContain("expires_at > created_at");
-    for (const days of AGENT_ACCESS_TOKEN_LIFETIME_DAYS) {
-      expect(days).toBeGreaterThan(0);
-      expect(days).toBeLessThanOrEqual(365);
-    }
-    expect(EXPIRY_MIGRATION).toContain(
-      `set default (pg_catalog.now() + interval '${DEFAULT_AGENT_ACCESS_TOKEN_LIFETIME_DAYS} days')`,
-    );
-  });
-
-  it("accepts only the offered numbers", () => {
-    for (const days of AGENT_ACCESS_TOKEN_LIFETIME_DAYS) {
-      expect(isAgentAccessTokenLifetime(days)).toBe(true);
-    }
-    for (const value of [0, -30, 7, 366, 90.5, "90", null, undefined, [90], NaN]) {
-      expect(isAgentAccessTokenLifetime(value)).toBe(false);
-    }
-  });
-
-  it("computes the expiry from the issue instant", () => {
-    const issuedAt = new Date("2026-09-27T08:00:00.000Z");
-
-    expect(personalAccessTokenExpiry(issuedAt, 30).toISOString()).toBe(
-      "2026-10-27T08:00:00.000Z",
-    );
-    expect(
-      personalAccessTokenExpiry(issuedAt, 365).getTime() - issuedAt.getTime(),
-    ).toBe(365 * DAY_MS);
   });
 });

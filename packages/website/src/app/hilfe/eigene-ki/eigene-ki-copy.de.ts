@@ -95,7 +95,7 @@ export const AGENT_HELP_COPY_DE: AgentHelpCopy = {
       "Die öffentlichen Inhalte gehen ohne alles. Für deinen eigenen Lernstand muss dein Programm belegen, für wen es arbeitet. Dafür gibt es Zugriffsschlüssel: eine Zeichenfolge, die du in deinem Konto anlegst und in deinem Programm hinterlegst.",
     steps: [
       "Melde dich an und öffne Konto, Deine KI.",
-      "Lege einen Zugriffsschlüssel an, gib ihm einen Namen, der dir sagt, welches Gerät ihn benutzt, und wähle, wie lange er gilt: 30, 90 oder 365 Tage.",
+      "Lege einen Zugriffsschlüssel an und gib ihm einen Namen, der dir sagt, welches Gerät ihn benutzt.",
       "Kopiere den Schlüssel sofort. Er wird genau einmal angezeigt und danach nur noch als Kürzel.",
       "Hinterlege ihn in deinem Programm als Kopfzeile Authorization mit dem Wort Bearer davor.",
     ],
@@ -106,7 +106,7 @@ export const AGENT_HELP_COPY_DE: AgentHelpCopy = {
     format:
       "Ein Schlüssel beginnt immer mit lat_ und ist danach zufällig. Gespeichert wird nur ein Prüfwert, nicht der Schlüssel selbst: Auch der Betreiber kann ihn dir nicht noch einmal zeigen. Verlierst du ihn, widerrufst du ihn und legst einen neuen an.",
     limit: (maxActive) =>
-      `Du kannst bis zu ${maxActive} Schlüssel gleichzeitig aktiv haben und jeden einzeln widerrufen. Ein widerrufener oder abgelaufener Schlüssel gilt ab der nächsten Anfrage nicht mehr.`,
+      `Du kannst bis zu ${maxActive} Schlüssel gleichzeitig aktiv haben und jeden einzeln widerrufen. Ein widerrufener Schlüssel gilt ab der nächsten Anfrage nicht mehr.`,
     bearerActive:
       "Schickst du deinen Schlüssel mit, kommen zwei Werkzeuge dazu: dein Lernstand und dein nächster Schritt. Beide lesen nur, geschrieben wird nichts. Ohne Schlüssel bleibt dein Konto unerreichbar, und ein widerrufener Schlüssel wird abgewiesen statt still auf die öffentlichen Werkzeuge zurückzufallen.",
     bearerPending: "",
