@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
@@ -51,12 +51,16 @@ describe("workshop frame stylesheet", () => {
   it("ships a byte-identical copy of scripts/workshops/workshop-frame.css in every restyled folder", () => {
     for (const slug of FRAME_WORKSHOPS) {
       const copy = join(publicWorkshops, slug, "lib/workshop-frame.css");
+      // One read, no stat first: a missing copy reads as null.
+      let bytes: Buffer | null;
+      try {
+        bytes = readFileSync(copy);
+      } catch {
+        bytes = null;
+      }
+      expect(bytes, `${slug}: lib/workshop-frame.css missing`).not.toBeNull();
       expect(
-        statSync(copy).isFile(),
-        `${slug}: lib/workshop-frame.css missing`,
-      ).toBe(true);
-      expect(
-        readFileSync(copy).equals(source),
+        bytes!.equals(source),
         `${slug}: lib/workshop-frame.css drifted; run node scripts/workshops/sync-frame.mjs`,
       ).toBe(true);
     }

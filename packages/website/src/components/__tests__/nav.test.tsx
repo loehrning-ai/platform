@@ -123,7 +123,8 @@ describe("<Nav />", () => {
     expect(grids).toHaveLength(3);
     for (const link of fallback!.querySelectorAll("a")) {
       expect(link.className).toContain("min-h-11");
-      expect(link.getAttribute("href")).not.toMatch(/github\.com/);
+      const host = new URL(link.getAttribute("href") ?? "", "https://loehrning.ai").hostname;
+      expect(host).not.toMatch(/(?:^|\.)github\.com$/);
     }
     expect(container.querySelector(".js-desktop-nav")).not.toBeNull();
     expect(fallback!.querySelector("[data-language-switch]")).toBeNull();
@@ -497,7 +498,11 @@ describe("<Nav />", () => {
     expect(
       within(dialog)
         .getAllByRole("link")
-        .some((link) => /github\.com/.test(link.getAttribute("href") ?? "")),
+        .some((link) =>
+          /(?:^|\.)github\.com$/.test(
+            new URL(link.getAttribute("href") ?? "", "https://loehrning.ai").hostname,
+          ),
+        ),
     ).toBe(false);
   });
 
