@@ -9,7 +9,7 @@ export const DEMOS_PAGE_COPY = {
     metadata: {
       title: "KI-Praxisbeispiele im Browser",
       description: (count: number) =>
-        `${count} interaktive KI-Praxisbeispiele mit offenen Daten, Annahmen und Kontrollschritten.`,
+        `${count} interaktive KI-Praxisbeispiele mit ausgewiesenen Daten, Annahmen und Kontrollschritten.`,
       openGraphDescription: (count: number) =>
         `${count} interaktive Praxisbeispiele für KI-Workflows, Automatisierung, Retrieval, Governance und Betrieb.`,
       missingTitle: "Praxisbeispiel nicht gefunden",
@@ -149,7 +149,7 @@ export const DEMOS_PAGE_COPY = {
     metadata: {
       title: "Interactive AI practice examples",
       description: (count: number) =>
-        `${count} interactive AI practice examples with open data, assumptions and control steps.`,
+        `${count} interactive AI practice examples with labelled data, assumptions and control steps.`,
       openGraphDescription: (count: number) =>
         `${count} interactive examples covering AI workflows, automation, retrieval, governance, and operations.`,
       missingTitle: "Practice example not found",

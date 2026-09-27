@@ -214,19 +214,19 @@ Free AI and data learning resources in German and English. Each page states its 
 
 Öffentlich sind Landingpages, technische Kursreader, Bücher, Demos, Workshops, Blog, Open-Source-Artefakte und maschinenlesbare Metadaten. Die Reader der vier Grundlagenkurse brauchen ein Konto. Quiz-, Abschluss- und Verifizierungsseiten können direkt erreichbar sein, werden aber nicht indexiert.
 
-Public: landing pages, technical course readers, books, demos, workshops, the blog, open-source artifacts and machine-readable metadata. The four foundation-course readers require an account. Quiz, completion and verification pages may be reachable directly but are not indexed.
+Public content: landing pages, technical course readers, books, demos, workshops, the blog, open-source artifacts and machine-readable metadata. The four foundation-course readers require an account. Quiz, completion and verification pages may be reachable directly but are not indexed.
 
 ## Sprachmodell / Language model
 
 Kanonische deutsche URLs haben kein Präfix, geprüfte englische Fassungen liegen unter /en. Eine /en-URL steht hier und in der Sitemap erst nach geprüfter Inhalts- und Routenparität. Nicht gelistete /en-Seiten gelten nicht als übersetzt.
 
-Canonical German URLs have no prefix, reviewed English versions live under /en. An /en URL appears here and in the sitemap only after verified content and route parity. Unlisted /en routes are not translated.
+Canonical German URLs have no prefix; reviewed English versions live under /en. An /en URL appears here and in the sitemap only after verified content and route parity. Treat unlisted /en routes as untranslated.
 
 ## Private Zustände / Private state
 
-Ein vollständig konfiguriertes Lernkonto speichert Fortschritt, Quiz- und Abschlussstatus und Datenschutzaktionen auf dem Server. Sonst bleiben kontogeschützte Reader geschlossen. Private APIs, Kontoseiten, Providerkonfiguration und Betriebsnachweise stehen nicht hier.
+Mit vollständiger Providerkonfiguration speichert das Lernkonto Fortschritt, Quiz- und Abschlussstatus und Datenschutzaktionen auf dem Server. Ohne sie bleiben kontogeschützte Reader geschlossen. Private APIs, Kontoseiten, Providerkonfiguration und Betriebsnachweise fehlen in dieser Datei.
 
-A fully configured learning account stores progress, quiz and completion state and privacy actions on the server. Otherwise protected readers stay closed. Private APIs, account pages, provider configuration and operational evidence are not listed here.
+With full provider configuration, the learning account stores progress, quiz and completion state and privacy actions on the server. Without it, protected readers stay closed. Private APIs, account pages, provider configuration and operational evidence are not listed here.
 
 ## Öffentliche Seiten / Public pages
 
@@ -239,9 +239,9 @@ ${publicPageLines}
 
 ## Agenten-Zugang / Agent access
 
-Jeder MCP-Client (etwa Claude Desktop, Claude Code oder Codex) liest über den MCP-Endpunkt die öffentlichen Inhalte: Kurse, Lektionen, Workshops mit Materialien, Buchkapitel, Open-Source-Werkzeuge, Suche und Wissensgraph. Lernstand und nächsten Schritt liest er erst nach OAuth-Freigabe oder mit einem persönlichen Zugriffstoken aus dem Konto. Der Endpunkt schreibt nie. Ist er nicht aktiviert, bleiben diese Datei und die JSON-Kataloge die maschinenlesbaren Quellen.
+Jeder MCP-Client (etwa Claude Desktop, Claude Code oder Codex) liest über den MCP-Endpunkt die öffentlichen Inhalte: Kurse, Lektionen, Workshops mit Materialien, Buchkapitel, Open-Source-Werkzeuge, Suche und Wissensgraph. Lernstand und nächsten Schritt liest er erst nach OAuth-Freigabe oder mit einem persönlichen Zugriffstoken aus dem Konto. Der Endpunkt schreibt nie. Ist er in einer Umgebung nicht aktiviert, bleiben diese Datei und die JSON-Kataloge die maschinenlesbaren Quellen.
 
-Any MCP client (such as Claude Desktop, Claude Code or Codex) reads the public content through the MCP endpoint: courses, lessons, workshops with materials, book chapters, open-source tools, search and the knowledge graph. It reads progress and the next step only after an OAuth grant or with a personal access token from the account. The endpoint never writes. When it is not enabled, this file and the JSON catalogs remain the machine-readable sources.
+Any MCP client (such as Claude Desktop, Claude Code or Codex) reads the public content through the MCP endpoint: courses, lessons, workshops with materials, book chapters, open-source tools, search and the knowledge graph. It reads progress and the next step only after an OAuth grant or with a personal access token from the account. The endpoint never writes. When a deployment has it disabled, this file and the JSON catalogs remain the machine-readable sources.
 
 - MCP-Endpunkt (Streamable HTTP, GET zeigt die Einrichtung) / MCP endpoint (Streamable HTTP, GET shows the setup guide): ${SITE_ORIGIN}/api/mcp
 - OAuth-Ressourcenmetadaten des Endpunkts (RFC 9728) / Protected resource metadata for the endpoint (RFC 9728): ${SITE_ORIGIN}/.well-known/oauth-protected-resource/api/mcp

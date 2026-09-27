@@ -38,7 +38,7 @@ matches the deck. The first two doors need no SQL.
 | `semantic/` | What a semantic layer is (`SEMANTIC-LAYER.md`), level vs change vs rate (`METRICS.md`), the four annotated YAML files, a vague definition taken apart (`VAGUE-DEFINITION.md`), and every field explained (`FIELD-REFERENCE.md`) |
 | `naming/` | Naming rules taught through FOLDLINE's real bad names, a review worksheet and a SQL lint |
 | `warehouse/` | Layers (source, core, analytics), serving-view rules, least-privilege access, freshness and lineage, tests, and runnable SQL |
-| `claude/` | `README.md` with Setups A (Project), B (Claude Code: `CLAUDE.example.md`, Agent Skill, hook) and C (database connector, `CONNECTOR.md`); the Project upload set in `project/`; the Skill, the SQL guard hook, `mcp.example.json` and `settings.example.json` (copy them to `CLAUDE.md`, `.mcp.json` and `.claude/settings.json`); which file guides and which enforces |
+| `claude/` | `README.md` with Setups A (Project), B (Claude Code: `CLAUDE.example.md`, Agent Skill, hook) and C (database connector, `CONNECTOR.md`); the Project upload set in `project/`; the Skill and the SQL guard hook; the examples `CLAUDE.example.md`, `mcp.example.json` and `settings.example.json`, which you copy to `CLAUDE.md`, `.mcp.json` and `.claude/settings.json`; and which file guides and which enforces |
 | `claude-demo/` | The live demo files, the check sheet (`CHECK-YOUR-RESULT.md`), the AI run log and presenter notes |
 | `domains/` | The same ideas in four other domains: bike-shop inventory, headcount, web-shop conversion, support backlog |
 
@@ -52,8 +52,8 @@ matches the deck. The first two doors need no SQL.
 | Bad | "Make our data AI-ready." | No question means no test, so you never know when you are done |
 | Bad | "How much revenue?" | No period, no level-or-change, no unit. Even FOLDLINE's approved lane must ask back (C01) |
 
-Pick one question with an owner that someone asks every month or quarter. Build it end to end
-before you add a second.
+Pick one question that someone asks every month or quarter, and give it an owner. Build it end
+to end before you add a second.
 
 ---
 
@@ -72,9 +72,8 @@ Use these workshop rules word for word when you report results.
 
 ## New lesson from the dry runs
 
-A better AI route moved the failure without removing it. In dry runs before the next live
-session, a fresh Claude chat given only the export CSVs did **not** repeat −19,960. It noticed
-April was negative and read `amount` as a monthly change, then added the changes from January and
+In dry runs before the next live session, a fresh Claude chat given only the export CSVs did
+**not** repeat −19,960. It noticed April was negative and read `amount` as a monthly change, then added the changes from January and
 labelled the result "Ending MRR":
 **75,890 / 85,665 / 128,230**, with a caveat that the opening balance was missing. The true
 values are €258,785 higher. That was one run per prompt: an observation, not a benchmark.

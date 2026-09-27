@@ -260,7 +260,7 @@ function figBridge() {
   <div class="br" role="img" aria-label="Scope 2 2025: location-based ${esc(num("s2lb_2025"))}; the certificate for Werk Süd removes ${esc(num("bridge_cert_t", "absunit"))}; stopping there, with the rest at the grid average, gives ${esc(num("mb_grid_avg_wrong_s2_t"))}, which is wrong for market-based; the residual mix on the rest adds ${esc(num("bridge_rm_t", "absunit"))}; market-based ${esc(num("s2mb_2025"))}.">
     ${barRows(rows, 0, Math.max(lbv, mbv) * 1.02)}
   </div>
-  <figcaption id="fig-bridge-cap" class="wf-caption">Scope 2 2025, from location-based to market-based. The dashed bar is the wrong ${esc(num("mb_grid_avg_wrong_s2_t"))}: the certificate comes off, and the rest stays at the grid average. ${esc(factorLabel())}.</figcaption>
+  <figcaption id="fig-bridge-cap" class="wf-caption">Scope 2 2025, from location-based to market-based. The dashed bar is the wrong ${esc(num("mb_grid_avg_wrong_s2_t"))}: the certificate comes off, and the rest stays at the grid average.</figcaption>
 </figure>`;
 }
 
@@ -284,7 +284,7 @@ function figDrivers() {
   <div class="br" role="img" aria-label="Market-based decrease ${esc(num("chg_mb_t", "absunit"))}: guarantees of origin ${esc(num("drv_mb_cert_t", "absunit"))}, less electricity ${esc(num("drv_mb_elec_t", "absunit"))}, less gas and diesel ${esc(num("drv_mb_s1_t", "absunit"))}.">
     ${group(data.drivers.mb, "")}
   </div>
-  <figcaption id="fig-drv-cap" class="wf-caption">What drove the change, 2024 to 2025, both groups on one scale. ${esc(data.drivers.convention_en)} ${esc(factorLabel())}.</figcaption>
+  <figcaption id="fig-drv-cap" class="wf-caption">What drove the change, 2024 to 2025, both groups on one scale. ${esc(data.drivers.convention_en)}</figcaption>
 </figure>`;
 }
 

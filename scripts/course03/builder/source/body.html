@@ -108,7 +108,7 @@
       <div class="t-why"><h3>Why it fails</h3><p><code>monthly_revenue.amount</code> holds each month's change (new + expansion − contraction − churn), and ending MRR cannot be negative here.</p></div>
     </div>
     <details class="builders"><summary>For builders <span class="label">SQL</span></summary><div class="builders__body">
-      <p>Serve the level beside the change and test the identity every month (case Q02). Never let an AI rebuild a level from changes; the dry run tried and started the tub empty.</p>
+      <p>Serve the level beside the change and test the identity every month (case Q02). Never let an AI rebuild a level from a window of changes: in the rehearsal it summed the changes from January and left out the opening balance.</p>
 <pre class="code"><code>-- Q02: previous level + change = level, for every month
 SELECT month_start, ending_mrr_eur, net_new_mrr_eur,
        lag(ending_mrr_eur) OVER (ORDER BY month_start) + net_new_mrr_eur
@@ -141,7 +141,7 @@ ORDER BY month_start;</code></pre>
         <div class="bars" id="pool-bars" aria-hidden="true"></div>
         <div class="sr-only"><table id="pool-table"><caption>Conversion rates</caption><tbody></tbody></table></div>
         <p class="live" id="pool-live" aria-live="polite"></p>
-        <p class="fig__note">FOLDLINE is right by luck: every segment started Q2 with 40 accounts, so the average of three 10.0 % rates equals the pooled 12 of 120. At 20,000 email sessions the web shop agrees too: equal bases hide the bug.</p>
+        <p class="fig__note">FOLDLINE is right by luck: every segment started Q2 with 40 accounts, so the average of three 10.0 % rates equals the pooled 12 of 120. Drag email sessions to 20,000 and the average and pooled rates agree too: equal bases hide the bug.</p>
       </div>
     </div>
     <div class="triple">
@@ -223,7 +223,7 @@ ORDER BY month_start;</code></pre>
   contract_version: 1.0.0
   # block 2: the builder's extra fields
   ambiguous_terms: [mrr, revenue]        # ask back (C01)</code></pre>
-      <p>Runbook steps (module 12) that build it: <strong>0</strong> question and owner; <strong>1</strong> the four blanks and the case list in <code>verified-questions.yml</code>; <strong>2</strong> truth rows, computed by two people; <strong>6</strong> <code>model.yml</code> and <code>metric.yml</code>; <strong>8</strong> <code>policy.yml</code>; <strong>10</strong> compile by hand to each reader; <strong>9</strong> and <strong>11</strong> test that the readers use it.</p>
+      <p>Runbook steps (module 12) that build it: <strong>0</strong> question and owner; <strong>1</strong> the four blanks and the cases in <code>verified-questions.yml</code>; <strong>2</strong> truth rows from two people; <strong>6</strong> <code>model.yml</code> and <code>metric.yml</code>; <strong>8</strong> <code>policy.yml</code>; <strong>10</strong> compile to each reader. Steps <strong>9</strong> and <strong>11</strong> test that the readers use it.</p>
     </div></details>
     <p class="deeper"><span class="label">Go deeper</span><a href="./data-readiness-kit/builder/semantic/SEMANTIC-LAYER.md">semantic/SEMANTIC-LAYER.md</a><a href="./data-readiness-kit/builder/semantic/FIELD-REFERENCE.md">semantic/FIELD-REFERENCE.md</a><a href="./data-readiness-kit/builder/semantic/VAGUE-DEFINITION.md">semantic/VAGUE-DEFINITION.md</a></p>
   </article>
@@ -231,7 +231,7 @@ ORDER BY month_start;</code></pre>
 
 <!-- ============================================================ PART 2 -->
 <section class="part" id="part-design" aria-labelledby="part-design-t">
-  <div class="part__head"><span class="part__num" aria-hidden="true">02</span><p class="part__name" id="part-design-t">Part 2 · Design</p></div>
+  <div class="part__head"><span class="part__num" aria-hidden="true">02</span><p class="part__name" id="part-design-t">Part 2 · Design</p><p class="part__lede">Fix each trap in one layer and give every name and row one meaning.</p></div>
 
   <!-- M4 -->
   <article class="mod" id="m4" aria-labelledby="m4-h">
@@ -250,14 +250,14 @@ ORDER BY month_start;</code></pre>
       </div>
       <p class="label" style="margin-top:16px">Where is each trap fixed?</p>
       <div class="traps" id="m4-traps"></div>
-      <ol class="ledger" id="m4-ledger" aria-live="polite" style="min-height:0"></ol>
+      <ol class="ledger" id="m4-ledger" aria-live="polite" style="min-height:0" hidden></ol>
       <div id="m4-directbox"></div>
       <p class="live sr-only" id="m4-live" aria-live="polite"></p>
     </div>
     <div class="triple">
       <div class="t-good"><h3><svg class="icon icon--s" aria-hidden="true"><use href="#i-pass"/></svg>Good</h3><p>The AI's login sees five views in <code>analytics</code>. April 334,675 traces to 144 rows in <code>core.account_months</code> and to the feed.</p></div>
       <div class="t-bad"><h3>Counter-example</h3><p><code>foldline_bad_reader</code> sees all seven export tables in <code>saas_bad.public</code>.</p></div>
-      <div class="t-why"><h3>Why it fails</h3><p>The AI got the delivery boxes. It picked <code>monthly_revenue</code>, whose sums are the true monthly changes, and read them as levels. The table needed a clear name and the level beside it.</p></div>
+      <div class="t-why"><h3>Why it fails</h3><p>The AI read the raw export tables. It picked <code>monthly_revenue</code>, whose sums are the true monthly changes, and read them as levels. The table needed a clear name and the level beside it.</p></div>
     </div>
     <details class="builders"><summary>For builders <span class="label">SQL</span></summary><div class="builders__body">
       <p>A lineage check you can run: a second person recomputes April from the feed instead of the view under test.</p>
@@ -366,7 +366,7 @@ WHERE table_schema = 'analytics'
   <article class="mod" id="m7" aria-labelledby="m7-h">
     <p class="label mod__eyebrow">Module 7 · Lock and connect</p>
     <h2 id="m7-h">Which gate actually stops a request?</h2>
-    <p class="oneline"><span class="label">In one line</span>Two locks: refuse early, enforce anyway. Instructions and Skills <strong>guide</strong> and a hook or read-only default is a <strong>guardrail</strong>; together they refuse early. Only the database role <strong>enforces</strong>.</p>
+    <p class="oneline"><span class="label">In one line</span>Two locks: refuse early, enforce anyway. Instructions and Skills <strong>guide</strong>. A hook or a read-only default is a <strong>guardrail</strong>. Together they refuse early; only the database role <strong>enforces</strong>.</p>
     <div class="fig" id="m7-fig">
       <fieldset class="reqs" id="m7-reqs"><legend>Pick a request</legend></fieldset>
       <div class="fig__controls">
@@ -421,7 +421,7 @@ ALTER ROLE foldline_ready_reader SET search_path = '';</code></pre>
     <div class="triple">
       <div class="t-good"><h3><svg class="icon icon--s" aria-hidden="true"><use href="#i-pass"/></svg>Good</h3><p><code>.mcp.json</code> names <code>${FOLDLINE_READY_DSN}</code>. The value lives in your shell or a secret manager and logs in as <code>foldline_ready_reader</code>.</p></div>
       <div class="t-bad"><h3>Counter-example</h3><p>A connection string pasted into <code>CLAUDE.md</code> “for convenience”, or the export CSVs uploaded to the Project “for context”.</p></div>
-      <div class="t-why"><h3>Why it fails</h3><p>Claude reads the file and it often gets committed. Uploaded look-alikes bring back the choice between seven tables.</p></div>
+      <div class="t-why"><h3>Why it fails</h3><p>Claude reads <code>CLAUDE.md</code>, and the file often gets committed with the secret in it. Uploaded export CSVs bring back the choice between seven tables.</p></div>
     </div>
     <details class="builders"><summary>For builders <span class="label">checks</span></summary><div class="builders__body">
       <p>Done when: every reader shows <code>ending_mrr</code> version 1.0.0; the connector logs in as <code>foldline_ready_reader</code>; no credential appears in any file; D01 is denied through the connector.</p>
@@ -450,7 +450,7 @@ ALTER ROLE foldline_ready_reader SET search_path = '';</code></pre>
     <div class="triple">
       <div class="t-good"><h3><svg class="icon icon--s" aria-hidden="true"><use href="#i-pass"/></svg>Good</h3><p>At 60 hours: answer, state the load time (2026-07-01 06:00 UTC) and the age, and escalate to <code>revenue_analytics</code>.</p></div>
       <div class="t-bad"><h3>Counter-example</h3><p>“Older than 48 hours: refuse.” Or a 60-hour snapshot returned with no warning.</p></div>
-      <div class="t-why"><h3>Why it fails</h3><p>Nobody wrote a 48-hour rule, so the next run behaves differently and no test can be written. Hiding the age lets right meaning pass as fresh data.</p></div>
+      <div class="t-why"><h3>Why it fails</h3><p>Nobody wrote or approved a 48-hour rule, so the next run can behave differently and no test can be written. Hiding the age passes a 60-hour-old snapshot off as fresh.</p></div>
     </div>
     <details class="builders"><summary>For builders <span class="label">SQL</span></summary><div class="builders__body">
       <p>The view stores facts; the caller supplies the clock. No <code>now()</code> in a view, so F00 and F01 can run on frozen clocks.</p>
@@ -481,12 +481,12 @@ WHERE view_name = 'analytics.mrr_summary_monthly';</code></pre>
           <div class="plane__head"><h3 id="plane-db">Database plane: 70_checks.sql</h3><button class="btn btn--small" type="button" id="m10-replay">Replay</button></div>
           <ol class="checks" id="m10-checks" aria-label="Recorded check output, logged in as foldline_ready_reader"></ol>
           <p class="total" id="m10-dbtotal">DB CHECKS 22 of 22 PASS. 0 SKIP. 0 FAIL.</p>
-          <p class="fig__note" id="m10-count-note"><strong>Why 22, when the deck showed 9 of 9?</strong> The workshop's 9 course tests were G01 to G05, D01 and three policy cases (C01, R01, R02); a database cannot test a clarify or a refuse, so those three move to the AI run log. <code>70_checks.sql</code> keeps G01 to G05 and D01 and adds access (B-), reconciliation and lineage (Q-), teaching (T-) and freshness (F-) checks: 6 + 5 + 7 + 2 + 2 = 22. The quick start shows 21 of 21 and 1 SKIP until you log in as the reader, because B-S01 needs the login's settings.</p>
+          <p class="fig__note" id="m10-count-note"><strong>Why 22, when the deck showed 9 of 9?</strong> A database cannot test a clarify or a refuse, so C01, R01 and R02 moved to the AI run log. <code>70_checks.sql</code> keeps G01 to G05 and D01 and adds access (B-), reconciliation and lineage (Q-), teaching (T-) and freshness (F-) checks: 6 + 5 + 7 + 2 + 2 = 22.</p>
         </section>
         <section class="plane" aria-labelledby="plane-ai">
           <div class="plane__head"><h3 id="plane-ai">AI plane: run log</h3><span class="chip chip--gap">An observation, not a benchmark</span></div>
           <table class="runs" id="m10-runs"><thead><tr><th scope="col">When</th><th scope="col">AI route</th><th scope="col">Runs</th><th scope="col">Values</th><th scope="col">Cited</th></tr></thead><tbody></tbody></table>
-          <p class="total">No total: one or two runs per case are observations.</p>
+          <p class="total">No total: with one or two runs per case, these are observations.</p>
           <p class="fig__note">Values and Cited count answer cases only; a clarify or a refuse counts as behaviour. The deck graded the citation on the approved lane only.</p>
         </section>
       </div>
@@ -504,6 +504,7 @@ WHERE view_name = 'analytics.mrr_summary_monthly';</code></pre>
 psql -X -d postgres -f sql/65_local_login.sql                        # local sandbox only
 psql -X -d saas_ready -U foldline_ready_reader -f sql/70_checks.sql  # full proof, mode B</code></pre>
       <p>Add <code>-h</code>, <code>-p</code> and <code>-U</code>, or set <code>PGHOST</code>, <code>PGPORT</code> and <code>PGUSER</code>, as in <code>warehouse/README.md</code>. Keep any password in your shell or <code>~/.pgpass</code>, never in a file.</p>
+      <p>Until you log in as the reader, the quick start shows 21 of 21 and 1 SKIP (B-S01 needs the login's settings).</p>
       <p>Any failing check makes psql exit with code 3, so a CI job fails. Write expected rows before any AI run, computed by two people independently, never by the AI under test.</p>
     </div></details>
     <p class="deeper"><span class="label">Go deeper</span><a href="./data-readiness-kit/builder/warehouse/TESTS.md">warehouse/TESTS.md</a><a href="./data-readiness-kit/builder/semantic/verified-questions.yml">semantic/verified-questions.yml</a><a href="./data-readiness-kit/builder/claude-demo/AI-RUN-LOG.md">claude-demo/AI-RUN-LOG.md</a></p>
@@ -539,7 +540,7 @@ psql -X -v ON_ERROR_STOP=1 -d domain_packs -f domains/sql/webshop_conversion.sql
 psql -X -v ON_ERROR_STOP=1 -d domain_packs -f domains/sql/support_backlog.sql
 dropdb domain_packs</code></pre>
       <p>Add <code>-h</code>, <code>-p</code> and <code>-U</code>, or set <code>PGHOST</code>, <code>PGPORT</code> and <code>PGUSER</code>, as in <code>warehouse/README.md</code>.</p>
-      <p>The packs' wrong answers are worked arithmetic. FOLDLINE's recorded runs (one per question per lane) and the logged rehearsal runs are the course's only AI evidence.</p>
+      <p>The packs' wrong answers are calculated examples, not AI runs. FOLDLINE's recorded runs (one per question per lane) and the logged rehearsal runs are the course's only AI evidence.</p>
     </div></details>
     <p class="deeper"><span class="label">Go deeper</span><a href="./data-readiness-kit/builder/domains/README.md">domains/README.md</a><a href="./data-readiness-kit/builder/domains/RETAIL-INVENTORY.md">RETAIL-INVENTORY.md</a><a href="./data-readiness-kit/builder/domains/PEOPLE-HEADCOUNT.md">PEOPLE-HEADCOUNT.md</a><a href="./data-readiness-kit/builder/domains/WEBSHOP-CONVERSION.md">WEBSHOP-CONVERSION.md</a><a href="./data-readiness-kit/builder/domains/SUPPORT-BACKLOG.md">SUPPORT-BACKLOG.md</a></p>
   </article>
@@ -588,7 +589,7 @@ dropdb domain_packs</code></pre>
 
 <!-- ============================================================ REFERENCE -->
 <section class="part" id="reference" aria-labelledby="reference-t">
-  <div class="part__head"><span class="part__num" aria-hidden="true">07</span><p class="part__name" id="reference-t">Reference</p></div>
+  <div class="part__head"><span class="part__num" aria-hidden="true">07</span><p class="part__name" id="reference-t">Reference</p><p class="part__lede">Look up a failure, a term or a file.</p></div>
 
   <!-- M13 -->
   <article class="mod" id="m13" aria-labelledby="m13-h">
@@ -605,7 +606,7 @@ dropdb domain_packs</code></pre>
     <div class="triple">
       <div class="t-good"><h3><svg class="icon icon--s" aria-hidden="true"><use href="#i-pass"/></svg>Good</h3><p>Start with the five that matter most: AP-M01, AP-A01, AP-C02, AP-T04, AP-E03.</p></div>
       <div class="t-bad"><h3>Counter-example</h3><p>“Something looks off; let's rephrase the prompt.”</p></div>
-      <div class="t-why"><h3>Why it fails</h3><p>A clearer prompt only moves the failure: the dry run avoided −19,960 and still labelled 75,890 as Ending MRR.</p></div>
+      <div class="t-why"><h3>Why it fails</h3><p>A clearer prompt only moves the failure: the rehearsal avoided −19,960 and still labelled 75,890 as Ending MRR.</p></div>
     </div>
     <p class="deeper"><span class="label">Go deeper</span><a href="./data-readiness-kit/builder/ANTI-PATTERNS.md">ANTI-PATTERNS.md</a><a href="./data-readiness-kit/builder/ANTI-PATTERN-GALLERY.md">ANTI-PATTERN-GALLERY.md</a></p>
   </article>
@@ -614,7 +615,7 @@ dropdb domain_packs</code></pre>
     <p class="label mod__eyebrow">Reference · Words</p>
     <h2 id="glossary-h">Glossary</h2>
     <dl class="gloss">
-      <dt>MRR</dt><dd>Monthly recurring revenue: what accounts pay per month for subscriptions. It is neither accounting revenue, cash nor profit.</dd>
+      <dt>MRR</dt><dd>Monthly recurring revenue: what accounts pay per month for subscriptions. It is not accounting revenue, cash or profit.</dd>
       <dt>Level, change, rate</dt><dd>A <strong>level</strong> is measured at one moment (ending MRR), a <strong>change</strong> flows in or out during a period (net new MRR), and a <strong>rate</strong> divides one count by another (logo churn, 4 of 40 = 10.0 %).</dd>
       <dt>Four blanks</dt><dd>What the AI had to guess in the workshop: kind of number, rows per what, which months, which table.</dd>
       <dt>Five boxes</dt><dd>The workshop's question card: question, approved view, four blanks, boundary (what must be refused) and test.</dd>
@@ -624,16 +625,14 @@ dropdb domain_packs</code></pre>
       <dt>Grant</dt><dd>A permission given to a role. Anything not granted fails with SQLSTATE 42501, “permission denied”.</dd>
       <dt>Trace</dt><dd>The end of an answer that names metric and version, view or file, period, unit, load time and data age.</dd>
       <dt>Pooled rate</dt><dd>Total numerator ÷ total denominator, for example 12 of 120 = 10.0 % churn across segments.</dd>
-      <dt>Pseudonymous key</dt><dd>A stable stand-in for an identity, such as <code>fl_0006</code>, which can be joined back to the account.</dd>
+      <dt>Pseudonymous key</dt><dd>A stable stand-in for an identity, such as <code>fl_0006</code>. It can be joined back to a person or company, so it is not anonymous.</dd>
       <dt>Guardrail</dt><dd>A check or default the reader can bypass, such as a hook, a read-only default or a connector setting.</dd>
-      <dt>Semantic layer</dt><dd>The written meaning between tables and readers (module 3). In this kit: <code>model.yml</code>, <code>metric.yml</code>, <code>policy.yml</code>, <code>verified-questions.yml</code>.</dd>
       <dt>Additive, semi-additive, non-additive</dt><dd>Changes add along every axis. Levels add across things, never across time. Rates, averages and distinct counts never add; recompute them from their parts.</dd>
-      <dt>Grain</dt><dd>What one row stands for, such as “one row per account and month”.</dd>
       <dt>Serving view</dt><dd>A view in <code>analytics</code> cut to one question family, with approved names, units, data-state columns and complete periods only.</dd>
       <dt>Allowlist</dt><dd>A list of what is allowed, with everything else denied: the reader may SELECT five named views. A denylist lets a new schema through the day it appears.</dd>
-      <dt>MCP</dt><dd>Model Context Protocol, a standard way to connect an AI tool to a data source. An MCP database connector logs in with whatever login you give it.</dd>
+      <dt>MCP</dt><dd>Model Context Protocol, a standard way to connect an AI tool to a data source. An MCP database connector logs in with whatever login you give it, so give it the read-only reader.</dd>
       <dt>Skill</dt><dd>A folder with a <code>SKILL.md</code> that Claude loads when its description matches the task, such as <code>.claude/skills/foldline-analytics/SKILL.md</code>.</dd>
-      <dt>Hook</dt><dd>A command Claude Code runs at a fixed point, such as before a tool call. It can block a query that is not on the allowlist.</dd>
+      <dt>Hook</dt><dd>A command Claude Code runs at a fixed point, such as before a tool call. It is a guardrail: it can block a query outside the allowlist.</dd>
       <dt>Evaluation clock</dt><dd>The stated “now” for judging freshness and periods: 2026-07-01 09:00 UTC in the course. Tests use a frozen clock, never <code>now()</code>.</dd>
     </dl>
   </article>

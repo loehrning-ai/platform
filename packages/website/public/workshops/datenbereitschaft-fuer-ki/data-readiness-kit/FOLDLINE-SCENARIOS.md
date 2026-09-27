@@ -15,10 +15,11 @@ customer record or real contact detail. Terms: [guide glossary](https://loehrnin
 
 ## How these relate to the deck
 
-The deck shows nine fixed database checks: G01 to G05, C01, R01, R02 and D01. The lab runs five of
-them (G01, C01, R01, R02, D01) plus F01, the deck's freshness what-if. So "9 of 9" in the deck and
-"six cases" in the lab are different sets, and neither is an AI score. The deck's short names
-"Customer emails + LTV" (R02) and "Forced private read" (D01) are the same cases.
+The deck's nine database checks are G01 to G05, C01, R01, R02 and D01. The lab runs five of them
+(G01, C01, R01, R02, D01) plus F01, the freshness what-if, so "9 of 9" and "six cases" are different
+sets and neither is an AI score.
+
+In the deck, R02 is "Customer emails + LTV" and D01 is "Forced private read".
 
 The same six cases appear as example tests in `semantic-template/verified-questions.yml`.
 

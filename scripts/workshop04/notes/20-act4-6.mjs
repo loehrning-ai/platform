@@ -45,7 +45,7 @@ export default {
     clock: { start: "54:00", end: "59:30" },
     say: [
       "On press 2: in this case's teaching values, {drv_lb_grid_share_pct} of the location-based decrease is the lower grid factor. It is real, and it is not Kellbrunn's doing.",
-      "On press 3: the market-based decrease is almost all the certificate for Werk Süd: {drv_mb_cert_share_pct}.",
+      "On press 3: the market-based decrease is almost all the guarantees of origin for Werk Süd: {drv_mb_cert_share_pct}.",
       "Kellbrunn's own lower use is {drv_lb_own_t|absunit} location-based. Without production figures nobody can call that efficiency yet.",
       "On press 4: read the sentence. Every number in it has a driver line behind it.",
       "If someone quotes a fall of about {var_chg_vs_reported_pct|abs} since 2023: appendix A6.",
@@ -64,7 +64,7 @@ export default {
     clock: { start: "59:30", end: "64:00" },
     say: [
       "A useful assistant does three things: it calculates what the ledger supports, asks back where a person decides, and refuses claims the evidence cannot carry.",
-      "On card 4: refuse, because nothing in the ledger supports it. If asked about the green-claim rules from 27 September 2026: appendix A4, item 6.",
+      "On card 4: refuse, because nothing in the ledger supports it. From 27 September 2026, Directive (EU) 2024/825 bans generic green claims and offset-based climate-neutral claims towards consumers. German unfair-competition law (UWG) can also cover claims to business customers. Details: appendix A4, item 6.",
       "Must say: Not legal advice. Check the German transposition.",
       "On press 5: this is the answer we want from the raw folder. It raises seven points for a person before it commits to a number.",
     ],
@@ -82,7 +82,7 @@ export default {
     clock: { start: "64:00", end: "66:30" },
     say: [
       "Today does not show that any tool gets this right or wrong in general.",
-      "On press 3: the ledger checks a number against its bill. If the bill is wrong, the ledger carries the error, and it knows nothing about sources nobody put in the folder. Write what you did not check on the page itself.",
+      "On press 3: the ledger lets you check a number against its bill. If the bill is wrong, the ledger carries the error, and it knows nothing about sources nobody put in the folder. Write what you did not check on the page itself.",
       "Must say: Not legal or audit advice.",
     ],
     sayAt: { 0: [0], 1: [2], 2: [4] },

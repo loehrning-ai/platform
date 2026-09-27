@@ -33,7 +33,7 @@ for (const viewport of [
       const wrong = page.locator("#wrong");
       await expect(wrong.locator('[data-v="g01.bad.v0"]')).toHaveText("−€19,960");
       await expect(page.locator("#again")).toContainText("€334,675");
-      await expect(page.locator("#failed")).toContainText("Right answer to a different question.");
+      await expect(page.locator("#failed")).toContainText("That is net new MRR, a different metric.");
       await expect(page.locator("#failed")).toContainText("€32,380");
       await expect(page.locator("#again").getByText("Values match")).toBeVisible();
 

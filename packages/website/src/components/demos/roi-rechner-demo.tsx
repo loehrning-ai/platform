@@ -8,7 +8,7 @@ import {
   useState,
 } from "react";
 import { DEMO } from "@/lib/demo-tokens";
-import { DEMO_HEIGHT, usePrefersReducedMotion } from "./demo-utils";
+import { usePrefersReducedMotion } from "./demo-utils";
 import { useDemoLocale } from "./demo-locale";
 import type { Locale } from "@/lib/i18n/locale";
 
@@ -141,7 +141,6 @@ export default function RoiRechnerDemo() {
         gap: 18,
         fontFamily: DEMO.font.sans,
         color: DEMO.ink,
-        minHeight: DEMO_HEIGHT,
       }}
     >
       {/* Craftsman slider styles — scoped via data-demo-id attribute */}
@@ -182,7 +181,7 @@ export default function RoiRechnerDemo() {
             onChange={(x) => set("hourly", x)}
           />
           <Slider
-            label={text("Adoption", "Adoption")}
+            label={text("Nutzungsquote", "Adoption")}
             value={v.adoption}
             min={10}
             max={90}
@@ -336,7 +335,7 @@ export default function RoiRechnerDemo() {
               </span>
               <span style={{ color: "rgba(243,240,233,0.62)" }}>
                 {" "}
-                {text("Adoption", "adoption")}{" "}
+                {text("Nutzungsquote", "adoption")}{" "}
               </span>
               <span style={{ color: "rgba(243,240,233,0.5)" }}>×</span>
               <span style={{ color: DEMO.kalk, fontWeight: 700 }}>
@@ -418,7 +417,7 @@ export default function RoiRechnerDemo() {
             }}
           >
             <Assumption
-              k={text("Adoption", "Adoption")}
+              k={text("Nutzungsquote", "Adoption")}
               d={text(
                 "Beispielband 30–80 %. Ersetze den Wert durch die gemessene Nutzung.",
                 "Sample range: 30–80%. Replace it with measured usage.",

@@ -7,7 +7,7 @@ Terms: [guide glossary](https://loehrning.ai/workshops/datenbereitschaft-fuer-ki
 
 ## What this file is
 
-- Example instructions for Claude Code: copy it into your project's root folder as `CLAUDE.md`.
+- Example instructions for Claude Code: copy this file into your project's root folder as `CLAUDE.md`.
   Other AI tools and API integrations do not read it automatically.
 - It assumes `metric.yml`, `model.yml` and `policy.yml` from `semantic-template/`; adapt the names.
 - It does not connect Claude to a database. Use a read-only login (here `ai_analytics_reader`; in

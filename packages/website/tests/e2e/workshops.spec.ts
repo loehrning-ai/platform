@@ -110,7 +110,7 @@ test.describe("workshop self-study journey", () => {
   test("repairs the third workshop lab and invalidates results after a changed choice", async ({ page, request }) => {
     const base = "/workshops/datenbereitschaft-fuer-ki";
     await page.goto(`${base}/data-readiness-kit/readiness-lab.html`);
-    await page.getByRole("button", { name: "Test My Choices" }).click();
+    await page.getByRole("button", { name: "Test my choices" }).click();
     await expect(page.locator("#simulation-grade")).not.toHaveText("6 / 6 cases · 10 / 10 controls");
     for (const [id, value] of Object.entries({
       "sim-surface": "governed",
@@ -121,7 +121,7 @@ test.describe("workshop self-study journey", () => {
     })) {
       await page.locator(`#${id}`).selectOption(value);
     }
-    await page.getByRole("button", { name: "Test My Choices" }).click();
+    await page.getByRole("button", { name: "Test my choices" }).click();
     await expect(page.locator("#simulation-grade")).toHaveText("6 / 6 cases · 9 / 10 controls");
     await expect(page.locator("#status")).toHaveText("PILOT ONLY");
     await page.locator("#sim-metric").selectOption("movement");

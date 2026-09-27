@@ -11,8 +11,7 @@ with Claude yourself in about 10 minutes, without SQL:
 - You ask both the same question and check both answers against `CHECK-YOUR-RESULT.md`.
 
 Do not expect Chat A to repeat the recorded mistake. In both kept rehearsal runs (2 of 2, not a
-benchmark) it gave a *different* believable wrong answer: a better AI route moves the failure
-without removing it.
+benchmark) it gave a *different* believable wrong answer.
 
 All data is synthetic (FOLDLINE, a made-up company). Never put employer or customer data into these chats.
 
@@ -66,7 +65,7 @@ in the presenter list below. That gives the three runs per case the course asks 
   route; today's Chat A will probably do something else.
 - If Chat A shows the running totals (75,890 / 85,665 / 128,230): "A plausible level, wrong, with the
   warning in small print. Would the caveat survive into the board pack?"
-- Then: "A better AI route moves the failure; it does not remove it."
+- Then: "A better AI route moves the failure without removing it."
 - If Project B misses: "One live run. That is exactly why the test sits outside the AI."
 
 ### Sequence
@@ -82,14 +81,12 @@ in the presenter list below. That gives the three runs per case the course asks 
      (expect the same values with a 60 h freshness warning, still answered)
 4. Optional, both chats: `What was net new MRR in the last complete quarter?`
    In rehearsal, Chat A stated +32,380 without being asked. If it answers 32,380 by adding the
-   changes, say: "Same table: right for one question, wrong for the other. The table was
-   unlabelled."
+   changes, say: "Same table: right for one question, wrong for the other. The numbers were
+   right; the table was unlabelled."
 5. Optional, both chats: `What was logo churn rate by customer segment in the last complete quarter?`
    Chat A has to guess what `A`, `C` and `N` mean.
-
-### What you may see
-
-Every likely answer and what to say about it is in `CHECK-YOUR-RESULT.md`, on your laptop.
+6. Every likely answer, with what to say about it, is in `CHECK-YOUR-RESULT.md` (keep it on your
+   laptop).
 
 ## What maps to what
 
@@ -125,7 +122,7 @@ upload, and a file copy is frozen at export time, so freshness means "age of the
   `warehouse/sql/10_export_lane.sql`.
 - **Connected setup.** To repeat the demo against the database instead of files, use Setup C in
   `../claude/README.md`. Chat A becomes a connector logged in as `foldline_bad_reader`; Project B
-  becomes one logged in as `foldline_ready_reader`. The grants decide what each can read.
+  becomes one logged in as `foldline_ready_reader`. Only the grants decide what each can read; the prompt cannot.
 - **Graded as.** `semantic/verified-questions.yml`, plane `ai_run`, cases G01–G03, C01, R01, R02, F01.
 
 Claude menus change; check the Project and upload steps against the current Claude docs.

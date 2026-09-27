@@ -81,8 +81,7 @@ Write the identity down in `metric.yml` (`reconciliation`) and test it (case Q02
 observation), a different Claude chat read `amount` correctly as a monthly change, then added the
 changes from January and labelled the result "Ending MRR": **75,890 / 85,665 / 128,230**, with a
 warning that the opening balance was missing. The true values are 258,785 higher (the end of
-December 2025). The better AI route moved the failure; only a served level (`ending_mrr_eur`)
-removes the need to reconstruct one.
+December 2025). Only a served level (`ending_mrr_eur`) removes the need to reconstruct one.
 
 ---
 
@@ -177,7 +176,7 @@ Two teaching examples add the remaining shapes: `active_accounts` (distinct coun
 **Owner.** A team: `revenue_analytics`. It approves every change and answers escalations (for
 example "the data is 60 hours old, do we block?").
 
-**Versioning.** MAJOR.MINOR.PATCH.
+**Versioning.** Use MAJOR.MINOR.PATCH.
 
 | Bump | When | FOLDLINE example | Effect on receipts |
 | --- | --- | --- | --- |
@@ -193,5 +192,5 @@ example "the data is 60 hours old, do we block?").
   component."*
 
 **Proxies.** Refuse an undefined metric (R01: profit). Use a proxy only if the user asks for a
-**labelled** proxy **and** the policy lists it. FOLDLINE's policy lists none, so MRR is no profit
+**labelled** proxy **and** the policy lists it. FOLDLINE's policy lists none, so MRR is not a profit
 proxy; answering profit from MRR silently changes the question.

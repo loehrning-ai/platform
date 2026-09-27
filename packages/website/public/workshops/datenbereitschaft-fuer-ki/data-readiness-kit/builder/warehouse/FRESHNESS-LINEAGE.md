@@ -2,10 +2,10 @@
 
 ## In plain words
 
-The right meaning is not the same as fresh data. A perfectly defined "ending MRR" computed from last week's load is still last week's number. So every answer needs two more facts: **how old is the data**, and **where did this number come from**.
+A well-defined "ending MRR" from last week's load is still last week's number. So every answer needs two more facts:
 
-- **Freshness** says how old the data is, measured against a stated clock, and what to do about it: answer, answer with a warning, or stop.
-- **Lineage** is the path from a number back to the feeds it came from. It lets anyone check the answer without trusting the AI.
+- **Freshness**: how old the data is against a stated clock, and what follows: answer, answer with a warning, or stop.
+- **Lineage**: the path from a number back to its feeds, so anyone can check the answer without trusting the AI.
 
 ## FOLDLINE's clock
 
@@ -18,7 +18,7 @@ The right meaning is not the same as fresh data. A perfectly defined "ending MRR
 | Hard expiry | none written |
 | What-if clock | 2026-07-03 18:00 UTC gives 60 hours: **stale_disclosed, answer with a warning** (F01) |
 
-At 60 hours the answer is still given. The data did not change, and nobody wrote a rule that blocks at 60 hours. The right move is to disclose the age and **escalate to the owner** (`revenue_analytics`), not to invent an expiry on the spot. The 60-hour scene in the deck was a what-if, not a rerun.
+At 60 hours the answer is still given: the data did not change, and nobody wrote a rule that blocks at 60 hours. Disclose the age and **escalate to the owner** (`revenue_analytics`); do not invent an expiry on the spot. The deck's 60-hour scene was a what-if, not a rerun.
 
 ## The decision rule
 
@@ -30,15 +30,15 @@ In this order:
 4. **Warn** if the age exceeds `warn_after_hours` (36). Answer, and state the load time and the age.
 5. Otherwise, **answer**, and still state the load time in the trace.
 
-`sql/70_checks.sql` implements rules 1, 3, 4 and 5 against `analytics.data_status_by_view`. Rule 2 is enforced by the views themselves, which serve complete months only (Q03).
+`sql/70_checks.sql` implements rules 1, 3, 4 and 5 against `analytics.data_status_by_view`. The views enforce rule 2 by serving complete months only (Q03).
 
 ## Choosing thresholds
 
 | Threshold | How to choose it | FOLDLINE | Counter-example | Why it fails |
 | --- | --- | --- | --- | --- |
-| `warn_after_hours` | Decision cadence plus normal load delay. People read MRR daily; loads land about 6 hours after close; so warn well before a second day passes. | 36 | No threshold: answer silently whatever the age | Right meaning, stale data, no disclosure. The reader cannot judge the answer. |
-| Block rules | Only rules the owner wrote down: failing quality, an incomplete period, a hard expiry | Quality and incomplete period only | "It feels old, so refuse" at 60 hours | An invented rule is an undocumented policy. The next run behaves differently, and the test cannot be written. |
-| `hard_expiry_hours` | Only when stale data would cause harm, such as a pricing decision on a live number. The owner writes it with a reason. | `NULL` | A hard expiry of 24 hours on month-end data | Month-end MRR does not change after the close. A 24-hour expiry blocks correct answers every weekend. |
+| `warn_after_hours` | Decision cadence plus normal load delay. MRR is read daily and loads land about 6 hours after close, so warn before a second day passes. | 36 | No threshold: answer silently whatever the age | Stale data without disclosure. The reader cannot judge the answer. |
+| Block rules | Only rules the owner wrote down: failing quality, an incomplete period, a hard expiry | Quality and incomplete period only | "It feels old, so refuse" at 60 hours | An undocumented policy. The next run behaves differently, and no test can be written. |
+| `hard_expiry_hours` | Only when stale data would cause harm, such as a pricing decision on a live number. The owner writes it with a reason. | `NULL` | A hard expiry of 24 hours on month-end data | Month-end MRR does not change after the close. The expiry blocks correct answers every weekend. |
 
 ## `analytics.data_status_by_view`
 
@@ -55,7 +55,7 @@ One row per approved data view. The AI reads it **before** it answers.
 | `owner_team` | revenue_analytics | Whom to escalate to. |
 | `definition_version` | 1.0.0 | Cite it in every answer. |
 
-There is **no `age_hours` column**, on purpose. Age depends on the clock. A view that computes `now() - data_loaded_at_utc` gives a different answer every hour, and the frozen tests F00 and F01 become impossible. The caller computes age against a stated clock:
+There is **no `age_hours` column**, on purpose. A view that computes `now() - data_loaded_at_utc` gives a different answer every hour, and the frozen tests F00 and F01 become impossible. The caller computes age against a stated clock:
 
 ```sql
 SELECT view_name,
@@ -65,7 +65,7 @@ WHERE view_name = 'analytics.mrr_summary_monthly';
 -- age_hours = 3
 ```
 
-The thresholds live in a table, `core.serving_contracts`, not in the view body. Changing 36 to 48 is a data change with an owner and a version bump, not a code edit.
+The thresholds live in the table `core.serving_contracts`. Changing 36 to 48 is a data change with an owner and a version bump.
 
 ## Worked lineage: where does April's 334,675 come from?
 
@@ -96,7 +96,7 @@ The same number, reconciled from the level at the end of 2025 and the monthly ch
 -19,960   net new, April 2026        = 334,675
 ```
 
-This is the reconciliation the Chat A dry run could not do. Its export started in January, so it had the four changes but not the 258,785. Its running total, 75,890, is exactly 334,675 − 258,785.
+The Chat A dry run could not do this: its export started in January, so it had the four changes but not the 258,785. Its running total, 75,890, is exactly 334,675 − 258,785.
 
 ### Churn lineage: from A, C, N to 4 of 40
 
@@ -109,7 +109,7 @@ analytics.logo_churn_by_segment_quarter   2026-04-01, Enterprise, starting 40, c
             <- source.crm_accounts    108 'A', 12 'C', 24 'N'
 ```
 
-The CRM status is used for a cross-check only: quality rule R4 confirms that every account marked churned has zero MRR at the end of its churn month. The rate itself comes from billing snapshots, so a late CRM update cannot change it.
+The CRM status serves only as a cross-check: quality rule R4 confirms that every account marked churned has zero MRR at the end of its churn month. The rate comes from billing snapshots, so a late CRM update cannot change it.
 
 ## Declaring and testing lineage
 
@@ -122,7 +122,7 @@ lineage:
   transformation: 40_analytics.sql (view), built on 30_core.sql (tables)
 ```
 
-A declaration that nobody checks rots. Test that every declared relation exists (run as the builder):
+Test that every declared relation exists (run as the builder):
 
 ```sql
 SELECT rel, to_regclass(rel) IS NOT NULL AS exists
@@ -131,7 +131,7 @@ FROM (VALUES ('core.account_months'), ('core.accounts'), ('core.load_status'),
 -- all true on the builder databases
 ```
 
-PostgreSQL can also tell you which relations a view really reads, so you can compare it with the declaration:
+PostgreSQL also shows which relations a view really reads, to compare with the declaration:
 
 ```sql
 SELECT DISTINCT d.refobjid::regclass AS reads_from
@@ -140,22 +140,11 @@ WHERE r.ev_class = 'analytics.mrr_summary_monthly'::regclass AND d.refobjid <> r
 -- core.account_months, core.load_status
 ```
 
-Test Q07 in `sql/70_checks.sql` does this for all five views and compares the result with the
-`upstream` lists in `semantic/model.yml`. When a view starts reading a new table, Q07 fails until
-someone updates the declaration. The first declaration in this kit was written from memory. It
-missed that the expansion and account views also read `core.accounts` (for country and segment),
-and that `analytics.data_status_by_view` reads `core.serving_contracts` (for its thresholds). A
-review against `pg_depend` caught it; Q07 now does.
+Test Q07 in `sql/70_checks.sql` compares this, for all five views, with the `upstream` lists in
+`semantic/model.yml`. When a view starts reading a new table, Q07 fails until someone updates the
+declaration. This kit's first declaration, written from memory, missed that the expansion and
+account views also read `core.accounts` (for country and segment), and that
+`analytics.data_status_by_view` reads `core.serving_contracts` (for its thresholds). A review
+against `pg_depend` caught it; Q07 now does.
 
-At larger scale, generate lineage instead of writing it. dbt builds a lineage graph from `ref()` calls, and OpenLineage collects lineage events from schedulers and engines. Verify the current documentation of whichever tool you choose; this kit does not depend on either.
-
-## What works and what does not
-
-| Works | Why | Does not work | Why it fails |
-| --- | --- | --- | --- |
-| A stated evaluation clock in every test and every answer | The same inputs give the same verdict | `now()` inside a view or a test | Verdicts change by the hour; F00 and F01 cannot exist. |
-| Warn at 36 hours and still answer | The reader gets the number and knows its age | Hide the data's age | Right meaning, unknown freshness. |
-| Block only on written rules | Behaviour is predictable and testable | Invent a block at 60 hours | An undocumented policy; the owner never agreed to it. |
-| `data_status_by_view` read first | One place for load time, completeness and quality | Load time in a wiki page | The AI cannot read it, and nobody updates it. |
-| Lineage declared and tested | A declaration that breaks gets noticed | "The pipeline is documented in Confluence" | Nobody can check it from the database. |
-| A reconciliation from the last known level | Catches a missing opening balance | A running total from the start of an export | 75,890 instead of 334,675: the missing 258,785. |
+At larger scale, generate lineage instead of writing it: dbt builds a lineage graph from `ref()` calls, and OpenLineage collects lineage events from schedulers and engines. Check the current documentation of your tool; this kit depends on neither.

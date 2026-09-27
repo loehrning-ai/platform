@@ -48,7 +48,7 @@ export default {
     "Spend-based figures move with prices: the tonnage stayed flat while nominal spend rose.",
   ]),
   "appendix-scope2-order": appendix("The market-based order: which rate applies to which kilowatt hour.", [
-    "Certificates first, for the kilowatt hours they cover; then a qualifying supplier rate; then the residual mix for the rest.",
+    "Guarantees of origin first, for the kilowatt hours they cover; then a qualifying supplier rate; then the residual mix for the rest.",
     "The kit's bills leave out the Stromkennzeichnung, so step 2 is empty here. Real bills carry it.",
   ]),
   "appendix-sources": appendix("The sources behind the rules, dates and published figures.", [

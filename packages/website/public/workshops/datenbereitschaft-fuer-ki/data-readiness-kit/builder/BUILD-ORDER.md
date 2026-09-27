@@ -140,7 +140,7 @@ One person may hold several roles, but the tester should not have built the lane
 | Input | Steps 2, 5 and 7 |
 | Output | The printed output of `warehouse/sql/70_checks.sql`, saved as a receipt with date, dataset ID and definition version |
 | Done when | `DB CHECKS n of n PASS`. The receipt says: "These test the database and course rules, not the AI." |
-| FOLDLINE | The deck's nine (G01–G05, C01, R01, R02, D01) plus B-, Q-, T- and F- cases; `70_checks.sql` runs 22. In the deck, C01, R01 and R02 were course rules checked outside the AI tool, before any SQL. The kit has no policy engine, so Claude's instructions carry them and step 11 grades them; a pass there is guidance evidence only. R02 stays backed by D01 (42501) |
+| FOLDLINE | The deck's nine (G01–G05, C01, R01, R02, D01) plus B-, Q-, T- and F- cases; `70_checks.sql` runs 22. In the deck, C01, R01 and R02 were course rules checked outside the AI tool, before any SQL. The kit has no policy engine, so Claude's instructions carry them and step 11 grades them. A pass there is guidance evidence only and does not reproduce the deck's C01/R01/R02 result. R02 stays backed by D01 (42501) |
 | Prevents | AP-E03 database checks read as an AI score |
 
 ### Step 10. Compile to Claude and connect
@@ -178,7 +178,7 @@ For a question of FOLDLINE's size, built by someone who has done it once:
 | 7–9 | About two hours | Most of it is reading the check output |
 | 10–11 | About two hours plus the runs | Three runs per case, per AI route |
 
-The FOLDLINE kit runs steps 4–9 in about a minute (`warehouse/README.md`); reading the output takes about 15.
+The FOLDLINE kit runs steps 4–9 in about a minute (`warehouse/README.md`); reading the output takes about 15 minutes.
 
 ---
 
@@ -215,7 +215,7 @@ overrides it.
 **FOLDLINE: Pilot only, spoken as "limited pilot, not signed off".** The database checks pass and
 the AI values matched 3 of 3. Check A2 (runtime consumption) stays at level 1: the definition is
 written down, but the runs cited it 0 of 3. Y2 (regression) is not proven either: the SQL leaned on
-a `search_path` setting, with one run per question.
+a `search_path` setting, and there was one run per question.
 
 ---
 

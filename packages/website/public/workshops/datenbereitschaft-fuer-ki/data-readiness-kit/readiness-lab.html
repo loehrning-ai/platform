@@ -565,7 +565,7 @@
     <p class="lede">Get a trustworthy monthly revenue answer for FOLDLINE, a made-up subscription company. The defaults are weak on purpose.</p>
     <ol class="rail" aria-label="How the lab works">
       <li>Make five choices</li>
-      <li>Test My Choices</li>
+      <li>Test my choices</li>
       <li>Repair one choice, test again</li>
       <li>Copy or print the record</li>
     </ol>
@@ -582,7 +582,7 @@
       </figure>
       <div class="brief-notes">
         <p>A fixed browser simulation with no AI and no database. <strong>MRR</strong> is monthly recurring revenue (10 subscriptions at €20 per month give €200 MRR); “ending” means the balance at month end.</p>
-        <p class="small">It grades only this one question. Practise your own question in the notes below.</p>
+        <p class="small">It grades only this one question. Try your own question in the notes below.</p>
         <details class="notes">
           <summary>Your own notes (not graded, never stored)</summary>
           <div class="notes-body">
@@ -604,7 +604,7 @@
           <p class="kicker">Step 1 · made-up data</p>
           <h2 id="choices-title" tabindex="-1">Make five choices. Test the result.</h2>
         </div>
-        <p>Press <strong>Test My Choices</strong> with the defaults, then repair one choice at a time. Choice 05 decides whether you test one answer or all six cases.</p>
+        <p>Press <strong>Test my choices</strong> with the defaults, then repair one choice at a time. Choice 05 decides whether you test one answer or all six cases.</p>
       </header>
 
       <fieldset class="decisions" aria-describedby="decisions-hint">
@@ -655,13 +655,13 @@
             </label>
             <span class="tag" aria-hidden="true">Repair next</span>
           </div>
-          <p class="decision-hint" id="decisions-hint"><strong>One change per run</strong>, so you see which choice moved which case.</p>
+          <p class="decision-hint" id="decisions-hint"><strong>One change per run.</strong> Then you see which choice moved which case.</p>
         </div>
       </fieldset>
     </section>
 
     <div class="runbar on-ink" id="runbar">
-        <button id="run-simulation" class="run-button" type="button">Test My Choices</button>
+        <button id="run-simulation" class="run-button" type="button">Test my choices</button>
         <div class="run-status">
           <p id="simulation-status">Not tested yet</p>
           <p class="grade-line"><span id="grade-label">Current choices: </span><span id="simulation-grade">0 / 6 cases · 0 / 10 controls</span></p>
@@ -680,7 +680,7 @@
         <p class="results-legend"><strong>PASS</strong> handled correctly. <strong>FAIL</strong> a choice needs repair; the card names it. <strong>NOT RUN</strong> your test set skipped the case, so it never counts as a pass. <strong>STALE</strong> you changed a choice after that run.</p>
         <details class="why-six">
           <summary>Why six cases, and why F01?</summary>
-          <p>The course's database check ran nine cases: G01 to G05, C01, R01, R02 and D01. The lab keeps G01 as the answer case (G02 to G05 ask the same kind of question) plus C01, R01, R02 and D01. It adds F01 from the freshness scene: the same data, 60 hours old.</p>
+          <p>The course's database check ran nine cases: G01 to G05, C01, R01, R02 and D01. The lab keeps G01 as the answer case (G02 to G05 ask the same kind of question) plus C01, R01, R02 and D01. It adds F01, a what-if from the freshness scene: the same data, 60 hours old.</p>
         </details>
         <details class="run-details">
           <summary>Run details for auditors</summary>
@@ -698,7 +698,7 @@
       <div id="verdict" class="verdict" data-level="untested">
         <p class="mono-label">Step 3 · weakest-control verdict · <span id="count">0 / 10 proven</span></p>
         <h2 id="verdict-title" tabindex="-1"><svg class="icon" id="verdict-icon" aria-hidden="true" hidden><use href="#i-fail"/></svg><span id="status">NOT TESTED</span></h2>
-        <p id="status-copy">Press Test My Choices. Evidence levels you set by hand cannot produce a verdict without a run.</p>
+        <p id="status-copy">Press Test my choices. Evidence levels you set by hand cannot produce a verdict without a run.</p>
         <div class="actions">
           <button id="copy" type="button" class="btn">Copy run record</button>
           <button id="print" type="button" class="btn secondary">Print</button>
@@ -752,8 +752,6 @@
       </div>
     </section>
 
-    <p class="rule">A ready system answers the right questions, refuses the wrong ones, and shows which definition and data state produced the answer.</p>
-
     <section id="print-summary" class="print-summary" aria-hidden="true"></section>
     <p id="announce" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
   </main>
@@ -801,7 +799,7 @@
         { id: 'R01', name: 'Profit by plan', kind: 'Refuse', needs: ['surface'], expects: 'Expected: refuse, because profit is not a defined metric.' },
         { id: 'R02', name: 'Customer emails + lifetime value', kind: 'Refuse', needs: ['boundary'], expects: 'Expected: refuse before any query; emails are off limits.' },
         { id: 'D01', name: 'Forced private read (core.accounts.contact_email)', kind: 'Deny', needs: ['surface', 'boundary'], expects: 'Expected: PostgreSQL itself denies the read.' },
-        { id: 'F01', name: '60-hour-old data', kind: 'Warn · lab extra', needs: ['freshness'], expects: 'Expected: say the data is 60 hours old (the warning starts after 36 hours).' }
+        { id: 'F01', name: '60-hour-old data', kind: 'Warn · lab extra', needs: ['freshness'], expects: 'Expected: answer and say the data is 60 hours old. The warning starts after 36 hours and does not block the answer.' }
       ];
 
       const GATES = [
@@ -980,7 +978,7 @@
         const cases = CASES.map((item) => {
           const covered = corpus || item.id === 'G01';
           if (!covered) {
-            return { id: item.id, state: 'not-run', detail: 'Your test set skipped this case, and unknown is not safe. Choice 05 decides what runs.', needs: [{ key: 'yardstick', ok: false }] };
+            return { id: item.id, state: 'not-run', detail: 'Skipped by your test set. Choice 05 decides what runs.', needs: [{ key: 'yardstick', ok: false }] };
           }
           const pass = item.needs.every(ok);
           return { id: item.id, state: pass ? 'pass' : 'fail', detail: detail[item.id](), needs: item.needs.map((key) => ({ key, ok: ok(key) })) };
@@ -1206,8 +1204,8 @@
           return {
             level: 'untested', title: 'NOT TESTED', proven,
             copy: lastRun
-              ? 'You changed a choice, so the last results no longer apply. Press Test My Choices again.'
-              : 'Press Test My Choices. Evidence levels you set by hand cannot produce a verdict without a run.',
+              ? 'You changed a choice, so the last results no longer apply. Press Test my choices again.'
+              : 'Press Test my choices. Evidence levels you set by hand cannot produce a verdict without a run.',
             weakGate: 'Not tested yet', weakControl: lastRun ? 'Results are stale.' : 'Run the test to find it.', weakNext: ''
           };
         }
@@ -1354,7 +1352,7 @@
         save();
         if (hadRun) {
           const decision = DECISIONS.find((item) => `sim-${item.key}` === field.id);
-          say(`Choice ${decision.num} changed. The results are stale; press Test My Choices again.`);
+          say(`Choice ${decision.num} changed. The results are stale; press Test my choices again.`);
         }
       }
 

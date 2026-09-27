@@ -89,7 +89,7 @@
         <li><b>Write down the buffer that worked:</b> the service target that balanced cost and fill rate. Then use the critical ratio to decide who needs the bigger buffer: a bakery, whose croissants spoil overnight, or a parcel network, where a missed delivery costs more than an idle van.</li>
       </ol>
       <p class="wf-note">A 100% service level loses money. Set the buffer from the cost of too much against the cost of too little.</p>
-      <p class="trains">Pillars 1 to 3. Field card sections 1 to 3.</p>
+      <p class="trains">Practises pillars 1 to 3. Look up: field card sections 1 to 3.</p>
     </article>
 
     <article class="tier">
@@ -102,7 +102,7 @@
         <li><b>Score both</b> over the 14 weeks: <b>MAE</b> = <code>AVG(ABS(actual - forecast))</code>; <b>Bias</b> = <code>AVG(forecast - actual)</code> (positive means over-forecast).</li>
         <li><b>Report</b> MAE and bias for both forecasts and one sentence: is smoothing worth the extra step?</li>
       </ol>
-      <p class="trains">Baselines and backtesting. “Reading a forecast” below and the field card checks.</p>
+      <p class="trains">Practises baselines and backtesting. Look up: “Reading a forecast” below and the field card checks.</p>
     </article>
 
     <article class="tier">
@@ -115,7 +115,7 @@
         <li>Which is worse, and whether your critical ratio points to a high or low service level.</li>
         <li>The <b>buffer</b> you would set, and which signal (a season, a lead time, a promotion) would change it.</li>
       </ol>
-      <p class="trains">All five pillars. Field card sections 1 to 3.</p>
+      <p class="trains">Practises all five pillars. Look up: field card sections 1 to 3.</p>
     </article>
   </section>
 
@@ -131,13 +131,14 @@
     </table>
   </section>
 
-  <section class="wf-section" aria-labelledby="ref-title">
-    <header class="wf-kopf"><h2 class="wf-h2" id="ref-title">Reading a forecast</h2></header>
+  <section class="wf-section" aria-labelledby="ptr-title">
+    <header class="wf-kopf"><h2 class="wf-h2" id="ptr-title">Reading a forecast</h2></header>
     <ul class="hw-pointers">
       <li><b>MAE:</b> the average miss. <b>Bias:</b> the average signed error; near-zero bias with a large MAE means the misses cancel while every order is off.</li>
       <li><b>RMSE</b> squares errors, so a few big misses dominate. <b>MAPE</b> explodes near zero demand and treats over and under unevenly.</li>
       <li>No value is “good” in general. Compare against your own <b>naive baseline</b> (forecast value added).</li>
       <li>A 90% band should hold about 90% of real points and <b>widens with the horizon</b>. Plan against the band.</li>
+      <li><b>Safety stock</b> grows with σ and with the square root of lead time.</li>
       <li><b>Risk pooling:</b> combined independent demands grow only as <code>√(σ₁²+σ₂²)</code>, so one shared buffer (a central warehouse, a phone and its earbuds planned together) needs less stock than many separate ones.</li>
       <li><b>What no model predicts:</b> novelty (no precedent), regime change (the rules behind the data shift), reflexivity (acting on the forecast changes it) and one-off choices (no distribution). Google Flu Trends overestimated flu in 100 of 108 weeks; weather forecasts lose most skill after about 10 days.</li>
       <li><b>M5 competition</b> (Walmart sales, 2020): about 7.5% of 5,507 teams beat plain exponential smoothing. The winner, 22.4% more accurate, combined 220 gradient-boosted tree models and no deep learning. Total demand is predictable; one item in one store is mostly noise.</li>
@@ -145,7 +146,7 @@
     <p class="trains">Sources: Makridakis et al. (2022), Lazer et al., Science (2014). Newsvendor numbers come from a worked bakery example.</p>
   </section>
 
-  <p class="hw-foot">No account needed, no personal data entered.</p>
+  <p class="hw-foot">Runs in your browser, offline. No account and no personal data needed.</p>
 </main>
 <footer class="wf-foot">
   <p>Original course material by Tim Löhr. All rights reserved. <a href="/en/open-source/lizenzrichtlinie">License policy</a>. Synthetic practice-market teaching data; invented figures.</p>

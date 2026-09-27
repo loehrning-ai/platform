@@ -2,14 +2,14 @@
 
 ## In plain words
 
-A web shop wants to know how many visits turn into orders. That is a **rate**: orders divided by
-sessions. Search brought 20,000 sessions and 400 orders (2 %). Email brought 1,000 sessions and
-80 orders (8 %). The export ships only the two rates. The AI averages them and reports **5.00 %**.
-The shop's real rate is 480 ÷ 21,000 = **2.29 %**. Two more traps sit in the same data: unique
-visitors do not add across days, and the clock decides which month an order belongs to.
+Conversion is a **rate**: orders divided by sessions. Search brought 20,000 sessions and 400
+orders (2 %); email brought 1,000 sessions and 80 orders (8 %). The export ships only the two
+rates. The AI averages them and reports **5.00 %**; the shop's real rate is 480 ÷ 21,000 =
+**2.29 %**. Two more traps: unique visitors do not add across days, and the clock decides which
+month an order belongs to.
 
 FOLDLINE twin: logo churn. Every segment had 40 starting accounts, so averaging three 10 % rates
-happened to give the pooled 10 %. FOLDLINE was right by luck. The web shop is where the luck runs out.
+gave the pooled 10 % by luck. The web shop has unequal bases.
 
 All data is synthetic. Reporting time zone: UTC (written by the owner). Clock: 2026-07-01 09:00 UTC.
 
@@ -67,9 +67,8 @@ JOIN core.load_status AS s ON s.subject_area = 'web_shop'
 WHERE date_trunc('month', c.activity_on)::date <= s.complete_through_month;
 ```
 
-Unique visitors are not in this view. A distinct count must be computed from visitor rows at
-exactly the grain it is asked for (day, week, month). Serve it in its own view per grain, or
-refuse for grains you do not serve.
+Unique visitors are not in this view. A distinct count comes from visitor rows at exactly the
+asked grain (day, week, month). Serve one view per grain, or refuse grains you do not serve.
 
 ## Metric YAML
 
@@ -130,8 +129,6 @@ metrics:
 
 ## What an AI plausibly answers from the export
 
-Not recorded runs: the arithmetic a reader gets by trusting the export names. Use them as tests.
-
 | Plausible answer | How it happens | Why it is wrong |
 | --- | --- | --- |
 | "June conversion: 5.00 %." | `AVG(cr)` over two channel rows | 1,000 email sessions weigh as much as 20,000 search sessions. Pooled: 2.29 % |
@@ -144,7 +141,7 @@ Not recorded runs: the arithmetic a reader gets by trusting the export names. Us
 | --- | --- | --- |
 | Serve `orders` and `sessions`; compute the rate last | Serve `cr` alone | A rate without counts cannot be pooled or checked |
 | Write the denominator: sessions, not visitors | "Conversion = orders ÷ traffic" | Per session and per visitor differ by the return rate |
-| Distinct counts per grain, from visitor rows | Daily uniques summed into weekly | Returning visitors are counted again every day |
+| Distinct counts per grain, from visitor rows | Daily uniques summed into weekly | Returning visitors count again every day |
 | One written reporting zone (UTC) and `_at_utc` names | Timestamps without zone | The month of an order depends on who reads it |
 | Keep visitor keys in core | Serve cookie IDs "for funnels" | A stable key is pseudonymous, not anonymous |
 
@@ -154,9 +151,9 @@ Not recorded runs: the arithmetic a reader gets by trusting the export names. Us
 - Run it: `psql -X -d domain_packs -f domains/sql/webshop_conversion.sql`. It ends with
   `WEB SHOP CHECKS PASS`. The time-zone check uses PostgreSQL's own `AT TIME ZONE 'Europe/Berlin'`.
 - Naming lint: 0 findings on this view.
-- Large sites use approximate distinct counts (HyperLogLog sketches). A sketch can be merged
-  across days; a plain count cannot. Label the result "approximate".
-- If the business reports in local time, write `time_zone: Europe/Berlin` in the metric and
-  name the day column accordingly. Pick one zone per metric; never mix them in one view.
+- Large sites use approximate distinct counts (HyperLogLog sketches), which merge across days.
+  Label the result "approximate".
+- If the business reports in local time, write `time_zone: Europe/Berlin` in the metric and name
+  the day column to match. One zone per metric; never mix zones in one view.
 
 </details>

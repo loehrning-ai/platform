@@ -326,7 +326,7 @@ function genBridge() {
   const W = 1040, x0 = 300, k = (W - x0 - 150) / lb; // px per t, bars start at 0
   const rows = [
     { label: "Location-based", a: 0, b: lb, cls: "br-bar--lb", key: "s2lb_2025", order: 0 },
-    { label: "Certificate, Werk Süd", a: lb + cert, b: lb, cls: "br-bar--minus", key: "bridge_cert_t", order: 1 },
+    { label: "Guarantees of origin", a: lb + cert, b: lb, cls: "br-bar--minus", key: "bridge_cert_t", order: 1 },
     { label: "Residual mix on the rest", a: lb + cert, b: lb + cert + rm, cls: "br-bar--plus", key: "bridge_rm_t", order: 2 },
     { label: "Market-based", a: 0, b: mb, cls: "br-bar--mb", key: "s2mb_2025", order: 3 },
   ];

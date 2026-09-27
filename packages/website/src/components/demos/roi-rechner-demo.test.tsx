@@ -72,7 +72,7 @@ describe("<RoiRechnerDemo>", () => {
   it("exposes the four sliders with their default values and accessible ranges", () => {
     render(<RoiRechnerDemo />);
 
-    const adoption = screen.getByLabelText("Adoption");
+    const adoption = screen.getByLabelText("Nutzungsquote");
     expect(adoption).toHaveAttribute("aria-valuenow", "55");
     expect(adoption).toHaveAttribute("aria-valuemin", "10");
     expect(adoption).toHaveAttribute("aria-valuemax", "90");

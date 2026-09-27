@@ -346,7 +346,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
   });
   $('#tub-reveal').addEventListener('click', () => {
     showGap = true; go(6);
-    verdict.innerHTML = `${'<span class="chip chip--muted">Answer</span>'} ${int(D.q2.end)} ${MINUS} ${int(D.q2.start)} = ${int(D.q2.netNew)}, and ${D.tub.slice(4).map(t => signed(t.chg)).join(' ')} = ${int(D.q2.netNew)}. Both give the same gap.`;
+    verdict.innerHTML = `${'<span class="chip chip--muted">Answer</span>'} ${int(D.q2.end)} ${MINUS} ${int(D.q2.start)} = ${int(D.q2.netNew)}, and ${D.tub.slice(4).map(t => signed(t.chg)).join(' ')} = ${int(D.q2.netNew)}. Both ways give the same gap.`;
   });
   render(false);
   window.__m1Final = () => { showGap = true; cur = 6; render(false); };
@@ -485,6 +485,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
     const g = seq.start();
     clearLook();
     ledger.textContent = '';
+    ledger.hidden = false;
     edges.forEach(e => e.classList.remove('is-drawn'));
     const lines = [
       ['analytics', `analytics.mrr_summary_monthly · month_start 2026-04-01 · ending_mrr_eur ${int(D.trace.april)}`],
@@ -896,7 +897,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
     let cls = '', head, extra = '', withheld = false;
     if (quality.checked) { cls = 'is-block'; withheld = true; head = `<span>Refuse: written rule.</span> ${failChip('Blocked')}`; extra = `<p style="margin:0">“${esc(D.messages.QUALITY)}”</p>`; }
     else if (q3.checked) { cls = 'is-block'; withheld = true; head = `<span>Refuse: written rule.</span> ${failChip('Blocked')}`; extra = `<p style="margin:0">“${esc(D.messages.Q3)}” Q3 2026 is not finished at this clock.</p>`; }
-    else if (invent.checked && h > F.invented) { cls = 'is-block'; withheld = true; head = `<span>Refused by an invented ${F.invented} h rule.</span> ${failChip()}`; extra = `<p class="antinote">Anti-pattern AP-F02. Nobody wrote a ${F.invented} h rule, so the next run can behave differently and no test can be written. FOLDLINE's <code>hard_expiry_hours</code> is NULL: warn, answer, escalate.</p>`; }
+    else if (invent.checked && h > F.invented) { cls = 'is-block'; withheld = true; head = `<span>Refused by an invented ${F.invented} h rule.</span> ${failChip()}`; extra = `<p class="antinote">Anti-pattern AP-F02. Nobody wrote or approved a ${F.invented} h rule, so the next run can behave differently and no test can be written. FOLDLINE's <code>hard_expiry_hours</code> is NULL: warn, answer, escalate.</p>`; }
     else if (over) { cls = 'is-warn'; head = `<span>Answer with a warning.</span> ${gapChip('Stale, disclosed')}`; extra = `<p style="margin:0">“Data loaded at ${F.loaded}, ${h} h before the evaluation clock ${clk}. The warning threshold is ${F.warn} h.” Escalate to <code>revenue_analytics</code>; invent nothing.</p>`; }
     else { head = `<span>Fresh: answer.</span> ${'<span class="chip chip--muted">Fresh</span>'}`; extra = `<p style="margin:0">Loaded ${F.loaded}, ${h} h before the clock ${clk}. Still stated in the trace.</p>`; }
     const vals = D.tub.slice(4).map(t => eur(t.end)).join(' / ');
@@ -999,7 +1000,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
     yb.setAttribute('aria-expanded', open ? 'true' : 'false');
     if (open && !card.firstChild) {
       card.className = 'yours rise';
-      card.innerHTML = `<h3>Your four blanks</h3><p class="fig__note">Nothing is saved or sent. Use invented examples, not employer data.</p><div class="field" style="margin-bottom:10px"><label for="y-q">Your question: period, shape, grain</label><input type="text" id="y-q" autocomplete="off"></div><div class="grid4">${D.blanks.map((b, k) => `<div class="field"><label for="y-b${k}">${esc(b.label)}</label><input type="text" id="y-b${k}" autocomplete="off"></div>`).join('')}</div><div class="field" style="margin-top:10px"><label for="y-w">One wrong answer an AI could give, and its arithmetic</label><input type="text" id="y-w" autocomplete="off"></div><p style="margin-top:12px"><button class="btn btn--small" type="button" id="y-clear">Clear</button></p>`;
+      card.innerHTML = `<h3>Your four blanks</h3><p class="fig__note">Nothing is saved or sent; it disappears when you leave. Use invented examples, not employer data.</p><div class="field" style="margin-bottom:10px"><label for="y-q">Your question: period, shape, grain</label><input type="text" id="y-q" autocomplete="off"></div><div class="grid4">${D.blanks.map((b, k) => `<div class="field"><label for="y-b${k}">${esc(b.label)}</label><input type="text" id="y-b${k}" autocomplete="off"></div>`).join('')}</div><div class="field" style="margin-top:10px"><label for="y-w">One wrong answer an AI could give, and its arithmetic</label><input type="text" id="y-w" autocomplete="off"></div><p style="margin-top:12px"><button class="btn btn--small" type="button" id="y-clear">Clear</button></p>`;
       $('#y-clear').addEventListener('click', () => $$('input', card).forEach(i => { i.value = ''; }));
     }
     if (open) $('#y-q').focus();

@@ -32,7 +32,7 @@ describe("getDemoCopy", () => {
     expect(copy?.ogSubtitle).toBe(
       "Formeln, Pivot und Prognose in einer Beispieltabelle prüfen.",
     );
-    expect(copy?.why).toContain("Excel");
+    expect(copy?.why).toContain("Vorwoche");
   });
 
   it("returns undefined for an unknown slug", () => {

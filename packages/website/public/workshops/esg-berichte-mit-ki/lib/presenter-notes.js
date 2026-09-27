@@ -30,7 +30,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "ask": [],
     "expectedAudience": [],
     "revealOrder": [
-      "Title, date, question card, meta line"
+      "Title, date, question, footer"
     ],
     "cut": "Read the question once and advance.",
     "appendixRoutes": []
@@ -45,7 +45,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     },
     "say": [
       "I build the data pipelines behind reports like this one.",
-      "The company is fictional and no emission factor is an official value, so you can check every number with a phone calculator."
+      "The company is fictional and the factors are simple teaching values, not official ones, so you can check every number with a phone calculator."
     ],
     "sayAt": {
       "0": [
@@ -72,10 +72,10 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "budget_seconds": 100
     },
     "say": [
-      "Kellbrunn has 180 people and has never been under the EU reporting law. Since 18 March 2026 it covers companies with more than 1,000 employees and more than 450 million euros turnover; national law must follow by 19 March 2027.",
+      "Kellbrunn has 180 people and has never been under the EU reporting law. Since 18 March 2026 that law covers companies with more than 1,000 employees and more than 450 million euros turnover. National law must follow by 19 March 2027.",
       "The bank and the car maker still want this number, and whether it went down.",
       "On press 2: remember the second half of the question. Most of today's trouble is there.",
-      "If asked about customer requests or the voluntary standard: appendix A4, items 3 and 4."
+      "If asked about customer requests: under Directive 2026/470, suppliers with up to 1,000 employees may refuse requests beyond the voluntary standard; Germany must transpose it by 19 March 2027. Details: appendix A4, items 3 and 4."
     ],
     "sayAt": {
       "0": [
@@ -305,7 +305,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "say": [
       "On a German bill the dot separates thousands: one thousand two hundred forty megawatt hours.",
       "On press 3: A and B are the same reading, both a thousand times too small. Kellbrunn's second-largest electricity user almost disappears: minus 495.5 tonnes.",
-      "On press 4: two checks need no number format. 23 kilowatt hours per person would not run one CNC machine for an afternoon, and last year's figure is on the same page.",
+      "On press 4: two checks catch it without knowing the format. 23 kilowatt hours per person would not run one CNC machine for an afternoon, and last year's figure is on the same page.",
       "The fix: keep value and unit as printed and let a written rule convert them."
     ],
     "sayAt": {
@@ -600,7 +600,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     ]
   },
   "two-scope-2": {
-    "purpose": "Report both Scope 2 figures; a certificate counts only for the kWh it covers.",
+    "purpose": "Report both Scope 2 figures; guarantees of origin count only for the kWh they cover.",
     "mode": "vote",
     "clock": {
       "start": "38:30",
@@ -609,10 +609,10 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     },
     "say": [
       "Must say: Under the GHG Protocol, a company buying power in a market with certificates and supplier contracts, such as Germany, reports both Scope 2 figures. Which Scope 2 method the VSME Basic Module asks for: check the EFRAG text before the session (appendix A4).",
-      "On press 2: location-based uses the grid average where the power is used; market-based uses what you bought. The certificate covers Werk Süd only.",
-      "On press 3: for power without a certificate, use a qualifying supplier rate if there is one, otherwise the residual mix. In Germany the residual mix is usually above the grid average, because the green attributes sold as certificates are taken out of it.",
-      "On press 5: the certificate takes 496.0 tonnes out; the residual mix on the other 2,370 megawatt hours puts 474.0 back.",
-      "On press 6: so market-based is only 22.0 tonnes lower. Do not let one certificate turn into a sentence about the whole company."
+      "On press 2: location-based uses the grid average where the power is used; market-based uses what you bought. The guarantees of origin cover Werk Süd only.",
+      "On press 3: for power without guarantees of origin, use a qualifying supplier rate if there is one, otherwise the residual mix. In Germany the residual mix is usually above the grid average, because the green attributes sold as guarantees of origin are taken out of it.",
+      "On press 5: the guarantees of origin take 496.0 tonnes out; the residual mix on the other 2,370 megawatt hours puts 474.0 back.",
+      "On press 6: so market-based is only 22.0 tonnes lower. Do not let one plant's green power turn into a sentence about the whole company."
     ],
     "sayAt": {
       "0": [
@@ -657,7 +657,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "Most expect a big drop from the green tariff; the 22.0 t is the surprise."
     ],
     "revealOrder": [
-      "Certificate card, 34.3% bar",
+      "Guarantees of origin card, 34.3% bar",
       "Vote 1",
       "Both Scope 2 numbers",
       "Wrong options, claim line",
@@ -766,7 +766,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     },
     "say": [
       "On press 2: in this case's teaching values, 71% of the location-based decrease is the lower grid factor. It is real, and it is not Kellbrunn's doing.",
-      "On press 3: the market-based decrease is almost all the certificate for Werk Süd: 95%.",
+      "On press 3: the market-based decrease is almost all the guarantees of origin for Werk Süd: 95%.",
       "Kellbrunn's own lower use is 30.1 t location-based. Without production figures nobody can call that efficiency yet.",
       "On press 4: read the sentence. Every number in it has a driver line behind it.",
       "If someone quotes a fall of about 39.4% since 2023: appendix A6."
@@ -826,7 +826,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     },
     "say": [
       "A useful assistant does three things: it calculates what the ledger supports, asks back where a person decides, and refuses claims the evidence cannot carry.",
-      "On card 4: refuse, because nothing in the ledger supports it. If asked about the green-claim rules from 27 September 2026: appendix A4, item 6.",
+      "On card 4: refuse, because nothing in the ledger supports it. From 27 September 2026, Directive (EU) 2024/825 bans generic green claims and offset-based climate-neutral claims towards consumers. German unfair-competition law (UWG) can also cover claims to business customers. Details: appendix A4, item 6.",
       "Must say: Not legal advice. Check the German transposition.",
       "On press 5: this is the answer we want from the raw folder. It raises seven points for a person before it commits to a number."
     ],
@@ -880,7 +880,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     },
     "say": [
       "Today does not show that any tool gets this right or wrong in general.",
-      "On press 3: the ledger checks a number against its bill. If the bill is wrong, the ledger carries the error, and it knows nothing about sources nobody put in the folder. Write what you did not check on the page itself.",
+      "On press 3: the ledger lets you check a number against its bill. If the bill is wrong, the ledger carries the error, and it knows nothing about sources nobody put in the folder. Write what you did not check on the page itself.",
       "Must say: Not legal or audit advice."
     ],
     "sayAt": {
@@ -1213,7 +1213,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "budget_seconds": 0
     },
     "say": [
-      "Certificates first, for the kilowatt hours they cover; then a qualifying supplier rate; then the residual mix for the rest.",
+      "Guarantees of origin first, for the kilowatt hours they cover; then a qualifying supplier rate; then the residual mix for the rest.",
       "The kit's bills leave out the Stromkennzeichnung, so step 2 is empty here. Real bills carry it."
     ],
     "sayAt": {

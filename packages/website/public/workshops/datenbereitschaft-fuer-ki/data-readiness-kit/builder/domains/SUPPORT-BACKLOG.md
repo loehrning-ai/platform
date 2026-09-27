@@ -2,16 +2,15 @@
 
 ## In plain words
 
-A support desk counts its unfinished tickets at the end of every month. That count, the
-backlog, is a **level**. Tickets opened and tickets closed are the **flows**. Resolution time is
-a **median**: the middle ticket's time. Medians cannot be added or averaged. The export stores
-ticket states as the codes `O`, `P`, `C` and `R`. The AI counts `status = 'O'` and reports
-**41** open tickets on 30 June. The backlog is **70**. It also averages three monthly medians
-(**17 h**). The median of all 910 tickets closed in Q2 is **14 h**.
+The month-end count of unfinished tickets, the backlog, is a **level**. Tickets opened and closed
+are the **flows**. Resolution time is a **median**, the middle ticket's time, which cannot be
+added or averaged. The export stores ticket states as the codes `O`, `P`, `C` and `R`. The AI
+counts `status = 'O'` and reports **41** open tickets on 30 June; the backlog is **70**. It also
+averages three monthly medians (**17 h**); the median of all 910 tickets closed in Q2 is **14 h**.
 
-FOLDLINE twin: the export stored account states as `A`, `C` and `N`. The AI searched for
-'active' and found 0 of 0. FOLDLINE's own export lane has the same `tickets` table:
-`saas_bad.public.tickets(id, acct_id, opened, closed, status, prio)`. See
+FOLDLINE twin: the export stored account states as `A`, `C` and `N`, and the AI's search for
+'active' found 0 of 0. FOLDLINE's export lane has the same `tickets` table,
+`saas_bad.public.tickets(id, acct_id, opened, closed, status, prio)`; see
 [`../naming/NAMING-REVIEW.md`](../naming/NAMING-REVIEW.md).
 
 All data is synthetic. Clock: 2026-07-01 09:00 UTC. Last complete quarter: Q2 2026.
@@ -33,7 +32,7 @@ Decision it changes: whether to add a support shift in July.
 Identity test: **80 + 900 − 910 = 70.** The backlog on 30 June: open 41 + pending customer 22 +
 reopened 7 = **70**.
 
-Why the median needs rows or buckets. Bucket counts add across months, so any period's median
+The median needs rows or buckets. Bucket counts add across months, so any period's median
 bucket can be found:
 
 | Resolution time | Closed in Q2 | Running total |
@@ -156,8 +155,6 @@ metrics:
 
 ## What an AI plausibly answers from the export
 
-Not recorded runs: the arithmetic a reader gets by trusting the export names. Use them as tests.
-
 | Plausible answer | How it happens | Why it is wrong |
 | --- | --- | --- |
 | "41 open tickets on 30 June." | `COUNT(*) WHERE status = 'O'` | Pending (22) and reopened (7) tickets are unfinished too. Backlog: 70 |
@@ -168,10 +165,10 @@ Not recorded runs: the arithmetic a reader gets by trusting the export names. Us
 
 | Works | Does not work | Why |
 | --- | --- | --- |
-| Decode status codes in core from the owner's written list | Guess `C` = closed | `C` could be cancelled. A guess changes the backlog silently |
+| Decode status codes in core from the owner's written list | Guess `C` = closed | `C` could mean cancelled, and the backlog changes silently |
 | Write which states count as "open" in `population` | "Backlog = open tickets" | The word "open" is also one of the states |
 | Serve medians per grain, computed from rows | Serve monthly medians and let readers average them | A median of a period needs that period's rows |
-| Serve bucket counts next to the median | Serve only the median | Buckets add across months and let anyone check the median's range |
+| Serve bucket counts next to the median | Serve only the median | Nobody can check the median's range across months |
 | `CHECK` the backlog identity in core | Trust the export's `backlog` column | A missed reopening breaks every later month |
 
 <details>
@@ -182,7 +179,7 @@ Not recorded runs: the arithmetic a reader gets by trusting the export names. Us
   median of 14 h over 910 tickets.
 - Naming lint: 0 findings on the three support views.
 - `percentile_cont` interpolates between the two middle values; `percentile_disc` returns a
-  real ticket's value. Write which one in the metric; they differ on even counts.
+  real ticket's value. They differ on even counts, so the metric names one.
 - A service-level rate ("closed within 24 h") is a ratio of counts and pools like conversion:
   Q2 closed within 24 h = 650 of 910 = 71.4 %.
 

@@ -3,8 +3,8 @@
 ## In plain words
 
 A definition can exist and still fail: a reader (a person, a test or Claude) fills each vague
-field with a guess. Below are the vague version, then each field's guess and the FOLDLINE number
-it produced.
+field with a guess. Below: the vague version first, then a table of each vague field, the guess it
+allowed and the wrong FOLDLINE number it produced.
 
 ---
 
@@ -41,7 +41,7 @@ metrics:
 | 3 | `type: sum` | Summing is always allowed | Month-end levels added: 1,066,140 | `type: snapshot` plus `additivity.across_time: none` |
 | 4 | `model: monthly_revenue` | The export table is approved | The recorded run picked `monthly_revenue` | Keep the key, fix the value: `model: analytics.mrr_summary_monthly` (schema-qualified, the approved view). `metric.yml` in this kit calls the same field `relation` |
 | 5 | `expression: amount` | `amount` is a balance | −19,960 / 9,775 / 42,565 labelled "ending MRR" | `expression: ending_mrr_eur`; the change lives in `net_new_mrr_eur` |
-| 6 | `result_grain: monthly` on `monthly_revenue` | Rows per segment are fine | The export table has one row per segment **and** month, while the line says only "monthly". The recorded run silently summed the segments per `dt` | On a view keyed by `month_start`, the deck's contract uses `result_grain: monthly`; the trap is the table. This kit writes `one row per complete calendar month` |
+| 6 | `result_grain: monthly` on `monthly_revenue` | Rows per segment are fine | The export table has one row per segment **and** month, while the line says only "monthly". The recorded run silently summed the segments per `dt` | On a view keyed by `month_start`, the deck's contract uses `result_grain: monthly`; the trap is the mixed-grain table. This kit writes `one row per complete calendar month` |
 | 7 | `period_rule: last quarter` | Q3 (in progress), or one quarter total | A partial month, or one summed number | "Each complete month-end (three rows); never sum across months"; `completeness: month_start <= complete_through_month` |
 | 8 | `population: all customers` | New joiners are in the churn base | 4 of 48 = 8.33 %: the deck's fixed export-lane database check (replay data, not on a slide). The recorded AI run found 0 of 0 | "Accounts active at the end of the month before period_start; joiners are not in the base" |
 | 9 | `status_filter: active` | The table says 'active' | 0 of 0, "no rate" | Readable values decoded in core: `active`, `churned`, `new`; `zero_denominator: "null"` |

@@ -232,7 +232,7 @@ function trapRow(t) {
     <p class="trap__meta"><span class="tag">${esc(t.role)}</span>${docBtn("trap:" + t.id, DOCLINK[t.id][0], DOCLINK[t.id][1])}</p>
   </div>
   <button class="sw" type="button" role="switch" data-trap="${t.id}" aria-checked="${r.pressed}" aria-labelledby="sl-${t.id} tn-${t.id}${scope ? " ts-" + t.id : ""}" aria-describedby="te-${t.id}"><span class="sw__box" aria-hidden="true"></span><span class="sw__t" id="sl-${t.id}">As the AI did it</span><span class="sw__s" aria-hidden="true">AI</span></button>
-  <p class="iso${r.isoZero ? " is-zero" : ""}" id="te-${t.id}"><b>${esc(r.iso)}</b><span class="iso__tail">${r.isoZero ? "" : " if only this trap fires"}</span> <button class="linkish only" type="button" data-only="${t.id}">Only this trap<span class="sr-only"> (${esc(trapTitle(t))})</span></button></p>
+  <p class="iso${r.isoZero ? " is-zero" : ""}" id="te-${t.id}"><b>${esc(r.iso)}</b><span class="iso__tail sr-only">${r.isoZero ? "" : " if only this trap fires"}</span> <button class="linkish only" type="button" data-only="${t.id}">Only this trap<span class="sr-only"> (${esc(trapTitle(t))})</span></button></p>
   <div class="mob">
     <div class="track" data-open="trap:${t.id}" aria-hidden="true"><span class="ghost"${style(r.ghost)}${r.ghost ? "" : " hidden"}></span><span class="bar${r.bar && !r.bar.neg ? " is-up" : ""}"${style(r.bar)}${r.bar ? "" : " hidden"}></span></div>
     <p class="fx num">${esc(r.fx)}</p>
@@ -250,9 +250,9 @@ const noteRow = `<li class="trap trap--note">
   <p class="noteline">${esc(D.trapNotes.twoMonthBill_en)}</p>
 </li>`;
 const rowsHtml = D.traps.map((t) => trapRow(t) + (t.id === "T2" ? "\n" + noteRow : "")).join("\n");
-const legend = `<span class="blegend"><span><i class="lg lg--down" aria-hidden="true"></i>Fixing lowers the total</span><span><i class="lg lg--up" aria-hidden="true"></i>Fixing raises it</span><span><i class="lg lg--path" aria-hidden="true"></i>Dashed: the path from the raw-folder answer</span></span>`;
-const board = `<div class="mobhint"><p>Under each switch: the effect if only that trap fires, then the bar that fixes it and the running total.</p>${legend}</div>
-<div class="board__head" aria-hidden="true"><span class="c3">Trap, switch, and its effect if only this trap fires</span><span class="bh-chart"><span id="bh-chart">${esc(V0.head)}</span>${legend}</span><span class="r">Fixing it changes the total by</span><span class="r">Running total</span></div>
+const legend = (path) => `<span class="blegend"><span><i class="lg lg--down" aria-hidden="true"></i>Fixing lowers the total</span><span><i class="lg lg--up" aria-hidden="true"></i>Fixing raises it</span>${path ? `<span><i class="lg lg--path" aria-hidden="true"></i>Dashed: the path from the raw-folder answer</span>` : ""}</span>`;
+const board = `<div class="mobhint"><p>Under each switch: the effect if only that trap fires, then the bar that fixes it and the running total.</p>${legend(true)}</div>
+<div class="board__head" aria-hidden="true"><span class="c3">Trap, switch, and its effect if only this trap fires</span><span class="bh-chart"><span id="bh-chart">${esc(V0.head)}</span>${legend(false)}</span><span class="r">Fixing it changes the total by</span><span class="r">Running total</span></div>
 <div id="board" role="tabpanel" aria-labelledby="tab-lb" data-method="lb"><ul class="board">
 <li class="tot tot--start${V0.ghost ? " is-ghost" : ""}">
   <p class="tot__label"><b>${esc(V0.start.label)}</b><span class="tot__sub"><span id="ts-sub">${esc(V0.start.sub)}</span><span class="tot__axis" id="ts-axis">${V0.start.sub ? " " : ""}${esc(V0.start.axis)}</span></span></p>
@@ -354,7 +354,7 @@ const bridges = `<div class="bridges">${bridge("lb", "Location-based, 2024 to 20
 const nb = (label, k, accent) => `<button class="nbtn${accent ? " nbtn--accent" : ""}" type="button" data-open="${k}">${esc(label)}</button>`;
 const sentence = `<div class="sentence" id="sentence">
   <p class="label">The rewritten sentence. Every number opens its driver line and rows.</p>
-  <p>Scope 1 and 2 fell ${nb(nAbs("chg_lb_pct"), "chg:lb")} location-based <span class="num">(${nb(n("chg_lb_t"), "chg:lb")})</span>. In this case's teaching values, ${nb(nAbs("drv_lb_grid_t"), "drv:grid", true)} of that comes from a lower grid factor and ${nb(nAbs("drv_lb_own_t"), "drv:own")} from using less electricity, gas and diesel. Market-based fell ${nb(nAbs("chg_mb_pct"), "chg:mb")}; ${nb(nAbs("drv_mb_cert_t"), "drv:cert")} of that is guarantees of origin covering Werk Süd since January 2025.</p>
+  <p>Scope 1 and 2 fell ${nb(nAbs("chg_lb_pct"), "chg:lb")} location-based <span class="num">(${nb(n("chg_lb_t"), "chg:lb")})</span>. In the teaching values, ${nb(nAbs("drv_lb_grid_t"), "drv:grid", true)} of that comes from a lower grid factor and ${nb(nAbs("drv_lb_own_t"), "drv:own")} from using less electricity, gas and diesel. Market-based fell ${nb(nAbs("chg_mb_pct"), "chg:mb")}; ${nb(nAbs("drv_mb_cert_t"), "drv:cert")} of that is guarantees of origin covering Werk Süd since January 2025.</p>
 </div>
 <p class="struck">The AI's sentence: <s>“The reduction comes mainly from efficiency measures at Werk Nord.”</s> The folder has no production volumes, so “used less” is supported and “more efficient” is not.</p>`;
 const top3 = (m) => D.ranking[m].slice(0, 3);
@@ -422,10 +422,10 @@ const control = `<details class="more ctl" id="ctl" open><summary>Control total,
 const runs = D.runs;
 const runsHtml = runs.status === "not_captured" ? `<div class="runs">
   <div>
-    <p><span class="chip chip--gap">Not captured yet</span></p>
-    <p>${esc(D.meta.constructedLabel_en)}</p>
+    <p><span class="chip chip--gap">No recorded runs yet</span></p>
+    <p><b>Raw-folder answer.</b> ${esc(D.meta.constructedLabel_en)}</p>
     <p class="tlabel"><span class="chip">${esc(D.meta.targetLabel_en)}</span></p>
-    <p>Used for the ledger answer in the deck and the guide.</p>
+    <p>The deck and the guide use it for the ledger answer.</p>
   </div>
   <details class="more proto" id="proto" open><summary>The capture protocol</summary><ol aria-label="Run protocol">
     <li>Hold the model, prompt, factor file, 2024 summary and date constant.</li>

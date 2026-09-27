@@ -170,7 +170,7 @@
    "id": "amount",
    "label": "amount = change",
    "layer": "analytics",
-   "fix": "analytics.mrr_summary_monthly serves the change as net_new_mrr_eur beside ending_mrr_eur. The level comes from the account grain in core.",
+   "fix": "analytics.mrr_summary_monthly serves the change as net_new_mrr_eur beside ending_mrr_eur. The level comes from the account grain in core, not from a window of changes.",
    "test": "G01, Q02"
   }
  ],
@@ -1327,7 +1327,7 @@
    "wrong": "17 h",
    "wrongWhy": "median resolution: the average of monthly medians 12, 26 and 13 h",
    "right": "Cannot compute",
-   "rightWhy": "from medians; all 910 closed tickets give 14 h",
+   "rightWhy": "from medians alone; all 910 closed tickets give 14 h",
    "renames": [
     [
      "status 'O'",

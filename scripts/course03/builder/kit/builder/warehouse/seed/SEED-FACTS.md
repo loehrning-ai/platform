@@ -5,7 +5,7 @@
 FOLDLINE is made up, but its numbers are fixed across the deck, the guide, the lab, the kit, the web page and this warehouse. Every number the builder uses, by origin:
 
 - **DECK**: a fixed fact shown in the workshop. Never change it.
-- **RECORDED AI ANSWER**: what an AI answered in the recording. One run each: an observation.
+- **RECORDED AI ANSWER**: what an AI answered in the recording. One run each; not a benchmark.
 - **DECK EXPORT-LANE CHECK**: the deck's own database checks on the export lane (fixedSql). This seed reproduces them exactly.
 - **DEMO-ONLY FILL**: needed for the demo and the bathtub. Not in the deck. Keep it consistent.
 - **REPLAY**: rows from the deck's replay data (G04, G05).

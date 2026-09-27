@@ -92,5 +92,5 @@ Counter-example: `Claude passes 9 of 9.` The nine are database checks; they do n
 
 ## When old rows stop counting
 
-Start a new block after a new model or AI route, changed instructions or definitions, new or
-regenerated files, a new metric version, or a changed connector or login.
+Start a new block, without reusing old rows, after a new model or AI route, changed instructions
+or definitions, new or regenerated files, a new metric version, or a changed connector or login.

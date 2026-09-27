@@ -6,7 +6,7 @@
 
 Instructions guide the AI from three places: `CLAUDE.md` (Claude Code), Project instructions (Claude Projects) and an Agent Skill (`.claude/skills/foldline-analytics/SKILL.md`); see `../claude/README.md`. They help it refuse early. Only the database can **enforce**. The course's rule: "two locks: refuse early, enforce anyway".
 
-Read-only is not least privilege. The export login is read-only too, and it sees all seven look-alike tables. The approved login can read exactly five views.
+Read-only is not least privilege. In this kit's rebuild, the export login is read-only too, and it sees all seven look-alike tables. The approved login can read exactly five views.
 
 After `sql/60_access.sql` runs, `foldline_ready_reader`:
 

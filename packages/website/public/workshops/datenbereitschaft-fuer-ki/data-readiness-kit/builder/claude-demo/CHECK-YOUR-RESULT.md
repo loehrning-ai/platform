@@ -53,8 +53,8 @@ Before or after the table, Claude warns that the opening balance is missing.
 | Then say | "A better AI route moves the failure without removing it. The recording failed loudly with a negative April; this fails quietly. The fix is the same: write down what each number means and serve the level itself." |
 | Check it yourself | Add 258,785 to each of Claude's numbers: 75,890 + 258,785 = 334,675. Or ask Claude: "What was ending MRR on 31 December 2025?" It cannot know. |
 
-**How sure are we?** Both kept Chat A rehearsal transcripts showed this pattern (2 of 2, one run
-each): an observation, not a benchmark.
+**How sure are we?** Both Chat A rehearsal transcripts we kept showed this pattern (2 of 2, one
+run each): an observation, not a benchmark.
 
 If Claude splits the running totals by segment, this file gives:
 

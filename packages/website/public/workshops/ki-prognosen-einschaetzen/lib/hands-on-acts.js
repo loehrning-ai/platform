@@ -481,13 +481,13 @@
       var promoErr = Math.round(Math.abs(this.y[118] - this.predAt(this.model, 118)));
       var owner = "No model sees the undated shock, so it goes to the exception owner and stays out of the score.";
       if (this.model === "ma") {
-        this.v._set("<b>History only loses.</b> A seven day average misses the weekday rhythm the spreadsheet uses and overspends by <b>" + money(-saved) + "</b> in six weeks. Give the model at least the sheet's calendar. " + owner, "warn");
+        this.v._set("<b>History only loses.</b> A seven-day average misses the weekday rhythm the spreadsheet uses and overspends by <b>" + money(-saved) + "</b> in six weeks. Give the model at least the sheet's calendar. " + owner, "warn");
         emitResult("race", money(saved), "vs same weekday last week", "Start from weekday, then add the dates.");
       } else if (this.model === "wk") {
-        this.v._set("<b>Weekday rhythm beats last week</b> by <b>" + money(saved) + "</b> over six weeks, a <b>" + pct(cut) + "</b> cut. The promo day still misses by about <b>" + promoErr + "</b>: a weekday model cannot see a one off promo date. " + owner, "gold");
+        this.v._set("<b>Weekday rhythm beats last week</b> by <b>" + money(saved) + "</b> over six weeks, a <b>" + pct(cut) + "</b> cut. The promo day still misses by about <b>" + promoErr + " packages</b>: a weekday model cannot see a one-off promo date. " + owner, "gold");
         emitResult("race", money(saved) + " lower", "capacity cost, six weeks", "The promo day still misses. Add the dates.");
       } else {
-        this.v._set("<b>The promo date is the catch.</b> With the promo calendar the promo day error drops to about <b>" + promoErr + "</b> and capacity cost falls <b>" + pct(cut) + "</b>, about <b>" + money(saved) + "</b> over six weeks. " + owner, "good");
+        this.v._set("<b>The promo date is the catch.</b> With the promo calendar the promo day error drops to about <b>" + promoErr + " packages</b> and capacity cost falls <b>" + pct(cut) + "</b>, about <b>" + money(saved) + "</b> over six weeks. " + owner, "good");
         emitResult("race", money(saved) + " lower", "capacity cost, six weeks", "Last week could not see the promo date.");
       }
     },
@@ -657,7 +657,7 @@
 	        this.strip,
 	        el("div", { class: "hs-metrics" }, [this.mFill, this.mBull, this.mCash, this.mCost]),
 	        this.v,
-	        el("div", { class: "hs-note", html: "Bullwhip ratio = CV(order)<sup>2</sup> / CV(POS demand)<sup>2</sup>. Invented figures." })
+	        el("div", { class: "hs-note", html: "Bullwhip: orders swing more than real demand. Ratio = CV(order)<sup>2</sup> / CV(POS demand)<sup>2</sup>. Invented figures." })
 	      ]));
 
       this.loop = makeLoop(this, 72, function () { self.stepWeek(); }, function () { self.render(); });
@@ -744,7 +744,7 @@
 	      this.live._state(false, false, "Device maker | laptop handoff bullwhip");
 	      var cells = this.strip.children;
 	      for (var i = 0; i < 52; i++) cells[i].className = "";
-	      this.v._set("Run one laptop demand year. <b>Local buffers</b> pass padded orders upstream. <b>Shared forecast</b> gives every team the same POS signal and one safety-stock policy.");
+	      this.v._set("Run one laptop demand year. <b>Local buffers</b> pass padded orders upstream, so orders swing more than demand (bullwhip). <b>Shared forecast</b> gives every team the same POS signal and one safety-stock policy.");
 	    },
     run: function () {
       if (this.loop.running) return;
@@ -897,7 +897,7 @@
 	      this.gImpact = this._gate("Impact", "waiting", "review");
 
 	      this.v = verdict();
-	      this.v._set("Demand signals arrive every few minutes. The blind policy ships the deploy-day plan. The AI policy auto-releases capacity only when the gate passes. Trigger a shock.");
+	      this.v._set("Demand signals arrive every few minutes. The no-gate policy ships the deploy-day plan. Gated AI auto-releases capacity only when the gate passes. Trigger a shock.");
 
 	      var bSpike = el("button", { class: "hs-btn shock", type: "button", text: "Viral creator spike" });
 	      var bCrash = el("button", { class: "hs-btn shock crash", type: "button", text: "Regional demand drop" });
@@ -952,7 +952,7 @@
       if (!silent) {
         this.lossB = 0; this.lossG = 0;
 	        this.live._state(true, false, "Social app | steady demand state");
-	        this.v._set("Reset. Both policies match until demand moves. Trigger a shift.", null);
+	        this.v._set("Reset. Both policies match until demand moves. Trigger a shock.", null);
 	        this.updateGateBoard();
         this.draw();
       }
@@ -1023,7 +1023,7 @@
           this.newR = clamp(recent / (baseNow || 1), 0.3, 2.5);
           this.state = "retrained"; this.stateT = 0;
 	          if (this.releaseAt < 0 && this.shockStart >= 0) this.releaseAt = this.t;
-	          if (!warm) this.v._set("<b>Retrained on the new regime.</b> Automation resumes with the gate armed. The blind policy noticed nothing.", "good");
+	          if (!warm) this.v._set("<b>Retrained on the new regime.</b> Automation resumes with the gate armed. The no-gate policy noticed nothing.", "good");
         }
       }
 	      else if (this.state === "retrained") { this.stateT++; if (this.stateT > 10 && this.alarmMAE < THRESH * 0.6) { this.state = "ok"; if (!warm) this.live._state(true, false, "Social app | steady state under new regime"); } }

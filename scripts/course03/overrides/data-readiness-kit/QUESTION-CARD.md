@@ -24,7 +24,7 @@ real questions hide their trap here: "active members" may or may not include pau
 finance-approved figure.
 
 MRR is monthly recurring revenue: ten subscriptions at €20 per month give €200 MRR. One more €20
-subscription is a monthly change of €20, to €220.
+subscription is a change of +€20, and MRR rises to €220.
 
 ## Optional detail for a future implementation
 

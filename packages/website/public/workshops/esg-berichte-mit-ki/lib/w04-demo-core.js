@@ -146,7 +146,7 @@ var W04Core = (function () {
       var r = st.rows[i], iso = t.isolated[method + "_t"];
       var o = {
         pressed: r.active,
-        iso: tenths(iso) === 0 ? "0 t for this number" : t.isolated[method + "_en"] + " t",
+        iso: tenths(iso) === 0 ? "0 t on " + (method === "lb" ? "location-based" : "market-based") : t.isolated[method + "_en"] + " t",
         isoZero: tenths(iso) === 0,
         fx: r.active ? signed(r.effect) : "",
         run: r.active ? num(r.to) : "",
@@ -169,7 +169,7 @@ var W04Core = (function () {
       head: ghost ? "Path from the raw-folder answer (dashed)" : "Fixing the active traps in order",
       start: {
         label: mask === 0 || mask === 127 ? "The raw-folder answer (constructed)" : "This answer",
-        sub: ghost ? "Dashed: the path when every trap fires." : "",
+        sub: "",
         axis: ghost ? "The axis starts at " + axis + ", not at zero."
           : "The axis starts at " + axis + ", not at zero, so this bar and the right-answer bar are shortened.",
         t: ghost ? num(raw) : num(st.start),

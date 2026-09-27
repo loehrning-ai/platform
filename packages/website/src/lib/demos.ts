@@ -113,7 +113,7 @@ export const demos: readonly Demo[] = [
     templateSlugs: ["use-case-bewertungsmatrix"],
     evidenceMode: "synthetic",
     externalActionMode: "none",
-    syntheticDataLabel: "Neun fiktive Verkaufszeilen, nur linear fortgeschrieben.",
+    syntheticDataLabel: "Neun fiktive Verkaufszeilen; die Prognose ist eine einfache lineare Fortschreibung.",
     riskNotes: [
       "Rechne jede vorgeschlagene Formel an einer Zeile von Hand nach.",
       "Vergleiche die Prognose mit denselben Wochen im Vorjahr.",
@@ -174,7 +174,7 @@ export const demos: readonly Demo[] = [
     background: "Beispiel-DB · Signal-Scan · Textentwurf · Review-Gate",
     description:
       "Die Pipeline markiert Signale im CRM mit Quelle und schreibt je Kontakt einen Nachrichtenentwurf.",
-    teaser: "Eine Pipeline entwirft Nachrichten, und vor jedem Versand prüfst du.",
+    teaser: "Eine Pipeline entwirft Nachrichten, die du vor dem Versand prüfst.",
     tags: ["Pipeline", "Review-Gate", "Quellen"],
     meta: [
       { label: "Lernziel", value: "Signalbezug" },
@@ -195,7 +195,7 @@ export const demos: readonly Demo[] = [
     riskNotes: [
       "Prüfe zu jedem Signal die Quelle und ihr Datum.",
       "Kläre die Rechtsgrundlage, bevor du einen Kontakt anschreibst.",
-      "Jede Nachricht braucht einen Abmeldeweg.",
+      "Gib jeder Nachricht einen Abmeldeweg.",
     ],
     lastReviewed: "2026-06-19",
   },
@@ -344,7 +344,7 @@ export const demos: readonly Demo[] = [
     templateSlugs: ["pilot-charter"],
     evidenceMode: "synthetic",
     externalActionMode: "simulated",
-    syntheticDataLabel: "Eine erfundene Rechnung und eine simulierte SAP-Prüfung.",
+    syntheticDataLabel: "Zwei erfundene Rechnungsvarianten und ein simulierter SAP-Import.",
     riskNotes: [
       "Stoppe Import und Buchung, wenn die Extraktionssicherheit niedrig ist.",
       "Prüfe Pflichtangaben nach UStG und mögliche Dubletten vor der Freigabe.",
@@ -420,7 +420,7 @@ export const demos: readonly Demo[] = [
     templateSlugs: ["pilot-charter"],
     evidenceMode: "synthetic",
     externalActionMode: "none",
-    syntheticDataLabel: "Vier erfundene Anwendungen; die Latenzkurve läuft zufällig weiter.",
+    syntheticDataLabel: "Vier erfundene Anwendungen mit erfundenen Messwerten; die Latenzkurve läuft zufällig weiter.",
     riskNotes: [
       "Lege für jede Anwendung eigene Messpunkte und ein Budget fest.",
       "Bestimme vorab, wer bei einem Budget-Alarm entscheidet.",
@@ -440,7 +440,7 @@ export const demos: readonly Demo[] = [
     titleKicker: "Zwei Antworten im Vergleich.",
     background: "Vergleich Basismodell gegen Domänenbeispiele",
     description:
-      "Du vergleichst die Antworten eines Basismodells und eines angepassten Modells auf dieselbe Frage. Daneben steht, wann RAG oder ein besserer Prompt reicht.",
+      "Du vergleichst die Antworten eines Basismodells und eines angepassten Modells auf dieselbe Frage.",
     teaser: "Du vergleichst ein Basismodell mit einem angepassten Modell.",
     tags: ["Fine-Tuning", "Sonnet 4.6", "DACH"],
     meta: [
@@ -476,16 +476,16 @@ export const demos: readonly Demo[] = [
     accent: true,
     title: "Annahmen-Rechner.",
     titleKicker: "Nutzen aus vier Annahmen.",
-    background: "Headcount × Stundensatz × Adoption × gesparte Stunden",
+    background: "Teamgröße × Stundensatz × Nutzungsquote × gesparte Stunden",
     description:
-      "Du trägst Teamgröße, Stundensatz, Nutzungsquote und gesparte Stunden ein und siehst die Formel und die Spanne des Ergebnisses.",
-    teaser: "Du siehst die Formel und die Spanne hinter dem ROI deines Teams.",
+      "Du trägst Teamgröße, Stundensatz, Nutzungsquote und gesparte Stunden ein und siehst die Formel hinter dem Ergebnis.",
+    teaser: "Du siehst die Formel hinter dem ROI deines Teams.",
     tags: ["ROI", "Kalkulation", "Transparent"],
     meta: [
       { label: "Eingaben", value: "4 Annahmen" },
       { label: "Ergebnis", value: "Szenario" },
       { label: "Formel", value: "offen dokumentiert" },
-      { label: "Adoption-Annahme", value: "30–80%" },
+      { label: "Nutzungsquote", value: "30–80%" },
       { label: "Zeitraum", value: "12 Monate" },
     ],
     industries: ["Geschäftsführung", "Finance", "HR"],

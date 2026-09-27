@@ -38,7 +38,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
       { label: "Data protection", value: "Check tenant settings" },
     ],
     industries: ["Controlling", "Finance", "Small and medium-sized businesses"],
-    syntheticDataLabel: "Nine fictional sales rows, only extended in a straight line.",
+    syntheticDataLabel: "Nine fictional sales rows; the forecast is a simple linear projection.",
     riskNotes: [
       "Recalculate each suggested formula by hand for one row.",
       "Compare the forecast with the same weeks last year.",
@@ -88,7 +88,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     riskNotes: [
       "Check the source and date behind each signal.",
       "Establish the lawful basis before you contact anyone.",
-      "Every message needs an opt-out path.",
+      "Give every message an opt-out link.",
     ],
   },
   "agent-pipeline": {
@@ -141,7 +141,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     background: "Keyword search · 6 sample documents · answers with source cards",
     description:
       "Keyword search finds clauses in six company documents and quotes them with their location. Without a match, the system does not answer.",
-    teaser: "Quotes contract clauses with their location, silent without a match.",
+    teaser: "Quotes contract clauses with their location and stays silent without a match.",
     tags: ["Keyword search", "Rule-based", "DE / EN"],
     meta: [
       { label: "Learning objective", value: "Require sources" },
@@ -173,7 +173,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
       { label: "Control", value: "Review before import" },
     ],
     industries: ["Manufacturing", "Accounting", "Small and medium-sized businesses"],
-    syntheticDataLabel: "An invented invoice and a simulated SAP check.",
+    syntheticDataLabel: "Two invented invoice variants and a simulated SAP import.",
     riskNotes: [
       "Stop import and posting when extraction confidence is low.",
       "Check mandatory VAT fields and possible duplicates before sign-off.",
@@ -217,7 +217,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
       { label: "Drift", value: "Check regularly" },
     ],
     industries: ["FinTech", "Platforms", "IT operations"],
-    syntheticDataLabel: "Four invented applications; the latency curve continues at random.",
+    syntheticDataLabel: "Four invented applications with invented measurements; the latency curve continues at random.",
     riskNotes: [
       "Set your own measurement points and a budget for each application.",
       "Decide in advance who acts on a budget alert.",
@@ -228,7 +228,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     titleKicker: "Two answers side by side.",
     background: "Base model compared with domain examples",
     description:
-      "You compare the answers of a base model and an adapted model to the same question. Alongside, you see when retrieval or a better prompt would do.",
+      "You compare the answers of a base model and an adapted model to the same question.",
     teaser: "You compare a base model with an adapted one.",
     tags: ["Fine-tuning", "Sonnet 4.6", "DACH"],
     meta: [
@@ -250,8 +250,8 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     titleKicker: "A benefit from four assumptions.",
     background: "Headcount × hourly cost × adoption × hours saved",
     description:
-      "You enter team size, hourly rate, adoption and hours saved and see the formula and the range of the result.",
-    teaser: "You see the formula and the range behind your team's ROI.",
+      "You enter team size, hourly rate, adoption and hours saved and see the formula behind the result.",
+    teaser: "You see the formula behind your team's ROI.",
     tags: ["ROI", "Scenario model", "Transparent"],
     meta: [
       { label: "Inputs", value: "4 assumptions" },

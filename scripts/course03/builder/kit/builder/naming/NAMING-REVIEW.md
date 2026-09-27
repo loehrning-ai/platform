@@ -3,8 +3,9 @@
 ## In plain words
 
 Ten minutes, one table, one question per column: **would a stranger guess right?** A stranger is
-anyone who has not seen the data: a new colleague, an auditor, or an AI. If what a stranger would
-think a name means is not what it holds, the name forces a guess.
+anyone who has not seen the data: a new colleague, an auditor, or an AI. Read each name aloud and
+write down what a stranger would think it holds. If that differs from what it really holds, the
+name forces a guess, and an AI will guess too.
 
 At FOLDLINE, `monthly_revenue.amount` sounded like revenue but held each month's change. The AI
 guessed "ending MRR" and answered −€19,960 for April; the true ending MRR was €334,675.
@@ -46,7 +47,7 @@ database.
 
 | Current name | What would a stranger guess? | What it really holds | Rule broken | Proposed name | Description sentence (COMMENT) | Forces a guess? |
 | --- | --- | --- | --- | --- | --- | --- |
-| (table) | All subscriptions | One month, June 2026 | R4 | not served; use `analytics.account_mrr_monthly` | — | yes |
+| (table) | All subscriptions | One month, June 2026 | R4 | not served; use `analytics.account_mrr_monthly` with `complete_through_month` | — | yes |
 | `customer_id` | A customer number, maybe a CRM id | The same account number as `customer_master.id` | R6 | `account_key` | Pseudonymous analytics key. Not anonymous. | yes |
 | `date` | Subscription start? Invoice day? | First day of the month (`2026-06-01`) | R3, banned | `month_start` | First day of the calendar month (UTC). | yes |
 | `amount` | Price? Invoice? | June month-end MRR level, EUR | R1, R2, banned | `ending_mrr_eur` | Level: the account's recurring value at month end, EUR. Never sum across months. | yes |
@@ -133,7 +134,7 @@ Reviewer 1: `________`  Reviewer 2: `________`  Date: `________`
 **Before you finish**
 
 - [ ] Every "yes" has a proposed name and a one-sentence description with a "never".
-- [ ] Every proposed name passes the checklist in `NAMING-RULES.md` §9.
+- [ ] Every proposed name passes the checklist in `NAMING-RULES.md` §10.
 - [ ] The rename map (old name → new name → layer) is written down for `../BUILD-ORDER.md`,
       step 3.
 - [ ] Anything already published is renamed with an alias view, not in place (`NAMING-RULES.md` §7).

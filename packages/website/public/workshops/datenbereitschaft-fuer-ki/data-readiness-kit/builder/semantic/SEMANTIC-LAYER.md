@@ -5,8 +5,8 @@
 A **semantic layer** is a written dictionary between your tables and everyone who reads them.
 For each number it says what the number means, which table answers it, and what must be refused.
 
-Like a restaurant menu, it names each dish, portion and allergen, and guests order from it
-instead of picking ingredients in the cold store. At FOLDLINE the cold store is the seven export
+Think of a restaurant menu: it names each dish, its portion and its allergens, and guests order
+from it instead of picking ingredients in the cold store. At FOLDLINE the cold store is the seven export
 tables; the menu is five approved views plus four small files.
 
 The workshop's **four blanks** are a tiny semantic layer:
@@ -41,7 +41,7 @@ The deck's phrase for this: **"One definition, four readers, separate locks."**
 - **The warehouse layers** (source, core, analytics) decide what data exists and in what shape.
   See `../warehouse/LAYERS.md`.
 - **The semantic layer** (the four files) decides what each served number *means*.
-- **Claude** reads a compiled copy of the semantic layer, never the YAML itself. See
+- **Claude** reads a compiled copy of the semantic layer; it does not load the YAML on its own. See
   `../claude/README.md`.
 - **The grants** decide what the AI's login can touch. The semantic layer cannot deny anything.
 
@@ -95,7 +95,7 @@ Skill copy.
 
 **Compiled is not consumed.** Q06 proves the catalog received version 1.0.0, not that Claude
 used it: the recorded runs loaded the definition and cited it 0 of 3 times. Only a required trace,
-graded in every AI run, shows use.
+graded in every AI run, shows whether Claude used it.
 
 ---
 
@@ -115,25 +115,16 @@ product names; check exact syntax in each product's current documentation.
 | `verified-questions.yml` | saved queries plus your own tests | your own tests (no built-in equivalent assumed) | Snowflake Cortex Analyst verified queries |
 | `policy.yml` allowlist | access through the warehouse role | access policies / security context | grants remain the lock in every case |
 
-A product can compile definitions and serve them through an API. The database grant stays.
+A product can compile definitions and serve them through an API. You still need the database grant.
 
 ---
 
-## What works and what does not
+## Counter-example: the export lane had no semantic layer
 
-| What works | What does not | Why the second one fails |
-| --- | --- | --- |
-| Write the four blanks before you build a view | Build the view, then describe what it happens to contain | The view decides the meaning: monthly_revenue "sounded like the answer" and meant something else |
-| One definition, copied to four readers with the same name and version | A slightly different wording in the prompt, the catalog and the test | A test passes against one meaning while Claude answers another |
-| A schema-qualified name: `analytics.mrr_summary_monthly` (the key may be `model:` or `relation:`) | An unqualified name: `mrr_summary_monthly`, whatever the key | The recorded run needed `search_path analytics,public`; another connection finds nothing, or something else |
-| A required trace that names metric and version | "The definition is in the project, so it is used" | Loaded is not the same as used: 0 of 3 citations |
-| A semantic layer **and** grants | A semantic layer **instead of** grants | It guides but cannot deny; PostgreSQL denies D01 |
-
-**Counter-example: the export lane had no semantic layer.** Of seven working tables, "three of
-them sound like the answer", and none said what its numbers meant. The AI picked
-`monthly_revenue`, read a change as a level and labelled it `ending_mrr`. A definition file would
-have given the AI, the test and the reviewer the same written answer to "which table, which kind
-of number".
+Of seven working tables, "three of them sound like the answer", and none said what its numbers
+meant. The AI picked `monthly_revenue`, read a change as a level and labelled it `ending_mrr`. A
+definition file would have given the AI, the test and the reviewer the same written answer to
+"which table, which kind of number".
 
 See also: `METRICS.md` (level, change, rate), `VAGUE-DEFINITION.md` (a bad definition, field
 by field), `FIELD-REFERENCE.md` (every field).

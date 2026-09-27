@@ -269,8 +269,9 @@ Never serve these names. `lint_names.sql` rule LINT-01 finds them.
 ## 4. FOLDLINE: the export lane renamed
 
 The worked example in `NAMING-REVIEW.md` renames all 33 export-lane columns, verified against the
-builder's `saas_bad` database. Renamed columns live in core; no export table is served, and
-`analytics` holds only the five approved views.
+builder's `saas_bad` database. Renamed columns live in core; the served ones (`month_start`, `customer_segment`,
+`country_code`, `plan_name`, `net_new_mrr_eur`, `ending_mrr_eur`, `account_key`) also appear in
+the analytics views. No export table is served.
 
 Two numbers show why renaming matters. `acct_history.balance` already contains the month's
 change, so `SUM(balance + change)` counts it twice: the deck's export-lane check returned €314,715 for April
@@ -463,7 +464,13 @@ accepted exceptions, with reasons, in the header of `lint_names.sql`.
 
 ---
 
-## 9. Checklist
+## 9. What works and what does not
+
+The seven-rule table at the top is the summary; §1 gives each rule's counter-example.
+
+---
+
+## 10. Checklist
 
 Every served name must pass.
 

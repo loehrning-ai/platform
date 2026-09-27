@@ -51,7 +51,7 @@ Groups: [Question](#ap-q-question) · [Naming](#ap-n-naming) · [Layers](#ap-l-l
 | AP-M01 | A change read as a level | Ending MRR "April −€19,960" (recorded run) | A monthly change answers a different question; a level cannot be negative here | `type: snapshot` on `ending_mrr_eur`; the change is `net_new_mrr_eur` | G01 | Bathtub |
 | AP-M02 | Levels added across months | 334,675 + 344,450 + 387,015 = 1,066,140 | Three month-ends added describe nothing | `additivity.across_time: none`; return three rows or the last month | G01 (ai_run); review | Can I add these? |
 | AP-M03 | Changes subtracted as if they were levels | 42,565 − 60,160 = −17,595 (recorded export-lane run) | Level(end) − level(start) works only for levels | Sum the changes (32,380) or subtract levels (387,015 − 354,635) | G02, Q02 | Bathtub |
-| AP-M04 | A level rebuilt from changes with no opening balance | 75,890 / 85,665 / 128,230 (dry run, one observation) | The first level is missing; every month is short by 258,785 | Serve the level; never ask the AI to reconstruct it | G01 (ai_run) | Bathtub |
+| AP-M04 | A level rebuilt from changes with no opening balance | 75,890 / 85,665 / 128,230 (rehearsal, one observation) | The first level is missing; every month is short by 258,785 | Serve the level; never ask the AI to reconstruct it | G01 (ai_run) | Bathtub |
 | AP-M05 | Rates averaged | Web shop: (2 % + 8 %) ÷ 2 = 5.00 % vs pooled 2.29 % | Small groups weigh as much as large ones | Pool: total numerator ÷ total denominator; ship both counts | Review; FOLDLINE is right by luck (equal bases of 40) | Can I add these? |
 | AP-M06 | New joiners in the churn base | 4 of 48 = 8.33 % (deck's export-lane check) | Joiners were never in the starting base | `population`: active at the end of the prior month | G03, Q04 | Can I add these? |
 | AP-M07 | 0 ÷ 0 shown as 0 % | "0 of 0" after searching 'active' | Claims nobody left when nothing was measured | `zero_denominator: "null"`; say "no rate" | Review; `nullif` in the view | Can I add these? |
@@ -114,7 +114,7 @@ Groups: [Question](#ap-q-question) · [Naming](#ap-n-naming) · [Layers](#ap-l-l
 | ID | Symptom | FOLDLINE instance | Why it fails | Fix | Caught by | Module |
 | --- | --- | --- | --- | --- | --- | --- |
 | AP-E01 | "Same model" | The recording names the AI route, not the model version | The underlying model version was not established | Say "same AI route" | Review | Tests |
-| AP-E02 | One run used as a benchmark | One recorded run per question per lane | Another run can differ, as the dry runs did | "One run is an observation, not a benchmark"; 3 or more runs per case | Review of the run log | Tests |
+| AP-E02 | One run used as a benchmark | One recorded run per question per lane | Another run can differ, as the rehearsal runs did | "One run is an observation, not a benchmark"; 3 or more runs per case | Review of the run log | Tests |
 | AP-E03 | Database checks read as an AI score | "9 of 9 tests pass, so the AI scores 9 of 9" | They test the database and course rules, not the AI | Two planes, two reports | Review | Tests |
 | AP-E04 | An average across controls | "Eight of ten checks proven: 80 % ready" | A weak check hides behind the average | The weakest check decides: not ready, pilot only, bounded ready | Review of READY-CANVAS | Build |
 

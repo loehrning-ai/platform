@@ -22,7 +22,7 @@ const COPY = {
       "Nachprüfbare Texte mit Primärquellen zu KI im Alltag, EU AI Act und KI in der Gesellschaft.",
     kicker: (count: number) => `Blog · ${count} Artikel`,
     title: "KI im Alltag, mit Quellen erklärt.",
-    intro: "Texte zu KI im Alltag, EU AI Act und KI in der Gesellschaft.",
+    intro: "Artikel zum EU AI Act und zu KI in Arbeit und Gesellschaft.",
     lastUpdated: "Zuletzt aktualisiert",
     allArticles: "Alle Artikel",
     listNote: "Neueste zuerst",
@@ -42,7 +42,7 @@ const COPY = {
     kicker: (count: number) =>
       `Blog · ${count} ${count === 1 ? "article" : "articles"}`,
     title: "Everyday AI, explained with sources.",
-    intro: "Articles about everyday AI, the EU AI Act and AI in society.",
+    intro: "Articles on the EU AI Act and on AI at work and in society.",
     lastUpdated: "Last updated",
     allArticles: "All articles",
     listNote: "Newest first",

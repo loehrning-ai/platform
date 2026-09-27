@@ -40,7 +40,7 @@ no AI request, database, sign-in or API key.
 
 Work in threes; alone, take all three roles.
 
-- The **operator** makes the five choices and presses **Test My Choices**.
+- The **operator** makes the five choices and presses **Test my choices**.
 - The **witness** logs each run in the "Lab run log" of `READY-CANVAS.md`: run hash, case counts,
   verdict, first weak check. The run hash is under "Run details for auditors" and in the run record.
 - The **skeptic** checks that each changed choice marks the old results as out of date.
@@ -57,11 +57,11 @@ levels in this browser until you press **Reset lab**.
 Which data the AI can see, what number we mean, what is off limits, what happens when data is old,
 and how we check it. Every choice starts on its weak option.
 
-### Minutes 5 to 8: press Test My Choices
+### Minutes 5 to 8: press Test my choices
 
-Read the values and the run hash. The refusal, denial and old-data warning appear once choice 05
-runs all six cases. Your first run tests one ordinary question, so the other five show as NOT RUN:
-missing evidence, even if the answer looks right. That gap is your first finding.
+Read the values and the run hash. Your first run tests one ordinary question, so the other five
+cases show NOT RUN, not FAIL: missing evidence, which is your first finding. Choice 05 runs all six,
+including the refusal, denial and old-data warning.
 
 ### Minutes 8 to 10: repair one choice and run again
 
@@ -77,9 +77,9 @@ Name the first weak check and one next test. The record covers only the FOLDLINE
 
 ## What counts as bounded ready
 
-All ten checks are proven for one question and one data surface. "Proven" means a repeatable test
+All ten checks must be proven for one question and one data surface. "Proven" means a repeatable test
 passed; a written document alone is "Documented". Run the tests again after every change to the
 schema, metric, policy, data, or model.
 
-The weakest check sets the result, not an average. It applies only to the declared question and
+The weakest check sets the result, not an average. It is not a maturity level. It applies only to the declared question and
 surface in your recorded evidence.

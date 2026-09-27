@@ -5,7 +5,7 @@
 In the workshop, one question got two answers.
 
 - **Export lane.** Seven undocumented tables. An AI answered "ending MRR" with −19,960 / 9,775 / 42,565.
-- **Approved lane.** Five approved views, a written definition, a read-only login and tests: 334,675 / 344,450 / 387,015.
+- **Approved lane.** Five approved views, a written definition, a read-only login and tests. The answer: 334,675 / 344,450 / 387,015.
 
 This folder builds both lanes on your own PostgreSQL with one command in about a minute. You get:
 
@@ -60,13 +60,13 @@ REPLAY OK: every recorded and deck export-lane number above was reproduced exact
 
 | Line | What it proves |
 | --- | --- |
-| G01 PASS | The approved view returns the workshop's ending MRR with the deck's exact SQL. |
+| G01 PASS | The approved view returns the workshop's ending MRR, 334,675 / 344,450 / 387,015, with the deck's exact SQL. |
 | G02 PASS | Net new MRR for Q2 is 32,380 = −19,960 + 9,775 + 42,565. |
 | G03 PASS | Logo churn is 4 of 40 = 10.0 % in every segment; joiners are not in the base. |
 | D01 PASS | The AI's reader gets SQLSTATE 42501 on `core.accounts.contact_email`. The database is the lock. |
 | B-T01 PASS | The reader cannot create a temporary table, even after `BEGIN READ WRITE`. |
 | B-S01 SKIP | `SET ROLE` does not load a role's login settings. This is expected; see "Full proof" below. |
-| Q02 PASS | The bathtub identity holds: 354,635 + 32,380 = 387,015, and each month's previous level plus its change gives its level. |
+| Q02 PASS | The bathtub identity holds: 354,635 + 32,380 = 387,015, and each month's opening level plus its change gives its closing level. |
 | Q07 PASS | The lineage in `semantic/model.yml` matches what each view reads, according to PostgreSQL's dependency catalog (`pg_depend`). |
 | F01 PASS | At 60 hours the data is past the 36-hour warning. The answer comes with a warning. As the deck says: "No age-based block rule was written." |
 | DB CHECKS ... PASS | The database and the course rules behave. **This is not an AI score.** |
@@ -135,9 +135,9 @@ Guides in this folder:
 
 | You see | It means | Do this |
 | --- | --- | --- |
-| `relation "mrr_summary_monthly" does not exist` | An unqualified name as the logged-in reader, as intended (B-S01). | Write `analytics.mrr_summary_monthly`. |
+| `relation "mrr_summary_monthly" does not exist` | You used an unqualified name as the logged-in reader. The error is intended (B-S01). | Write `analytics.mrr_summary_monthly`. |
 | `permission denied for schema core` | The lock works (D01). | Nothing. Use the approved views. |
-| `cannot execute CREATE TABLE in a read-only transaction` | The read-only default, a guardrail, fired. | Nothing. B-W01 shows the lock underneath. |
+| `cannot execute CREATE TABLE in a read-only transaction` | The read-only default fired. It is a guardrail; the grants are the lock. | Nothing. B-W01 shows the lock underneath. |
 | `must be able to SET ROLE "foldline_owner"` | You are not a superuser and lack membership (PostgreSQL 16 or newer). | Re-run 00; step 1 grants the membership. If it still fails, your role lacks CREATEROLE. |
 | `role "foldline_owner" already exists` | Nothing. The scripts create roles only when they are missing. | Nothing. |
 | `database "saas_ready" is being accessed by other users` at teardown | Another session is open. | Close it, then re-run 99. |

@@ -28,7 +28,7 @@
   <ul class="chips" aria-label="What the figures are">
     <li class="chip">Fictional company</li>
     <li class="chip">{{factorlabel}}</li>
-    <li class="chip chip--gap">Raw-folder answer: constructed<span class="c-tail">&nbsp;from documented failure modes</span></li>
+    <li class="chip chip--gap">Raw-folder answer: constructed</li>
   </ul>
   <div class="g-tools">
   <details class="toc-phone">
@@ -48,7 +48,7 @@
 <section class="g-sec" aria-labelledby="why-asked">
   <div class="g-kopf"><p class="wf-kicker">The case</p><h2 id="why-asked"><span class="g-n">{{sec}}</span>Why does a {{j:company.staff_2025}}-person company get this question?</h2></div>
   {{fold}}
-  <p>Kellbrunn Präzisionsteile GmbH is invented. It makes stamped and machined metal parts at two plants, Werk Nord and Werk Süd, and runs a leased warehouse, Lager Ost. It has {{j:company.staff_2025}} staff and has never been in CSRD scope. Its house bank wants Scope 1 and 2 emissions to price a loan; a car maker's supplier questionnaire asks the same and whether the number went down.</p>
+  <p>Kellbrunn Präzisionsteile GmbH is invented: {{j:company.staff_2025}} staff, two plants (Werk Nord, Werk Süd) for stamped and machined metal parts, and a leased warehouse, Lager Ost. It has never been in CSRD scope. Its house bank wants Scope 1 and 2 emissions to price a loan; a car maker's questionnaire asks the same and whether the number went down.</p>
   <div class="recall">
     <p class="recall-q"><span class="wf-kicker">Before you open</span>Which two thresholds decide CSRD scope since 18 March 2026?</p>
     <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
@@ -100,7 +100,7 @@
   <div class="recall">
     <p class="recall-q"><span class="wf-kicker">Before you open</span>Why did the Werk Nord sum end up only {{n:wn_net_raw_vs_right_kwh:absunit}} off?</p>
     <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
-      <p>The duplicate March bill adds {{n:dup_kwh}} and the missing October takes out {{n:oct_kwh}}, so they cancel. A month-by-month grid shows both.</p>
+      <p>The duplicate March bill adds {{n:dup_kwh}} and the missing October takes out {{n:oct_kwh}}, so all but {{n:wn_net_raw_vs_right_kwh:absunit}} cancel. A month-by-month grid shows both.</p>
     </div></details>
   </div>
   {{endfold}}
@@ -141,7 +141,7 @@
 <section class="g-sec" aria-labelledby="looked-right">
   <div class="g-kopf"><p class="wf-kicker">Why it failed</p><h2 id="looked-right"><span class="g-n">{{sec}}</span>Why the total looked right</h2></div>
   {{fold}}
-  <p>The duplicate and the missing October cancel to {{n:pair_dup_oct_t:absunit}}. The Talbrück bill hides four fifths ({{n:jv_hides_unit_share_pct}}) of the unit error. The gas bills state on page 2 that their kWh use the gross calorific value (Brennwert, Hs), and the AI used the net-value factor (Heizwert, Hi): {{n:gasbasis_t}}. AdBlue, an exhaust urea solution in the fuel-card export, was counted as diesel: {{n:adblue_t}}.</p>
+  <p>The duplicate and the missing October cancel to {{n:pair_dup_oct_t:absunit}}. The Talbrück bill hides four fifths ({{n:jv_hides_unit_share_pct}}) of the unit error. The gas bills state on page 2 that their kWh use the gross calorific value (Brennwert, Hs), but the AI used the net-value factor (Heizwert, Hi): {{n:gasbasis_t}}. AdBlue, an exhaust urea solution in the fuel-card export, was counted as diesel: {{n:adblue_t}}.</p>
   <p>As the errors come out one by one, the running total swings between {{n:wf_lb_min_t}} and {{n:wf_lb_max_t}} and ends at {{n:total_lb_2025}}, {{n:gap_lb_t}} from where it started.</p>
   {{fig:waterfall}}
   <div class="recall">
@@ -179,14 +179,14 @@
     <li><p><b>Coverage</b> (clerk). Fill the site-by-month grid before summing. One bill counts once, by invoice number, period and meter.</p></li>
     <li><p><b>Units</b> (reader, then clerk). Keep value, unit and quoted line as printed. Convert only with the written table.</p></li>
     <li><p><b>Factors</b> (clerk). Use factor IDs from the pinned table and record the edition. The gas basis must match the bill.</p></li>
-    <li><p><b>Scope 2</b> (clerk). Report location-based and market-based, in the market-based order.</p></li>
-    <li><p><b>Citations</b> (writer). Every number in a text names its row IDs. No claim word without a number, a scope and a row.</p></li>
+    <li><p><b>Scope 2</b> (clerk). Report location-based and market-based. Market-based takes the guarantee of origin first, then the supplier rate, then the residual mix.</p></li>
+    <li><p><b>Citations</b> (writer). Every number in a text names its row IDs. Words like “reduced” or “green” need a number, a scope and a row.</p></li>
   </ol>
   <p>The edition here is {{j:factorEdition}}. Last year's grid factor ({{j:factors.F-EL-LB-2024.value:fix2}}) on 2025 electricity would add {{n:last_year_factor_effect_t:absunit}}, the whole grid effect in this year's change.</p>
   <div class="recall">
     <p class="recall-q"><span class="wf-kicker">Before you open</span>Why should the AI never type a factor from memory?</p>
     <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
-      <p>Nobody can check the year, edition or basis of a value from memory. It may be last year's grid factor, which adds {{n:last_year_factor_effect_t:absunit}} here, or a gas factor on the wrong calorific basis, which adds {{n:gasbasis_t:absunit}}.</p>
+      <p>Nobody can check the year, edition or basis of a value from memory. It may be last year's grid factor, which adds {{n:last_year_factor_effect_t:absunit}} here, or a gas factor on the wrong calorific basis, which adds {{n:gasbasis_t:absunit}}. A factor ID points to one approved row.</p>
     </div></details>
   </div>
   {{endfold}}
@@ -197,7 +197,7 @@
   <div class="g-kopf"><p class="wf-kicker">The fix</p><h2 id="two-scope-2"><span class="g-n">{{sec}}</span>Two Scope 2 numbers</h2></div>
   {{fold}}
   <p>Location-based Scope 2 uses the average grid factor where the power is used: {{n:el_total_kwh}} × {{j:factors.F-EL-LB-2025.value:fix2}} = {{n:s2lb_2025}}. Market-based uses what the company bought: guarantees of origin cover {{n:go_mwh}} at Werk Süd only, so Werk Süd is zero. The other {{n:el_uncovered_kwh}} get a qualifying supplier-specific rate if one exists, otherwise the residual mix ({{j:factors.F-EL-RM-2025.value:fix2}} in the teaching values), giving {{n:s2mb_2025}}.</p>
-  <p>Under the GHG Protocol, a company buying power in a market with certificates and supplier contracts, such as Germany, reports both figures. The kit's bills leave out the supplier mix disclosure real German bills carry, so the residual mix applies. The guarantees of origin remove {{n:bridge_cert_t:absunit}}, the residual mix adds {{n:bridge_rm_t:absunit}} back, and market-based ends only {{n:bridge_net_t:absunit}} below location-based. With {{n:renewable_share_el_pct}} of the electricity covered, “we run on green electricity” is false.</p>
+  <p>Under the GHG Protocol, a company in a market with certificates and supplier contracts, such as Germany, reports both. The kit's bills lack the supplier mix disclosure real German bills carry, so the residual mix applies. Guarantees of origin remove {{n:bridge_cert_t:absunit}} and the residual mix adds {{n:bridge_rm_t:absunit}}, so market-based ends {{n:bridge_net_t:absunit}} below location-based; with {{n:renewable_share_el_pct}} covered, “we run on green electricity” is false.</p>
   {{fig:bridge}}
   <div class="recall">
     <p class="recall-q"><span class="wf-kicker">Before you open</span>Why is {{n:mb_grid_avg_wrong_s2_t}} wrong for market-based?</p>
@@ -231,11 +231,11 @@
     </div></details>
   </div>
   {{endfold}}
-  <p class="key"><b>Key point</b><span>The total moved by {{n:gap_lb_t}}. Every tonne now has a row behind it.</span></p>
+  <p class="key"><b>Key point</b><span>The ledger answer is {{n:gap_lb_t}} higher, and every tonne has a row behind it.</span></p>
 </section>
 
 <section class="g-sec" aria-labelledby="drivers">
-  <div class="g-kopf"><p class="wf-kicker">Ask again</p><h2 id="drivers"><span class="g-n">{{sec}}</span>What drove the change</h2></div>
+  <div class="g-kopf"><p class="wf-kicker">Say it right</p><h2 id="drivers"><span class="g-n">{{sec}}</span>What drove the change</h2></div>
   {{fold}}
   <p>Location-based emissions fell {{n:chg_lb_t:absunit}}. In the teaching values, {{n:drv_lb_grid_t:absunit}} of that ({{n:drv_lb_grid_share_pct}}) comes from the lower grid factor and {{n:drv_lb_own_t:absunit}} from using less electricity, gas and diesel. Market-based fell {{n:chg_mb_t:absunit}}, and {{n:drv_mb_cert_t:absunit}} of that ({{n:drv_mb_cert_share_pct}}) is the guarantees of origin for Werk Süd.</p>
   <p>The folder has no production volumes, so “used less” is supported and “more efficient” is not. The largest sources also depend on the method: location-based, Werk Nord electricity leads with {{n:wn_el_lb_2025}}, then Werk Süd electricity with {{n:ws_lb_2025}}; market-based, Werk Nord electricity is {{n:wn_el_mb_2025}} and Werk Süd electricity drops to zero.</p>
@@ -243,7 +243,7 @@
   <div class="recall">
     <p class="recall-q"><span class="wf-kicker">Before you open</span>Why can't Kellbrunn write “thanks to efficiency measures”?</p>
     <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
-      <p>Without production volumes, nobody can tell whether Kellbrunn used less energy per part or made fewer parts, and {{n:drv_lb_grid_share_pct}} of the location-based decrease came from the grid factor. A sentence the ledger supports: “Location-based emissions fell by {{n:chg_lb_t:absunit}}; {{n:drv_lb_grid_t:absunit}} came from the lower grid factor (teaching values) and {{n:drv_lb_own_t:absunit}} from lower electricity, gas and diesel use.”</p>
+      <p>Without production volumes, nobody can tell whether Kellbrunn used less energy per part or made fewer parts. And {{n:drv_lb_grid_share_pct}} of the location-based decrease came from the grid factor, which Kellbrunn did not cause. A sentence the ledger supports: “Location-based emissions fell by {{n:chg_lb_t:absunit}}; {{n:drv_lb_grid_t:absunit}} came from the lower grid factor (teaching values) and {{n:drv_lb_own_t:absunit}} from lower electricity, gas and diesel use.”</p>
     </div></details>
   </div>
   {{endfold}}
@@ -251,7 +251,7 @@
 </section>
 
 <section class="g-sec" aria-labelledby="ask-back">
-  <div class="g-kopf"><p class="wf-kicker">Ask again</p><h2 id="ask-back"><span class="g-n">{{sec}}</span>Calculate, ask back, refuse</h2></div>
+  <div class="g-kopf"><p class="wf-kicker">Say it right</p><h2 id="ask-back"><span class="g-n">{{sec}}</span>Calculate, ask back, refuse</h2></div>
   {{fold}}
   <ul class="ab-rows" aria-label="Five requests and the job each one needs">
     <li class="ab-row"><span class="ab-row__job">Calculate</span><div><p class="ab-row__req">“Sum Scope 2”</p><p class="ab-row__desc">From the ledger rows.</p></div></li>
@@ -279,7 +279,7 @@
   <div class="recall">
     <p class="recall-q"><span class="wf-kicker">Before you open</span>Name two Scope 1 sources a folder of energy bills never shows.</p>
     <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
-      <p>Any two of refrigerant top-ups for air conditioning or cooling, LPG or diesel forklifts at Lager Ost, an emergency generator and heating oil. Ask for their service invoices and fuel deliveries by name.</p>
+      <p>Two of these: refrigerant top-ups for air conditioning or cooling, LPG or diesel forklifts at Lager Ost, an emergency generator, heating oil. Ask for their service invoices and fuel deliveries by name, and note next to the number which you did not check.</p>
     </div></details>
   </div>
   {{endfold}}
@@ -289,7 +289,7 @@
 <section class="g-sec" aria-labelledby="your-bill">
   <div class="g-kopf"><p class="wf-kicker">Your turn</p><h2 id="your-bill"><span class="g-n">{{sec}}</span>Your bill</h2></div>
   {{fold}}
-  <p>Take one bill you know, or invent one, and fill the transfer sheet's five boxes: source, period, unit, boundary, factor. Each box shows the Werk Süd example. Put no company data into any tool.</p>
+  <p>Take one bill you know, or invent one, and fill the transfer sheet's five boxes: source, period, unit, boundary, factor. Put no company data into any tool.</p>
   <nav class="actions" aria-label="Sheets for your bill">
     <a class="wf-btn wf-btn--primary" href="./transfer.html">Open the transfer sheet</a>
     <a class="wf-btn" href="./field-card.html">Open the field card</a>
@@ -313,9 +313,7 @@
 <section class="g-sec" aria-labelledby="week-later">
   <div class="g-kopf"><p class="wf-kicker">After the session</p><h2 id="week-later"><span class="g-n">{{sec}}</span>One week later</h2></div>
   {{fold}}
-  <p class="provline">Follow-up: 5 minutes plus an optional 30-minute stretch.</p>
-  <p>Answer each question from memory before you open it.</p>
-  <div class="recall">
+    <div class="recall">
     <p class="recall-q">Name the unique key for a bill, and the fallback key.</p>
     <details class="reveal"><summary><span>Reveal the answer</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
       <p>Invoice number + period + meter. Fallback: period + meter + quantity, after normalising characters that OCR confuses (letter O to zero, letter l to one).</p>
@@ -357,7 +355,7 @@
     <dt>Residual mix</dt><dd>The factor for grid power left once certificates are sold off; in Germany usually above the grid average.</dd>
     <dt>Guarantee of origin <i>(Herkunftsnachweis)</i>, cancelled <i>(entwertet)</i></dt><dd>Proof that one MWh came from renewable sources. Cancelled for a named delivery point, it counts there only.</dd>
     <dt>Supplier mix disclosure <i>(Stromkennzeichnung)</i></dt><dd>The fuel mix and emissions a German supplier prints on its bills; the kit leaves it out on purpose.</dd>
-    <dt>Operational control</dt><dd>Count what the company runs, whatever it owns.</dd>
+    <dt>Operational control</dt><dd>Count all of what the company runs and none of what it does not run, whatever it owns.</dd>
     <dt>Equity share</dt><dd>Count each operation by the company's ownership share.</dd>
     <dt>Activity data</dt><dd>The measured quantity behind an emission: kWh, cubic metres, litres.</dd>
     <dt>Emission factor</dt><dd>Kilograms of CO₂e per unit of activity, from a named source and year.</dd>

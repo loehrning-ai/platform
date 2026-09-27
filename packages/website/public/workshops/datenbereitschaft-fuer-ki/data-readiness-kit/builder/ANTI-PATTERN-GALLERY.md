@@ -152,8 +152,7 @@ observation, not a benchmark.
 - **Fix:** serve the level. Never ask an AI to reconstruct one.
 - **FOLDLINE moment:** a dry run with a different AI route did not repeat −€19,960. It added the
   changes from January and labelled €75,890 / €85,665 / €128,230 as "Ending MRR", with a caveat
-  that the opening balance was missing. Every month was short by December's €258,785. The better
-  AI route moved the failure without removing it.
+  that the opening balance was missing. Every month was short by December's €258,785.
 - **Caught by:** G01 (AI plane).
 
 ### AP-M05 · Rates averaged instead of pooled
@@ -341,7 +340,7 @@ observation, not a benchmark.
 - **Fix:** the owner and a second person compute the truth independently from the database and
   record how.
 - **FOLDLINE moment:** the fixed facts (€334,675 / €344,450 / €387,015; 4 of 40) come from the
-  seed and an independent database check.
+  seed and an independent database check, never from a model answer.
 - **Caught by:** review of `truth_source`.
 
 ### AP-T05 · The harness uses SET ROLE

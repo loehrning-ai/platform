@@ -662,8 +662,8 @@ function FormulaOutput({ text }: OutputProps) {
         }}
       >
         {text(
-          "Berechnet die Veränderung zur Vorwoche derselben Region. Zieh die Formel herunter, sie gilt für alle Regionen.",
-          "Computes the change from the same region's prior week. Fill the formula down; it works for every region.",
+          "Berechnet die relative Veränderung zur Vorwoche derselben Region. Zieh die Formel herunter, sie gilt für alle Regionen.",
+          "Computes the relative change from the same region's prior week. Fill the formula down; it works for every region.",
         )}
       </p>
     </OutputShell>

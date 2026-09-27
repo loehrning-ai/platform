@@ -316,7 +316,7 @@
   <div class="ba-company" id="bad-architecture-company" data-step="1" data-motion="rise" style="--order:1"><svg class="icon icon--48" aria-hidden="true"><use href="#i-company"/></svg><span>Same company data · <span data-ev="dataset:accountCount" data-format="int">144</span> accounts</span></div>
 </div>
 <p class="callout ba-callout" id="bad-architecture-callout" data-step="3" data-step-until="4" data-motion="rise" data-focus>Three of them sound like the answer.</p>
-<p class="stamp ba-stamp" id="bad-architecture-stamp" data-step="4" data-motion="stamp" data-focus><svg class="icon" aria-hidden="true"><use href="#i-table"/></svg><span class="ba-stamp__text"><span class="ba-stamp__line">Every table works. Every query runs.</span> <span class="ba-stamp__line">None says what its numbers mean.</span></span></p>
+<p class="stamp ba-stamp" id="bad-architecture-stamp" data-step="4" data-motion="stamp" data-focus><svg class="icon" aria-hidden="true"><use href="#i-table"/></svg><span class="ba-stamp__text"><span class="ba-stamp__line">Every query runs, but no table</span> <span class="ba-stamp__line">says what its numbers mean.</span></span></p>
   <!-- /scene:bad-architecture -->
   </section>
 
@@ -414,7 +414,7 @@
     <p class="fa-sum__terms"><span class="fa-term">−€19,960</span> + <span class="fa-term">€9,775</span> + <span class="fa-term">€42,565</span></p>
     <p class="fa-sum__total">= <span class="fa-sum__value" id="failure-anatomy-total" data-ev="truth:G02:0:net_new_mrr_eur" data-format="eur" data-motion="count" data-focus>€32,380</span> = database net new MRR</p>
   </div>
-  <p class="stamp fa-verdict" id="failure-anatomy-verdict" data-step="5" data-motion="stamp" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-change"/></svg><span>Right answer to a different question.</span></p>
+  <p class="stamp fa-verdict" id="failure-anatomy-verdict" data-step="5" data-motion="stamp" style="--order:1"><svg class="icon" aria-hidden="true"><use href="#i-change"/></svg><span>That is net new MRR, a different metric.</span></p>
 </div>
 <p class="fa-nobody" id="failure-anatomy-nobody" data-step="3" data-step-until="5" data-motion="rise" style="--order:1">Nobody wrote these down.</p>
 <div class="fa-blanks" id="failure-anatomy-blanks" data-step="3" data-focus>
@@ -772,7 +772,7 @@
   </svg>
 
   <div class="node cc-node" id="contract-consumers-definition" data-focus><span class="node__box"><svg class="icon" aria-hidden="true"><use href="#i-contract"/></svg></span><span class="node__label">Definition</span></div>
-  <p class="cc-caption" id="contract-consumers-caption" data-step-until="1" data-motion="rise" style="--order:1">A file on disk changes nothing by itself.</p>
+  <p class="cc-caption" id="contract-consumers-caption" data-step-until="1" data-motion="rise" style="--order:1">The file only works where a tool reads it.</p>
 
   <div class="node cc-node" id="contract-consumers-compile" data-step="1" data-motion="rise" data-focus><span class="node__box"><svg class="icon" aria-hidden="true"><use href="#i-compiler"/></svg></span><span class="node__label">Compile</span></div>
 
@@ -785,7 +785,7 @@
 
   <div class="callout cc-callout" id="contract-consumers-callout" data-step="2" data-motion="rise">
     <p class="cc-callout__fact">Runs used an approved example <span class="cc-num" data-ev="summary:ready:verifiedQueryEvidencePasses" data-format="of:3" data-motion="count">3 of 3</span>, cited the definition <span class="cc-num" data-ev="summary:ready:metricCitationPasses" data-format="of:3" data-motion="count">0 of 3</span>.</p>
-    <p class="cc-callout__punch" id="contract-consumers-punch" data-step-until="3">Loaded is not the same as used.</p>
+    <p class="cc-callout__punch" id="contract-consumers-punch" data-step-until="3">Loaded, but never cited.</p>
     <span class="callout__pointer cc-pointer"></span>
   </div>
 
@@ -998,7 +998,7 @@
   <p class="stamp hn-stamp hn-deny" id="honest-no-d01" data-step="4" data-motion="stamp"><svg class="icon" aria-hidden="true"><use href="#i-deny"/></svg><span>Database denies it</span></p>
 
   <div class="hn-close" data-step="5">
-    <p class="stamp hn-close__stamp" data-motion="stamp" data-focus="step-5"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg><span>Two locks: refuse early, enforce anyway.</span></p>
+    <p class="stamp hn-close__stamp" data-motion="stamp" data-focus="step-5"><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg><span>Course rules refuse first; the database blocks the read.</span></p>
     <p class="small hn-close__small" data-motion="fade" style="--order:1">Course rules and database checks, not AI runs.</p>
   </div>
 </div>
@@ -1394,7 +1394,7 @@
   <li><span>CLAUDE.md <span class="sc-nowrap">(Claude Code only)</span></span></li>
   <li>human catalog</li>
 </ul>
-<p class="sc-note">Compiled is not consumed: see the Ask boundary appendix.</p>
+<p class="sc-note">Whether Ask uses it: see the Ask boundary appendix.</p>
   <!-- /scene:appendix-semantic-contract -->
   </section>
 
