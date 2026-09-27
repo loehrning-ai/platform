@@ -6,6 +6,12 @@
    kicker, so the utility is never generated. */
 @source not inline("overline");
 
+/* The site has one light theme. Tailwind's default `dark:` variant follows
+   prefers-color-scheme, so single `dark:` utilities flipped on a phone in dark
+   mode while the page around them stayed paper. `dark:` now needs an explicit
+   .dark ancestor, which the site never sets. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Versioned, self-hosted brand faces. Regular and Bold cover the first-view
    copy; Medium and SemiBold remain demand-loaded. `optional` keeps a slow font
    response from replacing already-painted text, while the metric-adjusted
@@ -145,8 +151,10 @@
 
   /* Type scale derived from the deck (104/60/40/32/26/24/22 at 1920px,
      times 0.75 for 1440px), tuned for reading. Clamp-based, no abrupt @media
-     jumps. Headlines are 700 and never tracked below -0.015em. Available as
-     `text-*` utilities and as var(--text-*) in CSS modules. */
+     jumps. Headlines are 700 and never tracked below -0.015em; the one
+     exception is the poster headline (--text-poster, only through
+     .poster-title). Available as `text-*` utilities and as var(--text-*) in
+     CSS modules. */
   --text-display: clamp(2.75rem, 1.6rem + 4.2vw, 4.75rem);
   --text-display--line-height: 1;
   --text-display--letter-spacing: -0.015em;
@@ -174,6 +182,12 @@
   --text-num-lg: 2.5rem;
   --text-num-lg--line-height: 1;
   --text-num-lg--letter-spacing: -0.01em;
+  /* Poster headline: 50px at 390, 96px from 1280. Band H1s only, set through
+     .poster-title below, which adds the word-fit rule. The -0.04em tracking is
+     allowed nowhere else (docs/experience-system.md, Poster layer). */
+  --text-poster: clamp(3.125rem, 1.9rem + 5.2vw, 6rem);
+  --text-poster--line-height: 0.92;
+  --text-poster--letter-spacing: -0.04em;
 
   /* Nav height token — fixed so every sticky offset shares one geometry. */
   --nav-h: 4rem;
@@ -201,11 +215,76 @@
   --tabbar-band-h: calc(var(--tabbar-h) + var(--safe-area-bottom));
 }
 
+/* Poster layer ("Plakat"): four scenes of three colours each, sampled from
+   the reference posters. Lemons (Ultramarin, Butter, Mennige), IDEA (Kreide,
+   Kobalt, Himbeere), Bloom (Sand, Aubergine, Terrakotta), Autumn (Rost,
+   Creme, Ocker). Mennige stays the one red: the lemons mid is Mennige.
+   `static` keeps every value in the compiled :root even before a utility
+   uses it, because CSS files outside this entry (phone-hero.css,
+   blog-index.css) and inline SVG styles read them through var(), which
+   Tailwind's usage scan does not see. The TypeScript twin of these values is
+   src/lib/plakat/palettes.ts; palettes.test.ts keeps both equal. Every
+   pairing and ratio: docs/plakat-pairings.md. Ratios below are against
+   Kalkweiß unless stated. */
+@theme static {
+  --color-ultramarin: #152a79; /* lemons ground and paper ink, 11.26 */
+  --color-butter: #fceeaf; /* lemons ink, 10.97 on Ultramarin; never on paper (1.03) */
+  --color-kreide: #ecebdd; /* IDEA ground; never a card on paper (1.05) */
+  --color-kobalt: #2e4d90; /* IDEA ink, 6.78 on Kreide, 7.15 */
+  --color-himbeere: #c94a7f; /* IDEA mid, display only: 3.67 on Kreide */
+  --color-himbeere-tief: #b6386f; /* Himbeere at text size: 4.62 on Kreide, 4.88; never on Beton (4.37) */
+  --color-sand: #e6d3af; /* Bloom ground */
+  --color-aubergine: #3b1f45; /* Bloom ink, 9.74 on Sand, 12.57 */
+  --color-terrakotta: #d1733d; /* Bloom mid, shapes only: 2.30 on Sand */
+  --color-terrakotta-tief: #964305; /* Terrakotta at text size: 4.61 on Sand, 5.95 */
+  --color-rost: #944d44; /* Autumn ground and paper ink, 5.42 */
+  --color-creme: #f0e1ca; /* Autumn ink, 4.80 on Rost: 17px and 400 or more only */
+  --color-ocker: #e4a057; /* Autumn mid, decoration only: 2.78 on Rost */
+  --color-ocker-hell: #ebb16a; /* Autumn meaningful mark or giant numeral: 3.24 on Rost */
+  --color-ocker-tief: #9b5e07; /* ochre at text size on Kalkweiß (4.62) and Bogen only */
+
+  /* Scene roles with their paper defaults. A .plakat-* scope redefines them,
+     so one component reads correctly on paper and in every scene. Never use
+     an /alpha modifier on a scene-* utility: Tailwind writes the color-mix
+     fallback with the :root value, which is wrong inside a scope. */
+  --color-scene-ground: #f3f0e9; /* band or cover ground */
+  --color-scene-ink: #121212; /* the one strong pair: type, buttons, ring */
+  --color-scene-mid: #b73a15; /* decorative shapes, never text */
+  --color-scene-mark: #b73a15; /* a shape that carries meaning, 3:1 or more on the ground */
+  --color-scene-accent-text: #97300f; /* text in the mid hue, 4.5:1 or more */
+  --color-scene-line: #121212; /* Kopflinie and tab marker; page scenes set it below */
+}
+
 @layer base {
   * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+  }
+
+  /* One light theme: form controls, scrollbars and the canvas stay light on
+     an OS in dark mode, matching the paper page. */
+  :root {
+    color-scheme: light;
+  }
+
+  /* The page scene line. Below a band, the Kopflinie, the StatRow values and
+     the active tab-bar marker take the scene's paper ink, 4.85:1 or more on
+     Kalkweiß, Bogen and Beton. The header and the L tile never change. The tab
+     bar sits in the root layout, outside the page tree, hence :root:has() on
+     the route's own [data-plakat-page] wrapper. Without :has() support the
+     line stays Druckschwarz. */
+  :root:has([data-plakat-page="lemons"]) {
+    --color-scene-line: #152a79;
+  }
+  :root:has([data-plakat-page="idea"]) {
+    --color-scene-line: #2e4d90;
+  }
+  :root:has([data-plakat-page="bloom"]) {
+    --color-scene-line: #3b1f45;
+  }
+  :root:has([data-plakat-page="autumn"]) {
+    --color-scene-line: #944d44;
   }
 
   html {
@@ -269,8 +348,11 @@
      the element, drawn instantly. The gap keeps it legible around a
      Mennige-filled button, where ring and fill share a hue. Mennige is 5.08:1
      on Kalkweiß, 5.40:1 on Bogen and 3.24:1 against an adjacent ink button;
-     .dark-section swaps it to #e07050 at 5.79:1 on graphit. The offset stays
-     at 2px because several bordered grids clip their children with
+     .dark-section swaps it to #e07050 at 5.79:1 on graphit, and each
+     .plakat-* scene swaps it to its ink (Butter 10.97, Kobalt 6.78, Aubergine
+     9.74, Creme 4.80 on the scene ground). A control at a scene edge uses an
+     inset ring, so the ring never lands on paper. The offset stays at 2px
+     because several bordered grids clip their children with
      overflow-hidden. */
   :focus-visible {
     outline: 3px solid var(--color-brand-orange);
@@ -435,8 +517,151 @@
     --color-card: #1c1b1a;
     --color-card-hover: #242321;
     --color-inset: #1c1b1a;
+    /* The Kopflinie inside a graphit band stays the band's ink. */
+    --color-scene-line: #f2f1ee;
     background-color: var(--color-background);
     color: var(--color-foreground);
+  }
+
+  /* Plakat scenes: one ground, one ink, one mid. Every text token is the ink
+     (no muted tier on a poster), every control edge is the ink, hairlines are
+     decorative (below 2:1). The focus ring (--color-brand-orange) is the ink.
+     Paper and Mennige are never redefined, so bg-mennige text-paper stays
+     5.40:1 wherever it lands. The second selector lets a server component opt
+     a band into its page's scene without React context. Assign a scene only
+     through src/lib/plakat/palettes.ts. Ratios: docs/plakat-pairings.md. */
+  .plakat-lemons,
+  [data-plakat-page="lemons"] [data-plakat-band] {
+    --color-background: #152a79;
+    --color-foreground: #fceeaf; /* 10.97 */
+    --color-muted-foreground: #fceeaf;
+    --color-muted: #fceeaf;
+    --color-border: #fceeaf;
+    --color-track: #4f5b86; /* Butter 25% over Ultramarin, 1.94, decor */
+    --color-hairline: #4f5b86;
+    --color-card: #152a79;
+    --color-card-hover: #2c3e7e; /* Butter on it 8.58 */
+    --color-inset: #23367c; /* Butter on it 9.52 */
+    --color-brand-orange: #fceeaf; /* ring and accent text, 10.97 */
+    --color-kupfer: #fceeaf;
+    --color-kupfer-dark: #fceeaf;
+    --color-pass: #6fbf9a; /* 5.85 */
+    --color-destructive: #ff7a59; /* 4.99 */
+    --color-risk-red: #ff7a59; /* 4.99 */
+    --color-risk-yellow: #facc15; /* 8.37 */
+    --color-risk-green: #4ade80; /* 7.35 */
+    --color-brand-sand: #d8c29e; /* 7.40 */
+    --color-brand-amber: #ffc857; /* 8.33 */
+    --color-scene-ground: #152a79;
+    --color-scene-ink: #fceeaf;
+    --color-scene-mid: #b73a15; /* Mennige, 2.21, shapes only */
+    --color-scene-mark: #fceeaf;
+    --color-scene-accent-text: #fceeaf;
+    --color-scene-line: #fceeaf;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  .plakat-idea,
+  [data-plakat-page="idea"] [data-plakat-band] {
+    --color-background: #ecebdd;
+    --color-foreground: #2e4d90; /* 6.78 */
+    --color-muted-foreground: #2e4d90;
+    --color-muted: #2e4d90;
+    --color-border: #2e4d90;
+    --color-track: #b3bcc6; /* 1.60, decor */
+    --color-hairline: #b3bcc6;
+    --color-card: #ecebdd;
+    --color-card-hover: #d9dbd5; /* Kobalt on it 5.83 */
+    --color-inset: #e1e2d8; /* 6.23 */
+    --color-brand-orange: #2e4d90;
+    --color-kupfer: #2e4d90;
+    --color-kupfer-dark: #2e4d90;
+    /* Status tones keep their paper values: 6.61 to 7.59 on Kreide. */
+    --color-scene-ground: #ecebdd;
+    --color-scene-ink: #2e4d90;
+    --color-scene-mid: #c94a7f; /* 3.67: display type and shapes */
+    --color-scene-mark: #c94a7f;
+    --color-scene-accent-text: #b6386f; /* 4.62 */
+    --color-scene-line: #2e4d90;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  .plakat-bloom,
+  [data-plakat-page="bloom"] [data-plakat-band] {
+    --color-background: #e6d3af;
+    --color-foreground: #3b1f45; /* 9.74 */
+    --color-muted-foreground: #3b1f45;
+    --color-muted: #3b1f45;
+    --color-border: #3b1f45;
+    --color-track: #b39d8f; /* 1.76, decor */
+    --color-hairline: #b39d8f;
+    --color-card: #e6d3af;
+    --color-card-hover: #d5c1a4; /* 8.17 */
+    --color-inset: #dcc8a9; /* 8.77 */
+    --color-brand-orange: #3b1f45;
+    --color-kupfer: #3b1f45;
+    --color-kupfer-dark: #3b1f45;
+    /* Status tones keep their paper values: 5.40 to 6.20 on Sand. */
+    --color-scene-ground: #e6d3af;
+    --color-scene-ink: #3b1f45;
+    --color-scene-mid: #d1733d; /* 2.30, shapes only */
+    --color-scene-mark: #3b1f45;
+    --color-scene-accent-text: #964305; /* 4.61 */
+    --color-scene-line: #3b1f45;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  /* Rost rules (binding): Creme on Rost is 4.80:1, only 0.30 above AA. Text
+     here is 17px or larger at weight 400 or more; no muted tier, no reduced
+     opacity, no hover tint (a hover underlines or inverts the pair); no
+     question card, status or pass chip, badge, form field, progress bar,
+     text-caption, text-label or text-xs; a meaningful shape uses Ocker hell. */
+  .plakat-autumn,
+  [data-plakat-page="autumn"] [data-plakat-band] {
+    --color-background: #944d44;
+    --color-foreground: #f0e1ca; /* 4.80: 17px+ and 400+ only */
+    --color-muted-foreground: #f0e1ca;
+    --color-muted: #f0e1ca;
+    --color-border: #f0e1ca;
+    --color-track: #b0796c; /* 1.70, decor */
+    --color-hairline: #b0796c;
+    --color-card: #944d44;
+    --color-card-hover: #944d44; /* a 10% tint drops Creme to 4.00: no tint */
+    --color-inset: #944d44; /* a 6% tint drops Creme to 4.29: no tint */
+    --color-brand-orange: #f0e1ca;
+    --color-kupfer: #f0e1ca;
+    --color-kupfer-dark: #f0e1ca;
+    /* No status tone reaches 4.5 on Rost. Status UI is forbidden in this
+       scope; the tokens fall back to the ink so an accident stays legible. */
+    --color-pass: #f0e1ca;
+    --color-destructive: #f0e1ca;
+    --color-risk-red: #f0e1ca;
+    --color-risk-yellow: #f0e1ca;
+    --color-risk-green: #f0e1ca;
+    --color-brand-sand: #f0e1ca;
+    --color-brand-amber: #f0e1ca;
+    --color-scene-ground: #944d44;
+    --color-scene-ink: #f0e1ca;
+    --color-scene-mid: #e4a057; /* 2.78, shapes only */
+    --color-scene-mark: #ebb16a; /* 3.24 */
+    --color-scene-accent-text: #f0e1ca;
+    --color-scene-line: #f0e1ca;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  /* Footer: the graphit band set in Butter. The ring stays #e07050 (5.79). */
+  .dark-section.plakat-footer {
+    --color-foreground: #fceeaf; /* Butter on graphit 15.78 */
+    --color-muted-foreground: #fceeaf;
+    --color-muted: #fceeaf;
+    --color-hairline: rgba(252, 238, 175, 0.16); /* about #39372d, 1.54, decor */
+    --color-track: rgba(252, 238, 175, 0.16);
+    --color-border: rgba(252, 238, 175, 0.4); /* about 3.45, control edge */
+    --color-scene-line: #fceeaf;
   }
 
   /* Werkzeichnung helpers. Tailwind recipes live in src/components/werk. */
@@ -450,10 +675,43 @@
     font-variant-numeric: tabular-nums;
   }
 
-  /* Kopflinie: the 2px ink rule above a section head. */
+  /* Kopflinie: the 2px rule above a section head, in the scene line: ink on
+     paper, the scene's paper ink below a band, the band's ink inside one. */
   .kopflinie {
-    border-top: 2px solid var(--color-foreground);
+    border-top: 2px solid var(--color-scene-line);
     padding-top: 1rem;
+  }
+
+  /* The poster's one line of small spaced caps, set once per scene as a
+     graphic element. Never a UI label or a button, and only inside a
+     .plakat-* scope. The DOM text stays sentence case, so screen readers and
+     copy-paste get normal words. */
+  .plakat-caps {
+    font-size: 0.875rem; /* 14px */
+    line-height: 1.3;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-scene-ink);
+  }
+  .plakat-autumn .plakat-caps,
+  [data-plakat-page="autumn"] [data-plakat-band] .plakat-caps {
+    font-size: 1.0625rem; /* 17px: the Rost rule */
+    letter-spacing: 0.12em;
+  }
+
+  /* Poster headline: the longest unbreakable word always fits its column.
+     --fit is the em width of that word (src/lib/plakat/fit.ts), set inline by
+     the component. The column must be an inline-size container (@container).
+     The 2.25rem floor holds the display size for the longest German words. */
+  .poster-title {
+    font-size: max(2.25rem, min(var(--text-poster), calc(100cqi / var(--fit, 0.01))));
+    line-height: var(--text-poster--line-height);
+    letter-spacing: var(--text-poster--letter-spacing);
+    font-weight: 700;
+    text-wrap: balance;
+    padding-bottom: 0.06em; /* descenders survive line-height 0.92 in overflow-hidden bands */
   }
 
   .card-hover {

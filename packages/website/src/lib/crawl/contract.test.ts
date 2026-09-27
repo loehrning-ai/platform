@@ -386,6 +386,36 @@ describe("crawl contract", () => {
     }
   });
 
+  it("classifies the template downloads as public machine surfaces outside the sitemap", () => {
+    for (const path of [
+      "/vorlagen/ki-in-der-ausbildung-fragen.md",
+      "/vorlagen/ki-in-der-ausbildung-fragen.en.md",
+    ]) {
+      const entry = getCrawlRoute(path);
+      expect(entry.pattern, path).toBe("/vorlagen/:file");
+      expect(entry.routeClass, path).toBe("public-machine");
+      expect(entry.auth, path).toBe("public");
+      expect(entry.robots, path).toBe("allow");
+      expect(entry.includeInSitemap, path).toBe(false);
+      expect(entry.cache, path).toBe("public-short");
+      expect(entry.xRobotsTag, path).toBeUndefined();
+    }
+    expect(robotsAllowPaths()).toContain("/vorlagen/");
+    expect(sitemapStaticPaths().some((path) => path.startsWith("/vorlagen"))).toBe(false);
+
+    // The section index is not a page: it reaches the fail-closed default,
+    // whose pattern echoes the path, and is never public-indexable.
+    const index = getCrawlRoute("/vorlagen");
+    expect(index.pattern).toBe("/vorlagen");
+    expect(index.routeClass).toBe("public-noindex");
+    expect(index.routeClass).not.toBe("public-indexable");
+    expect(index.xRobotsTag).toContain("noindex");
+    // A nested path is not a template download either.
+    expect(getCrawlRoute("/vorlagen/en/ki-in-der-ausbildung-fragen.md").routeClass).toBe(
+      "public-noindex",
+    );
+  });
+
   it("keeps the OAuth consent page and its decision route protected in both locales", () => {
     for (const path of [
       "/oauth/consent",

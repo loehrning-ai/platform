@@ -176,6 +176,7 @@ _None._
 | `/.well-known/oauth-protected-resource` | Public machine-readable surface. |
 | `/.well-known/oauth-protected-resource/api/mcp` | Public machine-readable surface. |
 | `/skills/:name/SKILL.md` | Public machine-readable surface. |
+| `/vorlagen/:file` | Public machine-readable surface. |
 
 ## Asset patterns (public-assets)
 

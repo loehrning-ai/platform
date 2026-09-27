@@ -88,9 +88,12 @@ const contentJsonFiles = walkDir(join(ROOT, "content"), (f) =>
   f.endsWith(".json"),
 );
 const contentMdFiles = walkDir(join(ROOT, "content"), (f) => f.endsWith(".md"));
-// The standalone /vorlagen template section was removed from the platform;
-// no template MD files exist, so template-specific rules no-op.
-const templateMdFiles = [];
+// Question-sheet templates (CC BY 4.0) under content/vorlagen. The template
+// rules below (sources, freshness, metadata, placeholder exemptions) apply to
+// them.
+const templateMdFiles = walkDir(join(ROOT, "content", "vorlagen"), (f) =>
+  f.endsWith(".md"),
+);
 
 // TSX files in app/ and components/ (not test files)
 const tsxFiles = [
