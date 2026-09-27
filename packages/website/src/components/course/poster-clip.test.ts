@@ -210,13 +210,15 @@ describe("clipPosterComposition", () => {
       format: "portrait",
       viewBox: "0 0 400 500",
       preserveAspectRatio: "xMaxYMax meet",
-      children: [{ kind: "shapes", shapes: [{ role: "ink", d: "M300 100Q500 250 300 400Z" }] }],
+      children: [{ kind: "shapes", shapes: [{ role: "ink", d: "M300 100Q600 250 300 400Z" }] }],
     });
     const quadShape = quad?.[0];
     expect(quadShape?.kind).toBe("shape");
     const quadBounds = posterPathBounds((quadShape as { d: string }).d);
     expect(quadBounds?.x1).toBeCloseTo(400, 6);
     expect(posterPathHitTest((quadShape as { d: string }).d)([390, 250])).toBe(true);
+    // At y 150 the curve is at x 383.3; at y 250 it reached 450 before the cut.
     expect(posterPathHitTest((quadShape as { d: string }).d)([399.9, 150])).toBe(false);
+    expect(posterPathHitTest((quadShape as { d: string }).d)([410, 250])).toBe(false);
   });
 });
