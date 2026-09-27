@@ -24,8 +24,6 @@ export default localizeDataInfraLessonToGerman(canonical, {
 - **Genauigkeit.** Ob Werte Schema-, Bereichs-, Beziehungs- und Fachregeln erfüllen, explizit geprüft.
 
 Eine gestoppte Pipeline zeigt sich meist zuerst als Freshness-Fehler. Ein Transformationsfehler kann Freshness gesund lassen und Vollständigkeit oder Genauigkeit beschädigen, und CPU- oder Job-Erfolgsdiagramme übersehen ihn.`,
-      keyTakeaway:
-        "Miss Freshness, Vollständigkeit und Genauigkeit getrennt; ein erfolgreicher Job kann falsche Daten veröffentlichen.",
     },
     {
       id: "s2",
@@ -39,10 +37,10 @@ Leite jedes SLO aus Nutzerbedarf, Messfenster, Fehlerbudget und der Folge einer 
       title: "Testfamilien",
       content: `| Familie | Erkennt | Typischer Zielkonflikt |
 |---|---|---|
-| Schema | ergänzte, entfernte oder neu typisierte Felder; geänderte Nullability | An einer Schnittstelle schnell, aber Kompatibilitätsregeln benötigen weiterhin Zuständigkeit |
-| Constraint | Verstöße gegen Null-, Eindeutigkeits-, Beziehungs- und Bereichsregeln | Kosten steigen mit Tabellengröße, Abfrageform und Ausführungshäufigkeit |
-| Anomalie / Volumen | unerwartete Änderungen von Anzahl oder Verteilung | Benötigt eine repräsentative Basis und Prüfung von Fehlalarmen |
-| Reconciliation | Abweichungen zwischen unabhängig berechneten Summen oder Datensatzmengen | Starke Evidenz für eine definierte Invariante, scannt oder verbindet aber oft viele Daten |
+| Schema | ergänzte, entfernte oder neu typisierte Felder; geänderte Nullability | An einer Schnittstelle schnell; Kompatibilitätsregeln brauchen Zuständigkeit |
+| Constraint | Verstöße gegen Null-, Eindeutigkeits-, Beziehungs- und Bereichsregeln | Kosten steigen mit Tabellengröße, Abfrageform und Häufigkeit |
+| Anomalie / Volumen | unerwartete Änderungen von Anzahl oder Verteilung | Braucht eine repräsentative Basis und Prüfung von Fehlalarmen |
+| Reconciliation | Abweichungen zwischen unabhängig berechneten Summen oder Datensatzmengen | Starke Evidenz für eine Invariante; scannt oft viele Daten |
 
 Wähle Prüfungen nach Geschäftsrisiko und Ausführungskosten: Schnittstellen früh prüfen, große Datensätze begründet stichprobenartig oder inkrementell, teure Reconciliation für die wichtigen Invarianten. Keine Familie beweist End-to-End-Korrektheit.`,
     },
@@ -71,7 +69,7 @@ models:
           compare_model: ref('stg_orders')  # reconciliation
 \`\`\`
 
-Ein dbt-Datentest ist eine Abfrage, deren Ergebniszeilen Verstöße sind. Befehle, Auswahlregeln, Adapter und CI bestimmen, wann er läuft. \`equal_rowcount\` gilt nur, wenn beide Modelle dieselbe Granularität und denselben Filterumfang haben. Gib jedem Test Zuständigkeit, Schweregrad, Rhythmus und eine dokumentierte Reaktion.`,
+Ein dbt-Datentest ist eine Abfrage, deren Ergebniszeilen Verstöße sind; Befehle, Auswahlregeln, Adapter und CI bestimmen, wann er läuft. \`equal_rowcount\` gilt nur, wenn beide Modelle dieselbe Granularität und denselben Filterumfang haben. Gib jedem Test Zuständigkeit, Schweregrad, Rhythmus und eine dokumentierte Reaktion.`,
     },
     {
       id: "s5",
@@ -100,8 +98,6 @@ Ein praktikabler Ablauf:
 4. Den Alarm an das Team der fehlerhaften Grenze leiten, sobald die Evidenz sie zeigt; bis dahin an den Triage-Pfad.
 
 OpenLineage definiert Ereignisse für Jobläufe, Datasets und erweiterbare Facets. Die Abdeckung unterscheidet sich nach Werkzeug und Version, also prüfst du die tatsächlichen Ereignisse, bevor Routing davon abhängt. Schütze Lineage-Metadaten: Namen, Query-Facets und Fehlerdetails legen interne Strukturen und manchmal sensible Werte offen.`,
-      keyTakeaway:
-        "Ein Alarm geht an das Team der Grenze, die laut Evidenz versagt; das ist nicht immer das nächste vorgelagerte System.",
     },
     {
       id: "s7",
@@ -112,13 +108,9 @@ OpenLineage definiert Ereignisse für Jobläufe, Datasets und erweiterbare Facet
       id: "s8",
       title: "Begriffe",
       content: `- **SLI / SLO / SLA**, gemessenes Signal, sein Ziel in einem Zeitfenster und eine Vereinbarung mit Folgen.
-- **Freshness**, Verzögerung zwischen verfügbaren Daten und der dargestellten Fachzeit.
 - **Vollständigkeits-Näherungswert**, eine Anzahl, Abdeckungsquote oder Reconciliation-Abweichung.
 - **Anomalieerkennung**, vergleicht Beobachtungen mit einem erwarteten Bereich.
-- **Datenvertrag**, eine versionierte Vereinbarung zwischen Produzent und Consumer über Struktur, Bedeutung und Qualität.
-- **Deklarierte Prüfung**, eine explizite Invariante, die gegen Daten ausgewertet wird.
-- **Gelernte Prüfung**, ein aus der Historie abgeleiteter erwarteter Bereich.
-- **OpenLineage**, ein Ereignismodell für Job-, Lauf- und Dataset-Metadaten.`,
+- **Datenvertrag**, eine versionierte Vereinbarung zwischen Produzent und Consumer über Struktur, Bedeutung und Qualität.`,
     },
   ],
   widgets: [
@@ -129,10 +121,10 @@ OpenLineage definiert Ereignisse für Jobläufe, Datasets und erweiterbare Facet
       question:
         "Die Pipeline ist grün: Jobs erfolgreich, Latenz normal, keine Fehler. Das Marketing meldet, die Conversion-Rate sei seit drei Tagen falsch. Wahrscheinlichste Ursache?",
       options: [
-        "Ein Fehler im Dashboard.",
-        "Eine stille Regression bei Genauigkeit oder Vollständigkeit, etwa ein Join, der Zeilen verliert.",
-        "CPU-Sättigung.",
-        "Eine Netzwerkpartition.",
+        "Ein Darstellungsfehler im Dashboard.",
+        "Eine stille Genauigkeits- oder Vollständigkeitsregression, etwa ein Join, der Zeilen verliert.",
+        "CPU-Sättigung auf den Workern.",
+        "Eine Netzwerkpartition zwischen Regionen.",
       ],
       explanation:
         "Jobstatus und Latenz sagen nichts über das Ergebnis; ein Enum-Wechsel, ein abweichender Join-Schlüssel oder eine geänderte Einheit verändert die Ausgabe, ohne zu scheitern. Ein Reconciliation-Test auf der richtigen Granularität findet das.",

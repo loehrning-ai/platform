@@ -31,8 +31,6 @@ const lesson: DataInfraLesson = {
       readTimeMinutes: 3,
       content:
         'CAP applies once a network partition stops parts of a distributed system from communicating. For the affected operations, the system then cannot guarantee both **linearizable consistency** and **availability for every request to a non-failing node**.\n\nConsistency here does not mean "correct data", and availability is no uptime percentage. A design can reject or delay some operations, serve stale data for others, or treat records differently. Name the operation, failure model and client-visible behavior before you use a CAP label.',
-      keyTakeaway:
-        "CAP describes behavior during a partition; it ranks no databases and replaces no per-operation failure policy.",
     },
     {
       id: "s2",
@@ -61,8 +59,6 @@ const lesson: DataInfraLesson = {
       readTimeMinutes: 3,
       content:
         '"Consistency" names several contracts. The staircase replays one synthetic race: writer A writes `x=1` then `x=2`; reader B reads `x`. Green means the result meets that step\'s contract; crimson means the simplified model allows the stale value.\n\nReplace "consistent" in a requirement with an observable rule, such as "a session reads its acknowledged writes" or "all clients see inventory decrements in one linearizable order". Then test the product and configuration against that rule under the stated failures.',
-      keyTakeaway:
-        'Name the client-visible consistency rule and its scope; "consistent" alone is no acceptance criterion.',
     },
     {
       id: "s6",
@@ -75,7 +71,7 @@ const lesson: DataInfraLesson = {
       title: "Vocab",
       readTimeMinutes: 1,
       content:
-        "- **Quorum (N/R/W)**, replica count, read responses and write acknowledgements. `R + W > N` forces overlap under simplified assumptions.\n- **Sloppy quorum**, temporary replicas accept writes during a failure and hand them over later.\n- **Read repair**, a read that sees divergent replicas triggers reconciliation.\n- **Linearizability**, each operation appears atomic and respects real-time order.\n- **Bounded staleness**, a contract that caps version or time lag.",
+        "- **Quorum (N/R/W)**, replica count, read responses and write acknowledgements. `R + W > N` forces overlap under simplified assumptions.\n- **Sloppy quorum**, temporary replicas accept writes during a failure and hand them over later.\n- **Read repair**, a read that sees divergent replicas triggers reconciliation.\n- **Bounded staleness**, a contract that caps version or time lag.",
     },
   ],
   widgets: [
@@ -88,7 +84,7 @@ const lesson: DataInfraLesson = {
         title: "A real interview question",
         copy: DATA_INFRA_QUIZ_COPY,
         question:
-          "A replicated cart accepts temporary divergence during a partition so reachable regions stay writable. Normally it requires coordinated cart state across devices. Which PACELC shorthand fits?",
+          "A replicated cart accepts divergence during a partition so reachable regions stay writable. Normally it requires coordinated cart state across devices. Which PACELC shorthand fits?",
         options: [
           "PA/EL, availability during partitions, latency otherwise.",
           "PC/EC, reject partitioned writes, coordinate otherwise.",
@@ -112,9 +108,9 @@ const lesson: DataInfraLesson = {
           'A design says only: "the replicas are eventually consistent." What question is still unanswered?',
         options: [
           '"How long does convergence take, and what do clients see meanwhile?"',
-          '"What\'s your replication factor?"',
+          '"What\'s your replication factor per region?"',
           '"Are you sure you don\'t mean strong consistency?"',
-          '"Why not Postgres?"',
+          '"Why not just use Postgres instead?"',
         ],
         correct: 0,
         explanation:

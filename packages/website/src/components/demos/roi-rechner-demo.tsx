@@ -420,7 +420,7 @@ export default function RoiRechnerDemo() {
             <Assumption
               k={text("Adoption", "Adoption")}
               d={text(
-                "Beispielband 30–80 %. Unter 30 % → Rollout scheitert. Der Wert muss mit tatsächlicher Nutzung ersetzt werden.",
+                "Beispielband 30–80 %. Ersetze den Wert durch die gemessene Nutzung.",
                 "Sample range: 30–80%. Replace it with measured usage.",
               )}
             />

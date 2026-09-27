@@ -107,7 +107,7 @@ function outputFor(taskId: TaskId): Output {
       formula:
         '=WENN(INDIREKT("E"&ZEILE()-3)=0;"";(E2-INDIREKT("E"&ZEILE()-3))/INDIREKT("E"&ZEILE()-3))',
       explain:
-        "Greift auf die Vorwoche derselben Region zu (−3 Zeilen, da 3 Regionen pro KW) und berechnet die relative Veränderung. Division-by-Zero abgefangen.",
+        "Vergleicht mit der Vorwoche derselben Region (3 Zeilen höher, 3 Regionen pro KW) und fängt Division durch null ab.",
       preview: [
         { w: "KW 15", region: "Nord", wachstum: "+9,9 %" },
         { w: "KW 15", region: "Süd", wachstum: "−16,3 %" },
@@ -127,7 +127,7 @@ function outputFor(taskId: TaskId): Output {
         { region: "Süd", stk: 274, umsatz: "1.328.900 €", anteil: "20 %" },
       ],
       explain:
-        "West hat im kleinen Beispieldatensatz den höchsten Umsatzanteil. Produktmix, Preis und Volumen müssen vor einer Interpretation getrennt geprüft werden.",
+        "West hat im kleinen Beispieldatensatz den höchsten Umsatzanteil. Prüf Produktmix, Preis und Volumen getrennt, bevor du das deutest.",
     };
   }
   return {
@@ -139,7 +139,7 @@ function outputFor(taskId: TaskId): Output {
       { w: "KW 20", pred: 684, lo: 590, hi: 778 },
     ],
     explain:
-      "Illustrative lineare Fortschreibung aus nur drei Wochen. Saisonale Effekte sind damit nicht belegt; der Bereich ist ein Beispiel und nicht kalibriert. Keine Bestandsentscheidung ohne längere Datenreihe, Lieferzeiten, Fehlmengenkosten und Kapazitätsgrenzen.",
+      "Lineare Fortschreibung aus nur drei Wochen, nicht kalibriert und ohne belegte Saisoneffekte. Für eine Bestandsentscheidung fehlen längere Datenreihe, Lieferzeiten, Fehlmengenkosten und Kapazitätsgrenzen.",
   };
 }
 

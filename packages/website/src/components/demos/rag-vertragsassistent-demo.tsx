@@ -479,7 +479,7 @@ function RagVertragsassistentGerman() {
                 }}
               >
                 {m.isEmpty
-                  ? "Keine Übereinstimmung gefunden, das System kann hier keine Antwort verankern. Kein Dokument im Beispielarchiv enthält ausreichend passende Schlüsselbegriffe für diese Anfrage."
+                  ? "Keine Übereinstimmung gefunden: Kein Dokument im Beispielarchiv enthält passende Schlüsselbegriffe."
                   : renderBold(m.text ?? "")}
               </div>
               {/* Below sm the first Fundstelle sits right under the answer as
@@ -988,9 +988,8 @@ function RagContractAssistantEnglish() {
           screen-reader users a landmark into the instrument. */}
         <h2 className="sr-only">Contract assistant: questions to the sample archive</h2>
         <p className="text-caption text-muted-foreground" style={{ margin: 0, maxWidth: 720 }}>
-          Six fictional company documents are searched with fixed keyword rules
-          in the browser. This is not legal advice and no model or document
-          service is called.
+          Fixed keyword rules run in the browser; no model or document service
+          is called.
         </p>
       </div>
 

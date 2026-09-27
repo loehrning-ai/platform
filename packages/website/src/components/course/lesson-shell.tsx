@@ -23,7 +23,7 @@ import {
   LESSON_DRAWER_INERT_ATTRIBUTE,
   setSharedInertOwner,
 } from "@/lib/a11y/shared-inert";
-import { cn } from "@/lib/utils";
+import { cx } from "@/components/werk/cx";
 import { coursePlakat, type PlakatKey } from "@/lib/plakat/palettes";
 
 /**
@@ -382,14 +382,14 @@ export function LessonShell({
         data-lesson-shell-desktop-sidebar
         data-lesson-shell-navigation
         data-collapsed={desktopSidebarCollapsed ? "true" : "false"}
-        className={cn(
+        className={cx(
           "hidden shrink-0 self-start overflow-hidden border-r border-hairline bg-background lg:sticky lg:top-28 lg:block lg:h-[calc(100svh-7rem)]",
           desktopSidebarCollapsed ? "lg:w-14" : "lg:w-60",
         )}
       >
         <div className="flex h-full min-h-0 flex-col">
           <div
-            className={cn(
+            className={cx(
               "relative flex min-h-14 shrink-0 items-center gap-2 border-b border-hairline p-2",
               desktopSidebarCollapsed ? "justify-center" : "justify-between",
             )}
@@ -423,7 +423,7 @@ export function LessonShell({
           </div>
           <div
             id={desktopSidebarId}
-            className={cn(
+            className={cx(
               "min-h-0 flex-1 overscroll-contain [scrollbar-gutter:stable]",
               desktopSidebarCollapsed
                 ? "overflow-hidden p-0"
@@ -499,7 +499,7 @@ export function LessonShell({
           // heading) and the 2px Kopflinien take the scene line (Ultramarin
           // 11.26, Kobalt 7.15, Aubergine 12.57 on Kalkweiß); body, widgets
           // and callouts stay paper and ink. Druckschwarz without a scene.
-          className={cn(
+          className={cx(
             "mx-auto w-full min-w-0 overflow-x-clip lg:pt-2 [&>*]:min-w-0 [&_h1]:text-scene-line [&_[role=heading][aria-level='1']]:text-scene-line [&_.border-t-2.border-foreground]:border-scene-line",
             CONTENT_WIDTH_CLASS[contentMode],
           )}

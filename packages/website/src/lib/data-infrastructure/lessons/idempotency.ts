@@ -32,8 +32,6 @@ const lesson: DataInfraLesson = {
       readTimeMinutes: 2,
       content:
         "A delivery guarantee needs a named boundary and failure model:\n\n- **At-most-once** can omit an effect after an uncertain failure.\n- **At-least-once** can duplicate effects unless the consumer controls them; source durability and retention still bound any loss claim.\n- **Exactly-once** means committed state on a defined source-process-sink path looks as if each input affected it once, through transactions, checkpoints, coordinated offsets or idempotent effects.\n\nIdempotency is one of these mechanisms. An HTTP payment call, for example, needs the provider's idempotency contract, retained request identities and reconciliation for unknown outcomes.",
-      keyTakeaway:
-        "An exactly-once claim is incomplete without source, state, sink, configuration and failure boundary.",
     },
     {
       id: "s2",
@@ -62,8 +60,6 @@ const lesson: DataInfraLesson = {
       readTimeMinutes: 2,
       content:
         "A **dead-letter path** holds records the current contract cannot process, without blocking valid ones. It changes completeness and ordering, so it is part of the processing guarantee.\n\nStore only a protected reference or encrypted payload, a safe error code, source identity and position, schema version, first-seen time, retry count and owner. Raw records and exception messages can carry personal data, credentials or internal details, so apply access control, minimization, retention and redaction.\n\nDefine which failures are retried or quarantined, whether a record may bypass ordering, who authorizes replay and how repaired output is reconciled. Set alert thresholds from expected invalid-input rates and user impact.",
-      keyTakeaway:
-        "A DLQ makes failures visible and recoverable; fixing the bug stays your job.",
     },
     {
       id: "s5",
@@ -120,7 +116,7 @@ const lesson: DataInfraLesson = {
           'A daily job processes "yesterday\'s data." A bug affects the last 90 days. What do you change before backfilling?',
         options: [
           "Just run it 90 times.",
-          "Parameterize the window, pin the source, test reruns, isolate live writes, plan rollback.",
+          "Parameterize the window, pin the source, test reruns, isolate writes, plan rollback.",
           "Restore from snapshot.",
           "Add more logging.",
         ],

@@ -214,10 +214,9 @@ export function DemoDetailLayout({
           <div className="min-w-0 lg:col-span-7">
             <SectionHead title={pageCopy.aboutHeading} />
             {copy ? (
-              <div className="mt-6 max-w-[64ch] space-y-4 text-body text-foreground max-sm:mt-4">
-                <p>{copy.why}</p>
-                <p className="text-muted-foreground">{copy.proof}</p>
-              </div>
+              <p className="mt-6 max-w-[64ch] text-body text-foreground max-sm:mt-4">
+                {copy.why}
+              </p>
             ) : null}
 
             <DemoNotesToggle

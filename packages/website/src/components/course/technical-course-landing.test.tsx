@@ -58,7 +58,8 @@ describe("TechnicalCourseLanding", () => {
       screen.getByRole("link", { name: "View course map" }),
     ).toHaveAttribute("href", "#map");
     const facts = screen.getByRole("complementary", { name: "Course facts" });
-    expect(within(facts).getByText("Course facts")).toBeVisible();
+    // The landmark carries the name; the visible label is gone at every width.
+    expect(within(facts).getByText("Course facts")).toHaveClass("sr-only");
     expect(within(facts).getAllByRole("listitem")).toHaveLength(2);
     expect(
       facts.querySelector("[data-course-onboarding-checklist]"),
@@ -95,7 +96,7 @@ describe("TechnicalCourseLanding", () => {
     expect(within(facts).getByRole("figure", { name: "Arbeitszyklus" })).toBeInTheDocument();
   });
 
-  it("renders the facts as one wrapping caption line below lg and the ruled column from lg", () => {
+  it("renders the facts as one line under the actions, with separators that never end a line", () => {
     render(
       <TechnicalCourseHeader
         eyebrow="Kurs"
@@ -107,21 +108,23 @@ describe("TechnicalCourseLanding", () => {
       />,
     );
     const facts = screen.getByRole("complementary", { name: "Auf einen Blick" });
-    // Inside the band the phone facts are one plain line with no hairline
-    // (SPEC §3.1); from lg they keep the 2px ruled column.
-    expect(facts).toHaveClass("border-t-2", "border-foreground", "max-lg:border-t-0");
-    // The visible label repeats the landmark name, so it is visually hidden
-    // below lg only.
-    expect(within(facts).getByText("Auf einen Blick")).toHaveClass("max-lg:sr-only");
+    // No hairline, rule or box inside a band (SPEC §3.1): the facts are one
+    // plain line at 14px on a phone (the caps line's size) and 17px from lg.
+    expect(facts.className).not.toMatch(/border/);
+    expect(within(facts).getByText("Auf einen Blick")).toHaveClass("sr-only");
     const list = facts.querySelector("[data-course-onboarding-checklist]");
-    expect(list).toHaveClass("max-lg:flex", "max-lg:flex-wrap");
+    expect(list).toHaveClass("flex", "flex-wrap", "text-[0.875rem]/[1.5]", "lg:text-[1.0625rem]/[1.5]");
+    // Each item leads with its separator; the list sits one separator width
+    // left inside a clipping box, so the first separator of every line is
+    // cut off and a wrapped line never ends with a lone "·".
+    expect(list).toHaveClass("-ml-[1.25em]");
+    expect(list?.parentElement).toHaveClass("overflow-hidden");
     const rows = within(facts).getAllByRole("listitem");
     expect(rows).toHaveLength(2);
     for (const row of rows) {
-      // Desktop rows keep their hairline and 17px body; phones drop both.
-      // Desktop rows keep their hairline and 17px body; phones drop both and
-      // set the line at 14px, the caps line's size (SPEC §3.13).
-      expect(row).toHaveClass("border-b", "py-2.5", "text-body", "max-lg:border-0", "max-lg:py-0", "max-lg:text-[0.875rem]");
+      expect(row.className).toContain("before:content-['·'_/_'']");
+      expect(row.className).toContain("before:w-[1.25em]");
+      expect(row.className).not.toMatch(/after:content/);
     }
     // The band's one body size: a 17px lead at every width (SPEC §3.1).
     expect(screen.getByText("Intro")).toHaveClass("text-[1.0625rem]/[1.5]");
@@ -167,11 +170,28 @@ describe("TechnicalCourseLanding", () => {
     expect(title).toHaveClass("poster-title");
     expect(title.getAttribute("style")).toMatch(/--fit:\s*\d/);
     expect(title.parentElement).toHaveClass("@container");
+    // The caps line is one line: each "·" part is an unbreakable item that
+    // carries its separator, and a part that does not fit is clipped whole.
+    const caps = header?.querySelector(".plakat-caps");
+    expect(caps).toHaveClass("max-h-[1.3em]", "overflow-hidden");
+    expect(Array.from(caps?.querySelectorAll("span > span") ?? [], (part) => part.textContent)).toEqual([
+      "Claude Course",
+      "\u00a0· Technikkurs",
+    ]);
     // The course poster, from lg only, aria-hidden and without a numeral
-    // (Technikkurse carry none, D9); never an <img>.
+    // (Technikkurse carry none, D9); never an <img>. As on the workshop
+    // bands (SPEC §3.1) it fills the band's right edge at full height,
+    // behind the text column, so its shapes bleed off real band edges.
     const art = header?.querySelector("[data-plakat-art]");
     expect(art).toHaveAttribute("aria-hidden", "true");
-    expect(art).toHaveClass("hidden", "lg:block");
+    expect(art).toHaveClass("hidden", "lg:block", "absolute", "inset-y-0", "right-0", "-z-10");
+    expect(header).toHaveClass("relative", "isolate");
+    expect(frame).toHaveClass("@container");
+    // The text column keeps 3rem clear of the art.
+    expect(title.closest("[data-plakat-band] > div")?.className).toMatch(/lg:pr-\[max\(0px,calc\(min\(36cqw,30rem\)/);
+    // The secondary action in a band is the scene secondary (SPEC §3.8).
+    const actions = header?.querySelector("[data-course-entry-actions]");
+    expect(actions).toHaveClass("[&>*+*]:border-2", "[&>*+*]:border-scene-ink", "[&>*+*]:hover:bg-scene-ink", "[&>*+*]:hover:text-scene-ground");
     expect(art?.querySelector("svg[data-poster='idea']")).not.toBeNull();
     expect(art?.querySelector("[data-poster-numeral-text]")).toBeNull();
     expect(header?.querySelector("img")).toBeNull();
@@ -227,6 +247,23 @@ describe("TechnicalCourseLanding", () => {
     expect(screen.getByText("Lektion 3")).toHaveClass("max-sm:sr-only");
     expect(TECHNICAL_COURSE_LESSON_ROW_COLUMNS).toContain("grid-cols-[2rem_minmax(0,1fr)_1rem]");
     expect(TECHNICAL_COURSE_LESSON_ROW_COLUMNS).toContain("sm:grid-cols-[4.75rem_minmax(0,1fr)_1rem]");
+  });
+
+  it("sets the same '·' separator in every band caps line", () => {
+    const { container } = render(
+      <TechnicalCourseHeader
+        courseId="codex"
+        eyebrow="Codex / Kurs"
+        title="Titel"
+        intro="Intro"
+        primaryAction={<a href="/a">Start</a>}
+        facts={["12 Lektionen"]}
+        factsLabel="Kursdaten"
+      />,
+    );
+    const caps = container.querySelector(".plakat-caps");
+    expect(caps?.textContent).toBe("Codex\u00a0· Kurs");
+    expect(caps?.textContent).not.toContain("/");
   });
 
   it("drops legal-document section marks from labels", () => {

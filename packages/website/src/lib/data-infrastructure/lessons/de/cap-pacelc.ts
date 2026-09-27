@@ -19,8 +19,6 @@ export default localizeDataInfraLessonToGerman(canonical, {
       content: `CAP gilt, sobald eine Netzwerkpartition Teile eines verteilten Systems voneinander trennt. Für die betroffenen Vorgänge kann das System dann nicht zugleich **linearisierbare Konsistenz** und **Verfügbarkeit jeder Anfrage an einen nicht ausgefallenen Knoten** garantieren.
 
 Konsistenz heißt hier nicht „richtige Daten“, Verfügbarkeit ist keine Uptime-Quote. Ein Entwurf darf manche Vorgänge ablehnen oder verzögern, für andere veraltete Daten liefern oder Datensätze unterschiedlich behandeln. Benenne Vorgang, Fehlermodell und sichtbares Client-Verhalten, bevor du ein CAP-Etikett nutzt.`,
-      keyTakeaway:
-        "CAP beschreibt Verhalten während einer Partition; es bewertet keine Datenbanken und ersetzt keine Fehlerregel je Vorgang.",
     },
     {
       id: "s2",
@@ -57,8 +55,6 @@ Benchmarke das konfigurierte Deployment im Normalbetrieb und unter Störung. Kei
       content: `„Konsistenz“ benennt mehrere Verträge. Die Stufen spielen einen synthetischen Wettlauf ab: Writer A schreibt \`x=1\`, dann \`x=2\`; Reader B liest \`x\`. Grün heißt, das Ergebnis erfüllt den Vertrag der Stufe; Karmesin heißt, das vereinfachte Modell lässt den veralteten Wert zu.
 
 Ersetz „konsistent“ in einer Anforderung durch eine beobachtbare Regel, etwa „eine Sitzung liest ihre bestätigten Schreibvorgänge“ oder „alle Clients sehen Bestandsabbuchungen in einer linearisierbaren Reihenfolge“. Dann prüfst du Produkt und Konfiguration gegen diese Regel unter den genannten Fehlern.`,
-      keyTakeaway:
-        "Benenne die sichtbare Konsistenzregel und ihren Umfang; „konsistent“ allein ist kein Abnahmekriterium.",
     },
     {
       id: "s6",
@@ -71,7 +67,6 @@ Ersetz „konsistent“ in einer Anforderung durch eine beobachtbare Regel, etwa
       content: `- **Quorum (N/R/W)**, Replikatzahl, Leseantworten und Schreibbestätigungen. \`R + W > N\` erzwingt unter vereinfachten Annahmen eine Überschneidung.
 - **Sloppy Quorum**, vorübergehende Replikate nehmen im Fehlerfall Schreibvorgänge an und reichen sie später weiter.
 - **Read Repair**, ein Lesevorgang, der abweichende Replikate sieht, stößt den Abgleich an.
-- **Linearisierbarkeit**, jeder Vorgang wirkt atomar und respektiert die Echtzeitordnung.
 - **Begrenzte Veraltung**, ein Vertrag, der den Verzug in Versionen oder Zeit deckelt.`,
     },
   ],
@@ -99,9 +94,9 @@ Ersetz „konsistent“ in einer Anforderung durch eine beobachtbare Regel, etwa
         'Ein Entwurf sagt nur: "Die Replikate sind eventuell konsistent." Welche Frage ist noch offen?',
       options: [
         '"Wie lange dauert die Konvergenz, und was sehen Clients solange?"',
-        '"Wie hoch ist euer Replikationsfaktor?"',
+        '"Wie hoch ist euer Replikationsfaktor je Region?"',
         '"Meint ihr nicht in Wahrheit starke Konsistenz?"',
-        '"Warum nicht Postgres?"',
+        '"Warum nehmt ihr nicht einfach Postgres?"',
       ],
       explanation:
         "Eventuelle Konsistenz verspricht Konvergenz, sobald die Schreibvorgänge enden, ohne Zeitgrenze. Miss die Konvergenz unter Last und Fehlern, definiere, was Clients solange sehen, und ergänze Sitzungsgarantien nur bei Bedarf.",

@@ -157,8 +157,8 @@ export function bindLessonMission(
       keyConcepts,
       bridge:
         locale === "de"
-          ? `Übertrage diesen Lektionsfokus auf den synthetischen Fall: ${skill}.`
-          : `Carry this lesson focus into the synthetic case: ${skill}.`,
+          ? `Lektionsfokus im Übungsfall: ${skill}.`
+          : `Lesson focus in the practice case: ${skill}.`,
     }),
   });
 }

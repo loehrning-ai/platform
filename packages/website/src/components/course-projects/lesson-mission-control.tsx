@@ -82,7 +82,7 @@ const MISSION_COPY = {
     collapse: "Signalstrecke einklappen",
     expand: "Signalstrecke ausklappen",
     localBoundary:
-      "Gespeichert werden nur feste Auswahl-IDs, Abrufzähler und Fälligkeitszeitpunkte in diesem Browser. Geschriebene Abrufe und Notizen werden weder gespeichert noch gesendet.",
+      "Was du hier schreibst, wird weder gespeichert noch gesendet.",
     syntheticOnly: "Nur synthetischen Kontext verwenden.",
     locked: "Vorherige Phase zuerst abschließen",
     current: "aktuell",
@@ -92,9 +92,9 @@ const MISSION_COPY = {
     stepLocked: "gesperrt",
     complete: "Lektionsschleife geschlossen",
     ownerRequired:
-      "Aktiviere den lokalen Lernmodus, bevor du diese Mission startest.",
+      "Aktiviere zuerst den lokalen Lernmodus.",
     stageLocked:
-      "Diese Projektphase ist gesperrt. Schließe zuerst die vorherigen Projektphasen ab.",
+      "Diese Projektphase ist gesperrt. Schließe zuerst die vorherigen ab.",
     correct: "Signal trägt.",
     incorrect: "Signal trägt noch nicht.",
     continue: "Nächstes Signal",
@@ -102,29 +102,29 @@ const MISSION_COPY = {
     committed: "Festgelegte Prognose",
     revealed: "Aufgedecktes Störsignal",
     predictionHint:
-      "Lege dich vor der Beobachtung fest. Die Auswahl wird nach dem Aufdecken gesperrt; revidiert wird später mit Evidenz.",
+      "Leg dich vor der Beobachtung fest. Danach ist die Auswahl gesperrt; revidiert wird später mit Evidenz.",
     predictionHintCompact:
       "Vor der Beobachtung festlegen; danach ist die Auswahl gesperrt.",
     openWorkspace: "Instrument öffnen",
     workspaceOpen: "Instrument offen",
     manipulateRequired:
-      "Ändere mindestens eine bereitgestellte Steuerung im Instrument. Das Öffnen allein zählt nicht als Manipulation.",
-    manipulated: "Eine Instrumentänderung wurde für diese Lektion erkannt.",
+      "Ändere mindestens eine Steuerung im Instrument. Nur Öffnen zählt nicht.",
+    manipulated: "Instrumentänderung erkannt.",
     runRequired:
-      "Führe jetzt die sichtbare, begrenzte Ausführungsaktion im Instrument aus. Nur ein erfolgreicher fester Beleg öffnet die Evidenzprüfung.",
+      "Führe jetzt das Instrument aus. Erst ein erfolgreicher Beleg öffnet die Evidenzprüfung.",
     runInstrument: "Instrument zur Ausführung öffnen",
-    runComplete: "Erfolgreicher Ausführungsbeleg für diese Lektion erkannt.",
+    runComplete: "Ausführungsbeleg erkannt.",
     retrievalRecall: "Regel aus dem Gedächtnis",
     retrievalRecallPrompt:
-      "Rekonstruiere die entscheidende Regel schriftlich, bevor Antwortoptionen oder Begründungen erscheinen.",
+      "Schreib die entscheidende Regel auf, bevor die Optionen erscheinen.",
     retrievalRecallHint:
-      "12 bis 280 Zeichen. Dieser Abruf bleibt nur im Arbeitsspeicher dieser Seite.",
+      "12 bis 280 Zeichen, wird nicht gespeichert.",
     retrievalRecallCommit: "Abruf festlegen und Optionen öffnen",
     retrievalRecallCommitted:
-      "Schriftlicher Abruf festgelegt. Jetzt die Regel prüfen.",
+      "Abruf festgelegt. Jetzt die Regel prüfen.",
     firstRetrievalChoice: "Erste Abrufauswahl",
     retrievalChoiceLocked:
-      "Die Auswahl dieses Versuchs ist gesperrt und kann nicht umgeschaltet werden.",
+      "Diese Auswahl ist gesperrt.",
     misconception: "Fehlvorstellung erkannt",
     repairRetrieval: "Reparaturabruf beginnen",
     retrievalDue: "Der nächste Abruf ist jetzt fällig.",
@@ -134,14 +134,14 @@ const MISSION_COPY = {
     retrievalAttempts: "Abrufversuche",
     scratch: "Temporäre Revisionsnotiz",
     scratchHint:
-      "Optional, maximal 280 Zeichen. Bleibt nur im Arbeitsspeicher dieser Seite.",
+      "Optional, bis 280 Zeichen, wird nicht gespeichert.",
     transferCase: "Neuer Fall",
     reset: "Lektionsmission zurücksetzen",
     resetLocked: "Zurücksetzen nach Projektverifikation gesperrt",
     resetLabel:
-      "Nur die lokal gespeicherten Auswahl-IDs dieser Lektionsmission löschen",
+      "Nur die gespeicherte Auswahl dieser Mission löschen",
     resetFailed:
-      "Zurücksetzen fehlgeschlagen: Der gespeicherte Missionsstand konnte nicht sicher gelöscht werden. Der bisherige Stand bleibt erhalten.",
+      "Zurücksetzen fehlgeschlagen. Der bisherige Stand bleibt erhalten.",
     steps: {
       predict: "Prognose",
       manipulate: "Manipulieren",
@@ -167,7 +167,7 @@ const MISSION_COPY = {
     collapse: "Collapse signal circuit",
     expand: "Expand signal circuit",
     localBoundary:
-      "Only fixed choice IDs, retrieval counts, and due timestamps are stored in this browser. Written recall and scratch notes are neither saved nor sent.",
+      "What you write here is neither saved nor sent.",
     syntheticOnly: "Use synthetic context only.",
     locked: "Complete the previous beat first",
     current: "current",
@@ -176,9 +176,9 @@ const MISSION_COPY = {
     stepIncomplete: "incomplete",
     stepLocked: "locked",
     complete: "Lesson loop closed",
-    ownerRequired: "Activate local learning before starting this mission.",
+    ownerRequired: "Activate local learning first.",
     stageLocked:
-      "This project phase is locked. Complete the preceding project stages first.",
+      "This project phase is locked. Complete the earlier ones first.",
     correct: "Signal holds.",
     incorrect: "Signal does not hold yet.",
     continue: "Next signal",
@@ -186,28 +186,28 @@ const MISSION_COPY = {
     committed: "Committed prediction",
     revealed: "Revealed failure signal",
     predictionHint:
-      "Commit before observing. The choice locks after reveal; revision happens later against evidence.",
+      "Commit before observing. The choice then locks; you revise later against evidence.",
     predictionHintCompact: "Commit before observing; the choice then locks.",
     openWorkspace: "Open instrument",
     workspaceOpen: "Instrument open",
     manipulateRequired:
-      "Change at least one supplied control in the instrument. Opening it alone does not count as manipulation.",
-    manipulated: "An instrument change was detected for this lesson.",
+      "Change at least one control in the instrument. Opening it alone does not count.",
+    manipulated: "Instrument change detected.",
     runRequired:
-      "Now use the visible bounded run action in the instrument. Only its successful fixed receipt unlocks evidence inspection.",
+      "Now run the instrument. Only a successful receipt unlocks the evidence check.",
     runInstrument: "Open instrument to run",
-    runComplete: "A successful execution receipt was detected for this lesson.",
+    runComplete: "Execution receipt detected.",
     retrievalRecall: "Rule from memory",
     retrievalRecallPrompt:
-      "Reconstruct the governing rule in writing before answer options or rationales appear.",
+      "Write down the governing rule before the options appear.",
     retrievalRecallHint:
-      "12 to 280 characters. This recall remains only in this page's memory.",
+      "12 to 280 characters, not saved.",
     retrievalRecallCommit: "Commit recall and open options",
     retrievalRecallCommitted:
-      "Written recall committed. Now check the governing rule.",
+      "Recall committed. Now check the rule.",
     firstRetrievalChoice: "First retrieval choice",
     retrievalChoiceLocked:
-      "This attempt's choice is locked and cannot be switched.",
+      "This choice is locked.",
     misconception: "Misconception detected",
     repairRetrieval: "Begin repair retrieval",
     retrievalDue: "The next retrieval is due now.",
@@ -217,14 +217,14 @@ const MISSION_COPY = {
     retrievalAttempts: "retrieval attempts",
     scratch: "Temporary revision note",
     scratchHint:
-      "Optional, 280 characters maximum. It remains only in this page's memory.",
+      "Optional, up to 280 characters, not saved.",
     transferCase: "New case",
     reset: "Reset lesson mission",
     resetLocked: "Reset locked after project verification",
     resetLabel:
-      "Clear only the locally stored choice IDs for this lesson mission",
+      "Clear only this mission's stored choices",
     resetFailed:
-      "Reset failed: the stored mission state could not be removed safely. The prior state remains intact.",
+      "Reset failed. The previous state is kept.",
     steps: {
       predict: "Predict",
       manipulate: "Manipulate",

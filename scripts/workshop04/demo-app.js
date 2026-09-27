@@ -384,7 +384,7 @@
       rows.push({ cells: ["Total", "", n0(sum)], cls: "sum" });
       return { title: "Grid factor: " + key("drv_lb_grid_t"), sub: "drivers.lb · location-based only", nodes: [
         el("p", { "class": "arith" }, [d.en + ": " + C.signed(d.t) + " t", el("span", { text: d.arithmetic.replace(/ x /g, " × ").replace(/ - /g, " − ") + " kg = " + C.signed(d.t) + " t" })]),
-        para("In this case's teaching values, " + key("drv_lb_grid_share_pct") + " of the location-based decrease comes from the lower grid factor. Kellbrunn did nothing for it. The market-based bridge has no factor effect, because the residual mix is held at the same value in both years."),
+        para("In the teaching values, " + key("drv_lb_grid_share_pct") + " of the location-based decrease comes from the lower grid factor, which Kellbrunn did not cause. The market-based bridge has no factor effect, because the residual mix is the same in both years."),
         dtable(["Factor ID", "Year", "kg CO₂e per kWh"], ["F-EL-LB-2024", "F-EL-LB-2025"].map(function (id) { return { cells: [id, F[id].year, f2(id)] }; }), { num: [2] }),
         el("h3", { text: "The electricity rows it multiplies" }),
         dtable(["Row", "Source", "kWh"], rows, { num: [2] })

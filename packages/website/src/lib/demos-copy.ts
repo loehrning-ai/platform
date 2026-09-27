@@ -1,23 +1,21 @@
 /**
- * Demo narrative copy: why the example is built this way, and what in it is
- * invented.
+ * Demo narrative copy: why the example is built this way, the OG subtitle
+ * and where the run stops.
  *
  * Single source of truth for the detail-page narrative body. Kept separate
  * from the structural `demos.ts` so copy rewrites don't require touching
  * type definitions.
  *
  * `why` opens with the case the learner works on (du-form, a concrete actor),
- * never with an unsourced rule of thumb. `proof` is one plain sentence that
- * names which figures in the example are invented or assumed; the detail page
- * shows it once, next to the evidence line, so it no longer carries a
- * "Sandbox-Szenario:" prefix or a trailing negation.
+ * never with an unsourced rule of thumb, and adds what the lede does not say.
+ * What is invented is stated once, in the registry's `syntheticDataLabel`
+ * (the "Daten" row on the detail page).
  */
 
 import type { Locale } from "@/lib/i18n/locale";
 
 export interface DemoCopy {
   readonly why: string;
-  readonly proof: string;
   readonly ogSubtitle: string;
   /** Where the run stops or waits for a person: the "Abbruch" row. */
   readonly stop: string;
@@ -25,85 +23,62 @@ export interface DemoCopy {
 
 export const demoCopy: Readonly<Record<string, DemoCopy>> = {
   excel: {
-    why: "Du arbeitest in einer Excel-Tabelle mit erfundenen Controlling-Zahlen: Formeln, eine Pivot-Tabelle und eine Plausibilitätsprüfung der Prognose.",
-    proof:
-      "Die neun Verkaufszeilen der Beispieltabelle sind fiktiv, und die Prognose schreibt sie nur linear fort.",
+    why: "Du prüfst in Excel, ob die Formel die richtige Vorwoche greift und ob Pivot und Prognose zu den Zahlen passen.",
     ogSubtitle: "Formeln, Pivot und Prognose in einer Beispieltabelle prüfen.",
     stop: "Der Entwurf bleibt in der Tabelle, bis du Formel und Prognose übernimmst.",
   },
   word: {
-    why: "Ein Assistent schreibt Memos und Briefe nach einem Dokumentmuster. Danach prüfst du, ob Stil, Quellen und Freigabe noch stimmen.",
-    proof:
-      "Kunde, Projekt und Budget des Anschreibens sowie Erstellzeit und Stil-Treffer sind fiktiv.",
+    why: "Ein Assistent schreibt Memos und Briefe nach einem Dokumentmuster.",
     ogSubtitle: "Word-Entwurf nach Musterstil, mit Prüfschritten vor der Freigabe.",
     stop: "Der Entwurf steht auf „Freigabe ausstehend“, bis du Stil, Quellen und Datenschutz geprüft hast.",
   },
   "outbound-workflow": {
-    why: "Jeder Entwurf nennt das öffentliche Signal, auf das er sich bezieht, und die Quelle dazu. So prüfst du vor dem Versand, warum er geschrieben wurde.",
-    proof:
-      "Kontakte, Signale und Quellen sind erfunden, und der Versandschritt ist simuliert.",
+    why: "Jeder Entwurf nennt sein öffentliches Signal und die Quelle, damit du vor dem Versand prüfen kannst, warum er entstand.",
     ogSubtitle: "Nachrichten mit öffentlichen Signalen begründen.",
     stop: "Jeder Entwurf hält vor dem Versand am Review an.",
   },
   "agent-pipeline": {
-    why: "Vier Agenten schreiben ein Memo: einer recherchiert, einer fasst zusammen, einer sucht Fehler, einer redigiert. Du prüfst, ob die Fehlersuche das Memo tatsächlich besser macht.",
-    proof:
-      "Der Auftrag, die 42 gefundenen Dokumente und die Evidenz-Scores im Protokoll sind fiktiv.",
+    why: "Einer recherchiert, einer fasst zusammen, einer sucht Fehler und einer redigiert, und du prüfst, ob die Fehlersuche das Memo besser macht.",
     ogSubtitle: "Vier Agenten arbeiten nacheinander an einem Memo.",
     stop: "Die Spur endet beim Memoentwurf, den du selbst gegenliest.",
   },
   "n8n-supply-chain": {
-    why: "Ein Lieferverzug löst vier Schritte aus: Bestand prüfen, Kundennachricht entwerfen, Nachbestellung markieren, eskalieren. Du siehst, welche davon der n8n-Workflow übernimmt und wo die Disponentin freigibt.",
-    proof:
-      "Statusmeldung, Bestand, Nachrichten und Nachbestellung sind erfunden und bleiben im Browser.",
+    why: "Du siehst, welche Schritte der n8n-Workflow allein erledigt: Bestand prüfen, Kundennachricht entwerfen, Nachbestellung markieren, eskalieren.",
     ogSubtitle: "Lieferverzug: Workflow-Entwurf mit manueller Freigabe.",
     stop: "Kundennachricht und Nachbestellung warten auf die Freigabe der Disponentin.",
   },
   "rag-vertragsassistent": {
-    why: "Du fragst ein Archiv mit Beispielverträgen und bekommst die Klausel mit Fundstelle. Das Beispiel zeigt auch Fragen, auf die das System nicht antworten sollte. Eine Rechtsauskunft ersetzt es nicht.",
-    proof:
-      "Das Vertragsarchiv ist erfunden, und die Suche vergleicht Schlüsselwörter.",
+    why: "Du stellst dem Vertragsarchiv Fragen, auch solche, auf die das System nicht antworten sollte.",
     ogSubtitle: "Chat mit Beispielverträgen; Antworten zeigen Fundstellen.",
     stop: "Findet die Suche keine Klausel, antwortet das System nicht.",
   },
   "rechnung-zu-sap": {
-    why: "Die KI liest die Felder einer PDF-Rechnung aus. Regeln prüfen Pflichtfelder und Dubletten, und vor dem SAP-Import gibt ein Mensch frei.",
-    proof:
-      "Die Rechnung ist erfunden, und die SAP-Prüfung ist simuliert.",
+    why: "Die KI liest die Felder der PDF-Rechnung aus, Regeln prüfen Pflichtangaben und Dubletten.",
     ogSubtitle: "PDF-Beispiel rein, IDoc-Entwurf zur Prüfung raus.",
     stop: "Vor dem SAP-Import hält der Ablauf an, bis ein Mensch freigibt.",
   },
   "prompt-scanner": {
-    why: "Das Beispiel markiert personenbezogene Daten und Geschäftsgeheimnisse, bevor ein Text das Haus verlässt, und zeigt einen Injection-Fall, den die Regeln übersehen.",
-    proof:
-      "Die Beispieltexte sind erfunden, und die Prüfung läuft mit regulären Ausdrücken in deinem Browser.",
+    why: "Ein Grenzfall zeigt eine Prompt-Injection, die die Regeln übersehen.",
     ogSubtitle: "Personendaten markieren, bevor ein Prompt weitergegeben wird.",
     stop: "Ein blockierender Treffer hält den Prompt an. Andere Treffer werden maskiert oder zur Prüfung markiert.",
   },
   "cost-drift-observability": {
-    why: "Vier Beispielanwendungen stehen mit Kosten, Antwortzeit und Fehlerquote nebeneinander. Du siehst, welche am meisten kostet und wie stark die Antwortzeit schwankt.",
-    proof: "Die vier Anwendungen und alle Messwerte sind erfunden, und die Latenzkurve wird im Browser zufällig fortgeschrieben.",
+    why: "Du siehst auch, wie stark die Antwortzeit jeder Anwendung schwankt.",
     ogSubtitle: "Kosten, Antwortzeit und Drift als simulierte Betriebsansicht.",
     stop: "Die Ansicht zeigt nur Messwerte. Ab welchem Wert jemand eingreift, legst du selbst fest.",
   },
   "llm-observability": {
-    why: "Du vergleichst Eval-Metriken und einen Drift-Indikator für vier Antworten, drei davon mit dem Urteil eines Menschen, und siehst, wo die automatische Bewertung danebenliegt.",
-    proof:
-      "Die vier Antworten, ihre Scores und die drei menschlichen Bewertungen sind erfunden, der Drift-Indikator ist vorgegeben.",
+    why: "Zu jeder Antwort siehst du Eval-Metriken und einen Drift-Indikator.",
     ogSubtitle: "Eval-Score, Drift und menschliches Urteil im Vergleich.",
     stop: "Wo Score und menschliches Urteil auseinanderliegen, listet das Beispiel die Antwort auf.",
   },
   "fine-tune-playground": {
     why: "Du siehst Baseline, Anpassung und Holdout-Prüfung getrennt und prüfst, ob die Anpassung etwas bringt.",
-    proof:
-      "Beide Antworten, die Spezifitätswerte und die Trainingsmetriken sind vorgegebene Beispielwerte, trainiert wurde dafür kein Modell.",
     ogSubtitle: "Basismodell und Domänenantwort für dieselbe Frage vergleichen.",
     stop: "Beide Antworten sind vorab geschrieben und ändern sich beim Abspielen nicht.",
   },
   "roi-rechner": {
-    why: "Ein Nutzen-Szenario hängt an wenigen Annahmen. Der Rechner zeigt jede als Zahl und die Formel dazu, und du siehst, welche das Ergebnis am stärksten verschiebt.",
-    proof:
-      "Teamgröße, Stundensatz, Nutzungsquote und gesparte Stunden sind Beispielannahmen, die du selbst änderst.",
+    why: "Du siehst, welche Annahme das Ergebnis am stärksten verschiebt.",
     ogSubtitle: "Teamgröße × Stundensatz × Nutzungsquote × gesparte Stunden = Szenario.",
     stop: "Der Rechner endet bei einer Spanne, die du selbst bewertest.",
   },
@@ -111,82 +86,62 @@ export const demoCopy: Readonly<Record<string, DemoCopy>> = {
 
 const englishDemoCopy: Readonly<Record<string, DemoCopy>> = {
   excel: {
-    why: "You work in an Excel sheet with invented controlling figures: formulas, a pivot table and a plausibility check on the forecast.",
-    proof:
-      "The nine sales rows in the sample sheet are fictional, and the forecast only extends them in a straight line.",
+    why: "You check in Excel whether the formula picks the right prior week and whether pivot and forecast match the figures.",
     ogSubtitle: "Check formulas, a pivot and a forecast in a sample sheet.",
     stop: "The draft stays in the sheet until you accept the formula and the forecast.",
   },
   word: {
-    why: "An assistant writes memos and letters from a document template. Then you check whether style, sources and approval still hold.",
-    proof:
-      "The client, project and budget in the letter and the drafting time and style match are fictional.",
+    why: "An assistant writes memos and letters from a document template.",
     ogSubtitle: "A Word draft in a sample style, with review before approval.",
     stop: "The draft stays at “Approval pending” until you have checked style, sources and data protection.",
   },
   "outbound-workflow": {
-    why: "Each draft names the public signal it refers to and the source behind it. That lets you check before sending why it was written.",
-    proof: "Contacts, signals and sources are invented, and the send step is simulated.",
+    why: "Each draft names its public signal and source, so you can check before sending why it was written.",
     ogSubtitle: "Ground a message in public signals.",
     stop: "Every draft stops at the review before sending.",
   },
   "agent-pipeline": {
-    why: "Four agents write one memo: one researches, one summarises, one looks for errors, one edits. You check whether the error search actually makes the memo better.",
-    proof:
-      "The brief, the 42 documents found and the evidence scores in the log are fictional.",
+    why: "One researches, one summarises, one looks for errors and one edits, and you check whether the error search makes the memo better.",
     ogSubtitle: "Four agents work on one memo in turn.",
     stop: "The trace ends at the memo draft, which you read yourself.",
   },
   "n8n-supply-chain": {
-    why: "A delivery delay triggers four steps: check stock, draft the customer message, flag the reorder, escalate. You see which of them the n8n workflow handles and where the dispatcher signs off.",
-    proof:
-      "Status event, stock, messages and reorder are invented and stay in the browser.",
+    why: "You see which steps the n8n workflow handles alone: check stock, draft the customer message, flag the reorder, escalate.",
     ogSubtitle: "Delivery delay: a workflow draft with manual sign-off.",
     stop: "The customer message and the reorder wait for the dispatcher's sign-off.",
   },
   "rag-vertragsassistent": {
-    why: "You query an archive of sample contracts and get the clause with its location. The example also shows questions the system should not answer. It does not replace legal advice.",
-    proof: "The contract archive is invented, and the search compares keywords.",
+    why: "You ask the contract archive questions, including some the system should not answer.",
     ogSubtitle: "Chat with sample contracts; answers show their sources.",
     stop: "If the search finds no clause, the system does not answer.",
   },
   "rechnung-zu-sap": {
-    why: "The AI reads the fields of a PDF invoice. Rules check mandatory fields and duplicates, and a person approves before the SAP import.",
-    proof: "The invoice is invented, and the SAP check is simulated.",
+    why: "The AI reads the fields of the PDF invoice, and rules check mandatory fields and duplicates.",
     ogSubtitle: "Sample PDF in, IDoc draft out for review.",
     stop: "The run stops before the SAP import until a person signs off.",
   },
   "prompt-scanner": {
-    why: "The example flags personal data and trade secrets before a text leaves the company, and shows one injection case its rules miss.",
-    proof:
-      "The sample texts are invented, and the check runs as regular expressions in your browser.",
+    why: "A boundary case shows a prompt injection the rules miss.",
     ogSubtitle: "Flag personal data before a prompt is passed on.",
     stop: "A blocking match stops the prompt. Other matches are masked or flagged for review.",
   },
   "cost-drift-observability": {
-    why: "Four sample applications sit side by side with cost, latency and error rate. You see which one costs most and how much its latency varies.",
-    proof: "The four applications and all measurements are invented, and the latency curve is extended at random in your browser.",
+    why: "You also see how much each application's latency varies.",
     ogSubtitle: "Cost, latency and drift as a simulated operations view.",
     stop: "The view shows measurements only. You decide at which value someone steps in.",
   },
   "llm-observability": {
-    why: "You compare eval metrics and a drift indicator for four answers, three of them with a human rating, and see where the automated score is off.",
-    proof:
-      "The four answers, their scores and the three human ratings are invented, and the drift indicator is seeded.",
+    why: "For each answer you see eval metrics and a drift indicator.",
     ogSubtitle: "Eval score, drift and human judgement side by side.",
     stop: "Where the score and the human rating diverge, the example lists the answer.",
   },
   "fine-tune-playground": {
     why: "You see baseline, adaptation and holdout check separately and check whether the adaptation helps.",
-    proof:
-      "Both answers, the specificity values and the training metrics are seeded sample values; no model was trained for them.",
     ogSubtitle: "Compare a base model and a domain answer to the same question.",
     stop: "Both answers are written in advance and stay the same on every run.",
   },
   "roi-rechner": {
-    why: "A benefit scenario rests on a few assumptions. The calculator shows each one as a number, with the formula, so you see which one moves the result most.",
-    proof:
-      "Team size, hourly rate, adoption and hours saved are sample assumptions that you change yourself.",
+    why: "You see which assumption moves the result most.",
     ogSubtitle: "Team size × hourly rate × adoption × hours saved = scenario.",
     stop: "The calculator ends at a range that you judge yourself.",
   },

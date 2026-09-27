@@ -9,7 +9,7 @@ export const DEMOS_PAGE_COPY = {
     metadata: {
       title: "KI-Praxisbeispiele im Browser",
       description: (count: number) =>
-        `${count} interaktive KI-Praxisbeispiele mit klar ausgewiesenen Daten, Annahmen, Kontrollschritten und Systemgrenzen.`,
+        `${count} interaktive KI-Praxisbeispiele mit offenen Daten, Annahmen und Kontrollschritten.`,
       openGraphDescription: (count: number) =>
         `${count} interaktive Praxisbeispiele für KI-Workflows, Automatisierung, Retrieval, Governance und Betrieb.`,
       missingTitle: "Praxisbeispiel nicht gefunden",
@@ -22,11 +22,12 @@ export const DEMOS_PAGE_COPY = {
       // The soft hyphen lets the poster H1 break "KI-Arbeits-" / "abläufe"
       // on a phone instead of leaving "KI-" alone on the first line.
       heading: "KI-Arbeits\u00adabläufe prüfen",
-      // Two sentences: phones show only the first, from sm up both.
+      // One sentence. introductionDetail stays empty until /demos drops its
+      // rendering (copy-diet request): the stat line already says what runs
+      // and what is simulated.
       introduction:
-        "Jedes Beispiel spielt einen Arbeitsablauf mit erfundenen Daten durch, von der Eingabe bis zur Freigabe.",
-      introductionDetail:
-        "Zu jedem Beispiel steht, woher die Daten kommen, wie es ausgeführt wird und welche Aktionen nur simuliert sind.",
+        "Jedes Beispiel spielt einen KI-Arbeitsablauf mit erfundenen Daten durch.",
+      introductionDetail: "",
       statsLabel: "Umfang der Sammlung",
       // Phone stat line, one item per list entry so a wrap never strands a
       // separator; the StatRow carries the same numbers from sm up.
@@ -63,8 +64,7 @@ export const DEMOS_PAGE_COPY = {
       resultPlural: "Praxisbeispiele",
       industryPrefix: "Arbeitskontext",
       emptyTitle: "Keine Treffer.",
-      emptyBody:
-        "Für diese Kombination ist kein Praxisbeispiel veröffentlicht. Setze einen Filter zurück.",
+      emptyBody: "Kein Beispiel passt zu dieser Kombination.",
       reset: "Filter zurücksetzen",
       // Phone filter disclosure: one 44px button instead of three selects.
       filterToggle: "Filter",
@@ -128,11 +128,10 @@ export const DEMOS_PAGE_COPY = {
     errors: {
       indexKicker: "Praxisbeispiel-Galerie nicht verfügbar",
       indexHeading: "Die Galerie konnte nicht geladen werden.",
-      indexBody:
-        "Lade die Seite erneut. Die Kursübersicht bleibt unabhängig davon erreichbar.",
+      indexBody: "Lade die Seite neu oder öffne die Kurse.",
       detailKicker: "Praxisbeispiel nicht verfügbar",
       detailHeading: "Dieses Praxisbeispiel konnte nicht geladen werden.",
-      detailBody: "Lade das Beispiel erneut oder kehre zur Galerie zurück.",
+      detailBody: "Lade das Beispiel neu oder öffne die Galerie.",
       retry: "Erneut laden",
       courses: "Zu den Kursen",
       gallery: "Zur Galerie",
@@ -150,7 +149,7 @@ export const DEMOS_PAGE_COPY = {
     metadata: {
       title: "Interactive AI practice examples",
       description: (count: number) =>
-        `${count} interactive AI practice examples with explicit data, assumptions, control steps, and system boundaries.`,
+        `${count} interactive AI practice examples with open data, assumptions and control steps.`,
       openGraphDescription: (count: number) =>
         `${count} interactive examples covering AI workflows, automation, retrieval, governance, and operations.`,
       missingTitle: "Practice example not found",
@@ -160,10 +159,8 @@ export const DEMOS_PAGE_COPY = {
       kicker: "Practice examples",
       kickerDetail: "in the browser",
       heading: "Inspect AI workflows",
-      introduction:
-        "Each example runs one workflow on invented data, from the input to the sign-off.",
-      introductionDetail:
-        "Next to it you see where the data comes from, how the example runs and which actions are only simulated.",
+      introduction: "Each example runs one AI workflow on invented data.",
+      introductionDetail: "",
       statsLabel: "What the collection holds",
       statsLine: (examples: number, modes: number, actions: number) => [
         `${examples} examples`,
@@ -196,8 +193,7 @@ export const DEMOS_PAGE_COPY = {
       resultPlural: "practice examples",
       industryPrefix: "Work context",
       emptyTitle: "No matches.",
-      emptyBody:
-        "No published example matches this combination. Clear one of the filters.",
+      emptyBody: "No example matches this combination.",
       reset: "Reset filters",
       filterToggle: "Filters",
       activeFilters: (count: number) => `${count} active`,
@@ -256,10 +252,10 @@ export const DEMOS_PAGE_COPY = {
     errors: {
       indexKicker: "Practice gallery unavailable",
       indexHeading: "The gallery could not be loaded.",
-      indexBody: "Reload this page. The course catalogue remains available.",
+      indexBody: "Reload the page or open the courses.",
       detailKicker: "Practice example unavailable",
       detailHeading: "This practice example could not be loaded.",
-      detailBody: "Reload the example or return to the gallery.",
+      detailBody: "Reload the example or open the gallery.",
       retry: "Reload",
       courses: "View courses",
       gallery: "Open gallery",
@@ -290,44 +286,44 @@ export const DEMO_EVIDENCE_COPY: Readonly<
     synthetic: {
       label: "Synthetisch",
       tooltip:
-        "Alle Daten in diesem Beispiel sind erfunden, und es läuft kein KI-Modell. Die Zahlen sind Beispielwerte, gemessen wurde nichts.",
+        "Alle Daten sind erfunden, gemessen wurde nichts, und es läuft kein KI-Modell.",
     },
     rule_based: {
       label: "Regelbasiert",
       tooltip:
-        "Dieses Beispiel läuft mit festen Regeln in deinem Browser und ruft weder ein KI-Modell noch eine externe API auf. Du siehst, was die Regeln erkennen und was sie übersehen.",
+        "Feste Regeln laufen in deinem Browser, ohne KI-Modell und ohne externe API. Du siehst, was sie erkennen und was sie übersehen.",
     },
     recorded_trace: {
       label: "Aufgezeichnete Spur",
       tooltip:
-        "Spielt einen aufgezeichneten Ablauf ab. Nichts läuft live, und kein System wird angesprochen.",
+        "Spielt einen aufgezeichneten Ablauf ab, ohne ein System anzusprechen.",
     },
     live_api: {
       label: "Live-API",
       tooltip:
-        "Dieser Modus würde echte Anfragen an eine KI-API senden. Er ist nur aktiv, wenn der Anbieter freigeschaltet und geprüft ist. Gib keine persönlichen Daten ein.",
+        "Sendet echte Anfragen an eine KI-API, nur wenn der Anbieter freigeschaltet und geprüft ist. Gib keine persönlichen Daten ein.",
     },
   },
   en: {
     synthetic: {
       label: "Synthetic",
       tooltip:
-        "All data in this example is invented, and no AI model runs. The figures are sample values; nothing was measured.",
+        "All data is invented, nothing was measured, and no AI model runs.",
     },
     rule_based: {
       label: "Rule-based",
       tooltip:
-        "This example runs on fixed rules in your browser and calls no AI model or external API. You see what the rules catch and what they miss.",
+        "Fixed rules run in your browser, with no AI model or external API. You see what they catch and what they miss.",
     },
     recorded_trace: {
       label: "Recorded trace",
       tooltip:
-        "Replays a recorded run. Nothing runs live, and no system is contacted.",
+        "Replays a recorded run without contacting any system.",
     },
     live_api: {
       label: "Live API",
       tooltip:
-        "This mode would send real API requests. It is available only when the provider is explicitly enabled and verified. Do not enter personal data.",
+        "Sends real requests to an AI API, only when the provider is enabled and verified. Do not enter personal data.",
     },
   },
 };

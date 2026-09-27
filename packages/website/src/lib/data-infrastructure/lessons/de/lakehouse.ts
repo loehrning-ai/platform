@@ -37,8 +37,6 @@ Wähle, indem du die aktuelle Spezifikation und die genauen Katalog- und Engine-
 Ein Lesevorgang löst \`orders\` über den Katalog zu \`v18.json\` auf, nimmt den aktuellen Snapshot, streicht Manifeste und Dateien anhand ihrer Statistiken und öffnet nur die übrigen Parquet-Dateien.
 
 Ein Schreibvorgang läuft rückwärts: Datendateien, Manifest, Manifestliste, Metadatendatei. Dann setzt ein atomares Compare-and-swap den Katalogzeiger von \`v17.json\` auf \`v18.json\`, und dieses CAS *ist* der Commit. Scheitert es, bleiben die Entwurfsdateien verwaist, bis VACUUM sie entfernt.`,
-      keyTakeaway:
-        "Ein Commit ist ein atomares Compare-and-swap des Katalogzeigers; alles darunter ist vorher isoliert geschrieben.",
     },
     {
       id: "s3",
@@ -79,13 +77,13 @@ Delete-Dateitypen, Vorgaben und Engine-Unterstützung unterscheiden sich je Vers
 
 | Entscheidung | Zu erhebende Evidenz |
 |---|---|
-| Engine-Interoperabilität | Benötigte Lese- und Schreiboperationen je exakter Engine-/Versionskombination |
-| Commit und Isolation | Katalogatomarität, Validierung paralleler Schreibvorgänge, Retry-Verhalten und Wiederherstellung unbekannter Commits |
-| Änderungen und Löschungen | CoW-/MoR-Unterstützung, Delete-Darstellung, Merge-Kosten und Lebenszyklus von Datenschutzlöschungen |
-| Schema- und Partitionsentwicklung | Unterstützte Änderungen, Reader-Kompatibilität und nötige Neuschreibung alter Dateien |
-| Inkrementelle Verarbeitung | Change-Feed-Semantik, Ordnung, Aufbewahrung und Checkpoint-Identität |
-| Betrieb | Kompaktierung, Snapshot-Ablauf, Orphan Cleanup, Observability und Disaster Recovery |
-| Governance | Autorisierungsgrenze, Audit-Ereignisse, Verschlüsselung, Katalogverfügbarkeit und Zuständigkeit |
+| Engine-Interoperabilität | Lese- und Schreiboperationen je genauer Engine-Version |
+| Commit und Isolation | Katalogatomarität, Schreibvalidierung, Retries, Wiederherstellung unbekannter Commits |
+| Änderungen und Löschungen | CoW-/MoR-Unterstützung, Delete-Darstellung, Merge-Kosten, Datenschutzlöschung |
+| Schema- und Partitionsentwicklung | Unterstützte Änderungen, Reader-Kompatibilität, Neuschreiben alter Dateien |
+| Inkrementelle Verarbeitung | Change-Feed-Semantik, Ordnung, Aufbewahrung, Checkpoint-Identität |
+| Betrieb | Kompaktierung, Snapshot-Ablauf, Orphan Cleanup, Observability, Disaster Recovery |
+| Governance | Autorisierung, Audit-Ereignisse, Verschlüsselung, Katalogverfügbarkeit, Zuständigkeit |
 
 Engine-Integrationen können der Spezifikation hinterherhinken oder nur einen Teil der Operationen bieten.`,
     },
@@ -97,19 +95,15 @@ Engine-Integrationen können der Spezifikation hinterherhinken oder nur einen Te
     {
       id: "s8",
       title: "Kernaussagen",
-      content: `- Format und Katalog legen gemeinsam fest, wie ein Tabellenzustand veröffentlicht und wiederhergestellt wird.
-- Miss CoW und MoR an deiner eigenen Last.
-- Nach einer Partitionsentwicklung behalten alte Dateien ihre Spezifikation, neue nutzen die neue.
+      content: `- Nach einer Partitionsentwicklung behalten alte Dateien ihre Spezifikation, neue nutzen die neue.
 - Belege Lesen, Schreiben, Löschen, Evolution und Wiederherstellung auf deinen genauen Engine-Versionen.`,
     },
     {
       id: "s9",
       title: "Begriffe",
       content: `- **Snapshot**, Metadaten für einen commiteten Tabellenzustand.
-- **Time Travel**, einen aufbewahrten früheren Snapshot lesen.
 - **Snapshot-Ablauf / VACUUM**, entfernt Historie und nicht referenzierte Dateien nach Produktregeln.
 - **Verborgene Partitionierung**, leitet Partitionswerte aus Quellspalten ab, also filtern Abfragen auf diesen Spalten.
-- **OCC**, optimistische Nebenläufigkeitskontrolle: unabhängig vorbereiten, dann gegen aktuelle Metadaten validieren und committen.
 - **Kompaktierung**, schreibt kleine Dateien in ein neues Layout um.
 - **Z-Order**, mehrdimensionales Clustering, das Data Skipping für gewählte Prädikate verbessert.`,
     },
@@ -124,11 +118,11 @@ Engine-Integrationen können der Spezifikation hinterherhinken oder nur einen Te
       options: [
         "Die 50 Zeilen werden an Ort und Stelle neu geschrieben.",
         "Eine Datei mit Löschmarkierungen wird geschrieben; sonst ändert sich nichts.",
-        "Betroffene Dateien werden neu geschrieben; alte Snapshots behalten die vorherigen bis zum Aufbewahrungsende.",
-        "Die gesamte Tabelle wird neu geschrieben.",
+        "Betroffene Dateien werden neu geschrieben; alte Snapshots halten die alten bis Aufbewahrungsende.",
+        "Die gesamte Tabelle wird von Grund auf neu geschrieben.",
       ],
       explanation:
-        "CoW ersetzt die betroffenen Dateien, und der neue Snapshot lässt die Zeilen aus. Alte Snapshots, Branches, Tags, Objektversionen, Replikate und Backups können die Bytes weiter halten, also verfolgt und prüft eine Datenschutzlöschung jede Aufbewahrungsebene.",
+        "CoW ersetzt die betroffenen Dateien, und der neue Snapshot lässt die Zeilen aus. Alte Snapshots, Branches, Tags, Objektversionen, Replikate und Backups können die Bytes weiter halten, also prüft eine Datenschutzlöschung jede Ebene.",
     },
     {
       kind: "quiz",

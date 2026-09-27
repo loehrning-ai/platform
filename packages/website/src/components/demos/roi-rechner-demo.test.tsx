@@ -114,16 +114,16 @@ describe("<RoiRechnerDemo>", () => {
     const toggle = screen.getByRole("button", { name: /Annahmen & Methodik/ });
     expect(toggle).toHaveAttribute("aria-expanded", "false");
     // Panel body is not mounted while collapsed.
-    expect(screen.queryByText(/Rollout scheitert/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Ersetze den Wert durch die gemessene Nutzung/)).not.toBeInTheDocument();
 
     fireEvent.click(toggle);
 
     expect(toggle).toHaveAttribute("aria-expanded", "true");
-    expect(screen.getByText(/Rollout scheitert/)).toBeInTheDocument();
+    expect(screen.getByText(/Ersetze den Wert durch die gemessene Nutzung/)).toBeInTheDocument();
 
     fireEvent.click(toggle);
 
     expect(toggle).toHaveAttribute("aria-expanded", "false");
-    expect(screen.queryByText(/Rollout scheitert/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Ersetze den Wert durch die gemessene Nutzung/)).not.toBeInTheDocument();
   });
 });

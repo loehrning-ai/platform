@@ -142,7 +142,7 @@ export function Ch0FundamentalsDe({ chapter }: Ch0FundamentalsDeProps) {
       <section className="section">
         <SectionLabel n="0.6">Wie aus einer Abfrage Arbeit wird</SectionLabel>
         <h2 className="h2">Fünf Transformationen zwischen Text und Bytes.</h2>
-        <p className="prose">Ein Koordinator führt SQL durch eine Kette: Der Parser baut einen <b>AST</b>, der Analyzer löst Namen gegen den Katalog auf, der Planer erzeugt einen <b>logischen</b> Baum relationaler Operatoren und danach einen <b>physischen</b> Plan mit Exchange-Typen und Worker-Anzahl. Abschließend entsteht ein <b>Task-Graph</b> verteilter Stages. Welche Details <code>EXPLAIN</code> oder <code>EXPLAIN ANALYZE</code> zeigt, hängt von der Engine ab.</p>
+        <p className="prose">Ein Koordinator zerlegt SQL in einen <b>AST</b>, löst Namen gegen den Katalog auf, baut einen <b>logischen</b> und dann einen <b>physischen</b> Plan und verteilt einen <b>Task-Graph</b> aus Stages auf den Cluster. Was <code>EXPLAIN</code> oder <code>EXPLAIN ANALYZE</code> zeigt, hängt von der Engine ab.</p>
         <SqlDecoderStage />
       </section>
 

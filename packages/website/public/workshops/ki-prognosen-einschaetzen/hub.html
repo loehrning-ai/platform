@@ -28,7 +28,6 @@
     .wf-cover__body{padding-top:24px}
     .wf-cover .wf-h1--hero{font-size:clamp(36px,calc(1.9rem + 5.2vw),50px)}
     .wf-cover .wf-lead{margin-top:14px}
-    .hub-lead-more{display:none}
     .hub-ctas{flex-wrap:nowrap;gap:8px}
     .hub-ctas .wf-btn{flex:1 1 0;min-width:0;padding:8px 12px;text-align:center;white-space:nowrap}
     .hub-long{display:none}.hub-short{display:inline}
@@ -78,7 +77,7 @@
     <div class="wf-wrap wf-cover__body">
       <p class="wf-kicker">Workshop 01 · <span class="hub-long">Forecasting decisions</span><span class="hub-short">Forecasts</span></p>
       <h1 class="wf-h1 wf-h1--hero" id="hub-title">Turn a forecast into a decision</h1>
-      <p class="wf-lead">In about 90 minutes you work out what a wrong forecast costs, how big the buffer should be, and when a person has to approve.<span class="hub-lead-more"> You work through three practice companies and a demand simulator that runs in your browser.</span></p>
+      <p class="wf-lead">In about 90 minutes you work out what a wrong forecast costs, how big the buffer should be and when a person approves.</p>
       <div class="hub-ctas">
         <a class="wf-btn wf-btn--primary" href="./hands-on.html"><span class="hub-long">Open the hands-on lab</span><span class="hub-short">Hands-on lab</span></a>
         <a class="wf-btn" href="./case-study/index.html"><span class="hub-long">Read the business case</span><span class="hub-short">Business case</span></a>
@@ -91,21 +90,21 @@
   <div class="wf-wrap hub-question">
     <figure class="wf-qcard">
       <figcaption class="wf-kicker">The question you answer</figcaption>
-      <p>A missed sale costs one amount and a leftover unit another. How much buffer do you carry, and when does a person make the call?</p>
+      <p>A missed sale costs one amount, a leftover unit another. How much buffer do you carry, and when does a person decide?</p>
     </figure>
   </div>
 
   <div class="wf-wrap hub-body">
     <div>
       <section class="wf-section" aria-labelledby="mats-title">
-        <header class="wf-kopf"><h2 class="wf-h2" id="mats-title">Materials</h2><p>Four pages and one dataset, in this order</p></header>
+        <header class="wf-kopf"><h2 class="wf-h2" id="mats-title">Materials</h2></header>
         <ol class="wf-rows">
-          <li><a class="wf-row" href="./hands-on.html"><span class="wf-row__n">02</span><span class="wf-row__title">Hands-on lab</span><span class="wf-row__go" aria-hidden="true">→</span><span class="wf-row__desc">Three labs: ZIP capacity for a parcel network, one shared number for a device maker, a release gate for a social app.</span></a></li>
-          <li><a class="wf-row" href="./case-study/index.html"><span class="wf-row__n">03</span><span class="wf-row__title">Business case</span><span class="wf-row__go" aria-hidden="true">→</span><span class="wf-row__desc">One phone launch, three teams and a demand forecast that is higher than the stock.</span></a></li>
-          <li><a class="wf-row" href="./field-card.html"><span class="wf-row__n">04</span><span class="wf-row__title">Field card</span><span class="wf-row__go" aria-hidden="true">→</span><span class="wf-row__desc">The checks, formulas and thresholds on one A4 page to print.</span></a></li>
-          <li><a class="wf-row" href="./homework.html"><span class="wf-row__n">05</span><span class="wf-row__title">Take-home</span><span class="wf-row__go" aria-hidden="true">→</span><span class="wf-row__desc">Build two forecasts on the dataset, compare their error and write down your service level.</span></a></li>
+          <li><a class="wf-row" href="./hands-on.html"><span class="wf-row__n">02</span><span class="wf-row__title">Hands-on lab</span><span class="wf-row__go" aria-hidden="true">→</span><span class="wf-row__desc">One simulator per practice company below.</span></a></li>
+          <li><a class="wf-row" href="./case-study/index.html"><span class="wf-row__n">03</span><span class="wf-row__title">Business case</span><span class="wf-row__go" aria-hidden="true">→</span><span class="wf-row__desc">A phone launch where forecast demand exceeds the stock.</span></a></li>
+          <li><a class="wf-row" href="./field-card.html"><span class="wf-row__n">04</span><span class="wf-row__title">Field card</span><span class="wf-row__go" aria-hidden="true">→</span><span class="wf-row__desc">Rules, formulas and checks on one printable page.</span></a></li>
+          <li><a class="wf-row" href="./homework.html"><span class="wf-row__n">05</span><span class="wf-row__title">Take-home</span><span class="wf-row__go" aria-hidden="true">→</span><span class="wf-row__desc">Two forecasts on the dataset, their error and your service level.</span></a></li>
         </ol>
-        <p class="hub-data wf-small">Dataset for the take-home: <a href="./data/demand-weekly.csv" download><code>demand-weekly.csv</code></a>, 104 weeks of synthetic demand.</p>
+        <p class="hub-data wf-small">Dataset: <a href="./data/demand-weekly.csv" download><code>demand-weekly.csv</code></a>, 104 weeks of synthetic demand.</p>
       </section>
     </div>
 
@@ -113,10 +112,10 @@
       <section class="wf-section" aria-labelledby="learn-title">
         <header class="wf-kopf"><h2 class="wf-h2" id="learn-title">What you can do afterwards</h2></header>
         <ol class="wf-steps">
-          <li>Check, in euros, whether a model beats the rule “same weekday last week”.</li>
-          <li>Set the service level from the cost of too much and too little stock.</li>
-          <li>Decide which signal stops the automation and who approves the restart.</li>
-          <li>Write a go/no-go rule with a threshold and a named approver.</li>
+          <li>Check in euros whether a model beats “same weekday last week”</li>
+          <li>Set the service level from overstock and stockout costs</li>
+          <li>Name the signal that stops automation and who restarts it</li>
+          <li>Write a go/no-go rule with threshold and approver</li>
         </ol>
       </section>
     </div>
@@ -124,13 +123,13 @@
 
   <div class="wf-wrap">
     <section class="wf-section" aria-labelledby="lens-title">
-      <header class="wf-kopf"><h2 class="wf-h2" id="lens-title">Three practice companies</h2><p>Invented figures, no real company's system</p></header>
+      <header class="wf-kopf"><h2 class="wf-h2" id="lens-title">Practice companies</h2></header>
       <table class="wf-table hub-lenses">
         <thead><tr><th scope="col">Company</th><th scope="col">The question it asks</th></tr></thead>
         <tbody>
-          <tr><td>Parcel network</td><td>How much delivery capacity do we plan for each ZIP cluster tomorrow?</td></tr>
-          <tr><td>Device maker</td><td>What happens when every tier adds its own buffer on top of the order below it?</td></tr>
-          <tr><td>Social app</td><td>When may a live forecast release capacity without a person checking it?</td></tr>
+          <tr><td>Parcel network</td><td>How much delivery capacity per ZIP cluster tomorrow?</td></tr>
+          <tr><td>Device maker</td><td>What happens when every tier pads the order below it?</td></tr>
+          <tr><td>Social app</td><td>When may a live forecast release capacity unchecked?</td></tr>
         </tbody>
       </table>
     </section>

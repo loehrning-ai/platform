@@ -8,7 +8,7 @@ const lesson: CodexLesson = {
   number: 7,
   title: "Reviewing a Codex PR",
   subtitle:
-    "Review the requested behavior, complete diff, tests, dependencies, and security boundaries before merge.",
+    "Before merge, check behavior, the full diff, tests, dependencies and security boundaries.",
   durationMinutes: 14,
   trackId: "in-the-loop",
   hook: "The diff and logs are evidence, not approval.",
@@ -28,11 +28,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Same review standard as for any other pull request. A tidy diff, tests included, green command logs. None of that lowers the bar. Those properties make review easier and establish nothing about correctness.\n\nStart from the requested behavior and trust boundaries. Then inspect the complete repository diff, including staged, unstaged, untracked, generated, configuration, and dependency changes. Read test code and command logs to determine what was actually exercised.\n\nWork from a repeatable checklist. Scope, behavior, failure handling, security, operations, rollback. Surface plausibility is not a review.",
-        },
-        {
-          kind: "pull-quote",
-          text: "Acceptance remains a human decision based on the task, the full diff, and independently reviewable evidence.",
+            "A Codex diff gets the same review as any other pull request. Tidy code, tests and green logs prove nothing about correctness.\n\nStart from the requested behavior and the trust boundaries. Read the complete diff (staged, unstaged, untracked, generated, configuration and dependency changes) plus test code and command logs, then work through the checklist below.",
         },
       ],
     },
@@ -44,7 +40,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Six checks as a baseline, plus whatever the affected system demands on top. Stop early when the task or scope is wrong. No later check repairs a mismatched change.",
+            "Six baseline checks. Stop early if the task or scope is wrong; later checks cannot repair that.",
         },
         {
           kind: "card-grid",
@@ -52,32 +48,32 @@ const lesson: CodexLesson = {
             {
               eyebrow: "check 01",
               title: "Does it do what you asked?",
-              body: "Compare observable behavior with the goal and acceptance criteria. Reject a nearby solution even when its implementation is internally consistent.",
+              body: "Compare behavior with the goal and acceptance criteria. Reject a nearby solution, however consistent it is.",
             },
             {
               eyebrow: "check 02",
               title: "Is it the right size?",
-              body: "Inspect every changed and deleted file. Require an explanation for changes outside the stated scope; do not use file count alone as a quality measure.",
+              body: "Read every changed and deleted file. Changes outside the stated scope need a reason.",
             },
             {
               eyebrow: "check 03",
               title: "Do the tests exercise the requirement?",
-              body: "Read new and modified tests. Check assertions, fixtures, mocks, negative cases, skipped paths, and whether the test fails when the relevant behavior is removed.",
+              body: "Read assertions, fixtures, mocks, negative cases and skipped paths. Would the test fail without the behavior?",
             },
             {
               eyebrow: "check 04",
               title: "Are there new dependencies?",
-              body: "Review manifest and lockfile changes, package provenance, maintenance status, license, transitive risk, and whether an existing dependency already provides the capability.",
+              body: "Check lockfile, provenance, maintenance, license and transitive risk. Could an existing dependency do the job?",
             },
             {
               eyebrow: "check 05",
               title: "What was removed or bypassed?",
-              body: "Inspect deleted tests, validation, fallbacks, feature flags, comments that encode constraints, and error handling. Confirm each removal is required by the task.",
+              body: "The task must justify every deleted test, validation, fallback, feature flag, constraint comment or error handler.",
             },
             {
               eyebrow: "check 06",
               title: "Does it fit the system contract?",
-              body: "Check authorization, data handling, errors, logging, concurrency, migrations, observability, rollback, naming, and repository conventions. Update AGENTS.md only when a durable rule was genuinely missing.",
+              body: "Check authorization, data handling, errors, logging, concurrency, migrations, observability, rollback and conventions. Add to AGENTS.md only a durable rule that was missing.",
             },
           ],
         },
@@ -91,7 +87,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            'The task asked for a rate limiter on `/login`. The test mocks the limiter decision away. Work out what it actually covers.\n\n```\n# tests/api/test_login_rate_limit.py\n\ndef test_login_maps_denial_to_429(client, mocker):\n    mock_limiter = mocker.patch("api.auth.limiter.is_allowed")\n    mock_limiter.return_value = False\n\n    response = client.post("/login", json={...})\n\n    assert response.status_code == 429\n    mock_limiter.assert_called_once()\n```\n\nIt verifies one thing. The endpoint maps a denied limiter result to status 429. It does **not** verify counting, the threshold, key selection, storage or reset behavior. Keep it if that mapping matters, and add a test through the real limiter boundary.\n\n```\n# exercises the configured limiter behavior\n\ndef test_login_blocks_at_6th_attempt(client):\n    for _ in range(5):\n        response = client.post("/login", json={...})\n        assert response.status_code == 401  # bad credentials, request allowed\n\n    response = client.post("/login", json={...})\n    assert response.status_code == 429  # request blocked\n```',
+            "The task asked for a rate limiter on `/login`. This test mocks the limiter decision. What does it still cover?\n\n```\n# tests/api/test_login_rate_limit.py\n\ndef test_login_maps_denial_to_429(client, mocker):\n    mock_limiter = mocker.patch(\"api.auth.limiter.is_allowed\")\n    mock_limiter.return_value = False\n\n    response = client.post(\"/login\", json={...})\n\n    assert response.status_code == 429\n    mock_limiter.assert_called_once()\n```\n\nIt only checks that a denied limiter result becomes status 429. Counting, threshold, key selection, storage and reset stay untested. Keep it if that mapping matters, and add a test through the real limiter:\n\n```\n# exercises the configured limiter behavior\n\ndef test_login_blocks_at_6th_attempt(client):\n    for _ in range(5):\n        response = client.post(\"/login\", json={...})\n        assert response.status_code == 401  # bad credentials, request allowed\n\n    response = client.post(\"/login\", json={...})\n    assert response.status_code == 429  # request blocked\n```",
         },
       ],
     },
@@ -103,7 +99,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Here's a diff. Find the issue before you scroll to the quiz.",
+            "Find the issue in the caching diff above before the quiz.",
         },
       ],
     },
@@ -115,7 +111,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Security requirements must be explicit in both the task and review. Functional tests rarely cover every trust boundary. Base the security pass on the changed data flows, privileges, dependencies, and deployment context.",
+            "State security requirements in the task and check them in review; functional tests rarely cover every trust boundary.",
         },
         {
           kind: "card-grid",
@@ -123,29 +119,29 @@ const lesson: CodexLesson = {
             {
               eyebrow: "sec 01",
               title: "Input trust boundary",
-              body: "Trace untrusted values to database queries, file paths, shell commands, templates, redirects, and logs. Apply validation, parameterization, canonicalization, or output encoding appropriate to each sink.",
+              body: "Trace untrusted values into queries, file paths, shell commands, templates, redirects and logs. Validate, parameterize, canonicalize or encode per sink.",
             },
             {
               eyebrow: "sec 02",
               title: "Authentication and authorization",
-              body: "For every new or changed operation, verify identity, role, tenant, resource ownership, and default-deny behavior. A route-level authentication guard alone may not enforce object-level authorization.",
+              body: "For each changed operation, verify identity, role, tenant, ownership and default deny. A route guard may not enforce object-level authorization.",
             },
             {
               eyebrow: "sec 03",
               title: "Secrets in source",
-              body: "Inspect source, fixtures, logs, generated files, and configuration for credentials or sensitive values. Use the repository's secret scanner and revoke any exposed credential; deletion from the latest diff does not remove history.",
+              body: "Scan source, fixtures, logs, generated files and configuration for credentials. Revoke exposed ones; deleting them from the diff leaves them in history.",
             },
             {
               eyebrow: "sec 04",
               title: "Error message leakage",
-              body: "Do not return raw exceptions or log sensitive payloads. Verify client-safe errors, server-side diagnostic context, stable status codes, and redaction at each logging boundary.",
+              body: "Send no raw exceptions to clients and log no sensitive payloads. Keep diagnostics server-side, status codes stable and redact at each logging boundary.",
             },
           ],
         },
         {
           kind: "callout",
-          title: "Use repository-specific security checks:",
-          body: "Run the configured secret, dependency, static-analysis, and authorization tests for the changed stack. Inspect their scope, exclusions, and output. A grep can support triage but is not a security gate.",
+          title: "Use the repository's security checks",
+          body: "Run the configured secret, dependency, static-analysis and authorization checks and read their scope, exclusions and output. A grep helps triage and is no gate.",
         },
         {
           kind: "prose",
@@ -157,7 +153,7 @@ const lesson: CodexLesson = {
           // regex scans the raw .ts source for and would otherwise flag as
           // a leaked address.
           markdown:
-            'Working output is not the same as safe output. The request said "add a `/debug/user` endpoint" and said nothing about authorization, input handling or response fields.\n\n```\n# insecure version\n\n' +
+            "The request said \"add a `/debug/user` endpoint\" and named no authorization, input handling or response fields. The first version below works and is unsafe.\n\n```\n# insecure version\n\n" +
             '@app.route("/debug/user")           # no auth guard\ndef debug_user():\n    user_id = request.args.get("id")  # no validation\n    try:\n        u = db.session.query(User).get(user_id)\n        return jsonify(u.__dict__)       # exposes all columns\n    except Exception as e:\n        return str(e), 500              # leaks stack trace\n\n# corrected version, same feature, secure\n\n' +
             '@app.route("/debug/user")\n' +
             '@require_admin                         # explicit authorization\ndef debug_user():\n    try:\n        user_id = int(request.args["id"])\n    except (KeyError, ValueError):\n        return jsonify({"error": "invalid id"}), 400\n\n    user = db.session.get(User, user_id)\n    if user is None:\n        return jsonify({"error": "not found"}), 404\n    return jsonify(user.to_safe_dict())  # explicit field allowlist\n```',
@@ -208,7 +204,7 @@ const lesson: CodexLesson = {
           },
           { type: "context", text: "    return jsonify(user.to_dict())" },
         ],
-        note: "The cache is process-local and has no invalidation path. A profile update can leave stale objects in each worker until eviction or restart. Review the repository's cache ownership, invalidation, process model, and object-lifecycle rules before accepting this change.",
+        note: "The cache is process-local and never invalidated. After a profile update, workers serve stale objects until eviction or restart. Check the repository's cache and process rules before accepting.",
       },
     },
     {
@@ -221,16 +217,16 @@ const lesson: CodexLesson = {
         title: CODEX_QUIZ_TITLE,
         copy: CODEX_QUIZ_COPY,
         question:
-          "Codex returns a diff with new passing tests. What should the reviewer do first with those tests?",
+          "Codex returns a diff with new passing tests. What do you do with those tests first?",
         options: [
           "Trust them, they're green, so they work.",
-          'Read each one and ask: "would this test fail if the implementation were wrong?" If the answer isn\'t obviously yes, the test proves nothing.',
+          "Read each one and check it would fail if the code were wrong.",
           "Delete them and write your own.",
           "Skip to the implementation code; tests are a formality.",
         ],
         correct: 1,
         explanation:
-          "A passing suite reports that its assertions completed in one environment. Read each test to determine which behavior it exercises, then confirm the relevant assertion fails when that behavior is absent or wrong.",
+          "A green suite only says its assertions passed in one environment. Check which behavior each test exercises and that its assertion fails when that behavior is missing or wrong.",
       },
     },
     {
@@ -246,13 +242,13 @@ const lesson: CodexLesson = {
           'The PR adds "from some-new-lib import magic" at the top. Your reaction?',
         options: [
           "Accept it because the import compiles.",
-          "Review why it is needed, its source and maintenance status, license and security posture, transitive impact, and existing alternatives before accepting it.",
+          "Check need, provenance, maintenance, license, security, transitive impact and alternatives first.",
           "Tell Codex to remove it without reading what it does.",
           "Run npm audit and move on.",
         ],
         correct: 1,
         explanation:
-          "A dependency changes the supply-chain and maintenance boundary. Review the manifest and lockfile, verify provenance, and require a concrete reason for adding it.",
+          "A new dependency moves the supply-chain and maintenance boundary. Check manifest and lockfile, verify provenance and require a concrete reason for it.",
       },
     },
   ],

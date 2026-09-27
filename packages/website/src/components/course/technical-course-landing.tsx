@@ -126,14 +126,55 @@ function plainLabel(label: string): string {
 }
 
 /**
- * Kicker text for the hero. A no-break space ties each "·" to the part before
- * it, so a narrow screen breaks after the separator and never starts a line
- * with it; `text-balance` on the kicker then keeps a short last part such as
- * "kostenlos" from standing alone on the second line.
+ * Kicker text for a paper hero. A no-break space ties each "·" to the part
+ * before it, so a narrow screen breaks after the separator and never starts
+ * a line with it.
  */
 function kickerLabel(label: string): string {
   return plainLabel(label).replace(/ · /g, "\u00a0· ");
 }
+
+/**
+ * The band's caps line is one line (SPEC §1.5). Each "·" part is an
+ * unbreakable flex item that carries its separator at its start, and the
+ * line is clipped to one line height: a part that does not fit drops out
+ * whole, so a phone never shows a second line or a line ending in "·".
+ * The DOM keeps every part for screen readers. Every landing sets the same
+ * "·" separator (SPEC §1.5), whichever one its kicker copy uses.
+ */
+function CapsSegments({ label }: { readonly label: string }): JSX.Element {
+  // " / " in older kicker copy is the same division; the series sets "·".
+  const parts = plainLabel(label).split(/ [·/] /);
+  return (
+    <>
+      {parts.map((part, index) => (
+        <span key={`${index}-${part}`} className="whitespace-nowrap">
+          {index > 0 ? `\u00a0· ${part}` : part}
+        </span>
+      ))}
+    </>
+  );
+}
+
+/**
+ * Width of the lg band art, and the text column's right padding that keeps
+ * 3rem clear of it. Both resolve against the frame (an inline-size
+ * container, so no viewport units): the art sits against the band's own
+ * right edge, the text column ends at the 72rem track, whose outer margin is
+ * max(1.5rem, (frame - 72rem) / 2) from sm up.
+ */
+const BAND_ART_WIDTH = "w-[min(36cqw,30rem)]";
+const BAND_ART_CLEARANCE =
+  "lg:pr-[max(0px,calc(min(36cqw,30rem)_+_3rem_-_max(1.5rem,(100cqw_-_72rem)_/_2)))]";
+
+/**
+ * The band's secondary action is the scene secondary (SPEC §3.8): a 2px ink
+ * edge that inverts to ink and ground on hover. The pages pass the shared
+ * paper class (1px ink, tonal hover), so the band restyles any action after
+ * the first; on paper the class stays as it is.
+ */
+const BAND_SECONDARY_ACTIONS =
+  "[&>*+*]:border-2 [&>*+*]:border-scene-ink [&>*+*]:text-scene-ink [&>*+*]:hover:bg-scene-ink [&>*+*]:hover:text-scene-ground";
 
 /**
  * The words of a headline that may be inline markup (line-break spans or a
@@ -189,7 +230,7 @@ export function TechnicalCourseFrame({
   const scene = coursePlakat(courseId);
   return (
     <div
-      className="grid w-full min-w-0 grid-cols-[minmax(1rem,1fr)_minmax(0,72rem)_minmax(1rem,1fr)] overflow-x-clip pb-12 sm:grid-cols-[minmax(1.5rem,1fr)_minmax(0,72rem)_minmax(1.5rem,1fr)] [&>*:not([data-technical-course-header])]:col-start-2"
+      className="@container grid w-full min-w-0 grid-cols-[minmax(1rem,1fr)_minmax(0,72rem)_minmax(1rem,1fr)] overflow-x-clip pb-12 sm:grid-cols-[minmax(1.5rem,1fr)_minmax(0,72rem)_minmax(1.5rem,1fr)] [&>*:not([data-technical-course-header])]:col-start-2"
       data-technical-course={courseId}
       data-plakat-page={scene?.plakat}
       lang={lang}
@@ -199,15 +240,27 @@ export function TechnicalCourseFrame({
   );
 }
 
-/** The course's poster in the band's right track, from lg (SPEC §3.13). */
+/**
+ * The course's poster from lg (SPEC §3.1, §3.13): the full band height
+ * against the band's right edge, behind the text column, so its shapes bleed
+ * off the band's right and bottom edges as on the workshop bands. The
+ * poster is pinned to the bottom-right corner (meet); its ground fills the
+ * rest of the column in the band's own colour.
+ */
 function HeaderArt({ scene }: { readonly scene: CoursePlakat }): JSX.Element {
   return (
     <div
       aria-hidden="true"
       data-plakat-art=""
-      className="pointer-events-none hidden aspect-[4/5] w-full max-w-[15rem] lg:block"
+      className={cx("pointer-events-none absolute inset-y-0 right-0 -z-10 hidden lg:block", BAND_ART_WIDTH)}
     >
-      <PosterArt plakat={scene.plakat} motif={scene.motif} numeral={scene.numeral} format="portrait" />
+      <PosterArt
+        plakat={scene.plakat}
+        motif={scene.motif}
+        numeral={scene.numeral}
+        format="portrait"
+        cornerDots={false}
+      />
     </div>
   );
 }
@@ -230,18 +283,26 @@ export function TechnicalCourseHeader({
   // tracks and puts its content back in the middle one. Type budget: the
   // caps line, the poster title and 17px for the lead, the actions and the
   // facts (14px on a phone, the caps line's size). There is no phone art:
-  // the action stays in the first screen. From lg the right track holds the
-  // course's poster over the ruled facts.
+  // the action stays in the first screen. From lg the poster fills the
+  // band's right edge at full height and the text column stops before it.
   return (
     <header
-      className="col-span-full grid min-w-0 grid-cols-subgrid"
+      className="relative isolate col-span-full grid min-w-0 grid-cols-subgrid"
       data-technical-course-header
       data-plakat-band=""
     >
-      <div className="col-start-2 grid min-w-0 gap-x-12 gap-y-5 pb-7 pt-6 sm:gap-y-8 sm:pb-10 sm:pt-10 lg:grid-cols-[minmax(0,1fr)_20rem] lg:pb-14 lg:pt-14">
+      {scene ? <HeaderArt scene={scene} /> : null}
+      <div
+        className={cx(
+          "col-start-2 min-w-0 pb-7 pt-6 sm:pb-10 sm:pt-10 lg:pb-14 lg:pt-14",
+          scene && BAND_ART_CLEARANCE,
+        )}
+      >
         <div className="@container min-w-0">
           {scene ? (
-            <CapsLine className="text-balance">{kickerLabel(eyebrow)}</CapsLine>
+            <CapsLine className="max-h-[1.3em] overflow-hidden [&>span]:flex [&>span]:flex-wrap">
+              <CapsSegments label={eyebrow} />
+            </CapsLine>
           ) : (
             <Kicker className="text-balance">{kickerLabel(eyebrow)}</Kicker>
           )}
@@ -255,39 +316,38 @@ export function TechnicalCourseHeader({
             {intro}
           </p>
           <div
-            className="mt-5 flex min-w-0 flex-wrap items-center gap-3 sm:mt-8"
+            className={cx(
+              "mt-5 flex min-w-0 flex-wrap items-center gap-3 sm:mt-8",
+              scene && BAND_SECONDARY_ACTIONS,
+            )}
             data-course-entry-actions
           >
             {primaryAction}
             {secondaryAction}
           </div>
-        </div>
 
-        <div className="min-w-0 lg:flex lg:flex-col lg:gap-8">
-          {scene ? <HeaderArt scene={scene} /> : null}
-          <aside
-            aria-label={factsLabel}
-            className="min-w-0 self-start border-t-2 border-foreground pt-4 max-lg:border-t-0 max-lg:pt-0 lg:self-stretch"
-          >
-            <p className="text-label text-foreground max-lg:sr-only">
-              {plainLabel(factsLabel)}
-            </p>
-            <ul
-              className="mt-3 min-w-0 max-lg:mt-0 max-lg:flex max-lg:flex-wrap"
-              data-course-onboarding-checklist
-            >
-              {facts.map((fact) => (
-                <li
-                  key={fact}
-                  className={cx(
-                    "min-w-0 break-words border-b border-hairline py-2.5 text-body text-foreground tabular-nums",
-                    "max-lg:border-0 max-lg:py-0 max-lg:text-[0.875rem] max-lg:leading-normal max-lg:after:mx-2 max-lg:after:content-['·'_/_''] max-lg:last:after:content-none",
-                  )}
-                >
-                  {fact}
-                </li>
-              ))}
-            </ul>
+          {/* The facts are one line under the actions at every width (14px
+              on a phone, 17px from lg), as on the workshop posters. Each
+              item starts with its "·"; the list sits 1.25em left inside a
+              clipping box, so the separator of the first item on every line
+              is cut off and a wrapped line never starts or ends with "·". */}
+          <aside aria-label={factsLabel} className="mt-5 min-w-0 sm:mt-8">
+            <p className="sr-only">{plainLabel(factsLabel)}</p>
+            <div className="min-w-0 overflow-hidden">
+              <ul
+                className="-ml-[1.25em] flex min-w-0 flex-wrap text-[0.875rem]/[1.5] lg:text-[1.0625rem]/[1.5]"
+                data-course-onboarding-checklist
+              >
+                {facts.map((fact) => (
+                  <li
+                    key={fact}
+                    className="min-w-0 break-words text-foreground tabular-nums before:inline-block before:w-[1.25em] before:text-center before:content-['·'_/_'']"
+                  >
+                    {fact}
+                  </li>
+                ))}
+              </ul>
+            </div>
             {figure ? <div className="mt-8 min-w-0">{figure}</div> : null}
             {progress ? (
               <div className="mt-5 empty:hidden" data-course-progress-card>

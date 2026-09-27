@@ -258,10 +258,10 @@
       <h2>Set tomorrow's ZIP capacity</h2>
       <div class="lead">
         <div class="framework" aria-label="Parcel network forecasting framework">
-          <div class="fw fw-predict"><b>What we predict</b><span>Tomorrow's package demand for a ZIP cluster, to size delivery capacity (vans, drivers, shifts).</span></div>
+          <div class="fw fw-predict"><b>What we predict</b><span>Tomorrow's parcels per ZIP cluster, to size vans, drivers and shifts.</span></div>
           <div class="fw fw-manual"><b>Manual today</b><span>A planner types &ldquo;same weekday last week&rdquo; into a spreadsheet.</span></div>
-          <div class="fw fw-ai"><b>What the model adds</b><span>It learns the weekday rhythm and the promo calendar, so it catches the promo spike the sheet misses and builds less excess capacity. The one shock no model can see goes to a person.</span></div>
-          <div class="fw fw-obj"><b>Goal</b><span>See in euros where the model beats the manual rule, and where it hands the call to a person.</span></div>
+          <div class="fw fw-ai"><b>What the model adds</b><span>Weekday rhythm and promo calendar: it catches the promo spike and builds less excess. The undated shock goes to a person.</span></div>
+          <div class="fw fw-obj"><b>Goal</b><span>See in euros where the model beats the rule and where a person decides.</span></div>
         </div>
       </div>
       <div class="stage">
@@ -274,10 +274,10 @@
       <h2>Stop the laptop bullwhip</h2>
       <div class="lead">
         <div class="framework" aria-label="Device maker forecasting framework">
-          <div class="fw fw-predict"><b>What we predict</b><span>Weekly laptop demand, shared as one number down the chain (demand planning &rarr; logistics &rarr; store).</span></div>
-          <div class="fw fw-manual"><b>Manual today</b><span>Each tier adds its own safety buffer on top of the padded order beneath it.</span></div>
-          <div class="fw fw-ai"><b>What the model adds</b><span>One shared, calibrated forecast replaces the stacked local buffers. The bullwhip shrinks, service holds, and less cash sits in inventory.</span></div>
-          <div class="fw fw-obj"><b>Goal</b><span>See how a single shared signal beats local padding on bullwhip, cost and fill rate.</span></div>
+          <div class="fw fw-predict"><b>What we predict</b><span>Weekly laptop demand as one number for planning, logistics and stores.</span></div>
+          <div class="fw fw-manual"><b>Manual today</b><span>Each tier pads the order it gets with its own buffer.</span></div>
+          <div class="fw fw-ai"><b>What the model adds</b><span>One shared, calibrated forecast replaces the stacked buffers, with less bullwhip and less cash in stock.</span></div>
+          <div class="fw fw-obj"><b>Goal</b><span>Compare shared signal and local padding on bullwhip, cost and fill rate.</span></div>
         </div>
       </div>
       <div class="stage"><hs-buffer-run></hs-buffer-run></div>
@@ -288,10 +288,10 @@
       <h2>Gate fast demand before it ships</h2>
       <div class="lead">
         <div class="framework" aria-label="Social app forecasting framework">
-          <div class="fw fw-predict"><b>What we predict</b><span>Fast-moving user demand, nowcast live and released behind a trust gate.</span></div>
-          <div class="fw fw-manual"><b>Manual today</b><span>Ship the deploy-day plan and never check it again (auto-release without a gate).</span></div>
-          <div class="fw fw-ai"><b>What the model adds</b><span>A monitored model detects drift, sends the exception to an owner, retrains and resumes. That avoids the capacity the unchecked plan loses.</span></div>
-          <div class="fw fw-obj"><b>Goal</b><span>See where the money comes from: the release gate and its owner.</span></div>
+          <div class="fw fw-predict"><b>What we predict</b><span>Fast user demand, nowcast live and released behind a gate.</span></div>
+          <div class="fw fw-manual"><b>Manual today</b><span>Ship the deploy-day plan and never check it again.</span></div>
+          <div class="fw fw-ai"><b>What the model adds</b><span>It detects drift, sends the exception to an owner, retrains and resumes.</span></div>
+          <div class="fw fw-obj"><b>Goal</b><span>See how much the release gate and its owner save.</span></div>
         </div>
       </div>
       <div class="stage">
@@ -305,7 +305,6 @@
       <button type="button" id="prev-act">Previous</button>
       <span>Act <b id="act-count">1/3</b></span>
       <button type="button" id="next-act">Next</button>
-      <span class="disclaimer">Practice companies with invented figures.</span>
     </div>
     <p class="wf-foot-line">Original course material by Tim Löhr. All rights reserved. <a href="/en/open-source/lizenzrichtlinie">License policy</a>. Synthetic practice-market teaching data; invented figures.</p>
   </footer>

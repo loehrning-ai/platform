@@ -24,8 +24,6 @@ export default localizeDataInfraLessonToGerman(canonical, {
 - **Exactly-once** heißt, der bestätigte Zustand auf einem definierten Pfad aus Quelle, Verarbeitung und Ziel wirkt, als hätte jede Eingabe ihn einmal beeinflusst, umgesetzt über Transaktionen, Checkpoints, koordinierte Offsets oder idempotente Effekte.
 
 Idempotenz ist einer dieser Mechanismen. Ein HTTP-Aufruf an einen Zahlungsdienst etwa braucht den Idempotenzvertrag des Anbieters, aufbewahrte Anfrageidentitäten und einen Abgleich unklarer Ergebnisse.`,
-      keyTakeaway:
-        "Eine Exactly-once-Aussage ist ohne Quelle, Zustand, Ziel, Konfiguration und Fehlergrenze unvollständig.",
     },
     {
       id: "s2",
@@ -96,8 +94,6 @@ Flink trennt Exactly-once für verwalteten Zustand von End-to-End-Ausgabe, die w
 Speichere nur eine geschützte Referenz oder verschlüsselte Nutzlast, einen sicheren Fehlercode, Quellidentität und -position, Schemaversion, Zeitpunkt des ersten Auftretens, Anzahl der Versuche und Zuständigkeit. Rohdatensätze und Ausnahmeberichte können personenbezogene Daten, Zugangsdaten oder interne Details enthalten, also gelten Zugriffskontrolle, Minimierung, Aufbewahrung und Schwärzung.
 
 Leg fest, welche Fehler wiederholt oder isoliert werden, ob ein Datensatz die Reihenfolge umgehen darf, wer Wiederholungen freigibt und wie reparierte Ausgabe abgeglichen wird. Alarmschwellen folgen der erwarteten Rate ungültiger Eingaben und der Wirkung auf Nutzer.`,
-      keyTakeaway:
-        "Eine DLQ macht Fehler sichtbar und wiederherstellbar; den Bug behebst du weiterhin selbst.",
     },
     {
       id: "s5",

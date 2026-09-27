@@ -29,7 +29,7 @@ export function Ch8GovernDe({ chapter }: Ch8GovernDeProps) {
         <p className="prose">
           Eine Spalte hat einen technischen Typ und ein richtlinienrelevantes
           <em> Subjekt</em>: <code>employee_email</code> identifiziert eine
-          Person, <code>service_account_id</code> eine Anwendung,
+          Person, <code>service_account_id</code> eine Anwendung,{" "}
           <code>contractor_id</code> eine externe Arbeitskraft. Die drei Bezeichnungen unten sind Kursbezeichnungen; eine produktive Taxonomie
           stimmst du mit den Rechts-, Datenschutz-, Sicherheits- und Aufbewahrungsregeln deiner Organisation ab.
         </p>

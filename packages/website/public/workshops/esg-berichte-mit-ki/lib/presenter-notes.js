@@ -4,7 +4,7 @@
    cut, appendixRoutes); clock, mode and purpose are documentary. */
 window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
   "cover": {
-    "purpose": "Open with the one question and the promise; the clock starts on the first press.",
+    "purpose": "Open with the question; the clock starts on the first press.",
     "mode": "listen",
     "clock": {
       "start": "00:00",
@@ -13,8 +13,8 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     },
     "say": [
       "Presenter cue: the clock starts on your first press.",
-      "Today we ask one question about one fictional company, and we keep asking it until the end.",
-      "It is the question your bank or your biggest customer sends every spring. By the end you will know why the first answer looked right, and which parts of it were wrong."
+      "Today we ask one question about one fictional company, until the end.",
+      "Your bank or biggest customer sends it every spring. By the end you will know why the first answer looked right and which parts were wrong."
     ],
     "sayAt": {
       "0": [
@@ -30,13 +30,13 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "ask": [],
     "expectedAudience": [],
     "revealOrder": [
-      "Title, date, the question card, meta line"
+      "Title, date, question card, meta line"
     ],
     "cut": "Read the question once and advance.",
     "appendixRoutes": []
   },
   "host": {
-    "purpose": "Who is talking, and that nothing today is real company data.",
+    "purpose": "Who is talking; no real company data.",
     "mode": "listen",
     "clock": {
       "start": "00:40",
@@ -45,7 +45,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     },
     "say": [
       "I build the data pipelines behind reports like this one.",
-      "Nothing today comes from a real company, and none of the emission factors are official values. That is on purpose, so you can check every number with a phone calculator."
+      "The company is fictional and no emission factor is an official value, so you can check every number with a phone calculator."
     ],
     "sayAt": {
       "0": [
@@ -64,7 +64,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "appendixRoutes": []
   },
   "the-case": {
-    "purpose": "Introduce Kellbrunn, its boundary and who asks; anchor the second half of the question.",
+    "purpose": "Kellbrunn, its boundary and who asks; stress the second half of the question.",
     "mode": "listen",
     "clock": {
       "start": "01:10",
@@ -72,10 +72,10 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "budget_seconds": 100
     },
     "say": [
-      "Kellbrunn has 180 people and has never been under the EU reporting law. Since 18 March 2026 the EU rule covers companies with more than 1,000 employees and more than 450 million euros turnover. Member states must bring national law in line by 19 March 2027.",
-      "The bank and the car maker still want this number, and they want to know whether it went down.",
-      "On press 2: keep the second half of the question in mind. Most of today's trouble is in that half.",
-      "If asked about customer requests: Directive 2026/470 lets suppliers with up to 1,000 employees refuse requests that go beyond the voluntary standard. Germany has to transpose it by 19 March 2027. The VSME Basic Module, on which that standard is based, includes Scope 1 and 2; whether the delegated regulation keeps those datapoints is on the check list in appendix A4."
+      "Kellbrunn has 180 people and has never been under the EU reporting law. Since 18 March 2026 it covers companies with more than 1,000 employees and more than 450 million euros turnover; national law must follow by 19 March 2027.",
+      "The bank and the car maker still want this number, and whether it went down.",
+      "On press 2: remember the second half of the question. Most of today's trouble is there.",
+      "If asked about customer requests or the voluntary standard: appendix A4, items 3 and 4."
     ],
     "sayAt": {
       "0": [
@@ -93,7 +93,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     },
     "ask": [],
     "expectedAudience": [
-      "Some expect the CSRD to cover them; answer with the two thresholds."
+      "Some think the CSRD covers them; answer with the two thresholds."
     ],
     "revealOrder": [
       "Question card, fact strip, boundary sketch",
@@ -106,7 +106,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     ]
   },
   "the-arc": {
-    "purpose": "Show the experiment: the same AI twice, only the data changes.",
+    "purpose": "Same AI twice; only the data changes.",
     "mode": "listen",
     "clock": {
       "start": "02:50",
@@ -114,8 +114,8 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "budget_seconds": 70
     },
     "say": [
-      "We ask the AI twice. First it gets the folder as Kellbrunn has it today. Then it gets the same information prepared into one table with written rules.",
-      "The experiment keeps the model the same, so any difference comes from the preparation. Today both answers are constructed from documented failure modes; recorded runs go into appendix A3."
+      "We ask the AI twice: first on the folder as Kellbrunn has it today, then on the same information prepared as one table with written rules.",
+      "The model stays the same, so any difference comes from the preparation. Both answers today are constructed from documented failure modes; recorded runs go into appendix A3."
     ],
     "sayAt": {
       "0": [
@@ -135,7 +135,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "appendixRoutes": []
   },
   "raw-folder": {
-    "purpose": "Show what the AI gets: a normal folder in which twelve bills look like a full year.",
+    "purpose": "What the AI gets: a normal folder where twelve bills look like a full year.",
     "mode": "listen",
     "clock": {
       "start": "04:00",
@@ -143,9 +143,9 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "budget_seconds": 150
     },
     "say": [
-      "This is a normal folder: monthly bills from the utility, an annual statement, quarterly statements from the landlord, and a fuel-card export.",
-      "On press 2: twelve bills for Werk Nord, which looks like a full year.",
-      "We give all of it to the AI, with last year's figures and a table of emission factors."
+      "A normal folder: monthly utility bills, an annual statement, quarterly landlord statements and a fuel-card export.",
+      "On press 2: twelve bills for Werk Nord. That looks like a full year.",
+      "The AI gets all of it, plus last year's figures and a table of emission factors."
     ],
     "sayAt": {
       "0": [
@@ -169,7 +169,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "Many do not know which file their number comes from."
     ],
     "revealOrder": [
-      "Folder tree collapsed and two bill cards",
+      "Folder tree collapsed, two bill cards",
       "Folders expanded with counts",
       "Box around the 12"
     ],
@@ -177,7 +177,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "appendixRoutes": []
   },
   "raw-answer": {
-    "purpose": "Let the room judge a plausible answer before anyone knows what is wrong with it.",
+    "purpose": "The room judges a plausible answer before knowing what is wrong.",
     "mode": "vote",
     "clock": {
       "start": "06:30",
@@ -185,9 +185,9 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "budget_seconds": 300
     },
     "say": [
-      "Must say: This answer is constructed from documented failure modes. It shows what the answer looks like when all seven traps fire (six data traps and the market-based method error). It is not a recorded run.",
+      "Must say: This answer is constructed from documented failure modes. It shows the answer when all seven traps fire: six data traps and the market-based method error. It is not a recorded run.",
       "On press 1: read the total and the 7.5%. Do not read the rest aloud.",
-      "On press 2: it is down 7.5%, the per-head figure is normal, twelve bills for twelve months, and it shows its sums.",
+      "On press 2: down 7.5%, a normal per-head figure, twelve bills for twelve months, and it shows its sums.",
       "On press 3: hands up. Who would send this to the bank today? Remember your hand; we come back to it at the end."
     ],
     "sayAt": {
@@ -217,10 +217,10 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       }
     ],
     "expectedAudience": [
-      "Most pick Send or Ask back first. People who say Refuse usually cannot name why yet; ask them to hold it."
+      "Most pick Send or Ask back first. Those who say Refuse usually cannot name why yet; ask them to hold it."
     ],
     "revealOrder": [
-      "Question card and empty answer lane",
+      "Question card, empty answer lane",
       "Answer text and constructed label",
       "Five sanity checks",
       "Room vote"
@@ -231,7 +231,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     ]
   },
   "month-grid": {
-    "purpose": "Twelve files are not twelve months: fill the site by month grid before adding anything up.",
+    "purpose": "Twelve files are not twelve months: fill the site-by-month grid before adding up.",
     "mode": "vote",
     "clock": {
       "start": "11:30",
@@ -240,10 +240,10 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     },
     "say": [
       "Twelve files are not twelve months.",
-      "On press 3: March is in twice. Purchasing forwarded the same invoice and someone scanned it again. October is missing. The November and December bill covers two months in one file, so the count still comes out at twelve.",
-      "On press 3, then ask: August is low. Error or real? It is real: the plant holiday. A good assistant flags it and a person confirms it. It never 'corrects' a true value.",
+      "On press 3: March is in twice; purchasing forwarded the invoice and someone scanned it again. October is missing. One bill covers November and December, so the count still comes to twelve.",
+      "On press 3, then ask: August is low. Error or real? Real: the plant holiday. A good assistant flags it and a person confirms it; it never 'corrects' a true value.",
       "On press 5: the facility manager's meter file has October: 200,000 kilowatt hours.",
-      "On press 6: the duplicate and the gap almost cancel. The Werk Nord sum is only 5,000 kilowatt hours off, which is why nobody notices."
+      "On press 6: the duplicate and the gap almost cancel. Werk Nord is only 5,000 kilowatt hours off, so nobody notices."
     ],
     "sayAt": {
       "0": [
@@ -280,14 +280,14 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       }
     ],
     "expectedAudience": [
-      "Many say 12. On August, some say error; answer: plant holiday, flag and confirm."
+      "Many say 12. On August some say error; answer: plant holiday, flag and confirm."
     ],
     "revealOrder": [
-      "The Werk Nord folder: 12 files",
+      "Werk Nord folder: 12 files",
       "Empty grid",
       "Room vote",
-      "Grid as delivered, with the August dip",
-      "The two March bills side by side, invoice numbers marked",
+      "Grid as delivered, August dip",
+      "Both March bills, invoice numbers marked",
       "Meter rows and the October subtraction",
       "Net line: duplicate March, missing October, +5,000 kWh off"
     ],
@@ -295,7 +295,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "appendixRoutes": []
   },
   "one-unit": {
-    "purpose": "A dot that means a thousand, and two checks that catch it without knowing the format.",
+    "purpose": "A dot that means a thousand, and two checks that catch it.",
     "mode": "vote",
     "clock": {
       "start": "16:30",
@@ -303,10 +303,10 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "budget_seconds": 225
     },
     "say": [
-      "On a German bill the dot separates thousands. This is one thousand two hundred forty megawatt hours.",
-      "On press 3: A and B are the same reading, and both are a thousand times too small. They make Kellbrunn's second-largest electricity user almost disappear: minus 495.5 tonnes.",
-      "On press 4: two checks catch it without knowing the number format. 23 kilowatt hours per person would not run one CNC machine for an afternoon, and last year's figure is printed on the same page.",
-      "To fix it, keep the value and unit as printed in the row and let a written rule convert them."
+      "On a German bill the dot separates thousands: one thousand two hundred forty megawatt hours.",
+      "On press 3: A and B are the same reading, both a thousand times too small. Kellbrunn's second-largest electricity user almost disappears: minus 495.5 tonnes.",
+      "On press 4: two checks need no number format. 23 kilowatt hours per person would not run one CNC machine for an afternoon, and last year's figure is on the same page.",
+      "The fix: keep value and unit as printed and let a written rule convert them."
     ],
     "sayAt": {
       "0": [
@@ -335,10 +335,10 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       }
     ],
     "expectedAudience": [
-      "People who read English-format reports pick A."
+      "Readers of English-format reports pick A."
     ],
     "revealOrder": [
-      "Statement card and three options",
+      "Statement card, three options",
       "Room vote",
       "Answer C",
       "Effect bar −495.5 t",
@@ -356,11 +356,11 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "budget_seconds": 180
     },
     "say": [
-      "Under the operational control approach Kellbrunn chose, this bill is out: the partner runs the plant, and the contract and the meter are Talbrück's.",
+      "Under operational control, which Kellbrunn chose, this bill is out: the partner runs the plant, and contract and meter are Talbrück's.",
       "Forty percent would be right only under the equity-share approach, and that choice is written down before anyone opens the folder.",
-      "The row stays in the ledger as excluded, with the reason. It is a candidate for Scope 3 category 15 later.",
-      "The AI can flag a company name that is not on your list. Whether that company is inside the boundary was decided and written down before the run.",
-      "If asked about Scope 3: if Kellbrunn rents Halle 3 to Talbrück, check Category 13 (downstream leased assets) too. Either way it is Scope 3, not Scope 1 or 2."
+      "The row stays in the ledger as excluded, with the reason. It is a later candidate for Scope 3 category 15.",
+      "The AI can flag a company name that is not on your list. Whether it is inside the boundary was decided before the run.",
+      "If asked about Scope 3: if Kellbrunn rents Halle 3 to Talbrück, check category 13 (downstream leased assets) too. Either way it is Scope 3, not Scope 1 or 2."
     ],
     "sayAt": {
       "0": [
@@ -395,7 +395,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "Finance people often pick 40% by analogy with consolidation."
     ],
     "revealOrder": [
-      "Bill card with addressee highlighted",
+      "Bill card, addressee highlighted",
       "Room vote",
       "Answer and boundary line",
       "Effect +400.0 t / +600.0 t"
@@ -412,11 +412,11 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "budget_seconds": 255
     },
     "say": [
-      "On press 1: take the hands before any bar moves. The title asks the question and the right total stays a question mark until the vote is done.",
+      "On press 1: take the hands before any bar moves. The right total stays a question mark until the vote is done.",
       "On press 2: the duplicate and the missing October cancel to 2.0 tonnes.",
       "On press 3: the Talbrück bill hides four fifths of the unit error.",
       "On press 4: the two small ones. The gas bill states its basis on page 2, and AdBlue is not a fuel.",
-      "On press 5: on the way the total swings between 1,464.5 and 1,960.0 tonnes. Next year the same errors can add up instead of cancelling.",
+      "On press 5: the total swings between 1,464.5 and 1,960.0 tonnes on the way. Next year the same errors can add up instead of cancelling.",
       "Six errors, and the total is 48.7 tonnes off: 2.5%. No check on the total would catch that."
     ],
     "sayAt": {
@@ -455,12 +455,12 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "Most expect a large gap; the 2.5% surprises."
     ],
     "revealOrder": [
-      "Prediction band and the raw-folder bar; the right total is a question mark",
+      "Prediction band, raw-folder bar; right total is a question mark",
       "Room vote",
-      "Duplicate and October bars, and the right total",
+      "Duplicate and October bars, right total",
       "Talbrück and unit bars",
       "Gas and AdBlue bars, two cards",
-      "Swing band; the title now gives the gap"
+      "Swing band; title gives the gap"
     ],
     "cut": "Skip press 4; mention gas and AdBlue in one sentence.",
     "appendixRoutes": [
@@ -476,13 +476,13 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "budget_seconds": 390
     },
     "say": [
-      "Here is what we hold constant: the question, the model, the prompt and the factor table. We change only how the data arrives.",
-      "On press 1: a ledger has one row for each quantity on a document. Excluded rows stay in, with a reason, so anyone can see what was left out.",
-      "On press 3: ask the room which column would have caught the Talbrück bill.",
+      "We hold the question, the model, the prompt and the factor table constant, and change only how the data arrives.",
+      "On press 1: a ledger has one row per quantity on a document. Excluded rows stay in with a reason, so anyone sees what was left out.",
+      "On press 3: ask which column would have caught the Talbrück bill.",
       "On press 4: this row is done for you.",
-      "On press 5: fill the middle row with me. What goes into kilowatt hours? Which factor for location-based, which for market-based?",
-      "On press 6: now October, alone. Where does the number come from? Which grade, and why B?",
-      "On press 7: the control total. Every kilowatt hour on paper is either in, out with a reason, or added from the meter, so nothing is lost or counted twice without a row saying so."
+      "On press 5: fill the middle row with me. Kilowatt hours? Which factor for location-based, which for market-based?",
+      "On press 6: October, alone. Where does the number come from? Which grade, and why B?",
+      "On press 7: the control total. Every kilowatt hour on paper is in, out with a reason, or added from the meter, so nothing is lost or counted twice without a row saying so."
     ],
     "sayAt": {
       "0": [
@@ -526,25 +526,25 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     ],
     "expectedAudience": [
       "Someone says 'multiply by 1,000'; ask them to name the rule and where it is written.",
-      "Grade: someone says A; answer: a meter reading is not a bill, so B."
+      "Someone says grade A; answer: a meter reading is not a bill, so B."
     ],
     "revealOrder": [
       "Same and changed columns",
-      "Ledger columns with three excluded rows",
+      "Ledger columns, three excluded rows",
       "E-WN-01 evidence expanded",
       "Call-out: which column (answer: Company on the bill, entity_on_document)",
-      "Three completion rows replace the excerpt; worked row E-WN-03",
-      "Half-filled row E-WS-01: the room calls out kWh and both factors",
-      "E-WS-01 filled; blank row E-WN-10: the room calls out source, kWh, status, grade",
+      "Three completion rows; worked row E-WN-03",
+      "Half-filled row E-WS-01: room calls out kWh and both factors",
+      "E-WS-01 filled; blank row E-WN-10: room calls out source, kWh, status, grade",
       "E-WN-10 filled; control total"
     ],
-    "cut": "Skip press 2 and press 7; keep the three completion rows.",
+    "cut": "Skip presses 2 and 7; keep the three completion rows.",
     "appendixRoutes": [
       "appendix-arithmetic"
     ]
   },
   "six-rules": {
-    "purpose": "Six rules a controller would sign, three roles, and a pinned factor table.",
+    "purpose": "Six rules a controller would sign, three roles, a pinned factor table.",
     "mode": "vote",
     "clock": {
       "start": "34:00",
@@ -552,9 +552,9 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "budget_seconds": 270
     },
     "say": [
-      "The rules are plain sentences a controller would sign. Each one catches one of the traps we just saw.",
-      "On press 2: three roles. The reader copies what is printed, with the quote. The clerk applies the rules, in a spreadsheet, never in its head. The writer drafts sentences and cites rows. The AI may propose rules; a spreadsheet applies them, and a person approves the list.",
-      "On press 4: the factor rule matters most for a comparison. The AI picks an ID from our table and records the edition. Last year's factor looks almost the same and would wipe out the whole grid effect we are about to find.",
+      "The rules are plain sentences a controller would sign. Each catches one of the traps we just saw.",
+      "On press 2: three roles. The reader copies what is printed, with the quote. The clerk applies the rules in a spreadsheet, never in its head. The writer drafts sentences and cites rows. The AI may propose rules; a spreadsheet applies them and a person approves the list.",
+      "On press 4: for a comparison the factor rule matters most. The AI picks an ID from our table and records the edition. Last year's factor looks almost the same and would wipe out the whole grid effect we are about to find.",
       "If asked about real factors: appendix A2."
     ],
     "sayAt": {
@@ -584,14 +584,14 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       }
     ],
     "expectedAudience": [
-      "Web search is a common pick; answer: the result has no fixed edition and may not be the reporting year."
+      "Web search is a common pick; answer: the result has no fixed edition and may not be for the reporting year."
     ],
     "revealOrder": [
       "Pinned factor table",
       "Rules 1 to 3",
-      "Rules 4 to 6 and the approval line",
+      "Rules 4 to 6, approval line",
       "Room vote",
-      "Answer C and the +72.2 t effect"
+      "Answer C, +72.2 t effect"
     ],
     "cut": "Skip the vote; read rule 4 aloud.",
     "appendixRoutes": [
@@ -609,9 +609,9 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     },
     "say": [
       "Must say: Under the GHG Protocol, a company buying power in a market with certificates and supplier contracts, such as Germany, reports both Scope 2 figures. Which Scope 2 method the VSME Basic Module asks for: check the EFRAG text before the session (appendix A4).",
-      "On press 2: location-based uses the grid average where the power is used. Market-based uses what you bought. The certificate covers Werk Süd and nothing else.",
-      "On press 3: for power without a certificate the order is: a qualifying supplier rate if there is one, otherwise the residual mix. In Germany the residual mix is usually higher than the grid average, because the green attributes sold as certificates are taken out of it.",
-      "On press 5: the certificate takes 496.0 tonnes out. The residual mix on the other 2,370 megawatt hours puts 474.0 back.",
+      "On press 2: location-based uses the grid average where the power is used; market-based uses what you bought. The certificate covers Werk Süd only.",
+      "On press 3: for power without a certificate, use a qualifying supplier rate if there is one, otherwise the residual mix. In Germany the residual mix is usually above the grid average, because the green attributes sold as certificates are taken out of it.",
+      "On press 5: the certificate takes 496.0 tonnes out; the residual mix on the other 2,370 megawatt hours puts 474.0 back.",
       "On press 6: so market-based is only 22.0 tonnes lower. Do not let one certificate turn into a sentence about the whole company."
     ],
     "sayAt": {
@@ -654,13 +654,13 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       }
     ],
     "expectedAudience": [
-      "Most expect the green tariff to show a big drop; the 22.0 t is the aha."
+      "Most expect a big drop from the green tariff; the 22.0 t is the surprise."
     ],
     "revealOrder": [
-      "Certificate card and the 34.3% bar",
+      "Certificate card, 34.3% bar",
       "Vote 1",
       "Both Scope 2 numbers",
-      "Wrong options and the claim line",
+      "Wrong options, claim line",
       "Vote 2",
       "Bridge bars",
       "22.0 t line"
@@ -671,7 +671,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     ]
   },
   "rematch": {
-    "purpose": "Ask the same question on the ledger: every figure names its rows, both Scope 2 methods, and what was not checked.",
+    "purpose": "Same question on the ledger: rows behind every figure, both Scope 2 methods, what was not checked.",
     "mode": "listen",
     "clock": {
       "start": "44:00",
@@ -679,9 +679,9 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "budget_seconds": 240
     },
     "say": [
-      "Same question, same model. This time every figure names its rows, the meter reading is labelled as one, both Scope 2 numbers use the right method, and the answer says what it did not check.",
+      "Same question, same model. Now every figure names its rows, the meter reading is labelled, both Scope 2 numbers use the right method, and the answer says what it did not check.",
       "On press 3: the total moved by 48.7 tonnes. More important, every tonne now has a row and a page behind it.",
-      "If the answer is still the constructed target: say so. 'This is the answer we expect. Recorded runs will go into appendix A3 once they are captured; the capture protocol is there now.'"
+      "If the answer is still the constructed target, say so: 'This is the answer we expect. Recorded runs go into appendix A3 once captured; the capture protocol is there now.'"
     ],
     "sayAt": {
       "0": [
@@ -716,7 +716,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     ]
   },
   "trace-two": {
-    "purpose": "Pairs trace three figures back to paper: worked, half done, alone.",
+    "purpose": "Pairs trace three figures to paper: worked, half done, alone.",
     "mode": "pair",
     "clock": {
       "start": "48:00",
@@ -724,10 +724,10 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "budget_seconds": 360
     },
     "say": [
-      "Work in pairs, on paper, no tools. The first figure is done, the second is half done, the third is yours. Four minutes.",
+      "In pairs, on paper, no tools. The first figure is done, the second half done, the third is yours. Four minutes.",
       "Presenter cue: walk the room at minute two; point stuck pairs to page 2 of the gas bill.",
       "On press 2: compare. On press 3: two slips, and one other route that is also right.",
-      "This is what a customer's auditor does with your page: pick a number, ask for the rows, pick a row, ask for the paper."
+      "A customer's auditor does this with your page: pick a number, ask for the rows, pick a row, ask for the paper."
     ],
     "sayAt": {
       "0": [
@@ -745,7 +745,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     },
     "ask": [],
     "expectedAudience": [
-      "Common slips: 418.0 t for gas (Hi factor); 3,650,000 kWh for the grid bar. Real shares of each slip will be added once test runs are recorded (appendix A3)."
+      "Common slips: 418.0 t for gas (Hi factor); 3,650,000 kWh for the grid bar. Shares per slip follow once test runs are recorded (appendix A3)."
     ],
     "revealOrder": [
       "Worksheet with three figures",
@@ -757,7 +757,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "appendixRoutes": []
   },
   "what-drove-it": {
-    "purpose": "Split the change against 2024 into drivers, per method, and rewrite the AI's reason from the driver lines.",
+    "purpose": "Split the change against 2024 into drivers per method; rewrite the AI's reason from them.",
     "mode": "vote",
     "clock": {
       "start": "54:00",
@@ -767,7 +767,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "say": [
       "On press 2: in this case's teaching values, 71% of the location-based decrease is the lower grid factor. It is real, and it is not Kellbrunn's doing.",
       "On press 3: the market-based decrease is almost all the certificate for Werk Süd: 95%.",
-      "Kellbrunn's own lower use is 30.1 t location-based, and without production figures nobody can call that efficiency yet.",
+      "Kellbrunn's own lower use is 30.1 t location-based. Without production figures nobody can call that efficiency yet.",
       "On press 4: read the sentence. Every number in it has a driver line behind it.",
       "If someone quotes a fall of about 39.4% since 2023: appendix A6."
     ],
@@ -801,13 +801,13 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       }
     ],
     "expectedAudience": [
-      "Most pick efficiency, which is the AI's claim."
+      "Most pick efficiency, the AI's claim."
     ],
     "revealOrder": [
       "Both bridges on one scale, totals only; the AI's sentence, not yet struck",
       "Room vote",
       "Location-based bars and driver names; the AI's sentence struck through",
-      "Market-based bars, driver names and the residual-mix caption",
+      "Market-based bars, driver names, residual-mix caption",
       "Rewritten sentence"
     ],
     "cut": "Skip the market-based bridge; say the 744.0 t in one sentence.",
@@ -817,7 +817,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     ]
   },
   "ask-back": {
-    "purpose": "Sort five requests: calculate what the ledger supports, ask back where a person decides, refuse or rewrite claims the evidence cannot carry.",
+    "purpose": "Sort five requests: calculate, ask back where a person decides, refuse or rewrite.",
     "mode": "do",
     "clock": {
       "start": "59:30",
@@ -825,8 +825,8 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "budget_seconds": 270
     },
     "say": [
-      "A useful assistant does three different things: it calculates what the ledger supports, asks back where a person decides, and refuses claims the evidence cannot carry.",
-      "On card 4: refuse it because nothing in the ledger supports it. From 27 September 2026, Directive (EU) 2024/825 bans, towards consumers, generic environmental claims such as 'eco-friendly' unless recognised excellent environmental performance can be shown, and claims that a product is climate-neutral based on offsets (in Germany through an amendment to the UWG, known from secondary sources; check the current text). Whether your own website is aimed at consumers is a question for your lawyer. German unfair-competition law (UWG) can also apply to misleading claims towards business customers; check with a lawyer.",
+      "A useful assistant does three things: it calculates what the ledger supports, asks back where a person decides, and refuses claims the evidence cannot carry.",
+      "On card 4: refuse, because nothing in the ledger supports it. If asked about the green-claim rules from 27 September 2026: appendix A4, item 6.",
       "Must say: Not legal advice. Check the German transposition.",
       "On press 5: this is the answer we want from the raw folder. It raises seven points for a person before it commits to a number."
     ],
@@ -852,7 +852,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       }
     ],
     "expectedAudience": [
-      "Card 3 is often put under Calculate; answer: rewrite with the share and the site.",
+      "Card 3 often lands under Calculate; answer: rewrite with the share and the site.",
       "Card 5 splits the room."
     ],
     "revealOrder": [
@@ -871,7 +871,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     ]
   },
   "limits": {
-    "purpose": "Say in plain words what the session does not show.",
+    "purpose": "Say plainly what the session does not show.",
     "mode": "listen",
     "clock": {
       "start": "64:00",
@@ -880,7 +880,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     },
     "say": [
       "Today does not show that any tool gets this right or wrong in general.",
-      "On press 3: the ledger lets you check a number against its bill. If the bill is wrong, the ledger carries the error, and it knows nothing about sources nobody put in the folder. Write what you did not check on the page itself.",
+      "On press 3: the ledger checks a number against its bill. If the bill is wrong, the ledger carries the error, and it knows nothing about sources nobody put in the folder. Write what you did not check on the page itself.",
       "Must say: Not legal or audit advice."
     ],
     "sayAt": {
@@ -910,7 +910,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     ]
   },
   "your-bill": {
-    "purpose": "Each person fills the five boxes for one bill of their own, then compares with a partner.",
+    "purpose": "Each person fills five boxes for one bill, then compares with a partner.",
     "mode": "write",
     "clock": {
       "start": "66:30",
@@ -919,7 +919,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     },
     "say": [
       "Must say: No company data goes into any tool today.",
-      "Take one bill you know from work, or invent a realistic one. Fill the five boxes: where it comes from, which period, which unit, whether it is inside your boundary, and which factor with which year.",
+      "Take one bill you know from work, or invent a realistic one. Fill the five boxes: source, period, unit, whether it is inside your boundary, and which factor from which year.",
       "On press 6: tell your neighbour which box was hardest. Two pairs share with the room."
     ],
     "sayAt": {
@@ -941,7 +941,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       }
     ],
     "expectedAudience": [
-      "Boundary and factor are the usual hardest boxes."
+      "Boundary and factor are usually the hardest."
     ],
     "revealOrder": [
       "Sheet with example",
@@ -956,7 +956,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "appendixRoutes": []
   },
   "resolution": {
-    "purpose": "Close the loop: both answers, the number ladder, the same vote as at the start, four questions to take home.",
+    "purpose": "Both answers, the number ladder, the opening vote again, four questions to take home.",
     "mode": "vote",
     "clock": {
       "start": "73:30",
@@ -1015,8 +1015,8 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "budget_seconds": 0
     },
     "say": [
-      "Point to the line that answers the question; every figure here is also in the kit file erwartet/ergebnisse_2025.md.",
-      "Totals are computed from unrounded values and rounded once. The location-based shares are rounded one by one, which is why only the top three are shown."
+      "Point to the line that answers the question; every figure is also in the kit file erwartet/ergebnisse_2025.md.",
+      "Totals are computed from unrounded values and rounded once. Location-based shares are rounded one by one, so only the top three are shown."
     ],
     "sayAt": {
       "0": [
@@ -1035,13 +1035,13 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "appendixRoutes": []
   },
   "appendix-factors": {
-    "purpose": "Where real factors come from, and what to record about each one.",
+    "purpose": "Where real factors come from, and what to record about each.",
     "mode": "listen",
     "clock": {
       "budget_seconds": 0
     },
     "say": [
-      "The case uses teaching values so everyone can check the arithmetic. None of them is an official factor.",
+      "The case uses teaching values so everyone can check the arithmetic. None is an official factor.",
       "For a real inventory, record source, edition, year, region, basis and licence for every factor, and check the licence before you paste values into an external tool.",
       "The UBA values come from search summaries read on 26 September 2026, and UBA revises earlier years; re-check them before quoting."
     ],
@@ -1065,14 +1065,14 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "appendixRoutes": []
   },
   "appendix-run-record": {
-    "purpose": "How the two answers were produced, and what is still missing.",
+    "purpose": "How the two answers were produced, and what is missing.",
     "mode": "listen",
     "clock": {
       "budget_seconds": 0
     },
     "say": [
-      "Both answers on the slides are constructed. The raw-folder answer shows what happens when all seven traps fire (six data traps and the market-based method error); it is not a recorded run.",
-      "Before publication both conditions are run five times each with the protocol in the kit, and this table is filled from the runs."
+      "Both answers on the slides are constructed; the raw-folder answer is not a recorded run.",
+      "Before publication each condition runs five times with the kit's protocol, and this table is filled from the runs."
     ],
     "sayAt": {
       "0": [
@@ -1091,7 +1091,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "appendixRoutes": []
   },
   "appendix-regulation": {
-    "purpose": "What is true about the rules on 26 September 2026, with the items that need a check before the session.",
+    "purpose": "The rules on 26 September 2026, and what needs a check before the session.",
     "mode": "listen",
     "clock": {
       "budget_seconds": 0
@@ -1136,7 +1136,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     },
     "say": [
       "Two of the six sentences are false, not only imprecise: the green electricity claim and the rise in Scope 1.",
-      "The per-employee figure looked like a check, but it was computed from the same wrong total."
+      "The per-employee figure looked like a check, but it came from the same wrong total."
     ],
     "sayAt": {
       "0": [
@@ -1181,14 +1181,14 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "appendixRoutes": []
   },
   "appendix-steel": {
-    "purpose": "Scope 3 from a supplier's reply: which of the three numbers to use.",
+    "purpose": "Scope 3 from a supplier's reply: which of three numbers to use.",
     "mode": "listen",
     "clock": {
       "budget_seconds": 0
     },
     "say": [
       "Only the product footprint describes the steel Kellbrunn bought. The supplier's own Scope 1 and 2 intensity leaves out most of the steel's footprint.",
-      "Spend-based figures move with prices: the tonnage stayed flat while the nominal spend rose."
+      "Spend-based figures move with prices: the tonnage stayed flat while nominal spend rose."
     ],
     "sayAt": {
       "0": [
@@ -1214,7 +1214,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     },
     "say": [
       "Certificates first, for the kilowatt hours they cover; then a qualifying supplier rate; then the residual mix for the rest.",
-      "The kit's bills leave out the Stromkennzeichnung, so step 2 is empty in this case. Real bills carry it."
+      "The kit's bills leave out the Stromkennzeichnung, so step 2 is empty here. Real bills carry it."
     ],
     "sayAt": {
       "0": [
@@ -1233,7 +1233,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     "appendixRoutes": []
   },
   "appendix-sources": {
-    "purpose": "The sources behind the rules, dates and published figures in this workshop.",
+    "purpose": "The sources behind the rules, dates and published figures.",
     "mode": "listen",
     "clock": {
       "budget_seconds": 0

@@ -188,13 +188,13 @@ const STUDIO_COPY = {
     evidence: "Erwartete Evidenz",
     completedSummary: "Verifikationsnotiz",
     milestone:
-      "Der verifizierte Artefaktstatus ist im Lernfortschritt gespeichert.",
+      "Die Verifizierung ist im Lernfortschritt gespeichert.",
     stageDone: "Phasenmissionen abgeschlossen",
     stageLocked: "Vorherige Projektphase zuerst abschließen",
     verifyLocked:
-      "Die Projektabnahme wird erst nach allen fünf abgeschlossenen Phasenmissionen freigeschaltet.",
+      "Die Projektabnahme öffnet erst nach allen fünf Phasenmissionen.",
     persistFailed:
-      "Verifizierung nicht gespeichert: Der Lernfortschritt konnte nicht sicher geschrieben werden. Das Artefakt bleibt in dieser Sitzung bearbeitbar.",
+      "Verifizierung nicht gespeichert. Du kannst das Artefakt in dieser Sitzung weiter bearbeiten.",
   },
   en: {
     eyebrow: "Applied course project",
@@ -216,13 +216,13 @@ const STUDIO_COPY = {
     evidence: "Expected evidence",
     completedSummary: "Verification note",
     milestone:
-      "The verified artifact milestone is stored in learning progress.",
+      "The verification is saved in your learning progress.",
     stageDone: "Stage missions complete",
     stageLocked: "Complete the preceding project stage first",
     verifyLocked:
-      "Project acceptance unlocks only after all five stage missions are complete.",
+      "Project acceptance unlocks only after all five stage missions.",
     persistFailed:
-      "Verification was not stored: learning progress could not be written safely. The artifact remains editable in this session.",
+      "Verification was not stored. You can keep editing the artifact in this session.",
   },
 } as const;
 
@@ -1072,9 +1072,6 @@ function CourseProjectCheckpointStudio({
                 <div className="min-w-0">
                   <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange-dark">
                     {copy.ready}
-                  </p>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {currentStage.objective[locale]}
                   </p>
                 </div>
                 <button

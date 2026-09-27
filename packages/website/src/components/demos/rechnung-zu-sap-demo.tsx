@@ -325,8 +325,8 @@ export default function RechnungZuSapDemo() {
       </h2>
       <p className="text-caption text-muted-foreground" style={{ margin: 0, maxWidth: 720 }}>
           {text(
-            "Laufzeit und Fehlerquote hängen von Belegqualität, Regeln und Review ab. Hier werden nur feste Beispieldaten verarbeitet.",
-            "Runtime and error rate depend on document quality, rules, and review. This interface processes fixed sample data only.",
+            "Echte Laufzeit und Fehlerquote hängen von Belegqualität, Regeln und Review ab.",
+            "Real runtime and error rate depend on document quality, rules and review.",
           )}
         </p>
 

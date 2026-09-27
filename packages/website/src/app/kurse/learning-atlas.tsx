@@ -40,7 +40,7 @@ import { FILTER_CHIP_CLASS } from "@/components/werk/chip";
 import { cx } from "@/components/werk/cx";
 import { notifyUrlStateChanged } from "@/lib/navigation/url-state";
 import { PosterThumb } from "@/components/plakat";
-import { coursePlakat, PLAKAT_KEYS } from "@/lib/plakat/palettes";
+import { coursePlakat, PLAKAT_KEYS, type PlakatKey } from "@/lib/plakat/palettes";
 import type { CourseAccess, CourseAccessBySlug } from "@/lib/courses/access";
 import {
   CourseLedgerRow,
@@ -69,6 +69,24 @@ function byTrackScene(courses: readonly Course[]): Course[] {
     .map((course, index) => ({ course, index }))
     .sort((a, b) => rank(a.course) - rank(b.course) || a.index - b.index)
     .map(({ course }) => course);
+}
+
+/**
+ * The rows of a group split into runs of one scene, in order. A group with
+ * two scenes (the Technikkurse: IDEA, then Bloom) names each run, so the
+ * colour change always has a label (SPEC §2.2).
+ */
+function sceneRuns(
+  courses: readonly Course[],
+): { readonly scene: PlakatKey | undefined; readonly courses: Course[] }[] {
+  const runs: { scene: PlakatKey | undefined; courses: Course[] }[] = [];
+  for (const course of courses) {
+    const scene = coursePlakat(course.slug)?.plakat;
+    const last = runs.at(-1);
+    if (last && last.scene === scene) last.courses.push(course);
+    else runs.push({ scene, courses: [course] });
+  }
+  return runs;
 }
 
 /**
@@ -131,6 +149,7 @@ const ATLAS_COPY = {
     groupUnavailable: "hier nicht verfügbar",
     groupAccountRequired: "Lernkonto nötig",
     groupSource: "Quellcode aller Technikkurse",
+    sceneSubheads: { idea: "Prompting und Agenten", bloom: "Daten" },
     unavailableAction: "Hier nicht verfügbar · Kursübersicht",
     overview: "Kursübersicht",
     accessTerm: "Zugang",
@@ -178,6 +197,7 @@ const ATLAS_COPY = {
     groupUnavailable: "unavailable here",
     groupAccountRequired: "account required",
     groupSource: "source code of all technical courses",
+    sceneSubheads: { idea: "Prompting and agents", bloom: "Data" },
     unavailableAction: "Unavailable here · Course overview",
     overview: "Course overview",
     accessTerm: "Access",
@@ -214,6 +234,8 @@ const ATLAS_COPY = {
       readonly groupUnavailable: string;
       readonly groupAccountRequired: string;
       readonly groupSource: string;
+      /** Names the track inside a group that holds two scenes (SPEC §2.2). */
+      readonly sceneSubheads: Partial<Record<PlakatKey, string>>;
       readonly goals: readonly LearningGoal[];
     }
   >
@@ -244,6 +266,7 @@ export function LearningAtlas({
   readonly access: CourseAccessBySlug;
 }) {
   const copy = ATLAS_COPY[locale];
+  const sceneSubheads: Partial<Record<PlakatKey, string>> = copy.sceneSubheads;
   const sections = courseSections(locale);
   const courses = localizeCatalog(ALL_COURSE_CATALOG, locale);
   // Null keeps the default recommendation distinct from an explicit choice
@@ -785,22 +808,47 @@ export function LearningAtlas({
                   </a>
                 ) : null}
               </div>
-              <ol>
-                {group.courses.map((course) => (
-                  <CourseLedgerRow
-                    key={course.slug}
-                    course={course}
-                    inPath={selectedSlugs.has(course.slug)}
-                    visible={matchesLevel(course, levelFilter)}
-                    stat={stats[course.slug]}
-                    locale={locale}
-                    copy={copy}
-                    access={access[course.slug] ?? "unavailable"}
-                    accessInGroupHead={groupAccess !== null}
-                    sourceInGroupHead={groupSource !== null}
-                  />
-                ))}
-              </ol>
+              {sceneRuns(group.courses).map((run, runIndex, runs) => {
+                const subhead =
+                  runs.length > 1 && run.scene ? sceneSubheads[run.scene] : undefined;
+                const subheadId = subhead ? `${group.id}-${run.scene}` : undefined;
+                return (
+                  <div
+                    key={run.scene ?? runIndex}
+                    data-scene-run={run.scene}
+                    className={cx(
+                      subhead && "mt-4 first:mt-2 sm:mt-6 sm:first:mt-3",
+                      !run.courses.some((course) => matchesLevel(course, levelFilter)) &&
+                        "hidden lg:block",
+                    )}
+                  >
+                    {subhead ? (
+                      <p
+                        id={subheadId}
+                        className="text-label font-semibold text-muted-foreground"
+                      >
+                        {subhead}
+                      </p>
+                    ) : null}
+                    <ol aria-labelledby={subheadId}>
+                      {run.courses.map((course) => (
+                        <CourseLedgerRow
+                          key={course.slug}
+                          course={course}
+                          inPath={selectedSlugs.has(course.slug)}
+                          visible={matchesLevel(course, levelFilter)}
+                          stat={stats[course.slug]}
+                          locale={locale}
+                          copy={copy}
+                          access={access[course.slug] ?? "unavailable"}
+                          accessInGroupHead={groupAccess !== null}
+                          sourceInGroupHead={groupSource !== null}
+                        />
+                      ))}
+                    </ol>
+                  </div>
+                );
+              })}
             </section>
             );
           })}

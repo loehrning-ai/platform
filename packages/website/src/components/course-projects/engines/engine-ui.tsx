@@ -45,14 +45,11 @@ export function EngineFrame({
         className="min-w-0 border-2 border-foreground bg-card shadow-[5px_5px_0_0_rgba(11,9,8,0.16)]"
       >
         <header className="border-b-2 border-foreground bg-foreground px-4 py-4 text-background sm:px-6">
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-[#ffc6aa]">
-            {engineLabel} · {config.id}
-          </p>
           <h2
             id={`${config.id}-project-title`}
-            className="mt-2 break-words text-xl font-black leading-tight sm:text-2xl"
+            className="break-words text-xl font-black leading-tight sm:text-2xl"
           >
-            {projectText(config.title, locale)}
+            {engineLabel}
           </h2>
         </header>
 

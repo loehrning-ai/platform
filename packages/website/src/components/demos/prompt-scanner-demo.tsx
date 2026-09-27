@@ -289,12 +289,6 @@ export default function PromptScannerDemo() {
       <h2 className="sr-only">
         {copy("Prompt prüfen", "Check a prompt")}
       </h2>
-      <p className="text-caption text-muted-foreground" style={{ margin: 0, maxWidth: 720 }}>
-          {copy(
-            "Lokale Regelprüfung mit Beispieldaten. Treffer werden vor einer Weitergabe markiert.",
-            "Local rule check with sample data. Matches are marked before any submission.",
-          )}
-        </p>
 
       <div
         style={{

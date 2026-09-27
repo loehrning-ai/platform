@@ -122,26 +122,26 @@ export default function RepoLab({
           mode: "Ausführungsmodus",
           browserMode: "Browser-Simulation",
           browserDetail:
-            "Sofort verfügbar. Befehle verändern nur den lokalen Übungszustand im Browser.",
+            "Befehle ändern nur den Übungsstand im Browser.",
           sandboxMode: "Isolierter echter Lauf",
           sandboxDetail:
-            "Startet bei Freigabe eine kurzlebige Node-24-microVM mit gesperrtem Netzwerk und ausschließlich synthetischen Dateien.",
+            "Startet eine kurzlebige Node-24-microVM ohne Netzwerk, nur mit synthetischen Dateien.",
           sandboxTitle: "Echte Sandbox-Ausführung",
           sandboxBoundary:
-            "Feste Sequenz, keine freie Shell: Ausgangslauf → fehlschlagender Test → begrenzter Fix → grüner Test → echter Git-Diff.",
+            "Feste Sequenz ohne freie Shell: Ausgangslauf → roter Test → begrenzter Fix → grüner Test → echter Git-Diff.",
           sandboxRun: "Isolierten Lauf starten",
           sandboxRunning: "Isolierte microVM läuft …",
           sandboxUnavailable:
-            "Echte Sandbox nicht verfügbar. Es wurde kein Befehl simuliert. Die Browser-Simulation bleibt separat verfügbar.",
+            "Echte Sandbox nicht verfügbar. Es wurde nichts simuliert; die Browser-Simulation bleibt nutzbar.",
           sandboxMalformed:
-            "Die Sandbox-Antwort war ungültig. Es wird keine Ausgabe erfunden.",
+            "Die Sandbox-Antwort war ungültig; es wird keine Ausgabe erfunden.",
           sandboxResult: "Echte Befehlsausgabe",
           sandboxDiff: "Echter Git-Diff",
           sandboxRuntime:
             "Node 24 · Netzwerk deny-all · nicht persistent · synthetischer Arbeitsbereich",
           spec: "Editierbarer AGENTS.md-Auftrag",
           specHelp:
-            "Beschreibe gewünschtes Verhalten und ein prüfbares Akzeptanzkriterium.",
+            "Beschreibe das gewünschte Verhalten und ein prüfbares Akzeptanzkriterium.",
           specPlaceholder:
             "Scope: src/retry.ts. Nicht-Ziel: öffentliche API ändern. Akzeptanz: exponentieller Backoff, idempotenter Schlüssel, Test/Typecheck/Lint grün.",
           terminal: "Befehlsterminal",
@@ -161,16 +161,16 @@ export default function RepoLab({
           lintEvidence: "Lint nach dem Patch ausgeführt",
           diffEvidence: "Diff nach dem Patch inspiziert",
           pending:
-            "Abnahme gesperrt: Task-Spec, alle fünf Projektphasen und eine vollständig attestierte echte Sandbox-Sequenz sind erforderlich. Browser-Simulation zählt nicht.",
+            "Abnahme gesperrt: Nötig sind Task-Spec, alle fünf Projektphasen und eine voll attestierte echte Sandbox-Sequenz.",
           ready:
-            "Task-Spec und vollständig attestierte echte Sandbox-Sequenz sind belegt.",
+            "Task-Spec und voll attestierte echte Sandbox-Sequenz belegt.",
           browserNonVerifying:
-            "Übungsmodus. Synthetische In-Browser-Ausgaben und grüne Statusmarken sind keine Abnahme-Evidenz.",
+            "Übungsmodus: Ausgaben und grüne Statusmarken im Browser sind keine Abnahme-Evidenz.",
           sandboxEvidence:
-            "Attestierte Sequenz: Baseline, erwarteter Fehlschlag, begrenzter Fix, grüner Wiederholungstest, Quellprüfung, Diff-Prüfung und begrenzter Git-Diff",
+            "Attestierte Sequenz: Baseline, erwarteter Fehlschlag, begrenzter Fix, grüne Wiederholung, Quell- und Diff-Prüfung, begrenzter Git-Diff",
           stageEvidence: "Alle fünf Projektphasen abgeschlossen",
           summary:
-            "Repository-Labor verifiziert: Task-Spec und vollständig attestierte isolierte Sandbox-Sequenz mit erwartetem roten/grünen Testlauf, Quellprüfung und begrenztem Diff.",
+            "Repository-Labor verifiziert: Task-Spec und voll attestierte isolierte Sandbox-Sequenz mit Rot/Grün-Test, Quellprüfung und begrenztem Diff.",
         }
       : {
           engine: "Repository lab",
@@ -179,17 +179,17 @@ export default function RepoLab({
           mode: "Execution mode",
           browserMode: "Browser simulation",
           browserDetail:
-            "Always available. Commands modify only the local exercise state in this browser.",
+            "Commands change only the exercise state in this browser.",
           sandboxMode: "Isolated real run",
           sandboxDetail:
-            "When enabled, starts a short-lived Node 24 microVM with deny-all networking and synthetic files only.",
+            "Starts a short-lived Node 24 microVM with no network and synthetic files only.",
           sandboxTitle: "Real sandbox execution",
           sandboxBoundary:
-            "Fixed sequence, no free shell: baseline → failing test → bounded fix → passing test → actual Git diff.",
+            "Fixed sequence, no free shell: baseline → failing test → bounded fix → passing test → real Git diff.",
           sandboxRun: "Start isolated run",
           sandboxRunning: "Isolated microVM running …",
           sandboxUnavailable:
-            "Real sandbox unavailable. No command was simulated. The browser simulation remains a separate fallback.",
+            "Real sandbox unavailable. Nothing was simulated; the browser simulation still works.",
           sandboxMalformed:
             "The sandbox response was invalid. No output is being invented.",
           sandboxResult: "Actual command output",
@@ -219,16 +219,16 @@ export default function RepoLab({
           lintEvidence: "Lint run after the patch",
           diffEvidence: "Post-patch diff inspected",
           pending:
-            "Acceptance locked: the task spec, all five project stages, and one fully attested real Sandbox sequence are required. Browser simulation does not count.",
+            "Acceptance locked: needs the task spec, all five project stages and one fully attested real Sandbox sequence.",
           ready:
-            "The task spec and fully attested real Sandbox sequence are evidenced.",
+            "Task spec and fully attested real Sandbox sequence evidenced.",
           browserNonVerifying:
-            "Practice mode. Synthetic in-browser output and green status marks are not acceptance evidence.",
+            "Practice mode: browser output and green status marks are not acceptance evidence.",
           sandboxEvidence:
-            "Attested sequence: baseline, expected failure, bounded fix, passing rerun, source check, diff check, and scoped Git diff",
+            "Attested sequence: baseline, expected failure, bounded fix, passing rerun, source and diff check, scoped Git diff",
           stageEvidence: "All five project stages completed",
           summary:
-            "Repository lab verified: task spec plus a fully attested isolated Sandbox sequence with expected red/green tests, source check, and scoped diff.",
+            "Repository lab verified: task spec and a fully attested isolated Sandbox sequence with red/green tests, source check and scoped diff.",
         };
 
   const normalizedSpec = spec.trim().toLowerCase();
@@ -306,8 +306,8 @@ export default function RepoLab({
         command: "reset",
         output:
           locale === "de"
-            ? "Repository, Spezifikation und Evidenz wurden auf den Ausgangszustand gesetzt."
-            : "Repository, specification, and evidence were restored to the initial state.",
+            ? "Repository, Spezifikation und Evidenz zurückgesetzt."
+            : "Repository, specification and evidence reset.",
       },
     ]);
   }

@@ -177,10 +177,9 @@ export function Ch0Fundamentals({ chapter }: Ch0FundamentalsProps) {
         <SectionLabel n="0.6">How a query becomes work</SectionLabel>
         <h2 className="h2">Five transformations between your text and your bytes.</h2>
         <p className="prose">
-          A coordinator walks SQL through a chain: the parser builds an <b>AST</b>,
-          analyzer resolves names against the catalog, planner emits a<b> logical</b> tree of relational operators, then a <b>physical</b> plan
-          with exchange types and worker counts, and finally a <b>task graph</b> of stages dispatched across the cluster. What
-          <code>EXPLAIN</code> or <code>EXPLAIN ANALYZE</code> shows depends on the engine.
+          A coordinator parses SQL into an <b>AST</b>, resolves names against the catalog, builds a <b>logical</b> and then a{" "}
+          <b>physical</b> plan, and dispatches a <b>task graph</b> of stages across the cluster. What <code>EXPLAIN</code> or{" "}
+          <code>EXPLAIN ANALYZE</code> shows depends on the engine.
         </p>
         <SqlDecoderStage />
       </section>

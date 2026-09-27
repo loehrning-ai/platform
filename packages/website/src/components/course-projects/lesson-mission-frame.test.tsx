@@ -46,6 +46,6 @@ describe("LessonMissionFrame", () => {
     expect(
       screen.queryByRole("list", { name: "Schlüsselkonzepte" }),
     ).toBeNull();
-    expect(screen.getByText(/synthetischen Fall/)).toBeInTheDocument();
+    expect(screen.getByText(/Übungsfall/)).toBeInTheDocument();
   });
 });

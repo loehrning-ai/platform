@@ -39,9 +39,9 @@ export const BLOG_POSTS: readonly BlogPost[] = [
     titleDe: "Der EU AI Act: was er bedeutet, wenn du keine Juristin bist",
     titleEn: "The EU AI Act: what it means if you are not a lawyer",
     summary:
-      "Was der EU AI Act regelt, was schon gilt und was ab 2. August 2026 dazukommt. Mit dem Stand zum AI Omnibus (Juli 2026), deinen Rechten nach Art. 50, 85 und 86 und praktischen Schritten. Alle Angaben mit Primärquellen.",
+      "Was der EU AI Act regelt, was schon gilt und was ab 2. August 2026 dazukommt, nach dem Stand zum AI Omnibus (Juli 2026).",
     summaryEn:
-      "What the EU AI Act regulates, what already applies, and what changes on 2 August 2026. Covers the July 2026 AI Omnibus position, rights under Articles 50, 85, and 86, and practical steps. Every legal claim links to a primary source.",
+      "What the EU AI Act regulates, what already applies and what changes on 2 August 2026, as of the AI Omnibus (July 2026).",
     datePublished: "2026-07-16",
     dateModified: "2026-07-28",
     tags: ["EU AI Act", "Rechtliche Grundlagen"],

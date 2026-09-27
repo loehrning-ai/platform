@@ -65,8 +65,6 @@ Leite die Regel aus beobachteter Verzögerung, inaktiven Partitionen, Uhrenquali
 - **Exactly-once.** Innerhalb eines Umfangs sieht die commitete Ausgabe aus, als hätte jede Eingabe einmal gewirkt, umgesetzt über Transaktionen, Checkpoints, wiedereinspielbare Quellen, idempotente Ziele oder koordinierte Offsets. Externe APIs gehören nicht automatisch dazu.
 
 Kafka-Transaktionen veröffentlichen Ausgabe und konsumierte Offsets auf einem Kafka-zu-Kafka-Read-Process-Write-Pfad atomar, wenn Producer, Consumer, Isolation und Broker mitspielen. Flink verlangt für End-to-End-Exactly-once wiedereinspielbare Quellen und transaktionale oder idempotente Ziele. Liste alle Seiteneffekte auf und prüfe die Wiederherstellung mit Fehlerinjektion.`,
-      keyTakeaway:
-        "Eine Verarbeitungsgarantie gilt nur für benannte Quelle, Zustand, Ziel, Konfiguration und Fehlermodell.",
     },
     {
       id: "s5c",
@@ -75,14 +73,14 @@ Kafka-Transaktionen veröffentlichen Ausgabe und konsumierte Offsets auf einem K
 
 | Entscheidung | Evidenz |
 |---|---|
-| Verarbeitungsmodus | Scheduling von Datensätzen oder Micro-Batches und APIs je Modus |
-| Zustand | Größe, Backend, Checkpoint-Dauer, Wiederherstellung, Rescaling und Schemaentwicklung |
-| Ereigniszeit | Watermark-Erzeugung, inaktive Eingaben, Fenster, Joins, Timer und Late-Data-Korrekturen |
-| Garantien | Quell-Replay, Zustandssemantik, Zielbeteiligung, Offset-Commits und Fehlertests |
-| Latenz und Durchsatz | Gemessene Perzentile unter Normalbetrieb, Backpressure, Checkpoints und Wiederherstellung |
-| Betrieb | Deployment, Upgrades, Savepoints/Checkpoints, Observability, Kosten und Zuständigkeit |
+| Verarbeitungsmodus | Scheduling von Datensätzen oder Micro-Batches; APIs je Modus |
+| Zustand | Größe, Backend, Checkpoint-Dauer, Wiederherstellung, Rescaling, Schemaentwicklung |
+| Ereigniszeit | Watermarks, inaktive Eingaben, Fenster, Joins, Timer, späte Korrekturen |
+| Garantien | Quell-Replay, Zustandssemantik, Zielbeteiligung, Offset-Commits, Fehlertests |
+| Latenz und Durchsatz | Gemessene Perzentile unter Last, Backpressure, Checkpoints, Wiederherstellung |
+| Betrieb | Deployment, Upgrades, Savepoints, Observability, Kosten, Zuständigkeit |
 
-Die offizielle Dokumentation trennt bei Spark Structured Streaming den standardmäßigen Micro-Batch-Modus von einem kontinuierlichen Modus mit anderen Garantien; Flink trennt Zustandsgarantien von End-to-End-Zielgarantien.`,
+Spark Structured Streaming etwa arbeitet standardmäßig mit Micro-Batches und bietet einen getrennten kontinuierlichen Modus mit anderen Garantien.`,
     },
     {
       id: "s6",
@@ -92,19 +90,14 @@ Die offizielle Dokumentation trennt bei Spark Structured Streaming den standardm
     {
       id: "s7",
       title: "Kernaussagen",
-      content: `- Teste das Zeitmodell mit verzögerter, doppelter und ungeordneter Eingabe.
-- Lege für jede Watermark-Regel Korrektur, Aufbewahrung und Consumer-Verhalten bei verspäteten Daten fest.
-- Grenze jede Zustellgarantie ein und teste jeden externen Seiteneffekt.
-- Wähle Engines nach gemessener Last auf der aktuellen Version.`,
+      content: `- Teste mit verzögerter, doppelter und ungeordneter Eingabe.
+- Teste jeden externen Seiteneffekt mit Fehlerinjektion.`,
     },
     {
       id: "s8",
       title: "Begriffe",
       content: `- **Kompaktiertes Topic**, behält mindestens den neuesten Wert je Schlüssel und entfernt ältere verzögert.
 - **ISR**, nach Broker-Regeln synchrone Replikate; mit den Producer-Bestätigungen bestimmen sie die Dauerhaftigkeit.
-- **At-most-once**, kann Effekte auslassen und vermeidet Replay innerhalb seines Umfangs.
-- **At-least-once**, kann Effekte wiederholen; Idempotenz braucht eine stabile Vorgangsidentität.
-- **Exactly-once**, commitete Ausgabe spiegelt jede Eingabe einmal, innerhalb eines benannten Umfangs.
 - **Backpressure**, nachgelagerte Grenzen, die vorgelagerte Arbeit bremsen oder stauen.
 - **Zulässige Verspätung**, wie lange ein Fenster Zustand hält, um verspätete Ereignisse anzunehmen oder zu korrigieren.`,
     },
@@ -117,7 +110,7 @@ Die offizielle Dokumentation trennt bei Spark Structured Streaming den standardm
       question:
         "Ein Team legt für das Topic `page_views` vier Partitionen an. Ein Jahr später sollen 50 Consumer derselben Consumer Group parallel arbeiten. Welches Problem entsteht?",
       options: [
-        "Keines; Kafka skaliert automatisch.",
+        "Keines; Kafka skaliert Consumer automatisch.",
         "Nur vier Consumer arbeiten gleichzeitig; mehr Partitionen können Schlüssel später neu zuordnen.",
         "Das Team benötigt mehr Broker.",
         "Das Team sollte Kinesis verwenden.",
@@ -130,7 +123,7 @@ Die offizielle Dokumentation trennt bei Spark Structured Streaming den standardm
       cpId: "q2",
       title: "Regel für verspätete Daten",
       question:
-        "Ein Streaming-Job aggregiert „Umsatz je Minute“. Die Watermark liegt 30 Sekunden hinter der höchsten Ereigniszeit. Ein Ereignis mit Ereigniszeit 14:32:15 trifft um 14:34:00 Verarbeitungszeit ein. Was geschieht?",
+        "Ein Job summiert Umsatz je Minute, Watermark 30 Sekunden hinter der höchsten Ereigniszeit. Ein Ereignis von 14:32:15 kommt um 14:34:00 Verarbeitungszeit an. Was passiert?",
       options: [
         "Es wird in das Ergebnis für 14:32 Uhr aufgenommen.",
         "Fenster- und Late-Data-Regel entscheiden: verwerfen, weiterleiten, halten oder korrigieren.",

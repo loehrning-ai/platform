@@ -19,13 +19,10 @@ const COPY = {
   de: {
     metadataTitle: "Blog | loehrning.ai",
     metadataDescription:
-      "Lange, nachprüfbare Texte über KI im Alltag, EU AI Act und KI in der Gesellschaft, für die breite deutschsprachige Öffentlichkeit.",
+      "Nachprüfbare Texte mit Primärquellen zu KI im Alltag, EU AI Act und KI in der Gesellschaft.",
     kicker: (count: number) => `Blog · ${count} Artikel`,
     title: "KI im Alltag, mit Quellen erklärt.",
-    // Two sentences: phones show only the first, from sm up both.
-    intro:
-      "Öffentliche Texte zu KI im Alltag, EU AI Act und KI in der Gesellschaft.",
-    introDetail: "Offen, nachprüfbar, mit Zahlen und Quellenangaben.",
+    intro: "Texte zu KI im Alltag, EU AI Act und KI in der Gesellschaft.",
     lastUpdated: "Zuletzt aktualisiert",
     allArticles: "Alle Artikel",
     listNote: "Neueste zuerst",
@@ -33,24 +30,19 @@ const COPY = {
     readLabel: (title: string) => `Artikel lesen: ${title}`,
     read: "Artikel lesen",
     noteLabel: "Kein Redaktionsplan.",
-    note: "Dieser Blog erscheint unregelmäßig. Neue Artikel entstehen, wenn ein Thema sauber genug erklärt werden kann und die Quellen stimmen.",
     sourceLabel: "Quellenstandard",
     sourceTitle: "Behauptungen mit Belegspur.",
-    sourceBody:
-      "Rechtliche Aussagen führen zu Primärquellen. Datum, Lesedauer und Themenumfang stehen vor dem Einstieg fest.",
+    sourceBody: "Rechtliche Aussagen führen zu Primärquellen.",
     sourceMarks: ["Primärquellen", "Prüfdatum", "Lesezeit sichtbar"],
   },
   en: {
     metadataTitle: "Blog | loehrning.ai",
     metadataDescription:
-      "Long-form, source-backed writing about everyday AI, the EU AI Act, and AI in society for a general English-speaking audience.",
+      "Verifiable articles with primary sources about everyday AI, the EU AI Act and AI in society.",
     kicker: (count: number) =>
       `Blog · ${count} ${count === 1 ? "article" : "articles"}`,
     title: "Everyday AI, explained with sources.",
-    intro:
-      "Public articles about everyday AI, the EU AI Act, and AI in society.",
-    introDetail:
-      "Open access, verifiable claims, explicit figures, and primary sources.",
+    intro: "Articles about everyday AI, the EU AI Act and AI in society.",
     lastUpdated: "Last updated",
     allArticles: "All articles",
     listNote: "Newest first",
@@ -58,11 +50,9 @@ const COPY = {
     readLabel: (title: string) => `Read article: ${title}`,
     read: "Read article",
     noteLabel: "No publishing quota.",
-    note: "Articles appear when a subject can be explained precisely and the source record is complete. There is no fixed publishing schedule.",
     sourceLabel: "Source standard",
     sourceTitle: "Claims with an evidence trail.",
-    sourceBody:
-      "Legal claims lead to primary sources. Date, reading time, and scope are visible before you open the article.",
+    sourceBody: "Legal claims lead to primary sources.",
     sourceMarks: ["Primary sources", "Review date", "Reading time visible"],
   },
 } as const;
@@ -145,7 +135,6 @@ function BlogIndexContent({ locale }: { readonly locale: Locale }) {
           <div className="blog-index__hero-row">
             <p className="blog-index__lead">
               {copy.intro}
-              <span className="blog-index__lead-detail"> {copy.introDetail}</span>
             </p>
             <Halftone field="blog" className="blog-index__halftone" />
           </div>
@@ -209,7 +198,6 @@ function BlogIndexContent({ locale }: { readonly locale: Locale }) {
               );
             })}
           </ol>
-          <p className="blog-index__note">{copy.note}</p>
         </div>
       </section>
 

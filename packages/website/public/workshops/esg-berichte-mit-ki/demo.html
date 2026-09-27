@@ -590,8 +590,8 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
 <header class="head wrap">
   <p class="label">Workshop 04 · Interactive demo · 10 minutes</p>
   <h1>How can a total be almost right when six of its parts are wrong?</h1>
-  <p class="lede">Kellbrunn Präzisionsteile GmbH asked an AI for its Scope 1 and 2 emissions and handed it a raw folder of 22 files.<span class="lede-more"> Each switch below puts back one trap from that folder and shows what it does to the total, in both Scope 2 methods.</span></p>
-  <p class="provline"><span class="chip chip--muted">Fictional company</span><span class="chip chip--muted">Teaching factors, not official values</span><span class="chip chip--gap">The raw-folder answer is constructed from documented failure modes</span></p>
+  <p class="lede">Kellbrunn Präzisionsteile GmbH asked an AI for its Scope 1 and 2 emissions and handed it a raw folder of 22 files.</p>
+  <p class="provline"><span class="chip chip--muted">Fictional company</span><span class="chip chip--muted">Teaching factors, not official values</span><span class="chip chip--gap">Raw-folder answer: constructed</span></p>
 </header>
 
 <div class="wrap">
@@ -631,13 +631,12 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
     <tr class="is-total"><th scope="row">Total</th><td class="num">1,866.0 t</td><td class="num">1,893.2 t</td></tr>
     <tr><th scope="row">vs 2024</th><td class="num">−30.2%</td><td class="num">−29.2%</td></tr></tbody>
 </table>
-<p class="caption cmp__note"><b>Raw folder:</b> Constructed from documented failure modes: what the answer looks like when all seven traps fire (six data traps and the market-based method error). Not a recorded run. <b>Ledger:</b> computed from <code>belegtabelle_2025.csv</code> with the written rules and the teaching factors.</p>
+<p class="caption cmp__note"><b>Raw folder.</b> Constructed from documented failure modes: what the answer looks like when all seven traps fire (six data traps and the market-based method error). Not a recorded run. <b>Ledger.</b> Computed from <code>belegtabelle_2025.csv</code> with the written rules and the teaching factors.</p>
 <p class="gapline">The raw-folder total is <b class="num">48.7 t below</b> the right one, 2.5% of the total. Its change against 2024 is off by 2.4 percentage points, and its explanation is wrong.</p>
 <details class="more">
   <summary>Read the raw-folder answer as text</summary>
   <div class="quote">
     <p>“Kellbrunn's 2025 emissions: Scope 1 516.0 t CO₂e, Scope 2 1,350.5 t CO₂e (location-based), total 1,866.5 t. That is 7.5% below 2024 (2,017.5 t). Scope 2 market-based: 1,350.0 t. Since 2025 Kellbrunn runs on green electricity (Ökostrom Plus). The reduction comes mainly from efficiency measures at Werk Nord. Scope 1 rose by 6.5%, probably due to higher heating demand.”</p>
-    <p class="caption">Constructed from documented failure modes: what the answer looks like when all seven traps fire (six data traps and the market-based method error). Not a recorded run.</p>
   </div>
 </details>
   </div>
@@ -645,7 +644,7 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
 
 <section class="beat" id="traps" aria-labelledby="h-traps">
   <header class="kopf"><h2 id="h-traps">Which trap moves the total, and by how much?</h2><p>2 of 6 · Trap switches</p></header>
-  <p class="beat__lead">Every switch starts off, with its trap fixed. Switch one on, “As the AI did it”,<span class="lead-more"> and the total, the distance from the right answer and the change against 2024 update. Each total is looked up from the 128 precomputed combinations of the traps, for the Scope 2 method you pick. Six traps change the location-based total. The seventh, T7, only touches the market-based figure.</span><span class="lead-ph"> to see what it does to the total.</span></p>
+  <p class="beat__lead">Every switch starts off, with its trap fixed. Switch one on, “As the AI did it”,<span class="lead-more"> and the three meters update from 128 precomputed trap combinations. Six traps change the location-based total; T7 only the market-based figure.</span><span class="lead-ph"> to see what it does to the total.</span></p>
   <div class="beat__body">
     <details class="seq" id="seq">
   <summary>Guided sequence<span>6 steps, about 6 minutes</span></summary>
@@ -661,9 +660,9 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
       </fieldset></div></li>
 <li><div class="step"><p class="act">Switch on “As the AI did it” for the Talbrück bill (T3) only.</p><p class="res"><b>2,315.2 t</b> · +14.8% vs 2024.</p><p class="why"><span class="why__l">Why it matters</span> +14.8% against 2024 makes anyone ask what happened, so this error gets caught.</p></div><button class="btn stepgo" type="button" data-step="2">Set this up<span class="sr-only">: step 2</span></button></li>
 <li><div class="step"><p class="act">Also switch it on for the MWh misread (T4).</p><p class="res"><b>1,819.7 t</b> · −9.8% vs 2024.</p><p class="why"><span class="why__l">Why it matters</span> A fall of 9.8% looks plausible again, so nobody asks.</p></div><button class="btn stepgo" type="button" data-step="3">Set this up<span class="sr-only">: step 3</span></button></li>
-<li><div class="step"><p class="act">Switch the method to market-based. The MWh row now shows 0 t.</p><p class="res"><b>2,493.2 t</b> · −6.8% vs 2024 (market-based).</p><p class="why"><span class="why__l">Why it matters</span> Market-based hides the unit error completely, because the certificate prices Werk Süd's power at zero. A fall of 6.8% looks fine with the Talbrück bill still inside.</p></div><button class="btn stepgo" type="button" data-step="4">Set this up<span class="sr-only">: step 4</span></button></li>
+<li><div class="step"><p class="act">Switch the method to market-based; the MWh row now shows 0 t.</p><p class="res"><b>2,493.2 t</b> · −6.8% vs 2024 (market-based).</p><p class="why"><span class="why__l">Why it matters</span> Market-based hides the unit error, because the certificate prices Werk Süd's power at zero. A fall of 6.8% looks fine with the Talbrück bill still inside.</p></div><button class="btn stepgo" type="button" data-step="4">Set this up<span class="sr-only">: step 4</span></button></li>
 <li><div class="step"><p class="act">Switch back to location-based, then switch it on only for the duplicate March (T1) and October (T2).</p><p class="res"><b>1,917.2 t</b> · −5.0% vs 2024.</p><p class="why"><span class="why__l">Why it matters</span> Together they move the total by only +2.0 t, so a check on the total misses both. In market-based the pair moves it by +3.0 t.</p></div><button class="btn stepgo" type="button" data-step="5">Set this up<span class="sr-only">: step 5</span></button></li>
-<li><div class="step"><p class="act">Open the evidence drawer from “72.2 t” in the rewritten sentence in section 4.</p><p class="why"><span class="why__l">Why it matters</span> In this case's teaching values, 71% of the location-based decrease comes from the lower grid factor. Kellbrunn did nothing for it.</p></div><button class="btn" type="button" data-open="drv:grid">Open 72.2 t</button></li></ol>
+<li><div class="step"><p class="act">Open the evidence drawer from “72.2 t” in the rewritten sentence in section 4.</p><p class="why"><span class="why__l">Why it matters</span> In the teaching values, 71% of the location-based decrease comes from the lower grid factor, which Kellbrunn did not cause.</p></div><button class="btn" type="button" data-open="drv:grid">Open 72.2 t</button></li></ol>
 </details>
     <div class="console">
   <div class="controls" id="board-top">
@@ -695,10 +694,10 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
 <li class="trap is-ghost" data-trap="T1">
   <div class="trap__main">
     <p class="trap__name"><span class="trap__id">T1</span><span class="trap__t"><span id="tn-T1">Duplicate March bill counted</span></span></p>
-    <p class="trap__meta"><span class="tag">Clerk</span><button class="linkish doc" type="button" data-open="trap:T1" title="scan_rechnung_maerz.md"><span class="sr-only">Open the evidence: </span>Scanned March bill</button></p>
+    <p class="trap__meta"><span class="tag">Clerk</span><button class="linkish doc" type="button" data-open="trap:T1" title="scan_rechnung_maerz.md"><span class="sr-only">Open the evidence, </span>Scanned March bill</button></p>
   </div>
   <button class="sw" type="button" role="switch" data-trap="T1" aria-checked="false" aria-labelledby="sl-T1 tn-T1" aria-describedby="te-T1"><span class="sw__box" aria-hidden="true"></span><span class="sw__t" id="sl-T1">As the AI did it</span><span class="sw__s" aria-hidden="true">AI</span></button>
-  <p class="iso" id="te-T1"><b>+82.0 t</b><span class="iso__tail"> if only this trap fires</span> <button class="linkish only" type="button" data-only="T1">Only this trap<span class="sr-only">: Duplicate March bill counted</span></button></p>
+  <p class="iso" id="te-T1"><b>+82.0 t</b><span class="iso__tail"> if only this trap fires</span> <button class="linkish only" type="button" data-only="T1">Only this trap<span class="sr-only"> (Duplicate March bill counted)</span></button></p>
   <div class="mob">
     <div class="track" data-open="trap:T1" aria-hidden="true"><span class="ghost" style="--l:45.84%;--w:6.43%;--cl:42.06%;--cw:7.94%"></span><span class="bar" hidden></span></div>
     <p class="fx num">−82.0</p>
@@ -708,10 +707,10 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
 <li class="trap is-ghost" data-trap="T2">
   <div class="trap__main">
     <p class="trap__name"><span class="trap__id">T2</span><span class="trap__t"><span id="tn-T2">October missing</span></span></p>
-    <p class="trap__meta"><span class="tag">Clerk</span><button class="linkish doc" type="button" data-open="trap:T2" title="zaehlerstaende_2025.csv"><span class="sr-only">Open the evidence: </span>Meter readings</button></p>
+    <p class="trap__meta"><span class="tag">Clerk</span><button class="linkish doc" type="button" data-open="trap:T2" title="zaehlerstaende_2025.csv"><span class="sr-only">Open the evidence, </span>Meter readings</button></p>
   </div>
   <button class="sw" type="button" role="switch" data-trap="T2" aria-checked="false" aria-labelledby="sl-T2 tn-T2" aria-describedby="te-T2"><span class="sw__box" aria-hidden="true"></span><span class="sw__t" id="sl-T2">As the AI did it</span><span class="sw__s" aria-hidden="true">AI</span></button>
-  <p class="iso" id="te-T2"><b>−80.0 t</b><span class="iso__tail"> if only this trap fires</span> <button class="linkish only" type="button" data-only="T2">Only this trap<span class="sr-only">: October missing</span></button></p>
+  <p class="iso" id="te-T2"><b>−80.0 t</b><span class="iso__tail"> if only this trap fires</span> <button class="linkish only" type="button" data-only="T2">Only this trap<span class="sr-only"> (October missing)</span></button></p>
   <div class="mob">
     <div class="track" data-open="trap:T2" aria-hidden="true"><span class="ghost" style="--l:45.84%;--w:6.27%;--cl:50%;--cw:7.75%"></span><span class="bar" hidden></span></div>
     <p class="fx num">+80.0</p>
@@ -721,7 +720,7 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
 <li class="trap trap--note">
   <div class="trap__main">
     <p class="trap__name"><span class="trap__id">·</span><span class="trap__t">Two months on one bill</span></p>
-    <p class="trap__meta"><span class="tag">Clerk</span><button class="linkish doc" type="button" data-open="doc:2025-11-12_strom_wn.md" title="2025-11-12_strom_wn.md"><span class="sr-only">Open the evidence: </span>Nov and Dec bill</button></p>
+    <p class="trap__meta"><span class="tag">Clerk</span><button class="linkish doc" type="button" data-open="doc:2025-11-12_strom_wn.md" title="2025-11-12_strom_wn.md"><span class="sr-only">Open the evidence, </span>Nov and Dec bill</button></p>
   </div>
   <span class="nosw">No switch</span>
   <p class="noteline">0 t in the sum; keeps the file count at 12 and hides the missing October.</p>
@@ -729,10 +728,10 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
 <li class="trap is-ghost" data-trap="T3">
   <div class="trap__main">
     <p class="trap__name"><span class="trap__id">T3</span><span class="trap__t"><span id="tn-T3">Joint venture bill included</span></span></p>
-    <p class="trap__meta"><span class="tag">Clerk</span><button class="linkish doc" type="button" data-open="trap:T3" title="jahresrechnung_tb_2025.md"><span class="sr-only">Open the evidence: </span>Talbrück annual bill</button></p>
+    <p class="trap__meta"><span class="tag">Clerk</span><button class="linkish doc" type="button" data-open="trap:T3" title="jahresrechnung_tb_2025.md"><span class="sr-only">Open the evidence, </span>Talbrück annual bill</button></p>
   </div>
   <button class="sw" type="button" role="switch" data-trap="T3" aria-checked="false" aria-labelledby="sl-T3 tn-T3" aria-describedby="te-T3"><span class="sw__box" aria-hidden="true"></span><span class="sw__t" id="sl-T3">As the AI did it</span><span class="sw__s" aria-hidden="true">AI</span></button>
-  <p class="iso" id="te-T3"><b>+400.0 t</b><span class="iso__tail"> if only this trap fires</span> <button class="linkish only" type="button" data-only="T3">Only this trap<span class="sr-only">: Joint venture bill included</span></button></p>
+  <p class="iso" id="te-T3"><b>+400.0 t</b><span class="iso__tail"> if only this trap fires</span> <button class="linkish only" type="button" data-only="T3">Only this trap<span class="sr-only"> (Joint venture bill included)</span></button></p>
   <div class="mob">
     <div class="track" data-open="trap:T3" aria-hidden="true"><span class="ghost" style="--l:20.74%;--w:31.37%;--cl:11.25%;--cw:38.75%"></span><span class="bar" hidden></span></div>
     <p class="fx num">−400.0</p>
@@ -742,10 +741,10 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
 <li class="trap is-ghost" data-trap="T4">
   <div class="trap__main">
     <p class="trap__name"><span class="trap__id">T4</span><span class="trap__t"><span id="tn-T4">“1.240 MWh” read as 1,240 kWh</span></span></p>
-    <p class="trap__meta"><span class="tag">Reader</span><button class="linkish doc" type="button" data-open="trap:T4" title="jahresuebersicht_2025_oekostrom.md"><span class="sr-only">Open the evidence: </span>Werk Süd statement</button></p>
+    <p class="trap__meta"><span class="tag">Reader</span><button class="linkish doc" type="button" data-open="trap:T4" title="jahresuebersicht_2025_oekostrom.md"><span class="sr-only">Open the evidence, </span>Werk Süd statement</button></p>
   </div>
   <button class="sw" type="button" role="switch" data-trap="T4" aria-checked="false" aria-labelledby="sl-T4 tn-T4" aria-describedby="te-T4"><span class="sw__box" aria-hidden="true"></span><span class="sw__t" id="sl-T4">As the AI did it</span><span class="sw__s" aria-hidden="true">AI</span></button>
-  <p class="iso" id="te-T4"><b>−495.5 t</b><span class="iso__tail"> if only this trap fires</span> <button class="linkish only" type="button" data-only="T4">Only this trap<span class="sr-only">: “1.240 MWh” read as 1,240 kWh</span></button></p>
+  <p class="iso" id="te-T4"><b>−495.5 t</b><span class="iso__tail"> if only this trap fires</span> <button class="linkish only" type="button" data-only="T4">Only this trap<span class="sr-only"> (“1.240 MWh” read as 1,240 kWh)</span></button></p>
   <div class="mob">
     <div class="track" data-open="trap:T4" aria-hidden="true"><span class="ghost" style="--l:20.74%;--w:38.86%;--cl:50%;--cw:48%"></span><span class="bar" hidden></span></div>
     <p class="fx num">+495.5</p>
@@ -755,10 +754,10 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
 <li class="trap is-ghost" data-trap="T5">
   <div class="trap__main">
     <p class="trap__name"><span class="trap__id">T5</span><span class="trap__t"><span id="tn-T5">Hi factor on Hs kWh</span></span></p>
-    <p class="trap__meta"><span class="tag">Reader</span><button class="linkish doc" type="button" data-open="trap:T5" title="gas_jahresrechnung_wn_2025.md and gas_jahresrechnung_ws_2025.md"><span class="sr-only">Open the evidence: </span>Two gas bills</button></p>
+    <p class="trap__meta"><span class="tag">Reader</span><button class="linkish doc" type="button" data-open="trap:T5" title="gas_jahresrechnung_wn_2025.md and gas_jahresrechnung_ws_2025.md"><span class="sr-only">Open the evidence, </span>Two gas bills</button></p>
   </div>
   <button class="sw" type="button" role="switch" data-trap="T5" aria-checked="false" aria-labelledby="sl-T5 tn-T5" aria-describedby="te-T5"><span class="sw__box" aria-hidden="true"></span><span class="sw__t" id="sl-T5">As the AI did it</span><span class="sw__s" aria-hidden="true">AI</span></button>
-  <p class="iso" id="te-T5"><b>+41.8 t</b><span class="iso__tail"> if only this trap fires</span> <button class="linkish only" type="button" data-only="T5">Only this trap<span class="sr-only">: Hi factor on Hs kWh</span></button></p>
+  <p class="iso" id="te-T5"><b>+41.8 t</b><span class="iso__tail"> if only this trap fires</span> <button class="linkish only" type="button" data-only="T5">Only this trap<span class="sr-only"> (Hi factor on Hs kWh)</span></button></p>
   <div class="mob">
     <div class="track" data-open="trap:T5" aria-hidden="true"><span class="ghost" style="--l:56.33%;--w:3.28%;--cl:45.95%;--cw:4.05%"></span><span class="bar" hidden></span></div>
     <p class="fx num">−41.8</p>
@@ -768,10 +767,10 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
 <li class="trap is-ghost" data-trap="T6">
   <div class="trap__main">
     <p class="trap__name"><span class="trap__id">T6</span><span class="trap__t"><span id="tn-T6">AdBlue counted as diesel</span></span></p>
-    <p class="trap__meta"><span class="tag">Clerk</span><button class="linkish doc" type="button" data-open="trap:T6" title="tankkarten_2025.csv"><span class="sr-only">Open the evidence: </span>Fuel-card export</button></p>
+    <p class="trap__meta"><span class="tag">Clerk</span><button class="linkish doc" type="button" data-open="trap:T6" title="tankkarten_2025.csv"><span class="sr-only">Open the evidence, </span>Fuel-card export</button></p>
   </div>
   <button class="sw" type="button" role="switch" data-trap="T6" aria-checked="false" aria-labelledby="sl-T6 tn-T6" aria-describedby="te-T6"><span class="sw__box" aria-hidden="true"></span><span class="sw__t" id="sl-T6">As the AI did it</span><span class="sw__s" aria-hidden="true">AI</span></button>
-  <p class="iso" id="te-T6"><b>+3.0 t</b><span class="iso__tail"> if only this trap fires</span> <button class="linkish only" type="button" data-only="T6">Only this trap<span class="sr-only">: AdBlue counted as diesel</span></button></p>
+  <p class="iso" id="te-T6"><b>+3.0 t</b><span class="iso__tail"> if only this trap fires</span> <button class="linkish only" type="button" data-only="T6">Only this trap<span class="sr-only"> (AdBlue counted as diesel)</span></button></p>
   <div class="mob">
     <div class="track" data-open="trap:T6" aria-hidden="true"><span class="ghost" style="--l:56.09%;--w:0.24%;--cl:49.71%;--cw:0.29%"></span><span class="bar" hidden></span></div>
     <p class="fx num">−3.0</p>
@@ -781,10 +780,10 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
 <li class="trap is-ghost" data-trap="T7">
   <div class="trap__main">
     <p class="trap__name"><span class="trap__id">T7</span><span class="trap__t"><span id="tn-T7">Grid average instead of residual mix</span> <span class="tag tag--scope" id="ts-T7">Market-based only</span></span></p>
-    <p class="trap__meta"><span class="tag">Clerk</span><button class="linkish doc" type="button" data-open="trap:T7" title="faktoren_lehrwerte.csv"><span class="sr-only">Open the evidence: </span>Factor file</button></p>
+    <p class="trap__meta"><span class="tag">Clerk</span><button class="linkish doc" type="button" data-open="trap:T7" title="faktoren_lehrwerte.csv"><span class="sr-only">Open the evidence, </span>Factor file</button></p>
   </div>
   <button class="sw" type="button" role="switch" data-trap="T7" aria-checked="false" aria-labelledby="sl-T7 tn-T7 ts-T7" aria-describedby="te-T7"><span class="sw__box" aria-hidden="true"></span><span class="sw__t" id="sl-T7">As the AI did it</span><span class="sw__s" aria-hidden="true">AI</span></button>
-  <p class="iso is-zero" id="te-T7"><b>0 t for this number</b><span class="iso__tail"></span> <button class="linkish only" type="button" data-only="T7">Only this trap<span class="sr-only">: Grid average instead of residual mix</span></button></p>
+  <p class="iso is-zero" id="te-T7"><b>0 t for this number</b><span class="iso__tail"></span> <button class="linkish only" type="button" data-only="T7">Only this trap<span class="sr-only"> (Grid average instead of residual mix)</span></button></p>
   <div class="mob">
     <div class="track" data-open="trap:T7" aria-hidden="true"><span class="ghost" hidden></span><span class="bar" hidden></span></div>
     <p class="fx num">0.0</p>
@@ -798,13 +797,13 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
   <p class="run num">1,915.2</p>
 </li>
 </ul></div>
-<div class="boardfoot"><p class="caption" id="board-caption">Every switch is fixed, so this answer is the right answer. The dashed bars show the path from the raw-folder answer to the right answer, with all traps active, in this order.</p><p class="check" id="board-check" hidden></p><p class="caption mbnote" id="board-mbnote" hidden></p></div>
+<div class="boardfoot"><p class="caption" id="board-caption">Every switch is fixed, so this is the right answer. The dashed bars show the path from the raw-folder answer, one trap at a time, in this order.</p><p class="check" id="board-check" hidden></p><p class="caption mbnote" id="board-mbnote" hidden></p></div>
   </div>
 </section>
 
 <section class="beat" id="evidence" aria-labelledby="h-evidence">
   <header class="kopf"><h2 id="h-evidence">Which bill does each ledger row come from?</h2><p>3 of 6 · Evidence drawer</p></header>
-  <p class="beat__lead">Open a file to read it as text, with the quoted line marked, and see the ledger row it produced in <code>belegtabelle_2025.csv</code>. The bills are German documents, as in the kit.</p>
+  <p class="beat__lead">Open a file to read it with the quoted line marked, next to the ledger row it produced in <code>belegtabelle_2025.csv</code>. The bills are German, as in the kit.</p>
   <div class="beat__body">
     <details class="tree" id="tree" open>
   <summary>All 22 files of the raw folder, plus the factor file</summary>
@@ -848,7 +847,7 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
 
 <section class="beat" id="coverage" aria-labelledby="h-coverage">
   <header class="kopf"><h2 id="h-coverage">Is every site covered for every month?</h2><p>5 of 6 · Coverage and control total</p></header>
-  <p class="beat__lead">One cell per site and month. A folder of 12 Werk Nord electricity files looks complete until you draw this grid. The duplicate and October switches in section 2 change it too.</p>
+  <p class="beat__lead">One cell per site and month. The 12 Werk Nord electricity files look complete until you draw this grid. The duplicate and October switches in section 2 change it too.</p>
   <div class="beat__body two">
     <div class="covwrap">
   <div class="gridbar"><button class="btn" type="button" id="cov-toggle" aria-pressed="false">As the folder arrived</button><p class="caption" id="cov-caption" aria-live="polite">As the ledger has it. October comes from the meter readings (grade B).</p></div>
@@ -866,11 +865,11 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
 </div>
     <details class="more ctl" id="ctl" open><summary>Control total, electricity 2025 (kWh)</summary><table>
   <tbody>
-    <tr><th scope="row">Werk Nord: 10 genuine bills<br><span class="st">included</span></th><td class="n">2,060,000</td></tr><tr><th scope="row">Werk Nord: duplicate March (<span class="nw">4711-03</span>)<br><span class="st">excluded: duplicate</span></th><td class="n">205,000</td></tr><tr><th scope="row">Talbrück Beschichtung GmbH<br><span class="st">excluded: boundary</span></th><td class="n">1,000,000</td></tr><tr><th scope="row">Werk Süd: annual statement<br><span class="st">included</span></th><td class="n">1,240,000</td></tr><tr><th scope="row">Lager Ost: 4 quarters<br><span class="st">included</span></th><td class="n">110,000</td></tr>
+    <tr><th scope="row">Werk Nord: 10 genuine bills<br><span class="st">included</span></th><td class="n">2,060,000</td></tr><tr><th scope="row">Werk Nord: duplicate March (<span class="nw">4711-03</span>)<br><span class="st">excluded, duplicate</span></th><td class="n">205,000</td></tr><tr><th scope="row">Talbrück Beschichtung GmbH<br><span class="st">excluded, boundary</span></th><td class="n">1,000,000</td></tr><tr><th scope="row">Werk Süd: annual statement<br><span class="st">included</span></th><td class="n">1,240,000</td></tr><tr><th scope="row">Lager Ost: 4 quarters<br><span class="st">included</span></th><td class="n">110,000</td></tr>
     <tr class="sum"><th scope="row">Documents in the folder</th><td class="n">4,615,000</td></tr>
     <tr><th scope="row">minus excluded (duplicate, Talbrück)</th><td class="n">−1,205,000</td></tr>
     <tr><th scope="row">Included documents</th><td class="n">3,410,000</td></tr>
-    <tr><th scope="row">plus October Werk Nord from meter readings<br><span class="st">added: meter reading, grade B</span></th><td class="n">+200,000</td></tr>
+    <tr><th scope="row">plus October Werk Nord from meter readings<br><span class="st">added from meter reading, grade B</span></th><td class="n">+200,000</td></tr>
     <tr class="fin"><th scope="row">Electricity in the boundary</th><td class="n">3,610,000</td></tr>
   </tbody></table>
   <p class="caption">The meter row stays below the documents sum because it is not a document in the folder.</p>
@@ -901,7 +900,7 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
 </main>
 
 <footer class="wf-foot">
-  <p>Data: <code>w04-data.json</code> version 1.0.0, built 2026-09-26 by <code>build_dataset.py</code>. Illustrative teaching values, not official factors. Factor edition: Lehrwerte v1.0, 2026-01-15. Kellbrunn Präzisionsteile GmbH, Talbrück Beschichtung GmbH, Lindmark Energie GmbH and Grundstücksverwaltung Lager Ost GbR are invented. Nothing on this page calls an AI, and nothing you do here is stored or sent.</p>
+  <p>Data: <code>w04-data.json</code> version 1.0.0, built 2026-09-26 by <code>build_dataset.py</code>. Illustrative teaching values, not official factors. Factor edition: Lehrwerte v1.0, 2026-01-15. Kellbrunn Präzisionsteile GmbH, Talbrück Beschichtung GmbH, Lindmark Energie GmbH and Grundstücksverwaltung Lager Ost GbR are invented. Nothing on this page calls an AI, and nothing you do is stored or sent.</p>
 </footer>
 
 <dialog class="drawer" id="drawer" aria-labelledby="drawer-title">

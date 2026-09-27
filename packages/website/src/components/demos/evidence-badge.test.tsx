@@ -18,10 +18,10 @@ import { EvidenceBadge, SimulationDisclosure } from "./evidence-badge";
 
 describe("<EvidenceBadge> evidence line + disclosure", () => {
   it.each([
-    ["synthetic", "Synthetisch", "Alle Daten in diesem Beispiel sind erfunden"],
-    ["rule_based", "Regelbasiert", "festen Regeln in deinem Browser"],
+    ["synthetic", "Synthetisch", "Alle Daten sind erfunden"],
+    ["rule_based", "Regelbasiert", "Feste Regeln laufen in deinem Browser"],
     ["recorded_trace", "Aufgezeichnete Spur", "aufgezeichneten Ablauf"],
-    ["live_api", "Live-API", "würde echte Anfragen"],
+    ["live_api", "Live-API", "Sendet echte Anfragen"],
   ] as const)(
     "states the %s mode as plain text and reveals/hides its explanation",
     (mode, label, detailsFragment) => {

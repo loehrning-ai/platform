@@ -135,8 +135,8 @@ export function RoiDemo(): JSX.Element {
         </h3>
         <p className="mt-1.5 text-[13px] text-muted-foreground">
           {text(
-            "Didaktische Rechnung mit veränderbaren Arbeitsannahmen und fest ausgewiesenen Kostenparametern. Kein Benchmark und keine Prognose.",
-            "Illustrative calculation with adjustable work assumptions and disclosed cost parameters. It is not a benchmark or forecast.",
+            "Lehrrechnung mit veränderbaren Annahmen und offenen Kostenwerten. Kein Benchmark und keine Prognose.",
+            "A teaching calculation with adjustable assumptions and disclosed costs. Not a benchmark or forecast.",
           )}
         </p>
       </div>
@@ -249,8 +249,8 @@ export function RoiDemo(): JSX.Element {
         </div>
         <div className="text-[12px] leading-[1.5] text-muted-foreground">
           {text(
-            "Fest im Beispiel: 46 Arbeitswochen, 280.000 € Implementierung, 45 € Lizenz pro Person und Monat sowie Auslastungsfaktoren 1,25 und 1,40 in Jahr 2 und 3. Diese Werte sind keine empirischen Benchmarks. Ersetze sie vor einer Entscheidung durch geprüfte interne Werte und dokumentiere Unsicherheit, Nebenkosten und nicht realisierte Zeit.",
-            "Fixed in this example: 46 working weeks, €280,000 implementation cost, €45 licence cost per person per month, and utilisation factors of 1.25 and 1.40 in years 2 and 3. These values are not empirical benchmarks. Replace them with reviewed internal values before a decision, and document uncertainty, indirect costs, and time that cannot be converted into savings.",
+            "Fest im Beispiel: 46 Arbeitswochen, 280.000 € Implementierung, 45 € Lizenz pro Person und Monat, Auslastungsfaktoren 1,25 und 1,40 in Jahr 2 und 3. Ersetze sie vor einer Entscheidung durch geprüfte interne Werte und dokumentiere Unsicherheit, Nebenkosten und nicht realisierte Zeit.",
+            "Fixed in this example: 46 working weeks, €280,000 implementation, €45 licence per person per month, utilisation factors 1.25 and 1.40 in years 2 and 3. Replace them with reviewed internal values before a decision, and document uncertainty, indirect costs and time that yields no savings.",
           )}
         </div>
       </div>

@@ -590,8 +590,8 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
 <header class="head wrap">
   <p class="label">Workshop 04 · Interactive demo · 10 minutes</p>
   <h1>How can a total be almost right when six of its parts are wrong?</h1>
-  <p class="lede">{{t:meta.company}} asked an AI for its Scope 1 and 2 emissions and handed it a raw folder of {{n:files_raw_2025}} files.<span class="lede-more"> Each switch below puts back one trap from that folder and shows what it does to the total, in both Scope 2 methods.</span></p>
-  <p class="provline"><span class="chip chip--muted">Fictional company</span><span class="chip chip--muted">Teaching factors, not official values</span><span class="chip chip--gap">The raw-folder answer is constructed from documented failure modes</span></p>
+  <p class="lede">{{t:meta.company}} asked an AI for its Scope 1 and 2 emissions and handed it a raw folder of {{n:files_raw_2025}} files.</p>
+  <p class="provline"><span class="chip chip--muted">Fictional company</span><span class="chip chip--muted">Teaching factors, not official values</span><span class="chip chip--gap">Raw-folder answer: constructed</span></p>
 </header>
 
 <div class="wrap">
@@ -612,7 +612,7 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
 
 <section class="beat" id="traps" aria-labelledby="h-traps">
   <header class="kopf"><h2 id="h-traps">Which trap moves the total, and by how much?</h2><p>2 of 6 · Trap switches</p></header>
-  <p class="beat__lead">Every switch starts off, with its trap fixed. Switch one on, “As the AI did it”,<span class="lead-more"> and the total, the distance from the right answer and the change against 2024 update. Each total is looked up from the {{c:count}} precomputed combinations of the traps, for the Scope 2 method you pick. Six traps change the location-based total. The seventh, T7, only touches the market-based figure.</span><span class="lead-ph"> to see what it does to the total.</span></p>
+  <p class="beat__lead">Every switch starts off, with its trap fixed. Switch one on, “As the AI did it”,<span class="lead-more"> and the three meters update from {{c:count}} precomputed trap combinations. Six traps change the location-based total; T7 only the market-based figure.</span><span class="lead-ph"> to see what it does to the total.</span></p>
   <div class="beat__body">
     {{block:sequence}}
     {{block:console}}
@@ -622,7 +622,7 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
 
 <section class="beat" id="evidence" aria-labelledby="h-evidence">
   <header class="kopf"><h2 id="h-evidence">Which bill does each ledger row come from?</h2><p>3 of 6 · Evidence drawer</p></header>
-  <p class="beat__lead">Open a file to read it as text, with the quoted line marked, and see the ledger row it produced in <code>belegtabelle_2025.csv</code>. The bills are German documents, as in the kit.</p>
+  <p class="beat__lead">Open a file to read it with the quoted line marked, next to the ledger row it produced in <code>belegtabelle_2025.csv</code>. The bills are German, as in the kit.</p>
   <div class="beat__body">
     {{block:tree}}
   </div>
@@ -640,7 +640,7 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
 
 <section class="beat" id="coverage" aria-labelledby="h-coverage">
   <header class="kopf"><h2 id="h-coverage">Is every site covered for every month?</h2><p>5 of 6 · Coverage and control total</p></header>
-  <p class="beat__lead">One cell per site and month. A folder of {{n:files_wn_electricity}} Werk Nord electricity files looks complete until you draw this grid. The duplicate and October switches in section 2 change it too.</p>
+  <p class="beat__lead">One cell per site and month. The {{n:files_wn_electricity}} Werk Nord electricity files look complete until you draw this grid. The duplicate and October switches in section 2 change it too.</p>
   <div class="beat__body two">
     {{block:grid}}
     {{block:control}}
@@ -658,7 +658,7 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
 </main>
 
 <footer class="wf-foot">
-  <p>Data: <code>w04-data.json</code> version {{t:meta.dataVersion}}, built {{t:meta.builtOn}} by <code>build_dataset.py</code>. {{t:meta.factorLabel_en}} Factor edition: {{t:factorEdition}}. {{t:meta.company}}, {{t:meta.jv}}, {{t:meta.supplier}} and {{t:meta.landlord}} are invented. Nothing on this page calls an AI, and nothing you do here is stored or sent.</p>
+  <p>Data: <code>w04-data.json</code> version {{t:meta.dataVersion}}, built {{t:meta.builtOn}} by <code>build_dataset.py</code>. {{t:meta.factorLabel_en}} Factor edition: {{t:factorEdition}}. {{t:meta.company}}, {{t:meta.jv}}, {{t:meta.supplier}} and {{t:meta.landlord}} are invented. Nothing on this page calls an AI, and nothing you do is stored or sent.</p>
 </footer>
 
 <dialog class="drawer" id="drawer" aria-labelledby="drawer-title">

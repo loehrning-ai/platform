@@ -27,8 +27,8 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     titleKicker: "Check formulas and a forecast.",
     background: "Excel add-in · Microsoft 365 · no additional software",
     description:
-      "You select a range of invented sales figures and get formula suggestions, a pivot-table draft and a forecast that you check.",
-    teaser: "You check formulas and a forecast on invented sales figures.",
+      "You select sales figures and get formula suggestions, a pivot draft and a forecast to check.",
+    teaser: "You check formulas and a forecast on sales figures.",
     tags: ["Excel add-in", "M365", "Fundamentals"],
     meta: [
       { label: "Learning objective", value: "Check formulas" },
@@ -38,7 +38,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
       { label: "Data protection", value: "Check tenant settings" },
     ],
     industries: ["Controlling", "Finance", "Small and medium-sized businesses"],
-    syntheticDataLabel: "Invented sales figures in a sample sheet.",
+    syntheticDataLabel: "Nine fictional sales rows, only extended in a straight line.",
     riskNotes: [
       "Recalculate each suggested formula by hand for one row.",
       "Compare the forecast with the same weeks last year.",
@@ -50,8 +50,8 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     titleKicker: "A draft from a brief.",
     background: "Word lab · style checks with sample documents",
     description:
-      "You enter a brief and get a structured draft. Then you check style, sources, approval and personal data.",
-    teaser: "A brief becomes a draft that you check for style and facts.",
+      "Your brief becomes a structured draft that you check for style, sources and personal data.",
+    teaser: "You check a draft from a brief for style and facts.",
     tags: ["Word add-in", "M365", "Fundamentals"],
     meta: [
       { label: "Learning objective", value: "Refine a brief" },
@@ -61,7 +61,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
       { label: "Data protection", value: "Remove personal data" },
     ],
     industries: ["Engineering", "Skilled trades", "Professional services"],
-    syntheticDataLabel: "Invented briefs and sample documents.",
+    syntheticDataLabel: "Fictional briefs, sample documents, drafting time and style matches.",
     riskNotes: [
       "Remove names and customer data before the brief goes into the assistant.",
       "Check every figure and source in the draft against the original.",
@@ -73,8 +73,8 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     titleKicker: "Messages with a source.",
     background: "Sample database · signal scan · draft · review gate",
     description:
-      "The pipeline reads fictional contacts, marks each signal with its source and drafts a message. A review comes before any send.",
-    teaser: "A pipeline drafts messages, and you review each one before it goes out.",
+      "The pipeline marks CRM signals with their source and drafts a message for each contact.",
+    teaser: "A pipeline drafts messages that you review before sending.",
     tags: ["Pipeline", "Review gate", "Sources"],
     meta: [
       { label: "Learning objective", value: "Ground messages in signals" },
@@ -96,7 +96,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     titleKicker: "A memo from four agent steps.",
     background: "Four roles: research, synthesis, critique, editing",
     description:
-      "You read the recorded trace of four agents writing one memo together, from the first research step to the final draft.",
+      "You read the recorded trace of four agents writing one memo together.",
     teaser: "You read the trace of four agents writing one memo together.",
     tags: ["Multi-agent", "Opus 4.5", "Recorded trace"],
     meta: [
@@ -107,7 +107,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
       { label: "Log", value: "Complete trace" },
     ],
     industries: ["Strategy", "Corporate development", "Investment"],
-    syntheticDataLabel: "An earlier run on an invented brief, replayed step by step.",
+    syntheticDataLabel: "A recorded run; the brief, 42 documents and evidence scores are fictional.",
     riskNotes: [
       "Check the research sources yourself. The critique role only sees what the research delivered.",
       "Compare the critique's objections with the final memo.",
@@ -118,8 +118,8 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     titleKicker: "A workflow with sign-off.",
     background: "n8n pattern · simulated DHL, SAP, Slack, and email steps",
     description:
-      "A fictional delivery delay runs through a stock check, a customer draft and an escalation. A person signs off at the end.",
-    teaser: "A fictional delivery delay runs through the workflow to sign-off.",
+      "A delivery delay runs through a stock check, a customer draft and an escalation until the dispatcher signs off.",
+    teaser: "A delivery delay runs through the n8n workflow to sign-off.",
     tags: ["n8n", "Self-hosted", "Supply chain"],
     meta: [
       { label: "Learning objective", value: "Read an automation flow" },
@@ -129,7 +129,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
       { label: "Data protection", value: "Define hosting" },
     ],
     industries: ["Logistics", "Manufacturing", "Wholesale"],
-    syntheticDataLabel: "Invented DHL, SAP, Slack and email events.",
+    syntheticDataLabel: "Invented DHL, SAP, Slack and email events, in the browser only.",
     riskNotes: [
       "Read the customer message draft before you sign it off.",
       "Decide who signs off the reorder when the dispatcher is away.",
@@ -140,8 +140,8 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     titleKicker: "Answers with clause references.",
     background: "Keyword search · 6 sample documents · answers with source cards",
     description:
-      "Keyword search finds clauses in six invented company documents, from the framework agreement to the signature policy, and quotes them with their location. For questions without a match, the system does not answer.",
-    teaser: "Keyword search quotes clauses from six sample documents.",
+      "Keyword search finds clauses in six company documents and quotes them with their location. Without a match, the system does not answer.",
+    teaser: "Quotes contract clauses with their location, silent without a match.",
     tags: ["Keyword search", "Rule-based", "DE / EN"],
     meta: [
       { label: "Learning objective", value: "Require sources" },
@@ -151,7 +151,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
       { label: "Data basis", value: "Document archive" },
     ],
     industries: ["Legal practice", "Procurement", "Legal operations"],
-    syntheticDataLabel: "Eight invented sample contracts.",
+    syntheticDataLabel: "Six invented company documents.",
     riskNotes: [
       "Open the quoted clause and read it in context.",
       "A clause reference is not a legal interpretation. Disputed cases go to your legal team.",
@@ -184,8 +184,8 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     titleKicker: "Flag personal data in a prompt.",
     background: "Rule-based token classification · runs locally in the browser",
     description:
-      "Rules flag names, IBANs and confidential terms before a prompt is released. They miss some cases, so treat each flag as a hint.",
-    teaser: "Rules flag names and IBANs before a prompt is released.",
+      "Rules flag names, IBANs and confidential terms before a prompt is released. They miss some cases, so each flag is only a hint.",
+    teaser: "Flags names and IBANs in a prompt and misses some cases.",
     tags: ["GDPR", "On-premises", "Rule-based"],
     meta: [
       { label: "Learning objective", value: "Identify sensitive data" },
@@ -195,7 +195,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
       { label: "Rules", value: "Configurable" },
     ],
     industries: ["Insurance", "Financial services", "Healthcare"],
-    syntheticDataLabel: "Invented sample texts, checked in your browser.",
+    syntheticDataLabel: "Invented sample texts, checked with regular expressions in your browser.",
     riskNotes: [
       "Read the prompt yourself before you release it, even when nothing is flagged.",
       "Check each flag, because harmless words get caught too.",
@@ -206,7 +206,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     titleKicker: "Read cost, latency and errors.",
     background: "Seeded scenarios · cost, errors, and drift as a learning trace",
     description:
-      "An operations view with sample values for cost, latency, errors and drift. You compare four applications and read off which one costs most.",
+      "You compare cost, latency, errors and drift across four applications and read off which one costs most.",
     teaser: "You compare cost, latency and errors across four sample applications.",
     tags: ["OpenTelemetry", "Monitoring", "Drift"],
     meta: [
@@ -217,7 +217,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
       { label: "Drift", value: "Check regularly" },
     ],
     industries: ["FinTech", "Platforms", "IT operations"],
-    syntheticDataLabel: "Four invented applications with sample values.",
+    syntheticDataLabel: "Four invented applications; the latency curve continues at random.",
     riskNotes: [
       "Set your own measurement points and a budget for each application.",
       "Decide in advance who acts on a budget alert.",
@@ -228,7 +228,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     titleKicker: "Two answers side by side.",
     background: "Base model compared with domain examples",
     description:
-      "You ask the same question twice and compare the base model's answer with that of an adapted model. Alongside, you see when retrieval or a better prompt would do.",
+      "You compare the answers of a base model and an adapted model to the same question. Alongside, you see when retrieval or a better prompt would do.",
     teaser: "You compare a base model with an adapted one.",
     tags: ["Fine-tuning", "Sonnet 4.6", "DACH"],
     meta: [
@@ -239,7 +239,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
       { label: "Iteration", value: "Repeat evaluation" },
     ],
     industries: ["Manufacturing", "Technical services", "Specialist production"],
-    syntheticDataLabel: "Invented training and holdout examples.",
+    syntheticDataLabel: "Seeded answers, metrics and training examples; no model was trained.",
     riskNotes: [
       "First check whether retrieval, a better prompt or a clearer process does the same job.",
       "Score the adapted model only on holdout questions it was not trained on.",
@@ -272,7 +272,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     titleKicker: "Automated and human scores side by side.",
     background: "Fictional evaluation metrics · drift indicator · human review",
     description:
-      "You check the automated score for four sample answers. A person also rated three of them, and in two cases the automated score is off.",
+      "You check the automated score for four answers. A person rated three of them too, and twice the automated score is off.",
     teaser: "You check where the automated score is wrong.",
     tags: ["Observability", "Evaluation", "Drift"],
     meta: [
@@ -283,7 +283,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
       { label: "Data source", value: "Seeded scenarios" },
     ],
     industries: ["FinTech", "Platforms", "IT operations"],
-    syntheticDataLabel: "Invented answers, scores and ratings.",
+    syntheticDataLabel: "Invented answers, scores and ratings; the drift indicator is seeded.",
     riskNotes: [
       "Have people re-check automated scores on a regular schedule.",
       "Set your own drift baseline and thresholds for each use case.",

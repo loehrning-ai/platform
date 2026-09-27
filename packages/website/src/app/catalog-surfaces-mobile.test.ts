@@ -142,10 +142,15 @@ describe("catalog surfaces below lg", () => {
     expect(row).not.toContain("grid-cols-[minmax(0,1fr)_2.75rem]");
     // The list is the index: the band carries no anchor row at any width.
     expect(workshops).not.toContain("data-workshop-index");
-    expect(workshops).toContain("pb-10 pt-5 sm:pb-24 sm:pt-20");
+    expect(workshops).toContain('className="pt-5 sm:pt-16"');
     expect(workshops).toContain('layout="rail"');
-    // The route section starts at sm, so the list follows the cover.
-    expect(workshops).toContain('className="hidden pt-6 sm:block sm:pt-20"');
+    // The route section starts at sm and follows the list, so the posters
+    // follow the cover at every width.
+    expect(workshops).toContain('className="hidden pt-16 sm:block"');
+    expect(workshops.indexOf('aria-labelledby="workshop-list-heading"')).toBeLessThan(
+      workshops.indexOf('aria-labelledby="workshop-route-heading"'),
+    );
+    expect(workshops).toContain('"pb-10 pt-4 sm:pb-24 sm:pt-12"');
   });
 
   it("keeps the open-source cover and ledger frames bounded on phones", () => {
@@ -228,8 +233,10 @@ describe("/kurse below lg", () => {
     // A row keeps its 44px title target while giving 6px back on a phone.
     expect(row).toContain("-my-1.5 flex min-h-11");
     expect(row).toContain("sm:my-0 sm:inline-flex");
-    expect(row).toContain("flex h-8 items-center");
-    expect(row).toContain("sm:h-11");
+    // The number column became the poster thumbnail column (SPEC §3.4):
+    // 72px on a phone, 80px from sm.
+    expect(row).toContain("grid-cols-[4.5rem_minmax(0,1fr)] gap-x-4 sm:grid-cols-[5rem_minmax(0,1fr)]");
+    expect(row).toMatch(/<PosterThumb[\s\S]*?size="sm"/);
     // From lg the right-hand cells span both rows, so the links line stays
     // directly under the promise as it did inside the text column.
     expect(row).toContain("lg:col-start-3 lg:row-span-2 lg:row-start-1");

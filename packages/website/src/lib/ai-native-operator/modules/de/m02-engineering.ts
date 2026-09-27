@@ -9,9 +9,9 @@ export const ENGINEERING_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Technische Arbeit als kontrollierte Delegation",
     subtitle:
-      "Trenne delegierbare Arbeit von Entscheidungen, die technische Verantwortung verlangen.",
+      "Trenne delegierbare Arbeit von Entscheidungen, die du selbst tragen musst.",
     objective:
-      "Trenne delegierbare Arbeit von Entscheidungen, die technische Verantwortung verlangen.",
+      "Trenne delegierbare Arbeit von Entscheidungen, die du selbst tragen musst.",
     durationMinutes: 15,
     keyConcepts: [],
     quiz: [],
@@ -21,21 +21,21 @@ export const ENGINEERING_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "Aufgabe vor der Zuweisung einordnen",
         readTimeMinutes: 5,
         content:
-          "Vier Fragen vor jeder Zuweisung: Umfang, Abhängigkeiten, Fehlerkosten, Prüfreferenz. Ein begrenztes Refactoring mit aussagekräftigen Tests eignet sich zur Delegation. Architekturentscheidung, Sicherheitsgrenze, unbekannte Migration oder Störung im Betrieb verlangen deinen eigenen Kopf oder eine sehr viel engere Modellrolle.",
+          "Prüfe zuerst Umfang, Abhängigkeiten, Fehlerkosten und Prüfreferenz. Ein begrenztes Refactoring mit guten Tests ist delegierbar. Architekturentscheidung, Sicherheitsgrenze, unbekannte Migration oder Störung verlangen deine Analyse oder eine viel engere Modellrolle.",
       },
       {
         id: "s2",
         title: "Eine sichtbare Kontrollschleife verwenden",
         readTimeMinutes: 5,
         content:
-          "Fünf Schritte, immer dieselben: Ergebnis definieren, Arbeitsbereich begrenzen, Änderung erzeugen lassen, Differenz und Nachweise prüfen, annehmen oder ablehnen. Die verantwortliche Person nickt nicht die letzte Ansicht ab. Sie prüft Annahmen und Verhalten und bleibt für die Zusammenführung verantwortlich.",
+          "Ergebnis definieren, Arbeitsbereich begrenzen, Änderung erzeugen lassen, Differenz und Nachweise prüfen, annehmen oder ablehnen. Die verantwortliche Person prüft Annahmen und Verhalten und trägt die Zusammenführung.",
       },
       {
         id: "s3",
         title: "Fähigkeiten für zuverlässige Delegation",
         readTimeMinutes: 5,
         content:
-          "Erzeugen ist billig geworden. Wertvoll sind jetzt Aufgabenzerlegung, Schnittstellengestaltung, Spezifikationen, Testentwurf, Codeprüfung, Beobachtbarkeit und Vorfallbehandlung. Diese Fähigkeiten begrenzen Änderungen, machen Fehler sichtbar und halten das Ergebnis für die nächste Fachkraft lesbar.",
+          "Wenn Erzeugen billig ist, zählen Aufgabenzerlegung, Schnittstellengestaltung, Spezifikation, Testentwurf, Codeprüfung, Beobachtbarkeit und Vorfallbehandlung. Sie begrenzen Änderungen, machen Fehler sichtbar und halten Ergebnisse lesbar.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -48,7 +48,7 @@ export const ENGINEERING_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           lessonId: "engineering/1",
           cpId: "exercise",
           scenario:
-            "Nimm deine letzte ausgelieferte Änderung. Was davon war delegierbar, was brauchte dein Urteil, welche Nachweise trugen die Freigabe, und welche Unsicherheit blieb?",
+            "Nimm deine letzte ausgelieferte Änderung. Notiere, was delegierbar war, was dein Urteil brauchte, welche Nachweise die Freigabe trugen und welche Unsicherheit blieb.",
           rows: 4,
         },
       },
@@ -62,9 +62,9 @@ export const ENGINEERING_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Spezifikationsgeleitete Entwicklung",
     subtitle:
-      "Schreibe eine Spezifikation, die Umsetzungsentscheidungen begrenzt und die Annahme beobachtbar macht.",
+      "Begrenze Umsetzungsentscheidungen und mach die Annahme beobachtbar.",
     objective:
-      "Schreibe eine Spezifikation, die Umsetzungsentscheidungen begrenzt und die Annahme beobachtbar macht.",
+      "Begrenze Umsetzungsentscheidungen und mach die Annahme beobachtbar.",
     durationMinutes: 22,
     keyConcepts: [],
     quiz: [],
@@ -74,21 +74,21 @@ export const ENGINEERING_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "Eine Spezifikation reduziert Mehrdeutigkeit",
         readTimeMinutes: 7,
         content:
-          "Eine Spezifikation garantiert keinen korrekten Code. Sie gibt Umsetzung und Prüfung denselben Maßstab, und das reicht. Beschreibe vorher das gewünschte Verhalten, betroffene Schnittstellen, Vorgaben und den Nachweis, der die Annahme trägt. Ist eine wichtige Entscheidung offen, schreib das hin. Sonst trifft der Agent sie stillschweigend.",
+          "Beschreibe vor der Umsetzung Verhalten, betroffene Schnittstellen, Vorgaben und Annahmenachweis. Das gibt Umsetzung und Prüfung einen Maßstab, aber keine Garantie für korrekten Code. Schreib offene Entscheidungen auf, damit der Agent nicht rät.",
       },
       {
         id: "s2",
         title: "Fünf nützliche Teile einer Spezifikation",
         readTimeMinutes: 8,
         content:
-          "Fünf Teile: (1) das Ziel samt Ergebnis für Anwender oder System, (2) Schnittstellen wie API-Verträge, Funktionssignaturen, Datenformen und erlaubte Dateien, (3) unveränderliche Bedingungen, (4) ausdrückliche Nichtziele und verbotene Änderungen, (5) Testfälle mit konkreten Eingaben und erwarteten Ergebnissen. Wo nötig kommen Vorgaben für Sicherheit, Datenschutz, Migration oder Rücknahme dazu.",
+          "(1) Ziel mit Ergebnis für Anwender oder System, (2) Schnittstellen wie API-Verträge, Funktionssignaturen, Datenformen und erlaubte Dateien, (3) unveränderliche Bedingungen, (4) Nichtziele und verbotene Änderungen, (5) Testfälle mit Eingaben und erwarteten Ergebnissen. Bei Bedarf dazu Sicherheit, Datenschutz, Migration oder Rücknahme.",
       },
       {
         id: "s3",
         title: "Vorgaben nach Risiko priorisieren",
         readTimeMinutes: 7,
         content:
-          "Steck den Spezifikationsaufwand dorthin, wo eine falsche Umsetzung Schaden anrichtet oder lange unentdeckt bliebe. Randbedingungen, Fehlerverhalten, Kompatibilität, geforderte Annahmenachweise. Zusätzlicher Text hilft nur, wenn er eine echte Mehrdeutigkeit beseitigt. Länge verbessert keine Spezifikation.",
+          "Spezifiziere am genauesten, wo eine falsche Umsetzung schadet oder lange unentdeckt bliebe: Randbedingungen, Fehlerverhalten, Kompatibilität und geforderte Annahmenachweise. Mehr Text lohnt nur gegen echte Mehrdeutigkeit.",
       },
     ],
     callout: {
@@ -127,7 +127,7 @@ export const ENGINEERING_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           cpId: "exercise",
           title: "Spezifikation erstellen",
           scenario:
-            "Schreibe eine fünfteilige Spezifikation für einen echten Eintrag aus deinem Arbeitsvorrat. Mindestens eine unveränderliche Bedingung, ein Nichtziel und ein Test für den Fehlerfall.",
+            "Schreibe eine fünfteilige Spezifikation für einen echten Eintrag aus deinem Arbeitsvorrat, mit mindestens einer unveränderlichen Bedingung, einem Nichtziel und einem Test für den Fehlerfall.",
           rows: 4,
         },
       },
@@ -141,9 +141,9 @@ export const ENGINEERING_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Parallele Arbeit mit Trennung",
     subtitle:
-      "Lass unabhängige Agentenaufgaben gleichzeitig laufen, ohne verdeckte Konflikte oder ungeprüfte Änderungen zu erzeugen.",
+      "Lass unabhängige Agentenaufgaben gleichzeitig laufen, ohne verdeckte Konflikte.",
     objective:
-      "Lass unabhängige Agentenaufgaben gleichzeitig laufen, ohne verdeckte Konflikte oder ungeprüfte Änderungen zu erzeugen.",
+      "Lass unabhängige Agentenaufgaben gleichzeitig laufen, ohne verdeckte Konflikte.",
     durationMinutes: 24,
     keyConcepts: [],
     quiz: [],
@@ -153,21 +153,21 @@ export const ENGINEERING_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "Parallelität braucht unabhängige Grenzen",
         readTimeMinutes: 8,
         content:
-          "Wann dürfen mehrere Agenten gleichzeitig arbeiten? Wenn Umfang, Dateien, Daten, Berechtigungen und Abschlusskriterien für jeden von ihnen klar sind. Getrennte Arbeitsbäume oder isolierte Umgebungen, keine gemeinsam veränderlichen Ressourcen, Abhängigkeiten vor dem Start geklärt. Gekoppelte Aufgaben zu parallelisieren kostet meist mehr Abstimmung, als es einbringt.",
+          "Lass Agenten nur parallel arbeiten, wenn Umfang, Dateien, Daten, Berechtigungen und Abschlusskriterien je klar sind. Nutze getrennte Arbeitsbäume oder Umgebungen, teile keine veränderlichen Ressourcen und kläre Abhängigkeiten vorab; gekoppelte Aufgaben kosten mehr Abstimmung, als sie sparen.",
       },
       {
         id: "s2",
         title: "Ein begrenztes Einstiegsmuster",
         readTimeMinutes: 8,
         content:
-          "Fang mit drei unabhängigen Rollen an. Ein Agent untersucht einen Fehler und schlägt eine Behebung vor, ein zweiter setzt eine kleine spezifizierte Änderung um, ein dritter prüft Tests oder Dokumentation. Jede Rolle bekommt eine enge Eingabe und eine enge Ausgabe. Eine benannte technische Fachkraft prüft die Ergebnisse, löst Konflikte und entscheidet, wie es weitergeht.",
+          "Fang mit drei Rollen an: Ein Agent untersucht und schlägt eine Behebung vor, einer setzt eine kleine spezifizierte Änderung um, einer prüft Tests oder Dokumentation. Eine benannte Fachkraft prüft die Ergebnisse, löst Konflikte und entscheidet über das Weitere.",
       },
       {
         id: "s3",
         title: "Häufige Fehler paralleler Arbeit",
         readTimeMinutes: 8,
         content:
-          "Parallele Arbeit scheitert, wenn Agenten überlappende Bereiche ändern, mit veralteten Annahmen arbeiten, Berechtigungen überschreiten oder schneller Änderungen erzeugen, als Menschen sie lesen können. Dann hilft weniger Gleichzeitigkeit, engere Spezifikationen, aktualisierter gemeinsamer Kontext und stärkere Integrationstests. Die Zahl der Agenten ist kein Leistungsziel.",
+          "Parallele Arbeit scheitert, wenn Agenten überlappende Bereiche ändern, veralteten Annahmen folgen, Berechtigungen überschreiten oder schneller Änderungen erzeugen, als Menschen sie lesen. Dann senkst du die Gleichzeitigkeit, schärfst Spezifikationen, aktualisierst den gemeinsamen Kontext und stärkst Integrationstests.",
       },
     ],
     exerciseKind: "slot-fill",
@@ -181,7 +181,7 @@ export const ENGINEERING_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           cpId: "exercise",
           title: "Deine erste Aufgabenverteilung",
           scenario:
-            "Definiere drei unabhängige Agentenaufträge, jeweils mit Rolle, Umfangsgrenze, erwartetem Ergebnis und menschlicher Verantwortung.",
+            "Definiere drei unabhängige Agentenaufträge mit Rolle, Umfangsgrenze, erwartetem Ergebnis und menschlicher Verantwortung.",
           placeholders: ["Agent A, Rolle", "Agent B, Rolle", "Agent C, Rolle"],
         },
       },
@@ -195,9 +195,9 @@ export const ENGINEERING_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Evaluationen als Freigabekontrolle",
     subtitle:
-      "Repräsentative Fälle, Regressionsprüfungen und ausdrückliche Freigabekriterien für Agentenänderungen.",
+      "Sichere Agentenänderungen mit repräsentativen Fällen, Regressionsprüfungen und Freigabekriterien ab.",
     objective:
-      "Repräsentative Fälle, Regressionsprüfungen und ausdrückliche Freigabekriterien für Agentenänderungen.",
+      "Sichere Agentenänderungen mit repräsentativen Fällen, Regressionsprüfungen und Freigabekriterien ab.",
     durationMinutes: 20,
     keyConcepts: [],
     quiz: [],
@@ -207,27 +207,27 @@ export const ENGINEERING_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "Evaluationen liefern begrenzte Nachweise",
         readTimeMinutes: 7,
         content:
-          "Eine Evaluationssammlung prüft definiertes Verhalten an bekannten Fällen. Mehr nicht. Sie zeigt Regressionen und vergleicht Versionen, beweist aber keine Sicherheit außerhalb der Sammlung. Je nach Risiko der Aufgabe kommen Codeprüfung, Sicherheitskontrollen, gestufte Freigabe, Beobachtung und Vorfallbehandlung dazu.",
+          "Eine Evaluationssammlung prüft definiertes Verhalten an bekannten Fällen, zeigt Regressionen und vergleicht Versionen. Außerhalb der Sammlung beweist sie nichts. Je nach Risiko kommen Codeprüfung, Sicherheitskontrollen, gestufte Freigabe, Beobachtung und Vorfallbehandlung dazu.",
       },
       {
         id: "s2",
         title: "Fälle aus realer Arbeit und bekannten Risiken wählen",
         readTimeMinutes: 7,
         content:
-          "Bau die kleinste Sammlung, die wichtige Normalfälle, Randbedingungen und schon beobachtete Fehlerarten abdeckt. Gibt es eine verlässliche Referenz, automatisiere die Bewertung. Braucht es Urteil, schreib die Bewertungsregeln auf und miss, wie einig sich die Prüfenden sind, sobald ihre Unterschiede eine Freigabe kippen könnten.",
+          "Deck wichtige Normalfälle, Randbedingungen und beobachtete Fehlerarten mit der kleinsten Sammlung ab. Mit verlässlicher Referenz bewertest du automatisch, sonst nach schriftlichen Regeln, und misst die Einigkeit der Prüfenden, wenn sie eine Freigabe kippen könnte.",
       },
       {
         id: "s3",
         title: "Freigabe- und Rücknahmekriterien festlegen",
         readTimeMinutes: 6,
         content:
-          "Modell, Eingabe, Kontext, Werkzeuge oder Richtlinie geändert? Dann laufen die relevanten Evaluationen. Lege fest, welche Regressionen die Freigabe sperren, wer eine Ausnahme genehmigen darf, welche Nachweise das kostet und wie die Rücknahme aussieht. Speichere Version und Ergebnis, damit sich ein Vorfall rekonstruieren lässt.",
+          "Nach jeder Änderung an Modell, Eingabe, Kontext, Werkzeugen oder Richtlinie laufen die relevanten Evaluationen. Lege fest, welche Regressionen sperren, wer Ausnahmen mit welchen Nachweisen genehmigt und wie die Rücknahme läuft, und speichere Version und Ergebnis.",
       },
     ],
     callout: {
       kind: "note",
       h: "Eine nützliche Fallgliederung",
-      text: "Drei Gruppen: (1) kritische Bedingungen, die immer gelten müssen, (2) repräsentative Arbeitsfälle, (3) gegnerische oder früher beobachtete Fehler. Werte jede Gruppe für sich aus. Ein Durchschnitt verdeckt sonst genau die Regression, die zählt.",
+      text: "Teile die Fälle in (1) kritische Bedingungen, die immer gelten müssen, (2) repräsentative Arbeitsfälle und (3) gegnerische oder früher beobachtete Fehler. Werte jede Gruppe einzeln aus, damit kein Durchschnitt eine kritische Regression verdeckt.",
     },
     exerciseKind: "slot-fill",
     widgets: [
@@ -240,7 +240,7 @@ export const ENGINEERING_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           cpId: "exercise",
           title: "Evaluationsfälle",
           scenario:
-            "Fünf Fälle für einen Agentenarbeitsablauf, drei repräsentative und zwei gegnerische. Zu jedem: Eingabe, erwartetes Verhalten, Bewertungsmethode.",
+            "Lege fünf Fälle für einen Agentenarbeitsablauf fest: drei repräsentative und zwei gegnerische, je mit Eingabe, erwartetem Verhalten und Bewertungsmethode.",
           placeholders: [
             "Testfall 1 (typisch)",
             "Testfall 2 (typisch)",
@@ -269,7 +269,7 @@ export const ENGINEERING_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
       {
         id: "ano-engineering-q1",
         questionText:
-          "Welche Teile einer Spezifikation legen das gewünschte Ergebnis und seine Annahme am unmittelbarsten fest?",
+          "Welche Teile einer Spezifikation legen das gewünschte Ergebnis und seine Annahme am direktesten fest?",
         answerOptions: [
           {
             id: "a",
@@ -293,7 +293,7 @@ export const ENGINEERING_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Das Ziel sagt, was herauskommen muss, Testfälle machen die Annahme beobachtbar. Schnittstellen, unveränderliche Bedingungen und Nichtziele bleiben wichtige Vorgaben; Länge und Urheberschaft definieren keine Korrektheit.",
+          "Das Ziel sagt, was herauskommen muss, Testfälle machen die Annahme beobachtbar. Schnittstellen, Bedingungen und Nichtziele zählen auch; Länge und Urheberschaft definieren nichts.",
       },
       {
         id: "ano-engineering-q2",
@@ -307,7 +307,7 @@ export const ENGINEERING_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
           {
             id: "b",
-            text: "Die Freigabe bleibt gesperrt, es sei denn, die dokumentierte Ausnahmeverantwortung prüft die Nachweise und trägt das Restrisiko.",
+            text: "Sperren, außer die Ausnahmeverantwortung prüft Nachweise und trägt das Restrisiko.",
             isCorrect: true,
           },
           {
@@ -322,7 +322,7 @@ export const ENGINEERING_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Eine Freigabeschranke wirkt nur, wenn ihr Scheitern die Freigabe sperrt oder ein kontrolliertes Ausnahmeverfahren auslöst. Die Ausnahme braucht Verantwortung, Nachweise, eine benannte Restgefahr und einen Rücknahmeweg.",
+          "Eine Schranke wirkt nur, wenn ihr Scheitern die Freigabe sperrt oder ein kontrolliertes Ausnahmeverfahren auslöst. Die Ausnahme braucht Verantwortung, Nachweise, benanntes Restrisiko und Rücknahmeweg.",
       },
       {
         id: "ano-engineering-q3",
@@ -341,7 +341,7 @@ export const ENGINEERING_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
           {
             id: "c",
-            text: "Überlappung reduzieren, Spezifikationen schärfen, Kontext aktualisieren, Integrationsprüfungen verstärken.",
+            text: "Überlappung senken, Spezifikationen schärfen, Kontext aktualisieren, Integration prüfen.",
             isCorrect: true,
           },
           {
@@ -351,7 +351,7 @@ export const ENGINEERING_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Konflikte und mangelhafte Ausgaben zeigen oft auf gekoppelte Bereiche, mehrdeutige Anforderungen, veralteten Kontext oder schwache Integrationskontrollen. Behebe das, bevor du das Modell wechselst oder noch mehr parallel laufen lässt.",
+          "Konflikte und schwache Ausgaben kommen meist von gekoppelten Bereichen, vagen Anforderungen, veraltetem Kontext oder schwachen Integrationskontrollen. Behebe das vor Modellwechsel oder mehr Agenten.",
       },
     ],
     sections: [],

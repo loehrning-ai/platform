@@ -122,7 +122,7 @@ export default function DataLab({
                 ? "Ausführbarer Pipeline-Kontrollraum"
                 : "Ausführbarer Daten-Kontrollraum",
           honest:
-            "Reale Node-24-Ausführung in einem kurzlebigen, netzwerkfreien Sandbox-Workspace · ausschließlich generierte Kursdaten",
+            "Reale Node-24-Ausführung in einer kurzlebigen Sandbox ohne Netz · nur generierte Kursdaten",
           query:
             variant === "experiment"
               ? "Vorregistrierter Analyseplan"
@@ -130,10 +130,10 @@ export default function DataLab({
                 ? "Deduplizierungs- und Zeitplan"
                 : "Telemetrie-Abfrageplan",
           queryHelp:
-            "Der Plan bleibt nur in diesem Browserzustand. Er wird strukturell geprüft, nicht als freie SQL-Anweisung ausgeführt. Der feste Kurs-Workspace führt Quellcode und Tests aus.",
+            "Der Plan bleibt im Browser und wird nur auf Struktur geprüft, nie als SQL ausgeführt. Ausgeführt werden der feste Kurscode und seine Tests.",
           queryValid: "Analysevertrag vollständig",
           queryInvalid:
-            "Der begrenzte Analysevertrag muss die kursrelevanten Felder und Ausschlüsse enthalten.",
+            "Dem Analysevertrag fehlen Felder oder Ausschlüsse.",
           inject:
             variant === "experiment"
               ? "Leakage und Peeking für den Lauf aktivieren"
@@ -144,14 +144,14 @@ export default function DataLab({
           execute: "Isolierten Workspace wirklich ausführen",
           executing: "Sandbox wird ausgeführt …",
           unavailable:
-            "Keine Ausführung bestätigt. Der reale Sandbox-Dienst ist nicht bereit, das Kontingent ist erschöpft oder der Lauf ist fehlgeschlagen.",
+            "Keine Ausführung bestätigt. Die Sandbox ist nicht bereit, das Kontingent ist erschöpft oder der Lauf ist fehlgeschlagen.",
           malformed:
-            "Keine Ausführung bestätigt. Die Antwort erfüllt den festen Evidenzvertrag nicht.",
+            "Keine Ausführung bestätigt. Die Antwort verletzt den Evidenzvertrag.",
           results: "Attestierte Ausführungsergebnisse",
           empty:
-            "Noch kein realer Lauf. Es werden keine simulierten Kennzahlen als Ausführung ausgegeben.",
+            "Noch kein realer Lauf.",
           restored:
-            "Ein früherer strukturierter Ausführungsbeleg ist gespeichert. Für stdout und Testprotokoll den Workspace erneut ausführen.",
+            "Ein früherer Ausführungsbeleg ist gespeichert. Für stdout und Testprotokoll erneut ausführen.",
           terminal: "Reales Laufprotokoll",
           decision:
             variant === "experiment"
@@ -177,9 +177,9 @@ export default function DataLab({
                 ? "Backfill-Runbook mit Mengenabgleich"
                 : "SLO-, Kosten- und Recovery-Begründung",
           noteHelp:
-            "Nur Arbeitsspeicher: Der Text wird weder in den Lernfortschritt noch an den Sandbox-Dienst übertragen.",
+            "Wird nicht gespeichert und nicht an die Sandbox gesendet.",
           notePlaceholder:
-            "Begründe die Entscheidung mit mindestens einem attestierten Messwert und einem Reproduktions- oder Recovery-Schritt.",
+            "Nenne mindestens einen attestierten Messwert und einen Reproduktions- oder Recovery-Schritt.",
           planEvidence: "Begrenzter Analysevertrag festgelegt",
           executionEvidence:
             "Node-Programm und zwei Invariantentests erfolgreich ausgeführt",
@@ -194,16 +194,16 @@ export default function DataLab({
             "Entscheidung im Arbeitsspeicher mit Messwert begründet",
           stageEvidence: "Alle fünf Projektphasen abgeschlossen",
           pending:
-            "Analysevertrag, Fehlerfixture, realer Lauf, Entscheidung und Begründung fehlen noch.",
+            "Es fehlen noch Analysevertrag, Fehlerfixture, realer Lauf, Entscheidung oder Begründung.",
           stageLocked:
-            "Die Ausführung ist belegt. Finale Verifikation bleibt gesperrt, bis alle fünf Projektphasen abgeschlossen sind.",
+            "Ausführung belegt. Die finale Verifikation öffnet nach allen fünf Projektphasen.",
           ready: "Ausführung und Entscheidung sind prüfbar.",
           summary:
             variant === "experiment"
-              ? "Experiment verifiziert: reale Fixture-Ausführung verglich +5 pp sicher mit +22 pp geleakt; Leakage und Peeking wurden in der Model Card begrenzt."
+              ? "Experiment verifiziert: +5 pp sicher gegen +22 pp geleakt; Leakage und Peeking in der Model Card begrenzt."
               : variant === "pipeline"
-                ? "Pipeline verifiziert: 117 Events wurden ausgeführt, 14 Duplikate und 8 Late Events behandelt, Backfill und 102→102-Replay bestanden."
-                : "Kontrollraum verifiziert: 684-ms-SLO-Bruch ausgeführt und 210-ms-Zero-Loss-Recovery mit 2,4× Incident-Kosten belegt.",
+                ? "Pipeline verifiziert: 117 Events, 14 Duplikate und 8 Late Events behandelt, Backfill und 102→102-Replay bestanden."
+                : "Kontrollraum verifiziert: 684-ms-SLO-Bruch und 210-ms-Recovery ohne Verlust bei 2,4× Incident-Kosten belegt.",
         }
       : {
           engine:
@@ -213,7 +213,7 @@ export default function DataLab({
                 ? "Executable pipeline control room"
                 : "Executable data control room",
           honest:
-            "Real Node 24 execution in an ephemeral, network-denied sandbox workspace · generated course data only",
+            "Real Node 24 execution in a short-lived sandbox without network · generated course data only",
           query:
             variant === "experiment"
               ? "Pre-registered analysis plan"
@@ -221,10 +221,10 @@ export default function DataLab({
                 ? "Deduplication and event-time plan"
                 : "Telemetry query plan",
           queryHelp:
-            "The plan stays in browser memory. It is structurally checked, not executed as free-form SQL. The fixed course workspace executes source code and tests.",
+            "The plan stays in the browser and is only checked for structure, never run as SQL. The fixed course code and its tests are what runs.",
           queryValid: "Analysis contract complete",
           queryInvalid:
-            "The bounded analysis contract must contain the course-specific fields and exclusions.",
+            "The analysis contract is missing fields or exclusions.",
           inject:
             variant === "experiment"
               ? "Enable leakage and peeking for the run"
@@ -235,14 +235,14 @@ export default function DataLab({
           execute: "Execute the isolated workspace for real",
           executing: "Running sandbox …",
           unavailable:
-            "No execution was confirmed. The real sandbox service is not ready, its budget is exhausted, or the run failed.",
+            "No execution was confirmed. The sandbox is not ready, its budget is exhausted, or the run failed.",
           malformed:
-            "No execution was confirmed. The response failed the fixed evidence contract.",
+            "No execution was confirmed. The response broke the evidence contract.",
           results: "Attested execution results",
           empty:
-            "No real run yet. Simulated metrics are not presented as execution.",
+            "No real run yet.",
           restored:
-            "A prior structured execution receipt is stored. Rerun the workspace to recover stdout and the test transcript.",
+            "A prior execution receipt is stored. Rerun to see stdout and the test transcript.",
           terminal: "Actual run transcript",
           decision:
             variant === "experiment"
@@ -268,9 +268,9 @@ export default function DataLab({
                 ? "Backfill runbook with reconciliation"
                 : "SLO, cost, and recovery rationale",
           noteHelp:
-            "Memory only: this text is not persisted to learning progress or sent to the sandbox service.",
+            "Not saved and not sent to the sandbox.",
           notePlaceholder:
-            "Justify the decision with at least one attested metric and one reproduction or recovery step.",
+            "Cite at least one attested metric and one reproduction or recovery step.",
           planEvidence: "Bounded analysis contract specified",
           executionEvidence:
             "Node program and two invariant tests executed successfully",
@@ -284,16 +284,16 @@ export default function DataLab({
           noteEvidence: "Decision justified in memory with an attested metric",
           stageEvidence: "All five project stages completed",
           pending:
-            "The analysis contract, failure fixture, real run, decision, or rationale is still missing.",
+            "Still missing: analysis contract, failure fixture, real run, decision or rationale.",
           stageLocked:
-            "Execution is evidenced. Final verification remains locked until all five project stages are complete.",
+            "Execution evidenced. Final verification unlocks after all five project stages.",
           ready: "The execution and operating decision are auditable.",
           summary:
             variant === "experiment"
-              ? "Experiment verified: real fixture execution compared a safe +5 pp with a leaked +22 pp; leakage and peeking were bounded in the model card."
+              ? "Experiment verified: safe +5 pp against leaked +22 pp; leakage and peeking bounded in the model card."
               : variant === "pipeline"
-                ? "Pipeline verified: 117 events executed, 14 duplicates and 8 late events handled, backfill and the 102→102 replay passed."
-                : "Control room verified: a 684 ms SLO breach executed and a 210 ms zero-loss recovery with 2.4× incident cost was evidenced.",
+                ? "Pipeline verified: 117 events, 14 duplicates and 8 late events handled, backfill and 102→102 replay passed."
+                : "Control room verified: 684 ms SLO breach and 210 ms zero-loss recovery at 2.4× incident cost evidenced.",
         };
 
   const queryValidation = useMemo(() => {

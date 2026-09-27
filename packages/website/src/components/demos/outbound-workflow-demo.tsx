@@ -1026,8 +1026,7 @@ function OutboundWorkflowDemoEnglish() {
           screen-reader users a landmark into the instrument. */}
         <h2 className="sr-only">Message from public signals</h2>
         <p className="text-caption text-muted-foreground" style={{ margin: 0, maxWidth: 720 }}>
-          All people, companies, addresses, and signals below are fictional. The
-          interface drafts locally and cannot send email.
+          Drafts stay in the browser; this page cannot send email.
         </p>
       </div>
 

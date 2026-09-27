@@ -241,7 +241,7 @@ test.describe("Data Infrastructure golden path", () => {
     // mental-model.ts): option index 1 is correct, and
     // DATA_INFRA_QUIZ_COPY's correctLabel is "Correct."
     const correctAnswer = page.getByRole("radio", {
-      name: "B The log, because this scenario explicitly gives it complete retained change history.",
+      name: "B The log, which holds the complete retained change history.",
     });
     await expect(correctAnswer).toBeVisible();
     await correctAnswer.click();

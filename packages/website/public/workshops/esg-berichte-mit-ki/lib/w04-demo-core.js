@@ -195,7 +195,7 @@ var W04Core = (function () {
         s1: num(st.s1) + " t", s2: num(st.s2) + " t"
       },
       caption: ghost
-        ? "Every switch is fixed, so this answer is the right answer. The dashed bars show the path from the raw-folder answer to the right answer, with all traps active, in this order."
+        ? "Every switch is fixed, so this is the right answer. The dashed bars show the path from the raw-folder answer, one trap at a time, in this order."
         : (mask === 127
           ? "With all traps active. Each bar fixes one trap, in this order, from the raw-folder answer to the right answer."
           : "Each bar fixes one active trap, in this order, from this answer to the right answer. Totals come from the " + nStates + " precomputed states."),

@@ -18,13 +18,13 @@ export default function Error({
     locale === "en"
       ? {
           title: "The blog could not be loaded.",
-          body: "The article record is unchanged. Reload the page or return home.",
+          body: "Reload the page or go back home.",
           retry: "Reload",
           home: "Back to home",
         }
       : {
           title: "Der Blog konnte nicht geladen werden.",
-          body: "Der Artikelbestand wurde nicht verändert. Lade die Seite erneut oder kehre zur Startseite zurück.",
+          body: "Lade die Seite neu oder geh zur Startseite.",
           retry: "Erneut laden",
           home: "Zur Startseite",
         };

@@ -315,7 +315,7 @@ function genStack() {
   return `<div class="st" style="--st-ws:${wsW}px">`
     + `<div class="st__bar"><span class="st__ws" data-motion="grow" data-axis="x"><svg class="icon icon--40" aria-hidden="true"><use href="#i-certificate" /></svg></span><span class="st__rest" data-motion="grow" data-axis="x" style="--order:1"></span></div>`
     + `<p class="st__lab st__lab--ws"><b>Werk Süd ${n("el_ws_mwh")}</b><span>covered by guarantees of origin</span></p>`
-    + `<p class="st__lab st__lab--rest"><b>Werk Nord + Lager Ost ${n("el_uncovered_mwh")}</b><span>no certificate</span></p>`
+    + `<p class="st__lab st__lab--rest"><b>Werk Nord + Lager Ost ${n("el_uncovered_mwh")}</b><span>not covered</span></p>`
     + `<p class="st__total">2025 electricity ${n("el_total_mwh")} · covered ${n("renewable_share_el_pct")}</p>`
     + `</div>`;
 }

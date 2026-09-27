@@ -55,7 +55,7 @@
   <header>
     <p class="wf-kicker">Workshop 01 · Forecasting decisions · Take-home</p>
     <h1 class="wf-h1">Forecasting practice</h1>
-    <p class="wf-lead">Three levels, from 15 minutes to open-ended. Level 1 uses the hands-on lab, level 2 a spreadsheet and the practice dataset, level 3 your own work. Stop after any level.</p>
+    <p class="wf-lead">Three levels: 15 minutes in the lab, 45 minutes in a spreadsheet, then your own work. Stop after any level.</p>
     <div class="hw-kit">
       <a class="wf-btn" href="./hands-on.html">Hands-on lab</a>
       <a class="wf-btn" href="./case-study/index.html">Business case</a>
@@ -69,7 +69,7 @@
       <thead><tr><th>Pillar</th><th>The question</th><th>Where it hurts</th></tr></thead>
       <tbody>
         <tr><td><b>1 Overpredict</b></td><td>What does too much cost?</td><td>Cash frozen, spoilage, markdowns</td></tr>
-        <tr><td><b>2 Underpredict</b></td><td>What does too little cost?</td><td>Stockouts, customers who walk away</td></tr>
+        <tr><td><b>2 Underpredict</b></td><td>What does too little cost?</td><td>Stockouts, lost customers</td></tr>
         <tr><td><b>3 Safety stock</b></td><td>How much cushion, given 1 and 2?</td><td>The number that balances both costs</td></tr>
         <tr><td><b>4 Many factors</b></td><td>Where do buffers stack up?</td><td>SKUs, regions and suppliers each pad their order: the bullwhip</td></tr>
         <tr><td><b>5 Supply and demand</b></td><td>Why forecast ahead at all?</td><td>Everyone commits to one number before demand is known</td></tr>
@@ -82,41 +82,40 @@
 
     <article class="tier">
       <div class="tier-head"><h3>Level 1: set a buffer in the lab</h3><span class="wf-kicker">15 minutes</span></div>
-      <p>Open the <a href="./hands-on.html">hands-on lab</a>. In act 1 (parcel network) switch the forecast between <i>History only</i>, <i>+ Weekday</i> and <i>+ Promo dates</i>. In act 2 (device maker) move the <b>Service target</b> slider and compare <i>Local buffers</i> with <i>Shared forecast</i>. The gap between forecast and order is your <b>safety stock</b>.</p>
+      <p>Open the <a href="./hands-on.html">hands-on lab</a>. The gap between forecast and order is your <b>safety stock</b>.</p>
       <ol>
-        <li><b>Run a high service level.</b> Set act 2 to a service target of at least 90%. Watch the cash tied up in inventory grow as stockouts get rare.</li>
-        <li><b>Beat the manual rule once.</b> In act 1, find the forecast that beats “same weekday last week” on the capacity bill. Note the one shock no forecast catches.</li>
-        <li><b>Write down the buffer that worked.</b> Record the service target that balanced cost and fill rate. Then decide which business needs the bigger buffer: a bakery, where croissants spoil overnight, or a parcel network, where a missed delivery costs more than an idle van. Work it out with the critical ratio.</li>
+        <li><b>Beat the manual rule.</b> In act 1 (parcel network), switch between <i>History only</i>, <i>+ Weekday</i> and <i>+ Promo dates</i> until one beats “same weekday last week” on the capacity bill. Note the shock no forecast catches.</li>
+        <li><b>Run a high service level.</b> In act 2 (device maker), set the <b>Service target</b> to 90% or more and compare <i>Local buffers</i> with <i>Shared forecast</i>. Cash tied in stock grows as stockouts get rare.</li>
+        <li><b>Write down the buffer that worked:</b> the service target that balanced cost and fill rate. Then use the critical ratio to decide who needs the bigger buffer: a bakery, whose croissants spoil overnight, or a parcel network, where a missed delivery costs more than an idle van.</li>
       </ol>
       <p class="wf-note">A 100% service level loses money. Set the buffer from the cost of too much against the cost of too little.</p>
-      <p class="trains">Practises pillars 1 to 3. Field card sections 2 (newsvendor) and 3 (safety stock).</p>
+      <p class="trains">Pillars 1 to 3. Field card sections 1 to 3.</p>
     </article>
 
     <article class="tier">
       <div class="tier-head"><h3>Level 2: score two forecasts</h3><span class="wf-kicker">45 minutes</span></div>
-      <p>Build two forecasts on the practice dataset and score them. A spreadsheet is enough; a notebook works too.</p>
-      <p class="wf-note wf-note--gap"><b>Dataset:</b> <a href="./data/demand-weekly.csv" download><code>demand-weekly.csv</code></a>, 104 weeks of one product's demand (<code>week_start, units</code>), with a trend and a bump in Q4. Hide the last 14 rows as your test set, or use your own series.</p>
+      <p>A spreadsheet is enough; a notebook works too. <b>Dataset:</b> <a href="./data/demand-weekly.csv" download><code>demand-weekly.csv</code></a>, 104 weeks of one product's demand (<code>week_start, units</code>) with a trend and a bump in Q4, or your own series.</p>
       <ol>
-        <li><b>Split.</b> Hide the last 14 weeks (your test period) so the model never sees the answers. This is <i>backtesting</i>.</li>
+        <li><b>Split.</b> Hide the last 14 weeks as your test period so the model never sees the answers (<i>backtesting</i>).</li>
         <li><b>Naive baseline.</b> Forecast each test week as last week's actual. This is the bar to beat.</li>
-        <li><b>Smoothed forecast.</b> Use a moving average of the last 3 weeks, or exponential smoothing <code>F = 0.3·actual + 0.7·F_prev</code>. In a notebook: <code>SimpleExpSmoothing</code> or <code>Holt</code>.</li>
+        <li><b>Smoothed forecast.</b> A 3-week moving average, or exponential smoothing <code>F = 0.3·actual + 0.7·F_prev</code>. In a notebook: <code>SimpleExpSmoothing</code> or <code>Holt</code>.</li>
         <li><b>Score both</b> over the 14 weeks: <b>MAE</b> = <code>AVG(ABS(actual - forecast))</code>; <b>Bias</b> = <code>AVG(forecast - actual)</code> (positive means over-forecast).</li>
-        <li><b>Report</b> four numbers (MAE and bias for naive and smoothed) and one sentence: is the smoothed forecast worth the extra step?</li>
+        <li><b>Report</b> MAE and bias for both forecasts and one sentence: is smoothing worth the extra step?</li>
       </ol>
-      <p class="trains">Practises baselines and backtesting. Field card section 5 and the five checks.</p>
+      <p class="trains">Baselines and backtesting. “Reading a forecast” below and the field card checks.</p>
     </article>
 
     <article class="tier">
       <div class="tier-head"><h3>Level 3: your own work</h3><span class="wf-kicker">Open-ended</span></div>
       <p>Pick a business, team or system where something runs out or piles up. Apply the newsvendor rule in five sentences:</p>
       <ol>
-        <li>Name the domain and the one quantity you would forecast: staff hours, inventory, server capacity, hospital beds or ad budget.</li>
-        <li>Where does <b>over-forecasting</b> cost you most?</li>
-        <li>Where does <b>under-forecasting</b> cost you most?</li>
-        <li>Which is worse, and does your critical ratio point to a high or a low service level?</li>
-        <li>What <b>buffer</b> would you set, and which signal (a season, a lead time, a promotion) would make you change it?</li>
+        <li>The domain and the one quantity you would forecast (staff hours, inventory, server capacity, hospital beds, ad budget).</li>
+        <li>Where <b>over-forecasting</b> costs you most.</li>
+        <li>Where <b>under-forecasting</b> costs you most.</li>
+        <li>Which is worse, and whether your critical ratio points to a high or low service level.</li>
+        <li>The <b>buffer</b> you would set, and which signal (a season, a lead time, a promotion) would change it.</li>
       </ol>
-      <p class="trains">Practises all five pillars. Field card sections 1 to 4.</p>
+      <p class="trains">All five pillars. Field card sections 1 to 3.</p>
     </article>
   </section>
 
@@ -125,24 +124,28 @@
     <table class="wf-table check">
       <thead><tr><th>Level</th><th>Done</th><th>Go back if</th></tr></thead>
       <tbody>
-        <tr><td>Level 1</td><td>One act 2 run at a service target of 90% or more, the act 1 forecast that beats the manual rule, and the service target you would pick</td><td>You found a good setting by chance and cannot say which buffer did it</td></tr>
-        <tr><td>Level 2</td><td>Four numbers reported; smoothed MAE at or below naive MAE; absolute bias under about 20% of average demand</td><td>You looked at the test weeks, or reported MAE without bias</td></tr>
-        <tr><td>Level 3</td><td>Five sentences; the cost of over- and of under-forecasting both named; the buffer follows from which is worse</td><td>You described the domain but did not choose a buffer or say why</td></tr>
+        <tr><td>Level 1</td><td>An act 2 run at 90% or more, the act 1 forecast that beats the manual rule, your service target</td><td>You cannot say which buffer made a setting work</td></tr>
+        <tr><td>Level 2</td><td>Four numbers; smoothed MAE at or below naive MAE; absolute bias under about 20% of average demand</td><td>You looked at the test weeks, or reported MAE without bias</td></tr>
+        <tr><td>Level 3</td><td>Five sentences naming both costs; the buffer follows from the worse one</td><td>You described the domain but chose no buffer or gave no reason</td></tr>
       </tbody>
     </table>
   </section>
 
-  <section class="wf-section" aria-labelledby="ptr-title">
-    <header class="wf-kopf"><h2 class="wf-h2" id="ptr-title">Where to look things up</h2></header>
+  <section class="wf-section" aria-labelledby="ref-title">
+    <header class="wf-kopf"><h2 class="wf-h2" id="ref-title">Reading a forecast</h2></header>
     <ul class="hw-pointers">
-      <li><b>Buffer and service-level maths:</b> <a href="./field-card.html">field card</a> section 2 (newsvendor and critical ratio) and section 3 (safety stock).</li>
-      <li><b>Baselines and smoothing for level 2:</b> field card section 5 and the five checks.</li>
-      <li><b>The whole chain:</b> the <a href="./case-study/index.html">business case</a>, one phone launch from forecast to allocation.</li>
-      <li><b>Intuition first:</b> the three acts of the <a href="./hands-on.html">hands-on lab</a> (current process, buffer policy, release gate).</li>
+      <li><b>MAE:</b> the average miss. <b>Bias:</b> the average signed error; near-zero bias with a large MAE means the misses cancel while every order is off.</li>
+      <li><b>RMSE</b> squares errors, so a few big misses dominate. <b>MAPE</b> explodes near zero demand and treats over and under unevenly.</li>
+      <li>No value is “good” in general. Compare against your own <b>naive baseline</b> (forecast value added).</li>
+      <li>A 90% band should hold about 90% of real points and <b>widens with the horizon</b>. Plan against the band.</li>
+      <li><b>Risk pooling:</b> combined independent demands grow only as <code>√(σ₁²+σ₂²)</code>, so one shared buffer (a central warehouse, a phone and its earbuds planned together) needs less stock than many separate ones.</li>
+      <li><b>What no model predicts:</b> novelty (no precedent), regime change (the rules behind the data shift), reflexivity (acting on the forecast changes it) and one-off choices (no distribution). Google Flu Trends overestimated flu in 100 of 108 weeks; weather forecasts lose most skill after about 10 days.</li>
+      <li><b>M5 competition</b> (Walmart sales, 2020): about 7.5% of 5,507 teams beat plain exponential smoothing. The winner, 22.4% more accurate, combined 220 gradient-boosted tree models and no deep learning. Total demand is predictable; one item in one store is mostly noise.</li>
     </ul>
+    <p class="trains">Sources: Makridakis et al. (2022), Lazer et al., Science (2014). Newsvendor numbers come from a worked bakery example.</p>
   </section>
 
-  <p class="hw-foot">Everything here runs in your browser without a connection. You need no account and enter no personal data.</p>
+  <p class="hw-foot">No account needed, no personal data entered.</p>
 </main>
 <footer class="wf-foot">
   <p>Original course material by Tim Löhr. All rights reserved. <a href="/en/open-source/lizenzrichtlinie">License policy</a>. Synthetic practice-market teaching data; invented figures.</p>

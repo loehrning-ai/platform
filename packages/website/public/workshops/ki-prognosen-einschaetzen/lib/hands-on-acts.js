@@ -433,7 +433,7 @@
       return { bias: a ? b / a : 0 };
     },
     setPrimer: function () {
-      this.v._set("Six weeks of ZIP demand replay as a shadow pilot. The grey line is <b>same weekday last week</b>, the anchor to beat. Two days are marked: a <b>promo that is on the calendar</b> and a <b>shock that is not</b>. Press Run to score the capacity bill. Underbuild costs €" + COST_UNDER + " a package, overbuild costs €" + COST_OVER + ".", null);
+      this.v._set("Six weeks of ZIP demand, replayed as a shadow pilot. The grey line, <b>same weekday last week</b>, is the rule to beat. Marked: a <b>promo on the calendar</b> and a <b>shock that is not</b>. Underbuild costs €" + COST_UNDER + " a package, overbuild €" + COST_OVER + ". Press Run.", null);
     },
     reset: function (silent) {
       this._sweep && this._sweep.stop();
@@ -479,16 +479,16 @@
       this.rowChal.row.classList.toggle("win", chalWon);
       (chalWon ? this.rowChal : this.rowBase).who.classList.add("front");
       var promoErr = Math.round(Math.abs(this.y[118] - this.predAt(this.model, 118)));
-      var owner = "The shock day has no calendar date. No model sees it, so it goes to the exception owner, not the model score.";
+      var owner = "No model sees the undated shock, so it goes to the exception owner and stays out of the score.";
       if (this.model === "ma") {
-        this.v._set("<b>History only loses.</b> A seven day average is blind to the weekday rhythm your spreadsheet already uses, so it overspends by <b>" + money(-saved) + "</b> across six weeks. Give the model at least the calendar the sheet has. " + owner, "warn");
-        emitResult("race", money(saved), "vs same weekday last week", "Less calendar than the sheet loses. Start from weekday, then add the dates.");
+        this.v._set("<b>History only loses.</b> A seven day average misses the weekday rhythm the spreadsheet uses and overspends by <b>" + money(-saved) + "</b> in six weeks. Give the model at least the sheet's calendar. " + owner, "warn");
+        emitResult("race", money(saved), "vs same weekday last week", "Start from weekday, then add the dates.");
       } else if (this.model === "wk") {
-        this.v._set("<b>Weekday rhythm beats last week</b> by <b>" + money(saved) + "</b> over six weeks, a <b>" + pct(cut) + "</b> cut. But watch the promo day: it still misses by about <b>" + promoErr + "</b> because a weekday model cannot see a one off promo date. " + owner, "gold");
-        emitResult("race", money(saved) + " lower", "capacity cost, six weeks", "Weekday helps, but the promo day is still a miss. Add the dates.");
+        this.v._set("<b>Weekday rhythm beats last week</b> by <b>" + money(saved) + "</b> over six weeks, a <b>" + pct(cut) + "</b> cut. The promo day still misses by about <b>" + promoErr + "</b>: a weekday model cannot see a one off promo date. " + owner, "gold");
+        emitResult("race", money(saved) + " lower", "capacity cost, six weeks", "The promo day still misses. Add the dates.");
       } else {
-        this.v._set("<b>The promo date is the catch.</b> Add the known promo calendar and the promo day error drops to about <b>" + promoErr + "</b>. Capacity cost falls <b>" + pct(cut) + "</b>, about <b>" + money(saved) + "</b> over six weeks. " + owner, "good");
-        emitResult("race", money(saved) + " lower", "capacity cost, six weeks", "The promo date is the one thing last week could not see.");
+        this.v._set("<b>The promo date is the catch.</b> With the promo calendar the promo day error drops to about <b>" + promoErr + "</b> and capacity cost falls <b>" + pct(cut) + "</b>, about <b>" + money(saved) + "</b> over six weeks. " + owner, "good");
+        emitResult("race", money(saved) + " lower", "capacity cost, six weeks", "Last week could not see the promo date.");
       }
     },
     render: function () {
@@ -657,7 +657,7 @@
 	        this.strip,
 	        el("div", { class: "hs-metrics" }, [this.mFill, this.mBull, this.mCash, this.mCost]),
 	        this.v,
-	        el("div", { class: "hs-note", html: "Bullwhip is order-variance amplification: CV(order)<sup>2</sup> / CV(POS demand)<sup>2</sup>. Local buffers pass padded orders as demand. Shared forecast uses one POS demand distribution and makes safety stock an explicit policy. Teaching lens with invented figures; not any company's real system." })
+	        el("div", { class: "hs-note", html: "Bullwhip ratio = CV(order)<sup>2</sup> / CV(POS demand)<sup>2</sup>. Invented figures." })
 	      ]));
 
       this.loop = makeLoop(this, 72, function () { self.stepWeek(); }, function () { self.render(); });
@@ -744,7 +744,7 @@
 	      this.live._state(false, false, "Device maker | laptop handoff bullwhip");
 	      var cells = this.strip.children;
 	      for (var i = 0; i < 52; i++) cells[i].className = "";
-	      this.v._set("Run the same laptop demand year. <b>Local buffers</b> pass padded orders upstream. <b>Shared forecast</b> gives every team the same POS demand signal and one explicit safety-stock policy.");
+	      this.v._set("Run one laptop demand year. <b>Local buffers</b> pass padded orders upstream. <b>Shared forecast</b> gives every team the same POS signal and one safety-stock policy.");
 	    },
     run: function () {
       if (this.loop.running) return;
@@ -775,15 +775,15 @@
 	      var costDelta = local.total - mine.total;
 	      var head = "Mode <b>" + this.modeLabel(this.mode) + "</b>: fill rate <b>" + pct(mine.fillRate) + "</b>, bullwhip ratio <b>" + mine.bullwhip.toFixed(1) + "x</b>, decision cost <b>" + money(mine.total) + "</b>, WAPE <b>" + pct(mine.wape) + "</b>, bias <b>" + (mine.bias >= 0 ? "+" : "") + pct(mine.bias) + "</b>. ";
 	      if (this.mode === "local") {
-	        this.v._set(head + "This is the failure mode: the forecast may be reasonable, but the handoff turns padded orders into demand. Compare it with shared forecast to separate forecasting error from process amplification.", "warn");
+	        this.v._set(head + "The handoff turns padded orders into demand, even with a sound forecast. Compare with shared forecast to separate forecast error from process amplification.", "warn");
 	      } else if (mine.fillRate >= this.svc - 0.04 && reduction >= 0.3 && costDelta > 0) {
-	        this.v._set(head + "Shared signal wins the operating gate: bullwhip falls by <b>" + pct(reduction) + "</b> versus local buffers while service stays near target and cost improves by <b>" + money(costDelta) + "</b>.", "good");
+	        this.v._set(head + "Shared signal passes the gate: bullwhip falls <b>" + pct(reduction) + "</b> against local buffers, service stays near target, cost drops <b>" + money(costDelta) + "</b>.", "good");
 	        confettiBurst(this.mBull);
 	      } else {
-	        this.v._set(head + "The policy is cleaner, but the launch override, batch size or service target still needs tuning before rollout. The approval gate is bullwhip down, fill rate protected, cost lower.", "gold");
+	        this.v._set(head + "Tune launch override, batch size or service target before rollout. The gate: bullwhip down, fill rate held, cost lower.", "gold");
 	      }
 	      emitResult("buffer", mine.bullwhip.toFixed(1) + "x", "Laptop bullwhip ratio",
-	        this.modeLabel(this.mode) + " produced " + money(mine.total) + " decision cost. Record: shared forecast or local buffers, service target by store tier, safety-stock location, batch-size rule, launch override owner.");
+	        this.modeLabel(this.mode) + " produced " + money(mine.total) + " decision cost.");
 	      this.render();
 	    },
 	    modeLabel: function (m) {
@@ -897,7 +897,7 @@
 	      this.gImpact = this._gate("Impact", "waiting", "review");
 
 	      this.v = verdict();
-	      this.v._set("Live demand signals arrive every few minutes. The blind policy ships the deploy-day plan. The AI policy can react to live features, but capacity only auto-releases when the trust gate passes. Trigger a shock.");
+	      this.v._set("Demand signals arrive every few minutes. The blind policy ships the deploy-day plan. The AI policy auto-releases capacity only when the gate passes. Trigger a shock.");
 
 	      var bSpike = el("button", { class: "hs-btn shock", type: "button", text: "Viral creator spike" });
 	      var bCrash = el("button", { class: "hs-btn shock crash", type: "button", text: "Regional demand drop" });
@@ -920,7 +920,7 @@
 	        el("div", { class: "hs-gates" }, [this.gFresh, this.gDrift, this.gBias, this.gCoverage, this.gImpact]),
         el("div", { class: "hs-metrics" }, [this.mBlind, this.mGov, this.mSaved]),
         this.v,
-	        el("div", { class: "hs-note", html: "Same demand, same base model. <b>No-gate</b> keeps shipping the deploy-day plan into capacity. <b>Gated AI</b> checks freshness, drift, bias, coverage and business impact before auto-release. Under-capacity costs €" + (META_UNDER / 1000).toFixed(1) + "k per demand point; over-capacity costs €" + (META_OVER / 1000).toFixed(1) + "k. Teaching lens with invented figures; not any company's real system." })
+	        el("div", { class: "hs-note", html: "Same demand, same base model. <b>Gated AI</b> checks freshness, drift, bias, coverage and impact before auto-release. Under-capacity costs €" + (META_UNDER / 1000).toFixed(1) + "k per demand point, over-capacity €" + (META_OVER / 1000).toFixed(1) + "k. Invented figures." })
       ]));
 
       // particles along the pipeline
@@ -952,7 +952,7 @@
       if (!silent) {
         this.lossB = 0; this.lossG = 0;
 	        this.live._state(true, false, "Social app | steady demand state");
-	        this.v._set("Reset. Both policies are healthy and identical until reality moves. Trigger a shift.", null);
+	        this.v._set("Reset. Both policies match until demand moves. Trigger a shift.", null);
 	        this.updateGateBoard();
         this.draw();
       }
@@ -960,7 +960,7 @@
     base: function (t) { return 100 + 9 * Math.sin(2 * Math.PI * t / 7) + 4 * Math.sin(2 * Math.PI * t / 3.5 + 1); },
     shock: function (kind) {
       if (this.state !== "ok") {
-        this.v._set("<b>The loop is already handling a shock.</b> Let the story finish (monitor, gate, override, retrain), or press Reset. Then throw the next one.", "warn");
+        this.v._set("<b>A shock is still running.</b> Let it finish (monitor, gate, override, retrain) or press Reset.", "warn");
         return;
       }
 	      this.shockStart = this.t; this.detectAt = -1; this.releaseAt = -1;
@@ -968,14 +968,14 @@
 	      else {
         var nextR = Math.max(this.R * 0.62, 0.32); // floor inside the retrain clamp (0.3) so the loop can always re-track
         if (nextR >= this.R) {
-          this.v._set("<b>Demand is already at the floor of this simulation.</b> Press Reset to run the story again.", "warn");
+          this.v._set("<b>Demand is at the simulation's floor.</b> Press Reset.", "warn");
           return;
         }
 	        this.R = nextR; this.live._state(true, true, "Shock: regional user demand dropped");
 	      }
 	      this.v._set(kind === "spike"
-	        ? "<b>A viral creator spike.</b> Demand jumps past the recent training window. Watch which policy detects the break before capacity drifts."
-	        : "<b>A regional demand drop.</b> The old model's world no longer exists. Watch which policy stops blind auto-release.", "warn");
+	        ? "<b>A viral creator spike.</b> Demand jumps past the training window. Which policy detects the break first?"
+	        : "<b>A regional demand drop.</b> The old model no longer fits. Which policy stops blind auto-release?", "warn");
     },
     tick: function (warm) {
       var t = this.t++;
@@ -1012,7 +1012,7 @@
       var THRESH = 11; // ~3x noise sigma
       if (this.state === "ok" && this.alarmMAE > THRESH) { this.state = "alert"; this.stateT = 0; if (this.detectAt < 0 && this.shockStart >= 0) this.detectAt = this.t; }
       else if (this.state === "alert") { this.state = "override"; this.stateT = 0;
-	        if (!warm) this.v._set("<b>Drift monitor tripped.</b> The gate closed: large variance now routes to a named exception owner. The override tracks recent reality while the model is stale.", "gold");
+	        if (!warm) this.v._set("<b>Drift monitor tripped.</b> The gate closed and large variance goes to a named exception owner. The override tracks recent demand while the model is stale.", "gold");
       }
       else if (this.state === "override") {
         this.stateT++;
@@ -1023,7 +1023,7 @@
           this.newR = clamp(recent / (baseNow || 1), 0.3, 2.5);
           this.state = "retrained"; this.stateT = 0;
 	          if (this.releaseAt < 0 && this.shockStart >= 0) this.releaseAt = this.t;
-	          if (!warm) this.v._set("<b>Retrained on the new regime.</b> Automation resumes with the gate still armed. The blind policy never noticed anything.", "good");
+	          if (!warm) this.v._set("<b>Retrained on the new regime.</b> Automation resumes with the gate armed. The blind policy noticed nothing.", "good");
         }
       }
 	      else if (this.state === "retrained") { this.stateT++; if (this.stateT > 10 && this.alarmMAE < THRESH * 0.6) { this.state = "ok"; if (!warm) this.live._state(true, false, "Social app | steady state under new regime"); } }
@@ -1033,7 +1033,7 @@
 	        setMetric(this.mGov, money(this.lossG));
 	        setMetric(this.mSaved, money(Math.max(0, this.lossB - this.lossG)));
 	        emitResult("loop", this.releaseMode.toLowerCase(), "current release mode",
-	          "No-gate release lost " + money(this.lossB) + "; gated AI lost " + money(this.lossG) + "; avoided loss is " + money(Math.max(0, this.lossB - this.lossG)) + ". Record: operating mode, gate owner, drift tolerance, trigger, override path.");
+	          "No-gate release lost " + money(this.lossB) + "; gated AI lost " + money(this.lossG) + "; avoided loss is " + money(Math.max(0, this.lossB - this.lossG)) + ".");
 	      }
     },
 	    updateGateBoard: function () {

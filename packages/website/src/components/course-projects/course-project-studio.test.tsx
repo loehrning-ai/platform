@@ -916,7 +916,7 @@ describe("CourseProjectStudio", () => {
       screen.getByText("Notebook and model card verified"),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/verified artifact milestone/i),
+      screen.getByText(/verification is saved in your learning progress/i),
     ).toBeInTheDocument();
     expect(mockedGetExerciseResult).toHaveBeenCalledWith(
       "data-science",

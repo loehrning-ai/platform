@@ -66,15 +66,13 @@ const lesson: DataInfraLesson = {
       readTimeMinutes: 3,
       content:
         'Every delivery claim names its boundary, failure model and observable state:\n\n- **At-most-once.** A failure can omit an effect; acknowledged work is not replayed within the scope.\n- **At-least-once.** Retries after uncertain failures can apply a record twice unless the consumer controls duplicates. "No loss" still rests on source durability, retention and acknowledgements.\n- **Exactly-once.** Within a scope, committed output looks as if each input took effect once, through transactions, checkpoints, replayable sources, idempotent sinks or coordinated offsets. External APIs are not covered automatically.\n\nKafka transactions atomically publish output and consumed offsets on a Kafka-to-Kafka read-process-write path when producers, consumers, isolation and brokers all take part. Flink requires replayable sources and transactional or idempotent sinks for end-to-end exactly-once. List every side effect and test recovery with failure injection.',
-      keyTakeaway:
-        "A processing guarantee holds only for the named source, state, sink, configuration and failure model.",
     },
     {
       id: "s5c",
       title: "Select a streaming engine",
       readTimeMinutes: 3,
       content:
-        'Engine capabilities and defaults change. Compare the exact version and connectors on a reproducible workload:\n\n| Decision | Evidence |\n|---|---|\n| Processing mode | How records or micro-batches are scheduled, and which APIs change by mode |\n| State | Size, backend, checkpoint duration, recovery time, rescaling, and schema evolution |\n| Event time | Watermark generation, idle inputs, windows, joins, timers, and late-data updates |\n| Guarantees | Source replay, state semantics, sink participation, offset commits, and failure tests |\n| Latency and throughput | Measured percentiles under normal load, backpressure, checkpointing, and recovery |\n| Operations | Deployment, upgrades, savepoints/checkpoints, observability, cost, and team ownership |\n\nThe official docs describe Spark Structured Streaming\'s default micro-batch mode and a separate continuous mode with different guarantees; Flink separates state guarantees from end-to-end sink guarantees.',
+        'Engine capabilities and defaults change. Compare the exact version and connectors on a reproducible workload:\n\n| Decision | Evidence |\n|---|---|\n| Processing mode | Record or micro-batch scheduling; APIs per mode |\n| State | Size, backend, checkpoint time, recovery, rescaling, schema evolution |\n| Event time | Watermarks, idle inputs, windows, joins, timers, late updates |\n| Guarantees | Source replay, state semantics, sink participation, offset commits, failure tests |\n| Latency and throughput | Measured percentiles under load, backpressure, checkpoints, recovery |\n| Operations | Deployment, upgrades, savepoints, observability, cost, ownership |\n\nSpark Structured Streaming, for example, defaults to micro-batches and offers a separate continuous mode with other guarantees.',
     },
     {
       id: "s6",
@@ -87,14 +85,14 @@ const lesson: DataInfraLesson = {
       title: "Key takeaways",
       readTimeMinutes: 2,
       content:
-        "- Test the time model with delayed, duplicated and out-of-order input.\n- Define late-data revision, retention and consumer behavior for each watermark policy.\n- Scope every delivery guarantee and test every external side effect.\n- Choose engines from measured workloads on the current version.",
+        "- Test with delayed, duplicated and out-of-order input.\n- Test every external side effect under failure injection.",
     },
     {
       id: "s8",
       title: "Vocab",
       readTimeMinutes: 2,
       content:
-        "- **Compacted topic**, keeps at least the latest value per key and drops older ones with a delay.\n- **ISR**, replicas in sync under broker rules; with producer acks they set durability.\n- **At-most-once**, can omit effects and avoids replay within its scope.\n- **At-least-once**, can repeat effects; idempotency needs a stable operation identity.\n- **Exactly-once**, committed output reflects each input once, within a named scope.\n- **Backpressure**, downstream limits that slow or pile up upstream work.\n- **Allowed lateness**, how long a window keeps state to accept or revise late events.",
+        "- **Compacted topic**, keeps at least the latest value per key and drops older ones with a delay.\n- **ISR**, replicas in sync under broker rules; with producer acks they set durability.\n- **Backpressure**, downstream limits that slow or pile up upstream work.\n- **Allowed lateness**, how long a window keeps state to accept or revise late events.",
     },
   ],
   widgets: [
@@ -109,10 +107,10 @@ const lesson: DataInfraLesson = {
         question:
           "A team picks 4 partitions for their `page_views` topic. A year later they want 50 consumers in the consumer group for parallelism. What's wrong?",
         options: [
-          "Nothing; Kafka auto-scales.",
-          "Only four consumers can work at once; adding partitions later can remap keys.",
-          "They need more brokers.",
-          "They should use Kinesis.",
+          "Nothing; Kafka scales consumers automatically.",
+          "Only four consumers work at once; more partitions can later remap keys.",
+          "They need more brokers in the cluster.",
+          "They should switch to Kinesis.",
         ],
         correct: 1,
         explanation:
@@ -128,7 +126,7 @@ const lesson: DataInfraLesson = {
         title: "Late data policy",
         copy: DATA_INFRA_QUIZ_COPY,
         question:
-          'Your stream job aggregates "revenue per minute." Watermark is 30 seconds behind max event time. An event with event-time 14:32:15 arrives at 14:34:00 (processing time). What happens?',
+          'A job sums revenue per minute, watermark 30 seconds behind max event time. An event stamped 14:32:15 arrives at processing time 14:34:00. What happens?',
         options: [
           "It's included in the 14:32 result.",
           "The window and late-data policy decide: drop, route, retain or revise.",

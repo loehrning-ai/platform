@@ -40,7 +40,7 @@ export function GlossaryView({
           glossary: "Glossary",
           counts: `${totalTerms} entries · ${groups.length} categories`,
           intro:
-            "Definitions for the technical, organizational and regulatory terms used in the course. Terms retain established product names where translation would reduce precision.",
+            "Technical, organisational and legal terms from the course. Product features, plans and data flows change; check the current provider documentation.",
           placeholder: "Search: GDPR, MCP, PARA …",
           searchLabel: "Search glossary",
           clear: "Clear",
@@ -51,7 +51,7 @@ export function GlossaryView({
           noResults: "No results. Try another term.",
           terms: "terms",
           footer:
-            "Definitions are reviewed with the course content. This reference remains publicly accessible.",
+            "Reviewed together with the course content.",
           status: "Reference status",
         }
       : {
@@ -59,7 +59,7 @@ export function GlossaryView({
           glossary: "Glossar",
           counts: `${totalTerms} Einträge · ${groups.length} Kategorien`,
           intro:
-            "Definitionen für die technischen, organisatorischen und regulatorischen Begriffe des Kurses. Etablierte Produktnamen bleiben unverändert, wenn eine Übersetzung ungenau wäre.",
+            "Begriffe aus Technik, Organisation und Recht, die der Kurs verwendet. Produktfunktionen, Tarife und Datenflüsse ändern sich; prüf die aktuelle Anbieterdokumentation.",
           placeholder: "Suche: DSGVO, MCP, PARA …",
           searchLabel: "Glossar durchsuchen",
           clear: "Leeren",
@@ -69,7 +69,7 @@ export function GlossaryView({
           noResults: "Keine Treffer. Versuche einen anderen Begriff.",
           terms: "Begriffe",
           footer:
-            "Definitionen werden zusammen mit dem Kursinhalt geprüft. Diese Referenz bleibt frei zugänglich.",
+            "Zusammen mit dem Kursinhalt geprüft.",
           status: "Referenzstatus",
         };
   const [hydrated, setHydrated] = useState(false);

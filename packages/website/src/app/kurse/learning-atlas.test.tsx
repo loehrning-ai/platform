@@ -376,6 +376,17 @@ describe("LearningAtlas", () => {
       "bloom",
     ]);
     expect(technical.querySelector("[data-poster-numeral-text]")).toBeNull();
+    // The colour change carries a label: each scene run inside Technikkurse
+    // is its own list named by a quiet subhead (SPEC §2.2). The Grundlagenpfad
+    // holds one scene and gets none. Rows stay untinted (checked below).
+    const runs = Array.from(technical.querySelectorAll<HTMLElement>("[data-scene-run]"));
+    expect(runs.map((run) => run.dataset.sceneRun)).toEqual(["idea", "bloom"]);
+    expect(
+      runs.map((run) => within(run).getByRole("list").getAttribute("aria-labelledby")),
+    ).toEqual(["tiefer-gehen-idea", "tiefer-gehen-bloom"]);
+    expect(within(technical).getByRole("list", { name: "Prompting und Agenten" })).toBeInTheDocument();
+    expect(within(technical).getByRole("list", { name: "Daten" })).toBeInTheDocument();
+    expect(foundation.querySelectorAll("[data-scene-run] ol[aria-labelledby]")).toHaveLength(0);
 
     // "01" prints once on the page: the next-proof poster has no numeral.
     const numerals = Array.from(

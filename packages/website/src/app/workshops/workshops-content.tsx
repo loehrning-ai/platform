@@ -10,6 +10,7 @@ import {
   ButtonLink,
   Callout,
   Chip,
+  cx,
   Kicker,
   Pictogram,
   Route,
@@ -175,14 +176,23 @@ export function WorkshopsContent({ workshops, locale }: Props) {
         labelledBy="workshops-hub-heading"
         // Phones: a 96px strip with a 10rem glyph, so the first row still
         // starts inside the first screen with the wider fallback face.
-        className="[&>[data-plakat-art-phone]]:mt-4 [&>[data-plakat-art-phone]]:h-24"
-        art={<PosterNumeral value={workshops.length} plakat={scene} />}
+        // From sm the strip and its glyph grow with the width.
+        className="[&>[data-plakat-art-phone]]:mt-4 [&>[data-plakat-art-phone]]:h-24 sm:[&>[data-plakat-art-phone]]:h-40"
+        // lg: the glyph is sized to the band, so the "4" fills the art
+        // column as the poster object rather than sitting in its corner.
+        art={
+          <PosterNumeral
+            value={workshops.length}
+            plakat={scene}
+            className="[&_text]:text-[36rem]"
+          />
+        }
         artPhone={
           <PosterNumeral
             value={workshops.length}
             plakat={scene}
             format="strip"
-            className="[&_text]:text-[10rem]"
+            className="[&_text]:text-[10rem] sm:[&_text]:text-[16rem]"
           />
         }
       >
@@ -216,44 +226,9 @@ export function WorkshopsContent({ workshops, locale }: Props) {
         </div>
       </PlakatBand>
 
-      {/* Phones skip the route: every workshop page opens with its own
-          agenda, and here it would push the list below the first screen. */}
-      <section
-        aria-labelledby="workshop-route-heading"
-        className="hidden pt-6 sm:block sm:pt-20"
-      >
-        <div className={CONTAINER}>
-          <SectionHead
-            id="workshop-route-heading"
-            title={copy.routeHeading}
-            caption={copy.routeCaption}
-            size="compact"
-          />
-          {/* Phones: the five station names on one scroll-snapped rail, no
-              captions. From sm the captions return at 14px so the five
-              columns do not wrap into ragged one-word lines; the route is
-              capped so it reads as deliberate. */}
-          <Route
-            stations={copy.routeStations.map((station) => ({
-              label: station.label,
-              caption: (
-                <span className="hidden text-[0.875rem] leading-snug text-pretty sm:block">
-                  {station.caption}
-                </span>
-              ),
-            }))}
-            mode="description"
-            label={copy.routeHeading}
-            locale={locale}
-            layout="rail"
-            className="mt-4 max-w-[60rem] sm:mt-8"
-          />
-        </div>
-      </section>
-
       <section
         aria-labelledby="workshop-list-heading"
-        className="pb-10 pt-5 sm:pb-24 sm:pt-20"
+        className="pt-5 sm:pt-16"
       >
         <div className={CONTAINER}>
           <SectionHead
@@ -292,11 +267,50 @@ export function WorkshopsContent({ workshops, locale }: Props) {
             </strong>{" "}
             {copy.teamsBody(withPresenter)}
           </p>
-          <Callout variant="boundary" className="mt-4 max-w-[64ch] sm:mt-6">
-            {copy.boundary}
-          </Callout>
         </div>
       </section>
+
+      {/* The route follows the list, so the posters come right after the
+          band. Phones skip it: every workshop page opens with its own
+          agenda. */}
+      <section
+        aria-labelledby="workshop-route-heading"
+        className="hidden pt-16 sm:block"
+      >
+        <div className={CONTAINER}>
+          <SectionHead
+            id="workshop-route-heading"
+            title={copy.routeHeading}
+            caption={copy.routeCaption}
+            size="compact"
+          />
+          {/* Phones: the five station names on one scroll-snapped rail, no
+              captions. From sm the captions return at 14px so the five
+              columns do not wrap into ragged one-word lines; the route is
+              capped so it reads as deliberate. */}
+          <Route
+            stations={copy.routeStations.map((station) => ({
+              label: station.label,
+              caption: (
+                <span className="hidden text-[0.875rem] leading-snug text-pretty sm:block">
+                  {station.caption}
+                </span>
+              ),
+            }))}
+            mode="description"
+            label={copy.routeHeading}
+            locale={locale}
+            layout="rail"
+            className="mt-4 max-w-[60rem] sm:mt-8"
+          />
+        </div>
+      </section>
+
+      <div className={cx(CONTAINER, "pb-10 pt-4 sm:pb-24 sm:pt-12")}>
+        <Callout variant="boundary" className="max-w-[64ch]">
+          {copy.boundary}
+        </Callout>
+      </div>
     </div>
   );
 }

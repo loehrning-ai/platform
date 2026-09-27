@@ -171,11 +171,11 @@ async function renderAtRetrieval() {
   });
   fireEvent.click(screen.getByRole("button", { name: /Next signal/ }));
   fireEvent.click(
-    screen.getByRole("button", { name: /feature-availability audit/i }),
+    screen.getByRole("button", { name: /availability audit at prediction time/i }),
   );
   expect(screen.getByRole("status", { name: "Signal holds." })).toHaveFocus();
   const repeatedEvidence = screen.getByRole("button", {
-    name: /feature-availability audit/i,
+    name: /availability audit at prediction time/i,
   });
   repeatedEvidence.focus();
   fireEvent.click(repeatedEvidence);
@@ -189,7 +189,7 @@ async function renderAtRetrieval() {
   );
   fireEvent.click(
     screen.getByRole("button", {
-      name: /remove the leaking feature, re-split by time/i,
+      name: /drop the leaking feature, re-split by time/i,
     }),
   );
   expect(screen.getByRole("status", { name: "Signal holds." })).toHaveFocus();
@@ -245,7 +245,7 @@ describe("LessonMissionControl", () => {
     )!;
     act(() => mission.dispatchEvent(new Event(LESSON_MISSION_OPEN_TASK_EVENT)));
     expect(
-      screen.getByText("Activate local learning before starting this mission."),
+      screen.getByText("Activate local learning first."),
     ).toHaveFocus();
     expect(
       window.localStorage.getItem(
@@ -459,7 +459,7 @@ describe("LessonMissionControl", () => {
     expect(screen.getByText(/Current step: 04\/07 · Inspect/)).toBeVisible();
 
     fireEvent.click(
-      screen.getByRole("button", { name: /feature-availability audit/i }),
+      screen.getByRole("button", { name: /availability audit at prediction time/i }),
     );
     await waitFor(() => {
       expect(
@@ -508,7 +508,7 @@ describe("LessonMissionControl", () => {
       expect(screen.getByRole("button", { name: /Next signal/ })).toBeEnabled();
     });
     expect(
-      screen.getByText(/instrument change was detected/i),
+      screen.getByText(/instrument change detected/i),
     ).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /Next signal/ }));
     expect(screen.getByText(/Current step: 03\/07 · Run/)).toBeVisible();
@@ -606,7 +606,7 @@ describe("LessonMissionControl", () => {
 
     fireEvent.click(
       screen.getByRole("button", {
-        name: /feature timeline relative to prediction time/i,
+        name: /feature timeline against prediction time/i,
       }),
     );
     expect(await screen.findByText("Lesson loop closed")).toBeInTheDocument();
@@ -810,7 +810,7 @@ describe("LessonMissionControl", () => {
     ).toBeDisabled();
     expect(
       screen.getByText(
-        /Geschriebene Abrufe und Notizen werden weder gespeichert noch gesendet/,
+        /Was du hier schreibst, wird weder gespeichert noch gesendet/,
       ),
     ).toBeVisible();
     for (const choice of profile.retrieval.choices) {
@@ -844,7 +844,7 @@ describe("LessonMissionControl", () => {
     render(<LessonMissionControl {...missionProps()} />);
 
     expect(
-      await screen.findByText(/activate local learning before/i),
+      await screen.findByText(/activate local learning first/i),
     ).toBeInTheDocument();
     expect(
       screen.queryByText(/project phase is locked/i),

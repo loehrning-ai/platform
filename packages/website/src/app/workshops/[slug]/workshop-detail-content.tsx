@@ -467,7 +467,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
           <BackGlyph />
           {copy.workshopsShort}
         </Link>
-        <CapsLine className="mt-3 sm:mt-0">
+        <CapsLine className="mt-3 max-[359px]:mt-2 sm:mt-0">
           {/* Each part stays whole and carries its separator, so a narrow
               phone breaks the line before the dot ("· ESG-Berichte" opens
               line two), never after it or inside "ESG-Berichte". */}
@@ -485,7 +485,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
           id="workshop-title"
           // Below 360px the poster step scales with the width (42px, as 50px
           // at 390), so the start button stays above the tab bar at 320x568.
-          className="poster-title mt-3 max-w-[16ch] text-scene-ink max-[359px]:[--text-poster:2.625rem] sm:mt-4"
+          className="poster-title mt-3 max-w-[16ch] text-scene-ink max-[359px]:mt-2 max-[359px]:[--text-poster:2.625rem] sm:mt-4"
           style={posterTitleStyle(title.head)}
         >
           {title.head}

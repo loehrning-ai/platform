@@ -17,40 +17,38 @@ export default localizeDataInfraLessonToGerman(canonical, {
     {
       id: "s1",
       title: "Referenzmodell mit sechs Ebenen",
-      content: `Keine zwei Datenplattformen sehen gleich aus. Prüfen lassen sich alle mit demselben Raster: **Quelle, Log oder Ingestion, Verarbeitung, Speicher, Serving und Nutzung**. Ein System darf Ebenen zusammenlegen, ohne dauerhaftes Log auskommen oder mehrere Speicher betreiben. Das Raster ist ein Diagnosewerkzeug, keine Bauvorschrift.
+      content: `Datenplattformen sehen verschieden aus, prüfen lassen sich alle mit demselben Raster: **Quelle, Log oder Ingestion, Verarbeitung, Speicher, Serving und Nutzung**. Ein System darf Ebenen zusammenlegen, ohne dauerhaftes Log auskommen oder mehrere Speicher betreiben. Das Raster dient der Diagnose und schreibt keine Architektur vor.
 
-Schreib für jedes Dataset auf: Herkunft, verändernde Transformationen, dauerhafte Kopien, ausliefernde Schnittstelle, Consumer. Die Spur zeigt Zuständigkeit, Replay-Grenzen und die Stelle, an der ein falscher Wert ins System kam.`,
+Notiere für jedes Dataset Herkunft, verändernde Transformationen, dauerhafte Kopien, ausliefernde Schnittstelle und Consumer. Die Spur zeigt Zuständigkeit, Replay-Grenzen und die Stelle, an der ein falscher Wert ins System kam.`,
     },
     {
       id: "s2",
       title: "Den Weg eines Ereignisses verfolgen",
-      content: `Ein mobiler Client erzeugt eine Bestellung über \`$48.90\`. Später steht sie in einem Betriebsbericht. Was passiert dazwischen? Das interaktive Modell verfolgt es durch sechs mögliche Ebenen, mit festen Beispieldaten. Es erklärt Übergaben und Backpressure, nicht Produktionsdurchsatz.`,
+      content: `Ein mobiler Client erzeugt eine Bestellung über \`$48.90\`, die später in einem Betriebsbericht steht. Das interaktive Modell verfolgt diesen Weg durch sechs mögliche Ebenen, mit festen Beispieldaten. Es zeigt Übergaben und Backpressure und misst keinen Produktionsdurchsatz.`,
     },
     {
       id: "s3",
       title: "Die Aufgabe jeder Schicht",
-      content: `Eine Ebene verdient ihren Platz nur, wenn sie an den Daten etwas ändert: Form, Dauerhaftigkeit, Zuständigkeit oder Zugriffsvertrag.
+      content: `Eine Ebene verdient ihren Platz nur, wenn sie Form, Dauerhaftigkeit, Zuständigkeit oder Zugriffsvertrag der Daten ändert.
 
-1. **Quelle.** Das System, in dem ein Ereignis entsteht oder veränderlicher Zustand lebt: Anwendungsdatenbank, Gerät, Sensor, externe API. Schema und Aufbewahrung entscheiden, was du später rekonstruieren kannst.
-2. **Log oder Ingestion.** Eine optionale dauerhafte Übergabe zwischen Producern und Consumern. Ein partitioniertes Log kann Ordnung je Partition, Aufbewahrung, Replay und Fan-out liefern; das entscheiden Konfiguration und Producer-Disziplin.
-3. **Verarbeitung.** Filtert, validiert, reichert an, joint, aggregiert oder fenstert. Ein Batch-Job kennt das Ende seiner Eingabe. Ein Stream-Job kennt es nicht.
-4. **Speicher.** Hält Roh- oder Modelldaten fest. Object Store, Tabellenformat und verwaltetes Warehouse unterscheiden sich in Transaktionen, Aufbewahrung, Governance und Abfrageverhalten.
+1. **Quelle.** Hier entsteht ein Ereignis oder lebt veränderlicher Zustand: Anwendungsdatenbank, Gerät, Sensor, externe API. Schema und Aufbewahrung begrenzen, was eine Wiederherstellung rekonstruieren kann.
+2. **Log oder Ingestion.** Eine optionale dauerhafte Übergabe zwischen Producern und Consumern. Ein partitioniertes Log kann Ordnung je Partition, Aufbewahrung, Replay und Fan-out liefern; was davon greift, entscheiden Konfiguration und Producer-Disziplin.
+3. **Verarbeitung.** Filtert, validiert, reichert an, joint, aggregiert oder fenstert. Ein Batch-Job kennt das Ende seiner Eingabe, ein Stream-Job nicht.
+4. **Speicher.** Hält Roh- oder Modelldaten. Object Store, Tabellenformat und verwaltetes Warehouse unterscheiden sich in Transaktionen, Aufbewahrung, Governance und Abfrageverhalten.
 5. **Serving.** Liefert Daten für ein Zugriffsmuster und ein Latenzziel: analytisches SQL, Schlüsselzugriff, Suche, Feature-Abruf oder API. Die Umsetzung folgt gemessenen Lastzielen.
 6. **Nutzung.** Dashboards, Alarme, Modelle, Abrechnung, Betrugsprüfung, Produktfunktionen. Was sie an Korrektheit und Freshness brauchen, schlägt auf jeden Vertrag davor durch.
 
-Zeichne im Design-Review nur die Ebenen, die du brauchst. An jeden Pfeil gehören Ordnung, Aufbewahrung, Schema, Latenz und Fehlerverhalten. Produktnamen sind kein Entwurf.`,
-      keyTakeaway:
-        "Eine Ebene ist begründet, wenn sie Form, Dauerhaftigkeit, Zuständigkeit oder Zugriffsvertrag der Daten konkret verändert.",
+Zeichne im Design-Review nur die Ebenen, die das Problem braucht, und schreib an jeden Pfeil Ordnung, Aufbewahrung, Schema, Latenz und Fehlerverhalten.`,
     },
     {
       id: "s4",
       title: "Zwei Kräfte",
-      content: `Zwei Spannungen tauchen in jedem Review auf. Keine ist ein Schalter.
+      content: `Zwei Spannungen tauchen in jedem Review auf, und keine ist ein Schalter.
 
-- **Latenz, Durchsatz und Kosten.** Ein transaktionaler Speicher ist meist auf Schlüsselzugriffe getrimmt, ein analytischer auf Scans und Aggregation. Verarbeitung und Serving verbinden beide Muster unter einem ausgesprochenen Freshness-Ziel.
-- **Validierung vor oder nach dem Landing.** Schema-on-write weist ab, was den Schreibvertrag verletzt. Schema-on-read schiebt einen Teil der Interpretation zu den Lesern. Wichtige Daten brauchen trotzdem Ingestion-Prüfung, Metadaten und Quarantäneregeln.
+- **Latenz, Durchsatz und Kosten.** Transaktionale Speicher sind meist auf Schlüsselzugriffe getrimmt, analytische auf Scans und Aggregation. Verarbeitung und Serving verbinden beide unter einem ausgesprochenen Freshness-Ziel.
+- **Validierung vor oder nach dem Landing.** Schema-on-write weist ab, was den Schreibvertrag verletzt. Schema-on-read überlässt einen Teil der Interpretation den Lesern und braucht trotzdem Ingestion-Prüfung, Metadaten und Quarantäneregeln.
 
-Batch oder Streaming? Das entscheiden Freshness, Replay-Modell, Betriebskosten und Fehlerbehebung. ETL oder ELT? Das entscheiden Security-Grenzen, Quellbeschränkungen, Governance und der Ort, an dem eine Transformation sicher laufen darf.`,
+Zwischen Batch und Streaming entscheiden Freshness, Replay-Modell, Betriebskosten und Fehlerbehebung. Zwischen ETL und ELT entscheiden Security-Grenzen, Quellbeschränkungen, Governance und der Ort, an dem eine Transformation sicher laufen darf.`,
     },
     {
       id: "s5",
@@ -60,12 +58,12 @@ Batch oder Streaming? Das entscheiden Freshness, Replay-Modell, Betriebskosten u
     {
       id: "s6",
       title: "Begriffe",
-      content: `- **OLTP**, Online Transactional Processing. Systeme für transaktionale Lese- und Schreibvorgänge, meist Schlüsselzugriffe auf den aktuellen Anwendungszustand. Ein großer analytischer Scan kann mit dieser Last konkurrieren.
-- **OLAP**, Online Analytical Processing. Systeme für analytische Scans und Aggregation, oft spaltenorientiert in Speicherung und Ausführung.
-- **ETL gegen ELT**, ETL transformiert vor dem Laden, ELT landet zuerst und transformiert in der Zielplattform. Keine Reihenfolge garantiert Replay, Security oder niedrigere Kosten; Aufbewahrung und Kontrollen entwirfst du in beiden Fällen selbst.
-- **Bronze / Silver / Gold**, eine Namenskonvention für gestufte Datenqualität. Der Name liefert keinen Vertrag; den schreibt das Team für jede Stufe selbst.
-- **Lakehouse**, Daten im Object Store unter einem Tabellenformat, das Snapshots, Transaktionen, Schemaentwicklung und Planungsmetadaten ergänzen kann. Was davon greift, entscheiden Format, Katalog, Engine und Konfiguration.
-- **Schema beim Lesen oder Schreiben**, zwei Stellen, an denen ein Datenvertrag greifen kann. Produktionssysteme kombinieren meist Ingestion-Prüfung, gespeichertes Schema und Reader-Validierung.`,
+      content: `- **OLTP**, Online Transactional Processing: Schlüsselzugriffe zum Lesen und Schreiben auf den aktuellen Anwendungszustand.
+- **OLAP**, Online Analytical Processing: Scans und Aggregation, oft spaltenorientiert.
+- **ETL gegen ELT**, vor dem Laden transformieren oder zuerst landen und im Ziel transformieren. Keine Reihenfolge garantiert Replay, Security oder niedrigere Kosten.
+- **Bronze / Silver / Gold**, Medallion-Namen für gestufte Datenqualität. Den Vertrag je Stufe schreibt dein Team.
+- **Lakehouse**, Daten im Object Store, verwaltet über ein Tabellenformat.
+- **Schema beim Lesen oder Schreiben**, zwei Stellen, an denen ein Datenvertrag greifen kann.`,
     },
   ],
   widgets: [
@@ -74,30 +72,30 @@ Batch oder Streaming? Das entscheiden Freshness, Replay-Modell, Betriebskosten u
       cpId: "q1",
       title: "Welche Schicht ermöglicht den Wiederaufbau?",
       question:
-        "Ein aufbewahrtes Ereignislog enthält innerhalb des Wiederherstellungsfensters jede akzeptierte Änderung, mit stabilen Schlüsseln und Schemas. Die abgeleiteten Speicher sind weg. Welche Ebene ist die beste Replay-Quelle?",
+        "Die abgeleiteten Speicher sind weg. Ein aufbewahrtes Log enthält jede akzeptierte Änderung im Wiederherstellungsfenster, mit stabilen Schlüsseln und Schemas. Woraus spielst du neu ein?",
       options: [
-        "Die Quelldatenbanken, weil dort die Wahrheit liegt.",
-        "Das Log, weil das Szenario ihm ausdrücklich die vollständige aufbewahrte Änderungshistorie gibt.",
-        "Das Warehouse, weil es die saubersten Daten enthält.",
-        "Die Dashboards, weil dort die Leute tatsächlich hinschauen.",
+        "Aus den Quelldatenbanken, weil dort die Wahrheit liegt.",
+        "Aus dem Log, weil es die vollständige Änderungshistorie hält.",
+        "Aus dem Warehouse, weil es die saubersten Daten hat.",
+        "Aus den Dashboards, weil dort die Leute hinschauen.",
       ],
       explanation:
-        "Unter diesen Annahmen kann das Log jeden abgeleiteten Speicher innerhalb seines Aufbewahrungsfensters neu aufbauen. Die Annahmen sind der Punkt. Fehlen Ereignisse, wackeln Schlüssel oder Schemas, ist die Aufbewahrung abgelaufen oder wirkten externe Effekte am Log vorbei, gilt das nicht mehr. Eine Wiederherstellungsaussage ohne diese Grenzen ist keine.",
+        "Unter diesen Annahmen baut das Log abgeleitete Speicher innerhalb seines Aufbewahrungsfensters neu auf. Fehlende Ereignisse, wackelnde Schlüssel oder Schemas, abgelaufene Aufbewahrung oder Effekte am Log vorbei brechen das, deshalb nennt eine Wiederherstellungsaussage diese Grenzen.",
     },
     {
       kind: "quiz",
       cpId: "q2",
       title: "In welche Schicht gehört diese Abfrage?",
       question:
-        'Die Marketing-Analystin fragt: "Wie viele Personen aus jedem Land haben in den letzten 24 Stunden gekauft?" Welche Schicht antwortet, und welche darf diese Last nicht direkt tragen?',
+        'Eine Analystin fragt: "Wie viele Personen aus jedem Land haben in den letzten 24 Stunden gekauft?" Welche Schicht antwortet, und welche soll sie nicht direkt abfragen?',
       options: [
-        "Direkt gegen das Quell-Postgres, weil dort die frischesten Daten liegen.",
-        "Direkt aus dem Kafka-Log, weil es die maßgebliche Quelle ist.",
-        "Über einen analytischen Serving-Pfad. Direkter Zugriff auf die Quell-DB braucht einen eigenen, gemessenen operativen Anwendungsfall.",
+        "Direkt das Quell-Postgres, dort liegen die frischesten Daten.",
+        "Direkt das Kafka-Log, es ist die maßgebliche Quelle.",
+        "Ein analytischer Serving-Pfad; die Quell-DB nur mit gemessenem Anlass.",
         "Jemand exportiert die Daten als CSV.",
       ],
       explanation:
-        "Eine breite Aggregation auf der Transaktionsdatenbank kann Verbindungen, CPU, Speicher, Cache und I/O der Anwendung auffressen, auch ohne Zeilensperren. Ein getrennter analytischer Serving-Pfad hält diese Last fern. Direkte OLTP-Abfragen bleiben vertretbar für begrenzte operative Lesevorgänge mit gemessener Wirkung.",
+        "Eine breite Aggregation auf der Transaktionsdatenbank frisst Verbindungen, CPU, Speicher, Cache und I/O der Anwendung, auch ohne Zeilensperren. Ein analytischer Serving-Pfad hält diese Last fern; begrenzte operative Lesezugriffe mit gemessener Wirkung dürfen auf OLTP bleiben.",
     },
     {
       kind: "flashcards",
@@ -107,22 +105,22 @@ Batch oder Streaming? Das entscheiden Freshness, Replay-Modell, Betriebskosten u
         {
           term: "OLTP",
           q: "Online Transactional Processing (transaktionale Online-Verarbeitung)",
-          a: "Systeme für transaktionale Lese- und Schreibvorgänge auf dem aktuellen Anwendungszustand. Ein breiter analytischer Scan kann mit latenzkritischen Verbindungen, CPU, Speicher und I/O konkurrieren.",
+          a: "Auf transaktionale Lese- und Schreibvorgänge im aktuellen Anwendungszustand getrimmt. Ein breiter analytischer Scan konkurriert um Verbindungen, CPU, Speicher und I/O.",
         },
         {
           term: "OLAP",
           q: "Online Analytical Processing (analytische Online-Verarbeitung)",
-          a: "Systeme für analytische Scans und Aggregation. Speicherlayout, Ausführungsmodell, Parallelität und Lastisolierung entscheiden über die echte Leistung.",
+          a: "Auf analytische Scans und Aggregation getrimmt. Speicherlayout, Ausführungsmodell, Parallelität und Lastisolierung entscheiden über die echte Leistung.",
         },
         {
           term: "ETL vs ELT",
           q: "Warum ist heute meist von ELT die Rede?",
-          a: "ETL transformiert vor dem Laden. ELT landet zuerst und transformiert im Ziel. Die Wahl folgt Security-Grenzen, Quellbeschränkungen, Replay, Governance und Ausführungskosten, nicht der Mode.",
+          a: "ETL transformiert vor dem Laden, ELT landet zuerst und transformiert im Ziel. Die Wahl folgt Security-Grenzen, Quellbeschränkungen, Replay, Governance und Kosten.",
         },
         {
           term: "Bronze / Silver / Gold",
           q: "Die Medallion-Architektur",
-          a: "Eine Namenskonvention für gestufte Datenqualität. Vertrag, Zuständigkeit, Aufbewahrung und erlaubte Transformationen jeder Stufe musst du definieren; die Namen liefern nichts davon.",
+          a: "Namen für gestufte Datenqualität. Vertrag, Zuständigkeit, Aufbewahrung und erlaubte Transformationen je Stufe legst du fest; die Namen liefern nichts davon.",
         },
         {
           term: "Lakehouse",
@@ -131,8 +129,8 @@ Batch oder Streaming? Das entscheiden Freshness, Replay-Modell, Betriebskosten u
         },
         {
           term: "Schema beim Lesen und Schreiben",
-          q: "Wann fallen die Kosten des Schemas an?",
-          a: "Schema-on-write prüft vor der Annahme gegen einen Vertrag. Schema-on-read schiebt einen Teil der Interpretation zu den Readern. Belastbare Plattformen setzen Verträge meist an mehreren Grenzen durch.",
+          q: "Wo wird der Vertrag durchgesetzt?",
+          a: "Schema-on-write prüft vor der Annahme, Schema-on-read überlässt einen Teil der Interpretation den Lesern. Belastbare Plattformen setzen Verträge an mehreren Stellen durch.",
         },
       ],
     },

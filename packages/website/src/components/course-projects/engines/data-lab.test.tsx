@@ -473,7 +473,7 @@ describe("DataLab", () => {
     );
 
     expect(
-      screen.getByText(/Final verification remains locked/i),
+      screen.getByText(/Final verification unlocks after all five/i),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Verify project" }),
@@ -491,7 +491,7 @@ describe("DataLab", () => {
       },
     );
     expect(screen.getByRole("status", { name: "" })).toHaveTextContent(
-      /bounded analysis contract/i,
+      /analysis contract is missing fields or exclusions/i,
     );
     expect(
       screen.getByRole("button", {

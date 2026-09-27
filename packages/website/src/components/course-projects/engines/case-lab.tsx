@@ -78,8 +78,8 @@ const REDLINE_PROMPTS: readonly CasePrompt[] = [
       en: "Draft claim: “This model is guaranteed to cut every electricity bill by 40%.”",
     },
     evidence: {
-      de: "Die freigegebene Fantasie-Produktnotiz nennt nur eine Energiesparfunktion, aber keine Messung und keine Garantie.",
-      en: "The approved fictional product note mentions an energy-saving mode but contains no measurement or guarantee.",
+      de: "Die freigegebene Produktnotiz nennt nur eine Energiesparfunktion, ohne Messung oder Garantie.",
+      en: "The approved product note names only an energy-saving mode, with no measurement or guarantee.",
     },
     choices: [
       { value: "approve", de: "Claim freigeben", en: "Approve the claim" },
@@ -103,8 +103,8 @@ const REDLINE_PROMPTS: readonly CasePrompt[] = [
       en: "Workflow: “Send the AI draft directly to the customer list.”",
     },
     evidence: {
-      de: "Das Briefing fordert vor externer Nutzung eine menschliche Prüfung von Claims, Empfängern und Handlungsaufforderung.",
-      en: "The brief requires human review of claims, recipients, and calls to action before external use.",
+      de: "Vor externer Nutzung verlangt das Briefing, dass ein Mensch Claims, Empfänger und Handlungsaufforderung prüft.",
+      en: "Before external use, the brief requires human review of claims, recipients and calls to action.",
     },
     choices: [
       {
@@ -135,8 +135,8 @@ const DOSSIER_PROMPTS: readonly CasePrompt[] = [
       en: "The system pre-sorts synthetic applicant profiles before people allocate apprenticeship opportunities.",
     },
     evidence: {
-      de: "Die Vorsortierung beeinflusst den Zugang zu einem Ausbildungsangebot; die genaue menschliche Kontrolle ist unbekannt.",
-      en: "Pre-sorting influences access to an apprenticeship opportunity; the exact human control is unknown.",
+      de: "Die Vorsortierung beeinflusst den Zugang zu einem Ausbildungsplatz; wie Menschen sie kontrollieren, ist unbekannt.",
+      en: "Pre-sorting influences access to an apprenticeship; how humans control it is unknown.",
     },
     choices: [
       {
@@ -164,7 +164,7 @@ const DOSSIER_PROMPTS: readonly CasePrompt[] = [
       en: "A vendor develops the model; the city sets the purpose, data fields, and use in the selection process.",
     },
     evidence: {
-      de: "Mehrere Akteure können unterschiedliche Rollen und zeitgebundene Pflichten haben.",
+      de: "Mehrere Akteure können verschiedene Rollen und befristete Pflichten haben.",
       en: "Several actors can hold distinct roles and time-bound duties.",
     },
     choices: [
@@ -189,8 +189,8 @@ const DOSSIER_PROMPTS: readonly CasePrompt[] = [
       en: "The contract version, model version, control authority, and legal-source date are unknown.",
     },
     evidence: {
-      de: "Eine belastbare Fallakte muss fehlende Tatsachen und datierte Primärquellen sichtbar lassen.",
-      en: "A defensible case file must keep missing facts and dated primary sources visible.",
+      de: "Die Fallakte muss fehlende Tatsachen und datierte Primärquellen sichtbar lassen.",
+      en: "The case file must keep missing facts and dated primary sources visible.",
     },
     choices: [
       {
@@ -221,8 +221,8 @@ const STAKEHOLDER_PROMPTS: readonly CasePrompt[] = [
       en: "Clip caption: “The factory closes on Friday.”",
     },
     evidence: {
-      de: "Der Text ist eine Behauptung eines fiktiven Accounts, keine direkt beobachtbare Tatsache.",
-      en: "The caption is a claim from a fictional account, not a directly observable fact.",
+      de: "Ein fiktiver Account behauptet das; beobachten lässt es sich nicht.",
+      en: "A fictional account claims this; it cannot be observed.",
     },
     choices: [
       { value: "fact", de: "Bestätigte Tatsache", en: "Confirmed fact" },
@@ -263,8 +263,8 @@ const STAKEHOLDER_PROMPTS: readonly CasePrompt[] = [
       en: "A premature report could affect workers, families, suppliers, and the fictional town.",
     },
     evidence: {
-      de: "Schadens- und Korrekturplanung gehören in die Publikationsentscheidung.",
-      en: "Harm and correction planning belong in the publication decision.",
+      de: "Schaden und Korrektur gehören in die Publikationsentscheidung.",
+      en: "Harm and correction belong in the publication decision.",
     },
     choices: [
       {
@@ -713,30 +713,30 @@ export default function CaseLab({
                 : "Offene Frage und Eskalationsvermerk",
           notePlaceholder:
             variant === "redline"
-              ? "Die Garantie wird durch eine belegte Beschreibung der Energiesparfunktion ersetzt; Versand erst nach menschlicher Prüfung."
+              ? "Garantie durch belegte Beschreibung der Energiesparfunktion ersetzen; Versand erst nach menschlicher Prüfung."
               : variant === "stakeholder"
-                ? "Nicht als Fakt veröffentlichen; zuerst unabhängige Quelle prüfen und Betroffene bei einer Korrektur sichtbar informieren."
-                : "Kontrollbefugnis und Modellversion mit datierter Primärquelle klären; bis dahin keine endgültige Klassifikation behaupten.",
-          choicesEvidence: "Alle Fallstellen evidenzgerecht bearbeitet",
-          sourcesEvidence: "Zwei voneinander belastbare Evidenzpfade gewählt",
+                ? "Nicht als Fakt veröffentlichen; erst unabhängige Quelle prüfen, bei Korrektur Betroffene sichtbar informieren."
+                : "Kontrollbefugnis und Modellversion mit datierter Primärquelle klären; bis dahin keine endgültige Einstufung.",
+          choicesEvidence: "Alle Fallstellen belegt bearbeitet",
+          sourcesEvidence: "Zwei unabhängige Evidenzpfade gewählt",
           noteEvidence:
             "Grenze, Unsicherheit, Eskalation und nächster Beleg festgelegt",
           noteScratch: "Optionale Sitzungsnotiz · wird nicht gespeichert",
           localRunTitle: "Lokale synthetische Auswertung",
           localRunHelp:
-            "Führt ausschließlich die feste Auswahlakte gegen die sichtbaren Kursregeln aus. Kein Modell, Provider oder externer Dienst wird aufgerufen.",
+            "Prüft nur deine Auswahl gegen die Kursregeln, ohne Modell, Provider oder externen Dienst.",
           localRun: "Strukturierte Auswertung ausführen",
-          localRunComplete: "Feste Auswahlakte lokal erfolgreich ausgewertet.",
+          localRunComplete: "Auswahl lokal ausgewertet.",
           localRunEvidence: "Lokale strukturierte Auswertung erfolgreich",
           pending:
             "Fallstellen, Evidenzpfade und vier Prüfdimensionen abschließen.",
           ready: "Fallakte und Unsicherheitsgrenzen sind prüfbar.",
           summary:
             variant === "redline"
-              ? "Redline verifiziert: sensibles Segment entfernt, unbelegten Claim ersetzt und menschliche Freigabe ergänzt."
+              ? "Redline verifiziert: sensibles Segment entfernt, unbelegter Claim ersetzt, menschliche Freigabe ergänzt."
               : variant === "stakeholder"
-                ? "Evidenzkarte verifiziert: Behauptung und Beobachtung getrennt, unabhängige Quellen gewählt und Publikationsrisiko dokumentiert."
-                : "Falldossier verifiziert: Systemgrenze und Rollen getrennt, offene Rechtsfragen mit datierten Evidenzpfaden dokumentiert.",
+                ? "Evidenzkarte verifiziert: Behauptung und Beobachtung getrennt, unabhängige Quellen gewählt, Risiko dokumentiert."
+                : "Falldossier verifiziert: Systemgrenze und Rollen getrennt, offene Rechtsfragen mit datierten Quellen dokumentiert.",
         }
       : {
           engine:
@@ -768,32 +768,32 @@ export default function CaseLab({
                 : "Open question and escalation note",
           notePlaceholder:
             variant === "redline"
-              ? "Replace the guarantee with a supported description of the energy-saving feature; require human review before sending."
+              ? "Replace the guarantee with a supported description of the energy-saving mode; send only after human review."
               : variant === "stakeholder"
-                ? "Do not publish as fact; first check an independent source and visibly notify affected people of any correction."
-                : "Confirm control authority and model version against a dated primary source; do not claim a final classification yet.",
+                ? "Do not publish as fact; check an independent source first and visibly tell affected people about any correction."
+                : "Confirm control authority and model version against a dated primary source; no final classification until then.",
           choicesEvidence: "Every case segment handled against evidence",
           sourcesEvidence:
-            "Two independently defensible evidence paths selected",
+            "Two independent evidence paths selected",
           noteEvidence:
             "Boundary, uncertainty, escalation, and next evidence fixed",
           noteScratch: "Optional session note · not stored",
           localRunTitle: "Local synthetic evaluation",
           localRunHelp:
-            "Runs only the fixed-choice record against the visible course rules. No model, provider, or external service is invoked.",
+            "Checks only your choices against the course rules, with no model, provider or external service.",
           localRun: "Run structured evaluation",
           localRunComplete:
-            "Fixed-choice record evaluated locally with success.",
+            "Choices evaluated locally.",
           localRunEvidence: "Local structured evaluation succeeded",
           pending:
-            "Resolve the case segments, evidence paths, and four review dimensions.",
+            "Resolve case segments, evidence paths and four review dimensions.",
           ready: "The case file and uncertainty boundaries are auditable.",
           summary:
             variant === "redline"
-              ? "Redline verified: sensitive segment removed, unsupported claim replaced, and human approval added."
+              ? "Redline verified: sensitive segment removed, unsupported claim replaced, human approval added."
               : variant === "stakeholder"
-                ? "Evidence map verified: claim and observation separated, independent sources selected, and publication risk documented."
-                : "Case dossier verified: system boundary and roles separated, open legal questions documented with dated evidence paths.",
+                ? "Evidence map verified: claim and observation separated, independent sources chosen, risk documented."
+                : "Case dossier verified: system boundary and roles separated, open legal questions documented with dated sources.",
         };
 
   const choicesCorrect = prompts.every(
@@ -1035,8 +1035,8 @@ export default function CaseLab({
           />
           <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
             {locale === "de"
-              ? "Freitext bleibt im Arbeitsspeicher dieser Seite und zählt nicht als Prüfnachweis."
-              : "Free text remains in this page's memory and does not count as verification evidence."}
+              ? "Zählt nicht als Prüfnachweis."
+              : "Does not count as evidence."}
           </p>
         </div>
       </section>
@@ -1082,7 +1082,7 @@ export default function CaseLab({
             ? copy.ready
             : evidenceReady && !verificationEnabled
               ? locale === "de"
-                ? "Alle fünf Projektphasen müssen vor der Abnahme belegt sein."
+                ? "Vor der Abnahme müssen alle fünf Projektphasen belegt sein."
                 : "All five project stages need evidence before acceptance."
               : copy.pending
         }

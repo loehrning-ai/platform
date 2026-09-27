@@ -9,9 +9,9 @@ export const TALENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Arbeitsproben mit zugelassenen Werkzeugen",
     subtitle:
-      "Eine tätigkeitsnahe Aufgabe und ein klares Bewertungsraster zeigen, wie jemand mit den vorhandenen Werkzeugen arbeitet.",
+      "Zeig mit echter Aufgabe und Raster, wie jemand mit den Werkzeugen arbeitet.",
     objective:
-      "Eine tätigkeitsnahe Aufgabe und ein klares Bewertungsraster zeigen, wie jemand mit den vorhandenen Werkzeugen arbeitet.",
+      "Zeig mit echter Aufgabe und Raster, wie jemand mit den Werkzeugen arbeitet.",
     durationMinutes: 20,
     keyConcepts: [],
     quiz: [],
@@ -21,21 +21,21 @@ export const TALENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "Eine repräsentative Arbeitsprobe wählen",
         readTimeMinutes: 7,
         content:
-          "Die Aufgabe bildet wichtige Tätigkeiten der Rolle ab, ohne unbezahlte Produktivarbeit oder internes Firmenwissen zu verlangen. Begrenze den Umfang auf den angegebenen Zeitrahmen, gib allen Bewerbenden dieselben Materialien und ermögliche angemessene Anpassungen. Geprüft werden die Anforderungen der Tätigkeit, nicht die Vertrautheit mit einem Bewerbungsrätsel.",
+          "Die Aufgabe bildet wichtige Tätigkeiten der Rolle ab, ohne unbezahlte Produktivarbeit oder internes Wissen zu verlangen. Passe den Umfang an den Zeitrahmen an, gib allen dieselben Materialien und ermögliche angemessene Anpassungen. Geprüft werden die Anforderungen der Tätigkeit.",
       },
       {
         id: "s2",
         title: "Den Arbeitsprozess beobachten",
         readTimeMinutes: 7,
         content:
-          "Bewerbende arbeiten mit denselben zugelassenen Werkzeugen, die sie in der Rolle hätten. Schau zu, wie sie den Auftrag klären, die Aufgabe zerlegen, Arbeit spezifizieren, Delegationsgrenzen setzen, Ausgaben prüfen, Annahmen testen und das Ergebnis erklären. Ihre Daten und ihr geistiges Eigentum bleiben geschützt. Kein privates Konto, keine nicht offengelegte Datenweitergabe.",
+          "Bewerbende nutzen die zugelassenen Werkzeuge der Rolle. Schau zu, wie sie den Auftrag klären, die Arbeit zerlegen und spezifizieren, Delegationsgrenzen setzen, Ausgaben prüfen, Annahmen testen und das Ergebnis erklären. Private Konten oder verdeckte Datenweitergabe verlangst du nicht.",
       },
       {
         id: "s3",
         title: "Anhand klarer Kriterien bewerten",
         readTimeMinutes: 6,
         content:
-          "Lege beobachtbare Merkmale fest für Spezifikationsqualität, Urteil beim Werkzeugeinsatz, Prüfqualität, Verifikation, Kommunikation und Endergebnis. Schule die Bewertenden am Raster und vergleiche unabhängige Bewertungen. Tippgeschwindigkeit, Nutzungsmenge und eine sprachlich glatte Ausgabe belegen keine Kompetenz, wenn die Person ihre Arbeit weder erklären noch verifizieren kann.",
+          "Lege beobachtbare Merkmale für Spezifikationsqualität, Werkzeugurteil, Prüfqualität, Verifikation, Kommunikation und Endergebnis fest. Schule die Bewertenden am Raster und vergleiche unabhängige Bewertungen. Tempo und Glätte zählen nichts ohne Erklärung und Verifikation.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -49,7 +49,7 @@ export const TALENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           cpId: "exercise",
           title: "Bewertungsraster für eine Arbeitsprobe",
           scenario:
-            "Entwirf eine repräsentative Bewerbungsaufgabe. Halte fest: zugelassene Werkzeuge, Materialien, Zeitrahmen, mögliche Anpassungen, Bewertungsdimensionen und beobachtbare Anker.",
+            "Entwirf eine Bewerbungsaufgabe mit zugelassenen Werkzeugen, Materialien, Zeitrahmen, Anpassungen, Bewertungsdimensionen und beobachtbaren Ankern.",
           rows: 5,
         },
       },
@@ -63,9 +63,9 @@ export const TALENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Modellgestützte Arbeit in Laufbahnmodellen",
     subtitle:
-      "Rollenspezifische Erwartungen für Nutzung, Prüfung und Steuerung modellgestützter Abläufe festlegen.",
+      "Lege Rollenerwartungen für Nutzung, Prüfung und Steuerung modellgestützter Arbeit fest.",
     objective:
-      "Rollenspezifische Erwartungen für Nutzung, Prüfung und Steuerung modellgestützter Abläufe festlegen.",
+      "Lege Rollenerwartungen für Nutzung, Prüfung und Steuerung modellgestützter Arbeit fest.",
     durationMinutes: 18,
     keyConcepts: [],
     quiz: [],
@@ -75,21 +75,21 @@ export const TALENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "Ein vierstufiges Kompetenzraster",
         readTimeMinutes: 6,
         content:
-          "Stufe 1 nutzt zugelassene Unterstützung für begrenzte Aufgaben und prüft das Ergebnis. Stufe 2 betreibt einen wiederholbaren Ablauf mit dokumentierten Eingaben, Prüfung und Eskalation. Stufe 3 entwirft Kontrollen, Evaluationen und Überwachung für gemeinsam genutzte Abläufe. Stufe 4 setzt Rollen- oder Organisationsstandards und trägt die Betriebsverantwortung. Passe die Stufen an die echte Arbeit an; allgemeingültige Beförderungskriterien sind sie nicht.",
+          "Stufe 1 nutzt zugelassene Unterstützung für begrenzte Aufgaben und prüft Ergebnisse. Stufe 2 betreibt einen wiederholbaren Ablauf mit dokumentierten Eingaben, Prüfung und Eskalation. Stufe 3 entwirft Kontrollen, Evaluationen und Überwachung für gemeinsame Abläufe. Stufe 4 setzt Standards und trägt die Betriebsverantwortung.",
       },
       {
         id: "s2",
         title: "Artefakte und Entscheidungen messen",
         readTimeMinutes: 6,
         content:
-          "Belege sind Spezifikationen, Evaluationssätze, Prüfprotokolle, Reaktionen auf Störungen, wiederverwendbare Abläufe und dokumentierte Entscheidungen. Bewertet werden Begründung, Kontrollen und Ergebnisse einer Person, nicht ihre Eingabemenge oder behauptete Produktivität. Gleiche Beispiele zwischen den Bewertenden ab, damit dasselbe Verhalten dieselbe Einstufung bekommt.",
+          "Belege sind Spezifikationen, Evaluationssätze, Prüfprotokolle, Reaktionen auf Störungen, wiederverwendbare Abläufe und dokumentierte Entscheidungen. Bewertet werden Begründung, Kontrollen und Ergebnisse, nie Eingabemenge oder behauptete Produktivität. Gleiche Beispiele zwischen Bewertenden ab, damit dasselbe Verhalten dieselbe Einstufung bekommt.",
       },
       {
         id: "s3",
         title: "Erst Zugang und Schulung, dann Bewertung",
         readTimeMinutes: 6,
         content:
-          "Bewerte eine Kompetenz erst, wenn zugelassene Werkzeuge, rollenspezifische Schulung, Übungszeit und klare Erwartungen bereitstehen. Berücksichtige notwendige Anpassungen und Rollen, in denen ein Modelleinsatz eingeschränkt oder ungeeignet ist. Kündige Änderungen an, bevor sie auf Beförderungs- oder Leistungsentscheidungen wirken, dokumentiere die Belege und sieh ein Verfahren für Einwände vor.",
+          "Bewerte eine Kompetenz erst, wenn Werkzeuge, Schulung, Übungszeit und klare Erwartungen bereitstehen, mit Rücksicht auf Anpassungen und eingeschränkte Rollen. Kündige Änderungen vor Beförderungs- oder Leistungsentscheidungen an, dokumentiere Belege und sieh ein Einspruchsverfahren vor.",
       },
     ],
     exerciseKind: "slot-fill",
@@ -103,7 +103,7 @@ export const TALENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           cpId: "exercise",
           title: "Kompetenzstufen",
           scenario:
-            "Entwirf vier Kompetenzstufen für eine Rollenfamilie. Benenne je Stufe die erwartete Verantwortung, ein beobachtbares Artefakt und die geltenden Kontrollen.",
+            "Entwirf vier Kompetenzstufen für eine Rollenfamilie, je mit Verantwortung, einem beobachtbaren Artefakt und den geltenden Kontrollen.",
           placeholders: [
             "Stufe 1: begrenzte Nutzung mit Ergebnisprüfung",
             "Stufe 2: wiederholbarer Ablauf mit Prüfung",
@@ -122,9 +122,9 @@ export const TALENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Vergütung an Ergebnissen und Kontrollen ausrichten",
     subtitle:
-      "Rollenbezogene Ergebnisse, Qualität, Zusammenarbeit und Risikokontrollen bewerten, ohne die Werkzeugnutzung selbst zu belohnen.",
+      "Vergüte Ergebnisse, Qualität, Zusammenarbeit und Kontrollen statt Werkzeugaktivität.",
     objective:
-      "Rollenbezogene Ergebnisse, Qualität, Zusammenarbeit und Risikokontrollen bewerten, ohne die Werkzeugnutzung selbst zu belohnen.",
+      "Vergüte Ergebnisse, Qualität, Zusammenarbeit und Kontrollen statt Werkzeugaktivität.",
     durationMinutes: 22,
     keyConcepts: [],
     quiz: [],
@@ -134,27 +134,27 @@ export const TALENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
         title: "Werkzeugnutzung von Vergütung trennen",
         readTimeMinutes: 8,
         content:
-          "Die Nutzung eines Modells ist eine Eingabe, kein Ergebnis. Wer Nutzung direkt belohnt, bekommt unnötige Verarbeitung, verstecktes Handarbeiten und unsichere Delegation. Vergütung folgt rollenbezogenen Ergebnissen, Qualität, Zusammenarbeit und Kontrollpflichten. Auch dann, wenn der Verzicht auf ein Modell die richtige Entscheidung war.",
+          "Modellnutzung ist eine Eingabe. Wer sie belohnt, bekommt unnötige Verarbeitung, versteckte Handarbeit und unsichere Delegation. Vergütung folgt Ergebnissen, Qualität, Zusammenarbeit und Kontrollpflichten der Rolle, auch wenn der Verzicht auf ein Modell richtig war.",
       },
       {
         id: "s2",
         title: "Ausgewogene Belege verwenden",
         readTimeMinutes: 7,
         content:
-          "Jede Messgröße bekommt eine Gegenmessgröße, passend zur Rolle. Kürzere Durchlaufzeit braucht Qualitäts- und Störungsdaten. Durchsatz braucht Umfang und Komplexität. Gemeinsam genutzte Werkzeuge brauchen Belege zu Nutzung, Pflege und Unterstützung. Und keine feste Formel über Teams hinweg, deren Arbeit, Risiko und Messgüte sich unterscheiden.",
+          "Jede passende Messgröße bekommt eine Gegenmessgröße: Durchlaufzeit mit Qualitäts- und Störungsdaten, Durchsatz mit Umfang und Komplexität, gemeinsame Werkzeuge mit Belegen zu Nutzung, Pflege und Unterstützung. Nutze keine feste Formel über Teams mit unterschiedlicher Arbeit, Risiko und Messgüte.",
       },
       {
         id: "s3",
         title: "Ein folgenreiches Messverfahren kontrollieren",
         readTimeMinutes: 7,
         content:
-          "Vergütungskennzahlen können unvollständig, manipulierbar oder verzerrt sein. Dokumentiere Datenquellen und Ausschlüsse, prüfe Muster zwischen Gruppen, nutze eine unabhängige Kalibrierung und halte ein Einspruchsverfahren offen. Personal- und Rechtsverantwortliche sitzen mit am Tisch, bevor du Vergütungskriterien änderst. Erst recht bei Regeln zu Beschäftigung, Diskriminierung, Datenschutz oder Beschäftigtenüberwachung.",
+          "Vergütungskennzahlen können unvollständig, manipulierbar oder verzerrt sein. Dokumentiere Quellen und Ausschlüsse, vergleiche Gruppen, kalibriere unabhängig und halte ein Einspruchsverfahren offen. Hol Personal- und Rechtsverantwortliche vor jeder Kriterienänderung dazu, besonders bei Regeln zu Beschäftigung, Diskriminierung, Datenschutz oder Beschäftigtenüberwachung.",
       },
     ],
     callout: {
       kind: "warn",
-      h: "Aktivitätskennzahlen sind kein Leistungsbeleg",
-      text: "Zahl der Modellanfragen, Datenvolumen, Zahl der Agenten und Nutzungszeit lassen sich steigern, ohne dass die Arbeit besser wird. Solche Größen gehören nicht direkt in eine Vergütungsentscheidung. Bewerte verifizierte Ergebnisse und Kontrollen, mit genug Kontext, um Qualitätsverlust, Risikoverlagerung und Kennzahlenmanipulation zu sehen.",
+      h: "Aktivitätskennzahlen raus aus der Vergütung",
+      text: "Zahl der Modellanfragen, Datenvolumen, Zahl der Agenten und Nutzungszeit steigen auch ohne bessere Arbeit. Lass sie aus der Vergütung heraus und achte auf Qualitätsverlust, Risikoverlagerung und Kennzahlenmanipulation.",
     },
     exerciseKind: "reflect-box",
     widgets: [
@@ -167,7 +167,7 @@ export const TALENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           cpId: "exercise",
           title: "Beleggrundlage für Vergütung",
           scenario:
-            "Nimm eine Rolle. Liste Ergebnisse, Qualitätsindikatoren, Kooperationsbelege, Kontrollpflichten, Gegenmessgrößen, Kalibrierungsverfahren und Einspruchsweg für Vergütungsentscheidungen auf.",
+            "Liste für eine Rolle Ergebnisse, Qualitätsindikatoren, Kooperationsbelege, Kontrollpflichten, Gegenmessgrößen, Kalibrierung und Einspruchsweg für die Vergütung auf.",
           rows: 5,
         },
       },
@@ -180,8 +180,8 @@ export const TALENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     number: 4,
     kind: "quiz",
     title: "Modul 5, Wissensprüfung",
-    subtitle: "Zwei Fragen zu den Personalpraktiken.",
-    objective: "Zwei Fragen zu den Personalpraktiken.",
+    subtitle: "Zwei Fragen zu Einstellung und Vergütung.",
+    objective: "Zwei Fragen zu Einstellung und Vergütung.",
     durationMinutes: 8,
     keyConcepts: [],
     quiz: [
@@ -202,7 +202,7 @@ export const TALENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
           {
             id: "c",
-            text: "Klärung, Spezifikation, Urteil beim Werkzeugeinsatz, Prüfung, Verifikation, Kommunikation und Endergebnis.",
+            text: "Wie die Person spezifiziert, Werkzeuge beurteilt, verifiziert und erklärt.",
             isCorrect: true,
           },
           {
@@ -212,7 +212,7 @@ export const TALENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Eine repräsentative Arbeitsprobe zeigt, wie Bewerbende relevante Arbeit einordnen, ausführen, prüfen und erklären. Geschwindigkeit, Nutzungsmenge und ein glattes Ergebnis ohne nachvollziehbare Begründung reichen dafür nicht.",
+          "Eine Arbeitsprobe zeigt, wie Bewerbende relevante Arbeit einordnen, ausführen, prüfen und erklären. Tempo, Nutzungsmenge oder ein glattes Ergebnis ohne Begründung zeigen das nicht.",
       },
       {
         id: "ano-talent-q2",
@@ -241,7 +241,7 @@ export const TALENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Die Anzahl der Eingaben misst Werkzeugaktivität und kann steigen, ohne Ergebnis oder Qualität zu verbessern. Die anderen Kennzahlen können isoliert ebenfalls irreführen. Deshalb brauchen sie Gegenmessgrößen, Kontext und Kalibrierung.",
+          "Die Zahl der Eingaben misst Werkzeugaktivität und steigt ohne bessere Ergebnisse. Die anderen Kennzahlen täuschen allein ebenfalls, deshalb brauchen sie Gegenmessgrößen, Kontext und Kalibrierung.",
       },
     ],
     sections: [],

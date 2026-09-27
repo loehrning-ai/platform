@@ -9,26 +9,26 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Maintain a model and system registry",
     subtitle:
-      "Record deployed model-mediated systems, their owners, intended uses, data access, tools, controls, and current status.",
+      "Record each deployed system with owner, use, data access, tools, controls and status.",
     objective:
-      "Record deployed model-mediated systems, their owners, intended uses, data access, tools, controls, and current status.",
+      "Record each deployed system with owner, use, data access, tools, controls and status.",
     durationMinutes: 18,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "Inventory the deployed system, not only the model",
+        title: "Inventory the deployed system",
         readTimeMinutes: 9,
         content:
-          "A model name tells you nothing about operational risk. Register each deployed use with its business purpose, accountable owner, provider and version, deployment location, data classifications, connected tools, user groups, risk tier, and lifecycle status. Include externally hosted features and embedded vendor capabilities wherever they touch your data or decisions.",
+          "Register each deployed use with business purpose, accountable owner, provider and version, deployment location, data classifications, connected tools, user groups, risk tier and lifecycle status. Include externally hosted features and embedded vendor capabilities that touch your data or decisions.",
       },
       {
         id: "s2",
         title: "Keep the registry tied to lifecycle events",
         readTimeMinutes: 9,
         content:
-          "Write or update the record at intake, approval, release, material change, periodic review, incident response, and retirement. Store evaluation evidence, approval conditions, last review, next review, and unresolved findings. Name an owner for completeness, and build a way to find the systems nobody registered.",
+          "Update the record at intake, approval, release, material change, periodic review, incident response and retirement. Store evaluation evidence, approval conditions, last and next review and open findings. One owner answers for completeness, with a process to find unregistered systems.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -41,7 +41,7 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
           lessonId: "governance/1",
           cpId: "exercise",
           scenario:
-            "Choose one deployed model-mediated system. Record its use, owner, provider and version, hosting location, data classes, tools, users, risk tier, approvals, evaluation evidence, review date, and retirement condition. Mark every unknown field.",
+            "For one deployed system, record use, owner, provider and version, hosting, data classes, tools, users, risk tier, approvals, evaluation evidence, review date and retirement condition. Mark every unknown field.",
           rows: 3,
         },
       },
@@ -55,9 +55,9 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Release changes through defined controls",
     subtitle:
-      "Match evaluation, approval, rollout, monitoring, and rollback requirements to the risk of each change.",
+      "Match evaluation, approval, rollout, monitoring and rollback to each change's risk.",
     objective:
-      "Match evaluation, approval, rollout, monitoring, and rollback requirements to the risk of each change.",
+      "Match evaluation, approval, rollout, monitoring and rollback to each change's risk.",
     durationMinutes: 24,
     keyConcepts: [],
     quiz: [],
@@ -67,14 +67,14 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Define a change-specific release gate",
         readTimeMinutes: 12,
         content:
-          "Model, provider, prompt, retrieval, tool, policy, routing. Any of those changes behavior. Classify the change, pick representative quality and safety evaluations, set acceptance thresholds, name the required human review. Automate repeatable checks, and store the result with the released version.",
+          "Changes to model, provider, prompt, retrieval, tool, policy or routing can all shift behavior. Classify the change, pick representative quality and safety evaluations, set thresholds and name the human review. Automate repeatable checks and store results with the released version.",
       },
       {
         id: "s2",
         title: "Control the release after the gate",
         readTimeMinutes: 12,
         content:
-          "Pre-release evaluations cannot cover every production condition. Use staged exposure where feasible, watch the defined outcome and guardrail signals, and prepare rollback or containment criteria before you need them. Document an emergency-change path with limited authority, explicit time bounds, retrospective review, and follow-up testing.",
+          "Pre-release evaluations miss some production conditions. Use staged exposure where feasible, watch outcome and guardrail signals and set rollback or containment criteria in advance. Document an emergency path with limited authority, time bounds, retrospective review and follow-up tests.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -87,7 +87,7 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
           lessonId: "governance/2",
           cpId: "exercise",
           scenario:
-            "For one deployed workflow, define change classes, required evaluations, acceptance thresholds, approvers, staged rollout, production guardrails, rollback criteria, and the emergency-change record.",
+            "For one deployed workflow, define change classes, evaluations, thresholds, approvers, staged rollout, production guardrails, rollback criteria and the emergency-change record.",
           rows: 4,
         },
       },
@@ -101,9 +101,9 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Give agents bounded identity and audit trails",
     subtitle:
-      "Use attributable workload identities, explicit delegation, least privilege, and protected event records.",
+      "Use distinct workload identities, explicit delegation, least privilege and protected logs.",
     objective:
-      "Use attributable workload identities, explicit delegation, least privilege, and protected event records.",
+      "Use distinct workload identities, explicit delegation, least privilege and protected logs.",
     durationMinutes: 20,
     keyConcepts: [],
     quiz: [],
@@ -113,14 +113,14 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Separate the actor, user, and authority",
         readTimeMinutes: 10,
         content:
-          "When an agent acts, the system identifies the executing workload, the user or service it acts for, and the authorization that permits it. Every production workload gets a distinct identity. Least privilege, short-lived credentials, scoped resources and actions, explicit revocation. Not shared secrets, not broad service accounts.",
+          "When an agent acts, the system identifies the executing workload, whom it acts for and the authorization behind it. Each production workload gets its own identity with least privilege, short-lived credentials, scoped resources and actions and explicit revocation.",
       },
       {
         id: "s2",
         title: "Record enough evidence to reconstruct the event",
         readTimeMinutes: 10,
         content:
-          "An audit event carries a unique event identifier, timestamps, workload identity, represented user or service, action, resource, authorization decision, policy version, result, and correlation identifiers. Protect the log's integrity and access. Store references or redacted values instead of unnecessary secrets and personal data.",
+          "An audit event holds event ID, timestamps, workload identity, represented user or service, action, resource, authorization decision, policy version, result and correlation IDs. Protect the log and store references or redacted values in place of secrets and personal data.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -133,7 +133,7 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
           lessonId: "governance/3",
           cpId: "exercise",
           scenario:
-            "Choose one consequential write or destructive action. Identify the workload identity, represented user or service, credential scope, authorization evidence, audit fields, retention, log access, revocation path, and incident owner.",
+            "For one consequential write or delete action, identify workload identity, represented user or service, credential scope, authorization evidence, audit fields, retention, log access, revocation path and incident owner.",
           rows: 3,
         },
       },
@@ -154,7 +154,7 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
       {
         id: "ano-governance-q1",
         questionText:
-          "The security team asks which deployed systems use customer personal data, but no complete answer is available. What is the primary corrective control?",
+          "Security asks which deployed systems use customer personal data, and nobody can fully answer. What is the primary corrective control?",
         answerOptions: [
           {
             id: "a",
@@ -163,7 +163,7 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
           {
             id: "b",
-            text: "Create and maintain a system registry tied to intake, release, change, review, incident, and retirement events.",
+            text: "Maintain a system registry tied to lifecycle events.",
             isCorrect: true,
           },
           {
@@ -178,7 +178,7 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "The immediate gap is a missing inventory. A registry links each deployed use to its owner, data classifications, provider and version, tools, controls, approvals, and lifecycle state. Other safeguards stay necessary. None of them replaces that record.",
+          "The gap is a missing inventory. A registry links each use to owner, data classes, provider and version, tools, controls, approvals and lifecycle state, which no other safeguard replaces.",
       },
       {
         id: "ano-governance-q2",
@@ -197,7 +197,7 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
           {
             id: "c",
-            text: "Workload identity, represented user or service, action, resource, authorization and policy version, timestamps, result, and correlation identifiers.",
+            text: "A protected event log with identity, authority, action and result.",
             isCorrect: true,
           },
           {
@@ -207,7 +207,7 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "A protected event record links the executing workload, the represented principal, the authority, the action, the resource, and the result at the moment of the event. Display names and later recollection cannot establish that chain.",
+          "A protected event record links workload, represented principal, authority, action, resource and result at the moment of the event. Display names and later recollection cannot establish that chain.",
       },
     ],
     sections: [],

@@ -4,7 +4,7 @@ import { localizeDataInfraLessonToGerman } from "../../translate-lesson";
 export default localizeDataInfraLessonToGerman(canonical, {
   title: "CDC, Lambda & Kappa",
   subtitle: "Change Data Capture · zwei Architekturen",
-  hook: "Commitete Zeilenänderungen erfassen, Bootstrap und Replay festlegen und aus den Anforderungen einen oder zwei Verarbeitungspfade wählen.",
+  hook: "Commitete Zeilenänderungen erfassen, Bootstrap und Replay definieren und einen oder zwei Verarbeitungspfade aus Anforderungen wählen.",
   keyConcepts: [
     "Change Data Capture",
     "WAL/binlog",
@@ -21,8 +21,6 @@ export default localizeDataInfraLessonToGerman(canonical, {
 **Change Data Capture (CDC)** liest eine Änderungsschnittstelle der Datenbank, meist ein Transaktionslog oder einen logischen Replikationsstream, und gibt Zeilenänderungen aus. Datenbank, Connector und Konfiguration bestimmen Ereignisform, Ordnung, Before Images und Zustellgarantien. Snapshots, Log Decoding, Replikationsslots und Aufbewahrung belasten die Quelle.
 
 **Bootstrap und Fortsetzung.** Ein Connector erstellt einen konsistenten Snapshot und streamt dann ab einer aufgezeichneten Logposition. Debeziums PostgreSQL-Connector bietet mehrere Snapshot-Modi; Sperren, Retries und Dauer hängen an Konfiguration und Last. Mit dauerhaften Offsets müssen Consumer den Snapshot nicht wiederholen.`,
-      keyTakeaway:
-        "Ein CDC-Entwurf benennt Snapshot-Modus, Logposition, Ordnungsumfang, Aufbewahrung, Neustartverhalten und Quellwirkung.",
     },
     {
       id: "s2",
@@ -64,8 +62,6 @@ Die Serialisierung (JSON, Avro, Protobuf) ist eine Deployment-Entscheidung. Ob d
 Die **Kappa-Architektur** nutzt einen Stream-Verarbeitungspfad für Live-Betrieb und Replay. Das spart die doppelte Implementierung nur, wenn die Quelle vollständige wiedereinspielbare Historie hält, derselbe Code mit seinen Abhängigkeiten alte Semantik reproduziert, Ziele Replay vertragen und die Wiederherstellungszeit akzeptabel ist. Ist die Aufbewahrung abgelaufen oder kamen Quelldaten aus Gesamtsnapshots, ist ein Neustart ab Offset null kein Backfill-Plan.
 
 Nimm einen Pfad, wenn Replay-Vollständigkeit und Wiederherstellungsziele nachgewiesen sind, und behalte einen Neuberechnungspfad für autoritative Massendaten, lange Historie, komplexe Batch-Algorithmen oder unabhängige Reconciliation. Versioniere in beiden Fällen die Fachlogik und prüfe Replay gegen die Quelle.`,
-      keyTakeaway:
-        "Ein Verarbeitungspfad spart doppelte Logik nur, wenn aufbewahrte Eingabe und versionierter Code die benötigte Historie reproduzieren.",
     },
     {
       id: "s5",
@@ -83,7 +79,6 @@ Vor dem Einsatz legst du Zuständigkeit für die Source of Truth, Partitionsordn
       id: "s7",
       title: "Begriffe",
       content: `- **WAL / binlog**, das Transaktionslog der Datenbank mit geordneten Quellpositionen, das CDC liest.
-- **Snapshot und Stream**, ein zeitpunktbezogener Snapshot, fortgesetzt ab einer kompatiblen Logposition.
 - **Tombstone**, ein Kafka-Datensatz mit Schlüssel und Nullwert, der eine Löschung markiert.
 - **Schema Registry**, speichert versionierte Schemas und prüft konfigurierte Kompatibilitätsregeln.
 - **Outbox-Muster**, Fachzustand und Outbox-Zeile in einer Transaktion, asynchron veröffentlicht; Publisher-Retries, Deduplizierung und Monitoring bleiben nötig.`,
@@ -97,10 +92,10 @@ Vor dem Einsatz legst du Zuständigkeit für die Source of Truth, Partitionsordn
       question:
         "Ein Team pollt Postgres mit `SELECT * WHERE updated_at > last_seen`. Welche Grenze muss das Review vor dem Vergleich mit CDC benennen?",
       options: [
-        "CDC ist schneller.",
+        "CDC ist immer schneller als Polling.",
         "Polling braucht verlässliche Änderungs- und Löschmarker und gemessene Abfragekosten; CDC kostet auch.",
-        "Polling ist veraltet.",
-        "CDC benötigt weniger Netzwerkbandbreite.",
+        "Polling ist in aktuellem Postgres veraltet.",
+        "CDC braucht immer weniger Netzwerkbandbreite.",
       ],
       explanation:
         "Polling passt bei begrenzter Last mit dauerhaften Update- und Delete-Markern und indizierten, gemessenen Abfragen. CDC spart Polling-Overhead, bringt aber Snapshots, Log Decoding, Slot-Aufbewahrung, Connector-Offsets und At-least-once- oder begrenzte Transaktionszustellung mit.",
@@ -110,10 +105,10 @@ Vor dem Einsatz legst du Zuständigkeit für die Source of Truth, Partitionsordn
       cpId: "q2",
       title: "Lambda oder Kappa",
       question:
-        "Eine Lambda-Pipeline berechnet „wöchentlich aktive Personen“ einmal in Spark und einmal in Flink. Die Ergebnisse weichen um 0,3% ab, niemand weiß warum. Wie sieht die IC5-Lösung aus?",
+        "Eine Lambda-Pipeline berechnet „wöchentlich aktive Personen“ in Spark und in Flink. Die Ergebnisse weichen um 0,3% ab, Ursache unbekannt. Wie sieht die IC5-Lösung aus?",
       options: [
-        "Einen Unit-Test ergänzen.",
-        "Nur zu einem Pfad zusammenführen, wenn Replay die Historie reproduziert; sonst beide gegen eine autoritative Berechnung abgleichen.",
+        "Im Spark-Job einen Unit-Test ergänzen.",
+        "Nur bei reproduzierbarer Historie zusammenführen; sonst gegen eine Berechnung abgleichen.",
         "Beide Werte mitteln.",
         "Maschinelles Lernen zur Abstimmung einsetzen.",
       ],

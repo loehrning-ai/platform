@@ -232,10 +232,16 @@ describe("<WorkshopDetailContent>", () => {
         // card, meta list or small type in the band.
         expect(band.querySelectorAll(".plakat-caps")).toHaveLength(1);
         expect(band.querySelectorAll("[data-question-card], dl, input, select, textarea, [role=status], [data-chip]")).toHaveLength(0);
+        // No muted tier and no reduced opacity either (Rost rule 2, SPEC
+        // §1.6), held on every scene so the autumn band cannot regress.
         for (const node of band.querySelectorAll("*")) {
           const classes = node.getAttribute("class")?.split(/\s+/) ?? [];
-          for (const small of ["text-caption", "text-label", "text-xs"]) {
+          for (const small of ["text-caption", "text-label", "text-xs", "text-muted-foreground"]) {
             expect(classes, `${small} in the band`).not.toContain(small);
+          }
+          for (const name of classes) {
+            expect(name, "reduced opacity in the band").not.toMatch(/(^|:)opacity-(?!100\b)/);
+            expect(name, "a translucent colour in the band").not.toMatch(/(^|:)(text|decoration|border|bg|fill|stroke)-[\w-]+\/\d+$/);
           }
         }
         // Scene buttons: the ink fill and the ink outline, never Mennige.

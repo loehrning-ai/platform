@@ -32,8 +32,6 @@ const lesson: DataInfraLesson = {
       readTimeMinutes: 2,
       content:
         "A pipeline can run perfectly and still publish wrong numbers. Infrastructure metrics show whether jobs run; data reliability needs three product-facing signals:\n\n- **Freshness.** How far the data trails the relevant business time, for example latest accepted event time against now. The definition must handle expected source activity, empty periods and delayed events.\n- **Completeness.** Whether the expected records or aggregates arrived. Row counts against a fitting baseline are a proxy and prove nothing about every event.\n- **Accuracy.** Whether values meet schema, range, relationship and domain rules, checked explicitly.\n\nA stopped pipeline usually shows first as a freshness failure. A transformation defect can keep freshness healthy while it breaks completeness or accuracy, and CPU or job-success graphs miss it.",
-      keyTakeaway:
-        "Track freshness, completeness and accuracy separately; a healthy job can publish wrong data.",
     },
     {
       id: "s2",
@@ -47,14 +45,14 @@ const lesson: DataInfraLesson = {
       title: "Test families",
       readTimeMinutes: 2,
       content:
-        "| Family | Detects | Typical trade-off |\n|---|---|---|\n| Schema | added, removed, or retyped fields; nullability changes | Fast when enforced at an interface, but compatibility rules still need ownership |\n| Constraint | null, uniqueness, relationship, and range violations | Cost grows with table size, query shape, and execution frequency |\n| Anomaly / volume | unexpected count or distribution changes | Needs a representative baseline and false-positive review |\n| Reconciliation | disagreements between independently derived totals or record sets | Strong evidence for a defined invariant, but often scans or joins substantial data |\n\nPick tests by business risk and execution cost: interface checks early, sampled or incremental checks on large datasets where justified, expensive reconciliation for the invariants that matter. No single family proves end-to-end correctness.",
+        "| Family | Detects | Typical trade-off |\n|---|---|---|\n| Schema | added, removed or retyped fields; nullability changes | Fast at an interface; compatibility rules need an owner |\n| Constraint | null, uniqueness, relationship and range violations | Cost grows with table size, query shape and frequency |\n| Anomaly / volume | unexpected count or distribution changes | Needs a representative baseline and false-positive review |\n| Reconciliation | mismatches between independently derived totals or record sets | Strong evidence for an invariant; often scans a lot of data |\n\nPick tests by business risk and execution cost: interface checks early, sampled or incremental checks on large datasets where justified, expensive reconciliation for the invariants that matter. No single family proves end-to-end correctness.",
     },
     {
       id: "s4",
       title: "dbt tests",
       readTimeMinutes: 2,
       content:
-        "```yaml\n# models/marts/fact_orders.yml\nmodels:\n  - name: fact_orders\n    columns:\n      - name: order_id\n        tests: [unique, not_null]\n      - name: amount_usd\n        tests:\n          - not_null\n          - dbt_utils.accepted_range:\n              min_value: 0\n              max_value: 1000000\n      - name: status\n        tests:\n          - accepted_values:\n              values: ['pending','paid','shipped','refunded','cancelled']\n    tests:\n      - dbt_utils.equal_rowcount:\n          compare_model: ref('stg_orders')  # reconciliation\n```\n\nA dbt data test is a query whose returned rows are violations. Commands, selection rules, adapter and CI decide when it runs. `equal_rowcount` is valid only when both models share grain and filter scope. Give each test an owner, a severity, a cadence and a documented response.",
+        "```yaml\n# models/marts/fact_orders.yml\nmodels:\n  - name: fact_orders\n    columns:\n      - name: order_id\n        tests: [unique, not_null]\n      - name: amount_usd\n        tests:\n          - not_null\n          - dbt_utils.accepted_range:\n              min_value: 0\n              max_value: 1000000\n      - name: status\n        tests:\n          - accepted_values:\n              values: ['pending','paid','shipped','refunded','cancelled']\n    tests:\n      - dbt_utils.equal_rowcount:\n          compare_model: ref('stg_orders')  # reconciliation\n```\n\nA dbt data test is a query whose returned rows are violations; commands, selection rules, adapter and CI decide when it runs. `equal_rowcount` is valid only when both models share grain and filter scope. Give each test an owner, a severity, a cadence and a documented response.",
     },
     {
       id: "s5",
@@ -69,8 +67,6 @@ const lesson: DataInfraLesson = {
       readTimeMinutes: 3,
       content:
         "An anomaly in `fact_orders.amount_usd` is a symptom. Lineage narrows the search by showing dependencies between jobs and datasets; it does not prove which change caused the defect, and gaps in instrumentation hide paths.\n\nA practical incident loop:\n\n1. Define SLI, target, owner and response for each important dataset.\n2. Emit test and pipeline outcomes with stable job and dataset identifiers.\n3. Investigate with lineage, recent deployments, source health and sample reconciliation.\n4. Route the alert to the team owning the failing boundary once evidence shows it; until then, to the triage owner.\n\nOpenLineage defines events for job runs, datasets and extensible facets. Coverage varies by tool and version, so inspect the real events before routing on them. Protect lineage metadata: names, query facets and failure details expose internal structure and sometimes sensitive values.",
-      keyTakeaway:
-        "Route an alert to the owner of the boundary the evidence shows failing, which is not always the nearest upstream system.",
     },
     {
       id: "s7",
@@ -83,7 +79,7 @@ const lesson: DataInfraLesson = {
       title: "Vocab",
       readTimeMinutes: 2,
       content:
-        "- **SLI / SLO / SLA**, measured signal, its target over a window, and an agreement with consequences.\n- **Freshness**, delay between available data and the business time it represents.\n- **Completeness proxy**, a count, coverage ratio or reconciliation difference.\n- **Anomaly detection**, compares observations with an expected range.\n- **Data contract**, a versioned producer-consumer agreement on structure, meaning and quality.\n- **Declared check**, an explicit invariant evaluated against data.\n- **Learned check**, an expected range inferred from history.\n- **OpenLineage**, an event model for job, run and dataset metadata.",
+        "- **SLI / SLO / SLA**, measured signal, its target over a window, and an agreement with consequences.\n- **Completeness proxy**, a count, coverage ratio or reconciliation difference.\n- **Anomaly detection**, compares observations with an expected range.\n- **Data contract**, a versioned producer-consumer agreement on structure, meaning and quality.",
     },
   ],
   widgets: [
@@ -98,10 +94,10 @@ const lesson: DataInfraLesson = {
         question:
           'The pipeline is green: jobs succeeded, latency normal, no errors. Marketing says the conversion rate has been wrong for three days. Most likely cause?',
         options: [
-          "A bug in the dashboard.",
+          "A rendering bug in the dashboard.",
           "A silent accuracy or completeness regression, such as a join dropping rows.",
-          "CPU saturation.",
-          "A network partition.",
+          "CPU saturation on the workers.",
+          "A network partition between regions.",
         ],
         correct: 1,
         explanation:

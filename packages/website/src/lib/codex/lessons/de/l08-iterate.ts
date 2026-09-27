@@ -8,13 +8,6 @@ function prose(sectionIndex: number, blockIndex: number): string {
   return block.markdown;
 }
 
-function pullQuote(sectionIndex: number, blockIndex: number): string {
-  const block = canonical.sections[sectionIndex]?.blocks[blockIndex];
-  if (block?.kind !== "pull-quote")
-    throw new Error("Codex L08 translation expected a pull quote.");
-  return block.text;
-}
-
 function card(
   sectionIndex: number,
   blockIndex: number,
@@ -72,7 +65,7 @@ export default localizeCodexLessonToGerman(canonical, {
     [canonical.title, "Iterationsschleifen"],
     [
       canonical.subtitle,
-      "Gezielte Korrektur, neue Spezifikation oder sauberer Neustart: Fehler- und Diff-Struktur entscheiden.",
+      "Korrigieren, neu spezifizieren oder neu starten, je nach Abweichung.",
     ],
     [canonical.hook, "Erst die Ursache einordnen, dann antworten."],
     [canonical.keyConcepts[0], "Gezielte Korrektur"],
@@ -81,97 +74,81 @@ export default localizeCodexLessonToGerman(canonical, {
     [canonical.keyConcepts[3], "Entscheidungsbaum"],
     [
       prose(0, 0),
-      "Der Diff kommt zurück und passt nicht. Bevor du antwortest, ordne die Abweichung ein. Ein lokaler Fehler, eine fehlende Anforderung, eine ungültige Aufgabengrenze und veralteter Sitzungskontext verlangen vier verschiedene Reaktionen.\n\nDer Entscheidungsbaum ist Diagnosehilfe, kein Zähler für Wiederholungen:",
+      "Bevor du auf einen falschen Diff antwortest, ordne die Abweichung ein.",
     ],
     [card(0, 1, 0, "eyebrow"), "begrenzter lokaler Fehler"],
     [card(0, 1, 0, "title"), "Gezielt korrigieren"],
     [
       card(0, 1, 0, "body"),
-      "Ziel und Architektur stimmen, die nötige Änderung ist lokal. Ein gezielter Kommentar reicht: Fehler, Ort, verlangter Nachweis.",
+      "Ziel und Architektur stimmen, die Korrektur ist lokal. Nenne Fehler, Ort und verlangten Nachweis.",
     ],
     [card(0, 1, 1, "eyebrow"), "Lücke in Anforderung oder Rahmen"],
     [card(0, 1, 1, "title"), "Neu spezifizieren"],
     [
       card(0, 1, 1, "body"),
-      "Mehrere Kommentare tragen Ziele, Grenzen oder Akzeptanzkriterien nach? Dann schreib den Auftrag neu. Belegte Erkenntnisse behältst du, gestartet wird mit dem korrigierten Vertrag.",
+      "Kommentare tragen Ziele, Grenzen oder Kriterien nach. Schreib den Auftrag neu und behalte Belegtes.",
     ],
     [card(0, 1, 2, "eyebrow"), "falsches Problem oder falsche Architektur"],
     [card(0, 1, 2, "title"), "Mit Nachweisen neu starten"],
     [
       card(0, 1, 2, "body"),
-      "Rette keinen Diff, der auf einer falschen Annahme steht. Lies Code und Anforderung noch einmal, dann ein neuer Auftrag mit korrigierten Nachweisen und Grenzen.",
+      "Die Prämisse ist falsch. Lies Code und Anforderung neu und starte einen neuen Auftrag mit korrigierten Nachweisen.",
     ],
     [card(0, 1, 3, "eyebrow"), "mehrere gekoppelte Anliegen"],
     [card(0, 1, 3, "title"), "Zerlegen und neu starten"],
     [
       card(0, 1, 3, "body"),
-      "Trenne, was sich unabhängig implementieren oder prüfen lässt. Abhängigkeitsreihenfolge und gültige Zwischenzustände stehen vor den neuen Aufträgen fest.",
-    ],
-    [
-      pullQuote(0, 2),
-      "Neustart, wenn Korrekturen die Prämisse ändern oder der Diff auseinanderläuft, statt zu konvergieren.",
+      "Trenne, was sich getrennt umsetzen lässt. Leg Reihenfolge und gültige Zwischenzustände fest, bevor die neuen Aufträge laufen.",
     ],
     [canonical.sections[1].title, "Eine wirksame Korrektur"],
     [
       prose(1, 0),
-      "Eine gezielte Korrektur passt nur, solange der Auftrag selbst gültig bleibt. Vergleiche einen vagen Kommentar mit einem, der Fehler, Ort und erwarteten Nachweis nennt.",
-    ],
-    [
-      prose(1, 1),
-      "Eine brauchbare Korrektur nennt **was falsch ist**, **wo es liegt** und **welches Ergebnis oder welche Prüfung verlangt wird**. Schreibt diese Erklärung Ziel oder Architektur um, ersetze den Auftrag, statt Kommentare zu stapeln.",
+      "Eine gezielte Korrektur passt, solange der Auftrag selbst gültig ist. Wie der konkrete Kommentar oben nennt sie **was falsch ist**, **wo** und **welches Ergebnis oder welche Prüfung verlangt wird**. Müsste sie Ziel oder Architektur umschreiben, ersetze den Auftrag.",
     ],
     [prose(2, 0), "Eine Frage dazu, wann neu spezifiziert wird."],
     [canonical.sections[3].title, "Wann du neu startest"],
     [
       prose(3, 0),
-      "Hängt der Diff an einer falschen Anforderung, einer ungültigen Architektur oder einer zu breiten Grenze, starte neu. Wer von dort weiterbaut, schleppt Annahmen mit, um die jede spätere Korrektur herumarbeiten muss.\n\nVor dem Verwerfen sicherst du, was nicht im Repository steht: verworfene Ansätze mit Begründung, neu erkannte Grenzen, relevante Befehlsausgabe, bereits verfolgte Dateien und Aufrufpfade. Das wandert in eine neue, begrenzte Spezifikation.\n\nEine feste Anzahl von Überarbeitungen gibt es nicht. Mehrere kleine, unabhängige Korrekturen können effizient sein. Eine einzige Korrektur, die die Prämisse ändert, kann den sofortigen Neustart rechtfertigen.",
+      "Starte neu, wenn der Diff auf einer falschen Anforderung, ungültigen Architektur oder zu breiten Grenze steht, oder wenn Korrekturen die Prämisse ändern und der Diff auseinanderläuft. Die Zahl der Überarbeitungen entscheidet nicht: Viele kleine Korrekturen können passen, eine geänderte Prämisse rechtfertigt den sofortigen Neustart.\n\nVor dem Verwerfen sicherst du, was nicht im Repository steht: verworfene Ansätze mit Begründung, neue Grenzen, relevante Befehlsausgabe, bereits verfolgte Dateien und Aufrufpfade.",
     ],
-    [callout(3, 1, "title"), "Nur belegte Erkenntnisse übernehmen:"],
+    [callout(3, 1, "title"), "Nur belegte Erkenntnisse übernehmen"],
     [
       callout(3, 1, "body"),
-      "Ein gescheiterter Versuch zeigt manchmal Unklarheit oder verborgene Kopplung. Manchmal enthält er einfach falsche Annahmen. Übernimm nur, was Repository-Nachweise oder reproduzierbare Befehle stützen.",
+      "Gescheiterte Versuche enthalten auch falsche Annahmen. Übernimm nur, was Repository-Nachweise oder reproduzierbare Befehle stützen.",
     ],
     [canonical.sections[4].title, "Kontext in langen Sitzungen"],
     [
       prose(4, 0),
-      "Lange interaktive Sitzungen sammeln Anforderungen, Korrekturen, Protokolle und verworfene Ansätze an. Irgendwann lassen sich die relevanten Anweisungen schwerer konsistent anwenden, besonders wenn spätere Nachrichten früheren widersprechen oder der aktive Kontext verdichtet wurde.\n\nDu siehst es daran, dass ein verworfener Ansatz wieder auftaucht, eine akzeptierte Korrektur zurückgenommen wird oder eine allgemeine Regel eine spätere Ausnahme überschreibt. Dieselben Zeichen passen auch zu einem mehrdeutigen Auftrag oder geändertem Code. Prüfe also die Nachweise, bevor du die Kontextlänge beschuldigst.\n\nBildet der Verlauf keinen eindeutigen Vertrag mehr, beginne eine neue Sitzung mit knapper Spezifikation und nur den belegten Erkenntnissen, die es zum Weitermachen braucht.",
+      "Lange Sitzungen sammeln Anforderungen, Korrekturen, Protokolle und verworfene Ansätze an. Anweisungen lassen sich dann schwerer konsistent anwenden, besonders nach Widersprüchen oder Verdichtung.\n\nDie Signale unten können auch einen mehrdeutigen Auftrag oder geänderten Code bedeuten. Prüfe also zuerst die Nachweise. Bildet der Verlauf keinen eindeutigen Vertrag mehr, beginne eine neue Sitzung mit knapper Spezifikation und den belegten Erkenntnissen.",
     ],
     [card(4, 1, 0, "eyebrow"), "Signal 01"],
     [card(4, 1, 0, "title"), "Korrigiertes Verhalten wird zurückgenommen"],
     [
       card(4, 1, 0, "body"),
-      "Eine akzeptierte Korrektur verschwindet ohne Begründung wieder aus dem Code. Prüfe die aktuelle Anforderung. Ist die Sitzung widersprüchlich geworden, formuliere sie in einem neuen Auftrag.",
+      "Eine akzeptierte Korrektur verschwindet ohne Grund im Code. Formuliere die Anforderung in einem neuen Auftrag.",
     ],
     [card(4, 1, 1, "eyebrow"), "Signal 02"],
     [card(4, 1, 1, "title"), "Verworfene Ansätze werden erneut vorgeschlagen"],
     [
       card(4, 1, 1, "body"),
-      "Ein verworfener Ansatz taucht wieder auf, ohne auf die dokumentierte Begründung einzugehen. Grenze und Nachweis wandern ausdrücklich in eine neue Spezifikation.",
+      "Ein verworfener Ansatz kehrt zurück und übergeht die dokumentierte Begründung. Grenze und Nachweis kommen in eine neue Spezifikation.",
     ],
     [card(4, 1, 2, "eyebrow"), "Signal 03"],
     [card(4, 1, 2, "title"), "Generische Ergebnisse trotz konkreter Eingaben"],
     [
       card(4, 1, 2, "body"),
-      "Das Ergebnis nennt die Repository-Pfade, Konventionen oder Befehle nicht mehr, die der Auftrag braucht. Stell diese Eingaben wieder her, bevor irgendetwas weiter geändert wird.",
+      "Das Ergebnis nennt die nötigen Repository-Pfade, Konventionen oder Befehle nicht mehr. Stell diese Eingaben zuerst wieder her.",
     ],
     [card(4, 1, 3, "eyebrow"), "Signal 04"],
     [card(4, 1, 3, "title"), "Korrekturen werden umfangreicher"],
     [
       card(4, 1, 3, "body"),
-      "Korrekturen bauen aufeinander auf oder widersprechen sich, statt die Abweichung zu verkleinern. Frag dich, ob Auftrag, Diff oder Sitzungskontext neu aufgesetzt gehören.",
-    ],
-    [
-      pullQuote(4, 2),
-      "Setz den Kontext zurück, sobald das Gespräch keinen widerspruchsfreien Auftragsvertrag mehr ausdrückt.",
+      "Korrekturen wachsen oder widersprechen sich, und die Abweichung bleibt. Setz Auftrag, Diff oder Sitzung neu auf.",
     ],
     [canonical.sections[5].title, "Kontextverdichtung: Relevantes übernehmen"],
     [
       prose(5, 0),
-      "Eine neue Sitzung erbt nicht das ganze Transkript. Sie erbt belegte Fakten, die weder im Repository noch in der ursprünglichen Spezifikation stehen. Das sind entdeckte Grenzen, verworfene Ansätze mit Begründung, relevante Befehlsergebnisse und offene Fragen.",
-    ],
-    [
-      prose(5, 1),
-      "Trenne Nachweis von Erzählung. Rein kommen Dateipfade, exakte Fehlermeldungen, Befehle mit Ergebnis und die Begründung für verworfene Ansätze. Raus bleiben Vermutungen, wiederholte Diskussion und alles, was die nächste Sitzung selbst aus versionierten Dateien lesen kann.",
+      "In eine neue Sitzung kommen nur belegte Fakten, die weder Repository noch Spezifikation enthalten: Dateipfade, exakte Fehler, Befehle mit Ergebnis, Grenzen, verworfene Ansätze mit Begründung, offene Fragen. Vermutungen und wiederholte Diskussion bleiben weg.",
     ],
     [prose(6, 0), "Eine Frage zum Erkennen von Kontextverschleiß."],
     [widgetString(0, "title"), "Zwei Review-Kommentare zum selben Problem"],
@@ -187,11 +164,11 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       widgetString(0, "note"),
-      "Der konkrete Kommentar nennt Fehler, Ort, verlangten Aufbau und Assertion. Die Reviewerin kann den überarbeiteten Test direkt daran messen.",
+      "Er nennt Fehler, Ort, Aufbau und Assertion. Daran misst du den überarbeiteten Test.",
     ],
     [
       widgetString(1, "question"),
-      "Ein überarbeiteter Diff ändert dieselbe Anforderung wieder und wieder auf andere Weise und wächst über den ursprünglichen Umfang hinaus. Was jetzt?",
+      "Ein überarbeiteter Diff baut dieselbe Anforderung immer wieder um und wächst über den ursprünglichen Umfang hinaus. Was jetzt?",
     ],
     [
       widgetStrings(1, "options")[0],
@@ -199,7 +176,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       widgetStrings(1, "options")[1],
-      "Die Iteration stoppen, belegte Erkenntnisse sichern und mit korrigierter Spezifikation und Grenze neu starten.",
+      "Stoppen, Belegtes sichern, mit korrigierter Spezifikation neu starten.",
     ],
     [
       widgetStrings(1, "options")[2],
@@ -211,7 +188,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       widgetString(1, "explanation"),
-      "Änderungen, die nicht konvergieren, zeigen eine instabile Prämisse, Grenze oder einen instabilen Kontext. Eine neue Spezifikation gibt dem nächsten Versuch einen prüfbaren Vertrag. Entscheidend ist die Abweichung, nicht die Zahl der Wiederholungen.",
+      "Änderungen, die nicht konvergieren, zeigen eine instabile Prämisse, Grenze oder einen instabilen Kontext. Eine neue Spezifikation gibt dem nächsten Versuch einen Vertrag. Auslöser ist das Auseinanderlaufen, egal nach wie vielen Runden.",
     ],
     [widgetString(2, "title"), "Kontextverdichtung: übernehmen oder weglassen"],
     [widgetString(2, "badLabel"), "Unnötigen Verlauf übernehmen"],
@@ -226,31 +203,31 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       widgetString(2, "note"),
-      "Die Prüffrage: Vermeidet eine neue Sitzung die falschen Wege auch ohne diesen Punkt? Falls ja, weglassen. Falls nein, übernehmen. Caching- und TTL-Dokumentation findet jede Sitzung selbst; die drei konkreten Erkenntnisse nicht.",
+      "Behalte einen Punkt nur, wenn eine neue Sitzung ohne ihn einen falschen Weg wiederholen würde. Caching und TTL stehen in der Doku, diese drei Erkenntnisse nicht.",
     ],
     [
       widgetString(3, "question"),
-      "Die Sitzung schlägt einen verworfenen Ansatz wieder vor, ohne auf die dokumentierte Begründung einzugehen. Wie reagierst du?",
+      "Die Sitzung schlägt einen verworfenen Ansatz wieder vor und übergeht die dokumentierte Begründung. Was tust du?",
     ],
     [
       widgetStrings(3, "options")[0],
-      "Das Modell widerspricht dir. Begründe deine Position nachdrücklicher.",
+      "Deine Position nachdrücklicher begründen.",
     ],
     [
       widgetStrings(3, "options")[1],
-      'Prüfe, ob die Ablehnung weiterhin gilt. Starte dann einen neuen Auftrag mit dem ausdrücklichen Hinweis: "Verwende [Ansatz] wegen [Nachweis] nicht."',
+      "Die Ablehnung prüfen und mit Nachweis in einen neuen Auftrag schreiben.",
     ],
     [
       widgetStrings(3, "options")[2],
-      "Wiederhole die Ablehnung ohne ihre Begründung.",
+      "Die Ablehnung ohne Begründung wiederholen.",
     ],
     [
       widgetStrings(3, "options")[3],
-      "Akzeptiere den Vorschlag; das Modell könnte einen besseren Grund gefunden haben.",
+      "Annehmen; das Modell hat vielleicht einen besseren Grund gefunden.",
     ],
     [
       widgetString(3, "explanation"),
-      "Der wiederholte Vorschlag kann widersprüchlichen Kontext oder eine geänderte Codebasis bedeuten. Prüfe die Nachweise noch einmal. Gilt die Grenze weiter, kommt sie samt Begründung in einen neuen, widerspruchsfreien Auftrag.",
+      "Die Wiederholung kann widersprüchlichen Kontext oder geänderten Code bedeuten. Gilt die Grenze weiter, schreib \"Verwende [Ansatz] wegen [Nachweis] nicht\" in einen neuen Auftrag.",
     ],
   ],
 });

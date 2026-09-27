@@ -376,6 +376,10 @@ describe("<WorkshopsContent>", () => {
       for (const small of ["text-caption", "text-label", "text-xs", "text-muted-foreground"]) {
         expect(classes, `${small} in the band`).not.toContain(small);
       }
+      for (const name of classes) {
+        expect(name, "reduced opacity in the band").not.toMatch(/(^|:)opacity-(?!100\b)/);
+        expect(name, "a translucent colour in the band").not.toMatch(/(^|:)(text|decoration|border|bg|fill|stroke)-[\w-]+\/\d+$/);
+      }
     }
     expectNoMennigeInScene(container);
     expectCapsInsideScene(container);

@@ -90,7 +90,7 @@ function cmpTable() {
   ${group("Location-based", "lb")}
   ${group("Market-based", "mb")}
 </table>
-<p class="caption cmp__note"><b>Raw folder:</b> ${esc(D.meta.constructedLabel_en)} <b>Ledger:</b> computed from <code>belegtabelle_2025.csv</code> with the written rules and the teaching factors.</p>`;
+<p class="caption cmp__note"><b>Raw folder.</b> ${esc(D.meta.constructedLabel_en)} <b>Ledger.</b> Computed from <code>belegtabelle_2025.csv</code> with the written rules and the teaching factors.</p>`;
 }
 const lanes = `<div class="lanes">
   <article class="lane lane--export" aria-labelledby="lane-raw">
@@ -110,7 +110,6 @@ ${cmpTable()}
   <summary>Read the raw-folder answer as text</summary>
   <div class="quote">
     <p>“Kellbrunn's 2025 emissions: Scope 1 ${esc(n("wrong_s1"))} CO₂e, Scope 2 ${esc(n("wrong_s2lb"))} CO₂e (location-based), total ${esc(n("wrong_total_lb"))}. That is ${esc(nAbs("wrong_chg_lb_pct"))} below 2024 (${esc(n("total_lb_2024"))}). Scope 2 market-based: ${esc(n("wrong_s2mb"))}. Since 2025 Kellbrunn runs on green electricity (Ökostrom Plus). The reduction comes mainly from efficiency measures at Werk Nord. Scope 1 rose by ${esc(nAbs("wrong_chg_s1_pct"))}, probably due to higher heating demand.”</p>
-    <p class="caption">${esc(D.meta.constructedLabel_en)}</p>
   </div>
 </details>`;
 assert(W.lb_t === D.numbers.wrong_total_lb.rounded && W.s1_t === D.numbers.wrong_s1.rounded && W.s2lb_t === D.numbers.wrong_s2lb.rounded, "combinations[127] differs from the wrong_* keys");
@@ -143,12 +142,12 @@ const STEP = {
        why: `${n(stepN(2).keys[1])} against 2024 makes anyone ask what happened, so this error gets caught.` },
   3: { act: `Also switch it on for the MWh misread (T4).`,
        why: `A fall of ${nAbs(stepN(3).keys[1])} looks plausible again, so nobody asks.` },
-  4: { act: `Switch the method to market-based. The MWh row now shows 0 t.`,
-       why: `Market-based hides the unit error completely, because the certificate prices Werk Süd's power at zero. A fall of ${nAbs(stepN(4).keys[1])} looks fine with the Talbrück bill still inside.` },
+  4: { act: `Switch the method to market-based; the MWh row now shows 0 t.`,
+       why: `Market-based hides the unit error, because the certificate prices Werk Süd's power at zero. A fall of ${nAbs(stepN(4).keys[1])} looks fine with the Talbrück bill still inside.` },
   5: { act: `Switch back to location-based, then switch it on only for the duplicate March (T1) and October (T2).`,
        why: `Together they move the total by only ${n(stepN(5).keys[0])}, so a check on the total misses both. In market-based the pair moves it by ${n(stepN(5).keys[1])}.` },
   6: { act: `Open the evidence drawer from “${nAbs(stepN(6).keys[0])}” in the rewritten sentence in section 4.`,
-       why: `In this case's teaching values, ${n("drv_lb_grid_share_pct")} of the location-based decrease comes from the lower grid factor. Kellbrunn did nothing for it.` },
+       why: `In the teaching values, ${n("drv_lb_grid_share_pct")} of the location-based decrease comes from the lower grid factor, which Kellbrunn did not cause.` },
 };
 function stepRes(s) {
   if (!s.keys || s.n === 6) return "";
@@ -223,7 +222,7 @@ const DOCLINK = {
   T7: ["Factor file", "faktoren_lehrwerte.csv"],
 };
 function style(g) { return g ? ` style="--l:${g.l}%;--w:${g.w}%;--cl:${g.cl}%;--cw:${g.cw}%"` : ""; }
-const docBtn = (open, label, file) => `<button class="linkish doc" type="button" data-open="${esc(open)}" title="${esc(file)}"><span class="sr-only">Open the evidence: </span>${esc(label)}</button>`;
+const docBtn = (open, label, file) => `<button class="linkish doc" type="button" data-open="${esc(open)}" title="${esc(file)}"><span class="sr-only">Open the evidence, </span>${esc(label)}</button>`;
 function trapRow(t) {
   const r = V0.rows[t.id];
   const scope = mbOnly(t) ? ` <span class="tag tag--scope" id="ts-${t.id}">Market-based only</span>` : "";
@@ -233,7 +232,7 @@ function trapRow(t) {
     <p class="trap__meta"><span class="tag">${esc(t.role)}</span>${docBtn("trap:" + t.id, DOCLINK[t.id][0], DOCLINK[t.id][1])}</p>
   </div>
   <button class="sw" type="button" role="switch" data-trap="${t.id}" aria-checked="${r.pressed}" aria-labelledby="sl-${t.id} tn-${t.id}${scope ? " ts-" + t.id : ""}" aria-describedby="te-${t.id}"><span class="sw__box" aria-hidden="true"></span><span class="sw__t" id="sl-${t.id}">As the AI did it</span><span class="sw__s" aria-hidden="true">AI</span></button>
-  <p class="iso${r.isoZero ? " is-zero" : ""}" id="te-${t.id}"><b>${esc(r.iso)}</b><span class="iso__tail">${r.isoZero ? "" : " if only this trap fires"}</span> <button class="linkish only" type="button" data-only="${t.id}">Only this trap<span class="sr-only">: ${esc(trapTitle(t))}</span></button></p>
+  <p class="iso${r.isoZero ? " is-zero" : ""}" id="te-${t.id}"><b>${esc(r.iso)}</b><span class="iso__tail">${r.isoZero ? "" : " if only this trap fires"}</span> <button class="linkish only" type="button" data-only="${t.id}">Only this trap<span class="sr-only"> (${esc(trapTitle(t))})</span></button></p>
   <div class="mob">
     <div class="track" data-open="trap:${t.id}" aria-hidden="true"><span class="ghost"${style(r.ghost)}${r.ghost ? "" : " hidden"}></span><span class="bar${r.bar && !r.bar.neg ? " is-up" : ""}"${style(r.bar)}${r.bar ? "" : " hidden"}></span></div>
     <p class="fx num">${esc(r.fx)}</p>
@@ -398,7 +397,7 @@ const grid = `<div class="covwrap">
   <p class="legend">${["1", "2", "0", "S", "Z", "J", "Q", "X"].map((k) => `<span data-code="${k}" data-label="${esc(LEG_EN[k])}" data-glyph="${esc(GLYPH[k])}"><i class="k-${k}" aria-hidden="true">${esc(GLYPH[k])}</i>${esc(LEG_EN[k])}</span>`).join("")}</p>
   <p class="flagline"><span class="chip chip--muted">Flag, do not correct</span> August ${esc(n("aug_kwh"))} is a real dip during the plant holiday.</p>
 </div>`;
-const STATUS_EN = { enthalten: "included", "ausgeschlossen: Duplikat": "excluded: duplicate", "ausgeschlossen: Grenze": "excluded: boundary", "ergänzt: Zählerstand, DQ B": "added: meter reading, grade B" };
+const STATUS_EN = { enthalten: "included", "ausgeschlossen: Duplikat": "excluded, duplicate", "ausgeschlossen: Grenze": "excluded, boundary", "ergänzt: Zählerstand, DQ B": "added from meter reading, grade B" };
 const docs = D.controlTotal.filter((r) => r.group === "document"), meters = D.controlTotal.filter((r) => r.group === "meter");
 const sumDocs = docs.reduce((s, r) => s + r.kwh, 0), exc = docs.filter((r) => r.status.startsWith("ausgeschlossen")).reduce((s, r) => s + r.kwh, 0);
 assert(sumDocs === D.numbers.ctl_docs_kwh.value, "control total: documents do not add up to ctl_docs_kwh");

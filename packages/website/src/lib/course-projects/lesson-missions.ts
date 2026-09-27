@@ -92,8 +92,8 @@ export const LESSON_MISSION_PROFILES = {
       "The draft claims proven energy savings. The sources hold only a manufacturer estimate with no measurement method.",
     ),
     manipulation: text(
-      "Ändere im Redline-Pult Datenklasse oder Quellenregel und sieh, welche Claims die Prüfung passieren.",
-      "In the redline desk, change a data class or grounding rule and see which claims pass review.",
+      "Ändere Datenklasse oder Quellenregel und sieh, welche Claims die Prüfung passieren.",
+      "Change a data class or grounding rule and see which claims pass review.",
     ),
     evidence: probe(
       text(
@@ -236,8 +236,8 @@ export const LESSON_MISSION_PROFILES = {
       "The ranking rejects no one automatically but decides which profiles humans ever see. Provider and deployer roles are unresolved.",
     ),
     manipulation: text(
-      "Ändere in der Fallakte Zweck, Entscheidungseinfluss oder Rolle und verfolge den Pflichtenpfad.",
-      "In the case file, change purpose, decision influence or role and trace the obligation path.",
+      "Ändere Zweck, Entscheidungseinfluss oder Rolle und verfolge den Pflichtenpfad.",
+      "Change purpose, decision influence or role and trace the obligation path.",
     ),
     evidence: probe(
       text(
@@ -387,8 +387,8 @@ export const LESSON_MISSION_PROFILES = {
       "Two project updates conflict. The agent can publish the report without escalating the conflict or marking an evidence gap.",
     ),
     manipulation: text(
-      "Verschiebe in der Workflow-Konsole Freigabegate oder Abbruchregel und sieh dir den Laufpfad an.",
-      "In the workflow console, move an approval gate or stop rule and watch the run path.",
+      "Verschiebe Freigabegate oder Abbruchregel und sieh dir den Laufpfad an.",
+      "Move an approval gate or stop rule and watch the run path.",
     ),
     evidence: probe(
       text(
@@ -443,8 +443,8 @@ export const LESSON_MISSION_PROFILES = {
       ),
       {
         "goal-only": text(
-          "Ein präzises Ziel begrenzt weder Mittel noch Freigaben. „Veröffentliche die Zusammenfassung“ ist eindeutig, erlaubt ohne Werkzeug- und Stoppgrenze aber die Veröffentlichung trotz Quellenkonflikt.",
-          "A precise goal bounds neither means nor approvals. “Publish the summary” is clear, yet without tool and stop limits it still allows publishing through a source conflict.",
+          "Ein präzises Ziel begrenzt weder Mittel noch Freigaben. „Veröffentliche die Zusammenfassung“ ist eindeutig, erlaubt ohne Stoppgrenze aber das Veröffentlichen trotz Quellenkonflikt.",
+          "A precise goal bounds neither means nor approvals. “Publish the summary” is clear, yet without a stop limit it allows publishing through a source conflict.",
         ),
         persona: text(
           "Eine Persona beschreibt Verhalten, gibt aber keine Berechtigung und erzwingt keinen Stopp. Auch ein „Compliance-Prüfer“ kann ohne Gate einen widersprüchlichen Entwurf veröffentlichen.",
@@ -542,8 +542,8 @@ export const LESSON_MISSION_PROFILES = {
       "The timestamp matches the claim but comes from a newly exported copy. Two accounts share the same clip and cite each other.",
     ),
     manipulation: text(
-      "Ändere in der Provenienz-Redaktion Quellenunabhängigkeit oder Signalgewicht und verfolge die Publikationsentscheidung.",
-      "In the provenance newsroom, change source independence or signal weight and trace the publication decision.",
+      "Ändere Quellenunabhängigkeit oder Signalgewicht und verfolge die Publikationsentscheidung.",
+      "Change source independence or signal weight and trace the publication decision.",
     ),
     evidence: probe(
       text(
@@ -670,8 +670,8 @@ export const LESSON_MISSION_PROFILES = {
       "After a timeout, batch 42 is delivered again. Three events have the same event ID but a later ingestion timestamp.",
     ),
     manipulation: text(
-      "Aktiviere im Störstand Replay, ändere Deduplikations- oder Late-Data-Regeln und vergleiche Zeilenzahl und Reconciliation.",
-      "On the failure bench, trigger replay, change deduplication or late-data rules and compare row counts and reconciliation.",
+      "Aktiviere Replay, ändere Deduplikations- oder Late-Data-Regeln und vergleiche Zeilenzahl und Reconciliation.",
+      "Trigger replay, change deduplication or late-data rules and compare row counts and reconciliation.",
     ),
     evidence: probe(
       text(
@@ -805,8 +805,8 @@ export const LESSON_MISSION_PROFILES = {
       "The `resolved_at` feature is computed before the split. It is in training and evaluation but unknown at real prediction time.",
     ),
     manipulation: text(
-      "Schalte im Prüffeld Leakage und Zwischenanalysen um und vergleiche Effekt, Unsicherheit und Holdout-Verhalten.",
-      "In the test rig, toggle leakage and interim looks and compare effect, uncertainty and holdout behavior.",
+      "Schalte Leakage und Zwischenanalysen um und vergleiche Effekt, Unsicherheit und Holdout-Verhalten.",
+      "Toggle leakage and interim looks and compare effect, uncertainty and holdout behavior.",
     ),
     evidence: probe(
       text(
@@ -853,8 +853,8 @@ export const LESSON_MISSION_PROFILES = {
           "Training data must steer fitting or the model learns no parameters. That does not consume the sealed holdout.",
         ),
         validation: text(
-          "Validierungsdaten sind für Modell- und Hyperparameterentscheidungen da, solange du sie nicht übernutzt. Die Lernrate wählst du auf der Validierung; den finalen Holdout öffnest du danach einmal.",
-          "Validation data is for model and hyperparameter decisions, as long as you do not overuse it. You pick the learning rate on validation and open the final holdout once afterward.",
+          "Validierungsdaten sind für Modell- und Hyperparameterentscheidungen da, ohne sie zu übernutzen. Die Lernrate wählst du dort; den finalen Holdout öffnest du danach einmal.",
+          "Validation data is for model and hyperparameter decisions, without overuse. You pick the learning rate there and open the final holdout once afterward.",
         ),
       },
     ),
@@ -926,8 +926,8 @@ export const LESSON_MISSION_PROFILES = {
       "Consumer lag rises. After rebalancing, latency recovers while some sequences are processed twice.",
     ),
     manipulation: text(
-      "Erzeuge im Kontrollraum Partition oder Rückstau und ändere Replikation, Wasserzeichen oder Replay-Strategie.",
-      "In the control room, inject a partition or backlog and change replication, watermark or replay strategy.",
+      "Erzeuge Partition oder Rückstau und ändere Replikation, Wasserzeichen oder Replay-Strategie.",
+      "Inject a partition or backlog and change replication, watermark or replay strategy.",
     ),
     evidence: probe(
       text(
@@ -1069,8 +1069,8 @@ export const LESSON_MISSION_PROFILES = {
       "The test expects three attempts and sees four. The diff shows the counter rising before the stop check instead of after.",
     ),
     manipulation: text(
-      "Sieh dir in der Werkbank die Dateien an, wende den begrenzten Patch an und führe die erlaubten Checks aus.",
-      "In the workbench, inspect the files, apply the bounded patch and run the allowed checks.",
+      "Sieh dir die Dateien an, wende den begrenzten Patch an und führe die erlaubten Checks aus.",
+      "Inspect the files, apply the bounded patch and run the allowed checks.",
     ),
     evidence: probe(
       text(
@@ -1213,8 +1213,8 @@ export const LESSON_MISSION_PROFILES = {
       "Source B conflicts with Source C on the exhibition year. An attractive visitor count is in no source but in the baseline answer.",
     ),
     manipulation: text(
-      "Ändere im Komparator Grounding- und Verweigerungsregeln und führe beide Varianten gegen dasselbe Quellenpaket aus.",
-      "In the comparator, change grounding and refusal rules and run both variants against the same source packet.",
+      "Ändere Grounding- und Verweigerungsregeln und führe beide Varianten mit demselben Quellenpaket aus.",
+      "Change grounding and refusal rules and run both variants on the same source packet.",
     ),
     evidence: probe(
       text(
@@ -1253,8 +1253,8 @@ export const LESSON_MISSION_PROFILES = {
           "Format tests only structure. A neatly formatted table can still present a disputed figure as certain.",
         ),
         length: text(
-          "Länge misst nur den Umfang. Der kurze Satz „42 ist bestätigt“ ist trotz Quellenkonflikt zu sicher, und mehr Wörter schließen die Evidenzlücke nicht.",
-          "Length measures only volume. The short sentence “42 is confirmed” is overconfident despite a source conflict, and more words would not close the evidence gap.",
+          "Länge misst nur den Umfang. Schon „42 ist bestätigt“ ist trotz Quellenkonflikt zu sicher; mehr Wörter schließen die Lücke nicht.",
+          "Length measures only volume. Even “42 is confirmed” is overconfident despite a source conflict; more words would not close the gap.",
         ),
       },
     ),
@@ -1344,8 +1344,8 @@ export const LESSON_MISSION_PROFILES = {
       "The scout returns duplicate tickets. The analyst exceeds its budget, the critic detects duplicates but cannot stop the run.",
     ),
     manipulation: text(
-      "Ändere im Kontrollstand Budget, Freigabegate oder Eingriffspunkt und beobachte Trace, Kosten und Ergebnisqualität.",
-      "In the control plane, change budget, approval gate or intervention point and watch trace, cost and output quality.",
+      "Ändere Budget, Freigabegate oder Eingriffspunkt und beobachte Trace, Kosten und Ergebnisqualität.",
+      "Change budget, approval gate or intervention point and watch trace, cost and output quality.",
     ),
     evidence: probe(
       text(

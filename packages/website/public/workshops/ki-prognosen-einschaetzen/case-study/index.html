@@ -2316,7 +2316,6 @@
       <span>Workshop 01 &middot; <span class="cs-long">Forecasting decisions &middot; </span>Business case<span class="cs-short"> &middot; practice company, invented figures</span></span>
     </div>
     <p class="cs-eyebrow">New device launch <span class="sep" aria-hidden="true">&middot;</span> Practice market</p>
-    <p class="cs-disclaimer">Practice company with invented figures.</p>
     <p class="s1-kicker">System</p>
     <h1>Three teams, one phone launch and a forecast above the stock</h1>
     <p class="lede s1-sub">Retail asks, Logistics plans capacity, SDM forecasts demand, and all three collide.</p>
@@ -2338,7 +2337,7 @@
   <div class="s2-head">
     <p class="s2-kicker">Focus</p>
     <h2 class="s2-title" id="s2z-title">Zoom in: just SDM</h2>
-    <p class="s2-dek">Supply and Demand Management rations one capped supply across stores, once a model estimates the demand behind each ask.</p>
+    <p class="s2-dek">Supply and Demand Management splits the capped supply across stores by the demand a model estimates behind each ask.</p>
   </div>
   <div class="panel s2-stage">
     <svg class="chart" id="systemFocusChart" role="img" aria-label="System map zoomed into SDM; Retail and Logistics dimmed to the background, SDM enlarged and in focus under a 1,050 supply cap"></svg>
@@ -2359,18 +2358,17 @@
       <p class="kicker">The data</p>
       <h2>The three Macedonia stores</h2>
     </div>
-    <p>Different sizes, different signals. Preorders lead demand, and a stockout hides the real demand.</p>
   </div>
   <div class="grid two">
     <div class="panel">
       <div class="panel-head"><h3>Request vs preorders</h3><span>launch week, 3 stores</span></div>
       <svg id="storeDataChart" class="chart short" role="img" aria-label="Three Macedonia stores by size: Skopje requests 610 with 392 preorders, East Gate 470 with 288, Bitola 290 with 121; preorders track and lead demand."></svg>
-      <p class="cap-mono">preorders lead demand -> the earliest real signal per store</p>
+      <p class="cap-mono">preorders: the earliest real signal per store</p>
     </div>
     <div class="panel">
       <div class="panel-head"><h3>What the data can and cannot say</h3></div>
       <div class="s03-chips">
-        <div class="s03-chip"><b>Preorders lead</b><span>they arrive before launch and predict demand</span></div>
+        <div class="s03-chip"><b>Preorders lead</b><span>they arrive before launch</span></div>
         <div class="s03-chip"><b>Sales != demand</b><span>a stockout censors true demand</span></div>
         <div class="s03-chip"><b>Spike, then decay</b><span>demand peaks in launch week, then falls</span></div>
       </div>
@@ -2432,13 +2430,11 @@
       <p class="kicker">Stakes</p>
       <h2 id="s5-ou-title">What if the number is wrong?</h2>
     </div>
-    <p>Over and under are both costly, and at a launch they are not equal.</p>
   </div>
 
   <div class="panel ou-panel">
     <div class="panel-head">
       <h3>Two ways to miss the number</h3>
-      <span>consequences only</span>
     </div>
     <svg id="overUnderChart" class="chart ou-chart" role="img" aria-label="Diverging schematic: overforecast consequences point left in orange, underforecast consequences point right in red, and the red under bar is drawn longer because at a launch under usually hurts more."></svg>
     <div class="ou-cols">
@@ -2565,7 +2561,6 @@
       <p class="kicker">Evaluate</p>
       <h2>Test on past weeks, then measure after launch</h2>
     </div>
-    <p>Rolling-origin backtest against the baseline, scored with WAPE.</p>
   </div>
 
   <div class="grid two">
@@ -2639,7 +2634,6 @@
       <p class="kicker">Monitor</p>
       <h2>Check the forecast every day after launch</h2>
     </div>
-    <p>Refresh, gate, watch drift, retrain on a trigger, then learn.</p>
   </div>
 
   <div class="grid two mon-grid">
@@ -2700,13 +2694,12 @@
   <div class="section-head">
     <div>
       <p class="kicker">Recap</p>
-      <h2 id="s12-title">What SDM decides, and what you take away</h2>
+      <h2 id="s12-title">What SDM decides</h2>
     </div>
-    <p>Stores ask for 1,370 phones. The model estimates 1,180. Supply is 1,050.</p>
   </div>
   <div class="grid two next-grid">
     <div class="panel next-rule">
-      <div class="panel-head"><h3>The decision rule</h3><span>use it on the field card</span></div>
+      <div class="panel-head"><h3>The decision rule</h3></div>
       <ol class="next-steps">
         <li>Split the 1,050 by estimated demand per store, not by the size of each ask.</li>
         <li>Keep the 320 phones of unmet asks visible to Retail and Logistics.</li>
@@ -2715,12 +2708,12 @@
       </ol>
     </div>
     <div class="panel next-links">
-      <div class="panel-head"><h3>Next step</h3><span>about 15 to 45 minutes</span></div>
+      <div class="panel-head"><h3>Next step</h3></div>
       <ul class="next-list">
-        <li><a href="../field-card.html">Field card</a>: the newsvendor rule, safety stock and the five checks on one A4 page.</li>
-        <li><a href="../homework.html">Take-home</a>: score two forecasts on 104 weeks of practice data.</li>
-        <li><a href="../hands-on.html">Hands-on lab</a>: run the same trade-off for three practice companies.</li>
-        <li><a href="../hub.html">Workshop hub</a>: all materials and the dataset.</li>
+        <li><a href="../field-card.html">Field card</a>: the newsvendor rule and five checks.</li>
+        <li><a href="../homework.html">Take-home</a>: score two forecasts on practice data.</li>
+        <li><a href="../hands-on.html">Hands-on lab</a>: the same trade-off in three companies.</li>
+        <li><a href="../hub.html">Workshop hub</a>: all materials.</li>
       </ul>
     </div>
   </div>

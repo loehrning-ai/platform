@@ -344,37 +344,37 @@ function classifyProviderFailure(
     locale === "de"
       ? {
           policyDisabled:
-            "Der Live-Provider ist durch eine explizite Kursrichtlinie deaktiviert.",
+            "Eine Kursrichtlinie hat den Live-Provider deaktiviert.",
           policyNotReady:
-            "Das gewählte Modell ist durch eine explizite Kursrichtlinie noch nicht freigegeben.",
+            "Eine Kursrichtlinie gibt das gewählte Modell noch nicht frei.",
           auth: "Authentifizierung oder Zugriff ist fehlgeschlagen. Der Provider wurde nicht ausgeführt.",
           validation:
-            "Die Anfrage wurde abgelehnt. Es wurde keine Provider-Evidenz erzeugt.",
+            "Die Anfrage wurde abgelehnt.",
           quota:
-            "Ein Nutzungs- oder Providerbudget ist erreicht. Es wurde keine Provider-Evidenz erzeugt.",
+            "Ein Nutzungs- oder Providerbudget ist erreicht.",
           provider:
-            "Der Upstream-Providerlauf ist fehlgeschlagen. Es wurde keine Provider-Evidenz erzeugt.",
+            "Der Upstream-Providerlauf ist fehlgeschlagen.",
           network:
-            "Die Practice-API ist nicht erreichbar. Es wurde keine Provider-Evidenz erzeugt.",
+            "Die Practice-API ist nicht erreichbar.",
           malformed:
-            "Die Provider-Antwort war fehlerhaft. Es wurde keine Provider-Evidenz übernommen.",
+            "Die Provider-Antwort war fehlerhaft.",
         }
       : {
           policyDisabled:
-            "The live provider is disabled by an explicit course policy.",
+            "A course policy has disabled the live provider.",
           policyNotReady:
-            "The selected model is not enabled yet by an explicit course policy.",
+            "A course policy has not enabled the selected model yet.",
           auth: "Authentication or access failed. The provider was not run.",
           validation:
-            "The request was rejected. No provider evidence was produced.",
+            "The request was rejected.",
           quota:
-            "A usage or provider budget was exhausted. No provider evidence was produced.",
+            "A usage or provider budget is exhausted.",
           provider:
-            "The upstream provider run failed. No provider evidence was produced.",
+            "The upstream provider run failed.",
           network:
-            "The practice API is unreachable. No provider evidence was produced.",
+            "The practice API is unreachable.",
           malformed:
-            "The provider response was malformed. No provider evidence was accepted.",
+            "The provider response was malformed.",
         };
 
   if (malformedResponse) {
@@ -613,7 +613,7 @@ export default function PromptLab({
           engine: "Prompt-Labor",
           context: "Arbeitskontext",
           contextHelp:
-            "Fakten, Zielgruppe und Ausgangslage. Keine vertraulichen oder personenbezogenen Daten.",
+            "Fakten, Zielgruppe und Ausgangslage.",
           contextPlaceholder:
             "Beispiel: Ein internes Operations-Team braucht eine prüfbare Entscheidungsnotiz auf Basis synthetischer Vorfalldaten.",
           prompt: "Prompt-Auftrag",
@@ -627,15 +627,15 @@ export default function PromptLab({
           privacyWarning:
             "Keine Namen, Kontaktdaten, Zugangsdaten, Gesundheitsdaten oder unveröffentlichten Unternehmensdaten eingeben.",
           privacyConfirm:
-            "Ich bestätige: Die Eingaben sind synthetisch oder zur Veröffentlichung freigegeben.",
+            "Meine Eingaben sind synthetisch oder zur Veröffentlichung freigegeben.",
           run: "Provider ausführen",
           running: "Provider läuft …",
           model: "Angefragtes Modell",
           modelHelp:
-            "Die Auswahl sendet nur eine öffentliche Modell-ID. Die Bereitstellung kann sie ablehnen; API-Schlüssel bleiben ausschließlich auf dem Server.",
+            "Gesendet wird nur die öffentliche Modell-ID; die Bereitstellung kann sie ablehnen. API-Schlüssel bleiben auf dem Server.",
           providerTitle: "Provider-Ausgabe · nur echte API-Antwort",
           providerIdle:
-            "Noch kein Providerlauf. Die lokale Analyse oben erzeugt keine Modellantwort.",
+            "Noch kein Providerlauf.",
           failureClass: "Fehlerklasse",
           failureClassLabels: {
             "policy-disabled": "Kursrichtlinie · deaktiviert",
@@ -648,25 +648,25 @@ export default function PromptLab({
             "malformed-response": "Fehlerhafte Antwort",
           },
           degradedNotice:
-            "Herabgestufter Lernpfad: Nur lokale Prompt-Struktur und korrektes Stop-Verhalten werden geprüft. Es liegt keine Provider-Evidenz vor.",
+            "Herabgestufter Lernpfad: Geprüft werden nur Prompt-Struktur und Stop-Verhalten. Es liegt keine Provider-Evidenz vor.",
           acknowledgeDegraded: "Herabgestuften Modus bestätigen",
           degradedAcknowledged:
             "Herabgestufter Modus bestätigt · keine Provider-Evidenz",
           localLearningTitle:
             "Lokaler synthetischer Lernlauf · kein Modellaufruf",
           localLearningNotice:
-            "Prüft nur die sichtbaren, synthetischen Prompt-Struktur- und Kontrollsignale. Erzeugt keine Antwort und keine Evidenz für Provider, Projekt oder Teilnahmebestätigung.",
+            "Prüft nur Prompt-Struktur und Kontrollen. Keine Antwort, keine Evidenz für Provider, Projekt oder Teilnahmebestätigung.",
           runLocalLearning: "Lokalen Lernlauf ausführen",
           localLearningComplete:
             "Lokaler Lernlauf abgeschlossen · nur RUN-Lernsignal",
           operationalFailure:
-            "Dieser Betriebsfehler ist keine Evidenz und kann weder Provider-Evidenz noch eine normale Verifizierung erfüllen.",
+            "Dieser Betriebsfehler ist keine Evidenz und zählt nicht für die Verifizierung.",
           partialPrimary:
-            "Die primäre Claude-Antwort bleibt sichtbar. Der Quellenvergleich ist fehlgeschlagen; dieser Teilerfolg ist keine vollständige Provider-Evidenz.",
+            "Der Quellenvergleich ist fehlgeschlagen. Die erste Claude-Antwort bleibt sichtbar, ist aber keine vollständige Provider-Evidenz.",
           evidenceStructure: "Ziel, Kontext und Grenzen sind erkennbar",
           evidenceRunSuccess: "Echter Providerlauf erfolgreich",
           evidenceRunDegraded:
-            "Richtlinien-Stopp protokolliert · keine Verifizierung für Projekt oder Teilnahmebestätigung",
+            "Richtlinien-Stopp protokolliert · zählt nicht für Projekt oder Bestätigung",
           evidenceRunPending:
             "Echte Provider-Evidenz oder Richtlinien-Stopp fehlt",
           ready: "Die Prompt-Evidenz ist vollständig.",
@@ -674,11 +674,11 @@ export default function PromptLab({
             "Struktur vervollständigen und einen echten Providerlauf versuchen.",
           success: "Die Practice-API hat eine Provider-Antwort geliefert.",
           priorSuccess:
-            "Ein früherer erfolgreicher API-Lauf ist im Artefakt vermerkt. Die Provider-Ausgabe wird nicht im Lernfortschritt gespeichert.",
+            "Ein früherer erfolgreicher API-Lauf ist vermerkt. Die Provider-Ausgabe wird nicht gespeichert.",
           degradedNotVerified:
-            "Dieser Richtlinien-Stopp ist ein eigener, nicht gleichwertiger Lernpfad. Er verifiziert weder das Provider-Artefakt noch das Kurszertifikat.",
+            "Dieser Richtlinien-Stopp verifiziert weder das Provider-Artefakt noch das Kurszertifikat.",
           stageLocked:
-            "Die Projektverifizierung bleibt gesperrt, bis alle fünf Arbeitsphasen abgeschlossen sind.",
+            "Die Verifizierung öffnet nach allen fünf Arbeitsphasen.",
           stageEvidence: "Alle fünf Arbeitsphasen sind abgeschlossen",
           verifySummarySuccess:
             "Prompt-Labor verifiziert: Ziel, Kontext und Grenzen geprüft; Providerlauf erfolgreich.",
@@ -687,7 +687,7 @@ export default function PromptLab({
           engine: "Prompt lab",
           context: "Working context",
           contextHelp:
-            "Facts, audience, and starting point. Do not include confidential or personal data.",
+            "Facts, audience and starting point.",
           contextPlaceholder:
             "Example: An internal operations team needs an auditable decision memo based on synthetic incident data.",
           prompt: "Prompt instruction",
@@ -701,15 +701,15 @@ export default function PromptLab({
           privacyWarning:
             "Do not enter names, contact details, credentials, health data, or unpublished company data.",
           privacyConfirm:
-            "I confirm that the inputs are synthetic or approved for disclosure.",
+            "My inputs are synthetic or approved for disclosure.",
           run: "Run provider",
           running: "Provider running …",
           model: "Requested model",
           modelHelp:
-            "This sends a public model ID only. The deployment may deny it; API keys remain server-side.",
+            "Only the public model ID is sent, and the deployment may deny it. API keys stay on the server.",
           providerTitle: "Provider output · API response only",
           providerIdle:
-            "No provider run yet. The local analysis above does not generate a model answer.",
+            "No provider run yet.",
           failureClass: "Failure class",
           failureClassLabels: {
             "policy-disabled": "Course policy · disabled",
@@ -722,20 +722,20 @@ export default function PromptLab({
             "malformed-response": "Malformed response",
           },
           degradedNotice:
-            "Degraded learning path: only local prompt structure and correct stop behavior are assessed. No provider evidence exists.",
+            "Degraded learning path: only prompt structure and stop behavior are checked. No provider evidence exists.",
           acknowledgeDegraded: "Acknowledge degraded mode",
           degradedAcknowledged:
             "Degraded mode acknowledged · no provider evidence",
           localLearningTitle: "Local synthetic learning run · no model call",
           localLearningNotice:
-            "Checks only the visible synthetic prompt-structure and control signals. It generates no answer and no provider, project, or certificate evidence.",
+            "Checks only prompt structure and controls. No answer and no provider, project or certificate evidence.",
           runLocalLearning: "Run local learning check",
           localLearningComplete:
             "Local learning run complete · RUN learning signal only",
           operationalFailure:
-            "This operational failure is not evidence and cannot satisfy provider evidence or normal verification.",
+            "This operational failure is not evidence and does not count toward verification.",
           partialPrimary:
-            "The primary Claude response remains visible. The grounded comparison failed; this partial success is not complete provider evidence.",
+            "The grounded comparison failed. The first Claude response stays visible but is not complete provider evidence.",
           evidenceStructure: "Goal, context, and constraints are identifiable",
           evidenceRunSuccess: "Real provider run succeeded",
           evidenceRunDegraded:
@@ -746,11 +746,11 @@ export default function PromptLab({
           pending: "Complete the structure and attempt a real provider run.",
           success: "The practice API returned a provider response.",
           priorSuccess:
-            "A prior successful API run is recorded in the artifact. Provider output is not stored in learning progress.",
+            "A prior successful API run is recorded. Provider output is not stored.",
           degradedNotVerified:
-            "This policy stop is a separate, non-equivalent learning path. It verifies neither the provider artifact nor the course certificate.",
+            "This policy stop verifies neither the provider artifact nor the course certificate.",
           stageLocked:
-            "Project verification remains locked until all five work stages are complete.",
+            "Verification unlocks after all five work stages.",
           stageEvidence: "All five work stages are complete",
           verifySummarySuccess:
             "Prompt lab verified: goal, context, and constraints checked; provider run succeeded.",
@@ -787,11 +787,11 @@ export default function PromptLab({
             "Jede Rolle erhält nur synthetische Tickets; der Redakteur darf nicht autonom versenden.",
           review: "Run-Evidenz auswerten",
           reviewHelp:
-            "Die Auswahl bewertet einen erfolgreichen Providerlauf. Ein expliziter Richtlinien-Stopp öffnet nur einen nicht gleichwertigen, herabgestuften Lernpfad.",
+            "Bewerte einen erfolgreichen Providerlauf. Ein Richtlinien-Stopp öffnet nur den herabgestuften Lernpfad.",
           evaluateWorkflow:
             "Output gegen Freigabe, Abbruchregel, Eigentum und Fallback prüfen",
           evaluateOperator:
-            "Fehlerhaften Pfad am Qualitätsgate stoppen und Reviewaufwand/Kosten getrennt erfassen",
+            "Fehlerpfad am Qualitätsgate stoppen, Reviewaufwand und Kosten getrennt erfassen",
           stopUnavailable:
             "Keine Ausgabe erfinden; expliziten Richtlinien-Stopp protokollieren",
           unsafeReview: "Ausgabe ohne Rubrik oder Gate übernehmen",
@@ -830,11 +830,11 @@ export default function PromptLab({
             "Each role receives only synthetic tickets; the editor cannot send autonomously.",
           review: "Assess run evidence",
           reviewHelp:
-            "The selection evaluates a successful provider run. An explicit policy stop opens only a separate, non-equivalent degraded learning path.",
+            "Assess a successful provider run. A policy stop opens only the degraded learning path.",
           evaluateWorkflow:
             "Check output against approval, stop rule, ownership, and fallback",
           evaluateOperator:
-            "Stop the faulty path at the quality gate and separate review effort from cost",
+            "Stop the faulty path at the quality gate; log review effort and cost apart",
           stopUnavailable: "Invent no output; record the explicit policy stop",
           unsafeReview: "Accept output without a rubric or gate",
           missionEvidence:
@@ -850,10 +850,10 @@ export default function PromptLab({
       ? {
           packetTitle: "Synthetisches Quellenpaket · an beide Läufe gesendet",
           packetHelp:
-            "Beide Providerläufe erhalten exakt dieses Paket. Der Arbeitskontext ergänzt nur Zielgruppe und Ausgabezweck.",
+            "Der Arbeitskontext ergänzt nur Zielgruppe und Zweck.",
           deskTitle: "Antwortvergleich und Redlining",
           deskHelp:
-            "Bewerte die zwei sichtbaren API-Antworten. Die Auswahl wird als begrenzte Evidenz gespeichert; Antworten und Freitext werden nicht gespeichert.",
+            "Bewerte beide API-Antworten. Gespeichert wird nur deine Auswahl, keine Antwort und kein Freitext.",
           comparison: "Vergleichsurteil",
           comparisonOptions: [
             ["", "Urteil wählen"],
@@ -863,7 +863,7 @@ export default function PromptLab({
           ],
           claimsTitle: "Claim-Evidenz-Matrix",
           claimsHelp:
-            "Ordne jeden festen Claim der tragenden Quelle, einem Konflikt oder einer Beleglücke zu. Entscheide dann die Redline.",
+            "Ordne jeden Claim einer Quelle, einem Konflikt oder einer Beleglücke zu und entscheide die Redline.",
           claims: [
             "Claim 1 · Die Ausstellung eröffnet am 12. Oktober.",
             "Claim 2 · Das Objekt kam 1986 in die Sammlung.",
@@ -890,7 +890,7 @@ export default function PromptLab({
             "Quellenstatus oder Redline widerspricht dem Quellenpaket.",
           rubricTitle: "Vierdimensionale Vergleichsrubrik · Antwort A und B",
           rubricHelp:
-            "Bewerte jede Dimension separat: 1 = fehlt oder unbelegt, 2 = wesentliche Lücken, 3 = weitgehend erfüllt, 4 = vollständig erfüllt.",
+            "Jede Dimension einzeln: 1 = fehlt oder unbelegt, 2 = wesentliche Lücken, 3 = weitgehend erfüllt, 4 = vollständig erfüllt.",
           rubricDimensions: {
             factuality: "Faktentreue",
             completeness: "Vollständigkeit",
@@ -908,22 +908,22 @@ export default function PromptLab({
             [4, "4 · vollständig erfüllt"],
           ],
           twoOutputs:
-            "Zwei echte Providerantworten liegen für denselben Fall vor",
-          comparisonComplete: "Ein sichtbarer Antwortvergleich ist entschieden",
+            "Zwei echte Providerantworten zum selben Fall",
+          comparisonComplete: "Antwortvergleich entschieden",
           claimsComplete:
-            "Alle drei Claims sind korrekt zugeordnet und redigiert",
+            "Alle drei Claims richtig zugeordnet und redigiert",
           rubricComplete:
-            "Beide Antworten sind in allen vier Rubrikdimensionen separat bewertet",
+            "Beide Antworten in allen vier Dimensionen bewertet",
           comparisonMismatch:
-            "Das Vergleichsurteil muss mit den Summen der beiden Rubriken übereinstimmen.",
+            "Das Vergleichsurteil muss zu den Rubriksummen passen.",
         }
       : {
           packetTitle: "Synthetic source packet · sent to both runs",
           packetHelp:
-            "Both provider runs receive this exact packet. Working context adds only the audience and output purpose.",
+            "Working context adds only audience and purpose.",
           deskTitle: "Response comparison and redlining",
           deskHelp:
-            "Assess the two visible API responses. Only bounded evidence choices are stored; responses and free text are not stored.",
+            "Assess both API responses. Only your choices are stored, never responses or free text.",
           comparison: "Comparison verdict",
           comparisonOptions: [
             ["", "Select a verdict"],
@@ -933,7 +933,7 @@ export default function PromptLab({
           ],
           claimsTitle: "Claim-evidence matrix",
           claimsHelp:
-            "Map each fixed claim to its supporting source, a conflict, or an evidence gap. Then make the redline decision.",
+            "Map each claim to a source, a conflict or an evidence gap, then decide the redline.",
           claims: [
             "Claim 1 · The exhibition opens on 12 October.",
             "Claim 2 · The object entered the collection in 1986.",
@@ -960,7 +960,7 @@ export default function PromptLab({
             "Evidence status or redline conflicts with the source packet.",
           rubricTitle: "Four-dimension comparison rubric · Responses A and B",
           rubricHelp:
-            "Score each dimension independently: 1 = absent or unsupported, 2 = material gaps, 3 = mostly met, 4 = fully met.",
+            "Score each dimension on its own: 1 = absent or unsupported, 2 = material gaps, 3 = mostly met, 4 = fully met.",
           rubricDimensions: {
             factuality: "Factuality",
             completeness: "Completeness",
@@ -977,13 +977,13 @@ export default function PromptLab({
             [3, "3 · mostly met"],
             [4, "4 · fully met"],
           ],
-          twoOutputs: "Two real provider responses exist for the same case",
-          comparisonComplete: "A visible response comparison is decided",
-          claimsComplete: "All three claims are correctly mapped and redlined",
+          twoOutputs: "Two real provider responses for the same case",
+          comparisonComplete: "Response comparison decided",
+          claimsComplete: "All three claims correctly mapped and redlined",
           rubricComplete:
-            "Both responses are scored separately across all four rubric dimensions",
+            "Both responses scored on all four dimensions",
           comparisonMismatch:
-            "The comparison verdict must agree with the totals of both rubrics.",
+            "The verdict must match the rubric totals.",
         };
 
   const diagnostics = useMemo(

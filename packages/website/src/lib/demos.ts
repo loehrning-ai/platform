@@ -95,8 +95,8 @@ export const demos: readonly Demo[] = [
     titleKicker: "Formeln und Prognose prüfen.",
     background: "Excel-Add-In · Microsoft 365 · keine neue Software",
     description:
-      "Du markierst einen Bereich mit erfundenen Absatzzahlen und bekommst Formelvorschläge, einen Pivot-Entwurf und eine Prognose, die du gegenprüfst.",
-    teaser: "Du prüfst Formeln und eine Prognose an erfundenen Absatzzahlen.",
+      "Du markierst Absatzzahlen und bekommst Formelvorschläge, einen Pivot-Entwurf und eine Prognose zum Gegenprüfen.",
+    teaser: "Du prüfst Formeln und eine Prognose zu Absatzzahlen.",
     tags: ["Excel-Add-In", "M365", "Grundlagen"],
     meta: [
       { label: "Lernziel", value: "Formeln prüfen" },
@@ -113,7 +113,7 @@ export const demos: readonly Demo[] = [
     templateSlugs: ["use-case-bewertungsmatrix"],
     evidenceMode: "synthetic",
     externalActionMode: "none",
-    syntheticDataLabel: "Erfundene Absatzzahlen in einer Beispieltabelle.",
+    syntheticDataLabel: "Neun fiktive Verkaufszeilen, nur linear fortgeschrieben.",
     riskNotes: [
       "Rechne jede vorgeschlagene Formel an einer Zeile von Hand nach.",
       "Vergleiche die Prognose mit denselben Wochen im Vorjahr.",
@@ -134,8 +134,8 @@ export const demos: readonly Demo[] = [
     titleKicker: "Entwurf aus einem Briefing.",
     background: "Word-Lab + Stilprüfung mit Musterdokumenten",
     description:
-      "Du gibst ein Briefing ein und bekommst einen gegliederten Entwurf. Danach prüfst du Stil, Quellen, Freigabe und personenbezogene Daten.",
-    teaser: "Aus einem Briefing wird ein Entwurf, den du auf Stil und Fakten prüfst.",
+      "Aus deinem Briefing entsteht ein gegliederter Entwurf, den du auf Stil, Quellen und personenbezogene Daten prüfst.",
+    teaser: "Du prüfst einen Entwurf aus einem Briefing auf Stil und Fakten.",
     tags: ["Word-Add-In", "M365", "Grundlagen"],
     meta: [
       { label: "Lernziel", value: "Briefing schärfen" },
@@ -152,7 +152,7 @@ export const demos: readonly Demo[] = [
     templateSlugs: ["ki-nutzungsrichtlinie"],
     evidenceMode: "synthetic",
     externalActionMode: "none",
-    syntheticDataLabel: "Erfundene Briefings und Musterdokumente.",
+    syntheticDataLabel: "Fiktive Briefings, Musterdokumente, Erstellzeit und Stil-Treffer.",
     riskNotes: [
       "Entferne Namen und Kundendaten, bevor das Briefing in den Assistenten geht.",
       "Prüfe jede Zahl und jede Quelle im Entwurf gegen das Original.",
@@ -173,7 +173,7 @@ export const demos: readonly Demo[] = [
     titleKicker: "Nachrichten mit Quelle.",
     background: "Beispiel-DB · Signal-Scan · Textentwurf · Review-Gate",
     description:
-      "Die Pipeline liest fiktive Kontakte, markiert Signale mit Quelle und schreibt einen Nachrichtenentwurf. Vor jedem Versand steht ein Review.",
+      "Die Pipeline markiert Signale im CRM mit Quelle und schreibt je Kontakt einen Nachrichtenentwurf.",
     teaser: "Eine Pipeline entwirft Nachrichten, und vor jedem Versand prüfst du.",
     tags: ["Pipeline", "Review-Gate", "Quellen"],
     meta: [
@@ -212,7 +212,7 @@ export const demos: readonly Demo[] = [
     titleKicker: "Memo aus vier Agentenschritten.",
     background: "Vier Rollen: Recherche, Synthese, Kritik, Redaktion",
     description:
-      "Du liest die aufgezeichnete Spur von vier Agenten, die zusammen ein Memo schreiben, vom ersten Rechercheschritt bis zur Schlussfassung.",
+      "Du liest die aufgezeichnete Spur von vier Agenten, die zusammen ein Memo schreiben.",
     teaser: "Du liest die Spur von vier Agenten, die gemeinsam ein Memo schreiben.",
     tags: ["Multi-Agent", "Opus 4.5", "Trace"],
     meta: [
@@ -230,7 +230,7 @@ export const demos: readonly Demo[] = [
     templateSlugs: ["pilot-charter"],
     evidenceMode: "recorded_trace",
     externalActionMode: "none",
-    syntheticDataLabel: "Ein früherer Lauf mit einem erfundenen Auftrag, Schritt für Schritt abgespielt.",
+    syntheticDataLabel: "Aufgezeichneter Lauf; Auftrag, 42 Dokumente und Evidenz-Scores sind fiktiv.",
     riskNotes: [
       "Prüfe die Quellen der Recherche selbst. Die Kritik-Rolle sieht nur, was die Recherche geliefert hat.",
       "Vergleiche die Einwände der Kritik mit der Schlussfassung des Memos.",
@@ -250,8 +250,8 @@ export const demos: readonly Demo[] = [
     titleKicker: "Workflow mit Freigabe.",
     background: "n8n-Muster · simulierte DHL/SAP/Mail-Schritte",
     description:
-      "Ein fiktiver Lieferverzug läuft durch Bestandsprüfung, Kundenentwurf und Eskalation. Am Ende gibt ein Mensch frei.",
-    teaser: "Ein fiktiver Lieferverzug läuft durch den Workflow bis zur Freigabe.",
+      "Ein Lieferverzug läuft durch Bestandsprüfung, Kundenentwurf und Eskalation, bis die Disponentin freigibt.",
+    teaser: "Ein Lieferverzug läuft durch den n8n-Workflow bis zur Freigabe.",
     tags: ["n8n", "Self-host", "Supply-Chain"],
     meta: [
       { label: "Lernziel", value: "Flow lesen" },
@@ -268,7 +268,7 @@ export const demos: readonly Demo[] = [
     templateSlugs: ["pilot-charter"],
     evidenceMode: "synthetic",
     externalActionMode: "simulated",
-    syntheticDataLabel: "Erfundene DHL-, SAP-, Slack- und Mail-Ereignisse.",
+    syntheticDataLabel: "Erfundene DHL-, SAP-, Slack- und Mail-Ereignisse, nur im Browser.",
     riskNotes: [
       "Lies den Entwurf der Kundennachricht, bevor du ihn freigibst.",
       "Lege fest, wer die Nachbestellung freigibt, wenn die Disponentin fehlt.",
@@ -288,8 +288,8 @@ export const demos: readonly Demo[] = [
     titleKicker: "Antworten mit Fundstelle.",
     background: "Keyword-Suche · 6 Beispieldokumente · Antwort mit Quellenkarte",
     description:
-      "Eine Keyword-Suche findet Klauseln in sechs erfundenen Unternehmensdokumenten, von der Rahmenvereinbarung bis zur Unterschriftenregelung, und zitiert sie mit Fundstelle. Auf Fragen ohne Treffer antwortet das System nicht.",
-    teaser: "Eine Keyword-Suche zitiert Klauseln aus sechs Beispieldokumenten.",
+      "Eine Keyword-Suche findet Klauseln in sechs Unternehmensdokumenten und zitiert sie mit Fundstelle. Ohne Treffer antwortet das System nicht.",
+    teaser: "Zitiert Vertragsklauseln mit Fundstelle und schweigt ohne Treffer.",
     tags: ["Keyword-Suche", "Regelbasiert", "DE / EN"],
     meta: [
       { label: "Lernziel", value: "Quellenpflicht" },
@@ -306,7 +306,7 @@ export const demos: readonly Demo[] = [
     templateSlugs: ["ki-anbieter-due-diligence"],
     evidenceMode: "rule_based",
     externalActionMode: "none",
-    syntheticDataLabel: "Acht erfundene Beispielverträge.",
+    syntheticDataLabel: "Sechs erfundene Unternehmensdokumente.",
     riskNotes: [
       "Öffne die zitierte Klausel und lies sie im Zusammenhang.",
       "Eine Fundstelle ersetzt keine Rechtsauslegung. Strittige Fälle gehören in die Rechtsabteilung.",
@@ -364,8 +364,8 @@ export const demos: readonly Demo[] = [
     titleKicker: "Personendaten im Prompt markieren.",
     background: "Regelbasierte Token-Klassifikation · lokal ausführbares Muster",
     description:
-      "Regeln markieren Namen, IBANs und vertrauliche Begriffe, bevor ein Prompt freigegeben wird. Manche Fälle übersehen sie, deshalb ist jeder Treffer nur ein Hinweis.",
-    teaser: "Regeln markieren Namen und IBANs, bevor ein Prompt freigegeben wird.",
+      "Regeln markieren Namen, IBANs und vertrauliche Begriffe, bevor ein Prompt freigegeben wird. Sie übersehen manche Fälle, deshalb ist jeder Treffer nur ein Hinweis.",
+    teaser: "Markiert Namen und IBANs im Prompt und übersieht manche Fälle.",
     tags: ["DSGVO", "On-Prem", "Regelbasiert"],
     meta: [
       { label: "Lernziel", value: "PII erkennen" },
@@ -382,7 +382,7 @@ export const demos: readonly Demo[] = [
     templateSlugs: ["ki-nutzungsrichtlinie"],
     evidenceMode: "rule_based",
     externalActionMode: "none",
-    syntheticDataLabel: "Erfundene Beispieltexte, geprüft in deinem Browser.",
+    syntheticDataLabel: "Erfundene Beispieltexte, geprüft mit regulären Ausdrücken in deinem Browser.",
     riskNotes: [
       "Lies den Prompt vor der Freigabe selbst, auch wenn nichts markiert ist.",
       "Prüfe jede Markierung, weil auch harmlose Wörter getroffen werden.",
@@ -402,7 +402,7 @@ export const demos: readonly Demo[] = [
     titleKicker: "Kosten, Antwortzeit und Fehler ablesen.",
     background: "Seed-Szenarien · Kosten, Fehler und Drift als Lernspur",
     description:
-      "Eine Betriebsansicht mit Beispielwerten für Kosten, Antwortzeit, Fehler und Drift. Du vergleichst vier Anwendungen und liest ab, welche am meisten kostet.",
+      "Du vergleichst Kosten, Antwortzeit, Fehler und Drift von vier Anwendungen und liest ab, welche am meisten kostet.",
     teaser: "Du vergleichst Kosten, Antwortzeit und Fehler von vier Beispielanwendungen.",
     tags: ["OTel", "Monitoring", "Drift"],
     meta: [
@@ -420,7 +420,7 @@ export const demos: readonly Demo[] = [
     templateSlugs: ["pilot-charter"],
     evidenceMode: "synthetic",
     externalActionMode: "none",
-    syntheticDataLabel: "Vier erfundene Anwendungen mit Beispielwerten.",
+    syntheticDataLabel: "Vier erfundene Anwendungen; die Latenzkurve läuft zufällig weiter.",
     riskNotes: [
       "Lege für jede Anwendung eigene Messpunkte und ein Budget fest.",
       "Bestimme vorab, wer bei einem Budget-Alarm entscheidet.",
@@ -440,7 +440,7 @@ export const demos: readonly Demo[] = [
     titleKicker: "Zwei Antworten im Vergleich.",
     background: "Vergleich Basismodell gegen Domänenbeispiele",
     description:
-      "Du stellst dieselbe Frage zweimal und vergleichst die Antwort des Basismodells mit der eines angepassten Modells. Daneben steht, wann RAG oder ein besserer Prompt reichen würde.",
+      "Du vergleichst die Antworten eines Basismodells und eines angepassten Modells auf dieselbe Frage. Daneben steht, wann RAG oder ein besserer Prompt reicht.",
     teaser: "Du vergleichst ein Basismodell mit einem angepassten Modell.",
     tags: ["Fine-Tuning", "Sonnet 4.6", "DACH"],
     meta: [
@@ -458,7 +458,7 @@ export const demos: readonly Demo[] = [
     templateSlugs: ["use-case-bewertungsmatrix"],
     evidenceMode: "synthetic",
     externalActionMode: "none",
-    syntheticDataLabel: "Erfundene Trainings- und Holdout-Beispiele.",
+    syntheticDataLabel: "Vorgegebene Antworten, Messwerte und Trainingsbeispiele; trainiert wurde kein Modell.",
     riskNotes: [
       "Prüfe zuerst, ob RAG, ein besserer Prompt oder ein klarerer Prozess dasselbe leisten.",
       "Bewerte das angepasste Modell nur an Holdout-Fragen, die nicht im Training waren.",
@@ -516,7 +516,7 @@ export const demos: readonly Demo[] = [
     titleKicker: "Automatik und Mensch im Vergleich.",
     background: "Fiktive Eval-Metriken · Drift-Indikator · menschliches Feedback vs. Auto-Eval",
     description:
-      "Du prüfst die automatische Bewertung von vier Beispielantworten. Drei davon hat auch ein Mensch bewertet, und in zwei Fällen liegt die automatische Bewertung daneben.",
+      "Du prüfst die automatische Bewertung von vier Antworten. Drei hat auch ein Mensch bewertet, und zweimal liegt die Automatik daneben.",
     teaser: "Du prüfst, wo die automatische Bewertung falsch liegt.",
     tags: ["Observability", "Eval", "Drift"],
     meta: [
@@ -534,7 +534,7 @@ export const demos: readonly Demo[] = [
     templateSlugs: ["pilot-charter"],
     evidenceMode: "synthetic",
     externalActionMode: "none",
-    syntheticDataLabel: "Erfundene Antworten, Scores und Bewertungen.",
+    syntheticDataLabel: "Erfundene Antworten, Scores und Bewertungen; der Drift-Indikator ist vorgegeben.",
     riskNotes: [
       "Lass automatische Scores regelmäßig von Menschen gegenprüfen.",
       "Lege für die Drift eine eigene Baseline und Schwellenwerte je Anwendungsfall fest.",

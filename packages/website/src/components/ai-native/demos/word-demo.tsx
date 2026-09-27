@@ -106,8 +106,8 @@ export function WordDemo(): JSX.Element {
         </h3>
         <p className="mt-1.5 max-w-[620px] text-[13px] leading-[1.55] text-muted-foreground">
           {text(
-            "Vier Eckdaten → Dokumententwurf mit Annahmen, Risiken, Datenquellen und Freigabevermerk. Nutzt Musterreferenzen, keine internen Dateien.",
-            "Four inputs → a document draft with assumptions, risks, data sources, and approval status. It uses sample references, not internal files.",
+            "Aus vier Eckdaten und Musterreferenzen entsteht ein Entwurf mit Annahmen, Risiken, Datenquellen und Freigabevermerk.",
+            "Four inputs and sample references become a draft with assumptions, risks, data sources and approval status.",
           )}
         </p>
       </div>

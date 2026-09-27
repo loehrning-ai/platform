@@ -694,8 +694,8 @@ function WordDemoEnglish() {
           screen-reader users a landmark into the instrument. */}
         <h2 className="sr-only">Project brief draft with review steps</h2>
         <p className="text-caption text-muted-foreground max-sm:hidden" style={{ margin: 0, maxWidth: 720 }}>
-          The output is assembled from fixed browser templates. No Word file,
-          Microsoft 365 tenant, or AI provider is contacted.
+          Built from fixed browser templates, without Word, Microsoft 365 or
+          an AI provider.
         </p>
       </div>
 

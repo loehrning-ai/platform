@@ -26,8 +26,8 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     ["Plan for the active boundary", "Für die aktive Grenze planen"],
     [
-      "**Make dependencies reproducible.** A cloud setup script installs runtimes, packages and fixtures before the agent phase. Locally, Codex has what the machine has and the sandbox permits. Put the exact setup and check commands in the repository.\n\n**Declare network needs.** A cloud agent phase reaches an external API only with network enabled and the destination allowed; locally, the sandbox decides. If the task needs no live data, use a versioned fixture.\n\n**Keep external checks separate.** Staging or production access is a security decision and needs scoped credentials and explicit authorization. Otherwise the check runs through the normal release process.",
-      "**Abhängigkeiten reproduzierbar machen.** In der Cloud installiert ein Setup-Skript vor der Agentenphase Laufzeiten, Pakete und Fixtures. Lokal hat Codex nur, was auf dem Rechner liegt und die Sandbox erlaubt. Die exakten Setup- und Prüfkommandos gehören ins Repository.\n\n**Netzwerkbedarf benennen.** Eine externe API erreicht die Cloud-Agentenphase nur mit eingeschaltetem Netzwerk und erlaubtem Ziel, lokal entscheidet die Sandbox. Braucht der Auftrag keine Live-Daten, nimm ein versioniertes Fixture.\n\n**Externe Prüfungen trennen.** Zugriff auf Staging oder Produktion ist eine Sicherheitsentscheidung und braucht begrenzte Zugangsdaten und ausdrückliche Freigabe. Sonst läuft die Prüfung über den normalen Release-Prozess.",
+      "**Make dependencies reproducible.** Locally, Codex has only what the machine has and the sandbox permits; in the cloud, the setup script provides it. Put the exact setup and check commands in the repository.\n\n**Declare network needs.** If the task needs no live data, use a versioned fixture and leave the network off.\n\n**Keep external checks separate.** Staging or production access is a security decision and needs scoped credentials and explicit authorization. Otherwise the check runs through the normal release process.",
+      "**Abhängigkeiten reproduzierbar machen.** Lokal hat Codex nur, was auf dem Rechner liegt und die Sandbox erlaubt, in der Cloud stellt das Setup-Skript es bereit. Die exakten Setup- und Prüfkommandos gehören ins Repository.\n\n**Netzwerkbedarf benennen.** Braucht der Auftrag keine Live-Daten, nimm ein versioniertes Fixture und lass das Netzwerk aus.\n\n**Externe Prüfungen trennen.** Zugriff auf Staging oder Produktion ist eine Sicherheitsentscheidung und braucht begrenzte Zugangsdaten und ausdrückliche Freigabe. Sonst läuft die Prüfung über den normalen Release-Prozess.",
     ],
     ["Cloud environment inputs", "Eingaben einer Cloud-Umgebung"],
     [
@@ -47,8 +47,8 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     ["Network allow-list", "Netzwerk-Freigabeliste"],
     [
-      "Agent-phase internet access is set per environment. If on, allow only the destinations and HTTP methods the task needs.",
-      "Internetzugriff in der Agentenphase wird pro Umgebung eingestellt. Ist er an, erlaube nur die Ziele und HTTP-Methoden, die der Auftrag braucht.",
+      "Set per environment. If enabled, allow only the destinations and HTTP methods the task needs.",
+      "Internetzugriff wird pro Umgebung eingestellt. Ist er an, erlaube nur die Ziele und HTTP-Methoden, die der Auftrag braucht.",
     ],
     ["provided by Codex", "von der Laufzeit bereitgestellt"],
     ["The runtime", "Die Laufzeit"],

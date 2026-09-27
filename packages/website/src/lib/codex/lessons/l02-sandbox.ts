@@ -44,7 +44,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "**Make dependencies reproducible.** A cloud setup script installs runtimes, packages and fixtures before the agent phase. Locally, Codex has what the machine has and the sandbox permits. Put the exact setup and check commands in the repository.\n\n**Declare network needs.** A cloud agent phase reaches an external API only with network enabled and the destination allowed; locally, the sandbox decides. If the task needs no live data, use a versioned fixture.\n\n**Keep external checks separate.** Staging or production access is a security decision and needs scoped credentials and explicit authorization. Otherwise the check runs through the normal release process.",
+            "**Make dependencies reproducible.** Locally, Codex has only what the machine has and the sandbox permits; in the cloud, the setup script provides it. Put the exact setup and check commands in the repository.\n\n**Declare network needs.** If the task needs no live data, use a versioned fixture and leave the network off.\n\n**Keep external checks separate.** Staging or production access is a security decision and needs scoped credentials and explicit authorization. Otherwise the check runs through the normal release process.",
         },
       ],
     },
@@ -74,7 +74,7 @@ const lesson: CodexLesson = {
             {
               eyebrow: "provided by you",
               title: "Network allow-list",
-              body: "Agent-phase internet access is set per environment. If on, allow only the destinations and HTTP methods the task needs.",
+              body: "Set per environment. If enabled, allow only the destinations and HTTP methods the task needs.",
             },
             {
               eyebrow: "provided by Codex",

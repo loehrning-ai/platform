@@ -203,7 +203,7 @@ function figMonths() {
     <li><span class="sw sw--meter"></span>Meter reading, grade B</li>
     <li><span class="sw sw--out"></span>Excluded row, with the reason</li>
   </ul>
-  <figcaption id="fig-months-cap" class="wf-caption">Werk Nord electricity 2025, month by month. JV: the joint venture Talbrück, which Kellbrunn does not run. Fictional company.</figcaption>
+  <figcaption id="fig-months-cap" class="wf-caption">Werk Nord electricity 2025, month by month. JV: the joint venture Talbrück, which Kellbrunn does not run.</figcaption>
 </figure>`;
 }
 
@@ -241,7 +241,7 @@ function figWaterfall() {
   <div class="br" role="img" aria-label="Waterfall, location-based Scope 1 and 2: the constructed answer ${esc(num("wrong_total_lb"))}; removing the errors one by one swings the running total between ${esc(num("wf_lb_min_t"))} and ${esc(num("wf_lb_max_t"))}; it ends at the right total, ${esc(num("total_lb_2025"))}.">
     ${table}
   </div>
-  <figcaption id="fig-wf-cap" class="wf-caption">Location-based Scope 1 and 2, errors removed one at a time in a fixed order. Computed from the traps: what they do when they fire. The raw-folder answer is constructed from documented failure modes, not a recorded run. The axis starts above zero; the dashed lines mark the lowest and highest running total.</figcaption>
+  <figcaption id="fig-wf-cap" class="wf-caption">Location-based Scope 1 and 2, errors removed one at a time in a fixed order. The raw-folder answer is constructed. The axis starts above zero; dashed lines mark the lowest and highest running total.</figcaption>
 </figure>`;
 }
 
@@ -260,7 +260,7 @@ function figBridge() {
   <div class="br" role="img" aria-label="Scope 2 2025: location-based ${esc(num("s2lb_2025"))}; the certificate for Werk Süd removes ${esc(num("bridge_cert_t", "absunit"))}; stopping there, with the rest at the grid average, gives ${esc(num("mb_grid_avg_wrong_s2_t"))}, which is wrong for market-based; the residual mix on the rest adds ${esc(num("bridge_rm_t", "absunit"))}; market-based ${esc(num("s2mb_2025"))}.">
     ${barRows(rows, 0, Math.max(lbv, mbv) * 1.02)}
   </div>
-  <figcaption id="fig-bridge-cap" class="wf-caption">Scope 2 2025, from location-based to market-based. The dashed bar is where the wrong ${esc(num("mb_grid_avg_wrong_s2_t"))} comes from: the certificate is taken off, and the rest stays at the grid average instead of the residual mix. ${esc(factorLabel())}.</figcaption>
+  <figcaption id="fig-bridge-cap" class="wf-caption">Scope 2 2025, from location-based to market-based. The dashed bar is the wrong ${esc(num("mb_grid_avg_wrong_s2_t"))}: the certificate comes off, and the rest stays at the grid average. ${esc(factorLabel())}.</figcaption>
 </figure>`;
 }
 
@@ -284,12 +284,12 @@ function figDrivers() {
   <div class="br" role="img" aria-label="Market-based decrease ${esc(num("chg_mb_t", "absunit"))}: guarantees of origin ${esc(num("drv_mb_cert_t", "absunit"))}, less electricity ${esc(num("drv_mb_elec_t", "absunit"))}, less gas and diesel ${esc(num("drv_mb_s1_t", "absunit"))}.">
     ${group(data.drivers.mb, "")}
   </div>
-  <figcaption id="fig-drv-cap" class="wf-caption">What drove the change, 2024 to 2025. Both groups are drawn on one scale. ${esc(data.drivers.convention_en)} ${esc(factorLabel())}.</figcaption>
+  <figcaption id="fig-drv-cap" class="wf-caption">What drove the change, 2024 to 2025, both groups on one scale. ${esc(data.drivers.convention_en)} ${esc(factorLabel())}.</figcaption>
 </figure>`;
 }
 
 function figControl() {
-  const status = { "enthalten": "included", "ausgeschlossen: Duplikat": "excluded: duplicate", "ausgeschlossen: Grenze": "excluded: boundary", "ergänzt: Zählerstand, DQ B": "added: meter reading, grade B" };
+  const status = { "enthalten": "included", "ausgeschlossen: Duplikat": "excluded, duplicate", "ausgeschlossen: Grenze": "excluded, boundary", "ergänzt: Zählerstand, DQ B": "added from meter reading, grade B" };
   const docs = data.controlTotal.filter((r) => r.group === "document");
   const meter = data.controlTotal.filter((r) => r.group === "meter");
   const row = (r) => {
@@ -409,7 +409,7 @@ const ALLOWED_PHRASES = [
   "more than 1,000 employees and more than €450m turnover", "18 March 2026", "19 March 2027", "27 September 2026",
   "26 September 2026", "26 Sep 2026", "Directive 2024/825", "Directive (EU) 2024/825", "§ 5 UWG", "category 15", "Category 15",
   // study figures (SPEC §4 §13, §10 sources)
-  "ESGReveal, GPT-4, 2023: 76.9%", "ESG Insight, DeepSeek, 2026: 78.2%",
+  "ESGReveal with GPT-4, 2023, 76.9%", "ESG Insight with DeepSeek, 2026, 78.2%",
   // durations and course facts
   "about 25 minutes", "Optional, 20 minutes", "5 minutes plus an optional 30-minute stretch", "After 90 minutes",
   // unit rule (a definition, not a value)

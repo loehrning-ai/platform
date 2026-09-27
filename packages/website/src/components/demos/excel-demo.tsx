@@ -167,8 +167,8 @@ export default function ExcelDemo() {
             and the run table's data row carry this, so the note hides. */}
         <p className="text-caption text-muted-foreground max-sm:hidden" style={{ margin: 0, maxWidth: 720 }}>
           {text(
-            "Neun fiktive Verkaufszeilen, rein im Browser. Keine Verbindung zu Excel, Microsoft 365 oder einem KI-Anbieter.",
-            "This browser-only example uses nine fictional sales rows. It does not connect to Excel, Microsoft 365, or an AI provider.",
+            "Läuft nur im Browser, ohne Excel, Microsoft 365 oder KI-Anbieter.",
+            "Runs in the browser only, without Excel, Microsoft 365 or an AI provider.",
           )}
         </p>
       </div>
@@ -662,8 +662,8 @@ function FormulaOutput({ text }: OutputProps) {
         }}
       >
         {text(
-          "Greift auf die Vorwoche derselben Region zu und berechnet die relative Veränderung. Zieh die Formel herunter, sie läuft für alle Regionen.",
-          "Reaches back to the prior week for the same region and computes the relative change. Fill the formula down; it works for every region.",
+          "Berechnet die Veränderung zur Vorwoche derselben Region. Zieh die Formel herunter, sie gilt für alle Regionen.",
+          "Computes the change from the same region's prior week. Fill the formula down; it works for every region.",
         )}
       </p>
     </OutputShell>
@@ -918,8 +918,8 @@ function ForecastOutput({ locale, text }: OutputProps) {
           }}
         >
           {text(
-            `Bei +${growthRate} % pro Woche übersteigt die obere Schätzung für KW 20 den sinnvollen Darstellungsbereich. Eine lineare Fortschreibung wird bei diesem Wachstum unzuverlässig.`,
-            `At +${growthRate}% per week the upper estimate for week 20 exceeds a sensible display range. A linear extrapolation stops being trustworthy at this rate.`,
+            `Bei +${growthRate} % pro Woche sprengt die obere Schätzung für KW 20 die Skala, und die lineare Fortschreibung wird unzuverlässig.`,
+            `At +${growthRate}% per week the upper estimate for week 20 leaves the scale, and the linear extrapolation becomes unreliable.`,
           )}
         </p>
       ) : null}

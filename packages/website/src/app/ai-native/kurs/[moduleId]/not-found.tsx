@@ -17,8 +17,8 @@ export default async function ModulNotFound() {
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
           {isEnglish
-            ? "The link is outdated or the module has moved. The course overview lists every current module."
-            : "Der Link ist veraltet oder das Modul wurde verschoben. Die Kursübersicht enthält alle aktuellen Module."}
+            ? "The link is outdated or the module has moved."
+            : "Der Link ist veraltet oder das Modul wurde verschoben."}
         </p>
         <Link
           href={localizeHref("/ai-native/kurs", locale)}

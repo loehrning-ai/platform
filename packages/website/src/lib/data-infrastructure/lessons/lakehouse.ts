@@ -39,8 +39,6 @@ const lesson: DataInfraLesson = {
       readTimeMinutes: 3,
       content:
         "Iceberg keeps five layers of pointers between a table name and its rows. Reads walk down, writes walk up:\n\n1. **Catalog** (Glue, Hive Metastore, Nessie, REST), maps each table name to its current `metadata.json` path.\n2. **`metadata.json`**, snapshot history, schemas, partition specs. `current_snapshot` points to a manifest list.\n3. **Manifest list** (Avro), one row per manifest with partition range stats, so a query can skip whole manifests.\n4. **Manifest** (Avro), one row per data file with column stats, so a query can skip files.\n5. **Data files** (Parquet), the rows.\n\nA read resolves `orders` → `v18.json` via the catalog, takes the current snapshot, prunes manifests and files by their stats and opens only the remaining Parquet files.\n\nA write goes the other way: data files, manifest, manifest list, metadata file. Then one atomic compare-and-swap moves the catalog pointer from `v17.json` to `v18.json`, and that CAS *is* the commit. If it fails, the draft files stay orphaned until VACUUM removes them.",
-      keyTakeaway:
-        "A commit is one atomic compare-and-swap on the catalog pointer; everything below it is written first, in isolation.",
     },
     {
       id: "s3",
@@ -70,7 +68,7 @@ const lesson: DataInfraLesson = {
       title: "Format comparison",
       readTimeMinutes: 3,
       content:
-        "Check each cell of this matrix against current docs and a small compatibility test:\n\n| Decision | Evidence to collect |\n|---|---|\n| Engine interoperability | Required read and write operations for every exact engine/version combination |\n| Commit and isolation | Catalog atomicity, concurrent-write validation, retry behavior, and unknown-commit recovery |\n| Updates and deletes | CoW/MoR support, delete representation, merge cost, and privacy-deletion lifecycle |\n| Schema and partition evolution | Supported changes, reader compatibility, and whether old files need rewriting |\n| Incremental processing | Change-feed semantics, ordering, retention, and checkpoint identity |\n| Operations | Compaction, snapshot expiration, orphan cleanup, observability, and disaster recovery |\n| Governance | Authorization boundary, audit events, encryption, catalog availability, and ownership |\n\nEngine integrations can lag the specification or support only some operations.",
+        "Check each cell of this matrix against current docs and a small compatibility test:\n\n| Decision | Evidence to collect |\n|---|---|\n| Engine interoperability | Read and write operations per exact engine version |\n| Commit and isolation | Catalog atomicity, write validation, retries, unknown-commit recovery |\n| Updates and deletes | CoW/MoR support, delete representation, merge cost, privacy deletion |\n| Schema and partition evolution | Supported changes, reader compatibility, old-file rewrites |\n| Incremental processing | Change-feed semantics, ordering, retention, checkpoint identity |\n| Operations | Compaction, snapshot expiration, orphan cleanup, observability, disaster recovery |\n| Governance | Authorization, audit events, encryption, catalog availability, ownership |\n\nEngine integrations can lag the specification or support only some operations.",
     },
     {
       id: "s7",
@@ -83,14 +81,14 @@ const lesson: DataInfraLesson = {
       title: "Key takeaways",
       readTimeMinutes: 2,
       content:
-        "- Format and catalog together define publication and recovery of table state.\n- Measure CoW and MoR on your own workload.\n- After partition evolution, old files keep their spec and new files use the new one.\n- Prove reads, writes, deletes, evolution and recovery on your exact engine versions.",
+        "- After partition evolution, old files keep their spec and new files use the new one.\n- Prove reads, writes, deletes, evolution and recovery on your exact engine versions.",
     },
     {
       id: "s9",
       title: "Vocab",
       readTimeMinutes: 2,
       content:
-        "- **Snapshot**, metadata for one committed table state.\n- **Time travel**, reading a retained earlier snapshot.\n- **Snapshot expiration / VACUUM**, removes history and unreferenced files under product rules.\n- **Hidden partitioning**, derives partition values from source columns, so queries filter on those columns.\n- **OCC**, optimistic concurrency control: prepare independently, validate and commit against current metadata.\n- **Compaction**, rewrites small files into a new layout.\n- **Z-order**, multidimensional clustering that improves data skipping for chosen predicates.",
+        "- **Snapshot**, metadata for one committed table state.\n- **Snapshot expiration / VACUUM**, removes history and unreferenced files under product rules.\n- **Hidden partitioning**, derives partition values from source columns, so queries filter on those columns.\n- **Compaction**, rewrites small files into a new layout.\n- **Z-order**, multidimensional clustering that improves data skipping for chosen predicates.",
     },
   ],
   widgets: [
@@ -103,16 +101,16 @@ const lesson: DataInfraLesson = {
         title: "GDPR delete",
         copy: DATA_INFRA_QUIZ_COPY,
         question:
-          "Your Iceberg table uses CoW updates. A user asks you to delete their ~50 rows, spread over 30 of 4,800 data files. What happens during the DELETE?",
+          "Your Iceberg table uses CoW. A user asks you to delete their ~50 rows, spread over 30 of 4,800 data files. What happens on DELETE?",
         options: [
           "The 50 rows are rewritten in place.",
           "A delete marker file is written; nothing else changes.",
-          "Affected files are rewritten; old snapshots keep the prior files until retention expires.",
-          "The whole table is rewritten.",
+          "Affected files get rewritten; old snapshots keep prior files until retention ends.",
+          "The whole table is rewritten from scratch.",
         ],
         correct: 2,
         explanation:
-          "CoW replaces the affected files, and the new snapshot omits the rows. Old snapshots, branches, tags, object versions, replicas and backups can still hold the bytes, so a privacy deletion traces and verifies every retention layer.",
+          "CoW replaces the affected files, and the new snapshot omits the rows. Old snapshots, branches, tags, object versions, replicas and backups can still hold the bytes, so a privacy deletion checks every layer.",
       },
     },
     {
