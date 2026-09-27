@@ -427,11 +427,16 @@ export function LearningAtlas({
             one joined row of 56px tabs on a shared hairline. The chosen goal
             is an ink fill, which carries the state without colour. The
             buttons stay aria-pressed toggles, so the choice keeps working as
-            a plain form of four buttons, and each one is reachable by Tab. */}
+            a plain form of four buttons, and each one is reachable by Tab.
+            The rail scrolls, so it clips anything drawn outside its box:
+            below lg each chip takes the inset ring (globals.css, the edge
+            rule), which keeps the ring whole without padding the rail past
+            its one 44px row. The joined tabs keep the outset ring from lg,
+            where the rail no longer clips. */}
         <div
           ref={goalRailRef}
           data-learning-goal-rail
-          className="-mx-4 snap-x overflow-x-auto overscroll-x-contain scroll-px-4 py-1.5 [scrollbar-width:none] max-lg:-my-1.5 sm:-mx-6 sm:mt-6 sm:scroll-px-6 lg:mx-0 lg:overflow-visible lg:py-0 [&::-webkit-scrollbar]:hidden"
+          className="-mx-4 snap-x overflow-x-auto overscroll-x-contain scroll-px-4 [scrollbar-width:none] sm:-mx-6 sm:mt-6 sm:scroll-px-6 lg:mx-0 lg:overflow-visible [&::-webkit-scrollbar]:hidden"
         >
           <div
             className="flex w-max gap-2 px-4 sm:px-6 lg:grid lg:w-auto lg:grid-cols-4 lg:gap-0 lg:px-0"
@@ -450,7 +455,7 @@ export function LearningAtlas({
                   onFocus={revealInRail}
                   data-learning-goal={candidate.id}
                   className={cx(
-                    "relative flex min-h-11 min-w-0 shrink-0 snap-start items-center whitespace-nowrap border px-3.5 py-2 text-left text-label transition-colors duration-[120ms] focus-visible:z-[2] motion-reduce:transition-none lg:min-h-14 lg:shrink lg:whitespace-normal lg:px-4",
+                    "relative flex min-h-11 min-w-0 shrink-0 snap-start items-center whitespace-nowrap border px-3.5 py-2 text-left text-label transition-colors duration-[120ms] focus-visible:z-[2] max-lg:focus-visible:outline-offset-[-3px] motion-reduce:transition-none lg:min-h-14 lg:shrink lg:whitespace-normal lg:px-4",
                     goalIndex > 0 && "lg:-ml-px",
                     selected
                       ? "z-[1] border-foreground bg-foreground text-background"
