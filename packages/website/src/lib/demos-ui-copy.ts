@@ -17,7 +17,11 @@ export const DEMOS_PAGE_COPY = {
     },
     catalog: {
       kicker: "Praxisbeispiele",
-      heading: "KI-Arbeitsabläufe prüfen",
+      // The poster caps line on the IDEA band reads "kicker · kickerDetail".
+      kickerDetail: "im Browser",
+      // The soft hyphen lets the poster H1 break "KI-Arbeits-" / "abläufe"
+      // on a phone instead of leaving "KI-" alone on the first line.
+      heading: "KI-Arbeits\u00adabläufe prüfen",
       // Two sentences: phones show only the first, from sm up both.
       introduction:
         "Jedes Beispiel spielt einen Arbeitsablauf mit erfundenen Daten durch, von der Eingabe bis zur Freigabe.",
@@ -154,6 +158,7 @@ export const DEMOS_PAGE_COPY = {
     },
     catalog: {
       kicker: "Practice examples",
+      kickerDetail: "in the browser",
       heading: "Inspect AI workflows",
       introduction:
         "Each example runs one workflow on invented data, from the input to the sign-off.",

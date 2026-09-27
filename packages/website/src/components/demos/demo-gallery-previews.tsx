@@ -11,7 +11,10 @@ import { useDemoLocale } from "./demo-locale";
  * - hatch   = raw or unapproved input (an export, a scan, a draft)
  * - ink     = the processing step or an approved result
  * - dashed  = a gate that is still open (review, sign-off, a known gap)
- * - Mennige = the one thing to look at; at most one mark per drawing
+ * - mark    = the one thing to look at; at most one mark per drawing. It is
+ *             drawn in the scene mark (border, fill, line) and the scene
+ *             accent text: Himbeere and Himbeere tief on the IDEA tile panel
+ *             (3.67 and 4.62:1 on Kreide), Mennige and Mennige tief on paper.
  *
  * Every preview renders inside the tile's aria-hidden band, so its short
  * labels are decoration for sighted readers only. Labels stay at 12px or
@@ -55,7 +58,7 @@ const NODE_TONES: Record<NodeTone, string> = {
   raw: "border border-foreground bg-card text-foreground",
   ink: "border border-foreground bg-foreground text-background",
   gate: "border border-dashed border-foreground bg-transparent text-foreground",
-  mark: "border-2 border-mennige bg-card text-kupfer-dark",
+  mark: "border-2 border-scene-mark bg-card text-scene-accent-text",
 };
 
 /** A square station with a pictogram and a label underneath. */
@@ -191,7 +194,7 @@ export function ExcelPreview() {
           {bars.map((height, index) => (
             <span key={index} className="w-full bg-foreground" style={{ height: `${height}%` }} />
           ))}
-          <span className="w-full bg-mennige" style={{ height: "56%" }} />
+          <span className="w-full bg-scene-mark" style={{ height: "56%" }} />
         </div>
         <p className={cx(LABEL, "mt-2")}>
           {text("Prognose KW 19, zu prüfen", "Week 19 forecast, to check")}
@@ -220,12 +223,12 @@ export function WordPreview() {
             key={check.label}
             className={cx(
               "demo-pv-rise flex items-center gap-2 px-2 py-1",
-              check.open ? "border-2 border-dashed border-mennige" : "border-b border-hairline",
+              check.open ? "border-2 border-dashed border-scene-mark" : "border-b border-hairline",
             )}
           >
             <Pictogram
               name={check.open ? "gap" : "pass"}
-              className={cx("size-4", check.open ? "text-kupfer-dark" : "text-foreground")}
+              className={cx("size-4", check.open ? "text-scene-accent-text" : "text-foreground")}
             />
             <span className={LABEL}>{check.label}</span>
           </li>
@@ -254,8 +257,8 @@ export function OutboundWorkflowPreview() {
       <Sheet lines={3} className="demo-pv-rise border-dashed">
         <span className={LABEL}>{text("Entwurf", "Draft")}</span>
       </Sheet>
-      <div className="demo-pv-rise flex items-center gap-2 border-2 border-mennige bg-card px-3 py-2">
-        <Pictogram name="person" className="size-5 text-kupfer-dark" />
+      <div className="demo-pv-rise flex items-center gap-2 border-2 border-scene-mark bg-card px-3 py-2">
+        <Pictogram name="person" className="size-5 text-scene-accent-text" />
         <span className={LABEL}>{text("Review vor Versand", "Review before sending")}</span>
       </div>
     </div>
@@ -281,7 +284,7 @@ export function AgentPipelinePreview() {
               className={cx(
                 "grid size-6 place-items-center border-2 text-[0.75rem] font-bold tabular-nums",
                 index === 2
-                  ? "border-mennige bg-mennige text-paper"
+                  ? "border-scene-mark bg-card text-scene-accent-text"
                   : "border-foreground bg-foreground text-background",
               )}
             >
@@ -324,7 +327,7 @@ export function RagVertragsassistentPreview() {
       <Sheet lines={3} className="demo-pv-rise">
         <span className="flex items-baseline gap-2">
           <span className={cx(DATA, "font-bold")}>§ 5 (2)</span>
-          <span className="block h-1.5 flex-1 border-b-2 border-mennige" />
+          <span className="block h-1.5 flex-1 border-b-2 border-scene-mark" />
         </span>
       </Sheet>
       <div className="demo-pv-rise flex items-center gap-2 self-end border border-foreground bg-card px-3 py-2">
@@ -358,8 +361,8 @@ export function RechnungZuSapPreview() {
           ))}
         </div>
       </div>
-      <div className="demo-pv-rise flex items-center gap-2 border-2 border-mennige bg-card px-3 py-1.5">
-        <Pictogram name="person" className="size-4 text-kupfer-dark" />
+      <div className="demo-pv-rise flex items-center gap-2 border-2 border-scene-mark bg-card px-3 py-1.5">
+        <Pictogram name="person" className="size-4 text-scene-accent-text" />
         <span className={LABEL}>{text("Review vor SAP-Import", "Review before SAP import")}</span>
       </div>
     </div>
@@ -375,7 +378,7 @@ export function PromptScannerPreview() {
           <span className="h-3 w-10 bg-hairline" />
           <span className="demo-pv-snap h-3 w-16 bg-foreground" />
           <span className="h-3 w-6 bg-hairline" />
-          <span className={cx(DATA, "border-b-2 border-mennige px-0.5")}>IBAN</span>
+          <span className={cx(DATA, "border-b-2 border-scene-mark px-0.5")}>IBAN</span>
           <span className="h-3 w-12 bg-hairline" />
         </span>
         <span className="flex flex-wrap items-center gap-1.5">
@@ -414,7 +417,7 @@ export function CostDriftObservabilityPreview() {
         {[22, 45, 68].map((y) => (
           <line key={y} x1="0" x2="220" y1={y} y2={y} className="stroke-hairline" strokeWidth="1" vectorEffect="non-scaling-stroke" />
         ))}
-        <line x1="0" x2="220" y1="30" y2="30" className="stroke-mennige" strokeWidth="1.5" strokeDasharray="6 4" vectorEffect="non-scaling-stroke" />
+        <line x1="0" x2="220" y1="30" y2="30" className="stroke-scene-mark" strokeWidth="1.5" strokeDasharray="6 4" vectorEffect="non-scaling-stroke" />
         <polyline
           className="demo-pv-draw stroke-foreground"
           pathLength={1}
@@ -429,7 +432,7 @@ export function CostDriftObservabilityPreview() {
       </svg>
       <div className="flex items-baseline justify-between gap-3">
         <span className={LABEL}>{text("Kosten pro Tag", "Cost per day")}</span>
-        <span className={cx(LABEL, "text-kupfer-dark")}>{text("Budgetgrenze", "Budget line")}</span>
+        <span className={cx(LABEL, "text-scene-accent-text")}>{text("Budgetgrenze", "Budget line")}</span>
       </div>
     </div>
   );
@@ -450,7 +453,7 @@ export function FineTunePlaygroundPreview() {
           </Sheet>
           <span className="block h-2 bg-hairline">
             <span
-              className={cx("block h-2", column.mark ? "bg-mennige" : "bg-foreground")}
+              className={cx("block h-2", column.mark ? "bg-scene-mark" : "bg-foreground")}
               style={{ width: `${column.score}%` }}
             />
           </span>
@@ -486,7 +489,7 @@ export function RoiRechnerPreview() {
       <div className="demo-pv-rise">
         <div className="relative h-4 border-x-2 border-foreground">
           <span className="absolute inset-x-0 top-1/2 h-0.5 -translate-y-1/2 bg-foreground" />
-          <span className="absolute left-[46%] top-0 h-4 w-2 bg-mennige" />
+          <span className="absolute left-[46%] top-0 h-4 w-2 bg-scene-mark" />
         </div>
         <div className="mt-2 flex justify-between">
           <span className={DATA}>{text("niedrig", "low")}</span>
@@ -520,7 +523,7 @@ export function LlmObservabilityPreview() {
             key={index}
             className={cx(
               "demo-pv-rise grid grid-cols-[minmax(0,1fr)_3.5rem_3.5rem] items-center gap-2 px-1 py-1",
-              disagree ? "border-2 border-mennige" : "border-b border-hairline",
+              disagree ? "border-2 border-scene-mark" : "border-b border-hairline",
             )}
           >
             <span className={DATA}>

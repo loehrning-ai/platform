@@ -12,9 +12,7 @@ import {
   BUTTON_CLASSES,
   Callout,
   Chip,
-  CoverBand,
   cx,
-  Kicker,
   Pictogram,
   QuestionCard,
   Route,
@@ -22,6 +20,14 @@ import {
   StatRow,
   type PictogramName,
 } from "@/components/werk";
+import {
+  CapsLine,
+  PlakatBand,
+  PosterArt,
+  ResultChart,
+} from "@/components/plakat";
+import { posterTitleStyle } from "@/lib/plakat/fit";
+import { PLAKAT, workshopPlakat, type WorkshopPlakat } from "@/lib/plakat/palettes";
 import { materialLanguageLabel, WORKSHOP_PAGE_COPY } from "../workshop-copy";
 import { splitTitle } from "../workshop-title";
 import { WorkshopDecisionLab } from "./workshop-decision-lab";
@@ -72,6 +78,13 @@ const LAB_STATION: Readonly<Record<string, number>> = {
   "esg-berichte-mit-ki": 1,
 };
 
+/**
+ * A workshop without a registered poster still gets a scene, so the page
+ * never falls back to a paper band; palettes.test.ts keeps every published
+ * workshop mapped.
+ */
+const FALLBACK_SCENE: WorkshopPlakat = { plakat: "lemons", motif: "fan" };
+
 /** Roles that make a sensible second cover button next to the primary one. */
 const SECONDARY_ROLES: readonly WorkshopMaterialRole[] = [
   "demo",
@@ -88,6 +101,11 @@ function formatDate(value: string, locale: Locale): string {
       : { day: "numeric", month: "long", year: "numeric" }),
     timeZone: "UTC",
   }).format(new Date(`${monthOnly ? `${value}-01` : value}T00:00:00Z`));
+}
+
+/** A no-break space before a currency sign, so "19.960 €" never ends a line with the number alone. */
+function keepAmountsTogether(text: string): string {
+  return text.replace(/(\d) (?=[€$£])/g, "$1\u00a0");
 }
 
 /** Caption lines join facts that start lowercase mid-line; the line itself starts upper case. */
@@ -292,6 +310,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
   );
   const need = limitingNeed(workshop, copy);
   const title = splitTitle(workshop.title);
+  const scene = workshopPlakat(workshop.slug) ?? FALLBACK_SCENE;
 
   const coverFacts = [
     workshop.minutesLive ? copy.minutesLive(workshop.minutesLive) : null,
@@ -306,8 +325,6 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
       : null,
     copy.coverFacts.free,
   ].filter((fact): fact is string => Boolean(fact));
-  // The leading minute facts, which the agenda caption repeats one block later.
-  const minuteFacts = (workshop.minutesLive ? 1 : 0) + 1;
 
   const agendaMinutes = workshop.minutesLive ?? workshop.minutesSelfStudy;
   const agendaCaption = [
@@ -378,9 +395,12 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
   ].filter((fact): fact is string => Boolean(fact));
 
   return (
-    <article className="bg-background pb-16 sm:pb-24">
-      {/* Phones carry the back link in the cover's kicker line instead, so
-          the cover starts right under the compact header. */}
+    <article
+      data-plakat-page={scene.plakat}
+      className="bg-background pb-16 sm:pb-24"
+    >
+      {/* Phones carry the back link at the top of the band instead, so the
+          band starts right under the compact header. */}
       <nav
         aria-label={copy.navigation}
         className="border-b border-hairline max-sm:hidden"
@@ -399,155 +419,157 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
         </div>
       </nav>
 
-      <CoverBand
+      <PlakatBand
+        plakat={scene.plakat}
         labelledBy="workshop-title"
-        phoneGlobe
-        contentClassName="pt-5 pb-6 sm:py-10 lg:py-12"
+        // IDEA marks the band's own corners, as on the reference poster; the
+        // art inside then carries no dots of its own.
+        cornerDots={PLAKAT[scene.plakat].cornerDots}
+        art={
+          <PosterArt
+            plakat={scene.plakat}
+            motif={scene.motif}
+            numeral={workshop.number}
+            format="portrait"
+            cornerDots={false}
+          />
+        }
+        artPhone={
+          <PosterArt
+            plakat={scene.plakat}
+            motif={scene.motif}
+            numeral={workshop.number}
+            format="strip"
+            cornerDots={false}
+          />
+        }
       >
-        <div className="flex flex-wrap items-center gap-x-2">
-          <Link
-            href={localizeHref("/workshops", locale)}
-            aria-label={copy.backAria}
-            data-cover-back=""
-            className="-my-3 inline-flex min-h-11 items-center gap-1.5 text-label text-muted-foreground underline decoration-transparent underline-offset-4 [-webkit-tap-highlight-color:transparent] active:text-foreground sm:hidden"
-          >
-            <BackGlyph />
-            {copy.workshopsShort}
-          </Link>
-          <span aria-hidden="true" className="text-label text-muted sm:hidden">
-            ·
-          </span>
-          {/* Phones keep the breadcrumb on one line: "← Workshops · 04". The
-              topic follows in the h1 right below. */}
-          <Kicker>
-            <span className="max-sm:hidden">{workshop.eyebrow}</span>
-            <span className="sm:hidden">{workshop.number}</span>
-          </Kicker>
-        </div>
+        {/* Phones carry the back link inside the band; from sm the paper bar
+            above the band holds it. */}
+        <Link
+          href={localizeHref("/workshops", locale)}
+          aria-label={copy.backAria}
+          data-cover-back=""
+          className="-my-1 inline-flex min-h-11 items-center gap-2 text-[1.0625rem] font-semibold text-scene-ink underline decoration-transparent decoration-2 underline-offset-4 [-webkit-tap-highlight-color:transparent] hover:decoration-scene-ink sm:hidden"
+        >
+          <BackGlyph />
+          {copy.workshopsShort}
+        </Link>
+        <CapsLine className="mt-3 sm:mt-0">{workshop.eyebrow}</CapsLine>
         <h1
           id="workshop-title"
-          className="mt-2 max-w-[22ch] text-[1.875rem]/[1.1] font-bold text-balance text-foreground max-sm:tracking-[-0.01em] sm:mt-3 sm:text-fluid-h1 lg:max-w-[18ch] lg:text-display"
+          className="poster-title mt-3 max-w-[16ch] text-scene-ink sm:mt-4"
+          style={posterTitleStyle(title.head)}
         >
           {title.head}
           {title.subtitle ? (
             <>
               {/* The colon stays visible, so the text, the accessible name
-                  and the search snippet all read as the full title. */}
+                  and the search snippet all read as the full title. The
+                  subtitle drops to the band's body size. */}
               :{" "}
               <span
                 data-title-subtitle=""
-                className="mt-1 block text-[1.1875rem]/[1.2] sm:mt-2 sm:text-fluid-h2 lg:mt-3"
+                className="mt-3 block text-[1.0625rem] font-semibold leading-snug tracking-normal"
               >
                 {title.subtitle}
               </span>
             </>
           ) : null}
         </h1>
-        <p className="mt-2.5 max-w-[60ch] text-[0.9375rem]/[1.5] text-muted-foreground text-pretty sm:mt-4 sm:text-body">
-          {workshop.summary}
+        <p className="mt-4 max-w-[40ch] text-body text-scene-ink text-pretty sm:mt-5 lg:max-w-[46ch]">
+          {keepAmountsTogether(workshop.summary)}
         </p>
-        {/* Phones show the start action first and let the q-card drop just
-            below it (workshop-standard 4.1); from sm the q-card leads, as on
-            the deck cover. The q-card holds no focusable element, so the
-            visual reorder never changes the focus order. */}
-        <div className="flex flex-col">
-          <QuestionCard
-            tone="dark"
-            label={copy.questionLabel}
-            question={workshop.question}
-            density="compact"
-            className="order-last mt-4 max-w-[42rem] sm:order-none sm:mt-6 md:max-w-[34rem] lg:max-w-[36rem] xl:max-w-[42rem]"
-          />
-          {/* Below 360px both buttons span the column in one even stack. */}
-          <div className="mt-4 flex flex-wrap items-center gap-2 max-[359px]:grid max-[359px]:grid-cols-1 max-[359px]:[&>*]:w-full max-[359px]:[&>*]:justify-between sm:mt-6 sm:gap-3">
-            {primary ? (
-              <WorkshopMaterialLink
-                workshopSlug={workshop.slug}
-                material={primary}
-                className={BUTTON_CLASSES.dark.primary}
-              >
-                <span>{copy.primaryAction[primary.role]}</span>
-                <ArrowGlyph
-                  direction={primary.kind === "html" ? "right" : "down"}
-                />
-              </WorkshopMaterialLink>
-            ) : null}
-            {secondary ? (
-              <WorkshopMaterialLink
-                workshopSlug={workshop.slug}
-                material={secondary}
-                className={BUTTON_CLASSES.dark.secondary}
-              >
-                <span>{copy.primaryAction[secondary.role]}</span>
-                <ArrowGlyph
-                  direction={secondary.kind === "html" ? "right" : "down"}
-                />
-              </WorkshopMaterialLink>
-            ) : (
-              <a
-                href={`#${MATERIAL_ANCHOR}`}
-                className={BUTTON_CLASSES.dark.secondary}
-              >
-                <span>{copy.seeMaterials}</span>
-                <ArrowGlyph direction="down" />
-              </a>
-            )}
-          </div>
-          {/* Phones leave the minutes to the agenda caption right below the
-              cover; they stay in the text, so the facts read the same. */}
-          <p className="mt-3 max-w-[48rem] text-caption text-muted-foreground tabular-nums sm:mt-5">
-            {coverFacts.map((fact, index) => {
-              const minutes = index < minuteFacts;
-              const first = index === 0 || (index === minuteFacts && minuteFacts > 0);
-              return (
-                <span
-                  key={fact}
-                  className={minutes ? "hidden sm:inline" : undefined}
-                >
-                  {index > 0 ? (
-                    <span className={first ? "hidden sm:inline" : undefined}>
-                      {" · "}
-                    </span>
-                  ) : null}
-                  <span
-                    className={cx(
-                      "whitespace-nowrap",
-                      first &&
-                        index > 0 &&
-                        "max-sm:inline-block max-sm:first-letter:uppercase",
-                    )}
-                  >
-                    {index === 0 ? sentenceStart(fact) : fact}
-                  </span>
-                </span>
-              );
-            })}
-          </p>
-          <dl className="mt-2 grid max-w-[48rem] grid-cols-[auto_minmax(0,1fr)] gap-x-2 gap-y-0.5 text-caption text-muted-foreground sm:mt-3 sm:gap-x-3 sm:gap-y-1">
-            {need ? (
-              <div className="contents">
-                <dt className="font-semibold text-foreground">
-                  {copy.needLabel}
-                </dt>
-                <dd>{need}</dd>
-              </div>
-            ) : null}
-            <div className="contents">
-              <dt className="font-semibold text-foreground">
-                {copy.leaveWith}
-              </dt>
-              <dd>{workshop.outcome}</dd>
-            </div>
-          </dl>
+        {/* Below 360px both buttons span the column in one even stack. */}
+        <div className="mt-6 flex flex-wrap items-center gap-3 max-[359px]:grid max-[359px]:grid-cols-1 max-[359px]:[&>*]:w-full max-[359px]:[&>*]:justify-between sm:mt-8">
+          {primary ? (
+            <WorkshopMaterialLink
+              workshopSlug={workshop.slug}
+              material={primary}
+              className={BUTTON_CLASSES.scene.primary}
+            >
+              <span>{copy.primaryAction[primary.role]}</span>
+              <ArrowGlyph
+                direction={primary.kind === "html" ? "right" : "down"}
+              />
+            </WorkshopMaterialLink>
+          ) : null}
+          {secondary ? (
+            <WorkshopMaterialLink
+              workshopSlug={workshop.slug}
+              material={secondary}
+              className={BUTTON_CLASSES.scene.secondary}
+            >
+              <span>{copy.primaryAction[secondary.role]}</span>
+              <ArrowGlyph
+                direction={secondary.kind === "html" ? "right" : "down"}
+              />
+            </WorkshopMaterialLink>
+          ) : (
+            <a
+              href={`#${MATERIAL_ANCHOR}`}
+              className={BUTTON_CLASSES.scene.secondary}
+            >
+              <span>{copy.seeMaterials}</span>
+              <ArrowGlyph direction="down" />
+            </a>
+          )}
         </div>
-      </CoverBand>
+      </PlakatBand>
 
       <section
         aria-labelledby="workshop-agenda-heading"
-        className="pb-3 pt-6 sm:py-10"
+        className="pb-3 pt-6 sm:py-10 lg:pt-14"
       >
         <div className={CONTAINER}>
+          {/* What the band leaves out lands first on paper: the fixed
+              question with its Mennige bar, the facts and the need. From lg
+              the question and the facts sit side by side. */}
+          <div
+            data-workshop-brief=""
+            className="grid gap-4 sm:gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-center lg:gap-12"
+          >
+            <QuestionCard
+              tone="paper"
+              label={copy.questionLabel}
+              question={workshop.question}
+              density="compact"
+              className="max-w-[42rem]"
+            />
+            <div className="min-w-0">
+              <p
+                data-workshop-facts=""
+                className="text-caption text-muted-foreground tabular-nums"
+              >
+                {coverFacts.map((fact, index) => (
+                  <span key={fact}>
+                    {index > 0 ? " · " : null}
+                    <span className="whitespace-nowrap">
+                      {index === 0 ? sentenceStart(fact) : fact}
+                    </span>
+                  </span>
+                ))}
+              </p>
+              <dl className="mt-2 grid grid-cols-[auto_minmax(0,1fr)] gap-x-3 gap-y-1 text-caption text-muted-foreground">
+                {need ? (
+                  <div className="contents">
+                    <dt className="font-semibold text-foreground">
+                      {copy.needLabel}
+                    </dt>
+                    <dd>{need}</dd>
+                  </div>
+                ) : null}
+                <div className="contents">
+                  <dt className="font-semibold text-foreground">
+                    {copy.leaveWith}
+                  </dt>
+                  <dd>{workshop.outcome}</dd>
+                </div>
+              </dl>
+            </div>
+          </div>
           <SectionHead
+            className="mt-8 sm:mt-14"
             id="workshop-agenda-heading"
             title={copy.agendaHeading}
             caption={agendaCaptionLine || copy.minutes(agendaMinutes)}
@@ -686,6 +708,24 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
             }))}
           />
 
+          {caseStudy.resultChart ? (
+            <ResultChart
+              plakat={scene.plakat}
+              className="mt-10 max-w-[56rem] sm:mt-14"
+              chart={{
+                heading: copy.resultChartHeading,
+                caption: copy.resultChartCaption(
+                  caseStudy.resultChart.unit,
+                  caseStudy.resultChart.basis,
+                  caseStudy.isFictional,
+                ),
+                note: caseStudy.resultChart.note,
+                unit: caseStudy.resultChart.unit,
+                bars: caseStudy.resultChart.bars,
+              }}
+            />
+          ) : null}
+
           {realWorldCase ? (
             <div className="mt-8 border-t border-hairline pt-5 sm:mt-14 sm:pt-8">
               <h3 className="text-[1.125rem]/[1.2] font-bold text-foreground sm:text-fluid-h3">
@@ -817,7 +857,7 @@ function MinorHead({
   readonly title: ReactNode;
 }) {
   return (
-    <header className="border-t-2 border-foreground pt-3 sm:pt-4">
+    <header className="border-t-2 border-scene-line pt-3 sm:pt-4">
       <h2
         id={id}
         className="text-[1.125rem]/[1.2] font-bold text-foreground sm:text-fluid-h3"

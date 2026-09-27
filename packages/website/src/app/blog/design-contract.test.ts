@@ -68,8 +68,13 @@ describe("blog editorial design contract", () => {
     expect(styles.index).not.toMatch(/rotate\(/);
     expect(styles.index).not.toMatch(/text-transform:\s*uppercase/);
     expect(styles.index).not.toMatch(/font-style:\s*italic|--font-serif/);
+    // The Kopflinie takes the page's scene line (SPEC §3.7): Kobalt below
+    // the IDEA band, Druckschwarz where :has() is missing.
     expect(styles.index).toMatch(
-      /\.blog-index__head\s*\{[^}]*border-top:\s*2px solid var\(--bi-ink\)/s,
+      /\.blog-index__head\s*\{[^}]*border-top:\s*2px solid var\(--bi-line\)/s,
+    );
+    expect(styles.index).toMatch(
+      /--bi-line:\s*var\(--color-scene-line, #121212\)/,
     );
     expect(styles.index).toMatch(
       /\.blog-index__container\s*\{[^}]*max-width:\s*75rem/s,
@@ -77,6 +82,34 @@ describe("blog editorial design contract", () => {
     expect(styles.index).toMatch(
       /\.blog-index__link\s*\{[^}]*min-height:\s*44px/s,
     );
+  });
+});
+
+describe("blog index IDEA band (SPEC §2.3, §3.12)", () => {
+  it("sets the hero title with the poster-title values and the word fit", () => {
+    expect(styles.index).toMatch(
+      /\.blog-index__title\s*\{[^}]*font-size:\s*max\(2\.25rem,\s*min\(var\(--text-poster\),\s*calc\(100cqi \/ var\(--fit, 0\.01\)\)\)\)/s,
+    );
+    expect(styles.index).toMatch(
+      /\.blog-index__title\s*\{[^}]*letter-spacing:\s*var\(--text-poster--letter-spacing\)/s,
+    );
+    expect(styles.index).toMatch(
+      /\.blog-index__hero-inner\s*\{[^}]*container-type:\s*inline-size/s,
+    );
+  });
+
+  it("colours the band from the scene tokens only, with no muted tier", () => {
+    const hero = styles.index.match(/\.blog-root \.blog-index__hero\s*\{([^}]*)\}/s)?.[1] ?? "";
+    expect(hero).toMatch(/--bi-ink:\s*var\(--color-scene-ink\)/);
+    expect(hero).toMatch(/--bi-slate:\s*var\(--color-scene-ink\)/);
+    expect(hero).toMatch(/--bi-slate-light:\s*var\(--color-scene-ink\)/);
+    // No raw hex inside the band rules: the ground and ink come from
+    // .plakat-idea in globals.css.
+    for (const selector of ["__hero", "__title", "__lead"]) {
+      const body =
+        styles.index.match(new RegExp(`\\.blog-index${selector}\\s*\\{([^}]*)\\}`, "s"))?.[1] ?? "";
+      expect(body, selector).not.toMatch(/#[0-9a-f]{3,6}\b/i);
+    }
   });
 });
 

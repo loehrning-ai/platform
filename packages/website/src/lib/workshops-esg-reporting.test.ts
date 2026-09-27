@@ -155,10 +155,37 @@ describe("Workshop 04 registry copy (ESG reporting)", () => {
     }
     for (const printed of [data.inputs.ws.printed, data.inputs.ws.priorYearPrinted]) allowed.add(printed.replace(/ MWh$/, ""));
     for (const workshop of both) {
-      const text = JSON.stringify(workshop).replace(/\/workshops\/[^"]+/g, "");
+      // A chart bar's numeric value is checked against its printed display
+      // in "charts only figures the workshop prints" below.
+      const text = JSON.stringify(workshop)
+        .replace(/\/workshops\/[^"]+/g, "")
+        .replace(/"value":\d+(?:\.\d+)?/g, "");
       for (const [token] of text.matchAll(/\d+(?:[.,]\d+)+/g)) {
         expect(allowed.has(token), `${workshop.slug} ${token}`).toBe(true);
       }
+    }
+  });
+
+  it("charts only figures the workshop prints elsewhere, with values equal to their display", () => {
+    for (const [locale, workshop] of [["de", de], ["en", en]] as const) {
+      const chart = workshop.caseStudy.resultChart;
+      expect(chart, locale).toBeDefined();
+      const { resultChart: _chart, ...caseStudy } = workshop.caseStudy;
+      // Every other string of the workshop: summary, description, lab and case.
+      const text = JSON.stringify({ ...workshop, caseStudy });
+      expect(chart!.bars.map((bar) => bar.kind)).toEqual(["reference", "answer", "correct"]);
+      for (const bar of chart!.bars) {
+        expect(text, `${locale} ${bar.display}`).toContain(bar.display);
+        const parsed = Number(
+          (locale === "de" ? bar.display.replace(/\./g, "").replace(",", ".") : bar.display.replace(/,/g, ""))
+            .replace(/\s*t$/, ""),
+        );
+        expect(bar.value, bar.display).toBe(parsed);
+        if (bar.note) {
+          for (const [figure] of bar.note.matchAll(/\d+(?:[.,]\d+)?\s?%/g)) expect(text).toContain(figure);
+        }
+      }
+      for (const [figure] of chart!.note.matchAll(/\d+(?:[.,]\d+)?\s?t\b/g)) expect(text).toContain(figure);
     }
   });
 });

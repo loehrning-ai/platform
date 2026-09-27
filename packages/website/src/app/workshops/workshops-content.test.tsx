@@ -4,6 +4,8 @@ import { createElement } from "react";
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { getWorkshops, type Workshop } from "@/lib/workshops";
+import { hubPlakat, WORKSHOP_PLAKAT } from "@/lib/plakat/palettes";
+import { expectCapsInsideScene, expectNoMennigeInScene } from "@/test/plakat-scene";
 import { orderWorkshopsForHub, WorkshopsContent } from "./workshops-content";
 
 vi.mock("next/image", () => ({
@@ -23,18 +25,12 @@ describe("<WorkshopsContent>", () => {
 
     const heading = screen.getByRole("heading", {
       level: 1,
-      name: "Workshops mit Fall und Vorlage",
+      name: "Workshops mit Fall und Vorlage.",
     });
     expect(heading).not.toHaveStyle({ opacity: "0" });
-    expect(heading.closest("[data-cover-band]")).toHaveClass("dark-section");
-    // Two lines in both locales from xl; the globe starts at lg and its mask
-    // keeps the text column clear.
-    expect(heading).toHaveClass("sm:max-w-[14ch]", "xl:max-w-[16ch]");
-    const band = heading.closest("[data-cover-band]");
-    expect(band).toHaveClass("md:max-lg:[&>[data-cover-globe]]:hidden");
-    expect(band?.className).toMatch(
-      /lg:\[&>\[data-cover-globe\]\]:\[mask-image:linear-gradient\(to_right,transparent_32%,black_50%\)\]/,
-    );
+    // Without a workshop the band still gets a scene (the fallback).
+    expect(heading.closest("[data-cover-band]")).toHaveClass(`plakat-${hubPlakat([])}`);
+    expect(heading).toHaveClass("poster-title");
     expect(screen.getByText("Workshops · 0 Fälle")).toBeVisible();
     expect(screen.getByRole("status")).toHaveTextContent(
       "Derzeit ist kein Workshop veröffentlicht.",
@@ -52,7 +48,7 @@ describe("<WorkshopsContent>", () => {
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "Workshops with a case and a template",
+        name: "Workshops with a case and a template.",
       }),
     ).toBeInTheDocument();
     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
@@ -147,19 +143,9 @@ describe("<WorkshopsContent>", () => {
       screen.getByRole("link", { name: "Start with Workshop 03" }),
     ).toHaveAttribute("href", "/en/workshops/datenbereitschaft-fuer-ki");
 
-    const index = screen.getByRole("navigation", {
-      name: "Workshops on this page",
-    });
-    expect(
-      within(index)
-        .getAllByRole("link")
-        .map((link) => [link.textContent, link.getAttribute("href")]),
-    ).toEqual([
-      ["01Forecasts", "#workshop-ki-prognosen-einschaetzen"],
-      ["02Business reports", "#workshop-geschaeftsberichte-mit-ki-lesen"],
-      ["03Data readiness", "#workshop-datenbereitschaft-fuer-ki"],
-      [`04${esg?.topic}`, "#workshop-esg-berichte-mit-ki"],
-    ]);
+    // The list is the index: the band carries no row of anchor links.
+    expect(screen.queryByRole("navigation")).toBeNull();
+    expect(container.querySelector("[data-workshop-index]")).toBeNull();
 
     // The hub links to workshop pages only; materials live on the detail page.
     const hrefs = Array.from(container.querySelectorAll("a")).map(
@@ -229,10 +215,12 @@ describe("<WorkshopsContent>", () => {
     const rows = screen.getAllByTestId("workshop-row");
 
     for (const row of rows) {
-      // Tile column plus text column below md, the reviewed sheet from md.
+      // Poster thumb column plus text column below md, the poster cover
+      // beside the text from md.
       expect(row).toHaveClass(
-        "grid-cols-[3.5rem_minmax(0,1fr)]",
-        "md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]",
+        "grid-cols-[5rem_minmax(0,1fr)]",
+        "md:grid-cols-[14rem_minmax(0,1fr)]",
+        "lg:grid-cols-[18rem_minmax(0,1fr)]",
         "py-4",
         "md:py-10",
       );
@@ -308,10 +296,6 @@ describe("<WorkshopsContent>", () => {
       "hidden",
       "sm:block",
     );
-    // The index row repeats the list on a phone, so it starts at md.
-    expect(
-      screen.getByRole("navigation", { name: "Workshops auf dieser Seite" }),
-    ).toHaveClass("hidden", "md:block");
     // Phones skip the route (each workshop page shows its own agenda), so
     // the list follows the cover; from sm it is the reviewed row.
     const rail = screen.getByRole("group", {
@@ -319,10 +303,11 @@ describe("<WorkshopsContent>", () => {
     });
     expect(rail).toHaveAttribute("tabindex", "0");
     expect(rail.closest("section")).toHaveClass("hidden", "sm:block");
-    // The phone H1 matches the detail H1 and is not held to 14ch.
-    expect(
-      screen.getByRole("heading", { level: 1 }),
-    ).toHaveClass("text-[1.875rem]/[1.08]", "sm:max-w-[14ch]", "sm:text-display");
+    // The H1 is a poster title: its size comes from the fit rule, so the
+    // longest word always fits the phone column.
+    const h1 = screen.getByRole("heading", { level: 1 });
+    expect(h1).toHaveClass("poster-title", "text-scene-ink");
+    expect(h1.style.getPropertyValue("--fit")).not.toBe("");
   });
 
   it("keeps the team note small and says how to open the presenter view", () => {
@@ -347,13 +332,61 @@ describe("<WorkshopsContent>", () => {
     ).toEqual(["Alle Materialien kostenlos, ohne Anmeldung"]);
   });
 
-  it("gives every row the same graphit cover on flat Werkzeichnung rows", () => {
+  it("sets the band in the newest workshop's scene with the key numeral", () => {
+    const workshops = getWorkshops("de");
+    const { container } = render(<WorkshopsContent workshops={workshops} locale="de" />);
+    const scene = hubPlakat(workshops);
+    expect(scene).toBe("autumn");
+
+    const band = screen
+      .getByRole("heading", { level: 1 })
+      .closest("[data-cover-band]") as HTMLElement;
+    expect(band).toHaveClass(`plakat-${scene}`);
+    expect(band).not.toHaveClass("dark-section");
+    // The page carries its scene, so the Kopflinien and the tab marker below
+    // the band take the scene line.
+    expect(container.querySelector(`[data-plakat-page="${scene}"]`)).not.toBeNull();
+    // The one caps line, the poster title and the 17px body: three sizes.
+    expect(band.querySelectorAll(".plakat-caps")).toHaveLength(1);
+    expect(within(band).getByText("Workshops · 4 Fälle").closest(".plakat-caps")).not.toBeNull();
+    for (const text of band.querySelectorAll("p:not(.plakat-caps)")) {
+      expect(text).toHaveClass("text-body", "text-scene-ink");
+    }
+    // The start button is the scene button (ink fill, ground label, 48px).
+    const start = within(band).getByRole("link", { name: "Mit Workshop 03 beginnen" });
+    expect(start).toHaveClass("bg-scene-ink", "text-scene-ground", "min-h-12");
+    // The key numeral: the workshop count in the mark colour, in the lg art
+    // column and in the phone strip, both decorative.
+    const numerals = band.querySelectorAll("[data-poster-numeral]");
+    expect([...numerals].map((numeral) => numeral.getAttribute("data-poster-numeral"))).toEqual([
+      "band",
+      "strip",
+    ]);
+    for (const numeral of numerals) {
+      expect(numeral).toHaveAttribute("aria-hidden", "true");
+      expect(numeral).toHaveTextContent(String(workshops.length));
+      expect(numeral.querySelector("text")).toHaveClass("fill-scene-mark");
+    }
+    // Rost rules (SPEC §1.6): nothing small, muted or stateful in the scene.
+    expect(
+      band.querySelectorAll("[data-question-card], input, select, textarea, [role=status], [data-chip]"),
+    ).toHaveLength(0);
+    for (const node of band.querySelectorAll("*")) {
+      const classes = node.getAttribute("class")?.split(/\s+/) ?? [];
+      for (const small of ["text-caption", "text-label", "text-xs", "text-muted-foreground"]) {
+        expect(classes, `${small} in the band`).not.toContain(small);
+      }
+    }
+    expectNoMennigeInScene(container);
+    expectCapsInsideScene(container);
+  });
+
+  it("gives every row its own poster in its own palette on flat paper rows", () => {
     const { container } = render(
       <WorkshopsContent workshops={getWorkshops("de")} locale="de" />,
     );
 
-    // The deck covers stay social cards; scaled into a row their text is
-    // illegible, so the hub draws no raster covers at all.
+    // The deck covers stay social cards; the hub draws SVG posters only.
     expect(SOURCE).not.toContain("card-preview.webp");
     expect(SOURCE).not.toContain("transition-all");
     expect(SOURCE).not.toMatch(/text-\[(?:9|10|11)(?:\.\d+)?px\]/);
@@ -368,32 +401,48 @@ describe("<WorkshopsContent>", () => {
     expect(SOURCE).not.toMatch(/border-l-\[\d+px\]/);
     expect(SOURCE).not.toContain("font-black");
     expect(SOURCE).not.toMatch(/tracking-\[-0\.0[2-9]/);
+    // No row tint, no palette fill on a row (the retired ROW_TONES pattern).
+    expect(SOURCE).not.toMatch(/bg-(?:ultramarin|kreide|sand|rost|butter|creme|kobalt|aubergine)/);
+    expect(SOURCE).not.toContain("MiniCover");
+    expect(SOURCE).not.toContain("GlobeLines");
 
     const rows = container.querySelectorAll("[data-testid='workshop-row']");
-    for (const row of rows) expect(row).toHaveClass("border-b", "border-hairline");
-    // One cover grammar for every row: the CSS mini-cover with the number
-    // and the title head only, set at 20px or more.
-    expect(container.querySelectorAll("img")).toHaveLength(0);
-    const miniCovers = container.querySelectorAll("[data-workshop-mini-cover]");
-    expect(miniCovers).toHaveLength(4);
-    for (const [position, cover] of [...miniCovers].entries()) {
-      expect(cover).toHaveAttribute("aria-hidden", "true");
-      expect(cover.querySelector("[data-werk-globe-country]")).toBeNull();
-      expect(cover).toHaveClass("hidden", "md:block");
-      const [number, title] = cover.querySelectorAll("p");
-      expect(number.textContent).toBe(["04", "03", "02", "01"][position]);
-      expect(title).toHaveClass("text-[1.25rem]");
-      expect(title.textContent).not.toContain(":");
+    for (const row of rows) {
+      expect(row).toHaveClass("border-b", "border-hairline");
+      expect(row.className).not.toMatch(/\bbg-(?!card-hover)/);
     }
-    // Phones: a decorative 56px graphit tile with the number replaces the
-    // cover, one per row, and no tile carries the Germany trace.
+    expect(container.querySelectorAll("img")).toHaveLength(0);
+
+    // From md: four posters, one per row, in four distinct palettes, each
+    // with its own numeral; all decorative.
+    const covers = container.querySelectorAll("[data-workshop-mini-cover]");
+    expect(covers).toHaveLength(4);
+    const numbers = ["04", "03", "02", "01"];
+    const slugs = [...rows].map((row) => row.id.replace(/^workshop-/, ""));
+    const palettes = [...covers].map((cover, position) => {
+      expect(cover).toHaveAttribute("aria-hidden", "true");
+      expect(cover).toHaveClass("hidden", "md:block");
+      const poster = cover.querySelector("svg[data-poster]")!;
+      expect(poster).toHaveAttribute("aria-hidden", "true");
+      expect(poster).toHaveAttribute("focusable", "false");
+      expect(poster.querySelector("[data-poster-numeral-text]")?.textContent).toBe(numbers[position]);
+      const slug = slugs[position] as keyof typeof WORKSHOP_PLAKAT;
+      expect(poster).toHaveClass(`plakat-${WORKSHOP_PLAKAT[slug].plakat}`);
+      return poster.getAttribute("data-poster");
+    });
+    expect(new Set(palettes).size).toBe(4);
+    expect(palettes).toEqual(["autumn", "bloom", "idea", "lemons"]);
+
+    // Phones: an 80x100 poster thumb in the same palette replaces the cover.
     const tiles = container.querySelectorAll("[data-workshop-tile]");
     expect(tiles).toHaveLength(4);
     for (const [position, tile] of [...tiles].entries()) {
       expect(tile).toHaveAttribute("aria-hidden", "true");
-      expect(tile).toHaveClass("size-14", "md:hidden");
-      expect(tile.textContent).toBe(["04", "03", "02", "01"][position]);
-      expect(tile.querySelector("[data-werk-globe-country]")).toBeNull();
+      expect(tile).toHaveClass("md:hidden");
+      expect(tile.querySelector("[data-poster-thumb]")).toHaveClass("w-20", "aspect-[4/5]");
+      expect(tile.querySelector("svg")).toHaveAttribute("data-poster", palettes[position]);
+      expect(tile.textContent).toBe(numbers[position]);
+      expect(tile.querySelector("a, button, [tabindex]")).toBeNull();
     }
     // Keyboard focus rings the whole clickable row.
     for (const row of rows) {

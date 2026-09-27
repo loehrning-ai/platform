@@ -111,9 +111,11 @@ describe("<DemoTile>", () => {
     const preview = container.querySelector("[data-demo-preview]");
     const heading = screen.getByRole("heading", { level: 3 });
 
-    // Uniform grid (blueprint 6.14): no spans, a fixed 4:3 preview panel.
+    // Uniform grid (blueprint 6.14): no spans, a fixed 4:3 preview panel
+    // in the IDEA scene (SPEC §3.12): Kobalt drawings on Kreide.
     expect(link.className).not.toMatch(/col-span|row-span/);
-    expect(preview).toHaveClass("aspect-[4/3]", "bg-inset");
+    expect(preview).toHaveClass("aspect-[4/3]", "plakat-idea");
+    expect(preview).not.toHaveClass("bg-inset");
     expect(preview).toBeTruthy();
     expect(preview).toHaveAttribute("aria-hidden", "true");
     expect(

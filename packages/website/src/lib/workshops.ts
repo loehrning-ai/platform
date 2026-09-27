@@ -111,6 +111,40 @@ export interface WorkshopCaseStudy {
   readonly decisionQuestion: string;
   /** What the underlying data structurally cannot answer, stated plainly. */
   readonly dataLimitations: readonly string[];
+  /**
+   * The case result as bars on paper (Werkzeichnung v2, SPEC §3.11): the
+   * reference value, the unchecked AI answer and the checked answer on one
+   * scale from zero. Every `display` string is printed verbatim elsewhere in
+   * the workshop's own copy, so the chart never invents a figure.
+   */
+  readonly resultChart?: WorkshopResultChart;
+}
+
+export type WorkshopResultBarKind = "reference" | "answer" | "correct";
+
+export interface WorkshopResultBar {
+  readonly label: string;
+  readonly value: number;
+  /** The value as the workshop prints it ("2.017,5 t"); never recomputed. */
+  readonly display: string;
+  /** A short direct label under the bar ("sechs Fehler, 7,5 % weniger"). */
+  readonly note?: string;
+  /** reference and correct are solid bars; answer (unchecked) is hatched. */
+  readonly kind: WorkshopResultBarKind;
+}
+
+/**
+ * The data of a result chart. The page adds the heading and the caption line
+ * from workshop-copy.ts and renders it with ResultChart (src/components/plakat).
+ */
+export interface WorkshopResultChart {
+  /** The unit the values share, e.g. "t CO₂e". */
+  readonly unit: string;
+  /** What the values cover, for the caption: "Scope 1 und 2". */
+  readonly basis: string;
+  /** One sentence under the bars: what the difference means. */
+  readonly note: string;
+  readonly bars: readonly WorkshopResultBar[];
 }
 
 export interface WorkshopMaterial {

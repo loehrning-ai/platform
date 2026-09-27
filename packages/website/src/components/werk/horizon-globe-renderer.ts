@@ -42,11 +42,11 @@ import {
   BERLIN_INSET_UNITS,
   BERLIN_UNITS,
   HORIZON,
-  HORIZON_ALPHA,
   HORIZON_DEPTH_FADE,
   HORIZON_GLINT,
-  HORIZON_INK,
+  HORIZON_HOME_SCENE,
   HORIZON_ROUTE,
+  HORIZON_SCENE,
   decodeRings,
   focusFade,
   horizonCenterLon,
@@ -63,6 +63,8 @@ import {
   tracePolylines,
   viewBasis,
   type HorizonFrame,
+  type HorizonScene,
+  type HorizonSceneKey,
 } from "./horizon-projection";
 import { HORIZON_LAND, HORIZON_LAND_SCALE } from "@/lib/horizon-land";
 
@@ -78,6 +80,8 @@ export type HorizonRendererOptions = {
    * every frame.
    */
   readonly staticCanvas?: HTMLCanvasElement | null;
+  /** The home scene to paint in (SPEC D7); defaults to the site's HOME_SCENE. */
+  readonly scene?: HorizonSceneKey;
   /** Start paused (a remembered choice). */
   readonly paused?: boolean;
   /**
@@ -153,23 +157,30 @@ function rgba(rgb: string, alpha: number): string {
 type Geometry = {
   readonly meridians: ReturnType<typeof toSpherePolylines>;
   readonly parallels: ReturnType<typeof toSpherePolylines>;
-  readonly land: ReturnType<typeof toSpherePolylines>;
+  /** Coastlines; null when the scene shows Germany only. */
+  readonly land: ReturnType<typeof toSpherePolylines> | null;
   readonly germany: ReturnType<typeof toSpherePolylines>;
   readonly route: ReturnType<typeof toSpherePolylines>;
   readonly stations: readonly (readonly [number, number])[];
 };
 
-let geometry: Geometry | null = null;
+const geometries = new Map<HorizonSceneKey, Geometry>();
 
-function loadGeometry(): Geometry {
-  geometry ??= {
-    meridians: toSpherePolylines(meridianLines()),
-    parallels: toSpherePolylines(parallelLines()),
-    land: toSpherePolylines(decodeRings(HORIZON_LAND, HORIZON_LAND_SCALE)),
-    germany: toSpherePolylines([GERMANY_OUTLINE]),
-    route: toSpherePolylines([routeLine()]),
-    stations: routeStations(),
-  };
+function loadGeometry(key: HorizonSceneKey, scene: HorizonScene): Geometry {
+  let geometry = geometries.get(key);
+  if (!geometry) {
+    geometry = {
+      meridians: toSpherePolylines(meridianLines(scene.grid.step)),
+      parallels: toSpherePolylines(parallelLines(scene.grid.step)),
+      land: scene.coast
+        ? toSpherePolylines(decodeRings(HORIZON_LAND, HORIZON_LAND_SCALE))
+        : null,
+      germany: toSpherePolylines([GERMANY_OUTLINE]),
+      route: toSpherePolylines([routeLine()]),
+      stations: routeStations(),
+    };
+    geometries.set(key, geometry);
+  }
   return geometry;
 }
 
@@ -228,7 +239,9 @@ export function createHorizonRenderer(
 ): HorizonRenderer {
   const { slot, canvas } = options;
   const staticCanvas = options.staticCanvas ?? null;
-  const geo = loadGeometry();
+  const sceneKey = options.scene ?? HORIZON_HOME_SCENE;
+  const scene = HORIZON_SCENE[sceneKey];
+  const geo = loadGeometry(sceneKey, scene);
   const reduceQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   let ctx: CanvasRenderingContext2D | null = null;
@@ -266,7 +279,10 @@ export function createHorizonRenderer(
   const fixedBasis = viewBasis(HORIZON.viewLat, horizonCenterLon(0));
 
   function depthGradient(alpha: number): CanvasGradient | string {
-    if (!ctx || !frame) return rgba(HORIZON_INK.line, alpha);
+    // A flat poster disc has no atmosphere: one solid knockout colour.
+    if (!scene.grid.depthFade || !ctx || !frame) {
+      return rgba(scene.grid.rgb, alpha);
+    }
     const gradient = ctx.createRadialGradient(
       frame.centerX,
       frame.centerY,
@@ -276,7 +292,7 @@ export function createHorizonRenderer(
       frame.radius,
     );
     for (const [stop, factor] of HORIZON_DEPTH_FADE) {
-      gradient.addColorStop(stop, rgba(HORIZON_INK.line, alpha * factor));
+      gradient.addColorStop(stop, rgba(scene.grid.rgb, alpha * factor));
     }
     return gradient;
   }
@@ -324,22 +340,34 @@ export function createHorizonRenderer(
   /** Frame geometry, gradients and the fixed layer for the current push. */
   function applyFrame(): void {
     frame = horizonFrame(size.width, size.height, push);
-    gridStroke = depthGradient(Math.min(1, HORIZON_ALPHA.grid * lift));
-    coastStroke = depthGradient(Math.min(1, HORIZON_ALPHA.coast * lift));
+    gridStroke = depthGradient(Math.min(1, scene.grid.alpha * lift));
+    coastStroke = depthGradient(Math.min(1, (scene.coast?.alpha ?? 0) * lift));
     if (staticCtx) drawFixed(staticCtx, true);
   }
 
-  /** Parallels (invariant under the polar spin) and the sky around the limb. */
+  /**
+   * The disc, the parallels (invariant under the polar spin) and the sky
+   * around the limb. On the lemons scene this layer sits under the moving
+   * one (phone-hero.css), so Germany and the route cover the parallels.
+   */
   function drawFixed(c: CanvasRenderingContext2D, clear: boolean): void {
     const f = frame;
     if (!f) return;
     if (clear) c.clearRect(0, 0, f.width, f.height);
+    if (scene.disc) {
+      c.beginPath();
+      c.arc(f.centerX, f.centerY, f.radius, 0, Math.PI * 2);
+      c.fillStyle = scene.disc;
+      c.fill();
+    }
     c.lineJoin = "round";
-    c.lineWidth = hair;
+    c.lineCap = "round";
+    c.lineWidth = scene.grid.width ?? hair;
     c.beginPath();
     tracePolylines(c, geo.parallels, fixedBasis, f, f.latMin);
     c.strokeStyle = gridStroke;
     c.stroke();
+    if (!scene.sky) return;
 
     // Limb, glint and degree scale: the server frame's sky layer, redrawn
     // so it stays on the pushed-in sphere.
@@ -348,7 +376,7 @@ export function createHorizonRenderer(
     c.lineWidth = 1;
     c.beginPath();
     c.arc(f.centerX, f.centerY, f.radius, start, end);
-    c.strokeStyle = rgba(HORIZON_INK.line, 0.5);
+    c.strokeStyle = rgba(scene.grid.rgb, 0.5);
     c.stroke();
     for (const [half, alpha, width] of HORIZON_GLINT) {
       c.beginPath();
@@ -360,7 +388,7 @@ export function createHorizonRenderer(
         (half - 90) * DEG,
       );
       c.lineWidth = width;
-      c.strokeStyle = rgba(HORIZON_INK.line, alpha);
+      c.strokeStyle = rgba(scene.grid.rgb, alpha);
       c.stroke();
     }
     const ticks = scaleTicks(f);
@@ -374,7 +402,7 @@ export function createHorizonRenderer(
         c.moveTo(x0, y0);
         c.lineTo(x1, y1);
       }
-      c.strokeStyle = rgba(HORIZON_INK.line, alpha);
+      c.strokeStyle = rgba(scene.grid.rgb, alpha);
       c.stroke();
     }
   }
@@ -385,11 +413,11 @@ export function createHorizonRenderer(
     y: number,
     outer: number,
     inner: number,
-    innerRgb: string,
+    colors: { readonly outer: string; readonly inner: string },
   ): void {
-    c.fillStyle = rgba(HORIZON_INK.accent, 1);
+    c.fillStyle = colors.outer;
     c.fillRect(x - outer / 2, y - outer / 2, outer, outer);
-    c.fillStyle = innerRgb;
+    c.fillStyle = colors.inner;
     c.fillRect(x - inner / 2, y - inner / 2, inner, inner);
   }
 
@@ -400,18 +428,22 @@ export function createHorizonRenderer(
     c.clearRect(0, 0, f.width, f.height);
     if (!staticCtx) drawFixed(c, false);
     const basis = viewBasis(HORIZON.viewLat, horizonCenterLon(theta));
-    c.lineWidth = hair;
+    c.lineWidth = scene.grid.width ?? hair;
     c.lineJoin = "round";
+    c.lineCap = "round";
 
     c.beginPath();
     tracePolylines(c, geo.meridians, basis, f, f.latMin);
     c.strokeStyle = gridStroke;
     c.stroke();
 
-    c.beginPath();
-    tracePolylines(c, geo.land, basis, f, f.latMin);
-    c.strokeStyle = coastStroke;
-    c.stroke();
+    if (geo.land) {
+      c.lineWidth = hair;
+      c.beginPath();
+      tracePolylines(c, geo.land, basis, f, f.latMin);
+      c.strokeStyle = coastStroke;
+      c.stroke();
+    }
 
     const focus = projectHorizonPoint(
       HORIZON.focusLat,
@@ -426,8 +458,8 @@ export function createHorizonRenderer(
     // The Lernroute and its stations, under Germany.
     c.beginPath();
     tracePolylines(c, geo.route, basis, f, -90);
-    c.lineWidth = 1;
-    c.strokeStyle = rgba(HORIZON_INK.accent, HORIZON_ROUTE.alpha * fade);
+    c.lineWidth = scene.route.width;
+    c.strokeStyle = rgba(scene.route.rgb, scene.route.alpha * fade);
     c.stroke();
     c.globalAlpha = fade;
     for (const [lat, lon] of geo.stations) {
@@ -439,7 +471,7 @@ export function createHorizonRenderer(
         point.y,
         HORIZON_ROUTE.stationUnits * unit,
         HORIZON_ROUTE.stationInsetUnits * unit,
-        "#141414",
+        scene.station,
       );
     }
     c.globalAlpha = 1;
@@ -447,13 +479,18 @@ export function createHorizonRenderer(
     c.beginPath();
     if (tracePolylines(c, geo.germany, basis, f, -90)) {
       c.closePath();
-      c.fillStyle = rgba(HORIZON_INK.accent, HORIZON_ALPHA.germanyFill * fade);
+      c.fillStyle = rgba(scene.germany.rgb, scene.germany.fillAlpha * fade);
       c.fill();
     }
-    c.lineJoin = "miter";
-    c.lineWidth = 1.5;
-    c.strokeStyle = rgba(HORIZON_INK.accent, HORIZON_ALPHA.germanyStroke * fade);
-    c.stroke();
+    if (scene.germany.strokeAlpha !== null) {
+      c.lineJoin = "miter";
+      c.lineWidth = 1.5;
+      c.strokeStyle = rgba(
+        scene.germany.rgb,
+        scene.germany.strokeAlpha * fade,
+      );
+      c.stroke();
+    }
 
     const berlin = projectHorizonPoint(BERLIN[0], BERLIN[1], basis, f);
     if (berlin.depth > 0) {
@@ -464,7 +501,7 @@ export function createHorizonRenderer(
         berlin.y,
         BERLIN_UNITS * unit,
         BERLIN_INSET_UNITS * unit,
-        rgba(HORIZON_INK.line, 1),
+        scene.berlin,
       );
       c.globalAlpha = 1;
     }

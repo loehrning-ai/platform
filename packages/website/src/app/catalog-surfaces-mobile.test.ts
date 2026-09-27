@@ -117,28 +117,31 @@ describe("catalog surfaces below lg", () => {
     const workshops = source("workshops/workshops-content.tsx");
     const row = workshops.slice(workshops.indexOf("function WorkshopRow"));
 
-    // Phone order is source order: the tile, then the duration line, the
-    // title, what you leave with and the one link. From md the same DOM becomes the
-    // two-column sheet (cover left), so nothing needs `order`.
+    // Phone order is source order: the poster thumb, then the duration line,
+    // the title, what you leave with and the one link. From md the same DOM
+    // becomes the two-column sheet (poster cover left), so nothing needs `order`.
     expect(row.indexOf("<figure")).toBeLessThan(row.indexOf("<h3"));
     expect(row.indexOf("data-workshop-meta")).toBeLessThan(row.indexOf("<h3"));
     expect(row.indexOf("<h3")).toBeLessThan(row.indexOf("data-workshop-question"));
     expect(row.indexOf("data-workshop-question")).toBeLessThan(
       row.indexOf("<Link"),
     );
-    // A phone row is a 56px tile beside the text; md returns the sheet.
+    // A phone row is an 80px poster thumb beside the text; md returns the
+    // sheet with the poster cover at 14rem, 18rem from lg (SPEC §3.3).
     expect(row).toContain(
-      "grid-cols-[3.5rem_minmax(0,1fr)] items-start gap-x-3.5 border-b border-hairline py-4",
+      "grid-cols-[5rem_minmax(0,1fr)] items-start gap-x-4 border-b border-hairline py-4",
     );
-    expect(row).toContain("md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-stretch md:gap-10 md:py-10");
+    expect(row).toContain(
+      "md:grid-cols-[14rem_minmax(0,1fr)] md:items-start md:gap-10 md:py-10 lg:grid-cols-[18rem_minmax(0,1fr)]",
+    );
     // The summary is md-only; "Du gehst mit" is one clamped sentence.
     expect(row).toContain('className="mt-3 hidden max-w-[56ch] text-body text-muted-foreground text-pretty md:block"');
     expect(row).toContain("max-md:line-clamp-2");
     // The link covers the row on a phone; the text keeps the full width.
     expect(row).toContain("max-md:absolute max-md:inset-0");
     expect(row).not.toContain("grid-cols-[minmax(0,1fr)_2.75rem]");
-    // The cover-band index repeats the list, so it only appears from md.
-    expect(workshops).toContain('className="mt-12 hidden border-t border-hairline pt-2 md:block"');
+    // The list is the index: the band carries no anchor row at any width.
+    expect(workshops).not.toContain("data-workshop-index");
     expect(workshops).toContain("pb-10 pt-7 sm:pb-24 sm:pt-20");
     expect(workshops).toContain('layout="rail"');
     // The route section starts at sm, so the list follows the cover.

@@ -15,8 +15,11 @@ const ContinueCard = dynamic(
 
 /**
  * Reserved seat for the companion home's first decision, below `lg` only.
- * The page docks it as the last row of the phone hero band, directly above
- * the tab bar, on the band's graphit.
+ * The page docks it in the phone hero band, directly under the primary
+ * action. It has no surface of its own: it inherits the band's scene
+ * (Butter on Ultramarin, or the graphit fallback) and its hairline, and its
+ * full-bleed link takes an inset ring (phone-hero.css), so the ring never
+ * lands outside the band.
  *
  * Three properties this shell exists to guarantee:
  *
@@ -50,7 +53,7 @@ export function ContinueSlot({
   }, []);
 
   return (
-    <div data-home-continue-slot className="dark-section w-full lg:hidden">
+    <div data-home-continue-slot className="w-full lg:hidden">
       <div className="box-content h-[3.5rem] border-t border-hairline">
         {mounted ? <ContinueCard locale={locale} courses={courses} /> : null}
       </div>

@@ -14,11 +14,17 @@ describe("demo cover below lg", () => {
   it("keeps the demo cover compact without moving the desktop console", () => {
     const demos = source("demos/page.tsx");
 
-    // Paper hero: tighter padding on a phone, the reviewed spacing from sm.
+    // The hero is the IDEA PlakatBand (SPEC §3.12); the facts follow it on
+    // paper with tighter padding on a phone, the reviewed spacing from sm.
+    const band = demos.indexOf('<PlakatBand');
+    const statRow = demos.search(/<StatRow\s+stats=\{stats\}/);
+    expect(demos).toMatch(/<PlakatBand\s+plakat="idea"/);
+    expect(band).toBeGreaterThan(-1);
+    expect(statRow).toBeGreaterThan(demos.indexOf("</PlakatBand>"));
     expect(demos).toContain(
-      'className="px-4 pb-6 pt-5 sm:px-6 sm:pb-12 sm:pt-12"',
+      'className="px-4 pb-6 pt-5 sm:px-6 sm:pb-12 sm:pt-10"',
     );
-    // Lead and check list stack on a phone and sit side by side from lg.
+    // Stats and check list stack on a phone and sit side by side from lg.
     expect(demos).toContain(
       "lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]",
     );

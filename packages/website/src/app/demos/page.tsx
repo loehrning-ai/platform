@@ -3,7 +3,8 @@ import {
   DemoGrid,
   type DemoGridInitialFilters,
 } from "@/components/demos/demo-grid";
-import { Kicker, StatRow } from "@/components/werk";
+import { StatRow } from "@/components/werk";
+import { CapsLine, Halftone, PlakatBand } from "@/components/plakat";
 import {
   DEMO_CATEGORIES,
   DEMO_LEVELS,
@@ -16,6 +17,7 @@ import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import { buildLocaleAlternates, localizeHref } from "@/lib/i18n/locale";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
+import { posterTitleStyle } from "@/lib/plakat/fit";
 import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -162,57 +164,77 @@ export default async function DemosPage({ searchParams }: DemosPageProps) {
   ];
 
   return (
-    <div className="overflow-x-clip">
+    <div className="overflow-x-clip" data-plakat-page="idea">
       <JsonLd data={jsonLd} id="demos-jsonld" />
 
-      {/* Paper hero: kicker, one-colour H1, lead, the three checks as an
-          ink-square list, then evidence stats derived from the registry.
-          Below sm the hero is kicker, H1, the lead's first sentence and one
-          stat line, so the first examples sit inside the first screen; the
-          check list repeats the lead there and is left out. */}
-      <header
-        className="px-4 pb-6 pt-5 sm:px-6 sm:pb-12 sm:pt-12"
-        data-demo-atlas-hero
+      {/* IDEA band (SPEC §3.12): four corner dots, the arrow caps line, the
+          Himbeere poster H1, a 17px Kobalt lede and one halftone image, so
+          the band keeps three type sizes. Everything factual (the stats and
+          the check list) sits on paper right below. Below sm the lede is its
+          first sentence only. */}
+      <header data-demo-atlas-hero>
+        <PlakatBand
+          plakat="idea"
+          labelledBy="demo-atlas-title"
+          cornerDots
+        >
+          <CapsLine arrow>
+            {copy.catalog.kicker} · {copy.catalog.kickerDetail}
+          </CapsLine>
+          <h1
+            id="demo-atlas-title"
+            className="poster-title mt-4 text-scene-mid sm:mt-5"
+            style={posterTitleStyle(copy.catalog.heading)}
+          >
+            {copy.catalog.heading}
+          </h1>
+          <p className="mt-4 max-w-[46ch] text-[1.0625rem] leading-normal text-scene-ink text-pretty sm:mt-5">
+            {copy.catalog.introduction}
+            <span className="max-sm:hidden"> {copy.catalog.introductionDetail}</span>
+          </p>
+          <Halftone field="demos" className="mt-6 sm:mt-8" />
+        </PlakatBand>
+      </header>
+
+      {/* Paper below the band: the registry-derived stats and the check list.
+          Below sm one caption line carries the same numbers and the check
+          list (which repeats the lede) is left out, so the first examples
+          start soon after the band. */}
+      <div
+        className="px-4 pb-6 pt-5 sm:px-6 sm:pb-12 sm:pt-10"
+        data-demo-atlas-facts
       >
         <div className="mx-auto max-w-6xl">
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-start lg:gap-12">
-            <div className="min-w-0">
-              <Kicker>{copy.catalog.kicker}</Kicker>
-              <h1 className="mt-2 max-w-[22ch] text-fluid-h1 font-bold text-foreground sm:mt-3">
-                {copy.catalog.heading}
-              </h1>
-              <p className="mt-3 max-w-[56ch] text-lead text-muted-foreground text-pretty max-sm:text-[1.0625rem] max-sm:leading-normal sm:mt-4">
-                {copy.catalog.introduction}
-                <span className="max-sm:hidden"> {copy.catalog.introductionDetail}</span>
-              </p>
-              {/* A wrapping list of unbreakable items. Every item carries a
-                  1em "·" before it, and the list is pulled 1em left inside a
-                  clipping wrapper: whichever item opens a line has its
-                  separator clipped, so no line starts or ends with "·". */}
-              <div className="mt-3 overflow-hidden sm:hidden">
-                <ul
-                  className="-ml-[1em] flex list-none flex-wrap p-0 text-caption text-muted-foreground tabular-nums"
-                  data-demo-stats-line
-                >
-                  {copy.catalog
-                    .statsLine(stats[0].value, stats[1].value, stats[2].value)
-                    .map((item) => (
-                      <li
-                        key={item}
-                        className="whitespace-nowrap before:inline-block before:w-[1em] before:text-center before:content-['·']"
-                      >
-                        {item}
-                      </li>
-                    ))}
-                </ul>
-              </div>
-            </div>
-            {/* Top-aligned with the H1 (the kicker line plus its gap sits above
-                it), so both columns share a first line at every width. */}
-            <div
-              className="min-w-0 max-sm:hidden lg:pt-[calc(var(--text-label)*1.3+0.75rem)]"
-              data-demo-scope
+          {/* A wrapping list of unbreakable items. Every item carries a
+              1em "·" before it, and the list is pulled 1em left inside a
+              clipping wrapper: whichever item opens a line has its
+              separator clipped, so no line starts or ends with "·". */}
+          <div className="overflow-hidden sm:hidden">
+            <ul
+              className="-ml-[1em] flex list-none flex-wrap p-0 text-caption text-muted-foreground tabular-nums"
+              data-demo-stats-line
             >
+              {copy.catalog
+                .statsLine(stats[0].value, stats[1].value, stats[2].value)
+                .map((item) => (
+                  <li
+                    key={item}
+                    className="whitespace-nowrap before:inline-block before:w-[1em] before:text-center before:content-['·']"
+                  >
+                    {item}
+                  </li>
+                ))}
+            </ul>
+          </div>
+          <div className="grid gap-10 max-sm:hidden lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-12">
+            <div
+              className="min-w-0"
+              aria-label={copy.catalog.statsLabel}
+              role="group"
+            >
+              <StatRow stats={stats} />
+            </div>
+            <div className="min-w-0" data-demo-scope>
               <p
                 id="demo-scope-label"
                 className="text-label text-foreground"
@@ -238,18 +260,8 @@ export default async function DemosPage({ searchParams }: DemosPageProps) {
               </ul>
             </div>
           </div>
-
-          {/* From sm up the stats stand as a StatRow. Below sm the stat line
-              under the lead says the same in one caption. */}
-          <div
-            className="mt-10 border-t border-hairline pt-6 max-sm:hidden"
-            aria-label={copy.catalog.statsLabel}
-            role="group"
-          >
-            <StatRow stats={stats} />
-          </div>
         </div>
-      </header>
+      </div>
 
       <section
         className="px-4 pb-12 sm:px-6 sm:pb-16"

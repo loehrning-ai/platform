@@ -10,13 +10,24 @@ import {
   ButtonLink,
   Callout,
   Chip,
-  CoverBand,
-  GlobeLines,
   Kicker,
   Pictogram,
   Route,
   SectionHead,
 } from "@/components/werk";
+import {
+  CapsLine,
+  PlakatBand,
+  PosterCover,
+  PosterNumeral,
+  PosterThumb,
+} from "@/components/plakat";
+import { posterTitleStyle } from "@/lib/plakat/fit";
+import {
+  hubPlakat,
+  workshopPlakat,
+  type WorkshopPlakat,
+} from "@/lib/plakat/palettes";
 import { WORKSHOP_PAGE_COPY } from "./workshop-copy";
 import { splitTitle } from "./workshop-title";
 
@@ -54,12 +65,10 @@ const MATERIAL_CAP = 4;
 const CONTAINER = "mx-auto max-w-[75rem] px-4 sm:px-6";
 
 /**
- * Each phone tile turns the line globe to a different longitude, so the four
- * tiles read as one family without repeating the same picture.
+ * A workshop without a registered poster still gets one; palettes.test.ts
+ * keeps every published workshop mapped, so this only guards new entries.
  */
-function tileView(number: WorkshopNumber) {
-  return { centerLat: 28, centerLon: -50 + Number(number) * 35, radius: 500 };
-}
+const FALLBACK_POSTER: WorkshopPlakat = { plakat: "lemons", motif: "fan" };
 
 /**
  * Registry prose uses U+2212 for negative numbers. Loehrning Sans draws it as
@@ -148,6 +157,7 @@ export function WorkshopsContent({ workshops, locale }: Props) {
   const first =
     workshops.find((workshop) => workshop.number === RECOMMENDED_START) ??
     ordered[0];
+  const scene = hubPlakat(workshops);
   const withPresenter = index
     .filter((workshop) =>
       workshop.materials.some((material) => material.role === "presenter"),
@@ -155,77 +165,48 @@ export function WorkshopsContent({ workshops, locale }: Props) {
     .map((workshop) => workshop.number);
 
   return (
-    <>
-      {/* Between md and lg the globe would sit under the text column, so it
-          starts at lg here. From lg the mask stays clear until 32% of the
-          globe layer: the text column ends before that at 1024 to 1920 in
-          both locales, and Germany sits past the 50% stop, so nothing drawn
-          runs under the copy. The bottom padding matches the top. */}
-      {/* Phones get a compact band: a cropped corner globe, a 34px heading,
-          the one-sentence lead and the start button, then straight into the
-          list. From sm the reviewed desktop band returns unchanged. */}
-      <CoverBand
+    <div data-plakat-page={scene}>
+      {/* The band takes the newest workshop's scene. Its one poster object is
+          the key numeral, the workshop count, in the scene's mark colour: in
+          the lg art column, and as a strip after the button on phones. The
+          list below is the index, so the band carries no anchor row. */}
+      <PlakatBand
+        plakat={scene}
         labelledBy="workshops-hub-heading"
-        phoneGlobe
-        className="md:max-lg:[&>[data-cover-globe]]:hidden lg:[&>[data-cover-globe]]:[mask-image:linear-gradient(to_right,transparent_32%,black_50%)]"
-        contentClassName="pt-6 pb-6 sm:pt-16 sm:pb-12 lg:pt-24 lg:pb-16"
+        art={<PosterNumeral value={workshops.length} plakat={scene} />}
+        artPhone={
+          <PosterNumeral value={workshops.length} plakat={scene} format="strip" />
+        }
       >
-        <Kicker>{copy.hubKicker(workshops.length)}</Kicker>
-        {/* 16ch from xl keeps the EN heading on two lines; below xl the wider
-            measure would reach the Germany trace. */}
+        <CapsLine>{copy.hubKicker(workshops.length)}</CapsLine>
         <h1
           id="workshops-hub-heading"
-          className="mt-3 text-[1.875rem]/[1.08] font-bold text-balance text-foreground max-sm:tracking-[-0.01em] sm:mt-4 sm:max-w-[14ch] sm:text-display xl:max-w-[16ch]"
+          className="poster-title mt-3 max-w-[14ch] text-scene-ink sm:mt-4"
+          style={posterTitleStyle(copy.hubHeading)}
         >
           {copy.hubHeading}
         </h1>
-        <p className="mt-3 max-w-[40ch] text-[0.9375rem]/[1.5] text-muted-foreground text-pretty sm:hidden">
+        <p className="mt-4 max-w-[40ch] text-body text-scene-ink text-pretty sm:hidden">
           {copy.hubLeadShort}
         </p>
-        <p className="mt-6 hidden max-w-[56ch] text-lead md:max-w-[46ch] xl:max-w-[56ch] text-muted-foreground text-pretty sm:block">
+        <p className="mt-5 hidden max-w-[52ch] text-body text-scene-ink text-pretty sm:block">
           {copy.hubLead}
         </p>
         {/* Below 360px the button spans the column, so it never breaks into
-            two lines beside a ragged caption. */}
-        <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 max-[359px]:grid max-[359px]:grid-cols-1 max-[359px]:[&>a]:w-full max-[359px]:[&>a]:justify-between sm:mt-8 sm:gap-y-3">
+            two lines beside a ragged line. */}
+        <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 max-[359px]:grid max-[359px]:grid-cols-1 max-[359px]:[&>a]:w-full max-[359px]:[&>a]:justify-between sm:mt-8">
           {first ? (
             <ButtonLink
               href={localizeHref(`/workshops/${first.slug}`, locale)}
-              tone="dark"
+              tone="scene"
               locale={locale}
             >
               {copy.hubStart(first.number)}
             </ButtonLink>
           ) : null}
-          <p className="text-caption text-muted-foreground">{copy.hubAccess}</p>
+          <p className="text-body text-scene-ink">{copy.hubAccess}</p>
         </div>
-
-        {index.length > 0 ? (
-          <nav
-            aria-label={copy.hubIndexLabel}
-            data-workshop-index=""
-            className="mt-12 hidden border-t border-hairline pt-2 md:block"
-          >
-            {/* Below md the compact list itself is the index, so the row of
-                anchors only appears with the two-column sheet. */}
-            <ol className="-mb-2 flex flex-wrap gap-x-6 pb-2">
-              {index.map((workshop) => (
-                <li key={workshop.slug} className="shrink-0">
-                  <a
-                    href={`#workshop-${workshop.slug}`}
-                    className="inline-flex min-h-11 items-center gap-2 text-label text-foreground underline decoration-transparent underline-offset-4 transition-colors duration-[120ms] hover:decoration-foreground motion-reduce:transition-none"
-                  >
-                    <span className="tabular-nums text-muted">
-                      {workshop.number}
-                    </span>
-                    {workshop.topic}
-                  </a>
-                </li>
-              ))}
-            </ol>
-          </nav>
-        ) : null}
-      </CoverBand>
+      </PlakatBand>
 
       {/* Phones skip the route: every workshop page opens with its own
           agenda, and here it would push the list below the first screen. */}
@@ -308,7 +289,7 @@ export function WorkshopsContent({ workshops, locale }: Props) {
           </Callout>
         </div>
       </section>
-    </>
+    </div>
   );
 }
 
@@ -336,13 +317,14 @@ function WorkshopRow({
   const isNew = NEW_WORKSHOPS.has(workshop.number);
   const isStart = workshop.number === RECOMMENDED_START;
   const title = splitTitle(workshop.title);
+  const poster = workshopPlakat(workshop.slug) ?? FALLBACK_POSTER;
 
-  // Below md a row is a list line, not a card: a 56px graphit tile with the
+  // Below md a row is a list line, not a card: an 80px poster thumb with the
   // number, a duration line, the title head and one flowing "you leave with"
   // sentence, with an arrow top right. The summary, the question, the need,
   // the materials and the live date live on the workshop page. The row bleeds
   // to the screen edge so the tap highlight and hairline run full width. From
-  // md the same DOM is the reviewed two-column sheet.
+  // md the same DOM is the two-column sheet with the poster cover left.
   return (
     <article
       id={`workshop-${workshop.slug}`}
@@ -350,29 +332,31 @@ function WorkshopRow({
       aria-labelledby={headingId}
       // The link's ::after makes the whole row clickable, so keyboard focus
       // rings the whole row too. Without :has() the link keeps its own ring.
-      className="group relative grid min-w-0 scroll-mt-24 grid-cols-[3.5rem_minmax(0,1fr)] items-start gap-x-3.5 border-b border-hairline py-4 outline-offset-4 transition-colors duration-[120ms] has-[a:active]:bg-card-hover has-[a:focus-visible]:outline has-[a:focus-visible]:outline-[3px] has-[a:focus-visible]:outline-brand-orange motion-reduce:transition-none max-md:-mx-4 max-md:px-4 max-md:outline-offset-[-3px] sm:max-md:-mx-6 sm:max-md:px-6 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:items-stretch md:gap-10 md:py-10"
+      className="group relative grid min-w-0 scroll-mt-24 grid-cols-[5rem_minmax(0,1fr)] items-start gap-x-4 border-b border-hairline py-4 outline-offset-4 transition-colors duration-[120ms] has-[a:active]:bg-card-hover has-[a:focus-visible]:outline has-[a:focus-visible]:outline-[3px] has-[a:focus-visible]:outline-brand-orange motion-reduce:transition-none max-md:-mx-4 max-md:px-4 max-md:outline-offset-[-3px] sm:max-md:-mx-6 sm:max-md:px-6 md:grid-cols-[14rem_minmax(0,1fr)] md:items-start md:gap-10 md:py-10 lg:grid-cols-[18rem_minmax(0,1fr)]"
     >
       <figure className="min-w-0">
+        {/* Each row shows its workshop's own poster, in its own palette, on
+            the paper list: an 80px thumb on a phone, the cover from md. Both
+            are decorative; the row's heading names the workshop. */}
+        <div aria-hidden="true" data-workshop-tile="" className="md:hidden">
+          <PosterThumb
+            plakat={poster.plakat}
+            motif={poster.motif}
+            numeral={workshop.number}
+            size="md"
+          />
+        </div>
         <div
           aria-hidden="true"
-          data-workshop-tile=""
-          className="relative isolate flex size-14 items-end overflow-hidden bg-dark-bg p-1.5 md:hidden"
+          data-workshop-mini-cover=""
+          className="hidden md:block"
         >
-          <GlobeLines
-            highlightGermany={false}
-            step={15}
-            view={tileView(workshop.number)}
-            className="absolute -right-7 -top-7 -z-10 size-[4.75rem] max-w-none"
+          <PosterCover
+            plakat={poster.plakat}
+            motif={poster.motif}
+            numeral={workshop.number}
           />
-          <span className="text-[1.0625rem] font-bold leading-none tabular-nums text-dark-fg">
-            {workshop.number}
-          </span>
         </div>
-        {/* Every row shows the same CSS cover (design-direction 6.7), so
-            the list reads as one system. The deck-cover images
-            stay the social cards: scaled into a row their q-card and meta
-            line fall to about 6px. */}
-        <MiniCover workshop={workshop} />
         <figcaption className="mt-2 hidden text-caption text-muted-foreground md:block">
           {workshop.format}
         </figcaption>
@@ -509,35 +493,5 @@ function WorkshopRow({
         </Link>
       </div>
     </article>
-  );
-}
-
-/**
- * CSS mini-cover (design-direction 6.7), the cover of every row: graphit, the
- * line globe cut off at the right, the number and the title head in paper,
- * as on the deck cover but without its q-card and meta line, which a row
- * cannot set legibly. Decorative, because the row's h3 carries the title. No
- * Germany trace, so the row keeps no second Mennige mark.
- */
-function MiniCover({ workshop }: { readonly workshop: Workshop }) {
-  return (
-    <div
-      aria-hidden="true"
-      data-workshop-mini-cover=""
-      className="relative isolate hidden aspect-video overflow-hidden bg-dark-bg outline outline-1 outline-foreground md:block"
-    >
-      <GlobeLines
-        highlightGermany={false}
-        className="absolute right-[-38%] top-1/2 -z-10 h-auto w-[95%] max-w-none -translate-y-[40%]"
-      />
-      <div className="flex h-full max-w-[70%] flex-col justify-between p-5 sm:p-6">
-        <p className="text-label font-semibold tabular-nums text-dark-muted">
-          {workshop.number}
-        </p>
-        <p className="text-[1.25rem] font-bold leading-[1.15] text-dark-fg text-balance lg:text-[1.5rem]">
-          {splitTitle(workshop.title).head}
-        </p>
-      </div>
-    </div>
   );
 }

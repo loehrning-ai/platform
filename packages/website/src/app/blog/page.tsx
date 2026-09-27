@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { CapsLine, CornerDots, Halftone } from "@/components/plakat";
 import { BLOG_POSTS, BLOG_LAST_MODIFIED } from "@/lib/blog-metadata";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import {
@@ -9,6 +10,7 @@ import {
   type Locale,
 } from "@/lib/i18n/locale";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
+import { posterTitleStyle } from "@/lib/plakat/fit";
 import { SITE_URL } from "@/lib/seo/json-ld";
 
 const PATH = "/blog";
@@ -20,10 +22,11 @@ const COPY = {
       "Lange, nachprüfbare Texte über KI im Alltag, EU AI Act und KI in der Gesellschaft, für die breite deutschsprachige Öffentlichkeit.",
     kicker: (count: number) => `Blog · ${count} Artikel`,
     title: "KI im Alltag, mit Quellen erklärt.",
+    // Two sentences: phones show only the first, from sm up both.
     intro:
-      "Öffentliche Texte zu KI im Alltag, EU AI Act und KI in der Gesellschaft. Offen, nachprüfbar, mit Zahlen und Quellenangaben.",
+      "Öffentliche Texte zu KI im Alltag, EU AI Act und KI in der Gesellschaft.",
+    introDetail: "Offen, nachprüfbar, mit Zahlen und Quellenangaben.",
     lastUpdated: "Zuletzt aktualisiert",
-    cadence: "erscheint unregelmäßig",
     allArticles: "Alle Artikel",
     listNote: "Neueste zuerst",
     readingTime: (minutes: number) => `${minutes} Min. Lesezeit`,
@@ -45,9 +48,10 @@ const COPY = {
       `Blog · ${count} ${count === 1 ? "article" : "articles"}`,
     title: "Everyday AI, explained with sources.",
     intro:
-      "Public articles about everyday AI, the EU AI Act, and AI in society. Open access, verifiable claims, explicit figures, and primary sources.",
+      "Public articles about everyday AI, the EU AI Act, and AI in society.",
+    introDetail:
+      "Open access, verifiable claims, explicit figures, and primary sources.",
     lastUpdated: "Last updated",
-    cadence: "published irregularly",
     allArticles: "All articles",
     listNote: "Newest first",
     readingTime: (minutes: number) => `${minutes} min read`,
@@ -116,17 +120,25 @@ function BlogIndexContent({ locale }: { readonly locale: Locale }) {
   const lastUpdated = formatDate(BLOG_LAST_MODIFIED, locale);
 
   return (
-    <div className="blog-index" data-blog-index>
-      <header className="blog-index__hero">
-        <div className="blog-index__container">
-          <p className="blog-index__kicker">{copy.kicker(BLOG_POSTS.length)}</p>
-          <h1 className="blog-index__title">{copy.title}</h1>
-          <p className="blog-index__lead">{copy.intro}</p>
-          <p className="blog-index__caption">
-            {copy.lastUpdated}{" "}
-            <time dateTime={BLOG_LAST_MODIFIED}>{lastUpdated}</time> ·{" "}
-            {copy.cadence}
+    <div className="blog-index" data-blog-index data-plakat-page="idea">
+      {/* IDEA band (SPEC §2.3, §3.12): the plakat-idea scope on the hero,
+          four corner dots, the caps line, the Kobalt poster title, a 17px
+          lede and the cloud halftone. Three type sizes; the update date
+          moves to paper under the section head. The blog reset in blog.css
+          zeroes Tailwind spacing, so every gap here is set in
+          blog-index.css. */}
+      <header className="blog-index__hero plakat-idea" data-blog-hero>
+        <CornerDots />
+        <div className="blog-index__container blog-index__hero-inner">
+          <CapsLine>{copy.kicker(BLOG_POSTS.length)}</CapsLine>
+          <h1 className="blog-index__title" style={posterTitleStyle(copy.title)}>
+            {copy.title}
+          </h1>
+          <p className="blog-index__lead">
+            {copy.intro}
+            <span className="blog-index__lead-detail"> {copy.introDetail}</span>
           </p>
+          <Halftone field="blog" className="blog-index__halftone" />
         </div>
       </header>
 
@@ -142,6 +154,10 @@ function BlogIndexContent({ locale }: { readonly locale: Locale }) {
               {copy.listNote} · {copy.noteLabel}
             </p>
           </header>
+          <p className="blog-index__caption blog-index__updated">
+            {copy.lastUpdated}{" "}
+            <time dateTime={BLOG_LAST_MODIFIED}>{lastUpdated}</time>
+          </p>
 
           <ol className="blog-index__list">
             {BLOG_POSTS_NEWEST_FIRST.map((post) => {

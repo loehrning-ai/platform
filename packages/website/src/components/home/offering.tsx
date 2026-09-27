@@ -27,11 +27,12 @@ const TECHNICAL_COURSE_COUNT = COURSE_CATALOG.filter(
  * full atlas.
  *
  * From lg the route reads left to right as four flat sheets: the course
- * cover in a 1px ink frame, its number and lesson count, the title, one
- * sentence and the duration. Below lg each course is one hairline row led by
+ * poster (the Grundlagenpfad in Lemons, numbered 01 to 04), its number and
+ * lesson count, the title, one sentence and the duration. Below lg each course is one hairline row led by
  * its number, with the duration as its one meta line. The number is the only
- * numbering on the page: these four are a sequence. No tints, no shadows and no hover lift: hover underlines the
- * title and nudges the arrow; focus is the global Mennige ring.
+ * numbering on the page: these four are a sequence. No tints, no shadows and
+ * no hover lift: hover underlines the title and nudges the arrow; focus is
+ * the global Mennige ring.
  */
 export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
   const copy = HOME_COPY[locale].offering;
@@ -68,9 +69,7 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
                   {/* Below lg the artwork steps out and the course number
                       becomes the row's lead column. */}
                   <span className="block max-lg:contents">
-                    {course.coverImage ? (
-                      <CourseArtwork src={course.coverImage} />
-                    ) : null}
+                    <CourseArtwork slug={course.slug} />
                     <span className="text-sm font-semibold tabular-nums text-muted-foreground lg:hidden">
                       {number}
                     </span>

@@ -215,9 +215,11 @@ describe("mobile tab bar active state", () => {
 
     const current = within(tabBar()).getAllByRole("link", { current: "page" });
     expect(current.map((link) => link.textContent)).toEqual(["Lernen"]);
-    // The active tab is an ink rule plus weight, so the state is not carried
-    // by colour alone and the persistent chrome spends no Mennige.
-    expect(current[0]).toHaveClass("border-foreground", "font-semibold");
+    // The active tab is a scene-line rule plus weight, so the state is not
+    // carried by colour alone and the persistent chrome spends no Mennige.
+    expect(current[0]).toHaveClass("border-scene-line", "font-semibold");
+    expect(current[0]).toHaveAttribute("aria-current", "page");
+    expect(current[0]).not.toHaveClass("border-foreground");
     expect(current[0].className).not.toContain("brand-orange");
   });
 

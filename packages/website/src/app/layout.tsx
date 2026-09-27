@@ -90,6 +90,10 @@ export const viewport: Viewport = {
   // unrestricted: no maximumScale, no userScalable.
   viewportFit: "cover",
   themeColor: "#f3f0e9",
+  // The site has one light theme. Poster scenes are fixed colour pairs, so a
+  // browser dark mode must not recolour form controls or scrollbars under
+  // them. Matches `:root { color-scheme: light }` in globals.css.
+  colorScheme: "light",
 };
 
 // Hosting on Vercel does not silently opt the site into measurement. The

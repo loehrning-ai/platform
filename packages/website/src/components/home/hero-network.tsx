@@ -9,6 +9,7 @@ import {
 } from "@/lib/country-polylines-3d";
 import { heroNetworkSteps, STEPS } from "@/components/home/hero-network-steps";
 import type { Locale } from "@/lib/i18n/locale";
+import { PLAKAT } from "@/lib/plakat/palettes";
 
 // Re-exported for backward compatibility while the homepage parent loads this
 // heavy projection module only for desktop viewports.
@@ -37,6 +38,36 @@ const KUPFER = "#e07050";
 const GRID_STEP = 7;
 const LC = "rgb(242,241,238)";
 const WARM = "rgb(242,241,238)";
+
+/**
+ * Paint per home scene (SPEC §3.6). Lemons: a flat Mennige disc on the
+ * Ultramarin band, an Ultramarin knockout graticule of 1.5 CSS px every 30
+ * degrees, the countries as flat Butter shapes and the typing word in
+ * Butter (4.96:1 on Mennige, display size). No gradient, glow, hatch or
+ * limb: the disc edge is the limb. Graphit: the line globe of the fallback.
+ */
+export type HeroGlobeScene = "lemons" | "graphit";
+
+type GlobePaint = {
+  /** Flat sphere fill, or null for the line globe. */
+  readonly disc: string | null;
+  readonly line: string;
+  readonly accent: string;
+  readonly gridStep: number;
+};
+
+const PAINT: Readonly<Record<HeroGlobeScene, GlobePaint>> = {
+  lemons: {
+    disc: PLAKAT.lemons.mid,
+    line: PLAKAT.lemons.ground,
+    accent: PLAKAT.lemons.ink,
+    gridStep: 30,
+  },
+  graphit: { disc: null, line: LC, accent: KUPFER, gridStep: GRID_STEP },
+};
+
+/** Knockout graticule width on the flat disc, CSS px. */
+const FLAT_GRID_WIDTH = 1.5;
 
 // ─── Locations (dramatic cross-globe panning) ───────────────────────────────
 // Step/journey data (Step type + STEPS constant) now lives in
@@ -103,20 +134,31 @@ const COUNTRY_RINGS_3D = Object.fromEntries(
   ]),
 ) as unknown as Readonly<Record<CountryKey3D, readonly (readonly Vec3[])[]>>;
 
-const GRID_LINES_3D: readonly (readonly Vec3[])[] = (() => {
+type GridLines = readonly (readonly Vec3[])[];
+
+const gridLineCache = new Map<number, GridLines>();
+
+/** Parallels and meridians every `step` degrees, as unit vectors (memoized). */
+function gridLines(step: number): GridLines {
+  const hit = gridLineCache.get(step);
+  if (hit) return hit;
   const lines: Vec3[][] = [];
-  for (let lat = -80; lat <= 80; lat += GRID_STEP) {
+  // Parallels are centred on the equator, so a 30 degree step draws 0, 30
+  // and 60 degrees on both sides; a 7 degree step keeps its old -80 start.
+  const first = step === GRID_STEP ? -80 : -Math.floor(80 / step) * step;
+  for (let lat = first; lat <= 80; lat += step) {
     const points: Vec3[] = [];
     for (let lon = -180; lon <= 180; lon += 4) points.push(ll3d(lat, lon));
     lines.push(points);
   }
-  for (let lon = -180; lon < 180; lon += GRID_STEP) {
+  for (let lon = -180; lon < 180; lon += step) {
     const points: Vec3[] = [];
     for (let lat = -90; lat <= 90; lat += 4) points.push(ll3d(lat, lon));
     lines.push(points);
   }
+  gridLineCache.set(step, lines);
   return lines;
-})();
+}
 
 function dp(sx: number, sy: number, z: number): number {
   const ed = Math.sqrt((sx - CX) ** 2 + (sy - CY) ** 2) / R;
@@ -330,7 +372,10 @@ function projectRingsClosed(
 const BERLIN_LAT = 52.5;
 const BERLIN_LON = 13.4;
 
-function buildGrid(project: Projector): { front: Seg[]; back: Seg[] } {
+function buildGrid(
+  project: Projector,
+  lines: GridLines = gridLines(GRID_STEP),
+): { front: Seg[]; back: Seg[] } {
   const front: Seg[] = [],
     back: Seg[] = [];
   const trace = (points: readonly Vec3[]) => {
@@ -382,7 +427,7 @@ function buildGrid(project: Projector): { front: Seg[]; back: Seg[] } {
         dp: cB > 0 ? Math.round((sB / cB) * 10000) / 10000 : 0,
       });
   };
-  for (const line of GRID_LINES_3D) trace(line);
+  for (const line of lines) trace(line);
   return { front, back };
 }
 
@@ -391,19 +436,57 @@ function buildGrid(project: Projector): { front: Seg[]; back: Seg[] } {
 // values, so the real globe is visible in the first HTML paint without a
 // visually unrelated poster or a large SVG payload.
 const berlinProjector = createProjector(BERLIN_LON, BERLIN_LAT);
-const initialGrid = buildGrid(berlinProjector);
-const INITIAL_SHELL_GRID = {
-  back: initialGrid.back.filter((_, index) => index % 8 === 0),
-  front: initialGrid.front.filter((_, index) => index % 8 === 0),
+
+/** The flat static frame shows Germany only: the first rings of the fill list. */
+const staticGermanyRings = projectRingsClosed(
+  COUNTRY_RINGS_3D.BERLIN,
+  berlinProjector,
+).length;
+
+type Shell = {
+  readonly grid: { readonly back: Seg[]; readonly front: Seg[] };
+  readonly country: Seg[];
 };
-const INITIAL_SHELL_COUNTRY = STEP_COUNTRY.flatMap((key) =>
-  projectRings(
-    COUNTRY_RINGS_3D[key].map((ring) =>
-      ring.filter((_, index) => index % 3 === 0 || index === ring.length - 1),
-    ),
-    berlinProjector,
-  ),
-);
+
+const shellCache = new Map<HeroGlobeScene, Shell>();
+
+/**
+ * The first-paint shell per scene. The line globe thins its dense grid and
+ * outlines; the flat disc has few lines, so it draws the full graticule and
+ * the country fills, and the live frame replaces it without a change.
+ */
+function initialShell(scene: HeroGlobeScene): Shell {
+  const hit = shellCache.get(scene);
+  if (hit) return hit;
+  const paint = PAINT[scene];
+  let shell: Shell;
+  if (paint.disc) {
+    shell = {
+      grid: { back: [], front: buildGrid(berlinProjector, gridLines(paint.gridStep)).front },
+      country: projectRingsClosed(COUNTRY_RINGS_3D.BERLIN, berlinProjector),
+    };
+  } else {
+    const initialGrid = buildGrid(berlinProjector);
+    shell = {
+      grid: {
+        back: initialGrid.back.filter((_, index) => index % 8 === 0),
+        front: initialGrid.front.filter((_, index) => index % 8 === 0),
+      },
+      country: STEP_COUNTRY.flatMap((key) =>
+        projectRings(
+          COUNTRY_RINGS_3D[key].map((ring) =>
+            ring.filter(
+              (_, index) => index % 3 === 0 || index === ring.length - 1,
+            ),
+          ),
+          berlinProjector,
+        ),
+      ),
+    };
+  }
+  shellCache.set(scene, shell);
+  return shell;
+}
 
 // ─── Component ──────────────────────────────────────────────────────────────
 
@@ -420,6 +503,8 @@ interface HeroNetworkProps {
   lonOut?: MotionValue<number>;
   /** Index of the city currently being displayed. Flips at 50% through transition. */
   stepIdxOut?: MotionValue<number>;
+  /** The home scene to paint in (SPEC D7). Defaults to the graphit line globe. */
+  scene?: HeroGlobeScene;
 }
 
 export function HeroNetwork({
@@ -432,7 +517,10 @@ export function HeroNetwork({
   latOut,
   lonOut,
   stepIdxOut,
+  scene = "graphit",
 }: HeroNetworkProps) {
+  const paint = PAINT[scene];
+  const flat = paint.disc !== null;
   const localizedSteps = useMemo(() => heroNetworkSteps(locale), [locale]);
   // The parent reads matchMedia after hydration and passes a stable boolean.
   // Keep rendering tied to that explicit input; the animation effect performs
@@ -546,7 +634,9 @@ export function HeroNetwork({
 
     // ── Grid ────────────────────────────────────────────────────────────
     const project = createProjector(targetLon, targetLat);
-    const grid = buildGrid(project);
+    const grid = buildGrid(project, gridLines(paint.gridStep));
+    // The flat disc hides the far side and draws one knockout line weight.
+    if (flat) grid.back.length = 0;
 
     // Back grid
     const gbEl = gridBackRef.current;
@@ -559,7 +649,7 @@ export function HeroNetwork({
           gbEl.appendChild(p);
         }
         p.setAttribute("d", s.d);
-        p.setAttribute("stroke", LC);
+        p.setAttribute("stroke", paint.line);
         p.setAttribute(
           "stroke-opacity",
           String((0.025 + s.dp * 0.035) * entrance),
@@ -572,9 +662,10 @@ export function HeroNetwork({
     // Front grid shadow (drawn ink effect)
     const gfsEl = gridFrontShadowRef.current;
     if (gfsEl) {
-      while (gfsEl.children.length > grid.front.length)
+      const shadow = flat ? [] : grid.front;
+      while (gfsEl.children.length > shadow.length)
         gfsEl.lastChild?.remove();
-      grid.front.forEach((s, i) => {
+      shadow.forEach((s, i) => {
         let p = gfsEl.children[i] as SVGPathElement | undefined;
         if (!p) {
           p = document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -602,16 +693,21 @@ export function HeroNetwork({
           p = document.createElementNS("http://www.w3.org/2000/svg", "path");
           gfEl.appendChild(p);
         }
+        p.setAttribute("d", s.d);
+        p.setAttribute("fill", "none");
+        p.setAttribute("stroke", paint.line);
+        if (flat) {
+          p.setAttribute("stroke-width", String(FLAT_GRID_WIDTH));
+          p.setAttribute("vector-effect", "non-scaling-stroke");
+          return;
+        }
         const shimmer = 1 + Math.sin(t * 1.5 + i * 0.7) * 0.04;
         const w = 0.45 + s.dp * 0.4;
-        p.setAttribute("d", s.d);
-        p.setAttribute("stroke", LC);
         p.setAttribute(
           "stroke-opacity",
           String((0.06 + s.dp * 0.16) * entrance * shimmer),
         );
         p.setAttribute("stroke-width", String(w));
-        p.setAttribute("fill", "none");
       });
     }
 
@@ -656,17 +752,24 @@ export function HeroNetwork({
       //                   when a country crosses the limb (no straight chord).
       const outlineSegs: Seg[] = [];
       const fillSegs: Seg[] = [];
-      for (const key of STEP_COUNTRY) {
+      // The flat disc shows one Butter country at a time: the one the
+      // typing word names. The line globe keeps all six.
+      const keys = flat ? [STEP_COUNTRY[displayIdx]] : STEP_COUNTRY;
+      for (const key of keys) {
         const rings = COUNTRY_RINGS_3D[key];
-        for (const seg of projectRings(rings, project)) outlineSegs.push(seg);
+        if (!flat) {
+          for (const seg of projectRings(rings, project)) outlineSegs.push(seg);
+        }
         for (const seg of projectRingsClosed(rings, project))
           fillSegs.push(seg);
       }
+      // The flat disc: every country is one flat Butter shape, no glow.
+      const glowSegs = flat ? [] : fillSegs;
       // 1. Radial glow — barely there, just a soft tint at the centroid.
       //    Uses limb-arc closed paths so the glow stays on visible front only.
-      while (glowEl.children.length > fillSegs.length)
+      while (glowEl.children.length > glowSegs.length)
         glowEl.lastChild?.remove();
-      fillSegs.forEach((s, i) => {
+      glowSegs.forEach((s, i) => {
         let p = glowEl.children[i] as SVGPathElement | undefined;
         if (!p) {
           p = document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -688,8 +791,8 @@ export function HeroNetwork({
           fillEl.appendChild(fp);
         }
         fp.setAttribute("d", s.d);
-        fp.setAttribute("fill", "url(#countryHatch)");
-        fp.setAttribute("fill-opacity", String(0.1 * entrance));
+        fp.setAttribute("fill", flat ? paint.accent : "url(#countryHatch)");
+        fp.setAttribute("fill-opacity", String(flat ? 1 : 0.1 * entrance));
         fp.setAttribute("stroke", "none");
       });
       // 3. Outline — solid Kupfer, uniform alpha (no top→bottom gradient).
@@ -779,8 +882,8 @@ export function HeroNetwork({
       }
     }
 
-    // Step dots
-    const stepsEl = stepDotsRef.current;
+    // Step dots (the line globe only; the flat disc sets on the foot)
+    const stepsEl = flat ? null : stepDotsRef.current;
     if (stepsEl) {
       for (let i = 0; i < stepsEl.children.length; i++) {
         const c = stepsEl.children[i] as SVGCircleElement;
@@ -796,7 +899,7 @@ export function HeroNetwork({
     // Self-schedule only while the loop is meant to be running (paused when the
     // hero scrolls off-screen / the tab is hidden — see the gating effect below).
     if (runningRef.current) rafRef.current = requestAnimationFrame(animate);
-  }, [frozen, latOut, localizedSteps, lonOut, stepIdxOut]);
+  }, [flat, frozen, latOut, localizedSteps, lonOut, paint, stepIdxOut]);
 
   useEffect(() => {
     // The parent switches to the declarative static composition after
@@ -894,20 +997,23 @@ export function HeroNetwork({
   // viewer sees the full set rather than just the home country. Memoized: the
   // projection math is expensive and the inputs only change with the
   // reduced-motion / mobile flags.
-  const staticGrid = useMemo(
-    () => (prefersReduced || mobile ? buildGrid(berlinProjector) : null),
-    [prefersReduced, mobile],
-  );
-  // Outlines: open per-arc paths.
+  const staticGrid = useMemo(() => {
+    if (!prefersReduced && !mobile) return null;
+    const grid = buildGrid(berlinProjector, gridLines(paint.gridStep));
+    return flat ? { front: grid.front, back: [] } : grid;
+  }, [prefersReduced, mobile, paint, flat]);
+  // Outlines: open per-arc paths (the line globe only).
   const staticCountry = useMemo(
     () =>
-      prefersReduced || mobile
+      (prefersReduced || mobile) && !flat
         ? STEP_COUNTRY.flatMap((key) =>
             projectRings(COUNTRY_RINGS_3D[key], berlinProjector),
           )
         : null,
-    [prefersReduced, mobile],
+    [prefersReduced, mobile, flat],
   );
+  const shell = !staticGrid ? initialShell(scene) : null;
+
   // Fills: closed paths with limb-arc closures (no chord across the disc).
   const staticCountryFill = useMemo(
     () =>
@@ -931,7 +1037,10 @@ export function HeroNetwork({
       }
     >
       <svg
-        viewBox="-120 -20 660 620"
+        // The flat disc fills its square box edge to edge; the line globe
+        // keeps its framing.
+        viewBox={flat ? `${CX - R} ${CY - R} ${2 * R} ${2 * R}` : "-120 -20 660 620"}
+        preserveAspectRatio={flat ? "xMinYMin meet" : undefined}
         fill="none"
         className="h-full w-full"
         style={{ overflow: "visible" }}
@@ -939,18 +1048,21 @@ export function HeroNetwork({
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <radialGradient id="sphereVolume" cx="38%" cy="30%" r="72%">
-            <stop offset="0%" stopColor={WARM} stopOpacity="0.012" />
-            <stop offset="58%" stopColor={WARM} stopOpacity="0.02" />
-            <stop offset="84%" stopColor={WARM} stopOpacity="0.055" />
-            <stop offset="100%" stopColor={WARM} stopOpacity="0.11" />
-          </radialGradient>
+          {!flat ? (
+            <radialGradient id="sphereVolume" cx="38%" cy="30%" r="72%">
+              <stop offset="0%" stopColor={WARM} stopOpacity="0.012" />
+              <stop offset="58%" stopColor={WARM} stopOpacity="0.02" />
+              <stop offset="84%" stopColor={WARM} stopOpacity="0.055" />
+              <stop offset="100%" stopColor={WARM} stopOpacity="0.11" />
+            </radialGradient>
+          ) : null}
           <clipPath id="gc">
             <circle cx={CX} cy={CY} r={R} />
           </clipPath>
           {/* Diagonal hatching for the country interior — static blueprint
                texture. Thicker hairlines (0.85 px) so the lines actually
                read as scaffolding, not as a wash. */}
+          {!flat ? (
           <pattern
             id="countryHatch"
             patternUnits="userSpaceOnUse"
@@ -968,37 +1080,53 @@ export function HeroNetwork({
               strokeWidth="0.85"
             />
           </pattern>
+          ) : null}
           {/* Radial inner-glow — soft Kupfer wash at the centroid (uniform
                radially: same opacity at top edge and bottom edge of the
                country). Whispers the country's presence behind the hatch. */}
+          {!flat ? (
           <radialGradient id="countryGlow" cx="50%" cy="50%" r="58%">
             <stop offset="0%" stopColor={KUPFER} stopOpacity="0.55" />
             <stop offset="55%" stopColor={KUPFER} stopOpacity="0.22" />
             <stop offset="100%" stopColor={KUPFER} stopOpacity="0" />
           </radialGradient>
+          ) : null}
         </defs>
 
-        <circle cx={CX} cy={CY} r={R} fill="url(#sphereVolume)" />
-        {/* A warm-neutral silhouette gives the sphere volume without a large
-            coloured background wash or a paint-heavy blur filter. */}
-        <circle
-          cx={CX}
-          cy={CY}
-          r={R + 1}
-          stroke={WARM}
-          strokeOpacity={0.12}
-          strokeWidth={2.4}
-          fill="none"
-        />
+        {paint.disc ? (
+          // The flat Mennige disc: one shape, its edge is the limb.
+          <circle
+            data-hero-globe-disc=""
+            cx={CX}
+            cy={CY}
+            r={R}
+            fill={paint.disc}
+          />
+        ) : (
+          <>
+            <circle cx={CX} cy={CY} r={R} fill="url(#sphereVolume)" />
+            {/* A warm-neutral silhouette gives the sphere volume without a
+                large coloured background wash or a paint-heavy blur filter. */}
+            <circle
+              cx={CX}
+              cy={CY}
+              r={R + 1}
+              stroke={WARM}
+              strokeOpacity={0.12}
+              strokeWidth={2.4}
+              fill="none"
+            />
+          </>
+        )}
 
         <g clipPath="url(#gc)" strokeLinecap="round" strokeLinejoin="round">
-          {!staticGrid ? (
+          {shell ? (
             <g
               ref={initialShellRef}
               data-hero-network-shell
               className="transition-opacity duration-100 motion-reduce:transition-none"
             >
-              {INITIAL_SHELL_GRID.back.map((s, i) => (
+              {shell.grid.back.map((s, i) => (
                 <path
                   key={`ib${i}`}
                   d={s.d}
@@ -1010,26 +1138,45 @@ export function HeroNetwork({
                   fill="none"
                 />
               ))}
-              {INITIAL_SHELL_GRID.front.map((s, i) => (
-                <path
-                  key={`if${i}`}
-                  d={s.d}
-                  stroke={LC}
-                  strokeOpacity={Math.round((0.06 + s.dp * 0.16) * 1000) / 1000}
-                  strokeWidth={Math.round((0.45 + s.dp * 0.4) * 1000) / 1000}
-                  fill="none"
-                />
-              ))}
-              {INITIAL_SHELL_COUNTRY.map((s, i) => (
-                <path
-                  key={`ic${i}`}
-                  d={s.d}
-                  stroke={KUPFER}
-                  strokeOpacity={Math.round((0.13 + s.dp * 0.05) * 1000) / 1000}
-                  strokeWidth={2}
-                  fill="none"
-                />
-              ))}
+              {shell.grid.front.map((s, i) =>
+                flat ? (
+                  <path
+                    key={`if${i}`}
+                    d={s.d}
+                    stroke={paint.line}
+                    strokeWidth={FLAT_GRID_WIDTH}
+                    vectorEffect="non-scaling-stroke"
+                    fill="none"
+                  />
+                ) : (
+                  <path
+                    key={`if${i}`}
+                    d={s.d}
+                    stroke={LC}
+                    strokeOpacity={
+                      Math.round((0.06 + s.dp * 0.16) * 1000) / 1000
+                    }
+                    strokeWidth={Math.round((0.45 + s.dp * 0.4) * 1000) / 1000}
+                    fill="none"
+                  />
+                ),
+              )}
+              {shell.country.map((s, i) =>
+                flat ? (
+                  <path key={`ic${i}`} d={s.d} fill={paint.accent} stroke="none" />
+                ) : (
+                  <path
+                    key={`ic${i}`}
+                    d={s.d}
+                    stroke={KUPFER}
+                    strokeOpacity={
+                      Math.round((0.13 + s.dp * 0.05) * 1000) / 1000
+                    }
+                    strokeWidth={2}
+                    fill="none"
+                  />
+                ),
+              )}
             </g>
           ) : null}
           <g
@@ -1063,17 +1210,41 @@ export function HeroNetwork({
               />
             ))}
           {staticGrid &&
-            staticGrid.front.map((s, i) => (
+            staticGrid.front.map((s, i) =>
+              flat ? (
+                <path
+                  key={`sf${i}`}
+                  d={s.d}
+                  stroke={paint.line}
+                  strokeWidth={FLAT_GRID_WIDTH}
+                  vectorEffect="non-scaling-stroke"
+                  fill="none"
+                />
+              ) : (
+                <path
+                  key={`sf${i}`}
+                  d={s.d}
+                  stroke={LC}
+                  strokeOpacity={
+                    Math.round((0.06 + s.dp * 0.16) * 1000) / 1000
+                  }
+                  strokeWidth={Math.round((0.45 + s.dp * 0.4) * 1000) / 1000}
+                  fill="none"
+                />
+              ),
+            )}
+          {flat &&
+            staticCountryFill &&
+            staticCountryFill.slice(0, staticGermanyRings).map((s, i) => (
               <path
-                key={`sf${i}`}
+                key={`sff${i}`}
                 d={s.d}
-                stroke={LC}
-                strokeOpacity={Math.round((0.06 + s.dp * 0.16) * 1000) / 1000}
-                strokeWidth={Math.round((0.45 + s.dp * 0.4) * 1000) / 1000}
-                fill="none"
+                fill={paint.accent}
+                stroke="none"
               />
             ))}
-          {staticCountryFill &&
+          {!flat &&
+            staticCountryFill &&
             staticCountryFill.map((s, i) => (
               <path
                 key={`scg${i}`}
@@ -1083,7 +1254,8 @@ export function HeroNetwork({
                 stroke="none"
               />
             ))}
-          {staticCountryFill &&
+          {!flat &&
+            staticCountryFill &&
             staticCountryFill.map((s, i) => (
               <path
                 key={`scf${i}`}
@@ -1107,15 +1279,17 @@ export function HeroNetwork({
             ))}
         </g>
 
-        <circle
-          cx={CX}
-          cy={CY}
-          r={R}
-          stroke={LC}
-          strokeOpacity={0.04}
-          strokeWidth={0.3}
-          fill="none"
-        />
+        {!flat ? (
+          <circle
+            cx={CX}
+            cy={CY}
+            r={R}
+            stroke={LC}
+            strokeOpacity={0.04}
+            strokeWidth={0.3}
+            fill="none"
+          />
+        ) : null}
 
         {/* Typing word — placed just above the country shape so it reads as
             a label for the visible country, not a floating header. */}
@@ -1130,7 +1304,7 @@ export function HeroNetwork({
               fontSize="30"
               fontWeight="600"
               letterSpacing="-0.02em"
-              fill={KUPFER}
+              fill={paint.accent}
               textAnchor="middle"
               opacity="0"
             />
@@ -1141,7 +1315,7 @@ export function HeroNetwork({
               fontFamily="ui-monospace, SFMono-Regular, monospace"
               fontSize="30"
               fontWeight="300"
-              fill={KUPFER}
+              fill={paint.accent}
               opacity="0"
             >
               _
@@ -1149,8 +1323,8 @@ export function HeroNetwork({
           </>
         )}
 
-        {/* Step dots */}
-        {!mobile && (
+        {/* Step dots (the line globe only) */}
+        {!mobile && !flat && (
           <g ref={stepDotsRef} opacity="0.5">
             {localizedSteps.map((_, i) => (
               <circle

@@ -1,3 +1,5 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { demos } from "@/lib/demos";
 import {
@@ -9,10 +11,65 @@ import { getDemoCopy } from "@/lib/demos-copy";
 import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { localizeHref } from "@/lib/i18n/locale";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
+import { OG_FONT_FAMILY, OgColophon } from "@/lib/plakat/og";
+import { PLAKAT, ROUTE_PLAKAT } from "@/lib/plakat/palettes";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const alt = "loehrning.ai interactive AI example · KI-Praxisbeispiel";
+
+/**
+ * The demo social card in the IDEA scene (SPEC §2.3, §3.15): Kreide ground,
+ * four Kobalt corner dots, the arrow caps line, the Himbeere title at poster
+ * size (display only, 3.67:1) and a Kobalt subtitle (6.78:1), above the shared
+ * Kalkweiß colophon strip with the header's L tile. Colours come from PLAKAT.
+ */
+const SCENE = PLAKAT[ROUTE_PLAKAT.demos];
+const INSET = 64;
+const DOT = 16;
+
+// The site face from src/fonts, read on the Node runtime (the cards are
+// prerendered for every demo). The card is set in 700 and 400.
+let fontData: Promise<{ bold: Buffer; regular: Buffer }> | undefined;
+async function ogFonts() {
+  fontData ??= Promise.all([
+    readFile(join(process.cwd(), "src/fonts/LoehrningSans-Bold.ttf")),
+    readFile(join(process.cwd(), "src/fonts/LoehrningSans-Regular.ttf")),
+  ]).then(([bold, regular]) => ({ bold, regular }));
+  const { bold, regular } = await fontData;
+  return [
+    { name: OG_FONT_FAMILY, data: bold, weight: 700 as const, style: "normal" as const },
+    { name: OG_FONT_FAMILY, data: regular, weight: 400 as const, style: "normal" as const },
+  ];
+}
+
+/** The IDEA poster's four corner dots, 24px in from the card's upper corners and the strip. */
+function CornerDots() {
+  const places = [
+    { left: 24, top: 24 },
+    { right: 24, top: 24 },
+    { left: 24, bottom: 80 + 24 },
+    { right: 24, bottom: 80 + 24 },
+  ];
+  return (
+    <>
+      {places.map((place) => (
+        <div
+          key={`${place.left ?? "r"}-${place.top ?? "b"}`}
+          style={{
+            position: "absolute",
+            display: "flex",
+            width: DOT,
+            height: DOT,
+            borderRadius: DOT / 2,
+            background: SCENE.ink,
+            ...place,
+          }}
+        />
+      ))}
+    </>
+  );
+}
 
 export async function generateStaticParams() {
   return demos.map((d) => ({ slug: d.slug }));
@@ -36,50 +93,56 @@ export default async function OgImage({ params }: { params: Promise<{ slug: stri
     (
       <div
         style={{
-          width: "100%",
-          height: "100%",
+          position: "relative",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
-          padding: 70,
-          background: "#F3F0E9",
-          fontFamily: "system-ui, -apple-system, sans-serif",
-          color: "#121212",
+          width: "100%",
+          height: "100%",
+          background: SCENE.ground,
+          color: SCENE.ink,
+          fontFamily: OG_FONT_FAMILY,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          {/* Das Ö mark: hard-cornered umlaut, counter knocked out (evenodd) */}
-          <svg width="36" height="48" viewBox="18 8 60 80" fill="#B73A15">
-            <rect x="26" y="8" width="16" height="16" />
-            <rect x="54" y="8" width="16" height="16" />
-            <path d="M18 34 H78 V88 H18 Z M36 52 H60 V70 H36 Z" fillRule="evenodd" />
-          </svg>
-          <div style={{ display: "flex", fontSize: 26, fontWeight: 700 }}>
-            loehrning<span style={{ color: "#B73A15" }}>.ai</span>
-          </div>
+        <CornerDots />
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            flexGrow: 1,
+            padding: `72px ${INSET}px 0 ${INSET}px`,
+          }}
+        >
           <div
             style={{
               display: "flex",
-              marginLeft: 16,
-              fontSize: 20,
-              fontWeight: 600,
-              color: "#4f4640",
-              letterSpacing: "0.02em",
+              alignItems: "center",
+              fontSize: 22,
+              fontWeight: 700,
+              lineHeight: 1.3,
+              letterSpacing: "0.14em",
+              textTransform: "uppercase",
             }}
           >
+            <svg width="64" height="12" viewBox="0 0 64 12" style={{ marginRight: 18 }}>
+              <path
+                d="M0 6H62M57 1.5L62 6L57 10.5"
+                fill="none"
+                stroke={SCENE.ink}
+                strokeWidth="2"
+              />
+            </svg>
             {categoryLine}
           </div>
-        </div>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <div
             style={{
               display: "flex",
-              fontSize: 68,
-              fontWeight: 700,
-              lineHeight: 1.05,
-              letterSpacing: "-0.015em",
+              marginTop: 28,
               maxWidth: 1060,
+              fontSize: 88,
+              fontWeight: 700,
+              lineHeight: 0.95,
+              letterSpacing: "-0.04em",
+              color: SCENE.mid,
             }}
           >
             {title}
@@ -87,48 +150,19 @@ export default async function OgImage({ params }: { params: Promise<{ slug: stri
           <div
             style={{
               display: "flex",
-              fontSize: 26,
-              lineHeight: 1.3,
-              color: "#4f4640",
-              maxWidth: 980,
+              marginTop: 28,
+              maxWidth: 900,
+              fontSize: 28,
+              fontWeight: 400,
+              lineHeight: 1.35,
             }}
           >
             {subtitle}
           </div>
         </div>
-
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              fontFamily: "monospace",
-              fontSize: 18,
-              color: "#655c54",
-            }}
-          >
-            {slugLine}
-          </div>
-          <div
-            style={{
-              display: "flex",
-              background: "#B73A15",
-              color: "#f9f7f2",
-              padding: "12px 20px",
-              fontWeight: 600,
-              fontSize: 20,
-            }}
-          >
-            {pageCopy.open}
-          </div>
-        </div>
+        <OgColophon trailing={slugLine} inset={INSET} />
       </div>
     ),
-    size,
+    { ...size, fonts: await ogFonts() },
   );
 }

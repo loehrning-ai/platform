@@ -14,11 +14,18 @@ vi.mock("@/lib/i18n/request-locale", () => ({
   getRequestLocale: getRequestLocaleMock,
 }));
 
-import RootLayout, { generateMetadata } from "./layout";
+import RootLayout, { generateMetadata, viewport } from "./layout";
 
 describe("root layout locale", () => {
   beforeEach(() => {
     getRequestLocaleMock.mockReset();
+  });
+
+  it("declares the one light colour scheme and keeps the Kalkweiß theme colour", () => {
+    // Poster scenes are fixed colour pairs; a browser dark mode must not
+    // recolour form controls or scrollbars under them (meta color-scheme).
+    expect(viewport.colorScheme).toBe("light");
+    expect(viewport.themeColor).toBe("#f3f0e9");
   });
 
   it.each(["de", "en"] as const)(

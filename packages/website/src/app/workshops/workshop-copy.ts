@@ -25,19 +25,17 @@ export interface WorkshopPageCopy {
   readonly catalog: {
     // Hub (design-direction 7.1, workshop-standard 4.2).
     readonly empty: string;
-    /** Cover-band kicker, e.g. "Workshops · 3 Fälle". Works for any count. */
+    /** The band's caps line, e.g. "Workshops · 3 Fälle". Works for any count. */
     readonly hubKicker: (count: number) => string;
     /** The H1. Describes the format; not a slogan. */
     readonly hubHeading: string;
     readonly hubLead: string;
     /** One-sentence lead for phones, where the full lead would push the list below the fold. */
     readonly hubLeadShort: string;
-    /** The one Mennige-group action of the page: into the first workshop of the list. */
+    /** The band's one action: into the recommended first workshop. */
     readonly hubStart: (number: string) => string;
     /** Line next to the cover-band button. */
     readonly hubAccess: string;
-    /** Accessible name of the index row of anchor links in the cover band. */
-    readonly hubIndexLabel: string;
     readonly routeHeading: string;
     readonly routeCaption: string;
     /** Five stations, the spine of the workshops the heading names. Static: a description, not progress. */
@@ -138,6 +136,10 @@ export interface WorkshopPageCopy {
     readonly selfHostHeading: string;
     readonly selfHostBody: string;
     readonly caseHeading: string;
+    /** h3 of the result chart in the case section. */
+    readonly resultChartHeading: string;
+    /** Line under the chart: unit, what the values cover, whether they are invented. */
+    readonly resultChartCaption: (unit: string, basis: string, fictional: boolean) => string;
     readonly syntheticCase: string;
     readonly realCompanyData: string;
     readonly realExplanation: (companyName: string, period: string) => string;
@@ -181,14 +183,13 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       empty: "Derzeit ist kein Workshop veröffentlicht.",
       hubKicker: (count) =>
         `Workshops · ${count} ${count === 1 ? "Fall" : "Fälle"}`,
-      hubHeading: "Workshops mit Fall und Vorlage",
+      hubHeading: "Workshops mit Fall und Vorlage.",
       hubLead:
         "Jeder Workshop dreht sich um eine Frage an eine erfundene Firma. Du rechnest oder prüfst an ihren Daten und schreibst am Ende auf, wie das für deine eigene Arbeit aussieht.",
       hubLeadShort:
         "Du rechnest oder prüfst an den Daten einer erfundenen Firma und nimmst eine Vorlage für deine Arbeit mit.",
       hubStart: (number) => `Mit Workshop ${number} beginnen`,
       hubAccess: "Alle Materialien kostenlos, ohne Anmeldung",
-      hubIndexLabel: "Workshops auf dieser Seite",
       routeHeading: "So laufen die Workshops 03 und 04",
       routeCaption: "Je 90 Minuten live",
       routeStations: [
@@ -317,6 +318,9 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       selfHostBody:
         "Öffne das Deck auf dem Beamer und drück P. Die Moderationsansicht zeigt Notizen, Abstimmungsfragen und eine Uhr.",
       caseHeading: "Der Fall",
+      resultChartHeading: "Was der Fall zeigt",
+      resultChartCaption: (unit, basis, fictional) =>
+        [unit, basis, fictional ? "erfundene Zahlen" : null].filter(Boolean).join(", "),
       syntheticCase: "Erfundener Fall",
       realCompanyData: "Echte Unternehmensdaten",
       realExplanation: (companyName, period) =>
@@ -362,14 +366,13 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       empty: "No workshop is currently published.",
       hubKicker: (count) =>
         `Workshops · ${count} ${count === 1 ? "case" : "cases"}`,
-      hubHeading: "Workshops with a case and a template",
+      hubHeading: "Workshops with a case and a template.",
       hubLead:
         "Each workshop centres on one question about an invented company. You calculate or check against its data and finish by writing down how it applies to your own work.",
       hubLeadShort:
         "You calculate or check against the data of an invented company and leave with a template for your own work.",
       hubStart: (number) => `Start with Workshop ${number}`,
       hubAccess: "All materials free, no sign-up",
-      hubIndexLabel: "Workshops on this page",
       routeHeading: "How Workshops 03 and 04 run",
       routeCaption: "90 minutes live each",
       routeStations: [
@@ -493,6 +496,9 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       selfHostBody:
         "Open the deck on the projector and press P. The presenter view shows notes, room votes and a clock.",
       caseHeading: "The case",
+      resultChartHeading: "What the case shows",
+      resultChartCaption: (unit, basis, fictional) =>
+        [unit, basis, fictional ? "invented figures" : null].filter(Boolean).join(", "),
       syntheticCase: "Invented case",
       realCompanyData: "Real company data",
       realExplanation: (companyName, period) =>

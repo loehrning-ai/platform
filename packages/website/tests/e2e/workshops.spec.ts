@@ -32,7 +32,9 @@ test.describe("workshop self-study journey", () => {
     await expect(page.locator("body")).not.toContainText("No paid service");
     // Detail page (design-direction 7.2): the cover starts the primary
     // material, the agenda is a Route, and nothing is hidden in accordions.
+    // The band is the workshop's poster (IDEA for W02) and still starts the deck.
     const cover = page.locator("[data-cover-band]");
+    await expect(cover).toHaveAttribute("data-plakat", "idea");
     await expect(cover.getByRole("link", { name: "Deck öffnen" })).toHaveAttribute(
       "href",
       "/workshops/geschaeftsberichte-mit-ki-lesen/slides.html",
@@ -171,5 +173,48 @@ test.describe("workshop self-study journey", () => {
     const spot = await outcome.boundingBox();
     await page.mouse.click(spot!.x + 20, spot!.y + spot!.height / 2);
     await expect(page).toHaveURL(/\/workshops\/geschaeftsberichte-mit-ki-lesen$/);
+  });
+
+  test("sets the four workshops as four posters in four palettes", async ({ page }) => {
+    await openHub(page);
+    // The hub band takes the newest workshop's scene (Workshop 04, Autumn).
+    await expect(page.locator("[data-cover-band]")).toHaveAttribute("data-plakat", "autumn");
+    const rows = page.getByTestId("workshop-row");
+    await expect(rows).toHaveCount(4);
+    // Each row shows its own poster; the four palettes are distinct and in
+    // the newest-first order of the list.
+    const palettes = await rows.evaluateAll((elements) =>
+      elements.map((row) => row.querySelector("svg[data-poster]")?.getAttribute("data-poster")),
+    );
+    expect(palettes).toEqual(["autumn", "bloom", "idea", "lemons"]);
+    // The poster grounds really differ on screen: one computed fill per row.
+    const grounds = await rows.evaluateAll((elements) =>
+      elements.map((row) => {
+        const ground = row.querySelector("svg[data-poster] .fill-scene-ground");
+        return ground ? getComputedStyle(ground).fill : null;
+      }),
+    );
+    expect(new Set(grounds).size).toBe(4);
+    expect(grounds).not.toContain(null);
+
+    // Each workshop page opens with the band in its own scene.
+    const expected = {
+      "ki-prognosen-einschaetzen": "lemons",
+      "geschaeftsberichte-mit-ki-lesen": "idea",
+      "datenbereitschaft-fuer-ki": "bloom",
+      "esg-berichte-mit-ki": "autumn",
+    } as const;
+    const bandGrounds = new Set<string>();
+    for (const [slug, plakat] of Object.entries(expected)) {
+      await page.goto(`/workshops/${slug}`);
+      const band = page.locator("[data-cover-band]");
+      await expect(band).toHaveAttribute("data-plakat", plakat);
+      await expect(band).toHaveClass(new RegExp(`\\bplakat-${plakat}\\b`));
+      bandGrounds.add(await band.evaluate((element) => getComputedStyle(element).backgroundColor));
+      // The question card sits on paper below the band, not inside it.
+      await expect(band.locator("[data-question-card]")).toHaveCount(0);
+      await expect(page.locator("[data-question-card]")).toHaveCount(1);
+    }
+    expect(bandGrounds.size).toBe(4);
   });
 });

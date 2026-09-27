@@ -326,6 +326,27 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         "Die Zahlen für 2024 stammen aus einer Zusammenfassung ohne Einzelrechnungen, mit derselben Grenze und derselben Faktortabelle (für 2024 mit den Faktoren von 2024).",
         "Ohne Produktionsmengen lässt sich nicht sagen, ob der geringere Verbrauch aus Effizienz oder aus weniger Produktion kommt.",
       ],
+      resultChart: {
+        unit: "t CO₂e",
+        basis: "Scope 1 und 2",
+        note: "Die KI-Summe liegt nur 48,7 t neben der richtigen, obwohl sechs Fehler darin stecken.",
+        bars: [
+          { label: "Vorjahr 2024", value: 2017.5, display: "2.017,5 t", kind: "reference" },
+          {
+            label: "KI-Antwort 2025",
+            value: 1866.5,
+            display: "1.866,5 t",
+            note: "sechs Fehler, 7,5 % weniger",
+            kind: "answer",
+          },
+          {
+            label: "Belegtabelle 2025, standortbasiert",
+            value: 1915.2,
+            display: "1.915,2 t",
+            kind: "correct",
+          },
+        ],
+      },
     },
     materials: materials([
       [
@@ -645,6 +666,27 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         "The 2024 figures come from a summary without individual bills, with the same boundary and the same factor file (2024 factors for 2024).",
         "Without production volumes nobody can say whether lower use came from efficiency or from lower output.",
       ],
+      resultChart: {
+        unit: "t CO₂e",
+        basis: "Scope 1 and 2",
+        note: "The AI total is only 48.7 t off the right one, although it holds six errors.",
+        bars: [
+          { label: "Last year 2024", value: 2017.5, display: "2,017.5 t", kind: "reference" },
+          {
+            label: "AI answer 2025",
+            value: 1866.5,
+            display: "1,866.5 t",
+            note: "six errors, 7.5% lower",
+            kind: "answer",
+          },
+          {
+            label: "Ledger 2025, location-based",
+            value: 1915.2,
+            display: "1,915.2 t",
+            kind: "correct",
+          },
+        ],
+      },
     },
     materials: materials([
       [

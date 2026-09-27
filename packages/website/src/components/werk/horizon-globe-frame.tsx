@@ -7,11 +7,11 @@ import {
   BERLIN_INSET_UNITS,
   BERLIN_UNITS,
   HORIZON,
-  HORIZON_ALPHA,
   HORIZON_DEPTH_FADE,
   HORIZON_GLINT,
-  HORIZON_GRID_STEP,
+  HORIZON_HOME_SCENE,
   HORIZON_ROUTE,
+  HORIZON_SCENE,
   decodeRings,
   focusFade,
   horizonCenterLon,
@@ -25,6 +25,7 @@ import {
   toSpherePolylines,
   tracePolylines,
   viewBasis,
+  type HorizonSceneKey,
   type PathSink,
 } from "./horizon-projection";
 import { HORIZON_LAND, HORIZON_LAND_SCALE } from "@/lib/horizon-land";
@@ -40,14 +41,18 @@ import { HORIZON_LAND, HORIZON_LAND_SCALE } from "@/lib/horizon-land";
  * The drawing lives in a 1000-unit-wide coordinate system: each SVG has a
  * viewBox 100 units tall with `xMidYMin meet`, so 1000 units always equal the
  * slot width and the drawing continues below the viewBox (overflow visible)
- * until the slot crops it. Three layers, back to front:
+ * until the slot crops it. Up to three layers, back to front, painted per
+ * HORIZON_SCENE (the lemons disc or the graphit line globe):
  *
- *  - `lines` (data-home-globe-ssr): graticule and coastlines behind a CSS
- *    depth-fade mask. Hidden once the canvas has drawn.
+ *  - `lines` (data-home-globe-ssr): on lemons the flat Mennige disc and the
+ *    30 degree Ultramarin knockout graticule; on graphit the graticule and
+ *    coastlines behind a CSS depth-fade mask. Hidden once the canvas has
+ *    drawn.
  *  - `focus` (data-home-globe-ssr): Germany, the Lernroute with its
- *    stations and the Berlin station. Unmasked, the one Mennige group in the
- *    band. Hidden once the canvas has drawn.
- *  - `sky` (data-home-globe-ssr): the limb, the apex glint, the degree scale
+ *    stations and the Berlin station. Unmasked. Hidden once the canvas has
+ *    drawn.
+ *  - `sky` (data-home-globe-ssr, graphit only; the lemons disc edge is the
+ *    limb): the limb, the apex glint, the degree scale
  *    and the one-off light sweep. The canvas redraws the limb, glint and
  *    scale (it pushes the sphere in after the takeover, so a fixed SVG limb
  *    would no longer meet the lines), so this layer steps out too.
@@ -139,8 +144,7 @@ export function horizonDepthMask(): string {
 
 const VIEWBOX = { viewBox: "0 0 1000 100", preserveAspectRatio: "xMidYMin meet" };
 
-/** Computed once per server process: the frame does not depend on the request. */
-let cached: {
+type FrameData = {
   grid: string;
   coast: string;
   germany: string;
@@ -155,10 +159,15 @@ let cached: {
   glint: readonly string[];
   sweep: string;
   mask: string;
-} | null = null;
+};
 
-function frameData() {
-  if (cached) return cached;
+/** Computed once per scene and server process: the frame does not depend on the request. */
+const cached = new Map<HorizonSceneKey, FrameData>();
+
+function frameData(sceneKey: HorizonSceneKey): FrameData {
+  const hit = cached.get(sceneKey);
+  if (hit) return hit;
+  const scene = HORIZON_SCENE[sceneKey];
   const berlin = projectHorizonPoint(BERLIN[0], BERLIN[1], BASIS, FRAME);
   const focus = projectHorizonPoint(
     HORIZON.focusLat,
@@ -169,16 +178,16 @@ function frameData() {
   const left = limbExit(FRAME, -1);
   const right = limbExit(FRAME, 1);
   const ticks = scaleTicks(FRAME);
-  cached = {
+  const data: FrameData = {
     grid: graticulePath(
       {
         centerLat: HORIZON.viewLat,
         centerLon: horizonCenterLon(0),
         radius: FRAME.radius,
       },
-      HORIZON_GRID_STEP,
+      scene.grid.step,
     ),
-    coast: coastPath(),
+    coast: scene.coast ? coastPath() : "",
     germany: germanyPath(),
     berlin: { x: berlin.x, y: berlin.y },
     fade: focusFade(focus.depth),
@@ -195,17 +204,55 @@ function frameData() {
     sweep: limbArc(left, right),
     mask: horizonDepthMask(),
   };
-  return cached;
+  cached.set(sceneKey, data);
+  return data;
 }
 
-const LINE = "#f2f1ee";
-const ACCENT = "#e07050";
-const GRAPHIT = "#141414";
+function Station({
+  x,
+  y,
+  size,
+  inset,
+  outer,
+  inner,
+}: {
+  readonly x: number;
+  readonly y: number;
+  readonly size: number;
+  readonly inset: number;
+  readonly outer: string;
+  readonly inner: string;
+}) {
+  return (
+    <>
+      <rect
+        x={r1(x - size / 2)}
+        y={r1(y - size / 2)}
+        width={size}
+        height={size}
+        fill={outer}
+      />
+      <rect
+        x={r1(x - inset / 2)}
+        y={r1(y - inset / 2)}
+        width={inset}
+        height={inset}
+        fill={inner}
+      />
+    </>
+  );
+}
 
-export function HorizonGlobeFrame() {
-  const data = frameData();
-  const berlinSize = BERLIN_UNITS;
-  const insetSize = BERLIN_INSET_UNITS;
+export function HorizonGlobeFrame({
+  scene: sceneKey = HORIZON_HOME_SCENE,
+}: {
+  /** The home scene to paint in (SPEC D7); defaults to the site's HOME_SCENE. */
+  readonly scene?: HorizonSceneKey;
+} = {}) {
+  const data = frameData(sceneKey);
+  const scene = HORIZON_SCENE[sceneKey];
+  const flat = scene.disc !== null;
+  const gridWidth = scene.grid.width ?? 0.5;
 
   return (
     <>
@@ -216,31 +263,49 @@ export function HorizonGlobeFrame() {
         fill="none"
         data-home-globe-ssr=""
         data-home-globe-layer="lines"
-        className="hz-layer hz-lines"
-        style={{
-          maskImage: data.mask,
-          WebkitMaskImage: data.mask,
-          // Radial reveal origin for the opening: Germany.
-          ["--hz-fx" as string]: `${r1(data.focus.x / 10)}cqw`,
-          ["--hz-fy" as string]: `${r1(data.focus.y / 10)}cqw`,
-        }}
+        data-home-globe-scene={sceneKey}
+        className={flat ? "hz-layer hz-disc-layer" : "hz-layer hz-lines"}
+        style={
+          scene.grid.depthFade
+            ? {
+                maskImage: data.mask,
+                WebkitMaskImage: data.mask,
+                // Radial reveal origin for the opening: Germany.
+                ["--hz-fx" as string]: `${r1(data.focus.x / 10)}cqw`,
+                ["--hz-fy" as string]: `${r1(data.focus.y / 10)}cqw`,
+              }
+            : undefined
+        }
       >
+        {scene.disc ? (
+          <circle
+            className="hz-disc"
+            cx={r1(FRAME.centerX)}
+            cy={r1(FRAME.centerY)}
+            r={r1(FRAME.radius)}
+            fill={scene.disc}
+          />
+        ) : null}
         <path
+          className="hz-grid"
           d={data.grid}
           transform={`translate(${r1(FRAME.centerX)} ${r1(FRAME.centerY)})`}
-          stroke={LINE}
-          strokeOpacity={HORIZON_ALPHA.grid}
-          strokeWidth="0.5"
+          stroke={scene.grid.hex}
+          strokeOpacity={scene.grid.alpha}
+          strokeWidth={gridWidth}
+          strokeLinecap="round"
           vectorEffect="non-scaling-stroke"
         />
-        <path
-          d={data.coast}
-          stroke={LINE}
-          strokeOpacity={HORIZON_ALPHA.coast}
-          strokeWidth="0.5"
-          strokeLinejoin="round"
-          vectorEffect="non-scaling-stroke"
-        />
+        {scene.coast ? (
+          <path
+            d={data.coast}
+            stroke={scene.grid.hex}
+            strokeOpacity={scene.coast.alpha}
+            strokeWidth="0.5"
+            strokeLinejoin="round"
+            vectorEffect="non-scaling-stroke"
+          />
+        ) : null}
       </svg>
 
       {data.germany ? (
@@ -259,27 +324,22 @@ export function HorizonGlobeFrame() {
             className="hz-route"
             d={data.route}
             pathLength={1}
-            stroke={ACCENT}
-            strokeOpacity={HORIZON_ROUTE.alpha}
-            strokeWidth="1"
+            stroke={scene.route.hex}
+            strokeOpacity={scene.route.alpha}
+            strokeWidth={scene.route.width}
+            strokeLinecap={flat ? "round" : undefined}
             vectorEffect="non-scaling-stroke"
           />
           <g className="hz-stations">
             {data.stations.map((station, index) => (
               <g key={index} style={{ ["--hz-i" as string]: index }}>
-                <rect
-                  x={r1(station.x - HORIZON_ROUTE.stationUnits / 2)}
-                  y={r1(station.y - HORIZON_ROUTE.stationUnits / 2)}
-                  width={HORIZON_ROUTE.stationUnits}
-                  height={HORIZON_ROUTE.stationUnits}
-                  fill={ACCENT}
-                />
-                <rect
-                  x={r1(station.x - HORIZON_ROUTE.stationInsetUnits / 2)}
-                  y={r1(station.y - HORIZON_ROUTE.stationInsetUnits / 2)}
-                  width={HORIZON_ROUTE.stationInsetUnits}
-                  height={HORIZON_ROUTE.stationInsetUnits}
-                  fill={GRAPHIT}
+                <Station
+                  x={station.x}
+                  y={station.y}
+                  size={HORIZON_ROUTE.stationUnits}
+                  inset={HORIZON_ROUTE.stationInsetUnits}
+                  outer={scene.station.outer}
+                  inner={scene.station.inner}
                 />
               </g>
             ))}
@@ -287,107 +347,105 @@ export function HorizonGlobeFrame() {
           <path
             className="hz-de-fill"
             d={data.germany}
-            fill={ACCENT}
-            fillOpacity={HORIZON_ALPHA.germanyFill * data.fade}
+            fill={scene.germany.hex}
+            fillOpacity={scene.germany.fillAlpha * data.fade}
           />
-          <path
-            className="hz-de"
-            d={data.germany}
-            pathLength={1}
-            stroke={ACCENT}
-            strokeOpacity={HORIZON_ALPHA.germanyStroke * data.fade}
-            strokeWidth="1.5"
-            strokeLinejoin="miter"
-            vectorEffect="non-scaling-stroke"
-          />
-          <g className="hz-berlin" opacity={data.fade}>
-            <rect
-              x={r1(data.berlin.x - berlinSize / 2)}
-              y={r1(data.berlin.y - berlinSize / 2)}
-              width={berlinSize}
-              height={berlinSize}
-              fill={ACCENT}
+          {scene.germany.strokeAlpha !== null ? (
+            <path
+              className="hz-de"
+              d={data.germany}
+              pathLength={1}
+              stroke={scene.germany.hex}
+              strokeOpacity={scene.germany.strokeAlpha * data.fade}
+              strokeWidth="1.5"
+              strokeLinejoin="miter"
+              vectorEffect="non-scaling-stroke"
             />
-            <rect
-              x={r1(data.berlin.x - insetSize / 2)}
-              y={r1(data.berlin.y - insetSize / 2)}
-              width={insetSize}
-              height={insetSize}
-              fill={LINE}
+          ) : null}
+          <g className="hz-berlin" opacity={data.fade}>
+            <Station
+              x={data.berlin.x}
+              y={data.berlin.y}
+              size={BERLIN_UNITS}
+              inset={BERLIN_INSET_UNITS}
+              outer={scene.berlin.outer}
+              inner={scene.berlin.inner}
             />
           </g>
         </svg>
       ) : null}
 
-      <svg
-        {...VIEWBOX}
-        aria-hidden="true"
-        focusable="false"
-        fill="none"
-        data-home-globe-ssr=""
-        data-home-globe-layer="sky"
-        className="hz-layer hz-sky"
-      >
-        <path
-          className="hz-scale"
-          d={data.ticks.minor}
-          stroke={LINE}
-          strokeOpacity="0.22"
-          strokeWidth="1"
-          vectorEffect="non-scaling-stroke"
-        />
-        <path
-          className="hz-scale"
-          d={data.ticks.major}
-          stroke={LINE}
-          strokeOpacity="0.4"
-          strokeWidth="1"
-          vectorEffect="non-scaling-stroke"
-        />
-        <path
-          className="hz-limb"
-          d={data.limbLeft}
-          pathLength={1}
-          stroke={LINE}
-          strokeOpacity="0.5"
-          strokeWidth="1"
-          vectorEffect="non-scaling-stroke"
-        />
-        <path
-          className="hz-limb"
-          d={data.limbRight}
-          pathLength={1}
-          stroke={LINE}
-          strokeOpacity="0.5"
-          strokeWidth="1"
-          vectorEffect="non-scaling-stroke"
-        />
-        {/* Pole glint: the pole sits just behind the apex, so the limb is
-            brightest there. Three stacked arcs taper it without a blur. */}
-        <g className="hz-glint">
-          {data.glint.map((d, index) => (
-            <path
-              key={d}
-              d={d}
-              stroke={LINE}
-              strokeOpacity={HORIZON_GLINT[index][1]}
-              strokeWidth={HORIZON_GLINT[index][2]}
-              vectorEffect="non-scaling-stroke"
-            />
-          ))}
-        </g>
-        <path
-          className="hz-sweep"
-          d={data.sweep}
-          pathLength={1}
-          stroke={LINE}
-          strokeOpacity="0.9"
-          strokeWidth="1.5"
-          strokeDasharray="0.12 2"
-          strokeDashoffset="0.12"
-          vectorEffect="non-scaling-stroke"
-        />
-      </svg>
+      {scene.sky ? (
+        <svg
+          {...VIEWBOX}
+          aria-hidden="true"
+          focusable="false"
+          fill="none"
+          data-home-globe-ssr=""
+          data-home-globe-layer="sky"
+          className="hz-layer hz-sky"
+        >
+          <path
+            className="hz-scale"
+            d={data.ticks.minor}
+            stroke={scene.grid.hex}
+            strokeOpacity="0.22"
+            strokeWidth="1"
+            vectorEffect="non-scaling-stroke"
+          />
+          <path
+            className="hz-scale"
+            d={data.ticks.major}
+            stroke={scene.grid.hex}
+            strokeOpacity="0.4"
+            strokeWidth="1"
+            vectorEffect="non-scaling-stroke"
+          />
+          <path
+            className="hz-limb"
+            d={data.limbLeft}
+            pathLength={1}
+            stroke={scene.grid.hex}
+            strokeOpacity="0.5"
+            strokeWidth="1"
+            vectorEffect="non-scaling-stroke"
+          />
+          <path
+            className="hz-limb"
+            d={data.limbRight}
+            pathLength={1}
+            stroke={scene.grid.hex}
+            strokeOpacity="0.5"
+            strokeWidth="1"
+            vectorEffect="non-scaling-stroke"
+          />
+          {/* Pole glint: the pole sits just behind the apex, so the limb is
+              brightest there. Three stacked arcs taper it without a blur. */}
+          <g className="hz-glint">
+            {data.glint.map((d, index) => (
+              <path
+                key={d}
+                d={d}
+                stroke={scene.grid.hex}
+                strokeOpacity={HORIZON_GLINT[index][1]}
+                strokeWidth={HORIZON_GLINT[index][2]}
+                vectorEffect="non-scaling-stroke"
+              />
+            ))}
+          </g>
+          <path
+            className="hz-sweep"
+            d={data.sweep}
+            pathLength={1}
+            stroke={scene.grid.hex}
+            strokeOpacity="0.9"
+            strokeWidth="1.5"
+            strokeDasharray="0.12 2"
+            strokeDashoffset="0.12"
+            vectorEffect="non-scaling-stroke"
+          />
+        </svg>
+      ) : null}
     </>
   );
 }

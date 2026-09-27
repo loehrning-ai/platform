@@ -77,10 +77,17 @@ describe("<DemoGrid>", () => {
     expect(container.querySelector("[data-demo-filter-console]")).toBeTruthy();
     expect(container.querySelector("[data-demo-atlas]")).toBeTruthy();
     expect(container.querySelector(".lg\\:grid-cols-3")).toBeTruthy();
-    // Section head with a Kopflinie; square filter chips, ink fill when pressed.
-    expect(
-      screen.getByRole("heading", { level: 2, name: "Alle Beispiele" }),
-    ).toBeInTheDocument();
+    // Section head with a Kopflinie in the page's scene line (Kobalt under
+    // the IDEA band, SPEC §3.7); square filter chips, ink fill when pressed.
+    const galleryHeading = screen.getByRole("heading", {
+      level: 2,
+      name: "Alle Beispiele",
+    });
+    expect(galleryHeading.closest("header")).toHaveClass(
+      "border-t-2",
+      "border-scene-line",
+    );
+    expect(galleryHeading.closest("header")).not.toHaveClass("border-foreground");
     const allChip = within(
       screen.getByRole("group", { name: "Reifegrad" }),
     ).getByRole("button", { name: /Alle \(12\)/ });

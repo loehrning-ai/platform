@@ -36,10 +36,12 @@ export function DemoTile({
       aria-label={copy.openAria(name)}
       className="demo-gallery-tile group relative flex min-w-0 flex-col text-foreground max-sm:py-4 max-sm:[contain-intrinsic-size:auto_132px]!"
     >
-      {/* Schematic drawing on a recessed Beton panel, the tile's only box
-          (blueprint 6.14). Every tile has the same 4:3 panel, so a row lines
-          up without spans. Hover darkens the panel one tone; no lift, no
-          shadow. Decorative: the tile's aria-label and visible text carry the
+      {/* Schematic drawing on a small IDEA poster (SPEC §3.12): the panel
+          takes the plakat-idea scene, so the drawing is Kobalt on Kreide and
+          its one mark is Himbeere. It is the tile's only box. Every tile has
+          the same 4:3 panel, so a row lines up without spans. Hover darkens
+          the panel one tone (Kreide to the scene's card-hover, Kobalt on it
+          5.83:1); no lift, no shadow. Decorative: the tile's aria-label and visible text carry the
           meaning, so screen readers skip the drawing's short labels. Below
           sm the tile is a ledger row (blueprint 6.6): no drawing, a
           one-sentence teaser, hairlines between rows. The whole row is the
@@ -50,7 +52,7 @@ export function DemoTile({
       <div
         aria-hidden="true"
         data-demo-preview
-        className="relative flex aspect-[4/3] overflow-hidden bg-inset transition-colors duration-[120ms] group-hover:bg-[color-mix(in_srgb,var(--color-inset),var(--color-foreground)_5%)] motion-reduce:transition-none max-sm:hidden"
+        className="plakat-idea relative flex aspect-[4/3] overflow-hidden transition-colors duration-[120ms] group-hover:bg-[var(--color-card-hover)] motion-reduce:transition-none max-sm:hidden"
       >
         <div
           className="flex w-full items-center justify-center motion-reduce:transform-none motion-reduce:transition-none"

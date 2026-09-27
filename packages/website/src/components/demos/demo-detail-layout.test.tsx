@@ -83,7 +83,7 @@ describe("<DemoDetailLayout>", () => {
     expect(teaser).toHaveTextContent(excel.teaser);
     expect(teaser).toHaveClass("sm:hidden");
     const description = screen.getByText(excel.description);
-    expect(description).toHaveClass("max-sm:hidden", "text-lead");
+    expect(description).toHaveClass("max-sm:hidden", "text-[1.0625rem]");
     expect(`${teaser?.className} ${description.className}`).not.toMatch(/line-clamp/);
   });
 
@@ -209,14 +209,28 @@ describe("<DemoDetailLayout>", () => {
     expect(container.textContent).not.toContain("Freigabe-Schritt simuliert");
   });
 
-  it("uses one-colour headings and a paper band for a dark engine", () => {
+  it("sets the header in the IDEA band and keeps a dark engine on paper", () => {
     const { container } = render(<DemoDetailLayout demo={agent} />);
     const h1 = screen.getByRole("heading", { level: 1 });
     expect(h1).toHaveTextContent(/^Agent-Pipeline$/);
-    expect(h1).toHaveClass("text-balance", "hyphens-manual");
+    // One colour: the poster title in the scene mid, balanced by .poster-title.
+    expect(h1).toHaveClass("poster-title", "text-scene-mid", "hyphens-manual");
+    expect(h1.getAttribute("style")).toMatch(/--fit:\s*\d/);
     expect(h1.querySelector("span")).toBeNull();
     const hero = container.querySelector("[data-demo-detail-hero]");
-    expect(hero?.className).not.toContain("dark-section");
+    const band = hero?.querySelector("[data-cover-band]");
+    expect(band).toHaveClass("plakat-idea");
+    expect(band?.contains(h1)).toBe(true);
+    // Unnamed: a named band became a region whose name matched the engine's.
+    expect(band).not.toHaveAttribute("aria-labelledby");
+    // Band type budget (SPEC §3.1): caps line, poster title, 17px body.
+    expect(band?.querySelector(".text-caption, .text-label, .text-lead")).toBeNull();
+    expect(band?.querySelector(".plakat-caps")).toBeTruthy();
+    // The engine sits on paper below the band, never inside it.
+    const instrument = container.querySelector("[data-demo-instrument]");
+    expect(instrument?.closest("[data-cover-band]")).toBeNull();
+    expect(instrument?.querySelector("[data-testid=demo-shell]")).toBeTruthy();
+    expect(hero?.className ?? "").not.toContain("dark-section");
     expect(
       screen.getByRole("heading", { level: 2, name: "So läuft dieses Beispiel" }),
     ).toBeInTheDocument();

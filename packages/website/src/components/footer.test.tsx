@@ -191,13 +191,14 @@ describe("Footer semantics and stable public dates", () => {
     expect(brandColumn).toHaveClass("lg:border-t", "lg:border-hairline");
   });
 
-  it("uses the same ink wordmark as the header, with no Mennige", async () => {
+  it("sets the wordmark in the footer ink (Butter), with no Mennige", async () => {
     await renderFooter("de");
 
     const home = screen.getByRole("link", { name: "loehrning.ai - Startseite" });
     expect(home).toHaveTextContent(/^loehrning\.ai$/);
     expect(home.innerHTML).not.toMatch(/brand-orange|mennige/);
-    expect(home).toHaveClass("font-bold", "tracking-[-0.015em]");
+    expect(home.className).not.toMatch(/\b(?:text|bg)-(?:brand-orange|mennige|kupfer)\b/);
+    expect(home).toHaveClass("font-bold", "tracking-[-0.015em]", "text-foreground");
   });
 
   it("is a flat graphit band with hairlines and no decorative shapes", async () => {
@@ -210,7 +211,7 @@ describe("Footer semantics and stable public dates", () => {
       /Freie Kurse, Workshops und quelloffene Materialien/,
     );
     expect(footer?.innerHTML).not.toMatch(/text-\[(?:9|10|11)px\]/);
-    expect(footer).toHaveClass("dark-section");
+    expect(footer).toHaveClass("dark-section", "plakat-footer");
     // Werkzeichnung: square geometry, no stamp shadows, no decorative
     // circles, no hover lift and no mono-uppercase labels.
     expect(footer?.innerHTML).not.toMatch(/rounded-|shadow-|-translate-y-/);

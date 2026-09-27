@@ -70,8 +70,10 @@ export function MobileTabBarLinks({
         const active = isActiveTab(tab.matchPaths, pathname);
         return (
           <li key={tab.id} className="min-w-0 flex-1">
-            {/* The active rule is a 2px ink border that is always present and
-                only changes colour, so marking a tab moves no layout. Weight
+            {/* The active rule is a 2px border that is always present and
+                only changes colour, so marking a tab moves no layout. It
+                takes the scene line: Druckschwarz on paper routes, the page's
+                poster ink below a band (globals.css :root:has()). Weight
                 (label and icon stroke) and aria-current carry the same state
                 without colour, so the current tab reads at a glance. */}
             <Link
@@ -82,7 +84,7 @@ export function MobileTabBarLinks({
               data-active={active ? "true" : "false"}
               className={`flex h-full min-h-11 w-full min-w-11 flex-col items-center justify-center gap-1 border-t-2 px-1 transition-colors duration-[120ms] motion-reduce:transition-none ${
                 active
-                  ? "border-foreground font-semibold text-foreground [&_svg]:stroke-[2.5]"
+                  ? "border-scene-line font-semibold text-foreground [&_svg]:stroke-[2.5]"
                   : "border-transparent text-muted-foreground hover:text-foreground"
               }`}
             >

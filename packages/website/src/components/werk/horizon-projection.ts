@@ -1,9 +1,11 @@
 /**
  * Horizon globe: shared projection for the phone home hero.
  *
- * The phone hero shows the Workshop 03 line globe from orbit: a sphere far
- * larger than the screen, so only its upper limb crosses the band, with
- * Europe below the horizon and Germany traced in Mennige. The server renders
+ * The phone hero shows a globe from orbit: a sphere far larger than the
+ * screen, so only its upper cap crosses the band, with Germany below the
+ * horizon. On the lemons band it is a flat Mennige disc with Germany in
+ * Butter; on the graphit fallback the Workshop 03 line globe
+ * (HORIZON_SCENE). The server renders
  * the first frame as SVG (horizon-globe-frame.tsx); the live renderer
  * (horizon-globe-renderer.ts) redraws the same geometry into a canvas. Both
  * use the numbers and functions in this file, so the two frames agree to the
@@ -18,6 +20,8 @@
  *
  * Pure functions, no DOM.
  */
+
+import { HOME_SCENE, PLAKAT } from "@/lib/plakat/palettes";
 
 export const HORIZON = {
   /** Sphere radius over slot width. */
@@ -69,8 +73,126 @@ export const HORIZON_DEPTH_FADE: readonly (readonly [number, number])[] = [
   [1, 0.3],
 ];
 
-/** Degrees between graticule lines (the deck uses 10). */
+/** Degrees between graticule lines on the graphit line globe (the deck uses 10). */
 export const HORIZON_GRID_STEP = 10;
+
+/** Degrees between graticule lines on the flat lemons disc. */
+export const HORIZON_POSTER_GRID_STEP = 30;
+
+export type HorizonSceneKey = "lemons" | "graphit";
+
+/**
+ * Paint of the horizon globe per home scene (Werkzeichnung v2, SPEC §3.6).
+ * Geometry, motion and the governor are the same in both; only paint
+ * differs. Colours are hex for the SVG frame and rgb triples for the canvas,
+ * so the canvas can compose alphas.
+ *
+ *  - lemons: a flat Mennige disc on the Ultramarin band, cut by a 30 degree
+ *    Ultramarin knockout graticule (1.5 CSS px, no depth fade), no
+ *    coastlines and no limb, glint or scale: the disc edge is the limb.
+ *    Germany, the Lernroute and its stations in Butter, Berlin in
+ *    Ultramarin with a Butter inset.
+ *  - graphit: the line globe on graphit (the fallback, SPEC D7).
+ */
+export type HorizonScene = {
+  /** Flat sphere fill, or null for a line globe. */
+  readonly disc: string | null;
+  readonly grid: {
+    readonly hex: string;
+    readonly rgb: string;
+    readonly alpha: number;
+    /** Stroke width in CSS px; null draws a device hairline. */
+    readonly width: number | null;
+    readonly step: number;
+    readonly depthFade: boolean;
+  };
+  /** Coastlines, or null when the disc shows Germany only. */
+  readonly coast: { readonly alpha: number } | null;
+  /** The limb stroke, the pole glint, the degree scale and the sweep. */
+  readonly sky: boolean;
+  readonly germany: {
+    readonly hex: string;
+    readonly rgb: string;
+    readonly fillAlpha: number;
+    /** Outline alpha, or null for a flat fill with no stroke. */
+    readonly strokeAlpha: number | null;
+  };
+  readonly route: {
+    readonly hex: string;
+    readonly rgb: string;
+    readonly alpha: number;
+    readonly width: number;
+  };
+  /** Route stations: square and inset. */
+  readonly station: { readonly outer: string; readonly inner: string };
+  /** Berlin: square and inset. */
+  readonly berlin: { readonly outer: string; readonly inner: string };
+};
+
+function rgbOf(hex: string): string {
+  const value = Number.parseInt(hex.slice(1), 16);
+  return `${(value >> 16) & 255},${(value >> 8) & 255},${value & 255}`;
+}
+
+const LEMONS = PLAKAT.lemons;
+const GRAPHIT_LINE = "#f2f1ee";
+const GRAPHIT_ACCENT = "#e07050";
+const GRAPHIT_GROUND = "#141414";
+
+export const HORIZON_SCENE: Readonly<Record<HorizonSceneKey, HorizonScene>> = {
+  lemons: {
+    disc: LEMONS.mid, // Mennige, 2.21 on Ultramarin: a shape
+    grid: {
+      hex: LEMONS.ground,
+      rgb: rgbOf(LEMONS.ground),
+      alpha: 1,
+      width: 1.5,
+      step: HORIZON_POSTER_GRID_STEP,
+      depthFade: false,
+    },
+    coast: null,
+    sky: false,
+    germany: {
+      hex: LEMONS.ink, // Butter, 4.96 on Mennige
+      rgb: rgbOf(LEMONS.ink),
+      fillAlpha: 1,
+      strokeAlpha: null,
+    },
+    route: { hex: LEMONS.ink, rgb: rgbOf(LEMONS.ink), alpha: 1, width: 2 },
+    station: { outer: LEMONS.ink, inner: LEMONS.mid },
+    berlin: { outer: LEMONS.ground, inner: LEMONS.ink }, // 10.97 on Germany
+  },
+  graphit: {
+    disc: null,
+    grid: {
+      hex: GRAPHIT_LINE,
+      rgb: rgbOf(GRAPHIT_LINE),
+      alpha: 0.26,
+      width: null,
+      step: HORIZON_GRID_STEP,
+      depthFade: true,
+    },
+    coast: { alpha: 0.66 },
+    sky: true,
+    germany: {
+      hex: GRAPHIT_ACCENT,
+      rgb: rgbOf(GRAPHIT_ACCENT),
+      fillAlpha: 0.12,
+      strokeAlpha: 0.95,
+    },
+    route: {
+      hex: GRAPHIT_ACCENT,
+      rgb: rgbOf(GRAPHIT_ACCENT),
+      alpha: 0.9,
+      width: 1,
+    },
+    station: { outer: GRAPHIT_ACCENT, inner: GRAPHIT_GROUND },
+    berlin: { outer: GRAPHIT_ACCENT, inner: GRAPHIT_LINE },
+  },
+};
+
+/** The scene the home hero paints its globe in (SPEC D7). */
+export const HORIZON_HOME_SCENE: HorizonSceneKey = HOME_SCENE;
 
 const DEG = Math.PI / 180;
 

@@ -199,10 +199,11 @@ export async function Footer() {
   const year = LAST_UPDATED.slice(0, 4);
 
   return (
-    // A graphit band in normal flow: no decoration, no wash, no shapes. The
-    // solid #141414 keeps every text token resolvable for axe; structure comes
-    // from hairlines only.
-    <footer className="dark-section">
+    // A graphit band in normal flow, set in Butter (plakat-footer, 15.78:1):
+    // no decoration, no wash, no shapes. The solid #141414 keeps every text
+    // token resolvable for axe; structure comes from hairlines only. The ring
+    // stays the graphit #e07050 (5.79:1).
+    <footer className="dark-section plakat-footer">
       {/* The 75rem page container: with sm:px-6 the content runs 144..1296 at
           1440, the same column as the header's wordmark and Login edge. */}
       <div className="mx-auto w-full max-w-[75rem] px-4 py-6 sm:px-6 sm:py-12">

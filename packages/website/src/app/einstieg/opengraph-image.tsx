@@ -1,61 +1,105 @@
 import { ImageResponse } from "next/og";
+import { OG_FONT_FAMILY, OgColophon } from "@/lib/plakat/og";
+import { PAPER } from "@/lib/plakat/palettes";
 
 export const runtime = "edge";
-export const alt = "Was ist KI? Ein Einstieg ohne Vorwissen — loehrning.ai";
+export const alt = "Was ist KI? Ein Einstieg ohne Vorwissen. loehrning.ai";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default function Image() {
+// Loehrning Sans Bold, bundled with the edge function by URL. One face keeps
+// the function small; the card is set in 700 throughout.
+const boldFont = fetch(
+  new URL("../../fonts/LoehrningSans-Bold.ttf", import.meta.url),
+).then((response) => response.arrayBuffer());
+
+const INSET = 64;
+
+/**
+ * /einstieg stays paper (SPEC §2.3): Kalkweiß, Druckschwarz type, Mennige
+ * only for the one step label, a 2px Kopflinie above the shared colophon
+ * strip with the header's L tile.
+ */
+export default async function Image() {
   return new ImageResponse(
     (
       <div
         style={{
-          width: "100%",
-          height: "100%",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
-          padding: "72px",
-          background: "linear-gradient(135deg, #f3f0e9 0%, #e8e3d6 100%)",
-          fontFamily: "system-ui, -apple-system, sans-serif",
+          width: "100%",
+          height: "100%",
+          background: PAPER.kalkweiss,
+          color: PAPER.druckschwarz,
+          fontFamily: OG_FONT_FAMILY,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-          {/* Das Ö mark — hard-cornered umlaut, counter knocked out (evenodd) */}
-          <svg width="30" height="40" viewBox="18 8 60 80" fill="#B73A15">
-            <rect x="26" y="8" width="16" height="16" />
-            <rect x="54" y="8" width="16" height="16" />
-            <path d="M18 34 H78 V88 H18 Z M36 52 H60 V70 H36 Z" fillRule="evenodd" />
-          </svg>
-          <div style={{ display: "flex", fontSize: "28px", fontWeight: 700, color: "#0B0908" }}>
-            loehrning<span style={{ color: "#B73A15" }}>.ai</span>
-          </div>
-        </div>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          <div style={{ fontSize: "18px", color: "#B73A15", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.12em" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            flexGrow: 1,
+            padding: `0 ${INSET}px`,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              fontSize: 24,
+              fontWeight: 700,
+              lineHeight: 1.3,
+              color: PAPER.mennige,
+            }}
+          >
             Stufe 1: Orientierung
           </div>
           <div
             style={{
               display: "flex",
               flexDirection: "column",
-              fontSize: "64px",
-              fontWeight: 800,
-              color: "#0B0908",
-              lineHeight: 1.05,
+              marginTop: 20,
+              fontSize: 84,
+              fontWeight: 700,
+              lineHeight: 1,
+              letterSpacing: "-0.015em",
             }}
           >
-            <div>Was ist KI?</div>
-            <div>Ein Einstieg</div>
-            <div>ohne Vorwissen.</div>
+            <div style={{ display: "flex" }}>Was ist KI?</div>
+            <div style={{ display: "flex" }}>Ein Einstieg ohne Vorwissen.</div>
           </div>
-          <div style={{ fontSize: "24px", color: "#4f4640", lineHeight: 1.4 }}>
-            10 Minuten. Kein Vorwissen. Kein Login.
+          <div
+            style={{
+              display: "flex",
+              marginTop: 32,
+              fontSize: 30,
+              fontWeight: 700,
+              lineHeight: 1.35,
+            }}
+          >
+            10 Minuten. Kein Login.
           </div>
         </div>
+        <div
+          style={{
+            display: "flex",
+            margin: `0 ${INSET}px`,
+            borderTop: `2px solid ${PAPER.druckschwarz}`,
+          }}
+        />
+        <OgColophon inset={INSET} />
       </div>
     ),
-    { ...size },
+    {
+      ...size,
+      fonts: [
+        {
+          name: OG_FONT_FAMILY,
+          data: await boldFont,
+          weight: 700,
+          style: "normal",
+        },
+      ],
+    },
   );
 }

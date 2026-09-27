@@ -1,6 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { BLOG_POSTS } from "@/lib/blog-metadata";
+import { expectCapsInsideScene } from "@/test/plakat-scene";
 
 const { getRequestLocaleMock } = vi.hoisted(() => ({
   getRequestLocaleMock: vi.fn(),
@@ -90,16 +91,34 @@ describe("BlogIndexPage", () => {
     expect(document.querySelector(".runline__track")).toBeNull();
   });
 
-  it("uses the paper hero, a Kopflinie section and ledger rows", async () => {
+  it("uses the IDEA hero band, a Kopflinie section and ledger rows", async () => {
     await renderPage("de");
 
     expect(screen.getByText("Blog · 2 Artikel")).toBeVisible();
+    const h1 = screen.getByRole("heading", {
+      level: 1,
+      name: "KI im Alltag, mit Quellen erklärt.",
+    });
+    expect(h1).toBeVisible();
+    // SPEC §2.3 and §3.12: the hero carries the IDEA scope, the page names
+    // its scene, the title takes the word fit and the band holds one
+    // halftone image instead of random dots, with three type sizes only.
+    const hero = h1.closest(".blog-index__hero");
+    expect(hero).toHaveClass("plakat-idea");
+    expect(document.querySelector("[data-blog-index]")).toHaveAttribute(
+      "data-plakat-page",
+      "idea",
+    );
+    expect(h1.getAttribute("style")).toMatch(/--fit:\s*\d/);
+    expect(hero?.querySelectorAll("[data-halftone='blog']")).toHaveLength(1);
+    expect(hero?.querySelector("#hero-dots, .hero__field")).toBeNull();
+    expect(hero?.querySelector(".blog-index__caption, time")).toBeNull();
+    expect(hero?.querySelector(".plakat-caps")).toHaveTextContent("Blog · 2 Artikel");
+    expectCapsInsideScene(document.body);
+    // The update date moves to paper, under the section head.
     expect(
-      screen.getByRole("heading", {
-        level: 1,
-        name: "KI im Alltag, mit Quellen erklärt.",
-      }),
-    ).toBeVisible();
+      document.querySelector("[data-blog-ledger] .blog-index__updated time"),
+    ).toBeTruthy();
     expect(
       screen.getByRole("heading", { level: 2, name: "Alle Artikel" }),
     ).toBeVisible();

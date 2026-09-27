@@ -11,7 +11,9 @@ import { COURSE_CATALOG } from "@/lib/courses/catalog";
 import { localizeCatalogCourse } from "@/lib/courses/catalog-copy";
 import { getDemoCopy } from "@/lib/demos-copy";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
-import { ArrowGlyph, Kicker, SectionHead } from "@/components/werk";
+import { ArrowGlyph, SectionHead } from "@/components/werk";
+import { PlakatBand } from "@/components/plakat";
+import { posterTitleStyle } from "@/lib/plakat/fit";
 import { DemoShell } from "./demo-shell";
 import { DemoCta } from "./demo-cta";
 import {
@@ -112,28 +114,20 @@ export function DemoDetailLayout({
   ];
 
   return (
-    <article className="overflow-x-clip" data-demo-detail-layout>
+    <article className="overflow-x-clip" data-demo-detail-layout data-plakat-page="idea">
       {/*
-        Header and instrument share one paper band: back link, kicker,
-        one-colour H1, lead, then the engine. Its evidence line (mode and
-        actions) sits in the engine's own header row. The engine never
-        server-renders (dynamic(..., {ssr:false})), so this band carries first
-        paint. A dark engine only turns its own frame graphit (DemoShell); the
-        band stays paper. The section is deliberately unnamed: named, it
-        became a region landmark whose name matched the engine's own region
-        (landmark-unique).
+        Header band in the IDEA scene (SPEC §3.12): back link, caps line,
+        Himbeere poster H1 and a 17px Kobalt lede. Below sm the lede is the
+        one-sentence teaser; from sm up the full description returns. The
+        band is deliberately unnamed: named, it became a region landmark
+        whose name matched the engine's own region (landmark-unique).
 
-        Below sm the back link and the kicker share one 44px row, the lead is
-        the one-sentence teaser and the gaps are tighter, so the engine starts
-        in the first screen even at 320. From sm up the link sits on its own
-        line above the kicker and the full description returns.
+        The engine sits on paper right below the band. It never
+        server-renders (dynamic(..., {ssr:false})), so the band carries first
+        paint. A dark engine only turns its own frame graphit (DemoShell).
       */}
-      <section
-        data-demo-detail-hero
-        data-demo-instrument
-        className="px-4 pb-10 pt-0 sm:px-6 sm:pb-12 sm:pt-6"
-      >
-        <div className="mx-auto max-w-6xl">
+      <div data-demo-detail-hero>
+        <PlakatBand plakat="idea" contentClassName="pt-1 sm:pt-6 lg:pb-12 lg:pt-8">
           <div
             className="flex flex-wrap items-center gap-x-3 sm:block"
             data-demo-detail-top
@@ -142,39 +136,45 @@ export function DemoDetailLayout({
               <Link
                 href={catalogHref}
                 aria-label={pageCopy.allExamples}
-                className="inline-flex min-h-11 items-center gap-2 text-label text-muted-foreground underline decoration-border underline-offset-4 hover:text-foreground hover:decoration-foreground"
+                className="inline-flex min-h-11 items-center gap-2 text-[1.0625rem] font-semibold text-scene-ink underline decoration-1 underline-offset-4 hover:decoration-2"
               >
                 <ArrowGlyph className="rotate-180" />
                 <span className="sm:hidden">{pageCopy.catalog}</span>
                 <span className="max-sm:hidden">{pageCopy.allExamples}</span>
               </Link>
             </nav>
-            <Kicker className="sm:mt-6">
-              <span className="max-sm:hidden">{pageCopy.example} </span>
-              {demo.n} · {categoryLabel}
-              {/* Under 360px the level drops so link and kicker keep one row. */}
-              <span className="max-[359px]:hidden"> · {levelLabel}</span>
-            </Kicker>
           </div>
+          <p className="plakat-caps mt-2 sm:mt-5">
+            <span className="max-sm:hidden">{pageCopy.example} </span>
+            {demo.n} · {categoryLabel}
+            {/* Under 360px the level drops so the line stays one row. */}
+            <span className="max-[359px]:hidden"> · {levelLabel}</span>
+          </p>
           <h1
             id="demo-title"
-            className="mt-1 max-w-[26ch] break-words text-fluid-h1 font-bold text-foreground text-balance hyphens-manual max-[359px]:text-[1.875rem] sm:mt-3"
+            className="poster-title mt-3 break-words text-scene-mid hyphens-manual sm:mt-4"
+            style={posterTitleStyle(name)}
           >
             {name}
           </h1>
           <p
-            className="mt-2 text-[1.0625rem] leading-normal text-muted-foreground text-pretty sm:hidden"
+            className="mt-3 text-[1.0625rem] leading-normal text-scene-ink text-pretty sm:hidden"
             data-demo-detail-teaser
           >
             {demo.teaser}
           </p>
-          <p className="mt-4 max-w-[60ch] text-lead text-muted-foreground text-pretty max-sm:hidden">
+          <p className="mt-5 max-w-[60ch] text-[1.0625rem] leading-normal text-scene-ink text-pretty max-sm:hidden">
             {demo.description}
           </p>
+        </PlakatBand>
+      </div>
 
-          <div className="mt-4 sm:mt-6">
-            <DemoShell demo={demo} locale={locale} />
-          </div>
+      <section
+        data-demo-instrument
+        className="px-4 pb-10 pt-4 sm:px-6 sm:pb-12 sm:pt-8"
+      >
+        <div className="mx-auto max-w-6xl">
+          <DemoShell demo={demo} locale={locale} />
         </div>
       </section>
 
@@ -304,7 +304,7 @@ export function DemoDetailLayout({
       {/* Continuation: the course lesson (the page's one Mennige button) and
           the next example, each named once. */}
       <section className="px-4 pb-12 sm:px-6 sm:pb-16">
-        <div className="mx-auto grid max-w-6xl gap-8 border-t-2 border-foreground pt-6 md:grid-cols-2 md:gap-12">
+        <div className="mx-auto grid max-w-6xl gap-8 border-t-2 border-scene-line pt-6 md:grid-cols-2 md:gap-12">
           <div data-demo-continuation className="flex min-w-0 flex-col items-start gap-3">
             <p className="text-label text-muted-foreground tabular-nums">
               {pageCopy.courseHeading}

@@ -1,5 +1,7 @@
 import { ImageResponse } from "next/og";
 import { getPostNumberLabel } from "@/lib/blog-metadata";
+import { OG_FONT_FAMILY, OgColophon } from "@/lib/plakat/og";
+import { PAPER } from "@/lib/plakat/palettes";
 
 export const runtime = "edge";
 export const alt =
@@ -7,43 +9,66 @@ export const alt =
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default function Image() {
+// Loehrning Sans Bold, bundled with the edge function by URL. One face keeps
+// the function small; the card is set in 700 throughout.
+const boldFont = fetch(
+  new URL("../../../fonts/LoehrningSans-Bold.ttf", import.meta.url),
+).then((response) => response.arrayBuffer());
+
+const INSET = 64;
+
+const DATES = [
+  { num: "Art. 5", label: "Verbote gelten seit 2. Feb 2025" },
+  { num: "Art. 50", label: "Transparenz ab 2. Aug 2026" },
+  { num: "Anhang III", label: "Hochrisiko ab Dez 2027" },
+] as const;
+
+/**
+ * Blog posts stay paper (SPEC §2.3, §5): Kalkweiß, Druckschwarz type, one
+ * Mennige label, the three dates as a ruled ledger under a 2px Kopflinie,
+ * and the shared colophon strip with the header's L tile (SPEC §3.15).
+ */
+export default async function Image() {
   return new ImageResponse(
     (
       <div
         style={{
-          width: "100%",
-          height: "100%",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
-          padding: 70,
-          background: "#0d0b09",
-          color: "#F3F0E9",
-          fontFamily: "system-ui, -apple-system, sans-serif",
+          width: "100%",
+          height: "100%",
+          background: PAPER.kalkweiss,
+          color: PAPER.druckschwarz,
+          fontFamily: OG_FONT_FAMILY,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          {/* Das Ö mark — hard-cornered umlaut, counter knocked out (evenodd) */}
-          <svg width="28" height="37" viewBox="18 8 60 80" fill="#B73A15">
-            <rect x="26" y="8" width="16" height="16" />
-            <rect x="54" y="8" width="16" height="16" />
-            <path d="M18 34 H78 V88 H18 Z M36 52 H60 V70 H36 Z" fillRule="evenodd" />
-          </svg>
-          <div style={{ display: "flex", fontSize: 26, fontWeight: 900, color: "#a89070" }}>
-            loehrning<span style={{ color: "#B73A15" }}>.ai</span> · Blog · Nº {getPostNumberLabel("eu-ai-act-grundlagen")}
-          </div>
-        </div>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            flexGrow: 1,
+            padding: `60px ${INSET}px 0 ${INSET}px`,
+          }}
+        >
           <div
             style={{
               display: "flex",
-              fontSize: 68,
-              fontWeight: 900,
+              fontSize: 24,
+              fontWeight: 700,
+              lineHeight: 1.3,
+              color: PAPER.mennige,
+            }}
+          >
+            Blog · Nº {getPostNumberLabel("eu-ai-act-grundlagen")}
+          </div>
+          <div
+            style={{
+              display: "flex",
+              marginTop: 16,
+              fontSize: 84,
+              fontWeight: 700,
               lineHeight: 1,
-              letterSpacing: "-0.02em",
-              maxWidth: 980,
+              letterSpacing: "-0.03em",
             }}
           >
             Der EU AI Act.
@@ -51,57 +76,59 @@ export default function Image() {
           <div
             style={{
               display: "flex",
-              fontSize: 28,
-              lineHeight: 1.35,
-              color: "#a89070",
-              maxWidth: 900,
+              marginTop: 20,
+              maxWidth: 940,
+              fontSize: 30,
+              fontWeight: 700,
+              lineHeight: 1.3,
+              color: PAPER.druckschwarz,
             }}
           >
             Was er bedeutet, wenn du keine Juristin bist. Zeitplan, AI Omnibus
             und deine Rechte, Stand Juli 2026.
           </div>
-        </div>
-
-        <div style={{ display: "flex", gap: 16 }}>
-          {[
-            { num: "Art. 5", label: "Verbote gelten seit 2. Feb 2025", source: "Reg. 2024/1689" },
-            { num: "Art. 50", label: "Transparenz ab 2. Aug 2026", source: "Reg. 2024/1689" },
-            { num: "Anhang III", label: "Hochrisiko ab Dez 2027, beschlossen", source: "AI Omnibus, 29. Juni 2026" },
-          ].map((item) => (
-            <div
-              key={item.num}
-              style={{
-                flex: 1,
-                display: "flex",
-                flexDirection: "column",
-                gap: 12,
-                padding: 22,
-                background: "#1a1612",
-                border: "2px solid #B73A15",
-              }}
-            >
+          <div
+            style={{
+              display: "flex",
+              marginTop: "auto",
+              marginBottom: 40,
+              borderTop: `2px solid ${PAPER.druckschwarz}`,
+            }}
+          >
+            {DATES.map((item, index) => (
               <div
+                key={item.num}
                 style={{
                   display: "flex",
-                  fontSize: 22,
-                  fontWeight: 900,
-                  color: "#B73A15",
-                  fontFamily: "monospace",
+                  flexDirection: "column",
+                  flex: 1,
+                  paddingTop: 16,
+                  paddingLeft: index === 0 ? 0 : 24,
                 }}
               >
-                {item.num}
+                <div style={{ display: "flex", fontSize: 26, fontWeight: 700, lineHeight: 1.2 }}>
+                  {item.num}
+                </div>
+                <div style={{ display: "flex", marginTop: 6, fontSize: 22, fontWeight: 700, lineHeight: 1.3 }}>
+                  {item.label}
+                </div>
               </div>
-              <div style={{ display: "flex", fontSize: 16, fontWeight: 700, lineHeight: 1.2, color: "#F3F0E9" }}>
-                {item.label}
-              </div>
-              <div style={{ display: "flex", fontSize: 12, color: "#a89070", fontFamily: "monospace" }}>
-                {item.source}
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
+        <OgColophon trailing="Blog" inset={INSET} />
       </div>
     ),
-    { ...size },
+    {
+      ...size,
+      fonts: [
+        {
+          name: OG_FONT_FAMILY,
+          data: await boldFont,
+          weight: 700,
+          style: "normal",
+        },
+      ],
+    },
   );
 }

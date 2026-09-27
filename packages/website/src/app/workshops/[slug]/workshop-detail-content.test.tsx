@@ -3,6 +3,8 @@ import { resolve } from "node:path";
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { getWorkshopBySlug, getWorkshops } from "@/lib/workshops";
+import { WORKSHOP_PLAKAT } from "@/lib/plakat/palettes";
+import { expectCapsInsideScene, expectNoMennigeInScene } from "@/test/plakat-scene";
 import { phoneDescription, WorkshopDetailContent } from "./workshop-detail-content";
 
 function follows(first: Element, second: Element): boolean {
@@ -27,21 +29,26 @@ describe("<WorkshopDetailContent>", () => {
     const h1 = screen.getByRole("heading", { level: 1, name: workshop.title });
     const cover = h1.closest("[data-cover-band]");
     expect(cover).not.toBeNull();
-    expect(cover).toHaveClass("dark-section");
+    expect(cover).toHaveClass("plakat-lemons");
     expect(within(cover as HTMLElement).getByText(workshop.eyebrow)).toHaveTextContent(
       "Workshop 01 · Prognosen",
     );
     expect(within(cover as HTMLElement).getByText(workshop.summary)).toBeInTheDocument();
-    // The fixed question sits in the dark q-card, once per page.
+    // The fixed question sits in the paper q-card at the top of the agenda,
+    // once per page; the facts and the need follow it there (SPEC D11).
+    const agenda = sectionOf("Ablauf");
     const questionCards = container.querySelectorAll("[data-question-card]");
     expect(questionCards).toHaveLength(1);
-    expect(questionCards[0]).toHaveAttribute("data-question-card", "dark");
+    expect(questionCards[0]).toHaveAttribute("data-question-card", "paper");
     expect(questionCards[0]).toHaveTextContent(workshop.question);
-    expect(cover).toHaveTextContent("Allein ca. 90 Min.");
-    expect(cover).toHaveTextContent("Du gehst mitGo/No-Go-Regel");
-    expect(cover).toHaveTextContent("Du brauchsteinen Browser, kein KI-Konto");
+    expect(agenda).toContainElement(questionCards[0] as HTMLElement);
+    expect(cover).not.toHaveTextContent("Allein ca. 90 Min.");
+    expect(agenda).toHaveTextContent("Allein ca. 90 Min.");
+    expect(agenda).toHaveTextContent("Du gehst mitGo/No-Go-Regel");
+    expect(agenda).toHaveTextContent("Du brauchsteinen Browser, kein KI-Konto");
+    // The brief comes first in the agenda section, before its Kopflinie.
+    expect(follows(agenda.querySelector("[data-workshop-brief]")!, agenda.querySelector("header")!)).toBe(true);
 
-    const agenda = sectionOf("Ablauf");
     const lab = container.querySelector("[data-workshop-decision-lab]")!;
     const materials = sectionOf("Material");
     expect(follows(cover!, agenda)).toBe(true);
@@ -140,10 +147,10 @@ describe("<WorkshopDetailContent>", () => {
     expect(audience).toHaveTextContent(workshop.notForYou);
     const outcomes = sectionOf("Nach dem Workshop");
     for (const line of workshop.outcomes) expect(outcomes).toHaveTextContent(line);
-    // "Du gehst mit" is said once, in the cover.
+    // "Du gehst mit" is said once, in the brief under the band.
     expect(outcomes).not.toHaveTextContent("Du gehst mit");
     expect(
-      container.querySelector("[data-cover-band]"),
+      container.querySelector("[data-workshop-brief]"),
     ).toHaveTextContent(`Du gehst mit${workshop.outcome}`);
     // The invented case is named in the section caption only, not again under the narrative.
     expect(caseSection).not.toHaveTextContent("und alle Zahlen sind für diesen Workshop erfunden");
@@ -204,6 +211,97 @@ describe("<WorkshopDetailContent>", () => {
     expect(document.getElementById("material")).not.toBeNull();
   });
 
+  for (const locale of ["de", "en"] as const) {
+    for (const workshop of getWorkshops(locale)) {
+      it(`${locale}/${workshop.slug}: sets the band as the workshop's poster, with facts on paper`, () => {
+        const { container } = render(<WorkshopDetailContent workshop={workshop} locale={locale} />);
+        const scene = WORKSHOP_PLAKAT[workshop.slug as keyof typeof WORKSHOP_PLAKAT].plakat;
+        const h1 = screen.getByRole("heading", { level: 1 });
+        const band = h1.closest("[data-cover-band]") as HTMLElement;
+        expect(band).toHaveClass(`plakat-${scene}`);
+        expect(band).not.toHaveClass("dark-section");
+        expect(container.querySelector("article")).toHaveAttribute("data-plakat-page", scene);
+        // Poster title, fit to its longest word; a subtitle stays inside the
+        // h1 at the band's body size.
+        expect(h1).toHaveClass("poster-title", "text-scene-ink");
+        expect(h1.style.getPropertyValue("--fit")).not.toBe("");
+        const subtitle = h1.querySelector("[data-title-subtitle]");
+        if (subtitle) expect(subtitle).toHaveClass("text-[1.0625rem]", "tracking-normal");
+        // Type budget: one caps line, the title and 17px body. No question
+        // card, meta list or small type in the band.
+        expect(band.querySelectorAll(".plakat-caps")).toHaveLength(1);
+        expect(band.querySelectorAll("[data-question-card], dl, input, select, textarea, [role=status], [data-chip]")).toHaveLength(0);
+        for (const node of band.querySelectorAll("*")) {
+          const classes = node.getAttribute("class")?.split(/\s+/) ?? [];
+          for (const small of ["text-caption", "text-label", "text-xs"]) {
+            expect(classes, `${small} in the band`).not.toContain(small);
+          }
+        }
+        // Scene buttons: the ink fill and the ink outline, never Mennige.
+        const [primary, secondary] = within(band)
+          .getAllByRole("link")
+          .filter((link) => !link.hasAttribute("data-cover-back"));
+        expect(primary).toHaveClass("bg-scene-ink", "text-scene-ground", "min-h-12");
+        expect(secondary).toHaveClass("border-scene-ink", "text-scene-ink", "min-h-12");
+        // The poster: the lg art and the phone strip, decorative, numbered.
+        const posters = band.querySelectorAll("svg[data-poster]");
+        expect([...posters].map((poster) => poster.getAttribute("data-poster-format"))).toEqual([
+          "portrait",
+          "strip",
+        ]);
+        for (const poster of posters) {
+          expect(poster).toHaveAttribute("aria-hidden", "true");
+          expect(poster.querySelector("[data-poster-numeral-text]")).toHaveTextContent(workshop.number);
+        }
+        expectNoMennigeInScene(container);
+        expectCapsInsideScene(container);
+      });
+    }
+  }
+
+  it("charts the W04 result on paper with a hatched AI answer and direct labels", () => {
+    for (const locale of ["de", "en"] as const) {
+      const workshop = getWorkshopBySlug("esg-berichte-mit-ki", locale)!;
+      const { container, unmount } = render(
+        <WorkshopDetailContent workshop={workshop} locale={locale} />,
+      );
+      const chart = container.querySelector("[data-result-chart]") as HTMLElement;
+      expect(chart).not.toBeNull();
+      expect(sectionOf(locale === "de" ? "Der Fall" : "The case")).toContainElement(chart);
+      expect(
+        within(chart).getByRole("heading", {
+          level: 3,
+          name: locale === "de" ? "Was der Fall zeigt" : "What the case shows",
+        }),
+      ).toBeInTheDocument();
+      expect(chart.querySelector("figcaption")).toHaveTextContent(
+        locale === "de"
+          ? "t CO₂e, Scope 1 und 2, erfundene Zahlen"
+          : "t CO₂e, Scope 1 and 2, invented figures",
+      );
+      const bars = [...chart.querySelectorAll("[data-result-bar]")];
+      expect(bars.map((bar) => bar.getAttribute("data-result-bar"))).toEqual([
+        "reference",
+        "answer",
+        "correct",
+      ]);
+      // Series differ by pattern and label, not by hue alone.
+      expect(bars[1].querySelector("[data-result-bar-fill]")?.className).toMatch(/repeating-linear-gradient/);
+      expect(bars[0].querySelector("[data-result-bar-fill]")).toHaveClass("bg-rost");
+      expect(bars[2].querySelector("[data-result-bar-fill]")).toHaveClass("bg-rost");
+      for (const bar of workshop.caseStudy.resultChart!.bars) {
+        expect(chart).toHaveTextContent(bar.label);
+        expect(chart).toHaveTextContent(bar.display);
+      }
+      unmount();
+    }
+    // Workshops without chart data show none.
+    render(
+      <WorkshopDetailContent workshop={getWorkshopBySlug("ki-prognosen-einschaetzen", "de")!} locale="de" />,
+    );
+    expect(document.querySelector("[data-result-chart]")).toBeNull();
+  });
+
   it("keeps one Mennige group: no orange rules, no mono eyebrows, no old risograph classes", () => {
     const source = readFileSync(
       resolve(process.cwd(), "src/app/workshops/[slug]/workshop-detail-content.tsx"),
@@ -257,10 +355,10 @@ describe("<WorkshopDetailContent>", () => {
       ),
     };
     const { container } = render(<WorkshopDetailContent workshop={mixed} locale="de" />);
-    expect(container.querySelector("[data-cover-band]")).toHaveTextContent(
+    expect(container.querySelector("[data-workshop-facts]")).toHaveTextContent(
       "kostenlos, ohne Anmeldung",
     );
-    expect(container.querySelector("[data-cover-band]")).not.toHaveTextContent(
+    expect(container.querySelector("[data-workshop-facts]")).not.toHaveTextContent(
       "Material auf Englisch",
     );
   });
@@ -327,15 +425,15 @@ describe("<WorkshopDetailContent>", () => {
     const workshop = getWorkshopBySlug("ki-prognosen-einschaetzen", "de")!;
     render(<WorkshopDetailContent workshop={workshop} locale="de" />);
 
-    // The language is said once in the cover; the material rows carry EN chips.
-    expect(
-      screen.getByRole("heading", { level: 1 }).closest("[data-cover-band]"),
-    ).toHaveTextContent("Material auf Englisch");
+    // The language is said once in the facts line; the material rows carry EN chips.
+    expect(document.querySelector("[data-workshop-facts]")).toHaveTextContent(
+      "Material auf Englisch",
+    );
     expect(screen.queryByText(/Alle Materialien auf Englisch/)).toBeNull();
     for (const material of workshop.materials) {
       expect(material.label).not.toMatch(/Englisch|English|\(|\)/);
     }
-    // Two back links: the bar from sm, the kicker-line link on phones. Each
+    // Two back links: the bar from sm, the band's top link on phones. Each
     // is display:none at the other size, so one is ever in the tree. The
     // name starts with the visible text of both (WCAG 2.5.3).
     const back = screen.getAllByRole("link", {
@@ -381,7 +479,7 @@ describe("<WorkshopDetailContent>", () => {
     for (const link of screen.getAllByRole("link", { name: "Back to all workshops" })) {
       expect(link).toHaveAttribute("href", "/en/workshops");
     }
-    expect(container.querySelector("[data-cover-band]")).toHaveTextContent(
+    expect(container.querySelector("[data-workshop-facts]")).toHaveTextContent(
       "free, no sign-up",
     );
     expect(screen.queryByText(/All materials in English/)).toBeNull();

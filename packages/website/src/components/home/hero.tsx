@@ -12,11 +12,27 @@ import {
   PhoneGlobeToggle,
   usePhoneGlobe,
 } from "@/components/home/phone-globe";
+import { CapsLine } from "@/components/plakat/caps-line";
 import { ArrowGlyph } from "@/components/werk/arrow-glyph";
+import { cx } from "@/components/werk/cx";
 import { BrandButton } from "@/components/ui/brand-button";
 import { withMotionProvider } from "@/components/motion/with-motion-provider";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
+import { posterTitleStyle } from "@/lib/plakat/fit";
+import { HOME_SCENE } from "@/lib/plakat/palettes";
 import "./phone-hero.css";
+
+/**
+ * The home scene (SPEC D7): the lemons poster band, or the graphit fallback
+ * behind the one constant in src/lib/plakat/palettes.ts.
+ */
+const LEMONS = HOME_SCENE === "lemons";
+
+/** The band's one caps line (SPEC §3.6). CSS sets the capitals. */
+const HERO_CAPS: Record<Locale, string> = {
+  de: "Frei · zweisprachig · quelloffen",
+  en: "Free · bilingual · open source",
+};
 
 const HeroNetwork = dynamic(
   () =>
@@ -85,7 +101,18 @@ function DesktopHeroGlobe({
       data-hero-globe-motion={
         prefersReduced ? "static" : paused ? "paused" : "running"
       }
-      className="home-hero-network-mask pointer-events-none absolute bottom-0 right-0 z-0 block h-[110%] w-[70vw] overflow-visible"
+      className={cx(
+        "pointer-events-none absolute z-0 block overflow-visible",
+        // Lemons: the flat disc starts 2rem right of the 40rem text column
+        // and bleeds off the right edge, never by more than half, so Germany
+        // (near its centre) stays in view from 1024 up; the band's foot strip
+        // cuts it below, so on wide screens it rises as a dome. No fade (a
+        // fade is off-poster).
+        // Graphit: the masked line globe of the fallback scene.
+        LEMONS
+          ? "left-[calc(max(3rem,50vw_-_36rem)_+_42rem)] top-24 aspect-square w-[min(62vw,56rem,calc(2*(100vw_-_max(3rem,50vw_-_36rem)_-_46rem)))]"
+          : "home-hero-network-mask bottom-0 right-0 h-[110%] w-[70vw]",
+      )}
     >
       <m.div
         className="h-full w-full"
@@ -99,6 +126,7 @@ function DesktopHeroGlobe({
           frozen={frozen}
           paused={paused}
           reducedMotion={prefersReduced}
+          scene={HOME_SCENE}
           className="h-full w-full opacity-100"
         />
       </m.div>
@@ -123,20 +151,21 @@ export type HeroSectionProps = {
 };
 
 /*
- * Two layouts, one tree, one graphit band.
+ * Two layouts, one tree, one poster band.
  *
- * The hero is a graphit band at every width (phone-hero.css sets the band's
- * tokens), with the facts as its label, the promise in two lines, one lead
- * sentence and one square primary action.
+ * The hero is the lemons band at every width (phone-hero.css sets the band's
+ * tokens: Butter on Ultramarin, the Mennige globe), with one caps line, the
+ * promise as the poster title, one lead sentence and one square Butter
+ * action. HOME_SCENE "graphit" keeps the earlier graphit band as a fallback.
  *
  * From lg the band is the cover: the text column on the left, the projection
  * globe running off the right edge behind it, a visible pause control beside
  * the action and the pillar register as a hairline index row at the foot.
  *
  * Below lg (phone-hero.css) the same section is laid out between the compact
- * top bar and the tab bar: the horizon globe fills the band behind everything
- * below the lead, the primary action sits on the ground in the thumb zone,
- * and the continue row is docked as the last row above the tab bar. The
+ * top bar and the tab bar: caps line, title, lead, the Butter action and the
+ * continue row, then the horizon globe fills the rest of the band down to
+ * the tab bar (the poster's one big shape). The
  * wrappers that exist for the desktop grid are `display: contents` there, so
  * kicker, heading, lead, actions, globe and continue row are placed on one
  * grid. Nothing about the layout is decided in JavaScript.
@@ -173,6 +202,8 @@ function HeroSectionContent({
 
   return (
     <section
+      data-plakat-band={LEMONS ? "" : undefined}
+      data-home-scene={HOME_SCENE}
       ref={sectionRef}
       data-section="hero"
       className="relative -mt-16 flex flex-col overflow-hidden px-6 pb-6 pt-24 max-lg:mt-0 max-lg:p-0 md:px-12 md:pb-10 md:pt-24 lg:min-h-[38rem] lg:pb-12"
@@ -183,7 +214,16 @@ function HeroSectionContent({
           two values: the two-line promise on the companion shell, and the
           cover band's display size from lg. The short-viewport padding
           override is scoped to lg too; below it phone-hero.css owns the band. */}
-      <style>{`
+      {LEMONS ? (
+        // The lemons title is a .poster-title: its size is the word-fit
+        // rule in globals.css, never an override here.
+        <style>{`
+        @media (min-width: 64rem) and (max-height: 680px) {
+          [data-section="hero"] { padding-top: 4.5rem !important; padding-bottom: 1.25rem !important; }
+        }
+      `}</style>
+      ) : (
+        <style>{`
         [data-section="hero"] h1 { font-size: clamp(2rem, 11.5vw - 0.25rem, 3rem); }
         @media (min-width: 64rem) {
           [data-section="hero"] h1 { font-size: var(--text-display); }
@@ -192,6 +232,7 @@ function HeroSectionContent({
           [data-section="hero"] { padding-top: 4.5rem !important; padding-bottom: 1.25rem !important; }
         }
       `}</style>
+      )}
 
       {desktopGlobe ? (
         <DesktopHeroGlobe
@@ -208,17 +249,32 @@ function HeroSectionContent({
           className="grid grid-cols-1 items-start gap-0 lg:grid-cols-[minmax(0,40rem)_1fr]"
         >
           <div data-hero-copy className="relative z-10">
-            {/* The facts open the band as its label at every width. */}
-            <p
-              data-hero-kicker
-              className="text-label text-muted-foreground lg:mt-6"
-            >
-              {copy.introduction.facts}
-            </p>
+            {/* The band's one caps line (lemons) or the facts as its label
+                (graphit) opens the band at every width. */}
+            {LEMONS ? (
+              <div data-hero-kicker className="lg:mt-2">
+                <CapsLine>{HERO_CAPS[locale]}</CapsLine>
+              </div>
+            ) : (
+              <p
+                data-hero-kicker
+                className="text-label text-muted-foreground lg:mt-6"
+              >
+                {copy.introduction.facts}
+              </p>
+            )}
 
+            {/* The title column is an inline-size container, so the poster
+                title's word-fit rule (100cqi / --fit) measures it. */}
+            <div data-hero-title className="@container lg:mt-5">
             <h1
               aria-label={copy.headline.join(" ")}
-              className="font-bold leading-none tracking-[-0.015em] text-foreground lg:mt-4"
+              className={
+                LEMONS
+                  ? "poster-title text-foreground"
+                  : "font-bold leading-none tracking-[-0.015em] text-foreground"
+              }
+              style={LEMONS ? posterTitleStyle(copy.headline.join(" ")) : undefined}
             >
               {/* One lockup for every width: the first two parts joined on
                   the first line, the last on the second, in one colour. The
@@ -234,10 +290,16 @@ function HeroSectionContent({
                 </span>
               ))}
             </h1>
+            </div>
 
             <p
               data-hero-lead
-              className="mt-6 max-w-xl text-lead text-muted-foreground"
+              className={cx(
+                "max-w-xl text-muted-foreground",
+                LEMONS
+                  ? "mt-7 text-[1.0625rem] leading-normal"
+                  : "mt-6 text-lead",
+              )}
             >
               {copy.introduction.lead}
               <span className="max-lg:hidden">{copy.introduction.detail}</span>.
@@ -301,8 +363,19 @@ function HeroSectionContent({
           Hidden below lg: Lernen, Prüfen and Anwenden point at the same three
           destinations the companion shell already gives a rail and a tab, so on
           a phone this register spent a third of the first screen repeating
-          them. */}
-      <ol className="relative z-10 mx-auto mt-6 grid w-full max-w-6xl grid-cols-1 border-t border-hairline max-lg:hidden sm:grid-cols-3 md:mt-8 lg:mt-10">
+          them.
+
+          On the lemons band the row is the poster's foot: a full-bleed
+          Ultramarin strip (the ::before) on which the Mennige disc sets, so
+          no text ever sits on the shape, and every size is the band's one
+          body size. */}
+      <ol
+        className={cx(
+          "relative z-10 mx-auto mt-6 grid w-full max-w-6xl grid-cols-1 border-t border-hairline max-lg:hidden sm:grid-cols-3 md:mt-8 lg:mt-10",
+          LEMONS &&
+            "before:absolute before:-bottom-12 before:left-1/2 before:top-0 before:-z-10 before:w-screen before:-translate-x-1/2 before:bg-background before:content-['']",
+        )}
+      >
         {copy.pillars.map((pillar, index) => {
           const href = pillar.href;
           const entry = (
@@ -310,18 +383,26 @@ function HeroSectionContent({
               <span className="flex items-baseline gap-3">
                 <span
                   aria-hidden="true"
-                  className="text-label tabular-nums text-muted"
+                  className={cx(
+                    "tabular-nums text-muted",
+                    LEMONS ? "text-[1.0625rem] font-semibold" : "text-label",
+                  )}
                 >
                   {String(index + 1).padStart(2, "0")}
                 </span>
-                <span className="text-base font-semibold text-foreground underline decoration-transparent underline-offset-4 transition-[text-decoration-color] duration-[120ms] group-hover:decoration-current motion-reduce:transition-none">
+                <span className="text-[1.0625rem] font-semibold text-foreground underline decoration-transparent underline-offset-4 transition-[text-decoration-color] duration-[120ms] group-hover:decoration-current motion-reduce:transition-none">
                   {pillar.title}
                 </span>
                 {href ? (
                   <ArrowGlyph className="ml-auto self-center text-muted-foreground group-hover:text-foreground" />
                 ) : null}
               </span>
-              <p className="mt-1.5 text-caption text-muted-foreground">
+              <p
+                className={cx(
+                  "mt-1.5 text-muted-foreground",
+                  LEMONS ? "text-[1.0625rem] leading-snug" : "text-caption",
+                )}
+              >
                 {pillar.body}
               </p>
             </>

@@ -44,14 +44,16 @@ describe("demo atlas visual contract", () => {
     expect(grid).toContain("lg:grid-cols-3");
     expect(grid).toContain("gap-y-12");
     expect(grid).toContain("data-demo-filter-console");
-    // Filters sit under a Kopflinie section head as square chips.
-    expect(grid).toContain("border-t-2 border-foreground");
+    // Filters sit under a Kopflinie section head (scene line) as square chips.
+    expect(grid).toContain("border-t-2 border-scene-line");
     expect(grid).toContain("FILTER_CHIP_CLASS");
     expect(tile).toContain("data-demo-preview");
-    // Blueprint 6.14: no tile border and no card fill; the recessed Beton
-    // preview is the only box, and meta is one caption line, not chips.
+    // Blueprint 6.14: no tile border and no card fill; the preview panel,
+    // a small IDEA poster (SPEC §3.12), is the only box, and meta is one
+    // caption line, not chips.
     expect(tile).not.toMatch(/border border-hairline bg-card|<Chip/);
-    expect(tile).toContain("bg-inset");
+    expect(tile).toContain("plakat-idea");
+    expect(tile).not.toContain("bg-inset");
     expect(tile).toContain("text-caption text-muted-foreground");
     expect(tile).not.toMatch(/bg-foreground|dark-section|demo\.dark/);
     // Copy is written to fit: no clamp from sm up. Below sm the tile is a
@@ -59,6 +61,12 @@ describe("demo atlas visual contract", () => {
     expect(tile).not.toMatch(/(?<!max-sm:)line-clamp/);
     expect(tile).toContain("max-sm:hidden");
     expect(grid).toContain("max-sm:divide-y max-sm:divide-hairline");
+    // The hub hero is the IDEA PlakatBand (SPEC §3.12) with the halftone
+    // and corner dots; its H1 is a poster title in the scene mid.
+    expect(hub).toMatch(/<PlakatBand\s+plakat="idea"/);
+    expect(hub).toContain('<Halftone field="demos"');
+    expect(hub).toContain("cornerDots");
+    expect(hub).toMatch(/className="poster-title[^"]*text-scene-mid/);
     // Stats are the shared StatRow, with values derived from the registry.
     expect(hub).toContain("<StatRow");
     expect(hub).toContain("stats={stats}");
@@ -88,8 +96,9 @@ describe("demo atlas visual contract", () => {
     const tile = source("demo-tile.tsx");
 
     expect(tile).toContain("transition-colors");
-    // Hover darkens the preview panel one tone.
-    expect(tile).toContain("group-hover:bg-[color-mix(");
+    // Hover darkens the preview panel one tone: the scene's card-hover
+    // (Kreide to #d9dbd5, Kobalt on it 5.83:1).
+    expect(tile).toContain("group-hover:bg-[var(--color-card-hover)]");
     expect(tile).toContain("motion-reduce:transition-none");
     expect(tile).toContain("motion-reduce:transform-none");
     // No hover lift, scale or offset shadow.
