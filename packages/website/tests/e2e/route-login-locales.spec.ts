@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 const GERMAN_LOGIN_TOKENS =
-  /(?:Weiter ohne Konto|Freie Lernplattform · Konto|Eine Anmeldung ist|Zum Kursangebot|Anmeldemethode|Anmeldedienst|Lernkonto)/;
+  /(?:Weiter ohne Konto|Freie Lernplattform · Konto|Eine Anmeldung ist|Die Anmeldung ist|Zum Kursangebot|Anmeldemethode|Anmeldedienst|Lernkonto)/;
 
 for (const width of [320, 390, 768, 1440] as const) {
   test(`login DE/EN copy, callback-error geometry, and return links hold at ${width}px`, async ({
