@@ -93,8 +93,8 @@ export function ShadowDeployment() {
         "Shadow- und Canary-Deployment",
       )}
       caption={text(
-        "The slider shifts synthetic v2 scores and routes no requests. Rows with Δ > 0.15 count as discrepancies, and the demo warns above a 0.30 discrepancy rate; both are illustrative. Real promotion needs representative traffic, outcome guardrails, uncertainty and a tested abort path.",
-        "Der Regler verschiebt synthetische v2-Scores und leitet keine Anfragen weiter. Zeilen mit Δ > 0.15 zählen als Abweichung, bei einer Abweichungsrate über 0.30 warnt die Demo; beides ist illustrativ. Reale Freigaben brauchen repräsentativen Verkehr, Ergebnisleitplanken, Unsicherheit und einen getesteten Abbruchpfad.",
+        "The slider shifts synthetic v2 scores and routes no requests. Rows with Δ > 0.15 count as discrepancies, and the simulation warns above a 0.30 discrepancy rate; both are illustrative. Real promotion needs representative traffic, outcome guardrails, uncertainty and a tested abort path.",
+        "Der Regler verschiebt synthetische v2-Scores und leitet keine Anfragen weiter. Zeilen mit Δ > 0.15 zählen als Abweichung, bei einer Abweichungsrate über 0.30 warnt die Simulation; beides ist illustrativ. Reale Freigaben brauchen repräsentativen Verkehr, Ergebnisleitplanken, Unsicherheit und einen getesteten Abbruchpfad.",
       )}
     >
       <div

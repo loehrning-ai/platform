@@ -9,24 +9,24 @@ export const MEASUREMENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Nutzung von Ergebnismessung trennen",
     subtitle:
-      "Aktivitätsdaten steuern den Betrieb; den Wert belegen vorab festgelegte Ergebnisse, Kosten und Schutzgrößen.",
+      "Nutze Aktivitätsdaten für den Betrieb und miss den Wert an vorab festgelegten Ergebnissen, Kosten und Schutzgrößen.",
     objective:
-      "Aktivitätsdaten steuern den Betrieb; den Wert belegen vorab festgelegte Ergebnisse, Kosten und Schutzgrößen.",
-    durationMinutes: 18,
+      "Nutze Aktivitätsdaten für den Betrieb und miss den Wert an vorab festgelegten Ergebnissen, Kosten und Schutzgrößen.",
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Aktivität dient der Diagnose",
-        readTimeMinutes: 9,
+        readTimeMinutes: 1,
         content:
-          "Lizenzen, aktive Personen, Modellaufrufe, Datenvolumen und Funktionsnutzung zeigen Reichweite, Last, Kosten und Unterstützungsbedarf, aber nicht, ob die Arbeit besser wurde. Halte Nutzungs-, Betriebs-, Ergebnis- und Schutzgrößen getrennt, damit keine als andere durchgeht.",
+          "Lizenzen, aktive Personen, Modellaufrufe, Tokenmenge und Funktionsnutzung zeigen Reichweite, Last, Kosten und Unterstützungsbedarf, aber nicht, ob die Arbeit besser wurde. Halte Nutzungs-, Betriebs-, Ergebnis- und Schutzgrößen getrennt, damit keine als andere durchgeht.",
       },
       {
         id: "s2",
         title: "Ein ausgewogenes Messgrößenset festlegen",
-        readTimeMinutes: 9,
+        readTimeMinutes: 1,
         content:
           "Fang beim erwarteten Wirkmechanismus an: Welches Verhalten ändert sich, welches Ergebnis folgt? Wähle wenige rollenbezogene Ergebnisse mit Qualitäts-, Risiko-, Gleichbehandlungs- und Kostenschutzgrößen. Lege Grundgesamtheit, Berechnung, Quelle, Zuständigkeit, Prüfrhythmus und Entscheidungsschwelle fest, bevor jemand Zahlen sieht.",
       },
@@ -59,21 +59,21 @@ export const MEASUREMENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
       "Lege Messgröße und Vergleich vor der Einführung fest, mit Blick auf Streuung, Saisonalität und andere Änderungen.",
     objective:
       "Lege Messgröße und Vergleich vor der Einführung fest, mit Blick auf Streuung, Saisonalität und andere Änderungen.",
-    durationMinutes: 14,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Den Ausgangszeitraum aus den Daten ableiten",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "Die Beobachtungsdauer hängt an Ereignishäufigkeit, Streuung, Saisonalität und der Änderungsgröße, die die Entscheidung erkennen muss. Friere Messdefinition, Grundgesamtheit, Ausschlüsse und Datenqualitätsprüfungen vor der Einführung ein und dokumentiere die Unsicherheit jedes historischen Mittelwerts.",
       },
       {
         id: "s2",
         title: "Einen belastbaren Vergleich aufbauen",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "Veränderungen bei Personal, Nachfrage, Richtlinien, Produkt oder Markt verzerren einen einfachen Vorher-nachher-Vergleich. Nutze wo möglich ein zufälliges, gestaffeltes, abgeglichenes oder unterbrochenes Zeitreihendesign und halte parallele Änderungen und Grenzen fest. Trägt der Vergleich keine Ursachenaussage, berichte einen Zusammenhang.",
       },
@@ -105,21 +105,21 @@ export const MEASUREMENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
       "Prüfe in einem Entscheidungsforum Ergebnisse, Unsicherheit, Schutzgrößen, Kosten und den nächsten Schritt.",
     objective:
       "Prüfe in einem Entscheidungsforum Ergebnisse, Unsicherheit, Schutzgrößen, Kosten und den nächsten Schritt.",
-    durationMinutes: 20,
+    durationMinutes: 9,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Den Rhythmus aus dem Entscheidungszyklus ableiten",
-        readTimeMinutes: 10,
+        readTimeMinutes: 1,
         content:
           "Die Prüfhäufigkeit folgt daraus, wie schnell Belege entstehen, wie oft sich die Maßnahme ändert und was eine späte Korrektur kostet. Leg Beteiligte, Entscheidungsrechte, nötige Belege und Abgabetermine fest. Jede Prüfung endet mit einer Entscheidung.",
       },
       {
         id: "s2",
         title: "Ein einheitliches Belegpaket verwenden",
-        readTimeMinutes: 10,
+        readTimeMinutes: 1,
         content:
           "Zeig Hypothese, Maßnahme, Ausgangslage und Vergleich, Ergebnisse mit Unsicherheit, Schutzgrößen und Störungen, Betriebskosten, Grenzen und Entscheidungsvorschlag. Halte die Entscheidung über Fortsetzen, Ändern, Pausieren oder Beenden fest, samt Verantwortung und nächster Prüfbedingung.",
       },
@@ -153,10 +153,10 @@ export const MEASUREMENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "quiz",
-    title: "Modul 9, Wissensprüfung und Abschlussaufgabe",
+    title: "Modul 9, Wissensprüfung",
     subtitle: "Drei Fragen zu Nutzung, Ausgangslage und Belegprüfung.",
     objective: "Drei Fragen zu Nutzung, Ausgangslage und Belegprüfung.",
-    durationMinutes: 15,
+    durationMinutes: 4,
     keyConcepts: [],
     quiz: [
       {
@@ -171,7 +171,7 @@ export const MEASUREMENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
           {
             id: "b",
-            text: "Wie wurde Produktivität definiert und gegen welche Ausgangslage verglichen?",
+            text: "Wie wurde Produktivität definiert, gegen welche Ausgangslage verglichen, und was änderte sich sonst?",
             isCorrect: true,
           },
           {
@@ -200,12 +200,12 @@ export const MEASUREMENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
           {
             id: "b",
-            text: "Das monatliche Datenvolumen ist gestiegen.",
+            text: "Die monatliche Tokenmenge ist gestiegen.",
             isCorrect: false,
           },
           {
             id: "c",
-            text: "Vorab festgelegte Ergebnisse verbessern sich im glaubwürdigen Vergleich.",
+            text: "Vorab festgelegte Ergebnis- und Schutzgrößen verbessern sich im glaubwürdigen Vergleich.",
             isCorrect: true,
           },
           {

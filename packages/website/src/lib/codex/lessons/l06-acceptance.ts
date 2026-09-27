@@ -38,7 +38,7 @@ const lesson: CodexLesson = {
     },
     {
       id: "s2",
-      title: "The three flavors",
+      title: "Three kinds of criteria",
       readTimeMinutes: 2,
       blocks: [
         {
@@ -71,7 +71,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Tests make acceptance criteria executable, but they cover only what their assertions and environment exercise. Three patterns:\n\n**Write the tests yourself.** Commit failing tests that describe the required behavior, then ask Codex to make them pass without weakening the assertions.\n\n**Separate test design from implementation.** Task A: \"Given these requirements, write failing tests in tests/api/test_users.py. Do not implement.\" Review whether the tests capture the intent. Task B: \"Make the reviewed tests pass.\"\n\n**Request both in one change.** Codex writes tests for the new behavior, compares them with the goal, then implements. Review the tests on their own, because generated tests can encode the same misunderstanding as the implementation.",
+            "Three patterns:\n\n**Write the tests yourself.** Commit failing tests that describe the required behavior, then ask Codex to make them pass without weakening the assertions.\n\n**Separate test design from implementation.** Task A: \"Given these requirements, write failing tests in tests/api/test_users.py. Do not implement.\" Review whether the tests capture the intent. Task B: \"Make the reviewed tests pass.\"\n\n**Request both in one change.** Codex writes tests for the new behavior, compares them with the goal, then implements. Review the tests on their own, because generated tests can encode the same misunderstanding as the implementation.",
         },
       ],
     },
@@ -113,7 +113,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Ask which wrong implementations could still pass. If a foreseeable one passes the positive examples, add a *negative constraint*: a real performance, security, compatibility or scope boundary that leaves internal details open. What automated checks miss stays with human review. Example:\n\n```\n# incomplete: only names a command\n## Acceptance\n- pytest tests/api/test_pagination.py passes\n\n# explicit evidence and boundaries\n## Acceptance\n- pytest tests/api/test_pagination.py passes\n- pytest tests/api passes; attach the command result\n- Query-count evidence shows pagination does not fetch every row\n- Changes outside api/users.py and its tests require prior explanation\n```",
+            "Ask which wrong implementation could still pass. If a foreseeable one passes the positive examples, add a *negative constraint*: a real performance, security, compatibility or scope boundary that leaves internal details open. Example:\n\n```\n# incomplete: only names a command\n## Acceptance\n- pytest tests/api/test_pagination.py passes\n\n# explicit evidence and boundaries\n## Acceptance\n- pytest tests/api/test_pagination.py passes\n- pytest tests/api passes; attach the command result\n- Query-count evidence shows pagination does not fetch every row\n- Changes outside api/users.py and its tests require prior explanation\n```",
         },
       ],
     },
@@ -125,7 +125,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Judge each criterion on executability, relevance and coverage, and keep those that give real evidence for this rate-limit change.",
+            "In the exercise above, keep only criteria that give real evidence for this rate-limit change.",
         },
       ],
     },
@@ -134,7 +134,7 @@ const lesson: CodexLesson = {
       title: "Quick check",
       readTimeMinutes: 1,
       blocks: [
-        { kind: "prose", markdown: "Two questions follow." },
+        { kind: "prose", markdown: "Two questions at the end of the lesson." },
       ],
     },
   ]),
@@ -225,13 +225,13 @@ const lesson: CodexLesson = {
           "You are unsure how to define \"done\" for a difficult new feature. Which step makes the acceptance boundary testable first?",
         options: [
           "Ship the task with vague criteria and iterate.",
-          "A first task that only writes failing tests; review them, then \"make them pass\".",
+          "A first task that only writes failing tests for the requirements; review them, then \"make them pass\".",
           "Skip acceptance criteria entirely.",
           "Write a long prose description and hope.",
         ],
         correct: 1,
         explanation:
-          "Separate test design from implementation. Check the proposed tests against the requirement and confirm they fail for the intended reason before implementation starts.",
+          "Separate test design from implementation. Check the proposed tests against the requirement and confirm they fail for the intended reason before implementation starts. Passing them later is only part of the final review.",
       },
     },
   ],

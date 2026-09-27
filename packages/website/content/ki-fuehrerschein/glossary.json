@@ -17,7 +17,7 @@
   },
   {
     "term": "Attention-Mechanismus",
-    "definition": "Berechnet gewichtete Beziehungen zwischen Token-Repräsentationen und hilft Transformer-Modellen, Kontext zu verknüpfen. Relevanz oder Verständnis belegt er nicht.",
+    "definition": "Mechanismus, der gewichtete Beziehungen zwischen Token-Repräsentationen berechnet und Transformer-Modellen hilft, Kontext zu verknüpfen. Relevanz oder Verständnis belegt er nicht.",
     "english": "Attention Mechanism",
     "category": "technik",
     "relatedTerms": ["Transformer", "Large Language Model (LLM)"]
@@ -182,7 +182,7 @@
   },
   {
     "term": "Large Language Model (LLM)",
-    "definition": "Großes, auf umfangreichen Daten trainiertes Modell, das Wahrscheinlichkeiten für Tokenfolgen modelliert. Manche verarbeiten neben Text weitere Modalitäten; Produktname und Modellversion sind zweierlei.",
+    "definition": "Großes, auf umfangreichen Daten trainiertes Modell, das Wahrscheinlichkeiten für Tokenfolgen modelliert. Manche verarbeiten neben Text weitere Modalitäten; Produktname und Modellversion sind nicht dasselbe.",
     "english": "Large Language Model",
     "category": "technik",
     "relatedTerms": ["Token", "Transformer", "Halluzination"]
@@ -214,7 +214,7 @@
   },
   {
     "term": "Neuronales Netz",
-    "definition": "Rechenmodell aus Schichten verbundener Knoten nach dem Vorbild biologischer Neuronen und Grundlage für Deep Learning.",
+    "definition": "Rechenmodell aus Schichten verbundener Knoten nach dem Vorbild biologischer Neuronen. Es ist die Grundlage für Deep Learning.",
     "english": "Neural Network",
     "category": "technik",
     "relatedTerms": ["Deep Learning", "Parameter"]

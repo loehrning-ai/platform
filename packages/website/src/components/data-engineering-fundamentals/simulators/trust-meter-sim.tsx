@@ -415,8 +415,8 @@ export function TrustMeterSim() {
               {dashState === "ok" &&
                 status === "ok" &&
                 text(
-                  "matches reference · checks passed",
-                  "entspricht der Referenz · Prüfungen bestanden",
+                  "matches reference · selected checks passed",
+                  "entspricht der Referenz · ausgewählte Prüfungen bestanden",
                 )}
               {dashState === "ok" &&
                 status !== "ok" &&
@@ -449,8 +449,8 @@ export function TrustMeterSim() {
           <div className="tm-impact-banner ok">
             ✓{" "}
             {text(
-              "30 days completed · checks passed · signal recorded",
-              "30 Tage abgeschlossen · Prüfungen bestanden · Signal erfasst",
+              "30 days completed · selected checks passed · signal recorded",
+              "30 Tage abgeschlossen · ausgewählte Prüfungen bestanden · Signal erfasst",
             )}
           </div>
         )}

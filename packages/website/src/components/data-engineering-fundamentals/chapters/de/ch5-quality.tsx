@@ -15,7 +15,7 @@ export function Ch5QualityDe({ chapter }: Ch5QualityDeProps) {
         accent={chapter.inkHex}
         eyebrow={`Kapitel ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Qualität: Eine Pipeline, die <span class='accent'>lief</span>, ist noch keine Pipeline, die <span class='accent'>korrekt</span> lief."
-        hook="Ein erfolgreicher Task kann trotzdem unvollständige, veraltete, doppelte oder schemawidrige Daten schreiben. Prüfungen belegen ausgewählte Eigenschaften."
+        hook="Ein erfolgreicher Task kann trotzdem unvollständige, veraltete, doppelte oder schemawidrige Daten schreiben. Jede Prüfung zeigt, ob eine benannte Eigenschaft erfüllt ist. Bestandene Prüfungen belegen nicht, dass jeder Wert stimmt."
         meta={[
           { k: "Prüfwerkzeug", v: "ExpectationSuite" },
           { k: "Schranke", v: "Signaltabelle + ExternalTaskSensor" },
@@ -25,18 +25,23 @@ export function Ch5QualityDe({ chapter }: Ch5QualityDeProps) {
 
       <section className="section">
         <SectionLabel n="6.1">Die Kernprüfungen</SectionLabel>
-        <h2 className="h2">Vier Prüfungen für unterschiedliche Fehlerarten.</h2>
-        <p className="prose">
-          <b>Zeilenzahlband:</b> Vergleich die Partition mit einer tabellenspezifischen Basislinie und Schwelle, um leere oder unvollständige
-          Schreibvorgänge und Quelländerungen zu finden.
-          <br />
-          <b>Schemaabgleich:</b> Vergleich das beobachtete Schema mit dem versionierten Vertrag und seiner Kompatibilitätsregel.
-          <br />
-          <b>Aktualität:</b> Prüf die benannte Partition oder den Ereigniszeit-Stichtag gegen das Ziel des Datensatzes.
-          <br />
-          <b>Eindeutigkeit:</b> Prüf den deklarierten Schlüssel auf der deklarierten Granularität. Nicht jede Faktentabelle hat einen
-          Primärschlüssel mit genau einer Zeile.
-        </p>
+        <h2 className="h2">Jede Prüfung fängt einen anderen Fehler.</h2>
+        <ul className="prose">
+          <li>
+            <b>Zeilenzahlband:</b> Vergleich die Partition mit einer tabellenspezifischen Basislinie und Schwelle, um leere oder unvollständige
+            Schreibvorgänge und Quelländerungen zu finden.
+          </li>
+          <li>
+            <b>Schemaabgleich:</b> Vergleich das beobachtete Schema mit dem versionierten Vertrag und seiner Kompatibilitätsregel.
+          </li>
+          <li>
+            <b>Aktualität:</b> Prüf die benannte Partition oder den Ereigniszeit-Stichtag gegen das Ziel des Datensatzes.
+          </li>
+          <li>
+            <b>Eindeutigkeit:</b> Prüf den deklarierten Schlüssel auf der deklarierten Granularität. Nicht jede Faktentabelle hat einen
+            Primärschlüssel mit genau einer Zeile.
+          </li>
+        </ul>
         <TrustMeterSim />
       </section>
 
@@ -44,8 +49,8 @@ export function Ch5QualityDe({ chapter }: Ch5QualityDeProps) {
         <SectionLabel n="6.2">Die Signaltabelle als Schranke</SectionLabel>
         <h2 className="h2">Konfigurierte Verbraucher auf ein benanntes Qualitätssignal warten lassen.</h2>
         <p className="prose">
-          Hier laufen die Prüfungen nach dem Schreiben einer Partition und vor den abhängigen Tasks. Bestehen sie, entsteht eine Zeile in einer
-          <b> Signaltabelle</b>, und Verbraucher mit einem <code>ExternalTaskSensor</code> warten darauf. Die Datentabelle bleibt lesbar, also
+          Hier laufen die Prüfungen nach dem Schreiben einer Partition und vor den abhängigen Tasks. Bestehen sie, entsteht eine Zeile in einer{" "}
+          <b>Signaltabelle</b>, und Verbraucher mit einem <code>ExternalTaskSensor</code> warten darauf. Die Datentabelle bleibt lesbar, also
           braucht der Zugriff eine eigene Kontrolle, und das Alarm-Routing muss konfiguriert und getestet sein.
         </p>
         <div className="cards-2">

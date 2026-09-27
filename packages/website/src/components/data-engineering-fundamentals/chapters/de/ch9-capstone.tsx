@@ -24,7 +24,7 @@ export function Ch9CapstoneDe({ chapter }: Ch9CapstoneDeProps) {
 
       <section className="section">
         <SectionLabel n="10.1">Die laufende Pipeline</SectionLabel>
-        <h2 className="h2">Simulierte Zeilen durchlaufen sechs ausgewählte Kontrollen.</h2>
+        <h2 className="h2">Simulierte Zeilen durchlaufen die Pipeline.</h2>
         <p className="prose">
           Jeder Punkt ist eine simulierte Nutzerzeile. Das Szenario modelliert einen additiven Merge, Wiederholungsschutz,
           Nachzüglerbehandlung, Orchestrierung, ausgewählte Qualitätsprüfungen und eine registrierte Metrik, keine vollständige
@@ -40,7 +40,7 @@ export function Ch9CapstoneDe({ chapter }: Ch9CapstoneDeProps) {
       <Takeaway
         title="Kernaussagen"
         items={[
-          "Ein Signal trennt einen abgeschlossenen Schreibvorgang von einem, der die benannten Prüfungen bestanden hat.",
+          "Ein Signal trennt einen abgeschlossenen Schreibvorgang von einem, der die benannten Prüfungen bestanden hat. Es beweist nicht jeden fachlichen Wert.",
           "Eine plausible Zahl braucht Quelle, Stichtag, Definitionsversion und Prüfnachweise, bevor jemand sie interpretieren kann.",
           "Verfolg einen Fehler bis zum verantwortlichen Vertrag zurück und bau den betroffenen Zustand neu auf, statt das Symptom nachgelagert zu verdecken.",
         ]}

@@ -76,8 +76,8 @@ function exportPreflightErrorMessage(
 function unknownDeleteStatusMessage(locale: Locale): string {
   return localized(
     locale,
-    "Der Löschstatus konnte nicht sicher ermittelt werden. Lade die Seite neu, ohne die Löschung erneut zu senden: Ist keine Anmeldung mehr möglich, ist das Konto gelöscht, sonst schreib an tim@loehrning.ai.",
-    "The deletion status could not be determined safely. Reload the page without resubmitting the deletion: if you can no longer sign in, the account is deleted; otherwise contact tim@loehrning.ai.",
+    "Der Löschstatus ist unklar. Sende die Löschung nicht erneut. Lade die Seite neu: Klappt keine Anmeldung mehr, ist das Konto gelöscht. Sonst schreib an tim@loehrning.ai.",
+    "The deletion status is unclear. Do not submit the deletion again. Reload the page: if you cannot sign in, the account is deleted. Otherwise email tim@loehrning.ai.",
   );
 }
 
@@ -95,8 +95,8 @@ function definiteDeleteFailureMessage(
   if (status === 403 && errorCode === "reauthentication_required") {
     return localized(
       locale,
-      "Zur Sicherheit: Melde dich ab und erneut mit einer verfügbaren Anmeldemethode an. Danach kannst du das Konto 15 Minuten lang löschen.",
-      "For security, sign out and sign in again with an available sign-in method. You can then delete the account for 15 minutes.",
+      "Zur Sicherheit: Melde dich ab und erneut mit einer verfügbaren Anmeldemethode an. Danach ist die Kontolöschung 15 Minuten lang freigegeben.",
+      "For security, sign out and sign in again with an available sign-in method. Account deletion then stays unlocked for 15 minutes.",
     );
   }
   if (status === 503 && errorCode === "pre_delete_incomplete") {
@@ -139,8 +139,8 @@ export function DatenschutzClient({
       setErrorMsg(
         localized(
           locale,
-          "Die Kontozuordnung ist noch nicht sicher bestätigt. Lade die Seite neu.",
-          "The account assignment is not yet verified. Reload the page.",
+          "Die Kontozuordnung ist noch nicht sicher bestätigt. Lade die Seite neu und starte den Export dann erneut.",
+          "The account assignment is not yet safely verified. Reload the page, then restart the export.",
         ),
       );
       return;
@@ -238,8 +238,8 @@ export function DatenschutzClient({
       setErrorMsg(
         localized(
           locale,
-          "Die Kontozuordnung ist noch nicht sicher bestätigt. Lade die Seite neu.",
-          "The account assignment is not yet verified. Reload the page.",
+          "Die Kontozuordnung ist noch nicht sicher bestätigt. Lade die Seite neu und setze den Kurs dann zurück.",
+          "The account assignment is not yet safely verified. Reload the page, then reset the course.",
         ),
       );
       return;
@@ -330,8 +330,8 @@ export function DatenschutzClient({
         setErrorMsg(
           localized(
             locale,
-            "Die Löschung konnte lokal nicht sicher vorbereitet werden. Es wurde keine Löschanfrage gesendet. Lade neu und prüfe, ob der Browser Website-Daten speichern darf.",
-            "The deletion could not be prepared safely in the browser. No deletion request was sent. Reload and check that the browser may store site data.",
+            "Die Löschung konnte lokal nicht sicher vorbereitet werden. Es wurde keine Löschanfrage gesendet. Lade die Seite neu und prüfe, ob der Browser Website-Daten speichern darf.",
+            "The deletion could not be prepared safely in the browser. No deletion request was sent. Reload the page and check that the browser may store site data.",
           ),
         );
       }
@@ -352,8 +352,8 @@ export function DatenschutzClient({
       setErrorMsg(
         localized(
           locale,
-          "Der Löschstatus konnte wegen eines Verbindungsfehlers nicht sicher ermittelt werden. Lade die Seite neu, ohne die Löschung erneut zu senden: Ist keine Anmeldung mehr möglich, ist das Konto gelöscht, sonst schreib an tim@loehrning.ai.",
-          "The deletion status could not be determined safely because of a connection error. Reload the page without resubmitting the deletion: if you can no longer sign in, the account is deleted; otherwise contact tim@loehrning.ai.",
+          "Wegen eines Verbindungsfehlers ist der Löschstatus unklar. Sende die Löschung nicht erneut. Lade die Seite neu: Klappt keine Anmeldung mehr, ist das Konto gelöscht. Sonst schreib an tim@loehrning.ai.",
+          "Because of a connection error, the deletion status is unclear. Do not submit the deletion again. Reload the page: if you cannot sign in, the account is deleted. Otherwise email tim@loehrning.ai.",
         ),
       );
       return;
@@ -441,8 +441,8 @@ export function DatenschutzClient({
       setErrorMsg(
         localized(
           locale,
-          "Die Kontozuordnung ist noch nicht sicher bestätigt. Lade die Seite neu.",
-          "The account assignment is not yet verified. Reload the page.",
+          "Die Kontozuordnung ist noch nicht sicher bestätigt. Lade die Seite neu und starte die Löschung dann erneut.",
+          "The account assignment is not yet safely verified. Reload the page, then restart the deletion.",
         ),
       );
       return;
@@ -561,8 +561,8 @@ export function DatenschutzClient({
             <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground">
               {localized(
                 locale,
-                "Du erhältst eine JSON-Datei mit E-Mail-Adresse, Kursfortschritt, historischen Quizversuchen, Dokumenten aus dem Lebenslauf-Editor und Exportzeitpunkt. Dazu kommen die Anmeldedaten, auch einzeln je verknüpfter Anmeldeidentität: Anmeldeverfahren, Kontokennung beim Anmeldedienst und Bestätigungsstatus der E-Mail, bei Google oder GitHub auch Name und Profilbild-Adresse, bei GitHub der Benutzername. Prüfe, dass",
-                "You receive a JSON file with your email address, course progress, historical quiz attempts, resume editor documents and the export time. It also holds your sign-in data, listed separately for each linked sign-in identity too: sign-in method, account identifier at the sign-in service and email verification status, with Google or GitHub also name and profile-picture address, with GitHub the username. Check that",
+                "Du erhältst eine JSON-Datei mit E-Mail-Adresse, Kursfortschritt, historischen Quizversuchen, Dokumenten aus dem Lebenslauf-Editor und Exportzeitpunkt. Dazu kommen deine Identitätsdaten aus der Anmeldung, einzeln je verknüpfter Anmeldeidentität: Anmeldeverfahren, Kontokennung beim Anmeldedienst und Bestätigungsstatus der E-Mail, bei Google oder GitHub auch Name und Profilbild-Adresse, bei GitHub der Benutzername. Prüfe, dass",
+                "You receive a JSON file with your email address, course progress, historical quiz attempts, resume editor documents and the export time. It also holds your identity data from sign-in, listed for each linked sign-in identity: sign-in method, account identifier at the sign-in service and email verification status, with Google or GitHub also name and profile-picture address, with GitHub the username. Check that",
               )}{" "}
               <code className="mx-1 font-mono text-[0.9em] text-foreground">
                 export_complete
@@ -571,7 +571,7 @@ export function DatenschutzClient({
               <code className="font-mono text-[0.9em] text-foreground">
                 true
               </code>
-              {localized(locale, " steht.", ".")}{" "}
+              {localized(locale, " steht. Das Feld", ". The field")}{" "}
               <code className="mx-1 font-mono text-[0.9em] text-foreground">
                 sections
               </code>{" "}
@@ -634,15 +634,15 @@ export function DatenschutzClient({
             <summary className="flex min-h-11 cursor-pointer items-center px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.1em] text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange">
               {localized(
                 locale,
-                "Umfang und Exporthistorie",
-                "Scope and export history",
+                "Was zurückgesetzt wird",
+                "What a reset deletes",
               )}
             </summary>
             <p className="border-t border-border px-4 py-3 text-sm leading-relaxed text-muted-foreground">
               {localized(
                 locale,
                 "Löscht Lektionen, Quiz- und Abschlussstatus eines Kurses auf dem Server und in diesem Browser. Andere Kurse sowie kursübergreifende XP, Badges, Streaks und Checkpoints bleiben. Der Server behält den Reset-Zeitpunkt als Schutz gegen veraltete Geräte; er steht im Export und verschwindet mit dem Konto.",
-                "Deletes lesson, quiz and completion status for one course on the server and in this browser. Other courses and cross-course XP, badges, streaks and checkpoints stay. The server keeps the reset time to guard against stale devices; it appears in the export and goes with the account.",
+                "Deletes lesson, quiz and completion status for one course on the server and in this browser. Other courses and cross-course XP, badges, streaks and checkpoints stay. The server keeps the reset time to guard against stale devices; it appears in the export and is deleted with the account.",
               )}
             </p>
           </details>
@@ -766,8 +766,8 @@ export function DatenschutzClient({
               <p className="border-t border-border px-3 py-3 text-sm leading-relaxed text-muted-foreground">
                 {localized(
                   locale,
-                  "Pseudonyme Missbrauchszähler und zwischengespeicherte KI-Antworten enthalten keine rohe Kontokennung und laufen nach den Fristen der Datenschutzerklärung aus. Ein lokaler Löschmarker mit der technischen Kontokennung bleibt höchstens 30 Tage, damit auch pausierte Tabs ihre Lerndaten entfernen. Danach sperren eine zufällige Generation und eine per SHA-256 abgeleitete Löschkennung ohne rohe Kontokennung veraltete Tabs dauerhaft. Höchstens 128 Kennungen werden vorgehalten, darüber ersetzt eine globale Generation die einzelnen; nur die Kennung des laufenden Löschvorgangs bleibt für dessen Wiederholung.",
-                  "Pseudonymous abuse counters and cached AI responses hold no raw account identifier and expire under the periods in the privacy policy. A local deletion marker with the technical account identifier stays for at most 30 days, so suspended tabs also remove their learning data. After that, a random generation and a SHA-256-derived deletion identifier without the raw identifier block stale tabs permanently. At most 128 identifiers are kept, beyond that a global generation replaces them; only the current deletion's identifier stays for idempotent processing.",
+                  "Pseudonyme Zähler zum Missbrauchsschutz und zwischengespeicherte KI-Antworten enthalten keine rohe Kontokennung und laufen nach den Fristen der Datenschutzerklärung aus. Nach der Löschung bleibt ein lokaler Löschmarker mit der technischen Kontokennung höchstens 30 Tage, damit auch pausierte Tabs ihre Lerndaten entfernen. Danach sperren eine zufällige technische Generation und eine per SHA-256 aus der Kontokennung abgeleitete Löschkennung ohne rohe Kontokennung veraltete Tabs dauerhaft. Es bleiben höchstens 128 solcher Kennungen; bei mehr ersetzt eine globale Generation die einzelnen, nur die Kennung der laufenden Löschung bleibt, damit sie sich sicher erneut verarbeiten lässt.",
+                  "Pseudonymous abuse-prevention counters and cached AI responses hold no raw account identifier and expire under the periods in the privacy policy. After deletion, a local deletion marker with the technical account identifier stays for at most 30 days, so suspended tabs also remove their learning data. After that, a random technical generation and a deletion identifier derived with SHA-256 from the account identifier, without the raw identifier, block stale tabs permanently. At most 128 such identifiers are kept; beyond that, a global generation replaces the individual ones, and only the current deletion's identifier stays so it can be processed again safely.",
                 )}
               </p>
             </details>

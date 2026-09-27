@@ -21,7 +21,7 @@ export default localizeCodexLessonToGerman(canonical, {
       "Answer \"how will you know it is done?\" before implementation, with observable examples, commands, tests or structural constraints. If you cannot name one relevant check, the behavior is still ambiguous or the verification path is missing.\n\nCodex runs the available checks and revises from their output. A green run still needs someone to confirm that the checks cover the requirement, ran in the intended environment and were not weakened to pass.",
       "Beantworte \"Woran erkenne ich, dass es fertig ist?\" vor der Umsetzung, mit beobachtbaren Beispielen, Befehlen, Tests oder strukturellen Grenzen. Fällt dir keine relevante Prüfung ein, ist das Verhalten noch unklar oder der Verifikationsweg fehlt.\n\nCodex führt die verfügbaren Prüfungen aus und bessert anhand ihrer Ausgabe nach. Auch ein grüner Lauf braucht jemanden, der bestätigt, dass die Prüfungen die Anforderung abdecken, in der richtigen Umgebung liefen und nicht abgeschwächt wurden.",
     ],
-    ["The three flavors", "Drei Arten"],
+    ["Three kinds of criteria", "Drei Arten von Kriterien"],
     ["01 · executable", "01 · ausführbar"],
     ["Tests that must pass", "Tests, die bestehen müssen"],
     [
@@ -42,8 +42,8 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     ["Tests-first workflow", "Arbeitsablauf mit Tests zuerst"],
     [
-      "Tests make acceptance criteria executable, but they cover only what their assertions and environment exercise. Three patterns:\n\n**Write the tests yourself.** Commit failing tests that describe the required behavior, then ask Codex to make them pass without weakening the assertions.\n\n**Separate test design from implementation.** Task A: \"Given these requirements, write failing tests in tests/api/test_users.py. Do not implement.\" Review whether the tests capture the intent. Task B: \"Make the reviewed tests pass.\"\n\n**Request both in one change.** Codex writes tests for the new behavior, compares them with the goal, then implements. Review the tests on their own, because generated tests can encode the same misunderstanding as the implementation.",
-      "Tests machen Akzeptanzkriterien ausführbar, decken aber nur ab, was ihre Assertions und ihre Umgebung ausüben. Drei Muster:\n\n**Tests selbst schreiben.** Committe fehlschlagende Tests für das verlangte Verhalten. Dann soll Codex sie grün bekommen, ohne die Assertions abzuschwächen.\n\n**Testentwurf und Implementierung trennen.** Auftrag A: \"Schreibe auf Grundlage dieser Anforderungen fehlschlagende Tests in tests/api/test_users.py. Implementiere nichts.\" Prüfe, ob die Tests die Absicht treffen. Auftrag B: \"Bring die geprüften Tests zum Bestehen.\"\n\n**Beides in einer Änderung verlangen.** Codex schreibt Tests für das neue Verhalten, gleicht sie mit dem Ziel ab und implementiert dann. Prüfe die Tests für sich, denn generierte Tests können dasselbe Missverständnis enthalten wie die Implementierung.",
+      "Three patterns:\n\n**Write the tests yourself.** Commit failing tests that describe the required behavior, then ask Codex to make them pass without weakening the assertions.\n\n**Separate test design from implementation.** Task A: \"Given these requirements, write failing tests in tests/api/test_users.py. Do not implement.\" Review whether the tests capture the intent. Task B: \"Make the reviewed tests pass.\"\n\n**Request both in one change.** Codex writes tests for the new behavior, compares them with the goal, then implements. Review the tests on their own, because generated tests can encode the same misunderstanding as the implementation.",
+      "Drei Muster:\n\n**Tests selbst schreiben.** Committe fehlschlagende Tests für das verlangte Verhalten. Dann soll Codex sie grün bekommen, ohne die Assertions abzuschwächen.\n\n**Testentwurf und Implementierung trennen.** Auftrag A: \"Schreibe auf Grundlage dieser Anforderungen fehlschlagende Tests in tests/api/test_users.py. Implementiere nichts.\" Prüfe, ob die Tests die Absicht treffen. Auftrag B: \"Bring die geprüften Tests zum Bestehen.\"\n\n**Beides in einer Änderung verlangen.** Codex schreibt Tests für das neue Verhalten, gleicht sie mit dem Ziel ab und implementiert dann. Prüfe die Tests für sich, denn generierte Tests können dasselbe Missverständnis enthalten wie die Implementierung.",
     ],
     ["Accept or reject?", "Annehmen oder ablehnen?"],
     [
@@ -60,7 +60,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ["Adjacent problem solving", "Benachbartes Problem gelöst"],
     [
       "The checks run but omit a required interface or constraint. Compare the output with the original user and system behavior as well as the new assertions.",
-      "Die Checks laufen, lassen aber eine geforderte Schnittstelle oder Grenze aus. Vergleiche die Ausgabe mit dem ursprünglichen Nutzer- und Systemverhalten und mit den neuen Assertions.",
+      "Die Prüfungen laufen, lassen aber eine geforderte Schnittstelle oder Grenze aus. Vergleiche die Ausgabe mit dem ursprünglichen Nutzer- und Systemverhalten und mit den neuen Assertions.",
     ],
     ["pattern 03", "Muster 03"],
     ["Hidden regression", "Verdeckte Regression"],
@@ -78,18 +78,15 @@ export default localizeCodexLessonToGerman(canonical, {
       "Ein für sich gültiger Bibliotheksaufruf kann mit Konfiguration, Nebenläufigkeit, Lebenszyklus oder Deployment des Repositorys kollidieren. Prüfe Integrationsvertrag und aktuelle Bibliotheksdokumentation.",
     ],
     [
-      "Ask which wrong implementations could still pass. If a foreseeable one passes the positive examples, add a *negative constraint*: a real performance, security, compatibility or scope boundary that leaves internal details open. What automated checks miss stays with human review. Example:\n\n```\n# incomplete: only names a command\n## Acceptance\n- pytest tests/api/test_pagination.py passes\n\n# explicit evidence and boundaries\n## Acceptance\n- pytest tests/api/test_pagination.py passes\n- pytest tests/api passes; attach the command result\n- Query-count evidence shows pagination does not fetch every row\n- Changes outside api/users.py and its tests require prior explanation\n```",
-      "Frag dich, welche falsche Implementierung noch durchkäme. Besteht eine absehbare die positiven Beispiele, ergänze eine *negative Einschränkung*: eine echte Leistungs-, Sicherheits-, Kompatibilitäts- oder Umfangsgrenze, die interne Details offenlässt. Was die Automatik nicht abdeckt, prüft ein Mensch. Beispiel:\n\n```\n# unvollständig: nennt nur einen Befehl\n## Akzeptanz\n- pytest tests/api/test_pagination.py besteht\n\n# ausdrückliche Nachweise und Grenzen\n## Akzeptanz\n- pytest tests/api/test_pagination.py besteht\n- pytest tests/api besteht; Befehlsausgabe beifügen\n- Query-Count-Nachweis zeigt, dass Pagination nicht sämtliche Zeilen lädt\n- Änderungen außerhalb von api/users.py und seinen Tests vorher begründen\n```",
+      "Ask which wrong implementation could still pass. If a foreseeable one passes the positive examples, add a *negative constraint*: a real performance, security, compatibility or scope boundary that leaves internal details open. Example:\n\n```\n# incomplete: only names a command\n## Acceptance\n- pytest tests/api/test_pagination.py passes\n\n# explicit evidence and boundaries\n## Acceptance\n- pytest tests/api/test_pagination.py passes\n- pytest tests/api passes; attach the command result\n- Query-count evidence shows pagination does not fetch every row\n- Changes outside api/users.py and its tests require prior explanation\n```",
+      "Frag dich, welche falsche Implementierung noch durchkäme. Kommt eine absehbare Fehlimplementierung durch die positiven Beispiele, ergänze eine *negative Einschränkung*: eine echte Leistungs-, Sicherheits-, Kompatibilitäts- oder Umfangsgrenze, die interne Details offenlässt. Beispiel:\n\n```\n# unvollständig: nennt nur einen Befehl\n## Akzeptanz\n- pytest tests/api/test_pagination.py besteht\n\n# ausdrückliche Nachweise und Grenzen\n## Akzeptanz\n- pytest tests/api/test_pagination.py besteht\n- pytest tests/api besteht; Befehlsausgabe beifügen\n- Query-Count-Nachweis zeigt, dass Pagination nicht sämtliche Zeilen lädt\n- Änderungen außerhalb von api/users.py und seinen Tests vorher begründen\n```",
     ],
     ["Build one", "Kriterien zusammenstellen"],
     [
-      "Judge each criterion on executability, relevance and coverage, and keep those that give real evidence for this rate-limit change.",
-      "Bewerte die Kriterien nach Ausführbarkeit, Relevanz und Abdeckung und behalte, was für diese Rate-Limit-Änderung echten Nachweis liefert.",
+      "In the exercise above, keep only criteria that give real evidence for this rate-limit change.",
+      "Behalte in der Übung oben nur Kriterien, die für diese Rate-Limit-Änderung echten Nachweis liefern.",
     ],
-    [
-      "Two questions follow.",
-      "Es folgen zwei Fragen.",
-    ],
+    ["Two questions at the end of the lesson.", "Zwei Fragen am Ende der Lektion."],
     [
       "Build acceptance evidence for a rate-limit feature",
       "Akzeptanznachweise für eine Rate-Limit-Funktion zusammenstellen",
@@ -160,11 +157,11 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       '"Make test" is shorter, so the agent reads it faster.',
-      '"Make test" ist kürzer und wird deshalb schneller gelesen.',
+      '"make test" ist kürzer und wird deshalb schneller gelesen.',
     ],
     [
       "\"Make test\" is a runnable check with output; \"should work\" names no evidence.",
-      "\"Make test\" ist eine ausführbare Prüfung mit Ausgabe; \"sollte funktionieren\" nennt keinen Nachweis.",
+      "\"make test\" ist eine ausführbare Prüfung mit Ausgabe; \"soll funktionieren\" nennt keinen Nachweis.",
     ],
     [
       "There is no meaningful difference.",
@@ -172,7 +169,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       '"Should work" implies higher quality.',
-      '"Soll funktionieren" verlangt eine höhere Qualität.',
+      '"soll funktionieren" verlangt eine höhere Qualität.',
     ],
     [
       "An executable command gives repeatable evidence and guides revision. The reviewer still confirms that it ran successfully and that its tests cover the requested behavior.",
@@ -187,8 +184,8 @@ export default localizeCodexLessonToGerman(canonical, {
       "Den Auftrag mit unklaren Kriterien starten und später nachbessern.",
     ],
     [
-      "A first task that only writes failing tests; review them, then \"make them pass\".",
-      "Ein erster Auftrag, der nur fehlschlagende Tests schreibt; prüfen, dann \"bring sie zum Bestehen\".",
+      "A first task that only writes failing tests for the requirements; review them, then \"make them pass\".",
+      "Ein erster Auftrag, der nur fehlschlagende Tests für die Anforderungen schreibt; prüfen, dann \"bring sie zum Bestehen\".",
     ],
     [
       "Skip acceptance criteria entirely.",
@@ -199,8 +196,8 @@ export default localizeCodexLessonToGerman(canonical, {
       "Eine lange Prosabeschreibung schreiben und hoffen.",
     ],
     [
-      "Separate test design from implementation. Check the proposed tests against the requirement and confirm they fail for the intended reason before implementation starts.",
-      "Trenne Testentwurf und Implementierung. Prüfe die vorgeschlagenen Tests gegen die Anforderung und bestätige, dass sie aus dem richtigen Grund scheitern, bevor die Umsetzung beginnt.",
+      "Separate test design from implementation. Check the proposed tests against the requirement and confirm they fail for the intended reason before implementation starts. Passing them later is only part of the final review.",
+      "Trenne Testentwurf und Implementierung. Prüfe die vorgeschlagenen Tests gegen die Anforderung und bestätige, dass sie aus dem richtigen Grund scheitern, bevor die Umsetzung beginnt. Dass sie später grün werden, ist nur ein Teil des Reviews.",
     ],
   ],
   preserve: [

@@ -45,14 +45,14 @@ const lesson: DataInfraLesson = {
       title: "Hive-style vs hidden",
       readTimeMinutes: 3,
       content:
-        "**Hive-style partitioning** stores the partition value in a path such as `s3://lake/orders/order_date=2026-05-01/part-001.parquet`. Writers must compute it consistently, a granularity change can force moving or rewriting files, and writers that derive `order_date` differently produce a wrong layout.\n\n**Hidden partitioning**, supported by Iceberg since spec v1, declares a transform such as `PARTITIONED BY (days(order_ts))` in table metadata. Compatible writers derive the value, and queries keep filtering on `order_ts`. Partition evolution can switch `days(order_ts)` to `hours(order_ts)` for new files while old files keep their spec, and readers plan across both.\n\nThis loosens the coupling between application code and physical layout. Engine support, transform semantics, metadata integrity, time zones and pruning still need checking on your deployed versions.",
+        "**Hive-style partitioning** stores the partition value in a path such as `s3://lake/orders/order_date=2026-05-01/part-001.parquet`. Writers must compute it consistently, a granularity change can force moving or rewriting files, and writers that derive `order_date` differently produce a wrong layout.\n\n**Hidden partitioning**, supported by Iceberg since spec v1, declares a transform such as `PARTITIONED BY (days(order_ts))` in table metadata. Compatible writers derive the value, and queries keep filtering on `order_ts`. Partition evolution can switch `days(order_ts)` to `hours(order_ts)` for new files while old files keep their spec, and readers plan across both.\n\nStill check engine support, transform semantics, metadata integrity, time zones and pruning on your deployed versions.",
     },
     {
       id: "s2",
       title: "Pick a key",
       readTimeMinutes: 2,
       content:
-        "The interactive model applies one fixed query to five synthetic layouts. Its file counts and scanned bytes are teaching inputs, not measurements or thresholds.\n\nCompare the relative behavior, then repeat with production distributions. Hourly partitions create small files at low volume, user partitions expose skew, and no partitioning forces broad scans.",
+        "The model above runs one fixed query on five synthetic layouts.\n\nCompare the relative behavior, then repeat with production distributions. Hourly partitions create small files at low volume, user partitions expose skew, and no partitioning forces broad scans.",
     },
     {
       id: "s3",
@@ -73,27 +73,27 @@ const lesson: DataInfraLesson = {
       title: "Sharding ≠ partitioning",
       readTimeMinutes: 2,
       content:
-        "The two terms mean different things across products.\n\n- **Analytical partitioning** groups table data for pruning, retention and maintenance.\n- **Database sharding** routes records across independently scalable database partitions or instances, which brings routing, rebalancing, cross-shard query and transaction concerns.\n\nRouting has the same range-versus-hash trade-off. Composite keys, virtual shards and online rebalancing each ease part of it, and you still measure skew.",
+        "Products use both words loosely; here they mean:\n\n- **Analytical partitioning** groups table data for pruning, retention and maintenance.\n- **Database sharding** routes records across independently scalable database partitions or instances, which brings routing, rebalancing, cross-shard query and transaction concerns.\n\nHash routing spreads keys but loses range locality; range routing keeps locality but creates hot ranges. Composite keys, virtual shards and online rebalancing each ease part of it, and you still measure skew.",
     },
     {
       id: "s6",
       title: "Quick check",
       readTimeMinutes: 1,
-      content: "Two questions on skew and layout.",
+      content: "Two questions on skew and layout, below the vocab.",
     },
     {
       id: "s7",
       title: "Key takeaways",
       readTimeMinutes: 2,
       content:
-        "- Inspect file-level plans and bytes read, not only the SQL text.\n- Pick file sizes from engine guidance and workload measurements.\n- Count re-clustering cost and write amplification into every clustering decision.",
+        "- Check bytes read in the file-level plan, not only the SQL text.",
     },
     {
       id: "s8",
       title: "Vocab",
       readTimeMinutes: 2,
       content:
-        "- **Partition pruning**, skipping file groups by partition metadata.\n- **Range partition**, groups rows by value range.\n- **Hash partition**, spreads a key over N buckets.\n- **List partition**, maps declared values to partitions.\n- **Hidden partitioning**, partition transforms declared in table metadata.\n- **Over-partitioning**, too many small partitions or files.\n- **Liquid clustering**, a Delta Lake layout feature.\n- **Salt**, a sub-key that spreads a hot key.",
+        "The flashcards below the questions cover partition pruning, range, hash and list partitions, hidden partitioning, over-partitioning, liquid clustering and salting.",
     },
   ],
   widgets: [
@@ -109,13 +109,13 @@ const lesson: DataInfraLesson = {
           "You partition `events` by `user_id` across 10M users. In production, 90% of partitions are <100MB, but 5 partitions are >500GB each. Which user IDs are those?",
         options: [
           "Random ones; that is how distributions work.",
-          'Bots, test accounts, a shared "guest" ID and a few whales (e.g. enterprise tenants).',
+          'Bots, test accounts, a shared "guest" ID and enterprise tenants.',
           "The newest users.",
           "It must be a bug.",
         ],
         correct: 1,
         explanation:
-          "Shared anonymous IDs, internal traffic, automation and large tenants cause most skew, and hashing the same key only moves the hotspot. Try a deterministic salt such as `user_id + (event_id % 16)` with recombination downstream, separate handling of known traffic, or time partitions clustered by user.",
+          "Shared anonymous IDs, internal traffic, automation and large tenants cause most skew; hashing the same key only moves it. Salt deterministically (`user_id + (event_id % 16)`), isolate known traffic, or partition by time and cluster by user, then check ordering needs.",
       },
     },
     {
@@ -136,7 +136,7 @@ const lesson: DataInfraLesson = {
         ],
         correct: 2,
         explanation:
-          "A compound `(order_date, country)` layout reaches up to 73,000 value combinations per year. Sorting or clustering by `country` inside date partitions avoids a directory per combination; confirm it with file statistics and query plans.",
+          "365 dates × about 200 countries give up to 73000 partitions a year. Sorting or clustering by `country` inside date partitions avoids a directory per combination; confirm it with file statistics and query plans.",
       },
     },
     {
@@ -181,7 +181,7 @@ const lesson: DataInfraLesson = {
           {
             term: "Liquid clustering",
             q: "What must be verified?",
-            a: "A Delta Lake layout feature. Verify runtimes, protocol requirements, clustering keys, maintenance and interoperability for your version.",
+            a: "Delta Lake clustering on declared keys that replaces fixed partitions and Z-order. Verify runtimes, protocol requirements, maintenance and interoperability for your version.",
           },
           {
             term: "Salt",

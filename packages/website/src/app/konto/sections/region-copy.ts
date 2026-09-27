@@ -221,13 +221,13 @@ export const ACCOUNT_CONTROLS_COPY = {
       {
         id: "reset",
         title: "Kursfortschritt zurücksetzen",
-        body: "Setzt einen Kurs zurück, andere bleiben unberührt.",
+        body: "Setzt einen Kurs auf dem Server und in diesem Browser zurück. Andere Kurse bleiben unberührt.",
         action: "Öffnen",
       },
       {
         id: "delete",
         title: "Konto löschen",
-        body: "Löscht Konto, E-Mail-Adresse und Fortschritt endgültig.",
+        body: "Löscht Konto, E-Mail-Adresse und serverseitigen Fortschritt endgültig.",
         action: "Öffnen",
       },
     ],
@@ -245,13 +245,13 @@ export const ACCOUNT_CONTROLS_COPY = {
       {
         id: "reset",
         title: "Reset course progress",
-        body: "Resets one course; the others stay untouched.",
+        body: "Resets one course on the server and in this browser. Other courses stay untouched.",
         action: "Open",
       },
       {
         id: "delete",
         title: "Delete account",
-        body: "Permanently deletes account, email address and progress.",
+        body: "Permanently deletes account, email address and server-side progress.",
         action: "Open",
       },
     ],

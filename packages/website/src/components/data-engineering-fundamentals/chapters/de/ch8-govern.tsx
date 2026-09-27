@@ -15,7 +15,7 @@ export function Ch8GovernDe({ chapter }: Ch8GovernDeProps) {
         accent={chapter.inkHex}
         eyebrow={`Kapitel ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Governance: Datenschutz wird an der <span class='accent'>Deployment-Schranke</span> geprüft."
-        hook="Die Referenzschranke prüft deklarierte Identitätsklassen, ACL-Metadaten und Transformationsregeln. Besteht ein Deployment, halten diese Regeln; rechtliche Konformität ist damit nicht belegt."
+        hook="Die Referenzschranke prüft deklarierte Identitätsklassen, ACL-Metadaten und Transformationsregeln."
         meta={[
           { k: "Deployment-Schranke", v: "Access Gateway" },
           { k: "ACL", v: "dataset_acl" },
@@ -27,8 +27,8 @@ export function Ch8GovernDe({ chapter }: Ch8GovernDeProps) {
         <SectionLabel n="9.1">Akteur-Annotationen</SectionLabel>
         <h2 className="h2">Jede Spalte deklariert, wen oder was sie identifiziert.</h2>
         <p className="prose">
-          Eine Spalte hat einen technischen Typ und ein richtlinienrelevantes
-          <em> Subjekt</em>: <code>employee_email</code> identifiziert eine
+          Eine Spalte hat einen technischen Typ und ein richtlinienrelevantes{" "}
+          <em>Subjekt</em>: <code>employee_email</code> identifiziert eine
           Person, <code>service_account_id</code> eine Anwendung,{" "}
           <code>contractor_id</code> eine externe Arbeitskraft. Die drei Bezeichnungen unten sind Kursbezeichnungen; eine produktive Taxonomie
           stimmst du mit den Rechts-, Datenschutz-, Sicherheits- und Aufbewahrungsregeln deiner Organisation ab.
@@ -63,7 +63,7 @@ export function Ch8GovernDe({ chapter }: Ch8GovernDeProps) {
         <h2 className="h2">Die Referenzschranke prüft deklarierte Metadaten.</h2>
         <p className="prose">
           Im Simulator prüft Access Gateway jede deklarierte Spalte gegen die Kursregeln, löst <code>dataset_acl</code> auf und prüft optional
-          eine Richtlinienzonen-Bindung. Sie findet fehlende Metadaten. Sensible Werte, Richtlinienkonflikte und rechtliche Anforderungen
+          eine Richtlinienzonen-Bindung. Das Gateway findet fehlende Metadaten. Sensible Werte, Richtlinienkonflikte und rechtliche Anforderungen
           brauchen weitere Prüfung und Nachweise.
         </p>
         <PermissionGateSim />
@@ -72,8 +72,8 @@ export function Ch8GovernDe({ chapter }: Ch8GovernDeProps) {
       <section className="section">
         <SectionLabel n="9.3">Richtlinienzonen und abgeschottete Transformationen</SectionLabel>
         <p className="prose">
-          Eine <b>Richtlinienzone</b> bindet die Ausführung an eine benannte Rechenumgebung, und eine abgeschottete Transformation verliert mit
-          <code> network=NO_NETWORK</code> den direkten Netzwerk-Egress. Identität, Speicher, Logs, Abhängigkeiten, Ausgaben und
+          Eine <b>Richtlinienzone</b> bindet die Ausführung an eine benannte Rechenumgebung, und eine abgeschottete Transformation verliert mit{" "}
+          <code>network=NO_NETWORK</code> den direkten Netzwerk-Egress. Identität, Speicher, Logs, Abhängigkeiten, Ausgaben und
           Deployment-Konfiguration müssen trotzdem erzwungen und getestet werden.
         </p>
         <CodeBlock

@@ -31,13 +31,13 @@ export default localizeDataInfraLessonToGerman(canonical, {
 
 Eine Abfrage wie *„Umsatz nach Kategorie summieren, nach Land und Zeitraum filtern“* joint eine Vertriebsfaktentabelle mit Produkt-, Kunden- und Datumsdimension. Das funktioniert, solange Definitionen und Granularitäten konsistent bleiben.
 
-- **SCD Type 2 (Slowly Changing Dimensions).** Ändert sich ein Attribut, kommt eine versionierte Dimensionszeile mit Gültigkeitsgrenzen dazu. Ein historischer Fakt joint auf die Version, die zu seinem Ereigniszeitpunkt galt, sofern Gültigkeitsgrenzen und verspätete Korrekturen konsistent behandelt werden.
-- **Ersatzschlüssel.** Ein Schlüssel unter Kontrolle des Warehouse entkoppelt Dimensionsversionen von geänderten oder wiederverwendeten Quell-IDs. Stabile natürliche Schlüssel können trotzdem passen, je nach Quellsemantik und Integrationsbedarf.`,
+- **SCD Typ 2 (Slowly Changing Dimensions).** Ändert sich ein Attribut, kommt eine versionierte Dimensionszeile mit Gültigkeitsgrenzen dazu. Ein historischer Fakt joint auf die Version, die zu seinem Ereigniszeitpunkt galt, sofern Gültigkeitsgrenzen und verspätete Korrekturen konsistent behandelt werden.
+- **Ersatzschlüssel.** Ein Schlüssel unter Kontrolle des Warehouse entkoppelt Dimensionsversionen von geänderten oder wiederverwendeten Quell-IDs; stabile natürliche Schlüssel können trotzdem passen.`,
     },
     {
       id: "s3",
       title: "Zeilen gegen Spalten",
-      content: `Eine zeilenorientierte Engine hält die Felder eines Datensatzes beieinander; Parquet gruppiert Werte innerhalb von Row Groups nach Spalten. Das interaktive Modell wendet \`SELECT SUM(amount) WHERE country='US'\` auf kleine feste Layouts an und zählt die Zellen, die es anfasst. Ein Datenbankbenchmark ist das nicht.
+      content: `Das Modell oben führt \`SELECT SUM(amount) WHERE country='US'\` auf einem Zeilen- und einem Spaltenlayout aus und zählt die Zellen, die jedes anfasst. Lektion 4 zeigt das Parquet-Layout im Detail.
 
 Zeilenlayouts passen oft zu Schlüsselzugriffen und Änderungen vieler Felder weniger Datensätze, Spaltenlayouts zu Scans weniger Felder über viele Datensätze. Indizes, Kompression, Cache, Engine und Lastform können das umdrehen.`,
     },
@@ -69,18 +69,12 @@ Nimm Data Vault, wenn Nachverfolgbarkeit und Mehrquellenintegration die zusätzl
     {
       id: "s6",
       title: "Kurzprüfung",
-      content: "Zwei Fragen zu breiter Tabelle und Historie.",
+      content: "Zwei Fragen zu breiter Tabelle und Historie, unter den Begriffen.",
     },
     {
       id: "s7",
       title: "Begriffe",
-      content: `- **Konforme Dimension**, eine Dimension, deren Schlüssel und Definitionen mehrere Faktentabellen teilen.
-- **Granularität**, was eine Faktzeile darstellt.
-- **Ersatzschlüssel**, eine Identität unter Kontrolle des Warehouse für Dimensionsversionen oder wechselnde Quellschlüssel.
-- **Brückentabelle**, eine n:m-Verbindung, etwa \`fact_orders ↔ bridge_order_promo ↔ dim_promo\`.
-- **Materialisierte Sicht**, ein gespeichertes Abfrageergebnis mit Engine-spezifischer Refresh-Regel.
-- **Data-Vault-Hub**, eindeutige Geschäftsschlüssel mit Lade- und Quellmetadaten.
-- **Data-Vault-Satellite**, beschreibende Attribute über die Ladezeit.`,
+      content: `Die Lernkarten unter den Fragen erklären konforme Dimensionen, Granularität, Ersatzschlüssel, Brückentabellen, materialisierte Sichten sowie Hubs und Satellites im Data Vault.`,
     },
   ],
   widgets: [
@@ -104,7 +98,7 @@ Nimm Data Vault, wenn Nachverfolgbarkeit und Mehrquellenintegration die zusätzl
       cpId: "q2",
       title: "SCD2 in der Praxis",
       question:
-        "Eine Person registriert sich in US (1. Januar) und zieht nach UK (1. Juni). Sie kauft am 1. März und am 1. September. Mit SCD Type 2 joint die März-Bestellung auf country=___ und die September-Bestellung auf country=___:",
+        "Eine Person meldet sich am 1. Januar in den USA an und zieht am 1. Juni nach Großbritannien. Mit welchem Land joinen unter SCD Typ 2 ihre Bestellungen vom 1. März und 1. September?",
       options: [
         "US, US; das Land steht ab der Registrierung fest.",
         "UK, UK; Berichte zeigen immer das aktuelle Land.",
@@ -112,7 +106,7 @@ Nimm Data Vault, wenn Nachverfolgbarkeit und Mehrquellenintegration die zusätzl
         "NULL, UK; die Historie geht verloren.",
       ],
       explanation:
-        "SCD Type 2 hält Versionen mit Gültigkeitszeitraum. Stimmen Grenzen und Behandlung verspäteter Änderungen, joint jeder Fakt auf die Version zum Ereigniszeitpunkt, also US im März und UK im September.",
+        "SCD Typ 2 hält Versionen mit Gültigkeitszeitraum. Stimmen Grenzen und Behandlung verspäteter Änderungen, joint jeder Fakt auf die Version zum Ereigniszeitpunkt, also US im März und UK im September.",
     },
     {
       kind: "flashcards",

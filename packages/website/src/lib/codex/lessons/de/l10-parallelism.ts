@@ -75,7 +75,7 @@ export default localizeCodexLessonToGerman(canonical, {
     [canonical.sections[0].title, "Parallelität verändert das Review-Problem"],
     [
       prose(0, 0),
-      "Aufträge gleichzeitig zu starten ist leicht, unabhängige Arbeit nicht. Jeder Auftrag braucht Review und kann über gemeinsame Dateien, Schemas, APIs, generierte Artefakte, Abhängigkeiten oder Deployment-Zustand mit den anderen kollidieren.\n\nFinde diese Abhängigkeiten, bevor du parallelisierst. Getrennte Arbeitskopien verhindern, dass zwei Prozesse denselben Checkout bearbeiten; fachliche Konflikte zeigen sich trotzdem beim Merge.",
+      "Parallele Aufträge sind schnell gestartet. Jeder braucht trotzdem Review und kann über gemeinsame Dateien, Schemas, APIs, generierte Artefakte, Abhängigkeiten oder Deployment-Zustand mit den anderen kollidieren.\n\nFinde diese Abhängigkeiten, bevor du parallelisierst. Getrennte Arbeitskopien verhindern, dass zwei Prozesse denselben Checkout bearbeiten; fachliche Konflikte zeigen sich trotzdem beim Merge.",
     ],
     [
       prose(1, 0),
@@ -112,7 +112,7 @@ export default localizeCodexLessonToGerman(canonical, {
       prose(3, 0),
       "Aufgaben, in denen jeweils \"gemeinsame Hilfsfunktionen bei Bedarf refaktorieren\" steht, wie im Validator-Beispiel oben, besitzen alle dieselbe Abhängigkeit. Was beim Merge passiert, weiß dann niemand.",
     ],
-    [callout(3, 1, "title"), "Die Korrektur"],
+    [callout(3, 1, "title"), "Die Korrektur."],
     [
       callout(3, 1, "body"),
       "Definiere und prüfe den gemeinsamen Vertrag zuerst, setz abhängige Aufgaben darauf auf und lass dann nur die unabhängigen Anpassungen parallel laufen.",
@@ -122,7 +122,7 @@ export default localizeCodexLessonToGerman(canonical, {
       prose(4, 0),
       "Ordne jede Aufgabe vor dem Start ein:\n\n- **Unabhängig:** kein gemeinsamer Code, Vertrag, generierter Zustand oder externer Seiteneffekt zu erwarten. Parallel laufen lassen, solange das Review mitkommt.\n- **Sequenziell abhängig:** braucht das akzeptierte Ergebnis einer anderen Aufgabe. Die Abhängigkeit zuerst ausführen und prüfen.\n- **Konfliktanfällig:** ändert gemeinsame Dateien, Schnittstellen, Schemas, Fixtures oder Dienste. Umbauen, Verantwortung zuweisen oder nacheinander laufen lassen.\n\nDisjunkte Dateilisten deuten auf Unabhängigkeit hin, beweisen sie aber nicht; fachliche Überschneidung prüfen Integrationstests und Merge-Review.",
     ],
-    [callout(4, 1, "title"), "Reihenfolge planen"],
+    [callout(4, 1, "title"), "Reihenfolge planen."],
     [
       callout(4, 1, "body"),
       "1) Abhängigkeiten und gemeinsamen Zustand erfassen. 2) Gemeinsame Verträge vor ihren Nutzern integrieren. 3) Jeder gleichzeitigen Aufgabe Verantwortliche, Basisrevision, Umfang und Prüfungen geben. 4) In kontrollierter Reihenfolge integrieren und übergreifende Prüfungen erneut laufen lassen.",
@@ -130,9 +130,9 @@ export default localizeCodexLessonToGerman(canonical, {
     [canonical.sections[5].title, "Arbeitsfluss im Team"],
     [
       prose(5, 0),
-      "Parallele Arbeit braucht benannte Zuständige: eine Reviewerin für jeden betroffenen Bereich und jede Vertrauensgrenze, und für jede Aufgabe festgehaltene Basisrevision, Abhängigkeitsreihenfolge und Integrationsverantwortung. Starte nicht mehr Aufgaben, als das Team prüfen kann, ohne Sicherheits- oder Freigabeprüfungen aufzuschieben. Produkt-, Architektur- und Risikoentscheidungen bleiben bei verantwortlichen Menschen; Umsetzung wird delegiert, sobald sie festgehalten sind.\n\nEine allgemeingültige Parallelitätszahl gibt es nicht. Wartezeit, Review-Komplexität, Überschneidung und Deployment-Risiko entscheiden, wann die nächste Aufgabe startet.",
+      "Parallele Arbeit braucht benannte Zuständige: eine kundige Reviewerin für jeden betroffenen Bereich und jede Vertrauensgrenze, und für jede Aufgabe festgehaltene Basisrevision, Abhängigkeitsreihenfolge und Integrationsverantwortung. Starte nicht mehr Aufgaben, als das Team prüfen kann, ohne Sicherheits- oder Freigabeprüfungen aufzuschieben. Produkt-, Architektur- und Risikoentscheidungen bleiben bei verantwortlichen Menschen; Umsetzung wird delegiert, sobald sie festgehalten sind.\n\nEine allgemeingültige Parallelitätszahl gibt es nicht. Wartezeit, Review-Komplexität, Überschneidung und Deployment-Risiko entscheiden, wann die nächste Aufgabe startet.",
     ],
-    [prose(6, 0), "Zwei Fragen zur Parallelisierung von Agentenarbeit."],
+    [prose(6, 0), "Fragen am Ende der Lektion."],
     [widgetString(0, "title"), "Dieselbe Arbeit, zwei Strukturen"],
     [widgetString(0, "badLabel"), "Parallelisierung verhindert"],
     [widgetString(0, "goodLabel"), "Parallelisierung ermöglicht"],
@@ -170,7 +170,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       widgetString(1, "explanation"),
-      "Einmal gebaut und geprüft, gibt es eine einzige gültige Middleware. Jede Einbindungsaufgabe fasst dann nur ihren eigenen Dienst an, also kollidiert nichts.",
+      "Wird die Middleware einmal gebaut und geprüft, gibt es eine einzige gültige Fassung. Jede Einbindungsaufgabe fasst dann nur ihren eigenen Dienst an, also kollidiert nichts.",
     ],
     [
       widgetString(2, "question"),

@@ -12,21 +12,21 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Read activity data for operation, and judge value by predefined outcomes, costs and guardrails.",
     objective:
       "Read activity data for operation, and judge value by predefined outcomes, costs and guardrails.",
-    durationMinutes: 18,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Activity is diagnostic",
-        readTimeMinutes: 9,
+        readTimeMinutes: 1,
         content:
           "Licenses, active users, model calls, tokens and feature use show reach, load, cost and support needs, but not whether the work improved. Keep adoption, operational, outcome and guardrail measures apart so none passes for another.",
       },
       {
         id: "s2",
         title: "Define a balanced measure set",
-        readTimeMinutes: 9,
+        readTimeMinutes: 1,
         content:
           "Start from the expected mechanism: which behavior changes and which outcome follows. Pick a few role-relevant outcomes with quality, risk, equity and cost guardrails. Fix population, calculation, source, owner, review cadence and decision threshold before anyone sees a result.",
       },
@@ -59,23 +59,23 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Fix metric and comparison before rollout, allowing for variability, seasonality and other changes.",
     objective:
       "Fix metric and comparison before rollout, allowing for variability, seasonality and other changes.",
-    durationMinutes: 14,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Choose a baseline period from the data",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "The observation period depends on event frequency, variance, seasonality and the size of change the decision must detect. Freeze metric definition, population, exclusions and data-quality checks before rollout, and record the uncertainty around any historical average.",
       },
       {
         id: "s2",
         title: "Build a credible comparison",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
-          "Staffing, demand, policy, product or market changes distort a plain before-and-after comparison. Use a randomized, staggered, matched or interrupted-time design where feasible, and record concurrent changes and limits. If the comparison cannot carry a causal claim, report an association.",
+          "Staffing, demand, policy, product or market changes distort a plain before-and-after comparison. Use a randomized, staggered, matched or interrupted time-series design where feasible, and record concurrent changes and limits. If the comparison cannot carry a causal claim, report an association.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -105,21 +105,21 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Review outcomes, uncertainty, guardrails, costs and the next action in a decision forum.",
     objective:
       "Review outcomes, uncertainty, guardrails, costs and the next action in a decision forum.",
-    durationMinutes: 20,
+    durationMinutes: 9,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Set cadence from the decision cycle",
-        readTimeMinutes: 10,
+        readTimeMinutes: 1,
         content:
           "Review frequency follows how fast evidence accumulates, how often the intervention changes and what a late correction costs. Fix participants, decision rights, required evidence and submission dates. Each review ends in a decision.",
       },
       {
         id: "s2",
         title: "Use a consistent evidence packet",
-        readTimeMinutes: 10,
+        readTimeMinutes: 1,
         content:
           "Present hypothesis, intervention, baseline and comparison, outcomes with uncertainty, guardrails and incidents, operating cost, limitations and the proposed decision. Record the decision to continue, change, pause or stop, its owner and the next review condition.",
       },
@@ -153,10 +153,10 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "quiz",
-    title: "Module 9 knowledge check and capstone",
+    title: "Module 9, knowledge check",
     subtitle: "Three questions on adoption, baselines and evidence reviews.",
     objective: "Three questions on adoption, baselines and evidence reviews.",
-    durationMinutes: 15,
+    durationMinutes: 4,
     keyConcepts: [],
     quiz: [
       {
@@ -171,7 +171,7 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
           {
             id: "b",
-            text: "How was productivity defined and compared, against which baseline?",
+            text: "How was productivity defined, against which baseline, and what else changed?",
             isCorrect: true,
           },
           {
@@ -205,7 +205,7 @@ export const MEASUREMENT_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
           {
             id: "c",
-            text: "Predefined outcomes improved against a credible comparison.",
+            text: "Predefined outcomes and guardrails improved against a credible comparison.",
             isCorrect: true,
           },
           {

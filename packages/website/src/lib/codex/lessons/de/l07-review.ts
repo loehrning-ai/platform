@@ -97,13 +97,13 @@ export default localizeCodexLessonToGerman(canonical, {
     [canonical.sections[1].title, "Die Prüfliste"],
     [
       prose(1, 0),
-      "Sechs Grundprüfungen. Sind Ziel oder Umfang falsch, hör früh auf; spätere Punkte reparieren das nicht.",
+      "Sechs Grundprüfungen und dazu, was das betroffene System verlangt. Sind Ziel oder Umfang falsch, hör früh auf; spätere Punkte reparieren das nicht.",
     ],
     [card(1, 1, 0, "eyebrow"), "Prüfung 01"],
     [card(1, 1, 0, "title"), "Erfüllt der PR den Auftrag?"],
     [
       card(1, 1, 0, "body"),
-      "Vergleiche das Verhalten mit Ziel und Akzeptanzkriterien. Eine benachbarte Lösung lehnst du ab, auch wenn sie in sich stimmig ist.",
+      "Vergleiche das Verhalten mit Ziel und Akzeptanzkriterien. Lehne eine Lösung für ein Nachbarproblem ab, auch wenn sie in sich stimmig ist.",
     ],
     [card(1, 1, 1, "eyebrow"), "Prüfung 02"],
     [card(1, 1, 1, "title"), "Hat die Änderung den richtigen Umfang?"],
@@ -133,15 +133,15 @@ export default localizeCodexLessonToGerman(canonical, {
     [card(1, 1, 5, "title"), "Passt die Änderung zum Systemvertrag?"],
     [
       card(1, 1, 5, "body"),
-      "Prüfe Autorisierung, Datenverarbeitung, Fehler, Protokollierung, Nebenläufigkeit, Migrationen, Beobachtbarkeit, Rücknahme und Konventionen. In AGENTS.md kommt nur eine fehlende dauerhafte Regel.",
+      "Prüfe Autorisierung, Datenverarbeitung, Fehler, Protokollierung, Nebenläufigkeit, Migrationen, Beobachtbarkeit, Rücknahme und Konventionen. Fehlte eine dauerhafte Regel, ergänze sie in AGENTS.md.",
     ],
     [canonical.sections[2].title, "Unauffällig falsche Tests"],
     [
       prose(2, 0),
       "Der Auftrag verlangt einen Rate Limiter für `/login`. Dieser Test mockt die Limiter-Entscheidung. Was deckt er noch ab?\n\n```\n# tests/api/test_login_rate_limit.py\n\ndef test_login_maps_denial_to_429(client, mocker):\n    mock_limiter = mocker.patch(\"api.auth.limiter.is_allowed\")\n    mock_limiter.return_value = False\n\n    response = client.post(\"/login\", json={...})\n\n    assert response.status_code == 429\n    mock_limiter.assert_called_once()\n```\n\nEr belegt nur, dass eine abgelehnte Limiter-Entscheidung zu Status 429 wird. Zählung, Grenzwert, Schlüsselbildung, Speicherung und Reset bleiben ungeprüft. Behalte ihn, wenn diese Zuordnung zählt, und ergänze einen Test über den echten Limiter:\n\n```\n# prüft das konfigurierte Limiter-Verhalten\n\ndef test_login_blocks_at_6th_attempt(client):\n    for _ in range(5):\n        response = client.post(\"/login\", json={...})\n        assert response.status_code == 401  # ungültige Daten, Anfrage erlaubt\n\n    response = client.post(\"/login\", json={...})\n    assert response.status_code == 429  # Anfrage blockiert\n```",
     ],
-    [canonical.sections[3].title, "Probleme erkennen"],
-    [prose(3, 0), "Finde den Fehler im Caching-Diff oben, bevor du zum Quiz gehst."],
+    [canonical.sections[3].title, "Den Fehler erkennen"],
+    [prose(3, 0), "Bevor du die Erklärung unter dem Caching-Diff oben liest, benenne den Fehler selbst."],
     [canonical.sections[4].title, "Die Sicherheitsprüfung"],
     [
       prose(4, 0),
@@ -163,24 +163,24 @@ export default localizeCodexLessonToGerman(canonical, {
     [card(4, 1, 2, "title"), "Geheimnisse im Quellcode"],
     [
       card(4, 1, 2, "body"),
-      "Durchsuche Quellcode, Fixtures, Protokolle, generierte Dateien und Konfiguration nach Zugangsdaten. Widerrufe offengelegte; aus dem Diff gelöscht bleiben sie in der Historie.",
+      "Durchsuche Quellcode, Fixtures, Protokolle, generierte Dateien und Konfiguration nach Zugangsdaten. Widerrufe offengelegte Zugangsdaten. Nur aus dem Diff gelöscht, bleiben sie in der Git-Historie.",
     ],
     [card(4, 1, 3, "eyebrow"), "Sicherheit 04"],
     [card(4, 1, 3, "title"), "Preisgabe durch Fehlermeldungen"],
     [
       card(4, 1, 3, "body"),
-      "Gib keine rohen Ausnahmen an Clients und protokolliere keine sensiblen Nutzdaten. Halte Diagnose auf dem Server und Statuscodes stabil, und schwärze an jeder Protokollgrenze.",
+      "Gib keine rohen Ausnahmen an Clients und protokolliere keine sensiblen Nutzdaten. Diagnosedaten bleiben auf dem Server, Statuscodes bleiben stabil. Schwärze sensible Daten an jeder Protokollgrenze.",
     ],
-    [callout(4, 2, "title"), "Nimm die Sicherheitsprüfungen des Repositorys"],
+    [callout(4, 2, "title"), "Nutze die Sicherheitsprüfungen des Repositorys."],
     [
       callout(4, 2, "body"),
-      "Lass die konfigurierten Secret-, Abhängigkeits-, Static-Analysis- und Autorisierungsprüfungen laufen und lies Umfang, Ausschlüsse und Ausgabe. Eine Textsuche hilft beim Sichten und ist kein Gate.",
+      "Lass die konfigurierten Secret-, Abhängigkeits-, Static-Analysis- und Autorisierungsprüfungen laufen und lies Umfang, Ausschlüsse und Ausgabe. Eine Textsuche hilft beim Sichten, ersetzt diese Prüfungen aber nicht.",
     ],
     [
       prose(4, 3),
-      "Der Auftrag lautete \"Endpunkt `/debug/user` ergänzen\" und ließ Autorisierung, Eingabebehandlung und erlaubte Antwortfelder offen. Die erste Fassung unten funktioniert und ist unsicher.\n\n```\n# unsichere Fassung\n\n@app.route(\"/debug/user\")           # keine Autorisierung\ndef debug_user():\n    user_id = request.args.get(\"id\")  # keine Validierung\n    try:\n        u = db.session.query(User).get(user_id)\n        return jsonify(u.__dict__)       # gibt alle Spalten aus\n    except Exception as e:\n        return str(e), 500              # gibt interne Details aus\n\n# überarbeitete Fassung\n\n@app.route(\"/debug/user\")\n@require_admin                         # ausdrückliche Autorisierung\ndef debug_user():\n    try:\n        user_id = int(request.args[\"id\"])\n    except (KeyError, ValueError):\n        return jsonify({\"error\": \"invalid id\"}), 400\n\n    user = db.session.get(User, user_id)\n    if user is None:\n        return jsonify({\"error\": \"not found\"}), 404\n    return jsonify(user.to_safe_dict())  # ausdrückliche Feldfreigabe\n```",
+      "Der Auftrag lautete \"Endpunkt `/debug/user` ergänzen\" und ließ Autorisierung, Eingabebehandlung und erlaubte Antwortfelder offen. Die erste Fassung unten funktioniert, ist aber unsicher.\n\n```\n# unsichere Fassung\n\n@app.route(\"/debug/user\")           # keine Autorisierung\ndef debug_user():\n    user_id = request.args.get(\"id\")  # keine Validierung\n    try:\n        u = db.session.query(User).get(user_id)\n        return jsonify(u.__dict__)       # gibt alle Spalten aus\n    except Exception as e:\n        return str(e), 500              # gibt interne Details aus\n\n# überarbeitete Fassung\n\n@app.route(\"/debug/user\")\n@require_admin                         # ausdrückliche Autorisierung\ndef debug_user():\n    try:\n        user_id = int(request.args[\"id\"])\n    except (KeyError, ValueError):\n        return jsonify({\"error\": \"invalid id\"}), 400\n\n    user = db.session.get(User, user_id)\n    if user is None:\n        return jsonify({\"error\": \"not found\"}), 404\n    return jsonify(user.to_safe_dict())  # ausdrückliche Feldfreigabe\n```",
     ],
-    [prose(5, 0), "Zwei Fragen zur Prüfung von Codex-PRs."],
+    [prose(5, 0), "Fragen am Ende der Lektion."],
     [
       widgetString(0, "title"),
       'PR: "Caching für /users/:id ergänzen", was ist falsch?',

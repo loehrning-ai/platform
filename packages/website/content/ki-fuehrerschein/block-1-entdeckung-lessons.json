@@ -32,7 +32,7 @@
           "id": "block_1_lesson_1_section_2",
           "title": "KI-gestützte Funktionen im Arbeitsablauf",
           "readTimeMinutes": 2,
-          "content": "Beim Auslesen von Dokumenten, Transkribieren, Übersetzen, Suchen, Prognostizieren und in Assistenzsystemen können KI-gestützte Funktionen stecken. Ob eine davon ein KI-System im Sinne der Verordnung ist, entscheiden Funktionsweise und Einsatz. Das Inventar hält Funktion und Version, Zweck, Daten, Nutzende, Verantwortliche und Freigabestatus fest, damit du Datenregeln, Prüfpflichten und Schulungsbedarf zuordnen kannst.\n\nArtikel 4 der EU-KI-Verordnung verpflichtet Anbieter und Betreiber in der geltenden Fassung, Maßnahmen zu ergreifen, um die Entwicklung der KI-Kompetenz der Personen zu unterstützen, die in ihrem Auftrag mit Betrieb und Nutzung von KI-Systemen befasst sind. Zu berücksichtigen sind technische Kenntnisse, Erfahrung, Aus- und Fortbildung, der Einsatzkontext und die betroffenen Personen oder Personengruppen.\n\nEin Inventar schreibt der Artikel nicht vor, es zeigt dir aber, für welchen Kontext du planst.",
+          "content": "Beim Auslesen von Dokumenten, Transkribieren, Übersetzen, Suchen, Prognostizieren und in Assistenzsystemen können KI-gestützte Funktionen stecken. Ob eine davon ein KI-System im Sinne der Verordnung ist, entscheiden Funktionsweise und Einsatz. Ein KI-Inventar hält Funktion und Version, Zweck, Daten, Nutzende, Verantwortliche und Freigabestatus fest, damit du Datenregeln, Prüfpflichten und Schulungsbedarf zuordnen kannst.\n\nArtikel 4 der EU-KI-Verordnung verpflichtet Anbieter und Betreiber in der geltenden Fassung, Maßnahmen zu ergreifen, um die Entwicklung der KI-Kompetenz der Personen zu unterstützen, die in ihrem Auftrag mit Betrieb und Nutzung von KI-Systemen befasst sind. Zu berücksichtigen sind technische Kenntnisse, Erfahrung, Aus- und Fortbildung, der Einsatzkontext und die betroffenen Personen oder Personengruppen. Ein Inventar schreibt der Artikel nicht vor. Es zeigt dir aber, für welche Einsätze du Kompetenzmaßnahmen planst.",
           "sources": [
             {
               "claimId": "ai-act-article-4-literacy-2025-02-02",
@@ -53,7 +53,7 @@
             },
             {
               "id": "b",
-              "text": "Alle drei mit Version und Zweck erfassen, Einordnung prüfen",
+              "text": "Alle drei mit Version, Zweck und Daten erfassen, Einordnung prüfen",
               "isCorrect": true
             },
             {
@@ -115,7 +115,7 @@
       "sections": [
         {
           "id": "block_1_lesson_2_section_1",
-          "title": "Vier Betriebsmodelle vergleichen",
+          "title": "Betriebsmodelle vergleichen",
           "readTimeMinutes": 2,
           "content": "Vergleiche Produktedition und Betrieb:\n\n| Betriebsmodell | Mindestens zu prüfen | Typischer Fehlschluss |\n|---|---|---|\n| **Verbraucherdienst** | Nutzungsbedingungen, Kontoeinstellungen, Aufbewahrung, Trainingsnutzung, Rechtsgrundlage, zulässige Inhalte | Bekannt oder bezahlt heißt freigegeben für Firmendaten |\n| **Unternehmens-SaaS** | Vertrag und AVV, Rollen und Berechtigungen, Datenregion, Aufbewahrung, Protokollierung, Konnektoren, Trainingsnutzung | Der Enterprise-Vertrag deckt jede Konfiguration und Datenklasse ab |\n| **Lokal oder selbst gehostet** | Modellquelle, Endgerät oder Infrastruktur, Patches, Telemetrie, Erweiterungen, Zugriffe, Protokollierung | Lokal heißt offline, aktuell und sicher |\n| **Eingebettete Funktion** | Funktion und Version, Aktivierung, Datenflüsse, Berechtigungsvererbung, verantwortliche Stelle | Die Freigabe des Hauptprodukts gilt für jede neue KI-Funktion |\n\nPrüfe Anbieterunterlagen und Vertrag bei der Beschaffung, nach jeder wesentlichen Funktionsänderung und bei den Review-Auslösern deiner Organisation."
         },
@@ -133,17 +133,17 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Nur kostenpflichtige Business-Tools sind für Texte erlaubt",
+              "text": "Nur kostenpflichtige Business-Tools sind für Texte erlaubt, auch für private",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Ein Verbraucherangebot, wenn du teilen darfst und Datenkontrollen, Aufbewahrung, Bedingungen passen",
+              "text": "Ein Verbraucherangebot kann geeignet sein, wenn du den Inhalt teilen darfst und Datenkontrollen, Aufbewahrung und Bedingungen zum Zweck passen",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "Kein KI-Tool darf für das Schreiben von Texten genutzt werden",
+              "text": "Kein KI-Tool darf für das Schreiben von Texten genutzt werden, auch nicht privat",
               "isCorrect": false
             },
             {
@@ -152,7 +152,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Auch privat entscheiden Inhalt, Rechte, Datenkontrollen, Aufbewahrung und Bedingungen. Für Beispiele nimmst du Platzhalter, Zugangsdaten tippst du nirgends ein."
+          "explanation": "Auch privat entscheiden Inhalt, Rechte, Datenkontrollen, Aufbewahrung und Bedingungen. Für Beispiele nimmst du Platzhalter. Zugangsdaten gehören in keinen Prompt."
         },
         {
           "id": "block_1_lesson_2_q2",
@@ -160,7 +160,7 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Ein Unternehmens-Arbeitsablauf liefert immer bessere Antworten",
+              "text": "Ein Unternehmens-Arbeitsablauf liefert immer bessere Antworten als ein privates Abo",
               "isCorrect": false
             },
             {
@@ -170,16 +170,16 @@
             },
             {
               "id": "c",
-              "text": "Ein kostenpflichtiges Abonnement darf jede Datenklasse verarbeiten",
+              "text": "Ein kostenpflichtiges Abonnement darf ohne weitere Prüfung jede Datenklasse verarbeiten",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Nur der EU-Sitz des Anbieters zählt",
+              "text": "Nur der EU-Sitz des Anbieters zählt, alles andere ergibt sich daraus",
               "isCorrect": false
             }
           ],
-          "explanation": "Eine Freigabe gilt für einen Zweck, eine Produktedition, eine Konfiguration, eine Datenklasse und bestimmte Rollen. Preis, Marke und Firmensitz prüfen davon nichts."
+          "explanation": "Eine Freigabe gilt für einen Zweck, eine Produktedition, eine Konfiguration, eine Datenklasse und bestimmte Rollen. Preis, Marke und Firmensitz sagen darüber nichts aus."
         }
       ]
     },
@@ -196,19 +196,19 @@
           "id": "block_1_lesson_3_section_1",
           "title": "Das KI-Inventar",
           "readTimeMinutes": 1,
-          "content": "Notiere je Zeile Funktion, Anbieter oder Betreiber, Zweck, betroffene Daten und verantwortliche Stelle. Ob eine Funktion rechtlich ein KI-System ist, klären Version und Funktionsweise.\n\n| Nr. | Produkt und Funktion | Zweck | Betroffene Daten | Freigabe bekannt? |\n|-----|----------------------|-------|------------------|-------------------|\n| 1 | E-Mail: vorgeschlagene Antworten | | | |\n| 2 | Tabellenkalkulation: Assistenz oder Mustererkennung | | | |\n| 3 | Konferenzsoftware: Transkription oder Assistenz | | | |\n| 4 | Suchmaschine: KI-Zusammenfassung | | | |\n| 5 | E-Mail: Spamfilter | | | |\n| 6 | Smartphone-Tastatur: Wortvorhersage | | | |\n| 7 | Navigation: Routen- oder Verkehrsprognose | | | |\n| 8 | | | | |\n| 9 | | | | |\n| 10 | | | | |\n\nTrag in die leeren Zeilen ein, was du tatsächlich nutzt. Unbekanntes markierst du, Produktverantwortliche, IT oder Beschaffung klären es."
+          "content": "Notiere je Zeile Funktion, Anbieter oder Betreiber, Zweck, betroffene Daten und verantwortliche Stelle.\n\n| Nr. | Produkt und Funktion | Zweck | Betroffene Daten | Freigabe bekannt? |\n|-----|----------------------|-------|------------------|-------------------|\n| 1 | E-Mail: vorgeschlagene Antworten | | | |\n| 2 | Tabellenkalkulation: Assistenz oder Mustererkennung | | | |\n| 3 | Konferenzsoftware: Transkription oder Assistenz | | | |\n| 4 | Suchmaschine: KI-Zusammenfassung | | | |\n| 5 | E-Mail: Spamfilter | | | |\n| 6 | Smartphone-Tastatur: Wortvorhersage | | | |\n| 7 | Navigation: Routen- oder Verkehrsprognose | | | |\n| 8 | | | | |\n| 9 | | | | |\n| 10 | | | | |\n\nTrag in die leeren Zeilen ein, was du tatsächlich nutzt. Unbekanntes markierst du, Produktverantwortliche, IT oder Beschaffung klären es."
         },
         {
           "id": "block_1_lesson_3_section_2",
           "title": "Auswertung",
           "readTimeMinutes": 2,
-          "content": "Eine Zeile ist fertig, wenn Funktion und Version, Zweck, Daten, Nutzerrollen, verantwortliche Stelle und Freigabestatus drinstehen. Unbekanntes bleibt als unbekannt markiert, denn eine Vermutung ist kein Eintrag. Jeder offene Punkt bekommt eine zuständige Stelle und einen nächsten Prüfschritt.\n\nDas Ergebnis ist ein Arbeitsdokument, weder vollständiges KI-Verzeichnis noch vollständiger Artikel-4-Nachweis. Artikel 4 schreibt kein Inventarformat vor. Mit dem Inventar ordnest du Kompetenzmaßnahmen, Datenregeln und Prüfroutinen den Funktionen zu, die im Einsatz sind."
+          "content": "Eine Zeile ist fertig, wenn Funktion und Version, Zweck, Daten, Nutzerrollen, verantwortliche Stelle und Freigabestatus drinstehen. Jeder offene Punkt bekommt eine zuständige Stelle und einen nächsten Prüfschritt.\n\nDas Ergebnis ist ein Arbeitsdokument, kein vollständiges KI-Verzeichnis und kein vollständiger Artikel-4-Nachweis. Mit dem Inventar ordnest du Kompetenzmaßnahmen, Datenregeln und Prüfroutinen den Funktionen zu, die im Einsatz sind."
         }
       ],
       "quiz": [
         {
           "id": "block_1_lesson_3_q1",
-          "questionText": "Eine Kollegin nutzt vorgeschlagene Antworten, eine Transkriptionsfunktion und eine Routenprognose. Was lässt sich daraus sicher ableiten?",
+          "questionText": "Dein Inventar nennt Spamfilter, Wortvorhersage und die KI-Zusammenfassung der Suche. Was lässt sich daraus sicher ableiten?",
           "answerOptions": [
             {
               "id": "a",
@@ -217,7 +217,7 @@
             },
             {
               "id": "b",
-              "text": "Genau ein KI-System, weil nur Transkription KI nutzt",
+              "text": "Genau ein KI-System, weil nur die Suchzusammenfassung KI nutzt",
               "isCorrect": false
             },
             {
@@ -227,11 +227,11 @@
             },
             {
               "id": "d",
-              "text": "Die Funktionen ins Inventar, Einordnung anhand von Produkt und Version prüfen",
+              "text": "Die Einordnung jeder Funktion anhand von Produkt und Version prüfen",
               "isCorrect": true
             }
           ],
-          "explanation": "Der Produktname verrät nicht, wie viele eigenständige KI-Systeme im rechtlichen Sinn dahinterstehen. Du erfasst Funktion und Version und prüfst danach."
+          "explanation": "Ein Spamfilter kann auch mit festen Regeln laufen, und der Produktname verrät nicht, wie viele eigenständige KI-Systeme im rechtlichen Sinn dahinterstehen. Du prüfst je Funktion und Version."
         },
         {
           "id": "block_1_lesson_3_q2",

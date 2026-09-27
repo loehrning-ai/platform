@@ -12,28 +12,28 @@ export const ORGMODEL_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Size teams from work, service duties, dependencies, skills and risk.",
     objective:
       "Size teams from work, service duties, dependencies, skills and risk.",
-    durationMinutes: 20,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Start with the operating boundary",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "Define the outcome a team owns, its users, service levels, dependencies, decision rights and control duties, then the workload and skills this needs. Clear ownership cuts handoffs. Size follows demand, coverage, complexity and risk.",
       },
       {
         id: "s2",
         title: "Evaluate capacity options explicitly",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
-          "A capacity request shows workload, bottlenecks, service impact, control constraints and the options assessed: process or scope changes, better tooling, automation, training or more people. The evidence supports one decision and sets no rule to automate before hiring.",
+          "A capacity request shows workload, bottlenecks, service impact, control constraints and the options assessed: process or scope changes, better tooling, automation, training or more people. Decide each request on this evidence, without a standing rule to automate before hiring.",
       },
       {
         id: "s3",
         title: "Adjust the design from operating evidence",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
           "Regulated work, specialist decisions, physical operations, incident coverage, accessibility or sustained demand may need a larger or different team. After a change, track workload, quality, incidents, queue age and staff load, and expand, split or recombine when they show strain.",
       },
@@ -66,21 +66,21 @@ export const ORGMODEL_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Cut handoffs with broad ownership and keep specialist authority where error cost requires it.",
     objective:
       "Cut handoffs with broad ownership and keep specialist authority where error cost requires it.",
-    durationMinutes: 18,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Broad ownership needs defined limits",
-        readTimeMinutes: 9,
+        readTimeMinutes: 1,
         content:
           "A generalist coordinates across domains and uses tools to retrieve context, draft artifacts or run bounded analysis, which cuts handoffs. Tools add no expertise or accountability, so define which decisions the generalist takes and which need a specialist.",
       },
       {
         id: "s2",
         title: "Set specialist checkpoints by risk",
-        readTimeMinutes: 9,
+        readTimeMinutes: 1,
         content:
           "Specialists own high-consequence domain decisions, review selected work, investigate novel cases and turn recurring guidance into standards or evaluation criteria. Set their involvement by error cost, novelty, regulation and reversibility, then check that the checkpoint prevents harm without needless queues.",
       },
@@ -112,21 +112,21 @@ export const ORGMODEL_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Remove duplicate approvals, keeping expertise, accountability and separation of duties.",
     objective:
       "Remove duplicate approvals, keeping expertise, accountability and separation of duties.",
-    durationMinutes: 14,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Map every approval to a purpose",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "For each approval, record the decision right, risk, required evidence and accountable role. Cut steps that repeat a judgment without adding information or control. Keep approvals that consequence, regulation, independent oversight or separation of duties require.",
       },
       {
         id: "s2",
         title: "Use decision briefs as untrusted aids",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "A model can assemble a brief of source-linked facts, options, assumptions, risks and open questions. Approvers must be able to open the sources and fix omissions. The brief sets neither the number of approvers nor who is accountable.",
       },
@@ -153,10 +153,10 @@ export const ORGMODEL_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "quiz",
-    title: "Module 6 knowledge check",
+    title: "Module 6, knowledge check",
     subtitle: "Two questions on capacity and specialist authority.",
     objective: "Two questions on capacity and specialist authority.",
-    durationMinutes: 8,
+    durationMinutes: 3,
     keyConcepts: [],
     quiz: [
       {
@@ -200,7 +200,7 @@ export const ORGMODEL_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
           {
             id: "b",
-            text: "Owning high-risk decisions and turning guidance into standards.",
+            text: "By owning or reviewing high-risk decisions and turning guidance into standards.",
             isCorrect: true,
           },
           {

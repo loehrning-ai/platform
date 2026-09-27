@@ -37,14 +37,14 @@ const lesson: DataInfraLesson = {
       title: "Star schema",
       readTimeMinutes: 3,
       content:
-        "A Kimball star schema starts from a declared grain. One or more **fact tables** at that grain join to **dimension tables** with descriptive context. A fact row usually carries dimension keys and measures, plus timestamps, status fields or degenerate dimensions when needed.\n\nA query such as *\"sum revenue by category, filtered by country and date range\"* joins a sales fact to product, customer and date dimensions. That works while definitions and grains stay consistent.\n\n- **SCD Type 2 (Slowly Changing Dimensions).** When an attribute changes, insert a versioned dimension row with effective dates. A historical fact joins to the version valid at its event time, if effective-time boundaries and late corrections are handled consistently.\n- **Surrogate keys.** A warehouse-controlled key decouples dimension versions from changing or reused source IDs. Stable natural keys can still be right, depending on source semantics and integration needs.",
+        "A Kimball star schema starts from a declared grain. One or more **fact tables** at that grain join to **dimension tables** with descriptive context. A fact row usually carries dimension keys and measures, plus timestamps, status fields or degenerate dimensions when needed.\n\nA query such as *\"sum revenue by category, filtered by country and date range\"* joins a sales fact to product, customer and date dimensions. That works while definitions and grains stay consistent.\n\n- **SCD Type 2 (Slowly Changing Dimensions).** When an attribute changes, insert a versioned dimension row with effective dates. A historical fact joins to the version valid at its event time, if effective-time boundaries and late corrections are handled consistently.\n- **Surrogate keys.** A warehouse-controlled key decouples dimension versions from changing or reused source IDs; stable natural keys can still fit.",
     },
     {
       id: "s3",
       title: "Row vs column",
       readTimeMinutes: 2,
       content:
-        "Row-oriented engines keep a record's fields together; Parquet groups values by column inside row groups. The interactive model runs `SELECT SUM(amount) WHERE country='US'` on small fixed layouts and counts the cells it inspects. It is no database benchmark.\n\nRow layouts often suit keyed reads and updates of many fields in few records, column layouts scans of few fields across many records. Indexes, compression, caching, the engine and workload shape can flip that.",
+        "The model above runs `SELECT SUM(amount) WHERE country='US'` on a row and a column layout and counts the cells each touches. Lesson 4 covers Parquet's layout in detail.\n\nRow layouts often suit keyed reads and updates of many fields in few records, column layouts scans of few fields across many records. Indexes, compression, caching, the engine and workload shape can flip that.",
     },
     {
       id: "s4",
@@ -64,14 +64,14 @@ const lesson: DataInfraLesson = {
       id: "s6",
       title: "Quick check",
       readTimeMinutes: 1,
-      content: "Two questions on grain and history.",
+      content: "Two questions on wide tables and history, below the vocab.",
     },
     {
       id: "s7",
       title: "Vocab",
       readTimeMinutes: 1,
       content:
-        "- **Conformed dimension**, a dimension whose keys and definitions several fact tables share.\n- **Grain**, what one fact row represents.\n- **Surrogate key**, a warehouse-controlled identifier for dimension versions or changing source keys.\n- **Bridge table**, a many-to-many link, for example `fact_orders ↔ bridge_order_promo ↔ dim_promo`.\n- **Materialized view**, a stored query result with an engine-specific refresh policy.\n- **Data Vault hub**, distinct business keys with load and source metadata.\n- **Data Vault satellite**, descriptive attributes over load time.",
+        "The flashcards below the questions cover conformed dimensions, grain, surrogate keys, bridge tables, materialized views, and Data Vault hubs and satellites.",
     },
   ],
   widgets: [
@@ -105,7 +105,7 @@ const lesson: DataInfraLesson = {
         title: "SCD2 in practice",
         copy: DATA_INFRA_QUIZ_COPY,
         question:
-          "A user signs up in the US (Jan 1) and moves to the UK (June 1). They buy on March 1 and on Sept 1. With SCD Type 2, the March order joins to country=___ and the Sept order to country=___:",
+          "A user signs up in the US on Jan 1 and moves to the UK on June 1. Under SCD Type 2, which country do their March 1 and Sept 1 orders join?",
         options: [
           "US, US; country is fixed at signup.",
           "UK, UK; reports always show the current country.",

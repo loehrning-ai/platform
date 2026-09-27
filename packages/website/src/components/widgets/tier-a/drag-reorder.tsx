@@ -50,13 +50,13 @@ export interface DragReorderWidgetCopy {
 }
 
 const DEFAULT_COPY: DragReorderWidgetCopy = {
-  kindLabel: "Sortieren",
+  kindLabel: "Einordnung",
   shuffleLabel: "Mischen",
   moveUpSuffix: "nach oben",
   moveDownSuffix: "nach unten",
   correctStatusLabel: "Richtig. Das ist die Risikopyramide.",
   wrongStatusLabel: "Noch nicht ganz. Grüne Zeilen stehen schon richtig.",
-  idleStatusLabel: "Sortiere, dann prüfe.",
+  idleStatusLabel: "Erst sortieren, dann prüfen.",
   checkLabel: "Reihenfolge prüfen",
 };
 
@@ -78,7 +78,7 @@ const DEFAULT_BLOCKS: readonly ReorderBlock[] = [
   {
     id: "verboten",
     label: "Verbotene Praktiken",
-    sample: "Social Scoring, manipulatives Verhalten. Komplett untersagt.",
+    sample: "Social Scoring, manipulatives Verhalten. Verboten nach Art. 5.",
   },
   {
     id: "hochrisiko",
@@ -87,13 +87,13 @@ const DEFAULT_BLOCKS: readonly ReorderBlock[] = [
   },
   {
     id: "transparenz",
-    label: "Transparenzpflicht",
-    sample: "Chatbots, generierte Inhalte. Kennzeichnen, sonst frei.",
+    label: "Transparenzpflichten",
+    sample: "Chatbots, generierte Inhalte. Kennzeichnungspflicht nach Art. 50.",
   },
   {
     id: "minimal",
     label: "Minimales Risiko",
-    sample: "Spamfilter, KI im Lager. Keine besonderen Pflichten.",
+    sample: "Spamfilter, KI im Lager. Keine besonderen Pflichten aus dem AI Act.",
   },
 ];
 

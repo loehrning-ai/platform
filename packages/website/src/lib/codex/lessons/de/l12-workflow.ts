@@ -82,7 +82,7 @@ const translated = localizeCodexLessonToGerman(canonical, {
     [canonical.title, "Ein prüfbarer Entwicklungsablauf"],
     [
       canonical.subtitle,
-      "Eine Änderung von der Anfrage bis zur Freigabe, mit ausdrücklichen Entscheidungen, begrenzten Aufgaben, unabhängigem Review und verifiziertem Deployment.",
+      "Bring eine Änderung von der Anfrage bis zur Freigabe, mit ausdrücklichen Entscheidungen, begrenzten Aufgaben, unabhängigem Review und verifiziertem Deployment.",
     ],
     [canonical.hook, "Absicht, Nachweis und Verantwortung bleiben verbunden."],
     [
@@ -118,59 +118,59 @@ const translated = localizeCodexLessonToGerman(canonical, {
     [card(1, 1, 2, "title"), "Umsetzen"],
     [
       card(1, 1, 2, "body"),
-      "Jede begrenzte Aufgabe läuft in ihrer konfigurierten Umgebung. Abhängiges nacheinander; Befehle und Umgebungsannahmen protokollieren.",
+      "Jede begrenzte Aufgabe läuft in ihrer konfigurierten Umgebung. Abhängige Aufgaben laufen nacheinander, unabhängige isoliert. Befehle und Umgebungsannahmen protokollieren.",
     ],
     [card(1, 1, 3, "eyebrow"), "Phase 04"],
     [
       card(1, 1, 3, "body"),
-      "Den vollständigen Diff gegen Auftrag und ausgeschlossenen Umfang lesen, Tests und Protokolle lesen, vertrauenswürdige Checks erneut laufen lassen. Lokale Fehler gezielt korrigieren, bei falscher Prämisse neu starten.",
+      "Den vollständigen Diff mit Auftrag und ausgeschlossenem Umfang abgleichen, Tests und Protokolle lesen, Sicherheits- und Betriebsfolgen prüfen, vertrauenswürdige Checks erneut laufen lassen. Lokale Fehler gezielt korrigieren, bei falscher Prämisse neu starten.",
     ],
     [card(1, 1, 4, "eyebrow"), "Phase 05"],
     [card(1, 1, 4, "title"), "Ausliefern"],
     [
       card(1, 1, 4, "body"),
-      "Über den regulären Merge-, Deployment- und Rollback-Prozess ausliefern. Erst das deployte Artefakt in der Zielumgebung belegt die Auslieferung.",
+      "Über den regulären Merge-, Deployment-, Rollback- und Freigabeprozess ausliefern. Das deployte Artefakt und sein Verhalten in der Zielumgebung prüfen; lokaler Erfolg belegt kein Deployment.",
     ],
     [card(1, 1, 5, "eyebrow"), "Phase 06"],
     [card(1, 1, 5, "title"), "Lernen"],
     [
       card(1, 1, 5, "body"),
-      "Eine dauerhafte, nicht offensichtliche Repository-Regel nur bei einer echten Lücke festhalten. Aufgabenerkenntnisse gehören ins Issue oder in den Pull Request.",
+      "Eine dauerhafte, nicht offensichtliche Repository-Regel nur bei einer echten Lücke festhalten. Aufgabenerkenntnisse gehören ins Issue oder in den Pull Request, Incident- und Deployment-Nachweise in das System, das sie verwaltet.",
     ],
     [
       prose(1, 2),
-      "Der Aufwand folgt Risiko und Reversibilität. Eine kleine lokale Änderung braucht einen knappen Auftrag und eine Prüfung; Authentifizierung, Daten, Zahlungen oder Migrationen brauchen Sicherheits- und Rollout-Nachweise, auch bei kurzem Code.",
+      "Richte den Aufwand nach Risiko und Reversibilität. Eine kleine lokale Änderung braucht einen knappen Auftrag und eine Prüfung; Authentifizierung, Daten, Zahlungen oder Migrationen brauchen Sicherheits- und Rollout-Nachweise, auch bei kurzem Code.",
     ],
     [canonical.sections[2].title, "Szene 01 · Die Anfrage"],
     [prose(2, 0), "Eingehende Anfrage:"],
     [
       callout(2, 1, "body"),
-      '"Hi, Finance braucht einen CSV-Export aller aktiven Abonnements, jede Nacht aktualisiert. Bis Freitag wäre super. Übernimmst du das? Was würdest du zuerst tun?"',
+      '"Hi, Finance braucht einen CSV-Export aller aktiven Abonnements, jede Nacht aktualisiert. Muss bis Freitag live sein. Übernimmst du das? Was würdest du zuerst tun?"',
     ],
     [canonical.sections[3].title, "Szene 02 · Die Spezifikation"],
     [
       prose(3, 0),
-      "Erste Aufgabe nach der Zerlegung: *Einen Endpunkt /admin/exports/subscriptions.csv ergänzen, der aktive Abonnements als CSV streamt.* Nächtliche Planung und Zustellung folgen als eigene Aufgaben. Welcher Einstieg in die Spezifikation ist der stärkste?",
+      "Erste Aufgabe nach der Zerlegung: *Einen Endpunkt /admin/exports/subscriptions.csv ergänzen, der aktive Abonnements als CSV streamt.* Nächtliche Planung und Zustellung folgen als eigene Aufgaben. Welcher Einstieg in die Spezifikation ist der stärkste? Antworte am Lektionsende.",
     ],
     [canonical.sections[4].title, "Szene 03 · Den Diff prüfen"],
     [
       prose(4, 0),
-      "Der Diff ist da, die Prüfungen sind grün. Lies, was sich tatsächlich geändert hat.",
+      "Der Diff ist da, die Prüfungen sind grün. Er steht am Lektionsende; lies, was sich tatsächlich geändert hat.",
     ],
     [canonical.sections[5].title, "Szene 04 · Die gezielte Korrektur"],
     [
       prose(5, 0),
-      "Der Test ersetzt active_subscriptions() und prüft, wie die gelieferten Testdaten serialisiert werden; die Auswahl aktiver Abonnements bleibt ungeprüft. Welcher Kommentar benennt den fehlenden Nachweis präzise?",
+      "Der Test ersetzt active_subscriptions() und prüft, wie die gelieferten Testdaten serialisiert werden; die Auswahl aktiver Abonnements bleibt ungeprüft. Welcher Kommentar benennt den fehlenden Nachweis präzise? Antworte am Lektionsende.",
     ],
     [canonical.sections[6].title, "Szene 05 · Nach dem Merge"],
     [
       prose(6, 0),
       "Die überarbeiteten Tests decken Auswahl und Serialisierung ab, der vollständige Diff ist gelesen, die vertrauenswürdigen Checks sind grün. Bevor der Scheduler-Auftrag startet, sicherst du jede dauerhafte Entscheidung, an der er hängt.",
     ],
-    [canonical.sections[7].title, "Kurs abgeschlossen"],
+    [canonical.sections[7].title, "Arbeitsregeln"],
     [
       prose(7, 0),
-      "Drei Arbeitsregeln:\n\n1. **Fakten von Hypothesen trennen.** Dateiverweise, exakte Befehlsergebnisse und belegte Grenzen behalten; unbelegte Erklärungen streichen.\n2. **Bei falscher Prämisse neu beginnen.** Lokale Fehler gezielt korrigieren; ändern sich Ziel, Architektur oder Umfang, schreib einen neuen Auftrag.\n3. **Arbeit an der Review-Kapazität begrenzen.** Nur so viele Aufgaben gleichzeitig, wie das Team auf dem nötigen Risikoniveau prüfen, integrieren und verifizieren kann.\n\nWas ein Coding-Agent liefert, bleibt ein Vorschlag. Annahme, Merge, Deployment und Incident gehören einem verantwortlichen Menschen.",
+      "1. **Fakten von Hypothesen trennen.** Dateiverweise, exakte Befehlsergebnisse und belegte Grenzen behalten; unbelegte Erklärungen streichen.\n2. **Bei falscher Prämisse neu beginnen.** Lokale Fehler gezielt korrigieren; ändern sich Ziel, Architektur oder Umfang, schreib einen neuen Auftrag.\n3. **Arbeit an der Review-Kapazität begrenzen.** Nur so viele Aufgaben gleichzeitig, wie das Team auf dem nötigen Risikoniveau prüfen, integrieren und verifizieren kann.\n\nWas ein Coding-Agent liefert, bleibt ein Vorschlag. Annahme, Merge, Deployment und Incident gehören einem verantwortlichen Menschen.",
     ],
     [
       widgetString(0, "question"),
@@ -178,7 +178,7 @@ const translated = localizeCodexLessonToGerman(canonical, {
     ],
     [
       widgetStrings(0, "options")[0],
-      "Agenten öffnen, Priyas Nachricht reinkopieren, Lauf starten.",
+      "Agenten öffnen, Anfrage reinkopieren, Lauf starten.",
     ],
     [
       widgetStrings(0, "options")[1],
@@ -186,11 +186,11 @@ const translated = localizeCodexLessonToGerman(canonical, {
     ],
     [
       widgetStrings(0, "options")[2],
-      "Priya nach den CSV-Spalten fragen und alles als einen großen Auftrag bauen.",
+      "Die anfragende Person nach den CSV-Spalten fragen und alles als einen großen Auftrag bauen.",
     ],
     [
       widgetStrings(0, "options")[3],
-      "Priya sagen, dass das diese Woche nichts wird.",
+      "Der anfragenden Person sagen, dass das diese Woche nichts wird.",
     ],
     [
       widgetString(0, "explanation"),
@@ -198,7 +198,7 @@ const translated = localizeCodexLessonToGerman(canonical, {
     ],
     [
       widgetString(1, "question"),
-      "Welcher Einstieg beschreibt Aufgabe (a), den Export-Endpunkt, am besten?",
+      "Welcher Einstieg beschreibt Aufgabe 01, den Export-Endpunkt, am besten?",
     ],
     [widgetStrings(1, "options")[0], '"CSV-Export der Abonnements ergänzen."'],
     [
@@ -254,7 +254,7 @@ const translated = localizeCodexLessonToGerman(canonical, {
     [widgetStrings(5, "options")[0], "Den PR-Tab schließen und weitermachen."],
     [
       widgetStrings(5, "options")[1],
-      "\"Tests, die ihr eigenes Prüfobjekt mocken, sind hier ein Fehler\" in die Agentenanweisungen aufnehmen.",
+      "\"Tests, die ihr eigenes Prüfobjekt mocken, sind hier ein Gegenmuster\" in die Agentenanweisungen aufnehmen, damit der nächste Lauf sie vermeidet.",
     ],
     [
       widgetStrings(5, "options")[2],

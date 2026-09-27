@@ -30,8 +30,8 @@ export function Ch4OrchestrateDe({ chapter }: Ch4OrchestrateDeProps) {
         <p className="prose">
           Eine geplante Pipeline ist ein <b>gerichteter azyklischer Graph</b>.
           Knoten sind Tasks, Kanten deklarierte Abhängigkeiten, und Airflow
-          plant, was bereit ist. Wiederholung, gelöschter Task-Zustand und
-          Backfill folgen DAG-Konfiguration und Operatorsemantik.
+          plant, was bereit ist. Retries, Clear und Backfills richten sich
+          nach DAG-Konfiguration und Operatorsemantik.
         </p>
         <DAGDiagram />
         <p className="prose" style={{ marginTop: 18 }}>
@@ -56,7 +56,7 @@ export function Ch4OrchestrateDe({ chapter }: Ch4OrchestrateDeProps) {
       <section className="section">
         <SectionLabel n="5.3">Der Schreibvertrag</SectionLabel>
         <CodeBlock
-          title="pipeline.py · der von Airflow erwartete Schreibvorgang"
+          title="pipeline.py · idempotenter Partitionsschreibvorgang"
           lang="Spark"
           html={IDEMPOTENT_WRITE_SQL}
         />
@@ -66,7 +66,7 @@ export function Ch4OrchestrateDe({ chapter }: Ch4OrchestrateDeProps) {
         title="Fehlmuster"
         items={[
           "<b>Auf einem wiederholbaren Pfad ohne stabilen Schlüssel anhängen.</b> Wiederholungen behalten Duplikate, wenn das Ziel nicht idempotent mergt oder dedupliziert.",
-          "<b>Externe Nebeneffekte mit dem Datenschreiben vermischen.</b> Benachrichtigungen und API-Schreibvorgänge auslagern und mit Idempotenzschlüssel oder Zustellungs-Ledger schützen.",
+          "<b>Externe Nebeneffekte mit dem Datenschreiben vermischen.</b> Benachrichtigungen und API-Schreibvorgänge in einen eigenen abschließenden Task mit Idempotenzschlüssel oder Zustellungs-Ledger auslagern, damit Wiederholungen bereits Gesendetes überspringen.",
           "<b>Die Partition per <code>CURRENT_DATE</code> oder <code>NOW()</code> wählen.</b> Die geplante Partition explizit übergeben, damit Backfills das angefragte Intervall treffen.",
           "<b>Auf Alarme vertrauen, die niemand konfiguriert hat.</b> Setz Fristen, Callbacks, Zuständigkeit und Routing und teste den Fehlerpfad.",
         ]}
@@ -76,7 +76,6 @@ export function Ch4OrchestrateDe({ chapter }: Ch4OrchestrateDeProps) {
         items={[
           "<b>Overwrite, Merge oder Upsert</b> aus Schlüssel- und Partitionssemantik der Tabelle wählen und eine Wiederholung mit derselben logischen Eingabe testen.",
           "Für bytegleiche Reproduktion zusätzlich Code, Quell-Snapshots und nichtdeterministische Eingaben fixieren.",
-          "Unvermeidbare Nebeneffekte wie E-Mails, Pushes oder externe API-Schreibvorgänge in <b>einen eigenen abschließenden Task</b> mit externem Ledger legen, damit Wiederholungen bereits Gesendetes überspringen.",
         ]}
       />
     </DataEngineeringFundamentalsLocaleProvider>

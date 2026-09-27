@@ -25,13 +25,13 @@
           "id": "block_2_lesson_1_section_1",
           "title": "Check product and operation together",
           "readTimeMinutes": 3,
-          "content": "Where a prompt goes depends on product edition, contract, configuration and workflow. Check at least these six fields:\n\n| Review field | Questions |\n|---|---|\n| **Roles** | Who is the controller, processor or another recipient? Is a processing agreement required and in place? |\n| **Data flows** | Which content, metadata and logs leave which system, and in which regions are they stored or processed? |\n| **Provider use** | Does the provider use inputs or outputs for model development, quality review or abuse monitoring? Which settings and commitments apply? |\n| **Access and functions** | Which roles, permissions, connectors, extensions and sharing links are active? |\n| **Lifecycle** | How long are inputs, outputs, logs and backups retained? How do access, deletion and export work? |\n| **Organizational approval** | Which purposes, data classes, user groups and configurations does the approval cover? |\n\nCloud or local, free or paid, consumer or enterprise are sales categories. A local system can send telemetry and reach the network, and an enterprise contract does not cover every function and data class. Check the documents at procurement and after every material change."
+          "content": "Where a prompt goes depends on product edition, contract, configuration and workflow. Check at least these six fields:\n\n| Review field | Questions |\n|---|---|\n| **Roles** | Who is the controller, processor or another recipient? Is a processing agreement required and in place? |\n| **Data flows** | Which content, metadata and logs leave which system, and in which regions are they stored or processed? |\n| **Provider use** | Does the provider use inputs or outputs for model development, quality review or abuse monitoring? Which settings and commitments apply? |\n| **Access and functions** | Which roles, permissions, connectors, extensions and sharing links are active? |\n| **Lifecycle** | How long are inputs, outputs, logs and backups retained? How do access, deletion and export work? |\n| **Organizational approval** | Which purposes, data classes, user groups and configurations does the approval cover? |\n\nWhether a tool runs locally or in the cloud, what it costs and whether it targets consumers or businesses says nothing about where the data goes. A local system can send telemetry, load extensions and reach the network. An enterprise contract does not cover every function and data class. Check the documents at procurement and after every material change."
         },
         {
           "id": "block_2_lesson_1_section_2",
           "title": "Shadow AI, and what works against it",
           "readTimeMinutes": 2,
-          "content": "Shadow AI is AI use for work that nobody approved. The classic case is a private chat account; extensions, new features in old software, personal API keys and local models outside the process count too.\n\nIt can lack contract, legal basis, permissions, data region, retention, logging and technical controls, and a \"training off\" switch settles none of this.\n\nCounter it with a current approval matrix, clear data rules, reachable contacts, a checkable procurement path, usable approved alternatives and, by risk, access control, configuration policies, logging or blocking.\n\nBefore work use, check the published approval status for purpose, data class, product edition and active configuration."
+          "content": "Shadow AI is AI use for work outside the approved inventory and the intended controls. The classic case is a private chat account; extensions, new features in old software, personal API keys and local models outside the process count too.\n\nSuch use can lack a contract, legal basis, permissions, data region, retention, logging and technical controls. A \"training off\" switch closes none of these gaps.\n\nCounter it with a current approval matrix, clear data rules, reachable contacts, a checkable procurement path, usable approved alternatives and, by risk, access control, configuration policies, logging or blocking.\n\nBefore using AI for work, check the published approval status for purpose, data class, product edition and active configuration."
         }
       ],
       "quiz": [
@@ -60,7 +60,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Safe is what was checked: product, contract, permissions, data classes, tenant and data region. A brand name or a European head office checks none of it."
+          "explanation": "Only what was checked is safe: product, contract, permissions, data classes, tenant and data region. Wide adoption and a European head office say nothing about it."
         },
         {
           "id": "block_2_lesson_1_q2",
@@ -95,7 +95,7 @@
       "id": "block_2_lesson_2",
       "blockId": "block_2",
       "number": 2,
-      "title": "The four levels of data classification",
+      "title": "Levels of data classification",
       "subtitle": "Which data belongs in which tool",
       "durationMinutes": 5,
       "keyConcepts": [
@@ -115,7 +115,7 @@
           "id": "block_2_lesson_2_section_2",
           "title": "The decision tree",
           "readTimeMinutes": 2,
-          "content": "Before every input you answer five questions:\n\n1. **Purpose:** What task should the system perform?\n2. **Data and rights:** Which data types, people, copyrights, trade secrets or contractual duties are involved?\n3. **Internal classification:** Which data class does your organization's policy assign?\n4. **Approval:** Are product, configuration, extensions and workflow approved for exactly this use?\n5. **Minimization:** What can you omit, anonymize or replace with a synthetic example?\n\nIf one answer is missing, you enter nothing and take the published approval or escalation route. A paid licence, an enterprise tenant and a disabled training setting answer none of the questions on their own. Cautious classification lowers the risk and replaces no legal basis, purpose limitation, authorization or contract."
+          "content": "Before every input you answer five questions:\n\n1. **Purpose:** What task should the system perform?\n2. **Data and rights:** Which data types, people, copyrights, trade secrets or contractual duties are involved?\n3. **Internal classification:** Which data class does your organization's policy assign?\n4. **Approval:** Are product, configuration, extensions and workflow approved for exactly this use?\n5. **Minimization:** What can you omit, anonymize or replace with a synthetic example?\n\nIf one answer is missing, you enter nothing and take the published approval or escalation route. A paid licence, an enterprise tenant and a disabled training setting answer none of the questions on their own. Cautious classification lowers the risk but does not replace a legal basis, purpose limitation, authorization or contract."
         }
       ],
       "quiz": [
@@ -198,7 +198,7 @@
           "id": "block_2_lesson_3_section_2",
           "title": "What the table shows",
           "readTimeMinutes": 2,
-          "content": "- **Public (items 1 and 6):** You still check rights, personal data, currency and the tool rules.\n- **Internal (item 2, sometimes item 9):** Stays inside the intended audience, only in the approved workflow and without details the purpose does not need.\n- **Confidential (items 3, 4 and 10; item 9 depending on content):** Contract, legal basis, permissions, data region, retention and configuration have to fit the purpose, even for an enterprise product.\n- **Restricted (items 5, 7 and 8):** General assistants are blocked. An exception needs a documented workflow reviewed on the technical and legal side.\n\nA real policy also needs owners, approved products and functions, prohibited data, a reporting route for incidents and a process for new use cases."
+          "content": "In the example model:\n\n- **Public (items 1 and 6):** You still check rights, personal data, currency and the tool rules.\n- **Internal (item 2, sometimes item 9):** Stays inside the intended audience, only in the approved workflow and without details the purpose does not need.\n- **Confidential (items 3, 4 and 10; item 9 depending on content):** Contract, legal basis, permissions, data region, retention and configuration have to fit the purpose, even for an enterprise product.\n- **Restricted (items 5, 7 and 8):** General assistants are blocked. An exception needs a documented workflow reviewed on the technical and legal side.\n\nBlock 5 covers what a real policy needs on top of this."
         }
       ],
       "quiz": [

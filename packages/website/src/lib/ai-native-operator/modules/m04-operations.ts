@@ -12,28 +12,28 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Put routine updates in writing and meet live only when needed.",
     objective:
       "Put routine updates in writing and meet live only when needed.",
-    durationMinutes: 14,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Classify the purpose first",
-        readTimeMinutes: 5,
+        readTimeMinutes: 1,
         content:
           "A status update, a decision and a sensitive discussion are different jobs. Routine facts go in writing. Contested decisions, incidents, relationship work and ambiguity often need a live conversation, so classify the purpose before you pick the format.",
       },
       {
         id: "s2",
         title: "Make written updates usable",
-        readTimeMinutes: 5,
+        readTimeMinutes: 1,
         content:
-          "Use one update format: current state, evidence or source links, blockers, owner, timestamp and decisions needed. A model can group and summarize entries, but summaries only route attention and readers keep access to the entries.",
+          "Use one update format: current state, evidence or source links, blockers, owner, timestamp and decisions needed. A model can group and summarize entries. The summary only routes attention; readers keep access to the entries, because summaries omit and distort.",
       },
       {
         id: "s3",
         title: "Document the live decision",
-        readTimeMinutes: 4,
+        readTimeMinutes: 1,
         content:
           "Before a live meeting, name the decision owner and the required input. Afterwards record the decision, reasoning, dissent, actions and owners. Schedule informal contact separately if the team needs it.",
       },
@@ -66,21 +66,21 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Give a drafting tool audience, purpose, evidence, constraints and an owner.",
     objective:
       "Give a drafting tool audience, purpose, evidence, constraints and an owner.",
-    durationMinutes: 12,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Write the brief before the draft",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
           "A brief states who reads the document, what decision it supports, which sources are authoritative, which constraints apply and who owns the result. Writers, models and reviewers all work from it.",
       },
       {
         id: "s2",
         title: "Treat generated text as an unverified draft",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
           "Check citations, figures, names, policy statements and sensitive claims against their sources. Keep document versions and name the human approver. The owner stays accountable for accuracy, disclosure and release.",
       },
@@ -112,28 +112,28 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Automate classification and routing with uncertainty and escalation visible.",
     objective:
       "Automate classification and routing with uncertainty and escalation visible.",
-    durationMinutes: 17,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Define the triage record",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
           "Record category, severity, proposed owner, confidence and evidence for each ticket. Automatic actions follow documented rules only. Keep the original request and link related tickets and context so a reviewer can reconstruct the route.",
       },
       {
         id: "s2",
         title: "Set risk-based review rules",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
-          "Escalate uncertain, conflicting, novel, high-impact and policy-required cases, and review a risk-based sample of the rest. Set thresholds from the cost of a wrong route; high confidence proves neither correctness nor absence of systematic error.",
+          "Escalate uncertain, conflicting, novel, high-impact and policy-required cases, and review a risk-based sample of the rest. Set thresholds from the cost of a wrong route, never from an automation target; high confidence proves neither correctness nor absence of systematic error.",
       },
       {
         id: "s3",
         title: "Close the correction loop",
-        readTimeMinutes: 5,
+        readTimeMinutes: 1,
         content:
           "Name owners for reviewing escalations, correcting routes, updating rules or examples and informing affected users. Log inputs, outputs, overrides and outcomes, watch error patterns, and suspend automatic actions when the control stops working.",
       },
@@ -161,10 +161,10 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "quiz",
-    title: "Module 4 knowledge check",
+    title: "Module 4, knowledge check",
     subtitle: "Two questions on coordination and triage.",
     objective: "Two questions on coordination and triage.",
-    durationMinutes: 7,
+    durationMinutes: 3,
     keyConcepts: [],
     quiz: [
       {
@@ -179,7 +179,7 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
           {
             id: "b",
-            text: "Move updates into writing and meet only for decisions.",
+            text: "Move updates into writing; meet live only for decisions or ambiguity.",
             isCorrect: true,
           },
           {
@@ -194,7 +194,7 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Routine facts belong in a written record, and summaries only route attention. Live time is for contested decisions, incidents, sensitive issues or real ambiguity.",
+          "Routine facts belong in a written record; summaries only show where to look. Live time is for contested decisions, incidents, sensitive issues or real ambiguity.",
       },
       {
         id: "ano-operations-q2",
@@ -213,7 +213,7 @@ export const OPERATIONS_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
           {
             id: "c",
-            text: "Uncertain, novel or high-impact cases plus a risk-based sample.",
+            text: "Uncertain, conflicting, novel, high-impact or policy-required cases plus a risk-based sample.",
             isCorrect: true,
           },
           {

@@ -41,7 +41,7 @@ export function Ch5Quality({ chapter }: Ch5QualityProps) {
         accent={chapter.inkHex}
         eyebrow={`Chapter ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Quality: a pipeline that <span class='accent'>ran</span> is not a pipeline that's <span class='accent'>right</span>."
-        hook="A successful task can still write incomplete, stale, duplicated or schema-incompatible data. Checks give evidence about selected properties."
+        hook="A successful task can still write incomplete, stale, duplicated or schema-incompatible data. Each check shows whether one named property holds. Passing checks does not prove every value is correct."
         meta={[
           { k: "Primitive", v: "ExpectationSuite" },
           { k: "Barrier", v: "signal table + ExternalTaskSensor" },
@@ -51,17 +51,22 @@ export function Ch5Quality({ chapter }: Ch5QualityProps) {
 
       <section className="section">
         <SectionLabel n="6.1">The core checks</SectionLabel>
-        <h2 className="h2">Four checks for distinct failure modes.</h2>
-        <p className="prose">
-          <b>Row-count band:</b> compare the partition with a table-specific baseline and threshold to catch empty or partial writes and
-          upstream changes.
-          <br />
-          <b>Schema check:</b> compare the observed schema with the versioned contract and its compatibility policy.
-          <br />
-          <b>Freshness:</b> check the named partition or event-time cutoff against the dataset&apos;s target.
-          <br />
-          <b>Uniqueness:</b> check the declared key at the declared grain. Not every fact table has a single-row primary key.
-        </p>
+        <h2 className="h2">Each check catches a different failure.</h2>
+        <ul className="prose">
+          <li>
+            <b>Row-count band:</b> compare the partition with a table-specific baseline and threshold to catch empty or partial writes and
+            upstream changes.
+          </li>
+          <li>
+            <b>Schema check:</b> compare the observed schema with the versioned contract and its compatibility policy.
+          </li>
+          <li>
+            <b>Freshness:</b> check the named partition or event-time cutoff against the dataset&apos;s target.
+          </li>
+          <li>
+            <b>Uniqueness:</b> check the declared key at the declared grain. Not every fact table has a single-row primary key.
+          </li>
+        </ul>
         <TrustMeterSim />
       </section>
 

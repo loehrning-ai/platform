@@ -36,7 +36,7 @@ export function Ch8Govern({ chapter }: Ch8GovernProps) {
         accent={chapter.inkHex}
         eyebrow={`Chapter ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Govern: privacy checks run at the <span class='accent'>deploy gate</span>."
-        hook="The reference gate checks declared identity classes, ACL metadata and transform policy. Passing it confirms those rules, not legal compliance."
+        hook="The reference gate checks declared identity classes, ACL metadata and transform policy."
         meta={[
           { k: "Deploy gate", v: "Access Gateway" },
           { k: "ACL", v: "dataset_acl" },
@@ -74,13 +74,13 @@ export function Ch8Govern({ chapter }: Ch8GovernProps) {
       <section className="section">
         <SectionLabel n="9.2">The deploy gate</SectionLabel>
         <h2 className="h2">The reference gate evaluates declared metadata.</h2>
-        <p className="prose">In the simulator, Access Gateway checks each declared column against the course rules, resolves <code> dataset_acl</code> and optionally checks a Policy Zone binding. It catches missing metadata. Sensitive values, policy conflicts and legal requirements need further review and evidence.</p>
+        <p className="prose">In the simulator, Access Gateway checks each declared column against the course rules, resolves <code>dataset_acl</code> and optionally checks a Policy Zone binding. It catches missing metadata. Sensitive values, policy conflicts and legal requirements need further review and evidence.</p>
         <PermissionGateSim />
       </section>
 
       <section className="section">
         <SectionLabel n="9.3">Policy zones &amp; opaque transforms</SectionLabel>
-        <p className="prose">A <b>Policy Zone</b> pins execution to a named compute environment, and an opaque transform can run with <code> network=NO_NETWORK</code> to remove direct egress. Identity, storage, logs, dependencies, outputs and deployment configuration still need enforcement and testing.</p>
+        <p className="prose">A <b>Policy Zone</b> pins execution to a named compute environment, and an opaque transform can run with <code>network=NO_NETWORK</code> to remove direct egress. Identity, storage, logs, dependencies, outputs and deployment configuration still need enforcement and testing.</p>
         <CodeBlock title="dim_users.spec.yaml · the shipped annotation" lang="YAML" html={ANNOTATED_SPEC_YAML} />
       </section>
 

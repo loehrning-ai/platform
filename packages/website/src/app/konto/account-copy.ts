@@ -85,7 +85,7 @@ export const ACCOUNT_COPY = {
     logout: "Abmelden",
     unavailableTitle: "Dein Lernstand ist gerade nicht erreichbar.",
     unavailableBody:
-      "Dein lokaler Lernstand im Browser bleibt erhalten.",
+      "Dein lokaler Lernstand bleibt erhalten. Lade die Seite später neu.",
     authUnavailableIdentity:
       "Der Anmeldedienst antwortet gerade nicht.",
     authUnavailableTitle: "Anmeldestatus ist gerade nicht abrufbar.",
@@ -131,7 +131,7 @@ export const ACCOUNT_COPY = {
     noOutcomes:
       "Lernergebnisse erscheinen hier, sobald du einen Kursnachweis erreichst.",
     outcomeBoundary:
-      "Die Einträge nennen Inhalte abgeschlossener Kurse und belegen weder deine Beherrschung noch eine akkreditierte Qualifikation.",
+      "Die Einträge zeigen, was deine abgeschlossenen Kurse behandelt haben. Sie belegen nicht, dass du es beherrschst, und sind keine akkreditierte Qualifikation.",
     deepenHeading: "Weiter vertiefen",
     resources: [
       {
@@ -149,7 +149,7 @@ export const ACCOUNT_COPY = {
     ],
     localDataHeading: "Gespeicherter Lernstand",
     localDataBody:
-      "Ohne Anmeldung bleiben Kursfortschritt, Checkpoints und Arbeitsbelege in diesem Browser; ein Lernkonto synchronisiert sie. Historische Aktivitätsdaten bleiben aus Kompatibilitätsgründen im Export, ohne offiziellen Nachweiswert.",
+      "Ohne Anmeldung bleiben Kursfortschritt, Checkpoints und Arbeitsbelege in diesem Browser. Ein Lernkonto synchronisiert sie. Historische Aktivitätsdaten bleiben aus Kompatibilitätsgründen im Export und gelten nicht als Nachweis.",
     sectionNavigationLabel: "Kontobereiche",
     sectionSettings: "Konto verwalten",
     privacyNavigationLabel: "Kontodatenschutz",
@@ -175,7 +175,7 @@ export const ACCOUNT_COPY = {
     logout: "Sign out",
     unavailableTitle: "Your learning record is temporarily unavailable.",
     unavailableBody:
-      "Progress stored in this browser is unchanged.",
+      "Progress in this browser is unchanged. Reload the page later.",
     authUnavailableIdentity:
       "The sign-in service is not responding.",
     authUnavailableTitle: "Sign-in status is temporarily unavailable.",
@@ -221,7 +221,7 @@ export const ACCOUNT_COPY = {
     noOutcomes:
       "Outcomes appear here once you earn a course record.",
     outcomeBoundary:
-      "The entries name content of completed courses and prove neither your mastery nor an accredited qualification.",
+      "The entries show what your completed courses covered. They do not prove you master it and are not an accredited qualification.",
     deepenHeading: "Go deeper",
     resources: [
       {
@@ -239,7 +239,7 @@ export const ACCOUNT_COPY = {
     ],
     localDataHeading: "Saved learning state",
     localDataBody:
-      "Without sign-in, course progress, checkpoints and work artifacts stay in this browser; a learning account syncs them. Historical activity data remains in exports for compatibility, with no official qualification value.",
+      "Without sign-in, course progress, checkpoints and work artifacts stay in this browser. A learning account syncs them. Historical activity data remains in exports for compatibility and does not count as a record.",
     sectionNavigationLabel: "Account sections",
     sectionSettings: "Manage account",
     privacyNavigationLabel: "Account privacy",

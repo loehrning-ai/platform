@@ -57,9 +57,8 @@ export function Ch7ServeDe({ chapter }: Ch7ServeDeProps) {
         <SectionLabel n="8.1">Was eine Metrikschicht ist</SectionLabel>
         <h2 className="h2">Metrikversion und Ausführungskontext deklarieren.</h2>
         <p className="prose">
-          Eine Metrikschicht ist ein <b>Register</b> aus Namen, Versionen, Zuständigkeiten, Granularitäten, Quellen, Formeln und zulässigen Filtern.
-          Wer eine registrierte Metrik abfragt, bekommt dieselbe Definition. Authentifizierung, Autorisierung, Quellauswahl und
-          Ausführungsprotokoll bleiben Aufgabe des Abfragedienstes.
+          Eine Metrikschicht ist ein <b>Register</b> aus Namen, Versionen, Zuständigkeiten, Granularitäten, Quellen, Formeln, zulässigen Filtern und
+          Gültigkeitsbeginn. Wer eine registrierte Metrik abfragt, bekommt dieselbe Definition.
         </p>
         <MetricsRegistryDe />
         <p className="prose" style={{ marginTop: 18 }}>
@@ -70,7 +69,7 @@ export function Ch7ServeDe({ chapter }: Ch7ServeDeProps) {
 
       <section className="section">
         <SectionLabel n="8.2">Der Weg einer Abfrage</SectionLabel>
-        <h2 className="h2">Dieselbe Frage darf nicht zu unterschiedlichem SQL führen.</h2>
+        <h2 className="h2">Eine Frage, Ad-hoc-SQL oder registrierte Metrik.</h2>
         <p className="prose">
           Frag <em>„Wie hoch war die DAU in den USA letzte Woche?“</em> Ohne
           Metrikschicht sucht die Analystin ähnlich benannte Tabellen, wählt
@@ -97,14 +96,14 @@ export function Ch7ServeDe({ chapter }: Ch7ServeDeProps) {
             <div className="ccard-t">Dashboards</div>
             <div className="ccard-n">Hex · Mode · Superset · Trino-Backend</div>
             <div className="ccard-d">
-              Lösen die registrierte Version auf und erfassen Filter, Quellenstichtag und Cache-Zustand.
+              Dashboards lösen die registrierte Version auf und erfassen Filter, Quellenstichtag und Cache-Zustand.
             </div>
           </div>
           <div className="ccard">
             <div className="ccard-t">Notebooks und APIs</div>
             <div className="ccard-n">Ein Resolver, mehrere Aufrufer</div>
             <div className="ccard-d">
-              Nutzen denselben Resolver und behalten aufruferspezifische Autorisierung und Audit-Kontext.
+              Alle Aufrufer nutzen denselben Resolver und behalten ihre eigene Autorisierung und ihren Audit-Kontext.
             </div>
           </div>
         </div>

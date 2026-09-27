@@ -35,18 +35,18 @@ export function Ch2Store({ chapter }: Ch2StoreProps) {
       <section className="section">
         <SectionLabel n="3.1">The pattern</SectionLabel>
         <h2 className="h2">Yesterday + today = today&apos;s cumulative.</h2>
-        <p className="prose">The additive example joins the prior partition to today&apos;s deltas with a <code>FULL OUTER JOIN</code> and
-          <code> COALESCE</code>, so keys from either side survive. Other cumulative models add merge rules, deletions, validity intervals
+        <p className="prose">The additive example joins the prior partition to today&apos;s deltas with a <code>FULL OUTER JOIN</code> and{" "}
+          <code>COALESCE</code>, so keys from either side survive. Other cumulative models add merge rules, deletions, validity intervals
           or conflict handling.</p>
         <p className="prose">Day 7 rests on day 6, which already carries everything before it. If day 3 is wrong, rebuild from the earliest affected partition onward; a code fix alone rewrites no stored history.</p>
       </section>
 
       <section className="section">
         <SectionLabel n="3.2">Scrub the week</SectionLabel>
-        <h2 className="h2">A bug on Day 3. Caught on Day 4. Backfilled on Day 5.</h2>
+        <h2 className="h2">A day-3 bug, found on day 4 and backfilled on day 5.</h2>
         <p className="prose">
-          Step through the days. On Day 3 a unit mix-up halves every user&apos;s points, and by Day 5 the drift is in every aggregate.
-          <em> Patch &amp; backfill</em> replays the bad days with the corrected logic.
+          Step through the days. On day 3 a unit mix-up halves every user&apos;s points, and by day 5 the drift is in every aggregate.{" "}
+          <em>Patch &amp; backfill</em> replays the bad days with the corrected logic.
         </p>
         <CumulativeSim />
       </section>
@@ -58,7 +58,7 @@ export function Ch2Store({ chapter }: Ch2StoreProps) {
 
       <AntiPatterns
         items={[
-          "<b>Using a left join here.</b> Keys that first appear in today's delta get dropped. Test new, existing and missing keys.",
+          "<b>Using a left join for the cumulative merge.</b> Keys that first appear in today's delta get dropped. Test new, existing and missing keys.",
           "<b>Deploying a fix without rebuilding dependent partitions.</b> Find the earliest affected date and recompute everything after it.",
           "<b>Reading wall-clock time inside a backfill.</b> Pass <code>&lt;DATEID&gt;</code> and other run inputs explicitly so the same input selects the same source range.",
           "<b>Publishing partial state.</b> Use the table format's atomic replace, merge or snapshot so readers never see an incomplete partition.",
@@ -67,7 +67,7 @@ export function Ch2Store({ chapter }: Ch2StoreProps) {
       <BestPractices
         items={[
           "Version cumulative logic and record which version produced each partition. Rebuild the range whose semantics changed.",
-          "Take <b>invariants from the business model</b>. Deletion or retention can lower the row count, so test expected key transitions instead of steady growth.",
+          "Take <b>invariants from the business model</b>. Deletion or retention can lower the row count, so test expected key transitions; row counts need not grow steadily.",
         ]}
       />
     </>

@@ -62,7 +62,7 @@ export const externalBenchmarks: readonly ExternalBenchmark[] = [
   {
     id: "bcg_2025_no_value",
     value: "74 %",
-    plain: "der Unternehmen sehen keinen Nutzen aus ersten KI-Investitionen.",
+    plain: "der Unternehmen sehen keinen greifbaren Nutzen aus ersten KI-Investitionen.",
     publisher: "BCG",
     year: "2025",
     topic: "failure",

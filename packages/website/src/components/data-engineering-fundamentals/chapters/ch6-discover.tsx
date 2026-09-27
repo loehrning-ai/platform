@@ -49,9 +49,9 @@ export function Ch6Discover({ chapter }: Ch6DiscoverProps) {
         <SectionLabel n="7.1">The six shortcuts</SectionLabel>
         <h2 className="h2">Use the course palette before adopting a dataset.</h2>
         <p className="prose">
-          Before adopting a table, check its purpose, owner, status, upstream producer and registered consumers. In the course palette,
-          <code> ht</code> shows table metadata, <code>fpl</code> opens the producing file, <code>ds produce</code> lists registered consumers,
-          <code> qbgs</code> searches examples, <code>udf</code> finds a function, and <code>wut</code> opens a glossary entry.
+          Before adopting a table, check its purpose, owner, status, upstream producer and registered consumers. In the course palette,{" "}
+          <code>ht</code> shows table metadata, <code>fpl</code> opens the producing file, <code>ds produce</code> lists registered consumers,{" "}
+          <code>qbgs</code> searches examples, <code>udf</code> finds a function, and <code>wut</code> opens a glossary entry.
         </p>
         <DiscoverySpeedrun />
       </section>

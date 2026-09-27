@@ -13,16 +13,16 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       "Know where commands run and what they can reach.",
-      "Wisse, wo Befehle laufen und was sie erreichen.",
+      "Prüf, wo Befehle laufen und was sie erreichen.",
     ],
     ["Local sandbox", "Lokale Sandbox"],
     ["Cloud environment", "Cloud-Umgebung"],
     ["Approval policy", "Freigaberichtlinie"],
     ["Network configuration", "Netzwerkkonfiguration"],
-    ["Local and cloud are different", "Lokal ist nicht Cloud"],
+    ["Local and cloud are different", "Lokal und Cloud unterscheiden sich"],
     [
-      "- **Local CLI and IDE sessions** run commands on your machine in the configured OS-enforced sandbox. The common workspace-write setting allows writes only in the active workspace and keeps the network off until you enable it. A separate approval policy decides when Codex must ask first.\n- **Cloud tasks** run in a dedicated OpenAI-managed container. Codex checks out the chosen repository and commit, runs the setup, does the task and returns a summary and diff. Setup may use the network and setup-only secrets. The secrets are removed before the agent phase, whose network access is off by default and enabled per environment.\n\nRead the active settings before you rely on them.",
-      "- **Lokale CLI- und IDE-Sitzungen** führen Befehle auf deinem Rechner aus, in der konfigurierten Sandbox des Betriebssystems. Die übliche Workspace-Write-Einstellung erlaubt Schreibzugriffe nur im aktiven Workspace und hält das Netzwerk zu, bis du es einschaltest. Eine eigene Freigaberichtlinie legt fest, wann Codex vorher fragen muss.\n- **Cloud-Aufträge** laufen in einem dedizierten Container, den OpenAI verwaltet. Codex checkt Repository und Commit aus, fährt das Setup, bearbeitet den Auftrag und liefert Zusammenfassung und Diff. Das Setup darf ins Netz und Setup-Secrets nutzen. Die Secrets werden vor der Agentenphase entfernt, deren Netzwerkzugriff standardmäßig aus ist und pro Umgebung eingeschaltet wird.\n\nLies die aktiven Einstellungen nach, bevor du dich darauf verlässt.",
+      "- **Local CLI and IDE sessions** run commands on your machine in the configured OS-enforced sandbox. The common workspace-write setting allows writes only in the active workspace and keeps the network off until you enable it. A separate approval policy decides when Codex must ask first.\n- **Cloud tasks** run in a dedicated OpenAI-managed container: Codex checks out the chosen commit, runs setup, does the task and returns a summary and diff. Setup may use the network and setup-only secrets. The agent phase loses the secrets, and its network stays off unless you enable it per environment.\n\nRead the active settings before you rely on them.",
+      "- **Lokale CLI- und IDE-Sitzungen** führen Befehle auf deinem Rechner aus, in der konfigurierten Sandbox des Betriebssystems. Die übliche Workspace-Write-Einstellung erlaubt Schreibzugriffe nur im aktiven Workspace und hält das Netzwerk zu, bis du es einschaltest. Eine eigene Freigaberichtlinie legt fest, wann Codex vorher fragen muss.\n- **Cloud-Aufträge** laufen in einem dedizierten, von OpenAI verwalteten Container: Codex checkt den gewählten Commit aus, fährt das Setup, bearbeitet den Auftrag und liefert Zusammenfassung und Diff. Das Setup darf ins Netz und Setup-Secrets nutzen. In der Agentenphase sind die Secrets weg, und das Netzwerk bleibt aus, bis du es pro Umgebung einschaltest.\n\nLies die aktiven Einstellungen nach, bevor du dich darauf verlässt.",
     ],
     ["Plan for the active boundary", "Für die aktive Grenze planen"],
     [
@@ -47,10 +47,10 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     ["Network allow-list", "Netzwerk-Freigabeliste"],
     [
-      "Set per environment. If enabled, allow only the destinations and HTTP methods the task needs.",
+      "Internet access is set per environment. If enabled, allow only the destinations and HTTP methods the task needs.",
       "Internetzugriff wird pro Umgebung eingestellt. Ist er an, erlaube nur die Ziele und HTTP-Methoden, die der Auftrag braucht.",
     ],
-    ["provided by Codex", "von der Laufzeit bereitgestellt"],
+    ["provided by Codex", "von Codex bereitgestellt"],
     ["The runtime", "Die Laufzeit"],
     [
       "A dedicated container with the checked-out repository and the base image's tools.",
@@ -63,16 +63,16 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     ["Keep changes reviewable", "Änderungen prüfbar halten"],
     [
-      "Git structure decides how easily a cloud checkout or your local working tree can be reviewed and merged.\n\n- **Separate working trees or cloud environments for concurrent tasks.** Separate branches avoid shared file state, but overlapping diffs can still conflict.\n- **One reviewable behavior and its tests per change**, whatever the line count.\n- **A deliberate base commit.** Record it and refresh it when upstream changes touch the same area.\n- **Trusted checks re-run outside the task when the risk warrants it.** Agent logs show what ran there; CI and the reviewer's own runs are independent evidence.",
-      "Wie leicht sich ein Cloud-Checkout oder dein lokaler Working Tree prüfen und mergen lässt, entscheidet die Git-Struktur.\n\n- **Getrennte Worktrees oder Cloud-Umgebungen für gleichzeitige Aufträge.** Getrennte Branches verhindern geteilten Dateizustand, überlappende Diffs können trotzdem kollidieren.\n- **Ein prüfbares Verhalten samt Tests pro Änderung**, egal wie viele Zeilen.\n- **Ein bewusst gewählter Basis-Commit.** Halte ihn fest und zieh ihn nach, wenn vorgelagerte Änderungen denselben Bereich treffen.\n- **Vertrauenswürdige Prüfungen außerhalb des Auftrags wiederholen, wenn das Risiko es rechtfertigt.** Agentenprotokolle zeigen, was dort lief. Unabhängige Nachweise liefern CI und eigene Läufe der Reviewerin.",
+      "- **Separate working trees or cloud environments for concurrent tasks.** Separate branches avoid shared file state, but overlapping diffs can still conflict.\n- **One reviewable behavior and its tests per change**, whatever the line count.\n- **A deliberate base commit.** Record it and refresh it when upstream changes touch the same area.\n- **Trusted checks re-run outside the task when the risk warrants it.** Agent logs show what ran inside the task; CI and your own runs are independent evidence.",
+      "- **Getrennte Worktrees oder Cloud-Umgebungen für gleichzeitige Aufträge.** Getrennte Branches verhindern geteilten Dateizustand, überlappende Diffs können trotzdem kollidieren.\n- **Ein prüfbares Verhalten samt Tests pro Änderung**, egal wie viele Zeilen.\n- **Ein bewusst gewählter Basis-Commit.** Halte ihn fest und zieh ihn nach, wenn vorgelagerte Änderungen denselben Bereich treffen.\n- **Vertrauenswürdige Prüfungen außerhalb des Auftrags wiederholen, wenn das Risiko es rechtfertigt.** Agentenprotokolle zeigen, was im Auftrag lief; CI und eigene Läufe sind unabhängige Nachweise.",
     ],
     [
       "Output is evidence for your review.",
       "Die Ausgabe ist Nachweis für dein Review.",
     ],
     [
-      "Read the diff against requested behavior and excluded scope, including additions, deletions, dependencies, generated files and test changes. The logs show what actually ran.",
-      "Lies den Diff gegen verlangtes Verhalten und ausgeschlossenen Umfang, samt Ergänzungen, Löschungen, Abhängigkeiten, generierten Dateien und Teständerungen. Die Protokolle zeigen, was wirklich lief.",
+      "Read the diff against requested behavior and excluded scope, including additions, deletions, dependencies, generated files and test changes.",
+      "Lies den Diff gegen verlangtes Verhalten und ausgeschlossenen Umfang, samt Ergänzungen, Löschungen, Abhängigkeiten, generierten Dateien und Teständerungen.",
     ],
     ["Pre-flight checklist", "Prüfliste vor dem Start"],
     [
@@ -91,7 +91,7 @@ export default localizeCodexLessonToGerman(canonical, {
       "Is the observable goal stated, and do the acceptance checks run here? Are excluded files and systems named? Who reviews diff and logs before merge?",
       "Steht das beobachtbare Ziel da, und laufen die Akzeptanzprüfungen hier? Sind ausgeschlossene Dateien und Systeme genannt? Wer liest Diff und Protokolle vor dem Merge?",
     ],
-    ["Two questions follow.", "Es folgen zwei Fragen."],
+    ["Two questions at the end of the lesson.", "Zwei Fragen am Ende der Lektion."],
     ["Adjust the task for the sandbox", "Auftrag an die Sandbox anpassen"],
     [
       "Fetch our OpenAPI spec from https://docs.acme.com/v3/openapi.json and generate TypeScript types.",

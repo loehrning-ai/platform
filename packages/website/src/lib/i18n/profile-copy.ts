@@ -99,7 +99,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
       intro:
         "Ich bin Tim Löhr. Beruflich habe ich als Data Scientist bei Apple und Red Bull sowie als Data Engineer bei Meta gearbeitet.",
       detail:
-        "Hier veröffentliche ich Kurse, Bücher, Demos, Workshops und technische Notizen. Vier Grundlagen-Reader benötigen ein kostenloses Lernkonto; alles andere ist ohne Konto erreichbar.",
+        "Hier veröffentliche ich Kurse, Bücher, Demos, Workshops und technische Notizen. Vier Grundlagen-Reader benötigen ein kostenloses Lernkonto; alle anderen Lernmaterialien sind ohne Konto erreichbar.",
       portraitCaption: "Tim Löhr · loehrning.ai",
       roleLabel: "Rolle",
       roleValue: "Kurator und Entwickler",
@@ -234,7 +234,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
       intro:
         "I am Tim Löhr. I previously worked as a data scientist at Apple and Red Bull and as a data engineer at Meta.",
       detail:
-        "Here I publish courses, books, demos, workshops and technical notes. Four foundation readers require a free learning account; everything else is available without one.",
+        "Here I publish courses, books, demos, workshops and technical notes. Four foundation readers require a free learning account; all other learning materials are available without one.",
       portraitCaption: "Tim Löhr · loehrning.ai",
       roleLabel: "Role",
       roleValue: "Curator and developer",

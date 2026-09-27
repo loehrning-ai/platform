@@ -166,7 +166,7 @@ describe("DatenschutzPage course-reset list", () => {
     render(<DatenschutzPage />);
 
     for (const label of [
-      "Umfang und Exporthistorie",
+      "Was zurückgesetzt wird",
       "Technische Lösch- und Sperrmarker",
     ]) {
       const disclosure = screen.getByText(label).closest("details");
@@ -469,7 +469,7 @@ describe("DatenschutzPage course-reset list", () => {
     );
 
     expect(await screen.findByRole("alert")).toHaveTextContent(
-      "Der Löschstatus konnte nicht sicher ermittelt werden.",
+      "Der Löschstatus ist unklar.",
     );
     expect(
       screen.getByRole("button", { name: "Löschstatus unklar" }),
@@ -512,7 +512,7 @@ describe("DatenschutzPage course-reset list", () => {
     );
 
     expect(await screen.findByRole("alert")).toHaveTextContent(
-      "Der Löschstatus konnte nicht sicher ermittelt werden.",
+      "Der Löschstatus ist unklar.",
     );
     expect(
       screen.getByRole("button", { name: "Löschstatus unklar" }),
@@ -623,7 +623,7 @@ describe("DatenschutzPage course-reset list", () => {
     );
 
     expect(await screen.findByRole("alert")).toHaveTextContent(
-      "wegen eines Verbindungsfehlers nicht sicher ermittelt",
+      "Wegen eines Verbindungsfehlers ist der Löschstatus unklar",
     );
     expect(cancelAccountDeletionMock).not.toHaveBeenCalled();
     expect(confirmAccountDeletionMock).not.toHaveBeenCalled();

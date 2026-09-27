@@ -58,18 +58,18 @@ export function Ch7Serve({ chapter }: Ch7ServeProps) {
       <section className="section">
         <SectionLabel n="8.1">What a metrics layer is</SectionLabel>
         <h2 className="h2">Declare the metric version and execution context.</h2>
-        <p className="prose">A metrics layer is a <b>registry</b> of names, versions, owners, grains, sources, formulas and allowed filters. Consumers that resolve a registered metric share one definition. Authentication, authorization, source selection and execution logging remain the query service&apos;s job.</p>
+        <p className="prose">A metrics layer is a <b>registry</b> of names, versions, owners, grains, sources, formulas, allowed filters and effective dates. Consumers that resolve a registered metric share one definition.</p>
         <MetricsRegistry />
         <p className="prose" style={{ marginTop: 18 }}>A registry alone enforces no row-level security, masking or regional placement. Build those controls into the query and data layers, pass identity through and test every consumer path.</p>
       </section>
 
       <section className="section">
         <SectionLabel n="8.2">The query story</SectionLabel>
-        <h2 className="h2">Same question. Different warehouse.</h2>
+        <h2 className="h2">One question, ad-hoc SQL or a registered metric.</h2>
         <p className="prose">
           Ask <em>&quot;what was DAU in the US last week?&quot;</em> Without a metrics layer, an analyst searches for related-looking tables,
-          picks one and writes ad-hoc SQL, sometimes on a table deprecated two years ago or with a renamed column.
-          <b> The answer does not show the error.</b>
+          picks one and writes ad-hoc SQL, sometimes on a table deprecated two years ago or with a renamed column.{" "}
+          <b>The answer does not show the error.</b>
         </p>
         <p className="prose">With a registry the consumer resolves a metric version, binds supported filters and runs the stored definition against its declared sources. Log version, filters, source snapshot or partitions and execution identity with the result.</p>
         <MetricsSim />

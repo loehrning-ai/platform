@@ -37,14 +37,14 @@ const lesson: DataInfraLesson = {
       title: "Same query, two layouts",
       readTimeMinutes: 2,
       content:
-        "The interactive model runs `SELECT SUM(amount) WHERE country='US'` on two small fixed layouts and counts the cells its simplified rules select. It explains projection and pruning and does not reproduce Postgres, Parquet, storage, cache or engine behavior.",
+        "The first model above runs `SELECT SUM(amount) WHERE country='US'` on both layouts and counts the cells each one touches.",
     },
     {
       id: "s3",
       title: "Anatomy of Parquet",
       readTimeMinutes: 4,
       content:
-        "Parquet is a columnar file format most analytical engines read. A file starts and ends with the magic bytes `PAR1`, with one or more **row groups** between them. Each row group holds one **column chunk** per column, and chunks hold encoded **pages**.\n\nThe footer records the schema, chunk locations and optional statistics and indexes. Writers choose row-group and page sizes; rows per group depend on row width and encoding. Readers read the footer first and then cut the bytes they fetch in three ways.\n\n1. **Column projection.** A query for `SUM(amount)` omits unrelated column chunks.\n2. **Encoding and compression.** Dictionary, run-length, delta, bit-packed and plain encodings suit different value distributions; measure compression on representative data.\n3. **Statistics and indexes.** If trustworthy metadata proves a row group cannot satisfy `amount > 1000`, the engine skips its data pages. Missing, truncated or unusable statistics reduce pruning.\n\nChoose between Parquet, ORC and Avro by consumers, schema evolution, interoperability and measured read and write behavior.",
+        "Parquet is a columnar file format most analytical engines read. A file starts and ends with the magic bytes `PAR1`, with one or more **row groups** between them. Each row group holds one **column chunk** per column, and chunks hold encoded **pages**.\n\nThe footer records the schema, chunk locations and optional statistics and indexes. Writers choose row-group and page sizes; rows per group depend on row width and encoding. A reader loads the footer first, then cuts the bytes it fetches in three ways.\n\n1. **Column projection.** A query for `SUM(amount)` omits unrelated column chunks.\n2. **Encoding and compression.** Dictionary, run-length, delta, bit-packed and plain encodings suit different value distributions; measure compression on representative data.\n3. **Statistics and indexes.** If trustworthy metadata proves a row group cannot satisfy `amount > 1000`, the engine skips its data pages. Missing, truncated or unusable statistics reduce pruning.\n\nChoose between Parquet, ORC and Avro by consumers, schema evolution, interoperability and measured read and write behavior.",
     },
     {
       id: "s4",
@@ -55,30 +55,30 @@ const lesson: DataInfraLesson = {
     },
     {
       id: "s5",
-      title: "Iceberg vs Delta",
+      title: "Parquet vs table formats",
       readTimeMinutes: 3,
       content:
-        "Parquet and lakehouse table formats work at different layers.\n\n- **Parquet** defines the bytes within a file: row groups, column chunks, pages, encodings and metadata. It does not define which files form the current table version.\n- **Apache Iceberg, Delta Lake, and Apache Hudi** manage sets of data and delete files as table versions. They define commit, snapshot, schema, partition and maintenance behavior, which varies by spec version and engine integration.\n\nIceberg snapshots reference manifest lists and manifests, Delta records table actions in `_delta_log/` and checkpoints, and Hudi keeps a timeline and file groups. These structures shape planning, concurrency, incremental reads and maintenance.\n\nTo choose, list the operations, isolation, delete semantics, partition evolution, engines, catalog, governance and upgrade path you need, and verify each against the current spec and your engine versions.",
+        "Parquet and lakehouse table formats work at different layers.\n\n- **Parquet** defines the bytes within a file: row groups, column chunks, pages, encodings and metadata. It does not define which files form the current table version.\n- **Apache Iceberg, Delta Lake, and Apache Hudi** manage sets of data and delete files as table versions. They define commit, snapshot, schema, partition and maintenance behavior.\n\nIceberg snapshots reference manifest lists and manifests, Delta records table actions in `_delta_log/` and checkpoints, and Hudi keeps a timeline and file groups. These structures shape planning, concurrency, incremental reads and maintenance.\n\nTo choose, list the operations, isolation, delete semantics, partition evolution, engines, catalog, governance and upgrade path you need, and verify each against the current spec and your engine versions.",
     },
     {
       id: "s6",
       title: "Bloom filters",
       readTimeMinutes: 2,
       content:
-        "Min/max statistics help little for unsorted high-cardinality point predicates such as `WHERE user_id = 'abc-123'`. A **Bloom filter** answers \"definitely absent\" or \"possibly present\". Built correctly, it has no false negatives for inserted values, and its false-positive rate follows from bit count, hash count and inserted items. The interactive model uses a tiny 32-bit filter so that collisions show; it is no guide to production sizing.",
+        "Min/max statistics help little for unsorted high-cardinality point predicates such as `WHERE user_id = 'abc-123'`. A **Bloom filter** answers \"definitely absent\" or \"possibly present\"; a correct one has no false negatives for inserted values, and bit count, hash count and inserted items set its false-positive rate.\n\nThe Bloom model above uses a tiny 32-bit filter so collisions show.",
     },
     {
       id: "s7",
       title: "Quick check",
       readTimeMinutes: 1,
-      content: "Two questions on pruning.",
+      content: "Two questions on pruning, below the vocab.",
     },
     {
       id: "s8",
       title: "Vocab",
       readTimeMinutes: 1,
       content:
-        "- **Row group**, rows stored together, one column chunk per column.\n- **Page**, an encoded block inside a column chunk.\n- **Footer-first**, reading file metadata at the end before any data.\n- **ORC**, a columnar format with stripes, indexes and encodings.\n- **Avro**, a row-oriented, schema-aware exchange format.\n- **Z-ordering**, multidimensional clustering for data skipping.",
+        "The flashcards below the questions cover row groups, pages, footer-first reads, ORC, Avro and Z-ordering.",
     },
   ],
   widgets: [
@@ -91,9 +91,9 @@ const lesson: DataInfraLesson = {
         title: "Predicate pushdown",
         copy: DATA_INFRA_QUIZ_COPY,
         question:
-          "Your table has 1,000 row groups, sorted by order_date. The query is WHERE order_date = '2026-04-15'. Roughly how many row groups does the engine open?",
+          "Your table has 1000 row groups, sorted by order_date. The query is WHERE order_date = '2026-04-15'. Roughly how many row groups does the engine open?",
         options: [
-          "All 1,000; it has to check each.",
+          "All 1000; it has to check each.",
           "Only those whose date statistics overlap April 15.",
           "About 100; there is no way to skip.",
           "It depends on the encoding.",
@@ -140,13 +140,13 @@ const lesson: DataInfraLesson = {
           },
           {
             term: "Page",
-            q: "Why are pages a thing?",
-            a: "An encoded block inside a column chunk. Readers skip pages when indexes and predicates permit; writers choose the size.",
+            q: "Why do pages exist?",
+            a: "They are the smallest unit a reader can decode or skip inside a column chunk, when indexes and predicates permit. Writers choose the size.",
           },
           {
             term: "Footer-first",
             q: "Why is the footer at the end?",
-            a: "It records the schema and the locations of row groups and column chunks. Readers fetch it first, then issue only the range reads their plan needs.",
+            a: "The writer knows the schema and every chunk's location only after writing the data, so it writes them last. Readers fetch the footer first, then issue only the range reads their plan needs.",
           },
           {
             term: "ORC",

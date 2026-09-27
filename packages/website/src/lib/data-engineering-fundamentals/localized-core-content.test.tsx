@@ -134,7 +134,7 @@ describe("Data Engineering Fundamentals German chapters 1-6", () => {
       ingest: ["Zwei Uhren, ein Ereignis", "Saubere Umsetzung"],
       stream: ["Kontinuierliche Verarbeitung", "Warehouse-Grenze"],
       store: ["Gestern + heute = heutiger kumulativer Zustand.", "Die Abfrage"],
-      comp: ["Drei Engines, dieselben Bytes.", "Verteilungen der Join-Schlüssel prüfen."],
+      comp: ["Trino, Spark und Snowflake lesen dieselben Parquet-Dateien.", "Verteilungen der Join-Schlüssel prüfen."],
     } satisfies Record<DefTranslatedCoreChapterId, readonly string[]>;
 
     for (const id of DEF_TRANSLATED_CORE_CHAPTER_IDS) {
@@ -200,7 +200,7 @@ describe("Data Engineering Fundamentals German chapters 1-6", () => {
       "Two clocks, one event",
       "The Ingestion Conveyor Belt",
       "Yesterday's snapshot",
-      "Watch a join actually happen",
+      "How a join runs",
       "Anti-patterns",
       "The right way",
       "Key takeaways",

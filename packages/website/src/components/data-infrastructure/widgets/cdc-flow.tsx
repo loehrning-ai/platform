@@ -572,8 +572,8 @@ function LambdaDiagram({ locale }: { readonly locale: Locale }): JSX.Element {
         className="fill-[#b85a4a] text-[11px] font-semibold"
       >
         {locale === "de"
-          ? "⚠ Zwei Codebasen: Jede Aggregation gibt es als Stream- und Batch-Variante; Abweichungen kosten Betriebsaufwand."
-          : "⚠ Two codebases: every aggregation exists in stream and batch form; drift between them costs operating work."}
+          ? "⚠ Zwei Codebasen: Jede Aggregation gibt es als Stream- und Batch-Variante. Abweichungen erhöhen den Betriebsaufwand."
+          : "⚠ Two codebases: every aggregation exists twice, as stream and batch. Drift between them adds operating work."}
       </text>
     </svg>
   );

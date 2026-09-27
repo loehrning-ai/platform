@@ -38,7 +38,7 @@ export const AGENT_ACCOUNT_COPY_DE: AgentAccountCopy = {
     "Der Chat liest dieselben Kursinhalte wie dein Programm.",
   chatOffTitle: "Der Chat ist in dieser Umgebung nicht eingerichtet.",
   chatOffBody:
-    "Bis dahin wird kein Schlüssel gespeichert und keine Anfrage gestellt.",
+    "Solange der Betreiber ihn nicht freischaltet, wird kein Schlüssel gespeichert und keine Anfrage gestellt.",
 
   keyHeading: "Dein Anthropic-Schlüssel",
   keyDisclosure:
@@ -131,7 +131,7 @@ export const AGENT_ACCOUNT_COPY_DE: AgentAccountCopy = {
 
   activityHeading: "Aktivität",
   activityIntro:
-    "Die letzten 50 Zugriffe von Programmen. Protokolliert werden Programm, Werkzeug, Ergebnis und Dauer, nie Ein- oder Ausgaben.",
+    "Die letzten 50 Zugriffe von Programmen. Protokolliert werden Programm, Werkzeug, Erfolg oder Fehler und Dauer, nie Inhalte.",
   activityEmpty: "Noch kein Programm hat auf dein Konto zugegriffen.",
   activityRetention: "Einträge werden nach 30 Tagen automatisch gelöscht.",
   activityUnavailable:

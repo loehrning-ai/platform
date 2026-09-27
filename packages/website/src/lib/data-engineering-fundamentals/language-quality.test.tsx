@@ -108,7 +108,7 @@ describe("Data Engineering Fundamentals language quality", () => {
       "Start practice",
       "Illustrative catalog graph",
       "Evaluate DatasetSpec",
-      "Six modeled controls",
+      "Inspect each failure mode",
       "Object-store scenario",
     ]) {
       expect(corpus, forbidden).not.toContain(forbidden);

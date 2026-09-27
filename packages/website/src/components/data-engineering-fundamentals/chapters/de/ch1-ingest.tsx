@@ -43,7 +43,7 @@ export function Ch1IngestDe({ chapter }: Ch1IngestDeProps) {
       <section className="section">
         <SectionLabel n="1.1">Zwei Uhren, ein Ereignis</SectionLabel>
         <h2 className="h2">Ereigniszeit und Verarbeitungszeit.</h2>
-        <p className="prose">Jedes Ereignis hat zwei Zeitstempel. Die <b>Ereigniszeit</b> ist der tatsächliche Zeitpunkt, etwa ein Tippen auf dem Smartphone oder eine angezeigte Werbung. Die <b>Verarbeitungszeit</b> ist der Moment, in dem der Stream das Ereignis sieht. Mobile Clients, Wiederholungen, schwacher Empfang und Uhrabweichungen lassen beide auseinanderlaufen, und wer sie gleichsetzt, bekommt falsche Zahlen.</p>
+        <p className="prose">Jedes Ereignis hat zwei Zeitstempel: die <b>Ereigniszeit</b>, wann es passiert ist (ein Tippen auf dem Smartphone, eine angezeigte Werbung), und die <b>Verarbeitungszeit</b>, wann der Stream es sieht. Mobile Clients, Wiederholungen, schwacher Empfang und Uhrabweichungen lassen beide auseinanderlaufen. Wer sie gleichsetzt, bekommt falsche Zahlen.</p>
         <p className="prose">In der Kursarchitektur transportiert Kafka die Ereignisse, und ein Flink-Job verarbeitet sie, bevor sich operative und Batch-Schreibvorgänge trennen. Die <b>Watermark</b> markiert den Fortschritt in der Ereigniszeit. Danach aktualisiert die konfigurierte Regel ein Fenster, gibt Nachzügler getrennt aus oder verwirft sie.</p>
       </section>
 
@@ -58,7 +58,7 @@ export function Ch1IngestDe({ chapter }: Ch1IngestDeProps) {
       <section className="section">
         <SectionLabel n="1.3">Zwei Speicher, zwei Aufgaben</SectionLabel>
         <h2 className="h2">Operative Sicht und vollständigen Batch trennen.</h2>
-        <p className="prose">Diese Rollen gehören zur Referenzarchitektur, nicht zu den Anbietern. Die Stichprobe dient der operativen Prüfung, der Batch reproduzierbaren Berichten, sobald Quelle, Vollständigkeitsprüfungen und Nachzüglerregel feststehen.</p>
+        <p className="prose">Stichprobe und Batch sind Rollen dieser Kursarchitektur; Kafka oder Flink liefern sie nicht mit. Die Stichprobe dient der operativen Prüfung, der Batch reproduzierbaren Berichten, sobald Quelle, Vollständigkeitsprüfungen und Nachzüglerregel feststehen.</p>
         <IngestStreamsDe />
       </section>
 

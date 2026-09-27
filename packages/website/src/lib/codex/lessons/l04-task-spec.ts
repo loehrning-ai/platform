@@ -28,13 +28,13 @@ const lesson: CodexLesson = {
   sections: buildSections([
     {
       id: "s1",
-      title: "Shape, not steps",
+      title: "Describe the result",
       readTimeMinutes: 3,
       blocks: [
         {
           kind: "prose",
           markdown:
-            "\"Add pagination to the users endpoint.\" Every part of that line hides a decision about behavior, constraints, verification or adjacent code, and Codex infers whatever you omit. `AGENTS.md` holds the durable project rules; the **task spec** holds this change.\n\n### Describe the end state first\n\nState the observable behavior, the interfaces that must stay stable, the checks that must pass and the areas that must not change. Add step-by-step instructions only when the sequence is itself the constraint, as in an ordered migration.\n\n\"GET /users supports ?page=N with 20 items per page and keeps the existing response schema\" is a reviewable result.",
+            "\"Add pagination to the users endpoint.\" Every part of that line hides a decision about behavior, constraints, verification or adjacent code, and Codex infers whatever you omit. `AGENTS.md` holds the durable project rules; the **task spec** holds this change.\n\nState the observable behavior, the interfaces that must stay stable, the checks that must pass and the areas that must not change. Add step-by-step instructions only when the sequence is itself the constraint, as in an ordered migration.\n\n\"GET /users supports ?page=N with 20 items per page and keeps the existing response schema\" is a reviewable result.",
         },
       ],
     },
@@ -78,7 +78,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Select the fields that make \"add pagination to /users\" reviewable. The assembled spec shows which decisions are explicit.",
+            "Use the exercise above: select the fields that make \"add pagination to /users\" reviewable.",
         },
       ],
     },
@@ -104,7 +104,7 @@ const lesson: CodexLesson = {
       title: "Quick check",
       readTimeMinutes: 1,
       blocks: [
-        { kind: "prose", markdown: "Two questions follow." },
+        { kind: "prose", markdown: "Two questions at the end of the lesson." },
       ],
     },
   ]),
@@ -201,7 +201,7 @@ const lesson: CodexLesson = {
           "The diff must be small regardless of the feature.",
           "Adjacent cleanup slips in, and the reviewer has no stated boundary to reject it.",
           "Codex will refuse to work without explicit scope.",
-          "Nothing, out-of-scope sections are decorative.",
+          "Nothing; out-of-scope sections are decorative.",
         ],
         correct: 1,
         explanation:
@@ -220,7 +220,7 @@ const lesson: CodexLesson = {
         question: "Which is the better acceptance criterion?",
         options: [
           '"Make sure it works well."',
-          "\"make test passes, with new cases for page 1, page 2 and page=999 (empty array).\"",
+          "\"make test passes, with new cases: page 1 returns 20 items, page 2 the next 20, page=999 an empty array.\"",
           '"It should be production-ready."',
           '"Don\'t break anything."',
         ],

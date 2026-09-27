@@ -38,7 +38,7 @@ export const AGENT_ACCOUNT_COPY_EN: AgentAccountCopy = {
     "The chat reads the same course content as your program.",
   chatOffTitle: "The chat is not configured in this environment.",
   chatOffBody:
-    "Until then no key is stored and no request is made.",
+    "Until the operator enables it, no key is stored and no request is made.",
 
   keyHeading: "Your Anthropic key",
   keyDisclosure:
@@ -58,7 +58,7 @@ export const AGENT_ACCOUNT_COPY_EN: AgentAccountCopy = {
   keyShapeError: "That does not look like an Anthropic key. It starts with sk-ant-.",
   keyUnknownError: "The key could not be stored.",
   keyStateUnavailable:
-    "Your key can't be loaded right now. Reload the page before replacing it.",
+    "Your key cannot be loaded right now. Reload the page before replacing it.",
 
   modelLabel: "Model",
   modelHint: "Models this installation allows.",
@@ -107,7 +107,7 @@ export const AGENT_ACCOUNT_COPY_EN: AgentAccountCopy = {
   tokenNameRequired: "Give the key a name.",
   tokenUnknownError: "The key could not be created.",
   tokensUnavailable:
-    "Your access keys can't be loaded right now. Reload the page.",
+    "Your access keys cannot be loaded right now. Reload the page.",
 
   grantsHeading: "Granted clients",
   grantsIntro: "Programs you granted access to your account in the browser.",
@@ -124,16 +124,16 @@ export const AGENT_ACCOUNT_COPY_EN: AgentAccountCopy = {
   grantsSetupBody:
     "Until then, connect your program with an access key below.",
   grantsUnavailable:
-    "Your granted clients can't be loaded right now. Reload the page.",
+    "Your granted clients cannot be loaded right now. Reload the page.",
   grantsListLabel: "Granted clients",
 
   activityHeading: "Activity",
   activityIntro:
-    "The last 50 program accesses. Logged are client, tool, result and duration, never inputs or outputs.",
+    "The last 50 program accesses. We log client, tool, success or error and duration, never content.",
   activityEmpty: "No program has reached your account yet.",
   activityRetention: "Entries are deleted automatically after 30 days.",
   activityUnavailable:
-    "The activity can't be loaded right now. Reload the page.",
+    "The activity cannot be loaded right now. Reload the page.",
   activityTableLabel: "Recent program accesses",
   activityColumnMoment: "When",
   activityColumnClient: "Client",

@@ -103,15 +103,15 @@ export default localizeCodexLessonToGerman(canonical, {
     [canonical.sections[1].title, "Eine wirksame Korrektur"],
     [
       prose(1, 0),
-      "Eine gezielte Korrektur passt, solange der Auftrag selbst gültig ist. Wie der konkrete Kommentar oben nennt sie **was falsch ist**, **wo** und **welches Ergebnis oder welche Prüfung verlangt wird**. Müsste sie Ziel oder Architektur umschreiben, ersetze den Auftrag.",
+      "Eine gezielte Korrektur passt, solange der Auftrag selbst gültig ist. Wie der konkrete Kommentar oben nennt sie, **was falsch ist**, **wo** und **welches Ergebnis oder welche Prüfung verlangt wird**. Müsste sie Ziel oder Architektur umschreiben, ersetze den Auftrag.",
     ],
-    [prose(2, 0), "Eine Frage dazu, wann neu spezifiziert wird."],
+    [prose(2, 0), "Frage am Ende der Lektion."],
     [canonical.sections[3].title, "Wann du neu startest"],
     [
       prose(3, 0),
-      "Starte neu, wenn der Diff auf einer falschen Anforderung, ungültigen Architektur oder zu breiten Grenze steht, oder wenn Korrekturen die Prämisse ändern und der Diff auseinanderläuft. Die Zahl der Überarbeitungen entscheidet nicht: Viele kleine Korrekturen können passen, eine geänderte Prämisse rechtfertigt den sofortigen Neustart.\n\nVor dem Verwerfen sicherst du, was nicht im Repository steht: verworfene Ansätze mit Begründung, neue Grenzen, relevante Befehlsausgabe, bereits verfolgte Dateien und Aufrufpfade.",
+      "Starte neu, wenn der Diff auf einer falschen Anforderung, einer ungültigen Architektur oder einem zu breiten Umfang beruht, oder wenn Korrekturen die Prämisse ändern und der Diff auseinanderläuft. Die Zahl der Überarbeitungen entscheidet nicht: Viele kleine Korrekturen können passen, eine einzige geänderte Prämisse kann den sofortigen Neustart rechtfertigen.\n\nVor dem Verwerfen sicherst du, was nicht im Repository steht: verworfene Ansätze mit Begründung, neue Grenzen, relevante Befehlsausgabe, bereits verfolgte Dateien und Aufrufpfade.",
     ],
-    [callout(3, 1, "title"), "Nur belegte Erkenntnisse übernehmen"],
+    [callout(3, 1, "title"), "Nur belegte Erkenntnisse übernehmen."],
     [
       callout(3, 1, "body"),
       "Gescheiterte Versuche enthalten auch falsche Annahmen. Übernimm nur, was Repository-Nachweise oder reproduzierbare Befehle stützen.",
@@ -125,7 +125,7 @@ export default localizeCodexLessonToGerman(canonical, {
     [card(4, 1, 0, "title"), "Korrigiertes Verhalten wird zurückgenommen"],
     [
       card(4, 1, 0, "body"),
-      "Eine akzeptierte Korrektur verschwindet ohne Grund im Code. Formuliere die Anforderung in einem neuen Auftrag.",
+      "Eine akzeptierte Korrektur verschwindet ohne Grund im Code. Prüfe die Anforderung und formuliere sie in einem neuen Auftrag.",
     ],
     [card(4, 1, 1, "eyebrow"), "Signal 02"],
     [card(4, 1, 1, "title"), "Verworfene Ansätze werden erneut vorgeschlagen"],
@@ -150,7 +150,7 @@ export default localizeCodexLessonToGerman(canonical, {
       prose(5, 0),
       "In eine neue Sitzung kommen nur belegte Fakten, die weder Repository noch Spezifikation enthalten: Dateipfade, exakte Fehler, Befehle mit Ergebnis, Grenzen, verworfene Ansätze mit Begründung, offene Fragen. Vermutungen und wiederholte Diskussion bleiben weg.",
     ],
-    [prose(6, 0), "Eine Frage zum Erkennen von Kontextverschleiß."],
+    [prose(6, 0), "Fragen am Ende der Lektion."],
     [widgetString(0, "title"), "Zwei Review-Kommentare zum selben Problem"],
     [widgetString(0, "badLabel"), "Unklare Korrektur"],
     [widgetString(0, "goodLabel"), "Konkrete Korrektur"],

@@ -106,13 +106,12 @@ const DEFAULT_COPY: RedactionDrillWidgetCopy = {
   allScenariosCleanLabel: "Beide Szenarien bereinigt",
   scenarioOfWord: "von",
   safeHeadline: "Sicher zum Einfügen.",
-  safeBodyTemplate:
-    "Alle {n} sensiblen Stellen erfasst, nichts Harmloses redigiert.",
+  safeBodyTemplate: "Alle {n} sensiblen Stellen erfasst.",
   notSafeHeadline: "Noch nicht abschicken.",
   missingSingularTemplate: "{n} sensible Stelle ist noch offen (rot markiert).",
   missingPluralTemplate: "{n} sensible Stellen sind noch offen (rot markiert).",
-  mistakesSingularTemplate: "{n} harmlose Stelle unnötig redigiert (amber).",
-  mistakesPluralTemplate: "{n} harmlose Stellen unnötig redigiert (amber).",
+  mistakesSingularTemplate: "{n} harmlose Stelle unnötig redigiert (gelb markiert).",
+  mistakesPluralTemplate: "{n} harmlose Stellen unnötig redigiert (gelb markiert).",
 };
 
 function fillCount(template: string, n: number): string {
@@ -166,7 +165,7 @@ const DEFAULT_SCENARIOS: readonly RedactionScenario[] = [
     id: "s2",
     label: "Kunden-E-Mail",
     intro:
-      "Ein KI-Tool soll diese Beschwerde-Mail zusammenfassen. Markiere nur, was geschützt werden muss.",
+      "Ein KI-Tool soll diese Beschwerde-Mail zusammenfassen. Markiere, was geschützt werden muss.",
     segments: [
       { text: "Fasse diese Kundenbeschwerde in zwei Sätzen zusammen:\n\n" },
       {

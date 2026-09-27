@@ -60,7 +60,7 @@ export default localizeCodexLessonToGerman(canonical, {
     [canonical.sections[0].title, "Die Landschaft"],
     [
       prose(0, 0),
-      "Coding-Werkzeuge mischen Inline-Vervollständigung, Editor-Chat, Terminal- und IDE-Agenten und Hintergrundaufträge, die einen Diff oder Pull Request liefern. Wähle nach betrieblichen Anforderungen: welchen Repository-Kontext das Werkzeug liest, wo Befehle laufen, welche Schreibzugriffe eine Freigabe brauchen, ob das Netzwerk offen ist, wie Modell- und Datenrichtlinien eingestellt sind und wie Ergebnisse in den Review kommen.",
+      "Coding-Werkzeuge mischen Inline-Vervollständigung, Editor-Chat, Terminal- und IDE-Agenten und Hintergrundaufträge, die einen Diff oder Pull Request liefern. Wähle danach, was das Werkzeug liest, wo Befehle laufen, welche Schreibzugriffe eine Freigabe brauchen, wie Netzwerkzugriff, Modell- und Datenrichtlinie geregelt sind und wie Ergebnisse in den Review kommen.",
     ],
     [canonical.sections[1].title, "Sechs beispielhafte Werkzeugoberflächen"],
     [card(1, 0, 0, "title"), "Editor- und GitHub-Abläufe"],
@@ -78,12 +78,12 @@ export default localizeCodexLessonToGerman(canonical, {
       card(1, 0, 2, "body"),
       "Nutzt Repository-Dateien und Shell-Werkzeuge im Terminal, innerhalb der eingestellten Berechtigungen. Hooks binden ihn in bestehende Abläufe ein.",
     ],
-    [card(1, 0, 3, "title"), "Open-Source-CLI-Oberfläche"],
+    [card(1, 0, 3, "title"), "Open-Source-CLI"],
     [
       card(1, 0, 3, "body"),
       "Eine CLI für viele Modellanbieter. Offline-Betrieb hängt an Modellendpunkt und lokaler Infrastruktur.",
     ],
-    [card(1, 0, 4, "title"), "Agent als VSCode-Erweiterung"],
+    [card(1, 0, 4, "title"), "Agent als Editor-Erweiterung"],
     [card(1, 0, 4, "eyebrow"), "Cline (früher Claude Dev)"],
     [
       card(1, 0, 4, "body"),
@@ -97,7 +97,7 @@ export default localizeCodexLessonToGerman(canonical, {
     [canonical.sections[2].title, "Auswahl nach Aufgabenform"],
     [
       prose(2, 0),
-      "Arbeitsablauf, Aufgabe und Kontrollgrenze gehören zusammen:\n\n- **Kleine lokale Änderung, Umsetzung bekannt** → direkt bearbeiten oder Inline-Vervollständigung.\n- **Unbekannte Codebasis** → erst lesend und interaktiv, mit belegten Datei- und Aufrufpfaden, dann Änderungen.\n- **Sauber spezifizierter Hintergrundauftrag** → dedizierte Umgebung, ausdrückliche Prüfungen, Diff- oder Pull-Request-Gate.\n- **Terminalzentrierter Ablauf** → ein CLI-Agent, der die Repository-Befehle innerhalb der Sandbox- und Freigaberegeln ausführt.\n- **Anbieter-, Residenz- oder Offline-Vorgabe** → Modellendpunkt, Telemetrie, Zugangsdaten und Netzwerkpfad prüfen; ein lokaler Client allein macht den Ablauf nicht offline.\n\nFür Sicherheits- oder Beschaffungsentscheidungen lies die aktuelle Produktdokumentation.",
+      "Wähle den Ablauf nach Aufgabe und Kontrollgrenze:\n\n- **Kleine lokale Änderung, Umsetzung bekannt** → direkt bearbeiten oder Inline-Vervollständigung.\n- **Unbekannte Codebasis** → erst lesend und interaktiv, mit belegten Datei- und Aufrufpfaden, dann Änderungen.\n- **Sauber spezifizierter Hintergrundauftrag** → dedizierte Umgebung, ausdrückliche Prüfungen, Diff- oder Pull-Request-Gate.\n- **Terminalzentrierter Ablauf** → ein CLI-Agent, der die Repository-Befehle innerhalb der Sandbox- und Freigaberegeln ausführt.\n- **Anbieter-, Residenz- oder Offline-Vorgabe** → Modellendpunkt, Telemetrie, Zugangsdaten und Netzwerkpfad prüfen; ein lokaler Client allein macht den Ablauf nicht offline.\n\nFür Sicherheits- oder Beschaffungsentscheidungen lies die aktuelle Produktdokumentation.",
     ],
     [canonical.sections[3].title, "MCP-Server"],
     [
@@ -108,7 +108,7 @@ export default localizeCodexLessonToGerman(canonical, {
       prose(4, 0),
       "Editor- und Terminal-Abläufe nutzen dieselben Repository-Kontrollen:\n\n- **Diff prüfen:** geänderte Dateien, Tests, Löschungen und erzeugte Artefakte im normalen Git-Review.\n- **Repository-Prüfungen ausführen:** die dokumentierten Lint-, Typ-, Test- und Build-Befehle, statt der Erfolgsmeldung des Werkzeugs zu trauen.\n- **Kontext begrenzen:** nur die Dateien und Protokolle, die der Auftrag braucht; kein breiterer Repository- oder Geheimniszugriff aus Bequemlichkeit.\n- **Gleichzeitige Arbeit isolieren:** getrennte Branches oder Worktrees verringern Dateikonflikte; gemeinsame Abhängigkeiten und erzeugter Zustand können trotzdem kollidieren.",
     ],
-    [prose(5, 0), "Zwei Fragen zur Werkzeugauswahl und zu MCP."],
+    [prose(5, 0), "Fragen am Ende der Lektion."],
     [widgetString(0, "title"), "Dieselbe Aufgabe, zwei Werkzeugentscheidungen"],
     [widgetString(0, "badLabel"), "Unnötig aufwendig"],
     [widgetString(0, "goodLabel"), "Passender Umfang"],
@@ -118,7 +118,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       widgetString(0, "good"),
-      "Aufgabe: Einen fehlenden JSDoc-Kommentar an einer Funktion ergänzen.\n\nVorgehen: Kommentar neben der Funktion schreiben, gegen den Code prüfen, in die laufende Änderung aufnehmen.\n\nAufwand: keiner zusätzlich.",
+      "Vorgehen: Kommentar neben der Funktion schreiben, gegen den Code prüfen, in die laufende Änderung aufnehmen.\n\nAufwand: keiner zusätzlich.",
     ],
     [
       widgetString(0, "note"),
@@ -152,13 +152,13 @@ export default localizeCodexLessonToGerman(canonical, {
       widgetString(2, "question"),
       "Was bringt MCP in einen Coding-Agenten-Ablauf?",
     ],
-    [widgetStrings(2, "options")[0], "Code schneller schreiben."],
+    [widgetStrings(2, "options")[0], "Schnellere Codeerzeugung."],
     [
       widgetStrings(2, "options")[1],
-      "Einen Standard, um Fähigkeiten konfigurierter Server zu finden und aufzurufen.",
+      "Einen Standard, um Fähigkeiten konfigurierter Server zu finden und aufzurufen, im Rahmen von Authentifizierung und Richtlinien.",
     ],
-    [widgetStrings(2, "options")[2], "In einer Sandbox ausgeführt werden."],
-    [widgetStrings(2, "options")[3], "Mehr Programmiersprachen verstehen."],
+    [widgetStrings(2, "options")[2], "Eine Sandbox-Laufzeitumgebung."],
+    [widgetStrings(2, "options")[3], "Unterstützung für mehr Programmiersprachen."],
     [
       widgetString(2, "explanation"),
       "MCP standardisiert, wie Fähigkeiten gefunden und aufgerufen werden. Authentifizierung, Autorisierung, Freigabe, Protokollierung und minimale Rechte ersetzt es nicht.",

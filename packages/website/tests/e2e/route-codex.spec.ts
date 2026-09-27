@@ -196,7 +196,7 @@ test.describe("Codex Course golden path", () => {
     // L01's "q1" quiz widget (lib/codex/lessons/l01-mental-model.ts): option
     // index 1 is correct, and CODEX_QUIZ_COPY's correctLabel is "Correct."
     const correctAnswer = page.getByRole("radio", {
-      name: /The task was ambiguous, "refactor auth" spans a huge scope/,
+      name: /The task was ambiguous: "refactor auth" spans a huge scope/,
     });
     await expect(correctAnswer).toBeVisible();
     await correctAnswer.click();

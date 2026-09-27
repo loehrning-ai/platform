@@ -33,72 +33,72 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "A task's shape decides what you can inspect afterwards. These patterns make requirements, repository evidence and verification boundaries explicit; each still needs a suitable environment and a human reading the diff.\n\nRequest, repository context, environment, diff and checks can each invalidate a result, so diagnose them separately.",
+            "A task's shape decides what you can inspect afterwards. These patterns make requirements, repository evidence and verification boundaries explicit; each still needs a suitable environment and a human reading the diff. When a result is wrong, check request, repository context, environment, diff and checks one at a time.",
         },
       ],
     },
     {
       id: "s2",
-      title: "Pattern 01, TDD with AI",
+      title: "Pattern 01: TDD with AI",
       readTimeMinutes: 2,
       blocks: [
         {
           kind: "prose",
           markdown:
-            "**Pattern:** when the requirement fits in tests, write them before implementation. A reviewed failing test is an executable example and shows that the test detects the missing behavior; passing it later proves only that behavior.\n\n1. *Test design:* tests without production changes. Review assertions, fixtures, boundaries and failure reason.\n2. *Implementation:* the bounded change, plus the reviewed tests and relevant regression checks.\n\nBoth can come from one task if the scope is clear. Review them separately anyway, because generated tests can share the code's misunderstanding.",
+            "When the requirement fits in tests, write them before implementation. A reviewed failing test is an executable example and shows that the test detects the missing behavior; passing it later is evidence for that behavior only, not for untested security, performance or integration needs.\n\n1. *Test design:* tests without production changes. Review assertions, fixtures, boundaries and failure reason.\n2. *Implementation:* the bounded change, plus the reviewed tests and relevant regression checks.\n\nBoth can come from one task if the scope is clear. Review them separately anyway, because generated tests can share the code's misunderstanding.",
         },
         {
           kind: "callout",
-          title: "Name the boundary a test covers",
+          title: "Name the boundary a test covers.",
           body: "A test that mocks a collaborator can cover mapping or error handling but leaves the collaborator itself untested. Add a test through the real boundary when that behavior is required.",
         },
       ],
     },
     {
       id: "s3",
-      title: "Pattern 02, Brownfield onboarding",
+      title: "Pattern 02: Brownfield onboarding",
       readTimeMinutes: 2,
       blocks: [
         {
           kind: "prose",
           markdown:
-            "**Pattern:** start unfamiliar repository work read-only, with file paths, call paths, existing utilities, configuration and tests as evidence. Answer before edits:\n\n- Which code and external systems does the behavior depend on?\n- Which existing utility already covers part of it?\n- Which repository instructions and conventions apply?\n- Which tests exercise the current behavior?\n- Which security and operational boundaries can the change affect?\n\nReview the exploration before granting wider write or network access. Editing from an incomplete model duplicates infrastructure, bypasses conventions and breaks callers.",
+            "Start unfamiliar repository work read-only, with file paths, call paths, existing utilities, configuration and tests as evidence. Answer before edits:\n\n- Which code and external systems does the behavior depend on?\n- Which existing utility already covers part of it?\n- Which repository instructions and conventions apply?\n- Which tests exercise the current behavior?\n- Which security and operational boundaries can the change affect?\n\nReview the exploration before granting wider write or network access. Editing from an incomplete model duplicates infrastructure, bypasses conventions and breaks callers. If claims lack support, ask for repository evidence instead of an architecture summary. Read the final diff either way.",
         },
       ],
     },
     {
       id: "s4",
-      title: "Pattern 03, Refactoring with AI",
+      title: "Pattern 03: Refactoring with AI",
       readTimeMinutes: 2,
       blocks: [
         {
           kind: "prose",
           markdown:
-            "**Pattern:** define a behavior-preserving transformation. Specify:\n\n- old and new pattern, with code examples;\n- an authoritative repository example, if one exists;\n- included files and explicit exclusions;\n- public interfaces and behavior that must stay unchanged;\n- regression checks for callers, generated output, types and migrations where relevant.\n\n**Risk:** \"clean up the codebase\" hands over architecture and naming decisions nobody specified. A bounded transformation is easier to review, and broad repetition still spreads a flawed target pattern.",
+            "Define a behavior-preserving transformation. Specify:\n\n- old and new pattern, with code examples;\n- an authoritative repository example, if one exists;\n- included files and explicit exclusions;\n- public interfaces and behavior that must stay unchanged;\n- regression checks for callers, generated output, types and migrations where relevant.\n\n**Risk:** \"clean up the codebase\" hands over architecture and naming decisions nobody specified. A bounded transformation is easier to review, but repeating it across the codebase also spreads any flaw in the target pattern.",
         },
       ],
     },
     {
       id: "s5",
-      title: "Pattern 04, Debugging with AI",
+      title: "Pattern 04: Debugging with AI",
       readTimeMinutes: 2,
       blocks: [
         {
           kind: "prose",
           markdown:
-            "**Pattern:** give symptom, environment, exact error output, reproduction steps and known exclusions, and ask for a hypothesis tied to a file and call path before you authorize a fix. Useful inputs:\n\n- exact error text and stack trace, secrets removed;\n- a minimal reproduction or failing test;\n- relevant versions, configuration and runtime conditions;\n- hypotheses already ruled out, with evidence.\n\nWhere possible, first add a regression test that fails for the reported defect and confirm why. Without a reproducible symptom, a plausible diff changes adjacent behavior and never establishes the cause.",
+            "Give symptom, environment, exact error output, reproduction steps and known exclusions, and ask for a hypothesis tied to a file and call path before you authorize a fix. Useful inputs:\n\n- exact error text and stack trace, secrets removed;\n- a minimal reproduction or failing test;\n- relevant versions, configuration and runtime conditions;\n- hypotheses already ruled out, with evidence.\n\nWhere possible, first add a regression test that fails for the reported defect and confirm why. Without a reproducible symptom, a plausible diff changes adjacent behavior and never establishes the cause.",
         },
       ],
     },
     {
       id: "s6",
-      title: "Pattern 05, Restart criteria",
+      title: "Pattern 05: Restart criteria",
       readTimeMinutes: 2,
       blocks: [
         {
           kind: "prose",
           markdown:
-            "**Pattern:** restart from a corrected specification when revision keeps a false premise or grows the diff. Signals: the same requirement is reimplemented without addressing review evidence, comments redefine goal or architecture, the diff spreads into unrelated files, accepted behavior keeps disappearing, or the session holds conflicting instructions.\n\nCarry over verified findings, rejected approaches with reasons and relevant command output.",
+            "Restart from a corrected specification when revision keeps a false premise or grows the diff. Signals: the same requirement is reimplemented without addressing review evidence, comments redefine goal or architecture, the diff spreads into unrelated files, accepted behavior keeps disappearing, or the session holds conflicting instructions.\n\nCarry over verified findings, rejected approaches with reasons and relevant command output.",
         },
       ],
     },
@@ -136,7 +136,7 @@ const lesson: CodexLesson = {
       blocks: [
         {
           kind: "prose",
-          markdown: "Two questions on usable and high-risk task patterns.",
+          markdown: "Questions at the end of the lesson.",
         },
       ],
     },

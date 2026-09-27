@@ -32,7 +32,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "`AGENTS.md` is versioned project context that Codex reads before it starts work. Put rules there that hold across every task.\n\nDiscovery is layered: global guidance from the Codex home directory, then project guidance from the project root down to the current working directory. In each directory, `AGENTS.override.md` takes precedence over `AGENTS.md`, and files closer to the working directory can override broader ones.\n\nThe repository file holds what changes the work: exact setup and check commands, architectural boundaries, test expectations, known constraints and actions that need approval. Task goals and acceptance criteria stay in the task request.",
+            "`AGENTS.md` is versioned project context that Codex reads before it starts work. Put rules there that hold across every task.\n\nDiscovery is layered: global guidance from the Codex home directory, then project guidance from the project root down to the current working directory. In each directory, `AGENTS.override.md` takes precedence over `AGENTS.md`, and files closer to the working directory can override broader ones.\n\nThe repository file holds what changes the work: exact setup and check commands with their prerequisites, architectural boundaries, test expectations, known constraints and actions that need approval. Task goals and acceptance criteria stay in the task request.",
         },
       ],
     },
@@ -44,7 +44,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "AGENTS.md is plain Markdown without a required schema. Write rules the agent can apply and checks it can run.",
+            "AGENTS.md is plain Markdown without a required schema. Instruction files take up context space, just like the task and code. Leave out marketing copy, meeting notes, preferences with no testable effect and vague goals like \"write clean code\". Keep an instruction if it prevents a known error, sets a boundary or makes verification possible.",
         },
       ],
     },
@@ -68,12 +68,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Both patches below answer \"add a /health endpoint that checks the database\". Only the second follows the rules in `AGENTS.md`.",
-        },
-        {
-          kind: "callout",
-          title: "Both versions work.",
-          body: "Only the second can be checked against written project rules.",
+            "Both patches below answer \"add a /health endpoint that checks the database\" and both work. Only the second follows the rules in `AGENTS.md`.",
         },
       ],
     },
@@ -84,7 +79,7 @@ const lesson: CodexLesson = {
       blocks: [
         {
           kind: "prose",
-          markdown: "The question is at the end of the lesson.",
+          markdown: "One question at the end of the lesson.",
         },
       ],
     },
@@ -96,12 +91,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "1. **Start with executable basics:** repository purpose, setup command, required checks and boundaries the code does not show.\n2. **Update it from reviews.** When a recurring project rule causes a rejected change, add the precise rule and its safe path.\n3. **Change it with the code.** When commands or conventions change, update the file in the same change.\n\n### What goes in, what stays out\n\nInstruction files use context alongside the task and code.\n\n- **In:** rules that affect implementation, review or safety, and exact commands such as `make test` with their prerequisites.\n- **Out:** marketing copy, meeting notes, preferences with no testable effect and vague goals like \"write clean code\".\n\nKeep an instruction if it prevents a known error, sets a boundary or makes verification possible.",
-        },
-        {
-          kind: "callout",
-          title: "Directory-specific rules.",
-          body: "Put repository-wide rules at the root and narrower rules next to the code they govern.",
+            "1. **Start with executable basics:** repository purpose, setup command, required checks and boundaries the code does not show.\n2. **Update it from reviews.** When a recurring project rule causes a rejected change, add the precise rule and its safe path.\n3. **Change it with the code.** When commands or conventions change, update the file in the same change.",
         },
       ],
     },
@@ -138,7 +128,7 @@ const lesson: CodexLesson = {
           },
           {
             section: "Conventions we enforce",
-            hint: 'Not "be clean." Specific rules.',
+            hint: 'Specific rules instead of "be clean".',
             body: [
               "No bare except:. Catch specific exceptions.",
               "Log with structlog, not print.",

@@ -12,21 +12,21 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Record each deployed system with owner, use, data access, tools, controls and status.",
     objective:
       "Record each deployed system with owner, use, data access, tools, controls and status.",
-    durationMinutes: 18,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Inventory the deployed system",
-        readTimeMinutes: 9,
+        readTimeMinutes: 1,
         content:
           "Register each deployed use with business purpose, accountable owner, provider and version, deployment location, data classifications, connected tools, user groups, risk tier and lifecycle status. Include externally hosted features and embedded vendor capabilities that touch your data or decisions.",
       },
       {
         id: "s2",
         title: "Keep the registry tied to lifecycle events",
-        readTimeMinutes: 9,
+        readTimeMinutes: 1,
         content:
           "Update the record at intake, approval, release, material change, periodic review, incident response and retirement. Store evaluation evidence, approval conditions, last and next review and open findings. One owner answers for completeness, with a process to find unregistered systems.",
       },
@@ -58,21 +58,21 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Match evaluation, approval, rollout, monitoring and rollback to each change's risk.",
     objective:
       "Match evaluation, approval, rollout, monitoring and rollback to each change's risk.",
-    durationMinutes: 24,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Define a change-specific release gate",
-        readTimeMinutes: 12,
+        readTimeMinutes: 1,
         content:
           "Changes to model, provider, prompt, retrieval, tool, policy or routing can all shift behavior. Classify the change, pick representative quality and safety evaluations, set thresholds and name the human review. Automate repeatable checks and store results with the released version.",
       },
       {
         id: "s2",
         title: "Control the release after the gate",
-        readTimeMinutes: 12,
+        readTimeMinutes: 1,
         content:
           "Pre-release evaluations miss some production conditions. Use staged exposure where feasible, watch outcome and guardrail signals and set rollback or containment criteria in advance. Document an emergency path with limited authority, time bounds, retrospective review and follow-up tests.",
       },
@@ -104,23 +104,23 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Use distinct workload identities, explicit delegation, least privilege and protected logs.",
     objective:
       "Use distinct workload identities, explicit delegation, least privilege and protected logs.",
-    durationMinutes: 20,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Separate the actor, user, and authority",
-        readTimeMinutes: 10,
+        readTimeMinutes: 1,
         content:
-          "When an agent acts, the system identifies the executing workload, whom it acts for and the authorization behind it. Each production workload gets its own identity with least privilege, short-lived credentials, scoped resources and actions and explicit revocation.",
+          "When an agent acts, the system identifies the executing workload, whom it acts for and the authorization behind it. Each production workload gets its own identity with least privilege, short-lived credentials, scoped resources and actions and explicit revocation, never shared secrets or broad service accounts.",
       },
       {
         id: "s2",
         title: "Record enough evidence to reconstruct the event",
-        readTimeMinutes: 10,
+        readTimeMinutes: 1,
         content:
-          "An audit event holds event ID, timestamps, workload identity, represented user or service, action, resource, authorization decision, policy version, result and correlation IDs. Protect the log and store references or redacted values in place of secrets and personal data.",
+          "An audit event holds event ID, timestamps, workload identity, represented user or service, action, resource, authorization decision, policy version, result and correlation IDs. Protect the log and store references or redacted values in place of unnecessary secrets and personal data.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -145,10 +145,10 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "quiz",
-    title: "Module 8 knowledge check",
+    title: "Module 8, knowledge check",
     subtitle: "Two questions on registry and audit trail.",
     objective: "Two questions on registry and audit trail.",
-    durationMinutes: 8,
+    durationMinutes: 3,
     keyConcepts: [],
     quiz: [
       {
@@ -178,7 +178,7 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "The gap is a missing inventory. A registry links each use to owner, data classes, provider and version, tools, controls, approvals and lifecycle state, which no other safeguard replaces.",
+          "The gap is a missing inventory. A registry links each use to owner, data classes, provider, version, tools, controls, approvals and lifecycle state.",
       },
       {
         id: "ano-governance-q2",
@@ -207,7 +207,7 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "A protected event record links workload, represented principal, authority, action, resource and result at the moment of the event. Display names and later recollection cannot establish that chain.",
+          "A protected event record links workload, represented principal, authority, action, resource and result at the time. Display names and later recollection cannot establish that chain.",
       },
     ],
     sections: [],

@@ -17,15 +17,15 @@ const lesson = localizeDataInfraLessonToGerman(canonical, {
       title: "Begrenzte Review-Schleife",
       content: `Geh diese Schleife durch und gib den Stellen mit der größten Unsicherheit und dem größten Risiko die meiste Zeit.
 
-1. **Klären.** Consumer, Entscheidungen, Spitzenlast beim Schreiben und Lesen, Freshness, Korrektheit, Datenschutz, Aufbewahrung, Verfügbarkeit und Kosten. Offene Annahmen aufschreiben.
-2. **Rahmen setzen.** Nur die Grenzen zeichnen, die die Aufgabe braucht. Hauptrisiken nennen und den Lesevertrag definieren, bevor ein Produktname fällt.
-3. **Schätzen und entwerfen.** Größenordnung von Durchsatz, Speicher und Gleichzeitigkeit berechnen, dann Partitionierung, Verarbeitung, Speicher und Serving daraus ableiten.
+1. **Klären.** Consumer, Entscheidungen, Spitzenlast beim Schreiben und Lesen, Freshness, Korrektheit, Datenschutz, Aufbewahrung, Verfügbarkeit und Kosten. Schreib offene Annahmen auf.
+2. **Rahmen setzen.** Zeichne nur die Grenzen, die die Aufgabe braucht. Nenne die Hauptrisiken und definiere den Lesevertrag, bevor ein Produktname fällt.
+3. **Schätzen und entwerfen.** Berechne die Größenordnung von Durchsatz, Speicher und Gleichzeitigkeit und leite daraus Partitionierung, Verarbeitung, Speicher und Serving ab.
 4. **Fehlerfälle prüfen.** Verspätete und doppelte Daten, Schiefe, Schemaänderungen, Backfills, Abhängigkeitsausfälle, Zugriffstrennung und Wiederherstellung. Zu jedem Risiko gehört Evidenz für Erkennung und Wiederherstellung.
-5. **Zielkonflikte prüfen.** Benennen, worauf der Entwurf optimiert, was er nicht garantiert und welche Entscheidungen noch Benchmark oder Prototyp brauchen.`,
+5. **Zielkonflikte prüfen.** Benenne, worauf der Entwurf optimiert, was er nicht garantiert und welche Entscheidungen noch Benchmark oder Prototyp brauchen.`,
     },
     {
       id: "s2",
-      title: "Durchgearbeitetes Szenario",
+      title: "Zum Szenario",
       content: `Der Ablauf oben spielt einen hypothetischen Marktplatz durch, auf dem Händler Bestell- und Umsatzaggregate sehen. Seine Verkehrs-, Größen-, Verspätungs- und Freshness-Werte sind Eingaben der Übung, keine Benchmarks oder Vorgaben. Für eine Produktionsentscheidung über die genannten Produkte brauchst du Kompatibilitätsprüfung, Security Review, Kostenmodell und repräsentative Lasttests.`,
     },
     {
@@ -33,7 +33,7 @@ const lesson = localizeDataInfraLessonToGerman(canonical, {
       title: "Präzise Formulierungen",
       content: `- *„Welche Entscheidung trifft der Consumer aus dieser Ausgabe und wie alt darf sie sein?“* definiert den Lesevertrag.
 - *„Wird Freshness ab Ereignisentstehung, Quell-Commit oder Ingestion gemessen?“* verhindert ein mehrdeutiges SLI.
-- *„Ich schätze zuerst und wähle danach eine Komponente.“* Eine Milliarde Ereignisse zu je 1 KB sind rund 1 TB pro Tag und im Schnitt 11.6 MB/s, vor Replikation, Kodierung, Indizes und Protokoll-Overhead. Die Spitze braucht eine eigene Annahme.
+- *„Ich schätze zuerst und wähle danach eine Komponente.“* Eine Milliarde Ereignisse zu je 1 KB sind rund 1 TB pro Tag und im Schnitt 11,6 MB/s, vor Replikation, Kodierung, Indizes und Protokoll-Overhead. Die Spitze braucht eine eigene Annahme.
 - *„Diese Komponente ist ein Kandidat, weil sie die Anforderungen erfüllt; Connector-Semantik und Pfadleistung prüfe ich separat.“* trennt Hypothese und Nachweis.
 - *„Das Risiko ist X, die Gegenmaßnahme Y und Z bleibt ungemindert.“* macht Restrisiko prüfbar.
 - *„Diese Garantie gilt nur zwischen diesen Grenzen.“* verhindert, dass eine lokale Verarbeitungsgarantie zur End-to-End-Aussage wird.`,
@@ -57,7 +57,7 @@ Jeder dieser Sätze überspringt eine Entscheidungsgrenze. Ergänze Anforderung,
     {
       id: "s6",
       title: "Kursüberblick",
-      content: `Die 30 Lernkarten am Ende dieser Lektion decken jedes Konzept des Kurses ab. Lies jede Karte als Review-Frage, die du an einer konkreten Last prüfst.`,
+      content: `Die 30 Lernkarten am Ende dieser Lektion wiederholen die Kernkonzepte des Kurses. Prüfe jede Karte an einem Workload, den du kennst.`,
     },
     {
       id: "s7",
@@ -71,12 +71,12 @@ Jeder dieser Sätze überspringt eine Entscheidungsgrenze. Ergänze Anforderung,
       cpId: "q1",
       title: "Der Klärungsschritt",
       question:
-        "Die Aufgabe lautet: „Entwirf eine Datenpipeline zur Betrugserkennung.“ Welche drei Zahlen müssen vor der ersten Zeichnung geklärt werden?",
+        "Die Aufgabe lautet: „Entwirf eine Datenpipeline zur Betrugserkennung.“ Welche drei Zahlen klärst du, bevor du etwas zeichnest?",
       options: [
         "„Welcher Cloudanbieter?“ „Ist Kafka bereits vorhanden?“ „Wie groß ist das Team?“",
         "Schreibvorgänge/s in der Spitze, Lesevorgänge/s oder Latenzbudget der Entscheidung und Freshness-Ziel (Echtzeit oder nächtlicher Batch).",
         "„Batch oder Streaming?“ Die interviewende Person soll den Entwurf vorgeben.",
-        "„Welches Budget besteht?“ und „Wie viele Engineers stehen bereit?“",
+        "„Wie hoch ist das Budget?“ und „Wie viele Engineers gibt es?“",
       ],
       explanation:
         "Spitzenlast beim Schreiben, Entscheidungslatenz und Freshness begrenzen die Architektur. Korrektheit, Datenschutz, Aufbewahrung, Verfügbarkeit und Wiederherstellung müssen trotzdem vor der Freigabe feststehen.",
@@ -86,15 +86,15 @@ Jeder dieser Sätze überspringt eine Entscheidungsgrenze. Ergänze Anforderung,
       cpId: "q2",
       title: "Die Hot-Partition",
       question:
-        "Ein Kafka-Topic für Bestellungen ist nach seller_id partitioniert. Ein Händler erzeugt am Black Friday 40% des gesamten Verkehrs. Was bricht und wie behebst du es?",
+        "Ein Kafka-Topic für Bestellungen ist nach seller_id partitioniert. Ein Händler erzeugt am Black Friday 40 % des gesamten Verkehrs. Was bricht und wie behebst du es?",
       options: [
         "Nichts; Kafka verteilt die Last automatisch.",
-        "Die Partition wird zum Engpass. Nach (seller_id, bucket) schlüsseln, je Bucket voraggregieren, dann auf seller_id umschlüsseln.",
+        "Die Partition wird zum Engpass; nach (seller_id, bucket) schlüsseln, dann je Händler zusammenführen.",
         "Kafka verteilt den Inhalt der Partition beim Rebalancing automatisch.",
         "Weitere Broker teilen die Partition selbstständig auf.",
       ],
       explanation:
-        "In einer Gruppe liest nur ein Consumer eine Partition, also deckelt die heiße Partition den Durchsatz, während andere leerlaufen. Teilschlüssel verteilen die Arbeit, kosten aber eine Aggregationsstufe und ändern die Ordnung; Buckets nach gemessener Schiefe bemessen.",
+        "Nur ein Consumer je Gruppe liest eine Partition; die heiße deckelt den Durchsatz. Teilschlüssel verteilen die Arbeit, kosten aber eine Aggregationsstufe und ändern die Ordnung. Bemiss Buckets nach Schiefe und Kapazität, dann teste die Wiederherstellung.",
     },
     {
       kind: "flashcards",
@@ -134,7 +134,7 @@ Jeder dieser Sätze überspringt eine Entscheidungsgrenze. Ergänze Anforderung,
         {
           term: "Predicate Pushdown",
           q: "Wie wird Arbeit übersprungen?",
-          a: "Über Minimum-/Maximumstatistiken je Row Group. Gilt amount > 1000 und ist der Höchstwert einer Gruppe 50, wird die ganze Gruppe übersprungen.",
+          a: "Über Minimum-/Maximumstatistiken je Row Group. Gilt amount > 1000 und ist der Höchstwert einer Gruppe 50, wird die ganze Gruppe übersprungen, sofern Prädikat, Metadaten und Schreiblayout das erlauben.",
         },
         {
           term: "Dictionary Encoding",
@@ -144,12 +144,12 @@ Jeder dieser Sätze überspringt eine Entscheidungsgrenze. Ergänze Anforderung,
         {
           term: "Iceberg-Metadatenkette",
           q: "Welche fünf Stufen?",
-          a: "Catalog → metadata.json → Manifest List → Manifests → Datendateien.",
+          a: "Catalog → metadata.json → Manifest List → Manifests → Datendateien. Details hängen von der Formatversion ab.",
         },
         {
           term: "CoW oder MoR",
           q: "Wann passt welches Verfahren?",
-          a: "Aktualisierungsarbeit gegen Zusammenführung beim Lesen. Engine-Unterstützung, Last und Wartung entscheiden.",
+          a: "Copy-on-Write kostet beim Aktualisieren, Merge-on-Read beim Lesen. Engine-Unterstützung, Last und Wartung entscheiden.",
         },
         {
           term: "Time Travel",
@@ -179,7 +179,7 @@ Jeder dieser Sätze überspringt eine Entscheidungsgrenze. Ergänze Anforderung,
         {
           term: "Idempotent",
           q: "Was muss gelten?",
-          a: "Die Wiederholung eines definierten Vorgangs erzeugt keinen zusätzlichen Effekt. Dafür braucht es stabile Schlüssel, deterministische Logik und korrekte Transaktionssemantik.",
+          a: "Die Wiederholung eines definierten Vorgangs erzeugt keinen zusätzlichen Effekt. MERGE oder Konfliktbehandlung braucht stabile Schlüssel, deterministische Logik und korrekte Transaktionssemantik.",
         },
         {
           term: "Kafka-Partition",
@@ -189,7 +189,7 @@ Jeder dieser Sätze überspringt eine Entscheidungsgrenze. Ergänze Anforderung,
         {
           term: "Ereigniszeit oder Verarbeitungszeit",
           q: "Welche Zeit wird verwendet?",
-          a: "Die Uhr, die die Fachfrage beantwortet. Ereigniszeit passt zu Quellzeitfenstern, Verarbeitungszeit zu operativen Ankunftsfragen.",
+          a: "Die Uhr, die die Fachfrage beantwortet. Ereigniszeit passt zu Fenstern nach Quellzeit, Verarbeitungszeit zu Fragen nach Ankunft und Betrieb.",
         },
         {
           term: "Watermark",
@@ -204,12 +204,12 @@ Jeder dieser Sätze überspringt eine Entscheidungsgrenze. Ergänze Anforderung,
         {
           term: "CDC",
           q: "Wie liest es die Quelle?",
-          a: "Über Datenbankänderungsprotokolle gemäß Connector-, Snapshot-, Quelllog-Aufbewahrungs-, Ordnungs- und Quelllastverhalten.",
+          a: "Aus den Änderungsprotokollen der Datenbank. Was ankommt, hängt von Connector, Snapshot, Aufbewahrung des Quelllogs, Ordnung und Last auf der Quelle ab.",
         },
         {
           term: "Batch oder Streaming",
           q: "Welche Architektur gewinnt?",
-          a: "Keine universell. Latenz, Replay, Korrektheit, Betriebskomplexität und Wiederherstellung vergleichen.",
+          a: "Keine gewinnt immer. Vergleiche Latenz, Replay, Korrektheit, Betriebskomplexität und Wiederherstellung.",
         },
         {
           term: "Outbox-Muster",
@@ -219,7 +219,7 @@ Jeder dieser Sätze überspringt eine Entscheidungsgrenze. Ergänze Anforderung,
         {
           term: "Verarbeitungsgarantien",
           q: "Wie werden sie benannt?",
-          a: "Replay, Prozessorzustand und Ziel-Commit getrennt benennen. Ohne End-to-End-Duplikateffekte geht es nur, wenn alle Grenzen zusammenarbeiten.",
+          a: "Replay, Prozessorzustand und Ziel-Commit getrennt benennen. Doppelte Effekte lassen sich End-to-End nur vermeiden, wenn jede Grenze mitspielt.",
         },
         {
           term: "Backfill-Entwurf",
@@ -278,14 +278,14 @@ export const INTERVIEW_MOVES: readonly InterviewMoveItem[] = [
   {
     tag: "scope",
     title: "Annahmen der Übung dokumentieren",
-    body: `<p>Angenommen werden <b>10,000 Bestelländerungen pro Sekunde in der Spitze</b>, <b>500 gleichzeitige Dashboard-Sitzungen</b> und ein Ziel, <b>99% der akzeptierten Ereignisse innerhalb von 5 Sekunden in einem rollierenden Stundenfenster</b> zu veröffentlichen.</p><p>Dazu kommen Händlerautorisierung, sieben Jahre Aufbewahrung der Aggregate, 30 Tage wiedereinspielbare Rohänderungen und ein dokumentierter Degraded Mode.</p>`,
+    body: `<p>Angenommen werden <b>10,000 Bestelländerungen pro Sekunde in der Spitze</b>, <b>500 gleichzeitige Dashboard-Sitzungen</b> und ein Ziel, <b>99 % der akzeptierten Ereignisse innerhalb von 5 Sekunden in einem rollierenden Stundenfenster</b> zu veröffentlichen.</p><p>Dazu kommen Händlerautorisierung, sieben Jahre Aufbewahrung der Aggregate, 30 Tage wiedereinspielbare Rohänderungen und ein dokumentierter Degraded Mode.</p>`,
     note: "Reale Reviews beziehen sie aus Produkt-, Rechts-, Security- und Last-Evidenz.",
   },
   {
     tag: "estimate",
     title: "Vor Kapazitätswahl schätzen",
     body: `<p>Hielte die Spitze einen ganzen Tag an: 10,000 × 86,400 = <b>864 Millionen Änderungen pro Tag</b>, bei einer beispielhaften Nutzlast von 1 KB also <b>864 GB pro Tag</b> vor Replikation, Indizes, Kodierung und Protokoll-Overhead.</p><p>Miss Kompressionsrate, Spitzendauer, Aggregatgröße und Cache-Residency mit repräsentativen Daten, bevor du Knoten oder Kosten dimensionierst.</p>`,
-    note: "Die Rechnung steckt das Problem ab und ersetzt keinen Benchmark.",
+    note: "Die Rechnung steckt das Problem ab. Verteilung, Overhead, Ausfallverhalten und Benchmarks misst du getrennt.",
   },
   {
     tag: "api",
@@ -303,7 +303,7 @@ WS  /sellers/:id/updates    → { event_id, occurred_at, aggregate_delta }</pre>
   {
     tag: "streaming",
     title: "Verarbeitungspfad vorschlagen",
-    body: `<p>Kandidat: PostgreSQL Change Capture → Kafka → zustandsbehafteter Stream-Prozessor, der versionsbewusste Änderungen anwendet und Aggregatänderungen veröffentlicht. Die Partitionszahl folgt gemessenem Durchsatz, Wiederherstellungszeit und Ordnungsbedarf.</p><p>Watermark und erlaubte Verspätung folgen beobachteten Verzögerungen und Korrekturbedarf. Ungültige Datensätze gehen in einen zugriffsbeschränkten, zeitlich begrenzten Prüfpfad.</p>`,
+    body: `<p>Kandidat: PostgreSQL Change Capture → Kafka → zustandsbehafteter Stream-Prozessor, der versionsbewusste Änderungen anwendet und Aggregatänderungen veröffentlicht. Die Partitionszahl folgt gemessenem Durchsatz, Wiederherstellungszeit und Ordnungsbedarf.</p><p>Watermark und erlaubte Verspätung folgen beobachteten Verzögerungen und Korrekturbedarf. Ungültige oder nicht verarbeitbare Datensätze gehen in einen zugriffsbeschränkten, zeitlich begrenzten Prüfpfad.</p>`,
     note: "Connector-Snapshots, Quelllog-Aufbewahrung, Replay, Prozessor-Checkpoints und Ziel-Commits sind getrennte Grenzen. Teste jede.",
   },
   {
@@ -327,19 +327,19 @@ WS  /sellers/:id/updates    → { event_id, occurred_at, aggregate_delta }</pre>
   {
     tag: "scale",
     title: "Gemessene Schlüsselschiefe behandeln",
-    body: `<p>Angenommen, ein Händler erzeugt 40% der Spitzenlast, mehr als die getestete Kapazität eines Partition-Consumers.</p><p>Schlüssle nach <code>(seller_id, bucket)</code>, aggregiere je Bucket vor und führe danach je Händler zusammen. Leite die Bucket-Anzahl aus Kapazitätsevidenz ab und dokumentiere veränderte Ordnungs-, Zustands- und Wiederherstellungskosten.</p>`,
+    body: `<p>Angenommen, ein Händler erzeugt 40 % der Spitzenlast, mehr als die getestete Kapazität eines Partition-Consumers.</p><p>Schlüssle nach <code>(seller_id, bucket)</code>, aggregiere je Bucket vor und führe danach je Händler zusammen. Leite die Bucket-Anzahl aus Kapazitätsevidenz ab und dokumentiere veränderte Ordnungs-, Zustands- und Wiederherstellungskosten.</p>`,
     note: "Zusätzliche Broker können eine Hot Partition verschieben. Deren Datensätze teilen sie nicht.",
   },
   {
     tag: "tradeoff",
     title: "Ausschlüsse und Restrisiko dokumentieren",
     body: `<p>Nicht Teil dieses Entwurfs: Mehrregionen-Wiederherstellung, Datenschutzlöschung über aufbewahrte Logs und Snapshots, Betrugsentscheidungen und mobile Zustellung.</p><p>Jeder Ausschluss kommt mit Zuständigkeit und Entscheidungsdatum ins Risikoregister. Kein Replikationsprodukt gilt als Lösung, bevor Failover, Ordnung, Datenverlust und Wiederherstellung erprobt sind.</p>`,
-    note: "Ein begrenzter Entwurf benennt, was er ausschließt.",
+    note: "Die Liste der Ausschlüsse zeigt, wo der Entwurf endet.",
   },
   {
     tag: "follow-up",
     title: "Mit Betriebsevidenz abschließen",
     body: `<p>Überwache End-to-End-Veröffentlichungsverzögerung, Vollständigkeit von Quelle zu Ziel, ungültige Datensätze, Partitionsschiefe, Checkpoint- und Ziel-Commit-Fehler, Reconciliation-Abweichungen und Datenalter im Serving Store.</p><p>Alarmiere auf ein nutzerwirksames SLO und nutze Komponentenmetriken zur Diagnose. Schreibe Runbooks für Replay, teilweisen Zielerfolg, Zugriffsvorfälle und Backfill-Rollback.</p>`,
-    note: "Garantien werden prüfbar, sobald sie Messungen, Zuständigkeiten und Wiederherstellungsabläufe haben.",
+    note: "Gib jeder Garantie eine Messung, eine Zuständigkeit und einen Wiederherstellungsablauf.",
   },
 ];

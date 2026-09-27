@@ -219,7 +219,7 @@ const ON_RAMP_NODE: LearningNode = {
   evidenceMode: "source_backed",
   sourceOwner: "editorial:onramp",
   summary:
-    "Für alle, die noch nie bewusst KI genutzt haben.",
+    "Einstiegsseite für alle, die noch nie bewusst KI genutzt haben.",
 };
 
 export const LEARNING_NODES: readonly LearningNode[] = [
@@ -237,7 +237,7 @@ export const LEARNING_NODES: readonly LearningNode[] = [
     evidenceMode: "self_attested",
     sourceOwner: "editorial:self-tests",
     summary:
-      "Zehn Fragen ohne Login zeigen dir, wo du auf dem KI-Kompetenzweg stehst.",
+      "Zehn Fragen ohne Login und ohne Datenspeicherung. Danach weißt du, wo du auf dem KI-Kompetenzweg stehst.",
   },
   ON_RAMP_NODE,
   ...courseNodes,

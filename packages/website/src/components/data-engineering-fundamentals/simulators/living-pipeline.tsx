@@ -1063,7 +1063,7 @@ export function LivingPipeline() {
               <code>dim_users</code>
             </div>
             <div className="lp-d-sub">
-              1,421,882 {text("simulated users · daily scenario fixture", "simulierte Nutzer · täglicher Szenario-Datensatz")}
+              {text("1,421,882", "1.421.882")} {text("simulated users · daily scenario fixture", "simulierte Nutzer · täglicher Szenario-Datensatz")}
             </div>
           </div>
 
@@ -1122,7 +1122,7 @@ export function LivingPipeline() {
               {text("control console · change one modeled condition", "Kontrollkonsole · eine modellierte Bedingung ändern")}
             </div>
             <div className="lp-console-title">
-              {text("Six modeled controls. Inspect each failure mode.", "Sechs modellierte Kontrollen. Jeden Fehlerzustand prüfen.")}
+              {text("Inspect each failure mode.", "Jeden Fehlerzustand prüfen.")}
             </div>
           </div>
           <div className="lp-console-actions">

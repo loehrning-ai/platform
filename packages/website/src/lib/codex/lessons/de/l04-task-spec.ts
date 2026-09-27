@@ -11,21 +11,21 @@ function prose(sectionIndex: number, blockIndex: number): string {
 
 export default localizeCodexLessonToGerman(canonical, {
   translations: [
-    ["Anatomy of a Task Spec", "Aufbau einer Aufgabenbeschreibung"],
+    ["Anatomy of a Task Spec", "Aufbau einer Auftragsbeschreibung"],
     [
       canonical.subtitle,
       "Ziel, Einschränkungen, Akzeptanzkriterien und ausgeschlossener Umfang machen die angeforderte Änderung prüfbar.",
     ],
     ["Define the result and its boundary.", "Definiere Ergebnis und Grenze."],
-    ["Task spec", "Aufgabenbeschreibung"],
+    ["Task spec", "Auftragsbeschreibung"],
     ["Goal", "Ziel"],
     ["Constraints", "Einschränkungen"],
     ["Acceptance criteria", "Akzeptanzkriterien"],
     ["Out of scope", "Nicht Bestandteil"],
-    ["Shape, not steps", "Ergebnis statt Einzelschritte"],
+    ["Describe the result", "Das Ergebnis beschreiben"],
     [
       prose(0, 0),
-      "\"Pagination zum Benutzer-Endpunkt hinzufügen\" lässt Verhalten, Grenzen, Verifikation und angrenzenden Code offen, und jedes Feld, das du weglässt, füllt Codex selbst. `AGENTS.md` regelt das Dauerhafte, die **Aufgabenspezifikation** die aktuelle Änderung.\n\n### Erst den Endzustand beschreiben\n\nNenne das beobachtbare Verhalten, die Schnittstellen, die stabil bleiben, die Prüfungen, die bestehen müssen, und die Bereiche, die unverändert bleiben. Schrittfolgen gehören nur hinein, wenn die Reihenfolge selbst eine Einschränkung ist, etwa bei einer geordneten Migration.\n\n\"GET /users unterstützt ?page=N mit 20 Einträgen pro Seite und behält das bestehende Antwortschema\" ist ein prüfbares Ergebnis.",
+      "\"Pagination zum Benutzer-Endpunkt hinzufügen\" lässt Verhalten, Grenzen, Verifikation und angrenzenden Code offen, und was du weglässt, ergänzt Codex selbst. `AGENTS.md` regelt das Dauerhafte, die **Auftragsbeschreibung** die aktuelle Änderung.\n\nNenne das beobachtbare Verhalten, die Schnittstellen, die stabil bleiben, die Prüfungen, die bestehen müssen, und die Bereiche, die unverändert bleiben. Schrittfolgen gehören nur hinein, wenn die Reihenfolge selbst eine Einschränkung ist, etwa bei einer geordneten Migration.\n\n\"GET /users unterstützt ?page=N mit 20 Einträgen pro Seite und behält das bestehende Antwortschema\" ist ein prüfbares Ergebnis.",
     ],
     ["The four parts", "Die vier Bestandteile"],
     ["01 · goal", "01 · Ziel"],
@@ -47,7 +47,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ["How will we know it's done?", "Woran erkennen wir fertig?"],
     [
       "The tests, commands and observable results required before acceptance, such as a passing make test and no new deprecation warnings. Read the output.",
-      "Die Tests, Befehle und beobachtbaren Ergebnisse, die vor der Annahme vorliegen müssen, etwa ein grünes `make test` ohne neue Deprecation-Warnungen. Lies die Ausgabe.",
+      "Die Tests, Befehle und beobachtbaren Ergebnisse, die vor der Annahme vorliegen müssen, etwa ein grünes make test ohne neue Deprecation-Warnungen. Lies die Ausgabe.",
     ],
     ["04 · out of scope", "04 · Nicht Bestandteil"],
     [
@@ -58,10 +58,10 @@ export default localizeCodexLessonToGerman(canonical, {
       "Adjacent work that stays out, such as auth or the query builder, so implementer and reviewer share one boundary.",
       "Angrenzende Arbeit, die draußen bleibt, etwa Auth oder der Query Builder. So teilen Implementierung und Review dieselbe Grenze.",
     ],
-    ["Build one", "Eine Spezifikation zusammenstellen"],
+    ["Build one", "Eine Auftragsbeschreibung zusammenstellen"],
     [
-      "Select the fields that make \"add pagination to /users\" reviewable. The assembled spec shows which decisions are explicit.",
-      "Wähle die Felder, die \"Pagination zu /users hinzufügen\" prüfbar machen. Die zusammengesetzte Fassung zeigt, was entschieden ist.",
+      "Use the exercise above: select the fields that make \"add pagination to /users\" reviewable.",
+      "Nutze die Übung oben: Wähle die Felder, die \"Pagination zu /users hinzufügen\" prüfbar machen.",
     ],
     ["Three quality tiers", "Drei Qualitätsstufen"],
     [
@@ -72,13 +72,10 @@ export default localizeCodexLessonToGerman(canonical, {
       "### Anatomy of the precise version\n\n- **\"20 per page\"** sets the default page size.\n- **\"?page=N query parameter\"** selects offset pagination over a cursor contract.\n- **\"Keep the existing response schema; add a pagination field\"** sets the compatibility boundary.\n- **\"make test must pass\"** names an executable check whose log you still read.\n- **\"Do not change the filtering logic\"** excludes an adjacent refactor.",
       "### Aufbau der präzisen Fassung\n\n- **\"20 pro Seite\"** legt die Standardgröße fest.\n- **\"Query-Parameter ?page=N\"** wählt Offset-Pagination statt eines Cursor-Vertrags.\n- **\"Bestehendes Antwortschema behalten; Feld pagination ergänzen\"** zieht die Kompatibilitätsgrenze.\n- **\"make test muss bestehen\"** nennt eine ausführbare Prüfung, deren Protokoll du trotzdem liest.\n- **\"Filterlogik nicht ändern\"** sperrt ein angrenzendes Refactoring.",
     ],
-    [
-      "Two questions follow.",
-      "Es folgen zwei Fragen.",
-    ],
+    ["Two questions at the end of the lesson.", "Zwei Fragen am Ende der Lektion."],
     [
       'Assemble a task spec for "/users pagination"',
-      "Aufgabenbeschreibung für die Pagination von /users",
+      "Auftragsbeschreibung für die Pagination von /users",
     ],
     [
       "Select each field that fixes an implementation or review decision.",
@@ -115,8 +112,8 @@ export default localizeCodexLessonToGerman(canonical, {
       "New test: page 1, page 2, out-of-range.",
       "Neue Tests: Seite 1, Seite 2 und außerhalb des Bereichs.",
     ],
-    ["make test passes.", "`make test` besteht."],
-    ["make lint passes.", "`make lint` besteht."],
+    ["make test passes.", "make test besteht."],
+    ["make lint passes.", "make lint besteht."],
     [
       "Adjacent work explicitly excluded from this change.",
       "Angrenzende Arbeit, die ausdrücklich draußen bleibt.",
@@ -142,12 +139,12 @@ export default localizeCodexLessonToGerman(canonical, {
       "Make the endpoint feel polished.",
       "Der Endpunkt soll hochwertig wirken.",
     ],
-    ["Three shapes of the same task", "Drei Fassungen derselben Aufgabe"],
+    ["Three shapes of the same task", "Drei Fassungen desselben Auftrags"],
     ["Weak, one line", "Schwach: ein Einzeiler"],
     ["Strong, four parts", "Stark: vier Bestandteile"],
     [
       "task:\nadd pagination to /users",
-      "Aufgabe:\nPagination zu /users hinzufügen",
+      "Auftrag:\nPagination zu /users hinzufügen",
     ],
     [
       "Goal\nUsers can page through GET /users results via ?page=N, 20 items per page.\n\nConstraints\n- Keep existing response schema; add a top-level \"pagination\" object.\n- Offset-based (?page=N), not cursor.\n- No new dependencies.\n\nAcceptance\n- Tests cover page 1, page 2, out-of-range (page=999 → empty).\n- make test && make lint pass.\n- Existing filters (?role, ?status) still work.\n\nOut of scope\n- Don't touch the single-user detail endpoint.\n- Don't refactor the filter builder.",
@@ -159,7 +156,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       "A task has a clear goal and acceptance criteria but no excluded scope. What review risk remains?",
-      "Eine Aufgabe enthält ein klares Ziel und Akzeptanzkriterien, aber keinen ausgeschlossenen Umfang. Welches Review-Risiko bleibt?",
+      "Ein Auftrag enthält ein klares Ziel und Akzeptanzkriterien, aber keinen ausgeschlossenen Umfang. Welches Review-Risiko bleibt?",
     ],
     [
       "The diff must be small regardless of the feature.",
@@ -174,7 +171,7 @@ export default localizeCodexLessonToGerman(canonical, {
       "Codex verweigert die Arbeit ohne explizite Umfangsangabe.",
     ],
     [
-      "Nothing, out-of-scope sections are decorative.",
+      "Nothing; out-of-scope sections are decorative.",
       "Nichts; ausgeschlossener Umfang ist nur dekorativ.",
     ],
     [
@@ -190,8 +187,8 @@ export default localizeCodexLessonToGerman(canonical, {
       '"Stelle sicher, dass es gut funktioniert."',
     ],
     [
-      "\"make test passes, with new cases for page 1, page 2 and page=999 (empty array).\"",
-      "\"`make test` besteht, mit neuen Fällen für Seite 1, Seite 2 und page=999 (leeres Array).\"",
+      "\"make test passes, with new cases: page 1 returns 20 items, page 2 the next 20, page=999 an empty array.\"",
+      "\"make test besteht, mit neuen Fällen: Seite 1 liefert 20 Einträge, Seite 2 die nächsten 20, page=999 ein leeres Array.\"",
     ],
     ['"It should be production-ready."', '"Es soll produktionsreif sein."'],
     ['"Don\'t break anything."', '"Nichts darf kaputtgehen."'],

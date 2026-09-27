@@ -55,7 +55,7 @@ const lesson: CodexLesson = {
             {
               eyebrow: "multiple coupled concerns",
               title: "Decompose and restart",
-              body: "Split separable concerns. Fix dependency order and valid intermediate states before the new tasks run.",
+              body: "Split separable concerns. Set the dependency order and valid intermediate states before the new tasks run.",
             },
           ],
         },
@@ -77,7 +77,7 @@ const lesson: CodexLesson = {
       id: "s3",
       title: "Quick check",
       readTimeMinutes: 1,
-      blocks: [{ kind: "prose", markdown: "One question on when to re-spec." }],
+      blocks: [{ kind: "prose", markdown: "Question at the end of the lesson." }],
     },
     {
       id: "s4",
@@ -91,7 +91,7 @@ const lesson: CodexLesson = {
         },
         {
           kind: "callout",
-          title: "Keep only verified findings",
+          title: "Keep only verified findings.",
           body: "Failed attempts also contain wrong assumptions. Carry forward only what repository evidence or reproducible commands support.",
         },
       ],
@@ -112,7 +112,7 @@ const lesson: CodexLesson = {
             {
               eyebrow: "signal 01",
               title: "Reverts fixed behavior",
-              body: "An accepted correction disappears without a code reason. Restate the requirement in a clean task.",
+              body: "An accepted correction disappears without a code reason. Confirm the requirement, then restate it in a clean task.",
             },
             {
               eyebrow: "signal 02",
@@ -150,7 +150,7 @@ const lesson: CodexLesson = {
       title: "Quick check",
       readTimeMinutes: 1,
       blocks: [
-        { kind: "prose", markdown: "One question on recognizing context rot." },
+        { kind: "prose", markdown: "Questions at the end of the lesson." },
       ],
     },
   ]),

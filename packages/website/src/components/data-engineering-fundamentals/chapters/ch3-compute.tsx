@@ -44,9 +44,9 @@ export function Ch3Compute({ chapter }: Ch3ComputeProps) {
       />
 
       <section className="section">
-        <SectionLabel n="4.1">Pick the engine for the query.</SectionLabel>
-        <h2 className="h2">Three engines, one set of bytes.</h2>
-        <p className="prose">Engines on the same table format and catalog read the same Parquet data. Choose by measured workload: shuffle volume, memory and spill, operational ownership and cost.</p>
+        <SectionLabel n="4.1">Engine choice</SectionLabel>
+        <h2 className="h2">Trino, Spark and Snowflake read the same Parquet files.</h2>
+        <p className="prose">Engines on the same table format and catalog read the same Parquet data. Choose by measured workload: startup and response time, shuffle, memory and spill, retries, concurrency, ownership and cost.</p>
         <EngineMatrix />
       </section>
 
@@ -54,8 +54,8 @@ export function Ch3Compute({ chapter }: Ch3ComputeProps) {
         <SectionLabel n="4.2">The planner, visualized</SectionLabel>
         <h2 className="h2">How a join runs.</h2>
         <p className="prose">
-          A partitioned <b>hash join</b> redistributes rows by join key, so one frequent key can leave one worker with far more data. A
-          <b> broadcast join</b> copies the build side to every worker and only works if it fits in each worker&apos;s memory with headroom.
+          A partitioned <b>hash join</b> redistributes rows by join key, so one frequent key can leave one worker with far more data. A{" "}
+          <b>broadcast join</b> copies the build side to every worker and only works if it fits in each worker&apos;s memory with headroom.
         </p>
         <p className="prose">
           Raise the skew slider and worker 0 gets more load. A frequent sentinel value such as <code>user_id = 0</code> in the join key causes
@@ -68,7 +68,7 @@ export function Ch3Compute({ chapter }: Ch3ComputeProps) {
         items={[
           '<b>Broadcasting an unmeasured build side.</b> Check compressed and in-memory size, worker count, concurrent work and memory limits before adding a hint.',
           "<b>Hash-joining on a column with one hot key</b>, such as <code>user_id = 0</code> for logged-out traffic. Salt the key or filter first.",
-          "<b>Assuming the engine will spill.</b> Check engine version, operator support and cluster settings before giving it a large join.",
+          "<b>Assuming the engine can or cannot spill.</b> Check engine version, operator support and cluster settings before giving it a large join.",
           "<b>Using stale table statistics.</b> Refresh them after large data changes and compare plan estimates with runtime rows.",
         ]}
       />

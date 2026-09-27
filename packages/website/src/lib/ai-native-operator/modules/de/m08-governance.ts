@@ -12,23 +12,23 @@ export const GOVERNANCE_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
       "Erfasse jedes eingesetzte System mit Zuständigkeit, Zweck, Datenzugriff, Werkzeugen, Kontrollen und Zustand.",
     objective:
       "Erfasse jedes eingesetzte System mit Zuständigkeit, Zweck, Datenzugriff, Werkzeugen, Kontrollen und Zustand.",
-    durationMinutes: 18,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Den Einsatz erfassen",
-        readTimeMinutes: 9,
+        readTimeMinutes: 1,
         content:
           "Erfasse jeden Einsatz mit Geschäftszweck, verantwortlicher Person, Anbieter und Version, Betriebsort, Datenklassen, verbundenen Werkzeugen, Nutzergruppen, Risikostufe und Lebenszyklusstatus. Extern betriebene und eingebettete Anbieterfunktionen gehören dazu, sobald sie Daten oder Entscheidungen berühren.",
       },
       {
         id: "s2",
         title: "Das Register an Lebenszyklusereignisse binden",
-        readTimeMinutes: 9,
+        readTimeMinutes: 1,
         content:
-          "Der Eintrag entsteht oder ändert sich bei Aufnahme, Freigabe, Veröffentlichung, wesentlicher Änderung, regelmäßiger Prüfung, Störungsbearbeitung und Stilllegung. Speichere Evaluationsbelege, Freigabebedingungen, letzte und nächste Prüfung und offene Feststellungen. Eine Person verantwortet die Vollständigkeit, samt Verfahren für nicht eingetragene Systeme.",
+          "Der Eintrag entsteht oder ändert sich bei Aufnahme, Freigabe, Veröffentlichung, wesentlicher Änderung, regelmäßiger Prüfung, Störungsbearbeitung und Stilllegung. Speichere Evaluationsbelege, Freigabebedingungen, letzte und nächste Prüfung und offene Feststellungen. Eine Person verantwortet die Vollständigkeit und ein Verfahren, das nicht eingetragene Systeme aufspürt.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -58,21 +58,21 @@ export const GOVERNANCE_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
       "Passe Evaluation, Freigabe, Einführung, Überwachung und Rücknahme an das Risiko jeder Änderung an.",
     objective:
       "Passe Evaluation, Freigabe, Einführung, Überwachung und Rücknahme an das Risiko jeder Änderung an.",
-    durationMinutes: 24,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Eine änderungsspezifische Freigabekontrolle festlegen",
-        readTimeMinutes: 12,
+        readTimeMinutes: 1,
         content:
           "Änderungen an Modell, Anbieter, Anweisung, Abruf, Werkzeug, Richtlinie oder Weiterleitung können das Verhalten verschieben. Ordne die Änderung ein, wähle repräsentative Qualitäts- und Sicherheitsevaluationen, setze Schwellen und benenne die menschliche Prüfung. Wiederholbare Kontrollen laufen automatisch, und ihr Ergebnis bleibt bei der veröffentlichten Version.",
       },
       {
         id: "s2",
         title: "Die Einführung nach der Freigabe kontrollieren",
-        readTimeMinutes: 12,
+        readTimeMinutes: 1,
         content:
           "Evaluationen vor der Veröffentlichung decken nicht jede Betriebsbedingung ab. Nutze wo möglich eine gestufte Einführung, beobachte Ergebnis- und Schutzsignale und lege Kriterien für Rücknahme oder Eindämmung vorab fest. Halte einen Notfallweg mit begrenzter Befugnis, Befristung, nachträglicher Prüfung und Folgetests schriftlich fest.",
       },
@@ -104,23 +104,23 @@ export const GOVERNANCE_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
       "Nutze eigene Dienstidentitäten, ausdrückliche Delegation, geringste Rechte und geschützte Protokolle.",
     objective:
       "Nutze eigene Dienstidentitäten, ausdrückliche Delegation, geringste Rechte und geschützte Protokolle.",
-    durationMinutes: 20,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Ausführenden Dienst, vertretene Person und Befugnis trennen",
-        readTimeMinutes: 10,
+        readTimeMinutes: 1,
         content:
-          "Handelt ein Agent, benennt das System den ausführenden Dienst, wen er vertritt und die Berechtigung dahinter. Jeder produktive Dienst bekommt eine eigene Identität mit geringsten Rechten, kurzlebigen Zugangsdaten, begrenzten Ressourcen und Aktionen und ausdrücklichem Widerruf.",
+          "Handelt ein Agent, benennt das System den ausführenden Dienst, wen er vertritt und die Berechtigung dahinter. Jeder produktive Dienst bekommt eine eigene Identität mit geringsten Rechten, kurzlebigen Zugangsdaten, begrenzten Ressourcen und Aktionen und ausdrücklichem Widerruf, nie gemeinsame Geheimnisse oder weitreichende Dienstkonten.",
       },
       {
         id: "s2",
         title: "Genügend Belege zur Rekonstruktion erfassen",
-        readTimeMinutes: 10,
+        readTimeMinutes: 1,
         content:
-          "Ein Prüfereignis enthält Ereigniskennung, Zeitstempel, Dienstidentität, vertretene Person oder vertretenen Dienst, Handlung, Ressource, Berechtigungsentscheidung, Richtlinienversion, Ergebnis und Verknüpfungskennungen. Schütze das Protokoll und speichere Verweise oder geschwärzte Werte statt Geheimnissen und personenbezogenen Daten.",
+          "Ein Prüfereignis enthält Ereigniskennung, Zeitstempel, Dienstidentität, vertretene Person oder vertretenen Dienst, Handlung, Ressource, Berechtigungsentscheidung, Richtlinienversion, Ergebnis und Verknüpfungskennungen. Schütze das Protokoll und speichere Verweise oder geschwärzte Werte statt unnötiger Geheimnisse und personenbezogener Daten.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -148,7 +148,7 @@ export const GOVERNANCE_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     title: "Modul 8, Wissensprüfung",
     subtitle: "Zwei Fragen zu Register und Prüfpfad.",
     objective: "Zwei Fragen zu Register und Prüfpfad.",
-    durationMinutes: 8,
+    durationMinutes: 3,
     keyConcepts: [],
     quiz: [
       {
@@ -178,7 +178,7 @@ export const GOVERNANCE_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Die Lücke ist ein fehlendes Verzeichnis. Ein Register verbindet jeden Einsatz mit Zuständigkeit, Datenklassen, Anbieter und Version, Werkzeugen, Kontrollen, Freigaben und Status, was keine andere Schutzmaßnahme ersetzt.",
+          "Die Lücke ist ein fehlendes Verzeichnis. Ein Register verbindet jeden Einsatz mit Zuständigkeit, Datenklassen, Anbieter, Version, Werkzeugen, Kontrollen, Freigaben und Status.",
       },
       {
         id: "ano-governance-q2",
@@ -207,7 +207,7 @@ export const GOVERNANCE_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Ein geschützter Ereignisdatensatz verbindet Dienst, vertretene Identität, Befugnis, Handlung, Ressource und Ergebnis zum Zeitpunkt des Ereignisses. Anzeigenamen und spätere Erinnerung belegen diese Kette nicht.",
+          "Ein geschützter Ereignisdatensatz verbindet Dienst, vertretene Identität, Befugnis, Handlung, Ressource und Ergebnis zum Zeitpunkt der Handlung. Anzeigenamen und spätere Erinnerung belegen diese Kette nicht.",
       },
     ],
     sections: [],

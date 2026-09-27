@@ -33,8 +33,8 @@ const lesson: DataInfraLesson = {
     },
     {
       id: "s2",
-      title: "Worked scenario",
-      readTimeMinutes: 3,
+      title: "About the scenario",
+      readTimeMinutes: 1,
       content:
         "The walkthrough above uses a hypothetical marketplace where sellers view order and revenue aggregates. Its traffic, size, lateness and freshness values are exercise inputs, not benchmarks or defaults. A production decision on the named products still needs compatibility checks, security review, cost modeling and representative load tests.",
     },
@@ -63,7 +63,7 @@ const lesson: DataInfraLesson = {
       title: "Course review",
       readTimeMinutes: 1,
       content:
-        "The 30 flashcards at the end of this lesson cover every concept of the course. Treat each card as a review prompt to test against a concrete workload.",
+        "The 30 flashcards at the end of this lesson review the course's core concepts. Test each card against a workload you know.",
     },
     {
       id: "s7",
@@ -83,11 +83,11 @@ const lesson: DataInfraLesson = {
         title: "The clarification move",
         copy: DATA_INFRA_QUIZ_COPY,
         question:
-          'The prompt is: "Design a data pipeline for fraud detection." Before drawing anything, which three numbers must you extract first?',
+          'The prompt is: "Design a data pipeline for fraud detection." Which three numbers do you pin down before drawing anything?',
         options: [
           '"Which cloud provider?" "Do you use Kafka already?" "How big is the team?"',
           "Peak writes/sec, reads/sec or decision latency budget, and freshness target (real-time vs. nightly scoring).",
-          '"Do you want batch or streaming?", let them decide the design for you.',
+          'Ask "Batch or streaming?" and let them pick the design.',
           '"What\'s the budget?" and "How many engineers do we have?"',
         ],
         correct: 1,
@@ -106,14 +106,14 @@ const lesson: DataInfraLesson = {
         question:
           "Your Kafka topic for orders is partitioned by seller_id. One seller drives 40% of all traffic on Black Friday. What breaks, and how do you fix it?",
         options: [
-          "Nothing breaks, Kafka handles it automatically.",
-          "That partition bottlenecks. Key by (seller_id, bucket), pre-aggregate per bucket, then re-key to seller_id.",
+          "Nothing breaks; Kafka handles it automatically.",
+          "That partition bottlenecks; sub-key by (seller_id, bucket), then merge per seller.",
           "Kafka will rebalance partitions automatically to spread the load.",
           "Add more brokers and the partition will split.",
         ],
         correct: 1,
         explanation:
-          "Only one consumer in a group reads a partition, so the hot one caps throughput while others idle. Sub-keys spread the work but add an aggregation stage and change ordering; size buckets from measured skew.",
+          "One consumer per group reads a partition, so the hot one caps throughput. Sub-keys spread the work but add an aggregation stage and change ordering. Size buckets from measured skew and capacity, then test recovery.",
       },
     },
     {
@@ -158,7 +158,7 @@ const lesson: DataInfraLesson = {
           {
             term: "Predicate pushdown",
             q: "How does it skip work?",
-            a: "Min/max stats per row group. Query amount > 1000, row group max amount = 50 → entire group skipped.",
+            a: "Min/max stats per row group. Query amount > 1000, row group max amount = 50 → entire group skipped, if predicate, metadata and writer layout allow it.",
           },
           {
             term: "Dictionary encoding",
@@ -167,13 +167,13 @@ const lesson: DataInfraLesson = {
           },
           {
             term: "Iceberg metadata chain",
-            q: "4 levels",
-            a: "catalog → metadata.json → manifest list → manifests → data files.",
+            q: "Five stages",
+            a: "catalog → metadata.json → manifest list → manifests → data files. Details vary by format version.",
           },
           {
             term: "CoW vs MoR",
             q: "When each?",
-            a: "Update work against read-time merging. Engine support, workload and maintenance decide.",
+            a: "Copy-on-write pays at update time, merge-on-read at read time. Engine support, workload and maintenance decide.",
           },
           {
             term: "Time travel",
@@ -203,7 +203,7 @@ const lesson: DataInfraLesson = {
           {
             term: "Idempotent",
             q: "What must hold?",
-            a: "Repeating a defined operation adds no effect. It needs stable keys, deterministic logic and correct transaction semantics.",
+            a: "Repeating a defined operation adds no effect. MERGE or conflict handling needs stable keys, deterministic logic and correct transaction semantics.",
           },
           {
             term: "Kafka partition",
@@ -213,7 +213,7 @@ const lesson: DataInfraLesson = {
           {
             term: "Event time vs processing time",
             q: "Which to use?",
-            a: "The clock that answers the business question. Event time suits source-time windows, processing time operational arrival questions.",
+            a: "The clock that answers the business question. Event time suits source-time windows; processing time suits questions about arrival and operations.",
           },
           {
             term: "Watermark",
@@ -228,12 +228,12 @@ const lesson: DataInfraLesson = {
           {
             term: "CDC",
             q: "What does it read?",
-            a: "Database change records, subject to connector, snapshot, source-log retention, ordering and source-load behavior.",
+            a: "Database change records. What arrives depends on the connector, snapshots, source-log retention, ordering and source load.",
           },
           {
             term: "Batch vs streaming",
             q: "Which architecture wins?",
-            a: "Neither, universally. Compare latency, replay, correctness, operating complexity and recovery.",
+            a: "Neither wins everywhere. Compare latency, replay, correctness, operating complexity and recovery.",
           },
           {
             term: "Outbox pattern",
@@ -308,7 +308,7 @@ export const INTERVIEW_MOVES: readonly InterviewMoveItem[] = [
     tag: "estimate",
     title: "Estimate before selecting capacity",
     body: "<p>If the peak lasted a full day: 10,000 × 86,400 = <b>864 million changes per day</b>, or <b>864 GB per day</b> at an illustrative 1 KB payload, before replication, indexes, encoding and protocol overhead.</p><p>Measure compression ratio, peak duration, aggregate size and cache residency with representative data before sizing nodes or spend.</p>",
-    note: "Arithmetic bounds the problem and replaces no benchmark.",
+    note: "The arithmetic bounds the problem. Distribution, overhead, failures and benchmarks still need measuring.",
   },
   {
     tag: "api",
@@ -325,7 +325,7 @@ export const INTERVIEW_MOVES: readonly InterviewMoveItem[] = [
   {
     tag: "streaming",
     title: "Propose a processing path",
-    body: "<p>Candidate path: PostgreSQL change capture → Kafka → a stateful stream processor that applies version-aware changes and publishes aggregate updates. Size partitions from measured throughput, recovery time and ordering needs.</p><p>Set watermark and allowed lateness from observed delays and correction needs. Route invalid records to a restricted, retention-bounded review path.</p>",
+    body: "<p>Candidate path: PostgreSQL change capture → Kafka → a stateful stream processor that applies version-aware changes and publishes aggregate updates. Size partitions from measured throughput, recovery time and ordering needs.</p><p>Set watermark and allowed lateness from observed delays and correction needs. Route invalid or unprocessable records to a restricted, retention-bounded review path.</p>",
     note: "Connector snapshots, source-log retention, replay, processor checkpoints and sink commits are separate boundaries. Test each.",
   },
   {
@@ -356,12 +356,12 @@ export const INTERVIEW_MOVES: readonly InterviewMoveItem[] = [
     tag: "tradeoff",
     title: "Record exclusions and residual risk",
     body: "<p>Out of scope here: multi-region recovery, privacy deletion across retained logs and snapshots, fraud decisions and mobile delivery.</p><p>Each exclusion goes into the risk register with an owner and a decision date. No replication product counts as recovery until failover, ordering, data loss and restoration have been exercised.</p>",
-    note: "A bounded design names what it excludes.",
+    note: "Listing exclusions shows reviewers where the design stops.",
   },
   {
     tag: "follow-up",
     title: "Close with operational evidence",
     body: "<p>Monitor end-to-end publication delay, source-to-sink completeness, invalid-record volume, partition skew, checkpoint and sink-commit failures, reconciliation differences and serving-store data age.</p><p>Page on a user-impacting SLO and use component metrics for diagnosis. Write runbooks for replay, partial sink success, access incidents and backfill rollback.</p>",
-    note: "Guarantees become reviewable once they have measurements, owners and recovery procedures.",
+    note: "Give each guarantee a measurement, an owner and a recovery procedure.",
   },
 ];

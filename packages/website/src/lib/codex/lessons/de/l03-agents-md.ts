@@ -9,22 +9,6 @@ function prose(sectionIndex: number, blockIndex: number): string {
   return block.markdown;
 }
 
-function callout(
-  sectionIndex: number,
-  blockIndex: number,
-  field: "title" | "body",
-): string {
-  const block = canonical.sections[sectionIndex]?.blocks[blockIndex];
-  if (block?.kind !== "callout") {
-    throw new Error("Codex L03 translation expected a callout.");
-  }
-  const value = block[field];
-  if (!value) {
-    throw new Error(`Codex L03 translation expected callout ${field}.`);
-  }
-  return value;
-}
-
 export default localizeCodexLessonToGerman(canonical, {
   translations: [
     [canonical.title, "AGENTS.md als Repository-Anweisung"],
@@ -40,12 +24,12 @@ export default localizeCodexLessonToGerman(canonical, {
     ["Onboarding the agent", "Den Agenten einarbeiten"],
     [
       prose(0, 0),
-      "`AGENTS.md` ist versionierter Projektkontext, den Codex liest, bevor die Arbeit beginnt. Hinein gehören Regeln, die für jeden Auftrag gelten.\n\nDie Suche ist geschichtet: globale Regeln aus dem Codex-Ausgangsverzeichnis, danach Projektregeln vom Projektstamm bis ins aktuelle Arbeitsverzeichnis. In jedem Verzeichnis hat `AGENTS.override.md` Vorrang vor `AGENTS.md`, und Dateien näher am Arbeitsverzeichnis können allgemeinere überschreiben.\n\nIn die Repository-Datei gehört, was die Arbeit verändert: exakte Setup- und Prüfkommandos, Architekturgrenzen, Testerwartungen, bekannte Einschränkungen und freigabepflichtige Aktionen. Ziele und Akzeptanzkriterien des einzelnen Auftrags stehen im Auftrag.",
+      "`AGENTS.md` ist versionierter Projektkontext, den Codex liest, bevor die Arbeit beginnt. Hinein gehören Regeln, die für jeden Auftrag gelten.\n\nDie Suche ist geschichtet: globale Regeln aus dem Codex-Ausgangsverzeichnis, danach Projektregeln vom Projektstamm bis ins aktuelle Arbeitsverzeichnis. In jedem Verzeichnis hat `AGENTS.override.md` Vorrang vor `AGENTS.md`, und Dateien näher am Arbeitsverzeichnis können allgemeinere überschreiben.\n\nIn die Repository-Datei gehört, was die Arbeit verändert: exakte Setup- und Prüfkommandos mit ihren Voraussetzungen, Architekturgrenzen, Testerwartungen, bekannte Einschränkungen und freigabepflichtige Aktionen. Ziele und Akzeptanzkriterien des einzelnen Auftrags stehen im Auftrag.",
     ],
     ["What to put in it", "Welche Angaben hineingehören"],
     [
       prose(1, 0),
-      "AGENTS.md ist einfaches Markdown ohne festes Schema. Schreib Regeln, die der Agent anwenden kann, und Prüfungen, die er ausführen kann.",
+      "AGENTS.md ist einfaches Markdown ohne festes Schema. Anweisungsdateien verbrauchen Kontext, genau wie Auftrag und Code. Lass Marketingtexte, Besprechungsnotizen, Vorlieben ohne prüfbare Wirkung und vage Ziele wie \"sauberen Code schreiben\" weg. Behalte eine Anweisung, wenn sie einen bekannten Fehler verhindert, eine Grenze zieht oder Verifikation ermöglicht.",
     ],
     ["A real example", "Ein konkretes Beispiel"],
     [
@@ -55,26 +39,13 @@ export default localizeCodexLessonToGerman(canonical, {
     ["Before & after", "Ohne und mit Konventionsdatei"],
     [
       prose(3, 0),
-      "Beide Patches unten beantworten denselben Auftrag: \"Ergänze einen /health-Endpunkt, der die Datenbank prüft\". Nur der zweite hält die Regeln aus `AGENTS.md` ein.",
+      "Beide Patches unten erfüllen den Auftrag \"Ergänze einen /health-Endpunkt, der die Datenbank prüft\" und funktionieren. Nur der zweite hält die Regeln aus `AGENTS.md` ein.",
     ],
-    ["Both versions work.", "Beide Fassungen funktionieren."],
-    [
-      callout(3, 1, "body"),
-      "Nur die zweite lässt sich gegen geschriebene Projektregeln prüfen.",
-    ],
-    [
-      "The question is at the end of the lesson.",
-      "Die Frage steht am Ende der Lektion.",
-    ],
+    ["One question at the end of the lesson.", "Eine Frage am Ende der Lektion."],
     ["Rollout plan", "Einführungsplan"],
     [
       prose(5, 0),
-      "1. **Mit ausführbaren Grundlagen anfangen:** Zweck des Repositorys, Setup-Befehl, Pflichtprüfungen und Grenzen, die nicht im Code stehen.\n2. **Aus Reviews nachziehen.** Scheitert eine Änderung an einer wiederkehrenden Projektregel, kommt die exakte Regel samt sicherem Weg in die Datei.\n3. **Mit dem Code ändern.** Ändern sich Befehle oder Konventionen, ändert sich die Datei in derselben Änderung.\n\n### Aufnehmen und weglassen\n\nAnweisungsdateien belegen Kontext, genau wie Auftrag und Code.\n\n- **Aufnehmen:** Regeln mit Wirkung auf Implementierung, Review oder Sicherheit und exakte Befehle wie `make test` mit ihren Voraussetzungen.\n- **Weglassen:** Marketingtexte, Besprechungsnotizen, Vorlieben ohne prüfbare Wirkung und vage Ziele wie \"sauberen Code schreiben\".\n\nBehalte eine Anweisung, wenn sie einen bekannten Fehler verhindert, eine Grenze zieht oder Verifikation ermöglicht.",
-    ],
-    ["Directory-specific rules.", "Verzeichnisspezifische Regeln."],
-    [
-      callout(5, 1, "body"),
-      "Repository-weite Regeln gehören an die Wurzel, engere Regeln neben den Code, für den sie gelten.",
+      "1. **Mit ausführbaren Grundlagen anfangen:** Zweck des Repositorys, Setup-Befehl, Pflichtprüfungen und Grenzen, die nicht im Code stehen.\n2. **Aus Reviews nachziehen.** Scheitert eine Änderung an einer wiederkehrenden Projektregel, kommt die exakte Regel samt sicherem Weg in die Datei.\n3. **Mit dem Code ändern.** Ändern sich Befehle oder Konventionen, ändert sich die Datei in derselben Änderung.",
     ],
     [
       "Assemble a useful AGENTS.md",
@@ -108,7 +79,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     ["Conventions we enforce", "Verbindliche Konventionen"],
     [
-      'Not "be clean." Specific rules.',
+      'Specific rules instead of "be clean".',
       'Konkrete Regeln statt "sauber arbeiten".',
     ],
     [

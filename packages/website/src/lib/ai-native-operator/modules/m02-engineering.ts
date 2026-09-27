@@ -10,28 +10,28 @@ export const ENGINEERING_LESSONS: readonly AiNativeOperatorLesson[] = [
     title: "Engineering as controlled delegation",
     subtitle: "Separate delegable work from decisions an engineer must own.",
     objective: "Separate delegable work from decisions an engineer must own.",
-    durationMinutes: 15,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Classify the task before assigning it",
-        readTimeMinutes: 5,
+        readTimeMinutes: 1,
         content:
           "Check scope, dependencies, error cost and the test oracle first. A contained refactor behind strong tests may be delegable. An architectural decision, security boundary, unfamiliar migration or incident needs human analysis or a much narrower model role.",
       },
       {
         id: "s2",
         title: "Use a visible control loop",
-        readTimeMinutes: 5,
+        readTimeMinutes: 1,
         content:
           "Define the result, constrain the workspace, let the agent produce a change, inspect the diff and evidence, then accept or reject. The owner checks assumptions and behavior and stays accountable for the merge.",
       },
       {
         id: "s3",
         title: "Skills that support reliable delegation",
-        readTimeMinutes: 5,
+        readTimeMinutes: 1,
         content:
           "With cheap generation, the scarce skills are task decomposition, interface design, specification, test design, code review, observability and incident handling. They limit changes, expose errors and keep results readable.",
       },
@@ -63,28 +63,28 @@ export const ENGINEERING_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Bound implementation choices and state observable acceptance criteria.",
     objective:
       "Bound implementation choices and state observable acceptance criteria.",
-    durationMinutes: 22,
+    durationMinutes: 7,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "A specification reduces ambiguity",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "Before implementation, state intended behavior, affected interfaces, constraints and acceptance evidence. This gives implementer and reviewer one standard, though no guarantee of correct code. Write down open decisions so the agent does not guess.",
       },
       {
         id: "s2",
         title: "Five useful specification sections",
-        readTimeMinutes: 8,
+        readTimeMinutes: 1,
         content:
           "(1) Goal with the user or system outcome; (2) interfaces such as API contracts, function signatures, data shapes and permitted files; (3) invariants; (4) non-goals and forbidden changes; (5) test cases with inputs and expected results. Add security, privacy, migration or rollback as needed.",
       },
       {
         id: "s3",
         title: "Prioritise constraints by risk",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "Specify most where a wrong implementation would do harm or slip past review: boundary conditions, failure behavior, compatibility and required acceptance evidence. Add prose only to remove a real ambiguity.",
       },
@@ -142,28 +142,28 @@ export const ENGINEERING_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Run independent agent tasks at once without hidden conflicts.",
     objective:
       "Run independent agent tasks at once without hidden conflicts.",
-    durationMinutes: 24,
+    durationMinutes: 9,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Parallelism requires independent boundaries",
-        readTimeMinutes: 8,
+        readTimeMinutes: 1,
         content:
           "Run agents in parallel only with clear scope, files, data, permissions and completion criteria for each. Use separate worktrees or sandboxes, share no mutable resources and map dependencies first; coupled tasks cost more to reconcile than they save.",
       },
       {
         id: "s2",
         title: "A bounded starter pattern",
-        readTimeMinutes: 8,
+        readTimeMinutes: 1,
         content:
           "Start with three roles: one agent investigates and proposes a fix, one implements a small specified change, one reviews tests or documentation. A named engineer reviews the artifacts, resolves conflicts and decides what proceeds.",
       },
       {
         id: "s3",
         title: "Common parallel-work failures",
-        readTimeMinutes: 8,
+        readTimeMinutes: 1,
         content:
           "Parallel work breaks when agents edit overlapping areas, act on stale assumptions, exceed permissions or produce changes faster than anyone can review. Then cut concurrency, narrow specifications, refresh shared context and strengthen integration tests.",
       },
@@ -196,28 +196,28 @@ export const ENGINEERING_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Gate agent changes with representative cases, regression checks and release criteria.",
     objective:
       "Gate agent changes with representative cases, regression checks and release criteria.",
-    durationMinutes: 20,
+    durationMinutes: 10,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Evaluations provide bounded evidence",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "An evaluation suite checks defined behavior on known cases, exposes regressions and compares versions. It proves nothing outside that set. Add code review, security controls, staged release, monitoring and incident response by risk.",
       },
       {
         id: "s2",
         title: "Choose cases from real work and known risk",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "Cover key normal cases, boundary conditions and observed failure modes with the smallest set. Automate scoring where a reliable oracle exists; otherwise use a written rubric and measure reviewer agreement when it could change a release.",
       },
       {
         id: "s3",
         title: "Define release and rollback criteria",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
           "Rerun relevant evaluations after any model, prompt, context, tool or policy change. Define which regressions block release, who approves exceptions on what evidence and how rollback works, and record version and result.",
       },
@@ -261,7 +261,7 @@ export const ENGINEERING_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Three questions on delegation, specifications, parallel work and release evaluations.",
     objective:
       "Three questions on delegation, specifications, parallel work and release evaluations.",
-    durationMinutes: 9,
+    durationMinutes: 4,
     keyConcepts: [],
     quiz: [
       {

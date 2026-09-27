@@ -37,7 +37,7 @@ ETL erzwingt Minimierung, Schwärzung, Formatumwandlung oder Aggregation, bevor 
 
 - **view**, erzeugt eine Sicht. Gespeichert werden nur Metadaten, die Abfragearbeit leisten die Reader.
 - **table**, baut eine physische Relation; Ersatzverhalten, Atomarität und Grants hängen am Adapter.
-- **incremental**, verarbeitet nach dem ersten Build eine gewählte Teilmenge. Ein \`unique_key\` kann Merge-Verhalten auslösen, macht die Quellauswahl aber nicht korrekt.
+- **incremental**, verarbeitet nach dem ersten Build eine gewählte Teilmenge. Ein \`unique_key\` kann bei unterstützten Strategien Merge-Verhalten auslösen, macht die Quellauswahl aber nicht korrekt.
 - **ephemeral**, fügt SQL als CTE in nachgelagerte Modelle ein, ohne eigene Relation.
 
 Der naive Filter \`created_at > max(created_at)\` übersieht verspätete Eingänge und spätere Änderungen an älteren Datensätzen. Nimm ein Quell-Change-Token oder verarbeite ein überlappendes Fenster neu und dedupliziere dann deterministisch:
@@ -65,17 +65,12 @@ Bevor das Modell replay-sicher heißt, legst du Null-Behandlung, doppelte Quells
 
 Miss beide an Aktualisierungsverteilung, Partitionsausrichtung, Zielgröße, Konkurrenz und Engine-Verhalten.
 
-**Slowly Changing Dimensions (SCD).**
-
-- **Typ 1** überschreibt das Attribut. Er hält den aktuellen Zustand und verwirft den früheren Wert absichtlich.
-- **Typ 2** schließt eine zeitlich gültige Version und fügt die nächste ein. As-of-Joins funktionieren, wenn Grenzen, verspätete Änderungen und Korrekturen behandelt sind; der Preis sind mehr Zeilen und schwierigere Joins.
-
-Nimm Typ 2 nur für Attribute, deren Historie jemand braucht. Die Kosten hängen an Änderungshäufigkeit, Zeilenbreite, Indizes und Abfragemuster.`,
+**Slowly Changing Dimensions (SCD)** aus Lektion 3: Typ 1 überschreibt das Attribut und verwirft den früheren Wert; Typ 2 schließt die aktuelle Version und fügt die nächste ein, um den Preis von mehr Zeilen und schwierigeren Joins. Nimm Typ 2 nur für Attribute, deren Historie jemand braucht; die Kosten hängen an Änderungshäufigkeit, Zeilenbreite, Indizes und Abfragemuster.`,
     },
     {
       id: "s4",
       title: "DAG, Backfill und Wiederholung",
-      content: `Das Diagramm rechnet eine deterministische synthetische Arbeitslast über 30 Tage mit 1, 4 und 10 Workern; die Tage \`06\`, \`14\` und \`22\` bekommen feste Retry-Kosten. Es zeigt Scheduling und abnehmenden Parallelitätsnutzen und schätzt keine Laufzeit.
+      content: `Das Backfill-Diagramm oben rechnet 30 feste Tage mit 1, 4 und 10 Workern, mit Wiederholungen an den Tagen \`06\`, \`14\` und \`22\`.
 
 Ein wiedereinspielbarer Batch-Job nimmt ein explizites Eingabefenster und veröffentlicht für dieselbe Eingabeversion deterministische Ausgabe, gestützt durch \`MERGE\`, Partitionsersetzung oder eine Transaktion. Externe Seiteneffekte, nichtdeterministische Funktionen, verspätete Eingabe, Duplikate und parallele Live-Schreibvorgänge brauchen trotzdem eigene Behandlung und Reconciliation.`,
     },
@@ -97,34 +92,26 @@ Der Orchestrator plant nur; für Determinismus, Atomarität und Vollständigkeit
     {
       id: "s6",
       title: "Kurzprüfung",
-      content: "Zwei Fragen zu Wiederholung und Replay.",
+      content: "Zwei Fragen zu Wiederholung und Replay, unter den Begriffen.",
     },
     {
       id: "s7",
       title: "Kernaussagen",
-      content: `- Retry und Backfill brauchen explizite Fenster, deterministische Quellversionen, atomare Veröffentlichung, idempotente externe Effekte und Reconciliation.
-- Der Name einer Materialisierung beweist nichts über Lese- und Build-Kosten, Freshness oder Atomarität.`,
+      content: `- Der Name einer Materialisierung sagt nichts über Lese- und Build-Kosten, Freshness oder Atomarität.`,
     },
     {
       id: "s8",
       title: "Begriffe",
-      content: `- **Idempotent**, eine Wiederholung mit derselben Identität und Eingabe ändert nichts weiter.
-- **Inkrementelles Modell**, verarbeitet nach dem ersten Build nur eine gewählte Teilmenge.
-- **SLA / Freshness**, Zielzeit von der Quelländerung bis zu nutzbaren Daten.
-- **Lineage**, erfasste Beziehungen zwischen Jobs, Datasets und Feldern.
-- **SCD Typ 1**, überschreibt ein Attribut ohne Historie.
-- **SCD Typ 2**, hält zeitlich gültige Versionen.
-- **MERGE oder Insert-Overwrite**, schlüsselbasierte Änderungen oder Ersatz einer ganzen Grenze.
-- **Sensor**, eine Aufgabe, die auf eine externe Bedingung wartet.`,
+      content: `Die Lernkarten unter den Fragen erklären Idempotenz, inkrementelle Modelle, SLA und Freshness, Lineage, SCD Typ 1 und 2, MERGE oder Insert-Overwrite und Sensoren.`,
     },
   ],
   widgets: [
     {
       kind: "quiz",
       cpId: "q1",
-      title: "Der Alarm um 3 Uhr",
+      title: "Wiederholung nach halbem Schreiben",
       question:
-        "Ein nächtlicher Job fügt die Bestellungen des Vortags in `fact_orders` ein und bricht nach der Hälfte ab. Nach der Wiederholung stehen dort doppelte Zeilen. Welcher Fehler steckt im Job?",
+        "Ein nächtlicher Job fügt die Bestellungen des Vortags in `fact_orders` ein und bricht nach der Hälfte ab. Die Wiederholung hinterlässt doppelte Zeilen. Welcher Fehler steckt im Job?",
       options: [
         "Keiner; dieses Verhalten ist zu erwarten.",
         "Er nutzt `INSERT` statt eines `MERGE` auf `order_id`.",
@@ -156,7 +143,7 @@ Der Orchestrator plant nur; für Determinismus, Atomarität und Vollständigkeit
       cards: [
         {
           term: "Idempotenz",
-          q: "Warum ist sie für Batch-Jobs entscheidend?",
+          q: "Welche Grenze musst du benennen?",
           a: "Benenne die Ausgaben und Seiteneffekte, die unverändert bleiben, wenn derselbe Vorgang mit derselben Eingabe erneut läuft. Ein Datenbankschreibvorgang kann idempotent sein, die Benachrichtigung oder der API-Aufruf daneben nicht.",
         },
         {
@@ -182,7 +169,7 @@ Der Orchestrator plant nur; für Determinismus, Atomarität und Vollständigkeit
         {
           term: "SCD Typ 2",
           q: "Wann ist dieser Typ geeignet?",
-          a: "Die alte Zeile wird mit valid_to und is_current=false geschlossen und eine neue eingefügt. So verbindest du Fakten mit dem Dimensionsstand zur Ereigniszeit, etwa der Region des Kunden beim Kauf; jede Version kostet eine Zeile.",
+          a: "Die alte Zeile wird mit valid_to und is_current=false geschlossen und eine neue eingefügt. So verbindest du Fakten mit dem Dimensionsstand zur Ereigniszeit, etwa der Region des Kunden beim Kauf, sofern Grenzen und verspätete Korrekturen behandelt sind; jede Version kostet eine Zeile.",
         },
         {
           term: "MERGE oder Insert-Overwrite",

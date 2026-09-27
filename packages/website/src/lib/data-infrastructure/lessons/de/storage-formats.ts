@@ -23,7 +23,7 @@ Ein Zeilenlayout hält die Felder eines Datensatzes zusammen und passt zu Schlü
     {
       id: "s2",
       title: "Eine Abfrage, zwei Anordnungen",
-      content: `Das interaktive Modell wendet \`SELECT SUM(amount) WHERE country='US'\` auf zwei kleine feste Layouts an und zählt die nach vereinfachten Regeln gewählten Zellen. Es erklärt Projektion und Pruning und bildet weder Postgres noch Parquet, Speicher, Cache oder Engine nach.`,
+      content: `Das erste Modell oben führt \`SELECT SUM(amount) WHERE country='US'\` auf beiden Layouts aus und zählt die Zellen, die jedes anfasst.`,
     },
     {
       id: "s3",
@@ -53,11 +53,11 @@ Vergleiche logische, kodierte und komprimierte Bytes an repräsentativen Dateien
     },
     {
       id: "s5",
-      title: "Iceberg und Delta",
+      title: "Parquet und Tabellenformate",
       content: `Parquet und Lakehouse-Tabellenformate arbeiten auf verschiedenen Ebenen.
 
 - **Parquet** definiert die Bytes in einer Datei: Row Groups, Column Chunks, Pages, Kodierungen, Metadaten. Welche Dateien die aktuelle Tabellenversion bilden, definiert es nicht.
-- **Apache Iceberg, Delta Lake und Apache Hudi** verwalten Mengen von Daten- und Delete-Dateien als Tabellenversionen. Sie definieren Commit-, Snapshot-, Schema-, Partitions- und Wartungsverhalten, das je nach Spezifikationsversion und Engine-Integration variiert.
+- **Apache Iceberg, Delta Lake und Apache Hudi** verwalten Mengen von Daten- und Delete-Dateien als Tabellenversionen. Sie definieren Commit-, Snapshot-, Schema-, Partitions- und Wartungsverhalten.
 
 Iceberg-Snapshots verweisen auf Manifest Lists und Manifests, Delta protokolliert Tabellenaktionen in \`_delta_log/\` und Checkpoints, Hudi führt Timeline und File Groups. Diese Strukturen prägen Planung, Konkurrenz, inkrementelles Lesen und Wartung.
 
@@ -66,22 +66,19 @@ Für die Wahl listest du Operationen, Isolation, Löschsemantik, Partitionsentwi
     {
       id: "s6",
       title: "Bloomfilter",
-      content: `Minimum-/Maximumstatistiken helfen bei unsortierten Punktprädikaten mit hoher Kardinalität wie \`WHERE user_id = 'abc-123'\` wenig. Ein **Bloomfilter** antwortet „sicher nicht enthalten“ oder „vielleicht enthalten“. Korrekt gebaut liefert er für eingefügte Werte keine falsch negativen Antworten, und seine Falsch-positiv-Rate folgt aus Bitzahl, Hashzahl und eingefügten Elementen. Das interaktive Modell nimmt einen winzigen 32-bit-Filter, damit Kollisionen sichtbar werden; für die Dimensionierung in Produktion taugt er nicht.`,
+      content: `Minimum-/Maximumstatistiken helfen bei unsortierten Punktprädikaten mit hoher Kardinalität wie \`WHERE user_id = 'abc-123'\` wenig. Ein **Bloomfilter** antwortet „sicher nicht enthalten“ oder „vielleicht enthalten“; ein korrekter liefert für eingefügte Werte keine falsch negativen Antworten, und Bitzahl, Hashzahl und eingefügte Elemente bestimmen seine Falsch-positiv-Rate.
+
+Das Bloom-Modell oben nutzt einen winzigen 32-bit-Filter, damit Kollisionen sichtbar werden.`,
     },
     {
       id: "s7",
       title: "Kurzprüfung",
-      content: "Zwei Fragen zum Pruning.",
+      content: "Zwei Fragen zum Pruning, unter den Begriffen.",
     },
     {
       id: "s8",
       title: "Begriffe",
-      content: `- **Row Group**, gemeinsam gespeicherte Zeilen mit einem Column Chunk je Spalte.
-- **Page**, ein kodierter Block in einem Column Chunk.
-- **Footer zuerst**, Dateimetadaten am Ende lesen, bevor Daten geladen werden.
-- **ORC**, ein Spaltenformat mit Stripes, Indizes und Kodierungen.
-- **Avro**, ein zeilenorientiertes, schemafähiges Austauschformat.
-- **Z-Ordering**, mehrdimensionales Clustering für Data Skipping.`,
+      content: `Die Lernkarten unter den Fragen erklären Zeilengruppen, Seiten, Footer zuerst, ORC, Avro und Z-Ordering.`,
     },
   ],
   widgets: [
@@ -90,9 +87,9 @@ Für die Wahl listest du Operationen, Isolation, Löschsemantik, Partitionsentwi
       cpId: "q1",
       title: "Predicate Pushdown",
       question:
-        "Die Tabelle hat 1,000 Zeilengruppen, sortiert nach order_date. Die Abfrage lautet WHERE order_date = '2026-04-15'. Wie viele Zeilengruppen öffnet die Engine ungefähr?",
+        "Die Tabelle hat 1000 Zeilengruppen, sortiert nach order_date. Die Abfrage lautet WHERE order_date = '2026-04-15'. Wie viele Zeilengruppen öffnet die Engine ungefähr?",
       options: [
-        "Alle 1,000, weil sie jede prüfen muss.",
+        "Alle 1000, weil sie jede prüfen muss.",
         "Nur die, deren Datumsstatistiken den 15. April überlappen.",
         "Etwa 100, weil sich Zeilengruppen nicht überspringen lassen.",
         "Das hängt von der Kodierung ab.",
@@ -105,12 +102,12 @@ Für die Wahl listest du Operationen, Isolation, Löschsemantik, Partitionsentwi
       cpId: "q2",
       title: "Aussage des Bloomfilters",
       question:
-        "Eine Abfrage sucht mit WHERE user_id = 'abc-123'. Der Bloomfilter für user_id meldet \"sicher nicht in dieser Zeilengruppe\". Was tut die Engine?",
+        "Eine Abfrage sucht mit WHERE user_id = 'abc-123'. Der Bloomfilter für user_id meldet „sicher nicht in dieser Zeilengruppe“. Was tut die Engine?",
       options: [
         "Sie öffnet die Zeilengruppe vorsichtshalber trotzdem.",
         "Sie überspringt die Zeilengruppe vollständig, ohne Datenseiten zu lesen.",
         "Sie prüft erneut mit den Minimum-/Maximumstatistiken.",
-        "Sie öffnet zufällig etwa ~50% der Zeilengruppen.",
+        "Sie öffnet zufällig ~50% der Zeilengruppen.",
       ],
       explanation:
         "Ein korrekter Bloomfilter liefert für eingefügte Werte keine falsch negativen Antworten, also darf die Engine bei „sicher nicht enthalten“ die Daten überspringen. Nur „vielleicht enthalten“ verlangt eine weitere Prüfung.",
@@ -123,17 +120,17 @@ Für die Wahl listest du Operationen, Isolation, Löschsemantik, Partitionsentwi
         {
           term: "Zeilengruppe",
           q: "Welche Größe ist angemessen?",
-          a: "Die aus gemessener Scangröße, Metadatenkosten, Kompression, Speicher und Parallelität folgt. Kleine Gruppen treiben Metadaten hoch, große kosten Pruning-Granularität und Parallelität.",
+          a: "Das entscheiden gemessene Scangröße, Metadatenkosten, Kompression, Speicher und Parallelität. Kleine Gruppen treiben Metadaten hoch, große kosten Pruning-Granularität und Parallelität.",
         },
         {
           term: "Seite",
           q: "Warum gibt es Seiten?",
-          a: "Ein kodierter Block in einem Column Chunk. Reader überspringen Pages, wenn Indizes und Prädikate es erlauben; die Größe wählt der Writer.",
+          a: "Sie sind die kleinste Einheit, die ein Reader in einem Column Chunk dekodieren oder überspringen kann, wenn Indizes und Prädikate es erlauben. Die Größe wählt der Writer.",
         },
         {
           term: "Footer zuerst",
           q: "Warum steht der Footer am Ende?",
-          a: "Er hält Schema und Positionen der Row Groups und Column Chunks. Reader holen ihn zuerst und schicken danach nur die Range Reads, die ihr Plan braucht.",
+          a: "Schema und Chunk-Positionen kennt der Writer erst nach den Daten, also schreibt er sie zuletzt. Reader holen den Footer zuerst und schicken dann nur die Range Reads, die ihr Plan braucht.",
         },
         {
           term: "ORC",

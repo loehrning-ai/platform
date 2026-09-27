@@ -11,7 +11,7 @@
       "id": "block_4_lesson_1",
       "blockId": "block_4",
       "number": 1,
-      "title": "Three failure patterns in AI output",
+      "title": "Failure patterns in AI output",
       "subtitle": "Unsupported sources, unauthorized inputs, false commitments",
       "durationMinutes": 5,
       "keyConcepts": [
@@ -31,7 +31,7 @@
           "id": "block_4_lesson_1_section_2",
           "title": "Why review depth follows risk",
           "readTimeMinutes": 2,
-          "content": "An unsupported source can come from generative modeling, faulty retrieval or a poor knowledge base. Unauthorized input is a governance and security failure, and a false commitment can sit in rules, data, integration or missing approval boundaries.\n\nSo review follows risk. An internal draft may need only a short source comparison; legal citations, financial figures, decisions about people and external commitments need primary sources and accountable approval. Better models and technical controls can lower the error rate, but they are evidence of neither truth nor permission."
+          "content": "An unsupported source can come from generative modeling, faulty retrieval or a poor knowledge base. Unauthorized input is a governance and security failure. A false commitment can stem from rules, data, integration or missing approval limits.\n\nHow deep you review depends on the risk. An internal draft may need only a short source comparison; legal citations, financial figures, decisions about people and external commitments need primary sources and accountable approval. Better models and technical controls can lower the error rate, but they are evidence of neither truth nor permission."
         }
       ],
       "quiz": [
@@ -109,13 +109,13 @@
           "id": "block_4_lesson_2_section_1",
           "title": "Steps 1 and 2: correct and complete?",
           "readTimeMinutes": 4,
-          "content": "The three questions are a first screen. Impact, reversibility and audience decide how deep you go.\n\n**Step 1: Is every decision-relevant claim supported?**\n- Figures: Check definition, period, unit, denominator, rounding and primary source.\n- Quotations: Open the original document and verify wording, context and version.\n- People and organizations: Verify identity, role and authority in an authoritative source.\n- Law: Check the consolidated or official text and its temporal scope; EUR-Lex is a primary source for EU law.\n\n**Step 2: Is the output complete for its purpose?**\n- Which assumptions, exceptions, uncertainties and counterevidence are missing?\n- Are plans, forecasts, opinions and confirmed facts separated?\n- Does the source apply to the country, period, product version and audience?\n- Are the date and source of the information visible?\n\nA model with retrieval or tools can still repeat current information wrongly, so you check the evidence in front of you."
+          "content": "The three questions are a first screen. Impact, reversibility and audience decide how deep you go.\n\n**Step 1: Is every decision-relevant claim supported?**\n- Figures: Check definition, period, unit, denominator, rounding and primary source.\n- Quotations: Open the original document and verify wording, context and version.\n- People and organizations: Verify identity, role and authority in an authoritative source.\n- Law: Check the consolidated or official text and its temporal scope; EUR-Lex is a primary source for EU law.\n\n**Step 2: Is the output complete for its purpose?**\n- Which assumptions, exceptions, uncertainties and counterevidence are missing?\n- Are plans, forecasts, opinions and confirmed facts separated?\n- Does the source apply to the country, period, product version and audience?\n- Are the date and source of the information visible?\n\nA model with retrieval or tools can still misstate current information, so you check the evidence in front of you."
         },
         {
           "id": "block_4_lesson_2_section_2",
-          "title": "Step 3: are you even allowed?",
+          "title": "Step 3: permitted and appropriate?",
           "readTimeMinutes": 3,
-          "content": "**Step 3: Is the use permitted and appropriate?**\n- Are you authorized to make the commitment, recommendation or decision?\n- May the input and output reach the intended recipients?\n- Are tone, language and presentation appropriate for the purpose and audience?\n- Are there discrimination, security, legal or reputational risks?\n- Does the policy require specialist review, dual control or a prohibition on automated use?\n\nFor the customer complaint you check order number, delivery date and commitments against the primary records, tick off every customer point and confirm your authority. Legal guidance or an employment decision goes through the defined specialist process.\n\nWhere the impact demands it, you document the review. There is no fixed review time."
+          "content": "- Are you authorized to make the commitment, recommendation or decision?\n- May the input and output reach the intended recipients?\n- Are tone, language and presentation appropriate for the purpose and audience?\n- Are there discrimination, security, legal or reputational risks?\n- Does the policy require specialist review, dual control or a prohibition on automated use?\n\nFor the customer complaint you check order number, delivery date and commitments against the primary records, tick off every customer point and confirm your authority. Legal guidance or an employment decision goes through the defined specialist process.\n\nWhere the impact demands it, you document the review. There is no fixed review time."
         }
       ],
       "quiz": [
@@ -171,7 +171,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Models produce convincing but false details such as an invented association, a wrong company figure or a person who does not exist. Crude errors stand out at once, subtle ones do not."
+          "explanation": "Models produce convincing but false details such as an invented association, a wrong company figure or a person who does not exist."
         }
       ]
     },
@@ -180,7 +180,7 @@
       "blockId": "block_4",
       "number": 3,
       "title": "Exercise: find three errors",
-      "subtitle": "Three sources, one draft, more than three errors",
+      "subtitle": "Check a draft against three sources",
       "durationMinutes": 5,
       "keyConcepts": [
         "Fact-checking",
@@ -192,13 +192,13 @@
           "id": "block_4_lesson_3_section_1",
           "title": "Source pack and draft",
           "readTimeMinutes": 3,
-          "content": "Sources, draft and names are synthetic. Compare only against the source pack.\n\n**Source A, decision record:** \"Pilot budget of EUR 1.8m approved on 12 May.\"\n\n**Source B, project status:** \"July is a target window. No binding start date has been approved. Owner open.\"\n\n**Source C, security approval:** \"Approval applies only to the EU customer portal, version 2.4, without file upload. Other products and features are out of scope.\"\n\n**Generated draft:**\n\n\"The board approved EUR 18m for the full program. The project will start on 1 July under Ms Keller. Security approval covers every customer product, including file upload.\"\n\nThe task asks for three errors, and there are more. Amount and scope are wrong, date and owner are invented, and the security approval is stretched to products and features the source pack excludes."
+          "content": "Sources, draft and names are synthetic. Compare only against the source pack.\n\n**Source A, decision record:**\n\n> Pilot budget: EUR 1.8m. Approved on 12 May.\n\n**Source B, project status:**\n\n> July is a target window. No binding start date has been approved. Owner: open.\n\n**Source C, security approval:**\n\n> Approval applies only to the EU customer portal, version 2.4, without file upload. Other products and features are out of scope.\n\n**Generated draft:**\n\n\"The board approved EUR 18m for the full program. The project will start on 1 July under Ms Keller. Security approval covers every customer product, including file upload.\"\n\nFind at least three errors."
         },
         {
           "id": "block_4_lesson_3_section_2",
           "title": "Your task",
           "readTimeMinutes": 2,
-          "content": "Build a correction table with four columns:\n\n1. Claim in the draft\n2. Status: supported, contradicted, or absent from the sources\n3. Correct wording\n4. Source ID and exact evidence\n\nThe correct short version:\n\n\"EUR 1.8m was approved for the pilot on 12 May. July is a target window; the start date and owner are open. Security approval covers the EU customer portal 2.4 without file upload.\"\n\nThis trains source binding and status discipline. Article 4 prescribes no such method, but it can be one building block of context-specific AI literacy measures."
+          "content": "Build a correction table with four columns:\n\n1. Claim in the draft\n2. Status: supported, contradicted, or absent from the sources\n3. Correct wording\n4. Source ID and exact evidence\n\nSolution, the correct short version:\n\n\"EUR 1.8m was approved for the pilot on 12 May. July is a target window; the start date and owner are open. Security approval covers the EU customer portal 2.4 without file upload.\"\n\nThis practises tying every claim to a source and marking its status. Article 4 prescribes no such method, but it can be one building block of context-specific AI literacy measures."
         }
       ],
       "quiz": [
@@ -208,7 +208,7 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Take the professional-sounding name as evidence",
+              "text": "Take the professional-sounding name and logo as evidence",
               "isCorrect": false
             },
             {
@@ -218,12 +218,12 @@
             },
             {
               "id": "c",
-              "text": "Ask the same language model to confirm it",
+              "text": "Ask the same language model to confirm it in the next prompt",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Rely on the domain suffix alone",
+              "text": "Rely on the domain suffix alone, such as .org or .eu",
               "isCorrect": false
             }
           ],
@@ -262,7 +262,7 @@
       "id": "block_4_lesson_4",
       "blockId": "block_4",
       "number": 4,
-      "title": "The golden rule",
+      "title": "The rule before any use",
       "subtitle": "No consequential output without the matching control",
       "durationMinutes": 3,
       "keyConcepts": [
@@ -281,7 +281,7 @@
           "id": "block_4_lesson_4_section_2",
           "title": "The rule",
           "readTimeMinutes": 2,
-          "content": "**Use an AI output only once the controls for its purpose and impact are complete.**\n\nFor an internal wording suggestion, a short check of source and tone can do. Figures, legal statements, employment decisions, security changes and external commitments need reproducible calculation, primary source, specialist review and documented approval.\n\nIf evidence is missing, mark the claim open or delete it. A search engine, a colleague or a second model is not a source by default; independence, authority and currency count.\n\nCount honestly: benefit of the AI step minus review effort minus error consequences."
+          "content": "**Use an AI output only once the controls for its purpose and impact are complete.**\n\nFor an internal wording suggestion, a short check of source and tone can do. Figures, legal statements, employment decisions, security changes and external commitments need reproducible calculation, primary source, specialist review and documented approval.\n\nIf evidence is missing, mark the claim open or delete it. A search engine, a colleague or a second model is not a source by default; independence, authority and currency count.\n\nUse AI only where its benefit outweighs review effort and possible error costs combined."
         }
       ],
       "quiz": [
@@ -291,7 +291,7 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Because AI-generated text is always wrong",
+              "text": "Because AI-generated text is always wrong and must be rewritten",
               "isCorrect": false
             },
             {
@@ -301,12 +301,12 @@
             },
             {
               "id": "c",
-              "text": "Because manually written text never carries errors",
+              "text": "Because manually written text never carries errors and needs no check",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Because AI-generated text is longer",
+              "text": "Because AI-generated text is longer and so carries more errors",
               "isCorrect": false
             }
           ],

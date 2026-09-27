@@ -46,7 +46,7 @@ export const WERKZEUGE_COPY = {
   de: {
     heading: "Werkzeuge",
     intro:
-      "Quelloffene Werkzeuge, die du mit deinem Konto nutzt oder selbst betreibst.",
+      "Diese Werkzeuge sind quelloffen: Du nutzt sie mit deinem Konto oder betreibst sie selbst.",
     cvEngineTitle: "CV Engine",
     cvEngineSourceBody:
       "Macht aus einer YAML-Datei einen einseitigen Lebenslauf als PDF. Hier läuft das Werkzeug nicht gehostet: Du betreibst es auf deinem Rechner, und deine Daten bleiben dort.",
@@ -68,7 +68,7 @@ export const WERKZEUGE_COPY = {
   en: {
     heading: "Tools",
     intro:
-      "Open-source tools you use with your account or run yourself.",
+      "These tools are open source: use them with your account or run them yourself.",
     cvEngineTitle: "CV Engine",
     cvEngineSourceBody:
       "Turns a YAML file into a one-page CV as a PDF. It is not hosted here: you run it on your own machine, and your data stays there.",

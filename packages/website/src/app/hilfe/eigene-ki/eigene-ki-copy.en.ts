@@ -14,12 +14,12 @@ export const AGENT_HELP_COPY_EN: AgentHelpCopy = {
   indexLabel: "On this page",
   endpointLabel: "Address for your program",
   statusReady: {
-    title: "The access is live.",
+    title: "Access is live.",
     body: "The public content needs no account and no token.",
   },
   statusOff: {
-    title: "This access is not switched on in this environment.",
-    body: "The address returns an error right now. The instructions apply as soon as the operator switches the access on.",
+    title: "Access is off in this environment.",
+    body: "Until the operator switches it on, the address returns an error.",
   },
   sectionTitles: {
     overview: "What this is",
@@ -66,7 +66,7 @@ export const AGENT_HELP_COPY_EN: AgentHelpCopy = {
   },
   code: {
     title: "Claude Code",
-    intro: "Once in the terminal, then every session knows the server.",
+    intro: "Add it once in the terminal and every session knows the server.",
     steps: [
       "Run the command below in a terminal.",
       "Check with claude mcp list that loehrning is there.",
@@ -79,7 +79,7 @@ export const AGENT_HELP_COPY_EN: AgentHelpCopy = {
   },
   codex: {
     title: "Codex",
-    intro: "One command in the terminal here as well.",
+    intro: "Codex also needs one terminal command.",
     steps: [
       "Run the command below.",
       "Check with codex mcp list that the server is registered.",
@@ -105,9 +105,9 @@ export const AGENT_HELP_COPY_EN: AgentHelpCopy = {
     format:
       "A token starts with lat_. Only a verifier is stored, so not even the operator can show it again. If you lose it, revoke it and create a new one.",
     limit: (maxActive) =>
-      `Up to ${maxActive} tokens can be active at once. A revoked token stops working with the next request.`,
+      `Up to ${maxActive} tokens can be active at once.`,
     bearerActive:
-      "With a token, two more read-only tools appear: your progress and your next step. A request with a revoked token is refused outright.",
+      "With a token, two more read-only tools appear: your progress and your next step. From the next request on, the server refuses a revoked token, even for the public tools.",
     bearerPending: "",
     oauthPending:
       "Granting access through a sign-in page is not set up yet. Until then, use the access token.",
@@ -125,7 +125,7 @@ export const AGENT_HELP_COPY_EN: AgentHelpCopy = {
     transcript:
       "The transcript stays in your browser only. Clear the site data and it is gone.",
     limits: (messagesPerHour, toolCalls) =>
-      `${messagesPerHour} messages per hour, up to ${toolCalls} tool calls per message.`,
+      `${messagesPerHour} messages per hour, up to ${toolCalls} tool calls per message. Then the chat stops.`,
     offTitle: "The chat is not set up in this environment.",
     offBody:
       "Until the operator switches it on, no key is stored and no request is made.",
@@ -139,14 +139,14 @@ export const AGENT_HELP_COPY_EN: AgentHelpCopy = {
       { uri: "workshop://ki-prognosen-einschaetzen", label: "A workshop" },
       { uri: "book://ki-landschaft/01_eisberg", label: "A book chapter" },
     ],
-    localeNote: "Append ?locale=en for the English text.",
+    localeNote: "Append ?locale=en for English; otherwise you get German.",
     islandNote:
-      "On lesson, chapter and workshop pages, the button open with your AI copies a ready prompt with the server address and the page's addresses.",
+      "On lesson, chapter and workshop pages, the Open with your AI button copies a ready prompt with the server address and the page's addresses.",
   },
   limits: {
     intro: "These limits are the same for everyone.",
     requests: (maxPerHour) =>
-      `${maxPerHour} requests per hour and address. After that the server refuses until the hour is over.`,
+      `${maxPerHour} requests per hour per IP address. After that the server refuses until the hour is over.`,
     output: (maxKilobytes) =>
       `Every answer is capped at ${maxKilobytes} KB. Longer texts are cut and name the address of the original page.`,
     search: (maxResults, maxQueryChars) =>
@@ -156,18 +156,18 @@ export const AGENT_HELP_COPY_EN: AgentHelpCopy = {
     tokens: (maxActive, nameChars) =>
       `${maxActive} active access tokens per account, names up to ${nameChars} characters.`,
     unavailable:
-      "If the server cannot reach its counters, it refuses the request.",
+      "If the server cannot count requests right now, it refuses them.",
   },
   privacy: {
     intro:
       "Public requests run without an account or identifier. When a program works for you, your account logs its calls.",
     logged: [
-      "Program, tool, success and duration of each call.",
+      "Logged: program, tool, success and duration of each call.",
       "The last 50 entries are in your account and are deleted after 30 days.",
     ],
     notLogged: [
-      "No search query, no answer text and no chat message.",
-      "No key in clear text, neither in the log nor in an error report.",
+      "Not logged: search queries, answer texts, chat messages and keys.",
+      "Error reports also show no access token or Anthropic key in clear text.",
     ],
     revoke:
       "You can revoke any token or grant in your account immediately. Deleting your account removes them and the log.",

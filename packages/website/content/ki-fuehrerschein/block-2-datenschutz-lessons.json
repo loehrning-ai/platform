@@ -25,13 +25,13 @@
           "id": "block_2_lesson_1_section_1",
           "title": "Produkt und Betrieb gemeinsam prüfen",
           "readTimeMinutes": 3,
-          "content": "Wohin ein Prompt geht, bestimmen Produktedition, Vertrag, Konfiguration und Arbeitsablauf. Prüfe mindestens diese sechs Felder:\n\n| Prüffeld | Fragen |\n|---|---|\n| **Rollen** | Wer ist Verantwortlicher, Auftragsverarbeiter oder weiterer Empfänger? Ist ein AVV nötig und abgeschlossen? |\n| **Datenflüsse** | Welche Inhalte, Metadaten und Protokolle verlassen welches System, und in welchen Regionen werden sie gespeichert oder verarbeitet? |\n| **Nutzung durch den Anbieter** | Nutzt der Anbieter Ein- oder Ausgaben für Modellentwicklung, Qualitätsprüfung oder Missbrauchserkennung? Welche Einstellungen und Zusagen gelten? |\n| **Zugriff und Funktionen** | Welche Rollen, Berechtigungen, Konnektoren, Erweiterungen und Freigabelinks sind aktiv? |\n| **Lebenszyklus** | Wie lange bleiben Eingaben, Ausgaben, Protokolle und Sicherungen erhalten? Wie laufen Auskunft, Löschung und Export? |\n| **Betriebliche Freigabe** | Für welche Zwecke, Datenklassen, Nutzergruppen und Konfigurationen gilt die Genehmigung? |\n\nCloud oder lokal, kostenlos oder bezahlt, Verbraucher- oder Unternehmensprodukt sind Vertriebskategorien. Ein lokales System kann Telemetrie senden und ins Netz gehen, ein Unternehmensvertrag deckt nicht jede Funktion und Datenklasse ab. Prüfe die Unterlagen bei der Beschaffung und nach jeder wesentlichen Änderung."
+          "content": "Wohin ein Prompt geht, bestimmen Produktedition, Vertrag, Konfiguration und Arbeitsablauf. Prüfe mindestens diese sechs Felder:\n\n| Prüffeld | Fragen |\n|---|---|\n| **Rollen** | Wer ist Verantwortlicher, Auftragsverarbeiter oder weiterer Empfänger? Ist ein AVV nötig und abgeschlossen? |\n| **Datenflüsse** | Welche Inhalte, Metadaten und Protokolle verlassen welches System, und in welchen Regionen werden sie gespeichert oder verarbeitet? |\n| **Nutzung durch den Anbieter** | Nutzt der Anbieter Ein- oder Ausgaben für Modellentwicklung, Qualitätsprüfung oder Missbrauchserkennung? Welche Einstellungen und Zusagen gelten? |\n| **Zugriff und Funktionen** | Welche Rollen, Berechtigungen, Konnektoren, Erweiterungen und Freigabelinks sind aktiv? |\n| **Lebenszyklus** | Wie lange bleiben Eingaben, Ausgaben, Protokolle und Sicherungen erhalten? Wie laufen Auskunft, Löschung und Export? |\n| **Betriebliche Freigabe** | Für welche Zwecke, Datenklassen, Nutzergruppen und Konfigurationen gilt die Genehmigung? |\n\nOb ein Tool lokal oder in der Cloud läuft, was es kostet und ob es für Verbraucher oder Unternehmen gedacht ist, sagt nichts darüber, wohin die Daten gehen. Ein lokales System kann Telemetrie senden, Erweiterungen laden und ins Netz gehen. Ein Unternehmensvertrag deckt nicht jede Funktion und Datenklasse ab. Prüfe die Unterlagen bei der Beschaffung und nach jeder wesentlichen Änderung."
         },
         {
           "id": "block_2_lesson_1_section_2",
           "title": "Shadow AI und was dagegen hilft",
           "readTimeMinutes": 2,
-          "content": "Shadow AI ist jede KI-Nutzung für die Arbeit, die niemand genehmigt hat. Am bekanntesten ist das private Chatkonto; genauso zählen Browser-Erweiterungen, neue Funktionen in längst gekaufter Software, eigene API-Schlüssel und lokale Modelle außerhalb des Betriebsprozesses.\n\nSolchen Abläufen können Vertrag, Rechtsgrundlage, Berechtigungen, Datenregion, Aufbewahrung, Protokollierung und technische Kontrollen fehlen. Der Schalter \"Trainingsnutzung aus\" klärt davon nichts allein.\n\nEs helfen eine aktuelle Freigabematrix, verständliche Datenregeln, erreichbare Ansprechpartner, ein prüfbarer Beschaffungsweg und taugliche genehmigte Alternativen, je nach Risiko auch Zugriffssteuerung, Konfigurationsrichtlinien, Protokollierung oder Sperren.\n\nVor jeder beruflichen Nutzung prüfst du den veröffentlichten Freigabestatus für Zweck, Datenklasse, Produktedition und aktive Konfiguration."
+          "content": "Shadow AI ist KI-Nutzung für die Arbeit außerhalb des genehmigten Inventars und der vorgesehenen Kontrollen. Am bekanntesten ist das private Chatkonto; genauso zählen Browser-Erweiterungen, neue Funktionen in längst gekaufter Software, eigene API-Schlüssel und lokale Modelle außerhalb des Betriebsprozesses.\n\nSolchen Abläufen können Vertrag, Rechtsgrundlage, Berechtigungen, Datenregion, Aufbewahrung, Protokollierung und technische Kontrollen fehlen. Der Schalter \"Trainingsnutzung aus\" schließt keine dieser Lücken.\n\nEs helfen eine aktuelle Freigabematrix, verständliche Datenregeln, erreichbare Ansprechpartner, ein prüfbarer Beschaffungsweg und taugliche genehmigte Alternativen, je nach Risiko auch Zugriffssteuerung, Konfigurationsrichtlinien, Protokollierung oder Sperren.\n\nVor jeder beruflichen Nutzung prüfst du den veröffentlichten Freigabestatus für Zweck, Datenklasse, Produktedition und aktive Konfiguration."
         }
       ],
       "quiz": [
@@ -60,7 +60,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Sicher ist, was geprüft wurde: Produkt, Vertrag, Berechtigungen, Datenklassen, Tenant und Datenregion. Markenname und europäischer Firmensitz prüfen nichts davon."
+          "explanation": "Sicher ist nur, was geprüft wurde: Produkt, Vertrag, Berechtigungen, Datenklassen, Tenant und Datenregion. Verbreitung und europäischer Firmensitz sagen darüber nichts aus."
         },
         {
           "id": "block_2_lesson_1_q2",
@@ -95,7 +95,7 @@
       "id": "block_2_lesson_2",
       "blockId": "block_2",
       "number": 2,
-      "title": "Die 4 Stufen der Datenklassifizierung",
+      "title": "Stufen der Datenklassifizierung",
       "subtitle": "Welche Daten in welches Tool gehören",
       "durationMinutes": 5,
       "keyConcepts": [
@@ -194,7 +194,7 @@
           "id": "block_2_lesson_3_section_2",
           "title": "Was die Tabelle zeigt",
           "readTimeMinutes": 2,
-          "content": "- **Öffentlich (Nr. 1, 6):** Rechte, personenbezogene Angaben, Aktualität und Tool-Regeln prüfst du trotzdem.\n- **Intern (Nr. 2, teilweise Nr. 9):** Bleibt im vorgesehenen Empfängerkreis, nur im freigegebenen Arbeitsablauf und ohne Angaben, die der Zweck nicht braucht.\n- **Vertraulich (Nr. 3, 4, 10; je nach Inhalt Nr. 9):** Vertrag, Rechtsgrundlage, Berechtigungen, Datenregion, Aufbewahrung und Konfiguration müssen zum Zweck passen, auch bei einem Unternehmensprodukt.\n- **Besonders geschützt (Nr. 5, 7, 8):** Allgemeine Assistenten sind gesperrt. Eine Ausnahme braucht einen dokumentierten, fachlich und rechtlich geprüften Arbeitsablauf.\n\nEine echte Richtlinie braucht außerdem Verantwortliche, freigegebene Produkte und Funktionen, verbotene Daten, einen Meldeweg für Vorfälle und einen Prozess für neue Anwendungsfälle."
+          "content": "Im Beispielmodell:\n\n- **Öffentlich (Nr. 1, 6):** Rechte, personenbezogene Angaben, Aktualität und Tool-Regeln prüfst du trotzdem.\n- **Intern (Nr. 2, teilweise Nr. 9):** Bleibt im vorgesehenen Empfängerkreis, nur im freigegebenen Arbeitsablauf und ohne Angaben, die der Zweck nicht braucht.\n- **Vertraulich (Nr. 3, 4, 10; je nach Inhalt Nr. 9):** Vertrag, Rechtsgrundlage, Berechtigungen, Datenregion, Aufbewahrung und Konfiguration müssen zum Zweck passen, auch bei einem Unternehmensprodukt.\n- **Besonders geschützt (Nr. 5, 7, 8):** Allgemeine Assistenten sind gesperrt. Eine Ausnahme braucht einen dokumentierten, fachlich und rechtlich geprüften Arbeitsablauf.\n\nWas eine echte Richtlinie außerdem braucht, folgt in Block 5."
         }
       ],
       "quiz": [

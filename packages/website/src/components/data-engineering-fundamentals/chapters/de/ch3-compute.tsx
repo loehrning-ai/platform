@@ -42,9 +42,9 @@ export function Ch3ComputeDe({ chapter }: Ch3ComputeDeProps) {
       />
 
       <section className="section">
-        <SectionLabel n="4.1">Die Engine nach der Abfrage wählen</SectionLabel>
-        <h2 className="h2">Drei Engines, dieselben Bytes.</h2>
-        <p className="prose">Engines mit demselben Tabellenformat und Katalog lesen dieselben Parquet-Dateien. Wähl nach gemessener Last: Shuffle-Volumen, Speicher und Spill, Betriebsverantwortung und Kosten.</p>
+        <SectionLabel n="4.1">Engine-Wahl</SectionLabel>
+        <h2 className="h2">Trino, Spark und Snowflake lesen dieselben Parquet-Dateien.</h2>
+        <p className="prose">Engines mit demselben Tabellenformat und Katalog lesen dieselben Parquet-Dateien. Wähl nach gemessener Last: Start- und Antwortzeit, Shuffle, Speicher und Spill, Wiederholungen, Parallelität, Verantwortung und Kosten.</p>
         <EngineMatrixDe />
       </section>
 
@@ -60,8 +60,8 @@ export function Ch3ComputeDe({ chapter }: Ch3ComputeDeProps) {
         title="Fehlmuster"
         items={[
           "<b>Eine ungemessene Build-Seite per Broadcast verteilen.</b> Komprimierte und entpackte Größe, Worker-Anzahl, parallele Arbeit und Speichergrenzen vor einem Hint prüfen.",
-          "<b>Hash-Join über eine Spalte mit einem heißen Schlüssel</b>, etwa <code>user_id = 0</code> für abgemeldeten Verkehr. Den Schlüssel salzen oder vorher filtern.",
-          "<b>Darauf setzen, dass die Engine auslagert.</b> Prüf Engine-Version, Operatorunterstützung und Clusterkonfiguration, bevor du ihr einen großen Join gibst.",
+          "<b>Hash-Join über eine Spalte mit einem heißen Schlüssel</b>, etwa <code>user_id = 0</code> für nicht angemeldete Nutzer. Den Schlüssel salzen oder vorher filtern.",
+          "<b>Annehmen, dass die Engine auslagert oder nicht auslagert.</b> Prüf Engine-Version, Operatorunterstützung und Clusterkonfiguration, bevor du ihr einen großen Join gibst.",
           "<b>Veraltete Tabellenstatistiken verwenden.</b> Nach großen Datenänderungen aktualisieren und Planschätzungen mit Laufzeitzeilen vergleichen.",
         ]}
       />

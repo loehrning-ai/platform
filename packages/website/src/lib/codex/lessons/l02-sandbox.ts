@@ -32,7 +32,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "- **Local CLI and IDE sessions** run commands on your machine in the configured OS-enforced sandbox. The common workspace-write setting allows writes only in the active workspace and keeps the network off until you enable it. A separate approval policy decides when Codex must ask first.\n- **Cloud tasks** run in a dedicated OpenAI-managed container. Codex checks out the chosen repository and commit, runs the setup, does the task and returns a summary and diff. Setup may use the network and setup-only secrets. The secrets are removed before the agent phase, whose network access is off by default and enabled per environment.\n\nRead the active settings before you rely on them.",
+            "- **Local CLI and IDE sessions** run commands on your machine in the configured OS-enforced sandbox. The common workspace-write setting allows writes only in the active workspace and keeps the network off until you enable it. A separate approval policy decides when Codex must ask first.\n- **Cloud tasks** run in a dedicated OpenAI-managed container: Codex checks out the chosen commit, runs setup, does the task and returns a summary and diff. Setup may use the network and setup-only secrets. The agent phase loses the secrets, and its network stays off unless you enable it per environment.\n\nRead the active settings before you rely on them.",
         },
       ],
     },
@@ -74,7 +74,7 @@ const lesson: CodexLesson = {
             {
               eyebrow: "provided by you",
               title: "Network allow-list",
-              body: "Set per environment. If enabled, allow only the destinations and HTTP methods the task needs.",
+              body: "Internet access is set per environment. If enabled, allow only the destinations and HTTP methods the task needs.",
             },
             {
               eyebrow: "provided by Codex",
@@ -105,12 +105,12 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Git structure decides how easily a cloud checkout or your local working tree can be reviewed and merged.\n\n- **Separate working trees or cloud environments for concurrent tasks.** Separate branches avoid shared file state, but overlapping diffs can still conflict.\n- **One reviewable behavior and its tests per change**, whatever the line count.\n- **A deliberate base commit.** Record it and refresh it when upstream changes touch the same area.\n- **Trusted checks re-run outside the task when the risk warrants it.** Agent logs show what ran there; CI and the reviewer's own runs are independent evidence.",
+            "- **Separate working trees or cloud environments for concurrent tasks.** Separate branches avoid shared file state, but overlapping diffs can still conflict.\n- **One reviewable behavior and its tests per change**, whatever the line count.\n- **A deliberate base commit.** Record it and refresh it when upstream changes touch the same area.\n- **Trusted checks re-run outside the task when the risk warrants it.** Agent logs show what ran inside the task; CI and your own runs are independent evidence.",
         },
         {
           kind: "callout",
           title: "Output is evidence for your review.",
-          body: "Read the diff against requested behavior and excluded scope, including additions, deletions, dependencies, generated files and test changes. The logs show what actually ran.",
+          body: "Read the diff against requested behavior and excluded scope, including additions, deletions, dependencies, generated files and test changes.",
         },
       ],
     },
@@ -144,7 +144,7 @@ const lesson: CodexLesson = {
       id: "s7",
       title: "Quick check",
       readTimeMinutes: 1,
-      blocks: [{ kind: "prose", markdown: "Two questions follow." }],
+      blocks: [{ kind: "prose", markdown: "Two questions at the end of the lesson." }],
     },
   ]),
   widgets: [

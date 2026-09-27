@@ -12,30 +12,30 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Connect approved sources with identity, authorization, freshness and provenance controls.",
     objective:
       "Connect approved sources with identity, authorization, freshness and provenance controls.",
-    durationMinutes: 24,
+    durationMinutes: 7,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Start with the supported decisions",
-        readTimeMinutes: 8,
+        readTimeMinutes: 1,
         content:
-          "First decide which decisions the layer supports. Per use case, name authoritative records, acceptable staleness, data classification and required evidence, and keep differences in authority, sensitivity and retention in the shared search.",
+          "First decide which decisions the layer supports. Per use case, name authoritative records, acceptable staleness, data classification and required evidence, and make the shared search respect each source's authority, sensitivity and retention rules.",
       },
       {
         id: "s2",
         title: "Connect only justified sources",
-        readTimeMinutes: 8,
+        readTimeMinutes: 1,
         content:
           "Documents, code, tickets, customer records, messages and calendars each carry their own risk. Apply purpose limitation and data minimization, and involve privacy, security, legal and worker representatives where required. Connect a source only for a defined purpose.",
       },
       {
         id: "s3",
         title: "Return evidence with the result",
-        readTimeMinutes: 8,
+        readTimeMinutes: 1,
         content:
-          "A retrieved answer shows source references, versions or timestamps and material access or freshness limits. With thin coverage or conflicting sources, the system states the limitation or abstains instead of presenting unsupported synthesis as fact.",
+          "A retrieved answer shows source references, versions or timestamps and material access or freshness limits, and users can inspect that evidence. With thin coverage or conflicting sources, the system states the limitation or abstains instead of presenting unsupported synthesis as fact.",
       },
     ],
     callout: {
@@ -71,30 +71,30 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Check user rights, workload identity and resource before returning content.",
     objective:
       "Check user rights, workload identity and resource before returning content.",
-    durationMinutes: 20,
+    durationMinutes: 7,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Place the control before disclosure",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "Authorization belongs in the retrieval path and at the source boundary. A response filter runs after retrieval and misses indirect disclosure. Check access before returning documents, passages, metadata or derived results, and test the policy on allowed and denied cases.",
       },
       {
         id: "s2",
         title: "Represent the user and the workload",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "The system knows which user started a request and which agent or service ran it. Effective access is at most the intersection of the user's rights, the workload's assigned scope and current policy. Use short-lived credentials and explicit delegation, never a shared elevated account.",
       },
       {
         id: "s3",
         title: "Log decisions without creating a new leak",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
-          "Log user, workload identity, time, requested resource IDs, policy version, authorization decision and returned source IDs. Protect the log and keep raw secrets and needless sensitive query text out of it.",
+          "Log user, workload identity, time, requested resource IDs, policy version, authorization decision and returned source IDs. Protect the log, keep raw secrets and needless sensitive query text out of it, and do not let it grow into a second uncontrolled data store.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -124,21 +124,21 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Set staleness limits, propagate changes and deletions, show the data timestamp.",
     objective:
       "Set staleness limits, propagate changes and deletions, show the data timestamp.",
-    durationMinutes: 22,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Match freshness to the decision",
-        readTimeMinutes: 11,
+        readTimeMinutes: 1,
         content:
           "A periodic snapshot can suit stable reference material and be unsafe for a workflow acting on fast-changing state. Set a maximum age per use case and source, covering updates, revocations and deletions too.",
       },
       {
         id: "s2",
         title: "Detect and expose stale state",
-        readTimeMinutes: 11,
+        readTimeMinutes: 1,
         content:
           "Choose event-driven, scheduled or on-demand sync by required freshness and cost. Monitor ingestion delay and failed updates, return an as-of timestamp or version with each result, and decide in advance whether the workflow warns, asks for confirmation, falls back to the source or stops past the limit.",
       },
@@ -165,10 +165,10 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "quiz",
-    title: "Module 7 knowledge check",
+    title: "Module 7, knowledge check",
     subtitle: "Two questions on authorization and freshness.",
     objective: "Two questions on authorization and freshness.",
-    durationMinutes: 9,
+    durationMinutes: 3,
     keyConcepts: [],
     quiz: [
       {
@@ -183,7 +183,7 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
           {
             id: "b",
-            text: "Enforce authorization in the retrieval path with user rights and policy.",
+            text: "Enforce authorization in the retrieval path.",
             isCorrect: true,
           },
           {
@@ -198,7 +198,7 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "The system must deny unauthorized content before disclosure, since a response filter comes too late and misses indirect leaks. Effective access combines user rights with the workload's assigned scope.",
+          "Deny unauthorized content before disclosure; a response filter comes too late and misses indirect leaks. Effective access is the intersection of user rights, workload scope and current policy.",
       },
       {
         id: "ano-data-q2",
@@ -217,7 +217,7 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
           {
             id: "c",
-            text: "It can act on data older than allowed if freshness goes unchecked.",
+            text: "It can act on data past its allowed age.",
             isCorrect: true,
           },
           {
@@ -227,7 +227,7 @@ export const DATA_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "A snapshot is safe only relative to the freshness a decision needs. Define that need, measure the delay, show the data timestamp and stop or degrade the workflow past the limit.",
+          "A snapshot is safe only within the freshness the decision needs. Measure the delay, show the data timestamp and warn or stop past the limit.",
       },
     ],
     sections: [],

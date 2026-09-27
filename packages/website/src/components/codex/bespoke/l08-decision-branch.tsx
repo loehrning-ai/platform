@@ -61,7 +61,7 @@ const COPY: Record<
       {
         text: "The focused check has intermittent failures with different error output across runs.",
         explanation:
-          "Correct. Reproduce it, keep each log and check whether the failure predates the diff.",
+          "Correct. Before touching production code, reproduce it, keep each log and check whether the failure predates the diff.",
         wrongExplanation:
           "A bounded investigation fits, because the task contract still holds and only the source of the failure is open.",
       },
@@ -95,7 +95,7 @@ const COPY: Record<
       {
         text: "Die fokussierte Prüfung schlägt unregelmäßig mit unterschiedlichen Fehlermeldungen fehl.",
         explanation:
-          "Richtig. Reproduzieren, jedes Protokoll sichern und klären, ob der Fehler schon vor dem Diff bestand.",
+          "Richtig. Vor Änderungen am Produktivcode reproduzieren, jedes Protokoll sichern und klären, ob der Fehler schon vor dem Diff bestand.",
         wrongExplanation:
           "Eine begrenzte Untersuchung passt, weil der Aufgabenvertrag gilt und nur die Fehlerursache offen ist.",
       },

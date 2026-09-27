@@ -28,8 +28,8 @@ export function Ch6DiscoverDe({ chapter }: Ch6DiscoverDeProps) {
         <SectionLabel n="7.1">Die sechs Kürzel</SectionLabel>
         <h2 className="h2">Erst die Kurspalette, dann der Datensatz.</h2>
         <p className="prose">
-          Bevor du eine Tabelle nutzt, klärst du Zweck, Zuständigkeit, Status, vorgelagerten Produzenten und registrierte Verbraucher.
-          <code> ht</code> zeigt im Kurs die Tabellenmetadaten, <code>fpl</code> öffnet die erzeugende Datei, <code>ds produce</code> listet
+          Bevor du eine Tabelle nutzt, klärst du Zweck, Zuständigkeit, Status, vorgelagerten Produzenten und registrierte Verbraucher.{" "}
+          <code>ht</code> zeigt im Kurs die Tabellenmetadaten, <code>fpl</code> öffnet die erzeugende Datei, <code>ds produce</code> listet
           registrierte Verbraucher, <code>qbgs</code> sucht Beispiele, <code>udf</code> findet eine Funktion, <code>wut</code> öffnet einen Glossareintrag.
         </p>
         <DiscoverySpeedrun />

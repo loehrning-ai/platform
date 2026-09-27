@@ -12,28 +12,28 @@ export const PRODUCT_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Name the outcome that depends on the model, and its fallback.",
     objective:
       "Name the outcome that depends on the model, and its fallback.",
-    durationMinutes: 13,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Start from the user's job",
-        readTimeMinutes: 4,
+        readTimeMinutes: 1,
         content:
-          "A chat box does not show that the product solves a problem better. Start from the user's job, name the delay or decision the model changes and define how you observe success. Remove controls that do not move that outcome.",
+          "Start from the user's job: name the delay or decision the model changes and how you observe success. Remove any control, a chat box included, that does not move that outcome.",
       },
       {
         id: "s2",
         title: "Integrate capability with existing controls",
-        readTimeMinutes: 5,
+        readTimeMinutes: 1,
         content:
           "A model-backed capability needs the usual product boundaries: supported inputs, permissions, failure states, latency, data handling and accountable owners. Keep structured controls where they add clarity or limit risk, and show the model's role when users need it to challenge a result.",
       },
       {
         id: "s3",
         title: "Use a dependency and fallback test",
-        readTimeMinutes: 4,
+        readTimeMinutes: 1,
         content:
           "Ask which user outcome changes when the model is removed or degraded. If none does, the capability may be unnecessary. If a core outcome depends on it, specify the fallback, the recovery path and what the user is told.",
       },
@@ -65,28 +65,28 @@ export const PRODUCT_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Separate user intent from decisions, permissions and confirmations.",
     objective:
       "Separate user intent from decisions, permissions and confirmations.",
-    durationMinutes: 18,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "Intent is not authority",
-        readTimeMinutes: 6,
+        title: "Record what the user authorised",
+        readTimeMinutes: 1,
         content:
           "A search, click, upload or request expresses a wanted outcome and authorises nothing beyond it. Record what the user asked for, which assumptions the system may make and which side effects need separate confirmation or a permission check.",
       },
       {
         id: "s2",
         title: "Evaluate each step before compressing the flow",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
           "Check each step after intent: is it deterministic, reversible, observable and within the user's authority? Delegate steps that pass all four. Keep review or confirmation where ambiguity, money movement, data disclosure, legal effect or another material consequence remains.",
       },
       {
         id: "s3",
         title: "Combine conversation with structured controls",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
           "Conversation suits ambiguous input and clarification. Structured controls suit exact values, constrained choices, comparison and confirmation. Pick the surface from the information and risk of the current step.",
       },
@@ -118,28 +118,28 @@ export const PRODUCT_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Generate interfaces only from approved components, schemas, states and accessibility rules.",
     objective:
       "Generate interfaces only from approved components, schemas, states and accessibility rules.",
-    durationMinutes: 21,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Compose from a fixed vocabulary",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "Define the component library, typed data contracts, permitted layouts and known interaction states. The model composes only from that vocabulary. Validate the structure before rendering and keep a stable fallback for failed validation.",
       },
       {
         id: "s2",
         title: "Specify the constraint hierarchy",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "Security, accessibility, permissions, data integrity and legal requirements are hard constraints. Design-system rules and product conventions set the permitted space, and personalisation stays inside it. Log selected components and inputs so you can reproduce unexpected behavior.",
       },
       {
         id: "s3",
         title: "Keep consequential surfaces deterministic",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "Payments, legal acceptance, account recovery, permission changes, destructive actions and other consequential steps use fixed, reviewed flows. A generative interface may explain or prepare, but the final action and its confirmation stay predictable and testable.",
       },
@@ -171,28 +171,28 @@ export const PRODUCT_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Measure model behavior in production without trusting one score.",
     objective:
       "Measure model behavior in production without trusting one score.",
-    durationMinutes: 17,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Production brings new conditions",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
           "Production adds new inputs, shifting data, tool failures, latency, real user behavior and distribution shift to the known pre-release cases. Privacy-preserving traces, version IDs, error categories and sampled review let you reproduce incidents without hoarding sensitive content.",
       },
       {
         id: "s2",
         title: "Measure observable signals",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
           "Track verified task completion, user corrections, tool errors, refusals, latency, cost, safety-rule triggers and fallback use. Where signals cannot show quality, a human labels a documented sample. Segment by workflow and version so an average hides no failing subgroup.",
       },
       {
         id: "s3",
         title: "Separate alerts, containment, and rollback",
-        readTimeMinutes: 5,
+        readTimeMinutes: 1,
         content:
           "Set thresholds from baseline and error cost: some signals alert an owner, some disable one capability, some trigger rollback to a known version. Test these controls before an incident, guard automatic action against noisy metrics, and have a named person close each event.",
       },
@@ -225,7 +225,7 @@ export const PRODUCT_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Three questions on product boundaries, delegation, interfaces and production controls.",
     objective:
       "Three questions on product boundaries, delegation, interfaces and production controls.",
-    durationMinutes: 8,
+    durationMinutes: 4,
     keyConcepts: [],
     quiz: [
       {

@@ -116,16 +116,16 @@ const DEFAULT_TITLE: Record<DiagramVariant, string> = {
 const DEFAULT_CAPTION: Record<DiagramVariant, string> = {
   stack: "Der Impuls läuft von oben nach unten durch jede Stufe.",
   flow: "Der Impuls folgt den Pfeilen.",
-  compare: "Tipp jede Schicht an.",
+  compare: "Was jede Schicht tut und was passiert, wenn sie fehlt.",
 };
 
 const DEFAULT_COPY: Omit<InteractiveDiagramCopy, "kindLabel"> = {
   inspectHeading: "Schicht antippen",
-  inspectBody: "Was sie tut und was passiert, wenn sie fehlt.",
+  inspectBody: "",
   consequencePrefix: "Wenn diese Schicht fehlt:",
   traceComplete: "Durchlauf komplett.",
   tracing: "Impuls läuft …",
-  traceIdle: "Starte den Durchlauf.",
+  traceIdle: "Durchlauf starten.",
   traceButton: "Verlauf abspielen",
 };
 
@@ -362,7 +362,9 @@ export function InteractiveDiagram({
                   <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
                     {chrome.inspectHeading}
                   </p>
-                  <p className="mt-2">{chrome.inspectBody}</p>
+                  {chrome.inspectBody && (
+                    <p className="mt-2">{chrome.inspectBody}</p>
+                  )}
                 </div>
               )}
             </aside>

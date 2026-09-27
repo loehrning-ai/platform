@@ -10,28 +10,28 @@ export const MINDSET_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     title: "Erst die Aufgabe wählen, dann das Werkzeug",
     subtitle: "Prüfe vor dem Delegieren, ob die Aufgabe zu einem Modell passt.",
     objective: "Prüfe vor dem Delegieren, ob die Aufgabe zu einem Modell passt.",
-    durationMinutes: 14,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Beim Ergebnis anfangen",
-        readTimeMinutes: 5,
+        readTimeMinutes: 1,
         content:
-          "Kläre Ergebnis, erlaubte Fehlerquote und wer für Fehler geradesteht. Ein Modell lohnt sich, wenn es Aufwand spart und keins davon schwächt.",
+          "Kläre Ergebnis, erlaubte Fehlerquote und wer für Fehler geradesteht. Ein Modell lohnt sich, wenn es Aufwand spart, ohne eins der drei zu schwächen.",
       },
       {
         id: "s2",
         title: "Guter Kandidat, schlechter Kandidat",
-        readTimeMinutes: 5,
+        readTimeMinutes: 1,
         content:
-          "Ein guter erster Kandidat hat klare Eingaben, ein sichtbares Ergebnis und eine Prüfung, die weniger kostet als Handarbeit. Ein schlechter hat unklare Befugnis, unumkehrbare Folgen, sensible Daten ohne freigegebenen Schutz oder ein unprüfbares Ergebnis.",
+          "Ein guter erster Kandidat hat klare Eingaben, ein sichtbares Ergebnis und eine Prüfung, die weniger kostet als Handarbeit. Ein schlechter hat unklare Befugnis, unumkehrbare Folgen, sensible Daten ohne freigegebenen Schutz oder ein unprüfbares Ergebnis. Mit engeren Vorgaben oder mehr Schutz kann eine Aufgabe die Seite wechseln.",
       },
       {
         id: "s3",
         title: "Erst klein delegieren",
-        readTimeMinutes: 4,
+        readTimeMinutes: 1,
         content:
           "Gib dem Modell eine enge Aufgabe, eine Abbruchbedingung und klare Vorgaben. Entscheidungen, Freigaben und Außenwirkung bleiben bei einer benannten Person, bis echte Ausgaben und Fehlerfälle zeigen, dass die Kontrollen greifen.",
       },
@@ -68,35 +68,35 @@ export const MINDSET_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
       "Bewerte, wie du modellgestützte Arbeit definierst, prüfst und steuerst.",
     objective:
       "Bewerte, wie du modellgestützte Arbeit definierst, prüfst und steuerst.",
-    durationMinutes: 11,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "L0, Ungeprüft",
-        readTimeMinutes: 3,
+        readTimeMinutes: 1,
         content:
           "Alles läuft von Hand, und niemand hat geprüft, wo ein Modell helfen würde. Für eine Aufgabe kann das richtig sein, wenn Risiko und Kosten es begründen.",
       },
       {
         id: "s2",
         title: "L1, Unterstützt",
-        readTimeMinutes: 3,
+        readTimeMinutes: 1,
         content:
           "Eine Person nutzt ein Modell für begrenzte Entwürfe, Zusammenfassungen oder Umformungen und prüft das Ergebnis vor der Nutzung. Die Praxis gehört ihr und ist im Team nicht wiederholbar.",
       },
       {
         id: "s3",
         title: "L2, Kontrollierter Arbeitsablauf",
-        readTimeMinutes: 3,
+        readTimeMinutes: 1,
         content:
           "Wiederkehrende Aufgaben haben Spezifikation, freigegebenen Kontext, Prüfkriterien und klare Prüfverantwortung. Modellergebnisse durchlaufen die üblichen technischen und betrieblichen Kontrollen, und erfasste Fehler ändern den Ablauf.",
       },
       {
         id: "s4",
         title: "L3, Orchestriertes Aufgabenportfolio",
-        readTimeMinutes: 2,
+        readTimeMinutes: 1,
         content:
           "Unabhängige Aufgaben laufen parallel in getrennten Arbeitsbereichen mit klaren Berechtigungen, Freigabeschranken und benannter Verantwortung, wo die Abhängigkeiten verstanden sind. Eine Person nimmt jedes Ergebnis an, lehnt es ab oder gibt es frei.",
       },
@@ -117,7 +117,7 @@ export const MINDSET_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           cpId: "exercise",
           title: "Selbsteinschätzung der Kontrollen",
           scenario:
-            "Bewerte deine heutige Arbeitsweise an zuletzt erledigten Aufgaben.",
+            "Bewerte deine heutige Arbeitsweise an zuletzt erledigten Aufgaben. Geplante Änderungen zählen nicht.",
           axes: [
             {
               id: "tasks",
@@ -165,28 +165,28 @@ export const MINDSET_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
       "Richte die Prüftiefe nach Wahrscheinlichkeit, Kosten und Erkennbarkeit eines Fehlers.",
     objective:
       "Richte die Prüftiefe nach Wahrscheinlichkeit, Kosten und Erkennbarkeit eines Fehlers.",
-    durationMinutes: 16,
+    durationMinutes: 10,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Vertrauen gilt für eine Aufgabe",
-        readTimeMinutes: 5,
+        readTimeMinutes: 1,
         content:
           "Ein Nachweis über ein Modell gilt für eine Aufgabe, Modellversion, Eingabe, Kontextquelle, Werkzeugausstattung und Prüfmethode. Ändert sich eins davon, sagt das alte Ergebnis nichts mehr.",
       },
       {
         id: "s2",
         title: "Fehlerkosten systematisch bewerten",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
-          "Schätze, wie wahrscheinlich ein Fehler ist, was er kostet und ob die Prüferin ihn sieht. Ein interner Entwurf braucht vielleicht eine Durchsicht; eine Sicherheitsänderung, Kundenentscheidung, Finanzkennzahl oder Offenlegung kann Quellenprüfung, Tests, eine zweite Person oder kein Modell verlangen.",
+          "Schätze, wie wahrscheinlich ein Fehler ist, was er kostet und ob die Prüferin ihn sieht. Ein umkehrbarer interner Entwurf braucht vielleicht eine Durchsicht; eine Sicherheitsänderung, Kundenentscheidung, Finanzkennzahl oder Offenlegung kann Quellenprüfung, Tests, eine zweite Person oder kein Modell verlangen.",
       },
       {
         id: "s3",
         title: "Nachweise aus geprüften Fällen aufbauen",
-        readTimeMinutes: 5,
+        readTimeMinutes: 1,
         content:
           "Fang dort an, wo es eine verlässliche Referenz oder einen Test gibt. Vergleiche die Ausgaben, benenne Fehlerarten, halte Bedingungen fest und prüf die Stichprobe nach jeder Änderung an Modell, Eingabe, Daten oder Werkzeugen erneut.",
       },
@@ -194,7 +194,7 @@ export const MINDSET_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     callout: {
       kind: "warn",
       h: "Die Verantwortung bleibt beim Menschen",
-      text: "Selbstsichere Ausgabe und erfahrene Prüferin können trotzdem einen Fehler durchwinken. Die benannte Person führt die Kontrollen fürs Restrisiko durch.",
+      text: "Auch eine überzeugend klingende Ausgabe und eine erfahrene Prüferin können einen Fehler durchlassen. Die benannte Person führt die Kontrollen durch, die das Restrisiko verlangt, und kann begründen, warum sie das Ergebnis abgenommen hat.",
     },
     exerciseKind: "matrix-grid",
     widgets: [
@@ -232,35 +232,35 @@ export const MINDSET_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "reading",
-    title: "Zuverlässige Systeme statt Heldentum belohnen",
+    title: "Zuverlässige, wiederholbare Arbeit belohnen",
     subtitle:
       "Erkenne Verantwortung, wiederholbare Arbeit und kontrollierte Ergebnisse an.",
     objective:
       "Erkenne Verantwortung, wiederholbare Arbeit und kontrollierte Ergebnisse an.",
-    durationMinutes: 12,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "Manueller Aufwand ist kein Qualitätsmaß",
-        readTimeMinutes: 4,
+        title: "Ergebnis und Nachweise bewerten",
+        readTimeMinutes: 1,
         content:
           "Arbeitsstunden, Codezeilen und Modellnutzung sagen nichts über Korrektheit, Wartbarkeit oder Nutzen. Bewerte Ergebnis, Nachweise, Betriebskosten und ob jemand anderes das Verfahren wiederholen kann.",
       },
       {
         id: "s2",
         title: "Teamwirksame Kontrollen anerkennen",
-        readTimeMinutes: 4,
+        readTimeMinutes: 1,
         content:
           "Lobe, wer Spezifikationen klärt, Regressionstests ergänzt, Fehlerarten dokumentiert, unnötige Schritte streicht oder unsichere Arbeit stoppt. Prüf Qualität, Belastung und Folgerisiken, bevor du Stellenabbau oder Ausgabemenge belohnst.",
       },
       {
         id: "s3",
         title: "Erfahrung an Prüfgrenzen einsetzen",
-        readTimeMinutes: 4,
+        readTimeMinutes: 1,
         content:
-          "Erfahrene Leute kennen Domäne, Architektur und unauffällige Fehler. Lass sie Vorgaben setzen, Ausnahmen prüfen und anderen das Bewerten beibringen; über die Annahme entscheidet die verantwortliche Person.",
+          "Erfahrene Leute kennen Domäne, Architektur und unauffällige Fehler. Lass sie Vorgaben setzen, Ausnahmen prüfen und anderen das Bewerten beibringen; über die Abnahme entscheidet die verantwortliche Person.",
       },
     ],
     exerciseKind: "plays",
@@ -300,7 +300,7 @@ export const MINDSET_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
       "Drei Fragen zu Aufgabenauswahl, Kontrollstufen, Prüfung und Verantwortung.",
     objective:
       "Drei Fragen zu Aufgabenauswahl, Kontrollstufen, Prüfung und Verantwortung.",
-    durationMinutes: 8,
+    durationMinutes: 4,
     keyConcepts: [],
     quiz: [
       {
@@ -330,7 +330,7 @@ export const MINDSET_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Ein Ergebnis belegt nichts über alle Aufgaben. Entscheide nach aufgabenspezifischen Nachweisen, Kosten und Erkennbarkeit eines Fehlers und den Kontrollen fürs Restrisiko.",
+          "Ein einzelnes Ergebnis sagt nichts über die Zuverlässigkeit bei anderen Aufgaben. Entscheide nach aufgabenspezifischen Nachweisen, Kosten und Erkennbarkeit eines Fehlers und den Kontrollen fürs Restrisiko.",
       },
       {
         id: "ano-mindset-q2",
@@ -388,7 +388,7 @@ export const MINDSET_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Weder Nachtschichten noch Modellnutzung messen Qualität. Prüfe Ergebnis, Nachweise, Wartbarkeit, Betriebsrisiko und ob das Verfahren nachvollziehbar ist.",
+          "Weder Nachtschichten noch Modellnutzung messen Qualität. Prüfe Ergebnis, Nachweise, Wartbarkeit, Betriebsrisiko und ob andere das Verfahren wiederholen können.",
       },
     ],
     sections: [],

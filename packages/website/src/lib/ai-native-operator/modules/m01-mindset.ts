@@ -12,28 +12,28 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Check whether a task suits a model before handing it over.",
     objective:
       "Check whether a task suits a model before handing it over.",
-    durationMinutes: 14,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Start at the outcome",
-        readTimeMinutes: 5,
+        readTimeMinutes: 1,
         content:
           "Name the outcome, its tolerable error rate and who is accountable for errors. A model earns its place when it cuts effort and keeps all three intact.",
       },
       {
         id: "s2",
         title: "Good candidate, bad candidate",
-        readTimeMinutes: 5,
+        readTimeMinutes: 1,
         content:
-          "A good first candidate has defined inputs, an observable output and a review cheaper than the manual work. A bad one has ambiguous authority, irreversible effects, sensitive data without approved controls or an uncheckable output.",
+          "A good first candidate has defined inputs, an observable output and a review cheaper than the manual work. A bad one has ambiguous authority, irreversible effects, sensitive data without approved controls or an uncheckable output. Tighter specifications or safeguards can move a task between the two.",
       },
       {
         id: "s3",
         title: "Hand over something small first",
-        readTimeMinutes: 4,
+        readTimeMinutes: 1,
         content:
           "Give the model a narrow task, a stopping condition and explicit constraints. Decisions, approvals and external effects stay with a named person until real outputs and failure cases show the controls hold.",
       },
@@ -70,35 +70,35 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Rate how you define, verify and govern model-assisted work.",
     objective:
       "Rate how you define, verify and govern model-assisted work.",
-    durationMinutes: 11,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "L0, Unexamined",
-        readTimeMinutes: 3,
+        readTimeMinutes: 1,
         content:
-          "Everything runs by hand and nobody has asked where a model would help. That can be right for a task if risk and cost decided it.",
+          "Everything runs by hand and nobody has asked where a model would help. For a given task that can be right, if risk and cost justify it.",
       },
       {
         id: "s2",
         title: "L1, Assisted",
-        readTimeMinutes: 3,
+        readTimeMinutes: 1,
         content:
           "One person uses a model for bounded drafts, summaries or transformations and checks the result before use. The practice is theirs and not repeatable across the team.",
       },
       {
         id: "s3",
         title: "L2, Controlled workflow",
-        readTimeMinutes: 3,
+        readTimeMinutes: 1,
         content:
           "Recurring tasks have specifications, approved context, evaluation criteria and a named reviewer. Model output passes the usual engineering and operational controls, and recorded failures change the workflow.",
       },
       {
         id: "s4",
         title: "L3, Orchestrated portfolio",
-        readTimeMinutes: 2,
+        readTimeMinutes: 1,
         content:
           "Independent tasks run in parallel with isolated workspaces, explicit permissions, release gates and named human owners, where dependencies are understood. A person accepts, rejects or releases every result.",
       },
@@ -119,7 +119,7 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
           cpId: "exercise",
           title: "Control self-assessment",
           scenario:
-            "Rate how you work today, using evidence from recent tasks.",
+            "Rate how you work today from recent tasks. Leave planned changes out.",
           axes: [
             {
               id: "tasks",
@@ -167,28 +167,28 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Set review depth by an error's likelihood, cost and visibility.",
     objective:
       "Set review depth by an error's likelihood, cost and visibility.",
-    durationMinutes: 16,
+    durationMinutes: 10,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Trust belongs to a task",
-        readTimeMinutes: 5,
+        readTimeMinutes: 1,
         content:
           "Evidence about a model holds for one task, model version, prompt, context source, tool set and evaluation method. Change one and the old result predicts nothing.",
       },
       {
         id: "s2",
         title: "Use an error-cost frame",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
-          "Estimate how likely an error is, what it costs and whether a reviewer would spot it. An internal draft may need a glance; a security change, customer decision, financial figure or disclosure may need source checks, tests, a second reviewer or no model.",
+          "Estimate how likely an error is, what it costs and whether a reviewer would spot it. A reversible internal draft may need a glance; a security change, customer decision, financial figure or disclosure may need source checks, tests, a second reviewer or no model.",
       },
       {
         id: "s3",
         title: "Build evidence from reviewed cases",
-        readTimeMinutes: 5,
+        readTimeMinutes: 1,
         content:
           "Start where a reliable answer or test exists. Compare outputs with it, label failure types and record conditions, and rerun the sample after any model, prompt, data or tool change.",
       },
@@ -196,7 +196,7 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
     callout: {
       kind: "warn",
       h: "The owner stays accountable",
-      text: "Confident output and an experienced reviewer can still let an error through. The named owner runs the checks the residual risk needs.",
+      text: "Confident output and an experienced reviewer can still let an error through. The named owner runs the checks the residual risk needs and can explain why the result was accepted.",
     },
     exerciseKind: "matrix-grid",
     widgets: [
@@ -234,33 +234,33 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "reading",
-    title: "Reward reliable systems, not heroics",
+    title: "Reward reliable, repeatable work",
     subtitle:
       "Recognise ownership, reproducible work and controlled outcomes.",
     objective:
       "Recognise ownership, reproducible work and controlled outcomes.",
-    durationMinutes: 12,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "Manual effort is not the quality measure",
-        readTimeMinutes: 4,
+        title: "Judge the result and its evidence",
+        readTimeMinutes: 1,
         content:
           "Hours, lines of code and model usage say nothing about correctness, maintainability or use. Judge the outcome, its evidence, operating cost and whether a colleague could repeat the process.",
       },
       {
         id: "s2",
         title: "Recognise controls that improve the team",
-        readTimeMinutes: 4,
+        readTimeMinutes: 1,
         content:
           "Praise people who clarify a specification, add a regression test, document a failure mode, cut a needless step or stop unsafe work. Check quality, workload and downstream risk before rewarding head-count cuts or output volume.",
       },
       {
         id: "s3",
         title: "Apply senior judgment at review boundaries",
-        readTimeMinutes: 4,
+        readTimeMinutes: 1,
         content:
           "Experienced people know the domain, the architecture and the failure that looks fine. Let them set constraints, review exceptions and teach others to judge results; the accountable person decides acceptance.",
       },
@@ -299,7 +299,7 @@ export const MINDSET_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Three questions on task selection, controls, verification and accountability.",
     objective:
       "Three questions on task selection, controls, verification and accountability.",
-    durationMinutes: 8,
+    durationMinutes: 4,
     keyConcepts: [],
     quiz: [
       {

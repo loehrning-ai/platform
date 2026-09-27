@@ -40,12 +40,12 @@ Zeit ist ein verbreiteter oberster Schlüssel, weil viele analytische Abfragen n
 
 **Verborgene Partitionierung**, von Iceberg seit Spezifikation v1 unterstützt, deklariert eine Transformation wie \`PARTITIONED BY (days(order_ts))\` in den Tabellenmetadaten. Kompatible Writer leiten den Wert ab, und Abfragen filtern weiter nach \`order_ts\`. Partitionsentwicklung kann \`days(order_ts)\` für neue Dateien auf \`hours(order_ts)\` umstellen, während alte Dateien ihre Spezifikation behalten; Reader planen über beide.
 
-Das lockert die Kopplung zwischen Anwendungscode und physischem Layout. Engine-Unterstützung, Transformationssemantik, Metadatenintegrität, Zeitzonen und Pruning prüfst du trotzdem für die eingesetzten Versionen.`,
+Engine-Unterstützung, Transformationssemantik, Metadatenintegrität, Zeitzonen und Pruning prüfst du trotzdem für die eingesetzten Versionen.`,
     },
     {
       id: "s2",
       title: "Einen Schlüssel wählen",
-      content: `Das interaktive Modell wirft eine feste Abfrage auf fünf synthetische Layouts. Dateizahlen und gescannte Bytes sind Lerneingaben, keine Messungen oder Schwellen.
+      content: `Das Modell oben führt eine feste Abfrage auf fünf synthetischen Layouts aus.
 
 Vergleiche das relative Verhalten und wiederhole es dann mit Produktionsverteilungen. Stündliche Partitionen erzeugen bei wenig Volumen kleine Dateien, Partitionen je Person legen Schiefe offen, und ohne Partitionierung kommt es zu breiten Scans.`,
     },
@@ -68,36 +68,27 @@ Wähle Partitions- und Clustering-Spalten aus Query-Telemetrie, schätze die Sch
     {
       id: "s5",
       title: "Sharding ist nicht Partitionierung",
-      content: `Beide Begriffe bedeuten je nach Produkt Verschiedenes.
+      content: `Produkte verwenden beide Wörter unscharf; hier gilt:
 
 - **Analytische Partitionierung** gruppiert Tabellendaten für Pruning, Aufbewahrung und Wartung.
 - **Datenbank-Sharding** verteilt Datensätze über unabhängig skalierbare Datenbankpartitionen oder Instanzen und bringt Fragen zu Routing, Rebalancing, Cross-Shard-Queries und Transaktionen mit.
 
-Beim Routing gilt derselbe Zielkonflikt zwischen Bereich und Hash. Zusammengesetzte Schlüssel, virtuelle Shards und Online-Rebalancing mildern je einen Teil davon, die Schiefe misst du trotzdem.`,
+Hash-Routing verteilt Schlüssel, verliert aber Bereichslokalität; Bereichs-Routing hält Lokalität, erzeugt aber heiße Bereiche. Zusammengesetzte Schlüssel, virtuelle Shards und Online-Rebalancing mildern je einen Teil davon, die Schiefe misst du trotzdem.`,
     },
     {
       id: "s6",
       title: "Kurzprüfung",
-      content: "Zwei Fragen zu Schiefe und Z-Order.",
+      content: "Zwei Fragen zu Schiefe und Layout, unter den Begriffen.",
     },
     {
       id: "s7",
       title: "Kernaussagen",
-      content: `- Prüf Pläne auf Dateiebene und gelesene Bytes, nicht nur den SQL-Text.
-- Wähle Dateigrößen aus Engine-Hinweisen und Lastmessungen.
-- Rechne Re-Clustering-Kosten und Schreibverstärkung in jede Clustering-Entscheidung ein.`,
+      content: `- Prüf gelesene Bytes im Plan auf Dateiebene, nicht nur den SQL-Text.`,
     },
     {
       id: "s8",
       title: "Begriffe",
-      content: `- **Partition Pruning**, Dateigruppen über Partitionsmetadaten ausschließen.
-- **Bereichspartition**, gruppiert Zeilen nach Wertebereich.
-- **Hash-Partition**, verteilt einen Schlüssel auf N Buckets.
-- **Listenpartition**, ordnet deklarierte Werte Partitionen zu.
-- **Verborgene Partitionierung**, Partitionstransformationen in den Tabellenmetadaten.
-- **Überpartitionierung**, zu viele kleine Partitionen oder Dateien.
-- **Liquid Clustering**, eine Layoutfunktion von Delta Lake.
-- **Salt**, ein Teilschlüssel, der einen Hot Key verteilt.`,
+      content: `Die Lernkarten unter den Fragen erklären Partition Pruning, Bereichs-, Hash- und Listenpartitionen, verborgene Partitionierung, Überpartitionierung, Liquid Clustering und Salt.`,
     },
   ],
   widgets: [
@@ -109,12 +100,12 @@ Beim Routing gilt derselbe Zielkonflikt zwischen Bereich und Hash. Zusammengeset
         "Du partitionierst `events` nach `user_id` über 10M Personen. In Produktion sind 90% der Partitionen <100MB groß, aber 5 Partitionen jeweils >500GB. Welche IDs liegen dort?",
       options: [
         "Zufällige IDs; so sehen Verteilungen aus.",
-        "Bots, Testkonten, eine geteilte Gast-ID und ein paar Großkunden, etwa Enterprise-Tenants.",
+        "Bots, Testkonten, eine geteilte Gast-ID und Enterprise-Tenants.",
         "Die neuesten Personen.",
         "Das muss ein Programmfehler sein.",
       ],
       explanation:
-        "Geteilte anonyme IDs, interner Verkehr, Automatisierung und große Tenants erzeugen die meiste Schiefe, und Hashen desselben Schlüssels verschiebt den Hotspot nur. Hilfreich sind ein deterministischer Salt wie `user_id + (event_id % 16)` mit Zusammenführung danach, getrennte Behandlung bekannten Verkehrs oder Zeitpartitionen mit Clustering nach Person.",
+        "Geteilte anonyme IDs, interner Verkehr, Automatisierung und große Tenants erzeugen die meiste Schiefe; Hashen desselben Schlüssels verschiebt sie nur. Salze deterministisch (`user_id + (event_id % 16)`), behandle bekannten Verkehr getrennt oder partitioniere nach Zeit und clustere nach Person, und prüf danach Ordnungsanforderungen.",
     },
     {
       kind: "quiz",
@@ -129,7 +120,7 @@ Beim Routing gilt derselbe Zielkonflikt zwischen Bereich und Hash. Zusammengeset
         "Eine zweite Tabellenkopie, partitioniert nach `country`.",
       ],
       explanation:
-        "Ein zusammengesetztes `(order_date, country)`-Layout erreicht bis zu 73,000 Wertekombinationen pro Jahr. Sortieren oder Clustern nach `country` innerhalb der Datumspartitionen spart ein Verzeichnis je Kombination; prüf das mit Dateistatistiken und Query-Plänen.",
+        "365 Tage × rund 200 Länder ergeben bis zu 73000 Partitionen pro Jahr. Sortieren oder Clustern nach `country` innerhalb der Datumspartitionen spart ein Verzeichnis je Kombination; prüf das mit Dateistatistiken und Query-Plänen.",
     },
     {
       kind: "flashcards",
@@ -169,7 +160,7 @@ Beim Routing gilt derselbe Zielkonflikt zwischen Bereich und Hash. Zusammengeset
         {
           term: "Liquid Clustering",
           q: "Was muss geprüft werden?",
-          a: "Eine Delta-Lake-Layoutfunktion. Prüf Runtimes, Protokollanforderungen, Clustering Keys, Wartung und Interoperabilität für deine Version.",
+          a: "Delta-Lake-Clustering auf deklarierten Schlüsseln, das feste Partitionen und Z-Order ersetzt. Prüf Runtimes, Protokollanforderungen, Wartung und Interoperabilität für deine Version.",
         },
         {
           term: "Salt",

@@ -14,12 +14,12 @@ export default localizeCodexLessonToGerman(canonical, {
     ["Task contract", "Auftragsrahmen"],
     ["Vague spec", "Unklare Spezifikation"],
     ["AGENTS.md", "AGENTS.md"],
-    ["An agent, not an assistant", "Ein Agent, kein Assistent"],
+    ["What Codex does", "Was Codex tut"],
     [
       canonical.sections[0].blocks[0]?.kind === "prose"
         ? canonical.sections[0].blocks[0].markdown
         : "",
-      "Codex ist ein **auftragsorientierter Coding-Agent**. Er läuft lokal in CLI oder IDE oder in einer Cloud-Umgebung, und jede Oberfläche folgt demselben Ablauf:\n\n1. Auftrag plus Kontext aus Sitzung und Repository übernehmen.\n2. Innerhalb der konfigurierten Grenzen für Dateisystem, Befehle, Freigaben und Netzwerk bleiben.\n3. Den relevanten Code lesen und die Änderungen planen.\n4. Dateien ändern, verfügbare Prüfungen ausführen, Ausgabe lesen und nachbessern.\n5. Eine Zusammenfassung und ein **Diff** zum Review liefern oder, falls konfiguriert, einen Pull Request öffnen.\n\nLokal kannst du eingreifen, in der Cloud läuft der Auftrag im Hintergrund. Das Ergebnis prüfst du in beiden Fällen gegen Auftrag und Repository.",
+      "Codex ist ein **auftragsorientierter Coding-Agent**. Er läuft lokal in CLI oder IDE oder in einer Cloud-Umgebung, und jede Oberfläche folgt demselben Ablauf:\n\n1. Auftrag plus Kontext aus Sitzung und Repository übernehmen.\n2. Innerhalb der konfigurierten Grenzen für Dateisystem, Befehle, Freigaben und Netzwerk bleiben.\n3. Den relevanten Code lesen und die Änderungen planen.\n4. Dateien ändern, verfügbare Prüfungen ausführen, Ausgabe lesen und nachbessern.\n5. Eine Zusammenfassung und ein **Diff** zum Review liefern; ein Cloud-Auftrag kann, falls konfiguriert, auch einen Pull Request öffnen.\n\nLokal kannst du eingreifen, in der Cloud läuft der Auftrag im Hintergrund. Das Ergebnis prüfst du in beiden Fällen gegen Auftrag und Repository.",
     ],
     [
       canonical.sections[0].blocks[1]?.kind === "prose"
@@ -58,10 +58,7 @@ export default localizeCodexLessonToGerman(canonical, {
       'The replay above condenses one run of *"add rate limiting to the /login endpoint"*: plan, inspect, edit, test, revise.',
       'Der Ablauf oben zeigt gekürzt einen Lauf für *"Rate Limiting zum Endpunkt /login hinzufügen"*: planen, untersuchen, ändern, testen, überarbeiten.',
     ],
-    [
-      "Two questions wait at the end of the lesson.",
-      "Zwei Fragen folgen am Ende der Lektion.",
-    ],
+    ["Two questions at the end of the lesson.", "Zwei Fragen am Ende der Lektion."],
     ["Three failure modes, named", "Drei Fehlermuster mit Namen"],
     ["mode 01", "Muster 01"],
     [
@@ -138,8 +135,8 @@ export default localizeCodexLessonToGerman(canonical, {
       "Codex hat einen Bug und gehört nicht an Auth-Code.",
     ],
     [
-      'The task was ambiguous, "refactor auth" spans a huge scope.',
-      'Der Auftrag war mehrdeutig, "Auth refaktorieren" deckt einen riesigen Bereich ab.',
+      'The task was ambiguous: "refactor auth" spans a huge scope.',
+      'Der Auftrag war mehrdeutig: "Auth refaktorieren" deckt einen riesigen Bereich ab.',
     ],
     [
       "The sandbox lacked the downstream services.",
@@ -162,8 +159,8 @@ export default localizeCodexLessonToGerman(canonical, {
       "Mit dem vollständigen Verlauf aller früheren Sitzungen zum Repository.",
     ],
     [
-      "Only what the surface loads or you provide; durable rules live in versioned files.",
-      "Nur mit dem, was die Oberfläche lädt oder du mitgibst. Dauerhafte Regeln stehen in versionierten Dateien.",
+      "Only what the surface loads or you provide.",
+      "Nur mit dem, was die Oberfläche lädt oder du mitgibst.",
     ],
     [
       "Only the most recent pull-request description.",

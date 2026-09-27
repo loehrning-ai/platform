@@ -32,7 +32,7 @@ export function Ch2StoreDe({ chapter }: Ch2StoreDeProps) {
 
       <section className="section">
         <SectionLabel n="3.2">Die Woche prüfen</SectionLabel>
-        <h2 className="h2">Fehler an Tag 3. Erkannt an Tag 4. Backfill an Tag 5.</h2>
+        <h2 className="h2">Ein Fehler an Tag 3, erkannt an Tag 4, per Backfill an Tag 5 behoben.</h2>
         <p className="prose">Klick dich durch die Tage. An Tag 3 halbiert eine Einheitenverwechslung die Punkte aller Nutzer, bis Tag 5 steckt die Abweichung in jeder Aggregation. <em>Korrigieren und neu berechnen</em> verarbeitet die fehlerhaften Tage mit der korrigierten Logik neu.</p>
         <CumulativeSim />
       </section>
@@ -45,7 +45,7 @@ export function Ch2StoreDe({ chapter }: Ch2StoreDeProps) {
       <AntiPatterns
         title="Fehlmuster"
         items={[
-          "<b>Hier einen Left Join verwenden.</b> Schlüssel, die erstmals in der heutigen Änderung auftauchen, fehlen dann. Neue, bestehende und fehlende Schlüssel testen.",
+          "<b>Einen Left Join für den kumulativen Merge verwenden.</b> Schlüssel, die erstmals in der heutigen Änderung auftauchen, fehlen dann. Neue, bestehende und fehlende Schlüssel testen.",
           "<b>Eine Korrektur ohne Neuberechnung abhängiger Partitionen veröffentlichen.</b> Such das früheste betroffene Datum und berechne alles danach neu.",
           "<b>Die Wanduhr in einem Backfill lesen.</b> <code>&lt;DATEID&gt;</code> und weitere Laufparameter explizit übergeben, damit dieselbe Eingabe denselben Quellenbereich wählt.",
           "<b>Unvollständigen Zustand veröffentlichen.</b> Atomares Replace, Merge oder Snapshot des Tabellenformats nutzen, damit niemand eine halbe Partition liest.",
@@ -55,7 +55,7 @@ export function Ch2StoreDe({ chapter }: Ch2StoreDeProps) {
         title="Saubere Umsetzung"
         items={[
           "Kumulative Logik versionieren und die erzeugende Version pro Partition erfassen. Den Bereich neu aufbauen, dessen Semantik sich geändert hat.",
-          "<b>Invarianten aus dem Fachmodell</b> ableiten. Löschung oder Aufbewahrung kann die Zeilenzahl senken, also erwartete Schlüsselübergänge testen, kein stetiges Wachstum.",
+          "<b>Invarianten aus dem Fachmodell</b> ableiten. Löschung oder Aufbewahrung kann die Zeilenzahl senken. Teste deshalb erwartete Schlüsselübergänge; die Zeilenzahl muss nicht stetig wachsen.",
         ]}
       />
     </DataEngineeringFundamentalsLocaleProvider>

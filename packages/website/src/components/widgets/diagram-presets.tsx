@@ -51,14 +51,14 @@ export const RISK_PYRAMID_NODES: readonly DiagramNode[] = [
   },
   {
     id: "transparenz",
-    label: "Begrenztes Risiko",
+    label: "Transparenzpflichten",
     sub: "Chatbots, generierte Bilder und Texte: Kennzeichnungspflicht",
     weight: 0.5,
   },
   {
     id: "minimal",
     label: "Minimales Risiko",
-    sub: "Spamfilter, KI im Lager, Empfehlungen: keine besonderen Pflichten",
+    sub: "Spamfilter, KI im Lager, Empfehlungen: keine besonderen Pflichten aus dem AI Act",
     weight: 0.32,
   },
 ];
@@ -81,7 +81,7 @@ export function RiskPyramidDiagram({
       lessonId={lessonId}
       cpId={cpId}
       reducedMotion={reducedMotion}
-      copy={copy}
+      copy={{ kindLabel: "Risikokarte", ...copy }}
     />
   );
 }
@@ -108,7 +108,7 @@ export const OBLIGATION_LAYER_NODES: readonly DiagramNode[] = [
     label: "Daten-Governance",
     sub: "Trainings-, Validierungs- und Testdaten geprüft auf Qualität und Bias",
     detail:
-      "Daten müssen relevant, repräsentativ und möglichst fehlerfrei sein. Lücken werden behoben.",
+      "Daten müssen relevant, repräsentativ und möglichst fehlerfrei sein. Bias und Lücken werden gesucht und behandelt.",
     consequence:
       "Das Modell lernt verzerrte Muster. Diskriminierung bleibt unentdeckt, bis Betroffene sich beschweren.",
     weight: 0.85,
@@ -135,7 +135,8 @@ export const OBLIGATION_LAYER_NODES: readonly DiagramNode[] = [
     id: "aufsicht",
     label: "Menschliche Aufsicht",
     sub: "Ein Mensch kann eingreifen, übersteuern oder abschalten",
-    detail: "Menschen verstehen die Ausgabe und kennen die Grenzen des Systems.",
+    detail:
+      "Die Verantwortung bleibt bei Menschen. Sie verstehen die Ausgabe und kennen die Grenzen des Systems.",
     consequence:
       "Niemand fängt offensichtliche Fehler automatisierter Entscheidungen ab.",
     weight: 0.46,
@@ -156,7 +157,7 @@ export function ObligationLayersDiagram({
   cpId,
   reducedMotion,
   title = "Die Pflichten eines Hochrisiko-Systems",
-  caption = "Tipp jede Schicht an.",
+  caption = "Was jede Pflicht verlangt und was passiert, wenn sie fehlt.",
   nodes = OBLIGATION_LAYER_NODES,
   copy,
 }: DiagramPresetProps): JSX.Element {

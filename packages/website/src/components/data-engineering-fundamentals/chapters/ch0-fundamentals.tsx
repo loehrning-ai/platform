@@ -32,7 +32,7 @@ function LakehouseDiagram() {
             <div className="lh-k">Storage (cheap, shared)</div>
             <div className="lh-v">Parquet · ORC · HDFS · S3</div>
           </div>
-          <div className="lh-note">Engines share the files and scale apart from storage.</div>
+          <div className="lh-note">Engines share the files and scale separately from storage.</div>
         </div>
       </div>
     </div>
@@ -58,30 +58,6 @@ function FormatSpectrum() {
                 {t}
               </span>
             ))}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function EngineCards() {
-  const engines = [
-    { n: "Presto / Trino", kind: "distributed SQL", fits: "Interactive SQL across configured catalogs and connectors.", not: "Long transformations with unchecked spill, retry and resource settings." },
-    { n: "Spark / Databricks", kind: "distributed processing", fits: "Batch transformations, large joins, jobs that recompute or spill.", not: "Latency-sensitive queries with unmeasured startup and scheduling overhead." },
-    { n: "Snowflake", kind: "managed cloud warehouse", fits: "Managed SQL with separately sized virtual warehouses.", not: "Workloads that need portability or external-engine access the platform lacks." },
-  ];
-  return (
-    <div className="eng-cards">
-      {engines.map((e) => (
-        <div className="eng-card" key={e.n}>
-          <div className="eng-n">{e.n}</div>
-          <div className="eng-kind">{e.kind}</div>
-          <div className="eng-row">
-            <span className="eng-k mint">Fits</span> <span className="eng-v">{e.fits}</span>
-          </div>
-          <div className="eng-row">
-            <span className="eng-k amber">Avoid</span> <span className="eng-v">{e.not}</span>
           </div>
         </div>
       ))}
@@ -124,11 +100,7 @@ export function Ch0Fundamentals({ chapter }: Ch0FundamentalsProps) {
 
       <section className="section">
         <SectionLabel n="0.2">The layers</SectionLabel>
-        <h2 className="h2">Every query passes the same stack.</h2>
-        <p className="prose">
-          A warehouse query passes seven layers, bottom-up: <b>physical storage</b>, <b>blob</b>, <b>file format</b>, <b>table
-          abstraction</b>, <b>catalog</b>, <b>query engine</b> and <b>application</b>.
-        </p>
+        <h2 className="h2">The layers a warehouse query passes.</h2>
         <LayerCake />
       </section>
 
@@ -188,15 +160,15 @@ export function Ch0Fundamentals({ chapter }: Ch0FundamentalsProps) {
         <SectionLabel n="0.7">The engine ecosystem</SectionLabel>
         <h2 className="h2">Pick the engine for the query.</h2>
         <p className="prose">
-          Interactive queries and long transformations need different startup time, memory, spill, retries and concurrency. Compare them
-          with your engine&apos;s configuration.
+          Interactive queries and long transformations differ in startup time, memory, spill, retries and concurrency, so check how your
+          engine is configured for them. Trino suits interactive SQL across connectors, Spark batch jobs with large joins or spill. Snowflake
+          runs managed SQL on virtual warehouses; check first whether other engines need access to the same data.
         </p>
-        <EngineCards />
       </section>
 
       <section className="section">
         <SectionLabel n="0.8">Connectors: same SQL, different physics</SectionLabel>
-        <h2 className="h2">The connector chooses the physics.</h2>
+        <h2 className="h2">Trino connectors decide where the data comes from.</h2>
         <p className="prose">
           Trino, the open-source MPP engine formerly called PrestoSQL, has pluggable connectors. The same SQL can become distributed
           object-store reads, local storage access or coordinator metadata. Check connector plan, cache state and data placement before
@@ -212,13 +184,12 @@ export function Ch0Fundamentals({ chapter }: Ch0FundamentalsProps) {
           "<b>Raw CSV as an analytical table.</b> Validate types and write a typed columnar copy for selective reads.",
           "<b><code>SELECT *</code> on a 300-column fact table.</b> Reads every column. Select only the columns you need.",
           "<b>Treating Trino and PrestoDB as identical.</b> They split around 2020; function names, connector behavior and optimizer defaults differ. Check which one your cluster runs before copying docs.",
-          "<b>Choosing an engine by reputation.</b> Measure startup, scan, memory, spill, retry and concurrency on the target workload.",
         ]}
       />
       <Takeaway
         items={[
-          "<b>Each of the seven layers fails differently.</b> A down metastore needs another fix than a slow SSD tier.",
-          "Read the plan and runtime statistics before tuning. Filter on partition and indexed columns first and avoid <code>SELECT *</code>.",
+          "<b>Each of the seven layers fails in its own way.</b> A metastore outage needs a different fix from a slow SSD tier.",
+          "Read the plan and runtime statistics before tuning, and filter on partition and indexed columns first.",
         ]}
       />
     </>

@@ -32,7 +32,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Running tasks is cheap; independent work is not. Each task still needs review, and tasks interact through shared files, schemas, APIs, generated artifacts, dependencies and deployment state.\n\nFind those dependencies before you parallelize. Separate working trees stop two processes from editing one checkout; semantic conflicts still surface at merge.",
+            "Starting parallel tasks is easy. Each task still needs review, and tasks interact through shared files, schemas, APIs, generated artifacts, dependencies and deployment state.\n\nFind those dependencies before you parallelize. Separate working trees stop two processes from editing one checkout; semantic conflicts still surface at merge.",
         },
       ],
     },
@@ -97,7 +97,7 @@ const lesson: CodexLesson = {
         },
         {
           kind: "callout",
-          title: "The fix",
+          title: "The fix.",
           body: "Define and review the shared contract first, rebase dependent tasks onto it, then run only the independent adoptions in parallel.",
         },
       ],
@@ -114,7 +114,7 @@ const lesson: CodexLesson = {
         },
         {
           kind: "callout",
-          title: "Scheduling order",
+          title: "Scheduling order.",
           body: "1) Map dependencies and shared state. 2) Land shared contracts before their consumers. 3) Give each concurrent task an owner, base revision, scope and checks. 4) Integrate in a controlled order and rerun cross-cutting checks.",
         },
       ],
@@ -127,7 +127,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Parallel work needs named owners: a reviewer for each affected area and trust boundary, and for every task a recorded base revision, dependency order and integration owner. Run no more tasks than the team can review without delaying security or release checks. Product, architecture and risk decisions stay with accountable people; delegate implementation once they are written down.\n\nThere is no universal concurrency target. Queue age, review complexity, overlap and deployment risk decide when the next task starts.",
+            "Parallel work needs named owners: a reviewer who knows each affected area and trust boundary, and for every task a recorded base revision, dependency order and integration owner. Run no more tasks than the team can review without delaying security or release checks. Product, architecture and risk decisions stay with accountable people; delegate implementation once they are written down.\n\nThere is no universal concurrency target. Queue age, review complexity, overlap and deployment risk decide when the next task starts.",
         },
       ],
     },
@@ -138,7 +138,7 @@ const lesson: CodexLesson = {
       blocks: [
         {
           kind: "prose",
-          markdown: "Two questions on parallelizing agent work.",
+          markdown: "Questions at the end of the lesson.",
         },
       ],
     },

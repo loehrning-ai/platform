@@ -26,7 +26,7 @@ export function Ch15StreamingDe({ chapter }: Ch15StreamingDeProps) {
       <section className="section">
         <SectionLabel n="2.1">Kontinuierliche Verarbeitung</SectionLabel>
         <h2 className="h2">Micro-Batch oder kontinuierlich, Exactly Once oder At Least Once.</h2>
-        <p className="prose">Batch-Engines verarbeiten begrenzte Eingaben nach einem Zeitplan. Streaming-Engines verarbeiten eine fortlaufende Eingabe und halten Zustand. Beide können richtig oder falsch liegen; der Vertrag legt fest, wann ein Ergebnis erscheint, wann es endgültig ist und was mit Wiederholungen, Duplikaten und Nachzüglern passiert.</p>
+        <p className="prose">Batch-Engines verarbeiten begrenzte Eingaben nach einem Zeitplan. Streaming-Engines verarbeiten eine fortlaufende Eingabe und halten Zustand. Beide können richtige oder falsche Ergebnisse liefern; der Vertrag legt fest, wann ein Ergebnis erscheint, wann es endgültig ist und was mit Wiederholungen, Duplikaten und Nachzüglern passiert.</p>
         <div className="cards-3">
           <div className="ccard">
             <div className="ccard-t">Latenz</div>
@@ -48,8 +48,8 @@ export function Ch15StreamingDe({ chapter }: Ch15StreamingDeProps) {
 
       <section className="section">
         <SectionLabel n="2.2">Das Problem an der Systemgrenze</SectionLabel>
-        <h2 className="h2">Die Kursgrenze modelliert Wiederholungsschutz und Watermark.</h2>
-        <p className="prose">Wiederholungen und Wiederherstellung stellen Datensätze erneut zu, und Ereigniszeit und Ankunftszeit laufen auseinander. An der Warehouse-Grenze fangen idempotentes Schreiben oder ein deterministischer Deduplizierungsschlüssel die Wiederholungen ab. Watermark und Nachzüglerregel steuern Veröffentlichung und spätere Datensätze. Schalte jede Kontrolle einzeln, um ihre Wirkung zu sehen.</p>
+        <h2 className="h2">Wiederholungen und Nachzügler an der Warehouse-Grenze.</h2>
+        <p className="prose">Wiederholungen und Wiederherstellung stellen Datensätze erneut zu, und Ereigniszeit und Ankunftszeit laufen auseinander. An der Warehouse-Grenze fängt ein idempotenter Upsert auf einem stabilen Ereignisschlüssel oder ein deterministischer Deduplizierungsschlüssel die Wiederholungen ab. Watermark und Nachzüglerregel steuern Veröffentlichung und spätere Datensätze.</p>
         <ConveyorSim />
       </section>
 

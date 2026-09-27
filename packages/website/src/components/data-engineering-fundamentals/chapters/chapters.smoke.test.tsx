@@ -93,7 +93,7 @@ describe("all 12 chapter components render with real ported content, not placeho
 
   it("Ch9Capstone renders the living pipeline with 6 modeled controls", () => {
     render(<Ch9Capstone chapter={getDefChapterMeta("cap")} />);
-    expect(screen.getByText("Six modeled controls. Inspect each failure mode.")).toBeInTheDocument();
+    expect(screen.getByText("Inspect each failure mode.")).toBeInTheDocument();
   });
 
   it("every chapter's real accent/ink hex from source flows into the Hero", () => {

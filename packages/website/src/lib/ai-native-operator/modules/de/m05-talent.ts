@@ -9,33 +9,33 @@ export const TALENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Arbeitsproben mit zugelassenen Werkzeugen",
     subtitle:
-      "Zeig mit echter Aufgabe und Raster, wie jemand mit den Werkzeugen arbeitet.",
+      "Beobachte an einer echten Aufgabe und mit einem Raster, wie Bewerbende mit den Werkzeugen arbeiten.",
     objective:
-      "Zeig mit echter Aufgabe und Raster, wie jemand mit den Werkzeugen arbeitet.",
-    durationMinutes: 20,
+      "Beobachte an einer echten Aufgabe und mit einem Raster, wie Bewerbende mit den Werkzeugen arbeiten.",
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Eine repräsentative Arbeitsprobe wählen",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
-          "Die Aufgabe bildet wichtige Tätigkeiten der Rolle ab, ohne unbezahlte Produktivarbeit oder internes Wissen zu verlangen. Passe den Umfang an den Zeitrahmen an, gib allen dieselben Materialien und ermögliche angemessene Anpassungen. Geprüft werden die Anforderungen der Tätigkeit.",
+          "Die Aufgabe bildet wichtige Tätigkeiten der Rolle ab, ohne unbezahlte Produktivarbeit oder internes Wissen zu verlangen. Passe den Umfang an den Zeitrahmen an, gib allen dieselben Materialien und ermögliche angemessene Anpassungen. Geprüft werden die Anforderungen der Tätigkeit; Rätselroutine zählt nicht.",
       },
       {
         id: "s2",
         title: "Den Arbeitsprozess beobachten",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
-          "Bewerbende nutzen die zugelassenen Werkzeuge der Rolle. Schau zu, wie sie den Auftrag klären, die Arbeit zerlegen und spezifizieren, Delegationsgrenzen setzen, Ausgaben prüfen, Annahmen testen und das Ergebnis erklären. Private Konten oder verdeckte Datenweitergabe verlangst du nicht.",
+          "Bewerbende nutzen die zugelassenen Werkzeuge der Rolle. Schau zu, wie sie den Auftrag klären, die Arbeit zerlegen und spezifizieren, Delegationsgrenzen setzen, Ausgaben prüfen, Annahmen testen und das Ergebnis erklären. Schütze Daten und geistiges Eigentum der Bewerbenden; private Konten oder verdeckte Datenweitergabe verlangst du nicht.",
       },
       {
         id: "s3",
         title: "Anhand klarer Kriterien bewerten",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
-          "Lege beobachtbare Merkmale für Spezifikationsqualität, Werkzeugurteil, Prüfqualität, Verifikation, Kommunikation und Endergebnis fest. Schule die Bewertenden am Raster und vergleiche unabhängige Bewertungen. Tempo und Glätte zählen nichts ohne Erklärung und Verifikation.",
+          "Lege beobachtbare Merkmale für Spezifikationsqualität, Werkzeugurteil, Prüfqualität, Verifikation, Kommunikation und Endergebnis fest. Schule die Bewertenden am Raster und vergleiche unabhängige Bewertungen. Tempo und ein poliertes Ergebnis zählen nur mit Erklärung und Verifikation.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -66,30 +66,30 @@ export const TALENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
       "Lege Rollenerwartungen für Nutzung, Prüfung und Steuerung modellgestützter Arbeit fest.",
     objective:
       "Lege Rollenerwartungen für Nutzung, Prüfung und Steuerung modellgestützter Arbeit fest.",
-    durationMinutes: 18,
+    durationMinutes: 10,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Ein vierstufiges Kompetenzraster",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
-          "Stufe 1 nutzt zugelassene Unterstützung für begrenzte Aufgaben und prüft Ergebnisse. Stufe 2 betreibt einen wiederholbaren Ablauf mit dokumentierten Eingaben, Prüfung und Eskalation. Stufe 3 entwirft Kontrollen, Evaluationen und Überwachung für gemeinsame Abläufe. Stufe 4 setzt Standards und trägt die Betriebsverantwortung.",
+          "Stufe 1 nutzt zugelassene Unterstützung für begrenzte Aufgaben und prüft Ergebnisse; Stufe 2 betreibt einen wiederholbaren Ablauf mit dokumentierten Eingaben, Prüfung und Eskalation. Stufe 3 entwirft Kontrollen, Evaluationen und Überwachung für gemeinsame Abläufe, und Stufe 4 setzt Standards und trägt die Betriebsverantwortung. Passe die Stufen an die Arbeit an; feste Beförderungshürden sind sie nicht.",
       },
       {
         id: "s2",
         title: "Artefakte und Entscheidungen messen",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
           "Belege sind Spezifikationen, Evaluationssätze, Prüfprotokolle, Reaktionen auf Störungen, wiederverwendbare Abläufe und dokumentierte Entscheidungen. Bewertet werden Begründung, Kontrollen und Ergebnisse, nie Eingabemenge oder behauptete Produktivität. Gleiche Beispiele zwischen Bewertenden ab, damit dasselbe Verhalten dieselbe Einstufung bekommt.",
       },
       {
         id: "s3",
         title: "Erst Zugang und Schulung, dann Bewertung",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
-          "Bewerte eine Kompetenz erst, wenn Werkzeuge, Schulung, Übungszeit und klare Erwartungen bereitstehen, mit Rücksicht auf Anpassungen und eingeschränkte Rollen. Kündige Änderungen vor Beförderungs- oder Leistungsentscheidungen an, dokumentiere Belege und sieh ein Einspruchsverfahren vor.",
+          "Bewerte eine Kompetenz erst, wenn Werkzeuge, Schulung, Übungszeit und klare Erwartungen bereitstehen, mit Rücksicht auf Anpassungen und Rollen mit eingeschränkter Modellnutzung. Kündige Änderungen vor Beförderungs- oder Leistungsentscheidungen an, dokumentiere Belege und sieh ein Einspruchsverfahren vor.",
       },
     ],
     exerciseKind: "slot-fill",
@@ -125,28 +125,28 @@ export const TALENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
       "Vergüte Ergebnisse, Qualität, Zusammenarbeit und Kontrollen statt Werkzeugaktivität.",
     objective:
       "Vergüte Ergebnisse, Qualität, Zusammenarbeit und Kontrollen statt Werkzeugaktivität.",
-    durationMinutes: 22,
+    durationMinutes: 7,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Werkzeugnutzung von Vergütung trennen",
-        readTimeMinutes: 8,
+        readTimeMinutes: 1,
         content:
           "Modellnutzung ist eine Eingabe. Wer sie belohnt, bekommt unnötige Verarbeitung, versteckte Handarbeit und unsichere Delegation. Vergütung folgt Ergebnissen, Qualität, Zusammenarbeit und Kontrollpflichten der Rolle, auch wenn der Verzicht auf ein Modell richtig war.",
       },
       {
         id: "s2",
         title: "Ausgewogene Belege verwenden",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "Jede passende Messgröße bekommt eine Gegenmessgröße: Durchlaufzeit mit Qualitäts- und Störungsdaten, Durchsatz mit Umfang und Komplexität, gemeinsame Werkzeuge mit Belegen zu Nutzung, Pflege und Unterstützung. Nutze keine feste Formel über Teams mit unterschiedlicher Arbeit, Risiko und Messgüte.",
       },
       {
         id: "s3",
         title: "Ein folgenreiches Messverfahren kontrollieren",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "Vergütungskennzahlen können unvollständig, manipulierbar oder verzerrt sein. Dokumentiere Quellen und Ausschlüsse, vergleiche Gruppen, kalibriere unabhängig und halte ein Einspruchsverfahren offen. Hol Personal- und Rechtsverantwortliche vor jeder Kriterienänderung dazu, besonders bei Regeln zu Beschäftigung, Diskriminierung, Datenschutz oder Beschäftigtenüberwachung.",
       },
@@ -154,7 +154,7 @@ export const TALENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     callout: {
       kind: "warn",
       h: "Aktivitätskennzahlen raus aus der Vergütung",
-      text: "Zahl der Modellanfragen, Datenvolumen, Zahl der Agenten und Nutzungszeit steigen auch ohne bessere Arbeit. Lass sie aus der Vergütung heraus und achte auf Qualitätsverlust, Risikoverlagerung und Kennzahlenmanipulation.",
+      text: "Zahl der Modellanfragen, Tokenmenge, Zahl der Agenten und Nutzungszeit steigen auch ohne bessere Arbeit. Lass sie aus der Vergütung heraus und achte auf Qualitätsverlust, Risikoverlagerung und Kennzahlenmanipulation.",
     },
     exerciseKind: "reflect-box",
     widgets: [
@@ -182,7 +182,7 @@ export const TALENT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     title: "Modul 5, Wissensprüfung",
     subtitle: "Zwei Fragen zu Einstellung und Vergütung.",
     objective: "Zwei Fragen zu Einstellung und Vergütung.",
-    durationMinutes: 8,
+    durationMinutes: 3,
     keyConcepts: [],
     quiz: [
       {

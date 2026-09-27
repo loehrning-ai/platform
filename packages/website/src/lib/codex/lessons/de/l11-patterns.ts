@@ -76,14 +76,14 @@ export default localizeCodexLessonToGerman(canonical, {
     [canonical.sections[0].title, "Die Musterbibliothek"],
     [
       prose(0, 0),
-      "Die Form eines Auftrags entscheidet, was sich später prüfen lässt. Die Muster hier machen Anforderungen, Repository-Nachweise und Prüfgrenzen ausdrücklich; jedes braucht trotzdem eine passende Umgebung und ein menschliches Review.\n\nAnfrage, Repository-Kontext, Umgebung, Diff und Prüfungen können das Ergebnis jeweils kippen. Diagnostiziere sie getrennt.",
+      "Die Form eines Auftrags entscheidet, was sich später prüfen lässt. Die Muster hier machen Anforderungen, Repository-Nachweise und Prüfgrenzen ausdrücklich; jedes braucht trotzdem eine passende Umgebung und ein menschliches Review. Ist ein Ergebnis falsch, prüfe Anfrage, Repository-Kontext, Umgebung, Diff und Prüfungen einzeln.",
     ],
     [canonical.sections[1].title, "Muster 01: TDD mit KI"],
     [
       prose(1, 0),
-      "**Muster:** Lässt sich die Anforderung in Tests ausdrücken, schreib sie vor der Umsetzung. Ein geprüfter fehlschlagender Test ist ein ausführbares Beispiel und zeigt, dass der Test das fehlende Verhalten bemerkt; wird er später grün, belegt das nur dieses Verhalten.\n\n1. *Testentwurf:* Tests ohne Produktionsänderung. Assertions, Fixtures, Grenzen und Fehlergrund prüfen.\n2. *Umsetzung:* die begrenzte Änderung, dazu die geprüften Tests und relevante Regressionstests.\n\nBei klarem Umfang dürfen beide aus einem Auftrag kommen. Prüf sie trotzdem getrennt, denn erzeugte Tests können das Missverständnis des Codes teilen.",
+      "Lässt sich die Anforderung in Tests ausdrücken, schreib sie vor der Umsetzung. Ein geprüfter fehlschlagender Test ist ein ausführbares Beispiel und zeigt, dass der Test das fehlende Verhalten bemerkt; wird er später grün, belegt das nur dieses Verhalten, nicht ungeprüfte Sicherheits-, Performance- oder Integrationsanforderungen.\n\n1. *Testentwurf:* Tests ohne Produktionsänderung. Assertions, Fixtures, Grenzen und Fehlergrund prüfen.\n2. *Umsetzung:* die begrenzte Änderung, dazu die geprüften Tests und relevante Regressionstests.\n\nBei klarem Umfang dürfen beide aus einem Auftrag kommen. Prüf sie trotzdem getrennt, denn erzeugte Tests können das Missverständnis des Codes teilen.",
     ],
-    [callout(1, 1, "title"), "Die Testgrenze benennen"],
+    [callout(1, 1, "title"), "Die Testgrenze benennen."],
     [
       callout(1, 1, "body"),
       "Ein Test mit gemocktem Kollaborateur kann Abbildung oder Fehlerbehandlung prüfen; der Kollaborateur selbst bleibt ungeprüft. Gehört sein Verhalten zur Anforderung, ergänze einen Test über die echte Grenze.",
@@ -94,22 +94,22 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       prose(2, 0),
-      "**Muster:** In einem unbekannten Repository beginnt die Arbeit schreibgeschützt, mit Dateipfaden, Aufrufpfaden, vorhandenen Hilfsfunktionen, Konfiguration und Tests als Nachweis. Kläre vor der ersten Änderung:\n\n- Von welchem Code und welchen externen Systemen hängt das Verhalten ab?\n- Welche vorhandene Hilfsfunktion deckt schon einen Teil ab?\n- Welche Repository-Anweisungen und Konventionen gelten?\n- Welche Tests führen das aktuelle Verhalten aus?\n- Welche Sicherheits- und Betriebsgrenzen kann die Änderung berühren?\n\nLies die Untersuchung, bevor du breiteren Schreib- oder Netzwerkzugriff freigibst. Wer auf einem unvollständigen Modell ändert, dupliziert Infrastruktur, umgeht Konventionen und bricht Aufrufer.",
+      "In einem unbekannten Repository beginnt die Arbeit lesend, mit Dateipfaden, Aufrufpfaden, vorhandenen Hilfsfunktionen, Konfiguration und Tests als Nachweis. Kläre vor der ersten Änderung:\n\n- Von welchem Code und welchen externen Systemen hängt das Verhalten ab?\n- Welche vorhandene Hilfsfunktion deckt schon einen Teil ab?\n- Welche Repository-Anweisungen und Konventionen gelten?\n- Welche Tests führen das aktuelle Verhalten aus?\n- Welche Sicherheits- und Betriebsgrenzen kann die Änderung berühren?\n\nLies die Untersuchung, bevor du breiteren Schreib- oder Netzwerkzugriff freigibst. Wer auf Basis eines unvollständigen Bilds ändert, dupliziert Infrastruktur, umgeht Konventionen und bricht Aufrufer. Fehlen Belege, verlange Repository-Nachweise statt einer Architekturzusammenfassung. Den finalen Diff liest du trotzdem.",
     ],
     [canonical.sections[3].title, "Muster 03: Refactoring mit KI"],
     [
       prose(3, 0),
-      "**Muster:** Leg eine verhaltenserhaltende Transformation fest, mit:\n\n- altem und neuem Muster samt Codebeispielen;\n- einem maßgeblichen Repository-Beispiel, falls vorhanden;\n- eingeschlossenen Dateien und ausdrücklichen Ausschlüssen;\n- öffentlichen Schnittstellen und Verhalten, die unverändert bleiben;\n- Regressionstests für Aufrufer, generierte Ausgabe, Typen und Migrationen, wo relevant.\n\n**Risiko:** \"Räume die Codebasis auf\" delegiert Architektur- und Benennungsentscheidungen, die niemand festgelegt hat. Eine begrenzte Transformation ist leichter zu prüfen, und breite Wiederholung vervielfältigt trotzdem ein fehlerhaftes Zielmuster.",
+      "Leg eine verhaltenserhaltende Transformation fest, mit:\n\n- altem und neuem Muster samt Codebeispielen;\n- einem maßgeblichen Repository-Beispiel, falls vorhanden;\n- eingeschlossenen Dateien und ausdrücklichen Ausschlüssen;\n- öffentlichen Schnittstellen und Verhalten, die unverändert bleiben;\n- Regressionstests für Aufrufer, generierte Ausgabe, Typen und Migrationen, wo relevant.\n\n**Risiko:** \"Räume die Codebasis auf\" delegiert Architektur- und Benennungsentscheidungen, die niemand festgelegt hat. Eine begrenzte Transformation ist leichter zu prüfen. Über die ganze Codebasis wiederholt, vervielfältigt sie aber auch jeden Fehler im Zielmuster.",
     ],
     [canonical.sections[4].title, "Muster 04: Debugging mit KI"],
     [
       prose(4, 0),
-      "**Muster:** Symptom, Umgebung, exakte Fehlerausgabe, Reproduktionsschritte und bekannte Ausschlüsse liefern und vor jeder Korrektur eine Hypothese verlangen, die an Datei und Aufrufpfad hängt. Nützliche Eingaben:\n\n- exakter Fehlertext und Stacktrace, Geheimnisse entfernt;\n- minimale Reproduktion oder ein fehlschlagender Test;\n- relevante Versionen, Konfiguration und Laufzeitbedingungen;\n- schon verworfene Hypothesen samt Nachweis.\n\nWo es geht, zuerst einen Regressionstest ergänzen, der am gemeldeten Fehler scheitert, und den Grund bestätigen. Ohne reproduzierbares Symptom ändert ein plausibler Diff benachbartes Verhalten und belegt die Ursache nie.",
+      "Symptom, Umgebung, exakte Fehlerausgabe, Reproduktionsschritte und bekannte Ausschlüsse liefern und vor jeder Korrektur eine Hypothese verlangen, die an Datei und Aufrufpfad hängt. Nützliche Eingaben:\n\n- exakter Fehlertext und Stacktrace, Geheimnisse entfernt;\n- minimale Reproduktion oder ein fehlschlagender Test;\n- relevante Versionen, Konfiguration und Laufzeitbedingungen;\n- schon verworfene Hypothesen samt Nachweis.\n\nWo es geht, zuerst einen Regressionstest ergänzen, der am gemeldeten Fehler scheitert, und den Grund bestätigen. Ohne reproduzierbares Symptom ändert ein plausibler Diff benachbartes Verhalten und belegt die Ursache nie.",
     ],
     [canonical.sections[5].title, "Muster 05: Neustartkriterien"],
     [
       prose(5, 0),
-      "**Muster:** Mit korrigierter Spezifikation neu beginnen, sobald Überarbeitungen eine falsche Prämisse konservieren oder den Diff aufblähen. Signale: Dieselbe Anforderung wird anders umgesetzt, ohne auf Review-Nachweise einzugehen, Kommentare definieren Ziel oder Architektur neu, der Diff wächst in fremde Dateien, akzeptiertes Verhalten verschwindet wiederholt, oder die Sitzung enthält widersprüchliche Anweisungen.\n\nÜbernimm belegte Erkenntnisse, verworfene Ansätze mit Begründung und relevante Befehlsausgabe.",
+      "Mit korrigierter Spezifikation neu beginnen, sobald Überarbeitungen eine falsche Prämisse beibehalten oder den Diff aufblähen. Signale: Dieselbe Anforderung wird anders umgesetzt, ohne auf Review-Nachweise einzugehen, Kommentare definieren Ziel oder Architektur neu, der Diff wächst in fremde Dateien, akzeptiertes Verhalten verschwindet wiederholt, oder die Sitzung enthält widersprüchliche Anweisungen.\n\nÜbernimm belegte Erkenntnisse, verworfene Ansätze mit Begründung und relevante Befehlsausgabe.",
     ],
     [canonical.sections[6].title, "Drei riskante Aufgabenformen"],
     [card(6, 0, 0, "eyebrow"), "Fehler 01"],
@@ -130,7 +130,7 @@ export default localizeCodexLessonToGerman(canonical, {
       card(6, 0, 2, "body"),
       "\"Refaktoriere die gesamte Architektur\" mischt Entwurf, Migration, Umsetzung und Rollout. Trenne Zielarchitektur, Kompatibilitätsschritte und begrenzte Transformationen.",
     ],
-    [prose(7, 0), "Zwei Fragen zu brauchbaren und riskanten Aufgabenmustern."],
+    [prose(7, 0), "Fragen am Ende der Lektion."],
     [
       widgetString(0, "title"),
       "Bestehende Codebasis: mit und ohne Untersuchung",

@@ -58,9 +58,9 @@ export function Ch1Ingest({ chapter }: Ch1IngestProps) {
         <SectionLabel n="1.1">Two clocks, one event</SectionLabel>
         <h2 className="h2">Event time vs processing time.</h2>
         <p className="prose">
-          Every event carries two timestamps. <b>Event time</b> is when it happened, such as a tap on a phone or a rendered ad.{" "}
-          <b>Processing time</b> is when your stream saw it. Mobile clients, retries, weak signal and clock skew pull them apart, and treating
-          them as equal gives wrong numbers.
+          Every event carries two timestamps: <b>event time</b>, when it happened (a tap on a phone, a rendered ad), and{" "}
+          <b>processing time</b>, when your stream saw it. Mobile clients, retries, weak signal and clock skew pull them apart. Treating them
+          as equal gives wrong numbers.
         </p>
         <p className="prose">In the course architecture Kafka transports events and a Flink job processes them before the operational and batch
           writes split. The <b>watermark</b> marks event-time progress. After it, the configured policy updates a window, reroutes late records
@@ -84,8 +84,8 @@ export function Ch1Ingest({ chapter }: Ch1IngestProps) {
           Separate the operational projection from the complete batch.
         </h2>
         <p className="prose">
-          These roles belong to this reference architecture, not to the vendors. The sample serves operational inspection. The batch serves
-          reproducible reporting once source, completeness checks and late-data policy are known.
+          Sample and batch are roles in this course architecture; Kafka or Flink do not provide them. The sample serves operational
+          inspection, the batch reproducible reporting once source, completeness checks and late-data policy are known.
         </p>
         <IngestStreams />
       </section>

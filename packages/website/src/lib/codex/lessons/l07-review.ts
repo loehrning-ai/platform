@@ -40,7 +40,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Six baseline checks. Stop early if the task or scope is wrong; later checks cannot repair that.",
+            "Six baseline checks, plus what the affected system needs. Stop early if the task or scope is wrong; later checks cannot repair that.",
         },
         {
           kind: "card-grid",
@@ -48,7 +48,7 @@ const lesson: CodexLesson = {
             {
               eyebrow: "check 01",
               title: "Does it do what you asked?",
-              body: "Compare behavior with the goal and acceptance criteria. Reject a nearby solution, however consistent it is.",
+              body: "Compare behavior with the goal and acceptance criteria. Reject a solution to a neighboring problem, even if it is consistent.",
             },
             {
               eyebrow: "check 02",
@@ -73,7 +73,7 @@ const lesson: CodexLesson = {
             {
               eyebrow: "check 06",
               title: "Does it fit the system contract?",
-              body: "Check authorization, data handling, errors, logging, concurrency, migrations, observability, rollback and conventions. Add to AGENTS.md only a durable rule that was missing.",
+              body: "Check authorization, data handling, errors, logging, concurrency, migrations, observability, rollback and conventions. If a durable rule was missing, add it to AGENTS.md.",
             },
           ],
         },
@@ -93,13 +93,13 @@ const lesson: CodexLesson = {
     },
     {
       id: "s4",
-      title: "Spot the problems",
+      title: "Spot the problem",
       readTimeMinutes: 1,
       blocks: [
         {
           kind: "prose",
           markdown:
-            "Find the issue in the caching diff above before the quiz.",
+            "Before you read the explanation under the caching diff above, name the defect yourself.",
         },
       ],
     },
@@ -129,19 +129,19 @@ const lesson: CodexLesson = {
             {
               eyebrow: "sec 03",
               title: "Secrets in source",
-              body: "Scan source, fixtures, logs, generated files and configuration for credentials. Revoke exposed ones; deleting them from the diff leaves them in history.",
+              body: "Scan source, fixtures, logs, generated files and configuration for credentials. Revoke exposed credentials; deleting them from the diff leaves them in Git history.",
             },
             {
               eyebrow: "sec 04",
               title: "Error message leakage",
-              body: "Send no raw exceptions to clients and log no sensitive payloads. Keep diagnostics server-side, status codes stable and redact at each logging boundary.",
+              body: "Send no raw exceptions to clients and log no sensitive payloads. Keep diagnostics server-side and status codes stable, and redact sensitive data at each logging boundary.",
             },
           ],
         },
         {
           kind: "callout",
-          title: "Use the repository's security checks",
-          body: "Run the configured secret, dependency, static-analysis and authorization checks and read their scope, exclusions and output. A grep helps triage and is no gate.",
+          title: "Use the repository's security checks.",
+          body: "Run the configured secret, dependency, static-analysis and authorization checks and read their scope, exclusions and output. A grep helps you triage but does not replace these checks.",
         },
         {
           kind: "prose",
@@ -153,7 +153,7 @@ const lesson: CodexLesson = {
           // regex scans the raw .ts source for and would otherwise flag as
           // a leaked address.
           markdown:
-            "The request said \"add a `/debug/user` endpoint\" and named no authorization, input handling or response fields. The first version below works and is unsafe.\n\n```\n# insecure version\n\n" +
+            "The request said \"add a `/debug/user` endpoint\" and named no authorization, input handling or response fields. The first version below works but is unsafe.\n\n```\n# insecure version\n\n" +
             '@app.route("/debug/user")           # no auth guard\ndef debug_user():\n    user_id = request.args.get("id")  # no validation\n    try:\n        u = db.session.query(User).get(user_id)\n        return jsonify(u.__dict__)       # exposes all columns\n    except Exception as e:\n        return str(e), 500              # leaks stack trace\n\n# corrected version, same feature, secure\n\n' +
             '@app.route("/debug/user")\n' +
             '@require_admin                         # explicit authorization\ndef debug_user():\n    try:\n        user_id = int(request.args["id"])\n    except (KeyError, ValueError):\n        return jsonify({"error": "invalid id"}), 400\n\n    user = db.session.get(User, user_id)\n    if user is None:\n        return jsonify({"error": "not found"}), 404\n    return jsonify(user.to_safe_dict())  # explicit field allowlist\n```',
@@ -165,7 +165,7 @@ const lesson: CodexLesson = {
       title: "Quick check",
       readTimeMinutes: 1,
       blocks: [
-        { kind: "prose", markdown: "Two questions on reviewing Codex PRs." },
+        { kind: "prose", markdown: "Questions at the end of the lesson." },
       ],
     },
   ]),

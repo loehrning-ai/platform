@@ -27,7 +27,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Coding tools mix inline completion, editor chat, terminal and IDE agents, and background tasks that return a diff or pull request. Choose by operating requirements: which repository context the tool reads, where commands run, which writes need approval, whether the network is on, how model and data policies are set, and how results reach review.",
+            "Coding tools mix inline completion, editor chat, terminal and IDE agents, and background tasks that return a diff or pull request. Choose by what the tool reads, where commands run, which writes need approval, network access, model and data policy, and how results reach review.",
         },
       ],
     },
@@ -56,7 +56,7 @@ const lesson: CodexLesson = {
             },
             {
               eyebrow: "Aider",
-              title: "Open-source CLI interface",
+              title: "Open-source CLI",
               body: "A CLI for many model providers. Offline use depends on the model endpoint and local infrastructure.",
             },
             {
@@ -114,7 +114,7 @@ const lesson: CodexLesson = {
       title: "Quick check",
       readTimeMinutes: 1,
       blocks: [
-        { kind: "prose", markdown: "Two questions on tool selection and MCP." },
+        { kind: "prose", markdown: "Questions at the end of the lesson." },
       ],
     },
   ]),
@@ -129,7 +129,7 @@ const lesson: CodexLesson = {
         badLabel: "Over-engineered",
         goodLabel: "Right-sized",
         bad: "Task: add a missing JSDoc comment to one function.\n\nApproach: a background environment and a separate pull request for an edit you could review in place.\n\nCost: extra environment and review state, same risk.",
-        good: "Task: add a missing JSDoc comment to one function.\n\nApproach: write the comment next to the function, check it against the code, add it to the current change.\n\nCost: nothing extra.",
+        good: "Approach: write the comment next to the function, check it against the code, add it to the current change.\n\nCost: nothing extra.",
         note: "Delegate when the extra environment, context and review buy isolation, verification or parallelism.",
       },
     },
@@ -166,10 +166,10 @@ const lesson: CodexLesson = {
         copy: CODEX_QUIZ_COPY,
         question: "What does MCP add to a coding-agent workflow?",
         options: [
-          "Write code faster.",
-          "A standard way to discover and call configured servers' capabilities.",
-          "Run inside a sandboxed environment.",
-          "Understand more programming languages.",
+          "Faster code generation.",
+          "A standard way to discover and call configured servers' capabilities, within auth and policy.",
+          "A sandboxed runtime.",
+          "Support for more programming languages.",
         ],
         correct: 1,
         explanation:

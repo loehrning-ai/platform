@@ -42,7 +42,7 @@ export function Ch4Orchestrate({ chapter }: Ch4OrchestrateProps) {
         <h2 className="h2">A DAG of tasks, one partition at a time.</h2>
         <p className="prose">A scheduled pipeline is a <b>directed acyclic graph</b>. Nodes are tasks, edges are declared dependencies, and Airflow schedules whatever is ready. Retries, clearing and backfills follow the DAG configuration and operator semantics.</p>
         <DAGDiagram />
-        <p className="prose" style={{ marginTop: 18 }}>Idempotency is the task&apos;s job; the scheduler does not guarantee it. Run twice on the same logical inputs, an idempotent task reaches the same state or makes duplicate side effects detectable and suppressible.</p>
+        <p className="prose" style={{ marginTop: 18 }}>Idempotency is the task&apos;s job; the scheduler does not guarantee it. An idempotent task run twice on the same logical inputs reaches the same state or makes duplicate side effects detectable and suppressible.</p>
       </section>
 
       <section className="section">
@@ -54,13 +54,13 @@ export function Ch4Orchestrate({ chapter }: Ch4OrchestrateProps) {
 
       <section className="section">
         <SectionLabel n="5.3">The contract</SectionLabel>
-        <CodeBlock title="pipeline.py · the Airflow-approved write" lang="Spark" html={IDEMPOTENT_WRITE_SQL} />
+        <CodeBlock title="pipeline.py · an idempotent partition write" lang="Spark" html={IDEMPOTENT_WRITE_SQL} />
       </section>
 
       <AntiPatterns
         items={[
           "<b>Appending on a retryable path without a stable key.</b> Retries keep duplicate rows unless the sink merges or deduplicates idempotently.",
-          "<b>Mixing external side effects into a data write.</b> Move notifications and API writes out and protect them with an idempotency key or delivery ledger.",
+          "<b>Mixing external side effects into a data write.</b> Move notifications and API writes into a dedicated final task with an idempotency key or delivery ledger, so replays skip work already sent.",
           "<b>Selecting the partition with <code>CURRENT_DATE</code> or <code>NOW()</code>.</b> Pass the scheduled partition explicitly so backfills hit the requested interval.",
           "<b>Assuming alerts exist.</b> Configure deadlines, callbacks, ownership and routing, then test the failure path.",
         ]}
@@ -69,7 +69,6 @@ export function Ch4Orchestrate({ chapter }: Ch4OrchestrateProps) {
         items={[
           "Choose <b>overwrite, merge or upsert</b> from the table's key and partition semantics, and test a repeated attempt on the same logical input.",
           "For byte-for-byte reproduction, also pin code, source snapshots and nondeterministic inputs.",
-          "Put unavoidable side effects (emails, pushes, external API writes) in <b>a dedicated terminal task</b> with an external ledger, so replays skip work already sent.",
         ]}
       />
     </>

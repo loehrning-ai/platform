@@ -23,13 +23,13 @@ const lesson: CodexLesson = {
   sections: buildSections([
     {
       id: "s1",
-      title: "An agent, not an assistant",
+      title: "What Codex does",
       readTimeMinutes: 3,
       blocks: [
         {
           kind: "prose",
           markdown:
-            "Codex is a **task-oriented coding agent**. It runs locally in the CLI or IDE or in a cloud environment, and every surface follows the same loop:\n\n1. Take the request plus the session and repository context.\n2. Stay within the configured filesystem, command, approval and network limits.\n3. Read the relevant code and plan the changes.\n4. Edit files, run the available checks, read their output and revise.\n5. Return a summary and a **diff** for review, or open a pull request if configured.\n\nLocal sessions can be interactive, cloud tasks run in the background. You review the result against the task and the repository either way.",
+            "Codex is a **task-oriented coding agent**. It runs locally in the CLI or IDE or in a cloud environment, and every surface follows the same loop:\n\n1. Take the request plus the session and repository context.\n2. Stay within the configured filesystem, command, approval and network limits.\n3. Read the relevant code and plan the changes.\n4. Edit files, run the available checks, read their output and revise.\n5. Return a summary and a **diff** for review; a cloud task can also open a pull request if configured.\n\nLocal sessions can be interactive, cloud tasks run in the background. You review the result against the task and the repository either way.",
         },
         {
           kind: "prose",
@@ -89,7 +89,7 @@ const lesson: CodexLesson = {
       blocks: [
         {
           kind: "prose",
-          markdown: "Two questions wait at the end of the lesson.",
+          markdown: "Two questions at the end of the lesson.",
         },
       ],
     },
@@ -300,7 +300,7 @@ const lesson: CodexLesson = {
           'Your Codex task says only "refactor our auth module." The PR rewrites your user model and breaks three downstream services. What went wrong?',
         options: [
           "Codex has a bug and shouldn't be used for auth.",
-          'The task was ambiguous, "refactor auth" spans a huge scope.',
+          'The task was ambiguous: "refactor auth" spans a huge scope.',
           "The sandbox lacked the downstream services.",
           "It needed write access to prod.",
         ],
@@ -322,7 +322,7 @@ const lesson: CodexLesson = {
           "What context can you assume in a new Codex session?",
         options: [
           "The full history of every earlier session on the repository.",
-          "Only what the surface loads or you provide; durable rules live in versioned files.",
+          "Only what the surface loads or you provide.",
           "Only the most recent pull-request description.",
           "All local terminal output from previous runs.",
         ],

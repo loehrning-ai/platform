@@ -61,26 +61,6 @@ function FormatSpectrumDe() {
   );
 }
 
-function EngineCardsDe() {
-  const engines = [
-    { n: "Presto / Trino", kind: "verteiltes SQL", fits: "Interaktives SQL über konfigurierte Kataloge und Konnektoren.", not: "Lange Transformationen mit ungeprüften Spill-, Wiederholungs- und Ressourceneinstellungen." },
-    { n: "Spark / Databricks", kind: "verteilte Verarbeitung", fits: "Batch-Transformationen, große Joins, Jobs mit Neuberechnung oder Spill.", not: "Latenzkritische Abfragen mit ungemessenem Start- und Scheduling-Aufwand." },
-    { n: "Snowflake", kind: "verwaltetes Cloud-Warehouse", fits: "Verwaltetes SQL mit getrennt dimensionierten virtuellen Warehouses.", not: "Lasten, die Portabilität oder Zugriff fremder Engines brauchen, den die Plattform nicht bietet." },
-  ];
-  return (
-    <div className="eng-cards">
-      {engines.map((engine) => (
-        <div className="eng-card" key={engine.n}>
-          <div className="eng-n">{engine.n}</div>
-          <div className="eng-kind">{engine.kind}</div>
-          <div className="eng-row"><span className="eng-k mint">Geeignet</span> <span className="eng-v">{engine.fits}</span></div>
-          <div className="eng-row"><span className="eng-k amber">Vermeiden</span> <span className="eng-v">{engine.not}</span></div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 export interface Ch0FundamentalsDeProps {
   readonly chapter: ChapterMeta;
 }
@@ -110,8 +90,7 @@ export function Ch0FundamentalsDe({ chapter }: Ch0FundamentalsDeProps) {
 
       <section className="section">
         <SectionLabel n="0.2">Die Schichten</SectionLabel>
-        <h2 className="h2">Jede Abfrage durchläuft denselben Stack.</h2>
-        <p className="prose">Eine Warehouse-Abfrage durchläuft sieben Schichten, von unten nach oben: <b>physischer Speicher</b>, <b>Blob</b>, <b>Dateiformat</b>, <b>Tabellenabstraktion</b>, <b>Katalog</b>, <b>Abfrage-Engine</b> und <b>Anwendung</b>.</p>
+        <h2 className="h2">Die Schichten einer Warehouse-Abfrage.</h2>
         <LayerCake />
       </section>
 
@@ -149,13 +128,12 @@ export function Ch0FundamentalsDe({ chapter }: Ch0FundamentalsDeProps) {
       <section className="section">
         <SectionLabel n="0.7">Das Ökosystem der Engines</SectionLabel>
         <h2 className="h2">Die Engine nach der Abfrage wählen.</h2>
-        <p className="prose">Interaktive Abfragen und lange Transformationen brauchen andere Startzeit, Arbeitsspeicher, Spill, Wiederholungen und Parallelität. Vergleich das mit der Konfiguration deiner Engine.</p>
-        <EngineCardsDe />
+        <p className="prose">Interaktive Abfragen und lange Transformationen unterscheiden sich bei Startzeit, Arbeitsspeicher, Spill, Wiederholungen und Parallelität; prüf, wie deine Engine dafür konfiguriert ist. Trino passt zu interaktivem SQL über Konnektoren, Spark zu Batch-Jobs mit großen Joins oder Spill. Snowflake betreibt verwaltetes SQL auf virtuellen Warehouses; kläre vorher, ob andere Engines auf dieselben Daten zugreifen müssen.</p>
       </section>
 
       <section className="section">
         <SectionLabel n="0.8">Konnektoren: gleiches SQL, anderes Laufzeitverhalten</SectionLabel>
-        <h2 className="h2">Der Konnektor bestimmt die Laufzeitbedingungen.</h2>
+        <h2 className="h2">Trino-Konnektoren bestimmen, woher die Daten kommen.</h2>
         <p className="prose">Trino, die Open-Source-MPP-Engine mit dem früheren Namen PrestoSQL, hat austauschbare Konnektoren. Dasselbe SQL kann verteilte Object-Store-Zugriffe, lokalen Speicher oder Metadaten des Koordinators nutzen. Prüf Konnektorplan, Cache-Zustand und Datenplatzierung, bevor du Latenzen vergleichst.</p>
         <ConnectorSwitcher />
       </section>
@@ -165,17 +143,16 @@ export function Ch0FundamentalsDe({ chapter }: Ch0FundamentalsDeProps) {
         items={[
           "<b>Einen Data Lake wie eine relationale Datenbank behandeln.</b> <code>UPDATE one_row WHERE id = ...</code> auf rohem Parquet schreibt eine ganze Datei neu. Nutz ein Tabellenformat (Iceberg/Delta) mit Änderungen auf Zeilenebene oder bündle Aktualisierungen.",
           "<b>Kleine Dateien.</b> Sie kosten Auflistung, Footer-Zugriffe und Task-Planung. Leg eine Zielgröße fest und kompaktiere, wenn Messwerte es rechtfertigen.",
-          "<b>Rohes CSV als analytische Tabelle.</b> Typen validieren und für selektive Abfragen eine typisierte Spaltenkopie schreiben.",
+          "<b>Rohes CSV als analytische Tabelle.</b> Validier die Typen und schreib für selektive Abfragen eine typisierte Spaltenkopie.",
           "<b><code>SELECT *</code> auf einer Faktentabelle mit 300 Spalten.</b> Liest jede Spalte. Frag nur die Spalten ab, die du brauchst.",
-          "<b>Trino und PrestoDB gleichsetzen.</b> Beide trennten sich um 2020; Funktionsnamen, Konnektorverhalten und Optimierer-Vorgaben unterscheiden sich. Prüf, welche dein Cluster betreibt, bevor du Dokumentation übernimmst.",
-          "<b>Eine Engine nach ihrem Ruf wählen.</b> Miss Start, Scan, Speicher, Spill, Wiederholung und Parallelität an deiner Ziellast.",
+          "<b>Trino und PrestoDB gleichsetzen.</b> Die Projekte haben sich um 2020 getrennt; Funktionsnamen, Konnektorverhalten und Optimierer-Vorgaben unterscheiden sich. Prüf, welche dein Cluster betreibt, bevor du Dokumentation übernimmst.",
         ]}
       />
       <Takeaway
         title="Kernaussagen"
         items={[
-          "<b>Jede der sieben Schichten fällt anders aus.</b> Ein ausgefallener Metastore braucht eine andere Lösung als eine langsame SSD-Schicht.",
-          "Vor dem Optimieren Plan und Laufzeitstatistiken lesen. Zuerst nach Partitions- und Indexspalten filtern und <code>SELECT *</code> vermeiden.",
+          "<b>Jede der sieben Schichten hat ihr eigenes Fehlerbild.</b> Ein ausgefallener Metastore braucht eine andere Lösung als eine langsame SSD-Schicht.",
+          "Lies vor dem Optimieren Plan und Laufzeitstatistiken und filtere zuerst nach Partitions- und Indexspalten.",
         ]}
       />
     </DataEngineeringFundamentalsLocaleProvider>

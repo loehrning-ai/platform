@@ -12,30 +12,30 @@ export const DATA_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
       "Binde freigegebene Quellen mit Kontrollen für Identität, Berechtigung, Aktualität und Herkunft an.",
     objective:
       "Binde freigegebene Quellen mit Kontrollen für Identität, Berechtigung, Aktualität und Herkunft an.",
-    durationMinutes: 24,
+    durationMinutes: 7,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Mit den unterstützten Entscheidungen beginnen",
-        readTimeMinutes: 8,
+        readTimeMinutes: 1,
         content:
-          "Lege zuerst fest, welche Entscheidungen die Schicht stützt. Benenne je Anwendungsfall maßgebliche Datensätze, zulässiges Alter, Datenklassifizierung und nötige Belege, und bilde Unterschiede bei Verbindlichkeit, Sensibilität und Aufbewahrung auch in der gemeinsamen Suche ab.",
+          "Lege zuerst fest, welche Entscheidungen die Schicht stützt. Benenne je Anwendungsfall maßgebliche Datensätze, zulässiges Alter, Datenklassifizierung und nötige Belege, und sorge dafür, dass die gemeinsame Suche Verbindlichkeit, Sensibilität und Aufbewahrungsregeln jeder Quelle beachtet.",
       },
       {
         id: "s2",
         title: "Nur begründete Quellen anbinden",
-        readTimeMinutes: 8,
+        readTimeMinutes: 1,
         content:
           "Dokumente, Quellcode, Tickets, Kundendaten, Nachrichten und Kalender bringen je eigene Risiken mit. Es gelten Zweckbindung und Datenminimierung; hol bei Bedarf Datenschutz, Sicherheit, Recht und Beschäftigtenvertretung dazu. Binde eine Quelle nur für einen festgelegten Zweck an.",
       },
       {
         id: "s3",
         title: "Belege mit dem Ergebnis ausgeben",
-        readTimeMinutes: 8,
+        readTimeMinutes: 1,
         content:
-          "Ein abgerufenes Ergebnis zeigt Quellenverweise, Versionen oder Zeitstempel und wesentliche Zugriffs- und Aktualitätsgrenzen. Bei dünner Abdeckung oder widersprüchlichen Quellen nennt das System die Einschränkung oder antwortet nicht, statt Unbelegtes als Tatsache auszugeben.",
+          "Ein abgerufenes Ergebnis zeigt Quellenverweise, Versionen oder Zeitstempel und wesentliche Zugriffs- und Aktualitätsgrenzen, und wer damit arbeitet, kann die Belege prüfen. Bei dünner Abdeckung oder widersprüchlichen Quellen nennt das System die Einschränkung oder antwortet nicht, statt Unbelegtes als Tatsache auszugeben.",
       },
     ],
     callout: {
@@ -71,30 +71,30 @@ export const DATA_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
       "Prüfe Rechte der Person, Dienstidentität und Ressource vor jeder Ausgabe.",
     objective:
       "Prüfe Rechte der Person, Dienstidentität und Ressource vor jeder Ausgabe.",
-    durationMinutes: 20,
+    durationMinutes: 7,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Die Kontrolle vor die Offenlegung setzen",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "Die Berechtigungsprüfung gehört in den Abrufpfad und an die Grenze der Quelle. Ein Ausgabefilter greift erst nach dem Abruf und übersieht indirekte Offenlegung. Prüfe den Zugriff, bevor Dokumente, Ausschnitte, Metadaten oder abgeleitete Ergebnisse herausgehen, und teste die Richtlinie mit erlaubten und abgelehnten Fällen.",
       },
       {
         id: "s2",
         title: "Person und ausführenden Dienst getrennt abbilden",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "Das System erkennt, welche Person die Anfrage ausgelöst hat und welcher Agent oder Dienst sie ausführt. Der wirksame Zugriff ist höchstens die Schnittmenge aus Rechten der Person, Umfang des Dienstes und geltender Richtlinie. Nutze kurzlebige Zugangsdaten und ausdrückliche Delegation, nie ein gemeinsames Konto mit erweiterten Rechten.",
       },
       {
         id: "s3",
         title: "Entscheidungen protokollieren, ohne ein neues Leck zu schaffen",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
-          "Protokolliere Person, Dienstidentität, Zeitpunkt, angeforderte Ressourcenkennungen, Richtlinienversion, Berechtigungsentscheidung und ausgegebene Quellenkennungen. Schütze das Protokoll und halte rohe Geheimnisse und unnötige sensible Anfragetexte heraus.",
+          "Protokolliere Person, Dienstidentität, Zeitpunkt, angeforderte Ressourcenkennungen, Richtlinienversion, Berechtigungsentscheidung und ausgegebene Quellenkennungen. Schütze das Protokoll, halte rohe Geheimnisse und unnötige sensible Anfragetexte heraus und lass es nicht zum zweiten unkontrollierten Datenspeicher werden.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -124,21 +124,21 @@ export const DATA_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
       "Lege Altersgrenzen fest, übertrage Änderungen und Löschungen, weise den Datenstand aus.",
     objective:
       "Lege Altersgrenzen fest, übertrage Änderungen und Löschungen, weise den Datenstand aus.",
-    durationMinutes: 22,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Aktualität an die Entscheidung anpassen",
-        readTimeMinutes: 11,
+        readTimeMinutes: 1,
         content:
           "Eine regelmäßige Momentaufnahme genügt für stabiles Referenzmaterial, aber nicht für einen Ablauf, der auf schnell veränderlichen Daten handelt. Lege je Anwendungsfall und Quelle ein Höchstalter fest, auch für Änderungen, Widerrufe und Löschungen.",
       },
       {
         id: "s2",
         title: "Veraltete Zustände erkennen und ausweisen",
-        readTimeMinutes: 11,
+        readTimeMinutes: 1,
         content:
           "Wähle ereignisgesteuerte, geplante oder bedarfsgesteuerte Synchronisierung nach nötiger Aktualität und Kosten. Überwache Verzögerungen und Fehlschläge, gib Datenstand oder Version mit jedem Ergebnis aus und leg vorab fest, ob der Ablauf bei Überschreitung warnt, bestätigen lässt, auf die Quelle zurückgreift oder stoppt.",
       },
@@ -168,7 +168,7 @@ export const DATA_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     title: "Modul 7, Wissensprüfung",
     subtitle: "Zwei Fragen zu Berechtigung und Aktualität.",
     objective: "Zwei Fragen zu Berechtigung und Aktualität.",
-    durationMinutes: 9,
+    durationMinutes: 3,
     keyConcepts: [],
     quiz: [
       {
@@ -183,7 +183,7 @@ export const DATA_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
           {
             id: "b",
-            text: "Berechtigung im Abrufpfad mit Personenrechten und Richtlinie durchsetzen.",
+            text: "Die Berechtigung schon im Abrufpfad durchsetzen.",
             isCorrect: true,
           },
           {
@@ -198,7 +198,7 @@ export const DATA_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Das System muss unberechtigte Inhalte vor der Offenlegung abweisen; ein Ausgabefilter kommt zu spät und übersieht indirekte Lecks. Wirksamer Zugriff verbindet Personenrechte mit dem zugewiesenen Umfang des Dienstes.",
+          "Das System muss unberechtigte Inhalte vor der Offenlegung abweisen; ein Ausgabefilter kommt zu spät und übersieht indirekte Lecks. Wirksamer Zugriff ist die Schnittmenge aus Personenrechten, Dienstumfang und geltender Richtlinie.",
       },
       {
         id: "ano-data-q2",
@@ -217,7 +217,7 @@ export const DATA_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
           {
             id: "c",
-            text: "Er kann auf zu alten Daten handeln, wenn niemand Aktualität prüft.",
+            text: "Er kann auf Daten handeln, die älter als erlaubt sind.",
             isCorrect: true,
           },
           {
@@ -227,7 +227,7 @@ export const DATA_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Eine Momentaufnahme ist nur relativ zur geforderten Aktualität sicher. Lege die Anforderung fest, miss die Verzögerung, zeig den Datenstand und schränke den Ablauf bei Überschreitung ein oder stoppe ihn.",
+          "Eine Momentaufnahme ist nur innerhalb der geforderten Aktualität sicher. Miss die Verzögerung, zeig den Datenstand und warne oder stoppe bei Überschreitung.",
       },
     ],
     sections: [],

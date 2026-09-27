@@ -117,7 +117,7 @@ export const OV_STAGES: readonly OverviewStage[] = [
     hex: "#0091FF",
     ink: "#0070C5",
     icon: "serve",
-    body: "A versioned metric registry reduces formula drift across consumers.",
+    body: "A versioned metric registry reduces formula drift when consumers resolve the registered definition.",
   },
   {
     id: "gov",
@@ -230,7 +230,7 @@ export const OV_STAGES_DE: readonly OverviewStage[] = [
     hex: "#0091FF",
     ink: "#0070C5",
     icon: "serve",
-    body: "Ein versioniertes Metrikregister verringert Formelabweichungen zwischen Verbrauchern.",
+    body: "Ein versioniertes Metrikregister verringert Formelabweichungen, wenn Verbraucher die registrierte Definition auflösen.",
   },
   {
     id: "gov",

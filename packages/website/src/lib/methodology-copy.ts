@@ -25,7 +25,7 @@ export const glossary: Readonly<Record<string, GlossaryEntry>> = {
   eu_ai_act: {
     label: "EU AI Act",
     short:
-      "EU-Verordnung 2024/1689. Art. 4 gilt seit 2. Februar 2025 und verlangt seit 27. Juli 2026 Maßnahmen zur Unterstützung von KI-Kompetenz. Risikoklassen: Art. 5, Art. 50, GPAI und Hochrisiko.",
+      "EU-Verordnung 2024/1689. Art. 4 gilt seit 2. Februar 2025 und verlangt seit 27. Juli 2026 Maßnahmen zur Unterstützung von KI-Kompetenz. Pflichten nach Risiko: verbotene Praktiken (Art. 5), Transparenz (Art. 50), GPAI und Hochrisiko.",
     long: "Die Verordnung verteilt Pflichten nach Rolle, etwa auf Anbieter und Betreiber. Art. 4 verlangt Maßnahmen, die KI-Kompetenz im jeweiligen Kontext unterstützen; Format und individuelles Kompetenzniveau schreibt er nicht vor. Bußgelder: Art. 5 bis 35 Mio. Euro oder 7 %, die meisten anderen Pflichten bis 15 Mio. Euro oder 3 %, Falschangaben bis 7,5 Mio. Euro oder 1 %.",
   },
 };

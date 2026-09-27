@@ -19,7 +19,7 @@ export const AGENT_HELP_COPY_DE: AgentHelpCopy = {
   },
   statusOff: {
     title: "Der Zugang ist in dieser Umgebung nicht aktiv.",
-    body: "Die Adresse liefert gerade einen Fehler. Die Anleitung gilt, sobald der Betreiber den Zugang einschaltet.",
+    body: "Bis der Betreiber ihn einschaltet, liefert die Adresse einen Fehler.",
   },
   sectionTitles: {
     overview: "Was das ist",
@@ -66,7 +66,7 @@ export const AGENT_HELP_COPY_DE: AgentHelpCopy = {
   },
   code: {
     title: "Claude Code",
-    intro: "Einmal im Terminal, danach kennt jede Sitzung den Server.",
+    intro: "Du trägst den Server einmal im Terminal ein, danach kennt ihn jede Sitzung.",
     steps: [
       "Führe den Befehl unten in einem Terminal aus.",
       "Prüfe mit claude mcp list, ob loehrning aufgeführt ist.",
@@ -105,9 +105,9 @@ export const AGENT_HELP_COPY_DE: AgentHelpCopy = {
     format:
       "Ein Schlüssel beginnt mit lat_. Gespeichert wird nur ein Prüfwert, deshalb kann auch der Betreiber ihn nicht erneut anzeigen. Verlierst du ihn, widerrufst du ihn und legst einen neuen an.",
     limit: (maxActive) =>
-      `Bis zu ${maxActive} Schlüssel können gleichzeitig aktiv sein. Ein widerrufener Schlüssel gilt ab der nächsten Anfrage nicht mehr.`,
+      `Bis zu ${maxActive} Schlüssel können gleichzeitig aktiv sein.`,
     bearerActive:
-      "Mit Schlüssel kommen zwei lesende Werkzeuge dazu: dein Lernstand und dein nächster Schritt. Eine Anfrage mit widerrufenem Schlüssel wird ganz abgewiesen.",
+      "Mit Schlüssel kommen zwei lesende Werkzeuge dazu: dein Lernstand und dein nächster Schritt. Ab der nächsten Anfrage weist der Server einen widerrufenen Schlüssel ab, auch für die öffentlichen Werkzeuge.",
     bearerPending: "",
     oauthPending:
       "Eine Freigabe über eine Anmeldeseite ist noch nicht eingerichtet. Bis dahin nutzt du den Zugriffsschlüssel.",
@@ -118,14 +118,14 @@ export const AGENT_HELP_COPY_DE: AgentHelpCopy = {
       "Ohne eigenes Programm nutzt du den Chat im Konto. Er läuft auf deinem Anthropic-Schlüssel und liest dieselben Inhalte.",
     steps: [
       "Melde dich an und öffne Konto, Deine KI.",
-      "Speichere deinen Anthropic-Schlüssel. Danach bleibt nur seine letzte Stelle sichtbar.",
+      "Speichere deinen Anthropic-Schlüssel. Danach siehst du nur noch sein Ende.",
       "Wähle ein Modell und schreib los.",
     ],
     cost: "Deine Nachrichten gehen mit deinem Schlüssel an Anthropic, zu deinen Vertragsbedingungen und auf deine Kosten.",
     transcript:
       "Der Verlauf liegt nur in deinem Browser. Löschst du die Seitendaten, ist er weg.",
     limits: (messagesPerHour, toolCalls) =>
-      `Pro Stunde ${messagesPerHour} Nachrichten, pro Nachricht bis zu ${toolCalls} Werkzeugaufrufe.`,
+      `Pro Stunde ${messagesPerHour} Nachrichten, pro Nachricht bis zu ${toolCalls} Werkzeugaufrufe. Danach hält der Chat an.`,
     offTitle: "Der Chat ist in dieser Umgebung nicht eingerichtet.",
     offBody:
       "Bis der Betreiber ihn freischaltet, wird kein Schlüssel gespeichert und keine Anfrage gestellt.",
@@ -142,35 +142,35 @@ export const AGENT_HELP_COPY_DE: AgentHelpCopy = {
       { uri: "workshop://ki-prognosen-einschaetzen", label: "Ein Workshop" },
       { uri: "book://ki-landschaft/01_eisberg", label: "Ein Buchkapitel" },
     ],
-    localeNote: "Mit ?locale=en kommt der englische Text.",
+    localeNote: "Mit ?locale=en kommt der englische Text, sonst der deutsche.",
     islandNote:
-      "Auf Lektions-, Kapitel- und Workshopseiten kopiert der Knopf Mit deiner KI öffnen einen fertigen Auftrag mit der Serveradresse und den Adressen der Seite.",
+      "Auf Lektions-, Kapitel- und Workshopseiten kopiert der Knopf „Mit deiner KI öffnen“ einen fertigen Auftrag mit der Serveradresse und den Adressen der Seite.",
   },
   limits: {
     intro: "Diese Grenzen gelten für alle gleich.",
     requests: (maxPerHour) =>
-      `${maxPerHour} Anfragen pro Stunde und Adresse. Danach lehnt der Server bis zum Ende der Stunde ab.`,
+      `${maxPerHour} Anfragen pro Stunde und IP-Adresse. Danach lehnt der Server bis zum Ende der Stunde ab.`,
     output: (maxKilobytes) =>
       `Jede Antwort ist auf ${maxKilobytes} KB begrenzt. Längere Texte werden gekürzt und nennen die Adresse der Originalseite.`,
     search: (maxResults, maxQueryChars) =>
-      `Die Suche liefert höchstens ${maxResults} Treffer, Anfragen dürfen bis zu ${maxQueryChars} Zeichen lang sein.`,
+      `Die Suche liefert höchstens ${maxResults} Treffer, Suchbegriffe dürfen bis zu ${maxQueryChars} Zeichen lang sein.`,
     chat: (messagesPerHour, messageKibibytes) =>
       `Chat im Konto: ${messagesPerHour} Nachrichten pro Stunde, ${messageKibibytes} KiB pro Nachricht.`,
     tokens: (maxActive, nameChars) =>
       `${maxActive} aktive Zugriffsschlüssel pro Konto, Namen bis ${nameChars} Zeichen.`,
     unavailable:
-      "Erreicht der Server seine Zähler nicht, lehnt er die Anfrage ab.",
+      "Kann der Server Anfragen gerade nicht zählen, lehnt er sie ab.",
   },
   privacy: {
     intro:
       "Öffentliche Anfragen laufen ohne Konto und Kennung. Arbeitet ein Programm für dich, protokolliert dein Konto seine Aufrufe.",
     logged: [
-      "Programm, Werkzeug, Erfolg und Dauer jedes Aufrufs.",
+      "Protokolliert werden Programm, Werkzeug, Erfolg und Dauer jedes Aufrufs.",
       "Die letzten 50 Einträge stehen in deinem Konto und werden nach 30 Tagen gelöscht.",
     ],
     notLogged: [
-      "Keine Suchanfrage, kein Antworttext und keine Chatnachricht.",
-      "Kein Schlüssel im Klartext, weder im Protokoll noch in einer Fehlermeldung.",
+      "Nicht protokolliert werden Suchanfragen, Antworttexte, Chatnachrichten und Schlüssel.",
+      "Auch in Fehlermeldungen steht weder ein Zugriffs- noch ein Anthropic-Schlüssel im Klartext.",
     ],
     revoke:
       "Jeden Schlüssel und jede Freigabe kannst du im Konto sofort widerrufen. Löschst du das Konto, verschwinden sie samt Protokoll.",

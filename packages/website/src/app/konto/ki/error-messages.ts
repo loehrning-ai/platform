@@ -72,8 +72,8 @@ const KEY_MESSAGES: Readonly<Record<string, Message>> = {
     en: "That does not look like an Anthropic key. It starts with sk-ant-.",
   },
   llm_key_rejected: {
-    de: "Anthropic hat diesen Schlüssel abgelehnt. Prüfe ihn in deinem Anthropic-Konto.",
-    en: "Anthropic rejected this key. Check it in your Anthropic account.",
+    de: "Anthropic hat diesen Schlüssel abgelehnt. Prüfe ihn in deinem Anthropic-Konto und füge ihn neu ein.",
+    en: "Anthropic rejected this key. Check it in your Anthropic account and paste it again.",
   },
   provider_timeout: {
     de: "Anthropic hat nicht rechtzeitig geantwortet. Der Schlüssel wurde nicht gespeichert.",

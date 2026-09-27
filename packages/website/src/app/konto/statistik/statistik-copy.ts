@@ -66,13 +66,13 @@ export const STATISTIK_COPY = {
     eyebrow: "Konto",
     title: "Betriebsstatistik",
     intro:
-      "Zusammengefasste Nutzungszahlen, bei jedem Aufruf neu berechnet und nicht gespeichert.",
+      "Die Seite zählt die Nutzung bei jedem Aufruf neu und speichert nichts.",
     unavailableTitle: "Statistik vorübergehend nicht verfügbar",
     unavailableBody:
       "Die Anmeldung ließ sich gerade nicht prüfen, deshalb erscheinen keine Zahlen. Versuche es später erneut.",
     reauthTitle: "Erneute Anmeldung erforderlich",
     reauthBody:
-      "Die Statistik öffnet sich nur bis 24 Stunden nach einer echten Anmeldung, eine ältere Sitzung reicht nicht.",
+      "Die Statistik öffnet sich nur bis 24 Stunden nach einer echten Anmeldung. Eine ältere Sitzung reicht nicht.",
     reauthSignOutStep: "1. Zuerst abmelden.",
     reauthSignOut: "Abmelden",
     reauthSignInStep: "2. Danach erneut anmelden.",
@@ -101,14 +101,14 @@ export const STATISTIK_COPY = {
     coursesIncomplete:
       "Mindestens ein Kurs fehlt, weil seine Anzahl nicht lesbar war.",
     accountTotalsNote:
-      "Die Zahl der Konten fehlt, weil ihre Zählung Nutzerdatensätze lesen müsste.",
+      "Die Zahl der Konten wird nicht angezeigt, weil man dafür Nutzerdatensätze lesen müsste.",
     ownerRowsNote:
       "Die eigenen Einträge des Betreibers sind in jeder Anzahl enthalten.",
     thresholdNote: (floor: number, minimum: number) =>
       `Unter ${floor} gespeicherten Lernständen wird keine Anzahl angezeigt. Einzelwerte unter ${minimum} werden nie als Zahl angezeigt.`,
     reachHeading: "Reichweite und Nutzungsereignisse",
     reachIntro: (days: number) =>
-      `Werte aus Vercel Web Analytics der letzten ${days} Tage, bei jedem Aufruf abgefragt und nicht gespeichert.`,
+      `Die Seite fragt Vercel Web Analytics für die letzten ${days} Tage bei jedem Aufruf ab und speichert nichts.`,
     reachDisabled:
       "Die Abfrage von Vercel Web Analytics ist hier nicht eingerichtet.",
     reachNotEnabled:
@@ -137,13 +137,13 @@ export const STATISTIK_COPY = {
     eyebrow: "Account",
     title: "Operating statistics",
     intro:
-      "Aggregated usage counts, recalculated on each request and not stored.",
+      "The page recounts usage on each request and stores nothing.",
     unavailableTitle: "Statistics temporarily unavailable",
     unavailableBody:
       "Your sign-in could not be verified just now, so no figures are shown. Try again later.",
     reauthTitle: "Sign in again",
     reauthBody:
-      "The statistics open only within 24 hours of an actual sign-in; an older session is not enough.",
+      "The statistics open only within 24 hours of an actual sign-in. An older session is not enough.",
     reauthSignOutStep: "1. Sign out first.",
     reauthSignOut: "Sign out",
     reauthSignInStep: "2. Then sign in again.",
@@ -172,13 +172,13 @@ export const STATISTIK_COPY = {
     coursesIncomplete:
       "At least one course is missing because its count could not be read.",
     accountTotalsNote:
-      "The number of accounts is missing because counting them would mean reading user records.",
+      "The number of accounts is not shown, because counting them would mean reading user records.",
     ownerRowsNote: "The operator's own records are included in every figure.",
     thresholdNote: (floor: number, minimum: number) =>
       `Below ${floor} stored progress records no figure is shown. Individual figures below ${minimum} are never shown as a number.`,
     reachHeading: "Reach and usage events",
     reachIntro: (days: number) =>
-      `Figures from Vercel Web Analytics for the last ${days} days, fetched on each request and not stored.`,
+      `The page fetches the last ${days} days from Vercel Web Analytics on each request and stores nothing.`,
     reachDisabled:
       "Vercel Web Analytics retrieval is not set up here.",
     reachNotEnabled:

@@ -232,8 +232,8 @@ export function RowColumn({ lessonId, cpId }: RowColumnProps): JSX.Element {
           }
           summary={
             locale === "de"
-              ? "Der Zeilenspeicher liest vier Spalten jeder Zeile. Der Spaltenspeicher liest nur country und amount."
-              : "A row-store scans all 4 columns of every row; a column-store reads only country and amount."
+              ? "Der Zeilenspeicher liest vier Spalten jeder Zeile. Der Spaltenspeicher liest nur die zwei Spalten der Abfrage, country und amount."
+              : "A row-store scans all 4 columns of every row; a column-store reads only the 2 columns the query needs, country and amount."
           }
         />
       ) : (

@@ -26,7 +26,7 @@ export function Ch9Capstone({ chapter }: Ch9CapstoneProps) {
 
       <section className="section">
         <SectionLabel n="10.1">The living pipeline</SectionLabel>
-        <h2 className="h2">Simulated rows move through six selected controls.</h2>
+        <h2 className="h2">Simulated rows move through the pipeline.</h2>
         <p className="prose">Each dot is a simulated user row. The scenario models an additive merge, replay protection, late-data routing, orchestration, selected quality checks and a registered metric, not a complete production architecture.</p>
         <p className="prose">
           Change a control below a stage, watch the rows and signal state, then run the analyst query and compare the value with its source
@@ -37,7 +37,7 @@ export function Ch9Capstone({ chapter }: Ch9CapstoneProps) {
 
       <Takeaway
         items={[
-          "A signal separates a completed write from one that passed the named checks.",
+          "A signal separates a completed write from one that passed the named checks. It does not prove every business value is correct.",
           "A plausible number needs source, cutoff, definition version and check evidence before anyone can interpret it.",
           "Trace a failure to the responsible contract and rebuild the affected state instead of masking the symptom downstream.",
         ]}

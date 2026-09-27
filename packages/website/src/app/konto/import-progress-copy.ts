@@ -86,9 +86,9 @@ export const IMPORT_COPY = {
       unauthorized:
         "Deine Anmeldung ist abgelaufen. Melde dich neu an und versuche es erneut.",
       rate_limit_exceeded:
-        "Zu viele Versuche. Warte etwa eine Stunde.",
+        "Zu viele Versuche. Versuche es in etwa einer Stunde erneut.",
       rate_limit_unavailable:
-        "Der Schutz vor zu vielen Anfragen ist gerade aus, deshalb wurde nichts geschrieben. Versuche es in einigen Minuten erneut.",
+        "Der Schutz vor zu vielen Anfragen ist gerade nicht verfügbar, deshalb wurde nichts geschrieben. Versuche es in einigen Minuten erneut.",
       payload_too_large: "Dein lokaler Lernstand ist für eine Übernahme zu groß.",
       progress_too_large:
         "Ein Kurs im lokalen Lernstand ist zu groß zum Speichern.",
@@ -136,9 +136,9 @@ export const IMPORT_COPY = {
       auth_not_configured:
         "This environment has no learning account configured.",
       unauthorized: "Your sign-in has expired. Sign in again and try once more.",
-      rate_limit_exceeded: "Too many attempts. Wait about an hour.",
+      rate_limit_exceeded: "Too many attempts. Try again in about an hour.",
       rate_limit_unavailable:
-        "The protection against excessive requests is down, so nothing was written. Try again in a few minutes.",
+        "The protection against excessive requests is unavailable, so nothing was written. Try again in a few minutes.",
       payload_too_large:
         "Your local learning record is too large to be transferred.",
       progress_too_large:

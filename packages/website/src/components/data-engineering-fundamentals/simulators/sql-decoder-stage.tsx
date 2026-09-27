@@ -298,7 +298,7 @@ export function SqlDecoderStage() {
           </div>
           <div className="sd-gantt-note">
             {Q.id === "scan" && text("Single stage. Scan+filter+project fuse into one pipeline on each worker.", "Eine Stage. Scan, Filter und Projektion verschmelzen auf jedem Worker zu einer Pipeline.")}
-            {Q.id === "hash" && text("Three stages. Two parallel scans, then a join stage after the shuffle, then a final aggregate.", "Drei Stages. Zwei parallele Scans, danach eine Join-Stage nach dem Shuffle und abschließend die Aggregation.")}
+            {Q.id === "hash" && text("Four stages: two parallel scans, a join stage after the shuffle, then the final aggregate.", "Vier Stages: zwei parallele Scans, eine Join-Stage nach dem Shuffle, dann die Aggregation.")}
             {Q.id === "bcast" && text("One stage. The small dim table is broadcast to every worker: no shuffle of the big table.", "Eine Stage. Die kleine Dimensionstabelle wird an jeden Worker übertragen; die große Tabelle wird nicht geshuffelt.")}
           </div>
         </div>

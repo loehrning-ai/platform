@@ -12,28 +12,28 @@ export const ORGMODEL_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
       "Leite die Teamgröße aus Arbeit, Leistungszusagen, Abhängigkeiten, Fähigkeiten und Risiko ab.",
     objective:
       "Leite die Teamgröße aus Arbeit, Leistungszusagen, Abhängigkeiten, Fähigkeiten und Risiko ab.",
-    durationMinutes: 20,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Mit dem Verantwortungsbereich beginnen",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "Leg fest, welches Ergebnis ein Team verantwortet, mit Nutzergruppen, Leistungszusagen, Abhängigkeiten, Entscheidungsrechten und Kontrollpflichten, dann Arbeitslast und Fähigkeiten. Klare Verantwortung spart Übergaben. Die Größe folgt Nachfrage, Erreichbarkeit, Komplexität und Risiko.",
       },
       {
         id: "s2",
         title: "Kapazitätsoptionen ausdrücklich bewerten",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
-          "Ein Kapazitätsantrag zeigt Arbeitslast, Engpässe, Auswirkungen auf Leistungszusagen, Kontrollvorgaben und geprüfte Optionen: Prozess- oder Umfangsänderung, bessere Werkzeuge, Automatisierung, Schulung oder mehr Personen. Die Belege stützen eine Entscheidung und keine Regel, vor jeder Einstellung zu automatisieren.",
+          "Ein Kapazitätsantrag zeigt Arbeitslast, Engpässe, Auswirkungen auf Leistungszusagen, Kontrollvorgaben und geprüfte Optionen: Prozess- oder Umfangsänderung, bessere Werkzeuge, Automatisierung, Schulung oder mehr Personen. Entschieden wird je Antrag anhand dieser Belege, ohne feste Regel, vor jeder Einstellung zu automatisieren.",
       },
       {
         id: "s3",
         title: "Die Struktur anhand von Betriebsdaten anpassen",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
           "Regulierte Arbeit, Fachentscheidungen, physische Abläufe, Rufbereitschaft, Barrierefreiheit oder anhaltende Nachfrage brauchen oft größere oder anders besetzte Teams. Beobachte nach Änderungen Arbeitslast, Qualität, Störungen, Alter offener Vorgänge und Belastung, und vergrößere, teile oder verbinde Teams, wenn diese Signale es zeigen.",
       },
@@ -66,23 +66,23 @@ export const ORGMODEL_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
       "Spare Übergaben durch breite Zuständigkeit und behalte Fachverantwortung, wo Fehlerkosten sie verlangen.",
     objective:
       "Spare Übergaben durch breite Zuständigkeit und behalte Fachverantwortung, wo Fehlerkosten sie verlangen.",
-    durationMinutes: 18,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Breite Verantwortung braucht klare Grenzen",
-        readTimeMinutes: 9,
+        readTimeMinutes: 1,
         content:
           "Eine breit aufgestellte Person koordiniert über Fachgebiete und nutzt Werkzeuge für Kontext, Entwürfe oder begrenzte Analysen, was Übergaben spart. Werkzeuge liefern keine Fachkunde und keine Verantwortung, also legst du fest, welche Entscheidungen sie trifft und welche Fachleute brauchen.",
       },
       {
         id: "s2",
         title: "Fachliche Prüfpunkte nach Risiko setzen",
-        readTimeMinutes: 9,
+        readTimeMinutes: 1,
         content:
-          "Fachleute verantworten folgenreiche Fachentscheidungen, prüfen ausgewählte Arbeit, untersuchen neuartige Fälle und machen wiederkehrende Hinweise zu Standards oder Evaluationskriterien. Ihre Einbindung folgt Fehlerkosten, Neuartigkeit, Regulierung und Umkehrbarkeit. Prüf danach, ob der Prüfpunkt Schäden verhindert, ohne unnötige Warteschlangen.",
+          "Fachleute verantworten folgenreiche Fachentscheidungen, prüfen ausgewählte Arbeit, untersuchen neuartige Fälle und machen wiederkehrende Hinweise zu Standards oder Evaluationskriterien. Ihre Einbindung folgt Fehlerkosten, Neuartigkeit, Regulierung und Umkehrbarkeit. Prüf danach, ob der Prüfpunkt Schäden verhindert, ohne unnötige Warteschlangen zu erzeugen.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -112,21 +112,21 @@ export const ORGMODEL_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
       "Streiche doppelte Freigaben und erhalte Fachkunde, Verantwortung und Funktionstrennung.",
     objective:
       "Streiche doppelte Freigaben und erhalte Fachkunde, Verantwortung und Funktionstrennung.",
-    durationMinutes: 14,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Jede Freigabe einem Zweck zuordnen",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "Notiere je Freigabe Entscheidungsrecht, Risiko, nötige Belege und verantwortliche Rolle. Streiche Schritte, die eine Prüfung ohne neue Information oder Kontrolle wiederholen. Was Tragweite, Regulierung, unabhängige Aufsicht oder Funktionstrennung verlangen, bleibt.",
       },
       {
         id: "s2",
         title: "Entscheidungsvorlagen als ungeprüfte Hilfsmittel nutzen",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "Ein Modell kann eine Vorlage aus belegten Fakten, Optionen, Annahmen, Risiken und offenen Punkten bauen. Freigebende müssen die Quellen öffnen und Lücken korrigieren können. Die Vorlage bestimmt weder die Zahl der Freigaben noch die Verantwortung.",
       },
@@ -156,7 +156,7 @@ export const ORGMODEL_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     title: "Modul 6, Wissensprüfung",
     subtitle: "Zwei Fragen zu Kapazität und Fachverantwortung.",
     objective: "Zwei Fragen zu Kapazität und Fachverantwortung.",
-    durationMinutes: 8,
+    durationMinutes: 3,
     keyConcepts: [],
     quiz: [
       {
@@ -199,7 +199,7 @@ export const ORGMODEL_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
           {
             id: "b",
-            text: "Indem sie riskante Entscheidungen tragen und Hinweise zu Standards machen.",
+            text: "Indem sie riskante Entscheidungen tragen oder prüfen und Hinweise zu Standards machen.",
             isCorrect: true,
           },
           {

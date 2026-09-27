@@ -29,7 +29,7 @@ describe("Konto verwalten region", () => {
       ).toHaveAttribute("href", "/konto/datenschutz");
     }
     expect(region).toHaveTextContent(
-      "Löscht Konto, E-Mail-Adresse und Fortschritt endgültig.",
+      "Löscht Konto, E-Mail-Adresse und serverseitigen Fortschritt endgültig.",
     );
   });
 

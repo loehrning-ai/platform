@@ -71,7 +71,7 @@ const CONNECTORS_DE: readonly Connector[] = [
     color: "c2",
     stats: { "gelesene Shards": "12", "gelesene Bytes": "180 MB", "Predicate Pushdown": "Row-Group-Statistiken" },
     workers: "local-ssd",
-    note: "Das Modell legt Shards auf lokale Worker-SSDs und überspringt den Object-Store-Abruf. Reale Systeme nutzen trotzdem oft Netzwerk für Koordination oder Replikation.",
+    note: "Das Modell legt Shards auf lokale Worker-SSDs und überspringt den Object-Store-Abruf. Reale Systeme können trotzdem Netzwerk für Koordination oder Replikation nutzen.",
   },
   {
     id: "system",

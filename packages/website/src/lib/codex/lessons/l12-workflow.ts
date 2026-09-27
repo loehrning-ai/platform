@@ -61,29 +61,29 @@ const lesson: CodexLesson = {
             {
               eyebrow: "phase 03",
               title: "Implement",
-              body: "Run each bounded task in its configured environment. Serialize dependencies and record commands and environment assumptions.",
+              body: "Run each bounded task in its configured environment. Serialize dependencies, isolate independent work, record commands and environment assumptions.",
             },
             {
               eyebrow: "phase 04",
               title: "Review",
-              body: "Compare the full diff with task and excluded scope, read tests and logs, rerun trusted checks. Comment on local defects; restart on a wrong premise.",
+              body: "Compare the full diff with task and excluded scope, read tests and logs, check security and operational effects, rerun trusted checks. Comment on local defects; restart on a wrong premise.",
             },
             {
               eyebrow: "phase 05",
               title: "Ship",
-              body: "Use the normal merge, deployment and rollback process. Only the deployed artifact in the target environment proves the release.",
+              body: "Use the normal merge, deployment, rollback and approval process. Verify the deployed artifact and its behavior in the target environment; local success is no deployment proof.",
             },
             {
               eyebrow: "phase 06",
               title: "Learn",
-              body: "Record a durable, non-obvious repository rule only for a real gap. Task findings go in the issue or pull request.",
+              body: "Record a durable, non-obvious repository rule only for a real gap. Task findings go in the issue or pull request; incident and deployment evidence stays in the system that owns it.",
             },
           ],
         },
         {
           kind: "prose",
           markdown:
-            "Ceremony follows risk and reversibility. A small local change needs a brief task and one check; authentication, data, payment or migration changes need security and rollout evidence, however short the code.",
+            "Scale the process to risk and reversibility. A small local change needs a brief task and one check; authentication, data, payment or migration changes need security and rollout evidence, however short the code.",
         },
       ],
     },
@@ -108,7 +108,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "First task after decomposition: *add a /admin/exports/subscriptions.csv endpoint that streams active subscriptions as CSV*. Nightly scheduling and delivery follow as separate tasks. Which spec opener is strongest?",
+            "First task after decomposition: *add a /admin/exports/subscriptions.csv endpoint that streams active subscriptions as CSV*. Nightly scheduling and delivery follow as separate tasks. Which spec opener is strongest? Answer it at the end of the lesson.",
         },
       ],
     },
@@ -120,7 +120,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "The diff arrives with passing checks. Read what actually changed.",
+            "The diff arrives with passing checks. It is at the end of the lesson; read what actually changed.",
         },
       ],
     },
@@ -132,7 +132,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "The test replaces active_subscriptions() and checks how the returned fixture is serialized, so selecting active subscriptions stays untested. Which comment names the missing evidence precisely?",
+            "The test replaces active_subscriptions() and checks how the returned fixture is serialized, so selecting active subscriptions stays untested. Which comment names the missing evidence precisely? Answer it at the end of the lesson.",
         },
       ],
     },
@@ -150,13 +150,13 @@ const lesson: CodexLesson = {
     },
     {
       id: "s8",
-      title: "Course complete",
+      title: "Operating rules",
       readTimeMinutes: 2,
       blocks: [
         {
           kind: "prose",
           markdown:
-            "Three operating rules:\n\n1. **Separate facts from hypotheses.** Keep file references, exact command results and verified constraints; drop unsupported explanations.\n2. **Restart on a false premise.** Correct local defects in place; write a new task when goal, architecture or scope must change.\n3. **Bound work by review capacity.** Launch no more concurrent tasks than the team can inspect, integrate and verify at the required risk level.\n\nA coding agent's output is a proposed change. The accountable human owns acceptance, merge, deployment and incident response.",
+            "1. **Separate facts from hypotheses.** Keep file references, exact command results and verified constraints; drop unsupported explanations.\n2. **Restart on a false premise.** Correct local defects in place; write a new task when goal, architecture or scope must change.\n3. **Bound work by review capacity.** Launch no more concurrent tasks than the team can inspect, integrate and verify at the required risk level.\n\nA coding agent's output is a proposed change. The accountable human owns acceptance, merge, deployment and incident response.",
         },
       ],
     },
@@ -174,10 +174,10 @@ const lesson: CodexLesson = {
         question:
           'The ask is "CSV export, nightly, live by Friday." What do you do first?',
         options: [
-          "Open the agent, paste Priya's message verbatim, hit run.",
+          "Open the agent, paste the request verbatim, hit run.",
           "Clarify columns, access, volume, destination, retention and deadline, then split by real dependencies.",
-          "Ask Priya for the exact CSV columns and ship it as one big task.",
-          "Tell Priya it is not feasible this week.",
+          "Ask the requester for the exact CSV columns and ship it as one big task.",
+          "Tell the requester it is not feasible this week.",
         ],
         correct: 1,
         explanation:
@@ -193,7 +193,7 @@ const lesson: CodexLesson = {
         cpId: "q2",
         title: CODEX_QUIZ_TITLE,
         copy: CODEX_QUIZ_COPY,
-        question: "Best opening for the spec of task (a), the export endpoint?",
+        question: "Best opening for the spec of task 01, the export endpoint?",
         options: [
           '"Add a CSV export of subscriptions."',
           '"Goal: GET /admin/exports/subscriptions.csv returns all active subscriptions as CSV, streamed (not loaded into memory). Columns: id, customer_email, plan, status, current_period_end."',
@@ -341,7 +341,7 @@ const lesson: CodexLesson = {
           "Before you move to task 02, which habit preserves the evidence and decisions from task 01?",
         options: [
           "Close the PR tab and move on.",
-          "Add \"tests that mock their own subject fail here\" to the agent instructions.",
+          "Add \"tests that mock their own subject are an anti-pattern here\" to the agent instructions so the next run avoids it.",
           "Rewrite the PR description yourself.",
           "Archive the PR in a private document.",
         ],

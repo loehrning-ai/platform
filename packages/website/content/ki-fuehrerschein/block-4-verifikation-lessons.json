@@ -11,7 +11,7 @@
       "id": "block_4_lesson_1",
       "blockId": "block_4",
       "number": 1,
-      "title": "Drei Fehlermuster bei KI-Ausgaben",
+      "title": "Fehlermuster bei KI-Ausgaben",
       "subtitle": "Unbelegte Quellen, unzulässige Eingaben und falsche Zusagen",
       "durationMinutes": 5,
       "keyConcepts": [
@@ -31,7 +31,7 @@
           "id": "block_4_lesson_1_section_2",
           "title": "Warum die Prüftiefe dem Risiko folgt",
           "readTimeMinutes": 2,
-          "content": "Die unbelegte Quelle kann aus der generativen Modellierung, fehlerhaftem Retrieval oder einer schlechten Wissensbasis kommen. Die unzulässige Eingabe ist ein Governance- und Sicherheitsfehler, die falsche Zusage kann an Regeln, Daten, Integration oder fehlenden Freigabegrenzen liegen.\n\nDeshalb folgt die Prüfung dem Risiko. Für einen internen Entwurf kann ein kurzer Textvergleich reichen; rechtliche Zitate, Finanzzahlen, Entscheidungen über Personen und Zusagen nach außen brauchen Primärquellen und die zuständige Freigabe. Bessere Modelle und technische Kontrollen können die Fehlerrate senken, belegen aber weder Wahrheit noch Zulässigkeit."
+          "content": "Die unbelegte Quelle kann aus der generativen Modellierung, fehlerhaftem Retrieval oder einer schlechten Wissensbasis kommen. Die unzulässige Eingabe ist ein Governance- und Sicherheitsfehler. Die falsche Zusage kann an Regeln, Daten, Integration oder fehlenden Freigabegrenzen liegen.\n\nWie tief du prüfst, richtet sich nach dem Risiko. Für einen internen Entwurf kann ein kurzer Textvergleich reichen; rechtliche Zitate, Finanzzahlen, Entscheidungen über Personen und Zusagen nach außen brauchen Primärquellen und die zuständige Freigabe. Bessere Modelle und technische Kontrollen können die Fehlerrate senken, belegen aber weder Wahrheit noch Zulässigkeit."
         }
       ],
       "quiz": [
@@ -113,9 +113,9 @@
         },
         {
           "id": "block_4_lesson_2_section_2",
-          "title": "Schritt 3: Darfst du das überhaupt?",
+          "title": "Schritt 3: Zulässig und angemessen?",
           "readTimeMinutes": 3,
-          "content": "**Schritt 3: Ist die Verwendung zulässig und angemessen?**\n- Darfst du die Zusage, Empfehlung oder Entscheidung treffen?\n- Dürfen Eingabedaten und Ausgabe an den vorgesehenen Empfängerkreis gelangen?\n- Sind Ton, Sprache und Darstellung für Zweck und Zielgruppe geeignet?\n- Gibt es Benachteiligungs-, Sicherheits-, Rechts- oder Reputationsrisiken?\n- Ist eine fachliche Zweitprüfung, Vier-Augen-Freigabe oder ein Verbot automatisierter Nutzung vorgesehen?\n\nBei der Kundenreklamation prüfst du Bestellnummer, Lieferdatum und Zusagen gegen die Primärquellen, hakst alle Punkte des Kunden ab und klärst deine Befugnis. Für Rechtsauskünfte oder Personalentscheidungen gilt der dafür definierte Fachprozess.\n\nVerlangt die Auswirkung es, dokumentierst du die Prüfung. Eine feste Prüfdauer gibt es nicht."
+          "content": "- Darfst du die Zusage, Empfehlung oder Entscheidung treffen?\n- Dürfen Eingabedaten und Ausgabe an den vorgesehenen Empfängerkreis gelangen?\n- Sind Ton, Sprache und Darstellung für Zweck und Zielgruppe geeignet?\n- Gibt es Benachteiligungs-, Sicherheits-, Rechts- oder Reputationsrisiken?\n- Ist eine fachliche Zweitprüfung, Vier-Augen-Freigabe oder ein Verbot automatisierter Nutzung vorgesehen?\n\nBei der Kundenreklamation prüfst du Bestellnummer, Lieferdatum und Zusagen gegen die Primärquellen, hakst alle Punkte des Kunden ab und klärst deine Befugnis. Für Rechtsauskünfte oder Personalentscheidungen gilt der dafür definierte Fachprozess.\n\nVerlangt die Auswirkung es, dokumentierst du die Prüfung. Eine feste Prüfdauer gibt es nicht."
         }
       ],
       "quiz": [
@@ -171,7 +171,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Modelle erzeugen überzeugende, aber falsche Angaben, etwa einen erfundenen Verband, eine falsche Unternehmenszahl oder eine Person, die es nicht gibt. Grobe Fehler fallen sofort auf, feine nicht."
+          "explanation": "Modelle erzeugen überzeugende, aber falsche Angaben, etwa einen erfundenen Verband, eine falsche Unternehmenszahl oder eine Person, die es nicht gibt."
         }
       ]
     },
@@ -180,7 +180,7 @@
       "blockId": "block_4",
       "number": 3,
       "title": "Übung: 3 Fehler finden",
-      "subtitle": "Drei Quellen, ein Entwurf, mehr als drei Fehler",
+      "subtitle": "Einen Entwurf gegen drei Quellen prüfen",
       "durationMinutes": 5,
       "keyConcepts": ["Faktencheck", "Halluzination erkennen", "Quellprüfung"],
       "sections": [
@@ -188,13 +188,13 @@
           "id": "block_4_lesson_3_section_1",
           "title": "Quellenpaket und Entwurf",
           "readTimeMinutes": 3,
-          "content": "Quellen, Entwurf und Namen sind synthetisch. Vergleiche nur mit dem Quellenpaket.\n\n**Quelle A, Beschlussprotokoll:** \"Pilotbetrieb mit einem Budget von 1,8 Mio. EUR am 12. Mai freigegeben.\"\n\n**Quelle B, Projektstatus:** \"Juli ist ein Zielkorridor. Ein verbindlicher Starttermin wurde nicht beschlossen. Verantwortliche Person offen.\"\n\n**Quelle C, Sicherheitsfreigabe:** \"Die Freigabe gilt nur für das EU-Kundenportal, Version 2.4, ohne Datei-Upload. Andere Produkte und Funktionen sind nicht umfasst.\"\n\n**Erzeugter Entwurf:**\n\n\"Der Vorstand hat 18 Mio. EUR für das Gesamtprogramm freigegeben. Das Projekt startet verbindlich am 1. Juli unter Leitung von Frau Keller. Die Sicherheitsfreigabe gilt für alle Kundenprodukte einschließlich Datei-Upload.\"\n\nGesucht sind drei Fehler, es gibt mehr. Betrag und Umfang stimmen nicht, Termin und verantwortliche Person sind erfunden, und die Sicherheitsfreigabe wurde auf Produkte und Funktionen ausgeweitet, die das Quellenpaket ausschließt."
+          "content": "Quellen, Entwurf und Namen sind synthetisch. Vergleiche nur mit dem Quellenpaket.\n\n**Quelle A, Beschlussprotokoll:**\n\n> Budget für den Pilotbetrieb: 1,8 Mio. EUR. Freigegeben am 12. Mai.\n\n**Quelle B, Projektstatus:**\n\n> Juli ist ein Zielkorridor. Ein verbindlicher Starttermin wurde nicht beschlossen. Verantwortliche Person: offen.\n\n**Quelle C, Sicherheitsfreigabe:**\n\n> Die Freigabe gilt nur für das EU-Kundenportal, Version 2.4, ohne Datei-Upload. Andere Produkte und Funktionen sind nicht umfasst.\n\n**Erzeugter Entwurf:**\n\n\"Der Vorstand hat 18 Mio. EUR für das Gesamtprogramm freigegeben. Das Projekt startet verbindlich am 1. Juli unter Leitung von Frau Keller. Die Sicherheitsfreigabe gilt für alle Kundenprodukte einschließlich Datei-Upload.\"\n\nFinde mindestens drei Fehler."
         },
         {
           "id": "block_4_lesson_3_section_2",
           "title": "Deine Aufgabe",
           "readTimeMinutes": 2,
-          "content": "Bau eine Korrekturtabelle mit vier Spalten:\n\n1. Aussage im Entwurf\n2. Status: belegt, widersprochen oder nicht in den Quellen enthalten\n3. Korrekte Formulierung\n4. Quellen-ID und exakter Beleg\n\nDie korrekte Kurzfassung:\n\n\"Für den Pilotbetrieb wurden 1,8 Mio. EUR am 12. Mai freigegeben. Juli ist ein Zielkorridor; Starttermin und verantwortliche Person sind offen. Die Sicherheitsfreigabe gilt für das EU-Kundenportal 2.4 ohne Datei-Upload.\"\n\nDas trainiert Quellenbindung und Statusdisziplin. Artikel 4 schreibt diese Methode nicht vor, sie kann aber ein Baustein kontextbezogener KI-Kompetenzmaßnahmen sein."
+          "content": "Bau eine Korrekturtabelle mit vier Spalten:\n\n1. Aussage im Entwurf\n2. Status: belegt, widersprochen oder nicht in den Quellen enthalten\n3. Korrekte Formulierung\n4. Quellen-ID und exakter Beleg\n\nLösung, die korrekte Kurzfassung:\n\n\"Für den Pilotbetrieb wurden 1,8 Mio. EUR am 12. Mai freigegeben. Juli ist ein Zielkorridor; Starttermin und verantwortliche Person sind offen. Die Sicherheitsfreigabe gilt für das EU-Kundenportal 2.4 ohne Datei-Upload.\"\n\nSo übst du, jede Aussage an eine Quelle zu binden und ihren Status zu markieren. Artikel 4 schreibt diese Methode nicht vor, sie kann aber ein Baustein kontextbezogener KI-Kompetenzmaßnahmen sein."
         }
       ],
       "quiz": [
@@ -204,7 +204,7 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Anhand des professionell klingenden Namens",
+              "text": "Anhand des professionell klingenden Namens und Logos",
               "isCorrect": false
             },
             {
@@ -214,12 +214,12 @@
             },
             {
               "id": "c",
-              "text": "Durch Bestätigung desselben Sprachmodells",
+              "text": "Durch eine Bestätigung desselben Sprachmodells im nächsten Prompt",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Nur anhand der Domain-Endung",
+              "text": "Nur anhand der Domain-Endung, etwa .org oder .eu",
               "isCorrect": false
             }
           ],
@@ -258,7 +258,7 @@
       "id": "block_4_lesson_4",
       "blockId": "block_4",
       "number": 4,
-      "title": "Die goldene Regel",
+      "title": "Die Regel vor jeder Verwendung",
       "subtitle": "Keine wirkungsrelevante Ausgabe ohne passende Kontrolle verwenden",
       "durationMinutes": 3,
       "keyConcepts": [
@@ -277,7 +277,7 @@
           "id": "block_4_lesson_4_section_2",
           "title": "Die Regel",
           "readTimeMinutes": 2,
-          "content": "**Verwende eine KI-Ausgabe erst, wenn die für Zweck und Auswirkung vorgesehenen Kontrollen abgeschlossen sind.**\n\nBeim internen Formulierungsvorschlag kann das ein kurzer Abgleich von Quelle und Ton sein. Zahlen, Rechtsaussagen, Personalentscheidungen, Sicherheitsänderungen und Zusagen nach außen brauchen reproduzierbare Berechnung, Primärquelle, Fachprüfung und dokumentierte Freigabe.\n\nFehlt der Beleg, markierst du die Aussage als offen oder streichst sie. Suchmaschine, Kollegin oder zweites Modell sind nicht automatisch Quellen, es zählen Unabhängigkeit, Autorität und Aktualität.\n\nRechne ehrlich: Nutzen des KI-Schritts minus Prüfaufwand minus Fehlerfolgen."
+          "content": "**Verwende eine KI-Ausgabe erst, wenn die für Zweck und Auswirkung vorgesehenen Kontrollen abgeschlossen sind.**\n\nBeim internen Formulierungsvorschlag kann das ein kurzer Abgleich von Quelle und Ton sein. Zahlen, Rechtsaussagen, Personalentscheidungen, Sicherheitsänderungen und Zusagen nach außen brauchen reproduzierbare Berechnung, Primärquelle, Fachprüfung und dokumentierte Freigabe.\n\nFehlt der Beleg, markierst du die Aussage als offen oder streichst sie. Suchmaschine, Kollegin oder zweites Modell sind nicht automatisch Quellen, es zählen Unabhängigkeit, Autorität und Aktualität.\n\nSetz KI nur ein, wenn ihr Nutzen größer ist als Prüfaufwand und mögliche Fehlerfolgen zusammen."
         }
       ],
       "quiz": [
@@ -287,7 +287,7 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Weil KI-Texte immer falsch sind",
+              "text": "Weil KI-Texte immer falsch sind und neu geschrieben werden müssen",
               "isCorrect": false
             },
             {
@@ -297,12 +297,12 @@
             },
             {
               "id": "c",
-              "text": "Weil manuelle Texte nie Fehler enthalten",
+              "text": "Weil manuelle Texte nie Fehler enthalten und nicht geprüft werden",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Weil KI-Texte länger sind",
+              "text": "Weil KI-Texte länger sind und deshalb mehr Fehler enthalten",
               "isCorrect": false
             }
           ],

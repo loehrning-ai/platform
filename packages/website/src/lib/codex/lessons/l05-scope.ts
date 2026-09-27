@@ -32,7 +32,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Scope by **cohesion and evidence**, whatever the file count, line count or time. A useful task usually:\n\n- changes one observable behavior or one enabling structure;\n- has dependencies you can name before implementation;\n- has a diff a reviewer can understand as one decision;\n- includes checks that exercise the changed behavior;\n- can be reverted without removing unrelated work.\n\nSplit a task when its parts can be implemented, verified, deployed or rolled back independently. Keep coupled changes together when splitting them would create an invalid intermediate state.",
+            "A reviewable task usually:\n\n- changes one observable behavior or one enabling structure;\n- has dependencies you can name before implementation;\n- has a diff a reviewer can understand as one decision;\n- includes checks that exercise the changed behavior;\n- can be reverted without removing unrelated work.\n\nSplit a task when its parts can be implemented, verified, deployed or rolled back independently. Keep coupled changes together when splitting them would create an invalid intermediate state.",
         },
       ],
     },
@@ -62,7 +62,7 @@ const lesson: CodexLesson = {
             {
               eyebrow: "move 03 · prep/do",
               title: "Do the plumbing first",
-              body: "First a behavior-preserving structural change with its own checks, then the feature on top. Keep both in one task if the first has no standalone value or safe state.",
+              body: "First land a behavior-preserving structural change with its own checks, then build the feature on top. Keep both in one task if the first has no standalone value or safe state.",
             },
           ],
         },
@@ -76,12 +76,12 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "**Change only what the current task requires.** Record independent defects and cleanup ideas for a separate diff.\n\nWith unclear boundaries, the requested behavior gets mixed with unrelated refactoring, dependency changes and test rewrites. The reviewer then has to reason about their interactions, and a revert removes all of them together. Narrow scope reduces that coupling, though it alone does not make a rollback safe.\n\nThat is *scope creep*. Catch it by comparing changed files and behaviors with the task's goal, constraints and exclusions, however useful the extra code looks.",
+            "**Change only what the current task requires.** Record independent defects and cleanup ideas for a separate diff.\n\n*Scope creep* mixes the requested behavior with unrelated refactoring, dependency changes and test rewrites, and a revert removes all of them together. Catch it by comparing changed files and behaviors with the task's goal, constraints and exclusions, however useful the extra code looks.",
         },
         {
           kind: "prose",
           markdown:
-            "Name the boundary in the task: *\"Change only files required for this task. Record unrelated issues in the pull-request description without fixing them.\"* Extra work then shows up in review. Compare:\n\n```\n# Too open\n## Goal\nAdd pagination to the users list endpoint. The current implementation\nreturns all users; we need page-based results.\n\n# Explicit behavior and scope\n## Goal\nAdd page and page_size query params to GET /users in api/users.py.\nDefault: page=1, page_size=20. Max page_size=100 (return 400 if exceeded).\nReturn {\"items\": [...], \"total\": N, \"page\": N, \"pages\": N}.\n\n## Scope\nChange api/users.py and tests/api/test_users.py. If another file is required,\nexplain why before changing it.\n```",
+            "Name the boundary in the task: *\"Change only files required for this task. Record unrelated issues in the pull-request description without fixing them.\"* Extra work then shows up in review, but the sentence does not replace a concrete scope. Compare:\n\n```\n# Too open\n## Goal\nAdd pagination to the users list endpoint. The current implementation\nreturns all users; we need page-based results.\n\n# Explicit behavior and scope\n## Goal\nAdd page and page_size query params to GET /users in api/users.py.\nDefault: page=1, page_size=20. Max page_size=100 (return 400 if exceeded).\nReturn {\"items\": [...], \"total\": N, \"page\": N, \"pages\": N}.\n\n## Scope\nChange api/users.py and tests/api/test_users.py. If another file is required,\nexplain why before changing it.\n```",
         },
       ],
     },
@@ -114,7 +114,7 @@ const lesson: CodexLesson = {
       title: "Quick check",
       readTimeMinutes: 1,
       blocks: [
-        { kind: "prose", markdown: "One question follows." },
+        { kind: "prose", markdown: "One question at the end of the lesson." },
       ],
     },
   ]),

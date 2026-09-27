@@ -12,28 +12,28 @@ export const PRODUCT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
       "Bestimme das Kundenergebnis, das am Modell hängt, und seinen Ersatzweg.",
     objective:
       "Bestimme das Kundenergebnis, das am Modell hängt, und seinen Ersatzweg.",
-    durationMinutes: 13,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Bei der Aufgabe der Kundin anfangen",
-        readTimeMinutes: 4,
+        readTimeMinutes: 1,
         content:
-          "Eine Chatfunktion belegt nicht, dass das Produkt ein Problem besser löst. Fang bei der Aufgabe der Kundin an, bestimme die Verzögerung oder Entscheidung, die das Modell verändert, und woran du Erfolg erkennst. Streiche Funktionen, die dieses Ergebnis nicht verbessern.",
+          "Fang bei der Aufgabe der Kundin an: Welche Verzögerung oder Entscheidung ändert das Modell, und woran erkennst du Erfolg? Streiche jede Funktion, auch eine Chatfunktion, die dieses Ergebnis nicht verbessert.",
       },
       {
         id: "s2",
         title: "Fähigkeit in bestehende Kontrollen einbinden",
-        readTimeMinutes: 5,
+        readTimeMinutes: 1,
         content:
           "Eine modellgestützte Fähigkeit braucht die üblichen Produktgrenzen: unterstützte Eingaben, Berechtigungen, Fehlerzustände, Latenz, Datenverarbeitung und verantwortliche Personen. Behalte strukturierte Kontrollen, wo sie Klarheit schaffen oder Risiko begrenzen, und zeig die Rolle des Modells, wenn Kunden ein Ergebnis anfechten wollen.",
       },
       {
         id: "s3",
         title: "Abhängigkeit und Ersatzweg prüfen",
-        readTimeMinutes: 4,
+        readTimeMinutes: 1,
         content:
           "Frag, welches Kundenergebnis sich ändert, wenn das Modell fehlt oder schlechter arbeitet. Ändert sich keins, ist die Fähigkeit vielleicht unnötig. Hängt ein Kernergebnis daran, legst du Ersatzweg, Wiederherstellung und die Information an die Kundin fest.",
       },
@@ -65,28 +65,28 @@ export const PRODUCT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
       "Trenne Kundenabsicht von Entscheidungen, Berechtigungen und Bestätigungen.",
     objective:
       "Trenne Kundenabsicht von Entscheidungen, Berechtigungen und Bestätigungen.",
-    durationMinutes: 18,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "Absicht ist keine Befugnis",
-        readTimeMinutes: 6,
+        title: "Festhalten, was beauftragt ist",
+        readTimeMinutes: 1,
         content:
           "Eine Suche, ein Klick, ein Upload oder ein Auftrag äußert ein Ziel und erlaubt sonst nichts. Halte fest, was beauftragt wurde, welche Annahmen das System treffen darf und welche Nebenwirkungen eine eigene Bestätigung oder Berechtigungsprüfung brauchen.",
       },
       {
         id: "s2",
         title: "Jeden Schritt vor der Verdichtung bewerten",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
           "Prüfe jeden Schritt nach der Absicht: Ist er eindeutig, umkehrbar, beobachtbar und von der Kundenbefugnis gedeckt? Delegiere Schritte, die alle vier erfüllen. Bei Mehrdeutigkeit, Geldbewegung, Datenoffenlegung, rechtlicher Wirkung oder anderen erheblichen Folgen bleibt Prüfung oder Bestätigung.",
       },
       {
         id: "s3",
         title: "Gespräch und strukturierte Kontrollen verbinden",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
           "Ein Gespräch taugt für mehrdeutige Eingaben und Rückfragen, strukturierte Kontrollen für genaue Werte, begrenzte Auswahl, Vergleich und Bestätigung. Wähle die Oberfläche nach Information und Risiko des aktuellen Schritts.",
       },
@@ -118,28 +118,28 @@ export const PRODUCT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
       "Erzeuge Oberflächen nur aus freigegebenen Komponenten, Datenformen, Zuständen und Barrierefreiheitsregeln.",
     objective:
       "Erzeuge Oberflächen nur aus freigegebenen Komponenten, Datenformen, Zuständen und Barrierefreiheitsregeln.",
-    durationMinutes: 21,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Aus festem Vokabular zusammensetzen",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "Lege Komponentenbibliothek, typisierte Datenverträge, erlaubte Anordnungen und bekannte Interaktionszustände fest. Nur daraus setzt das Modell zusammen. Prüfe die Struktur vor der Darstellung und halte einen stabilen Ersatz für den Fehlerfall bereit.",
       },
       {
         id: "s2",
         title: "Hierarchie der Vorgaben festlegen",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "Sicherheit, Barrierefreiheit, Berechtigungen, Datenintegrität und Recht sind feste Grenzen. Gestaltungsregeln und Produktkonventionen setzen den erlaubten Raum, und Personalisierung bleibt darin. Protokolliere gewählte Komponenten und Eingaben, damit du unerwartetes Verhalten reproduzieren kannst.",
       },
       {
         id: "s3",
         title: "Folgenreiche Oberflächen eindeutig halten",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "Zahlung, rechtliche Zustimmung, Kontowiederherstellung, Berechtigungsänderung, zerstörerische Aktionen und andere folgenreiche Schritte laufen über feste, geprüfte Abläufe. Eine generative Oberfläche darf erklären und vorbereiten. Die letzte Handlung und ihre Bestätigung bleiben vorhersehbar und prüfbar.",
       },
@@ -171,30 +171,30 @@ export const PRODUCT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
       "Miss Modellverhalten in Produktion, ohne einer einzelnen Kennzahl zu trauen.",
     objective:
       "Miss Modellverhalten in Produktion, ohne einer einzelnen Kennzahl zu trauen.",
-    durationMinutes: 17,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Produktion bringt neue Bedingungen",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
           "Produktion bringt zu den bekannten Fällen neue Eingaben, veränderte Daten, Werkzeugfehler, Latenz, echtes Kundenverhalten und verschobene Verteilungen. Datensparsame Ablaufspuren, Versionskennzeichen, Fehlerarten und Stichproben machen Vorfälle reproduzierbar, ohne sensible Inhalte zu horten.",
       },
       {
         id: "s2",
         title: "Beobachtbare Signale messen",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
           "Erfasse überprüfbaren Aufgabenerfolg, Kundenkorrekturen, Werkzeugfehler, Ablehnungen, Latenz, Kosten, ausgelöste Sicherheitsregeln und Ersatzwege. Wo Signale keine Qualität belegen, bewertet ein Mensch eine dokumentierte Stichprobe. Trenne nach Ablauf und Version, damit kein Durchschnitt eine fehlerhafte Teilgruppe verdeckt.",
       },
       {
         id: "s3",
         title: "Warnung, Eindämmung und Rücknahme trennen",
-        readTimeMinutes: 5,
+        readTimeMinutes: 1,
         content:
-          "Leite Schwellen aus Ausgangsverhalten und Fehlerkosten ab: Manche Signale alarmieren eine verantwortliche Person, andere schalten eine Fähigkeit ab oder lösen die Rücknahme auf eine bekannte Version aus. Teste diese Kontrollen vorab, schütze automatische Maßnahmen gegen verrauschte Kennzahlen, und eine benannte Person schließt jedes Ereignis.",
+          "Leite Schwellen aus Ausgangsverhalten und Fehlerkosten ab: Manche Signale alarmieren eine verantwortliche Person, andere schalten eine Fähigkeit ab oder lösen die Rücknahme auf eine bekannte Version aus. Teste diese Kontrollen vorab, schütze automatische Maßnahmen vor verrauschten Kennzahlen und lass jedes Ereignis von einer benannten Person abschließen.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -225,7 +225,7 @@ export const PRODUCT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
       "Drei Fragen zu Produktgrenzen, Delegation, begrenzten Oberflächen und Produktionskontrollen.",
     objective:
       "Drei Fragen zu Produktgrenzen, Delegation, begrenzten Oberflächen und Produktionskontrollen.",
-    durationMinutes: 8,
+    durationMinutes: 4,
     keyConcepts: [],
     quiz: [
       {

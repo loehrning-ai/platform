@@ -17,7 +17,7 @@
   },
   {
     "term": "Attention-Mechanismus",
-    "definition": "Computes weighted relationships between token representations and helps transformer models connect context. It establishes neither relevance nor understanding.",
+    "definition": "Mechanism that computes weighted relationships between token representations and helps transformer models connect context. It establishes neither relevance nor understanding.",
     "english": "Attention Mechanism",
     "category": "technik",
     "relatedTerms": ["Transformer", "Large Language Model (LLM)"]
@@ -182,7 +182,7 @@
   },
   {
     "term": "Large Language Model (LLM)",
-    "definition": "A large model trained on extensive data that models probabilities over token sequences. Some handle modalities beyond text; product name and model version are two different things.",
+    "definition": "A large model trained on extensive data that models probabilities over token sequences. Some handle modalities beyond text; product name and model version are not the same.",
     "english": "Large Language Model",
     "category": "technik",
     "relatedTerms": ["Token", "Transformer", "Halluzination"]

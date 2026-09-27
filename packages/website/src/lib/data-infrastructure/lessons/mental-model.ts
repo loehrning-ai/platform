@@ -31,41 +31,41 @@ const lesson: DataInfraLesson = {
       title: "A six-layer reference model",
       readTimeMinutes: 2,
       content:
-        "Data platforms differ, but one grid inspects them all: **source, log or ingestion, processing, storage, serving, and consumption**. A system may merge layers, skip a durable log or run several stores.\n\nFor every dataset, note its origin, the transformations that change it, its durable copies, the interface that serves it and its consumers. That trace shows ownership, replay limits and where a wrong value entered.",
+        "Data platforms differ, but you can check each against six layers: **source, log or ingestion, processing, storage, serving, and consumption**. A system may merge layers, skip a durable log or run several stores.\n\nFor every dataset, note its origin, the transformations that change it, its durable copies, the interface that serves it and its consumers. That trace shows ownership, replay limits and where a wrong value entered.",
     },
     {
       id: "s2",
       title: "Watch one event flow",
       readTimeMinutes: 2,
       content:
-        "A mobile client creates a `$48.90` order that ends up in an operations report. The interactive model traces that path through six possible layers on fixed sample events. It shows hand-offs and backpressure and does not measure throughput.",
+        "A mobile client creates a `$48.90` order that ends up in an operations report. Press **trace 1 event** in the model above to follow it through the six layers, with hand-offs and backpressure.",
     },
     {
       id: "s3",
       title: "What each layer is for",
       readTimeMinutes: 3,
       content:
-        "A layer earns its place only when it changes the data's shape, durability, ownership, or access contract.\n\n1. **Source.** Where events are born or mutable state lives: app database, device, sensor, external API. Its schema and retention limit what a recovery can rebuild.\n2. **Log or ingestion.** Optional durable hand-off between producers and consumers. A partitioned log can offer per-partition ordering, retention, replay and fan-out; configuration and producer discipline decide which.\n3. **Processing.** Filters, validates, enriches, joins, aggregates or windows data. A batch job knows where its input ends; a stream job does not.\n4. **Storage.** Holds raw or modeled data. Stores differ in transactions, retention, governance and query behavior.\n5. **Serving.** Delivers data for one access pattern and latency target: analytical SQL, keyed lookup, search, features or an API.\n6. **Consumption.** Dashboards, alerts, models, billing, fraud controls and product features. Their correctness and freshness needs set every upstream contract.\n\nIn a design review, draw only the layers the problem needs and label every arrow with ordering, retention, schema, latency and failure behavior.",
+        "A layer earns its place only when it changes the data's shape, durability, ownership, or access contract.\n\n1. **Source.** Where events are born or mutable state lives: app database, device, sensor, external API. Its schema and retention limit what a recovery can rebuild.\n2. **Log or ingestion.** Optional durable hand-off between producers and consumers. A partitioned log can offer per-partition ordering, retention, replay and fan-out; configuration and producer discipline decide which.\n3. **Processing.** Filters, validates, enriches, joins, aggregates or windows data. A batch job knows where its input ends; a stream job does not.\n4. **Storage.** Holds raw or modeled data. Object stores, table formats and warehouses differ in transactions, retention, governance and query behavior.\n5. **Serving.** Delivers data for one access pattern and latency target: analytical SQL, keyed lookup, search, features or an API. Measured load targets pick the implementation.\n6. **Consumption.** Dashboards, alerts, models, billing, fraud controls and product features. Their correctness and freshness needs set every upstream contract.\n\nIn a design review, draw only the layers the problem needs and label every arrow with ordering, retention, schema, latency and failure behavior.",
     },
     {
       id: "s4",
       title: "Two forces",
       readTimeMinutes: 2,
       content:
-        "Two tensions come up in every review.\n\n- **Latency, throughput, and cost.** Transactional stores optimize keyed reads and writes, analytical stores scans and aggregation. Processing and serving bridge them under a stated freshness objective.\n- **Validation before or after landing.** Schema-on-write rejects records that break the contract. Schema-on-read leaves some interpretation to readers and still needs ingestion checks and quarantine rules.\n\nPick batch or streaming by freshness, replay model, cost and recovery. Pick ETL or ELT by security boundaries, source constraints, governance and where a transformation may safely run.",
+        "- **Latency, throughput, and cost.** Transactional stores optimize keyed reads and writes, analytical stores scans and aggregation. Processing and serving bridge them under a stated freshness objective.\n- **Validation before or after landing.** Schema-on-write rejects records that break the contract. Schema-on-read leaves some interpretation to readers and still needs ingestion checks and quarantine rules.",
     },
     {
       id: "s5",
       title: "Quick check",
       readTimeMinutes: 1,
-      content: "Two questions on the six layers.",
+      content: "Two questions on the six layers, below the vocab.",
     },
     {
       id: "s6",
       title: "Vocab",
       readTimeMinutes: 1,
       content:
-        "- **OLTP**, keyed reads and writes on current application state.\n- **OLAP**, scans and aggregation, often columnar.\n- **ETL vs ELT**, transform before loading, or land first and transform in the target.\n- **Bronze / Silver / Gold**, names for successive quality layers; each needs its own contract.\n- **Lakehouse**, object-store data managed through a table format.\n- **Schema on read vs write**, the two points where a data contract can be enforced.",
+        "The flashcards below the questions cover OLTP, OLAP, ETL vs ELT, Bronze / Silver / Gold, lakehouses, and schema on read vs write.",
     },
   ],
   widgets: [
@@ -78,7 +78,7 @@ const lesson: DataInfraLesson = {
         title: "Which layer rebuilds the others?",
         copy: DATA_INFRA_QUIZ_COPY,
         question:
-          "The derived stores are lost. A retained log holds every accepted change in the recovery window, with stable keys and schemas. Which layer do you replay from?",
+          "Derived stores are lost. The retained log holds every accepted change for the recovery window, with stable keys and schemas. What do you replay from?",
         options: [
           "The source databases, where the truth lives.",
           "The log, which holds the complete retained change history.",
@@ -108,7 +108,7 @@ const lesson: DataInfraLesson = {
         ],
         correct: 2,
         explanation:
-          "A broad aggregation on the transactional database eats connections, CPU, memory, cache and I/O the application needs, even without row locks. An analytical serving path isolates it; bounded operational reads with measured impact can stay on OLTP.",
+          "A broad aggregation on the transactional database eats connections, CPU, memory, cache and I/O the application needs, even without row locks. An analytical path isolates it; bounded reads with measured impact can stay on OLTP.",
       },
     },
     {
@@ -133,7 +133,7 @@ const lesson: DataInfraLesson = {
           {
             term: "ETL vs ELT",
             q: "Why do we say ELT now?",
-            a: "ETL transforms before loading, ELT lands first and transforms in the target. Neither buys replay or security; pick by security boundaries, source constraints and governance.",
+            a: "ETL transforms before loading, ELT lands first and transforms in the target. Neither buys replay, security or lower cost; pick by security boundaries, source constraints, replay needs, governance and cost.",
           },
           {
             term: "Bronze / Silver / Gold",
@@ -143,7 +143,7 @@ const lesson: DataInfraLesson = {
           {
             term: "Lakehouse",
             q: "What does it describe?",
-            a: "Object-store files under a table format that can add snapshots, transactions and schema evolution. Format, catalog, engine and configuration decide what you get.",
+            a: "Object-store files under a table format that can add snapshots, transactions, schema evolution and planning metadata. Format, catalog, engine and configuration decide what you get.",
           },
           {
             term: "Schema on read vs write",

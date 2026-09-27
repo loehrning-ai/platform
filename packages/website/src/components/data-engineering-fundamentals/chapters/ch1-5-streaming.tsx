@@ -43,7 +43,7 @@ export function Ch15Streaming({ chapter }: Ch15StreamingProps) {
       <section className="section">
         <SectionLabel n="2.1">Continuous processing</SectionLabel>
         <h2 className="h2">Micro-batch vs continuous, exactly-once vs at-least-once.</h2>
-        <p className="prose">Batch engines process bounded inputs on a schedule. Streaming engines process unbounded input and carry state. Both can be right or wrong; the contract says when a result publishes, when it is final, and how replays, duplicates and late records are handled.</p>
+        <p className="prose">Batch engines process bounded inputs on a schedule. Streaming engines process unbounded input and carry state. Either can produce correct or wrong results; the contract says when a result publishes, when it is final, and how replays, duplicates and late records are handled.</p>
         <div className="cards-3">
           <div className="ccard">
             <div className="ccard-t">Latency</div>
@@ -65,8 +65,8 @@ export function Ch15Streaming({ chapter }: Ch15StreamingProps) {
 
       <section className="section">
         <SectionLabel n="2.2">The boundary problem</SectionLabel>
-        <h2 className="h2">The course boundary models replay protection and a watermark.</h2>
-        <p className="prose">Retries and recovery deliver records again, and event time drifts from arrival time. At the warehouse boundary an idempotent write or deterministic dedup key absorbs replays. A watermark and late-data policy decide when windows publish and what happens to later records. Toggle each control to see its effect alone.</p>
+        <h2 className="h2">Replays and late records at the warehouse boundary.</h2>
+        <p className="prose">Retries and recovery deliver records again, and event time drifts from arrival time. At the warehouse boundary an idempotent upsert on a stable event key or a deterministic dedup key absorbs replays. A watermark and late-data policy decide when windows publish and what happens to later records.</p>
         <ConveyorSim />
       </section>
 

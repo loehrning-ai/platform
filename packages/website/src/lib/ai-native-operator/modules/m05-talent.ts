@@ -12,30 +12,30 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Watch how a candidate works with the tools, using a real task and a rubric.",
     objective:
       "Watch how a candidate works with the tools, using a real task and a rubric.",
-    durationMinutes: 20,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Choose a representative work sample",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
-          "The task mirrors important work in the role without demanding unpaid production work or confidential knowledge. Fit the scope to the time box, give every candidate the same materials and offer reasonable accommodations. Assess job requirements, not puzzle familiarity.",
+          "The task mirrors important work in the role without demanding unpaid production work or confidential knowledge. Fit the scope to the time box, give every candidate the same materials and offer reasonable accommodations. Assess what the job requires; puzzle familiarity does not count.",
       },
       {
         id: "s2",
         title: "Observe the working process",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
-          "Candidates use the approved tools the role allows. Watch how they clarify the request, decompose and specify the work, choose what to delegate, inspect outputs, test assumptions and explain the result. No personal accounts or undisclosed data sharing.",
+          "Candidates use the approved tools the role allows. Watch how they clarify the request, decompose and specify the work, choose what to delegate, inspect outputs, test assumptions and explain the result. Protect candidate data and intellectual property, and do not require personal accounts or undisclosed data sharing.",
       },
       {
         id: "s3",
         title: "Score against anchored evidence",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
-          "Define observable indicators for specification quality, tool judgment, review quality, verification, communication and the final result. Train assessors on the rubric and compare independent ratings. Speed and polish count for nothing without explanation and verification.",
+          "Define observable indicators for specification quality, tool judgment, review quality, verification, communication and the final result. Train assessors on the rubric and compare independent ratings. Credit speed and polish only when explanation and verification back them.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -66,30 +66,30 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Set role-specific expectations for using, reviewing and governing model-assisted work.",
     objective:
       "Set role-specific expectations for using, reviewing and governing model-assisted work.",
-    durationMinutes: 18,
+    durationMinutes: 10,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "A four-level capability rubric",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
-          "L1 uses approved assistance for bounded tasks and checks results. L2 runs a repeatable workflow with documented inputs, review and escalation. L3 designs controls, evaluations and monitoring for shared workflows. L4 sets standards and is accountable for their operation.",
+          "Level 1 uses approved assistance for bounded tasks and checks results; level 2 runs a repeatable workflow with documented inputs, review and escalation. Level 3 designs controls, evaluations and monitoring for shared workflows; level 4 sets standards and is accountable for their operation. Adapt the levels to the work; they are not promotion gates.",
       },
       {
         id: "s2",
         title: "Measure artifacts and decisions",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
           "Evidence means specifications, evaluation sets, review records, incident responses, reusable workflows and documented decisions. Judge reasoning, controls and outcomes, never prompt volume or claimed productivity. Calibrate examples across reviewers so the same behavior earns the same rating.",
       },
       {
         id: "s3",
         title: "Provide access, training, and due process",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
-          "Assess a capability only after people have approved tools, training, practice time and clear expectations, allowing for accommodations and restricted roles. Announce changes before they affect promotion or performance, document evidence and offer a route to challenge.",
+          "Assess a capability only after people have approved tools, training, practice time and clear expectations, allowing for accommodations and roles where model use is restricted. Announce changes before they affect promotion or performance, document evidence and offer a route to challenge.",
       },
     ],
     exerciseKind: "slot-fill",
@@ -105,10 +105,10 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
           scenario:
             "Draft four capability levels for one role family, each with responsibility, one observable artifact and the controls that apply.",
           placeholders: [
-            "L1: bounded use with result checking",
-            "L2: repeatable workflow with review",
-            "L3: controls, evaluations, and monitoring",
-            "L4: standards and operational accountability",
+            "Level 1: bounded use with result checking",
+            "Level 2: repeatable workflow with review",
+            "Level 3: controls, evaluations, and monitoring",
+            "Level 4: standards and operational accountability",
           ],
         },
       },
@@ -125,28 +125,28 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
       "Pay for results, quality, collaboration and controls, not tool activity.",
     objective:
       "Pay for results, quality, collaboration and controls, not tool activity.",
-    durationMinutes: 22,
+    durationMinutes: 7,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Keep tool use separate from compensation",
-        readTimeMinutes: 8,
+        readTimeMinutes: 1,
         content:
           "Model use is an input. Rewarding it invites needless processing, hidden manual work and unsafe delegation. Compensation weighs role-relevant outcomes, quality, collaboration and control duties, including cases where using no model was right.",
       },
       {
         id: "s2",
         title: "Use balanced evidence",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "Pair each role-fitting measure with a countermeasure: cycle time with quality and incident data, throughput with scope and complexity, shared tooling with adoption, maintenance and support evidence. Use no single formula across teams whose work, risk and measurement quality differ.",
       },
       {
         id: "s3",
         title: "Control a high-stakes measurement process",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
           "Compensation metrics can be incomplete, gameable or biased. Document sources and exclusions, compare groups, calibrate independently and keep an appeal process. Involve HR and legal owners before changing criteria, especially under employment, discrimination, privacy or worker-monitoring rules.",
       },
@@ -179,10 +179,10 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "quiz",
-    title: "Module 5 knowledge check",
+    title: "Module 5, knowledge check",
     subtitle: "Two questions on hiring and pay.",
     objective: "Two questions on hiring and pay.",
-    durationMinutes: 8,
+    durationMinutes: 3,
     keyConcepts: [],
     quiz: [
       {
@@ -202,7 +202,7 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
           {
             id: "c",
-            text: "How they specify, judge tools, verify and explain results.",
+            text: "How the candidate specifies, judges tools, verifies and explains.",
             isCorrect: true,
           },
           {

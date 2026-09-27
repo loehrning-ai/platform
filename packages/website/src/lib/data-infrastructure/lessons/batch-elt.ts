@@ -45,21 +45,21 @@ const lesson: DataInfraLesson = {
       title: "dbt materializations",
       readTimeMinutes: 3,
       content:
-        "dbt manages transformations and their dependencies. In a SQL model, `{{ ref('upstream_model') }}` declares an upstream relation and adds it to the DAG. The materialization decides how a model is stored; exact SQL and strategies depend on the adapter.\n\n- **view**, creates a view. Only metadata is stored, and readers do the query work.\n- **table**, builds a physical relation; replacement, atomicity and grants vary by adapter.\n- **incremental**, processes a selected subset after the first build. A `unique_key` can enable merge behavior but does not make the source selection correct.\n- **ephemeral**, inlines SQL into downstream models as a CTE without its own relation.\n\nA naive `created_at > max(created_at)` filter misses late arrivals and later updates to older records. Use a source change token or reprocess an overlap window, then deduplicate deterministically:\n\n```sql\n-- Adapter-specific interval syntax; validate for the target warehouse.\n{{ config(materialized='incremental', unique_key='order_id') }}\n\nselect order_id, user_id, amount_usd, status, created_at, updated_at\nfrom {{ ref('stg_orders') }}\n{% if is_incremental() %}\n  where updated_at >= (\n    select max(updated_at) - interval '2 day' from {{ this }}\n  )\n{% endif %}\n```\n\nBefore you call the model replay-safe, define null handling, duplicate source keys, deletion capture, lookback size, transaction boundary and reconciliation.",
+        "dbt manages transformations and their dependencies. In a SQL model, `{{ ref('upstream_model') }}` declares an upstream relation and adds it to the DAG. The materialization decides how a model is stored; exact SQL and strategies depend on the adapter.\n\n- **view**, creates a view. Only metadata is stored, and readers do the query work.\n- **table**, builds a physical relation; replacement, atomicity and grants vary by adapter.\n- **incremental**, processes a selected subset after the first build. A `unique_key` can enable merge behavior in strategies that support it but does not make the source selection correct.\n- **ephemeral**, inlines SQL into downstream models as a CTE without its own relation.\n\nA naive `created_at > max(created_at)` filter misses late arrivals and later updates to older records. Use a source change token or reprocess an overlap window, then deduplicate deterministically:\n\n```sql\n-- Adapter-specific interval syntax; validate for the target warehouse.\n{{ config(materialized='incremental', unique_key='order_id') }}\n\nselect order_id, user_id, amount_usd, status, created_at, updated_at\nfrom {{ ref('stg_orders') }}\n{% if is_incremental() %}\n  where updated_at >= (\n    select max(updated_at) - interval '2 day' from {{ this }}\n  )\n{% endif %}\n```\n\nBefore you call the model replay-safe, define null handling, duplicate source keys, deletion capture, lookback size, transaction boundary and reconciliation.",
     },
     {
       id: "s3b",
       title: "Incremental / SCD",
       readTimeMinutes: 3,
       content:
-        "- **MERGE (upsert).** Match source and target on a declared key, then update or insert. It is replay-safe only with unique, deterministic source rows, stable merge logic, correct deletes and an atomic commit. Adapters scan different amounts of target data.\n- **Insert-overwrite (partition replacement).** Recompute a complete partition or window and replace it. This needs complete, deterministic input for that boundary and an atomic replacement.\n\nMeasure both against update distribution, partition alignment, target size, concurrency and engine behavior.\n\n**Slowly Changing Dimensions (SCD).**\n\n- **Type 1** overwrites the attribute. It holds current state and drops the prior value on purpose.\n- **Type 2** closes one effective-dated version and inserts the next. It supports as-of joins if boundaries, late changes and corrections are handled, at the cost of more rows and harder joins.\n\nUse Type 2 only for attributes whose history someone needs. Its cost follows change frequency, row width, indexing and query pattern.",
+        "- **MERGE (upsert).** Match source and target on a declared key, then update or insert. It is replay-safe only with unique, deterministic source rows, stable merge logic, correct deletes and an atomic commit. Adapters scan different amounts of target data.\n- **Insert-overwrite (partition replacement).** Recompute a complete partition or window and replace it. This needs complete, deterministic input for that boundary and an atomic replacement.\n\nMeasure both against update distribution, partition alignment, target size, concurrency and engine behavior.\n\n**Slowly Changing Dimensions (SCD)** from lesson 3: Type 1 overwrites the attribute and drops the prior value; Type 2 closes the current version and inserts the next, at the cost of more rows and harder joins. Use Type 2 only for attributes whose history someone needs; its cost follows change frequency, row width, indexing and query pattern.",
     },
     {
       id: "s4",
       title: "DAG, backfill, retry",
       readTimeMinutes: 2,
       content:
-        "The diagram runs a deterministic synthetic 30-day workload with 1, 4 and 10 workers; days `06`, `14`, and `22` carry fixed retry penalties. It shows scheduling and diminishing parallel benefit and estimates no runtime.\n\nA replayable batch job takes an explicit input window and publishes deterministic output for the same input version, backed by `MERGE`, partition replacement or a transaction. External side effects, nondeterministic functions, late input, duplicates and concurrent live writes still need explicit handling and reconciliation.",
+        "The backfill diagram above runs 30 fixed days on 1, 4 and 10 workers, with retries on days `06`, `14` and `22`.\n\nA replayable batch job takes an explicit input window and publishes deterministic output for the same input version, backed by `MERGE`, partition replacement or a transaction. External side effects, nondeterministic functions, late input, duplicates and concurrent live writes still need explicit handling and reconciliation.",
     },
     {
       id: "s5",
@@ -72,21 +72,21 @@ const lesson: DataInfraLesson = {
       id: "s6",
       title: "Quick check",
       readTimeMinutes: 1,
-      content: "Two questions on retries and replay.",
+      content: "Two questions on retries and replay, below the vocab.",
     },
     {
       id: "s7",
       title: "Key takeaways",
       readTimeMinutes: 2,
       content:
-        "- Retry and backfill need explicit windows, deterministic source versions, atomic publication, idempotent external effects and reconciliation.\n- A materialization's name proves nothing about read cost, build cost, freshness or atomicity.",
+        "- A materialization's name tells you nothing about read cost, build cost, freshness or atomicity.",
     },
     {
       id: "s8",
       title: "Vocab",
       readTimeMinutes: 2,
       content:
-        "- **Idempotent**, a repeat with the same identity and input changes nothing further.\n- **Incremental model**, processes only a selected subset after the first build.\n- **SLA / freshness**, target time from source change to usable data.\n- **Lineage**, recorded links between jobs, datasets and fields.\n- **SCD Type 1**, overwrites an attribute without history.\n- **SCD Type 2**, keeps effective-dated versions.\n- **MERGE vs insert-overwrite**, keyed changes or replacing a whole boundary.\n- **Sensor**, a task that waits for an external condition.",
+        "The flashcards below the questions cover idempotency, incremental models, SLA and freshness, lineage, SCD Types 1 and 2, MERGE vs insert-overwrite and sensors.",
     },
   ],
   widgets: [
@@ -99,7 +99,7 @@ const lesson: DataInfraLesson = {
         title: "Retry after a partial write",
         copy: DATA_INFRA_QUIZ_COPY,
         question:
-          "A nightly job inserts yesterday's orders into `fact_orders` and crashes halfway. After the on-call retries it, the table has duplicate rows. What is wrong with the job?",
+          "A nightly job inserts yesterday's orders into `fact_orders` and crashes halfway. The retry leaves duplicate rows. What is wrong with the job?",
         options: [
           "Nothing; that is expected behavior.",
           "It uses `INSERT` instead of a `MERGE` keyed on `order_id`.",
@@ -169,7 +169,7 @@ const lesson: DataInfraLesson = {
           {
             term: "SCD Type 2",
             q: "When to use it?",
-            a: "Close the old row (valid_to, is_current=false) and insert a new one. Facts can then join to the dimension as of the event date, such as the customer's region at purchase, at one row per version.",
+            a: "Close the old row (valid_to, is_current=false) and insert a new one. Facts can then join to the dimension as of the event date, such as the customer's region at purchase, if boundaries and late corrections are handled; each version costs a row.",
           },
           {
             term: "MERGE vs insert-overwrite",
