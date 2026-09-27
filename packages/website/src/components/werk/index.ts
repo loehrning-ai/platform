@@ -35,3 +35,30 @@ export {
 } from "./route";
 export { SectionHead, type SectionHeadProps } from "./section-head";
 export { StatRow, type Stat, type StatRowProps } from "./stat-row";
+// The poster layer (Werkzeichnung v2): the plakat primitives live in
+// src/components/plakat and are re-exported here, so one import brings the
+// whole kit.
+export {
+  CapsLine,
+  CornerDots,
+  Halftone,
+  PlakatBand,
+  PosterArt,
+  PosterCover,
+  PosterNumeral,
+  PosterThumb,
+  ResultChart,
+  type CapsLineProps,
+  type CornerDotsProps,
+  type HalftoneField,
+  type HalftoneProps,
+  type PlakatBandProps,
+  type PosterArtProps,
+  type PosterCoverProps,
+  type PosterNumeralProps,
+  type PosterThumbProps,
+  type PosterThumbSize,
+  type ResultChartBar,
+  type ResultChartData,
+  type ResultChartProps,
+} from "../plakat";

@@ -4,6 +4,7 @@ import { render, screen, within } from "@testing-library/react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import {
+  BUTTON_CLASSES,
   ButtonLink,
   Callout,
   Chip,
@@ -73,10 +74,13 @@ describe("Kicker and SectionHead", () => {
       <SectionHead id="material" title="Material" caption="Kostenlos, ohne Konto" description="Alles zum Nacharbeiten." />,
     );
     const header = container.querySelector("header");
-    expect(header).toHaveClass("border-t-2", "border-foreground");
+    // The Kopflinie is the scene line: ink on paper, the scene's ink below
+    // or inside a poster band. The heading keeps the foreground ink.
+    expect(header).toHaveClass("border-t-2", "border-scene-line");
+    expect(header).not.toHaveClass("border-foreground");
     const heading = screen.getByRole("heading", { level: 2, name: "Material" });
     expect(heading).toHaveAttribute("id", "material");
-    expect(heading).toHaveClass("text-fluid-h2", "font-bold");
+    expect(heading).toHaveClass("text-fluid-h2", "font-bold", "text-foreground");
     expect(screen.getByText("Kostenlos, ohne Konto")).toHaveClass("text-caption");
     expect(screen.getByText("Alles zum Nacharbeiten.")).toBeInTheDocument();
   });
@@ -292,6 +296,52 @@ describe("ButtonLink", () => {
     expect(link.className).not.toMatch(/bg-brand-orange|text-white/);
   });
 
+  it("renders the scene tone as the one strong pair of a poster band", () => {
+    render(
+      <div className="plakat-autumn">
+        <ButtonLink href="/workshops/esg-berichte-mit-ki/slides.html" tone="scene">
+          Deck öffnen
+        </ButtonLink>
+        <ButtonLink href="/workshops/esg-berichte-mit-ki/demo.html" tone="scene" variant="secondary">
+          Demo starten
+        </ButtonLink>
+      </div>,
+    );
+    const primary = screen.getByRole("link", { name: "Deck öffnen" });
+    // Ink fill, ground label, 2px ink edge, 48px tall, 17px for the Rost floor.
+    expect(primary).toHaveClass(
+      "min-h-12",
+      "border-2",
+      "border-scene-ink",
+      "bg-scene-ink",
+      "text-scene-ground",
+      "text-[1.0625rem]",
+      "font-semibold",
+    );
+    expect(primary).not.toHaveClass("min-h-11");
+    expect(primary).not.toHaveClass("text-[0.9375rem]");
+    const secondary = screen.getByRole("link", { name: "Demo starten" });
+    expect(secondary).toHaveClass("min-h-12", "border-2", "border-scene-ink", "bg-transparent", "text-scene-ink");
+    // Hover inverts the pair instead of tinting it.
+    expect(secondary).toHaveClass("hover:bg-scene-ink", "hover:text-scene-ground");
+  });
+
+  it("keeps every scene recipe free of Mennige, paper text, tints and alpha on scene colours", () => {
+    for (const [variant, classes] of Object.entries(BUTTON_CLASSES.scene)) {
+      expect(classes, variant).not.toMatch(/\b(?:bg|text|border)-(?:mennige|kupfer|brand-orange|paper|white)\b/);
+      expect(classes, variant).not.toMatch(/hover:bg-(?!scene-ink\b)/);
+      expect(classes, variant).not.toMatch(/scene-[a-z-]+\/\d/);
+      expect(classes, variant).toMatch(/\bmin-h-1[12]\b/);
+      expect(classes, variant).toContain("text-[1.0625rem]");
+      expect(classes, variant).toContain("motion-reduce:transition-none");
+    }
+    for (const variant of ["primary", "ink", "secondary"] as const) {
+      expect(BUTTON_CLASSES.scene[variant]).toMatch(/\bmin-h-12\b/);
+      expect(BUTTON_CLASSES.scene[variant]).toMatch(/\bborder-2\b/);
+    }
+    expect(BUTTON_CLASSES.scene.text).toMatch(/\bmin-h-11\b/);
+  });
+
   it("marks external links with a new-window note and download links with download", () => {
     render(
       <>
@@ -361,7 +411,9 @@ describe("StatRow", () => {
     const dl = container.querySelector("dl");
     expect(dl).toHaveClass("sm:grid-cols-3");
     expect(container.querySelectorAll("dt")).toHaveLength(3);
-    expect(screen.getByText("26")).toHaveClass("text-num-lg", "tabular-nums");
+    // Values take the scene line (ink on paper, the scene's ink below a band).
+    expect(screen.getByText("26")).toHaveClass("text-num-lg", "tabular-nums", "text-scene-line");
+    expect(screen.getByText("Szenen")).toHaveClass("text-label", "text-muted-foreground");
     expect(screen.getByText("75 Min. mit Fragen")).toHaveClass("text-caption");
   });
 });

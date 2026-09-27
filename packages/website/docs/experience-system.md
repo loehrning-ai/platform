@@ -18,27 +18,61 @@ Content that does none of these jobs is removed or placed in an on-demand refere
 
 ## Identity
 
-The visual language is "Werkzeichnung", taken from the Workshop 03 deck (`public/workshops/datenbereitschaft-fuer-ki/lib/tokens.css`): calm paper, precise ink, one red pencil.
+The visual language has two layers.
 
-- Kalkweiß `#f3f0e9` ground, Druckschwarz `#121212` ink, Schiefer `#4f4640` secondary text, and Mennige `#b73a15` as the only accent. At most one Mennige group per section: one filled Mennige button per page, one Mennige mark per drawing.
-- Graphit `#141414` appears only as a full-width band (`.dark-section`: workshop cover bands, the homepage hero and the footer), never as a card inside a paper grid. Inside it the accent flips to `#e07050` for text, and a filled accent button takes dark ink or becomes a paper button; white on `#e07050` fails AA.
+- **Werkzeichnung** (paper, ink, one Mennige accent), taken from the Workshop 03 deck (`public/workshops/datenbereitschaft-fuer-ki/lib/tokens.css`): calm paper, precise ink, one red pencil. It carries every reading and working surface and all chrome.
+- **The poster layer ("Plakat")** carries bands, covers, thumbnails, the demo previews, the footer type, social cards and deck covers. It is four screen-printed poster scenes, sampled from the owner's four reference posters.
+
+### Werkzeichnung
+
+- Kalkweiß `#f3f0e9` ground, Druckschwarz `#121212` ink, Schiefer `#4f4640` secondary text, and Mennige `#b73a15` as the only accent on paper. At most one Mennige group per section: one filled Mennige button per page, one Mennige mark per drawing.
+- Graphit `#141414` appears only as a full-width band (`.dark-section`): the footer, the AI-Native demo engines and the home fallback scene. It is never a card inside a paper grid. Inside it the accent flips to `#e07050` for text, and a filled accent button takes dark ink or becomes a paper button; white on `#e07050` fails AA.
 - The risograph accents (acid, sky, pink, peach, cobalt, teal) and `kupfer-mist` stay defined for routes not yet migrated (home, books, open source) but are not used on courses, workshops or demos, and not in new code.
-- Loehrning Sans for reading; headlines 700, sentence case, tracked no tighter than -0.015em. Labels are sentence case, 600, +0.02em (`text-label`, `.kicker`). Geist Mono only for data: file names, code, IDs, timestamps.
-- Structure comes from lines: a 2px ink Kopflinie above section heads (`.kopflinie`, `<SectionHead>`) and 1px Leinen hairlines (`--color-hairline`) between rows.
-- The line globe (homepage hero, workshop cover bands) is the spatial identity anchor; deck pictograms (`src/components/werk/pictogram.tsx`) are the one icon family on learning surfaces.
+- Loehrning Sans for reading; headlines 700, sentence case, tracked no tighter than -0.015em. The one exception is the poster headline (`.poster-title`, below). Labels are sentence case, 600, +0.02em (`text-label`, `.kicker`). Geist Mono only for data: file names, code, IDs, timestamps.
+- Structure comes from lines: a 2px Kopflinie above section heads (`.kopflinie`, `<SectionHead>`) and 1px Leinen hairlines (`--color-hairline`) between rows. The Kopflinie is the scene line (`--color-scene-line`): Druckschwarz on a plain paper page, the scene's paper ink below a poster band.
+- Deck pictograms (`src/components/werk/pictogram.tsx`) are the one icon family on learning surfaces.
 - Exactly one global top scroll-progress thread.
 
-Shared primitives live in `src/components/werk/` (Kicker, SectionHead, CoverBand, GlobeLines, Route, QuestionCard, MaterialList, StatRow, Callout, ButtonLink, Chip, Pictogram).
+Shared primitives live in `src/components/werk/` (Kicker, SectionHead, CoverBand, GlobeLines, Route, QuestionCard, MaterialList, StatRow, Callout, ButtonLink, Chip, Pictogram). The poster primitives live in `src/components/plakat/` (PlakatBand, PosterArt, PosterThumb, PosterCover, CapsLine, CornerDots, Halftone, ResultChart), their pure geometry and palettes in `src/lib/plakat/`.
 
-Course distinction comes from the task, instrument, diagram motif, and dataset. It does not come from unrelated base fonts, button shapes, shadows, or product-style color systems.
+### Poster layer
+
+1. **Four scenes**, each with exactly three colours (ground, ink, mid): `.plakat-lemons` (Ultramarin `#152a79`, Butter `#fceeaf`, Mennige `#b73a15`), `.plakat-idea` (Kreide `#ecebdd`, Kobalt `#2e4d90`, Himbeere `#c94a7f`), `.plakat-bloom` (Sand `#e6d3af`, Aubergine `#3b1f45`, Terrakotta `#d1733d`) and `.plakat-autumn` (Rost `#944d44`, Creme `#f0e1ca`, Ocker `#e4a057`). Each scope redefines the semantic tokens, so components built on `text-foreground`, `border-border` or the focus ring inherit tested pairs. Every pairing and its ratio is listed in [`plakat-pairings.md`](./plakat-pairings.md), generated from the CSS and the palettes.
+2. **Assignment** happens only through `src/lib/plakat/palettes.ts`: one palette per workshop (01 Lemons, 02 IDEA, 03 Bloom, 04 Autumn), one per course track (Grundlagenpfad Lemons, prompting and agents IDEA, data Bloom) and fixed route scenes (home Lemons, demos and blog IDEA). The deck, the social card, the OG image and the static materials of a workshop use the same entry; no second mapping exists. A page opts its paper into the scene with `data-plakat-page` on the outermost wrapper the route owns inside `<main>`.
+3. **One scene per poster.** A page shows several scenes side by side only as separate posters (the workshop list, course thumbnails). A scene is never a card inside a paper grid, and rows are never tinted. Palette colour on paper is limited to posters and thumbnails, the scene line (Kopflinie, tab-bar marker, StatRow values, lesson H1) and the result chart. Kreide, Sand, Butter and Creme are never fills on paper.
+4. **Palette grounds replace graphit** on bands and covers. Graphit remains for the footer, the AI-Native demo engines and the home fallback (`HOME_SCENE`).
+5. **Mennige** remains the only accent on paper and the brand red everywhere; the lemons mid is Mennige itself, so the site never shows two reds. Inside a scene the ink is the accent and the focus ring. The header, the Mennige L tile, the menu and the tab-bar ground never change colour.
+6. **Typography.** No new face: Loehrning Sans 400 and 700 carry the posters.
+   - One `.plakat-caps` line per scene: 14px (17px in autumn), 600, +0.16em (+0.12em in autumn), uppercase by CSS from sentence-case text. Allowed only inside a scene, and never for UI labels or buttons.
+   - Display tracking down to -0.04em at 50px or more, allowed only through `.poster-title` (`--text-poster`, line height 0.92, sized so the longest word fits its column). Everywhere else the -0.015em floor stays.
+   - At most three type sizes per band: the caps line, the poster title and one 17px body size for the lede, the subtitle, the buttons and a short access line. No `text-caption` or `text-label`, no hairline, box, card, question card or meta list inside a band; facts move to paper directly below.
+7. **Numerals** only where a sequence exists: workshops 01 to 04 and the Grundlagenpfad 01 to 04. Technical courses carry none.
+8. **The globe** is the home hero only, as a flat Mennige disc on the lemons band (the line globe in the graphit fallback). Workshop covers use posters.
+9. **Focus.** The ring follows the ground: each scope sets `--color-brand-orange` to its ink (Butter 10.97, Kobalt 6.78, Aubergine 9.74, Creme 4.80 on the ground). A control that is full-bleed, full-height or within 5px of a band edge uses an inset ring (`focus-visible:outline-offset-[-3px]`), so the ring never lands on paper, where Butter and Creme fall to 1.03 and 1.13.
+10. **Rost rules** (autumn scope, binding). Creme on Rost is 4.80:1, only 0.30 above AA.
+    1. Text inside `.plakat-autumn` is 17px (1.0625rem) or larger at weight 400 or more. The only exception is the SVG numeral, which is display size.
+    2. There is no muted tier and no reduced opacity. Every text token is Creme.
+    3. None of these sit inside an autumn scope: a question card, a status or pass chip, a badge, a form field, a progress bar, `text-caption`, `text-label` or `text-xs`.
+    4. There is no hover tint. A hover is an underline or an inversion of the same pair.
+    5. A meaningful shape uses Ocker hell `#ebb16a` (3.24). Ocker `#e4a057` (2.78) is decoration only.
+
+#### Not allowed on the poster layer
+
+- A palette colour as a row tint, a card fill or a left rule.
+- A Mennige fill inside a lemons or autumn scope (its edge falls to 2.21 and 1.07:1), or paper text on an ink fill inside any scope.
+- An `/alpha` modifier on a `scene-*` utility: Tailwind writes its fallback with the paper value, which is wrong inside a scope.
+- A second palette inside one scene, or a scene assigned anywhere but `palettes.ts`.
+- UI-icon motifs on posters (text lines, flowcharts, gauges, bar-chart clip art), gradients, or strokes on poster shapes.
+
+Course distinction comes from the task, instrument, diagram motif, dataset and the track's poster palette. It does not come from unrelated base fonts, button shapes, shadows, or product-style color systems.
 
 ## Geometry And Density
 
-- Flat editorial frames use 1px structural boundaries (Kante `#827970` for controls, Leinen hairlines for decoration) and a 2px ink Kopflinie for section heads. The question card is the only element with a left bar.
+- Flat editorial frames use 1px structural boundaries (Kante `#827970` for controls, Leinen hairlines for decoration) and a 2px Kopflinie in the scene line for section heads. The question card is the only element with a left bar.
 - Radius is 0 on learning surfaces (courses, workshops, demos), as in the deck. Elsewhere it stays between 0 and 8px while those routes are migrated; no new pills.
 - Elevation is tone, not shadow: Bogen `#f9f7f2` (raised sheet), Kalkweiß (page), Beton `#e5e4e2` (recessed band). `--shadow-overlay` is for floating overlays only (menus, dialogs, popovers). The offset stamp shadow (`shadow-tile`) is removed. `shadow-card` / `shadow-card-hover` remain on routes not yet migrated and are not used on learning surfaces. A named set of dense/functional surfaces (account, login, feedback, the course atlas, ki-check, demos, technical course landings, and the public information routes) stay flat by contract; see `access-surfaces-density.test.ts` and its per-route siblings.
 - Reading measure is at most 68ch. Mixed editorial content is at most 1120px. Widths above 1440px are reserved for workspaces that use the space.
-- UI labels are at least 12px. Mono is reserved for data (code, file names, IDs, timestamps); labels and eyebrows are sentence case, not uppercase.
+- UI labels are at least 12px. Mono is reserved for data (code, file names, IDs, timestamps); labels and eyebrows are sentence case, not uppercase. The poster caps line (`.plakat-caps`) is a graphic element inside a scene, never a label.
 - Section spacing uses 8, 12, 16, 24, 32, or 48px. Larger gaps require a deliberate scene change.
 - The first meaningful action on a learning route starts without scrolling at 390 × 844 and 1440 × 900.
 
@@ -167,7 +201,7 @@ A CSS rotation of one pre-rendered disc was rejected because it breaks the count
 
 ### Phone globe: narrow continuous-motion exception
 
-The homepage hero is one graphit band at every width. From 1024px it is a cover: the text on the left and the desktop projection, drawn in paper lines with Germany and the resource word in `#e07050`, running off the right edge. Below 1024px its identity anchor is the horizon globe: the Workshop 03 line globe seen from orbit, only its upper limb crossing the band, Europe below the horizon and Germany traced in Mennige. It is a separate module from the desktop projection (`werk/horizon-globe-frame.tsx`, `werk/horizon-globe-renderer.ts`, `home/phone-globe.tsx`, `home/phone-hero.css`) and uses its own attribute namespace, `data-home-globe*`. The desktop globe's `data-hero-*` attributes never appear below 1024px. It is decorative (`aria-hidden`, nothing focusable inside) and carries no information that the page does not state in text.
+The homepage hero is one band at every width, in the home scene (`HOME_SCENE` in `src/lib/plakat/palettes.ts`): the lemons band with a flat Mennige globe, Germany and the route in Butter, or the graphit fallback with the line globe. From 1024px it is a cover: the text on the left and the desktop projection running off the right edge. Below 1024px its identity anchor is the horizon globe: the globe seen from orbit, only its upper limb crossing the band, Europe below the horizon and Germany marked. It is a separate module from the desktop projection (`werk/horizon-globe-frame.tsx`, `werk/horizon-globe-renderer.ts`, `home/phone-globe.tsx`, `home/phone-hero.css`) and uses its own attribute namespace, `data-home-globe*`. The desktop globe's `data-hero-*` attributes never appear below 1024px. It is decorative (`aria-hidden`, nothing focusable inside) and carries no information that the page does not state in text.
 
 The exception has these enforced boundaries:
 
@@ -237,7 +271,7 @@ Three things drove it:
 - The suite pins that display by contract: `course-progress-*`, `progress-pct-*` and `progress-dots-*` testids, plus the `<details>` "Fakten und Zugang" block. Removing the affordances means rewriting assertions that exist to guard them, on a surface that is currently green.
 - The split it was meant to serve is satisfied anyway. `/konto` is now the catalog, and `/kurse` carries a "Fortschritt in deinem Konto ansehen" link into it, so the two surfaces no longer compete to be the progress home.
 
-What `/kurse` gained instead is what the brief was actually after: cover art, tonal rows, goal filters, and a demo teaser. If the progress display is later moved, move it wholesale and delete this note rather than letting the two surfaces drift.
+What `/kurse` gained instead is what the brief was actually after: poster thumbnails grouped by track, goal filters, and a demo teaser. If the progress display is later moved, move it wholesale and delete this note rather than letting the two surfaces drift.
 
 ### Account progress presents evidence, not rewards
 
@@ -250,7 +284,7 @@ The numeric, visual, and implementation constraints in this section enforce the 
 The release gate covers the contract below. Current gate outcomes are recorded only in the [platform design audit](./design-audit-2026.md#release-gate-status); listing a contract here does not claim that it passed.
 
 - one global progress indicator and no route-specific fixed duplicates;
-- no unapproved course-level base palette or typography system;
+- no unapproved course-level base palette or typography system; poster palettes come only from `src/lib/plakat/palettes.ts`, and every pairing in [`plakat-pairings.md`](./plakat-pairings.md) meets its floor (`palettes.test.ts` runs `scripts/plakat/build-pairings.mjs --check`, `globals-css.test.ts` checks each scope token against its ground);
 - no `transition: all`, unpausable decorative loop, or UI label below 12px in changed shared components;
 - keyboard, focus, target-size, reduced-motion, overflow, hydration, and locale parity;
 - reviewed desktop and mobile screenshots for every route family;

@@ -1,0 +1,323 @@
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { describe, expect, it } from "vitest";
+import { splitTitle } from "@/app/workshops/workshop-title";
+import { WORKSHOP_PAGE_COPY } from "@/app/workshops/workshop-copy";
+import { HOME_COPY } from "@/components/home/home-copy";
+import { getAiNativeOperatorCourseCopy } from "@/lib/ai-native-operator/course-copy";
+import { getCodexCourseCopy } from "@/lib/codex/course-copy";
+import { getDataEngineeringFundamentalsCourseCopy } from "@/lib/data-engineering-fundamentals/course-copy";
+import { getDataInfraCourseCopy } from "@/lib/data-infrastructure/course-copy";
+import { demoName } from "@/lib/demos";
+import { getDemosForLocale } from "@/lib/demos-localization";
+import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
+import { getWorkshops } from "@/lib/workshops";
+import {
+  breakSegments,
+  fitEm,
+  longestSegment,
+  POSTER_FIT_SAFETY,
+  POSTER_TITLE_SIZE,
+  POSTER_TRACKING_EM,
+  posterSizeAt,
+  posterTitleSize,
+  posterTitleStyle,
+  segmentEm,
+} from "./fit";
+import { BOLD_ADVANCES, TYPE_METRICS_FONT_SHA256 } from "./type-metrics";
+
+const WEBSITE = join(__dirname, "..", "..", "..");
+const read = (path: string) => readFileSync(join(WEBSITE, path), "utf8");
+
+// ─── The column model (SPEC §3.1, §3.13) ────────────────────────────────────
+// Content box of the headline's container at a viewport width, in px. Below
+// sm the band pads 16px a side, from sm 24px; from lg the container caps at
+// 75rem and a band with art reserves min(36vw, 30rem) + 3rem on the right.
+// Desktop widths assume a 15px classic scrollbar, which narrows the layout
+// but not the vw the poster size reads.
+
+type Layout = "band-art" | "band" | "course";
+
+const SCROLLBAR = 15;
+const VIEWPORTS = [320, 390, 1024, 1280, 1440] as const;
+
+function column(layout: Layout, viewport: number): number {
+  if (viewport < 640) return viewport - 32;
+  if (viewport < 1024) return viewport - 48;
+  const layoutWidth = viewport - SCROLLBAR;
+  switch (layout) {
+    case "band":
+      return Math.min(layoutWidth, 1200) - 48;
+    case "band-art":
+      return Math.min(layoutWidth, 1200) - 24 - (Math.min(0.36 * viewport, 480) + 48);
+    case "course":
+      // TechnicalCourseFrame: 72rem track; the header keeps a 20rem right
+      // track and a 3rem gap from lg.
+      return Math.min(layoutWidth - 48, 1152) - 320 - 48;
+  }
+}
+
+// ─── The registry: every band H1 set as a poster title, DE and EN ────────────
+
+interface PosterTitle {
+  readonly id: string;
+  readonly text: string;
+  /** Copy that lives inside a page file (not exported): each part must still be a literal there. */
+  readonly source?: { readonly file: string; readonly parts: readonly string[] };
+}
+
+interface Surface {
+  readonly name: string;
+  readonly layout: Layout;
+  /** Files whose H1 takes .poster-title; the surface joins the check once one does. */
+  readonly files: readonly string[];
+  readonly titles: readonly PosterTitle[];
+}
+
+const LOCALES = ["de", "en"] as const;
+
+/** Page-local copy (not exported): heading parts as they appear in the file. */
+function literal(id: string, file: string, parts: readonly string[]): PosterTitle {
+  return { id, text: parts.join(" "), source: { file, parts } };
+}
+
+const COURSE_LITERALS = [
+  { file: "src/app/ki-fuehrerschein/page.tsx", de: ["KI im Alltag:", "Was du wissen solltest."], en: ["AI at work:", "what you need to know."] },
+  { file: "src/app/eu-ai-act-kurs/page.tsx", de: ["Rollen, Risiken und", "Pflichten einordnen."], en: ["Map roles, risks,", "and duties."] },
+  { file: "src/app/ki-und-gesellschaft/page.tsx", de: ["Arbeit, Deepfakes", "und Bias einordnen."], en: ["Assess work, deepfakes,", "and bias."] },
+  { file: "src/app/ai-native/page.tsx", de: ["Routinearbeit mit Claude automatisieren."], en: ["Automate routine work with Claude."] },
+  { file: "src/app/kurse/open-source/claude/page.tsx", de: ["Claude mit klarer Struktur einsetzen."], en: ["Use Claude with clear structure."] },
+  { file: "src/app/ai-native/capstone-gallery/page.tsx", de: ["Noch keine veröffentlichten Capstones."], en: ["No published capstones."] },
+] as const;
+
+const PAGE_LITERALS = [
+  { file: "src/app/blog/page.tsx", de: ["KI im Alltag, mit Quellen erklärt."], en: ["Everyday AI, explained with sources."] },
+  { file: "src/app/kurse/learning-atlas.tsx", de: ["Womit fängst du an?"], en: ["Where do you want to start?"] },
+] as const;
+
+const SURFACES: readonly Surface[] = [
+  {
+    name: "workshop detail bands",
+    layout: "band-art",
+    files: ["src/app/workshops/[slug]/workshop-detail-content.tsx"],
+    titles: LOCALES.flatMap((locale) =>
+      getWorkshops(locale).map((workshop) => ({
+        id: `${workshop.slug} ${locale}`,
+        text: splitTitle(workshop.title).head,
+      })),
+    ),
+  },
+  {
+    name: "workshops hub band",
+    layout: "band-art",
+    files: ["src/app/workshops/workshops-content.tsx"],
+    titles: LOCALES.map((locale) => ({ id: `hub ${locale}`, text: WORKSHOP_PAGE_COPY[locale].catalog.hubHeading })),
+  },
+  {
+    name: "home hero band",
+    layout: "band-art",
+    files: ["src/components/home/hero.tsx", "src/components/home/phone-hero.css"],
+    titles: LOCALES.map((locale) => ({ id: `home ${locale}`, text: HOME_COPY[locale].hero.headline.join(" ") })),
+  },
+  {
+    name: "demos hub band",
+    layout: "band",
+    files: ["src/app/demos/page.tsx"],
+    titles: LOCALES.map((locale) => ({ id: `demos ${locale}`, text: DEMOS_PAGE_COPY[locale].catalog.heading })),
+  },
+  {
+    name: "demo detail bands",
+    layout: "band",
+    files: ["src/components/demos/demo-detail-layout.tsx"],
+    titles: LOCALES.flatMap((locale) =>
+      getDemosForLocale(locale).map((demo) => ({ id: `${demo.slug} ${locale}`, text: demoName(demo) })),
+    ),
+  },
+  {
+    name: "blog index band",
+    layout: "band",
+    files: ["src/app/blog/page.tsx", "src/app/blog/_styles/blog-index.css"],
+    titles: LOCALES.map((locale) => literal(`blog ${locale}`, PAGE_LITERALS[0].file, PAGE_LITERALS[0][locale])),
+  },
+  {
+    name: "/kurse headline on paper",
+    layout: "band",
+    files: ["src/app/kurse/learning-atlas.tsx"],
+    titles: LOCALES.map((locale) => literal(`kurse ${locale}`, PAGE_LITERALS[1].file, PAGE_LITERALS[1][locale])),
+  },
+  {
+    name: "course landing bands",
+    layout: "course",
+    files: ["src/components/course/technical-course-landing.tsx"],
+    titles: [
+      ...LOCALES.flatMap((locale) => [
+        { id: `codex ${locale}`, text: getCodexCourseCopy(locale).landing.title },
+        { id: `ai-native-operator ${locale}`, text: getAiNativeOperatorCourseCopy(locale).landing.title },
+        { id: `data-infrastructure ${locale}`, text: getDataInfraCourseCopy(locale).landing.title },
+        {
+          id: `data-engineering-fundamentals ${locale}`,
+          text: getDataEngineeringFundamentalsCourseCopy(locale).landing.title,
+        },
+      ]),
+      ...COURSE_LITERALS.flatMap((page) =>
+        LOCALES.map((locale) => literal(`${page.file} ${locale}`, page.file, page[locale])),
+      ),
+    ],
+  },
+];
+
+/** A surface joins the fit check once its headline is a .poster-title (SPEC §6, G1 to G4). */
+function adopted(surface: Surface): boolean {
+  return surface.files.some((file) => /\bposter-title\b|--text-poster\b/.test(read(file)));
+}
+
+// ─── Tests ─────────────────────────────────────────────────────────────────
+
+describe("poster title metrics", () => {
+  it("were measured from the bold web font on disk", () => {
+    const font = readFileSync(join(WEBSITE, "public/fonts/loehrning-sans-bold-v1.woff2"));
+    expect(
+      createHash("sha256").update(font).digest("hex"),
+      "the font changed: run node scripts/plakat/build-type-metrics.mjs",
+    ).toBe(TYPE_METRICS_FONT_SHA256);
+  });
+
+  it("match the headline widths Chromium sets with -0.04em tracking", () => {
+    // DOM widths of a span at 1000px, 700, letter-spacing -0.04em (Chromium
+    // 141, Loehrning Sans Bold), measured when the table was built.
+    const measured = {
+      "Geschäftsberichte": 7.732109375,
+      "Arbeitsabläufe": 6.176328125,
+      Workshops: 4.837265625,
+      "verstehen.": 4.501859375,
+      "anwenden.": 4.699578125,
+    };
+    for (const [word, em] of Object.entries(measured)) {
+      expect(segmentEm(word), word).toBeCloseTo(em, 3);
+    }
+  });
+
+  it("follow the CSS of .poster-title", () => {
+    const css = read("src/app/globals.css");
+    expect(css).toMatch(
+      new RegExp(
+        `--text-poster:\\s*clamp\\(${POSTER_TITLE_SIZE.min / 16}rem,\\s*${POSTER_TITLE_SIZE.base / 16}rem \\+ ${
+          POSTER_TITLE_SIZE.perViewport * 100
+        }vw,\\s*${POSTER_TITLE_SIZE.max / 16}rem\\)`,
+      ),
+    );
+    expect(css).toMatch(new RegExp(`--text-poster--letter-spacing:\\s*${POSTER_TRACKING_EM}em`));
+    expect(css).toMatch(
+      new RegExp(`font-size:\\s*max\\(${POSTER_TITLE_SIZE.floor / 16}rem,\\s*min\\(var\\(--text-poster\\),\\s*calc\\(100cqi / var\\(--fit`),
+    );
+    expect(posterSizeAt(390)).toBeCloseTo(50.68, 2);
+    expect(posterSizeAt(1280)).toBe(96);
+  });
+});
+
+describe("breakSegments", () => {
+  it("splits at spaces and after hyphens and dashes, never at a no-break space", () => {
+    expect(breakSegments("KI-Arbeitsabläufe prüfen")).toEqual(["KI-", "Arbeitsabläufe", "prüfen"]);
+    expect(breakSegments("ESG-Berichte mit\u00a0KI")).toEqual(["ESG-", "Berichte", "mit\u00a0KI"]);
+    expect(breakSegments("a\u2013b c\u2014d")).toEqual(["a\u2013", "b", "c\u2014", "d"]);
+  });
+
+  it("turns a soft hyphen into a break that shows a hyphen", () => {
+    expect(breakSegments("zusammen\u00adhängendes")).toEqual(["zusammen-", "hängendes"]);
+  });
+
+  it("returns the fallback fit for an empty title", () => {
+    expect(fitEm("")).toBe(0.01);
+    expect(posterTitleStyle("")).toEqual({ "--fit": "0.01" });
+  });
+});
+
+describe("fitEm", () => {
+  it("is the longest segment with the safety headroom, rounded up", () => {
+    const { segment, em } = longestSegment("Geschäftsberichte mit KI lesen");
+    expect(segment).toBe("Geschäftsberichte");
+    const fit = fitEm("Geschäftsberichte mit KI lesen");
+    expect(fit).toBeGreaterThanOrEqual(em * POSTER_FIT_SAFETY);
+    expect(fit - em * POSTER_FIT_SAFETY).toBeLessThan(0.001);
+    expect(posterTitleStyle("Geschäftsberichte mit KI lesen")).toEqual({ "--fit": String(fit) });
+  });
+
+  it("gives the spec's reference sizes (SPEC §4)", () => {
+    const report = fitEm("Geschäftsberichte mit KI lesen");
+    // 36px at 320 and about 45px at 390: one line, never broken.
+    expect(posterTitleSize(report, column("band-art", 320), 320)).toBeCloseTo(36, 0);
+    expect(posterTitleSize(report, column("band-art", 390), 390)).toBeCloseTo(45, 0);
+    // KI-Arbeitsabläufe breaks after the hyphen: 45px at 320.
+    expect(longestSegment("KI-Arbeitsabläufe prüfen").segment).toBe("Arbeitsabläufe");
+    expect(posterTitleSize(fitEm("KI-Arbeitsabläufe prüfen"), 288, 320)).toBeCloseTo(45, 0);
+    // Shorter titles reach the full poster size: 50.7px at 390.
+    for (const title of ["Workshops mit Fall und Vorlage.", "KI verstehen. Sicher anwenden."]) {
+      expect(posterTitleSize(fitEm(title), column("band-art", 390), 390), title).toBeCloseTo(50.68, 1);
+    }
+  });
+});
+
+describe("the poster title registry", () => {
+  it("covers every surface the spec sets in the poster size", () => {
+    expect(SURFACES.map((surface) => surface.name)).toEqual([
+      "workshop detail bands",
+      "workshops hub band",
+      "home hero band",
+      "demos hub band",
+      "demo detail bands",
+      "blog index band",
+      "/kurse headline on paper",
+      "course landing bands",
+    ]);
+    for (const surface of SURFACES) {
+      expect(surface.titles.length, surface.name).toBeGreaterThanOrEqual(2);
+      for (const title of surface.titles) expect(title.text.trim(), title.id).not.toBe("");
+    }
+  });
+
+  it("still matches the page-local copy it reads", () => {
+    for (const surface of SURFACES) {
+      for (const { id, source } of surface.titles) {
+        if (!source) continue;
+        const text = read(source.file);
+        for (const part of source.parts) {
+          expect(text, `${id}: "${part}" is no longer in ${source.file}; update the registry`).toContain(`"${part}"`);
+        }
+      }
+    }
+  });
+
+  it("sets every title in glyphs the web font maps", () => {
+    for (const surface of SURFACES) {
+      for (const title of surface.titles) {
+        for (const character of title.text.normalize("NFC")) {
+          if (/\s/.test(character)) continue;
+          expect(BOLD_ADVANCES[character], `${title.id}: "${character}"`).toBeDefined();
+        }
+      }
+    }
+  });
+});
+
+describe.each(SURFACES)("$name", (surface) => {
+  it.skipIf(!adopted(surface))(
+    `fits every title at ${VIEWPORTS.join(", ")}px, DE and EN`,
+    () => {
+      const overflows: string[] = [];
+      for (const title of surface.titles) {
+        const fit = fitEm(title.text);
+        for (const viewport of VIEWPORTS) {
+          const width = column(surface.layout, viewport);
+          const size = posterTitleSize(fit, width, viewport);
+          if (size * fit > width + 1e-9) {
+            overflows.push(
+              `${title.id} at ${viewport}px: "${longestSegment(title.text).segment}" needs ${(size * fit).toFixed(1)}px of ${width.toFixed(1)}px at ${size.toFixed(1)}px. Add a soft hyphen (U+00AD) or reword.`,
+            );
+          }
+        }
+      }
+      expect(overflows).toEqual([]);
+    },
+  );
+});

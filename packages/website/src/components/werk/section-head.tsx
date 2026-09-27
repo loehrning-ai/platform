@@ -20,9 +20,14 @@ export type SectionHeadProps = {
 };
 
 /**
- * Section head with a Kopflinie: a 2px ink rule, then the heading and an
+ * Section head with a Kopflinie: a 2px rule, then the heading and an
  * optional right-aligned caption on one baseline. Replaces orange left rules
  * and eyebrow-plus-heading stacks. Content below should start about mt-8.
+ *
+ * The rule is the scene line: Druckschwarz on a plain paper page, the scene's
+ * paper ink below a poster band (Ultramarin, Kobalt, Aubergine or Rost, set by
+ * the page's data-plakat-page), the band's ink inside a band. The heading
+ * itself stays in the foreground ink.
  */
 export function SectionHead({
   title,
@@ -35,7 +40,7 @@ export function SectionHead({
 }: SectionHeadProps) {
   const compact = size === "compact";
   return (
-    <header className={cx("border-t-2 border-foreground pt-4", compact && "pt-3 sm:pt-4", className)}>
+    <header className={cx("border-t-2 border-scene-line pt-4", compact && "pt-3 sm:pt-4", className)}>
       <div
         className={cx(
           "flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2",

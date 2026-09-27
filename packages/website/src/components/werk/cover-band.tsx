@@ -21,6 +21,12 @@ export type CoverBandProps = {
 };
 
 /**
+ * The graphit variant of the cover band. Poster bands (PlakatBand in
+ * src/components/plakat) replace it on workshops, courses, demos and the
+ * blog; CoverBand stays for the home fallback scene (HOME_SCENE "graphit" in
+ * src/lib/plakat/palettes.ts) and the AI-Native demos. New code uses
+ * PlakatBand.
+ *
  * Graphit cover band, as on the workshop deck cover: a full-width in-flow
  * <section> (no viewport-width units, no negative margins) scoped with .dark-section, with
  * a static line globe on the right, cut off by the band edge. The globe is

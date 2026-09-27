@@ -145,22 +145,6 @@ describe("catalog surfaces below lg", () => {
     expect(workshops).toContain('className="hidden pt-6 sm:block sm:pt-20"');
   });
 
-  it("keeps the demo cover compact without moving the desktop console", () => {
-    const demos = source("demos/page.tsx");
-
-    // Paper hero: tighter padding on a phone, the reviewed spacing from sm.
-    expect(demos).toContain(
-      'className="px-4 pb-6 pt-5 sm:px-6 sm:pb-12 sm:pt-12"',
-    );
-    // Lead and check list stack on a phone and sit side by side from lg.
-    expect(demos).toContain(
-      "lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]",
-    );
-    // The stats are the shared StatRow (two columns on a phone, one row of
-    // three from sm), not a bespoke figure grid.
-    expect(demos).toMatch(/<StatRow\s+stats=\{stats\}/);
-  });
-
   it("keeps the open-source cover and ledger frames bounded on phones", () => {
     const hub = source("open-source/page.tsx");
     const ledger = source("open-source/artifact-ledger.tsx");

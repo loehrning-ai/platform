@@ -307,7 +307,9 @@ describe("Plakat scenes (poster palettes)", () => {
     const staticTheme = new Map<string, string>();
     root.walkAtRules("theme", (rule) => {
       if (rule.params.trim() !== "static") return;
-      rule.walkDecls((declaration) => staticTheme.set(declaration.prop, declaration.value));
+      rule.walkDecls((declaration) => {
+        staticTheme.set(declaration.prop, declaration.value);
+      });
     });
     for (const name of [...RAW_TOKENS, ...SCENE_TOKENS]) {
       expect(staticTheme.get(name), `${name} must sit in @theme static`).toMatch(/^#[0-9a-f]{6}$/);

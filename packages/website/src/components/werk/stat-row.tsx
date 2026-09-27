@@ -17,6 +17,10 @@ export type StatRowProps = {
  * Evidence row: label, large tabular value, optional caption. No boxes and
  * no icons; stats are separated by hairlines from sm up. Inside .dark-section
  * the hairline token switches to the dark hairline automatically.
+ *
+ * Values take the scene line: Druckschwarz on plain paper, the scene's paper
+ * ink below a poster band (4.85:1 or more on Kalkweiß, Bogen and Beton), the
+ * ink inside a band. Labels stay Schiefer.
  */
 export function StatRow({ stats, className }: StatRowProps) {
   return (
@@ -33,7 +37,7 @@ export function StatRow({ stats, className }: StatRowProps) {
           className="flex flex-col pr-6 sm:border-l sm:border-hairline sm:pl-6 sm:first:border-l-0 sm:first:pl-0"
         >
           <dt className="text-label text-muted-foreground">{stat.label}</dt>
-          <dd className="mt-1 text-num-lg font-bold text-foreground tabular-nums">
+          <dd className="mt-1 text-num-lg font-bold text-scene-line tabular-nums">
             {stat.value}
           </dd>
           {stat.note ? (

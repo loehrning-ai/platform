@@ -4,10 +4,13 @@ import { ArrowGlyph, type ArrowDirection } from "./arrow-glyph";
 import { cx } from "./cx";
 
 export type ButtonVariant = "primary" | "ink" | "secondary" | "text";
-export type ButtonTone = "paper" | "dark";
+export type ButtonTone = "paper" | "dark" | "scene";
 
 const BUTTON_BASE =
   "group inline-flex min-h-11 items-center gap-2 px-5 text-[0.9375rem] font-semibold transition-colors duration-[120ms] motion-reduce:transition-none";
+
+const SCENE_PRIMARY =
+  "min-h-12 border-2 border-scene-ink bg-scene-ink text-[1.0625rem] text-scene-ground [&>span:first-child]:decoration-2 [&>span:first-child]:underline-offset-4 hover:[&>span:first-child]:underline";
 
 /**
  * Class recipes, exported for <button> elements that need the same look.
@@ -22,6 +25,15 @@ const BUTTON_BASE =
  *
  * Dark tone (graphit band): primary is a paper button with ink text, never
  * white on the lightened accent (3.18:1 fails); secondary is a paper outline.
+ *
+ * Scene tone (inside a .plakat-* scope, a poster band): one strong pair, the
+ * scene's ink and ground, so it reads right on every palette. Primary is an
+ * ink fill with a ground label (Butter on Ultramarin 10.97, Kobalt 6.78,
+ * Aubergine 9.74, Creme on Rost 4.80), 17px at 600 for the Rost floor, 48px
+ * tall, with a 2px ink edge. Hover never tints (a Rost tint would drop Creme
+ * below AA): primary underlines its label, secondary inverts the pair, text
+ * thickens its underline. The focus ring is the ink through the scope's
+ * --color-brand-orange, 2px off the fill. Never Mennige or text-paper here.
  */
 export const BUTTON_CLASSES: Record<ButtonTone, Record<ButtonVariant, string>> = {
   paper: {
@@ -41,6 +53,15 @@ export const BUTTON_CLASSES: Record<ButtonTone, Record<ButtonVariant, string>> =
       "border border-dark-border bg-transparent text-dark-fg hover:bg-[#242321]",
     ),
     text: "group inline-flex min-h-11 items-center gap-1.5 font-semibold text-dark-fg underline decoration-dark-border underline-offset-4 transition-colors duration-[120ms] hover:decoration-dark-fg motion-reduce:transition-none",
+  },
+  scene: {
+    primary: cx(BUTTON_BASE, SCENE_PRIMARY),
+    ink: cx(BUTTON_BASE, SCENE_PRIMARY),
+    secondary: cx(
+      BUTTON_BASE,
+      "min-h-12 border-2 border-scene-ink bg-transparent text-[1.0625rem] text-scene-ink hover:bg-scene-ink hover:text-scene-ground",
+    ),
+    text: "group inline-flex min-h-11 items-center gap-1.5 text-[1.0625rem] font-semibold text-scene-ink underline decoration-scene-ink decoration-1 underline-offset-4 transition-colors duration-[120ms] hover:decoration-2 motion-reduce:transition-none",
   },
 };
 
