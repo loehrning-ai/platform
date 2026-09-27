@@ -25,6 +25,10 @@ export type PlakatBandProps = {
    * The IDEA poster's four corner dots, 16px inside the band's own corners
    * (the /demos band). Poster art inside the band then takes
    * `cornerDots={false}`, so the dots mark the band, not a poster in it.
+   * With `artPhone`, the bottom pair shows only from lg: below lg it would
+   * sit on the strip numeral's baseline (a Kobalt dot beside a Himbeere
+   * "02" reads as ".02"). The content then starts 36px down on phones, so
+   * the top dots stay clear of the caps line.
    */
   readonly cornerDots?: boolean;
   /** Extra classes for the inner content container (an inline-size container). */
@@ -64,7 +68,16 @@ export function PlakatBand({
       data-plakat={plakat}
       className={cx(plakatClass(plakat), "relative isolate overflow-hidden", className)}
     >
-      {cornerDots ? <CornerDots /> : null}
+      {cornerDots ? (
+        artPhone ? (
+          <>
+            <CornerDots corners="top" />
+            <CornerDots corners="bottom" className="hidden lg:block" />
+          </>
+        ) : (
+          <CornerDots />
+        )
+      ) : null}
       {art ? (
         <div
           aria-hidden="true"
@@ -76,7 +89,8 @@ export function PlakatBand({
       ) : null}
       <div
         className={cx(
-          "@container relative mx-auto max-w-[75rem] px-4 pt-5 sm:px-6 sm:pt-10 lg:py-16",
+          "@container relative mx-auto max-w-[75rem] px-4 sm:px-6 sm:pt-10 lg:py-16",
+          cornerDots ? "pt-9" : "pt-5",
           art && "lg:pr-[calc(min(36vw,30rem)+3rem)]",
           contentClassName,
         )}

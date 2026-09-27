@@ -173,6 +173,27 @@ export const COURSE_PLAKAT = {
 
 export type CoursePlakatId = keyof typeof COURSE_PLAKAT;
 
+/**
+ * `TechnicalCourseFrame` ids that stay paper on purpose, with no scene and no
+ * `data-plakat-page`. SPEC §3.1 and §5 keep the AI-Native demos on paper with
+ * their graphit engines, and the glossary is a reading surface. A frame must
+ * read its scene through `coursePlakat(courseId)` and render no scene when it
+ * returns undefined; `palettes.test.ts` fails on any other unmapped id.
+ */
+export const UNSCENED_COURSE_IDS = ["ai-native-demos", "ai-native-glossary"] as const;
+
+/**
+ * The paper and ink of the chrome, for renderers that cannot read CSS tokens
+ * (Satori OG images, static generators). Equal to `--color-background`,
+ * `--color-paper`, `--color-foreground` and `--color-mennige` in globals.css.
+ */
+export const PAPER = {
+  kalkweiss: "#f3f0e9",
+  bogen: "#f9f7f2",
+  druckschwarz: "#121212",
+  mennige: "#b73a15",
+} as const;
+
 /** Route families with a fixed scene. Workshops and courses use the maps above. */
 export const ROUTE_PLAKAT = {
   home: "lemons",

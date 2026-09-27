@@ -1,4 +1,4 @@
-import { PLAKAT, type MotifId, type PlakatKey } from "./palettes";
+import { PLAKAT, type MotifId, type PlakatKey } from "./palettes.ts";
 
 /**
  * Poster geometry (Werkzeichnung v2, SPEC §3.5), ported from the reference

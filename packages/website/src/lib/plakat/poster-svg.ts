@@ -1,11 +1,11 @@
-import { PLAKAT, type PlakatKey } from "./palettes";
+import { PLAKAT, type PlakatKey } from "./palettes.ts";
 import {
   POSTER_CANVAS,
   posterComposition,
   type PosterCompositionOptions,
   type PosterNode,
   type ShapeRole,
-} from "./motifs";
+} from "./motifs.ts";
 
 /**
  * The poster as a standalone SVG string, for the static generators (social

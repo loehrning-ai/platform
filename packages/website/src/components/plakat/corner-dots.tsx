@@ -1,42 +1,48 @@
 import { cx } from "@/components/werk/cx";
 
 export type CornerDotsProps = {
+  /** Which dots to draw. "top" and "bottom" draw one pair each. Default: all four. */
+  readonly corners?: "all" | "top" | "bottom";
+  /** Extra classes for every dot, e.g. `hidden lg:block`. */
   readonly className?: string;
 };
 
-/** Centre of each dot from its corner, in px. */
-const INSET = 16;
-const RADIUS = 4;
+/** Diameter of a dot, in px. Its box sits 12px in, so the centre is 16px in. */
+const SIZE = 8;
 
 const CORNERS = [
-  { x: "0", y: "0", cx: INSET, cy: INSET },
-  { x: "100%", y: "0", cx: -INSET, cy: INSET },
-  { x: "0", y: "100%", cx: INSET, cy: -INSET },
-  { x: "100%", y: "100%", cx: -INSET, cy: -INSET },
+  { id: "top-left", row: "top", place: "top-3 left-3" },
+  { id: "top-right", row: "top", place: "top-3 right-3" },
+  { id: "bottom-left", row: "bottom", place: "bottom-3 left-3" },
+  { id: "bottom-right", row: "bottom", place: "bottom-3 right-3" },
 ] as const;
 
 /**
- * The IDEA poster's four corner dots, as a band ornament: one aria-hidden
- * SVG over the band with a dot 16px inside each corner, in the scene ink.
- * Each dot sits in a 1px nested viewport pinned to its corner (a zero size
- * would disable rendering) and paints past it, so the dots hold their inset
- * at any band size without CSS geometry properties.
- * SVG circles, not round-cornered boxes (demo surfaces ban that utility).
- * The parent must be `relative`.
+ * The IDEA poster's four corner dots, as a band ornament: a dot 16px inside
+ * each corner, in the scene ink. Each dot is its own aria-hidden 8px SVG,
+ * pinned to its corner, so no dot box covers a text box: axe can then check
+ * the contrast of the band's text against the ground instead of marking it
+ * incomplete. SVG circles, not round-cornered boxes (demo surfaces ban that
+ * utility). The parent must be `relative`.
  */
-export function CornerDots({ className }: CornerDotsProps) {
+export function CornerDots({ corners = "all", className }: CornerDotsProps) {
   return (
-    <svg
-      aria-hidden="true"
-      focusable="false"
-      data-corner-dots=""
-      className={cx("pointer-events-none absolute inset-0 size-full overflow-visible", className)}
-    >
-      {CORNERS.map((corner) => (
-        <svg key={`${corner.x}-${corner.y}`} x={corner.x} y={corner.y} width="1" height="1" overflow="visible">
-          <circle cx={corner.cx} cy={corner.cy} r={RADIUS} className="fill-scene-ink" />
+    <>
+      {CORNERS.filter((corner) => corners === "all" || corner.row === corners).map((corner) => (
+        <svg
+          key={corner.id}
+          aria-hidden="true"
+          focusable="false"
+          data-corner-dots=""
+          data-corner={corner.id}
+          width={SIZE}
+          height={SIZE}
+          viewBox={`0 0 ${SIZE} ${SIZE}`}
+          className={cx("pointer-events-none absolute size-2", corner.place, className)}
+        >
+          <circle cx={SIZE / 2} cy={SIZE / 2} r={SIZE / 2} className="fill-scene-ink" />
         </svg>
       ))}
-    </svg>
+    </>
   );
 }

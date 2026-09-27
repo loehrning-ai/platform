@@ -13,16 +13,19 @@ import {
   hubPlakat,
   isPlakatKey,
   MOTIF_IDS,
+  PAPER,
   PLAKAT,
   PLAKAT_KEYS,
   plakatClass,
   ROUTE_PLAKAT,
+  UNSCENED_COURSE_IDS,
   WORKSHOP_PLAKAT,
   workshopPlakat,
 } from "./palettes";
 
 const WEBSITE = join(__dirname, "..", "..", "..");
-const APP_DIR = join(WEBSITE, "src", "app");
+const SRC_DIR = join(WEBSITE, "src");
+const APP_DIR = join(SRC_DIR, "app");
 const css = postcss.parse(readFileSync(join(APP_DIR, "globals.css"), "utf8"));
 
 function declarations(selector: string): Map<string, string> {
@@ -46,17 +49,18 @@ function themeTokens(): Map<string, string> {
   return found;
 }
 
-function pageFiles(directory: string): string[] {
+/** Every non-test .tsx under src: pages and the components that render a frame for a route. */
+function sourceFiles(directory: string): string[] {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     const path = join(directory, entry.name);
-    if (entry.isDirectory()) return pageFiles(path);
-    return entry.name === "page.tsx" ? [path] : [];
+    if (entry.isDirectory()) return sourceFiles(path);
+    return entry.name.endsWith(".tsx") && !/\.test\.tsx$/.test(entry.name) ? [path] : [];
   });
 }
 
 /** Every `<TechnicalCourseFrame courseId=...>` value, resolving a same-file string constant. */
 function technicalCourseIds(): { file: string; courseId: string }[] {
-  return pageFiles(APP_DIR).flatMap((file) => {
+  return sourceFiles(SRC_DIR).flatMap((file) => {
     const source = readFileSync(file, "utf8");
     const frames = [...source.matchAll(/<TechnicalCourseFrame\b[^>]*?\bcourseId=(?:"([^"]+)"|\{([A-Za-z_$][\w$]*)\})/gs)];
     return frames.map((match) => {
@@ -102,6 +106,15 @@ describe("palettes.ts matches the CSS scopes", () => {
     }
     // Mennige stays the one red: the lemons mid is the Mennige token itself.
     expect(PLAKAT.lemons.mid).toBe(theme.get("--color-mennige"));
+  });
+
+  it("keeps PAPER equal to the paper and ink tokens", () => {
+    expect(PAPER).toEqual({
+      kalkweiss: theme.get("--color-background"),
+      bogen: theme.get("--color-paper"),
+      druckschwarz: theme.get("--color-foreground"),
+      mennige: theme.get("--color-mennige"),
+    });
   });
 
   it("keeps three distinct colours per scene and four distinct grounds", () => {
@@ -168,12 +181,20 @@ describe("workshop palettes (locked, decision D3)", () => {
 });
 
 describe("course palettes (grouped by track)", () => {
-  it("maps every TechnicalCourseFrame courseId in src/app", () => {
+  it("maps every TechnicalCourseFrame courseId in src, or lists it as paper on purpose", () => {
     const frames = technicalCourseIds();
-    expect(frames.length).toBeGreaterThanOrEqual(10);
+    expect(frames.length).toBeGreaterThanOrEqual(12);
+    const unscened: readonly string[] = UNSCENED_COURSE_IDS;
     for (const { file, courseId } of frames) {
+      if (unscened.includes(courseId)) {
+        expect(coursePlakat(courseId), `${file}: ${courseId} is listed as paper`).toBeUndefined();
+        continue;
+      }
       expect(coursePlakat(courseId), `${file}: ${courseId}`).toBeDefined();
     }
+    // The paper list names only ids a frame really uses, so it cannot hide a typo.
+    const used = new Set(frames.map((frame) => frame.courseId));
+    for (const courseId of UNSCENED_COURSE_IDS) expect(used.has(courseId), courseId).toBe(true);
   });
 
   it("maps every catalogue course: Grundlagenpfad Lemons 01 to 04, Technikkurse without numerals", () => {

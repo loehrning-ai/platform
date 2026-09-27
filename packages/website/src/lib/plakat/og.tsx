@@ -1,6 +1,6 @@
 import type { ReactElement } from "react";
 import { POSTER_CANVAS, numeralLayout } from "./motifs";
-import { PLAKAT, type MotifId, type PlakatKey } from "./palettes";
+import { PAPER, PLAKAT, type MotifId, type PlakatKey } from "./palettes";
 import { posterSvgDataUri } from "./poster-svg";
 import { BOLD_ASCENDER, BOLD_DESCENDER, UNITS_PER_EM } from "./type-metrics";
 
@@ -23,16 +23,10 @@ export const OG_FONT_FAMILY = "Loehrning Sans";
 /**
  * The header's paper colours: Kalkweiß ground, the Mennige tile, its Bogen
  * letter and the Druckschwarz wordmark. Satori cannot read the CSS tokens,
- * so the values are written here; plakat.test.tsx holds each one equal to
- * its @theme token in globals.css (--color-background, --color-mennige,
- * --color-paper, --color-foreground).
+ * so the values come from PAPER in palettes.ts, which palettes.test.ts holds
+ * equal to the @theme tokens in globals.css.
  */
-export const OG_PAPER = {
-  kalkweiss: "#f3f0e9",
-  mennige: "#b73a15",
-  bogen: "#f9f7f2",
-  druckschwarz: "#121212",
-} as const;
+export const OG_PAPER = PAPER;
 
 export type OgColophonProps = {
   /** A short line at the right end of the strip, e.g. "Workshop 04 · kostenlos". */
@@ -128,6 +122,17 @@ export function OgPoster({ plakat, motif, numeral = null, width, fontFamily = OG
   const ascent = BOLD_ASCENDER / UNITS_PER_EM;
   const lineHeight = (BOLD_ASCENDER - BOLD_DESCENDER) / UNITS_PER_EM;
   const palette = PLAKAT[plakat];
+  const numeralBox = {
+    display: "flex",
+    position: "absolute",
+    left: layout.x * scale,
+    top: layout.y * scale - ascent * fontSize,
+    fontFamily,
+    fontSize,
+    fontWeight: layout.fontWeight,
+    lineHeight,
+    letterSpacing: layout.letterSpacing * scale,
+  } as const;
   return (
     <div
       style={{
@@ -141,22 +146,18 @@ export function OgPoster({ plakat, motif, numeral = null, width, fontFamily = OG
       }}
     >
       {numeral ? (
-        <div
-          style={{
-            display: "flex",
-            position: "absolute",
-            left: layout.x * scale,
-            top: layout.y * scale - ascent * fontSize,
-            fontFamily,
-            fontSize,
-            fontWeight: layout.fontWeight,
-            lineHeight,
-            letterSpacing: layout.letterSpacing * scale,
-            color: layout.role === "mid" ? palette.mid : palette.ink,
-          }}
-        >
-          {numeral}
-        </div>
+        // Two stacked copies emulate the SVG keyline (paint-order: stroke
+        // fill), which Satori has no property for: first a ground-coloured
+        // copy with a centred stroke of the keyline width, then the fill copy
+        // on top. Where the numeral crosses a shape, the ground cuts the gap.
+        [
+          <div key="keyline" data-og-numeral="keyline" style={{ ...numeralBox, color: palette.ground, WebkitTextStroke: `${layout.keyline * scale}px ${palette.ground}` }}>
+            {numeral}
+          </div>,
+          <div key="fill" data-og-numeral="fill" style={{ ...numeralBox, color: layout.role === "mid" ? palette.mid : palette.ink }}>
+            {numeral}
+          </div>,
+        ]
       ) : null}
     </div>
   );
