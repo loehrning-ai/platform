@@ -96,6 +96,8 @@ interface Edge {
   readonly keep: "below" | "above";
 }
 
+export type { Box as PosterBox, Point as PosterPoint };
+
 export type ClippedPosterItem =
   | { readonly kind: "shape"; readonly role: ShapeRole; readonly d: string }
   | { readonly kind: "numeral"; readonly text: string; readonly layout: NumeralLayout };
