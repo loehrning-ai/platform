@@ -1,21 +1,27 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
 import type { Locale } from "@/lib/i18n/locale";
 import { OG_FONT_FAMILY, OgColophon } from "@/lib/plakat/og";
 import { PAPER } from "@/lib/plakat/palettes";
 
-export const runtime = "edge";
 // One alt serves both locales: the /en mirror re-exports this module.
 export const alt =
   "Was ist KI? Ein Einstieg ohne Vorwissen. / What is AI? No prior knowledge needed. loehrning.ai";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-// Loehrning Sans Bold, bundled with the edge function by URL. One face keeps
-// the function small; the card is set in 700 throughout.
-const boldFont = fetch(
-  new URL("../../fonts/LoehrningSans-Bold.ttf", import.meta.url),
-).then((response) => response.arrayBuffer());
+// Loehrning Sans Bold from src/fonts, read on the Node runtime on the first
+// render, like the other share cards. The card reads the request locale, so
+// it renders per request; the font reaches the deployed function through
+// outputFileTracingIncludes in next.config.ts. The card is set in 700
+// throughout, so one face is enough.
+let boldFont: Promise<Buffer> | undefined;
+function loadBoldFont(): Promise<Buffer> {
+  boldFont ??= readFile(join(process.cwd(), "src/fonts/LoehrningSans-Bold.ttf"));
+  return boldFont;
+}
 
 const INSET = 64;
 
@@ -122,7 +128,7 @@ export default async function Image() {
       fonts: [
         {
           name: OG_FONT_FAMILY,
-          data: await boldFont,
+          data: await loadBoldFont(),
           weight: 700,
           style: "normal",
         },

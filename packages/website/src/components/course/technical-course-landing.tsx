@@ -136,12 +136,19 @@ function kickerLabel(label: string): string {
 }
 
 /**
- * The band's caps line is one line (SPEC §1.5). Each "·" part is an
- * unbreakable flex item that carries its separator at its start, and the
- * line is clipped to one line height: a part that does not fit drops out
- * whole, so a phone never shows a second line or a line ending in "·".
- * The DOM keeps every part for screen readers. Every landing sets the same
- * "·" separator (SPEC §1.5), whichever one its kicker copy uses.
+ * The band's caps line is one line (SPEC §1.5). Each "·" part is a flex
+ * item that carries its separator at its start, and the line is clipped to
+ * one line height: a part that does not fit drops out whole, so a phone
+ * never shows a second line or a line ending in "·". The DOM keeps every
+ * part for screen readers. Every landing sets the same "·" separator
+ * (SPEC §1.5), whichever one its kicker copy uses.
+ *
+ * A flex line takes a part only at its full one-line width, so a part on
+ * the shown line never wraps. A part that dropped out may wrap inside its
+ * own hidden row instead of running past the column, so nothing in the
+ * caps line is wider than the line. The first part never wraps: it has to
+ * fit, and a first part that does not is a copy error the geometry checks
+ * catch.
  */
 function CapsSegments({ label }: { readonly label: string }): JSX.Element {
   // " / " in older kicker copy is the same division; the series sets "·".
@@ -149,7 +156,10 @@ function CapsSegments({ label }: { readonly label: string }): JSX.Element {
   return (
     <>
       {parts.map((part, index) => (
-        <span key={`${index}-${part}`} className="whitespace-nowrap">
+        <span
+          key={`${index}-${part}`}
+          className={index > 0 ? "min-w-0 break-words" : "whitespace-nowrap"}
+        >
           {index > 0 ? `\u00a0· ${part}` : part}
         </span>
       ))}

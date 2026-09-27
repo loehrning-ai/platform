@@ -118,23 +118,40 @@ describe("HeroNetwork render branches", () => {
     const { container, rerender } = render(
       <HeroNetwork scrollProgress={motionValue(0)} />,
     );
-    const liveLayer = container.querySelector(
-      '[data-hero-network-live="grid-back"]',
+    // Every rAF-owned layer carries a stable name; e2e motion probes read
+    // grid-front, the one layer every scene redraws.
+    const liveLayers = Array.from(
+      container.querySelectorAll("[data-hero-network-live]"),
     );
+    expect(
+      liveLayers.map((layer) => layer.getAttribute("data-hero-network-live")),
+    ).toEqual([
+      "grid-back",
+      "grid-front-shadow",
+      "grid-front",
+      "country-glow",
+      "country-fill",
+      "country-outline",
+    ]);
 
     // Model the real rAF-owned DOM: these children are not part of React's
     // virtual tree and must be removed explicitly when static mode takes over.
-    const injectedPath = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "path",
-    );
-    liveLayer?.appendChild(injectedPath);
-    expect(injectedPath.isConnected).toBe(true);
+    const injectedPaths = liveLayers.map((layer) => {
+      const path = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "path",
+      );
+      layer.appendChild(path);
+      return path;
+    });
+    for (const path of injectedPaths) expect(path.isConnected).toBe(true);
 
     rerender(<HeroNetwork scrollProgress={motionValue(0)} mobile />);
 
-    expect(injectedPath.isConnected).toBe(false);
-    expect(liveLayer).toHaveAttribute("display", "none");
+    for (const path of injectedPaths) expect(path.isConnected).toBe(false);
+    for (const layer of liveLayers) {
+      expect(layer).toHaveAttribute("display", "none");
+    }
     expect(container.firstElementChild).toHaveAttribute(
       "data-hero-network-motion",
       "static",

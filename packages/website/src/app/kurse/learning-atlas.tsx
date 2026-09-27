@@ -240,12 +240,34 @@ const ATLAS_COPY = {
  * A chip that takes focus inside a horizontal rail scrolls fully into the
  * rail's view (WCAG 2.4.11): a cut chip at the screen edge otherwise keeps
  * half its ring off-screen. Only the rail scrolls sideways.
+ *
+ * The rails snap each chip's start. A minimal ("nearest") scroll lands
+ * between two snap points, and the snap then pulls the rail back to the
+ * earlier one, leaving the chip cut (a German goal chip at 320px). A cut
+ * chip therefore scrolls to its own snap point, which the snap keeps.
+ * Keyboard focus moves instantly, as the browser's own focus scroll does:
+ * a smooth scroll still running when Tab moves on races that native scroll
+ * and the snap, and can settle with the next chip cut.
  */
 function revealInRail(event: React.FocusEvent<HTMLElement>): void {
-  event.currentTarget.scrollIntoView({
+  const chip = event.currentTarget;
+  let rail = chip.parentElement;
+  for (let depth = 0; rail && depth < 3; depth += 1) {
+    if (/auto|scroll/.test(getComputedStyle(rail).overflowX)) break;
+    rail = rail.parentElement;
+  }
+  let cut = false;
+  if (rail && rail.scrollWidth > rail.clientWidth) {
+    const view = rail.getBoundingClientRect();
+    const box = chip.getBoundingClientRect();
+    cut = box.left < view.left - 0.5 || box.right > view.right + 0.5;
+  }
+  chip.scrollIntoView({
     block: "nearest",
-    inline: "nearest",
-    behavior: getMotionAwareScrollBehavior(),
+    inline: cut ? "start" : "nearest",
+    behavior: chip.matches(":focus-visible")
+      ? "instant"
+      : getMotionAwareScrollBehavior(),
   });
 }
 

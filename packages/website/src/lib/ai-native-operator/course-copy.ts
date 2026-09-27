@@ -103,7 +103,7 @@ const COPY: Readonly<Record<Locale, AiNativeOperatorCourseCopy>> = {
     },
     landing: {
       breadcrumbs: ["Home", "Courses", "AI-Native Operator"],
-      eyebrow: "Course on model-assisted operations",
+      eyebrow: "Operator course · model-assisted operations",
       title: "AI-Native Operator",
       start: "Begin module 01",
       syllabusLink: "View syllabus",
@@ -217,7 +217,7 @@ const COPY: Readonly<Record<Locale, AiNativeOperatorCourseCopy>> = {
     },
     landing: {
       breadcrumbs: ["Start", "Kurse", "AI-Native Operator"],
-      eyebrow: "Kurs zu modellgestütztem Betrieb",
+      eyebrow: "Operator-Kurs · modellgestützter Betrieb",
       title: "AI-Native Operator",
       start: "Modul 01 beginnen",
       syllabusLink: "Lehrplan ansehen",

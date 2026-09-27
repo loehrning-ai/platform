@@ -114,16 +114,24 @@ describe("TechnicalCourseLanding", () => {
     expect(within(facts).getByText("Auf einen Blick")).toHaveClass("sr-only");
     const list = facts.querySelector("[data-course-onboarding-checklist]");
     expect(list).toHaveClass("flex", "flex-wrap", "text-[0.875rem]/[1.5]", "lg:text-[1.0625rem]/[1.5]");
-    // Each item leads with its separator; the list sits one separator width
-    // left inside a clipping box, so the first separator of every line is
-    // cut off and a wrapped line never ends with a lone "·".
-    expect(list).toHaveClass("-ml-[1.25em]");
+    // Items are one separator width apart and each "·" hangs in the gap
+    // before its item, outside the item's box. The list fills its clipping
+    // box exactly (no negative margin, so no box leaves the column): the
+    // separator of the first item on every line falls left of the box and
+    // is cut off, and a wrapped line never starts or ends with a lone "·".
+    expect(list).toHaveClass("gap-x-[1.25em]");
+    expect(list?.className).not.toMatch(/(?:^|\s)-m[lxs]?-/);
     expect(list?.parentElement).toHaveClass("overflow-hidden");
     const rows = within(facts).getAllByRole("listitem");
     expect(rows).toHaveLength(2);
     for (const row of rows) {
-      expect(row.className).toContain("before:content-['·'_/_'']");
-      expect(row.className).toContain("before:w-[1.25em]");
+      expect(row).toHaveClass(
+        "relative",
+        "before:absolute",
+        "before:right-full",
+        "before:w-[1.25em]",
+        "before:content-['·'_/_'']",
+      );
       expect(row.className).not.toMatch(/after:content/);
     }
     // The band's one body size: a 17px lead at every width (SPEC §3.1).
@@ -170,14 +178,20 @@ describe("TechnicalCourseLanding", () => {
     expect(title).toHaveClass("poster-title");
     expect(title.getAttribute("style")).toMatch(/--fit:\s*\d/);
     expect(title.parentElement).toHaveClass("@container");
-    // The caps line is one line: each "·" part is an unbreakable item that
-    // carries its separator, and a part that does not fit is clipped whole.
+    // The caps line is one line: each "·" part is an item that carries its
+    // separator, and a part that does not fit is clipped whole. The first
+    // part never wraps; a later part may wrap only inside its own hidden
+    // row, so no part runs past the column.
     const caps = header?.querySelector(".plakat-caps");
     expect(caps).toHaveClass("max-h-[1.3em]", "overflow-hidden");
-    expect(Array.from(caps?.querySelectorAll("span > span") ?? [], (part) => part.textContent)).toEqual([
+    const capsParts = Array.from(caps?.querySelectorAll("span > span") ?? []);
+    expect(capsParts.map((part) => part.textContent)).toEqual([
       "Claude Course",
       "\u00a0· Technikkurs",
     ]);
+    expect(capsParts[0]).toHaveClass("whitespace-nowrap");
+    expect(capsParts[1]).toHaveClass("min-w-0", "break-words");
+    expect(capsParts[1]).not.toHaveClass("whitespace-nowrap");
     // The course poster, from lg only, aria-hidden and without a numeral
     // (Technikkurse carry none, D9); never an <img>. As on the workshop
     // bands (SPEC §3.1) it fills the band's right edge at full height,

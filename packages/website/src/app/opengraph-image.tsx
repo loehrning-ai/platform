@@ -1,3 +1,5 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import {
   GERMANY_OUTLINE,
@@ -14,7 +16,6 @@ import { getRequestLocale } from "@/lib/i18n/request-locale";
 import type { Locale } from "@/lib/i18n/locale";
 import { PLAKAT, ROUTE_PLAKAT } from "@/lib/plakat/palettes";
 
-export const runtime = "edge";
 // One alt serves both locales: the /en mirror re-exports this module, and a
 // static export cannot read the request.
 export const alt =
@@ -51,11 +52,16 @@ const COPY: Record<
   },
 };
 
-// Loehrning Sans Bold, bundled with the edge function by URL. Only the one
-// face is loaded: the whole card is set in 700, which keeps the function small.
-const boldFont = fetch(
-  new URL("../fonts/LoehrningSans-Bold.ttf", import.meta.url),
-).then((response) => response.arrayBuffer());
+// Loehrning Sans Bold from src/fonts, read on the Node runtime on the first
+// render, like the other share cards. The card reads the request locale, so
+// it renders per request; the font reaches the deployed function through
+// outputFileTracingIncludes in next.config.ts. Only the one face is loaded:
+// the whole card is set in 700.
+let boldFont: Promise<Buffer> | undefined;
+function loadBoldFont(): Promise<Buffer> {
+  boldFont ??= readFile(join(process.cwd(), "src/fonts/LoehrningSans-Bold.ttf"));
+  return boldFont;
+}
 
 // The globe: an orthographic sphere rising from the bottom right, drawn like
 // the home hero's lemons globe (SPEC §3.6): a flat Mennige disc, a 30°
@@ -175,7 +181,7 @@ export default async function Image() {
       fonts: [
         {
           name: OG_FONT_FAMILY,
-          data: await boldFont,
+          data: await loadBoldFont(),
           weight: 700,
           style: "normal",
         },

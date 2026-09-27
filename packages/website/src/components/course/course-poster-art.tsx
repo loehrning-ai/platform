@@ -15,9 +15,10 @@ import { clipPosterComposition } from "./poster-clip";
  * viewport hid are gone, and the root keeps PosterArt's scene class, whose
  * background is the ground colour for any letterbox.
  *
- * Root attributes, shape classes and the numeral are PosterArt's own; the
- * unit tests hold both renderings to the same markup apart from the path
- * data. A composition the clipper does not handle falls back to PosterArt.
+ * Root attributes, shape classes and the numeral are PosterArt's own:
+ * course-poster-art.test.tsx holds the root and the numeral to PosterArt's
+ * markup, and poster-clip.test.ts compares the two pictures point by point.
+ * A composition the clipper does not handle falls back to PosterArt.
  */
 export function CoursePosterArt({
   scene,

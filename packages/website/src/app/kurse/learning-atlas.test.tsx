@@ -782,6 +782,48 @@ describe("LearningAtlas phone ledger", () => {
     expect(buttons[1]).not.toHaveClass("bg-foreground");
   });
 
+  it("reveals a focused goal chip the rail cuts at the chip's own snap point", () => {
+    render(<LearningAtlas access={getCourseAccess(true)} />);
+    const goals = screen.getByRole("group", { name: "Lernziel auswählen" });
+    const rail = goals.closest<HTMLElement>("[data-learning-goal-rail]")!;
+    const [first, second] = within(goals).getAllByRole("button");
+    // jsdom has neither the Tailwind CSS nor layout. Model the 320px phone:
+    // the rail scrolls (overflow-x-auto), the first chip is whole and the
+    // second starts inside the rail and ends past it.
+    rail.style.overflowX = "auto";
+    Object.defineProperty(rail, "clientWidth", { configurable: true, value: 320 });
+    Object.defineProperty(rail, "scrollWidth", { configurable: true, value: 725 });
+    const rect = (left: number, right: number) =>
+      ({ left, right, top: 0, bottom: 44, width: right - left, height: 44, x: left, y: 0 }) as DOMRect;
+    vi.spyOn(rail, "getBoundingClientRect").mockReturnValue(rect(0, 320));
+    vi.spyOn(first, "getBoundingClientRect").mockReturnValue(rect(16, 182));
+    vi.spyOn(second, "getBoundingClientRect").mockReturnValue(rect(190, 380));
+    const scrollIntoView = vi.fn();
+    first.scrollIntoView = scrollIntoView;
+    second.scrollIntoView = scrollIntoView;
+
+    // A whole chip takes the minimal scroll, which moves nothing sideways.
+    fireEvent.focus(first);
+    expect(scrollIntoView).toHaveBeenLastCalledWith(
+      expect.objectContaining({ block: "nearest", inline: "nearest" }),
+    );
+    // A cut chip aligns its start, the rail's snap point for it: a minimal
+    // scroll would stop between snap points and snap back to the first chip.
+    fireEvent.focus(second);
+    expect(scrollIntoView).toHaveBeenLastCalledWith(
+      expect.objectContaining({ block: "nearest", inline: "start" }),
+    );
+    // Keyboard focus reveals instantly, like the browser's own focus scroll,
+    // so a smooth scroll never races the next Tab.
+    vi.spyOn(second, "matches").mockImplementation(
+      (selector) => selector === ":focus-visible",
+    );
+    fireEvent.focus(second);
+    expect(scrollIntoView).toHaveBeenLastCalledWith(
+      expect.objectContaining({ inline: "start", behavior: "instant" }),
+    );
+  });
+
   it("keeps the phone path, sheet and rows compact and hands the reviewed layout back at sm and lg", () => {
     const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);
 

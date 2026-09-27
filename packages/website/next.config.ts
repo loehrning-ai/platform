@@ -41,6 +41,10 @@ const nextConfig: NextConfig = {
     // with readFile(process.cwd() + ...) at request time, because they read
     // the request locale; list the files so the trace never misses them.
     // Keys are picomatch globs, so a dynamic segment's brackets are escaped.
+    "/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/en/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/einstieg/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/en/einstieg/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
     "/kurse/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
     "/en/kurse/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
     "/kurse/twitter-image": ["./src/fonts/LoehrningSans-*.ttf"],

@@ -1250,6 +1250,10 @@ export function HeroNetwork({
               )}
             </g>
           ) : null}
+          {/* The rAF-owned layers, each named by `data-hero-network-live`.
+               Only `grid-front` is drawn in every scene: the flat disc hides
+               the far side (grid-back stays empty) and draws no shadow, glow
+               or outline, so motion probes read `grid-front`. */}
           <g
             ref={gridBackRef}
             data-hero-network-live="grid-back"
@@ -1257,16 +1261,33 @@ export function HeroNetwork({
           />
           <g
             ref={gridFrontShadowRef}
+            data-hero-network-live="grid-front-shadow"
             display={staticGrid ? "none" : undefined}
           />
-          <g ref={gridFrontRef} display={staticGrid ? "none" : undefined} />
+          <g
+            ref={gridFrontRef}
+            data-hero-network-live="grid-front"
+            display={staticGrid ? "none" : undefined}
+          />
           {/* Country: 3 layered passes (paint order = z-stack)
                1. radial glow (light-emitting wash)
                2. hatch texture overlay (subtle)
                3. outline (uniform Kupfer stroke). */}
-          <g ref={countryGlowRef} display={staticGrid ? "none" : undefined} />
-          <g ref={countryFillRef} display={staticGrid ? "none" : undefined} />
-          <g ref={countryRef} display={staticGrid ? "none" : undefined} />
+          <g
+            ref={countryGlowRef}
+            data-hero-network-live="country-glow"
+            display={staticGrid ? "none" : undefined}
+          />
+          <g
+            ref={countryFillRef}
+            data-hero-network-live="country-fill"
+            display={staticGrid ? "none" : undefined}
+          />
+          <g
+            ref={countryRef}
+            data-hero-network-live="country-outline"
+            display={staticGrid ? "none" : undefined}
+          />
 
           {/* Static fallback for prefers-reduced-motion */}
           {staticGrid &&

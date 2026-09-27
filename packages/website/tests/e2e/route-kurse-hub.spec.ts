@@ -351,52 +351,55 @@ test("/kurse scrolls a shared goal's chip into the phone rail", async ({
 // The one-row rail above (≤ 48px) must not be bought with a clipped ring or a
 // short chip. The rail scrolls, so it clips whatever is drawn outside its box:
 // every chip reached by Tab keeps a 44px target and a ring drawn whole inside
-// the rail.
-test("/kurse keeps each focused goal chip tappable and its ring inside the phone rail", async ({
-  page,
-}) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
-  await page
-    .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
-    .waitFor({ state: "attached" });
+// the rail. At 320 the second German chip starts inside the screen and ends
+// past it, so focus has to scroll the rail against its snap points.
+for (const phone of PHONES) {
+  test(`/kurse keeps each focused goal chip tappable and its ring inside the phone rail at ${phone.width}`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: phone.width, height: phone.height });
+    await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
+    await page
+      .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+      .waitFor({ state: "attached" });
 
-  const chips = page.locator("[data-learning-goal]");
-  await expect(chips).toHaveCount(4);
-  await chips.first().focus();
-  await page.keyboard.press("Tab");
-  await page.keyboard.press("Shift+Tab");
+    const chips = page.locator("[data-learning-goal]");
+    await expect(chips).toHaveCount(4);
+    await chips.first().focus();
+    await page.keyboard.press("Tab");
+    await page.keyboard.press("Shift+Tab");
 
-  for (let index = 0; index < 4; index += 1) {
-    if (index > 0) await page.keyboard.press("Tab");
-    const chip = chips.nth(index);
-    await expect(chip).toBeFocused();
-    // The chip scrolls into the rail on focus, smoothly unless motion is
-    // reduced, so poll until the ring has settled inside.
-    await expect
-      .poll(() =>
-        chip.evaluate((element) => {
-          const rail = element.closest("[data-learning-goal-rail]") as HTMLElement;
-          const style = getComputedStyle(element);
-          const reach =
-            parseFloat(style.outlineOffset) + parseFloat(style.outlineWidth);
-          const box = element.getBoundingClientRect();
-          const clip = rail.getBoundingClientRect();
-          return {
-            focusVisible: element.matches(":focus-visible"),
-            ring: style.outlineStyle !== "none" && parseFloat(style.outlineWidth) >= 2,
-            height: box.height >= 44,
-            inside:
-              box.top - reach >= clip.top - 0.5 &&
-              box.bottom + reach <= clip.bottom + 0.5 &&
-              box.left - reach >= clip.left - 0.5 &&
-              box.right + reach <= clip.right + 0.5,
-          };
-        }),
-      )
-      .toEqual({ focusVisible: true, ring: true, height: true, inside: true });
-  }
-});
+    for (let index = 0; index < 4; index += 1) {
+      if (index > 0) await page.keyboard.press("Tab");
+      const chip = chips.nth(index);
+      await expect(chip).toBeFocused();
+      // The chip scrolls into the rail on focus (instantly for keyboard
+      // focus), so poll for the frame the scroll and its snap take to settle.
+      await expect
+        .poll(() =>
+          chip.evaluate((element) => {
+            const rail = element.closest("[data-learning-goal-rail]") as HTMLElement;
+            const style = getComputedStyle(element);
+            const reach =
+              parseFloat(style.outlineOffset) + parseFloat(style.outlineWidth);
+            const box = element.getBoundingClientRect();
+            const clip = rail.getBoundingClientRect();
+            return {
+              focusVisible: element.matches(":focus-visible"),
+              ring: style.outlineStyle !== "none" && parseFloat(style.outlineWidth) >= 2,
+              height: box.height >= 44,
+              inside:
+                box.top - reach >= clip.top - 0.5 &&
+                box.bottom + reach <= clip.bottom + 0.5 &&
+                box.left - reach >= clip.left - 0.5 &&
+                box.right + reach <= clip.right + 0.5,
+            };
+          }),
+        )
+        .toEqual({ focusVisible: true, ring: true, height: true, inside: true });
+    }
+  });
+}
 
 test("/kurse prints the source attribution on every technical row from lg", async ({
   page,

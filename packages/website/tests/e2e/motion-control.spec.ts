@@ -41,8 +41,11 @@ test.describe("landing globe motion", () => {
       0,
     );
 
+    // Probe the front graticule: it is the one rAF-owned layer every home
+    // scene redraws each frame. The flat poster disc hides the far side, so
+    // its grid-back layer is empty by design and cannot show motion.
     const livePath = page
-      .locator('[data-hero-network-live="grid-back"] path')
+      .locator('[data-hero-network-live="grid-front"] path')
       .first();
     await expect(livePath).toBeAttached();
 
@@ -107,10 +110,36 @@ test.describe("landing globe motion", () => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/en");
 
-    await expect(
-      page.locator('[data-hero-globe-motion="static"]'),
-    ).toBeVisible();
+    const globe = page.locator('[data-hero-globe-motion="static"]');
+    await expect(globe).toBeVisible();
     await expect(page.getByRole("button", { name: /globe/i })).toHaveCount(0);
+
+    // Static is a fact about frames, not only a label: the projection module
+    // mounts in its static branch, the frame loop never draws into any
+    // rAF-owned layer, and the declarative composition holds still.
+    await expect(
+      globe.locator('[data-hero-network-motion="static"]'),
+    ).toHaveCount(1);
+    await expect(
+      globe.locator('[data-hero-network-live="grid-front"]'),
+    ).toHaveAttribute("display", "none");
+    const frame = () =>
+      globe
+        .locator("svg path")
+        .evaluateAll((paths) =>
+          paths.map((path) => path.getAttribute("d")).join("|"),
+        );
+    const settled = await frame();
+    expect(settled).not.toBe("");
+    await page.waitForTimeout(1_000);
+    expect(await frame()).toBe(settled);
+    expect(
+      await globe
+        .locator("[data-hero-network-live]")
+        .evaluateAll((layers) =>
+          layers.reduce((drawn, layer) => drawn + layer.childElementCount, 0),
+        ),
+    ).toBe(0);
     expect(runtimeErrors).toEqual([]);
   });
 
@@ -119,7 +148,7 @@ test.describe("landing globe motion", () => {
   }) => {
     await page.goto("/en");
 
-    const liveGrid = page.locator('[data-hero-network-live="grid-back"]');
+    const liveGrid = page.locator('[data-hero-network-live="grid-front"]');
     await expect
       .poll(() => liveGrid.evaluate((layer) => layer.childElementCount))
       .toBeGreaterThan(0);
