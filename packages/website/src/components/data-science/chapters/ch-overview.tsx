@@ -36,7 +36,7 @@ const STAGES: readonly StageCard[] = [
     id: "clean",
     n: "03",
     title: "Clean",
-    tag: "missing · shifted · leaky",
+    tag: "missing values · scaling · leakage",
     blurb: "Impute and scale without smuggling in information from the future.",
   },
   {
@@ -64,7 +64,7 @@ const STAGES: readonly StageCard[] = [
     id: "interp",
     n: "07",
     title: "Interpret",
-    tag: "inspect model drivers",
+    tag: "explain model behavior",
     blurb: "Use SHAP, permutation importance, and partial dependence.",
   },
   {
@@ -93,14 +93,14 @@ const STAGES: readonly StageCard[] = [
     n: "11",
     title: "Deploy",
     tag: "models in production",
-    blurb: "Monitor drift. Retrain on a signal, not on the calendar.",
+    blurb: "Monitor drift and retrain when a signal calls for it.",
   },
   {
     id: "cap",
     n: "12",
     title: "Capstone",
     tag: "the complete cycle",
-    blurb: "Once all the way through: noise → decision → feedback.",
+    blurb: "One fraud dataset from audit to deployment review.",
   },
 ];
 
@@ -189,7 +189,7 @@ export default function ChOverview() {
       <section className="section ov-curriculum-section">
         <div className="ov-section-head">
           <p className="ov-kicker">The curriculum</p>
-          <h2 className="ov-h2">Twelve chapters: build the model, then prove the effect.</h2>
+          <h2 className="ov-h2">Chapters 1 to 7 build a model; 8 to 12 test its effect.</h2>
         </div>
         <div className="ov-curriculum">
           {STAGES.map((stage) => (

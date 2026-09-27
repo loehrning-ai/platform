@@ -59,8 +59,8 @@ export default function Ch12Capstone() {
         </h2>
         <p className="prose">
           The log shows where leakage can enter; scaling before the split is
-          the classic mistake. This local sequence blocks it but validates no
-          real pipeline.
+          the classic mistake. The demo lists scaling first but fits the scaler
+          on the training split only, and it validates no real pipeline.
         </p>
         <PipelineProgress />
       </section>

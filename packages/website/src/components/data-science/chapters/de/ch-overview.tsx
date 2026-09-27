@@ -31,7 +31,7 @@ const STAGES: readonly StageCard[] = [
     id: "clean",
     n: "03",
     title: "Bereinigung",
-    tag: "fehlend · verschoben · undicht",
+    tag: "Fehlwerte · Skalierung · Leakage",
     blurb:
       "Imputiere und skaliere Daten, ohne Informationen aus der Zukunft einzuschleusen.",
   },
@@ -61,7 +61,7 @@ const STAGES: readonly StageCard[] = [
     id: "interp",
     n: "07",
     title: "Interpretation",
-    tag: "Ursachen im Modell prüfen",
+    tag: "Modellverhalten erklären",
     blurb: "Nutze SHAP, Permutationswichtigkeit und partielle Abhängigkeiten.",
   },
   {
@@ -91,14 +91,14 @@ const STAGES: readonly StageCard[] = [
     title: "Betrieb",
     tag: "Modelle in Produktion",
     blurb:
-      "Überwache Drift. Trainiere auf ein Signal hin, nicht nach Kalender.",
+      "Überwache Drift und trainiere neu, wenn ein Signal es verlangt.",
   },
   {
     id: "cap",
     n: "12",
     title: "Abschlussprojekt",
     tag: "der vollständige Zyklus",
-    blurb: "Einmal ganz durch: Rauschen → Entscheidung → Feedback.",
+    blurb: "Ein Betrugsdatensatz vom Audit bis zur Deployment-Prüfung.",
   },
 ];
 
@@ -187,7 +187,7 @@ export default function ChOverviewDe() {
       <section className="section ov-curriculum-section">
         <div className="ov-section-head">
           <p className="ov-kicker">Lehrplan</p>
-          <h2 className="ov-h2">Zwölf Kapitel: Modell entwickeln, Wirkung nachweisen.</h2>
+          <h2 className="ov-h2">Kapitel 1 bis 7 bauen ein Modell, Kapitel 8 bis 12 prüfen seine Wirkung.</h2>
         </div>
         <div className="ov-curriculum">
           {STAGES.map((stage) => (

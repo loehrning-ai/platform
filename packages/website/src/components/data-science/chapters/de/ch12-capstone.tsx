@@ -54,8 +54,9 @@ export default function Ch12CapstoneDe() {
         </h2>
         <p className="prose">
           Das Protokoll zeigt, wo Leakage entstehen kann; der Klassiker ist die
-          Skalierung vor dem Split. Diese lokale Sequenz schließt ihn aus,
-          prüft aber keine reale Pipeline.
+          Skalierung vor dem Split. Die Demo zeigt die Skalierung zuerst, passt
+          den Scaler aber nur auf dem Trainingsanteil an und prüft keine reale
+          Pipeline.
         </p>
         <PipelineProgress />
       </section>
