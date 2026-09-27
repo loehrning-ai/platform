@@ -90,10 +90,11 @@ describe("/einstieg social image", () => {
     const total = size.width * size.height;
     for (const card of [de, en]) {
       // Kalkweiß ground, Druckschwarz headline and rule, one Mennige step
-      // label plus the colophon's L tile.
+      // label plus the colophon's L tile. The tile alone is about 1 300
+      // Mennige pixels, so the bound also proves the step label renders.
       expect(card.count(KALKWEISS)).toBeGreaterThan(total * 0.6);
       expect(card.count(DRUCKSCHWARZ)).toBeGreaterThan(10_000);
-      expect(card.count(MENNIGE)).toBeGreaterThan(1_000);
+      expect(card.count(MENNIGE)).toBeGreaterThan(1_800);
       expect(card.at(8, 8)).toEqual([...KALKWEISS]);
     }
     // The English copy is a different set of lines, not the German card.
