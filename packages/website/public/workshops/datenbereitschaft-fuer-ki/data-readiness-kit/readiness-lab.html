@@ -562,7 +562,7 @@
     </nav>
     <p class="eyebrow">Data Readiness for AI · Workshop 03 · optional 12-minute lab</p>
     <h1>Fix the AI's data.</h1>
-    <p class="lede">Help a made-up subscription company, FOLDLINE, get a trustworthy monthly revenue answer. The defaults are deliberately weak. The first tidy answer has a twist.</p>
+    <p class="lede">Get a trustworthy monthly revenue answer for FOLDLINE, a made-up subscription company. The defaults are weak on purpose.</p>
     <ol class="rail" aria-label="How the lab works">
       <li>Make five choices</li>
       <li>Test My Choices</li>
@@ -581,8 +581,8 @@
         <p>Data: the FOLDLINE practice database (made up). The last complete quarter is April to June 2026.</p>
       </figure>
       <div class="brief-notes">
-        <p>This is a fixed browser simulation. It calls no AI and connects to no database. <strong>MRR</strong> means monthly recurring revenue: 10 subscriptions at €20 per month give €200 MRR. “Ending” means the balance at month end.</p>
-        <p class="small">The simulation only knows this one FOLDLINE question, so it grades only this question. To practise wording your own question, use the notes below; they are never graded.</p>
+        <p>A fixed browser simulation with no AI and no database. <strong>MRR</strong> is monthly recurring revenue (10 subscriptions at €20 per month give €200 MRR); “ending” means the balance at month end.</p>
+        <p class="small">It grades only this one question. Practise your own question in the notes below.</p>
         <details class="notes">
           <summary>Your own notes (not graded, never stored)</summary>
           <div class="notes-body">
@@ -592,7 +592,7 @@
             <label for="note-surface">Data the AI should be allowed to see
               <textarea id="note-surface" name="note-surface" rows="2" maxlength="120" autocomplete="off" spellcheck="true" aria-describedby="notes-privacy"></textarea>
             </label>
-            <p id="notes-privacy">Use a generic example. Do not enter employer, customer, personal or sensitive data. Notes stay only in this open page: they are not saved, copied or printed, and they do not change the test.</p>
+            <p id="notes-privacy">Use a generic example. Do not enter employer, customer, personal or sensitive data. Notes stay on this open page and are never saved, copied or printed.</p>
           </div>
         </details>
       </div>
@@ -604,7 +604,7 @@
           <p class="kicker">Step 1 · made-up data</p>
           <h2 id="choices-title" tabindex="-1">Make five choices. Test the result.</h2>
         </div>
-        <p>Start with the defaults and press <strong>Test My Choices</strong>. Then repair one choice at a time. Choice 05 decides whether you test one answer or all six cases. A pass applies only to this simulation.</p>
+        <p>Press <strong>Test My Choices</strong> with the defaults, then repair one choice at a time. Choice 05 decides whether you test one answer or all six cases.</p>
       </header>
 
       <fieldset class="decisions" aria-describedby="decisions-hint">
@@ -655,7 +655,7 @@
             </label>
             <span class="tag" aria-hidden="true">Repair next</span>
           </div>
-          <p class="decision-hint" id="decisions-hint"><strong>One change per run.</strong> That way you can see which choice moved which case.</p>
+          <p class="decision-hint" id="decisions-hint"><strong>One change per run</strong>, so you see which choice moved which case.</p>
         </div>
       </fieldset>
     </section>
@@ -677,10 +677,10 @@
         <p id="next-callout" class="next-callout" hidden><span id="next-text"></span> <button type="button" class="link-button" id="next-go">Go to the choice</button></p>
         <ol id="run-history" class="run-history" aria-label="Run history"></ol>
         <ol id="case-results" class="case-results" aria-label="Six fixed cases"></ol>
-        <p class="results-legend"><strong>PASS</strong> this setup handled the case correctly. <strong>FAIL</strong> a choice needs repair; the card names it. <strong>NOT RUN</strong> your test set skipped the case. Unknown is not safe, so it never counts as a pass. <strong>STALE</strong> you changed a choice after that run. The freshness rule warns after 36 hours; it does not block an answer.</p>
+        <p class="results-legend"><strong>PASS</strong> handled correctly. <strong>FAIL</strong> a choice needs repair; the card names it. <strong>NOT RUN</strong> your test set skipped the case, so it never counts as a pass. <strong>STALE</strong> you changed a choice after that run.</p>
         <details class="why-six">
           <summary>Why six cases, and why F01?</summary>
-          <p>The course's database check ran nine cases: G01–G05, C01, R01, R02 and D01. This lab keeps G01 as the answer case (G02–G05 are more answer questions of the same kind) and keeps C01, R01, R02 and D01. It adds F01, a lab-only what-if taken from the course's freshness scene: the same data, 60 hours old.</p>
+          <p>The course's database check ran nine cases: G01 to G05, C01, R01, R02 and D01. The lab keeps G01 as the answer case (G02 to G05 ask the same kind of question) plus C01, R01, R02 and D01. It adds F01 from the freshness scene: the same data, 60 hours old.</p>
         </details>
         <details class="run-details">
           <summary>Run details for auditors</summary>
@@ -720,7 +720,7 @@
       <div class="checks-head">
         <div>
           <h2 id="checks-title">The ten checks behind the verdict</h2>
-          <p>Optional detail: five gates, two checks each. A test run sets each level. “Proven” unlocks only when a matching test passes, and a document can never outrank a failed test. You may mark “Documented” only for checks your test set did not run.</p>
+          <p>The ten checks sit in five gates of two, and a test run sets each level. “Proven” needs a matching passed test, and a document never outranks a failed test. Mark “Documented” only for checks your test set did not run.</p>
         </div>
         <dl class="levels" aria-label="Evidence levels">
           <div><dt>0 · Unproven</dt><dd>No evidence, or the test failed.</dd></div>
@@ -735,9 +735,9 @@
       <div>
         <h2 id="next-title">What this lab does not prove</h2>
         <ul>
-          <li>It is a fixed simulation. A pass says nothing about your own systems or your employer's data.</li>
+          <li>A pass says nothing about your own systems or your employer's data.</li>
           <li>A correct value does not show that the answer used the definition. In the course's recorded runs the answers cited it 0 of 3 times.</li>
-          <li>Instructions guide, grants enforce: only a database permission makes a forbidden read fail.</li>
+          <li>Only a database permission makes a forbidden read fail; instructions only guide.</li>
         </ul>
       </div>
       <div>
@@ -746,7 +746,7 @@
           <li>Fill the five boxes on the <a href="./QUESTION-CARD.md">question card</a> for one question from your own work.</li>
           <li>Record the ten checks on the <a href="./READY-CANVAS.md">evidence canvas</a>.</li>
           <li>Adapt the definition templates: <a href="./semantic-template/metric.yml">metric</a>, <a href="./semantic-template/model.yml">model</a>, <a href="./semantic-template/policy.yml">policy</a> and <a href="./semantic-template/verified-questions.yml">verified questions</a>.</li>
-          <li>Set up an assistant with the <a href="./agent/CLAUDE.example.md">example instructions</a>, and remember that the grants do the enforcing.</li>
+          <li>Set up an assistant with the <a href="./agent/CLAUDE.example.md">example instructions</a>.</li>
           <li>Back to the <a href="../guide.html">learner guide</a> or <a href="../data-readiness-kit.zip" download>download all worksheets</a>.</li>
         </ol>
       </div>
@@ -970,7 +970,7 @@
             ? 'Refused before any query: customer emails are outside the approved data.'
             : `A prompt warning did not stop the email request.${fix(['boundary'])}`),
           D01: () => (governed && leastPrivilege
-            ? `PostgreSQL denied ${fixture.deniedRelation} · ${fixture.denial}. Instructions guide, grants enforce.`
+            ? `PostgreSQL denied ${fixture.deniedRelation} · ${fixture.denial}.`
             : `The broad reader could read the private column; nothing denied it.${fix(wrong(['surface', 'boundary']))}`),
           F01: () => (freshness
             ? `Said the snapshot is ${fixture.freshnessHours} h old (warning after ${fixture.discloseAfterHours} h). No hard expiry is declared, so it warns and escalates instead of blocking.`
@@ -980,7 +980,7 @@
         const cases = CASES.map((item) => {
           const covered = corpus || item.id === 'G01';
           if (!covered) {
-            return { id: item.id, state: 'not-run', detail: 'Your test set skipped this case. Unknown is not safe. Choice 05 decides what gets tested.', needs: [{ key: 'yardstick', ok: false }] };
+            return { id: item.id, state: 'not-run', detail: 'Your test set skipped this case, and unknown is not safe. Choice 05 decides what runs.', needs: [{ key: 'yardstick', ok: false }] };
           }
           const pass = item.needs.every(ok);
           return { id: item.id, state: pass ? 'pass' : 'fail', detail: detail[item.id](), needs: item.needs.map((key) => ({ key, ok: ok(key) })) };
@@ -1006,7 +1006,7 @@
           } else if (needsOk && casesPass(ids)) {
             state = control.cap ? 'documented' : 'pass';
             reason = control.cap
-              ? `The value is right, but nothing shows the answer used ${fixture.semanticVersion}. The course's recorded runs cited it ${fixture.recordedCitations}. Stays Documented.`
+              ? `The value is right, but nothing shows the answer used ${fixture.semanticVersion} (recorded runs cited it ${fixture.recordedCitations}). Stays Documented.`
               : 'The matching test passed.';
           } else {
             state = 'fail';
@@ -1217,7 +1217,7 @@
         const next = nextRepair(latestRun);
         const weakGate = `Gate ${weak.control.gate.num} · ${weak.control.gate.name}`;
         const weakControl = `${weak.control.id} ${weak.control.name}: ${latestRun.controls[weak.control.key].reason}`;
-        const weakNext = next ? `Any weak choice can go next. In choice order: choice ${next.num} · ${next.question}` : 'Next test: the answer must cite ending_mrr@1 in its trace.';
+        const weakNext = next ? `Next, in choice order: choice ${next.num} · ${next.question}` : 'Next test: the answer must cite ending_mrr@1 in its trace.';
         if (minimum === 0) {
           return { level: 'not-ready', title: 'NOT READY', proven, weakGate, weakControl, weakNext,
             copy: 'At least one check failed or has no evidence. Do not let an AI answer this question yet.' };
@@ -1225,7 +1225,7 @@
         const onlyA2 = t.pass === latestRun.cases.length && state.every((item) => item.control.key === 'a2' ? item.value === 1 : item.value === 2);
         if (onlyA2) {
           return { level: 'pilot', title: 'PILOT ONLY', proven, weakGate, weakControl, weakNext,
-            copy: `All six cases passed and nine of ten checks are proven. A2 stays Documented: a correct value does not show that the answer used the definition, and the course's recorded FOLDLINE runs cited it ${fixture.recordedCitations}. Verdict: limited pilot, not signed off.` };
+            copy: `All six cases passed and nine of ten checks are proven. A2 stays Documented: a correct value does not show the answer used the definition (the recorded runs cited it ${fixture.recordedCitations}). Verdict: limited pilot, not signed off.` };
         }
         const selfDeclared = state.some((item) => item.value === 1 && latestRun.controls[item.control.key].state === 'not-run');
         return { level: 'pilot', title: selfDeclared ? 'PILOT ONLY · SELF-DECLARED' : 'PILOT ONLY', proven, weakGate, weakControl, weakNext,

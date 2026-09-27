@@ -197,8 +197,8 @@ describe("<WorkshopsContent>", () => {
     expect(within(rows[1]).queryByText("Neu")).toBeNull();
     // German amount: ASCII minus, euro sign on the same line.
     expect(within(rows[1]).getByText("-19.960 €")).toHaveClass("whitespace-nowrap");
-    // Hyphenated words such as "Scope-1-und-2-Frage" are not amounts.
-    expect(within(rows[0]).getByText(/Scope-1-und-2-Frage/).tagName).toBe("P");
+    // Hyphenated words such as "Scope-1-und-2-Summe" are not amounts.
+    expect(within(rows[0]).getByText(/Scope-1-und-2-Summe/).tagName).toBe("P");
     expect(rows[0].querySelector("p:not([data-workshop-meta]) > .whitespace-nowrap")).toBeNull();
     expect(
       screen.getByRole("link", { name: "Mit Workshop 03 beginnen" }),

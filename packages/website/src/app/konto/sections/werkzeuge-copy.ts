@@ -46,21 +46,21 @@ export const WERKZEUGE_COPY = {
   de: {
     heading: "Werkzeuge",
     intro:
-      "Werkzeuge aus der Plattform, die du mit deinem Konto benutzt. Jedes davon ist quelloffen, und du kannst jedes davon selbst betreiben.",
+      "Quelloffene Werkzeuge, die du mit deinem Konto nutzt oder selbst betreibst.",
     cvEngineTitle: "CV Engine",
     cvEngineSourceBody:
-      "Aus einer YAML-Datei wird ein einseitiger Lebenslauf als PDF. In dieser Umgebung läuft das Werkzeug nicht gehostet: du betreibst es auf deinem eigenen Rechner, und deine Daten bleiben dort.",
+      "Macht aus einer YAML-Datei einen einseitigen Lebenslauf als PDF. Hier läuft das Werkzeug nicht gehostet: Du betreibst es auf deinem Rechner, und deine Daten bleiben dort.",
     cvEngineHostedBody:
-      "Aus einer YAML-Datei wird ein einseitiger Lebenslauf als PDF. Deine Dokumente liegen in derselben Kontogrenze wie dein Lernstand, und du erreichst sie mit einem Klick.",
+      "Macht aus einer YAML-Datei einen einseitigen Lebenslauf als PDF. Deine Dokumente liegen im selben Konto wie dein Lernstand.",
     documentCount: (count) =>
       count === 1 ? "1 Dokument" : `${count} Dokumente`,
     noDocuments: "Noch kein Dokument angelegt.",
     lastEdit: (date) => `zuletzt bearbeitet am ${date}`,
     lastEditNamed: (title, date) => `zuletzt bearbeitet: ${title}, am ${date}`,
     documentsUnavailable:
-      "Deine Dokumente lassen sich gerade nicht lesen. Das Werkzeug selbst ist davon nicht betroffen.",
+      "Deine Dokumente lassen sich gerade nicht lesen; das Werkzeug läuft trotzdem.",
     unreachable:
-      "Das gehostete Werkzeug ist vorübergehend nicht erreichbar. Deine Dokumente bleiben gespeichert, und du kannst die Engine jederzeit selbst betreiben.",
+      "Das gehostete Werkzeug ist vorübergehend nicht erreichbar. Deine Dokumente bleiben gespeichert.",
     open: "Öffnen",
     source: "Quellcode",
     selfHost: "Selbst betreiben",
@@ -68,21 +68,21 @@ export const WERKZEUGE_COPY = {
   en: {
     heading: "Tools",
     intro:
-      "Tools from the platform that you use with your account. Each one is open source, and you can run each one yourself.",
+      "Open-source tools you use with your account or run yourself.",
     cvEngineTitle: "CV Engine",
     cvEngineSourceBody:
-      "A YAML file becomes a one-page CV as a PDF. This environment does not host the tool: you run it on your own machine, and your data stays there.",
+      "Turns a YAML file into a one-page CV as a PDF. It is not hosted here: you run it on your own machine, and your data stays there.",
     cvEngineHostedBody:
-      "A YAML file becomes a one-page CV as a PDF. Your documents live inside the same account boundary as your learning record, and you reach them in one click.",
+      "Turns a YAML file into a one-page CV as a PDF. Your documents live in the same account as your learning record.",
     documentCount: (count) =>
       count === 1 ? "1 document" : `${count} documents`,
     noDocuments: "No document created yet.",
     lastEdit: (date) => `last edited on ${date}`,
     lastEditNamed: (title, date) => `last edited: ${title}, on ${date}`,
     documentsUnavailable:
-      "Your documents cannot be read right now. The tool itself is unaffected.",
+      "Your documents cannot be read right now; the tool still works.",
     unreachable:
-      "The hosted tool is temporarily unreachable. Your documents remain stored, and you can run the engine yourself at any time.",
+      "The hosted tool is temporarily unreachable. Your documents stay stored.",
     open: "Open",
     source: "Source code",
     selfHost: "Run it yourself",

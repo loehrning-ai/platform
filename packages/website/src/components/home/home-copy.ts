@@ -5,7 +5,7 @@ export const HOME_COPY = {
     metadata: {
       title: "KI-Kurse, Workshops und offene Lernmaterialien",
       description:
-        "Kostenfreie KI-Kurse auf Deutsch und Englisch, Workshops, Bücher, Demos und Open-Source-Werkzeuge. Mit Quellenstand, bekannten Grenzen und klaren Zugangsregeln.",
+        "Kostenfreie KI-Kurse auf Deutsch und Englisch, dazu Workshops, Bücher, Demos und Open-Source-Werkzeuge, mit Quellen und klaren Zugangsregeln.",
     },
     hero: {
       headline: ["KI", "verstehen.", "Sicher anwenden."],
@@ -13,8 +13,8 @@ export const HOME_COPY = {
       // lead + detail + "." + facts. Below lg the facts sit above the
       // headline as the band's label instead.
       introduction: {
-        lead: "Wähle ein Ziel. Triff eine Entscheidung. Teste sie an einem Modell",
-        detail: " und nimm einen überprüfbaren Arbeitsbeleg mit",
+        lead: "Wähle ein Ziel und prüfe deine Entscheidungen an einem Modell",
+        detail: " und nimm einen Arbeitsbeleg mit",
         facts: "Frei, zweisprachig und quelloffen.",
       },
       primaryCta: "Lernroute wählen",
@@ -22,66 +22,64 @@ export const HOME_COPY = {
       pillars: [
         {
           title: "Lernen",
-          body: "Formuliere zuerst eine eigene Antwort.",
+          body: "Antworte zuerst, dann siehst du die Lösung.",
           href: "/kurse",
         },
         {
           title: "Prüfen",
-          body: "Verändere eine Variable und beobachte den Unterschied.",
+          body: "Ändere eine Variable und vergleiche.",
           href: "/demos",
         },
         {
           title: "Anwenden",
-          body: "Übertrage die Regel in einen neuen Fall.",
+          body: "Übertrag die Regel auf einen neuen Fall.",
           href: "/workshops",
         },
       ],
     },
     offering: {
       headline: "Vier Kurse in fester Reihenfolge",
-      introduction:
-        "Beginne mit sicherer Anwendung. Prüfe danach gesellschaftliche Folgen, rechtliche Pflichten und belastbare Arbeitsabläufe.",
       // Section caption, from lg: facts only, never a restated heading.
       routeSignal: (lessons: number) =>
         `${lessons} Lektionen · kostenlos · DE + EN`,
       routeLabel: "Empfohlener Grundlagenpfad",
       lessonLabel: "Lektionen",
       deeperSummary: (count: number) =>
-        `Dazu ${count} technische Kurse von Data Engineering bis System Design.`,
+        `Dazu ${count} technische Kurse zu Prompting, Coding-Agenten und Daten.`,
       viewAllCourses: "Alle Kurse ansehen",
     },
     workflow: {
       headline: "Material zum Nachlesen und Ausprobieren",
-      introduction:
-        "Wähle nach Aufgabe: nachlesen, ausprobieren, gemeinsam entscheiden oder selbst weiterbauen.",
+      // Empty: the rows name each task (see copy-diet requests).
+      introduction: "",
       // Section caption, from lg: facts only.
       boardLabel: (areas: number) => `${areas} Bereiche · ohne Konto`,
       boardAriaLabel: "Werkzeuge und Lernressourcen",
       resources: [
         {
           label: "Blog",
-          body: "Einordnungen zu KI und Recht mit Primärquellen.",
+          body: "KI und Recht, mit Primärquellen.",
           // Phone rows: one line at 320px, never truncated.
           short: "KI und Recht, mit Quellen",
           href: "/blog",
         },
         {
           label: "Lernbücher",
-          body: "Vertiefungen mit Kapiteln, Quellen und Begriffen.",
+          body: "Kapitel mit Quellen und Begriffen.",
           // Phone rows: one line at 320px, never truncated.
           short: "Kapitel mit Quellen",
           href: "/buecher",
         },
         {
           label: "Praxisbeispiele",
-          body: "Arbeitsabläufe zum Ausprobieren, mit Annahmen und Grenzen.",
+          body: "Abläufe zum Ausprobieren, mit Annahmen und Grenzen.",
           // Phone rows: one line at 320px, never truncated.
           short: "Abläufe zum Ausprobieren",
           href: "/demos",
         },
         {
           label: "Workshops",
-          body: "Geführte Fälle für gemeinsame Entscheidungen.",
+          body: "Geführte Fälle für Entscheidungen im Team.",
           // Phone rows: one line at 320px, never truncated.
           short: "Fälle für Teams",
           href: "/workshops",
@@ -116,9 +114,9 @@ export const HOME_COPY = {
         `${chapters} Kapitel · ${minutes} Min.`,
     },
     credibility: {
-      headline: "Was hier nicht verhandelbar ist",
-      introduction:
-        "Jede Oberfläche folgt denselben Regeln: offen zugänglich, zweisprachig, mit sichtbarer Herkunft und verantworteter Redaktion.",
+      headline: "Grundregeln",
+      // Empty: the four principles below say it (see copy-diet requests).
+      introduction: "",
       principles: [
         {
           title: "Keine Paywall",
@@ -126,7 +124,7 @@ export const HOME_COPY = {
         },
         {
           title: "Zwei vollständige Fassungen",
-          body: "Alle Kurse sind vollständig auf Deutsch und Englisch verfügbar.",
+          body: "Alle Kurse gibt es auf Deutsch und Englisch.",
         },
         {
           title: "Stand und Herkunft sichtbar",
@@ -134,7 +132,7 @@ export const HOME_COPY = {
         },
         {
           title: "Von Tim Löhr redigiert",
-          body: "Autorschaft, Überarbeitungsstand und bekannte Grenzen bleiben sichtbar.",
+          body: "Überarbeitungsstand und bekannte Grenzen bleiben sichtbar.",
         },
       ],
     },
@@ -143,13 +141,13 @@ export const HOME_COPY = {
     metadata: {
       title: "AI courses, workshops and open learning materials",
       description:
-        "Free AI courses in German and English, workshops, books, demos and open-source tools. Each resource states its sources, known limits and access requirements.",
+        "Free AI courses in German and English, plus workshops, books, demos and open-source tools, with sources and clear access rules.",
     },
     hero: {
       headline: ["Understand", "AI.", "Apply it safely."],
       introduction: {
-        lead: "Choose a goal. Commit to a decision. Test it against a model",
-        detail: " and leave with a reviewable work artifact",
+        lead: "Choose a goal and test your decisions on a model",
+        detail: " and take away a record of your work",
         facts: "Free, bilingual and open source.",
       },
       primaryCta: "Choose a learning route",
@@ -157,49 +155,46 @@ export const HOME_COPY = {
       pillars: [
         {
           title: "Learn",
-          body: "State your own answer before the reveal.",
+          body: "Answer first, then see the solution.",
           href: "/kurse",
         },
         {
           title: "Check",
-          body: "Change one variable and observe the difference.",
+          body: "Change one variable and compare.",
           href: "/demos",
         },
         {
           title: "Apply",
-          body: "Transfer the rule into a new case.",
+          body: "Use the rule on a new case.",
           href: "/workshops",
         },
       ],
     },
     offering: {
       headline: "Four courses in a set order",
-      introduction:
-        "Start with safe use. Then test social effects, legal duties and reviewable working methods.",
       routeSignal: (lessons: number) => `${lessons} lessons · free · DE + EN`,
       routeLabel: "Recommended foundation path",
       lessonLabel: "lessons",
       deeperSummary: (count: number) =>
-        `Plus ${count} technical courses, from data engineering to system design.`,
+        `Plus ${count} technical courses on prompting, coding agents and data.`,
       viewAllCourses: "View all courses",
     },
     workflow: {
       headline: "Material to read and try",
-      introduction:
-        "Choose by task: read, experiment, decide together or build on the source.",
+      introduction: "",
       boardLabel: (areas: number) => `${areas} areas · no account needed`,
       boardAriaLabel: "Tools and learning resources",
       resources: [
         {
           label: "Blog",
-          body: "AI and legal analysis with primary sources.",
+          body: "AI and law, with primary sources.",
           // Phone rows: one line at 320px, never truncated.
           short: "AI and law, with sources",
           href: "/blog",
         },
         {
           label: "Learning books",
-          body: "Deeper chapters with sources and definitions.",
+          body: "Chapters with sources and definitions.",
           // Phone rows: one line at 320px, never truncated.
           short: "Chapters with sources",
           href: "/buecher",
@@ -213,7 +208,7 @@ export const HOME_COPY = {
         },
         {
           label: "Workshops",
-          body: "Guided cases for shared decisions.",
+          body: "Guided cases for team decisions.",
           // Phone rows: one line at 320px, never truncated.
           short: "Cases for teams",
           href: "/workshops",
@@ -227,7 +222,7 @@ export const HOME_COPY = {
         },
       ],
       accountBody:
-        "A free account synchronizes progress and work artifacts across devices.",
+        "A free account syncs progress and work artifacts across devices.",
       accountCta: "Go to account",
     },
     companion: {
@@ -248,9 +243,8 @@ export const HOME_COPY = {
         `${chapters} chapters · ${minutes} min`,
     },
     credibility: {
-      headline: "What is not negotiable here",
-      introduction:
-        "Every surface follows the same rules: open access, complete bilingual editions, visible provenance and accountable editing.",
+      headline: "Ground rules",
+      introduction: "",
       principles: [
         {
           title: "No paywall",
@@ -258,7 +252,7 @@ export const HOME_COPY = {
         },
         {
           title: "Two complete editions",
-          body: "Every course is complete in English and German.",
+          body: "Every course is available in German and English.",
         },
         {
           title: "Date and origin shown",
@@ -266,7 +260,7 @@ export const HOME_COPY = {
         },
         {
           title: "Edited by Tim Löhr",
-          body: "Authorship, revision date and known limits stay visible.",
+          body: "Revision date and known limits stay visible.",
         },
       ],
     },
@@ -291,19 +285,17 @@ export const HOME_COURSE_COPY: Readonly<
     "ki-und-gesellschaft": {
       title: "KI und Gesellschaft",
       tagline:
-        "Deepfakes, Bias und Folgen für Arbeit anhand von Beispielen prüfen.",
+        "Prüfe an Beispielen, was Deepfakes, Bias und KI für die Arbeit bedeuten.",
       duration: "ca. 46 Min.",
     },
     "eu-ai-act-kurs": {
       title: "EU AI Act Kurs",
-      tagline:
-        "Anwendungsfall klassifizieren, Rolle bestimmen, Pflichten zuordnen.",
+      tagline: "Ordne deinen Anwendungsfall ein und leite Rolle und Pflichten ab.",
       duration: "ca. 1 Std. 50 Min.",
     },
     "ai-native": {
       title: "AI-Native Arbeitskurs",
-      tagline:
-        "Absicht klären, Kontext bereitstellen, Ausführung und Ergebnis prüfen.",
+      tagline: "Gib der KI Absicht und Kontext, dann prüfe das Ergebnis.",
       // /kurse states "ca. 5 Std. Lektionen, 12 Std. mit Übungen".
       duration: "ca. 5 Std. + Übungen",
     },
@@ -316,18 +308,17 @@ export const HOME_COURSE_COPY: Readonly<
     },
     "ki-und-gesellschaft": {
       title: "AI and Society",
-      tagline: "Assess deepfakes, bias and effects on work through examples.",
+      tagline: "Use examples to assess deepfakes, bias and effects on work.",
       duration: "about 46 min",
     },
     "eu-ai-act-kurs": {
       title: "EU AI Act Course",
-      tagline: "Classify a use case, identify the role and map the duties.",
+      tagline: "Classify your use case, then derive your role and duties.",
       duration: "about 1 hr 50 min",
     },
     "ai-native": {
       title: "AI-Native Work Course",
-      tagline:
-        "Clarify intent, provide context, then verify execution and results.",
+      tagline: "Give the AI intent and context, then check the result.",
       // /kurse states "about 5 hrs of lessons, 12 hrs with exercises".
       duration: "about 5 hr + exercises",
     },

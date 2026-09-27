@@ -110,12 +110,12 @@ export default localizeCodexLessonToGerman(canonical, {
     [canonical.sections[3].title, "Das Gegenmuster"],
     [
       prose(3, 0),
-      "Parallele Aufträge, in denen jeweils \"gemeinsame Hilfsfunktionen bei Bedarf refaktorieren\" steht, besitzen alle dieselbe Abhängigkeit. Was beim Merge passiert, weiß dann niemand.",
+      "Aufgaben, in denen jeweils \"gemeinsame Hilfsfunktionen bei Bedarf refaktorieren\" steht, wie im Validator-Beispiel oben, besitzen alle dieselbe Abhängigkeit. Was beim Merge passiert, weiß dann niemand.",
     ],
     [callout(3, 1, "title"), "Die Korrektur"],
     [
       callout(3, 1, "body"),
-      "Brauchen mehrere Aufgaben dieselbe Infrastrukturänderung, definiere und prüfe diesen Vertrag zuerst. Abhängige Aufgaben setzen auf der akzeptierten Revision auf; parallel laufen danach nur die unabhängigen Anpassungen.",
+      "Definiere und prüfe den gemeinsamen Vertrag zuerst, setz abhängige Aufgaben darauf auf und lass dann nur die unabhängigen Anpassungen parallel laufen.",
     ],
     [canonical.sections[4].title, "Unabhängig oder abhängig"],
     [
@@ -146,7 +146,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       widgetString(0, "note"),
-      "Arbeit an gemeinsamen Grundlagen läuft nacheinander. Die Folgeaufgaben laufen parallel, sobald ihre Abhängigkeit stabil ist.",
+      "Gemeinsame Grundlagen nacheinander, danach die Folgeaufgaben parallel.",
     ],
     [
       widgetString(1, "question"),

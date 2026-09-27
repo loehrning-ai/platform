@@ -267,16 +267,14 @@ export function VerificationPage({
                   {config.language === "en" ? (
                     <>
                       {config.recordNoun.label}, generated locally. The QR data
-                      is readable, but not server-verified, not
-                      cryptographically signed, and not an official or legally
-                      binding credential.
+                      is not server-verified, not cryptographically signed and
+                      not an official or legally binding credential.
                     </>
                   ) : (
                     <>
                       {config.recordNoun.label}, lokal erzeugt. Die QR-Daten
-                      sind lesbar, aber nicht servergeprüft, nicht
-                      kryptografisch signiert und keine behördliche oder
-                      rechtliche Bescheinigung.
+                      sind nicht servergeprüft, nicht kryptografisch signiert
+                      und keine behördliche oder rechtliche Bescheinigung.
                     </>
                   )}
                 </p>
@@ -301,11 +299,11 @@ export function VerificationPage({
                 <p className="mt-2 text-sm text-muted-foreground">
                   {config.language === "en"
                     ? invalidReason === "course-mismatch"
-                      ? "The link contains readable data, but points to a different course."
-                      : "The link doesn't contain readable certificate data, or it's been corrupted."
+                      ? "The link's data belongs to a different course."
+                      : "The link holds no readable certificate data or is damaged."
                     : invalidReason === "course-mismatch"
-                      ? "Der Link enthält lesbare Daten, verweist aber auf einen anderen Kurs."
-                      : "Der Link enthält keine lesbaren Zertifikatdaten oder wurde beschädigt."}
+                      ? "Die Daten im Link gehören zu einem anderen Kurs."
+                      : "Der Link enthält keine lesbaren Zertifikatdaten oder ist beschädigt."}
                 </p>
               </div>
             )}

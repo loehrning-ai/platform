@@ -60,52 +60,52 @@ export const IMPORT_COPY = {
     offerBody: (courses, lessons) =>
       `In diesem Browser liegt Lernfortschritt, den dein Konto noch nicht kennt: ${courses}, ${lessons}.`,
     offerNote:
-      "Du kannst ihn einmalig übernehmen. Der Stand im Browser bleibt dabei unverändert erhalten, und übernommen wird nur, was deinen Kontostand nach vorne bringt.",
+      "Du kannst ihn einmal übernehmen. Übernommen wird nur, was deinen Kontostand voranbringt; der Browser behält seinen Stand.",
     action: "Lokalen Fortschritt übernehmen",
     sending: "Wird übernommen",
     successLabel: "Übernommen",
     successBody: (courses, lessons) =>
-      `${courses} und ${lessons} sind jetzt in deinem Konto. Der lokale Stand im Browser bleibt erhalten.`,
+      `${courses} und ${lessons} sind jetzt in deinem Konto.`,
     successNothing:
-      "Dein Konto war bereits auf demselben Stand. Es wurde nichts verändert.",
+      "Dein Konto war bereits auf demselben Stand.",
     reload: "Lernstand neu laden",
     failedLabel: "Übernahme nicht möglich",
     keepsLocal:
-      "Dein lokaler Lernstand ist unverändert. Du kannst es später erneut versuchen.",
+      "Dein lokaler Lernstand ist unverändert. Versuche es später erneut.",
     alreadyImported: (date) =>
-      `Für dieses Konto wurde bereits am ${date} ein lokaler Lernstand übernommen. Ein zweiter Import ist nicht vorgesehen.`,
+      `Du hast am ${date} schon einen lokalen Lernstand übernommen. Ein zweiter Import ist nicht möglich.`,
     unknownError:
-      "Die Verbindung zum Server ist fehlgeschlagen. Bitte versuche es später erneut.",
+      "Die Verbindung zum Server ist fehlgeschlagen. Versuche es später erneut.",
     errors: {
       unsupported_media_type:
-        "Der Server hat die Anfrage nicht angenommen. Lade die Seite neu und versuche es erneut.",
+        "Der Server hat die Anfrage abgelehnt. Lade die Seite neu und versuche es erneut.",
       auth_unavailable:
         "Der Anmeldedienst antwortet gerade nicht. Versuche es in einigen Minuten erneut.",
       auth_not_configured:
-        "In dieser Umgebung ist kein Lernkonto eingerichtet, deshalb gibt es kein Ziel für die Übernahme.",
+        "In dieser Umgebung ist kein Lernkonto eingerichtet.",
       unauthorized:
         "Deine Anmeldung ist abgelaufen. Melde dich neu an und versuche es erneut.",
       rate_limit_exceeded:
-        "Es gab zu viele Versuche. Warte etwa eine Stunde und versuche es erneut.",
+        "Zu viele Versuche. Warte etwa eine Stunde.",
       rate_limit_unavailable:
-        "Der Schutz vor zu vielen Anfragen ist gerade nicht verfügbar, deshalb wurde nichts geschrieben. Versuche es in einigen Minuten erneut.",
+        "Der Schutz vor zu vielen Anfragen ist gerade aus, deshalb wurde nichts geschrieben. Versuche es in einigen Minuten erneut.",
       payload_too_large: "Dein lokaler Lernstand ist für eine Übernahme zu groß.",
       progress_too_large:
-        "Ein einzelner Kurs aus dem lokalen Lernstand ist für die Speicherung zu groß.",
+        "Ein Kurs im lokalen Lernstand ist zu groß zum Speichern.",
       invalid_import:
-        "Der lokale Lernstand hat eine Form, die der Server nicht annehmen kann.",
+        "Der Server kann das Format des lokalen Lernstands nicht annehmen.",
       unsupported_schema_version:
-        "Der lokale Lernstand stammt aus einer älteren Version. Öffne einen Kurs, damit der Browser ihn aktualisiert, und versuche es dann erneut.",
+        "Der lokale Lernstand stammt aus einer älteren Version. Öffne einen Kurs, damit der Browser ihn aktualisiert, dann versuche es erneut.",
       progress_owner_mismatch:
-        "Das angemeldete Konto hat sich zwischendurch geändert. Lade die Seite neu und versuche es erneut.",
+        "Das angemeldete Konto hat gewechselt. Lade die Seite neu und versuche es erneut.",
       progress_conflict:
-        "Dein Lernstand wurde gerade an anderer Stelle geändert. Lade die Seite neu und versuche es erneut.",
+        "Dein Lernstand wurde gerade woanders geändert. Lade die Seite neu und versuche es erneut.",
       progress_read_failed:
         "Dein gespeicherter Lernstand ließ sich nicht lesen. Versuche es später erneut.",
       progress_write_failed:
         "Dein Lernstand ließ sich nicht speichern. Versuche es später erneut.",
       progress_store_unavailable:
-        "Der Speicher für den Lernstand ist gerade nicht erreichbar. Versuche es später erneut.",
+        "Der Lernstand-Speicher ist gerade nicht erreichbar. Versuche es später erneut.",
     },
   },
   en: {
@@ -113,50 +113,50 @@ export const IMPORT_COPY = {
     offerBody: (courses, lessons) =>
       `This browser holds progress your account does not know about yet: ${courses}, ${lessons}.`,
     offerNote:
-      "You can transfer it once. The record in this browser stays exactly as it is, and only what moves your account forward is transferred.",
+      "You can transfer it once. Only what moves your account forward is transferred; the browser keeps its record.",
     action: "Transfer local progress",
     sending: "Transferring",
     successLabel: "Transferred",
     successBody: (courses, lessons) =>
-      `${courses} and ${lessons} are now in your account. The local record in this browser is kept.`,
+      `${courses} and ${lessons} are now in your account.`,
     successNothing:
-      "Your account already held the same state. Nothing was changed.",
+      "Your account already held the same state.",
     reload: "Reload the learning record",
     failedLabel: "Transfer not possible",
     keepsLocal:
-      "Your local learning record is unchanged. You can try again later.",
+      "Your local learning record is unchanged. Try again later.",
     alreadyImported: (date) =>
-      `A local learning record was already transferred into this account on ${date}. A second import is not offered.`,
-    unknownError: "The connection to the server failed. Please try again later.",
+      `You already transferred a local learning record on ${date}. A second import is not possible.`,
+    unknownError: "The connection to the server failed. Try again later.",
     errors: {
       unsupported_media_type:
-        "The server did not accept the request. Reload the page and try again.",
+        "The server rejected the request. Reload the page and try again.",
       auth_unavailable:
         "The sign-in service is not responding. Try again in a few minutes.",
       auth_not_configured:
-        "This environment has no learning account configured, so there is no target for the transfer.",
+        "This environment has no learning account configured.",
       unauthorized: "Your sign-in has expired. Sign in again and try once more.",
-      rate_limit_exceeded: "Too many attempts. Wait about an hour and try again.",
+      rate_limit_exceeded: "Too many attempts. Wait about an hour.",
       rate_limit_unavailable:
-        "The protection against excessive requests is unavailable, so nothing was written. Try again in a few minutes.",
+        "The protection against excessive requests is down, so nothing was written. Try again in a few minutes.",
       payload_too_large:
         "Your local learning record is too large to be transferred.",
       progress_too_large:
-        "A single course in the local record is too large to be stored.",
+        "A course in the local record is too large to store.",
       invalid_import:
-        "The local learning record has a shape the server cannot accept.",
+        "The server cannot accept the format of the local record.",
       unsupported_schema_version:
         "The local learning record comes from an older version. Open a course so the browser updates it, then try again.",
       progress_owner_mismatch:
-        "The signed-in account changed in the meantime. Reload the page and try again.",
+        "The signed-in account changed. Reload the page and try again.",
       progress_conflict:
-        "Your learning record was changed elsewhere just now. Reload the page and try again.",
+        "Your learning record just changed elsewhere. Reload the page and try again.",
       progress_read_failed:
         "Your stored learning record could not be read. Try again later.",
       progress_write_failed:
         "Your learning record could not be saved. Try again later.",
       progress_store_unavailable:
-        "The store for the learning record is unreachable. Try again later.",
+        "The learning record store is unreachable. Try again later.",
     },
   },
 } as const satisfies Readonly<Record<Locale, ImportIslandCopy>>;

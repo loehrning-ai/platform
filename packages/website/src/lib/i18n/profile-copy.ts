@@ -99,7 +99,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
       intro:
         "Ich bin Tim Löhr. Beruflich habe ich als Data Scientist bei Apple und Red Bull sowie als Data Engineer bei Meta gearbeitet.",
       detail:
-        "Auf dieser Plattform veröffentliche ich Kurse, Bücher, Demos, Workshops und technische Notizen. Vier Grundlagen-Reader benötigen ein kostenloses Lernkonto; die übrigen veröffentlichten Lernmaterialien sind ohne Konto erreichbar. Aussagen sollen nachvollziehbar, Quellen sichtbar und Grenzen ausdrücklich sein.",
+        "Hier veröffentliche ich Kurse, Bücher, Demos, Workshops und technische Notizen. Vier Grundlagen-Reader benötigen ein kostenloses Lernkonto; alles andere ist ohne Konto erreichbar.",
       portraitCaption: "Tim Löhr · loehrning.ai",
       roleLabel: "Rolle",
       roleValue: "Kurator und Entwickler",
@@ -118,8 +118,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
     timeline: {
       eyebrow: "Laufbahn",
       title: "Berufliche Stationen",
-      intro:
-        "Die Chronologie zeigt Zeitraum, Rolle und Arbeitsschwerpunkt jeder Station.",
+      intro: "",
       ariaLabel: "Chronologie der beruflichen Stationen",
       currentLabel: "Aktuell",
       milestones: [
@@ -160,8 +159,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
     credentials: {
       eyebrow: "Ausbildung und Forschung",
       title: "Akademischer Hintergrund",
-      intro:
-        "Studium, internationale Programme und Forschungsarbeit, die für die veröffentlichten Inhalte fachlich relevant sind.",
+      intro: "",
       cards: [
         {
           id: "degree",
@@ -201,7 +199,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
       eyebrow: "Kontakt",
       title: "Direkter Kontakt",
       intro:
-        "Fragen zu Inhalten, Korrekturen und technische Zusammenarbeit erreichen mich per E-Mail oder LinkedIn.",
+        "Schreib mir bei Fragen, Korrekturen oder zur Zusammenarbeit per E-Mail oder LinkedIn.",
       linksLabel: "Kontaktwege",
       email: "E-Mail schreiben",
       linkedIn: "Auf LinkedIn schreiben",
@@ -232,11 +230,11 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
     ],
     hero: {
       eyebrow: "Person and work",
-      title: "I build loehrning.ai to keep knowledge about AI verifiable.",
+      title: "I build loehrning.ai so AI knowledge stays verifiable.",
       intro:
         "I am Tim Löhr. I previously worked as a data scientist at Apple and Red Bull and as a data engineer at Meta.",
       detail:
-        "On this platform, I publish courses, books, demos, workshops, and technical notes. Four foundation readers require a free learning account; the other published learning materials are available without an account. Claims should be traceable, sources visible, and limitations explicit.",
+        "Here I publish courses, books, demos, workshops and technical notes. Four foundation readers require a free learning account; everything else is available without one.",
       portraitCaption: "Tim Löhr · loehrning.ai",
       roleLabel: "Role",
       roleValue: "Curator and developer",
@@ -255,8 +253,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
     timeline: {
       eyebrow: "Career",
       title: "Professional timeline",
-      intro:
-        "The chronology shows the period, role, and area of work for each position.",
+      intro: "",
       ariaLabel: "Chronology of professional roles",
       currentLabel: "Current",
       milestones: [
@@ -297,8 +294,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
     credentials: {
       eyebrow: "Education and research",
       title: "Academic background",
-      intro:
-        "Degree work, international programmes, and research relevant to the material published here.",
+      intro: "",
       cards: [
         {
           id: "degree",
@@ -337,7 +333,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
       eyebrow: "Contact",
       title: "Contact me directly",
       intro:
-        "Questions about the material, corrections, and technical collaboration can be sent by email or LinkedIn.",
+        "Write to me by email or LinkedIn with questions, corrections or collaboration ideas.",
       linksLabel: "Contact methods",
       email: "Send an email",
       linkedIn: "Message me on LinkedIn",

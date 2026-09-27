@@ -4,10 +4,8 @@
 
 Picture a bathtub.
 
-- The **level** is how much water is in the tub at one moment. FOLDLINE's ending MRR on 30 June
-  2026 is **€387,015**. That is a level.
-- The **change** is what flowed in or out during a period. June's net new MRR is **+€42,565**.
-  That is a change.
+- The **level** is the water in the tub at one moment: ending MRR on 30 June 2026, **€387,015**.
+- The **change** is what flowed in or out during a period: June's net new MRR, **+€42,565**.
 - The last level plus the change gives the new level: **€354,635 + €32,380 = €387,015**
   (end of March, plus Q2's net new, gives end of June).
 
@@ -19,8 +17,8 @@ Ask three questions about every number before anyone adds, averages or charts it
 2. **Can I add it, and across what?** (segments, months, accounts)
 3. **What is the base?** (for a rate or an average: divided by what, counted when?)
 
-The recorded AI run failed question 1. It treated each month's change as the month-end level and
-reported **−€19,960 / €9,775 / €42,565**. Ending MRR cannot be negative here.
+The recorded AI run failed question 1: it read each month's change as the month-end level and
+reported **−€19,960 / €9,775 / €42,565**, though ending MRR cannot be negative here.
 
 ---
 
@@ -39,13 +37,9 @@ reported **−€19,960 / €9,775 / €42,565**. Ending MRR cannot be negative 
 
 ## Additivity: what you may add
 
-Three words cover almost every case.
-
-- **Additive**: you may add it along every axis. Changes are additive.
-- **Semi-additive**: you may add it across things (accounts, segments), but **not across time**.
-  Levels are semi-additive.
-- **Non-additive**: you may not add it at all. Rates, averages and distinct counts are
-  non-additive. You recompute them from their parts.
+- **Additive** (changes): add along every axis.
+- **Semi-additive** (levels): add across things (accounts, segments), **never across time**.
+- **Non-additive** (rates, averages, distinct counts): never add; recompute from the parts.
 
 ### The grid
 
@@ -83,13 +77,12 @@ Write the identity down in `metric.yml` (`reconciliation`) and test it (case Q02
 | start − left + joined = end (accounts) | 40 − 4 + 8 = 44 per segment | Q04 |
 | sum of accounts = company | sum of 144 account rows = ending MRR, every month | Q05 |
 
-**A missing opening level breaks the identity.** In a dry run, a different Claude chat did not
-repeat the recorded mistake. It correctly read `amount` as a monthly change, then added the
-changes from January and labelled the result "Ending MRR": **75,890 / 85,665 / 128,230**. It
-warned that the opening balance was missing. The true values are 258,785 higher (the end of
-December 2025). That was one run per prompt: an observation, not a benchmark. The lesson: a
-better AI route moves the failure. It does not remove it. Only a served level
-(`ending_mrr_eur`) removes the need to reconstruct one.
+**A missing opening level breaks the identity.** In a dry run (one run per prompt, an
+observation), a different Claude chat read `amount` correctly as a monthly change, then added the
+changes from January and labelled the result "Ending MRR": **75,890 / 85,665 / 128,230**, with a
+warning that the opening balance was missing. The true values are 258,785 higher (the end of
+December 2025). The better AI route moved the failure; only a served level (`ending_mrr_eur`)
+removes the need to reconstruct one.
 
 ---
 
@@ -97,11 +90,11 @@ better AI route moves the failure. It does not remove it. Only a served level
 
 ### Pooled, not averaged
 
-A rate for a group is **total numerator ÷ total denominator**. It is never the average of the
-sub-group rates.
+A group's rate is **total numerator ÷ total denominator**, never the average of the sub-group
+rates.
 
-**FOLDLINE is right by luck.** Every segment has 40 starting accounts. So the average of three
-10 % rates (10 %) equals the pooled rate (12 of 120 = 10 %). Change one base and they split.
+**FOLDLINE is right by luck.** Every segment has 40 starting accounts, so the average of three
+10 % rates equals the pooled 12 of 120 = 10 %. Change one base and they split.
 
 **Web shop, where it goes wrong:**
 
@@ -112,8 +105,8 @@ sub-group rates.
 | Average of the two rates | | | **5.00 %** (wrong) |
 | Pooled | 480 | 21,000 | **2.29 %** (right) |
 
-The average treats 1,000 email sessions as if they weighed as much as 20,000 search sessions.
-Ship `orders` and `sessions` next to the rate so any reader can pool them.
+The average weighs 1,000 email sessions like 20,000 search sessions. Serve `orders` and
+`sessions` next to the rate so any reader can pool them.
 
 ### The denominator decides the number
 
@@ -125,9 +118,9 @@ Ship `orders` and `sessions` next to the rate so any reader can pool them.
 
 ### Zero rule
 
-**0 ÷ 0 is null, never 0 %.** An answer of "0 % churn" claims nobody left. "No rate: the base is
-empty" says the question could not be answered. Write `zero_denominator: "null"` and use
-`nullif(denominator, 0)` in SQL.
+**0 ÷ 0 is null, never 0 %.** "0 % churn" claims nobody left; "No rate: the base is empty" says
+the question has no answer. Write `zero_denominator: "null"` and use `nullif(denominator, 0)` in
+SQL.
 
 ### Averages are rates too
 
@@ -137,8 +130,8 @@ MRR per active account is €387,015 ÷ 132 = **€2,931.93** at the end of June
 | --- | --- | --- |
 | June: 387,015 ÷ 132 | €2,931.93 | Right: numerator and denominator at the same instant |
 | June: 387,015 ÷ 144 | €2,687.60 | Wrong base: counts churned and not-yet-started accounts as paying 0 |
-| Mean of monthly averages: (2,720.93 + 2,800.41 + 2,931.93) ÷ 3 | €2,817.76 | Average of averages. It is not the owner's rule: for one quarter figure the owner chose the last month-end, June, €2,931.93. It also sits close to 2,820.48 (sum of levels ÷ account-months), which only means "average per account-month" and nothing else. Both are close only because the monthly counts are similar |
-| Sum of Q2 levels ÷ distinct Q2 accounts: 1,066,140 ÷ 141 | €7,561.28 | Mixed shapes: a meaningless sum over a different window. 2.6 times the June value, and it looks precise |
+| Mean of monthly averages: (2,720.93 + 2,800.41 + 2,931.93) ÷ 3 | €2,817.76 | Average of averages, and not the owner's rule, which takes the last month-end (June, €2,931.93) for one quarter figure. It sits close to 2,820.48 (sum of levels ÷ account-months, meaning only "average per account-month") because the monthly counts are similar |
+| Sum of Q2 levels ÷ distinct Q2 accounts: 1,066,140 ÷ 141 | €7,561.28 | Mixed shapes: a meaningless sum over a different window, 2.6 times the June value, and it looks precise |
 
 ---
 
@@ -155,8 +148,6 @@ Clock: **2026-07-01 09:00 UTC**. Last complete quarter: **2026-04-01 (inclusive)
 | Logo churn by segment | Rate | Recompute from the quarter's own base and count | 4 of 40 = 10.0 % each |
 | Active accounts at quarter end | Distinct count | Last month-end | 132 |
 | Distinct accounts active at any Q2 month-end | Distinct count | Count distinct at account grain | 141 |
-
-Two more rules:
 
 - **Complete periods only.** Serve `month_start <= complete_through_month`. A July figure on
   1 July is a partial month; `subscription_export` holding June only is the same trap.
@@ -183,10 +174,10 @@ Two teaching examples add the remaining shapes: `active_accounts` (distinct coun
 
 ## Governance: owner, version, synonyms, proxies
 
-**Owner.** A team, not a person: `revenue_analytics`. The owner approves every change and
-answers escalations (for example "the data is 60 hours old, do we block?").
+**Owner.** A team: `revenue_analytics`. It approves every change and answers escalations (for
+example "the data is 60 hours old, do we block?").
 
-**Versioning.** Use three numbers, MAJOR.MINOR.PATCH.
+**Versioning.** MAJOR.MINOR.PATCH.
 
 | Bump | When | FOLDLINE example | Effect on receipts |
 | --- | --- | --- | --- |
@@ -201,23 +192,6 @@ answers escalations (for example "the data is 60 hours old, do we block?").
   "revenue" trigger C01: *"Specify the MRR meaning: ending MRR, net-new MRR, or an MRR movement
   component."*
 
-**Proxies.** If a metric is not defined, refuse (R01: profit). Use a proxy only if the user asks
-for a **labelled** proxy **and** the policy lists that proxy. FOLDLINE's policy lists none. MRR is
-not a profit proxy.
-
----
-
-## What works and what does not
-
-| What works | What does not | Why the second one fails (FOLDLINE) |
-| --- | --- | --- |
-| Name the shape in the column: `ending_mrr_eur`, `net_new_mrr_eur` | `amount` | The recorded run read a change as a level: −19,960 |
-| Return three month-end rows for a quarter | Add the month-ends | 1,066,140 describes nothing |
-| Quarter change = sum of monthly changes, or level(end) − level(start) | Change(end) − change(start) | −17,595 instead of 32,380 |
-| Serve the level | Rebuild the level from changes | Dry run: 75,890 / 85,665 / 128,230, missing an opening balance of 258,785 |
-| Write the base: active at the end of the prior month | "All customers" | 4 of 48 = 8.33 % instead of 10.0 % |
-| Pool rates: sum numerators ÷ sum denominators | Average the rates | Web shop 5.00 % instead of 2.29 % |
-| 0 ÷ 0 = null, "no rate" | 0 % | Claims nobody left when nothing was measured |
-| Readable status values: `active`, `churned`, `new` | `A`, `C`, `N` | Searched 'active', found 0 of 0 |
-| A version on every definition, cited in every trace | An unversioned wiki page | Nobody can tell which definition produced an answer; cited 0 of 3 |
-| Refuse an undefined metric | Answer with a proxy | Profit by plan from MRR silently changes the question |
+**Proxies.** Refuse an undefined metric (R01: profit). Use a proxy only if the user asks for a
+**labelled** proxy **and** the policy lists it. FOLDLINE's policy lists none, so MRR is no profit
+proxy; answering profit from MRR silently changes the question.

@@ -219,7 +219,7 @@ const ON_RAMP_NODE: LearningNode = {
   evidenceMode: "source_backed",
   sourceOwner: "editorial:onramp",
   summary:
-    "Kurze Orientierungsseite für alle, die noch nie bewusst KI genutzt haben.",
+    "Für alle, die noch nie bewusst KI genutzt haben.",
 };
 
 export const LEARNING_NODES: readonly LearningNode[] = [
@@ -237,7 +237,7 @@ export const LEARNING_NODES: readonly LearningNode[] = [
     evidenceMode: "self_attested",
     sourceOwner: "editorial:self-tests",
     summary:
-      "Zehn Fragen, kein Login, kein Backend. Zeigt dir, wo du auf dem KI-Kompetenzweg stehst.",
+      "Zehn Fragen ohne Login zeigen dir, wo du auf dem KI-Kompetenzweg stehst.",
   },
   ON_RAMP_NODE,
   ...courseNodes,
@@ -328,36 +328,35 @@ export const PATHWAY_STAGES = [
   {
     id: "grundlagen",
     title: "Grundlagen",
-    description: "KI-Kompetenz für sichere Alltagsnutzung aufbauen.",
+    description: "KI im Alltag sicher nutzen.",
   },
   {
     id: "regeln",
     title: "Regeln",
-    description: "AI-Act-Rollen, Risikoklassen und Pflichten einordnen.",
+    description: "Rollen, Risikoklassen und Pflichten im AI Act einordnen.",
   },
   {
     id: "anwenden",
     title: "Anwenden",
     description:
-      "Workflows, Tools und Automatisierung mit Review-Grenzen üben.",
+      "KI-Workflows üben und Ergebnisse vor der Freigabe prüfen.",
   },
   {
     id: "dokumentieren",
     title: "Dokumentieren",
     description:
-      "Vorlagen, Nachweise und Entscheidungen nachvollziehbar ablegen.",
+      "Nachweise und Entscheidungen ablegen.",
   },
   {
     id: "vertiefen",
     title: "Vertiefen",
-    description: "Bücher, Demos und technische Labore gezielt nutzen.",
+    description: "Bücher, Demos und technische Labore.",
   },
 ] as const;
 
 export interface PathwayStageCopy {
   readonly displayLabel: string;
   readonly subtitle: string;
-  readonly description: string;
 }
 
 /**
@@ -372,66 +371,52 @@ export const PATHWAY_STAGE_COPY: Readonly<
     pruefen: {
       displayLabel: "Prüfen",
       subtitle: "Wo stehe ich?",
-      description: "Finde deinen Einstiegspunkt auf dem KI-Kompetenzweg.",
     },
     grundlagen: {
       displayLabel: "Verstehen",
       subtitle: "KI im Alltag sicher nutzen",
-      description: "KI-Grundlagen für die alltägliche sichere Nutzung.",
     },
     regeln: {
       displayLabel: "Einordnen",
       subtitle: "Regeln kennen und anwenden",
-      description: "Was die EU-KI-Verordnung für dich bedeutet.",
     },
     anwenden: {
       displayLabel: "Umsetzen",
       subtitle: "Mit KI arbeiten",
-      description: "Praktische Arbeit mit KI-Tools im Berufsalltag.",
     },
     dokumentieren: {
       displayLabel: "Belegen",
       subtitle: "Nachweise und Vorlagen",
-      description: "Dokumentation, Vorlagen und Nachweise für dein Team.",
     },
     vertiefen: {
       displayLabel: "Vertiefen",
       subtitle: "Bücher, Demos, Labore",
-      description:
-        "Bücher, Praxisbeispiele und technische Labore für mehr Tiefe.",
     },
   },
   en: {
     pruefen: {
       displayLabel: "Assess",
       subtitle: "Where do I stand?",
-      description: "Find your entry point on the AI competency path.",
     },
     grundlagen: {
       displayLabel: "Understand",
       subtitle: "Using AI safely day to day",
-      description: "AI fundamentals for safe everyday use.",
     },
     regeln: {
       displayLabel: "Classify",
       subtitle: "Know the rules and apply them",
-      description: "What the EU AI Act means for you.",
     },
     anwenden: {
       displayLabel: "Apply",
       subtitle: "Working with AI",
-      description: "Practical work with AI tools on the job.",
     },
     dokumentieren: {
       displayLabel: "Document",
       subtitle: "Records and templates",
-      description: "Documentation, templates and records for your team.",
     },
     vertiefen: {
       displayLabel: "Deepen",
       subtitle: "Books, demos, labs",
-      description:
-        "Books, practice examples and technical labs for more depth.",
     },
   },
 };

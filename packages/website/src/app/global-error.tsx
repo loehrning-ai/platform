@@ -24,13 +24,13 @@ export default function GlobalError({
   const copy = english
     ? {
         title: "The application could not be loaded.",
-        body: "An unexpected error occurred. Reload the application.",
+        body: "An unexpected error occurred.",
         errorId: "Error ID",
         retry: "Retry",
       }
     : {
         title: "Die Anwendung konnte nicht geladen werden.",
-        body: "Ein unerwarteter Fehler ist aufgetreten. Lade die Anwendung erneut.",
+        body: "Ein unerwarteter Fehler ist aufgetreten.",
         errorId: "Fehler-ID",
         retry: "Erneut laden",
       };

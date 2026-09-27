@@ -915,7 +915,7 @@ describe("LearningAtlas phone ledger", () => {
       }),
     ).toHaveAttribute("href", "/kurse/open-source/codex/kurs/L01");
   });
-  it("marks path courses with an ink square and keeps the marker text and ledger intro in the accessibility tree", () => {
+  it("marks path courses with an ink square and keeps the marker text in the accessibility tree", () => {
     const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);
 
     const marked = Array.from(
@@ -939,10 +939,11 @@ describe("LearningAtlas phone ledger", () => {
     expect(outside).not.toHaveTextContent("Teil deines Pfads");
     expect(outside?.querySelector("[data-path-marker]")).toBeNull();
 
-    const intro = screen.getByText(
-      "Jede Zeile sagt, was du nach dem Kurs kannst. Jeden Kurs kannst du auch ohne Pfad direkt öffnen.",
-    );
-    expect(intro).toHaveClass("sr-only", "sm:not-sr-only");
+    // The ledger head explains nothing the rows already show: no intro
+    // paragraph on how to read the page.
+    expect(
+      screen.queryByText(/Jede Zeile sagt, was du nach dem Kurs kannst/),
+    ).toBeNull();
     const legend = container.querySelector("[data-path-legend]");
     expect(legend).toHaveAttribute("aria-hidden", "true");
     expect(legend).toHaveTextContent("Teil deines Pfads");

@@ -100,9 +100,6 @@ export function LoginForm({
         >
           {copy.title}
         </h2>
-        <p className="mt-2 break-words text-sm leading-relaxed text-muted-foreground">
-          {copy.unavailableInstruction}
-        </p>
         <p
           role="note"
           className="mt-3 break-words border-t border-border pt-3 font-mono text-xs uppercase leading-relaxed tracking-[0.08em] text-muted-foreground"
@@ -215,11 +212,6 @@ export function LoginForm({
         >
           {copy.title}
         </h2>
-        <p className="mt-2 break-words text-sm leading-relaxed text-muted-foreground">
-          {magicLinkAvailable || oauthAvailable
-            ? copy.availableInstruction
-            : copy.unavailableInstruction}
-        </p>
       </div>
       {googleAvailable ? (
         <button

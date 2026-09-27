@@ -521,7 +521,7 @@ describe("KontoPage catalog", () => {
 
     expect(
       screen.getByText(
-        "Bei den vier grundlegenden Kursen synchronisiert ein Konto Fortschritt und Abschlussstatus geräteübergreifend. Die sechs technischen Kurse funktionieren auch ohne Konto.",
+        "Bei den vier Grundlagenkursen synchronisiert ein Konto Fortschritt und Abschluss geräteübergreifend. Die sechs Technikkurse gehen auch ohne Konto.",
       ),
     ).toBeInTheDocument();
 
@@ -662,7 +662,7 @@ describe("KontoPage account regions", () => {
     const records = container.querySelector("#konto-nachweise") as HTMLElement;
     expect(
       within(records).getByText(
-        "Noch kein Kurs abgeschlossen. Die erste Bestätigung erscheint hier, sobald du einen Kurs beendest.",
+        "Noch kein Kurs abgeschlossen. Deine erste Bestätigung erscheint hier.",
       ),
     ).toBeInTheDocument();
     expect(within(records).queryAllByRole("link")).toHaveLength(0);

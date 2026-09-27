@@ -17,30 +17,30 @@ export default localizeDataInfraLessonToGerman(canonical, {
     {
       id: "s1",
       title: "Aufbau einer Batch-Pipeline",
-      content: `Begrenzte Eingabe rein, begrenzte Ausgabe raus, dazwischen die Transformation. Mehr ist eine Batch-Pipeline nicht. Sie startet nach Zeitplan, auf ein Ereignis hin oder auf Zuruf.
+      content: `Eine Batch-Pipeline macht aus einer begrenzten Eingabe eine begrenzte Ausgabe, nach Zeitplan, auf ein Ereignis hin oder auf Abruf.
 
-Nimm Batch, wenn Freshness-Ziel, Quellschnittstelle und Wiederherstellungsmodell begrenzte Läufe zulassen. Nimm Streaming, wenn Consumer inkrementelle Ergebnisse oder kontinuierliche Zustandsänderungen brauchen und das zusätzliche Betriebsmodell diesen Preis wert ist. In beiden Fällen schreibst du Eingabegrenzen, Abhängigkeiten, Veröffentlichung, Wiederholungen und Vollständigkeitsevidenz auf.`,
+Nimm Batch, wenn Freshness-Ziel, Quellschnittstelle und Wiederherstellungsmodell begrenzte Läufe zulassen. Nimm Streaming, wenn Consumer inkrementelle Ergebnisse oder laufenden Zustand brauchen und sich der zusätzliche Betrieb lohnt. In beiden Fällen legst du Eingabegrenzen, Abhängigkeiten, Veröffentlichung, Wiederholungen und Vollständigkeitsnachweise fest.`,
     },
     {
       id: "s2",
       title: "ETL oder ELT",
-      content: `**ETL** transformiert vor dem Laden ins Zielsystem. **ELT** landet zuerst und transformiert in der Zielplattform. Beide sind gültig.
+      content: `**ETL** transformiert vor dem Laden ins Ziel, **ELT** landet zuerst und transformiert in der Zielplattform.
 
-ELT kann Replay verbessern. Aber nur, wenn die gelandete Eingabe unveränderlich, vollständig, aufbewahrt und unter passenden Kontrollen zugänglich ist. Transformationen rücken näher an analytisches Compute und werden per SQL zugänglich. Umsonst ist das nicht: Rohaufbewahrung kostet, Quelllöschungen und Schemaänderungen erschweren Replay, und sensible Daten dürfen möglicherweise gar nicht im Ziel liegen.
+ELT hilft beim Replay nur, wenn die gelandete Eingabe unveränderlich, vollständig, aufbewahrt und unter passenden Kontrollen zugänglich ist. Außerdem rücken Transformationen an analytisches Compute und SQL-Werkzeuge heran. Rohaufbewahrung kostet Geld, Quelllöschungen und Schemaänderungen erschweren Replay, und sensible Daten dürfen vielleicht gar nicht ins Ziel.
 
-ETL kann Minimierung, Redaktion, Formatumwandlung oder Aggregation vor einer Security-Grenze erzwingen und die Ziellast senken. Die Grenze folgt aus Datenklassifizierung, Quelllimits, Aufbewahrung, benötigter Neuverarbeitung, Governance und gemessenen Kosten. Nicht aus einer Siegergeschichte.`,
+ETL erzwingt Minimierung, Schwärzung, Formatumwandlung oder Aggregation, bevor Daten eine Security-Grenze passieren, und senkt die Ziellast. Die Grenze legst du nach Datenklassifizierung, Quelllimits, Aufbewahrung, Neuverarbeitungsbedarf, Governance und gemessenen Kosten fest.`,
     },
     {
       id: "s3",
       title: "dbt-Materialisierungen",
-      content: `dbt verwaltet Transformationen und ihre Abhängigkeiten. In einem SQL-Modell deklariert \`{{ ref('upstream_model') }}\` eine vorgelagerte Relation und hängt sie in den DAG. Die Materialisierung bestimmt, als was ein Modell im Warehouse landet; exaktes SQL und unterstützte Strategien hängen am Adapter.
+      content: `dbt verwaltet Transformationen und ihre Abhängigkeiten. In einem SQL-Modell deklariert \`{{ ref('upstream_model') }}\` eine vorgelagerte Relation und hängt sie in den DAG. Die Materialisierung bestimmt, wie ein Modell gespeichert wird; exaktes SQL und Strategien hängen am Adapter.
 
-- **view**, erzeugt eine Sicht. Gespeichert werden nur Metadaten, die Abfragearbeit wandert zu den Readern.
-- **table**, baut eine physische Relation. Ersatzverhalten, Atomarität und Grants unterscheiden sich nach Adapter und Konfiguration.
-- **incremental**, verarbeitet nach dem ersten Build eine gewählte Teilmenge. Ein \`unique_key\` kann bei unterstützten Strategien Update- oder Merge-Verhalten auslösen, macht die Quellauswahl aber nicht korrekt.
-- **ephemeral**, fügt SQL als CTE in nachgelagerte Modelle ein, ohne eine eigene Relation anzulegen.
+- **view**, erzeugt eine Sicht. Gespeichert werden nur Metadaten, die Abfragearbeit leisten die Reader.
+- **table**, baut eine physische Relation; Ersatzverhalten, Atomarität und Grants hängen am Adapter.
+- **incremental**, verarbeitet nach dem ersten Build eine gewählte Teilmenge. Ein \`unique_key\` kann Merge-Verhalten auslösen, macht die Quellauswahl aber nicht korrekt.
+- **ephemeral**, fügt SQL als CTE in nachgelagerte Modelle ein, ohne eigene Relation.
 
-Der naive Filter \`created_at > max(created_at)\` übersieht verspätete Eingänge und spätere Änderungen an älteren Datensätzen. Belastbarer sind ein Quell-Change-Token oder ein überlappend neu verarbeitetes Fenster mit deterministischer Deduplizierung:
+Der naive Filter \`created_at > max(created_at)\` übersieht verspätete Eingänge und spätere Änderungen an älteren Datensätzen. Nimm ein Quell-Change-Token oder verarbeite ein überlappendes Fenster neu und dedupliziere dann deterministisch:
 
 \`\`\`sql
 -- Adapter-specific interval syntax; validate for the target warehouse.
@@ -55,48 +55,44 @@ from {{ ref('stg_orders') }}
 {% endif %}
 \`\`\`
 
-Auch das ist ein Muster, keine Garantie. Bevor das Modell replay-sicher heißt, definierst du Null-Behandlung, doppelte Quellschlüssel, Löschung, Lookback-Größe, Transaktionsgrenze und Reconciliation.`,
+Bevor das Modell replay-sicher heißt, legst du Null-Behandlung, doppelte Quellschlüssel, Löscherfassung, Lookback-Größe, Transaktionsgrenze und Reconciliation fest.`,
     },
     {
       id: "s3b",
       title: "Inkrementelle Verarbeitung und SCD",
-      content: `Zwei Strategien wenden inkrementelle Änderungen an:
-
-- **MERGE (Upsert).** Quelle und Ziel auf einem deklarierten Schlüssel abgleichen, dann aktualisieren oder einfügen. Replay-sicher wird das mit eindeutigen deterministischen Quellzeilen, stabiler Merge-Logik, korrekter Löschbehandlung und atomarem Ziel-Commit. Adapter scannen dabei unterschiedlich viel Zieldaten.
-- **Insert-Overwrite (Partitionsersetzung).** Eine vollständige Zielpartition oder ein Fenster neu berechnen und ersetzen. Dafür brauchst du vollständige deterministische Eingabe für diese Grenze und eine Engine-Operation, die den Ersatz atomar veröffentlicht.
+      content: `- **MERGE (Upsert).** Quelle und Ziel auf einem deklarierten Schlüssel abgleichen, dann aktualisieren oder einfügen. Replay-sicher ist das nur mit eindeutigen, deterministischen Quellzeilen, stabiler Merge-Logik, korrekten Löschungen und atomarem Commit. Adapter scannen dabei unterschiedlich viel Zieldaten.
+- **Insert-Overwrite (Partitionsersetzung).** Eine vollständige Partition oder ein Fenster neu berechnen und ersetzen. Das braucht vollständige, deterministische Eingabe für diese Grenze und einen atomaren Ersatz.
 
 Miss beide an Aktualisierungsverteilung, Partitionsausrichtung, Zielgröße, Konkurrenz und Engine-Verhalten.
 
 **Slowly Changing Dimensions (SCD).**
 
-- **Typ 1**, überschreibt das modellierte Attribut. Es zeigt den aktuellen Zustand und bewahrt den früheren Wert absichtlich nicht.
-- **Typ 2**, schließt eine effektive Version und fügt eine weitere ein. As-of-Joins funktionieren, wenn Grenzen, verspätete Änderungen und Korrekturen richtig behandelt werden. Der Preis: mehr Zeilen, komplexere Joins.
+- **Typ 1** überschreibt das Attribut. Er hält den aktuellen Zustand und verwirft den früheren Wert absichtlich.
+- **Typ 2** schließt eine zeitlich gültige Version und fügt die nächste ein. As-of-Joins funktionieren, wenn Grenzen, verspätete Änderungen und Korrekturen behandelt sind; der Preis sind mehr Zeilen und schwierigere Joins.
 
-Nimm Typ 2 nur für Attribute, deren Historie jemand wirklich abfragt. Die Kosten hängen an Änderungshäufigkeit, Zeilenbreite, Indizes und Abfragemuster, nicht an einem festen Multiplikator.`,
-      keyTakeaway:
-        "SCD Typ 1 eignet sich für Attribute des aktuellen Zustands, Typ 2 für definierte Consumer mit zeitlich gültiger Historie; keine Variante ist eine kursweite Vorgabe.",
+Nimm Typ 2 nur für Attribute, deren Historie jemand braucht. Die Kosten hängen an Änderungshäufigkeit, Zeilenbreite, Indizes und Abfragemuster.`,
     },
     {
       id: "s4",
       title: "DAG, Backfill und Wiederholung",
-      content: `Das Diagramm verwendet eine deterministische synthetische Arbeitslast. Die Tage \`06\`, \`14\` und \`22\` bekommen feste Retry-Kosten. Es erklärt Scheduling und abnehmenden Parallelitätsnutzen, es schätzt keine Laufzeit und misst nichts.
+      content: `Das Diagramm rechnet eine deterministische synthetische Arbeitslast über 30 Tage mit 1, 4 und 10 Workern; die Tage \`06\`, \`14\` und \`22\` bekommen feste Retry-Kosten. Es zeigt Scheduling und abnehmenden Parallelitätsnutzen und schätzt keine Laufzeit.
 
-Ein wiedereinspielbarer Batch-Job akzeptiert ein explizites Eingabefenster und veröffentlicht für dieselbe Eingabeversion deterministische Ausgabe. \`MERGE\`, Partitionsersetzung oder eine Transaktion können das tragen. Externe Seiteneffekte, nichtdeterministische Funktionen, verspätete Eingabe, Duplikate und parallele Live-Schreibvorgänge brauchen trotzdem eigene Behandlung und Reconciliation.`,
+Ein wiedereinspielbarer Batch-Job nimmt ein explizites Eingabefenster und veröffentlicht für dieselbe Eingabeversion deterministische Ausgabe, gestützt durch \`MERGE\`, Partitionsersetzung oder eine Transaktion. Externe Seiteneffekte, nichtdeterministische Funktionen, verspätete Eingabe, Duplikate und parallele Live-Schreibvorgänge brauchen trotzdem eigene Behandlung und Reconciliation.`,
     },
     {
       id: "s5",
       title: "Orchestratoren",
-      content: `Airflow, Dagster, Prefect und andere Orchestratoren bieten unterschiedliche Abstraktionen und Deployment-Modelle. Fähigkeiten ändern sich; vergleiche aktuelle Versionen mit deinen Anforderungen:
+      content: `Airflow, Dagster, Prefect und andere Orchestratoren unterscheiden sich in Abstraktionen und Deployment-Modellen, und ihre Funktionen ändern sich. Vergleiche aktuelle Versionen mit deinen Anforderungen:
 
-- Abhängigkeits- und Ereignissemantik;
-- Retry-, Timeout-, Abbruch- und Backfill-Verhalten;
-- Konkurrenz- und Ressourcensteuerung;
-- Secret-Behandlung und Ausführungsisolation;
-- Logs, Metriken, Lineage und Zuständigkeit;
-- Deployment, Upgrade und Wiederherstellung;
-- Integration mit der bestehenden Laufzeit.
+- Abhängigkeits- und Ereignissemantik
+- Retry, Timeout, Abbruch und Backfill
+- Konkurrenz- und Ressourcensteuerung
+- Secrets und Ausführungsisolation
+- Logs, Metriken, Lineage und Zuständigkeit
+- Deployment, Upgrades und Wiederherstellung
+- Passung zur bestehenden Laufzeit
 
-Der Orchestrator plant Arbeit. Deterministisch, atomar oder vollständig macht er den Job darunter nicht.`,
+Der Orchestrator plant nur; für Determinismus, Atomarität und Vollständigkeit sorgt der Job selbst.`,
     },
     {
       id: "s6",
@@ -106,23 +102,20 @@ Der Orchestrator plant Arbeit. Deterministisch, atomar oder vollständig macht e
     {
       id: "s7",
       title: "Kernaussagen",
-      content: `- **ELT unterstützt Replay nur, wenn gelandete Eingabe vollständig, für den Zweck ausreichend unveränderlich, aufbewahrt und verwaltet ist.** ETL kann an einer Security- oder Minimierungsgrenze Pflicht sein.
-- **Retry und Backfill sind getrennte Entwürfe.** Explizite Fenster, deterministische Quellversionen, atomare Veröffentlichung, idempotente externe Effekte und Reconciliation stehen jeweils für sich.
-- **Materialisierung wählst du aus Lese- und Build-Kosten, Freshness, Atomarität und Adapterverhalten.** Der Name beweist davon nichts.
-- **SCD Typ 1 oder Typ 2 ist eine Historienanforderung.** Versioniere nur für As-of-Analysen und lege verspätete Korrekturen fest.
-- **MERGE oder Partitionsersetzung hängt an Schlüsseln, Partitionsausrichtung, Konkurrenz und Engine-Implementierung.** Prüfe den tatsächlichen Plan und das Fehlerverhalten.`,
+      content: `- Retry und Backfill brauchen explizite Fenster, deterministische Quellversionen, atomare Veröffentlichung, idempotente externe Effekte und Reconciliation.
+- Der Name einer Materialisierung beweist nichts über Lese- und Build-Kosten, Freshness oder Atomarität.`,
     },
     {
       id: "s8",
       title: "Begriffe",
-      content: `- **Idempotent**, die Wiederholung eines Vorgangs mit derselben Identität und Eingabe hat keinen zusätzlichen beabsichtigten Effekt. Begrenze die Aussage auf enthaltenen Zustand und Seiteneffekte.
-- **Inkrementelles Modell**, eine Materialisierung, die nach dem ersten Build eine ausgewählte Teilmenge verarbeitet. Auswahl und Merge-Strategie sind zwei Entscheidungen.
-- **SLA / Freshness**, Vertrag oder Ziel zwischen Quelländerung und nutzbaren Zieldaten. Prüfe werkzeugspezifische Konfiguration gegen aktuelle Dokumentation.
-- **Lineage**, erfasste Beziehungen zwischen Jobs, Datasets und Feldern. Automatische Extraktion bleibt bei dynamischen oder externen Abhängigkeiten unvollständig.
-- **SCD Typ 1**, ersetzt ein modelliertes Attribut und verwirft frühere modellierte Werte.
-- **SCD Typ 2**, erfasst zeitlich gültige Versionen für As-of-Analysen.
-- **MERGE oder Insert-Overwrite**, schlüsselbasierte Änderungsanwendung gegenüber Ersatz einer vollständigen Grenze; beide brauchen deterministische Eingabe und atomare Veröffentlichung für Replay.
-- **Sensor**, ein Orchestrator-Mechanismus, der wartet oder deferiert, bis eine externe Bedingung beobachtet wurde; Polling- und Ereignissemantik variieren.`,
+      content: `- **Idempotent**, eine Wiederholung mit derselben Identität und Eingabe ändert nichts weiter.
+- **Inkrementelles Modell**, verarbeitet nach dem ersten Build nur eine gewählte Teilmenge.
+- **SLA / Freshness**, Zielzeit von der Quelländerung bis zu nutzbaren Daten.
+- **Lineage**, erfasste Beziehungen zwischen Jobs, Datasets und Feldern.
+- **SCD Typ 1**, überschreibt ein Attribut ohne Historie.
+- **SCD Typ 2**, hält zeitlich gültige Versionen.
+- **MERGE oder Insert-Overwrite**, schlüsselbasierte Änderungen oder Ersatz einer ganzen Grenze.
+- **Sensor**, eine Aufgabe, die auf eine externe Bedingung wartet.`,
     },
   ],
   widgets: [
@@ -131,30 +124,30 @@ Der Orchestrator plant Arbeit. Deterministisch, atomar oder vollständig macht e
       cpId: "q1",
       title: "Der Alarm um 3 Uhr",
       question:
-        "Ein nächtlicher Job fügt die Bestellungen des Vortags in `fact_orders` ein. Er bricht nach der Hälfte ab. Nach der Wiederholung stehen dort doppelte Zeilen. Welcher Fehler steckt im Job?",
+        "Ein nächtlicher Job fügt die Bestellungen des Vortags in `fact_orders` ein und bricht nach der Hälfte ab. Nach der Wiederholung stehen dort doppelte Zeilen. Welcher Fehler steckt im Job?",
       options: [
         "Keiner; dieses Verhalten ist zu erwarten.",
-        "Er verwendet `INSERT` statt `MERGE` oder eines Upserts mit `order_id` als Schlüssel. Der Job ist nicht idempotent.",
+        "Er nutzt `INSERT` statt eines `MERGE` auf `order_id`.",
         "Es fehlt ein try/catch-Block.",
         "Es sind mehr Wiederholungsversuche nötig.",
       ],
       explanation:
-        "Ein wiederholbarer Job muss idempotent sein: Zwei Läufe über dasselbe Fenster erzeugen dasselbe Ergebnis. `INSERT` hängt Zeilen an und dupliziert sie im zweiten Lauf. `MERGE` auf einem eindeutigen Schlüssel wie `order_id` aktualisiert vorhandene Zeilen und fügt nur fehlende hinzu. Hinter vielen unerklärlichen Duplikaten in Produktion steckt genau das.",
+        "Ein einfaches `INSERT` hängt bei jeder Wiederholung dieselben Zeilen an, der Job ist also nicht idempotent. Ein deterministisches `MERGE` auf `order_id` oder der atomare Ersatz eines vollständigen Fensters verhindert die Duplikate.",
     },
     {
       kind: "quiz",
       cpId: "q2",
       title: "Wann ELT Replay unterstützt",
       question:
-        "Ein Team bewertet ELT für Daten, die historisch neu verarbeitet werden könnten. Welcher Vorteil gilt nur, wenn die Landing Zone vollständige, kontrollierte Eingaben aufbewahrt?",
+        "Ein Team prüft ELT für Daten, die vielleicht historisch neu verarbeitet werden. Welcher Vorteil gilt nur, wenn die Landing Zone vollständige, kontrollierte Eingaben aufbewahrt?",
       options: [
         "SQL ist einfacher als Python.",
-        "Aufbewahrte gelandete Eingaben können korrigierte Transformationen die Historie ohne weitere Quellabfrage neu verarbeiten lassen.",
+        "Korrigierte Transformationen verarbeiten die Historie ohne neuen Quellabzug.",
         "Snowflake ist schneller.",
         "ELT ist die neuere Vorgehensweise.",
       ],
       explanation:
-        "Eine aufbewahrte Landing Zone entkoppelt das Replay von Transformationen von der Verfügbarkeit der Quelle. Das gilt nur, wenn die Eingabe vollständig, für die Anforderung ausreichend versioniert, aufbewahrt, autorisiert und mit der korrigierten Logik kompatibel ist. Neuberechnung verbraucht weiterhin Compute und kann einen Abgleich nachgelagerter Systeme verlangen.",
+        "Eine aufbewahrte Landing Zone entkoppelt Replay von der Verfügbarkeit der Quelle, wenn die Eingabe vollständig, ausreichend versioniert, aufbewahrt, autorisiert und zur korrigierten Logik passend ist. Neuberechnung kostet trotzdem Compute und kann Abgleiche nachgelagert erzwingen.",
     },
     {
       kind: "flashcards",
@@ -164,42 +157,42 @@ Der Orchestrator plant Arbeit. Deterministisch, atomar oder vollständig macht e
         {
           term: "Idempotenz",
           q: "Warum ist sie für Batch-Jobs entscheidend?",
-          a: "Benenne, welche Ausgabe und welche externen Seiteneffekte unverändert bleiben, wenn dieselbe Vorgangsidentität und Eingabe erneut laufen. Ein Datenbankschreibvorgang kann idempotent sein, die Benachrichtigung oder der API-Aufruf daneben nicht.",
+          a: "Benenne die Ausgaben und Seiteneffekte, die unverändert bleiben, wenn derselbe Vorgang mit derselben Eingabe erneut läuft. Ein Datenbankschreibvorgang kann idempotent sein, die Benachrichtigung oder der API-Aufruf daneben nicht.",
         },
         {
           term: "Inkrementelles Modell",
           q: "Wie setzt dbt es um?",
-          a: "Mit {% if is_incremental() %} wählst du eine begrenzte Änderungsmenge aus und konfigurierst danach eine vom Adapter unterstützte Strategie. Ein Maximalzeitstempel kann verspätete Änderungen auslassen; ein Change Token oder eine Überlappung mit deterministischer Deduplizierung hält besser. Das Verhalten von unique_key hängt an Strategie und Adapter.",
+          a: "Mit {% if is_incremental() %} wählst du eine begrenzte Änderungsmenge und dazu eine vom Adapter unterstützte Strategie. Ein Maximalzeitstempel übersieht verspätete Änderungen; nimm ein Change Token oder eine Überlappung mit deterministischer Deduplizierung.",
         },
         {
           term: "SLA / Freshness",
           q: "Wie wird Freshness festgelegt?",
-          a: "Als Ziel zwischen einer Quelländerung und nutzbaren Zieldaten. Monitoring-Konfiguration und Alarmverhalten sind werkzeug- und versionsabhängig und gehören in der eingesetzten Integration geprüft.",
+          a: "Als Zielzeit zwischen Quelländerung und nutzbaren Daten. Monitoring und Alarme sind werkzeug- und versionsabhängig, also prüf deine Integration.",
         },
         {
           term: "Lineage",
           q: "Warum ist sie wichtig?",
-          a: "Lineage grenzt ein, welche vorgelagerten Datasets und Jobs eine Ausgabe beeinflussen könnten. Automatisch erzeugte Graphen lassen dynamisches SQL, externe APIs und semantische Änderungen aus; Zuständigkeit und Laufbelege bleiben nötig.",
+          a: "Sie grenzt ein, welche vorgelagerten Datasets und Jobs eine Ausgabe beeinflussen könnten. Automatisch erzeugte Graphen übersehen dynamisches SQL, externe APIs und semantische Änderungen, also bleiben Zuständigkeit und Laufbelege nötig.",
         },
         {
           term: "SCD Typ 1",
           q: "Wann ist dieser Typ geeignet?",
-          a: "Die Zeile wird überschrieben, sobald sich ein Attribut ändert. Historie bleibt nicht erhalten. Das passt, wenn frühere Werte für die definierten Consumer keine Rolle spielen, etwa bei einer Korrektur oder einem aktuellen Kontaktwert.",
+          a: "Die Zeile wird überschrieben, sobald sich ein Attribut ändert, ohne Historie. Das passt, wenn frühere Werte für die Consumer keine Rolle spielen, etwa bei einem Tippfehler oder einer neuen Telefonnummer.",
         },
         {
           term: "SCD Typ 2",
           q: "Wann ist dieser Typ geeignet?",
-          a: "Bei einer Änderung wird die alte Zeile mit valid_to und is_current=false geschlossen und eine neue eingefügt. Damit verbindest du Fakten mit dem Dimensionsstand zur Ereigniszeit, sofern Grenzen und verspätete Korrekturen sauber behandelt sind. Jede Version kostet eine Zeile.",
+          a: "Die alte Zeile wird mit valid_to und is_current=false geschlossen und eine neue eingefügt. So verbindest du Fakten mit dem Dimensionsstand zur Ereigniszeit, etwa der Region des Kunden beim Kauf; jede Version kostet eine Zeile.",
         },
         {
           term: "MERGE oder Insert-Overwrite",
           q: "Welche Strategie ist idempotent?",
-          a: "Beide tragen Replay, wenn Eingabe und Logik deterministisch sind und die Veröffentlichung atomar ist. MERGE braucht zusätzlich eindeutige Quellzeilen und stabile Match-Logik; Ersatz braucht eine vollständige Partitionsgrenze. Die Kosten hängen an Engine und Layout.",
+          a: "Beide tragen Replay, wenn Eingabe und Logik deterministisch sind und die Veröffentlichung atomar ist. MERGE braucht zusätzlich eindeutige Quellzeilen und stabilen Abgleich, Ersatz eine vollständige Partitionsgrenze.",
         },
         {
           term: "Sensor",
           q: "Was bezeichnet der Begriff in Airflow?",
-          a: "Ein Orchestrator-Mechanismus, der wartet oder deferiert, bis eine externe Bedingung beobachtet wurde. Polling-, Ereignis-, Timeout- und Ressourcenverhalten hängen an Werkzeug und Konfiguration.",
+          a: "Eine Aufgabe, die auf eine externe Bedingung wartet, etwa eine gelandete Datei, ein Tabellenupdate oder eine API-Antwort 200, bevor nachgelagerte Aufgaben laufen.",
         },
       ],
     },

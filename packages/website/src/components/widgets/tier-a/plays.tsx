@@ -69,7 +69,7 @@ export function PlaysWidget({
       scenario={
         scenario ??
         (locale === "de"
-          ? "Wähle die Maßnahmen, die du verbindlich umsetzen wirst."
+          ? "Wähle die Maßnahmen, die du umsetzt."
           : "Select the controls you will implement.")
       }
       done={done}

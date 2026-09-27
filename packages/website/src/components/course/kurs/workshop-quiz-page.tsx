@@ -99,20 +99,20 @@ const QUIZ_COPY: Readonly<Record<"de" | "en", QuizCopy>> = {
     loading: "Quiz wird geladen…",
     loadErrorTitle: "Quiz konnte nicht geladen werden.",
     loadErrorBody:
-      "Die Quizfragen konnten nicht geladen werden. Prüfe deine Verbindung und versuche es erneut.",
+      "Prüfe deine Verbindung und versuch es erneut.",
     savingResult: "Ergebnis wird gespeichert…",
     saveErrorTitle: "Ergebnis wurde nicht gespeichert.",
     saveErrorBody:
-      "Der lokale Speicher hat den Eintrag abgelehnt. Es wurde kein Abschluss freigeschaltet.",
+      "Der Browserspeicher hat den Eintrag abgelehnt. Es wurde kein Abschluss freigeschaltet.",
     retrySave: "Speichern erneut versuchen",
     retry: "Erneut versuchen",
     backToCourse: "Zurück zum Kurs",
     completeLessonsTitle: "Schließe zuerst alle Lektionen ab",
     completeLessonsBody:
-      "Das Abschlussquiz wird freigeschaltet, sobald alle Kurslektionen als abgeschlossen markiert sind.",
+      "Danach wird das Quiz freigeschaltet.",
     correctCount: (score, total) => `${score}/${total} richtig`,
     passRequired: (threshold) =>
-      `Du brauchst mindestens ${threshold}% zum Bestehen. Versuch es noch einmal.`,
+      `Zum Bestehen brauchst du mindestens ${threshold}%.`,
     downloadRecord: (label) => `${label} herunterladen`,
     cancel: "Abbrechen",
     timeRemaining: (minutes, seconds) =>
@@ -136,7 +136,7 @@ const QUIZ_COPY: Readonly<Record<"de" | "en", QuizCopy>> = {
     loading: "Quiz is loading…",
     loadErrorTitle: "Quiz couldn't be loaded.",
     loadErrorBody:
-      "The quiz questions could not be loaded. Check your connection and try again.",
+      "Check your connection and try again.",
     savingResult: "Saving result…",
     saveErrorTitle: "Result was not saved.",
     saveErrorBody:
@@ -146,10 +146,10 @@ const QUIZ_COPY: Readonly<Record<"de" | "en", QuizCopy>> = {
     backToCourse: "Back to course",
     completeLessonsTitle: "Complete every lesson first",
     completeLessonsBody:
-      "The final quiz becomes available after every course lesson is marked complete.",
+      "The quiz unlocks after that.",
     correctCount: (score, total) => `${score}/${total} correct`,
     passRequired: (threshold) =>
-      `You need at least ${threshold}% to pass. Try again.`,
+      `You need at least ${threshold}% to pass.`,
     downloadRecord: (label) => `Download ${label}`,
     cancel: "Cancel",
     timeRemaining: (minutes, seconds) =>

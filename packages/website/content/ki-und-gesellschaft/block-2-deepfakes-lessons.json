@@ -29,24 +29,21 @@
       "sections": [
         {
           "id": "deepfake-2-1-s1",
-          "title": "Drei Fälle, die nicht dasselbe sind",
+          "title": "Drei erfundene Fälle",
           "readTimeMinutes": 2,
-          "content": "Drei Fälle. Alle drei sind erfunden, keiner beschreibt ein echtes Ereignis:\n\n1. Ein manipuliertes Video legt einer bekannten Person eine Aussage in den Mund, die sie nie gemacht hat.\n2. Ein Betrugsanruf arbeitet mit einer geklonten Stimme und verlangt unter Zeitdruck eine Überweisung.\n3. Ein Konto baut mit einem vollständig erzeugten Profilbild und einer erfundenen Biografie Vertrauen auf.\n\nDieselbe Prüfung für alle drei? Nein. Fall eins und zwei können Deepfakes im rechtlichen Sinn sein, weil eine bestehende Person oder ein Ereignis täuschend nachgebildet wird. Das erfundene Gesicht in Fall drei ist synthetischer Inhalt, aber nicht automatisch ein Deepfake nach der Definition der KI-Verordnung, solange es keiner bestehenden Person oder Entität ähnelt.\n\nUnd in keinem der drei Fälle beweist Aussehen oder Klang irgendetwas. Weder Echtheit noch Manipulation.",
-          "keyTakeaway": "Deepfake und synthetischer Inhalt sind keine Synonyme. Die Frage ist, ob bestehende Personen, Objekte, Orte, Entitäten oder Ereignisse täuschend echt nachgebildet werden."
+          "content": "1. Ein manipuliertes Video legt einer bekannten Person eine Aussage in den Mund, die sie nie gemacht hat.\n2. Ein Betrugsanruf verlangt mit geklonter Stimme unter Zeitdruck eine Überweisung.\n3. Ein Konto baut mit einem vollständig erzeugten Profilbild und einer erfundenen Biografie Vertrauen auf.\n\nFall eins und zwei können rechtlich Deepfakes sein, weil sie eine bestehende Person oder ein Ereignis täuschend nachbilden. Das erfundene Gesicht in Fall drei ist synthetischer Inhalt, aber nicht automatisch ein Deepfake nach der KI-Verordnung, solange es keiner bestehenden Person oder Entität ähnelt.\n\nAussehen oder Klang beweisen in keinem Fall Echtheit oder Manipulation."
         },
         {
           "id": "deepfake-2-1-s2",
           "title": "Was das Gesetz einen Deepfake nennt",
           "readTimeMinutes": 1,
-          "content": "Der Begriff hat eine gesetzliche Definition, und die ist enger als der Alltagsgebrauch. Art. 3 Nr. 60 der KI-Verordnung nennt einen Deepfake einen KI-erzeugten oder manipulierten Bild-, Audio- oder Videoinhalt, der bestehenden Personen, Objekten, Orten, Entitäten oder Ereignissen ähnelt und einer Person fälschlich authentisch oder wahr erscheinen würde.\n\nDahinter können ganz verschiedene Verfahren stecken: Gesichtstausch, Lippensynchronisation, Sprachsynthese, Stimmenklonen oder generative Bild- und Videomodelle. Wie viel Referenzmaterial in welcher Qualität nötig ist, hängt vom Verfahren ab. Eine feste Zahl von Bildern oder Audiominuten gibt es nicht.\n\nDie Definition beschreibt das Ergebnis und seine Täuschungswirkung, kein bestimmtes Modellverfahren. Auch klassische Bildbearbeitung kann täuschen. Unter diese AI-Act-Definition fällt sie trotzdem nur, wenn der Inhalt KI-erzeugt oder KI-manipuliert ist.",
-          "keyTakeaway": "Die KI-Verordnung definiert Deepfakes über drei Merkmale: KI-Erzeugung oder -Manipulation, Ähnlichkeit mit Bestehendem und den falschen Eindruck von Authentizität."
+          "content": "Art. 3 Nr. 60 der KI-Verordnung fasst den Begriff enger als der Alltag: Ein Deepfake ist ein KI-erzeugter oder manipulierter Bild-, Audio- oder Videoinhalt, der bestehenden Personen, Objekten, Orten, Entitäten oder Ereignissen ähnelt und einer Person fälschlich authentisch oder wahr erscheinen würde.\n\nDie Definition beschreibt Ergebnis und Täuschungswirkung. Klassische Bildbearbeitung kann auch täuschen, fällt aber nur darunter, wenn der Inhalt KI-erzeugt oder KI-manipuliert ist.\n\nDahinter können Gesichtstausch, Lippensynchronisation, Sprachsynthese, Stimmenklonen oder generative Bild- und Videomodelle stecken. Wie viel Referenzmaterial nötig ist, hängt vom Verfahren ab; eine feste Zahl von Bildern oder Audiominuten gibt es nicht."
         },
         {
           "id": "deepfake-2-1-s3",
-          "title": "Zwei Pflichten seit August 2026, kein Echtheitsbeweis",
+          "title": "Art. 50: Markierung und Offenlegung",
           "readTimeMinutes": 1,
-          "content": "Art. 50 der KI-Verordnung verlangt zwei verschiedene Dinge von zwei verschiedenen Rollen:\n\n- Anbieter erfasster generativer Systeme müssen synthetische Ausgaben grundsätzlich maschinenlesbar als künstlich erzeugt oder manipuliert markieren.\n- Betreiber, die einen Deepfake erzeugen oder manipulieren und offenlegen, müssen grundsätzlich sichtbar mitteilen, dass der Inhalt künstlich erzeugt oder manipuliert wurde. Für erkennbar künstlerische, kreative, satirische, fiktionale oder ähnliche Werke gilt eine angepasste Offenlegung; weitere gesetzliche Ausnahmen sind zu prüfen.\n\nArt. 50 ist seit 2. August 2026 anwendbar. Anbieter von Systemen, die vor diesem Datum schon auf dem Markt waren, müssen Art. 50 Abs. 2 nach der Übergangsregel in Verordnung (EU) 2026/1744 ab 2. Dezember 2026 erfüllen. Eine vorhandene Markierung kann die Herkunft stützen. Fehlt sie, beweist das nicht, dass der Inhalt echt ist. Nicht bis dahin und auch nicht danach, denn Markierungen lassen sich entfernen und Ausnahmen können greifen.\n\nQuellen: Verordnung (EU) 2024/1689, Art. 3 Nr. 60 und Art. 50; Verordnung (EU) 2026/1744, Art. 1 Nr. 39 Buchst. b.",
-          "keyTakeaway": "Art. 50 trennt die maschinenlesbare Markierung durch Anbieter von der sichtbaren Offenlegung durch Betreiber. Beides hängt vom Kontext ab, und keines von beiden beweist Echtheit."
+          "content": "Art. 50 der KI-Verordnung verlangt von zwei Rollen Verschiedenes:\n\n- Anbieter erfasster generativer Systeme müssen synthetische Ausgaben grundsätzlich maschinenlesbar als künstlich erzeugt oder manipuliert markieren.\n- Betreiber, die einen Deepfake erzeugen oder manipulieren und offenlegen, müssen grundsätzlich sichtbar mitteilen, dass der Inhalt künstlich erzeugt oder manipuliert wurde. Für erkennbar künstlerische, kreative, satirische, fiktionale oder ähnliche Werke gilt eine angepasste Offenlegung; weitere gesetzliche Ausnahmen sind zu prüfen.\n\nArt. 50 ist seit 2. August 2026 anwendbar. Für Systeme, die vorher schon auf dem Markt waren, gilt Abs. 2 nach der Übergangsregel in Verordnung (EU) 2026/1744 ab 2. Dezember 2026. Eine Markierung kann die Herkunft stützen; fehlt sie, beweist das keine Echtheit, weil Markierungen entfernbar sind und Ausnahmen greifen können.\n\nQuellen: Verordnung (EU) 2024/1689, Art. 3 Nr. 60 und Art. 50; Verordnung (EU) 2026/1744, Art. 1 Nr. 39 Buchst. b."
         }
       ],
       "quiz": [
@@ -75,7 +72,7 @@
               "isCorrect": true
             }
           ],
-          "explanation": "Art. 3 Nr. 60 braucht drei Dinge zugleich: KI-Erzeugung oder -Manipulation, Ähnlichkeit mit bestehenden Personen, Objekten, Orten, Entitäten oder Ereignissen, und den falschen Eindruck von Authentizität oder Wahrheit."
+          "explanation": "Art. 3 Nr. 60 verlangt alle drei Merkmale: KI-Erzeugung oder -Manipulation, Ähnlichkeit mit Bestehendem und den falschen Anschein von Authentizität oder Wahrheit."
         },
         {
           "id": "deepfake-2-1-q2",
@@ -102,7 +99,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Deepfakes entstehen mit ganz verschiedenen Verfahren. Wie viele Referenzdaten und wie viel Handarbeit nötig sind, wechselt von Verfahren zu Verfahren. Eine allgemeingültige Mindestmenge gibt es nicht."
+          "explanation": "Der Bedarf an Referenzdaten und Handarbeit hängt vom Verfahren ab. Eine allgemeine Mindestmenge gibt es nicht."
         },
         {
           "id": "deepfake-2-1-q3",
@@ -117,7 +114,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 50 ist seit 2. August 2026 anwendbar. Anbieter erfasster Systeme markieren nach Abs. 2 maschinenlesbar, Betreiber legen Deepfakes nach Abs. 4 grundsätzlich sichtbar offen. Für generative Systeme, die vor diesem Datum schon auf dem Markt waren, läuft für Abs. 2 eine Übergangsfrist bis 2. Dezember 2026."
+          "explanation": "Art. 50 ist seit 2. August 2026 anwendbar. Für generative Systeme, die vorher schon auf dem Markt waren, läuft für die Markierung nach Abs. 2 eine Übergangsfrist bis 2. Dezember 2026."
         }
       ]
     },
@@ -142,24 +139,21 @@
       "sections": [
         {
           "id": "deepfake-2-2-s1",
-          "title": "Werkzeuge für Herkunft, nicht für Wahrheit",
+          "title": "Werkzeuge für die Herkunftssuche",
           "readTimeMinutes": 2,
-          "content": "Kein Werkzeug sagt dir, ob ein Bild wahr ist. Drei Werkzeugklassen sagen dir, woher es kommen könnte:\n\n1. Rückwärtsbildersuche: Google Lens und TinEye (tineye.com) können frühere oder ähnliche Fundstellen zeigen. Ein frühes Ergebnis ist ein Hinweis auf den Kontext, nicht automatisch die Originalquelle.\n2. Videozerlegung: InVID/WeVerify (weverify.eu) kann Videos in Schlüsselbilder zerlegen, Rückwärtssuchen anstoßen und verfügbare Metadaten anzeigen. Die Erweiterung ist ein Recherchewerkzeug. Ob ein Video wahr ist, entscheidet sie nicht.\n3. Provenienzdaten: Vorhandene Content Credentials oder andere signierte Herkunftsinformationen können Bearbeitungsschritte und Aussteller dokumentieren. Fehlen sie, beweist das keine Manipulation. Sind sie da, prüfst du Gültigkeit und Aussteller.\n\nUnd bevor du irgendetwas hochlädst: Vertrauliche, intime oder personenbezogene Inhalte gehören nicht ungeprüft zu einem Drittanbieter. Prüfe vorher Datenschutz, Nutzungsbedingungen und ob es eine lokale Alternative gibt.",
-          "keyTakeaway": "Rückwärtssuche, Schlüsselbilder und Provenienzdaten liefern Hinweise. Über Echtheit oder Aussage entscheidet keines dieser Werkzeuge allein."
+          "content": "Kein Werkzeug sagt dir, ob ein Bild wahr ist. Drei Werkzeugklassen liefern Hinweise auf die Herkunft:\n\n1. Rückwärtsbildersuche: Google Lens und TinEye (tineye.com) können frühere oder ähnliche Fundstellen zeigen. Ein früher Treffer zeigt Kontext, nicht automatisch die Originalquelle.\n2. Videozerlegung: InVID/WeVerify (weverify.eu) kann Videos in Schlüsselbilder zerlegen, Rückwärtssuchen anstoßen und verfügbare Metadaten anzeigen. Ob ein Video wahr ist, entscheidet die Erweiterung nicht.\n3. Provenienzdaten: Content Credentials oder andere signierte Herkunftsangaben können Bearbeitungsschritte und Aussteller dokumentieren. Fehlen sie, beweist das keine Manipulation; sind sie da, prüfst du Gültigkeit und Aussteller.\n\nVertrauliche, intime oder personenbezogene Inhalte lädst du erst hoch, wenn du Datenschutz, Nutzungsbedingungen und lokale Alternativen geprüft hast."
         },
         {
           "id": "deepfake-2-2-s2",
-          "title": "Fünf Schritte, bevor du irgendetwas glaubst",
+          "title": "Bevor du einem Inhalt glaubst",
           "readTimeMinutes": 2,
-          "content": "1. Behauptung festhalten: Was soll der Inhalt belegen, wann und wo soll er entstanden sein?\n2. Quelle öffnen: Such den frühesten erreichbaren Beitrag, das vollständige Video und das Konto oder Medium hinter der Veröffentlichung. Ein Screenshot ohne Link ist keine belastbare Quelle.\n3. Kontext abgleichen: Prüfe Datum, Ort, Sprache, Wetter, sichtbare Schilder und den ungeschnittenen Ablauf gegen unabhängige Quellen.\n4. Herkunft suchen: Nutze Rückwärtsbildersuche oder Schlüsselbilder. Vergleiche konkrete Bilddetails, nicht bloß ähnliche Motive.\n5. Ergebnis begrenzen: Schreib auf, was bestätigt ist, was widerlegt ist und was offen bleibt. \"Nicht verifiziert\" ist ein zulässiges Ergebnis.\n\nHände, Haare, Blinzeln, Licht, Kompressionsartefakte: Solche Auffälligkeiten dürfen dich genauer hinschauen lassen. Eine Checkliste sind sie nicht. Generatoren ändern sich, und dieselben Auffälligkeiten entstehen auch durch Kamera, Schnitt oder Kompression.",
-          "keyTakeaway": "Fang mit Behauptung, Quelle und Kontext an. Visuelle Artefakte sind Hinweise, für einen Deepfake-Nachweis aber weder notwendig noch hinreichend."
+          "content": "1. Behauptung festhalten: Was soll der Inhalt belegen, wann und wo soll er entstanden sein?\n2. Quelle öffnen: den frühesten erreichbaren Beitrag, das vollständige Video und das Konto oder Medium dahinter suchen. Ein Screenshot ohne Link ist keine belastbare Quelle.\n3. Kontext abgleichen: Datum, Ort, Sprache, Wetter, sichtbare Schilder und den ungeschnittenen Ablauf mit unabhängigen Quellen vergleichen.\n4. Herkunft suchen: per Rückwärtssuche oder Schlüsselbildern konkrete Bilddetails vergleichen statt bloß ähnlicher Motive.\n5. Ergebnis begrenzen: festhalten, was bestätigt, widerlegt oder offen ist. \"Nicht verifiziert\" ist ein zulässiges Ergebnis.\n\nAuffälligkeiten an Händen, Haaren, Blinzeln, Licht oder Kompression rechtfertigen einen zweiten Blick. Als Checkliste taugen sie nicht, weil Generatoren sich ändern und Kamera, Schnitt oder Kompression dieselben Spuren erzeugen."
         },
         {
           "id": "deepfake-2-2-s3",
           "title": "Was die Prozentzahl eines Detektors bedeutet",
           "readTimeMinutes": 2,
-          "content": "Der Detektor zeigt eine Prozentzahl. Was du siehst, ist eine modellabhängige Schätzung. Wie viel sie taugt, hängt von Trainingsdaten, getesteten Generatoren, Kompression, Ausschnitt, Nachbearbeitung und Schwellenwert ab. Eine kalibrierte Wahrscheinlichkeit für deinen Einzelfall ist die Zahl nicht automatisch.\n\nDaraus folgen zwei Grenzen:\n- Ein negatives Ergebnis belegt keine Echtheit. Der Inhalt kann außerhalb der bekannten Testverteilung liegen oder verändert worden sein.\n- Ein positives Ergebnis belegt keine Manipulation. Auch echte Aufnahmen können Merkmale auslösen, die das Modell falsch einordnet.\n\nNutze einen Detektor höchstens als zusätzlichen Hinweis. Wer veröffentlichen, beschuldigen oder rechtlich vorgehen will, braucht nachvollziehbare Herkunft, Kontext, weitere Belege und gegebenenfalls eine forensische Fachprüfung.",
-          "keyTakeaway": "Ein Detektorwert ist ein Hinweis unter bekannten Testbedingungen. Als Echtheitsbeweis taugt er nicht, als alleiniger Manipulationsnachweis auch nicht."
+          "content": "Die Prozentzahl eines Detektors ist eine modellabhängige Schätzung und nicht automatisch eine kalibrierte Wahrscheinlichkeit für deinen Fall. Ihr Wert hängt von Trainingsdaten, getesteten Generatoren, Kompression, Ausschnitt, Nachbearbeitung und Schwellenwert ab.\n\n- Ein negatives Ergebnis belegt keine Echtheit. Der Inhalt kann außerhalb der bekannten Testverteilung liegen oder verändert worden sein.\n- Ein positives Ergebnis belegt keine Manipulation. Auch echte Aufnahmen können Merkmale auslösen, die das Modell falsch einordnet.\n\nNutze Detektoren höchstens als zusätzlichen Hinweis. Wer veröffentlichen, beschuldigen oder rechtlich vorgehen will, braucht nachvollziehbare Herkunft, Kontext, weitere Belege und bei Bedarf eine forensische Fachprüfung."
         }
       ],
       "quiz": [
@@ -188,7 +182,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Eine Rückwärtssuche findet indexierte gleiche oder ähnliche Bilder. Das kann eine frühere Verwendung oder einen anderen Kontext zeigen. Der früheste Treffer ist trotzdem nicht zwingend die Originalquelle."
+          "explanation": "Die Suche findet indexierte gleiche oder ähnliche Bilder und zeigt so frühere Verwendungen oder andere Kontexte. Der früheste Treffer ist nicht zwingend die Originalquelle."
         },
         {
           "id": "deepfake-2-2-q2",
@@ -215,7 +209,7 @@
               "isCorrect": true
             }
           ],
-          "explanation": "Visuelle Auffälligkeiten wandern mit jeder Generatorgeneration und tauchen auch in echten, komprimierten oder bearbeiteten Aufnahmen auf. Quelle und Kontext liefern Belege, die andere nachprüfen können."
+          "explanation": "Visuelle Auffälligkeiten ändern sich mit jeder Generatorgeneration und kommen auch in echten, komprimierten oder bearbeiteten Aufnahmen vor. Quelle und Kontext liefern nachprüfbare Belege."
         },
         {
           "id": "deepfake-2-2-q3",
@@ -233,7 +227,7 @@
             },
             {
               "id": "c",
-              "text": "Unter den Bedingungen dieses Detektors wurde kein ausreichendes Signal gefunden; Echtheit ist damit nicht bewiesen",
+              "text": "Dieser Detektor fand unter seinen Bedingungen kein ausreichendes Signal; Echtheit ist nicht bewiesen",
               "isCorrect": true
             },
             {
@@ -242,7 +236,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Ein negatives Ergebnis gilt für genau ein Modell, einen Schwellenwert und den geprüften Inhalt. Ein unbekanntes Verfahren oder eine Nachbearbeitung, und die Erkennung sieht anders aus."
+          "explanation": "Das Ergebnis gilt nur für dieses Modell, diesen Schwellenwert und den geprüften Inhalt. Unbekannte Verfahren oder Nachbearbeitung können es ändern."
         }
       ]
     },
@@ -251,7 +245,7 @@
       "blockId": "block_2",
       "number": 3,
       "title": "Was tun, wenn du einen Deepfake findest?",
-      "subtitle": "Sichern, melden, Betroffene schützen. Nicht teilen.",
+      "subtitle": "Sichern und melden, ohne zu teilen",
       "durationMinutes": 4,
       "owner": "editorial:ki-und-gesellschaft",
       "lastReviewed": "2026-09-05",
@@ -268,24 +262,21 @@
       "sections": [
         {
           "id": "deepfake-2-3-s1",
-          "title": "Fünf Schritte, und keiner davon heißt Teilen",
+          "title": "Was du nach dem Fund tust",
           "readTimeMinutes": 2,
-          "content": "1. Nicht weiterverbreiten: Teile, zitiere oder kommentiere den Inhalt nicht öffentlich. Auch nicht mit Warnhinweis. Sichere, soweit das gefahrlos geht, URL, Kontoname, Zeitpunkt und einen Screenshot lokal.\n2. Erst prüfen, dann beschuldigen: Ein Verdacht ist kein Befund. Nutze die Quellenprüfung aus Lektion 2.\n3. Präzise melden: Nutze den aktuell angezeigten Meldeweg der Plattform, nenne die konkrete URL und den möglichen Rechts- oder Regelverstoß. Art. 16 des Digital Services Act verpflichtet Hostingdienste zu einem leicht zugänglichen elektronischen Meldeverfahren für mutmaßlich rechtswidrige Inhalte. Hinreichend genaue Meldungen müssen zeitnah, sorgfältig, objektiv und frei von Willkür bearbeitet und entschieden werden. Eine Pflicht, jeden gemeldeten Inhalt zu entfernen, folgt daraus nicht.\n4. Betroffene privat informieren: Schick ihnen Fundstelle und Belege, ohne den Inhalt selbst weiterzugeben.\n5. Bei möglicher Straftat oder unmittelbarer Gefahr die Polizei einschalten: Die zuständige Onlinewache erreichst du über polizei.de. In einer akuten Gefahrensituation gilt der Notruf.",
-          "keyTakeaway": "Nicht verstärken, Belege sichern, präzise melden, Betroffene schützen. Eine Meldung löst eine Prüfung und eine Entscheidung aus. Eine Entfernung löst sie nicht automatisch aus."
+          "content": "1. Nicht weiterverbreiten: nicht öffentlich teilen, zitieren oder kommentieren, auch nicht mit Warnhinweis. Soweit das gefahrlos geht, URL, Kontoname, Zeitpunkt und Screenshot lokal sichern.\n2. Erst prüfen, dann beschuldigen: Ein Verdacht ist kein Befund. Nutze die Quellenprüfung aus Lektion 2.\n3. Präzise melden: über den aktuellen Meldeweg der Plattform, mit URL und möglichem Rechts- oder Regelverstoß. Art. 16 des Digital Services Act verpflichtet Hostingdienste zu einem leicht zugänglichen elektronischen Meldeverfahren für mutmaßlich rechtswidrige Inhalte. Hinreichend genaue Meldungen müssen zeitnah, sorgfältig, objektiv und frei von Willkür bearbeitet und entschieden werden; eine Pflicht, jeden gemeldeten Inhalt zu entfernen, folgt daraus nicht.\n4. Betroffene privat informieren: Fundstelle und Belege schicken, ohne den Inhalt weiterzugeben.\n5. Bei möglicher Straftat oder unmittelbarer Gefahr die Polizei einschalten: Die zuständige Onlinewache erreichst du über polizei.de, in akuter Gefahr den Notruf."
         },
         {
           "id": "deepfake-2-3-s2",
-          "title": "Drei Verfahren, drei Adressaten",
+          "title": "Wohin deine Beschwerde geht",
           "readTimeMinutes": 1,
-          "content": "Wer hat gegen was verstoßen? Diese Frage entscheidet, wohin deine Beschwerde geht. Art. 50 der KI-Verordnung trennt die maschinenlesbare Markierung durch Anbieter erfasster generativer Systeme von der sichtbaren Offenlegung durch Betreiber, die Deepfakes erzeugen oder manipulieren und offenlegen. Ausnahmen und Übergangsregeln prüfst du für jede Rolle getrennt. Für Systeme, die schon vor dem 2. August 2026 auf dem Markt waren, gilt Art. 50 Abs. 2 nach Verordnung (EU) 2026/1744 ab dem 2. Dezember 2026.\n\nArt. 85 ermöglicht dir eine Beschwerde bei der zuständigen Marktüberwachungsbehörde. Nach dem KI-MIG ist das grundsätzlich die Bundesnetzagentur als Marktüberwachungsbehörde, Anlaufstelle und Beschwerdestelle, soweit keine Fachbehörde zuständig ist. Was zählt, ist der aktuell veröffentlichte offizielle Behördenkanal, nicht die Adresse aus einem alten Blogbeitrag.\n\nPlattformmeldung nach dem DSA, Strafanzeige, Beschwerde wegen eines möglichen Verstoßes gegen die KI-Verordnung: drei Verfahren, drei Adressaten, drei verschiedene Voraussetzungen.\n\nQuellen: Verordnung (EU) 2024/1689, Art. 50 und 85; Verordnung (EU) 2026/1744; KI-MIG.",
-          "keyTakeaway": "Plattformmeldung, Strafanzeige und AI-Act-Beschwerde haben verschiedene Voraussetzungen und verschiedene Adressaten. Prüfe Rolle, Ausnahme und den aktuellen Behördenkanal getrennt."
+          "content": "Wohin du dich wendest, hängt davon ab, wer gegen was verstoßen hat. Plattformmeldung nach dem DSA, Strafanzeige und Beschwerde nach der KI-Verordnung haben verschiedene Adressaten und Voraussetzungen. Bei Art. 50 prüfst du Markierung durch Anbieter und Offenlegung durch Betreiber getrennt, jeweils mit den Ausnahmen und Übergangsregeln aus Lektion 1.\n\nArt. 85 ermöglicht dir eine Beschwerde bei der zuständigen Marktüberwachungsbehörde. Nach dem KI-MIG ist das grundsätzlich die Bundesnetzagentur als Marktüberwachungsbehörde, Anlaufstelle und Beschwerdestelle, soweit keine Fachbehörde zuständig ist. Nutze den aktuell veröffentlichten offiziellen Behördenkanal.\n\nQuellen: Verordnung (EU) 2024/1689, Art. 50 und 85; Verordnung (EU) 2026/1744; KI-MIG."
         },
         {
           "id": "deepfake-2-3-s3",
           "title": "Wenn dein Bild oder deine Stimme betroffen ist",
           "readTimeMinutes": 1,
-          "content": "Dein Gesicht in einem Video, das du nie gedreht hast. Die Grundregel steht in § 22 KUG: Bildnisse dürfen nur mit Einwilligung der abgebildeten Person verbreitet oder öffentlich zur Schau gestellt werden. Die Ausnahmen in § 23 KUG und die Interessenabwägung nach § 23 Abs. 2 bleiben zu prüfen. Ob ein Deepfake diese Rechte verletzt und welcher Anspruch daraus folgt, hängt vom konkreten Inhalt, vom Kontext und vom Verbreitungsweg ab.\n\nDeine Stimme schützt § 22 KUG nicht für sich allein. Bei geklonten oder manipulierten Audioaufnahmen kommen je nach Nutzung das allgemeine Persönlichkeitsrecht, das Datenschutzrecht und zivil- oder strafrechtliche Vorschriften in Betracht. Eine bestimmte Rechtsfolge kann dir ohne Prüfung des Einzelfalls niemand zusagen.\n\nSichere Fundstelle und Belege, ohne den Inhalt weiterzugeben. verbraucherzentrale.de und klicksafe.de geben eine erste Orientierung. Für die Bewertung deiner konkreten Ansprüche brauchst du qualifizierte medienrechtliche Beratung.",
-          "keyTakeaway": "§ 22 KUG enthält die Grundregel für Bildnisse, § 23 die Ausnahmen. Stimme, Anspruch und Rechtsweg prüfst du gesondert und für deinen Fall."
+          "content": "Nach § 22 KUG dürfen Bildnisse nur mit Einwilligung der abgebildeten Person verbreitet oder öffentlich zur Schau gestellt werden. Die Ausnahmen in § 23 KUG und die Interessenabwägung nach § 23 Abs. 2 bleiben zu prüfen. Ob ein Deepfake diese Rechte verletzt und welcher Anspruch folgt, hängt von Inhalt, Kontext und Verbreitungsweg ab.\n\nDeine Stimme allein schützt § 22 KUG nicht. Bei geklonten oder manipulierten Audioaufnahmen kommen je nach Nutzung das allgemeine Persönlichkeitsrecht, das Datenschutzrecht und zivil- oder strafrechtliche Vorschriften in Betracht. Eine bestimmte Rechtsfolge kann dir ohne Prüfung des Einzelfalls niemand zusagen.\n\nSichere Fundstelle und Belege, ohne den Inhalt weiterzugeben. Erste Orientierung geben verbraucherzentrale.de und klicksafe.de; deine Ansprüche bewertet eine qualifizierte medienrechtliche Beratung."
         }
       ],
       "quiz": [
@@ -295,7 +286,7 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Das Video sofort an alle bekannten Medien weiterschicken, damit es analysiert werden kann",
+              "text": "Das Video zur Analyse sofort an alle bekannten Medien schicken",
               "isCorrect": false
             },
             {
@@ -314,7 +305,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Jede öffentliche Weitergabe kann die Reichweite vergrößern, auch die gut gemeinte. Sichere URL, Konto, Zeitpunkt und einen Screenshot, soweit das gefahrlos geht, und geh danach den passenden Melde- oder Behördenweg."
+          "explanation": "Jede öffentliche Weitergabe vergrößert die Reichweite, auch die gut gemeinte. Erst sicherst du Belege, dann meldest du."
         },
         {
           "id": "deepfake-2-3-q2",
@@ -341,7 +332,7 @@
               "isCorrect": true
             }
           ],
-          "explanation": "Nach dem KI-MIG ist die Bundesnetzagentur grundsätzlich zuständig, soweit keine Fachbehörde zuständig ist. Deshalb prüfst du zuerst die aktuelle offizielle Zuständigkeitsinformation und den veröffentlichten Behördenkanal."
+          "explanation": "Nach dem KI-MIG ist die Bundesnetzagentur zuständig, soweit keine Fachbehörde zuständig ist. Prüfe deshalb zuerst die aktuelle offizielle Zuständigkeit und den veröffentlichten Behördenkanal."
         },
         {
           "id": "deepfake-2-3-q3",
@@ -359,7 +350,7 @@
             },
             {
               "id": "c",
-              "text": "Die Grundregel, dass Bildnisse nur mit Einwilligung verbreitet oder öffentlich gezeigt werden dürfen; gesetzliche Ausnahmen bleiben zu prüfen",
+              "text": "Bildnisse dürfen nur mit Einwilligung verbreitet oder öffentlich gezeigt werden; Ausnahmen regelt § 23",
               "isCorrect": true
             },
             {
@@ -368,7 +359,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "§ 22 KUG enthält die Einwilligungsregel für die Verbreitung und öffentliche Zurschaustellung von Bildnissen. § 23 KUG enthält die Ausnahmen und eine Interessenabwägung. Ob ein Deepfake ein Recht verletzt, entscheidet sich deshalb im Einzelfall."
+          "explanation": "§ 22 KUG regelt die Einwilligung, § 23 KUG Ausnahmen und Interessenabwägung. Ob ein Deepfake ein Recht verletzt, entscheidet der Einzelfall."
         }
       ]
     }

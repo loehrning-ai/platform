@@ -12,7 +12,7 @@ const lesson: CodexLesson = {
   number: 9,
   title: "Choosing a Coding-Agent Workflow",
   subtitle:
-    "Compare interaction model, execution boundary, provider constraints, and review path before selecting a tool.",
+    "Compare interaction model, execution boundary, provider limits and review path before you pick a tool.",
   durationMinutes: 11,
   trackId: "in-the-loop",
   hook: "Choose by operating requirements.",
@@ -128,9 +128,9 @@ const lesson: CodexLesson = {
         kindLabel: CODEX_COMPARE_KIND_LABEL,
         badLabel: "Over-engineered",
         goodLabel: "Right-sized",
-        bad: "Task: add a missing JSDoc comment to one function.\n\nApproach: spin up a background environment and a separate pull request for an edit you could review in place.\n\nCost: extra environment and review state, no less risk.",
-        good: "Task: add a missing JSDoc comment to one function.\n\nApproach: write or generate the comment next to the function, check it against the code, add it to the current change.\n\nCost: no extra environment or review object.",
-        note: "Delegated tasks add environment, context and review overhead. Delegate when that buys isolation, verification or parallelism; otherwise keep the change where you are.",
+        bad: "Task: add a missing JSDoc comment to one function.\n\nApproach: a background environment and a separate pull request for an edit you could review in place.\n\nCost: extra environment and review state, same risk.",
+        good: "Task: add a missing JSDoc comment to one function.\n\nApproach: write the comment next to the function, check it against the code, add it to the current change.\n\nCost: nothing extra.",
+        note: "Delegate when the extra environment, context and review buy isolation, verification or parallelism.",
       },
     },
     {
@@ -143,7 +143,7 @@ const lesson: CodexLesson = {
         title: CODEX_QUIZ_TITLE,
         copy: CODEX_QUIZ_COPY,
         question:
-          "You need to understand authentication in an unfamiliar codebase before making changes. Which workflow is the safest first step?",
+          "Before changing an unfamiliar codebase, you must understand its authentication. What is the safest first step?",
         options: [
           "Grant write and network access immediately so exploration is unrestricted.",
           "Explore read-only with file evidence, then scope a separate change.",
@@ -152,7 +152,7 @@ const lesson: CodexLesson = {
         ],
         correct: 1,
         explanation:
-          "Read-oriented exploration limits accidental changes and produces evidence you can verify. Once the authentication path and trust boundaries are known, create a separate task with explicit scope and checks.",
+          "Read-only exploration avoids accidental changes and yields verifiable evidence. Once the authentication path and trust boundaries are known, scope a separate task with explicit checks.",
       },
     },
     {

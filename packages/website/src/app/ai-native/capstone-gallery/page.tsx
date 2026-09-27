@@ -191,7 +191,7 @@ export default async function CapstoneGalleryPage() {
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <h3 className="text-sm font-bold text-foreground">{title}</h3>
-                <p className="text-[13px] leading-relaxed text-muted-foreground">
+                <p className="col-start-2 text-[13px] leading-relaxed text-muted-foreground sm:col-start-auto">
                   {description}
                 </p>
               </li>

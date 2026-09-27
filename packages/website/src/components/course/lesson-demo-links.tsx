@@ -22,12 +22,12 @@ interface LessonDemoCopy {
 
 const LESSON_DEMO_COPY: Readonly<Record<Locale, LessonDemoCopy>> = {
   de: {
-    heading: "Praxisbeispiel zu dieser Lektion",
-    headingPlural: "Praxisbeispiele zu dieser Lektion",
+    heading: "Praxisbeispiel",
+    headingPlural: "Praxisbeispiele",
   },
   en: {
-    heading: "Practice example for this lesson",
-    headingPlural: "Practice examples for this lesson",
+    heading: "Practice example",
+    headingPlural: "Practice examples",
   },
 };
 

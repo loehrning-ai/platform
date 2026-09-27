@@ -48,10 +48,9 @@ export function HeroEn() {
           <span className="word">.</span>
         </h1>
         <p className="hero__lede">
-          The EU AI Act applies in stages. Some provisions have applied since
-          February 2025, more apply from 2 August 2026, and the high-risk rules
-          follow later. This article explains what already applies, what is now
-          in force, and which rights individuals receive. Current to 28 July
+          The EU AI Act applies in stages: some provisions since February 2025,
+          more from 2 August 2026, the high-risk rules later. This article
+          explains what applies and which rights you get. Current to 28 July
           2026; every legal claim cites a primary source.
         </p>
       </section>
@@ -65,23 +64,21 @@ export function HeroEn() {
           <p>
             A chatbot answers your question to an insurer. Software sorts your
             job application before a person sees it. A video shows a politician
-            saying words they never said. The EU AI Act now contains rules for
-            all three situations, and some of those rules apply from 2 August
-            2026.
+            saying words they never said. The EU AI Act has rules for all three
+            cases, and some apply from 2 August 2026.
           </p>
           <p>
-            At the same time, the EU decided in June 2026 to postpone the rules
-            for high-risk systems. Two claims have circulated since:
+            In June 2026 the EU also decided to postpone the rules for
+            high-risk systems. Two claims have circulated since:
             <em> everything applies from August</em> and{" "}
-            <em>everything has been postponed</em>. Both are wrong. This article
-            separates the application dates in the law currently in force.
+            <em>everything has been postponed</em>. Both are wrong.
           </p>
         </div>
       </section>
 
       <div className="bridge reveal">
-        Article 4 does not require a certificate. The European Commission states
-        this expressly in its Q&amp;A on AI literacy.
+        Article 4 does not require a certificate. The European Commission says
+        so expressly in its Q&amp;A on AI literacy.
       </div>
     </>
   );

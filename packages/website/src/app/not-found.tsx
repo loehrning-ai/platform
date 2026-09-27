@@ -8,12 +8,12 @@ export default async function NotFound() {
     locale === "en"
       ? {
           title: "Page not found.",
-          body: "The requested page does not exist or its address has changed.",
+          body: "This page does not exist or has moved.",
           home: "Back to home",
         }
       : {
           title: "Seite nicht gefunden.",
-          body: "Die angeforderte Seite existiert nicht oder wurde verschoben.",
+          body: "Diese Seite gibt es nicht oder sie ist umgezogen.",
           home: "Zur Startseite",
         };
 

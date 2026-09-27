@@ -87,11 +87,6 @@ export function CompletionCertificateCta({
           ? `${config.recordNoun.possessive} ist bereit.`
           : `Your ${config.recordNoun.label.toLowerCase()} is ready.`}
       </h2>
-      <p className="mt-2 max-w-[64ch] text-body text-muted-foreground">
-        {isGerman
-          ? "Alle erforderlichen Lektionen sind abgeschlossen. Die Download-Seite prüft deinen Lernstand erneut, bevor sie die lokale PDF vorbereitet."
-          : "Every required lesson is complete. The download page checks your progress again before preparing the local PDF."}
-      </p>
       <Link
         href={certificateHref}
         className="mt-4 inline-flex min-h-11 max-w-full items-center gap-2 break-words bg-foreground px-5 py-3 text-left text-[0.9375rem] font-semibold text-background transition-colors duration-[120ms] hover:bg-muted-foreground motion-reduce:transition-none"

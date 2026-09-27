@@ -242,7 +242,7 @@ describe("Data Infrastructure German lessons 1-6", () => {
         (sum, lesson) => sum + collectVisibleEntries(lesson).length,
         0,
       ),
-    ).toBe(465);
+    ).toBe(460);
   });
 
   it("derives identical lesson, section, checkpoint, scoring and ordering identity", () => {

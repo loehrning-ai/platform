@@ -9,9 +9,8 @@ export function Grundlagen() {
         Eine Verordnung, 113 Artikel, <span className="em">ein Prinzip: Risiko.</span>
       </h2>
       <p className="dek">
-        Der EU AI Act regelt nicht &bdquo;die KI&ldquo;, sondern konkrete
-        Einsatzzwecke. Je größer das Risiko für Menschen, desto strenger die
-        Pflichten.
+        Der EU AI Act regelt Einsatzzwecke: Je größer das Risiko für
+        Menschen, desto strenger die Pflichten.
       </p>
 
       <div className="premise">
@@ -21,17 +20,15 @@ export function Grundlagen() {
             13. Juni 2024 angenommen, am 12. Juli 2024 im Amtsblatt der EU
             veröffentlicht und ist am 1. August 2024 in Kraft getreten.
             (Quelle: EUR-Lex, CELEX:32024R1689) Als Verordnung gilt sie
-            unmittelbar in jedem Mitgliedstaat. Deutschland muss sie nicht
-            in ein eigenes Gesetz übersetzen, nur die Aufsicht national
-            organisieren, dazu später mehr.
+            unmittelbar in jedem Mitgliedstaat; Deutschland muss nur die
+            Aufsicht national organisieren.
           </p>
           <p>
             Das Gesetz richtet sich an zwei Hauptrollen:{" "}
-            <strong>Anbieter</strong>, die ein KI-System entwickeln und auf
-            den Markt bringen, und <strong>Betreiber</strong>, die ein
-            fertiges System beruflich einsetzen, etwa eine Firma, die
-            Bewerbungen mit Software vorsortiert. Dazu kommen Einführer und
-            Händler. Als Privatperson bist du fast nie Adressat: Wer ein
+            <strong>Anbieter</strong> entwickeln ein KI-System und bringen es
+            auf den Markt, <strong>Betreiber</strong> setzen ein fertiges
+            System beruflich ein, etwa eine Firma, die Bewerbungen mit
+            Software vorsortiert. Dazu kommen Einführer und Händler. Wer ein
             KI-System ausschließlich privat und nicht beruflich nutzt, ist
             von den Betreiberpflichten ausgenommen. (Quelle: EU AI Act
             Art. 2 Abs. 10, Reg. 2024/1689)
@@ -41,17 +38,18 @@ export function Grundlagen() {
             <strong>Artikel 4</strong> verpflichtet Anbieter und Betreiber
             seit dem 2. Februar 2025, Maßnahmen zu ergreifen, um die
             Entwicklung der KI-Kompetenz ihres Personals und weiterer in ihrem
-            Auftrag befasster Personen zu unterstützen. Technische Kenntnisse,
-            Erfahrung, Aus- und Fortbildung, Einsatzkontext und betroffene
-            Personen oder Personengruppen sind zu berücksichtigen. Seit der Änderung durch
-            die Verordnung (EU) 2026/1744 muss dabei kein bestimmtes
-            Kompetenzniveau einzelner Personen garantiert werden. Es gibt
-            kein vorgeschriebenes Format, keine Pflichtprüfung und kein
-            Mindestzertifikat. Die Organisation muss trotzdem belastbare,
-            kontextgerechte Maßnahmen treffen; eine bloße Aufzeichnung ohne
-            Maßnahme genügt nicht. (Quelle: Art. 4 in der Fassung der
-            Verordnung (EU) 2026/1744; Commission Q&amp;A zu Art. 4,
-            abgerufen 28. Juli 2026)
+            Auftrag befasster Personen zu unterstützen. Zu berücksichtigen
+            sind technische Kenntnisse, Erfahrung, Aus- und Fortbildung,
+            Einsatzkontext und betroffene Personen oder Personengruppen.
+          </p>
+          <p>
+            Seit der Änderung durch die Verordnung (EU) 2026/1744 muss kein
+            bestimmtes Kompetenzniveau einzelner Personen garantiert werden.
+            Format, Pflichtprüfung und Mindestzertifikat sind nicht
+            vorgeschrieben. Nötig sind belastbare, kontextgerechte Maßnahmen;
+            eine Aufzeichnung ohne Maßnahme genügt nicht. (Quelle:
+            Art. 4 in der Fassung der Verordnung (EU) 2026/1744; Commission
+            Q&amp;A zu Art. 4, abgerufen 28. Juli 2026)
           </p>
         </div>
         <aside className="premise__stats">
@@ -65,7 +63,6 @@ export function Grundlagen() {
             <b>Art. 2 Abs. 10</b>
             Rein private, nicht berufliche Nutzung
             ist von den Betreiberpflichten ausgenommen.
-            Das Gesetz zielt auf Organisationen.
           </div>
           <div className="margin-note">
             <b>Art. 4 · KI-Kompetenz</b>

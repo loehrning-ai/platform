@@ -11,7 +11,7 @@ interface SourceEn {
 const SOURCES_EN: readonly SourceEn[] = [
   {
     title: "Regulation (EU) 2024/1689",
-    desc: "The complete regulation on EUR-Lex in German. Use the EUR-Lex language selector for the official English text. The enacted text, not a summary, is authoritative.",
+    desc: "The complete regulation on EUR-Lex in German; the language selector gives the official English text. The enacted text is authoritative.",
     href: "https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32024R1689",
     badge: "Primary source",
     example: "EUR-Lex · Official Journal, 12 July 2024",
@@ -25,7 +25,7 @@ const SOURCES_EN: readonly SourceEn[] = [
   },
   {
     title: "Council of the EU: approval of the Omnibus",
-    desc: "The Council press release on its final approval, including the new dates for high-risk systems.",
+    desc: "Council press release on its final approval, with the new high-risk dates.",
     href: "https://www.consilium.europa.eu/en/press/press-releases/2026/06/29/artificial-intelligence-council-gives-final-green-light-to-simplify-and-streamline-rules/",
     badge: "Primary source",
     example: "Consilium · 29 June 2026",
@@ -39,14 +39,14 @@ const SOURCES_EN: readonly SourceEn[] = [
   },
   {
     title: "Timeline and implementation guidance",
-    desc: "The Commission's official AI Act overview, including the GPAI Code and AI Act Service Desk.",
+    desc: "The Commission's AI Act overview, with the GPAI Code and AI Act Service Desk.",
     href: "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai",
     badge: "Commission",
     example: "digital-strategy.ec.europa.eu",
   },
   {
     title: "KI-MIG in the Bundestag",
-    desc: "The Bundestag record of the German implementing act that designates the Federal Network Agency as the central supervisor.",
+    desc: "Bundestag record of the German implementing act that makes the Federal Network Agency the central supervisor.",
     href: "https://www.bundestag.de/dokumente/textarchiv/2026/kw24-de-ki-1183820",
     badge: "Primary source",
     example: "bundestag.de · 11 June 2026",
@@ -83,8 +83,8 @@ export function QuellenEn() {
           Trust the text in the <span className="em">Official Journal.</span>
         </h2>
         <p className="dek">
-          Every legal claim in this article can be checked here. All sources
-          were last reviewed on 28 July 2026.
+          Check every legal claim here. All sources last reviewed on 28 July
+          2026.
         </p>
 
         <div className="sources">
@@ -118,14 +118,11 @@ export function QuellenEn() {
 
       <section className="essay-close">
         <p>
-          The EU AI Act is neither a reason for panic nor an empty rulebook. It
-          is a staged law. Its main individual rights become applicable on 2
-          August 2026, while the most demanding obligations for high-risk
-          systems have been moved by binding law to late 2027 and 2028.
-          Separating those dates resolves most of the confusion.
+          The EU AI Act applies in stages: its main individual rights become
+          applicable on 2 August 2026, while the most demanding high-risk
+          obligations have been moved by binding law to late 2027 and 2028.
         </p>
         <p>
-          This article is updated when the legal position materially changes.
           The German authority route remains expressly provisional until
           official promulgation of the KI-MIG has been verified.
         </p>

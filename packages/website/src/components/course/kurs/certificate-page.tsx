@@ -225,8 +225,8 @@ export function CertificatePage({ courseSlug, locale }: CertificatePageProps) {
       setErrors({
         download:
           config.language === "en"
-            ? "The PDF could not be generated. No certificate was downloaded. Retry in a current browser."
-            : "Die PDF konnte nicht erzeugt werden. Es wurde keine Bescheinigung heruntergeladen. Versuche es erneut in einem aktuellen Browser.",
+            ? "The PDF could not be generated and nothing was downloaded. Try again in a current browser."
+            : "Die PDF konnte nicht erzeugt werden, es wurde nichts heruntergeladen. Versuch es in einem aktuellen Browser erneut.",
       });
     } finally {
       if (downloadAttemptRef.current === attempt) setLoading(false);
@@ -258,8 +258,8 @@ export function CertificatePage({ courseSlug, locale }: CertificatePageProps) {
             >
               {ownerKind === "unknown"
                 ? config.language === "en"
-                  ? "Choose Continue locally above or wait for account verification to load your completion record."
-                  : "Wähle oben Lokal weiterlernen oder warte auf die Kontoprüfung, um deinen Abschlussstand zu laden."
+                  ? "Choose Continue locally above or wait for the account check."
+                  : "Wähle oben Lokal weiterlernen oder warte auf die Kontoprüfung."
                 : config.language === "en"
                   ? "Checking the completion record."
                   : "Abschlussstand wird geprüft."}
@@ -328,8 +328,8 @@ export function CertificatePage({ courseSlug, locale }: CertificatePageProps) {
               </h2>
               <p className="text-sm text-muted-foreground">
                 {config.language === "en"
-                  ? "Enter your name. The PDF is generated locally in your browser from your progress, it isn't issued server-side."
-                  : "Trag deinen Namen ein. Die PDF wird lokal in deinem Browser aus deinem Lernstand erstellt, sie wird nicht serverseitig ausgestellt."}
+                  ? "Your name goes only into the PDF, which your browser creates from your progress."
+                  : "Dein Name steht nur in der PDF, die dein Browser aus deinem Lernstand erstellt."}
               </p>
 
               <form className="space-y-3" onSubmit={handleDownload}>
@@ -427,17 +427,15 @@ export function CertificatePage({ courseSlug, locale }: CertificatePageProps) {
               <p className="text-xs text-muted">
                 {config.language === "en" ? (
                   <>
-                    The name is only written into the downloaded file. Your
-                    course progress stays local in the browser; the PDF is not
-                    an official or legally binding credential.{" "}
+                    The PDF is not an official or legally binding
+                    credential.{" "}
                     {config.recordNoun.demonstrative} is based on your own
                     self-assessment, not an external exam.
                   </>
                 ) : (
                   <>
-                    Der Name wird nur in die heruntergeladene Datei geschrieben.
-                    Der Kursfortschritt bleibt lokal im Browser gespeichert; die
-                    PDF ist keine behördliche oder rechtliche Bescheinigung.{" "}
+                    Die PDF ist keine behördliche oder rechtliche
+                    Bescheinigung.{" "}
                     {config.recordNoun.demonstrative} basiert auf deiner eigenen
                     Einschätzung, nicht auf einer externen Prüfung.
                   </>

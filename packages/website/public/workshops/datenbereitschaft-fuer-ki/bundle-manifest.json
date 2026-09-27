@@ -146,8 +146,8 @@
     },
     {
       "path": "builder.html",
-      "sizeBytes": 257094,
-      "sha256": "3ac261544d51d48f37cd2301424dea79a3fbf5d44149501d0f310ed1bab88b4b"
+      "sizeBytes": 251628,
+      "sha256": "b043389f60d5d64351ba5ce012ce8e6af92981672e4d1d2db1bae8b0281ae98a"
     },
     {
       "path": "card-preview.webp",
@@ -156,8 +156,8 @@
     },
     {
       "path": "data-readiness-kit.zip",
-      "sizeBytes": 1144739,
-      "sha256": "13bd9be276a248919d14153ad43160324715aa326ec56bed23ebf79238a9c124"
+      "sizeBytes": 1142173,
+      "sha256": "94ff80f36b5c67019ac10a6b031b740afc1c9e65743b6f79aec421d8a4d115f9"
     },
     {
       "path": "data-readiness-kit/ASSET-RIGHTS.md",
@@ -166,33 +166,33 @@
     },
     {
       "path": "data-readiness-kit/FOLDLINE-SCENARIOS.md",
-      "sizeBytes": 2189,
-      "sha256": "9e18e00eb2c014a4444d3677ab5f939af2c0667a4e062875ee078aced5d60b7e"
+      "sizeBytes": 1934,
+      "sha256": "daf22fd66226ba9cda1d80ec7cc65704d97b90e52d3a125179e3d72bc86c8385"
     },
     {
       "path": "data-readiness-kit/QUESTION-CARD.md",
-      "sizeBytes": 2995,
-      "sha256": "281b5f0748898403392e61a5f9634618d14ee5a9610d1afcca9af20c3738cb45"
+      "sizeBytes": 2725,
+      "sha256": "6a990f607187aa584f96b679bc328acc149352c905b39dda0951fdb2eb23f86c"
     },
     {
       "path": "data-readiness-kit/README.md",
-      "sizeBytes": 2066,
-      "sha256": "4486b350bfb005d6a5d6cede579c0852dc8c3b25b49971ed352d75cfcd3d8003"
+      "sizeBytes": 1956,
+      "sha256": "6a34c0df6871ff5ec59ce0deb0c99d92bedd2f0504378192629449e9f41997de"
     },
     {
       "path": "data-readiness-kit/READY-CANVAS.md",
-      "sizeBytes": 3826,
-      "sha256": "9ae484bfc6e95cd13bd28a885f12884e60b57f9ef8ba268b4d9e85ec8e895b1e"
+      "sizeBytes": 3567,
+      "sha256": "34884a445d0e0c5b1193f7f69835e216c168f2ea2d5d0289fe8ff5450e7b808c"
     },
     {
       "path": "data-readiness-kit/START-HERE.md",
-      "sizeBytes": 5787,
-      "sha256": "b7343c92cd4625d0696f3f34072ece84910e8dd9bb3eed960c1fe122e165fc71"
+      "sizeBytes": 4667,
+      "sha256": "db673847a06d66e3dee5b0b10385a8880b18013276ea7056f4e185f4066e15a5"
     },
     {
       "path": "data-readiness-kit/agent/CLAUDE.example.md",
-      "sizeBytes": 3440,
-      "sha256": "f8b16c1cca9789789f38007a0f461326963a434dbdaa91ebb7c46c7e22934fee"
+      "sizeBytes": 3118,
+      "sha256": "85bcc246886fb11d0fefa4f79708cc2821571020bdd9fd01ddb2fc9c934a6f61"
     },
     {
       "path": "data-readiness-kit/builder/ANTI-PATTERN-GALLERY.md",
@@ -201,8 +201,8 @@
     },
     {
       "path": "data-readiness-kit/builder/ANTI-PATTERNS.md",
-      "sizeBytes": 14403,
-      "sha256": "45c4b07db8777af8f84de8ea69411c8934d44dae5bce0b172c00778dd0e6faa4"
+      "sizeBytes": 14173,
+      "sha256": "2b50b1afd535a25589369d8f7b816eb359908c9fc3d90c9316c27d628af0444d"
     },
     {
       "path": "data-readiness-kit/builder/BUILD-ORDER.md",
@@ -536,8 +536,8 @@
     },
     {
       "path": "data-readiness-kit/readiness-lab.html",
-      "sizeBytes": 87594,
-      "sha256": "aff289390bf745bae0d144eed9a19828c8d39c639ababe2884b7a02e5431520a"
+      "sizeBytes": 86970,
+      "sha256": "28d98e830c97163d695cbe14436524bda6f6da9f5d75c36e87422fadc8933599"
     },
     {
       "path": "data-readiness-kit/semantic-template/metric.yml",
@@ -561,13 +561,13 @@
     },
     {
       "path": "demo.html",
-      "sizeBytes": 103669,
-      "sha256": "c9a0224cf1bfee4fd7e02cdb4c132139428b67ad06127bda63351d25e4838292"
+      "sizeBytes": 103495,
+      "sha256": "4e582eafb7754f50dd195e25cc943acdb9bb1292e2c134ec18b1032c4721d284"
     },
     {
       "path": "guide.html",
-      "sizeBytes": 32163,
-      "sha256": "64baebd54fe7a90200d02553c6837780fe326466c89da2e2fc53b75239f6a321"
+      "sizeBytes": 31444,
+      "sha256": "e8258a1cb6575856eed0f970b0c191f715da0beaccea8c079d6d20b5f73ed6c1"
     },
     {
       "path": "lib/deck-runtime.js",
@@ -591,8 +591,8 @@
     },
     {
       "path": "lib/presenter-notes.js",
-      "sizeBytes": 69978,
-      "sha256": "f0dc529d5553bcb9fb19c8ad036d62a8e87a638b11ccb8887866533dcd8032c1"
+      "sizeBytes": 47602,
+      "sha256": "866fd451eba8c81ba657086470bf46461f40a0159387040ec4f286ecf666d1cb"
     },
     {
       "path": "lib/presenter.css",
@@ -761,13 +761,13 @@
     },
     {
       "path": "presenter.html",
-      "sizeBytes": 9026,
-      "sha256": "0dd671a4e95b70a7068c287f8088bab999827907df3ff0f6ba7a915e4c42f95b"
+      "sizeBytes": 8969,
+      "sha256": "71d46f994e1a993b468640c4b2c5e1f8725dc1ff41c36fbf772e66e4d1ee2f87"
     },
     {
       "path": "slides.html",
-      "sizeBytes": 180000,
-      "sha256": "db70026f1ca469d469e063c0192b850d49dc0247dd091280964f4bdf68cf4597"
+      "sizeBytes": 179944,
+      "sha256": "8677991396574f69d957a05edfdbe9c33238417f0d084f5694d370c9677b6956"
     }
   ]
 }

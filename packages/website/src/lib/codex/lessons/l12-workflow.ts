@@ -181,7 +181,7 @@ const lesson: CodexLesson = {
         ],
         correct: 1,
         explanation:
-          "The request combines data contract, authorization, export generation, scheduling, and delivery. Resolve the missing product and security decisions, then split only where the intermediate state is valid and independently reviewable.",
+          "The request mixes data contract, authorization, export, scheduling and delivery. Settle the open product and security decisions, then split only where each intermediate state is valid and reviewable.",
       },
     },
     {
@@ -320,7 +320,7 @@ const lesson: CodexLesson = {
         options: [
           '"test is weak, please improve"',
           '"make it test the real thing"',
-          '"tests/api/admin/test_exports.py::test_export_subscriptions verifies serialization but not active-status selection. Add an integration test that seeds active and canceled rows, calls the endpoint through the real repository, and asserts that only active rows appear. Keep a focused serialization test if it covers separate behavior."',
+          "\"tests/api/admin/test_exports.py::test_export_subscriptions checks serialization only. Add an integration test through the real repository that seeds active and canceled rows and asserts that only active rows appear.\"",
           '"add more tests"',
         ],
         correct: 2,

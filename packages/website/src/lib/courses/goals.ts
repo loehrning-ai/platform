@@ -23,8 +23,7 @@ export const LEARNING_GOALS: Readonly<Record<Locale, readonly LearningGoal[]>> =
     {
       id: "start",
       label: "Ich nutze KI im Job",
-      summary:
-        "Die vier Grundlagenkurse, vom Datenschutz im Alltag bis zum eigenen KI-Ablauf.",
+      summary: "Die vier Grundlagenkurse in empfohlener Reihenfolge.",
       courseSlugs: [
         "ki-fuehrerschein",
         "ki-und-gesellschaft",
@@ -41,14 +40,13 @@ export const LEARNING_GOALS: Readonly<Record<Locale, readonly LearningGoal[]>> =
     {
       id: "build",
       label: "Ich baue mit KI",
-      summary: "Prompts, Claude-Projekte, Coding-Agenten und KI-Abläufe im Team.",
+      summary: "Prompts, Coding-Agenten und KI-Abläufe im Team.",
       courseSlugs: ["ai-native", "claude", "codex", "ai-native-operator"],
     },
     {
       id: "data",
       label: "Ich arbeite mit Daten",
-      summary:
-        "Von der Pipeline über die Datenplattform bis zur Modellkennzahl.",
+      summary: "Pipelines, Datenplattformen und Modellkennzahlen.",
       courseSlugs: [
         "data-engineering-fundamentals",
         "data-infrastructure",
@@ -61,8 +59,7 @@ export const LEARNING_GOALS: Readonly<Record<Locale, readonly LearningGoal[]>> =
     {
       id: "start",
       label: "I use AI at work",
-      summary:
-        "The four foundation courses, from data protection at work to your own AI workflow.",
+      summary: "The four foundation courses in the suggested order.",
       courseSlugs: [
         "ki-fuehrerschein",
         "ki-und-gesellschaft",
@@ -79,13 +76,13 @@ export const LEARNING_GOALS: Readonly<Record<Locale, readonly LearningGoal[]>> =
     {
       id: "build",
       label: "I build with AI",
-      summary: "Prompts, Claude projects, coding agents and AI workflows in a team.",
+      summary: "Prompts, coding agents and AI workflows in a team.",
       courseSlugs: ["ai-native", "claude", "codex", "ai-native-operator"],
     },
     {
       id: "data",
       label: "I work with data",
-      summary: "From the pipeline to the data platform to the model metric.",
+      summary: "Pipelines, data platforms and model metrics.",
       courseSlugs: [
         "data-engineering-fundamentals",
         "data-infrastructure",

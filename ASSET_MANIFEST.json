@@ -1037,8 +1037,8 @@
     },
     {
       "path": "packages/website/public/workshops/datenbereitschaft-fuer-ki/data-readiness-kit.zip",
-      "sizeBytes": 1144739,
-      "sha256": "13bd9be276a248919d14153ad43160324715aa326ec56bed23ebf79238a9c124",
+      "sizeBytes": 1142173,
+      "sha256": "94ff80f36b5c67019ac10a6b031b740afc1c9e65743b6f79aec421d8a4d115f9",
       "owner": "Tim L\u00f6hr",
       "source": "Original Data Readiness for AI course material, owner-authorized loehrning.ai publication",
       "license": "LicenseRef-Loehrning-Brand",

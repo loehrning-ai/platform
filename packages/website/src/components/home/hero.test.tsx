@@ -27,7 +27,7 @@ describe("HeroSection learning-platform positioning", () => {
       screen.queryByText("Open learning instruments"),
     ).not.toBeInTheDocument();
     expect(
-      screen.getByText(/Commit to a decision\. Test it against a model/),
+      screen.getByText(/Choose a goal and test your decisions/),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /Choose a learning route/i }),
@@ -72,7 +72,7 @@ describe("HeroSection learning-platform positioning", () => {
   it("renders the above-fold introduction without a delayed clipping reveal", () => {
     render(<HeroSection />);
     const introduction = screen.getByText(
-      /Wähle ein Ziel\. Triff eine Entscheidung/,
+      /Wähle ein Ziel und prüfe deine Entscheidungen/,
     );
 
     expect(introduction.tagName).toBe("P");

@@ -23,7 +23,7 @@ async function signOut(request: NextRequest) {
       request,
     });
     return new NextResponse(
-      "Abmeldung vorübergehend nicht möglich. Bitte später erneut versuchen.",
+      "Abmelden geht gerade nicht. Versuche es später erneut.",
       {
         status: 503,
         headers: {

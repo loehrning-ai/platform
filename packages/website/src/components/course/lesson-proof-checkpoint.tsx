@@ -26,38 +26,38 @@ const COPY = {
     sectionDone: "Abschnitt geprüft",
     eyebrow: "Transfer-Checkpoint",
     title: "Lege deinen nächsten Schritt fest.",
-    body: "Notiere eine Prognose, Entscheidung, einen Test oder eine Änderung, die du in die Praxis übernimmst.",
+    body: "Notiere eine Prognose, Entscheidung, einen Test oder eine Änderung für deine Praxis.",
     label: "Entscheidung oder Änderung",
     placeholder: "Ich werde … ändern und mit … prüfen.",
     validation: "Mindestens 3 Wörter und 12 Zeichen.",
     privacy:
-      "Deine Antwort wird weder gespeichert noch synchronisiert. Nur der Kursfortschritt wird festgehalten.",
+      "Deine Antwort wird weder gespeichert noch synchronisiert, nur dein Fortschritt.",
     boundary:
       "Dieser Checkpoint dokumentiert Navigation, nicht Beherrschung oder Zertifizierung.",
     save: "Checkpoint speichern",
     loading: "Lernstand wird geladen",
     completed: "Navigations-Checkpoint gespeichert",
     completedBody:
-      "Der Lektionsfortschritt ist erfasst. Das ist keine Kompetenzprüfung und kein Nachweis.",
+      "Fortschritt erfasst. Das ist keine Kompetenzprüfung und kein Nachweis.",
   },
   en: {
     sectionOpen: "Confirm section reviewed",
     sectionDone: "Section reviewed",
     eyebrow: "Transfer checkpoint",
     title: "State your next move.",
-    body: "Name one prediction, decision, test, or revision you will carry into real work.",
+    body: "Name one prediction, decision, test, or revision for your real work.",
     label: "Decision or revision",
     placeholder: "I will revise … and test it by …",
     validation: "Use at least 3 words and 12 characters.",
     privacy:
-      "Your response is not saved or synced. Only the course-progress checkpoint is recorded.",
+      "Your response is not saved or synced, only your progress.",
     boundary:
       "This checkpoint records navigation, not mastery or certification.",
     save: "Save checkpoint",
     loading: "Loading progress",
     completed: "Navigation checkpoint saved",
     completedBody:
-      "Lesson progress is recorded. This is not a mastery assessment or credential.",
+      "Progress recorded. This is not a mastery assessment or credential.",
   },
 } as const;
 

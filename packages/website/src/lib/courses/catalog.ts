@@ -157,7 +157,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     eyebrow: "Schritt 01 · KI-Kompetenz",
     tagline: "Aufgaben abgrenzen, Daten schützen und Antworten prüfen.",
     description:
-      "Du lernst, wie generative KI Antworten erzeugt, wo sie danebenliegt und welche Daten du nicht eingibst. Der Kurs erklärt Artikel 4 des AI Act in der seit 27. Juli 2026 geltenden Fassung. Am Ende erstellst du lokal eine Teilnahmebestätigung.",
+      "Du lernst, wie generative KI antwortet, wo sie danebenliegt und welche Daten du nicht eingibst. Der Kurs erklärt Artikel 4 des AI Act in der seit 27. Juli 2026 geltenden Fassung; am Ende erstellst du lokal eine Teilnahmebestätigung.",
     href: "/ki-fuehrerschein",
     startHref: "/ki-fuehrerschein/kurs",
     continueHref: "/ki-fuehrerschein/kurs",
@@ -181,7 +181,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     tagline:
       "Deepfakes, Bias und Folgen für Arbeit anhand von Beispielen prüfen.",
     description:
-      "Der Kurs behandelt in drei Blöcken Arbeitsmarkt, Deepfakes und Bias. Zu jeder Aussage siehst du die Quelle, wer ein Interesse an ihr hat und wie sicher der Befund ist.",
+      "Drei Blöcke zu Arbeitsmarkt, Deepfakes und Bias. Zu jeder Aussage siehst du Quelle, Interessenlage und wie sicher der Befund ist.",
     href: "/ki-und-gesellschaft",
     startHref: "/ki-und-gesellschaft/kurs",
     continueHref: "/ki-und-gesellschaft/kurs",
@@ -229,7 +229,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     tagline:
       "Absicht klären, Kontext bereitstellen, Ausführung und Ergebnis prüfen.",
     description:
-      "Ein Arbeitsablauf, der sich wiederholen lässt: Recherche, Dokumentation, Automatisierung. Vier Module, und jede Übung benennt Werkzeug, Eingabe, Prüfschritt und Abbruchkriterium.",
+      "Vier Module zu wiederholbaren Abläufen für Recherche, Dokumentation und Automatisierung. Jede Übung nennt Werkzeug, Eingabe, Prüfschritt und Abbruchkriterium.",
     href: "/ai-native",
     startHref: "/ai-native/kurs/modul_1",
     continueHref: "/ai-native/kurs/modul_1/modul_1_lesson_1",
@@ -306,7 +306,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
       "Native Route in diesem Quellstand",
     ],
     integrationNote:
-      "Native Route sowie Fortschritts- und Abschlusslogik sind in diesem Quellstand integriert; eine Bereitstellung erfordert getrennte Live-Prüfung. Ursprünglich als Open-Source-Kurs importiert.",
+      "Route, Fortschritt und Abschluss sind in diesem Quellstand integriert; die Bereitstellung braucht eine getrennte Live-Prüfung. Ursprünglich ein importierter Open-Source-Kurs.",
   },
   // Codex Course: second imported course flipped from
   // "pending" to "live" now that it has real native routes, per-lesson
@@ -325,7 +325,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     tagline:
       "Codeaufgaben mit Spezifikation, Tests und Review an Codex delegieren.",
     description:
-      "Codex schreibt den Code. Du schreibst die Spezifikation, die Akzeptanzkriterien und das Review. Zwölf Lektionen zu Sandbox-Grenzen, AGENTS.md, Werkzeugwahl und paralleler Arbeit; der Abschlussfall zieht alles zusammen.",
+      "Codex schreibt den Code, du Spezifikation, Akzeptanzkriterien und Review. Zwölf Lektionen zu Sandbox-Grenzen, AGENTS.md, Werkzeugwahl und paralleler Arbeit, dazu ein Abschlussfall.",
     href: "/kurse/open-source/codex",
     startHref: "/kurse/open-source/codex/kurs/L01",
     continueHref: "/kurse/open-source/codex/kurs",
@@ -365,7 +365,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
       "Native Route in diesem Quellstand",
     ],
     integrationNote:
-      "Native Route sowie Fortschritts- und Abschlusslogik sind in diesem Quellstand integriert; eine Bereitstellung erfordert getrennte Live-Prüfung. Ursprünglich als Open-Source-Kurs importiert.",
+      "Route, Fortschritt und Abschluss sind in diesem Quellstand integriert; die Bereitstellung braucht eine getrennte Live-Prüfung. Ursprünglich ein importierter Open-Source-Kurs.",
   },
   // Data Infrastructure: third imported course flipped
   // from "pending" to "live" now that it has real native routes, per-lesson
@@ -387,7 +387,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     tagline:
       "Speicher-, Streaming- und Konsistenzentscheidungen systematisch vergleichen.",
     description:
-      "Die zwölf Lektionen behandeln CAP und PACELC, Datenmodelle, Dateiformate, Lakehouse-Tabellen, Streaming, CDC, Idempotenz und Daten-SLAs. In Simulationen siehst du, ab welcher Last oder welchem Ausfall ein Entwurf nicht mehr trägt.",
+      "Zwölf Lektionen zu CAP und PACELC, Datenmodellen, Dateiformaten, Lakehouse-Tabellen, Streaming, CDC, Idempotenz und Daten-SLAs. Simulationen zeigen, ab welcher Last oder welchem Ausfall ein Entwurf nicht mehr trägt.",
     href: "/kurse/open-source/data-infrastructure",
     startHref: "/kurse/open-source/data-infrastructure/kurs/mental-model",
     continueHref: "/kurse/open-source/data-infrastructure/kurs",
@@ -431,7 +431,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
       "Native Route in diesem Quellstand",
     ],
     integrationNote:
-      "Native Route sowie Fortschritts- und Abschlusslogik sind in diesem Quellstand integriert; eine Bereitstellung erfordert getrennte Live-Prüfung. Ursprünglich als Open-Source-Kurs importiert.",
+      "Route, Fortschritt und Abschluss sind in diesem Quellstand integriert; die Bereitstellung braucht eine getrennte Live-Prüfung. Ursprünglich ein importierter Open-Source-Kurs.",
   },
   // Data Engineering Fundamentals: fourth imported
   // course flipped from "pending" to "live". totalLessons/unitCount
@@ -450,7 +450,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     tagline:
       "Eine Datenpipeline von der Quelle bis zur Nutzung entwerfen und absichern.",
     description:
-      "Zwölf Kapitel folgen den Daten von Ingest über Streaming, Speicherung, Compute, Orchestrierung, Qualität, Discovery und Serving bis zur Governance. In 17 Simulationen und einem Abschlussfall verfolgst du, wie ein Fehler an einer Stelle weiter hinten Schaden anrichtet.",
+      "Zwölf Kapitel zu Ingest, Streaming, Speicherung, Compute, Orchestrierung, Qualität, Discovery, Serving und Governance. In 17 Simulationen und einem Abschlussfall siehst du, wie ein Fehler weiter hinten Schaden anrichtet.",
     href: "/kurse/open-source/data-engineering-fundamentals",
     startHref: "/kurse/open-source/data-engineering-fundamentals/home",
     continueHref: "/kurse/open-source/data-engineering-fundamentals",
@@ -492,7 +492,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
       "Native Route in diesem Quellstand",
     ],
     integrationNote:
-      "Native Route sowie Fortschritts- und Abschlusslogik sind in diesem Quellstand integriert; eine Bereitstellung erfordert getrennte Live-Prüfung. Ursprünglich als Open-Source-Kurs importiert.",
+      "Route, Fortschritt und Abschluss sind in diesem Quellstand integriert; die Bereitstellung braucht eine getrennte Live-Prüfung. Ursprünglich ein importierter Open-Source-Kurs.",
   },
   // Data Science: fifth imported course flipped from
   // "pending" to "live". Like data-engineering-fundamentals, chapters live
@@ -509,7 +509,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     tagline:
       "Modelle bewerten, Fehlinterpretationen erkennen und Betrieb überwachen.",
     description:
-      "Die zwölf Kapitel verbinden Stichproben, Datenbereinigung, Features, Evaluation, Interpretierbarkeit, Experimente, Kausalität und Drift. In 37 Simulationen siehst du, wo eine gut aussehende Kennzahl in die Irre führt.",
+      "Zwölf Kapitel zu Stichproben, Datenbereinigung, Features, Evaluation, Interpretierbarkeit, Experimenten, Kausalität und Drift. 37 Simulationen zeigen, wo eine gut aussehende Kennzahl täuscht.",
     href: "/kurse/open-source/data-science",
     startHref: "/kurse/open-source/data-science",
     continueHref: "/kurse/open-source/data-science",
@@ -549,7 +549,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
       "Native Route in diesem Quellstand",
     ],
     integrationNote:
-      "Native Route sowie Fortschritts- und Abschlusslogik sind in diesem Quellstand integriert; eine Bereitstellung erfordert getrennte Live-Prüfung. Ursprünglich als Open-Source-Kurs importiert.",
+      "Route, Fortschritt und Abschluss sind in diesem Quellstand integriert; die Bereitstellung braucht eine getrennte Live-Prüfung. Ursprünglich ein importierter Open-Source-Kurs.",
   },
   // AI-Native Operator: sixth and last imported course
   // flipped from "pending" to "live". Its URL structure stays under
@@ -571,7 +571,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     tagline:
       "KI-gestützte Arbeit mit Zuständigkeit, Kontrolle und Messung organisieren.",
     description:
-      "Neun Module mit 39 Lektionen behandeln Engineering, Produktarbeit, Betrieb, Rollen, Organisation, Daten, Governance und Messung. In 30 Übungen legst du fest, wer bei KI-gestützter Arbeit was entscheidet und prüft.",
+      "Neun Module mit 39 Lektionen zu Engineering, Produktarbeit, Betrieb, Rollen, Organisation, Daten, Governance und Messung. In 30 Übungen legst du fest, wer bei KI-gestützter Arbeit entscheidet und prüft.",
     href: "/kurse/open-source/ai-native-operator",
     startHref: "/kurse/open-source/ai-native-operator/mindset/1",
     continueHref: "/kurse/open-source/ai-native-operator",
@@ -612,7 +612,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
       "Native Route in diesem Quellstand",
     ],
     integrationNote:
-      "Native Route sowie Fortschritts- und Abschlusslogik sind in diesem Quellstand integriert; eine Bereitstellung erfordert getrennte Live-Prüfung. Ursprünglich als Open-Source-Kurs importiert.",
+      "Route, Fortschritt und Abschluss sind in diesem Quellstand integriert; die Bereitstellung braucht eine getrennte Live-Prüfung. Ursprünglich ein importierter Open-Source-Kurs.",
   },
 ] as const;
 

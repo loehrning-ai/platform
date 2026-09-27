@@ -21,7 +21,6 @@
   .fc-spark svg{display:block;margin-left:auto}
   .fc-grid{columns:2;column-gap:40px;margin-top:8px}
   @media (max-width:760px){.fc-grid{columns:1}}
-  @media (max-width:600px){.fc-spark,#print-card{display:none}.fc-mast{padding-bottom:12px}.sec{padding:12px 0 14px}}
   .sec{break-inside:avoid;display:inline-block;width:100%;margin:0;padding:18px 0 20px;border-bottom:var(--wf-hair)}
   .sec h2{display:flex;align-items:baseline;gap:12px;margin:0 0 10px;font:700 19px/1.25 var(--wf-sans);letter-spacing:-.005em}
   .sec h2 .n{flex:none;min-width:22px;font:500 14px/1 var(--wf-sans);font-feature-settings:"tnum" 1;color:var(--wf-slate-soft)}
@@ -72,6 +71,7 @@
     .ztab td{font-size:9.5px}
     .fc-foot{font-size:8.5px;margin-top:4px}
   }
+  @media (max-width:600px){.fc-spark,#print-card,.fc-mast .wf-kicker{display:none}.wrap{padding-top:16px}.fc-mast{padding-bottom:10px}.fc-mast .wf-h1{font-size:30px}.sec{padding:10px 0 12px}.sec h2{font-size:16px;margin-bottom:6px}.sec p,.lean,ol.mind li,.rule{font-size:14px;line-height:1.45}.sec p{margin-bottom:6px}.rule{margin:6px 0}.lean{gap:4px}.formula{margin:4px 0 6px;padding:6px 10px;font-size:14px}.sec.checks{margin-top:10px;padding:10px 12px 10px 18px}ol.mind li{padding:3px 0}}
 </style>
 </head>
 <body class="wf-page">
@@ -93,8 +93,8 @@
 <main class="wrap" id="main" tabindex="-1">
   <header class="fc-mast">
     <div>
-      <p class="wf-kicker">Workshop 01 · Field card</p>
-      <h1 class="wf-h1">The forecaster's field card</h1>
+      <p class="wf-kicker">Workshop 01 · Forecasting decisions</p>
+      <h1 class="wf-h1">Field card</h1>
       <button type="button" class="wf-btn wf-btn--primary" id="print-card">Print this card</button>
     </div>
     <div class="fc-spark" aria-hidden="true">
@@ -111,8 +111,8 @@
     <section class="sec">
       <h2><span class="n">1</span>The newsvendor rule</h2>
       <div class="formula">service level = Cu / (Cu + Co)</div>
-      <p><code>Cu</code>: margin (and goodwill) lost per unit <b>short</b>. <code>Co</code>: unit cost minus salvage per <b>leftover</b>.</p>
-      <p class="rule">If <b>Cu &gt; Co</b>, the ratio is above 50%: <b>order more than the average</b>. Bakery: <code>Cu≈4.1</code>, <code>Co≈1.3</code>, <code>CR≈0.76</code>, so bake to about 76% service.</p>
+      <p><code>Cu</code> is the margin (and goodwill) lost per unit <b>short</b>, <code>Co</code> the unit cost minus salvage per <b>leftover</b>.</p>
+      <p class="rule">If <b>Cu &gt; Co</b>, the ratio is above 50% and you <b>order more than the average</b>. Bakery: <code>Cu≈4.1</code>, <code>Co≈1.3</code>, <code>CR≈0.76</code>, so bake to about 76% service. Gadgets: <code>CR≈0.84</code>.</p>
     </section>
 
     <section class="sec">
@@ -121,7 +121,6 @@
         <div><b>More</b> when margins are fat, stockouts hurt, goods keep or resupply is slow.</div>
         <div><b>Less</b> when margins are thin, goods spoil, restocking is fast or storage is costly.</div>
       </div>
-      <p class="src">Gadgets <code>CR≈0.84</code>, bakery <code>CR≈0.76</code>: both order above the average.</p>
     </section>
 
     <section class="sec">
@@ -131,12 +130,12 @@
     </section>
 
     <section class="sec checks" aria-labelledby="checks-title">
-      <h2 id="checks-title">Five checks before you trust a forecast</h2>
+      <h2 id="checks-title">Before you trust a forecast</h2>
       <ol class="mind">
         <li>Beat “same as last week”, or stop.</li>
         <li>Pick the model by its backtest score.</li>
-        <li>Report a range: a 90% band holds about 90% of real points.</li>
-        <li>Test on unseen weeks from several start dates.</li>
+        <li>Report a range with every forecast.</li>
+        <li>Test on unseen weeks, several start dates.</li>
         <li>Write down what it cannot cover: novelty, regime change, reflexivity, one-off events.</li>
       </ol>
     </section>

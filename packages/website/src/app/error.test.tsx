@@ -51,7 +51,7 @@ describe("src/app/error.tsx", () => {
     );
     expect(
       screen.getByText(
-        "Ein unerwarteter Fehler ist aufgetreten. Lade die Anfrage erneut.",
+        "Ein unerwarteter Fehler ist aufgetreten.",
       ),
     ).toBeInTheDocument();
     expect(

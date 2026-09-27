@@ -48,11 +48,10 @@ export function Hero() {
           <span className="word">bist.</span>
         </h1>
         <p className="hero__lede">
-          Das erste umfassende KI-Gesetz der Welt gilt in Stufen: Teile sind
-          seit Februar 2025 anwendbar, weitere folgen am 2. August 2026, die
-          Hochrisiko-Regeln später. Dieser Text erklärt ohne Fachjargon, was
-          schon gilt, was inzwischen in Kraft ist und welche Rechte du bekommst.
-          Stand: 28. Juli 2026, jede Angabe mit Primärquelle.
+          Der EU AI Act gilt in Stufen: Teile seit Februar 2025, weitere ab
+          2. August 2026, die Hochrisiko-Regeln später. Hier steht ohne
+          Fachjargon, was gilt und welche Rechte du bekommst. Stand: 28. Juli
+          2026, jede Angabe mit Primärquelle.
         </p>
       </section>
 
@@ -66,23 +65,21 @@ export function Hero() {
             Ein Chatbot beantwortet deine Frage an die Versicherung. Eine
             Software sortiert deine Bewerbung, bevor ein Mensch sie sieht. Ein
             Video zeigt eine Politikerin, die den gezeigten Satz nie gesagt hat.
-            Für alle drei Situationen enthält der EU AI Act inzwischen konkrete
-            Regeln, und einige davon werden am 2. August 2026 anwendbar.
+            Für alle drei Fälle hat der EU AI Act Regeln, einige davon gelten
+            ab dem 2. August 2026.
           </p>
           <p>
-            Gleichzeitig hat die EU im Juni 2026 beschlossen, die Regeln für
-            sogenannte Hochrisiko-Systeme zu verschieben. Seitdem kursieren zwei
+            Im Juni 2026 hat die EU zudem beschlossen, die Regeln für
+            Hochrisiko-Systeme zu verschieben. Seitdem kursieren zwei
             Erzählungen: <em>alles gilt ab August</em> und{" "}
-            <em>alles ist verschoben</em>. Beide sind falsch. Dieser Text trennt
-            die verschiedenen Anwendungsdaten im heute geltenden Recht.
+            <em>alles ist verschoben</em>. Beide sind falsch.
           </p>
         </div>
       </section>
 
       <div className="bridge reveal">
-        Du musst kein Zertifikat erwerben, um den EU AI Act zu erfüllen. Das
-        stellt die Europäische Kommission in ihrem Q&amp;A zu Artikel 4
-        ausdrücklich fest.
+        Artikel 4 verlangt kein Zertifikat. Das stellt die Europäische
+        Kommission in ihrem Q&amp;A zur KI-Kompetenz ausdrücklich fest.
       </div>
     </>
   );

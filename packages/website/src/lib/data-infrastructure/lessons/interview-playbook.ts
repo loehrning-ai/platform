@@ -29,30 +29,28 @@ const lesson: DataInfraLesson = {
       title: "A bounded review loop",
       readTimeMinutes: 3,
       content:
-        "Structure carries a design review. A fixed order does not: the prompt decides where uncertainty and risk sit. Use this loop and spend the time where either is highest:\n\n1. **Clarify.** Identify consumers, decisions, peak write and read demand, freshness, correctness, privacy, retention, availability, and cost constraints. Record the assumptions that stay unresolved.\n2. **Frame.** Draw only the boundaries the request involves. Name the dominant risks and define the read-path contract before you choose products.\n3. **Estimate and design.** Calculate order-of-magnitude throughput, storage, and concurrency. Select partitioning, processing, storage, and serving mechanisms from those requirements.\n4. **Test failure modes.** Walk through late and duplicate data, skew, schema changes, backfills, dependency loss, access isolation, and recovery. Pair every risk with detection and recovery evidence.\n5. **Review trade-offs.** Restate what the design optimizes, what it does not guarantee, and which decisions still need a benchmark or a prototype.\n\nClarification keeps a low-frequency reporting need from turning into a streaming system nobody asked for. Estimates keep product selection from arriving before the workload.",
-      keyTakeaway:
-        "Clarify the consumer contract and quantify the workload before selecting components.",
+        "Work through this loop and spend the most time where the prompt holds the most uncertainty and risk.\n\n1. **Clarify.** Consumers, decisions, peak write and read demand, freshness, correctness, privacy, retention, availability and cost. Write down the assumptions that stay open.\n2. **Frame.** Draw only the boundaries the request involves. Name the main risks and define the read-path contract before you pick products.\n3. **Estimate and design.** Calculate order-of-magnitude throughput, storage and concurrency, then choose partitioning, processing, storage and serving from them.\n4. **Test failure modes.** Late and duplicate data, skew, schema changes, backfills, dependency loss, access isolation and recovery. Pair every risk with detection and recovery evidence.\n5. **Review trade-offs.** State what the design optimizes, what it does not guarantee and which decisions still need a benchmark or prototype.",
     },
     {
       id: "s2",
       title: "Worked scenario",
       readTimeMinutes: 3,
       content:
-        "The interactive walkthrough uses a hypothetical marketplace where sellers view order and revenue aggregates. Every traffic, size, lateness, and freshness value is an exercise input, not a benchmark result or a recommended default. The design names products to make trade-offs concrete. A production decision still needs current compatibility checks, security review, cost modeling, and representative load tests.",
+        "The walkthrough above uses a hypothetical marketplace where sellers view order and revenue aggregates. Its traffic, size, lateness and freshness values are exercise inputs, not benchmarks or defaults. A production decision on the named products still needs compatibility checks, security review, cost modeling and representative load tests.",
     },
     {
       id: "s3",
       title: "Precise review language",
       readTimeMinutes: 2,
       content:
-        'Use language that exposes assumptions and evidence:\n\n- *"What decision does the consumer make from this output, and how stale may it be?"* defines the read contract.\n- *"Is the freshness target measured from event creation, source commit, or ingestion?"* prevents an ambiguous SLI.\n- *"Let me estimate before selecting a component."* One billion 1 KB events represent about 1 TB per day and 11.6 MB/s on average before replication, encoding, indexes, and protocol overhead. Peak demand needs its own assumption.\n- *"This component is a candidate because it meets these requirements; I would verify connector semantics and benchmark this path."* separates a design hypothesis from proof.\n- *"The risk is X, the mitigation is Y, and Z remains unmitigated."* makes residual risk reviewable.\n- *"This guarantee holds only between these boundaries."* prevents local processing semantics from becoming an end-to-end claim.',
+        '- *"What decision does the consumer make from this output, and how stale may it be?"* defines the read contract.\n- *"Is freshness measured from event creation, source commit or ingestion?"* prevents an ambiguous SLI.\n- *"Let me estimate before I pick a component."* One billion 1 KB events are about 1 TB per day and 11.6 MB/s on average, before replication, encoding, indexes and protocol overhead. Peak demand needs its own assumption.\n- *"This component is a candidate because it meets these requirements; I would verify connector semantics and benchmark this path."* separates hypothesis from proof.\n- *"The risk is X, the mitigation is Y, and Z remains unmitigated."* makes residual risk reviewable.\n- *"This guarantee holds only between these boundaries."* keeps a local processing guarantee from becoming an end-to-end claim.',
     },
     {
       id: "s4",
       title: "Under-specified language",
       readTimeMinutes: 2,
       content:
-        '- *"We would use Kafka."* Which requirement needs a durable partitioned log?\n- *"Machine learning will detect it."* What signal, training data, error cost, and fallback are available?\n- *"It must be exactly-once."* Which state transition and sink boundary must avoid duplicate effects?\n- *"Put everything in one warehouse."* What workload, isolation, and recovery requirements support that?\n- *"That failure is unlikely."* What evidence supports the probability, and what is the impact?\n\nEvery one skips a decision boundary. Repair it by naming the requirement, assumption, evidence, and condition that would change the design.',
+        '- *"We would use Kafka."* Which requirement needs a durable partitioned log?\n- *"Machine learning will detect it."* What signal, training data, error cost and fallback are available?\n- *"It must be exactly-once."* Which state transition and sink boundary must avoid duplicate effects?\n- *"Put everything in one warehouse."* What workload, isolation and recovery requirements support that?\n- *"That failure is unlikely."* What evidence supports the probability, and what is the impact?\n\nEach skips a decision boundary. Repair it by naming the requirement, assumption, evidence and the condition that would change the design.',
     },
     {
       id: "s5",
@@ -63,16 +61,16 @@ const lesson: DataInfraLesson = {
     {
       id: "s6",
       title: "Course review",
-      readTimeMinutes: 3,
+      readTimeMinutes: 1,
       content:
-        "Use these statements as review prompts, not universal rules.\n\n- **Reference layers**, Source → Log → Processing → Storage → Serving → Consumption is one way to locate boundaries; drop the layers a workload does not need.\n- **CAP**, Under a network partition, a distributed register cannot provide both linearizable responses and a response from every non-failing node. State the model and the failure boundary.\n- **PACELC**, Extends the discussion to normal-operation latency and consistency trade-offs; classify a concrete operation, never a vendor.\n- **Star schema**, A fact table records events or measurements at a declared grain; dimensions carry descriptive context.\n- **SCD Type 2**, Preserves selected attribute history by adding validity-bounded dimension rows. Surrogate-key behavior follows the model.\n- **Parquet anatomy**, A file contains row groups, column chunks, and pages; metadata supports selective reads.\n- **Predicate pruning**, Statistics skip regions only when the predicate, the metadata, and the writer layout make that safe.\n- **Dictionary encoding**, Replaces repeated values with dictionary references when the writer decides the encoding pays off.\n- **Table metadata**, A table format coordinates snapshots and files through catalog and metadata structures whose details vary by format and version.\n- **Copy-on-write and merge-on-read**, Different update/read trade-offs whose cost follows engine support, workload, and maintenance.\n- **Time travel**, Retained snapshots enable historical reads while consuming storage and demanding explicit retention and access policy.\n- **Partitioning**, Choose transforms from measured filters, file distribution, update patterns, and engine behavior; validate the resulting file sizes.\n- **Clustering**, Improves data skipping for selected predicates, at rewrite and ingestion cost.\n- **Small files**, Raise metadata and planning overhead; compaction policy follows observed workload and write behavior.\n- **ETL and ELT**, Place transformations where security, governance, latency, replay, and compute constraints support them.\n- **Idempotence**, Repeating a defined operation has no additional effect; `MERGE` or conflict handling achieves that only with stable keys and correct transaction semantics.\n- **Kafka partitions**, Bound active consumer parallelism within a consumer group for a topic and preserve order only inside a partition. Capacity and ordering drive the count.\n- **Event and processing time**, Choose the clock that matches the business question; some operational use cases deliberately use processing time.\n- **Watermark**, A progress policy for deciding when event-time results may be emitted or revised; it proves nothing about all earlier events arriving.\n- **Windows**, Tumbling, hopping, session, and custom windows encode different grouping rules and state costs.\n- **CDC**, Reads database change records subject to connector, source, snapshot, retention, and ordering behavior. It costs source capacity and operations.\n- **Batch and streaming architectures**, One or multiple processing paths can be valid; compare correctness, replay, latency, and operating complexity.\n- **Outbox pattern**, Commits an application state change and an outbox row together, then publishes separately. Delivery and sink effects still need handling.\n- **Processing guarantees**, State source replay, processor state, and sink commit guarantees separately. End-to-end duplicate effects require cooperation across every boundary.\n- **Backfills**, Pin input and code versions, isolate or coordinate live writes, make output replacement deterministic, and define validation and rollback.\n- **Schema compatibility**, Backward, forward, and full compatibility are defined relative to reader and writer versions; deployment order shapes the policy.\n- **Data reliability**, Freshness, completeness, and accuracy need workload-specific SLIs, targets, owners, and responses.\n- **Lineage**, Supplies dependency evidence for impact analysis and triage; coverage and causality need verification.\n- **Data tests**, Schema, constraint, anomaly, and reconciliation checks cover different risks at different execution costs.\n- **Stack selection**, Choose components from workload, team, security, interoperability, recovery, and cost evidence. There is no course-wide default stack.",
+        "The 30 flashcards at the end of this lesson cover every concept of the course. Treat each card as a review prompt to test against a concrete workload.",
     },
     {
       id: "s7",
       title: "Operational close",
       readTimeMinutes: 1,
       content:
-        "Close the review with the operating questions nobody answered: who owns data-quality incidents, how backfills get authorized and isolated, which recovery objectives have been exercised, and which guarantees are measured in production.\n\nA design is incomplete until its ownership, evidence, failure response, and residual risks are explicit.",
+        "End the review with the open operating questions: who owns data-quality incidents, how backfills get authorized and isolated, which recovery objectives were exercised and which guarantees are measured in production.",
     },
   ],
   widgets: [
@@ -88,13 +86,13 @@ const lesson: DataInfraLesson = {
           'The prompt is: "Design a data pipeline for fraud detection." Before drawing anything, which three numbers must you extract first?',
         options: [
           '"Which cloud provider?" "Do you use Kafka already?" "How big is the team?"',
-          "Writes/sec (transaction volume at peak), reads/sec or latency budget for the fraud decision, and freshness target (realtime inference vs. nightly batch scoring). These define the architecture.",
+          "Peak writes/sec, reads/sec or decision latency budget, and freshness target (real-time vs. nightly scoring).",
           '"Do you want batch or streaming?", let them decide the design for you.',
           '"What\'s the budget?" and "How many engineers do we have?"',
         ],
         correct: 1,
         explanation:
-          "Peak write demand, read or decision latency, and freshness constrain the architecture. They are not sufficient on their own: correctness, privacy, retention, availability, and recovery requirements have to be stated before the design is accepted.",
+          "Peak writes, decision latency and freshness constrain the architecture. Correctness, privacy, retention, availability and recovery requirements still have to be stated before the design is accepted.",
       },
     },
     {
@@ -106,16 +104,16 @@ const lesson: DataInfraLesson = {
         title: "The hot partition problem",
         copy: DATA_INFRA_QUIZ_COPY,
         question:
-          "Your Kafka topic for orders is partitioned by seller_id. One seller drives 40% of all traffic on Black Friday. What exactly breaks, and what is the IC5 fix?",
+          "Your Kafka topic for orders is partitioned by seller_id. One seller drives 40% of all traffic on Black Friday. What breaks, and how do you fix it?",
         options: [
           "Nothing breaks, Kafka handles it automatically.",
-          "That partition becomes the bottleneck. Use a controlled sub-key such as (seller_id, bucket) to spread the hot seller, pre-aggregate per bucket, then re-key to seller_id for the final aggregation.",
+          "That partition bottlenecks. Key by (seller_id, bucket), pre-aggregate per bucket, then re-key to seller_id.",
           "Kafka will rebalance partitions automatically to spread the load.",
           "Add more brokers and the partition will split.",
         ],
         correct: 1,
         explanation:
-          "A consumer group cannot process one partition with multiple active consumers at once, so skew caps throughput while other partitions idle. A controlled sub-key spreads the work and adds a second aggregation stage and changed ordering. Derive the bucket count from measured skew and capacity, then test recovery and re-keying behavior.",
+          "Only one consumer in a group reads a partition, so the hot one caps throughput while others idle. Sub-keys spread the work but add an aggregation stage and change ordering; size buckets from measured skew.",
       },
     },
     {
@@ -130,27 +128,27 @@ const lesson: DataInfraLesson = {
           {
             term: "Six layers",
             q: "In order",
-            a: "Source → Log → Processing → Storage → Serving → Consumption.",
+            a: "Source → Log → Processing → Storage → Serving → Consumption. Drop layers a workload does not need.",
           },
           {
             term: "CAP",
             q: "During a partition…",
-            a: "For a defined distributed register, linearizable responses and a response from every non-failing node cannot both be guaranteed. State the model and the boundary.",
+            a: "A distributed register cannot guarantee both linearizable responses and an answer from every non-failing node. State the model and the boundary.",
           },
           {
             term: "PACELC",
             q: "In normal operation…",
-            a: "It surfaces latency and consistency trade-offs outside partitions. Classify a concrete operation, not an entire vendor product.",
+            a: "Latency and consistency trade-offs outside partitions. Classify one operation, never a whole vendor product.",
           },
           {
             term: "Star schema",
             q: "What's in the middle?",
-            a: "A fact table, foreign keys + numeric measures. Surrounding dimension tables hold descriptive context.",
+            a: "A fact table at a declared grain, with foreign keys and numeric measures. Dimension tables add descriptive context.",
           },
           {
             term: "SCD Type 2",
             q: "How preserve history?",
-            a: "Insert new dim row with valid_from/valid_to instead of overwriting. Surrogate key changes; natural key stays.",
+            a: "A new dim row with valid_from/valid_to instead of an overwrite. Surrogate key changes; natural key stays.",
           },
           {
             term: "Parquet anatomy",
@@ -165,7 +163,7 @@ const lesson: DataInfraLesson = {
           {
             term: "Dictionary encoding",
             q: "What does it do?",
-            a: "Replaces repeated values with dictionary references when the writer decides the encoding pays off.",
+            a: "Replaces repeated values with dictionary references when the writer decides it pays off.",
           },
           {
             term: "Iceberg metadata chain",
@@ -175,77 +173,77 @@ const lesson: DataInfraLesson = {
           {
             term: "CoW vs MoR",
             q: "When each?",
-            a: "They trade update work against read-time merging. Engine support, workload, and maintenance decide the result.",
+            a: "Update work against read-time merging. Engine support, workload and maintenance decide.",
           },
           {
             term: "Time travel",
             q: "What enables it?",
-            a: "Retained snapshots and referenced files enable historical reads, with storage, privacy, and retention consequences.",
+            a: "Retained snapshots and referenced files. They cost storage and need privacy, retention and access rules.",
           },
           {
             term: "Partitioning",
             q: "Pick by what?",
-            a: "Measured filters, data distribution, update patterns, and engine behavior. Validate file sizes and pruning with representative data.",
+            a: "Measured filters, data distribution, update patterns and engine behavior. Validate file sizes and pruning with representative data.",
           },
           {
             term: "Clustering",
             q: "When use it?",
-            a: "When selected predicates gain enough locality to justify rewrite and ingestion cost. Verify with query evidence.",
+            a: "When locality for selected predicates justifies the rewrite and ingestion cost, shown by query evidence.",
           },
           {
             term: "Small file problem",
             q: "Response?",
-            a: "Measure planning and metadata overhead, then set compaction policy and file targets for the actual engine and workload.",
+            a: "Measure planning and metadata overhead, then set compaction and file-size targets for the engine and workload.",
           },
           {
             term: "ELT vs ETL",
             q: "How to choose",
-            a: "Place transformations where governance, latency, replay, security, and compute constraints support them.",
+            a: "Place transformations where governance, latency, replay, security and compute constraints support them.",
           },
           {
             term: "Idempotent",
             q: "What must hold?",
-            a: "Repeating a defined operation has no additional effect. Stable keys, deterministic logic, and correct transaction semantics are required.",
+            a: "Repeating a defined operation adds no effect. It needs stable keys, deterministic logic and correct transaction semantics.",
           },
           {
             term: "Kafka partition",
             q: "What does it bound?",
-            a: "Active consumer parallelism within a group and the scope of ordering. Choose counts from capacity and ordering needs.",
+            a: "Active consumer parallelism in a group; order holds only inside a partition. Size the count from capacity and ordering needs.",
           },
           {
             term: "Event time vs processing time",
             q: "Which to use?",
-            a: "Use the clock that answers the business question. Event time handles source-time windows; processing time fits operational arrival-time questions.",
+            a: "The clock that answers the business question. Event time suits source-time windows, processing time operational arrival questions.",
           },
           {
             term: "Watermark",
             q: "What does it represent?",
-            a: "A progress policy for emitting or revising event-time results. It is not proof that all earlier events arrived.",
+            a: "A progress policy for emitting or revising event-time results. It does not prove all earlier events arrived.",
           },
           {
             term: "Window types",
             q: "Four kinds",
-            a: "Tumbling (fixed non-overlapping), hopping (fixed overlapping), session (gap-based), global (custom trigger).",
+            a: "Tumbling (fixed non-overlapping), hopping (fixed overlapping), session (gap-based), global (custom trigger). Each has its own state cost.",
           },
           {
             term: "CDC",
             q: "What does it read?",
-            a: "Database change records, subject to connector, snapshot, source-log retention, ordering, and source-load behavior.",
+            a: "Database change records, subject to connector, snapshot, source-log retention, ordering and source-load behavior.",
           },
           {
             term: "Batch vs streaming",
             q: "Which architecture wins?",
-            a: "Neither, universally. Compare latency, replay, correctness, operating complexity, and recovery requirements.",
+            a: "Neither, universally. Compare latency, replay, correctness, operating complexity and recovery.",
           },
           {
             term: "Outbox pattern",
             q: "When?",
-            a: "When an application must commit state and an intent-to-publish row together. Publication and sink effects still need delivery handling.",
+            a: "When state and an intent-to-publish row must commit together. Publication and sink effects still need delivery handling.",
           },
           {
             term: "Processing guarantees",
             q: "How to state them",
-            a: "Describe replay, processor state, and sink commit boundaries separately. End-to-end duplicate effects require cooperation across all of them.",
+            a: "Name replay, processor state and sink commit separately. Avoiding end-to-end duplicate effects needs every boundary to cooperate.",
           },
           {
             term: "Backfill design",
@@ -255,12 +253,12 @@ const lesson: DataInfraLesson = {
           {
             term: "Schema compatibility",
             q: "Backward / forward / full",
-            a: "Define compatibility relative to reader and writer versions. Select the policy from deployment order and consumer needs.",
+            a: "Compatibility is defined between reader and writer versions. Pick the policy from deployment order and consumer needs.",
           },
           {
             term: "Three SLO numbers",
             q: "For data?",
-            a: "Freshness (how recent), completeness (any missing rows), accuracy (values right).",
+            a: "Freshness (how recent), completeness (missing rows), accuracy (right values), each with its own SLI, target, owner and response.",
           },
           {
             term: "Lineage",
@@ -270,12 +268,12 @@ const lesson: DataInfraLesson = {
           {
             term: "Data test families",
             q: "How do they differ?",
-            a: "Schema, constraint, anomaly, and reconciliation checks cover different risks at different execution costs.",
+            a: "Schema, constraint, anomaly and reconciliation checks cover different risks at different execution costs.",
           },
           {
             term: "Stack selection",
             q: "What drives it?",
-            a: "Workload, team, security, interoperability, recovery, and cost evidence. There is no course-wide default stack.",
+            a: "Workload, team, security, interoperability, recovery and cost evidence. There is no course-wide default stack.",
           },
         ],
       },
@@ -297,73 +295,73 @@ export const INTERVIEW_MOVES: readonly InterviewMoveItem[] = [
   {
     tag: "clarify",
     title: "Restate the problem without adding requirements",
-    body: '<p>Prompt: <em>"Design analytics for a marketplace where sellers view order and revenue dashboards."</em></p><p>Restatement: <b>"The system publishes seller-scoped aggregates from order changes. Freshness, traffic, retention, authorization, and consistency are still open requirements."</b></p>',
-    note: "A neutral restatement confirms scope. It stops an unspecified dashboard from quietly becoming a real-time system.",
+    body: '<p>The prompt reads <em>"Design analytics for a marketplace where sellers view order and revenue dashboards."</em></p><p>Restate it as <b>"The system publishes seller-scoped aggregates from order changes. Freshness, traffic, retention, authorization and consistency are still open."</b></p>',
+    note: "This keeps a vague dashboard from quietly becoming a real-time system.",
   },
   {
     tag: "scope",
     title: "Record the exercise assumptions",
-    body: "<p>Assume <b>10,000 order changes per second at peak</b>, <b>500 concurrent dashboard sessions</b>, and a product target to publish accepted events within <b>5 seconds for 99% of events over a rolling hour</b>.</p><p>Also require seller-level authorization, seven years of aggregate retention, replayable raw changes for 30 days, and a documented degraded mode.</p>",
-    note: "These are scenario inputs. A real review pulls them from product, legal, security, and workload evidence.",
+    body: "<p>Assume <b>10,000 order changes per second at peak</b>, <b>500 concurrent dashboard sessions</b> and a target to publish accepted events within <b>5 seconds for 99% of events over a rolling hour</b>.</p><p>Also require seller-level authorization, seven years of aggregate retention, 30 days of replayable raw changes and a documented degraded mode.</p>",
+    note: "Real reviews take these from product, legal, security and workload evidence.",
   },
   {
     tag: "estimate",
     title: "Estimate before selecting capacity",
-    body: "<p>At the assumed peak sustained for a full day: 10,000 × 86,400 = <b>864 million changes per day</b>. At an illustrative 1 KB payload, that is <b>864 GB per day</b> before replication, indexes, encoding, and protocol overhead.</p><p>Compression ratio, peak duration, aggregate size, and cache residency stay unknown. Measure them with representative data before sizing nodes or spend.</p>",
-    note: "Arithmetic bounds the problem. It replaces no distribution, overhead, failure, or benchmark measurement.",
+    body: "<p>If the peak lasted a full day: 10,000 × 86,400 = <b>864 million changes per day</b>, or <b>864 GB per day</b> at an illustrative 1 KB payload, before replication, indexes, encoding and protocol overhead.</p><p>Measure compression ratio, peak duration, aggregate size and cache residency with representative data before sizing nodes or spend.</p>",
+    note: "Arithmetic bounds the problem and replaces no benchmark.",
   },
   {
     tag: "api",
     title: "Define the consumer contract",
-    body: "<p>Start with two provisional interfaces:</p><pre>GET /sellers/:id/dashboard  → { as_of, revenue_24h, orders_24h }\nWS  /sellers/:id/updates    → { event_id, occurred_at, aggregate_delta }</pre><p>Both derive the seller identity from the authenticated principal, enforce tenant scope server-side, and return the data timestamp. The implementation may use a cache or query store after measurement.</p>",
-    note: "The contract exposes freshness and authorization. Storage stays an implementation decision.",
+    body: "<p>Two provisional interfaces:</p><pre>GET /sellers/:id/dashboard  → { as_of, revenue_24h, orders_24h }\nWS  /sellers/:id/updates    → { event_id, occurred_at, aggregate_delta }</pre><p>Both take the seller identity from the authenticated principal, enforce tenant scope server-side and return the data timestamp. Add a cache or query store only after measuring.</p>",
+    note: "Freshness and authorization are in the contract; storage stays open.",
   },
   {
     tag: "data model",
     title: "Define event identity and ordering",
-    body: "<p>Use an immutable change envelope with <code>event_id, order_id, seller_id, operation, source_commit_position, occurred_at, amount_minor, currency, schema_version</code>.</p><p><code>seller_id</code> supports seller-scoped aggregation, and its skew and per-order ordering behavior still have to be measured. No single key satisfies every downstream operation.</p>",
-    note: "Stable identity supports deduplication; the partition key defines ordering and skew boundaries.",
+    body: "<p>Use an immutable change envelope with <code>event_id, order_id, seller_id, operation, source_commit_position, occurred_at, amount_minor, currency, schema_version</code>.</p><p><code>seller_id</code> keys seller-scoped aggregation. Measure its skew and per-order ordering, since no single key fits every downstream operation.</p>",
+    note: "Stable identity enables deduplication; the partition key sets ordering and skew boundaries.",
   },
   {
     tag: "streaming",
     title: "Propose a processing path",
-    body: "<p>A candidate path is PostgreSQL change capture → Kafka → a stateful stream processor. Partition count comes from measured throughput, recovery time, and ordering constraints. The processor applies version-aware changes and publishes aggregate updates.</p><p>Choose watermark and allowed-lateness policy from the observed delay distribution and correction requirements. Route invalid or unprocessable records to a restricted, retention-bounded review path.</p>",
-    note: "Connector snapshots, source-log retention, replay, processor checkpoints, and sink commits are separate boundaries. Test each.",
+    body: "<p>Candidate path: PostgreSQL change capture → Kafka → a stateful stream processor that applies version-aware changes and publishes aggregate updates. Size partitions from measured throughput, recovery time and ordering needs.</p><p>Set watermark and allowed lateness from observed delays and correction needs. Route invalid records to a restricted, retention-bounded review path.</p>",
+    note: "Connector snapshots, source-log retention, replay, processor checkpoints and sink commits are separate boundaries. Test each.",
   },
   {
     tag: "storage",
     title: "Separate history from serving",
-    body: "<p>Maintain a durable historical table for replay and analysis, plus a seller-scoped serving materialization for the dashboard. Iceberg and Druid are candidates in this exercise, not required products.</p><p>Define how both sinks identify a processing attempt, handle retries, expose their committed version, and reconcile. A successful write to one sink does not make the other atomic.</p>",
-    note: "Multiple materializations buy workload isolation and cost divergence plus recovery work.",
+    body: "<p>Keep a durable history table for replay and analysis plus a seller-scoped serving view for the dashboard. Iceberg and Druid are candidates here, not requirements.</p><p>Define how both sinks identify attempts, handle retries, expose their committed version and reconcile. A write to one does not make the other atomic.</p>",
+    note: "Two materializations isolate workloads and add divergence and recovery work.",
   },
   {
     tag: "serving",
     title: "Protect the read and push paths",
-    body: "<p>The API queries a pre-aggregated seller view and returns its <code>as_of</code> value. Cache only after defining invalidation, tenant-safe keys, and acceptable staleness.</p><p>The push gateway authorizes each subscription, applies bounded buffers and rate limits, handles slow clients, and revokes access when the session changes. It consumes a shared stream rather than creating one broker consumer group per seller.</p>",
-    note: "A latency claim needs a representative load test that includes authorization, fan-out, skew, and failure behavior.",
+    body: "<p>The API reads a pre-aggregated seller view and returns its <code>as_of</code>. Cache only after defining invalidation, tenant-safe keys and acceptable staleness.</p><p>The push gateway authorizes each subscription, bounds buffers and rates, handles slow clients and revokes access on session change. It reads one shared stream instead of one broker consumer group per seller.</p>",
+    note: "A latency claim needs a representative load test with authorization, fan-out, skew and failures.",
   },
   {
     tag: "tradeoff",
     title: "State the consistency boundary",
-    body: "<p>The dashboard serves the latest committed aggregate available in the serving store and exposes its data timestamp. It promises no linearizable reads against the order database.</p><p>The exercise target allows bounded publication delay. Outage and partition behavior still need a product decision: stale response with a visible timestamp, explicit unavailability, or a degraded summary.</p>",
-    note: "Describe observable behavior for a specific read and a specific failure, not a product-wide consistency label.",
+    body: "<p>The dashboard serves the latest committed aggregate in the serving store and shows its data timestamp. It promises no linearizable reads against the order database.</p><p>During an outage or partition, product must choose: a stale response with a visible timestamp, explicit unavailability or a degraded summary.</p>",
+    note: "Describe observable behavior for one read and one failure instead of a product-wide consistency label.",
   },
   {
     tag: "scale",
     title: "Handle measured key skew",
-    body: "<p>Assume one seller accounts for 40% of peak traffic and exceeds one partition consumer's tested capacity.</p><p>Introduce controlled sub-keys such as <code>(seller_id, bucket)</code>, pre-aggregate per bucket, then merge by seller. Derive the bucket count from capacity evidence and document the changed ordering, state, and recovery costs.</p>",
-    note: "Adding brokers can relocate a hot partition. It does not divide that partition's records.",
+    body: "<p>Assume one seller drives 40% of peak traffic, beyond one partition consumer's tested capacity.</p><p>Key by <code>(seller_id, bucket)</code>, pre-aggregate per bucket, then merge by seller. Derive the bucket count from capacity evidence and document the changed ordering, state and recovery costs.</p>",
+    note: "More brokers can move a hot partition. They do not split its records.",
   },
   {
     tag: "tradeoff",
     title: "Record exclusions and residual risk",
-    body: "<p>This pass does not design multi-region recovery, privacy deletion across retained logs and snapshots, fraud decisions, or mobile delivery.</p><p>Each exclusion enters the risk register with an owner and a decision date. Do not imply a replication product solves recovery until failover, ordering, data loss, and restoration have been exercised.</p>",
-    note: "A bounded design names the obligations it excludes instead of hiding them.",
+    body: "<p>Out of scope here: multi-region recovery, privacy deletion across retained logs and snapshots, fraud decisions and mobile delivery.</p><p>Each exclusion goes into the risk register with an owner and a decision date. No replication product counts as recovery until failover, ordering, data loss and restoration have been exercised.</p>",
+    note: "A bounded design names what it excludes.",
   },
   {
     tag: "follow-up",
     title: "Close with operational evidence",
-    body: "<p>Monitor end-to-end publication delay, source-to-sink completeness, invalid-record volume, partition skew, checkpoint and sink-commit failures, reconciliation differences, and serving-store data age.</p><p>Page from a user-impacting SLO and use component metrics for diagnosis. Define runbooks for replay, partial sink success, access incidents, and backfill rollback.</p>",
-    note: "A design becomes reviewable when its guarantees carry measurements, owners, and recovery procedures.",
+    body: "<p>Monitor end-to-end publication delay, source-to-sink completeness, invalid-record volume, partition skew, checkpoint and sink-commit failures, reconciliation differences and serving-store data age.</p><p>Page on a user-impacting SLO and use component metrics for diagnosis. Write runbooks for replay, partial sink success, access incidents and backfill rollback.</p>",
+    note: "Guarantees become reviewable once they have measurements, owners and recovery procedures.",
   },
 ];

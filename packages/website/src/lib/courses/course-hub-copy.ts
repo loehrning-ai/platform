@@ -19,7 +19,7 @@ export const COURSE_HUB_COPY = {
   de: {
     metadataTitle: "KI-Kurse: Grundlagen, Technik und Workshops",
     metadataDescription:
-      "Zehn Kurse auf Deutsch und Englisch, alle kostenlos, dazu Workshops und Lernbücher mit Material zum Herunterladen. Jeder Kurs nennt Dauer, Stufe und ob du ein Konto brauchst, die Technikkurse auch ihren Quellstand auf GitHub.",
+      "Zehn Kurse auf Deutsch und Englisch, alle kostenlos, dazu Workshops und Lernbücher. Jeder Kurs nennt Dauer, Stufe und Kontopflicht, die Technikkurse ihren Quellstand auf GitHub.",
     metadataImageAlt:
       "loehrning.ai Kursübersicht mit Grundlagenpfad und Technikkursen",
     kicker: (count: number) => `${count} Kurse · Deutsch und Englisch`,
@@ -37,16 +37,16 @@ export const COURSE_HUB_COPY = {
     workshopsAction: "Workshops ansehen",
     accessHeading: "Kosten und Konto",
     accessBody:
-      "Alle Kurse sind kostenlos. Für die vier Grundlagenkurse legst du ein Lernkonto an, damit dein Fortschritt auf jedem Gerät gleich ist. Technikkurse, Workshops und Bücher öffnest du ohne Konto; nur das PDF des Lernbuchs braucht eins. Die Teilnahmebestätigung stellt loehrning.ai selbst aus, sie ist nicht akkreditiert.",
+      "Alle Kurse sind kostenlos. Ein Lernkonto brauchst du nur für die vier Grundlagenkurse, damit dein Fortschritt auf jedem Gerät gleich ist, und für das PDF des Lernbuchs. Die Teilnahmebestätigung stellt loehrning.ai selbst aus; sie ist nicht akkreditiert.",
     /** The phone version of `accessBody`: the same three facts in two sentences. */
     accessBodyShort:
-      "Alle Kurse sind kostenlos. Ein Lernkonto brauchst du nur für die vier Grundlagenkurse und das PDF des Lernbuchs; die Teilnahmebestätigung ist nicht akkreditiert.",
+      "Alle Kurse sind kostenlos. Ein Konto brauchst du nur für die Grundlagenkurse und das Lernbuch-PDF; die Teilnahmebestätigung ist nicht akkreditiert.",
     accessAction: "Lernkonto anlegen",
   },
   en: {
     metadataTitle: "AI courses: foundations, technical practice, and workshops",
     metadataDescription:
-      "Ten free AI courses in English and German, plus workshops and learning books with downloadable material. Each course lists duration, level and whether you need an account.",
+      "Ten free AI courses in English and German, plus workshops and learning books. Each course lists duration, level and whether you need an account.",
     metadataImageAlt:
       "loehrning.ai course catalogue with a foundation path and technical courses",
     kicker: (count: number) => `${count} courses · English and German`,
@@ -63,9 +63,9 @@ export const COURSE_HUB_COPY = {
     workshopsAction: "See the workshops",
     accessHeading: "Cost and account",
     accessBody:
-      "All courses are free. For the four foundation courses you create a learning account so your progress is the same on every device. Technical courses, workshops and books open without an account; only the learning book's PDF needs one. loehrning.ai issues the certificate of participation itself; it is not accredited.",
+      "All courses are free. You only need a learning account for the four foundation courses, so your progress is the same on every device, and for the learning book's PDF. loehrning.ai issues the certificate of participation itself; it is not accredited.",
     accessBodyShort:
-      "All courses are free. You only need a learning account for the four foundation courses and the learning book's PDF; the certificate of participation is not accredited.",
+      "All courses are free. You only need an account for the foundation courses and the learning book's PDF; the certificate of participation is not accredited.",
     accessAction: "Create a learning account",
   },
 } as const satisfies Readonly<
@@ -75,10 +75,8 @@ export const COURSE_HUB_COPY = {
 export type CourseHubCopy = (typeof COURSE_HUB_COPY)[Locale];
 
 /**
- * One down-to-earth promise per course for the /kurse hub: what you can do
- * after the course, opening with the concrete action. The ledger intro says
- * the frame ("what you can do afterwards") once, so the rows do not repeat
- * it. Taken from the course-surface review. The catalog tagline
+ * One promise per course for the /kurse hub, at most 12 words: what you can
+ * do after the course, opening with the concrete action. The catalog tagline
  * stays the short card label used by other surfaces; the hub shows this line.
  */
 export const COURSE_PROMISES: Readonly<
@@ -86,47 +84,47 @@ export const COURSE_PROMISES: Readonly<
 > = {
   de: {
     "ki-fuehrerschein":
-      "Du weißt, welche Daten in welches KI-Tool dürfen, und prüfst eine KI-Antwort, bevor sie in eine Mail oder ein Protokoll geht.",
+      "Du weißt, welche Daten ins KI-Tool dürfen, und prüfst Antworten vorm Weitergeben.",
     "ki-und-gesellschaft":
-      "Eine Schlagzeile wie „KI ersetzt 40 % der Jobs“ führst du auf ihre Datenbasis zurück, und bei einem verdächtigen Video weißt du, was zu tun ist.",
+      "Du prüfst die Daten hinter KI-Schlagzeilen und weißt, was bei Deepfake-Verdacht hilft.",
     "eu-ai-act-kurs":
-      "Für ein KI-Tool im Unternehmen stehen danach Risikoklasse und Rolle fest, dazu die Pflichten mit ihren Fristen.",
+      "Risikoklasse, Rolle, Pflichten und Fristen eines KI-Tools bestimmen.",
     "ai-native":
-      "Claude ist für ein festes Projekt eingerichtet, und eine wiederkehrende Aufgabe läuft als n8n-Ablauf mit Freigabeschritt.",
+      "Du baust ein Claude-Projekt und einen n8n-Ablauf mit Freigabe.",
     claude:
-      "Du schreibst Prompts mit Kontext, Beispielen und festem Ausgabeformat und legst eine CLAUDE.md für dein Projekt an.",
+      "Du schreibst Prompts mit Kontext, Beispielen und Ausgabeformat und legst CLAUDE.md an.",
     codex:
-      "Codex bekommt von dir eine Aufgabe mit AGENTS.md und Akzeptanzkriterien, und du prüfst den Pull Request, bevor du ihn mergst.",
+      "Du beauftragst Codex mit AGENTS.md und Akzeptanzkriterien und prüfst den Pull Request.",
     "data-infrastructure":
-      "Tabellenformat, Partitionierung und Streaming-Garantie einer Datenplattform begründest du so, dass sie im Design-Review halten.",
+      "Du begründest Tabellenformat, Partitionierung und Streaming-Garantien im Design-Review.",
     "data-engineering-fundamentals":
-      "Du zeichnest eine Pipeline von der Quelle bis zum Dashboard auf und sagst für jede Station, wo sie typischerweise bricht.",
+      "Du zeichnest eine Pipeline von der Quelle bis zum Dashboard samt Bruchstellen.",
     "data-science":
-      "Du hinterfragst eine Kennzahl wie „92 % Accuracy“ und erkennst einen A/B-Test, der zu früh gestoppt wurde.",
+      "Du prüfst Kennzahlen wie „92 % Accuracy“ und zu früh gestoppte A/B-Tests.",
     "ai-native-operator":
-      "Für dein Team legst du fest, welche Aufgaben KI übernimmt, wer freigibt und woran ihr nach drei Monaten den Nutzen messt.",
+      "Du legst KI-Aufgaben und Freigaben fest und misst den Nutzen.",
   },
   en: {
     "ki-fuehrerschein":
-      "You know which data may go into which AI tool, and you check an AI answer before it ends up in an email or minutes.",
+      "You know what data AI may see and check answers before sharing.",
     "ki-und-gesellschaft":
-      "You trace a headline like 'AI will replace 40% of jobs' back to its data, and you know what to do with a suspicious video.",
+      "You trace AI headlines to their data and handle suspected deepfakes.",
     "eu-ai-act-kurs":
-      "For one AI tool your company uses, you name its risk class and your role and list the duties and deadlines that follow.",
+      "Determine an AI tool's risk class, role, duties and deadlines.",
     "ai-native":
-      "Claude is set up for one real project, and a recurring task runs as an n8n workflow with an approval step.",
+      "You build a Claude project and an n8n workflow with sign-off.",
     claude:
-      "You write prompts with context, examples and a fixed output format, and you set up a CLAUDE.md for your project.",
+      "You write prompts with context, examples and output format, plus a CLAUDE.md.",
     codex:
-      "You hand Codex a task with an AGENTS.md and acceptance criteria, and you review the pull request before you merge it.",
+      "You brief Codex with AGENTS.md and acceptance criteria, then review its PR.",
     "data-infrastructure":
-      "You can justify the table format, partitioning and streaming guarantees of a data platform in a design review.",
+      "You justify table format, partitioning and streaming guarantees in a design review.",
     "data-engineering-fundamentals":
-      "You sketch a pipeline from source to dashboard and say, for each stage, where it usually breaks.",
+      "You sketch a pipeline from source to dashboard, including where it breaks.",
     "data-science":
-      "You question a metric like '92% accuracy' and spot an A/B test that was stopped too early.",
+      "You question metrics like '92% accuracy' and A/B tests stopped early.",
     "ai-native-operator":
-      "You decide which tasks your team hands to AI, who signs off, and how you measure after three months whether it paid off.",
+      "You set your team's AI tasks and sign-offs and measure the payoff.",
   },
 };
 

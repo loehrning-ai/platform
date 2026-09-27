@@ -1,11 +1,8 @@
 # Evidence canvas
 
-This is the optional technical follow-up. During the lesson, use the five boxes in
-`QUESTION-CARD.md`. This canvas checks whether those choices have evidence behind them.
-
-Score one question and one AI-facing data surface. Attach evidence. Do not grade intentions.
-
-New word? The [guide glossary](https://loehrning.ai/workshops/datenbereitschaft-fuer-ki/guide.html#glossary) explains it.
+Optional technical follow-up to the five boxes in `QUESTION-CARD.md`: does each choice have
+evidence behind it? Score one question and one AI-facing data surface, and attach evidence, not
+intentions. Terms: [guide glossary](https://loehrning.ai/workshops/datenbereitschaft-fuer-ki/guide.html#glossary).
 
 ## Scope
 
@@ -16,12 +13,11 @@ New word? The [guide glossary](https://loehrning.ai/workshops/datenbereitschaft-
 | Practice data (fixture) |  | `FOLDLINE-AGG-001` |
 | Definition version |  | `ending_mrr` 1.0.0 |
 
-Lock the four blanks from box 3 of the question card: kind of number, rows per what, which months,
-and which table. Also write down who counts (population and status).
+Lock the four blanks and who counts from box 3 of the question card.
 
 ## Lab run log
 
-The witness fills one row per run in the browser lab. The run hash changes whenever a choice changes.
+The witness fills one row per lab run. The run hash changes whenever a choice changes.
 
 | Run | Choice changed | Run hash | Pass / fail / not run | Verdict | First weak check | Old results out of date? (skeptic) |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -34,8 +30,8 @@ The witness fills one row per run in the browser lab. The run hash changes whene
 
 ## The ten checks
 
-Five gates, two checks each. The ids and names match the browser lab. "Yardstick" means the set of
-tests used to judge the result.
+Five gates, two checks each, named as in the browser lab. "Yardstick" is the set of tests that
+judges the result.
 
 Level: **0** = unproven (no evidence, or the test failed). **1** = documented (written down, not
 tested). **2** = proven (a repeatable test passed).
@@ -59,8 +55,6 @@ tested). **2** = proven (a repeatable test passed).
 - **Pilot only:** every check is at least documented, but at least one is not proven.
 - **Bounded ready:** all ten checks are proven for the declared question and surface.
 
-An average never overrides a weak check. This is an evidence gate for one question. It is not a
-maturity model or a platform certification.
-
-Lab run records prove only the fixed FOLDLINE practice data. Replace them with real runtime and
-database evidence before you grade another system.
+An average never overrides a weak check. This is an evidence gate for one question, not a maturity
+model or a certification. Lab run records prove only the FOLDLINE practice data; grade another
+system with its own runtime and database evidence.

@@ -396,7 +396,7 @@ describe("login layout branches", () => {
       { ...NO_RUNTIME, account: true },
       "Weiter ohne Konto.",
       "Keine Methode freigegeben",
-      "Weder Google noch der Login-Link sind hier geprüft.",
+      "Die Anmeldung ist hier noch nicht eingerichtet.",
       /Eine bestehende Sitzung bleibt gültig/,
     ],
     [
@@ -406,7 +406,7 @@ describe("login layout branches", () => {
       "Weiter ohne Konto.",
       "Hier nicht eingerichtet",
       "Diese Umgebung läuft ohne Konto.",
-      /Bücher, Demos, KI-Check und die technischen Kurse bleiben vollständig offen/,
+      /Hier ist nichts zu tun/,
     ],
   ] as const)(
     "gives the %s branch one column and its own status, headline and next step",

@@ -9,8 +9,7 @@ export function PraxisEn() {
         What you can do <span className="em">now.</span>
       </h2>
       <p className="dek">
-        Four questions for employees and five steps for small businesses. None
-        requires legal counsel to begin.
+        Four questions for employees and five steps for small businesses.
       </p>
 
       <div className="premise">
@@ -21,7 +20,7 @@ export function PraxisEn() {
           </p>
           <p>
             <b style={{ color: "var(--kupfer)" }}>1.</b> Can you recognise when
-            an AI system makes or prepares a decision about you? One example is
+            an AI system makes or prepares a decision about you? For example,
             software that sorts CVs before a person reads them.
           </p>
           <p>
@@ -31,8 +30,8 @@ export function PraxisEn() {
           </p>
           <p>
             <b style={{ color: "var(--kupfer)" }}>3.</b> Can you distinguish an
-            AI output from a human decision? An AI system produces an output; it
-            does not carry legal or professional judgment.
+            AI output from a human decision? An AI output carries no legal or
+            professional judgment.
           </p>
           <p>
             <b style={{ color: "var(--kupfer)" }}>4.</b> Do you know where to
@@ -44,7 +43,7 @@ export function PraxisEn() {
           <p style={{ marginTop: 28 }}>
             <b style={{ color: "var(--kupfer)" }}>As a small business</b> using
             finished tools such as ChatGPT or Copilot, you are usually a
-            deployer and face a limited set of obligations:
+            deployer with limited obligations:
           </p>
           <p>
             <b style={{ color: "var(--kupfer)" }}>1. Keep an inventory:</b>{" "}
@@ -60,10 +59,9 @@ export function PraxisEn() {
           <p>
             <b style={{ color: "var(--kupfer)" }}>3. Prepare for Article 50:</b>{" "}
             Does your customer chatbot identify itself as AI? Are AI-generated
-            images or videos disclosed where Article 50 requires it? These
-            obligations apply from 2 August 2026. The Commission&apos;s
-            voluntary transparency code of 10 June 2026 provides wording
-            guidance; the Commission and the AI Board found it adequate on 8 and
+            images or videos disclosed where Article 50 requires it? This
+            applies from 2 August 2026. Wording guidance comes from the
+            Commission&apos;s voluntary transparency code of 10 June 2026; the Commission and the AI Board found it adequate on 8 and
             9 July 2026. (Source: European Commission, Code of Practice on
             Transparency of AI-generated Content)
           </p>
@@ -72,9 +70,8 @@ export function PraxisEn() {
               4. Check for high-risk uses:
             </b>{" "}
             Do you use AI for recruitment, credit decisions, or exams? Such uses
-            are likely to fall under Annex III. The relevant obligations begin
-            under the enacted timetable on 2 December 2027. Recording the use
-            now reduces later implementation work.
+            are likely to fall under Annex III, with obligations from 2 December
+            2027. Recording the use now reduces later implementation work.
           </p>
           <p>
             <b style={{ color: "var(--kupfer)" }}>5. Ask questions:</b> The
@@ -88,11 +85,6 @@ export function PraxisEn() {
             <b>Role rule of thumb</b>
             Using a finished tool: deployer. Building a system or marketing it
             under your own name: provider, with substantially more obligations.
-          </div>
-          <div className="margin-note">
-            <b>No certificate required</b>
-            For Article 4, the Commission prescribes no format, examination, or
-            certificate. Keep an internal record of the measures taken.
           </div>
         </aside>
       </div>

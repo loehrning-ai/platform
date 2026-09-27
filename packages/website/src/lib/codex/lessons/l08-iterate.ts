@@ -188,7 +188,7 @@ const lesson: CodexLesson = {
         ],
         correct: 1,
         explanation:
-          "Changes that do not converge point to an unstable premise, boundary or context. A clean specification gives the next attempt one contract. The trigger is divergence, whatever the retry count.",
+          "Non-converging changes point to an unstable premise, boundary or context. Restart from one clean specification, whatever the retry count.",
       },
     },
     {
@@ -200,8 +200,8 @@ const lesson: CodexLesson = {
         kindLabel: CODEX_COMPARE_KIND_LABEL,
         badLabel: "Carrying noise",
         goodLabel: "Carrying signal",
-        bad: "CONTEXT FROM LAST SESSION:\n- We were working on the rate limiter\n- There was a conversation about caching\n- I asked about Redis vs. in-memory\n- You said something about TTLs\n- We discussed the test structure for a while\n- The second approach seemed better\n- Something about the limiter key format",
-        good: "CONTEXT FROM LAST SESSION (3 bullets):\n1. Constraint discovered: the limiter key must be (ip, user_id) not just ip, shared IPs (offices, proxies) would block unrelated users otherwise.\n2. Rejected approach: lru_cache is process-local; on multi-worker deployments counts don't accumulate. Use Redis.\n3. Hidden coupling: rate_limit_middleware runs before auth, so user_id is unavailable there, limiter logic must live in the view layer.",
+        bad: "CONTEXT FROM LAST SESSION:\n- We were working on the rate limiter\n- There was a conversation about caching\n- You said something about TTLs\n- The second approach seemed better",
+        good: "CONTEXT FROM LAST SESSION (3 bullets):\n1. Constraint: the limiter key must be (ip, user_id). Keying on ip alone blocks unrelated users behind shared IPs (offices, proxies).\n2. Rejected: lru_cache is process-local, so counts don't add up across workers. Use Redis.\n3. Hidden coupling: rate_limit_middleware runs before auth, so user_id is unavailable there. Limiter logic belongs in the view layer.",
         note: "Keep a bullet only if a fresh session would repeat a wrong turn without it. Caching and TTL basics are in the docs; these three discoveries are not.",
       },
     },

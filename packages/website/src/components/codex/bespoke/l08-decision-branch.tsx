@@ -61,9 +61,9 @@ const COPY: Record<
       {
         text: "The focused check has intermittent failures with different error output across runs.",
         explanation:
-          "Correct. Request reproduction, preserve each log, and identify whether the failure predates the diff before changing production code.",
+          "Correct. Reproduce it, keep each log and check whether the failure predates the diff.",
         wrongExplanation:
-          "A bounded investigation is appropriate because the task contract is still valid and the immediate question is the source of the intermittent failure.",
+          "A bounded investigation fits, because the task contract still holds and only the source of the failure is open.",
       },
       {
         text: "The reported checks pass, but the diff adds an unrelated refactor outside the stated scope.",
@@ -75,7 +75,7 @@ const COPY: Record<
       {
         text: "The PR fundamentally misunderstands the module's purpose.",
         explanation:
-          "Correct. Discard the diff, re-establish the module contract from repository evidence, and start a new bounded task.",
+          "Correct. Discard the diff, re-establish the module contract from the repository and start a new bounded task.",
         wrongExplanation:
           "A local correction cannot repair a diff built on the wrong module contract. Restart from verified context.",
       },
@@ -95,9 +95,9 @@ const COPY: Record<
       {
         text: "Die fokussierte Prüfung schlägt unregelmäßig mit unterschiedlichen Fehlermeldungen fehl.",
         explanation:
-          "Richtig. Reproduktion anfordern, jedes Protokoll sichern und vor Änderungen am Produktivcode klären, ob der Fehler bereits vorher bestand.",
+          "Richtig. Reproduzieren, jedes Protokoll sichern und klären, ob der Fehler schon vor dem Diff bestand.",
         wrongExplanation:
-          "Eine begrenzte Untersuchung passt, weil der Aufgabenvertrag gültig bleibt und zunächst die Fehlerursache belegt werden muss.",
+          "Eine begrenzte Untersuchung passt, weil der Aufgabenvertrag gilt und nur die Fehlerursache offen ist.",
       },
       {
         text: "Die gemeldeten Prüfungen bestehen, aber der Diff enthält ein sachfremdes Refactoring außerhalb des vereinbarten Umfangs.",

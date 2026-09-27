@@ -108,7 +108,7 @@ describe("/ueber-mich locale metadata and structured data", () => {
       url: "https://loehrning.ai/en/ueber-mich",
     });
     expect(person?.knowsAbout).toContain("AI literacy");
-    expect(screen.getByRole("heading", { name: /keep knowledge about AI verifiable/ })).toBeVisible();
+    expect(screen.getByRole("heading", { name: /so AI knowledge stays verifiable/ })).toBeVisible();
     expect(document.body).not.toHaveTextContent("Akademischer Hintergrund");
   });
 });

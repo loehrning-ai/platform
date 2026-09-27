@@ -24,7 +24,7 @@ const STAGES_EN: readonly RiskStageEn[] = [
     stage: 3,
     title: "Limited risk",
     range: "Article 50 · transparency obligations from 2 August 2026",
-    desc: "Permitted, but subject to disclosure requirements: people must be told when they interact with an AI system, generated content must be marked in a machine-readable format, and deepfakes must be disclosed. Section 05 explains the details.",
+    desc: "Permitted, but subject to disclosure requirements: people must be told when they interact with an AI system, generated content must be marked in a machine-readable format, and deepfakes must be disclosed.",
   },
   {
     stage: 4,
@@ -45,9 +45,9 @@ export function RisikoklassenEn() {
         Four levels and <span className="em">one special case.</span>
       </h2>
       <p className="dek">
-        Classification depends on the use, not the underlying technology. The
-        same model family can be low-risk in one product and subject to the
-        strictest obligations in another.
+        Classification depends on the use: the same model family can be
+        low-risk in one product and subject to the strictest obligations in
+        another.
       </p>
 
       <div className="ladder reveal">
@@ -73,18 +73,17 @@ export function RisikoklassenEn() {
           <p>
             The special case is <strong>general-purpose AI models</strong>{" "}
             (GPAI), meaning the models behind tools such as ChatGPT, Claude, or
-            Gemini. They are not classified by a particular use. Instead, a
-            separate chapter applies. Since 2 August 2025, their providers have
+            Gemini. A separate chapter applies to them regardless of use. Since
+            2 August 2025, their providers have
             had to supply technical documentation, comply with EU copyright law,
             and publish a sufficiently detailed summary of training content.
             (Source: EU AI Act, Articles 51 to 56 and Article 113)
           </p>
           <p>
-            To support implementation, the Commission published a voluntary
-            General-Purpose AI Code of Practice on 10 July 2025. Its signatories
-            include OpenAI, Anthropic, Google, and Microsoft. The Code can help
-            a provider demonstrate compliance, but it does not replace a
-            conformity assessment. The Commission can enforce the GPAI
+            On 10 July 2025 the Commission published a voluntary General-Purpose
+            AI Code of Practice, signed by OpenAI, Anthropic, Google, Microsoft
+            and others. It helps a provider demonstrate compliance but does not
+            replace a conformity assessment. The Commission can enforce the GPAI
             obligations from 2 August 2026. (Source: European Commission,
             General-Purpose AI Code of Practice, 10 July 2025)
           </p>
@@ -93,7 +92,7 @@ export function RisikoklassenEn() {
           <div className="margin-note">
             <b>Everyday classification</b>A customer-service FAQ chatbot is
             level 3. The same language model used to assess job applications is
-            level 2. The use determines the class, not the model.
+            level 2.
           </div>
           <div className="margin-note">
             <b>GPAI · Articles 51 to 56</b>

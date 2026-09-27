@@ -194,7 +194,7 @@ const translated = localizeCodexLessonToGerman(canonical, {
     ],
     [
       widgetString(0, "explanation"),
-      "In der Anfrage stecken Datenvertrag, Autorisierung, Exporterzeugung, Planung und Zustellung. Kläre die fehlenden Produkt- und Sicherheitsentscheidungen. Getrennt wird nur dort, wo ein gültiger, unabhängig prüfbarer Zwischenzustand entsteht.",
+      "In der Anfrage stecken Datenvertrag, Autorisierung, Export, Planung und Zustellung. Kläre die offenen Produkt- und Sicherheitsentscheidungen und trenne nur dort, wo ein gültiger, prüfbarer Zwischenzustand entsteht.",
     ],
     [
       widgetString(1, "question"),
@@ -240,7 +240,7 @@ const translated = localizeCodexLessonToGerman(canonical, {
     [widgetStrings(4, "options")[1], '"Prüfe das tatsächliche Verhalten."'],
     [
       widgetStrings(4, "options")[2],
-      '"tests/api/admin/test_exports.py::test_export_subscriptions prüft die Serialisierung, aber nicht die Auswahl nach Aktivstatus. Ergänze einen Integrationstest, der aktive und gekündigte Datensätze anlegt, den Endpunkt über das echte Repository aufruft und nur aktive Zeilen erwartet. Behalte einen fokussierten Serialisierungstest, wenn er getrenntes Verhalten abdeckt."',
+      "\"tests/api/admin/test_exports.py::test_export_subscriptions prüft nur die Serialisierung. Ergänze einen Integrationstest über das echte Repository, der aktive und gekündigte Datensätze anlegt und nur aktive Zeilen erwartet.\"",
     ],
     [widgetStrings(4, "options")[3], '"Mehr Tests ergänzen."'],
     [

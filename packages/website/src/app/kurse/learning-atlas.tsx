@@ -113,8 +113,6 @@ function matchesLevel(course: Course, level: LevelFilter): boolean {
 const ATLAS_COPY = {
   de: {
     heading: "Womit fängst du an?",
-    intro:
-      "Wähle, was auf dich zutrifft. Der Pfad zeigt die passenden Kurse in der empfohlenen Reihenfolge.",
     goalLabel: "Lernziel auswählen",
     pathLabel: "Kurse in diesem Pfad",
     nextProof: "Empfohlen als Nächstes",
@@ -126,8 +124,6 @@ const ATLAS_COPY = {
     completedLabel: "Abgeschlossen",
     levelTerm: "Stufe",
     allCourses: "Alle Kurse",
-    allCoursesIntro:
-      "Jede Zeile sagt, was du nach dem Kurs kannst. Jeden Kurs kannst du auch ohne Pfad direkt öffnen.",
     pathHeading: (count: number) => `Dein Pfad · ${count} Kurse`,
     pathStartUnavailable: (title: string) =>
       `${title} ist hier nicht verfügbar.`,
@@ -161,8 +157,6 @@ const ATLAS_COPY = {
   },
   en: {
     heading: "Where do you want to start?",
-    intro:
-      "Pick what fits you. The path shows the matching courses in the suggested order.",
     goalLabel: "Choose a learning goal",
     pathLabel: "Courses in this path",
     nextProof: "Suggested next",
@@ -174,8 +168,6 @@ const ATLAS_COPY = {
     completedLabel: "Completed",
     levelTerm: "Level",
     allCourses: "All courses",
-    allCoursesIntro:
-      "Each row says what you can do afterwards. You can open any course directly, with or without a path.",
     pathHeading: (count: number) => `Your path · ${count} courses`,
     pathStartUnavailable: (title: string) =>
       `${title} isn't available here.`,
@@ -212,7 +204,6 @@ const ATLAS_COPY = {
     Locale,
     LedgerRowCopy & {
       readonly heading: string;
-      readonly intro: string;
       readonly goalLabel: string;
       readonly pathLabel: string;
       readonly nextProof: string;
@@ -221,7 +212,6 @@ const ATLAS_COPY = {
       readonly inProgress: string;
       readonly queued: string;
       readonly allCourses: string;
-      readonly allCoursesIntro: string;
       readonly pathHeading: (count: number) => string;
       readonly pathStartUnavailable: (title: string) => string;
       readonly levelLabel: string;
@@ -400,10 +390,10 @@ export function LearningAtlas({
   return (
     <div data-testid="learning-atlas">
       <section aria-labelledby="learning-atlas-heading">
-        {/* The Kopflinie head. Below sm the question and the intro stay in
-            the accessibility tree only: the goal chips read as the question
-            on their own, so the phone hero is followed directly by the
-            choice and the recommended course's action. */}
+        {/* The Kopflinie head. Below sm the question stays in the
+            accessibility tree only: the goal chips read as the question on
+            their own, so the phone hero is followed directly by the choice
+            and the recommended course's action. */}
         <header className="border-t-2 border-scene-line pt-3 max-sm:border-t-0 max-sm:pt-0 sm:pt-4">
           <h2
             id="learning-atlas-heading"
@@ -411,9 +401,6 @@ export function LearningAtlas({
           >
             {copy.heading}
           </h2>
-          <p className="sr-only max-w-[64ch] text-body text-muted-foreground text-pretty sm:not-sr-only sm:mt-2 sm:block">
-            {copy.intro}
-          </p>
         </header>
 
         {/* Below lg the four goals are one horizontal rail of square chips
@@ -692,11 +679,6 @@ export function LearningAtlas({
               <ArrowGlyph />
             </Link>
           </div>
-          {/* Orientation, not a decision: below sm it stays in the
-              accessibility tree and leaves the printed page. */}
-          <p className="sr-only text-body text-muted-foreground sm:not-sr-only sm:mt-1">
-            {copy.allCoursesIntro}
-          </p>
           {/* The key to the ink square on each row; the rows carry the
               same fact as text for screen readers. */}
           <p

@@ -108,7 +108,7 @@ describe("<LessonQuiz> empty + initial state", () => {
       <LessonQuiz questions={[]} bestScore={null} onComplete={onComplete} />,
     );
     expect(
-      screen.getByText("Keine Quizfragen für diese Lektion verfügbar."),
+      screen.getByText("Keine Quizfragen für diese Lektion."),
     ).toBeInTheDocument();
     expect(onComplete).not.toHaveBeenCalled();
   });
@@ -244,7 +244,7 @@ describe("<LessonQuiz> completion scoring", () => {
     expect(screen.getByText("0%")).toBeInTheDocument();
     expect(screen.getByText("0/2 richtig")).toBeInTheDocument();
     expect(
-      screen.getByText("Lies die Lektion nochmal und versuch es noch einmal."),
+      screen.getByText("Lies die Lektion nochmal und versuch es erneut."),
     ).toBeInTheDocument();
   });
 

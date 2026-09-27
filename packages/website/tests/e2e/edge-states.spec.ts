@@ -58,7 +58,7 @@ test.describe("edge: unknown route renders not-found.tsx", () => {
     await expect(page.getByText("404", { exact: true }).first()).toBeVisible();
     await expect(
       page.getByText(
-        "Die angeforderte Seite existiert nicht oder wurde verschoben.",
+        "Diese Seite gibt es nicht oder sie ist umgezogen.",
       ),
     ).toBeVisible();
 

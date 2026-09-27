@@ -5,13 +5,13 @@
     "last_updated": "2026-04-18"
   },
   "categories": {
-    "claude": "Claude.ai, Claude Code and the Anthropic platform",
-    "obsidian": "Obsidian and personal knowledge-management concepts",
+    "claude": "Claude and the Anthropic platform",
+    "obsidian": "Obsidian and knowledge management",
     "automation": "n8n, workflows, MCP and APIs",
-    "mindset": "AI-native work, orchestration and assistant workflows",
+    "mindset": "AI-native work and orchestration",
     "regulatorik": "EU AI Act, GDPR, UWG and compliance",
-    "pedagogy": "Course concepts, the capstone and review processes",
-    "technik": "Technical foundations, APIs and formats"
+    "pedagogy": "Course concepts and the capstone",
+    "technik": "Technical foundations and formats"
   },
   "entries": [
     {"term": "AI-native", "category": "mindset", "definition": "A way of working where AI tools are a fixed part of a defined process. Judgement, review and accountability stay with people.", "related": ["Claude-Orchestrator", "Coworker-Mindset"]},
@@ -73,7 +73,7 @@
     {"term": "Deployer", "category": "regulatorik", "definition": "Under the EU AI Act, a person or organisation using an AI system under its authority, except for personal non-professional use. In a company, the organisation is generally the deployer.", "related": ["Provider"]},
     {"term": "Importer", "category": "regulatorik", "definition": "A person or organisation located in the EU that places an AI system bearing the name or trademark of a non-EU entity on the EU market.", "related": ["Provider", "Deployer"]},
     {"term": "FRIA", "category": "regulatorik", "definition": "Fundamental Rights Impact Assessment. Article 27 of the EU AI Act requires one for specified deployers and qualifying high-risk uses, not for every AI deployment.", "related": ["Hochrisiko-System"]},
-    {"term": "Art. 4 AI-Literacy", "category": "regulatorik", "definition": "Article 4 of the EU AI Act requires providers and deployers to take measures that support the development of AI literacy among staff and other people dealing with AI systems on their behalf. Knowledge, experience, education and training, use context, and affected people or groups must be considered; no specific individual level has to be guaranteed. This course can be one measure among several.", "related": ["EU AI Act"]},
+    {"term": "Art. 4 AI-Literacy", "category": "regulatorik", "definition": "Article 4 of the EU AI Act requires providers and deployers to take measures supporting the development of AI literacy among their staff and others acting on their behalf. Knowledge, experience, education and training, use context and affected people or groups must be considered; no specific individual level has to be guaranteed. This course can be one measure among several.", "related": ["EU AI Act"]},
     {"term": "UWG", "category": "regulatorik", "definition": "Germany's Act Against Unfair Competition. Section 5 covers misleading commercial practices, including unsupported quantitative claims.", "related": []},
     {"term": "DSGVO", "category": "regulatorik", "definition": "The German abbreviation for the General Data Protection Regulation (GDPR), which governs processing of personal data in the EU and EEA.", "related": ["Art. 28 AVV", "Art. 22"]},
     {"term": "Art. 28 AVV", "category": "regulatorik", "definition": "A data processing agreement under GDPR Article 28 between a controller and a processor when the processor handles personal data on the controller's behalf.", "related": ["DSGVO"]},

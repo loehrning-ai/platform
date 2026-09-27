@@ -197,7 +197,7 @@
         <rect class="the-case-strip__tick" x="364" y="0" width="12" height="136" data-motion="stamp" style="--order:2" />
         <path class="the-case-strip__bracket" id="the-case-q2-bracket" data-step="3" data-motion="grow" data-axis="x" d="M2 138V152H376V138" />
       </svg>
-      <p class="the-case-months__q2" id="the-case-q2" data-step="3" data-motion="fade" style="--order:0">Last complete quarter: <span class="the-case-nowrap">April–June 2026</span></p>
+      <p class="the-case-months__q2" id="the-case-q2" data-step="3" data-motion="fade" style="--order:0">Last complete quarter: <span class="the-case-nowrap">April to June 2026</span></p>
       <p class="the-case-months__q3" id="the-case-q3" data-step="3" data-motion="fade" style="--order:0">Q3 not finished</p>
     </div>
   <!-- /scene:the-case -->
@@ -1176,7 +1176,7 @@
     </div>
     <span class="yd-box__label">Four blanks</span>
     <span class="yd-rules" aria-hidden="true"><span class="yd-rule"></span><span class="yd-rule"></span><span class="yd-rule"></span><span class="yd-rule"></span></span>
-    <p class="yd-ghost yd-ghost--blanks" data-step-until="5"><span class="yd-ghost__line"><svg class="icon icon--32" aria-hidden="true"><use href="#i-level"/></svg><span>Level</span></span><span class="yd-ghost__line"><svg class="icon icon--32" aria-hidden="true"><use href="#i-rows"/></svg><span>Month</span></span><span class="yd-ghost__line"><svg class="icon icon--32" aria-hidden="true"><use href="#i-calendar"/></svg><span>Apr–Jun</span></span><span class="yd-ghost__line"><svg class="icon icon--32" aria-hidden="true"><use href="#i-view"/></svg><span>MRR summary</span></span></p>
+    <p class="yd-ghost yd-ghost--blanks" data-step-until="5"><span class="yd-ghost__line"><svg class="icon icon--32" aria-hidden="true"><use href="#i-level"/></svg><span>Level</span></span><span class="yd-ghost__line"><svg class="icon icon--32" aria-hidden="true"><use href="#i-rows"/></svg><span>Month</span></span><span class="yd-ghost__line"><svg class="icon icon--32" aria-hidden="true"><use href="#i-calendar"/></svg><span>Apr to Jun</span></span><span class="yd-ghost__line"><svg class="icon icon--32" aria-hidden="true"><use href="#i-view"/></svg><span>MRR summary</span></span></p>
   </div>
   <div class="yd-box" id="your-data-box-4" data-focus data-motion="fade" style="--order:1">
     <svg class="yd-link" data-step="3" width="64" height="24" viewBox="0 0 64 24" aria-hidden="true" data-allow-overlap><path class="edge yd-link__line" d="M2 12H46" data-motion="draw"/><path class="edge-head yd-link__head" d="M60 12l-14-7v14z" data-motion="fade" style="--order:4"/></svg>
@@ -1197,7 +1197,7 @@
   <svg class="icon icon--48" aria-hidden="true"><use href="#i-person"/></svg>
   <p class="yd-now__text" data-step-until="1" data-motion="fade" style="--order:1"><b>Now:</b> write one business question and what should happen.</p>
   <p class="yd-now__text" data-step="1" data-step-until="2" data-motion="fade"><b>Now:</b> name the smallest approved view it needs.</p>
-  <p class="yd-now__text" data-step="2" data-step-until="3" data-motion="fade"><b>Now:</b> fill the four blanks: kind of number, rows, months, table.</p>
+  <p class="yd-now__text" data-step="2" data-step-until="3" data-motion="fade"><b>Now:</b> fill the four blanks (kind of number, rows, months, table).</p>
   <p class="yd-now__text" data-step="3" data-step-until="4" data-motion="fade"><b>Now:</b> one thing the AI must never reach.</p>
   <p class="yd-now__text" data-step="4" data-step-until="5" data-motion="fade"><b>Now:</b> write one test. Compare with a partner.</p>
   <p class="yd-now__text" data-step="5" data-motion="fade">Two pairs share with the room: your question and your hardest box.</p>
@@ -1261,7 +1261,7 @@
 <p class="stamp rs-verdict" id="resolution-verdict" data-step="3" data-motion="stamp" style="--order:0" data-focus><svg class="icon" aria-hidden="true"><use href="#i-checklist"/></svg><span>Verdict: limited pilot, not signed off.</span></p>
 <p class="rs-gapline" id="resolution-gapline" data-step="3" data-motion="rise" style="--order:1"><svg class="icon icon--40" aria-hidden="true"><use href="#i-gap"/></svg><span>Gaps: no definition cited · SQL leaned on a setting · one run each</span></p>
 <div class="rs-sign" id="resolution-sign" data-step="3" data-motion="fade" style="--order:3">
-  <p class="rs-materials"><span class="rs-materials__label">Materials:</span> <span class="rs-materials__url">loehrning.ai/workshops/datenbereitschaft-fuer-ki</span> <span class="rs-materials__label">· Try it:</span> <a class="rs-materials__url deck-link" href="./demo.html" target="_blank" rel="noopener">interactive demo</a></p>
+  <p class="rs-materials"><span class="rs-materials__label">Materials:</span> <span class="rs-materials__url">loehrning.ai/workshops/datenbereitschaft-fuer-ki</span> <span class="rs-materials__label">·</span> <a class="rs-materials__url deck-link" href="./demo.html" target="_blank" rel="noopener">interactive demo</a></p>
   <p class="rs-lockup" id="resolution-lockup"><img src="./assets/lockup-horizontal.svg" width="206" height="40" alt="loehrning.ai" /><span class="rs-lockup__co">× Brainster</span></p>
 </div>
 <div class="room-vote rs-vote" id="resolution-vote" data-step-until="1" data-motion="rise" style="--order:1" data-allow-overlap>
@@ -1422,7 +1422,7 @@ FROM core.stock_months;</code></pre>
   TO ai_reader;
 -- no grant on core.* or raw.*</code></pre>
     <p class="fx-does"><b>The lock:</b> the database refuses everything else.</p>
-    <p class="fx-with">BigQuery: dataset role · Snowflake: role grant · Postgres: GRANT</p>
+    <p class="fx-with">BigQuery dataset role · Snowflake role grant · Postgres GRANT</p>
   </li>
   <li class="fx-panel">
     <p class="fx-head"><span class="fx-num">3</span>Metric definition <span class="fx-kind">semantic layer · metrics.yml</span></p>
@@ -1449,7 +1449,7 @@ description: Use for questions about stock, sales or
     <p class="fx-with">Works with: Claude Code, Claude apps, the Claude API</p>
   </li>
 </ol>
-<p class="fx-kit"><b>Kit:</b> <span class="mono">data-readiness-kit/builder/</span> (runnable PostgreSQL starter with the same pattern) · <a class="deck-link" href="./demo.html" target="_blank" rel="noopener">Interactive demo: raw tables vs certified views</a></p>
+<p class="fx-kit"><b>Kit</b> <span class="mono">data-readiness-kit/builder/</span>, a runnable PostgreSQL starter · <a class="deck-link" href="./demo.html" target="_blank" rel="noopener">Interactive demo</a></p>
   <!-- /scene:appendix-fix -->
   </section>
 
@@ -1511,7 +1511,7 @@ REVOKE ALL ON SCHEMA source, core FROM PUBLIC;</code></pre>
 </div>
 <p class="ae-summary" data-focus>approved <span data-ev="corpus:ready-pass" data-format="int">9</span>/9 · export 0/5 applicable · not an AI score</p>
 <div class="ae-board ae-board--run" data-visual="recorded-runs">
-  <p class="ae-head"><svg class="icon icon--32" aria-hidden="true"><use href="#i-ai-model" /></svg>Recorded AI runs (G01–G03)</p>
+  <p class="ae-head"><svg class="icon icon--32" aria-hidden="true"><use href="#i-ai-model" /></svg>Recorded AI runs (G01 to G03)</p>
   <table class="ctable ae-table ae-table--run">
     <thead><tr><th>grade</th><th class="num">export</th><th class="num">approved</th></tr></thead>
     <tbody>
@@ -1573,7 +1573,7 @@ REVOKE ALL ON SCHEMA source, core FROM PUBLIC;</code></pre>
 <div class="lf-envelope">
   <span class="lf-envelope__icon"><svg class="icon icon--48" aria-hidden="true"><use href="#i-database" /></svg></span>
   <div class="lf-envelope__text">
-    <p class="lf-envelope__facts">FOLDLINE · Berlin B2B operations SaaS · January 2025–June 2026 · 144 accounts · 2,592 account-months · EUR · Q2 2026</p>
+    <p class="lf-envelope__facts">FOLDLINE · Berlin B2B operations SaaS · January 2025 to June 2026 · 144 accounts · 2,592 account-months · EUR · Q2 2026</p>
     <p class="lf-envelope__ids">foldline_saas_2026q2 · foldline-v1 · frozen_historical · load delay 6 h after period close</p>
   </div>
 </div>
@@ -1586,7 +1586,7 @@ REVOKE ALL ON SCHEMA source, core FROM PUBLIC;</code></pre>
 <h1 class="scene-title">What the AI tool receives, and what it drops</h1>
 <div class="ab-shots" data-visual="recorded-boundary-summary">
   <figure class="ab-shot"><div class="ab-public-panel"><strong>Two synthetic connections</strong><p>Bad: unclear raw fields.</p><p>Ready: approved analytical views.</p><p>Same frozen FOLDLINE dataset.</p></div><figcaption class="ab-shot__name">Historical source setup, summarized</figcaption></figure>
-  <figure class="ab-shot"><div class="ab-public-panel"><strong>Three recorded questions</strong><p>Ending balance. Net change. Churn.</p><p>One observed run per question and lane.</p><p>No new model call on this page.</p></div><figcaption class="ab-shot__name">Historical run record, summarized</figcaption></figure>
+  <figure class="ab-shot"><div class="ab-public-panel"><strong>Three recorded questions</strong><p>Ending balance, net change and churn.</p><p>One observed run per question and lane.</p><p>No new model call on this page.</p></div><figcaption class="ab-shot__name">Historical run record, summarized</figcaption></figure>
   <p class="ab-provenance">Original teaching summary of the August 2026 record. Third-party interface screenshots are omitted from this public edition.</p></div>
 <div class="ab-gaps">
   <p class="ab-gap"><svg class="icon icon--40" aria-hidden="true"><use href="#i-gap" /></svg><span>Ready G01 SQL names no schema; the captured <span class="mono">search_path</span> finds <span class="mono">analytics.mrr_summary_monthly</span>. A portability dependency.</span></p>

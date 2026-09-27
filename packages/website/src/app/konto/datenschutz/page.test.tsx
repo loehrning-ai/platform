@@ -763,10 +763,10 @@ describe("DatenschutzPage course-reset list", () => {
     render(<DatenschutzPage />);
 
     expect(screen.getByRole("status")).toHaveTextContent(
-      "Server-Synchronisierung ist nach mehreren Versuchen weiterhin fehlgeschlagen",
+      "Synchronisierung fehlgeschlagen",
     );
     expect(screen.getByRole("status")).toHaveTextContent(
-      "Fortschritt bleibt in diesem Browser gespeichert",
+      "Fortschritt ist in diesem Browser gespeichert",
     );
   });
 
@@ -1157,7 +1157,7 @@ describe("DatenschutzPage course-reset list", () => {
     );
 
     expect(await screen.findByRole("alert")).toHaveTextContent(
-      "geschützte Export-Datenspeicher ist vorübergehend nicht verfügbar",
+      "Export-Speicher ist gerade nicht erreichbar",
     );
     expect(submit).not.toHaveBeenCalled();
   });
@@ -1178,35 +1178,32 @@ describe("DatenschutzPage export description matches the export route", () => {
 
   /** Every item of the export enumeration, as [German phrase, English phrase]. */
   const BASE_ENUMERATION = [
-    ["deiner E-Mail-Adresse", "your email address"],
-    ["deinem Kursfortschritt", "course progress"],
-    ["vorhandenen historischen Quizversuchen", "existing historical quiz attempts"],
-    ["deinen Dokumenten aus dem Lebenslauf-Editor", "your resume editor documents"],
-    ["dem Exportzeitpunkt", "the export time"],
+    ["E-Mail-Adresse", "your email address"],
+    ["Kursfortschritt", "course progress"],
+    ["historischen Quizversuchen", "historical quiz attempts"],
+    ["Dokumenten aus dem Lebenslauf-Editor", "resume editor documents"],
+    ["Exportzeitpunkt", "the export time"],
   ] as const;
 
   /** Each `sign_in_identity` key the route writes, and where the copy names it. */
   const IDENTITY_ENUMERATION: Readonly<
     Record<string, readonly [de: string, en: string]>
   > = {
-    provider: ["das Anmeldeverfahren", "the sign-in method"],
-    linked_providers: ["das Anmeldeverfahren", "the sign-in method"],
+    provider: ["Anmeldeverfahren", "sign-in method"],
+    linked_providers: ["Anmeldeverfahren", "sign-in method"],
     provider_account_id: [
-      "die Kontokennung beim Anmeldedienst",
-      "the account identifier held by the sign-in service",
+      "Kontokennung beim Anmeldedienst",
+      "account identifier at the sign-in service",
     ],
     email_verified: [
-      "der Bestätigungsstatus der E-Mail-Adresse",
-      "the verification status of the email address",
+      "Bestätigungsstatus der E-Mail",
+      "email verification status",
     ],
     username: ["der Benutzername", "the username"],
-    name: ["der hinterlegte Name", "the stored name"],
-    picture_url: [
-      "die Adresse des Profilbilds",
-      "the address of the profile picture",
-    ],
+    name: ["auch Name", "also name"],
+    picture_url: ["Profilbild-Adresse", "profile-picture address"],
     linked_identities: [
-      "für jede verknüpfte Anmeldeidentität",
+      "je verknüpfter Anmeldeidentität",
       "for each linked sign-in identity",
     ],
   };
@@ -1285,10 +1282,10 @@ describe("DatenschutzPage export description matches the export route", () => {
 
   it("names the sign-in identity record in the account deletion panel in both languages", () => {
     expect(controlText("de", "delete")).toContain(
-      "Dabei wird auch der bei der Anmeldung gespeicherte Identitätsdatensatz gelöscht, bei Anmeldung mit Google einschließlich Kontokennung, Name und Adresse des Profilbilds.",
+      "den bei der Anmeldung gespeicherten Identitätsdatensatz, bei Google samt Kontokennung, Name und Profilbild-Adresse.",
     );
     expect(controlText("en", "delete")).toContain(
-      "The identity record stored at sign-in is deleted as well, including, where you signed in with Google, the account identifier, name and profile-picture address.",
+      "the identity record stored at sign-in, with Google including account identifier, name and profile-picture address.",
     );
   });
 });

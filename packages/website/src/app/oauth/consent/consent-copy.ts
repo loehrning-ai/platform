@@ -86,7 +86,7 @@ const DE: ConsentPageCopy = {
   eyebrow: "Freigabe",
   title: "Zugriff für eine App freigeben",
   introduction: (clientName) =>
-    `${clientName} möchte in deinem Namen auf loehrning.ai zugreifen. Lies, was das bedeutet, und entscheide dann.`,
+    `${clientName} möchte in deinem Namen auf loehrning.ai zugreifen.`,
   signedInAs: (identity) => `Angemeldet als ${identity}.`,
   requestHeading: "Wer fragt an",
   clientNameLabel: "App",
@@ -97,7 +97,7 @@ const DE: ConsentPageCopy = {
   redirectHostLabel: "Weiterleitung an",
   redirectHostUnknown: "Nicht lesbar. Lehne im Zweifel ab.",
   redirectHostNote:
-    "Nach deiner Entscheidung landest du auf diesem Host. Wenn du ihn nicht erkennst, lehne ab.",
+    "Nach deiner Entscheidung landest du auf diesem Host. Erkennst du ihn nicht, lehne ab.",
   scopesHeading: "Diese Berechtigungen werden angefragt",
   scopeLines: {
     openid:
@@ -111,24 +111,24 @@ const DE: ConsentPageCopy = {
   unknownScope: (scope) =>
     `Die Berechtigung „${scope}“ ist auf der Plattform nicht dokumentiert. Stimme nur zu, wenn du weißt, wofür die App sie braucht.`,
   noScopes:
-    "Die App fragt keine zusätzlichen Profildaten an. Es bleibt bei dem Zugriff, den eine Freigabe ohnehin erlaubt.",
+    "Die App fragt keine zusätzlichen Profildaten an.",
   platformAccess:
-    "Mit einer Freigabe darf die App über die Agenten-Schnittstelle deinen Lernfortschritt und deinen nächsten Schritt lesen. Mehr erreicht sie auf loehrning.ai nicht: Schreiben oder löschen kann sie hier nichts.",
+    "Mit einer Freigabe liest die App über die Agenten-Schnittstelle deinen Lernfortschritt und deinen nächsten Schritt. Schreiben oder löschen kann sie auf loehrning.ai nichts.",
   tokenPower:
-    "Unsere Kontoseiten und Kontoeinstellungen lehnen das Zugriffstoken dieser App ab. Unser Anmeldedienst Supabase akzeptiert es bis zu seinem Ablauf trotzdem wie deine eigene Anmeldung, etwa um deine E-Mail-Adresse zu lesen. Gib die Freigabe nur Programmen, die du selbst installiert hast.",
+    "Unsere Kontoseiten und Kontoeinstellungen lehnen das Zugriffstoken dieser App ab. Unser Anmeldedienst Supabase akzeptiert es bis zum Ablauf wie deine eigene Anmeldung, etwa um deine E-Mail-Adresse zu lesen. Gib die Freigabe nur Programmen, die du selbst installiert hast.",
   approve: "Zugriff erlauben",
   deny: "Ablehnen",
   denyNote:
-    "Bei einer Ablehnung schicken wir die App ohne Zugriff zurück. Dein Konto bleibt unverändert.",
+    "Lehnst du ab, geht die App ohne Zugriff zurück. Dein Konto bleibt unverändert.",
   errorEyebrow: "Abgebrochen",
   errorHeading: "Freigabe nicht möglich",
   errorBodies: {
     "missing-request":
-      "Dieser Aufruf enthält keine Kennung der Anfrage. Ohne sie wissen wir nicht, welche App du freigeben würdest.",
+      "Diesem Aufruf fehlt die Kennung der Anfrage, also ist unklar, welche App du freigeben würdest.",
     "invalid-request":
-      "Die Kennung in der Adresse hat ein Format, das wir nicht akzeptieren. Wir fragen damit nichts ab.",
+      "Die Kennung in der Adresse hat ein ungültiges Format.",
     "unknown-request":
-      "Diese Anfrage ist abgelaufen oder unbekannt. Aus Sicherheitsgründen leiten wir dich nirgendwohin weiter.",
+      "Diese Anfrage ist abgelaufen oder unbekannt, deshalb leiten wir dich nicht weiter.",
     "backend-unavailable":
       "Die Anmeldung ist gerade nicht erreichbar. Es liegt nicht an deiner App.",
     "decision-failed":
@@ -147,7 +147,7 @@ const EN: ConsentPageCopy = {
   eyebrow: "Authorization",
   title: "Approve access for an app",
   introduction: (clientName) =>
-    `${clientName} wants to reach loehrning.ai on your behalf. Read what that means, then decide.`,
+    `${clientName} wants to access loehrning.ai on your behalf.`,
   signedInAs: (identity) => `Signed in as ${identity}.`,
   requestHeading: "Who is asking",
   clientNameLabel: "App",
@@ -172,24 +172,24 @@ const EN: ConsentPageCopy = {
   unknownScope: (scope) =>
     `The permission "${scope}" is not documented on this platform. Approve only if you know what the app needs it for.`,
   noScopes:
-    "The app requests no extra profile data. Access stays at what an approval grants anyway.",
+    "The app requests no extra profile data.",
   platformAccess:
-    "With an approval the app may read your learning progress and your next step through the agent interface. That is all it reaches on loehrning.ai: it can never write or delete anything here.",
+    "With an approval the app reads your learning progress and your next step through the agent interface. It can never write or delete anything on loehrning.ai.",
   tokenPower:
-    "Our account pages and account settings refuse this app's access token. Our sign-in service Supabase still accepts it like your own sign-in until it expires, for example to read your email address. Only approve programs you installed yourself.",
+    "Our account pages and account settings refuse this app's access token. Our sign-in service Supabase accepts it like your own sign-in until it expires, for example to read your email address. Only approve programs you installed yourself.",
   approve: "Allow access",
   deny: "Deny",
   denyNote:
-    "If you deny, we send the app back without access. Your account stays unchanged.",
+    "If you deny, the app goes back without access. Your account stays unchanged.",
   errorEyebrow: "Stopped",
   errorHeading: "Authorization not possible",
   errorBodies: {
     "missing-request":
-      "This call carries no request id. Without it we cannot tell which app you would be approving.",
+      "This call has no request id, so we cannot tell which app you would approve.",
     "invalid-request":
-      "The request id in the address has a format we do not accept. We looked nothing up with it.",
+      "The request id in the address has an invalid format.",
     "unknown-request":
-      "This request has expired or is unknown. For safety we send you nowhere.",
+      "This request has expired or is unknown, so we do not redirect you.",
     "backend-unavailable":
       "Sign-in is unreachable right now. This is not your app's fault.",
     "decision-failed":

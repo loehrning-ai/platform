@@ -70,7 +70,7 @@ export function TaskSpecWidget({
   lessonId,
   cpId,
   title = "Bau eine Aufgaben-Spezifikation",
-  desc = "Schalte die Bausteine an, die in eine starke Spezifikation gehören. Rechts siehst du die zusammengesetzte Vorgabe.",
+  desc = "Schalte die Bausteine an, die in eine starke Spezifikation gehören.",
   goal = "Beschreibe die Änderung in einem Satz.",
   items,
   threshold = 3,

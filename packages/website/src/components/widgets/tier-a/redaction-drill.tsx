@@ -107,14 +107,12 @@ const DEFAULT_COPY: RedactionDrillWidgetCopy = {
   scenarioOfWord: "von",
   safeHeadline: "Sicher zum Einfügen.",
   safeBodyTemplate:
-    "Alle {n} sensiblen Stellen erfasst, keine Übertreibung. Genau diese Gewohnheit zählt: lesen, bevor man einfügt.",
+    "Alle {n} sensiblen Stellen erfasst, nichts Harmloses redigiert.",
   notSafeHeadline: "Noch nicht abschicken.",
   missingSingularTemplate: "{n} sensible Stelle ist noch offen (rot markiert).",
   missingPluralTemplate: "{n} sensible Stellen sind noch offen (rot markiert).",
-  mistakesSingularTemplate:
-    "Sie haben {n} harmlose Stelle redigiert (amber). Unnötig, aber kein Schaden.",
-  mistakesPluralTemplate:
-    "Sie haben {n} harmlose Stellen redigiert (amber). Unnötig, aber kein Schaden.",
+  mistakesSingularTemplate: "{n} harmlose Stelle unnötig redigiert (amber).",
+  mistakesPluralTemplate: "{n} harmlose Stellen unnötig redigiert (amber).",
 };
 
 function fillCount(template: string, n: number): string {
@@ -142,7 +140,7 @@ const DEFAULT_SCENARIOS: readonly RedactionScenario[] = [
     id: "s1",
     label: "Server-Log",
     intro:
-      "Ein Kollege will dieses Fehlerprotokoll in ein KI-Tool kopieren, um den Fehler zu finden. Markiere alles, was niemals den Betrieb verlassen darf.",
+      "Ein Kollege will dieses Fehlerprotokoll in ein KI-Tool kopieren. Markiere alles, was den Betrieb nicht verlassen darf.",
     segments: [
       { text: "Bitte hilf mir, diesen Fehler im Bestellsystem zu finden:\n\n" },
       { text: "[2026-05-14 14:22] POST /api/v2/auftraege " },
@@ -168,7 +166,7 @@ const DEFAULT_SCENARIOS: readonly RedactionScenario[] = [
     id: "s2",
     label: "Kunden-E-Mail",
     intro:
-      "Diese Beschwerde-Mail soll von der KI zusammengefasst werden. Achtung: hier stecken die sensiblen Stellen zwischen harmlosen. Markiere nur, was wirklich geschützt gehört.",
+      "Ein KI-Tool soll diese Beschwerde-Mail zusammenfassen. Markiere nur, was geschützt werden muss.",
     segments: [
       { text: "Fasse diese Kundenbeschwerde in zwei Sätzen zusammen:\n\n" },
       {
@@ -205,7 +203,7 @@ export function RedactionDrillWidget({
   lessonId,
   cpId,
   title = "Redigiere, bevor du einfügst",
-  scenario = "Bevor Sie ein Protokoll oder eine E-Mail in ein KI-Tool kopieren: lesen, dann einfügen. Klicken Sie jede Stelle an, die niemals Ihr Haus verlassen darf.",
+  scenario = "Prüfe jeden Text, bevor du ihn in ein KI-Tool kopierst.",
   scenarios = DEFAULT_SCENARIOS,
   copy,
 }: RedactionDrillWidgetProps): JSX.Element {

@@ -16,7 +16,7 @@ describe("CredibilityStrip", () => {
     render(<CredibilityStrip />);
     expect(screen.getByTestId("platform-principles")).toBeInTheDocument();
     expect(
-      screen.getByText("Was hier nicht verhandelbar ist"),
+      screen.getByText("Grundregeln"),
     ).toBeInTheDocument();
     expect(screen.queryByText("Betriebsprinzipien")).not.toBeInTheDocument();
   });
@@ -24,7 +24,7 @@ describe("CredibilityStrip", () => {
   it("renders the same operating facts in English without German labels", () => {
     const { container } = render(<CredibilityStrip locale="en" />);
 
-    expect(screen.getByText("What is not negotiable here")).toBeInTheDocument();
+    expect(screen.getByText("Ground rules")).toBeInTheDocument();
     expect(screen.getByText("No paywall")).toBeInTheDocument();
     expect(
       screen.getByText(/Four readers require a free learning account/),
@@ -68,13 +68,13 @@ describe("CredibilityStrip", () => {
   it("keeps authorship, evidence, access, and locale as the four operating facts", () => {
     render(<CredibilityStrip />);
     expect(
-      screen.getByText(/vollständig auf Deutsch und Englisch/),
+      screen.getByText(/Alle Kurse gibt es auf Deutsch und Englisch/),
     ).toBeInTheDocument();
     expect(
       screen.getByText(/Fakten verweisen auf Quellen/),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/Autorschaft, Überarbeitungsstand/),
+      screen.getByText(/Überarbeitungsstand und bekannte Grenzen bleiben sichtbar/),
     ).toBeInTheDocument();
   });
 
@@ -83,7 +83,7 @@ describe("CredibilityStrip", () => {
     expect(
       screen.getByRole("heading", {
         level: 2,
-        name: "Was hier nicht verhandelbar ist",
+        name: "Grundregeln",
       }),
     ).toBeInTheDocument();
   });

@@ -291,7 +291,7 @@ describe("<WorkshopQuizPage>", () => {
       }),
     ).toBeInTheDocument();
     expect(screen.getByRole("alert")).toHaveTextContent(
-      "The quiz questions could not be loaded.",
+      "Check your connection and try again.",
     );
     expect(
       screen.queryByText(/private provider detail/),

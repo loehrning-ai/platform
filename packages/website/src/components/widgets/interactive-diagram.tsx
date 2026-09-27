@@ -114,19 +114,16 @@ const DEFAULT_TITLE: Record<DiagramVariant, string> = {
 };
 
 const DEFAULT_CAPTION: Record<DiagramVariant, string> = {
-  stack:
-    "Klick auf Verlauf: ein Impuls läuft von oben nach unten durch jede Stufe.",
-  flow: "Klick auf Verlauf: der Impuls folgt den Pfeilen Schritt für Schritt.",
-  compare:
-    "Tippe eine Schicht an: was sie tut und was passiert, wenn sie fehlt.",
+  stack: "Der Impuls läuft von oben nach unten durch jede Stufe.",
+  flow: "Der Impuls folgt den Pfeilen.",
+  compare: "Tipp jede Schicht an.",
 };
 
 const DEFAULT_COPY: Omit<InteractiveDiagramCopy, "kindLabel"> = {
   inspectHeading: "Schicht antippen",
-  inspectBody:
-    "Tipp eine Schicht an, um zu sehen, was sie tut und was passiert, wenn sie fehlt.",
+  inspectBody: "Was sie tut und was passiert, wenn sie fehlt.",
   consequencePrefix: "Wenn diese Schicht fehlt:",
-  traceComplete: "Durchlauf komplett. So fließt es durch den Stapel.",
+  traceComplete: "Durchlauf komplett.",
   tracing: "Impuls läuft …",
   traceIdle: "Starte den Durchlauf.",
   traceButton: "Verlauf abspielen",

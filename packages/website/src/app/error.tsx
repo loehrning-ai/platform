@@ -21,14 +21,14 @@ export default function Error({
     locale === "en"
       ? {
           title: "The page could not be loaded.",
-          body: "An unexpected error occurred. Retry the request.",
+          body: "An unexpected error occurred.",
           errorId: "Error ID",
           retry: "Retry",
           home: "Back to home",
         }
       : {
           title: "Die Seite konnte nicht geladen werden.",
-          body: "Ein unerwarteter Fehler ist aufgetreten. Lade die Anfrage erneut.",
+          body: "Ein unerwarteter Fehler ist aufgetreten.",
           errorId: "Fehler-ID",
           retry: "Erneut laden",
           home: "Zur Startseite",

@@ -68,27 +68,27 @@
   "files": {
     "data-readiness-kit/FOLDLINE-SCENARIOS.md": {
       "original": "7ae913626a5910cffe3c41f7be10ba03ea28f12684cd96cadf0a22a3fed7e65e",
-      "override": "9e18e00eb2c014a4444d3677ab5f939af2c0667a4e062875ee078aced5d60b7e"
+      "override": "daf22fd66226ba9cda1d80ec7cc65704d97b90e52d3a125179e3d72bc86c8385"
     },
     "data-readiness-kit/QUESTION-CARD.md": {
       "original": "a5077847b18892fececaa060d9732c33ebbd8f3182e4e978dfc94135c8f7d429",
-      "override": "281b5f0748898403392e61a5f9634618d14ee5a9610d1afcca9af20c3738cb45"
+      "override": "6a990f607187aa584f96b679bc328acc149352c905b39dda0951fdb2eb23f86c"
     },
     "data-readiness-kit/READY-CANVAS.md": {
       "original": "b970c75eb79754d5ac28c6b14b2439d26af1412240494b7ae5fb0e851dbb8ee4",
-      "override": "9ae484bfc6e95cd13bd28a885f12884e60b57f9ef8ba268b4d9e85ec8e895b1e"
+      "override": "34884a445d0e0c5b1193f7f69835e216c168f2ea2d5d0289fe8ff5450e7b808c"
     },
     "data-readiness-kit/START-HERE.md": {
       "original": "f0da28bb4af0c9fef81ec27edbbaa900436a0c4ca2dd69b7c92f9798281a2cea",
-      "override": "b7343c92cd4625d0696f3f34072ece84910e8dd9bb3eed960c1fe122e165fc71"
+      "override": "db673847a06d66e3dee5b0b10385a8880b18013276ea7056f4e185f4066e15a5"
     },
     "data-readiness-kit/agent/CLAUDE.example.md": {
       "original": "40f1c65fe8496ac93d3f62e02714845e09db3aeb6af3bc9ce228d49d4ce16c14",
-      "override": "f8b16c1cca9789789f38007a0f461326963a434dbdaa91ebb7c46c7e22934fee"
+      "override": "85bcc246886fb11d0fefa4f79708cc2821571020bdd9fd01ddb2fc9c934a6f61"
     },
     "data-readiness-kit/readiness-lab.html": {
       "original": "b779d2d693282a2a6c6025921e5537bb435ba264d2fe67aec0d59511ffeffad8",
-      "override": "aff289390bf745bae0d144eed9a19828c8d39c639ababe2884b7a02e5431520a"
+      "override": "28d98e830c97163d695cbe14436524bda6f6da9f5d75c36e87422fadc8933599"
     },
     "data-readiness-kit/semantic-template/metric.yml": {
       "original": "b48caed51267d39a779d14258dc6243091c8ce19c1da132b14f1b1eddc381842",
@@ -116,7 +116,7 @@
     },
     "lib/presenter-notes.js": {
       "original": "a446b5d1620dc0c797561637d574554700fc482c9668a2309dd7aec8293460e8",
-      "override": "f0dc529d5553bcb9fb19c8ad036d62a8e87a638b11ccb8887866533dcd8032c1"
+      "override": "866fd451eba8c81ba657086470bf46461f40a0159387040ec4f286ecf666d1cb"
     },
     "lib/presenter.css": {
       "original": "bd08d3b6cbb941c66b41655eae56b9415f81c29d983bb436858b0ced37f234d2",
@@ -240,11 +240,11 @@
     },
     "presenter.html": {
       "original": "7779628c833430709a4a5c1d5eb39aa31b7694ed7a516ce150eec0eaa09634db",
-      "override": "0dd671a4e95b70a7068c287f8088bab999827907df3ff0f6ba7a915e4c42f95b"
+      "override": "71d46f994e1a993b468640c4b2c5e1f8725dc1ff41c36fbf772e66e4d1ee2f87"
     },
     "slides.html": {
       "original": "7da1ad2f4e46b636302a970a0ca822253861ebab40465fc5d004311a1c96c783",
-      "override": "db70026f1ca469d469e063c0192b850d49dc0247dd091280964f4bdf68cf4597"
+      "override": "8677991396574f69d957a05edfdbe9c33238417f0d084f5694d370c9677b6956"
     }
   }
 }

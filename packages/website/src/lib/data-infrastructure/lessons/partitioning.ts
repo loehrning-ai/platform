@@ -31,51 +31,49 @@ const lesson: DataInfraLesson = {
       title: "Why partition",
       readTimeMinutes: 2,
       content:
-        "Which files can the planner skip before it reads a byte? Partition metadata answers that question: it eliminates groups of files whose partition values cannot satisfy a predicate. Planning and data I/O drop. Elapsed time does not follow partition count alone, because file statistics, storage requests, cache, parallelism, engine planning, and surviving data volume all weigh in.\n\nUse three checks:\n\n1. **Predicate match.** Derive candidate keys from actual filters and joins, not from semantic preference.\n2. **Resulting file distribution.** Estimate bytes and files per partition across typical and skewed values. There is no universal target size; engines and workloads expose different trade-offs.\n3. **Cardinality and evolution.** A high-cardinality key creates many small partitions. A coarse key forces broad scans. Model new values, late data, and future granularity changes.",
+        "Partition metadata lets the planner skip groups of files whose partition values cannot satisfy a predicate, which cuts planning and data I/O. Elapsed time also depends on file statistics, storage requests, cache, parallelism, engine planning and the data that survives pruning.\n\n1. **Predicate match.** Derive candidate keys from actual filters and joins.\n2. **File distribution.** Estimate bytes and files per partition for typical and skewed values. No target size fits every engine and workload.\n3. **Cardinality and evolution.** A high-cardinality key creates many small partitions, a coarse key forces broad scans. Model new values, late data and future granularity changes.",
     },
     {
       id: "s1b",
       title: "Range / hash / list",
       readTimeMinutes: 3,
       content:
-        "Three common strategies, three different failure modes:\n\n- **Range partitioning.** Assign rows by value range, for example one month of `order_date`. Range locality survives; current-period writes concentrate.\n- **Hash partitioning.** Map a key to one of N buckets, for example `hash(user_id) % 16`. A suitable key spreads out, but a range query usually touches every bucket and skewed keys stay hot.\n- **List partitioning.** Map declared values such as regions to partitions. Categorical routing works; new or null values need explicit validation and fallback behavior.\n\nTime-based top-level partitions are common because many analytical queries carry time predicates and retention operates by time. They are not a default. Tenant isolation, legal location, event distribution, and query patterns can justify another key, or no explicit partitioning at all.",
+        "- **Range partitioning.** Assigns rows by value range, for example one month of `order_date`. It keeps range locality and concentrates current-period writes.\n- **Hash partitioning.** Maps a key to one of N buckets, for example `hash(user_id) % 16`. It spreads a suitable key, but range queries usually touch every bucket and skewed keys stay hot.\n- **List partitioning.** Maps declared values such as regions to partitions. New or null values need explicit validation and a fallback.\n\nTime is a common top-level key because many analytical queries filter on time and retention works by time. Tenant isolation, legal location, event distribution and query patterns can justify another key or no explicit partitioning.",
     },
     {
       id: "s1c",
       title: "Hive-style vs hidden",
       readTimeMinutes: 3,
       content:
-        "Path-derived and transform-derived partition values impose different writer contracts.\n\n**Hive-style partitioning** stores a partition value in a path such as `s3://lake/orders/order_date=2026-05-01/part-001.parquet`. Writers must compute that value consistently. The value may also live in the file, a granularity change can force moving or rewriting existing files, and any disagreement over how `order_date` is derived produces an incorrect layout.\n\n**Hidden partitioning**, supported by Iceberg since spec v1, declares a transform such as `PARTITIONED BY (days(order_ts))` in table metadata. Compatible writers derive the value and queries keep filtering on `order_ts`. Partition evolution can change `days(order_ts)` to `hours(order_ts)` for new files while old files keep their previous specification. Readers plan across both layouts.\n\nThat loosens the coupling between application code and the physical partition value. It removes no correctness requirement: engine support, transform semantics, metadata integrity, time-zone handling, and pruning behavior all need verification on the deployed versions.",
-      keyTakeaway:
-        "Partition evolution can let new files use a new transform while old files retain their layout; compatible readers must plan across both specifications.",
+        "**Hive-style partitioning** stores the partition value in a path such as `s3://lake/orders/order_date=2026-05-01/part-001.parquet`. Writers must compute it consistently, a granularity change can force moving or rewriting files, and writers that derive `order_date` differently produce a wrong layout.\n\n**Hidden partitioning**, supported by Iceberg since spec v1, declares a transform such as `PARTITIONED BY (days(order_ts))` in table metadata. Compatible writers derive the value, and queries keep filtering on `order_ts`. Partition evolution can switch `days(order_ts)` to `hours(order_ts)` for new files while old files keep their spec, and readers plan across both.\n\nThis loosens the coupling between application code and physical layout. Engine support, transform semantics, metadata integrity, time zones and pruning still need checking on your deployed versions.",
     },
     {
       id: "s2",
       title: "Pick a key",
       readTimeMinutes: 2,
       content:
-        "The interactive model applies one fixed query to five synthetic layouts. Its file counts and scanned bytes are teaching inputs, not measurements or recommended thresholds.\n\nCompare the relative behavior, then repeat the exercise with production distributions. Hourly partitions create small files at low volume. User partitions expose key skew. No partition forces broad scans. The observed data and the engine decide.",
+        "The interactive model applies one fixed query to five synthetic layouts. Its file counts and scanned bytes are teaching inputs, not measurements or thresholds.\n\nCompare the relative behavior, then repeat with production distributions. Hourly partitions create small files at low volume, user partitions expose skew, and no partitioning forces broad scans.",
     },
     {
       id: "s3",
       title: "Small files",
       readTimeMinutes: 2,
       content:
-        "Frequent commits produce files smaller than the engine's efficient scan unit, especially when each partition receives little data per commit. Many files raise metadata, planning, open-request, and scheduling work. Storage and engine behavior decide how much.\n\n**Compaction** rewrites selected files into a new layout. It burns compute and I/O, publishes another table version, and can conflict with concurrent updates. Trigger it from measured file-count, size-distribution, and query signals instead of a universal nightly schedule.\n\nCompaction commands and options are vendor- and version-specific. Confirm current syntax, isolation behavior, target-size semantics, and rollback procedure in the exact engine before you operate a table.",
+        "Frequent commits produce files smaller than the engine's efficient scan unit, especially when each partition gets little data per commit. Many files add metadata, planning, open-request and scheduling work.\n\n**Compaction** rewrites selected files into a new layout. It costs compute and I/O, publishes another table version and can conflict with concurrent updates, so trigger it from measured file counts, size distribution and query signals instead of a fixed nightly job. Commands are vendor- and version-specific, so check syntax, isolation, target-size semantics and rollback in your engine first.",
     },
     {
       id: "s4",
       title: "Clustering / Z-order",
       readTimeMinutes: 3,
       content:
-        "Queries filter different columns. A table may partition by one transform or a compound specification, then cluster or sort records within the resulting file groups.\n\nSorting tightens min/max ranges for the sort columns. **Z-ordering** and related multidimensional clustering techniques try to preserve locality across several columns, and the benefit depends on data distribution and predicate mix. More columns dilute locality and add maintenance work. No count is universally useful.\n\nSelect partition and clustering columns from query telemetry, estimate write amplification, and verify pruning with file-level plans. When two access patterns need incompatible layouts, a separate materialized projection is the clearer answer.",
+        "A table may partition by one transform or a compound spec, then cluster or sort records within the resulting file groups for other filters.\n\nSorting tightens min/max ranges for the sort columns. **Z-ordering** and related multidimensional clustering try to keep locality across several columns. The benefit depends on data distribution and predicate mix, and each extra column dilutes it and adds maintenance.\n\nPick partition and clustering columns from query telemetry, estimate write amplification and verify pruning in file-level plans. When two access patterns need incompatible layouts, build a separate materialized projection.",
     },
     {
       id: "s5",
       title: "Sharding ≠ partitioning",
       readTimeMinutes: 2,
       content:
-        "The terms overlap across products, so define them in context:\n\n- **Analytical partitioning** groups table data for pruning, retention, and maintenance. It still needs metadata and can involve coordinated commits.\n- **Database sharding** routes records across independently scalable database partitions or instances. It brings routing, rebalancing, cross-shard query, and transaction concerns.\n\nHash routing spreads suitable keys and weakens range locality. Range routing preserves locality and creates hot ranges. Composite keys, virtual shards, and online rebalancing each address part of that trade-off. None removes the need to measure skew.",
+        "The two terms mean different things across products.\n\n- **Analytical partitioning** groups table data for pruning, retention and maintenance.\n- **Database sharding** routes records across independently scalable database partitions or instances, which brings routing, rebalancing, cross-shard query and transaction concerns.\n\nRouting has the same range-versus-hash trade-off. Composite keys, virtual shards and online rebalancing each ease part of it, and you still measure skew.",
     },
     {
       id: "s6",
@@ -88,14 +86,14 @@ const lesson: DataInfraLesson = {
       title: "Key takeaways",
       readTimeMinutes: 2,
       content:
-        "- **Match layout to measured predicates and data distribution.** Inspect file-level plans and bytes read, not only SQL text.\n- **Range, hash, and list each expose a failure mode.** Model hot ranges, skewed keys, new values, nulls, and late data before choosing.\n- **Over-partitioning raises metadata and small-file work.** Pick a file-size distribution from engine guidance and workload measurements, not from a universal threshold.\n- **Hidden partitioning and partition evolution loosen writer/query coupling.** Old and new specifications coexist, so compatibility and maintenance still matter.\n- **Clustering supports secondary predicates only when the layout matches the workload.** Re-clustering cost and write amplification belong in the decision.",
+        "- Inspect file-level plans and bytes read, not only the SQL text.\n- Pick file sizes from engine guidance and workload measurements.\n- Count re-clustering cost and write amplification into every clustering decision.",
     },
     {
       id: "s8",
       title: "Vocab",
       readTimeMinutes: 2,
       content:
-        "- **Partition pruning**, uses partition metadata and predicates to eliminate file groups before data reads.\n- **Range partition**, preserves range locality but concentrates writes in current or popular ranges.\n- **Hash partition**, distributes a suitable key, weakens range locality, and does not remove key skew.\n- **List partition**, maps categories explicitly and therefore needs validation for new, null, and fallback values.\n- **Hidden partitioning**, declares transforms in table metadata so compatible writers and readers derive partition values.\n- **Over-partitioning**, creates excessive metadata or small files through high cardinality or needlessly fine granularity.\n- **Liquid clustering**, a Delta Lake layout feature whose capabilities and constraints must be checked for the deployed version.\n- **Salt**, adds a deterministic or controlled sub-key to spread a hot key; downstream reads or aggregations must recombine the sub-keys correctly.",
+        "- **Partition pruning**, skipping file groups by partition metadata.\n- **Range partition**, groups rows by value range.\n- **Hash partition**, spreads a key over N buckets.\n- **List partition**, maps declared values to partitions.\n- **Hidden partitioning**, partition transforms declared in table metadata.\n- **Over-partitioning**, too many small partitions or files.\n- **Liquid clustering**, a Delta Lake layout feature.\n- **Salt**, a sub-key that spreads a hot key.",
     },
   ],
   widgets: [
@@ -108,16 +106,16 @@ const lesson: DataInfraLesson = {
         title: "The skew trap",
         copy: DATA_INFRA_QUIZ_COPY,
         question:
-          "You partition `events` by `user_id`. The dataset has 10M users. Production observes: 90% of partitions are <100MB, but 5 partitions are >500GB each. Which user IDs are those?",
+          "You partition `events` by `user_id` across 10M users. In production, 90% of partitions are <100MB, but 5 partitions are >500GB each. Which user IDs are those?",
         options: [
-          "Random, that's just how distributions work.",
-          'High-volume internal accounts: bots, test accounts, "guest" or unauthenticated users that share an ID, and a few real whales (e.g. enterprise tenants).',
+          "Random ones; that is how distributions work.",
+          'Bots, test accounts, a shared "guest" ID and a few whales (e.g. enterprise tenants).',
           "The newest users.",
           "It must be a bug.",
         ],
         correct: 1,
         explanation:
-          "Shared anonymous IDs, internal traffic, automation, and large tenants are the usual sources of skew. Hashing the same skewed key only relocates the hotspot. Candidate mitigations: a deterministic salt such as `user_id + (event_id % 16)` with correct downstream recombination, separate treatment for known traffic classes, or time partitioning plus clustering by user. Measure each against ordering and query requirements.",
+          "Shared anonymous IDs, internal traffic, automation and large tenants cause most skew, and hashing the same key only moves the hotspot. Try a deterministic salt such as `user_id + (event_id % 16)` with recombination downstream, separate handling of known traffic, or time partitions clustered by user.",
       },
     },
     {
@@ -129,16 +127,16 @@ const lesson: DataInfraLesson = {
         title: "Z-order vs partition",
         copy: DATA_INFRA_QUIZ_COPY,
         question:
-          "Your table is partitioned by `order_date`. Half your queries also filter by `country`. Which response is the strongest initial design hypothesis?",
+          "Your table is partitioned by `order_date`, and half your queries also filter by `country`. What is the strongest first design hypothesis?",
         options: [
-          "Partition by `(order_date, country)`, nested partitions.",
+          "Nested partitions by `(order_date, country)`.",
           "Repartition by `country` instead.",
-          "Keep `order_date` as the partition; Z-order (or simply sort) by `country` within each partition.",
-          "Build a separate copy of the table partitioned by `country`.",
+          "Keep `order_date`; Z-order or sort by `country` inside.",
+          "A separate table copy partitioned by `country`.",
         ],
         correct: 2,
         explanation:
-          "A compound `(order_date, country)` layout reaches up to 73,000 value combinations per year before you account for missing combinations and multiple files. Sorting or clustering by `country` within date partitions is a reasonable hypothesis that avoids one partition directory per combination. Confirm file statistics and query plans on representative data.",
+          "A compound `(order_date, country)` layout reaches up to 73,000 value combinations per year. Sorting or clustering by `country` inside date partitions avoids a directory per combination; confirm it with file statistics and query plans.",
       },
     },
     {
@@ -153,42 +151,42 @@ const lesson: DataInfraLesson = {
           {
             term: "Partition pruning",
             q: 'How does the engine "prune"?',
-            a: "The planner applies predicates to partition metadata and eliminates file groups that cannot match. Metadata still costs planning time; pruned data files never get opened.",
+            a: "The planner applies predicates to partition metadata and drops file groups that cannot match. Planning still costs time; pruned files are never opened.",
           },
           {
             term: "Range partition",
             q: "Best for? Failure mode?",
-            a: "Best for time-series data where queries filter on recent ranges. Failure mode: hot partition, the current-period partition takes all writes; historical partitions are read-only. Fix with rolling windows or write spreading.",
+            a: "Time series queried by recent ranges. Failure mode: the current partition takes all writes while older ones sit read-only. Rolling windows or write spreading help.",
           },
           {
             term: "Hash partition",
             q: "Best for? Failure mode?",
-            a: "Best for even write distribution across N buckets. Failure mode: destroys range locality, a query for a date range must scan all N buckets. Avoid it for range-query-heavy analytical workloads; prefer range or list.",
+            a: "Even writes across N buckets. Failure mode: no range locality, so a date-range query scans all N buckets. Prefer range or list for range-heavy analytics.",
           },
           {
             term: "List partition",
             q: "Best for? Failure mode?",
-            a: "Useful for declared categorical routing. New and null values need explicit validation; a rejected write, quarantined value, or controlled fallback beats an automatic catch-all.",
+            a: "Declared categorical routing. New and null values need validation; rejecting, quarantining or a controlled fallback beats an automatic catch-all.",
           },
           {
             term: "Hidden partitioning",
             q: "Iceberg vs Hive-style",
-            a: "Path-based layouts expose physical partition values to writers. Transform-based hidden partitioning declares days(order_ts) in metadata; partition evolution lets new files use a new spec while old files keep the previous layout.",
+            a: "Hive-style paths expose partition values to writers. Hidden partitioning declares days(order_ts) in metadata, and evolution lets new files use a new spec while old files keep theirs.",
           },
           {
             term: "Over-partitioning",
             q: "The anti-pattern",
-            a: "Too many tiny partitions. Symptoms: slow partition listing, high metadata-listing costs, files <10MB each. Cause: partitioning on a high-cardinality column (user_id, event_id) or too-fine time granularity (minutes). Fix: coarsen the granularity or cluster instead.",
+            a: "Too many tiny partitions, with slow listing, high metadata cost and files <10MB. It comes from high-cardinality keys (user_id, event_id) or minute granularity; coarsen or cluster instead.",
           },
           {
             term: "Liquid clustering",
             q: "What must be verified?",
-            a: "It is a Delta Lake layout feature. Verify supported runtimes, protocol requirements, clustering keys, maintenance behavior, and interoperability for the deployed version.",
+            a: "A Delta Lake layout feature. Verify runtimes, protocol requirements, clustering keys, maintenance and interoperability for your version.",
           },
           {
             term: "Salt",
             q: "When to salt a key",
-            a: "When a key is hot, spread records over a bounded subkey such as 0..15 using a deterministic or controlled rule. Downstream reads or aggregates must combine those subkeys. Verify that the distribution benefit outweighs read amplification and preserves required ordering.",
+            a: "When a key is hot, spread it over a bounded subkey such as 0..15 by a deterministic rule. Reads and aggregates must recombine the subkeys, and the gain must outweigh read amplification without breaking required ordering.",
           },
         ],
       },

@@ -260,7 +260,7 @@ export interface Workshop {
   readonly duration: string;
   /** Two sentences at most: `<access>. <data flow>.` The one place access is stated. */
   readonly accessNote: string;
-  /** The artefact the learner leaves with, as a short label ("Du gehst mit"). */
+  /** The artefact the learner leaves with, as a short label ("Du nimmst mit"). */
   readonly outcome: string;
   readonly audience: readonly string[];
   /** One sentence naming who should pick another workshop, and why. */
@@ -305,27 +305,27 @@ const WORKSHOPS_DE: readonly Workshop[] = [
     title: "Kann KI die Zukunft vorhersagen?",
     eyebrow: "Workshop 01 · Prognosen",
     summary:
-      "Du rechnest aus, was eine falsche Prognose kostet, wie groß der Puffer sein muss und wann eine Person freigibt, in drei Browser-Laboren und einem Launch-Fall.",
+      "In Browser-Laboren rechnest du aus, was eine falsche Prognose kostet und wann eine Person freigeben muss.",
     description:
-      "Zuerst prüfst du, ob ein Modell das heutige Verfahren schlägt, also denselben Wochentag der Vorwoche. Dann rechnest du aus, was zu viel und was zu wenig Kapazität kostet, und legst den Puffer fest. Zum Schluss bestimmst du, woran du im Betrieb merkst, dass eine Prognose danebenliegt, und wer dann freigibt. Die Labore rechnen die Kosten in US-Dollar, der Launch-Fall rechnet in Stück.",
+      "Du prüfst, ob ein Modell den Wert vom selben Wochentag der Vorwoche schlägt, und legst aus den Kosten von zu viel und zu wenig Kapazität den Puffer fest. Dann bestimmst du, woran du eine danebenliegende Prognose erkennst und wer freigibt. Die Labore rechnen in US-Dollar, der Launch-Fall in Stück.",
     format: "Selbstlern-Kit",
     duration: "~90 Minuten",
     accessNote:
-      "Kein KI-Zugang nötig, alles läuft statisch im Browser. Für die Übung brauchst du ein Tabellenprogramm.",
+      "Alles läuft im Browser.",
     outcome: "Go/No-Go-Regel",
     audience: [
-      "Disponentinnen und Planer, die Kapazität oder Bestellmengen nach einer Prognose festlegen",
-      "Führungskräfte, die eine Prognose verantworten, ohne sie selbst zu rechnen",
-      "Analytics-Teams, die zeigen müssen, dass ein Modell das bestehende Verfahren schlägt",
+      "Disponentinnen und Planer, die nach Prognosen Mengen festlegen",
+      "Führungskräfte, die eine Prognose verantworten, aber nicht rechnen",
+      "Analytics-Teams, die belegen müssen, dass ein Modell besser ist",
     ],
     notForYou:
-      "Eher nicht für dich, wenn du ein Prognosemodell programmieren willst; hier arbeitest du mit fertigen Simulationen.",
+      "Nicht für dich, wenn du ein Prognosemodell programmieren willst; hier nutzt du fertige Simulationen.",
     question:
       "Nach welcher Regel verteilst du 1.050 Stück auf drei Standorte, und wann muss eine Person freigeben?",
     outcomes: [
-      "Du rechnest in Dollar aus, ob eine Prognose die Faustregel schlägt, die deine Planung heute benutzt.",
-      "Du bestimmst aus den Kosten von zu viel und zu wenig Ware ein Servicelevel und daraus einen Puffer.",
-      "Du schreibst eine Freigaberegel, die festlegt, wann die Prognose automatisch läuft und wann eine benannte Person entscheidet.",
+      "Du rechnest in Dollar aus, ob eine Prognose die heutige Faustregel schlägt.",
+      "Du leitest aus den Fehlerkosten ein Servicelevel und den Puffer ab.",
+      "Du legst fest, wann die Prognose allein läuft und wann eine benannte Person entscheidet.",
       "Du nennst vier Arten von Ereignissen, die kein Modell vorhersagt.",
     ],
     agenda: [
@@ -335,7 +335,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         mode: "self",
         activity: "vote",
         description:
-          "Du verteilst 1.050 Stück auf drei Standorte und wählst den stärksten Beleg dafür.",
+          "Du verteilst 1.050 Stück auf drei Standorte und wählst den stärksten Beleg.",
       },
       {
         label: "Kapazität festlegen",
@@ -343,7 +343,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         mode: "self",
         activity: "do",
         description:
-          "Im ersten Labor vergleichst du drei Ausbaustufen eines Modells mit dem Wert der Vorwoche, in Dollar.",
+          "Du vergleichst drei Modellstufen in Dollar mit dem Wert der Vorwoche.",
       },
       {
         label: "Puffer in der Lieferkette",
@@ -351,7 +351,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         mode: "self",
         activity: "do",
         description:
-          "Im zweiten Labor schickst du dieselbe Nachfrage zweimal durch die Lieferkette und vergleichst die Schwankung.",
+          "Du schickst dieselbe Nachfrage zweimal durch die Lieferkette und vergleichst die Schwankung.",
       },
       {
         label: "Freigabe nach einem Nachfrageschock",
@@ -359,7 +359,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         mode: "self",
         activity: "do",
         description:
-          "Im dritten Labor löst du Schocks aus und siehst, wann eine benannte Person übernimmt.",
+          "Du löst Schocks aus und siehst, wann eine benannte Person übernimmt.",
       },
       {
         label: "Der Launch-Fall",
@@ -367,7 +367,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         mode: "self",
         activity: "do",
         description:
-          "In elf Stationen verteilst du 1.050 Stück und legst vier tägliche Prüfungen vor der Freigabe fest.",
+          "In elf Stationen verteilst du 1.050 Stück und legst vier tägliche Prüfungen fest.",
       },
       {
         label: "Dein Fall",
@@ -375,37 +375,36 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         mode: "self",
         activity: "write",
         description:
-          "Mit der Prüfkarte schreibst du in fünf Sätzen auf, wie die Regel für eine Prognose aus deiner Arbeit aussieht.",
+          "Mit der Prüfkarte schreibst du in fünf Sätzen die Regel für eine eigene Prognose.",
       },
     ],
     agendaSource: "plan",
     minutesSelfStudy: 90,
     needs: [
-      "Ein Browser, für die Labore am besten auf einem Desktop-Bildschirm",
-      "Für die optionale Übung ein Tabellenprogramm wie Excel, LibreOffice Calc oder Google Tabellen",
+      "Ein Browser, für die Labore am besten am Desktop",
+      "Für die optionale Übung ein Tabellenprogramm wie Excel",
     ],
     notNeeded: [
       "Programmierkenntnisse",
       "Ein KI-Konto",
-      "Eigene Firmendaten, denn alle Zahlen sind erfunden und mitgeliefert",
+      "Eigene Firmendaten",
     ],
     notCovered: [
-      "Modellbau und Programmierung",
       "Die Auswahl von Prognose-Software",
-      "Die Herleitung der Formeln; du wendest sie an",
+      "Die Herleitung der Formeln",
       "Die Planung für dein eigenes Sortiment",
     ],
     provenance: {
       author: "Tim Löhr",
       reviewedAt: "2026-09-26",
       data: "synthetic",
-      note: "Alle Firmen und Zahlen in Laboren, Fall und Übung sind für die Lehre erfunden. Der Workshop zeigt keine KI-Antworten.",
+      note: "Alle Firmen und Zahlen sind erfunden. Der Workshop zeigt keine KI-Antworten.",
     },
     decisionLab: {
       kicker: "Entscheidung 01 · Liefergrenze",
       title: "1.050 Stück. Wer bekommt sie?",
       prompt:
-        "Drei Standorte melden 1.370 Stück an. Das Modell schätzt 1.180 Stück Nachfrage, lieferbar sind 1.050. Welche Regel darf jetzt laufen?",
+        "Welche Regel darf jetzt laufen?",
       facts: ["Anmeldungen 1.370", "Nachfrage p50 1.180", "Liefergrenze 1.050"],
       decisionLegend: "Deine erste Entscheidung",
       evidenceLegend: "Der stärkste Beleg",
@@ -463,7 +462,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         },
         unsupported: {
           title: "Noch nicht freigabefähig",
-          body: "Die Standorte melden 1.370 Stück an, die geschätzte Nachfrage liegt bei 1.180, lieferbar sind 1.050. Verteile nach der Nachfrage und lass bei 12 % Restfehler eine benannte Person jede Ausnahme freigeben.",
+          body: "Anmeldungen überschreiten die 1.050 lieferbaren Stück, gleiche Teile übergehen die geschätzte Nachfrage. Verteile nach der geschätzten Nachfrage und lass bei 12 % Restfehler eine benannte Person jede Ausnahme freigeben.",
         },
       },
     },
@@ -472,42 +471,42 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         n: "01",
         title: "Das heutige Verfahren in Dollar schlagen",
         description:
-          "Im ersten Labor laufen sechs Wochen Paketnachfrage im Schattenbetrieb gegen den Wert, den die Planung heute nutzt: denselben Wochentag der Vorwoche. Fehlende Kapazität kostet mehr als überschüssige, deshalb rechnest du beides in Dollar. Du schaltest zwischen drei Ausbaustufen des Modells. Einen Aktionstag, den niemand eingetragen hat, sieht keine Stufe; diesen Fall bekommt eine Person.",
+          "Im Schattenbetrieb gegen den Vorwochenwert kostet fehlende Kapazität mehr als überschüssige; einen nicht eingetragenen Aktionstag bekommt eine Person.",
         tool: "Labor 1",
       },
       {
         n: "02",
         title: "Gestapelte Puffer mit einer gemeinsamen Prognose vergleichen",
         description:
-          "Im zweiten Labor läuft dieselbe Nachfrage zweimal durch die Lieferkette. Einmal schlägt jede Stufe ihren eigenen Puffer auf, einmal planen alle mit derselben Prognose. Du vergleichst, wie stark die Bestellungen schwanken, wie oft geliefert werden kann und wie viel Geld im Lager liegt.",
+          "Du vergleichst einen Puffer je Stufe mit einer gemeinsamen Prognose nach Bestellschwankung, Lieferfähigkeit und Lagerwert.",
         tool: "Labor 2",
       },
       {
         n: "03",
         title: "Die Freigabe nach einem Nachfrageschock prüfen",
         description:
-          "Im dritten Labor löst du Nachfrageschocks aus und vergleichst zwei Betriebsarten. Die blinde fährt den Plan vom Starttag unverändert weiter. Die überwachte erkennt die Abweichung, stoppt die Automatik, gibt den Fall an eine benannte Person und startet erst nach dem Nachtrainieren wieder.",
+          "Nach einem Schock fährt der blinde Betrieb weiter, der überwachte stoppt, übergibt an eine benannte Person und startet nach dem Nachtrainieren neu.",
         tool: "Labor 3",
       },
       {
         n: "04",
         title: "Den Launch-Fall mit 1.050 Stück durchrechnen",
         description:
-          "Der Fall hat elf Stationen. Du verteilst erst von Hand in einer Tabelle, rechnest die ungleichen Fehlerkosten und wählst ein Modell (12 % statt 21 % Abweichung). Danach suchst du Datenfehler in einer Abfrage, testest rückwirkend über mehrere Startpunkte und legst vier tägliche Prüfungen vor der Freigabe fest.",
+          "Du verteilst von Hand, wählst nach Fehlerkosten ein Modell (12 % statt 21 % Abweichung), suchst Datenfehler, testest rückwirkend und legst vier tägliche Prüfungen fest.",
         tool: "Launch-Fall",
       },
       {
         n: "05",
         title: "Zwei Prognosen selbst rechnen",
         description:
-          "Die Übung liefert 104 Wochen Nachfrage als CSV-Datei. Du hältst die letzten 14 Wochen zurück, prognostizierst sie einmal naiv und einmal geglättet und berechnest für beide den mittleren Fehler und die systematische Abweichung. Aus den vier Zahlen schreibst du einen Satz dazu, ob die geglättete Prognose genauer war. Die Übung ist optional und dauert 15 bis 45 Minuten.",
+          "Optional, 15 bis 45 Minuten: Du prognostizierst die letzten 14 von 104 Wochen naiv und geglättet und vergleichst mittleren Fehler und systematische Abweichung.",
         tool: "Übung · optional",
       },
       {
         n: "06",
         title: "Auf eine Prognose aus deiner Arbeit übertragen",
         description:
-          "Die Prüfkarte passt auf eine A4-Seite: fünf Säulen einer Prognose, die Servicelevel-Formel aus den Kosten von zu viel und zu wenig Ware, eine Faustregel für den Sicherheitsbestand und vier Arten von Ereignissen, die kein Modell vorhersagt. Mit ihr schreibst du in fünf Sätzen auf, wie die Regel für einen Fall aus deiner Arbeit aussieht.",
+          "Mit der A4-Prüfkarte schreibst du in fünf Sätzen die Regel für einen eigenen Fall.",
         tool: "Prüfkarte",
       },
     ],
@@ -518,7 +517,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       sector: "Unterhaltungselektronik · Absatz- und Bedarfsplanung",
       period: "Startwoche eines neuen Geräts",
       narrative:
-        "Bei diesem Launch ist die Nachfrage größer als die zugesagte Menge. Drei Standorte melden 1.370 Stück an, das Modell schätzt 1.180, zugesagt sind 1.050. Drei Abteilungen lesen daraus drei verschiedene Zahlen. Alle Firmen und Zahlen im Fall und in den Laboren sind erfunden.",
+        "Die Nachfrage nach dem neuen Gerät übersteigt die zugesagte Menge, und drei Abteilungen lesen daraus drei verschiedene Zahlen.",
       metrics: [
         { label: "Anmeldung der Standorte", value: "1.370" },
         { label: "Geschätzte Nachfrage (Median)", value: "1.180" },
@@ -526,12 +525,12 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         { label: "Abweichung Modell / Baseline", value: "12 % / 21 %" },
       ],
       decisionQuestion:
-        "Nach welcher Regel verteilst du 1.050 Stück auf drei unterschiedlich große Standorte, wenn 320 angemeldete Stück fehlen? Und ab welchem Prognosefehler muss eine Person diese Verteilung freigeben?",
+        "Wer bekommt die 1.050 Stück, wenn 320 angemeldete fehlen, und ab welchem Prognosefehler gibt eine Person frei?",
       dataLimitations: [
-        "Verkäufe zeigen nur, was verkauft wurde. Was im Regal fehlte, taucht in keiner Verkaufsstatistik auf und muss rekonstruiert werden.",
-        "Ins Modell dürfen nur Merkmale, die zum Prognosezeitpunkt bekannt waren. Sonst gelangt Wissen aus der Zukunft in den Rücktest.",
-        "Ein einzelner Genauigkeitswert verbirgt die systematische Abweichung. Ein Modell kann im Mittel gut aussehen und trotzdem dauerhaft zu hoch liegen.",
-        "Wettbewerber und Wetter bleiben auf diesem Horizont Risiken; das Modell führt sie bewusst nicht als Merkmale.",
+        "Verkäufe zeigen keine Fehlmengen; was im Regal fehlte, musst du rekonstruieren.",
+        "Ins Modell dürfen nur Merkmale, die zum Prognosezeitpunkt bekannt waren, sonst sieht der Rücktest die Zukunft.",
+        "Ein einzelner Genauigkeitswert verbirgt ein Modell, das im Mittel gut aussieht und dauerhaft zu hoch liegt.",
+        "Wettbewerber und Wetter bleiben Risiken; das Modell nutzt sie bewusst nicht.",
       ],
     },
     materials: [
@@ -544,8 +543,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         phase: "before",
         optional: true,
         description:
-          "Die Startseite der englischen Materialien mit Links zu Laboren, Launch-Fall und Übung. Diese Workshop-Seite erfüllt denselben Zweck.",
-        short: "Die Startseite der englischen Materialien mit Links zu allen Teilen.",
+          "Die Startseite der Materialien mit Links zu allen Teilen; diese Seite ersetzt sie.",
       },
       {
         label: "Labore · 3 Simulationen",
@@ -557,7 +555,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         minutes: 45,
         primary: true,
         description:
-          "Drei Simulationen auf einer Seite. Du legst Kapazität fest, dämpfst die Schwankung durch gestapelte Puffer und gibst einen plötzlichen Nachfrageanstieg kontrolliert frei.",
+          "Drei Simulationen zu Kapazität, Puffern und einem Nachfrageschock.",
       },
       {
         label: "Launch-Fall",
@@ -568,7 +566,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         phase: "during",
         minutes: 30,
         description:
-          "Der Launch-Fall in elf Stationen. Du verteilst 1.050 Stück auf drei Standorte und legst fest, was täglich vor einer Freigabe geprüft wird.",
+          "Du verteilst 1.050 Stück und legst die täglichen Prüfungen fest.",
       },
       {
         label: "Prüfkarte · 1 Seite",
@@ -578,7 +576,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         role: "card",
         phase: "after",
         description:
-          "Eine A4-Seite zum Ausdrucken mit fünf Säulen einer Prognose, der Servicelevel-Formel, dem Sicherheitsbestand und vier Arten von Ereignissen, die kein Modell vorhersagt.",
+          "Eine A4-Seite zum Ausdrucken: fünf Säulen einer Prognose, Servicelevel, Sicherheitsbestand und vier Ereignisarten, die kein Modell vorhersagt.",
         short: "Eine A4-Seite mit den fünf Säulen einer Prognose, zum Ausdrucken.",
       },
       {
@@ -591,7 +589,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         minutes: 45,
         optional: true,
         description:
-          "Die Anleitung zur Übung mit dem Datensatz. Du rechnest zwei Prognosen, vergleichst vier Zahlen und schreibst einen Satz dazu, in 15 Minuten oder mit Zusatzaufgabe in 45.",
+          "Du rechnest zwei Prognosen und schreibst einen Satz zu den vier Zahlen. Mit Zusatzaufgabe dauert es 45 statt 15 Minuten.",
       },
       {
         label: "Datensatz, 104 Wochen · .csv",
@@ -603,7 +601,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         optional: true,
         sizeLabel: "1,6 KB",
         description:
-          "Die wöchentliche Nachfrage für die Übung (demand-weekly.csv). Erfundene Übungsdaten, die sich in jedem Tabellenprogramm öffnen.",
+          "Die wöchentliche Nachfrage für die Übung (demand-weekly.csv). Öffnet in jedem Tabellenprogramm.",
       },
     ],
   },
@@ -614,28 +612,28 @@ const WORKSHOPS_DE: readonly Workshop[] = [
     title: "Geschäftsberichte mit KI lesen",
     eyebrow: "Workshop 02 · Geschäftsberichte",
     summary:
-      "Du schreibst auf, was die Kennzahlen eines Monatsberichts bedeuten, lässt Claude damit ein Dashboard füllen und begründest eine Entscheidung mit einer Zahl.",
+      "Du legst fest, was die Kennzahlen eines Monatsberichts bedeuten, und lässt Claude danach ein Dashboard füllen.",
     description:
-      "In der Claude-App arbeitest du für die erfundene Firma NORTHWIND. Du bekommst ihren Monatsbericht und die Rohdaten dahinter und schreibst in fünf Prompts auf, was Umsatz, Mängel und Marketing dort bedeuten. Aus deinen Regeln wird ein Skill, den Claude auch für den nächsten Monatsbericht nutzt. Im zweiten Fall wendest du dieselbe Methode auf Metas öffentliche Quartalszahlen an.",
+      "In der Claude-App schreibst du in fünf Prompts auf, was Umsatz, Mängel und Marketing im Monatsbericht der erfundenen Firma NORTHWIND bedeuten. Daraus wird ein Skill für jeden weiteren Monatsbericht. Im zweiten Fall nutzt du dieselbe Methode für Metas öffentliche Quartalszahlen.",
     format: "Selbstlern-Kit",
     duration: "~90 Minuten",
     accessNote:
-      "Du brauchst die Claude-Desktop-App mit Claude Code in einem Plan, der Claude Code enthält. Nimm nur das erfundene Kit, denn Dateien können an den Dienst gehen.",
+      "Nimm nur das erfundene Kit: Claude kann Dateien an Anthropic übertragen.",
     outcome: "Kennzahlen-Skill + Dashboard",
     audience: [
-      "Controllerinnen und Controller, die Monats- oder Quartalsberichte schreiben oder lesen",
-      "Finance-Teams im Mittelstand, die jeden Monatsbericht nach denselben Regeln lesen wollen",
-      "Alle, die Claude für Zahlenarbeit ausprobieren wollen, ohne selbst zu programmieren",
+      "Controllerinnen und Controller mit Monats- oder Quartalsberichten",
+      "Finance-Teams, die jeden Monatsbericht gleich lesen wollen",
+      "Alle, die Claude ohne Programmieren für Zahlen testen wollen",
     ],
     notForYou:
-      "Eher nicht für dich, wenn du keinen Zugang zur Claude-Desktop-App hast; die Workshops 01, 03 und 04 laufen ohne KI-Konto.",
+      "Ohne Claude-Desktop-App nimm Workshop 01, 03 oder 04; sie laufen ohne KI-Konto.",
     question:
       "Soll NORTHWIND die Produktlinie CRAFT nacharbeiten oder mehr Q3-Marketingbudget dahinterstellen?",
     outcomes: [
-      "Du schreibst für fünf Kennzahlen eines Monatsberichts auf, was sie in dieser Firma bedeuten, und speicherst das als Claude-Skill.",
-      "Du lässt Claude den Bericht nach diesen Regeln auslesen und prüfst eine Zahl gegen Datei und Spalte der Quelle.",
-      "Du begründest eine Entscheidung mit der tragenden Zahl, den Kosten eines Irrtums und dem, was die Daten offenlassen.",
-      "Du wendest denselben Skill auf den nächsten Monatsbericht an.",
+      "Du schreibst auf, was fünf Kennzahlen bedeuten, und speicherst das als Skill.",
+      "Du prüfst eine von Claude ausgelesene Zahl gegen Datei und Spalte.",
+      "Du begründest eine Entscheidung mit der Zahl, die sie trägt, und nennst, was ein Irrtum kostet und was die Daten offenlassen.",
+      "Du wendest den Skill auf den nächsten Monatsbericht an.",
     ],
     agenda: [
       {
@@ -644,7 +642,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         mode: "self",
         activity: "do",
         description:
-          "Du entpackst das Kit und öffnest den Ordner in der Claude-App unter Claude Code.",
+          "Du entpackst das Kit und öffnest den Ordner in Claude Code.",
       },
       {
         label: "Claude liest die Firma",
@@ -652,7 +650,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         mode: "self",
         activity: "do",
         description:
-          "Mit dem ersten Prompt liest Claude Steckbrief und Monatsbericht und nennt die Entscheidung des Monats.",
+          "Claude liest Steckbrief und Monatsbericht und nennt die Entscheidung des Monats.",
       },
       {
         label: "Den Kennzahlen-Skill schreiben",
@@ -660,7 +658,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         mode: "self",
         activity: "write",
         description:
-          "Du beantwortest Claudes Fragen zu Umsatz, Mängeln und Marketing; Claude schreibt die Antworten in den Skill.",
+          "Claude fragt nach Umsatz, Mängeln und Marketing und schreibt deine Antworten in den Skill.",
       },
       {
         label: "Auslesen und an der Quelle prüfen",
@@ -668,7 +666,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         mode: "self",
         activity: "do",
         description:
-          "Claude liest den Monat nach deinen Regeln aus, und du prüfst eine Zahl gegen die Rohdaten-CSV.",
+          "Claude liest den Monat nach deinen Regeln aus, du prüfst eine Zahl gegen die CSV.",
       },
       {
         label: "Das Dashboard füllen",
@@ -676,7 +674,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         mode: "self",
         activity: "do",
         description:
-          "Claude trägt die Kennzahlen in die leere Dashboard-Vorlage ein und öffnet die Seite.",
+          "Claude trägt die Kennzahlen in die Dashboard-Vorlage ein.",
       },
       {
         label: "Entscheiden",
@@ -684,7 +682,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         mode: "self",
         activity: "write",
         description:
-          "Du entscheidest über CRAFT und schreibst die tragende Zahl, die Kosten eines Irrtums und das stärkste Gegenargument dazu.",
+          "Du entscheidest über CRAFT und nennst die Zahl, die trägt, was ein Irrtum kostet und das stärkste Gegenargument.",
       },
       {
         label: "Fall 2: Metas Quartal",
@@ -693,32 +691,31 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         activity: "do",
         optional: true,
         description:
-          "Du wendest dieselbe Methode auf Metas öffentliche Quartalsmitteilung Q2 2026 an.",
+          "Du wendest die Methode auf Metas Quartalsmitteilung Q2 2026 an.",
       },
     ],
     agendaSource: "plan",
     minutesSelfStudy: 90,
     needs: [
-      "Die Claude-Desktop-App mit Claude Code, in einem Plan, der Claude Code enthält",
+      "Die Claude-Desktop-App in einem Plan mit Claude Code",
       "Windows oder macOS",
-      "Ein Zip-Archiv entpacken können; START-HERE.md im Kit führt durch die Einrichtung",
+      "Ein Zip-Archiv entpacken; START-HERE.md führt durch die Einrichtung",
     ],
     notNeeded: [
       "Programmierkenntnisse",
       "Einen API-Schlüssel",
-      "Eigene Firmendaten, denn das Kit bringt alle Dateien mit",
+      "Eigene Firmendaten",
     ],
     notCovered: [
       "API, Datenbank oder Automatisierung",
       "Ein Grundkurs Bilanzanalyse",
-      "Echte Firmendaten in Claude; im Workshop nutzt du nur das erfundene Kit",
       "Ein Vergleich von KI-Anbietern",
     ],
     provenance: {
       author: "Tim Löhr",
       reviewedAt: "2026-09-26",
       data: "synthetic-and-public",
-      note: "NORTHWIND und alle Zahlen des Übungsfalls sind erfunden. Fall 2 nutzt nur Metas öffentliche Quartalsmitteilung; der Autor arbeitet als Data Engineer bei Meta.",
+      note: "Fall 2 nutzt nur Metas öffentliche Quartalsmitteilung; der Autor arbeitet als Data Engineer bei Meta.",
     },
     decisionLab: {
       kicker: "Entscheidung 01 · CRAFT",
@@ -728,7 +725,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       facts: [
         "Umsatz 4,12 Mio. €",
         "Einheiten 9.162",
-        "Meiste Mängel · Monat 2",
+        "Meiste Mängel · 2 Monate in Folge",
       ],
       decisionLegend: "Deine erste Entscheidung",
       evidenceLegend: "Der stärkste Beleg",
@@ -772,7 +769,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       feedback: {
         aligned: {
           title: "Qualität vor zusätzlicher Nachfrage",
-          body: "Die Mängel im zweiten Monat in Folge rechtfertigen, das Budget anzuhalten. Für mehr Budget oder das Ende der Linie bräuchtest du Stückkosten, Retouren je Linie und eine Zuordnung des Marketings, und das Kit hat nichts davon.",
+          body: "Mängel im zweiten Monat in Folge rechtfertigen den Budgetstopp. Für mehr Budget oder das Aus fehlen im Kit Stückkosten, Retouren je Linie und die Zuordnung des Marketings.",
         },
         decisionOnly: {
           title: "Richtige Reihenfolge, falscher Hauptbeleg",
@@ -780,7 +777,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         },
         evidenceOnly: {
           title: "Der Beleg widerspricht der Entscheidung",
-          body: "Wiederholte Mängel sprechen gegen mehr Nachfrage. Für ein sofortiges Aus reichen sie nicht. Prüf zuerst Ursache und Nacharbeit.",
+          body: "Wiederholte Mängel sprechen gegen mehr Nachfrage, für ein sofortiges Aus reichen sie nicht. Prüf zuerst Ursache und Nacharbeit.",
         },
         unsupported: {
           title: "Die Belege tragen diese Entscheidung nicht",
@@ -793,49 +790,49 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         n: "01",
         title: "Claude liest die Firma",
         description:
-          "Du öffnest den Kit-Ordner in der Claude-App. Er enthält den Monatsbericht (8 Seiten), fünf CSV-Dateien mit Rohdaten, die auch in Excel aufgehen, und einen Steckbrief der Firma. Claude liest Steckbrief und Bericht und sagt, wer NORTHWIND ist und welche Entscheidung der Monat vorbereitet. Die Dateien können dabei an den Dienst übertragen werden; prüf vor echten Daten die Produkt-, Vertrags- und Aufbewahrungseinstellungen.",
+          "Claude liest Steckbrief und Monatsbericht; die Dateien können dabei an den Dienst übertragen werden, also prüf vor echten Daten Produkt-, Vertrags- und Aufbewahrungseinstellungen.",
         tool: "Dateien",
       },
       {
         n: "02",
         title: "Den Kennzahlen-Skill schreiben",
         description:
-          "Im Kit liegt ein halb fertiger Kennzahlen-Skill. Claude fragt dich nacheinander, was Umsatz, Mängel und Marketing bei NORTHWIND bedeuten, und schreibt deine Antworten in die Skill-Datei. Claude soll ab jetzt zuerst deine Regeln lesen; prüf in jeder Antwort, ob er sie nennt.",
+          "Claude fragt, was Umsatz, Mängel und Marketing bedeuten, und ergänzt damit den halb fertigen Skill. Prüf in jeder Antwort, ob Claude deine Regeln nennt.",
         tool: "Skill",
       },
       {
         n: "03",
         title: "Auslesen und an der Quelle prüfen",
         description:
-          "Der Skill liest den Bericht mit deinen Regeln und schreibt die Monatskennzahlen in eine Tabelle. Eine davon prüfst du gegen die Rohdaten-CSV, mit Datei und Spalte. Stell dieselbe Frage einmal ohne Skill und vergleiche die beiden Antworten.",
+          "Du prüfst eine ausgelesene Kennzahl mit Datei und Spalte gegen die CSV und vergleichst mit einer Antwort ohne Skill.",
         tool: "Claude Code",
       },
       {
         n: "04",
         title: "Das Dashboard füllen",
         description:
-          "Das Kit enthält eine leere Dashboard-Vorlage. Mit einem Prompt trägt Claude die Kennzahlen ein und öffnet die Seite. Sie zeigt Umsatz je Linie mit CRAFT markiert, Mängel, Marketing, offene Eskalationen und die anstehende Entscheidung. Den 8-Seiten-Bericht behält der Analyst, das Meeting bekommt diese eine Seite.",
+          "Mit einem Prompt füllt Claude die Dashboard-Vorlage, die das Meeting statt des 8-Seiten-Berichts bekommt.",
         tool: "Dashboard",
       },
       {
         n: "05",
         title: "Gegen den Vertriebsleiter argumentieren",
         description:
-          "Zum Schluss entscheidest du, ob CRAFT nachgearbeitet wird oder mehr Q3-Marketingbudget bekommt. Du nennst die Zahl, die das stützt, was ein Irrtum kosten würde, was die Daten offenlassen, und das stärkste Argument des Vertriebsleiters.",
+          "Du entscheidest über CRAFT und nennst die Zahl, die trägt, was ein Irrtum kostet, welche Daten fehlen und das stärkste Gegenargument.",
         tool: "Entscheidung",
       },
       {
         n: "06",
         title: "Fall 2 mit Metas Quartal",
         description:
-          "Jetzt nimmst du ein echtes Unternehmen. Claude lädt Metas Quartalsmitteilung Q2 2026 direkt aus dem Netz; im Kit liegt sie nicht. Du definierst sechs Kennzahlen, liest das Quartal aus (+28 % Umsatz, −8 % operatives Ergebnis) und lässt Claude ein Dashboard ohne Vorlage entwerfen. Dann beurteilst du, ob sich 31 Mrd. $ Investitionen in einem Quartal rechnen können.",
+          "Claude lädt Metas Quartalsmitteilung Q2 2026 aus dem Netz, und du beurteilst 31 Mrd. $ Investitionen in einem Quartal.",
         tool: "SEC-Mitteilung · live",
       },
       {
         n: "07",
         title: "Mit deinen eigenen Berichten wiederholen",
         description:
-          "Deine Regeln stehen in der Skill-Datei, also wendest du sie im nächsten Monat auf den neuen Bericht an. Das Kit enthält beide Fälle, das Arbeitsblatt und eine leere Vorlage für die Berichte deiner eigenen Firma.",
+          "Im nächsten Monat wendest du den Skill auf den neuen Bericht an.",
         tool: "Wiederholung",
       },
     ],
@@ -846,7 +843,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       sector: "Elektronikfertigung",
       period: "September 2023",
       narrative:
-        "NORTHWIND ist eine erfundene Firma für diesen Workshop, ein familiengeführter Elektronikhersteller aus Berlin mit rund 850 Beschäftigten und acht Produktlinien, von denen sieben ausliefern, Monatsabschluss September 2023. CRAFT ist die Kaffee-Linie mit zwei Espressomaschinen und einer Mühle zwischen 199 € und 699 €, die neueste und teuerste Linie im Sortiment. Sie macht bei einem der geringsten Absätze (Rang 6 von 7 liefernden Linien) den zweithöchsten Umsatz und hat den zweiten Monat in Folge die meisten Qualitätsmängel. Der Vertriebsleiter will mehr Q3-Marketingbudget für CRAFT.",
+        "Das Familienunternehmen hat rund 850 Beschäftigte und acht Produktlinien, sieben davon liefern aus. Die neueste und teuerste ist CRAFT: zwei Espressomaschinen und eine Mühle für 199 € bis 699 €. CRAFT macht bei Absatzrang 6 von 7 den zweithöchsten Umsatz.",
       metrics: [
         { label: "Umsatz gesamt", value: "21,69 Mio. €" },
         { label: "Einheiten gesamt", value: "139.056" },
@@ -854,11 +851,11 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         { label: "CRAFT-Einheiten", value: "9.162" },
       ],
       decisionQuestion:
-        "Soll NORTHWIND die Produktlinie CRAFT technisch nacharbeiten, oder, wie der Vertriebsleiter fordert, mehr Q3-Marketingbudget hinter CRAFT stellen?",
+        "Welche Zahl trägt die Entscheidung, und welche Daten fehlen dafür?",
       dataLimitations: [
-        "Keine echte Bruttomarge je Linie: Es liegen keine Stückkosten pro Produkt vor.",
-        "Keine Kundenretouren je Linie: Bestellungen sind nicht mit Produktlinien verknüpft.",
-        "Kein exaktes Marketingbudget je Produktlinie: Kampagnenbudgets sind nicht sauber zurechenbar.",
+        "Keine Bruttomarge je Linie, weil Stückkosten fehlen.",
+        "Keine Retouren je Linie, weil Bestellungen nicht mit Linien verknüpft sind.",
+        "Kein Marketingbudget je Linie, weil Kampagnen nicht sauber zurechenbar sind.",
       ],
     },
     realWorldCase: {
@@ -871,7 +868,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       sourceLimitation:
         "Unternehmensmitteilung mit ungeprüften Quartalszahlen. Der freie Cashflow ist eine ergänzende Non-GAAP-Kennzahl; die Quelle belegt Werte, nicht die Investitionsentscheidung.",
       narrative:
-        "Meta meldet für Q2 2026 28 % mehr Umsatz und 8 % weniger operatives Ergebnis. Fast der gesamte operative Cashflow floss in Infrastruktur, der freie Cashflow lag bei 784 Mio. $. Du definierst sechs Kennzahlen für das Quartal, liest die Zahlen aus und lässt Claude das Dashboard ohne Vorlage entwerfen.",
+        "Fast der gesamte operative Cashflow floss in Infrastruktur. Du definierst sechs Kennzahlen, liest das Quartal aus und lässt Claude ein Dashboard ohne Vorlage entwerfen.",
       metrics: [
         { label: "Umsatz", value: "+28 %" },
         { label: "Operatives Ergebnis", value: "−8 %" },
@@ -891,7 +888,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         phase: "during",
         primary: true,
         description:
-          "Die Folien führen durch Firma, Kit-Ordner, die fünf Prompts mit ihren Ergebnissen, drei Zusatz-Prompts und Fall 2 mit Meta. Jeder Prompt hat einen Knopf zum Kopieren. Mit den Pfeiltasten blätterst du.",
+          "Die Folien zeigen Firma, Kit, die fünf Prompts mit Ergebnissen, drei Zusatz-Prompts und Fall 2. Jeder Prompt hat einen Kopierknopf.",
         short: "Die Folien führen durch Firma, Kit, Prompts und Fall 2 mit Meta.",
       },
       {
@@ -903,7 +900,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         phase: "before",
         sizeLabel: "60 KB",
         description:
-          "Das NORTHWIND-Kit mit START-HERE.md, CSV-Rohdaten, beiden Monatsberichten als Markdown, dem halb fertigen Kennzahlen-Skill, der Dashboard-Vorlage, dem Arbeitsblatt, der Meta-Aufgabe und einer leeren Vorlage für die eigene Firma. Nur Textdateien; den gestalteten Bericht zeigen die Folien.",
+          "Das Kit enthält START-HERE.md, Rohdaten, beide Monatsberichte, den halb fertigen Skill, Dashboard-Vorlage, Arbeitsblatt, Meta-Aufgabe und eine Vorlage für die eigene Firma. Nur Textdateien.",
         short: "Das NORTHWIND-Kit mit Rohdaten, Berichten, Skill und Vorlagen.",
       },
     ],
@@ -918,27 +915,27 @@ const WORKSHOPS_EN: readonly Workshop[] = [
     title: "Can AI predict the future?",
     eyebrow: "Workshop 01 · Forecasts",
     summary:
-      "You work out what a wrong forecast costs, how big the buffer has to be and when a person approves, in three browser labs and one launch case.",
+      "In browser labs you work out what a wrong forecast costs and when a person must approve.",
     description:
-      "First you check whether a model beats the current method, the same weekday one week earlier. Then you work out what too much and too little capacity cost and set the buffer. Finally you decide how you will notice a forecast going wrong in operation, and who approves then. The labs price costs in US dollars; the launch case counts units.",
+      "You check whether a model beats the value from the same weekday a week earlier, and set the buffer from the cost of too much and too little capacity. Then you decide how you spot a forecast going wrong and who approves. The labs price in US dollars; the launch case counts units.",
     format: "Self-study kit",
     duration: "~90 minutes",
     accessNote:
-      "No AI account needed, everything runs statically in the browser. For the exercise you need a spreadsheet program.",
+      "Everything runs in the browser.",
     outcome: "Go/no-go rule",
     audience: [
-      "Planners and schedulers who set capacity or order quantities from a forecast",
-      "Managers who own a forecast without calculating it themselves",
-      "Analytics teams that have to show a model beats the existing process",
+      "Planners who set quantities from forecasts",
+      "Managers who own a forecast but do not calculate it",
+      "Analytics teams who must prove a model does better",
     ],
     notForYou:
-      "Probably not for you if you want to program a forecasting model; here you work with ready-made simulations.",
+      "Not for you if you want to program a forecasting model; here you use ready-made simulations.",
     question:
       "Which rule allocates 1,050 units among three sites, and when must a person approve?",
     outcomes: [
-      "Work out in dollars whether a forecast beats the rule of thumb your planners use today.",
-      "Set a service level from the cost of too much and too little stock, and a buffer from that.",
-      "Write a release rule that says when the forecast runs automatically and when a named person decides.",
+      "Work out in dollars whether a forecast beats today's rule of thumb.",
+      "Derive a service level and the buffer from the error costs.",
+      "Set when the forecast runs alone and when a named person decides.",
       "Name four kinds of events that no model predicts.",
     ],
     agenda: [
@@ -948,7 +945,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         mode: "self",
         activity: "vote",
         description:
-          "You allocate 1,050 units among three sites and pick the strongest evidence for it.",
+          "You allocate 1,050 units among three sites and pick the strongest evidence.",
       },
       {
         label: "Set capacity",
@@ -956,7 +953,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         mode: "self",
         activity: "do",
         description:
-          "In the first lab you compare three model stages with last week's value, in dollars.",
+          "You compare three model stages in dollars with last week's value.",
       },
       {
         label: "Buffers in the supply chain",
@@ -964,7 +961,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         mode: "self",
         activity: "do",
         description:
-          "In the second lab you send the same demand through the supply chain twice and compare the swings.",
+          "You send the same demand through the supply chain twice and compare the swings.",
       },
       {
         label: "Release after a demand shock",
@@ -972,7 +969,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         mode: "self",
         activity: "do",
         description:
-          "In the third lab you trigger shocks and see when a named person takes over.",
+          "You trigger shocks and see when a named person takes over.",
       },
       {
         label: "The launch case",
@@ -980,7 +977,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         mode: "self",
         activity: "do",
         description:
-          "Over eleven stations you allocate 1,050 units and set four daily checks before release.",
+          "Over eleven stations you allocate 1,050 units and set four daily checks.",
       },
       {
         label: "Your case",
@@ -988,37 +985,36 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         mode: "self",
         activity: "write",
         description:
-          "With the field card you write five sentences on how the rule looks for a forecast from your own work.",
+          "With the field card you write the rule for a forecast of your own in five sentences.",
       },
     ],
     agendaSource: "plan",
     minutesSelfStudy: 90,
     needs: [
-      "A browser, ideally on a desktop screen for the labs",
-      "For the optional exercise, a spreadsheet program such as Excel, LibreOffice Calc or Google Sheets",
+      "A browser, ideally on a desktop for the labs",
+      "For the optional exercise, a spreadsheet such as Excel",
     ],
     notNeeded: [
       "Programming skills",
       "An AI account",
-      "Your own company data, because every figure is invented and supplied",
+      "Your own company data",
     ],
     notCovered: [
-      "Building or programming a model",
       "Choosing forecasting software",
-      "Deriving the formulas; you apply them",
+      "Deriving the formulas",
       "Planning for your own product range",
     ],
     provenance: {
       author: "Tim Löhr",
       reviewedAt: "2026-09-26",
       data: "synthetic",
-      note: "Every company and figure in the labs, the case and the exercise is invented for teaching. The workshop shows no AI answers.",
+      note: "All companies and figures are invented. The workshop shows no AI answers.",
     },
     decisionLab: {
       kicker: "Decision 01 · Supply limit",
       title: "1,050 units. Who gets them?",
       prompt:
-        "Three sites request 1,370 units. The model estimates demand at 1,180; only 1,050 can be supplied. Which rule may run now?",
+        "Which rule may run now?",
       facts: ["Requests 1,370", "Demand p50 1,180", "Supply limit 1,050"],
       decisionLegend: "Your first decision",
       evidenceLegend: "The strongest evidence",
@@ -1076,7 +1072,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         },
         unsupported: {
           title: "Not ready for release",
-          body: "The sites request 1,370 units, estimated demand is 1,180, and 1,050 can be supplied. Allocate by demand and have a named person approve every exception at a 12% residual error.",
+          body: "Requests exceed the 1,050 units that can be supplied, and equal shares ignore estimated demand. Allocate by estimated demand and have a named person approve every exception at a 12% residual error.",
         },
       },
     },
@@ -1085,42 +1081,42 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         n: "01",
         title: "Beat the current process in dollars",
         description:
-          "In the first lab, six weeks of parcel demand run as a shadow test against the number planning uses today: the same weekday one week earlier. Missing capacity costs more than spare capacity, so you price both in dollars. You switch between three model stages. A promotion nobody entered is invisible to every stage; that case goes to a person.",
+          "In a shadow test against last week's value, missing capacity costs more than spare; a promotion nobody entered goes to a person.",
         tool: "Lab 1",
       },
       {
         n: "02",
         title: "Compare stacked buffers with a shared forecast",
         description:
-          "In the second lab the same demand runs through the supply chain twice. Once every stage adds its own buffer, once everyone plans with the same forecast. You compare how much the orders swing, how often the chain can deliver and how much money sits in stock.",
+          "You compare a buffer per stage with a shared forecast on order swings, delivery rate and stock value.",
         tool: "Lab 2",
       },
       {
         n: "03",
         title: "Test the release after a demand shock",
         description:
-          "In the third lab you trigger demand shocks and compare two operating modes. The blind one keeps running the plan from launch day. The monitored one detects the deviation, stops the automation, hands the case to a named person and restarts only after retraining.",
+          "After a shock the blind mode keeps running; the monitored one stops, hands over to a named person and restarts after retraining.",
         tool: "Lab 3",
       },
       {
         n: "04",
         title: "Work through the launch case with 1,050 units",
         description:
-          "The case has eleven stations. You first allocate by hand in a spreadsheet, price the unequal error costs and pick a model (12% rather than 21% deviation). Then you look for data errors in one query, backtest from several start dates and set four daily checks before release.",
+          "You allocate by hand, pick a model by error cost (12% rather than 21% deviation), look for data errors, backtest and set four daily checks.",
         tool: "Launch case",
       },
       {
         n: "05",
         title: "Calculate two forecasts yourself",
         description:
-          "The exercise provides 104 weeks of demand as a CSV file. You hold back the final 14 weeks, forecast them once with a naive method and once with smoothing, and calculate mean error and systematic bias for both. From the four numbers you write one sentence on whether smoothing was more accurate. The exercise is optional and takes 15 to 45 minutes.",
+          "Optional, 15 to 45 minutes: you forecast the last 14 of 104 weeks naively and with smoothing and compare mean error and systematic bias.",
         tool: "Exercise · optional",
       },
       {
         n: "06",
         title: "Apply it to a forecast from your work",
         description:
-          "The field card fits on one A4 page: five pillars of a forecast, the service-level formula from the costs of too much and too little stock, a rule of thumb for safety stock, and four kinds of events no model predicts. With it you write five sentences on how the rule looks for a case from your own work.",
+          "With the A4 field card you write the rule for a case of your own in five sentences.",
         tool: "Field card",
       },
     ],
@@ -1131,7 +1127,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
       sector: "Consumer electronics · Supply and demand planning",
       period: "Launch week for a new device",
       narrative:
-        "At this launch, demand is higher than the confirmed quantity. Three sites request 1,370 units, the model estimates 1,180, and 1,050 are confirmed. Three departments read three different numbers from this. Every company and figure in the case and the labs is invented.",
+        "Demand for the new device exceeds the confirmed quantity, and three departments read three different numbers from it.",
       metrics: [
         { label: "Site requests", value: "1,370" },
         { label: "Estimated demand (median)", value: "1,180" },
@@ -1139,12 +1135,12 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         { label: "Model / baseline deviation", value: "12% / 21%" },
       ],
       decisionQuestion:
-        "Which rule allocates 1,050 units among three sites of different sizes when 320 requested units are missing? And at what forecast error must a person approve that allocation?",
+        "Who gets the 1,050 units when 320 requested units are missing, and at what forecast error does a person approve?",
       dataLimitations: [
-        "Sales show only what was sold. Stockouts never appear in sales figures and have to be reconstructed.",
-        "Only features known at forecast time may enter the model. Otherwise knowledge from the future leaks into the backtest.",
-        "One accuracy measure hides systematic bias. A model can look acceptable on average and still run high every week.",
-        "Competitors and weather remain risks at this horizon; the model deliberately leaves them out as features.",
+        "Sales miss stockouts; what was missing from the shelf has to be reconstructed.",
+        "Only features known at forecast time may enter the model, or the backtest sees the future.",
+        "One accuracy figure hides a model that looks fine on average and runs high every week.",
+        "Competitors and weather remain risks; the model deliberately leaves them out.",
       ],
     },
     materials: [
@@ -1157,8 +1153,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         phase: "before",
         optional: true,
         description:
-          "The start page of the materials, with links to the labs, the launch case and the exercise. This workshop page does the same job.",
-        short: "The start page of the materials, with links to every part.",
+          "The start page of the materials with links to every part; this page replaces it.",
       },
       {
         label: "Labs · 3 simulations",
@@ -1170,7 +1165,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         minutes: 45,
         primary: true,
         description:
-          "Three simulations on one page. You set capacity, damp the swings caused by stacked buffers and release a sudden rise in demand through a controlled process.",
+          "Three simulations on capacity, buffers and a demand shock.",
       },
       {
         label: "Launch case",
@@ -1181,7 +1176,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         phase: "during",
         minutes: 30,
         description:
-          "The launch case in eleven stations. You allocate 1,050 units among three sites and decide what is checked every day before a release.",
+          "You allocate 1,050 units and set the daily checks.",
       },
       {
         label: "Field card · 1 page",
@@ -1191,7 +1186,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         role: "card",
         phase: "after",
         description:
-          "One printable A4 page with five pillars of a forecast, the service-level formula, safety stock and four kinds of events no model predicts.",
+          "One printable A4 page: five pillars of a forecast, service level, safety stock and four kinds of events no model predicts.",
         short: "One printable A4 page with the five pillars of a forecast.",
       },
       {
@@ -1204,7 +1199,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         minutes: 45,
         optional: true,
         description:
-          "Instructions for the exercise with the dataset. You calculate two forecasts, compare four numbers and write one sentence, in 15 minutes or in 45 with the extra task.",
+          "You calculate two forecasts and write one sentence on the four numbers. The extra task takes it from 15 to 45 minutes.",
       },
       {
         label: "Dataset, 104 weeks · .csv",
@@ -1216,7 +1211,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         optional: true,
         sizeLabel: "1.6 KB",
         description:
-          "The weekly demand for the exercise (demand-weekly.csv). Invented practice data that opens in any spreadsheet.",
+          "The weekly demand for the exercise (demand-weekly.csv). Opens in any spreadsheet.",
       },
     ],
   },
@@ -1227,28 +1222,28 @@ const WORKSHOPS_EN: readonly Workshop[] = [
     title: "Read business reports with AI",
     eyebrow: "Workshop 02 · Business reports",
     summary:
-      "You write down what the metrics in a monthly report mean, have Claude fill a dashboard with them and back a decision with one figure.",
+      "You define what a monthly report's metrics mean, then have Claude fill a dashboard by those rules.",
     description:
-      "In the Claude app you work for the invented company NORTHWIND. You get its monthly report and the raw data behind it, and in five prompts you write down what revenue, defects and marketing mean there. Your rules become a skill that Claude also uses for the next monthly report. In the second case you apply the same method to Meta's public quarterly figures.",
+      "In the Claude app you write down in five prompts what revenue, defects and marketing mean in the monthly report of the invented company NORTHWIND. That becomes a skill for every later monthly report. In the second case you apply the same method to Meta's public quarterly figures.",
     format: "Self-study kit",
     duration: "~90 minutes",
     accessNote:
-      "Claude steps require suitable Claude access: the Claude desktop app with Claude Code, on a plan that includes it. Use only the fictional kit, because files may reach that service.",
+      "Use only the invented kit: Claude may transfer files to Anthropic.",
     outcome: "Metrics skill + dashboard",
     audience: [
-      "Controllers who write or read monthly and quarterly reports",
-      "Finance teams in mid-sized companies that want to read every monthly report by the same rules",
-      "Anyone who wants to try Claude for work with figures without writing code",
+      "Controllers who work with monthly or quarterly reports",
+      "Finance teams who want to read every monthly report alike",
+      "Anyone who wants to test Claude on figures without code",
     ],
     notForYou:
-      "Probably not for you if you have no access to the Claude desktop app; Workshops 01, 03 and 04 need no AI account.",
+      "Without the Claude desktop app, pick Workshop 01, 03 or 04; they need no AI account.",
     question:
       "Should NORTHWIND rework the CRAFT product line or put more Q3 marketing budget behind it?",
     outcomes: [
-      "Write down what five metrics in a monthly report mean in this company, and save that as a Claude skill.",
-      "Have Claude read the report by those rules and check one figure against the source file and column.",
-      "Argue a decision with the figure it rests on, the cost of being wrong and what the data leave open.",
-      "Apply the same skill to the next monthly report.",
+      "Write down what five metrics mean and save it as a skill.",
+      "Check a figure Claude extracted against its file and column.",
+      "Back a decision with its key figure, the cost of error and data gaps.",
+      "Apply the skill to the next monthly report.",
     ],
     agenda: [
       {
@@ -1257,7 +1252,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         mode: "self",
         activity: "do",
         description:
-          "You unzip the kit and open the folder in the Claude app under Claude Code.",
+          "You unzip the kit and open the folder in Claude Code.",
       },
       {
         label: "Claude reads the company",
@@ -1265,7 +1260,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         mode: "self",
         activity: "do",
         description:
-          "With the first prompt Claude reads the profile and the monthly report and names the month's decision.",
+          "Claude reads the profile and the monthly report and names the month's decision.",
       },
       {
         label: "Write the metrics skill",
@@ -1273,7 +1268,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         mode: "self",
         activity: "write",
         description:
-          "You answer Claude's questions on revenue, defects and marketing; Claude writes the answers into the skill.",
+          "Claude asks about revenue, defects and marketing and writes your answers into the skill.",
       },
       {
         label: "Extract and check the source",
@@ -1281,7 +1276,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         mode: "self",
         activity: "do",
         description:
-          "Claude extracts the month by your rules, and you check one figure against the raw CSV.",
+          "Claude extracts the month by your rules; you check one figure against the CSV.",
       },
       {
         label: "Fill the dashboard",
@@ -1289,7 +1284,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         mode: "self",
         activity: "do",
         description:
-          "Claude writes the metrics into the empty dashboard template and opens the page.",
+          "Claude writes the metrics into the dashboard template.",
       },
       {
         label: "Decide",
@@ -1297,7 +1292,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         mode: "self",
         activity: "write",
         description:
-          "You decide on CRAFT and write down the figure it rests on, the cost of being wrong and the strongest counter-argument.",
+          "You decide on CRAFT, with key figure, cost of error and the strongest counter-argument.",
       },
       {
         label: "Case 2: Meta's quarter",
@@ -1306,39 +1301,38 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         activity: "do",
         optional: true,
         description:
-          "You apply the same method to Meta's public Q2 2026 quarterly release.",
+          "You apply the method to Meta's Q2 2026 quarterly release.",
       },
     ],
     agendaSource: "plan",
     minutesSelfStudy: 90,
     needs: [
-      "The Claude desktop app with Claude Code, on a plan that includes Claude Code",
+      "The Claude desktop app on a plan with Claude Code",
       "Windows or macOS",
-      "Being able to unzip an archive; START-HERE.md in the kit walks you through setup",
+      "Unzipping an archive; START-HERE.md walks you through setup",
     ],
     notNeeded: [
       "Programming skills",
       "An API key",
-      "Your own company data, because the kit supplies every file",
+      "Your own company data",
     ],
     notCovered: [
       "APIs, databases or automation",
       "An introduction to financial statement analysis",
-      "Real company data in Claude; in the workshop you use only the invented kit",
       "A comparison of AI providers",
     ],
     provenance: {
       author: "Tim Löhr",
       reviewedAt: "2026-09-26",
       data: "synthetic-and-public",
-      note: "NORTHWIND and every figure in the practice case are invented. Case 2 uses only Meta's public quarterly release; the author works as a data engineer at Meta.",
+      note: "Case 2 uses only Meta's public quarterly release; the author works as a data engineer at Meta.",
     },
     decisionLab: {
       kicker: "Decision 01 · CRAFT",
       title: "Create more demand or repair the product first?",
       prompt:
-        "CRAFT generates €4.12m of revenue at low volume, but records the most quality defects for a second month. Sales wants more Q3 marketing budget. What happens first?",
-      facts: ["Revenue €4.12m", "Units 9,162", "Most defects · month 2"],
+        "CRAFT generates €4.12m of revenue at low volume, but records the most quality defects for a second month. Sales wants more Q3 marketing budget. What do you do first?",
+      facts: ["Revenue €4.12m", "Units 9,162", "Most defects · 2 months running"],
       decisionLegend: "Your first decision",
       evidenceLegend: "The strongest evidence",
       choices: [
@@ -1382,7 +1376,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
       feedback: {
         aligned: {
           title: "Quality before more demand",
-          body: "The repeated defects justify holding the budget. To decide on more budget or closing the line you would need unit costs, returns per line and marketing attribution, and the kit has none of them.",
+          body: "Defects in a second month in a row justify holding the budget. For more budget or closing the line, the kit lacks unit costs, returns per line and marketing attribution.",
         },
         decisionOnly: {
           title: "Right sequence, wrong primary evidence",
@@ -1403,49 +1397,49 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         n: "01",
         title: "Claude reads the company",
         description:
-          "You open the kit folder in the Claude app. It holds the monthly report (eight pages), five raw CSV files that also open in Excel, and a company profile. Claude reads the profile and the report and says who NORTHWIND is and which decision the month prepares. The files may be transferred to the service; check current product, contract and retention settings before you use real data.",
+          "Claude reads the profile and the monthly report; the files may be transferred to the service, so check product, contract and retention settings before you use real data.",
         tool: "Files",
       },
       {
         n: "02",
         title: "Write the metrics skill",
         description:
-          "The kit holds a half-finished metrics skill. Claude asks you in turn what revenue, defects and marketing mean at NORTHWIND and writes your answers into the skill file. From now on Claude should read your rules first; check in each answer whether it names them.",
+          "Claude asks what revenue, defects and marketing mean and completes the half-finished skill with your answers. Check that each answer names your rules.",
         tool: "Skill",
       },
       {
         n: "03",
         title: "Extract the figures and check the source",
         description:
-          "The skill reads the report with your rules and writes the month's metrics into a table. You check one of them against the raw CSV, by file and column. Ask the same question once without the skill and compare the two answers.",
+          "You check one extracted metric against the CSV by file and column and compare with an answer without the skill.",
         tool: "Claude Code",
       },
       {
         n: "04",
         title: "Fill the dashboard",
         description:
-          "The kit contains an empty dashboard template. With one prompt Claude writes the metrics into it and opens the page. It shows revenue by product line with CRAFT marked, defects, marketing, open escalations and the pending decision. The analyst keeps the eight-page report; the meeting gets this one page.",
+          "With one prompt Claude fills the dashboard template the meeting gets instead of the eight-page report.",
         tool: "Dashboard",
       },
       {
         n: "05",
         title: "Argue against the sales director",
         description:
-          "Finally you decide whether CRAFT is reworked or gets more Q3 marketing budget. You name the figure that supports it, what being wrong would cost, what the data leave open, and the sales director's strongest argument.",
+          "You decide on CRAFT with key figure, cost of error, data gaps and the strongest counter-argument.",
         tool: "Decision",
       },
       {
         n: "06",
         title: "Case 2 with Meta's quarter",
         description:
-          "Now you take a real company. Claude fetches Meta's Q2 2026 quarterly release directly from the web; the kit does not contain it. You define six metrics, extract the quarter (+28% revenue, −8% operating income) and have Claude design a dashboard without a template. Then you judge whether $31 billion of capital expenditure in one quarter can pay off.",
+          "Claude fetches Meta's Q2 2026 release from the web, and you judge $31 billion of capital expenditure in one quarter.",
         tool: "SEC filing · live",
       },
       {
         n: "07",
         title: "Repeat it on your own reports",
         description:
-          "Your rules live in the skill file, so next month you apply them to the new report. The kit includes both cases, the worksheet and an empty template for your own company's reports.",
+          "Next month you apply the skill to the new report.",
         tool: "Repeat",
       },
     ],
@@ -1456,7 +1450,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
       sector: "Electronics manufacturing",
       period: "September 2023",
       narrative:
-        "NORTHWIND is a company invented for this workshop, a family-owned electronics manufacturer in Berlin with about 850 employees and eight product lines, seven of them shipping, closing September 2023. CRAFT is its coffee line with two espresso machines and a grinder priced from €199 to €699, the newest and most expensive line in the range. At one of the lowest unit volumes (sixth of seven shipping lines) it makes the second-highest revenue, and for the second month in a row it has the most quality defects. The sales director wants more Q3 marketing budget for CRAFT.",
+        "The family business has about 850 employees and eight product lines, seven of them shipping. The newest and most expensive is CRAFT: two espresso machines and a grinder priced €199 to €699. CRAFT ranks sixth of seven by units but second by revenue.",
       metrics: [
         { label: "Total revenue", value: "€21.69m" },
         { label: "Total units", value: "139,056" },
@@ -1464,11 +1458,11 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         { label: "CRAFT units", value: "9,162" },
       ],
       decisionQuestion:
-        "Should NORTHWIND rework the CRAFT product line, or follow the sales director's proposal and increase CRAFT's Q3 marketing budget?",
+        "Which figure carries the decision, and which data are missing?",
       dataLimitations: [
-        "There is no actual gross margin by product line because unit costs by product are unavailable.",
-        "Customer returns cannot be assigned to product lines because orders are not linked to them.",
-        "Marketing spend cannot be assigned precisely to individual product lines because campaign budgets are not allocated cleanly.",
+        "No gross margin per line, because unit costs are missing.",
+        "No returns per line, because orders are not linked to lines.",
+        "No marketing spend per line, because campaigns are not cleanly allocated.",
       ],
     },
     realWorldCase: {
@@ -1481,7 +1475,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
       sourceLimitation:
         "Company release with unaudited quarterly figures. Free cash flow is a supplemental non-GAAP measure; the source supports the figures, not the investment decision.",
       narrative:
-        "Meta reports 28% more revenue and 8% less operating income for Q2 2026. Almost all operating cash flow went into infrastructure, and free cash flow was $784m. You define six metrics for the quarter, extract the figures and have Claude design the dashboard without a template.",
+        "Almost all operating cash flow went into infrastructure. You define six metrics, extract the quarter and have Claude design a dashboard without a template.",
       metrics: [
         { label: "Revenue", value: "+28%" },
         { label: "Operating income", value: "−8%" },
@@ -1501,7 +1495,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         phase: "during",
         primary: true,
         description:
-          "The slides walk through the company, the kit folder, the five prompts and their results, three extra prompts and case 2 on Meta. Every prompt has a copy button. Use the arrow keys to move on.",
+          "The slides show the company, the kit, the five prompts with results, three extra prompts and case 2. Every prompt has a copy button.",
         short: "The slides walk through the company, the kit, the prompts and Meta.",
       },
       {
@@ -1513,7 +1507,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         phase: "before",
         sizeLabel: "60 KB",
         description:
-          "The NORTHWIND kit with START-HERE.md, raw CSV data, both monthly reports as Markdown, the half-finished metrics skill, the dashboard template, the worksheet, the Meta exercise and an empty template for your own company. Text files only; the slides show the designed report.",
+          "The kit holds START-HERE.md, raw data, both monthly reports, the half-finished skill, dashboard template, worksheet, Meta exercise and a template for your own company. Text files only.",
         short: "The NORTHWIND kit with raw data, reports, the skill and templates.",
       },
     ],

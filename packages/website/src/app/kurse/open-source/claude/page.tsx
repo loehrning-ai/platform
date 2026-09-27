@@ -33,7 +33,7 @@ const LANDING_COPY = {
     eyebrow: "Technischer Claude-Kurs",
     title: "Claude mit klarer Struktur einsetzen.",
     intro:
-      "Zwölf Lektionen zeigen, wie du Aufgaben präzise beschreibst, relevante Fakten bereitstellst und Ergebnisse prüfst. Jede Lektion enthält eine interaktive Übung.",
+      "Du gibst Claude Aufgaben mit Kontext, Beispielen und Ausgabeformat und prüfst die Ergebnisse.",
     startLesson: "Lektion 01 starten",
     courseMap: "Zum Kursplan",
     facts: [
@@ -44,18 +44,11 @@ const LANDING_COPY = {
     ],
     demoEyebrow: "Prompt-Bausteine",
     demoIntro:
-      "Aktiviere einzelne Bestandteile und vergleiche die simulierten Ergebnisse.",
+      "Schalte Bausteine an und vergleiche die simulierten Ergebnisse.",
     demoToggle: "Prompt-Werkbank ausprobieren",
     courseEyebrow: "Kursplan",
     courseTitle: "Vier Themenbereiche, zwölf Lektionen",
-    courseIntro:
-      "Beginne mit dem mentalen Modell. Danach folgen wiederverwendbare Arbeitsabläufe, Agenten, Prüfverfahren und Teamregeln.",
     lessonLabel: "Lektion",
-    finalEyebrow: "Einstieg",
-    finalTitle: "Lektion 01: Was Claude tatsächlich ist",
-    finalBody:
-      "Die erste Lektion erklärt Kontextfenster, Grounding und typische Fehlerbilder. Bearbeitungszeit: acht Minuten.",
-    begin: "Beginnen",
     teaches: [
       "Prompt-Struktur und Kontextfenster",
       "CLAUDE.md und wiederverwendbare Arbeitsabläufe",
@@ -70,7 +63,7 @@ const LANDING_COPY = {
     eyebrow: "Technical Claude course",
     title: "Use Claude with clear structure.",
     intro:
-      "Twelve lessons cover precise task briefs, relevant context, and verifiable output. Every lesson includes an interactive exercise.",
+      "You give Claude tasks with context, examples and output format, then check the results.",
     startLesson: "Start lesson 01",
     courseMap: "View course map",
     facts: [
@@ -81,18 +74,11 @@ const LANDING_COPY = {
     ],
     demoEyebrow: "Prompt components",
     demoIntro:
-      "Toggle individual components and compare the simulated results.",
+      "Toggle components and compare the simulated results.",
     demoToggle: "Try the prompt workbench",
     courseEyebrow: "Course map",
     courseTitle: "Four tracks, twelve lessons",
-    courseIntro:
-      "Start with the mental model, then move through reusable workflows, agents, evaluation methods, and team rules.",
     lessonLabel: "Lesson",
-    finalEyebrow: "Start here",
-    finalTitle: "Lesson 01: What Claude actually is",
-    finalBody:
-      "The first lesson explains context windows, grounding, and common failure modes. Estimated time: eight minutes.",
-    begin: "Begin",
     teaches: [
       "Prompt structure and context windows",
       "CLAUDE.md and reusable workflows",

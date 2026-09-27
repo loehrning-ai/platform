@@ -17,28 +17,28 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "Sind deine Daten bereit für KI?",
     eyebrow: "Workshop 03 · Datenbereitschaft",
     summary:
-      "Eine KI meldet für April einen MRR-Endbestand von −19.960 €. Du findest heraus, warum die Zahl falsch ist und welcher Umbau der Daten die richtige liefert.",
+      "Eine KI meldet für April −19.960 € MRR-Endbestand. Du findest den Fehler und baust die Daten so um, dass die Zahl stimmt.",
     description:
-      "Die erfundene Firma FOLDLINE stellt eine Frage: den MRR-Endbestand pro Monat im letzten abgeschlossenen Quartal. MRR ist der monatlich wiederkehrende Umsatz. Auf sieben exportierten Tabellen antwortet die KI mit −19.960 / 9.775 / 42.565, weil sie die Veränderungen jedes Monats addiert und damit Bestand und Veränderung verwechselt. Danach liest die KI nur freigegebene Sichten, bekommt eine schriftliche Kennzahl-Definition (die semantische Schicht) und darf nur lesen; Tests prüfen den Aufbau. Dieselbe Frage stimmt dann mit der Datenbank überein: 334.675 / 344.450 / 387.015. Zum Schluss siehst du, was der Aufbau nicht absichert, und schreibst deine eigene Frage in fünf Felder.",
+      "Die erfundene Firma FOLDLINE fragt nach dem MRR-Endbestand (monatlich wiederkehrender Umsatz) pro Monat im letzten abgeschlossenen Quartal. Auf sieben Exporttabellen antwortet die KI mit −19.960 / 9.775 / 42.565, weil sie die Veränderungen addiert und Bestand mit Veränderung verwechselt. Mit freigegebenen Sichten, schriftlicher Kennzahl-Definition (semantische Schicht), reinen Leserechten und Tests stimmt die Antwort mit der Datenbank überein: 334.675 / 344.450 / 387.015. Zum Schluss prüfst du die Grenzen des Aufbaus und schreibst deine eigene Frage in fünf Felder.",
     format: "Live-Workshop mit Deck",
     duration: "~90 Minuten",
     accessNote:
-      "Für Deck, Lernbegleiter und Demo brauchst du nur einen Browser; Material auf Englisch, Einführung auf Deutsch. Die gezeigten KI-Antworten wurden im August 2026 aufgezeichnet und sind keine Live-Abfragen.",
+      "Für Deck, Lernbegleiter und Demo brauchst du nur einen Browser; Material auf Englisch, Einführung auf Deutsch. Die KI-Antworten sind Aufzeichnungen vom August 2026.",
     outcome: "Fünf-Felder-Vorlage",
     audience: [
-      "Analystinnen und Controller, die Zahlen aus KI-Antworten weitergeben, auch ohne SQL-Kenntnisse",
+      "Analystinnen und Controller, die Zahlen aus KI-Antworten weitergeben",
       "Teams, die festlegen, welche Daten eine KI lesen darf",
-      "Moderatorinnen und Moderatoren, die den Fall mit einer Gruppe durchgehen wollen",
+      "Moderierende, die den Fall mit einer Gruppe durchgehen",
     ],
     notForYou:
-      "Eher nicht für dich, wenn du eine Anleitung zum Aufbau eines Data Warehouse suchst; dafür gibt es den optionalen Builder-Leitfaden.",
+      "Nicht für dich, wenn du ein Data Warehouse aufbauen willst; dafür gibt es den optionalen Builder-Leitfaden.",
     question:
       "Zeige den MRR-Endbestand pro Monat für das letzte abgeschlossene Quartal.",
     outcomes: [
-      "Du erkennst, ob eine KI einen Bestand oder eine Veränderung ausgegeben hat.",
-      "Du schreibst für eine eigene Frage fest, welche Art Zahl, welche Zeilen, welcher Zeitraum und welche Tabelle gemeint sind, und wer mitzählt.",
-      "Du unterscheidest eine Anweisung an die KI von einer Datenbankberechtigung und sagst, welche von beiden einen Zugriff verhindert.",
-      "Du schreibst einen Test mit erwarteter Antwort und der Quelle des richtigen Werts.",
+      "Du erkennst, ob eine KI einen Bestand oder eine Veränderung ausgibt.",
+      "Du legst für eine eigene Frage Zahlart, Zeilen, Zeitraum, Tabelle und Zählweise fest.",
+      "Du sagst, ob eine Anweisung oder eine Datenbankberechtigung den Zugriff sperrt.",
+      "Du schreibst einen Test mit erwarteter Antwort und ihrer Quelle.",
     ],
     agenda: [
       {
@@ -46,49 +46,49 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 5,
         activity: "listen",
         description:
-          "Du lernst FOLDLINE und die eine Frage kennen, die bis zum Schluss gleich bleibt.",
+          "FOLDLINE stellt die eine Frage, die bis zum Schluss bleibt.",
       },
       {
         label: "Die falsche Antwort",
         minutes: 10,
         activity: "vote",
         description:
-          "Die KI liefert aus sieben Exporttabellen −19.960 / 9.775 / 42.565, und du stimmst ab, ob du das ins Board-Pack legst.",
+          "Die KI liefert −19.960 / 9.775 / 42.565; du stimmst ab, ob das ins Board-Pack geht.",
       },
       {
         label: "Warum sie falsch ist",
         minutes: 6,
         activity: "vote",
         description:
-          "Du verfolgst den April-Wert zu vier Festlegungen zurück, die niemand aufgeschrieben hat.",
+          "Du führst den April-Wert auf vier ungeschriebene Festlegungen zurück.",
       },
       {
         label: "Die Reparatur",
         minutes: 17,
         activity: "do",
         description:
-          "Die KI bekommt freigegebene Sichten und einen Login mit reinen Leserechten, und du füllst die vier Lücken der Kennzahl-Definition aus.",
+          "Die KI bekommt freigegebene Sichten und reine Leserechte; du füllst die vier Lücken der Definition.",
       },
       {
         label: "Dieselbe Frage noch einmal",
         minutes: 12,
         activity: "listen",
         description:
-          "Über die freigegebenen Sichten stimmt die Antwort mit der Datenbank überein, auch für eine Veränderung und eine Quote.",
+          "Die Antwort stimmt mit der Datenbank überein, auch für Veränderung und Quote.",
       },
       {
         label: "Grenzen des Aufbaus",
         minutes: 15,
         activity: "vote",
         description:
-          "Du stimmst über Grenzfälle ab: nachfragen, verweigern oder sperren, und was bei Daten gilt, die älter als 36 Stunden sind.",
+          "Du stimmst über Grenzfälle ab: nachfragen, verweigern oder sperren, und Daten älter als 36 Stunden.",
       },
       {
         label: "Dein Fall",
         minutes: 10,
         activity: "write",
         description:
-          "Du füllst die fünf Felder für eine eigene, erfundene Frage und stimmst noch einmal über die Antwort vom Anfang ab.",
+          "Du füllst fünf Felder für eine eigene, erfundene Frage und stimmst erneut über die Antwort vom Anfang ab.",
       },
       {
         label: "Fragen",
@@ -102,18 +102,17 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     minutesLive: 90,
     minutesSelfStudy: 75,
     needs: [
-      "Ein Browser, für das Deck am besten ein großer Bildschirm im Querformat",
-      "Papier und Stift für die fünf Felder",
-      "Optional ein Claude-Konto für den 10-Minuten-Versuch im Lernbegleiter",
+      "Ein Browser, fürs Deck am besten ein großer Querformat-Bildschirm",
+      "Papier und Stift",
+      "Optional ein Claude-Konto für den Versuch im Lernbegleiter (10 Min.)",
     ],
     notNeeded: [
       "SQL- oder Programmierkenntnisse",
       "Ein KI-Konto für Deck, Demo und Labor",
-      "Eigene Firmendaten, denn FOLDLINE ist erfunden",
+      "Eigene Firmendaten",
     ],
     notCovered: [
       "Ein SQL-Kurs",
-      "Der Aufbau eines Data Warehouse; dafür gibt es den optionalen Builder-Leitfaden",
       "Eine Aussage, ob ein bestimmtes KI-Produkt sicher ist",
       "Eine Freigabe für ein echtes System",
     ],
@@ -123,13 +122,13 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       aiOutputsRecordedAt: "2026-08",
       liveRunAt: "2026-09-25",
       data: "synthetic",
-      note: "FOLDLINE und alle Daten sind erfunden. Live gehalten am 25. September 2026 mit Brainster; die Datenbankergebnisse stammen aus einem Lauf des Workshop-Kits auf PostgreSQL 16.",
+      note: "Live gehalten mit Brainster. Die Datenbankergebnisse stammen aus einem Lauf des Workshop-Kits auf PostgreSQL 16.",
     },
     decisionLab: {
       kicker: "Entscheidung 01 · Bestand",
       title: "100 Euro plus 20 Euro. Wirklich 120?",
       prompt:
-        "Ein Datensatz enthält den Monatsendbestand von 100 Euro und die Veränderung von +20 Euro. Eine KI meldet 120 Euro Monatsendbestand. Was tust du?",
+        "Die KI addiert Endbestand und Veränderung. Was tust du?",
       facts: [
         "Endbestand 100 €",
         "Veränderung +20 €",
@@ -217,42 +216,42 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         n: "01",
         title: "Eine Frage stellen",
         description:
-          "FOLDLINE will den MRR-Endbestand pro Monat im letzten abgeschlossenen Quartal wissen. Diese Frage bleibt im ganzen Workshop dieselbe.",
+          "Die Frage nach dem MRR-Endbestand pro Monat im letzten abgeschlossenen Quartal bleibt den ganzen Workshop über gleich.",
         tool: "Deck · Die Frage",
       },
       {
         n: "02",
         title: "Die plausible falsche Antwort prüfen",
         description:
-          "Auf sieben exportierten Tabellen antwortet die KI mit −19.960 / 9.775 / 42.565. Sie hat die Veränderungen jedes Monats addiert und damit Bestand und Veränderung verwechselt.",
+          "Auf sieben Exporttabellen antwortet die KI mit −19.960 / 9.775 / 42.565, weil sie die Veränderungen addiert und Bestand mit Veränderung verwechselt.",
         tool: "Deck · Der Fehler",
       },
       {
         n: "03",
         title: "Die Daten umbauen",
         description:
-          "Die KI liest nur noch freigegebene Sichten, bekommt eine schriftliche Kennzahl-Definition (die semantische Schicht) und einen Login, der nur lesen darf. Dieselbe Frage stimmt danach mit der Datenbank überein: 334.675 / 344.450 / 387.015.",
+          "Mit freigegebenen Sichten, schriftlicher Kennzahl-Definition (semantische Schicht) und reinem Leselogin stimmt die Antwort mit der Datenbank überein: 334.675 / 344.450 / 387.015.",
         tool: "Deck · Die Reparatur",
       },
       {
         n: "04",
         title: "Die Grenzen des Aufbaus prüfen",
         description:
-          "Der Aufbau soll nachfragen oder verweigern und warnen, wenn die Daten älter als 36 Stunden sind. 9 von 9 Tests prüfen den Aufbau, nicht die KI, und in keinem der 3 Läufe zitierte die KI die Definition. Das reicht für einen begrenzten Piloten, nicht für eine Freigabe.",
+          "Der Aufbau soll nachfragen oder verweigern und bei Daten über 36 Stunden warnen. 9 von 9 Tests prüfen den Aufbau, nicht die KI, und in keinem der 3 Läufe zitierte die KI die Definition. Das reicht für einen begrenzten Piloten, nicht für eine Freigabe.",
         tool: "Deck · Grenzen",
       },
       {
         n: "05",
         title: "Deine fünf Felder ausfüllen",
         description:
-          "Du überträgst das Vorgehen auf eine eigene, erfundene Frage und füllst fünf Felder aus, von der Frage bis zum ersten Test. Die Fragekarte im Kit zeigt neben jedem Feld ein ausgefülltes Beispiel von FOLDLINE.",
+          "Für eine eigene, erfundene Frage füllst du fünf Felder, neben jedem das FOLDLINE-Beispiel.",
         tool: "Fragekarte",
       },
       {
         n: "06",
         title: "Optional: die Daten hinter beiden Antworten ansehen",
         description:
-          "In der interaktiven Demo öffnest du die Rohtabellen und die freigegebenen Sichten, führst dieselbe Frage auf beiden Seiten aus und prüfst das Ergebnis gegen die Definition. Tabellen und Ergebnisse stammen aus einem echten PostgreSQL-Lauf des Workshop-Kits.",
+          "Du stellst dieselbe Frage an Rohtabellen und freigegebene Sichten aus einem echten PostgreSQL-Lauf.",
         tool: "Interaktive Demo · etwa 10 Minuten",
       },
     ],
@@ -263,7 +262,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       sector: "Abo-Software für Geschäftskunden",
       period: "Q2 2026, eingefrorener Übungsstand",
       narrative:
-        "FOLDLINE hat 144 erfundene Kundenkonten. Dieselbe Frage nach dem MRR-Endbestand läuft gegen zwei Datenstände: sieben exportierte Tabellen und fünf freigegebene Sichten mit schriftlicher Definition. Du siehst aufgezeichnete KI-Antworten und getrennt davon feste Prüfungen gegen die Datenbank.",
+        "Dieselbe Frage läuft einmal gegen die Rohexporte und einmal gegen freigegebene Sichten mit schriftlicher Definition. KI-Antworten sind aufgezeichnet, Datenbankprüfungen laufen fest.",
       metrics: [
         { label: "Erfundene Konten", value: "144" },
         { label: "Exportierte Tabellen", value: "7" },
@@ -271,12 +270,11 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         { label: "Monate im Vergleich", value: "3" },
       ],
       decisionQuestion:
-        "Welche Definition und welche Grenzen braucht eine KI, bevor du ihrer Antwort auf genau diese Frage vertraust?",
+        "Welche Definition und welche Grenzen braucht eine KI, bevor du ihrer Antwort auf diese Frage vertraust?",
       dataLimitations: [
-        "Die Daten sind vollständig erfunden und auf einem festen Stand eingefroren.",
-        "Aufgezeichnete KI-Antworten belegen einzelne Beobachtungen, keine allgemeine Zuverlässigkeit.",
-        "9 von 9 Tests prüfen die Datenbank und die festen Regeln des Aufbaus, nicht die KI. Ein Prompt kann die KI nur bitten, eine Tabelle nicht zu lesen; blockieren kann das nur eine Datenbankberechtigung.",
-        "Ein bestandener Übungsfall ist keine Freigabe für ein echtes System.",
+        "Aufgezeichnete KI-Antworten sind einzelne Beobachtungen, kein Beleg für Zuverlässigkeit.",
+        "Die Tests prüfen Datenbank und Regeln, nicht die KI.",
+        "Nur eine Datenbankberechtigung sperrt eine Tabelle, ein Prompt nicht.",
       ],
     },
     materials: [
@@ -290,7 +288,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 75,
         primary: true,
         description:
-          "Etwa 75 Minuten Programm und 15 Minuten Fragen; die Demo ist optional (10 Min.). Pfeiltasten führen weiter, P öffnet die Moderationsansicht. Am besten auf einem großen Bildschirm im Querformat.",
+          "Etwa 75 Minuten Programm und 15 Minuten Fragen. Pfeiltasten blättern, P öffnet die Moderationsansicht.",
       },
       {
         label: "Moderationsansicht",
@@ -301,8 +299,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         phase: "during",
         optional: true,
         description:
-          "Für die Person, die moderiert: Notizen, Abstimmungsfragen und eine Uhr für die 75 Minuten. Sie verbindet sich mit dem Deck, sobald du dort P drückst.",
-        short: "Für die Person, die moderiert: Notizen, Abstimmungsfragen und eine Uhr.",
+          "Für die Person, die moderiert: Notizen, Abstimmungsfragen und eine Uhr. Verbindet sich mit dem Deck, sobald du dort P drückst.",
       },
       {
         label: "Interaktive Demo · 10 Min.",
@@ -314,7 +311,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 10,
         optional: true,
         description:
-          "Rohtabellen und freigegebene Sichten nebeneinander. Du siehst dir die Tabellen an, führst dieselbe Frage auf beiden Seiten aus und vergleichst die Antworten mit der Definition.",
+          "Rohtabellen und freigegebene Sichten nebeneinander. Du stellst auf beiden Seiten dieselbe Frage und vergleichst mit der Definition.",
       },
       {
         label: "Readiness-Kit · .zip",
@@ -325,7 +322,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         phase: "during",
         sizeLabel: "1,1 MB",
         description:
-          "Die Fragekarte mit den fünf Feldern zum Ausdrucken, dazu Testfälle, Vorlagen für Definitionen und die Dateien für Datenteams. Nur Textdateien; START-HERE.md sagt, womit du anfängst.",
+          "Die Fragekarte zum Ausdrucken, dazu Testfälle, Definitionsvorlagen und Dateien für Datenteams. Nur Textdateien; START-HERE.md sagt, womit du anfängst.",
         short: "Die Fragekarte zum Ausdrucken, dazu Testfälle und Vorlagen.",
       },
       {
@@ -336,8 +333,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         role: "guide",
         phase: "after",
         description:
-          "Der Workshop zum Nachlesen: die Frage, der Fehler, die Reparatur, die Grenzen, deine fünf Felder und ein Glossar. Funktioniert auch auf dem Smartphone.",
-        short: "Der Workshop zum Nachlesen, mit Glossar, auch auf dem Smartphone.",
+          "Der Workshop zum Nachlesen, mit Glossar, auch auf dem Smartphone.",
       },
       {
         label: "Browserlabor · 12 Min.",
@@ -349,8 +345,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 12,
         optional: true,
         description:
-          "Du reparierst die falsche Antwort auf den erfundenen Daten, indem du fünf Einstellungen wählst. Das Labor prüft sechs Fälle und zehn Kontrollen, alles im Browser.",
-        short: "Du reparierst die falsche Antwort mit fünf Einstellungen im Browser.",
+          "Du reparierst die falsche Antwort mit fünf Einstellungen im Browser. Das Labor prüft sechs Fälle und zehn Kontrollen.",
       },
       {
         label: "Builder-Leitfaden",
@@ -361,7 +356,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         phase: "after",
         optional: true,
         description:
-          "Für Datenteams, optional: elf Module dazu, wie ihr freigegebene Sichten, eine Kennzahl-Definition und einen Login mit reinen Leserechten auf der eigenen Datenbank aufbaut. Zählt nicht zur Workshop-Zeit.",
+          "Elf Module für Datenteams: freigegebene Sichten, Kennzahl-Definition und reiner Leselogin auf der eigenen Datenbank. Zählt nicht zur Workshop-Zeit.",
         short: "Elf Module für Datenteams, die das auf der eigenen Datenbank bauen.",
       },
     ],
@@ -373,27 +368,27 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "Are your data ready for AI?",
     eyebrow: "Workshop 03 · Data readiness",
     summary:
-      "An AI reports April ending MRR as −€19,960. You find out why that number is wrong and which change to the data produces the right one.",
+      "An AI reports April ending MRR as −€19,960. You find the mistake and restructure the data so the number is right.",
     description:
-      "The invented company FOLDLINE asks one question: \"Show ending MRR by month for the last complete quarter.\" MRR is monthly recurring revenue. On seven export tables the AI answers −19,960 / 9,775 / 42,565, because it added up each month's change and so mixed up a balance and a change. Then the AI reads only approved views, gets a written metric definition (the semantic layer) and may only read; tests check the setup. The same question now matches the database: 334,675 / 344,450 / 387,015. Finally you see what the setup does not cover, and you write your own question into five boxes.",
+      "The invented company FOLDLINE asks: \"Show ending MRR by month for the last complete quarter\" (MRR is monthly recurring revenue). On seven export tables the AI answers −19,960 / 9,775 / 42,565, because it adds up the changes and mixes up a balance with a change. With approved views, a written metric definition (the semantic layer), read-only access and tests, the answer matches the database: 334,675 / 344,450 / 387,015. Finally you test the setup's limits and write your own question into five boxes.",
     format: "Live workshop with deck",
     duration: "~90 minutes",
     accessNote:
-      "The deck, learner guide and demo need only a browser; materials are in English, the live session is introduced in German. The AI answers shown were recorded in August 2026; they are not live requests.",
+      "The deck, learner guide and demo need only a browser; materials are in English, the live session is introduced in German. The AI answers are recordings from August 2026.",
     outcome: "Five-box template",
     audience: [
-      "Analysts and controllers who pass on figures from AI answers, including those without SQL",
+      "Analysts and controllers who pass on figures from AI answers",
       "Teams that decide which data an AI may read",
-      "Facilitators who want to take a group through the case",
+      "Facilitators taking a group through the case",
     ],
     notForYou:
-      "Probably not for you if you are looking for a guide to building a data warehouse; the optional builder guide covers that.",
+      "Not for you if you want to build a data warehouse; the optional builder guide covers that.",
     question: "Show ending MRR by month for the last complete quarter.",
     outcomes: [
       "Spot whether an AI returned a balance or a change.",
-      "Write down, for a question of your own, which kind of number, which rows, which period and which table are meant, and who counts.",
-      "Tell an instruction to the AI apart from a database permission, and say which of the two blocks a read.",
-      "Write a test with the expected answer and the source of the correct value.",
+      "Set the number type, rows, period, table and counting rule for a question of your own.",
+      "Say whether an instruction or a database permission blocks a read.",
+      "Write a test with the expected answer and its source.",
     ],
     agenda: [
       {
@@ -401,49 +396,49 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 5,
         activity: "listen",
         description:
-          "You meet FOLDLINE and the one question that stays the same to the end.",
+          "FOLDLINE asks the one question that stays to the end.",
       },
       {
         label: "The wrong answer",
         minutes: 10,
         activity: "vote",
         description:
-          "The AI returns −19,960 / 9,775 / 42,565 from seven export tables, and you vote on whether it goes into the board pack.",
+          "The AI returns −19,960 / 9,775 / 42,565; you vote on whether it goes into the board pack.",
       },
       {
         label: "Why it is wrong",
         minutes: 6,
         activity: "vote",
         description:
-          "You trace the April value back to four decisions nobody wrote down.",
+          "You trace the April value to four unwritten decisions.",
       },
       {
         label: "The fix",
         minutes: 17,
         activity: "do",
         description:
-          "The AI gets approved views and a read-only login, and you fill the four blanks in the metric definition.",
+          "The AI gets approved views and read-only access; you fill the four blanks in the definition.",
       },
       {
         label: "The same question again",
         minutes: 12,
         activity: "listen",
         description:
-          "Through the approved views the answer matches the database, for a change and a rate too.",
+          "The answer matches the database, for a change and a rate too.",
       },
       {
         label: "Limits of the setup",
         minutes: 15,
         activity: "vote",
         description:
-          "You vote on edge cases: ask back, refuse or block, and what happens when data are older than 36 hours.",
+          "You vote on edge cases: ask back, refuse or block, and data older than 36 hours.",
       },
       {
         label: "Your case",
         minutes: 10,
         activity: "write",
         description:
-          "You fill the five boxes for an invented question of your own and vote again on the opening answer.",
+          "You fill five boxes for an invented question of your own and vote again on the opening answer.",
       },
       {
         label: "Questions",
@@ -458,17 +453,16 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     minutesSelfStudy: 75,
     needs: [
       "A browser, ideally a large landscape screen for the deck",
-      "Paper and a pen for the five boxes",
-      "Optionally a Claude account for the 10-minute try in the learner guide",
+      "Paper and a pen",
+      "Optionally a Claude account for the learner-guide try (10 min)",
     ],
     notNeeded: [
       "SQL or programming skills",
       "An AI account for the deck, demo and lab",
-      "Your own company data, because FOLDLINE is invented",
+      "Your own company data",
     ],
     notCovered: [
       "An SQL course",
-      "Building a data warehouse; the optional builder guide covers that",
       "A verdict on whether a particular AI product is safe",
       "Sign-off for a real system",
     ],
@@ -478,13 +472,13 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       aiOutputsRecordedAt: "2026-08",
       liveRunAt: "2026-09-25",
       data: "synthetic",
-      note: "FOLDLINE and all its data are invented. Run live on 25 September 2026 with Brainster; the database results come from a run of the workshop kit on PostgreSQL 16.",
+      note: "Run live with Brainster. The database results come from a run of the workshop kit on PostgreSQL 16.",
     },
     decisionLab: {
       kicker: "Decision 01 · Balance",
       title: "100 euros plus 20. Really 120?",
       prompt:
-        "A record contains a month-end balance of 100 euros and a change of +20 euros. An AI reports a month-end balance of 120 euros. What do you do?",
+        "The AI adds balance and change. What do you do?",
       facts: [
         "Ending balance €100",
         "Change +€20",
@@ -571,42 +565,42 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         n: "01",
         title: "Ask one question",
         description:
-          "FOLDLINE wants ending MRR by month for the last complete quarter. The question stays the same for the whole workshop.",
+          "The question about ending MRR by month for the last complete quarter stays the same for the whole workshop.",
         tool: "Deck · The question",
       },
       {
         n: "02",
         title: "Check the plausible wrong answer",
         description:
-          "On seven export tables the AI answers −19,960 / 9,775 / 42,565. It added up each month's change and so mixed up a balance and a change.",
+          "On seven export tables the AI answers −19,960 / 9,775 / 42,565, because it adds up the changes and mixes up a balance with a change.",
         tool: "Deck · The mistake",
       },
       {
         n: "03",
         title: "Rebuild what the AI reads",
         description:
-          "The AI now reads only approved views, gets a written metric definition (the semantic layer) and a login that may only read. The same question then matches the database: 334,675 / 344,450 / 387,015.",
+          "With approved views, a written metric definition (the semantic layer) and a read-only login, the answer matches the database: 334,675 / 344,450 / 387,015.",
         tool: "Deck · The fix",
       },
       {
         n: "04",
         title: "Test the limits of the setup",
         description:
-          "The setup should ask back or refuse, and warn when data are older than 36 hours. 9 of 9 tests check the setup, not the AI, and in none of the 3 runs did the AI cite the definition. That is enough for a limited pilot, not for sign-off.",
+          "The setup should ask back or refuse, and warn on data older than 36 hours. 9 of 9 tests check the setup, not the AI, and in none of the 3 runs did the AI cite the definition. That is enough for a limited pilot, not for sign-off.",
         tool: "Deck · Limits",
       },
       {
         n: "05",
         title: "Fill your five boxes",
         description:
-          "You apply the method to an invented question of your own and fill five boxes, from the question to the first test. The question card in the kit shows a filled FOLDLINE example next to each box.",
+          "For an invented question of your own you fill five boxes, each next to the FOLDLINE example.",
         tool: "Question card",
       },
       {
         n: "06",
         title: "Optional: look at the data behind both answers",
         description:
-          "In the interactive demo you open the raw tables and the approved views, run the same question on both sides and check the result against the definition. The tables and results come from a real PostgreSQL run of the workshop kit.",
+          "You run the same question on raw tables and approved views from a real PostgreSQL run.",
         tool: "Interactive demo · about 10 minutes",
       },
     ],
@@ -617,7 +611,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       sector: "Business subscription software",
       period: "Q2 2026, frozen teaching snapshot",
       narrative:
-        "FOLDLINE has 144 invented customer accounts. The same question about ending MRR runs against two data setups: seven export tables and five approved views with a written definition. You see recorded AI answers and, separately, fixed checks against the database.",
+        "The same question runs once against raw exports and once against approved views with a written definition. AI answers are recorded; database checks are fixed.",
       metrics: [
         { label: "Invented accounts", value: "144" },
         { label: "Export tables", value: "7" },
@@ -625,12 +619,11 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         { label: "Compared months", value: "3" },
       ],
       decisionQuestion:
-        "Which definition and boundaries does an AI need before you trust its answer to this particular question?",
+        "Which definition and boundaries does an AI need before you trust its answer to this question?",
       dataLimitations: [
-        "All data are invented and frozen at one point in time.",
-        "Recorded AI answers establish individual observations, not general reliability.",
-        "9 of 9 tests check the database and the fixed rules of the setup, not the AI. A prompt can only ask the AI not to read a table; only a database permission can block the read.",
-        "Passing a practice case does not approve a real system.",
+        "Recorded AI answers are single observations, not proof of reliability.",
+        "The tests check the database and rules, not the AI.",
+        "Only a database permission blocks a table, a prompt does not.",
       ],
     },
     materials: [
@@ -644,7 +637,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 75,
         primary: true,
         description:
-          "About 75 minutes of content and 15 minutes of questions; the demo is optional (10 min). Use the arrow keys; P opens the presenter view. Best on a large screen in landscape.",
+          "About 75 minutes of content and 15 minutes of questions. Arrow keys move on; P opens the presenter view.",
       },
       {
         label: "Presenter view",
@@ -655,7 +648,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         phase: "during",
         optional: true,
         description:
-          "For whoever presents: notes, room votes and a clock for the 75 minutes. It pairs with the deck as soon as you press P there.",
+          "For whoever presents: notes, room votes and a clock. Pairs with the deck when you press P there.",
       },
       {
         label: "Interactive demo · 10 min",
@@ -667,7 +660,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 10,
         optional: true,
         description:
-          "Raw tables and approved views side by side. Look at the tables, run the same question on both sides and compare the answers with the definition.",
+          "Raw tables and approved views side by side. Ask the same question on both sides and compare with the definition.",
       },
       {
         label: "Readiness kit · .zip",
@@ -678,7 +671,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         phase: "during",
         sizeLabel: "1.1 MB",
         description:
-          "The question card with the five boxes to print, plus test cases, definition templates and the files for data teams. Text files only; START-HERE.md tells you where to begin.",
+          "The question card to print, plus test cases, definition templates and files for data teams. Text files only; START-HERE.md tells you where to begin.",
         short: "The question card to print, plus test cases and templates.",
       },
       {
@@ -689,8 +682,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         role: "guide",
         phase: "after",
         description:
-          "The workshop to read at your own pace: the question, the mistake, the fix, the limits, your five boxes and a glossary. Works on a phone too.",
-        short: "The workshop to read at your own pace, with a glossary.",
+          "The workshop to read at your own pace, with a glossary, on a phone too.",
       },
       {
         label: "Browser lab · 12 min",
@@ -702,8 +694,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 12,
         optional: true,
         description:
-          "You repair the wrong answer on the invented data by choosing five settings. The lab checks six cases and ten controls, all in the browser.",
-        short: "You repair the wrong answer by choosing five settings in the browser.",
+          "You repair the wrong answer with five settings in the browser. The lab checks six cases and ten controls.",
       },
       {
         label: "Builder guide",
@@ -714,7 +705,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         phase: "after",
         optional: true,
         description:
-          "For data teams, optional: eleven modules on building approved views, a metric definition and a read-only login on your own database. Not part of the workshop time.",
+          "Eleven modules for data teams: approved views, a metric definition and a read-only login on your own database. Not part of the workshop time.",
         short: "Eleven modules for data teams who build this on their own database.",
       },
     ],

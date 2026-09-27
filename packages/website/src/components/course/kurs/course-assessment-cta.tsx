@@ -76,15 +76,15 @@ const ASSESSMENT_COPY: Readonly<Record<"de" | "en", AssessmentCopy>> = {
         remaining === 1 ? "Lektion" : "Lektionen"
       }.`,
     ready: (total) =>
-      `Alle ${total} Lektionen sind abgeschlossen. Das Workshop-Quiz ist jetzt freigeschaltet.`,
+      `Alle ${total} Lektionen sind abgeschlossen.`,
     passed: (recordPossessive) =>
-      `Bestanden. Du kannst das Quiz wiederholen. ${recordPossessive} steht zum Download bereit.`,
+      `Bestanden. ${recordPossessive} steht zum Download bereit.`,
     projectEligible: (recordPossessive) =>
-      `Alle Lektionen und das angewandte Projekt sind abgeschlossen. Das Projekt ist eine lokal gespeicherte Lernleistung, aber kein serverbestätigter Abschlussnachweis. Bestehe das Quiz, um ${recordPossessive} freizuschalten.`,
+      `Alle Lektionen und das angewandte Projekt sind abgeschlossen; das lokal gespeicherte Projekt ist kein serverbestätigter Abschlussnachweis. ${recordPossessive} schaltest du mit dem bestandenen Quiz frei.`,
     legacyCapstoneEligible: (recordPossessive) =>
-      `Alle Lektionen und deine frühere Capstone-Selbstprüfung sind abgeschlossen. ${recordPossessive} steht weiterhin zum Download bereit; das neue angewandte Projekt ist damit nicht verifiziert.`,
+      `Alle Lektionen und deine frühere Capstone-Selbstprüfung sind abgeschlossen. ${recordPossessive} bleibt abrufbar; das neue angewandte Projekt ist damit nicht verifiziert.`,
     localRecordNotice:
-      "Die PDF wird lokal erzeugt, ist nicht servergeprüft und kein akkreditierter Abschluss.",
+      "Die PDF entsteht lokal, ist nicht servergeprüft und kein akkreditierter Abschluss.",
     lockedLabel: "Quiz gesperrt",
     startQuiz: "Workshop-Quiz starten",
     retakeQuiz: "Quiz wiederholen",
@@ -102,15 +102,15 @@ const ASSESSMENT_COPY: Readonly<Record<"de" | "en", AssessmentCopy>> = {
         remaining === 1 ? "lesson" : "lessons"
       } remaining.`,
     ready: (total) =>
-      `All ${total} lessons are complete. The workshop quiz is now unlocked.`,
+      `All ${total} lessons are complete.`,
     passed: (recordPossessive) =>
-      `Passed. You can retake the quiz. ${recordPossessive} is ready to download.`,
+      `Passed. ${recordPossessive} is ready to download.`,
     projectEligible: (recordPossessive) =>
-      `Every lesson and the applied project are complete. The project is locally stored learning evidence, not a server-attested completion record. Pass the quiz to unlock ${recordPossessive}.`,
+      `Every lesson and the applied project are complete; the locally stored project is not a server-attested completion record. ${recordPossessive} unlocks when you pass the quiz.`,
     legacyCapstoneEligible: (recordPossessive) =>
-      `Every lesson and your historical capstone self-review are complete. ${recordPossessive} remains ready to download; this does not verify the new applied project.`,
+      `Every lesson and your earlier capstone self-review are complete. ${recordPossessive} stays available; this does not verify the new applied project.`,
     localRecordNotice:
-      "The PDF is generated locally, is not server-verified, and is not an accredited qualification.",
+      "The PDF is created locally, not server-verified and not an accredited qualification.",
     lockedLabel: "Quiz locked",
     startQuiz: "Start workshop quiz",
     retakeQuiz: "Retake quiz",

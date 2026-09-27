@@ -10,14 +10,13 @@ export function Praxis() {
       </h2>
       <p className="dek">
         Vier Fragen für Beschäftigte, fünf Schritte für kleine Unternehmen.
-        Nichts davon erfordert eine Anwältin.
       </p>
 
       <div className="premise">
         <div className="premise__body">
           <p>
             <b style={{ color: "var(--kupfer)" }}>Als Beschäftigte oder Beschäftigter</b>{" "}
-            prüfst du deinen eigenen Stand am schnellsten mit vier Fragen:
+            prüfst du deinen Stand mit vier Fragen:
           </p>
           <p>
             <b style={{ color: "var(--kupfer)" }}>1.</b> Erkennst du, wann
@@ -45,7 +44,7 @@ export function Praxis() {
           <p style={{ marginTop: 28 }}>
             <b style={{ color: "var(--kupfer)" }}>Als kleines Unternehmen,</b>{" "}
             das fertige Werkzeuge wie ChatGPT oder Copilot einsetzt, bist du
-            in der Regel Betreiber, mit überschaubaren Pflichten:
+            meist Betreiber mit überschaubaren Pflichten:
           </p>
           <p>
             <b style={{ color: "var(--kupfer)" }}>1. Inventar anlegen:</b>{" "}
@@ -61,10 +60,9 @@ export function Praxis() {
           <p>
             <b style={{ color: "var(--kupfer)" }}>3. Art. 50 vorbereiten:</b>{" "}
             Hat euer Kunden-Chatbot einen KI-Hinweis? Werden KI-generierte
-            Bilder oder Videos offengelegt, wo Art. 50 das verlangt? Ab dem
-            2. August 2026 ist das Pflicht. Der freiwillige
-            Transparenz-Kodex der Kommission vom 10. Juni 2026 gibt
-            Formulierungshilfen; Kommission und KI-Gremium bewerteten ihn am
+            Bilder oder Videos offengelegt, wo Art. 50 das verlangt? Das ist
+            ab dem 2. August 2026 Pflicht. Formulierungshilfen gibt der
+            freiwillige Transparenz-Kodex der Kommission vom 10. Juni 2026; Kommission und KI-Gremium bewerteten ihn am
             8. und 9. Juli 2026 als geeignet. (Quelle: Europäische Kommission,
             Code of Practice on Transparency of AI-generated Content)
           </p>
@@ -72,9 +70,8 @@ export function Praxis() {
             <b style={{ color: "var(--kupfer)" }}>4. Hochrisiko prüfen:</b>{" "}
             Nutzt ihr KI für Bewerbungen, Kreditentscheidungen oder
             Prüfungen? Dann fällt der Einsatz voraussichtlich unter Anhang
-            III. Die Pflichten dafür kommen nach dem beschlossenen Zeitplan
-            ab dem 2. Dezember 2027; wer jetzt dokumentiert, gerät später
-            nicht in Zeitnot.
+            III, mit Pflichten ab dem 2. Dezember 2027. Wer jetzt
+            dokumentiert, gerät später nicht in Zeitnot.
           </p>
           <p>
             <b style={{ color: "var(--kupfer)" }}>5. Fragen stellen:</b>{" "}
@@ -91,13 +88,6 @@ export function Praxis() {
             System bauen oder unter eigenem
             Namen vermarkten: Anbieter, mit
             deutlich mehr Pflichten.
-          </div>
-          <div className="margin-note">
-            <b>Kein Zertifikat nötig</b>
-            Die Kommission verlangt für Art. 4
-            weder Format noch Prüfung noch
-            Zertifikat. Interne Aufzeichnung
-            über Schulungen genügt.
           </div>
         </aside>
       </div>

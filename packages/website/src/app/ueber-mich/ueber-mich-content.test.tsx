@@ -51,7 +51,7 @@ describe("<UeberMichContent>", () => {
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "I build loehrning.ai to keep knowledge about AI verifiable.",
+        name: "I build loehrning.ai so AI knowledge stays verifiable.",
       }),
     ).toBeVisible();
     expect(

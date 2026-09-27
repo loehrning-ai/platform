@@ -170,9 +170,9 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
     metadata: {
       title: "Workshops für KI im Mittelstand",
       description: (count) =>
-        `${count} kostenlose Workshop${count === 1 ? "" : "s"} zu KI bei der Arbeit, jeder mit einem erfundenen Fall, einem Ablauf in Minuten und Material zum Herunterladen.`,
+        `${count} kostenlose Workshop${count === 1 ? "" : "s"} zu KI bei der Arbeit, mit erfundenem Fall und Material zum Herunterladen.`,
       openGraphDescription:
-        "Workshops mit einem erfundenen Fall, einer festen Frage und einer Vorlage für deine eigene Arbeit. Material kostenlos und ohne Konto.",
+        "Workshops mit erfundenem Fall und einer Vorlage für deine Arbeit. Material kostenlos, ohne Konto.",
       collectionDescription:
         "Workshops zu KI im Mittelstand mit Folien, Laboren im Browser und Dateien zum Nacharbeiten.",
       imageAlt: "Workshop-Katalog auf loehrning.ai",
@@ -185,7 +185,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         `Workshops · ${count} ${count === 1 ? "Fall" : "Fälle"}`,
       hubHeading: "Workshops mit Fall und Vorlage.",
       hubLead:
-        "Jeder Workshop dreht sich um eine Frage an eine erfundene Firma. Du rechnest oder prüfst an ihren Daten und schreibst am Ende auf, wie das für deine eigene Arbeit aussieht.",
+        "Jeder Workshop dreht sich um eine Frage an eine erfundene Firma, und du nimmst eine Vorlage für deine Arbeit mit.",
       hubLeadShort:
         "Du rechnest oder prüfst an den Daten einer erfundenen Firma und nimmst eine Vorlage für deine Arbeit mit.",
       hubStart: (number) => `Mit Workshop ${number} beginnen`,
@@ -196,7 +196,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         { label: "Die Frage", caption: "Ein Fall und eine Frage, die bis zum Schluss bleibt" },
         { label: "Die falsche Antwort", caption: "Eine Antwort, die plausibel klingt und nicht stimmt" },
         { label: "Warum sie falsch ist", caption: "Was in den Daten niemand festgelegt hat" },
-        { label: "Die Reparatur", caption: "Was die Antwort richtig macht, Schritt für Schritt" },
+        { label: "Die Reparatur", caption: "Was die Antwort richtig macht" },
         { label: "Deine Vorlage", caption: "Eine Seite für deinen eigenen Fall" },
       ],
       listHeading: "Workshops",
@@ -204,7 +204,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       workshopNumber: (number) => `Workshop ${number}`,
       questionLabel: "Die Frage",
       quote: (text) => `„${text}“`,
-      leaveWith: "Du gehst mit",
+      leaveWith: "Du nimmst mit",
       requirementLabel: "Du brauchst",
       requirementBrowserOnly: "Einen Browser, kein KI-Konto",
       materialLabel: "Material",
@@ -226,17 +226,16 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       viewWorkshop: "Workshop ansehen",
       teamsHeading: "Mit deinem Team",
       teamsBody: (numbers) => {
-        const tail =
-          "Was du für eine Gruppe brauchst, steht auf der Workshop-Seite.";
-        if (numbers.length === 0) return tail;
+        if (numbers.length === 0)
+          return "Was du für eine Gruppe brauchst, steht auf der Workshop-Seite.";
         const list =
           numbers.length === 1
             ? `Workshop ${numbers[0]} hat`
             : `Workshops ${numbers.slice(0, -1).join(", ")} und ${numbers.at(-1)} haben`;
-        return `${list} eine Moderationsansicht mit Notizen und Abstimmungsfragen. Öffne das Deck und drück P. ${tail}`;
+        return `${list} eine Moderationsansicht mit Notizen und Abstimmungsfragen. Öffne das Deck und drück P.`;
       },
       boundary:
-        "Alle Übungsfirmen sind erfunden. Wo echte Zahlen vorkommen, nennt die Workshop-Seite die Quelle. Gezeigte KI-Antworten sind aufgezeichnet oder für die Übung konstruiert, keine Live-Abfragen.",
+        "Alle Übungsfirmen sind erfunden, echte Zahlen tragen eine Quelle. Gezeigte KI-Antworten sind aufgezeichnet oder für die Übung konstruiert, keine Live-Abfragen.",
     },
     detail: {
       navigation: "Workshopnavigation",
@@ -268,7 +267,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       needLabel: "Du brauchst",
       browserOnly: "einen Browser, kein KI-Konto",
       outcomesHeading: "Nach dem Workshop",
-      leaveWith: "Du gehst mit",
+      leaveWith: "Du nimmst mit",
       agendaHeading: "Ablauf",
       minutes: (minutes) => `${minutes} Min.`,
       minutesLive: (minutes) => `Live ${minutes} Min.`,
@@ -316,7 +315,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       language: "Sprache",
       selfHostHeading: "Selbst moderieren",
       selfHostBody:
-        "Öffne das Deck auf dem Beamer und drück P. Die Moderationsansicht zeigt Notizen, Abstimmungsfragen und eine Uhr.",
+        "Öffne das Deck auf dem Beamer und drück P.",
       caseHeading: "Der Fall",
       resultChartHeading: "Was der Fall zeigt",
       resultChartCaption: (unit, basis, fictional) =>
@@ -353,9 +352,9 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
     metadata: {
       title: "Practical AI workshops for business",
       description: (count) =>
-        `${count} free workshop${count === 1 ? "" : "s"} on AI at work, each with an invented case, an agenda in minutes and materials to download.`,
+        `${count} free workshop${count === 1 ? "" : "s"} on AI at work, with an invented case and materials to download.`,
       openGraphDescription:
-        "Workshops with an invented case, one fixed question and a template for your own work. Materials are free and need no account.",
+        "Workshops with an invented case and a template for your own work. Materials free, no account.",
       collectionDescription:
         "AI workshops for business with slides, browser labs and files to work through.",
       imageAlt: "Workshop catalogue on loehrning.ai",
@@ -368,7 +367,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         `Workshops · ${count} ${count === 1 ? "case" : "cases"}`,
       hubHeading: "Workshops with a case and a template.",
       hubLead:
-        "Each workshop centres on one question about an invented company. You calculate or check against its data and finish by writing down how it applies to your own work.",
+        "Each workshop centres on one question about an invented company, and you leave with a template for your own work.",
       hubLeadShort:
         "You calculate or check against the data of an invented company and leave with a template for your own work.",
       hubStart: (number) => `Start with Workshop ${number}`,
@@ -379,7 +378,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         { label: "The question", caption: "One case and a question that stays to the end" },
         { label: "The wrong answer", caption: "An answer that sounds plausible and is wrong" },
         { label: "Why it is wrong", caption: "What nobody defined in the data" },
-        { label: "The fix", caption: "What makes the answer right, step by step" },
+        { label: "The fix", caption: "What makes the answer right" },
         { label: "Your template", caption: "One page for your own case" },
       ],
       listHeading: "Workshops",
@@ -407,16 +406,15 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       viewWorkshop: "View workshop",
       teamsHeading: "With your team",
       teamsBody: (numbers) => {
-        const tail = "What you need for a group is on the workshop page.";
-        if (numbers.length === 0) return tail;
+        if (numbers.length === 0) return "What you need for a group is on the workshop page.";
         const list =
           numbers.length === 1
             ? `Workshop ${numbers[0]} has`
             : `Workshops ${numbers.slice(0, -1).join(", ")} and ${numbers.at(-1)} have`;
-        return `${list} a presenter view with notes and voting questions. Open the deck and press P. ${tail}`;
+        return `${list} a presenter view with notes and voting questions. Open the deck and press P.`;
       },
       boundary:
-        "All practice companies are invented. Where real figures appear, the workshop page names the source. AI answers shown are recorded or constructed for the exercise, not live requests.",
+        "All practice companies are invented, and real figures carry a source. AI answers shown are recorded or constructed for the exercise, not live requests.",
     },
     detail: {
       navigation: "Workshop navigation",
@@ -494,7 +492,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       language: "Language",
       selfHostHeading: "Run it yourself",
       selfHostBody:
-        "Open the deck on the projector and press P. The presenter view shows notes, room votes and a clock.",
+        "Open the deck on the projector and press P.",
       caseHeading: "The case",
       resultChartHeading: "What the case shows",
       resultChartCaption: (unit, basis, fictional) =>

@@ -252,7 +252,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     reportApiError({ route: ROUTE, step: "auth-get-user", error });
     return plainText(
-      "Die Anmeldung ist gerade nicht erreichbar. Bitte versuche es gleich erneut.",
+      "Die Anmeldung ist gerade nicht erreichbar. Versuche es gleich erneut.",
       503,
       { "Retry-After": "30" },
     );
@@ -262,7 +262,7 @@ export async function POST(request: NextRequest) {
       reportApiError({ route: ROUTE, step: "auth-get-user", error: auth.error });
     }
     return plainText(
-      "Die Anmeldung ist gerade nicht erreichbar. Bitte versuche es gleich erneut.",
+      "Die Anmeldung ist gerade nicht erreichbar. Versuche es gleich erneut.",
       503,
       { "Retry-After": "30" },
     );
@@ -300,7 +300,7 @@ export async function POST(request: NextRequest) {
     });
     if (!userAllowed) {
       return plainText(
-        "Zu viele Versuche. Bitte warte eine Minute und öffne den Editor dann erneut.",
+        "Zu viele Versuche. Warte eine Minute und öffne den Editor dann erneut.",
         429,
         { "Retry-After": String(RATE_LIMIT_WINDOW_SECONDS) },
       );
@@ -318,14 +318,14 @@ export async function POST(request: NextRequest) {
       request,
     });
     return plainText(
-      "Der Schutz vor zu vielen Anfragen ist gerade nicht verfügbar. Bitte versuche es gleich erneut.",
+      "Der Schutz vor zu vielen Anfragen ist gerade nicht verfügbar. Versuche es gleich erneut.",
       503,
       { "Retry-After": "30" },
     );
   }
   if (!clientAllowed) {
     return plainText(
-      "Zu viele Versuche. Bitte warte eine Minute und öffne den Editor dann erneut.",
+      "Zu viele Versuche. Warte eine Minute und öffne den Editor dann erneut.",
       429,
       { "Retry-After": String(RATE_LIMIT_WINDOW_SECONDS) },
     );

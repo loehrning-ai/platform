@@ -51,7 +51,7 @@ export default localizeCodexLessonToGerman(canonical, {
     [canonical.title, "Einen Coding-Agenten-Ablauf auswählen"],
     [
       canonical.subtitle,
-      "Erst Interaktionsmodell, Ausführungsgrenze, Anbieteranforderungen und Review-Pfad vergleichen, dann wählen.",
+      "Vergleiche Interaktionsmodell, Ausführungsgrenze, Anbietervorgaben und Review-Pfad, bevor du wählst.",
     ],
     [canonical.hook, "Wähle nach Betriebsanforderungen."],
     [canonical.keyConcepts[0], "Werkzeuglandschaft"],
@@ -114,19 +114,19 @@ export default localizeCodexLessonToGerman(canonical, {
     [widgetString(0, "goodLabel"), "Passender Umfang"],
     [
       widgetString(0, "bad"),
-      "Aufgabe: Einen fehlenden JSDoc-Kommentar an einer Funktion ergänzen.\n\nVorgehen: Für eine Änderung, die man an Ort und Stelle prüfen kann, eine Hintergrundumgebung und einen eigenen Pull Request aufsetzen.\n\nAufwand: zusätzlicher Umgebungs- und Review-Zustand bei gleichem Risiko.",
+      "Aufgabe: Einen fehlenden JSDoc-Kommentar an einer Funktion ergänzen.\n\nVorgehen: Hintergrundumgebung und eigener Pull Request für eine Änderung, die man an Ort und Stelle prüfen kann.\n\nAufwand: zusätzlicher Umgebungs- und Review-Zustand bei gleichem Risiko.",
     ],
     [
       widgetString(0, "good"),
-      "Aufgabe: Einen fehlenden JSDoc-Kommentar an einer Funktion ergänzen.\n\nVorgehen: Kommentar neben der Funktion schreiben oder erzeugen lassen, gegen den Code prüfen, in die laufende Änderung aufnehmen.\n\nAufwand: keine zusätzliche Umgebung, kein zusätzliches Review-Objekt.",
+      "Aufgabe: Einen fehlenden JSDoc-Kommentar an einer Funktion ergänzen.\n\nVorgehen: Kommentar neben der Funktion schreiben, gegen den Code prüfen, in die laufende Änderung aufnehmen.\n\nAufwand: keiner zusätzlich.",
     ],
     [
       widgetString(0, "note"),
-      "Jeder delegierte Auftrag kostet Umgebung, Kontext und Review. Delegiere, wenn das Isolation, Verifikation oder Parallelität bringt; sonst bleibt die Änderung, wo du gerade arbeitest.",
+      "Delegiere, wenn zusätzliche Umgebung, Kontext und Review dir Isolation, Verifikation oder Parallelität bringen.",
     ],
     [
       widgetString(1, "question"),
-      "Unbekannte Codebasis, und du musst die Authentifizierung verstehen, bevor du etwas änderst. Welcher Ablauf ist der sicherste erste Schritt?",
+      "Bevor du eine unbekannte Codebasis änderst, musst du ihre Authentifizierung verstehen. Was ist der sicherste erste Schritt?",
     ],
     [
       widgetStrings(1, "options")[0],
@@ -146,7 +146,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       widgetString(1, "explanation"),
-      "Lesende Untersuchung begrenzt versehentliche Änderungen und liefert prüfbare Nachweise. Sind Authentifizierungspfad und Vertrauensgrenzen bekannt, folgt ein eigener Auftrag mit ausdrücklichem Umfang und Prüfungen.",
+      "Lesende Untersuchung vermeidet versehentliche Änderungen und liefert prüfbare Nachweise. Sind Authentifizierungspfad und Vertrauensgrenzen bekannt, folgt ein eigener Auftrag mit ausdrücklichen Prüfungen.",
     ],
     [
       widgetString(2, "question"),

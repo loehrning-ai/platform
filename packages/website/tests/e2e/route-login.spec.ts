@@ -206,9 +206,7 @@ test.describe("/login layout", () => {
       }),
     ).toBeVisible();
     await expect(
-      page.getByText(
-        /Bücher, Demos, KI-Check und die technischen Kurse bleiben vollständig offen/,
-      ),
+      page.getByText(/Hier ist nichts zu tun/),
     ).toBeVisible();
   });
 

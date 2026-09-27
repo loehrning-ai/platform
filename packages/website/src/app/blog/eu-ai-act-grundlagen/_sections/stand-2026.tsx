@@ -10,33 +10,29 @@ export function Stand2026() {
           Der AI Omnibus: veröffentlicht und <span className="em">in Kraft.</span>
         </h2>
         <p className="dek">
-          Die EU hat die Hochrisiko-Regeln verschoben. Was genau passiert
-          ist, und warum der 2. August 2026 trotzdem steht.
+          Die EU hat die Hochrisiko-Regeln verschoben. Der 2. August 2026
+          bleibt trotzdem.
         </p>
 
         <div className="premise">
           <div className="premise__body dropcap">
             <p>
               Am 19. November 2025 legte die Europäische Kommission den
-              sogenannten Digital Omnibus zur KI vor, einen Vorschlag zur
-              Änderung des AI Act (COM(2025) 836). Der Hintergrund:
-              Die harmonisierten technischen Normen, an denen sich
-              Hochrisiko-Anbieter orientieren sollen, waren bei den
-              Normungsorganisationen CEN und CENELEC weit hinter dem
-              Zeitplan; Mitte 2026 war noch keine einzige im Amtsblatt
-              zitiert. In der Debatte hieß das Schlagwort &bdquo;Stop the
-              clock&ldquo;: Anwendung erst, wenn die Werkzeuge da sind.
+              Digital Omnibus zur KI vor, einen Änderungsvorschlag zum AI Act
+              (COM(2025) 836). Die harmonisierten technischen Normen für
+              Hochrisiko-Anbieter lagen bei CEN und CENELEC weit hinter dem
+              Zeitplan; Mitte 2026 war noch keine im Amtsblatt zitiert. Das
+              Schlagwort hieß &bdquo;Stop the clock&ldquo;: Anwendung erst,
+              wenn die Werkzeuge da sind.
               (Quelle: OEIL 2025/0359(COD); Europäische Kommission,
               AI-Act-Standardisierung)
             </p>
             <p>
-              Der ursprüngliche Vorschlag wollte den Hochrisiko-Start an die
-              Verfügbarkeit der Normen koppeln. Im Gesetzgebungsverfahren
-              wurde daraus ein Paar fester Termine: Das Parlament stimmte am
-              16. Juni 2026 zu, der Rat am 29. Juni 2026, unterzeichnet
-              wurde der Rechtsakt am 8. Juli 2026. Er wurde als Verordnung
-              (EU) 2026/1744 am 24. Juli 2026 im Amtsblatt veröffentlicht
-              und trat am 27. Juli 2026 in Kraft. (Quelle: ABl. L,
+              Der Vorschlag koppelte den Hochrisiko-Start an die Normen;
+              beschlossen wurden zwei feste Termine. Das Parlament stimmte am 16. Juni 2026 zu, der Rat am
+              29. Juni 2026, unterzeichnet wurde am 8. Juli 2026. Als
+              Verordnung (EU) 2026/1744 erschien der Rechtsakt am 24. Juli
+              2026 im Amtsblatt und trat am 27. Juli 2026 in Kraft. (Quelle: ABl. L,
               2026/1744)
             </p>
             <p>
@@ -46,32 +42,35 @@ export function Stand2026() {
               Hochrisiko-Pflichten ab dem 2. Dezember 2027 erfüllen statt ab
               dem 2. August 2026. Für Hochrisiko-KI in regulierten Produkten
               nach Anhang I, etwa Medizingeräten, gilt der 2. August 2028.
+            </p>
+            <p>
               Anbieter bestimmter Altsysteme bekommen für die
               maschinenlesbare Markierung nach Art. 50 Abs. 2 eine
-              Übergangsfrist bis zum 2. Dezember 2026. Neu hinzu kommt ein
-              Verbot von KI-Systemen zur Erzeugung nicht einvernehmlicher
+              Übergangsfrist bis zum 2. Dezember 2026. Ab dem 2. Dezember
+              2026 sind zudem KI-Systeme zur Erzeugung nicht einvernehmlicher
               intimer Aufnahmen und von Darstellungen sexuellen
-              Kindesmissbrauchs, anwendbar ab dem 2. Dezember 2026. Das EU
-              AI Office erhält zusätzliche Durchsetzungsbefugnisse. (Quelle:
-              Verordnung (EU) 2026/1744)
+              Kindesmissbrauchs verboten. Das EU AI Office erhält zusätzliche
+              Durchsetzungsbefugnisse. (Quelle: Verordnung (EU) 2026/1744)
             </p>
             <p>
               <strong>Was der Omnibus nicht ändert:</strong> Der 2. August
-              2026 bleibt der allgemeine Anwendungsbeginn. Die
-              Transparenzpflichten aus Art. 50, das Beschwerderecht aus
-              Art. 85 und das Erklärungsrecht aus Art. 86 kommen planmäßig.
-              Die Verbote aus Art. 5 und die Pflicht zu Maßnahmen zur
-              Entwicklung von KI-Kompetenz aus Art. 4 gelten weiter.
-              Artikel 4 verlangt seit dem 27. Juli 2026 aber kein bestimmtes
-              Kompetenzniveau einzelner Personen mehr.
+              2026 bleibt der allgemeine Anwendungsbeginn: Transparenz
+              (Art. 50), Beschwerde (Art. 85) und Erklärung (Art. 86) kommen
+              planmäßig. Die Verbote aus Art. 5 und die Pflicht zu Maßnahmen für
+              KI-Kompetenz aus Art. 4 gelten weiter; ein bestimmtes
+              Kompetenzniveau einzelner Personen verlangt Artikel 4 seit dem
+              27. Juli 2026 nicht mehr.
             </p>
             <p>
-              In Deutschland kommt die Aufsicht dazu: Der Bundestag hat das
-              KI-Marktüberwachungsgesetz (KI-MIG) am 11. Juni 2026
-              beschlossen, der Bundesrat hat es am 10. Juli 2026 gebilligt.
-              Es macht die Bundesnetzagentur zur zentralen
-              Marktüberwachungsbehörde und Anlaufstelle für Beschwerden,
-              soweit keine Fachbehörde zuständig ist. Eine Veröffentlichung
+              In Deutschland beschloss der Bundestag das
+              KI-Marktüberwachungsgesetz (KI-MIG) am 11. Juni 2026, der
+              Bundesrat billigte es am 10. Juli 2026. Es macht die
+              Bundesnetzagentur zur zentralen Marktüberwachungsbehörde und
+              Anlaufstelle für Beschwerden, soweit keine Fachbehörde
+              zuständig ist.
+            </p>
+            <p>
+              Eine Veröffentlichung
               im Bundesgesetzblatt war am 28. Juli 2026 nicht verifiziert;
               maßgeblich bleiben das verkündete Gesetz und der offiziell
               veröffentlichte Beschwerdeweg. (Quelle: Bundestag, Beschluss

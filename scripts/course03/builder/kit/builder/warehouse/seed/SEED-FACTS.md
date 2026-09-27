@@ -2,15 +2,15 @@
 
 ## In plain words
 
-FOLDLINE is made up. Its numbers are not. They must stay the same across the deck, the guide, the lab, the kit, the web page and this warehouse. This page lists every number the builder uses and labels its origin:
+FOLDLINE is made up, but its numbers are fixed across the deck, the guide, the lab, the kit, the web page and this warehouse. Every number the builder uses, by origin:
 
 - **DECK**: a fixed fact shown in the workshop. Never change it.
-- **RECORDED AI ANSWER**: what an AI answered in the recording. One run each: an observation, not a benchmark.
+- **RECORDED AI ANSWER**: what an AI answered in the recording. One run each: an observation.
 - **DECK EXPORT-LANE CHECK**: the deck's own database checks on the export lane (fixedSql). This seed reproduces them exactly.
 - **DEMO-ONLY FILL**: needed for the demo and the bathtub. Not in the deck. Keep it consistent.
 - **REPLAY**: rows from the deck's replay data (G04, G05).
 - **DRY RUN**: what Claude answered in Chat A rehearsals. One run each: observations.
-- **GENERATED**: produced by `generate_seed.py`. May change if the seed changes. Never quote these as facts from the workshop.
+- **GENERATED**: produced by `generate_seed.py`; may change with the seed. Never quote as workshop facts.
 
 `generate_seed.py` asserts every row marked DECK, RECORDED, DECK EXPORT-LANE CHECK, DEMO-ONLY FILL and REPLAY before it writes anything. The generated SQL asserts them again when it loads. `sql/80_export_lane_replay.sql` asserts the wrong answers once more.
 
@@ -38,7 +38,7 @@ FOLDLINE is made up. Its numbers are not. They must stay the same across the dec
 | Jun 2026 | **387,015** | +42,565 | DECK |
 | Q2 2026 net new | | **32,380** = 387,015 − 354,635 | DECK |
 
-Identities: 258,785 + 14,210 + 21,480 + 60,160 − 19,960 = 334,675. The sum of the three Q2 levels, 1,066,140, describes nothing; it is only a teaching counter-example.
+Identity: 258,785 + 14,210 + 21,480 + 60,160 − 19,960 = 334,675. The sum of the three Q2 levels, 1,066,140, describes nothing; it is a teaching counter-example.
 
 ## Accounts and churn
 
@@ -86,7 +86,7 @@ Top ten accounts by ending MRR in June 2026 (all Enterprise, plan Enterprise), R
 | G04 | see the table above | Retry copies of one expansion each in AT, DE, NL, PL. |
 | G05 | Same values, keys `6`, `132` ... | Raw `id`s instead of `account_key`: right numbers, wrong identifiers. |
 
-Because the seed matches, `80_export_lane_replay.sql` labels these rows "recorded fixture". If a future seed stops matching, the replay fails loudly; relabel them "builder re-creation, not the recorded fixture" rather than printing the deck numbers as the builder's own.
+Because the seed matches, `80_export_lane_replay.sql` labels these rows "recorded fixture". If a future seed stops matching, the replay fails; relabel them "builder re-creation, not the recorded fixture" instead of printing the deck numbers as the builder's own.
 
 ## Dry runs (Chat A, export CSVs, no instructions)
 
@@ -96,7 +96,7 @@ Because the seed matches, `80_export_lane_replay.sql` labels these rows "recorde
 | Running totals from January, labelled "Ending MRR", with a caveat about the missing opening balance | 75,890 / 85,665 / 128,230 | DRY RUN |
 | The gap to the truth | 258,785 in every month: the December 2025 level the export does not contain | arithmetic |
 
-The rehearsal CSVs were regenerated from this seed, so their per-segment splits changed. Company totals did not. April is negative in every segment in the new file too (−13,285 / −3,080 / −3,595), a hint the rehearsal runs relied on. **Re-run the three Chat A dry runs before the next live session**; do not assume the old transcripts carry over.
+The rehearsal CSVs were regenerated from this seed, so their per-segment splits changed; company totals did not. April is still negative in every segment (−13,285 / −3,080 / −3,595), a hint the rehearsal runs relied on. **Re-run the three Chat A dry runs before the next live session**; the old transcripts do not carry over.
 
 ## Freshness
 

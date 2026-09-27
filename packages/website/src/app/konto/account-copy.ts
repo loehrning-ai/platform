@@ -80,17 +80,17 @@ export const ACCOUNT_COPY = {
     eyebrow: "Freie Lernplattform · Konto",
     title: "Dein Lernstand.",
     signedIn: (identity) =>
-      `Angemeldet als ${identity}. Dein Fortschritt wird lokal gespeichert und nach der Anmeldung geräteübergreifend synchronisiert.`,
+      `Angemeldet als ${identity}. Dein Fortschritt wird geräteübergreifend synchronisiert.`,
     localIdentity: "lokaler Zugriff ohne Konto",
     logout: "Abmelden",
     unavailableTitle: "Dein Lernstand ist gerade nicht erreichbar.",
     unavailableBody:
-      "Die Seite zeigt deshalb keinen vermeintlich leeren Fortschritt. Dein lokaler Lernstand bleibt im Browser erhalten.",
+      "Dein lokaler Lernstand im Browser bleibt erhalten.",
     authUnavailableIdentity:
-      "Der Anmeldedienst antwortet gerade nicht, daher lässt sich dein Anmeldestatus nicht prüfen.",
+      "Der Anmeldedienst antwortet gerade nicht.",
     authUnavailableTitle: "Anmeldestatus ist gerade nicht abrufbar.",
     authUnavailableBody:
-      "Du wurdest nicht abgemeldet. Die Seite meldet dich deshalb bewusst nicht ab und zeigt keinen leeren Lernstand. Lade die Seite in einigen Minuten neu.",
+      "Du wurdest nicht abgemeldet. Lade die Seite in einigen Minuten neu.",
     coursesCompleted: "Kurse abgeschlossen",
     outcomesCovered: "Lernergebnisse behandelt",
     lastSynchronized: "Zuletzt synchronisiert",
@@ -101,12 +101,12 @@ export const ACCOUNT_COPY = {
     start: "Starten",
     statusLabel: "Kursstatus",
     allComplete:
-      "Alle verfügbaren Kursnachweise sind erreicht. Die Lernbücher dienen zur Vertiefung und zum Nachschlagen.",
+      "Du hast alle Kursnachweise erreicht. Zum Vertiefen gibt es die Lernbücher.",
     booksLink: "Zu den Büchern",
     coursesHeading: "Meine Kurse",
     availableCoursesHeading: "Weitere Kurse",
     accountRequiredNote:
-      "Bei den vier grundlegenden Kursen synchronisiert ein Konto Fortschritt und Abschlussstatus geräteübergreifend. Die sechs technischen Kurse funktionieren auch ohne Konto.",
+      "Bei den vier Grundlagenkursen synchronisiert ein Konto Fortschritt und Abschluss geräteübergreifend. Die sechs Technikkurse gehen auch ohne Konto.",
     levelFilterLabel: "Niveau",
     allLevels: "Alle",
     sortLabel: "Sortierung",
@@ -121,17 +121,17 @@ export const ACCOUNT_COPY = {
     viewRecord: "Nachweis ansehen",
     recordsHeading: "Teilnahmebestätigungen",
     recordsIntro:
-      "Ein abgeschlossener Kurs erzeugt eine Teilnahmebestätigung mit Prüfcode. Sie belegt die Teilnahme, keine akkreditierte Qualifikation.",
+      "Jeder abgeschlossene Kurs ergibt eine Teilnahmebestätigung mit Prüfcode. Sie ist keine akkreditierte Qualifikation.",
     recordsEmpty:
-      "Noch kein Kurs abgeschlossen. Die erste Bestätigung erscheint hier, sobald du einen Kurs beendest.",
+      "Noch kein Kurs abgeschlossen. Deine erste Bestätigung erscheint hier.",
     recordOpen: (record) => `${record} öffnen`,
     outcomesHeading: "Behandelte Lernergebnisse",
     outcomeCount: (covered, total) => `${covered} von ${total} behandelt`,
     outcomeSource: (course) => `behandelt in ${course}`,
     noOutcomes:
-      "Noch keine Lernergebnisse aus abgeschlossenen Kursen. Sie erscheinen nach dem zugehörigen Kursnachweis.",
+      "Lernergebnisse erscheinen hier, sobald du einen Kursnachweis erreichst.",
     outcomeBoundary:
-      "Diese Einträge beschreiben Inhalte abgeschlossener Kurse. Sie belegen weder individuelle Beherrschung noch eine akkreditierte Qualifikation.",
+      "Die Einträge nennen Inhalte abgeschlossener Kurse und belegen weder deine Beherrschung noch eine akkreditierte Qualifikation.",
     deepenHeading: "Weiter vertiefen",
     resources: [
       {
@@ -143,13 +143,13 @@ export const ACCOUNT_COPY = {
       {
         key: "demos",
         title: "Praxisbeispiele",
-        body: "Interaktive Beispiele zum Prüfen einzelner Abläufe.",
+        body: "Arbeitsabläufe zum Durchklicken.",
         href: "/demos",
       },
     ],
     localDataHeading: "Gespeicherter Lernstand",
     localDataBody:
-      "Ohne Anmeldung bleiben Kursfortschritt, Checkpoints und Arbeitsbelege in diesem Browser. Ein Lernkonto synchronisiert sie geräteübergreifend. Historische Aktivitätsdaten bleiben aus Kompatibilitätsgründen im Export erhalten und haben keinen offiziellen Nachweiswert.",
+      "Ohne Anmeldung bleiben Kursfortschritt, Checkpoints und Arbeitsbelege in diesem Browser; ein Lernkonto synchronisiert sie. Historische Aktivitätsdaten bleiben aus Kompatibilitätsgründen im Export, ohne offiziellen Nachweiswert.",
     sectionNavigationLabel: "Kontobereiche",
     sectionSettings: "Konto verwalten",
     privacyNavigationLabel: "Kontodatenschutz",
@@ -158,7 +158,7 @@ export const ACCOUNT_COPY = {
     ownerStatisticsEyebrow: "Nur für das Betreiberkonto",
     ownerStatisticsTitle: "Betriebsstatistik",
     ownerStatisticsBody:
-      "Reichweite, Nutzungsereignisse und Kursverlauf der Plattform. Diese Karte sieht nur das Betreiberkonto.",
+      "Reichweite, Nutzungsereignisse und Kursverlauf der Plattform.",
     ownerStatisticsAction: "Statistik öffnen",
   },
   en: {
@@ -170,17 +170,17 @@ export const ACCOUNT_COPY = {
     eyebrow: "Free learning platform · Account",
     title: "Your learning record.",
     signedIn: (identity) =>
-      `Signed in as ${identity}. Progress is stored locally and synchronised across devices after sign-in.`,
+      `Signed in as ${identity}. Your progress syncs across devices.`,
     localIdentity: "local access without an account",
     logout: "Sign out",
     unavailableTitle: "Your learning record is temporarily unavailable.",
     unavailableBody:
-      "The page does not substitute an empty record. Progress stored in this browser remains unchanged.",
+      "Progress stored in this browser is unchanged.",
     authUnavailableIdentity:
-      "The sign-in service is not responding, so your sign-in status cannot be checked.",
+      "The sign-in service is not responding.",
     authUnavailableTitle: "Sign-in status is temporarily unavailable.",
     authUnavailableBody:
-      "You have not been signed out. The page deliberately does not sign you out or substitute an empty record. Reload in a few minutes.",
+      "You have not been signed out. Reload in a few minutes.",
     coursesCompleted: "Courses completed",
     outcomesCovered: "Course outcomes covered",
     lastSynchronized: "Last synchronised",
@@ -191,12 +191,12 @@ export const ACCOUNT_COPY = {
     start: "Start",
     statusLabel: "Course status",
     allComplete:
-      "Every available course record has been earned. The learning books provide reference material for further study.",
+      "You have earned every course record. The learning books go deeper.",
     booksLink: "Open books",
     coursesHeading: "My courses",
     availableCoursesHeading: "Available courses",
     accountRequiredNote:
-      "For the four foundation courses, an account synchronises progress and completion status across devices. The six technical courses also work without an account.",
+      "For the four foundation courses, an account syncs progress and completion across devices. The six technical courses work without one.",
     levelFilterLabel: "Level",
     allLevels: "All",
     sortLabel: "Sort",
@@ -211,17 +211,17 @@ export const ACCOUNT_COPY = {
     viewRecord: "View record",
     recordsHeading: "Certificates of participation",
     recordsIntro:
-      "A completed course produces a certificate of participation with a verification code. It documents participation, not an accredited qualification.",
+      "Each completed course gives a certificate of participation with a verification code. It is not an accredited qualification.",
     recordsEmpty:
-      "No completed course yet. The first certificate of participation appears here as soon as you finish a course.",
+      "No completed course yet. Your first certificate of participation appears here.",
     recordOpen: (record) => `Open ${record.toLowerCase()}`,
     outcomesHeading: "Covered course outcomes",
     outcomeCount: (covered, total) => `${covered} of ${total} covered`,
     outcomeSource: (course) => `covered in ${course}`,
     noOutcomes:
-      "No outcomes from completed courses yet. They appear after the corresponding course record is earned.",
+      "Outcomes appear here once you earn a course record.",
     outcomeBoundary:
-      "These entries describe content covered by completed courses. They prove neither individual mastery nor an accredited qualification.",
+      "The entries name content of completed courses and prove neither your mastery nor an accredited qualification.",
     deepenHeading: "Go deeper",
     resources: [
       {
@@ -233,13 +233,13 @@ export const ACCOUNT_COPY = {
       {
         key: "demos",
         title: "Applied examples",
-        body: "Interactive examples for examining individual workflows.",
+        body: "Workflows to click through.",
         href: "/demos",
       },
     ],
     localDataHeading: "Saved learning state",
     localDataBody:
-      "Without sign-in, course progress, checkpoints, and work artifacts remain in this browser. A learning account synchronises them across devices. Historical activity data remains in exports for compatibility and has no official qualification value.",
+      "Without sign-in, course progress, checkpoints and work artifacts stay in this browser; a learning account syncs them. Historical activity data remains in exports for compatibility, with no official qualification value.",
     sectionNavigationLabel: "Account sections",
     sectionSettings: "Manage account",
     privacyNavigationLabel: "Account privacy",
@@ -249,7 +249,7 @@ export const ACCOUNT_COPY = {
     ownerStatisticsEyebrow: "Operator account only",
     ownerStatisticsTitle: "Operating statistics",
     ownerStatisticsBody:
-      "Reach, usage events, and course progression across the platform. Only the operator account sees this card.",
+      "Reach, usage events and course progression across the platform.",
     ownerStatisticsAction: "Open statistics",
   },
 } as const satisfies Readonly<Record<Locale, AccountPageCopy>>;

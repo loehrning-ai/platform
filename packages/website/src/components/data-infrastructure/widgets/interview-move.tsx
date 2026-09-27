@@ -128,8 +128,8 @@ export function InterviewMove({
     <div className="min-w-0 max-w-full border-2 border-border bg-card/40 p-3 sm:p-5 md:p-6">
       <p className="mb-4 break-words font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange [overflow-wrap:anywhere]">
         {locale === "de"
-          ? "Ablauf · Staff-Systemdesign · Schritt für Schritt"
-          : "Walkthrough · IC5 design · step through the moves"}{" "}
+          ? "Ablauf · Systemdesign-Review"
+          : "Walkthrough · system design review"}{" "}
         {done ? "✓" : ""}
       </p>
 

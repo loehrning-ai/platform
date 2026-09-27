@@ -237,7 +237,7 @@ export function Watermark({ lessonId, cpId }: WatermarkProps): JSX.Element {
           title="Watermark"
           summary={
             locale === "de"
-              ? "Ereignisse werden nach Verarbeitungszeit und Ereigniszeit eingezeichnet. Zu späte Ereignisse unterhalb des Vier-Sekunden-Budgets werden verworfen."
+              ? "Verarbeitungszeit (x) gegen Ereigniszeit (y): Pünktliche Ereignisse liegen nahe der Diagonale, verspätete darunter, und Ereignisse jenseits des 4-Sekunden-Budgets werden verworfen."
               : "Events plotted by processing time (x) vs event time (y): on-time events land near the diagonal, late events fall below it, and events past a 4-second budget are dropped."
           }
         />

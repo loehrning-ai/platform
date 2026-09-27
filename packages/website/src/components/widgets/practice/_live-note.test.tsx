@@ -32,7 +32,7 @@ describe("LiveNote", () => {
     const note = screen.getByRole("status");
     expect(note.textContent).toMatch(/Live-Modus nicht verfügbar/);
     expect(note.textContent).toMatch(
-      /Die Live-Ausführung mit Claude ist in dieser Umgebung nicht aktiviert\.$/,
+      /Du siehst den statischen Qualitätswert\.$/,
     );
   });
 

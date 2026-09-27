@@ -37,7 +37,7 @@ export const externalBenchmarks: readonly ExternalBenchmark[] = [
   {
     id: "bitkom_2026_adoption",
     value: "41 %",
-    plain: "der deutschen Unternehmen nutzen KI aktiv. Also 59 % noch nicht.",
+    plain: "der deutschen Unternehmen nutzen KI aktiv.",
     publisher: "Bitkom Research",
     year: "2026",
     sampleSize: "N = 604",
@@ -62,7 +62,7 @@ export const externalBenchmarks: readonly ExternalBenchmark[] = [
   {
     id: "bcg_2025_no_value",
     value: "74 %",
-    plain: "der Unternehmen sehen keinen echten Nutzen aus ersten KI-Investitionen.",
+    plain: "der Unternehmen sehen keinen Nutzen aus ersten KI-Investitionen.",
     publisher: "BCG",
     year: "2025",
     topic: "failure",
@@ -70,7 +70,7 @@ export const externalBenchmarks: readonly ExternalBenchmark[] = [
   {
     id: "ifo_2024_handwerk",
     value: "~4 %",
-    plain: "des deutschen Handwerks nutzt überhaupt KI.",
+    plain: "des deutschen Handwerks nutzt KI.",
     publisher: "ifo Institut",
     year: "2024/25",
     topic: "adoption",
@@ -94,7 +94,7 @@ export const externalBenchmarks: readonly ExternalBenchmark[] = [
   {
     id: "cisco_2025_ready",
     value: "13 %",
-    plain: "der Unternehmen weltweit sind wirklich KI-bereit.",
+    plain: "der Unternehmen weltweit sind voll KI-bereit.",
     publisher: "Cisco AI Readiness Index",
     year: "2025",
     topic: "readiness",

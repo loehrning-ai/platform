@@ -13,14 +13,14 @@ const STEPS: readonly TimelineStep[] = [
     date: "1. Aug 2024",
     title: "In Kraft, noch ohne Pflichten",
     body:
-      "Die Verordnung tritt zwanzig Tage nach der Veröffentlichung im Amtsblatt (12. Juli 2024) in Kraft. Ab jetzt läuft die Uhr für alle folgenden Stufen. (Quelle: Art. 113, Reg. 2024/1689)",
+      "Die Verordnung tritt zwanzig Tage nach der Veröffentlichung im Amtsblatt (12. Juli 2024) in Kraft. (Quelle: Art. 113, Reg. 2024/1689)",
   },
   {
     num: "02",
     date: "2. Feb 2025",
     title: "Verbote und KI-Kompetenz",
     body:
-      "Kapitel I und II gelten: die verbotenen Praktiken aus Art. 5 und die Schulungspflicht aus Art. 4. Beides ist seit diesem Datum geltendes Recht. (Quelle: Art. 113 lit. a, Reg. 2024/1689)",
+      "Kapitel I und II gelten: die verbotenen Praktiken aus Art. 5 und die Schulungspflicht aus Art. 4. (Quelle: Art. 113 lit. a, Reg. 2024/1689)",
   },
   {
     num: "03",
@@ -56,8 +56,8 @@ export function Zeitplan() {
         Was schon gilt und was <span className="em">ab dem 2. August 2026</span> gilt.
       </h2>
       <p className="dek">
-        Art. 113 staffelt die Anwendung über mehrere Jahre. Der 2. August
-        2026 ist ein wichtiger Stichtag, aber weder Anfang noch Ende.
+        Art. 113 staffelt die Anwendung über mehrere Jahre; der 2. August
+        2026 ist ein Stichtag unter mehreren.
       </p>
 
       <div className="pipeline">
@@ -80,15 +80,17 @@ export function Zeitplan() {
       <div className="premise" style={{ marginTop: 48 }}>
         <div className="premise__body">
           <p>
-            Zur Einordnung der Sanktionen: Verstöße gegen die Verbote aus
-            Art. 5 können bis zu 35 Mio. EUR oder 7 Prozent des weltweiten
-            Jahresumsatzes kosten, je nachdem, welcher Betrag höher ist. Für
-            die meisten übrigen Pflichten, darunter die Transparenzregeln
-            aus Art. 50, liegt die Obergrenze bei 15 Mio. EUR oder
-            3 Prozent. Falsche Angaben gegenüber Behörden kosten bis zu
-            7,5 Mio. EUR oder 1 Prozent. Für kleine und mittlere Unternehmen
-            gilt jeweils der niedrigere der beiden Werte. (Quelle: EU AI Act
-            Art. 99 Abs. 3 bis 6, Reg. 2024/1689)
+            Verstöße gegen die Verbote aus Art. 5 können bis zu 35 Mio. EUR
+            oder 7 Prozent des weltweiten Jahresumsatzes kosten, je nachdem,
+            welcher Betrag höher ist.
+          </p>
+          <p>
+            Für die meisten übrigen Pflichten,
+            darunter die Transparenzregeln aus Art. 50, liegt die Obergrenze
+            bei 15 Mio. EUR oder 3 Prozent, für falsche Angaben gegenüber
+            Behörden bei 7,5 Mio. EUR oder 1 Prozent. Für KMU gilt jeweils der
+            niedrigere Wert. (Quelle: EU AI Act Art. 99 Abs. 3 bis 6,
+            Reg. 2024/1689)
           </p>
         </div>
         <aside className="premise__stats">

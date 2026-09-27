@@ -177,8 +177,8 @@ export interface SemanticSpaceWidgetProps {
 export function SemanticSpaceWidget({
   lessonId,
   cpId,
-  title = "Bedeutung lebt im Raum",
-  scenario = "Claude stellt Wörter als Vektoren dar. Verwandte Wörter liegen nah beieinander. Wirf ein Wort ein.",
+  title = "Wörter im Bedeutungsraum",
+  scenario = "Verwandte Wörter liegen nah beieinander. Wirf ein Wort ein.",
   seed = SEED,
   clusterKeywords = CLUSTER_KEYWORDS,
   clusterLabels = DEFAULT_CLUSTER_LABELS,

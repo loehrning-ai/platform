@@ -311,8 +311,8 @@ export async function generateCertificatePdf(
   doc.setFont("helvetica", "normal");
   doc.setTextColor(SCHIEFER);
   const completionSentence = isEn
-    ? `has successfully completed the ${course.certificateTitle} by loehrning.ai.`
-    : `den ${course.certificateTitle} der loehrning.ai erfolgreich absolviert hat.`;
+    ? `has completed the ${course.certificateTitle} by loehrning.ai.`
+    : `den ${course.certificateTitle} der loehrning.ai absolviert hat.`;
   const completionLayout = fitTextLayout(
     doc,
     completionSentence,

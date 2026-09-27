@@ -93,12 +93,12 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Parallel tasks that each say \"refactor shared helpers as needed\" all own the same dependency, so the merge becomes unpredictable.",
+            "Tasks that each say \"refactor shared helpers as needed\", like the validator example above, all own the same dependency, so the merge becomes unpredictable.",
         },
         {
           kind: "callout",
           title: "The fix",
-          body: "When tasks need the same infrastructure change, define and review that contract first. Rebase dependent tasks onto the accepted revision, then run only the independent adoption work in parallel.",
+          body: "Define and review the shared contract first, rebase dependent tasks onto it, then run only the independent adoptions in parallel.",
         },
       ],
     },
@@ -155,7 +155,7 @@ const lesson: CodexLesson = {
         goodLabel: "Parallel-friendly",
         bad: 'Three tasks running concurrently:\n\n· "Add validation to signup, refactor shared validators as needed."\n· "Add validation to checkout, refactor shared validators as needed."\n· "Add validation to profile update, refactor shared validators as needed."\n\nAll three may modify validators.py, so ownership and merge order are undefined.',
         good: 'Task A (runs first):\n"Define and test the shared validator interface in validators.py."\n\nAfter Task A is reviewed, separate adoption tasks use that accepted interface for signup, checkout, and profile update.\n\nEach adoption task owns its endpoint and tests; the shared validator remains out of scope.',
-        note: "Serialize work on shared foundations. Run leaf tasks in parallel once their dependencies are stable.",
+        note: "Serialize shared foundations, then parallelize the leaves.",
       },
     },
     {

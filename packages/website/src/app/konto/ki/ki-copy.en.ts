@@ -5,12 +5,12 @@ export const AGENT_ACCOUNT_COPY_EN: AgentAccountCopy = {
   metadata: {
     title: "Account · Your AI | Free learning platform",
     description:
-      "Manage how your own AI programs reach your learning account: access keys, granted clients, activity, and the chat that runs on your own Anthropic key.",
+      "Connect your own AI programs to your learning account: access keys, grants, activity and chat.",
   },
   eyebrow: "Free learning platform · Account",
   title: "Your AI.",
   intro:
-    "Connect your own AI program to the learning platform, see what it did, and chat about the course content on your own Anthropic key.",
+    "Connect your own AI program to the platform and chat about the courses on your Anthropic key.",
   backToAccount: "Back to your record",
   sectionNavigationLabel: "Sections on this page",
   sections: {
@@ -22,7 +22,7 @@ export const AGENT_ACCOUNT_COPY_EN: AgentAccountCopy = {
 
   accountUnavailableTitle: "Your sign-in status cannot be read right now.",
   accountUnavailableBody:
-    "You were not signed out. The page therefore shows no empty lists for activity, grants, and access keys. Reload it in a few minutes.",
+    "You were not signed out. Reload the page in a few minutes.",
 
   endpointHeading: "Connection",
   endpointBody:
@@ -31,18 +31,18 @@ export const AGENT_ACCOUNT_COPY_EN: AgentAccountCopy = {
   endpointHelpLink: "Setup guide for your program",
   endpointOffTitle: "Program access is not configured here.",
   endpointOffBody:
-    "The address appears once this environment enables it. Until then access keys and grants have no effect.",
+    "The address appears here once it is enabled. Until then access keys and grants have no effect.",
 
   chatHeading: "Chat with your AI",
   chatIntro:
-    "The chat runs on your own Anthropic key and reads the same course content your program does.",
+    "The chat reads the same course content as your program.",
   chatOffTitle: "The chat is not configured in this environment.",
   chatOffBody:
-    "No key is stored and no request is made until the operator switches the chat on.",
+    "Until then no key is stored and no request is made.",
 
   keyHeading: "Your Anthropic key",
   keyDisclosure:
-    "Your messages go to Anthropic with your key, under your own contract terms and at your own cost.",
+    "Your messages go to Anthropic with your key, under your contract terms and at your own cost.",
   keyStored: (hint) => `Stored. Your key ends in ${hint}.`,
   keyValidated: (moment) => `Last checked: ${moment}.`,
   keyMissing: "No key stored yet.",
@@ -58,7 +58,7 @@ export const AGENT_ACCOUNT_COPY_EN: AgentAccountCopy = {
   keyShapeError: "That does not look like an Anthropic key. It starts with sk-ant-.",
   keyUnknownError: "The key could not be stored.",
   keyStateUnavailable:
-    "The stored key cannot be read right now. Reload the page later before replacing it.",
+    "Your key can't be loaded right now. Reload the page before replacing it.",
 
   modelLabel: "Model",
   modelHint: "Models this installation allows.",
@@ -69,8 +69,7 @@ export const AGENT_ACCOUNT_COPY_EN: AgentAccountCopy = {
   chatSending: "Answering",
   chatStop: "Stop",
   chatClear: "Clear transcript",
-  chatEmpty:
-    "No messages yet. The transcript stays in this browser and is never stored on the server.",
+  chatEmpty: "No messages yet.",
   chatNeedsKey: "Store your Anthropic key first.",
   chatRoleUser: "You",
   chatRoleAssistant: "AI",
@@ -78,7 +77,7 @@ export const AGENT_ACCOUNT_COPY_EN: AgentAccountCopy = {
   chatLessonChip: (lesson) => `Context: ${lesson}`,
   chatLessonRemove: "Remove context",
   chatTranscriptNote:
-    "The transcript lives in this browser only, in your account namespace.",
+    "The transcript stays in this browser only, per account, never on the server.",
   chatUnknownError: "The answer could not be loaded.",
   chatLogLabel: "Transcript",
 
@@ -91,7 +90,7 @@ export const AGENT_ACCOUNT_COPY_EN: AgentAccountCopy = {
   tokenCreating: "Creating",
   tokenOnceTitle: "Your new access key",
   tokenOnceBody:
-    "Copy it now. It is not stored and cannot be shown again later.",
+    "Copy it now. It is not stored and cannot be shown again.",
   tokenCopy: "Copy",
   tokenCopied: "Copied",
   tokenDismiss: "Hide",
@@ -108,7 +107,7 @@ export const AGENT_ACCOUNT_COPY_EN: AgentAccountCopy = {
   tokenNameRequired: "Give the key a name.",
   tokenUnknownError: "The key could not be created.",
   tokensUnavailable:
-    "Your access keys cannot be read right now. The list stays empty rather than wrong.",
+    "Your access keys can't be loaded right now. Reload the page.",
 
   grantsHeading: "Granted clients",
   grantsIntro: "Programs you granted access to your account in the browser.",
@@ -123,18 +122,18 @@ export const AGENT_ACCOUNT_COPY_EN: AgentAccountCopy = {
   grantUnknownError: "The grant could not be revoked.",
   grantsSetupTitle: "Grants are not set up yet.",
   grantsSetupBody:
-    "While the sign-in service issues no grants, connect your program with an access key below.",
+    "Until then, connect your program with an access key below.",
   grantsUnavailable:
-    "Your granted clients cannot be read right now. The list stays empty rather than wrong.",
+    "Your granted clients can't be loaded right now. Reload the page.",
   grantsListLabel: "Granted clients",
 
   activityHeading: "Activity",
   activityIntro:
-    "The last 50 program accesses to your account. Recorded are client, tool, result, and duration, never inputs or results.",
+    "The last 50 program accesses. Logged are client, tool, result and duration, never inputs or outputs.",
   activityEmpty: "No program has reached your account yet.",
   activityRetention: "Entries are deleted automatically after 30 days.",
   activityUnavailable:
-    "The activity cannot be read right now. The list stays empty rather than wrong.",
+    "The activity can't be loaded right now. Reload the page.",
   activityTableLabel: "Recent program accesses",
   activityColumnMoment: "When",
   activityColumnClient: "Client",

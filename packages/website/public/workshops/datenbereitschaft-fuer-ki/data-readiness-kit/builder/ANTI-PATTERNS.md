@@ -2,17 +2,14 @@
 
 ## In plain words
 
-This is every known way the FOLDLINE question went wrong, or could have gone wrong, in one list.
-Each entry says what you would notice, what happened at FOLDLINE, why it fails, how to fix it,
-and which test catches it.
+Every known way the FOLDLINE question went wrong or could have, each with its symptom,
+the FOLDLINE case, why it fails, the fix and the test that catches it.
 
-Use it two ways:
-
-- **Before you build:** read the group for the step you are on (see `BUILD-ORDER.md`).
-- **After something looks wrong:** search this page for the symptom.
+- **Before you build:** read the group for your step (see `BUILD-ORDER.md`).
+- **When something looks wrong:** search for the symptom.
 
 Test IDs refer to `semantic/verified-questions.yml` (G, C, R, D, B, Q, F, T cases) and
-`naming/lint_names.sql` (LINT cases). "Review" means a person has to check it; no query can.
+`naming/lint_names.sql` (LINT cases). "Review" means a person checks it; no query can.
 "Module" is the matching module in `builder.html`.
 
 Groups: [Question](#ap-q-question) · [Naming](#ap-n-naming) · [Layers](#ap-l-layers) ·
@@ -35,17 +32,17 @@ Groups: [Question](#ap-q-question) · [Naming](#ap-n-naming) · [Layers](#ap-l-l
 | --- | --- | --- | --- | --- | --- | --- |
 | AP-N01 | Generic column names | `monthly_revenue.amount`, `.dt`, `customer_master.seg` | `amount` hides that the value is a monthly change; the recorded run read it as a level | `net_new_mrr_eur`, `month_start`, `customer_segment` | LINT-01 | Names |
 | AP-N02 | Status codes | `acct_history.state` and `customer_master.status` = A, C, N | The AI searched 'active' and found 0 of 0 | Decode in core: `active`, `churned`, `new` | LINT-06 | Names |
-| AP-N03 | Table named after where it came from, or after what it sounds like | `subscription_export` (June only); `monthly_revenue` (holds changes) | "Three of them sound like the answer." The name promises a total and a full history | Name the content and grain: `mrr_summary_monthly` | LINT-07; review | Names |
+| AP-N03 | Table named after where it came from, or after what it sounds like | `subscription_export` (June only); `monthly_revenue` (holds changes) | The name promises a total and a full history | Name the content and grain: `mrr_summary_monthly` | LINT-07; review | Names |
 | AP-N04 | A trusted-looking alias on the wrong number | The recorded run's output column `ending_mrr` on a sum of changes | A label is not evidence; the checklist counted it as a trust signal | Serve `ending_mrr_eur`; grade values against the truth, not labels | G01 | Names |
-| AP-N05 | Percent stored as 0–1 in a `_pct` column | (Trap; FOLDLINE stores 10.0) | 0.100 read as percent shows 0.1 % churn | `_pct` means 0–100; `_ratio` means 0–1 | Review; a range check such as `max(logo_churn_rate_pct) > 1` on real data | Names |
+| AP-N05 | Percent stored as 0–1 in a `_pct` column | (Trap; FOLDLINE stores 10.0) | 0.100 read as percent shows 0.1 % churn | `_pct` means 0–100; `_ratio` means 0–1 | Review; a range check such as `max(logo_churn_rate_pct) > 1` | Names |
 
 ## AP-L Layers
 
 | ID | Symptom | FOLDLINE instance | Why it fails | Fix | Caught by | Module |
 | --- | --- | --- | --- | --- | --- | --- |
-| AP-L01 | The AI reads source or core | `CLAUDE.example.md` says "Never query raw, core, or staging assets directly": an instruction, not a grant | Core holds identifiers and unserved columns; the AI has many look-alike choices | Serve only `analytics`; grant nothing else | D01 | Layers |
+| AP-L01 | The AI reads source or core | `CLAUDE.example.md` says "Never query raw, core, or staging assets directly", an instruction only | Core holds identifiers and unserved columns; the AI has many look-alike choices | Serve only `analytics`; grant nothing else | D01 | Layers |
 | AP-L02 | One login sees every table | `foldline_bad_reader` sees all 7 export tables | Too much reach, too many choices, no meaning | A login that sees the 5 approved views | B-P01 | Layers |
-| AP-L03 | Cleaning happens in the prompt | "Ignore rows in a retry batch; A means active" | Every run re-derives the cleaning, differently | Clean once in core; test it | Review; Q01 | Layers |
+| AP-L03 | Cleaning happens in the prompt | "Ignore rows in a retry batch; A means active" | Every run cleans again, differently | Clean once in core; test it | Review; Q01 | Layers |
 
 ## AP-M Metrics
 
@@ -67,9 +64,9 @@ Groups: [Question](#ap-q-question) · [Naming](#ap-n-naming) · [Layers](#ap-l-l
 | AP-S01 | Mixed grains in one table | `monthly_revenue` has one row per segment per month; readers sum it in different ways | "Rows per what?" has two answers | Grain in the name and the key; one grain per view | Q01; LINT-07 | Serving views |
 | AP-S02 | A rate without its counts | (Avoided: the churn view ships 40 and 4 with 10.0 %) | Nobody can check or pool the rate | `starting_accounts`, `churned_accounts` next to `logo_churn_rate_pct` | LINT-05 | Serving views |
 | AP-S03 | A partial period that looks complete | `subscription_export` holds June 2026 only | A top-10 or a trend from it is silently one month | Serve complete periods; `complete_through_month` on every row | Q03 | Serving views |
-| AP-S04 | Duplicate rows inflate sums | `billing_events` repeats every 19th movement in a retry batch | The recorded export check is higher in four countries (AT 1,955 vs 1,565), consistent with the repeated rows | Deduplicate in core with a uniqueness test | G04; Q01 | Layers |
+| AP-S04 | Duplicate rows inflate sums | `billing_events` repeats every 19th movement in a retry batch | The recorded export check is higher in four countries (AT 1,955 vs 1,565) | Deduplicate in core with a uniqueness test | G04; Q01 | Layers |
 | AP-S05 | `now()` inside a view | (Avoided: `data_status_by_view` stores facts; the reader supplies the clock) | Every re-run gives a different age; frozen tests are impossible | Store `data_loaded_at_utc`; compute age against a stated clock | F00, F01 | Freshness |
-| AP-S06 | One mega-view for everything | "Give the AI one wide table with every column" | Mixed grains, identifiers and many look-alike columns come back | One view per question family (FOLDLINE: five) | Review; B-P01 | Serving views |
+| AP-S06 | One mega-view for everything | "Give the AI one wide table with every column" | Mixed grains, identifiers and look-alike columns return | One view per question family (FOLDLINE: five) | Review; B-P01 | Serving views |
 
 ## AP-A Access
 
@@ -89,7 +86,7 @@ Groups: [Question](#ap-q-question) · [Naming](#ap-n-naming) · [Layers](#ap-l-l
 
 | ID | Symptom | FOLDLINE instance | Why it fails | Fix | Caught by | Module |
 | --- | --- | --- | --- | --- | --- | --- |
-| AP-C01 | The prompt used as the lock | "Please do not read contact emails" | An instruction guides; the lab reports that a prompt warning did not stop the email request | Refuse early (instructions) and enforce anyway (grants) | R02 and D01 | Claude |
+| AP-C01 | The prompt used as the lock | "Please do not read contact emails" | An instruction guides; in the lab a prompt warning did not stop the email request | Refuse early (instructions) and enforce anyway (grants) | R02 and D01 | Claude |
 | AP-C02 | The definition loaded but not used | Runs used an approved example 3 of 3, cited the definition 0 of 3 | Loaded is not the same as used | Require metric name and version in the trace; grade it | ai_run G01–G03 `metric_citation` | Semantic layer |
 | AP-C03 | A vague Skill description | `description: analytics helper` | Claude loads a Skill when the description matches; a vague one never triggers, or triggers everywhere | Name the trigger words: ending MRR, net new MRR, logo churn, expansion, top accounts | Review; ai_run trace | Claude |
 | AP-C04 | The export uploaded "for context" | Adding `monthly_revenue.csv` to the Project B knowledge | Claude may pick it; the look-alike returns | Upload only approved files | Review; G01 (ai_run) | Claude |

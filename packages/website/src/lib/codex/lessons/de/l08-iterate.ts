@@ -188,18 +188,18 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       widgetString(1, "explanation"),
-      "Änderungen, die nicht konvergieren, zeigen eine instabile Prämisse, Grenze oder einen instabilen Kontext. Eine neue Spezifikation gibt dem nächsten Versuch einen Vertrag. Auslöser ist das Auseinanderlaufen, egal nach wie vielen Runden.",
+      "Nicht konvergierende Änderungen zeigen eine instabile Prämisse, Grenze oder einen instabilen Kontext. Starte mit einer sauberen Spezifikation neu, egal nach wie vielen Runden.",
     ],
     [widgetString(2, "title"), "Kontextverdichtung: übernehmen oder weglassen"],
     [widgetString(2, "badLabel"), "Unnötigen Verlauf übernehmen"],
     [widgetString(2, "goodLabel"), "Relevante Erkenntnisse übernehmen"],
     [
       widgetString(2, "bad"),
-      "KONTEXT AUS DER LETZTEN SITZUNG:\n- Wir haben am Rate Limiter gearbeitet\n- Es gab ein Gespräch über Caching\n- Ich fragte nach Redis und In-Memory\n- Du hast etwas über TTLs gesagt\n- Wir haben länger über die Teststruktur gesprochen\n- Der zweite Ansatz wirkte besser\n- Es gab etwas zum Format des Limiter-Schlüssels",
+      "KONTEXT AUS DER LETZTEN SITZUNG:\n- Wir haben am Rate Limiter gearbeitet\n- Es gab ein Gespräch über Caching\n- Du hast etwas über TTLs gesagt\n- Der zweite Ansatz wirkte besser",
     ],
     [
       widgetString(2, "good"),
-      "KONTEXT AUS DER LETZTEN SITZUNG (3 Punkte):\n1. Entdeckte Nebenbedingung: Der Limiter-Schlüssel muss (ip, user_id) statt nur ip enthalten. Sonst würden gemeinsam genutzte IP-Adressen in Büros oder Proxys unbeteiligte Nutzende blockieren.\n2. Verworfener Ansatz: lru_cache gilt nur pro Prozess. Bei mehreren Workern werden Zähler nicht zusammengeführt. Redis verwenden.\n3. Verdeckte Kopplung: rate_limit_middleware läuft vor der Authentifizierung. user_id ist dort nicht verfügbar, daher muss die Limiter-Logik in der View-Schicht liegen.",
+      "KONTEXT AUS DER LETZTEN SITZUNG (3 Punkte):\n1. Nebenbedingung: Der Limiter-Schlüssel muss (ip, user_id) sein. Nur nach ip blockiert er unbeteiligte Nutzende hinter gemeinsamen IP-Adressen (Büros, Proxys).\n2. Verworfen: lru_cache gilt nur pro Prozess, Zähler addieren sich über Worker nicht. Redis verwenden.\n3. Verdeckte Kopplung: rate_limit_middleware läuft vor der Authentifizierung, user_id fehlt dort. Die Limiter-Logik gehört in die View-Schicht.",
     ],
     [
       widgetString(2, "note"),

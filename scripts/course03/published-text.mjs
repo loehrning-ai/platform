@@ -19,8 +19,7 @@ employer, customer, personal, or sensitive data.
 ## Online parts (not in this archive)
 
 - Learner guide: ${SITE}/guide.html
-- Browser lab (optional, 12 minutes): ${SITE}/data-readiness-kit/readiness-lab.html
-  The lab is a fixed simulation in your browser. It calls no AI and connects to no database.
+- Browser lab (optional, 12 minutes, no AI or database): ${SITE}/data-readiness-kit/readiness-lab.html
 - Builder guide for data teams (optional follow-up): ${SITE}/builder.html
 
 ## What is in this archive
@@ -36,8 +35,8 @@ employer, customer, personal, or sensitive data.
 | \`builder/\` | Optional follow-up for data teams: warehouse SQL starter, semantic layer, naming rules, metric definitions, Claude setup, four other domains and a live Claude demo. Start with \`builder/README.md\`. |
 | \`ASSET-RIGHTS.md\` | Rights notice. |
 
-The templates are examples, not active controls. Instructions guide, grants enforce: only database
-permissions make a forbidden read fail.
+The templates are examples, not active controls. Only database permissions make a forbidden read
+fail.
 
 Copyright Tim Löhr. All rights reserved. Publication on loehrning.ai does not grant reuse rights.
 `;

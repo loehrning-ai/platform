@@ -43,7 +43,7 @@ const KAPPA_STAGES_DE = [
 const KAPPA_NOTE =
   "One pipeline. Re-process by replaying the topic from offset 0 of a long-retention compacted topic.";
 const LAMBDA_NOTE =
-  "Two pipelines computing the same logic, then merged. Killer flaw: two codebases for one transform.";
+  "Two pipelines computing the same logic, then merged. Main drawback: two codebases for one transform.";
 
 const KAPPA_NOTE_DE =
   "Eine Pipeline. Für eine Neuberechnung wird das Topic ab Offset 0 erneut gelesen; dafür braucht es lange Aufbewahrung und Kompaktierung.";
@@ -572,8 +572,8 @@ function LambdaDiagram({ locale }: { readonly locale: Locale }): JSX.Element {
         className="fill-[#b85a4a] text-[11px] font-semibold"
       >
         {locale === "de"
-          ? "Zwei Codebasen: Jede Aggregation existiert als Stream- und Batch-Variante. Abweichungen zwischen beiden erhöhen den Betriebsaufwand."
-          : "⚠ Two codebases. Every aggregation expressed twice, once streaming, once batch. Drift between the two is the dominant operational pain."}
+          ? "⚠ Zwei Codebasen: Jede Aggregation gibt es als Stream- und Batch-Variante; Abweichungen kosten Betriebsaufwand."
+          : "⚠ Two codebases: every aggregation exists in stream and batch form; drift between them costs operating work."}
       </text>
     </svg>
   );

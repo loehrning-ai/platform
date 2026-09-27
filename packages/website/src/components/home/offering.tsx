@@ -48,7 +48,6 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
         <HomeSectionHead
           id="kurse-heading"
           note={copy.routeSignal(SPINE_LESSON_COUNT)}
-          introduction={copy.introduction}
           title={copy.headline}
         />
 

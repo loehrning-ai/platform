@@ -18,7 +18,7 @@ const LOCALES = [
     route: "/en/ueber-mich",
     htmlLang: "en",
     title: "About Tim Löhr",
-    h1: "I build loehrning.ai to keep knowledge about AI verifiable.",
+    h1: "I build loehrning.ai so AI knowledge stays verifiable.",
     timeline: "Professional timeline",
     academic: "Academic background",
     feedback: "/en/feedback",

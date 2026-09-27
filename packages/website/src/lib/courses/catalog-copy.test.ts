@@ -128,10 +128,17 @@ describe("course catalogue locale copy", () => {
     }
     expect(COURSE_HUB_COPY.de.metadataTitle).toContain("KI-Kurse");
     expect(COURSE_HUB_COPY.de.accessBody).toContain(
-      "nur das PDF des Lernbuchs braucht eins",
+      "und für das PDF des Lernbuchs",
     );
     expect(COURSE_HUB_COPY.en.accessBody).toContain(
-      "only the learning book's PDF needs one",
+      "and for the learning book's PDF",
+    );
+    // The account is needed only in those two cases.
+    expect(COURSE_HUB_COPY.de.accessBody).toContain(
+      "nur für die vier Grundlagenkurse",
+    );
+    expect(COURSE_HUB_COPY.en.accessBody).toContain(
+      "only need a learning account for the four foundation courses",
     );
     expect(COURSE_HUB_COPY.de.accessBody).not.toContain(
       "Downloads bleiben ohne Konto erreichbar",

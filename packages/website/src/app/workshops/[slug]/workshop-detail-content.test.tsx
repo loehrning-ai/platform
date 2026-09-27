@@ -45,7 +45,7 @@ describe("<WorkshopDetailContent>", () => {
     expect(agenda).toContainElement(questionCards[0] as HTMLElement);
     expect(cover).not.toHaveTextContent("Allein ca. 90 Min.");
     expect(agenda).toHaveTextContent("Allein ca. 90 Min.");
-    expect(agenda).toHaveTextContent("Du gehst mitGo/No-Go-Regel");
+    expect(agenda).toHaveTextContent("Du nimmst mitGo/No-Go-Regel");
     expect(agenda).toHaveTextContent("Du brauchsteinen Browser, kein KI-Konto");
     // The brief comes first in the agenda section, before its Kopflinie.
     expect(follows(agenda.querySelector("[data-workshop-brief]")!, agenda.querySelector("header")!)).toBe(true);
@@ -148,11 +148,11 @@ describe("<WorkshopDetailContent>", () => {
     expect(audience).toHaveTextContent(workshop.notForYou);
     const outcomes = sectionOf("Nach dem Workshop");
     for (const line of workshop.outcomes) expect(outcomes).toHaveTextContent(line);
-    // "Du gehst mit" is said once, in the brief under the band.
-    expect(outcomes).not.toHaveTextContent("Du gehst mit");
+    // "Du nimmst mit" is said once, in the brief under the band.
+    expect(outcomes).not.toHaveTextContent("Du nimmst mit");
     expect(
       container.querySelector("[data-workshop-brief]"),
-    ).toHaveTextContent(`Du gehst mit${workshop.outcome}`);
+    ).toHaveTextContent(`Du nimmst mit${workshop.outcome}`);
     // The invented case is named in the section caption only, not again under the narrative.
     expect(caseSection).not.toHaveTextContent("und alle Zahlen sind für diesen Workshop erfunden");
 
