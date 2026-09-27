@@ -680,7 +680,7 @@ function clipAgainstEdge(subpath: Subpath, edge: Edge): Subpath | null {
     const part = parts[index] as Segment;
     if (!kept[index]) continue;
     const previous = result.at(-1);
-    if (previous && !samePoint(previous.to, part.from)) result.push(line(previous.to, [previous.to[0], 0]), line([previous.to[0], 0], part.from));
+    if (previous && !samePoint(previous.to, part.from)) result.push(line(previous.to, part.from));
     result.push(part);
   }
   const last = result.at(-1) as Segment;
