@@ -49,7 +49,7 @@ function nextResult(): unknown {
 
 function builderFor(call: TableCall): Record<string, unknown> {
   const builder: Record<string, unknown> = {};
-  for (const name of ["select", "eq", "is", "insert", "update", "delete"]) {
+  for (const name of ["select", "eq", "is", "gt", "insert", "update", "delete"]) {
     builder[name] = (...args: unknown[]) => {
       call.ops.push({ name, args });
       return builder;
@@ -320,6 +320,7 @@ describe("POST mints a token exactly once", () => {
           name: "Laptop",
           prefix: "lat_abcdefgh",
           created_at: "2026-09-05T10:00:00.000Z",
+          expires_at: "2026-12-04T10:00:00.000Z",
         },
         error: null,
       },
@@ -342,16 +343,21 @@ describe("POST mints a token exactly once", () => {
       id: TOKEN_ID,
       limit: 5,
       activeTokens: 2,
+      expiresAt: "2026-12-04T10:00:00.000Z",
     });
 
     const insert = opNamed(calls[1]!, "insert")!;
     const row = insert.args[0] as Record<string, string>;
     expect(calls[1]!.table).toBe("agent_access_tokens");
     expect(Object.keys(row).sort()).toEqual([
+      "expires_at",
       "name",
       "prefix",
       "token_hash",
       "user_id",
+    ]);
+    expect(opNamed(calls[1]!, "select")!.args).toEqual([
+      "id, name, prefix, created_at, expires_at",
     ]);
     expect(row.user_id).toBe(OWNER_ID);
     // Trimmed by the schema, so a padded label cannot mint a padded name.
@@ -370,13 +376,30 @@ describe("POST mints a token exactly once", () => {
     await POST(request("POST", { expectedOwnerId: OWNER_ID, name: "A" }));
 
     const countOps = calls[0]!.ops.map((op) => op.name);
-    expect(countOps).toEqual(["select", "eq", "is"]);
+    expect(countOps).toEqual(["select", "eq", "is", "gt"]);
     expect(calls[0]!.ops[0]!.args).toEqual([
       "id",
       { count: "exact", head: true },
     ]);
     expect(calls[0]!.ops[1]!.args).toEqual(["user_id", OWNER_ID]);
     expect(calls[0]!.ops[2]!.args).toEqual(["revoked_at", null]);
+    // An expired token is retained for the list and counts for nothing.
+    const [expiryColumn, expiryInstant] = calls[0]!.ops[3]!.args as [
+      string,
+      string,
+    ];
+    expect(expiryColumn).toBe("expires_at");
+    expect(Math.abs(Date.parse(expiryInstant) - Date.now())).toBeLessThan(
+      60_000,
+    );
+    // The confirmation count after the insert applies the same rule.
+    expect(calls[2]!.ops.map((op) => op.name)).toEqual([
+      "select",
+      "eq",
+      "is",
+      "gt",
+    ]);
+    expect(calls[2]!.ops[3]!.args).toEqual(["expires_at", expiryInstant]);
   });
 
   it("refuses a sixth live token", async () => {
@@ -434,6 +457,106 @@ describe("POST mints a token exactly once", () => {
     expect(response.status).toBe(500);
     expect((await readJson(response)).error).toBe("token_mint_failed");
     expect(calls).toHaveLength(1);
+  });
+});
+
+describe("POST gives every token an expiry", () => {
+  const DAY_MS = 24 * 60 * 60 * 1000;
+
+  function queueSuccessfulMint(): void {
+    queued = [
+      { count: 0, error: null },
+      {
+        data: {
+          id: TOKEN_ID,
+          name: "Laptop",
+          prefix: "lat_abcdefgh",
+          created_at: "2026-09-05T10:00:00.000Z",
+          expires_at: "2026-12-04T10:00:00.000Z",
+        },
+        error: null,
+      },
+      { count: 1, error: null },
+    ];
+  }
+
+  function insertedRow(): Record<string, string> {
+    const insertCall = calls.find((call) => opNamed(call, "insert"));
+    return opNamed(insertCall!, "insert")!.args[0] as Record<string, string>;
+  }
+
+  it("gives a mint without a choice the 90-day default", async () => {
+    queueSuccessfulMint();
+    const before = Date.now();
+    const response = await POST(
+      request("POST", { expectedOwnerId: OWNER_ID, name: "Laptop" }),
+    );
+    const after = Date.now();
+
+    expect(response.status).toBe(201);
+    const expiresAt = Date.parse(insertedRow().expires_at!);
+    expect(expiresAt).toBeGreaterThanOrEqual(before + 90 * DAY_MS);
+    expect(expiresAt).toBeLessThanOrEqual(after + 90 * DAY_MS);
+  });
+
+  it.each([30, 90, 365])("honours a %i-day lifetime", async (days) => {
+    queueSuccessfulMint();
+    const before = Date.now();
+    const response = await POST(
+      request("POST", {
+        expectedOwnerId: OWNER_ID,
+        name: "Laptop",
+        expiresInDays: days,
+      }),
+    );
+    const after = Date.now();
+
+    expect(response.status).toBe(201);
+    const expiresAt = Date.parse(insertedRow().expires_at!);
+    expect(expiresAt).toBeGreaterThanOrEqual(before + days * DAY_MS);
+    expect(expiresAt).toBeLessThanOrEqual(after + days * DAY_MS);
+    // Inside the column CHECK: after creation, at most 366 days later.
+    expect(expiresAt - after).toBeLessThan(366 * DAY_MS);
+  });
+
+  it.each([
+    ["zero", 0],
+    ["a negative lifetime", -30],
+    ["an unoffered number", 7],
+    ["more than a year", 366],
+    ["ten years", 3650],
+    ["a fraction", 90.5],
+    ["a numeric string", "90"],
+    ["null", null],
+    ["a list", [90]],
+    ["infinity as text", "Infinity"],
+  ])("refuses %s as a lifetime before touching the store", async (_label, value) => {
+    const response = await POST(
+      request("POST", {
+        expectedOwnerId: OWNER_ID,
+        name: "Laptop",
+        expiresInDays: value,
+      }),
+    );
+
+    expect(response.status).toBe(400);
+    expect(await readJson(response)).toEqual({
+      error: "invalid_token_lifetime",
+    });
+    expect(calls).toHaveLength(0);
+  });
+
+  it("still names a bad name first when both are wrong", async () => {
+    const response = await POST(
+      request("POST", {
+        expectedOwnerId: OWNER_ID,
+        name: "   ",
+        expiresInDays: 7,
+      }),
+    );
+
+    expect(response.status).toBe(400);
+    expect((await readJson(response)).error).toBe("invalid_token_name");
   });
 });
 

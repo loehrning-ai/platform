@@ -95,7 +95,7 @@ export const AGENT_HELP_COPY_EN: AgentHelpCopy = {
       "Public content needs nothing at all. For your own progress, your program has to show who it works for. That is what an access token is: a string you create in your account and store in your program.",
     steps: [
       "Sign in and open Account, Your AI.",
-      "Create an access token and give it a name that tells you which device uses it.",
+      "Create an access token, give it a name that tells you which device uses it, and choose how long it stays valid: 30, 90 or 365 days.",
       "Copy the token right away. It is shown exactly once, and only as a short prefix afterwards.",
       "Store it in your program as an Authorization header with the word Bearer in front of it.",
     ],
@@ -106,7 +106,7 @@ export const AGENT_HELP_COPY_EN: AgentHelpCopy = {
     format:
       "A token always starts with lat_ and is random after that. Only a verifier is stored, never the token itself: not even the operator can show it to you again. If you lose it, revoke it and create a new one.",
     limit: (maxActive) =>
-      `You can hold up to ${maxActive} active tokens and revoke each one on its own. A revoked token stops working with the next request.`,
+      `You can hold up to ${maxActive} active tokens and revoke each one on its own. A revoked or expired token stops working with the next request.`,
     bearerActive:
       "When you send your token along, two more tools appear: your progress and your next step. Both only read, nothing is written. Without a token your account stays out of reach, and a revoked token is refused instead of quietly falling back to the public tools.",
     bearerPending: "",

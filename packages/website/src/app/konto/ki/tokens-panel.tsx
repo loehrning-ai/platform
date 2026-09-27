@@ -6,7 +6,9 @@ import type { Locale } from "@/lib/i18n/locale";
 import type { AgentTokenView, RegionOutcome } from "./account-agent-data";
 import {
   AGENT_TOKENS_ENDPOINT,
+  DEFAULT_TOKEN_LIFETIME_DAYS,
   MAX_ACTIVE_TOKENS,
+  TOKEN_LIFETIME_DAYS,
   TOKEN_NAME_MAX_LENGTH,
 } from "./agent-account-contract";
 import { agentErrorMessage } from "./error-messages";
@@ -15,6 +17,12 @@ import { formatUtcMoment } from "./moment";
 
 /**
  * Personal access tokens: mint once, list, revoke.
+ *
+ * Every token expires. The owner picks the lifetime when minting, and the
+ * list shows when each live token stops working and when an expired one did.
+ * A token counts toward the ceiling only while it is neither revoked nor
+ * expired, the same rule the mint route applies. "Now" is the moment the
+ * server rendered the page, so the server and the hydrated client agree.
  *
  * The clear token exists in exactly one place after the mint response: the
  * panel below. It is held in component state, never written to storage, and
@@ -34,6 +42,19 @@ interface MintedToken {
 
 type Busy = { readonly kind: "mint" } | { readonly kind: "revoke"; readonly id: string };
 
+type TokenState = "live" | "revoked" | "expired";
+
+/**
+ * Where a token stands at `nowMs`. An unreadable expiry is not live, which is
+ * how the bearer resolver treats it too.
+ */
+function tokenState(token: AgentTokenView, nowMs: number): TokenState {
+  if (token.revokedAt !== null) return "revoked";
+  const expiresAt =
+    token.expiresAt === null ? Number.NaN : Date.parse(token.expiresAt);
+  return expiresAt > nowMs ? "live" : "expired";
+}
+
 const INPUT_CLASS =
   "min-h-11 w-full min-w-0 rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange";
 const BUTTON_CLASS =
@@ -44,18 +65,26 @@ export function TokensPanel({
   ownerId,
   initial,
   agentAccessReady,
+  renderedAt,
 }: {
   readonly locale: Locale;
   readonly ownerId: string;
   readonly initial: RegionOutcome<AgentTokenView>;
   readonly agentAccessReady: boolean;
+  /** ISO instant the server rendered the page; expiry is judged against it. */
+  readonly renderedAt: string;
 }) {
   const copy = AGENT_ACCOUNT_COPY[locale];
   const nameFieldId = useId();
+  const lifetimeFieldId = useId();
+  const nowMs = Date.parse(renderedAt);
   const [tokens, setTokens] = useState<readonly AgentTokenView[]>(
     initial.ok ? initial.items : [],
   );
   const [name, setName] = useState("");
+  const [lifetimeDays, setLifetimeDays] = useState<number>(
+    DEFAULT_TOKEN_LIFETIME_DAYS,
+  );
   const [busy, setBusy] = useState<Busy | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [minted, setMinted] = useState<MintedToken | null>(null);
@@ -69,7 +98,9 @@ export function TokensPanel({
   }, [agentAccessReady]);
 
   const unavailable = !initial.ok;
-  const activeCount = tokens.filter((token) => token.revokedAt === null).length;
+  const activeCount = tokens.filter(
+    (token) => tokenState(token, nowMs) === "live",
+  ).length;
   const limitReached = activeCount >= MAX_ACTIVE_TOKENS;
 
   async function handleMint(event: React.FormEvent<HTMLFormElement>) {
@@ -90,7 +121,11 @@ export function TokensPanel({
       const response = await fetch(AGENT_TOKENS_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ expectedOwnerId: ownerId, name: trimmed }),
+        body: JSON.stringify({
+          expectedOwnerId: ownerId,
+          name: trimmed,
+          expiresInDays: lifetimeDays,
+        }),
       });
       const payload = (await response.json().catch(() => null)) as {
         readonly error?: unknown;
@@ -99,6 +134,7 @@ export function TokensPanel({
         readonly name?: unknown;
         readonly prefix?: unknown;
         readonly createdAt?: unknown;
+        readonly expiresAt?: unknown;
       } | null;
       if (!response.ok) {
         trackAgentTokenSurface("failed");
@@ -117,7 +153,8 @@ export function TokensPanel({
         typeof payload.token !== "string" ||
         typeof payload.name !== "string" ||
         typeof payload.prefix !== "string" ||
-        typeof payload.createdAt !== "string"
+        typeof payload.createdAt !== "string" ||
+        typeof payload.expiresAt !== "string"
       ) {
         trackAgentTokenSurface("failed");
         setError(copy.tokenUnknownError);
@@ -133,6 +170,7 @@ export function TokensPanel({
           createdAt: payload.createdAt as string,
           lastUsedAt: null,
           revokedAt: null,
+          expiresAt: payload.expiresAt as string,
         },
         ...current,
       ]);
@@ -230,6 +268,28 @@ export function TokensPanel({
             className={`mt-2 ${INPUT_CLASS}`}
           />
         </div>
+        <div className="min-w-0 basis-40">
+          <label
+            htmlFor={lifetimeFieldId}
+            className="block font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground"
+          >
+            {copy.tokenLifetimeLabel}
+          </label>
+          <select
+            id={lifetimeFieldId}
+            name="tokenLifetime"
+            value={lifetimeDays}
+            onChange={(event) => setLifetimeDays(Number(event.target.value))}
+            disabled={!agentAccessReady || busy !== null}
+            className={`mt-2 ${INPUT_CLASS}`}
+          >
+            {TOKEN_LIFETIME_DAYS.map((days) => (
+              <option key={days} value={days}>
+                {copy.tokenLifetimeOption(days)}
+              </option>
+            ))}
+          </select>
+        </div>
         <button
           type="submit"
           disabled={!agentAccessReady || busy !== null || limitReached}
@@ -296,49 +356,66 @@ export function TokensPanel({
         </p>
       ) : (
         <ul className="mt-4 grid gap-px border border-border bg-border">
-          {tokens.map((token) => (
-            <li
-              key={token.id}
-              className="flex flex-wrap items-start justify-between gap-3 bg-background p-3"
-            >
-              <div className="min-w-0">
-                <p className="font-semibold text-foreground">{token.name}</p>
-                <p className="mt-1 font-mono text-xs text-muted-foreground">
-                  {token.prefix}
-                </p>
-                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                  {copy.tokenCreated(
-                    formatUtcMoment(token.createdAt, locale) ?? token.createdAt,
-                  )}
-                  {" · "}
-                  {token.lastUsedAt
-                    ? copy.tokenLastUsed(
-                        formatUtcMoment(token.lastUsedAt, locale) ??
-                          token.lastUsedAt,
-                      )
-                    : copy.tokenNeverUsed}
-                </p>
-              </div>
-              {token.revokedAt ? (
-                <span className="font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground">
-                  {copy.tokenRevokedAt(
-                    formatUtcMoment(token.revokedAt, locale) ?? token.revokedAt,
-                  )}
-                </span>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() => handleRevoke(token.id)}
-                  disabled={busy !== null}
-                  className={BUTTON_CLASS}
-                >
-                  {busy?.kind === "revoke" && busy.id === token.id
-                    ? copy.tokenRevoking
-                    : copy.tokenRevoke}
-                </button>
-              )}
-            </li>
-          ))}
+          {tokens.map((token) => {
+            const state = tokenState(token, nowMs);
+            return (
+              <li
+                key={token.id}
+                className="flex flex-wrap items-start justify-between gap-3 bg-background p-3"
+              >
+                <div className="min-w-0">
+                  <p className="font-semibold text-foreground">{token.name}</p>
+                  <p className="mt-1 font-mono text-xs text-muted-foreground">
+                    {token.prefix}
+                  </p>
+                  <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                    {copy.tokenCreated(
+                      formatUtcMoment(token.createdAt, locale) ?? token.createdAt,
+                    )}
+                    {" · "}
+                    {token.lastUsedAt
+                      ? copy.tokenLastUsed(
+                          formatUtcMoment(token.lastUsedAt, locale) ??
+                            token.lastUsedAt,
+                        )
+                      : copy.tokenNeverUsed}
+                  </p>
+                  {state === "live" && token.expiresAt ? (
+                    <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                      {copy.tokenExpiresAt(
+                        formatUtcMoment(token.expiresAt, locale) ??
+                          token.expiresAt,
+                      )}
+                    </p>
+                  ) : null}
+                </div>
+                {state === "revoked" && token.revokedAt ? (
+                  <span className="font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground">
+                    {copy.tokenRevokedAt(
+                      formatUtcMoment(token.revokedAt, locale) ?? token.revokedAt,
+                    )}
+                  </span>
+                ) : state === "expired" && token.expiresAt ? (
+                  <span className="font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground">
+                    {copy.tokenExpiredAt(
+                      formatUtcMoment(token.expiresAt, locale) ?? token.expiresAt,
+                    )}
+                  </span>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => handleRevoke(token.id)}
+                    disabled={busy !== null}
+                    className={BUTTON_CLASS}
+                  >
+                    {busy?.kind === "revoke" && busy.id === token.id
+                      ? copy.tokenRevoking
+                      : copy.tokenRevoke}
+                  </button>
+                )}
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>

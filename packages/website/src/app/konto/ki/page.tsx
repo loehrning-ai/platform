@@ -278,6 +278,10 @@ export default async function KontoKiPage({
     unavailable: true,
   };
 
+  // The token list judges expiry against this one server instant, so the
+  // server render and the hydrated client agree on which keys are live.
+  const renderedAt = new Date().toISOString();
+
   if (supabase) {
     const [eventsResult, tokensResult, grantsResult, keyResult] =
       await Promise.all([
@@ -378,6 +382,7 @@ export default async function KontoKiPage({
           ownerId={user.id}
           initial={tokens}
           agentAccessReady={features.agentAccess}
+          renderedAt={renderedAt}
         />
 
         <h2 id="konto-ki-freigaben" className={`mt-12 ${REGION_HEADING_CLASS}`}>

@@ -24,6 +24,7 @@ describe("named API failures", () => {
     ["token", "token_limit"],
     ["token", "token_not_found"],
     ["token", "agent_access_disabled"],
+    ["token", "invalid_token_lifetime"],
     ["grant", "grant_revoke_failed"],
     ["grant", "oauth_server_unavailable"],
   ] as const)("names the %s failure %s", (region, code) => {

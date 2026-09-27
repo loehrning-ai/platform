@@ -19,7 +19,12 @@ type PersonalTokenLookup =
   | { readonly ok: true; readonly userId: string; readonly client: string }
   | {
       readonly ok: false;
-      readonly reason: "unknown" | "revoked" | "unavailable";
+      readonly reason:
+        | "unknown"
+        | "revoked"
+        | "expired"
+        | "account_inactive"
+        | "unavailable";
     };
 
 const mockIsAgentAccessReady = vi.fn<() => boolean>(() => true);
@@ -215,6 +220,10 @@ describe("resolveAgentPrincipal", () => {
   it.each([
     ["unknown", "invalid_token"],
     ["revoked", "revoked_token"],
+    ["expired", "expired_token"],
+    // A banned or soft-deleted owner: the access the token stood for has
+    // ended, and the answer says nothing more about the account.
+    ["account_inactive", "revoked_token"],
     ["unavailable", "verifier_unavailable"],
   ] as const)(
     "maps the %s personal token lookup to %s",

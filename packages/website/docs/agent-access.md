@@ -120,6 +120,15 @@ the token:
    tolerance for a client clock running ahead.
 5. `sub` must be a UUID. That value, and nothing claimed by the client, becomes
    the account id.
+6. `session_id` must be a UUID, and
+   `public.agent_oauth_session_live(session_id, sub)` must answer true: the
+   Auth session the token was issued under still exists for that account, is
+   not time-boxed out, and the account is neither banned nor soft-deleted.
+   Revoking the grant, a global sign-out, a ban, or deleting the account
+   therefore stops the token on this endpoint. Only a true answer is cached,
+   for at most 60 seconds and never past `exp`; an error fails closed as
+   `verifier_unavailable`. Supabase itself still accepts the token until `exp`,
+   which is why the access-token lifetime stays at 3600 seconds or less.
 
 Audit-trail label: `oauth:<client id>`.
 
@@ -135,6 +144,18 @@ For clients without an OAuth flow. Minted on `/konto/ki`, shown exactly once.
 - Lifecycle: at most 5 active tokens per account, name up to 64 characters,
   revocation sets `revoked_at` and is honoured on the next use,
   `last_used_at` is touched fire-and-forget.
+- Expiry: the owner picks 30, 90 or 365 days when minting (90 if the request
+  names none). `expires_at` is NOT NULL, and a CHECK keeps it after
+  `created_at` and at most 366 days later. A token past its expiry is refused
+  as `expired_token`, and only unrevoked, unexpired tokens count toward the
+  five. `/konto/ki` shows when each token stops working.
+- Account standing: after recognising a live token, the resolver asks
+  `public.agent_access_token_owner_active(user_id)` (service role only). A
+  banned or soft-deleted account's token is refused as `revoked_token`; an
+  error fails closed as `verifier_unavailable`. Nothing is cached. Deleting the
+  account removes its tokens through `ON DELETE CASCADE`. A global sign-out
+  does not touch personal tokens, because they are not tied to a browser
+  session: the owner revokes one on `/konto/ki`.
 - The browser role's column grant on `agent_access_tokens` excludes
   `token_hash`, so no browser-reachable query can return the verifier.
 

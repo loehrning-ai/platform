@@ -99,4 +99,25 @@ describe("agent account copy", () => {
     expect(AGENT_ACCOUNT_COPY.de.tokenOnceBody).toContain("nicht gespeichert");
     expect(AGENT_ACCOUNT_COPY.en.tokenOnceBody).toContain("not stored");
   });
+
+  it("says how fast a grant revocation takes effect, and where it does not", () => {
+    // The agent interface re-checks the grant's session at most a minute
+    // later; the Supabase access token itself lives until it expires, which
+    // the consent screen already says. "Access revoked." alone promised more.
+    expect(AGENT_ACCOUNT_COPY.de.grantRevokedNotice).toContain(
+      "innerhalb einer Minute",
+    );
+    expect(AGENT_ACCOUNT_COPY.de.grantRevokedNotice).toContain("Ablauf");
+    expect(AGENT_ACCOUNT_COPY.en.grantRevokedNotice).toContain(
+      "within a minute",
+    );
+    expect(AGENT_ACCOUNT_COPY.en.grantRevokedNotice).toContain("until it expires");
+  });
+
+  it("names a token's expiry in both locales", () => {
+    expect(AGENT_ACCOUNT_COPY.de.tokenLifetimeOption(90)).toBe("90 Tage");
+    expect(AGENT_ACCOUNT_COPY.en.tokenLifetimeOption(90)).toBe("90 days");
+    expect(AGENT_ACCOUNT_COPY.de.tokenExpiredAt("X")).toContain("Abgelaufen");
+    expect(AGENT_ACCOUNT_COPY.en.tokenExpiredAt("X")).toContain("Expired");
+  });
 });

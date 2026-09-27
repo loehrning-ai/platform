@@ -339,6 +339,35 @@ describe("POST /api/mcp bearer handling", () => {
     expect(body).not.toContain("list_courses");
   });
 
+  it.each([
+    ["expired", "The access token has expired."],
+    [
+      "account_inactive",
+      "The credential has been revoked, or the access it was issued for has ended.",
+    ],
+  ] as const)(
+    "refuses a personal access token the store answers %s for",
+    async (reason, description) => {
+      enableAgentAccess();
+      mockLookupToken.mockImplementation(async () => ({ ok: false, reason }));
+      const response = await POST(
+        jsonRequest(
+          { jsonrpc: "2.0", id: 13, method: "tools/list", params: {} },
+          { Authorization: `Bearer ${PERSONAL_TOKEN}` },
+        ),
+      );
+      expect(response.status).toBe(401);
+      const challenge = response.headers.get("WWW-Authenticate") ?? "";
+      expect(challenge).toContain('error="invalid_token"');
+      expect(challenge).toContain(`error_description="${description}"`);
+      const body = await response.text();
+      expect(body).not.toContain(PERSONAL_TOKEN);
+      expect(body).not.toContain("get_my_progress");
+      expect(body).not.toContain("list_courses");
+      expect(mockReadProgress).not.toHaveBeenCalled();
+    },
+  );
+
   it("adds the authenticated tools for a resolved personal access token", async () => {
     enableAgentAccess();
     mockLookupToken.mockImplementation(async () => ({

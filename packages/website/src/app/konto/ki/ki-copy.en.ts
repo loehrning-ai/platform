@@ -84,9 +84,11 @@ export const AGENT_ACCOUNT_COPY_EN: AgentAccountCopy = {
 
   tokensHeading: "Access keys",
   tokensIntro:
-    "For programs that cannot complete a browser grant. A key is shown exactly once.",
+    "For programs that cannot complete a browser grant. A key is shown exactly once and works only for the period you choose.",
   tokenNameLabel: "Name",
   tokenNamePlaceholder: "Claude Desktop on the laptop",
+  tokenLifetimeLabel: "Valid for",
+  tokenLifetimeOption: (days) => `${days} days`,
   tokenCreate: "Create key",
   tokenCreating: "Creating",
   tokenOnceTitle: "Your new access key",
@@ -100,6 +102,8 @@ export const AGENT_ACCOUNT_COPY_EN: AgentAccountCopy = {
   tokenLastUsed: (moment) => `Last used: ${moment}`,
   tokenNeverUsed: "Never used",
   tokenRevokedAt: (moment) => `Revoked: ${moment}`,
+  tokenExpiresAt: (moment) => `Valid until: ${moment}`,
+  tokenExpiredAt: (moment) => `Expired: ${moment}`,
   tokenRevoke: "Revoke",
   tokenRevoking: "Revoking",
   tokenActiveCount: (active, limit) => `${active} of ${limit} active`,
@@ -118,7 +122,8 @@ export const AGENT_ACCOUNT_COPY_EN: AgentAccountCopy = {
   grantGranted: (moment) => `Granted: ${moment}`,
   grantRevoke: "Revoke access",
   grantRevoking: "Revoking",
-  grantRevokedNotice: "Access revoked.",
+  grantRevokedNotice:
+    "Access revoked. The program loses access to the agent interface within a minute. An access token it already holds is still accepted by our sign-in service Supabase until it expires.",
   grantUnknownError: "The grant could not be revoked.",
   grantsSetupTitle: "Grants are not set up yet.",
   grantsSetupBody:

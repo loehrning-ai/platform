@@ -3,8 +3,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 /**
  * A personal access token is only ever recognised, never recovered. These
  * tests hold that line: the clear value reaches nothing but a digest, the
- * digest column is never selected back out, a revoked row stops working, and
- * a failed lookup never turns into an accepted credential.
+ * digest column is never selected back out, a revoked or expired row stops
+ * working, a banned or soft-deleted owner's token stops working, and a failed
+ * lookup never turns into an accepted credential.
  *
  * vi.mock is hoisted, so the factories below delegate to handles configured
  * per test.
@@ -35,8 +36,12 @@ const mockFrom = vi.fn<(table: string) => unknown>(() => ({
   select: (columns: string) => mockSelect(columns),
   update: (patch: Record<string, unknown>) => mockUpdate(patch),
 }));
+const mockRpc = vi.fn<
+  (name: string, args: Record<string, unknown>) => Promise<unknown>
+>(async () => ({ data: true, error: null }));
 const mockTryCreateServiceClient = vi.fn<() => unknown>(() => ({
   from: (table: string) => mockFrom(table),
+  rpc: (name: string, args: Record<string, unknown>) => mockRpc(name, args),
 }));
 
 vi.mock("@/lib/supabase/server", () => ({
@@ -50,6 +55,7 @@ vi.mock("next/server", () => ({
 }));
 
 import {
+  AGENT_ACCESS_TOKEN_OWNER_ACTIVE_RPC,
   AGENT_ACCESS_TOKENS_TABLE,
   hashPersonalAccessToken,
   isPersonalAccessToken,
@@ -73,6 +79,7 @@ function tokenRow(overrides: Record<string, unknown> = {}) {
       user_id: OWNER,
       name: "Laptop",
       revoked_at: null,
+      expires_at: "2026-12-04T12:00:00.000Z",
       ...overrides,
     },
     error: null,
@@ -96,8 +103,10 @@ beforeEach(() => {
     select: (columns: string) => mockSelect(columns),
     update: (patch: Record<string, unknown>) => mockUpdate(patch),
   }));
+  mockRpc.mockImplementation(async () => ({ data: true, error: null }));
   mockTryCreateServiceClient.mockImplementation(() => ({
     from: (table: string) => mockFrom(table),
+    rpc: (name: string, args: Record<string, unknown>) => mockRpc(name, args),
   }));
   mockAfter.mockImplementation((task) => {
     void task();
@@ -160,7 +169,7 @@ describe("lookupPersonalAccessToken", () => {
     await lookupPersonalAccessToken(PERSONAL_TOKEN, NOW);
 
     const [columns] = mockSelect.mock.calls[0] as [string];
-    expect(columns).toBe("id, user_id, name, revoked_at");
+    expect(columns).toBe("id, user_id, name, revoked_at, expires_at");
     expect(columns).not.toContain("token_hash");
   });
 
@@ -264,5 +273,161 @@ describe("lookupPersonalAccessToken", () => {
     const reported = JSON.stringify(mockReportApiError.mock.calls);
     expect(reported).not.toContain(PERSONAL_TOKEN);
     expect(reported).not.toContain(PERSONAL_TOKEN_DIGEST);
+  });
+});
+
+describe("lookupPersonalAccessToken: expiry and account standing", () => {
+  it("asks whether the owner's account is in good standing, by owner id only", async () => {
+    mockMaybeSingle.mockImplementation(async () => tokenRow());
+
+    expect((await lookupPersonalAccessToken(PERSONAL_TOKEN, NOW)).ok).toBe(true);
+    expect(mockRpc).toHaveBeenCalledTimes(1);
+    expect(mockRpc).toHaveBeenCalledWith(AGENT_ACCESS_TOKEN_OWNER_ACTIVE_RPC, {
+      p_user_id: OWNER,
+    });
+    expect(AGENT_ACCESS_TOKEN_OWNER_ACTIVE_RPC).toBe(
+      "agent_access_token_owner_active",
+    );
+    expect(JSON.stringify(mockRpc.mock.calls)).not.toContain(PERSONAL_TOKEN);
+    expect(JSON.stringify(mockRpc.mock.calls)).not.toContain(
+      PERSONAL_TOKEN_DIGEST,
+    );
+  });
+
+  it("refuses a token whose expiry has passed and does not touch it", async () => {
+    mockMaybeSingle.mockImplementation(async () =>
+      tokenRow({ expires_at: "2026-09-05T11:59:59.999Z" }),
+    );
+
+    expect(await lookupPersonalAccessToken(PERSONAL_TOKEN, NOW)).toEqual({
+      ok: false,
+      reason: "expired",
+    });
+    expect(mockUpdate).not.toHaveBeenCalled();
+    expect(mockRpc).not.toHaveBeenCalled();
+  });
+
+  it("refuses a token at the exact instant it expires", async () => {
+    mockMaybeSingle.mockImplementation(async () =>
+      tokenRow({ expires_at: NOW.toISOString() }),
+    );
+
+    expect(await lookupPersonalAccessToken(PERSONAL_TOKEN, NOW)).toEqual({
+      ok: false,
+      reason: "expired",
+    });
+  });
+
+  it("accepts a token one millisecond before it expires", async () => {
+    mockMaybeSingle.mockImplementation(async () =>
+      tokenRow({ expires_at: "2026-09-05T12:00:00.001Z" }),
+    );
+
+    expect((await lookupPersonalAccessToken(PERSONAL_TOKEN, NOW)).ok).toBe(true);
+  });
+
+  it("reports a revoked token as revoked even once it has also expired", async () => {
+    mockMaybeSingle.mockImplementation(async () =>
+      tokenRow({
+        revoked_at: "2026-08-01T09:00:00.000Z",
+        expires_at: "2026-08-02T09:00:00.000Z",
+      }),
+    );
+
+    expect(await lookupPersonalAccessToken(PERSONAL_TOKEN, NOW)).toEqual({
+      ok: false,
+      reason: "revoked",
+    });
+    expect(mockRpc).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ["a missing expiry", undefined],
+    ["a null expiry", null],
+    ["an unparseable expiry", "not a date"],
+    ["a numeric expiry", 1_800_000_000_000],
+  ])("fails closed on %s", async (_label, expiresAt) => {
+    mockMaybeSingle.mockImplementation(async () =>
+      tokenRow({ expires_at: expiresAt }),
+    );
+
+    expect(await lookupPersonalAccessToken(PERSONAL_TOKEN, NOW)).toEqual({
+      ok: false,
+      reason: "unavailable",
+    });
+    expect(mockUpdate).not.toHaveBeenCalled();
+    expect(mockRpc).not.toHaveBeenCalled();
+  });
+
+  it("refuses the token of a banned or soft-deleted account and does not touch it", async () => {
+    mockMaybeSingle.mockImplementation(async () => tokenRow());
+    mockRpc.mockImplementation(async () => ({ data: false, error: null }));
+
+    expect(await lookupPersonalAccessToken(PERSONAL_TOKEN, NOW)).toEqual({
+      ok: false,
+      reason: "account_inactive",
+    });
+    expect(mockUpdate).not.toHaveBeenCalled();
+  });
+
+  it("asks again on every call, so a ban takes effect on the next one", async () => {
+    mockMaybeSingle.mockImplementation(async () => tokenRow());
+
+    expect((await lookupPersonalAccessToken(PERSONAL_TOKEN, NOW)).ok).toBe(true);
+    mockRpc.mockImplementation(async () => ({ data: false, error: null }));
+    expect(await lookupPersonalAccessToken(PERSONAL_TOKEN, NOW)).toEqual({
+      ok: false,
+      reason: "account_inactive",
+    });
+    expect(mockRpc).toHaveBeenCalledTimes(2);
+  });
+
+  it("fails closed when the account standing cannot be read", async () => {
+    mockMaybeSingle.mockImplementation(async () => tokenRow());
+    mockRpc.mockImplementation(async () => ({
+      data: null,
+      error: { message: "permission denied for function" },
+    }));
+
+    expect(await lookupPersonalAccessToken(PERSONAL_TOKEN, NOW)).toEqual({
+      ok: false,
+      reason: "unavailable",
+    });
+    expect(mockUpdate).not.toHaveBeenCalled();
+    expect(mockReportApiError).toHaveBeenCalledWith(
+      expect.objectContaining({ step: "supabase-read" }),
+    );
+  });
+
+  it("fails closed when the standing check throws", async () => {
+    mockMaybeSingle.mockImplementation(async () => tokenRow());
+    mockRpc.mockImplementation(async () => {
+      throw new Error("socket hang up");
+    });
+
+    expect(await lookupPersonalAccessToken(PERSONAL_TOKEN, NOW)).toEqual({
+      ok: false,
+      reason: "unavailable",
+    });
+    const reported = JSON.stringify(mockReportApiError.mock.calls);
+    expect(reported).not.toContain(PERSONAL_TOKEN);
+    expect(reported).not.toContain(PERSONAL_TOKEN_DIGEST);
+  });
+
+  it.each([
+    ["the string true", "true"],
+    ["null", null],
+    ["a list", [true]],
+    ["a number", 1],
+    ["an object", { active: true }],
+  ])("reads %s from the standing check as no answer", async (_label, data) => {
+    mockMaybeSingle.mockImplementation(async () => tokenRow());
+    mockRpc.mockImplementation(async () => ({ data, error: null }));
+
+    expect(await lookupPersonalAccessToken(PERSONAL_TOKEN, NOW)).toEqual({
+      ok: false,
+      reason: "unavailable",
+    });
+    expect(mockUpdate).not.toHaveBeenCalled();
   });
 });

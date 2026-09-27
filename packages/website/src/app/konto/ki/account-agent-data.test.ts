@@ -66,6 +66,7 @@ const TOKEN_ROW = {
   created_at: "2026-09-01T09:00:00.000Z",
   last_used_at: null,
   revoked_at: null,
+  expires_at: "2026-11-30T09:00:00.000Z",
 };
 
 describe("agent access events read", () => {
@@ -129,7 +130,7 @@ describe("agent access tokens read", () => {
     const { client, calls } = stubClient({ data: [TOKEN_ROW], error: null });
     await fetchAgentTokens(client, "owner-1");
     expect(calls.columns).toBe(
-      "id, name, prefix, created_at, last_used_at, revoked_at",
+      "id, name, prefix, created_at, last_used_at, revoked_at, expires_at",
     );
     expect(calls.columns).not.toContain("token_hash");
   });
@@ -150,6 +151,30 @@ describe("agent access tokens read", () => {
       lastUsedAt: "2026-09-02T10:00:00.000Z",
       revokedAt: "2026-09-03T10:00:00.000Z",
     });
+  });
+
+  it("maps the expiry each token carries", async () => {
+    const { client } = stubClient({ data: [TOKEN_ROW], error: null });
+    const result = await fetchAgentTokens(client, "owner-1");
+    expect(result.ok && result.items[0]).toMatchObject({
+      revokedAt: null,
+      expiresAt: "2026-11-30T09:00:00.000Z",
+    });
+  });
+
+  it("keeps a row whose expiry is unreadable, with no expiry, rather than inventing one", async () => {
+    const { client } = stubClient({
+      data: [
+        { ...TOKEN_ROW, expires_at: null },
+        { ...TOKEN_ROW, id: "second", expires_at: "not a date" },
+      ],
+      error: null,
+    });
+    const result = await fetchAgentTokens(client, "owner-1");
+    expect(result.ok && result.items.map((item) => item.expiresAt)).toEqual([
+      null,
+      null,
+    ]);
   });
 
   it("reports unavailable when the read fails", async () => {

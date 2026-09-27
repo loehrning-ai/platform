@@ -106,6 +106,10 @@ const TOKEN_MESSAGES: Readonly<Record<string, Message>> = {
     de: "Der Name ist nicht zulässig. Wähle einen kurzen Namen ohne Sonderzeichen.",
     en: "That name is not allowed. Choose a short name without control characters.",
   },
+  invalid_token_lifetime: {
+    de: "Diese Gültigkeitsdauer ist nicht vorgesehen. Wähle 30, 90 oder 365 Tage.",
+    en: "That validity period is not offered. Choose 30, 90 or 365 days.",
+  },
   invalid_token_id: {
     de: "Der Schlüssel wurde nicht erkannt. Lade die Seite neu.",
     en: "The key was not recognised. Reload the page.",

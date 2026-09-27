@@ -32,6 +32,33 @@ export const MAX_ACTIVE_AGENT_ACCESS_TOKENS = 5;
 /** Owner-chosen label bound; mirrors the column CHECK constraint. */
 export const AGENT_ACCESS_TOKEN_NAME_MAX_LENGTH = 64;
 
+/**
+ * Lifetimes an owner can choose, in days. The column CHECK caps every token
+ * at 366 days after creation, so the longest choice keeps a day of headroom
+ * for clock drift between this server and the database.
+ */
+export const AGENT_ACCESS_TOKEN_LIFETIME_DAYS = [30, 90, 365] as const;
+export type AgentAccessTokenLifetimeDays =
+  (typeof AGENT_ACCESS_TOKEN_LIFETIME_DAYS)[number];
+/** What a mint without an explicit choice gets; also the column default. */
+export const DEFAULT_AGENT_ACCESS_TOKEN_LIFETIME_DAYS: AgentAccessTokenLifetimeDays = 90;
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+export function isAgentAccessTokenLifetime(
+  value: unknown,
+): value is AgentAccessTokenLifetimeDays {
+  return (AGENT_ACCESS_TOKEN_LIFETIME_DAYS as readonly unknown[]).includes(value);
+}
+
+/** The instant a token minted at `issuedAt` stops working. */
+export function personalAccessTokenExpiry(
+  issuedAt: Date,
+  lifetimeDays: AgentAccessTokenLifetimeDays,
+): Date {
+  return new Date(issuedAt.getTime() + lifetimeDays * DAY_MS);
+}
+
 export interface MintedPersonalAccessToken {
   /** The clear token. Returned to its owner once and never persisted. */
   readonly token: string;

@@ -17,8 +17,11 @@ import { getAuthenticatedUser } from "@/lib/supabase/auth-server";
 import { tryCreateServiceClient } from "@/lib/supabase/server";
 import {
   AGENT_ACCESS_TOKEN_NAME_MAX_LENGTH,
+  DEFAULT_AGENT_ACCESS_TOKEN_LIFETIME_DAYS,
+  isAgentAccessTokenLifetime,
   MAX_ACTIVE_AGENT_ACCESS_TOKENS,
   mintPersonalAccessToken,
+  personalAccessTokenExpiry,
 } from "./mint";
 
 /**
@@ -26,7 +29,8 @@ import {
  *
  * POST mints one. The clear token is in that response and nowhere else: it is
  * never written to the database, never logged, and never part of the account
- * export. DELETE revokes one by id.
+ * export. Every token expires: the owner picks 30, 90 or 365 days, and a
+ * request without a choice gets 90. DELETE revokes one by id.
  *
  * Node runtime, never edge: minting uses the Node CSPRNG and the SHA-256
  * digest from `node:crypto`.
@@ -62,6 +66,10 @@ const mintSchema = z
       // Control characters are the one hazard in an owner-chosen label: they
       // survive into the audit trail's client column and into log lines.
       .refine((value) => !/\p{Cc}/u.test(value), "Invalid token name"),
+    // Validated on its own below, so a bad lifetime is named as such rather
+    // than as a bad name. Optional, so a page rendered before lifetimes
+    // existed still mints, with the default.
+    expiresInDays: z.unknown().optional(),
   })
   .strict();
 
@@ -193,16 +201,21 @@ async function readOwnerBoundBody(
   return { ok: true, value };
 }
 
-/** Count of tokens the account can still present. Revoked rows are retained. */
+/**
+ * Count of tokens the account can still present. Revoked and expired rows are
+ * retained for the audit trail and the account list, and count for nothing.
+ */
 async function countActiveTokens(
   client: SupabaseClient,
   userId: string,
+  now: Date,
 ): Promise<number> {
   const { count, error } = await client
     .from(AGENT_ACCESS_TOKENS_TABLE)
     .select("id", { count: "exact", head: true })
     .eq("user_id", userId)
-    .is("revoked_at", null);
+    .is("revoked_at", null)
+    .gt("expires_at", now.toISOString());
   if (error) throw error;
   return count ?? 0;
 }
@@ -230,15 +243,31 @@ export async function POST(request: Request) {
   if (!parsed.success) {
     return privateJson({ error: "invalid_token_name" }, { status: 400 });
   }
+  // Only an absent field means "the default"; null, a string, or any other
+  // number is a request this route does not grant.
+  const requestedLifetime =
+    parsed.data.expiresInDays === undefined
+      ? DEFAULT_AGENT_ACCESS_TOKEN_LIFETIME_DAYS
+      : parsed.data.expiresInDays;
+  if (!isAgentAccessTokenLifetime(requestedLifetime)) {
+    return privateJson({ error: "invalid_token_lifetime" }, { status: 400 });
+  }
 
   const serviceClient = tryCreateServiceClient();
   if (!serviceClient) {
     return privateJson({ error: "token_store_unavailable" }, { status: 503 });
   }
 
+  const issuedAt = new Date();
+  const expiresAt = personalAccessTokenExpiry(issuedAt, requestedLifetime);
+
   let activeBefore: number;
   try {
-    activeBefore = await countActiveTokens(serviceClient, auth.user.id);
+    activeBefore = await countActiveTokens(
+      serviceClient,
+      auth.user.id,
+      issuedAt,
+    );
   } catch (error) {
     reportApiError({ route: ROUTE, step: "supabase-read", error, request });
     return privateJson({ error: "token_mint_failed" }, { status: 500 });
@@ -267,8 +296,9 @@ export async function POST(request: Request) {
         name: parsed.data.name,
         prefix: minted.prefix,
         token_hash: minted.tokenHash,
+        expires_at: expiresAt.toISOString(),
       })
-      .select("id, name, prefix, created_at")
+      .select("id, name, prefix, created_at, expires_at")
       .single();
     if (error) throw error;
     inserted = data as {
@@ -276,6 +306,7 @@ export async function POST(request: Request) {
       name: string;
       prefix: string;
       created_at: string;
+      expires_at: string;
     };
   } catch (error) {
     reportApiError({ route: ROUTE, step: "supabase-insert", error, request });
@@ -288,7 +319,11 @@ export async function POST(request: Request) {
   // an account holding six live credentials.
   let activeAfter: number;
   try {
-    activeAfter = await countActiveTokens(serviceClient, auth.user.id);
+    activeAfter = await countActiveTokens(
+      serviceClient,
+      auth.user.id,
+      issuedAt,
+    );
   } catch (error) {
     // The confirmation read failed, not the insert. The pre-check already
     // established there was room, so the account keeps the token it just
@@ -323,6 +358,7 @@ export async function POST(request: Request) {
       name: inserted.name,
       prefix: inserted.prefix,
       createdAt: inserted.created_at,
+      expiresAt: inserted.expires_at,
       activeTokens: activeAfter,
       limit: MAX_ACTIVE_AGENT_ACCESS_TOKENS,
     },

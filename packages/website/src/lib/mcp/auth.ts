@@ -4,6 +4,7 @@ import {
   isPersonalAccessToken,
   lookupPersonalAccessToken,
   PERSONAL_ACCESS_TOKEN_PREFIX,
+  type PersonalTokenRefusal,
 } from "@/lib/agent-access/personal-tokens";
 import { checkOAuthSessionLive } from "@/lib/agent-access/oauth-sessions";
 import { oauthClientLabel } from "@/lib/agent-access/record";
@@ -106,11 +107,19 @@ export function readBearerCredential(request: Request): string | null {
   return BEARER_CREDENTIAL.exec(header)?.[1] ?? null;
 }
 
+/**
+ * Every refusal the token store can give has exactly one rejection. An
+ * account that is banned or soft-deleted reads as `revoked_token`, whose
+ * description covers access that has ended, without telling a token holder
+ * anything about the account itself.
+ */
 const PERSONAL_TOKEN_REJECTION: Readonly<
-  Record<"unknown" | "revoked" | "unavailable", BearerRejection>
+  Record<PersonalTokenRefusal, BearerRejection>
 > = {
   unknown: "invalid_token",
   revoked: "revoked_token",
+  expired: "expired_token",
+  account_inactive: "revoked_token",
   unavailable: "verifier_unavailable",
 };
 
