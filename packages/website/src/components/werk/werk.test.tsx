@@ -16,6 +16,7 @@ import {
   MaterialRow,
   PICTOGRAM_NAMES,
   Pictogram,
+  PlakatBand,
   QuestionCard,
   Route,
   routeStationState,
@@ -505,6 +506,20 @@ describe("GlobeLines and CoverBand", () => {
     // The heading comes after the decorative layer in the DOM, never inside it.
     expect(globe?.querySelector("h1")).toBeNull();
     expect(section?.className).not.toMatch(/100vw|-mx-/);
+  });
+
+  it("scopes the poster band that supersedes it to its scene (SPEC §3.1, §8.1)", () => {
+    for (const plakat of ["lemons", "idea", "bloom", "autumn"] as const) {
+      const { container } = render(
+        <PlakatBand plakat={plakat} labelledBy={`band-${plakat}`}>
+          <h1 id={`band-${plakat}`}>Titel</h1>
+        </PlakatBand>,
+      );
+      const section = container.querySelector("section");
+      expect(section).toHaveClass(`plakat-${plakat}`, "relative", "isolate", "overflow-hidden");
+      expect(section).not.toHaveClass("dark-section");
+      expect(section).toHaveAttribute("data-cover-band", "");
+    }
   });
 
   it("drops the globe on request", () => {

@@ -183,7 +183,7 @@ describe("workshop palettes (locked, decision D3)", () => {
 describe("course palettes (grouped by track)", () => {
   it("maps every TechnicalCourseFrame courseId in src, or lists it as paper on purpose", () => {
     const frames = technicalCourseIds();
-    expect(frames.length).toBeGreaterThanOrEqual(12);
+    expect(frames.length).toBeGreaterThanOrEqual(14);
     const unscened: readonly string[] = UNSCENED_COURSE_IDS;
     for (const { file, courseId } of frames) {
       if (unscened.includes(courseId)) {

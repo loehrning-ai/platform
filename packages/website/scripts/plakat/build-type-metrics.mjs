@@ -10,7 +10,10 @@
  * - the kerning of every pair of title characters (letters, digits, German
  *   and French accents, title punctuation), as the browser shapes them;
  * - the ink of each figure 0 to 9 as horizontal bands, which plakat.test.tsx
- *   uses to hold the poster numerals clear of neighbouring shapes.
+ *   uses to hold the poster numerals clear of neighbouring shapes;
+ * - the same figure advances, kerning and ink for
+ *   public/fonts/loehrning-sans-regular-v1.woff2, the light autumn numeral
+ *   (weight 400), so the 4.5% margin check covers every palette.
  *
  * Both are measured in Playwright's Chromium with canvas measureText at
  * 2048px, the font's units per em, so every value is a whole font unit.
@@ -36,6 +39,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..", "..");
 const FONT_PATH = join(ROOT, "public", "fonts", "loehrning-sans-bold-v1.woff2");
 const FONT_LABEL = "public/fonts/loehrning-sans-bold-v1.woff2";
+const REGULAR_FONT_PATH = join(ROOT, "public", "fonts", "loehrning-sans-regular-v1.woff2");
+const REGULAR_FONT_LABEL = "public/fonts/loehrning-sans-regular-v1.woff2";
 const OUTPUT_PATH = join(ROOT, "src", "lib", "plakat", "type-metrics.ts");
 const OUTPUT_LABEL = "src/lib/plakat/type-metrics.ts";
 
@@ -177,17 +182,21 @@ async function launchChromium() {
   return chromium.launch({ executablePath });
 }
 
-async function measure(fontBytes, codePoints, unitsPerEm) {
+async function measure(fontBytes, regularBytes, codePoints, unitsPerEm) {
   const browser = await launchChromium();
   try {
     const page = await browser.newPage();
     await page.setContent("<!doctype html><html><body></body></html>");
     return await page.evaluate(
-      async ({ base64, codes, pairChars, size, bandCount }) => {
-        const bytes = Uint8Array.from(atob(base64), (character) => character.charCodeAt(0));
-        const face = new FontFace("PlakatMetricsProbe", bytes.buffer, { weight: "700" });
-        await face.load();
-        document.fonts.add(face);
+      async ({ base64, regularBase64, codes, pairChars, size, bandCount }) => {
+        const loadFace = async (family, data, weight) => {
+          const bytes = Uint8Array.from(atob(data), (character) => character.charCodeAt(0));
+          const face = new FontFace(family, bytes.buffer, { weight });
+          await face.load();
+          document.fonts.add(face);
+        };
+        await loadFace("PlakatMetricsProbe", base64, "700");
+        await loadFace("PlakatMetricsRegular", regularBase64, "400");
         const context = document.createElement("canvas").getContext("2d");
         context.font = `700 ${size}px "PlakatMetricsProbe"`;
         const width = (text) => context.measureText(text).width;
@@ -209,47 +218,66 @@ async function measure(fontBytes, codePoints, unitsPerEm) {
         canvas.width = size * 2;
         canvas.height = size * 2;
         const ink = canvas.getContext("2d", { willReadFrequently: true });
-        ink.font = `700 ${size}px "PlakatMetricsProbe"`;
-        const figureInk = {};
-        for (const figure of "0123456789") {
-          ink.clearRect(0, 0, canvas.width, canvas.height);
-          ink.fillStyle = "#000";
-          const baseline = pad + size;
-          ink.fillText(figure, pad, baseline);
-          const { data } = ink.getImageData(0, 0, canvas.width, canvas.height);
-          const rows = [];
-          for (let y = 0; y < canvas.height; y++) {
-            let left = -1;
-            let right = -1;
-            for (let x = 0; x < canvas.width; x++) {
-              if (data[(y * canvas.width + x) * 4 + 3] > 0) {
-                if (left < 0) left = x;
-                right = x + 1;
+        const inkOf = (font) => {
+          ink.font = font;
+          const figureInk = {};
+          for (const figure of "0123456789") {
+            ink.clearRect(0, 0, canvas.width, canvas.height);
+            ink.fillStyle = "#000";
+            const baseline = pad + size;
+            ink.fillText(figure, pad, baseline);
+            const { data } = ink.getImageData(0, 0, canvas.width, canvas.height);
+            const rows = [];
+            for (let y = 0; y < canvas.height; y++) {
+              let left = -1;
+              let right = -1;
+              for (let x = 0; x < canvas.width; x++) {
+                if (data[(y * canvas.width + x) * 4 + 3] > 0) {
+                  if (left < 0) left = x;
+                  right = x + 1;
+                }
               }
+              if (left >= 0) rows.push([y, left, right]);
             }
-            if (left >= 0) rows.push([y, left, right]);
+            const top = rows[0][0];
+            const bottom = rows[rows.length - 1][0] + 1;
+            const bands = [];
+            for (let band = 0; band < bandCount; band++) {
+              const from = top + Math.floor(((bottom - top) * band) / bandCount);
+              const to = top + Math.floor(((bottom - top) * (band + 1)) / bandCount);
+              const inBand = rows.filter(([y]) => y >= from && y < to);
+              if (inBand.length === 0) continue;
+              bands.push([
+                from - baseline,
+                to - baseline,
+                Math.min(...inBand.map(([, left]) => left)) - pad,
+                Math.max(...inBand.map(([, , right]) => right)) - pad,
+              ]);
+            }
+            figureInk[figure] = bands;
           }
-          const top = rows[0][0];
-          const bottom = rows[rows.length - 1][0] + 1;
-          const bands = [];
-          for (let band = 0; band < bandCount; band++) {
-            const from = top + Math.floor(((bottom - top) * band) / bandCount);
-            const to = top + Math.floor(((bottom - top) * (band + 1)) / bandCount);
-            const inBand = rows.filter(([y]) => y >= from && y < to);
-            if (inBand.length === 0) continue;
-            bands.push([
-              from - baseline,
-              to - baseline,
-              Math.min(...inBand.map(([, left]) => left)) - pad,
-              Math.max(...inBand.map(([, , right]) => right)) - pad,
-            ]);
+          return figureInk;
+        };
+        const figureInk = inkOf(`700 ${size}px "PlakatMetricsProbe"`);
+        // The light autumn numeral: figure advances, figure pair kerning and ink at 400.
+        const regular = document.createElement("canvas").getContext("2d");
+        regular.font = `400 ${size}px "PlakatMetricsRegular"`;
+        const regularWidth = (text) => regular.measureText(text).width;
+        const regularAdvances = {};
+        const regularKerning = {};
+        for (const first of "0123456789") {
+          regularAdvances[first] = Math.round(regularWidth(first));
+          for (const second of "0123456789") {
+            const delta = Math.round(regularWidth(first + second) - regularWidth(first) - regularWidth(second));
+            if (delta !== 0) regularKerning[first + second] = delta;
           }
-          figureInk[figure] = bands;
         }
-        return { advances, kerning, figureInk };
+        const regularInk = inkOf(`400 ${size}px "PlakatMetricsRegular"`);
+        return { advances, kerning, figureInk, regularAdvances, regularKerning, regularInk };
       },
       {
         base64: fontBytes.toString("base64"),
+        regularBase64: regularBytes.toString("base64"),
         codes: codePoints,
         pairChars: KERNING_CHARACTERS,
         size: unitsPerEm,
@@ -275,17 +303,41 @@ function literal(text) {
   return `${out}"`;
 }
 
-function render({ sha256, unitsPerEm, ascender, descender, advances, kerning, figureInk }) {
+function inkBlock(figureInk) {
+  return Object.entries(figureInk)
+    .map(
+      ([figure, bands]) =>
+        `  ${literal(figure)}: [\n${bands.map((band) => `    [${band.join(", ")}],`).join("\n")}\n  ],`,
+    )
+    .join("\n");
+}
+
+function numberBlock(values) {
+  return Object.entries(values)
+    .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
+    .map(([key, value]) => `  ${literal(key)}: ${value},`)
+    .join("\n");
+}
+
+function render({
+  sha256,
+  regularSha256,
+  unitsPerEm,
+  ascender,
+  descender,
+  advances,
+  kerning,
+  figureInk,
+  regularAdvances,
+  regularKerning,
+  regularInk,
+}) {
   const advanceLines = Object.entries(advances)
     .sort(([a], [b]) => a.codePointAt(0) - b.codePointAt(0))
     .map(([character, value]) => `  ${literal(character)}: ${value},`);
   const kerningLines = Object.entries(kerning)
     .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
     .map(([pair, value]) => `  ${literal(pair)}: ${value},`);
-  const inkLines = Object.entries(figureInk).map(
-    ([figure, bands]) =>
-      `  ${literal(figure)}: [\n${bands.map((band) => `    [${band.join(", ")}],`).join("\n")}\n  ],`,
-  );
   return `// Generated by scripts/plakat/build-type-metrics.mjs. Do not edit by hand.
 // Source: ${FONT_LABEL} (sha256 ${sha256}).
 // Measured in Chromium with canvas measureText at ${unitsPerEm}px, the font's
@@ -328,7 +380,27 @@ ${kerningLines.join("\n")}
 export const BOLD_FIGURE_INK: Readonly<
   Record<string, readonly (readonly [number, number, number, number])[]>
 > = {
-${inkLines.join("\n")}
+${inkBlock(figureInk)}
+};
+
+/** sha256 of ${REGULAR_FONT_LABEL}, the light autumn numeral (weight 400). */
+export const REGULAR_FONT_SHA256 = ${literal(regularSha256)};
+
+/** Advance of each regular (400) figure, in font units. */
+export const REGULAR_FIGURE_ADVANCES: Readonly<Record<string, number>> = {
+${numberBlock(regularAdvances)}
+};
+
+/** Pair kerning between regular (400) figures, in font units. Pairs not listed are 0. */
+export const REGULAR_FIGURE_KERNING: Readonly<Record<string, number>> = {
+${numberBlock(regularKerning)}
+};
+
+/** Ink of each regular (400) figure, in the same bands as BOLD_FIGURE_INK. */
+export const REGULAR_FIGURE_INK: Readonly<
+  Record<string, readonly (readonly [number, number, number, number])[]>
+> = {
+${inkBlock(regularInk)}
 };
 `;
 }
@@ -350,8 +422,10 @@ const codePoints = mappedCodePoints(cmap.data);
 const missing = KERNING_CHARACTERS.filter((character) => !codePoints.includes(character.codePointAt(0)));
 if (missing.length > 0) throw new Error(`${FONT_LABEL} does not map: ${missing.join(" ")}`);
 
-const { advances, kerning, figureInk } = await measure(fontBytes, codePoints, unitsPerEm);
-const output = render({ sha256, unitsPerEm, ascender, descender, advances, kerning, figureInk });
+const regularBytes = readFileSync(REGULAR_FONT_PATH);
+const regularSha256 = createHash("sha256").update(regularBytes).digest("hex");
+const measured = await measure(fontBytes, regularBytes, codePoints, unitsPerEm);
+const output = render({ sha256, regularSha256, unitsPerEm, ascender, descender, ...measured });
 
 if (checkOnly) {
   const current = existsSync(OUTPUT_PATH) ? readFileSync(OUTPUT_PATH, "utf8") : "";
@@ -360,11 +434,11 @@ if (checkOnly) {
     process.exit(1);
   }
   console.log(
-    `${OUTPUT_LABEL} is up to date (${codePoints.length} glyphs, ${Object.keys(kerning).length} kerning pairs).`,
+    `${OUTPUT_LABEL} is up to date (${codePoints.length} glyphs, ${Object.keys(measured.kerning).length} kerning pairs).`,
   );
 } else {
   writeFileSync(OUTPUT_PATH, output);
   console.log(
-    `Wrote ${OUTPUT_LABEL}: ${codePoints.length} glyphs, ${Object.keys(kerning).length} kerning pairs.`,
+    `Wrote ${OUTPUT_LABEL}: ${codePoints.length} glyphs, ${Object.keys(measured.kerning).length} kerning pairs.`,
   );
 }

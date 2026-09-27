@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 import { render, screen, within } from "@testing-library/react";
@@ -26,7 +27,15 @@ import {
   type PlakatKey,
 } from "@/lib/plakat/palettes";
 import { posterSvg, posterSvgDataUri } from "@/lib/plakat/poster-svg";
-import { BOLD_ADVANCES, BOLD_FIGURE_INK, BOLD_KERNING, UNITS_PER_EM } from "@/lib/plakat/type-metrics";
+import {
+  BOLD_ADVANCES,
+  BOLD_FIGURE_INK,
+  BOLD_KERNING,
+  REGULAR_FIGURE_ADVANCES,
+  REGULAR_FIGURE_INK,
+  REGULAR_FIGURE_KERNING,
+  UNITS_PER_EM,
+} from "@/lib/plakat/type-metrics";
 import {
   CapsLine,
   CornerDots,
@@ -40,6 +49,8 @@ import {
   type ResultChartData,
 } from "./index";
 import * as werk from "@/components/werk";
+import { ButtonLink } from "@/components/werk/button-link";
+import { expectCapsInsideScene, expectNoMennigeInScene } from "@/test/plakat-scene";
 
 const PLAKAT_DIR = __dirname;
 const WEBSITE = join(PLAKAT_DIR, "..", "..", "..");
@@ -215,7 +226,7 @@ function placedShapes(composition: ReturnType<typeof posterComposition>): { role
   return out;
 }
 
-/** The numeral's ink as boxes: bold figures from the measured ink bands, pen advanced as Chromium sets SVG text. */
+/** The numeral's ink as boxes: figures of its weight from the measured ink bands, pen advanced as Chromium sets SVG text. */
 function numeralInk(composition: ReturnType<typeof posterComposition>): { boxes: Box[]; fontSize: number } | null {
   const find = (nodes: readonly PosterNode[]): Extract<PosterNode, { kind: "numeral" }> | null => {
     for (const node of nodes) {
@@ -229,17 +240,21 @@ function numeralInk(composition: ReturnType<typeof posterComposition>): { boxes:
   };
   const numeral = find(composition.children);
   if (!numeral) return null;
-  const { x, y, fontSize, letterSpacing } = numeral.layout;
+  const { x, y, fontSize, letterSpacing, fontWeight } = numeral.layout;
+  const [advances, kerning, figureInk] =
+    fontWeight === 400
+      ? [REGULAR_FIGURE_ADVANCES, REGULAR_FIGURE_KERNING, REGULAR_FIGURE_INK]
+      : [BOLD_ADVANCES, BOLD_KERNING, BOLD_FIGURE_INK];
   const scale = fontSize / UNITS_PER_EM;
   const boxes: Box[] = [];
   let pen = x;
   const figures = [...numeral.text];
   figures.forEach((figure, index) => {
-    if (index > 0) pen += (BOLD_KERNING[figures[index - 1] + figure] ?? 0) * scale;
-    for (const [top, bottom, left, right] of BOLD_FIGURE_INK[figure]) {
+    if (index > 0) pen += (kerning[figures[index - 1] + figure] ?? 0) * scale;
+    for (const [top, bottom, left, right] of figureInk[figure]) {
       boxes.push([pen + left * scale, y + top * scale, pen + right * scale, y + bottom * scale]);
     }
-    pen += BOLD_ADVANCES[figure] * scale + letterSpacing;
+    pen += advances[figure] * scale + letterSpacing;
   });
   return { boxes, fontSize };
 }
@@ -421,10 +436,12 @@ describe("PosterArt", () => {
     }
   });
 
-  it("holds every bold numeral inside the 4.5% margin", () => {
+  it("holds every numeral, bold and the light autumn 04, inside the 4.5% margin", () => {
     // A numeral may cross a shape (bloom's "03" over the sun, 4.24:1): the
     // keyline cuts the gap. Only Himbeere against Kobalt needs clearance.
-    for (const poster of POSTERS.filter((candidate) => candidate.numeral && PLAKAT[candidate.plakat].numWeight === 700)) {
+    const numbered = POSTERS.filter((candidate) => candidate.numeral);
+    expect(new Set(numbered.map((poster) => PLAKAT[poster.plakat].numWeight))).toEqual(new Set([400, 700]));
+    for (const poster of numbered) {
       for (const format of ["portrait", "landscape"] as const) {
         const ink = numeralInk(posterComposition({ ...poster, format }));
         if (!ink) throw new Error("no numeral");
@@ -534,16 +551,46 @@ describe("PlakatBand", () => {
       </PlakatBand>,
     );
     const band = container.querySelector("section");
-    const dots = band?.querySelector(":scope > svg[data-corner-dots]");
-    expect(dots).not.toBeNull();
-    expect(dots?.querySelectorAll("circle")).toHaveLength(4);
+    const dots = band?.querySelectorAll(":scope > svg[data-corner-dots]") ?? [];
+    expect(dots).toHaveLength(4);
+    for (const dot of dots) expect(dot).not.toHaveClass("hidden");
     expect(band?.querySelector(".\\@container svg[data-corner-dots]")).toBeNull();
+    // The top dots end 20px down; the caps line starts 36px down on phones.
+    expect(band?.querySelector(".\\@container")).toHaveClass("pt-9", "sm:pt-10", "lg:py-16");
+    expect(band?.querySelector(".\\@container")).not.toHaveClass("pt-5");
     const { container: plain } = render(
       <PlakatBand plakat="idea">
         <p>Text</p>
       </PlakatBand>,
     );
     expect(plain.querySelector("svg[data-corner-dots]")).toBeNull();
+  });
+
+  it("keeps the bottom band dots off a phone strip numeral (no \".02\")", () => {
+    const { container } = render(
+      <PlakatBand
+        plakat="idea"
+        cornerDots
+        art={<PosterArt plakat="idea" motif="pie" numeral="02" format="portrait" cornerDots={false} />}
+        artPhone={<PosterArt plakat="idea" motif="pie" numeral="02" format="strip" />}
+      >
+        <p>Text</p>
+      </PlakatBand>,
+    );
+    const band = container.querySelector("section") as HTMLElement;
+    const dots = [...band.querySelectorAll(":scope > svg[data-corner-dots]")];
+    expect(dots.map((dot) => dot.getAttribute("data-corner"))).toEqual([
+      "top-left",
+      "top-right",
+      "bottom-left",
+      "bottom-right",
+    ]);
+    for (const dot of dots) {
+      const bottom = dot.getAttribute("data-corner")?.startsWith("bottom");
+      // Below lg a bottom dot would sit on the strip's baseline; from lg the strip is gone.
+      if (bottom) expect(dot).toHaveClass("hidden", "lg:block");
+      else expect(dot).not.toHaveClass("hidden");
+    }
   });
 
   it("puts a spacer in place of the phone art when there is none", () => {
@@ -556,6 +603,7 @@ describe("PlakatBand", () => {
     expect(band?.querySelector("[data-plakat-art], [data-plakat-art-phone]")).toBeNull();
     expect(band?.lastElementChild).toHaveClass("h-6", "lg:hidden");
     expect(band?.querySelector(".\\@container")).not.toHaveClass("lg:pr-[calc(min(36vw,30rem)+3rem)]");
+    expect(band?.querySelector(".\\@container")).toHaveClass("pt-5", "sm:pt-10");
   });
 
   it("is re-exported from the Werkzeichnung kit", () => {
@@ -611,24 +659,40 @@ describe("CapsLine, CornerDots, PosterNumeral and Halftone", () => {
         <CapsLine>Workshop 03 · Daten</CapsLine>
       </PlakatBand>,
     );
-    const caps = container.querySelector(".plakat-caps");
-    expect(caps?.parentElement?.closest('[class*="plakat-"]:not(.plakat-caps), [data-plakat-band]')).not.toBeNull();
+    expectCapsInsideScene(container);
+    const { container: paper } = render(
+      <section>
+        <CapsLine>Workshop 03 · Daten</CapsLine>
+      </section>,
+    );
+    expect(() => expectCapsInsideScene(paper)).toThrow(/outside a scene/);
   });
 
-  it("draws the band's four corner dots as circles, 16px in, in the ink", () => {
+  it("draws the band's four corner dots as four small SVGs, 16px in, in the ink", () => {
     const { container } = render(<CornerDots />);
-    const svg = container.querySelector("svg[data-corner-dots]");
-    expect(svg).toHaveAttribute("aria-hidden", "true");
-    expect(svg).toHaveClass("absolute", "inset-0", "pointer-events-none");
-    const circles = svg?.querySelectorAll("circle") ?? [];
-    expect(circles).toHaveLength(4);
-    for (const circle of circles) {
+    const dots = container.querySelectorAll("svg[data-corner-dots]");
+    expect(dots).toHaveLength(4);
+    const places: Record<string, readonly string[]> = {
+      "top-left": ["top-3", "left-3"],
+      "top-right": ["top-3", "right-3"],
+      "bottom-left": ["bottom-3", "left-3"],
+      "bottom-right": ["bottom-3", "right-3"],
+    };
+    for (const dot of dots) {
+      // An 8px box 12px in: the centre is 16px in, and no dot box covers the
+      // band's text, so axe can still check its contrast.
+      expect(dot).toHaveAttribute("aria-hidden", "true");
+      expect(dot).toHaveClass("absolute", "size-2", "pointer-events-none", ...places[dot.getAttribute("data-corner") ?? ""]);
+      expect(dot).not.toHaveClass("inset-0");
+      expect(dot).toHaveAttribute("viewBox", "0 0 8 8");
+      const circle = dot.querySelector("circle");
       expect(circle).toHaveAttribute("r", "4");
       expect(circle).toHaveClass("fill-scene-ink");
-      expect(Math.abs(Number(circle.getAttribute("cx")))).toBe(16);
-      expect(Math.abs(Number(circle.getAttribute("cy")))).toBe(16);
-      expect((circle.parentElement as Element).getAttribute("width")).not.toBe("0");
     }
+    const { container: top } = render(<CornerDots corners="top" className="lg:hidden" />);
+    const topDots = [...top.querySelectorAll("svg[data-corner-dots]")];
+    expect(topDots.map((dot) => dot.getAttribute("data-corner"))).toEqual(["top-left", "top-right"]);
+    for (const dot of topDots) expect(dot).toHaveClass("lg:hidden");
   });
 
   it("sets the key numeral in the meaningful-mark colour at the palette's weight", () => {
@@ -722,7 +786,7 @@ describe("Mennige stays out of a scene (SPEC §8.3)", () => {
   });
 
   it("uses no paper primary and no Mennige fill next to a scene button in files that render a PlakatBand", () => {
-    for (const file of sourceFiles(SRC).filter((path) => /\.tsx$/.test(path) && !/\.test\.tsx$/.test(path))) {
+    for (const file of productionTsx()) {
       const source = readFileSync(file, "utf8");
       const label = relative(WEBSITE, file);
       if (/<PlakatBand\b/.test(source)) {
@@ -736,7 +800,67 @@ describe("Mennige stays out of a scene (SPEC §8.3)", () => {
           expect(classes, label).not.toEqual(expect.arrayContaining(["text-paper"]));
         }
       }
+      expect(sceneButtonViolations(source), label).toEqual([]);
     }
+  });
+
+  it("catches a paper button inside a band and a paper fill on a scene button", () => {
+    // Each case is a way to put a Mennige edge on Rost (1.07) or Ultramarin (2.21).
+    const band = (inner: string) => `<PlakatBand plakat="autumn">\n  <h1>Titel</h1>\n  ${inner}\n</PlakatBand>`;
+    expect(sceneButtonViolations(band('<ButtonLink href="/deck">Deck öffnen</ButtonLink>'))).toHaveLength(1);
+    expect(sceneButtonViolations(band('<ButtonLink tone="scene" href="/deck">Deck öffnen</ButtonLink>'))).toEqual([]);
+    expect(sceneButtonViolations(band('<a className={BUTTON_CLASSES.paper.secondary} href="/deck">Deck</a>'))).toHaveLength(1);
+    expect(sceneButtonViolations(band('<span className="bg-mennige" />'))).toHaveLength(1);
+    expect(
+      sceneButtonViolations('<ButtonLink tone="scene" className="bg-mennige text-paper" href="/deck">Deck</ButtonLink>'),
+    ).toHaveLength(1);
+    expect(sceneButtonViolations('<a className={cx(BUTTON_CLASSES.scene.primary, "bg-kupfer")} href="/deck">Deck</a>')).toHaveLength(1);
+    // A course header band on a scene page counts as a band.
+    expect(
+      sceneButtonViolations('<header data-plakat-band="">\n  <header>x</header>\n  <ButtonLink href="/a">A</ButtonLink>\n</header>\n<ButtonLink href="/b">B</ButtonLink>'),
+    ).toHaveLength(1);
+    // A paper button on the paper below the band is allowed (one Mennige button per paper page).
+    expect(sceneButtonViolations(`${band('<ButtonLink tone="scene" href="/a">A</ButtonLink>')}\n<ButtonLink href="/b">B</ButtonLink>`)).toEqual([]);
+  });
+
+  it("finds no Mennige fill and no paper label rendered inside a lemons or autumn scene", () => {
+    for (const plakat of ["lemons", "autumn"] as const) {
+      const { container } = render(
+        <PlakatBand plakat={plakat}>
+          <ButtonLink tone="scene" href="/deck">
+            Deck öffnen
+          </ButtonLink>
+        </PlakatBand>,
+      );
+      expectNoMennigeInScene(container);
+      const { container: broken } = render(
+        <PlakatBand plakat={plakat}>
+          <ButtonLink href="/deck">Deck öffnen</ButtonLink>
+        </PlakatBand>,
+      );
+      expect(() => expectNoMennigeInScene(broken), plakat).toThrow(/inside a lemons or autumn scene/);
+      // tailwind-merge keeps the later fill, so a className cannot rescue a scene button.
+      const { container: overridden } = render(
+        <PlakatBand plakat={plakat}>
+          <ButtonLink tone="scene" className="bg-mennige" href="/deck">
+            Deck öffnen
+          </ButtonLink>
+        </PlakatBand>,
+      );
+      expect(() => expectNoMennigeInScene(overridden), plakat).toThrow(/bg-mennige/);
+    }
+    const { container: page } = render(
+      <div data-plakat-page="autumn">
+        <header data-plakat-band="">
+          <span className="bg-mennige" />
+        </header>
+        <span className="bg-mennige" />
+      </div>,
+    );
+    expect(() => expectNoMennigeInScene(page)).toThrow(/bg-mennige/);
+    page.querySelector("header span")?.remove();
+    // The paper below a band keeps its Mennige.
+    expect(() => expectNoMennigeInScene(page)).not.toThrow();
   });
 });
 
@@ -785,7 +909,103 @@ describe("posterSvg and the OG pieces", () => {
     expect(markup).toContain("background-image:url(&quot;data:image/svg+xml");
     expect(markup).toContain(">01</div>");
   });
+
+  it("keylines the OG numeral in the ground, under the fill, as the SVG poster does (SPEC §3.5)", () => {
+    const { container } = render(<OgPoster plakat="bloom" motif="dome" numeral="03" width={400} />);
+    const keyline = container.querySelector('[data-og-numeral="keyline"]') as HTMLElement;
+    const fill = container.querySelector('[data-og-numeral="fill"]') as HTMLElement;
+    expect(keyline.nextElementSibling).toBe(fill);
+    const layout = numeralLayout("bloom", "portrait");
+    expect(keyline.style.getPropertyValue("-webkit-text-stroke")).toBe(`${layout.keyline}px ${PLAKAT.bloom.ground}`);
+    expect(renderToStaticMarkup(<OgPoster plakat="bloom" motif="dome" numeral="03" width={400} />)).toContain(
+      `color:${PLAKAT.bloom.ground}`,
+    );
+    for (const property of ["left", "top", "font-size", "letter-spacing", "font-weight"]) {
+      expect(keyline.style.getPropertyValue(property), property).toBe(fill.style.getPropertyValue(property));
+    }
+    expect(keyline.textContent).toBe("03");
+    expect(fill.textContent).toBe("03");
+  });
+
+  it("loads poster-svg.ts in plain Node, as the static generators do", () => {
+    const out = execFileSync(
+      process.execPath,
+      [
+        "--input-type=module",
+        "-e",
+        "const { posterSvg } = await import('./src/lib/plakat/poster-svg.ts'); process.stdout.write(posterSvg({ plakat: 'autumn', motif: 'leaves', numeral: '04' }).slice(0, 4));",
+      ],
+      { cwd: WEBSITE, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
+    );
+    expect(out).toBe("<svg");
+  });
+
+  it("keeps raw hex out of src/lib/plakat outside palettes.ts and the generated metrics", () => {
+    const libDir = join(SRC, "lib", "plakat");
+    const files = readdirSync(libDir).filter(
+      (file) => /\.tsx?$/.test(file) && !/\.test\.tsx?$/.test(file) && !["palettes.ts", "type-metrics.ts"].includes(file),
+    );
+    expect(files).toContain("og.tsx");
+    for (const file of files) {
+      expect(readFileSync(join(libDir, file), "utf8"), file).not.toMatch(/#[0-9a-fA-F]{3,8}\b/);
+    }
+  });
 });
+
+function productionTsx(): string[] {
+  return sourceFiles(SRC).filter((path) => /\.tsx$/.test(path) && !/\.test\.tsx$/.test(path));
+}
+
+/** The source span of a JSX element, from its opening tag to its matching close. */
+function elementSpan(source: string, start: number, tag: string): string {
+  const pattern = new RegExp(`<${tag}\\b[^>]*?(/?)>|</${tag}>`, "g");
+  pattern.lastIndex = start;
+  let depth = 0;
+  for (let match = pattern.exec(source); match; match = pattern.exec(source)) {
+    if (match[0].startsWith("</")) depth -= 1;
+    else if (match[1] !== "/") depth += 1;
+    if (depth === 0) return source.slice(start, match.index + match[0].length);
+  }
+  return source.slice(start);
+}
+
+/** Band spans: every `<PlakatBand>` and every element carrying `data-plakat-band`. */
+function bandSpans(source: string): string[] {
+  const spans: string[] = [];
+  for (const match of source.matchAll(/<PlakatBand\b/g)) spans.push(elementSpan(source, match.index, "PlakatBand"));
+  for (const match of source.matchAll(/<([A-Za-z][\w.]*)\b[^>]*?\bdata-plakat-band\b/g)) {
+    spans.push(elementSpan(source, match.index, match[1]));
+  }
+  return spans;
+}
+
+const PAPER_FILL = /\b(?:bg-mennige|bg-kupfer|text-paper)\b/;
+
+/**
+ * Ways to put a Mennige edge on a scene ground (SPEC §1.3 and §8.3):
+ * a ButtonLink without tone="scene" or a paper button recipe inside a band,
+ * any Mennige or Kupfer fill or paper label inside a band, and a paper fill
+ * written next to a scene button (tailwind-merge keeps the later fill).
+ */
+function sceneButtonViolations(source: string): string[] {
+  const found: string[] = [];
+  for (const span of bandSpans(source)) {
+    for (const button of span.matchAll(/<ButtonLink\b[^>]*>/g)) {
+      if (!/\btone=(?:"scene"|\{"scene"\})/.test(button[0])) found.push(`paper ButtonLink in a band: ${button[0]}`);
+    }
+    for (const recipe of span.matchAll(/BUTTON_CLASSES\.paper\.\w+/g)) found.push(`paper recipe in a band: ${recipe[0]}`);
+    for (const fill of span.matchAll(/\b(?:bg-mennige|bg-kupfer|text-paper)\b/g)) found.push(`paper fill in a band: ${fill[0]}`);
+  }
+  for (const button of source.matchAll(/<ButtonLink\b[^>]*>/g)) {
+    if (/\btone=(?:"scene"|\{"scene"\})/.test(button[0]) && PAPER_FILL.test(button[0])) {
+      found.push(`paper fill on a scene ButtonLink: ${button[0]}`);
+    }
+  }
+  for (const call of source.matchAll(/cx\(([^()]*BUTTON_CLASSES\.scene[^()]*)\)/g)) {
+    if (PAPER_FILL.test(call[1])) found.push(`paper fill on a scene recipe: ${call[0]}`);
+  }
+  return [...new Set(found)];
+}
 
 function sourceFiles(directory: string): string[] {
   return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {

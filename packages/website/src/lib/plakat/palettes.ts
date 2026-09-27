@@ -175,12 +175,18 @@ export type CoursePlakatId = keyof typeof COURSE_PLAKAT;
 
 /**
  * `TechnicalCourseFrame` ids that stay paper on purpose, with no scene and no
- * `data-plakat-page`. SPEC §3.1 and §5 keep the AI-Native demos on paper with
- * their graphit engines, and the glossary is a reading surface. A frame must
- * read its scene through `coursePlakat(courseId)` and render no scene when it
- * returns undefined; `palettes.test.ts` fails on any other unmapped id.
+ * `data-plakat-page` (SPEC §3.1 and §5): the AI-Native demos keep their
+ * graphit engines, the glossary is a reading surface and the fluency test is
+ * a form. A frame reads its scene through `coursePlakat(courseId)` and renders
+ * no scene when it returns undefined; `palettes.test.ts` fails on any other
+ * unmapped id.
  */
-export const UNSCENED_COURSE_IDS = ["ai-native-demos", "ai-native-glossary"] as const;
+export const UNSCENED_COURSE_IDS = [
+  "ai-native-demos",
+  "ai-native-glossary",
+  "ai-native-fluency-test",
+  "ai-native-fluency-result",
+] as const;
 
 /**
  * The paper and ink of the chrome, for renderers that cannot read CSS tokens
