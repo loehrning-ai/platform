@@ -738,7 +738,7 @@ export function Nav() {
                 homeLabel={copy.home}
                 onNavigate={() => setMobileOpen(false)}
               />
-              <div className="flex shrink-0 items-center gap-1">
+              <div className="flex shrink-0 items-center">
                 <AuthStatus
                   variant="quiet"
                   onNavigate={() => setMobileOpen(false)}

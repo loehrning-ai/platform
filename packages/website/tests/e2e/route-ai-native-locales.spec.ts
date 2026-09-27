@@ -348,7 +348,10 @@ test.describe("AI-Native course DE/EN integration", () => {
             expect(geometry.right).toBeLessThanOrEqual(
               geometry.viewportWidth + 0.5,
             );
-            expect(geometry.scrollWidth).toBeGreaterThan(geometry.clientWidth);
+            // The phone sheet is sized to fit 320px without sideways
+            // scrolling; the region keeps overflow-x:auto as a fallback for
+            // larger text settings.
+            expect(geometry.scrollWidth).toBeLessThanOrEqual(geometry.clientWidth);
             expect(geometry.overflowX).toBe("auto");
           }
           expect(

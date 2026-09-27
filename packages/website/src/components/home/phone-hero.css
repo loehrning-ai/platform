@@ -170,8 +170,14 @@
     display: block;
     width: 100%;
     height: 100%;
-    overflow: visible;
     pointer-events: none;
+  }
+
+  /* Only the SVG layer may paint past its box. A canvas cannot, and
+     overflow: visible on a canvas is a deprecated rendering path in Chrome
+     (Lighthouse best-practices "deprecations"). */
+  [data-home-globe] > svg {
+    overflow: visible;
   }
 
   [data-home-globe] > canvas {

@@ -91,7 +91,7 @@ export function AuthStatus({
         prefetch={false}
         onClick={onNavigate}
         data-auth-status="quiet"
-        className="inline-flex min-h-11 min-w-11 items-center justify-center px-2 text-label text-foreground underline decoration-transparent underline-offset-4 outline-none transition-colors duration-[120ms] hover:bg-card-hover hover:decoration-current focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange motion-reduce:transition-none"
+        className="inline-flex min-h-11 min-w-11 items-center justify-center px-0.5 text-label text-foreground underline decoration-transparent underline-offset-4 outline-none transition-colors duration-[120ms] hover:bg-card-hover hover:decoration-current focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange motion-reduce:transition-none"
       >
         {label}
       </Link>

@@ -4,36 +4,42 @@ const TECHNICAL_COURSE_CASES = [
   {
     label: "Claude",
     slug: "claude",
+    phoneFoldHidden: true,
     checkpoint: "/en/kurse/open-source/claude/kurs/mental-model",
     nonCheckpoint: "/en/kurse/open-source/claude/kurs/anatomy",
   },
   {
     label: "Codex",
     slug: "codex",
+    phoneFoldHidden: true,
     checkpoint: "/kurse/open-source/codex/kurs/L01",
     nonCheckpoint: "/kurse/open-source/codex/kurs/L02",
   },
   {
     label: "Data Infrastructure",
     slug: "data-infrastructure",
+    phoneFoldHidden: false,
     checkpoint: "/en/kurse/open-source/data-infrastructure/kurs/mental-model",
     nonCheckpoint: "/en/kurse/open-source/data-infrastructure/kurs/cap-pacelc",
   },
   {
     label: "Data Engineering Fundamentals",
     slug: "data-engineering-fundamentals",
+    phoneFoldHidden: false,
     checkpoint: "/en/kurse/open-source/data-engineering-fundamentals/home",
     nonCheckpoint: "/en/kurse/open-source/data-engineering-fundamentals/fund",
   },
   {
     label: "Data Science",
     slug: "data-science",
+    phoneFoldHidden: true,
     checkpoint: "/en/kurse/open-source/data-science/fund",
     nonCheckpoint: "/en/kurse/open-source/data-science/explore",
   },
   {
     label: "AI-Native Operator",
     slug: "ai-native-operator",
+    phoneFoldHidden: false,
     checkpoint: "/en/kurse/open-source/ai-native-operator/mindset/1",
     nonCheckpoint: "/en/kurse/open-source/ai-native-operator/mindset/2",
   },
@@ -181,7 +187,15 @@ test.describe("learning density and value contract", () => {
 
       const reference = page.locator("details[data-lesson-reference]");
       await expect(reference).toHaveCount(1);
-      await expect(reference.locator("summary")).toBeVisible();
+      // Where a checkpoint's mission already repeats the objective
+      // (phoneFoldHidden), the lesson text stays open below sm without a fold
+      // control; from sm, and in the other readers, it can fold.
+      const phone = (page.viewportSize()?.width ?? 1280) < 640;
+      if (phone && course.phoneFoldHidden) {
+        await expect(reference.locator("summary")).toBeHidden();
+      } else {
+        await expect(reference.locator("summary")).toBeVisible();
+      }
       expect(
         await reference.evaluate(
           (details) => (details as HTMLDetailsElement).open,

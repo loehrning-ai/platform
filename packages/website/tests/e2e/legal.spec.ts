@@ -18,7 +18,7 @@ test.describe("/impressum", () => {
     await expect(
       page.getByRole("heading", { name: "Anbieter" }),
     ).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Kontakt" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Kontakt", exact: true })).toBeVisible();
     await expect(
       page.getByRole("heading", { name: "Haftungsausschluss" }),
     ).toBeVisible();

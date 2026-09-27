@@ -217,7 +217,7 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
     >
       {/* File bar: ink band with the file name as data; no product
           colours or logo. Below sm it merges with the formula bar into one
-          light 32px row ("Absatz-KW14-16.xlsx · F2 = Wachstum W/W"). */}
+          light row ("Absatz-KW14-16.xlsx · F2 = Wachstum W/W"). */}
       <div
         data-excel-file-bar
         className="min-h-8 bg-[#0B0908] px-2.5 py-[7px] text-[12px] text-[#F3F0E9] max-sm:bg-[#F7F4ED] max-sm:py-1 max-sm:text-[13px] max-sm:text-[#0B0908]"
@@ -231,17 +231,15 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
           minWidth: 0,
         }}
       >
-        <span
-          style={{
-            overflowWrap: "anywhere",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-        >
-          {isDe ? "Absatz-KW14-16.xlsx" : "sales-weeks-14-16.xlsx"}
-          <span className="sm:hidden" style={{ color: DEMO.schiefer }}>
-            {isDe ? " · F2 = Wachstum W/W" : " · F2 = Growth W/W"}
+        {/* Below sm the formula moves as one unit: on a 320px screen it
+            drops under the file name instead of being clipped. */}
+        <span className="min-w-0 max-w-full truncate max-sm:overflow-visible max-sm:whitespace-normal">
+          {isDe ? "Absatz-KW14-16.xlsx" : "sales-weeks-14-16.xlsx"}{" "}
+          <span
+            className="inline-block whitespace-nowrap sm:hidden"
+            style={{ color: DEMO.schiefer }}
+          >
+            {isDe ? "· F2 = Wachstum W/W" : "· F2 = Growth W/W"}
           </span>
         </span>
         <span className="max-sm:hidden" style={{ marginLeft: "auto", fontSize: 12 }}>
