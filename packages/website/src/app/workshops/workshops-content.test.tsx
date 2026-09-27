@@ -79,14 +79,14 @@ describe("<WorkshopsContent>", () => {
       rows.map((row) => row.querySelector("[data-workshop-output]")?.textContent),
     ).toEqual([
       esg?.outcome,
-      "Five-field template",
+      "Five-box template",
       "Metrics skill + dashboard",
       "Go/no-go rule",
     ]);
 
     const [, w03, w02, w01] = rows;
     expect(
-      within(w03).getByText("Workshop 03 · Live 90 min · Alone about 60 min"),
+      within(w03).getByText("Workshop 03 · Live 90 min · Alone about 75 min"),
     ).toBeInTheDocument();
     expect(
       within(w01).getByText("Workshop 01 · Alone about 90 min"),
@@ -173,16 +173,20 @@ describe("<WorkshopsContent>", () => {
     ).toBe(true);
   });
 
-  it("shows how every workshop runs as a static five-station route", () => {
+  it("shows the route of the workshops it names as a static five-station route", () => {
     render(<WorkshopsContent workshops={getWorkshops("de")} locale="de" />);
 
-    const route = screen.getByRole("list", { name: "So läuft jeder Workshop" });
+    // Workshops 01 and 02 follow other stations (and 01 shows no AI answer),
+    // so the route names the workshops it describes.
+    const route = screen.getByRole("list", {
+      name: "So laufen die Workshops 03 und 04",
+    });
     expect(route).toHaveAttribute("data-route-mode", "description");
     expect(within(route).getAllByRole("listitem")).toHaveLength(5);
     expect(route.querySelector("[aria-current]")).toBeNull();
     expect(
       screen
-        .getByText(/Gezeigte KI-Antworten sind Aufzeichnungen mit Datum/)
+        .getByText(/Gezeigte KI-Antworten sind aufgezeichnet oder für die Übung konstruiert/)
         .closest("[data-callout]"),
     ).toHaveAttribute("data-callout", "boundary");
   });
@@ -277,7 +281,7 @@ describe("<WorkshopsContent>", () => {
     // The phone meta line is a short duration line; the row the cover
     // button recommends says so.
     expect(rows[0].querySelector("[data-workshop-meta]")).toHaveTextContent(
-      "Neu · Live 90 · allein 60 Min.",
+      "Neu · Live 90 Min. · allein 80 Min.",
     );
     expect(rows[1].querySelector("[data-workshop-meta]")).toHaveTextContent(
       /^Einstieg · /,
@@ -298,7 +302,7 @@ describe("<WorkshopsContent>", () => {
 
     // Phones get a one-sentence lead; from sm the full lead returns.
     expect(
-      screen.getByText(/^Du prüfst eine KI-Antwort an den Daten/),
+      screen.getByText(/^Du rechnest oder prüfst an den Daten/),
     ).toHaveClass("sm:hidden");
     expect(screen.getByText(/^Jeder Workshop dreht sich/)).toHaveClass(
       "hidden",
@@ -310,7 +314,9 @@ describe("<WorkshopsContent>", () => {
     ).toHaveClass("hidden", "md:block");
     // Phones skip the route (each workshop page shows its own agenda), so
     // the list follows the cover; from sm it is the reviewed row.
-    const rail = screen.getByRole("group", { name: "So läuft jeder Workshop" });
+    const rail = screen.getByRole("group", {
+      name: "So laufen die Workshops 03 und 04",
+    });
     expect(rail).toHaveAttribute("tabindex", "0");
     expect(rail.closest("section")).toHaveClass("hidden", "sm:block");
     // The phone H1 matches the detail H1 and is not held to 14ch.
@@ -320,12 +326,18 @@ describe("<WorkshopsContent>", () => {
   });
 
   it("keeps the team note small and says how to open the presenter view", () => {
-    render(<WorkshopsContent workshops={getWorkshops("de")} locale="de" />);
+    const { container } = render(
+      <WorkshopsContent workshops={getWorkshops("de")} locale="de" />,
+    );
 
-    const heading = screen.getByRole("heading", { level: 2, name: "Mit deinem Team" });
-    expect(heading.closest("[data-workshop-teams]")).not.toBeNull();
+    // A note under the last row's hairline: no heading, no rule of its own.
+    expect(screen.queryByRole("heading", { name: "Mit deinem Team" })).toBeNull();
+    const note = container.querySelector("[data-workshop-teams]")!;
+    expect(note.tagName).toBe("P");
+    expect(note).not.toHaveClass("border-t");
+    expect(note).toHaveTextContent(/^Mit deinem Team\. Workshops 03 und 04 haben/);
     expect(
-      screen.getByText(/^Workshops 03 und 04 haben eine Moderationsansicht mit Notizen/),
+      screen.getByText(/Workshops 03 und 04 haben eine Moderationsansicht mit Notizen/),
     ).toBeInTheDocument();
     expect(screen.getByText(/Öffne das Deck und drück P\./)).toBeInTheDocument();
     expect(screen.getByText("Neueste zuerst")).toBeInTheDocument();
@@ -335,13 +347,14 @@ describe("<WorkshopsContent>", () => {
     ).toEqual(["Alle Materialien kostenlos, ohne Anmeldung"]);
   });
 
-  it("uses deck-cover previews on flat Werkzeichnung rows", () => {
+  it("gives every row the same graphit cover on flat Werkzeichnung rows", () => {
     const { container } = render(
       <WorkshopsContent workshops={getWorkshops("de")} locale="de" />,
     );
 
-    expect(SOURCE).toContain('from "next/image"');
-    expect(SOURCE).toContain("card-preview.webp");
+    // The deck covers stay social cards; scaled into a row their text is
+    // illegible, so the hub draws no raster covers at all.
+    expect(SOURCE).not.toContain("card-preview.webp");
     expect(SOURCE).not.toContain("transition-all");
     expect(SOURCE).not.toMatch(/text-\[(?:9|10|11)(?:\.\d+)?px\]/);
     expect(SOURCE).not.toMatch(/rounded-(?:lg|xl|2xl|3xl|full)/);
@@ -358,29 +371,19 @@ describe("<WorkshopsContent>", () => {
 
     const rows = container.querySelectorAll("[data-testid='workshop-row']");
     for (const row of rows) expect(row).toHaveClass("border-b", "border-hairline");
-    // Only real deck covers are images; the others get the CSS mini-cover,
-    // so every row shows the same graphit cover language.
-    const previews = container.querySelectorAll("img");
-    expect(previews).toHaveLength(2);
-    expect(previews[0]).toHaveAttribute(
-      "src",
-      "/workshops/esg-berichte-mit-ki/card-preview.webp",
-    );
-    // The H1 is the LCP element and the previews are hidden on phones, so
-    // every preview is lazy: a lazy image in a display:none box is never fetched.
-    expect(previews[0]).toHaveAttribute("loading", "lazy");
-    expect(previews[0]).not.toHaveAttribute("fetchpriority");
-    expect(previews[1]).toHaveAttribute(
-      "src",
-      "/workshops/datenbereitschaft-fuer-ki/card-preview.webp",
-    );
-    expect(previews[1]).toHaveAttribute("loading", "lazy");
+    // One cover grammar for every row: the CSS mini-cover with the number
+    // and the title head only, set at 20px or more.
+    expect(container.querySelectorAll("img")).toHaveLength(0);
     const miniCovers = container.querySelectorAll("[data-workshop-mini-cover]");
-    expect(miniCovers).toHaveLength(2);
-    for (const cover of miniCovers) {
+    expect(miniCovers).toHaveLength(4);
+    for (const [position, cover] of [...miniCovers].entries()) {
       expect(cover).toHaveAttribute("aria-hidden", "true");
       expect(cover.querySelector("[data-werk-globe-country]")).toBeNull();
       expect(cover).toHaveClass("hidden", "md:block");
+      const [number, title] = cover.querySelectorAll("p");
+      expect(number.textContent).toBe(["04", "03", "02", "01"][position]);
+      expect(title).toHaveClass("text-[1.25rem]");
+      expect(title.textContent).not.toContain(":");
     }
     // Phones: a decorative 56px graphit tile with the number replaces the
     // cover, one per row, and no tile carries the Germany trace.

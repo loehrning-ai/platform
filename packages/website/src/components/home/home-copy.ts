@@ -74,9 +74,9 @@ export const HOME_COPY = {
         },
         {
           label: "Praxisbeispiele",
-          body: "Modelle zum Ausprobieren, mit Annahmen und Grenzen.",
+          body: "Arbeitsabläufe zum Ausprobieren, mit Annahmen und Grenzen.",
           // Phone rows: one line at 320px, never truncated.
-          short: "Modelle zum Ausprobieren",
+          short: "Abläufe zum Ausprobieren",
           href: "/demos",
         },
         {
@@ -206,9 +206,9 @@ export const HOME_COPY = {
         },
         {
           label: "Applied examples",
-          body: "Models to try, with assumptions and limits.",
+          body: "Workflows to try, with assumptions and limits.",
           // Phone rows: one line at 320px, never truncated.
-          short: "Models to try",
+          short: "Workflows to try",
           href: "/demos",
         },
         {

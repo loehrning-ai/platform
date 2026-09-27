@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, type JSX } from "react";
-import { cn } from "@/lib/utils";
+import { cx as cn } from "@/components/werk/cx";
 import {
   genericAnswer,
   simulatedDelayMs,
@@ -221,8 +221,10 @@ export function HeroOrrery({
 
   // Werkzeichnung: a 1px ink frame with no offset shadow, sentence-case
   // labels, and each component as a hairline row with a square switch. The
-  // score, the percentages and the output stay mono because they are data.
-  // Below md the score is one caption line with its bar instead of a box.
+  // frame is the only box: the score is a stat behind a hairline and the
+  // output sits under a hairline, not in a second frame. The score, the
+  // percentages and the output stay mono because they are data. The run
+  // button is ink; the landing's one Mennige action is "Lektion 01 starten".
   return (
     <div className="border border-foreground bg-card p-4 sm:p-6 md:p-8">
       <div className="grid gap-4 md:grid-cols-[1fr_auto] md:items-start md:gap-6">
@@ -238,7 +240,7 @@ export function HeroOrrery({
             {copy.intro}
           </p>
         </div>
-        <div className="flex flex-wrap items-baseline gap-x-2 md:block md:min-w-[120px] md:border md:border-border md:bg-background md:p-4 md:text-right">
+        <div className="flex flex-wrap items-baseline gap-x-2 md:block md:min-w-[120px] md:border-l md:border-hairline md:pl-6 md:text-right">
           <p className="text-caption text-muted-foreground">{copy.score}</p>
           <p
             className={cn(
@@ -304,7 +306,7 @@ export function HeroOrrery({
           type="button"
           onClick={run}
           disabled={loading || !assembled.trim()}
-          className="inline-flex min-h-11 items-center bg-brand-orange px-4 py-2 text-[0.9375rem] font-semibold text-paper transition-colors duration-[120ms] hover:bg-kupfer-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none"
+          className="inline-flex min-h-11 items-center rounded-none bg-foreground px-4 py-2 text-[0.9375rem] font-semibold text-background transition-colors duration-[120ms] hover:bg-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none"
         >
           {loading ? copy.running : output ? copy.rerun : copy.run}
         </button>
@@ -321,7 +323,7 @@ export function HeroOrrery({
           <p className="mb-1 text-caption text-muted-foreground">
             {copy.disclosure}
           </p>
-          <pre className="max-h-[260px] overflow-auto whitespace-pre-wrap break-words border border-border bg-background p-4 text-[13px] leading-[1.55] text-foreground">
+          <pre className="max-h-[260px] overflow-auto whitespace-pre-wrap break-words border-t border-hairline pt-3 text-[13px] leading-[1.55] text-foreground">
             {output}
           </pre>
         </div>

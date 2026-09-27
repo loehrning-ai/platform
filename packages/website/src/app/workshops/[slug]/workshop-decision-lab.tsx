@@ -210,23 +210,45 @@ export function NumberUnitText({ text }: { readonly text: string }) {
   );
 }
 
+/** A fact value that is one number with a short unit: "1.866,5 t CO₂e", "4,12 Mio. €", "+20 €". */
+const COMPACT_AMOUNT = /^[+\-−±~≈€$£]*\d[\d.,]*(?:\s\S+){0,2}$/u;
+
+/**
+ * A fact-table value. A number with its unit stays on one line as a whole
+ * ("1.866,5 t CO₂e" never breaks before "CO₂e"); longer values bind each
+ * number to the word after it and wrap between the rest.
+ */
+function FactValue({ text }: { readonly text: string }) {
+  if (text.length <= 16 && COMPACT_AMOUNT.test(text))
+    return (
+      <span data-number-unit="" className="whitespace-nowrap">
+        {text}
+      </span>
+    );
+  return <NumberUnitText text={text} />;
+}
+
 const OPTION_ROW =
   "flex min-h-12 cursor-pointer items-start gap-3 border-b border-hairline px-2 py-2.5 text-left sm:py-3 transition-colors duration-[120ms] hover:bg-card has-[:checked]:bg-card";
 
 /**
- * Square radio, the same shape as the Route's current station: an ink frame
+ * Square radio, the same shape as the Route's current station: a 2px frame
  * that fills when checked, leaving a card-coloured square inside. Native
- * input, so keyboard and screen-reader behaviour stay as they are.
+ * input, so keyboard and screen-reader behaviour stay as they are. The frame
+ * colour comes from RADIO_FRAME or STRONGEST_MARK, never both.
  */
 const RADIO =
-  "mt-0.5 size-5 shrink-0 cursor-pointer appearance-none border-2 border-foreground bg-card checked:border-[6px] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-brand-orange disabled:cursor-wait";
+  "mt-0.5 size-5 shrink-0 cursor-pointer appearance-none border-2 bg-card checked:border-[6px] focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-brand-orange disabled:cursor-wait";
+const RADIO_FRAME = "border-foreground";
 
 /**
  * After a check the strongest-evidence square gets the lab's one Mennige
- * mark. It is a non-text outline (4.55:1 on Beton), and the option also
- * carries the pass pictogram and a word, so colour is never the only cue.
+ * mark: its frame turns Mennige (4.55:1 on Beton) in place of ink. It sits
+ * on the square itself with no offset, so it never reads as the offset focus
+ * ring, which stays the only Mennige outline. The option also carries the
+ * pass pictogram and a word, so colour is never the only cue.
  */
-const STRONGEST_MARK = "outline outline-2 outline-offset-2 outline-mennige";
+const STRONGEST_MARK = "border-mennige";
 
 function DecisionOption({
   option,
@@ -281,7 +303,7 @@ function DecisionOption({
         onChange={() => onSelect(option.id)}
         aria-describedby={markText ? markId : undefined}
         data-strongest-mark={strongest ? "" : undefined}
-        className={cx(RADIO, strongest && STRONGEST_MARK)}
+        className={cx(RADIO, strongest ? STRONGEST_MARK : RADIO_FRAME)}
       />
       <span className="min-w-0 flex-1">
         <span
@@ -494,24 +516,25 @@ export function WorkshopDecisionLab({
           <p className="mt-2 max-w-[52ch] text-[0.9375rem]/[1.5] text-muted-foreground text-pretty sm:mt-4 sm:text-body">
             <NumberUnitText text={config.prompt} />
           </p>
-          {/* One row from 26rem: equal columns, but a column never gets
-              narrower than its longest word ("12 Stromrechnungen"), so a
-              value wraps between words and never inside one. Below 26rem
+          {/* One row of equal columns wherever a column holds the widest
+              value ("1.866,5 t CO₂e", 131px at 20px) beside a 24px gap: from
+              34rem up to lg, and again from xl. Below 34rem, and in the
+              narrow left column of the two-column lab between lg and xl,
               each fact is one label-and-value line. */}
           <dl
             data-lab-facts=""
-            className="mt-3 grid grid-cols-1 gap-x-4 gap-y-1 border-t border-hairline pt-2 sm:mt-6 min-[26rem]:gap-y-3 min-[26rem]:pt-3 min-[26rem]:grid-flow-col min-[26rem]:grid-cols-none min-[26rem]:auto-cols-[minmax(min-content,1fr)]"
+            className="mt-3 grid grid-cols-1 gap-x-6 gap-y-1 border-t border-hairline pt-2 sm:mt-6 min-[34rem]:max-lg:grid-flow-col min-[34rem]:max-lg:grid-cols-none min-[34rem]:max-lg:auto-cols-fr min-[34rem]:max-lg:gap-y-3 min-[34rem]:max-lg:pt-3 xl:grid-flow-col xl:grid-cols-none xl:auto-cols-fr xl:gap-y-3 xl:pt-3"
           >
             {config.facts.map((fact) => {
               const { label, value } = splitFact(fact);
               return (
                 <div
                   key={fact}
-                  className="flex items-baseline justify-between gap-3 min-[26rem]:block"
+                  className="flex min-w-0 items-baseline justify-between gap-3 min-[34rem]:max-lg:block xl:block"
                 >
                   <dt className="text-label text-muted-foreground">{label}</dt>
-                  <dd className="break-words text-right text-[1.0625rem] font-bold leading-tight text-foreground tabular-nums min-[26rem]:mt-1 min-[26rem]:text-left min-[26rem]:text-[1.25rem]">
-                    <NumberUnitText text={value} />
+                  <dd className="text-right text-[1.0625rem] font-bold leading-tight text-foreground tabular-nums min-[34rem]:max-lg:mt-1 min-[34rem]:max-lg:text-left min-[34rem]:max-lg:text-[1.25rem] xl:mt-1 xl:text-left xl:text-[1.25rem]">
+                    <FactValue text={value} />
                   </dd>
                 </div>
               );

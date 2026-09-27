@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { Dateline } from "./_components/dateline";
 import { BLOG_POSTS, BLOG_LAST_MODIFIED } from "@/lib/blog-metadata";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import {
@@ -19,18 +18,14 @@ const COPY = {
     metadataTitle: "Blog | loehrning.ai",
     metadataDescription:
       "Lange, nachprüfbare Texte über KI im Alltag, EU AI Act und KI in der Gesellschaft, für die breite deutschsprachige Öffentlichkeit.",
-    datelineTitle: "Der loehrning.ai Blog",
+    kicker: (count: number) => `Blog · ${count} Artikel`,
+    title: "KI im Alltag, mit Quellen erklärt.",
     intro:
       "Öffentliche Texte zu KI im Alltag, EU AI Act und KI in der Gesellschaft. Offen, nachprüfbar, mit Zahlen und Quellenangaben.",
-    article: (count: number) =>
-      `${count} ${count === 1 ? "Artikel" : "Artikel"}`,
-    lastUpdated: "Zuletzt aktualisiert:",
-    ongoing: "Laufend ergänzt",
-    allArticles: "§ Alle Artikel",
-    featured: "Aktuelle Ausgabe",
-    feedTitle: "Ein Thema, gründlich statt viel.",
-    published: "erschienen",
-    articleNumber: "Artikel Nº",
+    lastUpdated: "Zuletzt aktualisiert",
+    cadence: "erscheint unregelmäßig",
+    allArticles: "Alle Artikel",
+    listNote: "Neueste zuerst",
     readingTime: (minutes: number) => `${minutes} Min. Lesezeit`,
     readLabel: (title: string) => `Artikel lesen: ${title}`,
     read: "Artikel lesen",
@@ -41,31 +36,20 @@ const COPY = {
     sourceBody:
       "Rechtliche Aussagen führen zu Primärquellen. Datum, Lesedauer und Themenumfang stehen vor dem Einstieg fest.",
     sourceMarks: ["Primärquellen", "Prüfdatum", "Lesezeit sichtbar"],
-    visual: {
-      label: "Sieben Abschnitte · Bürgerperspektive",
-      big: "2. Aug",
-      caption: "EU AI Act ab August 2026:",
-      emphasis: "Art. 50 Transparenz + deine Rechte",
-      status: "Lesefertige Vorschau",
-      articles: ["Art. 50", "Art. 85", "Art. 86"],
-    },
   },
   en: {
     metadataTitle: "Blog | loehrning.ai",
     metadataDescription:
       "Long-form, source-backed writing about everyday AI, the EU AI Act, and AI in society for a general English-speaking audience.",
-    datelineTitle: "The loehrning.ai blog",
+    kicker: (count: number) =>
+      `Blog · ${count} ${count === 1 ? "article" : "articles"}`,
+    title: "Everyday AI, explained with sources.",
     intro:
       "Public articles about everyday AI, the EU AI Act, and AI in society. Open access, verifiable claims, explicit figures, and primary sources.",
-    article: (count: number) =>
-      `${count} ${count === 1 ? "article" : "articles"}`,
-    lastUpdated: "Last updated:",
-    ongoing: "Updated when evidence changes",
-    allArticles: "§ All articles",
-    featured: "Current edition",
-    feedTitle: "One subject, examined properly.",
-    published: "published",
-    articleNumber: "Article Nº",
+    lastUpdated: "Last updated",
+    cadence: "published irregularly",
+    allArticles: "All articles",
+    listNote: "Newest first",
     readingTime: (minutes: number) => `${minutes} min read`,
     readLabel: (title: string) => `Read article: ${title}`,
     read: "Read article",
@@ -76,14 +60,6 @@ const COPY = {
     sourceBody:
       "Legal claims lead to primary sources. Date, reading time, and scope are visible before you open the article.",
     sourceMarks: ["Primary sources", "Review date", "Reading time visible"],
-    visual: {
-      label: "Seven sections · Citizen perspective",
-      big: "2 Aug",
-      caption: "EU AI Act from August 2026:",
-      emphasis: "Article 50 transparency and your rights",
-      status: "Reading preview",
-      articles: ["Art. 50", "Art. 85", "Art. 86"],
-    },
   },
 } as const;
 
@@ -140,162 +116,100 @@ function BlogIndexContent({ locale }: { readonly locale: Locale }) {
   const lastUpdated = formatDate(BLOG_LAST_MODIFIED, locale);
 
   return (
-    <>
-      <div className="blog-dateline">
-        <div className="left">
-          <Dateline locale={locale} />
+    <div className="blog-index" data-blog-index>
+      <header className="blog-index__hero">
+        <div className="blog-index__container">
+          <p className="blog-index__kicker">{copy.kicker(BLOG_POSTS.length)}</p>
+          <h1 className="blog-index__title">{copy.title}</h1>
+          <p className="blog-index__lead">{copy.intro}</p>
+          <p className="blog-index__caption">
+            {copy.lastUpdated}{" "}
+            <time dateTime={BLOG_LAST_MODIFIED}>{lastUpdated}</time> ·{" "}
+            {copy.cadence}
+          </p>
         </div>
-        <div
-          className="center"
-          style={{ color: "var(--druckertinte)", fontWeight: 700 }}
-        >
-          {copy.datelineTitle}
-        </div>
-        <div className="right">2026</div>
-      </div>
+      </header>
 
-      <section className="mast--hero" data-risograph-hero>
-        <div className="mast__statement">
-          <div className="mast__label">{copy.datelineTitle}</div>
-          <h1 className="mast__title">
-            Blog<span className="k">.</span>
-          </h1>
-          <div className="mast__sub">{copy.intro}</div>
-        </div>
-        <div className="mast__meta" data-risograph-sheet="issue">
-          <span className="mast__meta-index">Nº 01</span>
-          <div className="mast__meta-copy">
-            <b>{copy.article(BLOG_POSTS.length)}</b>
-            <span>
-              {copy.lastUpdated} {lastUpdated}
-            </span>
-            <span className="live">{copy.ongoing}</span>
-          </div>
-        </div>
-      </section>
+      <section
+        className="blog-index__section"
+        aria-labelledby="blog-articles"
+        data-blog-ledger
+      >
+        <div className="blog-index__container">
+          <header className="blog-index__head">
+            <h2 id="blog-articles">{copy.allArticles}</h2>
+            <p className="blog-index__caption">
+              {copy.listNote} · {copy.noteLabel}
+            </p>
+          </header>
 
-      <section className="feed" data-editorial-bento>
-        <div className="feed__head">
-          <div className="hash">{copy.allArticles}</div>
-          <div className="title">{copy.feedTitle}</div>
-          <div className="count">
-            <b>{BLOG_POSTS.length}</b> {copy.published}
-          </div>
-        </div>
-
-        <div className="editorial-grid">
-          <div className="article-stack">
-            <p className="article-stack__label">{copy.featured}</p>
+          <ol className="blog-index__list">
             {BLOG_POSTS_NEWEST_FIRST.map((post) => {
               const number = String(post.postNumber).padStart(2, "0");
               const localized = postCopy(post, locale);
               return (
-                <Link
+                <li
                   key={post.slug}
-                  href={localizeHref(`/blog/${post.slug}`, locale)}
-                  className="row"
-                  aria-label={copy.readLabel(localized.title)}
-                  data-link-preview
-                  data-editorial-article
+                  className="blog-index__row"
+                  data-blog-article
                 >
-                  <div className="row__body">
-                    <div className="row__topline">
-                      <span className="row__tag">{localized.tags[0]}</span>
-                      <span className="row__date">
+                  <span className="blog-index__no" aria-hidden="true">
+                    {number}
+                  </span>
+                  <div className="blog-index__body">
+                    <p className="blog-index__caption blog-index__meta">
+                      <time dateTime={post.datePublished}>
                         {formatDate(post.datePublished, locale)}
-                      </span>
-                      <span className="row__dot">·</span>
+                      </time>
+                      <span aria-hidden="true"> · </span>
                       <span>{copy.readingTime(post.readingTimeMin)}</span>
-                    </div>
-                    <span className="row__no">
-                      <span className="hash">
-                        {copy.articleNumber} {number}
-                      </span>
-                      {number}
-                    </span>
-                    <h2 className="row__title">{localized.title}</h2>
-                    <p className="row__dek">{localized.summary}</p>
-                    <div className="row__foot">
-                      <span className="row__author">Tim Löhr</span>
-                      {localized.tags.slice(1).map((tag) => (
-                        <span key={tag} className="contents">
-                          <span className="row__dot">·</span>
-                          <span>{tag}</span>
-                        </span>
-                      ))}
-                      <span className="row__cta">
-                        {copy.read} <span className="arr">↗</span>
-                      </span>
-                    </div>
+                      <span aria-hidden="true"> · </span>
+                      <span>{localized.tags[0]}</span>
+                    </p>
+                    <h3 className="blog-index__row-title">{localized.title}</h3>
+                    <p className="blog-index__summary">{localized.summary}</p>
                   </div>
-                  <div
-                    className="row__art"
-                    role="img"
-                    aria-label={`${copy.visual.caption} ${copy.visual.emphasis}`}
-                    data-article-preview
-                    data-risograph-sheet="article"
+                  <Link
+                    href={localizeHref(`/blog/${post.slug}`, locale)}
+                    className="blog-index__link"
+                    aria-label={copy.readLabel(localized.title)}
                   >
-                    <div className="row__art-label">
-                      <span>{copy.visual.status}</span>
-                      <span>01 / 07</span>
-                    </div>
-                    <div className="row__art-body">
-                      <div className="row__art-big">{copy.visual.big}</div>
-                      <div className="row__art-cap">
-                        {copy.visual.caption} <b>{copy.visual.emphasis}</b>
-                      </div>
-                    </div>
-                    <div className="row__art-articles">
-                      {copy.visual.articles.map((article) => (
-                        <span key={article}>{article}</span>
-                      ))}
-                    </div>
-                    <div className="row__art-foot">
-                      <span>Reg. 2024/1689</span>
-                      <span>AI Omnibus 2026</span>
-                    </div>
-                  </div>
-                </Link>
+                    {copy.read}
+                    <span className="blog-index__arrow" aria-hidden="true">
+                      →
+                    </span>
+                  </Link>
+                </li>
               );
             })}
-          </div>
-
-          <aside
-            className="evidence-card"
-            aria-labelledby="source-standard"
-            data-risograph-sheet="sources"
-          >
-            <span className="evidence-card__register" aria-hidden="true" />
-            <p className="evidence-card__label">{copy.sourceLabel}</p>
-            <h2 id="source-standard">{copy.sourceTitle}</h2>
-            <p>{copy.sourceBody}</p>
-            <ul>
-              {copy.sourceMarks.map((mark, index) => (
-                <li key={mark}>
-                  <span>{String(index + 1).padStart(2, "0")}</span>
-                  {mark}
-                </li>
-              ))}
-            </ul>
-          </aside>
-
-          <aside
-            className="feed__note"
-            aria-labelledby="publishing-note"
-            data-risograph-sheet="note"
-          >
-            <div>
-              <p className="feed__note-label">{copy.noteLabel}</p>
-              <h2 id="publishing-note">{copy.ongoing}</h2>
-            </div>
-            <p className="feed__note-body">{copy.note}</p>
-            <span className="feed__note-cta" aria-hidden="true">
-              ↳
-            </span>
-          </aside>
+          </ol>
+          <p className="blog-index__note">{copy.note}</p>
         </div>
       </section>
-    </>
+
+      <section
+        className="blog-index__section blog-index__section--last"
+        aria-labelledby="source-standard"
+      >
+        <div className="blog-index__container blog-index__standard">
+          <header className="blog-index__head">
+            <h2 id="source-standard">{copy.sourceTitle}</h2>
+            <p className="blog-index__caption">{copy.sourceLabel}</p>
+          </header>
+          <p className="blog-index__body-text">{copy.sourceBody}</p>
+          <ul className="blog-index__marks">
+            {copy.sourceMarks.map((mark, index) => (
+              <li key={mark}>
+                <span className="blog-index__no">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                {mark}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    </div>
   );
 }
 

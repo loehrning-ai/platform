@@ -106,13 +106,16 @@ function materialMeta(material: WorkshopMaterial): string {
 const PHONE_DESCRIPTION_BUDGET = 72;
 
 /**
- * A material description cut to its first clause for a phone row: the first
- * sentence, without parentheses and without what follows a semicolon. A
- * sentence still longer than two phone lines ends at its last comma (or
- * word) within the budget, with an ellipsis, so it never stops mid-word. The
- * meta line under it already says format, language and "optional".
+ * A material description for a phone row. An authored short text wins.
+ * Otherwise the first sentence, without parentheses and without what follows
+ * a semicolon. A registry material whose sentence is still longer than two
+ * phone lines carries a short text (the registry test pins that), so the
+ * fallback below, which ends at the last comma or word with an ellipsis,
+ * only guards material added without one. The meta line under it already
+ * says format, language and "optional".
  */
-export function phoneDescription(text: string): string {
+export function phoneDescription(text: string, short?: string): string {
+  if (short) return short;
   let first = text.split(/(?<=[.!?])\s+(?=\p{Lu})/u)[0] ?? text;
   first = first.replace(/\s*\([^)]*\)/g, "");
   const semicolon = first.indexOf(";");
@@ -173,7 +176,10 @@ function MaterialRow({
   readonly locale: Locale;
 }) {
   const download = material.kind !== "html";
-  const shortDescription = phoneDescription(material.description);
+  const shortDescription = phoneDescription(
+    material.description,
+    material.short,
+  );
   const notes = [
     material.primary ? copy.startHere : null,
     // Skip the minutes when the label already carries them ("Browserlabor · 12 Min.").
@@ -383,7 +389,9 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
           <Link
             href={localizeHref("/workshops", locale)}
             aria-label={copy.backAria}
-            className="inline-flex min-h-11 items-center gap-2 text-label text-muted-foreground underline decoration-transparent underline-offset-4 transition-colors duration-[120ms] hover:text-foreground hover:decoration-foreground"
+            // The bar is exactly as tall as the link, between the sticky
+            // header and the cover band, so the ring is drawn inside it.
+            className="inline-flex min-h-11 items-center gap-2 text-label text-muted-foreground underline decoration-transparent underline-offset-4 transition-colors duration-[120ms] hover:text-foreground hover:decoration-foreground focus-visible:outline-offset-[-3px]"
           >
             <BackGlyph />
             {copy.allWorkshops}
@@ -547,13 +555,17 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
           />
           {/* Phones: one scroll-snapped rail with label, minutes and the lab
               marker per station; the activity line returns from sm, where the
-              rail is the reviewed horizontal agenda. */}
+              rail is the reviewed horizontal agenda. More than six stations
+              keep the rail through tablet widths, where equal columns would
+              wrap the labels into three or four lines. */}
           <Route
             stations={stations}
             mode="description"
+            here={labStation}
             label={copy.agendaHeading}
             locale={locale}
             layout="rail"
+            railUntil={stations.length > 6 ? "lg" : "sm"}
             className="mt-4 sm:mt-6"
           />
           <div className="mt-1 flex flex-wrap items-center justify-between gap-x-6 sm:mt-4">

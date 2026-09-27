@@ -531,6 +531,8 @@ export function createHorizonRenderer(
   }
 
   function kick(): void {
+    // Nothing left to coast when no frame will run to settle it.
+    if (coasting && !shouldRun()) coasting = false;
     if (!raf && shouldRun()) {
       lastTick = lastDraw = performance.now();
       raf = requestAnimationFrame(tick);
@@ -631,6 +633,10 @@ export function createHorizonRenderer(
   function onPointerDown(event: PointerEvent): void {
     if (!live || reduceQuery.matches || frozen) return;
     if (event.pointerType === "mouse" && event.button !== 0) return;
+    // One finger spins the globe. A second finger landing mid-drag is
+    // ignored, so it can neither take the drag over nor strand it. A pointer
+    // that never became a drag may be replaced (its up may have been lost).
+    if (pointer?.on && event.pointerId !== pointer.id) return;
     pointer = {
       id: event.pointerId,
       x0: event.clientX,
@@ -677,7 +683,7 @@ export function createHorizonRenderer(
 
   function onPointerEnd(event: PointerEvent): void {
     if (!pointer || event.pointerId !== pointer.id) return;
-    if (pointer.on) {
+    if (pointer.on || dragging) {
       const samples = pointer.samples;
       let velocity = 0;
       if (
@@ -690,12 +696,19 @@ export function createHorizonRenderer(
         velocity = span > 0.008 ? sum / span : 0;
       }
       omega = Math.max(-240, Math.min(240, velocity));
-      dragging = false;
-      coasting = true;
+      // A release at rest has nothing to coast on; flagging it would keep
+      // publish() off "paused" with no frame left to clear the flag.
+      coasting = Math.abs(omega) > 0.02;
       lastTick = performance.now();
     }
+    dragging = false;
     pointer = null;
     kick();
+  }
+
+  /** Capture lost without a pointerup (element removed, browser gesture). */
+  function onLostCapture(event: PointerEvent): void {
+    onPointerEnd(event);
   }
 
   // ---- lifecycle ------------------------------------------------------------
@@ -764,6 +777,7 @@ export function createHorizonRenderer(
   slot.addEventListener("pointermove", onPointerMove, { passive: true });
   slot.addEventListener("pointerup", onPointerEnd);
   slot.addEventListener("pointercancel", onPointerEnd);
+  slot.addEventListener("lostpointercapture", onLostCapture);
   resizeObserver?.observe(slot);
   intersectionObserver?.observe(slot);
 
@@ -827,6 +841,7 @@ export function createHorizonRenderer(
       slot.removeEventListener("pointermove", onPointerMove);
       slot.removeEventListener("pointerup", onPointerEnd);
       slot.removeEventListener("pointercancel", onPointerEnd);
+      slot.removeEventListener("lostpointercapture", onLostCapture);
       resizeObserver?.disconnect();
       intersectionObserver?.disconnect();
       slot.removeAttribute("data-home-globe-live");

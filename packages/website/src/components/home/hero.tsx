@@ -6,7 +6,13 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { HOME_COPY } from "@/components/home/home-copy";
-import { PhoneGlobeToggle, usePhoneGlobe } from "@/components/home/phone-globe";
+import { GlobeToggle } from "@/components/home/globe-toggle";
+import {
+  LG_QUERY,
+  PhoneGlobeToggle,
+  usePhoneGlobe,
+} from "@/components/home/phone-globe";
+import { ArrowGlyph } from "@/components/werk/arrow-glyph";
 import { BrandButton } from "@/components/ui/brand-button";
 import { withMotionProvider } from "@/components/motion/with-motion-provider";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
@@ -35,48 +41,6 @@ function usePrefersReducedMotion(): boolean {
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
-   Tiny decorative atoms
-   ────────────────────────────────────────────────────────────────────────── */
-
-/** Print-shop registration crosshair. Place at section corners. */
-function RegisterMark({ className }: { className: string }) {
-  return (
-    <svg
-      width="12"
-      height="12"
-      viewBox="0 0 12 12"
-      aria-hidden="true"
-      className={`pointer-events-none absolute text-foreground/15 ${className}`}
-    >
-      <line
-        x1="6"
-        y1="0"
-        x2="6"
-        y2="12"
-        stroke="currentColor"
-        strokeWidth="0.6"
-      />
-      <line
-        x1="0"
-        y1="6"
-        x2="12"
-        y2="6"
-        stroke="currentColor"
-        strokeWidth="0.6"
-      />
-      <circle
-        cx="6"
-        cy="6"
-        r="1.6"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="0.5"
-      />
-    </svg>
-  );
-}
-
-/* ──────────────────────────────────────────────────────────────────────────
    Desktop globe (lg and up)
    ────────────────────────────────────────────────────────────────────────── */
 
@@ -84,17 +48,23 @@ function RegisterMark({ className }: { className: string }) {
  * The desktop projection and its scroll scene. Mounted only once the desktop
  * query has matched, so phones run no scroll-linked JavaScript and never
  * download hero-network.
+ *
+ * It is positioned against the section, not the content column, so the
+ * sphere runs off the viewport edge like the workshop cover globe instead of
+ * stopping at a hard vertical edge. Purely decorative and never a target: the
+ * visible pause control sits beside the primary action.
  */
 function DesktopHeroGlobe({
   locale,
   sectionRef,
   prefersReduced,
+  paused,
 }: {
   readonly locale: Locale;
   readonly sectionRef: React.RefObject<HTMLElement | null>;
   readonly prefersReduced: boolean;
+  readonly paused: boolean;
 }) {
-  const [networkPaused, setNetworkPaused] = useState(false);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end start"],
@@ -110,50 +80,29 @@ function DesktopHeroGlobe({
   const frozen = useTransform(scrollYProgress, [0.08, 0.15], [0, 1]);
 
   return (
-    <>
+    <m.div
+      id="home-hero-network"
+      data-hero-globe-motion={
+        prefersReduced ? "static" : paused ? "paused" : "running"
+      }
+      className="home-hero-network-mask pointer-events-none absolute bottom-0 right-0 z-0 block h-[110%] w-[70vw] overflow-visible"
+    >
       <m.div
-        id="home-hero-network"
-        data-hero-globe-motion={
-          prefersReduced ? "static" : networkPaused ? "paused" : "running"
+        className="h-full w-full"
+        style={
+          !prefersReduced ? { y: globeY, opacity: globeOpacity } : undefined
         }
-        className="home-hero-network-mask pointer-events-none absolute bottom-0 right-0 block h-[110%] w-[70vw] overflow-visible"
       >
-        <m.div
-          className="h-full w-full"
-          style={
-            !prefersReduced ? { y: globeY, opacity: globeOpacity } : undefined
-          }
-        >
-          <HeroNetwork
-            locale={locale}
-            scrollProgress={scrollYProgress}
-            frozen={frozen}
-            paused={networkPaused}
-            reducedMotion={prefersReduced}
-            className="h-full w-full opacity-100"
-          />
-        </m.div>
-      </m.div>
-
-      {!prefersReduced ? (
-        <button
-          type="button"
-          aria-controls="home-hero-network"
-          aria-label={
-            networkPaused
-              ? locale === "de"
-                ? "Globus fortsetzen"
-                : "Resume globe motion"
-              : locale === "de"
-                ? "Globus anhalten"
-                : "Pause globe motion"
-          }
-          data-hero-globe-surface-control
-          onClick={() => setNetworkPaused((current) => !current)}
-          className="absolute bottom-[8%] right-[1%] z-30 hidden h-[82%] min-h-11 w-[43%] min-w-11 cursor-pointer rounded-[50%] border-0 bg-transparent p-0 outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background lg:block"
+        <HeroNetwork
+          locale={locale}
+          scrollProgress={scrollYProgress}
+          frozen={frozen}
+          paused={paused}
+          reducedMotion={prefersReduced}
+          className="h-full w-full opacity-100"
         />
-      ) : null}
-    </>
+      </m.div>
+    </m.div>
   );
 }
 
@@ -174,19 +123,23 @@ export type HeroSectionProps = {
 };
 
 /*
- * Two layouts, one tree.
+ * Two layouts, one tree, one graphit band.
  *
- * From lg this is the reviewed desktop hero, unchanged: paper, the three-line
- * lockup, the projection globe on the right and the pillar register.
+ * The hero is a graphit band at every width (phone-hero.css sets the band's
+ * tokens), with the facts as its label, the promise in two lines, one lead
+ * sentence and one square primary action.
  *
- * Below lg (phone-hero.css) the same section becomes one graphit band between
- * the compact top bar and the tab bar: the label and the two-line promise at
- * the top, the horizon globe filling the band behind everything below the
- * lead, the primary action on the ground in the thumb zone, and the continue
- * row docked as the last row above the tab bar. The wrappers that exist for
- * the desktop grid are `display: contents` there, so kicker, heading, lead,
- * actions, globe and continue row are placed on one grid. Nothing about the
- * layout is decided in JavaScript.
+ * From lg the band is the cover: the text column on the left, the projection
+ * globe running off the right edge behind it, a visible pause control beside
+ * the action and the pillar register as a hairline index row at the foot.
+ *
+ * Below lg (phone-hero.css) the same section is laid out between the compact
+ * top bar and the tab bar: the horizon globe fills the band behind everything
+ * below the lead, the primary action sits on the ground in the thumb zone,
+ * and the continue row is docked as the last row above the tab bar. The
+ * wrappers that exist for the desktop grid are `display: contents` there, so
+ * kicker, heading, lead, actions, globe and continue row are placed on one
+ * grid. Nothing about the layout is decided in JavaScript.
  */
 function HeroSectionContent({
   locale = "de",
@@ -194,26 +147,19 @@ function HeroSectionContent({
   continueSlot,
 }: HeroSectionProps) {
   const copy = HOME_COPY[locale].hero;
-  // Desktop lockup colours. Below lg the band's tokens make every line paper.
-  const headlineColors = [
-    "text-foreground",
-    "text-foreground lg:text-brand-cobalt",
-    "text-foreground lg:text-brand-orange",
-  ] as const;
-  const pillarTones = [
-    "bg-brand-acid/65",
-    "bg-brand-peach/55",
-    "bg-brand-sky/60",
-  ] as const;
   const sectionRef = useRef<HTMLElement>(null);
   const prefersReduced = usePrefersReducedMotion();
   const phoneGlobeState = usePhoneGlobe();
   const [networkMode, setNetworkMode] = useState<"desktop" | "mobile" | null>(
     null,
   );
+  const [networkPaused, setNetworkPaused] = useState(false);
 
   useEffect(() => {
-    const media = window.matchMedia("(min-width: 1024px)");
+    // The same query as Tailwind lg, phone-hero.css and the phone renderer's
+    // eligibility, so the two globes can never run at once (a rem query
+    // follows the browser's default font size; a px query would not).
+    const media = window.matchMedia(LG_QUERY);
     const updateMode = () =>
       setNetworkMode(media.matches ? "desktop" : "mobile");
     updateMode();
@@ -223,76 +169,65 @@ function HeroSectionContent({
     };
   }, []);
 
+  const desktopGlobe = networkMode === "desktop";
+
   return (
     <section
       ref={sectionRef}
       data-section="hero"
-      className="berlin-grain berlin-hero relative -mt-16 flex flex-col overflow-hidden px-6 pb-6 pt-24 max-lg:mt-0 max-lg:p-0 md:px-12 md:pb-10 md:pt-24 lg:min-h-[38rem] lg:pb-12"
+      className="relative -mt-16 flex flex-col overflow-hidden px-6 pb-6 pt-24 max-lg:mt-0 max-lg:p-0 md:px-12 md:pb-10 md:pt-24 lg:min-h-[38rem] lg:pb-12"
     >
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute -left-10 top-32 hidden size-32 -rotate-12 rounded-[2rem] border border-foreground/15 bg-brand-pink/50 lg:block"
-      />
-
-      {/* ── Print-shop registration marks at the four corners ─────────── */}
-      <RegisterMark className="left-3 top-20 hidden lg:block" />
-      <RegisterMark className="right-3 top-20 hidden lg:block" />
-      <RegisterMark className="bottom-4 left-3 hidden lg:block" />
-      <RegisterMark className="bottom-4 right-3 hidden lg:block" />
-
       {/* The globe is the hero's only animated signal.
 
-          The headline size lives here rather than in an inline style because
-          it has two reviewed values: the two-line promise on the companion
-          shell, the three-line lockup from lg. The lg value is byte-identical
-          to the one this element carried inline. The short-viewport padding
+          The headline size lives here rather than in a utility because it has
+          two values: the two-line promise on the companion shell, and the
+          cover band's display size from lg. The short-viewport padding
           override is scoped to lg too; below it phone-hero.css owns the band. */}
       <style>{`
         [data-section="hero"] h1 { font-size: clamp(2rem, 11.5vw - 0.25rem, 3rem); }
         @media (min-width: 64rem) {
-          [data-section="hero"] h1 { font-size: clamp(2.25rem, min(8.4vw, 12.5svh), 8rem); }
+          [data-section="hero"] h1 { font-size: var(--text-display); }
         }
         @media (min-width: 64rem) and (max-height: 680px) {
           [data-section="hero"] { padding-top: 4.5rem !important; padding-bottom: 1.25rem !important; }
         }
       `}</style>
 
+      {desktopGlobe ? (
+        <DesktopHeroGlobe
+          locale={locale}
+          sectionRef={sectionRef}
+          prefersReduced={prefersReduced}
+          paused={networkPaused}
+        />
+      ) : null}
+
       <div data-hero-body className="relative z-10 mx-auto w-full max-w-6xl">
         <div
           data-hero-grid
-          className="grid grid-cols-1 items-start gap-0 lg:grid-cols-[1fr_minmax(0,440px)] xl:grid-cols-[1fr_520px]"
+          className="grid grid-cols-1 items-start gap-0 lg:grid-cols-[minmax(0,40rem)_1fr]"
         >
           <div data-hero-copy className="relative z-10">
-            {/* Below lg the facts open the band as its label; from lg they
-                close the introduction instead (the span below). */}
-            <p data-hero-kicker className="lg:hidden">
+            {/* The facts open the band as its label at every width. */}
+            <p
+              data-hero-kicker
+              className="text-label text-muted-foreground lg:mt-6"
+            >
               {copy.introduction.facts}
             </p>
 
             <h1
               aria-label={copy.headline.join(" ")}
-              className="font-bold leading-[0.94] text-foreground"
-              style={{ letterSpacing: "0" }}
+              className="font-bold leading-none tracking-[-0.015em] text-foreground lg:mt-4"
             >
-              {/* One lockup for every width: three parts on three lines from
-                  lg, the first two joined on one line below it, so the phone
-                  shows the whole promise in two lines. The accessible name is
-                  the aria-label at every width. */}
+              {/* One lockup for every width: the first two parts joined on
+                  the first line, the last on the second, in one colour. The
+                  accessible name is the aria-label. */}
               {copy.headline.map((line, index) => (
                 <span key={line}>
-                  <span
-                    className={
-                      "lg:drop-shadow-[0_3px_0_rgba(255,255,255,0.45)] " +
-                      headlineColors[index]
-                    }
-                  >
-                    {line}
-                  </span>
+                  <span>{line}</span>
                   {index === 0 ? (
-                    <>
-                      <span className="lg:hidden"> </span>
-                      <br className="max-lg:hidden" />
-                    </>
+                    " "
                   ) : index < copy.headline.length - 1 ? (
                     <br />
                   ) : null}
@@ -302,29 +237,40 @@ function HeroSectionContent({
 
             <p
               data-hero-lead
-              className="mt-6 max-w-xl rounded-2xl border border-foreground/10 bg-paper px-4 py-3 text-[1.125rem] leading-relaxed text-muted-foreground shadow-card"
+              className="mt-6 max-w-xl text-lead text-muted-foreground"
             >
               {copy.introduction.lead}
               <span className="max-lg:hidden">{copy.introduction.detail}</span>.
-              <span className="max-lg:hidden"> {copy.introduction.facts}</span>
             </p>
 
-            <div data-hero-actions className="mt-7">
+            <div
+              data-hero-actions
+              className="mt-8 flex items-center gap-4"
+            >
               <BrandButton
                 href={localizeHref("/kurse", locale)}
                 variant="primary"
-                surface="light"
+                surface="dark"
                 prefetch={false}
-                className="border-brand-cobalt bg-brand-cobalt text-white hover:border-brand-teal hover:bg-brand-teal hover:text-white"
               >
                 {copy.primaryCta} <ArrowRight size={15} aria-hidden="true" />
               </BrandButton>
-              <PhoneGlobeToggle globe={phoneGlobeState} label={copy.globeToggle} />
+              {desktopGlobe && !prefersReduced ? (
+                <GlobeToggle
+                  variant="desktop"
+                  paused={networkPaused}
+                  label={copy.globeToggle}
+                  controls="home-hero-network"
+                  onToggle={() => setNetworkPaused((current) => !current)}
+                />
+              ) : (
+                <PhoneGlobeToggle
+                  globe={phoneGlobeState}
+                  label={copy.globeToggle}
+                />
+              )}
             </div>
           </div>
-
-          {/* Globe placeholder to keep grid layout */}
-          <div className="hidden lg:block" />
         </div>
 
         {/* Below lg: the horizon globe. The server frame is the globe at
@@ -348,23 +294,15 @@ function HeroSectionContent({
         ) : null}
 
         {continueSlot}
-
-        {networkMode === "desktop" ? (
-          <DesktopHeroGlobe
-            locale={locale}
-            sectionRef={sectionRef}
-            prefersReduced={prefersReduced}
-          />
-        ) : null}
       </div>
 
-      {/* Three direct uses of the platform in one compact register.
+      {/* Three direct uses of the platform as one hairline index row.
 
           Hidden below lg: Lernen, Prüfen and Anwenden point at the same three
           destinations the companion shell already gives a rail and a tab, so on
           a phone this register spent a third of the first screen repeating
-          them. Visibility only; the register itself is unchanged. */}
-      <ol className="relative z-10 mx-auto mt-6 grid w-full max-w-6xl grid-cols-1 gap-2 max-lg:hidden sm:grid-cols-3 sm:gap-3 md:mt-8 lg:mt-10">
+          them. */}
+      <ol className="relative z-10 mx-auto mt-6 grid w-full max-w-6xl grid-cols-1 border-t border-hairline max-lg:hidden sm:grid-cols-3 md:mt-8 lg:mt-10">
         {copy.pillars.map((pillar, index) => {
           const href = pillar.href;
           const entry = (
@@ -372,15 +310,18 @@ function HeroSectionContent({
               <span className="flex items-baseline gap-3">
                 <span
                   aria-hidden="true"
-                  className="font-ui-mono text-xs font-bold leading-none tracking-[0.14em] text-brand-orange"
+                  className="text-label tabular-nums text-muted"
                 >
                   {String(index + 1).padStart(2, "0")}
                 </span>
-                <span className="text-base font-bold tracking-[-0.02em] text-foreground group-hover:text-brand-orange">
+                <span className="text-base font-semibold text-foreground underline decoration-transparent underline-offset-4 transition-[text-decoration-color] duration-[120ms] group-hover:decoration-current motion-reduce:transition-none">
                   {pillar.title}
                 </span>
+                {href ? (
+                  <ArrowGlyph className="ml-auto self-center text-muted-foreground group-hover:text-foreground" />
+                ) : null}
               </span>
-              <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">
+              <p className="mt-1.5 text-caption text-muted-foreground">
                 {pillar.body}
               </p>
             </>
@@ -388,21 +329,18 @@ function HeroSectionContent({
           return (
             <li
               key={pillar.title}
-              className={
-                "min-w-0 rounded-2xl border border-foreground/10 p-4 shadow-card transition-[box-shadow,transform] duration-200 hover:-translate-y-1 hover:shadow-card-hover motion-reduce:transform-none motion-reduce:transition-none sm:p-5 " +
-                (pillarTones[index] ?? pillarTones[0])
-              }
+              className="min-w-0 border-hairline sm:border-l sm:px-5 sm:first:border-l-0 sm:first:pl-0 sm:last:pr-0"
             >
               {href ? (
                 <Link
                   href={localizeHref(href, locale)}
                   prefetch={false}
-                  className="group block h-full rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+                  className="group block h-full py-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
                 >
                   {entry}
                 </Link>
               ) : (
-                entry
+                <div className="py-4">{entry}</div>
               )}
             </li>
           );

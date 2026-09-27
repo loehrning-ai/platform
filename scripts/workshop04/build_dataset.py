@@ -110,8 +110,8 @@ META = {
     "location_en": "Invented site in Hesse, Germany",
     "factorLabel_en": "Illustrative teaching values, not official factors.",
     "factorLabel_de": "Illustrative Lehrwerte, keine amtlichen Faktoren.",
-    "constructedLabel_en": "Constructed from documented failure modes: what the answer looks like when all six traps fire. Not a recorded run.",
-    "constructedLabel_de": "Konstruiert aus dokumentierten Fehlermustern: So sieht die Antwort aus, wenn alle sechs Fallen zuschlagen. Kein aufgezeichneter Lauf.",
+    "constructedLabel_en": "Constructed from documented failure modes: what the answer looks like when all seven traps fire (six data traps and the market-based method error). Not a recorded run.",
+    "constructedLabel_de": "Konstruiert aus dokumentierten Fehlermustern: So sieht die Antwort aus, wenn alle sieben Fallen zuschlagen (sechs Datenfallen und der Methodenfehler beim marktbasierten Wert). Kein aufgezeichneter Lauf.",
     "targetLabel_en": "Target answer, constructed. Not a recorded run.",
     "targetLabel_de": "Zielantwort, konstruiert. Kein aufgezeichneter Lauf.",
 }
@@ -871,7 +871,7 @@ def el_bill(inv, m1, m2, kwh, *, addressee_lines, meter, noisy=False, header=Non
         f"Verbrauch {de_int(kwh)} kWh",
         f"Abschlag ab dem nächsten Monat: {eur(advance)} (Vorauszahlung, keine Verbrauchsmenge)",
         "",
-        "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe README).",
+        "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe START-HERE.md).",
     ]
     return lines
 
@@ -1255,7 +1255,7 @@ write_text("START-HERE.md", [
     "",
     "| Folder | Contents |",
     "|---|---|",
-    f"| `rohdaten_2025/` | The raw folder the AI gets in the first run: {BILLS_AS_TEXT} bills as text files and {CSV_EXPORTS} CSV exports. German documents with German number format, as in real life. |",
+    f"| `rohdaten_2025/` | The raw folder the AI gets in the first run: {BILLS_AS_TEXT} documents as text files (bills, statements and one certificate confirmation) and {CSV_EXPORTS} CSV exports. German documents with German number format, as in real life. |",
     "| `vorjahr/` | The consultant's 2024 summary (grade B, no bills). |",
     "| `faktoren/` | The pinned factor table. Illustrative teaching values. |",
     "| `belegtabelle/` | Empty ledger with one worked, one half-filled and one blank row; empty coverage grid; the six rules. |",
@@ -1558,7 +1558,7 @@ write_text("aufzeichnungen/lauf_rohordner.md", [
     "# Run record · condition A (raw folder)",
     "",
     "Status: not recorded yet.",
-    "The answer shown in the workshop is constructed from documented failure modes: it shows what the answer looks like when all six traps fire.",
+    "The answer shown in the workshop is constructed from documented failure modes: it shows what the answer looks like when all seven traps fire (six data traps and the market-based method error).",
     "Protocol: prompts/00_run_protocol.md. Results will be listed here with model, version, tool, date and one line per run.",
 ])
 write_text("aufzeichnungen/lauf_belegtabelle.md", [
@@ -1609,7 +1609,7 @@ write_text("vorlagen/transfer.md", [
     "- EN: \"This number comes from [document, line], covers [period], was converted by [rule], belongs to [entity] under [boundary rule], and uses [factor ID, year, edition]. Still open: [one thing].\"",
     "- DE: „Diese Zahl stammt aus [Beleg, Zeile], deckt [Zeitraum] ab, wurde mit [Regel] umgerechnet, gehört zu [Gesellschaft] nach [Regel zur Bilanzgrenze] und nutzt [Faktor-ID, Jahr, Stand]. Noch offen: [eine Sache].\"",
     "",
-    f"Worked sentence: \"This number comes from the Werk Süd annual statement 2025, line 'Verbrauch 2025: {WS_PRINTED}', covers January to December 2025, was converted with MWh × {en_int(KIT_RULES['mwhToKwh'])}, belongs to {META['company']}, Werk Süd, under operational control, and uses F-EL-LB-2025 (teaching values {EDITION_NAME}). Still open: the monthly split, if the customer asks for quarters.\"",
+    f"Worked sentence: \"This number comes from the Werk Süd annual statement 2025, line 'Verbrauch 2025: {WS_PRINTED}', covers January to December 2025, was converted with MWh × {en_int(KIT_RULES['mwhToKwh'])}, belongs to {META['company']}, Werk Süd, under operational control, and uses F-EL-LB-2025 (edition {FACTOR_EDITION}). Still open: the monthly split, if the customer asks for quarters.\"",
 ])
 
 data["kitRules"] = KIT_RULES

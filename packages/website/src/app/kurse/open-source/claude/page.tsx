@@ -172,18 +172,17 @@ export default async function ClaudeCourseLandingPage() {
           className="mt-12 min-w-0 max-sm:mt-4"
           aria-labelledby="prompt-lab-heading"
         >
-          {/* Below lg the heading and intro stay for assistive technology
-              only: the toggle row names the workbench and carries the intro
-              as its second line. */}
-          <h2
-            id="prompt-lab-heading"
-            className="text-[26px] font-bold leading-tight tracking-[-0.025em] text-foreground max-lg:sr-only sm:text-[32px]"
-          >
-            {copy.demoEyebrow}
-          </h2>
-          <p className="mt-2 max-w-[640px] text-sm leading-[1.55] text-muted-foreground max-lg:sr-only">
-            {copy.demoIntro}
-          </p>
+          {/* The same Kopflinie head as the course plan below. Below lg the
+              heading and intro stay for assistive technology only: the
+              toggle row names the workbench and carries the intro as its
+              second line. */}
+          <div className="max-lg:sr-only">
+            <TechnicalCourseSectionHeading
+              headingId="prompt-lab-heading"
+              title={copy.demoEyebrow}
+              intro={copy.demoIntro}
+            />
+          </div>
           <PhoneDisclosure
             id="prompt-lab-instruments"
             label={copy.demoToggle}

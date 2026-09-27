@@ -107,7 +107,7 @@
     ".hs input[type=range]::-moz-range-thumb{width:14px;height:22px;border-radius:0;background:var(--ink);border:2px solid var(--paper);cursor:grab}" +
     ".hs input[type=range]:focus-visible{outline:3px solid " + RUST + "}" +
     ".hs-seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--ink);background:var(--paper)}" +
-    ".hs-seg button{font:500 14px/1.1 " + SANS + ";min-height:40px;padding:8px 12px;background:transparent;border:0;border-left:1px solid var(--line);cursor:pointer;color:var(--sub)}" +
+    ".hs-seg button{font:500 14px/1.1 " + SANS + ";min-height:44px;padding:8px 12px;background:transparent;border:0;border-left:1px solid var(--line);cursor:pointer;color:var(--sub)}" +
     ".hs-seg button:first-child{border-left:0}" +
     ".hs-seg button[aria-pressed=true]{background:var(--ink);color:#f2f1ee;font-weight:600}" +
     ".hs-seg button:focus-visible,.hs-btn:focus-visible{outline:3px solid " + RUST + ";outline-offset:2px}" +
@@ -116,7 +116,6 @@
     ".hs-btn[disabled]{opacity:.55;cursor:default}" +
     ".hs-btn.ghost{background:transparent;color:var(--ink)}" +
     ".hs-btn.ghost:hover{background:#efebe2}" +
-    ".hs-btn.hot{outline:3px solid " + RUST + ";outline-offset:2px}" +
     ".hs-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(108px,1fr));gap:9px;margin-top:12px}" +
     ".hs-metric{border-top:2px solid var(--ink);padding:8px 2px 0;background:transparent}" +
     ".hs-metric .k{" + LABEL + "}" +
@@ -356,7 +355,7 @@
       var segModel = seg(
         [{ value: "ma", label: RUNGS.ma.label }, { value: "wk", label: RUNGS.wk.label }, { value: "promo", label: RUNGS.promo.label }],
         this.model,
-        function (v) { self.model = v; self.rowChal.who.textContent = RUNGS[v].who; self.reset(); }
+        function (v) { self.model = v; self.rowChal.who.textContent = RUNGS[v].who; self.showScored(); }
       );
 
       // phone charts are too narrow for in-plot event labels: they move to this key under the chart
@@ -374,9 +373,12 @@
         this.v
       ]));
 
-      this.precompute();
-      this.setPrimer();
-      this.render();
+      // The lab opens on the scored replay (both bills filled in); Run replays the six weeks.
+      this.showScored();
+    },
+    showScored: function () {
+      this.reset(true);
+      this.cur = this.n; this.finish(); this.render();
     },
     _racer: function (name, color) {
       var who = el("span", { class: "who", text: name });
@@ -469,7 +471,7 @@
       var cb = this.cum.base, cc = this.cum.chal;
       var totB = cb[cb.length - 1], totC = cc[cc.length - 1];
       this.done = true;
-      this.btn.disabled = false; this.btn.textContent = "Run shadow replay again";
+      this.btn.disabled = false; this.btn.textContent = "Run shadow replay";
       this.live._state(false, false, "Replay complete, six weeks scored");
       var saved = totB - totC, cut = totB > 0 ? saved / totB : 0;
       var chalWon = totC < totB;
@@ -477,7 +479,7 @@
       this.rowChal.row.classList.toggle("win", chalWon);
       (chalWon ? this.rowChal : this.rowBase).who.classList.add("front");
       var promoErr = Math.round(Math.abs(this.y[118] - this.predAt(this.model, 118)));
-      var owner = "The red day is a shock with no calendar date. No model sees it, so it goes to the exception owner, not the model score.";
+      var owner = "The shock day has no calendar date. No model sees it, so it goes to the exception owner, not the model score.";
       if (this.model === "ma") {
         this.v._set("<b>History only loses.</b> A seven day average is blind to the weekday rhythm your spreadsheet already uses, so it overspends by <b>" + money(-saved) + "</b> across six weeks. Give the model at least the calendar the sheet has. " + owner, "warn");
         emitResult("race", money(saved), "vs same weekday last week", "Less calendar than the sheet loses. Start from weekday, then add the dates.");
@@ -514,12 +516,25 @@
         }
         stick(PROMO, rgba("#205b46", 0.95), 3.5);
         stick(SHOCK, C.red, 3.5);
-        ctx.font = "800 12px 'JetBrains Mono',ui-monospace,monospace"; ctx.textAlign = "center";
-        // narrow charts get the short labels; phone charts show none and use the key under the chart
-        var narrow = m.x1 - m.x0 < 440, half = narrow ? 30 : 92;
+        // Event labels sit in the headroom above the plot (padTop), in the sans label style, each
+        // tied to its day by a leader line. The shock takes the upper row and the promo the lower
+        // one, so neither leader crosses the other label. Phone charts use the key instead.
         if (!tiny) {
-          ctx.fillStyle = TEAL; haloText(ctx, narrow ? "promo" : "promo day, on the calendar", clamp(m.xToPx(PROMO), m.x0 + half, m.x1 - half), clamp(m.yToPx(s[PROMO]) - 13, m.y0 + 30, m.y1 - 8));
-          ctx.fillStyle = C.red; haloText(ctx, narrow ? "shock" : "shock, not on the calendar", clamp(m.xToPx(SHOCK), m.x0 + half, m.x1 - half), clamp(m.yToPx(s[SHOCK]) + 22, m.y0 + 30, m.y1 - 6));
+          var narrow = m.x1 - m.x0 < 440;
+          ctx.font = "600 13px Typing, system-ui, sans-serif"; ctx.textBaseline = "middle";
+          var label = function (t, text, rowY, color) {
+            var px = m.xToPx(t), py = m.yToPx(s[t]), w = ctx.measureText(text).width;
+            var right = px - 8 - w >= m.x0; // text ends left of the leader; flips right near the axis
+            ctx.strokeStyle = color; ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(right ? px - 5 : px + 5, rowY); ctx.lineTo(px, rowY); ctx.lineTo(px, Math.max(rowY, py - 6));
+            ctx.stroke();
+            ctx.fillStyle = "#4f4640"; ctx.textAlign = right ? "right" : "left";
+            ctx.fillText(text, right ? px - 8 : px + 8, rowY);
+          };
+          label(SHOCK, narrow ? "shock, no date" : "shock, not on the calendar", 12, C.red);
+          label(PROMO, narrow ? "promo day" : "promo day, on the calendar", 31, rgba("#205b46", 0.95));
+          ctx.textBaseline = "alphabetic"; ctx.textAlign = "start";
         }
         // replay cursor
         if (cur > START && cur < n) {
@@ -534,7 +549,8 @@
       this.chart.setData({
         series: series, after: after,
         xmin: X0, xmax: n - 1, ymin: lo - pad, ymax: hi + pad,
-        marker: START, markerLabel: "replay starts",
+        marker: START, markerLabel: "replay starts", markerFont: "600 13px Typing, system-ui, sans-serif",
+        padTop: tiny ? 22 : 44,
         regions: [{ x0: START, x1: n - 1, color: rgba("#121212", 0.04) }],
         xlabels: tiny ? [{ x: X0 + 7, t: "wk -12" }, { x: n - 4, t: "today" }] : [{ x: X0 + 7, t: "wk -12" }, { x: START, t: "wk -6" }, { x: n - 4, t: "today" }]
       });

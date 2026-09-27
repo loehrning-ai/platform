@@ -31,11 +31,15 @@ const MATERIALS: readonly MaterialFrame[] = [
   { href: `${base}/field-card.html`, kind: "html", language: "en", role: "card", phase: "after" },
 ];
 
-function materials(copy: readonly (readonly [label: string, description: string])[]): readonly WorkshopMaterial[] {
+/** Label, description and, where the first sentence runs long on a phone, its short phone wording. */
+type MaterialCopy = readonly [label: string, description: string, short?: string];
+
+function materials(copy: readonly MaterialCopy[]): readonly WorkshopMaterial[] {
   if (copy.length !== MATERIALS.length) throw new Error("Workshop 04: material copy does not match the material list");
   return MATERIALS.map((frame, index) => {
-    const [label, description] = copy[index];
-    return frame.kind === "zip" ? { ...frame, label, description, sizeLabel: KIT_SIZE_LABEL } : { ...frame, label, description };
+    const [label, description, short] = copy[index];
+    const text = short === undefined ? { label, description } : { label, description, short };
+    return frame.kind === "zip" ? { ...frame, ...text, sizeLabel: KIT_SIZE_LABEL } : { ...frame, ...text };
   });
 }
 
@@ -49,7 +53,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     summary:
       "Dieselbe Scope-1-und-2-Frage geht an einen Rechnungsordner und an eine Belegtabelle. Du findest sechs Fehler in einer Summe, die plausibel aussieht.",
     description:
-      "Die erfundene Kellbrunn Präzisionsteile GmbH (180 Beschäftigte, drei Standorte) will wissen, wie hoch ihre Scope-1- und Scope-2-Emissionen 2025 waren und ob sie gegenüber 2024 gesunken sind. Auf einen Ordner mit 22 Rechnungen und Exporten antwortet die KI mit 1.866,5 t CO₂e, 7,5 % weniger als im Vorjahr. Diese Antwort ist aus dokumentierten Fehlerarten konstruiert. Die Summe liegt nur 2,5 % neben der richtigen Zahl, obwohl sechs Fehler darin stecken: eine doppelte Märzrechnung, ein fehlender Oktober, die Rechnung eines Gemeinschaftsunternehmens, „1.240 MWh“ als 1.240 kWh gelesen, ein Gasfaktor auf der falschen Basis und AdBlue als Diesel gezählt. Mit einer Belegtabelle, sechs Regeln und festen Faktoren lautet die Antwort auf dieselbe Frage 1.915,2 t standortbasiert (−5,1 %) und 1.893,2 t marktbasiert (−29,2 %). Vom standortbasierten Rückgang kommen 72,2 t vom niedrigeren Netzfaktor und 30,1 t aus geringerem eigenem Verbrauch; vom marktbasierten kommen 744,0 t aus Herkunftsnachweisen für einen Standort. Alle Zahlen sind erfunden, die Faktoren sind Lehrwerte.",
+      "Die erfundene Kellbrunn Präzisionsteile GmbH (180 Beschäftigte, drei Standorte) will wissen, wie hoch ihre Scope-1- und Scope-2-Emissionen 2025 waren und ob sie gegenüber 2024 gesunken sind. Für einen Ordner mit 22 Rechnungen und Exporten zeigt der Workshop eine KI-Antwort, die aus dokumentierten Fehlerarten konstruiert ist: 1.866,5 t CO₂e, 7,5 % weniger als im Vorjahr. Die Summe weicht nur um 2,5 % von der richtigen Zahl ab, obwohl sie sechs Fehler enthält: eine doppelte Märzrechnung, ein fehlender Oktober, die Rechnung eines Gemeinschaftsunternehmens, „1.240 MWh“ als 1.240 kWh gelesen, ein Gasfaktor auf der falschen Basis und AdBlue als Diesel gezählt. Mit einer Belegtabelle, sechs Regeln und festen Faktoren lautet die Antwort auf dieselbe Frage 1.915,2 t standortbasiert (−5,1 %) und 1.893,2 t marktbasiert (−29,2 %). Vom standortbasierten Rückgang kommen 72,2 t vom niedrigeren Netzfaktor und 30,1 t aus geringerem eigenem Verbrauch; vom marktbasierten kommen 744,0 t aus Herkunftsnachweisen für einen Standort. Alle Zahlen sind erfunden, die Faktoren sind Lehrwerte.",
     format: "Live-Workshop mit Deck",
     duration: "~90 Minuten",
     accessNote:
@@ -100,7 +104,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
           "Du füllst mit der Gruppe Zeilen einer Belegtabelle, entscheidest, woher der Netzfaktor kommt, und rechnest beide Scope-2-Zahlen.",
       },
       {
-        label: "Noch einmal fragen und nachrechnen",
+        label: "Neu fragen und nachrechnen",
         minutes: 16,
         activity: "do",
         description:
@@ -131,7 +135,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     ],
     agendaSource: "deck",
     minutesLive: 90,
-    minutesSelfStudy: 60,
+    minutesSelfStudy: 80,
     needs: [
       "Ein Browser, für das Deck am besten ein großer Bildschirm im Querformat",
       "Papier und Stift für die fünf Felder und die Übung mit drei Zahlen",
@@ -160,11 +164,11 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       kicker: "Entscheidung 01 · Rohdaten",
       title: "1.866,5 Tonnen, 7,5 % weniger als 2024. Weiterschicken?",
       prompt:
-        "Die KI hat alle Rechnungen im Ordner gelesen und meldet für 2025 Scope 1 und 2 von 1.866,5 t CO₂e, 7,5 % unter dem Vorjahr. Die Bank wartet auf die Zahl. Was tust du?",
+        "Eine KI-Antwort, konstruiert aus dokumentierten Fehlerarten, meldet für 2025 Scope 1 und 2 von 1.866,5 t CO₂e, 7,5 % unter dem Vorjahr. Die Bank wartet auf die Zahl. Was tust du?",
       facts: [
-        "KI-Antwort 2025: 1.866,5 t CO₂e",
+        "KI-Antwort 2025 (konstruiert): 1.866,5 t CO₂e",
         "Vorjahr 2024: 2.017,5 t CO₂e",
-        "Ordner Werk Nord: 12 Stromrechnungen",
+        "Ordner Werk Nord: 12 Dateien",
       ],
       decisionLegend: "Deine erste Entscheidung",
       evidenceLegend: "Der stärkste Beleg",
@@ -210,11 +214,11 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       resultLabel: "Auswertung der Entscheidung",
       feedback: {
         aligned: {
-          title: "Zwölf Rechnungen, elf Monate.",
+          title: "Zwölf Dateien im Ordner decken nur elf Monate ab.",
           body: "Im Ordner steckt der März doppelt, der Oktober fehlt, und eine Rechnung gehört einem Gemeinschaftsunternehmen. Die Monatstabelle zeigt das, bevor jemand summiert. Richtig sind 1.915,2 t standortbasiert.",
         },
         decisionOnly: {
-          title: "Richtiger Schritt, schwacher Grund.",
+          title: "Der Schritt stimmt, aber dein Beleg trägt ihn nicht.",
           body: "Eine Zahl nah am Vorjahr und gezeigte Summen belegen nicht, dass jede Rechnung einmal zählt. Der Beleg ist die Monatstabelle: 12 Dateien decken hier 11 Monate ab.",
         },
         evidenceOnly: {
@@ -222,8 +226,8 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
           body: "Wenn zwölf Dateien keine zwölf Monate belegen, darf die Summe so nicht raus. Erst die Monatstabelle, dann die Zahl.",
         },
         unsupported: {
-          title: "Plausibel ist noch nicht geprüft.",
-          body: "Sechs Fehler heben sich hier fast auf: Die Summe liegt nur 48,7 t neben der richtigen. Der Vorjahresvergleich findet die doppelte Märzrechnung nicht.",
+          title: "Die Summe sieht plausibel aus und ist trotzdem falsch.",
+          body: "Sechs Fehler heben sich hier fast auf, deshalb weicht die Summe nur um 48,7 t von der richtigen ab. Der Vorjahresvergleich findet die doppelte Märzrechnung nicht.",
         },
         byChoice: {
           "send-total": {
@@ -232,8 +236,8 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
               body: "Zwölf Dateien decken elf Monate ab, und eine Rechnung gehört einer anderen Firma. Die Summe stimmt nur zufällig fast. Richtig sind 1.915,2 t standortbasiert, und die Begründung der KI ist falsch.",
             },
             unsupported: {
-              title: "Nah am Vorjahr heißt nicht richtig.",
-              body: "Die Summe liegt 48,7 t neben der richtigen, weil sich Fehler aufheben. Im nächsten Jahr können sich dieselben Fehler addieren statt aufheben.",
+              title: "Die Nähe zum Vorjahr belegt die Summe nicht.",
+              body: "Die Summe weicht nur um 48,7 t von der richtigen ab, weil sich Fehler aufheben. Im nächsten Jahr können sich dieselben Fehler addieren statt aufheben.",
             },
           },
           "ask-again": {
@@ -261,7 +265,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         n: "02",
         title: "Die plausible falsche Antwort prüfen",
         description:
-          "Auf 22 Belege antwortet die KI mit 1.866,5 t, 7,5 % unter dem Vorjahr. Die Antwort ist konstruiert und zeigt, was passiert, wenn sechs Fehler zusammentreffen. Die Summe liegt trotzdem nur 48,7 t neben der richtigen Zahl.",
+          "Für 22 Belege meldet die KI 1.866,5 t, 7,5 % unter dem Vorjahr. Die Antwort ist konstruiert und zeigt, was passiert, wenn sechs Fehler zusammentreffen. Trotzdem weicht die Summe nur um 48,7 t von der richtigen Zahl ab.",
         tool: "Deck · Der Fehler",
       },
       {
@@ -318,8 +322,8 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         "Welche Prüfungen brauchst du, bevor du eine Emissionszahl aus einem Rechnungsordner an Bank oder Kunden schickst?",
       dataLimitations: [
         "Firma, Rechnungen und Mengen sind erfunden; die Emissionsfaktoren sind Lehrwerte und keine amtlichen Werte.",
-        "Die Antwort der KI auf den Rohordner ist aus dokumentierten Fehlerarten konstruiert, bis aufgezeichnete Läufe mit Datum vorliegen.",
-        "Die Zahlen für 2024 stammen aus einer Zusammenfassung ohne Einzelrechnungen, mit derselben Grenze und denselben Faktoren.",
+        "Die KI-Antwort auf den Rohordner ist aus dokumentierten Fehlerarten konstruiert und kein aufgezeichneter Lauf. Aufgezeichnete Läufe werden mit Datum und Modell nachgetragen.",
+        "Die Zahlen für 2024 stammen aus einer Zusammenfassung ohne Einzelrechnungen, mit derselben Grenze und derselben Faktortabelle (für 2024 mit den Faktoren von 2024).",
         "Ohne Produktionsmengen lässt sich nicht sagen, ob der geringere Verbrauch aus Effizienz oder aus weniger Produktion kommt.",
       ],
     },
@@ -331,25 +335,30 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       [
         "Moderationsansicht",
         "Für die Person, die moderiert: Notizen, Abstimmungsfragen, Pflichtsätze und eine Uhr für die 77 Minuten. Die Ansicht verbindet sich mit dem Deck, sobald du dort P drückst.",
+        "Für die Person, die moderiert: Notizen, Abstimmungsfragen und eine Uhr.",
       ],
       [
         "Interaktive Demo · 10 Min.",
         "Schalte jede Falle einzeln ein, öffne jede Rechnung und sieh die Zeile, die daraus in der Belegtabelle wird.",
+        "Schalte jede Falle einzeln ein und sieh, was aus jeder Rechnung wird.",
       ],
       [
         "ESG-Kit · .zip",
         "Alle Rechnungen als Text, Faktoren, leere und erwartete Belegtabelle, fünf Prompts und Vorlagen für Datenanfragen. Nur CSV- und Markdown-Dateien; START-HERE.md sagt, womit du anfängst.",
+        "Rechnungen, Faktoren, Belegtabellen und Prompts als CSV und Markdown.",
       ],
       [
         "Transferblatt",
         "Fünf Felder für eine eigene Rechnung, mit dem Beispiel aus Werk Süd daneben. Zum Ausdrucken.",
+        "Fünf Felder für eine eigene Rechnung, mit Beispiel, zum Ausdrucken.",
       ],
       [
         "Lernbegleiter",
         "Der Workshop zum Nachlesen, mit Fragen, deren Antwort du aufklappst, einer Wiederholung nach einer Woche und einem Glossar. Funktioniert auch auf dem Smartphone.",
+        "Der Workshop zum Nachlesen, mit Glossar, auch auf dem Smartphone.",
       ],
       [
-        "Merkkarte",
+        "Prüfkarte",
         "Sieben Prüfungen auf einer A4-Seite, bevor du einer ESG-Zahl traust.",
       ],
     ]),
@@ -361,9 +370,9 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     title: "ESG Reporting with AI: From Raw Inputs to Clearer Insights",
     eyebrow: "Workshop 04 · ESG reporting",
     summary:
-      "You ask an AI the same Scope 1 and 2 question twice, once with a folder of bills and once with a ledger, and find six errors in a total that looks right.",
+      "The same Scope 1 and 2 question goes to a folder of bills and to a ledger. You find six errors in a total that looks right.",
     description:
-      "The invented company Kellbrunn Präzisionsteile GmbH (180 staff, three sites) wants to know its Scope 1 and 2 emissions for 2025 and whether they went down compared with 2024. From a folder of 22 bills and exports, the AI answers 1,866.5 t CO₂e, 7.5% below last year. This answer is constructed from documented failure modes. The total is only 2.5% from the right figure, although six errors are inside it: a duplicate March bill, a missing October, a joint venture's bill, \"1.240 MWh\" read as 1,240 kWh, a gas factor on the wrong basis and AdBlue counted as diesel. With a ledger, six rules and pinned factors, the answer to the same question is 1,915.2 t location-based (−5.1%) and 1,893.2 t market-based (−29.2%). Of the location-based decrease, 72.2 t comes from a lower grid factor and 30.1 t from lower own use; of the market-based decrease, 744.0 t comes from guarantees of origin for one site. All numbers are invented; the factors are teaching values.",
+      "The invented company Kellbrunn Präzisionsteile GmbH (180 staff, three sites) wants to know its Scope 1 and 2 emissions for 2025 and whether they went down compared with 2024. For a folder of 22 bills and exports, the workshop shows an AI answer constructed from documented failure modes: 1,866.5 t CO₂e, 7.5% below last year. The total is only 2.5% off the right figure, although it contains six errors: a duplicate March bill, a missing October, a joint venture's bill, \"1.240 MWh\" read as 1,240 kWh, a gas factor on the wrong basis and AdBlue counted as diesel. With a ledger, six rules and pinned factors, the answer to the same question is 1,915.2 t location-based (−5.1%) and 1,893.2 t market-based (−29.2%). Of the location-based decrease, 72.2 t comes from a lower grid factor and 30.1 t from lower own use; of the market-based decrease, 744.0 t comes from guarantees of origin for one site. All numbers are invented; the factors are teaching values.",
     format: "Live workshop with deck",
     duration: "~90 minutes",
     accessNote:
@@ -382,7 +391,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       "Build a month grid for one site and spot duplicate, missing and two-month bills before anyone adds them up.",
       "Write one ledger row with the quoted source, period, value and unit as printed, legal entity, boundary and factor with its year.",
       "Work out Scope 2 location-based and market-based, and name the kilowatt hours a guarantee of origin covers.",
-      "Split the change against last year into grid factor, certificates and own use, and write one sentence that cites every number.",
+      "Split the change against last year into grid factor, guarantees of origin and own use, and write one sentence that cites every number.",
     ],
     agenda: [
       {
@@ -418,7 +427,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 16,
         activity: "do",
         description:
-          "In pairs you trace three figures to their bills and split the decrease into grid factor, certificates and own use.",
+          "In pairs you trace three figures to their bills and split the decrease into grid factor, guarantees of origin and own use.",
       },
       {
         label: "Limits",
@@ -445,7 +454,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     ],
     agendaSource: "deck",
     minutesLive: 90,
-    minutesSelfStudy: 60,
+    minutesSelfStudy: 80,
     needs: [
       "A browser, ideally a large landscape screen for the deck",
       "Paper and a pen for the five boxes and the three-figure exercise",
@@ -474,9 +483,9 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       kicker: "Decision 01 · Raw data",
       title: "1,866.5 tonnes, 7.5% below 2024. Send it?",
       prompt:
-        "The AI read every bill in the folder and reports Scope 1 and 2 of 1,866.5 t CO₂e for 2025, 7.5% below last year. The bank is waiting for the number. What do you do?",
+        "An AI answer, constructed from documented failure modes, reports Scope 1 and 2 of 1,866.5 t CO₂e for 2025, 7.5% below last year. The bank is waiting for the number. What do you do?",
       facts: [
-        "AI answer 2025: 1,866.5 t CO₂e",
+        "AI answer 2025 (constructed): 1,866.5 t CO₂e",
         "Last year 2024: 2,017.5 t CO₂e",
         "Werk Nord folder: 12 electricity bills",
       ],
@@ -524,11 +533,11 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       resultLabel: "Decision feedback",
       feedback: {
         aligned: {
-          title: "Twelve bills, eleven months.",
+          title: "The twelve files in the folder cover only eleven months.",
           body: "March is in the folder twice, October is missing, and one bill belongs to a joint venture. A month grid shows this before anyone adds up. The right total is 1,915.2 t location-based.",
         },
         decisionOnly: {
-          title: "Right step, weak reason.",
+          title: "The step is right, but your evidence does not support it.",
           body: "A number close to last year and neatly shown sums do not prove each bill counts once. The evidence is the month grid: here 12 files cover 11 months.",
         },
         evidenceOnly: {
@@ -536,8 +545,8 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
           body: "If twelve files do not prove twelve months, the total cannot go out yet. Month grid first, then the number.",
         },
         unsupported: {
-          title: "Plausible is not the same as checked.",
-          body: "Six errors almost cancel here: the total is only 48.7 t from the right one. Comparing with last year does not find the duplicate March bill.",
+          title: "The total looks plausible and is still wrong.",
+          body: "Six errors almost cancel here, so the total is only 48.7 t off the right one. Comparing with last year does not find the duplicate March bill.",
         },
         byChoice: {
           "send-total": {
@@ -546,8 +555,8 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
               body: "Twelve files cover eleven months, and one bill belongs to another company. The total is nearly right by accident. The right total is 1,915.2 t location-based, and the AI's explanation is wrong.",
             },
             unsupported: {
-              title: "Close to last year does not mean correct.",
-              body: "The total is 48.7 t from the right one because errors cancel. Next year the same errors can add up instead of cancelling.",
+              title: "Being close to last year does not prove the total.",
+              body: "The total is only 48.7 t off the right one because errors cancel. Next year the same errors can add up instead of cancelling.",
             },
           },
           "ask-again": {
@@ -575,7 +584,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         n: "02",
         title: "Check the plausible wrong answer",
         description:
-          "From 22 documents the AI answers 1,866.5 t, 7.5% below last year. The answer is constructed and shows what happens when six errors meet. The total is still only 48.7 t from the right figure.",
+          "For 22 documents the AI reports 1,866.5 t, 7.5% below last year. The answer is constructed and shows what happens when six errors meet. Still, the total is only 48.7 t off the right figure.",
         tool: "Deck · The mistake",
       },
       {
@@ -632,8 +641,8 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         "Which checks do you need before you send an emissions figure from a folder of bills to a bank or customer?",
       dataLimitations: [
         "Company, bills and quantities are invented; the emission factors are teaching values, not official ones.",
-        "The AI answer on the raw folder is constructed from documented failure modes until recorded runs with a date exist.",
-        "The 2024 figures come from a summary without individual bills, with the same boundary and the same factors.",
+        "The AI answer on the raw folder is constructed from documented failure modes and is not a recorded run. Recorded runs will be added with date and model.",
+        "The 2024 figures come from a summary without individual bills, with the same boundary and the same factor file (2024 factors for 2024).",
         "Without production volumes nobody can say whether lower use came from efficiency or from lower output.",
       ],
     },
@@ -645,22 +654,27 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
       [
         "Presenter view",
         "For whoever presents: notes, room votes, must-say lines and a clock for the 77 minutes. The view pairs with the deck as soon as you press P there.",
+        "For whoever presents: notes, room votes and a clock.",
       ],
       [
         "Interactive demo · 10 min",
         "Switch each trap on alone, open every bill and see the ledger row it becomes.",
+        "Switch each trap on alone and see the ledger row each bill becomes.",
       ],
       [
         "ESG kit · .zip",
         "Every bill as text, factors, empty and expected ledgers, five prompts and data-request templates. CSV and Markdown only; START-HERE.md tells you where to begin.",
+        "Bills, factors, ledgers and prompts as CSV and Markdown files.",
       ],
       [
         "Transfer sheet",
         "Five boxes for one of your own bills, with the Werk Süd example beside each. For printing.",
+        "Five boxes for one of your own bills, with an example, for printing.",
       ],
       [
         "Learner guide",
         "The workshop to read at your own pace, with reveal questions, a one-week recall and a glossary. Works on a phone too.",
+        "The workshop to read at your own pace, with a glossary.",
       ],
       [
         "Field card",

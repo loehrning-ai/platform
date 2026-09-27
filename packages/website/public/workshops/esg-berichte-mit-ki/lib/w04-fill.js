@@ -12,7 +12,7 @@
      de       the German display string
    data-j paths are dot-separated; an array segment is an index or an id matched against row_id,
    id, step, n or a document's file name without its extension. data-form="cell:N" picks cell N of
-   a Markdown table line, data-form="md" drops a leading "# ", int / fix1 / fix2 / pct format a
+   a Markdown table line, data-form="md" drops a leading "# ", int / fix1 / fix2 / pct / pct1 format a
    plain number, math writes worked arithmetic with × and the minus sign, and seg:A-B keeps the
    " · " parts A to B of a line. */
 (function (root) {
@@ -63,6 +63,8 @@
     if (form === "fix1") text = Number(value).toFixed(1);
     if (form === "fix2") text = Number(value).toFixed(2);
     if (form === "pct") text = `${Number(value)}%`;
+    // Shares in a ranked list keep one decimal next to each other ("5.0%" beside "17.6%").
+    if (form === "pct1") text = `${Number(value).toFixed(1)}%`;
     // Worked arithmetic from the dataset is written in ASCII ("x", " - ", "-72.2"); on screen it gets
     // the multiplication sign and the minus sign U+2212.
     if (form === "math") text = text.replace(/ x /g, " × ").replace(/ - /g, " − ").replace(/(^|[\s(])-(?=\d)/g, "$1−");

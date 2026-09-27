@@ -99,7 +99,10 @@ export function AuthStatus({
   }
 
   // min-w fits the widest label ("Anmelden") so the control keeps its width
-  // when the session resolves to "Konto" and nothing beside it shifts.
+  // when the session resolves to "Konto" and nothing beside it shifts. In the
+  // desktop header, a desktop-nav container narrower than 44rem (only reached
+  // when the page is zoomed while the lg layout still applies) keeps the
+  // 44px square and the icon; the label stays in the accessible name.
   return (
     <Link
       href={href}
@@ -107,11 +110,17 @@ export function AuthStatus({
       onClick={onNavigate}
       className={cn(
         "inline-flex min-h-11 min-w-[7.25rem] items-center justify-center gap-2 border border-foreground bg-transparent px-3 py-2 text-sm font-semibold text-foreground outline-none transition-colors duration-[120ms] hover:bg-card-hover focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
-        mobile && "mt-3 w-full px-4",
+        mobile
+          ? "mt-3 w-full px-4"
+          : "@max-[44rem]/desktop-nav:min-w-11 @max-[44rem]/desktop-nav:px-0",
       )}
     >
       <Icon size={14} aria-hidden="true" />
-      {label}
+      <span
+        className={cn(!mobile && "@max-[44rem]/desktop-nav:sr-only")}
+      >
+        {label}
+      </span>
     </Link>
   );
 }

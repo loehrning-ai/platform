@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, type JSX } from "react";
-import { cn } from "@/lib/utils";
+import { useMemo, useState, type JSX } from "react";
+import { cx as cn } from "@/components/werk/cx";
 import {
   genericAnswer,
   simulatedDelayMs,
@@ -113,9 +113,6 @@ const COPY = {
     output: "Simulierte Ausgabe",
     disclosure: "Feste lokale Regeln; kein Modell- oder API-Aufruf.",
     result: "Ergebnis",
-    waiting: "Noch nicht ausgeführt",
-    empty: (stage: number) =>
-      `Führe Stufe ${stage} aus, um die simulierte Antwort zu sehen. Vergleiche anschließend die drei Stufen.`,
   },
   en: {
     prompt: "Prompt",
@@ -128,9 +125,6 @@ const COPY = {
     output: "Simulated output",
     disclosure: "Fixed local rules; no model or API call.",
     result: "Result",
-    waiting: "Not run yet",
-    empty: (stage: number) =>
-      `Run stage ${stage} to see the simulated response, then compare all three stages.`,
   },
 } as const;
 
@@ -142,7 +136,14 @@ export function HeroTransform({
   const stages = locale === "de" ? STAGES_DE : STAGES_EN;
   const copy = COPY[locale];
   const [stageIdx, setStageIdx] = useState(0);
-  const [outputs, setOutputs] = useState<(string | null)[]>([null, null, null]);
+  // Final state first: every stage's simulated output is on screen from the
+  // first paint, so the comparison works without pressing play. The run
+  // button replays the current stage. genericAnswer is deterministic, so
+  // server and client render the same text.
+  const outputs = useMemo(
+    () => stages.map((stage) => genericAnswer(stage.prompt, locale)),
+    [stages, locale],
+  );
   const [loading, setLoading] = useState(false);
 
   const active = stages[stageIdx];
@@ -152,15 +153,15 @@ export function HeroTransform({
     await new Promise((resolve) =>
       setTimeout(resolve, simulatedDelayMs(active.prompt)),
     );
-    const result = genericAnswer(active.prompt, locale);
-    setOutputs((prev) => prev.map((o, i) => (i === stageIdx ? result : o)));
     setLoading(false);
   };
 
   return (
     // Werkzeichnung: 1px ink frame, no offset shadows, square stage buttons and
-    // sentence-case labels. Prompt text and output stay mono or pre-formatted
-    // because they are data. Below sm the empty output drops its 260px floor.
+    // sentence-case labels. The frame is the only box: assessment and output
+    // sit under hairlines. Prompt text and output stay pre-formatted because
+    // they are data. The replay button is ink; the landing keeps Mennige for
+    // "Lektion 01 starten" only.
     <div className="grid gap-0 border border-foreground md:grid-cols-2">
       <div className="border-b border-border bg-card p-4 sm:p-6 md:border-b-0 md:border-r">
         <div className="mb-4 flex items-center justify-between">
@@ -189,10 +190,10 @@ export function HeroTransform({
             ))}
           </div>
         </div>
-        <pre className="max-h-[220px] overflow-y-auto whitespace-pre-wrap border border-border bg-background p-3 text-[12.5px] leading-[1.5] text-foreground">
+        <pre className="max-h-[220px] overflow-y-auto whitespace-pre-wrap border-y border-hairline py-3 text-[12.5px] leading-[1.5] text-foreground">
           {active.prompt}
         </pre>
-        <div className="mt-3 border border-border bg-background p-3">
+        <div className="mt-3">
           <p className="text-label text-foreground">{copy.diagnosis}</p>
           <p className="mt-1 text-[13px] leading-[1.5] text-muted-foreground">
             {active.note}
@@ -221,7 +222,7 @@ export function HeroTransform({
             type="button"
             onClick={run}
             disabled={loading}
-            className="inline-flex min-h-11 w-full items-center justify-center bg-brand-orange px-4 py-2 text-[0.9375rem] font-semibold text-paper transition-colors duration-[120ms] hover:bg-kupfer-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none sm:w-auto sm:shrink-0"
+            className="inline-flex min-h-11 w-full items-center justify-center rounded-none bg-foreground px-4 py-2 text-[0.9375rem] font-semibold text-background transition-colors duration-[120ms] hover:bg-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none sm:w-auto sm:shrink-0"
           >
             {loading ? copy.running : copy.run(stageIdx + 1)}
           </button>
@@ -233,23 +234,17 @@ export function HeroTransform({
           {copy.disclosure}
         </p>
         <p className="mt-1 text-[16px] font-semibold text-foreground">
-          {outputs[stageIdx] ? copy.result : copy.waiting}
+          {copy.result} · {copy.stage} {stageIdx + 1}
         </p>
         <div
-          className={cn(
-            "mt-4 overflow-auto whitespace-pre-wrap break-words border p-4 text-[13.5px] leading-[1.6] text-foreground sm:min-h-[260px]",
-            // Below sm the empty box waits for a run; "Noch nicht
-            // ausgeführt" above already says there is nothing yet.
-            !outputs[stageIdx] && "max-sm:hidden",
-            stageIdx === 2
-              ? "border-brand-amber/40 bg-brand-amber/5"
-              : "border-border bg-card/40",
-          )}
+          aria-live="polite"
+          aria-busy={loading}
+          className="mt-4 overflow-auto whitespace-pre-wrap break-words border-t border-hairline pt-4 text-[13.5px] leading-[1.6] text-foreground sm:min-h-[260px]"
         >
-          {outputs[stageIdx] ?? (
-            <span className="italic text-muted-foreground">
-              {copy.empty(stageIdx + 1)}
-            </span>
+          {loading ? (
+            <span className="text-muted-foreground">{copy.running}</span>
+          ) : (
+            outputs[stageIdx]
           )}
         </div>
       </div>

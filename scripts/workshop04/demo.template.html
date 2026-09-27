@@ -154,6 +154,8 @@ details.more>summary:hover{color:var(--mennige-deep)}
 .meter .gauge{grid-row:3}
 .meter .sub{grid-row:4}
 .meter:first-child .sub{grid-row:3 / span 2}
+/* the two scope values stack, so no separator is left at a line end */
+.sub--scopes .nw{display:block}
 .nw{white-space:nowrap}
 .l-short,.d-sign,.sw__s,.lead-ph{display:none}
 .meter b{display:block;font:700 clamp(20px,1.1rem + .6vw,28px)/1.15 var(--sans);letter-spacing:-.01em;white-space:nowrap}
@@ -180,6 +182,7 @@ details.more>summary:hover{color:var(--mennige-deep)}
 .lg{flex:none;display:inline-block;width:20px;height:12px;border:1.5px solid var(--ink)}
 .lg--down{background:var(--ink)}
 .lg--up{background:var(--papier)}
+.lg--path{background:transparent;border-style:dashed;border-color:var(--slate-soft)}
 .trap,.tot{min-height:64px;padding:8px 0;border-bottom:1px solid var(--leinen)}
 .trap__name{display:grid;grid-template-columns:30px minmax(0,1fr);align-items:baseline;font:600 16px/1.3 var(--sans)}
 .trap__t{text-wrap:balance}
@@ -194,9 +197,12 @@ details.more>summary:hover{color:var(--mennige-deep)}
 .sw{display:inline-flex;align-items:center;gap:10px;width:100%;min-height:44px;padding:6px 10px 6px 8px;border:1px solid var(--ink);background:var(--papier);cursor:pointer;font:600 14px/1.2 var(--sans);text-align:left}
 .sw__box{position:relative;flex:none;width:36px;height:20px;border:1.5px solid var(--ink);background:var(--papier)}
 .sw__box::after{content:"";position:absolute;top:2px;left:2px;width:13px;height:13px;background:var(--ink);transition:left var(--m-fade) var(--ease)}
-.sw[aria-pressed="true"]{box-shadow:inset 0 0 0 1px var(--ink)}
-.sw[aria-pressed="true"] .sw__box{background:var(--papier) var(--hatch)}
-.sw[aria-pressed="true"] .sw__box::after{left:18px;box-shadow:0 0 0 2px var(--papier)}
+/* role="switch": the label stays "As the AI did it"; off (the trap is fixed) keeps the knob left and the
+   label quiet, on moves the knob right over the hatch */
+.sw[aria-checked="false"] .sw__t,.sw[aria-checked="false"] .sw__s{font-weight:500;color:var(--slate)}
+.sw[aria-checked="true"]{box-shadow:inset 0 0 0 1px var(--ink)}
+.sw[aria-checked="true"] .sw__box{background:var(--papier) var(--hatch)}
+.sw[aria-checked="true"] .sw__box::after{left:18px;box-shadow:0 0 0 2px var(--papier)}
 .sw:hover{background:#efebe2}
 .iso{font-size:15px;line-height:1.35;color:var(--slate)}
 .iso b{display:block;font:700 16px/1.3 var(--sans);color:var(--ink)}
@@ -452,7 +458,9 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
   .presets{gap:6px}
   .presets .btn{font-size:14px;padding:6px 10px}
   .tab{padding:8px 12px;font-size:14px}
-  .trap{grid-template-columns:minmax(0,1fr) 132px;grid-template-areas:"name sw" "iso track";padding:8px 0;gap:2px 10px}
+  /* the effect line gets its own row, so the bar keeps the full width below it (a 12px track reads as a
+     squiggle) */
+  .trap{grid-template-columns:minmax(0,1fr) 132px;grid-template-areas:"name sw" "iso iso" "track track";padding:8px 0;gap:2px 10px}
   .trap>.mob{grid-template-columns:minmax(0,1fr) 50px 58px;gap:0 6px}
   .trap .fx,.trap .run{font-size:14px}
   .trap>.iso{gap:0 8px;line-height:1.2}
@@ -486,9 +494,9 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
   .trap__name{font-size:15px;grid-template-columns:26px minmax(0,1fr)}
   .sw{font-size:14px;gap:8px;padding:6px 8px 6px 6px}
   .sw__box{width:32px}
-  /* one or two lines of state word, the same height either way */
+  /* one or two lines of label, the same height either way */
   .trap>.sw{min-height:48px;line-height:1.2}
-  .sw[aria-pressed="true"] .sw__box::after{left:14px}
+  .sw[aria-checked="true"] .sw__box::after{left:14px}
   .steps>li{grid-template-columns:24px minmax(0,1fr);padding:10px 0}
   .boardfoot{grid-template-columns:minmax(0,1fr)}
   .steps .btn{grid-column:2;grid-row:auto;justify-self:start}
@@ -496,9 +504,13 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
   .brow__l,.brow__v{font-size:14px}
   .sentence{padding:12px 14px}
   .sentence p,.nbtn{font-size:16px}
-  /* the tap area grows through a pseudo-element, so the sentence keeps its line spacing */
-  .nbtn{position:relative;padding:0 2px;line-height:inherit}
-  .nbtn::after{content:"";position:absolute;inset:-10px -3px}
+  /* the tap area grows through a pseudo-element. The paragraph pitch is 2.4 × 16px = 38.4px; the button
+     keeps its own 1.3 line height (a button is an inline block, so an inherited 2.4 would make it as tall
+     as the pitch), and its grown area (about 23 + 2 × 7 = 37px) stays under the pitch, so number buttons
+     on consecutive lines no longer touch */
+  .sentence p{line-height:2.4}
+  .nbtn{position:relative;padding:0 2px;line-height:1.3}
+  .nbtn::after{content:"";position:absolute;inset:-7px -3px}
   .cov table{border-spacing:2px}
   .cov td{min-width:30px;height:28px;font-size:13px}
   .cov th{font-size:14px;padding:2px 4px}
@@ -516,11 +528,11 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
   .rowcard dt{padding:4px 0 0}
   .rowcard dd{padding:0 0 3px}
 }
-/* the smallest phones: the switch shrinks to a square (its state stays in aria-pressed and in the
+/* the smallest phones: the switch shrinks to a square (its state stays in aria-checked and in the
    knob), so name, effect and switch share two lines and the bar gets the full width below them */
 @media (max-width:359px){
   .trap{grid-template-columns:minmax(0,1fr) 64px;grid-template-areas:"name sw" "iso sw" "track track";gap:0 8px;padding:6px 0}
-  /* the switch keeps a short state word under its box: Fixed or AI */
+  /* the switch keeps a short label under its box: AI */
   .trap>.sw{align-self:start;flex-direction:column;justify-content:center;gap:3px;width:64px;min-height:48px;padding:5px 0 4px}
   .sw__t{display:none}
   .sw__s{display:block;font:600 12px/1.1 var(--sans)}
@@ -537,7 +549,7 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
 }
 @media (forced-colors:active){
   .bar,.tot .bar{background:CanvasText}
-  .bar.is-up,.tot--start .bar.is-raw,.swatch--hatch,.sw[aria-pressed="true"]{background:Canvas;border:2px dashed CanvasText}
+  .bar.is-up,.tot--start .bar.is-raw,.swatch--hatch,.sw[aria-checked="true"]{background:Canvas;border:2px dashed CanvasText}
   .qcard::before{background:CanvasText}
   mark{box-shadow:none;outline:2px solid Highlight}
 }
@@ -592,7 +604,7 @@ mark.is-key{box-shadow:inset 0 -.55em 0 #f2c7b5,0 0 0 1.5px var(--mennige)}
 
 <section class="beat" id="traps" aria-labelledby="h-traps">
   <header class="kopf"><h2 id="h-traps">Which trap moves the total, and by how much?</h2><p>2 of 6 · Trap switches</p></header>
-  <p class="beat__lead">Every switch starts at “Fixed”. Set one to “As the AI did it”<span class="lead-more"> and the total, the distance from the right answer and the change against 2024 update. Each total is looked up from the {{c:count}} precomputed combinations of the traps, for the Scope 2 method you pick. Six traps change the location-based total. The seventh, T7, only touches the market-based figure.</span><span class="lead-ph"> to see what it does to the total.</span></p>
+  <p class="beat__lead">Every switch starts off, with its trap fixed. Switch one on, “As the AI did it”,<span class="lead-more"> and the total, the distance from the right answer and the change against 2024 update. Each total is looked up from the {{c:count}} precomputed combinations of the traps, for the Scope 2 method you pick. Six traps change the location-based total. The seventh, T7, only touches the market-based figure.</span><span class="lead-ph"> to see what it does to the total.</span></p>
   <div class="beat__body">
     {{block:sequence}}
     {{block:console}}

@@ -146,8 +146,8 @@
     },
     {
       "path": "builder.html",
-      "sizeBytes": 256252,
-      "sha256": "8e4e914d191cac6f29d5efed4e66e0f952de48afca6d7ef9bb96229dbca7d08e"
+      "sizeBytes": 256559,
+      "sha256": "39552130595d27728ac0e77161f931cc4f4a490b50a6bb6e7df77cdb5db3e097"
     },
     {
       "path": "card-preview.webp",
@@ -536,8 +536,8 @@
     },
     {
       "path": "data-readiness-kit/readiness-lab.html",
-      "sizeBytes": 86652,
-      "sha256": "ee7ca48c869e29b464339457d65a66333b4093e6596fd6c9ad0987e547698e4b"
+      "sizeBytes": 87315,
+      "sha256": "78cda040f7abd998af1a6e7f4f283c02044d36b72ecc07fde9e59620a659195d"
     },
     {
       "path": "data-readiness-kit/semantic-template/metric.yml",
@@ -561,18 +561,18 @@
     },
     {
       "path": "demo.html",
-      "sizeBytes": 103002,
-      "sha256": "6d19b5ee8aec4f227367bb68938f8f0a03e74e435185ab7ce404673344bc1255"
+      "sizeBytes": 103316,
+      "sha256": "f75f08ef202324193659cecf6197f4946f023191d714076d7b28e5267492fa9d"
     },
     {
       "path": "guide.html",
-      "sizeBytes": 30787,
-      "sha256": "d78d3eab9f94c26240fca2f8f334bffb0bb8e702146de6417dc5b539cf53f17c"
+      "sizeBytes": 31810,
+      "sha256": "ea4ee92795040d46c1126ead7e62fb6563e6ebdcacc4b083a391c89bfcf4b329"
     },
     {
       "path": "lib/cover-globe.css",
-      "sizeBytes": 269,
-      "sha256": "6e8ce0bbbc03f9807853472202af2f29a00d3683f2c08d653437a62fcdd36cba"
+      "sizeBytes": 935,
+      "sha256": "7839494bf8bfca0d572403907aef78b9d11f5c0ce05cad69d332ee68d008571e"
     },
     {
       "path": "lib/deck-runtime.js",
@@ -581,8 +581,8 @@
     },
     {
       "path": "lib/deck-stage.js",
-      "sizeBytes": 48944,
-      "sha256": "36e41460c9ccb9b4f7f20218142ae8cc37fe0e532c597944472ab25eff06a2ae"
+      "sizeBytes": 49205,
+      "sha256": "9f2e022a9b62e0e387b9743e779c82ae3d9561fc6cea60b02222afe9fe6ba351"
     },
     {
       "path": "lib/demo-adapter.js",

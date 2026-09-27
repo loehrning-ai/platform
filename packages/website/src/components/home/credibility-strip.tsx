@@ -38,7 +38,7 @@ export function CredibilityStrip({
               <dt className="text-lg leading-snug font-bold text-foreground max-lg:text-base">
                 {item.title}
               </dt>
-              <dd className="mt-2 text-body text-muted-foreground max-lg:mt-0.5 max-lg:text-caption max-lg:leading-snug max-sm:sr-only">
+              <dd className="mt-2 text-body text-muted-foreground max-lg:mt-0.5 max-lg:text-caption max-lg:leading-snug">
                 {item.body}
               </dd>
             </div>

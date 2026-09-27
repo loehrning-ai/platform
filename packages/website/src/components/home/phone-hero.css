@@ -1,13 +1,19 @@
 /*
- * Phone home hero: one graphit band below lg (64rem).
+ * Home hero: one graphit band at every width.
  *
- * Everything here is scoped to `width < 64rem`; from lg the reviewed desktop
- * hero in hero.tsx is untouched. The rules are unlayered on purpose: they
- * outrank the desktop utilities on the same elements (which live in
- * Tailwind's layers) without !important, so the band owns its geometry below
- * lg and nothing leaks upward.
+ * The band's tokens are set once, for every width, so the hero's utilities
+ * (text-foreground, text-muted-foreground, border-hairline) resolve to the
+ * graphit values on phone and desktop alike. From lg the band is laid out by
+ * the utilities in hero.tsx (the cover: text left, the projection globe off
+ * the right edge, the pillar index row at the foot).
  *
- * Layout: a single-column grid between the compact top bar and the tab bar.
+ * Below lg (64rem) the rules in the `width < 64rem` blocks own the band's
+ * geometry. They are unlayered on purpose: they outrank the utilities on the
+ * same elements (which live in Tailwind's layers) without !important, and
+ * nothing in them leaks upward.
+ *
+ * Phone layout: a single-column grid between the compact top bar and the
+ * tab bar.
  *
  *   kicker     facts label (hidden on short screens)
  *   title      the two-line promise (h1, the LCP element; never animated)
@@ -24,21 +30,55 @@
  * instead of clipping the actions.
  */
 
+/* Graphit band tokens: the same values as .dark-section. */
+[data-section="hero"] {
+  --color-background: #141414;
+  --color-foreground: #f2f1ee;
+  --color-muted-foreground: #d4cec5;
+  --color-muted: #a8a097;
+  --color-brand-orange: #e07050;
+  --color-kupfer: #e07050;
+  --color-border: rgba(242, 241, 238, 0.4);
+  --color-track: rgba(242, 241, 238, 0.16);
+  --color-hairline: rgba(242, 241, 238, 0.16);
+  --color-card: #1c1b1a;
+  --color-card-hover: #242321;
+
+  background: var(--color-background);
+  color: var(--color-foreground);
+}
+
+/* The primary action on graphit is the paper button: square, flat, ink text
+   (17.5:1), never white on the lightened accent, and no hover lift. */
+[data-section="hero"] [data-hero-actions] > a {
+  min-height: 3rem;
+  padding: 0 1.25rem;
+  gap: 0.625rem;
+  border: 0;
+  border-radius: 0;
+  background: #f2f1ee;
+  color: #141414;
+  box-shadow: none;
+  font-size: 1rem;
+  transform: none;
+  translate: none;
+  transition: background-color 120ms var(--ease-deck);
+}
+
+[data-section="hero"] [data-hero-actions] > a:hover {
+  background: #e8e5de;
+  color: #141414;
+  box-shadow: none;
+  translate: none;
+}
+
+[data-section="hero"] [data-hero-actions] > a:focus-visible {
+  outline: 2px solid #e07050;
+  outline-offset: 3px;
+}
+
 @media (width < 64rem) {
   [data-section="hero"] {
-    /* Graphit band tokens: the same values as .dark-section, scoped to the
-       phone band so the desktop hero stays on paper. */
-    --color-background: #141414;
-    --color-foreground: #f2f1ee;
-    --color-muted-foreground: #d4cec5;
-    --color-muted: #a8a097;
-    --color-brand-orange: #e07050;
-    --color-kupfer: #e07050;
-    --color-border: rgba(242, 241, 238, 0.4);
-    --color-track: rgba(242, 241, 238, 0.16);
-    --color-hairline: rgba(242, 241, 238, 0.16);
-    --color-card: #1c1b1a;
-    --color-card-hover: #242321;
     --hz-gutter: 1rem;
 
     display: grid;
@@ -57,13 +97,6 @@
     padding: 0;
     overflow: hidden;
     isolation: isolate;
-    background: var(--color-background);
-    color: var(--color-foreground);
-  }
-
-  /* No paper grain on graphit. */
-  [data-section="hero"].berlin-grain::after {
-    content: none;
   }
 
   /* The desktop grid wrappers step aside so every row lands on the band's grid. */
@@ -184,35 +217,13 @@
     margin: 1rem var(--hz-gutter) 1.25rem;
   }
 
-  /* The primary action on graphit is the paper button: square, flat, ink
-     text (17.5:1), never white on the lightened accent. */
+  /* Phone sizing of the paper button: it wraps instead of clipping under
+     large text, one line at 100%. */
   [data-section="hero"] [data-hero-actions] > a {
-    min-height: 3rem;
-    padding: 0 1.25rem;
-    gap: 0.625rem;
-    border: 0;
-    border-radius: 0;
-    background: #f2f1ee;
-    color: #141414;
-    box-shadow: none;
-    font-size: 1rem;
-    /* Wraps instead of clipping under large text; one line at 100%. */
     flex: 0 1 auto;
     min-width: 0;
     white-space: normal;
     text-align: left;
-    transform: none;
-    transition: background-color 120ms var(--ease-deck);
-  }
-
-  [data-section="hero"] [data-hero-actions] > a:hover {
-    background: #e8e5de;
-    color: #141414;
-  }
-
-  [data-section="hero"] [data-hero-actions] > a:focus-visible {
-    outline: 2px solid #e07050;
-    outline-offset: 3px;
   }
 
   [data-section="hero"] [data-home-continue-slot] {
@@ -273,12 +284,13 @@
   }
 }
 
-/* ---- the globe's pause control ----------------------------------------- */
+/* ---- the globes' pause control ------------------------------------------ */
 
 /* Quiet on purpose: a 44px target with no frame and a small glyph at
    reduced contrast, so it never reads as a second button beside the action.
-   It arrives with a fade when the live globe takes over. */
-.phone-globe-toggle {
+   The same control sits beside the action on the phone band and the desktop
+   cover. On the phone it arrives with a fade when the live globe takes over. */
+.globe-toggle {
   position: relative;
   display: grid;
   flex: none;
@@ -294,18 +306,18 @@
   transition: color 120ms var(--ease-deck), border-color 120ms var(--ease-deck);
 }
 
-.phone-globe-toggle:hover {
+.globe-toggle:hover {
   color: #f2f1ee;
   border-color: rgb(242 241 238 / 0.4);
 }
 
-.phone-globe-toggle:focus-visible {
+.globe-toggle:focus-visible {
   color: #f2f1ee;
   outline: 2px solid #e07050;
   outline-offset: -2px;
 }
 
-.phone-globe-toggle svg {
+.globe-toggle svg {
   width: 0.75rem;
   height: 0.75rem;
 }

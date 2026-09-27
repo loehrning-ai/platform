@@ -185,16 +185,27 @@ export default async function DemosPage({ searchParams }: DemosPageProps) {
                 {copy.catalog.introduction}
                 <span className="max-sm:hidden"> {copy.catalog.introductionDetail}</span>
               </p>
-              <p
-                className="mt-3 text-caption text-muted-foreground tabular-nums text-balance sm:hidden"
-                data-demo-stats-line
-              >
-                {copy.catalog.statsLine(
-                  stats[0].value,
-                  stats[1].value,
-                  stats[2].value,
-                )}
-              </p>
+              {/* A wrapping list of unbreakable items. Every item carries a
+                  1em "·" before it, and the list is pulled 1em left inside a
+                  clipping wrapper: whichever item opens a line has its
+                  separator clipped, so no line starts or ends with "·". */}
+              <div className="mt-3 overflow-hidden sm:hidden">
+                <ul
+                  className="-ml-[1em] flex list-none flex-wrap p-0 text-caption text-muted-foreground tabular-nums"
+                  data-demo-stats-line
+                >
+                  {copy.catalog
+                    .statsLine(stats[0].value, stats[1].value, stats[2].value)
+                    .map((item) => (
+                      <li
+                        key={item}
+                        className="whitespace-nowrap before:inline-block before:w-[1em] before:text-center before:content-['·']"
+                      >
+                        {item}
+                      </li>
+                    ))}
+                </ul>
+              </div>
             </div>
             {/* Top-aligned with the H1 (the kicker line plus its gap sits above
                 it), so both columns share a first line at every width. */}

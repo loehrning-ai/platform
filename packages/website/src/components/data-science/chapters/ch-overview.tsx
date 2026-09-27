@@ -1,4 +1,3 @@
-import type { CSSProperties } from "react";
 import Link from "next/link";
 import { LazyFlowingPipeline } from "@/components/data-science/lazy-flowing-pipeline";
 import { dsChapterHref } from "@/lib/data-science/routes";
@@ -16,7 +15,6 @@ interface StageCard {
   readonly title: string;
   readonly tag: string;
   readonly blurb: string;
-  readonly hue: string;
 }
 
 const STAGES: readonly StageCard[] = [
@@ -26,7 +24,6 @@ const STAGES: readonly StageCard[] = [
     title: "Fundamentals",
     tag: "sample and population",
     blurb: "Draw samples and watch their means converge.",
-    hue: "#5B3EE8",
   },
   {
     id: "explore",
@@ -34,7 +31,6 @@ const STAGES: readonly StageCard[] = [
     title: "Explore",
     tag: "inspect before modelling",
     blurb: "Inspect distributions, outliers, and correlation structures.",
-    hue: "#1CA5D9",
   },
   {
     id: "clean",
@@ -42,7 +38,6 @@ const STAGES: readonly StageCard[] = [
     title: "Clean",
     tag: "missing · shifted · leaky",
     blurb: "Impute and scale without smuggling in information from the future.",
-    hue: "#1FAF7E",
   },
   {
     id: "feature",
@@ -50,7 +45,6 @@ const STAGES: readonly StageCard[] = [
     title: "Feature",
     tag: "represent information deliberately",
     blurb: "Encode categories, form interactions, and select features.",
-    hue: "#6BCF3F",
   },
   {
     id: "model",
@@ -58,7 +52,6 @@ const STAGES: readonly StageCard[] = [
     title: "Model",
     tag: "bias and variance",
     blurb: "Fit models, then compare training and test error.",
-    hue: "#E8A031",
   },
   {
     id: "eval",
@@ -66,7 +59,6 @@ const STAGES: readonly StageCard[] = [
     title: "Evaluate",
     tag: "defensible metrics",
     blurb: "Work with confusion matrices, ROC, calibration, and thresholds.",
-    hue: "#F25F3A",
   },
   {
     id: "interp",
@@ -74,7 +66,6 @@ const STAGES: readonly StageCard[] = [
     title: "Interpret",
     tag: "inspect model drivers",
     blurb: "Use SHAP, permutation importance, and partial dependence.",
-    hue: "#E8318F",
   },
   {
     id: "exp",
@@ -82,7 +73,6 @@ const STAGES: readonly StageCard[] = [
     title: "Experiment",
     tag: "measure effects under control",
     blurb: "Plan A/B tests, power, and MDE, then read 10k visitors.",
-    hue: "#5B3EE8",
   },
   {
     id: "causal",
@@ -90,7 +80,6 @@ const STAGES: readonly StageCard[] = [
     title: "Causal",
     tag: "beyond correlation",
     blurb: "Trace DAGs, confounders, and backdoor paths.",
-    hue: "#1CA5D9",
   },
   {
     id: "peek",
@@ -98,7 +87,6 @@ const STAGES: readonly StageCard[] = [
     title: "Peeking",
     tag: "when p-values mislead",
     blurb: "Run 50 experiments in parallel and watch false positives.",
-    hue: "#D83A3A",
   },
   {
     id: "deploy",
@@ -106,7 +94,6 @@ const STAGES: readonly StageCard[] = [
     title: "Deploy",
     tag: "models in production",
     blurb: "Monitor drift. Retrain on a signal, not on the calendar.",
-    hue: "#1FAF7E",
   },
   {
     id: "cap",
@@ -114,51 +101,31 @@ const STAGES: readonly StageCard[] = [
     title: "Capstone",
     tag: "the complete cycle",
     blurb: "Once all the way through: noise → decision → feedback.",
-    hue: "#E8318F",
   },
 ];
 
-// AA-readable (>=4.5:1 on cream panel) darkened twin of each bright hue,
-// used for small CTA text while the bright hue stays for dots/borders.
-const HUE_INK: Record<string, string> = {
-  "#5B3EE8": "#4A2FCC",
-  "#1CA5D9": "#137A9C",
-  "#1FAF7E": "#178060",
-  "#6BCF3F": "#447F1C",
-  "#E8A031": "#946012",
-  "#F25F3A": "#BE4020",
-  "#E8318F": "#BE216F",
-  "#D83A3A": "#B02A2A",
-};
-
 const OUTCOMES = [
   {
-    icon: "◇",
     t: "Inspect an unfamiliar dataset systematically",
     d: "Check distributions, missingness, and correlations against a checklist for the first 30 minutes.",
   },
   {
-    icon: "○",
     t: "Train a model without hidden leakage",
     d: "Spot leakage, split data cleanly, and fix the metric before the algorithm.",
   },
   {
-    icon: "△",
     t: "Interpret a confusion matrix correctly",
     d: "Read thresholds, precision and recall, calibration, and class imbalance.",
   },
   {
-    icon: "□",
     t: "Design a defensible A/B test",
     d: "Account for power, MDE, sample size, novelty effects, SRM checks, and CUPED.",
   },
   {
-    icon: "◈",
     t: "Distinguish correlation from causation",
     d: "Check DAGs, confounders, and backdoor paths, then aim your regression.",
   },
   {
-    icon: "✕",
     t: "Operate a model reliably in production",
     d: "Watch drift, trigger retraining, run shadow mode, and prepare rollbacks.",
   },
@@ -179,21 +146,21 @@ const TOOLS = [
   { n: "A/B platform", r: "experiments" },
 ] as const;
 
+// Werkzeichnung (design direction 7.4): ink roman headings with no italic
+// accent, sentence-case kickers, square geometry, hairline lists and a
+// gap-px Swiss grid for the chapters. No glyph icons, coloured dots or
+// coloured borders; the hero action is the page's one Mennige element.
 export default function ChOverview() {
   return (
     <>
       <section className="ov-hero">
         <div className="ov-hero-copy">
-          <div className="ov-hero-eyebrow">Data science course · free</div>
+          <p className="ov-hero-eyebrow">Data science course · free</p>
           <h1 className="ov-hero-title">
-            Data Science means{" "}
-            <br />
-            <span className="accent">turning data into decisions.</span>
+            Data Science means turning data into decisions.
           </h1>
           <p className="ov-hero-hook">
-            Twelve chapters, one working loop. Each opens with
-            <strong> a simulation you turn</strong>, then explains terms,
-            methods, and limits.
+            Twelve chapters, one working loop. Each opens with a simulation you turn, then explains terms, methods, and limits.
           </p>
           <div className="ov-hero-cta">
             <Link
@@ -226,63 +193,44 @@ export default function ChOverview() {
 
       <section className="section ov-outcomes-section">
         <div className="ov-section-head">
-          <div className="ov-kicker">Outcomes</div>
-          <h2 className="ov-h2">
-            Apply the methods and test{" "}
-            <br />
-            <em> how much they say.</em>
-          </h2>
+          <p className="ov-kicker">Outcomes</p>
+          <h2 className="ov-h2">Apply the methods and test how much they say.</h2>
         </div>
-        <div className="ov-outcomes">
-          {OUTCOMES.map((o, i) => (
-            <div className="ov-outcome" key={i}>
-              <div className="ov-outcome-icon">{o.icon}</div>
-              <div className="ov-outcome-t">{o.t}</div>
-              <div className="ov-outcome-d">{o.d}</div>
-            </div>
+        <ul className="ov-outcomes">
+          {OUTCOMES.map((outcome) => (
+            <li className="ov-outcome" key={outcome.t}>
+              <p className="ov-outcome-t">{outcome.t}</p>
+              <p className="ov-outcome-d">{outcome.d}</p>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
 
       <section className="section ov-curriculum-section">
         <div className="ov-section-head">
-          <div className="ov-kicker">The curriculum</div>
-          <h2 className="ov-h2">
-            Twelve chapters: build the model,{" "}
-            <br />
-            then prove the effect.
-          </h2>
+          <p className="ov-kicker">The curriculum</p>
+          <h2 className="ov-h2">Twelve chapters: build the model, then prove the effect.</h2>
           <p className="ov-lede">
-            The first half builds the model. The second half tests
-            <em> whether the result holds</em>: evaluation, interpretation,
-            experiments, and operations.
+            The first half builds the model. The second half tests whether the result holds: evaluation, interpretation, experiments, and operations.
           </p>
         </div>
         <div className="ov-curriculum">
-          {STAGES.map((s) => (
+          {STAGES.map((stage) => (
             <Link
-              key={s.id}
+              key={stage.id}
               className="ov-course"
-              style={
-                {
-                  "--hue": s.hue,
-                  "--hue-ink": HUE_INK[s.hue] || s.hue,
-                } as CSSProperties
-              }
-              href={dsChapterHref(s.id, "en")}
+              href={dsChapterHref(stage.id, "en")}
               prefetch={false}
             >
               <div className="ov-course-top">
-                <span className="ov-course-n">{s.n}</span>
-                <span
-                  className="ov-course-dot"
-                  style={{ background: s.hue, color: s.hue }}
-                />
+                <span className="ov-course-n">{stage.n}</span>
               </div>
-              <div className="ov-course-title">{s.title}</div>
-              <div className="ov-course-tag">{s.tag}</div>
-              <div className="ov-course-blurb">{s.blurb}</div>
-              <div className="ov-course-cta">Open chapter &nbsp;→</div>
+              <h3 className="ov-course-title">{stage.title}</h3>
+              <p className="ov-course-tag">{stage.tag}</p>
+              <p className="ov-course-blurb">{stage.blurb}</p>
+              <p className="ov-course-cta">
+                Open chapter <span aria-hidden="true">→</span>
+              </p>
             </Link>
           ))}
         </div>
@@ -290,25 +238,20 @@ export default function ChOverview() {
 
       <section className="section">
         <div className="ov-section-head ov-sh-tight">
-          <div className="ov-kicker">Tools in the course</div>
-          <h2 className="ov-h2">
-            Common open-source tools{" "}
-            <br />
-            for day-to-day data science.
-          </h2>
+          <p className="ov-kicker">Tools in the course</p>
+          <h2 className="ov-h2">Common open-source tools for day-to-day data science.</h2>
           <p className="ov-lede">
-            The simulations show how these tools <em>behave</em>. The concepts
-            carry over to other stacks too.
+            The simulations show how these tools behave. The concepts carry over to other stacks too.
           </p>
         </div>
-        <div className="ov-tools">
-          {TOOLS.map((t) => (
-            <div key={t.n} className="ov-tool">
-              <div className="ov-tool-n">{t.n}</div>
-              <div className="ov-tool-r">{t.r}</div>
+        <dl className="ov-tools">
+          {TOOLS.map((tool) => (
+            <div key={tool.n} className="ov-tool">
+              <dt className="ov-tool-n">{tool.n}</dt>
+              <dd className="ov-tool-r">{tool.r}</dd>
             </div>
           ))}
-        </div>
+        </dl>
       </section>
     </>
   );

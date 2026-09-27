@@ -341,7 +341,8 @@
     draw() {
       const ctx = this.ctx, cfg = this.cfg; if (!this.W) { this.resize(); return; }
       const W = this.W, H = this.H; ctx.clearRect(0, 0, W, H);
-      const PL = 66, PR = 22, PT = 22, PB = 42;
+      // cfg.padTop: optional headroom above the plot (callers that annotate events in the margin)
+      const PL = 66, PR = 22, PT = cfg.padTop != null ? cfg.padTop : 22, PB = 42;
       const x0 = PL, x1 = W - PR, y0 = PT, y1 = H - PB;
       const series = cfg.series || [], bands = cfg.bands || [], regions = cfg.regions || [];
       // domain
@@ -396,7 +397,7 @@
         ctx.restore();
         if (cfg.markerLabel) {
           // label sits right of its dashed line, with a paper halo so data lines never cut through it
-          ctx.save(); ctx.font = "700 15px 'JetBrains Mono',ui-monospace,monospace"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+          ctx.save(); ctx.font = cfg.markerFont || "700 15px 'JetBrains Mono',ui-monospace,monospace"; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
           const mt = ctx.measureText(cfg.markerLabel), up = mt.fontBoundingBoxAscent != null ? mt.fontBoundingBoxAscent + mt.fontBoundingBoxDescent : 17;
           // no room either side: the label ends at the plot's right edge, inside the replay region
           const mx = xToPx(cfg.marker), room = mx + 9 + mt.width <= x1, flip = !room && mx - 9 - mt.width >= x0;

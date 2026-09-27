@@ -15,8 +15,8 @@
   "location_en": "Invented site in Hesse, Germany",
   "factorLabel_en": "Illustrative teaching values, not official factors.",
   "factorLabel_de": "Illustrative Lehrwerte, keine amtlichen Faktoren.",
-  "constructedLabel_en": "Constructed from documented failure modes: what the answer looks like when all six traps fire. Not a recorded run.",
-  "constructedLabel_de": "Konstruiert aus dokumentierten Fehlermustern: So sieht die Antwort aus, wenn alle sechs Fallen zuschlagen. Kein aufgezeichneter Lauf.",
+  "constructedLabel_en": "Constructed from documented failure modes: what the answer looks like when all seven traps fire (six data traps and the market-based method error). Not a recorded run.",
+  "constructedLabel_de": "Konstruiert aus dokumentierten Fehlermustern: So sieht die Antwort aus, wenn alle sieben Fallen zuschlagen (sechs Datenfallen und der Methodenfehler beim marktbasierten Wert). Kein aufgezeichneter Lauf.",
   "targetLabel_en": "Target answer, constructed. Not a recorded run.",
   "targetLabel_de": "Zielantwort, konstruiert. Kein aufgezeichneter Lauf."
  },
@@ -5455,7 +5455,7 @@
     "Verbrauch 210.000 kWh",
     "Abschlag ab dem nächsten Monat: 53.800,00 € (Vorauszahlung, keine Verbrauchsmenge)",
     "",
-    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe README)."
+    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe START-HERE.md)."
    ],
    "trap": null,
    "note_en": ""
@@ -5488,7 +5488,7 @@
     "Verbrauch 195.000 kWh",
     "Abschlag ab dem nächsten Monat: 49.900,00 € (Vorauszahlung, keine Verbrauchsmenge)",
     "",
-    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe README)."
+    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe START-HERE.md)."
    ],
    "trap": null,
    "note_en": ""
@@ -5521,7 +5521,7 @@
     "Verbrauch 205.000 kWh",
     "Abschlag ab dem nächsten Monat: 52.500,00 € (Vorauszahlung, keine Verbrauchsmenge)",
     "",
-    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe README)."
+    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe START-HERE.md)."
    ],
    "trap": null,
    "note_en": ""
@@ -5554,7 +5554,7 @@
     "Verbrauch 190.000 kWh",
     "Abschlag ab dem nächsten Monat: 48.700,00 € (Vorauszahlung, keine Verbrauchsmenge)",
     "",
-    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe README)."
+    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe START-HERE.md)."
    ],
    "trap": null,
    "note_en": ""
@@ -5587,7 +5587,7 @@
     "Verbrauch 185.000 kWh",
     "Abschlag ab dem nächsten Monat: 47.400,00 € (Vorauszahlung, keine Verbrauchsmenge)",
     "",
-    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe README)."
+    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe START-HERE.md)."
    ],
    "trap": null,
    "note_en": ""
@@ -5620,7 +5620,7 @@
     "Verbrauch 180.000 kWh",
     "Abschlag ab dem nächsten Monat: 46.100,00 € (Vorauszahlung, keine Verbrauchsmenge)",
     "",
-    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe README)."
+    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe START-HERE.md)."
    ],
    "trap": null,
    "note_en": ""
@@ -5653,7 +5653,7 @@
     "Verbrauch 175.000 kWh",
     "Abschlag ab dem nächsten Monat: 44.800,00 € (Vorauszahlung, keine Verbrauchsmenge)",
     "",
-    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe README)."
+    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe START-HERE.md)."
    ],
    "trap": null,
    "note_en": ""
@@ -5686,7 +5686,7 @@
     "Verbrauch 120.000 kWh",
     "Abschlag ab dem nächsten Monat: 30.800,00 € (Vorauszahlung, keine Verbrauchsmenge)",
     "",
-    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe README)."
+    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe START-HERE.md)."
    ],
    "trap": "real-dip",
    "note_en": ""
@@ -5719,7 +5719,7 @@
     "Verbrauch 190.000 kWh",
     "Abschlag ab dem nächsten Monat: 48.700,00 € (Vorauszahlung, keine Verbrauchsmenge)",
     "",
-    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe README)."
+    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe START-HERE.md)."
    ],
    "trap": null,
    "note_en": ""
@@ -5752,7 +5752,7 @@
     "Verbrauch 410.000 kWh",
     "Abschlag ab dem nächsten Monat: 52.500,00 € (Vorauszahlung, keine Verbrauchsmenge)",
     "",
-    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe README)."
+    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe START-HERE.md)."
    ],
    "trap": "two-month",
    "note_en": ""
@@ -5788,7 +5788,7 @@
     "Verbrauch 205.000 kWh",
     "Abschlag ab dem nächsten Monat: 52.500,00 € (Vorauszahlung, keine Verbrauchsmenge)",
     "",
-    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe README)."
+    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe START-HERE.md)."
    ],
    "trap": "T1",
    "note_en": "Same invoice number 4711-03; OCR noise in supplier name and a stray line break, invoice number clean."
@@ -5821,7 +5821,7 @@
     "Verbrauch 1.000.000 kWh",
     "Abschlag ab dem nächsten Monat: 21.400,00 € (Vorauszahlung, keine Verbrauchsmenge)",
     "",
-    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe README)."
+    "Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe START-HERE.md)."
    ],
    "trap": "T3",
    "note_en": "Contract party, customer number and meter belong to the JV; Kellbrunn purchasing only checks the invoice."

@@ -571,13 +571,15 @@
 
     _collectSlides() {
       this._slides = this._slot.assignedElements({ flatten: true }).filter((element) => element.matches("section.slide"));
-      const total = this._slides.length;
+      // Numbered like the visible counter and the live region (_position): main scenes out of the
+      // main count, appendix pages out of the appendix count, so a screen reader hears one total.
       this._slides.forEach((slide, index) => {
         const label = slide.dataset.label || slide.querySelector("h1,h2")?.textContent?.trim() || "Scene";
+        const { appendix, number, count } = this._position(slide);
         slide.dataset.deckIndex = String(index);
         slide.setAttribute("role", "group");
         slide.setAttribute("aria-roledescription", "slide");
-        slide.setAttribute("aria-label", `${index + 1} of ${total}: ${label}`);
+        slide.setAttribute("aria-label", `${appendix ? "Appendix page" : "Scene"} ${number} of ${count}: ${label}`);
       });
     }
 

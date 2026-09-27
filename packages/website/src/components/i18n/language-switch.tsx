@@ -59,7 +59,11 @@ function SwitchLinks({
             key={targetLocale}
             href={`${localizeHref(pathname, targetLocale)}${suffix}`}
             aria-current={active ? "page" : undefined}
-            aria-label={active ? `${label}, ${copy.language}` : actionLabel}
+            aria-label={
+              active
+                ? `${targetLocale.toUpperCase()}, ${label}, ${copy.language}`
+                : actionLabel
+            }
             hrefLang={targetLocale}
             className={cn(
               "relative inline-flex min-h-11 min-w-11 items-center justify-center px-2 text-label tabular-nums outline-none transition-colors duration-[120ms] focus-visible:z-10 focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange motion-reduce:transition-none",

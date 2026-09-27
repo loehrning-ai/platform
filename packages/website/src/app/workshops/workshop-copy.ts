@@ -6,7 +6,7 @@ import type {
   WorkshopProvenance,
 } from "@/lib/workshops";
 
-/** One station of the "So läuft jeder Workshop" route on the hub. */
+/** One station of the route on the hub ("So laufen die Workshops 03 und 04"). */
 export interface WorkshopRouteStation {
   readonly label: string;
   readonly caption: string;
@@ -40,7 +40,7 @@ export interface WorkshopPageCopy {
     readonly hubIndexLabel: string;
     readonly routeHeading: string;
     readonly routeCaption: string;
-    /** Five stations, the spine every workshop follows. Static: a description, not progress. */
+    /** Five stations, the spine of the workshops the heading names. Static: a description, not progress. */
     readonly routeStations: readonly WorkshopRouteStation[];
     readonly listHeading: string;
     /** Right-hand note of the list head: says how the list is ordered. */
@@ -74,7 +74,7 @@ export interface WorkshopPageCopy {
     readonly minutesLive: (minutes: number) => string;
     /** "Allein ca. 60 Min." */
     readonly minutesSelfStudy: (minutes: number) => string;
-    /** Compact duration line of a phone row: "Live 90 · allein 60 Min." */
+    /** Compact duration line of a phone row: "Live 90 Min. · allein 60 Min." */
     readonly rowTimes: (live: number | undefined, self: number) => string;
     /** Takes an already formatted date. */
     readonly liveTested: (date: string) => string;
@@ -183,14 +183,14 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         `Workshops · ${count} ${count === 1 ? "Fall" : "Fälle"}`,
       hubHeading: "Workshops mit Fall und Vorlage",
       hubLead:
-        "Jeder Workshop dreht sich um eine Frage an eine erfundene Firma. Du prüfst eine Antwort an den Daten und schreibst am Ende auf, wie das für deine eigene Arbeit aussieht.",
+        "Jeder Workshop dreht sich um eine Frage an eine erfundene Firma. Du rechnest oder prüfst an ihren Daten und schreibst am Ende auf, wie das für deine eigene Arbeit aussieht.",
       hubLeadShort:
-        "Du prüfst eine KI-Antwort an den Daten einer erfundenen Firma und nimmst eine Vorlage für deine Arbeit mit.",
+        "Du rechnest oder prüfst an den Daten einer erfundenen Firma und nimmst eine Vorlage für deine Arbeit mit.",
       hubStart: (number) => `Mit Workshop ${number} beginnen`,
       hubAccess: "Alle Materialien kostenlos, ohne Anmeldung",
       hubIndexLabel: "Workshops auf dieser Seite",
-      routeHeading: "So läuft jeder Workshop",
-      routeCaption: "60 bis 90 Minuten",
+      routeHeading: "So laufen die Workshops 03 und 04",
+      routeCaption: "Je 90 Minuten live",
       routeStations: [
         { label: "Die Frage", caption: "Ein Fall und eine Frage, die bis zum Schluss bleibt" },
         { label: "Die falsche Antwort", caption: "Eine Antwort, die plausibel klingt und nicht stimmt" },
@@ -218,7 +218,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       rowTimes: (live, self) =>
         live === undefined
           ? `Allein ${self} Min.`
-          : `Live ${live} · allein ${self} Min.`,
+          : `Live ${live} Min. · allein ${self} Min.`,
       liveTested: (date) => `Live gehalten am ${date}`,
       newBadge: "Neu",
       startHere: "Einstieg",
@@ -235,11 +235,11 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         return `${list} eine Moderationsansicht mit Notizen und Abstimmungsfragen. Öffne das Deck und drück P. ${tail}`;
       },
       boundary:
-        "Alle Übungsfirmen sind erfunden. Wo echte Zahlen vorkommen, nennt die Workshop-Seite die Quelle. Gezeigte KI-Antworten sind Aufzeichnungen mit Datum und keine Live-Abfragen.",
+        "Alle Übungsfirmen sind erfunden. Wo echte Zahlen vorkommen, nennt die Workshop-Seite die Quelle. Gezeigte KI-Antworten sind aufgezeichnet oder für die Übung konstruiert, keine Live-Abfragen.",
     },
     detail: {
       navigation: "Workshopnavigation",
-      backAria: "Zurück zu allen Workshops",
+      backAria: "Alle Workshops, zurück zur Übersicht",
       allWorkshops: "Alle Workshops",
       workshopsShort: "Workshops",
       questionLabel: "Die Frage des Workshops",
@@ -311,7 +311,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       },
       startHere: "Hier starten",
       openAction: "Öffnen",
-      downloadAction: "Laden",
+      downloadAction: "Download",
       language: "Sprache",
       selfHostHeading: "Selbst moderieren",
       selfHostBody:
@@ -364,18 +364,18 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         `Workshops · ${count} ${count === 1 ? "case" : "cases"}`,
       hubHeading: "Workshops with a case and a template",
       hubLead:
-        "Each workshop centres on one question about an invented company. You check an answer against the data and finish by writing down how it applies to your own work.",
+        "Each workshop centres on one question about an invented company. You calculate or check against its data and finish by writing down how it applies to your own work.",
       hubLeadShort:
-        "You check an AI answer against the data of an invented company and leave with a template for your own work.",
+        "You calculate or check against the data of an invented company and leave with a template for your own work.",
       hubStart: (number) => `Start with Workshop ${number}`,
       hubAccess: "All materials free, no sign-up",
       hubIndexLabel: "Workshops on this page",
-      routeHeading: "How every workshop runs",
-      routeCaption: "60 to 90 minutes",
+      routeHeading: "How Workshops 03 and 04 run",
+      routeCaption: "90 minutes live each",
       routeStations: [
         { label: "The question", caption: "One case and a question that stays to the end" },
         { label: "The wrong answer", caption: "An answer that sounds plausible and is wrong" },
-        { label: "Why it is wrong", caption: "What nobody fixed in the data" },
+        { label: "Why it is wrong", caption: "What nobody defined in the data" },
         { label: "The fix", caption: "What makes the answer right, step by step" },
         { label: "Your template", caption: "One page for your own case" },
       ],
@@ -397,7 +397,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       minutesLive: (minutes) => `Live ${minutes} min`,
       minutesSelfStudy: (minutes) => `Alone about ${minutes} min`,
       rowTimes: (live, self) =>
-        live === undefined ? `Alone ${self} min` : `Live ${live} · alone ${self} min`,
+        live === undefined ? `Alone ${self} min` : `Live ${live} min · alone ${self} min`,
       liveTested: (date) => `Run live on ${date}`,
       newBadge: "New",
       startHere: "Start here",
@@ -413,7 +413,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         return `${list} a presenter view with notes and voting questions. Open the deck and press P. ${tail}`;
       },
       boundary:
-        "All practice companies are invented. Where real figures appear, the workshop page names the source. AI answers shown are dated recordings, not live requests.",
+        "All practice companies are invented. Where real figures appear, the workshop page names the source. AI answers shown are recorded or constructed for the exercise, not live requests.",
     },
     detail: {
       navigation: "Workshop navigation",

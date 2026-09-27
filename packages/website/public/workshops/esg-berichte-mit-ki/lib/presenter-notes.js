@@ -75,7 +75,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "Kellbrunn has 180 people and has never been under the EU reporting law. Since 18 March 2026 the EU rule covers companies with more than 1,000 employees and more than 450 million euros turnover. Member states must bring national law in line by 19 March 2027.",
       "The bank and the car maker still want this number, and they want to know whether it went down.",
       "On press 2: keep the second half of the question in mind. Most of today's trouble is in that half.",
-      "If asked about customer requests: Directive 2026/470 lets suppliers with up to 1,000 employees refuse requests that go beyond the voluntary standard. Germany has to transpose it by 19 March 2027. The VSME Basic Module, on which that standard is based, includes Scope 1 and 2, so this question stays."
+      "If asked about customer requests: Directive 2026/470 lets suppliers with up to 1,000 employees refuse requests that go beyond the voluntary standard. Germany has to transpose it by 19 March 2027. The VSME Basic Module, on which that standard is based, includes Scope 1 and 2; whether the delegated regulation keeps those datapoints is on the check list in appendix A4."
     ],
     "sayAt": {
       "0": [
@@ -115,7 +115,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     },
     "say": [
       "We ask the AI twice. First it gets the folder as Kellbrunn has it today. Then it gets the same information prepared into one table with written rules.",
-      "The model does not change between the two runs, so any difference in the second answer comes from the preparation."
+      "The experiment keeps the model the same, so any difference comes from the preparation. Today both answers are constructed from documented failure modes; recorded runs go into appendix A3."
     ],
     "sayAt": {
       "0": [
@@ -185,7 +185,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "budget_seconds": 300
     },
     "say": [
-      "Must say: This answer is constructed from documented failure modes. It shows what the answer looks like when all six traps fire. It is not a recorded run.",
+      "Must say: This answer is constructed from documented failure modes. It shows what the answer looks like when all seven traps fire (six data traps and the market-based method error). It is not a recorded run.",
       "On press 1: read the total and the 7.5%. Do not read the rest aloud.",
       "On press 2: it is down 7.5%, the per-head figure is normal, twelve bills for twelve months, and it shows its sums.",
       "On press 3: hands up. Who would send this to the bank today? Remember your hand; we come back to it at the end."
@@ -608,7 +608,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "budget_seconds": 330
     },
     "say": [
-      "Must say: Under the GHG Protocol, a company buying power in a market with certificates and supplier contracts, such as Germany, reports both Scope 2 figures. The VSME asks for location-based; add market-based.",
+      "Must say: Under the GHG Protocol, a company buying power in a market with certificates and supplier contracts, such as Germany, reports both Scope 2 figures. Which Scope 2 method the VSME Basic Module asks for: check the EFRAG text before the session (appendix A4).",
       "On press 2: location-based uses the grid average where the power is used. Market-based uses what you bought. The certificate covers Werk Süd and nothing else.",
       "On press 3: for power without a certificate the order is: a qualifying supplier rate if there is one, otherwise the residual mix. In Germany the residual mix is usually higher than the grid average, because the green attributes sold as certificates are taken out of it.",
       "On press 5: the certificate takes 496.0 tonnes out. The residual mix on the other 2,370 megawatt hours puts 474.0 back.",
@@ -745,7 +745,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     },
     "ask": [],
     "expectedAudience": [
-      "Common slips: 418.0 t for gas (Hi factor); 3,650,000 kWh for the grid bar. Add real shares only after the O3 test runs."
+      "Common slips: 418.0 t for gas (Hi factor); 3,650,000 kWh for the grid bar. Real shares of each slip will be added once test runs are recorded (appendix A3)."
     ],
     "revealOrder": [
       "Worksheet with three figures",
@@ -826,7 +826,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
     },
     "say": [
       "A useful assistant does three different things: it calculates what the ledger supports, asks back where a person decides, and refuses claims the evidence cannot carry.",
-      "On card 4: refuse it because nothing in the ledger supports it. Since 27 September 2026, Directive 2024/825 bans, towards consumers, generic environmental claims such as 'eco-friendly' unless recognised excellent environmental performance can be shown, and claims that a product is climate-neutral based on offsets (in Germany through an amendment to the UWG, known from secondary sources; check the current text). Whether your own website is aimed at consumers is a question for your lawyer. Misleading claims are banned towards business customers too (in Germany § 5 UWG).",
+      "On card 4: refuse it because nothing in the ledger supports it. From 27 September 2026, Directive (EU) 2024/825 bans, towards consumers, generic environmental claims such as 'eco-friendly' unless recognised excellent environmental performance can be shown, and claims that a product is climate-neutral based on offsets (in Germany through an amendment to the UWG, known from secondary sources; check the current text). Whether your own website is aimed at consumers is a question for your lawyer. German unfair-competition law (UWG) can also apply to misleading claims towards business customers; check with a lawyer.",
       "Must say: Not legal advice. Check the German transposition.",
       "On press 5: this is the answer we want from the raw folder. It raises seven points for a person before it commits to a number."
     ],
@@ -1071,7 +1071,7 @@ window.FOLDLINE_PRESENTER_NOTES = Object.freeze({
       "budget_seconds": 0
     },
     "say": [
-      "Both answers on the slides are constructed. The raw-folder answer shows what happens when all six traps fire; it is not a recorded run.",
+      "Both answers on the slides are constructed. The raw-folder answer shows what happens when all seven traps fire (six data traps and the market-based method error); it is not a recorded run.",
       "Before publication both conditions are run five times each with the protocol in the kit, and this table is filled from the runs."
     ],
     "sayAt": {

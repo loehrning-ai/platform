@@ -1,4 +1,3 @@
-import type { CSSProperties } from "react";
 import Link from "next/link";
 import { DataScienceLocaleProvider } from "@/components/data-science/locale-context";
 import { LazyFlowingPipeline } from "@/components/data-science/lazy-flowing-pipeline";
@@ -11,7 +10,6 @@ interface StageCard {
   readonly title: string;
   readonly tag: string;
   readonly blurb: string;
-  readonly hue: string;
 }
 
 const STAGES: readonly StageCard[] = [
@@ -21,7 +19,6 @@ const STAGES: readonly StageCard[] = [
     title: "Grundlagen",
     tag: "Stichprobe und Grundgesamtheit",
     blurb: "Zieh Stichproben und sieh zu, wie ihre Mittelwerte zusammenrücken.",
-    hue: "#5B3EE8",
   },
   {
     id: "explore",
@@ -29,7 +26,6 @@ const STAGES: readonly StageCard[] = [
     title: "Exploration",
     tag: "erst prüfen, dann modellieren",
     blurb: "Untersuche Verteilungen, Ausreißer und Korrelationsstrukturen.",
-    hue: "#1CA5D9",
   },
   {
     id: "clean",
@@ -38,7 +34,6 @@ const STAGES: readonly StageCard[] = [
     tag: "fehlend · verschoben · undicht",
     blurb:
       "Imputiere und skaliere Daten, ohne Informationen aus der Zukunft einzuschleusen.",
-    hue: "#1FAF7E",
   },
   {
     id: "feature",
@@ -46,7 +41,6 @@ const STAGES: readonly StageCard[] = [
     title: "Merkmale",
     tag: "Information gezielt abbilden",
     blurb: "Kodiere Kategorien, bilde Interaktionen und wähle Merkmale aus.",
-    hue: "#6BCF3F",
   },
   {
     id: "model",
@@ -54,7 +48,6 @@ const STAGES: readonly StageCard[] = [
     title: "Modellierung",
     tag: "Bias und Varianz",
     blurb: "Passe Modelle an und vergleiche Trainings- und Testfehler.",
-    hue: "#E8A031",
   },
   {
     id: "eval",
@@ -63,7 +56,6 @@ const STAGES: readonly StageCard[] = [
     tag: "belastbare Kennzahlen",
     blurb:
       "Arbeite mit Konfusionsmatrix, ROC, Kalibrierung und Schwellenwerten.",
-    hue: "#F25F3A",
   },
   {
     id: "interp",
@@ -71,7 +63,6 @@ const STAGES: readonly StageCard[] = [
     title: "Interpretation",
     tag: "Ursachen im Modell prüfen",
     blurb: "Nutze SHAP, Permutationswichtigkeit und partielle Abhängigkeiten.",
-    hue: "#E8318F",
   },
   {
     id: "exp",
@@ -79,7 +70,6 @@ const STAGES: readonly StageCard[] = [
     title: "Experimente",
     tag: "Wirkung kontrolliert messen",
     blurb: "Plane A/B-Tests, Power und MDE und werte 10k Besucher aus.",
-    hue: "#5B3EE8",
   },
   {
     id: "causal",
@@ -87,7 +77,6 @@ const STAGES: readonly StageCard[] = [
     title: "Kausalität",
     tag: "mehr als Korrelation",
     blurb: "Analysiere DAGs, Confounder und Backdoor-Pfade.",
-    hue: "#1CA5D9",
   },
   {
     id: "peek",
@@ -95,7 +84,6 @@ const STAGES: readonly StageCard[] = [
     title: "Peeking",
     tag: "wenn p-Werte täuschen",
     blurb: "Führe 50 Experimente parallel aus und beobachte falsche Positive.",
-    hue: "#D83A3A",
   },
   {
     id: "deploy",
@@ -104,7 +92,6 @@ const STAGES: readonly StageCard[] = [
     tag: "Modelle in Produktion",
     blurb:
       "Überwache Drift. Trainiere auf ein Signal hin, nicht nach Kalender.",
-    hue: "#1FAF7E",
   },
   {
     id: "cap",
@@ -112,49 +99,31 @@ const STAGES: readonly StageCard[] = [
     title: "Abschlussprojekt",
     tag: "der vollständige Zyklus",
     blurb: "Einmal ganz durch: Rauschen → Entscheidung → Feedback.",
-    hue: "#E8318F",
   },
 ];
 
-const HUE_INK: Record<string, string> = {
-  "#5B3EE8": "#4A2FCC",
-  "#1CA5D9": "#137A9C",
-  "#1FAF7E": "#178060",
-  "#6BCF3F": "#447F1C",
-  "#E8A031": "#946012",
-  "#F25F3A": "#BE4020",
-  "#E8318F": "#BE216F",
-  "#D83A3A": "#B02A2A",
-};
-
 const OUTCOMES = [
   {
-    icon: "◇",
     t: "Einen unbekannten Datensatz systematisch untersuchen",
     d: "Verteilungen, Fehlwerte und Korrelationen prüfen, mit einer klaren Checkliste für die ersten 30 Minuten.",
   },
   {
-    icon: "○",
     t: "Ein Modell ohne verstecktes Leakage trainieren",
     d: "Leakage erkennen, Daten sauber aufteilen und die Kennzahl vor dem Algorithmus festlegen.",
   },
   {
-    icon: "△",
     t: "Eine Konfusionsmatrix korrekt auswerten",
     d: "Schwellenwerte, Precision und Recall, Kalibrierung und Klassenungleichgewicht einordnen.",
   },
   {
-    icon: "□",
     t: "Einen belastbaren A/B-Test entwerfen",
     d: "Power, MDE, Stichprobengröße, Neuheitseffekte, SRM-Prüfungen und CUPED berücksichtigen.",
   },
   {
-    icon: "◈",
     t: "Korrelation und Kausalität unterscheiden",
     d: "DAGs, Confounder und Backdoor-Pfade prüfen und Regression gezielt einsetzen.",
   },
   {
-    icon: "✕",
     t: "Ein Modell in Produktion stabil betreiben",
     d: "Drift überwachen, Retraining auslösen, Shadow Mode nutzen und Rollbacks vorbereiten.",
   },
@@ -175,21 +144,21 @@ const TOOLS = [
   { n: "A/B platform", r: "Experimente" },
 ] as const;
 
+// Werkzeichnung (design direction 7.4): ink roman headings with no italic
+// accent, sentence-case kickers, square geometry, hairline lists and a
+// gap-px Swiss grid for the chapters. No glyph icons, coloured dots or
+// coloured borders; the hero action is the page's one Mennige element.
 export default function ChOverviewDe() {
   return (
     <DataScienceLocaleProvider locale="de">
       <section className="ov-hero">
         <div className="ov-hero-copy">
-          <div className="ov-hero-eyebrow">Data-Science-Kurs · kostenlos</div>
+          <p className="ov-hero-eyebrow">Data-Science-Kurs · kostenlos</p>
           <h1 className="ov-hero-title">
-            Data Science bedeutet,{" "}
-            <br />
-            <span className="accent">aus Daten Entscheidungen abzuleiten.</span>
+            Data Science bedeutet, aus Daten Entscheidungen abzuleiten.
           </h1>
           <p className="ov-hero-hook">
-            Zwölf Kapitel, ein Arbeitszyklus. Jedes Kapitel beginnt mit
-            <strong> einer Simulation, an der du drehst</strong>, und erklärt
-            Begriffe, Verfahren und Grenzen daran.
+            Zwölf Kapitel, ein Arbeitszyklus. Jedes Kapitel beginnt mit einer Simulation, an der du drehst, und erklärt Begriffe, Verfahren und Grenzen daran.
           </p>
           <div className="ov-hero-cta">
             <Link
@@ -222,37 +191,25 @@ export default function ChOverviewDe() {
 
       <section className="section ov-outcomes-section">
         <div className="ov-section-head">
-          <div className="ov-kicker">Ergebnisse</div>
-          <h2 className="ov-h2">
-            Verfahren anwenden und ihre{" "}
-            <br />
-            <em> Aussagekraft prüfen.</em>
-          </h2>
+          <p className="ov-kicker">Ergebnisse</p>
+          <h2 className="ov-h2">Verfahren anwenden und ihre Aussagekraft prüfen.</h2>
         </div>
-        <div className="ov-outcomes">
+        <ul className="ov-outcomes">
           {OUTCOMES.map((outcome) => (
-            <div className="ov-outcome" key={outcome.t}>
-              <div className="ov-outcome-icon">{outcome.icon}</div>
-              <div className="ov-outcome-t">{outcome.t}</div>
-              <div className="ov-outcome-d">{outcome.d}</div>
-            </div>
+            <li className="ov-outcome" key={outcome.t}>
+              <p className="ov-outcome-t">{outcome.t}</p>
+              <p className="ov-outcome-d">{outcome.d}</p>
+            </li>
           ))}
-        </div>
+        </ul>
       </section>
 
       <section className="section ov-curriculum-section">
         <div className="ov-section-head">
-          <div className="ov-kicker">Lehrplan</div>
-          <h2 className="ov-h2">
-            Zwölf Kapitel: Modell entwickeln,{" "}
-            <br />
-            Wirkung nachweisen.
-          </h2>
+          <p className="ov-kicker">Lehrplan</p>
+          <h2 className="ov-h2">Zwölf Kapitel: Modell entwickeln, Wirkung nachweisen.</h2>
           <p className="ov-lede">
-            Die erste Hälfte behandelt den Modellaufbau. Die zweite Hälfte
-            prüft,
-            <em> ob das Ergebnis trägt</em>: Evaluation, Interpretation,
-            Experimente und Betrieb.
+            Die erste Hälfte behandelt den Modellaufbau. Die zweite Hälfte prüft, ob das Ergebnis trägt: Evaluation, Interpretation, Experimente und Betrieb.
           </p>
         </div>
         <div className="ov-curriculum">
@@ -260,26 +217,18 @@ export default function ChOverviewDe() {
             <Link
               key={stage.id}
               className="ov-course"
-              style={
-                {
-                  "--hue": stage.hue,
-                  "--hue-ink": HUE_INK[stage.hue] || stage.hue,
-                } as CSSProperties
-              }
               href={dsChapterHref(stage.id)}
               prefetch={false}
             >
               <div className="ov-course-top">
                 <span className="ov-course-n">{stage.n}</span>
-                <span
-                  className="ov-course-dot"
-                  style={{ background: stage.hue, color: stage.hue }}
-                />
               </div>
-              <div className="ov-course-title">{stage.title}</div>
-              <div className="ov-course-tag">{stage.tag}</div>
-              <div className="ov-course-blurb">{stage.blurb}</div>
-              <div className="ov-course-cta">Kapitel öffnen &nbsp;→</div>
+              <h3 className="ov-course-title">{stage.title}</h3>
+              <p className="ov-course-tag">{stage.tag}</p>
+              <p className="ov-course-blurb">{stage.blurb}</p>
+              <p className="ov-course-cta">
+                Kapitel öffnen <span aria-hidden="true">→</span>
+              </p>
             </Link>
           ))}
         </div>
@@ -287,25 +236,20 @@ export default function ChOverviewDe() {
 
       <section className="section">
         <div className="ov-section-head ov-sh-tight">
-          <div className="ov-kicker">Werkzeuge im Kurs</div>
-          <h2 className="ov-h2">
-            Verbreitete Open-Source-Werkzeuge{" "}
-            <br />
-            für den Data-Science-Alltag.
-          </h2>
+          <p className="ov-kicker">Werkzeuge im Kurs</p>
+          <h2 className="ov-h2">Verbreitete Open-Source-Werkzeuge für den Data-Science-Alltag.</h2>
           <p className="ov-lede">
-            Die Simulationen zeigen das <em>Verhalten</em> dieser Werkzeuge. Die
-            Konzepte tragen auch auf anderen Stacks.
+            Die Simulationen zeigen das Verhalten dieser Werkzeuge. Die Konzepte tragen auch auf anderen Stacks.
           </p>
         </div>
-        <div className="ov-tools">
+        <dl className="ov-tools">
           {TOOLS.map((tool) => (
             <div key={tool.n} className="ov-tool">
-              <div className="ov-tool-n">{tool.n}</div>
-              <div className="ov-tool-r">{tool.r}</div>
+              <dt className="ov-tool-n">{tool.n}</dt>
+              <dd className="ov-tool-r">{tool.r}</dd>
             </div>
           ))}
-        </div>
+        </dl>
       </section>
     </DataScienceLocaleProvider>
   );

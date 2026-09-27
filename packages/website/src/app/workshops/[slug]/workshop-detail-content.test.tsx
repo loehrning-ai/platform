@@ -60,6 +60,17 @@ describe("<WorkshopDetailContent>", () => {
     expect(stations[0].querySelector("[data-lab-station]")).not.toBeNull();
     expect(stations[0]).toHaveTextContent("Übung unten");
     expect(route.querySelectorAll("[data-lab-station]")).toHaveLength(1);
+    // It carries the inset "here" square and is the current step; the line
+    // runs dashed from it on, and no station is read out with a state word.
+    expect(stations[0]).toHaveAttribute("aria-current", "step");
+    expect(stations[0].querySelector("[data-route-here]")).not.toBeNull();
+    expect(route.querySelectorAll("[data-route-here]")).toHaveLength(1);
+    expect(route.querySelectorAll("[aria-current]")).toHaveLength(1);
+    expect(stations[0].querySelector("[data-route-line]")).toHaveAttribute(
+      "data-route-line",
+      "dashed",
+    );
+    expect(route).not.toHaveTextContent(/erledigt|aktuell|offen/);
     const labLink = within(agenda).getByRole("link", {
       name: `„${workshop.agenda[0].label}“ unten ausprobieren`,
     });
@@ -325,8 +336,15 @@ describe("<WorkshopDetailContent>", () => {
       expect(material.label).not.toMatch(/Englisch|English|\(|\)/);
     }
     // Two back links: the bar from sm, the kicker-line link on phones. Each
-    // is display:none at the other size, so one is ever in the tree.
-    const back = screen.getAllByRole("link", { name: "Zurück zu allen Workshops" });
+    // is display:none at the other size, so one is ever in the tree. The
+    // name starts with the visible text of both (WCAG 2.5.3).
+    const back = screen.getAllByRole("link", {
+      name: "Alle Workshops, zurück zur Übersicht",
+    });
+    expect(back[0]).toHaveTextContent("Alle Workshops");
+    expect(back[1]).toHaveTextContent("Workshops");
+    // The bar is exactly as tall as the link, so its ring is drawn inside.
+    expect(back[0]).toHaveClass("min-h-11", "focus-visible:outline-offset-[-3px]");
     expect(back).toHaveLength(2);
     for (const link of back) expect(link).toHaveAttribute("href", "/workshops");
     expect(back[0].closest("nav")).toHaveClass("max-sm:hidden");
@@ -388,16 +406,32 @@ describe("phoneDescription", () => {
     ).toBe("Die wöchentliche Nachfrage für die Übung.");
     const single = "Sieben Prüfungen auf einer A4-Seite, bevor du einer ESG-Zahl traust.";
     expect(phoneDescription(single)).toBe(single);
-    // Longer than two phone lines: cut at the last comma, never mid-word.
+    // An authored short text wins over the first clause.
     expect(
       phoneDescription(
         "Schalte jede Falle einzeln ein, öffne jede Rechnung und sieh die Zeile, die daraus in der Belegtabelle wird.",
+        "Schalte jede Falle einzeln ein und sieh, was aus jeder Rechnung wird.",
       ),
-    ).toBe("Schalte jede Falle einzeln ein, öffne jede Rechnung und sieh die Zeile …");
+    ).toBe("Schalte jede Falle einzeln ein und sieh, was aus jeder Rechnung wird.");
+  });
+
+  it("never shows a cut-off description on a phone", () => {
     for (const locale of ["de", "en"] as const) {
       for (const workshop of getWorkshops(locale)) {
         for (const material of workshop.materials) {
-          expect(phoneDescription(material.description).length).toBeLessThanOrEqual(74);
+          const phone = phoneDescription(material.description, material.short);
+          expect(phone.length, material.href).toBeLessThanOrEqual(74);
+          expect(phone, material.href).not.toContain("…");
+          if (material.short !== undefined) {
+            // Authored: a complete clause within two phone lines.
+            expect(phone).toBe(material.short);
+            expect(material.short.length, material.href).toBeLessThanOrEqual(72);
+            expect(material.short, material.href).toMatch(/^\p{Lu}.*[.!?]$/u);
+          } else {
+            // Derived: the description's own first sentence, unchanged.
+            expect(material.description.startsWith(phone.slice(0, -1)), material.href).toBe(true);
+            expect(phone, material.href).toMatch(/[.!?]$/);
+          }
         }
       }
     }

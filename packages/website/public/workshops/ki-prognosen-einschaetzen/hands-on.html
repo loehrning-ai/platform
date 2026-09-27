@@ -212,7 +212,7 @@
     .stage .hs-card{height:auto;max-height:100%;padding:8px!important}
     .stage .hs-note{display:none!important}
     .stage .hs-chartwrap{max-height:180px}
-    .stage .hs-racer{grid-template-columns:88px 1fr 64px!important}
+    .stage .hs-racer{grid-template-columns:104px 1fr 60px!important}
     .stage .hs-strip i{height:6px!important}
     .hint{display:flex;position:static;z-index:20;font-size:11px;gap:8px}
   }
@@ -241,8 +241,7 @@
   </nav>
 </header>
 <div class="shell">
-  <h1 class="sr-only">Forecasting decisions: demand decision lab</h1>
-  <header class="bar" aria-label="Lab controls">
+  <div class="bar" role="region" aria-label="Lab controls">
     <div class="brand">
       <div><b>Demand decision lab</b><span class="tag">Workshop 01 &middot; Forecasting decisions &middot; Hands-on lab</span></div>
     </div>
@@ -250,9 +249,10 @@
       <div class="progress" id="progress" aria-hidden="true"></div>
     </div>
     <nav class="jump" id="jump" aria-label="Jump to act"></nav>
-  </header>
+  </div>
 
   <main id="main" tabindex="-1">
+    <h1 class="sr-only">Forecasting decisions: demand decision lab</h1>
     <section class="act active" data-mode="light" data-company="parcel" data-result="race" data-short="Parcel network">
       <div class="eyebrow"><div class="case-mark">Parcel network</div><span class="case-line">Last-mile ZIP capacity</span></div>
       <h2>Set tomorrow's ZIP capacity</h2>

@@ -205,7 +205,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     tagline:
       "Anwendungsfall klassifizieren, Rolle bestimmen, Pflichten zuordnen.",
     description:
-      "Du ordnest einen Anwendungsfall einer Klasse zu: verboten, transparenzpflichtig, GPAI, Hochrisiko oder keine. Jede Aussage mit Frist nennt Rechtsstand und Primärquelle. Der Kurs ersetzt keine Rechtsberatung.",
+      "Jeder Anwendungsfall landet in einer Klasse: verboten, transparenzpflichtig, GPAI, Hochrisiko oder keine. Jede Aussage mit Frist nennt Rechtsstand und Primärquelle. Der Kurs ersetzt keine Rechtsberatung.",
     href: "/eu-ai-act-kurs",
     startHref: "/eu-ai-act-kurs/kurs",
     continueHref: "/eu-ai-act-kurs/kurs",

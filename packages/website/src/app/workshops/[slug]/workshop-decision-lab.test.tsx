@@ -295,10 +295,19 @@ describe("<WorkshopDecisionLab>", () => {
     expect(facts).toHaveClass("border-t", "border-hairline");
     expect(facts?.querySelectorAll("dt")).toHaveLength(3);
     expect(facts?.querySelectorAll("dd")).toHaveLength(3);
-    // A column is never narrower than its longest word, so "12 Stromrechnungen"
-    // wraps between the words instead of inside one.
-    expect(facts).toHaveClass("min-[26rem]:auto-cols-[minmax(min-content,1fr)]");
-    expect(facts).not.toHaveClass("min-[26rem]:grid-cols-3");
+    // Equal columns with a 24px gap where they fit, one line per fact where
+    // they do not (phones, and the narrow lab column between lg and xl).
+    expect(facts).toHaveClass(
+      "gap-x-6",
+      "min-[34rem]:max-lg:auto-cols-fr",
+      "xl:auto-cols-fr",
+    );
+    expect(facts?.className).not.toMatch(/min-content/);
+    // A number keeps its whole unit: "1.866,5 t CO₂e" never splits.
+    for (const value of facts?.querySelectorAll("dd") ?? []) {
+      if (/\d/.test(value.textContent ?? ""))
+        expect(value.querySelector("[data-number-unit]")).toHaveClass("whitespace-nowrap");
+    }
   });
 });
 
@@ -417,7 +426,15 @@ describe("<WorkshopDecisionLab> option order and outcome feedback", () => {
     const marked = document.querySelectorAll("[data-strongest-mark]");
     expect(marked).toHaveLength(1);
     expect(marked[0]).toHaveAttribute("value", lab.strongestEvidenceId);
-    expect(marked[0]).toHaveClass("outline-mennige");
+    // A Mennige frame on the square, not an offset outline, so it never
+    // looks like the focus ring that moved on to "Decide again".
+    expect(marked[0]).toHaveClass("border-mennige");
+    expect(marked[0]).not.toHaveClass("border-foreground");
+    expect(marked[0].className).not.toMatch(/(?:^|\s)outline(?:-|\s|$)/);
+    for (const radio of container.querySelectorAll("input[type=radio]:not([data-strongest-mark])")) {
+      expect(radio).toHaveClass("border-foreground");
+      expect(radio).not.toHaveClass("border-mennige");
+    }
     expect(screen.getByRole("button", { name: "Decide again" })).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Decide again" }));

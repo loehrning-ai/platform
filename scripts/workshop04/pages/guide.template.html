@@ -28,7 +28,7 @@
   <ul class="chips" aria-label="What the figures are">
     <li class="chip">Fictional company</li>
     <li class="chip">{{factorlabel}}</li>
-    <li class="chip chip--gap">Raw-folder answer: constructed<span class="c-tail"> from documented failure modes</span></li>
+    <li class="chip chip--gap">Raw-folder answer: constructed<span class="c-tail">&nbsp;from documented failure modes</span></li>
   </ul>
   <nav class="actions" aria-label="Other materials">
     <a class="wf-btn wf-btn--primary" href="./slides.html">Open the deck</a>
@@ -68,7 +68,7 @@
 <section class="g-sec" aria-labelledby="first-answer">
   <div class="g-kopf"><p class="wf-kicker">Wrong answer</p><h2 id="first-answer"><span class="g-n">{{sec}}</span>The first answer, and the checks it passed</h2></div>
   {{fold}}
-  <p>We gave an AI the 2025 folder: {{n:files_raw_2025}} files with monthly electricity bills, an annual statement for Werk Süd, a certificate, two gas bills, four landlord statements, meter readings and a fuel-card export, plus last year's figures and a factor table. The answer: {{n:wrong_total_lb}}&nbsp;CO₂e, {{n:wrong_chg_lb_pct:abs}} below 2024.</p>
+  <p>This is what an AI answer on the 2025 folder looks like, constructed from documented failure modes (no run recorded yet). The folder: {{n:files_raw_2025}} files with monthly electricity bills, an annual statement for Werk Süd, a certificate, two gas bills, four landlord statements, meter readings and a fuel-card export, plus last year's figures and a factor table. The constructed answer: {{n:wrong_total_lb}}&nbsp;CO₂e, {{n:wrong_chg_lb_pct:abs}} below 2024.</p>
   <div class="answer answer--raw">
     <p class="wf-kicker">Raw-folder answer · constructed</p>
     <dl class="nums">
@@ -80,7 +80,7 @@
     </dl>
     <p class="provline">{{j:meta.constructedLabel_en}}</p>
   </div>
-  <p>It passes the checks people usually do: the change looks like a normal year, {{n:wrong_per_employee_t}} per employee is close to last year's {{n:per_employee_2024_t}}, the Werk Nord folder holds twelve bills, the AI shows its sums, and it gives two Scope 2 numbers. Six errors are inside it all the same; the next sections take them apart.</p>
+  <p>It passes the checks people usually do: the change looks like a normal year, {{n:wrong_per_employee_t}} per employee is close to last year's {{n:per_employee_2024_t}}, the Werk Nord folder holds twelve bills, the AI shows its sums, and it gives two Scope 2 numbers. Six errors are inside its location-based total all the same, and a seventh in its market-based figure; the next sections take them apart.</p>
   <div class="recall">
     <p class="recall-q"><span class="wf-kicker">Before you open</span>Which of the five checks would you have trusted most, and what does it test?</p>
     <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>
@@ -147,7 +147,7 @@
 <section class="g-sec" aria-labelledby="looked-right">
   <div class="g-kopf"><p class="wf-kicker">Why it failed</p><h2 id="looked-right"><span class="g-n">{{sec}}</span>Why the total looked right</h2></div>
   {{fold}}
-  <p>Six errors are inside the first answer. The duplicate and the missing October cancel to {{n:pair_dup_oct_t:absunit}}. The Talbrück bill hides four fifths ({{n:jv_hides_unit_share_pct}}) of the unit error. The gas bills state on page 2 that the kWh are based on the gross calorific value (Brennwert, Hs), and the AI used the factor for the net value (Heizwert, Hi): {{n:gasbasis_t}}. AdBlue in the fuel-card export is a urea solution for the exhaust, not a fuel: {{n:adblue_t}}.</p>
+  <p>Six errors are inside the first answer's location-based total. The duplicate and the missing October cancel to {{n:pair_dup_oct_t:absunit}}. The Talbrück bill hides four fifths ({{n:jv_hides_unit_share_pct}}) of the unit error. The gas bills state on page 2 that the kWh are based on the gross calorific value (Brennwert, Hs), and the AI used the factor for the net value (Heizwert, Hi): {{n:gasbasis_t}}. AdBlue in the fuel-card export is a urea solution for the exhaust, not a fuel: {{n:adblue_t}}.</p>
   <p>When you remove the errors one by one, the running total swings between {{n:wf_lb_min_t}} and {{n:wf_lb_max_t}} and ends at {{n:total_lb_2025}}, {{n:gap_lb_t}} away from where it started.</p>
   {{fig:waterfall}}
   <div class="recall">
@@ -267,7 +267,7 @@
     <li class="ab-row"><span class="ab-row__job">Refuse</span><div><p class="ab-row__req">“Write that we are climate-neutral”</p><p class="ab-row__desc">Refused, because nothing in the ledger supports it.</p></div></li>
     <li class="ab-row"><span class="ab-row__job">Calculate</span><div><p class="ab-row__req">“Explain why emissions fell”</p><p class="ab-row__desc">The assistant calculates the bridge first, then drafts a text that cites the driver lines.</p></div></li>
   </ul>
-  <p class="wf-note">For context: since 27 September 2026, Directive (EU) 2024/825 bans, towards consumers, generic environmental claims such as “eco-friendly” unless recognised excellent environmental performance can be shown, and claims that a product is climate-neutral based on offsets. In Germany this happens through an amendment to the UWG, known from secondary sources; check the current text. Whether a text such as your website is aimed at consumers is a question for your lawyer. Misleading claims are banned towards business customers too (in Germany § 5 UWG). Rules as of 26 Sep 2026. Not legal advice.</p>
+  <p class="wf-note">For context: from 27 September 2026, Directive (EU) 2024/825 bans, towards consumers, generic environmental claims such as “eco-friendly” unless recognised excellent environmental performance can be shown, and claims that a product is climate-neutral based on offsets. In Germany this happens through an amendment to the UWG, known from secondary sources; check the current text. Whether a text such as your website is aimed at consumers is a question for your lawyer. German unfair-competition law (UWG) can also apply to misleading claims towards business customers; check with a lawyer. Rules as of 26 Sep 2026. Not legal advice.</p>
   <div class="recall">
     <p class="recall-q"><span class="wf-kicker">Before you open</span>Which request needs a person to decide, and what is the decision?</p>
     <details class="reveal"><summary><span>Reveal the explanation</span><span class="toggle" aria-hidden="true"><span class="show">Show</span><span class="hide">Hide</span><span class="pm"></span></span></summary><div>

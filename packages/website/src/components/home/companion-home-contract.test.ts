@@ -5,16 +5,17 @@ import { describe, expect, it } from "vitest";
 /**
  * The companion home is one document with two layouts, not two documents.
  *
- * Below `lg` the page opens with one graphit hero band (the two-line promise,
- * the horizon globe, the primary action and the docked "continue" seat),
- * then two horizontal rails and compact hairline rows; from `lg` it is the
- * reviewed wide layout, unchanged. These assertions pin the two properties
- * that make that safe:
+ * The page opens with one graphit hero band at every width. Below `lg` it
+ * holds the two-line promise, the horizon globe, the primary action and the
+ * docked "continue" seat, then two horizontal rails and compact hairline
+ * rows follow; from `lg` the band is the cover (text left, the projection
+ * globe off the right edge, the pillar index row) and the page is the wide
+ * layout. These assertions pin the two properties that make that safe:
  *
  *  1. every phone compaction is expressed as a `max-lg:` / `max-sm:` override
- *     on top of the wide-layout utility, or in the hero's phone stylesheet,
- *     which is scoped to `width < 64rem` as a whole, so nothing can leak
- *     upward into the reviewed desktop geometry;
+ *     on top of the wide-layout utility, or in the hero's stylesheet, whose
+ *     phone geometry is scoped to `width < 64rem`, so nothing can leak
+ *     upward into the desktop geometry;
  *  2. the sections that ship measured layout hooks stay vertical stacks. Two
  *     shipped specs read `[data-home-course-card]` / `[data-home-resource-card]`
  *     rects at 320/390/768/1440 and require them inside the viewport, and one
@@ -29,7 +30,7 @@ function read(file: string): string {
   return readFileSync(join(HOME, file), "utf8");
 }
 
-describe("companion home: the wide layout is untouched", () => {
+describe("companion home: the wide layout stays separate", () => {
   it("keeps the hero's reviewed desktop geometry and adds phone-only overrides", () => {
     const hero = read("hero.tsx");
 
@@ -57,8 +58,9 @@ describe("companion home: the wide layout is untouched", () => {
   it("scopes every phone hero rule below lg", () => {
     const css = read("phone-hero.css");
     // Strip comments, then check that every rule block that styles the hero
-    // band sits inside a `width < 64rem` media query (the pause control and
-    // the keyframes are the only top-level rules).
+    // band sits inside a `width < 64rem` media query. The only top-level
+    // rules are the band's graphit tokens, the paper action, the pause
+    // control and the keyframes, all of which hold at every width.
     const source = css.replace(/\/\*[\s\S]*?\*\//g, "");
     const topLevel: string[] = [];
     let depth = 0;
@@ -82,7 +84,9 @@ describe("companion home: the wide layout is untouched", () => {
         /^@media \(width < 22\.5rem\)/.test(prelude) ||
         /^@media \(width >= 64rem\)/.test(prelude) ||
         /^@keyframes hz-/.test(prelude) ||
-        /^\.phone-globe-toggle/.test(prelude);
+        /^\.globe-toggle/.test(prelude) ||
+        prelude === '[data-section="hero"]' ||
+        /^\[data-section="hero"\] \[data-hero-actions\] > a/.test(prelude);
       expect(allowed, `unscoped phone hero rule: ${prelude}`).toBe(true);
     }
     // The band is a min-height, never a fixed height, and sized from the
@@ -100,18 +104,18 @@ describe("companion home: the wide layout is untouched", () => {
     expect(css).not.toMatch(/\binfinite\b/);
   });
 
-  it("keeps the desktop headline clamp byte-identical, above lg only", () => {
+  it("sets the headline at the display token from lg, the phone clamp below", () => {
     const hero = read("hero.tsx");
 
     expect(hero).toContain(
-      "@media (min-width: 64rem) {\n          [data-section=\"hero\"] h1 { font-size: clamp(2.25rem, min(8.4vw, 12.5svh), 8rem); }",
+      "@media (min-width: 64rem) {\n          [data-section=\"hero\"] h1 { font-size: var(--text-display); }",
     );
     // Below lg: the full two-line promise, "Sicher anwenden." at about 8.2
     // times the font size, inside a 16px gutter from 320px up.
     expect(hero).toContain(
       '[data-section="hero"] h1 { font-size: clamp(2rem, 11.5vw - 0.25rem, 3rem); }',
     );
-    // The short-viewport padding override belongs to the desktop pill; below
+    // The short-viewport padding override belongs to the desktop cover; below
     // lg the utilities own the band.
     expect(hero).toContain("@media (min-width: 64rem) and (max-height: 680px)");
   });
@@ -120,20 +124,55 @@ describe("companion home: the wide layout is untouched", () => {
     const hero = read("hero.tsx");
 
     expect(hero.match(/<h1\b/g)).toHaveLength(1);
-    // One lockup for every width: two lines below lg, the reviewed three
-    // lines from lg, never a second heading. Two shipped specs count `h1`
-    // elements in the DOM, not just the accessible ones. The desktop print
-    // shadow exists from lg only; the phone band is flat graphit.
-    expect(hero).toContain('"lg:drop-shadow-[0_3px_0_rgba(255,255,255,0.45)] "');
-    expect(hero).toContain('<br className="max-lg:hidden" />');
+    // One lockup for every width: two lines in one colour, never a second
+    // heading. Two shipped specs count `h1` elements in the DOM, not just the
+    // accessible ones.
     expect(hero).toContain('aria-label={copy.headline.join(" ")}');
+  });
+
+  it("draws the desktop hero as a graphit cover, not the old print look", () => {
+    const hero = read("hero.tsx");
+    const css = read("phone-hero.css");
+
+    // One colour, no print shadow, no decorative atoms.
+    for (const retired of [
+      "drop-shadow",
+      "RegisterMark",
+      "brand-pink",
+      "brand-cobalt",
+      "berlin-grain",
+      "berlin-hero",
+      "headlineColors",
+      "pillarTones",
+      "rounded-2xl",
+      "shadow-card",
+      "hover:-translate-y",
+      "brand-acid",
+      "brand-peach",
+      "brand-sky",
+      "font-ui-mono",
+      "tracking-[0.14em]",
+    ]) {
+      expect(hero, `hero still carries ${retired}`).not.toContain(retired);
+    }
+    // The band's graphit tokens hold at every width.
+    const band = css
+      .replace(/\/\*[\s\S]*?\*\//g, "")
+      .match(/^\[data-section="hero"\]\s*\{[^}]*\}/m)?.[0];
+    expect(band).toContain("--color-background: #141414;");
+    expect(band).toContain("background: var(--color-background);");
+    // The action is the square paper button with no lift.
+    expect(css).toMatch(
+      /\[data-section="hero"\] \[data-hero-actions\] > a \{[^}]*border-radius: 0;[^}]*translate: none;/,
+    );
   });
 
   it("hides the hero pillars below lg instead of restyling them", () => {
     const hero = read("hero.tsx");
     expect(hero).toContain("max-lg:hidden");
-    // The pillar row itself is untouched apart from that one class.
+    // The pillar register is a hairline index row, three columns from sm.
     expect(hero).toContain("sm:grid-cols-3");
+    expect(hero).toContain("border-t border-hairline");
     expect(hero).toContain("md:mt-8 lg:mt-10");
   });
 

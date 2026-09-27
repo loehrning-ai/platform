@@ -61,7 +61,10 @@ export function CoverBand({
         <div
           aria-hidden="true"
           data-cover-globe-phone=""
-          className="pointer-events-none absolute -right-36 -top-6 -z-10 size-[21rem] [mask-image:linear-gradient(to_right,transparent_8%,black_58%)] md:hidden"
+          // -top-24 lifts the Germany trace to the kicker row, whose text is
+          // always short, so it never sits at the end of an H1 line (at 320
+          // to 414px the trace keeps 130px or more from any text).
+          className="pointer-events-none absolute -right-36 -top-24 -z-10 size-[21rem] [mask-image:linear-gradient(to_right,transparent_8%,black_58%)] md:hidden"
         >
           <GlobeLines {...globeProps} className="size-full" />
         </div>

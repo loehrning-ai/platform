@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="./lib/tokens.css" />
 <link rel="stylesheet" href="./lib/deck.css" />
 <link rel="stylesheet" href="./lib/deck-viz.css" />
+<link rel="stylesheet" href="./lib/cover-globe.css" />
 <script src="./lib/deck-stage.js"></script>
 <script src="./lib/deck-viz.js"></script>
 <style>
@@ -21,22 +22,23 @@
 .chrome__topbar a.brand{pointer-events:auto;color:inherit;text-decoration:none}
 .chrome__topbar a.brand:hover{text-decoration:underline;text-underline-offset:4px}
 .chrome__topbar a.brand:focus-visible{outline:3px solid var(--kupfer-full);outline-offset:4px}
-.cv-kicker{display:flex;align-items:center;gap:22px;margin:0}
-.cv-kicker img{display:block;width:248px;height:auto}
-.cv-kicker span{font-family:var(--sans);font-size:24px;font-weight:600;letter-spacing:.02em;color:#d4cec5;padding-left:22px;border-left:1.5px solid rgba(242,241,238,.3)}
-/* ── cv- · the cover ─────────────────────────────────────────────────── */
-/* the loehrning.ai hero globe, captured as one frame and recoloured for the
-   dark cover: paper graticule, Mennige coastlines, bled off the right edge
-   and held well under the type. */
-.cv-globe{position:absolute;top:50%;right:-260px;transform:translateY(-50%);width:1280px;opacity:.34;pointer-events:none;user-select:none;z-index:0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 24%);mask-image:linear-gradient(90deg,transparent,#000 24%)}
-.cv-globe img{width:100%;height:auto;display:block}
-.slide .body.cover-body{z-index:2}
-/* ── cv- · cover "what you'll learn" strip ────────────────────────────── */
-.cv-learn{display:grid;grid-template-columns:repeat(4,1fr);gap:30px;width:100%;max-width:1180px;margin-top:16px}
-.cv-i{display:flex;flex-direction:column;gap:12px;padding-top:20px;border-top:2px solid rgba(242,241,238,.4)}
-.cv-ico{width:38px;height:38px;color:#f2f1ee;display:block}
-.cv-t{font-size:24px;font-weight:600;letter-spacing:0}
-.cv-s{font-size:20px;line-height:1.4;color:#d4cec5}
+/* ── cv- · the cover, on the Workshop 03/04 cover grammar ────────────── */
+/* lib/cover-globe.css is shared with Workshops 03 and 04; the crop below is the one their
+   story.css uses (#cover .workshop-globe): the drawing starts at x 900 and fades in over 200 px. */
+.slide .workshop-globe{top:0;right:0;left:0;width:1920px;height:1080px;overflow:hidden;opacity:.72;background:url("./assets/globe.svg") 900px center/1280px auto no-repeat;-webkit-mask-image:linear-gradient(to right,transparent 900px,#000 1100px);mask-image:linear-gradient(to right,transparent 900px,#000 1100px);transform:none}
+.slide .workshop-globe img{display:none}
+#cover>.cover-brand,#cover>.cover-date,#cover>.cover-title,#cover>.cover-sub,#cover>.cover-q,#cover>.cover-meta{position:absolute;z-index:1;left:96px;margin:0}
+#cover>.cover-brand{top:64px;display:flex;align-items:center}
+#cover>.cover-brand img{display:block;width:auto;height:40px}
+#cover>.cover-date{top:192px;color:#d4cec5;font-size:26px;font-weight:600;letter-spacing:.04em;line-height:1.3}
+#cover>.cover-title{top:248px;color:#f2f1ee;font-size:104px;font-weight:700;line-height:1;letter-spacing:-.015em}
+#cover>.cover-sub{top:478px;color:#d4cec5;font-size:32px;font-weight:600;line-height:1.3}
+#cover>.cover-q{top:560px;width:1040px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:24px;align-items:start;padding:24px 32px 24px 40px;border:3px solid #f2f1ee;background:#141414;color:#f2f1ee}
+#cover>.cover-q::before{content:"";position:absolute;top:-3px;bottom:-3px;left:-3px;width:8px;background:var(--mennige)}
+.cover-q__icon{width:56px;height:56px;fill:none;stroke:currentColor;stroke-width:3px}
+.cover-q__label{display:block;margin-bottom:8px;color:#d4cec5;font-size:26px;font-weight:600;letter-spacing:.06em}
+.cover-q__text{margin:0;font-size:40px;font-weight:600;line-height:1.2}
+#cover>.cover-meta{top:824px;color:#d4cec5;font-size:26px;line-height:1.3}
 /* ── bio- · the host slide ───────────────────────────────────────────── */
 .bio-grid{display:grid;grid-template-columns:460px 1fr;gap:72px;flex:1;align-items:center}
 .bio-shot{width:100%;aspect-ratio:1/1;overflow:hidden;border:1px solid var(--line);background:var(--card)}
@@ -171,6 +173,7 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
       <path d="M49.81 46.56 L32.15 14.28 A4.30 4.30 0 0 0 24.92 18.93 L46.95 48.40 Z"/>
     </g>
   </symbol>
+  <symbol id="i-question" viewBox="0 0 100 100"><path d="M8 12h84v60H46L28 90V72H8z" vector-effect="non-scaling-stroke"/><path d="M38 24h24v14H50v8" vector-effect="non-scaling-stroke"/><rect x="46" y="54" width="8" height="8" fill="currentColor" stroke="none"/></symbol>
   <g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="square" stroke-linejoin="miter">
     <symbol id="i-zip" viewBox="0 0 100 100"><path d="M6 84V20h30l8 11h50v53z" fill="none" stroke="currentColor" stroke-width="5"/><path d="M58 31v8M66 39v8M58 47v8M66 55v8M58 63v8" fill="none" stroke="currentColor" stroke-width="5"/><rect x="56" y="71" width="14" height="13" fill="none" stroke="currentColor" stroke-width="5"/></symbol>
     <symbol id="i-doc" viewBox="0 0 100 100"><path d="M20 8h42l18 18v66H20z" fill="none" stroke="currentColor" stroke-width="5"/><path d="M60 8v20h20M32 46h36M32 60h36M32 74h22" fill="none" stroke="currentColor" stroke-width="5"/></symbol>
@@ -187,36 +190,20 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
 <deck-stage width="1920" height="1080" id="stage">
 
 <!-- 01 · COVER -->
-<section class="slide dark" data-label="Cover" data-section="Workshop 02 · the course">
-  <div class="cv-globe" aria-hidden="true"><img src="./assets/globe.svg" alt="" decoding="async" /></div>
-  <div class="body center cover-body">
-    <p class="cv-kicker" data-rise style="--d:0ms"><img src="./assets/lockup-horizontal-dark.svg" width="248" height="48" alt="loehrning.ai" decoding="async" /><span>Workshop 02</span></p>
-    <h1 class="h1" data-rise style="--d:120ms;font-size:76px;line-height:1.06;margin:30px 0 28px;max-width:1180px">Using AI to understand business reports and make <span class="kupfer-text">decisions</span></h1>
-    <p class="body-lg" data-rise style="--d:240ms;max-width:980px;margin-bottom:56px">You get a business report every month. Today you teach Claude what your numbers mean, and let it do the reading for you.</p>
-    <div class="cv-learn" data-rise style="--d:360ms">
-      <div class="cv-i">
-        <svg class="cv-ico" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-doc"/></svg>
-        <span class="cv-t">Read the report</span>
-        <span class="cv-s">Point Claude at a folder of files and let it read them.</span>
-      </div>
-      <div class="cv-i">
-        <svg class="cv-ico" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-skill"/></svg>
-        <span class="cv-t">Write your rules</span>
-        <span class="cv-s">Say what each number means, in normal words. Claude saves it.</span>
-      </div>
-      <div class="cv-i">
-        <svg class="cv-ico" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-dashboard"/></svg>
-        <span class="cv-t">Build a dashboard</span>
-        <span class="cv-s">One page with this month's numbers on it.</span>
-      </div>
-      <div class="cv-i">
-        <svg class="cv-ico" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-decision"/></svg>
-        <span class="cv-t">Make one decision</span>
-        <span class="cv-s">And be able to say which number it rests on.</span>
-      </div>
+<section class="slide dark" id="cover" data-label="Cover" data-section="Workshop 02 · the question" data-chrome="none">
+  <div class="workshop-globe" aria-hidden="true"><img src="./assets/globe.svg" width="660" height="620" alt="" decoding="async" /></div>
+  <div class="cover-brand"><img src="./assets/lockup-horizontal-dark.svg" width="206" height="40" alt="loehrning.ai" decoding="async" /></div>
+  <p class="cover-date" data-rise style="--d:0ms">Workshop 02 · Self-study kit</p>
+  <h1 class="cover-title" data-rise style="--d:80ms">Reading business<br>reports with AI.</h1>
+  <p class="cover-sub" data-rise style="--d:160ms">Teach Claude what your numbers mean, then decide from them.</p>
+  <div class="cover-q" data-rise style="--d:240ms">
+    <svg class="cover-q__icon" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-question"/></svg>
+    <div>
+      <span class="cover-q__label">One question, held fixed</span>
+      <p class="cover-q__text">Should NORTHWIND rework the CRAFT product line or put more Q3 marketing budget behind it?</p>
     </div>
-    <p class="label-mono" data-rise style="--d:520ms;margin-top:52px">90 minutes &nbsp;·&nbsp; Claude desktop app &nbsp;·&nbsp; one zip folder with the practice data</p>
   </div>
+  <p class="cover-meta" data-rise style="--d:320ms">90 minutes · Claude desktop app · one zip folder with the practice data</p>
 </section>
 
 <!-- 02 · YOUR HOST -->
@@ -262,7 +249,7 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
     <div style="display:grid;grid-template-columns:1.05fr .95fr;gap:80px;flex:1;align-items:center">
       <div>
         <p class="overline" data-rise style="--d:0ms">The setup for the next 90 minutes</p>
-        <h2 class="h2" data-rise style="--d:120ms;font-size:60px;line-height:1.04;margin:26px 0 30px">You work at<br><span class="kupfer-text">NORTHWIND.</span></h2>
+        <h2 class="h2" data-rise style="--d:120ms;font-size:60px;line-height:1.04;margin:26px 0 30px">You work at<br>NORTHWIND.</h2>
         <p class="body-lg" data-rise style="--d:260ms;max-width:680px">A family-owned electronics maker in Berlin. About 850 people, roughly €180M a year, eight product lines from speakers to espresso machines. The September numbers just came in, and the leadership meeting wants an answer about one of those lines. You are the analyst they ask.</p>
         <p class="label-mono" data-rise style="--d:420ms;margin-top:32px">NORTHWIND is an invented company, so every number here is safe to share.</p>
       </div>
@@ -291,7 +278,7 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
 <section class="slide" data-label="The plan" data-section="What we do today">
   <div class="body">
     <p class="overline" data-rise style="--d:0ms">What we do today</p>
-    <h2 class="h2" data-rise style="--d:120ms;margin:24px 0 10px;max-width:1440px;font-size:54px">Each of the five prompts leaves a <span class="kupfer-text">file</span> behind.</h2>
+    <h2 class="h2" data-rise style="--d:120ms;margin:24px 0 10px;max-width:1440px;font-size:54px">Each of the five prompts leaves a file behind.</h2>
     <div class="rl-hero">
       <div class="rl-rail">
         <i class="rl-thread" data-rise style="--d:260ms"></i>
@@ -354,7 +341,7 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
 <section class="slide" data-label="The kit" data-section="The zip folder on your laptop">
   <div class="body">
     <p class="overline" data-rise style="--d:0ms">What you download</p>
-    <h2 class="h2" data-rise style="--d:100ms;font-size:44px;line-height:1.08;margin:18px 0 20px">Unzip the kit, and that folder becomes your <span class="kupfer-text">workspace</span>.</h2>
+    <h2 class="h2" data-rise style="--d:100ms;font-size:44px;line-height:1.08;margin:18px 0 20px">Unzip the kit, and that folder becomes your workspace.</h2>
     <div class="kit-head" data-rise style="--d:200ms">
       <svg class="kit-zip" viewBox="0 0 100 100" aria-hidden="true"><use href="#i-zip"/></svg>
       <div>
@@ -429,7 +416,7 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
     <div style="display:grid;grid-template-columns:1fr 1.15fr;gap:72px;flex:1;align-items:center">
       <div>
         <p class="overline" data-rise style="--d:0ms">Prompt 1 of 5</p>
-        <h2 class="h2" data-rise style="--d:120ms;font-size:46px;line-height:1.1;margin:22px 0 20px;max-width:760px">Let Claude read your <span class="kupfer-text">folder.</span></h2>
+        <h2 class="h2" data-rise style="--d:120ms;font-size:46px;line-height:1.1;margin:22px 0 20px;max-width:760px">Let Claude read your folder.</h2>
         <p class="body-md" data-rise style="--d:220ms;margin-bottom:22px;max-width:760px">Claude Code is a panel inside the Claude desktop app that can open a folder on your computer. Point it at the unzipped kit and it can read every file in there. START-HERE.md walks you through it. This first prompt has Claude read the company backstory and this month's report, then tell you what it found.</p>
         <div class="open-app" data-rise style="--d:320ms">
           <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
@@ -449,12 +436,11 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
           <div class="ph-row"><span class="ph-k">You see</span><span>two sentences ending at the <b>CRAFT</b> question</span></div>
         </div>
       </div>
-      <div class="mock" data-rise style="--d:500ms" data-mock>
-        <div class="mock__bar"><span class="b"></span><span class="b"></span><span class="b"></span><span class="t">Claude · northwind-analyst-kit</span></div>
+      <div class="mock" data-rise style="--d:500ms">
+        <p class="mock__cap">Claude · northwind-analyst-kit</p>
         <div class="mock__body">
-          <div class="msg user"><span class="who">You</span><span class="text" data-type="Read the backstory and this month's report. Who is NORTHWIND, and what decision is this report building toward?"></span></div>
-          <div class="msg claude dotsline"><span class="dots"><i></i><i></i><i></i></span></div>
-          <div class="msg claude" style="flex-direction:column;gap:14px">
+          <div class="msg user on"><span class="who">You</span><span class="text">Read the backstory and this month's report. Who is NORTHWIND, and what decision is this report building toward?</span></div>
+          <div class="msg claude on" style="flex-direction:column;gap:14px">
             <div class="reveal"><span class="who">Claude</span><div class="label-mono">Read company-backstory.md ✓ · read 2023-09-monthly-report.md ✓</div></div>
             <div class="reveal" style="font-size:20px;line-height:1.55;max-width:640px">NORTHWIND is a family-owned consumer electronics maker in Berlin, with eight product lines and about €180M a year, selling through around 150 resellers. September closed strong: €21.69M on 139,056 units.</div>
             <div class="reveal verdict"><div class="h">The decision coming up</div><div class="t">CRAFT: high revenue on low volume, and the most defects two months in a row. Fix the line, or spend more Q3 marketing on it?</div></div>
@@ -471,7 +457,7 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
     <div style="display:grid;grid-template-columns:1.05fr .95fr;gap:80px;flex:1;align-items:center">
       <div>
         <p class="overline" data-rise style="--d:0ms">The material</p>
-        <h2 class="h2" data-rise style="--d:120ms;font-size:60px;line-height:1.04;margin:26px 0 32px">This is the report<br>you <span class="kupfer-text">work from.</span></h2>
+        <h2 class="h2" data-rise style="--d:120ms;font-size:60px;line-height:1.04;margin:26px 0 32px">This is the report<br>you work from.</h2>
         <p class="body-lg" data-rise style="--d:260ms;max-width:660px">NORTHWIND's September close. Eight pages: summary, revenue per product line, defects, marketing spend, escalations, and one open decision on the last page. €21.69M across seven lines. Nobody typed these numbers from memory. They were rolled up from raw data files, which is the next slide.</p>
         <p class="body-md" data-rise style="--d:380ms;margin-top:22px;max-width:660px"><b style="color:var(--ink)">The full report is in the kit, as reports/2023-09-monthly-report.md.</b></p>
         <p class="label-mono" data-rise style="--d:460ms;margin-top:26px">reports/2023-09-monthly-report.md &nbsp;·&nbsp; every page is in this deck</p>
@@ -529,7 +515,7 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
       </div>
       <div>
         <p class="overline" data-rise style="--d:120ms">The material</p>
-        <h2 class="h2" data-rise style="--d:240ms;font-size:44px;line-height:1.12;margin:22px 0 22px;max-width:700px">Every figure in the report is a sum of <span class="kupfer-text">spreadsheet rows.</span></h2>
+        <h2 class="h2" data-rise style="--d:240ms;font-size:44px;line-height:1.12;margin:22px 0 22px;max-width:700px">Every figure in the report is a sum of spreadsheet rows.</h2>
         <p class="body-md" data-rise style="--d:360ms;max-width:680px">The report is a summary. Underneath it sit five CSV files in your kit, one row per sale, per defect, per campaign. We show them for one reason: so you know the report can be checked. Add up the 95 CRAFT rows for September and you get the same €4.12M the report prints.</p>
         <p class="body-md" data-rise style="--d:440ms;max-width:680px;margin-top:16px">In prompt 3, Claude does that check for you, live.</p>
         <p class="label-mono" data-rise style="--d:520ms;margin-top:30px">data/*.csv &nbsp;·&nbsp; open any of them in Excel</p>
@@ -544,7 +530,7 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
     <div style="display:grid;grid-template-columns:1.02fr .98fr;gap:76px;flex:1;align-items:center">
       <div>
         <p class="overline" data-rise style="--d:0ms">The first analyst decision</p>
-        <h2 class="h2" data-rise style="--d:120ms;font-size:46px;line-height:1.08;margin:22px 0 22px;max-width:820px">You cannot track everything. Pick the few numbers that <span class="kupfer-text">decide the month.</span></h2>
+        <h2 class="h2" data-rise style="--d:120ms;font-size:46px;line-height:1.08;margin:22px 0 22px;max-width:820px">You cannot track everything. Pick the few numbers that decide the month.</h2>
         <p class="body-md" data-rise style="--d:240ms;max-width:800px;margin-bottom:24px">A monthly report has hundreds of figures in it. Your job is to pick the handful that answer two questions: was this a good month, and what do we do next? For NORTHWIND that is five numbers, plus one flag.</p>
         <div data-rise style="--d:360ms">
           <div style="display:flex;gap:18px;align-items:baseline;padding:12px 0;border-top:1px solid var(--line)"><span style="font-size:22px;font-weight:700;letter-spacing:-.02em;min-width:210px">Revenue</span><span style="font-size:20px;color:var(--muted)">how big the month was</span></div>
@@ -569,7 +555,7 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
     <div style="display:grid;grid-template-columns:1.02fr .98fr;gap:76px;flex:1;align-items:center">
       <div>
         <p class="overline" data-rise style="--d:0ms">The part that takes judgment</p>
-        <h2 class="h2" data-rise style="--d:120ms;font-size:46px;line-height:1.08;margin:22px 0 24px;max-width:820px">The same word means different things at different <span class="kupfer-text">companies.</span></h2>
+        <h2 class="h2" data-rise style="--d:120ms;font-size:46px;line-height:1.08;margin:22px 0 24px;max-width:820px">The same word means different things at different companies.</h2>
         <div data-rise style="--d:280ms">
           <div style="padding:20px 0;border-top:1px solid var(--line)">
             <div class="label-mono" style="margin-bottom:8px">Revenue</div>
@@ -597,7 +583,7 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
 <section class="slide" data-label="The question" data-section="The question in the numbers">
   <div class="body">
     <p class="overline" data-rise style="--d:0ms">The question in the numbers</p>
-    <h2 class="h2" data-rise style="--d:120ms;font-size:56px;line-height:1.06;margin:24px 0 18px;max-width:1500px">Side by side, <span class="kupfer-text">CRAFT</span> has high revenue, few units and the most defects.</h2>
+    <h2 class="h2" data-rise style="--d:120ms;font-size:56px;line-height:1.06;margin:24px 0 18px;max-width:1500px">Side by side, CRAFT has high revenue, few units and the most defects.</h2>
     <p class="body-md" data-rise style="--d:220ms;max-width:1360px;margin-bottom:8px">CRAFT is the espresso line, three products between €199 and €699. It is second in revenue at €4.12M, sixth in units, and has logged the most defects two months running (24 in August, 23 in September). "Not logged" means no defect report that month.</p>
     <div class="viz-slot" data-rise style="--d:340ms;flex:1" id="viz-tension" data-viz="tension">
       <!-- animated revenue-by-line + defect flag mounts here -->
@@ -622,7 +608,7 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
     <div style="display:grid;grid-template-columns:1fr 1.15fr;gap:72px;flex:1;align-items:center">
       <div>
         <p class="overline" data-rise style="--d:0ms">Prompt 2 of 5</p>
-        <h2 class="h2" data-rise style="--d:120ms;font-size:46px;line-height:1.1;margin:22px 0 20px;max-width:760px">Write your rules into a <span class="kupfer-text">Skill</span> file.</h2>
+        <h2 class="h2" data-rise style="--d:120ms;font-size:46px;line-height:1.1;margin:22px 0 20px;max-width:760px">Write your rules into a Skill file.</h2>
         <p class="body-md" data-rise style="--d:220ms;margin-bottom:20px;max-width:760px">A Skill is a plain text file of instructions. Claude reads it before it starts work, every single time. Yours ships half written: Claude asks you six blanks one at a time, you answer in normal words, and it writes your answers into the file. No code anywhere.</p>
         <div class="open-app" data-rise style="--d:320ms">
           <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
@@ -642,12 +628,11 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
           <div class="ph-row"><span class="ph-k">You see</span><span>the finished file, with your own words in it</span></div>
         </div>
       </div>
-      <div class="mock" data-rise style="--d:500ms" data-mock>
-        <div class="mock__bar"><span class="b"></span><span class="b"></span><span class="b"></span><span class="t">Claude · northwind-analyst-kit</span></div>
+      <div class="mock" data-rise style="--d:500ms">
+        <p class="mock__cap">Claude · northwind-analyst-kit</p>
         <div class="mock__body">
-          <div class="msg user"><span class="who">You</span><span class="text" data-type="Complete the northwind-metrics Skill from my answers. Show me the finished Skill."></span></div>
-          <div class="msg claude dotsline"><span class="dots"><i></i><i></i><i></i></span></div>
-          <div class="msg claude" style="flex-direction:column;gap:12px">
+          <div class="msg user on"><span class="who">You</span><span class="text">Complete the northwind-metrics Skill from my answers. Show me the finished Skill.</span></div>
+          <div class="msg claude on" style="flex-direction:column;gap:12px">
             <div class="reveal"><span class="who">Claude</span><div class="label-mono">.claude/skills/northwind-metrics/SKILL.md written</div></div>
             <div class="reveal skill-line"><span class="ok">✓</span><span class="k">defects</span><span>NCR count per line. Chronic means high 2 months running.</span></div>
             <div class="reveal skill-line"><span class="ok">✓</span><span class="k">marketing</span><span>spend per channel, not split per line</span></div>
@@ -679,7 +664,7 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
     <div style="display:grid;grid-template-columns:1fr 1.15fr;gap:72px;flex:1;align-items:center">
       <div>
         <p class="overline" data-rise style="--d:0ms">Prompt 3 of 5</p>
-        <h2 class="h2" data-rise style="--d:120ms;font-size:40px;line-height:1.08;margin:10px 0 10px;max-width:800px">Run your rules on the report, and <span class="kupfer-text">check one number</span> against the raw data.</h2>
+        <h2 class="h2" data-rise style="--d:120ms;font-size:40px;line-height:1.08;margin:10px 0 10px;max-width:800px">Run your rules on the report, and check one number against the raw data.</h2>
         <p class="body-md" data-rise style="--d:200ms;margin-bottom:16px;max-width:780px">Here the CSV files come back: your Skill checks one figure from the report against the source rows.</p>
         <div class="prompt-card compact" data-rise style="--d:280ms;margin-bottom:16px">
           <div class="pc-head">
@@ -703,12 +688,11 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
           <div class="ph-row"><span class="ph-k">Checks</span><span>one figure against <b>data/demand_actuals.csv</b></span></div>
         </div>
       </div>
-      <div class="mock" data-rise style="--d:500ms" data-mock>
-        <div class="mock__bar"><span class="b"></span><span class="b"></span><span class="b"></span><span class="t">Claude · northwind-analyst-kit</span></div>
+      <div class="mock" data-rise style="--d:500ms">
+        <p class="mock__cap">Claude · northwind-analyst-kit</p>
         <div class="mock__body">
-          <div class="msg user"><span class="who">You</span><span class="text" data-type="Use my northwind-metrics Skill on the September report. Extract the numbers, verify one against the CSV, and name the line to look at."></span></div>
-          <div class="msg claude dotsline"><span class="dots"><i></i><i></i><i></i></span></div>
-          <div class="msg claude" style="flex-direction:column;gap:14px">
+          <div class="msg user on"><span class="who">You</span><span class="text">Use my northwind-metrics Skill on the September report. Extract the numbers, verify one against the CSV, and name the line to look at.</span></div>
+          <div class="msg claude on" style="flex-direction:column;gap:14px">
             <div class="reveal"><span class="who">Claude</span><div class="label-mono">metrics/metrics.json written · your reading rules applied</div></div>
             <div class="reveal">
               <table class="mtable">
@@ -744,7 +728,7 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
     <div style="display:grid;grid-template-columns:1fr 1.15fr;gap:72px;flex:1;align-items:center">
       <div>
         <p class="overline" data-rise style="--d:0ms">Prompt 4 of 5</p>
-        <h2 class="h2" data-rise style="--d:120ms;font-size:44px;line-height:1.1;margin:22px 0 20px;max-width:760px">Build the <span class="kupfer-text">dashboard</span> from the numbers your Skill pulled.</h2>
+        <h2 class="h2" data-rise style="--d:120ms;font-size:44px;line-height:1.1;margin:22px 0 20px;max-width:760px">Build the dashboard from the numbers your Skill pulled.</h2>
         <p class="body-md" data-rise style="--d:220ms;margin-bottom:22px;max-width:760px">The dashboard shows what the report <b>cannot say</b>: growth normalised per shipping week, defects priced in euros, the machine spread behind the flag, the countries the volume sits in. Claude writes one file of numbers, the page renders it, and the recommendation sits at the top where a VP reads it first.</p>
         <div class="open-app" data-rise style="--d:320ms">
           <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
@@ -764,12 +748,11 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
           <div class="ph-row"><span class="ph-k">Opens</span><span><b>dashboard/index.html</b>, filled in, CRAFT flagged</span></div>
         </div>
       </div>
-      <div class="mock" data-rise style="--d:500ms" data-mock>
-        <div class="mock__bar"><span class="b"></span><span class="b"></span><span class="b"></span><span class="t">dashboard/index.html · filled by Claude</span></div>
+      <div class="mock" data-rise style="--d:500ms">
+        <p class="mock__cap">dashboard/index.html · filled by Claude</p>
         <div class="mock__body">
-          <div class="msg user"><span class="who">You</span><span class="text" data-type="Build the dashboard from this month's metrics and open it."></span></div>
-          <div class="msg claude dotsline"><span class="dots"><i></i><i></i><i></i></span></div>
-          <div class="msg claude" style="flex-direction:column;gap:14px">
+          <div class="msg user on"><span class="who">You</span><span class="text">Build the dashboard from this month's metrics and open it.</span></div>
+          <div class="msg claude on" style="flex-direction:column;gap:14px">
             <div class="reveal"><span class="who">Claude</span><div class="label-mono">dashboard/index.html opened · revenue by line, September</div></div>
             <div class="reveal bars">
               <div class="bar-row"><span class="n">AURA</span><span class="bar"><i data-w="100%" style="--w:100%"></i></span><span class="v">€7.96M</span></div>
@@ -803,7 +786,7 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
     <div style="display:grid;grid-template-columns:.98fr 1.02fr;gap:72px;flex:1;align-items:center">
       <div>
         <p class="overline" data-rise style="--d:0ms">Prompt 5 of 5</p>
-        <h2 class="h2" data-rise style="--d:120ms;font-size:38px;line-height:1.1;margin:12px 0 12px;max-width:760px">Make the <span class="kupfer-text">decision</span> and name the number behind it, the cost of being wrong and what you cannot see.</h2>
+        <h2 class="h2" data-rise style="--d:120ms;font-size:38px;line-height:1.1;margin:12px 0 12px;max-width:760px">Make the decision and name the number behind it, the cost of being wrong and what you cannot see.</h2>
         <p class="body-md" data-rise style="--d:220ms;max-width:760px;margin-bottom:14px">The VP of Sales wants more Q3 marketing money behind CRAFT. <b>Vote first, hands up.</b> Then send the prompt and see whether your own numbers agree with you.</p>
         <div class="prompt-card" data-rise style="--d:340ms">
           <div class="pc-head">
@@ -831,7 +814,7 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
 <section class="slide" data-label="The answer" data-section="The answer you take to the VP">
   <div class="body">
     <p class="overline" data-rise style="--d:0ms">The answer you take to the VP</p>
-    <h2 class="h2" data-rise style="--d:100ms;font-size:34px;line-height:1.1;margin:12px 0 14px;max-width:1560px">The report said <span class="tnum">+26%</span> and “strong close”. Your Skill said <span class="kupfer-text tnum">+0.8%</span> and “don’t fund it yet.”</h2>
+    <h2 class="h2" data-rise style="--d:100ms;font-size:34px;line-height:1.1;margin:12px 0 14px;max-width:1560px">The report said <span class="tnum">+26%</span> and “strong close”. Your Skill said <span class="tnum">+0.8%</span> and “don’t fund it yet.”</h2>
 
     <div data-rise style="--d:220ms;display:grid;grid-template-columns:repeat(4,1fr);border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);margin-bottom:18px">
       <div style="padding:12px 20px 12px 0">
@@ -902,7 +885,7 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
 <section class="slide" data-label="Go further" data-section="Three harder things to try">
   <div class="body">
     <p class="overline" data-rise style="--d:0ms">Optional · once your Skill works</p>
-    <h2 class="h2" data-rise style="--d:100ms;font-size:46px;line-height:1.08;margin:18px 0 16px;max-width:1520px">Three harder things to try with what you just <span class="kupfer-text">built.</span></h2>
+    <h2 class="h2" data-rise style="--d:100ms;font-size:46px;line-height:1.08;margin:18px 0 16px;max-width:1520px">Three harder things to try with what you just built.</h2>
     <p class="body-md" data-rise style="--d:180ms;max-width:1520px;margin-bottom:22px">These go past extracting numbers. The first two make Claude check work a human did; the third has it write a small program. All three run in the same folder, with the same Skill, and none of them need code from you.</p>
     <div class="pc-stack three grow" data-rise style="--d:280ms">
       <div>
@@ -949,7 +932,7 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
 <section class="slide" data-label="Check the answer" data-section="Two prompts that work anywhere">
   <div class="body center">
     <p class="overline" data-rise style="--d:0ms">Take these to any report, at any company</p>
-    <h2 class="h2" data-rise style="--d:120ms;font-size:52px;line-height:1.08;margin:24px 0 28px;max-width:1520px">Two prompts to check <span class="kupfer-text">any answer</span> Claude gives you.</h2>
+    <h2 class="h2" data-rise style="--d:120ms;font-size:52px;line-height:1.08;margin:24px 0 28px;max-width:1520px">Two prompts to check any answer Claude gives you.</h2>
     <p class="body-lg" data-rise style="--d:240ms;max-width:1060px;margin-bottom:40px">The first makes Claude show its sources. The second makes it argue against itself. Use them whenever an answer sounds right but you have not checked it.</p>
     <div class="pc-stack" data-rise style="--d:380ms">
       <div>
@@ -984,7 +967,7 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
     <div style="display:grid;grid-template-columns:.88fr 1.12fr;gap:56px;flex:1;align-items:center">
       <div>
         <p class="overline" data-rise style="--d:0ms">Case 2 · leave the sandbox</p>
-        <h2 class="h2" data-rise style="--d:120ms;font-size:46px;line-height:1.1;margin:22px 0 20px;max-width:780px">Same recipe, on <span class="kupfer-text">Meta's real quarter.</span></h2>
+        <h2 class="h2" data-rise style="--d:120ms;font-size:46px;line-height:1.1;margin:22px 0 20px;max-width:780px">Same recipe, on Meta's real quarter.</h2>
         <p class="body-md" data-rise style="--d:220ms;margin-bottom:20px;max-width:780px">NORTHWIND is invented; the method works on real reports too. Meta's Q2 2026 results are a public earnings release, so Claude can fetch it live and there is nothing to download. It is also the same shape as CRAFT at a much bigger scale: a strong headline with a question sitting underneath it. The full task is in <b>meta-quarterly/TASK.md</b> in your kit.</p>
         <div class="open-app" data-rise style="--d:320ms">
           <svg viewBox="0 0 100 100" aria-hidden="true"><use href="#i-claude"/></svg>
@@ -1017,7 +1000,7 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
 <section class="slide" data-label="Case 2 · prompts" data-section="Case 2 · define, extract, build">
   <div class="body">
     <p class="overline" data-rise style="--d:0ms">Case 2 · the same two steps as NORTHWIND</p>
-    <h2 class="h2" data-rise style="--d:100ms;font-size:46px;line-height:1.08;margin:20px 0 18px;max-width:1500px">Define the metrics, extract the quarter, then let Claude <span class="kupfer-text">design the page itself.</span></h2>
+    <h2 class="h2" data-rise style="--d:100ms;font-size:46px;line-height:1.08;margin:20px 0 18px;max-width:1500px">Define the metrics, extract the quarter, then let Claude design the page itself.</h2>
     <p class="body-md" data-rise style="--d:180ms;max-width:1500px;margin-bottom:26px">For NORTHWIND we gave you a dashboard template to fill. Here there is no template. That is the difference worth seeing: filling a template repeats exactly the same way every month, generating a page is flexible but different every time. Use templates for a monthly routine, generation for a one-off.</p>
     <div class="pc-stack grow" data-rise style="--d:300ms">
       <div>
@@ -1103,10 +1086,10 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
 
 <!-- 21 · IT REPEATS -->
 <section class="slide kupfer" data-label="Next month" data-section="Next month">
-  <div class="cv-globe" aria-hidden="true"><img src="./assets/globe.svg" alt="" decoding="async" loading="lazy" /></div>
-  <div class="body center cover-body">
+  <div class="workshop-globe" aria-hidden="true"><img src="./assets/globe.svg" width="660" height="620" alt="" decoding="async" loading="lazy" /></div>
+  <div class="body center">
     <p class="overline" data-rise style="--d:0ms">What you keep</p>
-    <h2 class="h1" data-rise style="--d:120ms;font-size:88px;line-height:1.04;margin:32px 0 36px;max-width:1300px">Next month you run the same Skill on a <span class="kupfer-text">new report</span></h2>
+    <h2 class="h1" data-rise style="--d:120ms;font-size:88px;line-height:1.04;margin:32px 0 36px;max-width:1300px">Next month you run the same Skill on a new report</h2>
     <p class="body-lg" data-rise style="--d:260ms;max-width:1080px">Your reading of the numbers is now written down in the Skill. Put next month's file in reports/, run the Skill, rebuild the dashboard, and Claude reports what changed and whether the CRAFT decision still holds. The kit keeps both cases, the report, the data, your Skill, the dashboards and every prompt in this deck. Use meta-quarterly/TASK.md on any listed company and your-company-skill/ on your own numbers.</p>
     <div class="chips" data-rise style="--d:440ms;margin-top:52px">
       <a class="chip" style="color:#f2f1ee;text-decoration:none;pointer-events:auto" href="./northwind-analyst-kit.zip" download><span class="dot"></span>Download the kit (.zip)</a>
@@ -1135,6 +1118,11 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
   var slides = [].slice.call(stage.querySelectorAll('.slide'));
   var total = slides.length;
   slides.forEach(function(s, i){
+    s.setAttribute('role', 'group');
+    s.setAttribute('aria-roledescription', 'slide');
+    s.setAttribute('aria-label', (i+1) + ' of ' + total + ': ' + (s.getAttribute('data-label') || 'Slide'));
+    // The cover carries its own lockup and meta line, as in Workshops 03 and 04: no running header.
+    if (s.getAttribute('data-chrome') === 'none') return;
     var chrome = document.createElement('div');
     chrome.className = 'chrome';
     chrome.innerHTML =
@@ -1142,9 +1130,6 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
       '<div class="chrome__topbar"><a class="brand" href="' + WS_URL + '"><span class="markdot"></span>loehrning.ai</a><span>Workshop 02 · Reading business reports with AI</span></div>' +
       '<div class="chrome__footer"><span class="fleft"><span class="mini-rule"></span>' + (s.getAttribute('data-label') || '') + '</span><span class="page">' + pad(i+1) + ' / ' + pad(total) + '</span></div>';
     s.insertBefore(chrome, s.firstChild);
-    s.setAttribute('role', 'group');
-    s.setAttribute('aria-roledescription', 'slide');
-    s.setAttribute('aria-label', (i+1) + ' of ' + total + ': ' + (s.getAttribute('data-label') || 'Slide'));
   });
 
   // ── copy-to-clipboard on every prompt card ────────────────────────────
@@ -1223,9 +1208,6 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
   function resetSlide(s){
     if (!s) return;
     clearT(s);
-    s.querySelectorAll('.msg.on, .reveal.on').forEach(function(e){ e.classList.remove('on'); });
-    s.querySelectorAll('[data-type]').forEach(function(e){ e.textContent = ''; e.classList.add('type-caret'); });
-    s.querySelectorAll('.bar i').forEach(function(i){ i.style.width = '0'; });
     s.querySelectorAll('[data-count]').forEach(function(e){ e.textContent = fmt(0, +(e.dataset.decimals || 0)); });
     if (window.DeckViz && DeckViz.reset) DeckViz.reset(s);
   }
@@ -1247,56 +1229,6 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
     });
   }
 
-  function typeText(s, el, full, done){
-    if (!el){ done(); return; }
-    var i = 0;
-    (function tick(){
-      i += 3;
-      el.textContent = full.slice(0, i);
-      if (i < full.length) addT(s, setTimeout(tick, 14));
-      else { el.classList.remove('type-caret'); done(); }
-    })();
-  }
-
-  function runMock(s, mock){
-    var user = mock.querySelector('.msg.user');
-    var textEl = mock.querySelector('[data-type]');
-    var full = textEl ? textEl.dataset.type : '';
-    var dots = mock.querySelector('.dotsline');
-    var claudeMsg = mock.querySelector('.msg.claude:not(.dotsline)');
-    var reveals = [].slice.call(mock.querySelectorAll('.reveal'));
-    function showReveals(){
-      if (claudeMsg) claudeMsg.classList.add('on');
-      reveals.forEach(function(r, j){
-        addT(s, setTimeout(function(){
-          r.classList.add('on');
-          r.querySelectorAll('.bar i').forEach(function(i){ i.style.width = i.dataset.w; });
-        }, j * 420));
-      });
-    }
-    if (reduce){
-      user.classList.add('on');
-      if (claudeMsg) claudeMsg.classList.add('on');
-      if (textEl){ textEl.textContent = full; textEl.classList.remove('type-caret'); }
-      reveals.forEach(function(r){
-        r.classList.add('on');
-        r.querySelectorAll('.bar i').forEach(function(i){ i.style.width = i.dataset.w; });
-      });
-      return;
-    }
-    addT(s, setTimeout(function(){
-      user.classList.add('on');
-      if (textEl) textEl.classList.add('type-caret');
-      typeText(s, textEl, full, function(){
-        if (dots) dots.classList.add('on');
-        addT(s, setTimeout(function(){
-          if (dots) dots.classList.remove('on');
-          showReveals();
-        }, 750));
-      });
-    }, 450));
-  }
-
   function runCycling(s){
     var cyc = s.querySelector('.cycling');
     if (!cyc) return;
@@ -1313,7 +1245,6 @@ a.report-link:hover .report-shot.lead{border-color:var(--ink)}
   function playSlide(s){
     if (!s) return;
     countUps(s);
-    s.querySelectorAll('[data-mock]').forEach(function(m){ runMock(s, m); });
     runCycling(s);
     if (window.DeckViz && DeckViz.play) DeckViz.play(s, { reduce: reduce, addT: addT });
   }

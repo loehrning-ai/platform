@@ -9,7 +9,7 @@ import { cx } from "@/components/werk";
 
 /** Row geometry shared by active and idle items: 44px target, no left rule. */
 export const LESSON_SIDEBAR_ITEM_BASE_CLASS =
-  "flex min-h-11 w-full min-w-0 items-start gap-2 border-l-0 px-2.5 py-2.5 text-left text-[0.875rem] leading-[1.35] outline-none transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-orange motion-reduce:transition-none";
+  "flex min-h-11 w-full min-w-0 items-start gap-2 border-l-0 px-2.5 py-2.5 text-left text-[0.875rem] leading-[1.35] outline-none transition-colors duration-[120ms] focus-visible:outline-2 focus-visible:outline-solid focus-visible:-outline-offset-2 focus-visible:outline-brand-orange motion-reduce:transition-none";
 
 /** The current lesson: tonal fill, 600 weight, ink text. */
 export const LESSON_SIDEBAR_ITEM_ACTIVE_CLASS =

@@ -38,15 +38,24 @@ export function DsChapterSidebar({
             href={dsChapterHref(c.id, locale)}
             prefetch={false}
             className={cn(
-              "flex min-h-11 min-w-0 items-start gap-2 border-l-2 px-2.5 py-2.5 text-[13px] leading-[1.35] transition-colors",
+              "relative flex min-h-11 min-w-0 items-start gap-2 py-2.5 pl-5 pr-2.5 text-[13px] leading-[1.35] transition-colors duration-[120ms] motion-reduce:transition-none",
+              // Werkzeichnung: the current chapter is an ink square marker
+              // plus 600 weight, not a copper tint.
               active
-                ? "active border-brand-orange bg-brand-orange/10 font-semibold text-foreground"
-                : "border-transparent text-muted-foreground hover:border-brand-orange/40 hover:text-foreground",
+                ? "active font-semibold text-foreground"
+                : "text-muted-foreground hover:bg-card-hover hover:text-foreground",
             )}
             onClick={onNavigate}
             aria-current={active ? "page" : undefined}
           >
-            <span className="w-6 shrink-0 text-center font-mono text-xs font-bold text-brand-orange">
+            {active ? (
+              <span
+                aria-hidden="true"
+                data-active-marker
+                className="absolute left-1.5 top-[1.0625rem] size-2 bg-foreground"
+              />
+            ) : null}
+            <span className="w-6 shrink-0 text-center font-mono text-xs font-bold tabular-nums text-muted-foreground">
               {c.displayNumber}
             </span>
             <div className="min-w-0 flex-1">

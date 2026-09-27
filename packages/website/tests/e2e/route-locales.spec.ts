@@ -35,13 +35,13 @@ test.describe("DE/EN locale-routing foundation", () => {
 
     const desktopNavigation = page.locator(".js-desktop-nav");
     await desktopNavigation
-      .getByRole("link", { name: "Englische Oberfläche öffnen" })
+      .getByRole("link", { name: "EN, Englische Oberfläche öffnen" })
       .click();
     await expect(page).toHaveURL(/\/en\/kurse$/);
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
 
     await desktopNavigation
-      .getByRole("link", { name: "Open the German interface" })
+      .getByRole("link", { name: "DE, open the German interface" })
       .click();
     await expect(page).toHaveURL(/\/kurse$/);
     await expect(page.locator("html")).toHaveAttribute("lang", "de");
@@ -103,7 +103,7 @@ test.describe("DE/EN locale-routing foundation", () => {
         await expect(compactLanguage).toHaveAttribute("href", "/kurse");
         await expect(compactLanguage).toHaveAttribute("hreflang", "de");
         await expect(compactLanguage).toHaveAccessibleName(
-          "Open the German interface",
+          "DE, open the German interface",
         );
         const box = await compactLanguage.boundingBox();
         expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);

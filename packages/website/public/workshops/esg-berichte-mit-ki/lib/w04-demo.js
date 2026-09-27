@@ -45,9 +45,7 @@
       var r = v.rows[id], li = $('.trap[data-trap="' + id + '"]');
       if (!li) return;
       var sw = $(".sw", li);
-      sw.setAttribute("aria-pressed", r.pressed ? "true" : "false");
-      setText($(".sw__t", sw), r.sw);
-      setText($(".sw__s", sw), r.swShort);
+      sw.setAttribute("aria-checked", r.pressed ? "true" : "false");
       li.classList.toggle("is-on", r.pressed);
       li.classList.toggle("is-ghost", v.ghost);
       var iso = $(".iso", li);
@@ -141,7 +139,7 @@
   });
   $$('.predict input').forEach(function (r) {
     r.addEventListener("change", function () {
-      setText($("#p-status"), "Noted. Now set T4 to “As the AI did it” and read the total.");
+      setText($("#p-status"), "Noted. Now switch on “As the AI did it” for T4 and read the total.");
     });
   });
 

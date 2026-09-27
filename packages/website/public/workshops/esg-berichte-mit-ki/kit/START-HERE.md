@@ -10,7 +10,7 @@
 
 | Folder | Contents |
 |---|---|
-| `rohdaten_2025/` | The raw folder the AI gets in the first run: 20 bills as text files and 2 CSV exports. German documents with German number format, as in real life. |
+| `rohdaten_2025/` | The raw folder the AI gets in the first run: 20 documents as text files (bills, statements and one certificate confirmation) and 2 CSV exports. German documents with German number format, as in real life. |
 | `vorjahr/` | The consultant's 2024 summary (grade B, no bills). |
 | `faktoren/` | The pinned factor table. Illustrative teaching values. |
 | `belegtabelle/` | Empty ledger with one worked, one half-filled and one blank row; empty coverage grid; the six rules. |

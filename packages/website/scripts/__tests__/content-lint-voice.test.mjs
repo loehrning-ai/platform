@@ -7,6 +7,7 @@ import { findWorkshopHtmlDashes, runVoiceLint } from "../content-lint.mjs";
 import {
   classifyLearnerFile,
   collectLearnerFacingFiles,
+  decodeHtmlEntities,
   extractHtmlUnits,
   extractTsStringLiterals,
   isLearnerFacingFile,
@@ -633,9 +634,29 @@ const PHRASE_CASES = {
   "de-puffery-reise": [["Auf deiner KI-Reise."], ["Die Reisekosten steigen."]],
   "de-count-entscheidend": [["Das ist entscheidend."], ["Die Entscheidung f\u00e4llt morgen."]],
   "de-count-spannend": [["Eine spannende Frage."], ["Die Spannung steigt."]],
-  "en-puffery-vocab": [["A pivotal moment.", "This underscores the need."], ["The pivot table."]],
+  "en-puffery-vocab": [
+    ["A pivotal moment.", "This underscores the need.", "The results underscore the importance of review.", "The page showcases the product.", "In the realm of data."],
+    [
+      "The pivot table.",
+      "Prefix a private helper with an underscore.",
+      "Underscores in file names are fine.",
+      "Each iframe has its own JavaScript realm.",
+      "The realm of possible values is small.",
+    ],
+  ],
   "en-puffery-plays-role": [["Data plays a crucial role."], ["Role play works."]],
-  "en-puffery-copula": [["The page serves as a hub."], ["She stands by the door."]],
+  "en-puffery-copula": [
+    ["The page serves as a hub.", "The inventory stands as a record.", "The kit boasts ten tools."],
+    ["She stands by the door.", "Python treats functions as a first-class value.", "A closure functions as an adapter here."],
+  ],
+  "en-filler-landscape": [
+    ["The vendor landscape shifts."],
+    ["Best on a large screen in landscape.", "A browser, ideally a large landscape screen for the deck.", "Rotate the phone to landscape mode."],
+  ],
+  "en-claim-empower": [
+    ["Teams empower staff.", "Empowering users with AI."],
+    ["The EU directive on empowering consumers for the green transition."],
+  ],
   "en-count-crucial": [["This is crucial."], ["A crucible."]],
   "en-residue-chat": [["Great question! The answer is 4."], ["The question is great."]],
   "de-residue-chat": [["Gute Frage! Die Antwort ist 4."], ["Eine gute Fragestellung."]],
@@ -708,6 +729,16 @@ test("workshop HTML is read through its visible prose; dashes there are warnings
     { relFile: SLOP_HTML, line: 11, rule: "EM-DASH" },
     { relFile: SLOP_HTML, line: 15, rule: "EN-DASH" },
   ], "prose em dash and a month range fire; the attribute, the placeholder cells, the digit range, the style, the script and the comment do not");
+});
+
+test("malformed character references stay as written instead of aborting the lint", () => {
+  assert.equal(decodeHtmlEntities("&#228; &#xE4; &auml; &amp;"), "\u00e4 \u00e4 \u00e4 &");
+  assert.equal(decodeHtmlEntities("a &#99999999; b"), "a &#99999999; b");
+  assert.equal(decodeHtmlEntities("&#x110000;"), "&#x110000;");
+  assert.equal(decodeHtmlEntities("&#xD800;"), "&#xD800;");
+  assert.equal(decodeHtmlEntities("&constructor; &toString; &hasOwnProperty;"), "&constructor; &toString; &hasOwnProperty;");
+  assert.doesNotThrow(() => extractHtmlUnits("<p>Tippfehler &#99999999; im Deck.</p>"));
+  assert.equal(extractHtmlUnits("<p>Tippfehler &#99999999; im Deck.</p>")[0].segments[0].text, "Tippfehler &#99999999; im Deck.");
 });
 
 test("discovery covers workshop HTML, locale copy modules and the workshop registry modules", () => {

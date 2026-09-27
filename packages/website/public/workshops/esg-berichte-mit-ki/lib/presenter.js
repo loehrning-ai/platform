@@ -289,11 +289,10 @@
   }
 
   // The clock target is the sum of the main scenes' data-seconds, as the deck reports them, so the
-  // bar and the "target" label never drift from the deck. 75:00 is only the pre-pairing fallback.
-  const FALLBACK_TARGET_SECONDS = 75 * 60;
+  // bar and the "target" label never drift from the deck. Before the deck pairs there is no target:
+  // the label stays hidden rather than showing a number the materials do not state.
   function workshopTargetSeconds() {
-    const total = (state?.scenes || []).filter((scene) => scene.kind === "main").reduce((sum, scene) => sum + (Number(scene.seconds) || 0), 0);
-    return total > 0 ? total : FALLBACK_TARGET_SECONDS;
+    return (state?.scenes || []).filter((scene) => scene.kind === "main").reduce((sum, scene) => sum + (Number(scene.seconds) || 0), 0);
   }
   const PACE_TOLERANCE_SECONDS = 30;
 
@@ -316,8 +315,11 @@
     setText(nodes.timer, started ? formatTime(elapsed) : "00:00");
     setText(nodes.timerToggle, timerState.running ? "Pause" : started ? "Resume" : "Start clock");
     const elapsedSeconds = elapsed / 1000;
-    const WORKSHOP_TARGET_SECONDS = workshopTargetSeconds();
-    setText(nodes.clockTarget, `target ${formatBudget(WORKSHOP_TARGET_SECONDS)}`);
+    const pairedTarget = workshopTargetSeconds();
+    if (nodes.clockTarget.hidden !== !(pairedTarget > 0)) nodes.clockTarget.hidden = !(pairedTarget > 0);
+    setText(nodes.clockTarget, pairedTarget > 0 ? `target ${formatBudget(pairedTarget)}` : "");
+    // Unpaired, the bar has nothing to measure against: it stays empty and no scene window is drawn.
+    const WORKSHOP_TARGET_SECONDS = pairedTarget > 0 ? pairedTarget : Number.POSITIVE_INFINITY;
     nodes.clockFill.style.transform = `scaleX(${Math.min(1, elapsedSeconds / WORKSHOP_TARGET_SECONDS).toFixed(4)})`;
     const main = state?.kind === "main";
     const start = main ? Number(state.startBudgetSeconds) || 0 : 0;

@@ -196,12 +196,12 @@ const KONFIDENZ_DEFINITION = "Konfidenz = Anzahl Treffer";
 function MatchedTermsPanel({ terms }: { terms: readonly string[] }) {
   if (terms.length === 0) return null;
   return (
-    // Below sm one caption line, "Treffer: A · B · C", that wraps between
-    // terms; from sm up a Birke box with a hairline and the full label.
-    // The Konfidenz definition also sits in the title and in the expanded
-    // sources, beside each chip.
+    // One unboxed caption line at every width, "Treffer: A · B · C" below
+    // sm and the full label from sm up, wrapping between terms. It sits
+    // under the answer sheet, not in a second box beside it. The Konfidenz
+    // definition also sits in the title and in the expanded sources.
     <div
-      className="text-[13px] [overflow-wrap:anywhere] sm:border sm:border-[#E3DFD6] sm:bg-[#F7F4ED] sm:px-2.5 sm:py-1.5 sm:text-[12px]"
+      className="text-[13px] [overflow-wrap:anywhere] sm:text-[12px]"
       title={`${KONFIDENZ_DEFINITION} im Dokument`}
       data-rag-matched-terms
       style={{
@@ -289,6 +289,7 @@ function RagVertragsassistentGerman() {
     (q) => !asked.has(q) && !lastFollow.has(q),
   );
   const railFollowUps = smUp || typing ? [] : [...lastFollow];
+  const sendDisabled = typing || !input.trim();
 
   function submit(text?: string) {
     const q = (text ?? input).trim();
@@ -326,18 +327,16 @@ function RagVertragsassistentGerman() {
   return (
     <div
       data-demo-id="rag-vertragsassistent"
-      // Below sm the engine is as tall as its content: no fixed frame height
-      // and no inner scroll box, so the page scrolls once, not twice.
-      className="sm:min-h-[var(--rag-demo-h)]"
-      style={
-        {
-          "--rag-demo-h": `${DEMO_HEIGHT}px`,
-          display: "flex",
-          flexDirection: "column",
-          fontFamily: DEMO.font.sans,
-          color: DEMO.ink,
-        } as React.CSSProperties
-      }
+      // The engine is as tall as its content at every width: no fixed frame
+      // height that the chat log stretches into, so the suggestion rail sits
+      // right under the conversation instead of below a dead gap. Below sm
+      // there is no inner scroll box either, so the page scrolls once.
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        fontFamily: DEMO.font.sans,
+        color: DEMO.ink,
+      }}
     >
       {/* The page H1 and lead name the demo; this heading only gives
           screen-reader users a landmark into the instrument. */}
@@ -402,7 +401,7 @@ function RagVertragsassistentGerman() {
                 textOverflow: "ellipsis",
               }}
             >
-              Keyword-Suche · 8 Beispieldokumente
+              Keyword-Suche · 6 Beispieldokumente
             </div>
           </div>
         </div>
@@ -410,7 +409,7 @@ function RagVertragsassistentGerman() {
 
       <div
         ref={scrollRef}
-        className="max-sm:flex-none sm:max-h-[400px] sm:min-h-[280px] sm:flex-[1_1_0]"
+        className="flex-none sm:max-h-[400px] sm:min-h-[280px]"
         data-rag-chat-log
         style={{
           overflowY: "auto",
@@ -499,7 +498,8 @@ function RagVertragsassistentGerman() {
               )}
               {m.sources && m.sources.length > 0 && (
                 <div style={{ marginTop: 6 }}>
-                  {/* A plain text link below sm, a hairline box from sm up. */}
+                  {/* A plain text link at every width, not a box under the
+                      answer box. */}
                   <button
                     type="button"
                     onClick={() =>
@@ -507,7 +507,7 @@ function RagVertragsassistentGerman() {
                     }
                     aria-expanded={!!expanded[m.id]}
                     aria-label={`${expanded[m.id] ? "Quellen ausblenden" : `Alle ${m.sources.length} Quellen`}: zur Antwort auf „${m.queryContext}“`}
-                    className="inline-flex min-h-11 items-center gap-1.5 bg-transparent underline decoration-[#E3DFD6] underline-offset-4 sm:border sm:border-[#E3DFD6] sm:px-2 sm:no-underline"
+                    className="inline-flex min-h-11 items-center gap-1.5 border-0 bg-transparent p-0 underline decoration-[#4f4640]/50 underline-offset-4 hover:decoration-[#0B0908]"
                     style={{
                       ...DEMO.label,
                       cursor: "pointer",
@@ -542,12 +542,13 @@ function RagVertragsassistentGerman() {
                           <div
                             key={i}
                             style={{
+                              // A hairline-ruled list row, not a card: the
+                              // answer sheet stays the only box.
                               display: "flex",
                               alignItems: "stretch",
                               gap: 8,
-                              background: DEMO.kalk,
-                              border: `1px solid ${DEMO.leinen}`,
-                              padding: "7px 10px",
+                              borderTop: `1px solid ${DEMO.leinen}`,
+                              padding: "7px 0",
                               minWidth: 0,
                             }}
                           >
@@ -587,12 +588,9 @@ function RagVertragsassistentGerman() {
                                   display: "inline-flex",
                                   alignItems: "center",
                                   marginTop: 3,
-                                  padding: "1px 6px",
-                                  border: `1px solid ${DEMO.leinen}`,
-                                  background: DEMO.birke,
                                   fontFamily: DEMO.font.mono,
                                   fontSize: 12,
-                                  color: DEMO.ink,
+                                  color: DEMO.schiefer,
                                   letterSpacing: "0.02em",
                                   maxWidth: "100%",
                                   overflow: "hidden",
@@ -613,12 +611,15 @@ function RagVertragsassistentGerman() {
                 </div>
               )}
               {m.follow && idx === msgs.length - 1 && smUp && (
+                // Follow-ups are underlined text actions, not bordered chips:
+                // they sit beside the answer sheet, and a box never sits in
+                // a box. Each keeps its 44px target.
                 <div
                   style={{
                     display: "flex",
                     flexWrap: "wrap",
-                    gap: 6,
-                    marginTop: 8,
+                    columnGap: 18,
+                    marginTop: 2,
                   }}
                 >
                   {m.follow.map((f) => (
@@ -626,25 +627,17 @@ function RagVertragsassistentGerman() {
                       key={f}
                       type="button"
                       onClick={() => submit(f)}
-                      className="min-h-11 text-[14px] sm:text-[12px]"
+                      className="inline-flex min-h-11 items-center text-[14px] underline decoration-[#0B0908]/40 underline-offset-4 hover:decoration-[#0B0908] sm:text-[12px]"
                       style={{
-                        minHeight: 44,
                         background: "transparent",
-                        border: `1px solid ${DEMO.ink}`,
+                        border: 0,
                         color: DEMO.ink,
-                        padding: "5px 9px",
+                        padding: 0,
                         lineHeight: 1.3,
                         cursor: "pointer",
                         fontFamily: "inherit",
                         fontWeight: 600,
                         textAlign: "left",
-                        transition: reduced ? "none" : "background 150ms",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = DEMO.kalk;
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = "transparent";
                       }}
                     >
                       {f} →
@@ -696,7 +689,7 @@ function RagVertragsassistentGerman() {
                     },
                     {
                       stage: 2,
-                      label: "8 Dokumente durchsuchen",
+                      label: "6 Dokumente durchsuchen",
                       detail: "Schlüsselbegriff-Abgleich",
                     },
                     {
@@ -796,9 +789,10 @@ function RagVertragsassistentGerman() {
           onClick={() => submit(FAILURE_QUERY)}
           className={`${SUGGESTION_CHIP_CLASS} border-dashed border-[#4f4640] bg-transparent hover:border-[#0B0908]`}
           style={{ minHeight: 44, color: DEMO.ink, fontFamily: "inherit", cursor: "pointer" }}
-          aria-label={`Grenzfall testen: ${FAILURE_QUERY}`}
         >
-          <span style={{ fontWeight: 600, color: "#4f4640" }}>Grenzfall:</span>
+          {/* The visible text is the accessible name (no aria-label), so a
+              real space keeps "Grenzfall: …" identical for both. */}
+          <span style={{ fontWeight: 600, color: "#4f4640" }}>Grenzfall:</span>{" "}
           {FAILURE_QUERY}
         </button>
       </div>
@@ -842,19 +836,23 @@ function RagVertragsassistentGerman() {
         <button
           type="button"
           onClick={() => submit()}
-          disabled={typing || !input.trim()}
+          disabled={sendDisabled}
           style={{
             ...DEMO.label,
             minHeight: 44,
-            // Ink button: the page's one Mennige button is the course link.
-            background: DEMO.ink,
-            color: DEMO.kalk,
-            border: "none",
+            // Enabled: a solid ink button (the page's one Mennige button is
+            // the course link). Disabled: the same ink outline at reduced
+            // opacity, a faint frame rather than a grey block; disabled
+            // controls are exempt from contrast minimums, and the enabled
+            // ink edge on paper is far above 3:1.
+            background: sendDisabled ? "transparent" : DEMO.ink,
+            color: sendDisabled ? DEMO.ink : DEMO.kalk,
+            border: `1px solid ${DEMO.ink}`,
             padding: "9px 12px",
-            cursor: typing || !input.trim() ? "not-allowed" : "pointer",
-            opacity: typing || !input.trim() ? 0.5 : 1,
+            cursor: sendDisabled ? "not-allowed" : "pointer",
+            opacity: sendDisabled ? 0.4 : 1,
             flexShrink: 0,
-            transition: reduced ? "none" : "opacity 150ms",
+            transition: reduced ? "none" : "opacity 150ms, background 150ms",
           }}
           aria-label="Frage senden"
         >
@@ -889,6 +887,11 @@ const CONTRACT_ANSWERS_EN: Readonly<Record<string, EnglishContractAnswer>> = {
       {
         document: "Sample schedule B",
         section: "Clause 4",
+        confidence: "medium",
+      },
+      {
+        document: "Sample project terms",
+        section: "§8(2) Extraordinary termination",
         confidence: "medium",
       },
     ],
@@ -985,7 +988,7 @@ function RagContractAssistantEnglish() {
           screen-reader users a landmark into the instrument. */}
         <h2 className="sr-only">Contract assistant: questions to the sample archive</h2>
         <p className="text-caption text-muted-foreground" style={{ margin: 0, maxWidth: 720 }}>
-          Three fictional contract records are searched with fixed keyword rules
+          Six fictional company documents are searched with fixed keyword rules
           in the browser. This is not legal advice and no model or document
           service is called.
         </p>
@@ -1036,7 +1039,7 @@ function RagContractAssistantEnglish() {
           }}
         >
           <span style={{ fontWeight: 700 }}>Local sample index</span>
-          <span>3 records · 14 sample clauses</span>
+          <span>6 sample documents</span>
           <span style={{ marginLeft: "auto" }}>no external connection</span>
         </div>
 

@@ -66,10 +66,6 @@ const BOUNDED_SVG_ANNOTATION_EXCEPTIONS = {
     reason: "feature-pipeline stage, node, divergence, and trace annotations",
     sizes: { "8.5": 2, "9": 3, "9.5": 6 },
   },
-  "flowing-pipeline.tsx": {
-    reason: "pipeline stage and moving-record annotations",
-    sizes: { "9.5": 1, "10": 1 },
-  },
   "galton-sim.tsx": {
     reason: "bounded population and sample-mean plot labels",
     sizes: { "10": 2 },

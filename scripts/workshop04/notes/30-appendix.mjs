@@ -25,7 +25,7 @@ export default {
     "The UBA values come from search summaries read on 26 September 2026, and UBA revises earlier years; re-check them before quoting.",
   ]),
   "appendix-run-record": appendix("How the two answers were produced, and what is still missing.", [
-    "Both answers on the slides are constructed. The raw-folder answer shows what happens when all six traps fire; it is not a recorded run.",
+    "Both answers on the slides are constructed. The raw-folder answer shows what happens when all seven traps fire (six data traps and the market-based method error); it is not a recorded run.",
     "Before publication both conditions are run five times each with the protocol in the kit, and this table is filled from the runs.",
   ]),
   "appendix-regulation": appendix("What is true about the rules on 26 September 2026, with the items that need a check before the session.", [

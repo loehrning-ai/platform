@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { GlobeToggle } from "@/components/home/globe-toggle";
 import type {
   HorizonMotionState,
   HorizonRenderer,
@@ -27,7 +28,13 @@ import type {
  * choice is remembered in this browser.
  */
 
-const DESKTOP_QUERY = "(min-width: 64rem)";
+/**
+ * Tailwind `lg`, as a media query. The phone band (phone-hero.css), this
+ * renderer's eligibility and the desktop globe in hero.tsx all switch on it,
+ * so exactly one globe runs at any width and any default font size.
+ */
+export const LG_QUERY = "(min-width: 64rem)";
+const DESKTOP_QUERY = LG_QUERY;
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 const REDUCED_DATA_QUERY = "(prefers-reduced-data: reduce)";
 const PAUSED_KEY = "loehrning:home-globe-paused";
@@ -223,11 +230,7 @@ export function usePhoneGlobe(): PhoneGlobe {
   return { slotRef, canvasRef, staticCanvasRef, state, paused, togglePaused };
 }
 
-/**
- * The globe's pause control: a quiet 44px target (no frame, a small glyph at
- * reduced contrast), localized name with a pressed state. Rendered only while
- * the live renderer runs, so it never reads as a second action.
- */
+/** The phone horizon globe's toggle; nothing while the static frame shows. */
 export function PhoneGlobeToggle({
   globe,
   label,
@@ -237,21 +240,11 @@ export function PhoneGlobeToggle({
 }) {
   if (globe.state === "static") return null;
   return (
-    <button
-      type="button"
-      data-home-globe-toggle=""
-      aria-label={label}
-      aria-pressed={globe.paused}
-      onClick={globe.togglePaused}
-      className="phone-globe-toggle"
-    >
-      <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-        {globe.paused ? (
-          <path d="M5 3v10l8-5z" fill="currentColor" />
-        ) : (
-          <path d="M4 3h3v10H4zM9 3h3v10H9z" fill="currentColor" />
-        )}
-      </svg>
-    </button>
+    <GlobeToggle
+      variant="phone"
+      paused={globe.paused}
+      label={label}
+      onToggle={globe.togglePaused}
+    />
   );
 }

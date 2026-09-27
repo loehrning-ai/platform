@@ -30,10 +30,13 @@ const R = 500;
 const CX = 320;
 const CY = 380;
 const DEG = Math.PI / 180;
-const KUPFER = "#C4431A";
+// The globe sits on the hero's graphit band: paper lines and the lightened
+// Mennige the band uses for accent text (#e07050, 5.79:1 on graphit), the
+// same pair as the phone horizon globe (werk/horizon-globe-frame.tsx).
+const KUPFER = "#e07050";
 const GRID_STEP = 7;
-const LC = "rgb(20,20,19)";
-const WARM = "rgb(40,30,22)";
+const LC = "rgb(242,241,238)";
+const WARM = "rgb(242,241,238)";
 
 // ─── Locations (dramatic cross-globe panning) ───────────────────────────────
 // Step/journey data (Step type + STEPS constant) now lives in

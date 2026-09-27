@@ -126,6 +126,12 @@ export interface WorkshopMaterial {
   readonly sizeLabel?: string;
   /** Minutes the material takes, stated only where the material or the agenda gives a number. */
   readonly minutes?: number;
+  /**
+   * Phone wording of the description (at most 72 characters, a complete
+   * clause, no ellipsis). Set it where the description's first sentence is
+   * longer than two phone lines; without it the phone row shows that sentence.
+   */
+  readonly short?: string;
   /** True when the workshop's outcomes can be reached without this material. */
   readonly optional?: boolean;
   /** Exactly one material per workshop is the place to start ("Hier starten"). */
@@ -229,7 +235,10 @@ export interface Workshop {
   readonly question: string;
   /** Three or four sentences, each starting from an observable verb ("Danach kannst du"). */
   readonly outcomes: readonly string[];
-  /** The agenda in taught order. Minutes add up to minutesLive (live items) or minutesSelfStudy. */
+  /**
+   * The agenda in taught order. Live items add up to minutesLive; self-study
+   * items add up to minutesSelfStudy, rounded up to the next 5 minutes.
+   */
   readonly agenda: readonly WorkshopAgendaItem[];
   /** "deck" when the minutes come from the deck's scene timings, "plan" when they are planned values. */
   readonly agendaSource: "deck" | "plan";
@@ -262,7 +271,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
     title: "Kann KI die Zukunft vorhersagen?",
     eyebrow: "Workshop 01 · Prognosen",
     summary:
-      "Du rechnest aus, was eine falsche Prognose kostet, wie groß der Puffer sein muss und wann eine Person freigibt. Dazu drei Browser-Labore und ein Launch-Fall.",
+      "Du rechnest aus, was eine falsche Prognose kostet, wie groß der Puffer sein muss und wann eine Person freigibt, in drei Browser-Laboren und einem Launch-Fall.",
     description:
       "Zuerst prüfst du, ob ein Modell das heutige Verfahren schlägt, also denselben Wochentag der Vorwoche. Dann rechnest du aus, was zu viel und was zu wenig Kapazität kostet, und legst den Puffer fest. Zum Schluss bestimmst du, woran du im Betrieb merkst, dass eine Prognose danebenliegt, und wer dann freigibt. Die Labore rechnen die Kosten in US-Dollar, der Launch-Fall rechnet in Stück.",
     format: "Selbstlern-Kit",
@@ -502,6 +511,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         optional: true,
         description:
           "Die Startseite der englischen Materialien mit Links zu Laboren, Launch-Fall und Übung. Diese Workshop-Seite erfüllt denselben Zweck.",
+        short: "Die Startseite der englischen Materialien mit Links zu allen Teilen.",
       },
       {
         label: "Labore · 3 Simulationen",
@@ -535,6 +545,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         phase: "after",
         description:
           "Eine A4-Seite zum Ausdrucken mit fünf Säulen einer Prognose, der Servicelevel-Formel, dem Sicherheitsbestand und vier Arten von Ereignissen, die kein Modell vorhersagt.",
+        short: "Eine A4-Seite mit den fünf Säulen einer Prognose, zum Ausdrucken.",
       },
       {
         label: "Übungsaufgabe",
@@ -583,7 +594,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       "Alle, die Claude für Zahlenarbeit ausprobieren wollen, ohne selbst zu programmieren",
     ],
     notForYou:
-      "Eher nicht für dich, wenn du keinen Zugang zur Claude-Desktop-App hast; Workshop 01 und 03 laufen ohne KI-Konto.",
+      "Eher nicht für dich, wenn du keinen Zugang zur Claude-Desktop-App hast; die Workshops 01, 03 und 04 laufen ohne KI-Konto.",
     question:
       "Soll NORTHWIND die Produktlinie CRAFT nacharbeiten oder mehr Q3-Marketingbudget dahinterstellen?",
     outcomes: [
@@ -714,7 +725,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         },
         {
           id: "low-volume",
-          label: "CRAFT liegt beim Absatz nur auf Rang 6 von 7 Linien.",
+          label: "CRAFT liegt beim Absatz nur auf Rang 6 von 7 liefernden Linien.",
         },
       ],
       recommendedChoiceId: "quality-gate",
@@ -738,7 +749,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
           body: "Wiederholte Mängel sprechen gegen mehr Nachfrage. Für ein sofortiges Aus reichen sie nicht. Prüf zuerst Ursache und Nacharbeit.",
         },
         unsupported: {
-          title: "Die Entscheidung springt über die Belege",
+          title: "Die Belege tragen diese Entscheidung nicht",
           body: "Umsatz (Rang 2) und Absatz (Rang 6 von 7) sagen nichts über die Qualität. Fang mit den Mängeln an: CRAFT führt die Mängelliste den zweiten Monat an.",
         },
       },
@@ -801,7 +812,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
       sector: "Elektronikfertigung",
       period: "September 2023",
       narrative:
-        "NORTHWIND ist eine erfundene Firma für diesen Workshop, ein familiengeführter Elektronikhersteller aus Berlin mit rund 850 Beschäftigten und acht Produktlinien, Monatsabschluss September 2023. CRAFT ist die Kaffee-Linie mit zwei Espressomaschinen und einer Mühle zwischen 199 € und 699 €, die neueste und teuerste Linie im Sortiment. Sie macht bei einem der geringsten Absätze (Rang 6 von 7 Linien) den zweithöchsten Umsatz und hat den zweiten Monat in Folge die meisten Qualitätsmängel. Der Vertriebsleiter will mehr Q3-Marketingbudget für CRAFT.",
+        "NORTHWIND ist eine erfundene Firma für diesen Workshop, ein familiengeführter Elektronikhersteller aus Berlin mit rund 850 Beschäftigten und acht Produktlinien, von denen sieben ausliefern, Monatsabschluss September 2023. CRAFT ist die Kaffee-Linie mit zwei Espressomaschinen und einer Mühle zwischen 199 € und 699 €, die neueste und teuerste Linie im Sortiment. Sie macht bei einem der geringsten Absätze (Rang 6 von 7 liefernden Linien) den zweithöchsten Umsatz und hat den zweiten Monat in Folge die meisten Qualitätsmängel. Der Vertriebsleiter will mehr Q3-Marketingbudget für CRAFT.",
       metrics: [
         { label: "Umsatz gesamt", value: "21,69 Mio. €" },
         { label: "Einheiten gesamt", value: "139.056" },
@@ -847,6 +858,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         primary: true,
         description:
           "Die Folien führen durch Firma, Kit-Ordner, die fünf Prompts mit ihren Ergebnissen, drei Zusatz-Prompts und Fall 2 mit Meta. Jeder Prompt hat einen Knopf zum Kopieren. Mit den Pfeiltasten blätterst du.",
+        short: "Die Folien führen durch Firma, Kit, Prompts und Fall 2 mit Meta.",
       },
       {
         label: "Analyst-Kit · .zip",
@@ -858,6 +870,7 @@ const WORKSHOPS_DE: readonly Workshop[] = [
         sizeLabel: "60 KB",
         description:
           "Das NORTHWIND-Kit mit START-HERE.md, CSV-Rohdaten, beiden Monatsberichten als Markdown, dem halb fertigen Kennzahlen-Skill, der Dashboard-Vorlage, dem Arbeitsblatt, der Meta-Aufgabe und einer leeren Vorlage für die eigene Firma. Nur Textdateien; den gestalteten Bericht zeigen die Folien.",
+        short: "Das NORTHWIND-Kit mit Rohdaten, Berichten, Skill und Vorlagen.",
       },
     ],
   },
@@ -871,7 +884,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
     title: "Can AI predict the future?",
     eyebrow: "Workshop 01 · Forecasts",
     summary:
-      "You work out what a wrong forecast costs, how big the buffer has to be and when a person approves. With three browser labs and one launch case.",
+      "You work out what a wrong forecast costs, how big the buffer has to be and when a person approves, in three browser labs and one launch case.",
     description:
       "First you check whether a model beats the current method, the same weekday one week earlier. Then you work out what too much and too little capacity cost and set the buffer. Finally you decide how you will notice a forecast going wrong in operation, and who approves then. The labs price costs in US dollars; the launch case counts units.",
     format: "Self-study kit",
@@ -1111,6 +1124,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         optional: true,
         description:
           "The start page of the materials, with links to the labs, the launch case and the exercise. This workshop page does the same job.",
+        short: "The start page of the materials, with links to every part.",
       },
       {
         label: "Labs · 3 simulations",
@@ -1144,6 +1158,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         phase: "after",
         description:
           "One printable A4 page with five pillars of a forecast, the service-level formula, safety stock and four kinds of events no model predicts.",
+        short: "One printable A4 page with the five pillars of a forecast.",
       },
       {
         label: "Take-home",
@@ -1192,7 +1207,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
       "Anyone who wants to try Claude for work with figures without writing code",
     ],
     notForYou:
-      "Probably not for you if you have no access to the Claude desktop app; Workshops 01 and 03 need no AI account.",
+      "Probably not for you if you have no access to the Claude desktop app; Workshops 01, 03 and 04 need no AI account.",
     question:
       "Should NORTHWIND rework the CRAFT product line or put more Q3 marketing budget behind it?",
     outcomes: [
@@ -1320,7 +1335,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         {
           id: "low-volume",
           label:
-            "CRAFT ranks only sixth of seven product lines by unit volume.",
+            "CRAFT ranks only sixth of seven shipping lines by unit volume.",
         },
       ],
       recommendedChoiceId: "quality-gate",
@@ -1407,7 +1422,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
       sector: "Electronics manufacturing",
       period: "September 2023",
       narrative:
-        "NORTHWIND is a company invented for this workshop, a family-owned electronics manufacturer in Berlin with about 850 employees and eight product lines, closing September 2023. CRAFT is its coffee line with two espresso machines and a grinder priced from €199 to €699, the newest and most expensive line in the range. At one of the lowest unit volumes (sixth of seven lines) it makes the second-highest revenue, and for the second month in a row it has the most quality defects. The sales director wants more Q3 marketing budget for CRAFT.",
+        "NORTHWIND is a company invented for this workshop, a family-owned electronics manufacturer in Berlin with about 850 employees and eight product lines, seven of them shipping, closing September 2023. CRAFT is its coffee line with two espresso machines and a grinder priced from €199 to €699, the newest and most expensive line in the range. At one of the lowest unit volumes (sixth of seven shipping lines) it makes the second-highest revenue, and for the second month in a row it has the most quality defects. The sales director wants more Q3 marketing budget for CRAFT.",
       metrics: [
         { label: "Total revenue", value: "€21.69m" },
         { label: "Total units", value: "139,056" },
@@ -1453,6 +1468,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         primary: true,
         description:
           "The slides walk through the company, the kit folder, the five prompts and their results, three extra prompts and case 2 on Meta. Every prompt has a copy button. Use the arrow keys to move on.",
+        short: "The slides walk through the company, the kit, the prompts and Meta.",
       },
       {
         label: "Analyst kit · .zip",
@@ -1464,6 +1480,7 @@ const WORKSHOPS_EN: readonly Workshop[] = [
         sizeLabel: "60 KB",
         description:
           "The NORTHWIND kit with START-HERE.md, raw CSV data, both monthly reports as Markdown, the half-finished metrics skill, the dashboard template, the worksheet, the Meta exercise and an empty template for your own company. Text files only; the slides show the designed report.",
+        short: "The NORTHWIND kit with raw data, reports, the skill and templates.",
       },
     ],
   },

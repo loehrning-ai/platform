@@ -483,8 +483,10 @@
       .runbar { grid-template-columns: minmax(0, 1fr) auto; padding: 10px 16px; gap: 8px 12px; }
       .run-button { width: 100%; }
       .runbar .run-status { grid-column: 1 / -1; grid-row: 2; }
-      .runbar .verdict-chip { grid-column: 2; grid-row: 1; padding: 6px 8px; font-size: 13px; }
+      .runbar .verdict-chip { grid-column: 2; grid-row: 1; padding: 0 8px; font-size: 13px; }
       .verdict-chip span { display: none; }
+      /* the chip's link is the tap target: a full 44px row */
+      .verdict-chip a { min-height: 44px; display: inline-flex; align-items: center; }
       .grade-line { display: none; }
       #simulation-status { font-size: 14px; }
       .levels { grid-template-columns: 1fr; }
@@ -494,6 +496,13 @@
     }
 
     /* ---------- Print: one or two A4 pages ---------- */
+    @media (max-width: 360px) {
+      /* One row on the smallest phones: the button label fits on one line, the status line is
+         read by screen readers only (the chip shows the same state), and the bar stays under 72px. */
+      .runbar { padding: 8px 12px; gap: 8px; }
+      .run-button { min-height: 44px; padding: 6px 10px; font-size: 14px; white-space: nowrap; }
+      .runbar .run-status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    }
     @media print {
       @page { size: A4; margin: 14mm; }
       html, body { background: #fff; font-size: 11pt; min-height: 0; }

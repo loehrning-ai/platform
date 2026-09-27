@@ -24,9 +24,15 @@ export const DEMOS_PAGE_COPY = {
       introductionDetail:
         "Zu jedem Beispiel steht, woher die Daten kommen, wie es ausgeführt wird und welche Aktionen nur simuliert sind.",
       statsLabel: "Umfang der Sammlung",
-      // Phone stat line; the StatRow carries the same numbers from sm up.
-      statsLine: (examples: number, modes: number, actions: number) =>
-        `${examples} Beispiele · ${modes} Ausführungsarten · ${actions} Außenaktionen`,
+      // Phone stat line, one item per list entry so a wrap never strands a
+      // separator; the StatRow carries the same numbers from sm up.
+      statsLine: (examples: number, modes: number, actions: number) => [
+        `${examples} Beispiele`,
+        `${modes} Ausführungsarten`,
+        actions === 0
+          ? "nichts wird wirklich gesendet"
+          : `${actions} echte Außenaktionen`,
+      ],
       stats: {
         examples: { label: "Praxisbeispiele", note: "im Browser, ohne Konto" },
         modes: {
@@ -154,8 +160,11 @@ export const DEMOS_PAGE_COPY = {
       introductionDetail:
         "Next to it you see where the data comes from, how the example runs and which actions are only simulated.",
       statsLabel: "What the collection holds",
-      statsLine: (examples: number, modes: number, actions: number) =>
-        `${examples} examples · ${modes} execution modes · ${actions} external actions`,
+      statsLine: (examples: number, modes: number, actions: number) => [
+        `${examples} examples`,
+        `${modes} execution modes`,
+        actions === 0 ? "nothing is really sent" : `${actions} real external actions`,
+      ],
       stats: {
         examples: { label: "Practice examples", note: "in the browser, no account" },
         modes: {

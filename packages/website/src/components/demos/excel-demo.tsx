@@ -580,13 +580,14 @@ function OutputShell({
   readonly caption: string;
   readonly children: ReactNode;
 }) {
+  // An open section under a 2px ink rule, not a framed panel: the demo
+  // shell is already the frame, and a box never sits inside another box.
+  // Inside it only the code line (Beton fill) and tables carry a surface.
   return (
     <div
       style={{
-        background: DEMO.kalk,
-        border: `1px solid ${DEMO.ink}`,
         borderTop: `2px solid ${DEMO.ink}`,
-        padding: "14px 16px 16px",
+        padding: "14px 0 0",
       }}
     >
       <div
@@ -623,7 +624,6 @@ function FormulaOutput({ text }: OutputProps) {
       <div
         style={{
           background: "rgba(11,9,8,0.04)",
-          border: `1px solid ${DEMO.leinen}`,
           padding: "12px 14px",
           fontFamily: DEMO.font.mono,
           fontSize: 12,
@@ -639,7 +639,7 @@ function FormulaOutput({ text }: OutputProps) {
         )}
       </div>
       <dl
-        className="grid gap-0 sm:grid-cols-[repeat(auto-fit,minmax(140px,1fr))] sm:gap-2"
+        className="grid gap-0 sm:grid-cols-[repeat(auto-fit,minmax(140px,1fr))] sm:gap-x-4"
         style={{ marginTop: 12, marginBottom: 0 }}
       >
         <FormulaNote
@@ -673,11 +673,11 @@ function FormulaOutput({ text }: OutputProps) {
 }
 
 function FormulaNote({ k, v }: { readonly k: string; readonly v: string }) {
-  // A small Birke box from sm up; below sm a hairline row, so the result
-  // panel does not hold a third level of boxes.
+  // A hairline-ruled row below sm, a hairline-topped column from sm up:
+  // never a box, so the result section holds no nested frames.
   return (
     <div
-      className="flex items-baseline justify-between gap-3 border-b border-[#E3DFD6] py-2 first:border-t sm:block sm:border sm:bg-[#F7F4ED] sm:px-[9px] sm:py-[7px]"
+      className="flex items-baseline justify-between gap-3 border-b border-[#E3DFD6] py-2 first:border-t sm:block sm:border-b-0 sm:border-t sm:pb-0"
       style={{ minWidth: 0 }}
     >
       <dt

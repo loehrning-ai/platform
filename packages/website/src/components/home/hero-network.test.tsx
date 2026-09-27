@@ -103,7 +103,7 @@ describe("HeroNetwork render branches", () => {
     expect(container.querySelectorAll("path").length).toBeGreaterThan(0);
     // The mobile static composition now matches the desktop first frame.
     expect(
-      container.querySelectorAll('path[stroke="#C4431A"]').length,
+      container.querySelectorAll('path[stroke="#e07050"]').length,
     ).toBeGreaterThan(0);
     expect(container.querySelector("[data-hero-network-shell]")).toBeNull();
     // Label + cursor are gated behind !mobile.
@@ -163,7 +163,7 @@ describe("HeroNetwork render branches", () => {
     expect(container.querySelectorAll("path").length).toBeGreaterThan(0);
     // projectRings emitted at least one front-facing country outline (Berlin).
     expect(
-      container.querySelectorAll('path[stroke="#C4431A"]').length,
+      container.querySelectorAll('path[stroke="#e07050"]').length,
     ).toBeGreaterThan(0);
     // projectRingsClosed emitted at least one closed hatch fill.
     expect(

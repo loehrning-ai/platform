@@ -160,7 +160,7 @@ export function ContinueCard({
       prefetch={false}
       data-home-continue-card={target.mode}
       data-home-course-access={course.access}
-      className="group flex h-full w-full items-center gap-3 overflow-hidden bg-background pl-4 pr-1 outline-none transition-colors duration-150 hover:bg-card-hover focus-visible:bg-card-hover focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-orange motion-reduce:transition-none md:pl-8 md:pr-5"
+      className="group flex h-full w-full items-center gap-3 overflow-hidden bg-background pl-4 pr-1 outline-none transition-colors duration-150 hover:bg-card-hover focus-visible:bg-card-hover focus-visible:outline-2 focus-visible:outline-solid focus-visible:-outline-offset-2 focus-visible:outline-brand-orange motion-reduce:transition-none md:pl-8 md:pr-5"
     >
       <span className="min-w-0 flex-1">
         <span className="block truncate text-base font-semibold leading-snug text-foreground">

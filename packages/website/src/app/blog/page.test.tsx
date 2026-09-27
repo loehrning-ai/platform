@@ -29,14 +29,15 @@ describe("BlogIndexPage", () => {
       const link = screen.getByRole("link", {
         name: `Artikel lesen: ${post.titleDe}`,
       });
-      const row = within(link);
+      const row = within(link.closest("li")!);
       const number = String(post.postNumber).padStart(2, "0");
       expect(link).toHaveAttribute("href", `/blog/${post.slug}`);
+      expect(link).toHaveTextContent("Artikel lesen");
       expect(
-        row.getByRole("heading", { name: post.titleDe }),
+        row.getByRole("heading", { level: 3, name: post.titleDe }),
       ).toBeInTheDocument();
       expect(row.getByText(post.summary)).toBeInTheDocument();
-      expect(row.getByText(`Artikel Nº ${number}`)).toBeInTheDocument();
+      expect(row.getByText(number)).toBeInTheDocument();
       expect(
         row.getByText(`${post.readingTimeMin} Min. Lesezeit`),
       ).toBeInTheDocument();
@@ -51,10 +52,10 @@ describe("BlogIndexPage", () => {
       const link = screen.getByRole("link", {
         name: `Read article: ${post.titleEn}`,
       });
-      const row = within(link);
+      const row = within(link.closest("li")!);
       expect(link).toHaveAttribute("href", `/en/blog/${post.slug}`);
       expect(
-        row.getByRole("heading", { name: post.titleEn }),
+        row.getByRole("heading", { level: 3, name: post.titleEn }),
       ).toBeInTheDocument();
       expect(row.getByText(post.summaryEn)).toBeInTheDocument();
       expect(
@@ -68,7 +69,9 @@ describe("BlogIndexPage", () => {
   it("orders equal-date posts by descending manifest number", async () => {
     await renderPage("de");
     const renderedHrefs = Array.from(
-      document.querySelectorAll<HTMLAnchorElement>("a.row"),
+      document.querySelectorAll<HTMLAnchorElement>(
+        "[data-blog-article] a",
+      ),
     ).map((link) => link.getAttribute("href"));
     const expectedHrefs = [...BLOG_POSTS]
       .sort(
@@ -87,31 +90,45 @@ describe("BlogIndexPage", () => {
     expect(document.querySelector(".runline__track")).toBeNull();
   });
 
-  it("uses one useful editorial bento and a persistent article preview", async () => {
+  it("uses the paper hero, a Kopflinie section and ledger rows", async () => {
     await renderPage("de");
 
-    expect(document.querySelector("[data-risograph-hero]")).not.toBeNull();
+    expect(screen.getByText("Blog · 1 Artikel")).toBeVisible();
     expect(
-      document.querySelector('[data-risograph-sheet="issue"]'),
-    ).not.toBeNull();
-    expect(document.querySelector("[data-editorial-bento]")).not.toBeNull();
-    expect(document.querySelectorAll("[data-link-preview]")).toHaveLength(
-      BLOG_POSTS.length,
-    );
-    expect(document.querySelectorAll("[data-article-preview]")).toHaveLength(
-      BLOG_POSTS.length,
-    );
-    expect(
-      screen.getByRole("img", {
-        name: /EU AI Act ab August 2026.*Art\. 50 Transparenz/,
+      screen.getByRole("heading", {
+        level: 1,
+        name: "KI im Alltag, mit Quellen erklärt.",
       }),
     ).toBeVisible();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Alle Artikel" }),
+    ).toBeVisible();
+    expect(document.querySelector("[data-blog-ledger] ol")).not.toBeNull();
+    expect(document.querySelectorAll("[data-blog-article]")).toHaveLength(
+      BLOG_POSTS.length,
+    );
     expect(
       screen.getByRole("heading", { name: "Behauptungen mit Belegspur." }),
     ).toBeVisible();
     expect(screen.getByText("Primärquellen")).toBeVisible();
     expect(screen.getByText("Prüfdatum")).toBeVisible();
-    expect(screen.getByText("Kein Redaktionsplan.")).toBeVisible();
+    expect(screen.getByText(/Kein Redaktionsplan\./)).toBeVisible();
+  });
+
+  it("drops the risograph masthead, preview sheets and stacked panels", async () => {
+    await renderPage("de");
+
+    for (const selector of [
+      "[data-risograph-hero]",
+      "[data-risograph-sheet]",
+      "[data-editorial-bento]",
+      "[data-article-preview]",
+      ".blog-dateline",
+      ".mast__meta",
+      ".evidence-card__register",
+    ]) {
+      expect(document.querySelector(selector)).toBeNull();
+    }
   });
 
   it("localizes editorial support panels without German leakage", async () => {
@@ -121,7 +138,7 @@ describe("BlogIndexPage", () => {
       screen.getByRole("heading", { name: "Claims with an evidence trail." }),
     ).toBeVisible();
     expect(screen.getByText("Primary sources")).toBeVisible();
-    expect(screen.getByText("No publishing quota.")).toBeVisible();
+    expect(screen.getByText(/No publishing quota\./)).toBeVisible();
     expect(screen.queryByText("Prüfdatum")).not.toBeInTheDocument();
   });
 

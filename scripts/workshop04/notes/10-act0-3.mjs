@@ -45,7 +45,7 @@ export default {
       "Kellbrunn has {staff|bare} people and has never been under the EU reporting law. Since 18 March 2026 the EU rule covers companies with more than 1,000 employees and more than 450 million euros turnover. Member states must bring national law in line by 19 March 2027.",
       "The bank and the car maker still want this number, and they want to know whether it went down.",
       "On press 2: keep the second half of the question in mind. Most of today's trouble is in that half.",
-      "If asked about customer requests: Directive 2026/470 lets suppliers with up to 1,000 employees refuse requests that go beyond the voluntary standard. Germany has to transpose it by 19 March 2027. The VSME Basic Module, on which that standard is based, includes Scope 1 and 2, so this question stays.",
+      "If asked about customer requests: Directive 2026/470 lets suppliers with up to 1,000 employees refuse requests that go beyond the voluntary standard. Germany has to transpose it by 19 March 2027. The VSME Basic Module, on which that standard is based, includes Scope 1 and 2; whether the delegated regulation keeps those datapoints is on the check list in appendix A4.",
     ],
     sayAt: { 0: [0], 1: [1], 2: [2], 3: [1] },
     ask: [],
@@ -61,7 +61,7 @@ export default {
     clock: { start: "02:50", end: "04:00" },
     say: [
       "We ask the AI twice. First it gets the folder as Kellbrunn has it today. Then it gets the same information prepared into one table with written rules.",
-      "The model does not change between the two runs, so any difference in the second answer comes from the preparation.",
+      "The experiment keeps the model the same, so any difference comes from the preparation. Today both answers are constructed from documented failure modes; recorded runs go into appendix A3.",
     ],
     sayAt: { 0: [0], 1: [1] },
     ask: [],
@@ -93,7 +93,7 @@ export default {
     mode: "vote",
     clock: { start: "06:30", end: "11:30" },
     say: [
-      "Must say: This answer is constructed from documented failure modes. It shows what the answer looks like when all six traps fire. It is not a recorded run.",
+      "Must say: This answer is constructed from documented failure modes. It shows what the answer looks like when all seven traps fire (six data traps and the market-based method error). It is not a recorded run.",
       "On press 1: read the total and the {wrong_chg_lb_pct|abs}. Do not read the rest aloud.",
       "On press 2: it is down {wrong_chg_lb_pct|abs}, the per-head figure is normal, twelve bills for twelve months, and it shows its sums.",
       "On press 3: hands up. Who would send this to the bank today? Remember your hand; we come back to it at the end.",
@@ -245,7 +245,7 @@ export default {
     mode: "vote",
     clock: { start: "38:30", end: "44:00" },
     say: [
-      "Must say: Under the GHG Protocol, a company buying power in a market with certificates and supplier contracts, such as Germany, reports both Scope 2 figures. The VSME asks for location-based; add market-based.",
+      "Must say: Under the GHG Protocol, a company buying power in a market with certificates and supplier contracts, such as Germany, reports both Scope 2 figures. Which Scope 2 method the VSME Basic Module asks for: check the EFRAG text before the session (appendix A4).",
       "On press 2: location-based uses the grid average where the power is used. Market-based uses what you bought. The certificate covers Werk Süd and nothing else.",
       "On press 3: for power without a certificate the order is: a qualifying supplier rate if there is one, otherwise the residual mix. In Germany the residual mix is usually higher than the grid average, because the green attributes sold as certificates are taken out of it.",
       "On press 5: the certificate takes {bridge_cert_t|abs} tonnes out. The residual mix on the other {el_uncovered_mwh|bare} megawatt hours puts {bridge_rm_t|abs} back.",

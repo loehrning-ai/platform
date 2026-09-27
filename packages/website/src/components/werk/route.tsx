@@ -23,6 +23,14 @@ export type RouteProps = {
    * description: an agenda where every station and segment is solid.
    */
   readonly mode?: RouteMode;
+  /**
+   * Description mode only: index of the station the page itself mirrors
+   * ("Übung unten"). It gets the inset "here" square and aria-current="step";
+   * from it on the line runs dashed and the squares are outlined
+   * (design-direction 6.10, 7.2). The stations stay an agenda: labels keep
+   * their ink and no state words are read.
+   */
+  readonly here?: number;
   /** Accessible name for the list ("Ablauf"). */
   readonly label?: string;
   readonly locale?: "de" | "en";
@@ -34,8 +42,33 @@ export type RouteProps = {
    * horizontal row. With rail, className goes on the region, not the list.
    */
   readonly layout?: "stack" | "rail";
+  /**
+   * rail only: the width up to which the rail scrolls. "sm" (default) is the
+   * phone rail. "lg" keeps it through tablet widths, for a long route (more
+   * than six stations) whose equal columns would wrap labels into three or
+   * four lines there. Assumes the page container's px-4 sm:px-6 gutter.
+   */
+  readonly railUntil?: "sm" | "lg";
   readonly className?: string;
 };
+
+/** Rail classes per breakpoint, written out so Tailwind sees every class. */
+const RAIL_CLASSES = {
+  sm: {
+    list: "flex w-max sm:grid sm:w-auto sm:grid-flow-col sm:auto-cols-fr",
+    item: "relative w-[9.5rem] shrink-0 snap-start pr-5 sm:w-auto sm:shrink sm:pr-4",
+    label: "mt-2.5 min-w-0 sm:mt-3",
+    group:
+      "-mx-4 snap-x snap-mandatory max-sm:[mask-image:linear-gradient(to_right,black_calc(100%-2rem),transparent)] scroll-px-4 overflow-x-auto overscroll-x-contain px-4 pb-1 [scrollbar-width:none] focus-visible:outline focus-visible:outline-[3px] focus-visible:-outline-offset-[3px] focus-visible:outline-brand-orange sm:mx-0 sm:overflow-visible sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden",
+  },
+  lg: {
+    list: "flex w-max lg:grid lg:w-auto lg:grid-flow-col lg:auto-cols-fr",
+    item: "relative w-[9.5rem] shrink-0 snap-start pr-5 lg:w-auto lg:shrink lg:pr-4",
+    label: "mt-2.5 min-w-0 sm:mt-3",
+    group:
+      "-mx-4 snap-x snap-mandatory max-lg:[mask-image:linear-gradient(to_right,black_calc(100%-2rem),transparent)] scroll-px-4 overflow-x-auto overscroll-x-contain px-4 pb-1 [scrollbar-width:none] focus-visible:outline focus-visible:outline-[3px] focus-visible:-outline-offset-[3px] focus-visible:outline-brand-orange sm:-mx-6 sm:scroll-px-6 sm:px-6 lg:mx-0 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden",
+  },
+} as const;
 
 const STATE_WORDS: Record<"de" | "en", Record<"past" | "current" | "future", string>> = {
   de: { past: "erledigt", current: "aktuell", future: "offen" },
@@ -59,7 +92,23 @@ export function routeStationState(
   return "future";
 }
 
-function StationSquare({ state }: { readonly state: RouteStationState }) {
+function StationSquare({
+  state,
+  here = false,
+}: {
+  readonly state: RouteStationState;
+  readonly here?: boolean;
+}) {
+  if (here) {
+    return (
+      <span
+        data-route-here=""
+        className="flex size-4 shrink-0 items-center justify-center bg-foreground"
+      >
+        <span className="size-1.5 bg-card" />
+      </span>
+    );
+  }
   if (state === "current") {
     return (
       <span className="flex size-5 shrink-0 items-center justify-center bg-foreground">
@@ -83,12 +132,15 @@ export function Route({
   stations,
   current,
   mode = "progress",
+  here,
   label,
   locale = "de",
   layout = "stack",
+  railUntil = "sm",
   className,
 }: RouteProps) {
   const rail = layout === "rail";
+  const railClasses = RAIL_CLASSES[railUntil];
   const list = (
     <ol
       aria-label={label}
@@ -96,22 +148,25 @@ export function Route({
       data-route-layout={rail ? "rail" : undefined}
       className={
         rail
-          ? "flex w-max sm:grid sm:w-auto sm:grid-flow-col sm:auto-cols-fr"
+          ? railClasses.list
           : cx("grid grid-cols-1 sm:grid-flow-col sm:auto-cols-fr", className)
       }
     >
       {stations.map((station, index) => {
         const state = routeStationState(index, current, mode);
         const last = index === stations.length - 1;
-        const solidLine = state === "past" || state === "solid";
+        const marked = mode === "description" && here !== undefined;
+        const isHere = marked && index === here;
+        const solidLine =
+          (state === "past" || state === "solid") && !(marked && index >= here);
         return (
           <li
             key={index}
             data-state={state}
-            aria-current={state === "current" ? "step" : undefined}
+            aria-current={state === "current" || isHere ? "step" : undefined}
             className={
               rail
-                ? "relative w-[9.5rem] shrink-0 snap-start pr-5 sm:w-auto sm:shrink sm:pr-4"
+                ? railClasses.item
                 : cx(
                     "relative grid grid-cols-[1rem_minmax(0,1fr)] gap-x-4 sm:block sm:pr-4",
                     last ? undefined : "pb-6 sm:pb-0",
@@ -119,7 +174,10 @@ export function Route({
             }
           >
             <span aria-hidden="true" className="relative z-10 flex size-4 items-center justify-center">
-              <StationSquare state={state} />
+              <StationSquare
+                state={marked && index > here ? "future" : state}
+                here={isHere}
+              />
             </span>
             {last ? null : (
               <span
@@ -133,10 +191,10 @@ export function Route({
                 )}
               />
             )}
-            <div className={rail ? "mt-2.5 min-w-0 sm:mt-3" : "min-w-0 sm:mt-3"}>
+            <div className={rail ? railClasses.label : "min-w-0 sm:mt-3"}>
               <p
                 className={cx(
-                  "text-label",
+                  "text-label text-balance",
                   state === "future" ? "text-muted" : "text-foreground",
                   state === "current" && "font-bold",
                 )}
@@ -163,7 +221,8 @@ export function Route({
 
   if (!rail) return list;
 
-  // The rail scrolls on phones only; from sm it is a plain row. The negative
+  // The rail scrolls on phones only (through tablets with railUntil="lg");
+  // from there on it is a plain row. The negative
   // margin lets the rail run to the screen edge inside a px-4 container. A
   // group, not a region: the surrounding section is already the landmark.
   // Stations have one fixed phone width, so the last visible one is always
@@ -173,11 +232,8 @@ export function Route({
       role="group"
       aria-label={label}
       tabIndex={0}
-      data-route-rail=""
-      className={cx(
-        "-mx-4 snap-x snap-mandatory max-sm:[mask-image:linear-gradient(to_right,black_calc(100%-2rem),transparent)] scroll-px-4 overflow-x-auto overscroll-x-contain px-4 pb-1 [scrollbar-width:none] focus-visible:outline focus-visible:outline-[3px] focus-visible:-outline-offset-[3px] focus-visible:outline-brand-orange sm:mx-0 sm:overflow-visible sm:px-0 sm:pb-0 [&::-webkit-scrollbar]:hidden",
-        className,
-      )}
+      data-route-rail={railUntil}
+      className={cx(railClasses.group, className)}
     >
       {list}
     </div>

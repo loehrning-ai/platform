@@ -535,7 +535,8 @@ export const VOICE_PHRASE_RULES = [
     lang: "en",
     category: "filler",
     label: "landscape (figurative)",
-    pattern: wordPattern("landscapes?", "i"),
+    // Screen orientation is a term of art: "in landscape", "a landscape screen".
+    pattern: wordPattern("(?<!\\bin )landscapes?(?! (?:screens?|displays?|monitors?|mode|orientation|format|view|layout))", "i"),
     perLesson: 1,
   },
   // English hedges
@@ -623,7 +624,9 @@ export const VOICE_PHRASE_RULES = [
     lang: "en",
     category: "claim",
     label: "empower",
-    pattern: wordPattern("empower(?:s|ed|ing|ment)?", "i"),
+    // Directive (EU) 2024/825 is officially "on empowering consumers for the
+    // green transition"; the directive's name is a term of art.
+    pattern: wordPattern("empower(?:s|ed|ing|ment)?(?! consumers for the green transition)", "i"),
   },
   {
     id: "en-claim-unlock-potential",
@@ -791,8 +794,10 @@ export const VOICE_PHRASE_RULES = [
     id: "en-puffery-vocab",
     lang: "en",
     category: "puffery",
-    label: "pivotal / tapestry / testament / underscore / showcase / intricate ...",
-    pattern: wordPattern("pivotal|tapestr(?:y|ies)|testament to|underscor(?:e|es|ed|ing)|showcas(?:e|es|ed|ing)|intricac(?:y|ies)|intricate(?:ly)?|meticulous(?:ly)?|commendable|garner(?:s|ed|ing)?|realms?|groundbreaking|renowned|vibrant|multifaceted|transformative|paving the way", "i"),
+    label: "pivotal / tapestry / testament / underscores the need / showcase / intricate ...",
+    // Only the figurative uses of "underscore" and "realm": the `_` character
+    // ("prefix it with an underscore") and a JavaScript realm are technical terms.
+    pattern: wordPattern("pivotal|tapestr(?:y|ies)|testament to|underscor(?:e|es|ed|ing) (?:the|its|their|this|that|how|why) (?:importance|need|role|fact|value|significance|urgency)|showcas(?:e|es|ed|ing)|intricac(?:y|ies)|intricate(?:ly)?|meticulous(?:ly)?|commendable|garner(?:s|ed|ing)?|in the realms? of|groundbreaking|renowned|vibrant|multifaceted|transformative|paving the way", "i"),
   },
   {
     id: "en-puffery-plays-role",
@@ -806,7 +811,9 @@ export const VOICE_PHRASE_RULES = [
     lang: "en",
     category: "puffery",
     label: "serves as / stands as / boasts",
-    pattern: wordPattern("(?:serv(?:es|ed|ing)|stand(?:s|ing)|function(?:s|ing)) as an?|boasts", "i"),
+    // "functions as a" is left out: "Python treats functions as a first-class
+    // value" is ordinary technical prose.
+    pattern: wordPattern("(?:serv(?:es|ed|ing)|stand(?:s|ing)) as an?|boasts", "i"),
   },
   {
     id: "en-count-crucial",

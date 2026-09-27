@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type CSSProperties,
-} from "react";
+import { useEffect, useId, useState } from "react";
 import { useElementVisibility, useTicker } from "@/lib/data-science/hooks";
 import { dsChapterHref } from "@/lib/data-science/routes";
 import type { DsNumberedChapterId } from "@/lib/data-science/types";
@@ -14,11 +8,13 @@ import { useDataScienceLocale } from "../locale-context";
 
 // ─── FlowingPipeline ────────────────────────────────
 //
-// Typed port of Ch_Overview.js's `FlowingPipeline`: an animated loop
-// diagram of the first 6 DS-loop stages, with particles flowing along a
-// smooth bezier path and per-station animated glyphs. Source declares an
-// unused `mulberry32(7)` ref inside this component (never read anywhere
-// in its body) — dropped here as dead code, not a behavior change.
+// Typed port of Ch_Overview.js's `FlowingPipeline`, redrawn in the
+// Werkzeichnung pictogram style (design direction 7.4): the first six stages
+// of the working cycle as square ink nodes on a 2px ink line, a dashed return
+// line labelled "Rückmeldung", and one Mennige node where the reader starts.
+// The source's pastel round nodes, gradient line, glow filters and coloured
+// particles are gone. The small glyph inside each node still moves while the
+// drawing is in view (useTicker honours prefers-reduced-motion).
 
 interface Station {
   readonly id: DsNumberedChapterId;
@@ -26,7 +22,6 @@ interface Station {
   readonly n: string;
   readonly cx: number;
   readonly cy: number;
-  readonly hue: string;
   readonly glyph: "cloud" | "scatter" | "filter" | "gears" | "curve" | "target";
 }
 
@@ -35,54 +30,48 @@ const STATIONS: readonly Station[] = [
     id: "fund",
     lab: "Data",
     n: "01",
-    cx: 120,
-    cy: 90,
-    hue: "#5B3EE8",
+    cx: 150,
+    cy: 150,
     glyph: "cloud",
   },
   {
     id: "explore",
     lab: "Explore",
     n: "02",
-    cx: 330,
-    cy: 180,
-    hue: "#1CA5D9",
+    cx: 380,
+    cy: 150,
     glyph: "scatter",
   },
   {
     id: "clean",
     lab: "Clean",
     n: "03",
-    cx: 560,
-    cy: 120,
-    hue: "#1FAF7E",
+    cx: 610,
+    cy: 150,
     glyph: "filter",
   },
   {
     id: "feature",
     lab: "Feature",
     n: "04",
-    cx: 640,
-    cy: 300,
-    hue: "#6BCF3F",
+    cx: 610,
+    cy: 400,
     glyph: "gears",
   },
   {
     id: "model",
     lab: "Model",
     n: "05",
-    cx: 430,
-    cy: 380,
-    hue: "#E8A031",
+    cx: 380,
+    cy: 400,
     glyph: "curve",
   },
   {
     id: "eval",
     lab: "Evaluate",
     n: "06",
-    cx: 180,
-    cy: 440,
-    hue: "#F25F3A",
+    cx: 150,
+    cy: 400,
     glyph: "target",
   },
 ];
@@ -102,26 +91,9 @@ const STATION_LABELS_DE: Readonly<Record<DsNumberedChapterId, string>> = {
   cap: "Abschluss",
 };
 
-function buildSmoothPath(pts: readonly (readonly [number, number])[]): string {
-  if (pts.length < 2) return "";
-  const p0Start = pts[0]!;
-  let d = `M ${p0Start[0]} ${p0Start[1]}`;
-  for (let i = 0; i < pts.length - 1; i++) {
-    const p0 = pts[Math.max(0, i - 1)]!;
-    const p1 = pts[i]!;
-    const p2 = pts[i + 1]!;
-    const p3 = pts[Math.min(pts.length - 1, i + 2)]!;
-    const c1x = p1[0] + (p2[0] - p0[0]) / 6;
-    const c1y = p1[1] + (p2[1] - p0[1]) / 6;
-    const c2x = p2[0] - (p3[0] - p1[0]) / 6;
-    const c2y = p2[1] - (p3[1] - p1[1]) / 6;
-    d += ` C ${c1x} ${c1y}, ${c2x} ${c2y}, ${p2[0]} ${p2[1]}`;
-  }
-  return d;
-}
-
 interface StationGlyphProps {
   readonly kind: Station["glyph"];
+  /** Stroke and fill colour; the drawing passes currentColor. */
   readonly hue: string;
   readonly t: number;
   readonly phase: number;
@@ -293,14 +265,6 @@ function StationGlyph({ kind, hue, t, phase }: StationGlyphProps) {
   }
 }
 
-interface Particle {
-  readonly x: number;
-  readonly y: number;
-  readonly hue: string;
-  readonly size: number;
-  readonly idx: number;
-}
-
 export function FlowingPipeline() {
   const { locale, text } = useDataScienceLocale();
   // Keep the server render and the first client render byte-identical. Starting
@@ -315,160 +279,99 @@ export function FlowingPipeline() {
     rootMargin: "0px 0px -50% 0px",
   });
   const t = useTicker(animationReady && inView);
-  const [hover, setHover] = useState<DsNumberedChapterId | null>(null);
-  const [focused, setFocused] = useState<DsNumberedChapterId | null>(null);
+  const arrowId = `ov-loop-arrow-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const W = 760;
   const H = 540;
+  const HALF = 34;
 
-  const pathD = useMemo(() => {
-    const s0 = STATIONS[0]!;
-    const s5 = STATIONS[5]!;
-    const pathPts: (readonly [number, number])[] = STATIONS.map((s) => [
-      s.cx,
-      s.cy,
-    ]);
-    return (
-      buildSmoothPath(pathPts) +
-      ` C ${s5.cx - 120} ${s5.cy + 60}, ${s0.cx - 60} ${s0.cy + 200}, ${s0.cx} ${s0.cy}`
-    );
-  }, []);
-
-  const pathRef = useRef<SVGPathElement>(null);
-  const [pathLen, setPathLen] = useState(0);
-
-  useEffect(() => {
-    if (
-      pathRef.current &&
-      typeof pathRef.current.getTotalLength === "function"
-    ) {
-      setPathLen(pathRef.current.getTotalLength());
-    }
-  }, [pathD]);
-
-  const N_PARTICLES = 28;
-  const particles: Particle[] = [];
-  if (
-    pathLen > 0 &&
-    pathRef.current &&
-    typeof pathRef.current.getPointAtLength === "function"
-  ) {
-    for (let i = 0; i < N_PARTICLES; i++) {
-      const speed = 0.05;
-      const phase = (i / N_PARTICLES + t * speed) % 1;
-      const pt = pathRef.current.getPointAtLength(phase * pathLen);
-      const hue =
-        i % 4 === 0
-          ? "#5B3EE8"
-          : i % 4 === 1
-            ? "#E8318F"
-            : i % 4 === 2
-              ? "#6BCF3F"
-              : "#1CA5D9";
-      const size = 2.4 + 1.1 * Math.sin(t * 3 + i * 0.7);
-      particles.push({ x: pt.x, y: pt.y, hue, size, idx: i });
-    }
-  }
+  // Two rows: 01 to 03 left to right, 04 to 06 right to left. The forward
+  // line runs straight from node to node; the node squares cover the joints. The return line leaves the last node to the left, runs up the
+  // margin and enters the first node from the left with an arrowhead.
+  const forward = STATIONS.map((s) => `${s.cx},${s.cy}`).join(" ");
+  const first = STATIONS[0]!;
+  const last = STATIONS[STATIONS.length - 1]!;
+  const RETURN_X = 44;
+  const returnPath = `M ${last.cx - HALF} ${last.cy} L ${RETURN_X} ${last.cy} L ${RETURN_X} ${first.cy} L ${first.cx - HALF - 4} ${first.cy}`;
 
   return (
     <div ref={containerRef} className="ov-loop-wrap">
-      <svg viewBox={`0 0 ${W} ${H}`} className="ov-loop">
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        className="ov-loop"
+        role="group"
+        aria-label={text(
+          "Working cycle of the course",
+          "Arbeitszyklus des Kurses",
+        )}
+      >
         <defs>
-          <linearGradient id="loop-grad-l" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#5B3EE8" stopOpacity="0.75" />
-            <stop offset="0.5" stopColor="#E8318F" stopOpacity="0.75" />
-            <stop offset="1" stopColor="#6BCF3F" stopOpacity="0.75" />
-          </linearGradient>
-          <filter id="soft-glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="2.2" result="b" />
-            <feMerge>
-              <feMergeNode in="b" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-          <filter
-            id="paper-shadow"
-            x="-50%"
-            y="-50%"
-            width="200%"
-            height="200%"
+          <marker
+            id={arrowId}
+            viewBox="0 0 10 10"
+            refX="9"
+            refY="5"
+            markerWidth="8"
+            markerHeight="8"
+            orient="auto-start-reverse"
           >
-            <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
-            <feOffset dy="3" />
-            <feComponentTransfer>
-              <feFuncA type="linear" slope="0.14" />
-            </feComponentTransfer>
-            <feMerge>
-              <feMergeNode />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
+            <path className="ov-loop-arrow" d="M 0 0 L 10 5 L 0 10 z" />
+          </marker>
         </defs>
+        <polyline className="ov-loop-line" points={forward} />
         <path
-          ref={pathRef}
-          d={pathD}
-          fill="none"
-          stroke="url(#loop-grad-l)"
-          strokeWidth="2.5"
-          opacity="0.55"
+          className="ov-loop-return"
+          d={returnPath}
+          markerEnd={`url(#${arrowId})`}
         />
-        <path
-          d={pathD}
-          fill="none"
-          stroke="url(#loop-grad-l)"
-          strokeWidth="10"
-          opacity="0.08"
-          filter="url(#soft-glow)"
-        />
-        {particles.map((p) => (
-          <circle
-            key={p.idx}
-            cx={p.x}
-            cy={p.y}
-            r={p.size}
-            fill={p.hue}
-            opacity="0.85"
-            filter="url(#soft-glow)"
-          />
-        ))}
+        <g transform={`translate(${RETURN_X + 14} 268)`}>
+          <text className="ov-loop-feedback">
+            {text("Feedback", "Rückmeldung")}
+          </text>
+          <text className="ov-loop-caption" y="24">
+            {text("the loop closes", "der Zyklus schließt sich")}
+          </text>
+        </g>
         {STATIONS.map((s, i) => {
-          const h = hover === s.id || focused === s.id;
-          const pulseR = 34 + 1.5 * Math.sin(t * 1.4 + i);
           const label = locale === "de" ? STATION_LABELS_DE[s.id] : s.lab;
+          const isStart = i === 0;
+          const onTopRow = i < 3;
           return (
             <g key={s.id} transform={`translate(${s.cx} ${s.cy})`}>
               <a
-                className="ov-loop-node"
+                className={isStart ? "ov-loop-node is-start" : "ov-loop-node"}
                 href={dsChapterHref(s.id, locale)}
                 aria-label={`${s.n} · ${label} - ${text("Open chapter", "Kapitel öffnen")}`}
-                onMouseEnter={() => setHover(s.id)}
-                onMouseLeave={() => setHover(null)}
-                onFocus={() => setFocused(s.id)}
-                onBlur={() => setFocused(null)}
               >
-                <circle
-                  r={pulseR + 6}
-                  fill="none"
-                  stroke={s.hue}
-                  strokeWidth={h ? 1.6 : 0.8}
-                  opacity={h ? 0.6 : 0.22}
+                <rect
+                  className="ov-loop-box"
+                  x={-HALF}
+                  y={-HALF}
+                  width={HALF * 2}
+                  height={HALF * 2}
                 />
-                <circle
-                  r={pulseR}
-                  fill="#FFFDF7"
-                  stroke={s.hue}
-                  strokeWidth={h ? 2.6 : 1.8}
-                  filter="url(#paper-shadow)"
-                />
-                <StationGlyph kind={s.glyph} hue={s.hue} t={t} phase={i} />
+                <g className="ov-loop-glyph">
+                  <StationGlyph
+                    kind={s.glyph}
+                    hue="currentColor"
+                    t={t}
+                    phase={i}
+                  />
+                </g>
+                {isStart ? (
+                  <text
+                    className="ov-loop-start"
+                    y={-HALF - 44}
+                    textAnchor="middle"
+                  >
+                    {text("Start here", "Hier beginnen")}
+                  </text>
+                ) : null}
+                {/* Top-row labels sit above their node and bottom-row labels
+                    below, so no label crosses the line between the rows. */}
                 <text
-                  y={pulseR + 18}
+                  className="ov-loop-label"
+                  y={onTopRow ? -HALF - 14 : HALF + 30}
                   textAnchor="middle"
-                  fill={h ? s.hue : "#3A3540"}
-                  fontFamily="'JetBrains Mono', monospace"
-                  fontSize="10"
-                  fontWeight="700"
-                  letterSpacing="0.14em"
-                  style={{ textTransform: "uppercase" } as CSSProperties}
                 >
                   {s.n} · {label}
                 </text>
@@ -476,27 +379,6 @@ export function FlowingPipeline() {
             </g>
           );
         })}
-        <g transform="translate(70 330)">
-          <text
-            fontFamily="'Instrument Serif', serif"
-            fontSize="22"
-            fontStyle="italic"
-            fill="#3A3540"
-            opacity="0.5"
-          >
-            {text("feedback", "Rückmeldung")}
-          </text>
-          <text
-            y="18"
-            fontFamily="'JetBrains Mono', monospace"
-            fontSize="9.5"
-            fill="#6A6270"
-            letterSpacing="0.14em"
-            style={{ textTransform: "uppercase" } as CSSProperties}
-          >
-            {text("the loop closes", "der Zyklus schließt sich")}
-          </text>
-        </g>
       </svg>
     </div>
   );

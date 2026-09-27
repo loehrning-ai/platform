@@ -55,13 +55,21 @@ describe("blog editorial design contract", () => {
     );
   });
 
-  it("uses light risograph surfaces without hiding the real article preview", () => {
-    expect(styles.index).toContain("--blog-acid");
-    expect(styles.index).toContain("--blog-lilac");
-    expect(styles.index).toContain("--blog-sky");
+  it("styles the index on the Werkzeichnung paper system without risograph surfaces", () => {
     expect(styles.index).not.toMatch(
-      /(?:mast__meta|row__art|feed__note)[^{]*\{[^}]*background:\s*var\(--druckertinte\)/s,
+      /--blog-(?:acid|lilac|sky|pink|cobalt|teal)|brand-(?:acid|peach|sky|pink|cobalt|teal)/,
     );
-    expect(styles.index).not.toMatch(/\.row__art\s*\{[^}]*display:\s*none/s);
+    expect(styles.index).not.toMatch(/rotate\(/);
+    expect(styles.index).not.toMatch(/text-transform:\s*uppercase/);
+    expect(styles.index).not.toMatch(/font-style:\s*italic|--font-serif/);
+    expect(styles.index).toMatch(
+      /\.blog-index__head\s*\{[^}]*border-top:\s*2px solid var\(--bi-ink\)/s,
+    );
+    expect(styles.index).toMatch(
+      /\.blog-index__container\s*\{[^}]*max-width:\s*75rem/s,
+    );
+    expect(styles.index).toMatch(
+      /\.blog-index__link\s*\{[^}]*min-height:\s*44px/s,
+    );
   });
 });

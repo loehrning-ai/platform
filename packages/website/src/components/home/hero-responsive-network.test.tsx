@@ -30,7 +30,7 @@ const originalMatchMedia = window.matchMedia;
 
 function setDesktopMatch(matches: boolean): void {
   window.matchMedia = vi.fn().mockImplementation((query: string) => ({
-    matches: query === "(min-width: 1024px)" ? matches : false,
+    matches: query === "(min-width: 64rem)" ? matches : false,
     media: query,
     onchange: null,
     addEventListener: vi.fn(),
@@ -48,7 +48,7 @@ function setControlledDesktopMatch(
   const desktopListeners = new Set<(event: MediaQueryListEvent) => void>();
 
   window.matchMedia = vi.fn().mockImplementation((query: string) => {
-    const desktopQuery = query === "(min-width: 1024px)";
+    const desktopQuery = query === "(min-width: 64rem)";
     return {
       get matches() {
         return desktopQuery ? desktopMatches : false;
@@ -76,7 +76,7 @@ function setControlledDesktopMatch(
     desktopMatches = matches;
     const event = {
       matches,
-      media: "(min-width: 1024px)",
+      media: "(min-width: 64rem)",
     } as MediaQueryListEvent;
     desktopListeners.forEach((listener) => listener(event));
   };
@@ -147,9 +147,29 @@ describe("HeroSection responsive globe", () => {
     expect(screen.queryByTestId("hero-network")).not.toBeInTheDocument();
   });
 
-  it("uses the globe surface instead of a visible overlay control", async () => {
-    setDesktopMatch(true);
+  it("mounts the desktop projection on the same rem query as Tailwind lg", async () => {
+    // A px query would disagree with lg under a larger default font size and
+    // run both globes at once between 1024px and 16 x the font size.
+    window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+      matches: query === "(min-width: 1024px)",
+      media: query,
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }));
     render(<HeroSection locale="en" />);
+    await act(async () => {
+      await Promise.resolve();
+    });
+    expect(screen.queryByTestId("hero-network")).not.toBeInTheDocument();
+  });
+
+  it("gives the desktop globe one visible pause control beside the action", async () => {
+    setDesktopMatch(true);
+    const { container } = render(<HeroSection locale="en" />);
 
     await screen.findByTestId("hero-network");
     expect(screen.getByTestId("hero-network")).toHaveAttribute(
@@ -159,17 +179,49 @@ describe("HeroSection responsive globe", () => {
     expect(
       document.querySelector('[data-hero-globe-motion="running"]'),
     ).not.toBeNull();
-    const surfaceControl = screen.getByRole("button", {
-      name: "Pause globe motion",
-    });
-    expect(surfaceControl).toHaveAttribute("data-hero-globe-surface-control");
+    // Exactly one control: no invisible surface button over the globe.
+    const controls = screen.getAllByRole("button", { name: "Pause the globe" });
+    expect(controls).toHaveLength(1);
+    const toggle = controls[0];
+    expect(container.querySelector("[data-hero-globe-surface-control]")).toBeNull();
+    expect(toggle).toHaveAttribute("data-hero-globe-toggle");
+    expect(toggle).toHaveAttribute("aria-controls", "home-hero-network");
+    expect(toggle).toHaveAttribute("aria-pressed", "false");
+    expect(toggle.closest("[data-hero-actions]")).not.toBeNull();
 
-    fireEvent.click(surfaceControl);
+    fireEvent.click(toggle);
     expect(screen.getByTestId("hero-network")).toHaveAttribute(
       "data-paused",
       "true",
     );
-    expect(surfaceControl).toHaveAccessibleName("Resume globe motion");
+    expect(toggle).toHaveAttribute("aria-pressed", "true");
+    expect(toggle).toHaveAccessibleName("Pause the globe");
+    expect(
+      document.querySelector('[data-hero-globe-motion="paused"]'),
+    ).not.toBeNull();
+  });
+
+  it("drops the pause control when reduced motion leaves the globe static", async () => {
+    window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+      matches:
+        query === "(min-width: 64rem)" ||
+        query === "(prefers-reduced-motion: reduce)",
+      media: query,
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    }));
+    render(<HeroSection locale="en" />);
+    await screen.findByTestId("hero-network");
+    expect(
+      document.querySelector('[data-hero-globe-motion="static"]'),
+    ).not.toBeNull();
+    expect(
+      screen.queryByRole("button", { name: /globe/i }),
+    ).not.toBeInTheDocument();
   });
 
   it("unmounts the desktop projection during a responsive interruption", async () => {

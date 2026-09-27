@@ -58,13 +58,16 @@ describe("website motion policy", () => {
   });
 
   it("gives the globe intrinsic neutral volume without a coloured hero wash", () => {
-    const globalCss = read("app/globals.css");
     const hero = read("components/home/hero.tsx");
+    const band = read("components/home/phone-hero.css");
     const network = read("components/home/hero-network.tsx");
-    const heroRule = globalCss.match(/\.berlin-hero\s*\{[^}]*\}/s)?.[0] ?? "";
 
-    expect(heroRule).toContain("background: var(--color-paper)");
-    expect(heroRule).not.toMatch(
+    // The hero is the flat graphit band at every width: no paper hero class,
+    // no grain, no tinted wash.
+    expect(hero).not.toContain("berlin-hero");
+    expect(hero).not.toContain("berlin-grain");
+    expect(band).toContain("--color-background: #141414;");
+    expect(band).not.toMatch(
       /169\s*,\s*221\s*,\s*252|203\s*,\s*188\s*,\s*255/,
     );
     expect(hero).not.toContain("bg-brand-peach/20");
@@ -113,6 +116,7 @@ describe("website motion policy", () => {
 
   it("bounds the homepage globe continuous-motion exception", () => {
     const hero = read("components/home/hero.tsx");
+    const toggle = read("components/home/globe-toggle.tsx");
     const network = read("components/home/hero-network.tsx");
     const policy = readFileSync(
       join(SRC, "..", "docs/experience-system.md"),
@@ -121,14 +125,18 @@ describe("website motion policy", () => {
 
     expect(hero).not.toContain("setGlobeSettled(true)");
     expect(hero).toContain('import("@/components/home/hero-network")');
-    expect(hero).toContain('networkMode === "desktop" ?');
-    expect(hero).toContain("data-hero-globe-surface-control");
-    expect(hero).toContain('aria-controls="home-hero-network"');
-    expect(hero).toContain("Pause globe motion");
-    expect(hero).toContain("Resume globe motion");
-    expect(hero).toContain("Globus anhalten");
-    expect(hero).toContain("Globus fortsetzen");
-    expect(hero).not.toContain("aria-pressed={networkPaused}");
+    expect(hero).toContain('networkMode === "desktop"');
+    // Mounted on the same rem query as Tailwind lg and the phone renderer.
+    expect(hero).toContain("window.matchMedia(LG_QUERY)");
+    expect(hero).not.toContain("(min-width: 1024px)");
+    // One visible pause control beside the action; no invisible surface
+    // button over the globe. Fixed name, pressed state.
+    expect(hero).not.toContain("data-hero-globe-surface-control");
+    expect(hero).toContain('controls="home-hero-network"');
+    expect(hero).toContain("paused={networkPaused}");
+    expect(toggle).toContain("data-hero-globe-toggle");
+    expect(toggle).toContain("aria-pressed={paused}");
+    expect(toggle).toContain("aria-controls={controls}");
     expect(hero).toContain("data-hero-globe-motion");
     expect(network).toContain(
       'window.matchMedia("(prefers-reduced-motion: reduce)")',
@@ -147,6 +155,9 @@ describe("website motion policy", () => {
     );
     expect(policy).toContain(
       "The projection module and SVG tree are not loaded or rendered on mobile",
+    );
+    expect(policy).toContain(
+      "A visible 44px pause control sits beside the primary action whenever the globe moves",
     );
   });
 
@@ -172,7 +183,8 @@ describe("website motion policy", () => {
     expect(loader).toContain('"(prefers-reduced-data: reduce)"');
     expect(loader).toContain("saveData");
     expect(loader).toContain("requestIdleCallback");
-    expect(loader).toContain("aria-pressed={globe.paused}");
+    expect(loader).toContain("paused={globe.paused}");
+    expect(loader).toContain("export const LG_QUERY");
     // Suspension, caps and the governor.
     expect(renderer).toContain("IntersectionObserver");
     expect(renderer).toContain('document.addEventListener("visibilitychange"');

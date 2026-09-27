@@ -138,13 +138,13 @@ assert(D.numbers[stepN(2).keys[1]].rounded > 0 && D.numbers[stepN(3).keys[1]].ro
 assert(D.factors["F-EL-GO"].value === 0 && t10(T.T4.isolated.mb_t) === 0, "step 4 copy: the certificate factor is not 0");
 assert(stepN(4).method === "mb" && stepN(5).method === "lb" && stepN(5).state_mask === "3", "guided steps 4 and 5: method or mask changed");
 const STEP = {
-  2: { act: `Set only the Talbrück bill (T3) to “As the AI did it”.`,
+  2: { act: `Switch on “As the AI did it” for the Talbrück bill (T3) only.`,
        why: `${n(stepN(2).keys[1])} against 2024 makes anyone ask what happened, so this error gets caught.` },
-  3: { act: `Also set the MWh misread (T4) to “As the AI did it”.`,
+  3: { act: `Also switch it on for the MWh misread (T4).`,
        why: `A fall of ${nAbs(stepN(3).keys[1])} looks plausible again, so nobody asks.` },
   4: { act: `Switch the method to market-based. The MWh row now shows 0 t.`,
        why: `Market-based hides the unit error completely, because the certificate prices Werk Süd's power at zero. A fall of ${nAbs(stepN(4).keys[1])} looks fine with the Talbrück bill still inside.` },
-  5: { act: `Switch back to location-based, then set only the duplicate March (T1) and October (T2) to “As the AI did it”.`,
+  5: { act: `Switch back to location-based, then switch it on only for the duplicate March (T1) and October (T2).`,
        why: `Together they move the total by only ${n(stepN(5).keys[0])}, so a check on the total misses both. In market-based the pair moves it by ${n(stepN(5).keys[1])}.` },
   6: { act: `Open the evidence drawer from “${nAbs(stepN(6).keys[0])}” in the rewritten sentence in section 4.`,
        why: `In this case's teaching values, ${n("drv_lb_grid_share_pct")} of the location-based decrease comes from the lower grid factor. Kellbrunn did nothing for it.` },
@@ -196,7 +196,7 @@ const consoleBlock = `<div class="console">
     </div>
   </div>
   <div class="meters">
-    <p class="meter">${lbl("This answer", "Answer")}<b id="m-total" class="num">${esc(M0.total)}</b><span class="sub sub--scopes"><span class="nw" id="m-s1">Scope 1 ${esc(M0.s1)}</span> · <span class="nw" id="m-s2">Scope 2 ${esc(M0.s2)}</span></span></p>
+    <p class="meter">${lbl("This answer", "Answer")}<b id="m-total" class="num">${esc(M0.total)}</b><span class="sub sub--scopes"><span class="nw" id="m-s1">Scope 1 ${esc(M0.s1)}</span> <span class="nw" id="m-s2">Scope 2 ${esc(M0.s2)}</span></span></p>
     <p class="meter meter--dist${M0.distZero ? " is-zero" : ""}" id="meter-dist">${lbl("Distance from the right answer", "Distance")}<b id="m-dist" class="num"><span class="d-sign" id="m-dist-sign" aria-hidden="true">${esc(M0.distSign)}</span><span id="m-dist-n">${esc(M0.distN)}</span><span class="d-side" id="m-dist-side">${esc(M0.distSide)}</span></b><span class="gauge" aria-hidden="true"><i id="g-dist" style="--w:${M0.distW}%"></i></span><span class="sub" id="m-dist-pct">${esc(M0.distPct)}</span></p>
     <p class="meter">${lbl("Change vs 2024", "vs 2024")}<b id="m-vs" class="num">${esc(M0.vs)}</b><span class="gauge gauge--vs" aria-hidden="true"><s id="g-vs-right" style="--p:${M0.vsRightPos}%"></s><i id="g-vs" style="--p:${M0.vsPos}%"></i></span><span class="sub sub--vs"><span class="l-long">Right answer: </span><span class="l-short">Right: </span><span id="m-vs-right">${esc(M0.vsRight)}</span></span></p>
   </div>
@@ -231,7 +231,7 @@ function trapRow(t) {
     <p class="trap__name"><span class="trap__id">${t.id}</span><span class="trap__t"><span id="tn-${t.id}">${esc(trapTitle(t))}</span>${scope}</span></p>
     <p class="trap__meta"><span class="tag">${esc(t.role)}</span>${docBtn("trap:" + t.id, DOCLINK[t.id][0], DOCLINK[t.id][1])}</p>
   </div>
-  <button class="sw" type="button" data-trap="${t.id}" aria-pressed="${r.pressed}" aria-labelledby="tn-${t.id}${scope ? " ts-" + t.id : ""}" aria-describedby="te-${t.id}"><span class="sw__box" aria-hidden="true"></span><span class="sw__t">${esc(r.sw)}</span><span class="sw__s" aria-hidden="true">${esc(r.swShort)}</span></button>
+  <button class="sw" type="button" role="switch" data-trap="${t.id}" aria-checked="${r.pressed}" aria-labelledby="sl-${t.id} tn-${t.id}${scope ? " ts-" + t.id : ""}" aria-describedby="te-${t.id}"><span class="sw__box" aria-hidden="true"></span><span class="sw__t" id="sl-${t.id}">As the AI did it</span><span class="sw__s" aria-hidden="true">AI</span></button>
   <p class="iso${r.isoZero ? " is-zero" : ""}" id="te-${t.id}"><b>${esc(r.iso)}</b><span class="iso__tail">${r.isoZero ? "" : " if only this trap fires"}</span> <button class="linkish only" type="button" data-only="${t.id}">Only this trap<span class="sr-only">: ${esc(trapTitle(t))}</span></button></p>
   <div class="mob">
     <div class="track" data-open="trap:${t.id}" aria-hidden="true"><span class="ghost"${style(r.ghost)}${r.ghost ? "" : " hidden"}></span><span class="bar${r.bar && !r.bar.neg ? " is-up" : ""}"${style(r.bar)}${r.bar ? "" : " hidden"}></span></div>
@@ -250,7 +250,7 @@ const noteRow = `<li class="trap trap--note">
   <p class="noteline">${esc(D.trapNotes.twoMonthBill_en)}</p>
 </li>`;
 const rowsHtml = D.traps.map((t) => trapRow(t) + (t.id === "T2" ? "\n" + noteRow : "")).join("\n");
-const legend = `<span class="blegend"><span><i class="lg lg--down" aria-hidden="true"></i>Fixing lowers the total</span><span><i class="lg lg--up" aria-hidden="true"></i>Fixing raises it</span></span>`;
+const legend = `<span class="blegend"><span><i class="lg lg--down" aria-hidden="true"></i>Fixing lowers the total</span><span><i class="lg lg--up" aria-hidden="true"></i>Fixing raises it</span><span><i class="lg lg--path" aria-hidden="true"></i>Dashed: the path from the raw-folder answer</span></span>`;
 const board = `<div class="mobhint"><p>Under each switch: the effect if only that trap fires, then the bar that fixes it and the running total.</p>${legend}</div>
 <div class="board__head" aria-hidden="true"><span class="c3">Trap, switch, and its effect if only this trap fires</span><span class="bh-chart"><span id="bh-chart">${esc(V0.head)}</span>${legend}</span><span class="r">Fixing it changes the total by</span><span class="r">Running total</span></div>
 <div id="board" role="tabpanel" aria-labelledby="tab-lb" data-method="lb"><ul class="board">
@@ -292,10 +292,10 @@ for (const m of ["lb", "mb"]) {
   assert(want.every((x) => v.mbNote.includes(x)) && [1, 2, 3].every((i) => v.mbNote.includes(C.signed(D.waterfall.mb[i].change_t))), "market-based caption misses the T1 to T3 values");
   assert(C.view(D, 127, "lb").mbNote === "" && C.view(D, 1, "mb").mbNote === "", "market-based caption shows without T7");
 }
-for (const k of Object.keys(D.combinations)) for (const m of ["lb", "mb"]) assert(C.state(D, Number(k), m).sumOk, `bars do not add up for mask ${k} ${m}`);
+for (const k of Object.keys(D.combinations)) for (const m of ["lb", "mb"]) assert(C.state(D, Number(k), m).checkOk, `chart ends differ from the stored totals for mask ${k} ${m}`);
 
 /* ------------------------------------------------ section 3: folder tree */
-const TAG = { T1: "T1 duplicate", T3: "T3 not ours", T4: "T4 unit", T5: "T5 Hs basis", "real-dip": "August dip", "two-month": "two months", scope2: "certificate" };
+const TAG = { T1: "T1 duplicate", T3: "T3 outside", T4: "T4 unit", T5: "T5 Hs basis", "real-dip": "August dip", "two-month": "two months", scope2: "certificate" };
 const folders = [];
 function folderOf(p) { return p.split("/").slice(1, -1).join("/"); }
 for (const d of D.documents) {
@@ -384,9 +384,9 @@ const tbCell = (i) => `<td class="k-X tbc" aria-label="Talbrück, ${MONTHS_LONG[
 const wide = `<table class="covtab covtab--wide"><caption class="sr-only">Coverage per site and month, 2025</caption>
       <thead><tr><th scope="col" class="pin">Site</th>${MONTHS.map((m) => `<th scope="col">${m}</th>`).join("")}</tr></thead>
       <tbody>${D.coverage.rows.map((r) => `<tr><th scope="row" class="pin">${esc(ROWNAME[r] || r)}</th>${MONTHS.map((m, i) => cell(r, i)).join("")}</tr>`).join("")}
-      <tr class="outside tbc"><th scope="row" class="pin">Talbrück (not ours)</th>${MONTHS.map((m, i) => tbCell(i)).join("")}</tr></tbody></table>`;
+      <tr class="outside tbc"><th scope="row" class="pin">Talbrück (outside the boundary)</th>${MONTHS.map((m, i) => tbCell(i)).join("")}</tr></tbody></table>`;
 const tall = `<table class="covtab covtab--tall"><caption class="sr-only">Coverage per month and site, 2025</caption>
-      <thead><tr><th scope="col">Month</th>${D.coverage.rows.map((r) => `<th scope="col"><abbr title="${esc(ROWNAME[r] || r)}">${esc(SHORT[r] || r)}</abbr></th>`).join("")}<th scope="col" class="tbc"><abbr title="Talbrück, not ours">TB</abbr></th></tr></thead>
+      <thead><tr><th scope="col">Month</th>${D.coverage.rows.map((r) => `<th scope="col"><abbr title="${esc(ROWNAME[r] || r)}">${esc(SHORT[r] || r)}</abbr></th>`).join("")}<th scope="col" class="tbc"><abbr title="Talbrück, outside the boundary">TB</abbr></th></tr></thead>
       <tbody>${MONTHS.map((m, i) => `<tr><th scope="row">${m}</th>${D.coverage.rows.map((r) => cell(r, i)).join("")}${tbCell(i)}</tr>`).join("")}</tbody></table>`;
 const grid = `<div class="covwrap">
   <div class="gridbar"><button class="btn" type="button" id="cov-toggle" aria-pressed="false">As the folder arrived</button><p class="caption" id="cov-caption" aria-live="polite">As the ledger has it. October comes from the meter readings (grade B).</p></div>

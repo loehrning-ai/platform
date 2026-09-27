@@ -617,9 +617,12 @@ export function decodeHtmlEntities(text) {
   return text.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (match, name) => {
     if (name[0] === "#") {
       const code = name[1] === "x" || name[1] === "X" ? parseInt(name.slice(2), 16) : parseInt(name.slice(1), 10);
-      return Number.isFinite(code) ? String.fromCodePoint(code) : match;
+      // Out-of-range and surrogate references stay as written instead of
+      // throwing a RangeError that would abort the whole lint run.
+      const valid = Number.isInteger(code) && code >= 0 && code <= 0x10ffff && (code < 0xd800 || code > 0xdfff);
+      return valid ? String.fromCodePoint(code) : match;
     }
-    return name in HTML_ENTITIES ? HTML_ENTITIES[name] : match;
+    return Object.hasOwn(HTML_ENTITIES, name) ? HTML_ENTITIES[name] : match;
   });
 }
 

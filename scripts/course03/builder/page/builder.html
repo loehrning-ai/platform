@@ -647,7 +647,7 @@ input[type="range"]:focus-visible{outline:3px solid var(--mennige);outline-offse
 .wf-mats a .wf-long,.wf-mats a .wf-short{font:inherit;color:inherit}
 .wf-mats a .wf-short{display:none}
 .wf-strip a:focus-visible,.wf-mats a:focus-visible,.wf-foot a:focus-visible,.wf-skip:focus-visible{outline:3px solid #b73a15;outline-offset:2px}
-.wf-foot{box-sizing:border-box;max-width:var(--wf-max);margin:64px auto 0;padding:20px var(--wf-gutter) 32px;border-top:1px solid #d4cec5;color:#4f4640;font-size:14px;line-height:1.5}
+.wf-foot{box-sizing:border-box;width:calc(100% - 2 * var(--wf-gutter));max-width:calc(var(--wf-max) - 2 * var(--wf-gutter));margin:64px auto 0;padding:20px 0 32px;border-top:1px solid #d4cec5;color:#4f4640;font-size:14px;line-height:1.5}
 .wf-foot a{color:inherit;text-decoration:underline;text-underline-offset:3px}
 .wf-foot a:hover{color:#97300f}
 /* phones: brand and back link share one row, the materials are one scroll rail below (as lib/workshop-frame.css) */
@@ -704,9 +704,12 @@ input[type="range"]:focus-visible{outline:3px solid var(--mennige);outline-offse
     <a class="wf-back-alt" href="/workshops/datenbereitschaft-fuer-ki" lang="de" hreflang="de">Workshop-Seite auf Deutsch</a>
   </nav>
   <nav class="wf-mats" aria-label="Workshop materials">
-    <a href="./slides.html"><span>01</span><span class="wf-long">Interactive course</span><span class="wf-short">Course</span></a>
-    <a href="./guide.html" aria-current="true"><span>02</span><span class="wf-long">Learner guide</span><span class="wf-short">Guide</span></a>
-    <a href="./demo.html"><span>03</span><span class="wf-long">Interactive demo</span><span class="wf-short">Demo</span></a>
+    <a href="./slides.html"><span>01</span>Deck</a>
+    <a href="./demo.html"><span>02</span><span class="wf-long">Interactive demo</span><span class="wf-short">Demo</span></a>
+    <a href="./data-readiness-kit.zip" download><span>03</span>Kit</a>
+    <a href="./guide.html"><span>04</span><span class="wf-long">Learner guide</span><span class="wf-short">Guide</span></a>
+    <a href="./data-readiness-kit/readiness-lab.html"><span>05</span><span class="wf-long">Browser lab</span><span class="wf-short">Lab</span></a>
+    <a href="./builder.html" aria-current="page"><span>06</span><span class="wf-long">Builder guide</span><span class="wf-short">Builder</span></a>
   </nav>
 </header>
 
@@ -1384,7 +1387,7 @@ dropdb domain_packs</code></pre>
     </ul>
     <p>FOLDLINE is a synthetic company. Every number on this page is synthetic teaching data: 144 business accounts, EUR, UTC. Do not paste employer data, personal records or credentials into any file, chat or demo. Nothing on this page certifies production readiness.</p>
     <p>Claude features change; verify current docs.</p>
-    <p><a href="./guide.html">Learner guide</a> · <a href="./slides.html">Interactive course</a> · <a href="./data-readiness-kit/readiness-lab.html">12-minute lab</a></p>
+    <p><a href="./guide.html">Learner guide</a> · <a href="./slides.html">Deck</a> · <a href="./data-readiness-kit/readiness-lab.html">12-minute lab</a></p>
   </div>
 </footer>
 <footer class="wf-foot">

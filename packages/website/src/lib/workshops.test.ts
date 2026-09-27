@@ -382,7 +382,12 @@ describe("workshop standard fields", () => {
           expect(workshopAgendaMinutes(workshop, "live"), label).toBe(
             workshop.minutesLive,
           );
-          // Self-study skips live-only items such as the question round.
+          // Self-study skips live-only items such as the question round and
+          // shows the remaining agenda minutes rounded up to 5.
+          const selfMinutes = workshopAgendaMinutes(workshop, "self");
+          expect(workshop.minutesSelfStudy, label).toBe(
+            Math.ceil(selfMinutes / 5) * 5,
+          );
           expect(workshop.minutesSelfStudy, label).toBeLessThanOrEqual(
             workshop.minutesLive,
           );

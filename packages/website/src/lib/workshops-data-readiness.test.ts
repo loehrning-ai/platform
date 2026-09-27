@@ -88,19 +88,19 @@ describe("published Data Readiness workshop", () => {
     expect(JSON.stringify(en).replace("An SQL course", "")).not.toMatch(/\bcourses?\b/i);
     expect(en.question).toBe("Show ending MRR by month for the last complete quarter.");
     expect(en.description).toContain("Show ending MRR by month for the last complete quarter");
-    expect(en.description).toContain("-19,960 / 9,775 / 42,565");
+    expect(en.description).toContain("−19,960 / 9,775 / 42,565");
     expect(en.description).toContain("334,675 / 344,450 / 387,015");
     expect(de.description).toContain("334.675 / 344.450 / 387.015");
     for (const workshop of [de, en]) {
       const text = JSON.stringify(workshop);
       expect(text).not.toMatch(/same model|gleiche[sn]? Modell|fünf Regeln|five rules|Regeln im Labor/i);
       expect(text).toMatch(/36/);
-      expect(text).toMatch(/0 (?:of|von) 3/);
+      expect(text).toMatch(/(?:in keinem der|in none of the) 3 (?:Läufe|runs)/);
       expect(text).toMatch(/9 (?:of|von) 9/);
       expect(workshop.provenance.liveRunAt).toBe("2026-09-25");
       expect(workshop.provenance.aiOutputsRecordedAt).toBe("2026-08");
     }
-    expect(JSON.stringify(en)).toMatch(/limited pilot, not signed off/);
+    expect(JSON.stringify(en)).toMatch(/limited pilot, not for sign-off/);
   });
 
   it("takes its agenda from the deck's acts: 75 minutes of main path plus 15 minutes of questions", () => {

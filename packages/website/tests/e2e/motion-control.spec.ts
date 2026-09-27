@@ -15,7 +15,7 @@ test.describe("landing globe motion", () => {
     expect(html).not.toContain("data-hero-globe-poster");
   });
 
-  test("keeps rotating and uses the globe surface as its motion control", async ({
+  test("keeps rotating and pauses from the visible control beside the action", async ({
     page,
   }) => {
     const runtimeErrors: string[] = [];
@@ -29,16 +29,16 @@ test.describe("landing globe motion", () => {
     const network = page.locator("#home-hero-network");
     await expect(network).toBeVisible();
     await expect(network).toHaveAttribute("data-hero-globe-motion", "running");
-    const surfaceControl = page.getByRole("button", {
-      name: "Pause globe motion",
-    });
-    await expect(surfaceControl).toHaveAttribute(
-      "data-hero-globe-surface-control",
-      "true",
-    );
-    await expect(surfaceControl).toHaveCSS(
-      "background-color",
-      "rgba(0, 0, 0, 0)",
+    const toggle = page.getByRole("button", { name: "Pause the globe" });
+    await expect(toggle).toHaveCount(1);
+    await expect(toggle).toBeVisible();
+    await expect(toggle).toHaveAttribute("data-hero-globe-toggle", "");
+    await expect(toggle).toHaveAttribute("aria-pressed", "false");
+    await expect(
+      page.locator("[data-hero-actions] [data-hero-globe-toggle]"),
+    ).toHaveCount(1);
+    await expect(page.locator("[data-hero-globe-surface-control]")).toHaveCount(
+      0,
     );
 
     const livePath = page
@@ -79,13 +79,15 @@ test.describe("landing globe motion", () => {
       .poll(() => word.textContent(), { timeout: 5_000 })
       .toMatch(/\S/);
 
-    await surfaceControl.click();
+    await toggle.click();
     await expect(network).toHaveAttribute("data-hero-globe-motion", "paused");
+    await expect(toggle).toHaveAttribute("aria-pressed", "true");
     const pausedPath = await livePath.getAttribute("d");
     await page.waitForTimeout(300);
     expect(await livePath.getAttribute("d")).toBe(pausedPath);
 
-    await page.getByRole("button", { name: "Resume globe motion" }).click();
+    await toggle.click();
+    await expect(toggle).toHaveAttribute("aria-pressed", "false");
     await expect(network).toHaveAttribute("data-hero-globe-motion", "running");
     await expect
       .poll(() => livePath.getAttribute("d"), { timeout: 1_500 })
@@ -108,9 +110,7 @@ test.describe("landing globe motion", () => {
     await expect(
       page.locator('[data-hero-globe-motion="static"]'),
     ).toBeVisible();
-    await expect(page.getByRole("button", { name: /globe motion/i })).toHaveCount(
-      0,
-    );
+    await expect(page.getByRole("button", { name: /globe/i })).toHaveCount(0);
     expect(runtimeErrors).toEqual([]);
   });
 

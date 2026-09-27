@@ -65,6 +65,20 @@ const APP_NAMES_EN: Readonly<Record<string, string>> = {
   sales: "Request classification",
 };
 
+/** Euro amounts in the reader's locale: "186,42 €" in German, "€186.42" in English. */
+function formatEur(value: number, locale: string, digits: number): string {
+  return new Intl.NumberFormat(locale === "de" ? "de-DE" : "en-GB", {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
+  }).format(value);
+}
+
+function formatNumber(value: number, locale: string): string {
+  return value.toLocaleString(locale === "de" ? "de-DE" : "en-GB");
+}
+
 function makeSeries(len: number, base: number, amp: number): readonly number[] {
   const arr: number[] = [];
   let v = base;
@@ -201,9 +215,9 @@ export default function CostDriftObservabilityDemo() {
         {(
           [
             [
-              text("Spend · MTD", "Spend · month to date"),
-              `€${total.toFixed(0)}`,
-              text("+12 % vs. Vormo.", "+12% versus prior month"),
+              text("Kosten seit Monatsanfang", "Spend · month to date"),
+              formatEur(total, locale, 0),
+              text("+12 % ggü. Vormonat", "+12% versus prior month"),
               "var(--color-brand-orange)",
               true,
               [3, 4, 3, 5, 6, 7, 8, 9],
@@ -372,12 +386,8 @@ export default function CostDriftObservabilityDemo() {
                     color: selApp === a.id ? "rgba(243,240,233,0.75)" : DEMO.schiefer,
                   }}
                 >
-                  <span>€{a.cost.toFixed(0)}</span>
-                  <span>
-                    {a.calls.toLocaleString(
-                      locale === "de" ? "de-DE" : "en-GB",
-                    )}
-                  </span>
+                  <span>{formatEur(a.cost, locale, 0)}</span>
+                  <span>{formatNumber(a.calls, locale)}</span>
                 </div>
               </button>
             ))}
@@ -491,13 +501,19 @@ export default function CostDriftObservabilityDemo() {
               [
                 [
                   text("Aufrufe", "Calls"),
-                  activeApp.calls.toLocaleString(
-                    locale === "de" ? "de-DE" : "en-GB",
-                  ),
+                  formatNumber(activeApp.calls, locale),
                 ],
-                [text("Kosten", "Cost"), `€${activeApp.cost.toFixed(2)}`],
-                [text("Ø Latenz", "Average latency"), `${activeApp.lat} s`],
-                [text("Fehler", "Errors"), `${activeApp.err} %`],
+                [text("Kosten", "Cost"), formatEur(activeApp.cost, locale, 2)],
+                [
+                  text("Ø Latenz", "Average latency"),
+                  `${formatNumber(activeApp.lat, locale)} s`,
+                ],
+                [
+                  text("Fehler", "Errors"),
+                  locale === "de"
+                    ? `${formatNumber(activeApp.err, locale)} %`
+                    : `${formatNumber(activeApp.err, locale)}%`,
+                ],
               ] as const
             ).map(([l, v]) => (
               <div key={l}>

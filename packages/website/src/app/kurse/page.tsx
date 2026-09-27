@@ -68,7 +68,7 @@ export default async function KursePage() {
           the KI-Check as a text link. On a phone the headline is 30px and
           the lead 15px, so the goal rail and the recommended course share
           the first screen with it; sm hands the reviewed sizes back. */}
-      <div className="mx-auto max-w-[1180px] px-4 pb-6 pt-4 sm:px-6 sm:pb-14 sm:pt-12 lg:pb-16 lg:pt-10">
+      <div className="mx-auto max-w-[75rem] px-4 pb-6 pt-4 sm:px-6 sm:pb-14 sm:pt-12 lg:pb-16 lg:pt-10">
         <header className="max-w-[46rem]">
           <Kicker>{copy.kicker(ALL_COURSE_CATALOG.length)}</Kicker>
           <h1 className="mt-2 text-[1.875rem]/[1.08] font-bold tracking-[-0.012em] text-foreground text-balance sm:mt-3 sm:text-fluid-h1">
@@ -135,7 +135,7 @@ export default async function KursePage() {
         className="bg-inset"
         data-kurse-workshops
       >
-        <div className="mx-auto grid max-w-[1180px] gap-4 px-4 py-8 sm:px-6 sm:py-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-12 lg:py-12">
+        <div className="mx-auto grid max-w-[75rem] gap-4 px-4 py-8 sm:px-6 sm:py-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end lg:gap-12 lg:py-12">
           <div className="min-w-0">
             <h2
               id="kurse-workshops-heading"

@@ -62,13 +62,20 @@ for (const viewport of [
         expect(strip).toBeLessThanOrEqual(96);
         await expect(page.getByRole("link", { name: "Workshop-Seite auf Deutsch" })).toBeVisible();
 
-        // The three material tabs fit without scrolling (short names), so none sits under the edge fade.
-        const rail = await page.locator(".wf-mats").evaluate((node) => ({
-          overflow: node.scrollWidth - node.clientWidth,
-          text: (node as HTMLElement).innerText.replace(/\s+/g, " ").trim(),
-        }));
-        expect(rail.overflow).toBeLessThanOrEqual(0);
-        expect(rail.text).toBe("01 Course 02 Guide 03 Demo");
+        // The rail lists the site's materials with short names (as the Workshop 04 strip does); it may
+        // scroll, but the current tab sits fully inside it, clear of the 32px edge fades.
+        const rail = await page.locator(".wf-mats").evaluate((node) => {
+          const box = node.getBoundingClientRect();
+          const current = node.querySelector("[aria-current=page]")!.getBoundingClientRect();
+          return {
+            text: (node as HTMLElement).innerText.replace(/\s+/g, " ").trim(),
+            clearLeft: current.left - box.left,
+            clearRight: box.right - current.right,
+          };
+        });
+        expect(rail.text).toBe("01 Deck 02 Demo 03 Kit 04 Guide 05 Lab 06 Builder");
+        expect(rail.clearLeft).toBeGreaterThanOrEqual(0);
+        expect(rail.clearRight).toBeGreaterThanOrEqual(32);
         await expect(page.getByRole("link", { name: "Interactive demo" })).toBeHidden();
 
         // The route is one row of numbered 44px stations; each keeps its step name as its accessible name.

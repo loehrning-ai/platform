@@ -160,23 +160,6 @@
       flex: 0 0 auto;
     }
 
-    .workback {
-      display: grid;
-      gap: 10px;
-      position: relative;
-    }
-
-    .workback::before {
-      content: "";
-      position: absolute;
-      left: 15px;
-      top: 28px;
-      bottom: 28px;
-      width: 3px;
-      background: linear-gradient(var(--red), var(--blue));
-      border-radius: 999px;
-    }
-
     .work-step {
       display: grid;
       grid-template-columns: 34px 1fr;
@@ -1016,7 +999,7 @@
 }
 .s-cost .cap-mono {
   margin: 12px 0 0;
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 13px;
   line-height: 1.45;
   color: var(--muted);
@@ -1039,7 +1022,7 @@
   flex: 0 0 auto;
 }
 .s-cost .fleet-legend i.k-focus { background: var(--ink); }
-.s-cost .fleet-legend i.k-exception { background: var(--red); }
+.s-cost .fleet-legend i.k-exception { background: #f9f7f2; border: 1px solid var(--ink); }
 .s-cost .fleet-legend i.k-fleet { background: #e5e4e2; }
 /* --- sec4-models --- */
 /* --- Section 4: model-choice elevation (additive; reuses base tokens/classes) --- */
@@ -1182,7 +1165,7 @@
 .s-cost .cost-reserve strong { color: var(--green); }
 
 .s-cost .cost-note { margin-top: 14px; }
-.s-cost .cap-mono { font-family: var(--mono); margin-top: 10px; line-height: 1.4; }
+.s-cost .cap-mono { font-family: var(--sans); margin-top: 10px; line-height: 1.4; }
 /* --- sec7-metrics --- */
 .section.s-metrics { border-top: 3px solid var(--green); }
 .s-metrics h2 { letter-spacing: -0.018em; }
@@ -1243,7 +1226,7 @@
 .gate-cell .g-v{display:block;margin:8px 0 2px;font-size:23px;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
 .gate-cell .g-t{display:block;padding-right:56px;font-size:13px;color:var(--muted);font-family:var(--mono)}
 .gate-cell .g-pass{position:absolute;bottom:11px;right:11px;font-size:13px;font-weight:800;letter-spacing: .02em;color:var(--green);border:1px solid rgba(32,91,70,.4);border-radius:999px;padding:2px 7px;line-height:1.2}
-.cap-mono{font-family:var(--mono);font-size:13px;color:var(--muted);margin:12px 0 0}
+.cap-mono{font-family:var(--sans);font-size:13px;color:var(--muted);margin:12px 0 0}
 
 /* elevated, closed 5-step loop */
 .loop-wrap{margin-top:16px}
@@ -1331,7 +1314,7 @@
   font-weight: 800;
   text-transform: none;
   letter-spacing: .02em;
-  color: var(--red);
+  color: var(--muted);
 }
 .s4-excel .s4x-bigstat strong {
   font-size: clamp(52px, 7.5vw, 88px);
@@ -1344,7 +1327,7 @@
 
 .s4-excel .s4x-chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .s4-excel .s4x-chip {
-  color: var(--red);
+  color: var(--ink);
   border-color: var(--ink);
   background: transparent;
 }
@@ -1367,7 +1350,7 @@
   flex: 0 0 auto;
 }
 .s4-excel .fleet-legend i.k-focus { background: var(--ink); }
-.s4-excel .fleet-legend i.k-exception { background: var(--red); }
+.s4-excel .fleet-legend i.k-exception { background: #f9f7f2; border: 1px solid var(--ink); }
 .s4-excel .fleet-legend i.k-fleet { background: #e5e4e2; border: 1px solid #d4cec5; }
 .s4-excel .cap-mono { line-height: 1.45; }
 
@@ -1711,7 +1694,7 @@
   font-weight: 800;
   text-transform: none;
   letter-spacing: .02em;
-  color: var(--red);
+  color: var(--muted);
 }
 .s4-excel .s4x-bigstat strong {
   font-size: clamp(46px, 6vw, 82px);
@@ -1730,7 +1713,7 @@
 .s4-excel .s4x-sub { font-size: 14px; color: var(--muted); }
 .s4-excel .s4x-chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .s4-excel .s4x-chip {
-  color: var(--red);
+  color: var(--ink);
   border-color: var(--ink);
   background: transparent;
 }
@@ -1754,10 +1737,10 @@
   flex: 0 0 auto;
 }
 .s4-excel .fleet-legend i.k-focus { background: var(--ink); }
-.s4-excel .fleet-legend i.k-exception { background: var(--red); }
+.s4-excel .fleet-legend i.k-exception { background: #f9f7f2; border: 1px solid var(--ink); }
 .s4-excel .fleet-legend i.k-fleet { background: #e5e4e2; border: 1px solid #d4cec5; }
 .s4-excel .cap-mono {
-  font-family: var(--mono);
+  font-family: var(--sans);
   font-size: 13px;
   color: var(--muted);
   margin: 12px 0 0;
@@ -1789,7 +1772,7 @@
   padding: 14px 16px;
 }
 .s-overunder .ou-col.ou-over { border-top-color: var(--orange); }
-.s-overunder .ou-col.ou-under { border-top-color: var(--red); }
+.s-overunder .ou-col.ou-under { border-top-color: var(--ink); }
 
 .s-overunder .ou-col-head {
   display: flex;
@@ -1804,7 +1787,7 @@
 }
 .s-overunder .ou-col-head i { width: 11px; height: 11px; border-radius: 3px; flex: 0 0 auto; }
 .s-overunder .ou-over .ou-col-head i { background: var(--orange); }
-.s-overunder .ou-under .ou-col-head i { background: var(--red); }
+.s-overunder .ou-under .ou-col-head i { background: var(--ink); }
 
 .s-overunder .ou-col ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 9px; }
 .s-overunder .ou-col li {
@@ -1824,7 +1807,7 @@
   border-radius: 50%;
 }
 .s-overunder .ou-over li::before { background: var(--orange); }
-.s-overunder .ou-under li::before { background: var(--red); }
+.s-overunder .ou-under li::before { background: var(--ink); }
 
 .s-overunder .ou-note {
   margin: 14px 0 0;
@@ -2222,15 +2205,6 @@
     .read-progress > span { display: block; height: 100%; width: 0;
       background: #b73a15; }
 
-    /* scroll-reveal: the story unfolds as you scroll.
-       Progressive enhancement: hidden state applies ONLY once JS adds .reveal-on,
-       so if JS is off/errors the whole paper still shows. */
-    @media (prefers-reduced-motion: no-preference) {
-      .paper.reveal-on > .section, .paper.reveal-on > .hero {
-        opacity: 0; transform: translateY(26px);
-        transition: opacity .7s cubic-bezier(.2,.6,.2,1), transform .7s cubic-bezier(.2,.6,.2,1); }
-      .paper.reveal-on > .reveal-in { opacity: 1; transform: none; }
-    }
 
     /* scroll cue under the hero */
     .scroll-cue { text-align: center; margin: 30px 0 0; color: var(--muted);
@@ -2280,7 +2254,6 @@
     .kicker::before, .s2-kicker::before { display: none !important; }
     .cs-disclaimer { color: #4f4640; }
     .section-head p, .s2-dek { color: #4f4640; }
-    .workback::before { background: var(--ink); }
     .s-orgs .orgs-source::before { background: var(--ink); }
     .s-snow .caveat, .s-snow .caveat.c-fresh, .s-snow .caveat.c-censor, .s-snow .caveat.c-leak { border-top: 2px solid var(--ink); background: transparent; box-shadow: none; }
     .s-snow .caveat .cv-num, .s-snow .caveat.c-fresh .cv-num, .s-snow .caveat.c-censor .cv-num, .s-snow .caveat.c-leak .cv-num { background: transparent; color: #655c54; }
@@ -2942,7 +2915,7 @@ function renderFleetScaleChart() {
       const i = r * cols + c;
       let fill = "#e5e4e2", stroke = "#d4cec5";
       if (i < s3Fleet.focus) { fill = "#121212"; stroke = "#121212"; }
-      else if (exc.has(i)) { fill = "#b73a15"; stroke = "#b73a15"; }
+      else if (exc.has(i)) { fill = "#f9f7f2"; stroke = "#121212"; }
       svg.appendChild(svgEl("rect", { x: x0 + c * (cell + gap), y: y0 + r * (cell + gap), width: cell, height: cell, rx: 0, fill, stroke, "stroke-width": 1 }));
     }
   }
@@ -2978,9 +2951,9 @@ function renderDeadline() {
   const crossX = x(crossMarkets);
   svg.appendChild(svgEl("rect", { x: crossX, y: b.margin.top, width: (b.w - b.margin.right) - crossX, height: (b.h - b.margin.bottom) - b.margin.top, fill: "#121212", opacity: 0.05 }));
 
-  // cumulative manual-hours burden: one clean red line, no fill under it
+  // cumulative manual-hours burden: one ink line, no fill under it (Mennige marks the cutoff crossing only)
   const lineD = deadlineData.map(function (d, i) { return (i ? "L" : "M") + x(d.markets) + "," + y(d.hours); }).join(" ");
-  svg.appendChild(svgEl("path", { d: lineD, fill: "none", stroke: red, "stroke-width": 2.4, "stroke-linejoin": "round", "stroke-linecap": "round" }));
+  svg.appendChild(svgEl("path", { d: lineD, fill: "none", stroke: ink, "stroke-width": 2.4, "stroke-linejoin": "round", "stroke-linecap": "round" }));
 
   // cutoff reference line (orange dashed = a hard cap on available time)
   const cy = y(cutoff);
@@ -2989,7 +2962,7 @@ function renderDeadline() {
 
   // endpoint marker + label (the full-sweep burden)
   const ex = x(maxMarkets), ey = y(84);
-  svg.appendChild(svgEl("circle", { cx: ex, cy: ey, r: 4.5, fill: red }));
+  svg.appendChild(svgEl("circle", { cx: ex, cy: ey, r: 4.5, fill: ink }));
   addText(svg, "84h to finish", ex - 8, ey + 4, { "text-anchor": "end", style: "fill:" + ink + ";font-weight:800" });
 
   // crossing marker + the one teaching annotation (event + consequence at the mark)
@@ -3015,7 +2988,7 @@ function renderOverUnder(){
   var cx = (L + R) / 2;
   var half = Math.max(80, (b.innerW / 2) - 14);
   var overLen = half * 0.66, underLen = half * 0.88;
-  var yBar = 110, barH = 34, y0 = yBar - barH / 2, y1 = yBar + barH / 2, r = 6, gap = 3;
+  var yBar = 110, barH = 34, y0 = yBar - barH / 2, y1 = yBar + barH / 2, r = 0, gap = 3;
   var overEnd = cx - overLen, uEnd = cx + underLen;
 
   // horizontal bar with the OUTER end rounded (the data-end), inner end flat at the spine
@@ -3033,7 +3006,12 @@ function renderOverUnder(){
 
   // OVER bar (orange, left) and UNDER bar (red, right), a 3px surface gap at the spine
   svg.appendChild(svgEl("path", { d: barPath(cx - gap, overEnd, "left"), fill: "#655c54" }));
-  svg.appendChild(svgEl("path", { d: barPath(cx + gap, uEnd, "right"), fill: "#b73a15" }));
+  // Under: ink outline with the 45-degree hatch ("wrong / costly"), no accent colour
+  var defs = svgEl("defs", {}), hatch = svgEl("pattern", { id: "ouHatch", width: 8, height: 8, patternUnits: "userSpaceOnUse", patternTransform: "rotate(45)" });
+  hatch.appendChild(svgEl("rect", { width: 8, height: 8, fill: "#f9f7f2" }));
+  hatch.appendChild(svgEl("line", { x1: 0, y1: 0, x2: 0, y2: 8, stroke: "#121212", "stroke-width": 2.5 }));
+  defs.appendChild(hatch); svg.appendChild(defs);
+  svg.appendChild(svgEl("path", { d: barPath(cx + gap, uEnd, "right"), fill: "url(#ouHatch)", stroke: "#121212", "stroke-width": 1.5 }));
 
   // identity labels in ink (the colored bar carries the hue, the word stays neutral)
   addText(svg, "Over", overEnd, y0 - 13, { "text-anchor": "start", style: "fill:#121212;font-weight:850;font-size:18px;font-family:var(--sans)" });
@@ -3546,25 +3524,8 @@ function renderMonitor() {
       window.addEventListener('scroll', onScroll, { passive: true });
       onScroll();
       if (toTop) toTop.onclick = function () { window.scrollTo({ top: 0, behavior: 'smooth' }); };
-
-      var paper = document.querySelector('.paper');
-      var items = document.querySelectorAll('.paper > .section, .paper > .hero');
-      var motionOk = !(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-      if (paper && motionOk && 'IntersectionObserver' in window) {
-        paper.classList.add('reveal-on');
-        var io = new IntersectionObserver(function (entries) {
-          entries.forEach(function (e) {
-            if (e.isIntersecting) {
-              e.target.classList.add('reveal-in');
-              io.unobserve(e.target);
-              window.requestAnimationFrame(renderAll);
-            }
-          });
-        }, { threshold: 0.1, rootMargin: '0px 0px -6% 0px' });
-        items.forEach(function (el) { io.observe(el); });
-      } else {
-        items.forEach(function (el) { el.classList.add('reveal-in'); });
-      }
+      // Every section renders in its final state: no scroll reveal (print, screenshots and a
+      // reader who jumps ahead all see the whole story). renderAll runs once on load, above.
     })();
 
   </script>

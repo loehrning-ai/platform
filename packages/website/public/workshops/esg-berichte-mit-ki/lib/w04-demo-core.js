@@ -45,25 +45,29 @@ var W04Core = (function () {
   /* One state: which traps are active, for which method.
      The chart fixes the active traps one at a time in the fixed order T1..T7,
      from this state's total to the right answer (mask 0). Each bar is the
-     difference of two looked-up totals, so the bars always add up to the end total. */
+     difference of two looked-up totals, so the bars add up to the end total by
+     construction; adding them up again would check nothing. The check (checkOk)
+     compares the chart ends with values the dataset stores separately: the end
+     with numbers.total_<method>_2025, the start with the right answer plus this
+     state's stored gap (delta_vs_right_<method>_t). */
   function state(D, mask, method) {
     var bits = D.trapBits, c = combo(D, mask);
     var start = c[method + "_t"], end = total(D, 0, method);
-    var cur = mask, rows = [], sumT = tenths(start);
+    var cur = mask, rows = [];
     ORDER.forEach(function (id) {
       var active = (mask & bits[id]) !== 0;
       if (!active) { rows.push({ id: id, active: false }); return; }
       var next = cur & ~bits[id];
       var from = total(D, cur, method), to = total(D, next, method);
       var eff = (tenths(to) - tenths(from)) / 10;
-      sumT += tenths(to) - tenths(from);
       rows.push({ id: id, active: true, from: from, to: to, effect: eff });
       cur = next;
     });
     var dT = c["delta_vs_right_" + method + "_t"], dP = c["delta_vs_right_" + method + "_pct"];
+    var right = D.numbers["total_" + method + "_2025"].value;
     return {
       mask: mask, method: method, start: start, end: end, rows: rows,
-      sumOk: sumT === tenths(end),
+      checkOk: tenths(end) === tenths(right) && tenths(start) - tenths(dT) === tenths(right),
       s1: c.s1_t, s2: c[method === "lb" ? "s2lb_t" : "s2mb_t"],
       vs2024: c["vs2024_" + method + "_pct"],
       deltaT: dT, deltaPct: dP,
@@ -142,8 +146,6 @@ var W04Core = (function () {
       var r = st.rows[i], iso = t.isolated[method + "_t"];
       var o = {
         pressed: r.active,
-        sw: r.active ? "As the AI did it" : "Fixed",
-        swShort: r.active ? "AI" : "Fixed",
         iso: tenths(iso) === 0 ? "0 t for this number" : t.isolated[method + "_en"] + " t",
         isoZero: tenths(iso) === 0,
         fx: r.active ? signed(r.effect) : "",
@@ -198,8 +200,9 @@ var W04Core = (function () {
           ? "With all traps active. Each bar fixes one trap, in this order, from the raw-folder answer to the right answer."
           : "Each bar fixes one active trap, in this order, from this answer to the right answer. Totals come from the " + nStates + " precomputed states."),
       mbNote: mbNote(D, ghost || st, !!ghost),
-      check: ghost ? "" : (st.sumOk ? "Sum of the bars = chart total ✓" : "Sum of the bars does not match the chart total"),
-      sumOk: st.sumOk,
+      check: ghost ? "" : (st.checkOk ? "Checked: this total minus its stored gap = the right answer ✓"
+        : "This total minus its stored gap does not give the right answer"),
+      checkOk: st.checkOk,
       announce: announce(D, st)
     };
   }

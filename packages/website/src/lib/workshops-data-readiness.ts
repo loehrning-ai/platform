@@ -67,7 +67,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 17,
         activity: "do",
         description:
-          "Freigegebene Sichten, ein Login mit reinen Leserechten und eine Kennzahl-Definition, deren vier Lücken du mit ausfüllst.",
+          "Die KI bekommt freigegebene Sichten und einen Login mit reinen Leserechten, und du füllst die vier Lücken der Kennzahl-Definition aus.",
       },
       {
         label: "Dieselbe Frage noch einmal",
@@ -100,7 +100,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     ],
     agendaSource: "deck",
     minutesLive: 90,
-    minutesSelfStudy: 60,
+    minutesSelfStudy: 75,
     needs: [
       "Ein Browser, für das Deck am besten ein großer Bildschirm im Querformat",
       "Papier und Stift für die fünf Felder",
@@ -238,14 +238,14 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         n: "04",
         title: "Die Grenzen des Aufbaus prüfen",
         description:
-          "Der Aufbau soll nachfragen oder verweigern und warnen, wenn die Daten älter als 36 Stunden sind. 9 von 9 Tests prüfen den Aufbau, nicht die KI; die Läufe zitierten die Definition 0 von 3 Mal. Das Urteil bleibt ein begrenzter Pilot ohne Freigabe.",
+          "Der Aufbau soll nachfragen oder verweigern und warnen, wenn die Daten älter als 36 Stunden sind. 9 von 9 Tests prüfen den Aufbau, nicht die KI, und in keinem der 3 Läufe zitierte die KI die Definition. Das reicht für einen begrenzten Piloten, nicht für eine Freigabe.",
         tool: "Deck · Grenzen",
       },
       {
         n: "05",
         title: "Deine fünf Felder ausfüllen",
         description:
-          "Du überträgst das Vorgehen auf eine eigene, erfundene Frage und füllst fünf Felder aus, von der Frage bis zum ersten Test. Die Fragekarte im Kit zeigt neben jedem Feld ein ausgefülltes Beispiel von FOLDLINE. Ein gelungener Übungsfall ist keine Freigabe für ein echtes System.",
+          "Du überträgst das Vorgehen auf eine eigene, erfundene Frage und füllst fünf Felder aus, von der Frage bis zum ersten Test. Die Fragekarte im Kit zeigt neben jedem Feld ein ausgefülltes Beispiel von FOLDLINE.",
         tool: "Fragekarte",
       },
       {
@@ -302,6 +302,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         optional: true,
         description:
           "Für die Person, die moderiert: Notizen, Abstimmungsfragen und eine Uhr für die 75 Minuten. Sie verbindet sich mit dem Deck, sobald du dort P drückst.",
+        short: "Für die Person, die moderiert: Notizen, Abstimmungsfragen und eine Uhr.",
       },
       {
         label: "Interaktive Demo · 10 Min.",
@@ -325,6 +326,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         sizeLabel: "1,1 MB",
         description:
           "Die Fragekarte mit den fünf Feldern zum Ausdrucken, dazu Testfälle, Vorlagen für Definitionen und die Dateien für Datenteams. Nur Textdateien; START-HERE.md sagt, womit du anfängst.",
+        short: "Die Fragekarte zum Ausdrucken, dazu Testfälle und Vorlagen.",
       },
       {
         label: "Lernbegleiter",
@@ -335,6 +337,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         phase: "after",
         description:
           "Der Workshop zum Nachlesen: die Frage, der Fehler, die Reparatur, die Grenzen, deine fünf Felder und ein Glossar. Funktioniert auch auf dem Smartphone.",
+        short: "Der Workshop zum Nachlesen, mit Glossar, auch auf dem Smartphone.",
       },
       {
         label: "Browserlabor · 12 Min.",
@@ -347,6 +350,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         optional: true,
         description:
           "Du reparierst die falsche Antwort auf den erfundenen Daten, indem du fünf Einstellungen wählst. Das Labor prüft sechs Fälle und zehn Kontrollen, alles im Browser.",
+        short: "Du reparierst die falsche Antwort mit fünf Einstellungen im Browser.",
       },
       {
         label: "Builder-Leitfaden",
@@ -358,6 +362,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         optional: true,
         description:
           "Für Datenteams, optional: elf Module dazu, wie ihr freigegebene Sichten, eine Kennzahl-Definition und einen Login mit reinen Leserechten auf der eigenen Datenbank aufbaut. Zählt nicht zur Workshop-Zeit.",
+        short: "Elf Module für Datenteams, die das auf der eigenen Datenbank bauen.",
       },
     ],
   },
@@ -370,12 +375,12 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     summary:
       "An AI reports April ending MRR as −€19,960. You find out why that number is wrong and which change to the data produces the right one.",
     description:
-      "The invented company FOLDLINE asks one question: \"Show ending MRR by month for the last complete quarter.\" MRR is monthly recurring revenue. On seven export tables the AI answers -19,960 / 9,775 / 42,565, because it added up each month's change and so mixed up a balance and a change. Then the AI reads only approved views, gets a written metric definition (the semantic layer) and may only read; tests check the setup. The same question now matches the database: 334,675 / 344,450 / 387,015. Finally you see what the setup does not cover, and you write your own question into five boxes.",
+      "The invented company FOLDLINE asks one question: \"Show ending MRR by month for the last complete quarter.\" MRR is monthly recurring revenue. On seven export tables the AI answers −19,960 / 9,775 / 42,565, because it added up each month's change and so mixed up a balance and a change. Then the AI reads only approved views, gets a written metric definition (the semantic layer) and may only read; tests check the setup. The same question now matches the database: 334,675 / 344,450 / 387,015. Finally you see what the setup does not cover, and you write your own question into five boxes.",
     format: "Live workshop with deck",
     duration: "~90 minutes",
     accessNote:
       "The deck, learner guide and demo need only a browser; materials are in English, the live session is introduced in German. The AI answers shown were recorded in August 2026; they are not live requests.",
-    outcome: "Five-field template",
+    outcome: "Five-box template",
     audience: [
       "Analysts and controllers who pass on figures from AI answers, including those without SQL",
       "Teams that decide which data an AI may read",
@@ -403,7 +408,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 10,
         activity: "vote",
         description:
-          "The AI returns -19,960 / 9,775 / 42,565 from seven export tables, and you vote on whether it goes into the board pack.",
+          "The AI returns −19,960 / 9,775 / 42,565 from seven export tables, and you vote on whether it goes into the board pack.",
       },
       {
         label: "Why it is wrong",
@@ -417,7 +422,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 17,
         activity: "do",
         description:
-          "Approved views, a read-only login and a metric definition whose four blanks you help fill.",
+          "The AI gets approved views and a read-only login, and you fill the four blanks in the metric definition.",
       },
       {
         label: "The same question again",
@@ -450,7 +455,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     ],
     agendaSource: "deck",
     minutesLive: 90,
-    minutesSelfStudy: 60,
+    minutesSelfStudy: 75,
     needs: [
       "A browser, ideally a large landscape screen for the deck",
       "Paper and a pen for the five boxes",
@@ -573,7 +578,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         n: "02",
         title: "Check the plausible wrong answer",
         description:
-          "On seven export tables the AI answers -19,960 / 9,775 / 42,565. It added up each month's change and so mixed up a balance and a change.",
+          "On seven export tables the AI answers −19,960 / 9,775 / 42,565. It added up each month's change and so mixed up a balance and a change.",
         tool: "Deck · The mistake",
       },
       {
@@ -587,14 +592,14 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         n: "04",
         title: "Test the limits of the setup",
         description:
-          "The setup should ask back or refuse, and warn when data are older than 36 hours. 9 of 9 tests check the setup, not the AI; the runs cited the definition 0 of 3 times. The verdict stays a limited pilot, not signed off.",
+          "The setup should ask back or refuse, and warn when data are older than 36 hours. 9 of 9 tests check the setup, not the AI, and in none of the 3 runs did the AI cite the definition. That is enough for a limited pilot, not for sign-off.",
         tool: "Deck · Limits",
       },
       {
         n: "05",
         title: "Fill your five boxes",
         description:
-          "You apply the method to an invented question of your own and fill five boxes, from the question to the first test. The question card in the kit shows a filled FOLDLINE example next to each box. A successful practice case does not approve a real system.",
+          "You apply the method to an invented question of your own and fill five boxes, from the question to the first test. The question card in the kit shows a filled FOLDLINE example next to each box.",
         tool: "Question card",
       },
       {
@@ -674,6 +679,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         sizeLabel: "1.1 MB",
         description:
           "The question card with the five boxes to print, plus test cases, definition templates and the files for data teams. Text files only; START-HERE.md tells you where to begin.",
+        short: "The question card to print, plus test cases and templates.",
       },
       {
         label: "Learner guide",
@@ -684,6 +690,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         phase: "after",
         description:
           "The workshop to read at your own pace: the question, the mistake, the fix, the limits, your five boxes and a glossary. Works on a phone too.",
+        short: "The workshop to read at your own pace, with a glossary.",
       },
       {
         label: "Browser lab · 12 min",
@@ -696,6 +703,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         optional: true,
         description:
           "You repair the wrong answer on the invented data by choosing five settings. The lab checks six cases and ten controls, all in the browser.",
+        short: "You repair the wrong answer by choosing five settings in the browser.",
       },
       {
         label: "Builder guide",
@@ -707,6 +715,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         optional: true,
         description:
           "For data teams, optional: eleven modules on building approved views, a metric definition and a read-only login on your own database. Not part of the workshop time.",
+        short: "Eleven modules for data teams who build this on their own database.",
       },
     ],
   },

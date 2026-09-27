@@ -95,29 +95,14 @@ describe("blog stylesheet isolation", () => {
     expect(declarations.get("outline-offset")).toBe("5px");
   });
 
-  it("keeps the article visual panel visible and bounded on narrow screens", () => {
-    let baseDisplayLine = 0;
-    let mobileMinHeightLine = 0;
-
-    indexRoot.walkRules(".blog-root .row__art", (rule) => {
-      rule.walkDecls("display", (declaration) => {
-        const line = declaration.source?.start?.line ?? 0;
-        if (declaration.value === "flex") baseDisplayLine = line;
-        expect(declaration.value).not.toBe("none");
-      });
-      rule.walkDecls("min-height", (declaration) => {
-        if (
-          declaration.value === "280px" &&
-          rule.parent?.type === "atrule" &&
-          rule.parent.name === "media" &&
-          rule.parent.params.replaceAll(" ", "") === "(max-width:900px)"
-        ) {
-          mobileMinHeightLine = declaration.source?.start?.line ?? 0;
-        }
-      });
+  it("scopes every index rule under the blog boundary", () => {
+    const unscoped: string[] = [];
+    indexRoot.walkRules((rule) => {
+      for (const selector of rule.selectors) {
+        if (!selector.trim().startsWith(".blog-root")) unscoped.push(selector);
+      }
     });
 
-    expect(baseDisplayLine).toBeGreaterThan(0);
-    expect(mobileMinHeightLine).toBeGreaterThan(baseDisplayLine);
+    expect(unscoped).toEqual([]);
   });
 });

@@ -33,7 +33,7 @@ export default {
     ],
     sayAt: { 0: [0], 1: [1], 2: [2], 3: [3] },
     ask: [],
-    expectedAudience: ["Common slips: {wrong_s1_gas} for gas (Hi factor); {el_total_2024_kwh} for the grid bar. Add real shares only after the O3 test runs."],
+    expectedAudience: ["Common slips: {wrong_s1_gas} for gas (Hi factor); {el_total_2024_kwh} for the grid bar. Real shares of each slip will be added once test runs are recorded (appendix A3)."],
     revealOrder: ["Worksheet with three figures", "Timer running", "Expected answers", "If yours differs"],
     cut: "Do figures 1 and 2 only; show figure 3's answer.",
     appendixRoutes: [],
@@ -64,7 +64,7 @@ export default {
     clock: { start: "59:30", end: "64:00" },
     say: [
       "A useful assistant does three different things: it calculates what the ledger supports, asks back where a person decides, and refuses claims the evidence cannot carry.",
-      "On card 4: refuse it because nothing in the ledger supports it. Since 27 September 2026, Directive 2024/825 bans, towards consumers, generic environmental claims such as 'eco-friendly' unless recognised excellent environmental performance can be shown, and claims that a product is climate-neutral based on offsets (in Germany through an amendment to the UWG, known from secondary sources; check the current text). Whether your own website is aimed at consumers is a question for your lawyer. Misleading claims are banned towards business customers too (in Germany § 5 UWG).",
+      "On card 4: refuse it because nothing in the ledger supports it. From 27 September 2026, Directive (EU) 2024/825 bans, towards consumers, generic environmental claims such as 'eco-friendly' unless recognised excellent environmental performance can be shown, and claims that a product is climate-neutral based on offsets (in Germany through an amendment to the UWG, known from secondary sources; check the current text). Whether your own website is aimed at consumers is a question for your lawyer. German unfair-competition law (UWG) can also apply to misleading claims towards business customers; check with a lawyer.",
       "Must say: Not legal advice. Check the German transposition.",
       "On press 5: this is the answer we want from the raw folder. It raises seven points for a person before it commits to a number.",
     ],

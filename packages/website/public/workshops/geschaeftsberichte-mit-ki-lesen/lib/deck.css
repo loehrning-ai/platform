@@ -224,27 +224,21 @@ html, body { margin: 0; padding: 0; background: #000; overflow: hidden; }
   to   { opacity: 1; transform: none; }
 }
 
-/* ── Claude app mock (live preview) ────────────────────────────────────── */
-.mock {
-  background: #f9f7f2;
-  border: 2px solid var(--ink);
-  display: flex; flex-direction: column;
-  overflow: hidden;
-}
-.mock__bar {
-  display: flex; align-items: center; gap: 8px;
-  padding: 14px 18px; border-bottom: 1px solid var(--line);
-  background: var(--paper);
-}
-.mock__bar .b { width: 12px; height: 12px; border: 1.5px solid var(--muted); }
-.mock__bar .t {
-  margin-left: 10px; font-family: var(--sans); font-size: 18px; font-weight: 600;
+/* ── Claude chat, final state ─────────────────────────────────────────────
+   Not a re-drawn app window: a caption line names where the exchange happens,
+   and a 1px ink frame holds the finished chat (prompt and answer), so the slide
+   reads the same in the room, in print and in a screenshot. */
+.mock { display: flex; flex-direction: column; }
+.mock__cap {
+  margin: 0 0 10px; font-family: var(--sans); font-size: 18px; font-weight: 600;
   letter-spacing: 0.01em; color: var(--muted);
 }
-.mock__body { padding: 26px 28px; display: flex; flex-direction: column; gap: 18px; flex: 1; }
+.mock__body {
+  padding: 26px 28px; display: flex; flex-direction: column; gap: 18px; flex: 1;
+  background: #f9f7f2; border: 1px solid var(--ink);
+}
 
-.msg { max-width: 92%; opacity: 0; transform: translateY(10px); transition: opacity 420ms var(--ease), transform 420ms var(--ease); }
-.msg.on { opacity: 1; transform: none; }
+.msg { max-width: 92%; }
 .msg.user {
   align-self: flex-end;
   background: var(--card); border: 1px solid var(--line);
@@ -254,24 +248,8 @@ html, body { margin: 0; padding: 0; background: #000; overflow: hidden; }
   display: block; font-family: var(--sans); font-size: 18px; font-weight: 600;
   letter-spacing: 0.01em; color: var(--muted); margin-bottom: 6px;
 }
-.msg.claude { align-self: flex-start; max-width: 100%; width: 100%; }
+.msg.claude { align-self: flex-start; max-width: 100%; width: 100%; display: flex; flex-direction: column; }
 .msg.claude .who { color: var(--ink); }
-.type-caret::after {
-  content: '▍'; color: var(--ink);
-  animation: d-blink 900ms steps(1) infinite;
-}
-@keyframes d-blink { 50% { opacity: 0; } }
-
-/* typing dots */
-.dots { display: inline-flex; gap: 5px; padding: 6px 0; }
-.dots i { width: 7px; height: 7px; background: var(--muted); animation: d-dot 1s var(--ease) infinite; }
-.dots i:nth-child(2) { animation-delay: 150ms; }
-.dots i:nth-child(3) { animation-delay: 300ms; }
-@keyframes d-dot { 0%,100% { opacity: 0.25; } 50% { opacity: 1; } }
-
-/* reveal groups inside mock */
-.reveal { opacity: 0; transform: translateY(10px); transition: opacity 480ms var(--ease), transform 480ms var(--ease); }
-.reveal.on { opacity: 1; transform: none; }
 
 /* mini skill lines */
 .skill-line {
@@ -303,8 +281,8 @@ html, body { margin: 0; padding: 0; background: #000; overflow: hidden; }
 .bar-row .v { font-family: var(--mono); font-size: 18px; text-align: right; font-variant-numeric: tabular-nums; }
 .bar { height: 22px; background: var(--card); position: relative; }
 .bar i {
-  position: absolute; inset: 0 auto 0 0; width: 0;
-  background: var(--ink); transition: width 700ms var(--ease);
+  position: absolute; inset: 0 auto 0 0; width: var(--w, 0);
+  background: var(--ink);
 }
 .bar-row.hot .n, .bar-row.hot .v { color: var(--kupfer-full); font-weight: 600; }
 .bar-row.hot .bar i { background: var(--kupfer-full); }
@@ -328,23 +306,14 @@ html, body { margin: 0; padding: 0; background: #000; overflow: hidden; }
 
 /* ── Reduced motion ────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  .msg.dotsline { display: none !important; }
   [data-rise] { opacity: 1 !important; }
   .slide[data-deck-active] [data-rise] { animation: none; }
-  .msg, .reveal { opacity: 1 !important; transform: none !important; transition: none; }
-  .bar i { transition: none; }
   .cycling .word { transition: none; }
 }
 
 /* ── Print: every slide fully rendered, animations resolved ────────────── */
 @media print {
   [data-rise] { opacity: 1 !important; transform: none !important; animation: none !important; }
-  .msg, .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
-  .msg.dotsline { display: none !important; }
-  [data-type] { font-size: 18px; }
-  [data-type]::before { content: attr(data-type); }
-  [data-type]::after { content: none !important; }
-  .bar i { width: var(--w, 0) !important; transition: none !important; }
   .cycling .word { position: relative !important; opacity: 1 !important; transform: none !important; }
   .cycling .word + .word { display: none !important; }
   .cycling-sizer { display: none !important; }

@@ -59,7 +59,7 @@ export const COURSE_HUB_COPY = {
     workshopsHeading: "Rather work through a case?",
     workshopsBody: (count: number) =>
       `Each of the ${numberWord("en", count)} workshops gives you a made-up company, its numbers and files to download.`,
-    workshopsNote: "No account needed.",
+    workshopsNote: "Materials open without an account.",
     workshopsAction: "See the workshops",
     accessHeading: "Cost and account",
     accessBody:
@@ -90,7 +90,7 @@ export const COURSE_PROMISES: Readonly<
     "ki-und-gesellschaft":
       "Eine Schlagzeile wie „KI ersetzt 40 % der Jobs“ führst du auf ihre Datenbasis zurück, und bei einem verdächtigen Video weißt du, was zu tun ist.",
     "eu-ai-act-kurs":
-      "Für ein KI-Tool in deinem Unternehmen bestimmst du Risikoklasse und eure Rolle und listest, welche Pflichten bis wann anstehen.",
+      "Für ein KI-Tool im Unternehmen stehen danach Risikoklasse und Rolle fest, dazu die Pflichten mit ihren Fristen.",
     "ai-native":
       "Claude ist für ein festes Projekt eingerichtet, und eine wiederkehrende Aufgabe läuft als n8n-Ablauf mit Freigabeschritt.",
     claude:

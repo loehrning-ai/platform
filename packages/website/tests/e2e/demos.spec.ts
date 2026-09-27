@@ -115,7 +115,7 @@ test.describe("/demos/[slug] detail routes", () => {
     {
       slug: "cost-drift-observability",
       action: /Rechnungs-Extraktion/,
-      result: "€412.08",
+      result: "412,08 €",
     },
   ] as const) {
     test(`${engineCase.slug} stays contained and keyboard-operable at 390px`, async ({

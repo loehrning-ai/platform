@@ -15,12 +15,14 @@ const LOCALES = [
     prefix: "",
     articleTitle: /EU AI Act/,
     indexIntro: /Öffentliche Texte/,
+    indexKicker: /^Blog · \d+ Artikel$/,
   },
   {
     locale: "en",
     prefix: "/en",
     articleTitle: /The EU AI Act/,
     indexIntro: /Public articles/,
+    indexKicker: /^Blog · \d+ articles?$/,
   },
 ] as const;
 
@@ -30,7 +32,8 @@ for (const variant of LOCALES) {
   }) => {
     await page.goto(`${variant.prefix}/blog`);
     await expect(page.locator("html")).toHaveAttribute("lang", variant.locale);
-    await expect(page.locator("h1")).toContainText(/Blog/i);
+    await expect(page.locator("h1")).toBeVisible();
+    await expect(page.getByText(variant.indexKicker)).toBeVisible();
     await expect(page.locator("main")).toContainText(variant.indexIntro);
     await expect(
       page

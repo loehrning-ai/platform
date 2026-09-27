@@ -57,7 +57,7 @@ describe("<RagVertragsassistentDemo>", () => {
     // The avatar header repeats the H1, so it hides below sm.
     expect(container.querySelector("[data-rag-header]")).toHaveClass("max-sm:hidden");
     expect(
-      screen.getByText("Keyword-Suche · 8 Beispieldokumente"),
+      screen.getByText("Keyword-Suche · 6 Beispieldokumente"),
     ).toBeInTheDocument();
     // The green DEMO-MODUS pill restated the shell's evidence line.
     expect(screen.queryByText(/DEMO-MODUS/)).toBeNull();
@@ -132,7 +132,7 @@ describe("<RagVertragsassistentDemo>", () => {
       "Welche Pflichten gelten während der Frist?",
       "Welche Haftungsgrenzen gelten?",
       "Wer darf unterzeichnen?",
-      "Grenzfall:Wer hat Prokura für ausländische Verträge?",
+      "Grenzfall: Wer hat Prokura für ausländische Verträge?",
     ]);
     // One hairline style below sm (the sm-up arrow prefix hides), and a
     // right fade marks the cut-off.
@@ -141,9 +141,11 @@ describe("<RagVertragsassistentDemo>", () => {
 
     // Grenzfall trigger (last chip of the rail) + send button (disabled while
     // the input is empty). Rail chips keep their 44px target.
+    // No aria-label: the visible text is the accessible name (WCAG 2.5.3).
     const edgeCase = within(rail).getByRole("button", {
-      name: /Grenzfall testen/,
+      name: "Grenzfall: Wer hat Prokura für ausländische Verträge?",
     });
+    expect(edgeCase).not.toHaveAttribute("aria-label");
     expect(edgeCase).toHaveClass("min-h-11");
     expect(screen.getByRole("button", { name: "Frage senden" })).toBeDisabled();
   });
@@ -263,7 +265,7 @@ describe("<RagVertragsassistentDemo>", () => {
   it("returns an honest no-hit state for the built-in Grenzfall query", async () => {
     render(<RagVertragsassistentDemo />);
 
-    fireEvent.click(screen.getByRole("button", { name: /Grenzfall testen/ }));
+    fireEvent.click(screen.getByRole("button", { name: /^Grenzfall: / }));
 
     // No document matches -> the empty-answer message and "Kein Treffer" label.
     expect(

@@ -27,14 +27,14 @@ export const demoCopy: Readonly<Record<string, DemoCopy>> = {
   excel: {
     why: "Du arbeitest in einer Excel-Tabelle mit erfundenen Controlling-Zahlen: Formeln, eine Pivot-Tabelle und eine Plausibilitätsprüfung der Prognose.",
     proof:
-      "Die 42 Rollen im Controlling und die Entlastung von 4,2 Stunden pro Woche und Person sind angenommene Werte.",
+      "Die neun Verkaufszeilen der Beispieltabelle sind fiktiv, und die Prognose schreibt sie nur linear fort.",
     ogSubtitle: "Formeln, Pivot und Prognose in einer Beispieltabelle prüfen.",
     stop: "Der Entwurf bleibt in der Tabelle, bis du Formel und Prognose übernimmst.",
   },
   word: {
     why: "Ein Assistent schreibt Memos und Briefe nach einem Dokumentmuster. Danach prüfst du, ob Stil, Quellen und Freigabe noch stimmen.",
     proof:
-      "Das Monatsvolumen von 180 Entwürfen ist eine fiktive Annahme, an der die Prüfschritte durchgespielt werden.",
+      "Kunde, Projekt und Budget des Anschreibens sowie Erstellzeit und Stil-Treffer sind fiktiv.",
     ogSubtitle: "Word-Entwurf nach Musterstil, mit Prüfschritten vor der Freigabe.",
     stop: "Der Entwurf steht auf „Freigabe ausstehend“, bis du Stil, Quellen und Datenschutz geprüft hast.",
   },
@@ -48,7 +48,7 @@ export const demoCopy: Readonly<Record<string, DemoCopy>> = {
   "agent-pipeline": {
     why: "Vier Agenten schreiben ein Memo: einer recherchiert, einer fasst zusammen, einer sucht Fehler, einer redigiert. Du prüfst, ob die Fehlersuche das Memo tatsächlich besser macht.",
     proof:
-      "Der Auftrag ist erfunden, und der Zeitvergleich zwischen manuellem und assistiertem Entwurf ist hypothetisch.",
+      "Der Auftrag, die 42 gefundenen Dokumente und die Evidenz-Scores im Protokoll sind fiktiv.",
     ogSubtitle: "Vier Agenten arbeiten nacheinander an einem Memo.",
     stop: "Die Spur endet beim Memoentwurf, den du selbst gegenliest.",
   },
@@ -81,22 +81,22 @@ export const demoCopy: Readonly<Record<string, DemoCopy>> = {
     stop: "Ein blockierender Treffer hält den Prompt an. Andere Treffer werden maskiert oder zur Prüfung markiert.",
   },
   "cost-drift-observability": {
-    why: "Vier Beispielanwendungen stehen mit Kosten, Antwortzeit, Fehlerquote und Drift nebeneinander. Du siehst, bei welcher ein Budget-Alarm anschlagen würde.",
-    proof: "Die vier Anwendungen und alle Messwerte sind erfunden.",
+    why: "Vier Beispielanwendungen stehen mit Kosten, Antwortzeit und Fehlerquote nebeneinander. Du siehst, welche am meisten kostet und wie stark die Antwortzeit schwankt.",
+    proof: "Die vier Anwendungen und alle Messwerte sind erfunden, und die Latenzkurve wird im Browser zufällig fortgeschrieben.",
     ogSubtitle: "Kosten, Antwortzeit und Drift als simulierte Betriebsansicht.",
-    stop: "Ein Budget-Alarm würde bei der Anwendung anschlagen, die ihr Limit überschreitet.",
+    stop: "Die Ansicht zeigt nur Messwerte. Ab welchem Wert jemand eingreift, legst du selbst fest.",
   },
   "llm-observability": {
-    why: "Du vergleichst Eval-Metriken, einen Drift-Indikator und das Urteil eines Menschen für vier Antworten und siehst, wo die automatische Bewertung danebenliegt.",
+    why: "Du vergleichst Eval-Metriken und einen Drift-Indikator für vier Antworten, drei davon mit dem Urteil eines Menschen, und siehst, wo die automatische Bewertung danebenliegt.",
     proof:
-      "Die vier Antworten, ihre Scores und die menschlichen Bewertungen sind erfunden, der Drift-Indikator ist vorgegeben.",
+      "Die vier Antworten, ihre Scores und die drei menschlichen Bewertungen sind erfunden, der Drift-Indikator ist vorgegeben.",
     ogSubtitle: "Eval-Score, Drift und menschliches Urteil im Vergleich.",
     stop: "Wo Score und menschliches Urteil auseinanderliegen, listet das Beispiel die Antwort auf.",
   },
   "fine-tune-playground": {
     why: "Du siehst Baseline, Anpassung und Holdout-Prüfung getrennt und prüfst, ob die Anpassung etwas bringt.",
     proof:
-      "Die 2.400 gelabelten Fragen und die Differenz von 38 Punkten sind vorgegebene Beispielwerte, trainiert wurde dafür kein Modell.",
+      "Beide Antworten, die Spezifitätswerte und die Trainingsmetriken sind vorgegebene Beispielwerte, trainiert wurde dafür kein Modell.",
     ogSubtitle: "Basismodell und Domänenantwort für dieselbe Frage vergleichen.",
     stop: "Beide Antworten sind vorab geschrieben und ändern sich beim Abspielen nicht.",
   },
@@ -104,7 +104,7 @@ export const demoCopy: Readonly<Record<string, DemoCopy>> = {
     why: "Ein Nutzen-Szenario hängt an wenigen Annahmen. Der Rechner zeigt jede als Zahl und die Formel dazu, und du siehst, welche das Ergebnis am stärksten verschiebt.",
     proof:
       "Teamgröße, Stundensatz, Nutzungsquote und gesparte Stunden sind Beispielannahmen, die du selbst änderst.",
-    ogSubtitle: "Teamgröße × Stundensatz × Nutzungsquote = Szenario.",
+    ogSubtitle: "Teamgröße × Stundensatz × Nutzungsquote × gesparte Stunden = Szenario.",
     stop: "Der Rechner endet bei einer Spanne, die du selbst bewertest.",
   },
 };
@@ -113,14 +113,14 @@ const englishDemoCopy: Readonly<Record<string, DemoCopy>> = {
   excel: {
     why: "You work in an Excel sheet with invented controlling figures: formulas, a pivot table and a plausibility check on the forecast.",
     proof:
-      "The 42 controlling roles and the saving of 4.2 hours per person per week are assumed values.",
+      "The nine sales rows in the sample sheet are fictional, and the forecast only extends them in a straight line.",
     ogSubtitle: "Check formulas, a pivot and a forecast in a sample sheet.",
     stop: "The draft stays in the sheet until you accept the formula and the forecast.",
   },
   word: {
     why: "An assistant writes memos and letters from a document template. Then you check whether style, sources and approval still hold.",
     proof:
-      "The monthly volume of 180 drafts is an invented assumption used to walk through the review steps.",
+      "The client, project and budget in the letter and the drafting time and style match are fictional.",
     ogSubtitle: "A Word draft in a sample style, with review before approval.",
     stop: "The draft stays at “Approval pending” until you have checked style, sources and data protection.",
   },
@@ -133,7 +133,7 @@ const englishDemoCopy: Readonly<Record<string, DemoCopy>> = {
   "agent-pipeline": {
     why: "Four agents write one memo: one researches, one summarises, one looks for errors, one edits. You check whether the error search actually makes the memo better.",
     proof:
-      "The brief is invented, and the time comparison between manual and assisted drafting is hypothetical.",
+      "The brief, the 42 documents found and the evidence scores in the log are fictional.",
     ogSubtitle: "Four agents work on one memo in turn.",
     stop: "The trace ends at the memo draft, which you read yourself.",
   },
@@ -164,22 +164,22 @@ const englishDemoCopy: Readonly<Record<string, DemoCopy>> = {
     stop: "A blocking match stops the prompt. Other matches are masked or flagged for review.",
   },
   "cost-drift-observability": {
-    why: "Four sample applications sit side by side with cost, latency, error rate and drift. You see which one would trigger a budget alert.",
-    proof: "The four applications and all measurements are invented.",
+    why: "Four sample applications sit side by side with cost, latency and error rate. You see which one costs most and how much its latency varies.",
+    proof: "The four applications and all measurements are invented, and the latency curve is extended at random in your browser.",
     ogSubtitle: "Cost, latency and drift as a simulated operations view.",
-    stop: "A budget alert would fire for the application that exceeds its limit.",
+    stop: "The view shows measurements only. You decide at which value someone steps in.",
   },
   "llm-observability": {
-    why: "You compare eval metrics, a drift indicator and a human rating for four answers and see where the automated score is off.",
+    why: "You compare eval metrics and a drift indicator for four answers, three of them with a human rating, and see where the automated score is off.",
     proof:
-      "The four answers, their scores and the human ratings are invented, and the drift indicator is seeded.",
+      "The four answers, their scores and the three human ratings are invented, and the drift indicator is seeded.",
     ogSubtitle: "Eval score, drift and human judgement side by side.",
     stop: "Where the score and the human rating diverge, the example lists the answer.",
   },
   "fine-tune-playground": {
     why: "You see baseline, adaptation and holdout check separately and check whether the adaptation helps.",
     proof:
-      "The 2,400 labelled questions and the 38-point difference are seeded sample values; no model was trained for them.",
+      "Both answers, the specificity values and the training metrics are seeded sample values; no model was trained for them.",
     ogSubtitle: "Compare a base model and a domain answer to the same question.",
     stop: "Both answers are written in advance and stay the same on every run.",
   },
@@ -187,7 +187,7 @@ const englishDemoCopy: Readonly<Record<string, DemoCopy>> = {
     why: "A benefit scenario rests on a few assumptions. The calculator shows each one as a number, with the formula, so you see which one moves the result most.",
     proof:
       "Team size, hourly rate, adoption and hours saved are sample assumptions that you change yourself.",
-    ogSubtitle: "Team size × hourly rate × adoption = scenario.",
+    ogSubtitle: "Team size × hourly rate × adoption × hours saved = scenario.",
     stop: "The calculator ends at a range that you judge yourself.",
   },
 };

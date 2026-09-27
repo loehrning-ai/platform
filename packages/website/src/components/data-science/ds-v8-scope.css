@@ -3115,6 +3115,87 @@
 }
 
 /* ========================================================================
+   Werkzeichnung: square actions and the course-cycle drawing
+   ------------------------------------------------------------------------
+   Buttons, the chapter cards and the cycle frame are square (design
+   direction 5.4) and button text is never uppercase. The cycle drawing
+   (FlowingPipeline) is square ink nodes on a 2px ink line, a dashed return
+   line and one Mennige node where the reader starts.
+   ======================================================================== */
+.ds-v8-scope .btn,
+.ds-v8-scope .ov-loop-wrap,
+.ds-v8-scope .ov-course {
+  border-radius: 0px;
+}
+.ds-v8-scope .btn {
+  text-transform: none;
+}
+.ds-v8-scope .ov-loop-wrap {
+  background: none;
+}
+.ds-v8-scope .ov-loop-line {
+  fill: none;
+  stroke: var(--ink-1);
+  stroke-width: 2;
+}
+.ds-v8-scope .ov-loop-return {
+  fill: none;
+  stroke: var(--ink-1);
+  stroke-width: 1.5;
+  stroke-dasharray: 6 4;
+}
+.ds-v8-scope .ov-loop-arrow {
+  fill: var(--ink-1);
+}
+.ds-v8-scope .ov-loop-node {
+  color: var(--ink-1);
+  cursor: pointer;
+}
+.ds-v8-scope .ov-loop-box {
+  fill: var(--color-card);
+  stroke: var(--ink-1);
+  stroke-width: 1.5;
+}
+.ds-v8-scope .ov-loop-node:hover .ov-loop-box,
+.ds-v8-scope .ov-loop-node:focus-visible .ov-loop-box {
+  stroke-width: 3;
+}
+.ds-v8-scope .ov-loop-node.is-start {
+  color: var(--color-card);
+}
+.ds-v8-scope .ov-loop-node.is-start .ov-loop-box {
+  fill: var(--color-brand-orange);
+  stroke: var(--color-brand-orange);
+}
+.ds-v8-scope .ov-loop-node:hover text {
+  font-weight: 600;
+}
+.ds-v8-scope .ov-loop-node:hover .ov-loop-label {
+  text-decoration: underline;
+}
+.ds-v8-scope .ov-loop-label,
+.ds-v8-scope .ov-loop-start,
+.ds-v8-scope .ov-loop-feedback,
+.ds-v8-scope .ov-loop-caption {
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+.ds-v8-scope .ov-loop-label,
+.ds-v8-scope .ov-loop-feedback {
+  fill: var(--ink-1);
+}
+.ds-v8-scope .ov-loop-start {
+  fill: var(--color-brand-orange);
+}
+.ds-v8-scope .ov-loop-caption {
+  fill: var(--color-muted-foreground);
+  font-size: 17px;
+  font-weight: 400;
+}
+
+/* ========================================================================
    Landing on phones (below sm): Werkzeichnung
    ------------------------------------------------------------------------
    The overview is the course's marketing landing. Below 640px it drops the
@@ -3417,5 +3498,346 @@
      after the chapter list, whose every row is already a link. */
   .ds-v8-scope .ov-landing .tb {
     display: none;
+  }
+}
+
+/* ========================================================================
+   Landing from sm: Werkzeichnung (design direction 7.4)
+   ------------------------------------------------------------------------
+   From 640px the overview follows the course-landing blueprint: a
+   sentence-case kicker in Schiefer, an ink roman H1 with no italic accent,
+   one square Mennige action, a stat row with hairline separators, section
+   heads on a 2px ink Kopflinie with the old kicker as a quiet note, the
+   outcomes as a two-column hairline list without icons, the chapters as a
+   gap-px Swiss grid of square cells with a text link, and the tools as a
+   hairline table. Every rule is scoped to `.ov-landing`, so the numbered
+   chapter readers are untouched; below sm the phone layer above applies.
+   ======================================================================== */
+@media (min-width: 640px) {
+  .ds-v8-scope .ov-landing .ov-hero {
+    gap: 48px;
+    padding: 16px 0 48px;
+    border-bottom: 0;
+  }
+  .ds-v8-scope .ov-landing .ov-hero::after,
+  .ds-v8-scope .ov-landing .ov-hero-eyebrow::before,
+  .ds-v8-scope .ov-landing .ov-kicker::before {
+    content: none;
+    display: none;
+  }
+  .ds-v8-scope .ov-landing .ov-hero-eyebrow {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 14px !important;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    color: var(--color-muted-foreground);
+    margin: 0 0 12px;
+  }
+  .ds-v8-scope .ov-landing .ov-hero-title {
+    font-family: var(--font-sans);
+    font-size: var(--text-fluid-h1);
+    font-weight: 700;
+    font-style: normal;
+    line-height: var(--text-fluid-h1--line-height);
+    letter-spacing: var(--text-fluid-h1--letter-spacing);
+    color: var(--ink-1);
+    margin: 0 0 20px;
+    hyphens: manual;
+    overflow-wrap: break-word;
+  }
+  .ds-v8-scope .ov-landing .ov-hero-hook {
+    font-size: 20px;
+    line-height: 1.45;
+    color: var(--color-muted-foreground);
+    max-width: 56ch;
+    margin: 0 0 32px;
+  }
+  .ds-v8-scope .ov-landing .ov-hero-cta {
+    margin-bottom: 40px;
+  }
+  .ds-v8-scope .ov-landing .ov-cta-btn {
+    min-height: 48px;
+    padding: 12px 20px;
+    border-radius: 0;
+    font-size: 15px !important;
+    font-weight: 600;
+    text-transform: none;
+  }
+
+  /* Stat row: label above value, hairline separators, no boxes. */
+  .ds-v8-scope .ov-landing .ov-hero-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+  .ds-v8-scope .ov-landing .ov-stat {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: 4px;
+    padding: 0 24px;
+    border-left: 1px solid var(--color-hairline);
+  }
+  .ds-v8-scope .ov-landing .ov-stat:first-child {
+    padding-left: 0;
+    border-left: 0;
+  }
+  .ds-v8-scope .ov-landing .ov-stat .k {
+    font-family: var(--font-sans);
+    font-size: var(--text-num-lg);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    color: var(--ink-1);
+    font-variant-numeric: tabular-nums;
+  }
+  .ds-v8-scope .ov-landing .ov-stat .v {
+    font-family: var(--font-sans);
+    font-size: 14px !important;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    color: var(--color-muted-foreground);
+    margin: 0;
+  }
+  .ds-v8-scope .ov-landing .ov-loop-wrap {
+    border-radius: 0;
+    background: none;
+  }
+
+  /* Section heads: Kopflinie, ink H2, the old kicker as a right-hand note. */
+  .ds-v8-scope .ov-landing .section {
+    margin-bottom: 64px;
+  }
+  .ds-v8-scope .ov-landing .ov-section-head,
+  .ds-v8-scope .ov-landing .ov-section-head.ov-sh-tight {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px 24px;
+    max-width: none;
+    border-top: 2px solid var(--ink-1);
+    padding-top: 16px;
+    margin-bottom: 32px;
+  }
+  .ds-v8-scope .ov-landing .ov-kicker {
+    order: 2;
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 13px !important;
+    font-weight: 400;
+    line-height: 1.45;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--color-muted-foreground);
+    margin: 0;
+  }
+  .ds-v8-scope .ov-landing .ov-h2 {
+    order: 1;
+    flex: 1 1 28rem;
+    max-width: 40ch;
+    font-family: var(--font-sans);
+    font-size: var(--text-fluid-h2);
+    font-weight: 700;
+    font-style: normal;
+    line-height: var(--text-fluid-h2--line-height);
+    letter-spacing: var(--text-fluid-h2--letter-spacing);
+    color: var(--ink-1);
+    margin: 0;
+  }
+  .ds-v8-scope .ov-landing .ov-lede {
+    order: 3;
+    flex-basis: 100%;
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--color-muted-foreground);
+    max-width: 64ch;
+    margin: 0;
+  }
+
+  /* Outcomes: a two-column hairline list, bold sentence plus one line. */
+  .ds-v8-scope .ov-landing .ov-outcomes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 48px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: 0;
+    border-radius: 0;
+    background: none;
+  }
+  .ds-v8-scope .ov-landing .ov-outcome {
+    padding: 16px 0 18px;
+    border: 0;
+    border-bottom: 1px solid var(--color-hairline);
+    background: none;
+  }
+  .ds-v8-scope .ov-landing .ov-outcome:nth-child(-n + 2) {
+    border-top: 1px solid var(--color-hairline);
+  }
+  .ds-v8-scope .ov-landing .ov-outcome::before {
+    content: none;
+    display: none;
+  }
+  .ds-v8-scope .ov-landing .ov-outcome:hover {
+    background: none;
+  }
+  .ds-v8-scope .ov-landing .ov-outcome-t {
+    font-family: var(--font-sans);
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: 0;
+    color: var(--ink-1);
+    margin: 0 0 4px;
+  }
+  .ds-v8-scope .ov-landing .ov-outcome-d {
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--color-muted-foreground);
+    margin: 0;
+  }
+
+  /* Lehrplan: a gap-px Swiss grid of square cells, no dots or colour. */
+  .ds-v8-scope .ov-landing .ov-curriculum {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--color-hairline);
+    border: 1px solid var(--color-hairline);
+  }
+  .ds-v8-scope .ov-landing .ov-course {
+    gap: 6px;
+    padding: 24px;
+    border: 0;
+    border-radius: 0;
+    background: var(--color-background);
+    overflow: visible;
+    transition: background-color 120ms;
+  }
+  .ds-v8-scope .ov-landing .ov-course::before {
+    content: none;
+    display: none;
+  }
+  .ds-v8-scope .ov-landing .ov-course:hover {
+    background: var(--color-card-hover);
+    border-color: transparent;
+    box-shadow: none;
+    transform: none;
+  }
+  .ds-v8-scope .ov-landing .ov-course:focus-visible {
+    outline-offset: -3px;
+  }
+  .ds-v8-scope .ov-landing .ov-course-top {
+    margin: 0;
+  }
+  .ds-v8-scope .ov-landing .ov-course-n {
+    font-family: var(--font-sans);
+    font-size: 14px !important;
+    font-weight: 600;
+    letter-spacing: 0;
+    color: var(--color-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .ds-v8-scope .ov-landing .ov-course-title {
+    font-family: var(--font-sans);
+    font-size: var(--text-fluid-h3);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.005em;
+    color: var(--ink-1);
+    margin: 0;
+    hyphens: manual;
+    overflow-wrap: break-word;
+  }
+  .ds-v8-scope .ov-landing .ov-course-tag {
+    font-size: 13px;
+    font-style: normal;
+    line-height: 1.45;
+    color: var(--color-muted-foreground);
+    margin: 0;
+  }
+  .ds-v8-scope .ov-landing .ov-course-blurb {
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--color-muted-foreground);
+    margin: 4px 0 0;
+  }
+  .ds-v8-scope .ov-landing .ov-course-cta {
+    align-self: flex-start;
+    font-family: var(--font-sans);
+    font-size: 15px !important;
+    font-weight: 600;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--ink-1);
+    text-decoration: underline;
+    text-decoration-color: var(--color-hairline);
+    text-underline-offset: 4px;
+    margin: 12px 0 0;
+    padding: 0;
+    border-top: 0;
+  }
+  .ds-v8-scope .ov-landing .ov-course:hover .ov-course-cta {
+    transform: none;
+    text-decoration-color: var(--ink-1);
+  }
+
+  /* Tools: a hairline table, the name in mono (a code identifier). */
+  .ds-v8-scope .ov-landing .ov-tools {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 48px;
+    margin: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    overflow: visible;
+  }
+  .ds-v8-scope .ov-landing .ov-tool {
+    display: grid;
+    grid-template-columns: minmax(0, 12rem) minmax(0, 1fr);
+    gap: 16px;
+    align-items: baseline;
+    padding: 12px 0;
+    background: none;
+    border-bottom: 1px solid var(--color-hairline);
+  }
+  .ds-v8-scope .ov-landing .ov-tool:nth-child(-n + 2) {
+    border-top: 1px solid var(--color-hairline);
+  }
+  .ds-v8-scope .ov-landing .ov-tool:hover {
+    background: none;
+  }
+  .ds-v8-scope .ov-landing .ov-tool-n {
+    font-size: 14px;
+    margin: 0;
+  }
+  .ds-v8-scope .ov-landing .ov-tool-r {
+    font-family: var(--font-sans);
+    font-size: 15px !important;
+    font-style: normal;
+    color: var(--color-muted-foreground);
+    margin: 0;
+  }
+
+  /* The closing "next chapter" button repeated the hero action as a second
+     Mennige button; every chapter cell above is already a link. */
+  .ds-v8-scope .ov-landing .tb {
+    display: none;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1199.98px) {
+  .ds-v8-scope .ov-landing .ov-curriculum {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }

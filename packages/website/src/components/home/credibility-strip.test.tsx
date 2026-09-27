@@ -47,9 +47,13 @@ describe("CredibilityStrip", () => {
     ]);
     // The four have no order: no "01 ·" numbering anywhere.
     expect(container.textContent).not.toMatch(/0\d ·/);
-    // Below sm each fact is one line; the sentence stays for assistive tech.
-    for (const dd of container.querySelectorAll("dd")) {
-      expect(dd).toHaveClass("max-sm:sr-only");
+    // Every claim keeps its one-sentence explanation visible at every width:
+    // a bare title on a phone read as a cryptic, link-like row.
+    const bodies = container.querySelectorAll("dd");
+    expect(bodies).toHaveLength(4);
+    for (const dd of bodies) {
+      expect(dd.className).not.toMatch(/sr-only|line-clamp/);
+      expect(dd.textContent?.trim()).toMatch(/\.$/);
     }
   });
 

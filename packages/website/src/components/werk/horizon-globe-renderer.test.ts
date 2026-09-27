@@ -280,6 +280,93 @@ describe("horizon globe renderer", () => {
   });
 });
 
+function pointer(
+  target: HTMLElement,
+  type: string,
+  pointerId: number,
+  clientX: number,
+  clientY = 300,
+): void {
+  const event = new Event(type, { bubbles: true });
+  Object.assign(event, { pointerId, clientX, clientY, pointerType: "touch", button: 0 });
+  Object.defineProperty(event, "timeStamp", { value: now });
+  target.dispatchEvent(event);
+}
+
+describe("horizon globe renderer: drag", () => {
+  it("ignores a second finger mid-drag and returns to paused when the drag ends", () => {
+    const { slot, canvas } = setup();
+    const renderer = createHorizonRenderer({ slot, canvas });
+    flushFrame();
+    flushFrame();
+    renderer.setPaused(true);
+    expect(slot.getAttribute("data-home-globe-motion")).toBe("paused");
+    expect(frames.size).toBe(0);
+
+    // Finger A drags 60px horizontally.
+    pointer(slot, "pointerdown", 1, 100);
+    for (let x = 110; x <= 160; x += 10) {
+      now += 16;
+      pointer(slot, "pointermove", 1, x);
+    }
+    expect(slot.getAttribute("data-home-globe-motion")).toBe("running");
+    // Finger B lands and lifts before it crosses the drag threshold.
+    pointer(slot, "pointerdown", 2, 220);
+    pointer(slot, "pointerup", 2, 220);
+    // Finger A lifts after holding still, so there is no release velocity.
+    now += 200;
+    pointer(slot, "pointerup", 1, 160);
+
+    expect(slot.getAttribute("data-home-globe-motion")).toBe("paused");
+    expect(frames.size).toBe(0);
+  });
+
+  it("reports paused, not idle, after a slow drag while paused", () => {
+    const { slot, canvas, states } = setup();
+    const renderer = createHorizonRenderer({
+      slot,
+      canvas,
+      onState: (s) => states.push(s),
+    });
+    flushFrame();
+    flushFrame();
+    renderer.setPaused(true);
+
+    pointer(slot, "pointerdown", 1, 100);
+    for (let x = 110; x <= 180; x += 10) {
+      now += 16;
+      pointer(slot, "pointermove", 1, x);
+      flushFrame(0);
+    }
+    now += 200;
+    pointer(slot, "pointerup", 1, 180);
+    for (let i = 0; i < 5; i++) flushFrame();
+
+    expect(slot.getAttribute("data-home-globe-motion")).toBe("paused");
+    expect(states[states.length - 1]).toBe("paused");
+    expect(frames.size).toBe(0);
+  });
+
+  it("ends the drag when pointer capture is lost without a pointerup", () => {
+    const { slot, canvas } = setup();
+    const renderer = createHorizonRenderer({ slot, canvas });
+    flushFrame();
+    flushFrame();
+    renderer.setPaused(true);
+
+    pointer(slot, "pointerdown", 1, 100);
+    for (let x = 110; x <= 160; x += 10) {
+      now += 16;
+      pointer(slot, "pointermove", 1, x);
+    }
+    expect(slot.getAttribute("data-home-globe-motion")).toBe("running");
+    now += 200;
+    pointer(slot, "lostpointercapture", 1, 160);
+    expect(slot.getAttribute("data-home-globe-motion")).toBe("paused");
+    expect(frames.size).toBe(0);
+  });
+});
+
 describe("frame governor", () => {
   it("holds while frames stay inside the budget", () => {
     const governor = createFrameGovernor(4, 10);

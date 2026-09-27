@@ -138,10 +138,10 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
   "rag-vertragsassistent": {
     title: "Contract assistant.",
     titleKicker: "Answers with clause references.",
-    background: "Keyword search · 8 sample documents · answers with source cards",
+    background: "Keyword search · 6 sample documents · answers with source cards",
     description:
-      "Keyword search finds clauses in eight sample contracts and quotes them with their location. For questions without a match, the system does not answer.",
-    teaser: "Keyword search quotes clauses from eight sample contracts.",
+      "Keyword search finds clauses in six invented company documents, from the framework agreement to the signature policy, and quotes them with their location. For questions without a match, the system does not answer.",
+    teaser: "Keyword search quotes clauses from six sample documents.",
     tags: ["Keyword search", "Rule-based", "DE / EN"],
     meta: [
       { label: "Learning objective", value: "Require sources" },
@@ -203,21 +203,21 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
   },
   "cost-drift-observability": {
     title: "Cost and drift in production.",
-    titleKicker: "Read budget, latency and errors.",
+    titleKicker: "Read cost, latency and errors.",
     background: "Seeded scenarios · cost, errors, and drift as a learning trace",
     description:
-      "An operations view with fixed sample values for cost, latency, errors and drift. You read off where a budget alert would fire.",
-    teaser: "You read off when a budget alert fires on cost or drift.",
-    tags: ["OpenTelemetry", "Alerts", "Drift"],
+      "An operations view with sample values for cost, latency, errors and drift. You compare four applications and read off which one costs most.",
+    teaser: "You compare cost, latency and errors across four sample applications.",
+    tags: ["OpenTelemetry", "Monitoring", "Drift"],
     meta: [
       { label: "Learning objective", value: "Measure operations" },
-      { label: "Budget", value: "Alert before overrun" },
+      { label: "Cost", value: "Per application" },
       { label: "Stack", value: "OTel + Grafana" },
       { label: "Retention", value: "90 days" },
       { label: "Drift", value: "Check regularly" },
     ],
     industries: ["FinTech", "Platforms", "IT operations"],
-    syntheticDataLabel: "Four invented applications with fixed values.",
+    syntheticDataLabel: "Four invented applications with sample values.",
     riskNotes: [
       "Set your own measurement points and a budget for each application.",
       "Decide in advance who acts on a budget alert.",
@@ -250,7 +250,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     titleKicker: "A benefit from four assumptions.",
     background: "Headcount × hourly cost × adoption × hours saved",
     description:
-      "You enter team size, hourly rate and adoption and see the formula and the range of the result.",
+      "You enter team size, hourly rate, adoption and hours saved and see the formula and the range of the result.",
     teaser: "You see the formula and the range behind your team's ROI.",
     tags: ["ROI", "Scenario model", "Transparent"],
     meta: [
@@ -272,7 +272,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     titleKicker: "Automated and human scores side by side.",
     background: "Fictional evaluation metrics · drift indicator · human review",
     description:
-      "For four sample answers you compare the automated score with a human rating. In two cases the automated score is off.",
+      "You check the automated score for four sample answers. A person also rated three of them, and in two cases the automated score is off.",
     teaser: "You check where the automated score is wrong.",
     tags: ["Observability", "Evaluation", "Drift"],
     meta: [

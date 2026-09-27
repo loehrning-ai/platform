@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import CostDriftObservabilityDemo from "./cost-drift-observability-demo";
+import { DemoLocaleProvider } from "./demo-locale";
 
 /**
  * cost-drift-observability-demo.test.tsx (regression coverage)
@@ -47,10 +48,12 @@ describe("<CostDriftObservabilityDemo>", () => {
     ).not.toBeInTheDocument();
     expect(screen.queryByRole("note")).not.toBeInTheDocument();
 
-    // Spend MTD = sum of the four app costs
-    // (186.42 + 412.08 + 298.15 + 96.33 = 992.98) rounded to "993".
-    expect(screen.getByText("Spend · MTD")).toBeInTheDocument();
-    expect(screen.getByText("€993")).toBeInTheDocument();
+    // Month-to-date spend = sum of the four app costs
+    // (186.42 + 412.08 + 298.15 + 96.33 = 992.98) rounded to "993", in German
+    // label and number format (no English "Spend · MTD" / "€993").
+    expect(screen.getByText("Kosten seit Monatsanfang")).toBeInTheDocument();
+    expect(screen.getByText("993 €")).toBeInTheDocument();
+    expect(screen.queryByText(/Spend|MTD/)).not.toBeInTheDocument();
 
     // All four apps are selectable.
     expect(
@@ -68,8 +71,8 @@ describe("<CostDriftObservabilityDemo>", () => {
 
     // Default selection is the first app; the detail panel shows its 2-decimal
     // cost and its latency (both unique to the detail panel).
-    expect(screen.getByText("€186.42")).toBeInTheDocument();
-    expect(screen.getByText("1.2 s")).toBeInTheDocument();
+    expect(screen.getByText("186,42 €")).toBeInTheDocument();
+    expect(screen.getByText("1,2 s")).toBeInTheDocument();
   });
 
   it("shows the log stream as paused, not live, while the update interval never starts", () => {
@@ -113,7 +116,7 @@ describe("<CostDriftObservabilityDemo>", () => {
     render(<CostDriftObservabilityDemo />);
 
     // Precondition: the first app's detail figures are on screen.
-    expect(screen.getByText("€186.42")).toBeInTheDocument();
+    expect(screen.getByText("186,42 €")).toBeInTheDocument();
 
     fireEvent.click(
       screen.getByRole("button", { name: /Rechnungs-Extraktion/ }),
@@ -121,14 +124,26 @@ describe("<CostDriftObservabilityDemo>", () => {
 
     // The detail panel now reflects the selected app. The 2-decimal cost, the
     // latency, and the error rate are all unique to the detail panel (the app
-    // button only shows the rounded "€412").
-    expect(screen.getByText("€412.08")).toBeInTheDocument();
-    expect(screen.getByText("2.8 s")).toBeInTheDocument();
-    expect(screen.getByText("0.4 %")).toBeInTheDocument();
+    // button only shows the rounded "412 €"). German number format.
+    expect(screen.getByText("412,08 €")).toBeInTheDocument();
+    expect(screen.getByText("2,8 s")).toBeInTheDocument();
+    expect(screen.getByText("0,4 %")).toBeInTheDocument();
 
     // The previous app's detail figures are gone.
-    expect(screen.queryByText("€186.42")).not.toBeInTheDocument();
-    expect(screen.queryByText("1.2 s")).not.toBeInTheDocument();
+    expect(screen.queryByText("186,42 €")).not.toBeInTheDocument();
+    expect(screen.queryByText("1,2 s")).not.toBeInTheDocument();
+  });
+
+  it("formats currency, latency and error rate in English on the English route", () => {
+    render(
+      <DemoLocaleProvider locale="en">
+        <CostDriftObservabilityDemo />
+      </DemoLocaleProvider>,
+    );
+    expect(screen.getByText("€993")).toBeInTheDocument();
+    expect(screen.getByText("€186.42")).toBeInTheDocument();
+    expect(screen.getByText("1.2 s")).toBeInTheDocument();
+    expect(screen.getByText("0.2%")).toBeInTheDocument();
   });
 
   it("uses bounded responsive grids for KPIs, applications, and chart metrics", () => {

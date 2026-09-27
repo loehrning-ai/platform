@@ -300,7 +300,7 @@ describe("<Nav />", () => {
     const single = within(compactSwitch as HTMLElement).getByRole("link");
     expect(single).toHaveClass("min-h-11", "min-w-11");
     expect(single).toHaveTextContent(/^EN$/);
-    expect(single).toHaveAccessibleName("Englische Oberfläche öffnen");
+    expect(single).toHaveAccessibleName("EN, Englische Oberfläche öffnen");
     expect(single).toHaveAttribute("href", "/en");
     expect(single).toHaveAttribute("hreflang", "en");
     expect(single).not.toHaveAttribute("aria-current");
@@ -322,7 +322,7 @@ describe("<Nav />", () => {
     expect(single).toHaveTextContent(/^DE$/);
     expect(single).toHaveAttribute("href", "/kurse");
     expect(single).toHaveAttribute("hreflang", "de");
-    expect(single).toHaveAccessibleName("Open the German interface");
+    expect(single).toHaveAccessibleName("DE, open the German interface");
   });
 
   it("ends the phone sheet above the tab bar band, derived from the tokens", () => {
@@ -762,7 +762,7 @@ describe("<Nav />", () => {
     ).getByRole("group", { name: "Sprache" });
     expect(
       within(compactLanguage).getByRole("link", {
-        name: "Englische Oberfläche öffnen",
+        name: "EN, Englische Oberfläche öffnen",
       }),
     ).toHaveAttribute("href", "/en");
 

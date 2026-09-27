@@ -582,8 +582,15 @@ export function Nav() {
             start after the wordmark, and the utilities (language, GitHub,
             login) sit at the right behind a hairline, so the active language
             never reads as a sixth current page. */}
-        <div className="js-desktop-nav hidden lg:flex lg:min-w-0 lg:flex-1 lg:items-center lg:justify-between lg:gap-6 lg:pl-10">
-          <div className="flex items-center gap-4">
+        {/* The desktop row is a size container. At real desktop widths it is
+            at least 51rem wide (1024px viewport), so nothing below changes.
+            When the page is zoomed so far that the layout is narrower than
+            that while the lg breakpoint still holds (CSS zoom, or a zoomed
+            embed), the gaps tighten, the GitHub icon steps back to the
+            footer (which always lists it) and the sign-in control drops to
+            its icon, so the utility cluster never runs past the right edge. */}
+        <div className="js-desktop-nav @container/desktop-nav hidden lg:flex lg:min-w-0 lg:flex-1 lg:items-center lg:justify-between">
+          <div className="ml-10 flex items-center gap-4 @max-[44rem]/desktop-nav:ml-4 @max-[44rem]/desktop-nav:gap-2">
             {renderDropdown(
               "lernen",
               copy.learning,
@@ -618,7 +625,7 @@ export function Nav() {
             ))}
           </div>
 
-          <div className="flex items-center gap-2 border-l border-hairline pl-4">
+          <div className="ml-6 flex items-center gap-2 border-l border-hairline pl-4 @max-[44rem]/desktop-nav:ml-3 @max-[44rem]/desktop-nav:gap-1 @max-[44rem]/desktop-nav:pl-3">
             <LanguageSwitch />
 
             {/* Site navigation points at the organisation that publishes this
@@ -629,7 +636,7 @@ export function Nav() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={copy.githubOrganisation}
-              className="inline-flex min-h-11 min-w-11 items-center justify-center text-muted-foreground outline-none transition-colors duration-[120ms] hover:bg-card-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center text-muted-foreground @max-[44rem]/desktop-nav:hidden outline-none transition-colors duration-[120ms] hover:bg-card-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
             >
               <Github size={17} aria-hidden="true" />
             </a>

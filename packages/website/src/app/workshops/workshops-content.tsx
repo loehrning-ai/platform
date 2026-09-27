@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import type {
   Workshop,
@@ -28,13 +27,6 @@ interface Props {
 
 /** Workshops that carry the "Neu" meta chip on the hub. */
 const NEW_WORKSHOPS: ReadonlySet<WorkshopNumber> = new Set(["04"]);
-
-/**
- * Workshops whose card-preview.webp is a real Werkzeichnung deck cover
- * (design-direction 10.4). Every other row renders the CSS mini-cover from
- * 6.7, so the list stays uniform until the other covers are regenerated.
- */
-const DECK_COVERS: ReadonlySet<WorkshopNumber> = new Set(["03", "04"]);
 
 /**
  * The cover-band button is a recommendation, not "the newest": it stays on
@@ -299,21 +291,18 @@ export function WorkshopsContent({ workshops, locale }: Props) {
             </ol>
           )}
 
-          {/* A note, not a section: two sentences do not earn a Kopflinie. */}
-          <div
+          {/* A note, not a section: two sentences do not earn a Kopflinie,
+              so it sits under the last row's hairline with no rule of its
+              own, its lead-in set in ink. */}
+          <p
             data-workshop-teams=""
-            className="mt-6 grid max-w-[64ch] gap-1 border-t border-hairline pt-4 sm:mt-10 sm:gap-2 sm:pt-6"
+            className="mt-6 max-w-[64ch] text-[0.9375rem]/[1.5] text-muted-foreground text-pretty sm:mt-10 sm:text-body"
           >
-            <h2
-              id="workshop-teams-heading"
-              className="text-[1.0625rem] font-bold leading-[1.25] text-foreground sm:text-[1.25rem]"
-            >
-              {copy.teamsHeading}
-            </h2>
-            <p className="text-[0.9375rem]/[1.5] text-muted-foreground text-pretty sm:text-body">
-              {copy.teamsBody(withPresenter)}
-            </p>
-          </div>
+            <strong className="font-semibold text-foreground">
+              {copy.teamsHeading}.
+            </strong>{" "}
+            {copy.teamsBody(withPresenter)}
+          </p>
           <Callout variant="boundary" className="mt-4 max-w-[64ch] sm:mt-6">
             {copy.boundary}
           </Callout>
@@ -379,23 +368,11 @@ function WorkshopRow({
             {workshop.number}
           </span>
         </div>
-        {DECK_COVERS.has(workshop.number) ? (
-          <div className="hidden aspect-video overflow-hidden bg-dark-bg outline outline-1 outline-foreground md:block">
-            <Image
-              src={`/workshops/${workshop.slug}/card-preview.webp`}
-              alt=""
-              width={1024}
-              height={576}
-              // Below the cover band at every width, and hidden on phones,
-              // where a lazy image in a display:none box is never fetched.
-              loading="lazy"
-              sizes="(min-width: 1200px) 470px, (min-width: 768px) 40vw, calc(100vw - 32px)"
-              className="size-full object-cover"
-            />
-          </div>
-        ) : (
-          <MiniCover workshop={workshop} />
-        )}
+        {/* Every row shows the same CSS cover (design-direction 6.7), so
+            the list reads as one system. The deck-cover images
+            stay the social cards: scaled into a row their q-card and meta
+            line fall to about 6px. */}
+        <MiniCover workshop={workshop} />
         <figcaption className="mt-2 hidden text-caption text-muted-foreground md:block">
           {workshop.format}
         </figcaption>
@@ -536,10 +513,11 @@ function WorkshopRow({
 }
 
 /**
- * CSS mini-cover (design-direction 6.7) for workshops without a deck cover
- * image: graphit, the line globe cut off at the right, the title in paper.
- * Decorative, because the row's h3 carries the title. No Germany trace, so
- * the row keeps no second Mennige mark.
+ * CSS mini-cover (design-direction 6.7), the cover of every row: graphit, the
+ * line globe cut off at the right, the number and the title head in paper,
+ * as on the deck cover but without its q-card and meta line, which a row
+ * cannot set legibly. Decorative, because the row's h3 carries the title. No
+ * Germany trace, so the row keeps no second Mennige mark.
  */
 function MiniCover({ workshop }: { readonly workshop: Workshop }) {
   return (
@@ -556,8 +534,8 @@ function MiniCover({ workshop }: { readonly workshop: Workshop }) {
         <p className="text-label font-semibold tabular-nums text-dark-muted">
           {workshop.number}
         </p>
-        <p className="text-[1.25rem] font-bold leading-[1.2] text-dark-fg text-balance">
-          {workshop.title}
+        <p className="text-[1.25rem] font-bold leading-[1.15] text-dark-fg text-balance lg:text-[1.5rem]">
+          {splitTitle(workshop.title).head}
         </p>
       </div>
     </div>

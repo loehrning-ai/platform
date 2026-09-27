@@ -90,7 +90,7 @@
     },
     "data-readiness-kit/readiness-lab.html": {
       "original": "b779d2d693282a2a6c6025921e5537bb435ba264d2fe67aec0d59511ffeffad8",
-      "override": "ee7ca48c869e29b464339457d65a66333b4093e6596fd6c9ad0987e547698e4b"
+      "override": "78cda040f7abd998af1a6e7f4f283c02044d36b72ecc07fde9e59620a659195d"
     },
     "data-readiness-kit/semantic-template/metric.yml": {
       "original": "b48caed51267d39a779d14258dc6243091c8ce19c1da132b14f1b1eddc381842",
@@ -108,13 +108,17 @@
       "original": "a899e9e7b31315004b87fd56f28efe6b88eb7f58004ba600af6a59c2cdb97249",
       "override": "8b3a3a60cef09884f53b0c56eb9a8e6f9b82d5f410c0aec2b351e4c6e8c400de"
     },
+    "lib/cover-globe.css": {
+      "original": "6e8ce0bbbc03f9807853472202af2f29a00d3683f2c08d653437a62fcdd36cba",
+      "override": "7839494bf8bfca0d572403907aef78b9d11f5c0ce05cad69d332ee68d008571e"
+    },
     "lib/deck-runtime.js": {
       "original": "c44c12bfedf1136655fe2289b907149e8abf20241a052bd75af440dca07b1e6c",
       "override": "c5e5fd894634e8eb6c04de7b8e597da7cab8ece3325452517728c6cfce06b6e0"
     },
     "lib/deck-stage.js": {
       "original": "de4da3214d3cb262b7776606fbbab1b74cb87928f0044b95de51b6523fb0f5dd",
-      "override": "36e41460c9ccb9b4f7f20218142ae8cc37fe0e532c597944472ab25eff06a2ae"
+      "override": "9f2e022a9b62e0e387b9743e779c82ae3d9561fc6cea60b02222afe9fe6ba351"
     },
     "lib/presenter-notes.js": {
       "original": "a446b5d1620dc0c797561637d574554700fc482c9668a2309dd7aec8293460e8",

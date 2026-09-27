@@ -4,6 +4,15 @@
 
 body{font-family:var(--wf-sans)}
 
+/* One grid with the material strip above: the lab bar, the act and the footer controls keep the
+   strip's content edges (max 1200px less the gutter, so 160-1280 at 1440). */
+.bar,main,.hint{padding-left:max(var(--wf-gutter),calc((100% - var(--wf-max)) / 2 + var(--wf-gutter)));padding-right:max(var(--wf-gutter),calc((100% - var(--wf-max)) / 2 + var(--wf-gutter)))}
+main{padding-top:28px;padding-bottom:28px}
+/* act copy starts at the top of its column, level with the lab card */
+.act.active{grid-template-rows:auto auto minmax(0,1fr);align-items:start}
+.eyebrow{align-self:start}
+.stage{align-self:start}
+
 /* lab bar: title, case route, jump buttons */
 .bar{background:var(--wf-paper);backdrop-filter:none;border-bottom:var(--wf-hair)}
 .brand b{font:700 17px/1.2 var(--wf-sans)}

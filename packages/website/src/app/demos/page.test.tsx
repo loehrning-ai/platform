@@ -52,9 +52,24 @@ describe("DemosPage URL filter boundary", () => {
     // Below sm the StatRow gives way to one caption line with the same
     // registry numbers, and the check list (which repeats the lead) hides.
     expect(stats).toHaveClass("max-sm:hidden");
-    expect(container.querySelector("[data-demo-stats-line]")).toHaveTextContent(
-      "12 Beispiele · 3 Ausführungsarten · 0 Außenaktionen",
-    );
+    // One unbreakable item per entry and a CSS separator that a clipping
+    // wrapper hides at each line start, so a wrap never leaves a line
+    // starting or ending with "·"; the zero
+    // count reads as a plain phrase instead of "0 Außenaktionen".
+    const statsLine = container.querySelector("[data-demo-stats-line]");
+    expect(
+      Array.from(statsLine?.querySelectorAll("li") ?? []).map(
+        (node) => node.textContent,
+      ),
+    ).toEqual([
+      "12 Beispiele",
+      "3 Ausführungsarten",
+      "nichts wird wirklich gesendet",
+    ]);
+    expect(statsLine?.textContent).not.toContain("·");
+    expect(statsLine?.querySelector("li")).toHaveClass("whitespace-nowrap");
+    expect(statsLine).toHaveClass("-ml-[1em]");
+    expect(statsLine?.parentElement).toHaveClass("overflow-hidden", "sm:hidden");
     expect(container.querySelector("[data-demo-scope]")).toHaveClass(
       "max-sm:hidden",
     );

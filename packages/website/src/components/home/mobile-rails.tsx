@@ -47,7 +47,7 @@ const RAIL_CLASS =
 /* Werkzeichnung tile: square, a hairline edge, no fill and no shadow. The
    hover and focus states change tone only. */
 const TILE_CLASS =
-  "group flex h-full min-h-[6.25rem] flex-col justify-between gap-2 border border-hairline bg-card p-3 outline-none transition-colors duration-150 hover:border-foreground hover:bg-card-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange motion-reduce:transition-none";
+  "group flex h-full min-h-[6.25rem] flex-col justify-between gap-2 border border-hairline bg-card p-3 outline-none transition-colors duration-150 hover:border-foreground hover:bg-card-hover focus-visible:outline-2 focus-visible:outline-solid focus-visible:-outline-offset-2 focus-visible:outline-brand-orange motion-reduce:transition-none";
 
 /* Sentence-case label for data (a book's edition) in Schiefer, never a
    mono all-caps eyebrow. Demos are not a sequence, so their tiles carry no

@@ -15,3 +15,21 @@
   width: 100%;
   height: auto;
 }
+
+/* Edge fade. The globe's atmosphere is a shade lighter than the graphit ground and runs past the
+   slide's top and bottom edges. On a 16:10 screen the 16:9 slide letterboxes onto graphit, and a
+   hard cut there shows as a faint horizontal seam. The overlay fades the drawing into the ground
+   over the outer 96 px of the box, so the edge meets the letterbox without a line. */
+.workshop-globe::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    var(--graphit, #141414) 0,
+    rgb(20 20 20 / 0) 96px,
+    rgb(20 20 20 / 0) calc(100% - 96px),
+    var(--graphit, #141414) 100%
+  );
+}

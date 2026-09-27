@@ -21,7 +21,7 @@ Content that does none of these jobs is removed or placed in an on-demand refere
 The visual language is "Werkzeichnung", taken from the Workshop 03 deck (`public/workshops/datenbereitschaft-fuer-ki/lib/tokens.css`): calm paper, precise ink, one red pencil.
 
 - Kalkweiß `#f3f0e9` ground, Druckschwarz `#121212` ink, Schiefer `#4f4640` secondary text, and Mennige `#b73a15` as the only accent. At most one Mennige group per section: one filled Mennige button per page, one Mennige mark per drawing.
-- Graphit `#141414` appears only as a full-width band (`.dark-section`: workshop cover bands and the footer), never as a card inside a paper grid. Inside it the accent flips to `#e07050` for text, and a filled accent button takes dark ink or becomes a paper button; white on `#e07050` fails AA.
+- Graphit `#141414` appears only as a full-width band (`.dark-section`: workshop cover bands, the homepage hero and the footer), never as a card inside a paper grid. Inside it the accent flips to `#e07050` for text, and a filled accent button takes dark ink or becomes a paper button; white on `#e07050` fails AA.
 - The risograph accents (acid, sky, pink, peach, cobalt, teal) and `kupfer-mist` stay defined for routes not yet migrated (home, books, open source) but are not used on courses, workshops or demos, and not in new code.
 - Loehrning Sans for reading; headlines 700, sentence case, tracked no tighter than -0.015em. Labels are sentence case, 600, +0.02em (`text-label`, `.kicker`). Geist Mono only for data: file names, code, IDs, timestamps.
 - Structure comes from lines: a 2px ink Kopflinie above section heads (`.kopflinie`, `<SectionHead>`) and 1px Leinen hairlines (`--color-hairline`) between rows.
@@ -158,16 +158,16 @@ The desktop homepage globe may rotate continuously because its movement carries 
 
 The exception has four enforced boundaries:
 
-- It exists only at 1024px and wider. The projection module and SVG tree are not loaded or rendered on mobile, where they compete with the first action and can overlap the headline.
+- It exists only from `lg` (64rem, 1024px at the default font size). The desktop globe, the phone band and the phone renderer all switch on that one rem query, so the two globes never run at once, whatever the browser's default font size. The projection module and SVG tree are not loaded or rendered on mobile, where they compete with the first action and can overlap the headline.
 - `prefers-reduced-motion: reduce` produces a static desktop composition. The animation effect checks the media query directly, so it cannot run a live frame while React synchronizes the preference. Leaving the hero viewport, hiding the document, or scrolling through the hero also suspends projection work.
-- The globe surface itself is the pause and resume control. It has no separate overlay shape, but remains a keyboard-focusable 44px-or-larger target with localized accessible names and a visible focus indicator.
+- A visible 44px pause control sits beside the primary action whenever the globe moves: a toggle button with a fixed localized name ("Globus anhalten" / "Pause the globe"), `aria-pressed` for its state, `aria-controls` naming the globe and a visible focus indicator. It is the same control as on the phone band. The globe itself is not a target.
 - Projection work follows the historical production cadence: a 60fps cap, a 7-second location cycle, a 78% dwell, and a 2-second opening delay. This replaces the visibly stepped 10fps ambient mode and the accelerated 4.6-second cycle. Unit sphere vectors are precomputed, frame rotation trigonometry runs once per frame, and high-refresh displays remain capped. Local Lighthouse is indicative; the CI median and its 200ms total-blocking-time cap remain authoritative.
 
 A CSS rotation of one pre-rendered disc was rejected because it breaks the country projection and disconnects the typed resource word from the destination pan. Keeping the real projection with desktop-only loading, viewport suspension, scroll suspension, document-visibility suspension, and a 60fps cap preserves the information while bounding unnecessary main-thread and paint work.
 
 ### Phone globe: narrow continuous-motion exception
 
-Below 1024px the homepage hero is one graphit band, and its identity anchor is the horizon globe: the Workshop 03 line globe seen from orbit, only its upper limb crossing the band, Europe below the horizon and Germany traced in Mennige. It is a separate module from the desktop projection (`werk/horizon-globe-frame.tsx`, `werk/horizon-globe-renderer.ts`, `home/phone-globe.tsx`, `home/phone-hero.css`) and uses its own attribute namespace, `data-home-globe*`. The desktop globe's `data-hero-*` attributes never appear below 1024px. It is decorative (`aria-hidden`, nothing focusable inside) and carries no information that the page does not state in text.
+The homepage hero is one graphit band at every width. From 1024px it is a cover: the text on the left and the desktop projection, drawn in paper lines with Germany and the resource word in `#e07050`, running off the right edge. Below 1024px its identity anchor is the horizon globe: the Workshop 03 line globe seen from orbit, only its upper limb crossing the band, Europe below the horizon and Germany traced in Mennige. It is a separate module from the desktop projection (`werk/horizon-globe-frame.tsx`, `werk/horizon-globe-renderer.ts`, `home/phone-globe.tsx`, `home/phone-hero.css`) and uses its own attribute namespace, `data-home-globe*`. The desktop globe's `data-hero-*` attributes never appear below 1024px. It is decorative (`aria-hidden`, nothing focusable inside) and carries no information that the page does not state in text.
 
 The exception has these enforced boundaries:
 

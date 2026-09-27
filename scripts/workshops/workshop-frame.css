@@ -88,7 +88,8 @@
 .wf-strip a:focus-visible,.wf-mats a:focus-visible,.wf-foot a:focus-visible,.wf-skip:focus-visible{outline:3px solid var(--wf-mennige);outline-offset:2px}
 
 /* ------------------------------------------------------------------ footer */
-.wf-foot{box-sizing:border-box;max-width:var(--wf-max);margin:64px auto 0;padding:20px var(--wf-gutter) 32px;border-top:var(--wf-hair);color:var(--wf-slate);font:400 14px/1.5 var(--wf-sans)}
+/* The hairline spans the content column (160-1280 at 1440), not the gutters: width and margins, no side padding. */
+.wf-foot{box-sizing:border-box;width:calc(100% - 2 * var(--wf-gutter));max-width:calc(var(--wf-max) - 2 * var(--wf-gutter));margin:64px auto 0;padding:20px 0 32px;border-top:var(--wf-hair);color:var(--wf-slate);font:400 14px/1.5 var(--wf-sans)}
 .wf-foot a{color:inherit;text-decoration:underline;text-underline-offset:3px}
 .wf-foot a:hover{color:var(--wf-mennige-deep)}
 

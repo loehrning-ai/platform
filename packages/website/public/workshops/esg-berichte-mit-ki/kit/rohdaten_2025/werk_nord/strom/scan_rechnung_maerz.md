@@ -26,4 +26,4 @@ Abrechnungs zeitraum: 01.03.2025 bis 31.03.2025
 Verbrauch 205.000 kWh
 Abschlag ab dem nächsten Monat: 52.500,00 € (Vorauszahlung, keine Verbrauchsmenge)
 
-Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe README).
+Stromkennzeichnung nach § 42 EnWG: im Kit weggelassen (Vereinfachung, siehe START-HERE.md).

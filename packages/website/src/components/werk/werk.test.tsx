@@ -203,6 +203,42 @@ describe("Route", () => {
       expect(line).not.toHaveClass("border-l-2");
     }
   });
+
+  it("keeps a long route on the rail through tablet widths on request", () => {
+    render(
+      <Route label="Ablauf" stations={stations} mode="description" layout="rail" railUntil="lg" />,
+    );
+    const rail = screen.getByRole("group", { name: "Ablauf" });
+    expect(rail).toHaveAttribute("data-route-rail", "lg");
+    expect(rail).toHaveClass("overflow-x-auto", "sm:-mx-6", "sm:px-6", "lg:overflow-visible", "lg:mx-0");
+    expect(rail).not.toHaveClass("sm:overflow-visible");
+    const list = within(rail).getByRole("list", { name: "Ablauf" });
+    expect(list).toHaveClass("flex", "lg:grid", "lg:auto-cols-fr");
+    expect(list).not.toHaveClass("sm:grid");
+    for (const item of within(list).getAllByRole("listitem")) {
+      expect(item).toHaveClass("w-[9.5rem]", "lg:w-auto");
+    }
+  });
+
+  it("marks the station a page mirrors in an agenda without turning it into progress", () => {
+    const { container } = render(
+      <Route label="Ablauf" stations={stations} mode="description" here={1} />,
+    );
+    const items = within(screen.getByRole("list", { name: "Ablauf" })).getAllByRole("listitem");
+    expect(items[1]).toHaveAttribute("aria-current", "step");
+    expect(items[1].querySelector("[data-route-here]")).not.toBeNull();
+    expect(container.querySelectorAll("[aria-current]")).toHaveLength(1);
+    // Solid up to the marked station, dashed from it on.
+    const lines = [...container.querySelectorAll("[data-route-line]")].map((line) =>
+      line.getAttribute("data-route-line"),
+    );
+    expect(lines).toEqual(["solid", ...lines.slice(1).map(() => "dashed")]);
+    // Still an agenda: every label in ink, no state words.
+    for (const item of items) {
+      expect(item.querySelector("p")).toHaveClass("text-foreground");
+      expect(item).not.toHaveTextContent(/erledigt|aktuell|offen/);
+    }
+  });
 });
 
 describe("QuestionCard", () => {
@@ -443,5 +479,7 @@ describe("GlobeLines and CoverBand", () => {
     const phone = container.querySelector("[data-cover-globe-phone]");
     expect(phone).toHaveAttribute("aria-hidden", "true");
     expect(phone).toHaveClass("md:hidden", "pointer-events-none", "-z-10");
+    // The Germany trace sits beside the short kicker row, above the H1.
+    expect(phone).toHaveClass("-top-24");
   });
 });

@@ -137,7 +137,7 @@ pre.code code{font-size:inherit;overflow-wrap:normal}
 .vote label:has(input:checked){background:var(--papier);font-weight:600}
 .vote .hint{margin:12px 0 0;display:flex;gap:8px;align-items:flex-start;font-size:14px;color:var(--slate)}
 .vote .status{margin:8px 0 0;min-height:1.5em;font-weight:600}
-@media (min-width:900px){.vote{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:0 48px}.vote .opts{grid-template-columns:repeat(3,minmax(0,1fr));border-top:0;margin:0;gap:0 16px}.vote label{border-top:1px solid var(--kante)}.vote .side{grid-column:1;grid-row:1 / span 2}.vote .opts-wrap{grid-column:2}}
+@media (min-width:900px){.vote{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:0 48px}.vote .opts{grid-template-columns:repeat(3,minmax(0,1fr));border-top:0;margin:14px 0 0;gap:0 16px}.vote label{border-top:1px solid var(--kante)}.vote .side{grid-column:1;grid-row:1 / span 2}.vote .opts-wrap{grid-column:2}}
 
 /* beat 2: truth chart drawn in HTML so labels stay legible at every width */
 .b2{display:grid;gap:32px;grid-template-columns:minmax(0,1fr)}
@@ -339,7 +339,7 @@ pre.code code{font-size:inherit;overflow-wrap:normal}
   .wf-mats a{padding-right:10px;margin-right:0}.wf-mats a:last-child{padding-right:0}
 }
 @media (max-width:374px){.wf-brand{min-width:44px}.wf-brand img{width:30px;height:30px;object-fit:cover;object-position:0 50%}}
-.wf-foot{box-sizing:border-box;max-width:var(--wf-max);margin:64px auto 0;padding:20px var(--wf-gutter) 32px;border-top:1px solid #d4cec5;color:#4f4640;font:400 14px/1.5 var(--sans)}
+.wf-foot{box-sizing:border-box;width:calc(100% - 2 * var(--wf-gutter));max-width:calc(var(--wf-max) - 2 * var(--wf-gutter));margin:64px auto 0;padding:20px 0 32px;border-top:1px solid #d4cec5;color:#4f4640;font:400 14px/1.5 var(--sans)}
 .wf-foot a{color:inherit;text-decoration:underline;text-underline-offset:3px}
 .wf-foot a:hover{color:#97300f}
 @media (max-width:600px){.wf-foot{margin-top:32px}}
@@ -474,9 +474,12 @@ pre.code code{font-size:inherit;overflow-wrap:normal}
     <a class="wf-back-alt" href="/workshops/datenbereitschaft-fuer-ki" lang="de" hreflang="de">Workshop-Seite auf Deutsch</a>
   </nav>
   <nav class="wf-mats" aria-label="Workshop materials">
-    <a href="./slides.html"><span>01</span><span class="wf-long">Interactive course</span><span class="wf-short">Course</span></a>
-    <a href="./guide.html"><span>02</span><span class="wf-long">Learner guide</span><span class="wf-short">Guide</span></a>
-    <a href="./demo.html" aria-current="page"><span>03</span><span class="wf-long">Interactive demo</span><span class="wf-short">Demo</span></a>
+    <a href="./slides.html"><span>01</span>Deck</a>
+    <a href="./demo.html" aria-current="page"><span>02</span><span class="wf-long">Interactive demo</span><span class="wf-short">Demo</span></a>
+    <a href="./data-readiness-kit.zip" download><span>03</span>Kit</a>
+    <a href="./guide.html"><span>04</span><span class="wf-long">Learner guide</span><span class="wf-short">Guide</span></a>
+    <a href="./data-readiness-kit/readiness-lab.html"><span>05</span><span class="wf-long">Browser lab</span><span class="wf-short">Lab</span></a>
+    <a href="./builder.html"><span>06</span><span class="wf-long">Builder guide</span><span class="wf-short">Builder</span></a>
   </nav>
 </header>
 
@@ -790,7 +793,7 @@ ORDER BY mrr_summary_monthly.month_start</code></pre></details>
   </ul>
   <ul class="next">
     <li><a href="./guide.html#five-boxes"><b>Fill the five boxes for one question from your own work</b><span>Learner guide, about 10 minutes</span></a></li>
-    <li><a href="./slides.html#bad-ask/0"><b>Open the same story in the interactive course</b><span>Starts at the scene with the wrong answer</span></a></li>
+    <li><a href="./slides.html#bad-ask/0"><b>Open the same story in the deck</b><span>Starts at the scene with the wrong answer</span></a></li>
   </ul>
 
   <details class="hood" id="hood">

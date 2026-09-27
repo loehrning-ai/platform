@@ -207,7 +207,7 @@ export const PROFILE_COPY: Readonly<Record<Locale, ProfileCopy>> = {
       linkedIn: "Auf LinkedIn schreiben",
       linkedInCompany: "loehrning.ai auf LinkedIn",
       github: "GitHub-Profil öffnen",
-      feedbackPrefix: "Inhaltliche Fehler lassen sich auch über",
+      feedbackPrefix: "Inhaltliche Fehler meldest du auch über",
       feedbackLabel: "das Feedback-Formular",
     },
   },

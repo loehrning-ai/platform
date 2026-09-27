@@ -111,7 +111,7 @@ export function LessonReference({
         {/* In flow under the head on a phone; from sm it moves to the top
             right of the block, level with the kicker. */}
         <summary
-          className={`mt-2 flex min-h-11 w-fit cursor-pointer list-none items-center gap-2 text-label text-foreground underline decoration-border underline-offset-4 outline-none hover:decoration-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange sm:absolute sm:right-0 sm:top-3 sm:mt-0 [&::-webkit-details-marker]:hidden${
+          className={`mt-2 flex min-h-11 w-fit cursor-pointer list-none items-center gap-2 text-label text-foreground underline decoration-border underline-offset-4 outline-none hover:decoration-foreground focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-2 focus-visible:outline-brand-orange sm:absolute sm:right-0 sm:top-3 sm:mt-0 [&::-webkit-details-marker]:hidden${
             objectiveRepeatedAbove ? " max-sm:hidden" : ""
           }`}
         >

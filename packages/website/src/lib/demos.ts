@@ -286,10 +286,10 @@ export const demos: readonly Demo[] = [
     accent: true,
     title: "Vertragsassistent.",
     titleKicker: "Antworten mit Fundstelle.",
-    background: "Keyword-Suche · 8 Beispieldokumente · Antwort mit Quellenkarte",
+    background: "Keyword-Suche · 6 Beispieldokumente · Antwort mit Quellenkarte",
     description:
-      "Eine Keyword-Suche findet Klauseln in acht Beispielverträgen und zitiert sie mit Fundstelle. Auf Fragen ohne Treffer antwortet das System nicht.",
-    teaser: "Eine Keyword-Suche zitiert Klauseln aus acht Beispielverträgen.",
+      "Eine Keyword-Suche findet Klauseln in sechs erfundenen Unternehmensdokumenten, von der Rahmenvereinbarung bis zur Unterschriftenregelung, und zitiert sie mit Fundstelle. Auf Fragen ohne Treffer antwortet das System nicht.",
+    teaser: "Eine Keyword-Suche zitiert Klauseln aus sechs Beispieldokumenten.",
     tags: ["Keyword-Suche", "Regelbasiert", "DE / EN"],
     meta: [
       { label: "Lernziel", value: "Quellenpflicht" },
@@ -399,15 +399,15 @@ export const demos: readonly Demo[] = [
     dark: false,
     accent: true,
     title: "Kosten und Drift im Betrieb.",
-    titleKicker: "Budget, Antwortzeit und Fehler ablesen.",
+    titleKicker: "Kosten, Antwortzeit und Fehler ablesen.",
     background: "Seed-Szenarien · Kosten, Fehler und Drift als Lernspur",
     description:
-      "Eine Betriebsansicht mit festen Beispielwerten für Kosten, Antwortzeit, Fehler und Drift. Du liest ab, wo ein Budget-Alarm anschlagen würde.",
-    teaser: "Du liest ab, wann ein Budget-Alarm bei Kosten oder Drift anschlägt.",
-    tags: ["OTel", "Alerts", "Drift"],
+      "Eine Betriebsansicht mit Beispielwerten für Kosten, Antwortzeit, Fehler und Drift. Du vergleichst vier Anwendungen und liest ab, welche am meisten kostet.",
+    teaser: "Du vergleichst Kosten, Antwortzeit und Fehler von vier Beispielanwendungen.",
+    tags: ["OTel", "Monitoring", "Drift"],
     meta: [
       { label: "Lernziel", value: "Betrieb messen" },
-      { label: "Budget", value: "Alert statt Blindflug" },
+      { label: "Kosten", value: "je Anwendung" },
       { label: "Stack", value: "OTel + Grafana" },
       { label: "Retention", value: "90 Tage" },
       { label: "Drift", value: "regelmäßig prüfen" },
@@ -420,7 +420,7 @@ export const demos: readonly Demo[] = [
     templateSlugs: ["pilot-charter"],
     evidenceMode: "synthetic",
     externalActionMode: "none",
-    syntheticDataLabel: "Vier erfundene Anwendungen mit festen Messwerten.",
+    syntheticDataLabel: "Vier erfundene Anwendungen mit Beispielwerten.",
     riskNotes: [
       "Lege für jede Anwendung eigene Messpunkte und ein Budget fest.",
       "Bestimme vorab, wer bei einem Budget-Alarm entscheidet.",
@@ -478,7 +478,7 @@ export const demos: readonly Demo[] = [
     titleKicker: "Nutzen aus vier Annahmen.",
     background: "Headcount × Stundensatz × Adoption × gesparte Stunden",
     description:
-      "Du trägst Teamgröße, Stundensatz und Nutzungsquote ein und siehst die Formel und die Spanne des Ergebnisses.",
+      "Du trägst Teamgröße, Stundensatz, Nutzungsquote und gesparte Stunden ein und siehst die Formel und die Spanne des Ergebnisses.",
     teaser: "Du siehst die Formel und die Spanne hinter dem ROI deines Teams.",
     tags: ["ROI", "Kalkulation", "Transparent"],
     meta: [
@@ -516,7 +516,7 @@ export const demos: readonly Demo[] = [
     titleKicker: "Automatik und Mensch im Vergleich.",
     background: "Fiktive Eval-Metriken · Drift-Indikator · menschliches Feedback vs. Auto-Eval",
     description:
-      "Du vergleichst für vier Beispielantworten die automatische Bewertung mit dem Urteil eines Menschen. In zwei Fällen liegt die automatische Bewertung daneben.",
+      "Du prüfst die automatische Bewertung von vier Beispielantworten. Drei davon hat auch ein Mensch bewertet, und in zwei Fällen liegt die automatische Bewertung daneben.",
     teaser: "Du prüfst, wo die automatische Bewertung falsch liegt.",
     tags: ["Observability", "Eval", "Drift"],
     meta: [

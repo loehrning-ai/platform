@@ -87,6 +87,28 @@ describe("demoCopy record integrity", () => {
       "kein Modell",
     );
   });
+
+  it("names only figures the demos actually show", () => {
+    // Earlier proof lines named figures no engine renders (42 roles, 4.2 h,
+    // 180 drafts, 2,400 questions, a 38-point gap); a reader could not find
+    // them anywhere.
+    for (const locale of ["de", "en"] as const) {
+      for (const slug of Object.keys(demoCopy)) {
+        const proof = getDemoCopy(slug, locale)?.proof ?? "";
+        expect(proof, `${locale}:${slug}`).not.toMatch(
+          /42 (Rollen|controlling)|4[,.]2 (Stunden|hours)|\b180\b|2[.,]400|\b38\b/,
+        );
+      }
+    }
+  });
+
+  it("promises no budget alarm or limit the cost-and-drift demo lacks", () => {
+    for (const locale of ["de", "en"] as const) {
+      const copy = getDemoCopy("cost-drift-observability", locale);
+      const all = `${copy?.why} ${copy?.proof} ${copy?.stop} ${copy?.ogSubtitle}`;
+      expect(all, locale).not.toMatch(/Budget-Alarm|budget alert|Limit\b|limit\b/i);
+    }
+  });
 });
 
 describe("demoCopy <-> demos coverage", () => {
