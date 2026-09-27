@@ -29,7 +29,7 @@ with a connector, the database grants.
 | `skills/foldline-analytics/SKILL.md` | `.claude/skills/foldline-analytics/SKILL.md` (Setups B, C) | Guides | An Agent Skill. Claude loads the full file when a question matches its `description`, or on `/foldline-analytics` |
 | `skills/foldline-analytics/references/metrics.md` | `.claude/skills/foldline-analytics/references/metrics.md` | Guides | The compiled metric table the Skill points to |
 | `hooks/sql_guard.py` | `hooks/sql_guard.py` (Setups B, C) | Guardrail (application) | Claude Code runs it before a connector tool call, whatever Claude decides. Exit code 2 blocks the call; any other non-zero exit does not |
-| `settings.example.json` | `.claude/settings.json` | Guardrail | Registers the hook for the connector's tools. Denies plain `psql` in Claude's shell tool and `.env` reads by its file tools. Pattern rules only: `psql` by full path or inside `sh -c` passes, and `Read(./.env)` does not stop `cat .env` |
+| `settings.example.json` | `.claude/settings.json` | Guardrail | Registers the hook for the connector's tools. Denies plain `psql` in Claude's shell tool and `.env` reads by its file tools. Pattern rules only: they miss `psql` by full path or inside `sh -c`, and `Read(./.env)` does not stop `cat .env` |
 | `mcp.example.json` | `.mcp.json` at the repository root (Setup C) | Configuration | Starts the connector. Names the secret `${FOLDLINE_READY_DSN}`; never contains it. Claude Code expands `${VAR}` in `command`, `args`, `env`, `url` and `headers` |
 | `CONNECTOR.md` | (read it) | Instructions for you | Setup C step by step, and how to prove the lock |
 | `../warehouse/sql/60_access.sql` | Your database | **Enforces** | Grants SELECT on five views to `foldline_ready_reader`. Everything else fails with 42501 |
@@ -98,8 +98,8 @@ Test the hook without Claude: `python3 hooks/sql_guard.py --self-test`.
 
 Follow `CONNECTOR.md`: build the warehouse, set `FOLDLINE_READY_DSN` in your environment, copy
 `mcp.example.json` to `.mcp.json` with your reviewed PostgreSQL MCP server, keep the Setup B files,
-and prove the lock with `psql` as `foldline_ready_reader` (42501 on `core.accounts`). Its "What
-works" table covers DSNs and logins (AP-A04, AP-A05).
+and prove the lock with `psql` as `foldline_ready_reader` (42501 on `core.accounts`). The "What
+works and what does not" table in `CONNECTOR.md` covers DSNs and logins (AP-A04, AP-A05).
 
 ---
 

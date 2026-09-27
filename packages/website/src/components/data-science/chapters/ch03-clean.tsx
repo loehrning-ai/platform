@@ -84,10 +84,7 @@ export default function Ch03Clean() {
 
       <section className="section">
         <SectionLabel n="03.3">Feature Scaling</SectionLabel>
-        <h2 className="h2">
-          Income at 150,000. Age at 34.{" "}
-          <em>Without scaling, units dominate.</em>
-        </h2>
+        <h2 className="h2">Why unscaled features let units dominate</h2>
         <p className="prose">
           Regularized linear models penalize coefficient size, so feature units
           change the effective penalty and the coefficient you read. kNN,

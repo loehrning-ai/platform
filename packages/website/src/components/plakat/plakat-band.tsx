@@ -22,6 +22,14 @@ export type PlakatBandProps = {
    */
   readonly artPhone?: ReactNode;
   /**
+   * strip (default): the 128px strip above, for a key numeral (the hub).
+   * poster: a full-bleed 16:9 row for `<PosterArt format="landscape" />`, the
+   * numeral and the motif at full column width (219px at 390), capped at
+   * 18rem on a tablet. The reference posters give the art 40 to 70% of the
+   * area; a strip left a phone band nearly all type.
+   */
+  readonly artPhoneLayout?: "strip" | "poster";
+  /**
    * The IDEA poster's four corner dots, 16px inside the band's own corners
    * (the /demos band). Poster art inside the band then takes
    * `cornerDots={false}`, so the dots mark the band, not a poster in it.
@@ -43,7 +51,7 @@ export type PlakatBandProps = {
  * blog; CoverBand stays for the home fallback scene.
  *
  * Type budget: two or three sizes per band. The caps line (14px, 17px in
- * autumn), the poster title (`.poster-title` with `posterTitleStyle()`), and
+ * autumn), the poster title (`.poster-title` with `posterTitleFallbackStyle()`), and
  * one body size of 17px for the lede, subtitle, buttons (`tone="scene"`) and
  * a short access line. No hairline, box, card, question card, meta list,
  * `text-caption` or `text-label` inside a band: facts move to paper below.
@@ -57,6 +65,7 @@ export function PlakatBand({
   labelledBy,
   art,
   artPhone,
+  artPhoneLayout = "strip",
   cornerDots = false,
   contentClassName,
   className,
@@ -101,7 +110,11 @@ export function PlakatBand({
         <div
           aria-hidden="true"
           data-plakat-art-phone=""
-          className="pointer-events-none mt-6 h-32 w-full pl-4 sm:pl-6 lg:hidden"
+          data-plakat-art-phone-layout={artPhoneLayout}
+          className={cx(
+            "pointer-events-none mt-6 w-full lg:hidden",
+            artPhoneLayout === "poster" ? "aspect-[16/9] max-h-72" : "h-32 pl-4 sm:pl-6",
+          )}
         >
           {artPhone}
         </div>

@@ -429,7 +429,7 @@ const runsHtml = runs.status === "not_captured" ? `<div class="runs">
   </div>
   <details class="more proto" id="proto" open><summary>The capture protocol</summary><ol aria-label="Run protocol">
     <li>Hold the model, prompt, factor file, 2024 summary and date constant.</li>
-    <li>Conditions: ${esc(runs.plannedConditions.join("; "))}.</li>
+    <li>Conditions: ${esc(runs.plannedConditions.map((c) => c.replace(": ", ", ")).join("; "))}.</li>
     <li>${esc(String(runs.runsPerCondition))} runs per condition, each scored on ${esc(String(runs.scoredItems.length))} items, from Scope 1 to whether it asks about other Scope 1 sources.</li>
   </ol></details>
 </div>` : `<p>Recorded runs are in <code>runs.table</code>.</p>`;

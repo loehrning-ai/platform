@@ -113,7 +113,7 @@ export const GOVERNANCE_LESSONS: readonly AiNativeOperatorLesson[] = [
         title: "Separate the actor, user, and authority",
         readTimeMinutes: 1,
         content:
-          "When an agent acts, the system identifies the executing workload, whom it acts for and the authorization behind it. Each production workload gets its own identity with least privilege, short-lived credentials, scoped resources and actions and explicit revocation, never shared secrets or broad service accounts.",
+          "When an agent acts, the system identifies the executing workload, whom it acts for and the authorization behind it. Each production workload gets its own identity with least privilege, short-lived credentials, scoped resources and actions and revocation, never shared secrets or broad service accounts.",
       },
       {
         id: "s2",

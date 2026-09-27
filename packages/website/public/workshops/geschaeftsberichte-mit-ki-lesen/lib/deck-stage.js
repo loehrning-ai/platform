@@ -472,7 +472,7 @@
       const portrait = document.createElement('div');
       portrait.className = 'portrait export-hidden';
       portrait.innerHTML =
-        '<p>Turn your phone sideways, or <a href="' + WORKSHOP_URL + '">read the workshop page</a>.</p>' +
+        '<p>Turn your phone sideways for a larger view, or <a href="' + WORKSHOP_URL + '">read the workshop page</a>.</p>' +
         '<button type="button" aria-label="Dismiss hint">OK</button>';
       let dismissed = false;
       try { dismissed = sessionStorage.getItem(PORTRAIT_KEY) === '1'; } catch (e) { /* ignore */ }

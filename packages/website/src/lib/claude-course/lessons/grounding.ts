@@ -21,14 +21,14 @@ const lesson: ClaudeLesson = {
       title: "Why unsupported answers happen",
       readTimeMinutes: 1,
       content:
-        "An unsupported claim is one the allowed sources cannot justify, and it appears even with relevant context present. Causes include missing retrieval, conflicting documents, ambiguous instructions, model error or a citation that does not support the sentence.\n\nStructure reduces the risk: authoritative data, defined allowed sources, inspectable citations, permitted abstention and a verified result. A citation is a pointer someone has to check.",
+        "An unsupported claim is one the allowed sources cannot justify, and it appears even with relevant context present. Causes include missing retrieval, conflicting documents, ambiguous instructions, model error or a citation that does not back the sentence.\n\nStructure lowers the risk: authoritative data, defined sources, checkable citations, permitted abstention and a verified result. A citation is a pointer someone has to check.",
     },
     {
       id: "three-grounding-moves",
-      title: "The three grounding moves",
+      title: "Grounding moves",
       readTimeMinutes: 1,
       content:
-        "- **01 · Supply or retrieve the source.** Current policy, log or code; model training is no source for private or changing facts.\n- **02 · Require traceability.** A source identifier and quoted passage per material claim, checked against the claim.\n- **03 · Define abstention.** For example: \"If the allowed sources do not support an answer, return `NOT_IN_CONTEXT` and list the missing information.\" Test answerable and unanswerable cases.",
+        "- **01 · Supply or retrieve the source.** Current policy, log or code; training is no source for private or changing facts.\n- **02 · Require traceability.** A source ID and quoted passage per material claim, checked against the claim.\n- **03 · Define abstention.** For example: \"If the allowed sources do not support an answer, return `NOT_IN_CONTEXT` and list the missing information.\" Test answerable and unanswerable cases.",
     },
     {
       id: "smell-test",
@@ -84,7 +84,7 @@ const lesson: ClaudeLesson = {
         task: "Write a prompt that answers from an attached policy document and returns NOT_IN_CONTEXT when it finds no support.",
         original: "answer questions about this doc and dont make stuff up",
         criteria:
-          "requires citations, provides an explicit out-of-context signal, restricts answers to attached context",
+          "requires citations, provides an out-of-context signal, restricts answers to attached context",
       },
     },
   ],

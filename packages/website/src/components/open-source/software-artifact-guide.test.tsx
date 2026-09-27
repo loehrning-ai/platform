@@ -4,7 +4,7 @@ import {
   assertOpenSourceArtifacts,
   type ToolArtifact,
 } from "@/lib/open-source/artifacts";
-import { SoftwareArtifactGuide } from "./software-artifact-guide";
+import { dataFlowFacts, SoftwareArtifactGuide } from "./software-artifact-guide";
 
 const TOOL = {
   id: "tool:report-builder",
@@ -252,5 +252,20 @@ describe("SoftwareArtifactGuide", () => {
       "href",
       "/en/kurse/open-source/codex",
     );
+  });
+});
+
+describe("dataFlowFacts", () => {
+  it("lists one fact per sentence or clause, never breaking inside 127.0.0.1 or DEPLOY.md", () => {
+    const facts = dataFlowFacts(
+      "The core runs locally: cv.yaml stays in the checkout; the build opens no socket. Unconfigured, the editor talks only to 127.0.0.1. Only the Supabase variant (DEPLOY.md) saves them.",
+    );
+    expect(facts).toEqual([
+      "The core runs locally: cv.yaml stays in the checkout.",
+      "The build opens no socket.",
+      "Unconfigured, the editor talks only to 127.0.0.1.",
+      "Only the Supabase variant (DEPLOY.md) saves them.",
+    ]);
+    for (const fact of facts) expect(fact.split(/\s+/).length).toBeLessThanOrEqual(20);
   });
 });

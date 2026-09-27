@@ -37,7 +37,7 @@ const nextConfig: NextConfig = {
     "/api/mcp": ["./content/books/**"],
     "/blog/ki-in-der-ausbildung": ["./content/vorlagen/**"],
     "/en/blog/ki-in-der-ausbildung": ["./content/vorlagen/**"],
-    // Node-runtime share cards read the site face (and the demo halftone)
+    // Node-runtime share cards read the site face (and the demo or blog halftone)
     // with readFile(process.cwd() + ...) at request time, because they read
     // the request locale; list the files so the trace never misses them.
     // Keys are picomatch globs, so a dynamic segment's brackets are escaped.
@@ -57,8 +57,10 @@ const nextConfig: NextConfig = {
     "/en/kurse/open-source/data-engineering-fundamentals/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
     "/open-source/\\[kind\\]/\\[slug\\]/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
     "/en/open-source/\\[kind\\]/\\[slug\\]/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
-    "/blog/ki-in-der-ausbildung/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
-    "/en/blog/ki-in-der-ausbildung/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/blog/ki-in-der-ausbildung/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf", "./public/plakat/halftone-blog.png"],
+    "/en/blog/ki-in-der-ausbildung/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf", "./public/plakat/halftone-blog.png"],
+    "/blog/eu-ai-act-grundlagen/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf", "./public/plakat/halftone-blog.png"],
+    "/en/blog/eu-ai-act-grundlagen/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf", "./public/plakat/halftone-blog.png"],
     "/demos/\\[slug\\]/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf", "./public/plakat/halftone-demos.png"],
     "/en/demos/\\[slug\\]/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf", "./public/plakat/halftone-demos.png"],
   },

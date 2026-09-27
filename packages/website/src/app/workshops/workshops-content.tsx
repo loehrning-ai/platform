@@ -22,7 +22,7 @@ import {
   PosterNumeral,
   PosterThumb,
 } from "@/components/plakat";
-import { posterTitleStyle } from "@/lib/plakat/fit";
+import { posterTitleFallbackStyle } from "@/lib/plakat/fit";
 import {
   hubPlakat,
   workshopPlakat,
@@ -199,7 +199,7 @@ export function WorkshopsContent({ workshops, locale }: Props) {
         <h1
           id="workshops-hub-heading"
           className="poster-title mt-3 max-w-[14ch] text-scene-ink sm:mt-4"
-          style={posterTitleStyle(copy.hubHeading)}
+          style={posterTitleFallbackStyle(copy.hubHeading)}
         >
           {copy.hubHeading}
         </h1>

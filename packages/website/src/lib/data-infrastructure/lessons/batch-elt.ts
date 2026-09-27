@@ -59,7 +59,7 @@ const lesson: DataInfraLesson = {
       title: "DAG, backfill, retry",
       readTimeMinutes: 2,
       content:
-        "The backfill diagram above runs 30 fixed days on 1, 4 and 10 workers, with retries on days `06`, `14` and `22`.\n\nA replayable batch job takes an explicit input window and publishes deterministic output for the same input version, backed by `MERGE`, partition replacement or a transaction. External side effects, nondeterministic functions, late input, duplicates and concurrent live writes still need explicit handling and reconciliation.",
+        "The backfill diagram above runs 30 fixed days on 1, 4 and 10 workers, with retries on days `06`, `14` and `22`.\n\nA replayable batch job takes a fixed input window and publishes deterministic output for the same input version, backed by `MERGE`, partition replacement or a transaction. External side effects, nondeterministic functions, late input, duplicates and concurrent live writes still need explicit handling and reconciliation.",
     },
     {
       id: "s5",

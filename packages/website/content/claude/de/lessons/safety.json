@@ -2,7 +2,7 @@
   "id": "safety",
   "number": 12,
   "title": "Datenverarbeitung und Prompt-Injection",
-  "subtitle": "Datenrichtlinie, Zugriffskontrollen und mehrschichtige Abwehr gegen Prompt-Injection.",
+  "subtitle": "Datenrichtlinie und mehrschichtige Abwehr gegen Prompt-Injection.",
   "durationMinutes": 8,
   "trackId": "team",
   "hook": "Prüfe die Datenrichtlinie, bevor du etwas einfügst.",
@@ -17,25 +17,25 @@
       "id": "the-rule",
       "title": "Die Regel",
       "readTimeMinutes": 1,
-      "content": "Die Oberfläche sagt nichts darüber, was mit deinen Daten passiert. Prüfe vor dem Einfügen Klassifizierungsrichtlinie, Produkt- und Kontofreigabe, Aufbewahrung, Trainingsbedingungen, Region, Zugriffskontrollen und Incident-Prozess; all das hängt an Deployment und Vertrag.\n\nErzwinge die Grenze technisch: sensible Pfade sperren, Tools und Netzwerkzugriff beschränken, Eingaben minimieren, autorisierte Aktionen protokollieren, folgenreiche Ausgaben prüfen."
+      "content": "Die Oberfläche sagt nichts darüber, was mit deinen Daten passiert. Prüfe vor dem Einfügen Klassifizierungsrichtlinie, Produkt- und Kontofreigabe, Aufbewahrung, Trainingsbedingungen, Region, Zugriffskontrollen und Incident-Prozess; all das hängt an Deployment und Vertrag.\n\nErzwinge die Grenze technisch: sensible Pfade sperren, Tools und Netz beschränken, Eingaben minimieren, autorisierte Aktionen protokollieren, folgenreiche Ausgaben prüfen."
     },
     {
       "id": "never-paste",
-      "title": "Ohne explizite Freigabe blockieren",
+      "title": "Ohne Freigabe blockieren",
       "readTimeMinutes": 1,
-      "content": "Ohne explizit freigegebenen Ablauf bleibt draußen:\n\n- Geheimnisse: API-Schlüssel, Tokens, Zugangsdaten, Passwörter, Session-Cookies.\n- Personen-, Kunden-, Gesundheits-, Finanz- oder Authentifizierungsdaten über das genehmigte Minimum hinaus.\n- Vertrauliche Produkt-, Sicherheits-, Rechts-, Personal- oder Finanzinformationen.\n- Daten mit vertraglichen, regulatorischen, Export- oder Residenzbeschränkungen.\n- Alles, was die Organisationsrichtlinie verbietet.\n\nIst ein Geheimnis in einem nicht autorisierten System gelandet, folge dem Incident-Prozess und rotiere oder widerrufe es. Den Chat zu löschen reicht nicht."
+      "content": "Ohne freigegebenen Ablauf bleibt draußen:\n\n- Geheimnisse: API-Schlüssel, Tokens, Zugangsdaten, Passwörter, Session-Cookies.\n- Personen-, Kunden-, Gesundheits-, Finanz- oder Authentifizierungsdaten über das genehmigte Minimum hinaus.\n- Vertrauliche Produkt-, Sicherheits-, Rechts-, Personal- oder Finanzinformationen.\n- Daten mit vertraglichen, regulatorischen, Export- oder Residenzbeschränkungen.\n- Alles, was deine Richtlinie verbietet.\n\nIst ein Geheimnis in einem nicht autorisierten System gelandet, folge dem Incident-Prozess und rotiere oder widerrufe es; den Chat zu löschen reicht nicht."
     },
     {
       "id": "usually-fine",
       "title": "Nach Prüfung meist vertretbar",
       "readTimeMinutes": 1,
-      "content": "Je nach Richtlinie und Lizenzbedingungen sind weniger riskant:\n\n- Öffentliche Dokumentation und Standards.\n- Interner Code ohne Geheimnisse, personenbezogene Daten und vertrauliche Kennungen.\n- Synthetische Beispiele ohne Bezug zu Personen oder Kunden.\n- Dokumente, die für Konto und Verarbeitungsregion freigegeben sind.\n\nMinimiere zuerst: Ersetze Kennungen durch stabile Platzhalter wie `<CUSTOMER_ID>` und prüfe, ob die Aufgabe noch alles Nötige hat."
+      "content": "Je nach Richtlinie und Lizenzbedingungen sind weniger riskant:\n\n- Öffentliche Dokumentation und Standards.\n- Interner Code ohne Geheimnisse, personenbezogene Daten und vertrauliche Kennungen.\n- Synthetische Beispiele ohne Bezug zu Personen oder Kunden.\n- Dokumente, die für Konto und Region freigegeben sind.\n\nMinimiere zuerst: Ersetze Kennungen durch Platzhalter wie `<CUSTOMER_ID>` und prüfe, ob die Aufgabe noch alles Nötige hat."
     },
     {
       "id": "prompt-injection",
-      "title": "Prompt-Injection in Kurzform",
+      "title": "Prompt-Injection",
       "readTimeMinutes": 1,
-      "content": "Webseiten, externe Nachrichten, Uploads und Tool-Ergebnisse sind nicht vertrauenswürdige Eingaben und können Text enthalten, der das Modell umleiten oder Tools auslösen soll. Abgrenzungen und eine „nur Daten“-Anweisung helfen bei der Einordnung, sind aber keine Sicherheitsgrenze.\n\nSetz mehrere Schichten: Inhalte isolieren, Tools und Ziele allowlisten, Argumente validieren, folgenreiche Aktionen freigeben lassen, Ausgaben vor Wiederverwendung bereinigen, bekannte Payloads testen. Halte Geheimnisse möglichst außerhalb des Modellkontexts."
+      "content": "Webseiten, externe Nachrichten, Uploads und Tool-Ergebnisse sind nicht vertrauenswürdige Eingaben und können Text enthalten, der das Modell umleiten oder Tools auslösen soll. Abgrenzungen und eine „nur Daten“-Anweisung helfen, sind aber keine Sicherheitsgrenze.\n\nSetz mehrere Schichten: Inhalte isolieren, Tools und Ziele allowlisten, Argumente validieren, folgenreiche Aktionen freigeben lassen, Ausgaben vor Wiederverwendung bereinigen, bekannte Payloads testen. Halte Geheimnisse außerhalb des erreichbaren Modellkontexts."
     }
   ],
   "widgets": [

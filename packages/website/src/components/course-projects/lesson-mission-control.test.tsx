@@ -874,6 +874,16 @@ describe("LessonMissionControl", () => {
     expect(controlledBody).toHaveAttribute("hidden");
   });
 
+  it("keeps the phone mission lean: no eyebrow, no second step line", async () => {
+    render(<LessonMissionControl {...missionProps({ locale: "de" })} />);
+
+    const eyebrow = await screen.findByText(/Experiment-Prüffeld/);
+    expect(eyebrow).toHaveClass("max-sm:hidden");
+    expect(screen.getByText(/^Aktueller Schritt:/)).toHaveClass("max-sm:sr-only");
+    // The prediction hint shows once; the sequence help no longer repeats it.
+    expect(screen.getAllByText(/Leg dich vor der Beobachtung fest/)).toHaveLength(1);
+  });
+
   it("does not create a visit key and reset leaves no durable key", async () => {
     const props = missionProps();
     render(<LessonMissionControl {...props} />);

@@ -152,7 +152,7 @@ export const demos: readonly Demo[] = [
     templateSlugs: ["ki-nutzungsrichtlinie"],
     evidenceMode: "synthetic",
     externalActionMode: "none",
-    syntheticDataLabel: "Fiktive Briefings, Musterdokumente, Erstellzeit und Stil-Treffer.",
+    syntheticDataLabel: "Fiktive Briefings und Musterdokumente.",
     riskNotes: [
       "Entferne Namen und Kundendaten, bevor das Briefing in den Assistenten geht.",
       "Prüfe jede Zahl und jede Quelle im Entwurf gegen das Original.",

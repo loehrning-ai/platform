@@ -16,16 +16,14 @@ const lesson: ClaudeLesson = {
   id: "context",
   number: 3,
   title: "Context windows, tokens, and retrieval",
-  subtitle: "How tokens are counted and what to check in the context.",
+  subtitle: "Token counts and what to check in the context.",
   durationMinutes: 10,
   trackId: "foundations",
   hook: "The context window is limited, so choose relevant sources.",
   keyConcepts: [
     "Context engineering",
-    "Semantic space",
-    "Positional attention",
     "Tokens",
-    "Document delimiting",
+    "Source labels",
   ],
   quiz: [],
   sections: [
@@ -34,42 +32,42 @@ const lesson: ClaudeLesson = {
       title: "Context is the product",
       readTimeMinutes: 1,
       content:
-        "Context engineering means choosing and arranging what a model sees: instructions, source documents, examples, prior messages and tool results. Clear wording cannot supply a fact you never pasted or repair an unreliable source.\n\n**Semantic representations.** Models hold tokens as high-dimensional numerical states where related terms can land close together. A two-dimensional map only illustrates this.\n\n**Finite context.** Every model and product documents a context limit. Long inputs still fail when the relevant passage is hard to find, sources conflict or the output eats the budget, so test with your real model and inputs.",
+        "Context engineering means choosing and arranging what a model sees: instructions, documents, examples, prior messages and tool results. Clear wording cannot supply a missing fact or fix an unreliable source.\n\nModels hold tokens as high-dimensional states where related terms land close together; the map below only illustrates this.\n\nEvery model has a documented context limit. Long inputs still fail when the key passage is buried, sources conflict or the output eats the budget, so test with your real model and inputs.",
     },
     {
       id: "meaning-in-space",
       title: "Make vague words precise",
       readTimeMinutes: 1,
       content:
-        "The map above shows which terms sit close together. Words like \"concise\" or \"exhaustive\" still do not tell the model exactly what you want. Turn them into testable limits, such as \"at most 150 words\".",
+        "The map shows which terms sit close together. Words like \"concise\" or \"exhaustive\" still leave the target open, so turn them into testable limits such as \"at most 150 words\".",
     },
     {
       id: "window-as-budget",
       title: "The window is a budget",
       readTimeMinutes: 1,
       content:
-        "Instructions, messages, documents, prior turns and tool results share the window with the response.\n\n1. **Documents before the question.** For multi-document tasks, Anthropic's long-context guidance puts source documents before the query. Validate that with your evaluations.\n2. **Label each source.** Tags such as `<document index=\"1\" source=\"…\">` keep source boundaries visible and simplify citation formats.\n3. **State the evidence rule.** Say whether general knowledge is allowed, which sources count and what to return without support.\n\nWithout a retrieval or relevance strategy, a large document set adds conflicts and buries the passage you need.",
+        "Instructions, messages, documents, prior turns and tool results share the window with the response.\n\n1. **Documents before the question.** Anthropic's long-context guidance puts source documents before the query for multi-document tasks. Confirm it with your evals.\n2. **Label each source.** Tags such as `<document index=\"1\" source=\"…\">` keep boundaries visible and simplify citations.\n3. **State the evidence rule.** Say which sources count and what to return without support.\n\nWithout retrieval, a large document set adds conflicts and buries the passage you need.",
     },
     {
       id: "long-context-template",
       title: "The long-context template",
       readTimeMinutes: 2,
       content:
-        "Use this structure when an answer must come from supplied documents:\n\n```\n<documents>\n  <document index=\"1\" source=\"rollout-plan.md\">\n  [full text of doc 1]\n  </document>\n  <document index=\"2\" source=\"oncall-guide.md\">\n  [full text of doc 2]\n  </document>\n</documents>\n\n<instructions>\nAnswer using ONLY the documents above. If the answer isn't there, say so.\nCite sources as [doc-1] or [doc-2] inline.\n</instructions>\n\n<question>\nWhat's our rollback procedure if the forced cutover fails?\n</question>\n```\n\nCitations make claims inspectable; someone still checks them against the cited passage.",
+        "When an answer must come from supplied documents:\n\n```\n<documents>\n  <document index=\"1\" source=\"rollout-plan.md\">\n  [full text of doc 1]\n  </document>\n  <document index=\"2\" source=\"oncall-guide.md\">\n  [full text of doc 2]\n  </document>\n</documents>\n\n<instructions>\nAnswer using ONLY the documents above. If the answer isn't there, say so.\nCite sources as [doc-1] or [doc-2] inline.\n</instructions>\n\n<question>\nWhat's our rollback procedure if the forced cutover fails?\n</question>\n```\n\nCitations make claims checkable; someone still reads the cited passage.",
     },
     {
       id: "tokens-briefly",
       title: "Tokens, briefly",
       readTimeMinutes: 1,
       content:
-        "Claude API inputs are tokenized before inference. Token counts depend on model, language, punctuation and content type, so word-to-token formulas are estimates. When fit or cost matters, use Anthropic's token-counting endpoint or your product's tooling.",
+        "Claude API inputs are tokenized before inference. Counts depend on model, language, punctuation and content type, so word-to-token formulas are estimates. For fit or cost, use Anthropic's token-counting endpoint or your product's tooling.",
     },
     {
       id: "too-big-docs",
       title: "When your docs are too big",
       readTimeMinutes: 1,
       content:
-        "When sources outgrow the context budget, keep traceability:\n\n1. **Retrieve, then answer.** Select passages with source identifiers and measure recall on known questions.\n2. **Stage the task.** Split extraction, classification, drafting and review when each stage has a checkable output.\n3. **Use tools for changing sources.** File, database or web search fetch current evidence. Restrict permissions and log the sources used.\n\nA summary is a derived source that drops detail, so verify critical claims in the original passage.",
+        "When sources outgrow the budget, keep them traceable:\n\n1. **Retrieve, then answer.** Select passages with source IDs and measure recall on known questions.\n2. **Stage the task.** Split extraction, classification, drafting and review when each stage has a checkable output.\n3. **Use tools for changing sources.** File, database or web search fetch current evidence; restrict permissions and log the sources.\n\nA summary drops detail, so verify critical claims in the original passage.",
     },
   ],
   widgets: [

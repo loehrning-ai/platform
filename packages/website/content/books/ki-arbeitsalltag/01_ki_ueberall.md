@@ -74,7 +74,6 @@ Geh die Liste durch und hak ab, wo du KI längst nutzt.
 
 - [ ] Empfehlungen („Was du als nächstes schauen könntest")
 - [ ] Automatische Untertitel
-- [ ] Video-Gesichtserkennung (für Datenschutz-Settings)
 
 ## KI in deiner Musik (Spotify / Apple Music)
 

@@ -56,7 +56,6 @@ interface BookPageCopy {
     readonly openOverview: string;
     readonly pdfAfterLogin: string;
     readonly pdfUnavailable: string;
-    readonly sourceNote: string;
     readonly detailsLabel: string;
     readonly sourceInputs: string;
     readonly nextReview: (date: string) => string;
@@ -225,8 +224,6 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
       openOverview: "Buch und Kapitel öffnen",
       pdfAfterLogin: "Deutsches PDF nach Login",
       pdfUnavailable: "PDF-Download nicht verfügbar",
-      sourceNote:
-        "Die Lesefassungen entstanden 2025 und 2026. Primärquellen und Einschränkungen stehen im jeweiligen Kapitel.",
       detailsLabel: "Ausgabe, Quellen und Zugang",
       sourceInputs: "Dokumentierte Quellengrundlage",
       nextReview: (date) => `Nächste Prüfung: ${date}`,
@@ -324,8 +321,6 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
       openOverview: "Open book and chapters",
       pdfAfterLogin: "German PDF after sign-in",
       pdfUnavailable: "PDF download unavailable",
-      sourceNote:
-        "The reading editions were written in 2025 and 2026. Each chapter states its primary sources and limitations.",
       detailsLabel: "Edition, sources, and access",
       sourceInputs: "Documented source basis",
       nextReview: (date) => `Next review: ${date}`,

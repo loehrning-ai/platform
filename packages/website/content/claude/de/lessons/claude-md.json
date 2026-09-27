@@ -8,9 +8,8 @@
   "hook": "Regeln, die du wiederholt erklärst, gehören in eine Datei.",
   "keyConcepts": [
     "CLAUDE.md-Hierarchie",
-    "Lazy-geladene Unterordner-Dateien",
-    "Automatischer Speicher",
-    "Dauerhaftes Briefing"
+    "Verschachtelte Dateien",
+    "Auto-Memory"
   ],
   "quiz": [],
   "sections": [
@@ -18,19 +17,19 @@
       "id": "what-it-is",
       "title": "Was es ist",
       "readTimeMinutes": 1,
-      "content": "`CLAUDE.md` ist eine Markdown-Anweisungsdatei, die Claude Code lädt, damit eine Sitzung dein Repository kennt. Die Projektdatei liegt unter `./CLAUDE.md` oder `./.claude/CLAUDE.md`; Benutzer-, Managed-, lokale und verschachtelte Dateien haben eigene Geltungsbereiche.\n\nDie Anweisungen landen im Gesprächskontext und steuern das Verhalten, erzwingen aber nichts; was gelten muss, gehört in Berechtigungen, Hooks, Sandbox und CI."
+      "content": "`CLAUDE.md` ist eine Markdown-Anweisungsdatei, die Claude Code lädt, damit eine Sitzung dein Repository kennt. Die Projektdatei liegt unter `./CLAUDE.md` oder `./.claude/CLAUDE.md`; Benutzer-, Managed-, lokale und verschachtelte Dateien haben eigene Geltungsbereiche.\n\nDie Anweisungen landen im Kontext und steuern das Verhalten, erzwingen aber nichts. Was gelten muss, gehört in Berechtigungen, Hooks, Sandbox und CI."
     },
     {
       "id": "hierarchy",
       "title": "Wie die Hierarchie geladen wird",
       "readTimeMinutes": 2,
-      "content": "Claude Code findet Anweisungsdateien nach Geltungsbereich und Verzeichnis. Vereinfacht sieht ein Projekt so aus:\n\n```\n~/.claude/CLAUDE.md              # Benutzeranweisungen für alle Projekte\n<repo>/CLAUDE.md                 # Gemeinsame Projektanweisungen\n<repo>/.claude/CLAUDE.md         # Alternative Projektposition\n<repo>/CLAUDE.local.md           # Persönlich und projektspezifisch; gitignore\n\n# Beim Lesen von Dateien in diesen Ordnern entdeckt:\n<repo>/frontend/CLAUDE.md\n<repo>/services/auth/CLAUDE.md\n```\n\nAlle passenden Dateien landen zusammen im Kontext, lokalere weiter hinten. Eine verlässliche Vorrangregel gibt es nicht, also entferne Widersprüche. `/memory` zeigt, was geladen wurde; pfadspezifische Regeln gehören in `.claude/rules/` mit `paths`-Frontmatter."
+      "content": "Claude Code findet Anweisungsdateien nach Geltungsbereich und Verzeichnis:\n\n```\n~/.claude/CLAUDE.md              # Benutzeranweisungen für alle Projekte\n<repo>/CLAUDE.md                 # Gemeinsame Projektanweisungen\n<repo>/.claude/CLAUDE.md         # Alternative Projektposition\n<repo>/CLAUDE.local.md           # Persönlich und projektspezifisch; gitignore\n\n# Beim Lesen von Dateien in diesen Ordnern entdeckt:\n<repo>/frontend/CLAUDE.md\n<repo>/services/auth/CLAUDE.md\n```\n\nPassende Dateien landen zusammen im Kontext, lokalere weiter hinten. Eine verlässliche Vorrangregel gibt es nicht, also entferne Widersprüche. `/memory` zeigt, was geladen wurde; pfadspezifische Regeln gehören in `.claude/rules/` mit `paths`-Frontmatter."
     },
     {
       "id": "keep-in-leave-out",
       "title": "Was hineingehört",
       "readTimeMinutes": 1,
-      "content": "**Aufnehmen:**\n\n- Eine Projektbeschreibung in einem Satz\n- Stack und unterstützte Versionen\n- Befehle für Build, Tests und Linting\n- Prüfbare Konventionen\n- Wichtige Pfade und Projektbegriffe\n- Links auf gepflegte Architektur- oder Deployment-Doku\n\n**Nicht aufnehmen:**\n\n- Geheimnisse, Tokens, Zugangsdaten und personenbezogene Daten\n- Vage Anweisungen wie \"schreibe guten Code\"\n- Alte Historie\n- Lange Abläufe, die in einen Skill oder eine gepflegte Anleitung gehören\n- Pfadsperren (sensible Pfade sperrst du mit Berechtigungsregeln)\n\nJede Zeile kostet Kontext, und in einer langen Datei geht eine Anweisung eher unter. Anthropic empfiehlt kurze, klar strukturierte Regeln und nennt weniger als 200 Zeilen pro Datei als Richtwert. Imports ordnen Inhalte, werden beim Start aber genauso geladen."
+      "content": "**Aufnehmen:**\n\n- Eine Projektbeschreibung in einem Satz\n- Stack und unterstützte Versionen\n- Befehle für Build, Tests und Linting\n- Prüfbare Konventionen\n- Wichtige Pfade und Projektbegriffe\n- Links auf gepflegte Doku\n\n**Nicht aufnehmen:**\n\n- Geheimnisse, Tokens, Zugangsdaten und personenbezogene Daten\n- Vage Anweisungen wie \"schreibe guten Code\"\n- Alte Historie\n- Lange Abläufe (dafür gibt es Skills oder Doku)\n- Pfadsperren (dafür gibt es Berechtigungsregeln)\n\nJede Zeile kostet Kontext, und in langen Dateien gehen Anweisungen eher unter. Anthropic nennt weniger als 200 Zeilen pro Datei als Richtwert; Imports ordnen Inhalte, werden beim Start aber genauso geladen."
     },
     {
       "id": "template",
@@ -42,7 +41,7 @@
       "id": "auto-memory",
       "title": "Auto-Memory und Projektanweisungen",
       "readTimeMinutes": 1,
-      "content": "Claude-Code-Versionen mit Auto-Memory können Projektnotizen in lokale Markdown-Dateien schreiben. Die Funktion ist konfigurierbar, speichert nicht in jeder Sitzung etwas und taugt nicht als verlässliches Gedächtnis.\n\n- **CLAUDE.md:** von Menschen gepflegt, für gemeinsame, geprüfte Projektregeln.\n- **Auto-Memory:** lokal ausgewählte Notizen, geteilt zwischen Worktrees desselben Repositorys auf derselben Maschine.\n\nMit `/memory` prüfst, bearbeitest, deaktivierst oder löschst du Notizen. Geheimnisse gehören in keine der beiden Dateiarten."
+      "content": "Claude-Code-Versionen mit Auto-Memory können Projektnotizen in lokale Markdown-Dateien schreiben. Die Funktion ist konfigurierbar, speichert nicht in jeder Sitzung und taugt nicht als verlässliches Gedächtnis.\n\n- **CLAUDE.md:** von Menschen gepflegt, für gemeinsame, geprüfte Regeln.\n- **Auto-Memory:** lokale Notizen, geteilt zwischen Worktrees eines Repositorys auf derselben Maschine.\n\nMit `/memory` prüfst, bearbeitest, deaktivierst oder löschst du Notizen. Geheimnisse gehören in keine der beiden Dateiarten."
     }
   ],
   "widgets": [
@@ -70,7 +69,7 @@
           "Ein Changelog dessen, was dein Team im letzten Quartal ausgeliefert hat."
         ],
         "correct": 2,
-        "explanation": "CLAUDE.md-Anweisungen landen im Gesprächskontext, also halte sie kurz und genau. Geheimnisse gehören nicht hinein; was gelten muss, sichern technische Kontrollen.",
+        "explanation": "CLAUDE.md landet im Kontext, also halte sie kurz und genau. Geheimnisse bleiben draußen; was gelten muss, sichern technische Kontrollen.",
         "title": "Kurzprüfung",
         "copy": {
           "kindLabel": "Kurzprüfung",

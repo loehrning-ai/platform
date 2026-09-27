@@ -9,6 +9,7 @@ import {
   getBookSourceInputs,
 } from "./book-copy";
 import { BookPreviewController } from "./book-preview-controller";
+import { posterTitleFallbackStyle } from "@/lib/plakat/fit";
 
 const PRIMARY_READER_CLASS =
   "inline-flex min-h-11 max-w-full items-center justify-center gap-2 border-2 border-foreground bg-brand-orange px-4 py-2 text-center text-sm font-bold text-white transition-colors hover:bg-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange";
@@ -53,10 +54,13 @@ export function BuecherContent({
           className="mx-auto grid max-w-6xl gap-5 px-4 sm:gap-8 sm:px-6 lg:grid-cols-12 lg:items-end lg:gap-10"
           data-book-editorial-spread
         >
-          <header className="min-w-0 lg:col-span-8">
+          <header className="@container min-w-0 lg:col-span-8">
             <p className="text-label text-muted-foreground">{copy.kicker}</p>
+            {/* The site's one display step for top-level H1s (SPEC §4):
+                the poster title on paper, fit to its longest word, as /kurse. */}
             <h1
-              className={`${headingFontClassName} mt-3 max-w-[16ch] text-balance text-fluid-h1 font-bold text-foreground sm:mt-4 lg:text-display`}
+              className={`${headingFontClassName} poster-title mt-3 max-w-[16ch] text-foreground sm:mt-4`}
+              style={posterTitleFallbackStyle(`${copy.heading} ${copy.headingAccent}`)}
             >
               {copy.heading} {copy.headingAccent}
             </h1>
@@ -315,10 +319,6 @@ export function BuecherContent({
               );
             })}
           </div>
-
-          <p className="mt-6 max-w-4xl border-l-2 border-foreground px-4 py-1 text-xs leading-relaxed text-muted-foreground sm:ml-auto sm:mt-10">
-            {copy.sourceNote}
-          </p>
         </div>
       </section>
 

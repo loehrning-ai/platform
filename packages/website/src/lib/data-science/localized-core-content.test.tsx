@@ -185,7 +185,7 @@ describe("Data Science German overview and chapters 01-12", () => {
   it("renders reviewed German chapter and callout copy across the complete slice", async () => {
     const expected = {
       home: [
-        "aus Daten Entscheidungen abzuleiten",
+        "Aus Daten entscheiden.",
         "Kapitel öffnen",
         "Werkzeuge im Kurs",
       ],

@@ -250,12 +250,14 @@ describe("<WorkshopDetailContent>", () => {
           .filter((link) => !link.hasAttribute("data-cover-back"));
         expect(primary).toHaveClass("bg-scene-ink", "text-scene-ground", "min-h-12");
         expect(secondary).toHaveClass("border-scene-ink", "text-scene-ink", "min-h-12");
-        // The poster: the lg art and the phone strip, decorative, numbered.
+        // The poster: the lg art and the phone poster row (16:9, full
+        // bleed), decorative, numbered.
         const posters = band.querySelectorAll("svg[data-poster]");
         expect([...posters].map((poster) => poster.getAttribute("data-poster-format"))).toEqual([
           "portrait",
-          "strip",
+          "landscape",
         ]);
+        expect(band.querySelector("[data-plakat-art-phone]")).toHaveClass("aspect-[16/9]", "lg:hidden");
         for (const poster of posters) {
           expect(poster).toHaveAttribute("aria-hidden", "true");
           expect(poster.querySelector("[data-poster-numeral-text]")).toHaveTextContent(workshop.number);
@@ -549,7 +551,7 @@ describe("phoneDescription", () => {
     );
     const deck = container.querySelector('[data-material-role="deck"]')!;
     const short = deck.querySelector("[data-material-short]")!;
-    expect(short).toHaveTextContent("Plus 13 Minuten für Fragen.");
+    expect(short).toHaveTextContent("Für den Beamer.");
     expect(short).toHaveClass("sm:hidden");
     expect(short.nextElementSibling).toHaveClass("hidden", "sm:block");
     expect(deck).toHaveClass("has-[a:active]:bg-card-hover", "grid-cols-[1.5rem_minmax(0,1fr)]");

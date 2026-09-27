@@ -144,12 +144,12 @@ export const LESSON_MISSION_PROFILES = {
       ),
       {
         "more-tone": text(
-          "Tonalitätsbeispiele steuern nur die Form. Auch ein markengerechter Satz kann eine erfundene Wirkungszahl enthalten, also braucht jeder Claim eine Quelle oder sichtbare Unsicherheit.",
-          "Tone examples shape only form. An on-brand sentence can still contain an invented impact figure, so each claim needs a source or visible uncertainty.",
+          "Tonalitätsbeispiele steuern nur die Form. Auch ein markengerechter Satz kann eine erfundene Zahl enthalten.",
+          "Tone examples shape only form. An on-brand sentence can still carry an invented figure.",
         ),
         "longer-output": text(
-          "Länge erzeugt keine Evidenz, nur mehr Claims. Ein langer Entwurf kann denselben unbelegten Nutzen mehrfach wiederholen; binde jeden Claim an eine Quelle.",
-          "Length creates no evidence, only more claims. A long draft can repeat the same unsupported benefit several times; bind each claim to a source.",
+          "Länge erzeugt keine Evidenz, nur mehr Claims. Binde jeden Claim an eine Quelle.",
+          "Length adds claims, not evidence. Bind each claim to a source.",
         ),
       },
     ),
@@ -296,12 +296,12 @@ export const LESSON_MISSION_PROFILES = {
       ),
       {
         "label-first": text(
-          "Wer zuerst die Kategorie wählt, sucht danach bestätigende Tatsachen und übersieht leicht Systemgrenzen oder Rollen. Eine menschliche Freigabe macht einen entscheidungsbeeinflussenden Einsatz nicht automatisch risikoarm.",
-          "Picking the category first invites confirming facts and can hide system boundaries or roles. Human approval does not automatically make a decision-influencing use low risk.",
+          "Wer zuerst die Kategorie wählt, sucht bestätigende Tatsachen und übersieht Grenzen oder Rollen. Menschliche Freigabe macht einen Einsatz nicht automatisch risikoarm.",
+          "Picking the category first invites confirming facts and hides boundaries or roles. Human approval does not make a use low risk by itself.",
         ),
         "model-first": text(
-          "Das Modell allein bestimmt keine Pflicht. Derselbe Modelltyp hat in Rechtschreibprüfung und Bewerberauswahl andere Rollen und Risikopfade; prüfe zuerst den Einsatz.",
-          "The model alone sets no obligation. The same model type has different roles and risk paths in spell-checking and applicant selection; check the use first.",
+          "Das Modell allein bestimmt keine Pflicht. In Rechtschreibprüfung und Bewerberauswahl hat derselbe Modelltyp andere Risikopfade.",
+          "The model alone sets no obligation. The same model type has other risk paths in spell-checking and applicant selection.",
         ),
       },
     ),
@@ -443,12 +443,12 @@ export const LESSON_MISSION_PROFILES = {
       ),
       {
         "goal-only": text(
-          "Ein präzises Ziel begrenzt weder Mittel noch Freigaben. „Veröffentliche die Zusammenfassung“ ist eindeutig, erlaubt ohne Werkzeug- und Stoppgrenze aber das Veröffentlichen trotz Quellenkonflikt.",
-          "A precise goal bounds neither means nor approvals. “Publish the summary” is clear, yet without tool and stop limits it allows publishing through a source conflict.",
+          "Ein präzises Ziel begrenzt weder Mittel noch Freigaben. Ohne Werkzeug- und Stoppgrenze wird trotz Quellenkonflikt veröffentlicht.",
+          "A precise goal bounds neither means nor approvals. Without tool and stop limits, the agent publishes through a source conflict.",
         ),
         persona: text(
-          "Eine Persona beschreibt Verhalten, gibt aber keine Berechtigung und erzwingt keinen Stopp. Auch ein „Compliance-Prüfer“ kann ohne Gate einen widersprüchlichen Entwurf veröffentlichen.",
-          "A persona describes behavior but grants no authority and enforces no stop. Even a “compliance reviewer” agent can publish a conflicting draft when no gate blocks it.",
+          "Eine Persona gibt keine Berechtigung und erzwingt keinen Stopp. Auch ein „Compliance-Prüfer“ veröffentlicht, wenn kein Gate blockiert.",
+          "A persona grants no authority and enforces no stop. Even a “compliance reviewer” publishes when no gate blocks it.",
         ),
       },
     ),
@@ -590,8 +590,8 @@ export const LESSON_MISSION_PROFILES = {
       ),
       {
         "true-false": text(
-          "Wahr oder falsch erzwingt Gewissheit, wo das Signal mehrere Ursachen zulässt. Der Zeitstempel einer Kopie beweist weder Aufnahmezeit noch Fälschung. Halte Beobachtung und offene Unsicherheit getrennt.",
-          "A binary verdict forces certainty where the signal allows several causes. A copy's timestamp proves neither capture time nor fabrication. Keep observation and remaining uncertainty separate.",
+          "Wahr oder falsch erzwingt Gewissheit, wo das Signal mehrere Ursachen zulässt. Halte Beobachtung und Unsicherheit getrennt.",
+          "A binary verdict forces certainty where the signal allows several causes. Keep observation and uncertainty separate.",
         ),
         "popular-unpopular": text(
           "Popularität misst Verbreitung. Eine aus dem Kontext gerissene Kopie kann viral gehen, obwohl ihre Herkunft ungeklärt ist.",
@@ -726,8 +726,8 @@ export const LESSON_MISSION_PROFILES = {
           "The clock shows only when processing happens. Yesterday's event replayed today would look on time without event time.",
         ),
         "deploy-time": text(
-          "Deployment-Zeit datiert Code. Ein Ereignis kann vor dem Release entstehen und danach eintreffen; nur Ereignis- und Verarbeitungszeit zeigen diese Verspätung.",
-          "Deployment time dates code. An event can occur before a release and arrive after it; only event and processing time expose that delay.",
+          "Deployment-Zeit datiert Code. Nur Ereignis- und Verarbeitungszeit zeigen, dass ein Ereignis verspätet eintrifft.",
+          "Deployment time dates code. Only event and processing time expose a late arrival.",
         ),
       },
     ),
@@ -853,8 +853,8 @@ export const LESSON_MISSION_PROFILES = {
           "Training data must steer fitting or the model learns no parameters. That does not consume the sealed holdout.",
         ),
         validation: text(
-          "Validierungsdaten sind für Modell- und Hyperparameterentscheidungen da, ohne sie zu übernutzen. Die Lernrate wählst du dort; den finalen Holdout öffnest du danach einmal.",
-          "Validation data is for model and hyperparameter decisions, without overuse. You pick the learning rate there and open the final holdout once afterward.",
+          "Validierungsdaten dienen Modell- und Hyperparameterentscheidungen. Dort wählst du die Lernrate und öffnest danach einmal den Holdout.",
+          "Validation data serves model and hyperparameter choices. Pick the learning rate there, then open the final holdout once.",
         ),
       },
     ),
@@ -970,12 +970,12 @@ export const LESSON_MISSION_PROFILES = {
       ),
       {
         "partition-count": text(
-          "Die Partitionszahl steuert Parallelität und Datenverteilung. Auch bei zehn Partitionen kann in einer davon noch ein älteres Ereignis eintreffen.",
-          "Partition count controls parallelism and data distribution. Even with ten partitions, an older event can still arrive in one of them.",
+          "Die Partitionszahl steuert Parallelität. Auch bei zehn Partitionen kann in einer davon ein älteres Ereignis eintreffen.",
+          "Partition count controls parallelism. Even with ten partitions, an older event can arrive in one of them.",
         ),
         "replica-count": text(
-          "Replikas erhöhen die Verfügbarkeit, kopieren aber denselben Stand. Drei Replikas können dasselbe unvollständige Ereignisfenster enthalten. Nur ein Wasserzeichen bildet tolerierte Verspätung ab.",
-          "Replicas raise availability but copy the same state. Three replicas can hold the same incomplete event window. Only a watermark models tolerated lateness.",
+          "Replikas kopieren denselben unvollständigen Stand. Nur ein Wasserzeichen bildet tolerierte Verspätung ab.",
+          "Replicas copy the same incomplete state. Only a watermark models tolerated lateness.",
         ),
       },
     ),
@@ -1121,12 +1121,12 @@ export const LESSON_MISSION_PROFILES = {
       ),
       {
         "branch-name": text(
-          "Ein Branchname nennt die Absicht, aber weder erlaubte Dateien noch Abnahmekriterien. „fix-retry“ hindert keinen Agenten daran, auch Datenbankcode zu ändern.",
-          "A branch name states intent but defines neither allowed files nor acceptance criteria. “fix-retry” does not stop an agent from also changing database code.",
+          "Ein Branchname nennt die Absicht. Erlaubte Dateien und Abnahmekriterien legt er nicht fest.",
+          "A branch name states intent. It defines neither allowed files nor acceptance criteria.",
         ),
         "more-tools": text(
-          "Mehr Werkzeuge erweitern Fähigkeit und Schadensradius, setzen aber keine Grenze. Ohne Task-Vertrag weiß ein Agent mit Datenbankzugriff nicht, ob er das Schema ändern darf.",
-          "More tools expand capability and blast radius but set no boundary. Without a task contract, an agent with database access cannot know if schema changes are allowed.",
+          "Mehr Werkzeuge erweitern den Schadensradius, setzen aber keine Grenze. Ob Schemaänderungen erlaubt sind, regelt erst ein Task-Vertrag.",
+          "More tools widen the blast radius but set no boundary. Only a task contract says whether schema changes are allowed.",
         ),
       },
     ),
@@ -1192,7 +1192,7 @@ export const LESSON_MISSION_PROFILES = {
     courseSlug: "claude",
     instrument: text("Grounding-Komparator", "Grounding Comparator"),
     predictionPrompt: text(
-      "Welche Promptvariante erzeugt im Museumsfall weniger unbelegte Claims?",
+      "Welche Promptvariante erzeugt im Museumsfall weniger unbelegte Aussagen?",
       "Which prompt variant produces fewer unsupported claims in the museum case?",
     ),
     predictionChoices: choices(
@@ -1253,8 +1253,8 @@ export const LESSON_MISSION_PROFILES = {
           "Format tests only structure. A neatly formatted table can still present a disputed figure as certain.",
         ),
         length: text(
-          "Länge misst nur den Umfang. Schon „42 ist bestätigt“ ist trotz Quellenkonflikt zu sicher; mehr Wörter schließen die Lücke nicht.",
-          "Length measures only volume. Even “42 is confirmed” is overconfident despite a source conflict; more words would not close the gap.",
+          "Länge misst nur den Umfang. Schon „42 ist bestätigt“ ist trotz Quellenkonflikt zu sicher.",
+          "Length measures only volume. Even “42 is confirmed” is overconfident given the source conflict.",
         ),
       },
     ),
@@ -1404,12 +1404,12 @@ export const LESSON_MISSION_PROFILES = {
       ),
       {
         "full-history": text(
-          "Die ganze Historie mischt veraltete, abgelehnte und womöglich sensible Anweisungen. Eine früh verworfene Aktion wirkt dann wie ein erlaubter nächster Schritt. Übergib nur Ergebnis, Evidenz, Unsicherheit und Grenze.",
-          "Full history mixes stale, rejected and possibly sensitive instructions. An action rejected earlier can then look authorized. Hand off only result, evidence, uncertainty and limit.",
+          "Die ganze Historie mischt veraltete, abgelehnte und womöglich sensible Anweisungen. Übergib nur Ergebnis, Evidenz, Unsicherheit und Grenze.",
+          "Full history mixes stale, rejected and possibly sensitive instructions. Hand off only result, evidence, uncertainty and limit.",
         ),
         "role-only": text(
-          "Ein Rollenname klärt weder Ergebnis noch Spielraum. „Nächster Agent: Prüfer“ sagt nicht, welcher Claim offen ist oder ob veröffentlicht werden darf.",
-          "A role name states neither result nor scope. “Next agent: reviewer” says neither which claim is open nor whether publishing is allowed.",
+          "Ein Rollenname klärt weder Ergebnis noch Spielraum. Offen bleibt, welcher Claim strittig ist und ob veröffentlicht werden darf.",
+          "A role name states neither result nor scope. It leaves open which claim is disputed and whether publishing is allowed.",
         ),
       },
     ),

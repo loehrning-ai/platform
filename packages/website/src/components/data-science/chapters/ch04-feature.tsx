@@ -95,7 +95,7 @@ export default function Ch04Feature() {
         <p className="prose">
           In an interaction, the effect of A depends on B: an ad&apos;s
           relevance matters differently for different viewers, and a drug
-          works differently by patient age. Linear models need an explicit A×B
+          works differently by patient age. Linear models need an A×B
           feature; tree models can learn them through splits, depending on
           depth, sample size and regularization. Two-way partial dependence,
           SHAP interaction values or nested-model comparisons suggest

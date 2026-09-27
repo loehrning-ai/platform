@@ -25,9 +25,12 @@ export const PRINT_SCOPE_FALLBACK_MS = 1000;
 export function PrintSheetButton({
   label,
   scope = "sheet",
+  tone = "primary",
 }: {
   label: string;
   scope?: string;
+  /** "secondary" for a second print button on the page: one filled Mennige button per paper page. */
+  tone?: "primary" | "secondary";
 }) {
   const release = useRef<(() => void) | null>(null);
 
@@ -79,7 +82,7 @@ export function PrintSheetButton({
   return (
     <button
       type="button"
-      className="wz-btn wz-btn--primary"
+      className={tone === "primary" ? "wz-btn wz-btn--primary" : "wz-btn"}
       onClick={handleClick}
     >
       {label}

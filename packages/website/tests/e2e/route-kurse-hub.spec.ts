@@ -91,7 +91,7 @@ test.describe("/kurse hub", () => {
     // route protection is covered separately in route-ki-fuehrerschein.spec.ts.
     const proof = page.getByTestId("next-proof");
     await expect(
-      proof.getByRole("heading", { name: "Claude Course", exact: true }),
+      proof.getByRole("heading", { name: "Claude-Kurs", exact: true }),
     ).toBeVisible();
     await expect(
       proof.getByText("Offener Einstieg ohne Lernkonto", { exact: true }),
@@ -101,7 +101,7 @@ test.describe("/kurse hub", () => {
       proof.locator("[data-open-course-alternative]"),
     ).toHaveCount(0);
     const startCta = proof.getByRole("link", {
-      name: /^Kurs starten\s*:\s*Claude Course$/,
+      name: /^Kurs starten\s*:\s*Claude-Kurs$/,
     });
     await expect(startCta).toBeVisible();
     await expect(startCta).toHaveAttribute("href", CLAUDE_START);
@@ -138,7 +138,7 @@ test.describe("/kurse hub", () => {
         goal: "start",
         course: "KI-Führerschein",
         href: "/ki-fuehrerschein",
-        alternative: { course: "Claude Course", href: CLAUDE_START },
+        alternative: { course: "Claude-Kurs", href: CLAUDE_START },
       },
       {
         label: "Ich bewerte KI-Risiken",
@@ -155,7 +155,7 @@ test.describe("/kurse hub", () => {
         goal: "build",
         course: "AI-Native Arbeitskurs",
         href: "/ai-native",
-        alternative: { course: "Claude Course", href: CLAUDE_START },
+        alternative: { course: "Claude-Kurs", href: CLAUDE_START },
       },
       {
         label: "Ich arbeite mit Daten",

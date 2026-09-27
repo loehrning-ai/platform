@@ -600,7 +600,7 @@ describe("PromptLab", () => {
       fireEvent.click(
         screen.getByRole("button", { name: "Acknowledge degraded mode" }),
       );
-      fireEvent.click(screen.getByLabelText(/explicit policy stop/));
+      fireEvent.click(screen.getByLabelText(/record the policy stop/));
       expect(
         screen.getByText(/verifies neither the provider artifact nor the course certificate/i),
       ).toBeInTheDocument();

@@ -450,7 +450,13 @@ function Chip({
       data-filter-chip
       onClick={onClick}
       aria-pressed={active}
-      className={cx(FILTER_CHIP_CLASS, "tabular-nums")}
+      // Below the IDEA band the chosen filter takes the scene line (Kobalt,
+      // 7.15:1 against Kalkweiß), like the tab marker, instead of a third,
+      // unrelated Druckschwarz fill next to the Himbeere title.
+      className={cx(
+        FILTER_CHIP_CLASS,
+        "tabular-nums aria-pressed:border-scene-line aria-pressed:bg-scene-line aria-pressed:text-background",
+      )}
     >
       {children}
     </button>

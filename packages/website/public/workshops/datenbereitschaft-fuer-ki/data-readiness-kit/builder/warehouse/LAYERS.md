@@ -68,6 +68,7 @@ The deck uses two databases, `saas_bad` and `saas_ready`, so the comparison stay
 | --- | --- | --- |
 | Fix meaning in core, once | "Fix it in the prompt": "A means active" in the instructions | Each tool decodes differently. The recorded run searched `'active'` and found 0 rows. |
 | Keep source untouched | Clean data in place in source | The first bad fix destroys the evidence. |
+| Serve the AI five views at the grains its questions need | "Give the AI core so it can answer anything" | Core has 2,592 account-months, identifiers and system ids; D01 would have nothing to deny. |
 | One view per question family, at its grain | One wide mega-view at account-month grain | The AI must aggregate levels itself (1,066,140 = three levels summed). |
 | Constraints in core (PRIMARY KEY, CHECK) | Tests only in a report downstream | The wrong number is already in the board pack when the test runs. |
 

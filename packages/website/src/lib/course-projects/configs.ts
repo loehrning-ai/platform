@@ -65,8 +65,8 @@ export const COURSE_PROJECT_CONFIGS = {
       "Prompt brief with data classes, source plan and output redline",
     ),
     scenario: text(
-      "Ein fiktiver Büroausstatter will aus Produktnotizen eine Kundenmail machen. Der Entwurf mischt interne Hinweise und unbelegte Behauptungen und hat keine Prüfschritte.",
-      "A fictional office-supply company wants a customer email from product notes. The draft mixes internal notes and unsupported claims and has no review steps.",
+      "Ein fiktiver Büroausstatter macht aus Produktnotizen eine Kundenmail. Der Entwurf mischt interne Hinweise mit unbelegten Behauptungen.",
+      "A fictional office-supply company turns product notes into a customer email. The draft mixes internal notes with unsupported claims.",
     ),
     safety: text(
       "Nur die mitgelieferten Fantasiedaten verwenden, keine Namen, Kontaktdaten, vertraulichen Dokumente oder echten Geschäftsvorgänge.",
@@ -138,16 +138,16 @@ export const COURSE_PROJECT_CONFIGS = {
     courseSlug: "eu-ai-act-kurs",
     title: text("Das AI-Act-Fallarchiv", "The AI Act Case File"),
     mission: text(
-      "Ordne einen fiktiven KI-Einsatz ein, trenne Rollen und Pflichten und lege eine datierte Evidenzakte an statt eines pauschalen Rechtsurteils.",
-      "Classify a fictional AI use, separate roles and duties, and build a dated evidence file instead of a blanket legal verdict.",
+      "Ordne einen fiktiven KI-Einsatz ein, trenne Rollen und Pflichten und leg eine datierte Evidenzakte an.",
+      "Classify a fictional AI use, separate roles and duties, and build a dated evidence file.",
     ),
     artifact: text(
       "Datierte Fallakte: Systemgrenze, Rollen, Risikopfad, Pflichten, offene Rechtsfragen",
       "Dated case file: system boundary, roles, risk path, duties, open legal questions",
     ),
     scenario: text(
-      "Die fiktive Stadt Nordhafen prüft ein System, das synthetische Bewerbungen auf Ausbildungsplätze vorsortiert. Anbieter, Betreiber, Zweck und menschliche Entscheidung sind absichtlich lückenhaft beschrieben.",
-      "The fictional city of Northhaven is assessing a system that pre-sorts synthetic apprenticeship applications. Provider, deployer, purpose and human decision are deliberately incomplete.",
+      "Die fiktive Stadt Nordhafen prüft ein System, das synthetische Ausbildungsbewerbungen vorsortiert. Anbieter, Betreiber, Zweck und menschliche Entscheidung sind lückenhaft beschrieben.",
+      "The fictional city of Northhaven assesses a system that pre-sorts synthetic apprenticeship applications. Provider, deployer, purpose and human decision are incompletely described.",
     ),
     safety: text(
       "Keine echten Personen, keine Rechtsberatung. Ergebnisse sind Lernhypothesen, die an datierten Primärquellen zu prüfen sind.",
@@ -219,8 +219,8 @@ export const COURSE_PROJECT_CONFIGS = {
     courseSlug: "ai-native",
     title: text("Die kontrollierte Arbeitsstrecke", "The Controlled Work Run"),
     mission: text(
-      "Mach aus einem unscharfen Auftrag einen begrenzten Prompt, hol genau eine Modellantwort ein und bewerte sie mit lokal gesetzten Freigabe-, Abbruch- und Übergabekontrollen. Werkzeuge oder Workflows laufen nicht.",
-      "Turn a vague request into a bounded prompt, request exactly one model completion, and assess it with local approval, stop and handoff controls. No tools or workflows are executed.",
+      "Mach aus einem unscharfen Auftrag einen begrenzten Prompt, hol genau eine Modellantwort ein und bewerte sie mit Freigabe-, Abbruch- und Übergabekontrollen. Werkzeuge laufen nicht.",
+      "Turn a vague request into a bounded prompt, request exactly one model completion and assess it with approval, stop and handoff controls. No tools are executed.",
     ),
     artifact: text(
       "Lokal validierter Projektnachweis: eine Provider-Antwort mit Kontroll- und Übergabeplan",
@@ -381,8 +381,8 @@ export const COURSE_PROJECT_CONFIGS = {
       "The Fault-Tolerant Parcel Pipeline",
     ),
     mission: text(
-      "Lege vorab einen begrenzten Pipelineplan im Browser fest, aktiviere die feste Fehlerfixture und führe das vorgegebene Node-Programm mit Invariantentests auf dem Server aus.",
-      "Preregister a bounded pipeline plan in the browser, enable the fixed failure fixture, and run the server-supplied Node program with invariant tests.",
+      "Leg vorab einen begrenzten Pipelineplan fest, aktiviere die feste Fehlerfixture und führe das vorgegebene Node-Programm mit Invariantentests auf dem Server aus.",
+      "Preregister a bounded pipeline plan, enable the fixed failure fixture and run the server-supplied Node program with invariant tests.",
     ),
     artifact: text(
       "Lokal validierter Projektnachweis: fester Node-Lauf mit Mengenabgleich, 102→102-Replay und Backfill-Entscheidung",
@@ -468,16 +468,16 @@ export const COURSE_PROJECT_CONFIGS = {
     courseSlug: "data-science",
     title: text("Das belastbare Experiment", "The Defensible Experiment"),
     mission: text(
-      "Lege vorab einen begrenzten Analyseplan im Browser fest, aktiviere die feste Leakage-Fixture und führe das vorgegebene Experimentprogramm mit Invariantentests auf dem Server aus.",
-      "Preregister a bounded analysis plan in the browser, enable the fixed leakage fixture, and run the server-supplied experiment program with invariant tests.",
+      "Leg vorab einen begrenzten Analyseplan fest, aktiviere die feste Leakage-Fixture und führe das vorgegebene Experimentprogramm mit Invariantentests auf dem Server aus.",
+      "Preregister a bounded analysis plan, enable the fixed leakage fixture and run the server-supplied experiment program with invariant tests.",
     ),
     artifact: text(
       "Lokal validierter Projektnachweis: fester Experimentlauf mit sicherem/geleaktem Metrikvergleich und Model-Card-Entscheidung",
       "Locally validated project evidence: fixed experiment run with safe/leaked metric comparison and a model-card decision",
     ),
     scenario: text(
-      "Eine fiktive Lern-App testet zwei synthetische Onboarding-Varianten. Der Datensatz hat absichtlich fehlende Werte, eine nachgelagerte Leakage-Spalte und wiederholte Zwischenanalysen.",
-      "A fictional learning app tests two synthetic onboarding variants. The dataset has deliberate missing values, a downstream leakage column and repeated interim analyses.",
+      "Eine fiktive Lern-App testet zwei synthetische Onboarding-Varianten. Der Datensatz enthält fehlende Werte, eine nachgelagerte Leakage-Spalte und wiederholte Zwischenanalysen.",
+      "A fictional learning app tests two synthetic onboarding variants. The dataset holds missing values, a downstream leakage column and repeated interim analyses.",
     ),
     safety: text(
       "Der Datensatz ist generiert und beschreibt keine Personen. Lade keine eigenen Personen-, Gesundheits-, Finanz- oder Beschäftigtendaten.",
@@ -552,8 +552,8 @@ export const COURSE_PROJECT_CONFIGS = {
     courseSlug: "data-infrastructure",
     title: text("Der Streaming-Kontrollraum", "The Streaming Control Room"),
     mission: text(
-      "Lege vorab einen begrenzten Telemetrieplan im Browser fest, aktiviere die feste Partitionsfixture und führe das vorgegebene Recovery-Programm mit Invariantentests auf dem Server aus.",
-      "Preregister a bounded telemetry plan in the browser, enable the fixed partition fixture, and run the server-supplied recovery program with invariant tests.",
+      "Leg vorab einen begrenzten Telemetrieplan fest, aktiviere die feste Partitionsfixture und führe das vorgegebene Recovery-Programm mit Invariantentests auf dem Server aus.",
+      "Preregister a bounded telemetry plan, enable the fixed partition fixture and run the server-supplied recovery program with invariant tests.",
     ),
     artifact: text(
       "Lokal validierter Projektnachweis: fester Incidentlauf mit 684-ms-Bruch, 210-ms-Recovery ohne Verlust und Wiederherstellungsentscheidung",
@@ -564,8 +564,8 @@ export const COURSE_PROJECT_CONFIGS = {
       "The fictional Orbit Works streams synthetic sensor events. A network cut separates replicas, followed by backlog, rebalance, and late events.",
     ),
     safety: text(
-      "Infrastruktur und Telemetrie sind generiert. Der Code läuft isoliert ohne Netz, ohne Verbindung zu Cloud-Konten, Clustern oder externen Nachrichtensystemen.",
-      "Infrastructure and telemetry are generated. Code runs isolated without network, with no link to cloud accounts, clusters or external message systems.",
+      "Infrastruktur und Telemetrie sind generiert. Der Code läuft isoliert, ohne Netz und ohne Verbindung zu Cloud-Konten, Clustern oder Nachrichtensystemen.",
+      "Infrastructure and telemetry are generated. Code runs isolated, without network or links to cloud accounts, clusters or message systems.",
     ),
     completionCriteria: [
       text(
@@ -644,12 +644,12 @@ export const COURSE_PROJECT_CONFIGS = {
       "Locally validated project evidence: task spec and receipt from the fixed Sandbox patch-and-check chain",
     ),
     scenario: text(
-      "Das fiktive Paket queue-kit hat eine absichtlich fehlerhafte Retry-Funktion, lokale Tests und eine kleine AGENTS.md. Netzwerk, Secrets und fremde Repositories gibt es nicht.",
-      "The fictional queue-kit package has a deliberately faulty retry function, local tests and a small AGENTS.md. There is no network, no secrets and no third-party repository.",
+      "Das fiktive Paket queue-kit hat eine fehlerhafte Retry-Funktion, lokale Tests und eine kleine AGENTS.md, aber kein Netzwerk, keine Secrets und keine fremden Repositories.",
+      "The fictional queue-kit package has a faulty retry function, local tests and a small AGENTS.md, with no network, secrets or third-party repositories.",
     ),
     safety: text(
-      "Die Browser-Konsole simuliert `queue-kit` lokal. Der echte Lauf nutzt nur Dateien vom Server und eine feste Zehn-Schritt-Sequenz; eigener Code, freie Befehle und Repositories sind ausgeschlossen.",
-      "The browser console simulates `queue-kit` locally. The real run uses only server-generated files and a fixed ten-step sequence; your own code, free commands and repositories are not accepted.",
+      "Die Browser-Konsole simuliert `queue-kit` lokal. Der echte Lauf nutzt nur Serverdateien und eine feste Zehn-Schritt-Sequenz; eigener Code und freie Befehle sind ausgeschlossen.",
+      "The browser console simulates `queue-kit` locally. The real run uses only server files and a fixed ten-step sequence; your own code and free commands are not accepted.",
     ),
     completionCriteria: [
       text(
@@ -804,16 +804,16 @@ export const COURSE_PROJECT_CONFIGS = {
       "The Delegation Control Brief",
     ),
     mission: text(
-      "Schreib einen begrenzten Delegationsprompt, hol genau eine Modellantwort ein und bewerte sie mit lokal gesetzten Budget-, Freigabe-, Abbruch- und Übergabekontrollen. Agenten oder Werkzeuge laufen nicht.",
-      "Write a bounded delegation prompt, request exactly one model completion, and assess it with local budget, approval, stop and handoff controls. No agents or tools are executed.",
+      "Schreib einen begrenzten Delegationsprompt, hol genau eine Modellantwort ein und bewerte sie mit Budget-, Freigabe-, Abbruch- und Übergabekontrollen. Agenten laufen nicht.",
+      "Write a bounded delegation prompt, request exactly one model completion and assess it with budget, approval, stop and handoff controls. No agents or tools are executed.",
     ),
     artifact: text(
       "Lokal validierter Projektnachweis: eine Provider-Antwort mit Delegations-, Kontroll- und Eingriffsplan",
       "Locally validated project evidence: one provider completion with a delegation, control and intervention plan",
     ),
     scenario: text(
-      "Die fiktive Firma Lumen Tools plant aus synthetischen Support-Tickets einen Verbesserungsbericht. Scout, Analyst, Kritiker und Redakteur sind Rollen im lokalen Plan; kein Agent läuft.",
-      "The fictional company Lumen Tools plans an improvement report from synthetic support tickets. Scout, analyst, critic and editor are roles in the local plan; no agent runs.",
+      "Die fiktive Firma Lumen Tools plant aus synthetischen Support-Tickets einen Verbesserungsbericht. Scout, Analyst, Kritiker und Redakteur sind nur Rollen im Plan.",
+      "The fictional company Lumen Tools plans an improvement report from synthetic support tickets. Scout, analyst, critic and editor are only roles in the plan.",
     ),
     safety: text(
       "Alle Tickets und Firmen sind erfunden. Kein autonomer Versand, keine externen Tools, keine echten Kunden-, Team- oder Betriebsdaten.",

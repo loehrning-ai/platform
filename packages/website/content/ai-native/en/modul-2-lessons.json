@@ -908,7 +908,7 @@
           "id": "modul_2_lesson_7_section_2",
           "title": "Build a CLAUDE.md",
           "readTimeMinutes": 3,
-          "content": "A CLAUDE.md with clearly fictional data:\n\n```markdown\n# CLAUDE.md: Fictional sales role\n\n## Context\n- Fictional User Alpha, sales for fictional sample products\n- Organization: Fiktivwerk Beispiel GmbH (fictional)\n\n## Language and format\n- English, plain, concise and pragmatic\n\n## Data boundaries\n- No real customer, financial or access data\n- Prices, dates and commitments remain placeholders until approval\n\n## Tools\n- Use only explicitly approved, least-privileged tools\n- No external messages or write actions without approval\n```\n\nCheck when and from which path your client loads Project instructions. The file does not enforce permissions."
+          "content": "A CLAUDE.md with clearly fictional data:\n\n```markdown\n# CLAUDE.md: Fictional sales role\n\n## Context\n- Fictional User Alpha, sales for fictional sample products\n- Organization: Fiktivwerk Beispiel GmbH (fictional)\n\n## Language and format\n- English, plain, concise and pragmatic\n\n## Data boundaries\n- No real customer, financial or access data\n- Prices, dates and commitments remain placeholders until approval\n\n## Tools\n- Use only approved, least-privileged tools\n- No external messages or write actions without approval\n```\n\nCheck when and from which path your client loads Project instructions. The file does not enforce permissions."
         },
         {
           "id": "modul_2_lesson_7_section_3",
@@ -920,7 +920,7 @@
           "id": "modul_2_lesson_7_section_4",
           "title": "What never ends up in Memory",
           "readTimeMinutes": 2,
-          "content": "Third-party personal data, credentials and confidential business information go into persistent Memory only if an approved purpose, legal basis, product configuration and retention policy explicitly allow it.\n\n**Normally stays out:** customer names and contact details, account numbers, third-party email addresses, margins and negotiation strategies, HR records.\n\n**Possible after policy review:** your public role and organization, general style preferences, approved tools, typical non-confidential task categories."
+          "content": "Third-party personal data, credentials and confidential business information go into persistent Memory only if an approved purpose, legal basis, product configuration and retention policy allow it.\n\n**Normally stays out:** customer names and contact details, account numbers, third-party email addresses, margins and negotiation strategies, HR records.\n\n**Possible after policy review:** your public role and organization, general style preferences, approved tools, typical non-confidential task categories."
         }
       ],
       "quiz": [
@@ -953,7 +953,7 @@
         },
         {
           "id": "modul_2_lesson_7_q2",
-          "questionText": "What does not belong in persistent Memory without explicit approval and controls?",
+          "questionText": "What does not belong in persistent Memory without approval and controls?",
           "answerOptions": [
             {
               "id": "a",

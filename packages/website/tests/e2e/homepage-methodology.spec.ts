@@ -59,7 +59,12 @@ test.describe("Homepage learning-platform transparency", () => {
     const pill = page.getByTestId("footer-data-pill");
     await expect(pill).toBeVisible();
     await expect(pill).toContainText("Datenstand: Q3 2026");
-    await expect(pill).toContainText(`Aktualisiert: ${SITE_CONTENT_DATE}`);
+    // One date line: the reviewed ISO date is the <time> datetime behind
+    // "Q3 2026", no longer a second visible "Aktualisiert" date.
+    await expect(pill.locator("time")).toHaveAttribute(
+      "datetime",
+      SITE_CONTENT_DATE,
+    );
   });
 
   test("book PDF paths are disabled in the simplified build", async ({

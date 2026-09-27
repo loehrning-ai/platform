@@ -421,7 +421,7 @@ export const KI_CHECK_UI_COPY = {
     methodSummary: "Methode und Grenzen der Auswertung",
     methodTitle: "So wird das Profil berechnet",
     methodBody:
-      "Je Feld werden zwei Selbstauskünfte auf 0 bis 100 umgerechnet, der Gesamtstand ist der Mittelwert der fünf Felder. Liegen die Grundlagen unter 50, empfiehlt der Check den Grundlagenkurs, sonst den Kurs zum schwächsten Feld. Das Ergebnis ist eine Orientierung, keine Prüfung oder Zertifizierung.",
+      "Je Feld ergeben zwei Selbstauskünfte einen Wert von 0 bis 100, der Gesamtstand ist ihr Mittelwert. Unter 50 bei den Grundlagen empfiehlt der Check den Grundlagenkurs, sonst den Kurs zum schwächsten Feld; eine Prüfung ist das nicht.",
     privacyBody:
       "Die Antworten werden nur in diesem Browser ausgewertet und nicht gespeichert.",
     pathwayLabels: {
@@ -472,7 +472,7 @@ export const KI_CHECK_UI_COPY = {
     methodSummary: "Method and limits of this result",
     methodTitle: "How the profile is calculated",
     methodBody:
-      "Two self-reported answers per field are scaled to 0 to 100, and the overall score is the mean of the five fields. If your Basics score is below 50, the check recommends the foundation course; otherwise, the course for your weakest field. The result is orientation, not an exam or certification.",
+      "Two self-reported answers per field give a score from 0 to 100, and the overall score is their mean. Below 50 in Basics, the check recommends the foundation course, otherwise the course for your weakest field; it is not an exam.",
     privacyBody:
       "Answers are scored only in this browser and are not stored.",
     pathwayLabels: {

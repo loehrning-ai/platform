@@ -9,8 +9,7 @@
   "keyConcepts": [
     "Prompt-Bibliothek",
     "Geteiltes CLAUDE.md",
-    "Evaluierungs-Set",
-    "Checkliste für die Teilbarkeit"
+    "Evaluierungs-Set"
   ],
   "quiz": [],
   "sections": [
@@ -18,17 +17,17 @@
       "id": "why-share",
       "title": "Warum Prompts teilen",
       "readTimeMinutes": 1,
-      "content": "Ein Prompt für eine Person trägt versteckten Kontext: lokale Pfade, Teamnamen, unausgesprochenen Quellenzugriff, ein Ausgabeformat, das nur die Autorin kennt. Behandle wiederkehrende Prompts als gepflegte Artefakte und dokumentiere Aufgabe, Eingaben, Modell- und Tool-Annahmen, erwartete Ausgabe, Eigentümer und Eval-Fälle."
+      "content": "Ein Prompt für eine Person trägt versteckten Kontext: lokale Pfade, Teamnamen, unausgesprochenen Quellenzugriff, ein Ausgabeformat, das nur die Autorin kennt. Behandle wiederkehrende Prompts als gepflegte Artefakte mit Aufgabe, Eingaben, Modell- und Tool-Annahmen, erwarteter Ausgabe, Eigentümer und Eval-Fällen."
     },
     {
       "id": "three-artifacts",
-      "title": "Drei gemeinsam gepflegte Arbeitsmittel",
+      "title": "Gemeinsame Arbeitsmittel",
       "readTimeMinutes": 1,
-      "content": "- **01 · Prompt-Bibliothek.** Ein Repository oder Gdoc mit benannten, getesteten Prompts für Wiederkehrendes: PR-Review, Standup-Zusammenfassung, Post-Mortem-Entwurf, Release Notes.\n- **02 · CLAUDE.md.** Liegt im Repository, wird wie Code reviewt und bei geänderten Konventionen aktualisiert.\n- **03 · Evaluierungs-Set.** Eine Handvoll realistischer Eingaben mit der erwarteten Art der Ausgabe, nach jeder Prompt-Änderung erneut ausgeführt."
+      "content": "- **01 · Prompt-Bibliothek.** Ein Repository oder Gdoc mit benannten, getesteten Prompts für Wiederkehrendes wie PR-Review, Standup-Zusammenfassung oder Release Notes.\n- **02 · CLAUDE.md.** Liegt im Repository, wird wie Code reviewt und ändert sich mit den Konventionen.\n- **03 · Evaluierungs-Set.** Einige realistische Eingaben mit der erwarteten Art der Ausgabe, nach jeder Prompt-Änderung erneut ausgeführt."
     },
     {
       "id": "sharing-well",
-      "title": "Einen Prompt für andere nutzbar machen",
+      "title": "Einen Prompt teilen",
       "readTimeMinutes": 1,
       "content": "Vor der Veröffentlichung:\n\n- **Lokales ersetzen,** etwa Projekt- und Pfadnamen durch Platzhalter wie `<PROJECT>`.\n- **Umfang und Voraussetzungen nennen:** Einsatzfall, benötigte Quellen, erlaubte Aktionen.\n- **Ein geprüftes Beispiel mitgeben,** als Illustration markiert und ohne sensible Daten.\n- **Bekannte Fehler dokumentieren** und die wesentlichen an Eval-Fälle oder Kontrollen hängen."
     },
@@ -36,7 +35,7 @@
       "id": "rituals",
       "title": "Regelmäßige kurze Reviews",
       "readTimeMinutes": 1,
-      "content": "Prüfe in einem kurzen, wiederkehrenden Review einen Ablauf, seine Belege und einen Fehlerfall. Ein Prompt kommt erst in die gemeinsame Bibliothek, wenn eine andere Person sein Ergebnis allein anhand der Dokumentation reproduziert."
+      "content": "Prüfe in einem kurzen, wiederkehrenden Termin einen Ablauf, seine Belege und einen Fehlerfall. Ein Prompt kommt erst in die gemeinsame Bibliothek, wenn eine andere Person sein Ergebnis allein anhand der Dokumentation reproduziert."
     }
   ],
   "widgets": [

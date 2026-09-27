@@ -116,33 +116,19 @@ describe("demo autoplay visibility lifecycle", () => {
     expect(screen.getByText(memo)).toBeInTheDocument();
   });
 
-  it("shows the outbound draft on load, replays only on click, and never loops", () => {
+  it("shows the outbound draft on load, static: nothing plays or loops", () => {
     const { container } = render(<OutboundWorkflowDemo />);
 
-    // Final state first, with no looping pulse, scan or caret.
+    // Final state first, with no looping pulse, scan or caret, and no
+    // replay: the German page has the English static layout.
     expectNoInfiniteAnimation(container);
-    expect(screen.getByText("Versand simuliert 09:14")).toBeInTheDocument();
+    expect(screen.getByText("Qualifiziert, nicht gesendet")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Neu abspielen/ })).toBeNull();
 
-    // Entering the viewport does not start a run by itself.
-    setIntersecting(true);
-    act(() => vi.advanceTimersByTime(3_000));
-    expect(screen.getByText("Schritt 4 / 4")).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: "↻ Neu abspielen" }));
-    expect(screen.getByText("Schritt 0 / 4")).toBeInTheDocument();
-    act(() => vi.advanceTimersByTime(400));
-    expect(screen.getByText("Schritt 1 / 4")).toBeInTheDocument();
-    expectNoInfiniteAnimation(container);
-
-    // Leaving the viewport pauses the replay at the start.
-    setIntersecting(false);
-    expect(screen.getByText("Schritt 0 / 4")).toBeInTheDocument();
-
-    // Re-entry completes one bounded run and settles on the final state.
-    setIntersecting(true);
+    // Static: it does not even observe the viewport.
     act(() => vi.advanceTimersByTime(3_000));
     expectNoInfiniteAnimation(container);
-    expect(screen.getByText("Versand simuliert 09:14")).toBeInTheDocument();
+    expect(screen.getByText("Qualifiziert, nicht gesendet")).toBeInTheDocument();
 
     const checklist = screen.getByRole("button", {
       name: "Was fehlt vor einem echten Versand?",

@@ -229,7 +229,7 @@ test.describe("Claude Course golden path", () => {
       .getByRole("radiogroup", { name: "Answer options" })
       .first();
     const correctAnswer = firstQuestion.getByRole("radio", {
-      name: /Any specific service claim is ungrounded; request or supply telemetry before accepting an answer\./,
+      name: /Any named service is a guess until you supply telemetry\./,
     });
     await expect(correctAnswer).toBeVisible();
     await correctAnswer.click();

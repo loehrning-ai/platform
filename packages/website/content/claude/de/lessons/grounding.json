@@ -16,13 +16,13 @@
       "id": "not-a-bug",
       "title": "Warum unbelegte Antworten entstehen",
       "readTimeMinutes": 1,
-      "content": "Unbelegt ist eine Aussage, die keine erlaubte Quelle rechtfertigt; relevanter Kontext im Fenster verhindert sie nicht. Ursachen sind fehlendes Retrieval, widersprüchliche Dokumente, unklare Anweisungen, Modellfehler oder Zitate ohne passenden Beleg.\n\nStruktur senkt das Risiko: autoritative Daten, festgelegte erlaubte Quellen, prüfbare Zitate, erlaubte Abstention und ein kontrolliertes Ergebnis. Ein Zitat ist ein Verweis, den jemand prüfen muss."
+      "content": "Unbelegt ist eine Aussage, die keine erlaubte Quelle rechtfertigt; relevanter Kontext im Fenster verhindert sie nicht. Ursachen sind fehlendes Retrieval, widersprüchliche Dokumente, unklare Anweisungen, Modellfehler oder Zitate ohne passenden Beleg.\n\nStruktur senkt das Risiko: autoritative Daten, festgelegte Quellen, prüfbare Zitate, erlaubte Abstention und ein kontrolliertes Ergebnis. Ein Zitat ist ein Verweis, den jemand prüfen muss."
     },
     {
       "id": "three-grounding-moves",
-      "title": "Die drei Verankerungsstrategien",
+      "title": "So verankerst du Antworten",
       "readTimeMinutes": 1,
-      "content": "- **01 · Quelle bereitstellen oder abrufen.** Aktuelle Richtlinie, Log oder Code; das Modelltraining ist keine Quelle für private oder veränderliche Fakten.\n- **02 · Nachvollziehbarkeit verlangen.** Quellenkennung und Belegpassage für jede wesentliche Aussage, geprüft an der Aussage.\n- **03 · Abstention definieren.** Etwa: „Wenn die erlaubten Quellen keine Antwort stützen, gib `NOT_IN_CONTEXT` aus und nenne die fehlende Information.“ Teste beantwortbare und unbeantwortbare Fälle."
+      "content": "- **01 · Quelle bereitstellen oder abrufen.** Aktuelle Richtlinie, Log oder Code; das Training ist keine Quelle für private oder veränderliche Fakten.\n- **02 · Nachvollziehbarkeit verlangen.** Quellenkennung und Belegpassage für jede wesentliche Aussage, geprüft an der Aussage.\n- **03 · Abstention definieren.** Etwa: „Wenn die erlaubten Quellen keine Antwort stützen, gib `NOT_IN_CONTEXT` aus und nenne die fehlende Information.“ Teste beantwortbare und unbeantwortbare Fälle."
     },
     {
       "id": "smell-test",
@@ -78,7 +78,7 @@
         "cpId": "arena",
         "task": "Schreibe einen Prompt, der aus einem beigefügten Richtliniendokument antwortet und ohne Beleg NOT_IN_CONTEXT ausgibt.",
         "original": "beantworte fragen zu diesem dokument und erfinde nichts",
-        "criteria": "erfordert Zitate, liefert ein explizites Out-of-Context-Signal, beschränkt Antworten auf den beigefügten Kontext"
+        "criteria": "erfordert Zitate, liefert ein Out-of-Context-Signal, beschränkt Antworten auf den beigefügten Kontext"
       }
     }
   ]

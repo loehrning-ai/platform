@@ -1025,7 +1025,8 @@ export function LessonMissionControl({
     >
       <header className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] gap-0 border-b border-hairline text-foreground sm:grid-cols-1 lg:grid-cols-[minmax(0,1fr)_auto]">
         <div className="min-w-0 py-3">
-          <p className="text-label text-muted-foreground">
+          {/* Phones drop the eyebrow: the title and the tabs below say it. */}
+          <p className="text-label text-muted-foreground max-sm:hidden">
             {copy.eyebrow} ·{" "}
             <span className="hidden sm:inline">{copy.title} · </span>
             {profile.instrument[locale]}
@@ -1183,11 +1184,13 @@ export function LessonMissionControl({
                 );
               })}
             </ol>
+            {/* The selected tab already shows the beat on a phone; the step
+                line stays for screen readers there. */}
             <p
               role="status"
               aria-live="polite"
               aria-atomic="true"
-              className="mt-2 text-label text-muted-foreground"
+              className="mt-2 text-label text-muted-foreground max-sm:sr-only"
             >
               {copy.currentStep}:{" "}
               {String(displayActivePanel + 1).padStart(2, "0")}/
@@ -1195,7 +1198,7 @@ export function LessonMissionControl({
               {copy.steps[currentStepId]}
             </p>
             <p id={`${headingId}-sequence-help`} className="sr-only">
-              {copy.locked}. {copy.predictionHint}
+              {copy.locked}.
             </p>
             {!controlsEnabled ? (
               <p

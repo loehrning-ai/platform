@@ -81,7 +81,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Match the workflow to the task and its control boundary:\n\n- **Small local edit, known implementation** → edit directly or use inline completion.\n- **Unfamiliar codebase** → start read-oriented and interactive, with cited files and call paths, before any edits.\n- **Well-specified background task** → dedicated environment, explicit checks, diff or pull-request review gate.\n- **Terminal-centered workflow** → a CLI agent that runs the repository's commands inside the required sandbox and approval policy.\n- **Provider, residency or offline constraint** → check model endpoint, telemetry, credentials and network path; a local client alone does not make a workflow offline.\n\nFor security or procurement decisions, read the current product documentation.",
+            "Match the workflow to the task and its control boundary:\n\n- **Small local edit, known implementation** → edit directly or use inline completion.\n- **Unfamiliar codebase** → start read-oriented and interactive, with cited files and call paths, before any edits.\n- **Well-specified background task** → dedicated environment, named checks, diff or pull-request review gate.\n- **Terminal-centered workflow** → a CLI agent that runs the repository's commands inside the required sandbox and approval policy.\n- **Provider, residency or offline constraint** → check model endpoint, telemetry, credentials and network path; a local client alone does not make a workflow offline.\n\nFor security or procurement decisions, read the current product documentation.",
         },
       ],
     },

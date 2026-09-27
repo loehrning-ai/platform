@@ -1359,7 +1359,7 @@ const CV_ENGINE_TOOL_ARTIFACT = {
     statusNote:
       "Das Schema in cv.yaml und die Vorlagen können sich noch ändern, es gibt keine gehostete Instanz, und Antworten auf Issues sind nicht garantiert. Du betreibst das Werkzeug selbst auf deinem Rechner. Lies vor dem Konfigurieren docs/data-flow.md im Repository. Das Diagramm darin zeigt, welche Datenwege lokal bleiben.",
     dataFlow:
-      "Der Kern rendert lokal: cv.yaml, Schriften und CSS bleiben im Checkout, der PDF-Build öffnet keinen Socket und braucht keinen API-Schlüssel. Ohne Konfiguration spricht der Editor nur mit 127.0.0.1 und hält Dokumente im Arbeitsspeicher; dauerhaft speichert nur die selbst betriebene Supabase-Variante (DEPLOY.md). Optionaler KI-Import und Textgenerierung rufen mit deinem Schlüssel nach außen oder bleiben mit Ollama lokal.",
+      "Der Kern rendert lokal: cv.yaml, Schriften und CSS bleiben im Checkout; der PDF-Build öffnet keinen Socket und braucht keinen API-Schlüssel. Ohne Konfiguration spricht der Editor nur mit 127.0.0.1 und hält Dokumente im Arbeitsspeicher; dauerhaft speichert nur die selbst betriebene Supabase-Variante (DEPLOY.md). Optionaler KI-Import und Textgenerierung rufen mit deinem Schlüssel nach außen oder bleiben mit Ollama lokal.",
     prerequisites: [
       {
         label: "Python 3.13",

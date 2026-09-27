@@ -37,3 +37,13 @@ export function expectCapsInsideScene(container: ParentNode): void {
     ).not.toBeNull();
   }
 }
+
+/**
+ * A text matcher for one whole caps line. Each " · " part of a caps line is
+ * its own unbreakable run (CapsLine), so the plain string matcher, which
+ * reads one element's own text nodes, cannot see the line as one text.
+ */
+export function capsLine(text: string): (content: string, element: Element | null) => boolean {
+  return (_content, element) =>
+    element?.classList.contains("plakat-caps") === true && element.textContent === text;
+}

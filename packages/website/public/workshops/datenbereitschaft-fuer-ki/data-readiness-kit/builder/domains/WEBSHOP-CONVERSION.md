@@ -9,7 +9,7 @@ rates. The AI averages them and reports **5.00 %**; the shop's real rate is 480 
 month an order belongs to.
 
 FOLDLINE twin: logo churn. Every segment had 40 starting accounts, so averaging three 10 % rates
-gave the pooled 10 % by luck. The web shop has unequal bases.
+gave the pooled 10 % by luck. The web shop's channels have unequal bases, so the average is wrong.
 
 All data is synthetic. Reporting time zone: UTC (written by the owner). Clock: 2026-07-01 09:00 UTC.
 

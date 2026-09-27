@@ -239,7 +239,7 @@ test.describe("AI-Native public preview and login-gated course app (: /ai-native
       expect(url.searchParams.get("reason")).toBe("auth-not-configured");
       await expect(
         page.getByText(
-          "Eine Anmeldung ist in dieser Umgebung nicht freigegeben. Die vier Grundlagenkurse sind deshalb vorübergehend nicht erreichbar. Bücher, Demos, KI-Check und technische Kurse bleiben öffentlich.",
+          "Die Anmeldung ist hier nicht freigegeben, deshalb sind die vier Grundlagenkurse gerade nicht erreichbar.",
         ),
       ).toBeVisible();
     });

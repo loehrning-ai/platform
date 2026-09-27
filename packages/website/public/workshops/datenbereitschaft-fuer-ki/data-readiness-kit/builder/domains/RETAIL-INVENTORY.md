@@ -4,7 +4,7 @@
 
 A bike shop's month-end helmet count is a **level**: the water in the bathtub at one moment.
 Deliveries in and sales out are the **change**. Sell-through is a **rate**: helmets sold divided by
-helmets the shop could have sold. The export gives an AI a column called `qty`; it adds three
+helmets the shop could have sold. The export gives an AI a column called `qty`; the AI adds three
 month-end counts and reports "Q2 stock = 315". On 30 June the shelf held 110.
 
 FOLDLINE twin: ending MRR (a level) vs net new MRR (a change). The recorded run read changes as
@@ -54,7 +54,7 @@ Harbour 110 + Market 40 = 150 helmets on 30 June.
 
 ## The serving view
 
-Full runnable file, with core table, comments and checks: [`sql/retail_inventory.sql`](sql/retail_inventory.sql).
+The view is below. The full runnable file, with core table, comments and checks, is [`sql/retail_inventory.sql`](sql/retail_inventory.sql).
 
 ```sql
 CREATE VIEW analytics.inventory_by_store_category_monthly AS

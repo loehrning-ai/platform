@@ -12,7 +12,7 @@ const lesson: ClaudeLesson = {
   id: "evals",
   number: 11,
   title: "Prompt debugging and evals",
-  subtitle: "How to know a prompt is actually better.",
+  subtitle: "How to tell whether a prompt got better.",
   durationMinutes: 12,
   trackId: "team",
   hook: "Compare prompt versions on fixed cases.",
@@ -28,28 +28,28 @@ const lesson: ClaudeLesson = {
       title: "Why evals",
       readTimeMinutes: 1,
       content:
-        "A prompt change can fix one example and break another. An evaluation fixes inputs, success criteria and grading logic so versions compare under the same conditions.\n\nStart small with common cases, edge cases and known failures, and add cases from production. Output varies, so use repeated trials when a decision rests on pass rates. Record model, settings, prompt version, inputs, outputs and grades.",
+        "A prompt change can fix one example and break another. An eval fixes inputs, success criteria and grading so versions compare under the same conditions.\n\nStart with common cases, edge cases and known failures, then add cases from production. Output varies, so decisions on pass rates need repeated trials. Record model, settings, prompt version, inputs, outputs and grades.",
     },
     {
       id: "mvp-eval",
       title: "A small evaluation set",
       readTimeMinutes: 2,
       content:
-        "A spreadsheet, JSON file or test module is enough; each case needs a realistic input and written acceptance criteria.\n\n```\neval_v1:\n  - input:    <common case>\n    expects:  <checkable requirements>\n  - input:    <hard edge case>\n    expects:  <…>\n  - input:    <known failure mode>\n    expects:  <…>\n  - input:    <missing or ambiguous data>\n    expects:  <abstention or clarification behavior>\n```\n\nRun the same cases before and after a change, and save raw outputs and grades for review.",
+        "A spreadsheet, JSON file or test module is enough; each case needs a realistic input and written acceptance criteria.\n\n```\neval_v1:\n  - input:    <common case>\n    expects:  <checkable requirements>\n  - input:    <hard edge case>\n    expects:  <…>\n  - input:    <known failure mode>\n    expects:  <…>\n  - input:    <missing or ambiguous data>\n    expects:  <abstention or clarification behavior>\n```\n\nRun the same cases before and after each change and keep raw outputs and grades.",
     },
     {
       id: "debugging",
       title: "Debugging a broken prompt",
       readTimeMinutes: 1,
       content:
-        "Reproduce the failure with fixed input, model, settings and tool state. Disable or simplify prompt sections until the conflict shows, then reintroduce them one at a time on the same cases.\n\nThis is delta debugging, but model variance means one pass proves no cause. Repeat trials and read the transcripts first.",
+        "Reproduce the failure with fixed input, model, settings and tool state. Disable or simplify prompt sections until the conflict shows, then bring them back one at a time on the same cases.\n\nModel variance means one pass proves no cause, so repeat trials and read the transcripts first.",
     },
     {
       id: "llm-as-judge",
-      title: "Judging quality with a second model",
+      title: "A model as judge",
       readTimeMinutes: 1,
       content:
-        "A model grader applies a rubric to open-ended output and brings its own errors and preferences. Calibrate it on human-reviewed examples, randomize pairwise order, keep its justification and track disagreement.\n\nDeterministic graders check schema, required fields, citations and executable tests. Combine graders only when each measures a defined requirement.",
+        "A model grader applies a rubric to open-ended output and brings its own errors and preferences. Calibrate it on human-reviewed examples, randomize pairwise order, keep its reasoning and track disagreement.\n\nDeterministic graders check schema, required fields, citations and executable tests. Combine graders only when each measures a defined requirement.",
     },
   ],
   widgets: [
@@ -61,8 +61,7 @@ const lesson: ClaudeLesson = {
         lessonId: "evals",
         cpId: "tagger",
         title: "Name the failure mode",
-        scenario:
-          "Tag the failure mode in each of five simulated outputs. The examples are fixed course data.",
+        scenario: "Tag the failure mode in each simulated output.",
         modes: [
           {
             id: "halluzination",

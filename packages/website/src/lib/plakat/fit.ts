@@ -5,11 +5,12 @@ import { BOLD_ADVANCES, BOLD_KERNING, UNITS_PER_EM } from "./type-metrics";
  * The poster headline fit rule (Werkzeichnung v2, SPEC §4).
  *
  * `.poster-title` sets its size to
- *   max(2.25rem, min(var(--text-poster), calc(100cqi / var(--fit))))
+ *   max(2.125rem, min(var(--text-poster), calc(100cqi / var(--fit))))
  * where `--fit` is the em width of the title's longest unbreakable segment.
- * The component writes `--fit` inline from `fitEm()`, so the longest word
- * always fits its column: "Geschäftsberichte" takes 36px at 320 and about
- * 45px at 390, every shorter title reaches the 50px poster size.
+ * The component writes `--fit` inline from `fitEm()` (band titles add the
+ * fallback-face headroom, `posterTitleFallbackStyle()`), so the longest word
+ * always fits its column: "Geschäftsberichte" takes about 34px at 320 and
+ * 43px at 390, every shorter title reaches the 50px poster size.
  *
  * Widths come from `type-metrics.ts`, measured from the bold web font in
  * Chromium (scripts/plakat/build-type-metrics.mjs). Pure functions, no DOM:
@@ -23,11 +24,11 @@ export const POSTER_TRACKING_EM = -0.04;
 export const POSTER_FIT_SAFETY = 1.03;
 
 /**
- * The CSS size model of `.poster-title`, in px: the 2.25rem floor, and
+ * The CSS size model of `.poster-title`, in px: the 2.125rem floor, and
  * `--text-poster: clamp(3.125rem, 1.9rem + 5.2vw, 6rem)`.
  */
 export const POSTER_TITLE_SIZE = {
-  floor: 36,
+  floor: 34,
   min: 50,
   max: 96,
   base: 30.4,

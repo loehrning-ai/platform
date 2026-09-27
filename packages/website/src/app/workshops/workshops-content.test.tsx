@@ -5,7 +5,7 @@ import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { getWorkshops, type Workshop } from "@/lib/workshops";
 import { hubPlakat, WORKSHOP_PLAKAT } from "@/lib/plakat/palettes";
-import { expectCapsInsideScene, expectNoMennigeInScene } from "@/test/plakat-scene";
+import { capsLine, expectCapsInsideScene, expectNoMennigeInScene } from "@/test/plakat-scene";
 import { orderWorkshopsForHub, WorkshopsContent } from "./workshops-content";
 
 vi.mock("next/image", () => ({
@@ -31,7 +31,7 @@ describe("<WorkshopsContent>", () => {
     // Without a workshop the band still gets a scene (the fallback).
     expect(heading.closest("[data-cover-band]")).toHaveClass(`plakat-${hubPlakat([])}`);
     expect(heading).toHaveClass("poster-title");
-    expect(screen.getByText("Workshops · 0 Fälle")).toBeVisible();
+    expect(screen.getByText(capsLine("Workshops · 0 Fälle"))).toBeVisible();
     expect(screen.getByRole("status")).toHaveTextContent(
       "Derzeit ist kein Workshop veröffentlicht.",
     );
@@ -281,11 +281,13 @@ describe("<WorkshopsContent>", () => {
     expect(rows[3].querySelector("[data-workshop-meta]")).toHaveTextContent(
       /^Selbstlernen \d+ Min\.$/,
     );
-    // A long title shows its head on a phone; the heading keeps the full name.
+    // The series sets single titles (no subtitle after a colon): the row
+    // heading is the whole title, with no part hidden on a phone.
     const w04 = getWorkshops("de").find((w) => w.number === "04")!;
     const heading = within(rows[0]).getByRole("heading", { level: 3 });
     expect(heading).toHaveAccessibleName(w04.title);
-    expect(heading.querySelector("span")).toHaveClass("sr-only", "md:not-sr-only");
+    expect(w04.title).not.toContain(":");
+    expect(heading.querySelector(".sr-only")).toBeNull();
 
     // One one-sentence lead at every width; no second lede from sm.
     const lead = screen.getByText(/^Du rechnest oder prüfst an den Daten/);
@@ -324,7 +326,7 @@ describe("<WorkshopsContent>", () => {
     // Phones have no P key: the keyboard hint shows from lg only.
     expect(note.querySelector("[data-workshop-key-hint]")).toHaveClass("max-lg:hidden");
     expect(screen.getByText("Neueste zuerst")).toBeInTheDocument();
-    expect(screen.getByText("Workshops · 4 Fälle")).toBeInTheDocument();
+    expect(screen.getByText(capsLine("Workshops · 4 Fälle"))).toBeInTheDocument();
     expect(
       screen.getAllByText(/kostenlos/).map((node) => node.textContent),
     ).toEqual(["Alle Materialien kostenlos, ohne Anmeldung"]);
@@ -346,7 +348,7 @@ describe("<WorkshopsContent>", () => {
     expect(container.querySelector(`[data-plakat-page="${scene}"]`)).not.toBeNull();
     // The one caps line, the poster title and the 17px body: three sizes.
     expect(band.querySelectorAll(".plakat-caps")).toHaveLength(1);
-    expect(within(band).getByText("Workshops · 4 Fälle").closest(".plakat-caps")).not.toBeNull();
+    expect(band.querySelector(".plakat-caps")?.textContent).toBe("Workshops · 4 Fälle");
     for (const text of band.querySelectorAll("p:not(.plakat-caps)")) {
       expect(text).toHaveClass("text-body", "text-scene-ink");
     }

@@ -17,18 +17,18 @@ Answer each question with **unknown**, **partially evidenced**, or **evidenced**
 4. Are data provenance, data class, legal basis, and permitted use clear?
 5. Are access, retention, deletion, and possible transfers documented?
 6. Has anyone checked whether the data is sufficient and representative for the purpose?
+7. Are the role, risk classification, and applicable legal obligations documented with reasons?
 
 ### Technology and operations
 
-7. Are the system version, provider, integrations, and complete data flow known?
-8. Have identity, permissions, secrets, updates, logging, backups, and recovery been tested?
-9. Is there an exit and fallback path?
+8. Are the system version, provider, integrations, and complete data flow known?
+9. Have identity, permissions, secrets, updates, logging, backups, and recovery been tested?
+10. Is there an exit and fallback path?
 
 ### People and governance
 
-10. Are domain review, human oversight, and escalation staffed by people with real authority?
-11. Are users qualified for the task, the system's limits, and its risks?
-12. Are the role, risk classification, and applicable legal obligations documented with reasons?
+11. Are domain review, human oversight, and escalation staffed by people with real authority?
+12. Are users qualified for the task, the system's limits, and its risks?
 
 ## Turn answers into actions
 

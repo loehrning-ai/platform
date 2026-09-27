@@ -5,7 +5,7 @@
 Month-end headcount is a **level**. Hires minus leavers is the **change**. Attrition is a
 **rate**: leavers divided by a base. The owner writes down which of two common bases counts:
 19 ÷ 200 = **9.5 %** (headcount at the start) or 19 ÷ 203.5 = **9.34 %** (average headcount). The
-export gives an AI one monthly `attrition` column; it averages three months and reports **3.12 %**
+export gives an AI one monthly `attrition` column; the AI averages three months and reports **3.12 %**
 for the quarter, about a third of the real rate. People data also needs a privacy rule: no person
 rows, no group under 5.
 

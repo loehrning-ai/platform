@@ -326,7 +326,7 @@
               },
               {
                 "label": "Option C: structured brief",
-                "prompt": "Role: sales assistant in mechanical engineering. Context: explicitly fictional Customer Alpha has 12 employees and needs three fictional XR-200 sample machines; use a pragmatic tone and informal address. Task: prepare an internal quotation draft with three line items; use placeholders for delivery date, payment term and price, and mark each for review. Format: Markdown, no more than 280 words. Constraints: do not invent commitments or use promotional language.",
+                "prompt": "Role: sales assistant in mechanical engineering. Context: fictional Customer Alpha has 12 employees and needs three fictional XR-200 sample machines; use a pragmatic tone and informal address. Task: prepare an internal quotation draft with three line items; use placeholders for delivery date, payment term and price, and mark each for review. Format: Markdown, no more than 280 words. Constraints: do not invent commitments or use promotional language.",
                 "critique": "The RCTFC brief sets role, context, task, format and constraints and aims at a reviewable draft without invented commercial terms.",
                 "rating": 5
               }

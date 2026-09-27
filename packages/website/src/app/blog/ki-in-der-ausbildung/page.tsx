@@ -52,7 +52,6 @@ function wordCount(locale: Locale, sheet: QuestionSheet): number {
   const prose = [
     copy.title,
     copy.lede,
-    copy.intro,
     ...copy.facts.map((fact) => fact.value),
     ...copy.warumJetzt.paragraphs,
     ...copy.warumJetzt.stations.map((station) => station.what),
@@ -204,8 +203,11 @@ export default async function KiInDerAusbildungPage() {
         items={railItems(locale)}
         locale={locale}
       />
+      {/* Paper reading surface below the IDEA blog hub: only the Kopflinie
+          and the H1 take the scene line (as a lesson takes its track). */}
       <article
         className="post-wz"
+        data-plakat-page="idea"
         data-screen-label={POST_COPY[locale].screenLabel}
       >
         <Hero {...props} />

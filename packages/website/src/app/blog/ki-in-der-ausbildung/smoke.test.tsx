@@ -105,11 +105,21 @@ describe("KiInDerAusbildungPage", () => {
     render(await KiInDerAusbildungPage());
 
     const hero = document.getElementById("hero")!;
+    // The reason to visit is in the first view: jump, print, download.
+    const actions = hero.querySelector(".wz-hero__actions")!;
     expect(
-      within(hero).getByRole("link", { name: "zum Drucken und Herunterladen" }),
+      within(actions as HTMLElement).getByRole("link", { name: /Zur Fragenliste/ }),
     ).toHaveAttribute("href", "#fragen");
-    // The audience is the "Für" fact; the intro no longer repeats it.
-    expect(hero.querySelector(".wz-hero__intro")).not.toHaveTextContent(/Azubis/);
+    expect(
+      within(actions as HTMLElement).getByRole("button", { name: "Drucken" }),
+    ).not.toHaveClass("wz-btn--primary");
+    expect(
+      within(actions as HTMLElement).getByRole("link", { name: "Markdown" }),
+    ).toHaveAttribute("download");
+    // One lede sentence; the audience is the "Für" fact only.
+    expect(hero.querySelectorAll(".wz-hero__lede")).toHaveLength(1);
+    expect(hero.querySelector(".wz-hero__intro")).toBeNull();
+    expect(within(hero).queryByRole("link", { name: "zum Drucken und Herunterladen" })).toBeNull();
     expect(hero).not.toHaveTextContent("Vorwissen brauchst du keins");
     const grenzen = document.getElementById("grenzen")!.textContent ?? "";
     expect(grenzen.match(/Keine Rechtsberatung/g)).toHaveLength(1);
@@ -183,10 +193,15 @@ describe("KiInDerAusbildungPage", () => {
       "href",
       "https://www.gesetze-im-internet.de/bbig_2005/__43.html",
     );
+    // One tap target for the three questions (44px rule): the phrase links
+    // to the first of them.
     const exercise = document.querySelector(".wz-task")!;
     expect(
-      [...exercise.querySelectorAll("a")].map((link) => link.getAttribute("href")),
-    ).toEqual(["#frage-3", "#frage-6", "#frage-7"]);
+      [...exercise.querySelectorAll("a")].map((link) => [
+        link.textContent,
+        link.getAttribute("href"),
+      ]),
+    ).toEqual([["die Fragen 3, 6 und 7", "#frage-3"]]);
     for (const target of ["frage-3", "frage-6", "frage-7"]) {
       expect(document.getElementById(target)).not.toBeNull();
     }
@@ -251,7 +266,7 @@ describe("KiInDerAusbildungPage", () => {
     ).toBeInTheDocument();
     expect(
       within(document.getElementById("hero")!).getByRole("link", {
-        name: "to print and download",
+        name: /To the question list/,
       }),
     ).toHaveAttribute("href", "#fragen");
 

@@ -63,7 +63,7 @@ export const allBooks: readonly Book[] = [
     readingTimeMinutes: 63,
     resourceType: "HTML-Lesefassung",
     accessLabel: "kostenlos · jetzt lesen",
-    statusLabel: "Reader online",
+    statusLabel: "Lesefassung online",
     accessPolicy: "open-reader",
     readerHref: "/buecher/ki-landschaft",
     relatedResourceHref: "/eu-ai-act-kurs",

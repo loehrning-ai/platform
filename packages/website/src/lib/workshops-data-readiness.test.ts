@@ -57,8 +57,8 @@ describe("published Data Readiness workshop", () => {
     for (const workshop of [de, en]) expect(workshop.accessNote).toMatch(/August 2026/);
     expect(de.duration).toBe("~90 Minuten");
     expect(en.duration).toBe("~90 minutes");
-    expect(de.materials[0]?.description).toMatch(/Plus 15 Minuten für Fragen/);
-    expect(en.materials[0]?.description).toMatch(/Plus 15 minutes for questions/);
+    expect(de.materials[0]?.description).toMatch(/^Für den Beamer\. .*P öffnet die Moderationsansicht/);
+    expect(en.materials[0]?.description).toMatch(/^For the projector\. .*P opens the presenter view/);
     expect(en.materials.map((material) => material.label)).toEqual([
       "Deck · 26 scenes",
       "Presenter view",

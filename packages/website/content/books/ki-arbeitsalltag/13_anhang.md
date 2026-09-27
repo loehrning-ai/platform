@@ -6,7 +6,7 @@ Alphabetisch. Jeder Begriff mit kurzer Definition und, wo es hilft, dem Kapitel,
 
 | Begriff | Erklärung |
 |---------|-----------|
-| **Agent** | KI-System, das eigenständig Aktionen ausführt, nicht nur Text erzeugt. Ruft Tools auf, plant Schritte, führt sie aus. Beispiel: ein KI-Agent, der im Kalender nach einem freien Slot sucht und die Einladung verschickt. |
+| **Agent** | KI-System, das eigenständig Aktionen ausführt. Ruft Tools auf, plant Schritte, führt sie aus. Beispiel: ein KI-Agent, der im Kalender nach einem freien Slot sucht und die Einladung verschickt. |
 | **API** | Application Programming Interface, Schnittstelle, über die Software mit einem KI-Modell kommuniziert. Für dich als Nutzer meist unsichtbar; wird relevant, wenn die IT eigene Integrationen baut. |
 | **AVV (Auftragsverarbeitungsvertrag)** | Vertrag nach Art. 28 DSGVO, wenn ein Anbieter personenbezogene Daten im Auftrag des Verantwortlichen verarbeitet. Rollen und Produktstufe zuerst prüfen; nicht jeder Anbieter handelt in jedem Kontext als Auftragsverarbeiter. → Kapitel 4, 7, 11 |
 | **Bias** | Systematische Verzerrung in KI-Ausgaben durch unausgewogene Trainingsdaten. Führt dazu, dass Modelle Stereotype reproduzieren, etwa männliche Pronomen bei „Chefarzt". → Kapitel 9 |
@@ -53,7 +53,7 @@ Alphabetisch. Jeder Begriff mit kurzer Definition und, wo es hilft, dem Kapitel,
 
 Hier sind acht getestete Vorlagen, sortiert nach der Aufgabe, die du gerade lösen willst.
 
-Jede Vorlage folgt dem KRAFT-Schema aus Kapitel 8. Die angegebene **Datenstufe** ist eine konservative Orientierung, keine automatische Toolfreigabe. Maßgeblich bleiben deine Unternehmensrichtlinie sowie der konkrete Zweck, Vertrag und Datenfluss.
+Jede Vorlage folgt dem KRAFT-Schema aus Kapitel 8. Die angegebene **Datenstufe** ist eine konservative Orientierung und ersetzt keine Toolfreigabe. Maßgeblich bleiben deine Unternehmensrichtlinie sowie der konkrete Zweck, Vertrag und Datenfluss.
 
 Speichere deine angepassten Versionen in einem eigenen Dokument.
 

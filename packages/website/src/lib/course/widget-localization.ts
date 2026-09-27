@@ -36,7 +36,7 @@ const ENGLISH_REDACTION_SCENARIOS = [
       { text: "Dear Sir or Madam, I refer to order " },
       { text: "ORD-99214" },
       {
-        text: " from the explicitly fictional Fiktivwerk Example Ltd. The delivery arrived damaged. Please refund the amount to my account ",
+        text: " from the fictional Fiktivwerk Example Ltd. The delivery arrived damaged. Please refund the amount to my account ",
       },
       {
         text: "DE00 0000 0000 0000 0000 00 (DUMMY)",

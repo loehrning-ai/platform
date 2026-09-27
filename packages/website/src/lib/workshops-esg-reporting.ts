@@ -48,7 +48,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     slug: "esg-berichte-mit-ki",
     number: "04",
     topic: "ESG-Berichte",
-    title: "ESG-Berichte mit KI: Von Rohdaten zu klaren Erkenntnissen",
+    title: "ESG-Berichte mit KI",
     eyebrow: "Workshop 04 · ESG-Berichte",
     summary:
       "Du findest sechs Fehler in der plausiblen Scope-1-und-2-Summe einer KI.",
@@ -348,7 +348,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     materials: materials([
       [
         "Deck · 20 Szenen",
-        "Plus 13 Minuten für Fragen. Pfeiltasten blättern, P öffnet die Moderationsansicht.",
+        "Für den Beamer. Pfeiltasten blättern, P öffnet die Moderationsansicht.",
       ],
       [
         "Moderationsansicht",
@@ -384,7 +384,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     slug: "esg-berichte-mit-ki",
     number: "04",
     topic: "ESG reporting",
-    title: "ESG Reporting with AI: From Raw Inputs to Clearer Insights",
+    title: "ESG reports with AI",
     eyebrow: "Workshop 04 · ESG reporting",
     summary:
       "You find six errors in an AI's plausible Scope 1 and 2 total.",
@@ -684,7 +684,7 @@ export const ESG_REPORTING_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
     materials: materials([
       [
         "Deck · 20 scenes",
-        "Plus 13 minutes for questions. Arrow keys move on; P opens the presenter view.",
+        "For the projector. Arrow keys move on; P opens the presenter view.",
       ],
       [
         "Presenter view",

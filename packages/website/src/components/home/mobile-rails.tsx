@@ -7,6 +7,7 @@ import { HomeSectionHead } from "@/components/home/home-section-head";
 import { books } from "@/lib/books";
 import { getDemosForLocale } from "@/lib/demos-localization";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
+import { RailList } from "./rail-list";
 
 /**
  * Two horizontal rails the companion home shows below `lg` instead of a third
@@ -75,7 +76,7 @@ export function MobileRails({ locale = "de" }: { readonly locale?: Locale }) {
     >
       <div className={HOME_CONTAINER}>
         <HomeSectionHead title={copy.demosTitle} />
-        <ul aria-label={copy.demosRailLabel} className={RAIL_CLASS}>
+        <RailList aria-label={copy.demosRailLabel} className={RAIL_CLASS}>
           {demos.map((demo) => (
             <li
               key={demo.slug}
@@ -99,7 +100,7 @@ export function MobileRails({ locale = "de" }: { readonly locale?: Locale }) {
               </Link>
             </li>
           ))}
-        </ul>
+        </RailList>
       </div>
 
       {BOOK_RAIL_SHOWN ? (
@@ -108,7 +109,7 @@ export function MobileRails({ locale = "de" }: { readonly locale?: Locale }) {
           {/* One tile per publicly routed title. Titles on editorial hold
               are unroutable and must not appear, so this list is driven by
               `books`, never by `allBooks`. */}
-          <ul aria-label={copy.booksRailLabel} className={RAIL_CLASS}>
+          <RailList aria-label={copy.booksRailLabel} className={RAIL_CLASS}>
             {books.map((book) => {
               const display = getBookDisplay(book, locale);
               return (
@@ -135,7 +136,7 @@ export function MobileRails({ locale = "de" }: { readonly locale?: Locale }) {
                 </li>
               );
             })}
-          </ul>
+          </RailList>
         </div>
       ) : null}
     </section>

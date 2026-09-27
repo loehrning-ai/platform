@@ -247,7 +247,7 @@ export const DEMOS_PAGE_COPY = {
       alt: "loehrning.ai interactive AI example",
       fallbackTitle: "Interactive AI examples · loehrning.ai",
       fallbackSubtitle:
-        "Twelve interactive examples with explicit assumptions.",
+        "Twelve interactive examples with stated assumptions.",
       gallery: "Practice examples",
       open: "Open practice example",
     },

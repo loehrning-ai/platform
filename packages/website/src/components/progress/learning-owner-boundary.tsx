@@ -49,7 +49,27 @@ const LearningOwnerBoundaryRuntime = dynamic(
  */
 export function LearningOwnerBoundary() {
   const pathname = usePathname();
+  // A build without a public Supabase config has no account to wait for: the
+  // progress sync runtime selects the anonymous namespace as soon as it
+  // mounts, so the choice could only flash in and then shift the page up
+  // (CLS 0.10 at 320x568). Render nothing there. Only the inlined public
+  // variables are read, so the server and the client always agree.
+  if (!hasPublicAuthProvider()) return null;
   return isLearningOwnerRoute(pathname) ? <LearningOwnerRuntimeHost /> : null;
+}
+
+/**
+ * Whether the build carries a public auth provider. NEXT_PUBLIC_* values are
+ * inlined at build time, so this is the same on the server and in the
+ * browser; a malformed value still counts as configured (the choice shows,
+ * as before), never the other way round.
+ */
+function hasPublicAuthProvider(): boolean {
+  return Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL &&
+      (process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY),
+  );
 }
 
 /**

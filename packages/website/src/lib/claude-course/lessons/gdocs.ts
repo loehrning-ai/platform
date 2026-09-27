@@ -18,31 +18,31 @@ const lesson: ClaudeLesson = {
   sections: [
     {
       id: "why-gdocs",
-      title: "Why shared documents matter",
+      title: "Shared documents",
       readTimeMinutes: 1,
       content:
-        "Teams keep decisions, specs, incident reviews and launch plans in shared documents. A useful draft keeps the supplied facts, marks gaps and follows a structure reviewers know.",
+        "Decisions, specs, incident reviews and launch plans live in shared documents. A useful draft keeps the supplied facts, marks gaps and follows a structure reviewers know.",
     },
     {
       id: "move-1-skeleton",
-      title: "Move 1: give it the skeleton",
+      title: "Give it the skeleton",
       readTimeMinutes: 2,
       content:
-        "Document types carry conventions, such as the TL;DR in a design doc or the timeline in a post-mortem, so give the required sections:\n\n```\nOutput structure:\n# Title\n## TL;DR (3 bullets, each <15 words)\n## Context\n## Proposal\n## Risks & mitigations\n## Success metrics\n## Open questions\n```\n\nName the evidence each section needs and have gaps marked instead of guessed.",
+        "Document types carry conventions, such as the TL;DR in a design doc or the timeline in a post-mortem. Give the required sections:\n\n```\nOutput structure:\n# Title\n## TL;DR (3 bullets, each <15 words)\n## Context\n## Proposal\n## Risks & mitigations\n## Success metrics\n## Open questions\n```\n\nName the evidence each section needs and have gaps marked instead of guessed.",
     },
     {
       id: "move-2-voice",
-      title: "Move 2: give it the voice",
+      title: "Give it the voice",
       readTimeMinutes: 1,
       content:
-        "When terminology and style matter, supply a short approved passage and name the traits to match. Strip confidential details, forbid reusing its facts and evaluate whether the output hits the style.",
+        "When terminology and style matter, supply a short approved passage and name the traits to match. Strip confidential details, forbid reusing its facts and check whether the output hits the style.",
     },
     {
       id: "move-3-critique",
-      title: "Move 3: ask for the critique before the rewrite",
+      title: "Critique before rewrite",
       readTimeMinutes: 1,
       content:
-        "Review the draft against written criteria: unsupported claims, missing decisions, audience mismatch, structural defects. Ask for findings with quoted evidence, then request only the changes you approve. Anyone can read these findings; they need no private chain-of-thought.",
+        "Review the draft against written criteria: unsupported claims, missing decisions, audience mismatch, structural defects. Ask for findings with quoted evidence, then request only the changes you approve.",
     },
   ],
   widgets: [

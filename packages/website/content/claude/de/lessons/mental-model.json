@@ -2,16 +2,14 @@
   "id": "mental-model",
   "number": 1,
   "title": "Was Claude ist",
-  "subtitle": "Ein mentales Modell, das hält, wenn eine Antwort sicher klingt.",
+  "subtitle": "Ein mentales Modell für Antworten, die sicher klingen.",
   "durationMinutes": 8,
   "trackId": "foundations",
   "hook": "Claude erzeugt Antworten aus dem Kontext im Fenster. Suche und Gedächtnis sind Produktfunktionen.",
   "keyConcepts": [
-    "Vervollständigungs-Engine",
-    "Konstitutionelle KI",
     "Fundierung",
     "Halluzination",
-    "Hilfreich, harmlos, ehrlich"
+    "Konstitutionelle KI"
   ],
   "quiz": [],
   "sections": [
@@ -19,31 +17,31 @@
       "id": "what-it-is",
       "title": "Was es ist (und was nicht)",
       "readTimeMinutes": 1,
-      "content": "Claude erzeugt Text aus dem, was im Fenster liegt: Anfrage, Verlauf, Systemanweisungen, dazu Dokumente und Tool-Ergebnisse vom Produkt. Die Ausgabe ist probabilistisch; dieselbe Anfrage kann morgen anders enden.\n\n**Generierung ist kein Retrieval.** Nachschlagen braucht ein freigegebenes Tool und einen Aufruf, der gelaufen ist, etwa Websuche, Repository-Zugriff oder eine Datenbankabfrage.\n\n**Das Modell ist kein Speicher.** Verlauf, Projektkontext und Memory-Dateien kommen vom Produkt, wenn überhaupt. Prüfe, welche Einstellungen aktiv sind.\n\n**Flüssige Sprache ist keine Prüfung.** Das Modell kann einer falschen Prämisse folgen und Details erfinden. Wichtige Ausgaben bleiben Entwürfe, bis Quellen, Tests oder ein Reviewer sie bestätigen."
+      "content": "Claude erzeugt Text aus dem, was im Fenster liegt: Anfrage, Verlauf, Systemanweisungen und Dokumente oder Tool-Ergebnisse vom Produkt. Die Ausgabe ist probabilistisch; dieselbe Anfrage kann morgen anders ausfallen.\n\n**Generierung ist kein Retrieval.** Nachschlagen braucht ein freigegebenes Tool, das gelaufen ist, etwa Websuche oder eine Datenbankabfrage.\n\n**Das Modell ist kein Speicher.** Verlauf und Memory kommen vom Produkt, wenn überhaupt.\n\n**Flüssige Sprache ist keine Prüfung.** Das Modell kann einer falschen Prämisse folgen und Details erfinden. Wichtige Ausgaben bleiben Entwürfe, bis Quellen, Tests oder ein Reviewer sie bestätigen."
     },
     {
       "id": "three-things",
-      "title": "Die drei Dinge in jeder Interaktion",
+      "title": "Was eine Antwort formt",
       "readTimeMinutes": 1,
-      "content": "Drei Eingaben formen jede Antwort:\n\n- **Aktueller Kontext:** Anweisungen, Nachrichten, Anhänge und Tool-Ergebnisse im aktiven Fenster.\n- **Training:** allgemeine Muster mit wechselnder Abdeckung und wechselndem Stand, keine Quelle für private oder aktuelle Fakten.\n- **Einstellungen und Schutzmechanismen:** Modell, Sampling, freigegebene Tools und Produktrichtlinien.\n\n> **Fundierungsregel.** Hängt die Antwort an aktuellen, privaten oder folgenreichen Fakten, gib eine autoritative Quelle mit und prüfe, ob die Antwort daraus folgt."
+      "content": "Drei Eingaben formen jede Antwort:\n\n- **Kontext:** Anweisungen, Nachrichten, Anhänge und Tool-Ergebnisse im Fenster.\n- **Training:** allgemeine Muster mit ungleicher Abdeckung und ungleichem Stand, nie eine Quelle für private oder aktuelle Fakten.\n- **Einstellungen:** Modell, Sampling, freigegebene Tools und Produktrichtlinien.\n\n> **Fundierungsregel.** Bei aktuellen, privaten oder folgenreichen Fakten gib eine autoritative Quelle mit und prüfe, ob die Antwort daraus folgt."
     },
     {
       "id": "constitutional-ai",
-      "title": "Konstitutionelle KI in Kurzform",
+      "title": "Konstitutionelle KI",
       "readTimeMinutes": 1,
-      "content": "Konstitutionelle KI ist eine Trainingsmethode von Anthropic: Schriftliche Prinzipien erzeugen Kritiken, Überarbeitungen und Präferenzdaten. Die Methode wirkt neben anderen Sicherheitsverfahren und macht keine Antwort automatisch richtig und keine Ablehnung konsistent.\n\nEine Ablehnung ist eine Modellausgabe, kein Richtlinienbescheid. Fehlen bei einer legitimen Aufgabe Zweck oder Grenzen, ergänze sie, ohne gültige Schutzmechanismen zu umgehen.\n\n„Ich bin mir nicht sicher“ ist kein Konfidenzmaß, also prüfe die Belege. Lege fest, was zurückkommt, wenn die Quellen nicht reichen, und teste bekannte wie unbekannte Fälle."
+      "content": "Konstitutionelle KI ist eine Trainingsmethode von Anthropic: Schriftliche Prinzipien erzeugen Kritiken, Überarbeitungen und Präferenzdaten. Die Methode wirkt neben anderen Sicherheitsverfahren und macht keine Antwort automatisch richtig.\n\nEine Ablehnung ist eine Modellausgabe, kein Richtlinienbescheid. Fehlen bei einer legitimen Aufgabe Zweck oder Grenzen, ergänze sie, ohne gültige Schutzmechanismen zu umgehen.\n\nVorsichtige Formulierungen sind kein Konfidenzmaß. Lege fest, was zurückkommt, wenn die Quellen nicht reichen, und teste bekannte wie unbekannte Fälle."
     },
     {
       "id": "feel-it",
-      "title": "Praxistest: Wissen ohne Kontext",
+      "title": "Frag nach Unbekanntem",
       "readTimeMinutes": 1,
-      "content": "Frag nach Projektdaten, die du nie mitgegeben hast. Je nach Modell, Produkt und Prompt lehnt die Antwort ab, fragt nach Kontext oder behauptet etwas ohne Beleg. Eine projektspezifische Aussage braucht projektspezifische Belege, also gib die Quelle mit, fordere ein Zitat an und prüfe es."
+      "content": "Frag nach Projektdaten, die du nie mitgegeben hast. Je nach Einstellung lehnt das Modell ab, fragt nach Kontext oder behauptet etwas ohne Beleg. Eine Projektaussage braucht Projektbelege: Gib die Quelle mit, fordere ein Zitat an und prüfe es."
     },
     {
       "id": "failure-modes",
-      "title": "Drei typische Fehlerbilder",
+      "title": "Den Fehler benennen",
       "readTimeMinutes": 1,
-      "content": "Benenne den Fehler, bevor du den Prompt änderst:\n\n- **Unbelegte Aussage:** Keine gelieferte Quelle stützt sie. Gib Quellen oder Retrieval dazu und verlange Belege, die du prüfst.\n- **Vorgabendrift:** Format oder Regel werden verletzt. Mach das Kriterium prüfbar, validiere gegen ein Schema oder teile die Aufgabe.\n- **Generische Ausgabe:** Fachdetails oder Stil fehlen. Gib Kontext und ein geprüftes Beispiel mit, dann vergleiche repräsentative Fälle."
+      "content": "Benenne den Fehler, bevor du den Prompt änderst:\n\n- **Unbelegte Aussage:** Keine gelieferte Quelle stützt sie. Gib Quellen dazu und verlange Belege, die du prüfst.\n- **Vorgabendrift:** Format oder Regel werden verletzt. Mach das Kriterium prüfbar, validiere gegen ein Schema oder teile die Aufgabe.\n- **Generische Ausgabe:** Fachdetails oder Stil fehlen. Gib Kontext und ein geprüftes Beispiel mit und vergleiche repräsentative Fälle."
     }
   ],
   "widgets": [
@@ -55,7 +53,7 @@
         "lessonId": "mental-model",
         "cpId": "feel-it",
         "title": "Frag nach etwas, das Claude nicht wissen kann",
-        "hint": "Probier: „Welche Bereitschaftsrotation betreut den Authentifizierungsdienst in meinem Team?“ Dann lies die Antwort.",
+        "hint": "Probier: „Welche Bereitschaftsrotation betreut den Authentifizierungsdienst in meinem Team?“",
         "placeholder": "Frag nach Kontext, den du Claude nicht gegeben hast…"
       }
     },

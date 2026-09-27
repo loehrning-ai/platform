@@ -50,9 +50,9 @@ The seed generator is a third route: `seed/generate_seed.py` computes every view
 
 **How it works.**
 
-- Each check is a small block, mostly running the deck's exact SQL. It compares the result with a written expected value and stores PASS, FAIL or SKIP in a session setting (`set_config`), because the reader may not create a temporary table (B-T01).
+- Each check is a small block, mostly running the deck's exact SQL. It compares the result with a written expected value and stores PASS, FAIL or SKIP in a session setting (`set_config`), because the reader cannot create a temporary table (B-T01).
 - Attacks run inside `BEGIN ... EXCEPTION WHEN OTHERS` and record the SQLSTATE: 42501 for a denied privilege, 42P01 for an undefined table.
-- Writes and temp tables are attempted after `BEGIN READ WRITE`, so the test proves the grant is missing, beyond the read-only default.
+- Writes and temp tables are attempted after `BEGIN READ WRITE`, so a failure comes from the missing grant, not the read-only default.
 - The last statement raises an error when any check failed. With `ON_ERROR_STOP` psql exits with code 3, and a CI job fails.
 
 **Connect as the login.** Role settings (`search_path = ''`, `default_transaction_read_only`, `statement_timeout`) load at login, never through `SET ROLE`. The harness detects its mode:

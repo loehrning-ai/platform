@@ -21,19 +21,19 @@
     },
     {
       "id": "three-turn-loop",
-      "title": "Die Drei-Runden-Schleife",
+      "title": "Drei Runden",
       "readTimeMinutes": 1,
-      "content": "- **Runde 1 · Basiswert.** Lass einen ersten Prompt über ein kleines Testset laufen und notiere, welche Anforderungen erfüllt sind.\n- **Runde 2 · eine Korrektur.** Mach eine prüfbare Änderung wie „Entferne den ersten Absatz“ und lass alles andere gleich.\n- **Runde 3 · getestete Version sichern.** Speichere Prompt, Einsatzzweck, Modellannahmen und Eval-Fälle. Lass die Fälle nach späteren Änderungen oder Modellwechseln erneut laufen.\n\nAus einer akzeptierten Ausgabe kann ein Modell einen wiederverwendbaren Prompt entwerfen. Er bleibt ein Kandidat, bis er an neuen Eingaben besteht."
+      "content": "- **Runde 1 · Basiswert.** Lass einen ersten Prompt über ein kleines Testset laufen und notiere, welche Anforderungen erfüllt sind.\n- **Runde 2 · eine Korrektur.** Mach eine prüfbare Änderung wie „Entferne den ersten Absatz“ und lass alles andere gleich.\n- **Runde 3 · getestete Version sichern.** Speichere Prompt, Einsatzzweck, Modellannahmen und Eval-Fälle und lass die Fälle nach späteren Änderungen erneut laufen.\n\nEin Prompt, den ein Modell aus einer akzeptierten Ausgabe entwirft, bleibt ein Kandidat, bis er an neuen Eingaben besteht."
     },
     {
       "id": "show-dont-tell",
       "title": "Zeigen, nicht erzählen",
       "readTimeMinutes": 1,
-      "content": "Ein Beispiel macht eine unklare Anforderung sichtbar. Statt „professioneller Ton“ gib eine kurze, freigegebene Referenz mit und nenne die Merkmale, die bleiben sollen; für strukturierte Aufgaben helfen repräsentative Ein- und Ausgabepaare und Grenzfälle. Beispiele können zu Überanpassung führen und ungewollte Details mitschleppen, also entferne Vertrauliches, variiere sie und prüfe an zurückgehaltenen Fällen."
+      "content": "Ein Beispiel macht eine unklare Anforderung sichtbar. Statt „professioneller Ton“ gib eine kurze, freigegebene Referenz mit und nenne die Merkmale, die bleiben sollen; für strukturierte Aufgaben helfen repräsentative Ein- und Ausgabepaare und Grenzfälle. Beispiele können überanpassen und Details mitschleppen, also entferne Vertrauliches, variiere sie und prüfe an zurückgehaltenen Fällen."
     },
     {
       "id": "turn-2-vocabulary",
-      "title": "Was du in Runde 2 sagen solltest",
+      "title": "Formulierungen für Runde 2",
       "readTimeMinutes": 1,
       "content": "Schreib Korrekturen, die ein Reviewer an der Ausgabe prüfen kann.\n\n**Prüfbar:** „Entferne den ersten Absatz.“ · „Übernimm Satzlänge und Begriffe aus diesem freigegebenen Beispiel.“ · „Beginne jeden Aufzählungspunkt mit einem Verb.“ · „Der Leser kennt X; lass die Definition weg.“\n\n**Nicht prüfbar:** „Mach es besser.“ · „Klingt weniger nach KI.“ · „Prägnanter.“ · „Du weißt, was ich meine.“"
     }
@@ -46,7 +46,7 @@
       "props": {
         "weak": "mache es bitte besser und kürzer",
         "strong": "Kürze den Eröffnungsabsatz. Beginne mit dem Status in einem Satz, dann drei Aufzählungspunkte in der Stimme des angehängten Beispiels. Keine abschließenden Höflichkeiten.",
-        "takeaway": "Die stärkere Korrektur benennt eine prüfbare Änderung und zeigt auf ein Beispiel; das Ergebnis lässt sich an Quellenfakten und Beispiel prüfen."
+        "takeaway": "Die stärkere Korrektur nennt eine prüfbare Änderung und ein Beispiel, an dem sich das Ergebnis prüfen lässt."
       }
     },
     {
@@ -57,7 +57,7 @@
         "lessonId": "iteration",
         "cpId": "loop",
         "title": "Runde 1 laufen lassen, dann iterieren",
-        "hint": "Fordere einen schnellen Entwurf an. Füge die Ausgabe dann mit einer genauen Korrektur wieder ein und frag erneut.",
+        "hint": "Fordere einen schnellen Entwurf an und füge die Ausgabe dann mit einer genauen Korrektur wieder ein.",
         "placeholder": "Prompt für Runde 1 hier eingeben. Dann dieses Feld aktualisieren und für Runde 2 erneut ausführen."
       }
     },

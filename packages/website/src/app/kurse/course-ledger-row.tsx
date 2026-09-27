@@ -351,7 +351,10 @@ export function CourseLedgerRow({
             ) : null}
             <Link
               href={localizeHref(course.href, locale)}
-              className="-my-1.5 flex min-h-11 min-w-0 items-center underline decoration-transparent underline-offset-4 transition-colors duration-[120ms] hover:decoration-foreground motion-reduce:transition-none sm:my-0 sm:inline-flex"
+              // relative z-[1]: the -my-1.5 stretch reaches into the promise
+              // below, which would otherwise paint over (and take the taps
+              // of) the lower third of the 44px target.
+              className="relative z-[1] -my-1.5 flex min-h-11 min-w-0 items-center underline decoration-transparent underline-offset-4 transition-colors duration-[120ms] hover:decoration-foreground motion-reduce:transition-none sm:my-0 sm:inline-flex"
             >
               {course.title}
             </Link>

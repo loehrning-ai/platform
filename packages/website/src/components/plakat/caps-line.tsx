@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import { cx } from "@/components/werk/cx";
 
 export type CapsLineProps = {
@@ -33,16 +33,42 @@ export function CapsLine({ children, arrow = false, as: Tag = "p", className }: 
           <path d="M0 5H62M57.5 1.5L62 5L57.5 8.5" strokeWidth="1.5" strokeLinecap="square" />
         </svg>
       ) : null}
-      <span>{typeof children === "string" ? keepSeparators(children) : children}</span>
+      {typeof children === "string" && children.includes(SEPARATOR) ? (
+        <CapsSegments text={children} />
+      ) : (
+        <span>{children}</span>
+      )}
     </Tag>
   );
 }
 
+const SEPARATOR = " · ";
+
 /**
- * A caps line breaks only after a " · " separator: the space before each dot
- * is a no-break space, so a narrow phone never opens a line with a dot. The
- * DOM text stays one text node, the same words and separators.
+ * A caps line breaks only between its " · " parts, and never shows a dot at
+ * the start or end of a line. Each part is one unbreakable run that opens
+ * with its separator in a fixed 1.25em box; the first part opens with an
+ * empty box. Every line starts 1.25em left of the clip edge, so the box that
+ * opens a line (the empty one, or the dot of a part that wrapped) is clipped
+ * and the words sit flush with the title. The DOM text stays the same words
+ * and separators ("Workshop 02 · Geschäftsberichte").
  */
-function keepSeparators(text: string): string {
-  return text.replaceAll(" · ", "\u00a0· ");
+function CapsSegments({ text }: { readonly text: string }) {
+  return (
+    <span className="block min-w-0 overflow-x-clip">
+      <span className="-ms-[1.25em] block">
+        {text.split(SEPARATOR).map((part, index) => (
+          <Fragment key={`${index}-${part}`}>
+            {index > 0 ? <wbr /> : null}
+            <span className="whitespace-nowrap">
+              <span aria-hidden="true" className="inline-block w-[1.25em] text-center tracking-normal">
+                {index > 0 ? SEPARATOR : null}
+              </span>
+              {part}
+            </span>
+          </Fragment>
+        ))}
+      </span>
+    </span>
+  );
 }

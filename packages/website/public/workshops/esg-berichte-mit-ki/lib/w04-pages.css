@@ -289,6 +289,7 @@ details.reveal>div li{margin:0 0 6px}
 .fc .scene{color:var(--wf-slate);font-size:13px;white-space:nowrap}
 .fc .dont{color:var(--wf-slate)}
 .fc-lines{margin:16px 0 0;padding:0;list-style:none;border-top:var(--wf-hair)}
+@media screen and (min-width:641px){.fc-case-toggle{display:none}}
 .fc-lines li{padding:10px 0;border-bottom:var(--wf-hair)}
 .fc-lines b{font-weight:700}
 .tick{display:inline-block;width:14px;height:14px;margin:0 4px -2px 6px;border:1.5px solid var(--wf-ink);background:var(--wf-papier)}
@@ -313,6 +314,11 @@ details.reveal>div li{margin:0 0 6px}
   .fc td[data-label]{padding:2px 0}
   .fc td[data-label]::before{display:inline;margin-right:6px}
   .fc td.scene{display:none}
+  /* one phone screen: the case figures fold behind one button (w04-pages.js), and the roles
+     line, which the guide explains, is left to the printed card */
+  .fc-js .fc:not([data-cases="open"]) td.case{display:none}
+  .fc-case-toggle{margin:4px 0 8px}
+  .fc-lines li.fc-roles{display:none}
   .fc-lines li{padding:8px 0;font-size:15px}
   .sheet{padding-top:20px}
   .sheet-mast{gap:12px 24px;padding-bottom:14px}

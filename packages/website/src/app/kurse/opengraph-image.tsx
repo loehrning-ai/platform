@@ -13,7 +13,8 @@ export const contentType = "image/png";
 
 /**
  * The /kurse card stays paper, like the page (SPEC §2.3): the catalogue's
- * headline and one poster per track, the Grundlagenpfad's "01" first.
+ * headline and a 2 × 2 series of track posters at full card height, the
+ * Grundlagenpfad's "01" first and its "02" last, IDEA and Bloom between.
  */
 export default async function Image() {
   const locale = await getRequestLocale();
@@ -23,13 +24,14 @@ export default async function Image() {
     <CatalogOgCard
       caps={copy.kicker(ALL_COURSE_CATALOG.length)}
       title={copy.heading}
-      titleSize={58}
+      titleSize={68}
       subtitle=""
       trailing={localizeHref("/kurse", locale)}
       posters={[
         COURSE_PLAKAT["ki-fuehrerschein"],
         COURSE_PLAKAT.claude,
         COURSE_PLAKAT["data-science"],
+        COURSE_PLAKAT["ki-und-gesellschaft"],
       ]}
     />,
     { ...size, fonts: await courseOgFonts() },

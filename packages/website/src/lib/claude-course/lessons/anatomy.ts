@@ -9,17 +9,14 @@ const lesson: ClaudeLesson = {
   id: "anatomy",
   number: 2,
   title: "Anatomy of a great prompt",
-  subtitle:
-    "A checklist: context, task, constraints, examples and output format.",
+  subtitle: "Six parts and when each one helps.",
   durationMinutes: 12,
   trackId: "foundations",
   hook: "A useful prompt states the task and acceptance criteria.",
   keyConcepts: [
-    "Role, context, task, constraints, examples, format",
     "XML tags",
-    "Reasoning controls",
     "Structured outputs",
-    "Insufficient-evidence handling",
+    "Missing-evidence rule",
   ],
   quiz: [],
   sections: [
@@ -28,14 +25,14 @@ const lesson: ClaudeLesson = {
       title: "A prompt is a specification",
       readTimeMinutes: 1,
       content:
-        "State the task, supply the context, set constraints and describe a checkable output. Add a role or an example only when it carries information the task needs.\n\nA short task needs one direct instruction. For repeated tasks, work through the six parts below and write criteria a reviewer or test can verify.",
+        "State the task, supply the context, set constraints and describe a checkable output. Add a role or an example only when it carries information the task needs.\n\nA short task needs one direct instruction. For repeated tasks, use the six parts below and write criteria a reviewer or test can check.",
     },
     {
       id: "six-parts",
       title: "The six parts",
       readTimeMinutes: 1,
       content:
-        "- **01 · Role: whose perspective?** A role sets domain, audience or review standard and is no evidence of expertise. Example: `Review this as a technical editor for internal documentation.`\n- **02 · Context: which facts does the task depend on?** Name the audience and authorized sources; strip secrets and unrelated data.\n- **03 · Task: what action is required?** One direct verb. Number several deliverables.\n- **04 · Constraints: what must the output satisfy?** Length, exclusions and required facts as testable rules.\n- **05 · Examples: what does an accepted result look like?** A reviewed, representative and shareable input-output pair fixes tone or structure.\n- **06 · Format: how will the result be consumed?** Markdown, JSON, a table or a schema. Validate machine-readable output.\n\nThis order is one readable arrangement. Change it when your model's documentation or your evals call for it.",
+        "- **01 · Role:** sets domain, audience or review standard and proves no expertise. Example: `Review this as a technical editor for internal documentation.`\n- **02 · Context:** the facts the task depends on, with audience and authorized sources. Strip secrets and unrelated data.\n- **03 · Task:** one direct verb. Number several deliverables.\n- **04 · Constraints:** length, exclusions and required facts as testable rules.\n- **05 · Examples:** a reviewed, representative input-output pair that fixes tone or structure.\n- **06 · Format:** Markdown, JSON, a table or a schema. Validate machine-readable output.\n\nChange the order when your model's documentation or your evals call for it.",
     },
     {
       id: "xml-tags",
@@ -46,10 +43,10 @@ const lesson: ClaudeLesson = {
     },
     {
       id: "pro-moves",
-      title: "Three current controls",
+      title: "Current controls",
       readTimeMinutes: 1,
       content:
-        "- **Reasoning controls.** Where model and API support extended thinking, configure it through the documented API. Ask for conclusions and evidence instead of private chain-of-thought.\n- **Output controls.** Prefer structured outputs or an explicit schema. Claude 4.6 and later do not support assistant-response prefilling, so check your model's API documentation first.\n- **Insufficient evidence.** State the exact response for missing information. That lowers the pressure to guess but guarantees no accuracy, so verify the result.",
+        "- **Reasoning.** Where model and API support extended thinking, configure it through the documented API. Ask for conclusions and evidence instead of private chain-of-thought.\n- **Output.** Prefer structured outputs or a JSON schema. Claude 4.6 and later do not support assistant-response prefilling; check your model's API documentation.\n- **Missing evidence.** State the exact response for missing information. That lowers the pressure to guess but guarantees no accuracy.",
     },
   ],
   widgets: [
@@ -166,7 +163,7 @@ const lesson: ClaudeLesson = {
         cpId: "grade",
         task: "Rewrite a rambling Slack message into a crisp update with tl;dr, status, blockers, and next step.",
         rubric:
-          "Must state the task, relevant context, testable constraints, and output format. Add a role, example, rubric, or XML boundaries only where they clarify the work.",
+          "States the task, relevant context, testable constraints and output format. Role, example, rubric or XML only where they clarify the work.",
       },
     },
   ],

@@ -222,15 +222,15 @@ export const HELP_COPY = {
       startCatalogLink: "Kursübersicht",
       startAfterCatalog: ".",
       accountAvailable:
-        "Bücher, Praxisbeispiele, KI-Check und 6 technische Kursreader laufen ohne Konto. Die 4 Grundlagen-Kursreader brauchen ein kostenloses Lernkonto. Das Konto synchronisiert Fortschritt und Abschlussstatus zwischen deinen Geräten.",
+        "Bücher, Praxisbeispiele, KI-Check und 6 technische Kursreader laufen ohne Konto, die 4 Grundlagenkurse nur mit Lernkonto. Das Konto synchronisiert Fortschritt über deine Geräte.",
       accountUnavailable:
-        "Bücher, Praxisbeispiele, KI-Check und 6 technische Kursreader laufen ohne Konto. Die 4 Grundlagen-Kursreader brauchen ein Lernkonto. Solange Anmeldung und Lernkonto nicht freigeschaltet sind, sind diese 4 Reader vorübergehend nicht erreichbar.",
+        "Bücher, Praxisbeispiele, KI-Check und 6 technische Kursreader laufen ohne Konto, die 4 Grundlagenkurse nur mit Lernkonto. Hier sind diese 4 Reader vorübergehend nicht erreichbar.",
       progressSynced:
         "Dein Fortschritt liegt im Browser und mit angemeldetem Lernkonto auch auf dem Server. Was den lokalen Stand löschen kann, steht unten unter „Einschränkungen“.",
       progressLocal:
         "Dein Fortschritt liegt nur in diesem Browser. Was ihn löschen kann, steht unten unter „Einschränkungen“.",
       signInBoth:
-        "Die Login-Seite bietet Google-Anmeldung und einen Einmal-Link per E-Mail. Ist der Link abgelaufen oder benutzt, fordere einen neuen an und prüfe den Spam-Ordner.",
+        "Die Login-Seite bietet Google und einen Einmal-Link per E-Mail. Ist ein Link abgelaufen oder benutzt, fordere einen neuen an und prüfe den Spam-Ordner.",
       signInGoogle:
         "Die Login-Seite bietet aktuell Google-Anmeldung. Der Einmal-Link per E-Mail ist hier nicht freigeschaltet.",
       signInMagic:
@@ -241,11 +241,11 @@ export const HELP_COPY = {
         "Ja. Mit angemeldetem Lernkonto wird dein Fortschritt synchronisiert, ohne Anmeldung hat jedes Gerät seinen eigenen Stand.",
       devicesLocal:
         "Ja, aber jedes Gerät hat seinen eigenen Stand. Eine Synchronisierung gibt es aktuell nicht.",
-      quiz: "Quizze kannst du ohne Zeitdruck wiederholen. Nach dem Absenden siehst du Ergebnis und Erklärung. Als Kursabschluss zählt je nach Kurs ein bestandenes Abschlussquiz, eine eingereichte Abschlussaufgabe oder der Abschluss aller Lektionen.",
+      quiz: "Quizze laufen ohne Zeitdruck, und jeder Versuch zeigt eine Erklärung. Je nach Kurs zählt als Abschluss das bestandene Abschlussquiz, eine eingereichte Aufgabe oder alle Lektionen.",
       recordsBeforeLimits:
-        "loehrning.ai stellt sie selbst aus. Sie halten fest, dass du hier einen Kurs abgeschlossen hast. ",
+        "loehrning.ai stellt sie selbst aus, für einen hier abgeschlossenen Kurs. ",
       recordsLimitsLink:
-        "Sie sind nicht servergeprüft und belegen für sich allein keine Erfüllung von Artikel 4 der EU-KI-Verordnung.",
+        "Sie sind nicht servergeprüft und allein kein Nachweis für Artikel 4 der KI-Verordnung.",
       recordsAfterLimits: "",
       simulations:
         "Ein Praxisbeispiel erklärt ein Konzept mit synthetischen Daten und simulierten Abläufen. Seine Grenzen stehen unten unter „Einschränkungen“.",
@@ -260,7 +260,7 @@ export const HELP_COPY = {
       dataAvailableAfterLink:
         ". Datenschutzanfragen gehen auch per E-Mail an tim@loehrning.ai.",
       dataUnavailable:
-        "Aktuell ist kein Lernkonto freigeschaltet. Lokalen Fortschritt löschst du über die Website-Daten deines Browsers. Datenschutzanfragen gehen an tim@loehrning.ai.",
+        "Ohne Lernkonto löschst du lokalen Fortschritt über die Website-Daten deines Browsers. Datenschutzanfragen gehen an tim@loehrning.ai.",
       feedbackAvailableBeforeLink: "Nutze das ",
       feedbackLink: "Feedback-Formular",
       feedbackAvailableAfterLink:
@@ -321,37 +321,37 @@ export const HELP_COPY = {
       startCatalogLink: "course catalog",
       startAfterCatalog: ".",
       accountAvailable:
-        "Books, demos, the AI check and 6 technical course readers run without an account. The 4 foundation course readers need a free learning account, which syncs progress and completion status between your devices.",
+        "Books, practical examples, the AI check and 6 technical courses need no account, the 4 foundation courses do. An account syncs progress across your devices.",
       accountUnavailable:
-        "Books, demos, the AI check and 6 technical course readers work without an account. The 4 foundation course readers need a learning account. Until sign-in and learning accounts are enabled, these 4 readers are temporarily unavailable.",
+        "Books, practical examples, the AI check and 6 technical courses need no account, the 4 foundation courses do. Here those 4 are temporarily unavailable.",
       progressSynced:
-        "Progress is stored in your browser and, when you are signed in, on the server too. What can remove the local copy is listed under Limitations below.",
+        "Progress is stored in your browser and, when signed in, on the server. Limitations below lists what can remove the local copy.",
       progressLocal:
         "Progress is stored only in this browser. What can remove it is listed under Limitations below.",
       signInBoth:
-        "The sign-in page offers Google sign-in and a one-time email link. If the link has expired or been used, request a new one and check your spam folder.",
+        "The sign-in page offers Google and a one-time email link. If a link has expired or was used, request a new one and check spam.",
       signInGoogle:
         "The sign-in page currently offers Google sign-in. One-time email links are not enabled here.",
       signInMagic:
-        "The sign-in page currently offers a one-time email link. If it has expired or been used, request a new one and check your spam folder.",
+        "The sign-in page offers a one-time email link. If it has expired or was used, request a new one and check spam.",
       signInUnavailable:
         "No sign-in method is currently enabled. Public courses, books, demos and the AI check work without signing in.",
       devicesSynced:
-        "Yes. A signed-in learning account syncs your progress; without signing in, each device keeps its own state.",
+        "Yes. A signed-in learning account syncs your progress, otherwise each device keeps its own state.",
       devicesLocal:
         "Yes, but each device keeps its own state. Syncing is not currently available.",
-      quiz: "You can repeat quizzes without a time limit. After submitting, you see the result and an explanation. Depending on the course, completion means passing a final quiz, submitting a final task or completing every lesson.",
+      quiz: "Quizzes have no time limit, and each try shows an explanation. By course, completion means passing the final quiz, submitting a task or finishing all lessons.",
       recordsBeforeLimits:
-        "loehrning.ai issues them itself. They record that you completed a course here. ",
+        "loehrning.ai issues them itself for a course completed here. ",
       recordsLimitsLink:
-        "They are not server-verified and do not by themselves establish compliance with Article 4 of the EU AI Act.",
+        "They are not server-verified and alone are no proof of Article 4 AI Act compliance.",
       recordsAfterLimits: "",
       simulations:
         "A practical example explains a concept with synthetic data and simulated processes. Its limits are listed under Limitations below.",
       oneBookAvailable:
-        "The book is free to read in the browser, and as a PDF when you are signed in. It is learning material, not a citable legal source.",
+        "The book is free to read in the browser, and as a PDF when signed in. It is learning material, not a citable legal source.",
       oneBookUnavailable:
-        "The book is free to read in the browser and is learning material, not a citable legal source. A PDF download is not currently available.",
+        "The book is free to read in the browser and is learning material, not a citable legal source. No PDF download is currently available.",
       manyBooks:
         "All {bookCount} books are free to read in the browser. They are learning materials, not citable legal sources.",
       dataAvailableBeforeLink:
@@ -360,7 +360,7 @@ export const HELP_COPY = {
       dataAvailableAfterLink:
         ". You can also email privacy requests to tim@loehrning.ai.",
       dataUnavailable:
-        "No learning account is currently enabled. Remove local progress through your browser's site data. Send privacy requests to tim@loehrning.ai.",
+        "Without a learning account, remove local progress through your browser's site data. Send privacy requests to tim@loehrning.ai.",
       feedbackAvailableBeforeLink: "Use the ",
       feedbackLink: "feedback form",
       feedbackAvailableAfterLink:
@@ -391,7 +391,7 @@ export const HELP_LIMITATIONS_COPY = {
         description:
           "Abschlussdokumente entstehen in deinem Browser, ohne Serverprüfung, Signatur oder Zertifizierungsstelle. Allein belegen sie nicht, dass eine Organisation Artikel 4 der KI-Verordnung erfüllt.",
         mitigation:
-          "Behandle es als persönliche Lernaufzeichnung. Welche Maßnahmen und Nachweise Artikel 4 genügen, legt deine Organisation fest und lässt es rechtlich prüfen.",
+          "Behandle sie als persönliche Lernaufzeichnung. Welche Nachweise Artikel 4 genügen, entscheidet deine Organisation mit rechtlicher Prüfung.",
       },
       simulations: {
         title: "Simulierte Praxisbeispiele",
@@ -439,9 +439,9 @@ export const HELP_LIMITATIONS_COPY = {
       record: {
         title: "Self-issued completion documents",
         description:
-          "Completion documents are made in your browser, with no server check, signature or certification body. Alone they do not show that an organisation meets Article 4 of the AI Act.",
+          "Your browser creates completion documents with no server check, signature or certifier. Alone they do not prove an organisation meets AI Act Article 4.",
         mitigation:
-          "Treat it as a personal learning record. Your organisation decides which measures and evidence meet Article 4 and has that legally reviewed.",
+          "Treat them as a personal learning record. Your organisation decides, with legal review, which evidence meets Article 4.",
       },
       simulations: {
         title: "Simulated practical examples",

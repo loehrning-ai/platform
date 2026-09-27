@@ -88,7 +88,7 @@ describe("blog editorial design contract", () => {
 describe("blog index IDEA band (SPEC §2.3, §3.12)", () => {
   it("sets the hero title with the poster-title values and the word fit", () => {
     expect(styles.index).toMatch(
-      /\.blog-index__title\s*\{[^}]*font-size:\s*max\(2\.25rem,\s*min\(var\(--text-poster\),\s*calc\(100cqi \/ var\(--fit, 0\.01\)\)\)\)/s,
+      /\.blog-index__title\s*\{[^}]*font-size:\s*max\(2\.125rem,\s*min\(var\(--text-poster\),\s*calc\(100cqi \/ var\(--fit, 0\.01\)\)\)\)/s,
     );
     expect(styles.index).toMatch(
       /\.blog-index__title\s*\{[^}]*letter-spacing:\s*var\(--text-poster--letter-spacing\)/s,

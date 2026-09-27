@@ -89,7 +89,7 @@ describe("HeroTransform", () => {
     expect(screen.getByText(/stage 3 \/ 3 · structured/i)).toBeInTheDocument();
     expect(
       screen.getByText(
-        /Role, context, task, constraints, and format are explicit/,
+        /Role, context, task, constraints and format are stated/,
       ),
     ).toBeInTheDocument();
   });

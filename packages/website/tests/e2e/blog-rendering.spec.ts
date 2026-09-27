@@ -14,14 +14,14 @@ const LOCALES = [
     locale: "de",
     prefix: "",
     articleTitle: /EU AI Act/,
-    indexIntro: /Öffentliche Texte/,
+    indexIntro: /Artikel zum EU AI Act/,
     indexKicker: /^Blog · \d+ Artikel$/,
   },
   {
     locale: "en",
     prefix: "/en",
     articleTitle: /The EU AI Act/,
-    indexIntro: /Public articles/,
+    indexIntro: /Articles on the EU AI Act/,
     indexKicker: /^Blog · \d+ articles?$/,
   },
 ] as const;

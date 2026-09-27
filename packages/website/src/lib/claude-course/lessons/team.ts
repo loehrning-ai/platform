@@ -17,7 +17,6 @@ const lesson: ClaudeLesson = {
     "Prompt library",
     "Shared CLAUDE.md",
     "Eval set",
-    "Shareability checklist",
   ],
   quiz: [],
   sections: [
@@ -26,28 +25,28 @@ const lesson: ClaudeLesson = {
       title: "Why share",
       readTimeMinutes: 1,
       content:
-        "A one-person prompt carries hidden context: local paths, team names, unstated source access, an output format only its author reads. Treat recurring prompts as maintained artifacts and record task, inputs, model and tool assumptions, expected output, owner and evaluation cases.",
+        "A one-person prompt carries hidden context: local paths, team names, unstated source access, an output format only its author reads. Treat recurring prompts as maintained artifacts with task, inputs, model and tool assumptions, expected output, owner and eval cases.",
     },
     {
       id: "three-artifacts",
-      title: "Three team artifacts worth maintaining",
+      title: "Shared team artifacts",
       readTimeMinutes: 1,
       content:
-        "- **01 · Prompt library.** A repo or Gdoc of named, tested prompts for recurring tasks: PR review, standup summary, post-mortem draft, release notes.\n- **02 · CLAUDE.md.** Lives in the repo, is reviewed like code and is updated when conventions change.\n- **03 · Eval set.** A handful of realistic inputs with the expected kind of output, rerun after each prompt change.",
+        "- **01 · Prompt library.** A repo or Gdoc of named, tested prompts for recurring tasks such as PR review, standup summary or release notes.\n- **02 · CLAUDE.md.** Lives in the repo, is reviewed like code and changes with the conventions.\n- **03 · Eval set.** A few realistic inputs with the expected kind of output, rerun after each prompt change.",
     },
     {
       id: "sharing-well",
-      title: "How to share a prompt well",
+      title: "Sharing a prompt",
       readTimeMinutes: 1,
       content:
-        "Before you publish:\n\n- **Replace local details** such as project names and paths with placeholders like `<PROJECT>`.\n- **State scope and prerequisites:** when to use it, which sources it needs, which actions it may take.\n- **Add a reviewed example,** marked illustrative and stripped of sensitive data.\n- **Document known failures** and link each material one to an evaluation case or control.",
+        "Before you publish:\n\n- **Replace local details** such as project names and paths with placeholders like `<PROJECT>`.\n- **State scope and prerequisites:** when to use it, which sources it needs, which actions it may take.\n- **Add a reviewed example,** marked illustrative and stripped of sensitive data.\n- **Document known failures** and tie each material one to an eval case or control.",
     },
     {
       id: "rituals",
       title: "Short recurring reviews",
       readTimeMinutes: 1,
       content:
-        "Review one workflow, its evidence and one failure case in a short recurring slot. A prompt joins the shared library only after a teammate reproduces its result from the documentation alone.",
+        "In a short recurring slot, review one workflow, its evidence and one failure case. A prompt joins the shared library only after a teammate reproduces its result from the documentation alone.",
     },
   ],
   widgets: [

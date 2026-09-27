@@ -38,7 +38,7 @@ const lesson: DataInfraLesson = {
       title: "Range / hash / list",
       readTimeMinutes: 3,
       content:
-        "- **Range partitioning.** Assigns rows by value range, for example one month of `order_date`. It keeps range locality and concentrates current-period writes.\n- **Hash partitioning.** Maps a key to one of N buckets, for example `hash(user_id) % 16`. It spreads a suitable key, but range queries usually touch every bucket and skewed keys stay hot.\n- **List partitioning.** Maps declared values such as regions to partitions. New or null values need explicit validation and a fallback.\n\nTime is a common top-level key because many analytical queries filter on time and retention works by time. Tenant isolation, legal location, event distribution and query patterns can justify another key or no explicit partitioning.",
+        "- **Range partitioning.** Assigns rows by value range, for example one month of `order_date`. It keeps range locality and concentrates current-period writes.\n- **Hash partitioning.** Maps a key to one of N buckets, for example `hash(user_id) % 16`. It spreads a suitable key, but range queries usually touch every bucket and skewed keys stay hot.\n- **List partitioning.** Maps declared values such as regions to partitions. New or null values need validation and a fallback.\n\nTime is a common top-level key because many analytical queries filter on time and retention works by time. Tenant isolation, legal location, event distribution and query patterns can justify another key or no explicit partitioning.",
     },
     {
       id: "s1c",

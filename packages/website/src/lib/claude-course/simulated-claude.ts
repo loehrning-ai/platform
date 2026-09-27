@@ -148,8 +148,8 @@ export function gradePrompt(
   } else {
     weaknesses.push(
       german
-        ? "Die lokale Regel hat keine ausdrückliche Rolle oder Prüfperspektive erkannt."
-        : "The local rule found no explicit role or review perspective.",
+        ? "Die lokale Regel hat keine Rolle oder Prüfperspektive erkannt."
+        : "The local rule found no role or review perspective.",
     );
   }
   if (
@@ -168,8 +168,8 @@ export function gradePrompt(
   } else {
     weaknesses.push(
       german
-        ? "Die lokale Regel hat keinen ausdrücklichen Kontextmarker erkannt."
-        : "The local rule found no explicit context marker.",
+        ? "Die lokale Regel hat keinen Kontextmarker erkannt."
+        : "The local rule found no context marker.",
     );
   }
   if (
@@ -188,8 +188,8 @@ export function gradePrompt(
   } else {
     weaknesses.push(
       german
-        ? "Die lokale Regel hat keine ausdrückliche Formatvorgabe erkannt."
-        : "The local rule found no explicit format marker.",
+        ? "Die lokale Regel hat keine Formatvorgabe erkannt."
+        : "The local rule found no format marker.",
     );
   }
   if (userPrompt.length > 220) {
@@ -319,12 +319,12 @@ export function judgeRewrite(
     ? winner === "user"
       ? "Die Überarbeitung ergänzt Rolle, Kontext und Ausgabeformat. Dadurch bleiben weniger Angaben offen."
       : winner === "tie"
-        ? "Beide Fassungen benennen die Absicht, legen das Ausgabeformat aber nicht vollständig fest."
+        ? "Beide Fassungen benennen die Absicht; keine legt das Ausgabeformat fest."
         : "Das Original ist hier konkreter; in der Überarbeitung fehlen notwendige Angaben."
     : winner === "user"
-      ? "Your rewrite adds role, context, and an explicit output shape, so there is far less for the model to guess."
+      ? "Your rewrite adds role, context, and an output shape, so there is far less for the model to guess."
       : winner === "tie"
-        ? "Both convey the intent, but neither fully pins down the output format, which is the deciding gap."
+        ? "Both convey the intent; neither pins down the output format."
         : "The original is more concrete here; your rewrite drops some specifics it needs.";
 
   return { winner, why, userScore, originalScore };
@@ -335,15 +335,15 @@ export function judgeRewrite(
 /** Fixed local feedback for the fill-blank exercise. */
 export function fillBlankFeedback(locale: Locale = "en"): string {
   return locale === "de"
-    ? "Die Grundstruktur und die Absicht sind erkennbar. Ergänze messbare Erfolgskriterien und ein konkretes Ausgabeformat, damit weniger Interpretationsspielraum bleibt."
-    : "The basic structure and intent are clear. Add measurable success criteria and a concrete output format to reduce ambiguity.";
+    ? "Struktur und Absicht sind erkennbar. Ergänze messbare Erfolgskriterien und ein festes Ausgabeformat."
+    : "Structure and intent are clear. Add measurable success criteria and a fixed output format.";
 }
 
 /** Fixed local feedback for the shareability exercise. */
 export function shareabilityFeedback(locale: Locale = "en"): string {
   return locale === "de"
-    ? "Ersetze feste Repository-, Personen- und Kanalnamen durch <PLATZHALTER>. Ergänze oben einen kurzen Einsatzhinweis, damit Teammitglieder den Prompt korrekt einordnen können."
-    : "Replace fixed repository, teammate, and channel names with <PLACEHOLDERS>. Add a one-line use note so teammates can apply the prompt in the right context.";
+    ? "Ersetze feste Repository-, Personen- und Kanalnamen durch <PLATZHALTER> und ergänze oben einen kurzen Einsatzhinweis."
+    : "Replace fixed repository, teammate and channel names with <PLACEHOLDERS> and add a one-line use note.";
 }
 
 // ─── Socratic tutor (SocraticTutor) ─────────────────────────────────

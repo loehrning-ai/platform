@@ -56,7 +56,7 @@ export default function Ch09CausalDe() {
 
       <section className="section">
         <SectionLabel n="09.3">Klassische DAG-Muster</SectionLabel>
-        <h2 className="h2">Confounder. Collider. Mediator.</h2>
+        <h2 className="h2">Confounder, Collider und Mediator unterscheiden</h2>
         <p className="prose">
           Confounder, Collider und Mediatoren verlangen verschiedene
           Anpassungsentscheidungen. Keine Software liest eine kausale Rolle aus

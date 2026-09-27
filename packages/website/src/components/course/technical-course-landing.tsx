@@ -11,7 +11,7 @@ import { Kicker } from "@/components/werk";
 import { cx } from "@/components/werk/cx";
 import { CapsLine, PosterArt } from "@/components/plakat";
 import { coursePlakat, type CoursePlakat } from "@/lib/plakat/palettes";
-import { posterTitleStyle } from "@/lib/plakat/fit";
+import { posterTitleFallbackStyle } from "@/lib/plakat/fit";
 
 interface TechnicalCourseFrameProps {
   readonly children: ReactNode;
@@ -265,6 +265,28 @@ function HeaderArt({ scene }: { readonly scene: CoursePlakat }): JSX.Element {
   );
 }
 
+/**
+ * The course's poster below lg: a full-bleed 16:9 row at the band's bottom
+ * edge, the numeral (Grundlagenpfad) and the motif at full column width.
+ */
+function HeaderArtPhone({ scene }: { readonly scene: CoursePlakat }): JSX.Element {
+  return (
+    <div
+      aria-hidden="true"
+      data-plakat-art-phone=""
+      className="pointer-events-none col-span-full aspect-[16/9] max-h-72 w-full lg:hidden"
+    >
+      <PosterArt
+        plakat={scene.plakat}
+        motif={scene.motif}
+        numeral={scene.numeral}
+        format="landscape"
+        cornerDots={false}
+      />
+    </div>
+  );
+}
+
 export function TechnicalCourseHeader({
   courseId,
   eyebrow,
@@ -282,9 +304,11 @@ export function TechnicalCourseHeader({
   // `[data-plakat-page] [data-plakat-band]` scope, spans the frame's three
   // tracks and puts its content back in the middle one. Type budget: the
   // caps line, the poster title and 17px for the lead, the actions and the
-  // facts (14px on a phone, the caps line's size). There is no phone art:
-  // the action stays in the first screen. From lg the poster fills the
-  // band's right edge at full height and the text column stops before it.
+  // facts (14px on a phone, the caps line's size). Below lg the poster is a
+  // full-bleed 16:9 row after the facts (as on the workshop bands), so the
+  // action stays in the first screen and the band still reads as a poster.
+  // From lg the poster fills the band's right edge at full height and the
+  // text column stops before it.
   return (
     <header
       className="relative isolate col-span-full grid min-w-0 grid-cols-subgrid"
@@ -308,7 +332,7 @@ export function TechnicalCourseHeader({
           )}
           <h1
             className="poster-title mt-3 max-w-[16ch] break-words text-foreground sm:mt-4"
-            style={posterTitleStyle(titleText(title))}
+            style={posterTitleFallbackStyle(titleText(title))}
           >
             {title}
           </h1>
@@ -357,6 +381,7 @@ export function TechnicalCourseHeader({
           </aside>
         </div>
       </div>
+      {scene ? <HeaderArtPhone scene={scene} /> : null}
     </header>
   );
 }

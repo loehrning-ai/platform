@@ -17,7 +17,7 @@ import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import { buildLocaleAlternates, localizeHref } from "@/lib/i18n/locale";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
-import { posterTitleStyle } from "@/lib/plakat/fit";
+import { posterTitleFallbackStyle } from "@/lib/plakat/fit";
 import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -95,11 +95,12 @@ const CONTENT_BOX_DOTS =
 
 /**
  * The halftone keeps a dot pitch of about 6 to 7px (its mask's dots sit 16px
- * apart at 1600px): phones show a 112px strip cut from the field at 700px
- * wide, and from lg the field fills a column beside the lede at 176px high.
+ * apart at 1600px): phones show a 48px strip cut from the field at 700px
+ * wide (a motif line, so the first examples reach the first screen), and
+ * from lg the field fills a column beside the lede at 176px high.
  */
 const HALFTONE_CLASS =
-  "mt-4 max-sm:h-28 max-sm:[mask-size:700px_auto] sm:mt-8 lg:mt-0 lg:h-44";
+  "mt-4 max-sm:h-12 max-sm:[mask-size:700px_auto] sm:mt-8 lg:mt-0 lg:h-44";
 
 function singleValue(
   value: string | readonly string[] | undefined,
@@ -207,7 +208,7 @@ export default async function DemosPage({ searchParams }: DemosPageProps) {
           <h1
             id="demo-atlas-title"
             className="poster-title mt-4 text-scene-mid sm:mt-5"
-            style={posterTitleStyle(copy.catalog.heading)}
+            style={posterTitleFallbackStyle(copy.catalog.heading)}
           >
             {copy.catalog.heading}
           </h1>

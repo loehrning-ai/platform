@@ -288,7 +288,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 75,
         primary: true,
         description:
-          "Plus 15 Minuten für Fragen. Pfeiltasten blättern, P öffnet die Moderationsansicht.",
+          "Für den Beamer. Pfeiltasten blättern, P öffnet die Moderationsansicht.",
       },
       {
         label: "Moderationsansicht",
@@ -637,7 +637,7 @@ export const DATA_READINESS_WORKSHOP: Readonly<Record<Locale, Workshop>> = {
         minutes: 75,
         primary: true,
         description:
-          "Plus 15 minutes for questions. Arrow keys move on; P opens the presenter view.",
+          "For the projector. Arrow keys move on; P opens the presenter view.",
       },
       {
         label: "Presenter view",

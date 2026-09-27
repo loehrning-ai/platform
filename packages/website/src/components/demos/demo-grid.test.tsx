@@ -92,7 +92,9 @@ describe("<DemoGrid>", () => {
       screen.getByRole("group", { name: "Reifegrad" }),
     ).getByRole("button", { name: /Alle \(12\)/ });
     expect(allChip).toHaveAttribute("aria-pressed", "true");
-    expect(allChip).toHaveClass("min-h-11", "aria-pressed:bg-foreground");
+    // The chosen filter takes the IDEA scene line (Kobalt), not ink.
+    expect(allChip).toHaveClass("min-h-11", "aria-pressed:bg-scene-line", "aria-pressed:text-background");
+    expect(allChip).not.toHaveClass("aria-pressed:bg-foreground");
     expect(allChip.className).not.toMatch(/rounded|uppercase|font-mono/);
   });
 

@@ -441,7 +441,7 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       agendaHeading: "Agenda",
       minutes: (minutes) => `${minutes} min`,
       minutesLive: (minutes) => `Live ${minutes} min`,
-      minutesSelfStudy: (minutes) => `on your own about ${minutes} min`,
+      minutesSelfStudy: (minutes) => `self-paced about ${minutes} min`,
       agendaSource: {
         deck: "",
         plan: "Planned minutes, not yet measured with test readers.",

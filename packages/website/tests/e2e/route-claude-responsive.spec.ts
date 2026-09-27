@@ -28,14 +28,14 @@ const LOCALES = [
     locale: "de",
     prefix: "",
     landingTitle: "Claude mit klarer Struktur einsetzen.",
-    firstLessonTitle: "Was Claude tatsächlich ist",
+    firstLessonTitle: "Was Claude ist",
     completedLabel: "Navigations-Checkpoint gespeichert",
   },
   {
     locale: "en",
     prefix: "/en",
     landingTitle: "Use Claude with clear structure.",
-    firstLessonTitle: "What Claude actually is",
+    firstLessonTitle: "What Claude is",
     completedLabel: "Navigation checkpoint saved",
   },
 ] as const;
@@ -486,8 +486,8 @@ async function expectLocalizedInterfaceChrome(
   ).replace(/\s+/g, " ");
   const forbidden =
     locale === "de"
-      ? /\b(?:Mark as read|Complete lesson|Lesson complete|Confirm section reviewed|Section reviewed|Transfer checkpoint|State your next move|Decision or revision|Save checkpoint|Navigation checkpoint saved|Next lesson|Previous lesson|Key takeaway|Run prompt|Run both|Grade prompt|Assess rewrite|Check entries|Start loop|Run final review|What Claude actually is)\b/i
-      : /(?:Als gelesen markieren|Lektion abschließen|Lektion abgeschlossen|Abschnitt als geprüft bestätigen|Abschnitt geprüft|Transfer-Checkpoint|Lege deinen nächsten Schritt fest|Entscheidung oder Änderung|Checkpoint speichern|Navigations-Checkpoint gespeichert|Nächste Lektion|Vorherige Lektion|Kernaussage|Prompt simulieren|Beide simulieren|Prompt bewerten|Überarbeitung prüfen|Eingaben prüfen|Schleife starten|Abschlussprüfung starten|Was Claude tatsächlich ist)/i;
+      ? /\b(?:Mark as read|Complete lesson|Lesson complete|Confirm section reviewed|Section reviewed|Transfer checkpoint|State your next move|Decision or revision|Save checkpoint|Navigation checkpoint saved|Next lesson|Previous lesson|Key takeaway|Run prompt|Run both|Grade prompt|Assess rewrite|Check entries|Start loop|Run final review|What Claude is)\b/i
+      : /(?:Als gelesen markieren|Lektion abschließen|Lektion abgeschlossen|Abschnitt als geprüft bestätigen|Abschnitt geprüft|Transfer-Checkpoint|Lege deinen nächsten Schritt fest|Entscheidung oder Änderung|Checkpoint speichern|Navigations-Checkpoint gespeichert|Nächste Lektion|Vorherige Lektion|Kernaussage|Prompt simulieren|Beide simulieren|Prompt bewerten|Überarbeitung prüfen|Eingaben prüfen|Schleife starten|Abschlussprüfung starten|Was Claude ist)/i;
   expect(chrome, `${context}: foreign-language interface chrome`).not.toMatch(
     forbidden,
   );

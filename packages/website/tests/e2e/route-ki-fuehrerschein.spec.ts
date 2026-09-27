@@ -32,7 +32,7 @@ test.describe("/ki-fuehrerschein landing", () => {
 
     const h1 = page.getByRole("heading", { level: 1 });
     await expect(h1).toBeVisible();
-    await expect(h1).toContainText("KI im Alltag");
+    await expect(h1).toContainText("Welche Daten ins KI-Tool dürfen");
 
     const noise = meaningfulBrowserErrors(errors);
     expect(

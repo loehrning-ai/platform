@@ -57,7 +57,7 @@ CONSTRAINTS
 
 FORMAT
 Subject line, then body. No sign-off.`,
-    note: "Role, context, task, constraints, and format are explicit. Fewer details are left to inference.",
+    note: "Role, context, task, constraints and format are stated, so less is left to inference.",
   },
 ];
 
@@ -97,7 +97,7 @@ VORGABEN
 
 FORMAT
 Zuerst die Betreffzeile, dann der Text. Keine Grußformel.`,
-    note: "Rolle, Kontext, Aufgabe, Vorgaben und Format sind explizit. Weniger Details bleiben offen.",
+    note: "Rolle, Kontext, Aufgabe, Vorgaben und Format sind genannt; weniger bleibt offen.",
   },
 ];
 

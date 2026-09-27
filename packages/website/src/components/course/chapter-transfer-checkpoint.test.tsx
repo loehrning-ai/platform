@@ -110,7 +110,8 @@ describe("ChapterTransferCheckpoint", () => {
       expect(
         screen.getByText(/response is not saved or synced/i),
       ).toBeVisible();
-      expect(screen.getByText(/not mastery or certification/i)).toBeVisible();
+      // The evidence boundary is stated once, in the saved state below.
+      expect(screen.queryByText(/mastery/i)).toBeNull();
       fireEvent.click(save);
 
       expect(isEvidenceBackedLessonCompleted(courseSlug, chapterId)).toBe(true);

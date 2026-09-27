@@ -54,10 +54,10 @@ export const BLOG_POSTS: readonly BlogPost[] = [
     titleDe: "KI in der Ausbildung: Fragen für JAV und Betriebsrat",
     titleEn:
       "AI in apprenticeships: questions for youth representatives and works councils",
-    summary:
-      "Was JAV und Betriebsrat tun können, wenn KI in die Ausbildung kommt, was für Berichtsheft und Prüfung gilt und welche Fragen vor dem Start geklärt sein sollten. Mit Fragenliste zum Drucken unter CC BY 4.0 und Primärquellen.",
+    // The hub card teaser: one line, at most 12 words.
+    summary: "Rechte von JAV und Betriebsrat, 20 Fragen zum Drucken, mit Quellen.",
     summaryEn:
-      "What youth representatives and works councils can do when AI enters apprenticeship training, what applies to the training record and exams, and which questions to settle before launch. With a printable question list under CC BY 4.0 and primary sources.",
+      "Rights of youth reps and works councils, 20 printable questions, with sources.",
     datePublished: "2026-09-27",
     dateModified: "2026-09-27",
     tags: ["KI in der Ausbildung", "Mitbestimmung"],

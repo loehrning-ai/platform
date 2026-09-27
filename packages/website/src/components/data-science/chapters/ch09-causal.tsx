@@ -52,7 +52,7 @@ export default function Ch09Causal() {
         <p className="prose">
           A Directed Acyclic Graph (DAG) records the causal relations you
           assume: nodes are variables, arrows are direct-effect assumptions.
-          With a correct graph and an explicit estimand, it yields candidate
+          With a correct graph and a stated estimand, it yields candidate
           adjustment sets.
         </p>
         <DAGBuilder />
@@ -60,7 +60,7 @@ export default function Ch09Causal() {
 
       <section className="section">
         <SectionLabel n="09.3">Classic DAG patterns</SectionLabel>
-        <h2 className="h2">Confounder. Collider. Mediator.</h2>
+        <h2 className="h2">Tell confounders, colliders and mediators apart</h2>
         <p className="prose">
           Confounders, colliders and mediators need different adjustment
           decisions. No software reads a causal role from a table; the roles
@@ -115,7 +115,7 @@ export default function Ch09Causal() {
         items={[
           "<b>Draw the DAG first,</b> before any code, and show it to domain experts; they spot wrong arrows.",
           "<b>Use the backdoor criterion on the assumed graph.</b> Find a sufficient adjustment set and test plausible omitted structure with sensitivity analysis.",
-          "<b>Be explicit about which effect you want.</b> Total effect? Direct effect? Local Average Treatment Effect (LATE)?",
+          "<b>Name the effect you want.</b> Total effect? Direct effect? Local Average Treatment Effect (LATE)?",
         ]}
       />
       <Takeaway

@@ -24,28 +24,28 @@ const lesson: ClaudeLesson = {
       title: "Agents and workflows",
       readTimeMinutes: 1,
       content:
-        "In Anthropic's distinction, a workflow follows code-defined paths, while an agent lets a model pick actions and tools from intermediate results. Both use model calls, retrieval and tools.\n\nA basic loop sends goal and state to the model, validates the requested tool call, runs it within policy, returns the result and checks a stopping condition. Production systems add parallelism, queues, approvals, retries and persisted state. Tool access is authority, so bound it in code and infrastructure.",
+        "Anthropic distinguishes workflows, which follow code-defined paths, from agents, where a model picks actions and tools from intermediate results.\n\nA basic loop sends goal and state to the model, validates the requested tool call, runs it within policy, returns the result and checks a stopping condition. Production adds parallelism, queues, approvals, retries and persisted state. Tool access is authority, so bound it in code and infrastructure.",
     },
     {
       id: "the-loop-explicit",
-      title: "The loop, step by step",
+      title: "The loop",
       readTimeMinutes: 2,
       content:
         "```\n// one agent turn\nrequest   ← model receives goal + allowed state\npropose   ← model returns a response or tool request\nvalidate  ← harness checks schema, permission, and policy\nexecute   ← approved tool runs\nrecord    ← result and side effects are logged\ndecide    ← continue, stop, or request human input\n\n// until\n  acceptance checks pass | a limit is reached | a person intervenes\n```\n\nDefine termination, retries, idempotency and recovery before granting write access; a stop request in the prompt enforces nothing.",
     },
     {
       id: "four-guardrails",
-      title: "The four guardrails",
+      title: "Guardrails",
       readTimeMinutes: 1,
       content:
-        "- **01 · Scope.** Grant only the tools, resources and network destinations the task needs, and separate read from write.\n- **02 · Limits.** Cap steps, tokens, time, cost, retries and concurrency.\n- **03 · Approval and policy.** Enforced approval for deletion, deployment, payment or external messages. Defaults and permission modes vary, so inspect the active configuration.\n- **04 · Verification.** Deterministic checks where possible: schemas, linters, type checks, tests, screenshots, read-after-write.\n\nVerification exposes defined failures but does not make an agent correct. Add negative tests and make sure the verifier measures the outcome, not a proxy.",
+        "- **01 · Scope.** Grant only the tools, resources and destinations the task needs; separate read from write.\n- **02 · Limits.** Cap steps, tokens, time, cost, retries and concurrency.\n- **03 · Approval.** Enforce approval for deletion, deployment, payment or external messages, and inspect the active permission mode.\n- **04 · Verification.** Deterministic checks where possible: schemas, linters, type checks, tests, screenshots, read-after-write.\n\nVerification exposes defined failures but does not make an agent correct. Add negative tests and check that the verifier measures the outcome, not a proxy.",
     },
     {
       id: "when-to-use",
-      title: "When to reach for an agent",
+      title: "When an agent fits",
       readTimeMinutes: 1,
       content:
-        "**Agent fit:** multi-step work where later actions depend on tool results, the environment gives verifiable feedback, and latency and cost are justified.\n\n**Workflow or single call:** fixed sequences, one-shot transformations or tasks without a defensible stopping condition. Start with the simplest architecture that meets the evaluated requirement.",
+        "**Agent fit:** multi-step work where later actions depend on tool results, the environment gives checkable feedback, and latency and cost are justified.\n\n**Workflow or single call:** fixed sequences, one-shot transformations or tasks without a defensible stopping condition. Start with the simplest architecture that meets the requirement.",
     },
   ],
   widgets: [

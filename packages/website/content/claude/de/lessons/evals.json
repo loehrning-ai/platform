@@ -2,7 +2,7 @@
   "id": "evals",
   "number": 11,
   "title": "Prompt-Debugging und Evals",
-  "subtitle": "Wie du erkennst, ob ein Prompt wirklich besser ist.",
+  "subtitle": "Wie du erkennst, ob ein Prompt besser wurde.",
   "durationMinutes": 12,
   "trackId": "team",
   "hook": "Vergleiche Prompt-Versionen an festen Fällen.",
@@ -17,25 +17,25 @@
       "id": "why-evals",
       "title": "Warum Evals?",
       "readTimeMinutes": 1,
-      "content": "Eine Änderung kann einen Fall verbessern und einen anderen verschlechtern. Ein Eval legt Eingaben, Erfolgskriterien und Bewertungslogik fest, damit Versionen unter denselben Bedingungen antreten.\n\nFang klein an, mit häufigen Fällen, Grenzfällen und bekannten Fehlern, und ergänze Fälle aus dem Betrieb. Ausgaben variieren, also brauchen Entscheidungen über Erfolgsquoten mehrere Durchläufe. Dokumentiere Modell, Einstellungen, Prompt-Version, Eingaben, Ausgaben und Bewertungen."
+      "content": "Eine Änderung kann einen Fall verbessern und einen anderen verschlechtern. Ein Eval legt Eingaben, Erfolgskriterien und Bewertung fest, damit Versionen unter denselben Bedingungen antreten.\n\nFang mit häufigen Fällen, Grenzfällen und bekannten Fehlern an und ergänze Fälle aus dem Betrieb. Ausgaben variieren, also brauchen Entscheidungen über Erfolgsquoten mehrere Durchläufe. Dokumentiere Modell, Einstellungen, Prompt-Version, Eingaben, Ausgaben und Bewertungen."
     },
     {
       "id": "mvp-eval",
       "title": "Ein kleines Eval-Set",
       "readTimeMinutes": 2,
-      "content": "Eine Tabelle, eine JSON-Datei oder ein Testmodul reicht; jeder Fall braucht eine realistische Eingabe und explizite Abnahmekriterien.\n\n```\neval_v1:\n  - input:    <häufiger Fall>\n    expects:  <prüfbare Anforderungen>\n  - input:    <schwieriger Grenzfall>\n    expects:  <…>\n  - input:    <bekannter Fehlerfall>\n    expects:  <…>\n  - input:    <fehlende oder mehrdeutige Daten>\n    expects:  <Abstention oder Rückfrage>\n```\n\nLass vor und nach jeder Änderung dieselben Fälle laufen und speichere Rohausgaben und Bewertungen für das Review."
+      "content": "Eine Tabelle, eine JSON-Datei oder ein Testmodul reicht; jeder Fall braucht eine realistische Eingabe und schriftliche Abnahmekriterien.\n\n```\neval_v1:\n  - input:    <häufiger Fall>\n    expects:  <prüfbare Anforderungen>\n  - input:    <schwieriger Grenzfall>\n    expects:  <…>\n  - input:    <bekannter Fehlerfall>\n    expects:  <…>\n  - input:    <fehlende oder mehrdeutige Daten>\n    expects:  <Abstention oder Rückfrage>\n```\n\nLass vor und nach jeder Änderung dieselben Fälle laufen und speichere Rohausgaben und Bewertungen."
     },
     {
       "id": "debugging",
       "title": "Debugging eines fehlerhaften Prompts",
       "readTimeMinutes": 1,
-      "content": "Reproduziere den Fehler mit fester Eingabe, festem Modell, festen Einstellungen und festem Tool-Zustand. Deaktiviere oder vereinfache Prompt-Abschnitte, bis der Widerspruch eingekreist ist, und hol sie dann einzeln zurück, mit denselben Fällen.\n\nDas ist Delta-Debugging, doch wegen der Modellvarianz beweist ein Durchlauf keine Ursache. Wiederhole die Durchläufe und lies zuerst die Transkripte."
+      "content": "Reproduziere den Fehler mit fester Eingabe, festem Modell, festen Einstellungen und festem Tool-Zustand. Deaktiviere oder vereinfache Prompt-Abschnitte, bis der Widerspruch eingekreist ist, und hol sie dann einzeln zurück, mit denselben Fällen.\n\nWegen der Modellvarianz beweist ein Durchlauf keine Ursache, also wiederhole die Durchläufe und lies zuerst die Transkripte."
     },
     {
       "id": "llm-as-judge",
-      "title": "Qualität mit einem zweiten Modell beurteilen",
+      "title": "Ein Modell als Richter",
       "readTimeMinutes": 1,
-      "content": "Ein Modell-Grader bewertet offene Ausgaben anhand einer Rubrik und bringt eigene Fehler und Präferenzen mit. Kalibriere ihn an menschlich geprüften Beispielen, tausche bei Paarvergleichen die Reihenfolge, speichere die Begründung und miss die Abweichung.\n\nDeterministische Grader prüfen Schema, Pflichtfelder, Zitate und ausführbare Tests. Mehrere Grader kombinierst du nur, wenn jeder eine definierte Anforderung misst."
+      "content": "Ein Modell-Grader bewertet offene Ausgaben nach einer Rubrik und bringt eigene Fehler und Präferenzen mit. Kalibriere ihn an menschlich geprüften Beispielen, tausche bei Paarvergleichen die Reihenfolge, speichere die Begründung und miss die Abweichung.\n\nDeterministische Grader prüfen Schema, Pflichtfelder, Zitate und ausführbare Tests. Kombiniere Grader nur, wenn jeder eine definierte Anforderung misst."
     }
   ],
   "widgets": [
@@ -47,7 +47,7 @@
         "lessonId": "evals",
         "cpId": "tagger",
         "title": "Benenne den Fehlerfall",
-        "scenario": "Markiere den Fehlerfall in jeder der fünf simulierten Ausgaben. Die Beispiele sind feste Kursdaten.",
+        "scenario": "Markiere den Fehlerfall in jeder simulierten Ausgabe.",
         "modes": [
           {
             "id": "halluzination",

@@ -45,9 +45,8 @@ Typische Rollen: Manager, Analyst, HR, Vertrieb Innendienst, Projektleitung.
 
 Gute Tools für dich:
 
-- Midjourney oder Stable Diffusion für Bilder
+- Midjourney, Stable Diffusion oder Adobe Firefly für Bilder
 - ChatGPT oder Claude für Copy und Ideen
-- Adobe Firefly für produktionsreifes Design
 
 Typische Rollen: Designerin, Marketing, Content Creation, Social Media.
 

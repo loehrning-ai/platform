@@ -70,17 +70,24 @@ describe("blog stylesheet isolation", () => {
   });
 
   it("paints the article title in its settled position", () => {
+    // Every post opens with the shared header (PostHead): the H1 is one
+    // text run in .wz-hero__title, with no entrance motion.
+    const wzRoot = postcss.parse(
+      readFileSync(join(__dirname, "_styles/post-wz.css"), "utf8"),
+    );
     const declarations = new Map<string, string>();
-    postRoot.walkRules(".hero__title .word", (rule) => {
+    wzRoot.walkRules(/\.wz-hero__title\b/, (rule) => {
       rule.walkDecls((declaration) => {
         declarations.set(declaration.prop, declaration.value);
       });
     });
 
-    expect(declarations.get("display")).toBe("inline-block");
+    expect(declarations.get("font-weight")).toBe("700");
     expect(declarations.has("transform")).toBe(false);
     expect(declarations.has("animation")).toBe(false);
+    expect(heroSource).toContain("<PostHead");
     expect(heroSource).not.toContain("animationDelay");
+    expect(postCss).not.toMatch(/\.hero__title/);
   });
 
   it("restores a high-contrast focus-visible indicator on range sliders", () => {

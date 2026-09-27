@@ -497,6 +497,9 @@ describe("PosterThumb and PosterCover", () => {
     }
     expect(thumbs[3].querySelector("svg")).toHaveClass("plakat-autumn");
     expect(thumbs[3].querySelector("text")?.textContent).toBe("04");
+    // Kreide on Kalkweiß is 1.05:1: only the IDEA poster draws a Kobalt edge.
+    expect(thumbs[1]).toHaveClass("after:border", "after:border-kobalt");
+    for (const index of [0, 2, 3]) expect(thumbs[index]?.className).not.toContain("after:border");
   });
 
   it("gives the four workshops four distinct scenes", () => {
@@ -625,13 +628,19 @@ describe("PlakatBand", () => {
 
 describe("CapsLine, CornerDots, PosterNumeral and Halftone", () => {
   it("renders the caps line from sentence-case DOM text, with an optional hairline arrow", () => {
-    render(
+    const { container } = render(
       <div className="plakat-idea">
         <CapsLine arrow>Praxisbeispiele · im Browser</CapsLine>
       </div>,
     );
-    const caps = screen.getByText("Praxisbeispiele · im Browser").parentElement;
-    expect(caps).toHaveClass("plakat-caps");
+    // Each " · " part is its own unbreakable run, so the line is read whole.
+    const caps = container.querySelector(".plakat-caps");
+    expect(caps?.textContent).toBe("Praxisbeispiele · im Browser");
+    // A line breaks only between parts; the dot opens its part, so a wrapped
+    // part's dot sits in the clipped start box, never at a line end.
+    expect(
+      Array.from(caps?.querySelectorAll(".whitespace-nowrap") ?? [], (part) => part.textContent),
+    ).toEqual(["Praxisbeispiele", " · im Browser"]);
     const arrow = caps?.querySelector("svg[data-caps-arrow]");
     expect(arrow).toHaveAttribute("aria-hidden", "true");
     expect(arrow).toHaveAttribute("width", "64");

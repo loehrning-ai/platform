@@ -1,7 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { BLOG_POSTS } from "@/lib/blog-metadata";
-import { expectCapsInsideScene } from "@/test/plakat-scene";
+import { capsLine, expectCapsInsideScene } from "@/test/plakat-scene";
 
 const { getRequestLocaleMock } = vi.hoisted(() => ({
   getRequestLocaleMock: vi.fn(),
@@ -94,7 +94,7 @@ describe("BlogIndexPage", () => {
   it("uses the IDEA hero band, a Kopflinie section and ledger rows", async () => {
     await renderPage("de");
 
-    expect(screen.getByText("Blog · 2 Artikel")).toBeVisible();
+    expect(screen.getByText(capsLine("Blog · 2 Artikel"))).toBeVisible();
     const h1 = screen.getByRole("heading", {
       level: 1,
       name: "KI im Alltag, mit Quellen erklärt.",

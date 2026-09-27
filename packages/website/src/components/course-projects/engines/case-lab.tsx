@@ -317,7 +317,7 @@ const REVIEW_DIMENSIONS: Readonly<
         {
           value: "no-measurement",
           de: "Messwert und Garantie ausdrücklich nicht behaupten",
-          en: "Explicitly decline to claim a metric or guarantee",
+          en: "Decline to claim a metric or guarantee",
         },
         {
           value: "estimate",

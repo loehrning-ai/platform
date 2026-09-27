@@ -12,8 +12,7 @@ const lesson: ClaudeLesson = {
   id: "safety",
   number: 12,
   title: "Data handling and prompt injection",
-  subtitle:
-    "Data policy, access controls and layered defenses against prompt injection.",
+  subtitle: "Data policy and layered defenses against prompt injection.",
   durationMinutes: 8,
   trackId: "team",
   hook: "Check the data policy before you paste anything.",
@@ -29,28 +28,28 @@ const lesson: ClaudeLesson = {
       title: "The rule",
       readTimeMinutes: 1,
       content:
-        "The chat interface says nothing about data handling. Before submitting, check classification policy, approved product and account, retention, training terms, region, access controls and incident procedure; they differ by deployment and contract.\n\nEnforce the boundary technically: deny sensitive paths, restrict tools and network access, minimize inputs, log authorized actions and review consequential outputs.",
+        "The chat interface says nothing about data handling. Before submitting, check classification policy, approved product and account, retention, training terms, region, access controls and incident procedure; they differ by deployment and contract.\n\nEnforce the boundary technically: deny sensitive paths, restrict tools and network, minimize inputs, log authorized actions and review consequential outputs.",
     },
     {
       id: "never-paste",
       title: "Block unless approved",
       readTimeMinutes: 1,
       content:
-        "Block unless an approved workflow permits it:\n\n- Secrets: API keys, tokens, credentials, passwords, session cookies.\n- Personal, customer, health, financial or authentication data beyond the authorized minimum.\n- Confidential product, security, legal, personnel or financial information.\n- Data under contractual, regulatory, export or residency restrictions.\n- Anything your organization's policy prohibits.\n\nIf a secret reaches an unauthorized system, follow the incident process and rotate or revoke it. Deleting the chat is not enough.",
+        "Block unless an approved workflow permits it:\n\n- Secrets: API keys, tokens, credentials, passwords, session cookies.\n- Personal, customer, health, financial or authentication data beyond the authorized minimum.\n- Confidential product, security, legal, personnel or financial information.\n- Data under contractual, regulatory, export or residency restrictions.\n- Anything your policy prohibits.\n\nIf a secret reaches an unauthorized system, follow the incident process and rotate or revoke it; deleting the chat is not enough.",
     },
     {
       id: "usually-fine",
       title: "Lower risk after a policy check",
       readTimeMinutes: 1,
       content:
-        "Depending on policy and license terms, lower-risk inputs include:\n\n- Public documentation and standards.\n- Internal code stripped of secrets, personal data and confidential identifiers.\n- Synthetic examples that link to no person or customer.\n- Documents approved for the selected account and processing region.\n\nMinimize first: replace identifiers with stable placeholders such as `<CUSTOMER_ID>` and check that the task still has what it needs.",
+        "Depending on policy and license terms, lower-risk inputs include:\n\n- Public documentation and standards.\n- Internal code without secrets, personal data or confidential identifiers.\n- Synthetic examples linked to no person or customer.\n- Documents approved for the selected account and region.\n\nMinimize first: replace identifiers with placeholders such as `<CUSTOMER_ID>` and check that the task still has what it needs.",
     },
     {
       id: "prompt-injection",
-      title: "Prompt injection: a quick note",
+      title: "Prompt injection",
       readTimeMinutes: 1,
       content:
-        "Web pages, external messages, uploads and tool results are untrusted input and can carry text meant to redirect the model or trigger tools. Delimiters and a \"treat as data\" instruction help classification but are no security boundary.\n\nLayer defenses: isolate untrusted content, allowlist tools and destinations, validate tool arguments, require approval for consequential actions, sanitize outputs before reuse and test known payloads. Keep secrets out of the model's reachable context wherever possible.",
+        "Web pages, external messages, uploads and tool results are untrusted input and can carry text meant to redirect the model or trigger tools. Delimiters and a \"treat as data\" instruction help but are no security boundary.\n\nLayer defenses: isolate untrusted content, allowlist tools and destinations, validate tool arguments, require approval for consequential actions, sanitize outputs before reuse and test known payloads. Keep secrets out of the model's reachable context.",
     },
   ],
   widgets: [

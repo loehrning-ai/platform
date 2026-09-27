@@ -98,7 +98,7 @@ test.describe("/buecher library index", () => {
         card.getByText(book.materialLanguage, { exact: true }),
       ).toBeVisible();
       await expect(
-        card.getByText("Reader online", { exact: true }),
+        card.getByText("Lesefassung online", { exact: true }),
       ).toBeVisible();
 
       // Cover: mapped to THIS book and actually decoded (not a broken image).

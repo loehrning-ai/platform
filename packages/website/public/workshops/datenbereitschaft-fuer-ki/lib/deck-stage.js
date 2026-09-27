@@ -327,6 +327,12 @@
       .progress__rail {
         display: none;
       }
+
+      /* A phone gets a one-line toast above the toolbar, not a card over the slide. */
+      .notice {
+        padding: 8px 12px;
+        font-size: 14px;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -527,6 +533,11 @@
       rotate.querySelector("button").addEventListener("click", () => {
         rotate.setAttribute("data-dismissed", "");
         writeStorage("sessionStorage", ROTATE_DISMISSED_KEY, "1");
+        // One notice at a time: a touch hint held back by this note shows now.
+        if (this._touchHintPending) {
+          this._touchHintPending = false;
+          this._maybeShowTouchHint();
+        }
       });
 
       const live = document.createElement("div");
@@ -947,6 +958,12 @@
       if (this._controls.hidden || !window.matchMedia?.("(pointer: coarse)").matches) return;
       this._showControls(TOOLBAR_TOUCH_MS);
       if (readStorage("localStorage", TOUCH_HINT_KEY) === "1") return;
+      // One notice at a time: while the rotate note is on screen, the touch hint waits for it.
+      if (this._rotate && !this._rotate.hasAttribute("data-dismissed")
+        && window.getComputedStyle(this._rotate).display !== "none") {
+        this._touchHintPending = true;
+        return;
+      }
       writeStorage("localStorage", TOUCH_HINT_KEY, "1");
       this._showNotice("Swipe, or tap the right or left edge, to step through.", TOOLBAR_TOUCH_MS);
     }

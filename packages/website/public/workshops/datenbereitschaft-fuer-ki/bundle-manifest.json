@@ -156,8 +156,8 @@
     },
     {
       "path": "data-readiness-kit.zip",
-      "sizeBytes": 1116289,
-      "sha256": "bba44efde63f1edeceb4adeea1b136f9f8f92aa4505c651428217bcbc9181bae"
+      "sizeBytes": 1116748,
+      "sha256": "f998dea3b6051b941fccf5f13d9d6d1d54e9be154f134ae6ea801e86429681a2"
     },
     {
       "path": "data-readiness-kit/ASSET-RIGHTS.md",
@@ -266,8 +266,8 @@
     },
     {
       "path": "data-readiness-kit/builder/claude/README.md",
-      "sizeBytes": 9513,
-      "sha256": "5d517e91ba386e5da2f5d246760f579e1f799852d2ef33daa74ec05dc7af6136"
+      "sizeBytes": 9552,
+      "sha256": "90b6350f28cbed0417e5cb65ac6ba90f00b41b57cd75afeb293409e34debc655"
     },
     {
       "path": "data-readiness-kit/builder/claude/hooks/sql_guard.py",
@@ -331,8 +331,8 @@
     },
     {
       "path": "data-readiness-kit/builder/domains/PEOPLE-HEADCOUNT.md",
-      "sizeBytes": 9907,
-      "sha256": "156998877abfc4d42fafe8b822fa92aa7b034d0e263935c0c9be60afec21eb2f"
+      "sizeBytes": 9911,
+      "sha256": "b3ca48ff86b78d856b7cbc8cc3d4d1d31c7e7e723155e6c3d26a7d4a97a663fd"
     },
     {
       "path": "data-readiness-kit/builder/domains/README.md",
@@ -341,8 +341,8 @@
     },
     {
       "path": "data-readiness-kit/builder/domains/RETAIL-INVENTORY.md",
-      "sizeBytes": 9365,
-      "sha256": "9c8b35a65fe7742ea19fdf6b2d9b98f2df701de1fca32f960ada32c57f2a1cfa"
+      "sizeBytes": 9395,
+      "sha256": "9017f9d15ee08fc363c66b745dfa28fb6ce08b74b32d592d45b015201eff5618"
     },
     {
       "path": "data-readiness-kit/builder/domains/SUPPORT-BACKLOG.md",
@@ -351,8 +351,8 @@
     },
     {
       "path": "data-readiness-kit/builder/domains/WEBSHOP-CONVERSION.md",
-      "sizeBytes": 8525,
-      "sha256": "55d94f8728fae33911fc55c53dedc7c7601e1f83bac4cd8c769304b39d2be15c"
+      "sizeBytes": 8562,
+      "sha256": "489c079314dcba342cb6248d0ecf886432aaf3b48aefb6d40fb4a4679cb554f4"
     },
     {
       "path": "data-readiness-kit/builder/domains/sql/00_common.sql",
@@ -436,38 +436,38 @@
     },
     {
       "path": "data-readiness-kit/builder/warehouse/ACCESS.md",
-      "sizeBytes": 10075,
-      "sha256": "54f97be27c41f5f045fc4c1e9d6087642ca4ad6ac5a29fceba82f6a2b906f8fc"
+      "sizeBytes": 10098,
+      "sha256": "fa0ee8af99fd2fd5ba4eb61ea120ee621b1265b01d6894805c8e55ed09ed08b1"
     },
     {
       "path": "data-readiness-kit/builder/warehouse/FRESHNESS-LINEAGE.md",
-      "sizeBytes": 8186,
-      "sha256": "f394c9645bbed2cbc3b2a5cb4440b8e5427431973829c5b57734d33856133f79"
+      "sizeBytes": 8208,
+      "sha256": "43b693a417e6cbd81ac66c5626b23474ad8c5f5939107e3694a94b86a349c32f"
     },
     {
       "path": "data-readiness-kit/builder/warehouse/LAYERS.md",
-      "sizeBytes": 7263,
-      "sha256": "b8422465df0cc82e6474ebdce08009098113fa93bc45d1dd594354f11760c268"
+      "sizeBytes": 7464,
+      "sha256": "8d2aa62aec6266d871be8500a695178edc3ec76d6831f1744b24e3c9bb53ade1"
     },
     {
       "path": "data-readiness-kit/builder/warehouse/README.md",
-      "sizeBytes": 10353,
-      "sha256": "4b5ce7259a13b1da2a5c21a019fc8e7df299c68c9f0433d0ec06ba148b7851a5"
+      "sizeBytes": 10451,
+      "sha256": "90a439edf7e7256451fea5620ec4f39e2964501735a064e2f55701674a5f1001"
     },
     {
       "path": "data-readiness-kit/builder/warehouse/SERVING-VIEWS.md",
-      "sizeBytes": 10928,
-      "sha256": "dc1ee13ca8aea840bf1143ab06b635b562e1c9c39aa444442666f954d4d681f1"
+      "sizeBytes": 10934,
+      "sha256": "583b557974a118b1dd9e91949427a6a8ebe169f91162b4d94e6680a646c3e43c"
     },
     {
       "path": "data-readiness-kit/builder/warehouse/TESTS.md",
-      "sizeBytes": 10536,
-      "sha256": "b2ef35f974f1bd1d224d29bcfa1e3f648158d88c709d98b838566e7e636be250"
+      "sizeBytes": 10534,
+      "sha256": "00e97be853a0d8704e1471ac680ee953f38fa45b5b3d52e9810968b425a2501b"
     },
     {
       "path": "data-readiness-kit/builder/warehouse/seed/SEED-FACTS.md",
-      "sizeBytes": 8245,
-      "sha256": "4ea121b1f66d742fbbbb71fe111b05caeee26a740ee9524c41f0dcc88f0abfef"
+      "sizeBytes": 8246,
+      "sha256": "ad09d973d24370c7d8f943e27e6280dadbb24cf62ad75d280910269aac5e24c4"
     },
     {
       "path": "data-readiness-kit/builder/warehouse/seed/builder-data.json",
@@ -566,8 +566,8 @@
     },
     {
       "path": "guide.html",
-      "sizeBytes": 31297,
-      "sha256": "f2cf4c63ec70691a96ad856a248c1bc0fd4586e57f27c9a2678fdbc0266ddeb4"
+      "sizeBytes": 31295,
+      "sha256": "81e419db9291ce1a74fa868fe80e6275c489343cb690632a57273948e1e27a13"
     },
     {
       "path": "lib/deck-runtime.js",
@@ -576,8 +576,8 @@
     },
     {
       "path": "lib/deck-stage.js",
-      "sizeBytes": 49334,
-      "sha256": "5ef1d7029a79844a74dae2ee20c854e58e3682b01ee7ca1880c4431500924f8f"
+      "sizeBytes": 50008,
+      "sha256": "5ec4006cdfc2ba8613d5c0126b49e07373f86aef1eb63361885da75d190cd70f"
     },
     {
       "path": "lib/demo-adapter.js",
@@ -766,8 +766,8 @@
     },
     {
       "path": "slides.html",
-      "sizeBytes": 179941,
-      "sha256": "2d3b2f850d4600210d75494d7781ba74f3ddb33e431d0e44df7617fb4da356f2"
+      "sizeBytes": 179950,
+      "sha256": "86e376d00f903c33ebc2b8ecc597915c53f44fc51c98d38b1ac89e4c3c801e9a"
     }
   ]
 }

@@ -173,7 +173,7 @@ describe("catalog surfaces below lg", () => {
       "lg:grid-cols-[minmax(0,1.3fr)_minmax(18rem,0.7fr)]",
     );
     expect(ledger).toContain("grid-cols-2 border-l border-t border-foreground");
-    expect(ledger).toContain("sm:grid-cols-4");
+    expect(ledger).toContain("sm:grid-cols-3");
   });
 });
 

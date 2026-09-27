@@ -14,9 +14,8 @@ const lesson: ClaudeLesson = {
   hook: "Rules you keep explaining belong in a file.",
   keyConcepts: [
     "CLAUDE.md hierarchy",
-    "Lazy-loaded sub-folder files",
+    "Nested files",
     "Auto memory",
-    "Standing brief",
   ],
   quiz: [],
   sections: [
@@ -25,21 +24,21 @@ const lesson: ClaudeLesson = {
       title: "What it is",
       readTimeMinutes: 1,
       content:
-        "`CLAUDE.md` is a Markdown instruction file that Claude Code loads so a session knows your repo. The project file lives at `./CLAUDE.md` or `./.claude/CLAUDE.md`; user, managed, local and nested files have their own scopes.\n\nThe instructions enter the conversation context. They steer behavior and enforce nothing, so controls that must hold belong in permissions, hooks, sandboxing and CI.",
+        "`CLAUDE.md` is a Markdown instruction file that Claude Code loads so a session knows your repo. The project file lives at `./CLAUDE.md` or `./.claude/CLAUDE.md`; user, managed, local and nested files have their own scopes.\n\nThe instructions enter the context and steer behavior but enforce nothing. Controls that must hold belong in permissions, hooks, sandboxing and CI.",
     },
     {
       id: "hierarchy",
       title: "How the hierarchy loads",
       readTimeMinutes: 2,
       content:
-        "Claude Code finds instruction files by scope and directory. A simplified project view:\n\n```\n~/.claude/CLAUDE.md              # User instructions across projects\n<repo>/CLAUDE.md                 # Team-shared project instructions\n<repo>/.claude/CLAUDE.md         # Alternative project location\n<repo>/CLAUDE.local.md           # Personal project instructions; gitignore\n\n# Discovered on demand when files in these folders are read:\n<repo>/frontend/CLAUDE.md\n<repo>/services/auth/CLAUDE.md\n```\n\nApplicable files combine in context, the more local ones later. No reliable precedence rule exists, so remove contradictions. `/memory` shows what loaded; path-specific rules go in `.claude/rules/` with `paths` frontmatter.",
+        "Claude Code finds instruction files by scope and directory:\n\n```\n~/.claude/CLAUDE.md              # User instructions across projects\n<repo>/CLAUDE.md                 # Team-shared project instructions\n<repo>/.claude/CLAUDE.md         # Alternative project location\n<repo>/CLAUDE.local.md           # Personal project instructions; gitignore\n\n# Discovered on demand when files in these folders are read:\n<repo>/frontend/CLAUDE.md\n<repo>/services/auth/CLAUDE.md\n```\n\nMatching files combine in context, more local ones later. No reliable precedence rule exists, so remove contradictions. `/memory` shows what loaded; path-specific rules go in `.claude/rules/` with `paths` frontmatter.",
     },
     {
       id: "keep-in-leave-out",
       title: "What goes in it",
       readTimeMinutes: 1,
       content:
-        "**Include:**\n\n- A one-sentence project description\n- Stack and supported versions\n- Build, test and lint commands\n- Verifiable conventions\n- Important paths and project terms\n- Links to maintained architecture or deployment docs\n\n**Exclude:**\n\n- Secrets, tokens, credentials and personal data\n- Vague instructions such as \"write good code\"\n- Stale history\n- Long procedures that belong in a skill or maintained document\n- Path blocks (block sensitive paths with permission rules)\n\nEvery line spends context, and a long file gets followed less. Anthropic recommends concise, structured instructions and suggests fewer than 200 lines per file. Imports tidy the layout but still load at launch.",
+        "**Include:**\n\n- A one-sentence project description\n- Stack and supported versions\n- Build, test and lint commands\n- Verifiable conventions\n- Important paths and project terms\n- Links to maintained docs\n\n**Exclude:**\n\n- Secrets, tokens, credentials and personal data\n- Vague instructions such as \"write good code\"\n- Stale history\n- Long procedures (use a skill or a doc)\n- Path blocks (use permission rules)\n\nEvery line spends context, and long files get followed less. Anthropic suggests fewer than 200 lines per file; imports tidy the layout but still load at launch.",
     },
     {
       id: "template",
@@ -53,7 +52,7 @@ const lesson: ClaudeLesson = {
       title: "Auto memory and project instructions",
       readTimeMinutes: 1,
       content:
-        "Claude Code versions with auto memory can write project notes to local Markdown files. Auto memory is configurable, does not write in every session and needs inspection before you trust it.\n\n- **CLAUDE.md:** maintained by people, for shared, reviewed project rules.\n- **Auto memory:** machine-local notes picked during use, shared across worktrees of the same repository on that machine.\n\n`/memory` inspects, edits, disables or deletes stored notes. Keep secrets out of both.",
+        "Claude Code versions with auto memory can write project notes to local Markdown files. It is configurable, does not write every session and needs inspection before you trust it.\n\n- **CLAUDE.md:** maintained by people, for shared, reviewed rules.\n- **Auto memory:** machine-local notes, shared across worktrees of one repository on that machine.\n\n`/memory` inspects, edits, disables or deletes notes. Keep secrets out of both.",
     },
   ],
   widgets: [
@@ -82,7 +81,7 @@ const lesson: ClaudeLesson = {
         ],
         correct: 2,
         explanation:
-          "CLAUDE.md instructions enter the conversation context, so keep them short and specific. Keep secrets out and use technical controls wherever policy has to hold.",
+          "CLAUDE.md enters the context, so keep it short and specific. Secrets stay out; rules that must hold need technical controls.",
         title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },

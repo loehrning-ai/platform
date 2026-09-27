@@ -82,10 +82,7 @@ export default function Ch03CleanDe() {
 
       <section className="section">
         <SectionLabel n="03.3">Merkmalsskalierung</SectionLabel>
-        <h2 className="h2">
-          Einkommen bei 150,000, Alter bei 34.{" "}
-          <em>Ohne Skalierung dominieren Einheiten das Modell.</em>
-        </h2>
+        <h2 className="h2">Warum ohne Skalierung die Einheiten dominieren</h2>
         <p className="prose">
           Regularisierte lineare Modelle bestrafen die Koeffizientengröße,
           also verändert die Einheit die effektive Strafe und den Koeffizienten,

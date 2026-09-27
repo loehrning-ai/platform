@@ -120,7 +120,7 @@ Keep core as tables and analytics as thin views. Switch to a materialized view o
 
 | Behaviour | What happens | Consequence |
 | --- | --- | --- |
-| A view runs with its **owner's** rights (the default) | `foldline_ready_reader` reads `analytics.mrr_summary_monthly`, which reads `core.account_months`, with no grant on core | The reader needs SELECT on five views and nothing else. Owner rules and `security_invoker`: ACCESS.md. |
+| A view runs with its **owner's** rights (the default) | `foldline_ready_reader` reads `analytics.mrr_summary_monthly`, which reads `core.account_months`, with no grant on core | The reader needs SELECT on five views and nothing else. ACCESS.md covers owner rules and `security_invoker`. |
 | `WITH (security_barrier = true)` | Stops a caller's functions from seeing rows the view's WHERE clause filters out | Needed when a view filters rows for security, such as "only complete months" as a privacy rule. |
 | Catalog visibility | The reader can list object names in core from `pg_class`, but reading data returns 42501 | Names are not secret. Never put sensitive words in object names. |
 | Writes through views | Every FOLDLINE view is an aggregate or a join, so an UPDATE fails with 55000 ("cannot update view") before any privilege check | A single-table view would be updatable, and only the missing UPDATE grant would stop a write. Never grant INSERT, UPDATE or DELETE on serving views. |

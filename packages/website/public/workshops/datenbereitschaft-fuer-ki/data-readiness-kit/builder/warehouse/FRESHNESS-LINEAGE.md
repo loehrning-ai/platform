@@ -2,7 +2,7 @@
 
 ## In plain words
 
-A well-defined "ending MRR" from last week's load is still last week's number. So every answer needs two more facts:
+A well-defined "ending MRR" from last week's load is still last week's number. So besides the right meaning, every answer needs two facts:
 
 - **Freshness**: how old the data is against a stated clock, and what follows: answer, answer with a warning, or stop.
 - **Lineage**: the path from a number back to its feeds, so anyone can check the answer without trusting the AI.

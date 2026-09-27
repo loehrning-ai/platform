@@ -112,7 +112,7 @@
     },
     "lib/deck-stage.js": {
       "original": "de4da3214d3cb262b7776606fbbab1b74cb87928f0044b95de51b6523fb0f5dd",
-      "override": "5ef1d7029a79844a74dae2ee20c854e58e3682b01ee7ca1880c4431500924f8f"
+      "override": "5ec4006cdfc2ba8613d5c0126b49e07373f86aef1eb63361885da75d190cd70f"
     },
     "lib/presenter-notes.js": {
       "original": "a446b5d1620dc0c797561637d574554700fc482c9668a2309dd7aec8293460e8",
@@ -244,7 +244,7 @@
     },
     "slides.html": {
       "original": "7da1ad2f4e46b636302a970a0ca822253861ebab40465fc5d004311a1c96c783",
-      "override": "2d3b2f850d4600210d75494d7781ba74f3ddb33e431d0e44df7617fb4da356f2"
+      "override": "86e376d00f903c33ebc2b8ecc597915c53f44fc51c98d38b1ac89e4c3c801e9a"
     }
   }
 }

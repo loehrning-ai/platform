@@ -12,6 +12,7 @@ import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { ENTRY_COPY } from "@/lib/i18n/public-info-copy";
 import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
 import { createPublicPageMetadata } from "@/lib/seo/page-metadata";
+import { posterTitleFallbackStyle } from "@/lib/plakat/fit";
 
 const PATH = "/einstieg";
 const AI_ACT_SOURCE = "https://eur-lex.europa.eu/eli/reg/2024/1689/oj";
@@ -104,16 +105,21 @@ function EinstiegContent({ locale }: { readonly locale: Locale }) {
       <JsonLd data={article} id="einstieg-article-jsonld" />
 
       {/* Paper surface (SPEC §2.3): sentence-case labels, hairline rows, one
-          Mennige primary. The H1 sits on the 16px phone gutter, in line with
-          the header logo. */}
+          Mennige primary. The column is the header's (75rem less its 1.5rem
+          gutters), so the H1 starts under the logo at every width. */}
       <article
-        className="mx-auto w-full max-w-[70rem] px-4 pb-12 pt-6 sm:px-6 sm:pt-10 lg:px-8"
+        className="mx-auto w-full max-w-[75rem] px-4 pb-12 pt-6 sm:px-6 sm:pt-8"
         data-orientation-instrument
       >
         <header className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-end lg:gap-10">
-          <div className="min-w-0">
+          <div className="@container min-w-0">
             <Kicker>{copy.eyebrow.split(" / ")[0]}</Kicker>
-            <h1 className="mt-3 max-w-4xl text-balance text-fluid-h1 font-bold text-foreground lg:text-display">
+            {/* The site's one display step for top-level H1s (SPEC §4):
+                the poster title on paper, fit to its longest word, as /kurse. */}
+            <h1
+              className="poster-title mt-3 max-w-[16ch] text-foreground"
+              style={posterTitleFallbackStyle(copy.title)}
+            >
               {copy.title}
             </h1>
             <p className="mt-4 max-w-[62ch] text-pretty text-body text-muted-foreground">

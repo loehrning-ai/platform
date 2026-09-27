@@ -29,24 +29,24 @@ const lesson: ClaudeLesson = {
     },
     {
       id: "three-turn-loop",
-      title: "The three-turn loop",
+      title: "Three turns",
       readTimeMinutes: 1,
       content:
-        "- **Turn 1 · baseline.** Run a reasonable prompt on a small test set and record which requirements pass.\n- **Turn 2 · one correction.** Make one testable change, such as \"Remove the first paragraph\", and keep other variables stable.\n- **Turn 3 · keep the tested version.** Store the prompt with its use case, model assumptions and evaluation cases. Rerun them after later edits or model changes.\n\nA model can draft a reusable prompt from an accepted output. Treat it as a candidate until it passes on unseen inputs.",
+        "- **Turn 1 · baseline.** Run a reasonable prompt on a small test set and record which requirements pass.\n- **Turn 2 · one correction.** Make one testable change, such as \"Remove the first paragraph\", and keep everything else stable.\n- **Turn 3 · keep the tested version.** Store the prompt with its use case, model assumptions and eval cases, and rerun them after later changes.\n\nA prompt a model drafts from an accepted output stays a candidate until it passes on unseen inputs.",
     },
     {
       id: "show-dont-tell",
       title: "Show, don't tell",
       readTimeMinutes: 1,
       content:
-        "An example makes an ambiguous requirement observable. Instead of \"use a professional tone,\" supply a short approved reference and name the properties to keep; for structured work, add representative input-output pairs and edge cases. Examples can overfit and carry unwanted details, so strip confidential data, vary them and evaluate on held-out cases.",
+        "An example makes an ambiguous requirement observable. Instead of \"use a professional tone\", supply a short approved reference and name the traits to keep; for structured work, add representative input-output pairs and edge cases. Examples can overfit and leak details, so strip confidential data, vary them and test on held-out cases.",
     },
     {
       id: "turn-2-vocabulary",
-      title: "What to say in turn 2",
+      title: "Turn 2 wording",
       readTimeMinutes: 1,
       content:
-        'Write corrections a reviewer can check against the output.\n\n**Testable:** "Remove the first paragraph." · "Use the sentence length and terminology from this approved example." · "Start each bullet with a verb." · "Assume the reader knows X; omit its definition."\n\n**Not testable:** "Make it better." · "Less AI-sounding." · "Sharper." · "You know what I mean."',
+        "Write corrections a reviewer can check against the output.\n\n**Testable:** \"Remove the first paragraph.\" · \"Use the sentence length and terminology from this approved example.\" · \"Start each bullet with a verb.\" · \"Assume the reader knows X; omit its definition.\"\n\n**Not testable:** \"Make it better.\" · \"Less AI-sounding.\" · \"Sharper.\" · \"You know what I mean.\"",
     },
   ],
   widgets: [
@@ -59,7 +59,7 @@ const lesson: ClaudeLesson = {
         strong:
           "Cut the opening paragraph. Start with the status in one sentence, then three bullets in the voice of the attached example. No closing pleasantries.",
         takeaway:
-          "The stronger correction names one testable change and points at a concrete reference, so its result can be checked against the source facts and the example.",
+          "The stronger correction names one testable change and a concrete reference, so the result can be checked.",
       },
     },
     {
@@ -70,7 +70,8 @@ const lesson: ClaudeLesson = {
         lessonId: "iteration",
         cpId: "loop",
         title: "Run turn 1, then iterate",
-        hint: "Ask for a quick draft. Then paste the output back with a specific correction and ask again.",
+        hint:
+          "Ask for a quick draft, then paste the output back with one specific correction.",
         placeholder:
           "Turn 1 prompt goes here. Then update this box and re-run for turn 2.",
       },

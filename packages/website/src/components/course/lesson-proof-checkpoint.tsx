@@ -32,8 +32,6 @@ const COPY = {
     validation: "Mindestens 3 Wörter und 12 Zeichen.",
     privacy:
       "Deine Antwort wird weder gespeichert noch synchronisiert. Erfasst wird nur dein Fortschritt.",
-    boundary:
-      "Dieser Checkpoint dokumentiert Navigation, nicht Beherrschung oder Zertifizierung.",
     save: "Checkpoint speichern",
     loading: "Lernstand wird geladen",
     completed: "Navigations-Checkpoint gespeichert",
@@ -51,8 +49,6 @@ const COPY = {
     validation: "Use at least 3 words and 12 characters.",
     privacy:
       "Your response is not saved or synced. Only your progress is recorded.",
-    boundary:
-      "This checkpoint records navigation, not mastery or certification.",
     save: "Save checkpoint",
     loading: "Loading progress",
     completed: "Navigation checkpoint saved",
@@ -216,10 +212,10 @@ export function LessonProofCheckpoint({
           <p>{prerequisitesMet ? copy.validation : prerequisiteHint}</p>
           <p className="sm:text-right">{copy.privacy}</p>
         </div>
-        <div className="flex flex-col gap-3 border-t border-hairline pt-3 sm:flex-row sm:items-center sm:justify-between">
-          <p className="max-w-[48ch] text-[12px] leading-relaxed text-muted-foreground">
-            {copy.boundary}
-          </p>
+        {/* The evidence boundary is stated once, where it applies: in the
+            saved state ("Fortschritt erfasst. Das ist keine
+            Kompetenzprüfung ..."), not again on every open lesson. */}
+        <div className="flex flex-col gap-3 border-t border-hairline pt-3 sm:flex-row sm:items-center sm:justify-end">
           <button
             type="submit"
             disabled={!canCommit}

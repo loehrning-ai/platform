@@ -69,13 +69,13 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
       title: "KI im Alltag verstehen: kostenloser KI-Kurs auf Deutsch",
       description:
         "Kostenloser KI-Grundlagenkurs mit 5 Blöcken, 18 Lektionen und ca. 1 Std. 40 Min. Lernzeit. Für Erwachsene ohne Vorkenntnisse.",
-      openGraphTitle: "KI im Alltag: Was du wissen solltest",
+      openGraphTitle: "KI-Führerschein: Welche Daten ins KI-Tool dürfen",
       openGraphDescription:
         "5 Blöcke, 18 Lektionen, ca. 1 Std. 40 Min. Mit Lernkonto und lokal erzeugter Teilnahmebestätigung.",
     },
     graph: {
       home: "Start",
-      courseName: "KI im Alltag: Was du wissen solltest",
+      courseName: "KI-Führerschein: Welche Daten ins KI-Tool dürfen",
       description:
         "Kostenloser Online-Grundlagenkurs zur KI-Kompetenz mit 5 Blöcken, 18 Lektionen und ca. 1 Std. 40 Min. Lernzeit.",
       audience: "Erwachsene ohne technische Vorkenntnisse",
@@ -119,13 +119,13 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
       title: "Everyday AI Literacy: free foundation course",
       description:
         "Free foundation course with 5 blocks, 18 lessons, and about 1 hour 40 minutes of study. No technical background required.",
-      openGraphTitle: "Everyday AI Literacy: what you need to know",
+      openGraphTitle: "Everyday AI Literacy: which data may go into an AI tool",
       openGraphDescription:
         "5 blocks, 18 lessons, about 1 hour 40 minutes. Includes a learning account and a locally generated certificate of participation.",
     },
     graph: {
       home: "Home",
-      courseName: "Everyday AI Literacy: what you need to know",
+      courseName: "Everyday AI Literacy: which data may go into an AI tool",
       description:
         "Free online foundation course on practical AI literacy with 5 blocks, 18 lessons, and about 1 hour 40 minutes of study.",
       audience: "Adults without a technical background",

@@ -22,13 +22,13 @@ const LOCALES = [
   {
     locale: "de",
     prefix: "",
-    landingTitle: "Datenplattformen anhand ihrer Systemgrenzen entwerfen.",
+    landingTitle: "Datenplattformen entwerfen.",
     firstLessonTitle: "Der Daten-Stack von oben nach unten",
   },
   {
     locale: "en",
     prefix: "/en",
-    landingTitle: "Design data platforms from explicit system boundaries.",
+    landingTitle: "Design data platforms.",
     firstLessonTitle: "The stack, top to bottom",
   },
 ] as const;

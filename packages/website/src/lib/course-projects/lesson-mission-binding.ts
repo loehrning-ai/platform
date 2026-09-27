@@ -68,13 +68,6 @@ const SKILL_LENSES: Readonly<
   },
 };
 
-const SCENARIO_LENSES: Readonly<
-  Record<Locale, readonly [string, string, string, string]>
-> = {
-  de: ["Grenzenlinse", "Evidenzlinse", "Fehlermoduslinse", "Transferlinse"],
-  en: ["Boundary lens", "Evidence lens", "Failure-mode lens", "Transfer lens"],
-};
-
 function normalizeRequiredText(
   value: string,
   field: "title" | "objective",
@@ -134,10 +127,6 @@ export function bindLessonMission(
     MAX_OBJECTIVE_LENGTH,
   );
   const keyConcepts = normalizeConcepts(context.keyConcepts);
-  const lens =
-    SCENARIO_LENSES[locale][
-      (definition.scenarioSeed - 1) % SCENARIO_LENSES[locale].length
-    ];
   const skill = SKILL_LENSES[definition.stageId][locale];
   const sequence = String(definition.scenarioSeed).padStart(2, "0");
 
@@ -148,10 +137,11 @@ export function bindLessonMission(
       missionId: definition.id,
       skillId: definition.skillId,
       scenarioSeed: definition.scenarioSeed,
+      // The number alone: a "lens" eyebrow was jargon with no function.
       label:
         locale === "de"
-          ? `Lektionsmission ${sequence} · ${lens}`
-          : `Lesson mission ${sequence} · ${lens}`,
+          ? `Lektionsmission ${sequence}`
+          : `Lesson mission ${sequence}`,
       title,
       objective,
       keyConcepts,

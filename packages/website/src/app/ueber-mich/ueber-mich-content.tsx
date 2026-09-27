@@ -9,6 +9,7 @@ import { SectionHead } from "@/components/werk/section-head";
 import { PROFILE_COPY } from "@/lib/i18n/profile-copy";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import { LOEHRNING_LINKEDIN_URL, TIM_ENTITY } from "@/lib/seo/entity";
+import { posterTitleFallbackStyle } from "@/lib/plakat/fit";
 
 /** "https://www.linkedin.com/in/x/" -> "linkedin.com/in/x": the row's destination as text. */
 function displayUrl(url: string): string {
@@ -69,9 +70,14 @@ export function UeberMichContent({ locale }: { readonly locale: Locale }) {
           className={`${PROFILE_CONTAINER} grid gap-8 lg:grid-cols-12 lg:gap-x-12`}
           data-profile-editorial-spread
         >
-          <div className="min-w-0 lg:col-span-7">
+          <div className="@container min-w-0 lg:col-span-7">
             <Kicker>{copy.hero.eyebrow}</Kicker>
-            <h1 className="mt-4 max-w-[18ch] break-words text-fluid-h1 font-bold text-foreground text-pretty [overflow-wrap:anywhere] max-sm:text-[2rem] max-sm:leading-[1.1]">
+            {/* The site's one display step for top-level H1s (SPEC §4):
+                the poster title on paper, fit to its longest word, as /kurse. */}
+            <h1
+              className="poster-title mt-4 max-w-[16ch] text-foreground"
+              style={posterTitleFallbackStyle(copy.hero.title)}
+            >
               {copy.hero.title}
             </h1>
             <p className="mt-6 max-w-[56ch] text-lead text-foreground text-pretty max-sm:text-[1.0625rem] max-sm:leading-relaxed">

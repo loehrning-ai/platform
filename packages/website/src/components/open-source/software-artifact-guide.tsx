@@ -118,9 +118,13 @@ export function SoftwareArtifactGuide({
         >
           {copy.dataFlow}
         </h2>
-        <p className="mt-3 leading-relaxed text-muted-foreground">
-          {guide.dataFlow}
-        </p>
+        {/* One fact per line: the data flow reads as a short list, not a
+            60-word paragraph of nested clauses. */}
+        <ul className="mt-3 max-w-[68ch] list-disc space-y-1.5 pl-5 leading-relaxed text-muted-foreground marker:text-border">
+          {dataFlowFacts(guide.dataFlow).map((fact) => (
+            <li key={fact}>{fact}</li>
+          ))}
+        </ul>
       </section>
 
       <figure aria-labelledby={`${idPrefix}-screenshot-caption`}>
@@ -363,4 +367,21 @@ export function SoftwareArtifactGuide({
       </section>
     </div>
   );
+}
+
+/**
+ * The data-flow statement split into its sentences and semicolon clauses,
+ * one fact per list item. A period inside a token ("127.0.0.1",
+ * "DEPLOY.md") is no break: a sentence ends at a period followed by a space
+ * and a capital.
+ */
+export function dataFlowFacts(text: string): readonly string[] {
+  return text
+    .split(/(?<=\.)\s+(?=\p{Lu})|;\s+/u)
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .map((part) => {
+      const sentence = part.charAt(0).toLocaleUpperCase() + part.slice(1);
+      return /[.!?)]$/.test(sentence) ? sentence : `${sentence}.`;
+    });
 }

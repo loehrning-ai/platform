@@ -439,8 +439,9 @@ function TaskPicker({
   readonly text: (de: string, en: string) => string;
 }) {
   const isDe = locale === "de";
-  // From sm up each task is a bordered card and the selected one is ink
-  // filled, as before. Below sm the tasks are hairline ledger rows: the
+  // From sm up each task is a bordered card and the selected one is filled
+  // in the page's scene line (Kobalt on the IDEA demo pages, 7.15:1 with
+  // Kalkweiß type; ink where no scene is set). Below sm the tasks are hairline ledger rows: the
   // selected row carries a 2px ink tick on the left instead of a black
   // fill, and the "Formel generieren" line drops because the whole row is
   // the button.
@@ -472,7 +473,7 @@ function TaskPicker({
       {TASKS.map((t, i) => {
         const active = activeId === t.id;
         const muted = active
-          ? "text-[rgba(11,9,8,0.62)] sm:text-[rgba(243,240,233,0.75)]"
+          ? "text-[rgba(11,9,8,0.62)] sm:text-[rgba(243,240,233,0.85)]"
           : "text-[rgba(11,9,8,0.62)]";
         return (
           <button
@@ -486,7 +487,7 @@ function TaskPicker({
               "max-sm:border-b max-sm:border-l-2 max-sm:border-b-[#E3DFD6] max-sm:bg-transparent max-sm:py-2.5 max-sm:pl-3 max-sm:pr-0",
               "sm:border sm:px-[13px] sm:py-[11px]",
               active
-                ? "text-[#0B0908] max-sm:border-l-[#0B0908] sm:border-[#0B0908] sm:bg-[#0B0908] sm:text-[#F3F0E9]"
+                ? "text-[#0B0908] max-sm:border-l-[#0B0908] sm:border-scene-line sm:bg-scene-line sm:text-[#F3F0E9]"
                 : "text-[#0B0908] max-sm:border-l-transparent sm:border-[#E3DFD6] sm:bg-[#F7F4ED] sm:hover:border-[#0B0908] sm:hover:bg-[#F3F0E9]",
             ].join(" ")}
             style={{ fontFamily: "inherit" }}

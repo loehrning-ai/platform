@@ -61,7 +61,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
       { label: "Data protection", value: "Remove personal data" },
     ],
     industries: ["Engineering", "Skilled trades", "Professional services"],
-    syntheticDataLabel: "Fictional briefs, sample documents, drafting time and style matches.",
+    syntheticDataLabel: "Fictional briefs and sample documents.",
     riskNotes: [
       "Remove names and customer data before the brief goes into the assistant.",
       "Check every figure and source in the draft against the original.",
@@ -162,7 +162,7 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     titleKicker: "Check the extraction.",
     background: "OCR pattern · structured extraction · simulated SAP check",
     description:
-      "A sample invoice is extracted, checked against explicit rules, and stopped for review before a simulated SAP import.",
+      "A sample invoice is extracted, checked against fixed rules, and stopped for review before a simulated SAP import.",
     teaser: "A sample invoice is checked and stopped before the SAP import.",
     tags: ["OCR", "SAP · IDoc", "Invoice controls"],
     meta: [

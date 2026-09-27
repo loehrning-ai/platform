@@ -41,7 +41,10 @@ describe("demo atlas visual contract", () => {
     // The previews are flat posters (SPEC §3.12): decorative, aria-hidden
     // art with no text and no meaning-bearing mark, so nothing is told
     // apart by hue. Himbeere is the scene's mid shape, never a mark fill.
-    const previews = source("demo-gallery-previews.tsx");
+    const previews = readFileSync(
+      join(__dirname, "demo-gallery-previews.tsx"),
+      "utf8",
+    );
     const poster = readFileSync(join(__dirname, "demo-poster.tsx"), "utf8");
     for (const text of [previews, poster]) {
       expect(text).not.toMatch(/\bbg-scene-mark\b|\bfill-scene-mark\b/);

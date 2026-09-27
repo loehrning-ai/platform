@@ -1,50 +1,19 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 import OutboundWorkflowDemo from "./outbound-workflow-demo";
 
 /**
  * outbound-workflow-demo.test.tsx (regression coverage)
  *
- * Drives the real <OutboundWorkflowDemo>. Two deterministic states exist without
- * wall-clock timers:
- *
- *  - On load: final state first (design direction, principle 6). The stage
- *    machine starts at 4, so the email body, the send-simulated header, the
- *    token footer and the pre-send checklist toggle render immediately.
- *  - Replay: "Neu abspielen" rewinds to stage 0. The polyfilled
- *    IntersectionObserver never reports the demo in view, so the replay waits
- *    at stage 0 (the `if (!visible)` branch): the lead card, pipeline labels
- *    and recipient address render, the stage>=4 checklist does not.
- *  - Reduced motion: always stage 4.
- *
- * matchMedia + IntersectionObserver are polyfilled in src/test/setup.ts; we
- * override matchMedia locally to force the reduced-motion branch. leadIndex is
- * manual (a picker row, `aria-pressed`, no timer) and starts at 0 in both
- * states, so the first explicitly fictional lead is deterministic.
+ * Drives the real German <OutboundWorkflowDemo>. It has the English layout:
+ * four review steps, a contact picker with a score gate, the review draft and
+ * the pre-send controls. It is static (no timers, no replay), shows its final
+ * state on load and makes the same claims as the English page: the source is
+ * an unverified sample and the page sends nothing.
  */
 
-const originalMatchMedia = window.matchMedia;
-
-function setReducedMotion(reduced: boolean): void {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (window as any).matchMedia = (query: string) => ({
-    matches: reduced && query.includes("reduce"),
-    media: query,
-    onchange: null,
-    addEventListener: () => {},
-    removeEventListener: () => {},
-    addListener: () => {},
-    removeListener: () => {},
-    dispatchEvent: () => false,
-  });
-}
-
 describe("<OutboundWorkflowDemo>", () => {
-  afterEach(() => {
-    window.matchMedia = originalMatchMedia;
-  });
-
-  it("renders the pipeline, the first lead and the derived recipient address while a replay waits (stage 0)", () => {
+  it("renders the four review steps, the first lead and its derived recipient address", () => {
     render(<OutboundWorkflowDemo />);
 
     // No kicker and no slogan; one plain sr-only landmark heading.
@@ -56,102 +25,82 @@ describe("<OutboundWorkflowDemo>", () => {
     expect(heading).toHaveTextContent("Nachricht aus öffentlichen Signalen");
     expect(heading.querySelector("span")).toBeNull();
 
-    // Final state on load; replay rewinds to stage 0 (off-screen in jsdom).
-    expect(screen.getByText("Schritt 4 / 4")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "↻ Neu abspielen" }));
-    expect(screen.getByText("Schritt 0 / 4")).toBeInTheDocument();
+    // The same four steps as the English page.
+    const steps = screen.getByLabelText("Ablaufschritte");
+    for (const step of [
+      "Beispielkontakt",
+      "Quellenprüfung",
+      "Entwurf",
+      "Menschliche Prüfung",
+    ]) {
+      expect(steps).toHaveTextContent(step);
+    }
 
-    // The four pipeline stage labels always render (independent of the stage).
-    expect(screen.getByText("DB · Kontakte")).toBeInTheDocument();
-    expect(screen.getByText("Text-Generierung")).toBeInTheDocument();
-    expect(screen.getByText("Versandfreigabe simuliert")).toBeInTheDocument();
-
-    // First lead card (Lead #0412, row 1/3).
-    expect(screen.getByText("Lead #0412")).toBeInTheDocument();
-    expect(screen.getByText("Fiktivkontakt Alpha")).toBeInTheDocument();
+    // First lead, selected on load.
     expect(
-      screen.getByText("Head of Ops · Fiktivwerk Alpha (rein fiktiv)"),
-    ).toBeInTheDocument();
+      screen.getByRole("button", { name: /Fiktivkontakt Alpha/ }),
+    ).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByText("412 Tage")).toBeInTheDocument();
-    expect(screen.getByText("87")).toBeInTheDocument();
+    expect(screen.getByText("87/100")).toBeInTheDocument();
     expect(
-      screen.getByText("Wachstumsphase · 42 Mitarbeitende"),
+      screen.getByText("Fiktives Einstellungssignal · 42 Mitarbeitende"),
     ).toBeInTheDocument();
 
     // All demo addresses use IANA-reserved example domains.
     expect(
-      screen.getByText("kontakt-alpha@fiktivwerk.example"),
+      screen.getByText(/kontakt-alpha@fiktivwerk\.example/),
     ).toBeInTheDocument();
-    expect(screen.getByText("vertrieb@fiktivwerk.example")).toBeInTheDocument();
-
-    // The four metric tiles.
-    expect(screen.getByText("Quellencheck")).toBeInTheDocument();
-    expect(screen.getByText("PII-Check")).toBeInTheDocument();
-    expect(screen.getByText("Review-Status")).toBeInTheDocument();
-
-    // No inline simulation disclosure: the detail shell's EvidenceBadge states
-    // the mode once (its review_gated pill already says the send step is only
-    // simulated), so restating it here made it twice. Nothing was relocated
-    // because the note carried no claim the badge does not already make.
-    expect(
-      screen.queryByRole("note", { name: "Hinweis zur Simulation" }),
-    ).not.toBeInTheDocument();
-
-    // The failure-mode checklist only exists at stage>=4, so it is absent while idle.
-    expect(
-      screen.queryByRole("button", {
-        name: /Was fehlt vor einem echten Versand/,
-      }),
-    ).not.toBeInTheDocument();
   });
 
-  it("shows the generated email, the send-simulated footer and the pre-send checklist on load (stage 4)", () => {
+  it("states the same facts as the English page: unverified source, nothing sent", () => {
+    const { container } = render(<OutboundWorkflowDemo />);
+
+    expect(
+      screen.getByText(
+        "247 Beispiel-Tokens · Label Sonnet 4.6 · Quelle: ungeprüftes Beispiel",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/diese Seite kann keine E-Mail senden/),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Qualifiziert, nicht gesendet")).toBeInTheDocument();
+    // No invented send time, DKIM step, trace timestamp or verified-source claim.
+    for (const claim of [
+      /Versand simuliert/,
+      /DKIM/,
+      /touched_at/,
+      /Quelle geprüft/,
+      /Intent-Score/,
+    ]) {
+      expect(container.textContent ?? "").not.toMatch(claim);
+    }
+  });
+
+  it("shows the draft and the collapsed pre-send checklist on load", () => {
     render(<OutboundWorkflowDemo />);
 
-    // the full generated email body for the first lead is shown.
     expect(
-      screen.getByText(/20-minütiges Gespräch, kein Angebot/),
-    ).toBeInTheDocument();
-    // Signature block.
-    expect(screen.getByText("T. Muster")).toBeInTheDocument();
-
-    // Send-simulated status header + token/trace footer (stage>=3 / stage>=4).
-    expect(screen.getByText("Versand simuliert 09:14")).toBeInTheDocument();
-    expect(
-      screen.getByText("247 Tokens · Sonnet 4.6 · 1,8 s · Quelle geprüft"),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText("touched_at = 2026-04-21 09:14:03"),
+      screen.getByText(/Das ist ein Entwurf zur Prüfung durch einen Menschen/),
     ).toBeInTheDocument();
 
-    // The failure-mode block is now present; the checklist is collapsed by default.
     const toggle = screen.getByRole("button", {
       name: "Was fehlt vor einem echten Versand?",
     });
     expect(toggle).toHaveAttribute("aria-expanded", "false");
     expect(screen.queryByText(/Rechtliche Grundlage/)).not.toBeInTheDocument();
 
-    // Expanding reveals the four DSGVO / review checklist items.
     fireEvent.click(toggle);
     expect(toggle).toHaveAttribute("aria-expanded", "true");
     expect(screen.getByText(/Rechtliche Grundlage/)).toBeInTheDocument();
     expect(screen.getByText(/Opt-out-Mechanismus/)).toBeInTheDocument();
     expect(screen.getByText(/Menschliche Freigabe/)).toBeInTheDocument();
-
-    // The toggle label flips to the collapse affordance.
     expect(
       screen.getByRole("button", { name: "Verbergen" }),
     ).toBeInTheDocument();
   });
 
-  it("blocks the simulated send once the score threshold exceeds every lead's score", () => {
-    // The intent score was previously display-only. Raising the threshold
-    // above 91 (the highest sample score) demonstrates the failure beat: a
-    // pipeline that reaches its final stage and sends nothing.
-    setReducedMotion(true);
+  it("holds the draft once the score threshold exceeds every lead's score", () => {
     render(<OutboundWorkflowDemo />);
-
-    expect(screen.getByText("Versand simuliert 09:14")).toBeInTheDocument();
 
     const slider = screen.getByRole("slider", {
       name: "Minimale Score-Schwelle für den Versand",
@@ -159,46 +108,30 @@ describe("<OutboundWorkflowDemo>", () => {
     fireEvent.change(slider, { target: { value: "95" } });
 
     expect(
-      screen.getByText("Nicht gesendet: unter Score-Schwelle"),
+      screen.getByText("Angehalten: unter der Schwelle"),
     ).toBeInTheDocument();
     expect(
-      screen.queryByText("Versand simuliert 09:14"),
-    ).not.toBeInTheDocument();
-    expect(
-      screen.queryByText("touched_at = 2026-04-21 09:14:03"),
+      screen.queryByText("Qualifiziert, nicht gesendet"),
     ).not.toBeInTheDocument();
   });
 
-  it("switches the lead card, address and email body when a different picker button is clicked", () => {
-    setReducedMotion(true);
+  it("switches the address and the draft when another contact is picked", () => {
     render(<OutboundWorkflowDemo />);
 
-    expect(screen.getByText("Fiktivkontakt Alpha")).toBeInTheDocument();
-    expect(screen.getByText("CRM · Zeile 1/3")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Alpha" })).toHaveAttribute(
-      "aria-pressed",
-      "true",
-    );
+    fireEvent.click(screen.getByRole("button", { name: /Fiktivkontakt Beta/ }));
 
-    fireEvent.click(screen.getByRole("button", { name: "Beta" }));
-
-    expect(screen.getByText("Fiktivkontakt Beta")).toBeInTheDocument();
-    expect(screen.queryByText("Fiktivkontakt Alpha")).not.toBeInTheDocument();
     expect(
-      screen.getByText("kontakt-beta@fiktivwerk.example"),
+      screen.getByRole("button", { name: /Fiktivkontakt Beta/ }),
+    ).toHaveAttribute("aria-pressed", "true");
+    expect(
+      screen.getByRole("button", { name: /Fiktivkontakt Alpha/ }),
+    ).toHaveAttribute("aria-pressed", "false");
+    expect(
+      screen.getByText(/kontakt-beta@fiktivwerk\.example/),
     ).toBeInTheDocument();
     expect(
       screen.getByText("Kundendienst-Entlastung: Kurze Rückfrage"),
     ).toBeInTheDocument();
-    expect(screen.getByText("CRM · Zeile 2/3")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Beta" })).toHaveAttribute(
-      "aria-pressed",
-      "true",
-    );
-    expect(screen.getByRole("button", { name: "Alpha" })).toHaveAttribute(
-      "aria-pressed",
-      "false",
-    );
   });
 
   it("keeps both mobile grid panels inside the demo shell", () => {

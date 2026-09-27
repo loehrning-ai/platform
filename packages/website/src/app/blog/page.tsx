@@ -10,7 +10,7 @@ import {
   type Locale,
 } from "@/lib/i18n/locale";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
-import { posterTitleStyle } from "@/lib/plakat/fit";
+import { posterTitleFallbackStyle } from "@/lib/plakat/fit";
 import { SITE_URL } from "@/lib/seo/json-ld";
 
 const PATH = "/blog";
@@ -126,7 +126,7 @@ function BlogIndexContent({ locale }: { readonly locale: Locale }) {
         <CornerDots />
         <div className="blog-index__container blog-index__hero-inner">
           <CapsLine arrow>{copy.kicker(BLOG_POSTS.length)}</CapsLine>
-          <h1 className="blog-index__title" style={posterTitleStyle(copy.title)}>
+          <h1 className="blog-index__title" style={posterTitleFallbackStyle(copy.title)}>
             {copy.title}
           </h1>
           <div className="blog-index__hero-row">

@@ -16,8 +16,7 @@ import { PLAKAT, type CoursePlakat } from "@/lib/plakat/palettes";
  * as the ground, one caps line, the title at poster size with -0.04em
  * tracking, one 28px subtitle, the course poster on the right at the full
  * height above the Kalkweiß colophon strip with the header's L tile. The
- * /kurse card stays paper (SPEC §2.3) and shows the three track posters
- * instead. Colours come from PLAKAT and PAPER; nothing else is a hex here.
+ * /kurse card stays paper (SPEC §2.3) and shows four track posters instead. Colours come from PLAKAT and PAPER; nothing else is a hex here.
  */
 
 const INSET = 64;
@@ -139,51 +138,50 @@ export function CourseOgCard({
   );
 }
 
+/** The /kurse art column: the workshop cards' 504 × 630 poster slot. */
+const CATALOG_ART_WIDTH = 504;
+const CATALOG_TEXT_COLUMN = OG_SIZE.width - CATALOG_ART_WIDTH;
+
 /**
- * The /kurse card: paper, like the page, with one poster per track (the
- * Grundlagenpfad's first course with its "01", then IDEA and Bloom without a
- * numeral) standing in a row on the right.
+ * The /kurse card: paper, like the page, with the track posters as a 2 × 2
+ * series filling the full-height art column on the right, where the workshop
+ * and course cards place their one poster (the Grundlagenpfad's "01" first).
+ * The colophon strip sits under the text column below a 2px ink rule.
  */
 export function CatalogOgCard({
   posters,
   ...text
-}: CardText & { readonly posters: readonly CoursePlakat[] }): ReactElement {
-  const width = 132;
+}: CardText & { readonly posters: readonly [CoursePlakat, CoursePlakat, CoursePlakat, CoursePlakat] }): ReactElement {
+  const width = CATALOG_ART_WIDTH / 2;
   return (
     <div
       style={{
         display: "flex",
-        flexDirection: "column",
         width: "100%",
         height: "100%",
         background: OG_PAPER.kalkweiss,
         fontFamily: OG_FONT_FAMILY,
       }}
     >
-      <div style={{ display: "flex", height: POSTER_HEIGHT }}>
-        <TextColumn {...text} ink={OG_PAPER.druckschwarz} />
-        <div
-          style={{
-            display: "flex",
-            alignItems: "flex-end",
-            gap: 16,
-            paddingRight: INSET,
-            paddingBottom: 64,
-            flexShrink: 0,
-          }}
-        >
-          {posters.map((poster) => (
-            <OgPoster
-              key={poster.motif}
-              plakat={poster.plakat}
-              motif={poster.motif}
-              numeral={poster.numeral}
-              width={width}
-            />
-          ))}
+      <div style={{ display: "flex", flexDirection: "column", width: CATALOG_TEXT_COLUMN, flexShrink: 0 }}>
+        <div style={{ display: "flex", flexGrow: 1 }}>
+          <TextColumn {...text} ink={OG_PAPER.druckschwarz} />
+        </div>
+        <div style={{ display: "flex", borderTop: `2px solid ${OG_PAPER.druckschwarz}` }}>
+          <OgColophon trailing={text.trailing} inset={INSET} />
         </div>
       </div>
-      <OgColophon trailing={text.trailing} inset={INSET} />
+      <div style={{ display: "flex", flexWrap: "wrap", width: CATALOG_ART_WIDTH, height: OG_SIZE.height }}>
+        {posters.map((poster) => (
+          <OgPoster
+            key={poster.motif}
+            plakat={poster.plakat}
+            motif={poster.motif}
+            numeral={poster.numeral}
+            width={width}
+          />
+        ))}
+      </div>
     </div>
   );
 }

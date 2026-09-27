@@ -697,7 +697,7 @@ export default function PromptLab({
           promptPlaceholder:
             "Analyze the situation. Return three prioritized actions in a table. Use only the context and flag assumptions.",
           localTitle: "Local structure analysis · no model call",
-          goal: "Explicit goal in the prompt",
+          goal: "Goal stated in the prompt",
           contextCheck: "Sufficient working context",
           constraints: "Format or constraints in the prompt",
           privacyWarning:
@@ -833,7 +833,7 @@ export default function PromptLab({
             "Check output against approval, stop rule, ownership, and fallback",
           evaluateOperator:
             "Stop the faulty path at the quality gate; log review effort and cost apart",
-          stopUnavailable: "Invent no output; record the explicit policy stop",
+          stopUnavailable: "Invent no output; record the policy stop",
           unsafeReview: "Accept output without a rubric or gate",
           missionEvidence:
             variant === "operator"

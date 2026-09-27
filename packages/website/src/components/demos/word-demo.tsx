@@ -495,7 +495,7 @@ function WordDemoGerman() {
                     fontFamily: DEMO.font.mono,
                   }}
                 >
-                  BEISPIELWERK GMBH · MUSTERSTRASSE 1 · 12345 MUSTERSTADT
+                  FIKTIVWERK · BEISPIELADRESSE · NICHT ZUM VERSAND
                 </div>
                 <hr
                   style={{
@@ -509,14 +509,14 @@ function WordDemoGerman() {
                 <div style={{ marginTop: 14, fontSize: 12, color: "#555" }}>
                   {brief.kunde}
                   <br />
-                  z.Hd. Einkaufsleitung
+                  z. Hd. Prüfung Einkauf
                   <br />
                   <br />
                 </div>
                 <div
                   style={{ fontSize: 12, color: "#595959", textAlign: "right" }}
                 >
-                  Berlin, {new Date().toLocaleDateString("de-DE")}
+                  Berlin · Beispieldatum 8. August 2026
                 </div>
                 <h3
                   style={{
@@ -528,17 +528,14 @@ function WordDemoGerman() {
                 >
                   Projektbrief: {brief.projekt}
                 </h3>
+                <p style={{ marginBottom: 10 }}>Sehr geehrtes Prüfteam,</p>
                 <p style={{ marginBottom: 10 }}>
-                  Sehr geehrte Damen und Herren,
-                </p>
-                <p style={{ marginBottom: 10 }}>
-                  anbei der neutrale Prüfstand zur{" "}
-                  <strong>{brief.projekt}</strong>, konzipiert für den Zeitraum{" "}
+                  dieser Entwurf beschreibt die geplante Arbeit für{" "}
+                  <strong>{brief.projekt}</strong> im Zeitraum{" "}
                   <strong>{brief.zeitraum}</strong>.
                 </p>
                 <p style={{ marginBottom: 10 }}>
-                  Unser Vorgehen folgt drei Phasen: Datenaufnahme, Pilotbetrieb,
-                  Integration. Der grobe interne Rahmenwert liegt bei{" "}
+                  Der Planungsbetrag von{" "}
                   <strong
                     style={{
                       fontFamily: DEMO.font.mono,
@@ -547,27 +544,16 @@ function WordDemoGerman() {
                   >
                     {Number(brief.budget || 0).toLocaleString("de-DE")} €
                   </strong>{" "}
-                  als Planungsannahme. Keine Freigabe ohne Datenschutz- und
-                  Fachreview.
+                  ist eine Annahme, keine Freigabe und kein Lieferantenangebot.
                 </p>
-                <p
-                  style={{
-                    marginBottom: 10,
-                    color: "#555",
-                    fontSize: 12,
-                    fontStyle: "italic",
-                  }}
-                >
-                  […] weitere Abschnitte: Annahmen, Risiken, Datenquellen,
-                  Freigaben.
+                <p style={{ marginBottom: 10 }}>
+                  Vor der Nutzung nötig: fachliche Prüfung, Datenschutzprüfung,
+                  Budgetbestätigung und eine benannte Verantwortung.
                 </p>
                 <div style={{ marginTop: 14, fontSize: 12, color: "#555" }}>
-                  Interne Notiz
-                  <br />
-                  <br />
                   <strong style={{ color: "#000" }}>Freigabe ausstehend</strong>
                   <br />
-                  Review durch Fachbereich und Datenschutz
+                  Vor Export oder Versand prüft ein Mensch.
                 </div>
               </div>
             )}
@@ -589,50 +575,6 @@ function WordDemoGerman() {
             </div>
           )}
         </div>
-      </div>
-
-      {/* Metric row — auto-fit keeps it 4-up on wide, 2-up on mid, 1-up on narrow */}
-      {/* Below sm the three figures sit in one unboxed row under a
-          hairline; from sm up they are the boxed tiles. */}
-      <div
-        className="grid grid-cols-3 gap-2 sm:grid-cols-[repeat(auto-fit,minmax(140px,1fr))]"
-        data-word-metrics
-      >
-        {(
-          [
-            ["Erstellzeit (Beispiel)", "4,2 s"],
-            ["Stil-Treffer (Beispiel)", "96 %"],
-            ["Review-Hinweis", "Pflicht"],
-          ] as const
-        ).map(([l, v]) => (
-          <div
-            key={l}
-            className="border-t border-[#E3DFD6] pt-2 sm:border sm:bg-[#F3F0E9] sm:p-2.5"
-            style={{ minWidth: 0 }}
-          >
-            <div
-              style={{
-                ...DEMO.label,
-                color: DEMO.schiefer,
-              }}
-            >
-              {l}
-            </div>
-            <div
-              style={{
-                fontFamily: DEMO.font.mono,
-                fontSize: 18,
-                fontWeight: 700,
-                color: DEMO.ink,
-                marginTop: 3,
-                letterSpacing: "-0.01em",
-                visibility: generated ? "visible" : "hidden",
-              }}
-            >
-              {v}
-            </div>
-          </div>
-        ))}
       </div>
     </div>
   );

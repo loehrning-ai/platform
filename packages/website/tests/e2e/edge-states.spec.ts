@@ -164,7 +164,7 @@ test.describe("edge: provider-free /feedback fallback", () => {
     await page.goto(FEEDBACK, { waitUntil: "load" });
 
     await expect(
-      page.getByText(/serverseitige Speicherung ist .* nicht freigeschaltet/),
+      page.getByText(/Das Formular ist hier nicht freigeschaltet/),
     ).toBeVisible();
     await expect(page.getByRole("status")).toContainText(
       "Hier wird nichts gespeichert.",

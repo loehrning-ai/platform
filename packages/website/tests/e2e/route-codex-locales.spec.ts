@@ -28,15 +28,15 @@ const LOCALES = [
   {
     locale: "de",
     prefix: "",
-    landingTitle: "Codex kontrolliert im Repository einsetzen.",
-    firstLessonTitle: "Was Codex tatsächlich ist",
+    landingTitle: "Codex im Repository steuern.",
+    firstLessonTitle: "Was Codex ist",
     completed: "Navigations-Checkpoint gespeichert",
   },
   {
     locale: "en",
     prefix: "/en",
-    landingTitle: "Use Codex under explicit repository controls.",
-    firstLessonTitle: "What Codex actually is",
+    landingTitle: "Steer Codex in your repo.",
+    firstLessonTitle: "What Codex is",
     completed: "Navigation checkpoint saved",
   },
 ] as const;

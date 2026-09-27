@@ -188,6 +188,15 @@ describe("LearningAtlas", () => {
     document.cookie = "access-test-owner=; Max-Age=0; path=/";
   });
 
+  it("never calls a path course open when the page says it is unavailable", () => {
+    render(<LearningAtlas access={getCourseAccess(false)} />);
+    const path = screen.getByTestId("selected-path-sequence");
+    expect(
+      within(path).getByRole("link", { name: /KI-Führerschein.*hier nicht verfügbar/ }),
+    ).toBeInTheDocument();
+    expect(within(path).queryByRole("link", { name: /KI-Führerschein.*offen/ })).toBeNull();
+  });
+
   it("starts with a semantic goal decision and one explicit next proof", () => {
     render(<LearningAtlas access={getCourseAccess(true)} />);
 
@@ -322,13 +331,15 @@ describe("LearningAtlas", () => {
     expect(technicalHead).toHaveLength(1);
     const groupSource = technicalHead[0] as HTMLElement;
     expect(groupSource.closest("#tiefer-gehen")).not.toBeNull();
-    expect(groupSource).toHaveClass("lg:hidden", "min-h-11", "font-mono");
+    // A plain sans caption link on the phone, not a monospace commit line.
+    expect(groupSource).toHaveClass("lg:hidden", "min-h-11", "text-caption");
+    expect(groupSource).not.toHaveClass("font-mono");
     expect(groupSource).toHaveAttribute(
       "href",
       "https://github.com/Mavengence/interactive-courses/tree/0e5dfd327ce44663696b52eb6643bab147947101",
     );
     expect(groupSource).toHaveAccessibleName(
-      /^interactive-courses #0e5dfd3: Quellcode aller Technikkurse \(Mavengence\/interactive-courses, Commit 0e5dfd3\)$/,
+      /^interactive-courses auf GitHub: Quellcode aller Technikkurse \(Mavengence\/interactive-courses, Commit 0e5dfd3\)$/,
     );
 
     // Back to the ledger brief's zero-image rule. A cover thumbnail was tried

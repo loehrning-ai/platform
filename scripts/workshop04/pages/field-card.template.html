@@ -28,7 +28,8 @@
     <p class="wf-small">Prints on one A4 page.</p>
   </div>
 
-  <table class="fc">
+  <button type="button" class="wf-btn fc-case-toggle no-print" id="fc-case-toggle" aria-expanded="false" aria-controls="fc" hidden>Show the case figures</button>
+  <table class="fc" id="fc">
     <thead>
       <tr><th scope="col" class="n">No.</th><th scope="col">Check</th><th scope="col">Do</th><th scope="col">Don't</th><th scope="col">From the case</th><th scope="col">Deck scene</th></tr>
     </thead>
@@ -44,7 +45,7 @@
   </table>
 
   <ul class="fc-lines">
-    <li><b>Roles.</b> The reader quotes, the clerk applies rules in a spreadsheet, the writer cites rows. The AI may propose rules; a person approves the list.</li>
+    <li class="fc-roles"><b>Roles.</b> The reader quotes, the clerk applies rules in a spreadsheet, the writer cites rows. The AI may propose rules; a person approves the list.</li>
     <li><b>Before you send:</b> control total <span class="tick" aria-hidden="true"></span><span class="visually-hidden">(tick box)</span> · what you did not check, written next to the number <span class="tick" aria-hidden="true"></span><span class="visually-hidden">(tick box)</span></li>
   </ul>
 

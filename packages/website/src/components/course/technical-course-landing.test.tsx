@@ -218,6 +218,13 @@ describe("TechnicalCourseLanding", () => {
     expect(
       container.querySelector("[data-plakat-art] [data-poster-numeral-text]"),
     ).toHaveTextContent("01");
+    // Below lg the same poster is a full-bleed 16:9 row after the facts, so
+    // a phone band carries the numeral and the motif too.
+    const phoneArt = container.querySelector("[data-plakat-art-phone]");
+    expect(phoneArt).toHaveAttribute("aria-hidden", "true");
+    expect(phoneArt).toHaveClass("col-span-full", "aspect-[16/9]", "lg:hidden");
+    expect(phoneArt?.querySelector("svg[data-poster-format='landscape']")).not.toBeNull();
+    expect(phoneArt?.querySelector("[data-poster-numeral-text]")).toHaveTextContent("01");
     expectNoMennigeInScene(container);
     unmount();
 
@@ -238,6 +245,7 @@ describe("TechnicalCourseLanding", () => {
     // Without a scene there is no caps line and no poster.
     expect(frame?.querySelector(".plakat-caps")).toBeNull();
     expect(frame?.querySelector("[data-plakat-art]")).toBeNull();
+    expect(frame?.querySelector("[data-plakat-art-phone]")).toBeNull();
   });
 
   it("shows a two-digit lesson number on phones and the full label from sm", () => {

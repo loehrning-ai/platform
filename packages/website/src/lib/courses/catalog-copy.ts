@@ -93,7 +93,7 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
   claude: {
     title: "Claude Course",
     eyebrow: "Technical course · Prompting",
-    tagline: "Use Claude with explicit context, tools, and verification steps.",
+    tagline: "Use Claude with clear context, tools, and verification steps.",
     description:
       "Twelve lessons, each with a short exercise in Claude, cover prompt structure, context files, tool use, grounding, reviews, evaluation and collaboration.",
     duration: "about 2 hrs",

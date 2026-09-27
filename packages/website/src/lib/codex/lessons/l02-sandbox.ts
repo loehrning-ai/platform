@@ -44,7 +44,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "**Make dependencies reproducible.** Locally, Codex has only what the machine has and the sandbox permits; in the cloud, the setup script provides it. Put the exact setup and check commands in the repository.\n\n**Declare network needs.** If the task needs no live data, use a versioned fixture and leave the network off.\n\n**Keep external checks separate.** Staging or production access is a security decision and needs scoped credentials and explicit authorization. Otherwise the check runs through the normal release process.",
+            "**Make dependencies reproducible.** Locally, Codex has only what the machine has and the sandbox permits; in the cloud, the setup script provides it. Put the exact setup and check commands in the repository.\n\n**Declare network needs.** If the task needs no live data, use a versioned fixture and leave the network off.\n\n**Keep external checks separate.** Staging or production access is a security decision and needs scoped credentials and authorization. Otherwise the check runs through the normal release process.",
         },
       ],
     },

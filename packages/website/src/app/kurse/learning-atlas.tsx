@@ -38,6 +38,7 @@ import { ArrowGlyph } from "@/components/werk/arrow-glyph";
 import { BUTTON_CLASSES } from "@/components/werk/button-link";
 import { FILTER_CHIP_CLASS } from "@/components/werk/chip";
 import { cx } from "@/components/werk/cx";
+import { getMotionAwareScrollBehavior } from "@/lib/animation-policy";
 import { notifyUrlStateChanged } from "@/lib/navigation/url-state";
 import { PosterThumb } from "@/components/plakat";
 import { coursePlakat, PLAKAT_KEYS, type PlakatKey } from "@/lib/plakat/palettes";
@@ -145,6 +146,7 @@ const ATLAS_COPY = {
     groupUnavailable: "hier nicht verfügbar",
     groupAccountRequired: "Lernkonto nötig",
     groupSource: "Quellcode aller Technikkurse",
+    onGitHub: "auf GitHub",
     sceneSubheads: { idea: "Prompting und Agenten", bloom: "Daten" },
     unavailableAction: "Hier nicht verfügbar · Kursübersicht",
     overview: "Kursübersicht",
@@ -189,6 +191,7 @@ const ATLAS_COPY = {
     groupUnavailable: "unavailable here",
     groupAccountRequired: "account required",
     groupSource: "source code of all technical courses",
+    onGitHub: "on GitHub",
     sceneSubheads: { idea: "Prompting and agents", bloom: "Data" },
     unavailableAction: "Unavailable here · Course overview",
     overview: "Course overview",
@@ -224,12 +227,27 @@ const ATLAS_COPY = {
       readonly groupUnavailable: string;
       readonly groupAccountRequired: string;
       readonly groupSource: string;
+      /** The phone attribution link: "<repository> auf GitHub". */
+      readonly onGitHub: string;
       /** Names the track inside a group that holds two scenes (SPEC §2.2). */
       readonly sceneSubheads: Partial<Record<PlakatKey, string>>;
       readonly goals: readonly LearningGoal[];
     }
   >
 >;
+
+/**
+ * A chip that takes focus inside a horizontal rail scrolls fully into the
+ * rail's view (WCAG 2.4.11): a cut chip at the screen edge otherwise keeps
+ * half its ring off-screen. Only the rail scrolls sideways.
+ */
+function revealInRail(event: React.FocusEvent<HTMLElement>): void {
+  event.currentTarget.scrollIntoView({
+    block: "nearest",
+    inline: "nearest",
+    behavior: getMotionAwareScrollBehavior(),
+  });
+}
 
 function isGoalId(value: string | null): value is GoalId {
   return value !== null && GOAL_IDS.includes(value as GoalId);
@@ -413,7 +431,7 @@ export function LearningAtlas({
         <div
           ref={goalRailRef}
           data-learning-goal-rail
-          className="-mx-4 snap-x overflow-x-auto overscroll-x-contain scroll-px-4 [scrollbar-width:none] sm:-mx-6 sm:mt-6 sm:scroll-px-6 lg:mx-0 lg:overflow-visible [&::-webkit-scrollbar]:hidden"
+          className="-mx-4 snap-x overflow-x-auto overscroll-x-contain scroll-px-4 py-1.5 [scrollbar-width:none] max-lg:-my-1.5 sm:-mx-6 sm:mt-6 sm:scroll-px-6 lg:mx-0 lg:overflow-visible lg:py-0 [&::-webkit-scrollbar]:hidden"
         >
           <div
             className="flex w-max gap-2 px-4 sm:px-6 lg:grid lg:w-auto lg:grid-cols-4 lg:gap-0 lg:px-0"
@@ -429,6 +447,7 @@ export function LearningAtlas({
                   aria-pressed={selected}
                   aria-controls="selected-learning-path"
                   onClick={() => selectGoal(candidate.id)}
+                  onFocus={revealInRail}
                   data-learning-goal={candidate.id}
                   className={cx(
                     "relative flex min-h-11 min-w-0 shrink-0 snap-start items-center whitespace-nowrap border px-3.5 py-2 text-left text-label transition-colors duration-[120ms] focus-visible:z-[2] motion-reduce:transition-none lg:min-h-14 lg:shrink lg:whitespace-normal lg:px-4",
@@ -483,11 +502,16 @@ export function LearningAtlas({
                   : isNext
                     ? "current"
                     : "future";
+                // The state reads the same access map as the ledger, so the
+                // path never calls a course "offen" that the page says is
+                // unavailable here.
                 const status = stat.certified
                   ? copy.complete
                   : stat.started
                     ? copy.inProgress
-                    : copy.queued;
+                    : (access[course.slug] ?? "unavailable") === "unavailable"
+                      ? copy.groupUnavailable
+                      : copy.queued;
                 const last = index === pathCourses.length - 1;
                 return (
                   <li
@@ -705,7 +729,7 @@ export function LearningAtlas({
           <div
             role="group"
             aria-label={copy.levelLabel}
-            className="-mx-4 flex snap-x gap-2 overflow-x-auto overscroll-x-contain scroll-px-4 px-4 [scrollbar-width:none] sm:-mx-6 sm:scroll-px-6 sm:px-6 [&::-webkit-scrollbar]:hidden"
+            className="-mx-4 -my-1.5 flex snap-x gap-2 overflow-x-auto overscroll-x-contain scroll-px-4 px-4 py-1.5 [scrollbar-width:none] sm:-mx-6 sm:scroll-px-6 sm:px-6 [&::-webkit-scrollbar]:hidden"
           >
             {LEVEL_FILTERS.map((level) => {
               const selected = level === levelFilter;
@@ -715,6 +739,7 @@ export function LearningAtlas({
                   type="button"
                   aria-pressed={selected}
                   onClick={() => setLevelFilter(level)}
+                  onFocus={revealInRail}
                   data-course-level-chip={level}
                   className={cx(FILTER_CHIP_CLASS, "shrink-0 snap-start")}
                 >
@@ -779,9 +804,10 @@ export function LearningAtlas({
                     href={groupSource.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="-mt-2 inline-flex min-h-11 basis-full items-center font-mono text-caption text-muted-foreground underline decoration-border underline-offset-4 hover:decoration-foreground lg:hidden"
+                    className="-mt-2 inline-flex min-h-11 items-center gap-1 text-caption text-muted-foreground underline decoration-border underline-offset-4 hover:decoration-foreground lg:hidden"
                   >
-                    {groupSource.name} #{groupSource.commit}
+                    {groupSource.name} {copy.onGitHub}
+                    <ArrowGlyph direction="external" />
                     <span className="sr-only">
                       : {copy.groupSource} ({groupSource.owner}/
                       {groupSource.name}, {copy.sourceCommit}{" "}

@@ -31,8 +31,11 @@ export type PosterThumbProps = {
 /**
  * A mini poster beside a row's title. Decorative: the row's heading and link
  * carry the name, so it is aria-hidden and never focusable (a focusable
- * poster would need an inset ring, SPEC §3.9). No frame, no radius, no
- * shadow: the poster's own ground is its edge.
+ * poster would need an inset ring, SPEC §3.9). No radius, no shadow: the
+ * poster's own ground is its edge, except IDEA: Kreide on Kalkweiß is
+ * 1.05:1 (SPEC §1.1 "never a card on Kalkweiß"), so its edge is a 1px Kobalt
+ * hairline drawn over the art, and the corner dots sit inside a visible
+ * object.
  */
 export function PosterThumb({
   plakat,
@@ -46,7 +49,12 @@ export function PosterThumb({
     <span
       aria-hidden="true"
       data-poster-thumb=""
-      className={cx("relative block aspect-[4/5] shrink-0 overflow-hidden", POSTER_THUMB_SIZE[size], className)}
+      className={cx(
+        "relative block aspect-[4/5] shrink-0 overflow-hidden",
+        plakat === "idea" && "after:pointer-events-none after:absolute after:inset-0 after:border after:border-kobalt after:content-['']",
+        POSTER_THUMB_SIZE[size],
+        className,
+      )}
     >
       <PosterArt
         plakat={plakat}

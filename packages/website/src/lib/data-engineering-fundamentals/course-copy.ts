@@ -137,7 +137,7 @@ export const DATA_ENGINEERING_FUNDAMENTALS_COURSE_COPY = Object.freeze({
     },
     landing: {
       eyebrow: "Data engineering / fundamentals",
-      title: "Understand a data pipeline stage by stage.",
+      title: "Data pipelines, stage by stage.",
       intro:
         "At each stage you try the decision in a simulation.",
       start: "Open the overview",

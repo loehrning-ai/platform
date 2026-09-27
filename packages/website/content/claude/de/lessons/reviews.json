@@ -17,11 +17,11 @@
       "id": "why-it-works",
       "title": "Welche Prüfaufgaben sich eignen",
       "readTimeMinutes": 1,
-      "content": "Ein Modell prüft den gelieferten Diff auf mögliche Fehler, Konventionsverstöße und fehlende Tests. Dateien, Aufrufer, Laufzeitverhalten und Regeln, die weder der Prompt noch ein Tool liefert, sieht es nicht.\n\nGib Änderungsziel, Umgebungscode, Konventionen und Schweregrade mit. Jeder Befund braucht Datei und Zeile, einen Fehlerpfad und eine Trennung von Beleg und Vermutung.\n\nModellverhalten ändert sich von Version zu Version, also lass ein Review-Eval-Set nach jeder Änderung an Modell, Prompt oder Tool-Zugriff erneut laufen."
+      "content": "Ein Modell prüft den gelieferten Diff auf mögliche Fehler, Konventionsverstöße und fehlende Tests. Dateien, Aufrufer, Laufzeitverhalten und Regeln, die weder der Prompt noch ein Tool liefert, sieht es nicht.\n\nGib Änderungsziel, Umgebungscode, Konventionen und Schweregrade mit. Jeder Befund braucht Datei und Zeile, einen Fehlerpfad und eine Trennung von Beleg und Vermutung. Lass ein Review-Eval-Set nach jeder Änderung an Modell, Prompt oder Tool-Zugriff erneut laufen."
     },
     {
       "id": "review-template",
-      "title": "Die Prompt-Vorlage für Reviews",
+      "title": "Prompt-Vorlage für Reviews",
       "readTimeMinutes": 2,
       "content": "```\nDu überprüfst einen PR als Staff Engineer im Team.\n\nKONTEXT\n- Repo: <Kurzbeschreibung des Projekts>\n- Konventionen: <CLAUDE.md verlinken oder Zusammenfassung einfügen>\n- Ziel des Autors für diesen PR: <Beschreibung einfügen>\n\nDIFF\n<Diff einfügen>\n\nAUFGABE\nÜberprüfe den Diff. Gib für jedes Problem Folgendes an:\n- Schweregrad (blocker | nit | frage)\n- Datei:Zeile\n- Was du ändern würdest und warum, in einem Satz.\n\nFokus auf:\n1. Erfüllt der Code die in der Beschreibung genannten Anforderungen?\n2. Korrektheit, insbesondere Randfälle und Fehlerpfade.\n3. Tests: Validieren sie die Änderung oder sind sie nur vorhanden?\n4. Konsistenz mit bestehenden Konventionen im Repo.\n\nNICHT:\n- Den Code umschreiben.\n- Stil kommentieren, es sei denn, er verstößt gegen eine Konvention.\n- Das Review mit Lob aufblähen.\n```"
     },
@@ -29,7 +29,7 @@
       "id": "when-it-earns-its-keep",
       "title": "Wo es hilft",
       "readTimeMinutes": 1,
-      "content": "- **Vor dem Review.** Lass einen fokussierten Durchlauf über deinen Diff laufen, prüfe jeden Befund und starte die Checks.\n- **Bei großen Änderungen.** Lass eine vorläufige Karte des geänderten Verhaltens und der betroffenen Aufrufpfade erzeugen und halte sie gegen Codesuche und Tests.\n- **Repository-weit.** Ermittle erst die Aufrufer mit Repository-Tools und analysiere dann die Treffer auf Kompatibilitätsrisiken."
+      "content": "- **Vor dem Review.** Lass einen fokussierten Durchlauf über deinen Diff laufen, prüfe jeden Befund und starte die Checks.\n- **Bei großen Änderungen.** Lass geändertes Verhalten und betroffene Aufrufpfade kartieren und gleiche das mit Codesuche und Tests ab.\n- **Repository-weit.** Ermittle erst die Aufrufer mit Repository-Tools und analysiere sie dann auf Kompatibilitätsrisiken."
     }
   ],
   "widgets": [
@@ -41,7 +41,7 @@
         "lessonId": "reviews",
         "cpId": "review",
         "title": "Diff überprüfen",
-        "hint": "Füge einen kleinen Diff ein und fordere mit der Vorlage unten ein Review auf Staff-Level an.",
+        "hint": "Füge einen kleinen Diff ein und fordere mit der Vorlage unten ein Review an.",
         "placeholder": "Du überprüfst einen PR als Staff Engineer…\n\nDIFF:\n<Diff einfügen>"
       }
     },

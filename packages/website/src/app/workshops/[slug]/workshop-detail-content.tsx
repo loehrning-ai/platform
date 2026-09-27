@@ -26,7 +26,7 @@ import {
   PosterArt,
   ResultChart,
 } from "@/components/plakat";
-import { posterTitleStyle } from "@/lib/plakat/fit";
+import { posterTitleFallbackStyle } from "@/lib/plakat/fit";
 import { PLAKAT, workshopPlakat, type WorkshopPlakat } from "@/lib/plakat/palettes";
 import { materialLanguageLabel, WORKSHOP_PAGE_COPY } from "../workshop-copy";
 import { splitTitle } from "../workshop-title";
@@ -426,11 +426,12 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
       <PlakatBand
         plakat={scene.plakat}
         labelledBy="workshop-title"
-        // Phones: a 96px strip (SPEC §3.2 phone budget), so the lab still
-        // starts within 1.7 viewports at 390x664.
-        // From sm the strip grows with the width, so a tablet band still
-        // reads as a poster (numeral left, motif right).
-        className="[&>[data-plakat-art-phone]]:mt-4 [&>[data-plakat-art-phone]]:h-24 sm:[&>[data-plakat-art-phone]]:h-40 md:[&>[data-plakat-art-phone]]:h-48"
+        // Below lg the poster is a full-bleed 16:9 row after the actions:
+        // the numeral and the motif at full column width (219px at 390), so
+        // a phone band reads as the poster, not as a page of type with a
+        // scrap of art in the corner.
+        artPhoneLayout="poster"
+        className="[&>[data-plakat-art-phone]]:mt-4"
         // IDEA marks the band's own corners, as on the reference poster; the
         // art inside then carries no dots of its own. Phones start the
         // content at the same 20px on every band: the back link sits clear
@@ -451,7 +452,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
             plakat={scene.plakat}
             motif={scene.motif}
             numeral={workshop.number}
-            format="strip"
+            format="landscape"
             cornerDots={false}
           />
         }
@@ -475,7 +476,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
           // Below 360px the poster step scales with the width (42px, as 50px
           // at 390), so the start button stays above the tab bar at 320x568.
           className="poster-title mt-3 max-w-[16ch] text-scene-ink max-[359px]:mt-2 max-[359px]:[--text-poster:2.625rem] sm:mt-4"
-          style={posterTitleStyle(title.head)}
+          style={posterTitleFallbackStyle(title.head)}
         >
           {title.head}
           {title.subtitle ? (

@@ -62,7 +62,7 @@ describe("CaseLab", () => {
     );
     fireEvent.click(
       screen.getByLabelText(
-        "Explicitly decline to claim a metric or guarantee",
+        "Decline to claim a metric or guarantee",
       ),
     );
     fireEvent.click(screen.getByLabelText("Human claim and recipient review"));

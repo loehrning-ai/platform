@@ -5,6 +5,9 @@ import { describe, expect, it } from "vitest";
 import { splitTitle } from "@/app/workshops/workshop-title";
 import { WORKSHOP_PAGE_COPY } from "@/app/workshops/workshop-copy";
 import { HOME_COPY } from "@/components/home/home-copy";
+import { BOOK_PAGE_COPY } from "@/app/buecher/book-copy";
+import { ENTRY_COPY } from "@/lib/i18n/public-info-copy";
+import { PROFILE_COPY } from "@/lib/i18n/profile-copy";
 import { COURSE_HUB_COPY } from "@/lib/courses/course-hub-copy";
 import { getAiNativeOperatorCourseCopy } from "@/lib/ai-native-operator/course-copy";
 import { getCodexCourseCopy } from "@/lib/codex/course-copy";
@@ -102,7 +105,19 @@ const PAGE_LITERALS = [
   { file: "src/app/blog/page.tsx", de: ["KI im Alltag, mit Quellen erklärt."], en: ["Everyday AI, explained with sources."] },
 ] as const;
 
-const SURFACES: readonly Surface[] = [
+/**
+ * Every band H1 writes `posterTitleFallbackStyle()`: `font-display: optional`
+ * can leave a first visit on the Arial-metric fallback face, about 4.4%
+ * wider, and "Geschäftsberichte" then ran 5px into the gutter at 390.
+ */
+function withFallbackFit(surface: Surface): Surface {
+  return {
+    ...surface,
+    titles: surface.titles.map((title) => ({ ...title, fit: title.fit ?? fallbackFitEm(title.text) })),
+  };
+}
+
+const SURFACES: readonly Surface[] = ([
   {
     name: "workshop detail bands",
     layout: "band-art",
@@ -166,6 +181,25 @@ const SURFACES: readonly Surface[] = [
     })),
   },
   {
+    // The paper pages' H1s share the poster step (SPEC §4: one display size
+    // for top-level H1s); the reading pages (posts, lessons) keep 36/52px.
+    name: "paper page headlines",
+    layout: "band",
+    files: [
+      "src/app/ueber-mich/ueber-mich-content.tsx",
+      "src/app/buecher/buecher-content.tsx",
+      "src/app/einstieg/page.tsx",
+    ],
+    titles: LOCALES.flatMap((locale) => [
+      { id: `ueber-mich ${locale}`, text: PROFILE_COPY[locale].hero.title },
+      {
+        id: `buecher ${locale}`,
+        text: `${BOOK_PAGE_COPY[locale].catalog.heading} ${BOOK_PAGE_COPY[locale].catalog.headingAccent}`,
+      },
+      { id: `einstieg ${locale}`, text: ENTRY_COPY[locale].title },
+    ]),
+  },
+  {
     name: "course landing bands",
     layout: "course",
     files: ["src/components/course/technical-course-landing.tsx"],
@@ -184,7 +218,7 @@ const SURFACES: readonly Surface[] = [
       ),
     ],
   },
-];
+] as const satisfies readonly Surface[]).map(withFallbackFit);
 
 // ─── Tests ─────────────────────────────────────────────────────────────────
 
@@ -295,6 +329,7 @@ describe("the poster title registry", () => {
       "demo detail bands",
       "blog index band",
       "/kurse headline on paper",
+      "paper page headlines",
       "course landing bands",
     ]);
     for (const surface of SURFACES) {
@@ -308,6 +343,15 @@ describe("the poster title registry", () => {
       expect(
         surface.files.some((file) => /\bposter-title\b|--text-poster\b/.test(read(file))),
         `${surface.name}: none of ${surface.files.join(", ")} sets .poster-title`,
+      ).toBe(true);
+    }
+  });
+
+  it("gives every band title the fallback-face headroom", () => {
+    for (const surface of SURFACES) {
+      expect(
+        surface.files.some((file) => /posterTitleFallbackStyle\(/.test(read(file))),
+        `${surface.name}: none of ${surface.files.join(", ")} writes posterTitleFallbackStyle()`,
       ).toBe(true);
     }
   });

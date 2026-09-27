@@ -84,7 +84,7 @@
 .blog-root .blog-index__title {
   margin-top: 16px;
   max-width: 13em;
-  font-size: max(2.25rem, min(var(--text-poster), calc(100cqi / var(--fit, 0.01))));
+  font-size: max(2.125rem, min(var(--text-poster), calc(100cqi / var(--fit, 0.01))));
   line-height: var(--text-poster--line-height);
   letter-spacing: var(--text-poster--letter-spacing);
   font-weight: 700;
@@ -107,9 +107,11 @@
 /* The halftone keeps a dot pitch of about 6 to 7px at every width (the
    mask's dots sit 16px apart at 1600px). Phones show a 112px strip cut
    from the field at 700px wide instead of shrinking the whole field. */
+/* Phones: a 48px strip of the cloud field, a hairline motif, so the first
+   article starts in the first screen; the full field returns from sm. */
 .blog-root .blog-index__halftone {
-  margin-top: 20px;
-  height: 112px;
+  margin-top: 16px;
+  height: 48px;
   mask-size: 700px auto;
 }
 
@@ -167,8 +169,16 @@
 /* ---------- sections ---------- */
 
 .blog-root .blog-index__section {
-  padding-top: 32px;
+  padding-top: 20px;
   padding-bottom: 48px;
+}
+
+/* Phones: the ledger's order note is what the numbers already say; the
+   first article moves up into the first screen instead. */
+@media (max-width: 39.99rem) {
+  .blog-root .blog-index__head > .blog-index__caption {
+    display: none;
+  }
 }
 
 @media (min-width: 40rem) {

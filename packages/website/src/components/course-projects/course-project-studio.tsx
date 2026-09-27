@@ -1107,7 +1107,7 @@ function CourseProjectCheckpointStudio({
             )}
             {!verificationEnabled ? (
               <p className="mt-4 flex items-start gap-2 border-t border-hairline pt-3 text-xs font-semibold leading-snug">
-                <span className="mt-1 h-2 w-2 shrink-0 bg-mennige" aria-hidden="true" />
+                <span className="mt-1 h-2 w-2 shrink-0 bg-scene-line" aria-hidden="true" />
                 {copy.verifyLocked}
               </p>
             ) : null}

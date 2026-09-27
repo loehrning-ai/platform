@@ -23,8 +23,8 @@ export async function generateMetadata(): Promise<Metadata> {
       : "Capstone-Veröffentlichungsregeln: AI-Native Arbeitskurs";
   const description =
     locale === "en"
-      ? "Publication criteria and the current empty state of the AI-Native capstone collection. No entries are published without evidence and explicit consent."
-      : "Veröffentlichungskriterien und aktueller leerer Stand der AI-Native-Capstone-Sammlung. Keine Veröffentlichung ohne Beleg und ausdrückliche Freigabe.";
+      ? "Publication criteria and the current empty state of the AI-Native capstone collection. No entry is published without evidence and author consent."
+      : "Veröffentlichungskriterien und aktueller leerer Stand der AI-Native-Capstone-Sammlung. Keine Veröffentlichung ohne Beleg und Freigabe der Urheber.";
   const localizedPath = localizeHref("/ai-native/capstone-gallery", locale);
   const url = `${SITE_URL}${localizedPath}`;
   const alternates = buildLocaleAlternates("/ai-native/capstone-gallery", [
@@ -157,8 +157,8 @@ export default async function CapstoneGalleryPage() {
             ? "Evidence and privacy review required"
             : "Belege und Datenschutzprüfung nötig",
           isEnglish
-            ? "Explicit consent required"
-            : "Ausdrückliche Freigabe nötig",
+            ? "Author consent required"
+            : "Freigabe der Urheber nötig",
         ]}
         factsLabel={
           isEnglish ? "Publication boundary" : "Veröffentlichungsgrenze"

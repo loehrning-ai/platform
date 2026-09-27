@@ -1,12 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DEMO } from "@/lib/demo-tokens";
-import {
-  DEMO_HEIGHT,
-  usePrefersReducedMotion,
-  useVisibleAutoplay,
-} from "./demo-utils";
+import { DEMO_HEIGHT } from "./demo-utils";
 import { useDemoLocale } from "./demo-locale";
 
 interface Lead {
@@ -21,17 +17,50 @@ interface Lead {
   readonly address: string;
 }
 
-const LEADS: readonly Lead[] = [
+interface OutboundCopy {
+  readonly region: string;
+  readonly heading: string;
+  readonly note: string;
+  readonly stagesLabel: string;
+  readonly stages: readonly (readonly [string, string, string])[];
+  readonly contactsLabel: string;
+  readonly lastContact: string;
+  readonly sampleScore: string;
+  readonly threshold: string;
+  readonly thresholdLabel: string;
+  readonly draftLabel: string;
+  readonly draft: string;
+  readonly to: string;
+  readonly hold: string;
+  readonly qualified: string;
+  readonly subject: string;
+  readonly footer: string;
+  readonly showControls: string;
+  readonly hideControls: string;
+  readonly controls: readonly string[];
+  readonly leads: readonly Lead[];
+}
+
+/*
+ * One layout in both languages: the four review steps (sample contact,
+ * evidence check, draft, human review), the contact picker with a score
+ * gate, the draft and the pre-send controls. The German page used to run a
+ * different, heavier pipeline with invented send times, DKIM and a
+ * "source verified" claim; both now say the same, true things: the source
+ * is an unverified sample and this page sends nothing.
+ */
+
+const LEADS_DE: readonly Lead[] = [
   {
     name: "Fiktivkontakt Alpha",
     role: "Head of Ops",
     company: "Fiktivwerk Alpha (rein fiktiv)",
     last: "412 Tage",
-    signal: "Wachstumsphase · 42 Mitarbeitende",
+    signal: "Fiktives Einstellungssignal · 42 Mitarbeitende",
     score: 87,
-    subject: "Jahresservice-Check: Auftragsabwicklung",
+    subject: "Auftragsabwicklung: eine konkrete Rückfrage",
     email:
-      "Hallo,\n\nvor 14 Monaten hatten wir kurz Kontakt wegen eurer Auftragsabwicklung. Ich möchte kurz nachfragen, ob das Thema Automatisierung inzwischen aktueller geworden ist.\n\nBei Unternehmen in eurer Größenordnung lohnt sich oft ein erster Blick auf Routineaufgaben wie Statusmeldungen oder Bestandsabfragen. Der nächste Schritt wäre ein 20-minütiges Gespräch, kein Angebot.\n\nBitte nur antworten, wenn das Thema passt.",
+      "Hallo,\n\nzuletzt sprachen wir vor 14 Monaten über eure Auftragsabwicklung. Das fiktive öffentliche Beispiel zeigt jetzt ein größeres Operations-Team.\n\nEin sinnvoller erster Check wären Statusmeldungen und Bestandsabfragen. Das ist ein Entwurf zur Prüfung durch einen Menschen, kein Angebot und keine versendete E-Mail.\n\nBitte nur antworten, wenn das Thema passt.",
     address: "kontakt-alpha@fiktivwerk.example",
   },
   {
@@ -39,11 +68,11 @@ const LEADS: readonly Lead[] = [
     role: "Geschäftsführung",
     company: "Fiktivwerk Beta (rein fiktiv)",
     last: "228 Tage",
-    signal: "Modernisierung Kundendienst 2024",
+    signal: "Fiktives Update des Support-Systems",
     score: 74,
     subject: "Kundendienst-Entlastung: Kurze Rückfrage",
     email:
-      "Guten Tag,\n\nbeim letzten Kontakt war das Thema KI-Unterstützung im Kundendienst noch verfrüht. Inzwischen gibt es einfachere Einstiegspunkte: Ticket-Clustering, Standardantwort-Vorschläge, manuelle Freigabe vor dem Versand.\n\nKein Projekt-Pitch, nur eine Frage: Ist das Thema für euch aktuell?",
+      "Guten Tag,\n\nim letzten fiktiven Austausch war die Automatisierung im Kundendienst noch verfrüht. Eine begrenzte Prüfung könnte jetzt Ticket-Gruppierung und Antwortvorschläge ansehen, mit manueller Freigabe vor dem Versand.\n\nDieses Beispiel erzeugt nur einen Prüfentwurf.",
     address: "kontakt-beta@fiktivwerk.example",
   },
   {
@@ -51,911 +80,14 @@ const LEADS: readonly Lead[] = [
     role: "CTO",
     company: "Fiktivwerk Gamma (rein fiktiv)",
     last: "591 Tage",
-    signal: "Maschinenpark modernisiert 2024",
+    signal: "Fiktive Maschinenmodernisierung 2024",
     score: 91,
-    subject: "Predictive Maintenance: Stand nach Modernisierung?",
+    subject: "Wartungsdaten nach dem Maschinen-Update",
     email:
-      "Guten Tag,\n\nvor einiger Zeit sprachen wir über Predictive Maintenance. Damals fehlte die Datengrundlage.\n\nNach einer Maschinenmodernisierung verbessert sich die Sensor-Abdeckung oft deutlich. Bevor man ein Modell baut, braucht es aber: Ausfallhistorie, definierte Verantwortlichkeiten und einen klaren Schwellenwert für Eskalation.\n\nHat sich euer Datenstand verändert?",
+      "Guten Tag,\n\nunser früheres fiktives Gespräch endete, weil die Daten unvollständig waren. Nach einem Maschinen-Update bleibt der nächste Check derselbe: Ausfallhistorie, Zuständigkeit und ein Schwellenwert für die Eskalation.\n\nHat sich der Datenstand im Beispiel geändert? Von dieser Seite wird keine Nachricht gesendet.",
     address: "kontakt-gamma@fiktivwerk.example",
   },
 ];
-
-export default function OutboundWorkflowDemo() {
-  const { locale } = useDemoLocale();
-  return locale === "en" ? (
-    <OutboundWorkflowDemoEnglish />
-  ) : (
-    <OutboundWorkflowDemoGerman />
-  );
-}
-
-function OutboundWorkflowDemoGerman() {
-  const reduced = usePrefersReducedMotion();
-  const { ref, visible } = useVisibleAutoplay<HTMLDivElement>();
-  // Final state first: the reviewed draft renders on load. "Neu abspielen"
-  // is the only way into a replay, which pauses while off-screen.
-  const [stage, setStage] = useState<0 | 1 | 2 | 3 | 4>(4);
-  const [replaying, setReplaying] = useState(false);
-  const [runId, setRunId] = useState(0);
-  const [showChecklist, setShowChecklist] = useState(false);
-  const [leadIndex, setLeadIndex] = useState(0);
-  const [minScore, setMinScore] = useState(70);
-
-  useEffect(() => {
-    if (reduced) {
-      setStage(4);
-      setReplaying(false);
-      return;
-    }
-    if (!replaying) return;
-    if (!visible) {
-      setStage(0);
-      return;
-    }
-    setStage(0);
-    const timers = [
-      setTimeout(() => setStage(1), 400),
-      setTimeout(() => setStage(2), 1100),
-      setTimeout(() => setStage(3), 2000),
-      setTimeout(() => {
-        setStage(4);
-        setReplaying(false);
-      }, 3000),
-    ];
-    return () => timers.forEach(clearTimeout);
-  }, [visible, reduced, replaying, runId]);
-
-  const replay = () => {
-    setShowChecklist(false);
-    setReplaying(true);
-    setRunId((n) => n + 1);
-  };
-
-  const lead = LEADS[leadIndex];
-  const email = lead.address;
-  // The intent score was previously display-only. A real gate compares it
-  // against a learner-adjustable threshold: the failure beat is what
-  // happens when that threshold is set above every lead's score — a
-  // pipeline that reaches "review complete" and sends nothing.
-  const gated = lead.score < minScore;
-
-  return (
-    <div
-      ref={ref}
-      data-demo-id="outbound-workflow"
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 16,
-        width: "100%",
-        minWidth: 0,
-        minHeight: DEMO_HEIGHT,
-        fontFamily: DEMO.font.sans,
-        color: DEMO.ink,
-      }}
-    >
-      <style>{`
-        @keyframes outbound-scan {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(200%); }
-        }
-        [data-demo-id="outbound-workflow"] [data-outbound-pipeline],
-        [data-demo-id="outbound-workflow"] [data-outbound-body],
-        [data-demo-id="outbound-workflow"] [data-outbound-body] > *,
-        [data-demo-id="outbound-workflow"] [data-outbound-smtp],
-        [data-demo-id="outbound-workflow"] [data-outbound-footer] {
-          min-width: 0;
-        }
-        [data-demo-id="outbound-workflow"] [data-outbound-pipeline] > *,
-        [data-demo-id="outbound-workflow"] [data-outbound-metrics] > * {
-          min-width: 0;
-          overflow-wrap: anywhere;
-        }
-        @media (max-width: 640px) {
-          [data-demo-id="outbound-workflow"] [data-outbound-pipeline] {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
-          [data-demo-id="outbound-workflow"] [data-outbound-body] {
-            grid-template-columns: 1fr !important;
-          }
-          [data-demo-id="outbound-workflow"] [data-outbound-metrics] {
-            grid-template-columns: repeat(2, 1fr) !important;
-          }
-          [data-demo-id="outbound-workflow"] [data-outbound-smtp] {
-            flex-wrap: wrap;
-          }
-          [data-demo-id="outbound-workflow"] [data-outbound-footer] {
-            flex-wrap: wrap;
-          }
-        }
-      `}</style>
-      {/* The page H1 and lead name the demo; this heading only gives
-          screen-reader users a landmark into the instrument. */}
-      <h2 className="sr-only">Nachricht aus öffentlichen Signalen</h2>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 10,
-          flexWrap: "wrap",
-        }}
-      >
-        <span
-          style={{ ...DEMO.label, color: DEMO.schiefer, fontVariantNumeric: "tabular-nums" }}
-        >
-          {`Schritt ${stage} / 4`}
-        </span>
-        <button
-          type="button"
-          onClick={replay}
-          style={{
-            minHeight: 44,
-            padding: "0 12px",
-            ...DEMO.label,
-            background: "transparent",
-            color: DEMO.ink,
-            border: `1px solid ${DEMO.ink}`,
-            cursor: "pointer",
-          }}
-        >
-          ↻ Neu abspielen
-        </button>
-      </div>
-
-      {/* Pipeline stages */}
-      <div
-        data-outbound-pipeline
-        style={{
-          background: DEMO.birke,
-          border: `1px solid ${DEMO.leinen}`,
-          padding: "14px 14px",
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          gap: 8,
-        }}
-      >
-        {(
-          [
-            { label: "DB · Kontakte", sub: "Beispieldaten", s: 1 },
-            { label: "Signal-Scan", sub: "LinkedIn · News · CB", s: 2 },
-            {
-              label: "Text-Generierung",
-              sub: "Claude Sonnet · 247 Tokens",
-              s: 3,
-            },
-            {
-              label: "Versandfreigabe simuliert",
-              sub: "DKIM · Freigabe-Schritt (simuliert) · kein Versand",
-              s: 4,
-            },
-          ] as const
-        ).map((n) => {
-          const active = stage >= n.s;
-          const current = stage === n.s;
-          return (
-            <div
-              key={n.label}
-              style={{
-                // The current stage is the one Mennige mark; run stages get
-                // an ink edge, open ones a dashed edge. Flat, no lift.
-                background: current ? "var(--color-mennige)" : DEMO.kalk,
-                color: current ? "#f9f7f2" : DEMO.ink,
-                border: `1px ${active ? "solid" : "dashed"} ${current ? "var(--color-mennige)" : active ? DEMO.ink : DEMO.schiefer}`,
-                padding: "8px 10px",
-                transition: reduced
-                  ? "none"
-                  : "background-color 200ms ease-out, color 200ms ease-out, border-color 200ms ease-out",
-              }}
-            >
-              <div
-                style={{
-                  fontSize: 12,
-                  fontWeight: 700,
-                  letterSpacing: "-0.01em",
-                }}
-              >
-                {n.label}
-              </div>
-              <div
-                style={{
-                  fontFamily: DEMO.font.mono,
-                  fontSize: 12,
-                  color: current ? "#f9f7f2" : DEMO.schiefer,
-                  marginTop: 3,
-                }}
-              >
-                {n.sub}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Lead + email */}
-      <div
-        data-outbound-body
-        style={{
-          display: "grid",
-          gridTemplateColumns: "minmax(240px, 300px) 1fr",
-          gap: 14,
-          minWidth: 0,
-        }}
-      >
-        <div
-          style={{
-            background: DEMO.kalk,
-            border: `1px solid ${DEMO.ink}`,
-            padding: "12px 14px",
-            display: "flex",
-            flexDirection: "column",
-            gap: 10,
-            minWidth: 0,
-          }}
-        >
-          {/* Lead picker — switches which of the 3 fictional contacts is shown */}
-          <div
-            role="group"
-            aria-label="Kontakt wählen"
-            style={{ display: "flex", gap: 6 }}
-          >
-            {LEADS.map((l, i) => {
-              const selected = i === leadIndex;
-              return (
-                <button
-                  key={l.address}
-                  type="button"
-                  aria-pressed={selected}
-                  onClick={() => setLeadIndex(i)}
-                  style={{
-                    flex: 1,
-                    minHeight: 44,
-                    padding: "5px 8px",
-                    border: `1px solid ${DEMO.ink}`,
-                    background: selected ? DEMO.ink : DEMO.kalk,
-                    color: selected ? DEMO.kalk : DEMO.ink,
-                    ...DEMO.label,
-                    cursor: "pointer",
-                  }}
-                >
-                  {l.name.split(" ").pop()}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Fictional scenario banner */}
-          <div
-            style={{
-              ...DEMO.label,
-              color: "var(--color-muted-foreground)",
-            }}
-          >
-            Fiktives Szenario, Beispieldaten
-          </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <div
-              style={{
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                color: DEMO.ink,
-                fontWeight: 700,
-              }}
-            >
-              Lead #0412
-            </div>
-            <div
-              style={{
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                color: DEMO.schiefer,
-              }}
-            >
-              CRM · Zeile {leadIndex + 1}/{LEADS.length}
-            </div>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              paddingBottom: 10,
-              borderBottom: `1px dashed ${DEMO.leinen}`,
-            }}
-          >
-            <div
-              style={{
-                width: 36,
-                height: 36,
-                flexShrink: 0,
-                background: DEMO.birke,
-                border: `1px solid ${DEMO.ink}`,
-                display: "grid",
-                placeItems: "center",
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                fontWeight: 700,
-                color: DEMO.ink,
-              }}
-            >
-              {lead.name
-                .replace(/Dr\.\s*/g, "")
-                .split(" ")
-                .map((w) => w[0])
-                .join("")
-                .slice(0, 2)}
-            </div>
-            <div style={{ minWidth: 0, flex: 1 }}>
-              <div
-                style={{
-                  fontSize: 14,
-                  fontWeight: 700,
-                  letterSpacing: "-0.01em",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {lead.name}
-              </div>
-              <div
-                style={{
-                  fontSize: 12,
-                  color: DEMO.schiefer,
-                  marginTop: 1,
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {lead.role} · {lead.company}
-              </div>
-            </div>
-          </div>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: 8,
-              fontFamily: DEMO.font.mono,
-            }}
-          >
-            <div>
-              <div
-                style={{
-                  ...DEMO.label,
-                  color: DEMO.schiefer,
-                }}
-              >
-                Letzter Kontakt
-              </div>
-              <div
-                style={{
-                  color: DEMO.ink,
-                  marginTop: 3,
-                  fontWeight: 700,
-                  fontSize: 12,
-                }}
-              >
-                {lead.last}
-              </div>
-            </div>
-            <div>
-              <div
-                style={{
-                  ...DEMO.label,
-                  color: DEMO.schiefer,
-                }}
-              >
-                Intent-Score
-              </div>
-              <div
-                style={{
-                  color: DEMO.ink,
-                  marginTop: 1,
-                  fontWeight: 700,
-                  fontSize: 16,
-                  lineHeight: 1,
-                }}
-              >
-                {lead.score}
-                <span
-                  style={{
-                    color: DEMO.schiefer,
-                    fontSize: 12,
-                    fontWeight: 400,
-                  }}
-                >
-                  /100
-                </span>
-              </div>
-            </div>
-          </div>
-          <label
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 4,
-              fontFamily: DEMO.font.mono,
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                gap: 8,
-              }}
-            >
-              <span
-                style={{
-                  ...DEMO.label,
-                  color: DEMO.schiefer,
-                }}
-              >
-                Score-Schwelle
-              </span>
-              <span
-                style={{
-                  color: gated ? "var(--color-destructive)" : DEMO.ink,
-                  fontWeight: 700,
-                  fontSize: 12,
-                }}
-              >
-                {minScore}/100
-              </span>
-            </div>
-            <input
-              type="range"
-              min={0}
-              max={100}
-              step={1}
-              value={minScore}
-              onChange={(e) => setMinScore(Number(e.target.value))}
-              aria-label="Minimale Score-Schwelle für den Versand"
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-valuenow={minScore}
-              style={{
-                minHeight: 44,
-                width: "100%",
-                accentColor: DEMO.ink,
-              }}
-            />
-          </label>
-          <div
-            style={{
-              position: "relative",
-              padding: "8px 10px",
-              background: DEMO.birke,
-              // Dashed while the scan is open, solid once the signal is in.
-              border: `1px ${stage >= 2 ? "solid" : "dashed"} ${DEMO.ink}`,
-              overflow: "hidden",
-            }}
-          >
-            {stage === 1 && visible && !reduced && (
-              <div
-                aria-hidden
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  background:
-                    "linear-gradient(90deg, transparent 0%, rgba(11,9,8,0.10) 50%, transparent 100%)",
-                  animation: "outbound-scan 700ms cubic-bezier(0.16,1,0.3,1) 1 both",
-                  pointerEvents: "none",
-                }}
-              />
-            )}
-            <div
-              style={{
-                ...DEMO.label,
-                color: "var(--color-muted-foreground)",
-                position: "relative",
-              }}
-            >
-              {stage >= 2 ? "Signal erkannt" : "Signal-Scan läuft"}
-            </div>
-            <div
-              style={{
-                fontSize: 12,
-                color: DEMO.ink,
-                marginTop: 3,
-                fontWeight: 600,
-                lineHeight: 1.35,
-                position: "relative",
-              }}
-            >
-              {lead.signal}
-            </div>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              gap: 10,
-              marginTop: 2,
-              fontFamily: DEMO.font.mono,
-              fontSize: 12,
-            }}
-          >
-            {(
-              [
-                { key: "signal", label: "Signal", at: 2 },
-                { key: "text", label: "Text", at: 3 },
-                { key: "versand", label: "Versand", at: 4 },
-              ] as const
-            ).map((s) => (
-              <div
-                key={s.key}
-                style={{
-                  color: stage >= s.at ? DEMO.ink : DEMO.schiefer,
-                  fontWeight: stage >= s.at ? 700 : 400,
-                }}
-              >
-                {stage >= s.at ? `✓ ${s.label}` : s.label}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div
-          style={{
-            background: "white",
-            border: `1px solid ${DEMO.ink}`,
-            display: "flex",
-            flexDirection: "column",
-            minHeight: 260,
-            minWidth: 0,
-          }}
-        >
-          <div
-            data-outbound-smtp
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 10,
-              padding: "8px 14px",
-              background: DEMO.ink,
-              color: DEMO.kalk,
-              fontFamily: DEMO.font.mono,
-              fontSize: 12,
-              fontWeight: 700,
-            }}
-          >
-            <span style={{ color: "var(--color-kupfer-light)" }}>✉ Review</span>
-            <span style={{ opacity: 0.5 }}>›</span>
-            <span
-              style={{
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-                minWidth: 0,
-                flex: 1,
-              }}
-            >
-              an: {email}
-            </span>
-            <span
-              role={stage >= 4 && gated ? "alert" : undefined}
-              style={{
-                color:
-                  stage >= 4 && gated
-                    ? "var(--color-destructive)"
-                    : stage >= 4
-                      ? DEMO.statusGreen
-                      : "rgba(243,240,233,0.55)",
-                transition: "color 200ms ease-out",
-                flexShrink: 0,
-              }}
-            >
-              {stage >= 4
-                ? gated
-                  ? "Nicht gesendet: unter Score-Schwelle"
-                  : "Versand simuliert 09:14"
-                : stage >= 3
-                  ? "Entwurf"
-                  : "Wartet …"}
-            </span>
-          </div>
-          <div
-            style={{
-              padding: "12px 16px 6px",
-              borderBottom: `1px solid ${DEMO.leinen}`,
-              fontFamily: DEMO.font.mono,
-              fontSize: 12,
-              color: DEMO.schiefer,
-              display: "flex",
-              flexDirection: "column",
-              gap: 3,
-            }}
-          >
-            <div>
-              Von:{" "}
-              <span
-                style={{ color: DEMO.ink, fontWeight: 700, letterSpacing: 0 }}
-              >
-                vertrieb@fiktivwerk.example
-              </span>
-            </div>
-            <div
-              style={{
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              An:{" "}
-              <span
-                style={{ color: DEMO.ink, fontWeight: 700, letterSpacing: 0 }}
-              >
-                {email}
-              </span>
-            </div>
-            <div
-              style={{
-                marginTop: 2,
-                minWidth: 0,
-                overflowWrap: "anywhere",
-                whiteSpace: "normal",
-              }}
-            >
-              Betreff:{" "}
-              <span
-                style={{
-                  color: DEMO.ink,
-                  fontWeight: 700,
-                  fontFamily: "Georgia, serif",
-                  letterSpacing: 0,
-                  fontSize: 12,
-                  overflowWrap: "anywhere",
-                }}
-              >
-                {lead.subject}
-              </span>
-            </div>
-          </div>
-          <div
-            style={{
-              padding: "14px 18px 16px",
-              fontSize: 12,
-              color: "#222",
-              lineHeight: 1.55,
-              fontFamily: "Georgia, serif",
-              flex: 1,
-            }}
-          >
-            {stage < 3 ? (
-              <div
-                style={{
-                  display: "flex",
-                  gap: 10,
-                  alignItems: "center",
-                  padding: "32px 0",
-                  fontFamily: DEMO.font.mono,
-                  fontSize: 12,
-                  color: DEMO.schiefer,
-                }}
-              >
-                <span
-                  aria-hidden
-                  style={{
-                    display: "inline-block",
-                    width: 10,
-                    height: 10,
-                    border: `1px dashed ${DEMO.ink}`,
-                  }}
-                />
-                <span>
-                  {stage === 1
-                    ? "Signal-Scan läuft …"
-                    : "Claude Sonnet schreibt den Entwurf …"}
-                </span>
-              </div>
-            ) : (
-              <div style={{ whiteSpace: "pre-wrap" }}>
-                {lead.email}
-                <div
-                  style={{
-                    marginTop: 14,
-                    paddingTop: 10,
-                    borderTop: `1px solid ${DEMO.leinen}`,
-                    fontSize: 12,
-                    color: DEMO.schiefer,
-                    fontFamily: "Georgia, serif",
-                  }}
-                >
-                  Beste Grüße
-                  <br />
-                  <span style={{ color: "#222", fontWeight: 700 }}>
-                    T. Muster
-                  </span>{" "}
-                  · Muster AG
-                </div>
-              </div>
-            )}
-          </div>
-          {stage >= 3 && (
-            <div
-              data-outbound-footer
-              style={{
-                ...DEMO.label,
-                padding: "6px 14px",
-                borderTop: `1px dashed ${DEMO.leinen}`,
-                background: DEMO.birke,
-                display: "flex",
-                gap: 12,
-                color: DEMO.schiefer,
-              }}
-            >
-              <span>247 Tokens · Sonnet 4.6 · 1,8 s · Quelle geprüft</span>
-              {stage >= 4 && !gated && (
-                <span
-                  style={{
-                    marginLeft: "auto",
-                    fontFamily: DEMO.font.mono,
-                    fontSize: 12,
-                    fontWeight: 400,
-                    color: DEMO.ink,
-                  }}
-                >
-                  touched_at = 2026-04-21 09:14:03
-                </span>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div
-        data-outbound-metrics
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4,1fr)",
-          gap: 8,
-        }}
-      >
-        {(
-          [
-            ["Quellencheck", "Beispiel vollständig"],
-            ["PII-Check", "aktiv"],
-            ["Entwürfe", "3"],
-            ["Review-Status", "offen"],
-          ] as const
-        ).map(([l, v]) => (
-          <div
-            key={l}
-            style={{
-              background: DEMO.kalk,
-              border: `1px solid ${DEMO.leinen}`,
-              padding: 10,
-            }}
-          >
-            <div
-              style={{
-                ...DEMO.label,
-                color: DEMO.schiefer,
-              }}
-            >
-              {l}
-            </div>
-            <div
-              style={{
-                fontFamily: DEMO.font.mono,
-                fontSize: 18,
-                fontWeight: 700,
-                color: DEMO.ink,
-                marginTop: 3,
-              }}
-            >
-              {v}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Failure mode beat: was fehlt vor echtem Versand? */}
-      {stage >= 4 && (
-        <div
-          style={{
-            // Dashed = what is still missing before a real send.
-            border: `1px dashed ${DEMO.ink}`,
-            padding: "10px 14px",
-          }}
-        >
-          <div
-            style={{
-              ...DEMO.label,
-              color: DEMO.ink,
-              marginBottom: 6,
-            }}
-          >
-            Vor einem echten Versand
-          </div>
-          <button
-            type="button"
-            onClick={() => setShowChecklist((v) => !v)}
-            aria-expanded={showChecklist}
-            style={{
-              ...DEMO.label,
-              minHeight: 44,
-              background: "transparent",
-              border: `1px solid ${DEMO.ink}`,
-              color: DEMO.ink,
-              padding: "5px 12px",
-              cursor: "pointer",
-            }}
-          >
-            {showChecklist
-              ? "Verbergen"
-              : "Was fehlt vor einem echten Versand?"}
-          </button>
-          {showChecklist && (
-            <ul
-              style={{
-                marginTop: 10,
-                listStyle: "none",
-                padding: 0,
-                display: "flex",
-                flexDirection: "column",
-                gap: 6,
-              }}
-            >
-              {[
-                {
-                  label:
-                    "Rechtliche Grundlage: Einwilligung oder berechtigtes Interesse nachweisen (DSGVO Art. 6)",
-                },
-                {
-                  label:
-                    "Opt-out-Mechanismus: Abmeldelink in jeder E-Mail, sofortige Umsetzung",
-                },
-                {
-                  label:
-                    "Quellenprüfung: Woher stammt die Kontaktadresse? Wird sie aktuell gehalten?",
-                },
-                {
-                  label:
-                    "Menschliche Freigabe: Entwurf gelesen und bestätigt, bevor etwas verschickt wird",
-                },
-              ].map((item, i) => (
-                <li
-                  key={i}
-                  style={{
-                    display: "flex",
-                    alignItems: "flex-start",
-                    gap: 8,
-                    fontSize: 12,
-                    lineHeight: 1.5,
-                    color: DEMO.ink,
-                    padding: "6px 10px",
-                    background: DEMO.birke,
-                    border: `1px solid ${DEMO.leinen}`,
-                  }}
-                >
-                  <span
-                    aria-hidden
-                    style={{
-                      width: 10,
-                      height: 10,
-                      marginTop: 4,
-                      border: `1px solid ${DEMO.ink}`,
-                      flexShrink: 0,
-                    }}
-                  />
-                  {item.label}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      )}
-    </div>
-  );
-}
 
 const LEADS_EN: readonly Lead[] = [
   {
@@ -996,11 +128,85 @@ const LEADS_EN: readonly Lead[] = [
   },
 ];
 
-function OutboundWorkflowDemoEnglish() {
+const COPY: Readonly<Record<"de" | "en", OutboundCopy>> = {
+  de: {
+    region: "Beispiel eines Outbound-Prüfablaufs",
+    heading: "Nachricht aus öffentlichen Signalen",
+    note: "Entwürfe bleiben im Browser; diese Seite kann keine E-Mail senden.",
+    stagesLabel: "Ablaufschritte",
+    stages: [
+      ["01", "Beispielkontakt", "fiktive CRM-Zeile"],
+      ["02", "Quellenprüfung", "Feld für öffentliche Quelle"],
+      ["03", "Entwurf", "feste Browser-Kopie"],
+      ["04", "Menschliche Prüfung", "keine Versandaktion"],
+    ],
+    contactsLabel: "Fiktive Kontakte",
+    lastContact: "Letzter Kontakt",
+    sampleScore: "Beispiel-Score",
+    threshold: "Score-Schwelle",
+    thresholdLabel: "Minimale Score-Schwelle für den Versand",
+    draftLabel: "E-Mail-Entwurf",
+    draft: "Prüfentwurf",
+    to: "an",
+    hold: "Angehalten: unter der Schwelle",
+    qualified: "Qualifiziert, nicht gesendet",
+    subject: "Betreff",
+    footer: "247 Beispiel-Tokens · Label Sonnet 4.6 · Quelle: ungeprüftes Beispiel",
+    showControls: "Was fehlt vor einem echten Versand?",
+    hideControls: "Verbergen",
+    controls: [
+      "Rechtliche Grundlage: Einwilligung oder berechtigtes Interesse nachweisen (DSGVO Art. 6)",
+      "Quellenprüfung: Woher stammt die Kontaktadresse, und ist sie aktuell?",
+      "Opt-out-Mechanismus: Abmeldelink vor jedem echten Versand",
+      "Menschliche Freigabe: eine benannte Person bestätigt den Text",
+    ],
+    leads: LEADS_DE,
+  },
+  en: {
+    region: "Outbound review workflow example",
+    heading: "Message from public signals",
+    note: "Drafts stay in the browser; this page cannot send email.",
+    stagesLabel: "Workflow stages",
+    stages: [
+      ["01", "Sample contact", "fictional CRM row"],
+      ["02", "Evidence check", "public-source field"],
+      ["03", "Draft", "fixed browser copy"],
+      ["04", "Human review", "no delivery action"],
+    ],
+    contactsLabel: "Fictional contacts",
+    lastContact: "Last contact",
+    sampleScore: "Sample score",
+    threshold: "Score threshold",
+    thresholdLabel: "Minimum score threshold for outreach",
+    draftLabel: "Draft email",
+    draft: "Review draft",
+    to: "to",
+    hold: "Hold: below threshold",
+    qualified: "Qualified, not sent",
+    subject: "Subject",
+    footer: "247 sample tokens · Sonnet 4.6 label · source status: unverified sample",
+    showControls: "Show pre-send controls",
+    hideControls: "Hide pre-send controls",
+    controls: [
+      "Document the lawful basis and purpose limitation.",
+      "Verify the contact source, address, and current relevance.",
+      "Provide a working opt-out path before any real delivery.",
+      "Require a named human reviewer to approve the final text.",
+    ],
+    leads: LEADS_EN,
+  },
+};
+
+export default function OutboundWorkflowDemo() {
+  const { locale } = useDemoLocale();
+  return <OutboundReview copy={COPY[locale === "en" ? "en" : "de"]} />;
+}
+
+function OutboundReview({ copy }: { readonly copy: OutboundCopy }) {
   const [leadIndex, setLeadIndex] = useState(0);
   const [showControls, setShowControls] = useState(false);
   const [minScore, setMinScore] = useState(70);
-  const lead = LEADS_EN[leadIndex];
+  const lead = copy.leads[leadIndex] ?? copy.leads[0]!;
   // The sample score was previously display-only. A real gate compares it
   // against a learner-adjustable threshold: the failure beat is what
   // happens when the threshold is set above every lead's score.
@@ -1010,11 +216,12 @@ function OutboundWorkflowDemoEnglish() {
     <div
       data-demo-id="outbound-workflow"
       role="region"
-      aria-label="Outbound review workflow example"
+      aria-label={copy.region}
       style={{
         display: "flex",
         flexDirection: "column",
         gap: 16,
+        width: "100%",
         minHeight: DEMO_HEIGHT,
         minWidth: 0,
         fontFamily: DEMO.font.sans,
@@ -1024,14 +231,14 @@ function OutboundWorkflowDemoEnglish() {
       <div>
         {/* The page H1 and lead name the demo; this heading only gives
           screen-reader users a landmark into the instrument. */}
-        <h2 className="sr-only">Message from public signals</h2>
+        <h2 className="sr-only">{copy.heading}</h2>
         <p className="text-caption text-muted-foreground" style={{ margin: 0, maxWidth: 720 }}>
-          Drafts stay in the browser; this page cannot send email.
+          {copy.note}
         </p>
       </div>
 
       <div
-        aria-label="Workflow stages"
+        aria-label={copy.stagesLabel}
         style={{
           display: "grid",
           gridTemplateColumns:
@@ -1039,12 +246,7 @@ function OutboundWorkflowDemoEnglish() {
           gap: 8,
         }}
       >
-        {[
-          ["01", "Sample contact", "fictional CRM row"],
-          ["02", "Evidence check", "public-source field"],
-          ["03", "Draft", "fixed browser copy"],
-          ["04", "Human review", "no delivery action"],
-        ].map(([number, title, detail]) => (
+        {copy.stages.map(([number, title, detail]) => (
           <div
             key={number}
             style={{
@@ -1088,15 +290,17 @@ function OutboundWorkflowDemoEnglish() {
       </div>
 
       <div
+        data-outbound-body
         style={{
           display: "grid",
           gridTemplateColumns:
             "repeat(auto-fit, minmax(min(100%, 300px), 1fr))",
           gap: 14,
+          minWidth: 0,
         }}
       >
         <section
-          aria-label="Fictional contacts"
+          aria-label={copy.contactsLabel}
           style={{
             minWidth: 0,
             display: "flex",
@@ -1104,7 +308,7 @@ function OutboundWorkflowDemoEnglish() {
             gap: 8,
           }}
         >
-          {LEADS_EN.map((item, index) => {
+          {copy.leads.map((item, index) => {
             const selected = index === leadIndex;
             return (
               <button
@@ -1117,8 +321,10 @@ function OutboundWorkflowDemoEnglish() {
                   minHeight: 68,
                   padding: "10px 12px",
                   textAlign: "left",
-                  border: `1px solid ${DEMO.ink}`,
-                  background: selected ? DEMO.ink : DEMO.kalk,
+                  // The chosen contact takes the page's scene line (Kobalt
+                  // on the IDEA demo pages; ink where no scene is set).
+                  border: `1px solid ${selected ? "var(--color-scene-line, #121212)" : DEMO.ink}`,
+                  background: selected ? "var(--color-scene-line, #121212)" : DEMO.kalk,
                   color: selected ? DEMO.kalk : DEMO.ink,
                   cursor: "pointer",
                 }}
@@ -1156,7 +362,7 @@ function OutboundWorkflowDemoEnglish() {
                 fontSize: 12,
               }}
             >
-              <span>Last contact</span>
+              <span>{copy.lastContact}</span>
               <strong>{lead.last}</strong>
             </div>
             <div
@@ -1169,7 +375,7 @@ function OutboundWorkflowDemoEnglish() {
                 fontSize: 12,
               }}
             >
-              <span>Sample score</span>
+              <span>{copy.sampleScore}</span>
               <strong style={{ color: DEMO.ink }}>
                 {lead.score}/100
               </strong>
@@ -1207,7 +413,7 @@ function OutboundWorkflowDemoEnglish() {
                     color: DEMO.schiefer,
                   }}
                 >
-                  Score threshold
+                  {copy.threshold}
                 </span>
                 <span
                   style={{
@@ -1226,7 +432,7 @@ function OutboundWorkflowDemoEnglish() {
                 step={1}
                 value={minScore}
                 onChange={(e) => setMinScore(Number(e.target.value))}
-                aria-label="Minimum score threshold for outreach"
+                aria-label={copy.thresholdLabel}
                 aria-valuemin={0}
                 aria-valuemax={100}
                 aria-valuenow={minScore}
@@ -1241,7 +447,7 @@ function OutboundWorkflowDemoEnglish() {
         </section>
 
         <section
-          aria-label="Draft email"
+          aria-label={copy.draftLabel}
           style={{
             minWidth: 0,
             border: `1px solid ${DEMO.ink}`,
@@ -1263,9 +469,11 @@ function OutboundWorkflowDemoEnglish() {
             }}
           >
             <strong style={{ color: "var(--color-kupfer-light)" }}>
-              Review draft
+              {copy.draft}
             </strong>
-            <span style={{ overflowWrap: "anywhere" }}>to: {lead.address}</span>
+            <span style={{ overflowWrap: "anywhere" }}>
+              {copy.to}: {lead.address}
+            </span>
             <span
               role={gated ? "alert" : undefined}
               style={{
@@ -1273,7 +481,7 @@ function OutboundWorkflowDemoEnglish() {
                 color: gated ? "#fca5a5" : "#fbbf24",
               }}
             >
-              {gated ? "Hold: below threshold" : "Qualified, not sent"}
+              {gated ? copy.hold : copy.qualified}
             </span>
           </div>
           <div
@@ -1284,7 +492,7 @@ function OutboundWorkflowDemoEnglish() {
               lineHeight: 1.5,
             }}
           >
-            <span style={{ color: DEMO.schiefer }}>Subject: </span>
+            <span style={{ color: DEMO.schiefer }}>{copy.subject}: </span>
             <strong>{lead.subject}</strong>
           </div>
           <div
@@ -1310,8 +518,7 @@ function OutboundWorkflowDemoEnglish() {
               color: DEMO.schiefer,
             }}
           >
-            247 sample tokens · Sonnet 4.6 label · source status: unverified
-            sample
+            {copy.footer}
           </div>
         </section>
       </div>
@@ -1336,7 +543,7 @@ function OutboundWorkflowDemoEnglish() {
             cursor: "pointer",
           }}
         >
-          {showControls ? "Hide pre-send controls" : "Show pre-send controls"}
+          {showControls ? copy.hideControls : copy.showControls}
         </button>
         {showControls && (
           <ul
@@ -1349,10 +556,9 @@ function OutboundWorkflowDemoEnglish() {
               lineHeight: 1.5,
             }}
           >
-            <li>Document the lawful basis and purpose limitation.</li>
-            <li>Verify the contact source, address, and current relevance.</li>
-            <li>Provide a working opt-out path before any real delivery.</li>
-            <li>Require a named human reviewer to approve the final text.</li>
+            {copy.controls.map((control) => (
+              <li key={control}>{control}</li>
+            ))}
           </ul>
         )}
       </section>

@@ -14,8 +14,9 @@ const COPY = {
     unavailable: "Hier nicht verfügbar",
     groupUnavailable: "hier nicht verfügbar",
     overviewAction: "Hier nicht verfügbar · Kursübersicht",
-    alternative: "Offene Alternative ohne Lernkonto: Claude Course",
+    alternative: "Offene Alternative ohne Lernkonto: Claude-Kurs",
     foundation: "KI-Führerschein",
+    openCourse: "Claude-Kurs",
   },
   en: {
     open: "No account needed",
@@ -26,6 +27,7 @@ const COPY = {
     overviewAction: "Unavailable here · Course overview",
     alternative: "Open alternative without an account: Claude Course",
     foundation: "Everyday AI Literacy",
+    openCourse: "Claude Course",
   },
 } as const;
 
@@ -127,7 +129,7 @@ for (const locale of ["de", "en"] as const) {
         await expect(card).toHaveAttribute("data-home-continue-card", "start");
         await expect(card).toHaveAttribute("data-home-course-access", "open");
         await expect(card).toHaveAttribute("href", lesson);
-        await expect(card).toContainText("Claude Course");
+        await expect(card).toContainText(copy.openCourse);
         const disclosure = card.locator("[data-home-access-label]");
         await expect(disclosure).toHaveText(copy.open);
         // No scroll before these checks: the first decision must already fit.
@@ -157,7 +159,7 @@ for (const locale of ["de", "en"] as const) {
         await openHydrated(page, atlasRoute);
         const proof = page.getByTestId("next-proof");
         await expect(
-          proof.getByRole("heading", { name: "Claude Course" }),
+          proof.getByRole("heading", { name: copy.openCourse }),
         ).toBeVisible();
         await expect(
           proof.getByText(copy.recommendation, { exact: true }),

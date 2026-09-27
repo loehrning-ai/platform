@@ -159,7 +159,12 @@ function LogoWordmark({
       href={localizeHref("/", locale)}
       prefetch={false}
       onClick={onNavigate}
-      className="inline-flex min-h-11 min-w-0 shrink items-center outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      // An inset ring: the link sits 2px inside the 48px bar, so an outer
+      // ring lost its top edge to the viewport and put its bottom edge on the
+      // band below (Mennige on Rost 1.07:1). The 6px side padding (and the
+      // equal negative margin, so the tile does not move) keeps the ring on
+      // paper, clear of the Mennige tile.
+      className="-mx-1.5 inline-flex min-h-11 min-w-0 shrink items-center px-1.5 outline-none focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange"
     >
       <span
         data-logo-mark
@@ -614,7 +619,7 @@ export function Nav() {
                   routePathname === hrefPathname(link.href) ? "page" : undefined
                 }
                 className={cn(
-                  "inline-flex min-h-11 items-center border-y-2 border-t-transparent px-1 text-sm font-medium transition-colors duration-[120ms] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
+                  "inline-flex min-h-11 min-w-11 items-center justify-center border-y-2 border-t-transparent px-1 text-sm font-medium transition-colors duration-[120ms] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
                   isActivePath(link.href)
                     ? "border-b-foreground text-foreground"
                     : "border-b-transparent text-muted-foreground",

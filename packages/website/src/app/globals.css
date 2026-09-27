@@ -48,7 +48,7 @@
   font-weight: 700;
 }
 
-/* The metric fallback while Loehrning Sans loads (font-display: optional).
+/* The metric fallback while Loehrning Sans loads (optional font display).
    Liberation Sans and Arimo share Arial's metrics, so Linux and Android get
    the face the overrides were tuned for instead of a wider system face; the
    700 face keeps poster titles in a real bold rather than a synthetic one. */
@@ -719,9 +719,11 @@
   /* Poster headline: the longest unbreakable word always fits its column.
      --fit is the em width of that word (src/lib/plakat/fit.ts), set inline by
      the component. The column must be an inline-size container (@container).
-     The 2.25rem floor holds the display size for the longest German words. */
+     The 2.125rem floor holds the display size for the longest German words:
+     "Geschäftsberichte" on the Arial-metric fallback face still fits 288px
+     at 320 (the optional font display can leave a first visit on it). */
   .poster-title {
-    font-size: max(2.25rem, min(var(--text-poster), calc(100cqi / var(--fit, 0.01))));
+    font-size: max(2.125rem, min(var(--text-poster), calc(100cqi / var(--fit, 0.01))));
     line-height: var(--text-poster--line-height);
     letter-spacing: var(--text-poster--letter-spacing);
     font-weight: 700;

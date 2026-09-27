@@ -50,6 +50,21 @@
   var btn = document.getElementById("print-page");
   if (btn) btn.addEventListener("click", function () { window.print(); });
 
+  // Field card on a phone: the case figures fold behind one button, so the card fits one screen.
+  // Print (and a wide screen) always show them; without JavaScript they stay visible.
+  var cases = document.getElementById("fc-case-toggle");
+  var table = document.getElementById("fc");
+  if (cases && table) {
+    document.documentElement.classList.add("fc-js");
+    cases.hidden = false;
+    cases.addEventListener("click", function () {
+      var open = table.getAttribute("data-cases") !== "open";
+      if (open) table.setAttribute("data-cases", "open"); else table.removeAttribute("data-cases");
+      cases.setAttribute("aria-expanded", open ? "true" : "false");
+      cases.textContent = open ? "Hide the case figures" : "Show the case figures";
+    });
+  }
+
   var folds = document.querySelectorAll("details.g-fold");
   if (folds.length) {
     var setAll = function (open) { for (var i = 0; i < folds.length; i++) folds[i].open = open; };

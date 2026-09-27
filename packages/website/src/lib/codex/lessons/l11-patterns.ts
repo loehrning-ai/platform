@@ -33,7 +33,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "A task's shape decides what you can inspect afterwards. These patterns make requirements, repository evidence and verification boundaries explicit; each still needs a suitable environment and a human reading the diff. When a result is wrong, check request, repository context, environment, diff and checks one at a time.",
+            "A task's shape decides what you can inspect afterwards. These patterns make requirements, repository evidence and verification boundaries visible; each still needs a suitable environment and a human reading the diff. When a result is wrong, check request, repository context, environment, diff and checks one at a time.",
         },
       ],
     },

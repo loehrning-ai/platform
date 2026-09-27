@@ -1,6 +1,6 @@
 import type { ComponentType } from "react";
 import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import { DeineRechte } from "../deine-rechte";
 import { Grundlagen } from "../grundlagen";
 import { Hero } from "../hero";
@@ -17,17 +17,6 @@ import { QuellenEn } from "./quellen";
 import { RisikoklassenEn } from "./risikoklassen";
 import { Stand2026En } from "./stand-2026";
 import { ZeitplanEn } from "./zeitplan";
-
-vi.mock("../../../_components/hero-dots-field", () => ({
-  HeroDotsField: () => (
-    <svg
-      className="hero__field"
-      id="hero-dots"
-      viewBox="0 0 1200 700"
-      aria-hidden="true"
-    />
-  ),
-}));
 
 afterEach(cleanup);
 

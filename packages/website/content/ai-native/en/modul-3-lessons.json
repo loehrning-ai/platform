@@ -273,7 +273,7 @@
                   },
                   {
                     "id": "vt_s2",
-                    "question": "Note: customer dossier for Customer Alpha (explicitly fictitious; product history, contacts, buying patterns).",
+                    "question": "Note: customer dossier for Customer Alpha (fictitious; product history, contacts, buying patterns).",
                     "options": [
                       {
                         "id": "a",
@@ -748,7 +748,7 @@
               },
               {
                 "label": "Variant C: RCTFC + structured output",
-                "prompt": "Role: Chief of Staff, writing for management.\nContext: daily notes from 2026-04-14 to 2026-04-20 in the vault.\nTask: create a weekly report.\n\nFormat: Markdown, 3 sections (1. Highlights, 3 bullet points, max 15 words each; 2. Blockers with a proposed solution, max 3; 3. Next week, max 5 lines).\nOff-limits: adverbs like \"successful\", \"productive\", \"focused\".\nSource: facts from the notes only, no additions or opinions.\nConstraint: if the time frame has no data, say so and make nothing up.",
+                "prompt": "Role: Chief of Staff, writing for management.\nContext: daily notes from 2026-04-14 to 2026-04-20 in the vault.\nTask: create a weekly report.\n\nFormat: Markdown, 3 sections (1. Highlights, 3 bullet points, max 15 words each; 2. Blockers with a proposed solution, max 3; 3. Next week, max 5 lines).\n\nOff-limits: adverbs like \"successful\", \"productive\", \"focused\".\nSource: facts from the notes only, no additions or opinions.\nConstraint: if the time frame has no data, say so and make nothing up.",
                 "critique": "The brief sets RCTFC fields, an output schema, banned wording and a source rule. That makes repeated outputs comparable and reviewable.",
                 "rating": 5
               }
@@ -863,7 +863,7 @@
           "id": "modul_3_lesson_6_section_2",
           "title": "Setup",
           "readTimeMinutes": 4,
-          "content": "The course bundle contains `install-obsidian-claude-code-mcp.sh`. Read every setup script before you run it.\n\n**Before execution:**\n1. Read the script and pinned dependency versions\n2. Verify the repository URL and commit\n3. Back up the Claude Code configuration\n4. Set an explicit path to a copied practice vault\n5. Review loopback binding, port and authentication for the bridge\n6. Confirm that existing MCP entries are not overwritten\n7. Do not provide secrets as command arguments\n\nThen test start and stop, and record changed files, running processes and the complete rollback."
+          "content": "The course bundle contains `install-obsidian-claude-code-mcp.sh`. Read every setup script before you run it.\n\n**Before execution:**\n1. Read the script and pinned dependency versions\n2. Verify the repository URL and commit\n3. Back up the Claude Code configuration\n4. Set the path to a copied practice vault\n5. Review loopback binding, port and authentication for the bridge\n6. Confirm that existing MCP entries are not overwritten\n7. Do not provide secrets as command arguments\n\nThen test start and stop, and record changed files, running processes and the complete rollback."
         },
         {
           "id": "modul_3_lesson_6_section_3",

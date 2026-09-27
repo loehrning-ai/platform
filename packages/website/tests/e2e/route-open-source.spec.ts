@@ -183,11 +183,21 @@ async function expectSharedDetailContract(
   }
 
   if (artifact.kind !== "video") {
-    // The guide's data-flow paragraph is the honesty surface for a hosted
+    // The guide's data-flow statement is the honesty surface for a hosted
     // instance: it must be readable on the page, not only in the registry.
-    await expect(
-      page.getByText(artifact.guide.dataFlow, { exact: true }),
-    ).toBeVisible();
+    // It renders one fact per list item, so its words must all appear there,
+    // in order; only the list's clause breaks and final stops may differ.
+    const words = (text: string) =>
+      text
+        .toLocaleLowerCase()
+        .replace(/[.;]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    const dataFlow = page.locator('section[aria-labelledby$="-data-flow"] ul');
+    await expect(dataFlow).toBeVisible();
+    expect(words(await dataFlow.innerText())).toBe(
+      words(artifact.guide.dataFlow),
+    );
   }
 }
 

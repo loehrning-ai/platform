@@ -76,10 +76,14 @@ export interface PostCopy {
   readonly keywords: readonly string[];
   /** Shown on a row whose linked page is in the other language. */
   readonly otherLanguage: Readonly<Partial<Record<PageLanguage, string>>>;
-  readonly metaArticle: string;
   readonly metaReading: string;
   readonly lede: string;
-  readonly intro: string;
+  /** The hero's action row: jump to the sheet, print it, download it. */
+  readonly heroActions: {
+    readonly jump: string;
+    readonly print: string;
+    readonly download: string;
+  };
   readonly facts: readonly {
     readonly label: string;
     readonly value: string;
@@ -230,11 +234,13 @@ export const POST_COPY: Readonly<Record<Locale, PostCopy>> = {
       "KI-Verordnung",
     ],
     otherLanguage: { en: "auf Englisch" },
-    metaArticle: "Artikel",
     metaReading: "Min. Lesezeit",
-    lede: "Wenn dein Betrieb einen KI-Tutor, eine Lernplattform oder einen Schreibassistenten für Azubis einführt, fallen die wichtigen Entscheidungen vor dem ersten Login. Es geht darum, welche Daten anfallen, wer Ergebnisse sieht und was im Berichtsheft erlaubt ist. Hier stehen die Rechte von JAV und Betriebsrat, die Regeln für Berichtsheft und Prüfung und eine Fragenliste zum Ausdrucken.",
-    intro:
-      "Nach dem Lesen kannst du die Fragen stellen, die bei einem KI-Werkzeug in der Ausbildung auf den Tisch gehören, und weißt, wer welches Recht hat.",
+    lede: "Wenn dein Betrieb einen KI-Tutor, eine Lernplattform oder einen Schreibassistenten für Azubis einführt, fallen die wichtigen Entscheidungen vor dem ersten Login.",
+    heroActions: {
+      jump: "Zur Fragenliste",
+      print: "Drucken",
+      download: "Markdown",
+    },
     facts: [
       {
         label: "Für",
@@ -244,14 +250,15 @@ export const POST_COPY: Readonly<Record<Locale, PostCopy>> = {
       { label: "Stand", value: "{stand}. Keine Rechtsberatung." },
       {
         label: "Fragenliste",
-        value:
-          "Frei nutzbar unter CC BY 4.0, [zum Drucken und Herunterladen](#fragen).",
+        value: "Frei nutzbar unter CC BY 4.0.",
       },
     ],
     warumJetzt: {
       paragraphs: [
-        "Vom {range:de-betrvg-64-jav-election-start-2026-10-01:de-betrvg-64-jav-election-end-2026-11-30} laufen die regelmäßigen Wahlen der Jugend- und Auszubildendenvertretung, kurz JAV ([§ 64 Abs. 1 BetrVG](betrvg:64)). Gewählt wird in Betrieben, in denen in der Regel mindestens fünf Beschäftigte jünger als 18 sind oder eine Ausbildung machen ([§ 60 Abs. 1 BetrVG](betrvg:60)). Nach überwiegender Auffassung braucht es dafür außerdem einen Betriebsrat. Wählen dürfen alle Jugendlichen unter 18 und alle Azubis, unabhängig vom Alter ([§ 61 Abs. 1 BetrVG](betrvg:61)).",
-        "Zur selben Zeit kommt KI in die Ausbildung, als Tutor, als Lernplattform oder als Hilfe beim Berichtsheft. Seit 2021 nennt das Betriebsverfassungsgesetz Künstliche Intelligenz an drei Stellen ausdrücklich ([§ 80 Abs. 3](betrvg:80), [§ 90 Abs. 1 Nr. 3](betrvg:90) und [§ 95 Abs. 2a BetrVG](betrvg:95)). Die KI-Verordnung der EU verbietet seit {date:ai-act-article-5-prohibited-2025-02-02} Emotionserkennung am Arbeitsplatz und in Bildungseinrichtungen. Für KI, die Lernergebnisse bewertet oder Personal auswählt, gelten ab {date:ai-act-high-risk-areas-adopted-2027-12-02} Hochrisiko-Pflichten.",
+        "Vom {range:de-betrvg-64-jav-election-start-2026-10-01:de-betrvg-64-jav-election-end-2026-11-30} laufen die regelmäßigen Wahlen der Jugend- und Auszubildendenvertretung, kurz JAV ([§ 64 Abs. 1 BetrVG](betrvg:64)). Gewählt wird in Betrieben, in denen in der Regel mindestens fünf Beschäftigte jünger als 18 sind oder eine Ausbildung machen ([§ 60 Abs. 1 BetrVG](betrvg:60)).",
+        "Nach überwiegender Auffassung braucht es dafür außerdem einen Betriebsrat. Wählen dürfen alle Jugendlichen unter 18 und alle Azubis, unabhängig vom Alter ([§ 61 Abs. 1 BetrVG](betrvg:61)).",
+        "Zur selben Zeit kommt KI in die Ausbildung, als Tutor, als Lernplattform oder als Hilfe beim Berichtsheft. Seit 2021 nennt das Betriebsverfassungsgesetz Künstliche Intelligenz an drei Stellen ausdrücklich ([§ 80 Abs. 3](betrvg:80), [§ 90 Abs. 1 Nr. 3](betrvg:90) und [§ 95 Abs. 2a BetrVG](betrvg:95)).",
+        "Die KI-Verordnung der EU verbietet seit {date:ai-act-article-5-prohibited-2025-02-02} Emotionserkennung am Arbeitsplatz und in Bildungseinrichtungen. Für KI, die Lernergebnisse bewertet oder Personal auswählt, gelten ab {date:ai-act-high-risk-areas-adopted-2027-12-02} Hochrisiko-Pflichten.",
         "Im öffentlichen Dienst gelten andere Gesetze und andere Wahltermine.",
       ],
       routeLabel: "Termine",
@@ -352,13 +359,15 @@ export const POST_COPY: Readonly<Record<Locale, PostCopy>> = {
       printNote: "Druckt auf A4, keine Frage wird auf zwei Seiten getrennt.",
       exerciseLabel: "Übung · 15 Minuten",
       exercise:
-        "Wähl ein Werkzeug, das in eurer Ausbildung schon läuft, zum Beispiel eine Lernplattform. Beantworte die Fragen [3](#frage-3), [6](#frage-6) und [7](#frage-7) so weit, wie du es ohne Rückfrage kannst. Jede Lücke ist ein Punkt für die nächste JAV-Sitzung.",
+        "Wähl ein Werkzeug, das in eurer Ausbildung schon läuft, zum Beispiel eine Lernplattform. Beantworte [die Fragen 3, 6 und 7](#frage-3) so weit, wie du es ohne Rückfrage kannst. Jede Lücke ist ein Punkt für die nächste JAV-Sitzung.",
     },
     berichtsheft: [
-      "Das Berufsbildungsgesetz verlangt einen schriftlichen oder elektronischen Ausbildungsnachweis ([§ 13 S. 2 Nr. 7 BBiG](bbig:13)). Welche der beiden Formen gilt, steht im Ausbildungsvertrag ([§ 11 Abs. 1 BBiG](bbig:11)). Womit du ihn schreibst, regelt das Gesetz nicht. Der Eintrag muss trotzdem stimmen, denn dein Betrieb sieht den Nachweis regelmäßig durch ([§ 14 Abs. 2 BBiG](bbig:14)), und für die Zulassung zur Abschlussprüfung muss er über deinen Betrieb schriftlich oder elektronisch vorgelegt werden ([§ 43 Abs. 1 Nr. 2 BBiG](bbig:43)).",
+      "Das Berufsbildungsgesetz verlangt einen schriftlichen oder elektronischen Ausbildungsnachweis ([§ 13 S. 2 Nr. 7 BBiG](bbig:13)). Welche der beiden Formen gilt, steht im Ausbildungsvertrag ([§ 11 Abs. 1 BBiG](bbig:11)).",
+      "Womit du ihn schreibst, regelt das Gesetz nicht. Der Eintrag muss trotzdem stimmen, denn dein Betrieb sieht den Nachweis regelmäßig durch ([§ 14 Abs. 2 BBiG](bbig:14)), und für die Zulassung zur Abschlussprüfung muss er über deinen Betrieb schriftlich oder elektronisch vorgelegt werden ([§ 43 Abs. 1 Nr. 2 BBiG](bbig:43)).",
       "Seit dem {date:de-bbig-43-record-without-signature-2024-08-01} verlangt das Gesetz für die Zulassung keine Unterschriften von Ausbilder und Azubi mehr. Wie deine Kammer die Vorlage regelt, steht in ihren Hinweisen zum Ausbildungsnachweis.",
       "Betriebs- und Geschäftsgeheimnisse musst du für dich behalten (§ 13 S. 2 Nr. 6 BBiG). Sie gehören deshalb nicht in ein KI-Werkzeug, das dein Betrieb nicht freigegeben hat.",
-      `In der Prüfung gilt die Prüfungsordnung deiner Kammer ([§ 47 BBiG](bbig:47)). Welche Hilfsmittel erlaubt sind, legen Prüfungsordnung und Kammer fest, und nicht zugelassene Hilfsmittel können als Täuschung gewertet werden. Einige Kammern verlangen bei Haus- und Projektarbeiten, KI-Nutzung zu kennzeichnen und Prompts zu dokumentieren, zum Beispiel die [IHK Darmstadt](${IHK_DARMSTADT}) und die [Handelskammer Bremen](${HK_BREMEN}). Lies die Regel deiner Kammer, bevor du anfängst.`,
+      `In der Prüfung gilt die Prüfungsordnung deiner Kammer ([§ 47 BBiG](bbig:47)). Welche Hilfsmittel erlaubt sind, legen Prüfungsordnung und Kammer fest, und nicht zugelassene Hilfsmittel können als Täuschung gewertet werden.`,
+      `Einige Kammern verlangen bei Haus- und Projektarbeiten, KI-Nutzung zu kennzeichnen und Prompts zu dokumentieren, zum Beispiel die [IHK Darmstadt](${IHK_DARMSTADT}) und die [Handelskammer Bremen](${HK_BREMEN}). Lies die Regel deiner Kammer, bevor du anfängst.`,
     ],
     grenzen: [
       "Die Liste zeigt, welche Fragen sich aus den Gesetzen ergeben. Ob ein bestimmtes Werkzeug in deinem Betrieb zulässig ist, kann sie nicht sagen, dafür braucht es die Antworten und den Einzelfall.",
@@ -534,11 +543,13 @@ export const POST_COPY: Readonly<Record<Locale, PostCopy>> = {
       "AI Act",
     ],
     otherLanguage: { de: "in German" },
-    metaArticle: "Article",
     metaReading: "min read",
-    lede: "When your company introduces an AI tutor, a learning platform or a writing assistant for trainees, the important decisions are made before the first login. They cover which data is recorded, who sees results and what is allowed in the training record. This page sets out the rights of the youth and trainee representation (JAV) and the works council, the rules for the training record and exams, and a question list you can print.",
-    intro:
-      "After reading, you can ask the questions that belong on the table when an AI tool enters apprenticeship training, and you know who holds which right.",
+    lede: "When your company introduces an AI tutor, a learning platform or a writing assistant for trainees, the important decisions are made before the first login.",
+    heroActions: {
+      jump: "To the question list",
+      print: "Print",
+      download: "Markdown",
+    },
     facts: [
       {
         label: "For",
@@ -548,13 +559,15 @@ export const POST_COPY: Readonly<Record<Locale, PostCopy>> = {
       { label: "Status", value: "{stand}. Not legal advice." },
       {
         label: "Question list",
-        value: "Free to reuse under CC BY 4.0, [to print and download](#fragen).",
+        value: "Free to reuse under CC BY 4.0.",
       },
     ],
     warumJetzt: {
       paragraphs: [
-        "The regular elections of the youth and trainee representation, the {de:Jugend- und Auszubildendenvertretung} or JAV, run from {range:de-betrvg-64-jav-election-start-2026-10-01:de-betrvg-64-jav-election-end-2026-11-30} ([Section 64(1) BetrVG](betrvg:64), the Works Constitution Act). Elections take place in establishments that normally employ at least five people who are under 18 or in vocational training ([Section 60(1) BetrVG](betrvg:60)). The prevailing view is that a works council must also exist. Everyone under 18 and every trainee, whatever their age, may vote ([Section 61(1) BetrVG](betrvg:61)).",
-        "At the same time AI is entering apprenticeship training as a tutor, a learning platform or help with the training record. Since 2021 the Works Constitution Act has named artificial intelligence explicitly in three places ([Section 80(3)](betrvg:80), [Section 90(1) no. 3](betrvg:90) and [Section 95(2a) BetrVG](betrvg:95)). The EU AI Act has prohibited emotion recognition in the workplace and in education institutions since {date:ai-act-article-5-prohibited-2025-02-02}. High-risk obligations for AI that assesses learning outcomes or selects staff apply from {date:ai-act-high-risk-areas-adopted-2027-12-02}.",
+        "The regular elections of the youth and trainee representation, the {de:Jugend- und Auszubildendenvertretung} or JAV, run from {range:de-betrvg-64-jav-election-start-2026-10-01:de-betrvg-64-jav-election-end-2026-11-30} ([Section 64(1) BetrVG](betrvg:64), the Works Constitution Act). Elections take place in establishments that normally employ at least five people who are under 18 or in vocational training ([Section 60(1) BetrVG](betrvg:60)).",
+        "The prevailing view is that a works council must also exist. Everyone under 18 and every trainee, whatever their age, may vote ([Section 61(1) BetrVG](betrvg:61)).",
+        "At the same time AI is entering apprenticeship training as a tutor, a learning platform or help with the training record. Since 2021 the Works Constitution Act has named artificial intelligence explicitly in three places ([Section 80(3)](betrvg:80), [Section 90(1) no. 3](betrvg:90) and [Section 95(2a) BetrVG](betrvg:95)).",
+        "The EU AI Act has prohibited emotion recognition in the workplace and in education institutions since {date:ai-act-article-5-prohibited-2025-02-02}. High-risk obligations for AI that assesses learning outcomes or selects staff apply from {date:ai-act-high-risk-areas-adopted-2027-12-02}.",
         "The public sector has different laws and different election dates.",
       ],
       routeLabel: "Dates",
@@ -659,13 +672,15 @@ export const POST_COPY: Readonly<Record<Locale, PostCopy>> = {
       printNote: "Prints on A4, and no question breaks across two pages.",
       exerciseLabel: "Exercise · 15 minutes",
       exercise:
-        "Pick a tool that already runs in your apprenticeship training, for example a learning platform. Answer questions [3](#frage-3), [6](#frage-6) and [7](#frage-7) as far as you can without asking anyone. Every gap is an item for the next JAV meeting.",
+        "Pick a tool that already runs in your apprenticeship training, for example a learning platform. Answer [questions 3, 6 and 7](#frage-3) as far as you can without asking anyone. Every gap is an item for the next JAV meeting.",
     },
     berichtsheft: [
-      "The Vocational Training Act requires a written or electronic training record ([Section 13 sentence 2 no. 7 BBiG](bbig:13)). Which of the two applies is set in the training contract ([Section 11(1) BBiG](bbig:11)). The Act does not say what you write it with. The entry still has to be accurate, because your company reviews the record regularly ([Section 14(2) BBiG](bbig:14)) and, for admission to the final exam, the record has to be submitted in writing or electronically through your company ([Section 43(1) no. 2 BBiG](bbig:43)).",
+      "The Vocational Training Act requires a written or electronic training record ([Section 13 sentence 2 no. 7 BBiG](bbig:13)). Which of the two applies is set in the training contract ([Section 11(1) BBiG](bbig:11)).",
+      "The Act does not say what you write it with. The entry still has to be accurate, because your company reviews the record regularly ([Section 14(2) BBiG](bbig:14)) and, for admission to the final exam, the record has to be submitted in writing or electronically through your company ([Section 43(1) no. 2 BBiG](bbig:43)).",
       "Since {date:de-bbig-43-record-without-signature-2024-08-01} the Act no longer requires the record to be signed by the trainer and the trainee for admission. Your chamber's notes on the training record say how it handles the submission.",
       "You must keep trade and business secrets to yourself (Section 13 sentence 2 no. 6 BBiG). They therefore do not belong in an AI tool your company has not approved.",
-      `In the exam, the exam regulations of your chamber apply ([Section 47 BBiG](bbig:47)). The exam regulations and the chamber decide which aids are allowed, and unauthorised aids can be treated as cheating. Some chambers require trainees to label AI use in home assignments and project work and to document their prompts, for example [IHK Darmstadt](${IHK_DARMSTADT}) and [Handelskammer Bremen](${HK_BREMEN}). Read your chamber's rule before you start.`,
+      `In the exam, the exam regulations of your chamber apply ([Section 47 BBiG](bbig:47)). The exam regulations and the chamber decide which aids are allowed, and unauthorised aids can be treated as cheating.`,
+      `Some chambers require trainees to label AI use in home assignments and project work and to document their prompts, for example [IHK Darmstadt](${IHK_DARMSTADT}) and [Handelskammer Bremen](${HK_BREMEN}). Read your chamber's rule before you start.`,
     ],
     grenzen: [
       "The list shows which questions follow from the law. It cannot tell you whether a specific tool is lawful in your company, which depends on the answers and on the individual case.",

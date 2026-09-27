@@ -16,9 +16,9 @@ import WordDemo from "./word-demo";
  *    budget) and the SIMULIERT badge + "Neu erstellen" label appear.
  *
  * matchMedia's default polyfill reports normal motion, so we drive the ladder
- * with fake timers. The metric labels ("Erstellzeit" ...) render in every state
- * (only their values are visibility-toggled), so generation is detected via the
- * filled brief, the badge and the button label instead.
+ * with fake timers. Generation is detected via the filled brief, the badge and
+ * the button label. The German letter mirrors the English one: a fixed sample
+ * date, one fictional company, no invented metric tiles.
  */
 
 afterEach(() => {
@@ -57,6 +57,16 @@ describe("<WordDemo>", () => {
     expect(screen.getByText("Simuliert")).toBeInTheDocument();
     expect(screen.queryByText(/Eckdaten ausfüllen und/)).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Neu erstellen/ })).toBeEnabled();
+  });
+
+  it("mirrors the English letter: fixed sample date, no invented metrics", () => {
+    const { container } = render(<WordDemo />);
+    expect(screen.getByText("Berlin · Beispieldatum 8. August 2026")).toBeInTheDocument();
+    expect(screen.getByText(/ist eine Annahme, keine Freigabe/)).toBeInTheDocument();
+    expect(container.querySelector("[data-word-metrics]")).toBeNull();
+    for (const invented of [/Stil-Treffer/, /Erstellzeit/, /BEISPIELWERK/, /neutrale Prüfstand/]) {
+      expect(container.textContent ?? "").not.toMatch(invented);
+    }
   });
 
   it("re-derives the doc filename live when the Adressat changes", () => {
