@@ -902,8 +902,8 @@
     },
     {
       "path": "packages/website/tests/e2e/__screenshots__/visual-regression.spec.ts/books-desktop.png",
-      "sizeBytes": 137085,
-      "sha256": "051e52d177d3ae98d63586b258b443305525d6cd7e524e34c4dc225647f64340",
+      "sizeBytes": 81908,
+      "sha256": "2dbd1739b846b8e7dab917e8b589ffadfd1582dba894a96d416d2185a389d982",
       "owner": "Tim L\u00f6hr",
       "source": "Playwright-generated visual regression baseline from this repository",
       "license": "LicenseRef-Loehrning-Editorial",
