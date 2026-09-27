@@ -229,10 +229,13 @@ test.describe("/demos/[slug] detail routes", () => {
     // Final state first: an answered example, not an empty prompt.
     await expect(page.getByText("3 Monate zum Quartalsende")).toBeVisible();
     await expect(page.getByText("Frag das Beispielarchiv.")).toHaveCount(0);
-    // The first Fundstelle sits under the answer, above the tab bar.
-    const citation = page.getByText(
-      "Quelle: Rahmenvereinbarung v3.2, §12.3 Kündigung",
-    );
+    // The first Fundstelle sits under the answer, above the tab bar. The
+    // server paints a static first frame with the same line; measure the
+    // interactive engine's line, which replaces it once the chunk loads, so
+    // the box is not read mid-swap.
+    const citation = page
+      .locator("[data-rag-inline-source]")
+      .filter({ hasText: "Quelle: Rahmenvereinbarung v3.2, §12.3 Kündigung" });
     await expect(citation).toBeVisible();
     const citationBox = await citation.boundingBox();
     expect(
