@@ -9,9 +9,10 @@ import {
 } from "react";
 import { Kicker } from "@/components/werk";
 import { cx } from "@/components/werk/cx";
-import { CapsLine, PosterArt } from "@/components/plakat";
+import { CapsLine } from "@/components/plakat";
 import { coursePlakat, type CoursePlakat } from "@/lib/plakat/palettes";
 import { posterTitleFallbackStyle } from "@/lib/plakat/fit";
+import { CoursePosterArt } from "./course-poster-art";
 
 interface TechnicalCourseFrameProps {
   readonly children: ReactNode;
@@ -242,10 +243,12 @@ export function TechnicalCourseFrame({
 
 /**
  * The course's poster from lg (SPEC §3.1, §3.13): the full band height
- * against the band's right edge, behind the text column, so its shapes bleed
- * off the band's right and bottom edges as on the workshop bands. The
- * poster is pinned to the bottom-right corner (meet); its ground fills the
- * rest of the column in the band's own colour.
+ * against the band's right edge, behind the text column, so its shapes end
+ * at the band's right and bottom edges as on the workshop bands. The poster
+ * is pinned to the bottom-right corner (meet); its scene background fills
+ * the rest of the column in the band's own colour. The shapes are cut to
+ * the poster's canvas as geometry (CoursePosterArt), so no path box runs
+ * past the band while the picture stays the same.
  */
 function HeaderArt({ scene }: { readonly scene: CoursePlakat }): JSX.Element {
   return (
@@ -254,20 +257,15 @@ function HeaderArt({ scene }: { readonly scene: CoursePlakat }): JSX.Element {
       data-plakat-art=""
       className={cx("pointer-events-none absolute inset-y-0 right-0 -z-10 hidden lg:block", BAND_ART_WIDTH)}
     >
-      <PosterArt
-        plakat={scene.plakat}
-        motif={scene.motif}
-        numeral={scene.numeral}
-        format="portrait"
-        cornerDots={false}
-      />
+      <CoursePosterArt scene={scene} format="portrait" />
     </div>
   );
 }
 
 /**
  * The course's poster below lg: a full-bleed 16:9 row at the band's bottom
- * edge, the numeral (Grundlagenpfad) and the motif at full column width.
+ * edge, the numeral (Grundlagenpfad) and the motif at full column width,
+ * cut to the canvas as on lg.
  */
 function HeaderArtPhone({ scene }: { readonly scene: CoursePlakat }): JSX.Element {
   return (
@@ -276,13 +274,7 @@ function HeaderArtPhone({ scene }: { readonly scene: CoursePlakat }): JSX.Elemen
       data-plakat-art-phone=""
       className="pointer-events-none col-span-full aspect-[16/9] max-h-72 w-full lg:hidden"
     >
-      <PosterArt
-        plakat={scene.plakat}
-        motif={scene.motif}
-        numeral={scene.numeral}
-        format="landscape"
-        cornerDots={false}
-      />
+      <CoursePosterArt scene={scene} format="landscape" />
     </div>
   );
 }
@@ -351,21 +343,23 @@ export function TechnicalCourseHeader({
           </div>
 
           {/* The facts are one line under the actions at every width (14px
-              on a phone, 17px from lg), as on the workshop posters. Each
-              item starts with its "·"; the list sits 1.25em left inside a
-              clipping box, so the separator of the first item on every line
-              is cut off and a wrapped line never starts or ends with "·". */}
+              on a phone, 17px from lg), as on the workshop posters. Items
+              are 1.25em apart, and each "·" hangs in the gap before its
+              item. The list fills its clipping box exactly, so the "·" of
+              the first item on every line falls outside the box and is cut
+              off: a wrapped line never starts or ends with "·", and no
+              element box leaves the column. */}
           <aside aria-label={factsLabel} className="mt-5 min-w-0 sm:mt-8">
             <p className="sr-only">{plainLabel(factsLabel)}</p>
             <div className="min-w-0 overflow-hidden">
               <ul
-                className="-ml-[1.25em] flex min-w-0 flex-wrap text-[0.875rem]/[1.5] lg:text-[1.0625rem]/[1.5]"
+                className="flex min-w-0 flex-wrap gap-x-[1.25em] text-[0.875rem]/[1.5] lg:text-[1.0625rem]/[1.5]"
                 data-course-onboarding-checklist
               >
                 {facts.map((fact) => (
                   <li
                     key={fact}
-                    className="min-w-0 break-words text-foreground tabular-nums before:inline-block before:w-[1.25em] before:text-center before:content-['·'_/_'']"
+                    className="relative min-w-0 break-words text-foreground tabular-nums before:absolute before:right-full before:w-[1.25em] before:text-center before:content-['·'_/_'']"
                   >
                     {fact}
                   </li>
