@@ -839,9 +839,28 @@ export function posterPathHitTest(d: string): (point: Point) => boolean {
       }
     }
   }
+  // Bucket the edges by the horizontal bands their y-range touches, so a
+  // point only visits edges that can cross its scanline. The result is the
+  // same nonzero winding number as a scan over every edge.
+  let minY = Infinity;
+  let maxY = -Infinity;
+  for (const [previous, next] of edges) {
+    minY = Math.min(minY, previous[1], next[1]);
+    maxY = Math.max(maxY, previous[1], next[1]);
+  }
+  const bandCount = edges.length > 64 ? 128 : 1;
+  const bandHeight = maxY > minY ? (maxY - minY) / bandCount : 1;
+  const bandOf = (y: number) => Math.min(bandCount - 1, Math.max(0, Math.floor((y - minY) / bandHeight)));
+  const bands: [Point, Point][][] = Array.from({ length: bandCount }, () => []);
+  for (const edge of edges) {
+    const low = bandOf(Math.min(edge[0][1], edge[1][1]));
+    const high = bandOf(Math.max(edge[0][1], edge[1][1]));
+    for (let band = low; band <= high; band += 1) bands[band]?.push(edge);
+  }
   return (point) => {
+    if (!(point[1] >= minY && point[1] <= maxY)) return false;
     let winding = 0;
-    for (const [previous, next] of edges) {
+    for (const [previous, next] of bands[bandOf(point[1])] ?? []) {
       if (previous[1] <= point[1] === next[1] <= point[1]) continue;
       const cross =
         (next[0] - previous[0]) * (point[1] - previous[1]) -
