@@ -99,8 +99,8 @@ export default function RepoLab({
       id: 0,
       output:
         locale === "de"
-          ? "Synthetisches Repository bereit. `help` zeigt alle erlaubten Befehle."
-          : "Synthetic repository ready. `help` lists every allowed command.",
+          ? "Repository bereit."
+          : "Repository ready.",
     },
   ]);
 
@@ -116,16 +116,15 @@ export default function RepoLab({
   const copy =
     locale === "de"
       ? {
-          engine: "Repository-Labor",
           synthetic:
-            "Browser-Simulation eines synthetischen Repositorys · keine Betriebssystem-Shell",
+            "Browser-Simulation · keine Shell",
           mode: "Ausführungsmodus",
           browserMode: "Browser-Simulation",
           browserDetail:
             "Befehle ändern nur den Übungsstand im Browser.",
           sandboxMode: "Isolierter echter Lauf",
           sandboxDetail:
-            "Startet eine kurzlebige Node-24-microVM ohne Netzwerk, nur mit synthetischen Dateien.",
+            "Startet bei Freigabe eine kurzlebige Node-24-microVM ohne Netzwerk, nur mit synthetischen Dateien.",
           sandboxTitle: "Echte Sandbox-Ausführung",
           sandboxBoundary:
             "Feste Sequenz ohne freie Shell: Ausgangslauf → roter Test → begrenzter Fix → grüner Test → echter Git-Diff.",
@@ -160,8 +159,7 @@ export default function RepoLab({
           typeEvidence: "Typecheck nach dem Patch ausgeführt",
           lintEvidence: "Lint nach dem Patch ausgeführt",
           diffEvidence: "Diff nach dem Patch inspiziert",
-          pending:
-            "Abnahme gesperrt: Nötig sind Task-Spec, alle fünf Projektphasen und eine voll attestierte echte Sandbox-Sequenz.",
+          pending: "Offen ist noch eine voll attestierte echte Sandbox-Sequenz.",
           ready:
             "Task-Spec und voll attestierte echte Sandbox-Sequenz belegt.",
           browserNonVerifying:
@@ -173,16 +171,15 @@ export default function RepoLab({
             "Repository-Labor verifiziert: Task-Spec und voll attestierte isolierte Sandbox-Sequenz mit Rot/Grün-Test, Quellprüfung und begrenztem Diff.",
         }
       : {
-          engine: "Repository lab",
           synthetic:
-            "Browser simulation of a synthetic repository · no operating-system shell",
+            "Browser simulation · no shell",
           mode: "Execution mode",
           browserMode: "Browser simulation",
           browserDetail:
             "Commands change only the exercise state in this browser.",
           sandboxMode: "Isolated real run",
           sandboxDetail:
-            "Starts a short-lived Node 24 microVM with no network and synthetic files only.",
+            "When enabled, starts a short-lived Node 24 microVM with no network and synthetic files only.",
           sandboxTitle: "Real sandbox execution",
           sandboxBoundary:
             "Fixed sequence, no free shell: baseline → failing test → bounded fix → passing test → real Git diff.",
@@ -218,8 +215,7 @@ export default function RepoLab({
           typeEvidence: "Type check run after the patch",
           lintEvidence: "Lint run after the patch",
           diffEvidence: "Post-patch diff inspected",
-          pending:
-            "Acceptance locked: needs the task spec, all five project stages and one fully attested real Sandbox sequence.",
+          pending: "Still open: one fully attested real Sandbox sequence.",
           ready:
             "Task spec and fully attested real Sandbox sequence evidenced.",
           browserNonVerifying:
@@ -513,7 +509,7 @@ export default function RepoLab({
   }
 
   return (
-    <EngineFrame config={config} locale={locale} engineLabel={copy.engine}>
+    <EngineFrame config={config} locale={locale}>
       <fieldset className="border-2 border-foreground/20 bg-background p-3">
         <legend className="px-2 font-mono text-xs font-black uppercase tracking-[0.14em]">
           {copy.mode}

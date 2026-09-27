@@ -27,10 +27,10 @@ const lesson: DataInfraLesson = {
   sections: [
     {
       id: "s1",
-      title: "CDC, why",
+      title: "Why CDC",
       readTimeMinutes: 3,
       content:
-        "You want a source database mirrored into an analytical system, deletes included. Polling works while volume, freshness, delete tracking and source load stay bounded, and needs reliable change markers and explicit delete handling.\n\n**Change Data Capture (CDC)** reads a database change interface, often a transaction log or logical replication stream, and emits row-change events. Database, connector and configuration decide event shape, ordering, before-images and delivery guarantees. Snapshots, log decoding, replication slots and retention cost source resources.\n\n**Bootstrap and continuation.** A connector takes a consistent snapshot, then streams from a recorded log position. Debezium's PostgreSQL connector offers several snapshot modes; locking, retries and duration depend on configuration and workload. With durable offsets, consumers need not repeat the snapshot.",
+        "You want a source database mirrored into an analytical system, deletes included. Polling works while volume, freshness needs and source load stay bounded, and it needs reliable change markers and explicit delete handling.\n\n**Change Data Capture (CDC)** reads a database change interface, often a transaction log or logical replication stream, and emits row-change events. Database, connector and configuration decide event shape, ordering, before-images and delivery guarantees. Snapshots, log decoding, replication slots and retention cost source resources.\n\n**Bootstrap and continuation.** A connector takes a consistent snapshot, then streams from a recorded log position. Debezium's PostgreSQL connector offers several snapshot modes; locking, retries and duration depend on configuration and workload. With durable offsets, consumers need not repeat the snapshot.",
     },
     {
       id: "s2",
@@ -51,7 +51,7 @@ const lesson: DataInfraLesson = {
       title: "Lambda vs Kappa",
       readTimeMinutes: 3,
       content:
-        "**Lambda architecture** runs a low-latency path and a separate recomputation path, reconciled in serving. The batch path can correct or rebuild results; the price is duplicated logic.\n\n**Kappa architecture** uses one stream-processing path for live work and replay. That removes the dual implementation only if the source retains complete replayable history, the same code and dependencies reproduce old semantics, sinks tolerate replay and recovery time is acceptable. Once retention expired or source data arrived by bulk snapshot, restarting from offset zero is no backfill plan.\n\nChoose one path when replay completeness and recovery objectives are proven, and keep a recomputation path for authoritative bulk data, long history, complex batch algorithms or independent reconciliation. Either way, version the business logic and check replay output against the source.",
+        "**Lambda architecture** runs a low-latency path and a separate recomputation path, reconciled in serving. The batch path can correct or rebuild results; the price is duplicated logic.\n\n**Kappa architecture** uses one stream-processing path for live work and replay. That removes the dual implementation only if the source retains complete replayable history, the same code and dependencies reproduce old semantics, sinks tolerate replay and recovery time is acceptable. Once retention has expired or source data arrived as a bulk snapshot, restarting from offset zero is not a backfill plan.\n\nChoose one path when replay completeness and recovery objectives are proven, and keep a recomputation path for authoritative bulk data, long history, complex batch algorithms or independent reconciliation. Either way, version the business logic and check replay output against the source.",
     },
     {
       id: "s5",
@@ -71,7 +71,7 @@ const lesson: DataInfraLesson = {
       title: "Vocab",
       readTimeMinutes: 2,
       content:
-        "- **WAL / binlog**, the database transaction log with ordered source positions that CDC reads.\n- **Tombstone**, a Kafka record with a key and a null value that marks a deletion.\n- **Schema registry**, stores versioned schemas and checks configured compatibility rules.\n- **Outbox pattern**, business state and an outbox row in one transaction, published asynchronously; publisher retries, deduplication and monitoring stay necessary.",
+        "- **WAL / binlog**, the database transaction log with ordered source positions that CDC reads; check permissions, retention and failover first.\n- **Tombstone**, a Kafka record with a key and a null value that marks a deletion.\n- **Schema registry**, stores versioned schemas and checks configured compatibility rules.\n- **Outbox pattern**, business state and an outbox row in one transaction, published asynchronously; publisher retries, deduplication and monitoring stay necessary.",
     },
   ],
   widgets: [
@@ -87,7 +87,7 @@ const lesson: DataInfraLesson = {
           "A team polls Postgres with `SELECT * WHERE updated_at > last_seen`. Which limitation should the design review name before comparing it with CDC?",
         options: [
           "CDC is always faster than polling.",
-          "Polling needs change and delete markers and measured cost; CDC costs too.",
+          "Polling needs reliable change and delete markers; both approaches cost source load.",
           "Polling is deprecated in current Postgres.",
           "CDC always uses less network bandwidth.",
         ],
@@ -105,10 +105,10 @@ const lesson: DataInfraLesson = {
         title: "Lambda vs Kappa",
         copy: DATA_INFRA_QUIZ_COPY,
         question:
-          'A Lambda pipeline computes "weekly active users" in Spark and in Flink. Results differ by 0.3%, cause unknown. What\'s the IC5 fix?',
+          'A Lambda pipeline computes "weekly active users" in Spark and in Flink. Results differ by 0.3%, cause unknown. What\'s the durable fix?',
         options: [
           "Add a unit test to the Spark job.",
-          "Merge paths only if replay reproduces history; else reconcile against one calculation.",
+          "Keep one versioned calculation and reconcile the other path against it.",
           "Average the two numbers.",
           "Use machine learning to reconcile them.",
         ],

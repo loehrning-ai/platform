@@ -170,7 +170,6 @@ function reconcileDurableMissionIds(
 const STUDIO_COPY = {
   de: {
     eyebrow: "Angewandtes Kursprojekt",
-    workspace: "Projektwerkstatt",
     artifact: "Lieferobjekt",
     scenario: "Synthetischer Fall",
     safety: "Daten- und Sicherheitsgrenze",
@@ -182,23 +181,22 @@ const STUDIO_COPY = {
     ready: "Bereit zur Aktivierung",
     done: "Projekt verifiziert",
     pending: "Noch nicht verifiziert",
-    progress: "Arbeitsstufen",
+    progress: "Projektphasen",
     currentStage: "Aktuelle Projektphase",
     objective: "Jetzt bearbeiten",
     evidence: "Erwartete Evidenz",
     completedSummary: "Verifikationsnotiz",
     milestone:
       "Die Verifizierung ist im Lernfortschritt gespeichert.",
-    stageDone: "Phasenmissionen abgeschlossen",
-    stageLocked: "Vorherige Projektphase zuerst abschließen",
+    stageDone: "Abgeschlossen",
+    stageLocked: "Gesperrt",
     verifyLocked:
-      "Die Projektabnahme öffnet erst nach allen fünf Phasenmissionen.",
+      "Die Projektabnahme öffnet erst nach allen fünf Projektphasen.",
     persistFailed:
       "Verifizierung nicht gespeichert. Du kannst das Artefakt in dieser Sitzung weiter bearbeiten.",
   },
   en: {
     eyebrow: "Applied course project",
-    workspace: "Project studio",
     artifact: "Deliverable",
     scenario: "Synthetic case",
     safety: "Data and safety boundary",
@@ -210,17 +208,17 @@ const STUDIO_COPY = {
     ready: "Ready to activate",
     done: "Project verified",
     pending: "Not yet verified",
-    progress: "Work stages",
-    currentStage: "Current project phase",
+    progress: "Project stages",
+    currentStage: "Current project stage",
     objective: "Work on this now",
     evidence: "Expected evidence",
     completedSummary: "Verification note",
     milestone:
       "The verification is saved in your learning progress.",
-    stageDone: "Stage missions complete",
-    stageLocked: "Complete the preceding project stage first",
+    stageDone: "Complete",
+    stageLocked: "Locked",
     verifyLocked:
-      "Project acceptance unlocks only after all five stage missions.",
+      "Project acceptance unlocks only after all five project stages.",
     persistFailed:
       "Verification was not stored. You can keep editing the artifact in this session.",
   },
@@ -874,9 +872,6 @@ function CourseProjectCheckpointStudio({
               >
                 {String(currentStageIndex + 1).padStart(2, "0")}
               </span>
-              <span className="border border-foreground px-2 py-1 font-mono text-xs font-bold uppercase tracking-[0.16em]">
-                {copy.workspace}
-              </span>
             </div>
             <h2
               id={`${config.id}-title`}
@@ -903,14 +898,17 @@ function CourseProjectCheckpointStudio({
                   {config.mission[locale]}
                 </p>
                 <dl className="mt-4 space-y-4">
-                  <div>
-                    <dt className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange-dark">
-                      {copy.scenario}
-                    </dt>
-                    <dd className="mt-1 min-w-0 text-sm leading-snug text-muted-foreground [overflow-wrap:anywhere]">
-                      {config.scenario[locale]}
-                    </dd>
-                  </div>
+                  {/* Once the engine is open it shows the case itself. */}
+                  {!effectiveActivated ? (
+                    <div>
+                      <dt className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange-dark">
+                        {copy.scenario}
+                      </dt>
+                      <dd className="mt-1 min-w-0 text-sm leading-snug text-muted-foreground [overflow-wrap:anywhere]">
+                        {config.scenario[locale]}
+                      </dd>
+                    </div>
+                  ) : null}
                   <div className="border-l-2 border-brand-orange pl-3">
                     <dt className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange-dark">
                       {copy.safety}

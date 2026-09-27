@@ -827,7 +827,7 @@ describe("LessonMissionControl", () => {
     render(<LessonMissionControl {...props} />);
 
     expect(
-      await screen.findByText(/project phase is locked/i),
+      await screen.findByText(/project stage is locked/i),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("radio", { name: /Target leakage/ }),
@@ -847,7 +847,7 @@ describe("LessonMissionControl", () => {
       await screen.findByText(/activate local learning first/i),
     ).toBeInTheDocument();
     expect(
-      screen.queryByText(/project phase is locked/i),
+      screen.queryByText(/project stage is locked/i),
     ).not.toBeInTheDocument();
     expect(
       screen.getByRole("radio", { name: /Target leakage/ }),

@@ -42,7 +42,7 @@ const READER_COPY = {
     tocRegion: "Kapitelinhalt",
     tocHeading: "In diesem Kapitel",
     pdfAvailable:
-      "Nach der Anmeldung lädst du das PDF auf der Buchübersicht herunter.",
+      "Maßgeblich ist der Reader; nach der Anmeldung lädst du das PDF auf der Buchübersicht herunter.",
     pdfUnavailable:
       "Für dieses Buch gibt es derzeit kein PDF.",
     allChapters: "Alle Kapitel",
@@ -72,7 +72,7 @@ const READER_COPY = {
     tocRegion: "Chapter contents",
     tocHeading: "In this chapter",
     pdfAvailable:
-      "After signing in, download the German PDF from the book overview.",
+      "The reader is the maintained edition; after signing in, download the German PDF from the book overview.",
     pdfUnavailable:
       "No PDF is currently available for this book.",
     allChapters: "All chapters",

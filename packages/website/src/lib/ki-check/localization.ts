@@ -211,7 +211,7 @@ const QUESTIONS_EN: readonly Question[] = [
       },
       {
         score: 4,
-        text: "I know which cases need labelling and how to do it.",
+        text: "I know which cases need disclosure and how to do it.",
         meaning: "You turn the duty into a working step.",
       },
     ],
@@ -342,7 +342,7 @@ const STAGE_BANDS_EN: readonly StageBand[] = [
     min: 20,
     max: 40,
     blurb:
-      "You know several topics. A fixed method for checks, data use and rules is still missing.",
+      "You know several topics but do not yet check output and data with a fixed method.",
   },
   {
     level: 3,
@@ -350,7 +350,7 @@ const STAGE_BANDS_EN: readonly StageBand[] = [
     min: 40,
     max: 60,
     blurb:
-      "You use AI for ordinary tasks and spot several risks. Work on the weaker fields.",
+      "You use AI for everyday tasks and spot several risks. Work on the weaker fields.",
   },
   {
     level: 4,
@@ -366,7 +366,7 @@ const STAGE_BANDS_EN: readonly StageBand[] = [
     min: 80,
     max: 100,
     blurb:
-      "You check AI output critically, protect data and document important decisions. Pick an advanced topic from your field scores.",
+      "You check AI output critically, protect data and document important decisions. Deepen the field with your lowest score.",
   },
 ];
 
@@ -382,7 +382,7 @@ export const KI_CHECK_UI_COPY = {
     resultEyebrow: "KI-Check · Dein Ergebnis",
     resultTitle: "Hier stehst du gerade.",
     resultIntroduction:
-      "Dein Profil in fünf Kompetenzfeldern und ein passender nächster Kurs.",
+      "Dein Ergebnis beruht auf deiner Selbsteinschätzung.",
     overall: "Gesamtstand",
     scorePlateLabel: "Auswertung des KI-Checks",
     competencyLegendLabel: "Kompetenzwerte im Profil",
@@ -423,7 +423,7 @@ export const KI_CHECK_UI_COPY = {
     methodBody:
       "Je Feld werden zwei Selbstauskünfte auf 0 bis 100 umgerechnet, der Gesamtstand ist der Mittelwert der fünf Felder. Liegen die Grundlagen unter 50, empfiehlt der Check den Grundlagenkurs, sonst den Kurs zum schwächsten Feld. Das Ergebnis ist eine Orientierung, keine Prüfung oder Zertifizierung.",
     privacyBody:
-      "Die Antworten bleiben in diesem Browser und werden nicht gespeichert.",
+      "Die Antworten werden nur in diesem Browser ausgewertet und nicht gespeichert.",
     pathwayLabels: {
       pruefen: "Prüfen",
       grundlagen: "Verstehen",
@@ -435,9 +435,9 @@ export const KI_CHECK_UI_COPY = {
   },
   en: {
     resultEyebrow: "AI check · Result",
-    resultTitle: "Current profile.",
+    resultTitle: "Where you stand now.",
     resultIntroduction:
-      "Your profile in five competency fields and one next course.",
+      "Your result is based on your own self-assessment.",
     overall: "Overall score",
     scorePlateLabel: "AI check result",
     competencyLegendLabel: "Competency values in the profile",
@@ -472,9 +472,9 @@ export const KI_CHECK_UI_COPY = {
     methodSummary: "Method and limits of this result",
     methodTitle: "How the profile is calculated",
     methodBody:
-      "Two self-reported answers per field are scaled to 0 to 100, and the overall score is the mean of the five fields. If fundamentals score below 50, the check recommends the foundation course, otherwise the course for the weakest field. The result is orientation, not an exam or certification.",
+      "Two self-reported answers per field are scaled to 0 to 100, and the overall score is the mean of the five fields. If your Basics score is below 50, the check recommends the foundation course; otherwise, the course for your weakest field. The result is orientation, not an exam or certification.",
     privacyBody:
-      "Answers stay in this browser and are not stored.",
+      "Answers are scored only in this browser and are not stored.",
     pathwayLabels: {
       pruefen: "Assess",
       grundlagen: "Understand",

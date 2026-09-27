@@ -36,12 +36,12 @@ Bleiben Schlüssel, Partitioner und Partitionszahl stabil, bleiben die Datensät
       title: "Ereigniszeit oder Verarbeitungszeit",
       content: `Du zählst Ereignisse je Minute. Um 14:35 Verarbeitungszeit kommt ein Ereignis mit Ereigniszeit 14:32 an. Die Ereigniszeitaggregation steckt es ins Fenster 14:32, die Verarbeitungszeitaggregation zählt es bei Ankunft; welche Regel stimmt, entscheidet die Produktdefinition.
 
-Eine **Watermark** ist das Fortschrittssignal der Engine für Ereigniszeit: Nach einer konfigurierten oder erzeugten Regel erwartet sie keine wesentlich früheren Zeitstempel mehr. Dass alle früheren Ereignisse da sind, beweist sie nicht. Hinter einer Fenstergrenze kann die Engine ausgeben und verspätete Ereignisse je API und Konfiguration verwerfen, halten, weiterleiten oder korrigieren.`,
+Eine **Watermark** ist das Fortschrittssignal der Engine für Ereigniszeit: Nach einer konfigurierten oder erzeugten Regel erwartet sie keine wesentlich früheren Zeitstempel mehr. Dass alle früheren Ereignisse da sind, beweist sie nicht. Hinter einer Fenstergrenze kann die Engine Ergebnisse ausgeben und verspätete Ereignisse je API und Konfiguration verwerfen, halten, weiterleiten oder korrigieren.`,
     },
     {
       id: "s4",
-      title: "Watermark-Darstellung",
-      content: `Die Darstellung zeigt mit synthetischen Ereignissen und einer festen Verspätungsschwelle von vier Sekunden, wie eine Schwelle die Einstufung als pünktlich oder verspätet verschiebt. Eine Produktionsempfehlung ist sie nicht.
+      title: "Verspätungsschwelle wählen",
+      content: `Das Watermark-Modell oben zeigt mit synthetischen Ereignissen und einer festen Verspätungsschwelle von vier Sekunden, wie eine Schwelle die Einstufung als pünktlich oder verspätet verschiebt. Eine Produktionsempfehlung ist sie nicht.
 
 Leite die Regel aus beobachteter Verzögerung, inaktiven Partitionen, Uhrenqualität, Quellverhalten, erlaubter Zustandsgröße, Korrektursemantik und Consumer-SLO ab. Ein Perzentil hilft bei der Wahl; wie viel Verlust oder Korrektur akzeptabel ist, entscheidet das Produkt, und du misst es nach dem Deployment.`,
     },
@@ -64,11 +64,11 @@ Leite die Regel aus beobachteter Verzögerung, inaktiven Partitionen, Uhrenquali
 - **At-least-once.** Wiederholungen nach unklaren Fehlern können einen Datensatz zweimal wirken lassen, solange der Consumer Duplikate nicht kontrolliert. „Kein Verlust“ hängt weiter an Quelldauerhaftigkeit, Aufbewahrung und Bestätigungen.
 - **Exactly-once.** Innerhalb eines Umfangs sieht die commitete Ausgabe aus, als hätte jede Eingabe einmal gewirkt, umgesetzt über Transaktionen, Checkpoints, wiedereinspielbare Quellen, idempotente Ziele oder koordinierte Offsets. Externe APIs gehören nicht automatisch dazu.
 
-Kafka-Transaktionen veröffentlichen Ausgabe und konsumierte Offsets auf einem Kafka-zu-Kafka-Read-Process-Write-Pfad atomar, wenn Producer, Consumer, Isolation und Broker mitspielen. Flink verlangt für End-to-End-Exactly-once wiedereinspielbare Quellen und transaktionale oder idempotente Ziele. Liste alle Seiteneffekte auf und prüfe die Wiederherstellung mit Fehlerinjektion.`,
+Kafka-Transaktionen veröffentlichen Ausgabe und konsumierte Offsets auf einem Kafka-zu-Kafka-Read-Process-Write-Pfad atomar, wenn Producer, Consumer, Isolation und Broker mitspielen. Flink verlangt für End-to-End-Exactly-once wiedereinspielbare Quellen und transaktionale oder idempotente Ziele.`,
     },
     {
       id: "s5c",
-      title: "Streaming Engine auswählen",
+      title: "Streaming-Engine auswählen",
       content: `Fähigkeiten und Vorgaben von Engines ändern sich. Vergleiche die genaue Version und die Connectoren an einer reproduzierbaren Last:
 
 | Entscheidung | Evidenz |
@@ -80,7 +80,7 @@ Kafka-Transaktionen veröffentlichen Ausgabe und konsumierte Offsets auf einem K
 | Latenz und Durchsatz | Gemessene Perzentile unter Last, Backpressure, Checkpoints, Wiederherstellung |
 | Betrieb | Deployment, Upgrades, Savepoints, Observability, Kosten, Zuständigkeit |
 
-Spark Structured Streaming etwa arbeitet standardmäßig mit Micro-Batches und bietet einen getrennten kontinuierlichen Modus mit anderen Garantien.`,
+Spark Structured Streaming etwa arbeitet standardmäßig mit Micro-Batches und bietet einen getrennten kontinuierlichen Modus mit anderen Garantien. Flink trennt ebenso Zustandsgarantien von End-to-End-Garantien der Ziele. Kein Engine-Name garantiert einen Latenzbereich oder ein pauschales Exactly-once.`,
     },
     {
       id: "s6",
@@ -90,8 +90,7 @@ Spark Structured Streaming etwa arbeitet standardmäßig mit Micro-Batches und b
     {
       id: "s7",
       title: "Kernaussagen",
-      content: `- Teste mit verzögerter, doppelter und ungeordneter Eingabe.
-- Teste jeden externen Seiteneffekt mit Fehlerinjektion.`,
+      content: `- Teste mit verzögerter, doppelter und ungeordneter Eingabe und injiziere Fehler um jeden externen Seiteneffekt.`,
     },
     {
       id: "s8",
@@ -156,7 +155,7 @@ Spark Structured Streaming etwa arbeitet standardmäßig mit Micro-Batches und b
         {
           term: "Kompaktiertes Topic",
           q: "Was bezeichnet der Begriff?",
-          a: "Kompaktierung behält mindestens den neuesten Wert je Schlüssel und entfernt alte Werte verzögert. Sie trägt den Wiederaufbau von Schlüsselzustand.",
+          a: "Kompaktierung behält mindestens den neuesten Wert je Schlüssel und entfernt alte Werte verzögert. Damit lässt sich Zustand je Schlüssel neu aufbauen.",
         },
         {
           term: "ISR",

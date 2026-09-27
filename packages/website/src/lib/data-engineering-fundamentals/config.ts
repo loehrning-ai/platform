@@ -36,12 +36,12 @@ export const DATA_ENGINEERING_FUNDAMENTALS_CONFIG = {
   workshopQuizPassThreshold: 0.7,
   certificateTitle: "Data Engineering Fundamentals",
   certificateSubtitle:
-    "Certificate of participation from loehrning.ai, an independent learning platform. Not an accredited qualification.",
+    "Locally generated certificate of participation from the independent learning platform loehrning.ai. Not a state-recognized or accredited qualification.",
   certificateModules: [
     "Fundamentals: storage, formats, and query engines",
     "Ingest and streaming: event time, watermarks, and the path to the warehouse",
     "Store and compute: data models, file formats, partitioning, distributed execution",
-    "Orchestration to governance: idempotency, quality signals, a reference deploy gate",
+    "Orchestration and governance: idempotency, quality signals and a deploy gate",
   ],
   certificateReferenceLabel:
     "Personal certificate of participation: data-pipeline design from source to serving",
@@ -67,7 +67,7 @@ export const DATA_ENGINEERING_FUNDAMENTALS_CONFIG_DE =
         "Grundlagen: Speicher, Formate und Abfrage-Engines",
         "Datenaufnahme und Streaming: Ereigniszeit, Watermarks und der Weg ins Warehouse",
         "Speicherung und Verarbeitung: Datenmodelle, Dateiformate, Partitionierung und verteilte Ausführung",
-        "Orchestrierung bis Governance: Idempotenz, Qualitätsnachweise, Referenz-Freigabeschranke",
+        "Orchestrierung und Governance: Idempotenz, Qualitätsnachweise und eine Freigabeschranke",
       ],
       certificateReferenceLabel:
         "Persönliche Teilnahmebestätigung: Entwurf von Datenpipelines von der Quelle bis zur Bereitstellung",

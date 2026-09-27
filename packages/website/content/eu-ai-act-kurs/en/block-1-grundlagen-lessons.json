@@ -28,9 +28,9 @@
       "sections": [
         {
           "id": "block_1_lesson_1_section_1",
-          "title": "27 national AI laws in the pipeline",
+          "title": "The risk of 27 national rulebooks",
           "readTimeMinutes": 2,
-          "content": "By 2023 several Member States were drafting AI rules of their own, among them France's CNIL and Spain's AESIA; Italy's Garante banned ChatGPT in March 2023. Without harmonisation a German SME would have served 27 compliance regimes, each with its own definitions, reporting duties and fines.\n\nRecital 3 of Regulation (EU) 2024/1689 names the problem: divergent national rules fragment the internal market. The Commission pursues two objectives, trustworthy AI in the internal market and innovation (Article 1(1), points (a) and (h)).\n\n**Legal basis** is Article 114 TFEU (internal market), not Article 16 TFEU (data protection). The AI Act treats AI as a product, and one set of rules applies across all 27 Member States."
+          "content": "By 2023 several Member States were drafting AI rules of their own. In France the CNIL worked on AI guidance, Spain set up the AI supervisor AESIA, and Italy's Garante banned ChatGPT in March 2023. Without harmonisation a German SME would have served 27 compliance regimes, each with its own definitions, reporting duties and fines.\n\nRecital 3 of Regulation (EU) 2024/1689 names the problem: divergent national rules can fragment the internal market. The Regulation sets two objectives, trustworthy AI in the internal market and innovation (Article 1).\n\n**Legal basis** is Article 114 TFEU (internal market), not Article 16 TFEU (data protection). The AI Act treats AI as a product, and one set of rules applies across all 27 Member States."
         },
         {
           "id": "block_1_lesson_1_section_2",
@@ -42,7 +42,7 @@
           "id": "block_1_lesson_1_section_3",
           "title": "The CE tradition, the Machinery Regulation, and product liability",
           "readTimeMinutes": 2,
-          "content": "The AI Act is product-safety law. Through Regulation 765/2008, the New Legislative Framework, it follows the CE logic machinery builders have known for decades: conformity assessment, notified body, technical documentation, EU declaration of conformity, CE marking, market surveillance. Makers of CE-marked machinery, medical devices or toys often just add an AI chapter.\n\n**The GDPR applies alongside.** Article 2(7) leaves it unaffected. Whoever feeds personal data into an AI system complies with both. The GDPR governs whether you may process data, the AI Act how the system has to work (Recital 9).\n\n**Directly applicable.** As an EU regulation (Article 288(2) TFEU), the AI Act applies in all 27 Member States without transposition. The prohibitions in Article 5 and the AI-literacy duty in Article 4 have applied directly since 2 February 2025."
+          "content": "The AI Act is product-safety law. Through Regulation 765/2008, the New Legislative Framework, it follows the CE logic machinery builders have known for decades: conformity assessment, notified body, technical documentation, EU declaration of conformity, CE marking, market surveillance. Makers of CE-marked machinery, medical devices or toys often add an AI chapter to the technical documentation they already keep.\n\n**The GDPR applies alongside.** Article 2(7) leaves it unaffected. Whoever feeds personal data into an AI system complies with both. The GDPR governs whether you may process data, the AI Act how the system has to work (Recital 9).\n\n**Directly applicable.** As an EU regulation (Article 288(2) TFEU), the AI Act applies in all 27 Member States without transposition. The prohibitions in Article 5 and the AI-literacy duty in Article 4 have applied directly since 2 February 2025."
         }
       ],
       "quiz": [
@@ -160,7 +160,7 @@
           "id": "block_1_lesson_2_section_3",
           "title": "Operator or not: the private exemption (Article 2(10))",
           "readTimeMinutes": 1,
-          "content": "Article 3(8) groups all four roles, plus authorised representatives and product manufacturers, under the term **operator**. Every operator is bound at least by Article 4 on AI literacy, whatever its precise role.\n\n**The private exemption:** Article 2(10) excludes natural persons who use AI in a purely personal, non-professional activity, such as ChatGPT for their own texts, images or tax return.\n\n- A private individual plans a holiday with ChatGPT: **not caught**.\n- The same person, as an employee, writes customer correspondence with ChatGPT: **caught**, because the employer uses it professionally as a deployer (Article 3(4)).\n- A managing director drafts quotations with ChatGPT: **caught**, because her company is the deployer.",
+          "content": "Article 3(8) groups all four roles, plus authorised representatives and product manufacturers, under the term **operator**. Article 4 on AI literacy binds every provider and deployer, whatever the risk class.\n\n**The private exemption:** Article 2(10) excludes natural persons who use AI in a purely personal, non-professional activity, such as ChatGPT for their own texts, images or tax return.\n\n- A private individual plans a holiday with ChatGPT: **not caught**.\n- The same person, as an employee, writes customer correspondence with ChatGPT: **caught**, because the employer uses it professionally as a deployer (Article 3(4)).\n- A managing director drafts quotations with ChatGPT: **caught**, because her company is the deployer.",
           "keyTakeaway": "Whoever uses AI purely privately is not a deployer within the meaning of the Regulation (Article 2(10)). Professional use is caught, however small the business.",
           "_claimRef": "ai-act-general-application-2026-08-02",
           "sources": [
@@ -363,11 +363,11 @@
             },
             {
               "id": "d",
-              "text": "Only the server location",
+              "text": "Only the country where the servers are",
               "isCorrect": false
             }
           ],
-          "explanation": "Without the representative (Article 22), the technical documentation (Article 11) and the classification, you cannot meet your deployer obligations under Article 26."
+          "explanation": "You need the classification and the technical documentation (Article 11) for your deployer obligations under Article 26, and the EU authorised representative (Article 22) is your contact in the EU."
         }
       ]
     },
@@ -376,7 +376,7 @@
       "blockId": "block_1",
       "number": 4,
       "title": "Timeline: February 2025, August 2025, August 2026, December 2027, August 2028",
-      "subtitle": "What applies now and what follows in August 2026, 2027 and 2028",
+      "subtitle": "What applies now and what follows in 2026, 2027 and 2028",
       "durationMinutes": 4,
       "keyConcepts": [
         "Article 113 (phased application)",
@@ -390,7 +390,7 @@
           "id": "block_1_lesson_4_section_1",
           "title": "The application dates and the amended high-risk timetable",
           "readTimeMinutes": 2,
-          "content": "Regulation (EU) 2024/1689 entered into force on **1 August 2024** and applies in stages:\n\n- **2 February 2025:** Article 4 on AI literacy and most of the prohibitions in Article 5 apply.\n- **2 August 2025:** the rules for general-purpose AI models, the governance structure and much of the penalties framework apply; Commission enforcement against providers of general-purpose AI models starts on **2 August 2026**.\n- **27 July 2026:** Regulation (EU) 2026/1744 enters into force and amends Article 4, individual prohibitions, transitional provisions and the high-risk timetable, among other things.\n- **2 August 2026:** the transparency obligations in Article 50 and further general application points apply.\n- **2 December 2027:** high-risk rules for stand-alone systems under Article 6(2) and Annex III.\n- **2 August 2028:** high-risk rules for product-embedded systems under Article 6(1) and Annex I.\n\nThe high-risk dates are applicable law under the published amending regulation. Systems placed on the market before the new dates have transitional rules of their own.",
+          "content": "Regulation (EU) 2024/1689 entered into force on **1 August 2024** and applies in stages:\n\n- **2 February 2025:** Article 4 on AI literacy and most of the prohibitions in Article 5 apply.\n- **2 August 2025:** the rules for general-purpose AI models, the governance structure and much of the penalties framework apply; Commission enforcement against providers of general-purpose AI models starts on **2 August 2026**.\n- **27 July 2026:** Regulation (EU) 2026/1744 enters into force and amends Article 4, individual prohibitions, transitional provisions and the high-risk timetable, among other things.\n- **2 August 2026:** most remaining provisions apply, including the transparency obligations in Article 50.\n- **2 December 2027:** high-risk rules for stand-alone systems under Article 6(2) and Annex III.\n- **2 August 2028:** high-risk rules for product-embedded systems under Article 6(1) and Annex I.\n\nThe high-risk dates are applicable law under the published amending regulation. Systems placed on the market before the new dates have transitional rules of their own.",
           "_claimRef": "ai-act-article-4-literacy-2025-02-02",
           "sources": [
             {
@@ -402,7 +402,7 @@
           "id": "block_1_lesson_4_section_2",
           "title": "Your tasks per deadline",
           "readTimeMinutes": 2,
-          "content": "Article 4 prescribes no particular form of documentation and, since the amendment, no guaranteed individual level of competence (as of 28 July 2026). Providers and deployers must take measures that support the development of AI literacy in a way that fits the context.\n\n**Now:**\n\n- an inventory of every AI system in the house, shadow IT included\n- a risk classification per system (Annex III, Article 5, general-purpose AI or low risk)\n- documented Article 4 measures that fit the role and the risk\n- the notices under Article 50 in place by 2 August 2026, wherever the conditions are met\n\n**For 2027 and 2028:**\n\n- plan high-risk systems: stand-alone ones for **2 December 2027**, product-embedded ones for **2 August 2028**\n- prepare vendor documents, logs, human oversight and, where required, a fundamental rights impact assessment\n\nA substantial modification can end transitional treatment or trigger a fresh assessment, so classify again after every major update.",
+          "content": "Article 4 prescribes no particular form of documentation and, since the amendment, no guaranteed individual level of competence (as of 28 July 2026). Providers and deployers must take measures that support the development of AI literacy in a way that fits the context.\n\n**Now:**\n\n- build an inventory of every AI system in the house, shadow IT included\n- classify the risk of each system (Annex III, Article 5, general-purpose AI or low risk)\n- document Article 4 measures that fit the role and the risk\n- put the notices under Article 50 in place by 2 August 2026, wherever the conditions are met\n\n**For 2027 and 2028:**\n\n- plan high-risk systems: stand-alone ones for **2 December 2027**, product-embedded ones for **2 August 2028**\n- prepare vendor documents, logs, human oversight and, where required, a fundamental rights impact assessment\n\nA substantial modification can end transitional treatment or trigger a fresh assessment, so classify again after every major update.",
           "_claimRef": "ai-literacy-supervision-2026-08-02",
           "sources": [
             {
@@ -414,7 +414,7 @@
           "id": "block_1_lesson_4_section_3",
           "title": "When does enforcement begin?",
           "readTimeMinutes": 2,
-          "content": "Article 99 of Regulation (EU) 2024/1689 tiers fines in three levels. For undertakings the higher of the two figures applies:\n\n- **Prohibited practices (Article 5):** up to **EUR 35 million or 7%** of total worldwide annual turnover (Article 99(3))\n- **Obligations listed in Article 99(4):** up to **EUR 15 million or 3%**\n- **Incorrect information to authorities:** up to **EUR 7.5 million or 1%** (Article 99(5))\n\nSMEs, and since the amendment small mid-caps, have upper limits of their own. The calculation and the penalty tier depend on the case, the provision infringed, its application date and the competent authority.",
+          "content": "According to the Commission FAQ, national supervision and enforcement begin in early August 2026. Article 99 of Regulation (EU) 2024/1689 tiers fines in three levels. For undertakings the higher of the two figures applies, for SMEs the lower (Article 99(6)):\n\n- **Prohibited practices (Article 5):** up to **EUR 35 million or 7%** of total worldwide annual turnover (Article 99(3))\n- **Operator obligations, e.g. Articles 16, 26 and 50 (Article 99(4)):** up to **EUR 15 million or 3%**\n- **Incorrect information to authorities:** up to **EUR 7.5 million or 1%** (Article 99(5))\n\nSince the amendment, small mid-caps also have upper limits of their own. The calculation and the penalty tier depend on the case, the provision infringed, its application date and the competent authority.",
           "keyTakeaway": "Article 4 has applied since February 2025, in amended form since 27 July 2026. National supervision and enforcement begin in early August 2026, according to the Commission FAQ.",
           "_claimRef": "ai-literacy-supervision-2026-08-02",
           "sources": [
@@ -495,7 +495,7 @@
             },
             {
               "id": "c",
-              "text": "EUR 35 million or 7% of turnover, whichever is higher",
+              "text": "EUR 35 million or 7% of turnover",
               "isCorrect": true
             },
             {
@@ -504,7 +504,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Article 99(3) provides for up to EUR 35 million or 7%; for SMEs, Article 99(6) applies the lower amount."
+          "explanation": "Article 99(3) provides for up to EUR 35 million or 7%, whichever is higher; for SMEs, Article 99(6) applies the lower amount."
         }
       ]
     }

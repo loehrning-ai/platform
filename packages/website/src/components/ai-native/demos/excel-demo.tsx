@@ -177,10 +177,10 @@ export function ExcelDemo(): JSX.Element {
       aria-label="Praxisbeispiel: Excel"
     >
       <div>
-        <DemoOverline>Excel-Lab mit KI-Assistent</DemoOverline>
+        <DemoOverline>Excel-Lab</DemoOverline>
         <h3 className="mt-2 text-[24px] font-bold tracking-[-0.03em] text-foreground md:text-[26px]">
-          Tabellenlogik,{" "}
-          <span className="text-brand-orange">als Beispiel-Lab.</span>
+          Tabellenaufgaben mit{" "}
+          <span className="text-brand-orange">KI-Assistent</span>
         </h3>
         <p className="mt-1.5 max-w-[620px] text-[13px] leading-[1.55] text-muted-foreground">
           Kein Microsoft-365-Zugriff. Das Praxisbeispiel nutzt Beispieldaten und
@@ -511,8 +511,8 @@ export function ExcelDemo(): JSX.Element {
 
       {!output && !loading && (
         <div className="border border-dashed border-border bg-card/60 p-5 text-center text-[13px] text-muted-foreground">
-          → Wählen Sie eine Aufgabe. Der Assistent nutzt den sichtbaren
-          Beispielbereich und liefert Formel, Pivot oder Prognosevorschlag.
+          → Wähl eine Aufgabe. Der Assistent nutzt den sichtbaren
+          Beispielbereich und liefert Formel, Pivot oder Prognose.
         </div>
       )}
     </div>

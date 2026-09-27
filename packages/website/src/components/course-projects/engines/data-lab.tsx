@@ -115,14 +115,8 @@ export default function DataLab({
   const copy =
     locale === "de"
       ? {
-          engine:
-            variant === "experiment"
-              ? "Ausführbares Experiment-Notebook"
-              : variant === "pipeline"
-                ? "Ausführbarer Pipeline-Kontrollraum"
-                : "Ausführbarer Daten-Kontrollraum",
           honest:
-            "Reale Node-24-Ausführung in einer kurzlebigen Sandbox ohne Netz · nur generierte Kursdaten",
+            "Echter Node-24-Lauf · Sandbox ohne Netz",
           query:
             variant === "experiment"
               ? "Vorregistrierter Analyseplan"
@@ -130,7 +124,7 @@ export default function DataLab({
                 ? "Deduplizierungs- und Zeitplan"
                 : "Telemetrie-Abfrageplan",
           queryHelp:
-            "Der Plan bleibt im Browser und wird nur auf Struktur geprüft, nie als SQL ausgeführt. Ausgeführt werden der feste Kurscode und seine Tests.",
+            "Der Plan bleibt im Browser und wird nur auf Struktur geprüft, nie als SQL ausgeführt. Nur der feste Kurscode und seine Tests laufen.",
           queryValid: "Analysevertrag vollständig",
           queryInvalid:
             "Dem Analysevertrag fehlen Felder oder Ausschlüsse.",
@@ -140,8 +134,8 @@ export default function DataLab({
               : variant === "pipeline"
                 ? "Duplikate und Verspätung für den Lauf aktivieren"
                 : "Partition und Rückstau für den Lauf aktivieren",
-          injected: "Fehlerfixture für den isolierten Lauf aktiv",
-          execute: "Isolierten Workspace wirklich ausführen",
+          injected: "Fehlerfall für den Lauf aktiv",
+          execute: "In der Sandbox ausführen",
           executing: "Sandbox wird ausgeführt …",
           unavailable:
             "Keine Ausführung bestätigt. Die Sandbox ist nicht bereit, das Kontingent ist erschöpft oder der Lauf ist fehlgeschlagen.",
@@ -165,11 +159,14 @@ export default function DataLab({
               : "Fehler ignorieren und unverändert fortsetzen",
           correct:
             variant === "experiment"
-              ? "Nur sicheren +5-pp-Vergleich mit Leakage-, Peeking- und Reproduktionsgrenze dokumentieren"
+              ? "Sicheren +5-pp-Wert mit seinen Grenzen dokumentieren"
               : variant === "pipeline"
-                ? "Quelle isolieren, deduplizieren, Late Events backfillen und 102→102-Replay abgleichen"
-                : "Partition isolieren, kontrolliert wiederholen und 210-ms-Recovery bei null Verlust prüfen",
-          discard: "Alle Daten ohne Recovery-Beleg dauerhaft verwerfen",
+                ? "Isolieren, deduplizieren, backfillen, 102→102-Replay abgleichen"
+                : "Isolieren, gezielt wiederholen, 210 ms ohne Verlust prüfen",
+          discard:
+            variant === "experiment"
+              ? "Experiment ohne Begründung verwerfen"
+              : "Alle Daten ohne Recovery-Beleg dauerhaft verwerfen",
           note:
             variant === "experiment"
               ? "Model-Card-Grenze mit Messwert und Reproduktionsschritt"
@@ -189,12 +186,12 @@ export default function DataLab({
               : variant === "pipeline"
                 ? "Duplikate, Late Events, Backfill, Abgleich und idempotenter Replay ausgeführt"
                 : "SLO-Bruch und Zero-Loss-Recovery unter 250 ms ausgeführt",
-          decisionEvidence: "Kursgerechte Betriebsentscheidung gewählt",
+          decisionEvidence: "Entscheidung gewählt",
           noteEvidence:
-            "Entscheidung im Arbeitsspeicher mit Messwert begründet",
+            "Entscheidung mit Messwert begründet",
           stageEvidence: "Alle fünf Projektphasen abgeschlossen",
           pending:
-            "Es fehlen noch Analysevertrag, Fehlerfixture, realer Lauf, Entscheidung oder Begründung.",
+            "Arbeite die offenen Punkte oben ab.",
           stageLocked:
             "Ausführung belegt. Die finale Verifikation öffnet nach allen fünf Projektphasen.",
           ready: "Ausführung und Entscheidung sind prüfbar.",
@@ -206,14 +203,8 @@ export default function DataLab({
                 : "Kontrollraum verifiziert: 684-ms-SLO-Bruch und 210-ms-Recovery ohne Verlust bei 2,4× Incident-Kosten belegt.",
         }
       : {
-          engine:
-            variant === "experiment"
-              ? "Executable experiment notebook"
-              : variant === "pipeline"
-                ? "Executable pipeline control room"
-                : "Executable data control room",
           honest:
-            "Real Node 24 execution in a short-lived sandbox without network · generated course data only",
+            "Real Node 24 run · sandbox without network",
           query:
             variant === "experiment"
               ? "Pre-registered analysis plan"
@@ -221,7 +212,7 @@ export default function DataLab({
                 ? "Deduplication and event-time plan"
                 : "Telemetry query plan",
           queryHelp:
-            "The plan stays in the browser and is only checked for structure, never run as SQL. The fixed course code and its tests are what runs.",
+            "The plan stays in the browser and is only checked for structure, never run as SQL. Only the fixed course code and its tests run.",
           queryValid: "Analysis contract complete",
           queryInvalid:
             "The analysis contract is missing fields or exclusions.",
@@ -231,8 +222,8 @@ export default function DataLab({
               : variant === "pipeline"
                 ? "Enable duplicates and lateness for the run"
                 : "Enable partition and backlog for the run",
-          injected: "Failure fixture enabled for the isolated run",
-          execute: "Execute the isolated workspace for real",
+          injected: "Failure case active for the run",
+          execute: "Run in sandbox",
           executing: "Running sandbox …",
           unavailable:
             "No execution was confirmed. The sandbox is not ready, its budget is exhausted, or the run failed.",
@@ -256,11 +247,14 @@ export default function DataLab({
               : "Ignore the failure and continue unchanged",
           correct:
             variant === "experiment"
-              ? "Document only the safe +5 pp comparison with leakage, peeking, and reproduction limits"
+              ? "Document the safe +5 pp value with its limits"
               : variant === "pipeline"
-                ? "Isolate, deduplicate, backfill late events, and reconcile the 102→102 replay"
-                : "Isolate, replay deliberately, and verify 210 ms recovery with zero loss",
-          discard: "Permanently discard all data without recovery evidence",
+                ? "Isolate, deduplicate, backfill, reconcile the 102→102 replay"
+                : "Isolate, replay, verify 210 ms without loss",
+          discard:
+            variant === "experiment"
+              ? "Discard the experiment without a reason"
+              : "Permanently discard all data without recovery evidence",
           note:
             variant === "experiment"
               ? "Model-card limitation with metric and reproduction step"
@@ -280,11 +274,11 @@ export default function DataLab({
               : variant === "pipeline"
                 ? "Duplicates, late events, backfill, reconciliation, and idempotent replay executed"
                 : "SLO breach and zero-loss recovery below 250 ms executed",
-          decisionEvidence: "Course-specific operating decision selected",
-          noteEvidence: "Decision justified in memory with an attested metric",
+          decisionEvidence: "Decision selected",
+          noteEvidence: "Decision justified with a measured value",
           stageEvidence: "All five project stages completed",
           pending:
-            "Still missing: analysis contract, failure fixture, real run, decision or rationale.",
+            "Complete the open items above.",
           stageLocked:
             "Execution evidenced. Final verification unlocks after all five project stages.",
           ready: "The execution and operating decision are auditable.",
@@ -536,7 +530,7 @@ export default function DataLab({
   }
 
   return (
-    <EngineFrame config={config} locale={locale} engineLabel={copy.engine}>
+    <EngineFrame config={config} locale={locale}>
       <p className="border-l-4 border-brand-orange bg-brand-orange/[0.07] px-3 py-2 font-mono text-xs font-bold uppercase tracking-wide">
         {copy.honest}
       </p>

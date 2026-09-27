@@ -56,19 +56,19 @@ export interface KiCheckRecommendation {
 /** Reason lines per focus dimension for the gap case (du-form, warm). */
 const GAP_REASONING: Record<DimensionId, string> = {
   grundlagen:
-    "„KI verstehen“ ist dein schwächstes Feld. Der {title} behandelt Funktionsweise, Fehlertypen und Prüfung.",
+    "„KI verstehen“ ist dein schwächstes Feld. Der Kurs „{title}“ behandelt Funktionsweise, Fehlertypen und Prüfung.",
   urteil:
-    "„Kritisch einordnen“ ist dein schwächstes Feld. Der {title} behandelt Deepfakes, Verzerrungen und Quellenprüfung.",
+    "„Kritisch einordnen“ ist dein schwächstes Feld. Der Kurs „{title}“ behandelt Deepfakes, Verzerrungen und Quellenprüfung.",
   recht:
-    "„Regeln kennen“ ist dein schwächstes Feld. Der {title} ordnet Rollen, Risikoklassen und Pflichten des AI Act ein.",
+    "„Regeln kennen“ ist dein schwächstes Feld. Der Kurs „{title}“ ordnet Rollen, Risikoklassen und Pflichten des AI Act ein.",
   verantwortung:
-    "„Verantwortung tragen“ ist dein schwächstes Feld. Der {title} behandelt Datenschutz, Transparenz und Nachweise.",
+    "„Verantwortung tragen“ ist dein schwächstes Feld. Der Kurs „{title}“ behandelt Datenschutz, Transparenz und Nachweise.",
   praxis:
-    "„In der Arbeit anwenden“ ist dein schwächstes Feld. Der {title} zeigt eine Methode für Prompts, Werkzeuge und Prüfung.",
+    "„In der Arbeit anwenden“ ist dein schwächstes Feld. Der Kurs „{title}“ zeigt eine Methode für Prompts, Werkzeuge und Prüfung.",
 };
 
 const FOUNDATION_REASONING =
-  "Beginne mit den Grundlagen. Der {title} erklärt Funktionsweise, Fehlertypen, Datenschutz und Prüfung ohne Vorwissen.";
+  "Beginne mit den Grundlagen. Der Kurs „{title}“ setzt kein Vorwissen voraus und erklärt Funktionsweise, Fehlertypen, Datenschutz und das Prüfen von Ergebnissen.";
 
 const GAP_REASONING_EN: Record<DimensionId, string> = {
   grundlagen:
@@ -84,7 +84,7 @@ const GAP_REASONING_EN: Record<DimensionId, string> = {
 };
 
 const FOUNDATION_REASONING_EN =
-  "Start with the basics. {title} explains how AI works, typical errors, data protection and checks, with no prior knowledge needed.";
+  "Start with the basics. {title} needs no prior knowledge and covers how AI works, typical errors, data protection and checking output.";
 
 function build(
   focus: DimensionResult,

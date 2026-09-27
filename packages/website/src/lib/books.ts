@@ -87,7 +87,7 @@ export const allBooks: readonly Book[] = [
     sourceInputs: [
       "Public primary sources cited in the book",
       "Qualitative AI-readiness frameworks",
-      "Simplified learning-platform editorial review",
+      "Editorial review of the learning-platform edition",
     ],
     licensePolicy:
       "Kostenlos online lesbar; PDF-Download nach Login verfügbar.",
@@ -132,7 +132,7 @@ export const allBooks: readonly Book[] = [
     sourceInputs: [
       "KI-Führerschein lesson content",
       "European Commission AI literacy guidance",
-      "Simplified learning-platform editorial review",
+      "Editorial review of the learning-platform edition",
     ],
     licensePolicy:
       "Kostenlos online lesbar; keine öffentliche PDF-Distribution in dieser Version.",
@@ -177,7 +177,7 @@ export const allBooks: readonly Book[] = [
     sourceInputs: [
       "AI-Native course content",
       "Tool-selection editorial notes",
-      "Simplified learning-platform editorial review",
+      "Editorial review of the learning-platform edition",
     ],
     licensePolicy:
       "Kostenlos online lesbar; keine öffentliche PDF-Distribution in dieser Version.",

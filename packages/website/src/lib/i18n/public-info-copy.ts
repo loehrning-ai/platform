@@ -14,7 +14,7 @@ export const ENTRY_COPY = {
     intro:
       "Was ein KI-System tut und warum du seine Antworten prüfen musst.",
     facts: ["10 Minuten", "Ohne Konto", "Keine Vorkenntnisse"],
-    definitionIndex: "01 / Definition",
+    definitionIndex: "02 / Definition",
     definitionHeading: "Eine brauchbare Arbeitsdefinition",
     definition:
       "Ein KI-System nimmt Eingaben und leitet daraus Ausgaben ab: Vorhersagen, Inhalte, Empfehlungen, Entscheidungen. Was herauskommt, hängt vom Modell ab, von seinen Daten und vom Einsatzkontext.",
@@ -22,9 +22,9 @@ export const ENTRY_COPY = {
     definitionSource:
       "Die rechtliche Definition steht in Artikel 3 der EU-KI-Verordnung und gilt bei Rechtsfragen.",
     examplesHeading: "Drei Anwendungen aus dem Alltag",
-    examplesIndex: "02 / Beispiele",
+    examplesIndex: "03 / Beispiele",
     examplesIntro:
-      "Drei der vielen KI-Verfahren nutzt du täglich.",
+      "Drei KI-Verfahren, die du täglich nutzt.",
     examples: [
       {
         id: "gesicht",
@@ -51,14 +51,14 @@ export const ENTRY_COPY = {
     boundaryLabel: "Die wichtigste Grenze",
     boundaryHeading: "Ein plausibles Ergebnis kann falsch sein.",
     boundaryBody:
-      "Ein Modell gleicht seine Antwort nicht mit der Wirklichkeit ab. Bei wichtigen Entscheidungen prüfst du mit Quellen und Fachwissen, und ein Mensch trägt die Verantwortung.",
+      "Ein Modell gleicht seine Antwort nicht mit der Wirklichkeit ab. Bei wichtigen Entscheidungen prüfst du das Ergebnis an Quellen und mit Fachwissen, und ein Mensch trägt die Verantwortung.",
     faqHeading: "Kurze Antworten",
-    faqIndex: "03 / Fragen",
+    faqIndex: "04 / Fragen",
     faqs: [
       {
         question: "Ist dieser Einstieg kostenlos?",
         answer:
-          "Ja, auch der KI-Check. Die Zugangsbedingungen der Kurse stehen am jeweiligen Kurs.",
+          "Ja, und der KI-Check läuft wie diese Seite ohne Konto. Die Zugangsbedingungen der Kurse stehen am jeweiligen Kurs.",
       },
       {
         question: "Wer verantwortet die Inhalte?",
@@ -69,20 +69,20 @@ export const ENTRY_COPY = {
       },
     ],
     nextHeading: "Nächster Schritt",
-    nextIndex: "04 / Auswahl",
+    nextIndex: "01 / Auswahl",
     nextIntro:
       "Wähle nach deinem Ziel.",
     primaryLabel: "Stand einordnen",
     primaryTitle: "KI-Check",
     primaryMeta: "ca. 5 Minuten",
     primaryBody:
-      "{count} Fragen und eine begründete Kursempfehlung. Das Ergebnis bleibt in deinem Browser.",
+      "{count} Fragen, dann eine begründete Kursempfehlung, die nur in deinem Browser bleibt.",
     primaryCta: "KI-Check starten",
     courseLabel: "Grundkurs ansehen",
     courseTitle: "KI-Führerschein",
     courseBody:
       "Welche Daten in ein KI-Tool dürfen und wie du Antworten prüfst.",
-    courseCta: "Kursübersicht öffnen",
+    courseCta: "Zum Kurs",
     primerLabel: "Weiterlesen",
     primerTitle: "Blog",
     primerBody:
@@ -100,7 +100,7 @@ export const ENTRY_COPY = {
     intro:
       "What an AI system does and why you need to check its answers.",
     facts: ["10 minutes", "No account", "No prerequisites"],
-    definitionIndex: "01 / Definition",
+    definitionIndex: "02 / Definition",
     definitionHeading: "A useful working definition",
     definition:
       "An AI system takes inputs and derives outputs from them: predictions, content, recommendations, decisions. What comes out depends on the model, its data, and the context of use.",
@@ -108,9 +108,9 @@ export const ENTRY_COPY = {
     definitionSource:
       "The legal definition is in Article 3 of the EU AI Act and governs legal questions.",
     examplesHeading: "Three everyday applications",
-    examplesIndex: "02 / Examples",
+    examplesIndex: "03 / Examples",
     examplesIntro:
-      "You use three of the many AI methods every day.",
+      "Three AI methods you use every day.",
     examples: [
       {
         id: "gesicht",
@@ -139,12 +139,12 @@ export const ENTRY_COPY = {
     boundaryBody:
       "A model does not check its answer against reality. For important decisions, you check it with sources and expertise, and a person takes responsibility.",
     faqHeading: "Short answers",
-    faqIndex: "03 / Questions",
+    faqIndex: "04 / Questions",
     faqs: [
       {
         question: "Is this introduction free?",
         answer:
-          "Yes, and so is the AI check. Each course states its own access conditions.",
+          "Yes, and the AI check also runs without an account. Each course states its own access conditions.",
       },
       {
         question: "Who is responsible for the content?",
@@ -155,20 +155,20 @@ export const ENTRY_COPY = {
       },
     ],
     nextHeading: "Next step",
-    nextIndex: "04 / Selection",
+    nextIndex: "01 / Selection",
     nextIntro:
       "Choose by your goal.",
     primaryLabel: "Assess your level",
     primaryTitle: "AI check",
     primaryMeta: "about 5 minutes",
     primaryBody:
-      "{count} questions and a reasoned course recommendation. The result stays in your browser.",
+      "{count} questions, then a reasoned course recommendation that stays in your browser.",
     primaryCta: "Start the AI check",
     courseLabel: "Review a foundation course",
     courseTitle: "AI Fundamentals",
     courseBody:
       "Which data may go into an AI tool and how to check answers.",
-    courseCta: "Open the course overview",
+    courseCta: "Open the course",
     primerLabel: "Continue reading",
     primerTitle: "Blog",
     primerBody:
@@ -207,7 +207,7 @@ export const HELP_COPY = {
     updatesHeading: "Inhaltsänderungen",
     updatesEyebrow: "Änderungen",
     updatesBody: "Veröffentlichte Änderungen stehen unter",
-    updatesLink: "/neuigkeiten",
+    updatesLink: "Neuigkeiten",
     questions: {
       start: "Wo fange ich an?",
       account: "Warum brauche ich ein Konto?",
@@ -223,20 +223,20 @@ export const HELP_COPY = {
       limits: "Welche Einschränkungen sind bekannt?",
     },
     answers: {
-      startBeforeCheck: "Der ",
+      startBeforeCheck: "Fang mit dem ",
       startCheckLink: "KI-Check",
       startBetween:
-        " dauert etwa 5 Minuten und ordnet deinen Ausgangspunkt ein. Alle {courseCount} Kurse stehen in der ",
+        " an: Er dauert etwa 5 Minuten und empfiehlt dir einen Kurs. Alle {courseCount} Kurse stehen in der ",
       startCatalogLink: "Kursübersicht",
       startAfterCatalog: ".",
       accountAvailable:
         "Bücher, Praxisbeispiele, KI-Check und 6 technische Kursreader laufen ohne Konto. Die 4 Grundlagen-Kursreader brauchen ein kostenloses Lernkonto. Das Konto synchronisiert Fortschritt und Abschlussstatus zwischen deinen Geräten.",
       accountUnavailable:
-        "Bücher, Praxisbeispiele, KI-Check und 6 technische Kursreader laufen ohne Konto. Die 4 Grundlagen-Kursreader brauchen ein Lernkonto. Weil keine Anmeldemethode freigeschaltet ist, sind diese 4 Reader vorübergehend nicht erreichbar.",
+        "Bücher, Praxisbeispiele, KI-Check und 6 technische Kursreader laufen ohne Konto. Die 4 Grundlagen-Kursreader brauchen ein Lernkonto. Solange Anmeldung und Lernkonto nicht freigeschaltet sind, sind diese 4 Reader vorübergehend nicht erreichbar.",
       progressSynced:
-        "Dein Fortschritt liegt im Browser und mit angemeldetem Lernkonto auch auf dem Server. Gelöschte Website-Daten, ein privater Tab oder ein anderer Browser können den lokalen Stand löschen.",
+        "Dein Fortschritt liegt im Browser und mit angemeldetem Lernkonto auch auf dem Server. Was den lokalen Stand löschen kann, steht unten unter „Einschränkungen“.",
       progressLocal:
-        "Dein Fortschritt liegt nur in diesem Browser. Gelöschte Website-Daten, ein privater Tab oder ein anderes Gerät können ihn löschen.",
+        "Dein Fortschritt liegt nur in diesem Browser. Was ihn löschen kann, steht unten unter „Einschränkungen“.",
       signInBoth:
         "Die Login-Seite bietet Google-Anmeldung und einen Einmal-Link per E-Mail. Ist der Link abgelaufen oder benutzt, fordere einen neuen an und prüfe den Spam-Ordner.",
       signInGoogle:
@@ -251,16 +251,16 @@ export const HELP_COPY = {
         "Ja, aber jedes Gerät hat seinen eigenen Stand. Eine Synchronisierung gibt es aktuell nicht.",
       quiz: "Quizze kannst du ohne Zeitdruck wiederholen. Nach dem Absenden siehst du Ergebnis und Erklärung. Als Kursabschluss zählt je nach Kurs ein bestandenes Abschlussquiz, eine eingereichte Abschlussaufgabe oder der Abschluss aller Lektionen.",
       recordsBeforeLimits:
-        "Sie halten fest, dass du einen Kurs hier abgeschlossen hast, und loehrning.ai stellt sie selbst aus. ",
+        "loehrning.ai stellt sie selbst aus. Sie halten fest, dass du hier einen Kurs abgeschlossen hast. ",
       recordsLimitsLink:
         "Sie sind nicht servergeprüft und belegen für sich allein keine Erfüllung von Artikel 4 der EU-KI-Verordnung.",
       recordsAfterLimits: "",
       simulations:
-        "Ein Praxisbeispiel erklärt ein Konzept mit synthetischen Daten und simulierten Abläufen, ohne echten Versand und ohne echte Kundendaten.",
+        "Ein Praxisbeispiel erklärt ein Konzept mit synthetischen Daten und simulierten Abläufen. Seine Grenzen stehen unten unter „Einschränkungen“.",
       oneBookAvailable:
         "Das Buch ist kostenlos im Browser lesbar, mit Lernkonto auch als PDF. Es ist Lernmaterial, keine zitierfähige Rechtsquelle.",
       oneBookUnavailable:
-        "Das Buch ist kostenlos im Browser lesbar. Der PDF-Download ist aktuell nicht verfügbar. Es ist Lernmaterial, keine zitierfähige Rechtsquelle.",
+        "Das Buch ist kostenlos im Browser lesbar und ist Lernmaterial, keine zitierfähige Rechtsquelle. Ein PDF-Download ist aktuell nicht verfügbar.",
       manyBooks:
         "Alle {bookCount} Bücher sind kostenlos im Browser lesbar. Sie sind Lernmaterialien, keine zitierfähigen Rechtsquellen.",
       dataAvailableBeforeLink: "Datenexport und Kontolöschung stehen unter ",
@@ -281,7 +281,7 @@ export const HELP_COPY = {
     metadata: {
       title: "Help and frequently asked questions",
       description:
-        "Answers about access, learning progress, completion records, books and your data on loehrning.ai.",
+        "Answers about access, learning progress, completion documents, books and your data on loehrning.ai.",
     },
     eyebrow: "Help / Reference",
     title: "Help and frequently asked questions",
@@ -295,7 +295,7 @@ export const HELP_COPY = {
       "Sign-in",
       "Multiple devices",
       "Quizzes",
-      "Completion records",
+      "Completion documents",
       "Practical examples",
       "Books",
       "Data management",
@@ -306,7 +306,7 @@ export const HELP_COPY = {
     updatesHeading: "Content changes",
     updatesEyebrow: "Changes",
     updatesBody: "Published changes are listed under",
-    updatesLink: "/en/neuigkeiten",
+    updatesLink: "What's new",
     questions: {
       start: "Where should I start?",
       account: "Why do I need an account?",
@@ -314,7 +314,7 @@ export const HELP_COPY = {
       signIn: "How do I sign in?",
       devices: "Can I learn on more than one device?",
       quiz: "How do quizzes and retries work?",
-      records: "What do the completion records mean?",
+      records: "What do the completion documents mean?",
       simulations: "What is a practical example or sandbox?",
       books: "Books: what can I read or download?",
       data: "How do I delete my account or export my data?",
@@ -322,20 +322,20 @@ export const HELP_COPY = {
       limits: "Which limitations are known?",
     },
     answers: {
-      startBeforeCheck: "The ",
+      startBeforeCheck: "Start with the ",
       startCheckLink: "AI check",
       startBetween:
-        " takes about 5 minutes and identifies a suitable starting point. All {courseCount} courses are listed in the ",
+        ": it takes about 5 minutes and recommends a course. All {courseCount} courses are listed in the ",
       startCatalogLink: "course catalog",
       startAfterCatalog: ".",
       accountAvailable:
         "Books, demos, the AI check and 6 technical course readers run without an account. The 4 foundation course readers need a free learning account, which syncs progress and completion status between your devices.",
       accountUnavailable:
-        "Books, demos, the AI check and 6 technical course readers work without an account. The 4 foundation course readers need a learning account. Because no sign-in method is enabled, these 4 readers are temporarily unavailable.",
+        "Books, demos, the AI check and 6 technical course readers work without an account. The 4 foundation course readers need a learning account. Until sign-in and learning accounts are enabled, these 4 readers are temporarily unavailable.",
       progressSynced:
-        "Progress is stored in your browser and, when you are signed in, on the server too. Clearing site data, a private tab or another browser can remove the local copy.",
+        "Progress is stored in your browser and, when you are signed in, on the server too. What can remove the local copy is listed under Limitations below.",
       progressLocal:
-        "Progress is stored only in this browser. Clearing site data, a private tab or another device can remove it.",
+        "Progress is stored only in this browser. What can remove it is listed under Limitations below.",
       signInBoth:
         "The sign-in page offers Google sign-in and a one-time email link. If the link has expired or been used, request a new one and check your spam folder.",
       signInGoogle:
@@ -350,16 +350,16 @@ export const HELP_COPY = {
         "Yes, but each device keeps its own state. Syncing is not currently available.",
       quiz: "You can repeat quizzes without a time limit. After submitting, you see the result and an explanation. Depending on the course, completion means passing a final quiz, submitting a final task or completing every lesson.",
       recordsBeforeLimits:
-        "They record that you completed a course here, and loehrning.ai issues them itself. ",
+        "loehrning.ai issues them itself. They record that you completed a course here. ",
       recordsLimitsLink:
         "They are not server-verified and do not by themselves establish compliance with Article 4 of the EU AI Act.",
       recordsAfterLimits: "",
       simulations:
-        "A practical example explains a concept with synthetic data and simulated processes. It sends nothing and uses no real customer data.",
+        "A practical example explains a concept with synthetic data and simulated processes. Its limits are listed under Limitations below.",
       oneBookAvailable:
         "The book is free to read in the browser, and as a PDF when you are signed in. It is learning material, not a citable legal source.",
       oneBookUnavailable:
-        "The book is free to read in the browser. The PDF download is not currently available. It is learning material, not a citable legal source.",
+        "The book is free to read in the browser and is learning material, not a citable legal source. A PDF download is not currently available.",
       manyBooks:
         "All {bookCount} books are free to read in the browser. They are learning materials, not citable legal sources.",
       dataAvailableBeforeLink:
@@ -422,12 +422,12 @@ export const HELP_LIMITATIONS_COPY = {
         mitigationAvailable:
           "Mit angemeldetem Lernkonto liegt der Fortschritt auch auf dem Server. Der lokale Stand hängt weiter an den Website-Daten des Browsers.",
         mitigationUnavailable:
-          "Die Synchronisierung ist aktuell nicht freigeschaltet, und der lokale Stand ist kein Backup. Sichere wichtige Ergebnisse sofort.",
+          "Sichere wichtige Ergebnisse sofort; der lokale Stand ist kein Backup.",
       },
       books: {
         title: "Lernbücher sind keine Primärquellen",
         descriptionOne:
-          "Das Buch ist eine redaktionell bearbeitete Lernfassung, kein amtliches Dokument, keine zitierfähige Rechtsquelle und kein Ersatz für Rechtsberatung.",
+          "Jedes Lernbuch ist eine redaktionell bearbeitete Lernfassung, kein amtliches Dokument, keine zitierfähige Rechtsquelle und kein Ersatz für Rechtsberatung.",
         descriptionMany:
           "Die {bookCount} Bücher sind redaktionell bearbeitete Lernfassungen, keine amtlichen Dokumente, keine zitierfähigen Rechtsquellen und kein Ersatz für Rechtsberatung.",
         mitigation:
@@ -454,7 +454,7 @@ export const HELP_LIMITATIONS_COPY = {
       simulations: {
         title: "Simulated practical examples",
         description:
-          "Demos and sandboxes use synthetic data and simulated interfaces. They do not send real email, call production third-party APIs or process real customer data.",
+          "Practical examples and sandboxes use synthetic data and simulated interfaces. They do not send real email, call production third-party APIs or process real customer data.",
         mitigation:
           "Use the examples to understand the process. Before real use, review provider documentation, data flows, permissions, logging and internal approvals separately.",
       },
@@ -472,12 +472,12 @@ export const HELP_LIMITATIONS_COPY = {
         mitigationAvailable:
           "With a signed-in learning account, progress is also stored on the server. The local copy still depends on the browser's site data.",
         mitigationUnavailable:
-          "Syncing is not currently enabled, and local progress is no backup. Save important results immediately.",
+          "Save important results right away; local progress is not a backup.",
       },
       books: {
         title: "Learning books are not primary sources",
         descriptionOne:
-          "The book is an edited learning edition, not an official document, a citable legal source or a substitute for legal advice.",
+          "Each learning book is an edited learning edition, not an official document, a citable legal source or a substitute for legal advice.",
         descriptionMany:
           "The {bookCount} books are edited learning editions, not official documents, citable legal sources or substitutes for legal advice.",
         mitigation:
@@ -497,7 +497,7 @@ export const NEWS_COPY = {
     eyebrow: "Änderungsprotokoll",
     title: "Was ist neu",
     intro:
-      "Datierte Hinweise zu neuen Inhalten und Korrekturen.",
+      "Datierte Hinweise zu neuen Inhalten und Änderungen.",
     statusLabel: "Einträge",
     statusValue: "{count} dokumentiert",
     sourceLabel: "Quelle",
@@ -513,7 +513,7 @@ export const NEWS_COPY = {
     eyebrow: "Change log",
     title: "What is new",
     intro:
-      "Dated notes on new material and corrections.",
+      "Dated notes on new material and changes.",
     statusLabel: "Entries",
     statusValue: "{count} documented",
     sourceLabel: "Source",
@@ -545,7 +545,7 @@ export const FEEDBACK_COPY = {
       "Keine Anfrageparameter oder URL-Fragmente im Seitenpfad",
     ],
     disabledStatus:
-      "Es werden keine Formulardaten gespeichert. Schreib an die angegebene E-Mail-Adresse.",
+      "Es werden keine Formulardaten gespeichert. Schreib stattdessen an tim@loehrning.ai.",
     disabledCodeLabel: "Status / Formular deaktiviert",
     form: {
       categoryLegend: "Art der Rückmeldung",
@@ -593,7 +593,7 @@ export const FEEDBACK_COPY = {
       "No query parameters or URL fragments in the page path",
     ],
     disabledStatus:
-      "No form data is stored. Write to the email address given.",
+      "No form data is stored. Email tim@loehrning.ai instead.",
     disabledCodeLabel: "Status / Form disabled",
     form: {
       categoryLegend: "Feedback category",

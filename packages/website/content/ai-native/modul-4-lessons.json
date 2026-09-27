@@ -42,7 +42,7 @@
           "id": "modul_4_lesson_1_section_2",
           "title": "Warum der Kurs n8n nutzt",
           "readTimeMinutes": 3,
-          "content": "| | Managed SaaS | n8n Cloud | n8n self-hosted |\n|---|---|---|---|\n| Betrieb | Anbieter | Anbieter | deine Organisation |\n| Kosten | aktuelle Preis- und Nutzungseinheiten prüfen | aktuelle Pläne prüfen | Hosting plus Betriebszeit |\n| Datenschutz | Rollen, DPA/AVV, Transfers und Optionen prüfen | Vertrag und Region prüfen | Hostingvertrag und alle angebundenen APIs prüfen |\n| Sicherheit | Anbieter plus eigene Konfiguration | Anbieter plus eigene Konfiguration | Patches, HTTPS, Secrets, Backups und Monitoring selbst |\n\nWelches Modell passt, entscheiden Datenklassen, Betriebskompetenz, Integrationen, Volumen und Exit-Anforderungen. Der Kurs nutzt n8n, weil sich die Workflow-Logik auf andere Werkzeuge übertragen lässt."
+          "content": "| | Managed SaaS | n8n Cloud | n8n self-hosted |\n|---|---|---|---|\n| Betrieb | Anbieter | Anbieter | deine Organisation |\n| Kosten | aktuelle Preis- und Nutzungseinheiten prüfen | aktuelle Pläne prüfen | Hosting plus Betriebszeit |\n| Datenschutz | Rollen, DPA/AVV, Transfers und Optionen prüfen | Vertrag und Region prüfen | Hostingvertrag und alle angebundenen APIs prüfen |\n| Sicherheit | Anbieter plus eigene Konfiguration | Anbieter plus eigene Konfiguration | Patches, HTTPS, Secrets, Backups und Monitoring selbst |\n\nWelches Modell passt, entscheiden Datenklassen, Betriebskompetenz, Integrationen, Volumen, Exit-Anforderungen sowie Reaktionsfähigkeit und Wiederherstellung im Betrieb. Der Kurs nutzt n8n, weil sich die Workflow-Logik auf andere Werkzeuge übertragen lässt."
         },
         {
           "id": "modul_4_lesson_1_section_3",
@@ -54,7 +54,7 @@
           "id": "modul_4_lesson_1_section_4",
           "title": "Erster Flow + n8n.cloud-Fallback",
           "readTimeMinutes": 3,
-          "content": "**Hello World: Webhook zu Review-Text**\n\n1. **Trigger:** Webhook-Node über die geschützte HTTPS-Test-URL, Methode POST\n2. **Action:** Review-Text vorbereiten\n   - Subject: \"Neue Webhook-Nachricht\"\n   - Body: `{{ $json.message }}` (dynamisch)\n3. **Save** + **Test** mit synthetischen Daten\n\nErgebnis: ein sichtbarer Review-Text im Testlauf, ohne automatischen Versand.\n\n**Managed als Fallback:** Der Anbieter übernimmt Teile von Betrieb, Patching und Verfügbarkeit; Vertrag, Datenfluss, Zugriffe, Export und Löschung prüfst du trotzdem. Die Sandbox-Muster in Modul 4 laufen auch managed."
+          "content": "**Hello World: Webhook zu Review-Text**\n\n1. **Trigger:** Webhook-Node über die geschützte HTTPS-Test-URL, Methode POST\n2. **Action:** Review-Text vorbereiten\n   - Subject: \"Neue Webhook-Nachricht\"\n   - Body: `{{ $json.message }}` (dynamisch)\n3. **Save** + **Test** mit synthetischen Daten\n\nErgebnis: ein sichtbarer Review-Text im Testlauf, ohne automatischen Versand.\n\n**Managed als Fallback:** Der Anbieter übernimmt Teile von Betrieb, Patching und Verfügbarkeit; Vertrag, DPA/AVV, Region, Unterauftragsverarbeiter, Zugriffe, Logging, Export und Löschung prüfst du trotzdem. Die Sandbox-Muster in Modul 4 laufen in der Regel auch managed."
         }
       ],
       "quiz": [
@@ -91,22 +91,22 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Immer, self-hosted ist schlechter",
+              "text": "Immer, denn self-hosted ist die schlechtere Wahl",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Wenn Vertrag und Datenfluss passen und der Eigenbetrieb nicht gewollt ist",
+              "text": "Wenn Vertrag und Datenfluss passen und du nicht selbst hostest",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "Nur wenn du keinen Computer hast",
+              "text": "Nur wenn du keinen eigenen Computer besitzt",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Nie, immer self-hosten",
+              "text": "Nie, denn du solltest n8n immer selbst hosten",
               "isCorrect": false
             }
           ],
@@ -138,7 +138,7 @@
             "lessonId": "modul_4_lesson_2",
             "moduleId": "modul_4",
             "title": "Baue die E-Mail-Triage-Pipeline",
-            "scenario": "n8n-Sandbox: Eine neue Beispiel-Mail kommt an, Claude klassifiziert sie (Angebot / Support / Spam), Switch routet sie zur passenden Review-Liste. Ordne die Knoten.",
+            "scenario": "n8n-Sandbox: Eine neue Beispiel-Mail kommt an, Claude klassifiziert sie vereinfacht als Angebot, Support oder Spam, Switch routet sie zur passenden Review-Liste. Ordne die Knoten.",
             "palette": [
               {
                 "id": "trigger-gmail",
@@ -242,22 +242,22 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Ein Call für die Sicherheit",
+              "text": "Weil ein einzelner Call sicherer ist",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Jeder Schritt bekommt eigenes Schema, eigene Tests und Fehlerregeln",
+              "text": "Jeder Schritt hat eigenes Schema, Tests und Fehlerregeln",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "Claude kann nur ein JSON pro Call",
+              "text": "Claude kann nur ein JSON-Objekt pro Call liefern",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Anthropic empfiehlt das",
+              "text": "Weil Anthropic das pauschal empfiehlt",
               "isCorrect": false
             }
           ],
@@ -274,17 +274,17 @@
             },
             {
               "id": "b",
-              "text": "Rollen, Datenflüsse, AVV/DPA, Transparenz und Art. 22 bei erheblichen Entscheidungen",
+              "text": "Rollen, Datenflüsse, AVV/DPA, Transparenz, Art. 22 bei erheblicher Wirkung",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "Nur wenn Daten ins Ausland gehen",
+              "text": "Nur wenn personenbezogene Daten ins Ausland gehen",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Email-Server muss in Deutschland stehen",
+              "text": "Nur dass der E-Mail-Server in Deutschland stehen muss",
               "isCorrect": false
             }
           ],
@@ -321,7 +321,7 @@
         },
         {
           "id": "modul_4_lesson_3_section_2",
-          "title": "tl;dv + Claude-Extractor",
+          "title": "Transkript-Webhook + Claude-Extraktor",
           "readTimeMinutes": 4,
           "content": "**Webhook vorbereiten:** Ob dein Tarif beim Transkriptionsdienst Webhooks, Ereignisname, Signaturprüfung und Payload bietet, steht in dessen aktueller Dokumentation. Die URL ist immer HTTPS und geschützt.\n\n**n8n-Seite:** Webhook-Trigger anlegen, Signatur oder gemeinsamen Secret-Wert prüfen und nur die benötigten Felder weiterreichen.\n\n**Extraktion mit JSON-Output:**\n\n```\nExtrahiere aus diesem Meeting-Transkript JSON nach diesem Schema:\n\n{\n  \"meeting\": {\n    \"thema\": \"...\",\n    \"datum\": \"YYYY-MM-DD\",\n    \"teilnehmer\": [\"...\"]\n  },\n  \"entscheidungen\": [\n    {\"text\": \"...\", \"kontext\": \"...\"}\n  ],\n  \"action_items\": [\n    {\n      \"text\": \"...\",\n      \"verantwortlich\": \"... (Name)\",\n      \"faelligkeit\": \"YYYY-MM-DD oder null\",\n      \"prioritaet\": \"hoch | mittel | niedrig\"\n    }\n  ],\n  \"offene_fragen\": [\n    {\"text\": \"...\", \"wer_antwortet\": \"...\"}\n  ]\n}\n\nTranskript: {{ $json.transcript }}\n\nGib nur ein JSON-Objekt aus. Wenn ein Feld nicht belegt ist, setze `null`; ergänze keine Information aus Vermutung.\n```\n\nDie Antwort wird technisch gegen ein JSON-Schema validiert. Interne Denkschritte mit ausgeben zu lassen, bringt weder gültiges JSON noch eine bessere fachliche Prüfung."
         },
@@ -371,7 +371,7 @@
             },
             {
               "id": "b",
-              "text": "Ein eindeutiges Schema, eine null-Regel für fehlende Werte und anschließende technische Validierung",
+              "text": "Schema, null-Regel und technische Validierung",
               "isCorrect": true
             },
             {
@@ -484,7 +484,7 @@
         },
         {
           "id": "modul_4_lesson_4_section_2",
-          "title": "Kritisch: Draft, nicht Send",
+          "title": "Der Flow speichert nur Entwürfe",
           "readTimeMinutes": 3,
           "content": "Der Flow **erstellt einen Entwurf** und sendet nichts. Eine benannte Person prüft Quellen, Zahlen, Empfänger und Freigabestatus. Ob automatischer Versand vertretbar wäre, hängt von Inhalt, Empfängern, Fehlerfolgen und Kontrollen ab; in diesem Kurs bleibt der manuelle Review das Gate.\n\n**Cron-Trigger + Notiz-Query:**\n\n1. **Cron-Trigger:**\n   - Cron-Expression: `0 16 * * 5` (Freitag 16:00 Uhr)\n   - Timezone: Europe/Berlin\n\n2. **Notiz-Query-Knoten:**\n   - Query 1: Daily Notes der aktuellen Woche\n   - Query 2: aktive Projekt-MOCs\n   - Query 3: Notizen mit Tag `#entscheidung` aus den letzten 7 Tagen\n\nDer Knoten fasst die Rohdaten in strukturiertem JSON zusammen.\n\nDer Kurs zeigt das Muster mit Beispieldaten. Eine echte Integration braucht Rechteprüfung, Logging, Fallback und einen Review-Prozess."
         },
@@ -498,7 +498,7 @@
           "id": "modul_4_lesson_4_section_4",
           "title": "Das generelle Muster",
           "readTimeMinutes": 3,
-          "content": "Den Wochenbericht schreibst du nicht mehr neu, du prüfst einen Entwurf. Das Muster passt auch auf andere wiederkehrende Berichte: Zeitplan, strukturierte Notizen, Claude-Entwurf, manueller Review.\n\n**Hausaufgabe:** Baue das Muster zuerst mit Beispieldaten nach.\n1. Muster `F004-wochenbericht-obsidian` aus den Kursmaterialien kopieren\n2. echte Daten erst nach Datenschutz- und Rechteprüfung verwenden\n3. einmal manuell testen\n4. Ergebnis prüfen, korrigieren, dokumentieren\n5. Zeit vorher und nachher über drei Durchläufe messen\n\nTeile nur anonymisierte Screenshots oder Beschreibungen."
+          "content": "Den Wochenbericht prüfst du ab jetzt als Entwurf. Das Muster passt auch auf andere wiederkehrende Berichte: Zeitplan, strukturierte Notizen, Claude-Entwurf, manueller Review.\n\n**Hausaufgabe:** Baue das Muster zuerst mit Beispieldaten nach.\n1. Muster `F004-wochenbericht-obsidian` aus den Kursmaterialien kopieren\n2. echte Daten erst nach Datenschutz- und Rechteprüfung verwenden\n3. einmal manuell testen\n4. Ergebnis prüfen, korrigieren, dokumentieren\n5. Zeit vorher und nachher über drei Durchläufe messen\n\nTeile nur anonymisierte Screenshots oder Beschreibungen."
         }
       ],
       "quiz": [
@@ -508,22 +508,22 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Gmail API erlaubt kein Send",
+              "text": "Weil die Gmail API kein Senden erlaubt",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Der Review prüft Quellen, Zahlen, Empfänger und Freigabe vor der Weitergabe",
+              "text": "Ein Mensch prüft Quellen, Zahlen, Empfänger und Freigabe",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "Draft ist schneller als Send",
+              "text": "Ein Draft ist schneller als direktes Senden",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "DSGVO verbietet Auto-Send",
+              "text": "Weil die DSGVO automatisches Senden verbietet",
               "isCorrect": false
             }
           ],
@@ -540,7 +540,7 @@
             },
             {
               "id": "b",
-              "text": "Ein Kandidatenmuster für wiederkehrende Berichte: Zeitplan + freigegebene Quellen + Modellentwurf + Review",
+              "text": "Zeitplan, freigegebene Quellen, Modellentwurf, Review",
               "isCorrect": true
             },
             {
@@ -596,7 +596,7 @@
           "id": "modul_4_lesson_5_section_3",
           "title": "Vertrauliche Dokument-Zusammenfassung",
           "readTimeMinutes": 2,
-          "content": "Teste zuerst mit einem fiktiven Strategiepapier:\n\n```\nHier ist ein synthetisches Strategiepapier. Fasse zusammen in:\n- 3 Sätze Executive Summary\n- 5 Initiativen\n- 3 Risiken\n\nAntwort auf Deutsch. Markiere Unsicherheiten und erfinde keine Fakten.\n```\n\nBewerte den Output gegen eine vorab definierte Soll-Liste: Faktentreue, Vollständigkeit, Format, Auslassungen und erfundene Aussagen. Miss Laufzeit und Speicherverbrauch auf deinem Gerät.\n\nOb die Verarbeitung lokal blieb, prüfst du getrennt; auch Zwischenablage und Protokolle sind Wege nach draußen.\n\nReale Daten kommen erst in einen Pilot, wenn Datenklasse, Gerät, Anwendung, Modell, Netzwerk und Löschprozess freigegeben sind; fachlich geprüft wird auch dann."
+          "content": "Teste zuerst mit einem fiktiven Strategiepapier:\n\n```\nHier ist ein synthetisches Strategiepapier. Fasse zusammen in:\n- 3 Sätze Executive Summary\n- 5 Initiativen\n- 3 Risiken\n\nAntwort auf Deutsch. Markiere Unsicherheiten und erfinde keine Fakten.\n```\n\nBewerte den Output gegen eine vorab definierte Soll-Liste: Faktentreue, Vollständigkeit, Format, Auslassungen und erfundene Aussagen. Miss Laufzeit und Speicherverbrauch auf deinem Gerät.\n\nOb die Verarbeitung lokal blieb, prüfst du getrennt; ein lokal geladenes Modell beweist das nicht, und auch Zwischenablage und Protokolle sind Wege nach draußen.\n\nReale Daten kommen erst in einen Pilot, wenn Datenklasse, Gerät, Anwendung, Modell, Netzwerk und Löschprozess freigegeben sind; fachlich geprüft wird auch dann."
         },
         {
           "id": "modul_4_lesson_5_section_4",
@@ -612,26 +612,26 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Immer, sicherer",
+              "text": "Immer, weil lokal immer sicherer ist",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Wenn der Fall lokal freigegeben ist und Gerät, Modell und Netzwerk kontrolliert sind",
+              "text": "Wenn Gerät, Modell und Netzwerk freigegeben und kontrolliert sind",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "Nur ohne Internet",
+              "text": "Nur auf Rechnern ohne Internetzugang",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Bei mehr als 10 Nutzern",
+              "text": "Sobald mehr als 10 Personen im Team das Tool nutzen",
               "isCorrect": false
             }
           ],
-          "explanation": "Vertraulich heißt nicht automatisch sicher lokal. Die ganze lokale Verarbeitungskette, dazu Rechte, Backups und Löschung, muss für den Anwendungsfall freigegeben und kontrolliert sein."
+          "explanation": "Vertrauliche Daten sind nicht schon deshalb sicher, weil sie lokal verarbeitet werden. Die ganze lokale Verarbeitungskette, dazu Rechte, Backups und Löschung, muss für den Anwendungsfall freigegeben und kontrolliert sein."
         },
         {
           "id": "modul_4_lesson_5_q2",
@@ -720,7 +720,7 @@
                         "id": "d",
                         "label": "Hängt von GPAI ab",
                         "correct": false,
-                        "explanation": "GPAI ist die Modellebene (Anthropic). Du bist Deployer, und der Zweck fällt nicht unter Anhang III."
+                        "explanation": "GPAI ist die Modellebene (Anthropic); du bist Deployer."
                       }
                     ]
                   },
@@ -732,7 +732,7 @@
                         "id": "a",
                         "label": "Minimales Risiko: nur Ranking",
                         "correct": false,
-                        "explanation": "Ein Ranking beeinflusst den Zugang zu Beschäftigung. Das IST Anhang III."
+                        "explanation": "Ein Ranking beeinflusst den Zugang zu Beschäftigung. Das fällt unter Anhang III."
                       },
                       {
                         "id": "b",
@@ -772,9 +772,9 @@
                       },
                       {
                         "id": "c",
-                        "label": "Verboten: Emotion-Recognition",
+                        "label": "Verboten: Emotionserkennung",
                         "correct": false,
-                        "explanation": "Verboten ist nur Emotionserkennung AM ARBEITSPLATZ (Art. 5 AI Act). Eine Gesprächszusammenfassung erkennt keine Emotionen."
+                        "explanation": "Verboten ist nur Emotionserkennung am Arbeitsplatz (Art. 5 AI Act). Eine Gesprächszusammenfassung erkennt keine Emotionen."
                       },
                       {
                         "id": "d",
@@ -817,7 +817,7 @@
                         "id": "d",
                         "label": "Provider-Pflichten",
                         "correct": false,
-                        "explanation": "Du bist Deployer, aber der Zweck fällt nicht unter Anhang III."
+                        "explanation": "Du bist hier Deployer."
                       }
                     ]
                   },
@@ -877,7 +877,7 @@
                         "id": "d",
                         "label": "Art. 22 DSGVO",
                         "correct": false,
-                        "explanation": "Art. 22 betrifft automatisierte Entscheidungen über Personen, und eine Firma ist keine Person."
+                        "explanation": "Art. 22 DSGVO betrifft automatisierte Entscheidungen über natürliche Personen; eine Firma ist keine natürliche Person."
                       }
                     ]
                   }
@@ -944,7 +944,7 @@
                         "id": "d",
                         "label": "Provider-Pflicht",
                         "correct": false,
-                        "explanation": "Anthropic ist Provider. Du bist Deployer, und der Zweck fällt nicht unter Anhang III."
+                        "explanation": "Anthropic ist Provider, du bist Deployer."
                       }
                     ]
                   },
@@ -989,13 +989,13 @@
           "id": "modul_4_lesson_6_section_1",
           "title": "Die drei Rollen",
           "readTimeMinutes": 3,
-          "content": "**Vorweg:** Das hier ist kein Rechtsrat. Im konkreten Fall fragst du einen Fachanwalt für IT-Recht; das folgende Framework hilft dir, viele Fälle vorzusortieren.\n\n**Provider (Anbieter):** baut das KI-System oder lässt es bauen und bringt es unter eigener Marke in den Markt.\n\n**Deployer (Betreiber):** setzt das KI-System unter eigener Autorität ein (nicht für rein persönliche, nicht berufliche Zwecke).\n\n**Importer (Importeur):** bringt ein KI-System aus einem Drittland (außerhalb der EU) in die EU.\n\nIm Unternehmen ist meist die Organisation Betreiber, und du handelst in ihrem Auftrag. Setzt deine Firma Claude, Copilot oder n8n mit Claude ein, ist sie regelmäßig Betreiber; Anthropic, Microsoft oder der jeweilige Anbieter bleiben Provider ihrer Systeme.\n\n**Betreiberpflichten** (verkürzt):\n- Hochrisiko-Systeme: Nutzung nach Anleitung, Monitoring, menschliche Aufsicht und Logs nach Art. 26; FRIA nur für Art.-27-Fälle.\n- Transparenz gegenüber Betroffenen nach Art. 50, soweit der Anwendungsfall darunter fällt.\n- Art. 4: rollen- und risikogerechte KI-Kompetenzmaßnahmen; eine Teilnahmebestätigung allein reicht nicht.\n- Nicht-Hochrisiko: weniger Spezialpflichten; Datenschutz, Betriebsrat, Geheimhaltung und Fachprüfung bleiben relevant."
+          "content": "**Vorweg:** Das hier ist kein Rechtsrat. Im konkreten Fall fragst du einen Fachanwalt für IT-Recht; das folgende Framework hilft dir, viele Fälle vorzusortieren.\n\n**Provider (Anbieter):** baut das KI-System oder lässt es bauen und bringt es unter eigener Marke in den Markt.\n\n**Deployer (Betreiber):** setzt das KI-System unter eigener Autorität ein (nicht für rein persönliche, nicht berufliche Zwecke).\n\n**Importer (Importeur):** bringt ein KI-System aus einem Drittland (außerhalb der EU) in die EU.\n\nIm Unternehmen ist meist die Organisation Betreiber, und du handelst in ihrem Auftrag. Bei Claude, Copilot oder n8n mit Claude bleiben Anthropic, Microsoft oder der jeweilige Anbieter Provider ihrer Systeme.\n\n**Betreiberpflichten** (verkürzt):\n- Hochrisiko-Systeme: Nutzung nach Anleitung, Monitoring, menschliche Aufsicht und Logs nach Art. 26; FRIA nur für Art.-27-Fälle.\n- Transparenz gegenüber Betroffenen nach Art. 50, soweit der Anwendungsfall darunter fällt.\n- Art. 4: rollen- und risikogerechte KI-Kompetenzmaßnahmen; eine Teilnahmebestätigung allein reicht nicht.\n- Nicht-Hochrisiko: weniger Spezialpflichten; Datenschutz, Betriebsrat, Geheimhaltung und Fachprüfung bleiben relevant."
         },
         {
           "id": "modul_4_lesson_6_section_2",
           "title": "Annex III: die Hochrisiko-Kategorien",
           "readTimeMinutes": 3,
-          "content": "Anhang III gliedert Hochrisiko-Anwendungsfälle in acht Bereiche: Biometrie; kritische Infrastruktur; Bildung und Berufsbildung; Beschäftigung; Zugang zu wesentlichen privaten und öffentlichen Diensten; Strafverfolgung; Migration, Asyl und Grenzkontrolle; Rechtspflege und demokratische Prozesse. Die Unterpunkte sind enger als diese Überschriften.\n\n| Anwendungsfall | Erste Einordnung |\n|---|---|\n| reiner Marketingentwurf | nicht allein Anhang III; Art. 4, Datenschutz, Geheimhaltung und Fachprüfung bleiben |\n| Kreditscore natürlicher Personen, nicht Betrugserkennung | grundsätzlich Anhang III Nr. 5 lit. b |"
+          "content": "Anhang III gliedert Hochrisiko-Anwendungsfälle in acht Bereiche: Biometrie; kritische Infrastruktur; Bildung und Berufsbildung; Beschäftigung; Zugang zu wesentlichen privaten und öffentlichen Diensten; Strafverfolgung; Migration, Asyl und Grenzkontrolle; Rechtspflege und demokratische Prozesse. Die Unterpunkte sind enger als diese Überschriften.\n\nZwei Beispiele für die erste Einordnung:\n\n| Anwendungsfall | Erste Einordnung |\n|---|---|\n| reiner Marketingentwurf | nicht allein Anhang III; Art. 4, Datenschutz, Geheimhaltung und Fachprüfung bleiben |\n| Kreditscore natürlicher Personen, nicht Betrugserkennung | grundsätzlich Anhang III Nr. 5 lit. b |"
         },
         {
           "id": "modul_4_lesson_6_section_3",
@@ -1022,7 +1022,7 @@
             },
             {
               "id": "b",
-              "text": "Der vorgesehene Zweck, der passende Unterpunkt, Art. 6 Abs. 3 und 4, die Rolle",
+              "text": "Vorgesehener Zweck, Unterpunkt, Art. 6 Abs. 3 und 4, Rolle",
               "isCorrect": true
             },
             {
@@ -1110,7 +1110,7 @@
               },
               "constraints": {
                 "minChars": 30,
-                "hint": "Harte Grenzen: DSGVO, interne Daten nur geschwärzt, Kosten < X €/Monat, Build-Zeit < Y Stunden. Dazu, was ausdrücklich NICHT zum Scope gehört."
+                "hint": "Harte Grenzen: DSGVO, interne Daten nur geschwärzt, Kosten < X €/Monat, Build-Zeit < Y Stunden. Dazu, was ausdrücklich nicht zum Scope gehört."
               }
             }
           }
@@ -1127,11 +1127,11 @@
           "id": "modul_4_lesson_7_section_2",
           "title": "Was ein gutes Capstone ist",
           "readTimeMinutes": 3,
-          "content": "**Ein prüfbarer Capstone ist:**\n- **relevant:** bearbeitet ein echtes, wiederkehrendes Problem\n- **messbar:** erfasst mindestens Qualität, Fehler, Review-Aufwand oder Durchlaufzeit vor und nach dem Pilot\n- **begrenzt:** hat klaren Start, klares Ende, erlaubte Daten und einen Fallback\n- **dokumentiert:** enthält Workflow-Diagramm, Risiko- und Datenschutzprüfung sowie Fehlerbehandlung\n- **übergabefähig:** nennt Voraussetzungen, Betriebsschritte, Zuständigkeit und Abschaltweg\n\n**Nicht ausreichend** sind eine unveränderte Tutorial-Kopie, fehlende Anwendung auf den gewählten Ablauf, Nutzenaussagen ohne Ausgangswert und fehlender Umgang mit Fehlern, Ausfällen oder falschen Ergebnissen.\n\n**Drei mögliche Pilotmuster:**\n\n1. **Vertrieb, Angebots-Follow-up-Entwurf.** Angebot erfasst → Entwurf nach definierter Frist → Mensch prüft Empfänger, Inhalt und Versand.\n2. **Finanzen, Rechnungs-Ingestion.** synthetische Rechnungen → Felder extrahieren → CSV validieren → fachlicher Review vor Import.\n3. **HR, Einarbeitungspaket.** freigegebene Stammdaten → Dokumententwürfe → HR prüft Rechte, Vollständigkeit und Versand."
+          "content": "**Ein prüfbarer Capstone ist:**\n- **relevant:** bearbeitet ein echtes, wiederkehrendes Problem\n- **messbar:** erfasst mindestens Qualität, Fehler, Review-Aufwand oder Durchlaufzeit vor und nach dem Pilot\n- **begrenzt:** hat klaren Start, klares Ende, erlaubte Daten und einen Fallback\n- **dokumentiert:** enthält Workflow-Diagramm, Risiko- und Datenschutzprüfung sowie Fehlerbehandlung\n- **übergabefähig:** nennt Voraussetzungen, Betriebsschritte, Zuständigkeit und Abschaltweg\n\n**Nicht ausreichend:** eine unveränderte Tutorial-Kopie, ein Workflow, den du nicht auf deinen Ablauf anwendest, Nutzenaussagen ohne Ausgangswert oder kein Plan für Fehler, Ausfälle und falsche Ergebnisse.\n\n**Drei mögliche Pilotmuster:**\n\n1. **Vertrieb, Angebots-Follow-up-Entwurf.** Angebot erfasst → Entwurf nach definierter Frist → Mensch prüft Empfänger, Inhalt und Versand.\n2. **Finanzen, Rechnungs-Ingestion.** synthetische Rechnungen → Felder extrahieren → CSV validieren → fachlicher Review vor Import.\n3. **HR, Einarbeitungspaket.** freigegebene Stammdaten → Dokumententwürfe → HR prüft Rechte, Vollständigkeit und Versand."
         },
         {
           "id": "modul_4_lesson_7_section_3",
-          "title": "Scope in 7 Tagen",
+          "title": "Scope begrenzen",
           "readTimeMinutes": 3,
           "content": "**Zeitbudget:** Plane einen ersten prüfbaren Durchlauf in deiner verfügbaren Arbeits- und Review-Zeit und reserviere Zeit für Testdaten, Fehlerfälle, Dokumentation und Rückbau.\n\n**Scope zu groß:**\n- \"Ich baue ein komplettes CRM-System mit KI\"\n- \"Ich digitalisiere die gesamte Buchhaltung\"\n- \"Ich migriere die komplette Firmendokumentation\"\n\n**Begrenzbarer Scope:**\n- \"Angebotsentwurf aus freigegebenem Briefing und versionierter Preisliste\"\n- \"Lead-E-Mail-Triage mit synthetischen Testmails und Review-Liste\"\n- \"Wochenbericht aus einem definierten Satz freigegebener Notizen\"\n\n**Scope reduzieren:** Such den kleinsten Durchlauf, der die zentrale Annahme prüft. Weitere Datenquellen, automatische Schreibaktionen und Sonderfälle bleiben draußen, bis Start, Ende, Review und Fallback eindeutig sind.\n\n**Sieben Pflicht-Elemente der Capstone-Rubrik:**\n1. Problem-Statement\n2. Workflow-Diagramm (Trigger → Schritte → Output)\n3. Begründung der Tool-Wahl\n4. Risiko- und Datenschutzprüfung\n5. Messung anhand von mindestens drei vergleichbaren Durchläufen\n6. Fehlerfall + Fallback\n7. Liste der offenen Entscheidungen und nächsten Schritte\n\n**Hausaufgabe:** Wähle einen Workflow und halte intern Titel, Problem, erlaubte Daten, geplanten Stack, Zeitbudget, Review-Kriterien und Abbruchbedingung fest. Prüfe das vor dem Bau gegen die Rubrik."
         }
@@ -1170,7 +1170,7 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Scope verdoppeln bei Zweifel",
+              "text": "Im Zweifel den Scope verdoppeln, um sicherzugehen",
               "isCorrect": false
             },
             {
@@ -1180,12 +1180,12 @@
             },
             {
               "id": "c",
-              "text": "Immer max. 10% vom Original",
+              "text": "Immer auf höchstens 10 % des Originals kürzen",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Scope ist nicht anpassbar",
+              "text": "Gar nicht, der Scope ist nicht anpassbar",
               "isCorrect": false
             }
           ],
@@ -1241,9 +1241,9 @@
       "sections": [
         {
           "id": "modul_4_lesson_8_section_1",
-          "title": "Capstone-Bewertung und Rubric",
+          "title": "Capstone-Bewertung und Rubrik",
           "readTimeMinutes": 3,
-          "content": "Für den fertigen Capstone triffst du zwei getrennte Entscheidungen: Wie schneidet er gegen die Rubrik ab, und darf er geteilt werden?\n\nDie Teilnahmebestätigung beruht auf deiner eigenen Angabe zu den sieben Kriterien, erfüllt oder nicht erfüllt. Eine externe Prüfung des Systems oder deiner Kompetenz ist sie nicht.\n\n**Ablauf:**\n1. **Dokumentieren:** Workflow, Testdaten, Ergebnisse und Fehlerfälle festhalten\n2. **Rubrik prüfen:** jedes Kriterium belegen, auch dass der Workflow in seinen Automations- und Review-Grenzen bleibt\n3. **Freigabe getrennt entscheiden:** Teilen braucht ausdrückliches Opt-in sowie Datenschutz-, Geheimhaltungs- und Sicherheitsprüfung\n4. **Optional iterieren:** Feedback und Messwerte in einer neuen Version dokumentieren"
+          "content": "Für den fertigen Capstone triffst du zwei getrennte Entscheidungen: Wie schneidet er gegen die Rubrik ab, und darf er geteilt werden?\n\nDie Teilnahmebestätigung beruht auf deiner eigenen Angabe zu den sieben Kriterien, erfüllt oder nicht erfüllt. Sie ist keine externe Prüfung des Systems oder deiner Kompetenz und belegt keinen sicheren Produktivbetrieb.\n\n**Ablauf:**\n1. **Dokumentieren:** Workflow, Testdaten, Ergebnisse und Fehlerfälle festhalten\n2. **Rubrik prüfen:** jedes Kriterium belegen, auch dass der Workflow in seinen Automations- und Review-Grenzen bleibt\n3. **Freigabe getrennt entscheiden:** Teilen braucht ausdrückliches Opt-in sowie Datenschutz-, Geheimhaltungs- und Sicherheitsprüfung\n4. **Optional iterieren:** Feedback und Messwerte in einer neuen Version dokumentieren"
         },
         {
           "id": "modul_4_lesson_8_section_2",
@@ -1261,7 +1261,7 @@
           "id": "modul_4_lesson_8_section_4",
           "title": "Abschluss",
           "readTimeMinutes": 2,
-          "content": "Modul 4 schließt den Arbeitskurs ab: 27 Lektionen zu Aufgabenanalyse, Modellnutzung, Wissensbasis und Workflow-Automation.\n\nDer Abschluss dokumentiert, was du bearbeitet und wie du den Capstone selbst bewertet hast. Er ist weder ein externes Audit noch ein Nachweis für sicheren Produktivbetrieb.\n\nDie Teilnahmebestätigung lädst du nach dem Quiz oder dem Capstone herunter. Ihr QR-Code enthält lesbare Abschlussdaten für die technische Prüfung.\n\n**Abschlussarbeit:**\n1. Zwei fremde oder ältere Workflows anhand der Rubrik prüfen\n2. Den eigenen Capstone mit Messwerten, Fehlerfällen und Datenfreigabe dokumentieren\n3. Festhalten, welche Annahmen bestätigt, widerlegt oder noch offen sind"
+          "content": "Modul 4 schließt den Arbeitskurs ab: 27 Lektionen zu Aufgabenanalyse, Modellnutzung, Wissensbasis und Workflow-Automation.\n\nDie Teilnahmebestätigung lädst du nach dem Quiz oder dem Capstone herunter. Ihr QR-Code enthält lesbare Abschlussdaten für die technische Prüfung.\n\n**Abschlussarbeit:**\n1. Zwei fremde oder ältere Workflows anhand der Rubrik prüfen\n2. Den eigenen Capstone mit Messwerten, Fehlerfällen und Datenfreigabe dokumentieren\n3. Festhalten, welche Annahmen bestätigt, widerlegt oder noch offen sind"
         }
       ],
       "quiz": [
@@ -1276,12 +1276,12 @@
             },
             {
               "id": "b",
-              "text": "Übergabefähigkeit / risikobasierte Fehlerbehandlung / nachvollziehbare Methodik",
+              "text": "Übergabe / Fehlerbehandlung / nachvollziehbare Methode",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "Dokumentiert / Getestet / Verbreitet",
+              "text": "Dokumentiert / getestet / im Team verbreitet",
               "isCorrect": false
             },
             {
@@ -1303,7 +1303,7 @@
             },
             {
               "id": "b",
-              "text": "Datenschutzpflichten + vertragliche Geheimhaltung + Schutz von Secrets und internen Informationen",
+              "text": "Datenschutz, Geheimhaltung und Schutz von Secrets",
               "isCorrect": true
             },
             {

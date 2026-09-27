@@ -53,7 +53,7 @@
       },
       { "id": "d", "text": "Nur gegen Aufpreis.", "isCorrect": false }
     ],
-    "explanation": "Persistenz ist eine Produktfunktion. Projects, CLAUDE.md oder auto-memory können sie liefern. Prüfe die Konfiguration, statt auf Erinnerung über Chats hinweg zu bauen.",
+    "explanation": "Persistenz ist eine Produktfunktion, etwa über Projects, CLAUDE.md oder auto-memory. Prüfe die Konfiguration, statt auf Erinnerung über Chats hinweg zu bauen.",
     "version": 1,
     "active": true
   },
@@ -146,7 +146,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Tokenisierung variiert nach Modell, Sprache, Zeichensetzung und Inhaltstyp. Bei Kontextgrenze oder Kosten zählt der unterstützte Zähler.",
+    "explanation": "Tokenisierung variiert nach Modell, Sprache, Zeichensetzung und Inhaltstyp. Wenn Kontextgrenze oder Kosten zählen, nutze den offiziellen Token-Zähler.",
     "version": 1,
     "active": true
   },
@@ -154,7 +154,7 @@
     "id": "claude-q06",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Du hast drei Quelldokumente und eine Frage. An welcher Stelle empfiehlt Anthropic die Frage?",
+    "questionText": "Du hast drei Quelldokumente und eine Frage. Wo soll die Frage laut Anthropic stehen?",
     "answerOptions": [
       {
         "id": "a",
@@ -262,7 +262,7 @@
       },
       { "id": "d", "text": "\"Versuche es noch einmal.\"", "isCorrect": false }
     ],
-    "explanation": "Nur diese Korrektur benennt eine prüfbare Änderung. Die anderen drei sind Stimmung, keine Anweisung.",
+    "explanation": "Nur diese Korrektur benennt eine prüfbare Änderung. Die anderen drei sagen nicht, was sich ändern soll.",
     "version": 1,
     "active": true
   },
@@ -417,7 +417,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Du stellst autoritative Daten bereit, verlangst Belege, definierst Abstention und prüfst die zitierten Passagen.",
+    "explanation": "Du stellst autoritative Daten bereit, verlangst Belege, legst fest, wann Claude \"nicht im Kontext\" sagt, und prüfst die zitierten Passagen.",
     "version": 1,
     "active": true
   },
@@ -525,7 +525,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Ein offengelegtes Geheimnis gilt als kompromittiert. Erneuern, und künftige Eingaben vorher redigieren.",
+    "explanation": "Ein offengelegtes Geheimnis gilt als kompromittiert. Lass es erneuern und künftige Eingaben vorher schwärzen.",
     "version": 1,
     "active": true
   },
@@ -542,7 +542,7 @@
       },
       {
         "id": "b",
-        "text": "Markiere sie als unsicher, beschränke Tools und Ziele, gib Folgenreiches nur frei.",
+        "text": "Markiere sie als nicht vertrauenswürdig, beschränke Tools und Ziele, lass Folgenreiches freigeben.",
         "isCorrect": true
       },
       {

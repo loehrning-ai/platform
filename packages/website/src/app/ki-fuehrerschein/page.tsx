@@ -85,7 +85,7 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
     heading: "KI im Alltag:",
     headingAccent: "Was du wissen solltest.",
     introduction:
-      "Du lernst, welche Daten in ein KI-Tool dürfen und wie du eine Antwort prüfst, bevor sie weitergeht. Vorkenntnisse brauchst du keine.",
+      "Du lernst, welche Daten in ein KI-Tool dürfen und wie du eine Antwort prüfst, bevor sie weitergeht. Technische Vorkenntnisse brauchst du keine.",
     imageAlt:
       "Editoriale Collage eines KI-Prüfpasses mit Lernkarten, Datenschutz und Prüfschritten",
     start: "Kostenlos mit Lernkonto starten",
@@ -98,8 +98,8 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
     outcomesHeading: "Was du danach kannst",
     outcomes: [
       { title: "Daten in vier Stufen einordnen, bevor sie ins Tool gehen" },
-      { title: "Mail, Protokoll, Auswertung und Bericht mit KI entwerfen" },
-      { title: "Eine KI-Antwort gegen die Quelle prüfen" },
+      { title: "Mails, Protokolle, Auswertungen und Berichte mit KI entwerfen" },
+      { title: "Eine KI-Antwort gegen die Quelle prüfen und Erfundenes erkennen" },
       { title: "Festlegen, wer bei folgenreichen Ergebnissen entscheidet" },
     ],
     curriculumHeading: "Lehrplan",
@@ -150,9 +150,9 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
     outcomesHeading: "What you can do afterwards",
     outcomes: [
       { title: "Sort data into four levels before it enters a tool" },
-      { title: "Draft email, minutes, analysis and report with AI" },
-      { title: "Check an AI answer against its source" },
-      { title: "Decide who signs off results with consequences" },
+      { title: "Draft emails, minutes, analyses and reports with AI" },
+      { title: "Check an AI answer against its source and spot invented details" },
+      { title: "Decide who signs off on high-stakes results" },
     ],
     curriculumHeading: "Course plan",
     minutes: (count) => `${count} min`,

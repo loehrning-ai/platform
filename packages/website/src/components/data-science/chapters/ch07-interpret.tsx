@@ -22,7 +22,7 @@ export default function Ch07Interpret() {
       <Hero
         eyebrow="Chapter 07 · Interpret"
         title="Explanation methods answer <em>specific questions.</em>"
-        hook="Good predictions explain nothing yet. SHAP, LIME and permutation importance each describe one slice of model behavior, under reference data and assumptions you have to state."
+        hook="SHAP, LIME and permutation importance each describe one slice of model behavior, under reference data and assumptions you have to state."
         meta={[
           { k: "Read", v: "10 min" },
           { k: "Focus", v: "SHAP · LIME · Permutation" },
@@ -32,7 +32,7 @@ export default function Ch07Interpret() {
 
       <section className="section">
         <SectionLabel n="07.1">Per-instance explanations, SHAP</SectionLabel>
-        <h2 className="h2">SHAP: game theory meets ML.</h2>
+        <h2 className="h2">SHAP splits one prediction across features.</h2>
         <p className="prose">
           SHAP (SHapley Additive exPlanations) splits a prediction additively
           across features, using Shapley values and a chosen background
@@ -45,7 +45,7 @@ export default function Ch07Interpret() {
 
       <section className="section">
         <SectionLabel n="07.2">Local approximation, LIME</SectionLabel>
-        <h2 className="h2">Complex model, simple explanation, nearby.</h2>
+        <h2 className="h2">LIME fits a linear model around one point.</h2>
         <p className="prose">
           LIME (Local Interpretable Model-agnostic Explanations) asks a local
           question:{" "}
@@ -64,7 +64,9 @@ export default function Ch07Interpret() {
         <SectionLabel n="07.3">
           Global feature importance, permutation
         </SectionLabel>
-        <h2 className="h2">Corrupt one column. Measure the damage.</h2>
+        <h2 className="h2">
+          Shuffle a column and the metric drop measures reliance.
+        </h2>
         <p className="prose">
           Shuffling one column breaks its link to the target while the model
           keeps running. The metric drop estimates how much the model relied
@@ -100,10 +102,10 @@ export default function Ch07Interpret() {
         />
         <BestPractices
           items={[
-            "<b>SHAP for additive attribution:</b> state explainer, output scale, background data, handling of feature dependence and approximation error. Efficiency holds for the chosen SHAP formulation, not every implementation output.",
+            "<b>SHAP for additive attribution:</b> state explainer, output scale, background data, handling of feature dependence and approximation error. SHAP values sum exactly to the prediction only in the chosen formulation; approximations deviate.",
             "<b>Permutation for reliance on evaluation data:</b> choose metric and permutation unit, and read correlated features jointly when needed.",
             "<b>LIME for a local surrogate:</b> report locality, perturbation distribution, surrogate fit and stability across seeds.",
-            "<b>Show how stable importance estimates are.</b> Repeat stochastic procedures and report the spread; call it confidence only with a justified sampling interpretation.",
+            "<b>Show how stable importance estimates are.</b> Repeat stochastic procedures and report the spread.",
           ]}
         />
       </section>

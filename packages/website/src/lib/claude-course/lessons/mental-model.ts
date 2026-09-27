@@ -26,21 +26,21 @@ const lesson: ClaudeLesson = {
     {
       id: "what-it-is",
       title: "What it is (and isn't)",
-      readTimeMinutes: 3,
+      readTimeMinutes: 1,
       content:
         "Claude generates text from what sits in the window: the request, the conversation, system instructions, and documents or tool results the product supplied. Output is probabilistic; the same request can land differently tomorrow.\n\n**Generation is not retrieval.** Looking something up takes an enabled tool and a call that returned, such as web search, repository access or a database query.\n\n**The model is not storage.** History, project context and memory files come from the product, if at all. Check which controls are active.\n\n**Fluent output is not review.** The model can follow a false premise and invent details. Important output stays a draft until sources, tests or a reviewer confirm it.",
     },
     {
       id: "three-things",
       title: "The three things in every exchange",
-      readTimeMinutes: 2,
+      readTimeMinutes: 1,
       content:
         "Three inputs shape a generation:\n\n- **Current context:** instructions, messages, attachments and tool results in the active window.\n- **Training:** general patterns of varying coverage and recency, no source for private or current facts.\n- **Settings and safeguards:** model, sampling, enabled tools and product policies.\n\n> **Grounding rule.** When an answer depends on current, private or high-stakes facts, supply an authoritative source and check that the response follows from it.",
     },
     {
       id: "constitutional-ai",
       title: "Constitutional AI, in 90 seconds",
-      readTimeMinutes: 2,
+      readTimeMinutes: 1,
       content:
         "Constitutional AI is one Anthropic training method: written principles generate critiques, revisions and preference data. It works beside other safety methods and makes no response automatically correct or refusal consistent.\n\nA refusal is a model output, not a policy ruling. For a legitimate task, add the missing purpose and constraints without bypassing a valid safety boundary.\n\nUncertainty language is not calibrated confidence, so check the evidence. Define what the model returns when sources fall short, and test known and unknown cases.",
     },
@@ -49,7 +49,7 @@ const lesson: ClaudeLesson = {
       title: "Feel it: the unknown-knowns test",
       readTimeMinutes: 1,
       content:
-        "Ask about project data you never supplied. Depending on model, product and prompt, the response abstains, asks for context or answers with nothing behind it. A project-specific claim needs project-specific evidence, so supply the source and verify the citation.",
+        "Ask about project data you never supplied. Depending on model, product and prompt, the response abstains, asks for context or answers with nothing behind it. A project-specific claim needs project-specific evidence, so supply the source, ask for a citation and verify it.",
     },
     {
       id: "failure-modes",

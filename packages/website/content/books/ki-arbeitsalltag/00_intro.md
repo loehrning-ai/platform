@@ -2,7 +2,7 @@
 
 # Wie du dieses Buch nutzt
 
-Seit dem 2. Februar 2025 gilt Artikel 4 der EU-KI-Verordnung zur KI-Kompetenz, und er betrifft jeden Arbeitgeber in Europa. Der KI-Führerschein vermittelt die Grundlagen, dieses Buch dient als Nachschlagewerk, egal ob du alle fünf Blöcke abgeschlossen hast oder gerade bei Block 2 bist.
+Seit dem 2. Februar 2025 gilt Artikel 4 der EU-KI-Verordnung zur KI-Kompetenz, und er betrifft jeden Arbeitgeber in Europa. Der KI-Führerschein vermittelt die Grundlagen. Dieses Buch ist dein Nachschlagewerk, egal ob du alle fünf Blöcke abgeschlossen hast oder gerade bei Block 2 bist.
 
 Du musst das Buch **nicht von vorne bis hinten lesen**. Schlag nach, was du brauchst.
 
@@ -43,7 +43,7 @@ Jedes Kapitel hat vier Teile:
 
 ## Die Tipps
 
-Tipps, im Kurs grüne Kästen, stehen hier als Callouts.
+Was im Kurs in grünen Kästen steht, findest du hier als Tipp-Kasten.
 
 > **Tipp:** Speichere deine besten Prompts in einer Datei. Nach zehn Prompts hast du ein System, das für dich arbeitet.
 

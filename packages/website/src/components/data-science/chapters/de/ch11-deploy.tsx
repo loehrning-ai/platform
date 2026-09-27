@@ -35,8 +35,7 @@ export default function Ch11DeployDe() {
           zuordnen.
         </h2>
         <p className="prose">
-          Produktions-ML ist ein System aus Request-Routing, Merkmalsabruf,
-          Modellbereitstellung und Monitoring. Gib jeder Komponente
+          Gib jeder Komponente
           Verantwortliche, Timeouts, Fallbacks, Beobachtbarkeit und
           Rollback-Verhalten, bevor du dem Gesamtpfad vertraust.
         </p>
@@ -53,9 +52,8 @@ export default function Ch11DeployDe() {
           sich: Das Modell lernte auf Nutzern aus 2023 und sieht 2025 anderes
           Verhalten. Der PSI (Population Stability Index) summiert (actual −
           expected) × ln(actual/expected) über alle Buckets und hängt von
-          Buckets und Stichprobengröße ab. Ein Grenzwert wie 0.2 ist eine
-          kontextabhängige Heuristik, keine Retraining-Regel, und Eingabedrift
-          beweist keinen Leistungsverlust.
+          Buckets und Stichprobengröße ab. Eingabedrift beweist keinen
+          Leistungsverlust.
         </p>
         <p className="prose">
           <strong>Konzeptdrift</strong> sieht man schlechter: Die Beziehung
@@ -107,7 +105,7 @@ export default function Ch11DeployDe() {
       <AntiPatterns
         title="Fehlmuster"
         items={[
-          "<b>Kein getesteter Rollback-Pfad.</b> Das alte Artefakt hilft nichts, wenn Schemas, Zustand, Caches oder Folgewirkungen nicht mit zurückgehen.",
+          "<b>Kein getesteter Rollback-Pfad.</b> Das alte Artefakt hilft nichts, wenn Schemas, Zustand, Caches oder Folgewirkungen nicht mit zurückgehen. Üb die Wiederherstellung nach größeren Änderungen und halt fest, was tatsächlich wiederhergestellt wird.",
           "<b>Unbeobachtetes Kandidatenverhalten.</b> Vor der Freigabe den Kandidaten mit repräsentativen Eingaben über Replay, Shadow, Batch oder eine gestufte Route prüfen.",
           "<b>Nur eine verzögerte Ergebnismetrik überwachen.</b> Eingabequalität, Merkmals- und Vorhersageverteilungen, Latenz, Fehler und fachliche Leitplanken ergänzen, ohne Proxys als Leistungsnachweis zu behandeln.",
           "<b>Ein Modellartefakt direkt überschreiben.</b> Retraining braucht unveränderliche Versionen, Evaluation, Freigabe, gestufte Bereitstellung und einen wiederherstellbaren Rollback-Pfad.",
@@ -117,7 +115,7 @@ export default function Ch11DeployDe() {
         title="Bewährte Verfahren"
         items={[
           "<b>Einen Rollout-Vertrag schreiben.</b> Geeigneten Verkehr, Beobachtungsfenster, Akzeptanzmetriken, Leitplanken, Label-Verzögerung, Abbruchverantwortung und Rollback aus dem Systemrisiko ableiten.",
-          "<b>Retraining-Auslöser kalibrieren.</b> Baselines und Fehlerbudgets festlegen, prüfen, ob aus einem Alarm eine Maßnahme folgt, und bei verfügbaren Labels Ergebnisevidenz verlangen.",
+          "<b>Retraining-Auslöser kalibrieren.</b> Baselines und Fehlerbudgets festlegen, Alarme an fachliche Wirkung und Nutzerfolgen koppeln, prüfen, ob aus einem Alarm eine Maßnahme folgt, und bei verfügbaren Labels Ergebnisevidenz verlangen.",
           "<b>Daten, Code, Konfiguration und Modell versionieren.</b> Datenschutzkonforme Herkunftsnachweise aufbewahren, die Training und Evaluation reproduzieren.",
         ]}
       />

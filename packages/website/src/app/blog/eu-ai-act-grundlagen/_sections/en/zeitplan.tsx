@@ -76,7 +76,8 @@ export function ZeitplanEn() {
       <div className="premise" style={{ marginTop: 48 }}>
         <div className="premise__body">
           <p>
-            Breaches of Article 5 prohibitions can be fined up to EUR 35 million
+            Fines: breaches of the Article 5 prohibitions can be fined up to
+            EUR 35 million
             or 7% of total worldwide annual turnover, whichever is higher.
           </p>
           <p>

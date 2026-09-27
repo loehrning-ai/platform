@@ -159,7 +159,7 @@ export const AI_NATIVE_FAQ: readonly AiNativeFaqItem[] = [
   {
     question: "Wie ist der Capstone strukturiert?",
     answer:
-      "Du dokumentierst und testest einen begrenzten Workflow anhand einer Sieben-Punkte-Rubrik. Die Teilnahmebestätigung entsteht lokal aus deinem Fortschritt, ohne externe Prüfung oder Akkreditierung.",
+      "Du dokumentierst und testest einen begrenzten Workflow anhand einer binären Sieben-Punkte-Rubrik. Die Teilnahmebestätigung entsteht lokal aus deinem Fortschritt, ohne externe Prüfung oder Akkreditierung.",
   },
 ];
 
@@ -192,7 +192,7 @@ export const AI_NATIVE_FAQ_EN: readonly AiNativeFaqItem[] = [
   {
     question: "How is the capstone assessed?",
     answer:
-      "You document and test one bounded workflow against a seven-point self-review rubric. The completion record is created locally from your progress, without external examination or accreditation.",
+      "You document and test one bounded workflow against a binary seven-point self-review rubric. The completion record is created locally from your progress, without external examination or accreditation.",
   },
 ];
 

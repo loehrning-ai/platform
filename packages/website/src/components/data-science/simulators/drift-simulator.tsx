@@ -226,7 +226,7 @@ export function DriftSimulator() {
       title={text("Drift simulator", "Drift-Simulator")}
       meta={`${text("Day", "Tag")} ${day} / 60`}
       caption={text(
-        "Days 1–30 use a fixed baseline; days 31–60 add input and concept shift. The 0.2 PSI line is a demo threshold: real PSI depends on bins and sample size, measures no model quality and needs calibration against outcomes.",
+        "Days 1–30 use a fixed baseline; days 31–60 add input and concept shift. The 0.2 PSI line is a demo threshold: real PSI depends on bins and sample size, does not measure model quality and needs calibration against outcomes.",
         "Tage 1–30 nutzen eine feste Basis; Tage 31–60 ergänzen Eingabe- und Konzeptdrift. Die PSI-Linie bei 0.2 ist eine Demogrenze: Realer PSI hängt von Buckets und Stichprobengröße ab, misst keine Modellgüte und muss an Ergebnissen kalibriert werden.",
       )}
     >
@@ -314,7 +314,7 @@ export function DriftSimulator() {
                 : text("≤ 0.2 → no demo alert", "≤ 0.2 → kein Demoalarm")}
             </div>
             <div style={{ fontSize: 12, color: "var(--ink-2)", marginTop: 3 }}>
-              {text("Accuracy", "Genauigkeit")} = {round(current.acc, 3)}{" "}
+              AUC = {round(current.acc, 3)}{" "}
               {accAlarm ? text("⬇ degraded", "⬇ verschlechtert") : ""}
             </div>
             <div style={{ fontSize: 12, color: "var(--ink-2)", marginTop: 3 }}>
@@ -357,11 +357,11 @@ export function DriftSimulator() {
             yMax={1}
             color="#D1FF3A"
             thresholdVal={0.82}
-            thresholdLabel="alert"
+            thresholdLabel={text("alert", "Alarm")}
             cursorDay={day}
             label={text(
               "Model accuracy (AUC) over 60 days",
-              "Modellgenauigkeit (AUC) über 60 Tage",
+              "Modellgüte (AUC) über 60 Tage",
             )}
             driftStartLabel={text(
               "day 30 · drift start",

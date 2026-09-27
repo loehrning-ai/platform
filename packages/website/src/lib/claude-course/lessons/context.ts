@@ -19,7 +19,7 @@ const lesson: ClaudeLesson = {
   subtitle: "What enters a request, how it is tokenized, and what to verify.",
   durationMinutes: 10,
   trackId: "foundations",
-  hook: "Context is finite. Relevance, source quality, and placement decide the answer.",
+  hook: "The context window is limited, so choose relevant sources.",
   keyConcepts: [
     "Context engineering",
     "Semantic space",
@@ -32,21 +32,21 @@ const lesson: ClaudeLesson = {
     {
       id: "context-is-the-product",
       title: "Context is the product",
-      readTimeMinutes: 3,
+      readTimeMinutes: 1,
       content:
         "Context engineering means choosing and arranging what a model sees: instructions, source documents, examples, prior messages and tool results. Clear wording cannot supply a fact you never pasted or repair an unreliable source.\n\n**Semantic representations.** Models hold tokens as high-dimensional numerical states where related terms can land close together. A two-dimensional map only illustrates this.\n\n**Finite context.** Every model and product documents a context limit. Long inputs still fail when the relevant passage is hard to find, sources conflict or the output eats the budget, so test with your real model and inputs.",
     },
     {
       id: "meaning-in-space",
-      title: "Meaning lives in space",
+      title: "Make vague words precise",
       readTimeMinutes: 1,
       content:
-        "Terms such as \"concise\" and \"exhaustive\" imply different output requirements. When consistency matters, turn such terms into testable limits.",
+        "The map above shows which terms sit close together. Words like \"concise\" or \"exhaustive\" still do not tell the model exactly what you want. Turn them into testable limits, such as \"at most 150 words\".",
     },
     {
       id: "window-as-budget",
       title: "The window is a budget",
-      readTimeMinutes: 2,
+      readTimeMinutes: 1,
       content:
         "Instructions, messages, documents, prior turns and tool results share the window with the response.\n\n1. **Documents before the question.** For multi-document tasks, Anthropic's long-context guidance puts source documents before the query. Validate that with your evaluations.\n2. **Label each source.** Tags such as `<document index=\"1\" source=\"…\">` keep source boundaries visible and simplify citation formats.\n3. **State the evidence rule.** Say whether general knowledge is allowed, which sources count and what to return without support.\n\nWithout a retrieval or relevance strategy, a large document set adds conflicts and buries the passage you need.",
     },
@@ -80,7 +80,7 @@ const lesson: ClaudeLesson = {
       props: {
         lessonId: "context",
         cpId: "drop",
-        title: "Meaning lives in space",
+        title: "Meaning map",
         scenario:
           "This local illustration maps words to predefined topic groups. It does not call Claude or calculate embeddings.",
         seed: CLAUDE_SEMANTIC_SPACE_SEED,

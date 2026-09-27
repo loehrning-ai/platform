@@ -10,7 +10,7 @@ Der deutsche KI-Markt wächst von 9,9 Milliarden Euro (2025) auf über 40 Millia
 
 Du bist Geschäftsführer, Vertrieblerin, Marketingleiter, Buchhalterin, IT-Support und Praktikant in einer Person. Jede dieser Rollen bezahlst du mit Zeit, die du nicht abrechnen kannst.
 
-Bei Meta sehe ich Teams von 20 Leuten, die das machen, was du alleine schaffst. Sie haben Infrastruktur, du hast dich. Das ändert sich gerade.
+Bei Meta sehe ich Teams von 20 Leuten, die das machen, was du alleine schaffst. Mit KI-Werkzeugen bekommst du einen Teil dieser Infrastruktur.
 
 ## Das Eisberg-Paradoxon
 
@@ -28,7 +28,7 @@ Bei meiner eigenen Beratung habe ich eine Woche lang jede Viertelstunde getrackt
 
 22 Stunden gingen in E-Mails, Angebote, Rechnungen, Social Media und das Finanzamt. Dazu kamen eine aktualisierte Datenschutzerklärung und eine Mail an den Webhosting-Anbieter, warum die SSL-Erneuerung nicht funktioniert hat. Das passiert Woche für Woche, und als Data Engineer hätte ich es wissen müssen.
 
-Damit bin ich nicht allein. Der VGSD (Verband der Gründer und Selbstständigen Deutschland, 2023) schätzt, dass rund 40 Prozent der Arbeitszeit von Selbstständigen in Verwaltung fließen. McKinsey beziffert das technische Automatisierungspotenzial bei Wissensarbeit auf 60-70 Prozent (McKinsey Global Institute, "The economic potential of generative AI," Juni 2023). Das heißt: 60 Prozent der Aufgaben lassen sich teilweise automatisieren, KI ersetzt deshalb noch keine 60 Prozent deiner Arbeit. OECD-Erhebungen zeigen, dass US-KMU dieses Potenzial konsequenter nutzen als deutsche.
+Damit bin ich nicht allein. Der VGSD (Verband der Gründer und Selbstständigen Deutschland, 2023) schätzt, dass rund 40 Prozent der Arbeitszeit von Selbstständigen in Verwaltung fließen. McKinsey beziffert das technische Automatisierungspotenzial bei Wissensarbeit auf 60-70 Prozent (McKinsey Global Institute, "The economic potential of generative AI," Juni 2023). Gemeint ist Arbeitszeit mit Tätigkeiten, die sich technisch teilweise automatisieren lassen. KI ersetzt damit nicht 60 bis 70 Prozent deiner Arbeit.
 
 Die meisten Freelancer, die ich berate, kennen das. Du arbeitest 60 Stunden die Woche und rechnest am Ende 20 Stunden ab, vielleicht 25, wenn es gut läuft.
 
@@ -42,13 +42,11 @@ Eine Texterin schreibt deine E-Mails, Angebote und Social-Media-Posts als Entwur
 
 Eine Marktanalyse stellt dir ChatGPT in 30 Sekunden zusammen. Sie vergleicht Wettbewerber und bereitet Trends auf, ohne die Tiefe einer McKinsey-Beraterin, aber in einem Bruchteil der Zeit.
 
-Meetings zusammenfassen, To-do-Listen erstellen und Termine vorbereiten erledigt die KI nebenbei, zuverlässig und schnell.
+Meetings zusammenfassen, To-do-Listen erstellen und Termine vorbereiten übernimmt die KI nebenbei. Du prüfst nur das Ergebnis.
 
 Um 23 Uhr, wenn du endlich Zeit zum Nachdenken hast, wird sie zum Sparringspartner. Sie geht Pricing-Strategien durch, hinterfragt Businesspläne und diskutiert Positionierung. Einen guten Berater ersetzt sie nicht, aber sie ist immer verfügbar.
 
 109.000 IT-Stellen sind in Deutschland unbesetzt (Bitkom, 2025). Deine Kunden finden keine Festangestellten und brauchen Freelancer, die KI mitbringen. Mit KI-Kompetenz bist du schneller und für sie relevanter.
-
-KI nimmt dir die langweiligen 40 Prozent ab, damit du dich auf die wichtigen 60 Prozent konzentrieren kannst. Die Meta-Teams für Content, Research, Business-Ops und Strategy ersetzt sie nicht, gibt dir aber ihre Werkzeuge.
 
 Bei Red Bull mit 13.000 Mitarbeitern war die größte Hürde die Frage "Wo liegen unsere Daten?". Die Antwort waren 47 Excel-Tabellen auf Netzlaufwerken, keine davon aktuell oder verknüpft. Die Technik war lösbar, schwer fiel das Loslassen alter Prozesse.
 
@@ -109,11 +107,7 @@ Nimm einen Freelancer mit 75 Euro Stundensatz, ein solider Mittelwert für erfah
 
 Sagen wir, du sparst durch KI-Tools 10 Stunden pro Woche beim Admin-Kram, der 40 Prozent deiner Zeit frisst. Die Kundenarbeit bleibt gleich.
 
-10 Stunden pro Woche × 75 Euro = 750 Euro pro Woche.
-
-750 Euro × 4 Wochen = 3.000 Euro im Monat.
-
-3.000 Euro × 12 Monate = 36.000 Euro im Jahr.
+10 h × 75 € = 750 € pro Woche, rund 3.000 € im Monat, 36.000 € im Jahr.
 
 Diese Zeit rechnest du entweder ab oder steckst sie ins Wochenende. Dem stehen folgende Kosten gegenüber:
 
@@ -123,19 +117,15 @@ Diese Zeit rechnest du entweder ab oder steckst sie ins Wochenende. Dem stehen f
 | Claude Pro | 20 EUR |
 | **Gesamt** | **40 EUR** |
 
-Vierzig Euro im Monat sind weniger als ein Mittagessen pro Woche.
-
-Das Verhältnis liegt bei 3.000 Euro Kapazitätsgewinn zu 40 Euro Kosten, und wenige Investments haben ein besseres Verhältnis von Aufwand zu Ertrag.
+Bis zu 3.000 Euro Kapazitätsgewinn im Monat stehen 40 Euro Kosten gegenüber.
 
 Die 3.000 Euro sind der Best Case, wenn dein Kalender voll ist und jede freie Stunde sofort in bezahlte Arbeit fließt. Viele Freelancer haben nicht unbegrenzt Aufträge und investieren die gesparte Zeit in Akquise, Strategie oder Erholung. Rechne konservativ mit 50-70 Prozent Auslastung, also 1.500 bis 2.100 Euro im Monat bei 40 Euro Toolkosten.
 
 Die 10 Stunden kommen nicht geschenkt. Du musst lernen, gute Prompts zu schreiben (Kapitel 3), und wissen, welche Aufgaben sich eignen. Prüfen musst du immer.
 
-Bei Meta vertraut niemand KI-Output blind, auch nicht die Leute, die die Modelle selbst gebaut haben. Wenn die jede Antwort gegenlesen, solltest du es auch tun.
+Meine ersten Versuche mit KI für meine eigene Beratung waren miserabel. "Schreib mir ein Angebot" ergab generischen Unsinn. Nach drei Wochen schlechter Prompts habe ich verstanden: Die Qualität des Outputs hängt von der Qualität des Inputs ab.
 
-Meine ersten Versuche mit KI für meine eigene Beratung waren miserabel. "Schreib mir ein Angebot" ergab generischen Unsinn, den kein Kunde ernst genommen hätte. Nach drei Wochen schlechter Prompts habe ich verstanden: Die Qualität des Outputs hängt von der Qualität des Inputs ab, und "Schreib mir ein Angebot" ist so nutzlos wie "Mach mal was" als Briefing für einen Praktikanten.
-
-In den ersten zwei Wochen investierst du mehr Zeit, als du sparst, und fluchst, wenn ChatGPT zum dritten Mal etwas Unbrauchbares ausspuckt. Das ist normal. Eine Stanford/NBER-Studie mit Customer-Support-Agents (Brynjolfsson, Li, Raymond, NBER WP 31161, 2023) misst +14 Prozent Produktivität im Schnitt, bei Einsteigern +34 Prozent und bei erfahrenen Profis kaum etwas. Wenn du gerade erst anfängst, ist dein Hebel am größten.
+In den ersten zwei Wochen investierst du mehr Zeit, als du sparst. Das ist normal. Eine Stanford/NBER-Studie mit Customer-Support-Agents (Brynjolfsson, Li, Raymond, NBER WP 31161, 2023) misst +14 Prozent Produktivität im Schnitt, bei Einsteigern +34 Prozent und bei erfahrenen Profis kaum etwas. Wenn du gerade erst anfängst, ist dein Hebel am größten.
 
 Ab Woche drei kippt es, weil du deine Prompts und die Grenzen der Tools kennst. Dann sparst du, konservativ gerechnet, 5 bis 15 Stunden pro Woche, je nach Branche, Aufgabenprofil und Bereitschaft, alte Gewohnheiten zu ändern.
 

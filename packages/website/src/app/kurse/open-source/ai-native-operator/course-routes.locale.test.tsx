@@ -88,14 +88,14 @@ describe("AI-Native Operator locale propagation across the course lifecycle", ()
     {
       locale: "de" as const,
       prefix: "",
-      landingMarker: "Neun Module · linear oder selbstgesteuert",
+      landingMarker: "Linear oder in eigener Reihenfolge",
       moduleMarker: "Aufgaben anhand von Fehlerkosten",
       lessonTitle: "Erst die Aufgabe wählen, dann das Werkzeug",
     },
     {
       locale: "en" as const,
       prefix: "/en",
-      landingMarker: "Nine modules · linear or self-directed",
+      landingMarker: "In order or in any order",
       moduleMarker: "Select tasks by error cost",
       lessonTitle: "Choose tasks before choosing tools",
     },

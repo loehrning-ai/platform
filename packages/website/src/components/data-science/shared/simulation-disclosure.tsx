@@ -9,8 +9,8 @@ export function SimulationDisclosure() {
     <p className="simulation-disclosure" role="note">
       <strong>{text("Scope", "Geltungsbereich")}:</strong>{" "}
       {text(
-        "Local teaching model on fixed synthetic or seeded pseudorandom data; it does not estimate, validate, or certify a production system.",
-        "Lokales Lehrmodell mit festen synthetischen oder initialisierten Pseudozufallsdaten. Es schätzt, validiert oder zertifiziert kein Produktionssystem.",
+        "Local teaching model on fixed or seeded data; the same settings give the same output. It does not estimate, validate, or certify a production system.",
+        "Lokales Lehrmodell mit festen oder per Seed erzeugten Daten; gleiche Einstellungen liefern dieselbe Ausgabe. Es schätzt, validiert oder zertifiziert kein Produktionssystem.",
       )}
     </p>
   );

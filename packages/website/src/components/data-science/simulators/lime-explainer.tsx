@@ -117,7 +117,7 @@ export function LIMEExplainer() {
       )}
       meta={`P(class B) = ${round(localExplanation.prob, 3)}`}
       caption={text(
-        "A local linear approximation of a fixed synthetic surface near the query point. Its fidelity depends on neighborhood and surface; the dotted line is no validated model boundary.",
+        "A local linear approximation of a fixed synthetic surface near the query point. Its fidelity depends on neighborhood and surface; the dotted line is not a validated model boundary.",
         "Eine lokale lineare Approximation einer festen synthetischen Fläche nahe dem Abfragepunkt. Ihre Güte hängt von Nachbarschaft und Fläche ab; die gepunktete Linie ist keine validierte Modellgrenze.",
       )}
     >

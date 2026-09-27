@@ -28,7 +28,7 @@
           "id": "block_3_lesson_1_section_1",
           "title": "The risk-management system is never finished",
           "readTimeMinutes": 2,
-          "content": "**Blocks 3 to 6 are for people who buy, run or answer for AI systems at work.** If you only want the framework and your own rights, you can stop after block 2.\n\n---\n\nFor high-risk AI systems, Article 9(1) requires a risk-management system that is **established, implemented, documented and maintained**: a continuous, iterative process across the whole lifecycle, systematically reviewed and updated (Article 9(2)). It has four steps (Article 9(2), points (a) to (d)):\n\n- **(a)** identify and analyse known and reasonably foreseeable risks to health, safety and fundamental rights\n- **(b)** estimate and evaluate risks under reasonably foreseeable misuse\n- **(c)** evaluate other risks identified through post-market monitoring (Article 72)\n- **(d)** adopt appropriate and targeted risk-management measures\n\nMeasures follow a ranking (Article 9(5), second subparagraph): design the risk out first, then mitigate and control, then inform and train under Article 13. Testing before market placement is mandatory (Article 9(8)), and the impact on people under 18 has to be considered (Article 9(9)).\n\n**In practice for SMEs:** one risk matrix with the risk, likelihood, severity, control, owner and model version. Review it, for example, quarterly; the Regulation does not prescribe that interval.\n\nName an owner with a role and start date; that is not required, but you can show it. Infringements of the obligations in Article 99(4) can cost up to EUR 15 million or 3% of total worldwide annual turnover."
+          "content": "**Blocks 3 to 6 are for people who buy, run or answer for AI systems at work.** If you only want the framework and your own rights, you can stop after block 2.\n\n---\n\nFor high-risk AI systems, Article 9(1) requires a risk-management system that is **established, implemented, documented and maintained**: a continuous, iterative process across the whole lifecycle, systematically reviewed and updated (Article 9(2)). It has four steps (Article 9(2), points (a) to (d)):\n\n- **(a)** identify and analyse known and reasonably foreseeable risks to health, safety and fundamental rights\n- **(b)** estimate and evaluate risks under reasonably foreseeable misuse\n- **(c)** evaluate other risks identified through post-market monitoring (Article 72)\n- **(d)** adopt appropriate and targeted risk-management measures\n\nMeasures follow a ranking (Article 9(5), second subparagraph): design the risk out first, then mitigate and control, then inform and train under Article 13. Testing before market placement is mandatory (Article 9(8)), and the impact on people under 18 has to be considered (Article 9(9)).\n\n**In practice for SMEs:** one risk matrix with the risk, likelihood, severity, control, owner and model version. Review it, for example, quarterly; the Regulation does not prescribe that interval.\n\nName an owner with a role and start date. The Regulation does not require it, but it helps you show that the process runs. Infringements of the obligations in Article 99(4) can cost up to EUR 15 million or 3% of total worldwide annual turnover."
         },
         {
           "id": "block_3_lesson_1_section_2",
@@ -40,7 +40,7 @@
           "id": "block_3_lesson_1_section_3",
           "title": "Special-category data for bias correction and the GDPR link",
           "readTimeMinutes": 2,
-          "content": "As an exception to Article 9 GDPR, Article 10(5) allows special categories of personal data (such as ethnic origin, health or religion) to be processed to detect and correct bias where that is strictly necessary and synthetic or anonymised data will not do. All six conditions (Article 10(5), points (a) to (f)) must hold at once:\n\n- (a) the bias cannot be detected and corrected effectively with other data\n- (b) pseudonymisation and state-of-the-art security\n- (c) strict access control and confidentiality obligations\n- (d) no transfer to or access by other parties\n- (e) deletion once the bias is corrected or the retention period ends\n- (f) an entry in the Article 30 GDPR records of processing explaining why the processing was strictly necessary\n\n**In practice for SMEs:** to test your recruitment system for sex-related bias, you may use data about sex this way if you document the conditions and bring in the data protection officer where the GDPR requires it. Article 10(5) does not name consent as a condition, and the rest of data-protection law still applies.\n\nVariance and subgroup analysis can detect bias, and mitigation can come before, during or after training."
+          "content": "As an exception to Article 9 GDPR, Article 10(5) allows special categories of personal data (such as ethnic origin, health or religion) to be processed to detect and correct bias where that is strictly necessary and synthetic or anonymised data will not do. All six conditions (Article 10(5), points (a) to (f)) must hold at once:\n\n- (a) the bias cannot be detected and corrected effectively with other data\n- (b) technical limits on re-use, pseudonymisation and state-of-the-art security\n- (c) strict access control and confidentiality obligations\n- (d) no transfer to or access by other parties\n- (e) deletion once the bias is corrected or the retention period ends, whichever comes first\n- (f) an entry in the Article 30 GDPR records of processing explaining why the processing was strictly necessary and why other data would not do\n\n**In practice for SMEs:** to test your recruitment system for bias by ethnic origin, you may use data on ethnic origin this way if you document the conditions and bring in the data protection officer where the GDPR requires it. Article 10(5) does not name consent as a condition, and the rest of data-protection law still applies.\n\nVariance and subgroup analysis can detect bias, and mitigation can come before, during or after training."
         }
       ],
       "quiz": [
@@ -109,7 +109,7 @@
             },
             {
               "id": "b",
-              "text": "Only when all six conditions in Article 10(5) are met at once",
+              "text": "Only when all six conditions in Article 10(5) are met",
               "isCorrect": true
             },
             {
@@ -157,7 +157,7 @@
           "id": "block_3_lesson_2_section_3",
           "title": "Provider and deployer: who documents what",
           "readTimeMinutes": 2,
-          "content": "The **provider** prepares the Annex IV documentation before market placement, keeps logs under its control (Article 19) and keeps the EU declaration of conformity for 10 years (Article 47(1)).\n\nThe **deployer** monitors operation according to the instructions for use, keeps logs under its control for at least 6 months and reports serious incidents without undue delay to the provider and the market surveillance authority (Article 26(5) and (6)).\n\nThe Article 73 deadlines bind the provider: 15 days as standard, 2 days for a widespread infringement, 10 days in the event of a death.\n\n**Change of role** (Article 25): whoever makes a **substantial modification** to a high-risk system or changes its intended purpose can become the provider, with Annex IV documentation and its own conformity assessment. Fine-tuning or retraining is not automatically a substantial modification; assess it against Article 3(23), the changes the original provider planned for and Article 25.\n\n**In practice for SMEs:** run a bought recruitment tool as supplied and you are the deployer. Fine-tune it on your applicant data or change its purpose, and document the Article 25 assessment."
+          "content": "The **provider** prepares the Annex IV documentation before market placement, keeps logs under its control (Article 19) and keeps the EU declaration of conformity for 10 years (Article 47(1)).\n\nThe **deployer** monitors operation according to the instructions for use, keeps logs under its control for at least 6 months and reports serious incidents without undue delay to the provider and the market surveillance authority (Article 26(5) and (6)).\n\nThe Article 73 deadlines bind the provider: 15 days as standard, 2 days for a widespread infringement, 10 days in the event of a death.\n\n**Change of role** (Article 25): whoever makes a **substantial modification** to a high-risk system or changes its intended purpose can become the provider, with Annex IV documentation and its own conformity assessment. Fine-tuning or retraining is not automatically a substantial modification; assess it against Article 3(23), the changes the original provider planned for and Article 25. A modification is substantial if the original conformity assessment did not foresee it and it affects compliance or the intended purpose.\n\n**In practice for SMEs:** run a bought recruitment tool as supplied and you are the deployer. If you fine-tune it on your applicant data or change its purpose, document the Article 25 assessment."
         }
       ],
       "quiz": [
@@ -226,7 +226,7 @@
             },
             {
               "id": "b",
-              "text": "It assesses under Article 25 whether the change is substantial; if so, it becomes provider",
+              "text": "It becomes provider if the change is substantial (Article 25)",
               "isCorrect": true
             },
             {
@@ -248,7 +248,7 @@
       "id": "block_3_lesson_3",
       "blockId": "block_3",
       "number": 3,
-      "title": "Human oversight, accuracy, and cybersecurity",
+      "title": "Human oversight, robustness, and cybersecurity",
       "subtitle": "Human control over high-risk systems and protection against attacks",
       "durationMinutes": 5,
       "keyConcepts": [
@@ -262,7 +262,7 @@
           "id": "block_3_lesson_3_section_1",
           "title": "Human oversight: from the concept to the stop control",
           "readTimeMinutes": 2,
-          "content": "Article 14(1) requires high-risk systems to be designed so that natural persons can effectively oversee them while they are in use. Oversight is therefore a **design requirement**.\n\nThe measures come from two sources (Article 14(3)): the provider builds them in before market placement, such as interface controls, confidence information or a stop function. The deployer implements the ones the provider identifies, such as roles, training under Article 4 and escalation paths.\n\nThe overseers must be able, as appropriate and proportionate, to (Article 14(4), points (a) to (e)):\n\n- (a) **understand** the system's capacities and limitations and detect anomalies\n- (b) stay **aware of automation bias**, the tendency to rely automatically on AI output\n- (c) **interpret** the output correctly\n- (d) **decide not to use** the system, or disregard, override or reverse its output\n- (e) **intervene or stop the system** through a stop control or comparable safe procedure\n\n**Independent verification** (Article 14(5)): for remote biometric identification under Annex III, point 1(a), no action may rest on the AI identification alone. At least two competent, trained and authorised people must verify and confirm it separately. Law enforcement, migration, border control and asylum are exempt where Union or national law treats the rule as disproportionate.\n\n**In practice for SMEs:** with remote biometric identification at a site entrance, a match alone opens no door."
+          "content": "Article 14(1) requires high-risk systems to be designed so that natural persons can effectively oversee them while they are in use. Oversight is therefore a **design requirement**.\n\nThe measures come from two sources (Article 14(3)): the provider builds them in before market placement, such as interface controls, confidence information or a stop function. The deployer implements the ones the provider identifies, such as roles, training under Article 4 and escalation paths.\n\nThe system must enable the overseers, as appropriate and proportionate, to (Article 14(4), points (a) to (e)):\n\n- (a) **understand** the system's capacities and limitations and detect anomalies\n- (b) stay **aware of automation bias**, the tendency to rely automatically on AI output\n- (c) **interpret** the output correctly\n- (d) **decide not to use** the system, or disregard, override or reverse its output\n- (e) **intervene or stop the system** through a stop control or comparable safe procedure\n\n**Independent verification** (Article 14(5)): for remote biometric identification under Annex III, point 1(a), no action may rest on the AI identification alone. At least two competent, trained and authorised people must verify and confirm it separately. Law enforcement, migration, border control and asylum are exempt where Union or national law treats the rule as disproportionate.\n\n**In practice for SMEs:** if a site-entrance system falls under Article 14(5), at least two people confirm each match separately before anyone acts."
         },
         {
           "id": "block_3_lesson_3_section_2",
@@ -284,7 +284,7 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Understand capacities, know automation bias, interpret, override output, stop",
+              "text": "Understand capacities, know automation bias, interpret, override, stop",
               "isCorrect": true
             },
             {
@@ -316,7 +316,7 @@
             },
             {
               "id": "b",
-              "text": "For remote biometric identification, two authorised people separately confirm a match",
+              "text": "At least two authorised people separately confirm a remote biometric match",
               "isCorrect": true
             },
             {
@@ -330,7 +330,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Under Article 14(5) no action may rest on a remote biometric identification alone, with narrow exceptions such as law enforcement."
+          "explanation": "Under Article 14(5) no action may rest on a remote biometric identification alone; at least two people verify it separately. Narrow exceptions apply, for example to law enforcement."
         },
         {
           "id": "block_3_lesson_3_q3",
@@ -379,7 +379,7 @@
           "id": "block_3_lesson_4_section_1",
           "title": "Which procedure applies? The decision logic in Article 43",
           "readTimeMinutes": 2,
-          "content": "The procedure depends on the Annex III category (Article 43):\n\n- **Annex III, point 1 (biometrics):** where the provider has applied harmonised standards (Article 40) or common specifications (Article 41), it chooses between internal control under Annex VI and a notified body under Annex VII. Article 43(1) sets out when the notified body is required.\n- **Annex III, points 2 to 8:** internal control under Annex VI (Article 43(2)), with no notified body.\n- **Products under Annex I, section A** (machinery, medical devices, motor vehicles, toys): the sectoral procedure absorbs the AI requirements (Article 43(3)).\n\nUnder **internal control (Annex VI)** the provider itself checks the quality-management system under Article 17, the technical documentation and its consistency with development and post-market monitoring; no third party checks first.\n\nA **notified body (Annex VII)** assesses the quality-management system and technical documentation, carries out surveillance and may obtain access to training, validation and testing data, including through an API. Its certificate is valid for at most four years for Annex III systems (Article 44(2)).\n\n**In practice for SMEs:** recruitment AI (point 4), credit scoring (point 5) and education (point 3) run through Annex VI. For biometrics at a site entrance (point 1(a)), check the Article 43(1) conditions closely. Find notified bodies through the accreditation authority (DAkkS in Germany) and the Commission's NANDO database."
+          "content": "The procedure depends on the Annex III category (Article 43):\n\n- **Annex III, point 1 (biometrics):** where the provider has applied harmonised standards (Article 40) or common specifications (Article 41), it chooses between internal control under Annex VI and a notified body under Annex VII. Where such standards do not exist, or it has not applied them or only in part, the notified body is required (Article 43(1)).\n- **Annex III, points 2 to 8:** internal control under Annex VI (Article 43(2)), with no notified body.\n- **Products under Annex I, section A** (machinery, medical devices, motor vehicles, toys): the sectoral procedure absorbs the AI requirements (Article 43(3)).\n\nUnder **internal control (Annex VI)** the provider itself checks the quality-management system under Article 17, the technical documentation and its consistency with development and post-market monitoring; no third party checks first.\n\nA **notified body (Annex VII)** assesses the quality-management system and technical documentation, carries out surveillance and may obtain access to training, validation and testing data, including through an API. Its certificate is valid for at most four years for Annex III systems (Article 44(2)).\n\n**In practice for SMEs:** recruitment AI (point 4), credit scoring (point 5) and education (point 3) run through Annex VI. For biometrics at a site entrance (point 1(a)), check the Article 43(1) conditions closely. Find notified bodies through the accreditation authority (DAkkS in Germany) and the Commission's NANDO database."
         },
         {
           "id": "block_3_lesson_4_section_2",
@@ -460,7 +460,7 @@
             },
             {
               "id": "b",
-              "text": "In the Commission's EU database under Article 71, with Annex VIII data",
+              "text": "In the EU database under Article 71, with Annex VIII data",
               "isCorrect": true
             },
             {

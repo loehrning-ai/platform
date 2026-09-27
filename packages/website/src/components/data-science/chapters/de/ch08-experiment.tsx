@@ -74,7 +74,7 @@ export default function Ch08ExperimentDe() {
         items={[
           "<b>Die Stichprobengröße skaliert ungefähr mit 1 / Effekt².</b> Bei unveränderter Varianz, Zuweisung, α und Power braucht ein halbierter Zieleffekt etwa die vierfache Stichprobe.",
           "<b>Intervalle und p-Werte fassen dasselbe Modell zusammen.</b> Berichte Effektgröße und Unsicherheit; ein schwaches Design reparieren beide nicht.",
-          '<b>Aussagen auf den ausgeschlossenen Bereich begrenzen.</b> "Kein Effekt nachgewiesen" bedeutet nicht "kein Effekt"; das Intervall mit dem vorab festgelegten relevanten Bereich vergleichen.',
+          '<b>Behaupte nur, was das Intervall ausschließt.</b> „Kein Effekt nachgewiesen“ heißt nicht „kein Effekt“; vergleich das Intervall mit dem vorab festgelegten relevanten Bereich.',
         ]}
       />
     </DataScienceLocaleProvider>

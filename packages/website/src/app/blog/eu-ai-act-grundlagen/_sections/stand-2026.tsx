@@ -11,7 +11,7 @@ export function Stand2026() {
         </h2>
         <p className="dek">
           Die EU hat die Hochrisiko-Regeln verschoben. Der 2. August 2026
-          bleibt trotzdem.
+          bleibt trotzdem Stichtag.
         </p>
 
         <div className="premise">
@@ -53,10 +53,10 @@ export function Stand2026() {
               Durchsetzungsbefugnisse. (Quelle: Verordnung (EU) 2026/1744)
             </p>
             <p>
-              <strong>Was der Omnibus nicht ändert:</strong> Der 2. August
-              2026 bleibt der allgemeine Anwendungsbeginn: Transparenz
-              (Art. 50), Beschwerde (Art. 85) und Erklärung (Art. 86) kommen
-              planmäßig. Die Verbote aus Art. 5 und die Pflicht zu Maßnahmen für
+              <strong>Was der Omnibus nicht geändert hat:</strong> Der
+              2. August 2026 bleibt allgemeiner Anwendungsbeginn für
+              Transparenz (Art. 50), Beschwerde (Art. 85) und Erklärung
+              (Art. 86). Die Verbote aus Art. 5 und die Pflicht zu Maßnahmen für
               KI-Kompetenz aus Art. 4 gelten weiter; ein bestimmtes
               Kompetenzniveau einzelner Personen verlangt Artikel 4 seit dem
               27. Juli 2026 nicht mehr.
@@ -72,8 +72,7 @@ export function Stand2026() {
             <p>
               Eine Veröffentlichung
               im Bundesgesetzblatt war am 28. Juli 2026 nicht verifiziert;
-              maßgeblich bleiben das verkündete Gesetz und der offiziell
-              veröffentlichte Beschwerdeweg. (Quelle: Bundestag, Beschluss
+              das KI-MIG trat am 29. Juli 2026 in Kraft. (Quelle: Bundestag, Beschluss
               11. Juni 2026; Bundesrat, 10. Juli 2026)
             </p>
           </div>
@@ -93,9 +92,9 @@ export function Stand2026() {
             </div>
             <div className="margin-note">
               <b>Deutschland · KI-MIG</b>
+              In Kraft seit 29. Juli 2026.
               Bundesnetzagentur als zentrale
-              Aufsicht vorgesehen. Verkündung
-              war am 28. Juli 2026 nicht verifiziert.
+              Aufsicht.
             </div>
           </aside>
         </div>

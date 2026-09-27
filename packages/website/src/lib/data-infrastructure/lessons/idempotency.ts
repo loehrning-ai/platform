@@ -31,7 +31,7 @@ const lesson: DataInfraLesson = {
       title: "Three guarantees",
       readTimeMinutes: 2,
       content:
-        "A delivery guarantee needs a named boundary and failure model:\n\n- **At-most-once** can omit an effect after an uncertain failure.\n- **At-least-once** can duplicate effects unless the consumer controls them; source durability and retention still bound any loss claim.\n- **Exactly-once** means committed state on a defined source-process-sink path looks as if each input affected it once, through transactions, checkpoints, coordinated offsets or idempotent effects.\n\nIdempotency is one of these mechanisms. An HTTP payment call, for example, needs the provider's idempotency contract, retained request identities and reconciliation for unknown outcomes.",
+        "A delivery guarantee needs a named boundary and failure model:\n\n- **At-most-once** can omit an effect after an uncertain failure but does not replay acknowledged work within its scope.\n- **At-least-once** can duplicate effects unless the consumer controls them; source durability and retention still bound any loss claim.\n- **Exactly-once** means committed state on a defined source-process-sink path looks as if each input affected it once, through transactions, checkpoints, coordinated offsets or idempotent effects.\n\nIdempotency is one of these mechanisms. An HTTP payment call, for example, needs the provider's idempotency contract, retained request identities and reconciliation for unknown outcomes.",
     },
     {
       id: "s2",
@@ -59,7 +59,7 @@ const lesson: DataInfraLesson = {
       title: "Dead-letter queues",
       readTimeMinutes: 2,
       content:
-        "A **dead-letter path** holds records the current contract cannot process, without blocking valid ones. It changes completeness and ordering, so it is part of the processing guarantee.\n\nStore only a protected reference or encrypted payload, a safe error code, source identity and position, schema version, first-seen time, retry count and owner. Raw records and exception messages can carry personal data, credentials or internal details, so apply access control, minimization, retention and redaction.\n\nDefine which failures are retried or quarantined, whether a record may bypass ordering, who authorizes replay and how repaired output is reconciled. Set alert thresholds from expected invalid-input rates and user impact.",
+        "A **dead-letter path** holds records the current contract cannot process, without blocking valid ones. It changes completeness and ordering, so it is part of the processing guarantee.\n\nStore only a protected reference or encrypted payload, a safe error code, source identity and position, schema version, first-seen time, retry count and owner. Raw records and exception messages can carry personal data, credentials or internal details, so apply access control, minimization, retention and redaction.\n\nDefine which failures are retried or quarantined, whether a record may bypass ordering, who authorizes replay and how repaired output is reconciled. Set alert thresholds from expected invalid-input rates and user impact, not from any non-zero count.",
     },
     {
       id: "s5",

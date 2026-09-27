@@ -20,14 +20,14 @@ export default function LektionError({
       ? {
           eyebrow: "Error",
           title: "The lesson could not be loaded",
-          body: "Your progress is kept.",
+          body: "Your saved progress is unchanged.",
           retry: "Try again",
           back: "Back to course overview",
         }
       : {
           eyebrow: "Fehler",
           title: "Die Lektion konnte nicht geladen werden",
-          body: "Dein Fortschritt bleibt erhalten.",
+          body: "Dein gespeicherter Fortschritt bleibt unverändert.",
           retry: "Erneut versuchen",
           back: "Zur Kursübersicht",
         };

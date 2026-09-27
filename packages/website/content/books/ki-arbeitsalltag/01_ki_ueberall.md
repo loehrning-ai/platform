@@ -4,7 +4,7 @@ Du nutzt KI seit Jahren jeden Tag, oft ohne es zu wissen. Durch den Tag eines du
 
 Der Spamfilter sortiert 200 Mails am Tag aus, Outlook schlägt den nächsten Satz vor, und Teams transkribiert dein Meeting. Excel rät die Formel, DeepL übersetzt, und OCR macht die PDF durchsuchbar. Das iPhone erkennt dein Gesicht, und die Navi-App sagt den Stau vorher.
 
-Bei Meta habe ich gelernt, dass KI selten als „KI" daherkommt. Sie steckt im Autocomplete, im Ranking und in der Gesichtserkennung, und gut funktioniert sie, wenn du sie nicht bemerkst.
+Bei Meta habe ich gelernt, dass KI selten als „KI" daherkommt. Sie steckt im Autocomplete, im Ranking und in der Gesichtserkennung. Am besten funktioniert sie, wenn du sie nicht bemerkst.
 
 Geh die Liste durch und hak ab, wo du KI längst nutzt.
 
@@ -84,7 +84,7 @@ Geh die Liste durch und hak ab, wo du KI längst nutzt.
 
 ## Die Erkenntnis
 
-Zähl deine Häkchen. Die KI in deinem Alltag ist:
+Zähl die Bereiche oben, in denen du mindestens einmal pro Woche ein Häkchen gesetzt hast. Bei fünf oder mehr bist du längst Power-User, ohne es zu merken. Die KI in deinem Alltag ist:
 
 - **Unsichtbar**, weil sie da war, bevor du darauf geachtet hast.
 - **Normal** wie Strom aus der Steckdose.
@@ -94,15 +94,11 @@ Das ist das „überall" aus Block 1, Lektion 1.
 
 > **Begriff:** KI-System (EU AI Act, Art. 3). Ein maschinelles System, das mit unterschiedlichem Autonomiegrad arbeitet und aus Eingaben Vorhersagen, Inhalte, Empfehlungen oder Entscheidungen ableitet. Der Spamfilter fällt genauso darunter wie ChatGPT.
 
-## Checkliste: Wo nutzt du KI bereits?
-
-Zähl die Bereiche oben, die du mindestens einmal pro Woche berührst. Bei fünf oder mehr bist du unbewusst längst Power-User.
-
 > **Das Wichtigste:** KI läuft in deinem Alltag längst. Es kommt darauf an, wie bewusst du sie nutzt.
 
 ## Die ersten 5 Minuten
 
-Jetzt nutzt du KI bewusst, ohne neues Programm und ohne IT-Freigabe, in fünf Minuten. Such dir eins von zwei Werkzeugen aus.
+Jetzt nutzt du KI bewusst, in fünf Minuten und ohne neues Programm. Gib dabei nur öffentliche Infos ein (Kapitel 3). Such dir eins von zwei Werkzeugen aus.
 
 **Variante 1: ChatGPT.** Tippe im Browser `chat.com` in die Adresszeile. Wenn du gefragt wirst, klick auf „Sign up" und leg mit E-Mail und Passwort ein Konto an. Auf dem Handy nimmst du die App „ChatGPT" aus dem App Store oder Play Store. Schreib einen Satz ins Textfeld unten und drück Enter, dann erscheint die Antwort Zeile für Zeile.
 

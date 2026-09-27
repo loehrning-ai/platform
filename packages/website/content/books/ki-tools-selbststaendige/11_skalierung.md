@@ -4,7 +4,7 @@ Du arbeitest 50 Stunden die Woche, bist ausgebucht, dein Stundensatz liegt am ob
 
 ## Denken wie ein Unternehmer
 
-Ein Freelancer verkauft seine Zeit, ein Unternehmer verkauft ein System. Bei Meta habe ich gelernt, dass die besten Teams alles automatisieren, was automatisiert werden kann, damit Menschen sich auf Beziehungen, Strategie und Kreativität konzentrieren.
+Als Freelancer verkaufst du Zeit. Als Unternehmer verkaufst du ein System, das auch ohne deine Stunden liefert. Bei Meta automatisieren Teams jede Routine, die sich automatisieren lässt, damit mehr Zeit für Kundenarbeit bleibt.
 
 Frag dich also, was an deiner Arbeit sich wiederholt und was davon ein System übernehmen oder ein Produkt werden könnte. Mit KI kannst du das auch ohne Team und Investoren umsetzen.
 

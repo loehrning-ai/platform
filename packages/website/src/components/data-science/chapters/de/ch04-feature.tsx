@@ -29,12 +29,14 @@ export default function Ch04FeatureDe() {
         <SectionLabel n="04.1">Kategoriale Merkmale kodieren</SectionLabel>
         <h2 className="h2">Vier Kodierungen und ein häufiger Fehler</h2>
         <p className="prose">
-          <strong>One-Hot</strong> bildet nominale Werte ohne Rangfolge ab und
-          kostet eine Spalte je Kategorie. <strong>Target Encoding</strong>{" "}
-          nutzt Labels und braucht fold-lokale Schätzung, Glättung und eine
-          Regel für unbekannte Kategorien. Ganzzahlige Codes erzwingen bei
-          Modellen mit numerischer Distanz eine Rangfolge; Frequency Encoding
-          wirft gleich häufige Kategorien zusammen.
+          <strong>One-Hot</strong> bildet nominale Werte ohne Rangfolge ab,
+          kostet eine Spalte je Kategorie und braucht eine Regel für unbekannte
+          Kategorien. <strong>Target Encoding</strong> nutzt Labels und braucht
+          zusätzlich fold-lokale Schätzung und Glättung. Ganzzahlige Codes
+          erzwingen bei Modellen mit numerischer Distanz eine Rangfolge;
+          Frequency Encoding eignet sich, wenn Häufigkeit informativ ist und
+          kein Target Leakage entstehen darf, wirft aber gleich häufige
+          Kategorien zusammen.
         </p>
         <EncodingComparison />
       </section>
@@ -46,12 +48,6 @@ export default function Ch04FeatureDe() {
           "<b>Hochkardinale Kennungen ohne Ressourcenplan one-hot kodieren.</b> Vergleich Hashing, gruppierte Kategorien und gelernte Encoder unter deinen Speicher- und Validierungsgrenzen; eine universelle Kategorienzahl gibt es nicht.",
         ]}
       />
-      <BestPractices
-        title="Saubere Umsetzung"
-        items={[
-          "<b>Frequency Encoding</b>, wenn Häufigkeit informativ ist und Target Leakage ausgeschlossen sein muss.",
-        ]}
-      />
 
       <section className="section">
         <SectionLabel n="04.2">Polynomiale Merkmalserweiterung</SectionLabel>
@@ -59,10 +55,8 @@ export default function Ch04FeatureDe() {
           Mit x² kann ein lineares Modell eine Krümmung abbilden.
         </h2>
         <p className="prose">
-          Ein lineares Modell zeichnet Geraden. Mit den Merkmalen{" "}
-          <code>x²</code> und <code>x³</code> zeichnet es Kurven, ohne
-          Modellwechsel. Zu wenige Terme passen zu schlecht, zu viele lernen
-          Rauschen.
+          Mit <code>x²</code> und <code>x³</code> als Merkmalen zeichnet ein
+          lineares Modell Kurven, ohne dass du das Modell wechselst.
         </p>
         <PolynomialExpansion />
       </section>
@@ -102,21 +96,18 @@ export default function Ch04FeatureDe() {
           Bei einer Interaktion hängt der Effekt von A vom Wert von B ab: Die
           Relevanz einer Anzeige wirkt je nach Person anders, ein Medikament je
           nach Alter. Lineare Modelle brauchen ein explizites A×B-Merkmal;
-          Baummodelle lernen Interaktionen selbst.
+          Baummodelle können sie über Splits lernen, je nach Tiefe, Stichprobe
+          und Regularisierung. Zweiweg-PDP, SHAP-Interaktionswerte oder
+          Vergleiche verschachtelter Modelle liefern Kandidaten;
+          Split-Wichtigkeit allein identifiziert kein Paar.
         </p>
         <InteractionTerms />
       </section>
-      <BestPractices
-        title="Saubere Umsetzung"
-        items={[
-          "<b>Interaktionsspezifische Diagnostik verwenden.</b> Zweiweg-PDP, SHAP-Interaktionswerte oder Vergleiche verschachtelter Modelle liefern Kandidaten; Split-Wichtigkeit allein identifiziert kein Paar.",
-        ]}
-      />
 
       <Takeaway
         title="Kernaussagen"
         items={[
-          "<b>Polynomiale Erweiterung verändert Bias und Varianz.</b> Die Simulation mit 40 Punkten macht höhere Grade instabil; wähl Basis und Regularisierung fold-lokal auf dem realen Design.",
+          "<b>Polynomiale Erweiterung verändert Bias und Varianz.</b> Mit 40 Punkten werden höhere Grade in der Simulation instabil. Wähl Basis und Regularisierung in jedem Trainingsfold deiner echten Daten.",
           "<b>Interaktionssuchen erzeugen Multiplizität.</b> Geh von Fachhypothesen aus, kontrollier die Suche innerhalb der Validierung und bestätig behaltene Terme auf unberührten Daten.",
         ]}
       />

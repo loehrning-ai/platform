@@ -41,7 +41,7 @@
           "id": "block_2_lesson_1_section_3",
           "title": "What an SME has to check",
           "readTimeMinutes": 2,
-          "content": "**If a tool measures emotions, biometrics or social behaviour and attaches consequences to the result, check it against Article 5.** Typical cases:\n\n- A plastics manufacturer wants to spot stress in machine operators by webcam to optimise shifts: prohibited under point (f).\n- An insurer scores applicants on public social-media posts: prohibited under point (c) once the detrimental treatment is unrelated to the context.\n\nAlso check every tool for steering decisions, and allow 30 to 60 minutes per system. Consent from the people affected or approval from the works council does not cure an Article 5 infringement. The Federal Network Agency's AI Service Desk has given free initial information since July 2025.\n\nIf you find such a tool, stop using it and get legal advice."
+          "content": "**If a tool measures emotions, biometrics or social behaviour and attaches consequences to the result, check it against Article 5.** Typical cases:\n\n- A plastics manufacturer wants to spot stress in machine operators by webcam to optimise shifts: prohibited under point (f).\n- An insurer scores applicants on public social-media posts: prohibited under point (c) once the detrimental treatment is unrelated to the context.\n\nAllow 30 to 60 minutes per system for this Article 5 check, and include whether the tool manipulates decisions (point (a)). Consent from the people affected or approval from the works council does not cure an Article 5 infringement. The Federal Network Agency's AI Service Desk has offered free initial advice since July 2025.\n\nIf you find such a tool, stop using it and get legal advice."
         }
       ],
       "quiz": [
@@ -147,13 +147,13 @@
           "id": "block_2_lesson_2_section_1",
           "title": "Route 1: a safety component of a regulated product under Article 6(1)",
           "readTimeMinutes": 2,
-          "content": "AI in a lift control is high-risk through **Annex I**, the first route into the high-risk class. It lists around 20 EU harmonisation acts, among them Machinery Regulation 2023/1230, Medical Devices Regulation 2017/745, IVDR 2017/746, Toy Safety Directive 2009/48/EC, Radio Equipment Directive 2014/53/EU, Lifts Directive 2014/33/EU, motor-vehicle type approval, aviation (EASA), rail and marine equipment.\n\nUnder **Article 6(1)** an AI system is high-risk where it is the safety component of an Annex I product or is itself such a product, **and** the sectoral act requires a third-party conformity assessment. Examples are an AI module in a plant control with a protective shutdown (Machinery Regulation) and a medical AI device (Medical Devices Regulation).\n\nLegal consequence: the sectoral conformity assessment **plus** the obligations in Articles 8 to 15, covered in block 3."
+          "content": "AI as a safety component of a lift control is high-risk through **Annex I**, the first route into the high-risk class. It lists around 20 EU harmonisation acts, among them Machinery Regulation 2023/1230, Medical Devices Regulation 2017/745, IVDR 2017/746, Toy Safety Directive 2009/48/EC, Radio Equipment Directive 2014/53/EU, Lifts Directive 2014/33/EU, motor-vehicle type approval, aviation (EASA), rail and marine equipment.\n\nUnder **Article 6(1)** an AI system is high-risk where it is the safety component of an Annex I product or is itself such a product, **and** the sectoral act requires a third-party conformity assessment. Examples are an AI module in a plant control with a protective shutdown (Machinery Regulation) and a medical AI device (Medical Devices Regulation).\n\nLegal consequence: the sectoral conformity assessment **plus** the obligations in Articles 8 to 15, covered in block 3."
         },
         {
           "id": "block_2_lesson_2_section_2",
           "title": "Route 2: stand-alone high-risk systems under Article 6(2) and the eight Annex III areas",
           "readTimeMinutes": 3,
-          "content": "Under **Article 6(2)**, independent of paragraph 1, an AI system is high-risk where it is used in one of the **eight Annex III areas**. Paragraph 3 holds a narrow counter-exception for pure support functions.\n\n1. **Biometrics:** remote identification, categorisation by sensitive attributes, emotion recognition where Article 5 does not prohibit it.\n2. **Critical infrastructure:** AI as a safety component in digital infrastructure, road traffic, water, gas, heating and electricity, for example at municipal utilities.\n3. **Education and vocational training:** admission and assessment AI, exam monitoring, for example exam software at vocational schools.\n4. **Employment and HR:** recruitment, **CV screening** and candidate evaluation (point 4(a)), plus promotion, termination, task allocation and performance monitoring (point 4(b)). CV ranking in an applicant-tracking system can fall under point 4(a); the intended purpose decides.\n5. **Essential services:** public assistance, creditworthiness assessment and credit scoring, life and health insurance pricing, emergency-call prioritisation, for example at insurance brokers.\n6. **Law enforcement** and 7. **migration, asylum, border control:** public-authority territory, rarely relevant to an SME.\n8. **Justice and democratic processes:** assistants to research and interpret facts and law (Annex III, point 8(a)), AI intended to influence elections (point 8(b)).\n\nProviders meet Article 16 and the requirements in Articles 9 to 15 (block 3), deployers Article 26. The fundamental rights impact assessment in Article 27 binds only the addressees named there. The rules apply from **2 December 2027** for stand-alone Annex III systems and from **2 August 2028** for product-embedded systems (Regulation (EU) 2026/1744, in force since 27 July 2026)."
+          "content": "Under **Article 6(2)**, independent of paragraph 1, an AI system is high-risk where it is used in one of the **eight Annex III areas**. Paragraph 3 holds a narrow counter-exception for pure support functions.\n\n1. **Biometrics:** remote identification, categorisation by sensitive attributes, emotion recognition where Article 5 does not prohibit it.\n2. **Critical infrastructure:** AI as a safety component in digital infrastructure, road traffic, water, gas, heating and electricity, for example at municipal utilities.\n3. **Education and vocational training:** admission and assessment AI, exam monitoring, for example exam software at vocational schools.\n4. **Employment and HR:** recruitment, **CV screening** and candidate evaluation (point 4(a)), plus terms of work relationships, promotion, termination, task allocation and performance monitoring (point 4(b)). CV ranking in an applicant-tracking system can fall under point 4(a); the intended purpose decides.\n5. **Essential services:** public assistance, creditworthiness assessment and credit scoring, life and health insurance pricing, emergency-call prioritisation, for example at insurance brokers.\n6. **Law enforcement:** public-authority territory, rarely relevant to an SME.\n7. **Migration, asylum, border control:** also public-authority territory.\n8. **Justice and democratic processes:** assistants to research and interpret facts and law (Annex III, point 8(a)), AI intended to influence elections (point 8(b)).\n\nProviders meet Article 16 and the requirements in Articles 9 to 15 (block 3), deployers Article 26. The fundamental rights impact assessment in Article 27 binds only the addressees named there. The rules apply from **2 December 2027** for stand-alone Annex III systems and from **2 August 2028** for product-embedded systems (Regulation (EU) 2026/1744, in force since 27 July 2026)."
         },
         {
           "id": "block_2_lesson_2_section_3",
@@ -174,7 +174,7 @@
             },
             {
               "id": "b",
-              "text": "High risk under Article 6(2) in conjunction with Annex III, point 4(b)",
+              "text": "High risk under Annex III, point 4(b)",
               "isCorrect": true
             },
             {
@@ -188,7 +188,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Annex III, point 4(b), covers AI for performance evaluation. Choosing what stands out shapes the evaluation, even if a human decides."
+          "explanation": "Annex III, point 4(b), read with Article 6(2), covers AI for performance evaluation. The AI decides which feedback the manager sees, so it shapes the evaluation even if a human decides."
         },
         {
           "id": "block_2_lesson_2_q2",
@@ -223,12 +223,12 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Nothing needs documenting",
+              "text": "Nothing needs documenting; the classification is enough",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Document the assessment (Article 6(4)) and register the system (Article 49(2))",
+              "text": "Document the assessment (Article 6(4)), register the system (Article 49(2))",
               "isCorrect": true
             },
             {
@@ -319,7 +319,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Article 50(4), second subparagraph, requires visible disclosure on the text itself where nobody holds editorial responsibility."
+          "explanation": "For AI text on matters of public interest with no editorial responsibility, Article 50(4), second subparagraph, requires visible disclosure on the text; a footer notice is not enough."
         },
         {
           "id": "block_2_lesson_3_q2",
@@ -408,7 +408,7 @@
           "id": "block_2_lesson_4_section_3",
           "title": "The asymmetry of misclassification",
           "readTimeMinutes": 2,
-          "content": "**Too low** (high risk treated as minimal): risk management, logging or human oversight can be missing. Once the duties apply, market-surveillance measures and penalties under Article 99 come into play; parallel law such as the General Equal Treatment Act or the GDPR can bite earlier.\n\n**Too high** (minimal treated as high risk): unnecessary compliance work, system by system.\n\nDocument the purpose, the role and the Article 6 assessment against the annexes. If a legal question stays open, write it down and set a risk-appropriate interim control. Do not wait for 2 December 2027.\n\n**Apply it now:** work through the six questions for your most important AI system and enter the risk class and reasoning in your AI inventory (risk-classification column)."
+          "content": "**Too low** (high risk treated as minimal): risk management, logging or human oversight can be missing. Once the duties apply, market-surveillance measures and penalties under Article 99 come into play; parallel law such as the General Equal Treatment Act or the GDPR can bite earlier.\n\n**Too high** (minimal treated as high risk): unnecessary compliance work, system by system.\n\nDocument the purpose, the role and the Article 6 assessment against the annexes. If a legal question stays open, write it down and set a control that fits the risk until it is resolved. Do not wait for 2 December 2027.\n\n**Apply it now:** work through the six questions for your most important AI system and enter the risk class and reasoning in your AI inventory (risk-classification column)."
         }
       ],
       "quiz": [
@@ -468,7 +468,7 @@
         },
         {
           "id": "block_2_lesson_4_q3",
-          "questionText": "An IT service firm with 40 employees uses ChatGPT for (a) meeting summaries, (b) email drafts and (c) pre-selecting freelancer profiles. How is each use classified?",
+          "questionText": "A 40-person IT firm uses ChatGPT for (a) meeting summaries, (b) email drafts and (c) pre-selecting freelancer profiles. How is each use classified?",
           "answerOptions": [
             {
               "id": "a",
@@ -477,7 +477,7 @@
             },
             {
               "id": "b",
-              "text": "(a) and (b) minimal, (c) high-risk under Annex III, point 4(a)",
+              "text": "(a) and (b) minimal, (c) high-risk (Annex III, point 4(a))",
               "isCorrect": true
             },
             {
@@ -491,7 +491,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Classification runs per use case: pre-selecting freelancers filters candidates for work (Annex III, point 4(a)); summaries and emails do not."
+          "explanation": "Classification runs per use case. Pre-selecting freelancer profiles is selection of people under Annex III, point 4(a); summaries and emails are not. Being a general-purpose AI model does not make every use high-risk."
         }
       ],
       "widgets": [

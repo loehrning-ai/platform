@@ -128,9 +128,9 @@ export const CODEX_COURSE_COPY = Object.freeze({
         "Lokale Teilnahmebestätigung für den Codex-Kurs herunterladen.",
     },
     verificationMetadata: {
-      title: "Teilnahmebestätigungsdaten prüfen: Codex-Kurs",
+      title: "Zertifikatdaten lesen: Codex-Kurs",
       description:
-        "Lokal kodierte Daten einer Codex-Teilnahmebestätigung lesen, nicht servergeprüft oder signiert.",
+        "Liest die lokal kodierten Daten einer Teilnahmebestätigung. Sie sind nicht servergeprüft und nicht kryptografisch signiert.",
     },
     error: {
       title: "Codex-Kurs konnte nicht geladen werden",
@@ -207,7 +207,7 @@ export const CODEX_COURSE_COPY = Object.freeze({
     verificationMetadata: {
       title: "Read completion-record data: Codex Course",
       description:
-        "Read locally encoded Codex completion data, not server-verified or signed.",
+        "Reads the locally encoded data of a completion record. The data is not server-verified or cryptographically signed.",
     },
     error: {
       title: "The Codex Course could not load",

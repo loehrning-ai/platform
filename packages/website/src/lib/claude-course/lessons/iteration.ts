@@ -12,7 +12,7 @@ const lesson: ClaudeLesson = {
   subtitle: "Change one variable, compare results, and keep the evidence.",
   durationMinutes: 10,
   trackId: "workflows",
-  hook: "First drafts are for calibration, not delivery.",
+  hook: "Use the first draft to calibrate the prompt.",
   keyConcepts: [
     "Calibrate, correct, lock",
     "Show, don't tell",
@@ -30,21 +30,21 @@ const lesson: ClaudeLesson = {
     {
       id: "three-turn-loop",
       title: "The three-turn loop",
-      readTimeMinutes: 2,
+      readTimeMinutes: 1,
       content:
         "- **Turn 1 · baseline.** Run a reasonable prompt on a small test set and record which requirements pass.\n- **Turn 2 · one correction.** Make one testable change, such as \"Remove the first paragraph\", and keep other variables stable.\n- **Turn 3 · keep the tested version.** Store the prompt with its use case, model assumptions and evaluation cases. Rerun them after later edits or model changes.\n\nA model can draft a reusable prompt from an accepted output. Treat it as a candidate until it passes on unseen inputs.",
     },
     {
       id: "show-dont-tell",
       title: "Show, don't tell",
-      readTimeMinutes: 2,
+      readTimeMinutes: 1,
       content:
         "An example makes an ambiguous requirement observable. Instead of \"use a professional tone,\" supply a short approved reference and name the properties to keep; for structured work, add representative input-output pairs and edge cases. Examples can overfit and carry unwanted details, so strip confidential data, vary them and evaluate on held-out cases.",
     },
     {
       id: "turn-2-vocabulary",
       title: "What to say in turn 2",
-      readTimeMinutes: 2,
+      readTimeMinutes: 1,
       content:
         'Write corrections a reviewer can check against the output.\n\n**Testable:** "Remove the first paragraph." · "Use the sentence length and terminology from this approved example." · "Start each bullet with a verb." · "Assume the reader knows X; omit its definition."\n\n**Not testable:** "Make it better." · "Less AI-sounding." · "Sharper." · "You know what I mean."',
     },
@@ -69,7 +69,7 @@ const lesson: ClaudeLesson = {
       props: {
         lessonId: "iteration",
         cpId: "loop",
-        title: "Run a turn-1, then iterate",
+        title: "Run turn 1, then iterate",
         hint: "Ask for a quick draft. Then paste the output back with a specific correction and ask again.",
         placeholder:
           "Turn 1 prompt goes here. Then update this box and re-run for turn 2.",
@@ -86,7 +86,7 @@ const lesson: ClaudeLesson = {
           "Which turn-2 correction is most likely to actually change the output?",
         options: [
           '"Make it better."',
-          '"Less AI sounding."',
+          '"Less AI-sounding."',
           '"Cut the opening paragraph and start with the status in one sentence."',
           '"Try again."',
         ],
@@ -104,10 +104,10 @@ const lesson: ClaudeLesson = {
       props: {
         lessonId: "iteration",
         cpId: "arena",
-        task: "Correct a first-draft status update that opened with too much throat-clearing.",
+        task: "Correct the first draft of a status update that opens with too much preamble.",
         original: "make it sound better and shorter",
         criteria:
-          "specificity, testability, actionable instruction, avoids vibes",
+          "Specific, testable, actionable, no vague words.",
       },
     },
   ],

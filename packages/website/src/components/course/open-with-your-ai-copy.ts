@@ -47,27 +47,27 @@ const DE: OpenWithYourAiCopy = {
   kinds: {
     lesson: {
       heading: "Diesen Block mit deiner KI öffnen",
-      body: "Dein KI-Programm liest damit die Lektionen des Blocks im Originalwortlaut.",
+      body: "Gib den Auftrag deinem KI-Programm. Es liest die Lektionen des Blocks direkt von der Plattform, im Originalwortlaut.",
       promptOpening: (contextTitle) =>
         `Ich lerne gerade auf loehrning.ai: ${contextTitle}.`,
       promptTask:
-        "Fasse den Inhalt zusammen, nenne die drei wichtigsten Punkte und stell mir dann drei Verständnisfragen. Nutze nur den Text.",
+        "Fasse den Inhalt zusammen, nenne die drei wichtigsten Punkte und stell mir dann drei Verständnisfragen. Nutze nur die gelesenen Inhalte und erfinde nichts.",
     },
     chapter: {
       heading: "Dieses Kapitel mit deiner KI öffnen",
-      body: "Dein KI-Programm liest damit das Kapitel im Originalwortlaut.",
+      body: "Gib den Auftrag deinem KI-Programm. Es liest das Kapitel direkt von der Plattform, im Originalwortlaut.",
       promptOpening: (contextTitle) =>
         `Ich lese gerade auf loehrning.ai: ${contextTitle}.`,
       promptTask:
-        "Fasse das Kapitel zusammen, nenne die drei wichtigsten Punkte und sag mir, welche Aussagen belegt sind und welche nicht. Nutze nur den Text.",
+        "Fasse das Kapitel zusammen, nenne die drei wichtigsten Punkte und sag mir, welche Aussagen der Text belegt und welche nicht. Nutze nur die gelesenen Inhalte und erfinde nichts.",
     },
     workshop: {
       heading: "Diesen Workshop mit deiner KI öffnen",
-      body: "Dein KI-Programm liest damit Ablauf und Materialien von der Plattform.",
+      body: "Gib den Auftrag deinem KI-Programm. Es liest Ablauf und Materialien direkt von der Plattform.",
       promptOpening: (contextTitle) =>
         `Ich arbeite gerade einen Workshop auf loehrning.ai durch: ${contextTitle}.`,
       promptTask:
-        "Führe mich Schritt für Schritt durch den Ablauf. Nimm mir die Entscheidungsaufgaben nicht ab: Stell mir die Fragen und warte auf meine Antwort. Nutze nur den Text.",
+        "Führe mich Schritt für Schritt durch den Ablauf. Nimm mir die Entscheidungsaufgaben nicht ab: Stell mir die Fragen und warte auf meine Antwort. Nutze nur die gelesenen Inhalte und erfinde nichts.",
     },
   },
   promptServerLine: (serverUrl) => `Server (HTTP): ${serverUrl}`,
@@ -89,27 +89,27 @@ const EN: OpenWithYourAiCopy = {
   kinds: {
     lesson: {
       heading: "Open this block with your AI",
-      body: "Your AI program uses it to read the block's lessons in their original wording.",
+      body: "Give the prompt to your AI program. It reads the block's lessons straight from the platform, word for word.",
       promptOpening: (contextTitle) =>
         `I am working through this on loehrning.ai: ${contextTitle}.`,
       promptTask:
-        "Summarise the content, name the three most important points, then ask me three comprehension questions. Use only the text.",
+        "Summarise the content, name the three most important points, then ask me three comprehension questions. Use only the content you read and invent nothing.",
     },
     chapter: {
       heading: "Open this chapter with your AI",
-      body: "Your AI program uses it to read the chapter in its original wording.",
+      body: "Give the prompt to your AI program. It reads the chapter straight from the platform, word for word.",
       promptOpening: (contextTitle) =>
         `I am reading this on loehrning.ai: ${contextTitle}.`,
       promptTask:
-        "Summarise the chapter, name the three most important points, and tell me which claims are supported and which are not. Use only the text.",
+        "Summarise the chapter, name the three most important points, and tell me which claims the text supports and which it does not. Use only the content you read and invent nothing.",
     },
     workshop: {
       heading: "Open this workshop with your AI",
-      body: "Your AI program uses it to read the steps and materials from the platform.",
+      body: "Give the prompt to your AI program. It reads the steps and materials straight from the platform.",
       promptOpening: (contextTitle) =>
         `I am working through a workshop on loehrning.ai: ${contextTitle}.`,
       promptTask:
-        "Walk me through the steps one at a time. Do not settle the decision labs for me: ask me the questions and wait for my answer. Use only the text.",
+        "Walk me through the steps one at a time. Do not settle the decision labs for me: ask me the questions and wait for my answer. Use only the content you read and invent nothing.",
     },
   },
   promptServerLine: (serverUrl) => `Server (HTTP): ${serverUrl}`,

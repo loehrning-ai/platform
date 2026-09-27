@@ -17,7 +17,7 @@ export default function Ch07InterpretDe() {
       <Hero
         eyebrow="Kapitel 07 · Interpretation"
         title="Erklärungsverfahren beantworten <em>bestimmte Fragen.</em>"
-        hook="Gute Vorhersagen erklären noch nichts. SHAP, LIME und Permutationswichtigkeit beschreiben je einen Ausschnitt des Modellverhaltens, unter Referenzdaten und Annahmen, die du benennen musst."
+        hook="SHAP, LIME und Permutationswichtigkeit beschreiben je einen Ausschnitt des Modellverhaltens, unter Referenzdaten und Annahmen, die du benennen musst."
         meta={[
           { k: "Lesezeit", v: "10 min" },
           { k: "Inhalt", v: "SHAP · LIME · Permutation" },
@@ -29,7 +29,7 @@ export default function Ch07InterpretDe() {
         <SectionLabel n="07.1">
           Erklärungen einzelner Vorhersagen mit SHAP
         </SectionLabel>
-        <h2 className="h2">SHAP: Spieltheorie für ML.</h2>
+        <h2 className="h2">SHAP verteilt eine Vorhersage auf die Merkmale.</h2>
         <p className="prose">
           SHAP (SHapley Additive exPlanations) verteilt eine Vorhersage additiv
           auf Merkmale, über Shapley-Werte und eine gewählte
@@ -43,7 +43,7 @@ export default function Ch07InterpretDe() {
       <section className="section">
         <SectionLabel n="07.2">Lokale Approximation mit LIME</SectionLabel>
         <h2 className="h2">
-          Komplexes Modell, einfache Erklärung in lokaler Nähe.
+          LIME nähert das Modell um einen Punkt linear an.
         </h2>
         <p className="prose">
           LIME (Local Interpretable Model-agnostic Explanations) stellt eine
@@ -63,7 +63,9 @@ export default function Ch07InterpretDe() {
         <SectionLabel n="07.3">
           Globale Merkmalswichtigkeit durch Permutation
         </SectionLabel>
-        <h2 className="h2">Eine Spalte zerstören. Den Schaden messen.</h2>
+        <h2 className="h2">
+          Mischst du eine Spalte, misst der Metrikverlust die Abhängigkeit.
+        </h2>
         <p className="prose">
           Mischst du eine Spalte durch, verliert das Merkmal seinen Bezug zum
           Ziel, und das Modell rechnet weiter. Der Metrikverlust schätzt, wie
@@ -101,10 +103,10 @@ export default function Ch07InterpretDe() {
         <BestPractices
           title="Bewährte Verfahren"
           items={[
-            "<b>SHAP für additive Attribution:</b> Explainer, Ausgabeskala, Hintergrunddaten, Behandlung von Merkmalsabhängigkeit und Approximationsfehler angeben. Effizienz gilt für die gewählte SHAP-Formulierung, nicht für jede Implementierungsausgabe.",
+            "<b>SHAP für additive Attribution:</b> Explainer, Ausgabeskala, Hintergrunddaten, Behandlung von Merkmalsabhängigkeit und Approximationsfehler angeben. Die SHAP-Werte summieren sich nur in der gewählten Formulierung exakt zur Vorhersage; Näherungen weichen ab.",
             "<b>Permutation für Abhängigkeit auf Evaluationsdaten:</b> Metrik und Permutationseinheit wählen und korrelierte Merkmale bei Bedarf gemeinsam lesen.",
             "<b>LIME für ein lokales Ersatzmodell:</b> Lokalität, Perturbationsverteilung, Ersatzmodellgüte und Stabilität über Seeds berichten.",
-            "<b>Stabilität von Wichtigkeitsschätzungen zeigen.</b> Stochastische Verfahren wiederholen und Streuung berichten; von Konfidenz nur bei begründeter Stichprobeninterpretation sprechen.",
+            "<b>Stabilität von Wichtigkeitsschätzungen zeigen.</b> Stochastische Verfahren wiederholen und die Streuung berichten.",
           ]}
         />
       </section>

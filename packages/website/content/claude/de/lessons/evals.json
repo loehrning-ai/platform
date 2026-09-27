@@ -5,7 +5,7 @@
   "subtitle": "Wie du erkennst, ob ein Prompt wirklich besser ist.",
   "durationMinutes": 12,
   "trackId": "team",
-  "hook": "Ein Eindruck ersetzt keine Prüfung.",
+  "hook": "Vergleiche Prompt-Versionen an festen Fällen.",
   "keyConcepts": [
     "Minimaler Eval",
     "Binäre Suche eines Prompts",
@@ -28,14 +28,14 @@
     {
       "id": "debugging",
       "title": "Debugging eines fehlerhaften Prompts",
-      "readTimeMinutes": 2,
+      "readTimeMinutes": 1,
       "content": "Reproduziere den Fehler mit fester Eingabe, festem Modell, festen Einstellungen und festem Tool-Zustand. Deaktiviere oder vereinfache Prompt-Abschnitte, bis der Widerspruch eingekreist ist, und hol sie dann einzeln zurück, mit denselben Fällen.\n\nDas ist Delta-Debugging, doch wegen der Modellvarianz beweist ein Durchlauf keine Ursache. Wiederhole die Durchläufe und lies zuerst die Transkripte."
     },
     {
       "id": "llm-as-judge",
       "title": "Qualität mit einem zweiten Modell beurteilen",
-      "readTimeMinutes": 2,
-      "content": "Ein Modell-Grader bewertet offene Ausgaben anhand einer Rubrik und bringt eigene Fehler und Präferenzen mit. Kalibriere ihn an menschlich geprüften Beispielen, tausche bei Paarvergleichen die Reihenfolge, speichere die Begründung und miss die Abweichung.\n\nSchema, Pflichtfelder, Zitate und ausführbare Tests prüfen deterministische Grader. Mehrere Grader kombinierst du nur, wenn jeder eine definierte Anforderung misst."
+      "readTimeMinutes": 1,
+      "content": "Ein Modell-Grader bewertet offene Ausgaben anhand einer Rubrik und bringt eigene Fehler und Präferenzen mit. Kalibriere ihn an menschlich geprüften Beispielen, tausche bei Paarvergleichen die Reihenfolge, speichere die Begründung und miss die Abweichung.\n\nDeterministische Grader prüfen Schema, Pflichtfelder, Zitate und ausführbare Tests. Mehrere Grader kombinierst du nur, wenn jeder eine definierte Anforderung misst."
     }
   ],
   "widgets": [
@@ -104,7 +104,7 @@
             "prompt": "Was ist die aktuelle Version unserer internen AuthKit-Bibliothek?",
             "output": "AuthKit ist derzeit in Version 3.7.2, angeblich in einem aktuellen Release veröffentlicht, mit Fehlerbehebungen für den OAuth-Flow und einem neuen MFA-Modul.",
             "correct": "halluzination",
-            "why": "Die simulierte Antwort hat keine interne Quelle für Version, Release und Release Notes."
+            "why": "Die simulierte Antwort hat keine interne Quelle für Version, Datum und Release Notes."
           }
         ],
         "passThreshold": 4,
@@ -144,9 +144,9 @@
         "cpId": "q1",
         "question": "Du änderst einen Prompt, und die neue Ausgabe „fühlt sich besser an“. Was ist der nächste Schritt?",
         "options": [
-          "Veröffentlichen.",
-          "Beide Versionen an denselben Eval-Fällen vergleichen.",
-          "Frage einen Kollegen, ob es ihm gefällt.",
+          "Veröffentliche ihn.",
+          "Vergleiche beide Versionen an denselben Eval-Fällen.",
+          "Frag Kollegen, ob er ihnen gefällt.",
           "Bitte Claude, sich selbst zu bewerten."
         ],
         "correct": 1,
@@ -169,7 +169,7 @@
         "cpId": "q2",
         "question": "Ein Prompt zeigt nach mehreren Änderungen eine Regression. Welcher Schritt grenzt widersprüchliche Anweisungen am besten ein?",
         "options": [
-          "Füge weitere Anweisungen hinzu, um die Seltsamkeit zu beheben.",
+          "Füge weitere Anweisungen hinzu, um das seltsame Verhalten zu beheben.",
           "Deaktiviere Abschnitte, wiederhole dieselben Durchläufe und hol sie einzeln zurück.",
           "Wechsle zu einem anderen Modell.",
           "Bitte Claude, den Prompt von Grund auf neu zu schreiben."

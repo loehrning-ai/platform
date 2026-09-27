@@ -43,7 +43,7 @@
           "id": "deepfake-2-1-s3",
           "title": "Art. 50: Markierung und Offenlegung",
           "readTimeMinutes": 1,
-          "content": "Art. 50 der KI-Verordnung verlangt von zwei Rollen Verschiedenes:\n\n- Anbieter erfasster generativer Systeme müssen synthetische Ausgaben grundsätzlich maschinenlesbar als künstlich erzeugt oder manipuliert markieren.\n- Betreiber, die einen Deepfake erzeugen oder manipulieren und offenlegen, müssen grundsätzlich sichtbar mitteilen, dass der Inhalt künstlich erzeugt oder manipuliert wurde. Für erkennbar künstlerische, kreative, satirische, fiktionale oder ähnliche Werke gilt eine angepasste Offenlegung; weitere gesetzliche Ausnahmen sind zu prüfen.\n\nArt. 50 ist seit 2. August 2026 anwendbar. Für Systeme, die vorher schon auf dem Markt waren, gilt Abs. 2 nach der Übergangsregel in Verordnung (EU) 2026/1744 ab 2. Dezember 2026. Eine Markierung kann die Herkunft stützen; fehlt sie, beweist das keine Echtheit, weil Markierungen entfernbar sind und Ausnahmen greifen können.\n\nQuellen: Verordnung (EU) 2024/1689, Art. 3 Nr. 60 und Art. 50; Verordnung (EU) 2026/1744, Art. 1 Nr. 39 Buchst. b."
+          "content": "Art. 50 der KI-Verordnung verlangt von zwei Rollen Verschiedenes:\n\n- Anbieter erfasster generativer Systeme müssen synthetische Ausgaben grundsätzlich maschinenlesbar als künstlich erzeugt oder manipuliert markieren (Abs. 2).\n- Betreiber, die einen Deepfake erzeugen oder manipulieren und offenlegen, müssen grundsätzlich sichtbar mitteilen, dass der Inhalt künstlich erzeugt oder manipuliert wurde (Abs. 4). Für erkennbar künstlerische, kreative, satirische, fiktionale oder ähnliche Werke gilt eine angepasste Offenlegung; weitere gesetzliche Ausnahmen sind zu prüfen.\n\nArt. 50 ist seit 2. August 2026 anwendbar. Für Systeme, die vorher schon auf dem Markt waren, gilt Abs. 2 nach der Übergangsregel in Verordnung (EU) 2026/1744 ab 2. Dezember 2026. Eine Markierung kann die Herkunft stützen; fehlt sie, beweist das keine Echtheit, weil Markierungen entfernbar sind und Ausnahmen greifen können.\n\nQuellen: Verordnung (EU) 2024/1689, Art. 3 Nr. 60 und Art. 50; Verordnung (EU) 2026/1744, Art. 1 Nr. 39 Buchst. b."
         }
       ],
       "quiz": [
@@ -123,7 +123,7 @@
       "blockId": "block_2",
       "number": 2,
       "title": "Wie du Herkunft und Kontext prüfst",
-      "subtitle": "Quellenarbeit statt Detektor-Urteil",
+      "subtitle": "Quellen prüfen, Detektoren richtig lesen",
       "durationMinutes": 6,
       "owner": "editorial:ki-und-gesellschaft",
       "lastReviewed": "2026-09-05",
@@ -264,7 +264,7 @@
           "id": "deepfake-2-3-s1",
           "title": "Was du nach dem Fund tust",
           "readTimeMinutes": 2,
-          "content": "1. Nicht weiterverbreiten: nicht öffentlich teilen, zitieren oder kommentieren, auch nicht mit Warnhinweis. Soweit das gefahrlos geht, URL, Kontoname, Zeitpunkt und Screenshot lokal sichern.\n2. Erst prüfen, dann beschuldigen: Ein Verdacht ist kein Befund. Nutze die Quellenprüfung aus Lektion 2.\n3. Präzise melden: über den aktuellen Meldeweg der Plattform, mit URL und möglichem Rechts- oder Regelverstoß. Art. 16 des Digital Services Act verpflichtet Hostingdienste zu einem leicht zugänglichen elektronischen Meldeverfahren für mutmaßlich rechtswidrige Inhalte. Hinreichend genaue Meldungen müssen zeitnah, sorgfältig, objektiv und frei von Willkür bearbeitet und entschieden werden; eine Pflicht, jeden gemeldeten Inhalt zu entfernen, folgt daraus nicht.\n4. Betroffene privat informieren: Fundstelle und Belege schicken, ohne den Inhalt weiterzugeben.\n5. Bei möglicher Straftat oder unmittelbarer Gefahr die Polizei einschalten: Die zuständige Onlinewache erreichst du über polizei.de, in akuter Gefahr den Notruf."
+          "content": "1. Nicht weiterverbreiten: nicht öffentlich teilen, zitieren oder kommentieren, auch nicht mit Warnhinweis. Soweit das gefahrlos geht, URL, Kontoname, Zeitpunkt und Screenshot lokal sichern.\n2. Erst prüfen: Nutze die Quellenprüfung aus Lektion 2, bevor du jemanden beschuldigst.\n3. Präzise melden: über den Meldeweg der Plattform, mit URL und möglichem Rechts- oder Regelverstoß.\n4. Betroffene privat informieren: Fundstelle und Belege schicken, ohne den Inhalt weiterzugeben.\n5. Bei möglicher Straftat oder unmittelbarer Gefahr die Polizei einschalten: Die zuständige Onlinewache erreichst du über polizei.de, in akuter Gefahr den Notruf.\n\nArt. 16 des Digital Services Act verpflichtet Hostingdienste zu einem leicht zugänglichen elektronischen Meldeverfahren für mutmaßlich rechtswidrige Inhalte. Hinreichend genaue Meldungen müssen sie zeitnah, sorgfältig, objektiv und willkürfrei bearbeiten und entscheiden; jeden gemeldeten Inhalt entfernen müssen sie nicht."
         },
         {
           "id": "deepfake-2-3-s2",
@@ -276,7 +276,7 @@
           "id": "deepfake-2-3-s3",
           "title": "Wenn dein Bild oder deine Stimme betroffen ist",
           "readTimeMinutes": 1,
-          "content": "Nach § 22 KUG dürfen Bildnisse nur mit Einwilligung der abgebildeten Person verbreitet oder öffentlich zur Schau gestellt werden. Die Ausnahmen in § 23 KUG und die Interessenabwägung nach § 23 Abs. 2 bleiben zu prüfen. Ob ein Deepfake diese Rechte verletzt und welcher Anspruch folgt, hängt von Inhalt, Kontext und Verbreitungsweg ab.\n\nDeine Stimme allein schützt § 22 KUG nicht. Bei geklonten oder manipulierten Audioaufnahmen kommen je nach Nutzung das allgemeine Persönlichkeitsrecht, das Datenschutzrecht und zivil- oder strafrechtliche Vorschriften in Betracht. Eine bestimmte Rechtsfolge kann dir ohne Prüfung des Einzelfalls niemand zusagen.\n\nSichere Fundstelle und Belege, ohne den Inhalt weiterzugeben. Erste Orientierung geben verbraucherzentrale.de und klicksafe.de; deine Ansprüche bewertet eine qualifizierte medienrechtliche Beratung."
+          "content": "Nach § 22 KUG dürfen Bildnisse nur mit Einwilligung der abgebildeten Person verbreitet oder öffentlich zur Schau gestellt werden. Die Ausnahmen in § 23 KUG und die Interessenabwägung nach § 23 Abs. 2 bleiben zu prüfen. Ob ein Deepfake diese Rechte verletzt und welcher Anspruch folgt, hängt von Inhalt, Kontext und Verbreitungsweg ab.\n\nDeine Stimme allein schützt § 22 KUG nicht. Bei geklonten oder manipulierten Audioaufnahmen kommen je nach Nutzung das allgemeine Persönlichkeitsrecht, das Datenschutzrecht und zivil- oder strafrechtliche Vorschriften in Betracht.\n\nWelche Ansprüche du hast, klärt eine medienrechtliche Beratung im Einzelfall; erste Orientierung geben verbraucherzentrale.de und klicksafe.de."
         }
       ],
       "quiz": [
@@ -305,7 +305,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Jede öffentliche Weitergabe vergrößert die Reichweite, auch die gut gemeinte. Erst sicherst du Belege, dann meldest du."
+          "explanation": "Jede öffentliche Weitergabe kann die Reichweite vergrößern, auch die gut gemeinte. Erst sicherst du Belege, soweit das gefahrlos geht, dann meldest du."
         },
         {
           "id": "deepfake-2-3-q2",
@@ -313,12 +313,12 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Bundeskriminalamt (BKA)",
+              "text": "Beim Bundeskriminalamt (BKA) anzeigen",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Bundesanstalt für Finanzdienstleistungsaufsicht (BaFin)",
+              "text": "An die Finanzaufsicht BaFin schreiben",
               "isCorrect": false
             },
             {
@@ -332,7 +332,7 @@
               "isCorrect": true
             }
           ],
-          "explanation": "Nach dem KI-MIG ist die Bundesnetzagentur zuständig, soweit keine Fachbehörde zuständig ist. Prüfe deshalb zuerst die aktuelle offizielle Zuständigkeit und den veröffentlichten Behördenkanal."
+          "explanation": "Nach dem KI-MIG ist die Bundesnetzagentur grundsätzlich zuständig, soweit keine Fachbehörde zuständig ist. Prüfe deshalb zuerst die aktuelle offizielle Zuständigkeit und den veröffentlichten Behördenkanal."
         },
         {
           "id": "deepfake-2-3-q3",

@@ -36,7 +36,7 @@ export const AI_NATIVE_OPERATOR_CONFIG = {
   workshopQuizPassThreshold: 0.7,
   certificateTitle: "Certificate of participation: AI-Native Operator",
   certificateSubtitle:
-    "Local certificate of participation from the independent learning platform loehrning.ai. Not server-verified, externally assessed, or accredited, and no evidence of regulatory compliance.",
+    "Local certificate of participation from the independent learning platform loehrning.ai. It is not server-verified, externally assessed or accredited, and it is no evidence of regulatory compliance.",
   certificateModules: [
     "Mindset & Culture",
     "Engineering Practices",
@@ -64,7 +64,7 @@ export const AI_NATIVE_OPERATOR_CONFIG_DE =
     title: "AI-Native Operator: Praxiskurs",
     certificateTitle: "Teilnahmebestätigung: AI-Native Operator",
     certificateSubtitle:
-      "Lokal erzeugte Teilnahmebestätigung der unabhängigen Lernplattform loehrning.ai. Nicht servergeprüft, fremdbewertet oder akkreditiert und kein Nachweis regulatorischer Konformität.",
+      "Lokal erzeugte Teilnahmebestätigung der unabhängigen Lernplattform loehrning.ai. Sie ist weder servergeprüft noch fremdbewertet oder akkreditiert und kein Nachweis regulatorischer Konformität.",
     certificateModules: [
       "Mindset und Arbeitskultur",
       "Technische Praxis",

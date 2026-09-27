@@ -705,7 +705,7 @@ describe("CourseProjectStudio", () => {
     expect(mockedSaveExerciseResult).not.toHaveBeenCalled();
     expect(
       screen.getByText(
-        /Project acceptance unlocks only after all five stage missions/,
+        /Project acceptance unlocks only after all five project stages/,
       ),
     ).toBeInTheDocument();
   });

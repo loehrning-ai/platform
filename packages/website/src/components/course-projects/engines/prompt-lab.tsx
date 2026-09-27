@@ -610,10 +610,11 @@ export default function PromptLab({
   const copy =
     locale === "de"
       ? {
-          engine: "Prompt-Labor",
           context: "Arbeitskontext",
           contextHelp:
-            "Fakten, Zielgruppe und Ausgangslage.",
+            variant === "grounding"
+              ? "Zielgruppe und Zweck."
+              : "Fakten, Zielgruppe und Ausgangslage.",
           contextPlaceholder:
             "Beispiel: Ein internes Operations-Team braucht eine prüfbare Entscheidungsnotiz auf Basis synthetischer Vorfalldaten.",
           prompt: "Prompt-Auftrag",
@@ -632,8 +633,8 @@ export default function PromptLab({
           running: "Provider läuft …",
           model: "Angefragtes Modell",
           modelHelp:
-            "Gesendet wird nur die öffentliche Modell-ID; die Bereitstellung kann sie ablehnen. API-Schlüssel bleiben auf dem Server.",
-          providerTitle: "Provider-Ausgabe · nur echte API-Antwort",
+            "Die Bereitstellung kann das Modell ablehnen. API-Schlüssel bleiben auf dem Server.",
+          providerTitle: "Provider-Ausgabe",
           providerIdle:
             "Noch kein Providerlauf.",
           failureClass: "Fehlerklasse",
@@ -668,7 +669,7 @@ export default function PromptLab({
           evidenceRunDegraded:
             "Richtlinien-Stopp protokolliert · zählt nicht für Projekt oder Bestätigung",
           evidenceRunPending:
-            "Echte Provider-Evidenz oder Richtlinien-Stopp fehlt",
+            "Echte Providerantwort oder Richtlinien-Stopp liegt vor",
           ready: "Die Prompt-Evidenz ist vollständig.",
           pending:
             "Struktur vervollständigen und einen echten Providerlauf versuchen.",
@@ -678,16 +679,17 @@ export default function PromptLab({
           degradedNotVerified:
             "Dieser Richtlinien-Stopp verifiziert weder das Provider-Artefakt noch das Kurszertifikat.",
           stageLocked:
-            "Die Verifizierung öffnet nach allen fünf Arbeitsphasen.",
-          stageEvidence: "Alle fünf Arbeitsphasen sind abgeschlossen",
+            "Die Verifizierung öffnet nach allen fünf Projektphasen.",
+          stageEvidence: "Alle fünf Projektphasen abgeschlossen",
           verifySummarySuccess:
             "Prompt-Labor verifiziert: Ziel, Kontext und Grenzen geprüft; Providerlauf erfolgreich.",
         }
       : {
-          engine: "Prompt lab",
           context: "Working context",
           contextHelp:
-            "Facts, audience and starting point.",
+            variant === "grounding"
+              ? "Audience and purpose."
+              : "Facts, audience and starting point.",
           contextPlaceholder:
             "Example: An internal operations team needs an auditable decision memo based on synthetic incident data.",
           prompt: "Prompt instruction",
@@ -706,8 +708,8 @@ export default function PromptLab({
           running: "Provider running …",
           model: "Requested model",
           modelHelp:
-            "Only the public model ID is sent, and the deployment may deny it. API keys stay on the server.",
-          providerTitle: "Provider output · API response only",
+            "The deployment may deny it. API keys stay on the server.",
+          providerTitle: "Provider output",
           providerIdle:
             "No provider run yet.",
           failureClass: "Failure class",
@@ -741,7 +743,7 @@ export default function PromptLab({
           evidenceRunDegraded:
             "Policy stop recorded · no project or certificate verification",
           evidenceRunPending:
-            "Real provider evidence or a policy stop is missing",
+            "Real provider answer or policy stop recorded",
           ready: "The prompt evidence is complete.",
           pending: "Complete the structure and attempt a real provider run.",
           success: "The practice API returned a provider response.",
@@ -750,8 +752,8 @@ export default function PromptLab({
           degradedNotVerified:
             "This policy stop verifies neither the provider artifact nor the course certificate.",
           stageLocked:
-            "Verification unlocks after all five work stages.",
-          stageEvidence: "All five work stages are complete",
+            "Verification unlocks after all five project stages.",
+          stageEvidence: "All five project stages completed",
           verifySummarySuccess:
             "Prompt lab verified: goal, context, and constraints checked; provider run succeeded.",
         };
@@ -783,11 +785,9 @@ export default function PromptLab({
               : "Eigentümer, Fallback, Messgröße und Wiederanlauf definiert",
           budget: "Maximales Agentenbudget",
           graph: "Scout → Analyst → Kritiker → Redakteur",
-          graphHelp:
-            "Jede Rolle erhält nur synthetische Tickets; der Redakteur darf nicht autonom versenden.",
           review: "Run-Evidenz auswerten",
           reviewHelp:
-            "Bewerte einen erfolgreichen Providerlauf. Ein Richtlinien-Stopp öffnet nur den herabgestuften Lernpfad.",
+            "Bewerte die Providerantwort. Bei einem Richtlinien-Stopp bleibt nur der herabgestufte Lernpfad.",
           evaluateWorkflow:
             "Output gegen Freigabe, Abbruchregel, Eigentum und Fallback prüfen",
           evaluateOperator:
@@ -826,11 +826,9 @@ export default function PromptLab({
               : "Owner, fallback, measure, and restart procedure defined",
           budget: "Maximum agent budget",
           graph: "Scout → Analyst → Critic → Editor",
-          graphHelp:
-            "Each role receives only synthetic tickets; the editor cannot send autonomously.",
           review: "Assess run evidence",
           reviewHelp:
-            "Assess a successful provider run. A policy stop opens only the degraded learning path.",
+            "Assess the provider answer. A policy stop leaves only the degraded learning path.",
           evaluateWorkflow:
             "Check output against approval, stop rule, ownership, and fallback",
           evaluateOperator:
@@ -848,9 +846,7 @@ export default function PromptLab({
   const groundingCopy =
     locale === "de"
       ? {
-          packetTitle: "Synthetisches Quellenpaket · an beide Läufe gesendet",
-          packetHelp:
-            "Der Arbeitskontext ergänzt nur Zielgruppe und Zweck.",
+          packetTitle: "Quellenpaket · an beide Läufe",
           deskTitle: "Antwortvergleich und Redlining",
           deskHelp:
             "Bewerte beide API-Antworten. Gespeichert wird nur deine Auswahl, keine Antwort und kein Freitext.",
@@ -918,9 +914,7 @@ export default function PromptLab({
             "Das Vergleichsurteil muss zu den Rubriksummen passen.",
         }
       : {
-          packetTitle: "Synthetic source packet · sent to both runs",
-          packetHelp:
-            "Working context adds only audience and purpose.",
+          packetTitle: "Source packet · sent to both runs",
           deskTitle: "Response comparison and redlining",
           deskHelp:
             "Assess both API responses. Only your choices are stored, never responses or free text.",
@@ -1355,15 +1349,12 @@ export default function PromptLab({
   }
 
   return (
-    <EngineFrame config={config} locale={locale} engineLabel={copy.engine}>
+    <EngineFrame config={config} locale={locale}>
       {variant === "grounding" ? (
         <section className="mb-5 border-2 border-foreground bg-brand-orange/[0.08] p-4">
           <h3 className="font-mono text-xs font-black uppercase tracking-[0.14em]">
             {groundingCopy.packetTitle}
           </h3>
-          <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-            {groundingCopy.packetHelp}
-          </p>
           <pre className="mt-3 whitespace-pre-wrap border-l-4 border-brand-orange pl-3 font-mono text-xs leading-relaxed">
             {GROUNDING_SOURCE_PACKET[locale]}
           </pre>
@@ -1421,7 +1412,7 @@ export default function PromptLab({
               }}
             />
             <p className="mt-1 text-right font-mono text-xs text-muted-foreground">
-              {requestLength} / 3,800
+              {requestLength} / {locale === "de" ? "3.800" : "3,800"}
             </p>
           </div>
           {variant === "grounding" ? (
@@ -1479,9 +1470,6 @@ export default function PromptLab({
           <div className="mb-4 border-2 border-foreground bg-[#11100f] p-4 text-[#f8f5ee]">
             <p className="font-mono text-xs font-black uppercase tracking-wide text-[#ffb08a]">
               {missionCopy.graph}
-            </p>
-            <p className="mt-2 text-sm leading-relaxed text-[#d7d0c4]">
-              {missionCopy.graphHelp}
             </p>
             <label className="mt-4 block text-sm font-bold">
               {missionCopy.budget}: {budget}

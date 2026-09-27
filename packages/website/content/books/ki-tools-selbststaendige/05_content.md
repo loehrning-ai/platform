@@ -47,7 +47,7 @@ Ein Blogartikel, den Google findet, bringt dir über Monate und Jahre Kunden. Mi
 
 In Schritt 5 überarbeitest du selbst und bringst deine Expertise, Beispiele und Stimme ein. Klingt dein Blog mit denselben Phrasen und derselben Struktur wie jeder andere KI-Blog, fehlt dieser Schritt.
 
-Google bewertet Inhalte nach Nützlichkeit. Ein kurzer Text mit echter Erfahrung schlägt 2.000 Wörter austauschbaren KI-Text.
+Google bewertet Inhalte nach Nützlichkeit, unabhängig davon, ob KI mitgeschrieben hat. Schreib deshalb aus eigener Erfahrung, auch wenn der Text kürzer wird.
 
 > **KRAFT-Prompt: Blogartikel**
 >

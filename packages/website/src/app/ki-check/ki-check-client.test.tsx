@@ -254,7 +254,7 @@ describe("KiCheckClient", () => {
     }
 
     expect(
-      screen.getByRole("heading", { level: 1, name: "Current profile." }),
+      screen.getByRole("heading", { level: 1, name: "Where you stand now." }),
     ).toHaveFocus();
     expect(screen.getByText("Level 1: Starting")).toBeInTheDocument();
     expect(screen.getByText("AI Fundamentals")).toBeInTheDocument();

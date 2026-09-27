@@ -36,7 +36,7 @@ export default function Ch02ExploreDe() {
         </p>
         <p className="prose">
           <strong>Schiefe</strong> misst Asymmetrie: Ein langer rechter Rand
-          zieht den Mittelwert über den Median, etwa bei Einkommen oder Latenz.{" "}
+          zieht den Mittelwert oft über den Median, etwa bei Einkommen oder Latenz.{" "}
           <strong>Exzess-Kurtosis</strong> basiert auf dem vierten Moment,
           reagiert heftig auf Extremwerte und beschreibt allein kein
           Randrisiko. Verändere N und sieh, wie stark die Schätzungen schwanken.
@@ -88,8 +88,8 @@ export default function Ch02ExploreDe() {
         <p className="prose">
           Der Regler legt unabhängiges <strong>Messrauschen</strong> auf die
           konstruierte lineare Beziehung, und Pearson r wandert gegen 0.
-          Abschwächung unter einem klassischen Messfehlermodell; andere
-          Fehlermechanismen verzerren anders. Disattenuation braucht begründbare
+          So wirkt klassischer Messfehler; andere Fehler verzerren r anders. Wer
+          r korrigieren will (Disattenuation), braucht begründete
           Reliabilitätsschätzungen.
         </p>
         <CorrelationMatrix />
@@ -103,7 +103,7 @@ export default function Ch02ExploreDe() {
         <BestPractices
           title="Saubere Korrelationsanalyse"
           items={[
-            "<b>Für ordinale oder monotone Fragen Spearmans ρ erwägen.</b> Verteilungsannahmen betreffen die Inferenz; der Koeffizient muss zur gesuchten Beziehung passen.",
+            "<b>Für ordinale oder monotone Beziehungen Spearmans ρ nehmen.</b>",
             "<b>Stark korrelierte Merkmale clustern.</b> Hierarchisches Clustering auf 1−|r| zeigt redundante Gruppen.",
             "<b>Beziehungen zum Ziel und zwischen Eingangsmerkmalen trennen.</b> Letztere können Redundanz anzeigen.",
           ]}

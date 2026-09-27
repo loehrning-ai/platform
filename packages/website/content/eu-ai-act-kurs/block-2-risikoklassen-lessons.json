@@ -41,7 +41,7 @@
           "id": "block_2_lesson_1_section_3",
           "title": "Was der Mittelstand prüfen muss",
           "readTimeMinutes": 2,
-          "content": "**Misst ein Tool Emotionen, Biometrie oder Sozialverhalten und knüpft Konsequenzen daran, prüfen Sie es gegen Art. 5.** Typische Fälle:\n\n- Ein Kunststoff-Hersteller will per Webcam Stress bei Maschinenbedienern erkennen, um Schichten zu optimieren: verboten nach lit. f.\n- Ein Versicherer scort Antragsteller anhand öffentlicher Social-Media-Posts: verboten nach lit. c, sobald die Schlechterstellung kontextfremd ist.\n\nPrüfen Sie jede Software auch darauf, ob sie Entscheidungen manipuliert, und planen Sie 30 bis 60 Minuten pro System ein. Einwilligung der Betroffenen oder Zustimmung des Betriebsrats heilen einen Art.-5-Verstoß nicht. Eine kostenlose Erstauskunft gibt seit Juli 2025 der KI-Servicedesk der BNetzA.\n\nFinden Sie so ein Tool, stoppen Sie den Einsatz und holen Sie Rechtsberatung."
+          "content": "**Misst ein Tool Emotionen, Biometrie oder Sozialverhalten und knüpft Konsequenzen daran, prüfen Sie es gegen Art. 5.** Typische Fälle:\n\n- Ein Kunststoff-Hersteller will per Webcam Stress bei Maschinenbedienern erkennen, um Schichten zu optimieren: verboten nach lit. f.\n- Ein Versicherer scort Antragsteller anhand öffentlicher Social-Media-Posts: verboten nach lit. c, sobald die Schlechterstellung kontextfremd ist.\n\nPlanen Sie für diesen Art.-5-Check 30 bis 60 Minuten pro System ein und prüfen Sie dabei auch, ob das Tool Entscheidungen manipuliert (lit. a). Einwilligung der Betroffenen oder Zustimmung des Betriebsrats heilen einen Art.-5-Verstoß nicht. Eine kostenlose Erstauskunft gibt seit Juli 2025 der KI-Servicedesk der BNetzA.\n\nFinden Sie so ein Tool, stoppen Sie den Einsatz und holen Sie Rechtsberatung."
         }
       ],
       "quiz": [
@@ -147,19 +147,19 @@
           "id": "block_2_lesson_2_section_1",
           "title": "Weg 1: Sicherheitsbauteil eines regulierten Produkts (Art. 6 Abs. 1)",
           "readTimeMinutes": 2,
-          "content": "Eine KI in der Aufzugssteuerung ist Hochrisiko über **Anhang I**, den ersten Weg in die Hochrisiko-Klasse. Er listet rund 20 EU-Harmonisierungsrechtsakte, darunter Maschinen-VO 2023/1230, Medizinprodukte-VO 2017/745, IVDR 2017/746, Spielzeug-RL 2009/48/EG, Funkanlagen-RL 2014/53/EU, Aufzugs-RL 2014/33/EU, Kfz-Typgenehmigung, Luftfahrt (EASA), Eisenbahn und Schiffsausrüstung.\n\nNach **Art. 6 Abs. 1** ist ein KI-System Hochrisiko, wenn es Sicherheitsbauteil eines Anhang-I-Produkts oder selbst ein solches Produkt ist **und** der sektorale Rechtsakt eine Konformitätsbewertung durch Dritte verlangt. Beispiele sind ein KI-Modul in einer Anlagensteuerung mit Schutzabschaltung (Maschinen-VO) und ein medizinisches KI-Device (Medizinprodukte-VO).\n\nRechtsfolge: sektorale Konformitätsbewertung **plus** die Pflichten aus Art. 8 bis 15, die Block 3 behandelt."
+          "content": "Eine KI als Sicherheitsbauteil einer Aufzugssteuerung ist über **Anhang I** Hochrisiko, den ersten Weg in die Hochrisiko-Klasse. Er listet rund 20 EU-Harmonisierungsrechtsakte, darunter Maschinen-VO 2023/1230, Medizinprodukte-VO 2017/745, IVDR 2017/746, Spielzeug-RL 2009/48/EG, Funkanlagen-RL 2014/53/EU, Aufzugs-RL 2014/33/EU, Kfz-Typgenehmigung, Luftfahrt (EASA), Eisenbahn und Schiffsausrüstung.\n\nNach **Art. 6 Abs. 1** ist ein KI-System Hochrisiko, wenn es Sicherheitsbauteil eines Anhang-I-Produkts oder selbst ein solches Produkt ist **und** der sektorale Rechtsakt eine Konformitätsbewertung durch Dritte verlangt. Beispiele sind ein KI-Modul in einer Anlagensteuerung mit Schutzabschaltung (Maschinen-VO) und ein medizinisches KI-Device (Medizinprodukte-VO).\n\nRechtsfolge: sektorale Konformitätsbewertung **plus** die Pflichten aus Art. 8 bis 15, die Block 3 behandelt."
         },
         {
           "id": "block_2_lesson_2_section_2",
-          "title": "Weg 2: Standalone-Hochrisiko (Art. 6 Abs. 2 und die acht Anhang-III-Bereiche)",
+          "title": "Weg 2: eigenständige Hochrisiko-Systeme (Art. 6 Abs. 2 und die acht Anhang-III-Bereiche)",
           "readTimeMinutes": 3,
-          "content": "Nach **Art. 6 Abs. 2**, unabhängig von Abs. 1, ist ein KI-System Hochrisiko, wenn es in einem der **acht Anhang-III-Bereiche** eingesetzt wird. Abs. 3 enthält eine enge Rückausnahme für reine Hilfsfunktionen.\n\n1. **Biometrie:** Fernidentifizierung, Kategorisierung nach sensiblen Merkmalen, Emotionserkennung, soweit nicht nach Art. 5 verboten.\n2. **Kritische Infrastruktur:** KI als Sicherheitsbauteil in digitaler Infrastruktur, Straßenverkehr, Wasser, Gas, Heizung und Strom, etwa bei Stadtwerken.\n3. **Bildung und Berufsausbildung:** Zulassungs- und Bewertungs-KI, Prüfungsüberwachung, etwa Prüfungssoftware an Berufsschulen.\n4. **Beschäftigung und HR:** Recruiting, **CV-Screening** und Kandidatenbewertung (Nr. 4 lit. a) sowie Beförderung, Kündigung, Aufgabenverteilung und Leistungsmonitoring (Nr. 4 lit. b). ATS-CV-Ranking kann unter Nr. 4 lit. a fallen, maßgeblich ist der vorgesehene Zweck.\n5. **Wesentliche Dienste:** Sozialleistungen, Bonitätsbewertung und Kreditscoring, Tarifierung von Lebens- und Krankenversicherungen, Notrufpriorisierung, etwa bei Versicherungsmaklern.\n6. **Strafverfolgung** und 7. **Migration, Asyl, Grenzkontrolle:** Behördenkontext, für den Mittelstand selten relevant.\n8. **Justiz und demokratische Prozesse:** Assistenten zur Recherche und Auslegung von Sachverhalt und Recht (Anhang III Nr. 8 lit. a), KI zur Wahlbeeinflussung (lit. b).\n\nAnbieter erfüllen Art. 16 und die Anforderungen aus Art. 9 bis 15 (Block 3), Betreiber Art. 26. Die Grundrechtefolgenabschätzung nach Art. 27 trifft nur den dort genannten Adressatenkreis. Anwendbar sind die Regeln ab dem **2. Dezember 2027** für eigenständige Anhang-III-Systeme und ab dem **2. August 2028** für produktintegrierte Systeme (Verordnung (EU) 2026/1744, seit 27. Juli 2026 in Kraft)."
+          "content": "Nach **Art. 6 Abs. 2**, unabhängig von Abs. 1, ist ein KI-System Hochrisiko, wenn es in einem der **acht Anhang-III-Bereiche** eingesetzt wird. Abs. 3 enthält eine enge Rückausnahme für reine Hilfsfunktionen.\n\n1. **Biometrie:** Fernidentifizierung, Kategorisierung nach sensiblen Merkmalen, Emotionserkennung, soweit nicht nach Art. 5 verboten.\n2. **Kritische Infrastruktur:** KI als Sicherheitsbauteil in digitaler Infrastruktur, Straßenverkehr, Wasser, Gas, Heizung und Strom, etwa bei Stadtwerken.\n3. **Bildung und Berufsausbildung:** Zulassungs- und Bewertungs-KI, Prüfungsüberwachung, etwa Prüfungssoftware an Berufsschulen.\n4. **Beschäftigung und HR:** Recruiting, **CV-Screening** und Kandidatenbewertung (Nr. 4 lit. a) sowie Bedingungen von Arbeitsverhältnissen, Beförderung, Kündigung, Aufgabenverteilung und Leistungsmonitoring (Nr. 4 lit. b). CV-Ranking in einem Bewerbermanagementsystem (ATS) kann unter Nr. 4 lit. a fallen, maßgeblich ist der vorgesehene Zweck.\n5. **Wesentliche Dienste:** Sozialleistungen, Bonitätsbewertung und Kreditscoring, Tarifierung von Lebens- und Krankenversicherungen, Notrufpriorisierung, etwa bei Versicherungsmaklern.\n6. **Strafverfolgung:** Behördenkontext, für den Mittelstand selten relevant.\n7. **Migration, Asyl, Grenzkontrolle:** ebenfalls Behördenkontext.\n8. **Justiz und demokratische Prozesse:** Assistenten zur Recherche und Auslegung von Sachverhalt und Recht (Anhang III Nr. 8 lit. a), KI zur Wahlbeeinflussung (lit. b).\n\nAnbieter erfüllen Art. 16 und die Anforderungen aus Art. 9 bis 15 (Block 3), Betreiber Art. 26. Die Grundrechtefolgenabschätzung nach Art. 27 trifft nur den dort genannten Adressatenkreis. Anwendbar sind die Regeln ab dem **2. Dezember 2027** für eigenständige Anhang-III-Systeme und ab dem **2. August 2028** für produktintegrierte Systeme (Verordnung (EU) 2026/1744, seit 27. Juli 2026 in Kraft)."
         },
         {
           "id": "block_2_lesson_2_section_3",
           "title": "Die Ausnahme: Art. 6 Abs. 3",
           "readTimeMinutes": 2,
-          "content": "Nach **Art. 6 Abs. 3** ist ein System in einem Anhang-III-Bereich kein Hochrisiko, wenn es kein erhebliches Risiko für Gesundheit, Sicherheit oder Grundrechte birgt und das Entscheidungsergebnis nicht wesentlich beeinflusst. Das kommt in Frage, wenn es:\n\n- (a) eine eng begrenzte verfahrenstechnische Aufgabe erfüllt,\n- (b) das Ergebnis einer abgeschlossenen menschlichen Tätigkeit verbessert,\n- (c) Entscheidungsmuster oder Abweichungen erkennt, ohne die menschliche Bewertung ohne angemessene Überprüfung zu ersetzen oder zu beeinflussen, oder\n- (d) eine vorbereitende Aufgabe für eine Anhang-III-Bewertung erledigt.\n\n**Profiling schließt die Ausnahme aus.** Wer sie nutzt, dokumentiert die Bewertung nach Art. 6 Abs. 4 und registriert das System in der EU-Datenbank nach Art. 49 Abs. 2.\n\nDie Marktüberwachung darf jederzeit prüfen, ob die Ausnahme greift. Nimmt ein ATS-Anbieter sein Vorsortier-Modul so aus der Hochrisiko-Klasse, prüft der **Betreiber** die Einstufung trotzdem selbst; wer blind vertraut, haftet für die Fehleinschätzung."
+          "content": "Nach **Art. 6 Abs. 3** ist ein System in einem Anhang-III-Bereich kein Hochrisiko, wenn es kein erhebliches Risiko für Gesundheit, Sicherheit oder Grundrechte birgt und das Entscheidungsergebnis nicht wesentlich beeinflusst. Das kommt in Frage, wenn es:\n\n- (a) eine eng begrenzte verfahrenstechnische Aufgabe erfüllt,\n- (b) das Ergebnis einer abgeschlossenen menschlichen Tätigkeit verbessert,\n- (c) Entscheidungsmuster oder Abweichungen erkennt, ohne die zuvor abgeschlossene menschliche Bewertung ohne angemessene menschliche Überprüfung zu ersetzen oder zu beeinflussen, oder\n- (d) eine vorbereitende Aufgabe für eine Anhang-III-Bewertung erledigt.\n\n**Profiling schließt die Ausnahme aus.** Wer sie nutzt, dokumentiert die Bewertung nach Art. 6 Abs. 4 und registriert das System in der EU-Datenbank nach Art. 49 Abs. 2.\n\nDie Marktüberwachung darf jederzeit prüfen, ob die Ausnahme greift. Nimmt ein ATS-Anbieter sein Vorsortier-Modul so aus der Hochrisiko-Klasse, prüft der **Betreiber** die Einstufung trotzdem selbst; wer blind vertraut, haftet für die Fehleinschätzung."
         }
       ],
       "quiz": [
@@ -169,12 +169,12 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Begrenztes Risiko, weil nur Zusammenfassung",
+              "text": "Begrenztes Risiko, weil sie nur zusammenfasst",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Hochrisiko nach Art. 6 Abs. 2 i.V.m. Anhang III Nr. 4 lit. b",
+              "text": "Hochrisiko nach Anhang III Nr. 4 lit. b",
               "isCorrect": true
             },
             {
@@ -188,7 +188,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Anhang III Nr. 4 lit. b erfasst KI zur Leistungsbewertung. Wählt die KI aus, was hervorsticht, formt sie die Bewertung, auch wenn ein Mensch entscheidet."
+          "explanation": "Über Art. 6 Abs. 2 erfasst Anhang III Nr. 4 lit. b KI zur Leistungsbewertung. Die KI bestimmt, welches Feedback die Führungskraft sieht, und prägt so die Bewertung, auch wenn ein Mensch entscheidet."
         },
         {
           "id": "block_2_lesson_2_q2",
@@ -223,12 +223,12 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Nichts dokumentieren",
+              "text": "Nichts dokumentieren, die Einstufung genügt",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Die Bewertung dokumentieren (Art. 6 Abs. 4) und das System registrieren (Art. 49 Abs. 2)",
+              "text": "Bewertung dokumentieren (Art. 6 Abs. 4), System registrieren (Art. 49 Abs. 2)",
               "isCorrect": true
             },
             {
@@ -319,7 +319,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 50 Abs. 4 Unterabs. 2 verlangt die sichtbare Offenlegung am Text selbst, wenn niemand redaktionell verantwortlich ist."
+          "explanation": "Für KI-Texte zu Themen öffentlichen Interesses ohne redaktionelle Verantwortung verlangt Art. 50 Abs. 4 Unterabs. 2 eine sichtbare Offenlegung am Text, eine Footer-Notiz reicht nicht."
         },
         {
           "id": "block_2_lesson_3_q2",
@@ -396,7 +396,7 @@
           "id": "block_2_lesson_4_section_1",
           "title": "Was minimales Risiko konkret heißt",
           "readTimeMinutes": 2,
-          "content": "**Minimales Risiko** ist die Restmenge und im Mittelstand die größte Klasse: alles, was weder unter Art. 5 noch unter Art. 6 (Anhang I oder III) noch unter Art. 50 fällt. Typische Beispiele:\n\n- ChatGPT für interne E-Mail-Entwürfe\n- DeepL für Übersetzungen ohne Personenbezug\n- QS-Bilderkennung auf der Produktionslinie ohne Personenbezug\n- Spamfilter im Mailserver\n- Predictive Maintenance auf Maschinendaten\n- Routenplanung, Lagerverwaltung\n- GitHub Copilot für Code-Vervollständigung\n\nSpezielle KI-VO-Pflichten gibt es hier nicht, **Art. 4 (KI-Kompetenz)** gilt aber für alle Klassen, und Art. 95 ermuntert zu freiwilligen Verhaltenskodizes. KI-Systeme nach Art. 3 Nr. 1 bleiben die Tools trotzdem."
+          "content": "**Minimales Risiko** ist die Restmenge und im Mittelstand die größte Klasse: alles, was weder unter Art. 5 noch unter Art. 6 (Anhang I oder III) noch unter Art. 50 fällt. Typische Beispiele:\n\n- ChatGPT für interne E-Mail-Entwürfe\n- DeepL für Übersetzungen ohne Personenbezug\n- QS-Bilderkennung auf der Produktionslinie ohne Personenbezug\n- Spamfilter im Mailserver\n- Predictive Maintenance auf Maschinendaten\n- Routenplanung, Lagerverwaltung\n- GitHub Copilot für Code-Vervollständigung\n\nSpezielle KI-VO-Pflichten gibt es hier nicht, **Art. 4 (KI-Kompetenz)** gilt aber für alle Klassen, und Art. 95 ermuntert zu freiwilligen Verhaltenskodizes. Die Tools bleiben trotzdem KI-Systeme nach Art. 3 Nr. 1."
         },
         {
           "id": "block_2_lesson_4_section_2",
@@ -408,7 +408,7 @@
           "id": "block_2_lesson_4_section_3",
           "title": "Asymmetrie der Fehlklassifikation",
           "readTimeMinutes": 2,
-          "content": "**Zu niedrig** (Hochrisiko als minimal behandelt): Risikomanagement, Logging oder menschliche Aufsicht können fehlen. Sobald die Pflichten anwendbar sind, kommen Maßnahmen der Marktüberwachung und Sanktionen nach Art. 99 in Betracht; Parallelrecht wie AGG oder DSGVO kann schon vorher greifen.\n\n**Zu hoch** (Minimales als Hochrisiko behandelt): unnötiger Compliance-Aufwand pro System.\n\nDokumentieren Sie Zweck, Rolle und die Prüfung nach Art. 6 mit den Anhängen. Bleibt eine Rechtsfrage offen, halten Sie sie fest und legen eine risikoadäquate Zwischenkontrolle fest. Warten Sie damit nicht bis zum 2. Dezember 2027.\n\n**Jetzt anwenden:** Gehen Sie für Ihr wichtigstes KI-System die sechs Fragen durch und tragen Sie Risikoklasse und Begründung in Ihr KI-Inventar ein (Spalte Risikoklassifizierung)."
+          "content": "**Zu niedrig** (Hochrisiko als minimal behandelt): Risikomanagement, Logging oder menschliche Aufsicht können fehlen. Sobald die Pflichten anwendbar sind, kommen Maßnahmen der Marktüberwachung und Sanktionen nach Art. 99 in Betracht; Parallelrecht wie AGG oder DSGVO kann schon vorher greifen.\n\n**Zu hoch** (Minimales als Hochrisiko behandelt): unnötiger Compliance-Aufwand pro System.\n\nDokumentieren Sie Zweck, Rolle und die Prüfung nach Art. 6 mit den Anhängen. Bleibt eine Rechtsfrage offen, notieren Sie sie und legen Sie bis zur Klärung eine Kontrolle fest, die zum Risiko passt. Warten Sie damit nicht bis zum 2. Dezember 2027.\n\n**Jetzt anwenden:** Gehen Sie für Ihr wichtigstes KI-System die sechs Fragen durch und tragen Sie Risikoklasse und Begründung in Ihr KI-Inventar ein (Spalte Risikoklassifizierung)."
         }
       ],
       "quiz": [
@@ -477,7 +477,7 @@
             },
             {
               "id": "b",
-              "text": "(a) und (b) minimal, (c) Hochrisiko nach Anhang III Nr. 4 lit. a",
+              "text": "(a) und (b) minimal, (c) Hochrisiko (Anhang III Nr. 4 lit. a)",
               "isCorrect": true
             },
             {
@@ -491,7 +491,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Eingestuft wird pro Anwendungsfall: Die Vorauswahl von Freelancern filtert für eine Beschäftigung (Anhang III Nr. 4 lit. a), Zusammenfassungen und E-Mails nicht."
+          "explanation": "Eingestuft wird pro Anwendungsfall. Die Vorauswahl von Freelancer-Profilen ist Personalauswahl nach Anhang III Nr. 4 lit. a, Zusammenfassungen und E-Mails sind es nicht. Dass ChatGPT ein GPAI-Modell ist, macht nicht jeden Einsatz zu Hochrisiko."
         }
       ],
       "widgets": [

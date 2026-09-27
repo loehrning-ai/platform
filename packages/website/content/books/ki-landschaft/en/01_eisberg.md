@@ -15,7 +15,7 @@ Two figures carry the paper:
 | Visible exposure | 2.2% of US wage value | concentrated in computer and technology occupations |
 | Broader technical exposure | 11.7% of US wage value | additional cognitive tasks in administration, finance, and professional services |
 
-Both values measure only a modelled overlap between tasks and technical capabilities, not a productivity gain, actual adoption, job loss or German market share.
+Both values measure only a modelled overlap between tasks and technical capabilities. They do not measure productivity gains, actual adoption, job loss or German market share.
 
 ## What an organization can infer from this
 
@@ -39,10 +39,10 @@ An honest stocktake separates two questions:
 1. **Which AI systems and features are already running?** Record approved and unapproved accounts, embedded features, integrations, and automated decisions.
 2. **Which tasks could use support?** Record volume, the cost of errors, data classes, the domain review needed, and measurable success criteria.
 
-The first inventory creates control, the second a prioritized list for learning and pilots. Neither needs a company ranking or an externally calculated readiness score.
+The first inventory creates control. The second produces a prioritized list for learning and pilots. Neither needs a company ranking or an externally calculated readiness score.
 
 ## The right starting point
 
 Take a process whose input data is approved, whose output a person checks before use, and whose success you can measure. Document the baseline, test with representative cases and write down every error.
 
-The iceberg problem is the everyday information work that nobody examines systematically or improves under control.
+The iceberg problem is the everyday information work that nobody examines systematically or improves in a controlled way.

@@ -40,7 +40,7 @@ const QUEUE_COPY = {
     openDueLesson: "Fällige Lektion öffnen",
     remainingDue: (count: number) => `und ${count} weitere`,
     localBoundary:
-      "Was du hier schreibst, wird nicht gespeichert.",
+      "Deine geschriebenen Abrufe werden hier weder angezeigt noch gespeichert.",
     standings: {
       "repair-required": "Reparatur erforderlich",
       passed: "einmal bestanden",
@@ -74,7 +74,7 @@ const QUEUE_COPY = {
     openDueLesson: "Open due lesson",
     remainingDue: (count: number) => `and ${count} more`,
     localBoundary:
-      "What you write here is not saved.",
+      "Your written recall is neither shown nor saved here.",
     standings: {
       "repair-required": "repair required",
       passed: "passed once",

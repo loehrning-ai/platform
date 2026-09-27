@@ -5,7 +5,7 @@
   "subtitle": "Aussagen mit Quellen verbinden, Abstention definieren und Zitate prüfen.",
   "durationMinutes": 10,
   "trackId": "advanced",
-  "hook": "Flüssig formuliert heißt nicht belegt.",
+  "hook": "Jede Aussage braucht eine prüfbare Quelle.",
   "keyConcepts": [
     "Einfügen, zitieren, Ablehnungsmodus",
     "Grüne Flaggen vs. rote Flaggen"
@@ -21,13 +21,13 @@
     {
       "id": "three-grounding-moves",
       "title": "Die drei Verankerungsstrategien",
-      "readTimeMinutes": 2,
+      "readTimeMinutes": 1,
       "content": "- **01 · Quelle bereitstellen oder abrufen.** Aktuelle Richtlinie, Log oder Code; das Modelltraining ist keine Quelle für private oder veränderliche Fakten.\n- **02 · Nachvollziehbarkeit verlangen.** Quellenkennung und Belegpassage für jede wesentliche Aussage, geprüft an der Aussage.\n- **03 · Abstention definieren.** Etwa: „Wenn die erlaubten Quellen keine Antwort stützen, gib `NOT_IN_CONTEXT` aus und nenne die fehlende Information.“ Teste beantwortbare und unbeantwortbare Fälle."
     },
     {
       "id": "smell-test",
-      "title": "Prüfsignale für unbelegte Aussagen",
-      "readTimeMinutes": 2,
+      "title": "Unbelegte Aussagen erkennen",
+      "readTimeMinutes": 1,
       "content": "**Grüne Flaggen:** Quellenkennungen, kurze Belegzitate, benannte Lücken, Fakten getrennt von Schlussfolgerungen.\n\n**Rote Flaggen:** präzise Zahlen ohne Quelle, Entitäten außerhalb des erlaubten Materials, Zitate, die nichts stützen, breite Verallgemeinerungen ohne Beleg. Solche Signale lenken das Review und ersetzen es nicht."
     }
   ],
@@ -55,11 +55,11 @@
         "options": [
           "Füge „nicht halluzinieren“ zu jedem Prompt hinzu.",
           "Verwende ein intelligenteres Modell.",
-          "Gib die Quelldaten mit und verlange Zitate oder ein „nicht im Kontext“-Signal.",
+          "Gib Quelldaten mit, verlange Zitate oder ein „nicht im Kontext“-Signal.",
           "Frage zweimal und vergleiche die Antworten."
         ],
         "correct": 2,
-        "explanation": "Autoritative Daten bereitstellen, nachvollziehbare Belege verlangen, Abstention definieren, zitierte Passagen prüfen.",
+        "explanation": "Mit Quelldaten und Zitatpflicht lässt sich jede Aussage an einer Passage prüfen; das Abstentionssignal ersetzt das Raten.",
         "title": "Kurzprüfung",
         "copy": {
           "kindLabel": "Kurzprüfung",
@@ -76,7 +76,7 @@
       "props": {
         "lessonId": "grounding",
         "cpId": "arena",
-        "task": "Schreibe einen Prompt, der aus einem beigefügten Richtliniendokument antwortet und bei fehlendem Beleg abstinent bleibt.",
+        "task": "Schreibe einen Prompt, der aus einem beigefügten Richtliniendokument antwortet und ohne Beleg NOT_IN_CONTEXT ausgibt.",
         "original": "beantworte fragen zu diesem dokument und erfinde nichts",
         "criteria": "erfordert Zitate, liefert ein explizites Out-of-Context-Signal, beschränkt Antworten auf den beigefügten Kontext"
       }

@@ -52,7 +52,6 @@ interface LandingCopy {
   readonly imageLabel: string;
   readonly facts: readonly string[];
   readonly whyHeading: string;
-  readonly whyBody: string;
   readonly curriculumHeading: string;
   readonly minutes: (count: number) => string;
   readonly methods: readonly {
@@ -107,8 +106,6 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
       "Lernnachweis als PDF",
     ],
     whyHeading: "Was du prüfst",
-    whyBody:
-      "Jedes der drei Themen hat eigene Prüfschritte.",
     curriculumHeading: "Lehrplan",
     minutes: (count) => `${count} Min.`,
     methods: [
@@ -178,8 +175,6 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
       "Completion record as a PDF",
     ],
     whyHeading: "What you check",
-    whyBody:
-      "Each of the three topics has its own checks.",
     curriculumHeading: "Course plan",
     minutes: (count) => `${count} min`,
     methods: [
@@ -196,7 +191,7 @@ const LANDING_COPY: Readonly<Record<Locale, LandingCopy>> = {
       {
         number: "03",
         title: "Decisions",
-        body: "Check training data, target measure, error costs, owners and appeal route.",
+        body: "Check training data, target measure, error costs, accountable people and appeal route.",
       },
     ],
     evidenceHeading: "What the completion record establishes",
@@ -342,7 +337,7 @@ export default async function KiUndGesellschaftLandingPage() {
           }
         />
 
-        <CourseLandingSection title={copy.whyHeading} intro={copy.whyBody}>
+        <CourseLandingSection title={copy.whyHeading}>
           <CourseOutcomeList
             items={copy.methods.map((method) => ({
               title: method.title,

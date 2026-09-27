@@ -223,7 +223,7 @@ export default async function BookOverviewPage({ params }: Params) {
               {display.description}
             </p>
 
-            <dl className="mt-5 grid min-w-0 grid-cols-2 border-l border-t border-border lg:grid-cols-4">
+            <dl className="mt-5 grid min-w-0 grid-cols-2 border-l border-t border-border lg:grid-cols-5">
               {[
                 [copy.detail.format, display.resourceType],
                 [
@@ -236,12 +236,16 @@ export default async function BookOverviewPage({ params }: Params) {
                 ],
                 [
                   copy.detail.access,
-                  `${copy.detail.freeAccess} · ${copy.detail.lastReviewed(formatReviewDate(book.lastReviewed, locale))}`,
+                  copy.detail.freeAccess,
+                ],
+                [
+                  copy.detail.reviewedLabel,
+                  formatReviewDate(book.lastReviewed, locale),
                 ],
               ].map(([label, value]) => (
                 <div
                   key={label}
-                  className="min-w-0 border-b border-r border-border p-3"
+                  className="min-w-0 border-b border-r border-border p-3 last:col-span-2 lg:last:col-span-1"
                 >
                   <dt className="break-words text-xs font-semibold text-muted-foreground">
                     {label}
@@ -318,9 +322,6 @@ export default async function BookOverviewPage({ params }: Params) {
                   <span className="min-w-0">
                     <span className="block break-words text-sm font-semibold leading-snug text-foreground group-hover:text-brand-orange">
                       {chapter.title}
-                    </span>
-                    <span className="mt-1 block font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground">
-                      {copy.detail.chapterLanguage}
                     </span>
                   </span>
                   <span className="flex shrink-0 items-center gap-2">

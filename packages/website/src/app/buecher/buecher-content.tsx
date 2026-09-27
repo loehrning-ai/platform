@@ -102,7 +102,7 @@ export function BuecherContent({
             />
             <div className="relative border border-foreground/30 bg-paper p-4 shadow-card sm:p-6">
               <span className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
-                {copy.collectionHeading}
+                {copy.collectionCountLabel}
               </span>
               <div className="mt-3 flex items-end justify-between gap-6 border-b border-foreground pb-4 sm:mt-7">
                 <strong className="text-4xl font-bold leading-[0.76] tracking-[-0.08em] text-foreground sm:text-[clamp(3.5rem,7vw,5.5rem)]">
@@ -314,8 +314,7 @@ export function BuecherContent({
                     <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
                       {copy.reviewed(
                         formatReviewDate(book.lastReviewed, locale),
-                      )}{" "}
-                      · {copy.editorialOwner(book.sourceOwner)}
+                      )}
                     </p>
 
                     <details className="group/details mt-3 border-t border-border">

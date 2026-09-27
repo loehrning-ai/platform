@@ -34,9 +34,9 @@
         },
         {
           "id": "arbeit-1-1-s2",
-          "title": "Besser als Menschen, worin?",
+          "title": "Was „besser als Menschen“ heißt",
           "readTimeMinutes": 2,
-          "content": "\"KI ist besser als Menschen\" sagt ohne Testbedingungen nichts. Prüfe:\n\n- Aufgabe: Sind Eingang, Ausgang und Qualitätsmaß klar definiert?\n- Daten: Passen die Testdaten zur realen Zielgruppe und zum späteren Einsatz?\n- Folgen: Was kostet ein Fehler, und wer prüft Grenzfälle?\n- Umgebung: Ist die Situation standardisiert oder wechselt sie physisch und sozial?\n\nEin Modell kann in einem begrenzten Bildklassifikationstest hohe Werte erreichen und im Klinikbetrieb ungeeignet sein. Ein Sprachmodell kann einen Entwurf beschleunigen und darin Angaben erfinden, ein Planungssystem alle Standardfälle bearbeiten und an einer seltenen Ausnahme scheitern.\n\nRechtliche Verantwortung, Freigaben und Interessenabwägungen bleiben bei Menschen und Organisationen."
+          "content": "\"KI ist besser als Menschen\" sagt ohne Testbedingungen nichts. Prüfe:\n\n- Aufgabe: Sind Eingang, Ausgang und Qualitätsmaß klar definiert?\n- Daten: Passen die Testdaten zur realen Zielgruppe und zum späteren Einsatz?\n- Folgen: Was kostet ein Fehler, und wer prüft Grenzfälle?\n- Umgebung: Ist die Situation standardisiert oder wechselt sie physisch und sozial?\n\nEin Modell kann in einem begrenzten Bildklassifikationstest hohe Werte erreichen und im Klinikbetrieb ungeeignet sein. Ein Sprachmodell kann einen Entwurf beschleunigen und darin Angaben erfinden, ein Planungssystem alle Standardfälle bearbeiten und an einer seltenen Ausnahme scheitern.\n\nAuch wenn das System besser abschneidet, tragen Menschen und Organisationen die rechtliche Verantwortung, geben frei und wägen Interessen ab."
         },
         {
           "id": "arbeit-1-1-s3",
@@ -152,19 +152,19 @@
           "id": "arbeit-1-2-s1",
           "title": "Assistenz ohne Leistungsversprechen",
           "readTimeMinutes": 2,
-          "content": "Ein Assistenz-Workflow gibt dem System einen begrenzten Schritt; Freigabe und Verantwortung bleiben bei einer benannten Person. Ob das Zeit spart, misst du im eigenen Prozess.\n\nDrei synthetische Beispiele:\n- Eine Pflegefachkraft lässt aus freigegebenen, datenschutzkonformen Stichpunkten einen Entwurf schreiben und prüft jede Angabe gegen die Dokumentation. Patientendaten gehören nur in ein dafür freigegebenes System.\n- Eine Buchhalterin lässt ungewöhnliche Einträge markieren. Die Markierung ist ein Prüfhinweis, kein Betrugs- oder Fehlerbefund.\n- Ein Kommunikationsteam prüft Bildentwürfe vor der Veröffentlichung auf Rechte, Sachbezug, Kennzeichnung und Freigabe.\n\nEin kontrollierter Test legt vorher Aufgabe, erlaubte Daten, Qualitätskriterien, Prüfer, Abbruchpunkt und Protokollierung fest. Erst seine Messdaten zeigen den Nutzen."
+          "content": "Ein Assistenz-Workflow gibt dem System einen begrenzten Schritt; Freigabe und Verantwortung bleiben bei einer benannten Person. Ob das Zeit spart, misst du im eigenen Prozess.\n\nDrei erfundene Beispiele:\n- Eine Pflegefachkraft lässt aus freigegebenen, datenschutzkonformen Stichpunkten einen Entwurf schreiben und prüft jede Angabe gegen die Dokumentation. Patientendaten gehören nur in ein dafür freigegebenes System.\n- Eine Buchhalterin lässt ungewöhnliche Einträge markieren. Die Markierung heißt: genauer prüfen. Einen Betrug oder Fehler belegt sie nicht.\n- Ein Kommunikationsteam erzeugt Bildentwürfe und prüft sie vor der Veröffentlichung auf Rechte, Sachbezug, Kennzeichnung und Freigabe.\n\nEin kontrollierter Test legt vorher Aufgabe, erlaubte Daten, Qualitätskriterien, Prüfer, Abbruchpunkt und Protokollierung fest. Erst seine Messdaten zeigen den Nutzen."
         },
         {
           "id": "arbeit-1-2-s2",
           "title": "Was KI-Kompetenz umfasst",
           "readTimeMinutes": 2,
-          "content": "Wer einen KI-Entwurf freigibt, braucht keinen Python-Kurs, aber fünf Fähigkeiten:\n\n1. Aufgabe beschreiben: Zweck, Kontext, Format und Grenzen nennen.\n2. Ausgabe prüfen: Behauptungen, Zahlen und Quellen gegen verlässliche Unterlagen halten.\n3. Risiko erkennen: Bei personenbezogenen Daten, vertraulichen Informationen oder folgenreichen Entscheidungen stoppen und die zuständige Stelle einbeziehen.\n4. Werkzeug einordnen: Freigabestatus, Datenverarbeitung, Grenzen und Versionsänderungen kennen.\n5. Arbeit dokumentieren: Eingaben, relevante Ausgaben, Änderungen und Freigaben festhalten, wenn der Prozess es verlangt.\n\nArt. 4 der KI-Verordnung verpflichtet Anbieter und Betreiber seit der Änderung durch Verordnung (EU) 2026/1744, Maßnahmen zu ergreifen, die die Entwicklung der KI-Kompetenz ihrer Mitarbeitenden und weiterer für sie handelnder Personen unterstützen. Ein garantiertes Kompetenzniveau je Person verlangt die Norm nicht."
+          "content": "Wer einen KI-Entwurf freigibt, braucht fünf Fähigkeiten, und Programmieren gehört nicht dazu:\n\n1. Aufgabe beschreiben: Zweck, Kontext, Format und Grenzen nennen.\n2. Ausgabe prüfen: Behauptungen, Zahlen und Quellen gegen verlässliche Unterlagen halten.\n3. Risiko erkennen: Bei personenbezogenen Daten, vertraulichen Informationen oder folgenreichen Entscheidungen stoppen und die zuständige Stelle einbeziehen.\n4. Werkzeug einordnen: Freigabestatus, Datenverarbeitung, Grenzen und Versionsänderungen kennen.\n5. Arbeit dokumentieren: Eingaben, relevante Ausgaben, Änderungen und Freigaben festhalten, wenn der Prozess es verlangt.\n\nArt. 4 der KI-Verordnung verpflichtet Anbieter und Betreiber seit der Änderung durch Verordnung (EU) 2026/1744, Maßnahmen zu ergreifen, die die Entwicklung der KI-Kompetenz ihrer Mitarbeitenden und weiterer für sie handelnder Personen unterstützen. Ein garantiertes Kompetenzniveau je Person verlangt die Norm nicht."
         },
         {
           "id": "arbeit-1-2-s3",
           "title": "Wann der Betriebsrat mitbestimmt",
           "readTimeMinutes": 2,
-          "content": "Ein Tool zählt, wie schnell eine Kollegin ihre Tickets schließt. § 87 Abs. 1 Nr. 6 BetrVG gibt dem Betriebsrat, soweit keine gesetzliche oder tarifliche Regelung besteht, ein Mitbestimmungsrecht bei Einführung und Anwendung technischer Einrichtungen, die dazu bestimmt sind, Verhalten oder Leistung der Arbeitnehmer zu überwachen. Ob ein KI-System darunter fällt, entscheiden Funktion und Einsatz; das Recht hat der Betriebsrat, nicht die einzelne beschäftigte Person.\n\nIm Betrieb gehören auf den Tisch:\n- Zweck und unterstützte Entscheidung\n- erhobene, abgeleitete oder gespeicherte Beschäftigtendaten\n- wer die Auswertungen sieht und wie lange sie gespeichert bleiben\n- menschliche Kontrolle, Fehlerkorrektur und Beschwerdeweg\n- Schulung und verbindliche Nutzungsregeln\n\nOhne Einigung entscheidet nach § 87 Abs. 2 die Einigungsstelle. Ob dein System erfasst ist, klärt eine fachkundige arbeitsrechtliche Prüfung."
+          "content": "Ein Tool zählt, wie schnell eine Kollegin ihre Tickets schließt. Soweit keine gesetzliche oder tarifliche Regelung besteht, bestimmt der Betriebsrat nach § 87 Abs. 1 Nr. 6 BetrVG mit, wenn technische Einrichtungen eingeführt und angewendet werden, die Verhalten oder Leistung der Arbeitnehmer überwachen sollen.\n\nOb ein KI-System darunter fällt, entscheiden Funktion und Einsatz. Das Recht hat der Betriebsrat, nicht die einzelne beschäftigte Person.\n\nSprich im Betrieb diese Punkte an:\n- Zweck und unterstützte Entscheidung\n- erhobene, abgeleitete oder gespeicherte Beschäftigtendaten\n- wer die Auswertungen sieht und wie lange sie gespeichert bleiben\n- menschliche Kontrolle, Fehlerkorrektur und Beschwerdeweg\n- Schulung und verbindliche Nutzungsregeln\n\nEinigen sich Arbeitgeber und Betriebsrat in einer mitbestimmungspflichtigen Angelegenheit nicht, entscheidet nach § 87 Abs. 2 die Einigungsstelle. Ob dein System erfasst ist, klärt eine fachkundige arbeitsrechtliche Prüfung."
         }
       ],
       "quiz": [
@@ -256,7 +256,7 @@
       "blockId": "block_1",
       "number": 3,
       "title": "Welche Aufgaben sich verändern können und was du selbst prüfst",
-      "subtitle": "Tätigkeitsmerkmale statt Berufslisten",
+      "subtitle": "Welche Tätigkeitsmerkmale zählen",
       "durationMinutes": 5,
       "owner": "editorial:ki-und-gesellschaft",
       "lastReviewed": "2026-09-05",
@@ -269,19 +269,19 @@
           "id": "arbeit-1-3-s1",
           "title": "Wo das technische Potenzial hoch ist",
           "readTimeMinutes": 2,
-          "content": "Wiederholt sich ein Schritt täglich, sind die Eingaben digital, gibt es klare Regeln oder ein Qualitätsmaß und wechselt die physische Umgebung kaum, ist das technische Potenzial eher hoch. Beispiele sind strukturierte Daten übertragen, formale Vollständigkeit prüfen und Entwürfe nach Vorlage erstellen.\n\nDie Einführung bleibt trotzdem offen: Schlechte Daten, seltene Ausnahmen, Haftungsrisiken, Integrationskosten oder Nachkontrolle können den Nutzen schmälern. Umgekehrt kann Technik einzelne Schritte in fast jedem Beruf unterstützen.\n\nDas IAB ordnet Kerntätigkeiten im Beruf anhand marktreifer Technik ein und aktualisiert diese Momentaufnahme regelmäßig."
+          "content": "Das technische Potenzial ist eher hoch, wenn sich ein Schritt täglich wiederholt, digitale Eingaben hat, klaren Regeln oder einem Qualitätsmaß folgt und in einer kaum wechselnden physischen Umgebung stattfindet. Beispiele sind strukturierte Daten übertragen, formale Vollständigkeit prüfen und Entwürfe nach Vorlage erstellen.\n\nDie Einführung bleibt trotzdem offen: Schlechte Daten, seltene Ausnahmen, Haftungsrisiken, Integrationskosten oder Nachkontrolle können den Nutzen schmälern. Umgekehrt kann Technik einzelne Schritte in fast jedem Beruf unterstützen.\n\nDas IAB ordnet Kerntätigkeiten im Beruf anhand marktreifer Technik ein und aktualisiert diese Momentaufnahme regelmäßig."
         },
         {
           "id": "arbeit-1-3-s2",
           "title": "Was Automatisierung schwer macht",
           "readTimeMinutes": 1,
-          "content": "Automatisierung wird schwer, wenn eine Tätigkeit mehrere dieser Merkmale verbindet, etwa auf einer unbekannten Baustelle oder in der Pflege mit lückenhaften Informationen und Angehörigen im Zimmer:\n\n- wechselnde physische Umgebung und feinmotorische Arbeit\n- unvollständige Informationen und seltene Ausnahmen\n- unmittelbare Verantwortung für Sicherheit oder Grundrechte\n- Verhandlung mit mehreren Beteiligten\n- Beziehung, Vertrauen oder Kenntnis der Verhältnisse vor Ort\n\n\"KI-sicher\" wird ein Beruf dadurch nicht. Dokumentation, Planung und Informationssuche können sich auch in Pflege, Handwerk, Pädagogik und Beratung ändern, und Robotik kann physische Aufgaben langfristig verschieben. Schau deshalb auf einzelne Aufgaben."
+          "content": "Automatisierung wird schwer, wenn eine Tätigkeit mehrere der folgenden Merkmale verbindet, etwa auf einer unbekannten Baustelle oder in der Pflege mit lückenhaften Informationen und Angehörigen im Zimmer:\n\n- wechselnde physische Umgebung und feinmotorische Arbeit\n- unvollständige Informationen und seltene Ausnahmen\n- unmittelbare Verantwortung für Sicherheit oder Grundrechte\n- Verhandlung mit mehreren Beteiligten\n- Beziehung, Vertrauen oder Kenntnis der Verhältnisse vor Ort\n\n\"KI-sicher\" wird ein Beruf dadurch nicht. Dokumentation, Planung und Informationssuche können sich auch in Pflege, Handwerk, Pädagogik und Beratung ändern, und Robotik kann physische Aufgaben langfristig verschieben. Schau deshalb auf einzelne Aufgaben."
         },
         {
           "id": "arbeit-1-3-s3",
           "title": "Was du selbst tun kannst",
           "readTimeMinutes": 2,
-          "content": "1. Aufgaben inventarisieren: wiederkehrende Schritte, Fehlerfolgen, benötigte Daten und Freigaben aufschreiben.\n2. Sicher testen: nur freigegebene Werkzeuge und Testdaten ohne vertrauliche oder personenbezogene Inhalte nutzen und mit einer vorher festgelegten Referenz vergleichen.\n3. Zuständigkeiten klären: Die Bundesagentur für Arbeit bietet \"Berufsberatung im Erwerbsleben\" mit Informationen zu Weiterbildung und Förderung; im Betrieb helfen Führungskraft, Datenschutz, Informationssicherheit und, wo vorhanden, der Betriebsrat.\n\nArt. 5 der KI-Verordnung verbietet seit 2. Februar 2025 bestimmte Praktiken, darunter, von Ausnahmen abgesehen, Emotionserkennung am Arbeitsplatz. Einstellungs- und Auswahlsysteme können unter Anhang III fallen; für eigenständige Anhang-III-Systeme gelten die Hochrisiko-Regeln nach Verordnung (EU) 2026/1744 ab 2. Dezember 2027. AGG, DSGVO und Arbeitsrecht können schon heute gelten.\n\nLäuft deine Bewerbung über so ein System, frag nach Zweck, Daten, Bedeutung der Ausgabe, menschlicher Beteiligung und Verantwortung."
+          "content": "1. Aufgaben inventarisieren: wiederkehrende Schritte, Fehlerfolgen, benötigte Daten und Freigaben aufschreiben.\n2. Sicher testen: nur freigegebene Werkzeuge und Testdaten ohne vertrauliche oder personenbezogene Inhalte nutzen und mit einer vorher festgelegten Referenz vergleichen.\n3. Beraten lassen: Die Bundesagentur für Arbeit bietet \"Berufsberatung im Erwerbsleben\" mit Informationen zu Weiterbildung und Förderung.\n4. Im Betrieb fragen: Führungskraft, Datenschutz, Informationssicherheit und, wo vorhanden, Betriebsrat.\n\nArt. 5 der KI-Verordnung verbietet seit 2. Februar 2025 bestimmte Praktiken, darunter, von Ausnahmen abgesehen, Emotionserkennung am Arbeitsplatz. Einstellungs- und Auswahlsysteme können unter Anhang III fallen; für eigenständige Anhang-III-Systeme gelten die Hochrisiko-Regeln nach Verordnung (EU) 2026/1744 ab 2. Dezember 2027. AGG, DSGVO und Arbeitsrecht können schon heute gelten.\n\nLäuft deine Bewerbung über so ein System, frag nach Zweck, Daten, Bedeutung der Ausgabe, menschlicher Beteiligung und Verantwortung."
         }
       ],
       "quiz": [
@@ -360,7 +360,7 @@
             },
             {
               "id": "d",
-              "text": "Art. 5 verbietet seit 2. Februar 2025 bestimmte Praktiken; Recruiting-KI prüfst du nach Anhang III und geltendem Recht",
+              "text": "Art. 5 verbietet seit 2. Februar 2025 bestimmte Praktiken am Arbeitsplatz",
               "isCorrect": true
             }
           ],

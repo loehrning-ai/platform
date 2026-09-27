@@ -29,7 +29,7 @@ export default function Ch06Evaluate() {
       <section className="section">
         <SectionLabel n="06.1">The confusion matrix</SectionLabel>
         <h2 className="h2">
-          Four cells. <em>One thousand decisions.</em>
+          Four cells count every decision at <em>the threshold.</em>
         </h2>
         <p className="prose">
           One threshold turns scores into TP, FP, FN, and TN counts. Precision,
@@ -66,7 +66,7 @@ export default function Ch06Evaluate() {
         <AntiPatterns
           items={[
             "<b>Reporting accuracy alone on rare events.</b> At a 0.1% event rate, always predicting negative gives 99.9% accuracy and detects nothing.",
-            "<b>Mixing training and decision objectives unchecked.</b> A log-loss model can be thresholded for a cost target; then validate calibration and operating metrics separately.",
+            "<b>Confusing the training objective with the decision objective.</b> For a model trained on log loss, pick the threshold from costs, then check calibration and operating metrics separately.",
             "<b>Default τ=0.5.</b> Set the threshold from your cost ratio.",
           ]}
         />
@@ -74,7 +74,7 @@ export default function Ch06Evaluate() {
 
       <Takeaway
         items={[
-          "<b>Metric = value judgement.</b> You're saying which mistake is worse.",
+          "<b>A metric encodes a value judgment.</b> It decides which error counts more.",
           `<b>Calibration concerns groups of predictions.</b> Among cases scored about 0.7, roughly 70% should be positive over the stated population and time window; it guarantees nothing for one case.`,
         ]}
       />

@@ -122,7 +122,7 @@ describe("AI-Native locale propagation across the complete course lifecycle", ()
       (lessonReference?.props as { children?: ReactNode }).children,
     );
     expect(lessonReferenceText).toContain(
-      "Describe the task precisely, check the result and answer for its use.",
+      "Describe the task precisely and check the result before you use it.",
     );
     expect(lessonReferenceText).toContain(
       "You already have the tools and learn to combine them.",

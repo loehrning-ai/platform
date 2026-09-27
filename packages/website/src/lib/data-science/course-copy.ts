@@ -61,9 +61,9 @@ export const DATA_SCIENCE_COURSE_COPY = Object.freeze({
         "Lokale Teilnahmebestätigung für Data Science Fundamentals herunterladen.",
     },
     verificationMetadata: {
-      title: "Teilnahmebestätigungsdaten lesen: Data Science Fundamentals",
+      title: "Zertifikatdaten lesen: Data Science Fundamentals",
       description:
-        "Lokal kodierte Abschlussdaten lesen. Nicht servergeprüft, nicht kryptografisch signiert.",
+        "Liest die lokal kodierten Daten einer Teilnahmebestätigung. Sie sind nicht servergeprüft und nicht kryptografisch signiert.",
     },
     error: {
       eyebrow: "Data Science / Fehler",
@@ -103,7 +103,7 @@ export const DATA_SCIENCE_COURSE_COPY = Object.freeze({
     verificationMetadata: {
       title: "Read completion-record data: Data Science Fundamentals",
       description:
-        "Read locally encoded completion data, not server-verified or signed.",
+        "Reads the locally encoded data of a completion record. The data is not server-verified or cryptographically signed.",
     },
     error: {
       eyebrow: "Data Science / error",

@@ -26,7 +26,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "A regulation applies directly in every Member State; a directive must first be transposed into national law.",
+    "explanation": "The AI Act is Regulation (EU) 2024/1689. A regulation applies directly in every Member State; a directive must first be transposed into national law.",
     "version": 1,
     "active": true
   },
@@ -57,7 +57,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 113 point (a) makes Art. 4 and the prohibitions in Art. 5 applicable from 2 February 2025; per the Commission FAQ, national supervision and enforcement of Art. 4 start on 2 August 2026. This does not automatically mean that the same fine applies to every infringement. (Source: claimId ai-literacy-supervision-2026-08-02)",
+    "explanation": "Art. 113 point (a) makes Art. 4 and the prohibitions in Art. 5 applicable from 2 February 2025; per the Commission FAQ, national supervision and enforcement of Art. 4 start on 2 August 2026; this does not automatically mean that the same fine applies to every infringement. (Source: claimId ai-literacy-supervision-2026-08-02)",
     "version": 1,
     "active": true,
     "claimId": "ai-literacy-supervision-2026-08-02"
@@ -111,7 +111,7 @@
       },
       {
         "id": "c",
-        "text": "Yes, Art. 2(1)(a) also covers providers from third countries",
+        "text": "Yes, Art. 2(1)(a) covers third-country providers placing on the EU market",
         "isCorrect": true
       },
       {
@@ -213,7 +213,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Spam filters fall under neither Annex I nor Annex III and trigger no transparency obligation under Art. 50. Only voluntary codes of conduct under Art. 95 apply.",
+    "explanation": "Spam filters fall under neither Annex I nor Annex III and trigger no transparency obligation under Art. 50. That makes them minimal risk, with only voluntary codes of conduct under Art. 95.",
     "version": 1,
     "active": true
   },
@@ -523,7 +523,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "The AI Office published the Code on 10 July 2025. Signatories such as OpenAI, Anthropic, Google and Mistral may use adherence as a means of demonstrating compliance (Art. 53(4), Art. 55(2)), but this does not create a presumption of conformity in the legal sense; only harmonised standards under Art. 40 and 41 would. (Source: AI Office, GPAI Code of Practice, 10 July 2025; Art. 53(4) of Regulation (EU) 2024/1689)",
+    "explanation": "The AI Office published the Code on 10 July 2025. Signatories may use it as a means of demonstrating compliance (Art. 53(4), Art. 55(2)), but this does not create a presumption of conformity in the legal sense; only harmonised standards under Art. 40 and 41 would. (Source: AI Office, GPAI Code of Practice, 10 July 2025; Art. 53(4) of Regulation (EU) 2024/1689)",
     "version": 1,
     "active": true,
     "claimId": "gpai-code-compliance-demonstration-only"
@@ -617,7 +617,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "The KI-MIG, in force since 29 July 2026, makes the Federal Network Agency the market-surveillance authority, single point of contact and complaints body, unless a sectoral authority is responsible. Its official website sets out the complaints route.",
+    "explanation": "The KI-MIG makes the Federal Network Agency the market-surveillance authority, single point of contact and complaints body, unless a sectoral authority is responsible. Its official website sets out the complaints route.",
     "version": 1,
     "active": true
   },
@@ -710,7 +710,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 27(1) covers public bodies, private providers of public services and Annex III, points 5(b) and 5(c). A private HR use listed under point 4 is outside that scope. A DPIA under GDPR Art. 35 is separate, required only where the processing is likely to result in a high risk.",
+    "explanation": "Art. 27(1) covers public bodies, private providers of public services and Annex III, points 5(b) and 5(c). A private HR use listed under point 4 is outside that scope; a DPIA under GDPR Art. 35 is separate, required only where the processing is likely to result in a high risk.",
     "version": 1,
     "active": true
   },
@@ -780,7 +780,7 @@
     "id": "q_w26",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "You interact with a support chatbot. From when must the AI interaction generally be apparent under Art. 50(1)?",
+    "questionText": "From when must a support chatbot be recognisable as AI under Art. 50(1)?",
     "answerOptions": [
       {
         "id": "a",
@@ -803,7 +803,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Providers must design systems that interact directly with people so that those people are told at the latest at the first interaction, unless this is obvious. The obligation applies from 2 August 2026. (Source: Art. 50(1), Art. 113 of Regulation (EU) 2024/1689)",
+    "explanation": "Providers must design systems that interact directly with people so that those people are told they are interacting with AI at the latest at the first interaction, unless this is obvious. The obligation applies from 2 August 2026. (Source: Art. 50(1), Art. 113 of Regulation (EU) 2024/1689)",
     "claimId": "ai-act-transparency-application-2026-08-02",
     "version": 1,
     "active": true

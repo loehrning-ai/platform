@@ -6,7 +6,7 @@ export function Grundlagen() {
         <span className="kicker__line" />
       </div>
       <h2 className="heading">
-        Eine Verordnung, 113 Artikel, <span className="em">ein Prinzip: Risiko.</span>
+        Eine Verordnung mit 113 Artikeln und <span className="em">einem Prinzip: Risiko.</span>
       </h2>
       <p className="dek">
         Der EU AI Act regelt Einsatzzwecke: Je größer das Risiko für
@@ -28,8 +28,9 @@ export function Grundlagen() {
             <strong>Anbieter</strong> entwickeln ein KI-System und bringen es
             auf den Markt, <strong>Betreiber</strong> setzen ein fertiges
             System beruflich ein, etwa eine Firma, die Bewerbungen mit
-            Software vorsortiert. Dazu kommen Einführer und Händler. Wer ein
-            KI-System ausschließlich privat und nicht beruflich nutzt, ist
+            Software vorsortiert. Dazu kommen Einführer und Händler. Als
+            Privatperson bist du fast nie Adressat: Wer ein KI-System
+            ausschließlich privat und nicht beruflich nutzt, ist
             von den Betreiberpflichten ausgenommen. (Quelle: EU AI Act
             Art. 2 Abs. 10, Reg. 2024/1689)
           </p>
@@ -66,8 +67,7 @@ export function Grundlagen() {
           </div>
           <div className="margin-note">
             <b>Art. 4 · KI-Kompetenz</b>
-            Gilt seit 2. Februar 2025.
-            Kontextbezogen, kein Zertifikat nötig.
+            Gilt seit 2. Februar 2025, kontextbezogen.
             Aufsicht ab 2. August 2026 durch
             nationale Behörden.
           </div>

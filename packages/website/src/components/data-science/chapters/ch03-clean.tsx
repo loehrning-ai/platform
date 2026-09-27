@@ -32,7 +32,7 @@ export default function Ch03Clean() {
 
       <section className="section">
         <SectionLabel n="03.1">Missingness</SectionLabel>
-        <h2 className="h2">Not all missing is missing the same way.</h2>
+        <h2 className="h2">Why a value is missing decides how to treat it.</h2>
         <p className="prose">
           <strong>MCAR</strong> (missing completely at random) means
           missingness is independent of all values; complete cases stay
@@ -46,14 +46,16 @@ export default function Ch03Clean() {
           <strong>MNAR</strong> (missing not at random) means the missing value
           predicts its own absence, for example when high earners skip the
           income question. Identification then needs extra assumptions,
-          sensitivity analysis or a model of the missingness process.
+          sensitivity analysis or a model of the missingness process. All three
+          are assumptions about the process; the data do not reveal which
+          holds.
         </p>
         <MissingnessSim />
         <p className="prose" style={{ marginTop: 18 }}>
           Under MNAR the missing rate climbs in the high-value tail, so
           imputing the observed mean underestimates the true mean. A{" "}
           <code>feature_was_missing</code> indicator is a candidate if it
-          exists at prediction time, helps in validation and is no proxy for a
+          exists at prediction time, helps in validation and is not a proxy for a
           process change or a sensitive group.
         </p>
       </section>
@@ -62,9 +64,9 @@ export default function Ch03Clean() {
         <SectionLabel n="03.2">Imputation</SectionLabel>
         <h2 className="h2">Fill gaps without distorting the distribution.</h2>
         <p className="prose">
-          Mean imputation shrinks the variance. Forward-fill invents plateaus
-          in time series. KNN keeps local structure when its distance means
-          something. This demo knows the synthetic truth; for real missing
+          Mean imputation shrinks the variance, forward-fill invents plateaus
+          in time series, and KNN keeps local structure when its distance
+          means something. This demo knows the synthetic truth; for real missing
           values, compare methods with designed holdouts and sensitivity
           analysis.
         </p>
@@ -107,7 +109,7 @@ export default function Ch03Clean() {
       <section className="section">
         <SectionLabel n="03.4">Data Leakage</SectionLabel>
         <h2 className="h2">
-          Leakage makes unavailable information look predictive.
+          Leakage brings future information into training.
         </h2>
         <p className="prose">
           <strong>Leakage</strong> means model development used information
@@ -126,7 +128,7 @@ export default function Ch03Clean() {
         <LeakageDetector />
         <AntiPatterns
           items={[
-            "<b>Post-event features.</b> <code>total_purchases_lifetime</code> must not count purchases after the cutoff when it predicts <code>will_churn</code>.",
+            "<b>Post-event features.</b> <code>total_revenue_lifetime</code> must not count revenue after the cutoff when it predicts <code>will_churn</code>.",
             "<b>Inspecting the test set during EDA.</b> Every change you derive from it pulls test information into development.",
           ]}
         />
@@ -141,7 +143,7 @@ export default function Ch03Clean() {
 
       <Takeaway
         items={[
-          "<b>Scaling depends on algorithm and pipeline.</b> Fit it on training folds only and document how out-of-range values are handled.",
+          "<b>Scaling depends on algorithm and pipeline.</b> Document how out-of-range values are handled.",
           "<b>Cleaning is ongoing.</b> Every new feature, join or aggregation can introduce bugs, leaks or biased imputation.",
         ]}
       />

@@ -80,7 +80,7 @@ const ASSESSMENT_COPY: Readonly<Record<"de" | "en", AssessmentCopy>> = {
     passed: (recordPossessive) =>
       `Bestanden. ${recordPossessive} steht zum Download bereit.`,
     projectEligible: (recordPossessive) =>
-      `Alle Lektionen und das angewandte Projekt sind abgeschlossen; das lokal gespeicherte Projekt ist kein serverbestätigter Abschlussnachweis. ${recordPossessive} schaltest du mit dem bestandenen Quiz frei.`,
+      `Alle Lektionen und das angewandte Projekt sind abgeschlossen, doch das lokal gespeicherte Projekt ist kein serverbestätigter Abschlussnachweis. ${recordPossessive} schaltest du mit dem bestandenen Quiz frei.`,
     legacyCapstoneEligible: (recordPossessive) =>
       `Alle Lektionen und deine frühere Capstone-Selbstprüfung sind abgeschlossen. ${recordPossessive} bleibt abrufbar; das neue angewandte Projekt ist damit nicht verifiziert.`,
     localRecordNotice:
@@ -106,7 +106,7 @@ const ASSESSMENT_COPY: Readonly<Record<"de" | "en", AssessmentCopy>> = {
     passed: (recordPossessive) =>
       `Passed. ${recordPossessive} is ready to download.`,
     projectEligible: (recordPossessive) =>
-      `Every lesson and the applied project are complete; the locally stored project is not a server-attested completion record. ${recordPossessive} unlocks when you pass the quiz.`,
+      `Every lesson and the applied project are complete, but the locally stored project is not a server-attested completion record. ${recordPossessive} unlocks when you pass the quiz.`,
     legacyCapstoneEligible: (recordPossessive) =>
       `Every lesson and your earlier capstone self-review are complete. ${recordPossessive} stays available; this does not verify the new applied project.`,
     localRecordNotice:

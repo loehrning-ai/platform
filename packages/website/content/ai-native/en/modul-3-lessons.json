@@ -96,7 +96,7 @@
           "id": "modul_3_lesson_0_section_1",
           "title": "Installing Obsidian",
           "readTimeMinutes": 3,
-          "content": "This lesson has no time limit.\n\n**Step 1:** Download the current build for your operating system from `obsidian.md`, verify the source and install it.\n\n**Step 2: decide on synchronization.** Data can leave the device even from a local vault. Before any sync service, check encryption, accounts, device access, recovery and your organization's approval.\n\n**Step 3: import the vault template.**\n\nOption A: Create an empty practice vault, unzip `vault-template.zip` and copy its contents into it.\n\nOption B: Back up an existing vault and copy only the directories you need. Overwrite no file without a diff and a backup."
+          "content": "No time limit: finish and check each step before the next.\n\n**Step 1:** Download the current build for your operating system from `obsidian.md`, verify the source and install it.\n\n**Step 2: decide on synchronization.** Data can leave the device even from a local vault. Before any sync service, check encryption, accounts, device access, recovery and your organization's approval.\n\n**Step 3: import the vault template.**\n\nOption A: Create an empty practice vault, unzip `vault-template.zip` and copy its contents into it.\n\nOption B: Back up an existing vault and copy only the directories you need. Overwrite no file without a diff and a backup."
         },
         {
           "id": "modul_3_lesson_0_section_2",
@@ -108,7 +108,7 @@
           "id": "modul_3_lesson_0_section_3",
           "title": "Web Clipper + your first daily note",
           "readTimeMinutes": 8,
-          "content": "**Obsidian Web Clipper in the browser:**\n1. Install the extension via the official Clipper page from the browser's official source.\n2. Select the practice vault and `00 Inbox/` as the target.\n3. Leave the AI Interpreter off for now. It sends content to a model provider.\n\nTest with a non-sensitive public page and check the title, URL, capture date and content of the new note.\n\n**First daily note:**\nCmd/Ctrl+P → `Templater: insert template` → `_System/Templates/daily-note.md`.\n\nThen verify:\n- plugins and versions as expected\n- Clipper writes to the practice folder\n- template produces file name and fields\n- chat features use only the documented configuration\n\nIf a check fails, stop there, fix the error and only then use real data."
+          "content": "**Obsidian Web Clipper in the browser:**\n1. Install the extension from the official Clipper page.\n2. Select the practice vault and `00 Inbox/` as the target.\n3. Leave the AI Interpreter off for now. It sends content to a model provider. Before switching it on, check provider, key storage and retention.\n\nTest with a non-sensitive public page and check the title, URL, capture date and content of the new note.\n\n**First daily note:**\nCmd/Ctrl+P → `Templater: insert template` → `_System/Templates/daily-note.md`.\n\nThen verify:\n- plugins and versions as expected\n- Clipper writes to the practice folder\n- template produces file name and fields\n- chat features use only the documented configuration\n\nIf a check fails, stop there, fix the error and only then use real data."
         }
       ],
       "quiz": []
@@ -182,7 +182,7 @@
                         "id": "a",
                         "label": "Projects: you do have annual reviews",
                         "correct": false,
-                        "explanation": "Each review is a Project; the framework you reuse."
+                        "explanation": "Each review is a Project; you reuse the framework."
                       },
                       {
                         "id": "b",
@@ -212,7 +212,7 @@
                         "id": "a",
                         "label": "Projects: it might still come up again",
                         "correct": false,
-                        "explanation": "Without an active deadline it is no Project."
+                        "explanation": "Without an active deadline it is not a Project."
                       },
                       {
                         "id": "b",
@@ -224,7 +224,7 @@
                         "id": "c",
                         "label": "Resources: to prepare for the next negotiation",
                         "correct": false,
-                        "explanation": "Resources are templates. Link the single case from the next negotiation."
+                        "explanation": "Resources are reusable templates and references. File the closed single case in Archive and link it from the next negotiation."
                       },
                       {
                         "id": "d",
@@ -315,7 +315,7 @@
                         "id": "b",
                         "label": "Areas: sales enablement, ongoing",
                         "correct": false,
-                        "explanation": "You only look the catalog up."
+                        "explanation": "You only look things up in the catalog."
                       },
                       {
                         "id": "c",
@@ -457,7 +457,7 @@
           "id": "modul_3_lesson_2_section_4",
           "title": "Tagging policy",
           "readTimeMinutes": 3,
-          "content": "Start with a small, documented tag set, for example:\n- `#todo`: open action\n- `#entscheidung`: documented decision\n- `#warten-auf`: blocked action\n- `#idee`: untested proposal\n- `#followup`: item to review again\n- `#archivieren`: archive candidate\n\nUse folders for coarse filing, MOCs for Project context and tags for the few states that cut across everything. Personal names and sensitive attributes go into no tag without a data policy.\n\nTen tags is a starting limit. If the set grows, check overlaps, write down meanings and test whether your queries still answer predictably."
+          "content": "Start with a small, documented tag set, for example:\n- `#todo`: open action\n- `#entscheidung`: documented decision\n- `#warten-auf`: blocked action\n- `#idee`: untested proposal\n- `#followup`: item to review again\n- `#archivieren`: archive candidate\n\nUse folders for coarse filing, MOCs for Project context and tags for the few states that cut across everything. Keep personal names and sensitive attributes out of tags unless a data policy covers them.\n\nStart with ten tags at most. If the set grows, check overlaps, write down meanings and test whether your queries still answer predictably."
         }
       ],
       "quiz": [
@@ -486,7 +486,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "PARA comes from Tiago Forte: Projects have a clear end, Areas keep running, Resources serve as reference, Archive holds what is done."
+          "explanation": "The scheme comes from Tiago Forte."
         },
         {
           "id": "modul_3_lesson_2_q2",
@@ -494,12 +494,12 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Marketing Outreach Content",
+              "text": "Marketing Outreach Content for campaigns",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Map of Content: one master note per project as status hub",
+              "text": "Map of Content: one overview note per project",
               "isCorrect": true
             },
             {
@@ -554,7 +554,7 @@
           "id": "modul_3_lesson_3_section_3",
           "title": "Asking the right questions",
           "readTimeMinutes": 3,
-          "content": "Copilot answers as well as your question and index allow. Three rules help:\n\n**Concrete:** \"Which discount decisions are documented in the last 90 days?\" instead of \"What do I think about pricing policy?\"\n\n**Time-bound:** a period such as \"Q1 2026\" or \"since March 2026\", when it fits the task.\n\n**Source-linked:** for every statement the file path, date and passage.\n\nMeasure retrieval time, missing-source rate and correction effort against your old workflow. If the numbers do not improve, switch the configuration off again."
+          "content": "Copilot answers as well as your question and index allow. Three rules help:\n\n**Concrete:** \"Which discount decisions are documented in the last 90 days?\" instead of \"What do I think about pricing policy?\"\n\n**Time-bound:** a period such as \"Q1 2026\" or \"since March 2026\", when it fits the task.\n\n**Source-linked:** for every statement the file path, date and passage.\n\nMeasure retrieval time, missing-source rate and correction effort against your old workflow. If the numbers do not improve, switch the configuration off again. Both tools are retrieval aids; the source note stays the authoritative record."
         }
       ],
       "quiz": [
@@ -569,7 +569,7 @@
             },
             {
               "id": "b",
-              "text": "Embeddings: notes as vectors, compared by meaning",
+              "text": "Embeddings: vectors compared by meaning",
               "isCorrect": true
             },
             {
@@ -610,7 +610,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "That narrows the hits and makes them checkable. It still does not guarantee accuracy."
+          "explanation": "Concrete, time-bound questions that demand sources narrow the hits and make them checkable. They do not guarantee accuracy."
         }
       ]
     },
@@ -663,7 +663,7 @@
           "id": "modul_3_lesson_4_section_1",
           "title": "The browser-tab reality",
           "readTimeMinutes": 2,
-          "content": "Count your open tabs, the ones for reading later and the ones kept as reference. A tab has no fixed location, no metadata and no way back.\n\nThe workflow: Web Clipper saves the article, the AI Interpreter proposes metadata, Obsidian indexes the note. You time each article yourself."
+          "content": "Count your open tabs: how many are for reading later, how many for reference? A tab has no fixed location, no metadata and no way back.\n\nThe workflow: Web Clipper saves the article, the AI Interpreter proposes metadata, Obsidian indexes the note. Time each article yourself; the course deliberately gives no number."
         },
         {
           "id": "modul_3_lesson_4_section_2",
@@ -690,7 +690,7 @@
             },
             {
               "id": "b",
-              "text": "Summarizes, tags and suggests a folder before import",
+              "text": "Summarizes, tags and suggests a folder",
               "isCorrect": true
             },
             {
@@ -732,7 +732,7 @@
             "lessonId": "modul_3_lesson_5",
             "moduleId": "modul_3",
             "title": "Which daily Obsidian prompt is reviewable?",
-            "scenario": "You want to summarize last work week from the practice vault for the weekly report. Which prompt sets sources, format and boundaries?",
+            "scenario": "You want to summarize last week's work from the practice vault for the weekly report. Which prompt sets sources, format and boundaries?",
             "candidates": [
               {
                 "label": "Variant A: the blanket ask",
@@ -773,7 +773,7 @@
           "id": "modul_3_lesson_5_section_3",
           "title": "Structured Output (JSON) + Few-shot + CoT",
           "readTimeMinutes": 4,
-          "content": "**Structured output (JSON):** When a machine processes the answer further, it needs a fixed schema and technical validation.\n\n```\nAnalyze this fictitious meeting transcript. Return strictly valid JSON:\n{\n  \"entscheidungen\": [{\"text\": \"...\", \"verantwortlich\": null}],\n  \"action_items\": [{\"text\": \"...\", \"fälligkeit\": null, \"verantwortlich\": null}],\n  \"offene_fragen\": [{\"text\": \"...\", \"wer_antwortet\": null}]\n}\nUse null for unknown values. Do not invent details.\n```\n\nLater workflow steps may depend on the German keys, so they stay. Validate the result against the schema before n8n or Python use it; invalid JSON goes to a documented error path.\n\n**Few-shot:** Two or three representative examples show the model the pattern, but they prove no accuracy.\n\n**Reviewable intermediate results (CoT):** For complex tasks, ask for short evidence and assumptions. Do not ask for hidden reasoning, and skip intermediate steps on simple text tasks.\n\nWhether routine, schema or examples pay off, you measure on the task at hand."
+          "content": "**Structured output (JSON):** When a machine processes the answer further, it needs a fixed schema and technical validation.\n\n```\nAnalyze this fictitious meeting transcript. Return strictly valid JSON:\n{\n  \"entscheidungen\": [{\"text\": \"...\", \"verantwortlich\": null}],\n  \"action_items\": [{\"text\": \"...\", \"fälligkeit\": null, \"verantwortlich\": null}],\n  \"offene_fragen\": [{\"text\": \"...\", \"wer_antwortet\": null}]\n}\nUse null for unknown values. Do not invent details.\n```\n\nLater workflow steps may depend on the German keys, so they stay. Validate the result against the schema before n8n or Python use it; invalid JSON goes to a documented error path.\n\n**Few-shot:** Two or three representative examples show the model the pattern, but they prove no accuracy.\n\n**Reviewable intermediate results (CoT):** For complex tasks, ask for short evidence and assumptions. Do not ask for hidden reasoning, and skip intermediate steps on simple text tasks.\n\nMeasure on your own task whether the routine, schema or examples pay off."
         }
       ],
       "quiz": [
@@ -885,7 +885,7 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "MCP exposes tools; Copilot is an interface inside Obsidian",
+              "text": "MCP exposes tools; Copilot is an Obsidian interface",
               "isCorrect": true
             },
             {
@@ -895,7 +895,7 @@
             },
             {
               "id": "c",
-              "text": "MCP uses GPT-4, Copilot uses Claude",
+              "text": "MCP always uses GPT-4, Copilot always Claude",
               "isCorrect": false
             },
             {

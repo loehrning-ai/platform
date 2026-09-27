@@ -35,7 +35,7 @@ const DIMENSIONS: readonly DimensionMeta[] = [
     label: "Drafting",
     shortDesc: "Wie kommst du von Quellenmaterial zu einem prüfbaren Entwurf?",
     weakestRecommendation:
-      "Modul 1, Lektion 1.1 und 1.4: begrenzte Briefings und wiederkehrende Entwürfe.",
+      "Starte mit Modul 1, Lektion 1.1 und 1.4: begrenzte Briefings und wiederholbare Entwürfe.",
   },
   {
     id: "delegation",
@@ -50,21 +50,21 @@ const DIMENSIONS: readonly DimensionMeta[] = [
     shortDesc:
       "Welche wiederkehrenden Schritte haben ausdrückliche Kontrollen?",
     weakestRecommendation:
-      "Modul 4, Lektion 4.2 bis 4.4: drei begrenzte Workflow-Übungen.",
+      "Übe mit den drei begrenzten Workflows in Modul 4, Lektion 4.2 bis 4.4.",
   },
   {
     id: "knowledge",
     label: "Knowledge",
     shortDesc: "Kannst du Entscheidungen mit ihrem Quellenkontext abrufen?",
     weakestRecommendation:
-      "Modul 3: gepflegte Notizen, Abruf und Quellenprüfung mit Obsidian und Claude.",
+      "Arbeite Modul 3 durch: gepflegte Notizen, Abruf und Quellenprüfung mit Obsidian und Claude.",
   },
   {
     id: "governance",
     label: "Governance",
     shortDesc: "Erkennst du Daten- und Regulierungsprüfpunkte?",
     weakestRecommendation:
-      "Prüfe zuerst den KI-Führerschein, dann Modul 4, Lektion 4.6. Keine Rechtsberatung.",
+      "Mach zuerst den KI-Führerschein, dann Modul 4, Lektion 4.6. Das ist keine Rechtsberatung.",
   },
 ];
 
@@ -74,7 +74,7 @@ const DIMENSIONS_EN: readonly DimensionMeta[] = [
     label: "Drafting",
     shortDesc: "How do you move from source material to a reviewable draft?",
     weakestRecommendation:
-      "Module 1, lessons 1.1 and 1.4: bounded briefs and repeatable drafts.",
+      "Start with module 1, lessons 1.1 and 1.4: bounded briefs and repeatable drafts.",
   },
   {
     id: "delegation",
@@ -88,21 +88,21 @@ const DIMENSIONS_EN: readonly DimensionMeta[] = [
     label: "Automation",
     shortDesc: "Which repeated steps have explicit controls?",
     weakestRecommendation:
-      "Module 4, lessons 4.2 to 4.4: three bounded workflow exercises.",
+      "Practise with the three bounded workflows in module 4, lessons 4.2 to 4.4.",
   },
   {
     id: "knowledge",
     label: "Knowledge",
     shortDesc: "Can you retrieve decisions with their source context?",
     weakestRecommendation:
-      "Module 3: maintained notes, retrieval and source review with Obsidian and Claude.",
+      "Work through module 3: maintained notes, retrieval and source review with Obsidian and Claude.",
   },
   {
     id: "governance",
     label: "Governance",
     shortDesc: "Can you identify data and regulatory review points?",
     weakestRecommendation:
-      "Review AI Fundamentals first, then module 4, lesson 4.6. Not legal advice.",
+      "Take AI Fundamentals first, then module 4, lesson 4.6. This is not legal advice.",
   },
 ];
 
@@ -177,7 +177,7 @@ const SCENARIOS: readonly Scenario[] = [
       },
       {
         label:
-          "Ein überwachter Ablauf validiert, weist Review zu und protokolliert",
+          "Ein überwachter Ablauf prüft, leitet zur Freigabe weiter und protokolliert",
         score: 3,
       },
     ],
@@ -263,7 +263,7 @@ const SCENARIOS: readonly Scenario[] = [
       },
       {
         label:
-          "Ein geplanter Entwurf mit Quellenlinks, Ausnahmen und menschlicher Freigabe",
+          "Ein geplanter Entwurf kommt mit Quellenlinks, Ausnahmen und menschlicher Freigabe",
         score: 3,
       },
     ],
@@ -282,7 +282,7 @@ const SCENARIOS: readonly Scenario[] = [
       },
       {
         label:
-          "Ein Ablauf validiert und holt Freigaben, bevor Folgesysteme schreiben",
+          "Ein Ablauf prüft den Entwurf und holt Freigaben, bevor er in Folgesysteme schreibt",
         score: 3,
       },
     ],
@@ -301,7 +301,7 @@ const SCENARIOS: readonly Scenario[] = [
       },
       {
         label:
-          "Ich verknüpfe sie und notiere, welche Aussage sie stützt oder widerlegt",
+          "Ich verknüpfe sie und notiere, welche Aussage sie stützt oder infrage stellt",
         score: 3,
       },
     ],
@@ -379,7 +379,7 @@ const SCENARIOS_EN: readonly Scenario[] = [
       },
       {
         label:
-          "A monitored workflow with validation, approval and audit trail",
+          "Run a monitored workflow with validation, approval and an audit trail",
         score: 3,
       },
     ],
@@ -451,7 +451,7 @@ const SCENARIOS_EN: readonly Scenario[] = [
       },
       {
         label:
-          "A scheduled draft with source links, exception flags and human approval",
+          "Use a scheduled draft with source links, exception flags and human approval",
         score: 3,
       },
     ],
@@ -470,7 +470,7 @@ const SCENARIOS_EN: readonly Scenario[] = [
       },
       {
         label:
-          "Validate and get owner approval before downstream systems write",
+          "Validate and get owner approval before anything reaches downstream systems",
         score: 3,
       },
     ],
@@ -509,7 +509,7 @@ const SCENARIOS_EN: readonly Scenario[] = [
       },
       {
         label:
-          "A pilot gate with owners, evidence, legal review if needed, stop condition",
+          "A pilot gate with owners, evidence, legal review if needed and a stop condition",
         score: 3,
       },
     ],
@@ -727,7 +727,7 @@ function FluencyTestContent({ locale = "de" }: { readonly locale?: Locale }) {
               className="inline-flex min-h-11 items-center gap-2 border-b border-border px-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground transition-colors hover:border-brand-orange hover:text-brand-orange focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
             >
               <RotateCcw size={14} aria-hidden="true" />
-              {isEnglish ? "Start again" : "Nochmal bearbeiten"}
+              {isEnglish ? "Start again" : "Neu starten"}
             </button>
           </div>
         </div>
@@ -749,8 +749,8 @@ function FluencyTestContent({ locale = "de" }: { readonly locale?: Locale }) {
             </h1>
             <p className="mt-4 max-w-[680px] text-sm leading-relaxed text-muted-foreground">
               {isEnglish
-                ? "Ten scenarios in five dimensions. The result stays in your browser and compares you with nobody."
-                : "Zehn Szenarien in fünf Dimensionen. Das Ergebnis bleibt in deinem Browser und vergleicht dich mit niemandem."}
+                ? "Ten scenarios in five dimensions. Not a standardized test; the result stays in your browser."
+                : "Zehn Szenarien in fünf Dimensionen. Kein standardisierter Test; das Ergebnis bleibt in deinem Browser."}
             </p>
           </div>
 
@@ -838,7 +838,7 @@ function FluencyTestContent({ locale = "de" }: { readonly locale?: Locale }) {
               id={`scenario-heading-${current.id}`}
               className="mt-2 max-w-[800px] text-[26px] font-bold leading-tight tracking-[-0.025em] text-foreground sm:text-[32px]"
             >
-              „{current.question}“
+              {current.question}
             </h2>
 
             <div className="mt-5 grid border-t border-foreground">

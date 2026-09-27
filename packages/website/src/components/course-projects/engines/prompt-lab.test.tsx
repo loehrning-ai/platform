@@ -1116,7 +1116,7 @@ describe("PromptLab", () => {
     });
 
     expect(
-      screen.getByText(/Verification unlocks after all five work stages/i),
+      screen.getByText(/Verification unlocks after all five project stages/i),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Verify project" }),

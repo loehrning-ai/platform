@@ -80,7 +80,7 @@ const LANDING_COPY = {
       { href: "/ai-native/glossar", label: "Glossar", output: "70 Begriffe" },
       {
         href: "/ai-native/capstone-gallery",
-        label: "Capstone-Regeln",
+        label: "Regeln fürs Abschlussprojekt",
         output: "Veröffentlichungsgrenze",
       },
     ],
@@ -122,7 +122,7 @@ const LANDING_COPY = {
       { title: "Brief tasks with goal, context, example and review criterion" },
       { title: "Set up a Claude project with instructions, sample files and skills" },
       { title: "Keep emails, notes and folders in an Obsidian knowledge base" },
-      { title: "Test recurring tasks for n8n and set controls first" },
+      { title: "Check which recurring tasks suit n8n and set controls first" },
     ],
     modulesHeading: "Modules",
     topicsLabel: "Topics in this module",
@@ -149,7 +149,7 @@ const LANDING_COPY = {
     boundary: [
       "The reader needs a free learning account, with no payment details.",
       "The local completion record rests on stored progress and self-review and is not an external examination, accreditation or compliance finding.",
-      "AI Fundamentals is recommended but not required. Tool-specific guidance can become outdated after provider changes.",
+      "Everyday AI Literacy is recommended but not required. Tool-specific guidance can become outdated after provider changes.",
     ],
   },
 } as const satisfies Record<Locale, Record<string, unknown>>;

@@ -58,9 +58,10 @@ describe("KI und Gesellschaft course landing page", () => {
       }),
     ).toBeInTheDocument();
     expect(screen.getByText("AI and work")).toBeInTheDocument();
-    expect(
-      screen.getByText(/Each of the three topics has its own checks/),
-    ).toBeInTheDocument();
+    // Each topic has its own checks: work, media and decisions list separate steps.
+    expect(screen.getByText(/Assess tasks, occupations/)).toBeInTheDocument();
+    expect(screen.getByText(/independent checks/)).toBeInTheDocument();
+    expect(screen.getByText(/appeal route/)).toBeInTheDocument();
 
     const startLinks = screen.getAllByRole("link", {
       name: /Start with a learning account/,

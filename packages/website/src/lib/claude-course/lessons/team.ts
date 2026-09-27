@@ -9,10 +9,10 @@ const lesson: ClaudeLesson = {
   number: 10,
   title: "Team workflows",
   subtitle:
-    "Version prompts, document their scope, and test changes as a team.",
+    "Prompts, CLAUDE.md and evals as shared, maintained tools.",
   durationMinutes: 10,
   trackId: "team",
-  hook: "A reusable prompt needs an owner, a use case, and regression tests.",
+  hook: "A team prompt needs an owner, a use case and tests.",
   keyConcepts: [
     "Prompt library",
     "Shared CLAUDE.md",
@@ -31,23 +31,23 @@ const lesson: ClaudeLesson = {
     {
       id: "three-artifacts",
       title: "Three team artifacts worth maintaining",
-      readTimeMinutes: 2,
+      readTimeMinutes: 1,
       content:
-        "- **01 · Prompt library.** A repo or Gdoc of named, tested prompts for recurring tasks: PR review, standup summary, post-mortem draft, release notes.\n- **02 · CLAUDE.md.** In the repo, reviewed like code, updated when conventions drift.\n- **03 · Eval set.** A handful of realistic inputs with the expected kind of output, rerun after each prompt change.",
+        "- **01 · Prompt library.** A repo or Gdoc of named, tested prompts for recurring tasks: PR review, standup summary, post-mortem draft, release notes.\n- **02 · CLAUDE.md.** Lives in the repo, is reviewed like code and is updated when conventions change.\n- **03 · Eval set.** A handful of realistic inputs with the expected kind of output, rerun after each prompt change.",
     },
     {
       id: "sharing-well",
       title: "How to share a prompt well",
-      readTimeMinutes: 2,
+      readTimeMinutes: 1,
       content:
-        "Before you publish:\n\n- **Parameterize local details** such as project names and paths, for example as `<PROJECT>`.\n- **State scope and prerequisites:** when to use it, which sources it needs, which actions it may take.\n- **Add a reviewed example,** marked illustrative and stripped of sensitive data.\n- **Document known failures** and link each material one to an evaluation case or control.",
+        "Before you publish:\n\n- **Replace local details** such as project names and paths with placeholders like `<PROJECT>`.\n- **State scope and prerequisites:** when to use it, which sources it needs, which actions it may take.\n- **Add a reviewed example,** marked illustrative and stripped of sensitive data.\n- **Document known failures** and link each material one to an evaluation case or control.",
     },
     {
       id: "rituals",
       title: "Short recurring reviews",
       readTimeMinutes: 1,
       content:
-        "Review one workflow, its evidence and one failure case in a short recurring slot. A prompt joins the shared library once a teammate reproduces its result from the documentation alone.",
+        "Review one workflow, its evidence and one failure case in a short recurring slot. A prompt joins the shared library only after a teammate reproduces its result from the documentation alone.",
     },
   ],
   widgets: [
@@ -77,7 +77,7 @@ const lesson: ClaudeLesson = {
         ],
         correct: 1,
         explanation:
-          "Shareable prompts are parameterized and documented. Strip specifics, state when to use, and show a sample output.",
+          "Shareable prompts are parameterized and documented. Replace fixed names with placeholders, say when to use it and include a sample output.",
         title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },

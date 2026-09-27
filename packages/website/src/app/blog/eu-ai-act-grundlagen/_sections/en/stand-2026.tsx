@@ -10,7 +10,8 @@ export function Stand2026En() {
           The AI Omnibus: published and <span className="em">in force.</span>
         </h2>
         <p className="dek">
-          The EU postponed the high-risk rules. 2 August 2026 still stands.
+          The EU postponed the high-risk rules. 2 August 2026 is still a key
+          date.
         </p>
 
         <div className="premise">
@@ -50,10 +51,10 @@ export function Stand2026En() {
             </p>
             <p>
               <strong>What the Omnibus did not change:</strong> 2 August 2026
-              remains the general date of application: transparency (Article
-              50), complaints (Article 85) and explanations (Article 86) apply on
-              schedule. The Article 5 prohibitions and the Article 4 duty to
-              take AI literacy measures continue to apply; since 27 July 2026,
+              is still the general date of application for transparency
+              (Article 50), complaints (Article 85) and explanations (Article
+              86). The Article 5 prohibitions and the Article 4 duty to take AI
+              literacy measures still apply; since 27 July 2026,
               Article 4 no longer requires a specified literacy level for each
               individual.
             </p>
@@ -67,8 +68,8 @@ export function Stand2026En() {
             </p>
             <p>
               Publication in the Federal Law Gazette
-              had not been verified on 28 July 2026. The promulgated law and the
-              officially published complaints route remain decisive. (Source:
+              had not been verified on 28 July 2026; the KI-MIG entered into
+              force on 29 July 2026. (Source:
               Bundestag decision of 11 June 2026; Bundesrat, 10 July 2026)
             </p>
           </div>
@@ -85,8 +86,8 @@ export function Stand2026En() {
             </div>
             <div className="margin-note">
               <b>Germany · KI-MIG</b>
-              Federal Network Agency designated as central supervisor.
-              Promulgation had not been verified on 28 July 2026.
+              In force since 29 July 2026. Federal Network Agency is the
+              central supervisor.
             </div>
           </aside>
         </div>

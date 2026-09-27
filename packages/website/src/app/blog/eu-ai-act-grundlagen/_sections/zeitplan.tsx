@@ -80,7 +80,7 @@ export function Zeitplan() {
       <div className="premise" style={{ marginTop: 48 }}>
         <div className="premise__body">
           <p>
-            Verstöße gegen die Verbote aus Art. 5 können bis zu 35 Mio. EUR
+            Bußgelder: Verstöße gegen die Verbote aus Art. 5 können bis zu 35 Mio. EUR
             oder 7 Prozent des weltweiten Jahresumsatzes kosten, je nachdem,
             welcher Betrag höher ist.
           </p>

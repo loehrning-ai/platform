@@ -102,7 +102,7 @@ export const DATA_INFRA_TRACKS_DE: readonly DataInfraTrack[] = [
   {
     id: "foundations",
     label: "01 · grundlagen",
-    title: "Grenzen von Datensystemen begründet beurteilen.",
+    title: "Grenzen von Datensystemen beurteilen.",
     hint: "Datenfluss, Zielkonflikte nach CAP und PACELC und die Wahl des Datenmodells.",
   },
   {

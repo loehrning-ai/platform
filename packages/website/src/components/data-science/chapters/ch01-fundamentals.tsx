@@ -39,8 +39,8 @@ export default function Ch01Fundamentals() {
           and uncertainty.
         </p>
         <p className="prose">
-          Data science computes on <code>samples</code> and talks about{" "}
-          <code>populations</code> or future cases. Intervals, tests,
+          Data science computes on samples and draws conclusions about
+          populations or future cases. Intervals, tests,
           validation and experimental design quantify parts of that
           uncertainty; none repairs a biased sample or an invalid measurement.
         </p>
@@ -80,7 +80,7 @@ export default function Ch01Fundamentals() {
         <AntiPatterns
           items={[
             "<b>Fitting before looking.</b> Run <code>model.fit()</code> on data you never <em>plotted</em> and the model can learn the index column.",
-            "<b>Optimizing a number nobody asked for.</b> Great accuracy on the wrong metric is worse than decent accuracy on the right one.",
+            "<b>Optimizing a number nobody asked for.</b> Optimize the metric the decision depends on.",
             '<b>Confusing correlation with causation.</b> "Users who see feature X retain better" does not mean X causes retention.',
           ]}
         />
@@ -89,7 +89,7 @@ export default function Ch01Fundamentals() {
       <Takeaway
         items={[
           "<b>Name the target population</b> and how sampling, assignment, missingness and measurement limit the estimate.",
-          "<b>Use the loop as a control system.</b> Explore, validate and monitor wherever new data or transformations can invalidate old evidence.",
+          "<b>Use the loop as a control system.</b> Recheck the evidence whenever new data or transformations can invalidate it.",
         ]}
       />
     </>

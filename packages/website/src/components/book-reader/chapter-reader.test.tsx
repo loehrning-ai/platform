@@ -257,7 +257,7 @@ describe("ChapterReader focus mode and compact reader bar", () => {
     ).toHaveAttribute("href", "/en/buecher/ki-landschaft");
     expect(
       within(sheet!).getByText(
-        "After signing in, download the German PDF from the book overview.",
+        "The reader is the maintained edition; after signing in, download the German PDF from the book overview.",
       ),
     ).toBeInTheDocument();
 

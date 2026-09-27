@@ -26,7 +26,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Eine Verordnung gilt unmittelbar in allen Mitgliedstaaten, eine Richtlinie muss erst in nationales Recht umgesetzt werden.",
+    "explanation": "Die KI-Verordnung ist Verordnung (EU) 2024/1689. Eine Verordnung gilt unmittelbar in allen Mitgliedstaaten, eine Richtlinie muss erst in nationales Recht umgesetzt werden.",
     "version": 1,
     "active": true
   },
@@ -57,7 +57,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 113 Buchst. a macht Art. 4 und die Verbote nach Art. 5 ab dem 2. Februar 2025 anwendbar; nationale Aufsicht und Durchsetzung von Art. 4 beginnen laut Kommissions-FAQ am 2. August 2026. Daraus folgt nicht automatisch derselbe Bußgeldbetrag für jeden Verstoß. (Quelle: claimId ai-literacy-supervision-2026-08-02)",
+    "explanation": "Art. 113 Buchst. a macht Art. 4 und die Verbote nach Art. 5 ab dem 2. Februar 2025 anwendbar; nationale Aufsicht und Durchsetzung von Art. 4 beginnen laut Kommissions-FAQ am 2. August 2026, ohne dass daraus automatisch derselbe Bußgeldbetrag für jeden Verstoß folgt. (Quelle: claimId ai-literacy-supervision-2026-08-02)",
     "version": 1,
     "active": true,
     "claimId": "ai-literacy-supervision-2026-08-02"
@@ -111,7 +111,7 @@
       },
       {
         "id": "c",
-        "text": "Ja, Art. 2 Abs. 1 lit. a erfasst auch Anbieter aus Drittländern",
+        "text": "Ja, Art. 2 Abs. 1 Buchst. a erfasst Drittlandsanbieter, die in der EU in Verkehr bringen",
         "isCorrect": true
       },
       {
@@ -120,7 +120,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Lit. a greift, weil die Plattform in der EU in Verkehr kommt; nach Art. 2 Abs. 1 lit. c genügt schon, dass der Output in der EU verwendet wird. Der Sitz zählt nicht, jeder Auslöser begründet die Geltung für sich.",
+    "explanation": "Art. 2 Abs. 1 Buchst. a greift, weil die Plattform in der EU in Verkehr kommt; nach Buchst. c genügt schon, dass der Output in der EU verwendet wird. Der Sitz zählt nicht, jeder Auslöser begründet die Geltung für sich.",
     "version": 1,
     "active": true
   },
@@ -213,7 +213,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Spamfilter stehen weder in Anhang I noch in Anhang III und lösen keine Transparenzpflicht nach Art. 50 aus. Es bleiben freiwillige Verhaltenskodizes nach Art. 95.",
+    "explanation": "Spamfilter stehen weder in Anhang I noch in Anhang III und lösen keine Transparenzpflicht nach Art. 50 aus. Damit sind sie minimales Risiko mit freiwilligen Verhaltenskodizes nach Art. 95.",
     "version": 1,
     "active": true
   },
@@ -523,7 +523,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Das AI Office hat den Code am 10. Juli 2025 veröffentlicht. Unterzeichner wie OpenAI, Anthropic, Google und Mistral können ihn als Mittel zum Nachweis der Compliance nutzen (Art. 53 Abs. 4, Art. 55 Abs. 2), eine Konformitätsvermutung im rechtlichen Sinne begründen erst harmonisierte Normen nach Art. 40 und 41. (Quelle: AI Office, GPAI Code of Practice, 10. Juli 2025; Art. 53 Abs. 4 Verordnung (EU) 2024/1689)",
+    "explanation": "Das AI Office hat den Code am 10. Juli 2025 veröffentlicht. Unterzeichner können ihn als Mittel zum Nachweis der Compliance nutzen (Art. 53 Abs. 4, Art. 55 Abs. 2); eine Konformitätsvermutung im rechtlichen Sinne begründen erst harmonisierte Normen nach Art. 40 und 41. (Quelle: AI Office, GPAI Code of Practice, 10. Juli 2025; Art. 53 Abs. 4 Verordnung (EU) 2024/1689)",
     "version": 1,
     "active": true,
     "claimId": "gpai-code-compliance-demonstration-only"
@@ -594,7 +594,7 @@
     "id": "q_w20",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Welche Behörde benennt das seit dem 29. Juli 2026 geltende KI-MIG als zentrale Anlaufstelle?",
+    "questionText": "Welche Behörde benennt das KI-MIG, seit dem 29. Juli 2026 in Kraft, als zentrale Anlaufstelle?",
     "answerOptions": [
       {
         "id": "a",
@@ -617,7 +617,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Das seit dem 29. Juli 2026 geltende KI-MIG macht die Bundesnetzagentur zur Marktüberwachungsbehörde, Anlaufstelle und Beschwerdestelle, soweit keine Fachbehörde zuständig ist. Den Beschwerdeweg finden Sie auf ihrer offiziellen Seite.",
+    "explanation": "Das KI-MIG macht die Bundesnetzagentur zur Marktüberwachungsbehörde, Anlaufstelle und Beschwerdestelle, soweit keine Fachbehörde zuständig ist. Den Beschwerdeweg finden Sie auf ihrer offiziellen Seite.",
     "version": 1,
     "active": true
   },
@@ -710,7 +710,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 27 Abs. 1 erfasst öffentliche Stellen, private Erbringer öffentlicher Dienste und Anhang III Nr. 5 lit. b und c, einen privaten HR-Einsatz nach Nr. 4 also nicht. Eine DSFA nach Art. 35 DSGVO ist separat und nur bei voraussichtlich hohem Risiko nötig.",
+    "explanation": "Art. 27 Abs. 1 erfasst öffentliche Stellen, private Erbringer öffentlicher Dienste und Anhang III Nr. 5 Buchst. b und c, einen privaten HR-Einsatz nach Nr. 4 also nicht. Eine DSFA nach Art. 35 DSGVO ist separat und nur bei voraussichtlich hohem Risiko nötig.",
     "version": 1,
     "active": true
   },
@@ -780,7 +780,7 @@
     "id": "q_w26",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Sie interagieren mit einem Support-Chatbot. Ab wann muss die KI-Interaktion nach Art. 50 Abs. 1 grundsätzlich erkennbar sein?",
+    "questionText": "Ab wann muss ein Support-Chatbot nach Art. 50 Abs. 1 als KI erkennbar sein?",
     "answerOptions": [
       {
         "id": "a",
@@ -803,7 +803,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Anbieter müssen Systeme zur direkten Interaktion so gestalten, dass Betroffene spätestens bei der ersten Interaktion davon erfahren, sofern es nicht offensichtlich ist. Die Pflicht gilt ab dem 2. August 2026. (Quelle: Art. 50 Abs. 1, Art. 113 Verordnung (EU) 2024/1689)",
+    "explanation": "Anbieter müssen Systeme zur direkten Interaktion so gestalten, dass Betroffene spätestens bei der ersten Interaktion erfahren, dass sie mit KI interagieren, sofern es nicht offensichtlich ist. Die Pflicht gilt ab dem 2. August 2026. (Quelle: Art. 50 Abs. 1, Art. 113 Verordnung (EU) 2024/1689)",
     "claimId": "ai-act-transparency-application-2026-08-02",
     "version": 1,
     "active": true

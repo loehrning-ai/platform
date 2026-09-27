@@ -107,17 +107,15 @@ Betriebsrat (falls vorhanden) · Mitarbeitende/r
 Die Vorlage ist keine juristische Beratung, passt aber als Struktur für die meisten Unternehmen. Euer Datenschutzbeauftragter passt die Klauseln an eure Situation an.
 
 > **So bekommst du die Richtlinie in einem 25-Personen-Betrieb verabschiedet:**
-> 1. Schick die Rohfassung an Geschäftsführung und IT-Verantwortliche mit einem Satz: „Art. 4 EU-KI-Verordnung gilt seit Februar 2025, hier ist die Seite, die uns absichert."
-> 2. Plan keinen Workshop, sondern fünfzehn Minuten am Ende eines bestehenden Termins (Jour fixe, Teamrunde). Geh die sechs Punkte durch, halte Einwände direkt fest.
-> 3. Trag Datum und Version ein, lass im selben Termin unterschreiben, häng eine Kopie an den gemeinsamen Drucker. In kleinen Betrieben sterben Richtlinien an der Vertagung, nicht am Widerspruch.
+> 1. Schick die Rohfassung an Geschäftsführung und IT-Verantwortliche mit einem Satz: „Art. 4 EU-KI-Verordnung gilt seit Februar 2025. Hier ist eine Seite, mit der wir unsere Maßnahmen dokumentieren."
+> 2. Plan dafür fünfzehn Minuten am Ende eines bestehenden Termins (Jour fixe, Teamrunde). Geh die sechs Punkte durch, halte Einwände direkt fest.
+> 3. Trag Datum und Version ein, lass im selben Termin unterschreiben, häng eine Kopie an den gemeinsamen Drucker.
 
-Damit hat dein Betrieb einen dokumentierten Baustein für Art. 4, und du stehst als KI-Verantwortliche/r darauf, was bei einer Beförderung zählen kann.
+Damit hat dein Betrieb einen dokumentierten Baustein für Art. 4. Dein Name steht als KI-Verantwortliche/r darauf, und das kann bei einer Beförderung zählen.
 
 ## Das unterschreibst du
 
 Geschäftsführung, IT-Leitung, Datenschutzbeauftragte, Betriebsrat (falls vorhanden) und du unterschreiben. Die Unterschrift schützt dich: Hast du dich an die Richtlinie gehalten und etwas geht schief, stehst du nicht allein da.
-
-Bei Meta unterschreibe ich regelmäßig Policy-Updates in zwei Minuten, und danach ist klar, was erlaubt ist.
 
 ---
 

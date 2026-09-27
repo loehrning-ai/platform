@@ -155,7 +155,7 @@ const KI_FUEHRERSCHEIN: CourseData = {
     block_5: {
       title: "KI-Richtlinie Schritt für Schritt",
       description:
-        "Eine KI-Richtlinie in sechs Bausteinen.",
+        "Eine KI-Richtlinie in sechs Bausteinen aufsetzen: Geltungsbereich, Tools, Datenregeln, Prüfpflicht, Eskalation, Review.",
       durationMinutes: 25,
     },
   },
@@ -201,7 +201,7 @@ const KI_FUEHRERSCHEIN_EN: CourseData = {
     block_5: {
       title: "Building an AI use policy",
       description:
-        "An AI policy in six building blocks.",
+        "Draft an AI policy in six parts: scope, tools, data rules, review duty, escalation, maintenance.",
       durationMinutes: 25,
     },
   },
@@ -223,9 +223,9 @@ const EU_AI_ACT_KURS: CourseData = {
   config: EU_AI_ACT_KURS_CONFIG,
   blockMeta: {
     block_1: {
-      title: "Warum & Für wen",
+      title: "Geltungsbereich, Rollen und Fristen",
       description:
-        "Wer als Anbieter oder Betreiber erfasst ist und welche Fristen gelten.",
+        "Wer erfasst ist, welche Rollen es gibt und welche Fristen gelten.",
       durationMinutes: 16,
     },
     block_2: {
@@ -249,13 +249,13 @@ const EU_AI_ACT_KURS: CourseData = {
     block_5: {
       title: "Governance & Sanktionen",
       description:
-        "AI Office, nationale Behörden, Bußgelder bis 35 Mio EUR, Sandboxes, Meldewege.",
+        "AI Office, nationale Behörden, Bußgelder bis 35 Mio. EUR oder 7 % des Umsatzes, Sandboxes, Meldewege.",
       durationMinutes: 16,
     },
     block_6: {
       title: "Praxis: Umsetzung im Mittelstand",
       description:
-        "5-Schritte-Audit, DSGVO-Brücke, Vorlagen und ein Mittelstand-Fallbeispiel.",
+        "Audit in fünf Schritten, Abgleich mit der DSGVO, Vorlagen und ein Fallbeispiel aus dem Mittelstand.",
       durationMinutes: 20,
     },
   },
@@ -278,7 +278,7 @@ const EU_AI_ACT_KURS_EN: CourseData = {
     block_1: {
       title: "Scope, roles, and application dates",
       description:
-        "Who is covered as provider or deployer, and which dates apply.",
+        "Who is covered, which roles exist and which dates apply.",
       durationMinutes: 16,
     },
     block_2: {
@@ -302,13 +302,13 @@ const EU_AI_ACT_KURS_EN: CourseData = {
     block_5: {
       title: "Governance and penalties",
       description:
-        "AI Office, national authorities, fines up to EUR 35 million, sandboxes, reporting routes.",
+        "AI Office, national authorities, fines up to EUR 35 million or 7% of turnover, sandboxes, reporting routes.",
       durationMinutes: 16,
     },
     block_6: {
       title: "Implementation for smaller organizations",
       description:
-        "Five-step audit, GDPR bridge, templates and an SME case study.",
+        "Five-step audit, alignment with GDPR, templates and an SME case study.",
       durationMinutes: 20,
     },
   },
@@ -374,7 +374,7 @@ const KI_UND_GESELLSCHAFT: CourseData = {
     block_3: {
       title: "Ethik und Bias",
       description:
-        "Wie Bias in Daten, Modelle und Entscheidungen gerät, an dokumentierten Fällen.",
+        "An dokumentierten Fällen: wie Bias in Daten, Modelle und Entscheidungen gerät.",
       durationMinutes: 16,
     },
   },
@@ -406,7 +406,7 @@ const KI_UND_GESELLSCHAFT_EN: CourseData = {
     block_3: {
       title: "Bias, ethics, and accountability",
       description:
-        "How bias enters data, models and decisions, shown with documented cases.",
+        "Documented cases of how bias enters data, models and decisions.",
       durationMinutes: 16,
     },
   },

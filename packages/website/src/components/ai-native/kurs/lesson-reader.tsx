@@ -153,7 +153,7 @@ function AiNativeLessonReaderContent({
             "Your project evidence is saved in your progress. It is not a server-attested record and does not replace the workshop quiz.",
           legacyCapstoneQuestion: "Historical capstone self-review recorded",
           legacyCapstoneComplete:
-            "Once every lesson is complete, your earlier capstone self-review still counts for the record. It does not verify the new project artifact.",
+            "Once every lesson is complete, your earlier capstone self-review remains a valid route to completion. It does not verify the new project artifact.",
           downloadRecord: "Download completion record",
           takeQuiz: "Complete workshop quiz",
           capstonePrompt:
@@ -162,7 +162,7 @@ function AiNativeLessonReaderContent({
           knowledgeCheck: "Knowledge check",
           lessonQuiz: "Short lesson quiz",
           quizIntro: (count: number) =>
-            `${count} ${count === 1 ? "question" : "questions"}, repeatable. Your best result is saved.`,
+            `${count} ${count === 1 ? "question" : "questions"}. Retake the quiz as often as you like; your best result is saved.`,
           moduleComplete: (number: number) => `Module ${number} complete`,
           moduleBody: (count: number) =>
             `All ${count} lessons in this module are complete.`,
@@ -191,7 +191,7 @@ function AiNativeLessonReaderContent({
             "Deine Projektnachweise sind im Fortschritt gespeichert. Sie sind kein serverbestätigter Nachweis und ersetzen das Workshop-Quiz nicht.",
           legacyCapstoneQuestion: "Frühere Capstone-Selbstprüfung gespeichert",
           legacyCapstoneComplete:
-            "Nach Abschluss aller Lektionen zählt deine frühere Capstone-Selbstprüfung weiter für die Bestätigung. Das neue Projektartefakt bestätigt sie nicht.",
+            "Nach Abschluss aller Lektionen gilt deine frühere Capstone-Selbstprüfung weiter als Abschlussweg. Sie bestätigt das neue Projektartefakt nicht.",
           downloadRecord: "Teilnahmebestätigung herunterladen",
           takeQuiz: "Workshop-Quiz abschließen",
           capstonePrompt:
@@ -200,7 +200,7 @@ function AiNativeLessonReaderContent({
           knowledgeCheck: "Verständnis-Check",
           lessonQuiz: "Kurzes Quiz zu dieser Lektion",
           quizIntro: (count: number) =>
-            `${count} ${count === 1 ? "Frage" : "Fragen"}, beliebig oft wiederholbar. Dein bestes Ergebnis wird gespeichert.`,
+            `${count} ${count === 1 ? "Frage" : "Fragen"}. Du kannst das Quiz beliebig oft wiederholen; dein bestes Ergebnis wird gespeichert.`,
           moduleComplete: (number: number) => `Modul ${number} abgeschlossen`,
           moduleBody: (count: number) =>
             `Alle ${count} Lektionen dieses Moduls sind erledigt.`,

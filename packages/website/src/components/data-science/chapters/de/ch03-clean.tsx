@@ -27,7 +27,7 @@ export default function Ch03CleanDe() {
 
       <section className="section">
         <SectionLabel n="03.1">Fehlwertmechanismen</SectionLabel>
-        <h2 className="h2">Fehlt ist nicht gleich fehlt.</h2>
+        <h2 className="h2">Warum ein Wert fehlt, bestimmt die Behandlung.</h2>
         <p className="prose">
           <strong>MCAR</strong> (missing completely at random) heißt, das
           Fehlen hängt von keinem Wert ab; vollständige Fälle bleiben für
@@ -42,6 +42,8 @@ export default function Ch03CleanDe() {
           Wert sagt sein eigenes Fehlen vorher, etwa wenn Personen mit hohem
           Einkommen die Einkommensfrage auslassen. Dann brauchst du zusätzliche
           Annahmen, Sensitivitätsanalyse oder ein Modell des Fehlprozesses.
+          Alle drei sind Annahmen über den Prozess; die Daten zeigen nicht,
+          welche gilt.
         </p>
         <MissingnessSim />
         <p className="prose" style={{ marginTop: 18 }}>
@@ -60,9 +62,9 @@ export default function Ch03CleanDe() {
           Lücken füllen, ohne die Verteilung zu verfälschen.
         </h2>
         <p className="prose">
-          Mittelwert-Imputation drückt die Varianz. Forward-Fill baut in
-          Zeitreihen künstliche Plateaus. KNN erhält lokale Struktur, wenn die
-          Distanz sinnvoll ist. Die Demo kennt die synthetische Wahrheit; bei
+          Mittelwert-Imputation drückt die Varianz, Forward-Fill erzeugt in
+          Zeitreihen künstliche Plateaus, und KNN erhält lokale Struktur, wenn
+          die Distanz sinnvoll ist. Die Demo kennt die synthetische Wahrheit; bei
           echten Fehlwerten vergleichst du Verfahren über konstruierte Holdouts
           und Sensitivitätsanalysen.
         </p>
@@ -106,7 +108,7 @@ export default function Ch03CleanDe() {
       <section className="section">
         <SectionLabel n="03.4">Data Leakage</SectionLabel>
         <h2 className="h2">
-          Leakage lässt nicht verfügbare Information prädiktiv erscheinen.
+          Leakage bringt Information aus der Zukunft ins Training.
         </h2>
         <p className="prose">
           <strong>Leakage</strong> heißt, die Modellentwicklung nutzte
@@ -127,7 +129,7 @@ export default function Ch03CleanDe() {
         <AntiPatterns
           title="Fehlmuster"
           items={[
-            "<b>Merkmale nach dem Ereignis verwenden.</b> <code>total_purchases_lifetime</code> darf für <code>will_churn</code> keine Käufe nach dem Stichtag enthalten.",
+            "<b>Merkmale nach dem Ereignis verwenden.</b> <code>total_revenue_lifetime</code> darf für <code>will_churn</code> keinen Umsatz nach dem Stichtag enthalten.",
             "<b>Den Testsatz während der EDA untersuchen.</b> Jede daraus abgeleitete Änderung trägt Testinformation in die Entwicklung.",
           ]}
         />
@@ -144,7 +146,7 @@ export default function Ch03CleanDe() {
       <Takeaway
         title="Kernaussagen"
         items={[
-          "<b>Skalierung hängt von Algorithmus und Pipeline ab.</b> Pass sie nur auf Trainingsfolds an und dokumentier, was mit Werten außerhalb des Trainingsbereichs passiert.",
+          "<b>Skalierung hängt von Algorithmus und Pipeline ab.</b> Dokumentier, was mit Werten außerhalb des Trainingsbereichs passiert.",
           "<b>Datenbereinigung ist fortlaufend.</b> Jedes neue Merkmal, jeder Join und jede Aggregation kann Fehler oder Leakage einführen.",
         ]}
       />

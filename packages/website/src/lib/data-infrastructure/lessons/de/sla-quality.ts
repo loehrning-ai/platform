@@ -27,10 +27,10 @@ Eine gestoppte Pipeline zeigt sich meist zuerst als Freshness-Fehler. Ein Transf
     },
     {
       id: "s2",
-      title: "Zuverlässigkeitsmodell",
-      content: `Das Modell zeigt, wie drei Fehlertypen die Signale verschieben. Seine Werte sind feste Beispiele, keine Produktionsschwellen, und ein grünes Dashboard heißt nur, dass die gemessenen Bedingungen in ihren Grenzen liegen.
+      title: "SLOs festlegen",
+      content: `Das Observability-Modell oben zeigt, wie drei Fehlertypen die Signale verschieben. Seine Werte sind feste Beispiele, keine Produktionsschwellen, und ein grünes Dashboard heißt nur, dass die gemessenen Bedingungen in ihren Grenzen liegen.
 
-Leite jedes SLO aus Nutzerbedarf, Messfenster, Fehlerbudget und der Folge einer Verfehlung ab; ein Finanzabschluss braucht andere Definitionen als ein exploratives Dashboard. Prüfe Schwellen gegen historisches Verhalten, bevor sie den Bereitschaftsdienst wecken.`,
+Leite jedes SLO aus Nutzerbedarf, Messfenster, Fehlerbudget und der Folge einer Verfehlung ab; ein Finanzabschluss braucht strengere Definitionen als ein exploratives Dashboard. Prüfe Schwellen gegen historisches Verhalten, bevor sie den Bereitschaftsdienst wecken.`,
     },
     {
       id: "s3",
@@ -78,12 +78,14 @@ Ein dbt-Datentest ist eine Abfrage, deren Ergebniszeilen Verstöße sind; Befehl
 
 Gelernte Prüfungen schätzen erwartete Bereiche aus historischen Anzahlen, Nullraten oder Verteilungen. Sie zeigen unerwartete Änderungen und schlagen auch bei Saisonalität, Produkteinführungen, Ausfällen und dünnen Daten an.
 
-Wähle die Abdeckung nach Anforderungen:
+Entscheide nach Anforderungen:
 
 - deklarierte Prüfungen für Verträge und Fachinvarianten;
 - gelernte Prüfungen, wo die Historie aussagekräftig ist und jemand den Detektor justiert;
-- eine Liste der Datasets, die profiliert werden dürfen, weil Stichproben sensible Daten enthalten können;
-- ein Test von Alarmpräzision, Warehouse-Kosten, Zugriffskontrolle, Aufbewahrung, Lineage-Abdeckung und Export mit repräsentativen Daten.`,
+- welche Datasets profiliert werden dürfen, weil Stichproben sensible Daten enthalten können;
+- ein Probelauf mit repräsentativen Daten für Alarmpräzision, Warehouse-Kosten, Zugriffskontrolle, Aufbewahrung, Lineage-Abdeckung und Export.
+
+Nutze beide Prüfarten, wo sie passen; keine ist auf jeder Ebene Pflicht.`,
     },
     {
       id: "s6",
@@ -107,7 +109,7 @@ OpenLineage definiert Ereignisse für Jobläufe, Datasets und erweiterbare Facet
     {
       id: "s8",
       title: "Begriffe",
-      content: `- **SLI / SLO / SLA**, gemessenes Signal, sein Ziel in einem Zeitfenster und eine Vereinbarung mit Folgen.
+      content: `- **SLI / SLO / SLA**, gemessenes Signal, sein Ziel in einem Zeitfenster und eine Vereinbarung, die Folgen festlegen kann.
 - **Vollständigkeits-Näherungswert**, eine Anzahl, Abdeckungsquote oder Reconciliation-Abweichung.
 - **Anomalieerkennung**, vergleicht Beobachtungen mit einem erwarteten Bereich.
 - **Datenvertrag**, eine versionierte Vereinbarung zwischen Produzent und Consumer über Struktur, Bedeutung und Qualität.`,
@@ -134,7 +136,7 @@ OpenLineage definiert Ereignisse für Jobläufe, Datasets und erweiterbare Facet
       cpId: "q2",
       title: "Ziel der Alarmierung",
       question:
-        "fact_orders fehlen 30% der erwarteten Zeilen. Lineage: fact_orders ← stg_orders ← raw_orders ← Postgres CDC. CDC hat seit vier Stunden keine Ereignisse geliefert. Wer wird alarmiert?",
+        "In fact_orders fehlen 30% der erwarteten Zeilen. Lineage: fact_orders ← stg_orders ← raw_orders ← Postgres CDC, das seit vier Stunden nichts liefert. Wer wird alarmiert?",
       options: [
         "Das Team des dbt-Modells, wo der Test scheitert.",
         "Das Dashboard-Team, dem es aufgefallen ist.",

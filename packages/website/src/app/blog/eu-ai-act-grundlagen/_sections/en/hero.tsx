@@ -77,8 +77,8 @@ export function HeroEn() {
       </section>
 
       <div className="bridge reveal">
-        Article 4 does not require a certificate. The European Commission says
-        so expressly in its Q&amp;A on AI literacy.
+        AI literacy under Article 4 requires no certificate. The European
+        Commission says so expressly in its Q&amp;A.
       </div>
     </>
   );

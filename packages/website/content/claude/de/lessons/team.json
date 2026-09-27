@@ -5,7 +5,7 @@
   "subtitle": "Prompts, CLAUDE.md und Evals als gemeinsam gepflegte Arbeitsmittel.",
   "durationMinutes": 10,
   "trackId": "team",
-  "hook": "Läuft der Prompt nur bei dir, ist er kein Team-Prompt.",
+  "hook": "Ein Team-Prompt braucht Eigentümer, Einsatzfall und Tests.",
   "keyConcepts": [
     "Prompt-Bibliothek",
     "Geteiltes CLAUDE.md",
@@ -23,20 +23,20 @@
     {
       "id": "three-artifacts",
       "title": "Drei gemeinsam gepflegte Arbeitsmittel",
-      "readTimeMinutes": 2,
-      "content": "- **01 · Prompt-Bibliothek.** Ein Repository oder Gdoc mit benannten, getesteten Prompts für Wiederkehrendes: PR-Review, Standup-Zusammenfassung, Post-Mortem-Entwurf, Release Notes.\n- **02 · CLAUDE.md.** Im Repository, wie Code geprüft, aktualisiert, wenn sich Konventionen ändern.\n- **03 · Evaluierungs-Set.** Eine Handvoll realistischer Eingaben mit der erwarteten Art der Ausgabe, nach jeder Prompt-Änderung erneut ausgeführt."
+      "readTimeMinutes": 1,
+      "content": "- **01 · Prompt-Bibliothek.** Ein Repository oder Gdoc mit benannten, getesteten Prompts für Wiederkehrendes: PR-Review, Standup-Zusammenfassung, Post-Mortem-Entwurf, Release Notes.\n- **02 · CLAUDE.md.** Liegt im Repository, wird wie Code reviewt und bei geänderten Konventionen aktualisiert.\n- **03 · Evaluierungs-Set.** Eine Handvoll realistischer Eingaben mit der erwarteten Art der Ausgabe, nach jeder Prompt-Änderung erneut ausgeführt."
     },
     {
       "id": "sharing-well",
       "title": "Einen Prompt für andere nutzbar machen",
-      "readTimeMinutes": 2,
-      "content": "Vor der Veröffentlichung:\n\n- **Lokales parametrisieren,** etwa Projekt- und Pfadnamen als `<PROJECT>`.\n- **Umfang und Voraussetzungen nennen:** Einsatzfall, benötigte Quellen, erlaubte Aktionen.\n- **Ein geprüftes Beispiel mitgeben,** als Illustration markiert und ohne sensible Daten.\n- **Bekannte Fehler dokumentieren** und die wesentlichen an Eval-Fälle oder Kontrollen hängen."
+      "readTimeMinutes": 1,
+      "content": "Vor der Veröffentlichung:\n\n- **Lokales ersetzen,** etwa Projekt- und Pfadnamen durch Platzhalter wie `<PROJECT>`.\n- **Umfang und Voraussetzungen nennen:** Einsatzfall, benötigte Quellen, erlaubte Aktionen.\n- **Ein geprüftes Beispiel mitgeben,** als Illustration markiert und ohne sensible Daten.\n- **Bekannte Fehler dokumentieren** und die wesentlichen an Eval-Fälle oder Kontrollen hängen."
     },
     {
       "id": "rituals",
       "title": "Regelmäßige kurze Reviews",
       "readTimeMinutes": 1,
-      "content": "Prüfe in einem kurzen, wiederkehrenden Review einen Ablauf, seine Belege und einen Fehlerfall. Ein Prompt kommt in die gemeinsame Bibliothek, wenn eine andere Person sein Ergebnis allein anhand der Dokumentation reproduziert."
+      "content": "Prüfe in einem kurzen, wiederkehrenden Review einen Ablauf, seine Belege und einen Fehlerfall. Ein Prompt kommt erst in die gemeinsame Bibliothek, wenn eine andere Person sein Ergebnis allein anhand der Dokumentation reproduziert."
     }
   ],
   "widgets": [
@@ -59,12 +59,12 @@
         "question": "Dein teamweit geteilter Prompt funktioniert für dich, aber nicht für andere. Was ist die wahrscheinlichste Ursache?",
         "options": [
           "Unterschiedliche Claude-Modelle.",
-          "Feste Projektnamen und Pfade und fehlende Hinweise, wann er passt.",
+          "Feste Projektnamen und Pfade, dazu kein Hinweis, wann er passt.",
           "Tageszeit.",
           "Nicht genügend Adjektive."
         ],
         "correct": 1,
-        "explanation": "Teilbare Prompts sind parametrisiert und dokumentiert. Spezifika raus, Einsatzfall rein, Beispielausgabe dazu.",
+        "explanation": "Teilbare Prompts sind parametrisiert und dokumentiert. Ersetze feste Namen durch Platzhalter, nenn den Einsatzfall und gib eine Beispielausgabe mit.",
         "title": "Kurzprüfung",
         "copy": {
           "kindLabel": "Kurzprüfung",

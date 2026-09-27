@@ -15,7 +15,7 @@ const COPY = {
     permanent:
       "Synchronisierung angehalten. Dein Fortschritt ist in diesem Browser gespeichert, neue Änderungen erreichen andere Geräte aber nicht.",
     retry_exhausted:
-      "Synchronisierung fehlgeschlagen. Dein Fortschritt ist in diesem Browser gespeichert und wird später übertragen.",
+      "Synchronisierung fehlgeschlagen. Dein Fortschritt ist in diesem Browser gespeichert und wird bei der nächsten Änderung oder Verbindung erneut gesendet.",
     startup:
       "Synchronisierung konnte nicht starten. Dein Fortschritt ist in diesem Browser gespeichert.",
   },
@@ -23,7 +23,7 @@ const COPY = {
     permanent:
       "Sync stopped. Your progress is saved in this browser, but new changes do not reach other devices.",
     retry_exhausted:
-      "Sync failed. Your progress is saved in this browser and will be sent later.",
+      "Sync failed. Your progress is saved in this browser and is sent again with your next change or when you are back online.",
     startup: "Sync could not start. Your progress is saved in this browser.",
   },
 } as const;

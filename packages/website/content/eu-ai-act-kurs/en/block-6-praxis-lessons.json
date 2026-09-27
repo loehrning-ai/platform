@@ -29,19 +29,19 @@
           "id": "block_6_lesson_1_section_1",
           "title": "Five steps for a defensible initial inventory",
           "readTimeMinutes": 2,
-          "content": "How long the inventory takes depends on the organisation, the number of systems, shadow IT, supplier records and the risk profile; there is no fixed time budget.\n\n**1. Build the inventory.** The record of processing activities under Article 30 GDPR shows AI-supported processing of personal data. Systems without personal data and shadow AI turn up through IT asset and SaaS registers, procurement, supplier contracts, billing, browser or SSO approvals and interviews.\n\n**2. Establish purpose and system boundary.** Write down which function actually runs; a product name says neither whether it uses AI nor what its intended purpose is.\n\n**3. Determine role and possible risk class.** Per system: prohibited practice under Article 5, high-risk under Article 6 with Annex I or III, transparency case under Article 50, or none, each with exceptions and application dates.\n\n**4. Collect evidence and assess gaps.** Provider information, contracts, instructions for use, data flows, oversight, logs, security and the duties of the use case. Article 26 reaches only deployers of high-risk systems, Article 50 only its own conditions.\n\n**5. Prioritise measures.** Every evidenced gap gets an owner, a deadline, a dependency and a verification criterion. The review cadence follows risk, change and legal developments instead of a quarterly rule."
+          "content": "How long the inventory takes depends on the organisation, the number of systems, shadow IT, supplier records and the risk profile; there is no fixed time budget.\n\n**1. Build the inventory.** The record of processing activities under Article 30 GDPR shows AI-supported processing of personal data. Systems without personal data and shadow AI turn up through IT asset and SaaS registers, procurement, supplier contracts, billing, browser or SSO approvals and interviews.\n\n**2. Establish purpose and system boundary.** Write down which function actually runs; a product name says neither whether it uses AI nor what its intended purpose is.\n\n**3. Determine role and possible risk class.** Per system: prohibited practice under Article 5, high-risk under Article 6 with Annex I or III, transparency case under Article 50, or none, each with exceptions and application dates.\n\n**4. Collect evidence and assess gaps.** Provider information, contracts, instructions for use, data flows, oversight, logs, security and the duties of the use case. Article 26 reaches only deployers of high-risk systems; Article 50 only the cases it lists.\n\n**5. Prioritise measures.** Every evidenced gap gets an owner, a deadline, a dependency and a verification criterion. The review cadence follows risk, change and legal developments."
         },
         {
           "id": "block_6_lesson_1_section_2",
           "title": "An inventory with traceable fields",
           "readTimeMinutes": 2,
-          "content": "The AI Act prescribes no spreadsheet format for deployers and no 14 mandatory columns. Take a tool that keeps responsibilities, access rights and changes manageable.\n\n**Useful fields:** system ID, name, version, provider, function actually used, intended and internal purpose, user groups, affected persons, data categories, integrations, your role, possible risk category with a rationale, relevant duties, approval status, responsible person, contractual and provider evidence, human oversight, logging, security controls, DPIA or FRIA status where applicable, incidents, last review, next trigger.\n\nReconcile the inventory with the step 1 sources and your DPIAs. Versioning and change history are good controls; whether the law requires them follows from the role and the duty. A spreadsheet alone is not evidence of compliance."
+          "content": "The AI Act prescribes no spreadsheet format for deployers. Take a tool that keeps responsibilities, access rights and changes manageable.\n\n**Useful fields:** system ID, name, version, provider, function actually used, intended and internal purpose, user groups, affected persons, data categories, integrations, your role, possible risk category with a rationale, relevant duties, approval status, responsible person, contractual and provider evidence, human oversight, logging, security controls, DPIA or FRIA status where applicable, incidents, last review, next trigger.\n\nReconcile the inventory with the step 1 sources and your DPIAs. Versioning and change history are good controls; whether the law requires them follows from the role and the duty. A spreadsheet alone is not evidence of compliance."
         },
         {
           "id": "block_6_lesson_1_section_3",
           "title": "Review questions that produce evidence",
           "readTimeMinutes": 1,
-          "content": "- **Which generative services are actually running?** Article 4 requires context-appropriate measures to support AI literacy; Article 50 bites only where its specific condition is met.\n- **Which HR function is active?** A system that reviews, filters or evaluates job applications may fall within Annex III, point 4(a). A brand name and an AI claim do not decide the classification.\n- **Is there use outside approved accounts?** Check with lawful, proportionate sources and a secure reporting route.\n- **Does a high-risk system generate logs under the deployer's control?** Article 26(6) governs their retention.\n- **Are current provider information and the instructions for use available?** Request, review and version what is actually supplied."
+          "content": "- **Which generative services are actually running?** Their users need Article 4 measures; check per service whether an Article 50 case applies.\n- **Which HR function is active?** A system that reviews, filters or evaluates job applications may fall within Annex III, point 4(a). A brand name and an AI claim do not decide the classification.\n- **Is there use outside approved accounts?** Check with lawful, proportionate sources and a secure reporting route.\n- **Does a high-risk system generate logs under the deployer's control?** Article 26(6) governs their retention.\n- **Are current provider information and the instructions for use available?** Request, review and version what is actually supplied."
         }
       ],
       "quiz": [
@@ -147,7 +147,7 @@
           "id": "block_6_lesson_2_section_1",
           "title": "Using a DPIA as a starting point",
           "readTimeMinutes": 2,
-          "content": "A DPIA under Article 35 GDPR replaces no AI Act duty; it makes information reusable. Article 26(9) requires deployers of high-risk systems to use the provider's Article 13 information for a DPIA where one is required. The overlap depends on the system, the data and the documentation; fixed coverage percentages are not reliable.\n\n**Assess separately:**\n- **GDPR:** legal basis, purpose limitation, data minimisation, data-subject rights, processing on behalf of a controller, transfers, security, Article 35.\n- **Deployer obligations under Article 26:** instructions for use, human oversight, input data and logs where controlled, monitoring, information for employees.\n- **Provider obligations:** such as the conformity assessment and the EU declaration of conformity, which a deployer does not issue merely by using the system.\n- **Article 4:** context-appropriate measures to support AI literacy, with no prescribed training plan or attestation.\n\nArticle 27(4) allows a FRIA and a DPIA to be conducted together, provided both subject matters are covered."
+          "content": "A DPIA under Article 35 GDPR replaces no AI Act duty; it makes information reusable. Article 26(9) requires deployers of high-risk systems to use the provider's Article 13 information for a DPIA where one is required. The overlap depends on the system, the data and the documentation; fixed coverage percentages are not reliable.\n\n**Assess separately:**\n- **GDPR:** legal basis, purpose limitation, data minimisation, data-subject rights, processing on behalf of a controller, transfers, security, Article 35.\n- **Deployer obligations under Article 26:** instructions for use, human oversight, input data and logs where controlled, monitoring, information for employees and further duties by use case.\n- **Provider obligations:** such as the conformity assessment and the EU declaration of conformity, which a deployer does not issue merely by using the system.\n- **Article 4:** context-appropriate measures to support AI literacy, with no prescribed training plan or attestation.\n\nDeployers within Article 27 may conduct a FRIA together with a DPIA, provided both subject matters are covered (Article 27(4))."
         },
         {
           "id": "block_6_lesson_2_section_2",
@@ -157,7 +157,7 @@
         },
         {
           "id": "block_6_lesson_2_section_3",
-          "title": "The crosswalk: identifying additional work",
+          "title": "Crosswalk: what is additional",
           "readTimeMinutes": 1,
           "content": "A crosswalk puts common ground and differences side by side and so saves duplicate work.\n\n- A data-processing agreement under Article 28 GDPR applies only to processing on behalf of a controller; procurement and AI Act assurances are assessed separately by role and system.\n- Documentation of technical and organisational measures can reuse security controls. Article 15 addresses providers of high-risk systems; deployers have their own Article 26 and data-protection duties.\n- Information under Articles 13 and 14 GDPR and under Article 26(11) of the AI Act has different conditions and content.\n- The data protection officer may be involved. The AI Act does not require an “AI officer”; you settle responsibility, independence and conflicts of interest yourself.\n\n**Additional review fields:** deployer logs (Article 26(6)), employee information (paragraph 7), EU database duties by role, Article 4 measures, response to risks and incidents (Article 26(5)), Article 22 GDPR for automated decisions."
         }
@@ -196,22 +196,22 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Yes. The DPIA covers every AI Act obligation.",
+              "text": "Yes. The DPIA covers every AI Act obligation",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "No. It can support the analysis; deployer and provider duties are assigned separately.",
+              "text": "No. It can support the analysis; deployer and provider duties stay separate",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "No. A DPIA is unrelated to the AI Act.",
+              "text": "No. A DPIA is unrelated to the AI Act",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Only a DPIA older than 24 months must be supplemented.",
+              "text": "Only a DPIA older than 24 months must be supplemented",
               "isCorrect": false
             }
           ],
@@ -271,13 +271,13 @@
           "id": "block_6_lesson_3_section_2",
           "title": "What working templates may contain",
           "readTimeMinutes": 2,
-          "content": "**AI acceptable-use policy:** scope, permitted and excluded use cases, data classes, approval routes, human review, rights, incidents, contacts, change process. The AI Act does not require a file of that name.\n\n**Article 4 working framework:** record role, prior knowledge, context of use, affected persons and risks, and derive learning, instruction and control measures from them. The Commission names no mandatory format, no minimum hours and no mandatory attestation.\n\n**Procurement and contract checklist:** provider information under Article 13, purpose, system version, performance limits, updates, logs, security, support, incidents, data processing, exit, evidence. Audit rights, contractual penalties, reporting cycles or a German-language requirement are negotiation points.\n\n**Incident-response worksheet:** on a risk or a serious incident, Article 26(5) governs notification and suspension by the deployer; the reporting duty and periods for providers sit in Article 73. Authority and reporting route depend on the implementation and the sector."
+          "content": "**AI acceptable-use policy:** scope, permitted and excluded use cases, data classes, approval routes, human review, rights, incidents, contacts, change process. The AI Act does not require a file of that name.\n\n**Article 4 working framework:** record role, prior knowledge, context of use, affected persons and risks, and derive learning, instruction and control measures from them. The Commission names no mandatory format, no minimum hours and no mandatory attestation.\n\n**Procurement and contract checklist:** provider information under Article 13, purpose, system version, performance limits, updates, logs, security, support, incidents, data processing, exit, evidence. Audit rights, contractual penalties, reporting cycles or a German-language requirement are negotiation points.\n\n**Incident-response worksheet:** where there is reason to consider a risk, or on a serious incident, Article 26(5) governs notification and suspension by the deployer; the reporting duty and periods for providers sit in Article 73. Authority and reporting route depend on the implementation and the sector."
         },
         {
           "id": "block_6_lesson_3_section_3",
           "title": "Storage and maintenance responsibilities",
           "readTimeMinutes": 1,
-          "content": "**Storage:** a controlled system with clear owners, appropriate access rights, versioning, retention and recovery, such as Git or SharePoint; the AI Act prescribes neither.\n\n**Maintenance:** name a responsible function; the AI Act does not require an “AI officer”. Review on changes to the system, purpose, provider, model or data, after incidents and legal changes, plus a risk-appropriate interval. A generic quarterly cadence is not an authority-mandated rule.\n\n**Sources:**\n- EUR-Lex and the European Commission for the text of the Regulation, its timeline, guidance and AI-literacy questions and answers\n- data-protection supervisory authorities for GDPR guidance\n- the competent national and sectoral authorities for current enforcement and reporting information"
+          "content": "**Storage:** a controlled system with clear owners, appropriate access rights, versioning, retention and recovery, such as Git or SharePoint; the AI Act prescribes neither.\n\n**Maintenance:** name a responsible function. Review on changes to the system, purpose, provider, model or data, after incidents and legal changes, plus a risk-appropriate interval. The AI Act sets no fixed review interval.\n\n**Sources:**\n- EUR-Lex and the European Commission for the text of the Regulation, its timeline, guidance and AI-literacy questions and answers\n- data-protection supervisory authorities for GDPR guidance\n- the competent national and sectoral authorities for current enforcement and reporting information"
         }
       ],
       "quiz": [
@@ -287,22 +287,22 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Adaptable working tools with no prescribed format; duties assessed per system and role.",
+              "text": "Adaptable tools with no prescribed format; duties assessed per system and role",
               "isCorrect": true
             },
             {
               "id": "b",
-              "text": "Four documents are always mandatory and four are always voluntary.",
+              "text": "Four documents are always mandatory and four are always voluntary",
               "isCorrect": false
             },
             {
               "id": "c",
-              "text": "All eight documents are prescribed EU forms.",
+              "text": "All eight documents are prescribed EU forms",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Completing all eight documents automatically proves compliance.",
+              "text": "Completing all eight documents automatically proves compliance",
               "isCorrect": false
             }
           ],
@@ -314,22 +314,22 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "On changes and incidents, plus a risk-based interval.",
+              "text": "On changes and incidents, plus a risk-based interval",
               "isCorrect": true
             },
             {
               "id": "b",
-              "text": "Exactly once per quarter, as required by law.",
+              "text": "Exactly once per quarter, as required by law",
               "isCorrect": false
             },
             {
               "id": "c",
-              "text": "Only during an authority inspection.",
+              "text": "Only during an authority inspection",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Never, once the records have been created.",
+              "text": "Never, once the records have been created",
               "isCorrect": false
             }
           ],
@@ -341,22 +341,22 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Two days",
+              "text": "Providers report within two days",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Providers report within 10 days of awareness; deployers follow Article 26(5).",
+              "text": "Providers report immediately, within 10 days of awareness at the latest",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "15 days",
+              "text": "Providers report within 15 days",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "72 hours",
+              "text": "Providers report within 72 hours",
               "isCorrect": false
             }
           ],
@@ -383,11 +383,11 @@
           "id": "block_6_lesson_4_section_1",
           "title": "Classification and duties under Article 26",
           "readTimeMinutes": 2,
-          "content": "**Fictional facts:** XY GmbH, a machinery manufacturer in Bavaria with 200 employees, buys a CV-screening system that ranks CVs by a match score and prepares a shortlist. Product and function are invented.\n\n**Step 1, Article 5:** the purpose is none of the practices prohibited there; the specific implementation still has to be assessed.\n\n**Step 2, Article 6 and Annex III:** point 4(a) covers AI for recruitment or selection, in particular to analyse and filter job applications. The use case generally falls within it; any exception under Article 6(3) is assessed separately.\n\n**Roles and timeline:** XY GmbH is the deployer, and the supplier stays the provider as long as no change of role under Article 25 occurs. For standalone Annex III systems, Regulation (EU) 2026/1744, applicable since 27 July 2026, applies the high-risk rules from **2 December 2027**.\n\n**Deployer obligations under Article 26 from that date:**\n- Paragraph 1: use in accordance with the instructions, with technical and organisational measures.\n- Paragraphs 2 and 3: human oversight by competent, trained persons with authority and support; watch automation bias.\n- Paragraph 4: input data the deployer controls must be relevant and sufficiently representative for the purpose.\n- Paragraph 5: monitor operation; on a risk or a serious incident, inform the provider or distributor and the market-surveillance authority and suspend use.\n- Paragraph 6: retain automatically generated logs under the deployer's control for at least six months, unless applicable law provides otherwise.\n- Paragraph 7: before use, inform workers' representatives and the affected workers.\n- Paragraph 9: use provider information for a DPIA, which Article 35 GDPR requires where a high risk is likely; not every HR system needs one.\n- Paragraph 11: inform affected persons when the system makes or assists in decisions about them."
+          "content": "**Fictional facts:** XY GmbH, a machinery manufacturer in Bavaria with 200 employees, buys a CV-screening system that ranks CVs by a match score and prepares a shortlist. Product and function are invented.\n\n**Step 1, Article 5:** the purpose is none of the practices prohibited there; the specific implementation still has to be assessed.\n\n**Step 2, Article 6 and Annex III:** point 4(a) covers AI for recruitment or selection, in particular to analyse and filter job applications. The use case falls within it unless an exception under Article 6(3) applies.\n\n**Roles and timeline:** XY GmbH is the deployer, and the supplier stays the provider as long as no change of role under Article 25 occurs. For standalone Annex III systems, Regulation (EU) 2026/1744, applicable since 27 July 2026, applies the high-risk rules from **2 December 2027**.\n\n**Deployer obligations under Article 26 from that date:**\n- Paragraph 1: use in accordance with the instructions, with technical and organisational measures.\n- Paragraphs 2 and 3: human oversight by competent, trained persons with authority and support; watch automation bias.\n- Paragraph 4: input data the deployer controls must be relevant and sufficiently representative for the purpose.\n- Paragraph 5: monitor operation; where there is reason to consider a risk, or on a serious incident, inform the provider or distributor and the market-surveillance authority and suspend use.\n- Paragraph 6: retain automatically generated logs under the deployer's control for at least six months, unless applicable law provides otherwise.\n- Paragraph 7: before workplace use, inform workers' representatives and the affected workers.\n- Paragraph 9: use provider information for a DPIA, which Article 35 GDPR requires where a high risk is likely; not every HR system needs one.\n- Paragraph 11: inform affected persons when the system makes or assists in decisions about them."
         },
         {
           "id": "block_6_lesson_4_section_2",
-          "title": "Article 27: no FRIA solely because of this use",
+          "title": "FRIA, roles and parallel law",
           "readTimeMinutes": 2,
           "content": "**FRIA:** Article 27(1) covers bodies governed by public law, private entities providing public services and deployers of specified systems under Annex III, point 5(b) and (c). Employment AI under Annex III, point 4, is not among them. A private machinery manufacturer using the system only for its own recruitment therefore needs no FRIA under Article 27 alone.\n\n**Keep provider and deployer apart:**\n- The conformity assessment (Article 43) and the EU declaration of conformity (Article 47) sit with the provider, as long as no change of role under Article 25 shifts duties. The deployer checks documentation, marking and the instructions for use.\n- Providers of Annex III high-risk systems register under Article 49. Article 26(8) also requires deployers that are Union authorities, institutions or bodies to register; private deployers do not.\n\n**Parallel law:**\n- **Section 87(1), point 6, of the Works Constitution Act (BetrVG):** co-determination can apply where its conditions are met and a works council exists.\n- **General Equal Treatment Act (AGG):** discrimination can trigger claims under section 15 and the evidential rule in section 22; amount and limits depend on the facts.\n- **Article 22 GDPR:** assess whether a decision based solely on automated processing produces legal effects or similarly significantly affects a person, whether an exception applies and which safeguards are required. A merely formal human step does not reliably remove the solely automated character."
         },
@@ -395,7 +395,7 @@
           "id": "block_6_lesson_4_section_3",
           "title": "Procurement review fields for the fictional system",
           "readTimeMinutes": 1,
-          "content": "The AI Act prescribes no catalogue of eight contract clauses; procurement still has to secure the information and assistance that lawful operation needs.\n\n**Possible review fields (implementation choices rather than a statutory clause list):**\n- intended purpose, system and model version, performance limits and instructions for use under Article 13;\n- evidence of the provider role, CE marking and EU declaration of conformity where applicable;\n- quality, bias, robustness and security testing proportionate to the risk;\n- notification and documentation of material updates;\n- access to logs and information the deployer needs for Article 26 and data protection;\n- support on risks, incidents, data-subject rights, authority requests, exit and deletion of data.\n\nReporting frequency, response periods, audit rights, liability, contractual penalties, language, governing law and jurisdiction are negotiation points. In an incident XY GmbH follows Article 26(5); the provider performs its reporting duty under Article 73."
+          "content": "Procurement has to secure the information and assistance that lawful operation needs.\n\n**Possible review fields (implementation choices rather than a statutory clause list):**\n- intended purpose, system and model version, performance limits and instructions for use under Article 13;\n- evidence of the provider role, CE marking and EU declaration of conformity where applicable;\n- quality, bias, robustness and security testing proportionate to the risk;\n- notification and documentation of material updates;\n- access to logs and information the deployer needs for Article 26 and data protection;\n- support on risks, incidents, data-subject rights, authority requests, exit and deletion of data.\n\nReporting frequency, response periods, audit rights, liability, contractual penalties, language, governing law and jurisdiction are negotiation points. In an incident XY GmbH follows Article 26(5); the provider performs its reporting duty under Article 73."
         }
       ],
       "quiz": [
@@ -405,26 +405,26 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Yes. Every deployment of high-risk AI triggers a FRIA.",
+              "text": "Yes. Every deployment of high-risk AI triggers a FRIA",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "No. Article 27(1) covers public bodies and Annex III, point 5(b) or (c).",
+              "text": "No. HR AI under Annex III, point 4, is outside Article 27",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "Yes, because HR AI affects fundamental rights.",
+              "text": "Yes, because HR AI affects fundamental rights",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "No, because a DPIA replaces the FRIA completely.",
+              "text": "No, because a DPIA replaces the FRIA completely",
               "isCorrect": false
             }
           ],
-          "explanation": "Article 27(1) also covers private providers of public services, but not a private employer merely because of HR AI under Annex III, point 4. A DPIA is assessed separately under Article 35 GDPR."
+          "explanation": "Article 27(1) covers public bodies, private providers of public services and Annex III, point 5(b) or (c), but not a private employer merely because of HR AI under Annex III, point 4. A DPIA is assessed separately under Article 35 GDPR."
         },
         {
           "id": "block_6_lesson_4_q2",
@@ -459,22 +459,22 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Only the EU AI Act; it displaces all other law.",
+              "text": "Only the EU AI Act; it displaces all other law",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "The AI Act, the GDPR (Articles 22 and 35), the AGG, and co-determination where applicable.",
+              "text": "The AI Act, GDPR (Articles 22, 35), AGG and co-determination where applicable",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "The AI Act and GDPR; the AGG does not apply to AI.",
+              "text": "The AI Act and GDPR; the AGG does not apply to AI",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Only the GDPR and BetrVG; the AI Act only applies from 2027.",
+              "text": "Only the GDPR and BetrVG; the AI Act only applies from 2027",
               "isCorrect": false
             }
           ],

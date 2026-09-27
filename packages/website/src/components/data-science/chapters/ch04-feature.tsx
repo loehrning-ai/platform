@@ -34,12 +34,13 @@ export default function Ch04Feature() {
         <SectionLabel n="04.1">Encoding categorical features</SectionLabel>
         <h2 className="h2">Four encodings and one common mistake</h2>
         <p className="prose">
-          <strong>One-hot</strong> maps nominal values without an order and
-          costs a column per category. <strong>Target encoding</strong> uses
-          labels, so it needs fold-local estimation, smoothing and a rule for
-          unknown categories. Integer codes impose an order on models that read
-          numeric distance; frequency encoding merges equally frequent
-          categories.
+          <strong>One-hot</strong> maps nominal values without an order,
+          costs a column per category and needs a rule for unknown categories.{" "}
+          <strong>Target encoding</strong> uses labels, so it also needs
+          fold-local estimation and smoothing. Integer codes impose an order on
+          models that read numeric distance; frequency encoding fits when
+          frequency carries signal and target leakage must be ruled out, but it
+          merges equally frequent categories.
         </p>
         <EncodingComparison />
       </section>
@@ -51,19 +52,13 @@ export default function Ch04Feature() {
           "<b>One-hot encoding high-cardinality IDs without a resource plan.</b> Compare hashing, grouped categories and learned encoders under your memory and validation limits; no category count works as a universal cutoff.",
         ]}
       />
-      <BestPractices
-        items={[
-          "<b>Frequency encoding</b> when frequency is informative and target leakage must be ruled out.",
-        ]}
-      />
 
       <section className="section">
         <SectionLabel n="04.2">Polynomial feature expansion</SectionLabel>
         <h2 className="h2">With x², a linear model can bend.</h2>
         <p className="prose">
-          A linear model draws straight lines. Add <code>x²</code> and{" "}
-          <code>x³</code> as features and it fits curves without a model
-          change. Too few terms underfit, too many learn noise.
+          With <code>x²</code> and <code>x³</code> as features, a linear model
+          fits curves without a change of model.
         </p>
         <PolynomialExpansion />
       </section>
@@ -101,20 +96,18 @@ export default function Ch04Feature() {
           In an interaction, the effect of A depends on B: an ad&apos;s
           relevance matters differently for different viewers, and a drug
           works differently by patient age. Linear models need an explicit A×B
-          feature; tree models learn interactions themselves.
+          feature; tree models can learn them through splits, depending on
+          depth, sample size and regularization. Two-way partial dependence,
+          SHAP interaction values or nested-model comparisons suggest
+          candidates; split importance alone does not identify a pair.
         </p>
         <InteractionTerms />
       </section>
 
-      <BestPractices
-        items={[
-          "<b>Use interaction-specific diagnostics.</b> Two-way partial dependence, SHAP interaction values or nested-model comparisons can suggest candidates; split importance alone does not identify a pair.",
-        ]}
-      />
 
       <Takeaway
         items={[
-          "<b>Polynomial expansion changes bias and variance.</b> The 40-point demo makes higher degrees unstable; pick basis and regularization fold-locally on the real design.",
+          "<b>Polynomial expansion changes bias and variance.</b> With 40 points, higher degrees turn unstable in the demo. Choose basis and regularization within each training fold of your real data.",
           "<b>Interaction searches create multiplicity.</b> Start from domain hypotheses, control the search inside validation and confirm kept terms on untouched data.",
         ]}
       />

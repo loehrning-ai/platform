@@ -8,12 +8,12 @@ description: Hilf jemandem, mit CV Engine einen einseitigen Lebenslauf aus YAML 
 CV Engine ist ein offenes Werkzeug der loehrning.ai-Sammlung. Es baut aus einer
 YAML-Datei einen einseitigen Lebenslauf als PDF, mit einem Browser-Editor und
 einer A4-Vorschau daneben. Passt der Inhalt nicht auf eine Seite, bricht der Build
-ab und druckt keine zweite Seite. Diese Überlaufmeldung ist die Rückmeldung an die
-Person.
+ab und druckt keine zweite Seite. Die Überlaufmeldung zeigt der Person, dass sie
+kürzen muss.
 
-Eine gehostete Instanz gibt es nicht und ist nicht geplant, weil ein gehosteter
-Editor den Lebenslauf jedes Menschen bekäme, der ihn öffnet. Die Person betreibt
-das Werkzeug auf dem eigenen Rechner.
+Es gibt keine gehostete Instanz, und keine ist geplant: ein gehosteter Editor
+bekäme den Lebenslauf jedes Menschen, der ihn öffnet. Die Person betreibt das
+Werkzeug auf dem eigenen Rechner.
 
 Das Werkzeug ist experimentell: Schema in `cv.yaml` und Vorlagen können sich
 ändern. Sag das, bevor jemand eine halbe Stunde in eine Konfiguration steckt.
@@ -27,8 +27,8 @@ Hol dir die aktuellen Angaben aus diesen Quellen:
   Plattform.
 - `https://loehrning.ai/open-source/tools/cv-engine` zeigt dieselben Schritte für
   Menschen.
-- Das Repository liegt unter `https://github.com/loehrning-ai/cv-engine`, Lizenz
-  MIT.
+- Das Repository liegt unter `https://github.com/loehrning-ai/cv-engine`
+  (Lizenz MIT).
 
 Diese Datei nennt keine Befehle, weil Anleitung, Screenshots und Prüfsummen zu
 genau einem Quellstand gehören. Nimm die Schritte aus dem Register, zeig sie der
@@ -53,7 +53,7 @@ Zitiere daraus nur, was der Schritt braucht, und kopiere ihn nirgendwohin.
 ## Die Datenwege
 
 Lies vor jeder Konfiguration `docs/data-flow.md` im Repository. Das Diagramm dort
-zeigt, welcher Weg lokal bleibt. Kurz:
+zeigt, welcher Weg lokal bleibt:
 
 - Der Kern rendert vollständig lokal. `cv.yaml`, Schriften und CSS liegen im
   Checkout, der PDF-Build öffnet keinen Socket und braucht keinen Schlüssel.
@@ -65,8 +65,9 @@ zeigt, welcher Weg lokal bleibt. Kurz:
   mit dem Schlüssel der Person. Zeigen sie auf ein lokales Modell, bleibt auch
   dieser Aufruf auf ihrem Rechner.
 
-Fragt jemand, ob Daten das Gerät verlassen, erklär es in dieser Reihenfolge. Kurz
-gesagt: nur mit eingeschalteten KI-Funktionen, zum selbst gewählten Anbieter.
+Fragt jemand, ob Daten das Gerät verlassen, erklär die Wege in dieser
+Reihenfolge. Die Antwort: nur wenn die KI-Funktionen eingeschaltet sind, und dann
+zum selbst gewählten Anbieter.
 
 ## Voraussetzungen
 
@@ -75,13 +76,11 @@ Pango und Cairo als Systembibliotheken. Fehlen sie, scheitert schon der erste
 Build mit einer Meldung aus der Bibliothek statt aus dem Werkzeug. Hier biegt die
 Fehlersuche am häufigsten falsch ab: lies die Meldung, bevor du am YAML zweifelst.
 
-Einen eigenen Schlüssel braucht nur der Import aus PDF oder DOCX und das
-Generieren von Textbausteinen. Formular, Vorschau und PDF-Build funktionieren
+Die Person braucht einen eigenen Schlüssel nur für den Import aus PDF oder DOCX
+und für generierte Textbausteine. Formular, Vorschau und PDF-Build funktionieren
 ohne. Sag das, wenn jemand meint, erst etwas besorgen zu müssen.
 
-## Wo du wirklich hilfst
-
-Beim Inhalt hilfst du mehr als bei der Installation.
+## Beim Inhalt helfen
 
 **Überlauf beheben.** Kürze in dieser Reihenfolge: erst Stationen, die für die
 Zielrolle nichts beitragen, dann Aufzählungen, die dasselbe zweimal sagen, dann
@@ -103,11 +102,11 @@ später gegen die Vorlage.
 ## Wenn etwas nicht geht
 
 Ein unbekannter Slug liefert `unknown_tool_slug` mit dem Hinweis auf
-`list_open_source_tools`. Zeig dann die Liste, statt zu raten.
+`list_open_source_tools`. Zeig dann diese Liste.
 
 Bricht der Build ab, prüf zuerst, ob es eine Überlaufmeldung ist oder ein Fehler
-aus WeasyPrint. Das sind zwei verschiedene Probleme, und wer sie verwechselt,
-verliert die meiste Zeit.
+aus WeasyPrint. Das sind zwei verschiedene Probleme; wer sie verwechselt, sucht
+an der falschen Stelle.
 
 Fragen zum Werkzeug gehören ins Repository; Antworten auf Issues sind nicht
 zugesagt.
@@ -123,15 +122,16 @@ Lernstand und den nächsten Schritt; Lebenslauf-Dokumente listet sie nicht.
 CV Engine is an open tool from the loehrning.ai collection. It builds a one-page
 CV as a PDF from a YAML file, with a browser editor and an A4 preview beside it.
 When the content does not fit one page, the build stops and prints no second
-page; that overflow message is the feedback.
+page; the overflow message tells the person to cut.
 
 There is no hosted instance and none is planned, because a hosted editor would
-receive the CV of whoever opened it. The person runs the tool on their own machine.
-The tool is experimental: the `cv.yaml` schema and the templates can change. Say
+receive the CV of whoever opened it. The person runs the tool on their own
+machine. The tool is experimental: the `cv.yaml` schema and the templates can change. Say
 so before anyone invests half an hour in a configuration.
 
-Get current facts from these sources: `get_open_source_tool` with the slug `cv-engine` returns prerequisites, installation steps and the pinned
-source revision from the platform registry; the guide at
+Get current facts from these sources: `get_open_source_tool` with the slug
+`cv-engine` returns prerequisites, installation steps and the pinned source
+revision from the platform registry; the guide at
 `https://loehrning.ai/open-source/tools/cv-engine` shows the same steps for people;
 the repository is `https://github.com/loehrning-ai/cv-engine` under MIT. This file
 carries no commands, because the guide, the screenshots and the checksums belong
@@ -144,14 +144,17 @@ key where the tool asks for it, and you never request one in chat, read one out,
 write one to a file or propose a value. A CV carries a name, an address and a
 work history, so quote only what the step needs and copy it nowhere.
 
-Data paths, in this order. Read `docs/data-flow.md` in the repository before
-configuring anything. The core renders fully locally: `cv.yaml`, fonts and CSS
-sit in the checkout, and the PDF build opens no socket and needs no key. Without
-further configuration the browser editor talks only to `127.0.0.1` and keeps its
-documents in the server's memory; they persist only when someone runs the Supabase
-variant themselves. Only the optional AI features for import and generated text go
-outside, with the person's own key, and pointed at a local model that call stays
-on the machine too.
+Read `docs/data-flow.md` in the repository before configuring anything.
+
+When someone asks whether data leaves the device, explain the paths in this
+order. The core renders fully locally: `cv.yaml`, fonts and CSS sit in the
+checkout, and the PDF build opens no socket and needs no key. Without further
+configuration the browser editor talks only to `127.0.0.1` and keeps its
+documents in the server's memory; they persist only when someone runs the
+Supabase variant themselves, in their own project. Only the optional AI features
+for import and generated text go outside, with the person's own key; if they
+point at a local model, that call stays on the machine too. So data leaves only
+with the AI features on, and only to the provider the person chose.
 
 Prerequisites: CPython 3.13, plus Pango and Cairo as system libraries for
 WeasyPrint. Without them the first build fails with an error from the library
@@ -169,9 +172,10 @@ hold up in the interview. Keep formatting out of the YAML: the template owns
 appearance and `cv.yaml` owns text.
 
 When something breaks: an unknown slug returns `unknown_tool_slug` pointing at
-`list_open_source_tools`, so show the list instead of guessing. When the build
+`list_open_source_tools`, so show that list. When the build
 stops, first check whether it is an overflow message or a WeasyPrint error;
-confusing the two costs the most time. Questions about the tool belong in the
+they are different problems, and confusing them sends you looking in the wrong
+place. Questions about the tool belong in the
 repository; answers to issues are not promised.
 
 CV Engine needs no loehrning.ai account, and nothing built locally is sent to the

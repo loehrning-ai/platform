@@ -85,7 +85,7 @@ const COURSE_HUB_COPY: Readonly<Record<Locale, CourseHubCopy>> = {
       "Der Kurs ordnet veröffentlichte Forschung und dokumentierte Fallbeispiele ein. Quellen und Prüfstände stehen in den Lektionen. Er ersetzt keine Rechts-, Berufs- oder Einzelfallberatung.",
     importSuccess: "Fortschritt importiert.",
     importError:
-      "Der Fortschrittslink ist ungültig oder veraltet. Nichts wurde importiert.",
+      "Der Fortschrittslink ist ungültig oder veraltet. Es wurde nichts importiert.",
     overall: "Gesamtfortschritt",
     lessons: "Lektionen",
     blocks: "Blöcke",

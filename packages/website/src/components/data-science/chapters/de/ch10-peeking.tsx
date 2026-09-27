@@ -35,15 +35,13 @@ export default function Ch10PeekingDe() {
           Wer einen Test für eine feste Stichprobe wiederholt prüft und beim
           ersten p&lt;0.05 abbricht, hält die nominellen 5% für das Experiment
           nicht mehr ein. Die echte Rate hängt an Prüfplan, maximaler
-          Stichprobe, Ergebnismodell und Abhängigkeit der Prüfungen; der
-          Simulator schätzt eine konfigurierte Anordnung, keine allgemeine
-          Peeking-Rate.
+          Stichprobe, Ergebnismodell und Abhängigkeit der Prüfungen.
         </p>
         <PeekingSimulator />
         <AntiPatterns
           title="Fehlmuster"
           items={[
-            '<strong>"Gestern war es signifikant":</strong> Der p-Wert ist eine Zufallsvariable, und ein einzelner Ausschlag unter den Grenzwert ist keine Entdeckung.',
+            '<strong>„Gestern war es signifikant“:</strong> Der p-Wert ist eine Zufallsvariable, und ein einzelner Ausschlag unter den Grenzwert ist keine Entdeckung.',
             "<strong>HARKing (Hypothesising After Results are Known):</strong> Ein erst nach Sichtung der Daten gefundenes Muster ist explorativ und braucht Bestätigung auf neuen Daten.",
           ]}
         />
@@ -64,9 +62,7 @@ export default function Ch10PeekingDe() {
         </h2>
         <p className="prose">
           Die Family-Wise Error Rate (FWER) für <em>n</em> unabhängige Tests bei
-          α = 0.05 lautet 1 − (1 − 0.05)ⁿ, bei n = 20 etwa 64%. Die Formel
-          unterstellt unabhängige Tests und gültige Null-p-Werte; Abhängigkeit
-          verschiebt die Rate.
+          α = 0.05 lautet 1 − (1 − 0.05)ⁿ, bei n = 20 etwa 64%.
         </p>
         <MultipleTesting />
         <AntiPatterns
@@ -87,8 +83,7 @@ export default function Ch10PeekingDe() {
       <section className="section">
         <SectionLabel n="10.3">CUPED</SectionLabel>
         <h2 className="h2">
-          Vorperiodeninformationen können die Varianz unter passenden Annahmen
-          senken.
+          Daten aus der Vorperiode senken die Varianz des Schätzers.
         </h2>
         <p className="prose">
           CUPED (Controlled-experiment Using Pre-Experiment Data) baut aus einer
@@ -117,25 +112,23 @@ export default function Ch10PeekingDe() {
         </h2>
         <p className="prose">
           Power = P(H₀ verwerfen | H₁ gilt). Eine Studie mit zu geringer Power
-          übersieht echte Effekte und belegt trotzdem einen Experimentplatz. In
-          üblichen Näherungen für zwei Gruppen vervierfacht ein halbierter
-          minimal nachweisbarer Effekt (MDE) ungefähr die Stichprobe, bei
-          gleicher Varianz, α, Power und Zuteilung. Rechne die Power{" "}
+          übersieht echte Effekte und belegt trotzdem einen Experimentplatz.
+          Rechne die Power{" "}
           <em>vor</em> der Erhebung und nenn das Modell.
         </p>
         <PowerCalculator />
         <AntiPatterns
           title="Fehlmuster"
           items={[
-            "<strong>MDE bei der Laufzeitplanung ignorieren:</strong> Ein Test mit 30% Power besteht überwiegend aus Rauschen.",
-            '<strong>Nullergebnisse aus Tests mit zu geringer Power</strong> als "kein Effekt gefunden" berichten: Fehlende Evidenz ≠ Evidenz für das Fehlen.',
+            "<strong>MDE bei der Laufzeitplanung ignorieren:</strong> Ein Test mit 30% Power übersieht einen echten Effekt dieser Größe in 7 von 10 Fällen.",
+            '<strong>Nullergebnisse aus Tests mit zu geringer Power</strong> als „kein Effekt gefunden“ berichten: Ein Nullergebnis mit geringer Power schließt den Effekt nicht aus.',
           ]}
         />
         <BestPractices
           title="Bewährte Verfahren"
           items={[
             "Das Power-Ziel, häufig 80% oder 90%, aus den Kosten übersehener Effekte und der verfügbaren Stichprobe ableiten; kein Wert gilt universell.",
-            "Historische Varianz und Konversionsrate verwenden und Sensitivität gegenüber Drift, Ausfällen, ungleicher Zuteilung und Multiplizität prüfen.",
+            "Historische Varianz und Konversionsrate verwenden, einen CUPED-Gewinn erst nach Messung einrechnen und Sensitivität gegenüber Drift, Ausfällen, ungleicher Zuteilung und Multiplizität prüfen.",
           ]}
         />
       </section>
@@ -143,7 +136,7 @@ export default function Ch10PeekingDe() {
       <Takeaway
         title="Kernaussagen"
         items={[
-          "<b>Vorabregistrierung trennt Bestätigung von Exploration.</b> Primärmetrik, Analyse, Stoppregel und Ausschlüsse festhalten, bevor jemand Ergebnisse sieht.",
+          "<b>Vorabregistrierung trennt Bestätigung von Exploration.</b> Primärmetrik, Analyse, Stoppregel und Ausschlüsse festhalten, bevor jemand Ergebnisse sieht; Sekundärmetriken informieren, entscheiden aber nicht.",
         ]}
       />
     </DataScienceLocaleProvider>

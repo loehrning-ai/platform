@@ -85,7 +85,7 @@ const COURSE_HUB_COPY: Readonly<Record<Locale, CourseHubCopy>> = {
       "Dieser Kurs vermittelt Wissen über KI-Kompetenz nach Artikel 4 der EU-KI-Verordnung. Er ersetzt keine Rechtsberatung oder organisationsbezogene Compliance-Prüfung.",
     importSuccess: "Fortschritt importiert.",
     importError:
-      "Der Fortschrittslink ist ungültig oder veraltet. Nichts wurde importiert.",
+      "Der Fortschrittslink ist ungültig oder veraltet. Es wurde nichts importiert.",
     overall: "Gesamtfortschritt",
     lessons: "Lektionen",
     blocks: "Blöcke",

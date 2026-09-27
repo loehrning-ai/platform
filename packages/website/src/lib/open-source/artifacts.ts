@@ -1357,9 +1357,9 @@ const CV_ENGINE_TOOL_ARTIFACT = {
   guide: {
     status: "experimental",
     statusNote:
-      "Das Schema in cv.yaml und die Vorlagen können sich noch ändern, es gibt keine gehostete Instanz, und Antworten auf Issues sind nicht garantiert. Du betreibst das Werkzeug selbst auf deinem Rechner. Lies vor dem Konfigurieren docs/data-flow.md im Repository; das Diagramm zeigt, welche Datenwege lokal bleiben.",
+      "Das Schema in cv.yaml und die Vorlagen können sich noch ändern, es gibt keine gehostete Instanz, und Antworten auf Issues sind nicht garantiert. Du betreibst das Werkzeug selbst auf deinem Rechner. Lies vor dem Konfigurieren docs/data-flow.md im Repository. Das Diagramm darin zeigt, welche Datenwege lokal bleiben.",
     dataFlow:
-      "Der Kern rendert vollständig lokal: cv.yaml, Schriften und CSS bleiben im Checkout, und der PDF-Build öffnet keinen Socket und braucht keinen API-Schlüssel. Ohne Konfiguration spricht der Browser-Editor nur mit 127.0.0.1 und hält Dokumente im Arbeitsspeicher des Servers; dauerhaft speichert erst die Supabase-Variante in deinem eigenen Projekt. Nach außen gehen nur die optionalen KI-Funktionen für Import und Textgenerierung, mit deinem eigenen Schlüssel, und mit einem lokalen Ollama bleibt auch dieser Aufruf auf deinem Rechner.",
+      "Der Kern rendert lokal: cv.yaml, Schriften und CSS bleiben im Checkout, der PDF-Build öffnet keinen Socket und braucht keinen API-Schlüssel. Ohne Konfiguration spricht der Editor nur mit 127.0.0.1 und hält Dokumente im Arbeitsspeicher; dauerhaft speichert nur die selbst betriebene Supabase-Variante (DEPLOY.md). Optionaler KI-Import und Textgenerierung rufen mit deinem Schlüssel nach außen oder bleiben mit Ollama lokal.",
     prerequisites: [
       {
         label: "Python 3.13",
@@ -1432,7 +1432,7 @@ const CV_ENGINE_TOOL_ARTIFACT = {
         {
           title: "Formular und Vorschau ausprobieren",
           detail:
-            "Flask bindet nur an 127.0.0.1:5567. Links stehen Formular oder YAML, rechts die A4-Seite, die WeasyPrint druckt; die Plakette darüber zeigt die Seitenzahl, grün bei einer Seite und rot ab zwei. Dieser Modus hält alles nur im Arbeitsspeicher und schreibt nicht in content/cv.yaml, also lade das PDF vor dem Beenden herunter. Dauerhaft speichert nur die selbst betriebene Supabase-Variante aus DEPLOY.md.",
+            "Flask bindet nur an 127.0.0.1:5567. Links stehen Formular oder YAML, rechts die A4-Seite, die WeasyPrint druckt; die Plakette zeigt die Seitenzahl, grün bei einer Seite und rot ab zwei. Der Modus hält alles im Arbeitsspeicher und schreibt nicht in content/cv.yaml, also lade das PDF vor dem Beenden herunter.",
           command:
             "(cd cv-engine && ONEPAGER_DEMO_MODE=true .venv/bin/python tools/editor/server.py)",
         },
@@ -1453,7 +1453,7 @@ const CV_ENGINE_TOOL_ARTIFACT = {
     },
     integration: {
       summary:
-        "content/cv.yaml ist eine gewöhnliche Textdatei, über die Versionierung, Import und Pipeline laufen.",
+        "content/cv.yaml ist eine gewöhnliche Textdatei: Git, Importer und CI arbeiten direkt mit ihr.",
       targets: [
         "YAML",
         "PDF",
@@ -1561,7 +1561,7 @@ const CV_ENGINE_TOOL_ARTIFACT = {
       {
         title: "AI-Native Arbeitskurs",
         description:
-          "Intent formulieren, Kontext geben und Output prüfen, wie es auch ein Import aus deinem alten PDF verlangt.",
+          "Übt, KI-Output zu prüfen, etwa den Import aus deinem alten PDF.",
         href: "/ai-native",
       },
       {

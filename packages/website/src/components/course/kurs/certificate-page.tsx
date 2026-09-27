@@ -322,9 +322,7 @@ export function CertificatePage({ courseSlug, locale }: CertificatePageProps) {
             {/* Certificate form */}
             <div className="space-y-4">
               <h2 className="border-t-2 border-foreground pt-4 text-fluid-h3 font-bold">
-                {config.language === "en"
-                  ? `Download ${config.recordNoun.label}`
-                  : `${config.recordNoun.label} herunterladen`}
+                {config.language === "en" ? "Add your name" : "Name eintragen"}
               </h2>
               <p className="text-sm text-muted-foreground">
                 {config.language === "en"

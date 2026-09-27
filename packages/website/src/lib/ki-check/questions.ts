@@ -227,7 +227,7 @@ export const QUESTIONS: readonly Question[] = [
       },
       {
         score: 4,
-        text: "Ich weiß, welche Fälle Kennzeichnung brauchen und wie man sie umsetzt.",
+        text: "Ich weiß, welche Fälle Transparenz brauchen und wie man sie umsetzt.",
         meaning: "Du setzt die Pflicht in einen Arbeitsschritt um.",
       },
     ],
@@ -338,7 +338,7 @@ export const QUESTIONS: readonly Question[] = [
       {
         score: 4,
         text: "Ich habe feste Prüfschritte und weiß, wo KI besonders fehleranfällig ist.",
-        meaning: "Review ist bei dir ein fester Arbeitsschritt.",
+        meaning: "Prüfen ist bei dir ein fester Arbeitsschritt.",
       },
     ],
   },
@@ -360,7 +360,7 @@ export const STAGE_BANDS: readonly StageBand[] = [
     min: 20,
     max: 40,
     blurb:
-      "Du kennst mehrere Themen. Es fehlt noch eine feste Methode für Prüfung, Datenverwendung und Regeln.",
+      "Du kennst mehrere Themen, prüfst Ergebnisse und Daten aber noch ohne feste Methode.",
   },
   {
     level: 3,
@@ -368,7 +368,7 @@ export const STAGE_BANDS: readonly StageBand[] = [
     min: 40,
     max: 60,
     blurb:
-      "Du setzt KI für gewöhnliche Aufgaben ein und erkennst mehrere Risiken. Vertiefe die schwächeren Felder.",
+      "Du setzt KI für alltägliche Aufgaben ein und erkennst mehrere Risiken. Vertiefe die schwächeren Felder.",
   },
   {
     level: 4,
@@ -384,7 +384,7 @@ export const STAGE_BANDS: readonly StageBand[] = [
     min: 80,
     max: 100,
     blurb:
-      "Du prüfst KI-Ergebnisse kritisch, schützt Daten und dokumentierst wichtige Entscheidungen. Wähle nach den Feldwerten ein Vertiefungsthema.",
+      "Du prüfst KI-Ergebnisse kritisch, schützt Daten und dokumentierst wichtige Entscheidungen. Vertiefe das Feld mit dem niedrigsten Wert.",
   },
 ] as const;
 

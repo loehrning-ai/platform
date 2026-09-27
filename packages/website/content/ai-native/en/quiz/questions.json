@@ -37,7 +37,7 @@
     "answerOptions": [
       { "id": "a", "text": "Typing every line manually.", "isCorrect": false },
       { "id": "b", "text": "Only correcting spelling.", "isCorrect": false },
-      { "id": "c", "text": "Judge whether the result fits and take responsibility for its use.", "isCorrect": true },
+      { "id": "c", "text": "Judging whether the result fits and owning its use.", "isCorrect": true },
       { "id": "d", "text": "Nothing. Claude takes every decision.", "isCorrect": false }
     ],
     "explanation": "Delegating removes no accountability. The brief, the permissions, the factual and professional review and the decision to use the result stay with you.",
@@ -95,10 +95,10 @@
     "difficulty": "medium",
     "questionText": "What is a Claude Project with standing instructions used for?",
     "answerOptions": [
-      { "id": "a", "text": "A reusable workspace holding context, instructions and results for one topic.", "isCorrect": true },
-      { "id": "b", "text": "It is a static file backup without working context.", "isCorrect": false },
-      { "id": "c", "text": "It automatically deletes every conversation after 24 hours.", "isCorrect": false },
-      { "id": "d", "text": "It is only a file backup with no AI function.", "isCorrect": false }
+      { "id": "a", "text": "As a reusable workspace holding context, instructions and results for one topic.", "isCorrect": true },
+      { "id": "b", "text": "As a way to share your chats automatically with the whole team.", "isCorrect": false },
+      { "id": "c", "text": "As an automatic deletion of every conversation after 24 hours.", "isCorrect": false },
+      { "id": "d", "text": "As a plain file backup with no AI function.", "isCorrect": false }
     ],
     "explanation": "You no longer retype the same context for each task. Features and retention depend on the product version and account settings.",
     "version": 1,
@@ -172,7 +172,7 @@
     "answerOptions": [
       { "id": "a", "text": "Controlled batch operations across many files, with permission and result checks.", "isCorrect": true },
       { "id": "b", "text": "Playing music during work.", "isCorrect": false },
-      { "id": "c", "text": "It can only be used by software developers.", "isCorrect": false },
+      { "id": "c", "text": "Use by software developers only.", "isCorrect": false },
       { "id": "d", "text": "Replacing the operating system.", "isCorrect": false }
     ],
     "explanation": "Before accepting, check target paths, planned changes and the diff.",
@@ -235,7 +235,7 @@
       { "id": "c", "text": "Clearing browser history.", "isCorrect": false },
       { "id": "d", "text": "Saving web pages to the vault, optionally via template or AI interpreter.", "isCorrect": true }
     ],
-    "explanation": "The saved note keeps its source and capture date.",
+    "explanation": "The note keeps its source and capture date so you can check it later.",
     "version": 1,
     "active": true
   },
@@ -291,7 +291,7 @@
     "questionText": "Module 4 separates providers and deployers under the EU AI Act. What is a deployer?",
     "answerOptions": [
       { "id": "a", "text": "A person who connects server hardware in a data centre.", "isCorrect": false },
-      { "id": "b", "text": "Anyone using an AI system under its authority, except purely personally.", "isCorrect": true },
+      { "id": "b", "text": "Anyone using an AI system under their own authority, except for purely personal use.", "isCorrect": true },
       { "id": "c", "text": "Any end user, with no duties under any circumstances.", "isCorrect": false },
       { "id": "d", "text": "An authority that prohibits AI.", "isCorrect": false }
     ],
@@ -307,7 +307,7 @@
     "answerOptions": [
       { "id": "a", "text": "Free Risk Insurance Agreement.", "isCorrect": false },
       { "id": "b", "text": "Federal Reporting Information Act.", "isCorrect": false },
-      { "id": "c", "text": "Fundamental Rights Impact Assessment, for specified deployers and high-risk uses.", "isCorrect": true },
+      { "id": "c", "text": "Fundamental Rights Impact Assessment.", "isCorrect": true },
       { "id": "d", "text": "Final Review Internal Audit.", "isCorrect": false }
     ],
     "explanation": "Article 27 of the EU AI Act requires it from specified deployers of certain high-risk systems, not for every AI system.",

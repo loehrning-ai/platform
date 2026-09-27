@@ -72,7 +72,7 @@ const RUBRIC: readonly (readonly [string, string])[] = [
     "Rolle und Risikoklasse nach Annex III sind als Fragen dokumentiert. Der Kurs trifft keine rechtliche Feststellung.",
   ],
   [
-    "Ablösbar",
+    "Übergabefähig",
     "Eine andere Person versteht aus der Dokumentation Eingaben, Kontrollen, Zuständigkeit und Wiederanlauf.",
   ],
 ];
@@ -120,8 +120,8 @@ export default async function CapstoneGalleryPage() {
       <TechnicalCourseHeader
         eyebrow={
           isEnglish
-            ? "Publication policy · current state"
-            : "Veröffentlichungsregeln · aktueller Stand"
+            ? "Publication policy"
+            : "Veröffentlichungsregeln"
         }
         title={
           isEnglish
@@ -201,7 +201,7 @@ export default async function CapstoneGalleryPage() {
 
         <section
           role="status"
-          className="mt-10 grid min-w-0 gap-3 border-y border-foreground py-5 sm:grid-cols-[12rem_minmax(0,1fr)] sm:gap-6"
+          className="mt-10 min-w-0 border-y border-foreground py-5"
         >
           <div>
             <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">

@@ -133,7 +133,7 @@ export function InstrumentalVariable() {
     <Panel
       eyebrow={text("SIMULATION", "SIMULATION")}
       title={text("Instrumental Variables", "Instrumentalvariablen")}
-      meta={`F-stat: ${s.fStat}`}
+      meta={`${text("F-stat", "F-Statistik")}: ${s.fStat}`}
       caption={text(
         "This lookup table changes first stage and estimates together without fitting IV data. Relevance is one requirement; exogeneity, exclusion, the estimand and weak-instrument-robust inference need separate evidence.",
         "Diese Lookup-Tabelle verändert erste Stufe und Schätzungen gemeinsam, ohne IV-Daten anzupassen. Relevanz ist eine Anforderung; Exogenität, Exklusion, Estimand und Weak-IV-robuste Inferenz brauchen eigene Evidenz.",
@@ -232,8 +232,8 @@ export function InstrumentalVariable() {
             </div>
             <div style={{ color: "var(--ink-3)", fontSize: 12, marginTop: 4 }}>
               {text(
-                "F=10 is a conventional screen, not an instrument-validity test",
-                "F=10 ist ein konventioneller Screen, kein Gültigkeitstest für das Instrument",
+                "F=10 is a common weak-instrument rule of thumb, not a validity test",
+                "F=10 ist eine übliche Faustregel für schwache Instrumente, kein Gültigkeitstest",
               )}
             </div>
           </div>

@@ -39,13 +39,12 @@ export default function Ch10Peeking() {
           Check a fixed-sample A/B test repeatedly and stop at the first
           p&lt;0.05, and the nominal 5% no longer holds for the experiment. The
           real rate depends on look schedule, maximum sample, outcome model and
-          dependence between looks; the simulator estimates one configured
-          design, no universal peeking rate.
+          dependence between looks.
         </p>
         <PeekingSimulator />
         <AntiPatterns
           items={[
-            '<strong>"It was significant yesterday":</strong> the p-value is a random variable, and one dip below the threshold is no discovery.',
+            '<strong>"It was significant yesterday":</strong> the p-value is a random variable, and one dip below the threshold is not a discovery.',
             "<strong>HARKing (Hypothesising After Results are Known):</strong> a pattern found after looking at the data is exploratory and needs confirmation on new data.",
           ]}
         />
@@ -65,9 +64,7 @@ export default function Ch10Peeking() {
         </h2>
         <p className="prose">
           The family-wise error rate (FWER) for <em>n</em> independent tests at
-          α = 0.05 is 1 − (1 − 0.05)ⁿ, about 64% at n = 20. The formula
-          assumes independent tests with valid null p-values; dependence moves
-          the rate.
+          α = 0.05 is 1 − (1 − 0.05)ⁿ, about 64% at n = 20.
         </p>
         <MultipleTesting />
         <AntiPatterns
@@ -86,7 +83,7 @@ export default function Ch10Peeking() {
       <section className="section">
         <SectionLabel n="10.3">CUPED</SectionLabel>
         <h2 className="h2">
-          Pre-period information can reduce variance when the assumptions hold.
+          Pre-period data lowers the estimator's variance.
         </h2>
         <p className="prose">
           CUPED (Controlled-experiment Using Pre-Experiment Data) uses a
@@ -111,30 +108,27 @@ export default function Ch10Peeking() {
         <h2 className="h2">Underpowered tests waste time and money.</h2>
         <p className="prose">
           Power = P(reject H₀ | H₁ true). An underpowered study misses real
-          effects and still uses up an experiment slot. In common two-arm
-          approximations, halving the minimum detectable effect (MDE) roughly
-          quadruples the sample, with variance, α, power and allocation fixed.
-          Calculate power <em>before</em> collection and name the model you
+          effects and still uses up an experiment slot. Calculate power <em>before</em> collection and name the model you
           used.
         </p>
         <PowerCalculator />
         <AntiPatterns
           items={[
-            "<strong>Ignoring MDE when setting duration:</strong> a test with 30% power is mostly noise.",
-            '<strong>Reporting underpowered null results</strong> as "no effect found": absence of evidence ≠ evidence of absence.',
+            "<strong>Ignoring MDE when setting duration:</strong> a test with 30% power misses a real effect of that size 7 times in 10.",
+            '<strong>Reporting underpowered null results</strong> as "no effect found": an underpowered null result does not rule out the effect.',
           ]}
         />
         <BestPractices
           items={[
             "Derive the power target, often 80% or 90%, from the cost of missed effects and the available sample; neither value is universal.",
-            "Use historical variance and conversion rate, and test sensitivity to drift, attrition, unequal allocation and multiplicity.",
+            "Use historical variance and conversion rate, do not assume a CUPED gain before measuring it, and test sensitivity to drift, attrition, unequal allocation and multiplicity.",
           ]}
         />
       </section>
 
       <Takeaway
         items={[
-          "<b>Pre-registration separates confirmation from exploration.</b> Record primary metric, analysis, stopping rule and exclusions before anyone sees outcomes.",
+          "<b>Pre-registration separates confirmation from exploration.</b> Record primary metric, analysis, stopping rule and exclusions before anyone sees outcomes; secondary metrics inform but do not decide.",
         ]}
       />
     </>

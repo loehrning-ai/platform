@@ -24,7 +24,7 @@ export default function Ch06EvaluateDe() {
       <section className="section">
         <SectionLabel n="06.1">Die Konfusionsmatrix</SectionLabel>
         <h2 className="h2">
-          Vier Felder. <em>Eintausend Entscheidungen.</em>
+          Vier Felder zählen jede Entscheidung <em>am Schwellenwert.</em>
         </h2>
         <p className="prose">
           Ein Schwellenwert macht aus Scores TP, FP, FN und TN. Präzision,
@@ -63,7 +63,7 @@ export default function Ch06EvaluateDe() {
           title="Fehlmuster"
           items={[
             "<b>Bei seltenen Ereignissen nur Genauigkeit berichten.</b> Bei 0.1% Ereignisrate liefert ein Modell, das immer negativ sagt, 99.9% Genauigkeit und erkennt nichts.",
-            "<b>Trainings- und Entscheidungsziel ungeprüft vermischen.</b> Ein Log-Loss-Modell lässt sich auf ein Kostenziel schwellenwerten; validier dann Kalibrierung und Betriebsmetriken getrennt.",
+            "<b>Trainingsziel und Entscheidungsziel verwechseln.</b> Für ein mit Log Loss trainiertes Modell wählst du den Schwellenwert nach Kosten; prüf dann Kalibrierung und Betriebsmetriken getrennt.",
             "<b>τ=0.5 einfach stehen lassen.</b> Leg den Schwellenwert nach deinem Kostenverhältnis fest.",
           ]}
         />

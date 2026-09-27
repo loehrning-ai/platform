@@ -143,7 +143,7 @@ describe("login locale surface", () => {
       }),
     ).toBeVisible();
     expect(screen.getByRole("alert")).toHaveTextContent(
-      "Sign-in is not enabled in this environment.",
+      "Sign-in is not enabled here, so the four foundation courses are unavailable for now.",
     );
     expect(
       screen.getByRole("link", { name: "View all courses" }),
@@ -167,7 +167,7 @@ describe("login locale surface", () => {
     expect(screen.getAllByRole("alert")).toHaveLength(1);
   });
 
-  it("states what an account adds, and that local progress is not carried over", async () => {
+  it("states what an account adds, and that local progress is imported only once on request", async () => {
     mocks.getRequestLocale.mockResolvedValue("en");
 
     render(await LoginPage({ searchParams: Promise.resolve({}) }));
@@ -179,31 +179,31 @@ describe("login locale surface", () => {
       name: "What an account adds",
     });
     expect(
-      within(section).getByText("One learning thread across devices"),
+      within(section).getByText("Progress on every device"),
     ).toBeVisible();
     expect(
       within(section).getByText("Your tools with your documents"),
     ).toBeVisible();
     expect(
-      within(section).getByText("Your own AI connected"),
+      within(section).getByText("Connect your own AI"),
     ).toBeVisible();
     expect(
       within(section).getByText(/certificate of participation/),
     ).toBeVisible();
     expect(
-      within(section).getByText(/Export, reset, delete/),
+      within(section).getByText(/export, reset or delete your data/),
     ).toBeVisible();
     // Two of the three regions are gated behind readiness predicates on
     // /konto, so the panel says they appear only once configured rather than
     // promising a region that renders nothing.
     expect(
-      within(section).getByText(/once this server has them configured/),
+      within(section).getByText(/once they are set up here/),
     ).toBeVisible();
-    // Anonymous progress is never merged into an account by design
-    // (lib/progress/store.ts), so the page has to say so BEFORE sign-in
-    // rather than leave a learner to discover an empty dashboard after.
+    // Anonymous progress is not merged automatically; /konto offers a one-time
+    // import (import-progress-island.tsx), so the page has to say so BEFORE
+    // sign-in rather than leave a learner to discover an empty dashboard after.
     expect(
-      within(section).getByText(/is not carried over when you sign in/),
+      within(section).getByText(/you can import it into your account once/),
     ).toBeVisible();
   });
 
@@ -388,7 +388,7 @@ describe("login layout branches", () => {
       "Weiter ohne Konto.",
       "Konfiguration offen",
       "Die Anmeldung ist noch nicht freigeschaltet.",
-      /Hier ist nichts zu tun/,
+      /Sobald das geprüft ist/,
     ],
     [
       "methods",
@@ -397,7 +397,7 @@ describe("login layout branches", () => {
       "Weiter ohne Konto.",
       "Keine Methode freigegeben",
       "Die Anmeldung ist hier noch nicht eingerichtet.",
-      /Eine bestehende Sitzung bleibt gültig/,
+      /Die offenen Inhalte unten/,
     ],
     [
       "disabled",
@@ -406,7 +406,7 @@ describe("login layout branches", () => {
       "Weiter ohne Konto.",
       "Hier nicht eingerichtet",
       "Diese Umgebung läuft ohne Konto.",
-      /Hier ist nichts zu tun/,
+      /^Hier ist nichts zu tun\.$/,
     ],
   ] as const)(
     "gives the %s branch one column and its own status, headline and next step",

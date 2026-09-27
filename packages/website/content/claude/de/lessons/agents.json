@@ -5,7 +5,7 @@
   "subtitle": "Tool-Schleifen mit klarer Autorität, Grenzen und Verifizierung entwerfen.",
   "durationMinutes": 11,
   "trackId": "advanced",
-  "hook": "Ein Agent läuft in Schleifen. Leitplanken sind Pflicht.",
+  "hook": "Ein Agent arbeitet in Schleifen und braucht erzwungene Grenzen.",
   "keyConcepts": [
     "Kontext sammeln, handeln, überprüfen, wiederholen",
     "Umfang, Budget, Bestätigung, Verifizierung"
@@ -14,8 +14,8 @@
   "sections": [
     {
       "id": "agents-vs-chat",
-      "title": "Agenten vs. Chat",
-      "readTimeMinutes": 2,
+      "title": "Agenten und Workflows",
+      "readTimeMinutes": 1,
       "content": "In Anthropics Unterscheidung folgt ein Workflow Pfaden, die im Code stehen, während beim Agenten ein Modell anhand von Zwischenergebnissen Aktionen und Tools wählt. Modellaufrufe, Retrieval und Tools nutzen beide.\n\nDie einfachste Schleife übergibt Ziel und Zustand ans Modell, validiert angeforderte Tool-Aufrufe, führt sie innerhalb der Richtlinie aus, gibt Ergebnisse zurück und prüft das Abbruchkriterium. Produktionssysteme ergänzen Parallelität, Queues, Freigaben, Retries und persistente Zustände. Tool-Zugriff ist Autorität, also begrenze ihn in Code und Infrastruktur."
     },
     {
@@ -27,13 +27,13 @@
     {
       "id": "four-guardrails",
       "title": "Die vier Leitplanken",
-      "readTimeMinutes": 3,
-      "content": "- **01 · Umfang.** Nur Tools, Ressourcen und Netzwerkziele, die die Aufgabe braucht, Lesen und Schreiben getrennt.\n- **02 · Grenzen.** Schritte, Tokens, Zeit, Kosten, Retries und Parallelität.\n- **03 · Freigabe und Richtlinie.** Löschen, Deployment, Zahlung oder externe Nachrichten nur mit erzwungener Freigabe. Standards und Berechtigungsmodi variieren, also prüfe die aktive Konfiguration.\n- **04 · Verifizierung.** Deterministische Prüfungen, wo möglich: Schema, Linter, Typprüfung, Tests, Screenshots, Zurücklesen geschriebener Daten.\n\nVerifizierung legt definierte Fehler offen, macht einen Agenten aber nicht korrekt. Ergänze Negativtests und prüfe, ob der Verifier das Ergebnis misst oder nur einen Stellvertreter."
+      "readTimeMinutes": 1,
+      "content": "- **01 · Umfang.** Gib nur die Tools, Ressourcen und Netzwerkziele frei, die die Aufgabe braucht, und trenne Lesen von Schreiben.\n- **02 · Grenzen.** Begrenze Schritte, Tokens, Zeit, Kosten, Retries und Parallelität.\n- **03 · Freigabe und Richtlinie.** Löschen, Deployment, Zahlung oder externe Nachrichten nur mit erzwungener Freigabe. Standards und Berechtigungsmodi variieren, also prüfe die aktive Konfiguration.\n- **04 · Verifizierung.** Deterministische Prüfungen, wo möglich: Schema, Linter, Typprüfung, Tests, Screenshots, Zurücklesen geschriebener Daten.\n\nVerifizierung legt definierte Fehler offen, macht einen Agenten aber nicht korrekt. Ergänze Negativtests und prüfe, ob der Verifier das Ergebnis misst oder nur einen Stellvertreter."
     },
     {
       "id": "when-to-use",
       "title": "Wann ein Agent passt",
-      "readTimeMinutes": 2,
+      "readTimeMinutes": 1,
       "content": "**Agent geeignet:** mehrstufige Arbeit, bei der spätere Aktionen von Tool-Ergebnissen abhängen, die Umgebung prüfbares Feedback liefert und Latenz und Kosten gerechtfertigt sind.\n\n**Workflow oder Einzelaufruf:** feste Sequenzen, einmalige Transformationen oder Aufgaben ohne belastbares Abbruchkriterium. Nimm die einfachste Architektur, die die evaluierten Anforderungen erfüllt."
     }
   ],
@@ -57,7 +57,7 @@
         "question": "Ein Agent hat kein Budget für maximale Schritte. Was ist der wahrscheinlichste Fehlerfall?",
         "options": [
           "Der Agent weigert sich zu starten.",
-          "Er läuft, bis das Budget erschöpft ist, oft ohne zu konvergieren.",
+          "Er läuft weiter, bis eine andere Grenze greift, oft ohne zu konvergieren.",
           "Der Agent produziert keine Ausgabe.",
           "Nichts, Budgets sind optional."
         ],

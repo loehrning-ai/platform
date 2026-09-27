@@ -13,7 +13,7 @@
       "blockId": "block_1",
       "number": 1,
       "title": "AI and work: exposure is not a forecast",
-      "subtitle": "What OECD and IAB numbers do not say",
+      "subtitle": "What OECD and IAB figures say, and what they don't",
       "durationMinutes": 5,
       "owner": "editorial:ki-und-gesellschaft",
       "lastReviewed": "2026-09-05",
@@ -34,9 +34,9 @@
         },
         {
           "id": "arbeit-1-1-s2",
-          "title": "Better than people at what?",
+          "title": "What \"better than people\" means",
           "readTimeMinutes": 2,
-          "content": "\"AI is better than people\" says nothing without test conditions. Check:\n\n- Task: are input, output and quality measure defined?\n- Data: do the test data match the real population and later deployment?\n- Consequences: what does an error cost, and who reviews borderline cases?\n- Environment: standardised, or shifting physically and socially?\n\nA model can ace a narrow image-classification test and be unfit for the clinic. A language model can speed up a draft and invent facts in it; a planning system can handle every standard case and fail on one rare exception.\n\nLegal responsibility, approvals and the weighing of interests stay with people and organisations."
+          "content": "\"AI is better than people\" says nothing without test conditions. Check:\n\n- Task: are input, output and quality measure defined?\n- Data: do the test data match the real population and later deployment?\n- Consequences: what does an error cost, and who reviews borderline cases?\n- Environment: standardised, or shifting physically and socially?\n\nA model can ace a narrow image-classification test and be unfit for the clinic. A language model can speed up a draft and invent facts in it; a planning system can handle every standard case and fail on one rare exception.\n\nEven when the system scores better, people and organisations keep legal responsibility, approvals and the weighing of interests."
         },
         {
           "id": "arbeit-1-1-s3",
@@ -125,7 +125,7 @@
               "isCorrect": true
             }
           ],
-          "explanation": "Whether technical potential becomes time saved, extra review, more cases or fewer positions, the deployment in the organisation decides."
+          "explanation": "The deployment in the organisation decides whether technical potential becomes time saved, extra review, more cases or fewer positions."
         }
       ]
     },
@@ -152,19 +152,19 @@
           "id": "arbeit-1-2-s1",
           "title": "Assistance without a performance promise",
           "readTimeMinutes": 2,
-          "content": "An assisted workflow gives the system one bounded step; approval and accountability stay with a named person. Whether it saves time, you measure in your own process.\n\nThree synthetic examples:\n- A nurse drafts from approved, data-protection-compliant notes and checks every statement against the record. Patient data belong only in a system approved for them.\n- An accountant has unusual entries flagged. The flag is a prompt to look, not a fraud or error finding.\n- A communications team checks image drafts for rights, factual fit, disclosure and approval before publishing.\n\nA controlled test fixes task, permitted data, quality criteria, reviewer, stopping point and logging in advance. Only its measurements show the benefit."
+          "content": "An assisted workflow gives the system one bounded step; approval and accountability stay with a named person. You measure in your own process whether it saves time.\n\nThree invented examples:\n- A nurse drafts from approved, data-protection-compliant notes and checks every statement against the record. Patient data belong only in a system approved for them.\n- An accountant has unusual entries flagged. The flag means: look closer. It does not establish fraud or an error.\n- A communications team generates image drafts and checks them for rights, factual fit, disclosure and approval before publishing.\n\nA controlled test fixes task, permitted data, quality criteria, reviewer, stopping point and logging in advance. Only its measurements show the benefit."
         },
         {
           "id": "arbeit-1-2-s2",
           "title": "What AI literacy covers",
           "readTimeMinutes": 2,
-          "content": "Whoever approves an AI draft needs no Python course, but five abilities:\n\n1. Describe the task: purpose, context, format, limits.\n2. Review the output: check claims, figures and sources against reliable material.\n3. Recognise risk: stop at personal data, confidential information or consequential decisions and involve the responsible function.\n4. Place the tool: approval status, data handling, limits, version changes.\n5. Record the work: where the process demands it, keep inputs, relevant outputs, changes and approvals.\n\nArticle 4 of the AI Act, as amended by Regulation (EU) 2026/1744, requires providers and deployers to take measures that support the development of AI literacy among their staff and others acting on their behalf. It does not demand a guaranteed level per person."
+          "content": "To approve an AI draft you need five abilities, and programming is not one of them:\n\n1. Describe the task: purpose, context, format, limits.\n2. Review the output: check claims, figures and sources against reliable material.\n3. Recognise risk: stop at personal data, confidential information or consequential decisions and involve the responsible function.\n4. Place the tool: approval status, data handling, limits, version changes.\n5. Record the work: where the process demands it, keep inputs, relevant outputs, changes and approvals.\n\nArticle 4 of the AI Act, as amended by Regulation (EU) 2026/1744, requires providers and deployers to take measures that support the development of AI literacy among their staff and others acting on their behalf. It does not demand a guaranteed level per person."
         },
         {
           "id": "arbeit-1-2-s3",
           "title": "When the works council has a say",
           "readTimeMinutes": 2,
-          "content": "A tool counts how fast a colleague closes her tickets. Absent a statutory or collective-agreement rule, Section 87(1)(6) of the German Works Constitution Act (BetrVG) gives the works council co-determination over the introduction and use of technical equipment intended to monitor employees' behaviour or performance. Function and use decide whether an AI system falls under it; the right sits with the works council, not with each employee.\n\nOn the table in the firm:\n- purpose and supported decision\n- employee data collected, inferred or stored\n- who sees the analyses and how long they are stored\n- human oversight, correction and complaint route\n- training and binding rules of use\n\nWithout agreement, the conciliation committee decides under Section 87(2). Whether your system is covered needs qualified employment-law analysis."
+          "content": "A tool counts how fast a colleague closes her tickets. Absent a statutory or collective-agreement rule, Section 87(1)(6) of the German Works Constitution Act (BetrVG) gives the works council co-determination over introducing and using technical equipment intended to monitor employees' behaviour or performance.\n\nFunction and use decide whether an AI system is covered. The right belongs to the works council, not to each employee.\n\nRaise these points in your organisation:\n- purpose and supported decision\n- employee data collected, inferred or stored\n- who sees the analyses and how long they are stored\n- human oversight, correction and complaint route\n- training and binding rules of use\n\nIf employer and works council cannot agree in a co-determination matter, the conciliation committee decides under Section 87(2). Whether your system is covered needs qualified employment-law analysis."
         }
       ],
       "quiz": [
@@ -256,7 +256,7 @@
       "blockId": "block_1",
       "number": 3,
       "title": "Which tasks can change, and what you check yourself",
-      "subtitle": "Task characteristics instead of occupation lists",
+      "subtitle": "Which task characteristics count",
       "durationMinutes": 5,
       "owner": "editorial:ki-und-gesellschaft",
       "lastReviewed": "2026-09-05",
@@ -273,19 +273,19 @@
           "id": "arbeit-1-3-s1",
           "title": "Where technical potential runs high",
           "readTimeMinutes": 2,
-          "content": "When a step repeats daily, the inputs are digital, clear rules or a quality measure exist and the physical setting barely changes, the technical potential runs high. Examples are transferring structured data, checking formal completeness and drafting from a template.\n\nAdoption stays open: bad data, rare exceptions, liability, integration cost or follow-up checks can eat the benefit. The other way round, technology can support single steps in almost any job.\n\nThe IAB sorts core tasks within occupations against market-ready technology and refreshes that snapshot regularly."
+          "content": "The technical potential tends to be high when a step repeats daily, has digital inputs, follows clear rules or a quality measure and takes place in a physical setting that barely changes. Examples are transferring structured data, checking formal completeness and drafting from a template.\n\nAdoption stays open: bad data, rare exceptions, liability, integration cost or follow-up checks can eat the benefit. The other way round, technology can support single steps in almost any job.\n\nThe IAB sorts core tasks within occupations against market-ready technology and refreshes that snapshot regularly."
         },
         {
           "id": "arbeit-1-3-s2",
           "title": "What makes automation hard",
           "readTimeMinutes": 1,
-          "content": "Automation gets hard when a task combines several of these traits, as on an unfamiliar building site or in care with patchy information and a relative in the room:\n\n- a changing physical setting and fine-motor work\n- incomplete information and rare exceptions\n- direct responsibility for safety or fundamental rights\n- negotiation among several parties\n- relationship, trust or local knowledge\n\nNone of that makes an occupation \"AI-proof\". Documentation, planning and retrieval can shift in care, trades, teaching and advice too, and robotics can move physical tasks over time. So look at single tasks."
+          "content": "Automation gets hard when a task combines several of the following traits, as on an unfamiliar building site or in care with patchy information and a relative in the room:\n\n- a changing physical setting and fine-motor work\n- incomplete information and rare exceptions\n- direct responsibility for safety or fundamental rights\n- negotiation among several parties\n- relationship, trust or local knowledge\n\nNone of that makes an occupation \"AI-proof\". Documentation, planning and retrieval can shift in care, trades, teaching and advice too, and robotics can move physical tasks over time. So look at single tasks."
         },
         {
           "id": "arbeit-1-3-s3",
           "title": "What you can do yourself",
           "readTimeMinutes": 2,
-          "content": "1. Inventory your tasks: write down recurring steps, error consequences, data needed and approvals.\n2. Test safely: approved tools and test data only, nothing confidential or personal, compared against a reference fixed in advance.\n3. Settle responsibilities: Germany's Federal Employment Agency offers \"Berufsberatung im Erwerbsleben\", career guidance for people in employment, with information on training and funding; in the firm, turn to your manager, data protection, information security and any works council.\n\nArticle 5 of the AI Act has banned certain practices since 2 February 2025, among them emotion recognition at work, exceptions aside. Recruitment and selection systems can fall under Annex III; for stand-alone Annex III systems the high-risk rules apply from 2 December 2027 under Regulation (EU) 2026/1744. The AGG, GDPR and employment law can apply today.\n\nIf your application runs through such a system, ask about purpose, data, the meaning of the output, human involvement and accountability."
+          "content": "1. Inventory your tasks: write down recurring steps, error consequences, data needed and approvals.\n2. Test safely: approved tools and test data only, nothing confidential or personal, compared against a reference fixed in advance.\n3. Get advice: Germany's Federal Employment Agency offers \"Berufsberatung im Erwerbsleben\", career guidance for people in employment, with information on training and funding.\n4. Ask in your organisation: your manager, data protection, information security and any works council.\n\nArticle 5 of the AI Act has banned certain practices since 2 February 2025, among them emotion recognition at work, exceptions aside. Recruitment and selection systems can fall under Annex III; for stand-alone Annex III systems the high-risk rules apply from 2 December 2027 under Regulation (EU) 2026/1744. The AGG, GDPR and employment law can apply today.\n\nIf your application runs through such a system, ask about purpose, data, the meaning of the output, human involvement and accountability."
         }
       ],
       "quiz": [
@@ -364,7 +364,7 @@
             },
             {
               "id": "d",
-              "text": "Article 5 has banned certain practices since 2 February 2025; assess recruitment AI under Annex III and existing law",
+              "text": "Since 2 February 2025, Article 5 has banned certain practices at work",
               "isCorrect": true
             }
           ],

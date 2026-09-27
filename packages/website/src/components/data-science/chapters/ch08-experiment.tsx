@@ -74,7 +74,7 @@ export default function Ch08Experiment() {
         items={[
           "<b>Sample size scales roughly with 1 / effect².</b> With variance, allocation, α and power fixed, halving the target effect needs about four times the sample.",
           "<b>Intervals and p-values summarize one model.</b> Report effect size and uncertainty; neither repairs a weak design.",
-          '<b>State what the data exclude.</b> "No effect detected" is not "no effect"; compare the interval with the prespecified relevant-effect range.',
+          '<b>Claim only what the interval rules out.</b> "No effect detected" is not "no effect"; compare the interval with the pre-set relevant range.',
         ]}
       />
     </>

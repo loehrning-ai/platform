@@ -38,10 +38,10 @@ export default function Ch02Explore() {
         transformation.
       </p>
       <p className="prose">
-        <strong>Skewness</strong> measures asymmetry: a long right tail pushes
-        the mean above the median, as with income or latency.{" "}
+        <strong>Skewness</strong> measures asymmetry: a long right tail often
+        pushes the mean above the median, as with income or latency.{" "}
         <strong>Excess kurtosis</strong> rests on the fourth moment, reacts
-        hard to extremes and describes no tail risk on its own. Change N and
+        hard to extremes and does not describe tail risk on its own. Change N and
         watch the estimates wobble.
       </p>
       <DistributionExplorer />
@@ -88,10 +88,9 @@ export default function Ch02Explore() {
       </p>
       <p className="prose">
         The slider adds independent <strong>measurement noise</strong> to a
-        constructed linear relationship, and Pearson r drifts toward 0. That is
-        attenuation under classical measurement error; other error mechanisms
-        bias differently, and disattenuation needs defensible reliability
-        estimates.
+        constructed linear relationship, and Pearson r drifts toward 0. That is how
+        classical measurement error behaves; other errors bias r differently.
+        Correcting r (disattenuation) needs defensible reliability estimates.
       </p>
       <CorrelationMatrix />
       <AntiPatterns
@@ -104,7 +103,7 @@ export default function Ch02Explore() {
       <BestPractices
         title="Best practices, correlations"
         items={[
-          "<b>Consider Spearman's ρ for ordinal or monotonic questions.</b> Distribution assumptions affect inference; the coefficient must fit the association you ask about.",
+          "<b>Use Spearman's ρ for ordinal or monotone relationships.</b>",
           "<b>Cluster strongly correlated features.</b> Hierarchical clustering on 1−|r| reveals redundant groups.",
           "<b>Separate links to the target from links between inputs.</b> The latter can signal redundancy.",
         ]}

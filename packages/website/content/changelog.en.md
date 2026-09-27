@@ -2,7 +2,7 @@
 
 ### Added
 
-- Blog post Nº 02 "AI in apprenticeships: questions for youth representatives and works councils" in German and English, on the rights of the JAV and the works council when a company uses AI in apprenticeship training
+- Blog post Nº 02 "AI in apprenticeships: questions for youth representatives and works councils" in German and English: the rights both bodies have when a company uses AI in training
 - Question list with legal bases and notes on what an answer should contain, to print and to download as Markdown under CC BY 4.0
 
 ## 2026-08-09: Bilingual platform revision

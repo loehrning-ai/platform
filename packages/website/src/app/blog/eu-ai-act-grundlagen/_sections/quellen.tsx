@@ -121,8 +121,8 @@ export function Quellen() {
           sind verbindlich auf Ende 2027 und 2028 verschoben.
         </p>
         <p>
-          Der deutsche Behördenweg bleibt bis zur amtlich verifizierten
-          Verkündung des KI-MIG ausdrücklich vorläufig.
+          Seit dem 29. Juli 2026 ist die Bundesnetzagentur nach dem KI-MIG
+          die zentrale Beschwerdestelle.
         </p>
         <div className="essay-close__signoff">
           <span>

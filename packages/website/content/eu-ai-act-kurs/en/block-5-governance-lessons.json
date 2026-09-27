@@ -29,11 +29,11 @@
           "id": "block_5_lesson_1_section_1",
           "title": "EU level: AI Office and European AI Board",
           "readTimeMinutes": 2,
-          "content": "The **AI Office** (European Artificial Intelligence Office) sits in the Commission's Directorate-General CNECT, with more than 125 staff in six units, including Regulation and Compliance and AI Safety. Article 88 gives it **exclusive supervisory powers over GPAI models** such as GPT-4, Claude and Gemini. It coordinates the codes of practice, runs the secretariat of the European AI Board and has operated the public Service Desk since 8 October 2025.\n\nThe **European AI Board** (Article 65) has one representative per Member State, coordinates the national authorities and advises the Commission. A company that deploys AI and places no GPAI model on the market normally deals with neither directly; its competent authorities sit in Germany."
+          "content": "The **AI Office** (European Artificial Intelligence Office) sits in the Commission's Directorate-General CNECT, with more than 125 staff in six units, including Regulation and Compliance and AI Safety. Article 88 gives it **exclusive supervisory powers over GPAI models** such as GPT-4, Claude and Gemini.\n\nIt coordinates the codes of practice, runs the secretariat of the European AI Board and has operated the public Service Desk since 8 October 2025.\n\nThe **European AI Board** (Article 65) has one representative per Member State, coordinates the national authorities and advises the Commission. A company that deploys AI and places no GPAI model on the market normally deals with neither directly; its competent authorities sit in Germany."
         },
         {
           "id": "block_5_lesson_1_section_2",
-          "title": "Germany: the Federal Network Agency as the default authority",
+          "title": "Germany: the Federal Network Agency as the fallback authority",
           "readTimeMinutes": 1,
           "content": "Article 70(2) requires every Member State to name a **single point of contact**. In Germany the AI Market Implementation Act (KI-MIG) names the **Federal Network Agency (Bundesnetzagentur, BNetzA)**. The Bundestag adopted it on **11 June 2026**, the Bundesrat passed it on **10 July 2026** without referral to the Mediation Committee, and it **entered into force on 29 July 2026**.\n\nThe BNetzA is now the market-surveillance authority for every area without sectoral supervision, and the single point of contact and complaints body. The Act provides for a **Coordination and Competence Centre (KoKIVO)** inside the agency and an independent market-surveillance chamber for specified areas. The reporting channel in an individual case follows the sector and its law."
         },
@@ -41,7 +41,7 @@
           "id": "block_5_lesson_1_section_3",
           "title": "Sectoral supervision: which other authorities retain jurisdiction",
           "readTimeMinutes": 1,
-          "content": "The BNetzA is the fallback authority. Article 74 assigns market surveillance in several areas to existing sectoral authorities; data-protection and other sector-specific law keep their own allocations.\n\n- **Financial institutions:** Article 74(6) generally refers to the authorities responsible under financial-services law.\n- **Products covered by Annex I:** market surveillance generally follows the relevant product-safety law (Article 74(3)).\n- **Bodies referred to in Article 74(8):** the data-protection or other authorities named there supervise the Annex III systems it specifies.\n\nFor every system, record purpose, role, sector and the authorities that may have jurisdiction. Until the authorities consolidate their guidance, that mapping stays a legal question to confirm."
+          "content": "The BNetzA is the fallback authority. Article 74 assigns market surveillance in several areas to existing sectoral authorities; data-protection and other sector-specific law keep their own allocations.\n\n- **Financial institutions:** Article 74(6) generally refers to the authorities responsible under financial-services law.\n- **Products covered by Annex I:** market surveillance generally follows the relevant product-safety law (Article 74(3)).\n- **Annex III, point 1 (where used for law enforcement, border management, justice or democracy) and points 6 to 8:** under Article 74(8), data-protection supervisory authorities or another authority so designated supervise.\n\nFor every system, record purpose, role, sector and the authorities that may have jurisdiction. Have this mapping confirmed legally."
         }
       ],
       "quiz": [
@@ -159,7 +159,7 @@
           "id": "block_5_lesson_2_section_3",
           "title": "Worked examples for SMEs",
           "readTimeMinutes": 1,
-          "content": "**Example A: machinery manufacturer, EUR 20 million turnover**\n\n- Tier 1, say emotion recognition at the factory gate: 7 percent = EUR 1.4 million, which is also the SME ceiling.\n- Tier 2, say a missing risk assessment for HR AI: 3 percent = SME ceiling of EUR 600,000.\n- Tier 3, incorrect information to the BNetzA: 1 percent = SME ceiling of EUR 200,000.\n\n**Example B: craft business, EUR 1.5 million turnover**\n\n- Tier 1: 7 percent = EUR 105,000, existential for a three-person business.\n\n**Example C:** at EUR 50 million turnover, the ceiling for most obligations (3 percent, Article 99(4)) is EUR 1.5 million.\n\nWhat ends up on the notice depends on proportionality and the documented measures.\n\nIn Germany the competent market-surveillance authority imposes sanctions under the Act on Regulatory Offences (OWiG); an action before the administrative court is open (Article 99(10)). Member States report to the Commission annually (Article 99(11))."
+          "content": "**Example A: machinery manufacturer, EUR 20 million turnover**\n\n- Tier 1, say emotion recognition at the factory gate: at most EUR 1.4 million (7 percent).\n- Tier 2, say a missing risk assessment for HR AI: at most EUR 600,000 (3 percent).\n- Tier 3, incorrect information to the BNetzA: at most EUR 200,000 (1 percent).\n\n**Example B: craft business, EUR 1.5 million turnover**\n\n- Tier 1: at most EUR 105,000 (7 percent), existential for a three-person business.\n\n**Example C: SME with EUR 50 million turnover**\n\n- Tier 2: at most EUR 1.5 million (3 percent, Article 99(4)).\n\nThe actual amount depends on proportionality and the documented measures. In Germany the competent market-surveillance authority imposes sanctions under the Act on Regulatory Offences (OWiG); the fine notice can be challenged by objection, on which the local court (Amtsgericht) decides (Article 99(10)). Member States report to the Commission annually (Article 99(11))."
         }
       ],
       "quiz": [
@@ -242,7 +242,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Article 99(5) covers incorrect, incomplete or misleading information to notified bodies or authorities. Cooperation is mandatory; confidential information stays protected."
+          "explanation": "Article 99(5) covers incorrect, incomplete or misleading information to notified bodies or authorities. That is Tier 3."
         }
       ]
     },
@@ -265,7 +265,7 @@
           "id": "block_5_lesson_3_section_1",
           "title": "What an AI regulatory sandbox is under Article 57",
           "readTimeMinutes": 2,
-          "content": "If you build a high-risk AI system, you can talk to the authority before placing it on the market: in an **AI regulatory sandbox**. Under Article 3, point (55), that is a controlled framework in which a competent authority lets a provider or prospective provider develop, train, validate and, where appropriate, test an innovative AI system in real-world conditions.\n\nRegulation (EU) 2026/1744, applicable since 27 July 2026, sets **2 August 2027** in Article 57(1) as the deadline for at least one national sandbox. Article 57 provides, among other things, for guidance, supervision and a written exit report."
+          "content": "If you build a high-risk AI system, you can talk to the authority before placing it on the market: in an **AI regulatory sandbox**. Under Article 3, point (55), that is a controlled framework in which a competent authority lets a provider or prospective provider develop, train, validate and, where appropriate, test an innovative AI system in real-world conditions.\n\nRegulation (EU) 2026/1744 (the AI Omnibus), applicable since 27 July 2026, sets **2 August 2027** in Article 57(1) as the deadline for at least one national sandbox. Article 57 provides, among other things, for guidance, supervision and a written exit report."
         },
         {
           "id": "block_5_lesson_3_section_2",
@@ -395,7 +395,7 @@
           "id": "block_5_lesson_4_section_3",
           "title": "Authority request: a five-step response plan",
           "readTimeMinutes": 1,
-          "content": "Under Article 74 the authority obtains full access to documentation and to training, validation and testing data, including through APIs (Article 74(12)). It gets **source code** only on a reasoned request, once other testing or audit procedures have been exhausted or proved insufficient (Article 74(13)).\n\nIf it finds non-compliance, it requires corrective action within **no more than 15 working days** (Article 79(2)). For non-compliance with the prohibition in Article 5, the Union safeguard procedure shortens the objection period to 30 days (Article 81).\n\n**Initial response plan (an implementation control, not a statutory five-step format):**\n\n1. **Acknowledge in writing**, record the deadline, involve legal counsel. Do not hand over source code or training data on reflex.\n2. **Open an incident log:** date, request, people involved, information communicated.\n3. **Confirm jurisdiction:** the BNetzA, or a sectoral authority such as BaFin, BfArM or an LMA?\n4. **Assemble records:** Article 4 measures, risk assessment, post-market monitoring records, declaration of conformity. They may evidence measures under Article 99(7), point (g), but guarantee no lower fine.\n5. **Cooperate without giving incorrect information:** incorrect or incomplete information falls within Tier 3, up to EUR 7.5 million or 1 percent (Article 99(5)).\n\nPrepared records, an identified lawyer and a designated spokesperson carry the first 48 hours, without changing the legal duties or the authority's response."
+          "content": "Under Article 74 the authority obtains full access to documentation and to training, validation and testing data, including through APIs (Article 74(12)). It gets **source code** only on a reasoned request, once other testing or audit procedures have been exhausted or proved insufficient (Article 74(13)).\n\nIf it finds non-compliance, it requires corrective action within **no more than 15 working days** (Article 79(2)). For non-compliance with the prohibition in Article 5, the Union safeguard procedure shortens the objection period to 30 days (Article 81).\n\n**Initial response plan (an implementation control, not a statutory five-step format):**\n\n1. **Acknowledge in writing**, record the deadline, involve legal counsel. Do not hand over source code or training data on reflex.\n2. **Open an incident log:** date, request, people involved, information communicated.\n3. **Confirm jurisdiction:** the BNetzA, or a sectoral authority such as BaFin, BfArM or an LMA?\n4. **Assemble records:** Article 4 measures, risk assessment, post-market monitoring records, declaration of conformity. They may evidence measures under Article 99(7), point (g), but guarantee no lower fine.\n5. **Cooperate without giving incorrect information:** incorrect or incomplete information falls within Tier 3, up to EUR 7.5 million or 1 percent (Article 99(5))."
         }
       ],
       "quiz": [
@@ -410,7 +410,7 @@
             },
             {
               "id": "b",
-              "text": "10 days after establishing the suspected causal link",
+              "text": "10 days after becoming aware",
               "isCorrect": true
             },
             {
@@ -424,7 +424,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Article 73(4) shortens the period to 10 days after a death, counted from when the causal link is established or likely. Otherwise 15 days apply (paragraph 2), two days for a widespread infringement (paragraph 3)."
+          "explanation": "After a death, Article 73(4) requires a report immediately once the causal link is established or suspected, within 10 days of awareness at the latest. Otherwise 15 days apply (paragraph 2), two days for a widespread infringement (paragraph 3)."
         },
         {
           "id": "block_5_lesson_4_q2",

@@ -11,7 +11,7 @@ const lesson: ClaudeLesson = {
   subtitle: "Persistent instructions that travel with your project.",
   durationMinutes: 9,
   trackId: "workflows",
-  hook: "Project instructions in a file the team reviews like code.",
+  hook: "Rules you keep explaining belong in a file.",
   keyConcepts: [
     "CLAUDE.md hierarchy",
     "Lazy-loaded sub-folder files",
@@ -23,7 +23,7 @@ const lesson: ClaudeLesson = {
     {
       id: "what-it-is",
       title: "What it is",
-      readTimeMinutes: 2,
+      readTimeMinutes: 1,
       content:
         "`CLAUDE.md` is a Markdown instruction file that Claude Code loads so a session knows your repo. The project file lives at `./CLAUDE.md` or `./.claude/CLAUDE.md`; user, managed, local and nested files have their own scopes.\n\nThe instructions enter the conversation context. They steer behavior and enforce nothing, so controls that must hold belong in permissions, hooks, sandboxing and CI.",
     },
@@ -37,21 +37,21 @@ const lesson: ClaudeLesson = {
     {
       id: "keep-in-leave-out",
       title: "What goes in it",
-      readTimeMinutes: 2,
+      readTimeMinutes: 1,
       content:
-        "**Include:**\n\n- A one-sentence project description\n- Stack and supported versions\n- Build, test and lint commands\n- Verifiable conventions\n- Important paths and project terms\n- Links to maintained architecture or deployment docs\n\n**Exclude:**\n\n- Secrets, tokens, credentials and personal data\n- Vague instructions such as \"write good code\"\n- Stale history\n- Long procedures that belong in a skill or maintained document\n\nEvery line spends context, and a long file gets followed less. Anthropic recommends concise, structured instructions and suggests fewer than 200 lines per file. Imports tidy the layout but still load at launch.\n\nBlock sensitive paths with permission rules.",
+        "**Include:**\n\n- A one-sentence project description\n- Stack and supported versions\n- Build, test and lint commands\n- Verifiable conventions\n- Important paths and project terms\n- Links to maintained architecture or deployment docs\n\n**Exclude:**\n\n- Secrets, tokens, credentials and personal data\n- Vague instructions such as \"write good code\"\n- Stale history\n- Long procedures that belong in a skill or maintained document\n- Path blocks (block sensitive paths with permission rules)\n\nEvery line spends context, and a long file gets followed less. Anthropic recommends concise, structured instructions and suggests fewer than 200 lines per file. Imports tidy the layout but still load at launch.",
     },
     {
       id: "template",
       title: "A practical template",
-      readTimeMinutes: 1,
+      readTimeMinutes: 2,
       content:
         "```\n# <Project name>\n\n## What this is\nOne or two sentences: who uses it, what it does. Link to the README.\n\n## Stack\n- Language, framework, versions\n- Build and test tools\n\n## Conventions\n- Colocate tests as `*.test.ts`\n- Style and naming rules the team enforces\n\n## Commands\n- `yarn build`: production build\n- `yarn test`: unit tests (run before committing)\n- `yarn test:e2e`: e2e suite (slow, CI only)\n- `arc lint`: linter and formatter\n\n## Don't\n- Add npm deps without asking\n- Use `any` in TypeScript\n- Edit files in `generated/`\n\n## Terminology\n- \"Workspace\", not \"project\"\n- \"Member\", not \"user\", in customer-facing copy\n\n## Where things live\n- Architecture notes: `@docs/architecture.md`\n- Deployment: `@docs/deploy.md`\n```",
     },
     {
       id: "auto-memory",
       title: "Auto memory and project instructions",
-      readTimeMinutes: 2,
+      readTimeMinutes: 1,
       content:
         "Claude Code versions with auto memory can write project notes to local Markdown files. Auto memory is configurable, does not write in every session and needs inspection before you trust it.\n\n- **CLAUDE.md:** maintained by people, for shared, reviewed project rules.\n- **Auto memory:** machine-local notes picked during use, shared across worktrees of the same repository on that machine.\n\n`/memory` inspects, edits, disables or deletes stored notes. Keep secrets out of both.",
     },

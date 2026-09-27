@@ -10,7 +10,7 @@ export default localizeDataInfraLessonToGerman(canonical, {
     "PACELC-Modell",
     "Quorum",
     "Linearisierbarkeit",
-    "Eventuelle Konsistenz",
+    "Eventual Consistency",
   ],
   sections: [
     {
@@ -30,29 +30,29 @@ Es simuliert kein echtes Protokoll und kein gemessenes Ausfallverhalten. Eine Ei
     {
       id: "s3",
       title: "Das PACELC-Modell",
-      content: `PACELC ergänzt CAP um den Normalbetrieb: **Verfügbarkeit oder Konsistenz bei einer Partition; und sonst Koordinationslatenz oder Konsistenz?**
+      content: `PACELC ergänzt CAP um den Normalbetrieb: **bei einer Partition Verfügbarkeit oder Konsistenz, sonst Koordinationslatenz oder Konsistenz.**
 
 Koordination über Knoten kostet Arbeit und mindestens einen Netzwerkweg. Wie viel, entscheiden Topologie, Quorum-Platzierung, Last, Cache-Zustand und Fehler; ein lokales Replikat ist nicht um feste Millisekunden schneller. Manche Produkte lassen dich je Anfrage oder Transaktion wählen, andere je Tabelle, Sitzung oder Deployment.
 
-PA/EL, PA/EC, PC/EL und PC/EC sind Kurzformen für diese Wahl. Konfiguration und Vorgang können ein Deployment von einer in die andere schieben.`,
+PA/EL, PA/EC, PC/EL und PC/EC sind Kurzformen für diese Wahl, keine Herstellerklassen. Konfiguration und Vorgang können ein Deployment von einer in die andere schieben.`,
     },
     {
       id: "s4",
-      title: "Koordinationskosten",
-      content: `Die Frontier-Grafik zeigt eine **beispielhafte Reihenfolge**, keinen Benchmark. Stärkere Garantien verlangen meist mehr Koordination oder weniger freie Replikatwahl; was das kostet, entscheiden Umsetzung und Deployment.
+      title: "Konsistenzstufen und ihre Kosten",
+      content: `Stärkere Garantien verlangen meist mehr Koordination oder weniger freie Replikatwahl; was das kostet, entscheiden Umsetzung und Deployment.
 
 - **Best effort**, kein Freshness- oder Ordnungsvertrag.
-- **Eventuelle Konsistenz**, Replikate konvergieren, sobald die Schreibvorgänge enden, ohne Zeitgrenze, außer das System nennt eine.
+- **Eventual Consistency**, Replikate konvergieren, sobald die Schreibvorgänge enden, ohne Zeitgrenze, außer das System nennt eine.
 - **Read-your-writes**, eine Sitzung sieht ihre eigenen bestätigten Schreibvorgänge; andere Clients können ältere Versionen sehen.
 - **Kausale Konsistenz**, definierte kausale Beziehungen zwischen Vorgängen bleiben erhalten.
 - **Linearisierbarkeit**, jeder Vorgang wirkt atomar zwischen Aufruf und Antwort.
 
-Benchmarke das konfigurierte Deployment im Normalbetrieb und unter Störung. Kein Modellname verrät dir das p99.`,
+Miss das p99 des konfigurierten Deployments im Normalbetrieb und unter Störung.`,
     },
     {
       id: "s5",
-      title: "Die Konsistenzstufen",
-      content: `„Konsistenz“ benennt mehrere Verträge. Die Stufen spielen einen synthetischen Wettlauf ab: Writer A schreibt \`x=1\`, dann \`x=2\`; Reader B liest \`x\`. Grün heißt, das Ergebnis erfüllt den Vertrag der Stufe; Karmesin heißt, das vereinfachte Modell lässt den veralteten Wert zu.
+      title: "Konsistenz als Anforderung",
+      content: `„Konsistenz“ benennt mehrere Verträge. Nimm einen Wettlauf: Writer A schreibt \`x=1\`, dann \`x=2\`; Reader B liest \`x\`. Best effort und Eventual Consistency dürfen das veraltete \`x=1\` liefern; bei Linearisierbarkeit muss ein Lesevorgang, der nach der Bestätigung des zweiten Schreibvorgangs beginnt, \`x=2\` liefern.
 
 Ersetz „konsistent“ in einer Anforderung durch eine beobachtbare Regel, etwa „eine Sitzung liest ihre bestätigten Schreibvorgänge“ oder „alle Clients sehen Bestandsabbuchungen in einer linearisierbaren Reihenfolge“. Dann prüfst du Produkt und Konfiguration gegen diese Regel unter den genannten Fehlern.`,
     },
@@ -65,8 +65,8 @@ Ersetz „konsistent“ in einer Anforderung durch eine beobachtbare Regel, etwa
       id: "s7",
       title: "Begriffe",
       content: `- **Quorum (N/R/W)**, Replikatzahl, Leseantworten und Schreibbestätigungen. \`R + W > N\` erzwingt unter vereinfachten Annahmen eine Überschneidung.
-- **Sloppy Quorum**, vorübergehende Replikate nehmen im Fehlerfall Schreibvorgänge an und reichen sie später weiter.
-- **Read Repair**, ein Lesevorgang, der abweichende Replikate sieht, stößt den Abgleich an.
+- **Sloppy Quorum**, vorübergehende Replikate können im Fehlerfall Schreibvorgänge annehmen und später weiterreichen.
+- **Read Repair**, ein Lesevorgang, der abweichende Replikate sieht, kann den Abgleich anstoßen; ein Reparaturweg, kein Konvergenzbeweis.
 - **Begrenzte Veraltung**, ein Vertrag, der den Verzug in Versionen oder Zeit deckelt.`,
     },
   ],
@@ -76,7 +76,7 @@ Ersetz „konsistent“ in einer Anforderung durch eine beobachtbare Regel, etwa
       cpId: "q1",
       title: "Eine typische Interviewfrage",
       question:
-        "Ein replizierter Warenkorb nimmt während einer Partition Abweichungen hin, damit erreichbare Regionen beschreibbar bleiben. Normal verlangt er abgestimmten Zustand über Geräte. Welche PACELC-Kurzform passt?",
+        "Ein replizierter Warenkorb nimmt während einer Partition Abweichungen hin, damit erreichbare Regionen beschreibbar bleiben. Im Normalbetrieb verlangt er einen über Geräte abgestimmten Zustand. Welche PACELC-Kurzform passt?",
       options: [
         "PA/EL, verfügbar bei Partition, sonst niedrige Latenz.",
         "PC/EC, Schreibvorgänge bei Partition ablehnen, sonst koordinieren.",
@@ -89,24 +89,24 @@ Ersetz „konsistent“ in einer Anforderung durch eine beobachtbare Regel, etwa
     {
       kind: "quiz",
       cpId: "q2",
-      title: '"Eventuell" braucht eine Grenze',
+      title: "„Eventual Consistency“ braucht eine Grenze",
       question:
-        'Ein Entwurf sagt nur: "Die Replikate sind eventuell konsistent." Welche Frage ist noch offen?',
+        "Ein Entwurf sagt nur: „Die Replikate sind letztlich konsistent (Eventual Consistency).“ Welche Frage ist noch offen?",
       options: [
-        '"Wie lange dauert die Konvergenz, und was sehen Clients solange?"',
-        '"Wie hoch ist euer Replikationsfaktor je Region?"',
-        '"Meint ihr nicht in Wahrheit starke Konsistenz?"',
-        '"Warum nehmt ihr nicht einfach Postgres?"',
+        "„Wie lange dauert die Konvergenz, und was sehen Clients solange?“",
+        "„Wie hoch ist euer Replikationsfaktor je Region?“",
+        "„Meint ihr nicht in Wahrheit starke Konsistenz?“",
+        "„Warum nehmt ihr nicht einfach Postgres?“",
       ],
       explanation:
-        "Eventuelle Konsistenz verspricht Konvergenz, sobald die Schreibvorgänge enden, ohne Zeitgrenze. Miss die Konvergenz unter Last und Fehlern, definiere, was Clients solange sehen, und ergänze Sitzungsgarantien nur bei Bedarf.",
+        "Eventual Consistency verspricht Konvergenz, sobald die Schreibvorgänge enden, ohne Zeitgrenze. Miss die Konvergenz unter Last und Fehlern, definiere, was Clients solange sehen, und ergänze Sitzungsgarantien nur bei Bedarf.",
     },
     {
       kind: "quiz",
       cpId: "q3",
       title: "Die Fangfrage",
       question:
-        'Warum ist "CA" für ein repliziertes System, dessen Knoten die Verbindung verlieren können, meist eine unbrauchbare Kurzform?',
+        "Warum ist „CA“ für ein repliziertes System, dessen Knoten die Verbindung verlieren können, meist eine unbrauchbare Kurzform?",
       options: [
         "Konsistenz und Verfügbarkeit schließen einander per Definition aus.",
         "Offen bleibt, was passiert, wenn gesunde Knoten einander nicht erreichen.",
@@ -128,18 +128,18 @@ Ersetz „konsistent“ in einer Anforderung durch eine beobachtbare Regel, etwa
         },
         {
           term: "Sloppy Quorum",
-          q: 'Was bedeutet "sloppy"?',
-          a: "Im Fehlerfall nehmen vorübergehende Replikate Schreibvorgänge an und reichen sie später weiter. Konfiguration und Konfliktbehandlung bestimmen die Garantien.",
+          q: "Was bedeutet „sloppy“?",
+          a: "Im Fehlerfall können vorübergehende Replikate Schreibvorgänge annehmen und später weiterreichen. Konfiguration und Konfliktbehandlung bestimmen die Garantien.",
         },
         {
           term: "Read Repair",
-          q: "Wie gleichen sich Replikate bei eventueller Konsistenz an?",
-          a: "Ein Lesevorgang, der abweichende Replikate sieht, stößt den Abgleich an, und Anti-Entropy im Hintergrund ist ein zweiter Pfad. Versionsordnung und Konflikte definierst du trotzdem.",
+          q: "Wie gleichen sich Replikate bei Eventual Consistency an?",
+          a: "Ein Lesevorgang, der abweichende Replikate sieht, kann den Abgleich anstoßen, und Anti-Entropy im Hintergrund ist ein zweiter Pfad. Versionsordnung und Konflikte definierst du trotzdem.",
         },
         {
           term: "Linearisierbarkeit",
           q: "Warum ist sie teuer?",
-          a: "Jeder Vorgang muss atomar wirken und die Echtzeitordnung respektieren, über Leader, Leases, Konsens oder Quorums. Diese Koordination kostet Latenz.",
+          a: "Jeder Vorgang muss atomar wirken und die Echtzeitordnung respektieren, über Leader, Leases, Konsens oder Quorums. Was diese Koordination kostet, entscheidet der Entwurf.",
         },
         {
           term: "Begrenzte Veraltung",

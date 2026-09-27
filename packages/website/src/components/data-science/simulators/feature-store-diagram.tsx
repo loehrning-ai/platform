@@ -76,7 +76,7 @@ export function FeatureStoreDiagram() {
         "Feature Store und Training-Serving-Skew",
       )}
       caption={text(
-        "The toggle swaps two hard-coded scenarios and measures no skew. Parity still depends on versions, data freshness, point-in-time joins and online/offline tests.",
+        "The toggle swaps two hard-coded scenarios and does not measure skew. Parity still depends on versions, data freshness, point-in-time joins and online/offline tests.",
         "Der Schalter wechselt zwischen zwei festen Szenarien und misst keinen Skew. Parität hängt weiterhin von Versionen, Datenfrische, zeitpunktkorrekten Joins und Online-/Offline-Tests ab.",
       )}
     >

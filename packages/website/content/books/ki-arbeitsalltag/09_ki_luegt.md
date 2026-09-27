@@ -70,7 +70,7 @@ Wurden in Millionen Texten mehr Chefärzte männlich beschrieben, bleibt das die
 
 Auch zukünftige Modelle der GPT-, Claude- und Gemini-Reihen werden halluzinieren, seltener, aber nie null. Ein System, das alles schreiben kann, schreibt auch Dinge, die nicht stimmen.
 
-Bei Meta vertraue ich KI-Output nicht blind, und dort arbeiten Leute, die die Modelle selbst gebaut haben. Wenn die jede Antwort gegenlesen, solltest du es auch tun.
+Bei Meta lese ich KI-Output gegen, obwohl dort die Leute arbeiten, die die Modelle bauen. Mach das auch.
 
 > **Das Wichtigste:** Je überzeugender der KI-Output klingt, desto sorgfältiger musst du prüfen, denn subtile, plausible Fehler fallen nicht auf.
 

@@ -192,6 +192,8 @@ describe("template count 12→8 fix", () => {
     expect(raw).not.toContain("brauchen zwölf");
   });
 
+  // keyTakeaway was removed by the lesson trim; see copy-diet requests.md. Until it
+  // returns, the section must still name the eight templates and say they prove no compliance.
   it("block-6 L3 s1 references '8' or 'acht' (8 honest templates)", () => {
     const data = readJson("block-6-praxis-lessons.json") as {
       lessons: { sections: { content?: string; keyTakeaway?: string }[] }[];
@@ -199,6 +201,7 @@ describe("template count 12→8 fix", () => {
     const s1 = data.lessons[2]?.sections[0];
     const kt = `${s1?.keyTakeaway ?? ""} ${s1?.content ?? ""}`.toLowerCase();
     expect(/\bacht\b|\b8 /u.test(kt)).toBe(true);
+    expect(kt).toContain("compliance");
   });
 });
 
@@ -339,8 +342,9 @@ describe("landing page reframe", () => {
 
   it("landing page has two-track callout", () => {
     const content = readFile("app/eu-ai-act-kurs/page.tsx");
-    expect(content).toContain("Ohne Programmier- oder Jura-Vorkenntnisse");
+    expect(content).toContain("Blöcke 1 und 2");
     expect(content).toContain("Ab Block 3");
+    expect(content).toContain("Ohne Programmier- oder Jura-Vorkenntnisse");
   });
 
   it("landing page states that participation or its record does not prove Article 4 compliance", () => {

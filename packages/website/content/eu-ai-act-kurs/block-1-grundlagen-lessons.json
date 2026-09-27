@@ -28,9 +28,9 @@
       "sections": [
         {
           "id": "block_1_lesson_1_section_1",
-          "title": "27 nationale KI-Gesetze in der Pipeline",
+          "title": "Drohende Zersplitterung in 27 Regelwerke",
           "readTimeMinutes": 2,
-          "content": "Bis 2023 bereiteten mehrere Mitgliedstaaten eigene KI-Vorschriften vor, darunter die französische CNIL und die spanische AESIA; der italienische Garante sperrte im März 2023 ChatGPT. Ohne Harmonisierung hätte ein deutscher Mittelständler 27 Compliance-Regime bedienen müssen, jedes mit eigenen Definitionen, Meldepflichten und Bußgeldern.\n\nErwägungsgrund 3 der Verordnung (EU) 2024/1689 nennt das Problem: Unterschiedliche nationale Vorschriften zersplittern den Binnenmarkt. Die Kommission verfolgt zwei Ziele, vertrauenswürdige KI im Binnenmarkt und Innovation (Art. 1 Abs. 1 Buchstaben a, h).\n\n**Rechtsgrundlage** ist Art. 114 AEUV (Binnenmarkt), nicht Art. 16 AEUV (Datenschutz). Der AI Act behandelt KI als Produkt, und für Sie gilt ein Regelwerk in allen 27 Mitgliedstaaten."
+          "content": "Bis 2023 bereiteten mehrere Mitgliedstaaten eigene KI-Regeln vor. In Frankreich arbeitete die CNIL an KI-Vorgaben, Spanien baute die KI-Aufsicht AESIA auf, und der italienische Garante sperrte im März 2023 ChatGPT. Ohne Harmonisierung hätte ein deutscher Mittelständler 27 Compliance-Regime bedienen müssen, jedes mit eigenen Definitionen, Meldepflichten und Bußgeldern.\n\nErwägungsgrund 3 der Verordnung (EU) 2024/1689 nennt das Problem: Unterschiedliche nationale Vorschriften können den Binnenmarkt zersplittern. Die Verordnung nennt zwei Ziele, vertrauenswürdige KI im Binnenmarkt und Innovation (Art. 1).\n\n**Rechtsgrundlage** ist Art. 114 AEUV (Binnenmarkt), nicht Art. 16 AEUV (Datenschutz). Der AI Act behandelt KI als Produkt, und für Sie gilt ein Regelwerk in allen 27 Mitgliedstaaten."
         },
         {
           "id": "block_1_lesson_1_section_2",
@@ -42,7 +42,7 @@
           "id": "block_1_lesson_1_section_3",
           "title": "Die Tradition: CE, Maschinen-VO, Produkthaftung",
           "readTimeMinutes": 2,
-          "content": "Der AI Act ist Produktsicherheitsrecht. Über die Verordnung 765/2008, den Neuen Rechtsrahmen, folgt er der CE-Logik, die Maschinenbauer seit Jahrzehnten kennen: Konformitätsbewertung, benannte Stelle, technische Dokumentation, EU-Konformitätserklärung, CE-Kennzeichen, Marktüberwachung. Wer Maschinen, Medizinprodukte oder Spielzeug CE-konform herstellt, ergänzt oft nur ein KI-Kapitel.\n\n**Die DSGVO gilt daneben.** Art. 2 Abs. 7 lässt sie unberührt. Wer personenbezogene Daten in ein KI-System einspeist, hält beide Regelwerke ein. Die DSGVO regelt, ob Sie Daten verarbeiten dürfen, der AI Act, wie das System funktionieren muss (Erwägungsgrund 9).\n\n**Unmittelbar anwendbar.** Als EU-Verordnung (Art. 288 Abs. 2 AEUV) gilt der AI Act in allen 27 Mitgliedstaaten ohne Umsetzungsgesetz. Die Verbote (Art. 5) und die KI-Kompetenzpflicht (Art. 4) gelten seit 2. Februar 2025 direkt."
+          "content": "Der AI Act ist Produktsicherheitsrecht. Über die Verordnung 765/2008, den Neuen Rechtsrahmen, folgt er der CE-Logik, die Maschinenbauer seit Jahrzehnten kennen: Konformitätsbewertung, benannte Stelle, technische Dokumentation, EU-Konformitätserklärung, CE-Kennzeichen, Marktüberwachung. Wer Maschinen, Medizinprodukte oder Spielzeug CE-konform herstellt, ergänzt seine technische Dokumentation oft um ein KI-Kapitel.\n\n**Die DSGVO gilt daneben.** Art. 2 Abs. 7 lässt sie unberührt. Wer personenbezogene Daten in ein KI-System einspeist, hält beide Regelwerke ein. Die DSGVO regelt, ob Sie Daten verarbeiten dürfen, der AI Act, wie das System funktionieren muss (Erwägungsgrund 9).\n\n**Unmittelbar anwendbar.** Als EU-Verordnung (Art. 288 Abs. 2 AEUV) gilt der AI Act in allen 27 Mitgliedstaaten ohne Umsetzungsgesetz. Die Verbote (Art. 5) und die KI-Kompetenzpflicht (Art. 4) gelten seit 2. Februar 2025 direkt."
         }
       ],
       "quiz": [
@@ -160,7 +160,7 @@
           "id": "block_1_lesson_2_section_3",
           "title": "Akteur oder nicht: die private Ausnahme (Art. 2 Abs. 10)",
           "readTimeMinutes": 1,
-          "content": "Art. 3 Nr. 8 fasst alle vier Rollen sowie Bevollmächtigte und Produkthersteller unter dem Begriff **Akteur** zusammen. Für jeden Akteur gilt mindestens Art. 4 (KI-Kompetenz), unabhängig von der genauen Rolle.\n\n**Die private Ausnahme:** Art. 2 Abs. 10 nimmt natürliche Personen aus, die KI ausschließlich privat nutzen, etwa ChatGPT für eigene Texte, Bilder oder die Steuererklärung.\n\n- Eine Privatperson plant mit ChatGPT ihren Urlaub: **nicht erfasst**.\n- Dieselbe Person schreibt als Angestellte mit ChatGPT Kundenkorrespondenz: **erfasst**, weil der Arbeitgeber es beruflich als Betreiber nutzt (Art. 3 Nr. 4).\n- Eine Geschäftsführerin schreibt mit ChatGPT Angebotstexte: **erfasst**, weil ihr Unternehmen Betreiber ist.",
+          "content": "Art. 3 Nr. 8 fasst alle vier Rollen sowie Bevollmächtigte und Produkthersteller unter dem Begriff **Akteur** zusammen. Art. 4 (KI-Kompetenz) gilt für alle Anbieter und Betreiber, unabhängig von der Risikoklasse.\n\n**Die private Ausnahme:** Art. 2 Abs. 10 nimmt natürliche Personen aus, die KI ausschließlich privat nutzen, etwa ChatGPT für eigene Texte, Bilder oder die Steuererklärung.\n\n- Eine Privatperson plant mit ChatGPT ihren Urlaub: **nicht erfasst**.\n- Dieselbe Person schreibt als Angestellte mit ChatGPT Kundenkorrespondenz: **erfasst**, weil der Arbeitgeber es beruflich als Betreiber nutzt (Art. 3 Nr. 4).\n- Eine Geschäftsführerin schreibt mit ChatGPT Angebotstexte: **erfasst**, weil ihr Unternehmen Betreiber ist.",
           "keyTakeaway": "Wer KI rein privat nutzt, ist kein Betreiber im Sinne der Verordnung (Art. 2 Abs. 10). Berufliche Nutzung ist erfasst, egal wie klein der Betrieb.",
           "_claimRef": "ai-act-general-application-2026-08-02",
           "sources": [
@@ -278,7 +278,7 @@
           "id": "block_1_lesson_3_section_2",
           "title": "Der Bevollmächtigte in der EU",
           "readTimeMinutes": 2,
-          "content": "Art. 3 Nr. 5 definiert den **Bevollmächtigten** als in der EU niedergelassene natürliche oder juristische Person mit schriftlicher Vollmacht, Pflichten des Anbieters wahrzunehmen. Nach Art. 22 müssen Drittland-Anbieter der erfassten Hochrisiko-KI-Systeme einen benennen. OpenAI und Microsoft (beide Irland), Salesforce und Workday unterhalten EU-Einheiten oder Vertretungen, auch wegen Art. 22.\n\nDrei Fragen gehören in den nächsten Vendor-Vertrag:\n\n- **Wer ist der EU-Bevollmächtigte (Art. 22)?** Name, Sitz, Kontakt.\n- **Liegt die technische Dokumentation nach Art. 11 vor?** Dann Einsicht auf Anforderung vertraglich zusichern lassen.\n- **Wie ist das System klassifiziert?** Verbotene Praktik, hohes Risiko nach Anhang III oder Anhang I, Transparenzfall nach Art. 50, minimales Risiko oder GPAI-Modell.\n\nWer das nicht zügig beantworten kann, kann seine AI-Act-Compliance nicht belegen."
+          "content": "Art. 3 Nr. 5 definiert den **Bevollmächtigten** als in der EU niedergelassene natürliche oder juristische Person mit schriftlicher Vollmacht, Pflichten des Anbieters wahrzunehmen. Nach Art. 22 müssen Drittland-Anbieter der erfassten Hochrisiko-KI-Systeme einen benennen. OpenAI und Microsoft (beide Irland), Salesforce und Workday unterhalten EU-Einheiten oder Vertretungen, auch wegen Art. 22.\n\nDrei Fragen gehören in den nächsten Vendor-Vertrag:\n\n- **Wer ist der EU-Bevollmächtigte (Art. 22)?** Name, Sitz, Kontakt.\n- **Liegt die technische Dokumentation nach Art. 11 vor?** Dann Einsicht auf Anforderung vertraglich zusichern lassen.\n- **Wie ist das System klassifiziert?** Verbotene Praktik, hohes Risiko nach Anhang III oder Anhang I, Transparenzfall nach Art. 50, minimales Risiko oder GPAI-Modell.\n\nEin Anbieter, der diese drei Fragen nicht beantworten kann, kann seine AI-Act-Compliance nicht belegen."
         },
         {
           "id": "block_1_lesson_3_section_3",
@@ -363,11 +363,11 @@
             },
             {
               "id": "d",
-              "text": "Nur das Serverland",
+              "text": "Nur das Land, in dem die Server stehen",
               "isCorrect": false
             }
           ],
-          "explanation": "Ohne Bevollmächtigten (Art. 22), technische Dokumentation (Art. 11) und Klassifikation können Sie Ihre Betreiberpflichten nach Art. 26 nicht erfüllen."
+          "explanation": "Klassifikation und technische Dokumentation (Art. 11) brauchen Sie für Ihre Betreiberpflichten nach Art. 26, der EU-Bevollmächtigte (Art. 22) ist Ihr Ansprechpartner in der EU."
         }
       ]
     },
@@ -376,7 +376,7 @@
       "blockId": "block_1",
       "number": 4,
       "title": "Zeitplan: Februar 2025, August 2025, August 2026, Dezember 2027, August 2028",
-      "subtitle": "Was schon gilt und was im August 2026, 2027 und 2028 folgt",
+      "subtitle": "Was schon gilt und was 2026, 2027 und 2028 folgt",
       "durationMinutes": 4,
       "keyConcepts": [
         "Art. 113 (gestaffelte Anwendbarkeit)",
@@ -390,7 +390,7 @@
           "id": "block_1_lesson_4_section_1",
           "title": "Die Stichtage und der geänderte Hochrisiko-Zeitplan",
           "readTimeMinutes": 2,
-          "content": "Die Verordnung (EU) 2024/1689 trat am **1. August 2024** in Kraft und gilt stufenweise:\n\n- **2. Februar 2025:** Artikel 4 zur KI-Kompetenz und große Teile der Verbote nach Artikel 5 gelten.\n- **2. August 2025:** GPAI-Modellregeln, Governance-Struktur und große Teile des Sanktionsrahmens werden anwendbar; die Kommissionsdurchsetzung gegenüber GPAI-Anbietern startet am **2. August 2026**.\n- **27. Juli 2026:** Die Verordnung (EU) 2026/1744 tritt in Kraft und ändert unter anderem Artikel 4, einzelne Verbote, Übergangsregeln und den Hochrisiko-Zeitplan.\n- **2. August 2026:** Transparenzpflichten nach Artikel 50 und weitere allgemeine Anwendungspunkte greifen.\n- **2. Dezember 2027:** Hochrisiko-Regeln für eigenständige Systeme nach Artikel 6 Absatz 2 und Anhang III.\n- **2. August 2028:** Hochrisiko-Regeln für produktintegrierte Systeme nach Artikel 6 Absatz 1 und Anhang I.\n\nDie Hochrisiko-Termine sind mit der veröffentlichten Änderungsverordnung geltendes Recht. Für Systeme, die vor den neuen Stichtagen auf den Markt kamen, gelten eigene Übergangsregeln.",
+          "content": "Die Verordnung (EU) 2024/1689 trat am **1. August 2024** in Kraft und gilt stufenweise:\n\n- **2. Februar 2025:** Artikel 4 zur KI-Kompetenz und große Teile der Verbote nach Artikel 5 gelten.\n- **2. August 2025:** GPAI-Modellregeln, Governance-Struktur und große Teile des Sanktionsrahmens werden anwendbar; die Kommissionsdurchsetzung gegenüber GPAI-Anbietern startet am **2. August 2026**.\n- **27. Juli 2026:** Die Verordnung (EU) 2026/1744 tritt in Kraft und ändert unter anderem Artikel 4, einzelne Verbote, Übergangsregeln und den Hochrisiko-Zeitplan.\n- **2. August 2026:** Die meisten übrigen Vorschriften gelten, darunter die Transparenzpflichten nach Artikel 50.\n- **2. Dezember 2027:** Hochrisiko-Regeln für eigenständige Systeme nach Artikel 6 Absatz 2 und Anhang III.\n- **2. August 2028:** Hochrisiko-Regeln für produktintegrierte Systeme nach Artikel 6 Absatz 1 und Anhang I.\n\nDie Hochrisiko-Termine sind mit der veröffentlichten Änderungsverordnung geltendes Recht. Für Systeme, die vor den neuen Stichtagen auf den Markt kamen, gelten eigene Übergangsregeln.",
           "_claimRef": "ai-act-article-4-literacy-2025-02-02",
           "sources": [
             {
@@ -402,7 +402,7 @@
           "id": "block_1_lesson_4_section_2",
           "title": "Ihre Aufgaben pro Stichtag",
           "readTimeMinutes": 2,
-          "content": "Artikel 4 verlangt keine bestimmte Bescheinigung und seit der Änderung kein garantiertes individuelles Kompetenzniveau (Stand 28. Juli 2026). Anbieter und Betreiber müssen Maßnahmen treffen, die die Entwicklung der KI-Kompetenz kontextgerecht unterstützen.\n\n**Jetzt:**\n\n- Inventar aller KI-Systeme im Haus, Schatten-IT eingeschlossen\n- Risikoklassifizierung pro System (Anhang III, Art. 5, GPAI oder geringes Risiko)\n- rollen- und risikogerechte KI-Kompetenzmaßnahmen nach Art. 4 dokumentieren\n- Hinweise nach Art. 50 bis zum 2. August 2026 umsetzen, soweit der Tatbestand greift\n\n**Für 2027 und 2028:**\n\n- Hochrisiko-Systeme planen: eigenständige auf den **2. Dezember 2027**, produktintegrierte auf den **2. August 2028**\n- Vendor-Unterlagen, Logs, menschliche Aufsicht und, falls erforderlich, eine Grundrechtefolgenabschätzung vorbereiten\n\nEine wesentliche Änderung kann Übergangsregeln beenden oder eine neue Bewertung auslösen, klassifizieren Sie deshalb nach jedem größeren Update neu.",
+          "content": "Artikel 4 schreibt keine bestimmte Form der Dokumentation vor und seit der Änderung kein garantiertes individuelles Kompetenzniveau (Stand 28. Juli 2026). Anbieter und Betreiber müssen Maßnahmen treffen, die die Entwicklung der KI-Kompetenz kontextgerecht unterstützen.\n\n**Jetzt:**\n\n- Inventar aller KI-Systeme im Haus anlegen, Schatten-IT eingeschlossen\n- Risiko pro System klassifizieren (Anhang III, Art. 5, GPAI oder geringes Risiko)\n- rollen- und risikogerechte KI-Kompetenzmaßnahmen nach Art. 4 dokumentieren\n- Hinweise nach Art. 50 bis zum 2. August 2026 umsetzen, soweit der Tatbestand greift\n\n**Für 2027 und 2028:**\n\n- Hochrisiko-Systeme planen: eigenständige auf den **2. Dezember 2027**, produktintegrierte auf den **2. August 2028**\n- Vendor-Unterlagen, Logs, menschliche Aufsicht und, falls erforderlich, eine Grundrechtefolgenabschätzung vorbereiten\n\nEine wesentliche Änderung kann Übergangsregeln beenden oder eine neue Bewertung auslösen. Klassifizieren Sie deshalb nach jedem größeren Update neu.",
           "_claimRef": "ai-literacy-supervision-2026-08-02",
           "sources": [
             {
@@ -414,7 +414,7 @@
           "id": "block_1_lesson_4_section_3",
           "title": "Wann greift die Durchsetzung?",
           "readTimeMinutes": 2,
-          "content": "Art. 99 der Verordnung (EU) 2024/1689 staffelt die Bußgelder in drei Stufen. Für Unternehmen gilt der höhere der beiden Werte:\n\n- **Verbotene Praktiken (Art. 5):** bis **35 Mio. € oder 7 %** des weltweiten Jahresumsatzes (Art. 99 Abs. 3)\n- **Pflichten nach Art. 99 Abs. 4:** bis **15 Mio. € oder 3 %**\n- **Falsche Angaben an Behörden:** bis **7,5 Mio. € oder 1 %** (Art. 99 Abs. 5)\n\nFür KMU und seit der Änderung auch für kleine Mid-Caps gelten eigene Höchstgrenzen. Berechnung und Zuordnung zur Bußgeldstufe hängen vom Einzelfall ab, ebenso vom verletzten Artikel, seinem Anwendungsdatum und der zuständigen Behörde.",
+          "content": "Nach der Kommissions-FAQ beginnen nationale Aufsicht und Durchsetzung Anfang August 2026. Art. 99 der Verordnung (EU) 2024/1689 staffelt die Bußgelder in drei Stufen. Für Unternehmen gilt der höhere der beiden Werte, für KMU der niedrigere (Art. 99 Abs. 6):\n\n- **Verbotene Praktiken (Art. 5):** bis **35 Mio. EUR oder 7 %** des weltweiten Jahresumsatzes (Art. 99 Abs. 3)\n- **Pflichten der Akteure, etwa nach Art. 16, 26 und 50 (Art. 99 Abs. 4):** bis **15 Mio. EUR oder 3 %**\n- **Falsche Angaben an Behörden:** bis **7,5 Mio. EUR oder 1 %** (Art. 99 Abs. 5)\n\nSeit der Änderung haben auch kleine Mid-Caps eigene Höchstgrenzen. Berechnung und Zuordnung zur Bußgeldstufe hängen vom Einzelfall ab, ebenso vom verletzten Artikel, seinem Anwendungsdatum und der zuständigen Behörde.",
           "keyTakeaway": "Artikel 4 gilt seit Februar 2025, seit 27. Juli 2026 in geänderter Form. Nationale Aufsicht und Durchsetzung beginnen nach der Kommissions-FAQ Anfang August 2026.",
           "_claimRef": "ai-literacy-supervision-2026-08-02",
           "sources": [
@@ -485,26 +485,26 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "7,5 Mio. € oder 1 % Umsatz",
+              "text": "7,5 Mio. EUR oder 1 % Umsatz",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "15 Mio. € oder 3 % Umsatz",
+              "text": "15 Mio. EUR oder 3 % Umsatz",
               "isCorrect": false
             },
             {
               "id": "c",
-              "text": "35 Mio. € oder 7 % Umsatz, der höhere Wert",
+              "text": "35 Mio. EUR oder 7 % Umsatz",
               "isCorrect": true
             },
             {
               "id": "d",
-              "text": "50 Mio. € oder 10 % Umsatz",
+              "text": "50 Mio. EUR oder 10 % Umsatz",
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 99 Abs. 3 sieht bis zu 35 Mio. € oder 7 % vor; für KMU gilt nach Art. 99 Abs. 6 der niedrigere Wert."
+          "explanation": "Art. 99 Abs. 3 sieht bis zu 35 Mio. EUR oder 7 % vor, je nachdem, welcher Wert höher ist; für KMU gilt nach Art. 99 Abs. 6 der niedrigere Wert."
         }
       ]
     }

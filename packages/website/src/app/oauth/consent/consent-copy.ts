@@ -105,7 +105,7 @@ const DE: ConsentPageCopy = {
     email:
       "Die App kann deine E-Mail-Adresse lesen und sehen, ob sie bestätigt ist.",
     profile:
-      "Die Agenten-Werkzeuge dieser Plattform geben keine Profildaten wie deinen Namen oder dein Profilbild heraus.",
+      "Profil (Name, Profilbild): Die Agenten-Werkzeuge geben keine Profildaten heraus.",
     phone: "Die App kann deine hinterlegte Telefonnummer lesen.",
   },
   unknownScope: (scope) =>
@@ -113,7 +113,7 @@ const DE: ConsentPageCopy = {
   noScopes:
     "Die App fragt keine zusätzlichen Profildaten an.",
   platformAccess:
-    "Mit einer Freigabe liest die App über die Agenten-Schnittstelle deinen Lernfortschritt und deinen nächsten Schritt. Schreiben oder löschen kann sie auf loehrning.ai nichts.",
+    "Mit einer Freigabe darf die App über die Agenten-Schnittstelle nur deinen Lernfortschritt und deinen nächsten Schritt lesen. Schreiben oder löschen kann sie auf loehrning.ai nichts.",
   tokenPower:
     "Unsere Kontoseiten und Kontoeinstellungen lehnen das Zugriffstoken dieser App ab. Unser Anmeldedienst Supabase akzeptiert es bis zum Ablauf wie deine eigene Anmeldung, etwa um deine E-Mail-Adresse zu lesen. Gib die Freigabe nur Programmen, die du selbst installiert hast.",
   approve: "Zugriff erlauben",
@@ -124,7 +124,7 @@ const DE: ConsentPageCopy = {
   errorHeading: "Freigabe nicht möglich",
   errorBodies: {
     "missing-request":
-      "Diesem Aufruf fehlt die Kennung der Anfrage, also ist unklar, welche App du freigeben würdest.",
+      "Diesem Aufruf fehlt die Kennung der Anfrage. Deshalb ist unklar, welche App du freigeben würdest.",
     "invalid-request":
       "Die Kennung in der Adresse hat ein ungültiges Format.",
     "unknown-request":
@@ -166,7 +166,7 @@ const EN: ConsentPageCopy = {
     email:
       "The app can read your email address and whether it has been confirmed.",
     profile:
-      "The agent tools on this platform return no profile data such as your name or profile picture.",
+      "Profile (name, profile picture): the agent tools return no profile data.",
     phone: "The app can read your stored phone number.",
   },
   unknownScope: (scope) =>
@@ -174,7 +174,7 @@ const EN: ConsentPageCopy = {
   noScopes:
     "The app requests no extra profile data.",
   platformAccess:
-    "With an approval the app reads your learning progress and your next step through the agent interface. It can never write or delete anything on loehrning.ai.",
+    "With an approval the app may only read your learning progress and your next step through the agent interface. It can never write or delete anything on loehrning.ai.",
   tokenPower:
     "Our account pages and account settings refuse this app's access token. Our sign-in service Supabase accepts it like your own sign-in until it expires, for example to read your email address. Only approve programs you installed yourself.",
   approve: "Allow access",

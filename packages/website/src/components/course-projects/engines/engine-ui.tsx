@@ -2,6 +2,7 @@
 
 import { createContext, useContext, type ReactNode } from "react";
 
+import { getLessonMissionProfile } from "@/lib/course-projects/lesson-missions";
 import type {
   CourseProjectConfig,
   LocalizedProjectText,
@@ -28,7 +29,8 @@ const EngineLocaleContext = createContext<"de" | "en">("en");
 interface EngineFrameProps {
   config: CourseProjectConfig;
   locale: "de" | "en";
-  engineLabel: string;
+  /** Optional variant name, shown as a small eyebrow above the heading. */
+  engineLabel?: string;
   children: ReactNode;
 }
 
@@ -38,6 +40,9 @@ export function EngineFrame({
   engineLabel,
   children,
 }: EngineFrameProps) {
+  // The heading reuses the mission instrument name, so the button that opens
+  // the engine and the panel it opens carry the same name.
+  const instrument = getLessonMissionProfile(config.courseSlug).instrument;
   return (
     <EngineLocaleContext.Provider value={locale}>
       <section
@@ -45,13 +50,25 @@ export function EngineFrame({
         className="min-w-0 border-2 border-foreground bg-card shadow-[5px_5px_0_0_rgba(11,9,8,0.16)]"
       >
         <header className="border-b-2 border-foreground bg-foreground px-4 py-4 text-background sm:px-6">
+          {engineLabel ? (
+            <p className="mb-1 font-mono text-xs font-bold uppercase tracking-[0.14em] text-[#ffc6aa]">
+              {engineLabel}
+            </p>
+          ) : null}
           <h2
             id={`${config.id}-project-title`}
             className="break-words text-xl font-black leading-tight sm:text-2xl"
           >
-            {engineLabel}
+            {projectText(instrument, locale)}
           </h2>
         </header>
+
+        <p className="min-w-0 break-words border-b border-foreground/20 p-4 text-sm leading-relaxed sm:px-6">
+          <span className="font-bold">
+            {locale === "de" ? "Fall: " : "Case: "}
+          </span>
+          {projectText(config.scenario, locale)}
+        </p>
 
         <p className="min-w-0 break-words border-b border-foreground/20 bg-brand-orange/[0.06] p-4 text-sm leading-relaxed sm:px-6">
           {projectText(config.safety, locale)}

@@ -114,8 +114,8 @@ const COPY: Readonly<Record<Locale, AiNativeOperatorCourseCopy>> = {
       outcomesEyebrow: "Course outcomes",
       outcomesTitle: "Practices covered",
       syllabusEyebrow: "Syllabus",
-      syllabusMode: "Nine modules · linear or self-directed",
-      syllabusTitle: "Nine modules and 39 lessons",
+      syllabusMode: "In order or in any order",
+      syllabusTitle: "All modules",
       lessonUnit: (count) => `${count} ${count === 1 ? "lesson" : "lessons"}`,
     },
     module: {
@@ -228,8 +228,8 @@ const COPY: Readonly<Record<Locale, AiNativeOperatorCourseCopy>> = {
       outcomesEyebrow: "Kursziele",
       outcomesTitle: "Behandelte Praktiken",
       syllabusEyebrow: "Lehrplan",
-      syllabusMode: "Neun Module · linear oder selbstgesteuert",
-      syllabusTitle: "Neun Module und 39 Lektionen",
+      syllabusMode: "Linear oder in eigener Reihenfolge",
+      syllabusTitle: "Alle Module",
       lessonUnit: (count) =>
         `${count} ${count === 1 ? "Lektion" : "Lektionen"}`,
     },
@@ -253,7 +253,7 @@ const COPY: Readonly<Record<Locale, AiNativeOperatorCourseCopy>> = {
       reading: "Lektüre",
       minutes: (minutes) => `${minutes} Min.`,
       quizIntro:
-        "Wähle zu jeder Frage die beste Antwort. Sie bleibt nur in diesem Browser.",
+        "Wähle zu jeder Frage die beste Antwort. Deine Antworten bleiben nur in diesem Browser.",
       quickCheck: "Wissensprüfung",
       check: "Prüfen",
       answerOptions: "Antwortmöglichkeiten",

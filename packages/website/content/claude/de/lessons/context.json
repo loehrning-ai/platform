@@ -5,7 +5,7 @@
   "subtitle": "Was in eine Anfrage eingeht, wie Tokens gezählt werden, was du prüfen musst.",
   "durationMinutes": 10,
   "trackId": "foundations",
-  "hook": "Kontext ist begrenzt. Relevanz, Quellenqualität und Anordnung entscheiden die Antwort.",
+  "hook": "Das Kontextfenster ist begrenzt, also wähle relevante Quellen aus.",
   "keyConcepts": [
     "Kontext-Engineering",
     "Semantischer Raum",
@@ -18,19 +18,19 @@
     {
       "id": "context-is-the-product",
       "title": "Kontext ist das Produkt",
-      "readTimeMinutes": 3,
+      "readTimeMinutes": 1,
       "content": "Kontext-Engineering heißt auswählen und anordnen, was das Modell sieht: Anweisungen, Quelldokumente, Beispiele, frühere Nachrichten und Tool-Ergebnisse. Klare Sprache liefert keine fehlende Tatsache und repariert keine unzuverlässige Quelle.\n\n**Semantische Repräsentationen.** Modelle verarbeiten Tokens als hochdimensionale numerische Zustände, in denen verwandte Begriffe nah beieinander liegen können. Eine zweidimensionale Karte veranschaulicht das nur.\n\n**Begrenzter Kontext.** Modell und Produkt haben dokumentierte Grenzen. Lange Eingaben scheitern trotzdem, wenn die relevante Stelle untergeht, Quellen sich widersprechen oder die Antwort das Budget aufbraucht; teste mit dem echten Modell und echten Eingaben."
     },
     {
       "id": "meaning-in-space",
-      "title": "Bedeutung lebt im Raum",
+      "title": "Vage Wörter präzisieren",
       "readTimeMinutes": 1,
-      "content": "„Prägnant“ und „erschöpfend“ stellen verschiedene Anforderungen an die Ausgabe. Soll das Ergebnis konsistent sein, übersetze solche Wörter in prüfbare Grenzen."
+      "content": "Die Karte oben zeigt, welche Begriffe nah beieinander liegen. Wörter wie „prägnant“ oder „erschöpfend“ sagen dem Modell aber nicht, was genau du willst. Übersetze sie in prüfbare Grenzen, etwa „höchstens 150 Wörter“."
     },
     {
       "id": "window-as-budget",
       "title": "Das Kontextfenster ist ein Budget",
-      "readTimeMinutes": 2,
+      "readTimeMinutes": 1,
       "content": "Anweisungen, Nachrichten, Dokumente, frühere Interaktionen und Tool-Ergebnisse teilen sich das Fenster mit der Antwort.\n\n1. **Dokumente vor die Frage.** Anthropics Langkontext-Anleitung setzt bei Mehrdokument-Aufgaben die Quellen vor die Frage. Prüfe das mit deinen Evals.\n2. **Jede Quelle beschriften.** Tags wie `<document index=\"1\" source=\"…\">` halten Quellgrenzen sichtbar und erleichtern ein festes Zitatformat.\n3. **Die Belegregel nennen.** Leg fest, ob Allgemeinwissen erlaubt ist, welche Quellen zählen und was ohne Beleg zurückkommt.\n\nOhne Retrieval- oder Relevanzstrategie bringt eine große Dokumentmenge Widersprüche und verdeckt die gesuchte Stelle."
     },
     {
@@ -49,7 +49,7 @@
       "id": "too-big-docs",
       "title": "Wenn deine Dokumente zu groß sind",
       "readTimeMinutes": 1,
-      "content": "Passt der Quellenbestand nicht ins Kontextbudget, bleib nachvollziehbar:\n\n1. **Retrieval vor Antwort.** Hol Passagen mit Quellenkennung und miss die Trefferquote an bekannten Fragen.\n2. **In Stufen arbeiten.** Trenne Extraktion, Klassifikation, Entwurf und Review, sobald jede Stufe ein prüfbares Ergebnis liefert.\n3. **Tools für Quellen, die sich ändern.** Datei-, Datenbank- oder Websuche liefert aktuelle Belege. Halte Berechtigungen eng und protokolliere die genutzten Quellen.\n\nEine Zusammenfassung ist eine abgeleitete Quelle und verliert Details, also prüfe kritische Aussagen in der Originalpassage."
+      "content": "Passt der Quellenbestand nicht ins Kontextbudget, bleib nachvollziehbar:\n\n1. **Retrieval vor Antwort.** Hol Passagen mit Quellenkennung und miss die Trefferquote an bekannten Fragen.\n2. **In Stufen arbeiten.** Trenne Extraktion, Klassifikation, Entwurf und Review, wenn jede Stufe ein prüfbares Ergebnis liefert.\n3. **Tools für Quellen, die sich ändern.** Datei-, Datenbank- oder Websuche liefert aktuelle Belege. Halte Berechtigungen eng und protokolliere die genutzten Quellen.\n\nEine Zusammenfassung ist eine abgeleitete Quelle und verliert Details, also prüfe kritische Aussagen in der Originalpassage."
     }
   ],
   "widgets": [
@@ -60,7 +60,7 @@
       "props": {
         "lessonId": "context",
         "cpId": "drop",
-        "title": "Bedeutung lebt im Raum",
+        "title": "Bedeutungskarte",
         "scenario": "Diese lokale Illustration ordnet Wörter vordefinierten Themenfeldern zu. Claude wird nicht aufgerufen; Embeddings werden nicht berechnet.",
         "seed": [
           {

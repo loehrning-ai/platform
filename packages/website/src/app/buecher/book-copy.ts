@@ -37,6 +37,7 @@ interface BookPageCopy {
     readonly headingAccent: string;
     readonly introduction: (count: number) => string;
     readonly collectionHeading: string;
+    readonly collectionCountLabel: string;
     readonly collectionDescription: string;
     readonly publicationNumber: (position: number) => string;
     readonly byAuthor: (author: string) => string;
@@ -56,7 +57,6 @@ interface BookPageCopy {
     readonly pdfAfterLogin: string;
     readonly pdfUnavailable: string;
     readonly sourceNote: string;
-    readonly editorialOwner: (owner: string) => string;
     readonly detailsLabel: string;
     readonly sourceInputs: string;
     readonly nextReview: (date: string) => string;
@@ -76,7 +76,7 @@ interface BookPageCopy {
     readonly kicker: string;
     readonly chapterCount: (count: number) => string;
     readonly readingTime: (minutes: number) => string;
-    readonly lastReviewed: (date: string) => string;
+    readonly reviewedLabel: string;
     readonly materialLanguage: string;
     readonly materialLanguageValue: string;
     readonly format: string;
@@ -90,7 +90,6 @@ interface BookPageCopy {
     readonly contentsAria: string;
     readonly contentsHeading: string;
     readonly contentsIntro: string;
-    readonly chapterLanguage: string;
     readonly chapterAria: (title: string) => string;
     readonly minutesShort: (minutes: number) => string;
     readonly companionPrefix: string;
@@ -167,7 +166,7 @@ const BOOK_SOURCE_INPUTS_DE: Readonly<Record<string, string>> = {
   "Public primary sources cited in the book":
     "Im Buch zitierte öffentliche Primärquellen",
   "Qualitative AI-readiness frameworks": "Qualitative Rahmenwerke zur KI-Reife",
-  "Simplified learning-platform editorial review":
+  "Editorial review of the learning-platform edition":
     "Redaktionelle Prüfung der Lernplattform-Fassung",
   "KI-Führerschein lesson content": "Lektionsinhalte des KI-Führerscheins",
   "European Commission AI literacy guidance":
@@ -205,6 +204,7 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
       introduction: () =>
         "Alle Lesefassungen sind redaktionell freigegeben und kostenlos im Browser lesbar.",
       collectionHeading: "Der aktuelle Bestand",
+      collectionCountLabel: "Lesefassungen online",
       collectionDescription: "Kein Konto erforderlich.",
       publicationNumber: (position) =>
         `Ausgabe ${String(position).padStart(2, "0")}`,
@@ -227,7 +227,6 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
       pdfUnavailable: "PDF-Download nicht verfügbar",
       sourceNote:
         "Die Lesefassungen entstanden 2025 und 2026. Primärquellen und Einschränkungen stehen im jeweiligen Kapitel.",
-      editorialOwner: (owner) => `Redaktion: ${owner}`,
       detailsLabel: "Ausgabe, Quellen und Zugang",
       sourceInputs: "Dokumentierte Quellengrundlage",
       nextReview: (date) => `Nächste Prüfung: ${date}`,
@@ -245,11 +244,11 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
     detail: {
       context: "Lernpfad · Stufe 6: Vertiefen",
       contextBody:
-        "Das Lernbuch vertieft den Kurs mit Quellen und Einordnung.",
+        "Das Lernbuch vertieft den begleitenden Kurs mit Quellen und Einordnung.",
       kicker: "Lernbuch · Offene HTML-Lesefassung",
       chapterCount: (count) => `${count} Kapitel`,
       readingTime: (minutes) => `ca. ${minutes} Min.`,
-      lastReviewed: (date) => `Geprüft ${date}`,
+      reviewedLabel: "Geprüft",
       materialLanguage: "Materialsprache",
       materialLanguageValue: "Deutsch",
       format: "Format",
@@ -263,8 +262,7 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
       contentsAria: "Inhaltsverzeichnis",
       contentsHeading: "Inhaltsverzeichnis",
       contentsIntro:
-        "Die Kapitel öffnen im deutschen Reader.",
-      chapterLanguage: "Deutsch",
+        "Die Kapitel öffnen im deutschen Reader, der maßgeblichen Fassung.",
       chapterAria: (title) => `Kapitel „${title}“ öffnen`,
       minutesShort: (minutes) => `${minutes} Min.`,
       companionPrefix: "Begleitender Kurs",
@@ -306,6 +304,7 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
       introduction: () =>
         "Every English reading edition is editorially approved and free to read in your browser.",
       collectionHeading: "The current collection",
+      collectionCountLabel: "Reading editions online",
       collectionDescription: "No account required.",
       publicationNumber: (position) =>
         `Edition ${String(position).padStart(2, "0")}`,
@@ -319,7 +318,7 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
         format: "Format",
         materialLanguage: "Material language",
       },
-      chapterCount: (chapters) => `${chapters} chapters · HTML edition`,
+      chapterCount: (chapters) => `${chapters} chapters`,
       materialLanguageValue: "English",
       contents: "After reading",
       openOverview: "Open book and chapters",
@@ -327,7 +326,6 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
       pdfUnavailable: "PDF download unavailable",
       sourceNote:
         "The reading editions were written in 2025 and 2026. Each chapter states its primary sources and limitations.",
-      editorialOwner: (owner) => `Editorial owner: ${owner}`,
       detailsLabel: "Edition, sources, and access",
       sourceInputs: "Documented source basis",
       nextReview: (date) => `Next review: ${date}`,
@@ -345,11 +343,11 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
     detail: {
       context: "Learning path · Stage 6: Deepen",
       contextBody:
-        "The book adds sources and context to the course.",
+        "The book adds sources and context to its companion course.",
       kicker: "Learning book · Open HTML reading edition",
       chapterCount: (count) => `${count} chapters`,
       readingTime: (minutes) => `approx. ${minutes} min`,
-      lastReviewed: (date) => `Reviewed ${date}`,
+      reviewedLabel: "Reviewed",
       materialLanguage: "Material language",
       materialLanguageValue: "English",
       format: "Format",
@@ -363,8 +361,7 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
       contentsAria: "Table of contents",
       contentsHeading: "Table of contents",
       contentsIntro:
-        "The chapters open in the English reader.",
-      chapterLanguage: "English",
+        "The chapters open in the English reader, the maintained edition.",
       chapterAria: (title) => `Open the chapter “${title}”`,
       minutesShort: (minutes) => `${minutes} min`,
       companionPrefix: "Companion course",

@@ -97,8 +97,8 @@ export const LESSON_MISSION_PROFILES = {
     ),
     evidence: probe(
       text(
-        "Was ist die Herstellerschätzung?",
-        "What is the manufacturer estimate?",
+        "Wie ordnest du die Herstellerschätzung ein?",
+        "How do you classify the manufacturer estimate?",
       ),
       choices(
         choice(
@@ -134,7 +134,7 @@ export const LESSON_MISSION_PROFILES = {
         choice(
           "claim-rule",
           "Claim-Quelle-Zuordnung plus Unsicherheitsformat",
-          "Claim-to-source mapping plus an uncertainty format",
+          "Claim-source map plus uncertainty format",
         ),
       ),
       "claim-rule",
@@ -236,7 +236,7 @@ export const LESSON_MISSION_PROFILES = {
       "The ranking rejects no one automatically but decides which profiles humans ever see. Provider and deployer roles are unresolved.",
     ),
     manipulation: text(
-      "Ändere Zweck, Entscheidungseinfluss oder Rolle und verfolge den Pflichtenpfad.",
+      "Zweck, Entscheidungseinfluss oder Rolle ändern und den Pflichtenpfad verfolgen.",
       "Change purpose, decision influence or role and trace the obligation path.",
     ),
     evidence: probe(
@@ -324,7 +324,7 @@ export const LESSON_MISSION_PROFILES = {
         choice(
           "map-influence",
           "Einfluss und Rollen belegen, beide Pfade testen",
-          "Evidence influence and roles, test both paths",
+          "Document influence and roles, test both paths",
         ),
       ),
       "map-influence",
@@ -345,8 +345,8 @@ export const LESSON_MISSION_PROFILES = {
       choices(
         choice(
           "old-classification",
-          "Die alte Risikoeinstufung, weil das Modell gleich ist",
-          "The old risk class, because the model is the same",
+          "Die alte Risikoeinstufung",
+          "The old risk class",
         ),
         choice(
           "dated-sources",
@@ -405,7 +405,7 @@ export const LESSON_MISSION_PROFILES = {
         choice(
           "blocked-conflict",
           "Ein protokollierter Stopp am Quellenkonflikt",
-          "A logged stop at the source conflict",
+          "A logged stop at the conflict",
         ),
       ),
       "blocked-conflict",
@@ -423,7 +423,7 @@ export const LESSON_MISSION_PROFILES = {
         choice(
           "goal-only",
           "Nur ein möglichst genaues Ziel",
-          "Only a precise goal",
+          "Only the most precise goal possible",
         ),
         choice(
           "boundary-gates",
@@ -443,8 +443,8 @@ export const LESSON_MISSION_PROFILES = {
       ),
       {
         "goal-only": text(
-          "Ein präzises Ziel begrenzt weder Mittel noch Freigaben. „Veröffentliche die Zusammenfassung“ ist eindeutig, erlaubt ohne Stoppgrenze aber das Veröffentlichen trotz Quellenkonflikt.",
-          "A precise goal bounds neither means nor approvals. “Publish the summary” is clear, yet without a stop limit it allows publishing through a source conflict.",
+          "Ein präzises Ziel begrenzt weder Mittel noch Freigaben. „Veröffentliche die Zusammenfassung“ ist eindeutig, erlaubt ohne Werkzeug- und Stoppgrenze aber das Veröffentlichen trotz Quellenkonflikt.",
+          "A precise goal bounds neither means nor approvals. “Publish the summary” is clear, yet without tool and stop limits it allows publishing through a source conflict.",
         ),
         persona: text(
           "Eine Persona beschreibt Verhalten, gibt aber keine Berechtigung und erzwingt keinen Stopp. Auch ein „Compliance-Prüfer“ kann ohne Gate einen widersprüchlichen Entwurf veröffentlichen.",
@@ -502,8 +502,8 @@ export const LESSON_MISSION_PROFILES = {
         ),
         choice(
           "external-action",
-          "Eigenes Freigabegate und Rückfallweg für die Außenaktion",
-          "Own approval gate and fallback for the external action",
+          "Eigene Freigabe und Rückfallweg",
+          "Own approval and fallback",
         ),
       ),
       "external-action",
@@ -547,8 +547,8 @@ export const LESSON_MISSION_PROFILES = {
     ),
     evidence: probe(
       text(
-        "Was ist der Zeitstempel?",
-        "What is the timestamp?",
+        "Wie ordnest du den Zeitstempel ein?",
+        "How do you classify the timestamp?",
       ),
       choices(
         choice("proof", "Echtheitsbeweis", "Proof of authenticity"),
@@ -590,8 +590,8 @@ export const LESSON_MISSION_PROFILES = {
       ),
       {
         "true-false": text(
-          "Wahr oder falsch erzwingt Gewissheit, wo das Signal mehrere Ursachen zulässt. Der Zeitstempel einer Kopie beweist weder Aufnahmezeit noch Fälschung.",
-          "A binary verdict forces certainty where the signal allows several causes. A copy's timestamp proves neither capture time nor fabrication.",
+          "Wahr oder falsch erzwingt Gewissheit, wo das Signal mehrere Ursachen zulässt. Der Zeitstempel einer Kopie beweist weder Aufnahmezeit noch Fälschung. Halte Beobachtung und offene Unsicherheit getrennt.",
+          "A binary verdict forces certainty where the signal allows several causes. A copy's timestamp proves neither capture time nor fabrication. Keep observation and remaining uncertainty separate.",
         ),
         "popular-unpopular": text(
           "Popularität misst Verbreitung. Eine aus dem Kontext gerissene Kopie kann viral gehen, obwohl ihre Herkunft ungeklärt ist.",
@@ -608,17 +608,17 @@ export const LESSON_MISSION_PROFILES = {
         choice(
           "publish-true",
           "Als bestätigt veröffentlichen",
-          "Publish as confirmed",
+          "Publish it as confirmed",
         ),
         choice(
           "publish-fake",
           "Als Fälschung bezeichnen",
-          "Label it fabricated",
+          "Label it as fabricated",
         ),
         choice(
           "hold-verify",
           "Zurückhalten, Ursprung suchen, Unsicherheit notieren",
-          "Hold, trace the origin, log uncertainty",
+          "Hold, trace origin, note uncertainty",
         ),
       ),
       "hold-verify",
@@ -942,8 +942,8 @@ export const LESSON_MISSION_PROFILES = {
         ),
         choice(
           "invariant-slo",
-          "Lag, Duplikate, Verlust, Reihenfolge gegen Grenzwerte",
-          "Lag, duplicates, loss, ordering against limits",
+          "Lag, Duplikate, Verlust, Reihenfolge",
+          "Lag, duplicates, loss, ordering",
         ),
         choice("cpu-low", "CPU-Auslastung sinkt", "CPU utilization falls"),
       ),
@@ -974,8 +974,8 @@ export const LESSON_MISSION_PROFILES = {
           "Partition count controls parallelism and data distribution. Even with ten partitions, an older event can still arrive in one of them.",
         ),
         "replica-count": text(
-          "Replikas erhöhen die Verfügbarkeit, kopieren aber denselben Stand. Drei Replikas können dasselbe unvollständige Ereignisfenster enthalten.",
-          "Replicas raise availability but copy the same state. Three replicas can hold the same incomplete event window.",
+          "Replikas erhöhen die Verfügbarkeit, kopieren aber denselben Stand. Drei Replikas können dasselbe unvollständige Ereignisfenster enthalten. Nur ein Wasserzeichen bildet tolerierte Verspätung ab.",
+          "Replicas raise availability but copy the same state. Three replicas can hold the same incomplete event window. Only a watermark models tolerated lateness.",
         ),
       },
     ),
@@ -1086,7 +1086,7 @@ export const LESSON_MISSION_PROFILES = {
         choice(
           "focused-plus-suite",
           "Reproduktion, grüner Fokuscheck, grüne Prüfkette",
-          "Reproducer, green focused check, green full chain",
+          "Repro, green focused check, green chain",
         ),
         choice("large-diff", "Ein umfangreicher Diff", "A large diff"),
       ),
@@ -1209,8 +1209,8 @@ export const LESSON_MISSION_PROFILES = {
       ),
     ),
     revealedSignal: text(
-      "Quelle B widerspricht Quelle C beim Ausstellungsjahr. Eine attraktive Besucherzahl steht in keiner Quelle, aber in der Basisantwort.",
-      "Source B conflicts with Source C on the exhibition year. An attractive visitor count is in no source but in the baseline answer.",
+      "Quelle A und Quelle B nennen verschiedene Eröffnungstermine. Die Basisantwort nennt eine attraktive Besucherzahl, die in keiner Quelle steht.",
+      "Sources A and B give different opening dates. The baseline answer states an attractive visitor count that no source contains.",
     ),
     manipulation: text(
       "Ändere Grounding- und Verweigerungsregeln und führe beide Varianten mit demselben Quellenpaket aus.",
@@ -1218,8 +1218,8 @@ export const LESSON_MISSION_PROFILES = {
     ),
     evidence: probe(
       text(
-        "Was ist die Besucherzahl?",
-        "What is the visitor count?",
+        "Wie ordnest du die Besucherzahl ein?",
+        "How do you classify the visitor count?",
       ),
       choices(
         choice("supported", "Direkt belegt", "Directly supported"),
@@ -1228,8 +1228,8 @@ export const LESSON_MISSION_PROFILES = {
       ),
       "unsupported",
       text(
-        "Ein Konflikt braucht mindestens zwei widersprechende Belege. Hier fehlt jede Quelle.",
-        "A conflict needs at least two contradicting sources. Here there is none.",
+        "Ein Konflikt braucht zwei Quellen, die sich widersprechen. Keine Quelle nennt diese Zahl.",
+        "A conflict needs two sources that disagree. No source mentions this figure.",
       ),
     ),
     retrieval: probe(
@@ -1404,8 +1404,8 @@ export const LESSON_MISSION_PROFILES = {
       ),
       {
         "full-history": text(
-          "Die ganze Historie mischt veraltete, abgelehnte und womöglich sensible Anweisungen. Eine früh verworfene Aktion wirkt dann wie ein erlaubter nächster Schritt.",
-          "Full history mixes stale, rejected and possibly sensitive instructions. An action rejected earlier can then look authorized.",
+          "Die ganze Historie mischt veraltete, abgelehnte und womöglich sensible Anweisungen. Eine früh verworfene Aktion wirkt dann wie ein erlaubter nächster Schritt. Übergib nur Ergebnis, Evidenz, Unsicherheit und Grenze.",
+          "Full history mixes stale, rejected and possibly sensitive instructions. An action rejected earlier can then look authorized. Hand off only result, evidence, uncertainty and limit.",
         ),
         "role-only": text(
           "Ein Rollenname klärt weder Ergebnis noch Spielraum. „Nächster Agent: Prüfer“ sagt nicht, welcher Claim offen ist oder ob veröffentlicht werden darf.",

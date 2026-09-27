@@ -90,7 +90,7 @@ describe("AI-Native supplementary hub design contract", () => {
     expect(
       screen.getByRole("heading", { name: "Problem ist echt" }),
     ).toBeVisible();
-    expect(screen.getByRole("heading", { name: "Ablösbar" })).toBeVisible();
+    expect(screen.getByRole("heading", { name: "Übergabefähig" })).toBeVisible();
 
     localeState.value = "en";
     expect(await generateMetadata()).toMatchObject({

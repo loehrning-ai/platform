@@ -31,7 +31,7 @@ const COPY = {
     placeholder: "Ich werde … ändern und mit … prüfen.",
     validation: "Mindestens 3 Wörter und 12 Zeichen.",
     privacy:
-      "Deine Antwort wird weder gespeichert noch synchronisiert, nur dein Fortschritt.",
+      "Deine Antwort wird weder gespeichert noch synchronisiert. Erfasst wird nur dein Fortschritt.",
     boundary:
       "Dieser Checkpoint dokumentiert Navigation, nicht Beherrschung oder Zertifizierung.",
     save: "Checkpoint speichern",
@@ -50,7 +50,7 @@ const COPY = {
     placeholder: "I will revise … and test it by …",
     validation: "Use at least 3 words and 12 characters.",
     privacy:
-      "Your response is not saved or synced, only your progress.",
+      "Your response is not saved or synced. Only your progress is recorded.",
     boundary:
       "This checkpoint records navigation, not mastery or certification.",
     save: "Save checkpoint",

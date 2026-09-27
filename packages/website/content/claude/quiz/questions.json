@@ -213,7 +213,7 @@
       },
       {
         "id": "b",
-        "text": "Only when Claude reads files in that sub-folder (lazy loading).",
+        "text": "Only when Claude reads files in that sub-folder.",
         "isCorrect": true
       },
       {
@@ -242,7 +242,7 @@
       },
       { "id": "d", "text": "\"Try again.\"", "isCorrect": false }
     ],
-    "explanation": "Only that instruction names an exact edit a reviewer can check. The other three are mood, not acceptance criteria.",
+    "explanation": "Only that instruction names an exact edit a reviewer can check. The other three don't say what to change.",
     "version": 1,
     "active": true
   },
@@ -381,7 +381,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Provide authoritative data, require traceable support, define abstention, and verify the cited passages.",
+    "explanation": "Provide authoritative data, require traceable support, define when Claude says \"not in context\", and verify the cited passages.",
     "version": 1,
     "active": true
   },

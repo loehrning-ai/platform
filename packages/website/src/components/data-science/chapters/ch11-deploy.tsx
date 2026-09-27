@@ -40,8 +40,7 @@ export default function Ch11Deploy() {
           Trace the request path and assign each component a failure response.
         </h2>
         <p className="prose">
-          Production ML is a system of request routing, feature retrieval,
-          model serving and monitoring. Give every component an owner,
+          Give every component an owner,
           timeouts, fallbacks, observability and rollback behavior before you
           trust the end-to-end path.
         </p>
@@ -58,8 +57,7 @@ export default function Ch11Deploy() {
           model trained on 2023 users and sees 2025 users behave differently.
           PSI (Population Stability Index) sums (actual − expected) ×
           ln(actual/expected) over buckets and reacts to binning and sample
-          size. A threshold like 0.2 is a contextual heuristic, no retraining
-          rule, and input drift proves no performance loss.
+          size. Input drift does not prove a performance loss.
         </p>
         <p className="prose">
           <strong>Concept drift</strong> is harder to see: the relationship
@@ -108,7 +106,7 @@ export default function Ch11Deploy() {
 
       <AntiPatterns
         items={[
-          "<b>No tested rollback path.</b> The old artifact does not help if schemas, state, caches or downstream actions do not roll back with it.",
+          "<b>No tested rollback path.</b> The old artifact does not help if schemas, state, caches or downstream actions do not roll back with it. Rehearse recovery after major changes and record what actually recovers.",
           "<b>Unobserved candidate behavior.</b> Before promotion, test the candidate on representative inputs via replay, shadow, batch or a staged route.",
           "<b>Monitoring only a delayed outcome metric.</b> Add input quality, feature and prediction distributions, latency, errors and business guardrails, without treating proxies as proof of performance.",
           "<b>Overwriting a model artifact in place.</b> Retraining needs immutable versions, evaluation, approval, staged release and a recoverable rollback path.",
@@ -117,7 +115,7 @@ export default function Ch11Deploy() {
       <BestPractices
         items={[
           "<b>Write a rollout contract.</b> Derive eligible traffic, observation window, acceptance metrics, guardrails, label delay, abort authority and rollback from the system's risk.",
-          "<b>Calibrate retraining triggers.</b> Set baselines and error budgets, check that an alert is actionable and require outcome evidence when labels exist.",
+          "<b>Calibrate retraining triggers.</b> Set baselines and error budgets, tie alerts to business and user impact, check that an alert is actionable and require outcome evidence when labels exist.",
           "<b>Version data, code, configuration and model.</b> Keep privacy-safe lineage that reproduces training and evaluation.",
         ]}
       />

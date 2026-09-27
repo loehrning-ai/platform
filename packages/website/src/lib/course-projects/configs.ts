@@ -240,8 +240,8 @@ export const COURSE_PROJECT_CONFIGS = {
         "The prompt states goal, context, output format and hard limits.",
       ),
       text(
-        "Eine echte Provider-Antwort liegt vor; Freigabe, Abbruch und Übergabe sind als lokale Kontrollen gesetzt.",
-        "A real provider completion exists; approval, stop and handoff are set as local controls.",
+        "Eine echte Provider-Antwort liegt vor; Freigabe, Abbruch und Übergabe sind als lokale Plankontrollen gesetzt.",
+        "A real provider completion exists; approval, stop and handoff are set as local plan controls.",
       ),
       text(
         "Die Übergabe nennt Verantwortliche, Fallback, Messgröße und Wiederanlauf.",
@@ -269,8 +269,8 @@ export const COURSE_PROJECT_CONFIGS = {
           "Request exactly one completion from the allowed provider.",
         ),
         text(
-          "Provider-Antwort in dieser Sitzung",
-          "Provider completion in this session",
+          "Provider-Antwort in diesem Browserlauf",
+          "Provider completion in this browser session",
         ),
       ],
       verify: [
@@ -821,12 +821,12 @@ export const COURSE_PROJECT_CONFIGS = {
     ),
     completionCriteria: [
       text(
-        "Der Prompt begrenzt Auftrag, Kontext, Ausgabeformat und verbotene Aktionen.",
+        "Der Prompt begrenzt Auftrag, zulässigen Kontext, Ausgabeformat und verbotene Aktionen.",
         "The prompt bounds task, allowed context, output format and prohibited actions.",
       ),
       text(
-        "Eine echte Provider-Antwort liegt vor; Budget, Freigabe, Abbruch und Übergabe sind als lokale Kontrollen gesetzt.",
-        "A real provider completion exists; budget, approval, stop and handoff are set as local controls.",
+        "Eine echte Provider-Antwort liegt vor; Budget, Freigabe, Abbruch und Übergabe sind als lokale Plankontrollen gesetzt.",
+        "A real provider completion exists; budget, approval, stop and handoff are set as local plan controls.",
       ),
       text(
         "Die Auswertung wählt einen Eingriff und trennt Ergebnisqualität, Fehler, Reviewaufwand und geschätzten Aufwand.",
@@ -857,8 +857,8 @@ export const COURSE_PROJECT_CONFIGS = {
           "Request exactly one completion from the allowed provider.",
         ),
         text(
-          "Provider-Antwort in dieser Sitzung",
-          "Provider completion in this session",
+          "Provider-Antwort in diesem Browserlauf",
+          "Provider completion in this browser session",
         ),
       ],
       verify: [

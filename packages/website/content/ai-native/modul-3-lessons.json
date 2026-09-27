@@ -96,7 +96,7 @@
           "id": "modul_3_lesson_0_section_1",
           "title": "Obsidian installieren",
           "readTimeMinutes": 3,
-          "content": "Diese Lektion hat kein Zeitlimit.\n\n**Schritt 1:** Lade die aktuelle Version für dein Betriebssystem von `obsidian.md`, prüfe die Quelle und installiere sie.\n\n**Schritt 2: Synchronisierung entscheiden.** Auch aus einem lokalen Vault können Daten das Gerät verlassen. Vor jedem Sync-Dienst prüfst du Verschlüsselung, Konten, Gerätezugriff, Wiederherstellung und die Freigabe deiner Organisation.\n\n**Schritt 3: Vault-Template importieren.**\n\nOption A: Leeren Übungs-Vault anlegen, `vault-template.zip` entpacken und den Inhalt hineinkopieren.\n\nOption B: Vorhandenen Vault sichern und nur die benötigten Verzeichnisse kopieren. Überschreibe keine Datei ohne Diff und Backup."
+          "content": "Kein Zeitlimit: Schließ jeden Schritt ab und prüfe ihn, bevor du weitermachst.\n\n**Schritt 1:** Lade die aktuelle Version für dein Betriebssystem von `obsidian.md`, prüfe die Quelle und installiere sie.\n\n**Schritt 2: Synchronisierung entscheiden.** Auch aus einem lokalen Vault können Daten das Gerät verlassen. Vor jedem Sync-Dienst prüfst du Verschlüsselung, Konten, Gerätezugriff, Wiederherstellung und die Freigabe deiner Organisation.\n\n**Schritt 3: Vault-Template importieren.**\n\nOption A: Leeren Übungs-Vault anlegen, `vault-template.zip` entpacken und den Inhalt hineinkopieren.\n\nOption B: Vorhandenen Vault sichern und nur die benötigten Verzeichnisse kopieren. Überschreibe keine Datei ohne Diff und Backup."
         },
         {
           "id": "modul_3_lesson_0_section_2",
@@ -108,7 +108,7 @@
           "id": "modul_3_lesson_0_section_3",
           "title": "Web Clipper + erste Daily-Note",
           "readTimeMinutes": 8,
-          "content": "**Obsidian Web Clipper im Browser:**\n1. Installiere die Erweiterung über die offizielle Clipper-Seite aus der offiziellen Browser-Quelle.\n2. Wähle den Übungs-Vault und `00 Inbox/` als Ziel.\n3. Lass den AI Interpreter vorerst aus. Er schickt Inhalte an einen Modellanbieter.\n\nTeste mit einer unkritischen öffentlichen Seite und kontrolliere Titel, URL, Abrufdatum und Inhalt der neuen Notiz.\n\n**Erste Daily Note:**\nCmd/Ctrl+P → `Templater: insert template` → `_System/Templates/daily-note.md`.\n\nPrüfe danach:\n- Plugins und Versionen wie erwartet\n- Clipper speichert in den Übungsordner\n- Template erzeugt Dateinamen und Felder\n- Chatfunktionen nutzen nur die dokumentierte Konfiguration\n\nSchlägt ein Schritt fehl, hältst du dort an, behebst den Fehler und nimmst erst dann reale Daten."
+          "content": "**Obsidian Web Clipper im Browser:**\n1. Installiere die Erweiterung über die offizielle Clipper-Seite.\n2. Wähle den Übungs-Vault und `00 Inbox/` als Ziel.\n3. Lass den AI Interpreter vorerst aus. Er schickt Inhalte an einen Modellanbieter. Vor dem Einschalten prüfst du Provider, Schlüsselablage und Aufbewahrung.\n\nTeste mit einer unkritischen öffentlichen Seite und kontrolliere Titel, URL, Abrufdatum und Inhalt der neuen Notiz.\n\n**Erste Daily Note:**\nCmd/Ctrl+P → `Templater: insert template` → `_System/Templates/daily-note.md`.\n\nPrüfe danach:\n- Plugins und Versionen wie erwartet\n- Clipper speichert in den Übungsordner\n- Template erzeugt Dateinamen und Felder\n- Chatfunktionen nutzen nur die dokumentierte Konfiguration\n\nSchlägt ein Schritt fehl, hältst du dort an, behebst den Fehler und nimmst erst dann reale Daten."
         }
       ],
       "quiz": []
@@ -224,7 +224,7 @@
                         "id": "c",
                         "label": "Resources: zur Vorbereitung der nächsten Verhandlung",
                         "correct": false,
-                        "explanation": "Resources sind Vorlagen. Den Einzelfall verlinkst du aus der nächsten Verhandlung."
+                        "explanation": "Resources sind wiederverwendbare Vorlagen und Referenzen. Den abgeschlossenen Einzelfall legst du ins Archive und verlinkst ihn aus der nächsten Verhandlung."
                       },
                       {
                         "id": "d",
@@ -457,7 +457,7 @@
           "id": "modul_3_lesson_2_section_4",
           "title": "Tagging-Politik",
           "readTimeMinutes": 3,
-          "content": "Starte mit einem kleinen, dokumentierten Tag-Satz, zum Beispiel:\n- `#todo`: offene Aktion\n- `#entscheidung`: dokumentierte Entscheidung\n- `#warten-auf`: blockierte Aktion\n- `#idee`: ungeprüfter Vorschlag\n- `#followup`: erneut zu prüfender Punkt\n- `#archivieren`: Archivkandidat\n\nOrdner nutzt du für die grobe Ablage, MOCs für den Project-Kontext und Tags für die wenigen Zustände, die quer durch alles laufen. Personennamen und sensible Merkmale kommen ohne Datenkonzept in keinen Tag.\n\nZehn Tags sind eine Startgrenze. Wächst der Satz, prüfst du Überschneidungen, schreibst die Bedeutungen auf und testest, ob deine Abfragen noch vorhersehbar antworten."
+          "content": "Starte mit einem kleinen, dokumentierten Tag-Satz, zum Beispiel:\n- `#todo`: offene Aktion\n- `#entscheidung`: dokumentierte Entscheidung\n- `#warten-auf`: blockierte Aktion\n- `#idee`: ungeprüfter Vorschlag\n- `#followup`: erneut zu prüfender Punkt\n- `#archivieren`: Archivkandidat\n\nOrdner nutzt du für die grobe Ablage, MOCs für den Project-Kontext und Tags für die wenigen Zustände, die quer durch alles laufen. Personennamen und sensible Merkmale gehören nur mit Datenkonzept in einen Tag.\n\nBleib anfangs bei höchstens zehn Tags. Wächst der Satz, prüfst du Überschneidungen, schreibst die Bedeutungen auf und testest, ob deine Abfragen noch vorhersehbar antworten."
         }
       ],
       "quiz": [
@@ -486,7 +486,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "PARA stammt von Tiago Forte: Projects haben ein klares Ende, Areas laufen weiter, Resources dienen als Referenz, Archive hält Erledigtes."
+          "explanation": "Das Schema stammt von Tiago Forte."
         },
         {
           "id": "modul_3_lesson_2_q2",
@@ -494,12 +494,12 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Marketing Outreach Content",
+              "text": "Marketing Outreach Content für Kampagnen",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Map of Content: Master-Notiz pro Projekt als Status-Hub",
+              "text": "Map of Content: Übersichtsnotiz pro Projekt",
               "isCorrect": true
             },
             {
@@ -554,7 +554,7 @@
           "id": "modul_3_lesson_3_section_3",
           "title": "Die richtigen Fragen stellen",
           "readTimeMinutes": 3,
-          "content": "Copilot antwortet so gut, wie deine Frage und dein Index es erlauben. Drei Regeln helfen:\n\n**Konkret:** \"Welche Rabattentscheidungen sind in den letzten 90 Tagen dokumentiert?\" statt \"Was denke ich über Preispolitik?\"\n\n**Zeitlich begrenzt:** ein Zeitraum wie \"Q1 2026\" oder \"seit März 2026\", wenn er zur Aufgabe passt.\n\n**Mit Quellen:** für jede Aussage Dateipfad, Datum und Textstelle.\n\nMiss Suchzeit, Anteil fehlender Quellen und Korrekturaufwand gegen deinen alten Ablauf. Werden die Werte nicht besser, schaltest du die Konfiguration wieder ab."
+          "content": "Copilot antwortet so gut, wie deine Frage und dein Index es erlauben. Drei Regeln helfen:\n\n**Konkret:** \"Welche Rabattentscheidungen sind in den letzten 90 Tagen dokumentiert?\" statt \"Was denke ich über Preispolitik?\"\n\n**Zeitlich begrenzt:** ein Zeitraum wie \"Q1 2026\" oder \"seit März 2026\", wenn er zur Aufgabe passt.\n\n**Mit Quellen:** für jede Aussage Dateipfad, Datum und Textstelle.\n\nMiss Suchzeit, Anteil fehlender Quellen und Korrekturaufwand gegen deinen alten Ablauf. Werden die Werte nicht besser, schaltest du die Konfiguration wieder ab. Beide Werkzeuge sind Recherchehilfen; maßgeblich bleibt die Quellnotiz."
         }
       ],
       "quiz": [
@@ -569,7 +569,7 @@
             },
             {
               "id": "b",
-              "text": "Embeddings: Notizen als Vektoren, verglichen nach Bedeutung",
+              "text": "Embeddings: Vektoren, verglichen nach Bedeutung",
               "isCorrect": true
             },
             {
@@ -610,7 +610,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "So werden Treffer enger und prüfbar. Faktentreue garantiert das trotzdem nicht."
+          "explanation": "Konkrete, zeitlich begrenzte Fragen mit Quellenpflicht machen Treffer enger und prüfbar. Faktentreue garantieren sie nicht."
         }
       ]
     },
@@ -663,7 +663,7 @@
           "id": "modul_3_lesson_4_section_1",
           "title": "Die Browser-Tab-Realität",
           "readTimeMinutes": 2,
-          "content": "Zähl deine offenen Tabs, die zum späteren Lesen und die als Referenz. Ein Tab hat keinen festen Ablageort, keine Metadaten und keinen Weg zurück.\n\nDer Ablauf: Web Clipper speichert den Artikel, der AI Interpreter schlägt Metadaten vor, Obsidian indexiert die Notiz. Die Zeit pro Artikel stoppst du selbst."
+          "content": "Zähl deine offenen Tabs: Wie viele willst du später lesen, wie viele brauchst du als Referenz? Ein Tab hat keinen festen Ablageort, keine Metadaten und keinen Weg zurück.\n\nDer Ablauf: Web Clipper speichert den Artikel, der AI Interpreter schlägt Metadaten vor, Obsidian indexiert die Notiz. Die Zeit pro Artikel misst du selbst; der Kurs nennt bewusst keine Zahl."
         },
         {
           "id": "modul_3_lesson_4_section_2",
@@ -690,7 +690,7 @@
             },
             {
               "id": "b",
-              "text": "Fasst zusammen, taggt, schlägt Ordner vor, vor dem Import",
+              "text": "Fasst zusammen, taggt und schlägt Ordner vor",
               "isCorrect": true
             },
             {
@@ -885,7 +885,7 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "MCP stellt Tools bereit, Copilot ist eine Oberfläche in Obsidian",
+              "text": "MCP liefert Tools, Copilot ist eine Obsidian-Oberfläche",
               "isCorrect": true
             },
             {
@@ -895,7 +895,7 @@
             },
             {
               "id": "c",
-              "text": "MCP nutzt GPT-4, Copilot nutzt Claude",
+              "text": "MCP nutzt immer GPT-4, Copilot immer Claude",
               "isCorrect": false
             },
             {

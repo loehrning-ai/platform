@@ -136,8 +136,8 @@ export function SHAPWaterfallSim() {
         `Score ${round(finalScore, 3)} · ${decision}`,
       )}
       caption={text(
-        "Hand-coded additive score: (value − fixed reference value) × weight, not SHAP output from a fitted model. The display is clipped to [0.01, 0.99], which makes it no calibrated probability.",
-        "Fest codierter additiver Score: (Wert − fester Referenzwert) × Gewicht, keine SHAP-Ausgabe eines angepassten Modells. Die Anzeige ist auf [0.01, 0.99] begrenzt und dadurch keine kalibrierte Wahrscheinlichkeit.",
+        "Hand-coded additive score: (value − fixed reference value) × weight, not SHAP output from a fitted model. The display is clipped to [0.01, 0.99] and is not a calibrated probability.",
+        "Fest codierter additiver Score: (Wert − fester Referenzwert) × Gewicht, keine SHAP-Ausgabe eines angepassten Modells. Die Anzeige ist auf [0.01, 0.99] begrenzt und keine kalibrierte Wahrscheinlichkeit.",
       )}
     >
       <div className="sim-row">

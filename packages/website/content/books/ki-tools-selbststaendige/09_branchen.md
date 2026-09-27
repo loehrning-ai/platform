@@ -287,6 +287,8 @@ Bewertungen können öffentlich sichtbar und personenbezogen sein. KI erstellt e
 
 Vertrauliche Preise und Kalkulationen gehören nur in einen dafür freigegebenen Ablauf, für allgemeine Textentwürfe reichen Platzhalter oder fiktive Zahlen.
 
+Passe die Prompts mit fiktiven Fällen an dein Gewerk an, teste begrenzt und dokumentiere Zeit, Fehler, Nacharbeit und Nutzen, bevor du entscheidest.
+
 ## Coaches, Therapeuten, Trainer
 
 Bei Coaching, Therapie und Training unterscheiden sich zulässige Anwendungsfälle deutlich. Beginne mit allgemeinen, nicht personenbezogenen Materialien und einer fachlichen sowie datenschutzrechtlichen Prüfung.
@@ -388,7 +390,7 @@ Ton: Professionell, einladend, nicht verkäuferisch.
 
 **DSGVO-Hinweis:** Kundendaten gehören nicht in die KI. Anonymisiere: "Interessent A fragt nach Objekt B." Niemals Kontaktdaten, Bonitätsinformationen oder Personalausweiskopien in ChatGPT eingeben.
 
-**ROI mit eigenen Daten:** Rechne pro Exposé und Anfrage nur mit gemessenen, tatsächlich frei werdenden Stunden. Auch kostenlose Tarife haben Limits und sind im Betrieb nicht kostenfrei.
+**ROI mit eigenen Daten:** Erfasse pro Exposé und Anfrage Entwurfszeit, Prüfung, Korrekturen und Toolkosten und rechne nur mit tatsächlich frei werdenden Stunden. Auch kostenlose Tarife haben Limits und sind im Betrieb nicht kostenfrei.
 
 ## Gesundheitsberufe und Praxen
 

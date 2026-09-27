@@ -44,7 +44,7 @@ const CATEGORIES: readonly { readonly id: Category; readonly label: string }[] =
     { id: "chat-knowledge", label: "Chat & Wissen" },
     { id: "document-processing", label: "Dokumente" },
     { id: "agents-workflows", label: "Agents & Workflows" },
-    { id: "business-roi", label: "ROI & Reife" },
+    { id: "business-roi", label: "Wirtschaftlichkeit" },
     { id: "compliance-governance", label: "Compliance" },
     { id: "observability", label: "Observability" },
   ];
@@ -70,34 +70,35 @@ const DEMOS: readonly DemoEntry[] = [
   {
     kind: "demo-chat-rag",
     title: "RAG Vertrags-Assistent",
-    tagline: "Frag ein synthetisches Vertragsarchiv und prüf die Quellen jeder Antwort.",
+    tagline: "Fragen an ein synthetisches Vertragsarchiv stellen.",
     category: "chat-knowledge",
     teachesIn: "Modul 2 · Lektion 2.4 (Grounding + RAG)",
   },
   {
     kind: "demo-compliance",
     title: "Compliance Prompt-Scanner",
-    tagline: "Regelbasierter DSGVO-Check, der offensichtliche sensible Daten findet.",
+    tagline:
+      "Regelbasierter Check mit Beispielregeln, der offensichtliche sensible Daten findet. Keine Compliance-Entscheidung.",
     category: "compliance-governance",
     teachesIn: "Modul 4 · Lektion 4.3 (DSGVO-sicher prompten)",
   },
   {
     kind: "demo-roi",
-    title: "ROI Calculator",
-    tagline: "Vier Annahmen ändern und das Drei-Jahres-Szenario prüfen. Keine Prognose.",
+    title: "ROI-Szenariorechner",
+    tagline: "Vier Annahmen ändern und das Drei-Jahres-Szenario prüfen.",
     category: "business-roi",
-    teachesIn: "Lernpfad / ROI-Modell",
+    teachesIn: "Kursreferenz · Business-Case-Methode",
   },
   {
     kind: "demo-doc",
-    title: "Invoice OCR",
+    title: "Rechnungsauslesung",
     tagline: "Eine Rechnung in Felder und eine Review-Liste übertragen.",
     category: "document-processing",
     teachesIn: "Modul 2 · Lektion 2.3 (Artifacts + Dokumente)",
   },
   {
     kind: "demo-agent",
-    title: "Agent Workflow",
+    title: "Agenten-Pipeline",
     tagline: "Simulierter mehrstufiger Recherche- und Review-Ablauf mit Sub-Agents.",
     category: "agents-workflows",
     teachesIn: "Modul 2 · Lektion 2.5 (Claude Code + Sub-Agents)",
@@ -125,10 +126,10 @@ const DEMOS: readonly DemoEntry[] = [
   },
   {
     kind: "demo-finetune",
-    title: "Fine-Tuning Viz",
+    title: "Fine-Tuning-Entscheidung",
     tagline: "Fine-Tuning mit Prompting und Retrieval unter festen Annahmen vergleichen.",
     category: "business-roi",
-    teachesIn: "Post-Arbeitskurs Reference",
+    teachesIn: "Nach dem Kurs zum Nachschlagen",
   },
 ];
 
@@ -143,16 +144,16 @@ const DEMOS_EN: readonly DemoEntry[] = [
   {
     kind: "demo-compliance",
     title: "Prompt data scanner",
-    tagline: "A rule-based check that flags obvious sensitive data.",
+    tagline: "A rule-based check that flags obvious sensitive data. Not a compliance decision.",
     category: "compliance-governance",
     teachesIn: "Module 4 · Lesson 4.3 (data-aware prompting)",
   },
   {
     kind: "demo-roi",
     title: "ROI scenario calculator",
-    tagline: "Change four assumptions and inspect the three-year scenario. Not a forecast.",
+    tagline: "Change four assumptions and inspect the three-year scenario.",
     category: "business-roi",
-    teachesIn: "Course reference · business-case method",
+    teachesIn: "Reference · business-case method",
   },
   {
     kind: "demo-doc",

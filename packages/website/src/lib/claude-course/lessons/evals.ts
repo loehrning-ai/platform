@@ -15,7 +15,7 @@ const lesson: ClaudeLesson = {
   subtitle: "How to know a prompt is actually better.",
   durationMinutes: 12,
   trackId: "team",
-  hook: "A preferred sample is not evidence of a reliable prompt.",
+  hook: "Compare prompt versions on fixed cases.",
   keyConcepts: [
     "Minimum viable eval",
     "Binary search a prompt",
@@ -40,16 +40,16 @@ const lesson: ClaudeLesson = {
     {
       id: "debugging",
       title: "Debugging a broken prompt",
-      readTimeMinutes: 2,
+      readTimeMinutes: 1,
       content:
         "Reproduce the failure with fixed input, model, settings and tool state. Disable or simplify prompt sections until the conflict shows, then reintroduce them one at a time on the same cases.\n\nThis is delta debugging, but model variance means one pass proves no cause. Repeat trials and read the transcripts first.",
     },
     {
       id: "llm-as-judge",
       title: "Judging quality with a second model",
-      readTimeMinutes: 2,
+      readTimeMinutes: 1,
       content:
-        "A model grader applies a rubric to open-ended output and brings its own errors and preferences. Calibrate it on human-reviewed examples, randomize pairwise order, keep its justification and track disagreement.\n\nSchema, required fields, citations and executable tests belong to deterministic graders. Combine graders only when each measures a defined requirement.",
+        "A model grader applies a rubric to open-ended output and brings its own errors and preferences. Calibrate it on human-reviewed examples, randomize pairwise order, keep its justification and track disagreement.\n\nDeterministic graders check schema, required fields, citations and executable tests. Combine graders only when each measures a defined requirement.",
     },
   ],
   widgets: [
@@ -178,7 +178,7 @@ const lesson: ClaudeLesson = {
         question:
           "A prompt regresses after several edits. Which step best isolates conflicting instructions?",
         options: [
-          "Add more instructions to counteract the weirdness.",
+          "Add more instructions to fix the odd behavior.",
           "Disable sections, rerun the same trials, reintroduce them one at a time.",
           "Switch to a different model.",
           "Ask Claude to rewrite the prompt from scratch.",

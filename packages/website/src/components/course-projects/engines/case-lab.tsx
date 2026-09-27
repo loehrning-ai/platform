@@ -717,14 +717,14 @@ export default function CaseLab({
               : variant === "stakeholder"
                 ? "Nicht als Fakt veröffentlichen; erst unabhängige Quelle prüfen, bei Korrektur Betroffene sichtbar informieren."
                 : "Kontrollbefugnis und Modellversion mit datierter Primärquelle klären; bis dahin keine endgültige Einstufung.",
-          choicesEvidence: "Alle Fallstellen belegt bearbeitet",
+          choicesEvidence: "Alle Fallstellen mit Beleg bearbeitet",
           sourcesEvidence: "Zwei unabhängige Evidenzpfade gewählt",
           noteEvidence:
             "Grenze, Unsicherheit, Eskalation und nächster Beleg festgelegt",
           noteScratch: "Optionale Sitzungsnotiz · wird nicht gespeichert",
           localRunTitle: "Lokale synthetische Auswertung",
           localRunHelp:
-            "Prüft nur deine Auswahl gegen die Kursregeln, ohne Modell, Provider oder externen Dienst.",
+            "Prüft nur die Auswahl gegen die Kursregeln, ohne Modell, Provider oder externen Dienst.",
           localRun: "Strukturierte Auswertung ausführen",
           localRunComplete: "Auswahl lokal ausgewertet.",
           localRunEvidence: "Lokale strukturierte Auswertung erfolgreich",
@@ -772,7 +772,7 @@ export default function CaseLab({
               : variant === "stakeholder"
                 ? "Do not publish as fact; check an independent source first and visibly tell affected people about any correction."
                 : "Confirm control authority and model version against a dated primary source; no final classification until then.",
-          choicesEvidence: "Every case segment handled against evidence",
+          choicesEvidence: "Every case segment resolved with evidence",
           sourcesEvidence:
             "Two independent evidence paths selected",
           noteEvidence:

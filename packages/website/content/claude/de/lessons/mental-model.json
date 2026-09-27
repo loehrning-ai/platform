@@ -5,7 +5,7 @@
   "subtitle": "Ein mentales Modell, das hält, wenn eine Antwort sicher klingt.",
   "durationMinutes": 8,
   "trackId": "foundations",
-  "hook": "Claude erzeugt Antworten aus dem Kontext im Fenster. Suchen und Erinnern sind Produktfunktionen und Tools.",
+  "hook": "Claude erzeugt Antworten aus dem Kontext im Fenster. Suche und Gedächtnis sind Produktfunktionen.",
   "keyConcepts": [
     "Vervollständigungs-Engine",
     "Konstitutionelle KI",
@@ -18,26 +18,26 @@
     {
       "id": "what-it-is",
       "title": "Was es ist (und was nicht)",
-      "readTimeMinutes": 3,
+      "readTimeMinutes": 1,
       "content": "Claude erzeugt Text aus dem, was im Fenster liegt: Anfrage, Verlauf, Systemanweisungen, dazu Dokumente und Tool-Ergebnisse vom Produkt. Die Ausgabe ist probabilistisch; dieselbe Anfrage kann morgen anders enden.\n\n**Generierung ist kein Retrieval.** Nachschlagen braucht ein freigegebenes Tool und einen Aufruf, der gelaufen ist, etwa Websuche, Repository-Zugriff oder eine Datenbankabfrage.\n\n**Das Modell ist kein Speicher.** Verlauf, Projektkontext und Memory-Dateien kommen vom Produkt, wenn überhaupt. Prüfe, welche Einstellungen aktiv sind.\n\n**Flüssige Sprache ist keine Prüfung.** Das Modell kann einer falschen Prämisse folgen und Details erfinden. Wichtige Ausgaben bleiben Entwürfe, bis Quellen, Tests oder ein Reviewer sie bestätigen."
     },
     {
       "id": "three-things",
       "title": "Die drei Dinge in jeder Interaktion",
-      "readTimeMinutes": 2,
+      "readTimeMinutes": 1,
       "content": "Drei Eingaben formen jede Antwort:\n\n- **Aktueller Kontext:** Anweisungen, Nachrichten, Anhänge und Tool-Ergebnisse im aktiven Fenster.\n- **Training:** allgemeine Muster mit wechselnder Abdeckung und wechselndem Stand, keine Quelle für private oder aktuelle Fakten.\n- **Einstellungen und Schutzmechanismen:** Modell, Sampling, freigegebene Tools und Produktrichtlinien.\n\n> **Fundierungsregel.** Hängt die Antwort an aktuellen, privaten oder folgenreichen Fakten, gib eine autoritative Quelle mit und prüfe, ob die Antwort daraus folgt."
     },
     {
       "id": "constitutional-ai",
       "title": "Konstitutionelle KI in Kurzform",
-      "readTimeMinutes": 2,
+      "readTimeMinutes": 1,
       "content": "Konstitutionelle KI ist eine Trainingsmethode von Anthropic: Schriftliche Prinzipien erzeugen Kritiken, Überarbeitungen und Präferenzdaten. Die Methode wirkt neben anderen Sicherheitsverfahren und macht keine Antwort automatisch richtig und keine Ablehnung konsistent.\n\nEine Ablehnung ist eine Modellausgabe, kein Richtlinienbescheid. Fehlen bei einer legitimen Aufgabe Zweck oder Grenzen, ergänze sie, ohne gültige Schutzmechanismen zu umgehen.\n\n„Ich bin mir nicht sicher“ ist kein Konfidenzmaß, also prüfe die Belege. Lege fest, was zurückkommt, wenn die Quellen nicht reichen, und teste bekannte wie unbekannte Fälle."
     },
     {
       "id": "feel-it",
       "title": "Praxistest: Wissen ohne Kontext",
       "readTimeMinutes": 1,
-      "content": "Frag nach Projektdaten, die du nie mitgegeben hast. Je nach Modell, Produkt und Prompt lehnt die Antwort ab, fragt nach Kontext oder behauptet etwas ohne Beleg. Eine projektspezifische Aussage braucht projektspezifische Belege, also gib die Quelle mit und prüfe das Zitat."
+      "content": "Frag nach Projektdaten, die du nie mitgegeben hast. Je nach Modell, Produkt und Prompt lehnt die Antwort ab, fragt nach Kontext oder behauptet etwas ohne Beleg. Eine projektspezifische Aussage braucht projektspezifische Belege, also gib die Quelle mit, fordere ein Zitat an und prüfe es."
     },
     {
       "id": "failure-modes",

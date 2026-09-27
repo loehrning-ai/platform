@@ -12,7 +12,7 @@ const lesson: ClaudeLesson = {
     "Design tool loops with explicit authority, limits, and verification.",
   durationMinutes: 11,
   trackId: "advanced",
-  hook: "Agents are loops. Loops need guardrails.",
+  hook: "An agent works in loops and needs enforced limits.",
   keyConcepts: [
     "Gather context, act, verify, repeat",
     "Scope, budget, confirmation, verification",
@@ -21,8 +21,8 @@ const lesson: ClaudeLesson = {
   sections: [
     {
       id: "agents-vs-chat",
-      title: "Agents vs. chat",
-      readTimeMinutes: 2,
+      title: "Agents and workflows",
+      readTimeMinutes: 1,
       content:
         "In Anthropic's distinction, a workflow follows code-defined paths, while an agent lets a model pick actions and tools from intermediate results. Both use model calls, retrieval and tools.\n\nA basic loop sends goal and state to the model, validates the requested tool call, runs it within policy, returns the result and checks a stopping condition. Production systems add parallelism, queues, approvals, retries and persisted state. Tool access is authority, so bound it in code and infrastructure.",
     },
@@ -36,14 +36,14 @@ const lesson: ClaudeLesson = {
     {
       id: "four-guardrails",
       title: "The four guardrails",
-      readTimeMinutes: 3,
+      readTimeMinutes: 1,
       content:
-        "- **01 · Scope.** Only required tools, resources and network destinations, with read and write separated.\n- **02 · Limits.** Steps, tokens, time, cost, retries and concurrency.\n- **03 · Approval and policy.** Enforced approval for deletion, deployment, payment or external messages. Defaults and permission modes vary, so inspect the active configuration.\n- **04 · Verification.** Deterministic checks where possible: schemas, linters, type checks, tests, screenshots, read-after-write.\n\nVerification exposes defined failures but does not make an agent correct. Add negative tests and make sure the verifier measures the outcome, not a proxy.",
+        "- **01 · Scope.** Grant only the tools, resources and network destinations the task needs, and separate read from write.\n- **02 · Limits.** Cap steps, tokens, time, cost, retries and concurrency.\n- **03 · Approval and policy.** Enforced approval for deletion, deployment, payment or external messages. Defaults and permission modes vary, so inspect the active configuration.\n- **04 · Verification.** Deterministic checks where possible: schemas, linters, type checks, tests, screenshots, read-after-write.\n\nVerification exposes defined failures but does not make an agent correct. Add negative tests and make sure the verifier measures the outcome, not a proxy.",
     },
     {
       id: "when-to-use",
       title: "When to reach for an agent",
-      readTimeMinutes: 2,
+      readTimeMinutes: 1,
       content:
         "**Agent fit:** multi-step work where later actions depend on tool results, the environment gives verifiable feedback, and latency and cost are justified.\n\n**Workflow or single call:** fixed sequences, one-shot transformations or tasks without a defensible stopping condition. Start with the simplest architecture that meets the evaluated requirement.",
     },
@@ -69,7 +69,7 @@ const lesson: ClaudeLesson = {
           "An agent has no max-step budget. What's the most likely failure mode?",
         options: [
           "The agent refuses to start.",
-          "It runs until the budget is exhausted, often without converging.",
+          "It keeps running until another limit stops it, often without converging.",
           "The agent produces zero output.",
           "Nothing, budgets are optional.",
         ],

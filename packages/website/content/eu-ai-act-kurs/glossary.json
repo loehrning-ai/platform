@@ -49,7 +49,7 @@
   },
   {
     "term": "Transparenzpflicht",
-    "definition": "Pflichten für bestimmte KI mit begrenztem Risiko nach Art. 50: Menschen müssen erkennen können, dass sie mit KI interagieren, und KI-erzeugte oder manipulierte Inhalte wie Deepfakes und generierte Texte sind offenzulegen, soweit der Artikel greift.",
+    "definition": "Pflichten für bestimmte KI mit begrenztem Risiko nach Art. 50: Menschen müssen erkennen können, dass sie mit KI interagieren, und KI-erzeugte oder manipulierte Inhalte wie Deepfakes und generierte Texte sind in den Fällen des Art. 50 Abs. 4 offenzulegen.",
     "english": "Transparency Obligation",
     "category": "regulatorik",
     "relatedTerms": ["Wasserzeichen", "Deepfake"],

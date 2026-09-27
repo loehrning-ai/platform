@@ -19,7 +19,7 @@ export default localizeDataInfraLessonToGerman(canonical, {
       title: "Drei Garantien",
       content: `Eine Zustellgarantie braucht eine benannte Grenze und ein Fehlermodell:
 
-- **At-most-once** kann nach einem unklaren Fehler einen Effekt auslassen.
+- **At-most-once** kann nach einem unklaren Fehler einen Effekt auslassen, wiederholt bestätigte Arbeit innerhalb seines Umfangs aber nicht.
 - **At-least-once** kann Effekte verdoppeln, solange der Consumer sie nicht kontrolliert; jede Aussage über Verlust hängt weiter an Haltbarkeit und Aufbewahrung der Quelle.
 - **Exactly-once** heißt, der bestätigte Zustand auf einem definierten Pfad aus Quelle, Verarbeitung und Ziel wirkt, als hätte jede Eingabe ihn einmal beeinflusst, umgesetzt über Transaktionen, Checkpoints, koordinierte Offsets oder idempotente Effekte.
 
@@ -93,7 +93,7 @@ Flink trennt Exactly-once für verwalteten Zustand von End-to-End-Ausgabe, die w
 
 Speichere nur eine geschützte Referenz oder verschlüsselte Nutzlast, einen sicheren Fehlercode, Quellidentität und -position, Schemaversion, Zeitpunkt des ersten Auftretens, Anzahl der Versuche und Zuständigkeit. Rohdatensätze und Ausnahmeberichte können personenbezogene Daten, Zugangsdaten oder interne Details enthalten, also gelten Zugriffskontrolle, Minimierung, Aufbewahrung und Schwärzung.
 
-Leg fest, welche Fehler wiederholt oder isoliert werden, ob ein Datensatz die Reihenfolge umgehen darf, wer Wiederholungen freigibt und wie reparierte Ausgabe abgeglichen wird. Alarmschwellen folgen der erwarteten Rate ungültiger Eingaben und der Wirkung auf Nutzer.`,
+Leg fest, welche Fehler wiederholt oder isoliert werden, ob ein Datensatz die Reihenfolge umgehen darf, wer Wiederholungen freigibt und wie reparierte Ausgabe abgeglichen wird. Alarmschwellen folgen der erwarteten Rate ungültiger Eingaben und der Wirkung auf Nutzer, nicht jedem Wert über null.`,
     },
     {
       id: "s5",

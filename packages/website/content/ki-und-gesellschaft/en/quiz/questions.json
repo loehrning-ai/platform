@@ -7,7 +7,7 @@
     "answerOptions": [
       {
         "id": "a",
-        "text": "A high exposure value proves the same share of jobs goes",
+        "text": "A high exposure value proves the same share of jobs will disappear",
         "isCorrect": false
       },
       {
@@ -88,7 +88,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Article 4 of the AI Regulation requires providers and deployers to take measures supporting the AI literacy of their staff and other people they deploy. It does not guarantee a particular level for every individual.",
+    "explanation": "Article 4 of the AI Regulation requires providers and deployers to take measures supporting the AI literacy of their staff and other people they deploy. They need not guarantee a particular level for each person.",
     "version": 1,
     "active": true
   },
@@ -177,11 +177,11 @@
       },
       {
         "id": "d",
-        "text": "This duty has not been adopted yet",
+        "text": "Article 50 has not been adopted yet",
         "isCorrect": false
       }
     ],
-    "explanation": "Providers of covered generative systems mark output in machine-readable form under paragraph 2; deployers disclose deepfakes visibly under paragraph 4, with exceptions. For systems on the market before 2 August 2026, paragraph 2 applies from 2 December 2026 under Regulation (EU) 2026/1744.",
+    "explanation": "Article 50 applies from 2 August 2026. For generative systems on the market before then, the marking duty in paragraph 2 applies only from 2 December 2026 under Regulation (EU) 2026/1744.",
     "version": 1,
     "active": true
   },
@@ -220,7 +220,7 @@
     "id": "kug-q08",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Which statement about Section 22 KUG is correct?",
+    "questionText": "What does Section 22 KUG govern?",
     "answerOptions": [
       {
         "id": "a",
@@ -243,7 +243,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Section 23 sets the exceptions and, in paragraph 2, a balancing of interests. Section 22 KUG does not protect your voice on its own.",
+    "explanation": "Section 23 sets the exceptions, paragraph 2 a balancing of interests. A voice is not a portrait, so Section 22 KUG does not protect it on its own.",
     "version": 1,
     "active": true
   },
@@ -313,7 +313,7 @@
     "id": "kug-q11",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Which statement about Article 22 GDPR is correct?",
+    "questionText": "What does Article 22 GDPR govern?",
     "answerOptions": [
       {
         "id": "a",
@@ -322,7 +322,7 @@
       },
       {
         "id": "b",
-        "text": "Solely automated decisions with legal or similarly significant effect",
+        "text": "Decisions based solely on automated processing with legal or similarly significant effect",
         "isCorrect": true
       },
       {
@@ -336,7 +336,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Paragraph 2 holds exceptions; where a contract requires it or the person explicitly consented, paragraph 3 secures at least the right to human intervention, to state a view and to contest.",
+    "explanation": "Article 22 protects against such decisions; paragraph 2 allows exceptions. Where a contract requires the decision or the person explicitly consented, paragraph 3 secures at least human intervention, the right to state a view and to contest.",
     "version": 1,
     "active": true
   },
@@ -353,7 +353,7 @@
       },
       {
         "id": "b",
-        "text": "Depends on model, data and threshold; alone it proves nothing",
+        "text": "Their result depends on model, data and threshold and proves nothing alone",
         "isCorrect": true
       },
       {
@@ -398,7 +398,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "It generates keyframes, triggers reverse searches and shows available metadata, but it gives no verdict on truth.",
+    "explanation": "Google Lens and TinEye only search images; InVID/WeVerify combines all three steps for video. It does not decide whether a video is genuine.",
     "version": 1,
     "active": true
   },
@@ -451,7 +451,7 @@
       },
       {
         "id": "c",
-        "text": "Article 50 separates provider marking from deployer disclosure; recheck the complaint route",
+        "text": "Article 50 separates provider marking from deployer disclosure",
         "isCorrect": true
       },
       {

@@ -35,9 +35,7 @@ export default function Ch09CausalDe() {
           Im synthetischen Beispiel treibt die Temperatur Eisverkauf und
           Todesfälle durch Ertrinken, also entsteht eine positive Assoziation,
           obwohl Eis nichts bewirkt. Innerhalb der drei Temperaturgruppen
-          schrumpft sie. Reale Daten brauchen ein Kausalmodell, Messprüfungen
-          und Unsicherheit; Stratifizierung allein beweist keine vollständige
-          Entzerrung.
+          schrumpft sie.
         </p>
         <ConfoundingSimulator />
       </section>
@@ -51,9 +49,7 @@ export default function Ch09CausalDe() {
           Ein gerichteter azyklischer Graph (DAG) hält die kausalen Beziehungen
           fest, die du annimmst: Knoten sind Variablen, Pfeile sind Annahmen
           über direkte Effekte. Mit korrektem Graphen und ausgesprochenem
-          Estimand folgen daraus mögliche Anpassungsmengen. Daten allein
-          bestätigen keinen Pfeil, und vier Lehrmuster sind kein vollständiges
-          Kausalmodell.
+          Estimand folgen daraus mögliche Anpassungsmengen.
         </p>
         <DAGBuilder />
       </section>
@@ -79,7 +75,8 @@ export default function Ch09CausalDe() {
           Difference-in-Differences (DiD) vergleicht die Veränderung einer
           behandelten Gruppe mit der einer unbehandelten Kontrollgruppe. Unter
           parallelen Trends, ohne
-          Antizipation und Interferenz sowie bei stabiler Zusammensetzung bildet
+          Antizipation und Interferenz sowie bei stabiler Zusammensetzung (oder
+          einer Analyse, die Änderungen berücksichtigt) bildet
           der Kontrolltrend die kontrafaktische Veränderung der behandelten
           Gruppe ab. Ähnliche Vortrends stützen das Design, beweisen aber nichts
           über den unbeobachteten Trend nach dem Treatment.
@@ -108,7 +105,7 @@ export default function Ch09CausalDe() {
         title="Fehlmuster"
         items={[
           "<b>Auf alles regressieren.</b> Mehr Kontrollvariablen ≠ bessere Schätzung; der DAG bestimmt die Anpassungsmenge.",
-          "<b>Die F-Statistik der ersten Stufe als IV-Gültigkeitstest behandeln.</b> Stärke belegt weder Exklusion noch Exogenität, und der Wert 10 ist nur ein kontextabhängiger Weak-IV-Screen. Berichte Weak-IV-robuste Inferenz.",
+          "<b>Die F-Statistik der ersten Stufe als IV-Gültigkeitstest behandeln.</b> Stärke belegt weder Exklusion noch Exogenität. Berichte Weak-IV-robuste Inferenz.",
           "<b>Dynamik vor dem Treatment in DiD ignorieren.</b> Zeichne Event-Time-Schätzungen und prüf vorher Zusammensetzung, Antizipation und andere Schocks.",
         ]}
       />

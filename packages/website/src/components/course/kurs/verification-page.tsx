@@ -299,10 +299,10 @@ export function VerificationPage({
                 <p className="mt-2 text-sm text-muted-foreground">
                   {config.language === "en"
                     ? invalidReason === "course-mismatch"
-                      ? "The link's data belongs to a different course."
+                      ? "Scan the QR code on your PDF again to open the right course's check page."
                       : "The link holds no readable certificate data or is damaged."
                     : invalidReason === "course-mismatch"
-                      ? "Die Daten im Link gehören zu einem anderen Kurs."
+                      ? "Scanne den QR-Code auf deiner PDF erneut, um die Prüfseite des richtigen Kurses zu öffnen."
                       : "Der Link enthält keine lesbaren Zertifikatdaten oder ist beschädigt."}
                 </p>
               </div>

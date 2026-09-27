@@ -17,7 +17,7 @@ export default function Ch05Model() {
       <Hero
         eyebrow="Chapter 05 · Model"
         title="Model flexibility changes <em>bias and variance.</em>"
-        hook="More flexibility lowers approximation error, raises estimation variance and costs compute and interpretability. <strong>A validation design that matches deployment decides which trade pays off.</strong>"
+        hook="More flexibility usually lowers approximation error, raises estimation variance and costs compute and interpretability. <strong>A validation design that matches deployment decides which trade pays off.</strong>"
         meta={[
           { k: "Read", v: "9 min" },
           { k: "Focus", v: "Fit · CV · tune" },
@@ -68,14 +68,14 @@ export default function Ch05Model() {
 
       <AntiPatterns
         items={[
-          "<b>Tuning on the test set.</b> That is overfitting with extra steps.",
+          "<b>Tuning on the test set.</b> The model then fits the test set indirectly, and its score looks too good.",
           "<b>Leaderboard chasing.</b> A 0.01 AUC difference decides nothing without fold-level uncertainty, leakage checks and an untouched confirmation set.",
         ]}
       />
 
       <Takeaway
         items={[
-          "<b>Resampling measures split sensitivity.</b> Cross-validation helps only when folds match the data structure; grouped, temporal or nested designs are often needed.",
+          "<b>Resampling shows how much the result depends on the split.</b> Cross-validation helps only when folds match the data structure; grouped, temporal or nested designs are often needed.",
           "<b>Bias² + variance + noise decomposes squared error.</b> It holds under a specified data-generating process and does not apply to every metric.",
         ]}
       />

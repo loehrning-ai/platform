@@ -27,7 +27,7 @@ export default function Ch12Capstone() {
       <Hero
         eyebrow="Chapter 12 · Capstone"
         title='<em>Credit card fraud detection:</em> <span class="accent">the full DS loop.</span>'
-        hook="One public dataset with 284,807 transactions and 492 recorded fraud cases ties together exploration, leakage control, evaluation, threshold policy and deployment review. The simulation teaches and is no production model."
+        hook="One public dataset with 284,807 transactions and 492 recorded fraud cases ties together exploration, leakage control, evaluation, threshold policy and deployment review."
         meta={[
           { k: "Dataset", v: "Kaggle · 284K transactions" },
           { k: "Target", v: "Fraud · 0.17% base rate" },
@@ -55,7 +55,7 @@ export default function Ch12Capstone() {
       <section className="section">
         <SectionLabel n="12.2">The pipeline, step by step</SectionLabel>
         <h2 className="h2">
-          Six decisions. Each one a chapter in this course.
+          Six steps, each with a decision from the course.
         </h2>
         <p className="prose">
           The log shows where leakage can enter; scaling before the split is
@@ -88,9 +88,9 @@ export default function Ch12Capstone() {
           decision.
         </h2>
         <p className="prose">
-          A fraud model scores each transaction, and you set the cutoff. Too
-          low, and reviewers check many legitimate customers at high cost; too
-          high, and real fraud costs revenue and reputation.
+          A fraud model scores each transaction, and you set the cutoff. If it
+          is too low, reviewers check many legitimate customers at high cost;
+          if it is too high, real fraud costs revenue and reputation.
           <strong>
             {" "}
             The cost calculator uses a synthetic cost model; real decisions
@@ -105,27 +105,25 @@ export default function Ch12Capstone() {
           Shipping to production, the checklist
         </SectionLabel>
         <h2 className="h2">
-          A model in a notebook is a demo. A model in prod is an engineering
-          system.
+          Before going live, collect evidence for every review area.
         </h2>
         <p className="prose">
-          Before a fraud model touches a live transaction, collect evidence for
-          every review area. These eight teaching items prompt the review;
-          ticking them removes no failure mode and approves no deployment.
+          These eight teaching items prompt the review; ticking them does not
+          remove a failure mode or approve a deployment.
         </p>
         <PostDeployChecklist />
       </section>
 
       <AntiPatterns
         items={[
-          "<b>No model documentation.</b> Record intended use, exclusions, training and evaluation data, metrics, thresholds, owners, limits and known failure modes; a model card proves no legal compliance.",
+          "<b>No model documentation.</b> Record intended use, exclusions, training and evaluation data, metrics, thresholds, owners, limits and known failure modes; a model card does not prove legal compliance, and legal duties need a separate, system-specific check.",
           "<b>No monitoring contract.</b> Fraud patterns, input quality, label delay and operating costs change; give each signal an owner and a response.",
           "<b>A permanent threshold nobody reviews.</b> Reassess on a documented schedule after major changes in cost, prevalence, calibration, policy or capacity.",
         ]}
       />
       <Takeaway
         items={[
-          "<b>Production performance is system behavior.</b> Model quality, features, services, data contracts, monitoring, incident response and rollback all contribute.",
+          "<b>Model quality, features, services, data contracts, monitoring, incident response and rollback together determine performance in production.</b>",
         ]}
       />
 

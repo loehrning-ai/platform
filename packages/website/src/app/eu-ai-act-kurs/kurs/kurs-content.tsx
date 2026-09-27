@@ -90,7 +90,7 @@ const COURSE_HUB_COPY: Readonly<Record<Locale, CourseHubCopy>> = {
       "Dieser Kurs behandelt die Verordnung (EU) 2024/1689 in der durch die Verordnung (EU) 2026/1744 geänderten Fassung. Er ersetzt keine Rechtsberatung oder fallbezogene Compliance-Prüfung. Zeitabhängige Angaben wurden zuletzt am 28. Juli 2026 geprüft.",
     importSuccess: "Fortschritt importiert.",
     importError:
-      "Der Fortschrittslink ist ungültig oder veraltet. Nichts wurde importiert.",
+      "Der Fortschrittslink ist ungültig oder veraltet. Es wurde nichts importiert.",
     overall: "Gesamtfortschritt",
     lessons: "Lektionen",
     blocks: "Blöcke",

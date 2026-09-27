@@ -5,7 +5,7 @@
   "subtitle": "Ändere eine Variable, vergleiche Ergebnisse und sichere die Belege.",
   "durationMinutes": 10,
   "trackId": "workflows",
-  "hook": "Der erste Entwurf ist ein Messpunkt, kein Ergebnis.",
+  "hook": "Nutze den ersten Entwurf, um den Prompt zu kalibrieren.",
   "keyConcepts": [
     "Kalibrieren, korrigieren, fixieren",
     "Zeigen, nicht erzählen",
@@ -22,20 +22,20 @@
     {
       "id": "three-turn-loop",
       "title": "Die Drei-Runden-Schleife",
-      "readTimeMinutes": 2,
+      "readTimeMinutes": 1,
       "content": "- **Runde 1 · Basiswert.** Lass einen ersten Prompt über ein kleines Testset laufen und notiere, welche Anforderungen erfüllt sind.\n- **Runde 2 · eine Korrektur.** Mach eine prüfbare Änderung wie „Entferne den ersten Absatz“ und lass alles andere gleich.\n- **Runde 3 · getestete Version sichern.** Speichere Prompt, Einsatzzweck, Modellannahmen und Eval-Fälle. Lass die Fälle nach späteren Änderungen oder Modellwechseln erneut laufen.\n\nAus einer akzeptierten Ausgabe kann ein Modell einen wiederverwendbaren Prompt entwerfen. Er bleibt ein Kandidat, bis er an neuen Eingaben besteht."
     },
     {
       "id": "show-dont-tell",
       "title": "Zeigen, nicht erzählen",
-      "readTimeMinutes": 2,
+      "readTimeMinutes": 1,
       "content": "Ein Beispiel macht eine unklare Anforderung sichtbar. Statt „professioneller Ton“ gib eine kurze, freigegebene Referenz mit und nenne die Merkmale, die bleiben sollen; für strukturierte Aufgaben helfen repräsentative Ein- und Ausgabepaare und Grenzfälle. Beispiele können zu Überanpassung führen und ungewollte Details mitschleppen, also entferne Vertrauliches, variiere sie und prüfe an zurückgehaltenen Fällen."
     },
     {
       "id": "turn-2-vocabulary",
       "title": "Was du in Runde 2 sagen solltest",
-      "readTimeMinutes": 2,
-      "content": "Schreib Korrekturen, die ein Reviewer an der Ausgabe prüfen kann.\n\n**Prüfbar:** „Entferne den ersten Absatz.“ · „Übernimm Satzlänge und Begriffe aus diesem freigegebenen Beispiel.“ · „Beginne jeden Aufzählungspunkt mit einem Verb.“ · „Der Leser kennt X; lass die Definition weg.“\n\n**Nicht prüfbar:** „Mach es besser.“ · „Weniger nach KI klingend.“ · „Prägnanter.“ · „Du weißt, was ich meine.“"
+      "readTimeMinutes": 1,
+      "content": "Schreib Korrekturen, die ein Reviewer an der Ausgabe prüfen kann.\n\n**Prüfbar:** „Entferne den ersten Absatz.“ · „Übernimm Satzlänge und Begriffe aus diesem freigegebenen Beispiel.“ · „Beginne jeden Aufzählungspunkt mit einem Verb.“ · „Der Leser kennt X; lass die Definition weg.“\n\n**Nicht prüfbar:** „Mach es besser.“ · „Klingt weniger nach KI.“ · „Prägnanter.“ · „Du weißt, was ich meine.“"
     }
   ],
   "widgets": [
@@ -70,8 +70,8 @@
         "cpId": "q1",
         "question": "Welche Korrektur in Runde 2 wird die Ausgabe am wahrscheinlichsten ändern?",
         "options": [
-          "\"Mache es besser.\"",
-          "\"Weniger nach KI klingend.\"",
+          "\"Mach es besser.\"",
+          "\"Klingt weniger nach KI.\"",
           "\"Kürze den Eröffnungsabsatz und beginne mit dem Status in einem Satz.\"",
           "\"Versuche es erneut.\""
         ],
@@ -93,9 +93,9 @@
       "props": {
         "lessonId": "iteration",
         "cpId": "arena",
-        "task": "Korrigiere ein Status-Update im ersten Entwurf, das mit zu vielen Einleitungen begann.",
+        "task": "Korrigiere den ersten Entwurf eines Status-Updates, der mit zu viel Einleitung beginnt.",
         "original": "soll besser und kürzer klingen",
-        "criteria": "Spezifität, Testbarkeit, umsetzbare Anweisung, vermeidet Vages"
+        "criteria": "Konkret, testbar, umsetzbar, ohne vage Wörter."
       }
     }
   ]

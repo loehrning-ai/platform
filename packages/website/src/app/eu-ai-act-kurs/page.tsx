@@ -63,7 +63,7 @@ const LANDING_COPY = {
       "24 Lektionen",
       "ca. 1 Std. 50 Min. Lernzeit",
       "Abschlussquiz mit 27 Fragen",
-      "Rechtsstand: VO (EU) 2024/1689, Fassung seit 27.\u00a0Juli\u00a02026",
+      "VO (EU) 2024/1689, Fassung seit 27.\u00a0Juli\u00a02026",
     ],
     legalHeading: "Was Artikel 4 verlangt",
     legalBody:
@@ -72,14 +72,14 @@ const LANDING_COPY = {
     minutes: (count: number) => `${count} Min.`,
     audienceHeading: "Für wen",
     audience: [
-      { title: "Alle, die im Unternehmen KI-Tools auswählen oder nutzen" },
-      { title: "Ab Block 3: Datenschutz, IT, Compliance, Einkauf, Personal, Fachbereiche" },
+      { title: "Blöcke 1 und 2: alle, die KI-Tools auswählen oder nutzen" },
+      { title: "Ab Block 3: Datenschutz, IT, Compliance, Einkauf, Personal, Fachverantwortliche" },
       { title: "Ohne Programmier- oder Jura-Vorkenntnisse" },
     ],
     outcomes: [
       { title: "Ihre Rolle als Anbieter, Betreiber, Einführer oder Händler bestimmen" },
       { title: "Verbotene Praktiken, Hochrisiko-Systeme und Transparenzfälle unterscheiden" },
-      { title: "Pflichten mit Zuständigen, Fristen und Rechtsquelle auflisten" },
+      { title: "Pflichten mit Zuständigen, Fristen, Rechtsstand und Quelle auflisten" },
     ],
     // The EU AI Act course addresses the reader with "Sie" (CONTENT_GUIDE).
     outcomesHeading: "Was Sie danach können",
@@ -90,7 +90,7 @@ const LANDING_COPY = {
     ],
     disclaimerLabel: "Hinweis:",
     disclaimer:
-      "Bildungsangebot, keine Rechtsberatung: Der Nachweis ist weder akkreditiert noch serverseitig signiert. Teilnahme oder Teilnahmenachweis allein belegen weder Kompetenz noch die Erfüllung von Artikel 4; Systeminventur, Rollenklärung, Risikoklassifizierung und organisationsbezogene Kontrollen bleiben erforderlich.",
+      "Bildungsangebot, keine Rechtsberatung. Der Nachweis ist weder akkreditiert noch serverseitig signiert. Teilnahme oder Teilnahmenachweis allein belegen weder Kompetenz noch die Erfüllung von Artikel 4; Systeminventur, Rollenklärung, Risikoklassifizierung und organisationsbezogene Kontrollen bleiben erforderlich.",
     factsLabel: "Auf einen Blick",
     progressLabel: "Fortschritt im EU AI Act Kurs",
     lessonsLabel: "Lektionen",
@@ -131,7 +131,7 @@ const LANDING_COPY = {
       "24 lessons",
       "About 1 hr 50 min of study",
       "Final quiz with 27 questions",
-      "Legal basis: Regulation (EU) 2024/1689 as in force since 27\u00a0July\u00a02026",
+      "Reg. (EU) 2024/1689, version of 27\u00a0July\u00a02026",
     ],
     legalHeading: "What Article 4 requires",
     legalBody:
@@ -140,14 +140,14 @@ const LANDING_COPY = {
     minutes: (count: number) => `${count} min`,
     audienceHeading: "Who it is for",
     audience: [
-      { title: "Anyone choosing or using AI tools at work" },
-      { title: "From block 3: data protection, IT, compliance, procurement, HR, owners" },
+      { title: "Blocks 1 and 2: anyone choosing or using AI tools" },
+      { title: "From block 3: data protection, IT, compliance, procurement, HR, business owners" },
       { title: "No coding or legal background needed" },
     ],
     outcomes: [
       { title: "Identify your role as provider, deployer, importer or distributor" },
       { title: "Tell prohibited practices, high-risk systems and transparency cases apart" },
-      { title: "List duties with owners, deadlines and legal source" },
+      { title: "List duties with owners, deadlines, legal status and source" },
     ],
     outcomesHeading: "What you can do afterwards",
     evidenceHeading: "What the completion record establishes",
@@ -157,7 +157,7 @@ const LANDING_COPY = {
     ],
     disclaimerLabel: "Scope:",
     disclaimer:
-      "Educational material, not legal advice: the record is neither accredited nor server-signed. Participation or a completion record alone establishes neither competence nor compliance with Article 4; a system inventory, role analysis, risk classification, and organization-specific controls remain necessary.",
+      "Educational material, not legal advice. The record is neither accredited nor server-signed. Participation or a completion record alone establishes neither competence nor compliance with Article 4; a system inventory, role analysis, risk classification, and organization-specific controls remain necessary.",
     factsLabel: "At a glance",
     progressLabel: "EU AI Act Course progress",
     lessonsLabel: "lessons",

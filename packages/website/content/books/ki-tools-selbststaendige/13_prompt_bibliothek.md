@@ -308,7 +308,7 @@ Ton: Sachlich, datengetrieben.
 Kontext: Ich bin [BERUF], [ERFAHRUNG] Jahre, Umsatz [BETRAG] EUR/Jahr.
 Zielgruppe: [ZIELGRUPPE]. Positionierung: [USP].
 Rolle: Strategischer Unternehmensberater.
-Aufgabe: SWOT-Analyse + 3 Handlungsempfehlungen.
+Aufgabe: SWOT-Analyse + 3 Handlungsempfehlungen. Berücksichtige den deutschen Markt.
 Format: SWOT-Matrix (Tabelle) + Empfehlungen.
 Ton: Direkt, analytisch.
 ```

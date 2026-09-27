@@ -2,7 +2,7 @@
 
 Viele Einsteiger wollen KI ab Montag überall einsetzen. Finde stattdessen die drei Aufgaben in deinem Job, bei denen KI dir mehr Zeit spart, als sie kostet.
 
-Bei Meta sehe ich täglich, was KI mit sauberen Daten kann. Der Großteil ist Verwaltung, Koordination und Datenarbeit, und unter jeder interessanten Anwendung liegt zehnmal so viel Wartung. Fang auch in deinem Job bei dieser Routine an. Die folgenden zehn Fragen dauern fünf Minuten.
+Bei Meta sehe ich täglich, was KI mit sauberen Daten kann. Der Großteil ist Verwaltung, Koordination und Datenarbeit, und jede sichtbare Anwendung braucht viel Wartung. Fang auch in deinem Job bei dieser Routine an. Die folgenden zehn Fragen dauern fünf Minuten.
 
 ## Self-Assessment: Wie KI-exponiert ist dein Job?
 
@@ -25,7 +25,7 @@ Mit mehr als fünf Häkchen ist dein Job stark KI-exponiert. Auch mit null bis z
 
 KI funktioniert am besten bei repetitiven Aufgaben mit klarem Muster. Hast du die letzten zehn Fälle jedes Mal anders gelöst, ist KI nicht die Antwort.
 
-Prüfe jede Aufgabe mit drei Fragen: Machst du sie mehrmals pro Woche, folgt sie einem Muster, und könnte jemand Neues sie nach kurzer Anleitung erledigen? Dreimal ja heißt, die Aufgabe eignet sich gut, dreimal nein heißt, lass KI weg.
+Prüfe jede Aufgabe mit drei Fragen: Machst du sie mehrmals pro Woche, folgt sie einem Muster, und könnte jemand Neues sie nach kurzer Anleitung erledigen? Bei dreimal Ja eignet sich die Aufgabe gut. Bei dreimal Nein lass KI weg.
 
 ## Dein Profil: Vier Rollen
 

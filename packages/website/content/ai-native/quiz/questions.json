@@ -80,10 +80,10 @@
     "difficulty": "easy",
     "questionText": "Wie ordnet Modul 2 Claude in einen Arbeitsablauf ein?",
     "answerOptions": [
-      { "id": "a", "text": "Claude ist eine reine Suchmaschine.", "isCorrect": false },
-      { "id": "b", "text": "Claude ist ein Ersatz für dein gesamtes Team.", "isCorrect": false },
+      { "id": "a", "text": "Als reine Suchmaschine.", "isCorrect": false },
+      { "id": "b", "text": "Als Ersatz für dein gesamtes Team.", "isCorrect": false },
       { "id": "c", "text": "Als konfigurierbares System mit Kontext, begrenzten Aufgaben, Rechten und Review.", "isCorrect": true },
-      { "id": "d", "text": "Claude ist nur ein Chatbot für Smalltalk.", "isCorrect": false }
+      { "id": "d", "text": "Als Chatbot nur für Smalltalk.", "isCorrect": false }
     ],
     "explanation": "Projects, Skills, Plugins und MCP setzen Kontext und Zugriffe. Du begrenzt Rechte, prüfst Ergebnisse und entscheidest.",
     "version": 1,
@@ -95,10 +95,10 @@
     "difficulty": "medium",
     "questionText": "Wozu dient ein Claude Project mit dauerhaften Anweisungen?",
     "answerOptions": [
-      { "id": "a", "text": "Ein wiederverwendbarer Arbeitsbereich mit Kontext, Anweisungen und Ergebnissen zu einem Thema.", "isCorrect": true },
-      { "id": "b", "text": "Es ist ein statisches Datei-Backup ohne Arbeitskontext.", "isCorrect": false },
-      { "id": "c", "text": "Es löscht automatisch alle Chats nach 24 Stunden.", "isCorrect": false },
-      { "id": "d", "text": "Es ist ein reines Datei-Backup ohne KI-Funktion.", "isCorrect": false }
+      { "id": "a", "text": "Als wiederverwendbarer Arbeitsbereich mit Kontext, Anweisungen und Ergebnissen zu einem Thema.", "isCorrect": true },
+      { "id": "b", "text": "Als automatische Weitergabe deiner Chats an das ganze Team.", "isCorrect": false },
+      { "id": "c", "text": "Als automatische Löschung aller Chats nach 24 Stunden.", "isCorrect": false },
+      { "id": "d", "text": "Als reines Datei-Backup ohne KI-Funktion.", "isCorrect": false }
     ],
     "explanation": "So gibst du den Kontext nicht für jede Aufgabe neu ein. Funktionen und Aufbewahrung hängen von Produkt und Kontoeinstellungen ab.",
     "version": 1,
@@ -168,12 +168,12 @@
     "id": "an_w12",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Welche Funktion von Claude Code ist bei vielen lokalen Dateien besonders relevant?",
+    "questionText": "Welche Funktion von Claude Code hilft Nicht-Entwicklern bei vielen lokalen Dateien am meisten?",
     "answerOptions": [
       { "id": "a", "text": "Kontrollierte Batch-Operationen über viele Dateien, mit Rechte- und Ergebnisprüfung.", "isCorrect": true },
-      { "id": "b", "text": "Es spielt während der Arbeit Musik ab.", "isCorrect": false },
-      { "id": "c", "text": "Es ist nur für Software-Entwickler nutzbar.", "isCorrect": false },
-      { "id": "d", "text": "Es ersetzt das Betriebssystem.", "isCorrect": false }
+      { "id": "b", "text": "Musik während der Arbeit abspielen.", "isCorrect": false },
+      { "id": "c", "text": "Nutzung nur durch Software-Entwickler.", "isCorrect": false },
+      { "id": "d", "text": "Das Betriebssystem ersetzen.", "isCorrect": false }
     ],
     "explanation": "Vor der Annahme prüfst du Zielpfade, geplante Änderungen und den Diff.",
     "version": 1,
@@ -230,12 +230,12 @@
     "difficulty": "easy",
     "questionText": "Wofür ist der Obsidian Web Clipper gedacht?",
     "answerOptions": [
-      { "id": "a", "text": "Videos zu schneiden.", "isCorrect": false },
-      { "id": "b", "text": "Bilder aus dem Vault zu löschen.", "isCorrect": false },
-      { "id": "c", "text": "Den Browser-Verlauf zu leeren.", "isCorrect": false },
+      { "id": "a", "text": "Videos schneiden.", "isCorrect": false },
+      { "id": "b", "text": "Bilder aus dem Vault löschen.", "isCorrect": false },
+      { "id": "c", "text": "Den Browser-Verlauf leeren.", "isCorrect": false },
       { "id": "d", "text": "Webinhalte im Vault speichern, optional per Template oder KI-Interpreter aufbereitet.", "isCorrect": true }
     ],
-    "explanation": "Die gespeicherte Notiz sollte Quelle und Erfassungsdatum behalten.",
+    "explanation": "Die Notiz behält Quelle und Erfassungsdatum, damit du sie später prüfen kannst.",
     "version": 1,
     "active": true
   },
@@ -291,7 +291,7 @@
     "questionText": "Modul 4 unterscheidet nach dem EU AI Act Anbieter und Betreiber. Was ist ein Betreiber (Deployer)?",
     "answerOptions": [
       { "id": "a", "text": "Wer die Server-Hardware im Rechenzentrum verkabelt.", "isCorrect": false },
-      { "id": "b", "text": "Wer ein KI-System eigenverantwortlich nutzt, außer rein persönlich, nicht beruflich.", "isCorrect": true },
+      { "id": "b", "text": "Wer ein KI-System in eigener Verantwortung nutzt, außer rein privat.", "isCorrect": true },
       { "id": "c", "text": "Ein Synonym für Endkunde ohne jede Pflicht.", "isCorrect": false },
       { "id": "d", "text": "Eine Behörde, die KI verbietet.", "isCorrect": false }
     ],
@@ -307,7 +307,7 @@
     "answerOptions": [
       { "id": "a", "text": "Free Risk Insurance Agreement.", "isCorrect": false },
       { "id": "b", "text": "Federal Reporting Information Act.", "isCorrect": false },
-      { "id": "c", "text": "Fundamental Rights Impact Assessment, Grundrechte-Folgenabschätzung für bestimmte Betreiber und Hochrisiko-Einsätze.", "isCorrect": true },
+      { "id": "c", "text": "Fundamental Rights Impact Assessment (Grundrechte-Folgenabschätzung).", "isCorrect": true },
       { "id": "d", "text": "Final Review Internal Audit.", "isCorrect": false }
     ],
     "explanation": "Art. 27 des EU AI Act verlangt sie von bestimmten Betreibern bei bestimmten Hochrisiko-Systemen, nicht für jedes KI-System.",
@@ -321,9 +321,9 @@
     "questionText": "Welchen Umfang setzt der Capstone-Brief in Modul 4?",
     "answerOptions": [
       { "id": "a", "text": "Einen begrenzten Workflow als Pilot mit freigegebenen Daten planen, dokumentieren und testen.", "isCorrect": true },
-      { "id": "b", "text": "Eine 100-seitige theoretische Hausarbeit zu schreiben.", "isCorrect": false },
-      { "id": "c", "text": "Ein börsenreifes Startup zu gründen.", "isCorrect": false },
-      { "id": "d", "text": "Nichts zu liefern, der Capstone ist optional und ohne Kriterien.", "isCorrect": false }
+      { "id": "b", "text": "Eine 100-seitige theoretische Hausarbeit schreiben.", "isCorrect": false },
+      { "id": "c", "text": "Ein börsenreifes Startup gründen.", "isCorrect": false },
+      { "id": "d", "text": "Nichts liefern, der Capstone ist optional und ohne Kriterien.", "isCorrect": false }
     ],
     "explanation": "Produktivbetrieb folgt erst nach den nötigen Kontrollen und Freigaben, der Umfang richtet sich nach Zeit und Risiko. Die Rubrik prüft Dokumentation, Messung, Fehlerbehandlung und Kontrollen, kein Deployment-Datum.",
     "version": 1,

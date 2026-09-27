@@ -68,9 +68,9 @@ export const DATA_ENGINEERING_FUNDAMENTALS_COURSE_COPY = Object.freeze({
     },
     landing: {
       eyebrow: "Data Engineering / Grundlagen",
-      title: "Eine Datenpipeline ist ein zusammenhängendes System.",
+      title: "Eine Datenpipeline Station für Station verstehen.",
       intro:
-        "Du verfolgst Daten Station für Station von der Quelle bis zur Nutzung und probierst jede Entscheidung in einer Simulation aus.",
+        "Zu jeder Station probierst du die Entscheidung in einer Simulation aus.",
       start: "Überblick öffnen",
       browse: "Kapitel anzeigen",
       facts: [
@@ -104,9 +104,9 @@ export const DATA_ENGINEERING_FUNDAMENTALS_COURSE_COPY = Object.freeze({
         "Lokale Teilnahmebestätigung für Data Engineering Fundamentals herunterladen.",
     },
     verificationMetadata: {
-      title: "Teilnahmebestätigungsdaten lesen: Data Engineering Fundamentals",
+      title: "Zertifikatdaten lesen: Data Engineering Fundamentals",
       description:
-        "Lokal kodierte Abschlussdaten lesen. Nicht servergeprüft, nicht kryptografisch signiert.",
+        "Liest die lokal kodierten Daten einer Teilnahmebestätigung. Sie sind nicht servergeprüft und nicht kryptografisch signiert.",
     },
     error: {
       eyebrow: "Data Engineering / Fehler",
@@ -137,9 +137,9 @@ export const DATA_ENGINEERING_FUNDAMENTALS_COURSE_COPY = Object.freeze({
     },
     landing: {
       eyebrow: "Data engineering / fundamentals",
-      title: "A data pipeline is one connected system.",
+      title: "Understand a data pipeline stage by stage.",
       intro:
-        "Follow data stage by stage from source to use and try each decision in a simulation.",
+        "At each stage you try the decision in a simulation.",
       start: "Open the overview",
       browse: "View the chapters",
       facts: [
@@ -175,7 +175,7 @@ export const DATA_ENGINEERING_FUNDAMENTALS_COURSE_COPY = Object.freeze({
     verificationMetadata: {
       title: "Read completion-record data: Data Engineering Fundamentals",
       description:
-        "Read locally encoded completion data, not server-verified or signed.",
+        "Reads the locally encoded data of a completion record. The data is not server-verified or cryptographically signed.",
     },
     error: {
       eyebrow: "Data Engineering / error",

@@ -35,10 +35,10 @@ const lesson: DataInfraLesson = {
     },
     {
       id: "s2",
-      title: "Reliability model",
+      title: "Setting SLOs",
       readTimeMinutes: 2,
       content:
-        "The model shows how three failure types move the signals. Its values are fixed examples, not production thresholds, and a green dashboard means only that the measured conditions sit inside their limits.\n\nDerive each SLO from a user need, a measurement window, an error budget and the consequence of a miss; a finance close needs other definitions than an exploratory dashboard. Validate thresholds against history before you page anyone on them.",
+        "The observability model above shows how three failure types move the signals. Its values are fixed examples, not production thresholds, and a green dashboard means only that the measured conditions sit inside their limits.\n\nDerive each SLO from a user need, a measurement window, an error budget and the consequence of a miss; a finance close needs stricter definitions than an exploratory dashboard. Validate thresholds against history before you page anyone on them.",
     },
     {
       id: "s3",
@@ -59,7 +59,7 @@ const lesson: DataInfraLesson = {
       title: "Declared and learned checks",
       readTimeMinutes: 3,
       content:
-        "Declared checks encode known invariants: a key is unique, an amount is non-negative, a reconciliation difference stays within tolerance. They are reviewable and deterministic, and detect only what somebody specified. dbt data tests or Great Expectations run them, with version-dependent sources and reporting.\n\nLearned checks estimate an expected range from historical counts, null rates or distributions. They surface unexpected changes and also fire on seasonality, launches, outages and sparse data.\n\nChoose coverage from requirements:\n\n- declared checks for contracts and business invariants;\n- learned checks where history is informative and someone tunes the detector;\n- a list of datasets that may be profiled, since samples can carry sensitive data;\n- a test of alert precision, warehouse cost, access control, retention, lineage coverage and export on representative data.",
+        "Declared checks encode known invariants: a key is unique, an amount is non-negative, a reconciliation difference stays within tolerance. They are reviewable and deterministic, and detect only what somebody specified. dbt data tests or Great Expectations run them, with version-dependent sources and reporting.\n\nLearned checks estimate an expected range from historical counts, null rates or distributions. They surface unexpected changes and also fire on seasonality, launches, outages and sparse data.\n\nDecide from requirements:\n\n- declared checks for contracts and business invariants;\n- learned checks where history is informative and someone tunes the detector;\n- which datasets may be profiled, since samples can carry sensitive data;\n- a trial on representative data for alert precision, warehouse cost, access control, retention, lineage coverage and export.\n\nUse both check types where they fit; neither is required at every layer.",
     },
     {
       id: "s6",
@@ -79,7 +79,7 @@ const lesson: DataInfraLesson = {
       title: "Vocab",
       readTimeMinutes: 2,
       content:
-        "- **SLI / SLO / SLA**, measured signal, its target over a window, and an agreement with consequences.\n- **Completeness proxy**, a count, coverage ratio or reconciliation difference.\n- **Anomaly detection**, compares observations with an expected range.\n- **Data contract**, a versioned producer-consumer agreement on structure, meaning and quality.",
+        "- **SLI / SLO / SLA**, measured signal, its target over a window, and an agreement that can set consequences.\n- **Completeness proxy**, a count, coverage ratio or reconciliation difference.\n- **Anomaly detection**, compares observations with an expected range.\n- **Data contract**, a versioned producer-consumer agreement on structure, meaning and quality.",
     },
   ],
   widgets: [
@@ -113,7 +113,7 @@ const lesson: DataInfraLesson = {
         title: "Where to alert",
         copy: DATA_INFRA_QUIZ_COPY,
         question:
-          "fact_orders is missing 30% of expected rows. Lineage: fact_orders ← stg_orders ← raw_orders ← Postgres CDC. CDC has sent 0 events in 4 hours. Who gets paged?",
+          "fact_orders lacks 30% of expected rows. Lineage: fact_orders ← stg_orders ← raw_orders ← Postgres CDC, which sent 0 events in 4 hours. Who gets paged?",
         options: [
           "The dbt model owner, where the test failed.",
           "The dashboard team, who noticed.",

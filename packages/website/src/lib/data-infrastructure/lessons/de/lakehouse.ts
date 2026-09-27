@@ -36,12 +36,12 @@ Wähle, indem du die aktuelle Spezifikation und die genauen Katalog- und Engine-
 
 Ein Lesevorgang löst \`orders\` über den Katalog zu \`v18.json\` auf, nimmt den aktuellen Snapshot, streicht Manifeste und Dateien anhand ihrer Statistiken und öffnet nur die übrigen Parquet-Dateien.
 
-Ein Schreibvorgang läuft rückwärts: Datendateien, Manifest, Manifestliste, Metadatendatei. Dann setzt ein atomares Compare-and-swap den Katalogzeiger von \`v17.json\` auf \`v18.json\`, und dieses CAS *ist* der Commit. Scheitert es, bleiben die Entwurfsdateien verwaist, bis VACUUM sie entfernt.`,
+Ein Schreibvorgang läuft rückwärts: Datendateien, Manifest, Manifestliste, Metadatendatei. Dann setzt ein atomares Compare-and-swap den Katalogzeiger von \`v17.json\` auf \`v18.json\`, und dieses CAS *ist* der Commit. Scheitert es, bleiben die Entwurfsdateien verwaist, bis das Aufräumen verwaister Dateien sie entfernt.`,
     },
     {
       id: "s3",
       title: "ACID und Kataloge",
-      content: `Ein Commit-Protokoll veröffentlicht einen neuen Tabellenzustand, ohne je einen Teilzustand zu zeigen. In Icebergs optimistischem Modell bereiten Writer ihre Änderungen parallel vor, validieren und tauschen dann den Metadatenzeiger atomar.
+      content: `Ein Commit-Protokoll veröffentlicht einen neuen Tabellenzustand, ohne je einen Teilzustand zu zeigen.
 
 1. Writer A und Writer B lesen \`v18.json\`.
 2. Beide schreiben Kandidaten für Daten- und Metadatendateien.
@@ -54,9 +54,9 @@ Der Katalog gehört zur Korrektheit: Er löst eine Tabelle zu ihren Metadaten au
     },
     {
       id: "s4",
-      title: "Snapshot-Zeitachse",
+      title: "Kosten von Time Travel",
       content:
-        "Die Zeitachse ist eine feste Beispielfolge von Snapshots; wählst du einen älteren, lösen die Metadaten einen früheren Zustand auf. Was Abfrage und Rollback kosten, hängt von Metadatengröße, Katalog- und Speicherlatenz, Planung und aufbewahrten Dateien ab. Time Travel belegt Speicher, bis Aufbewahrung und Garbage Collection unerreichbare Daten entfernen.",
+        "Das Snapshot-Modell oben ist eine feste Beispielfolge von Snapshots; wählst du einen älteren, lösen die Metadaten einen früheren Zustand auf. Was Abfrage und Rollback kosten, hängt von Metadatengröße, Katalog- und Speicherlatenz, Planung und aufbewahrten Dateien ab. Time Travel belegt Speicher, bis Aufbewahrung und Garbage Collection unerreichbare Daten entfernen.",
     },
     {
       id: "s5",
@@ -67,8 +67,6 @@ Der Katalog gehört zur Korrektheit: Er löst eine Tabelle zu ihren Metadaten au
 - **Merge-on-Read (MoR).** Neue Datensätze oder Löschinformationen getrennt schreiben und beim Lesen oder bei der Kompaktierung zusammenführen. Änderungen schreiben weniger; Lesen und Wartung leisten mehr.
 
 Delete-Dateitypen, Vorgaben und Engine-Unterstützung unterscheiden sich je Version. Entscheide nach gemessener Aktualisierungsrate, Lesemuster, Dateigröße, Wartungskapazität und Löschsemantik.`,
-      keyTakeaway:
-        "Seltene Änderungen und viele Lesezugriffe sprechen für CoW, häufige Änderungen im CDC-Stil für MoR.",
     },
     {
       id: "s6",
@@ -80,7 +78,7 @@ Delete-Dateitypen, Vorgaben und Engine-Unterstützung unterscheiden sich je Vers
 | Engine-Interoperabilität | Lese- und Schreiboperationen je genauer Engine-Version |
 | Commit und Isolation | Katalogatomarität, Schreibvalidierung, Retries, Wiederherstellung unbekannter Commits |
 | Änderungen und Löschungen | CoW-/MoR-Unterstützung, Delete-Darstellung, Merge-Kosten, Datenschutzlöschung |
-| Schema- und Partitionsentwicklung | Unterstützte Änderungen, Reader-Kompatibilität, Neuschreiben alter Dateien |
+| Schema- und Partitionsentwicklung | Unterstützte Änderungen, Reader-Kompatibilität, Neuschreiben alter Dateien (nach Partitionsentwicklung behalten alte Dateien ihre Spezifikation) |
 | Inkrementelle Verarbeitung | Change-Feed-Semantik, Ordnung, Aufbewahrung, Checkpoint-Identität |
 | Betrieb | Kompaktierung, Snapshot-Ablauf, Orphan Cleanup, Observability, Disaster Recovery |
 | Governance | Autorisierung, Audit-Ereignisse, Verschlüsselung, Katalogverfügbarkeit, Zuständigkeit |
@@ -95,14 +93,13 @@ Engine-Integrationen können der Spezifikation hinterherhinken oder nur einen Te
     {
       id: "s8",
       title: "Kernaussagen",
-      content: `- Nach einer Partitionsentwicklung behalten alte Dateien ihre Spezifikation, neue nutzen die neue.
-- Belege Lesen, Schreiben, Löschen, Evolution und Wiederherstellung auf deinen genauen Engine-Versionen.`,
+      content: "- Seltene Änderungen und viele Lesezugriffe sprechen für CoW, häufige Änderungen im CDC-Stil für MoR.",
     },
     {
       id: "s9",
       title: "Begriffe",
       content: `- **Snapshot**, Metadaten für einen commiteten Tabellenzustand.
-- **Snapshot-Ablauf / VACUUM**, entfernt Historie und nicht referenzierte Dateien nach Produktregeln.
+- **Snapshot-Ablauf / VACUUM**, entfernt Historie und nach Produktregeln irgendwann nicht referenzierte Dateien.
 - **Verborgene Partitionierung**, leitet Partitionswerte aus Quellspalten ab, also filtern Abfragen auf diesen Spalten.
 - **Kompaktierung**, schreibt kleine Dateien in ein neues Layout um.
 - **Z-Order**, mehrdimensionales Clustering, das Data Skipping für gewählte Prädikate verbessert.`,
@@ -114,7 +111,7 @@ Engine-Integrationen können der Spezifikation hinterherhinken oder nur einen Te
       cpId: "q1",
       title: "Löschung nach DSGVO",
       question:
-        "Deine Iceberg-Tabelle nutzt CoW. Eine Person verlangt die Löschung ihrer ~50 Zeilen, verteilt über 30 von 4,800 Datendateien. Was passiert beim DELETE?",
+        "Deine Iceberg-Tabelle nutzt CoW. Eine Person verlangt die Löschung ihrer ~50 Zeilen, verteilt über 30 von 4800 Datendateien. Was passiert beim DELETE?",
       options: [
         "Die 50 Zeilen werden an Ort und Stelle neu geschrieben.",
         "Eine Datei mit Löschmarkierungen wird geschrieben; sonst ändert sich nichts.",

@@ -87,7 +87,7 @@ export const DATA_INFRA_COURSE_COPY = Object.freeze({
       eyebrow: "Data Infrastructure / Kurs",
       title: "Datenplattformen anhand ihrer Systemgrenzen entwerfen.",
       intro:
-        "Du verfolgst Daten von der Quelle bis zur Nutzung. Jede Lektion benennt Entscheidung, Ausfallmodus und Betriebsnachweis.",
+        "In jeder Lektion triffst du eine Entwurfsentscheidung und prüfst, wie sie ausfallen kann und woran du das im Betrieb erkennst.",
       start: "Lektion 01 starten",
       map: "Kursübersicht",
       facts: [
@@ -106,7 +106,7 @@ export const DATA_INFRA_COURSE_COPY = Object.freeze({
       courseTitle: "Zwölf Lektionen in vier Tracks.",
       lessonLabel: (number) => `Lektion ${String(number).padStart(2, "0")}`,
       progressEyebrow: "Lernstand",
-      progressTitle: "Fortschritt pro Track auf diesem Gerät.",
+      progressTitle: "Dein Fortschritt",
       breadcrumbs: ["Start", "Kurse", "Data Infrastructure"],
       jsonLdDescription:
         "Zwölf Lektionen zum Systemdesign von Datenplattformen.",
@@ -148,9 +148,9 @@ export const DATA_INFRA_COURSE_COPY = Object.freeze({
         "Lokale Teilnahmebestätigung für Data Infrastructure herunterladen.",
     },
     verificationMetadata: {
-      title: "Teilnahmebestätigungsdaten prüfen: Data Infrastructure",
+      title: "Zertifikatdaten lesen: Data Infrastructure",
       description:
-        "Lokal kodierte Abschlussdaten lesen, nicht servergeprüft oder signiert.",
+        "Liest die lokal kodierten Daten einer Teilnahmebestätigung. Sie sind nicht servergeprüft und nicht kryptografisch signiert.",
     },
     error: {
       title: "Data Infrastructure konnte nicht geladen werden",
@@ -174,7 +174,7 @@ export const DATA_INFRA_COURSE_COPY = Object.freeze({
       eyebrow: "Data Infrastructure / course",
       title: "Design data platforms from explicit system boundaries.",
       intro:
-        "Follow data from source to use. Each lesson names a decision, a failure mode, and operating evidence.",
+        "In each lesson you make one design decision and check how it can fail and how you would see that in production.",
       start: "Start lesson 01",
       map: "Course map",
       facts: [
@@ -193,7 +193,7 @@ export const DATA_INFRA_COURSE_COPY = Object.freeze({
       courseTitle: "Twelve lessons in four tracks.",
       lessonLabel: (number) => `Lesson ${String(number).padStart(2, "0")}`,
       progressEyebrow: "Progress",
-      progressTitle: "Track progress on this device.",
+      progressTitle: "Your progress",
       breadcrumbs: ["Home", "Courses", "Data Infrastructure"],
       jsonLdDescription:
         "Twelve lessons on data-platform system design.",
@@ -237,7 +237,7 @@ export const DATA_INFRA_COURSE_COPY = Object.freeze({
     verificationMetadata: {
       title: "Read completion-record data: Data Infrastructure",
       description:
-        "Read locally encoded completion data, not server-verified or signed.",
+        "Reads the locally encoded data of a completion record. The data is not server-verified or cryptographically signed.",
     },
     error: {
       title: "Data Infrastructure could not load",

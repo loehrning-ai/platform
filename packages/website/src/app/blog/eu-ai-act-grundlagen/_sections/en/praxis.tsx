@@ -15,8 +15,8 @@ export function PraxisEn() {
       <div className="premise">
         <div className="premise__body">
           <p>
-            <b style={{ color: "var(--kupfer)" }}>As an employee</b>, you can
-            check your position with four questions:
+            <b style={{ color: "var(--kupfer)" }}>As an employee</b>, check
+            your position:
           </p>
           <p>
             <b style={{ color: "var(--kupfer)" }}>1.</b> Can you recognise when
@@ -37,8 +37,7 @@ export function PraxisEn() {
             <b style={{ color: "var(--kupfer)" }}>4.</b> Do you know where to
             object or complain? From 2 August 2026, Article 85 points to the
             competent market-surveillance authority. In Germany, the Federal
-            Network Agency is the central body under the KI-MIG after
-            promulgation, unless a sector-specific authority is responsible.
+            Network Agency is the central body under the KI-MIG, unless a sector-specific authority is responsible.
           </p>
           <p style={{ marginTop: 28 }}>
             <b style={{ color: "var(--kupfer)" }}>As a small business</b> using

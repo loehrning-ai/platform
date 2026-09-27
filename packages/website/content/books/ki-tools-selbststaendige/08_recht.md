@@ -8,7 +8,7 @@ Dieses Kapitel nennt die Prüffelder. Den aktuellen Gesetzestext und die Einzelf
 
 > **Wissens-Vertiefung: KI-Führerschein**
 >
-> Der **KI-Führerschein** ist ein kostenloser 5-Block-Kurs bei loehrning.ai (Entdeckung, Datenschutz, Anwendung, Verifikation, Richtlinie) zu den regulatorischen Anforderungen.
+> Der **KI-Führerschein** ist ein kostenloser 5-Block-Kurs bei loehrning.ai (Entdeckung, Datenschutz, Anwendung, Verifikation, Richtlinie) zu den regulatorischen Anforderungen. Für dieses Kapitel zählt Block 2 (Datenschutz).
 >
 > **Kursdauer:** 5 × 30 Minuten + Praxisübungen
 > **Abschluss:** Der Kurs dokumentiert deinen Lernfortschritt. Die Teilnahmebestätigung ist kein behördlicher Nachweis und belegt allein keine organisationsbezogene Erfüllung von Art. 4.

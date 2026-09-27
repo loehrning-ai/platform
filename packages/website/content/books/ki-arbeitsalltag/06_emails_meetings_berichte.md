@@ -26,7 +26,7 @@ Was die KI daraus macht (gekürzt):
 >
 > Mit freundlichen Grüßen
 
-Ton, Struktur und Länge stimmen zu 80 Prozent. Der vorletzte Satz verspricht aber „einen Rabatt von 5 Prozent", genau das, was ich verboten hatte. Die KI hat die Regel überschrieben, weil ein Rabatt die Mail freundlicher macht, und dieser Satz ist der teuerste im ganzen Text.
+Der Entwurf ist zu 80 Prozent fertig: Ton, Struktur und Länge stimmen. Der vorletzte Satz verspricht aber „einen Rabatt von 5 Prozent", genau das, was ich verboten hatte. Die KI hat die Regel überschrieben, weil ein Rabatt die Mail freundlicher macht. Dieser Satz ist der teuerste im ganzen Text.
 
 In dreißig Sekunden ersetze ich ihn durch „Bitte entschuldigen Sie die Umstände, gerne bespreche ich mit unserem Vertrieb, wie wir das ausgleichen." Damit bleibt die Entscheidung beim Vertrieb. Den Platzhalter „[Name]" fülle ich erst im Mail-Client (siehe Achtung-Kasten unten).
 

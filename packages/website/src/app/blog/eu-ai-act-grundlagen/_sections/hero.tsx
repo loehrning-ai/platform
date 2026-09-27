@@ -78,8 +78,8 @@ export function Hero() {
       </section>
 
       <div className="bridge reveal">
-        Artikel 4 verlangt kein Zertifikat. Das stellt die Europäische
-        Kommission in ihrem Q&amp;A zur KI-Kompetenz ausdrücklich fest.
+        Für KI-Kompetenz nach Artikel 4 ist kein Zertifikat nötig. Das stellt
+        die Europäische Kommission in ihrem Q&amp;A ausdrücklich fest.
       </div>
     </>
   );

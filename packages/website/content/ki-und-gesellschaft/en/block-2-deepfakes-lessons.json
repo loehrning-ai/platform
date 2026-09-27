@@ -31,7 +31,7 @@
           "id": "deepfake-2-1-s1",
           "title": "Three invented cases",
           "readTimeMinutes": 2,
-          "content": "1. A manipulated video puts words in a known person's mouth she never said.\n2. A fraud call uses a cloned voice to demand a transfer under time pressure.\n3. An account builds trust with a fully generated profile picture and an invented biography.\n\nCases one and two can be deepfakes in law, because they deceptively reproduce an existing person or event. The invented face in case three is synthetic content, but not automatically a deepfake under the AI Regulation, as long as it resembles no existing person or entity.\n\nIn none of the cases do appearance or sound prove authenticity or manipulation."
+          "content": "1. A manipulated video puts words in a known person's mouth that they never said.\n2. A fraud call uses a cloned voice to demand a transfer under time pressure.\n3. An account builds trust with a fully generated profile picture and an invented biography.\n\nCases one and two can be deepfakes in law, because they deceptively reproduce an existing person or event. The invented face in case three is synthetic content, but not automatically a deepfake under the AI Regulation, as long as it resembles no existing person or entity.\n\nIn none of the cases do appearance or sound prove authenticity or manipulation."
         },
         {
           "id": "deepfake-2-1-s2",
@@ -43,7 +43,7 @@
           "id": "deepfake-2-1-s3",
           "title": "Article 50: marking and disclosure",
           "readTimeMinutes": 1,
-          "content": "Article 50 of the AI Regulation asks different things of two roles:\n\n- Providers of covered generative systems must, as a general rule, mark synthetic output in machine-readable form as artificially generated or manipulated.\n- Deployers who generate or manipulate a deepfake and disclose it must, as a general rule, state visibly that the content was artificially generated or manipulated. Evidently artistic, creative, satirical, fictional or analogous works get an adapted disclosure; further statutory exceptions have to be assessed.\n\nArticle 50 has applied since 2 August 2026. For systems already on the market before that date, paragraph 2 applies from 2 December 2026 under the transition in Regulation (EU) 2026/1744. A marking can support provenance; its absence proves no authenticity, because markings can be removed and exceptions can apply.\n\nSources: Regulation (EU) 2024/1689, Article 3(60) and Article 50; Regulation (EU) 2026/1744, Article 1(39)(b)."
+          "content": "Article 50 of the AI Regulation asks different things of two roles:\n\n- Providers of covered generative systems must, as a general rule, mark synthetic output in machine-readable form as artificially generated or manipulated (paragraph 2).\n- Deployers who generate or manipulate a deepfake and disclose it must, as a general rule, state visibly that the content was artificially generated or manipulated (paragraph 4). Evidently artistic, creative, satirical, fictional or analogous works get an adapted disclosure; further statutory exceptions have to be assessed.\n\nArticle 50 has applied since 2 August 2026. For systems already on the market before that date, paragraph 2 applies from 2 December 2026 under the transition in Regulation (EU) 2026/1744. A marking can support provenance; its absence proves no authenticity, because markings can be removed and exceptions can apply.\n\nSources: Regulation (EU) 2024/1689, Article 3(60) and Article 50; Regulation (EU) 2026/1744, Article 1(39)(b)."
         }
       ],
       "quiz": [
@@ -135,7 +135,7 @@
       "blockId": "block_2",
       "number": 2,
       "title": "How to check provenance and context",
-      "subtitle": "Source work, not a detector verdict",
+      "subtitle": "Check sources, read detectors correctly",
       "durationMinutes": 6,
       "owner": "editorial:ki-und-gesellschaft",
       "lastReviewed": "2026-09-05",
@@ -153,7 +153,7 @@
           "id": "deepfake-2-2-s1",
           "title": "Tools for tracing provenance",
           "readTimeMinutes": 2,
-          "content": "No tool tells you whether an image is true. Three tool classes give clues to its origin:\n\n1. Reverse image search: Google Lens and TinEye (tineye.com) can show earlier or similar appearances. An early hit points to context, not automatically to the original source.\n2. Video decomposition: InVID/WeVerify (weverify.eu) can split videos into keyframes, trigger reverse searches and show available metadata. Whether a video is true, the extension does not decide.\n3. Provenance data: Content Credentials or other signed provenance information can document editing steps and issuers. Missing provenance does not prove manipulation; where it exists, check validity and issuer.\n\nUpload confidential, intimate or personal content only after checking data protection, terms of use and local alternatives."
+          "content": "No tool tells you whether an image is true. Three tool classes give clues to its origin:\n\n1. Reverse image search: Google Lens and TinEye (tineye.com) can show earlier or similar appearances. An early hit points to context, not automatically to the original source.\n2. Video decomposition: InVID/WeVerify (weverify.eu) can split videos into keyframes, trigger reverse searches and show available metadata. The extension does not decide whether a video is true.\n3. Provenance data: Content Credentials or other signed provenance information can document editing steps and issuers. Missing provenance does not prove manipulation; where it exists, check validity and issuer.\n\nUpload confidential, intimate or personal content only after checking data protection, terms of use and local alternatives."
         },
         {
           "id": "deepfake-2-2-s2",
@@ -276,7 +276,7 @@
           "id": "deepfake-2-3-s1",
           "title": "What to do after you find it",
           "readTimeMinutes": 2,
-          "content": "1. Do not spread it: no public sharing, quoting or comment, even with a warning. Where safe, save URL, account name, timestamp and a screenshot locally.\n2. Check first, accuse later: a suspicion is no finding. Use the source check from Lesson 2.\n3. Report precisely: through the platform's current reporting route, with the URL and the possible legal or policy breach. Article 16 of the Digital Services Act obliges hosting services to offer an easily accessible electronic notice mechanism for allegedly illegal content. Sufficiently precise notices have to be handled and decided in a timely, diligent, objective and non-arbitrary way; no duty to remove every reported item follows from that.\n4. Tell the affected person privately: send source location and evidence without passing on the content.\n5. On a possible crime or immediate danger, involve the police: the competent online police station is at polizei.de; in an acute emergency, call the emergency number."
+          "content": "1. Do not spread it: no public sharing, quoting or comment, even with a warning. Where safe, save URL, account name, timestamp and a screenshot locally.\n2. Check first: use the source check from Lesson 2 before you accuse anyone.\n3. Report precisely: through the platform's reporting route, with the URL and the possible legal or policy breach.\n4. Tell the affected person privately: send source location and evidence without passing on the content.\n5. On a possible crime or immediate danger, involve the police: the competent online police station is at polizei.de; in an acute emergency, call the emergency number.\n\nArticle 16 of the Digital Services Act obliges hosting services to offer an easily accessible electronic notice mechanism for allegedly illegal content. They must handle and decide sufficiently precise notices in a timely, diligent, objective and non-arbitrary way; they need not remove every reported item."
         },
         {
           "id": "deepfake-2-3-s2",
@@ -286,9 +286,9 @@
         },
         {
           "id": "deepfake-2-3-s3",
-          "title": "When your image or voice is hit",
+          "title": "When your image or voice is used",
           "readTimeMinutes": 1,
-          "content": "Under Section 22 KUG, portraits may be distributed or publicly displayed only with the consent of the person shown. The exceptions in Section 23 KUG and the balancing under Section 23(2) still need checking. Whether a deepfake infringes these rights, and what claim follows, depends on content, context and distribution route.\n\nSection 22 KUG does not protect your voice alone. With cloned or manipulated audio, the general right of personality, data protection law and civil or criminal provisions can apply, depending on use. Nobody can promise a particular legal consequence without examining your case.\n\nPreserve source location and evidence without passing the content on. verbraucherzentrale.de and klicksafe.de give a first orientation; qualified media-law advice assesses your claims."
+          "content": "Under Section 22 KUG, portraits may be distributed or publicly displayed only with the consent of the person shown. The exceptions in Section 23 KUG and the balancing under Section 23(2) still need checking. Whether a deepfake infringes these rights, and what claim follows, depends on content, context and distribution route.\n\nSection 22 KUG does not protect your voice alone. With cloned or manipulated audio, the general right of personality, data protection law and civil or criminal provisions can apply, depending on use.\n\nMedia-law advice assesses your claims case by case; verbraucherzentrale.de and klicksafe.de give a first orientation."
         }
       ],
       "quiz": [
@@ -317,7 +317,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Every public pass-along grows the reach, including the well-meant kind. Preserve evidence first, then report."
+          "explanation": "Every public share can widen the reach, even a well-meant one. Preserve evidence first where that is safe, then report."
         },
         {
           "id": "deepfake-2-3-q2",
@@ -325,12 +325,12 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Federal Criminal Police Office (BKA)",
+              "text": "Report to the Federal Criminal Police Office (BKA)",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Federal Financial Supervisory Authority (BaFin)",
+              "text": "Write to the financial supervisor BaFin",
               "isCorrect": false
             },
             {
@@ -344,7 +344,7 @@
               "isCorrect": true
             }
           ],
-          "explanation": "Under the KI-MIG the Bundesnetzagentur is competent unless a sector authority is. So first check the current official competence information and the published authority channel."
+          "explanation": "Under the KI-MIG the Bundesnetzagentur is generally competent unless a sector authority is. So first check the current official competence information and the published authority channel."
         },
         {
           "id": "deepfake-2-3-q3",

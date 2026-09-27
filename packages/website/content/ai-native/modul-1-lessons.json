@@ -35,7 +35,7 @@
             "exerciseId": "modul_1_lesson_1_ex_1",
             "lessonId": "modul_1_lesson_1",
             "moduleId": "modul_1",
-            "title": "Schreibe einen besseren Claude-Brief",
+            "title": "Schreibe ein besseres Claude-Briefing",
             "scenario": "Ein Kunde bittet per Mail um eine Lösung bis Freitag. Ergänze den schwachen Prompt unten um Rolle, Kontext, klaren Auftrag und ein konkretes Output-Format.",
             "startingPrompt": "Schreib mir eine Mail zurück an den Kunden.",
             "criteria": [
@@ -74,19 +74,19 @@
       "sections": [
         {
           "id": "modul_1_lesson_1_section_1",
-          "title": "Zwei Entwürfe, eine Stoppuhr",
+          "title": "Die Kundenmail zweimal beantworten",
           "readTimeMinutes": 2,
-          "content": "Der fiktive Kunde Alpha schreibt wegen einer verspäteten Lieferung. Beantworte die Mail zweimal, von Hand und mit Claude als Entwurfsschreiber, und miss jeweils Entwurfszeit, Faktenfehler, nötige Korrekturen und Ton.\n\nDie Claude-Fassung bleibt ein interner Entwurf, bis ein Mensch sie freigibt. Dein Vergleich zeigt, ob sich der Ablauf für diese Aufgabe lohnt."
+          "content": "Der fiktive Kunde Alpha schreibt wegen einer verspäteten Lieferung. Beantworte die Mail zweimal, von Hand und mit Claude als Entwurfsschreiber, und miss jeweils Entwurfszeit, Faktenfehler, nötige Korrekturen und Ton.\n\nDie Claude-Fassung bleibt ein interner Entwurf, bis ein Mensch sie freigibt. Dein Vergleich zeigt, ob sich der Ablauf für diese Aufgabe lohnt; eine Zeitersparnis ist nicht versprochen."
         },
         {
           "id": "modul_1_lesson_1_section_2",
           "title": "Wann ein leeres Dokument der falsche Startpunkt ist",
           "readTimeMinutes": 2,
-          "content": "Im leeren Dokument schreibst du jeden Satz selbst. Mit einem Claude-Entwurf beginnst du beim Briefing und bei der Prüfung.\n\nViele starten trotzdem bei null: aus Gewohnheit, weil sie genau wissen wollen, was im Text steht, oder weil Schreiben ein Kernstück ihrer Rolle ist. Der Brief lohnt sich nur, wenn er den Aufwand senkt und Faktentreue und Ton hält."
+          "content": "Im leeren Dokument schreibst du jeden Satz selbst. Mit einem Claude-Entwurf beginnst du beim Briefing und bei der Prüfung.\n\nViele starten trotzdem bei null: aus Gewohnheit, weil sie genau wissen wollen, was im Text steht, oder weil Schreiben ein Kernstück ihrer Rolle ist. Das Briefing lohnt sich nur, wenn es den Aufwand senkt und Faktentreue und Ton hält."
         },
         {
           "id": "modul_1_lesson_1_section_3",
-          "title": "Der dreiteilige Claude-Brief",
+          "title": "Das dreiteilige Claude-Briefing",
           "readTimeMinutes": 3,
           "content": "\"Schreibe eine Antwort auf diese Kundenanfrage\" überlässt dem Modell jede Entscheidung, die dir gehört. Gib drei Vorgaben:\n\n**Rolle:** \"Du unterstützt den Vertrieb eines Maschinenbauunternehmens mit 80 Mitarbeitenden in Bayern. Verwende einen pragmatischen, direkten und sachlichen Ton.\"\n\n**Kontext:** die Kundenmail, wenn ihr Inhalt für das Werkzeug freigegeben ist.\n\n**Auftrag:** \"Erstelle einen Antwortentwurf. Bestätige Freitag als Ziel, frage aber nach Chargennummer und Anzahl der betroffenen Teile. Bleibe höflich und unter 150 Wörtern.\"\n\nKorrigiere vor dem Versand falsche Aussagen, ungedeckte Zusagen und Tonabweichungen, und miss Zeit und Korrekturaufwand."
         },
@@ -94,7 +94,7 @@
           "id": "modul_1_lesson_1_section_4",
           "title": "Warum drei Vorgaben reichen",
           "readTimeMinutes": 2,
-          "content": "Jede Vorgabe nimmt dem Modell einen Freiheitsgrad. Die **Rolle** legt Perspektive und Stil fest, damit der Entwurf nach Industrieunternehmen klingt statt nach Startup-Werbung. Der **Kontext** liefert nur freigegebene Fakten. Der **Auftrag** macht das Ergebnis prüfbar: unter 150 Wörter, eine Bestätigung, eine Rückfrage, ein festgelegter Ton.\n\nFehlt eine Vorgabe, wird der Text allgemein oder das Modell erfindet Annahmen. Das ist ein Briefingfehler. Du legst die Aufgabe fest, prüfst die Fakten und gibst frei."
+          "content": "Jede Vorgabe nimmt dem Modell einen Freiheitsgrad. Die **Rolle** legt Perspektive und Stil fest, damit der Entwurf nach Industrieunternehmen klingt statt nach Startup-Werbung, und der **Kontext** liefert nur freigegebene Fakten. Der **Auftrag** macht das Ergebnis prüfbar: unter 150 Wörter, eine Bestätigung, eine Rückfrage, ein festgelegter Ton.\n\nFehlt eine Vorgabe, wird der Text allgemein oder das Modell erfindet Annahmen; das ist ein Briefingfehler."
         }
       ],
       "quiz": [
@@ -123,7 +123,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Rolle, Kontext, Auftrag. RCTFC ergänzt später Format und Einschränkungen."
+          "explanation": "Rolle, Kontext und Auftrag legen fest, wer schreibt, auf welcher Grundlage und was entstehen soll. RCTFC ergänzt später Format und Einschränkungen."
         },
         {
           "id": "modul_1_lesson_1_q2",
@@ -150,7 +150,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Entwurfsarbeit abgeben, wenn die Aufgabe dafür taugt. Urteil, Faktenprüfung und Freigabe nicht."
+          "explanation": "Den Entwurf kannst du abgeben, wenn die Aufgabe dafür taugt. Urteil, Faktenprüfung und Freigabe bleiben bei dir."
         }
       ]
     },
@@ -181,7 +181,7 @@
             "exerciseId": "modul_1_lesson_2_ex_1",
             "lessonId": "modul_1_lesson_2",
             "moduleId": "modul_1",
-            "title": "RCTFC: dein erster strukturierter Brief",
+            "title": "RCTFC: dein erstes strukturiertes Briefing",
             "scenario": "Du bist Vertriebsleiter und lässt Claude eine Angebots-Zusammenfassung schreiben. Fülle alle 5 RCTFC-Felder aus.",
             "criteria": {
               "role": {
@@ -213,7 +213,7 @@
           "id": "modul_1_lesson_2_section_1",
           "title": "Aus meinem Arbeitsalltag, anonymisiert",
           "readTimeMinutes": 2,
-          "content": "Ich arbeite als Data Engineer bei einem großen US-Technologieunternehmen. Erfahrene Entwickler um mich herum lassen sich aus einer Spezifikation immer öfter eine erste Codefassung erzeugen. Repository prüfen, Output lesen, Tests fahren, Fehler korrigieren und freigeben machen sie selbst.\n\nDie Verschiebung ist kleiner als der Hype behauptet: weniger Routinecode tippen, mehr Zeit für die Frage, was gebaut wird und ob es taugt. Das geht auch außerhalb der Softwareentwicklung, wenn die Aufgabe ein beschreibbares Ergebnis und einen verlässlichen Prüfpunkt hat."
+          "content": "Ich arbeite als Data Engineer bei einem großen US-Technologieunternehmen. Erfahrene Entwickler um mich herum lassen sich aus einer Spezifikation immer öfter eine erste Codefassung erzeugen. Repository prüfen, Output lesen, Tests fahren, Fehler korrigieren und freigeben machen sie selbst, in der IDE, die für Navigation, Debugging und Review offen bleibt.\n\nDie Verschiebung ist kleiner als der Hype behauptet: weniger Routinecode tippen, mehr Zeit für die Frage, was gebaut wird und ob es taugt. Das geht auch außerhalb der Softwareentwicklung, wenn die Aufgabe ein beschreibbares Ergebnis und einen verlässlichen Prüfpunkt hat."
         },
         {
           "id": "modul_1_lesson_2_section_2",
@@ -225,7 +225,7 @@
           "id": "modul_1_lesson_2_section_3",
           "title": "Was für deine Rolle anders wird",
           "readTimeMinutes": 3,
-          "content": "Dieselbe Verschiebung gibt es in anderen Abteilungen:\n\n- **Vertrieb:** Claude schreibt den Angebotsentwurf, Preisstrategie und Zusagen bleiben bei dir.\n- **Finanzen:** Claude entwirft eine rein lesende SQL-Abfrage, du prüfst sie und liest die Zahlen.\n- **HR:** Claude entwirft die Stellenausschreibung, du prüfst Rechtliches, Fachliches und Organisatorisches.\n- **Operations:** Claude strukturiert die Prozessdaten, du entscheidest, was sich ändert.\n\nKI kann Routineproduktion senken. Fachwissen, Urteil und Verantwortung braucht es weiter."
+          "content": "Dieselbe Verschiebung gibt es in anderen Abteilungen:\n\n- **Vertrieb:** Claude schreibt den Angebotsentwurf, Preisstrategie und Zusagen bleiben bei dir.\n- **Finanzen:** Claude entwirft eine rein lesende SQL-Abfrage, du prüfst sie und liest die Zahlen.\n- **HR:** Claude entwirft die Stellenausschreibung, du prüfst Rechtliches, Fachliches und Organisatorisches.\n- **Operations:** Claude strukturiert die Prozessdaten, du entscheidest, was sich ändert.\n\nClaude kann Routineentwürfe übernehmen; Fachwissen, Urteil und Verantwortung bleiben bei dir."
         }
       ],
       "quiz": [
@@ -267,7 +267,7 @@
             },
             {
               "id": "b",
-              "text": "Modelloutput braucht definierte Prüfung; Verantwortung und Freigabe bleiben bei Menschen",
+              "text": "Modelloutput braucht definierte Prüfung; Verantwortung und Freigabe bleiben bei Menschen und Organisation",
               "isCorrect": true
             },
             {
@@ -290,7 +290,7 @@
       "moduleId": "modul_1",
       "number": 3,
       "title": "Claude im Ablauf: du spezifizierst und prüfst",
-      "subtitle": "Drei Basis-Pattern für AI-Orchestrierung",
+      "subtitle": "Drei Grundmuster für die Arbeit mit KI",
       "durationMinutes": 10,
       "premiumGated": false,
       "refreshCadence": "QUARTERLY",
@@ -325,8 +325,8 @@
                 "rating": 3
               },
               {
-                "label": "Variante C: strukturierter Brief",
-                "prompt": "Rolle: Vertriebsassistent im Maschinenbau. Kontext: ausdrücklich fiktiver Kunde Alpha, 12 Mitarbeitende, braucht 3 fiktive Beispielmaschinen XR-200. Ton pragmatisch, Du-Form. Auftrag: interner Angebots-Entwurf mit 3 Positionen. Verwende Liefertermin, Zahlungsziel und Preis nur als Platzhalter und markiere sie zur Prüfung. Format: Markdown, max. 280 Wörter. Tabu: keine erfundenen Zusagen oder Marketing-Phrasen.",
+                "label": "Variante C: strukturiertes Briefing",
+                "prompt": "Rolle: Vertriebsassistent im Maschinenbau. Kontext: ausdrücklich fiktiver Kunde Alpha, 12 Mitarbeitende, braucht 3 fiktive Beispielmaschinen XR-200; Ton pragmatisch, Du-Form. Auftrag: interner Angebots-Entwurf mit 3 Positionen; verwende Liefertermin, Zahlungsziel und Preis nur als Platzhalter und markiere sie zur Prüfung. Format: Markdown, max. 280 Wörter. Tabu: keine erfundenen Zusagen oder Marketing-Phrasen.",
                 "critique": "Das RCTFC-Briefing legt Rolle, Kontext, Auftrag, Format und Grenzen fest und zielt auf einen prüfbaren Entwurf ohne erfundene Konditionen.",
                 "rating": 5
               }
@@ -337,9 +337,9 @@
       "sections": [
         {
           "id": "modul_1_lesson_3_section_1",
-          "title": "Drei Basis-Pattern",
+          "title": "Entwurf, Analyse, Recherche",
           "readTimeMinutes": 3,
-          "content": "**Muster 1: Entwurf.** Claude liefert V1 einer Mail, eines Berichts oder einer Präsentation, du machst daraus V2 und notierst Zeit und Korrekturaufwand.\n> \"Erstelle V1 von [Ergebnis] aus [freigegebenem Kontext]. Verwende [Ton]. Umfang: [Grenze].\"\n\n**Muster 2: Analyse.** Du ziehst aus Daten oder Text etwas Bestimmtes heraus. Der Ablauf hängt an Umfang, Sensibilität und Prüfbedarf.\n> \"Hier ist [Eingabe]. Extrahiere [Felder] und fasse [Muster] zusammen. Format: [Tabelle, Liste oder Prosa]. Markiere Unsicherheit.\"\n\n**Muster 3: Recherche.** Du nutzt ein Werkzeug, das suchen kann, und öffnest die zitierten Primärquellen selbst.\n> \"Recherchiere [Thema] und beantworte [konkrete Fragen] mit [geforderten Quellentypen]. Gib [Struktur] mit Links und Veröffentlichungsdaten zurück.\"\n\nDie aufgabenspezifische Prüfung bleibt bei allen drei bei dir."
+          "content": "**Muster 1: Entwurf.** Claude liefert V1 einer Mail, eines Berichts oder einer Präsentation, du machst daraus V2 und notierst Zeit und Korrekturaufwand.\n> \"Erstelle V1 von [Ergebnis] aus [freigegebenem Kontext]. Verwende [Ton]. Umfang: [Grenze].\"\n\n**Muster 2: Analyse.** Du ziehst aus Daten oder Text etwas Bestimmtes heraus. Wie du vorgehst, hängt von Umfang, Sensibilität und Prüfbedarf ab.\n> \"Hier ist [Eingabe]. Extrahiere [Felder] und fasse [Muster] zusammen. Format: [Tabelle, Liste oder Prosa]. Markiere Unsicherheit.\"\n\n**Muster 3: Recherche.** Du nutzt ein Werkzeug, das suchen kann, und öffnest die zitierten Primärquellen selbst.\n> \"Recherchiere [Thema] und beantworte [konkrete Fragen] mit [geforderten Quellentypen]. Gib [Struktur] mit Links und Veröffentlichungsdaten zurück.\"\n\nDie aufgabenspezifische Prüfung bleibt bei allen drei bei dir."
         },
         {
           "id": "modul_1_lesson_3_section_2",
@@ -349,15 +349,15 @@
         },
         {
           "id": "modul_1_lesson_3_section_3",
-          "title": "Eng, mittel, tief",
+          "title": "Wie tief du nachbesserst",
           "readTimeMinutes": 2,
-          "content": "V1 sitzt selten. Sag beim Nachbessern, wie viel sich ändern soll und warum; die Stufe folgt dem Mangel.\n\n- **Eng**, einen Satz ändern: \"Entferne den zweiten Absatz. Formuliere den Ton eine Stufe direkter.\"\n- **Mittel**, die Struktur ändern: \"Ordne die Argumente neu und setze den stärksten Beleg an den Anfang.\"\n- **Tief**, neue Prämisse: \"V1 ist zu allgemein. Schreibe neu, mit direktem Ton und Fokus auf den Zeitaufwand des Kunden statt auf unsere Funktionen.\"\n\nOb das Ergebnis fachlich besteht, entscheidest du."
+          "content": "V1 sitzt selten. Sag beim Nachbessern, wie viel sich ändern soll und warum:\n\n- **Eng**, einen Satz ändern: \"Entferne den zweiten Absatz. Formuliere den Ton eine Stufe direkter.\"\n- **Mittel**, die Struktur ändern: \"Ordne die Argumente neu und setze den stärksten Beleg an den Anfang.\"\n- **Tief**, neue Prämisse: \"V1 ist zu allgemein. Schreibe neu, mit direktem Ton und Fokus auf den Zeitaufwand des Kunden statt auf unsere Funktionen.\""
         }
       ],
       "quiz": [
         {
           "id": "modul_1_lesson_3_q1",
-          "questionText": "Welche drei Basis-Pattern gibt es für AI-Orchestrierung?",
+          "questionText": "Welche drei Grundmuster stellt diese Lektion vor?",
           "answerOptions": [
             {
               "id": "a",
@@ -366,7 +366,7 @@
             },
             {
               "id": "b",
-              "text": "Drafting, Analyse, Recherche",
+              "text": "Entwurf, Analyse, Recherche",
               "isCorrect": true
             },
             {
@@ -384,7 +384,7 @@
         },
         {
           "id": "modul_1_lesson_3_q2",
-          "questionText": "Warum ein wiederverwendbarer Project-Brief statt wiederholter Kontext-Beschreibung?",
+          "questionText": "Warum ein wiederverwendbarer Project-Briefing statt wiederholter Kontext-Beschreibung?",
           "answerOptions": [
             {
               "id": "a",
@@ -457,7 +457,7 @@
                         "id": "b",
                         "label": "Bis morgen warten, sauberes Arbeiten braucht Zeit.",
                         "correct": false,
-                        "explanation": "Richtig, wenn Fakten fehlen. Liegen sie vor, schafft ein geprüfter Entwurf die Frist."
+                        "explanation": "Sinnvoll, wenn Fakten fehlen. Liegen sie vor, schafft ein geprüfter Entwurf die Frist."
                       },
                       {
                         "id": "c",
@@ -469,7 +469,7 @@
                         "id": "d",
                         "label": "Template raussuchen und anpassen.",
                         "correct": false,
-                        "explanation": "Hilft, ersetzt aber nicht die Anpassung an den Fall und bringt alte Formulierungen mit."
+                        "explanation": "Hilft, bringt aber alte Formulierungen mit, die du am Fall prüfen musst."
                       }
                     ]
                   },
@@ -521,7 +521,7 @@
                       },
                       {
                         "id": "c",
-                        "label": "Claude das Tabellenschema geben, nur lesende SQL anfordern, vor Ausführung prüfen lassen.",
+                        "label": "Claude das Tabellenschema geben, nur lesende SQL anfordern, von einer qualifizierten Person vor Ausführung prüfen lassen.",
                         "correct": true,
                         "explanation": "Claude entwirft nur die Abfrage, ohne Datenbankzugriff. Ergebnis und Bedeutung prüfst du."
                       },
@@ -578,7 +578,7 @@
                         "id": "a",
                         "label": "3 Stunden an der Formulierung feilen, dann Vorstand abstimmen lassen.",
                         "correct": false,
-                        "explanation": "Die Regelung braucht Sorgfalt, das Tippen nicht. Trenne beides."
+                        "explanation": "Sorgfalt braucht die Regelung; den Text kann ein geprüfter Entwurf liefern."
                       },
                       {
                         "id": "b",
@@ -608,7 +608,7 @@
                         "id": "a",
                         "label": "Sagen, dass du es nicht mehr weißt, und später in Mails suchen.",
                         "correct": false,
-                        "explanation": "Die Antwort steht im Entscheidungsprotokoll, nicht in deinem Gedächtnis."
+                        "explanation": "Die Antwort steht im Entscheidungsprotokoll; dort suchst du zuerst."
                       },
                       {
                         "id": "b",
@@ -657,7 +657,7 @@
                         "id": "c",
                         "label": "Praktikant für zwei Tage abordnen.",
                         "correct": false,
-                        "explanation": "Langsam, nicht reproduzierbar, beim nächsten Export wieder nötig."
+                        "explanation": "Das dauert, lässt sich nicht reproduzieren und muss beim nächsten Export wiederholt werden."
                       },
                       {
                         "id": "d",
@@ -711,13 +711,13 @@
                         "id": "b",
                         "label": "Freigegebene Aktivitätsliste geben, sachlichen Entwurf in drei Abschnitten anfordern, Unbelegtes streichen.",
                         "correct": true,
-                        "explanation": "Stabile Struktur. Stopp danach die Zeit, statt eine Einsparung anzunehmen."
+                        "explanation": "Die Struktur bleibt jede Woche gleich. Miss danach die Zeit, statt eine Einsparung anzunehmen."
                       },
                       {
                         "id": "c",
                         "label": "Mit jedem Projekt-Lead telefonieren, dann zusammenfassen.",
                         "correct": false,
-                        "explanation": "Gespräche für Entscheidungen, Routinemeldungen asynchron sammeln und prüfen."
+                        "explanation": "Telefoniere, wenn etwas zu entscheiden ist; Routinemeldungen sammelst du schriftlich und prüfst sie."
                       },
                       {
                         "id": "d",
@@ -738,19 +738,19 @@
           "id": "modul_1_lesson_4_section_1",
           "title": "Aufgaben 1 bis 5",
           "readTimeMinutes": 3,
-          "content": "**1. Mailentwurf aus Stichworten**\n> \"Fiktive Stichworte: Kunde Alpha, verspätete Lieferung, ungeprüfter Zieltermin, Rückfrage nach Chargennummer. Erstelle einen internen Mailentwurf und markiere jede Zusage zur Prüfung.\"\n\n**2. Meeting-Vorbereitung aus freigegebener Vorgeschichte**\n> \"Übungsmeeting mit Kunde Alpha um 15 Uhr. Gib mir aus diesen fiktiven Mails und Notizen offene Punkte, belegte Interessen und drei Fragen. Erfinde keine Motive.\"\n\n**3. Action-Items aus einem Meeting**\n> \"Extrahiere aus diesem freigegebenen oder fiktiven Transkript Entscheidungen, Action-Items mit Verantwortlichem und Datum sowie offene Fragen. Markiere Unsicherheit.\"\n\n**4. Recherche für eine Entscheidung**\n> \"Vergleiche Buchhaltungssysteme anhand aktueller offizieller Quellen. Trenne belegte Funktionen, aktuelle Preise und offene Vertrags- oder Datenschutzfragen.\"\n\n**5. Formularentwurf**\n> \"Fülle das Angebot-Template für eine fiktive Beispielmaschine an Kunde Alpha nur mit bestätigten Angaben. Preis, Zahlungsziel und Liefertermin bleiben geprüfte Platzhalter.\""
+          "content": "**1. Mailentwurf aus Stichworten**\n> \"Fiktive Stichworte: Kunde Alpha, verspätete Lieferung, ungeprüfter Zieltermin, Rückfrage nach Chargennummer. Erstelle einen internen Mailentwurf und markiere jede Zusage zur Prüfung.\"\n\n**2. Meeting-Vorbereitung aus freigegebener Vorgeschichte**\n> \"Übungsmeeting mit Kunde Alpha um 15 Uhr. Gib mir aus diesen fiktiven Mails und Notizen offene Punkte, belegte Interessen und drei Fragen. Erfinde keine Motive.\"\n\n**3. Action-Items aus einem Meeting**\n> \"Extrahiere aus diesem freigegebenen oder fiktiven Transkript Entscheidungen, Action-Items mit Verantwortlichem und Datum sowie offene Fragen. Markiere Unsicherheit.\"\n\n**4. Recherche für eine Entscheidung**\n> \"Vergleiche Buchhaltungssysteme anhand aktueller offizieller Quellen. Trenne belegte Funktionen, aktuelle Preise und offene Vertrags- oder Datenschutzfragen.\"\n\n**5. Formularentwurf**\n> \"Fülle das Angebot-Template für eine fiktive Beispielmaschine an Kunde Alpha nur mit bestätigten Angaben. Setze für Preis, Zahlungsziel und Liefertermin Platzhalter und markiere sie zur Prüfung.\""
         },
         {
           "id": "modul_1_lesson_4_section_2",
           "title": "Aufgaben 6 bis 10",
           "readTimeMinutes": 3,
-          "content": "**6. Daten-Säuberung in Excel**\n> \"Normalisiere diesen fiktiven CSV-Export mit uneinheitlichen Namen (Kunde Alpha GmbH, Kunde-Alpha Gmbh, Kunde Alpha & Co.) und gemischten Datumsformaten nach den vorgegebenen Regeln. Protokolliere jede Änderung.\"\n\n**7. Präsentation aus Rohmaterial**\n> \"Erstelle aus diesen freigegebenen Notizen und drei Charts eine Struktur mit Quellenhinweisen und markiere unbelegte Aussagen.\"\n\n**8. SQL-Abfrage**\n> \"Schreibe ausschließlich lesende SQL für den Umsatz pro fiktivem Kunden im letzten Quartal in einer Testdatenbank und erkläre deine Annahmen.\"\n\n**9. Übersetzung und Lokalisierung**\n> \"Übersetze diesen fiktiven deutschen Kundenbrief ins Englische und markiere rechtlich oder kulturell unsichere Formulierungen zur Prüfung.\"\n\n**10. Status-Update**\n> \"Erstelle aus dieser freigegebenen Aktivitätsliste einen sachlichen Entwurf mit Highlights, Problemen, Unsicherheiten und nächsten Schritten.\"\n\nKeine dieser Aufgaben braucht KI-Spezialisten, alle brauchen Datenkontrolle und Prüfung."
+          "content": "**6. Daten-Säuberung in Excel**\n> \"Normalisiere diesen fiktiven CSV-Export mit uneinheitlichen Namen (Kunde Alpha GmbH, Kunde-Alpha Gmbh, Kunde Alpha & Co.) und gemischten Datumsformaten nach den vorgegebenen Regeln. Protokolliere jede Änderung.\"\n\n**7. Präsentation aus Rohmaterial**\n> \"Erstelle aus diesen freigegebenen Notizen und drei Charts eine Struktur mit Quellenhinweisen und markiere unbelegte Aussagen.\"\n\n**8. SQL-Abfrage**\n> \"Schreibe ausschließlich lesende SQL für den Umsatz pro fiktivem Kunden im letzten Quartal in einer Testdatenbank und erkläre deine Annahmen.\"\n\n**9. Übersetzung und Lokalisierung**\n> \"Übersetze diesen fiktiven deutschen Kundenbrief ins Englische und markiere rechtlich oder kulturell unsichere Formulierungen zur Prüfung.\"\n\n**10. Status-Update**\n> \"Erstelle aus dieser freigegebenen Aktivitätsliste einen sachlichen Entwurf mit Highlights, Problemen, Unsicherheiten und nächsten Schritten.\""
         },
         {
           "id": "modul_1_lesson_4_section_3",
           "title": "Der größte Reibungspunkt",
           "readTimeMinutes": 2,
-          "content": "Für einen begrenzten Test brauchst du kein KI-Programm, eventuell aber die Freigabe deiner Organisation, bevor Daten fließen. Nimm eine Aufgabe mit risikoarmen oder fiktiven Daten, leg Eingabe, erwartetes Ergebnis und Prüfkriterien fest und erledige sie von Hand und mit Claude. Vergleiche Zeit, Faktentreue und Korrekturaufwand.\n\nErweitere erst, wenn der Test Nutzen zeigt und die Datennutzung freigegeben ist."
+          "content": "Für einen begrenzten Test brauchst du weder ein KI-Programm noch ein Großprojekt. Bevor Daten fließen, kann deine Organisation eine Freigabe verlangen. Nimm eine Aufgabe mit risikoarmen oder fiktiven Daten, leg Eingabe, erwartetes Ergebnis und Prüfkriterien fest und erledige sie von Hand und mit Claude; vergleiche Zeit, Faktentreue und Korrekturaufwand.\n\nErweitere erst, wenn der Test Nutzen zeigt und die Datennutzung freigegeben ist."
         }
       ],
       "quiz": [
@@ -842,15 +842,15 @@
         },
         {
           "id": "modul_1_lesson_5_section_2",
-          "title": "Der Test: 10 Szenarien",
+          "title": "Der Test: Szenarien 1 bis 5",
           "readTimeMinutes": 5,
-          "content": "Wähle pro Szenario, was du **heute tatsächlich tust**.\n\n**1, Drafting:** Eine Kundenmail braucht heute eine Antwort.\n- A) Ich schreibe selbst im leeren Dokument\n- B) Entwurf aus ein paar Stichpunkten\n- C) Freigegebene Mail mit Rolle, Kontext, Auftrag und Grenzen, Entwurf geprüft\n- D) Gepflegter Skill mit Pflichtkontext und Review-Checkliste\n\n**2, Delegation:** Du brauchst eine Stellenausschreibung.\n- A) Ich schreibe sie selbst\n- B) Anfrage ohne weitere Angaben\n- C) Rolle, Firmenkontext, Tätigkeitsprofil, Gehaltsrahmen und Format vorgegeben\n- D) Gepflegtes Project mit Quellen und Freigabekriterien\n\n**3, Automation:** Eine Website-Anfrage geht ein.\n- A) Ich übertrage sie von Hand ins CRM\n- B) Das Formular schreibt direkt ins CRM\n- C) Danach entsteht ein Antwortentwurf zur Prüfung\n- D) Überwachter Ablauf mit Validierung, Review-Zuweisung und Audit-Protokoll\n\n**4, Knowledge:** Jemand fragt nach einer Entscheidung aus dem Januar.\n- A) Aus dem Gedächtnis\n- B) Getrennte Suche in Mail, Notizen und Ablage\n- C) Gepflegte Wissensbasis, zitierten Eintrag geöffnet\n- D) Entscheidung, Quelle, Verantwortliche und spätere Änderungen in einem Abruf\n\n**5, Governance:** Dürfen Kundendaten in ein KI-Werkzeug?\n- A) Weiß ich nicht\n- B) Die DSGVO verbietet es pauschal\n- C) Daten klassifizieren, freigegebenes Werkzeug und Bedingungen prüfen\n- D) Richtlinie, Werkzeugregister und Eskalationsweg anwenden\n\n_(Szenarien 6 bis 10 stehen im Fluency-Test auf der AI-Native-Seite.)_"
+          "content": "Wähle pro Szenario, was du **heute tatsächlich tust**.\n\n**1 · Drafting:** Eine Kundenmail braucht heute eine Antwort.\n- A) Ich schreibe selbst im leeren Dokument\n- B) Entwurf aus ein paar Stichpunkten\n- C) Freigegebene Mail mit Rolle, Kontext, Auftrag und Grenzen, Entwurf geprüft\n- D) Gepflegter Skill mit Pflichtkontext und Review-Checkliste\n\n**2 · Delegation:** Du brauchst eine Stellenausschreibung.\n- A) Ich schreibe sie selbst\n- B) Anfrage ohne weitere Angaben\n- C) Rolle, Firmenkontext, Tätigkeitsprofil, Gehaltsrahmen und Format vorgegeben\n- D) Gepflegtes Project mit Quellen und Freigabekriterien\n\n**3 · Automation:** Eine Website-Anfrage geht ein.\n- A) Ich übertrage sie von Hand ins CRM\n- B) Das Formular schreibt direkt ins CRM\n- C) Das Formular schreibt ins CRM, dazu entsteht ein Antwortentwurf zur Prüfung\n- D) Überwachter Ablauf mit Validierung, Review-Zuweisung und Audit-Protokoll\n\n**4 · Knowledge:** Jemand fragt nach einer Entscheidung aus dem Januar.\n- A) Aus dem Gedächtnis\n- B) Getrennte Suche in Mail, Notizen und Ablage\n- C) Gepflegte Wissensbasis, zitierten Eintrag geöffnet\n- D) Entscheidung, Quelle, Verantwortliche und spätere Änderungen in einem Abruf\n\n**5 · Governance:** Dürfen Kundendaten in ein KI-Werkzeug?\n- A) Weiß ich nicht\n- B) Ich gehe davon aus, dass die DSGVO es verbietet\n- C) Daten klassifizieren, freigegebenes Werkzeug und Bedingungen prüfen\n- D) Richtlinie, Werkzeugregister und Eskalationsweg anwenden\n\n_(Szenarien 6 bis 10 stehen im [Fluency-Test](/ai-native/fluency-test).)_"
         },
         {
           "id": "modul_1_lesson_5_section_3",
           "title": "Was dein Score dir sagt",
           "readTimeMinutes": 2,
-          "content": "**Lesart pro Dimension:**\n- **0 bis 2:** wenig beobachtete Nutzung; such dir eine kontrollierte Übungsaufgabe\n- **3 bis 4:** regelmäßig, aber nicht bei allen geeigneten Aufgaben\n- **5 bis 6:** konsistente Nutzung der bewerteten Verhaltensweisen\n\nEinen Vergleichswert gibt es nicht, der Kurs hat keinen repräsentativen Durchschnitt erhoben. Wiederhole den Test nach den Modulen 2 bis 4 und vergleiche die Belege hinter jeder Antwort: abgeschlossene Abläufe, Quellenprüfungen, Freigaben, Governance-Kontrollen."
+          "content": "Jede Dimension hat zwei Szenarien; A zählt 0 und D 3 Punkte, zusammen also 0 bis 6.\n\n**Lesart pro Dimension:**\n- **0 bis 2:** wenig beobachtete Nutzung; such dir eine kontrollierte Übungsaufgabe\n- **3 bis 4:** regelmäßig, aber nicht bei allen geeigneten Aufgaben\n- **5 bis 6:** konsistente Nutzung der bewerteten Verhaltensweisen\n\nEinen Vergleichswert gibt es nicht, der Kurs hat keinen repräsentativen Durchschnitt erhoben. Wiederhole den Test nach den Modulen 2 bis 4 und vergleiche die Belege hinter jeder Antwort: abgeschlossene Abläufe, Quellenprüfungen, Freigaben, Governance-Kontrollen."
         }
       ],
       "quiz": [

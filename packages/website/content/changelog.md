@@ -2,7 +2,7 @@
 
 ### Hinzugefügt
 
-- Blogbeitrag Nº 02 „KI in der Ausbildung: Fragen für JAV und Betriebsrat“ auf Deutsch und Englisch, zu den Rechten von JAV und Betriebsrat, wenn ein Betrieb KI in der Ausbildung einsetzt
+- Blogbeitrag Nº 02 „KI in der Ausbildung: Fragen für JAV und Betriebsrat“ auf Deutsch und Englisch: welche Rechte beide haben, wenn ein Betrieb KI einsetzt
 - Fragenliste mit Rechtsgrundlagen und Hinweisen, was eine Antwort enthalten sollte, zum Drucken und als Markdown-Download unter CC BY 4.0
 
 ## 2026-08-09: Zweisprachige Plattformrevision

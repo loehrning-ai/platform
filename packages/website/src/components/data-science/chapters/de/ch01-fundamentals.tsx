@@ -28,15 +28,15 @@ export default function Ch01FundamentalsDe() {
           nicht die Grundgesamtheit.
         </h2>
         <p className="prose">
-          Ein fiktiver Dienst hat <strong>44 Millionen Nutzer</strong> und
-          testet per A/B-Test auf <strong>180,000</strong> geeigneten
+          Ein fiktiver Dienst hat <strong>44 Millionen Nutzer</strong>; ein
+          A/B-Test läuft auf <strong>180,000</strong> geeigneten
           Beobachtungen. Die Retention-Differenz von 2.3% schätzt eine Größe
           der Grundgesamtheit; ihre Bedeutung hängt an Zuweisung, Fehlwerten,
           Messung, Ziehung und Unsicherheit.
         </p>
         <p className="prose">
-          Datenwissenschaft rechnet auf <code>samples</code> und redet über{" "}
-          <code>populations</code> oder künftige Fälle. Intervalle, Tests,
+          Datenwissenschaft rechnet mit Stichproben und zieht Schlüsse über
+          Grundgesamtheiten oder künftige Fälle. Intervalle, Tests,
           Validierung und Versuchsdesign beziffern Teile dieser Unsicherheit;
           keines repariert eine verzerrte Stichprobe oder ungültige Messung.
         </p>
@@ -46,8 +46,8 @@ export default function Ch01FundamentalsDe() {
           mit endlicher Varianz skaliert der Standardfehler des Mittelwerts mit{" "}
           <code>1/√n</code>, und die Stichprobenverteilung nähert sich der
           Normalform. Abhängigkeit, schwere Verteilungsschwänze, kleine
-          Stichproben und wechselnde Grundgesamtheiten schwächen diese
-          Näherung nach dem zentralen Grenzwertsatz.
+          Stichproben und wechselnde Grundgesamtheiten schwächen die
+          Näherung des zentralen Grenzwertsatzes.
         </p>
       </section>
 
@@ -86,7 +86,7 @@ export default function Ch01FundamentalsDe() {
           title="Fehlmuster"
           items={[
             "<b>Fitten, bevor du hinschaust.</b> Lässt du <code>model.fit()</code> auf nie <em>geplotteten</em> Daten laufen, kann das Modell die Indexspalte lernen.",
-            "<b>Eine Zahl optimieren, nach der niemand gefragt hat.</b> Hohe Güte auf der falschen Kennzahl ist schlechter als mäßige auf der richtigen.",
+            "<b>Eine Zahl optimieren, nach der niemand gefragt hat.</b> Optimier die Kennzahl, die die Entscheidung trägt.",
             "<b>Korrelation für Kausalität halten.</b> „Wer Funktion X sieht, bleibt länger“ heißt nicht, dass X die Retention verursacht.",
           ]}
         />
@@ -96,7 +96,7 @@ export default function Ch01FundamentalsDe() {
         title="Kernaussagen"
         items={[
           "<b>Nenn die Zielpopulation</b> und wie Ziehung, Zuweisung, Fehlwerte und Messung die Schätzung begrenzen.",
-          "<b>Nutz den Zyklus als Kontrollsystem.</b> Explorier, validier und überwach überall, wo neue Daten oder Transformationen alte Evidenz entwerten können.",
+          "<b>Nutz den Zyklus als Kontrollsystem.</b> Prüf die Evidenz erneut, sobald neue Daten oder Transformationen sie entwerten können.",
         ]}
       />
     </DataScienceLocaleProvider>

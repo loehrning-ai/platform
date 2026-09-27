@@ -58,7 +58,7 @@ Das Modell-Tag ist nur ein Beispiel und kann veraltet sein. Wähle ein aktuell a
 
 **Datenschutzvorteil mit Grenzen:** Ein rein lokaler, korrekt konfigurierter Ablauf kann externe Datenübertragungen vermeiden. Rechtsgrundlage, Zweckbindung, Zugriffsschutz, Aufbewahrung, Betroffenenrechte und berufsrechtliche Pflichten bleiben bestehen. Bei besonderen Kategorien personenbezogener Daten oder Berufsgeheimnissen ist eine fachliche Prüfung erforderlich.
 
-Verwende Cloud-Dienste nur, wenn Daten, Vertrag, Einstellungen und Zweck dafür freigegeben sind.
+Qualität und Hardwarebedarf hängen von Modell und Aufgabe ab; teste mit repräsentativen, nicht vertraulichen Fällen. Verwende Cloud-Dienste nur, wenn Daten, Vertrag, Einstellungen und Zweck dafür freigegeben sind.
 
 ### Was kostet dich KI wirklich?
 

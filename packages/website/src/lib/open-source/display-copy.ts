@@ -11,7 +11,7 @@ export const OPEN_SOURCE_PAGE_COPY = {
         "Offene Werkzeuge mit öffentlichem Quellstand, die du selbst betreibst.",
     },
     eyebrow: "Open Source · selbst betreibbar",
-    title: "Freie Open-Source-Projekte.",
+    title: "Open-Source-Werkzeuge",
     introduction:
       "Prüfe an echten Ansichten und am Quellstand, was ein Werkzeug leistet, bevor du es auf deinem Rechner betreibst.",
     externalTab: ", öffnet in neuem Tab",
@@ -46,7 +46,7 @@ export const OPEN_SOURCE_PAGE_COPY = {
     },
     footnoteTitle: "Rechte und Lizenzen",
     footnote:
-      "Code, Lerntexte und Medien haben getrennte Lizenzen. Welche wofür gilt, steht am Artefakt.",
+      "Code, Lerntexte und Medien haben getrennte Lizenzen. Welche gilt, steht jeweils am Projekt.",
     platformCode: "Plattform-Code",
     licensePolicy: "Lizenzrichtlinie",
     courses: "Zu den technischen Kursen",
@@ -60,7 +60,7 @@ export const OPEN_SOURCE_PAGE_COPY = {
         "Open tools with a public source revision that you run yourself.",
     },
     eyebrow: "Open source · self-hosted",
-    title: "Free open source projects.",
+    title: "Open source tools",
     introduction:
       "Check real views and the source revision to see what a tool does before you run it on your machine.",
     externalTab: ", opens in a new tab",
@@ -95,7 +95,7 @@ export const OPEN_SOURCE_PAGE_COPY = {
     },
     footnoteTitle: "Rights and licenses",
     footnote:
-      "Code, learning text and media carry separate licenses. Each artifact states which applies.",
+      "Code, learning text and media carry separate licenses. Each project states which one applies.",
     platformCode: "Platform source",
     licensePolicy: "License policy",
     courses: "Browse technical courses",
@@ -233,9 +233,9 @@ const CV_ENGINE_ENGLISH_COPY = {
   language: "English",
   guide: {
     statusNote:
-      "The cv.yaml schema and templates may still change, there is no hosted instance, and issue responses are not guaranteed. You run the tool yourself on your own computer. Before configuring it, read docs/data-flow.md in the repository; its diagram shows which data paths stay local.",
+      "The cv.yaml schema and templates may still change, there is no hosted instance, and issue responses are not guaranteed. You run the tool yourself on your own computer. Before configuring it, read docs/data-flow.md in the repository. Its diagram shows which data paths stay local.",
     dataFlow:
-      "The core renderer runs entirely locally: cv.yaml, fonts and CSS stay in the checkout, and the PDF build opens no socket and needs no API key. Without configuration, the browser editor talks only to 127.0.0.1 and keeps documents in server memory; only the Supabase variant in your own project stores them permanently. The only external calls are the optional AI functions for import and text generation, with your own key, and pointed at a local Ollama even that call stays on your computer.",
+      "The core runs entirely locally: cv.yaml, fonts and CSS stay in the checkout; the PDF build opens no socket, needs no API key. Unconfigured, the editor talks only to 127.0.0.1 and keeps documents in memory; only the self-hosted Supabase variant (DEPLOY.md) saves them. Optional AI import and text generation call out with your key, or stay local with Ollama.",
     prerequisites: [
       {
         label: "Python 3.13",
@@ -296,7 +296,7 @@ const CV_ENGINE_ENGLISH_COPY = {
         {
           title: "Try the form and preview",
           detail:
-            "Flask binds only to 127.0.0.1:5567. The form or raw YAML is on the left, the A4 page WeasyPrint prints on the right; the badge above shows the page count, green for one page and red from two. This mode keeps everything in server memory and does not write content/cv.yaml, so download the PDF before you stop the process. Only the self-hosted Supabase variant in DEPLOY.md stores edits permanently.",
+            "Flask binds only to 127.0.0.1:5567. Form or raw YAML is on the left, the A4 page WeasyPrint prints on the right; the badge shows the page count, green for one page and red from two. This mode keeps everything in memory and does not write content/cv.yaml, so download the PDF before you stop the process.",
         },
         {
           title: "Change the layout instead of deleting content",
@@ -312,7 +312,7 @@ const CV_ENGINE_ENGLISH_COPY = {
     },
     integration: {
       summary:
-        "content/cv.yaml is an ordinary text file that versioning, imports and pipelines work through.",
+        "content/cv.yaml is a plain text file, so Git, the importer and CI work with it directly.",
       steps: [
         {
           title: "Version the CV",
@@ -361,7 +361,7 @@ const CV_ENGINE_ENGLISH_COPY = {
       {
         title: "AI-native work course",
         description:
-          "State intent, give context and review the output, as an import from your old PDF also requires.",
+          "Practise reviewing AI output, such as the import from your old PDF.",
       },
       {
         title: "Claude course",

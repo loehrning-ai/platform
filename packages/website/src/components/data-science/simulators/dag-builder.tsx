@@ -17,7 +17,11 @@ interface DagNode {
   readonly y: number;
   readonly label: string;
   readonly role:
-    "treatment" | "outcome" | "confounder" | "mediator" | "collider";
+    | "treatment"
+    | "outcome"
+    | "confounder"
+    | "mediator"
+    | "collider";
 }
 
 type EdgeType = "causal" | "spurious" | "direct";
@@ -52,7 +56,7 @@ const DAGS: readonly DagPattern[] = [
     question: "Can we estimate X → Y?",
     answer: "Yes, directly.",
     adjustZ: null,
-    adjustIcon: "—",
+    adjustIcon: "",
     explanation:
       "The graph assumes no open backdoor path. A regression of Y on X can identify the displayed effect if the graph is correct and consistency, positivity, measurement, and model assumptions also hold.",
   },
@@ -122,7 +126,7 @@ const DAGS_DE = [
     title: "Direkter Effekt",
     question: "Kann X → Y geschätzt werden?",
     answer: "Ja, direkt.",
-    adjustIcon: "—",
+    adjustIcon: "",
     explanation:
       "Der Graph nimmt keinen offenen Backdoor-Pfad an. Eine Regression von Y auf X kann den gezeigten Effekt identifizieren, wenn der Graph sowie Konsistenz-, Positivitäts-, Mess- und Modellannahmen gelten.",
   },
@@ -273,22 +277,24 @@ export function DAGBuilder() {
             >
               {dagCopy.answer}
             </div>
-            <div
-              style={{
-                display: "inline-block",
-                padding: "3px 10px",
-                borderRadius: 20,
-                fontSize: 12,
-                fontWeight: 700,
-                fontFamily: "'JetBrains Mono',monospace",
-                background: `${adjustColor}22`,
-                color: inkOf(adjustColor),
-                border: `1px solid ${adjustColor}66`,
-                marginBottom: 8,
-              }}
-            >
-              {dagCopy.adjustIcon}
-            </div>
+            {dagCopy.adjustIcon ? (
+              <div
+                style={{
+                  display: "inline-block",
+                  padding: "3px 10px",
+                  borderRadius: 20,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  fontFamily: "'JetBrains Mono',monospace",
+                  background: `${adjustColor}22`,
+                  color: inkOf(adjustColor),
+                  border: `1px solid ${adjustColor}66`,
+                  marginBottom: 8,
+                }}
+              >
+                {dagCopy.adjustIcon}
+              </div>
+            ) : null}
             <p
               className="prose"
               style={{ fontSize: 12, margin: 0, color: "var(--ink-3)" }}

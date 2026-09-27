@@ -97,7 +97,7 @@ export const COURSE_READER_COPY: Readonly<Record<Locale, CourseReaderCopy>> = {
       completed: "Lektion abgeschlossen",
       next: "Nächste Lektion",
       legalNote:
-        "Die blockbezogenen Prüfstände stehen oberhalb der Lektion. Keine Rechtsberatung.",
+        "Wann der Block zuletzt geprüft wurde, steht über der Lektion. Keine Rechtsberatung.",
     },
     section: {
       minutes: (count) => `~${count} Min`,
@@ -120,7 +120,7 @@ export const COURSE_READER_COPY: Readonly<Record<Locale, CourseReaderCopy>> = {
       progress: (current, total) => `Frage ${current} von ${total}`,
       previousBest: (score, total) => `Bisher: ${score}/${total}`,
       correctAnswer: "Richtige Antwort.",
-      incorrectSelection: "Ihre Auswahl ist falsch.",
+      incorrectSelection: "Deine Auswahl ist falsch.",
       correct: "Richtig",
       incorrect: "Falsch",
       next: "Weiter",
@@ -162,7 +162,7 @@ export const COURSE_READER_COPY: Readonly<Record<Locale, CourseReaderCopy>> = {
       completed: "Lesson complete",
       next: "Next lesson",
       legalNote:
-        "Block-specific review dates appear above the lesson. Not legal advice.",
+        "The block's review date is shown above the lesson. Not legal advice.",
     },
     section: {
       minutes: (count) => `~${count} min`,

@@ -6,14 +6,14 @@
       "title": "Von der Aufgabe zum Workflow",
       "subtitle": "Vom Ausführen zum Orchestrieren",
       "description": "Du machst aus wiederkehrenden Aufgaben wiederholbare Abläufe.",
-      "voiceAnchor": "Beschreibe die Aufgabe genau, prüfe das Ergebnis und steh für seine Verwendung gerade.",
+      "voiceAnchor": "Beschreibe die Aufgabe genau und prüfe das Ergebnis, bevor du es verwendest.",
       "durationMinutes": 50,
       "lessonCount": 5,
       "premiumGated": false,
       "topics": [
         "Wann du nicht mehr selbst schreibst",
         "Warum Teams Arbeit an KI delegieren",
-        "Claude als Arbeitswerkzeug: du definierst und prüfst",
+        "Claude als Arbeitswerkzeug: festlegen, begrenzen, prüfen",
         "Zehn wiederkehrende Aufgaben als Delegationskandidaten",
         "AI-Native Fluency Test (Selbst-Assessment)"
       ]
@@ -23,8 +23,8 @@
       "number": 2,
       "title": "Claude in einem definierten Arbeitskontext",
       "subtitle": "Der Claude-Stack: Projects, Skills, Plugins, MCP",
-      "description": "Du richtest Claude für einen festen Arbeitskontext ein.",
-      "voiceAnchor": "Kontext festlegen, Rechte begrenzen, jedes Ergebnis vor der Verwendung prüfen.",
+      "description": "Du richtest ein Claude-Projekt mit Anweisungen, Beispieldateien und Skills ein.",
+      "voiceAnchor": "Lege den Kontext fest und gib Claude nur die Rechte, die die Aufgabe braucht.",
       "durationMinutes": 76,
       "lessonCount": 7,
       "premiumGated": false,
@@ -33,9 +33,9 @@
         "Connector-Prinzip: Gmail, Kalender, Drive als simulierte OAuth-Übung",
         "Skills: wiederverwendbare Befehlsabläufe",
         "Plugins und MCP: Claude kontrolliert mit Systemen verbinden",
-        "Design Skill + Artifacts",
+        "Design-Skill und Artifacts",
         "Claude Code für Nicht-Entwickler",
-        "Memory & CLAUDE.md"
+        "Memory und CLAUDE.md"
       ]
     },
     {
@@ -43,7 +43,7 @@
       "number": 3,
       "title": "Eine durchsuchbare Wissensbasis",
       "subtitle": "Obsidian und Claude für strukturiertes Geschäftswissen",
-      "description": "Du führst Material aus Mails, Notizen und Ordnern in einer durchsuchbaren Wissensbasis zusammen.",
+      "description": "Du führst Mails, Notizen und Ordner in Obsidian zusammen.",
       "voiceAnchor": "Eine gepflegte Wissensbasis zeigt Herkunft und Stand jeder Notiz.",
       "durationMinutes": 89,
       "lessonCount": 7,
@@ -52,17 +52,17 @@
         "Setup-Walkthrough (optional, ohne Zeitlimit)",
         "Warum eine gepflegte Wissensbasis wichtig ist",
         "PARA und MOC als Ablagestruktur für KMU",
-        "Smart Connections + Copilot",
+        "Smart Connections und Copilot",
         "Obsidian Web Clipper",
         "Täglicher Ablauf, Prompts mit RCTFC und JSON-Ausgabe",
-        "Claude + Obsidian via MCP"
+        "Claude und Obsidian über MCP"
       ]
     },
     {
       "id": "modul_4",
       "number": 4,
       "title": "Wiederkehrende Arbeit automatisieren",
-      "subtitle": "n8n + EU AI Act + Capstone",
+      "subtitle": "n8n, EU AI Act und Abschlussprojekt",
       "description": "Du zerlegst wiederkehrende Handarbeit und prüfst, ob ein begrenzter n8n-Ablauf passt.",
       "voiceAnchor": "Automatisiere erst, wenn Eingaben, Prüfpunkt, Fehlerpfad und Verantwortung klar sind.",
       "durationMinutes": 88,
@@ -74,9 +74,9 @@
         "Sandbox-Build 2: Meeting → To-Do-Entwurf",
         "Sandbox-Build 3: Wochenbericht aus Notizen",
         "Local AI mit LM Studio",
-        "EU AI Act Deep-Dive (Annex III)",
-        "Capstone Brief: Pilot in 7 Tagen",
-        "Capstone Review + Privacy-Primer"
+        "EU AI Act vertieft (Anhang III)",
+        "Abschlussprojekt (Capstone): Pilot in 7 Tagen planen",
+        "Abschlussprojekt prüfen, Datenschutz-Grundlagen"
       ]
     }
   ]

@@ -11,13 +11,12 @@ describe("engine accessibility tokens", () => {
       <EngineFrame
         config={getCourseProjectConfig("codex")}
         locale="en"
-        engineLabel="Repository lab"
       >
         body
       </EngineFrame>,
     );
     expect(
-      screen.getByRole("heading", { name: "Repository lab" }).closest("header"),
+      screen.getByRole("heading", { name: "Repository Workbench" }).closest("header"),
     ).toHaveClass("bg-foreground", "text-background");
   });
 

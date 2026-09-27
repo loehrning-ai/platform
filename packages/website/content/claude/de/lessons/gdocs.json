@@ -5,7 +5,7 @@
   "subtitle": "Von unsortierten Stichpunkten zu einem prüfbaren Dokument.",
   "durationMinutes": 8,
   "trackId": "workflows",
-  "hook": "Das Dokument ist das Arbeitsergebnis. Der Prompt legt die Form fest.",
+  "hook": "Der Prompt legt die Form des Dokuments fest.",
   "keyConcepts": [
     "Struktur",
     "Stilübertragung",
@@ -23,19 +23,19 @@
       "id": "move-1-skeleton",
       "title": "Schritt 1: Gib Claude die Struktur vor",
       "readTimeMinutes": 2,
-      "content": "Jede Dokumentsorte hat Konventionen, etwa das TL;DR im Design-Dokument oder die Zeitleiste im Post-Mortem. Gib die nötigen Abschnitte vor:\n\n```\nOutput structure:\n# Titel\n## TL;DR (3 Stichpunkte, jeweils <15 Wörter)\n## Kontext\n## Vorschlag\n## Risiken & Gegenmaßnahmen\n## Erfolgsmetriken\n## Offene Fragen\n```\n\nNenn für jeden Abschnitt die nötigen Belege und lass Lücken markieren, damit Claude nicht rät."
+      "content": "Jede Dokumentsorte hat Konventionen, etwa das TL;DR im Design-Dokument oder die Zeitleiste im Post-Mortem. Gib die nötigen Abschnitte vor:\n\n```\nAusgabestruktur:\n# Titel\n## TL;DR (3 Stichpunkte, jeweils <15 Wörter)\n## Kontext\n## Vorschlag\n## Risiken & Gegenmaßnahmen\n## Erfolgsmetriken\n## Offene Fragen\n```\n\nNenn für jeden Abschnitt die nötigen Belege und lass Lücken markieren, damit Claude nicht rät."
     },
     {
       "id": "move-2-voice",
       "title": "Schritt 2: Gib Claude den Stil vor",
-      "readTimeMinutes": 2,
+      "readTimeMinutes": 1,
       "content": "Zählen Terminologie und Stil, gib eine kurze, freigegebene Referenz mit und benenne, was übernommen werden soll. Entferne vertrauliche Details, verbiete die Übernahme ihrer Fakten und prüfe mit einem Eval, ob die Ausgabe den Stil trifft."
     },
     {
       "id": "move-3-critique",
       "title": "Schritt 3: Bitte um Kritik vor der Überarbeitung",
-      "readTimeMinutes": 2,
-      "content": "Prüfe den Entwurf an expliziten Kriterien: unbelegte Aussagen, fehlende Entscheidungen, falsche Zielgruppe, Strukturfehler. Fordere Befunde mit zitierten Belegen an und beauftrage danach nur freigegebene Änderungen. Diesen Prüfschritt kann jemand nachlesen, und er braucht keine privaten Chain-of-Thought-Texte."
+      "readTimeMinutes": 1,
+      "content": "Prüfe den Entwurf an expliziten Kriterien: unbelegte Aussagen, fehlende Entscheidungen, falsche Zielgruppe, Strukturfehler. Fordere Befunde mit zitierten Belegen an und beauftrage danach nur freigegebene Änderungen. Diese Befunde kann jemand nachlesen; private Chain-of-Thought-Texte braucht es dafür nicht."
     }
   ],
   "widgets": [

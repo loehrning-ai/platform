@@ -278,8 +278,8 @@ export function ConfoundingSimulator() {
           >
             {display.zLab}{" "}
             {text(
-              "drives both axes. Remove its influence and the correlation vanishes.",
-              "beeinflusst beide Achsen. Wird dieser Einfluss entfernt, verschwindet die Korrelation.",
+              "drives both axes. Remove its influence and the correlation shrinks.",
+              "beeinflusst beide Achsen. Rechnest du diesen Einfluss heraus, schrumpft die Korrelation.",
             )}
           </p>
         </div>

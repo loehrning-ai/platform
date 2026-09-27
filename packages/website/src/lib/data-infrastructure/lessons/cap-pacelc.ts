@@ -30,7 +30,7 @@ const lesson: DataInfraLesson = {
       title: "CAP, restated",
       readTimeMinutes: 3,
       content:
-        'CAP applies once a network partition stops parts of a distributed system from communicating. For the affected operations, the system then cannot guarantee both **linearizable consistency** and **availability for every request to a non-failing node**.\n\nConsistency here does not mean "correct data", and availability is no uptime percentage. A design can reject or delay some operations, serve stale data for others, or treat records differently. Name the operation, failure model and client-visible behavior before you use a CAP label.',
+        'CAP applies once a network partition stops parts of a distributed system from communicating. For the affected operations, the system then cannot guarantee both **linearizable consistency** and **availability for every request to a non-failing node**.\n\nConsistency here does not mean "correct data", and availability is not an uptime percentage. A design can reject or delay some operations, serve stale data for others, or treat records differently. Name the operation, failure model and client-visible behavior before you use a CAP label.',
     },
     {
       id: "s2",
@@ -44,21 +44,21 @@ const lesson: DataInfraLesson = {
       title: "PACELC",
       readTimeMinutes: 3,
       content:
-        "PACELC adds normal operation to CAP: **if there is a partition, availability or consistency; else, coordination latency or consistency?**\n\nCoordinating across nodes costs work and at least one network round trip. Topology, quorum placement, workload, cache state and failures decide how much; a local replica is not a fixed number of milliseconds faster. Some products let you choose per request or transaction, others per table, session or deployment.\n\nPA/EL, PA/EC, PC/EL and PC/EC are shorthand for this choice. Configuration and operation type can move one deployment from one to another.",
+        "PACELC adds normal operation to CAP: **during a partition, choose availability or consistency; otherwise, choose coordination latency or consistency.**\n\nCoordinating across nodes costs work and at least one network round trip. Topology, quorum placement, workload, cache state and failures decide how much; a local replica is not a fixed number of milliseconds faster. Some products let you choose per request or transaction, others per table, session or deployment.\n\nPA/EL, PA/EC, PC/EL and PC/EC are shorthand for this choice, not vendor rankings. Configuration and operation type can move one deployment from one to another.",
     },
     {
       id: "s4",
-      title: "Latency tax",
+      title: "Consistency levels and their cost",
       readTimeMinutes: 2,
       content:
-        "The frontier graphic is an **illustrative ordering**, not a benchmark. Stronger guarantees usually need more coordination or fewer replica choices; the implementation and deployment decide the cost.\n\n- **Best effort**, no freshness or ordering contract.\n- **Eventual consistency**, replicas converge after writes stop, with no time bound unless the system states one.\n- **Read-your-writes**, a session sees its own acknowledged writes; other clients may see older versions.\n- **Causal consistency**, defined causal relationships between operations are preserved.\n- **Linearizability**, each operation appears to take effect atomically between invocation and response.\n\nBenchmark the configured deployment under normal and degraded conditions. No consistency model name tells you its p99.",
+        "Stronger guarantees usually need more coordination or fewer replica choices; the implementation and deployment decide the cost.\n\n- **Best effort**, no freshness or ordering contract.\n- **Eventual consistency**, replicas converge after writes stop, with no time bound unless the system states one.\n- **Read-your-writes**, a session sees its own acknowledged writes; other clients may see older versions.\n- **Causal consistency**, defined causal relationships between operations are preserved.\n- **Linearizability**, each operation appears to take effect atomically between invocation and response.\n\nBenchmark the configured deployment under normal and degraded conditions to get its p99.",
     },
     {
       id: "s5",
-      title: "Consistency staircase",
+      title: "Stating a consistency requirement",
       readTimeMinutes: 3,
       content:
-        '"Consistency" names several contracts. The staircase replays one synthetic race: writer A writes `x=1` then `x=2`; reader B reads `x`. Green means the result meets that step\'s contract; crimson means the simplified model allows the stale value.\n\nReplace "consistent" in a requirement with an observable rule, such as "a session reads its acknowledged writes" or "all clients see inventory decrements in one linearizable order". Then test the product and configuration against that rule under the stated failures.',
+        '"Consistency" names several contracts. Take one race: writer A writes `x=1` then `x=2`; reader B reads `x`. Best effort and eventual consistency may return the stale `x=1`; under linearizability, a read that starts after the second write is acknowledged must return `x=2`.\n\nReplace "consistent" in a requirement with an observable rule, such as "a session reads its acknowledged writes" or "all clients see inventory decrements in one linearizable order". Then test the product and configuration against that rule under the stated failures.',
     },
     {
       id: "s6",
@@ -71,7 +71,7 @@ const lesson: DataInfraLesson = {
       title: "Vocab",
       readTimeMinutes: 1,
       content:
-        "- **Quorum (N/R/W)**, replica count, read responses and write acknowledgements. `R + W > N` forces overlap under simplified assumptions.\n- **Sloppy quorum**, temporary replicas accept writes during a failure and hand them over later.\n- **Read repair**, a read that sees divergent replicas triggers reconciliation.\n- **Bounded staleness**, a contract that caps version or time lag.",
+        "- **Quorum (N/R/W)**, replica count, read responses and write acknowledgements. `R + W > N` forces overlap under simplified assumptions.\n- **Sloppy quorum**, temporary replicas may accept writes during a failure and hand them over later.\n- **Read repair**, a read that sees divergent replicas can trigger reconciliation; one repair path, not a convergence proof.\n- **Bounded staleness**, a contract that caps version or time lag.",
     },
   ],
   widgets: [
@@ -155,17 +155,17 @@ const lesson: DataInfraLesson = {
           {
             term: "Sloppy quorum",
             q: 'What does "sloppy" mean?',
-            a: "During a failure, temporary replicas accept writes and hand them over later. Configuration and conflict resolution decide the guarantees.",
+            a: "During a failure, temporary replicas may accept writes and hand them over later. Configuration and conflict resolution decide the guarantees.",
           },
           {
             term: "Read repair",
             q: "How does eventual consistency converge?",
-            a: "A read that sees divergent replicas triggers reconciliation, and background anti-entropy adds a second path. You still define version ordering and conflicts.",
+            a: "A read that sees divergent replicas can trigger reconciliation, and background anti-entropy adds a second path. You still define version ordering and conflicts.",
           },
           {
             term: "Linearizable",
             q: "Why is it expensive?",
-            a: "Each operation must appear atomic and respect real-time order, through leaders, leases, consensus or quorums. That coordination costs latency.",
+            a: "Each operation must appear atomic and respect real-time order, through leaders, leases, consensus or quorums. The design decides what that coordination costs.",
           },
           {
             term: "Bounded staleness",

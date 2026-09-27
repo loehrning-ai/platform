@@ -6,7 +6,7 @@ export function GrundlagenEn() {
         <span className="kicker__line" />
       </div>
       <h2 className="heading">
-        One regulation, 113 articles,{" "}
+        One regulation with 113 articles and{" "}
         <span className="em">one principle: risk.</span>
       </h2>
       <p className="dek">
@@ -29,8 +29,8 @@ export function GrundlagenEn() {
             develop an AI system and place it on the market;{" "}
             <strong>deployers</strong> use a finished system in a professional
             context, such as a company pre-screening job applications with
-            software. Importers and distributors are also covered. A person
-            who uses an AI system exclusively for a personal, non-professional
+            software. Importers and distributors are also covered. Individuals
+            are rarely addressed directly: a person who uses an AI system exclusively for a personal, non-professional
             activity is exempt from the obligations for deployers. (Source: EU AI Act,
             Article 2(10), Regulation 2024/1689)
           </p>
@@ -63,9 +63,8 @@ export function GrundlagenEn() {
           </div>
           <div className="margin-note">
             <b>Article 4 · AI literacy</b>
-            Applies since 2 February 2025. Measures must fit the context; no
-            certificate is required. National authorities supervise from 2
-            August 2026.
+            Applies since 2 February 2025; measures must fit the context.
+            National authorities supervise from 2 August 2026.
           </div>
         </aside>
       </div>

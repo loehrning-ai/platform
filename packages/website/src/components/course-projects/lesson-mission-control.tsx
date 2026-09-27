@@ -78,13 +78,13 @@ const MISSION_COPY = {
     stage: "Projektphase",
     objective: "Aktueller Auftrag",
     expectedEvidence: "Gesuchter Beleg",
-    progress: "Phasen abgeschlossen",
+    progress: "Etappen erledigt",
     collapse: "Signalstrecke einklappen",
     expand: "Signalstrecke ausklappen",
     localBoundary:
       "Was du hier schreibst, wird weder gespeichert noch gesendet.",
     syntheticOnly: "Nur synthetischen Kontext verwenden.",
-    locked: "Vorherige Phase zuerst abschließen",
+    locked: "Vorherige Etappe zuerst abschließen",
     current: "aktuell",
     currentStep: "Aktueller Schritt",
     stepComplete: "abgeschlossen",
@@ -108,7 +108,7 @@ const MISSION_COPY = {
     openWorkspace: "Instrument öffnen",
     workspaceOpen: "Instrument offen",
     manipulateRequired:
-      "Ändere mindestens eine Steuerung im Instrument. Nur Öffnen zählt nicht.",
+      "Nur Öffnen zählt noch nicht.",
     manipulated: "Instrumentänderung erkannt.",
     runRequired:
       "Führe jetzt das Instrument aus. Erst ein erfolgreicher Beleg öffnet die Evidenzprüfung.",
@@ -118,7 +118,7 @@ const MISSION_COPY = {
     retrievalRecallPrompt:
       "Schreib die entscheidende Regel auf, bevor die Optionen erscheinen.",
     retrievalRecallHint:
-      "12 bis 280 Zeichen, wird nicht gespeichert.",
+      "12 bis 280 Zeichen.",
     retrievalRecallCommit: "Abruf festlegen und Optionen öffnen",
     retrievalRecallCommitted:
       "Abruf festgelegt. Jetzt die Regel prüfen.",
@@ -160,7 +160,7 @@ const MISSION_COPY = {
   en: {
     eyebrow: "Lesson mission",
     title: "Signal circuit",
-    stage: "Project phase",
+    stage: "Project stage",
     objective: "Current assignment",
     expectedEvidence: "Evidence target",
     progress: "beats complete",
@@ -178,7 +178,7 @@ const MISSION_COPY = {
     complete: "Lesson loop closed",
     ownerRequired: "Activate local learning first.",
     stageLocked:
-      "This project phase is locked. Complete the earlier ones first.",
+      "This project stage is locked. Complete the earlier ones first.",
     correct: "Signal holds.",
     incorrect: "Signal does not hold yet.",
     continue: "Next signal",
@@ -191,7 +191,7 @@ const MISSION_COPY = {
     openWorkspace: "Open instrument",
     workspaceOpen: "Instrument open",
     manipulateRequired:
-      "Change at least one control in the instrument. Opening it alone does not count.",
+      "Opening alone does not count yet.",
     manipulated: "Instrument change detected.",
     runRequired:
       "Now run the instrument. Only a successful receipt unlocks the evidence check.",
@@ -201,7 +201,7 @@ const MISSION_COPY = {
     retrievalRecallPrompt:
       "Write down the governing rule before the options appear.",
     retrievalRecallHint:
-      "12 to 280 characters, not saved.",
+      "12 to 280 characters.",
     retrievalRecallCommit: "Commit recall and open options",
     retrievalRecallCommitted:
       "Recall committed. Now check the rule.",
@@ -1631,7 +1631,7 @@ export function LessonMissionControl({
                       allComplete
                         ? {
                             title: copy.complete,
-                            detail: `${completedBeatCount}/${BEATS.length} ${copy.progress}. ${copy.localBoundary}`,
+                            detail: `${completedBeatCount}/${BEATS.length} ${copy.progress}.`,
                           }
                         : undefined
                     }

@@ -156,7 +156,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       configuration:
         "Dein Fortschritt bleibt vorerst in diesem Browser.",
       methodsUnavailable:
-        "Ohne bestehende Sitzung bleibt dein Fortschritt in diesem Browser.",
+        "Dein Fortschritt bleibt in diesem Browser.",
       accountUnavailable: "Dein Fortschritt bleibt in diesem Browser.",
       records: "",
     },
@@ -170,25 +170,25 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       configuration: {
         status: "Konfiguration offen",
         headline: "Die Anmeldung ist noch nicht freigeschaltet.",
-        body: "Server, EU-Region und Auftragsverarbeitung sind für diese Umgebung noch nicht als geprüft hinterlegt.",
-        next: "Hier ist nichts zu tun. Danach schaltet der Server die Anmeldung selbst frei.",
+        body: "Server, EU-Region und Auftragsverarbeitung sind für diese Umgebung noch nicht geprüft.",
+        next: "Hier ist nichts zu tun. Sobald das geprüft ist, schaltet der Server die Anmeldung selbst frei.",
       },
       methods: {
         status: "Keine Methode freigegeben",
         headline: "Die Anmeldung ist hier noch nicht eingerichtet.",
         body: "",
-        next: "Eine bestehende Sitzung bleibt gültig.",
+        next: "Hier ist nichts zu tun. Die offenen Inhalte unten kannst du weiter nutzen.",
       },
       disabled: {
         status: "Hier nicht eingerichtet",
         headline: "Diese Umgebung läuft ohne Konto.",
-        body: "Das ist so eingerichtet und kein Fehler.",
+        body: "Das ist gewollt.",
         next: "Hier ist nichts zu tun.",
       },
     },
     reason: {
       accountUnavailable:
-        "Eine Anmeldung ist in dieser Umgebung nicht freigegeben. Die vier Grundlagenkurse sind deshalb gerade nicht erreichbar.",
+        "Die Anmeldung ist hier nicht freigegeben, deshalb sind die vier Grundlagenkurse gerade nicht erreichbar.",
       accountUnavailableLink: "Zum Kursangebot",
       progressSave:
         "Melde dich an, um deinen Fortschritt zwischen Geräten zu synchronisieren.",
@@ -255,10 +255,9 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
         "Die meisten Inhalte sind auch ohne Konto offen.",
       unavailable: {
         outage: "Der Anmeldedienst ist vorübergehend nicht erreichbar.",
-        configuration:
-          "Die Anmeldung bleibt aus, bis die Konfiguration geprüft ist.",
+        configuration: "Anmeldung noch gesperrt.",
         methods: "Keine Anmeldemethode ist hier vollständig konfiguriert.",
-        disabled: "Die Anmeldung ist in dieser Umgebung nicht konfiguriert.",
+        disabled: "Keine Anmeldemethode verfügbar.",
       },
     },
     accountValue: {
@@ -266,7 +265,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       lead: "",
       items: [
         {
-          title: "Ein Lernfaden über alle Geräte",
+          title: "Fortschritt auf allen Geräten",
           body: "Du machst am Laptop dort weiter, wo du am Handy aufgehört hast.",
         },
         {
@@ -274,18 +273,18 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
           body: "Werkzeuge wie die Lebenslauf-Engine öffnen sich mit deinen gespeicherten Dokumenten.",
         },
         {
-          title: "Deine eigene KI verbunden",
+          title: "Eigene KI anbinden",
           body: "Du legst fest, worauf dein eigener Assistent zugreifen darf, und entziehst ihm den Zugriff jederzeit.",
         },
       ],
       records:
-        "Abgeschlossene Kurse ergeben eine Teilnahmebestätigung, die abrufbar bleibt.",
+        "Für jeden abgeschlossenen Kurs bekommst du eine Teilnahmebestätigung, die du jederzeit abrufen kannst.",
       control:
-        "Exportieren, zurücksetzen, löschen: jederzeit und ohne Rückfrage.",
+        "Du kannst deine Daten jederzeit exportieren, zurücksetzen oder löschen.",
       availability:
-        "Werkzeuge und KI-Zugang erscheinen, sobald dieser Server sie konfiguriert hat.",
+        "Werkzeuge und KI-Zugang erscheinen im Konto, sobald sie hier eingerichtet sind.",
       localNote:
-        "Ohne Konto bleibt dein Fortschritt in diesem Browser und wird beim Anmelden nicht übernommen.",
+        "Fortschritt ohne Konto bleibt in diesem Browser. Nach dem Anmelden kannst du ihn einmal ins Konto übernehmen.",
     },
     publicAccess: {
       heading: "Ohne Konto offen",
@@ -343,7 +342,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       configuration:
         "For now, your progress stays in this browser.",
       methodsUnavailable:
-        "Without an existing session, your progress stays in this browser.",
+        "Your progress stays in this browser.",
       accountUnavailable: "Your progress stays in this browser.",
       records: "",
     },
@@ -357,25 +356,25 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       configuration: {
         status: "Configuration pending",
         headline: "Sign-in has not been cleared yet.",
-        body: "The server, EU region and data processing are not yet recorded as verified for this environment.",
-        next: "Nothing to do here. The server then enables sign-in by itself.",
+        body: "The server, EU region and data processing are not yet verified for this environment.",
+        next: "Nothing to do here. Once that is verified, the server enables sign-in by itself.",
       },
       methods: {
         status: "No method approved",
         headline: "Sign-in is not set up here yet.",
         body: "",
-        next: "An existing session stays valid.",
+        next: "Nothing to do here. The open content below still works.",
       },
       disabled: {
         status: "Not set up here",
         headline: "This deployment runs without accounts.",
-        body: "This is by design and not a fault.",
+        body: "This is intentional.",
         next: "Nothing to do here.",
       },
     },
     reason: {
       accountUnavailable:
-        "Sign-in is not enabled in this environment. The four foundation courses are unavailable for now.",
+        "Sign-in is not enabled here, so the four foundation courses are unavailable for now.",
       accountUnavailableLink: "View all courses",
       progressSave: "Sign in to sync your progress between devices.",
       progressSaveLink: "Back to all courses",
@@ -434,9 +433,9 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       accountUnavailableNote: "Most content is open without an account.",
       unavailable: {
         outage: "The authentication service is temporarily unavailable.",
-        configuration: "Sign-in stays off until the configuration is verified.",
+        configuration: "Sign-in still locked.",
         methods: "No sign-in method is fully configured here.",
-        disabled: "Sign-in is not configured in this environment.",
+        disabled: "No sign-in method available.",
       },
     },
     accountValue: {
@@ -444,7 +443,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       lead: "",
       items: [
         {
-          title: "One learning thread across devices",
+          title: "Progress on every device",
           body: "Continue on the laptop where you stopped on the phone.",
         },
         {
@@ -452,17 +451,17 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
           body: "Tools such as the CV engine open with your saved documents.",
         },
         {
-          title: "Your own AI connected",
+          title: "Connect your own AI",
           body: "You decide what your own assistant may access and can revoke that access any time.",
         },
       ],
       records:
-        "Finished courses produce a certificate of participation that stays retrievable.",
-      control: "Export, reset, delete: any time and without asking.",
+        "Each finished course gives you a certificate of participation you can retrieve any time.",
+      control: "You can export, reset or delete your data at any time.",
       availability:
-        "Tools and the AI connection appear once this server has them configured.",
+        "Tools and the AI connection appear in your account once they are set up here.",
       localNote:
-        "Without an account your progress stays in this browser and is not carried over when you sign in.",
+        "Progress without an account stays in this browser. After signing in you can import it into your account once.",
     },
     publicAccess: {
       heading: "Open without an account",

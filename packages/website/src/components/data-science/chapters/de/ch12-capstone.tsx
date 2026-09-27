@@ -21,7 +21,7 @@ export default function Ch12CapstoneDe() {
       <Hero
         eyebrow="Kapitel 12 · Abschlussprojekt"
         title='<em>Kreditkartenbetrug erkennen:</em> <span class="accent">der vollständige Data-Science-Zyklus.</span>'
-        hook="Ein öffentlicher Datensatz mit 284,807 Transaktionen und 492 erfassten Betrugsfällen verbindet Exploration, Leakage-Kontrolle, Evaluation, Schwellenwertpolitik und Deployment-Prüfung. Die Simulation dient dem Lernen und ist kein Produktionsmodell."
+        hook="Ein öffentlicher Datensatz mit 284,807 Transaktionen und 492 erfassten Betrugsfällen verbindet Exploration, Leakage-Kontrolle, Evaluation, Schwellenwertpolitik und Deployment-Prüfung."
         meta={[
           { k: "Datensatz", v: "Kaggle · 284K Transaktionen" },
           { k: "Ziel", v: "Betrug · 0.17% Basisrate" },
@@ -50,7 +50,7 @@ export default function Ch12CapstoneDe() {
       <section className="section">
         <SectionLabel n="12.2">Die Pipeline, Schritt für Schritt</SectionLabel>
         <h2 className="h2">
-          Sechs Entscheidungen. Jede entspricht einem Kapitel dieses Kurses.
+          Sechs Schritte, jeder mit einer Entscheidung aus dem Kurs.
         </h2>
         <p className="prose">
           Das Protokoll zeigt, wo Leakage entstehen kann; der Klassiker ist die
@@ -86,9 +86,9 @@ export default function Ch12CapstoneDe() {
         </h2>
         <p className="prose">
           Ein Betrugsmodell bewertet jede Transaktion, und du legst den
-          Grenzwert fest. Zu niedrig, und das Fraud-Team prüft teuer viele
-          legitime Kunden; zu hoch, und echter Betrug kostet Umsatz und
-          Reputation.
+          Grenzwert fest. Ist er zu niedrig, prüft das Betrugsteam viele
+          legitime Kunden, und das kostet; ist er zu hoch, kostet echter Betrug
+          Umsatz und Ruf.
           <strong>
             {" "}
             Der Kostenrechner nutzt ein synthetisches Kostenmodell; reale
@@ -103,12 +103,10 @@ export default function Ch12CapstoneDe() {
           Bereitstellung in Produktion: die Checkliste
         </SectionLabel>
         <h2 className="h2">
-          Ein Modell im Notebook ist eine Demo. Ein Modell in Produktion ist ein
-          Engineering-System.
+          Vor dem ersten Live-Einsatz sammelst du Evidenz für jedes Prüffeld.
         </h2>
         <p className="prose">
-          Bevor ein Betrugsmodell eine Live-Transaktion anfasst, sammelst du
-          für jedes Prüffeld Evidenz. Diese acht Lehrpunkte stoßen die Prüfung
+          Diese acht Lehrpunkte stoßen die Prüfung
           an; ein Häkchen beseitigt keinen Fehlermodus und genehmigt kein
           Deployment.
         </p>
@@ -118,7 +116,7 @@ export default function Ch12CapstoneDe() {
       <AntiPatterns
         title="Fehlmuster"
         items={[
-          "<b>Keine Modelldokumentation.</b> Zweck, Ausschlüsse, Trainings- und Evaluationsdaten, Metriken, Schwellenwerte, Verantwortliche, Grenzen und bekannte Fehlermuster festhalten; eine Model Card belegt keine rechtliche Konformität.",
+          "<b>Keine Modelldokumentation.</b> Zweck, Ausschlüsse, Trainings- und Evaluationsdaten, Metriken, Schwellenwerte, Verantwortliche, Grenzen und bekannte Fehlermuster festhalten; eine Model Card belegt keine rechtliche Konformität; rechtliche Pflichten brauchen eine eigene, systemspezifische Prüfung.",
           "<b>Kein Monitoring-Vertrag.</b> Betrugsmuster, Eingabequalität, Label-Verzögerung und Betriebskosten ändern sich; jedes Signal braucht Verantwortliche und eine Reaktion.",
           "<b>Ein dauerhafter Schwellenwert, den niemand prüft.</b> In dokumentiertem Rhythmus nach wesentlichen Änderungen von Kosten, Prävalenz, Kalibrierung, Regeln oder Kapazität neu bewerten.",
         ]}
@@ -126,7 +124,7 @@ export default function Ch12CapstoneDe() {
       <Takeaway
         title="Kernaussagen"
         items={[
-          "<b>Produktionsleistung ist Systemverhalten.</b> Modellgüte, Merkmale, Dienste, Datenverträge, Monitoring, Incident Response und Rollback tragen gemeinsam bei.",
+          "<b>Modellgüte, Merkmale, Dienste, Datenverträge, Monitoring, Incident Response und Rollback bestimmen gemeinsam die Leistung in Produktion.</b>",
         ]}
       />
 

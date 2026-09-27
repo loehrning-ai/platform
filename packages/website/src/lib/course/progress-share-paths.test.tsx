@@ -163,7 +163,7 @@ describe.each(COURSES)(
       expect(window.location.hash).toBe("");
       const alert = await screen.findByRole("alert");
       expect(alert).toHaveTextContent(
-        "Der Fortschrittslink ist ungültig oder veraltet. Nichts wurde importiert.",
+        "Der Fortschrittslink ist ungültig oder veraltet. Es wurde nichts importiert.",
       );
       expect(screen.queryByText(privatePayload)).toBeNull();
       expect(consoleError).not.toHaveBeenCalled();

@@ -44,14 +44,14 @@ const lesson: DataInfraLesson = {
       title: "Event vs processing time",
       readTimeMinutes: 3,
       content:
-        "You count events per minute. At processing time 14:35 an event arrives stamped 14:32. Event-time aggregation puts it in the 14:32 window, processing-time aggregation counts it on arrival; the product definition decides which is right.\n\nA **watermark** is the engine's event-time progress signal: under a configured or generated policy, it expects no substantially earlier timestamps. It does not prove every earlier event arrived. Past a window boundary, the engine may emit output and then drop, retain, route or revise late events, per its APIs and configuration.",
+        "You count events per minute. At processing time 14:35 an event arrives stamped 14:32. Event-time aggregation puts it in the 14:32 window, processing-time aggregation counts it on arrival; the product definition decides which is right.\n\nA **watermark** is the engine's event-time progress signal: it declares that, under a configured or generated policy, much earlier timestamps are no longer expected. It does not prove every earlier event arrived. Past a window boundary, the engine may emit output and then drop, retain, route or revise late events, per its APIs and configuration.",
     },
     {
       id: "s4",
-      title: "Watermark visualization",
+      title: "Choosing a lateness threshold",
       readTimeMinutes: 2,
       content:
-        "The visualization uses synthetic events and a fixed four-second lateness threshold to show how a threshold shifts on-time and late labels. It is no production recommendation.\n\nDerive the policy from observed lateness, idle partitions, clock quality, source behavior, allowed state size, revision semantics and consumer SLO. A percentile informs the choice; how much loss or correction is acceptable is a product decision you measure after deployment.",
+        "The watermark model above uses synthetic events and a fixed four-second lateness threshold to show how a threshold shifts on-time and late labels. It is not a production recommendation.\n\nDerive the policy from observed lateness, idle partitions, clock quality, source behavior, allowed state size, revision semantics and consumer SLO. A percentile informs the choice; how much loss or correction is acceptable is a product decision you measure after deployment.",
     },
     {
       id: "s5",
@@ -65,14 +65,14 @@ const lesson: DataInfraLesson = {
       title: "Delivery semantics",
       readTimeMinutes: 3,
       content:
-        'Every delivery claim names its boundary, failure model and observable state:\n\n- **At-most-once.** A failure can omit an effect; acknowledged work is not replayed within the scope.\n- **At-least-once.** Retries after uncertain failures can apply a record twice unless the consumer controls duplicates. "No loss" still rests on source durability, retention and acknowledgements.\n- **Exactly-once.** Within a scope, committed output looks as if each input took effect once, through transactions, checkpoints, replayable sources, idempotent sinks or coordinated offsets. External APIs are not covered automatically.\n\nKafka transactions atomically publish output and consumed offsets on a Kafka-to-Kafka read-process-write path when producers, consumers, isolation and brokers all take part. Flink requires replayable sources and transactional or idempotent sinks for end-to-end exactly-once. List every side effect and test recovery with failure injection.',
+        'Every delivery claim names its boundary, failure model and observable state:\n\n- **At-most-once.** A failure can omit an effect; acknowledged work is not replayed within the scope.\n- **At-least-once.** Retries after uncertain failures can apply a record twice unless the consumer controls duplicates. "No loss" still rests on source durability, retention and acknowledgements.\n- **Exactly-once.** Within a scope, committed output looks as if each input took effect once, through transactions, checkpoints, replayable sources, idempotent sinks or coordinated offsets. External APIs are not covered automatically.\n\nKafka transactions atomically publish output and consumed offsets on a Kafka-to-Kafka read-process-write path when producers, consumers, isolation and brokers all take part. Flink requires replayable sources and transactional or idempotent sinks for end-to-end exactly-once.',
     },
     {
       id: "s5c",
       title: "Select a streaming engine",
       readTimeMinutes: 3,
       content:
-        'Engine capabilities and defaults change. Compare the exact version and connectors on a reproducible workload:\n\n| Decision | Evidence |\n|---|---|\n| Processing mode | Record or micro-batch scheduling; APIs per mode |\n| State | Size, backend, checkpoint time, recovery, rescaling, schema evolution |\n| Event time | Watermarks, idle inputs, windows, joins, timers, late updates |\n| Guarantees | Source replay, state semantics, sink participation, offset commits, failure tests |\n| Latency and throughput | Measured percentiles under load, backpressure, checkpoints, recovery |\n| Operations | Deployment, upgrades, savepoints, observability, cost, ownership |\n\nSpark Structured Streaming, for example, defaults to micro-batches and offers a separate continuous mode with other guarantees.',
+        'Engine capabilities and defaults change. Compare the exact version and connectors on a reproducible workload:\n\n| Decision | Evidence |\n|---|---|\n| Processing mode | Record or micro-batch scheduling; APIs per mode |\n| State | Size, backend, checkpoint time, recovery, rescaling, schema evolution |\n| Event time | Watermarks, idle inputs, windows, joins, timers, late updates |\n| Guarantees | Source replay, state semantics, sink participation, offset commits, failure tests |\n| Latency and throughput | Measured percentiles under load, backpressure, checkpoints, recovery |\n| Operations | Deployment, upgrades, savepoints, observability, cost, ownership |\n\nSpark Structured Streaming, for example, defaults to micro-batches and offers a separate continuous mode with other guarantees. Flink likewise separates state guarantees from end-to-end sink guarantees. No engine name implies a latency band or one exactly-once guarantee.',
     },
     {
       id: "s6",
@@ -85,7 +85,7 @@ const lesson: DataInfraLesson = {
       title: "Key takeaways",
       readTimeMinutes: 2,
       content:
-        "- Test with delayed, duplicated and out-of-order input.\n- Test every external side effect under failure injection.",
+        "- Test with delayed, duplicated and out-of-order input, and inject failures around every external side effect.",
     },
     {
       id: "s8",

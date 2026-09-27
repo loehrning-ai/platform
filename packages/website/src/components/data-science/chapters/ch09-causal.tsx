@@ -39,9 +39,7 @@ export default function Ch09Causal() {
         <p className="prose">
           In the synthetic example, temperature drives both ice-cream sales and
           drowning deaths, so a positive association appears although ice cream
-          has no effect. Inside the three temperature bands it shrinks. Real
-          data need a causal model, measurement checks and uncertainty;
-          stratification alone does not prove all confounding is gone.
+          has no effect. Inside the three temperature bands it shrinks.
         </p>
         <ConfoundingSimulator />
       </section>
@@ -55,8 +53,7 @@ export default function Ch09Causal() {
           A Directed Acyclic Graph (DAG) records the causal relations you
           assume: nodes are variables, arrows are direct-effect assumptions.
           With a correct graph and an explicit estimand, it yields candidate
-          adjustment sets. Data alone verify no arrow, and four teaching
-          patterns are no complete causal model.
+          adjustment sets.
         </p>
         <DAGBuilder />
       </section>
@@ -81,7 +78,8 @@ export default function Ch09Causal() {
         <p className="prose">
           Difference-in-Differences (DiD) compares the change in a treated
           group with the change in an untreated control group. Under parallel
-          trends, no anticipation, no interference and stable composition, the
+          trends, no anticipation, no interference and stable composition (or an analysis that adjusts
+          for changes), the
           control trend gives the treated group&apos;s counterfactual change.
           Similar pre-trends support the design but prove nothing about the
           unobserved post-treatment trend.
@@ -109,7 +107,7 @@ export default function Ch09Causal() {
       <AntiPatterns
         items={[
           "<b>Regressing on everything.</b> More controls ≠ better estimate; the DAG sets the adjustment set.",
-          "<b>Treating the first-stage F-statistic as an IV validity test.</b> Strength shows neither exclusion nor exogeneity, and the value 10 is only a context-dependent weak-instrument screen. Report weak-IV-robust inference.",
+          "<b>Treating the first-stage F-statistic as an IV validity test.</b> Strength shows neither exclusion nor exogeneity. Report weak-IV-robust inference.",
           "<b>Ignoring pre-treatment dynamics in DiD.</b> Plot event-time estimates and check composition changes, anticipation and other shocks first.",
         ]}
       />

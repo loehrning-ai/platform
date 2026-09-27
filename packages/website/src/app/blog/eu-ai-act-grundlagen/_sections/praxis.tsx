@@ -16,7 +16,7 @@ export function Praxis() {
         <div className="premise__body">
           <p>
             <b style={{ color: "var(--kupfer)" }}>Als Beschäftigte oder Beschäftigter</b>{" "}
-            prüfst du deinen Stand mit vier Fragen:
+            prüfst du deinen Stand so:
           </p>
           <p>
             <b style={{ color: "var(--kupfer)" }}>1.</b> Erkennst du, wann
@@ -32,14 +32,15 @@ export function Praxis() {
           <p>
             <b style={{ color: "var(--kupfer)" }}>3.</b> Kannst du den
             Unterschied zwischen einem KI-Ergebnis und einer menschlichen
-            Entscheidung benennen? KI liefert Wahrscheinlichkeiten, kein
-            Urteil.
+            Entscheidung benennen? Ein KI-Ergebnis enthält keine rechtliche
+            oder fachliche Bewertung.
           </p>
           <p>
             <b style={{ color: "var(--kupfer)" }}>4.</b> Weißt du, wo du
             Einwände erheben kannst? Ab dem 2. August 2026 ist das die
-            Marktüberwachungsbehörde nach Art. 85, in Deutschland nach
-            Verkündung des KI-MIG zentral die Bundesnetzagentur.
+            Marktüberwachungsbehörde nach Art. 85, in Deutschland nach dem
+            KI-MIG zentral die Bundesnetzagentur, soweit keine Fachbehörde
+            zuständig ist.
           </p>
           <p style={{ marginTop: 28 }}>
             <b style={{ color: "var(--kupfer)" }}>Als kleines Unternehmen,</b>{" "}
@@ -70,8 +71,8 @@ export function Praxis() {
             <b style={{ color: "var(--kupfer)" }}>4. Hochrisiko prüfen:</b>{" "}
             Nutzt ihr KI für Bewerbungen, Kreditentscheidungen oder
             Prüfungen? Dann fällt der Einsatz voraussichtlich unter Anhang
-            III, mit Pflichten ab dem 2. Dezember 2027. Wer jetzt
-            dokumentiert, gerät später nicht in Zeitnot.
+            III, mit Pflichten ab dem 2. Dezember 2027. Haltet den Einsatz
+            schon jetzt fest; das spart später Umsetzungsarbeit.
           </p>
           <p>
             <b style={{ color: "var(--kupfer)" }}>5. Fragen stellen:</b>{" "}

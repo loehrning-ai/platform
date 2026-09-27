@@ -88,7 +88,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Art. 4 der KI-Verordnung verpflichtet Anbieter und Betreiber zu Maßnahmen, die die KI-Kompetenz ihres Personals und weiterer eingesetzter Personen unterstützen. Ein bestimmtes Niveau für jede einzelne Person garantiert er nicht.",
+    "explanation": "Art. 4 der KI-Verordnung verpflichtet Anbieter und Betreiber zu Maßnahmen, die die KI-Kompetenz ihres Personals und weiterer eingesetzter Personen unterstützen. Ein bestimmtes Niveau für jede Person müssen sie nicht garantieren.",
     "version": 1,
     "active": true
   },
@@ -165,11 +165,11 @@
       { "id": "c", "text": "Ab dem 1. Januar 2027", "isCorrect": false },
       {
         "id": "d",
-        "text": "Diese Pflicht ist noch nicht beschlossen",
+        "text": "Art. 50 ist noch nicht beschlossen",
         "isCorrect": false
       }
     ],
-    "explanation": "Anbieter erfasster generativer Systeme markieren nach Abs. 2 maschinenlesbar, Betreiber legen Deepfakes nach Abs. 4 mit Ausnahmen sichtbar offen. Für Systeme, die vor dem 2. August 2026 auf dem Markt waren, gilt Abs. 2 nach Verordnung (EU) 2026/1744 ab dem 2. Dezember 2026.",
+    "explanation": "Art. 50 gilt ab dem 2. August 2026. Für generative Systeme, die vorher auf dem Markt waren, gilt die Markierungspflicht nach Abs. 2 laut Verordnung (EU) 2026/1744 erst ab dem 2. Dezember 2026.",
     "version": 1,
     "active": true
   },
@@ -208,7 +208,7 @@
     "id": "kug-q08",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Welche Aussage zu § 22 KUG stimmt?",
+    "questionText": "Was regelt § 22 KUG?",
     "answerOptions": [
       {
         "id": "a",
@@ -231,7 +231,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "§ 23 regelt die Ausnahmen und in Abs. 2 eine Interessenabwägung. Die Stimme allein schützt § 22 KUG nicht.",
+    "explanation": "§ 23 regelt die Ausnahmen, Abs. 2 eine Interessenabwägung. Eine Stimme ist kein Bildnis, § 22 KUG schützt sie allein nicht.",
     "version": 1,
     "active": true
   },
@@ -301,7 +301,7 @@
     "id": "kug-q11",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Welche Aussage zu Art. 22 DSGVO stimmt?",
+    "questionText": "Was regelt Art. 22 DSGVO?",
     "answerOptions": [
       {
         "id": "a",
@@ -310,7 +310,7 @@
       },
       {
         "id": "b",
-        "text": "Ausschließlich automatisierte Entscheidungen mit rechtlicher oder ähnlich erheblicher Wirkung",
+        "text": "Entscheidungen, die ausschließlich automatisiert fallen und rechtlich oder ähnlich erheblich wirken",
         "isCorrect": true
       },
       {
@@ -324,7 +324,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Abs. 2 enthält Ausnahmen; bei Vertragserforderlichkeit oder ausdrücklicher Einwilligung sichert Abs. 3 mindestens das Recht auf menschliches Eingreifen, eigenen Standpunkt und Anfechtung.",
+    "explanation": "Art. 22 schützt vor solchen Entscheidungen, Abs. 2 erlaubt Ausnahmen. Ist die Entscheidung für einen Vertrag nötig oder liegt ausdrückliche Einwilligung vor, sichert Abs. 3 mindestens menschliches Eingreifen, eigenen Standpunkt und Anfechtung.",
     "version": 1,
     "active": true
   },
@@ -341,7 +341,7 @@
       },
       {
         "id": "b",
-        "text": "Hängt von Modell, Daten und Schwelle ab und beweist allein nichts",
+        "text": "Ihr Ergebnis hängt von Modell, Daten und Schwelle ab und beweist allein nichts",
         "isCorrect": true
       },
       {
@@ -374,7 +374,7 @@
       { "id": "c", "text": "Google Lens", "isCorrect": false },
       { "id": "d", "text": "TinEye (tineye.com)", "isCorrect": false }
     ],
-    "explanation": "Es erzeugt Schlüsselbilder, stößt Rückwärtssuchen an und zeigt verfügbare Metadaten, fällt aber kein Wahrheitsurteil.",
+    "explanation": "Google Lens und TinEye suchen nur nach Bildern; InVID/WeVerify bündelt alle drei Schritte für Videos. Ob ein Video echt ist, entscheidet es nicht.",
     "version": 1,
     "active": true
   },
@@ -427,7 +427,7 @@
       },
       {
         "id": "c",
-        "text": "Art. 50 trennt Anbieter-Markierung und Betreiber-Offenlegung; den Beschwerdeweg aktuell prüfen",
+        "text": "Art. 50 trennt Markierung durch Anbieter und Offenlegung durch Betreiber",
         "isCorrect": true
       },
       {

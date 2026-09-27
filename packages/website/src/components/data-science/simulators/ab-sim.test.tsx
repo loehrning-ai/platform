@@ -19,7 +19,7 @@ describe("ABSim ", () => {
     render(<ABSim />);
     expect(screen.getByText("Experiment stream")).toBeInTheDocument();
     expect(
-      screen.getByText(/crossing it at an interim look is no stopping rule/),
+      screen.getByText(/crossing it at an interim look is not a stopping rule/),
     ).toBeInTheDocument();
     expect(screen.getByLabelText("True lift")).toBeInTheDocument();
     expect(

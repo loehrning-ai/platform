@@ -123,8 +123,8 @@ export function QuellenEn() {
           obligations have been moved by binding law to late 2027 and 2028.
         </p>
         <p>
-          The German authority route remains expressly provisional until
-          official promulgation of the KI-MIG has been verified.
+          Since 29 July 2026, the Federal Network Agency has been the central
+          complaints body under the KI-MIG.
         </p>
         <div className="essay-close__signoff">
           <span>

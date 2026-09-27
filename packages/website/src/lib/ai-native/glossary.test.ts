@@ -56,13 +56,13 @@ describe("ai-native glossary - categories & CATEGORY_ORDER", () => {
 
   it("getCategoryLabel returns the JSON label for a category", () => {
     expect(getCategoryLabel("claude")).toBe(
-      "Claude.ai, Claude Code, Anthropic-Plattform",
+      "Claude und die Anthropic-Plattform",
     );
     expect(getCategoryLabel("regulatorik")).toBe(
-      "EU AI Act, DSGVO, UWG, Compliance",
+      "EU AI Act, DSGVO, UWG und Compliance",
     );
     expect(getCategoryLabel("mindset")).toBe(
-      "AI-native Konzepte, Orchestrierung, Delegationsmodell",
+      "AI-native Arbeit und Orchestrierung",
     );
   });
 

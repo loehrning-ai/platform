@@ -69,7 +69,7 @@ Kundenname und Umsatzabhängigkeit sind beide Confidential.
 
 Das Szenario ist generisch, und die KI hilft trotzdem.
 
-> **Achtung:** Auch „nur der eine Kundenname", mit dem die Antwort besser klingt, ist ein Verstoß. Free-ChatGPT kann Daten für Training nutzen, solange du Opt-out nicht aktiv gesetzt hast.
+> **Achtung:** Auch „nur der eine Kundenname", mit dem die Antwort besser klingt, ist schon zu viel. Free-ChatGPT kann Daten für Training nutzen, solange du Opt-out nicht aktiv gesetzt hast.
 
 ## Stufe 4: Restricted
 

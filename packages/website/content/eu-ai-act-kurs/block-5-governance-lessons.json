@@ -29,11 +29,11 @@
           "id": "block_5_lesson_1_section_1",
           "title": "EU-Ebene: AI Office und KI-Gremium",
           "readTimeMinutes": 2,
-          "content": "Das **AI Office** (Europäisches Büro für Künstliche Intelligenz) sitzt in der Generaldirektion CNECT der EU-Kommission, mit über 125 Mitarbeitenden in sechs Units, darunter Regulation and Compliance und AI Safety. Nach Art. 88 hat es die **ausschließliche Aufsicht über GPAI-Modelle** wie GPT-4, Claude oder Gemini. Es koordiniert die Codes of Practice, führt das Sekretariat des KI-Gremiums und betreibt seit 8. Oktober 2025 den öffentlichen Service Desk.\n\nDas **KI-Gremium** (European AI Board, Art. 65) hat einen Vertreter pro Mitgliedstaat, koordiniert die nationalen Behörden und berät die Kommission. Wer KI nur einsetzt und kein GPAI-Modell in Verkehr bringt, hat mit beiden in der Regel nicht direkt zu tun; die zuständigen Behörden sitzen in Deutschland."
+          "content": "Das **AI Office** (Europäisches Büro für Künstliche Intelligenz) sitzt in der Generaldirektion CNECT der EU-Kommission, mit über 125 Mitarbeitenden in sechs Referaten, darunter Regulation and Compliance und AI Safety. Nach Art. 88 hat es die **ausschließliche Aufsicht über GPAI-Modelle** wie GPT-4, Claude oder Gemini.\n\nEs koordiniert die Codes of Practice, führt das Sekretariat des KI-Gremiums und betreibt seit 8. Oktober 2025 den öffentlichen Service Desk.\n\nDas **KI-Gremium** (European AI Board, Art. 65) hat einen Vertreter pro Mitgliedstaat, koordiniert die nationalen Behörden und berät die Kommission. Wer KI nur einsetzt und kein GPAI-Modell in Verkehr bringt, hat mit beiden in der Regel nicht direkt zu tun; die zuständigen Behörden sitzen in Deutschland."
         },
         {
           "id": "block_5_lesson_1_section_2",
-          "title": "Deutschland: BNetzA als Default-Behörde",
+          "title": "Deutschland: BNetzA als Auffangbehörde",
           "readTimeMinutes": 1,
           "content": "Art. 70 Abs. 2 verlangt von jedem Mitgliedstaat eine **zentrale Anlaufstelle**. In Deutschland benennt das KI-MIG die **Bundesnetzagentur (BNetzA)**. Der Bundestag nahm es am **11. Juni 2026** an, der Bundesrat ließ es am **10. Juli 2026** ohne Vermittlungsausschuss passieren, seit dem **29. Juli 2026** ist es in Kraft.\n\nDie BNetzA ist damit Marktüberwachungsbehörde für alle Bereiche ohne sektorale Aufsicht, zentrale Anlaufstelle und Beschwerdestelle. Im Haus sieht das Gesetz ein **Koordinierungs- und Kompetenzzentrum (KoKIVO)** vor, für bestimmte Bereiche eine unabhängige Marktüberwachungskammer. Den Meldekanal im Einzelfall bestimmen Sektor und Fachrecht."
         },
@@ -41,7 +41,7 @@
           "id": "block_5_lesson_1_section_3",
           "title": "Sektorale Aufsicht: Wer zusätzlich zuständig bleibt",
           "readTimeMinutes": 1,
-          "content": "Die BNetzA ist die Auffangbehörde. Art. 74 weist die Marktüberwachung in mehreren Bereichen vorhandenen sektoralen Behörden zu; Datenschutz- und anderes Fachrecht behalten eigene Zuständigkeiten.\n\n- **Finanzinstitute:** Art. 74 Abs. 6 verweist grundsätzlich auf die nach Finanzdienstleistungsrecht zuständigen Behörden.\n- **Produkte unter Anhang I:** Die Marktüberwachung folgt grundsätzlich dem jeweiligen Produktsicherheitsrecht (Art. 74 Abs. 3).\n- **Stellen nach Art. 74 Abs. 8:** Die dort genannten Datenschutz- oder anderen Behörden überwachen die dort bezeichneten Anhang-III-Systeme.\n\nNotieren Sie pro System Zweck, Rolle, Sektor und mögliche Behörden. Bis die Zuständigkeiten konsolidiert sind, bleibt dieses Mapping eine zu bestätigende Rechtsfrage."
+          "content": "Die BNetzA ist die Auffangbehörde. Art. 74 weist die Marktüberwachung in mehreren Bereichen vorhandenen sektoralen Behörden zu; Datenschutz- und anderes Fachrecht behalten eigene Zuständigkeiten.\n\n- **Finanzinstitute:** Art. 74 Abs. 6 verweist grundsätzlich auf die nach Finanzdienstleistungsrecht zuständigen Behörden.\n- **Produkte unter Anhang I:** Die Marktüberwachung folgt grundsätzlich dem jeweiligen Produktsicherheitsrecht (Art. 74 Abs. 3).\n- **Anhang III Nr. 1 (soweit Strafverfolgung, Grenzschutz, Justiz oder Demokratie) und Nr. 6 bis 8:** Nach Art. 74 Abs. 8 überwachen die Datenschutzaufsichtsbehörden oder eine andere so benannte Behörde.\n\nNotieren Sie pro System Zweck, Rolle, Sektor und mögliche Behörden. Lassen Sie diese Zuordnung rechtlich bestätigen."
         }
       ],
       "quiz": [
@@ -159,7 +159,7 @@
           "id": "block_5_lesson_2_section_3",
           "title": "Rechenbeispiele für den Mittelstand",
           "readTimeMinutes": 1,
-          "content": "**Beispiel A: Maschinenbauer, 20 Mio Euro Umsatz**\n\n- Stufe 1 (etwa Emotionserkennung am Werkstor): 7 Prozent = 1,4 Mio Euro, zugleich der KMU-Deckel.\n- Stufe 2 (etwa fehlende Risikobewertung bei HR-KI): 3 Prozent = KMU-Deckel von 600 TEUR.\n- Stufe 3 (falsche Auskunft an die BNetzA): 1 Prozent = KMU-Deckel von 200 TEUR.\n\n**Beispiel B: Handwerksbetrieb, 1,5 Mio Euro Umsatz**\n\n- Stufe 1: 7 Prozent = 105 TEUR, für einen 3-Personen-Betrieb existenzbedrohend.\n\n**Beispiel C:** Bei 50 Mio. EUR Umsatz liegt die Obergrenze für die meisten Pflichten (3 Prozent, Art. 99 Abs. 4) bei 1,5 Mio. EUR.\n\nWas im Bescheid steht, hängt von Verhältnismäßigkeit und dokumentierten Maßnahmen ab.\n\nIn Deutschland verhängt die zuständige Marktüberwachungsbehörde Sanktionen nach dem OWiG; dagegen steht die Klage zum Verwaltungsgericht offen (Art. 99 Abs. 10). Die Mitgliedstaaten berichten der Kommission jährlich (Art. 99 Abs. 11)."
+          "content": "**Beispiel A: Maschinenbauer, 20 Mio Euro Umsatz**\n\n- Stufe 1 (etwa Emotionserkennung am Werkstor): höchstens 1,4 Mio Euro (7 Prozent).\n- Stufe 2 (etwa fehlende Risikobewertung bei HR-KI): höchstens 600.000 Euro (3 Prozent).\n- Stufe 3 (falsche Auskunft an die BNetzA): höchstens 200.000 Euro (1 Prozent).\n\n**Beispiel B: Handwerksbetrieb, 1,5 Mio Euro Umsatz**\n\n- Stufe 1: höchstens 105.000 Euro (7 Prozent), für einen 3-Personen-Betrieb existenzbedrohend.\n\n**Beispiel C: KMU mit 50 Mio Euro Umsatz**\n\n- Stufe 2: höchstens 1,5 Mio Euro (3 Prozent, Art. 99 Abs. 4).\n\nDie tatsächliche Höhe hängt von Verhältnismäßigkeit und dokumentierten Maßnahmen ab. In Deutschland verhängt die zuständige Marktüberwachungsbehörde Sanktionen nach dem OWiG; gegen den Bußgeldbescheid ist der Einspruch möglich, über den das Amtsgericht entscheidet (Art. 99 Abs. 10). Die Mitgliedstaaten berichten der Kommission jährlich (Art. 99 Abs. 11)."
         }
       ],
       "quiz": [
@@ -242,7 +242,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 99 Abs. 5 erfasst falsche, unvollständige oder irreführende Angaben an notifizierte Stellen oder Behörden. Kooperation ist Pflicht; vertrauliche Informationen bleiben geschützt."
+          "explanation": "Art. 99 Abs. 5 erfasst falsche, unvollständige oder irreführende Angaben an notifizierte Stellen oder Behörden. Dafür gilt Stufe 3."
         }
       ]
     },
@@ -265,7 +265,7 @@
           "id": "block_5_lesson_3_section_1",
           "title": "Was ein KI-Reallabor nach Art. 57 ist",
           "readTimeMinutes": 2,
-          "content": "Wer ein Hochrisiko-KI-System baut, kann vor dem Inverkehrbringen mit der Behörde sprechen: im **KI-Reallabor** (AI Regulatory Sandbox). Nach Art. 3 Nr. 55 ist das ein kontrollierter Rahmen, in dem eine zuständige Behörde ein innovatives KI-System entwickeln, trainieren, validieren und gegebenenfalls unter Realbedingungen testen lässt.\n\nDie seit dem 27. Juli 2026 geltende Verordnung (EU) 2026/1744 setzt in Art. 57 Abs. 1 den **2. August 2027** als Frist für mindestens ein nationales Reallabor. Art. 57 sieht unter anderem Anleitung, Aufsicht und einen schriftlichen Abschlussbericht vor."
+          "content": "Wer ein Hochrisiko-KI-System baut, kann vor dem Inverkehrbringen mit der Behörde sprechen: im **KI-Reallabor** (AI Regulatory Sandbox). Nach Art. 3 Nr. 55 ist das ein kontrollierter Rahmen, in dem eine zuständige Behörde ein innovatives KI-System entwickeln, trainieren, validieren und gegebenenfalls unter Realbedingungen testen lässt.\n\nDie seit dem 27. Juli 2026 geltende Verordnung (EU) 2026/1744 (AI Omnibus) setzt in Art. 57 Abs. 1 den **2. August 2027** als Frist für mindestens ein nationales Reallabor. Art. 57 sieht unter anderem Anleitung, Aufsicht und einen schriftlichen Abschlussbericht vor."
         },
         {
           "id": "block_5_lesson_3_section_2",
@@ -395,7 +395,7 @@
           "id": "block_5_lesson_4_section_3",
           "title": "Behördenanfrage: Reaktionsplan in 5 Schritten",
           "readTimeMinutes": 1,
-          "content": "Nach Art. 74 erhält die Behörde vollen Zugang zu Dokumentation sowie Trainings-, Validierungs- und Testdaten, auch über API (Art. 74 Abs. 12). **Quellcode** bekommt sie nur auf begründete Anfrage, wenn andere Test- oder Prüfverfahren ausgeschöpft oder unzureichend sind (Art. 74 Abs. 13).\n\nStellt sie Nichtkonformität fest, verlangt sie Korrekturmaßnahmen binnen **höchstens 15 Arbeitstagen** (Art. 79 Abs. 2). Bei Verstößen gegen Art. 5 verkürzt sich die Einwendungsfrist im Schutzklauselverfahren der Union auf 30 Tage (Art. 81).\n\n**Erstreaktionsplan (eine Umsetzungshilfe, kein gesetzliches Format):**\n\n1. **Schriftlich bestätigen**, Frist notieren, Anwalt einbeziehen. Quellcode oder Trainingsdaten nicht reflexhaft herausgeben.\n2. **Vorfall-Log starten:** Datum, Anfrage, Beteiligte, kommunizierte Informationen.\n3. **Zuständigkeit prüfen:** BNetzA oder eine sektorale Behörde wie BaFin, BfArM oder LMA?\n4. **Unterlagen sammeln:** Nachweise zu Maßnahmen nach Art. 4, Risikobewertung, Post-Market-Protokolle, Konformitätserklärung. Sie können Maßnahmen nach Art. 99 Abs. 7 lit. g belegen, garantieren aber kein niedrigeres Bußgeld.\n5. **Kooperieren ohne falsche Angaben:** Falsche oder unvollständige Angaben fallen in Stufe 3, bis 7,5 Mio Euro oder 1 Prozent (Art. 99 Abs. 5).\n\nVorbereitete Unterlagen, ein bekannter Anwalt und ein benannter Sprecher tragen die ersten 48 Stunden, ohne an Pflichten oder Behördenreaktion etwas zu ändern."
+          "content": "Nach Art. 74 erhält die Behörde vollen Zugang zu Dokumentation sowie Trainings-, Validierungs- und Testdaten, auch über API (Art. 74 Abs. 12). **Quellcode** bekommt sie nur auf begründete Anfrage, wenn andere Test- oder Prüfverfahren ausgeschöpft oder unzureichend sind (Art. 74 Abs. 13).\n\nStellt sie Nichtkonformität fest, verlangt sie Korrekturmaßnahmen binnen **höchstens 15 Arbeitstagen** (Art. 79 Abs. 2). Bei Verstößen gegen Art. 5 verkürzt sich die Einwendungsfrist im Schutzklauselverfahren der Union auf 30 Tage (Art. 81).\n\n**Erstreaktionsplan (eine Umsetzungshilfe, kein gesetzliches Format):**\n\n1. **Schriftlich bestätigen**, Frist notieren, Anwalt einbeziehen. Quellcode oder Trainingsdaten nicht reflexhaft herausgeben.\n2. **Vorfall-Log starten:** Datum, Anfrage, Beteiligte, kommunizierte Informationen.\n3. **Zuständigkeit prüfen:** BNetzA oder eine sektorale Behörde wie BaFin, BfArM oder LMA?\n4. **Unterlagen sammeln:** Nachweise zu Maßnahmen nach Art. 4, Risikobewertung, Post-Market-Protokolle, Konformitätserklärung. Sie können Maßnahmen nach Art. 99 Abs. 7 lit. g belegen, garantieren aber kein niedrigeres Bußgeld.\n5. **Kooperieren ohne falsche Angaben:** Falsche oder unvollständige Angaben fallen in Stufe 3, bis 7,5 Mio Euro oder 1 Prozent (Art. 99 Abs. 5)."
         }
       ],
       "quiz": [
@@ -410,7 +410,7 @@
             },
             {
               "id": "b",
-              "text": "10 Tage nach Vermutung des kausalen Zusammenhangs",
+              "text": "10 Tage nach Kenntnisnahme",
               "isCorrect": true
             },
             {
@@ -424,7 +424,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 73 Abs. 4 verkürzt die Frist bei Tod auf 10 Tage ab festgestelltem oder wahrscheinlichem Zusammenhang. Sonst gelten 15 Tage (Abs. 2), bei weitverbreitetem Verstoß 2 Tage (Abs. 3)."
+          "explanation": "Bei Tod meldet der Anbieter nach Art. 73 Abs. 4 unverzüglich, sobald er den Zusammenhang feststellt oder vermutet, spätestens 10 Tage nach Kenntnis. Sonst gelten 15 Tage (Abs. 2), bei weitverbreitetem Verstoß 2 Tage (Abs. 3)."
         },
         {
           "id": "block_5_lesson_4_q2",

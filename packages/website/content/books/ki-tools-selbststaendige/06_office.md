@@ -178,7 +178,7 @@ Deadline. Gantt-Chart-Beschreibung optional.
 Ton: Strukturiert, realistisch. Keine Überschätzung.
 ```
 
-Ich nutze diesen Workflow für jedes neue Beratungsprojekt: 5 Minuten für den Plan, dann justiere ich. Die KI unterschätzt oft den Aufwand für Kundenkommunikation und überschätzt Standardaufgaben.
+Ich nutze diesen Workflow für jedes neue Beratungsprojekt: 5 Minuten für den Plan, dann justiere ich. Die KI unterschätzt manchmal den Aufwand für Kundenkommunikation und überschätzt Standardaufgaben.
 
 > **Praxisprojekt 6: 5 E-Mail-Vorlagen mit eigener Zeitmessung**
 >

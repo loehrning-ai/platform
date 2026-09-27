@@ -4,7 +4,7 @@ Tippst du einen Kundennamen in ChatGPT, landet er auf Servern von OpenAI, einem 
 
 Bei Apple war Datenklassifizierung Pflicht-Kurs am ersten Tag, lange vor jedem KI-Hype. Jedes Dokument trug ein Label: Public, Internal, Confidential, Restricted. Bei Red Bull fehlte das. In einem Konzern mit 13.000 Mitarbeitenden konnte niemand sagen, wo die Daten liegen, und die ehrliche Antwort lautete: 47 Excel-Tabellen auf Netzlaufwerken.
 
-Deshalb fragst du dich vor jedem Prompt, welche Art Daten du eintippst.
+Die erste Grundregel für deinen KI-Alltag: Frag dich vor jedem Prompt, welche Art Daten du eintippst.
 
 ## Das mentale Modell
 

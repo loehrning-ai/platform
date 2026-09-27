@@ -16,7 +16,7 @@ export default localizeDataInfraLessonToGerman(canonical, {
     {
       id: "s1",
       title: "Warum CDC?",
-      content: `Du willst eine Quelldatenbank samt Deletes ins analytische System spiegeln. Polling reicht, solange Volumen, Freshness, Löschtracking und Quelllast begrenzt bleiben, und braucht verlässliche Änderungsmarker und eine ausdrückliche Löschbehandlung.
+      content: `Du willst eine Quelldatenbank samt Deletes ins analytische System spiegeln. Polling reicht, solange Volumen, Freshness-Anforderungen und Quelllast begrenzt bleiben, und braucht verlässliche Änderungsmarker und eine ausdrückliche Löschbehandlung.
 
 **Change Data Capture (CDC)** liest eine Änderungsschnittstelle der Datenbank, meist ein Transaktionslog oder einen logischen Replikationsstream, und gibt Zeilenänderungen aus. Datenbank, Connector und Konfiguration bestimmen Ereignisform, Ordnung, Before Images und Zustellgarantien. Snapshots, Log Decoding, Replikationsslots und Aufbewahrung belasten die Quelle.
 
@@ -78,7 +78,7 @@ Vor dem Einsatz legst du Zuständigkeit für die Source of Truth, Partitionsordn
     {
       id: "s7",
       title: "Begriffe",
-      content: `- **WAL / binlog**, das Transaktionslog der Datenbank mit geordneten Quellpositionen, das CDC liest.
+      content: `- **WAL / binlog**, das Transaktionslog der Datenbank mit geordneten Quellpositionen, das CDC liest; Berechtigungen, Aufbewahrung und Failover prüfst du vorher.
 - **Tombstone**, ein Kafka-Datensatz mit Schlüssel und Nullwert, der eine Löschung markiert.
 - **Schema Registry**, speichert versionierte Schemas und prüft konfigurierte Kompatibilitätsregeln.
 - **Outbox-Muster**, Fachzustand und Outbox-Zeile in einer Transaktion, asynchron veröffentlicht; Publisher-Retries, Deduplizierung und Monitoring bleiben nötig.`,
@@ -93,7 +93,7 @@ Vor dem Einsatz legst du Zuständigkeit für die Source of Truth, Partitionsordn
         "Ein Team pollt Postgres mit `SELECT * WHERE updated_at > last_seen`. Welche Grenze muss das Review vor dem Vergleich mit CDC benennen?",
       options: [
         "CDC ist immer schneller als Polling.",
-        "Polling braucht verlässliche Änderungs- und Löschmarker und gemessene Abfragekosten; CDC kostet auch.",
+        "Polling braucht verlässliche Änderungs- und Löschmarker; beide Wege belasten die Quelle.",
         "Polling ist in aktuellem Postgres veraltet.",
         "CDC braucht immer weniger Netzwerkbandbreite.",
       ],
@@ -105,10 +105,10 @@ Vor dem Einsatz legst du Zuständigkeit für die Source of Truth, Partitionsordn
       cpId: "q2",
       title: "Lambda oder Kappa",
       question:
-        "Eine Lambda-Pipeline berechnet „wöchentlich aktive Personen“ in Spark und in Flink. Die Ergebnisse weichen um 0,3% ab, Ursache unbekannt. Wie sieht die IC5-Lösung aus?",
+        "Eine Lambda-Pipeline berechnet „wöchentlich aktive Personen“ in Spark und in Flink. Die Ergebnisse weichen um 0,3% ab, Ursache unbekannt. Was ist die tragfähige Lösung?",
       options: [
         "Im Spark-Job einen Unit-Test ergänzen.",
-        "Nur bei reproduzierbarer Historie zusammenführen; sonst gegen eine Berechnung abgleichen.",
+        "Eine versionierte Berechnung festlegen und den anderen Pfad dagegen abgleichen.",
         "Beide Werte mitteln.",
         "Maschinelles Lernen zur Abstimmung einsetzen.",
       ],

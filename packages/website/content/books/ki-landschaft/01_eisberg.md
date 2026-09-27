@@ -2,7 +2,7 @@
 
 # Das Eisberg-Problem
 
-Die laute KI-Debatte dreht sich um Softwareentwicklung und neue Modelle. Die Arbeit, bei der ein System im Alltag wirklich helfen könnte, steckt woanders: in Verwaltung, Finanzen, Kundenservice, Einkauf. Weil dort niemand von KI-Arbeit spricht, prüft sie kaum jemand.
+Die laute KI-Debatte dreht sich um Softwareentwicklung und neue Modelle. Die Arbeit, bei der ein System im Alltag wirklich helfen könnte, steckt woanders: in Verwaltung, Finanzen, Kundenservice, Einkauf. Weil dort niemand sie KI-Arbeit nennt, prüft sie kaum jemand.
 
 ## Was der Iceberg Index misst
 
@@ -15,7 +15,7 @@ Zwei Größen stehen im Zentrum:
 | Sichtbare Exposition | 2,2 % des US-Lohnwerts | Schwerpunkt in Computer- und Technologieberufen |
 | Breitere technische Exposition | 11,7 % des US-Lohnwerts | zusätzliche kognitive Aufgaben in Verwaltung, Finanzen und professionellen Dienstleistungen |
 
-Beide Werte messen nur eine modellierte Überschneidung von Aufgaben und technischen Fähigkeiten, keinen Produktivitätsgewinn, keine tatsächliche Einführung, keinen Arbeitsplatzverlust und keinen deutschen Marktanteil.
+Beide Werte messen nur eine modellierte Überschneidung von Aufgaben und technischen Fähigkeiten. Produktivitätsgewinn, tatsächliche Einführung, Arbeitsplatzverlust und deutschen Marktanteil messen sie nicht.
 
 ## Was du daraus ableiten darfst
 
@@ -39,7 +39,7 @@ Eine ehrliche Bestandsaufnahme trennt zwei Fragen:
 1. **Welche KI-Systeme und Funktionen laufen schon?** Erfasse freigegebene und nicht freigegebene Konten, eingebettete Funktionen, Integrationen und automatisierte Entscheidungen.
 2. **Welche Aufgaben könnten Unterstützung vertragen?** Erfasse Volumen, Fehlerkosten, Datenklassen, nötige Fachprüfung und messbare Erfolgskriterien.
 
-Die erste Inventur schafft Kontrolle, die zweite eine priorisierte Lern- und Pilotliste. Keine davon braucht ein Firmenranking oder einen extern berechneten Reifegrad-Score.
+Die erste Inventur schafft Kontrolle. Die zweite ergibt eine priorisierte Lern- und Pilotliste. Keine davon braucht ein Firmenranking oder einen extern berechneten Reifegrad-Score.
 
 ## Der richtige Ausgangspunkt
 

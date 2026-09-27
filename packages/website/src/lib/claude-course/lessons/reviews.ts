@@ -8,31 +8,31 @@ const lesson: ClaudeLesson = {
   id: "reviews",
   number: 8,
   title: "Claude for code review and PRs",
-  subtitle: "A structured review pass that still requires human verification.",
+  subtitle: "Claude as a reviewer for well-scoped checks.",
   durationMinutes: 9,
   trackId: "advanced",
-  hook: "Define the change intent, repository rules, and evidence required for a finding.",
+  hook: "Claude checks a diff against its stated intent.",
   keyConcepts: ["Review prompt template", "Severity tagging", "Focus filters"],
   quiz: [],
   sections: [
     {
       id: "why-it-works",
-      title: "Why it works",
-      readTimeMinutes: 2,
+      title: "What a review pass can check",
+      readTimeMinutes: 1,
       content:
         "A model checks the supplied diff for candidate defects, convention violations and missing tests. It cannot see files, callers, runtime behavior or rules that neither the prompt nor a tool supplied.\n\nGive the author's goal, surrounding code, conventions and a severity definition. Every finding needs file and line, a failure path and evidence kept apart from guesswork.\n\nModel behavior shifts across versions, so rerun a review eval set whenever model, prompt or tool access changes.",
     },
     {
       id: "review-template",
       title: "The review prompt template",
-      readTimeMinutes: 3,
+      readTimeMinutes: 2,
       content:
         "```\nYou are reviewing a PR as a staff engineer on the team.\n\nCONTEXT\n- Repo: <what the project does, one line>\n- Conventions: <link CLAUDE.md or paste summary>\n- Author's stated goal of this PR: <paste their description>\n\nDIFF\n<paste the diff>\n\nTASK\nReview the diff. For each issue, emit:\n- severity (blocker | nit | question)\n- file:line\n- what you'd change and why, in one sentence\n\nFocus on:\n1. Does the code do what the description claims?\n2. Correctness, especially edge cases and error paths.\n3. Tests: are they exercising the change or just present?\n4. Consistency with existing conventions in the repo.\n\nDo NOT:\n- Rewrite the code.\n- Comment on style unless it breaks a convention.\n- Pad the review with praise.\n```",
     },
     {
       id: "when-it-earns-its-keep",
       title: "Where it helps",
-      readTimeMinutes: 2,
+      readTimeMinutes: 1,
       content:
         "- **Before review.** Run a focused pass over your diff, verify each finding and run the checks.\n- **For a large change.** Generate a candidate map of changed behavior and affected call paths, then compare it with code search and tests.\n- **Across the repository.** Enumerate callers with repository tools first, then analyze the results for compatibility risks.",
     },
@@ -46,7 +46,7 @@ const lesson: ClaudeLesson = {
         lessonId: "reviews",
         cpId: "review",
         title: "Review a diff",
-        hint: "Paste a small diff. Ask for a staff-level review using the template above.",
+        hint: "Paste a small diff and ask for a staff-level review with the template below.",
         placeholder:
           "You are reviewing a PR as a staff engineer…\n\nDIFF:\n<paste diff>",
       },

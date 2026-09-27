@@ -17,8 +17,8 @@
     {
       "id": "what-it-is",
       "title": "Was es ist",
-      "readTimeMinutes": 2,
-      "content": "`CLAUDE.md` ist eine Markdown-Anweisungsdatei, die Claude Code lädt, damit eine Sitzung dein Repository kennt. Die Projektdatei liegt unter `./CLAUDE.md` oder `./.claude/CLAUDE.md`; Benutzer-, Managed-, lokale und verschachtelte Dateien haben eigene Geltungsbereiche.\n\nDie Anweisungen landen im Gesprächskontext. Diese steuern das Verhalten und erzwingen nichts; was gelten muss, gehört in Berechtigungen, Hooks, Sandbox und CI."
+      "readTimeMinutes": 1,
+      "content": "`CLAUDE.md` ist eine Markdown-Anweisungsdatei, die Claude Code lädt, damit eine Sitzung dein Repository kennt. Die Projektdatei liegt unter `./CLAUDE.md` oder `./.claude/CLAUDE.md`; Benutzer-, Managed-, lokale und verschachtelte Dateien haben eigene Geltungsbereiche.\n\nDie Anweisungen landen im Gesprächskontext und steuern das Verhalten, erzwingen aber nichts; was gelten muss, gehört in Berechtigungen, Hooks, Sandbox und CI."
     },
     {
       "id": "hierarchy",
@@ -29,19 +29,19 @@
     {
       "id": "keep-in-leave-out",
       "title": "Was hineingehört",
-      "readTimeMinutes": 2,
-      "content": "**Aufnehmen:**\n\n- Eine Projektbeschreibung in einem Satz\n- Stack und unterstützte Versionen\n- Befehle für Build, Tests und Linting\n- Prüfbare Konventionen\n- Wichtige Pfade und Projektbegriffe\n- Links auf gepflegte Architektur- oder Deployment-Doku\n\n**Nicht aufnehmen:**\n\n- Geheimnisse, Tokens, Zugangsdaten und personenbezogene Daten\n- Vage Anweisungen wie \"schreibe guten Code\"\n- Alte Historie\n- Lange Abläufe, die in einen Skill oder eine gepflegte Anleitung gehören\n\nJede Zeile kostet Kontext, und in einer langen Datei geht eine Anweisung eher unter. Anthropic empfiehlt kurze, klar strukturierte Regeln und nennt weniger als 200 Zeilen pro Datei als Richtwert. Imports ordnen Inhalte, werden beim Start aber genauso geladen.\n\nSensible Pfade sperrst du mit Berechtigungsregeln."
+      "readTimeMinutes": 1,
+      "content": "**Aufnehmen:**\n\n- Eine Projektbeschreibung in einem Satz\n- Stack und unterstützte Versionen\n- Befehle für Build, Tests und Linting\n- Prüfbare Konventionen\n- Wichtige Pfade und Projektbegriffe\n- Links auf gepflegte Architektur- oder Deployment-Doku\n\n**Nicht aufnehmen:**\n\n- Geheimnisse, Tokens, Zugangsdaten und personenbezogene Daten\n- Vage Anweisungen wie \"schreibe guten Code\"\n- Alte Historie\n- Lange Abläufe, die in einen Skill oder eine gepflegte Anleitung gehören\n- Pfadsperren (sensible Pfade sperrst du mit Berechtigungsregeln)\n\nJede Zeile kostet Kontext, und in einer langen Datei geht eine Anweisung eher unter. Anthropic empfiehlt kurze, klar strukturierte Regeln und nennt weniger als 200 Zeilen pro Datei als Richtwert. Imports ordnen Inhalte, werden beim Start aber genauso geladen."
     },
     {
       "id": "template",
       "title": "Eine praktische Vorlage",
-      "readTimeMinutes": 1,
+      "readTimeMinutes": 2,
       "content": "```\n# <Projektname>\n\n## Was das ist\nEin oder zwei Sätze: wer es nutzt, was es tut. Link zur README.\n\n## Stack\n- Sprache, Framework, Versionen\n- Build- und Test-Tools\n\n## Konventionen\n- Tests als `*.test.ts` neben den Code legen\n- Stil- und Namensregeln, die das Team durchsetzt\n\n## Befehle\n- `yarn build`: Produktions-Build\n- `yarn test`: Unit-Tests (vor dem Commit ausführen)\n- `yarn test:e2e`: E2E-Suite (langsam, nur auf CI)\n- `arc lint`: Linter und Formatter\n\n## Nicht tun\n- Neue npm-Abhängigkeiten ohne Rücksprache hinzufügen\n- `any` in TypeScript verwenden\n- Dateien in `generated/` bearbeiten\n\n## Terminologie\n- \"Workspace\" statt \"Projekt\"\n- \"Mitglied\" statt \"Benutzer\" in Texten für Kunden\n\n## Wo die Dinge liegen\n- Architektur-Notizen: `@docs/architecture.md`\n- Deployment: `@docs/deploy.md`\n```"
     },
     {
       "id": "auto-memory",
       "title": "Auto-Memory und Projektanweisungen",
-      "readTimeMinutes": 2,
+      "readTimeMinutes": 1,
       "content": "Claude-Code-Versionen mit Auto-Memory können Projektnotizen in lokale Markdown-Dateien schreiben. Die Funktion ist konfigurierbar, speichert nicht in jeder Sitzung etwas und taugt nicht als verlässliches Gedächtnis.\n\n- **CLAUDE.md:** von Menschen gepflegt, für gemeinsame, geprüfte Projektregeln.\n- **Auto-Memory:** lokal ausgewählte Notizen, geteilt zwischen Worktrees desselben Repositorys auf derselben Maschine.\n\nMit `/memory` prüfst, bearbeitest, deaktivierst oder löschst du Notizen. Geheimnisse gehören in keine der beiden Dateiarten."
     }
   ],

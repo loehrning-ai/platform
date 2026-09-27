@@ -38,21 +38,21 @@ const lesson: DataInfraLesson = {
       title: "The metadata layer",
       readTimeMinutes: 3,
       content:
-        "Iceberg keeps five layers of pointers between a table name and its rows. Reads walk down, writes walk up:\n\n1. **Catalog** (Glue, Hive Metastore, Nessie, REST), maps each table name to its current `metadata.json` path.\n2. **`metadata.json`**, snapshot history, schemas, partition specs. `current_snapshot` points to a manifest list.\n3. **Manifest list** (Avro), one row per manifest with partition range stats, so a query can skip whole manifests.\n4. **Manifest** (Avro), one row per data file with column stats, so a query can skip files.\n5. **Data files** (Parquet), the rows.\n\nA read resolves `orders` → `v18.json` via the catalog, takes the current snapshot, prunes manifests and files by their stats and opens only the remaining Parquet files.\n\nA write goes the other way: data files, manifest, manifest list, metadata file. Then one atomic compare-and-swap moves the catalog pointer from `v17.json` to `v18.json`, and that CAS *is* the commit. If it fails, the draft files stay orphaned until VACUUM removes them.",
+        "Iceberg keeps five layers of pointers between a table name and its rows. Reads walk down, writes walk up:\n\n1. **Catalog** (Glue, Hive Metastore, Nessie, REST), maps each table name to its current `metadata.json` path.\n2. **`metadata.json`**, snapshot history, schemas, partition specs. `current_snapshot` points to a manifest list.\n3. **Manifest list** (Avro), one row per manifest with partition range stats, so a query can skip whole manifests.\n4. **Manifest** (Avro), one row per data file with column stats, so a query can skip files.\n5. **Data files** (Parquet), the rows.\n\nA read resolves `orders` → `v18.json` via the catalog, takes the current snapshot, prunes manifests and files by their stats and opens only the remaining Parquet files.\n\nA write goes the other way: data files, manifest, manifest list, metadata file. Then one atomic compare-and-swap moves the catalog pointer from `v17.json` to `v18.json`, and that CAS *is* the commit. If it fails, the draft files stay orphaned until orphan-file cleanup removes them.",
     },
     {
       id: "s3",
       title: "ACID & catalogs",
       readTimeMinutes: 3,
       content:
-        "A commit protocol publishes a new table state without exposing a partial update. In Iceberg's optimistic model, writers prepare changes concurrently, then validate and atomically swap the metadata pointer.\n\n1. Writer A and Writer B read `v18.json`.\n2. Each writes candidate data and metadata files.\n3. Writer A atomically commits a new metadata location.\n4. Writer B's stale-base commit fails. It revalidates against the new state before retrying, or returns a conflict.\n\nConflicts and cost still depend on operation type, engine options, catalog guarantees and format rules, and failed attempts leave files that maintenance must clean up safely.\n\nThe catalog is part of correctness: it resolves a table to its metadata and must provide the atomic operations the format needs. Hive Metastore, managed, REST and governance catalogs differ in protocol support, authorization, availability and ownership, so verify these for yours.",
+        "A commit protocol publishes a new table state without exposing a partial update.\n\n1. Writer A and Writer B read `v18.json`.\n2. Each writes candidate data and metadata files.\n3. Writer A atomically commits a new metadata location.\n4. Writer B's stale-base commit fails. It revalidates against the new state before retrying, or returns a conflict.\n\nConflicts and cost still depend on operation type, engine options, catalog guarantees and format rules, and failed attempts leave files that maintenance must clean up safely.\n\nThe catalog is part of correctness: it resolves a table to its metadata and must provide the atomic operations the format needs. Hive Metastore, managed, REST and governance catalogs differ in protocol support, authorization, availability and ownership, so verify these for yours.",
     },
     {
       id: "s4",
-      title: "Snapshot timeline",
+      title: "Time travel cost",
       readTimeMinutes: 2,
       content:
-        "The timeline is a fixed example sequence of snapshots; pick an earlier one to see metadata resolve a prior state. Query and rollback cost depend on metadata size, catalog and storage latency, planning and retained files. Time travel holds storage until retention and garbage collection remove unreachable data.",
+        "The snapshot model above is a fixed example sequence of snapshots; pick an earlier one to see metadata resolve a prior state. Query and rollback cost depend on metadata size, catalog and storage latency, planning and retained files. Time travel holds storage until retention and garbage collection remove unreachable data.",
     },
     {
       id: "s5",
@@ -60,15 +60,13 @@ const lesson: DataInfraLesson = {
       readTimeMinutes: 3,
       content:
         "On object storage, an update publishes new files or delete metadata; bytes are never edited in place. So `UPDATE orders SET status='shipped' WHERE id=42` forces a trade-off:\n\n- **Copy-on-Write (CoW).** Rewrite the affected files and publish a snapshot with the replacements. Reads stay simple; updates amplify writes.\n- **Merge-on-Read (MoR).** Write new records or delete information separately and merge them at read time or during compaction. Updates write less; reads and maintenance do more.\n\nDelete-file types, defaults and engine support differ by version. Decide from measured update rate, read pattern, file size, maintenance capacity and delete semantics.",
-      keyTakeaway:
-        "Rare updates and heavy reads suggest CoW; frequent CDC-style updates suggest MoR.",
     },
     {
       id: "s6",
       title: "Format comparison",
       readTimeMinutes: 3,
       content:
-        "Check each cell of this matrix against current docs and a small compatibility test:\n\n| Decision | Evidence to collect |\n|---|---|\n| Engine interoperability | Read and write operations per exact engine version |\n| Commit and isolation | Catalog atomicity, write validation, retries, unknown-commit recovery |\n| Updates and deletes | CoW/MoR support, delete representation, merge cost, privacy deletion |\n| Schema and partition evolution | Supported changes, reader compatibility, old-file rewrites |\n| Incremental processing | Change-feed semantics, ordering, retention, checkpoint identity |\n| Operations | Compaction, snapshot expiration, orphan cleanup, observability, disaster recovery |\n| Governance | Authorization, audit events, encryption, catalog availability, ownership |\n\nEngine integrations can lag the specification or support only some operations.",
+        "Check each cell of this matrix against current docs and a small compatibility test:\n\n| Decision | Evidence to collect |\n|---|---|\n| Engine interoperability | Read and write operations per exact engine version |\n| Commit and isolation | Catalog atomicity, write validation, retries, unknown-commit recovery |\n| Updates and deletes | CoW/MoR support, delete representation, merge cost, privacy deletion |\n| Schema and partition evolution | Supported changes, reader compatibility, old-file rewrites (after partition evolution, old files keep their spec) |\n| Incremental processing | Change-feed semantics, ordering, retention, checkpoint identity |\n| Operations | Compaction, snapshot expiration, orphan cleanup, observability, disaster recovery |\n| Governance | Authorization, audit events, encryption, catalog availability, ownership |\n\nEngine integrations can lag the specification or support only some operations.",
     },
     {
       id: "s7",
@@ -81,14 +79,14 @@ const lesson: DataInfraLesson = {
       title: "Key takeaways",
       readTimeMinutes: 2,
       content:
-        "- After partition evolution, old files keep their spec and new files use the new one.\n- Prove reads, writes, deletes, evolution and recovery on your exact engine versions.",
+        "- Rare updates and heavy reads suggest CoW; frequent CDC-style updates suggest MoR.",
     },
     {
       id: "s9",
       title: "Vocab",
       readTimeMinutes: 2,
       content:
-        "- **Snapshot**, metadata for one committed table state.\n- **Snapshot expiration / VACUUM**, removes history and unreferenced files under product rules.\n- **Hidden partitioning**, derives partition values from source columns, so queries filter on those columns.\n- **Compaction**, rewrites small files into a new layout.\n- **Z-order**, multidimensional clustering that improves data skipping for chosen predicates.",
+        "- **Snapshot**, metadata for one committed table state.\n- **Snapshot expiration / VACUUM**, removes history and, under product rules, eventually unreferenced files.\n- **Hidden partitioning**, derives partition values from source columns, so queries filter on those columns.\n- **Compaction**, rewrites small files into a new layout.\n- **Z-order**, multidimensional clustering that improves data skipping for chosen predicates.",
     },
   ],
   widgets: [
@@ -101,7 +99,7 @@ const lesson: DataInfraLesson = {
         title: "GDPR delete",
         copy: DATA_INFRA_QUIZ_COPY,
         question:
-          "Your Iceberg table uses CoW. A user asks you to delete their ~50 rows, spread over 30 of 4,800 data files. What happens on DELETE?",
+          "Your Iceberg table uses CoW. A user asks you to delete their ~50 rows, spread over 30 of 4800 data files. What happens on DELETE?",
         options: [
           "The 50 rows are rewritten in place.",
           "A delete marker file is written; nothing else changes.",

@@ -49,7 +49,7 @@
   },
   {
     "term": "Transparenzpflicht",
-    "definition": "Obligations for certain limited-risk AI under Art. 50: people must be able to recognise that they are interacting with AI, and AI-generated or manipulated content, such as deepfakes and generated text, must be disclosed where the Article applies.",
+    "definition": "Obligations for certain limited-risk AI under Art. 50: people must be able to recognise that they are interacting with AI, and AI-generated or manipulated content, such as deepfakes and generated text, must be disclosed in the cases of Art. 50(4).",
     "english": "Transparency Obligation",
     "category": "regulatorik",
     "relatedTerms": ["Wasserzeichen", "Deepfake"],
@@ -57,7 +57,7 @@
   },
   {
     "term": "Minimales Risiko",
-    "definition": "The bottom level of the risk pyramid, such as spam filters, warehouse AI or recommendation systems, with no risk-class obligations. Art. 4 on AI literacy has still applied since 2 February 2025.",
+    "definition": "The bottom level of the risk pyramid, such as spam filters, warehouse AI or recommendation systems, with no risk-class obligations. Art. 4 on AI literacy applies anyway, as it has since 2 February 2025.",
     "english": "Minimal Risk",
     "category": "regulatorik",
     "relatedTerms": ["Risikopyramide", "Verhaltenskodex"],
