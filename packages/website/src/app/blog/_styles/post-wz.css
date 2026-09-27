@@ -1,0 +1,964 @@
+/* ================================================================
+   WERKZEICHNUNG ARTICLE: paper, ink, one red pencil.
+   Scoped to .post-wz so the older editorial article (post.css) is
+   untouched. Tokens come from the site theme (--color-*), which already
+   carries the Werkzeichnung palette. No :root rules, no uppercase, no
+   italics, no serif, radius 0, no shadows. Mennige appears once per
+   section at most: the print button and the current Route station.
+   ================================================================ */
+
+.post-wz {
+  --wz-ink: var(--color-foreground, #121212);
+  --wz-slate: var(--color-muted-foreground, #4f4640);
+  --wz-slate-light: var(--color-muted, #655c54);
+  --wz-paper: var(--color-background, #f3f0e9);
+  --wz-sheet: var(--color-card, #f9f7f2);
+  --wz-inset: var(--color-inset, #e5e4e2);
+  --wz-hair: var(--color-hairline, #d4cec5);
+  --wz-edge: var(--color-border, #827970);
+  --wz-accent: var(--color-kupfer, #b73a15);
+  --wz-accent-deep: var(--color-kupfer-dark, #97300f);
+  --wz-gutter: clamp(16px, 4vw, 40px);
+  --wz-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: var(--font-loehrning-sans), "Inter", system-ui, sans-serif;
+  color: var(--wz-ink);
+  background: var(--wz-paper);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.post-wz a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+.post-wz a:hover {
+  text-decoration-thickness: 2px;
+}
+/* Focus: the site ring from globals.css (3px Mennige, 2px offset) applies
+   unchanged, so tabbing from the railbar into the article keeps one ring. */
+.post-wz .wz-num {
+  font-variant-numeric: tabular-nums;
+}
+.post-wz .wz-mono {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 13px;
+}
+
+/* ---------- hero ---------- */
+.wz-hero {
+  max-width: 75rem;
+  margin: 0 auto;
+  padding: 48px var(--wz-gutter) 32px;
+}
+.wz-hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+  color: var(--wz-slate);
+  margin-bottom: 20px;
+}
+.wz-hero__meta > span {
+  white-space: nowrap;
+}
+/* The dot ends the item before it, so a wrapped line never starts with a
+   separator. The empty alternative text keeps screen readers from reading it;
+   the first declaration is the fallback where that syntax is unsupported. */
+.wz-hero__meta > span:not(:last-child)::after {
+  content: "·";
+  content: "·" / "";
+  margin-left: 12px;
+  color: var(--wz-slate-light);
+}
+.wz-hero__title {
+  font-size: clamp(2.25rem, 1.5rem + 2.6vw, 3.25rem);
+  line-height: 1.05;
+  letter-spacing: -0.012em;
+  font-weight: 700;
+  max-width: 22ch;
+  text-wrap: balance;
+}
+.wz-hero__lede {
+  margin-top: 20px;
+  font-size: 20px;
+  line-height: 1.45;
+  max-width: 56ch;
+  text-wrap: pretty;
+}
+.wz-hero__intro {
+  margin-top: 16px;
+  max-width: 64ch;
+  text-wrap: pretty;
+}
+.wz-hero__facts {
+  margin-top: 32px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--wz-hair);
+}
+.wz-hero__fact {
+  padding: 12px 16px 0 0;
+}
+.wz-hero__fact dt {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--wz-slate);
+}
+.wz-hero__fact dd {
+  font-size: 15px;
+  line-height: 1.45;
+  margin-top: 2px;
+}
+
+/* ---------- sections ---------- */
+.wz-section {
+  max-width: 75rem;
+  margin: 0 auto;
+  padding: 48px var(--wz-gutter);
+  scroll-margin-top: calc(var(--nav-h, 64px) + 60px);
+}
+.wz-head {
+  border-top: 2px solid var(--wz-ink);
+  padding-top: 16px;
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  column-gap: 8px;
+  align-items: baseline;
+}
+.wz-head__index {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--wz-slate);
+  font-variant-numeric: tabular-nums;
+}
+.wz-head__title {
+  font-size: clamp(1.625rem, 1.3rem + 1.2vw, 2.25rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  font-weight: 700;
+  max-width: 30ch;
+  text-wrap: balance;
+}
+.wz-body {
+  margin-top: 32px;
+  margin-left: calc(3rem + 8px);
+}
+.wz-prose {
+  max-width: 64ch;
+}
+.wz-prose > * + * {
+  margin-top: 16px;
+}
+.wz-caption {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--wz-slate);
+  max-width: 64ch;
+}
+.wz-route + .wz-caption,
+.wz-table + .wz-caption {
+  margin-top: 12px;
+}
+
+/* ---------- Route: square stations on a 2px line ---------- */
+.wz-route {
+  list-style: none;
+  margin-top: 32px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+}
+.wz-route__station {
+  position: relative;
+  padding: 28px 16px 0 0;
+}
+.wz-route__station::before {
+  /* the line */
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 0;
+  right: 0;
+  border-top: 2px solid var(--wz-ink);
+}
+.wz-route__station[data-state="future"]::before,
+.wz-route__station[data-state="current"]::before {
+  border-top-style: dashed;
+}
+.wz-route__station:last-child::before {
+  right: calc(100% - 14px);
+}
+.wz-route__mark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 14px;
+  height: 14px;
+  background: var(--wz-ink);
+  border: 2px solid var(--wz-ink);
+}
+.wz-route__station[data-state="current"] .wz-route__mark {
+  background: var(--wz-accent);
+  border-color: var(--wz-accent);
+  box-shadow: inset 0 0 0 3px var(--wz-accent), inset 0 0 0 5px var(--wz-paper);
+}
+.wz-route__station[data-state="future"] .wz-route__mark {
+  background: var(--wz-paper);
+}
+.wz-route__date {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.wz-route__what {
+  display: block;
+  margin-top: 4px;
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--wz-slate);
+  max-width: 28ch;
+}
+
+/* ---------- can / cannot ---------- */
+.wz-split {
+  margin-top: 32px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 32px;
+}
+.wz-split__title {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--wz-ink);
+}
+.wz-list {
+  list-style: none;
+}
+.wz-list li {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: 8px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--wz-hair);
+  font-size: 16px;
+  line-height: 1.5;
+}
+.wz-list li::before {
+  content: "";
+  width: 9px;
+  height: 9px;
+  margin-top: 8px;
+  background: var(--wz-ink);
+  border: 1.5px solid var(--wz-ink);
+}
+.wz-list--outline li::before {
+  background: transparent;
+}
+.wz-list__ref {
+  color: var(--wz-slate);
+  white-space: nowrap;
+}
+
+/* ---------- table ---------- */
+.wz-table {
+  margin-top: 40px;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  line-height: 1.45;
+}
+.wz-table caption {
+  text-align: left;
+  font-size: 18px;
+  font-weight: 700;
+  padding-bottom: 12px;
+}
+.wz-table thead th {
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--wz-slate);
+  padding: 10px 16px 10px 0;
+  border-top: 2px solid var(--wz-ink);
+  border-bottom: 1px solid var(--wz-ink);
+}
+.wz-table td,
+.wz-table tbody th {
+  text-align: left;
+  vertical-align: top;
+  padding: 12px 16px 12px 0;
+  border-bottom: 1px solid var(--wz-hair);
+  font-weight: 400;
+}
+.wz-table tbody th {
+  font-weight: 600;
+  width: 46%;
+}
+.wz-table td:last-child {
+  white-space: nowrap;
+  color: var(--wz-slate);
+}
+
+/* ---------- the question sheet (an object: raised sheet, ink outline) ---------- */
+.wz-sheet-tools {
+  margin-top: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+}
+.wz-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 1px solid var(--wz-edge);
+  border-radius: 0;
+  background: transparent;
+  color: var(--wz-ink);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 120ms var(--wz-ease),
+    border-color 120ms var(--wz-ease);
+}
+.post-wz a.wz-btn {
+  text-decoration: none;
+}
+.wz-btn:hover {
+  border-color: var(--wz-ink);
+  background: var(--color-card-hover, #efebe2);
+}
+.wz-btn--primary {
+  background: var(--wz-accent);
+  border-color: var(--wz-accent);
+  color: var(--wz-sheet);
+}
+.wz-btn--primary:hover {
+  background: var(--wz-accent-deep);
+  border-color: var(--wz-accent-deep);
+}
+.wz-sheet {
+  margin-top: 24px;
+  background: var(--wz-sheet);
+  border: 1px solid var(--wz-ink);
+  padding: 32px clamp(16px, 3vw, 40px) 40px;
+}
+.wz-sheet__mast {
+  display: grid;
+  gap: 8px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--wz-ink);
+}
+.wz-sheet__title {
+  font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+}
+.wz-sheet__intro {
+  max-width: 70ch;
+  font-size: 16px;
+  line-height: 1.55;
+}
+.wz-sheet__status {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--wz-slate);
+  max-width: 90ch;
+}
+.wz-steps__title {
+  margin-top: 24px;
+  font-size: 19px;
+  line-height: 1.25;
+  font-weight: 700;
+}
+.wz-steps {
+  list-style: none;
+  counter-reset: wz-step;
+  margin-top: 8px;
+  max-width: 76ch;
+}
+.wz-steps li {
+  counter-increment: wz-step;
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--wz-hair);
+  font-size: 15px;
+  line-height: 1.5;
+}
+.wz-steps li::before {
+  content: counter(wz-step);
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid var(--wz-ink);
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.wz-steps__after {
+  margin-top: 20px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.wz-group {
+  margin-top: 40px;
+}
+.wz-group__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 2px solid var(--wz-ink);
+}
+.wz-group__letter {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  background: var(--wz-ink);
+  color: var(--wz-sheet);
+  font-size: 15px;
+  font-weight: 700;
+}
+.wz-group__title {
+  font-size: 19px;
+  line-height: 1.25;
+  font-weight: 700;
+}
+.wz-q {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr) minmax(12rem, 17rem);
+  column-gap: 20px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--wz-hair);
+  scroll-margin-top: calc(var(--nav-h, 64px) + 60px);
+}
+.wz-q:last-child {
+  border-bottom: 0;
+}
+/* The H5 holds the number square and the question, so heading navigation
+   hears the number. It spans the number and text columns as a subgrid; the
+   first grid-template-columns is the fallback without subgrid. */
+.wz-q__head {
+  grid-column: 1 / 3;
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  grid-template-columns: subgrid;
+  align-items: start;
+  font: inherit;
+  margin: 0;
+}
+.wz-q__num {
+  grid-column: 1;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1.5px solid var(--wz-ink);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.wz-q__text {
+  grid-column: 2;
+  display: block;
+  font-size: 18px;
+  line-height: 1.35;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  text-wrap: pretty;
+}
+.wz-q__label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--wz-slate);
+}
+.wz-q__answer {
+  margin-top: 12px;
+  font-size: 15px;
+  line-height: 1.55;
+  max-width: 68ch;
+}
+.wz-q__answer p {
+  margin-top: 2px;
+}
+.wz-q__basis {
+  grid-column: 3;
+  grid-row: 1 / span 3;
+  font-size: 14px;
+  line-height: 1.45;
+  padding-left: 16px;
+  border-left: 1px solid var(--wz-hair);
+}
+.wz-q__basis p {
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+.wz-q__aside {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--wz-slate);
+  max-width: 68ch;
+}
+.wz-q__aside::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  margin-top: 5px;
+  background: var(--wz-slate);
+}
+.wz-q__aside--open::before {
+  background: transparent;
+  border: 1.5px dashed var(--wz-ink);
+  width: 9px;
+  height: 9px;
+}
+.wz-q__aside b {
+  font-weight: 700;
+  color: var(--wz-ink);
+}
+.wz-q > :not(.wz-q__head):not(.wz-q__basis) {
+  grid-column: 2;
+}
+/* A URL wraps only after a slash (the <wbr> between parts), never at a
+   hyphen, so a wrapped URL cannot be mistaken for a hyphenated word. */
+.wz-url__part {
+  white-space: nowrap;
+}
+.wz-sheet__limits {
+  margin-top: 40px;
+  padding-top: 12px;
+  border-top: 2px solid var(--wz-ink);
+  font-size: 15px;
+  line-height: 1.55;
+}
+.wz-sheet__limits h4 {
+  font-size: 19px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.wz-sheet__limits p + p {
+  margin-top: 10px;
+}
+.wz-sheet__sources {
+  display: none;
+}
+.wz-sheet__licence {
+  margin-top: 24px;
+  font-size: 13px;
+  color: var(--wz-slate);
+}
+
+/* ---------- exercise, limits, links, sources ---------- */
+.wz-task {
+  margin-top: 40px;
+  max-width: 64ch;
+  padding-top: 12px;
+  border-top: 2px solid var(--wz-ink);
+}
+.wz-task__label {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--wz-slate);
+}
+.wz-task p {
+  margin-top: 6px;
+}
+.wz-rows {
+  list-style: none;
+  margin-top: 8px;
+  max-width: 64rem;
+}
+.wz-rows > li {
+  border-bottom: 1px solid var(--wz-hair);
+}
+.wz-row {
+  display: grid;
+  grid-template-columns: minmax(0, 16rem) minmax(0, 1fr) auto;
+  gap: 4px 24px;
+  align-items: baseline;
+  min-height: 44px;
+  padding: 14px 0;
+}
+.post-wz a.wz-row {
+  text-decoration: none;
+}
+.post-wz a.wz-row:hover .wz-row__title {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+.wz-row__title {
+  font-weight: 700;
+  font-size: 17px;
+}
+.wz-row__desc {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--wz-slate);
+}
+.wz-row__meta {
+  font-size: 14px;
+  color: var(--wz-slate);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.wz-row__source {
+  display: block;
+  margin-top: 2px;
+}
+.wz-subhead {
+  margin-top: 40px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* ---------- phone and tablet ---------- */
+@media (max-width: 1023px) {
+  .wz-q {
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+  }
+  .wz-q__basis {
+    grid-column: 2;
+    grid-row: auto;
+    order: 2;
+    margin-top: 10px;
+    padding-left: 0;
+    border-left: 0;
+  }
+  .wz-q__answer {
+    order: 3;
+  }
+  .wz-q__aside {
+    order: 4;
+  }
+}
+@media (max-width: 899px) {
+  .wz-body {
+    margin-left: 0;
+  }
+  .wz-head {
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+  }
+  .wz-hero__facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .wz-hero__fact {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--wz-hair);
+  }
+  .wz-route {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .wz-route__station {
+    padding: 0 0 20px 32px;
+  }
+  .wz-route__station::before {
+    top: 0;
+    bottom: 0;
+    left: 6px;
+    right: auto;
+    border-top: 0;
+    border-left: 2px solid var(--wz-ink);
+  }
+  .wz-route__station[data-state="future"]::before,
+  .wz-route__station[data-state="current"]::before {
+    border-left-style: dashed;
+  }
+  .wz-route__station:last-child::before {
+    bottom: calc(100% - 14px);
+  }
+  .wz-split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .wz-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  .wz-table,
+  .wz-table caption,
+  .wz-table tbody,
+  .wz-table tr,
+  .wz-table td,
+  .wz-table tbody th {
+    display: block;
+    width: auto;
+  }
+  .wz-table tr {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--wz-hair);
+  }
+  .wz-table td,
+  .wz-table tbody th {
+    padding: 2px 0;
+    border: 0;
+    white-space: normal;
+  }
+  .wz-table td::before {
+    content: attr(data-label) " ";
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--wz-slate);
+  }
+  .wz-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .wz-row__desc {
+    grid-column: 1 / -1;
+  }
+  .wz-sheet {
+    margin-left: calc(-1 * var(--wz-gutter));
+    margin-right: calc(-1 * var(--wz-gutter));
+    border-left: 0;
+    border-right: 0;
+  }
+}
+
+/* ---------- print ----------
+   The print button sets html[data-print-scope="sheet"]; then only the sheet
+   prints, on the named A4 page. A plain browser print keeps the article. */
+@page wz-sheet {
+  size: A4;
+  margin: 14mm 14mm 16mm;
+}
+@media print {
+  .post-wz {
+    background: #fff;
+    color: #000;
+    font-size: 10pt;
+    line-height: 1.35;
+  }
+  .post-wz .wz-q__answer .wz-q__label,
+  .post-wz .wz-q__answer p {
+    display: inline;
+  }
+  .post-wz .wz-q__answer {
+    margin-top: 1.5mm;
+    line-height: 1.35;
+  }
+  .post-wz .wz-q__aside {
+    margin-top: 1mm;
+    line-height: 1.3;
+  }
+  .post-wz .wz-q__aside::before {
+    margin-top: 1mm;
+  }
+  .post-wz .wz-sheet-tools {
+    display: none !important;
+  }
+  html[data-print-scope="sheet"] .post-wz > :not(#fragen),
+  html[data-print-scope="sheet"] #fragen > :not(.wz-sheet) {
+    display: none !important;
+  }
+  html[data-print-scope="sheet"] .post-wz #fragen {
+    padding: 0;
+  }
+  .post-wz .wz-sheet {
+    page: wz-sheet;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: #fff;
+  }
+  .post-wz .wz-sheet__title {
+    font-size: 15pt;
+  }
+  .post-wz .wz-sheet__intro,
+  .post-wz .wz-steps li,
+  .post-wz .wz-q__answer,
+  .post-wz .wz-sheet__limits {
+    font-size: 9pt;
+  }
+  .post-wz .wz-sheet__status,
+  .post-wz .wz-q__aside,
+  .post-wz .wz-q__label,
+  .post-wz .wz-sheet__licence {
+    font-size: 8pt;
+    color: #333;
+  }
+  .post-wz .wz-q {
+    grid-template-columns: 8mm minmax(0, 1fr) 40mm;
+    column-gap: 4mm;
+    padding: 2.2mm 0;
+    break-inside: avoid;
+    border-color: #999 !important;
+  }
+  .post-wz .wz-q__basis {
+    grid-column: 3;
+    grid-row: 1 / span 3;
+    margin-top: 0;
+    padding-left: 3mm;
+    border-left: 0.5pt solid #999 !important;
+    font-size: 8pt;
+    line-height: 1.3;
+  }
+  .post-wz .wz-q__text {
+    font-size: 10pt;
+    line-height: 1.25;
+  }
+  .post-wz .wz-sheet__mast {
+    padding-bottom: 3mm;
+  }
+  .post-wz .wz-q__num {
+    width: 6mm;
+    height: 6mm;
+    font-size: 8.5pt;
+    border-color: #000 !important;
+  }
+  .post-wz .wz-group {
+    margin-top: 5mm;
+  }
+  .post-wz .wz-group__head {
+    break-after: avoid;
+    border-top-color: #000 !important;
+  }
+  .post-wz .wz-group__letter {
+    background: #000;
+    color: #fff;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  .post-wz .wz-sheet__mast,
+  .post-wz .wz-sheet__limits {
+    border-color: #000 !important;
+  }
+  .post-wz .wz-steps__title {
+    margin-top: 3mm;
+    font-size: 11pt;
+    break-after: avoid;
+  }
+  .post-wz .wz-steps {
+    margin-top: 1mm;
+    max-width: none;
+    column-count: 2;
+    column-gap: 6mm;
+  }
+  .post-wz .wz-steps li {
+    break-inside: avoid;
+    padding: 1.2mm 0;
+    grid-template-columns: 5mm minmax(0, 1fr);
+    gap: 2mm;
+  }
+  .post-wz .wz-steps li::before {
+    width: 4.5mm;
+    height: 4.5mm;
+    font-size: 7.5pt;
+  }
+  .post-wz .wz-steps li::before {
+    border-color: #000 !important;
+  }
+  .post-wz .wz-sheet__limits {
+    break-inside: avoid;
+  }
+  .post-wz .wz-sheet__sources {
+    display: block;
+    margin-top: 4mm;
+    font-size: 8pt;
+    break-inside: avoid;
+  }
+  .post-wz .wz-sheet__sources li {
+    list-style: none;
+  }
+  .post-wz a {
+    text-decoration: none;
+  }
+
+  /* Whole-article print (plain browser print). globals.css greys every
+     border on paper; the article's structural rules stay ink, its hairlines
+     a mid grey. Fills that carry meaning print even with background
+     graphics switched off. */
+  .post-wz .wz-head,
+  .post-wz .wz-split__title,
+  .post-wz .wz-table thead th,
+  .post-wz .wz-task,
+  .post-wz .wz-route__mark {
+    border-color: #000 !important;
+  }
+  .post-wz .wz-hero__facts,
+  .post-wz .wz-hero__fact,
+  .post-wz .wz-list li,
+  .post-wz .wz-rows > li,
+  .post-wz .wz-table tr,
+  .post-wz .wz-table td,
+  .post-wz .wz-table tbody th {
+    border-color: #999 !important;
+  }
+  .post-wz .wz-route__mark,
+  .post-wz .wz-list li::before,
+  .post-wz .wz-q__aside::before {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* One type scale on paper: prose 10pt, lede 11pt, lists 10pt, tables and
+     rows 9.5pt, labels 8.5 to 9pt. */
+  .post-wz .wz-hero__title {
+    font-size: 20pt;
+  }
+  .post-wz .wz-hero__lede {
+    font-size: 11pt;
+  }
+  .post-wz .wz-hero__meta,
+  .post-wz .wz-head__index,
+  .post-wz .wz-route__date,
+  .post-wz .wz-table thead th,
+  .post-wz .wz-row__meta,
+  .post-wz .wz-task__label {
+    font-size: 9pt;
+  }
+  .post-wz .wz-hero__fact dt,
+  .post-wz .wz-caption,
+  .post-wz .wz-mono,
+  .post-wz .wz-table td::before {
+    font-size: 8.5pt;
+  }
+  .post-wz .wz-hero__fact dd,
+  .post-wz .wz-route__what,
+  .post-wz .wz-table,
+  .post-wz .wz-row__desc {
+    font-size: 9.5pt;
+  }
+  .post-wz .wz-head__title {
+    font-size: 15pt;
+  }
+  .post-wz .wz-split__title,
+  .post-wz .wz-table caption,
+  .post-wz .wz-subhead {
+    font-size: 11pt;
+  }
+  .post-wz .wz-list li,
+  .post-wz .wz-row__title {
+    font-size: 10pt;
+  }
+}

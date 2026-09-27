@@ -11,7 +11,7 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
   `src/lib/demos.ts`,
   `src/lib/blog-metadata.ts`, `src/lib/courses/catalog.ts`,
   `src/lib/open-source/artifacts.ts`).
-- Generated from the canonical content date: 2026-09-26. Owner of every page: Tim Löhr.
+- Generated from the canonical content date: 2026-09-27. Owner of every page: Tim Löhr.
 - This is a mechanically generated publication inventory, not a fabricated
   keyword, schema, or internal-link audit. It includes only values proved by
   the crawl contract, source files, and typed content catalogs. Generation
@@ -23,38 +23,39 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 
 | Canonical URL | Source/proof asset | Freshness evidence | In sitemap | Owner |
 | --- | --- | --- | --- | --- |
-| https://loehrning.ai | src/app/page.tsx | canonical content date 2026-09-26 | yes | Tim Löhr |
-| https://loehrning.ai/einstieg | src/app/einstieg/page.tsx | canonical content date 2026-09-26 | yes | Tim Löhr |
-| https://loehrning.ai/ki-check | src/app/ki-check/page.tsx | canonical content date 2026-09-26 | yes | Tim Löhr |
-| https://loehrning.ai/kurse | src/app/kurse/page.tsx | canonical content date 2026-09-26 | yes | Tim Löhr |
-| https://loehrning.ai/kurse/open-source/claude | src/app/kurse/open-source/claude/page.tsx | canonical content date 2026-09-26 | yes | Tim Löhr |
-| https://loehrning.ai/kurse/open-source/codex | src/app/kurse/open-source/codex/page.tsx | canonical content date 2026-09-26 | yes | Tim Löhr |
-| https://loehrning.ai/kurse/open-source/data-infrastructure | src/app/kurse/open-source/data-infrastructure/page.tsx | canonical content date 2026-09-26 | yes | Tim Löhr |
-| https://loehrning.ai/kurse/open-source/data-engineering-fundamentals | src/app/kurse/open-source/data-engineering-fundamentals/page.tsx | canonical content date 2026-09-26 | yes | Tim Löhr |
-| https://loehrning.ai/kurse/open-source/data-science | src/app/kurse/open-source/data-science/page.tsx | canonical content date 2026-09-26 | yes | Tim Löhr |
-| https://loehrning.ai/kurse/open-source/ai-native-operator | src/app/kurse/open-source/ai-native-operator/page.tsx | canonical content date 2026-09-26 | yes | Tim Löhr |
-| https://loehrning.ai/ki-fuehrerschein | src/app/ki-fuehrerschein/page.tsx | canonical content date 2026-09-26 | yes | Tim Löhr |
-| https://loehrning.ai/eu-ai-act-kurs | src/app/eu-ai-act-kurs/page.tsx | canonical content date 2026-09-26 | yes | Tim Löhr |
-| https://loehrning.ai/ai-native | src/app/ai-native/page.tsx | canonical content date 2026-09-26 | yes | Tim Löhr |
-| https://loehrning.ai/ki-und-gesellschaft | src/app/ki-und-gesellschaft/page.tsx | canonical content date 2026-09-26 | yes | Tim Löhr |
-| https://loehrning.ai/blog | src/app/blog/page.tsx | canonical content date 2026-09-26 | yes | Tim Löhr |
-| https://loehrning.ai/buecher | src/app/buecher/page.tsx | canonical content date 2026-09-26 | yes | Tim Löhr |
-| https://loehrning.ai/demos | src/app/demos/page.tsx | canonical content date 2026-09-26 | yes | Tim Löhr |
-| https://loehrning.ai/workshops | src/app/workshops/page.tsx | canonical content date 2026-09-26 | yes | Tim Löhr |
-| https://loehrning.ai/open-source | src/app/open-source/page.tsx | canonical content date 2026-09-26 | yes | Tim Löhr |
-| https://loehrning.ai/open-source/lizenzrichtlinie | src/app/open-source/lizenzrichtlinie/page.tsx | canonical content date 2026-09-26 | yes | Tim Löhr |
-| https://loehrning.ai/ueber-mich | src/app/ueber-mich/page.tsx | canonical content date 2026-09-26 | yes | Tim Löhr |
-| https://loehrning.ai/neuigkeiten | src/app/neuigkeiten/page.tsx | canonical content date 2026-09-26 | yes | Tim Löhr |
-| https://loehrning.ai/hilfe | src/app/hilfe/page.tsx | canonical content date 2026-09-26 | yes | Tim Löhr |
-| https://loehrning.ai/hilfe/eigene-ki | src/app/hilfe/eigene-ki/page.tsx | canonical content date 2026-09-26 | yes | Tim Löhr |
-| https://loehrning.ai/impressum | src/app/impressum/page.tsx | canonical content date 2026-09-26 | yes | Tim Löhr |
-| https://loehrning.ai/datenschutz | src/app/datenschutz/page.tsx | canonical content date 2026-09-26 | yes | Tim Löhr |
+| https://loehrning.ai | src/app/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/einstieg | src/app/einstieg/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/ki-check | src/app/ki-check/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/kurse | src/app/kurse/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/kurse/open-source/claude | src/app/kurse/open-source/claude/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/kurse/open-source/codex | src/app/kurse/open-source/codex/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/kurse/open-source/data-infrastructure | src/app/kurse/open-source/data-infrastructure/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/kurse/open-source/data-engineering-fundamentals | src/app/kurse/open-source/data-engineering-fundamentals/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/kurse/open-source/data-science | src/app/kurse/open-source/data-science/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/kurse/open-source/ai-native-operator | src/app/kurse/open-source/ai-native-operator/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/ki-fuehrerschein | src/app/ki-fuehrerschein/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/eu-ai-act-kurs | src/app/eu-ai-act-kurs/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/ai-native | src/app/ai-native/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/ki-und-gesellschaft | src/app/ki-und-gesellschaft/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/blog | src/app/blog/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/buecher | src/app/buecher/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/demos | src/app/demos/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/workshops | src/app/workshops/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/open-source | src/app/open-source/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/open-source/lizenzrichtlinie | src/app/open-source/lizenzrichtlinie/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/ueber-mich | src/app/ueber-mich/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/neuigkeiten | src/app/neuigkeiten/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/hilfe | src/app/hilfe/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/hilfe/eigene-ki | src/app/hilfe/eigene-ki/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/impressum | src/app/impressum/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
+| https://loehrning.ai/datenschutz | src/app/datenschutz/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
 
-### Blog posts (1)
+### Blog posts (2)
 
 | Canonical URL | Title | Description | Source/proof asset | Freshness evidence | Owner |
 | --- | --- | --- | --- | --- | --- |
 | https://loehrning.ai/blog/eu-ai-act-grundlagen | Der EU AI Act: was er bedeutet, wenn du keine Juristin bist | Was der EU AI Act regelt, was schon gilt und was ab 2. August 2026 dazukommt. Mit dem Stand zum AI Omnibus (J… | src/lib/blog-metadata.ts + src/app/blog/eu-ai-act-grundlagen/page.tsx | manifest dateModified 2026-07-28 | Tim Löhr |
+| https://loehrning.ai/blog/ki-in-der-ausbildung | KI in der Ausbildung: Fragen für JAV und Betriebsrat | Was JAV und Betriebsrat tun können, wenn KI in die Ausbildung kommt, was für Berichtsheft und Prüfung gilt un… | src/lib/blog-metadata.ts + src/app/blog/ki-in-der-ausbildung/page.tsx | manifest dateModified 2026-09-27 | Tim Löhr |
 
 ### Buch-Detailseiten (1)
 
@@ -81,18 +82,18 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 
 | Canonical URL | Title | Description | Source/proof asset | Freshness evidence | Owner |
 | --- | --- | --- | --- | --- | --- |
-| https://loehrning.ai/demos/excel | Claude in Excel. | Du markierst einen Bereich mit erfundenen Absatzzahlen und bekommst Formelvorschläge, einen Pivot-Entwurf und… | src/lib/demos.ts | canonical content date 2026-09-26 | Tim Löhr |
-| https://loehrning.ai/demos/word | Claude in Word. | Du gibst ein Briefing ein und bekommst einen gegliederten Entwurf. Danach prüfst du Stil, Quellen, Freigabe u… | src/lib/demos.ts | canonical content date 2026-09-26 | Tim Löhr |
-| https://loehrning.ai/demos/outbound-workflow | Signale im CRM. | Die Pipeline liest fiktive Kontakte, markiert Signale mit Quelle und schreibt einen Nachrichtenentwurf. Vor j… | src/lib/demos.ts | canonical content date 2026-09-26 | Tim Löhr |
-| https://loehrning.ai/demos/agent-pipeline | Agent-Pipeline. | Du liest die aufgezeichnete Spur von vier Agenten, die zusammen ein Memo schreiben, vom ersten Rechercheschri… | src/lib/demos.ts | canonical content date 2026-09-26 | Tim Löhr |
-| https://loehrning.ai/demos/n8n-supply-chain | Lieferverzug in n8n. | Ein fiktiver Lieferverzug läuft durch Bestandsprüfung, Kundenentwurf und Eskalation. Am Ende gibt ein Mensch… | src/lib/demos.ts | canonical content date 2026-09-26 | Tim Löhr |
-| https://loehrning.ai/demos/rag-vertragsassistent | Vertragsassistent. | Eine Keyword-Suche findet Klauseln in sechs erfundenen Unternehmensdokumenten, von der Rahmenvereinbarung bis… | src/lib/demos.ts | canonical content date 2026-09-26 | Tim Löhr |
-| https://loehrning.ai/demos/rechnung-zu-sap | Rechnung zu SAP. | Eine Beispielrechnung wird extrahiert, gegen Regeln geprüft und vor einem simulierten SAP-Import angehalten. | src/lib/demos.ts | canonical content date 2026-09-26 | Tim Löhr |
-| https://loehrning.ai/demos/prompt-scanner | Prompt-Scanner. | Regeln markieren Namen, IBANs und vertrauliche Begriffe, bevor ein Prompt freigegeben wird. Manche Fälle über… | src/lib/demos.ts | canonical content date 2026-09-26 | Tim Löhr |
-| https://loehrning.ai/demos/cost-drift-observability | Kosten und Drift im Betrieb. | Eine Betriebsansicht mit Beispielwerten für Kosten, Antwortzeit, Fehler und Drift. Du vergleichst vier Anwend… | src/lib/demos.ts | canonical content date 2026-09-26 | Tim Löhr |
-| https://loehrning.ai/demos/fine-tune-playground | Feintuning gegen Basismodell. | Du stellst dieselbe Frage zweimal und vergleichst die Antwort des Basismodells mit der eines angepassten Mode… | src/lib/demos.ts | canonical content date 2026-09-26 | Tim Löhr |
-| https://loehrning.ai/demos/roi-rechner | Annahmen-Rechner. | Du trägst Teamgröße, Stundensatz, Nutzungsquote und gesparte Stunden ein und siehst die Formel und die Spanne… | src/lib/demos.ts | canonical content date 2026-09-26 | Tim Löhr |
-| https://loehrning.ai/demos/llm-observability | Antwortqualität messen. | Du prüfst die automatische Bewertung von vier Beispielantworten. Drei davon hat auch ein Mensch bewertet, und… | src/lib/demos.ts | canonical content date 2026-09-26 | Tim Löhr |
+| https://loehrning.ai/demos/excel | Claude in Excel. | Du markierst einen Bereich mit erfundenen Absatzzahlen und bekommst Formelvorschläge, einen Pivot-Entwurf und… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/word | Claude in Word. | Du gibst ein Briefing ein und bekommst einen gegliederten Entwurf. Danach prüfst du Stil, Quellen, Freigabe u… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/outbound-workflow | Signale im CRM. | Die Pipeline liest fiktive Kontakte, markiert Signale mit Quelle und schreibt einen Nachrichtenentwurf. Vor j… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/agent-pipeline | Agent-Pipeline. | Du liest die aufgezeichnete Spur von vier Agenten, die zusammen ein Memo schreiben, vom ersten Rechercheschri… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/n8n-supply-chain | Lieferverzug in n8n. | Ein fiktiver Lieferverzug läuft durch Bestandsprüfung, Kundenentwurf und Eskalation. Am Ende gibt ein Mensch… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/rag-vertragsassistent | Vertragsassistent. | Eine Keyword-Suche findet Klauseln in sechs erfundenen Unternehmensdokumenten, von der Rahmenvereinbarung bis… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/rechnung-zu-sap | Rechnung zu SAP. | Eine Beispielrechnung wird extrahiert, gegen Regeln geprüft und vor einem simulierten SAP-Import angehalten. | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/prompt-scanner | Prompt-Scanner. | Regeln markieren Namen, IBANs und vertrauliche Begriffe, bevor ein Prompt freigegeben wird. Manche Fälle über… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/cost-drift-observability | Kosten und Drift im Betrieb. | Eine Betriebsansicht mit Beispielwerten für Kosten, Antwortzeit, Fehler und Drift. Du vergleichst vier Anwend… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/fine-tune-playground | Feintuning gegen Basismodell. | Du stellst dieselbe Frage zweimal und vergleichst die Antwort des Basismodells mit der eines angepassten Mode… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/roi-rechner | Annahmen-Rechner. | Du trägst Teamgröße, Stundensatz, Nutzungsquote und gesparte Stunden ein und siehst die Formel und die Spanne… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
+| https://loehrning.ai/demos/llm-observability | Antwortqualität messen. | Du prüfst die automatische Bewertung von vier Beispielantworten. Drei davon hat auch ein Mensch bewertet, und… | src/lib/demos.ts | canonical content date 2026-09-27 | Tim Löhr |
 
 ### Technische Labore (importierte Kurse) (0)
 

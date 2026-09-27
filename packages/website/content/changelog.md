@@ -1,3 +1,13 @@
+## 2026-09-27: Fragenliste zu KI in der Ausbildung
+
+Ein neuer Blogbeitrag erklärt, welche Rechte JAV und Betriebsrat haben, wenn ein Betrieb KI in der Ausbildung einsetzt. Die Fragenliste dazu steht unter CC BY 4.0 zum Drucken und Herunterladen bereit.
+
+### Hinzugefügt
+
+- Blogbeitrag Nº 02 „KI in der Ausbildung: Fragen für JAV und Betriebsrat“ auf Deutsch und Englisch
+- Fragenliste mit Rechtsgrundlagen und Hinweisen, was eine Antwort enthalten sollte
+- Download der Fragenliste als Markdown unter CC BY 4.0
+
 ## 2026-08-09: Zweisprachige Plattformrevision
 
 Diese Revision ordnet Lernangebote nach Grundlagen, technischen Kursen, Workshops und Büchern. Die öffentlichen Seiten und veröffentlichten Lernmaterialien stehen auf Deutsch und Englisch bereit. Zugangsbedingungen, Quellen, Simulationen und externe Abhängigkeiten werden direkt am jeweiligen Inhalt ausgewiesen.

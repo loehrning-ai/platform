@@ -49,6 +49,24 @@ export const BLOG_POSTS: readonly BlogPost[] = [
     readingTimeMin: 11,
     postNumber: 1,
   },
+  {
+    slug: "ki-in-der-ausbildung",
+    titleDe: "KI in der Ausbildung: Fragen für JAV und Betriebsrat",
+    titleEn:
+      "AI in apprenticeships: questions for youth representatives and works councils",
+    summary:
+      "Was JAV und Betriebsrat tun können, wenn KI in die Ausbildung kommt, was für Berichtsheft und Prüfung gilt und welche Fragen vor dem Start geklärt sein sollten. Mit Fragenliste zum Drucken unter CC BY 4.0 und Primärquellen.",
+    summaryEn:
+      "What youth representatives and works councils can do when AI enters apprenticeship training, what applies to the training record and exams, and which questions to settle before launch. With a printable question list under CC BY 4.0 and primary sources.",
+    datePublished: "2026-09-27",
+    dateModified: "2026-09-27",
+    tags: ["KI in der Ausbildung", "Mitbestimmung"],
+    tagsEn: ["AI in apprenticeships", "Co-determination"],
+    // German page: about 3,800 rendered words with the sheet, 16.5 minutes
+    // at 230 words per minute (smoke.test.tsx checks the band).
+    readingTimeMin: 17,
+    postNumber: 2,
+  },
 ];
 
 /** Most recent dateModified across all posts, for "Zuletzt aktualisiert" display. */

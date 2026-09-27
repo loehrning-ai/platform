@@ -9,8 +9,27 @@ describe("legal registry", () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
-  it("contains the complete set of 42 sourced claims", () => {
-    expect(LEGAL_CLAIMS.length).toBe(42);
+  it("contains the complete set of 45 sourced claims", () => {
+    expect(LEGAL_CLAIMS.length).toBe(45);
+  });
+
+  it("records the JAV election window and the unsigned training record as secondary evidence", () => {
+    const start = getLegalClaim("de-betrvg-64-jav-election-start-2026-10-01");
+    const end = getLegalClaim("de-betrvg-64-jav-election-end-2026-11-30");
+    const record = getLegalClaim("de-bbig-43-record-without-signature-2024-08-01");
+    expect(start?.effectiveDate).toBe("2026-10-01");
+    expect(end?.effectiveDate).toBe("2026-11-30");
+    expect(record?.effectiveDate).toBe("2024-08-01");
+    expect(start?.instrument).toBe("BetrVG");
+    expect(end?.instrument).toBe("BetrVG");
+    expect(record?.instrument).toBe("BBiG");
+    // No primary page was opened for these three claims. The registry must
+    // not present them as verified against the statute text.
+    for (const claim of [start, end, record]) {
+      expect(claim?.sourceKind).toBe("secondary");
+      expect(claim?.sourceUrl).not.toContain("gesetze-im-internet.de");
+      expect(claim?.summary).toContain("secondary sources, primary text not opened");
+    }
   });
 
   it("records the KI-MIG as in force and supersedes the negative publication check", () => {

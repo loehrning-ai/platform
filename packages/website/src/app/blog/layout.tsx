@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import "./_styles/blog.css";
 import "./_styles/blog-index.css";
 import "./_styles/post.css";
+import "./_styles/post-wz.css";
 
 const typing = localFont({
   src: [

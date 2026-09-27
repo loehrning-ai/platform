@@ -106,3 +106,54 @@ describe("blog stylesheet isolation", () => {
     expect(unscoped).toEqual([]);
   });
 });
+
+describe("Werkzeichnung article stylesheet isolation (post-wz.css)", () => {
+  const wzRoot = postcss.parse(
+    readFileSync(join(__dirname, "_styles/post-wz.css"), "utf8"),
+  );
+
+  it("defines no :root rule", () => {
+    const rootRules: string[] = [];
+    wzRoot.walkRules((rule) => {
+      if (rule.selectors.some((selector) => selector.includes(":root"))) {
+        rootRules.push(rule.selector);
+      }
+    });
+    expect(rootRules).toEqual([]);
+  });
+
+  it("scopes every selector to the article, its wz- parts or the print scope", () => {
+    const unscoped: string[] = [];
+    wzRoot.walkRules((rule) => {
+      for (const raw of rule.selectors) {
+        const selector = raw.trim();
+        if (
+          selector.startsWith(".post-wz") ||
+          selector.startsWith(".wz-") ||
+          selector.startsWith("html[data-print-scope")
+        ) {
+          continue;
+        }
+        unscoped.push(selector);
+      }
+    });
+    expect(unscoped).toEqual([]);
+  });
+
+  it("leaves the shared railbar alone, also on paper", () => {
+    const railbar: string[] = [];
+    wzRoot.walkRules((rule) => {
+      if (rule.selectors.some((selector) => selector.includes("railbar"))) {
+        railbar.push(rule.selector);
+      }
+    });
+    expect(railbar).toEqual([]);
+  });
+
+  it("is loaded after the editorial post stylesheet", () => {
+    const post = layoutSource.indexOf('import "./_styles/post.css";');
+    const wz = layoutSource.indexOf('import "./_styles/post-wz.css";');
+    expect(post).toBeGreaterThan(-1);
+    expect(wz).toBeGreaterThan(post);
+  });
+});

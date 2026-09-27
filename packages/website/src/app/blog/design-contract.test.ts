@@ -8,6 +8,12 @@ const styles = {
   post: readFileSync(join(__dirname, "_styles", "post.css"), "utf8"),
 } as const;
 
+// Werkzeichnung article stylesheet (post Nº 02 onward), scoped under .post-wz.
+const werkzeichnung = readFileSync(
+  join(__dirname, "_styles", "post-wz.css"),
+  "utf8",
+);
+
 describe("blog editorial design contract", () => {
   it("keeps visible editorial labels at 12px or larger", () => {
     for (const source of Object.values(styles)) {
@@ -70,6 +76,55 @@ describe("blog editorial design contract", () => {
     );
     expect(styles.index).toMatch(
       /\.blog-index__link\s*\{[^}]*min-height:\s*44px/s,
+    );
+  });
+});
+
+describe("Werkzeichnung article design contract (post-wz.css)", () => {
+  it("keeps every screen font size at 12px or larger", () => {
+    expect(werkzeichnung).not.toMatch(
+      /font-size:\s*(?:[0-9]|1[01])(?:\.[0-9]+)?px/,
+    );
+  });
+
+  it("uses sentence case, upright roman type and no serif face", () => {
+    expect(werkzeichnung).not.toMatch(/text-transform:\s*uppercase/);
+    expect(werkzeichnung).not.toMatch(/font-style:\s*italic/);
+    expect(werkzeichnung).not.toContain("--font-serif");
+  });
+
+  it("keeps square geometry: no radius other than 0", () => {
+    const radii = [...werkzeichnung.matchAll(/border-radius:\s*([^;]+);/g)].map(
+      (match) => match[1]!.trim(),
+    );
+    for (const radius of radii) expect(radius).toBe("0");
+  });
+
+  it("draws no shadow except the inset paper square of the current Route station", () => {
+    const shadows = [
+      ...werkzeichnung.matchAll(/([^{}]+)\{[^}]*?box-shadow:\s*([^;]+);/g),
+    ].map((match) => ({
+      selector: match[1]!.trim(),
+      value: match[2]!.trim(),
+    }));
+
+    expect(shadows).toHaveLength(1);
+    expect(shadows[0]!.selector).toBe(
+      '.wz-route__station[data-state="current"] .wz-route__mark',
+    );
+    for (const layer of shadows[0]!.value.split(/,\s*/)) {
+      expect(layer).toMatch(/^inset\s/);
+    }
+  });
+
+  it("keeps buttons on 44px targets and the sheet, heads and print page in place", () => {
+    expect(werkzeichnung).toMatch(/\.wz-btn\s*\{[^}]*min-height:\s*44px/s);
+    expect(werkzeichnung).toMatch(
+      /\.wz-sheet\s*\{[^}]*border:\s*1px solid var\(--wz-ink\)/s,
+    );
+    expect(werkzeichnung).toMatch(/@page wz-sheet\s*\{/);
+    expect(werkzeichnung).toMatch(
+      /\.wz-head\s*\{[^}]*border-top:\s*2px solid var\(--wz-ink\)/s,
     );
   });
 });

@@ -209,3 +209,79 @@ test.describe("blog without JavaScript", () => {
     });
   }
 });
+
+const QUESTION_SHEET_POST = [
+  {
+    locale: "de",
+    prefix: "",
+    title: "KI in der Ausbildung: Fragen für JAV und Betriebsrat",
+    print: "Fragenliste drucken",
+    download: "Als Markdown herunterladen",
+    downloadHref: "/vorlagen/ki-in-der-ausbildung-fragen.md",
+  },
+  {
+    locale: "en",
+    prefix: "/en",
+    title:
+      "AI in apprenticeships: questions for youth representatives and works councils",
+    print: "Print the question list",
+    download: "Download as Markdown",
+    downloadHref: "/vorlagen/ki-in-der-ausbildung-fragen.en.md",
+  },
+] as const;
+
+for (const variant of QUESTION_SHEET_POST) {
+  test(`blog: ${variant.locale} question-sheet post is listed, printable and downloadable`, async ({
+    page,
+    request,
+  }) => {
+    await page.goto(`${variant.prefix}/blog`);
+    await expect(
+      page
+        .locator(`a[href="${variant.prefix}/blog/ki-in-der-ausbildung"]`)
+        .first(),
+    ).toBeVisible();
+
+    const response = await page.goto(
+      `${variant.prefix}/blog/ki-in-der-ausbildung`,
+    );
+    expect(response?.status()).toBe(200);
+    await expect(page.locator("html")).toHaveAttribute("lang", variant.locale);
+    await expect(
+      page.getByRole("heading", { level: 1, name: variant.title }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: variant.print }),
+    ).toBeVisible();
+    const download = page.getByRole("link", { name: variant.download });
+    await expect(download).toBeVisible();
+    await expect(download).toHaveAttribute("href", variant.downloadHref);
+    await expect(download).toHaveAttribute("download", "");
+
+    const file = await request.get(variant.downloadHref);
+    expect(file.status()).toBe(200);
+    expect(file.headers()["content-type"]).toMatch(/^text\/markdown/);
+    expect(await file.text()).toContain("license: CC BY 4.0");
+  });
+
+  test(`blog: ${variant.locale} question-sheet post has no horizontal overflow at 390px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    const response = await page.goto(
+      `${variant.prefix}/blog/ki-in-der-ausbildung`,
+      { waitUntil: "domcontentloaded" },
+    );
+    expect(response?.status()).toBe(200);
+    await expect(page.locator("h1")).toBeVisible();
+    await expect
+      .poll(
+        () =>
+          page.evaluate(
+            () => document.documentElement.scrollWidth <= window.innerWidth,
+          ),
+        { timeout: 10_000 },
+      )
+      .toBe(true);
+  });
+}

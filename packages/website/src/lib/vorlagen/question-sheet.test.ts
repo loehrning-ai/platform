@@ -164,7 +164,17 @@ describe("formatSheetDate", () => {
     expect(formatSheetDate("2026-03-01", "de")).toBe("1. März 2026");
   });
 
-  it.each(["2026-9-27", "27.09.2026", "2026-13-01", "2026-00-10", "2026-01-32", ""])(
+  it.each([
+    "2026-9-27",
+    "27.09.2026",
+    "2026-13-01",
+    "2026-00-10",
+    "2026-01-32",
+    "2026-02-30",
+    "2027-02-29",
+    "2026-04-31",
+    "",
+  ])(
     "rejects %j",
     (value) => {
       expect(() => formatSheetDate(value, "de")).toThrow(SheetFormatError);
@@ -266,6 +276,8 @@ describe("parseQuestionSheet on fixtures", () => {
     ["a licence other than CC BY 4.0", "license: CC BY 4.0", "license: CC BY-SA 4.0"],
     ["a next review before the last review", 'nextReview: "2027-01-15"', 'nextReview: "2026-01-15"'],
     ["a usage step out of order", "2. Zweiter Schritt.", "3. Zweiter Schritt."],
+    ["an impossible review date", 'lastReviewed: "2026-09-27"', 'lastReviewed: "2026-02-30"'],
+    ["an impossible next review", 'nextReview: "2027-01-15"', 'nextReview: "2027-02-31"'],
     [
       "text after the sources",
       "https://www.gesetze-im-internet.de/betrvg/\n",
@@ -274,5 +286,26 @@ describe("parseQuestionSheet on fixtures", () => {
   ])("throws SheetFormatError for %s", (_label, from, to) => {
     const broken = mutate(from, to);
     expect(() => parseQuestionSheet(broken, "de")).toThrow(SheetFormatError);
+  });
+});
+
+describe("parseQuestionSheet front matter", () => {
+  const flag = "__questionSheetFrontMatterRan";
+
+  it.each([
+    // Without the guard, gray-matter would eval() these blocks and set the flag.
+    ["---js", `---js\n{ title: (globalThis.${flag} = true, 'x') }\n---\n# x\n`],
+    ["---javascript", `---javascript\n({ locale: (globalThis.${flag} = true, 'de') })\n---\n# x\n`],
+    ["---coffee", "---coffee\ntitle: 'x'\n---\n# x\n"],
+    ["a leading blank line", "\n" + FIXTURE],
+  ])("refuses %s before any engine runs", (_label, raw) => {
+    delete (globalThis as Record<string, unknown>)[flag];
+    expect(() => parseQuestionSheet(raw, "de")).toThrow(SheetFormatError);
+    expect((globalThis as Record<string, unknown>)[flag]).toBeUndefined();
+  });
+
+  it("accepts CRLF line endings after the opening delimiter", () => {
+    const sheet = parseQuestionSheet(FIXTURE.replace(/^---\n/, "---\r\n"), "de");
+    expect(sheet.meta.title).toBe("Testliste");
   });
 });

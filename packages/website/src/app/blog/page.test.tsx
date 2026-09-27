@@ -93,7 +93,7 @@ describe("BlogIndexPage", () => {
   it("uses the paper hero, a Kopflinie section and ledger rows", async () => {
     await renderPage("de");
 
-    expect(screen.getByText("Blog · 1 Artikel")).toBeVisible();
+    expect(screen.getByText("Blog · 2 Artikel")).toBeVisible();
     expect(
       screen.getByRole("heading", {
         level: 1,

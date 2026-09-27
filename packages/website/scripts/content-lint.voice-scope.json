@@ -73,6 +73,7 @@
     "content/books/ki-landschaft/en/08_fahrplan.md",
     "content/books/ki-landschaft/en/09_ausblick.md",
     "content/books/ki-landschaft/en/10_anhang.md",
-    "content/vorlagen/"
+    "content/vorlagen/",
+    "src/app/blog/ki-in-der-ausbildung/post-copy.ts"
   ]
 }

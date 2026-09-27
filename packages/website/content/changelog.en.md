@@ -1,3 +1,13 @@
+## 2026-09-27: Question list on AI in apprenticeships
+
+A new blog post explains which rights the JAV and the works council have when a company uses AI in apprenticeship training. The question list is available to print and download under CC BY 4.0.
+
+### Added
+
+- Blog post Nº 02 "AI in apprenticeships: questions for youth representatives and works councils" in German and English
+- Question list with legal bases and notes on what an answer should contain
+- Download of the question list as Markdown under CC BY 4.0
+
 ## 2026-08-09: Bilingual platform revision
 
 This revision organizes learning material into foundations, technical courses, workshops, and books. Public pages and released learning material are available in German and English. Access conditions, sources, simulations, and external dependencies are stated next to the relevant material.

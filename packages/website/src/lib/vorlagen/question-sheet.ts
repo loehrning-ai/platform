@@ -111,9 +111,40 @@ export function formatSheetDate(iso: string, locale: SheetLocale): string {
   if (!ISO_DATE.test(iso)) throw new SheetFormatError(`not an ISO date: ${iso}`);
   const [year, month, day] = iso.split("-").map(Number) as [number, number, number];
   const name = MONTHS[locale][month - 1];
-  if (!name || day < 1 || day > 31) throw new SheetFormatError(`not a real date: ${iso}`);
+  // Round-trip through the calendar so "2026-02-30" is refused, not printed.
+  const calendar = new Date(Date.UTC(year, month - 1, day));
+  if (
+    !name ||
+    calendar.getUTCFullYear() !== year ||
+    calendar.getUTCMonth() !== month - 1 ||
+    calendar.getUTCDate() !== day
+  ) {
+    throw new SheetFormatError(`not a real date: ${iso}`);
+  }
   return locale === "de" ? `${day}. ${name} ${year}` : `${day} ${name} ${year}`;
 }
+
+/**
+ * Front matter must be plain YAML. gray-matter's default engines include
+ * "javascript", which evaluates a "---js" block with eval(); a sheet edit
+ * must never run code, so any other language is refused before parsing.
+ */
+const PLAIN_YAML_OPENER = /^---\r?\n/;
+
+function refuseEngine(): never {
+  throw new SheetFormatError("frontmatter must be plain YAML");
+}
+
+const YAML_ONLY = {
+  language: "yaml",
+  engines: {
+    js: refuseEngine,
+    javascript: refuseEngine,
+    coffee: refuseEngine,
+    coffeescript: refuseEngine,
+    cson: refuseEngine,
+  },
+} as const;
 
 function requireString(data: Record<string, unknown>, key: string): string {
   const value = data[key];
@@ -130,6 +161,7 @@ function parseMeta(data: Record<string, unknown>, expected: SheetLocale): SheetM
   const nextReview = requireString(data, "nextReview");
   for (const [key, value] of [["lastReviewed", lastReviewed], ["nextReview", nextReview]] as const) {
     if (!ISO_DATE.test(value)) throw new SheetFormatError(`${key} must be YYYY-MM-DD`);
+    formatSheetDate(value, expected);
   }
   if (nextReview <= lastReviewed) throw new SheetFormatError("nextReview must be after lastReviewed");
   if (data.license !== "CC BY 4.0") throw new SheetFormatError('license must be "CC BY 4.0"');
@@ -175,7 +207,10 @@ function takeLabelled(block: string, label: string): string | null {
 
 export function parseQuestionSheet(raw: string, locale: SheetLocale): QuestionSheet {
   const labels = SHEET_LABELS[locale];
-  const { data, content } = matter(raw);
+  if (!PLAIN_YAML_OPENER.test(raw)) {
+    throw new SheetFormatError("frontmatter must open with a plain --- line (YAML only)");
+  }
+  const { data, content } = matter(raw, YAML_ONLY);
   const meta = parseMeta(data, locale);
   const all = blocks(content);
 

@@ -29,8 +29,14 @@ const nextConfig: NextConfig = {
   // those files as build inputs and would not ship them into this function.
   // Without this declaration the tool degrades honestly (body_available: false
   // plus the reader URL) rather than serving the chapter text.
+  //
+  // Blog post Nº 02 is dynamic (it reads the request locale) and renders the
+  // question sheet from content/vorlagen at request time through
+  // loadQuestionSheet, so both locale routes ship the sheet sources.
   outputFileTracingIncludes: {
     "/api/mcp": ["./content/books/**"],
+    "/blog/ki-in-der-ausbildung": ["./content/vorlagen/**"],
+    "/en/blog/ki-in-der-ausbildung": ["./content/vorlagen/**"],
   },
   // Drop the X-Powered-By: Next.js banner so we don't hand attackers a
   // free fingerprint of our stack version.

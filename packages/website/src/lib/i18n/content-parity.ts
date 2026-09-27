@@ -12,6 +12,7 @@ const ENGLISH_CONTENT_PARITY_PATHS = new Set<string>([
   "/ai-native/verifizierung",
   "/blog",
   "/blog/eu-ai-act-grundlagen",
+  "/blog/ki-in-der-ausbildung",
   "/buecher",
   "/buecher/ki-landschaft",
   "/buecher/ki-landschaft/01_eisberg",
