@@ -121,8 +121,8 @@ export function ThresholdSim() {
       )}
       meta={`τ = ${thr.toFixed(2)}`}
       caption={text(
-        "Drag τ. Dots above flip to 'predicted positive', some are right (violet), some are false alarms (orange). The ROC curve traces every possible τ; the square is where you are now.",
-        "Verschiebe τ. Punkte oberhalb gelten als positiv vorhergesagt: Einige sind korrekt (violett), andere Fehlalarme (orange). Die ROC-Kurve enthält jedes mögliche τ; das Quadrat markiert den aktuellen Wert.",
+        "Drag τ. Dots to its right count as predicted positive: violet ones are correct, orange ones are false alarms. The ROC curve traces every τ; the square marks the current one.",
+        "Verschiebe τ. Punkte rechts davon gelten als positiv vorhergesagt: violette korrekt, orange Fehlalarme. Die ROC-Kurve enthält jedes τ; das Quadrat markiert den aktuellen Wert.",
       )}
     >
       <div className="sim-row" style={{ gridTemplateColumns: "260px 1fr" }}>

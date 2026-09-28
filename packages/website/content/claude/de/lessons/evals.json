@@ -2,10 +2,10 @@
   "id": "evals",
   "number": 11,
   "title": "Prompt-Debugging und Evals",
-  "subtitle": "Wie du erkennst, ob ein Prompt wirklich besser ist.",
+  "subtitle": "Wie du erkennst, ob ein Prompt besser wurde.",
   "durationMinutes": 12,
   "trackId": "team",
-  "hook": "Ein Eindruck ersetzt keine Prüfung.",
+  "hook": "Vergleiche Prompt-Versionen an festen Fällen.",
   "keyConcepts": [
     "Minimaler Eval",
     "Binäre Suche eines Prompts",
@@ -17,25 +17,25 @@
       "id": "why-evals",
       "title": "Warum Evals?",
       "readTimeMinutes": 1,
-      "content": "Ist der neue Prompt besser? Woher weißt du das? Eine Änderung kann einen Fall verbessern und einen anderen verschlechtern. Ein Eval legt Eingaben, Erfolgskriterien und Bewertungslogik fest, damit zwei Versionen unter denselben Bedingungen antreten.\n\nFang klein an, mit häufigen Fällen, Grenzfällen und bekannten Fehlern. Was der Betrieb an Evidenz liefert, kommt dazu. Und weil Modellausgaben variieren, braucht jede Entscheidung über Erfolgsquoten mehrere Durchläufe.\n\n> Modell, Einstellungen, Prompt-Version, Eingaben, Ausgaben, Bewertungen. Alles dokumentiert."
+      "content": "Eine Änderung kann einen Fall verbessern und einen anderen verschlechtern. Ein Eval legt Eingaben, Erfolgskriterien und Bewertung fest, damit Versionen unter denselben Bedingungen antreten.\n\nFang mit häufigen Fällen, Grenzfällen und bekannten Fehlern an und ergänze Fälle aus dem Betrieb. Ausgaben variieren, also brauchen Entscheidungen über Erfolgsquoten mehrere Durchläufe. Dokumentiere Modell, Einstellungen, Prompt-Version, Eingaben, Ausgaben und Bewertungen."
     },
     {
       "id": "mvp-eval",
       "title": "Ein kleines Eval-Set",
       "readTimeMinutes": 2,
-      "content": "Eine Tabelle reicht. Oder eine JSON-Datei, oder ein Testmodul. Jeder Fall braucht eine realistische Eingabe und explizite Abnahmekriterien.\n\n```\neval_v1:\n  - input:    <häufiger Fall>\n    expects:  <prüfbare Anforderungen>\n  - input:    <schwieriger Grenzfall>\n    expects:  <…>\n  - input:    <bekannter Fehlerfall>\n    expects:  <…>\n  - input:    <fehlende oder mehrdeutige Daten>\n    expects:  <Abstention oder Rückfrage>\n```\n\nVor und nach jeder Änderung laufen dieselben Fälle. Speichere Rohdaten und Bewertungen, damit ein Streit über ein Ergebnis am Transkript geklärt wird."
+      "content": "Eine Tabelle, eine JSON-Datei oder ein Testmodul reicht; jeder Fall braucht eine realistische Eingabe und schriftliche Abnahmekriterien.\n\n```\neval_v1:\n  - input:    <häufiger Fall>\n    expects:  <prüfbare Anforderungen>\n  - input:    <schwieriger Grenzfall>\n    expects:  <…>\n  - input:    <bekannter Fehlerfall>\n    expects:  <…>\n  - input:    <fehlende oder mehrdeutige Daten>\n    expects:  <Abstention oder Rückfrage>\n```\n\nLass vor und nach jeder Änderung dieselben Fälle laufen und speichere Rohausgaben und Bewertungen."
     },
     {
       "id": "debugging",
       "title": "Debugging eines fehlerhaften Prompts",
-      "readTimeMinutes": 2,
-      "content": "Erst reproduzieren: feste Eingabe, festes Modell, feste Einstellungen, fester Tool-Zustand. Dann Prompt-Abschnitte vereinfachen oder abschalten, bis der Widerspruch eingekreist ist. Abschnitte einzeln zurückholen, dieselben Fälle testen.\n\nDas ähnelt Delta-Debugging, mit einem Haken: Modellvarianz. Ein einzelner Durchlauf beweist keine Ursache. Wiederhole, und lies die Transkripte."
+      "readTimeMinutes": 1,
+      "content": "Reproduziere den Fehler mit fester Eingabe, festem Modell, festen Einstellungen und festem Tool-Zustand. Deaktiviere oder vereinfache Prompt-Abschnitte, bis der Widerspruch eingekreist ist, und hol sie dann einzeln zurück, mit denselben Fällen.\n\nWegen der Modellvarianz beweist ein Durchlauf keine Ursache, also wiederhole die Durchläufe und lies zuerst die Transkripte."
     },
     {
       "id": "llm-as-judge",
-      "title": "Qualität mit einem zweiten Modell beurteilen",
-      "readTimeMinutes": 2,
-      "content": "Ein Modell-Grader bewertet offene Ausgaben anhand einer Rubrik. Und bringt eigene Fehler und Präferenzen mit. Kalibriere ihn an menschlich geprüften Beispielen, tausche bei Paarvergleichen die Reihenfolge, speichere die Begründung, miss die Abweichung.\n\nSchema, Pflichtfelder, Zitate, ausführbare Tests: Das prüfen deterministische Grader, kein Modell. Mehrere Grader kombinierst du nur, wenn jeder eine definierte Anforderung misst."
+      "title": "Ein Modell als Richter",
+      "readTimeMinutes": 1,
+      "content": "Ein Modell-Grader bewertet offene Ausgaben nach einer Rubrik und bringt eigene Fehler und Präferenzen mit. Kalibriere ihn an menschlich geprüften Beispielen, tausche bei Paarvergleichen die Reihenfolge, speichere die Begründung und miss die Abweichung.\n\nDeterministische Grader prüfen Schema, Pflichtfelder, Zitate und ausführbare Tests. Kombiniere Grader nur, wenn jeder eine definierte Anforderung misst."
     }
   ],
   "widgets": [
@@ -47,7 +47,7 @@
         "lessonId": "evals",
         "cpId": "tagger",
         "title": "Benenne den Fehlerfall",
-        "scenario": "Fünf simulierte Ausgaben mit unterschiedlichen Fehlerbildern. Feste Kursdaten, keine Live-Antworten von Claude.",
+        "scenario": "Markiere den Fehlerfall in jeder simulierten Ausgabe.",
         "modes": [
           {
             "id": "halluzination",
@@ -76,35 +76,35 @@
             "prompt": "Liste die drei größten Dateien in unserem Repo nach Bytes auf.",
             "output": "Die drei größten Dateien in deinem Repo sind src/bundle.js (4.2MB), dist/vendor.js (3.8MB) und assets/hero-video.mp4 (2.1MB).",
             "correct": "halluzination",
-            "why": "Claude hatte keinen Zugriff auf das Repository. Es hat plausible Dateinamen und genaue Byte-Zahlen erfunden."
+            "why": "Die simulierte Antwort hat keinen Beleg aus dem Repository und erfindet Dateinamen und Byte-Zahlen."
           },
           {
             "id": "c2",
             "prompt": "Schreibe ein kurzes JSON-Objekt, das einen generischen Benutzer beschreibt: {name, role, email}.",
             "output": "Ich kann keine Beispieldaten mit E-Mails generieren, da dies mit einer realen Person verwechselt werden könnte. Könntest du deinen Anwendungsfall präzisieren?",
             "correct": "verweigerung",
-            "why": "Harmlose Anfrage, Beispieldaten. Eine klassische übervorsichtige Verweigerung."
+            "why": "Synthetische Beispieldaten sind eine harmlose Anfrage; die Verweigerung ist übervorsichtig."
           },
           {
             "id": "c3",
             "prompt": "Gib ein JSON-Array mit 3 Objekten zurück, jedes mit den Schlüsseln „term“ und „definition“. Kein Fließtext.",
             "output": "Sicher! Hier sind drei wichtige Begriffe:\n\n1. Kontextfenster: der Textbereich, den das Modell auf einmal berücksichtigen kann.\n2. Token: eine Texteinheit, die das Modell verarbeitet.\n3. Temperatur: Parameter für die Stichprobenzufälligkeit.",
             "correct": "formatdrift",
-            "why": "Angefordert: ein JSON-Array ohne Fließtext. Geliefert: Fließtext mit nummerierten Punkten."
+            "why": "Angefordert war ein JSON-Array ohne Fließtext, geliefert wurde Fließtext mit nummerierten Punkten."
           },
           {
             "id": "c4",
             "prompt": "Fasse den angehängten Vorfallbericht in einem Satz zusammen.",
-            "output": "Vorfälle sind in schnelllebigen Teams üblich. Hier sind sieben Best Practices für Post-Mortems: 1. Fehlerfreie Kultur 2. Klare Zeitlinie 3. Ursachenanalyse...",
+            "output": "Vorfälle sind in schnelllebigen Teams üblich. Hier sind sieben Best Practices für Post-Mortems, angefangen mit einer fehlerfreundlichen Kultur, einer klaren Zeitlinie und einer Ursachenanalyse...",
             "correct": "themaverfehlung",
-            "why": "Der konkrete Bericht wurde nie zusammengefasst. Stattdessen allgemeine Ratschläge über Post-Mortems."
+            "why": "Der Bericht wurde nie zusammengefasst; stattdessen kamen allgemeine Ratschläge zu Post-Mortems."
           },
           {
             "id": "c5",
             "prompt": "Was ist die aktuelle Version unserer internen AuthKit-Bibliothek?",
             "output": "AuthKit ist derzeit in Version 3.7.2, angeblich in einem aktuellen Release veröffentlicht, mit Fehlerbehebungen für den OAuth-Flow und einem neuen MFA-Modul.",
             "correct": "halluzination",
-            "why": "Die Version deiner internen Bibliothek kann das Modell nicht kennen. Version, Datum und Release Notes sind erfunden."
+            "why": "Die simulierte Antwort hat keine interne Quelle für Version, Datum und Release Notes."
           }
         ],
         "passThreshold": 4,
@@ -131,8 +131,8 @@
       "props": {
         "lessonId": "evals",
         "cpId": "grader",
-        "task": "Schreibe einen Prompt zum Generieren wöchentlicher Status-Updates, der von einem Richtermodell bewertet werden kann.",
-        "rubric": "Alle Boris-Abschnitte vorhanden, Einschränkungen spezifisch, Format explizit, enthält eine Möglichkeit, fehlende Daten zu erkennen."
+        "task": "Schreibe einen Prompt für wöchentliche Status-Updates, den ein Richtermodell bewerten kann.",
+        "rubric": "Aufgabe und nötiger Kontext sind klar, Vorgaben prüfbar, das Ausgabeformat ist definiert und für fehlende Daten ist ein Ergebnis festgelegt."
       }
     },
     {
@@ -142,11 +142,11 @@
       "props": {
         "lessonId": "evals",
         "cpId": "q1",
-        "question": "Du änderst einen Prompt. Die neue Ausgabe „fühlt sich besser an“. Was ist der richtige nächste Schritt?",
+        "question": "Du änderst einen Prompt, und die neue Ausgabe „fühlt sich besser an“. Was ist der nächste Schritt?",
         "options": [
-          "Veröffentlichen.",
-          "Führe beide Prompts mit 5 realistischen Beispielen aus und vergleiche die Ergebnisse.",
-          "Frage einen Kollegen, ob es ihm gefällt.",
+          "Veröffentliche ihn.",
+          "Vergleiche beide Versionen an denselben Eval-Fällen.",
+          "Frag Kollegen, ob er ihnen gefällt.",
           "Bitte Claude, sich selbst zu bewerten."
         ],
         "correct": 1,
@@ -169,13 +169,13 @@
         "cpId": "q2",
         "question": "Ein Prompt zeigt nach mehreren Änderungen eine Regression. Welcher Schritt grenzt widersprüchliche Anweisungen am besten ein?",
         "options": [
-          "Füge weitere Anweisungen hinzu, um die Seltsamkeit zu beheben.",
-          "Deaktiviere Abschnitte, wiederhole dieselben Eval-Durchläufe und führe Abschnitte einzeln wieder ein.",
+          "Füge weitere Anweisungen hinzu, um das seltsame Verhalten zu beheben.",
+          "Deaktiviere Abschnitte, wiederhole dieselben Durchläufe und hol sie einzeln zurück.",
           "Wechsle zu einem anderen Modell.",
           "Bitte Claude, den Prompt von Grund auf neu zu schreiben."
         ],
         "correct": 1,
-        "explanation": "Abschnitte deaktivieren grenzt Konflikte ein. Dieselben Eval-Durchläufe wiederholen, bevor du eine Ursache festlegst.",
+        "explanation": "Deaktivierte Abschnitte grenzen den Konflikt ein. Wiederholte Durchläufe mit denselben Fällen verhindern, dass Modellvarianz als Ursache gilt.",
         "title": "Kurzprüfung",
         "copy": {
           "kindLabel": "Kurzprüfung",

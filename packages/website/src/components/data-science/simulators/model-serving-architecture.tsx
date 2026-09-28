@@ -207,10 +207,6 @@ export function ModelServingArchitecture() {
         "Model serving architecture",
         "Architektur für die Modellbereitstellung",
       )}
-      caption={text(
-        "Hover, focus, or select each component to see its role and common failure modes in production.",
-        "Komponente mit Maus, Tastaturfokus oder Auswahl aktivieren, um ihre Aufgabe und typische Produktionsfehler zu prüfen.",
-      )}
     >
       <div className="ds-architecture-layout">
         <div className="ds-architecture-visual">

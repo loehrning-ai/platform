@@ -1,42 +1,34 @@
 # Die 3-Schritt-Prüfung als Gewohnheit
 
-60 Sekunden, jedes Mal, ohne Ausnahme.
+Die Prüfung dauert 60 Sekunden und gilt jedes Mal. Wie der Schulterblick vor dem Spurwechsel machst du sie am Anfang bewusst und nach zwei Wochen automatisch.
 
-Wie der Schulterblick vor dem Spurwechsel. Am Anfang bewusst. Nach zwei Wochen automatisch.
-
-Drei Fragen, immer in dieser Reihenfolge. **Sachlich korrekt? Vollständig? Angemessen?**
-
-In der KI-Führerschein-Sprache heißen sie **Plausibilität / Quellencheck / Entscheidungsrelevanz**, gleiche Logik, andere Bezeichnung. Nutze den Namen, der dir besser im Kopf bleibt.
+Du stellst drei Fragen in dieser Reihenfolge: **Sachlich korrekt? Vollständig? Angemessen?** Im KI-Führerschein heißen sie **Plausibilität / Quellencheck / Entscheidungsrelevanz**, mit derselben Logik.
 
 ## Schritt 1: Sachlich korrekt?
 
-Der häufigste und teuerste Fehler.
-
-Prüfe:
+Hier passieren die häufigsten und teuersten Fehler. Prüfe:
 
 - **Zahlen:** Umsatz, Datum, Prozentsatz? Öffne die Primärquelle. Frag nicht die KI, ob die Zahl stimmt, sie wird "Ja" sagen.
 - **Zitate:** Google den exakten Wortlaut in Anführungszeichen. Existiert die Quelle? Stimmt der Wortlaut? ChatGPT erfindet Professoren, Institute und Fachverbände mit beeindruckender Detailtreue.
 - **Personen und Organisationen:** Gibt es den Experten, gibt es den Verband? Der "Bundesverband für Intelligente Fertigung" klingt seriös, es gibt ihn nicht.
 - **Rechtliche Verweise:** EUR-Lex für EU-Verordnungen. Gesetze-im-Internet.de für deutsches Recht. Akzeptiere nie einen Artikelverweis ungeprüft.
 
-**Faustregel:** Je plausibler die Behauptung, desto sorgfältiger prüfst du. Offensichtliche Fehler fallen auf. Subtile, plausible Fehler kosten dich.
+**Faustregel:** Je plausibler die Behauptung, desto sorgfältiger prüfst du.
 
 ## Schritt 2: Ist es vollständig?
 
-KI liefert selten die ganze Wahrheit. Sie liefert die statistisch wahrscheinliche Antwort.
-
-Frag aktiv:
+KI liefert die statistisch wahrscheinliche Antwort, selten die ganze. Frag aktiv:
 
 - **Was fehlt?** Welche Gegenargumente werden verschwiegen?
 - **Was ist vereinfacht?** Welche Nuance ging verloren?
 - **Welche Perspektive fehlt?** Gibt es eine relevante Alternative?
 - **Ist es aktuell?** Das Modell kennt nur Daten bis zum Trainings-Stichtag.
 
-Beispiel: Die KI fasst den EU AI Act korrekt zusammen, Hochrisiko-Anforderungen, Dokumentationspflichten. Aber sie erwähnt nicht den Digital Omnibus, der Fristen verschieben könnte. Und sie vergisst, dass Artikel 4 (KI-Kompetenzpflicht) seit Februar 2025 gilt. Nicht seit gestern.
+Beispiel: Die KI fasst Hochrisiko-Anforderungen und Dokumentationspflichten des EU AI Act korrekt zusammen. Sie erwähnt aber nicht die seit 27. Juli 2026 geltende Verordnung (EU) 2026/1744 (Digital Omnibus), die Hochrisiko-Fristen verschiebt, und vergisst, dass Artikel 4 (KI-Kompetenzpflicht) seit Februar 2025 gilt.
 
 ## Schritt 3: Ist es angemessen?
 
-Auch wenn der Inhalt stimmt, der Ton kann falsch sein.
+Auch bei korrektem Inhalt kann der Ton falsch sein.
 
 - **Passt der Ton zum Empfänger?** Vorstandsmail ist nicht Kundenmail.
 - **Gibt es unangemessene Formulierungen?** KI reproduziert Bias aus den Trainingsdaten.
@@ -44,50 +36,36 @@ Auch wenn der Inhalt stimmt, der Ton kann falsch sein.
 
 ## Ein konkretes Beispiel
 
-Du hast eine Kundenreklamation mit Copilot beantwortet (Kapitel 6). Jetzt der Schulterblick.
+Du hast eine Kundenreklamation mit Copilot beantwortet (Kapitel 6) und prüfst sie:
 
 **Schritt 1, Sachlich:** Stimmen Bestellnummer und Lieferdatum? Hat Copilot ein Datum erfunden, das nicht in der Original-E-Mail steht?
 
-**Schritt 2, Vollständig:** Geht die Antwort auf alle Punkte des Kunden ein? Oder nur auf den offensichtlichsten?
+**Schritt 2, Vollständig:** Geht die Antwort auf alle Punkte des Kunden ein oder nur auf den offensichtlichsten?
 
-**Schritt 3, Angemessen:** Passt der Ton für eine vierjährige Kundenbeziehung? Nicht zu distanziert. Nicht zu kumpelhaft.
-
-60 Sekunden, drei Fragen, dann senden.
+**Schritt 3, Angemessen:** Passt der Ton, weder zu distanziert noch zu kumpelhaft, zu einer vierjährigen Kundenbeziehung? Dann sendest du.
 
 ## Wenn du dich selbst erwischst
 
-Ich habe auch schon Halluzinationen nicht gemerkt. Einmal zitierte Claude mir ein Paper, das es tatsächlich gab, aber mit völlig anderem Inhalt als behauptet. Titel stimmte, Autor stimmte, Jahr stimmte. Die Aussage, die Claude dem Paper zuschrieb, war frei erfunden.
+Auch mir sind Halluzinationen schon fast durchgerutscht. Claude zitierte ein Paper, das es gab, mit korrektem Titel, Autor und Jahr, schrieb ihm aber eine frei erfundene Aussage zu. Ohne die PDF zu öffnen, hätte ich das mit meinem Namen in einen Blogpost übernommen.
 
-Hätte ich die PDF nicht aufgemacht, hätte ich das in einen Blogpost übernommen. Mit meinem Namen darunter.
-
-Das ist nicht „Tim war nachlässig". Die Halluzination war so gut getarnt, dass sie selbst bei Schritt 1 durchgerutscht wäre. Gerettet hat mich Schritt 2, die Quelle öffnen und nachlesen. Nicht glauben, aufmachen.
-
-Wenn dir selbst das passiert: nicht peinlich sein. Notieren, was durchgekommen ist und warum. Nächstes Mal fängst du es.
+Schritt 1 hätte die gut getarnte Halluzination nicht gefangen, gerettet hat mich Schritt 2: die Quelle öffnen und nachlesen. Passiert dir so etwas, notierst du, was durchgekommen ist und warum.
 
 ## Ein Preis-Beispiel
 
-Du lässt dir ein Angebot schreiben. Copilot liefert fünf Positionen, jede mit Stückpreis, Menge, Gesamtsumme.
+Copilot liefert für ein Angebot fünf Positionen mit Stückpreis, Menge und Gesamtsumme. Du prüfst jeden einzelnen Preis, denn ein Preisfehler im versendeten Angebot kostet Umsatz oder Vertrauen, beides teurer als zwei Minuten Prüfung.
 
-Prüfst du jeden Preis? Jeden einzelnen. Ein Preisfehler in einem Angebot, das rausgeht, kostet direkt Umsatz. Entweder du zahlst die Differenz, oder du musst peinlich nachbessern und verlierst Vertrauen. Beides teurer als die zwei Minuten Prüfung.
-
-Gleiche Logik bei Vertragsklauseln, Lieferterminen, Zertifikats-Nummern, Compliance-Verweisen. Alles, wofür du am Ende den Kopf hinhältst, wird geprüft.
-
-Bei einer internen Recherche für einen Kollegen: lockerer. Wenn Copilot dort mal 2023 statt 2024 schreibt, bist du nicht der, der mit dem Finger drauf zeigt bekommt.
+Dasselbe gilt für Vertragsklauseln, Liefertermine, Prüfnummern und Compliance-Verweise, für alles, wofür du am Ende den Kopf hinhältst. Bei einer internen Recherche für einen Kollegen darfst du lockerer prüfen, dort fällt ein 2023 statt 2024 weniger ins Gewicht.
 
 ## Warum "Nochmal die KI fragen" nicht hilft
 
-Wenn ein LLM einen Fehler gemacht hat, wird es den Fehler meistens wiederholen. Es hat kein Konzept von "wahr", nur Wahrscheinlichkeiten. Wenn die wahrscheinlichste Antwort falsch ist, bleibt sie falsch.
-
-Frag eine zweite Quelle. Google, die Firmenwebsite, einen Kollegen. Nie dieselbe KI.
+Ein LLM wiederholt seinen Fehler meistens, weil die wahrscheinlichste Antwort falsch bleibt. Frag eine zweite Quelle wie Google, die Firmenwebsite oder einen Kollegen, nie dieselbe KI.
 
 ## Die Verifikation bremst dich nicht
 
-Du hast in Kapitel 6 gelernt, 8 Minuten pro E-Mail zu sparen. Investiere 1 Minute in die Prüfung. Du bist immer noch 7 Minuten vorne. Und das Ergebnis ist zuverlässig.
+Aus Kapitel 6 sparst du 8 Minuten pro E-Mail. Investierst du 1 Minute in die Prüfung, bleibst du 7 Minuten vorne und hast ein zuverlässiges Ergebnis.
 
-Die 60 Sekunden, die du in Verifikation investierst, sind die wertvollsten 60 Sekunden deines Arbeitstags.
-
-> **Das Wichtigste:** Nie ungeprüft versenden. Nie. Ein ungeprüfter KI-Text ist schlimmer als kein Text, weil du als Autor haftest, aber den Inhalt nicht kennst.
+> **Versende nie ungeprüft.** Für einen ungeprüften KI-Text haftest du als Autor, ohne seinen Inhalt zu kennen.
 
 ---
 
-Im nächsten Kapitel: Wie dein Unternehmen eine KI-Nutzungsrichtlinie aufbaut.
+Das nächste Kapitel zeigt, wie dein Unternehmen eine KI-Nutzungsrichtlinie aufbaut.

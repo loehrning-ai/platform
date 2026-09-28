@@ -20,14 +20,14 @@ export default function ModulError({
       ? {
           eyebrow: "Error",
           title: "The module could not be loaded",
-          body: "This module did not load. Retry the request.",
+          body: "Your saved progress is unchanged.",
           retry: "Try again",
           back: "Back to course overview",
         }
       : {
           eyebrow: "Fehler",
           title: "Das Modul konnte nicht geladen werden",
-          body: "Dieses Modul wurde nicht geladen. Versuche die Anfrage erneut.",
+          body: "Dein gespeicherter Fortschritt bleibt unverändert.",
           retry: "Erneut versuchen",
           back: "Zur Kursübersicht",
         };

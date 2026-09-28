@@ -7,42 +7,42 @@ import { CLAUDE_QUIZ_COPY, CLAUDE_QUIZ_TITLE } from "../widget-copy";
 const lesson: ClaudeLesson = {
   id: "gdocs",
   number: 6,
-  title: "Drafting Structured Documents",
+  title: "Drafting structured documents",
   subtitle:
     "Turn source notes into a reviewable document without losing evidence.",
   durationMinutes: 8,
   trackId: "workflows",
-  hook: "Define the document structure, source boundary, and review standard.",
+  hook: "The prompt sets the document's structure.",
   keyConcepts: ["Skeleton", "Voice transfer", "Critique before rewrite"],
   quiz: [],
   sections: [
     {
       id: "why-gdocs",
-      title: "Why shared documents matter",
+      title: "Shared documents",
       readTimeMinutes: 1,
       content:
-        "A reviewer opens the draft and hunts for the decision. Teams keep decisions, specifications, incident reviews, and launch plans in shared documents. A useful draft preserves the supplied facts, exposes what is missing, and follows a structure reviewers recognize.\n\nThree controls help: provide the section outline, supply an approved style example, and review claims before rewriting prose.",
+        "Decisions, specs, incident reviews and launch plans live in shared documents. A useful draft keeps the supplied facts, marks gaps and follows a structure reviewers know.",
     },
     {
       id: "move-1-skeleton",
-      title: "Move 1: give it the skeleton",
+      title: "Give it the skeleton",
       readTimeMinutes: 2,
       content:
-        "Document types carry organization-specific conventions. Give the required sections instead of a generic default.\n\n```\nOutput structure:\n# Title\n## TL;DR (3 bullets, each <15 words)\n## Context\n## Proposal\n## Risks & mitigations\n## Success metrics\n## Open questions\n```\n\nName the evidence each section needs and mark missing material instead of guessing.",
+        "Document types carry conventions, such as the TL;DR in a design doc or the timeline in a post-mortem. Give the required sections:\n\n```\nOutput structure:\n# Title\n## TL;DR (3 bullets, each <15 words)\n## Context\n## Proposal\n## Risks & mitigations\n## Success metrics\n## Open questions\n```\n\nName the evidence each section needs and have gaps marked instead of guessed.",
     },
     {
       id: "move-2-voice",
-      title: "Move 2: give it the voice",
-      readTimeMinutes: 2,
+      title: "Give it the voice",
+      readTimeMinutes: 1,
       content:
-        "When terminology and sentence style matter, supply a short approved passage and name the traits to match. Strip confidential details and tell the model not to reuse facts from the style sample.\n\n> A style example shows the target. An evaluation shows whether you hit it.",
+        "When terminology and style matter, supply a short approved passage and name the traits to match. Strip confidential details, forbid reusing its facts and check whether the output hits the style.",
     },
     {
       id: "move-3-critique",
-      title: "Move 3: ask for the critique before the rewrite",
-      readTimeMinutes: 2,
+      title: "Critique before rewrite",
+      readTimeMinutes: 1,
       content:
-        "Judge the first draft against explicit criteria: unsupported claims, missing decisions, audience mismatch, structural defects. Ask for a short list of findings with quoted evidence, then request only the changes you approve.\n\nThat gives you an inspectable review step. It neither requires nor exposes private chain-of-thought.",
+        "Review the draft against written criteria: unsupported claims, missing decisions, audience mismatch, structural defects. Ask for findings with quoted evidence, then request only the changes you approve.",
     },
   ],
   widgets: [
@@ -90,7 +90,7 @@ const lesson: ClaudeLesson = {
         options: [
           'Ask for "a more professional tone."',
           "Start over with a new prompt.",
-          'Paste 2-3 paragraphs of a reference doc with the voice you want and say "rewrite matching this voice."',
+          "Paste 2-3 reference paragraphs and ask for a rewrite in that voice.",
           'Ask Claude to "be less AI."',
         ],
         correct: 2,

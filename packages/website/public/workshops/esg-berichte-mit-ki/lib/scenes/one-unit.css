@@ -1,0 +1,158 @@
+/* one-unit: the Werk Süd statement on the left with the printed line outlined, three readings on
+   the right. Press 2 marks C, press 3 draws what the misread does, press 4 the two plausibility
+   checks (slate). */
+
+#one-unit > .ou-doc {
+  position: absolute;
+  top: 232px;
+  left: var(--margin-x);
+  width: 720px;
+}
+
+#one-unit > .ou-doc .doc__sheet {
+  font-size: 22px;
+}
+
+#one-unit > .ou-doc .doc__mark {
+  font-size: 28px;
+}
+
+#one-unit > .ou-options {
+  position: absolute;
+  top: 240px;
+  right: var(--margin-x);
+  display: grid;
+  width: 920px;
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#one-unit .ou-opt {
+  position: relative;
+  display: flex;
+  height: 96px;
+  align-items: center;
+  gap: 28px;
+  padding: 0 24px 0 0;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+#one-unit .ou-opt__letter {
+  display: grid;
+  flex: none;
+  width: 90px;
+  height: 100%;
+  place-items: center;
+  border-right: 3px solid var(--ink);
+  font-size: var(--t-h2);
+  font-weight: 700;
+}
+
+#one-unit .ou-opt__text {
+  flex: 1;
+  font-size: var(--t-lead);
+  font-weight: 600;
+  font-feature-settings: "tnum" 1;
+}
+
+#one-unit .ou-right {
+  flex: none;
+}
+
+#one-unit .ou-ring {
+  position: absolute;
+  inset: -9px;
+  border: 4px solid var(--mennige);
+  pointer-events: none;
+}
+
+#one-unit > .ou-same {
+  position: absolute;
+  top: 600px;
+  right: var(--margin-x);
+  width: 920px;
+  max-width: none;
+}
+
+/* Press 3: two bars on one scale. 1,240 kWh is a thousandth of the right reading: a hairline. */
+#one-unit > .ou-effect {
+  position: absolute;
+  top: 660px;
+  left: var(--margin-x);
+  display: grid;
+  width: 1728px;
+  gap: 12px;
+}
+
+#one-unit .ou-bar-row {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  align-items: center;
+  gap: 24px;
+}
+
+#one-unit .ou-bar-label {
+  font-size: var(--t-body);
+  text-align: right;
+}
+
+#one-unit .ou-bar {
+  display: block;
+  height: 36px;
+  border: 2px solid var(--ink);
+}
+
+#one-unit .ou-bar--misread {
+  width: 3px;
+  background: var(--ink);
+}
+
+#one-unit .ou-bar--right {
+  width: 1100px;
+  background: var(--ink);
+}
+
+#one-unit .ou-effect__t {
+  justify-self: start;
+  margin: 4px 0 0 444px;
+  padding: 6px 16px;
+  border: 3px solid var(--mennige);
+  font-size: var(--t-lead);
+  font-weight: 700;
+}
+
+#one-unit > .ou-check {
+  position: absolute;
+  top: 832px;
+  left: var(--margin-x);
+  width: 1728px;
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  align-items: start;
+  gap: 4px 48px;
+}
+
+#one-unit .ou-check .check__head {
+  grid-column: 1 / -1;
+}
+
+#one-unit .ou-check p {
+  margin: 0;
+}
+
+#one-unit .ou-check .check__head {
+  margin: 0;
+}
+
+/* One Mennige mark per press: the printed line until the answer (entry and vote), the ring on C
+   (press 2), the effect figure (press 3). Earlier marks fall back to ink. */
+#one-unit:not([data-step-current="0"]):not([data-step-current="1"]) .ou-doc .doc__mark {
+  border-color: var(--ink);
+}
+
+#one-unit[data-step-current="4"] .ou-effect__t {
+  border-color: var(--ink);
+}

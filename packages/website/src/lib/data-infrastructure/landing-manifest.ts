@@ -47,14 +47,14 @@ const LESSON_SEEDS = [
     durationMinutes: 12,
     trackId: "foundations",
     en: {
-      title: "The Stack, Top to Bottom",
+      title: "The stack, top to bottom",
       subtitle: "Source → log → lake → warehouse → mart",
       hook: "Trace data from source to consumer, then state the contract at each boundary.",
     },
     de: {
       title: "Der Daten-Stack von oben nach unten",
       subtitle: "Quelle → Log → Lake → Warehouse → Mart",
-      hook: "Daten von der Quelle bis zum Consumer verfolgen und den Vertrag an jeder Grenze benennen.",
+      hook: "Daten bis zum Consumer verfolgen und jede Grenze festlegen.",
     },
   },
   {
@@ -62,7 +62,7 @@ const LESSON_SEEDS = [
     durationMinutes: 14,
     trackId: "foundations",
     en: {
-      title: "CAP, PACELC & Coordination Cost",
+      title: "CAP, PACELC and coordination cost",
       subtitle: "Partition behavior and normal-operation trade-offs",
       hook: "State the failure model first, then choose consistency and availability behavior per operation.",
     },
@@ -77,7 +77,7 @@ const LESSON_SEEDS = [
     durationMinutes: 13,
     trackId: "foundations",
     en: {
-      title: "Modeling: OLTP vs OLAP vs Stream",
+      title: "Modeling: OLTP vs OLAP vs stream",
       subtitle: "3NF · Kimball · Wide-table · Vault",
       hook: "Choose a model from write behavior, query shape, history, lineage, and ownership.",
     },
@@ -92,7 +92,7 @@ const LESSON_SEEDS = [
     durationMinutes: 13,
     trackId: "storage",
     en: {
-      title: "Row vs Column: Inside Parquet",
+      title: "Row vs column: inside Parquet",
       subtitle: "Encodings · row groups · pushdown",
       hook: "Relate physical layout and metadata to the bytes an analytical query must read.",
     },
@@ -107,7 +107,7 @@ const LESSON_SEEDS = [
     durationMinutes: 15,
     trackId: "storage",
     en: {
-      title: "The Lakehouse: Iceberg, Delta, Hudi",
+      title: "The lakehouse: Iceberg, Delta, Hudi",
       subtitle: "ACID on object storage",
       hook: "Inspect snapshots, commit validation, delete handling, and maintenance before choosing a table format.",
     },
@@ -122,7 +122,7 @@ const LESSON_SEEDS = [
     durationMinutes: 12,
     trackId: "storage",
     en: {
-      title: "Partitioning, Clustering, Small Files",
+      title: "Partitioning, clustering, small files",
       subtitle: "Lay out a petabyte to query a megabyte",
       hook: "Design file layout from measured predicates, distribution, file size, and maintenance cost.",
     },
@@ -138,7 +138,7 @@ const LESSON_SEEDS = [
     durationMinutes: 13,
     trackId: "movement",
     en: {
-      title: "Batch ETL & Orchestration",
+      title: "Batch ELT and orchestration",
       subtitle: "Airflow · dbt · idempotent merges",
       hook: "Make bounded jobs replayable, observable, and safe under partial failure.",
     },
@@ -153,9 +153,9 @@ const LESSON_SEEDS = [
     durationMinutes: 15,
     trackId: "movement",
     en: {
-      title: "Streaming: Kafka, Watermarks, Windows",
+      title: "Streaming: Kafka, watermarks, windows",
       subtitle: "Partitions · groups · event time",
-      hook: "Why event time ≠ processing time, and how watermarks let you reason about late data.",
+      hook: "Event time differs from processing time. Watermarks handle late data.",
     },
     de: {
       title: "Streaming: Kafka, Watermarks und Fenster",
@@ -170,12 +170,12 @@ const LESSON_SEEDS = [
     en: {
       title: "CDC, Lambda & Kappa",
       subtitle: "Change data capture · two architectures",
-      hook: "Capture committed row changes, define bootstrap and replay, then choose one or two processing paths from requirements.",
+      hook: "Capture row changes with CDC and pick the processing path.",
     },
     de: {
       title: "CDC, Lambda & Kappa",
       subtitle: "Change Data Capture · zwei Architekturen",
-      hook: "Commitete Zeilenänderungen erfassen, Bootstrap und Replay definieren und einen oder zwei Verarbeitungspfade aus Anforderungen wählen.",
+      hook: "Zeilenänderungen per CDC erfassen und den Verarbeitungspfad wählen.",
     },
   },
   {
@@ -183,7 +183,7 @@ const LESSON_SEEDS = [
     durationMinutes: 14,
     trackId: "scale",
     en: {
-      title: "Idempotency, Backfills & Processing Guarantees",
+      title: "Idempotency, backfills and processing guarantees",
       subtitle: "Scope the source, state, sink, and failure model",
       hook: "Make retries and historical reprocessing safe across every declared side effect.",
     },
@@ -198,7 +198,7 @@ const LESSON_SEEDS = [
     durationMinutes: 16,
     trackId: "scale",
     en: {
-      title: "SLAs, Observability & Data Quality",
+      title: "SLAs, observability and data quality",
       subtitle: "Freshness · volume · drift · lineage",
       hook: "Define measurable reliability targets, detect silent data defects, and route incidents with evidence.",
     },
@@ -213,14 +213,14 @@ const LESSON_SEEDS = [
     durationMinutes: 20,
     trackId: "scale",
     en: {
-      title: "System Design Review",
-      subtitle: "A seller analytics scenario with explicit assumptions",
-      hook: "Turn an ambiguous prompt into a reviewable design with estimates, failure boundaries, and stated trade-offs.",
+      title: "System design review",
+      subtitle: "A seller analytics scenario with stated assumptions",
+      hook: "Turn an open prompt into a reviewable system design.",
     },
     de: {
       title: "Systemdesign-Review",
       subtitle: "Ein Händleranalyse-Szenario mit expliziten Annahmen",
-      hook: "Eine mehrdeutige Aufgabe in einen prüfbaren Entwurf mit Schätzungen, Fehlergrenzen und benannten Zielkonflikten überführen.",
+      hook: "Eine offene Aufgabe als prüfbaren Systementwurf ausarbeiten.",
     },
   },
 ] as const satisfies readonly LessonSeed[];

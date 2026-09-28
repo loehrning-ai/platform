@@ -1,0 +1,10 @@
+position;kwh;status
+Werk Nord: 10 echte Rechnungen;2060000;enthalten
+Werk Nord: Duplikat März (4711-03);205000;ausgeschlossen: Duplikat
+Talbrück Beschichtung GmbH;1000000;ausgeschlossen: Grenze
+Werk Süd: Jahresübersicht;1240000;enthalten
+Lager Ost: 4 Quartale;110000;enthalten
+Summe Belege Strom;4615000;
+minus ausgeschlossen (Duplikat, Grenze);1205000;
+plus Oktober Werk Nord aus Zählerständen;200000;ergänzt: Zählerstand, DQ B
+Kontrollsumme = Strom in der Grenze;3610000;stimmt mit Belegtabelle

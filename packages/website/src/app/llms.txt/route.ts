@@ -208,25 +208,25 @@ function renderBody(): string {
 
 ${SITE_ENTITY.description}
 
-Free AI and data learning resources in German and English. Each page states its access boundary, source basis, and completion-record status.
+Free AI and data learning resources in German and English. Each page states its access, sources and completion-record status.
 
 ## Öffentlicher Bereich / Public access
 
-Öffentlich zugänglich sind Landingpages, technische Kursreader, Bücher, Demos, Workshops, Blog, Open-Source-Artefakte und maschinenlesbare Metadaten. Die Reader der vier Grundlagenkurse sind kontogeschützt. Quiz-, Abschluss- und Verifizierungsseiten können direkt erreichbar, aber bewusst nicht indexierbar sein.
+Öffentlich sind Landingpages, technische Kursreader, Bücher, Demos, Workshops, Blog, Open-Source-Artefakte und maschinenlesbare Metadaten. Die Reader der vier Grundlagenkurse brauchen ein Konto. Quiz-, Abschluss- und Verifizierungsseiten können direkt erreichbar sein, werden aber nicht indexiert.
 
-Public resources include landing pages, technical course readers, books, demos, workshops, the blog, open-source artifacts, and machine-readable metadata. The four foundation-course readers require an account. Quiz, completion, and verification pages may be directly accessible while deliberately excluded from indexing.
+Public content: landing pages, technical course readers, books, demos, workshops, the blog, open-source artifacts and machine-readable metadata. The four foundation-course readers require an account. Quiz, completion and verification pages may be reachable directly but are not indexed.
 
-## Sprachmodell / Language model
+## Sprachen und URLs / Languages and URLs
 
-Deutsch verwendet kanonische, nicht präfixierte URLs. Geprüfte englische Fassungen verwenden /en. Eine englische URL erscheint hier und in der Sitemap erst nach bestätigter Inhalts- und Routenparität. Nicht gelistete /en-Seiten dürfen nicht als übersetzt interpretiert werden.
+Kanonische deutsche URLs haben kein Präfix, geprüfte englische Fassungen liegen unter /en. Eine /en-URL steht hier und in der Sitemap erst nach geprüfter Inhalts- und Routenparität. Nicht gelistete /en-Seiten gelten nicht als übersetzt.
 
-German uses canonical, unprefixed URLs. Reviewed English versions use /en. An English URL appears here and in the sitemap only after content and route parity are verified. An unlisted /en route must not be treated as translated content.
+Canonical German URLs have no prefix; reviewed English versions live under /en. An /en URL appears here and in the sitemap only after verified content and route parity. Treat unlisted /en routes as untranslated.
 
 ## Private Zustände / Private state
 
-Wenn das Lernkonto vollständig konfiguriert ist, kann es Fortschritt, Quizstatus, Abschlussstatus, Datenschutzaktionen und serverseitige Synchronisation speichern. Ohne vollständige Providerkonfiguration bleiben kontogeschützte Reader geschlossen. Private APIs, Kontoseiten, Providerkonfiguration und Betriebsnachweise sind nicht Teil dieser Datei.
+Mit vollständiger Providerkonfiguration speichert das Lernkonto Fortschritt, Quiz- und Abschlussstatus und Datenschutzaktionen auf dem Server. Ohne sie bleiben kontogeschützte Reader geschlossen. Private APIs, Kontoseiten, Providerkonfiguration und Betriebsnachweise fehlen in dieser Datei.
 
-When the learning account is fully configured, it can store progress, quiz state, completion state, privacy actions, and server-side synchronization. Without complete provider configuration, protected readers remain closed. Private APIs, account pages, provider configuration, and operational evidence are outside this file.
+With full provider configuration, the learning account stores progress, quiz and completion state and privacy actions on the server. Without it, protected readers stay closed. Private APIs, account pages, provider configuration and operational evidence are not listed here.
 
 ## Öffentliche Seiten / Public pages
 
@@ -239,9 +239,9 @@ ${publicPageLines}
 
 ## Agenten-Zugang / Agent access
 
-Ein eigener Assistent (Claude Desktop, Claude Code, Codex oder ein anderer MCP-Client) liest die öffentlichen Inhalte über den MCP-Endpunkt: Kurse, Lektionen, Workshops mit Materialien, Buchkapitel, Open-Source-Werkzeuge, Suche im Inhalt und Wissensgraph, alles nur lesend. Lernstand und nächster Schritt sind erst nach einer OAuth-Freigabe oder mit einem persönlichen Zugriffstoken aus dem Konto lesbar; der Endpunkt schreibt nie. Ist der Endpunkt in einer Umgebung nicht aktiviert, bleiben diese Datei und die JSON-Kataloge die maschinenlesbaren Quellen.
+Jeder MCP-Client (etwa Claude Desktop, Claude Code oder Codex) liest über den MCP-Endpunkt die öffentlichen Inhalte: Kurse, Lektionen, Workshops mit Materialien, Buchkapitel, Open-Source-Werkzeuge, Suche und Wissensgraph. Lernstand und nächsten Schritt liest er erst nach OAuth-Freigabe oder mit einem persönlichen Zugriffstoken aus dem Konto. Der Endpunkt schreibt nie. Ist er in einer Umgebung nicht aktiviert, bleiben diese Datei und die JSON-Kataloge die maschinenlesbaren Quellen.
 
-A learner's own assistant (Claude Desktop, Claude Code, Codex or another MCP client) reads the public content through the MCP endpoint: courses, lessons, workshops with their materials, book chapters, open-source tools, content search and the knowledge graph, all read-only. Progress and the next step become readable only after an OAuth grant or with a personal access token from the account; the endpoint never writes. When the endpoint is not enabled in a deployment, this file and the JSON catalogs remain the machine-readable sources.
+Any MCP client (such as Claude Desktop, Claude Code or Codex) reads the public content through the MCP endpoint: courses, lessons, workshops with materials, book chapters, open-source tools, search and the knowledge graph. It reads progress and the next step only after an OAuth grant or with a personal access token from the account. The endpoint never writes. When a deployment has it disabled, this file and the JSON catalogs remain the machine-readable sources.
 
 - MCP-Endpunkt (Streamable HTTP, GET zeigt die Einrichtung) / MCP endpoint (Streamable HTTP, GET shows the setup guide): ${SITE_ORIGIN}/api/mcp
 - OAuth-Ressourcenmetadaten des Endpunkts (RFC 9728) / Protected resource metadata for the endpoint (RFC 9728): ${SITE_ORIGIN}/.well-known/oauth-protected-resource/api/mcp
@@ -260,9 +260,9 @@ ${sections}
 
 ## Wiederverwendung und Zitation / Reuse and citation
 
-Öffentliche Seiten dürfen als Lernressource zitiert und verlinkt werden. Abschlussdokumente sind selbst ausgestellte Teilnahmebestätigungen oder Lernnachweise, keine amtlichen oder akkreditierten Nachweise. Rechtsbezogene Inhalte ersetzen keine Rechtsberatung.
+Öffentliche Seiten dürfen zitiert und verlinkt werden. Abschlussdokumente sind selbst ausgestellte Teilnahmebestätigungen oder Lernnachweise, keine amtlichen oder akkreditierten Nachweise. Rechtsbezogene Inhalte ersetzen keine Rechtsberatung.
 
-Public pages may be cited and linked as learning resources. Completion documents are self-issued participation or learning records, not official or accredited credentials. Legal content is not legal advice.
+Public pages may be cited and linked. Completion documents are self-issued participation or learning records, not official or accredited credentials. Legal content is not legal advice.
 
 ## Datenstand / Content date
 

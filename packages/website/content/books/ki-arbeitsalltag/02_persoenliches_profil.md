@@ -1,12 +1,8 @@
 # Dein persönliches KI-Profil aufbauen
 
-KI ist überall, aber nicht überall gleich nützlich.
+Viele Einsteiger wollen KI ab Montag überall einsetzen. Finde stattdessen die drei Aufgaben in deinem Job, bei denen KI dir mehr Zeit spart, als sie kostet.
 
-Der Irrtum vieler Einsteiger ist die Fläche. KI „überall einsetzen", ab Montag. Falsches Ziel. Finde die drei Aufgaben in deinem Job, in denen KI dir mehr Zeit spart, als sie dir kostet. Der Rest ist Bonus.
-
-Bei Meta sehe ich täglich, was KI kann, wenn die Daten sauber sind. Der Großteil ist nicht spektakulär, Verwaltung, Koordination, Datenarbeit. Die interessante Spitze hat zehnmal so viel Wartung darunter. Gleiche Regel für deinen Job: Fang bei der Wartung an.
-
-Fünf Minuten, zehn Fragen, dein Profil.
+Bei Meta sehe ich täglich, was KI mit sauberen Daten kann. Der Großteil ist Verwaltung, Koordination und Datenarbeit, und jede sichtbare Anwendung braucht viel Wartung. Fang auch in deinem Job bei dieser Routine an. Die folgenden zehn Fragen dauern fünf Minuten.
 
 ## Self-Assessment: Wie KI-exponiert ist dein Job?
 
@@ -23,23 +19,17 @@ Hak ab, was auf dich zutrifft:
 - [ ] Ich schreibe Texte, die anderen Texten ähneln (Angebote, Anschreiben)
 - [ ] Ich fasse lange Dokumente zusammen
 
-Mehr als fünf Häkchen? Dein Job ist stark KI-exponiert. Null bis zwei? Selten, aber auch du hast drei Aufgaben, bei denen es sich lohnt.
+Mit mehr als fünf Häkchen ist dein Job stark KI-exponiert. Auch mit null bis zwei findest du drei Aufgaben, bei denen es sich lohnt.
 
 ## Die Faustregel
 
 KI funktioniert am besten bei repetitiven Aufgaben mit klarem Muster. Hast du die letzten zehn Fälle jedes Mal anders gelöst, ist KI nicht die Antwort.
 
-Drei Fragen zur Selbstprüfung.
-
-- Mache ich diese Aufgabe mehrmals pro Woche?
-- Folgt sie einem Muster?
-- Könnte jemand Neues sie nach kurzer Anleitung auch machen?
-
-Dreimal ja, und die Aufgabe ist ein Jackpot. Dreimal nein, dann Finger weg.
+Prüfe jede Aufgabe mit drei Fragen: Machst du sie mehrmals pro Woche, folgt sie einem Muster, und könnte jemand Neues sie nach kurzer Anleitung erledigen? Bei dreimal Ja eignet sich die Aufgabe gut. Bei dreimal Nein lass KI weg.
 
 ## Dein Profil: Vier Rollen
 
-Je nach Job brauchst du andere Werkzeuge. Die meisten Rollen im deutschen Mittelstand passen in eines dieser vier Profile, manche in zwei.
+Die meisten Rollen im deutschen Mittelstand passen in eines dieser vier Profile, manche in zwei.
 
 ### Profil A: Wissensarbeit (Büro, Daten, Meetings)
 
@@ -55,9 +45,8 @@ Typische Rollen: Manager, Analyst, HR, Vertrieb Innendienst, Projektleitung.
 
 Gute Tools für dich:
 
-- Midjourney oder Stable Diffusion für Bilder
+- Midjourney, Stable Diffusion oder Adobe Firefly für Bilder
 - ChatGPT oder Claude für Copy und Ideen
-- Adobe Firefly für produktionsreifes Design
 
 Typische Rollen: Designerin, Marketing, Content Creation, Social Media.
 
@@ -83,13 +72,11 @@ Typische Rollen: Support, Verkauf, Customer Service, Beschwerdemanagement.
 
 > **Tipp:** Viele Rollen sind Mischformen. Ein Vertriebsinnendienst kombiniert Profil A (Wissen) und D (Service). Ein Maschinenbauer mit Angebotsarbeit kombiniert C und A. Such dir das Profil aus, in dem du 70 Prozent deiner Zeit verbringst, und schau bei den anderen kurz rein.
 
-Damit das kein leeres Versprechen bleibt, gehört zu jedem Profil eine fertige Prompt-Vorlage. Profil A in Kapitel 6 (E-Mail, Protokoll, Bericht). Profil B im Anhang, Vorlage 6 (Social-Media-Post). Profil C in Kapitel 6 (Schichtübergabe) und Anhang, Vorlage 7 (Arbeitsanweisung). Profil D in Kapitel 6 (Service-Antwort) und Anhang, Vorlagen 4 und 5.
+Zu jedem Profil gibt es eine fertige Prompt-Vorlage. Profil A in Kapitel 6 (E-Mail, Protokoll, Bericht). Profil B im Anhang, Vorlage 6 (Social-Media-Post). Profil C in Kapitel 6 (Schichtübergabe) und Anhang, Vorlage 7 (Arbeitsanweisung). Profil D in Kapitel 6 (Service-Antwort) und Anhang, Vorlagen 4 und 5.
 
 ## Deine Top-3-Anwendungen
 
-Jetzt wird es konkret. Welche drei KI-Anwendungen sparen dir diesen Monat Zeit?
-
-Eine Zeile ist schon ausgefüllt, damit du siehst, wie gemeint. Die anderen zwei sind deine:
+Welche drei KI-Anwendungen sparen dir diesen Monat Zeit? Die erste Zeile ist ein Beispiel, die anderen zwei füllst du aus:
 
 | Aufgabe | Tool | Einsparung | Schwierigkeit |
 |---------|------|-----------|--------------|
@@ -97,7 +84,7 @@ Eine Zeile ist schon ausgefüllt, damit du siehst, wie gemeint. Die anderen zwei
 | Task 2 | ... | ... | ... |
 | Task 3 | ... | ... | ... |
 
-So liest sich die Beispielzeile: Reklamationsmails kosten dich zwölf Minuten pro Stück, bei rund fünfzehn im Monat sind das drei Stunden. Copilot in Outlook macht den Erstentwurf, du korrigierst. Das Tool hast du schon (M365-Lizenz), also „Leicht". So konkret wird deine eigene Zeile auch. Kein „mehr Effizienz", sondern Aufgabe, Tool, Stunden.
+So liest sich die Beispielzeile: Reklamationsmails kosten dich zwölf Minuten pro Stück, bei rund fünfzehn im Monat sind das drei Stunden. Copilot in Outlook macht den Erstentwurf, du korrigierst. Das Tool hast du schon (M365-Lizenz), also „Leicht". Deine Zeilen nennen genauso Aufgabe, Tool und Stunden.
 
 **Schwierigkeits-Skala:**
 
@@ -105,7 +92,7 @@ So liest sich die Beispielzeile: Reklamationsmails kosten dich zwölf Minuten pr
 - **Mittel:** Ich brauche ein bis zwei Stunden Einarbeitung.
 - **Schwer:** Ich brauche externe Hilfe (IT, externer Berater, Schulung).
 
-> **Jetzt bist du dran:** Trag die zwei offenen Aufgaben ein, bevor du weiterliest. Fünf Minuten Aufwand. Am Ende steht ein Plan statt eines Gefühls.
+> **Jetzt bist du dran:** Trag in fünf Minuten die zwei offenen Aufgaben ein, bevor du weiterliest.
 
 ## Checkliste: Bin ich bereit für KI?
 
@@ -115,7 +102,7 @@ So liest sich die Beispielzeile: Reklamationsmails kosten dich zwölf Minuten pr
 - [ ] Ich verstehe, wo Datenschutz ein Thema ist (siehe Kapitel 3)
 - [ ] Ich habe mit Vorgesetzten oder IT gesprochen, falls nötig
 
-Alle Häkchen gesetzt? Probier es diese Woche aus, nicht nächsten Monat.
+Sind alle Häkchen gesetzt, probierst du es diese Woche aus.
 
 ---
 

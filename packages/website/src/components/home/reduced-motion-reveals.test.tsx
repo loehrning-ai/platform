@@ -16,8 +16,8 @@ describe("homepage static content visibility", () => {
 
     expect(html).not.toContain("opacity:0");
     expect(html).not.toContain("scaleX(0)");
-    expect(html).toContain("Vier Kurse.");
-    expect(html).toContain("Betriebsprinzipien");
+    expect(html).toContain("Vier Kurse in fester Reihenfolge");
+    expect(html).toContain("Grundregeln");
   });
 
   it("renders the complete foundation route in visible static markup", () => {

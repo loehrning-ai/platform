@@ -1,5 +1,9 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { notFound } from "next/navigation";
+import { OG_FONT_FAMILY, OgColophon } from "@/lib/plakat/og";
+import { PAPER } from "@/lib/plakat/palettes";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
 import {
   OPEN_SOURCE_PROJECT_ARTIFACTS,
@@ -23,6 +27,27 @@ const DETAIL_ARTIFACTS = [
   ...OPEN_SOURCE_PROJECT_ARTIFACTS,
   ...OPEN_SOURCE_VIDEO_ARTIFACTS,
 ] as const;
+
+const INSET = 64;
+
+// The site face from src/fonts, read on the Node runtime. The card reads the
+// request locale, so it renders per request, not at build time; the font
+// files reach the deployed function through outputFileTracingIncludes in
+// next.config.ts (see requests.md G5a-fix). Open source stays paper
+// (SPEC §2.3): Kalkweiß, Druckschwarz type, one Mennige label and the shared
+// colophon strip with the header's L tile.
+let fontData: Promise<{ bold: Buffer; regular: Buffer }> | undefined;
+async function ogFonts() {
+  fontData ??= Promise.all([
+    readFile(join(process.cwd(), "src/fonts/LoehrningSans-Bold.ttf")),
+    readFile(join(process.cwd(), "src/fonts/LoehrningSans-Regular.ttf")),
+  ]).then(([bold, regular]) => ({ bold, regular }));
+  const { bold, regular } = await fontData;
+  return [
+    { name: OG_FONT_FAMILY, data: bold, weight: 700 as const, style: "normal" as const },
+    { name: OG_FONT_FAMILY, data: regular, weight: 400 as const, style: "normal" as const },
+  ];
+}
 
 export function generateStaticParams() {
   return DETAIL_ARTIFACTS.map((artifact) => ({
@@ -60,51 +85,43 @@ export default async function Image({
     (
       <div
         style={{
-          width: "100%",
-          height: "100%",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "space-between",
-          padding: 70,
-          background: "#0B0908",
-          color: "#F3F0E9",
-          fontFamily: "system-ui, -apple-system, sans-serif",
+          width: "100%",
+          height: "100%",
+          background: PAPER.kalkweiss,
+          color: PAPER.druckschwarz,
+          fontFamily: OG_FONT_FAMILY,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-          {/* Das Ö mark — hard-cornered umlaut, counter knocked out (evenodd) */}
-          <svg width="28" height="37" viewBox="18 8 60 80" fill="#B73A15">
-            <rect x="26" y="8" width="16" height="16" />
-            <rect x="54" y="8" width="16" height="16" />
-            <path d="M18 34 H78 V88 H18 Z M36 52 H60 V70 H36 Z" fillRule="evenodd" />
-          </svg>
-          <div style={{ display: "flex", fontSize: 26, fontWeight: 900 }}>
-            loehrning<span style={{ color: "#B73A15" }}>.ai</span>
-          </div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            flexGrow: 1,
+            padding: `${INSET}px ${INSET}px 0 ${INSET}px`,
+          }}
+        >
           <div
             style={{
               display: "flex",
-              marginLeft: 14,
-              fontFamily: "monospace",
-              fontSize: 15,
-              color: "#B73A15",
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
+              fontSize: 24,
+              fontWeight: 700,
+              lineHeight: 1.3,
+              color: PAPER.mennige,
             }}
           >
             {locale === "de" ? "Open-Source-Artefakt" : "Open-source artifact"}
           </div>
-        </div>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
           <div
             style={{
               display: "flex",
-              fontSize: title.length > 26 ? 62 : 72,
-              fontWeight: 900,
+              marginTop: 20,
+              fontSize: title.length > 26 ? 64 : 76,
+              fontWeight: 700,
               lineHeight: 1.02,
-              letterSpacing: 0,
-              maxWidth: 1040,
+              letterSpacing: "-0.015em",
+              maxWidth: 1072,
             }}
           >
             {title}
@@ -112,52 +129,46 @@ export default async function Image({
           <div
             style={{
               display: "flex",
+              marginTop: 20,
               fontSize: 28,
+              fontWeight: 400,
               lineHeight: 1.35,
-              color: "rgba(243,240,233,0.72)",
               maxWidth: 980,
             }}
           >
             {description}
           </div>
-        </div>
-
-        <div style={{ display: "flex", justifyContent: "space-between", gap: 24 }}>
-          <div style={{ display: "flex", gap: 10, flexWrap: "wrap", maxWidth: 670 }}>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginTop: "auto", paddingBottom: 28 }}>
             {chips.map((label) => (
               <div
                 key={label}
                 style={{
                   display: "flex",
-                  padding: "10px 14px",
-                  border: "2px solid rgba(243,240,233,0.28)",
-                  background: "rgba(243,240,233,0.08)",
-                  fontFamily: "monospace",
-                  fontSize: 17,
-                  fontWeight: 800,
-                  letterSpacing: "0.04em",
-                  textTransform: "uppercase",
+                  padding: "8px 14px",
+                  border: `2px solid ${PAPER.druckschwarz}`,
+                  fontSize: 20,
+                  fontWeight: 700,
+                  lineHeight: 1.2,
                 }}
               >
                 {label}
               </div>
             ))}
           </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "flex-end",
-              fontFamily: "monospace",
-              fontSize: 20,
-              color: "#B73A15",
-              fontWeight: 900,
-            }}
-          >
-            {locale === "de" ? "/open-source" : "/en/open-source"}
-          </div>
         </div>
+        <div
+          style={{
+            display: "flex",
+            margin: `0 ${INSET}px`,
+            borderTop: `2px solid ${PAPER.druckschwarz}`,
+          }}
+        />
+        <OgColophon
+          inset={INSET}
+          trailing={locale === "de" ? "/open-source" : "/en/open-source"}
+        />
       </div>
     ),
-    { ...size },
+    { ...size, fonts: await ogFonts() },
   );
 }

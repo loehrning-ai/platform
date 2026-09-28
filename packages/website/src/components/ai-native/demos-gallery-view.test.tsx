@@ -154,14 +154,14 @@ describe("<DemosGalleryView> default listing", () => {
     expect(screen.getByText("Chat & Wissen (1)")).toBeInTheDocument();
     expect(screen.getByText("Dokumente (3)")).toBeInTheDocument();
     expect(screen.getByText("Agents & Workflows (2)")).toBeInTheDocument();
-    expect(screen.getByText("ROI & Reife (2)")).toBeInTheDocument();
+    expect(screen.getByText("Wirtschaftlichkeit (2)")).toBeInTheDocument();
     expect(screen.getByText("Compliance (1)")).toBeInTheDocument();
     expect(screen.queryByText(/Observability/)).toBeNull();
 
     // A few demo titles are present.
     expect(screen.getByText("RAG Vertrags-Assistent")).toBeInTheDocument();
     expect(screen.getByText("Excel-Automation")).toBeInTheDocument();
-    expect(screen.getByText("ROI Calculator")).toBeInTheDocument();
+    expect(screen.getByText("ROI-Szenariorechner")).toBeInTheDocument();
   });
 
   it("hides the Clear button until a query is entered", () => {
@@ -193,10 +193,10 @@ describe("<DemosGalleryView> search filtering", () => {
     // Only the Dokumente category survives (Excel-Automation lives there).
     expect(screen.getByText("Dokumente (1)")).toBeInTheDocument();
     expect(screen.queryByText("Chat & Wissen (1)")).toBeNull();
-    expect(screen.queryByText("ROI & Reife (2)")).toBeNull();
+    expect(screen.queryByText("Wirtschaftlichkeit (2)")).toBeNull();
 
     expect(screen.getByText("Excel-Automation")).toBeInTheDocument();
-    expect(screen.queryByText("ROI Calculator")).toBeNull();
+    expect(screen.queryByText("ROI-Szenariorechner")).toBeNull();
     expect(screen.queryByText("RAG Vertrags-Assistent")).toBeNull();
   });
 

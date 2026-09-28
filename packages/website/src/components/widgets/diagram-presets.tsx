@@ -51,14 +51,14 @@ export const RISK_PYRAMID_NODES: readonly DiagramNode[] = [
   },
   {
     id: "transparenz",
-    label: "Begrenztes Risiko",
+    label: "Transparenzpflichten",
     sub: "Chatbots, generierte Bilder und Texte: Kennzeichnungspflicht",
     weight: 0.5,
   },
   {
     id: "minimal",
     label: "Minimales Risiko",
-    sub: "Spamfilter, KI im Lager, Empfehlungen: keine besonderen Pflichten",
+    sub: "Spamfilter, KI im Lager, Empfehlungen: keine besonderen Pflichten aus dem AI Act",
     weight: 0.32,
   },
 ];
@@ -68,7 +68,7 @@ export function RiskPyramidDiagram({
   cpId,
   reducedMotion,
   title = "Die Risikopyramide des EU AI Act",
-  caption = "Spiel den Verlauf ab: von der strengsten Stufe oben bis zur freiesten unten.",
+  caption = "Oben die strengste Stufe, unten die freieste.",
   nodes = RISK_PYRAMID_NODES,
   copy,
 }: DiagramPresetProps): JSX.Element {
@@ -81,7 +81,7 @@ export function RiskPyramidDiagram({
       lessonId={lessonId}
       cpId={cpId}
       reducedMotion={reducedMotion}
-      copy={copy}
+      copy={{ kindLabel: "Risikokarte", ...copy }}
     />
   );
 }
@@ -98,10 +98,9 @@ export const OBLIGATION_LAYER_NODES: readonly DiagramNode[] = [
     id: "risikomanagement",
     label: "Risikomanagement",
     sub: "Fortlaufender Prozess über den gesamten Lebenszyklus",
-    detail:
-      "Ein dokumentierter, wiederkehrender Prozess, der Risiken identifiziert, bewertet und mindert, solange das System im Einsatz ist.",
+    detail: "Ein dokumentierter Prozess erkennt, bewertet und mindert Risiken.",
     consequence:
-      "Risiken werden erst sichtbar, wenn etwas schiefgeht. Keine Grundlage für jede weitere Pflicht.",
+      "Risiken fallen erst auf, wenn etwas schiefgeht. Den übrigen Pflichten fehlt die Grundlage.",
     weight: 1,
   },
   {
@@ -119,19 +118,17 @@ export const OBLIGATION_LAYER_NODES: readonly DiagramNode[] = [
     label: "Technische Dokumentation",
     sub: "Zweck, Architektur, Datenherkunft, Leistungsgrenzen nachvollziehbar",
     detail:
-      "Eine vollständige Beschreibung, mit der eine Behörde die Konformität prüfen kann. Wird vor Markteinführung erstellt und gepflegt.",
-    consequence:
-      "Keine Prüfung möglich. Bei einer Kontrolle steht das System ohne Nachweis da.",
+      "Damit prüft eine Behörde die Konformität. Sie entsteht vor der Markteinführung und wird gepflegt.",
+    consequence: "Bei einer Kontrolle fehlt jeder Nachweis.",
     weight: 0.72,
   },
   {
     id: "protokollierung",
     label: "Protokollierung",
     sub: "Automatische Logs über die Lebensdauer des Systems",
-    detail:
-      "Das System zeichnet seine Vorgänge auf, sodass Ergebnisse rückverfolgbar und Vorfälle untersuchbar sind.",
+    detail: "Ergebnisse bleiben rückverfolgbar, Vorfälle lassen sich untersuchen.",
     consequence:
-      "Ein Fehlentscheid lässt sich nicht rekonstruieren. Weder Korrektur noch Beweisführung ist möglich.",
+      "Eine Fehlentscheidung lässt sich nicht rekonstruieren, also weder korrigieren noch belegen.",
     weight: 0.6,
   },
   {
@@ -139,9 +136,9 @@ export const OBLIGATION_LAYER_NODES: readonly DiagramNode[] = [
     label: "Menschliche Aufsicht",
     sub: "Ein Mensch kann eingreifen, übersteuern oder abschalten",
     detail:
-      "Die Verantwortung bleibt bei Menschen. Sie verstehen die Ausgabe, erkennen Grenzen und können das System stoppen.",
+      "Die Verantwortung bleibt bei Menschen. Sie verstehen die Ausgabe und kennen die Grenzen des Systems.",
     consequence:
-      "Automatisierte Entscheidungen laufen ungebremst. Niemand fängt offensichtliche Fehler ab.",
+      "Niemand fängt offensichtliche Fehler automatisierter Entscheidungen ab.",
     weight: 0.46,
   },
   {
@@ -149,9 +146,8 @@ export const OBLIGATION_LAYER_NODES: readonly DiagramNode[] = [
     label: "Genauigkeit und Robustheit",
     sub: "Messbare Leistung, Schutz gegen Manipulation und Cyberangriffe",
     detail:
-      "Das System erreicht ein angemessenes Genauigkeitsniveau und bleibt auch unter Angriff oder bei fehlerhaften Eingaben stabil.",
-    consequence:
-      "Schon kleine Störungen kippen das Ergebnis. Das System ist im Alltag nicht verlässlich.",
+      "Das System ist angemessen genau und bleibt bei Angriffen oder fehlerhaften Eingaben stabil.",
+    consequence: "Schon kleine Störungen kippen das Ergebnis.",
     weight: 0.32,
   },
 ];
@@ -161,7 +157,7 @@ export function ObligationLayersDiagram({
   cpId,
   reducedMotion,
   title = "Die Pflichten eines Hochrisiko-Systems",
-  caption = "Tipp jede Schicht an: was sie verlangt und was passiert, wenn sie fehlt.",
+  caption = "Was jede Pflicht verlangt und was passiert, wenn sie fehlt.",
   nodes = OBLIGATION_LAYER_NODES,
   copy,
 }: DiagramPresetProps): JSX.Element {

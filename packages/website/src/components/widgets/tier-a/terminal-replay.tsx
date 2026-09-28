@@ -50,6 +50,11 @@ export interface TerminalReplayWidgetProps {
   /** Terminal window chrome title, e.g. "codex@sandbox · task-4a92". */
   readonly windowTitle?: string;
   readonly frames: readonly TerminalReplayFrame[];
+  /** Placeholder line before the first run. */
+  readonly idleHint?: string;
+  readonly runLabel?: string;
+  readonly resetLabel?: string;
+  readonly speedLabel?: string;
 }
 
 const SPEEDS = [0.5, 1, 2, 4] as const;
@@ -124,6 +129,10 @@ export function TerminalReplayWidget({
   title,
   windowTitle = "codex@sandbox",
   frames,
+  idleHint = '# press "Run replay" to watch this session play out',
+  runLabel = "▶ Run replay",
+  resetLabel = "↺ Reset",
+  speedLabel = "speed",
 }: TerminalReplayWidgetProps): JSX.Element {
   const reduced = useReducedMotion();
   const { done, complete } = useCheckpoint(lessonId, cpId);
@@ -226,7 +235,7 @@ export function TerminalReplayWidget({
         <div className="max-h-[280px] overflow-y-auto p-3">
           {revealedCount === 0 && status !== "running" ? (
             <p className="font-mono text-[12px] text-muted-foreground">
-              # press &quot;Run replay&quot; to watch this session play out
+              {idleHint}
             </p>
           ) : (
             <>
@@ -251,17 +260,17 @@ export function TerminalReplayWidget({
           disabled={status === "running"}
           className="inline-flex min-h-11 items-center gap-1.5 border-2 border-foreground bg-brand-orange px-3.5 py-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-px hover:-translate-y-px hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
         >
-          ▶ Run replay
+          {runLabel}
         </button>
         <button
           type="button"
           onClick={reset}
           className="inline-flex min-h-11 items-center gap-1.5 border-2 border-border bg-background px-3.5 py-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground transition-colors hover:border-brand-orange"
         >
-          ↺ Reset
+          {resetLabel}
         </button>
         <label className="ml-auto flex items-center gap-2 font-mono text-xs text-muted-foreground">
-          speed
+          {speedLabel}
           <select
             value={speed}
             onChange={(e) => setSpeed(Number.parseFloat(e.target.value) || 1)}

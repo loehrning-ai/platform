@@ -2,24 +2,22 @@
 
 ## In plain words
 
-The five boxes from the lesson (question, approved view, four blanks, boundary, test) are a
-**design order**: they tell you what to decide. This file is the **build order**: what to make,
-in which sequence, and how you know each step is done.
+The five boxes from the lesson (question, approved view, four blanks, boundary, test) say what to
+decide. This file says what to build, in which order, and how you know each step is done.
 
-Three rules hold the whole way through:
+Three rules hold throughout:
 
 1. **Build one question end to end** before you add a second. FOLDLINE's is *"Show ending MRR by
    month for the last complete quarter."*
 2. **Write the truth before you connect any AI.** The right answer (334,675 / 344,450 / 387,015)
    is written down in step 2. Claude arrives in step 10.
-3. **Every step ends with evidence you can run**, not with a document you can read. A note by
-   itself cannot make a failing check pass.
+3. **Every step ends with evidence you can run.** A written note does not count.
 
 ---
 
 ## Roles
 
-One person may hold several roles. The tester should not be the person who built the lane.
+One person may hold several roles, but the tester should not have built the lane.
 
 | Role | Does | FOLDLINE |
 | --- | --- | --- |
@@ -33,8 +31,7 @@ One person may hold several roles. The tester should not be the person who built
 
 ## The steps
 
-Each step lists: who, input, output file, **done when** (executable evidence), the FOLDLINE
-example, and the anti-patterns it prevents (IDs from `ANTI-PATTERNS.md`).
+**Done when** is executable evidence. Anti-pattern IDs are from `ANTI-PATTERNS.md`.
 
 ### Step 0. Pick the question and the owner
 
@@ -43,7 +40,7 @@ example, and the anti-patterns it prevents (IDs from `ANTI-PATTERNS.md`).
 | Who | Question owner |
 | Input | A decision someone makes every month or quarter |
 | Output | The five boxes in `QUESTION-CARD.md` |
-| Done when | A second person restates the period, the kind of number, the rows and the unit without asking a question |
+| Done when | A second person restates the period, kind of number, rows and unit without asking |
 | FOLDLINE | "Show ending MRR by month for the last complete quarter." Owner: revenue_analytics. Decision: the board pack |
 | Prevents | AP-Q01 vague question, AP-Q02 no owner |
 
@@ -76,7 +73,7 @@ example, and the anti-patterns it prevents (IDs from `ANTI-PATTERNS.md`).
 | Who | Data builder |
 | Input | The tables you have today (FOLDLINE: seven export tables) |
 | Output | `naming/NAMING-REVIEW.md` filled in; a rename map |
-| Done when | Every column that will be served has a name a stranger can read. `naming/lint_names.sql` on the old tables prints the known failures |
+| Done when | Every column to be served has a name a stranger can read. `naming/lint_names.sql` on the old tables prints the known failures |
 | FOLDLINE | `monthly_revenue.amount` → `net_new_mrr_eur`; `dt` → `month_start`; `seg` → `customer_segment`; `A/C/N` → `active/churned/new` |
 | Prevents | AP-N01 generic names, AP-N02 status codes, AP-N03 source-named tables, AP-N04 misleading alias |
 
@@ -131,7 +128,7 @@ example, and the anti-patterns it prevents (IDs from `ANTI-PATTERNS.md`).
 | Who | Question owner and database admin |
 | Input | Steps 1 and 7 |
 | Output | `semantic/policy.yml` |
-| Done when | It is an allowlist. Every rule says what backs it (guides, application or database). The C01, R01 and R02 messages are written out. Freshness says warn at 36 h and names the only block rules |
+| Done when | It is an allowlist; every rule says what backs it (guides, application or database); the C01, R01 and R02 messages are written out; freshness warns at 36 h and names the only block rules |
 | FOLDLINE | "Two locks: refuse early, enforce anyway." |
 | Prevents | AP-C01 prompt as the lock, AP-F01 hiding the age, AP-F02 invented expiry |
 
@@ -143,7 +140,7 @@ example, and the anti-patterns it prevents (IDs from `ANTI-PATTERNS.md`).
 | Input | Steps 2, 5 and 7 |
 | Output | The printed output of `warehouse/sql/70_checks.sql`, saved as a receipt with date, dataset ID and definition version |
 | Done when | `DB CHECKS n of n PASS`. The receipt says: "These test the database and course rules, not the AI." |
-| FOLDLINE | The deck's nine (G01–G05, C01, R01, R02, D01) plus B-, Q-, T- and F- cases; `70_checks.sql` runs 22. In the deck, C01, R01 and R02 were course rules checked outside the AI tool, before any SQL. The builder kit has no policy engine, so Claude's instructions carry them and they are graded in step 11. A pass there is guidance evidence, not the deck's C01/R01/R02 result. R02 stays backed by D01 (42501) |
+| FOLDLINE | The deck's nine (G01–G05, C01, R01, R02, D01) plus B-, Q-, T- and F- cases; `70_checks.sql` runs 22. In the deck, C01, R01 and R02 were course rules checked outside the AI tool, before any SQL. The kit has no policy engine, so Claude's instructions carry them and step 11 grades them. A pass there is guidance evidence only and does not reproduce the deck's C01/R01/R02 result. R02 stays backed by D01 (42501) |
 | Prevents | AP-E03 database checks read as an AI score |
 
 ### Step 10. Compile to Claude and connect
@@ -152,8 +149,8 @@ example, and the anti-patterns it prevents (IDs from `ANTI-PATTERNS.md`).
 | --- | --- |
 | Who | AI configurer |
 | Input | `metric.yml`, `policy.yml`, the login |
-| Output | `claude/project/` (Setup A), `CLAUDE.md` plus `.claude/skills/foldline-analytics/` (Setup B), or a connector config using `${FOLDLINE_READY_DSN}` (Setup C). FOLDLINE's finished versions are in `claude/` (`claude/README.md`; `CLAUDE.example.md` becomes your `CLAUDE.md`): copy and adapt them |
-| Done when | Every reader shows `ending_mrr` version 1.0.0. The connector logs in as `foldline_ready_reader`. No credential appears in any file. The export tables are not uploaded "for context" |
+| Output | `claude/project/` (Setup A), `CLAUDE.md` plus `.claude/skills/foldline-analytics/` (Setup B), or a connector config using `${FOLDLINE_READY_DSN}` (Setup C). Copy and adapt FOLDLINE's versions in `claude/` (`CLAUDE.example.md` becomes your `CLAUDE.md`) |
+| Done when | Every reader shows `ending_mrr` version 1.0.0; the connector logs in as `foldline_ready_reader`; no file holds a credential; no export table is uploaded "for context" |
 | FOLDLINE | See `claude/README.md` |
 | Prevents | AP-C03 vague Skill description, AP-C04 export uploaded for context, AP-C05 unqualified names, AP-A04 superuser connection, AP-A05 DSN in CLAUDE.md |
 
@@ -164,7 +161,7 @@ example, and the anti-patterns it prevents (IDs from `ANTI-PATTERNS.md`).
 | Who | Tester (a second person) |
 | Input | The ai_run cases in `verified-questions.yml` |
 | Output | `claude-demo/AI-RUN-LOG.md` (at least 3 runs per case), `READY-CANVAS.md` filled |
-| Done when | Each run is graded on value, behaviour, schema-qualified relation, metric-and-version citation and stated freshness. The weakest canvas check sets the verdict |
+| Done when | Each run is graded on value, behaviour, schema-qualified relation, metric-and-version citation and stated freshness; the weakest canvas check sets the verdict |
 | FOLDLINE | Values 3 of 3, definition cited 0 of 3, SQL leaned on `search_path`, one run each: **limited pilot, not signed off** |
 | Prevents | AP-C02 definition loaded but not cited, AP-E01 "same model", AP-E02 one run as a benchmark, AP-E04 average across controls |
 
@@ -172,23 +169,23 @@ example, and the anti-patterns it prevents (IDs from `ANTI-PATTERNS.md`).
 
 ## Time guide
 
-For a question of FOLDLINE's size, with a person who has done it once before:
+For a question of FOLDLINE's size, built by someone who has done it once:
 
 | Steps | Typical time | Note |
 | --- | --- | --- |
-| 0–2 | One meeting, about an hour | Most delays come from step 2: two people disagree about the truth. That disagreement is the finding |
+| 0–2 | One meeting, about an hour | Most delays come from step 2, when two people disagree about the truth; that disagreement is a finding |
 | 3–6 | Half a day to two days | Depends on how messy the sources are |
 | 7–9 | About two hours | Most of it is reading the check output |
 | 10–11 | About two hours plus the runs | Three runs per case, per AI route |
 
-The FOLDLINE kit runs steps 4–9 for you in about a minute (`warehouse/README.md`); reading the output takes about 15 minutes.
+The FOLDLINE kit runs steps 4–9 in about a minute (`warehouse/README.md`); reading the output takes about 15 minutes.
 
 ---
 
 ## Re-run triggers
 
-Each change below invalidates the old receipts. Re-run the checks it touches before anyone uses
-an answer again.
+Each change invalidates the old receipts. Re-run the listed steps before anyone uses an answer
+again.
 
 | Change | Re-run | Why |
 | --- | --- | --- |
@@ -197,15 +194,15 @@ an answer again.
 | Policy change | Steps 7–11 | A new grant can open a door a test proved closed |
 | Data load | Step 9 (Q- and F- cases); step 11 spot checks | Freshness and reconciliations are per load |
 | AI route or model change | Step 11 | "Same AI route" is part of every AI receipt |
-| A change to instructions, the Skill or CLAUDE.md | Step 11 | A clearer prompt can move the failure, not only remove it |
+| A change to instructions, the Skill or CLAUDE.md | Step 11 | A clearer prompt can move a failure elsewhere |
 
 ---
 
 ## Gate: the ship rule
 
-Use `READY-CANVAS.md`. It has five gates (Restricted surface, Explicit structure, Agreed meaning,
+`READY-CANVAS.md` has five gates (Restricted surface, Explicit structure, Agreed meaning,
 Dependable data, Yardstick) with two checks each: R1, R2, E1, E2, A1, A2, D1, D2, Y1, Y2. Give each
-check a level: **0** unproven (no evidence, or the test failed), **1** documented (written down, not
+check a level: **0** unproven (no evidence, or the test failed), **1** documented (written, not
 tested), **2** proven (a repeatable test passed). The weakest check decides; an average never
 overrides it.
 
@@ -216,20 +213,9 @@ overrides it.
 | Bounded ready | All ten checks are proven for the declared question and surface |
 
 **FOLDLINE: Pilot only, spoken as "limited pilot, not signed off".** The database checks pass and
-the AI values matched 3 of 3. But check A2 (runtime consumption) stays at level 1: the definition
-is written down, and the runs cited it 0 of 3, so nothing proves the answer used it. The SQL leaned
-on a `search_path` setting, and there was one run per question, so Y2 (regression) is not proven
-either.
-
-## What works and what does not
-
-| What works | What does not | Why the second one fails |
-| --- | --- | --- |
-| Write the truth (step 2) before any AI is connected | Ask the AI first, then check whether it "looks right" | FOLDLINE's wrong answer ran without errors, had valid SQL, a column named `ending_mrr` and three tidy rows |
-| One question end to end | All metrics at once | Nothing reaches step 11, so nothing is proven |
-| Lock access (step 7) before connecting Claude (step 10) | Connect Claude to a broad login "for now" | The export login saw all 7 tables; the first connection is the one that leaks |
-| Keep database receipts and AI runs apart | One combined score | "9 of 9" was the database; the definition was cited 0 of 3 |
-| Re-run on every trigger | Keep last month's green receipt | A receipt proves the system that existed when it ran |
+the AI values matched 3 of 3. Check A2 (runtime consumption) stays at level 1: the definition is
+written down, but the runs cited it 0 of 3. Y2 (regression) is not proven either: the SQL leaned on
+a `search_path` setting, and there was one run per question.
 
 ---
 

@@ -2,7 +2,6 @@ import type { Locale } from "@/lib/i18n/locale";
 import type {
   DemoEvidenceMode,
   DemoExternalActionMode,
-  DemoLevel,
 } from "@/lib/demos";
 
 export const DEMOS_PAGE_COPY = {
@@ -10,29 +9,44 @@ export const DEMOS_PAGE_COPY = {
     metadata: {
       title: "KI-Praxisbeispiele im Browser",
       description: (count: number) =>
-        `${count} interaktive KI-Praxisbeispiele mit klar ausgewiesenen Daten, Annahmen, Kontrollschritten und Systemgrenzen.`,
+        `${count} interaktive KI-Praxisbeispiele mit ausgewiesenen Daten, Annahmen und Kontrollschritten.`,
       openGraphDescription: (count: number) =>
         `${count} interaktive Praxisbeispiele für KI-Workflows, Automatisierung, Retrieval, Governance und Betrieb.`,
       missingTitle: "Praxisbeispiel nicht gefunden",
       detailSuffix: "KI-Praxisbeispiel",
     },
     catalog: {
-      kicker: "Praxislabor · 12 prüfbare Simulationen",
-      headingLead: "Arbeitsabläufe prüfen.",
-      headingAccent: "Annahmen sichtbar machen.",
+      kicker: "Praxisbeispiele",
+      // The poster caps line on the IDEA band reads "kicker · kickerDetail".
+      kickerDetail: "im Browser",
+      // The soft hyphen lets the poster H1 break "KI-Arbeits-" / "abläufe"
+      // on a phone instead of leaving "KI-" alone on the first line.
+      heading: "KI-Arbeits\u00adabläufe prüfen",
+      // One sentence: the stat line below says what runs and what is
+      // simulated.
       introduction:
-        "Jedes Beispiel bildet einen abgegrenzten Ablauf ab. Datenherkunft, Ausführungsmodus, externe Aktionen und Prüfschritte stehen direkt am Beispiel. Kein Beispiel greift auf Unternehmenssysteme zu.",
-      stats: [
-        { value: "12", label: "Praxisbeispiele" },
-        { value: "4", label: "Ausführungsmodi" },
-        { value: "0", label: "reale Außenaktionen" },
+        "Jedes Beispiel spielt einen KI-Arbeitsablauf mit erfundenen Daten durch.",
+      statsLabel: "Umfang der Sammlung",
+      // Phone stat line, one item per list entry so a wrap never strands a
+      // separator; the StatRow carries the same numbers from sm up.
+      statsLine: (examples: number, actions: number) => [
+        `${examples} Beispiele`,
+        actions === 0
+          ? "nichts wird wirklich gesendet"
+          : `${actions} echte Außenaktionen`,
       ],
-      scopeLabel: "Was hier geprüft wird",
-      scopeItems: [
-        "Eingaben und Annahmen",
-        "Zwischenschritte und Quellen",
-        "Freigaben und Abbruchbedingungen",
-      ],
+      stats: {
+        examples: { label: "Praxisbeispiele", note: "im Browser, ohne Konto" },
+        modes: {
+          label: "Simulationsarten",
+          note: "synthetisch, regelbasiert, aufgezeichnet",
+        },
+        externalActions: {
+          label: "Echte Außenaktionen",
+          note: "nichts wird wirklich gesendet oder gebucht",
+        },
+      },
+      galleryHeading: "Alle Beispiele",
       level: "Reifegrad",
       category: "Kategorie",
       all: "Alle",
@@ -40,15 +54,16 @@ export const DEMOS_PAGE_COPY = {
       resultSingular: "Praxisbeispiel",
       resultPlural: "Praxisbeispiele",
       industryPrefix: "Arbeitskontext",
-      emptyKicker: "Filter-Ergebnis",
       emptyTitle: "Keine Treffer.",
-      emptyBody:
-        "Für diese Kombination ist kein Praxisbeispiel veröffentlicht. Setze einen Filter zurück.",
+      emptyBody: "Kein Beispiel passt zu dieser Kombination.",
       reset: "Filter zurücksetzen",
+      // Phone filter disclosure: one 44px button instead of three selects.
+      filterToggle: "Filter",
+      activeFilters: (count: number) => `${count} aktiv`,
     },
     tile: {
       kind: "Praxisbeispiel",
-      open: "Öffnen",
+      open: "Beispiel öffnen",
       openAria: (title: string) => `Praxisbeispiel öffnen: ${title}`,
     },
     detail: {
@@ -56,37 +71,44 @@ export const DEMOS_PAGE_COPY = {
       catalog: "Praxisbeispiele",
       allExamples: "Alle Praxisbeispiele",
       example: "Praxisbeispiel",
-      courseContext: "Kurskontext",
-      pathway: "KI-Kompetenzweg",
-      stages: {
-        einstieg: "Stufe 3: Anwenden",
-        mittel: "Stufe 4: Umsetzen",
-        fortg: "Stufe 5: Gestalten",
-      } satisfies Readonly<Record<DemoLevel, string>>,
       module: "Modul",
       lesson: "Lektion",
       block: "Block",
       toLesson: "Zur Lektion",
-      toGallery: "Zur Galerie",
-      continueLearning: "Weiterlernen",
-      openCourse: (title: string) => `${title} öffnen`,
-      openSuitableCourse: "Passenden Kurs öffnen",
-      inspectAssumptions: "Annahmen prüfen",
-      readBook: "Im Buch vertiefen",
-      practiceData: "Übungsdaten",
-      outputHeading: "Was das Beispiel liefert",
-      learningContext: "Lernkontext",
-      sandboxScenario: "Sandbox-Szenario",
-      sandboxBoundary: "Sandbox-Grenze",
+      openCourse: "Zum Kurs",
+      aboutHeading: "Worum es geht",
+      checksHeading: "Was du prüfen kannst",
+      runHeading: "So läuft dieses Beispiel",
+      // Phone-only button that folds the checks and the run table.
+      notesToggle: "So prüfst du das Beispiel",
+      dataLabel: "Daten",
+      executionLabel: "Ausführung",
+      actionsLabel: "Externe Aktionen",
+      stopLabel: "Abbruch",
+      noActions: "Keine",
+      // Values for the run table's "Externe Aktionen" row. The evidence line
+      // above the engine keeps the full DEMO_ACTION_LABELS phrase; in the
+      // table the row label already says "Aktionen", so the value is short.
+      actionValue: {
+        none: "Keine",
+        simulated: "Simuliert",
+        review_gated: "Simuliert, mit Freigabe-Schritt",
+        real_disabled: "Deaktiviert",
+      },
+      courseHeading: "Im Kurs",
       workContexts: "Arbeitskontexte",
+      workContextAria: (context: string) => `Praxisbeispiele im Arbeitskontext ${context}`,
       relatedBooks: "Vertiefende Bücher",
       publicLabel: "Öffentlich",
       nextExample: "Nächstes Praxisbeispiel",
-      next: "Weiter",
     },
     shell: {
-      instrument: "Interaktives Labor",
+      instrument: "Interaktives Beispiel",
       loading: "Praxisbeispiel wird geladen…",
+    },
+    evidence: {
+      explain: "Was heißt das?",
+      explainAria: (mode: string) => `Was heißt das? Ausführung: ${mode}`,
     },
     share: {
       copyPrompt: "Link kopieren:",
@@ -97,11 +119,10 @@ export const DEMOS_PAGE_COPY = {
     errors: {
       indexKicker: "Praxisbeispiel-Galerie nicht verfügbar",
       indexHeading: "Die Galerie konnte nicht geladen werden.",
-      indexBody:
-        "Lade die Seite erneut. Die Kursübersicht bleibt unabhängig davon erreichbar.",
+      indexBody: "Lade die Seite neu oder öffne die Kurse.",
       detailKicker: "Praxisbeispiel nicht verfügbar",
       detailHeading: "Dieses Praxisbeispiel konnte nicht geladen werden.",
-      detailBody: "Lade das Beispiel erneut oder kehre zur Galerie zurück.",
+      detailBody: "Lade das Beispiel neu oder öffne die Galerie.",
       retry: "Erneut laden",
       courses: "Zu den Kursen",
       gallery: "Zur Galerie",
@@ -111,37 +132,42 @@ export const DEMOS_PAGE_COPY = {
       fallbackTitle: "KI-Praxisbeispiele · loehrning.ai",
       fallbackSubtitle:
         "Zwölf interaktive Beispiele mit offengelegten Annahmen.",
-      gallery: "Praxislabor",
-      open: "Praxisbeispiel öffnen →",
+      gallery: "Praxisbeispiele",
+      open: "Praxisbeispiel öffnen",
     },
   },
   en: {
     metadata: {
       title: "Interactive AI practice examples",
       description: (count: number) =>
-        `${count} interactive AI practice examples with explicit data, assumptions, control steps, and system boundaries.`,
+        `${count} interactive AI practice examples with labelled data, assumptions and control steps.`,
       openGraphDescription: (count: number) =>
         `${count} interactive examples covering AI workflows, automation, retrieval, governance, and operations.`,
       missingTitle: "Practice example not found",
       detailSuffix: "Interactive AI example",
     },
     catalog: {
-      kicker: "Practice lab · 12 inspectable simulations",
-      headingLead: "Inspect the workflow.",
-      headingAccent: "Expose the assumptions.",
-      introduction:
-        "Each example represents a bounded workflow. Data provenance, execution mode, external actions, and review steps are stated next to the interface. No example connects to company systems.",
-      stats: [
-        { value: "12", label: "practice examples" },
-        { value: "4", label: "execution modes" },
-        { value: "0", label: "real external actions" },
+      kicker: "Practice examples",
+      kickerDetail: "in the browser",
+      heading: "Inspect AI workflows",
+      introduction: "Each example runs one AI workflow on invented data.",
+      statsLabel: "What the collection holds",
+      statsLine: (examples: number, actions: number) => [
+        `${examples} examples`,
+        actions === 0 ? "nothing is really sent" : `${actions} real external actions`,
       ],
-      scopeLabel: "What to inspect",
-      scopeItems: [
-        "Inputs and assumptions",
-        "Intermediate steps and sources",
-        "Approvals and stopping conditions",
-      ],
+      stats: {
+        examples: { label: "Practice examples", note: "in the browser, no account" },
+        modes: {
+          label: "Simulation types",
+          note: "synthetic, rule-based, recorded",
+        },
+        externalActions: {
+          label: "Real external actions",
+          note: "nothing is really sent or posted",
+        },
+      },
+      galleryHeading: "All examples",
       level: "Level",
       category: "Category",
       all: "All",
@@ -149,15 +175,15 @@ export const DEMOS_PAGE_COPY = {
       resultSingular: "practice example",
       resultPlural: "practice examples",
       industryPrefix: "Work context",
-      emptyKicker: "Filter result",
       emptyTitle: "No matches.",
-      emptyBody:
-        "No published example matches this combination. Clear one of the filters.",
+      emptyBody: "No example matches this combination.",
       reset: "Reset filters",
+      filterToggle: "Filters",
+      activeFilters: (count: number) => `${count} active`,
     },
     tile: {
       kind: "Example",
-      open: "Open",
+      open: "Open example",
       openAria: (title: string) => `Open practice example: ${title}`,
     },
     detail: {
@@ -165,37 +191,40 @@ export const DEMOS_PAGE_COPY = {
       catalog: "Practice examples",
       allExamples: "All practice examples",
       example: "Example",
-      courseContext: "Course context",
-      pathway: "AI competency path",
-      stages: {
-        einstieg: "Stage 3: Apply",
-        mittel: "Stage 4: Implement",
-        fortg: "Stage 5: Design",
-      } satisfies Readonly<Record<DemoLevel, string>>,
       module: "Module",
       lesson: "Lesson",
       block: "Block",
       toLesson: "Open lesson",
-      toGallery: "Open gallery",
-      continueLearning: "Continue learning",
-      openCourse: (title: string) => `Open ${title}`,
-      openSuitableCourse: "Open related course",
-      inspectAssumptions: "Inspect assumptions",
-      readBook: "Read the related book",
-      practiceData: "Practice data",
-      outputHeading: "What the example contains",
-      learningContext: "Learning context",
-      sandboxScenario: "Sandbox scenario",
-      sandboxBoundary: "Sandbox boundary",
+      openCourse: "Open the course",
+      aboutHeading: "What this covers",
+      checksHeading: "What you can check",
+      runHeading: "How this example runs",
+      notesToggle: "How to check this example",
+      dataLabel: "Data",
+      executionLabel: "Execution",
+      actionsLabel: "External actions",
+      stopLabel: "Stop point",
+      noActions: "None",
+      actionValue: {
+        none: "None",
+        simulated: "Simulated",
+        review_gated: "Simulated, with an approval step",
+        real_disabled: "Disabled",
+      },
+      courseHeading: "In the course",
       workContexts: "Work contexts",
+      workContextAria: (context: string) => `Practice examples for ${context}`,
       relatedBooks: "Related books",
       publicLabel: "Public",
       nextExample: "Next practice example",
-      next: "Next",
     },
     shell: {
-      instrument: "Interactive lab",
+      instrument: "Interactive example",
       loading: "Loading practice example…",
+    },
+    evidence: {
+      explain: "What this means",
+      explainAria: (mode: string) => `What this means. Execution: ${mode}`,
     },
     share: {
       copyPrompt: "Copy link:",
@@ -206,10 +235,10 @@ export const DEMOS_PAGE_COPY = {
     errors: {
       indexKicker: "Practice gallery unavailable",
       indexHeading: "The gallery could not be loaded.",
-      indexBody: "Reload this page. The course catalogue remains available.",
+      indexBody: "Reload the page or open the courses.",
       detailKicker: "Practice example unavailable",
       detailHeading: "This practice example could not be loaded.",
-      detailBody: "Reload the example or return to the gallery.",
+      detailBody: "Reload the example or open the gallery.",
       retry: "Reload",
       courses: "View courses",
       gallery: "Open gallery",
@@ -218,9 +247,9 @@ export const DEMOS_PAGE_COPY = {
       alt: "loehrning.ai interactive AI example",
       fallbackTitle: "Interactive AI examples · loehrning.ai",
       fallbackSubtitle:
-        "Twelve interactive examples with explicit assumptions.",
-      gallery: "Practice lab",
-      open: "Open practice example →",
+        "Twelve interactive examples with stated assumptions.",
+      gallery: "Practice examples",
+      open: "Open practice example",
     },
   },
 } as const;
@@ -240,44 +269,44 @@ export const DEMO_EVIDENCE_COPY: Readonly<
     synthetic: {
       label: "Synthetisch",
       tooltip:
-        "Dieses Praxisbeispiel verwendet vollständig erfundene Beispieldaten. Kein echter Nutzer, kein echtes Unternehmen, keine echte KI-Inferenz laufen im Hintergrund. Die Zahlen zeigen, wie ein Ergebnis aussehen könnte, nicht was ein System tatsächlich gemessen hat.",
+        "Alle Daten sind erfunden, gemessen wurde nichts, und es läuft kein KI-Modell.",
     },
     rule_based: {
       label: "Regelbasiert",
       tooltip:
-        "Dieses Praxisbeispiel läuft vollständig mit festen If-Else-Regeln im Browser. Kein KI-Modell und keine externe API werden aufgerufen. Das zeigt dir, wie regelbasierte Systeme funktionieren und wo ihre Grenzen liegen.",
+        "Feste Regeln laufen in deinem Browser, ohne KI-Modell und ohne externe API. Du siehst, was sie erkennen und was sie übersehen.",
     },
     recorded_trace: {
       label: "Aufgezeichnete Spur",
       tooltip:
-        "Dieses Praxisbeispiel spielt eine aufgezeichnete Beispielspur ab. Du siehst die Wiederholung einer aufgezeichneten Beispielspur, keine Live-Ausführung. So kannst du den Ablauf in Ruhe studieren, ohne auf echte Systeme zuzugreifen.",
+        "Spielt einen aufgezeichneten Ablauf ab, ohne ein System anzusprechen.",
     },
     live_api: {
       label: "Live-API",
       tooltip:
-        "Dieses Praxisbeispiel sendet tatsächliche Anfragen an eine KI-API. Ergebnisse variieren bei jeder Ausführung. Kosten entstehen pro Anfrage. Keine persönlichen Daten eingeben.",
+        "Sendet echte Anfragen an eine KI-API, nur wenn der Anbieter freigeschaltet und geprüft ist. Gib keine persönlichen Daten ein.",
     },
   },
   en: {
     synthetic: {
       label: "Synthetic",
       tooltip:
-        "This example uses entirely fictional data. No AI inference or company system runs in the background. Values illustrate a possible workflow, not measured impact.",
+        "All data is invented, nothing was measured, and no AI model runs.",
     },
     rule_based: {
       label: "Rule-based",
       tooltip:
-        "This example uses fixed browser-side rules. It calls no AI model or external API. The interface exposes what the rules detect and what they miss.",
+        "Fixed rules run in your browser, with no AI model or external API. You see what they catch and what they miss.",
     },
     recorded_trace: {
       label: "Recorded trace",
       tooltip:
-        "This example replays a fixed recorded execution. It is not a live run and does not connect to external systems.",
+        "Replays a recorded run without contacting any system.",
     },
     live_api: {
       label: "Live API",
       tooltip:
-        "This mode would send real API requests. It is available only when the provider is explicitly enabled and verified. Do not enter personal data.",
+        "Sends real requests to an AI API, only when the provider is enabled and verified. Do not enter personal data.",
     },
   },
 };

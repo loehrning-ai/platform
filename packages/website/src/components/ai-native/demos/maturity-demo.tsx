@@ -30,7 +30,7 @@ interface Question {
 const QUESTIONS: Readonly<Record<Locale, readonly Question[]>> = {
   de: [
     {
-      question: "Wie verwalten Sie derzeit Unternehmensdaten?",
+      question: "Wie verwaltet dein Unternehmen seine Daten?",
       dimension: "Daten",
       options: [
         { text: "Dateiserver, Tabellen und persönliche Ablagen", score: 1 },
@@ -43,7 +43,7 @@ const QUESTIONS: Readonly<Record<Locale, readonly Question[]>> = {
       ],
     },
     {
-      question: "Welchen Betriebsstand haben Ihre KI-Anwendungen?",
+      question: "Welchen Stand haben eure KI-Anwendungen?",
       dimension: "KI-Einsatz",
       options: [
         { text: "Noch keine Anwendung", score: 1 },
@@ -88,7 +88,7 @@ const QUESTIONS: Readonly<Record<Locale, readonly Question[]>> = {
       ],
     },
     {
-      question: "Wie messen Sie den Nutzen digitaler Initiativen?",
+      question: "Wie messt ihr den Nutzen digitaler Initiativen?",
       dimension: "Messung",
       options: [
         { text: "Keine festgelegten Messgrößen", score: 1 },
@@ -190,7 +190,7 @@ const COPY = {
     result: "Ergebnis der Selbsteinschätzung",
     profile: "Antworten nach Dimension",
     boundary:
-      "Kein Benchmark: Das Ergebnis basiert ausschließlich auf diesen fünf Selbstauskünften.",
+      "Kein Benchmark: Das Ergebnis beruht nur auf deinen fünf Antworten.",
     restart: "Neu starten",
     continue: "Im Kurs weiterlernen",
   },
@@ -204,7 +204,7 @@ const COPY = {
     result: "Self-assessment result",
     profile: "Responses by dimension",
     boundary:
-      "Not a benchmark: the result is based only on these five self-reported answers.",
+      "Not a benchmark: the result rests only on your five answers.",
     restart: "Restart",
     continue: "Continue in the course",
   },
@@ -227,7 +227,7 @@ const BANDS: readonly MaturityBand[] = [
     max: 9,
     label: "Explorer",
     description: {
-      de: "In mehreren Bereichen fehlen Grundlagen. Dokumentieren Sie zuerst Datenzugriff, Zuständigkeiten und einen abgegrenzten Anwendungsfall.",
+      de: "In mehreren Bereichen fehlen Grundlagen. Dokumentiere zuerst Datenzugriff, Zuständigkeiten und einen abgegrenzten Anwendungsfall.",
       en: "Several foundations are missing. First document data access, ownership, and one bounded use case.",
     },
     accentClass: "text-brand-amber",
@@ -238,7 +238,7 @@ const BANDS: readonly MaturityBand[] = [
     max: 13,
     label: "Starter",
     description: {
-      de: "Einzelne Grundlagen bestehen. Begrenzen Sie einen Pilotfall und definieren Sie Messgröße, Datenzugriff und Abbruchkriterium.",
+      de: "Einzelne Grundlagen bestehen. Begrenze einen Pilotfall und leg Messgröße, Datenzugriff und Abbruchkriterium fest.",
       en: "Some foundations are in place. Bound one pilot and define its measure, data access, and stopping condition.",
     },
     accentClass: "text-brand-orange",
@@ -249,7 +249,7 @@ const BANDS: readonly MaturityBand[] = [
     max: 17,
     label: "Operator",
     description: {
-      de: "Mehrere Voraussetzungen bestehen. Prüfen Sie Skalierung, Zuständigkeiten und gemeinsame Regeln für parallel eingesetzte Werkzeuge.",
+      de: "Mehrere Voraussetzungen bestehen. Prüf Skalierung, Zuständigkeiten und gemeinsame Regeln für parallel genutzte Werkzeuge.",
       en: "Several prerequisites are in place. Review scaling, ownership, and shared controls for tools used in parallel.",
     },
     accentClass: "text-[var(--color-kupfer-light)]",
@@ -260,8 +260,8 @@ const BANDS: readonly MaturityBand[] = [
     max: 20,
     label: "Leader",
     description: {
-      de: "Die Selbstauskunft zeigt in allen fünf Bereichen einen hohen Stand. Prüfen Sie die Angaben anhand von Nachweisen und festen Prüfterminen.",
-      en: "The answers indicate a high baseline in all five areas. Verify them against evidence and scheduled review dates.",
+      de: "Deine Antworten zeigen in allen fünf Bereichen einen hohen Stand. Prüf sie anhand von Nachweisen und festen Prüfterminen.",
+      en: "Your answers show a high baseline in all five areas. Verify them against evidence and scheduled review dates.",
     },
     accentClass: "text-risk-green",
     fillClass: "bg-risk-green",

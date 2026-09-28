@@ -97,10 +97,11 @@ describe("BLOG_POSTS manifest", () => {
     expect(slugs).not.toContain("eu-ai-act-update-2026-06");
   });
 
-  it("contains exactly the single definitive EU AI Act post", () => {
+  it("contains exactly the EU AI Act post and the question-sheet post, in number order", () => {
     const slugs = BLOG_POSTS.map((p) => p.slug);
-    expect(slugs).toEqual(["eu-ai-act-grundlagen"]);
-    expect(BLOG_POSTS[0].postNumber).toBe(1);
+    expect(slugs).toEqual(["eu-ai-act-grundlagen", "ki-in-der-ausbildung"]);
+    expect(BLOG_POSTS.map((p) => p.postNumber)).toEqual([1, 2]);
+    expect(getPostNumberLabel("ki-in-der-ausbildung")).toBe("02");
   });
 
   it("dates are valid ISO 8601 YYYY-MM-DD format", () => {

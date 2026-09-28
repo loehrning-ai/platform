@@ -21,7 +21,7 @@ export default function Ch12CapstoneDe() {
       <Hero
         eyebrow="Kapitel 12 · Abschlussprojekt"
         title='<em>Kreditkartenbetrug erkennen:</em> <span class="accent">der vollständige Data-Science-Zyklus.</span>'
-        hook="Ein öffentlicher Datensatz, 284,807 Transaktionen, 492 erfasste Betrugsfälle. Exploration, Leakage-Kontrolle, Evaluation, Schwellenwertpolitik und Deployment-Prüfung greifen hier ineinander. Die Lehrsimulation bleibt dabei eine Lehrsimulation, kein Produktionsmodell."
+        hook="Ein öffentlicher Datensatz mit 284,807 Transaktionen und 492 erfassten Betrugsfällen verbindet Exploration, Leakage-Kontrolle, Evaluation, Schwellenwertpolitik und Deployment-Prüfung."
         meta={[
           { k: "Datensatz", v: "Kaggle · 284K Transaktionen" },
           { k: "Ziel", v: "Betrug · 0.17% Basisrate" },
@@ -36,14 +36,13 @@ export default function Ch12CapstoneDe() {
           Fälle je Betrugsfall.
         </h2>
         <p className="prose">
-          Der öffentliche Credit-Card-Fraud-Datensatz zeigt starkes
+          Der öffentliche Credit-Card-Fraud-Datensatz verbindet starkes
           Klassenungleichgewicht, anonymisierte Eingaben und harte
-          Evaluationsentscheidungen auf einmal. Eine Basislinie, die alles als
-          legitim vorhersagt, erreicht <strong>99.83% Genauigkeit</strong> und
-          erkennt keinen einzigen Betrugsfall. Genauigkeit deckt diesen Fehler
-          zu. PR-AUC beschreibt die Rangfolge bei ungleichen Klassen; für einen
-          operativen Schwellenwert brauchst du zusätzlich Kosten, Kapazität,
-          Kalibrierung und eine zeitgerechte Validierung.
+          Evaluationsentscheidungen. Eine Basislinie, die alles als legitim
+          vorhersagt, erreicht <strong>99.83% Genauigkeit</strong> und erkennt
+          keinen Betrugsfall. PR-AUC beschreibt die Rangfolge bei ungleichen
+          Klassen; der operative Schwellenwert braucht zusätzlich Kosten,
+          Kapazität, Kalibrierung und zeitgerechte Validierung.
         </p>
         <DatasetExplorer />
       </section>
@@ -51,14 +50,12 @@ export default function Ch12CapstoneDe() {
       <section className="section">
         <SectionLabel n="12.2">Die Pipeline, Schritt für Schritt</SectionLabel>
         <h2 className="h2">
-          Sechs Entscheidungen. Jede entspricht einem Kapitel dieses Kurses.
+          Sechs Schritte, jeder mit einer Entscheidung aus dem Kurs.
         </h2>
         <p className="prose">
-          Führ die Schritte der Reihe nach aus. Die Ausgabe des einen ist die
-          Eingabe des nächsten, und das Protokoll zeigt dir, wo Leakage
-          entstehen kann. Der Klassiker bleibt die Skalierung vor dem Split.
-          Diese lokale Sequenz schließt genau diesen Fehler aus und prüft
-          trotzdem keine reale Pipeline.
+          Das Protokoll zeigt, wo Leakage entstehen kann; der Klassiker ist die
+          Skalierung vor dem Split. Diese Reihenfolge schließt ihn aus und prüft
+          keine reale Pipeline.
         </p>
         <PipelineProgress />
       </section>
@@ -66,18 +63,15 @@ export default function Ch12CapstoneDe() {
       <AntiPatterns
         title="Fehlmuster"
         items={[
-          "<b>Den Scaler am vollständigen Datensatz anpassen.</b> Der Scaler wird nur am Training angepasst und dann auf den Test angewendet. Eine Anpassung an allen Daten überträgt Teststatistiken ins Training.",
-          "<b>Nach der Skalierung stratifizieren.</b> Erst aufteilen, dann skalieren. Die Reihenfolge entscheidet.",
-          "<b>Nur Genauigkeit berichten.</b> Bei einer Ereignisrate von 0.17% sieht sogar eine triviale Mehrheitsvorhersage gut aus. Nimm Ranking, Kalibrierung, Schwellenwerte und Kosten dazu.",
-          "<b>Verfahren für Klassenungleichgewicht ungeprüft lassen.</b> Gewichtung, Resampling, Schwellenwertwahl und geeignete Zielfunktionen innerhalb des Validierungsdesigns vergleichen; kein einzelnes Verfahren ist vorgeschrieben.",
+          "<b>Verfahren für Klassenungleichgewicht ungeprüft lassen.</b> Vergleich Gewichtung, Resampling, Schwellenwertwahl und geeignete Zielfunktionen im Validierungsdesign; kein einzelnes Verfahren ist vorgeschrieben.",
         ]}
       />
       <BestPractices
         title="Bewährte Verfahren"
         items={[
-          "<b>Vor erlernter Vorverarbeitung aufteilen.</b> Transformationen innerhalb der Validierung auf dem Trainingsanteil anpassen und anschließend auf zurückgehaltene Daten anwenden.",
-          "<b>scale_pos_weight = N_legit / N_fraud als Kandidat behandeln, nicht als Regel.</b> Gewichtung und Wahrscheinlichkeitskalibrierung am Entscheidungsziel validieren.",
-          "<b>Ranking, Kalibrierung und operativen Schwellenwert getrennt bewerten.</b> Den Schwellenwert aus expliziten Fehlerkosten und Betriebskapazität ableiten.",
+          "<b>Vor erlernter Vorverarbeitung aufteilen.</b> Transformationen innerhalb der Validierung auf dem Trainingsanteil anpassen und dann auf zurückgehaltene Daten anwenden; ein auf allen Daten angepasster Scaler überträgt Teststatistiken.",
+          "<b>scale_pos_weight = N_legit / N_fraud als Kandidat behandeln.</b> Gewichtung und Wahrscheinlichkeitskalibrierung am Entscheidungsziel validieren.",
+          "<b>Ranking, Kalibrierung und operativen Schwellenwert getrennt bewerten.</b> Bei 0.17% Ereignisrate sieht Genauigkeit allein selbst für eine triviale Vorhersage gut aus.",
           "<b>Jedes Experiment erfassen.</b> Daten- und Codeversionen, Parameter, Metriken, Artefakte und Entscheidungsnotizen in einem reproduzierbaren Tracking-System speichern.",
         ]}
       />
@@ -91,15 +85,14 @@ export default function Ch12CapstoneDe() {
           fachliche Entscheidung.
         </h2>
         <p className="prose">
-          Jedes Betrugsmodell liefert je Transaktion einen
-          Wahrscheinlichkeitswert. Wo der Grenzwert liegt, entscheidet die
-          Fachseite. Zu niedrig: Die Sachbearbeiterin im Fraud-Team prüft
-          reihenweise legitime Kunden, und die Betriebskosten steigen. Zu hoch:
-          Echte Betrugsfälle laufen durch und kosten Umsatz und Reputation.
+          Ein Betrugsmodell bewertet jede Transaktion, und du legst den
+          Grenzwert fest. Ist er zu niedrig, prüft das Betrugsteam viele
+          legitime Kunden, und das kostet; ist er zu hoch, kostet echter Betrug
+          Umsatz und Ruf.
           <strong>
             {" "}
-            Der Kostenrechner untersucht dieses synthetische Kostenmodell; reale
-            Entscheidungen benötigen geprüfte Fachannahmen.
+            Der Kostenrechner nutzt ein synthetisches Kostenmodell; reale
+            Entscheidungen brauchen geprüfte Fachannahmen.
           </strong>
         </p>
         <PrecisionRecallTradeoff />
@@ -110,14 +103,12 @@ export default function Ch12CapstoneDe() {
           Bereitstellung in Produktion: die Checkliste
         </SectionLabel>
         <h2 className="h2">
-          Ein Modell im Notebook ist eine Demo. Ein Modell in Produktion ist ein
-          Engineering-System.
+          Vor dem ersten Live-Einsatz sammelst du Evidenz für jedes Prüffeld.
         </h2>
         <p className="prose">
-          Bevor ein Betrugsmodell eine Live-Transaktion anfasst, liegt für jedes
-          relevante Prüffeld Evidenz vor. Diese acht Lehrpunkte stoßen die
-          Prüfung an. Ein Häkchen im Browser beseitigt keinen Fehlermodus und
-          genehmigt kein Deployment.
+          Diese acht Lehrpunkte stoßen die Prüfung
+          an; ein Häkchen beseitigt keinen Fehlermodus und genehmigt kein
+          Deployment.
         </p>
         <PostDeployChecklist />
       </section>
@@ -125,29 +116,15 @@ export default function Ch12CapstoneDe() {
       <AntiPatterns
         title="Fehlmuster"
         items={[
-          "<b>Keine repräsentative Evidenz vor der Freigabe.</b> Replay, Batch-Auswertung, Shadow oder gestufte Exposition anhand von Risiko und Datenbeschränkungen wählen.",
-          "<b>Keine Modelldokumentation.</b> Zweck, Ausschlüsse, Trainings- und Evaluationsdaten, Metriken, Schwellenwerte, Verantwortliche, Grenzen und bekannte Fehlermuster festhalten.",
-          "<b>Kein Monitoring-Vertrag.</b> Betrugsmuster, Eingabequalität, Label-Verzögerung und Betriebskosten können sich ändern; jedes Signal benötigt Verantwortliche und Reaktion.",
-          "<b>Ein ungeprüfter dauerhafter Schwellenwert.</b> Nach wesentlichen Änderungen von Kosten, Prävalenz, Kalibrierung, Regeln oder Kapazität in dokumentiertem Rhythmus neu bewerten.",
-        ]}
-      />
-      <BestPractices
-        title="Bewährte Verfahren"
-        items={[
-          "<b>Rollout-Evidenz aus dem Risiko ableiten.</b> Repräsentativen Verkehr, Beobachtungsdauer, verzögerte Labels, Leitplanken und Abbruchverhalten statt einer festen Shadow-Frist definieren.",
-          "<b>Unveränderliche Kandidaten gegen einen schriftlichen Vertrag freigeben.</b> Unsicherheitsbewusste Ergebnismetriken und Sicherheitsleitplanken verlangen, kein festes Sprint-Ritual.",
-          "<b>Alarmgrenzen an Auswirkungen auf Geschäft und Nutzer koppeln.</b> Quantile und Driftstatistiken sind Eingaben, keine selbstbegründenden Aktionsgrenzen.",
-          "<b>Model Cards sind Dokumentation, kein Nachweis gegenüber einer Aufsicht.</b> Rechtliche und Governance-Pflichten brauchen eine eigene, systemspezifische Prüfung.",
+          "<b>Keine Modelldokumentation.</b> Zweck, Ausschlüsse, Trainings- und Evaluationsdaten, Metriken, Schwellenwerte, Verantwortliche, Grenzen und bekannte Fehlermuster festhalten; eine Model Card belegt keine rechtliche Konformität; rechtliche Pflichten brauchen eine eigene, systemspezifische Prüfung.",
+          "<b>Kein Monitoring-Vertrag.</b> Betrugsmuster, Eingabequalität, Label-Verzögerung und Betriebskosten ändern sich; jedes Signal braucht Verantwortliche und eine Reaktion.",
+          "<b>Ein dauerhafter Schwellenwert, den niemand prüft.</b> In dokumentiertem Rhythmus nach wesentlichen Änderungen von Kosten, Prävalenz, Kalibrierung, Regeln oder Kapazität neu bewerten.",
         ]}
       />
       <Takeaway
         title="Kernaussagen"
         items={[
-          "<b>Klassenungleichgewicht verändert die Aussage von Metriken.</b> Basisrate angeben und Ranking, Kalibrierung sowie Schwellenwertverhalten neben Genauigkeit prüfen.",
-          "<b>Erlernte Vorverarbeitung gehört in die Validierung.</b> Leakage kann Offline-Werte erhöhen; Herkunftsnachweise und zeitgerechte Tests können es vor der Freigabe erkennen.",
-          "<b>Der Schwellenwert kodiert Konsequenzen.</b> Aus Kosten, Kapazität, Regeln und kalibrierten Wahrscheinlichkeiten ableiten und danach überwachen.",
-          "<b>Produktionsleistung ist Systemverhalten.</b> Modellgüte, Merkmale, Dienste, Datenverträge, Monitoring, Incident Response und Rollback tragen gemeinsam bei.",
-          "<b>Nach wesentlichen Änderungen neu bewerten.</b> Neue Daten, Betrugsmuster, Kosten, Regeln und Infrastruktur können die frühere Entscheidung entkräften.",
+          "<b>Modellgüte, Merkmale, Dienste, Datenverträge, Monitoring, Incident Response und Rollback bestimmen gemeinsam die Leistung in Produktion.</b>",
         ]}
       />
 
@@ -155,10 +132,9 @@ export default function Ch12CapstoneDe() {
         <div className="ov-cta-eyebrow">Der Kurs ist abgeschlossen.</div>
         <div className="ov-cta-title">Jetzt ein reales Problem bearbeiten.</div>
         <div className="ov-cta-sub">
-          Such dir einen echten Datensatz, lauf den Zyklus einmal ganz durch,
-          liefer v1 aus. Danach arbeitest du an dem weiter, was du beobachtet
-          hast. Data Science lernt man an einem Problem, das einen wirklich
-          interessiert.
+          Such dir einen echten Datensatz, der dich interessiert, lauf den
+          Zyklus einmal ganz durch, liefer v1 aus und verbessere, was du
+          beobachtest.
         </div>
         <div className="ov-cta-row">
           <Link

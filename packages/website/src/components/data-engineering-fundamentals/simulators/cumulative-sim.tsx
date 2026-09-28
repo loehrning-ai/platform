@@ -86,7 +86,7 @@ export function CumulativeSim() {
       eyebrow={text("scrubber", "Tagesauswahl")}
       title={`user_lifetime_points · ${text("day by day", "Tag für Tag")}`}
       meta={`${text("Day", "Tag")} ${day + 1}/5`}
-      caption={text("In this recursive additive example, each snapshot depends on the prior day. Rebuild the affected range after a faulty input or rule.", "In diesem rekursiven additiven Beispiel hängt jeder Snapshot vom Vortag ab. Nach einer fehlerhaften Eingabe oder Regel wird der betroffene Bereich neu aufgebaut.")}
+      caption={text("Each snapshot builds on the prior day.", "Jeder Snapshot baut auf dem Vortag auf.")}
     >
       <div className="cm-days">
         {[0, 1, 2, 3, 4].map((d) => (

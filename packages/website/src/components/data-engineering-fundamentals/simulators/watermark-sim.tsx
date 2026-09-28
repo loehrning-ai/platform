@@ -113,7 +113,7 @@ export function WatermarkSim() {
       eyebrow={text("live simulator", "Live-Simulator")}
       title={text("kafka-to-warehouse · drag the watermark", "Kafka zum Warehouse · Watermark verschieben")}
       meta={`${events.length} ${text("events buffered", "Ereignisse gepuffert")}`}
-      caption={text("This simulator uses a discard-late policy. Green events arrive before the modeled watermark; amber events arrive after it.", "Dieser Simulator verwirft Nachzügler. Grüne Ereignisse treffen vor der modellierten Watermark ein, gelbe danach.")}
+      caption={text("Green events arrive before the watermark, amber events after it and get dropped.", "Grüne Ereignisse kommen vor der Watermark an, gelbe danach und werden verworfen.")}
     >
       <div
         className="wm-stage-scroll"

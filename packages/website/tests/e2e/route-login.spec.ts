@@ -82,7 +82,7 @@ test.describe("/login magic-link", () => {
       await expect(cta).toHaveCount(0);
       await expect(
         page.getByRole("note").filter({
-          hasText: /Anmeldung ist in dieser Umgebung nicht konfiguriert/i,
+          hasText: /Keine Anmeldemethode verfügbar/i,
         }),
       ).toBeVisible();
       return;
@@ -109,7 +109,7 @@ test.describe("/login magic-link", () => {
       await expect(cta).toHaveCount(0);
       await expect(
         page.getByRole("note").filter({
-          hasText: /Anmeldung ist in dieser Umgebung nicht konfiguriert/i,
+          hasText: /Keine Anmeldemethode verfügbar/i,
         }),
       ).toBeVisible();
       await expect(page.getByText(/verschickt/i)).toHaveCount(0);
@@ -146,7 +146,7 @@ test.describe("/login magic-link", () => {
       await expect(cta).toHaveCount(0);
       await expect(
         page.getByRole("note").filter({
-          hasText: /Anmeldung ist in dieser Umgebung nicht konfiguriert/i,
+          hasText: /Keine Anmeldemethode verfügbar/i,
         }),
       ).toBeVisible();
       await expect(page.getByText(/verschickt/i)).toHaveCount(0);
@@ -206,9 +206,7 @@ test.describe("/login layout", () => {
       }),
     ).toBeVisible();
     await expect(
-      page.getByText(
-        /Bücher, Demos, KI-Check und die technischen Kurse bleiben vollständig offen/,
-      ),
+      page.getByText(/^Hier ist nichts zu tun\.$/),
     ).toBeVisible();
   });
 
@@ -218,16 +216,16 @@ test.describe("/login layout", () => {
     const panel = page.locator("[data-login-account-value]");
     await expect(panel).toHaveCount(1);
     for (const claim of [
-      "Ein Lernfaden über alle Geräte",
+      "Fortschritt auf allen Geräten",
       "Deine Werkzeuge mit deinen Dokumenten",
-      "Deine eigene KI verbunden",
+      "Eigene KI anbinden",
     ]) {
       await expect(panel.getByText(claim, { exact: true })).toBeVisible();
     }
-    // Anonymous progress is not merged on sign-in, and the page has to say so
-    // before the sign-in rather than after an empty dashboard.
+    // Anonymous progress is only imported once on request (/konto), and the
+    // page has to say so before the sign-in rather than after an empty dashboard.
     await expect(
-      panel.getByText(/wird beim Anmelden nicht übernommen/),
+      panel.getByText(/einmal ins Konto übernehmen/),
     ).toBeVisible();
   });
 
@@ -302,7 +300,7 @@ test.describe("/login mobile", () => {
     } else {
       await expect(
         page.getByRole("note").filter({
-          hasText: /Anmeldung ist in dieser Umgebung nicht konfiguriert/i,
+          hasText: /Keine Anmeldemethode verfügbar/i,
         }),
       ).toBeVisible();
     }

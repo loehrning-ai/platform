@@ -17,7 +17,7 @@ export default function Ch04FeatureDe() {
       <Hero
         eyebrow="Kapitel 04 · Merkmalskonstruktion"
         title="Merkmalsdesign definiert <em>die Modelleingabe.</em>"
-        hook="Was hier nicht ins Merkmal kommt, sieht das Modell nie. Und was hineinkommt, muss bei der Inferenz noch da sein. Kodierung, nichtlineare Terme, Auswahl und Interaktionen vergleichst du Leakage-sicher."
+        hook="Merkmale bestimmen, welche Information das Modell sieht, und jedes muss bei der Inferenz noch existieren. Kodierung, nichtlineare Terme, Auswahl und Interaktionen vergleichst du in einem Leakage-sicheren Validierungsplan."
         meta={[
           { k: "Lesezeit", v: "12 min" },
           { k: "Inhalt", v: "Kodieren · Erweitern · Auswählen · Interagieren" },
@@ -27,32 +27,25 @@ export default function Ch04FeatureDe() {
 
       <section className="section">
         <SectionLabel n="04.1">Kategoriale Merkmale kodieren</SectionLabel>
-        <h2 className="h2">Vier Verfahren. Ein häufiger Fehler.</h2>
+        <h2 className="h2">Vier Kodierungen und ein häufiger Fehler</h2>
         <p className="prose">
-          Modelle rechnen mit Zahlen. Viele Eingaben sind Kategorien.{" "}
-          <strong>One-Hot</strong> bildet nominale Werte ohne Rangfolge ab und
-          bezahlt mit Spalten. <strong>Target Encoding</strong> greift auf
-          Labels zu und braucht fold-lokale Schätzung, Glättung und eine Regel
-          für unbekannte Kategorien. Ganzzahlige Codes schmuggeln für Modelle
-          mit numerischer Distanz eine Rangfolge ein; Frequency Encoding wirft
-          gleich häufige Kategorien zusammen.
+          <strong>One-Hot</strong> bildet nominale Werte ohne Rangfolge ab,
+          kostet eine Spalte je Kategorie und braucht eine Regel für unbekannte
+          Kategorien. <strong>Target Encoding</strong> nutzt Labels und braucht
+          zusätzlich fold-lokale Schätzung und Glättung. Ganzzahlige Codes
+          erzwingen bei Modellen mit numerischer Distanz eine Rangfolge;
+          Frequency Encoding eignet sich, wenn Häufigkeit informativ ist und
+          kein Target Leakage entstehen darf, wirft aber gleich häufige
+          Kategorien zusammen.
         </p>
         <EncodingComparison />
       </section>
       <AntiPatterns
         title="Fehlmuster"
         items={[
-          "<b>Nominale Kategorien als Zahlenfolge kodieren.</b> Berlin (5) ist nicht fünfmal New York (1).",
-          "<b>Target Encoding vor der Fold-Bildung.</b> Dann sehen Validierungszeilen eigene oder benachbarte Labels. Schätz den Encoder je Trainingsfold neu, mit Glättung und Regel für unbekannte Kategorien.",
+          "<b>Nominale Kategorien als Zahlenfolge kodieren.</b> Berlin (5) ist nicht fünfmal New York (1); das Training läuft fehlerfrei, und das Modell lernt Unsinn.",
+          "<b>Target Encoding vor der Fold-Bildung.</b> Dann sehen Validierungszeilen eigene oder benachbarte Labels. Schätz den Encoder je Trainingsfold, mit Glättung und Regel für unbekannte Kategorien.",
           "<b>Hochkardinale Kennungen ohne Ressourcenplan one-hot kodieren.</b> Vergleich Hashing, gruppierte Kategorien und gelernte Encoder unter deinen Speicher- und Validierungsgrenzen; eine universelle Kategorienzahl gibt es nicht.",
-        ]}
-      />
-      <BestPractices
-        title="Saubere Umsetzung"
-        items={[
-          "<b>One-Hot für nominale Merkmale erwägen,</b> wenn Kardinalität und Speicher beherrschbar sind. Unbekannte Kategorien benötigen eine definierte Behandlung.",
-          "<b>Fold-lokales Target Encoding</b> nur bei begründeter Nutzung von Labelinformation einsetzen; Glättung anwenden und Validierungszeilen nur aus dem Trainingsfold kodieren.",
-          "<b>Frequency Encoding</b>, wenn Häufigkeit informativ ist, aber Target Leakage ausgeschlossen werden muss.",
         ]}
       />
 
@@ -62,19 +55,16 @@ export default function Ch04FeatureDe() {
           Mit x² kann ein lineares Modell eine Krümmung abbilden.
         </h2>
         <p className="prose">
-          Ein lineares Modell zeichnet Geraden. Mit den Merkmalen{" "}
-          <code>x²</code> und <code>x³</code> zeichnet es Kurven, ohne
-          Modellwechsel. Zu wenige Terme untermodellieren, zu viele lernen
-          Rauschen.
+          Mit <code>x²</code> und <code>x³</code> als Merkmalen zeichnet ein
+          lineares Modell Kurven, ohne dass du das Modell wechselst.
         </p>
         <PolynomialExpansion />
       </section>
       <BestPractices
         title="Saubere Umsetzung"
         items={[
-          "<b>Den Grad anhand zurückgehaltener oder kreuzvalidierter Güte wählen.</b> Bei verschachtelten unregularisierten Least-Squares-Modellen auf denselben Zeilen kann Trainings-R² durch zusätzliche Terme nicht sinken; Generalisierung schon.",
+          "<b>Den Grad nach zurückgehaltener oder kreuzvalidierter Güte wählen.</b> Bei verschachtelten unregularisierten Least-Squares-Modellen auf denselben Zeilen kann Trainings-R² durch zusätzliche Terme nicht sinken; die Generalisierung schon.",
           "<b>Zentrieren oder skalieren, wenn Größenordnung Konditionierung oder Regularisierung beeinflusst.</b> Polynomterme können sich um viele Größenordnungen unterscheiden.",
-          "<b>Polynomterme dort prüfen, wo das Modell eine explizite Basis benötigt.</b> Bäume approximieren Nichtlinearität durch Splits; Tiefe, Stichprobe und Regularisierung bestimmen, ob eine Interaktion wirksam gelernt wird.",
         ]}
       />
 
@@ -84,18 +74,18 @@ export default function Ch04FeatureDe() {
           Mehr Merkmale ergeben nicht automatisch ein besseres Modell.
         </h2>
         <p className="prose">
-          Irrelevante Merkmale erhöhen Rauschen. Korrelierte Duplikate
-          verwässern Koeffizienten. Hohe Dimension erhöht Speicherbedarf und
-          Trainingszeit und kann die Generalisierung verschlechtern.
+          Irrelevante Merkmale erhöhen das Rauschen, korrelierte Duplikate
+          verwässern Koeffizienten. Mehr Dimensionen kosten Speicher und
+          Trainingszeit und können die Generalisierung verschlechtern.
         </p>
         <FeatureSelectionSim />
       </section>
       <AntiPatterns
         title="Fehlmuster"
         items={[
-          "<b>Merkmale vor dem Train-Test-Split auf dem vollständigen Datensatz auswählen.</b> Damit nutzt du Information aus dem späteren Testsatz.",
-          "<b>Merkmale wegen niedriger Korrelation wegwerfen.</b> Korrelation misst lineare Beziehungen, sonst nichts; r=0.04 verträgt sich bestens mit hoher Mutual Information.",
-          "<b>300 Merkmale bauen und auf LASSO hoffen.</b> Merkmale kommen in kleinen, gemessenen Schritten dazu.",
+          "<b>Merkmale vor dem Train-Test-Split auf dem vollständigen Datensatz auswählen.</b> Das nutzt Testinformation, und die Auswahl wirkt besser, als sie ist.",
+          "<b>Merkmale wegen niedriger Korrelation wegwerfen.</b> Korrelation misst nur lineare Beziehungen; ein Merkmal mit r=0.04 kann hohe Mutual Information haben (z. B. day_of_week und weekend_sales).",
+          "<b>300 Merkmale bauen und auf LASSO hoffen.</b> Nimm Merkmale in kleinen, gemessenen Schritten dazu; reines Rauschen kann die Regularisierung überstehen.",
         ]}
       />
 
@@ -103,30 +93,22 @@ export default function Ch04FeatureDe() {
         <SectionLabel n="04.4">Interaktionsterme</SectionLabel>
         <h2 className="h2">A × B ist nicht A + B.</h2>
         <p className="prose">
-          Bei einer Interaktion hängt der Effekt von A am Wert von B. Ob eine
-          Anzeige wirkt, entscheidet ihre Relevanz zusammen mit der Person
-          davor. Lineare Modelle brauchen ein explizites A×B-Merkmal;
-          Baummodelle lernen Interaktionen selbst.
+          Bei einer Interaktion hängt der Effekt von A vom Wert von B ab: Die
+          Relevanz einer Anzeige wirkt je nach Person anders, ein Medikament je
+          nach Alter. Lineare Modelle brauchen ein explizites A×B-Merkmal;
+          Baummodelle können sie über Splits lernen, je nach Tiefe, Stichprobe
+          und Regularisierung. Zweiweg-PDP, SHAP-Interaktionswerte oder
+          Vergleiche verschachtelter Modelle liefern Kandidaten;
+          Split-Wichtigkeit allein identifiziert kein Paar.
         </p>
         <InteractionTerms />
       </section>
-      <BestPractices
-        title="Saubere Umsetzung"
-        items={[
-          "<b>Interaktionen vor der Berechnung fachlich begründen.</b> Alle Paare zu durchsuchen ist teuer und erzeugt überwiegend Rauschen.",
-          "<b>Interaktionen zentrieren oder skalieren, wenn Interpretation, Konditionierung oder Regularisierung es verlangt.</b> Dies ist eine Modellentscheidung, keine universelle Voraussetzung.",
-          "<b>Interaktionsspezifische Diagnostik verwenden.</b> Zweiweg-PDP, SHAP-Interaktionswerte oder Vergleiche verschachtelter Modelle können Kandidaten liefern; gewöhnliche Split-Wichtigkeit identifiziert kein Paar allein.",
-        ]}
-      />
 
       <Takeaway
         title="Kernaussagen"
         items={[
-          "<b>Kodierung ist Teil der Modellentscheidung.</b> Target Encoding mit Leakage bläst Validierungswerte künstlich auf.",
-          "<b>Polynomiale Erweiterung verändert Bias und Varianz.</b> Die lokale Simulation mit 40 Punkten macht höhere Grade instabil; Basis und Regularisierung auf dem realen Design fold-lokal wählen.",
-          "<b>Merkmalsauswahl gehört in die Kreuzvalidierung.</b> Auswahl vor dem Split ist Leakage.",
-          "<b>Interaktionssuchen erzeugen Multiplizität.</b> Fachhypothesen verwenden, die Suche innerhalb der Validierung kontrollieren und behaltene Terme auf unberührten Daten bestätigen.",
-          "<b>Training und Inferenz müssen dieselben Merkmale berechnen.</b> Jedes Merkmal muss vor Bekanntwerden des Labels verfügbar sein.",
+          "<b>Polynomiale Erweiterung verändert Bias und Varianz.</b> Mit 40 Punkten werden höhere Grade in der Simulation instabil. Wähl Basis und Regularisierung in jedem Trainingsfold deiner echten Daten.",
+          "<b>Interaktionssuchen erzeugen Multiplizität.</b> Geh von Fachhypothesen aus, kontrollier die Suche innerhalb der Validierung und bestätig behaltene Terme auf unberührten Daten.",
         ]}
       />
     </DataScienceLocaleProvider>

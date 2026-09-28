@@ -132,11 +132,11 @@ export function InstrumentalVariable() {
   return (
     <Panel
       eyebrow={text("SIMULATION", "SIMULATION")}
-      title={text("Instrumental Variables", "Instrumentalvariablen")}
-      meta={`F-stat: ${s.fStat}`}
+      title={text("Instrumental Variables", "Instrumentvariablen")}
+      meta={`${text("F-stat", "F-Statistik")}: ${s.fStat}`}
       caption={text(
-        "This lookup-table demo changes the displayed first stage and estimates together; it does not fit IV data. Relevance is only one requirement. Exogeneity, exclusion, the estimand, and weak-instrument-robust inference need separate design evidence.",
-        "Diese Lookup-Table-Simulation verändert die angezeigte erste Stufe und die Schätzungen gemeinsam; sie passt keine IV-Daten an. Relevanz ist nur eine Anforderung. Exogenität, Exklusion, Estimand und Weak-IV-robuste Inferenz benötigen separate Designevidenz.",
+        "This lookup table changes first stage and estimates together without fitting IV data. Relevance is one requirement; exogeneity, exclusion, the estimand and weak-instrument-robust inference need separate evidence.",
+        "Diese Lookup-Tabelle verändert erste Stufe und Schätzungen gemeinsam, ohne IV-Daten anzupassen. Relevanz ist eine Anforderung; Exogenität, Exklusion, Estimand und Weak-IV-robuste Inferenz brauchen eigene Evidenz.",
       )}
     >
       <div className="sim-row" style={{ gridTemplateColumns: "220px 1fr" }}>
@@ -232,8 +232,8 @@ export function InstrumentalVariable() {
             </div>
             <div style={{ color: "var(--ink-3)", fontSize: 12, marginTop: 4 }}>
               {text(
-                "F=10 is a conventional screen, not an instrument-validity test",
-                "F=10 ist ein konventioneller Screen, kein Gültigkeitstest für das Instrument",
+                "F=10 is a common weak-instrument rule of thumb, not a validity test",
+                "F=10 ist eine übliche Faustregel für schwache Instrumente, kein Gültigkeitstest",
               )}
             </div>
           </div>

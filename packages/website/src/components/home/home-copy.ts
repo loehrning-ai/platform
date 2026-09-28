@@ -5,74 +5,84 @@ export const HOME_COPY = {
     metadata: {
       title: "KI-Kurse, Workshops und offene Lernmaterialien",
       description:
-        "Kostenfreie KI-Kurse auf Deutsch und Englisch, Workshops, Bücher, Demos und Open-Source-Werkzeuge. Mit Quellenstand, bekannten Grenzen und klaren Zugangsregeln.",
+        "Kostenfreie KI-Kurse auf Deutsch und Englisch, dazu Workshops, Bücher, Demos und Open-Source-Werkzeuge, mit Quellen und klaren Zugangsregeln.",
     },
     hero: {
       headline: ["KI", "verstehen.", "Sicher anwenden."],
-      introduction:
-        "Wähle ein Ziel. Triff eine Entscheidung. Teste sie an einem Modell und nimm einen überprüfbaren Arbeitsbeleg mit. Frei, zweisprachig und quelloffen.",
+      /** The band's one caps line (SPEC §3.6). CSS sets the capitals. */
+      capsLine: "Frei · zweisprachig · quelloffen",
+      // One sentence on phones (lead + "."), the full introduction from lg:
+      // lead + detail + "." + facts. Below lg the facts sit above the
+      // headline as the band's label instead.
+      introduction: {
+        lead: "Freie Kurse, Praxisbeispiele und Workshops zu KI",
+        detail: " mit Übungen und Quellen",
+        facts: "Frei, zweisprachig und quelloffen.",
+      },
       primaryCta: "Lernroute wählen",
+      globeToggle: "Globus anhalten",
       pillars: [
         {
           title: "Lernen",
-          body: "Formuliere zuerst eine eigene Antwort.",
+          body: "Antworte zuerst, dann siehst du die Lösung.",
           href: "/kurse",
         },
         {
           title: "Prüfen",
-          body: "Verändere eine Variable und beobachte den Unterschied.",
+          body: "Ändere eine Variable und vergleiche.",
           href: "/demos",
         },
         {
           title: "Anwenden",
-          body: "Übertrage die Regel in einen neuen Fall.",
+          body: "Übertrag die Regel auf einen neuen Fall.",
           href: "/workshops",
         },
       ],
     },
     offering: {
-      overline: "Grundlagenpfad",
-      headline: ["Vier Kurse.", "Eine klare Reihenfolge."],
-      introduction:
-        "Beginne mit sicherer Anwendung. Prüfe danach gesellschaftliche Folgen, rechtliche Pflichten und belastbare Arbeitsabläufe.",
-      routeSignal: "Ein Pfad. Vier überprüfbare Ergebnisse.",
+      headline: "Vier Kurse in fester Reihenfolge",
+      // Section caption, from lg: facts only, never a restated heading.
+      routeSignal: (lessons: number) => `${lessons} Lektionen`,
       routeLabel: "Empfohlener Grundlagenpfad",
       lessonLabel: "Lektionen",
       deeperSummary: (count: number) =>
-        `Dazu ${count} technische Kurse von Data Engineering bis System Design.`,
+        `Dazu ${count} technische Kurse zu Prompting, Coding-Agenten und Daten.`,
       viewAllCourses: "Alle Kurse ansehen",
     },
     workflow: {
-      overline: "Ressourcen",
-      headline: "Nachlesen, prüfen, übertragen.",
-      introduction:
-        "Wähle nach Aufgabe: nachlesen, ausprobieren, gemeinsam entscheiden oder selbst weiterbauen.",
-      boardLabel: "Kein Content-Labyrinth. Ein Werkzeug pro Absicht.",
+      headline: "Material zum Nachlesen und Ausprobieren",
+      // Section caption, from lg: facts only.
+      boardLabel: (areas: number) => `${areas} Bereiche · ohne Konto`,
       boardAriaLabel: "Werkzeuge und Lernressourcen",
       resources: [
         {
           label: "Blog",
-          body: "Einordnungen zu KI und Recht mit Primärquellen.",
+          // One line at 320px, never truncated; the same line at every width.
+          short: "KI und Recht, mit Quellen",
           href: "/blog",
         },
         {
           label: "Lernbücher",
-          body: "Vertiefungen mit Kapiteln, Quellen und Begriffen.",
+          // One line at 320px, never truncated; the same line at every width.
+          short: "Kapitel mit Quellen",
           href: "/buecher",
         },
         {
           label: "Praxisbeispiele",
-          body: "Modelle zum Ausprobieren, mit Annahmen und Grenzen.",
+          // One line at 320px, never truncated; the same line at every width.
+          short: "Abläufe zum Ausprobieren",
           href: "/demos",
         },
         {
           label: "Workshops",
-          body: "Geführte Fälle für gemeinsame Entscheidungen.",
+          // One line at 320px, never truncated; the same line at every width.
+          short: "Fälle für Teams",
           href: "/workshops",
         },
         {
           label: "Open Source",
-          body: "Werkzeuge mit Quellcode, Version und Lizenz.",
+          // One line at 320px, never truncated; the same line at every width.
+          short: "Code, Version, Lizenz",
           href: "/open-source",
         },
       ],
@@ -90,40 +100,31 @@ export const HOME_COPY = {
       },
       lessonsDone: (done: number, total: number) =>
         `${done} von ${total} Lektionen`,
-      demosEyebrow: "Ausprobieren",
       demosTitle: "Praxisbeispiele",
       demosRailLabel: "Praxisbeispiele zum Ausprobieren",
-      booksEyebrow: "Nachlesen",
       booksTitle: "Lernbücher",
       booksRailLabel: "Lernbücher der Plattform",
       bookMeta: (chapters: number, minutes: number) =>
         `${chapters} Kapitel · ${minutes} Min.`,
     },
     credibility: {
-      overline: "Betriebsprinzipien",
-      headline: "Was hier nicht verhandelbar ist.",
-      introduction:
-        "Jede Oberfläche folgt denselben Regeln: offen zugänglich, zweisprachig, mit sichtbarer Herkunft und verantworteter Redaktion.",
+      headline: "Grundregeln",
       principles: [
         {
-          label: "Zugang",
           title: "Keine Paywall",
-          body: "Kein Abo. Vier Reader benötigen ein kostenloses Lernkonto.",
+          body: "Vier Kurse brauchen ein kostenloses Lernkonto.",
         },
         {
-          label: "Sprachen",
           title: "Zwei vollständige Fassungen",
-          body: "Alle Kurse sind vollständig auf Deutsch und Englisch verfügbar.",
+          body: "Alle Kurse gibt es auf Deutsch und Englisch.",
         },
         {
-          label: "Quellen",
-          title: "Stand und Herkunft sichtbar",
+          title: "Quellen sind verlinkt",
           body: "Fakten verweisen auf Quellen. Annahmen und Simulationen sind markiert.",
         },
         {
-          label: "Redaktion",
           title: "Von Tim Löhr redigiert",
-          body: "Autorschaft, Überarbeitungsstand und bekannte Grenzen bleiben sichtbar.",
+          body: "Überarbeitungsstand und bekannte Grenzen bleiben sichtbar.",
         },
       ],
     },
@@ -132,79 +133,83 @@ export const HOME_COPY = {
     metadata: {
       title: "AI courses, workshops and open learning materials",
       description:
-        "Free AI courses in German and English, workshops, books, demos and open-source tools. Each resource states its sources, known limits and access requirements.",
+        "Free AI courses in German and English, plus workshops, books, demos and open-source tools, with sources and clear access rules.",
     },
     hero: {
       headline: ["Understand", "AI.", "Apply it safely."],
-      introduction:
-        "Choose a goal. Commit to a decision. Test it against a model and leave with a reviewable work artifact. Free, bilingual and open source.",
+      capsLine: "Free · bilingual · open source",
+      introduction: {
+        lead: "Free courses, examples and workshops on AI",
+        detail: " with exercises and sources",
+        facts: "Free, bilingual and open source.",
+      },
       primaryCta: "Choose a learning route",
+      globeToggle: "Pause the globe",
       pillars: [
         {
           title: "Learn",
-          body: "State your own answer before the reveal.",
+          body: "Answer first, then see the solution.",
           href: "/kurse",
         },
         {
           title: "Check",
-          body: "Change one variable and observe the difference.",
+          body: "Change one variable and compare.",
           href: "/demos",
         },
         {
           title: "Apply",
-          body: "Transfer the rule into a new case.",
+          body: "Use the rule on a new case.",
           href: "/workshops",
         },
       ],
     },
     offering: {
-      overline: "Foundation path",
-      headline: ["Four courses.", "One defined order."],
-      introduction:
-        "Start with safe use. Then test social effects, legal duties and reviewable working methods.",
-      routeSignal: "One path. Four reviewable outcomes.",
+      headline: "Four courses in a set order",
+      routeSignal: (lessons: number) => `${lessons} lessons`,
       routeLabel: "Recommended foundation path",
       lessonLabel: "lessons",
       deeperSummary: (count: number) =>
-        `Plus ${count} technical courses, from data engineering to system design.`,
+        `Plus ${count} technical courses on prompting, coding agents and data.`,
       viewAllCourses: "View all courses",
     },
     workflow: {
-      overline: "Resources",
-      headline: "Read, test, transfer.",
-      introduction:
-        "Choose by task: read, experiment, decide together or build on the source.",
-      boardLabel: "No content maze. One instrument for each intent.",
+      headline: "Material to read and try",
+      boardLabel: (areas: number) => `${areas} areas · no account needed`,
       boardAriaLabel: "Tools and learning resources",
       resources: [
         {
           label: "Blog",
-          body: "AI and legal analysis with primary sources.",
+          // One line at 320px, never truncated; the same line at every width.
+          short: "AI and law, with sources",
           href: "/blog",
         },
         {
           label: "Learning books",
-          body: "Deeper chapters with sources and definitions.",
+          // One line at 320px, never truncated; the same line at every width.
+          short: "Chapters with sources",
           href: "/buecher",
         },
         {
           label: "Applied examples",
-          body: "Models to try, with assumptions and limits.",
+          // One line at 320px, never truncated; the same line at every width.
+          short: "Workflows to try",
           href: "/demos",
         },
         {
           label: "Workshops",
-          body: "Guided cases for shared decisions.",
+          // One line at 320px, never truncated; the same line at every width.
+          short: "Cases for teams",
           href: "/workshops",
         },
         {
           label: "Open Source",
-          body: "Tools with source, version and licence.",
+          // One line at 320px, never truncated; the same line at every width.
+          short: "Code, version, licence",
           href: "/open-source",
         },
       ],
       accountBody:
-        "A free account synchronizes progress and work artifacts across devices.",
+        "A free account syncs progress and work artifacts across devices.",
       accountCta: "Go to account",
     },
     companion: {
@@ -217,40 +222,31 @@ export const HOME_COPY = {
       },
       lessonsDone: (done: number, total: number) =>
         `${done} of ${total} lessons`,
-      demosEyebrow: "Try it",
       demosTitle: "Applied examples",
       demosRailLabel: "Applied examples to try",
-      booksEyebrow: "Read up",
       booksTitle: "Learning books",
       booksRailLabel: "Learning books on this platform",
       bookMeta: (chapters: number, minutes: number) =>
         `${chapters} chapters · ${minutes} min`,
     },
     credibility: {
-      overline: "Operating principles",
-      headline: "What is not negotiable here.",
-      introduction:
-        "Every surface follows the same rules: open access, complete bilingual editions, visible provenance and accountable editing.",
+      headline: "Ground rules",
       principles: [
         {
-          label: "Access",
           title: "No paywall",
-          body: "No subscription. Four readers require a free learning account.",
+          body: "Four courses need a free learning account.",
         },
         {
-          label: "Languages",
           title: "Two complete editions",
-          body: "Every course is complete in English and German.",
+          body: "Every course is available in German and English.",
         },
         {
-          label: "Sources",
-          title: "Date and origin shown",
+          title: "Sources are linked",
           body: "Facts link to sources. Assumptions and simulations are labelled.",
         },
         {
-          label: "Editorial",
           title: "Edited by Tim Löhr",
-          body: "Authorship, revision date and known limits stay visible.",
+          body: "Revision date and known limits stay visible.",
         },
       ],
     },
@@ -275,43 +271,42 @@ export const HOME_COURSE_COPY: Readonly<
     "ki-und-gesellschaft": {
       title: "KI und Gesellschaft",
       tagline:
-        "Deepfakes, Bias und Folgen für Arbeit anhand von Beispielen prüfen.",
+        "Prüfe an Beispielen, was Deepfakes, Bias und KI für die Arbeit bedeuten.",
       duration: "ca. 46 Min.",
     },
     "eu-ai-act-kurs": {
       title: "EU AI Act Kurs",
-      tagline:
-        "Anwendungsfall klassifizieren, Rolle bestimmen, Pflichten zuordnen.",
+      tagline: "Ordne deinen Anwendungsfall ein und leite Rolle und Pflichten ab.",
       duration: "ca. 1 Std. 50 Min.",
     },
     "ai-native": {
       title: "AI-Native Arbeitskurs",
-      tagline:
-        "Absicht klären, Kontext bereitstellen, Ausführung und Ergebnis prüfen.",
-      duration: "ca. 12 Std.",
+      tagline: "Gib der KI Absicht und Kontext, dann prüfe das Ergebnis.",
+      // /kurse states "ca. 5 Std. Lektionen, 12 Std. mit Übungen".
+      duration: "ca. 5 Std. + Übungen",
     },
   },
   en: {
     "ki-fuehrerschein": {
-      title: "AI Fundamentals",
+      title: "Everyday AI Literacy",
       tagline: "Set task boundaries, protect data and verify responses.",
       duration: "about 1 hr 40 min",
     },
     "ki-und-gesellschaft": {
       title: "AI and Society",
-      tagline: "Assess deepfakes, bias and effects on work through examples.",
+      tagline: "Use examples to assess deepfakes, bias and effects on work.",
       duration: "about 46 min",
     },
     "eu-ai-act-kurs": {
       title: "EU AI Act Course",
-      tagline: "Classify a use case, identify the role and map the duties.",
+      tagline: "Classify your use case, then derive your role and duties.",
       duration: "about 1 hr 50 min",
     },
     "ai-native": {
       title: "AI-Native Work Course",
-      tagline:
-        "Clarify intent, provide context, then verify execution and results.",
-      duration: "about 12 hr",
+      tagline: "Give the AI intent and context, then check the result.",
+      // /kurse states "about 5 hrs of lessons, 12 hrs with exercises".
+      duration: "about 5 hr + exercises",
     },
   },
 };

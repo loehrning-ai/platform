@@ -30,6 +30,22 @@ export function isLocale(value: unknown): value is Locale {
   return value === "de" || value === "en";
 }
 
+const INVALID_PARSED_PATHNAME: ParsedLocalePathname = {
+  locale: DEFAULT_LOCALE,
+  pathname: INVALID_INTERNAL_PATH,
+  explicitLocale: null,
+  valid: false,
+};
+
+/**
+ * True when a browser would read the value as scheme-relative (another
+ * authority) rather than as a path on this origin. WHATWG URL parsing treats a
+ * leading backslash like a slash, so `/\host` counts as well.
+ */
+function isSchemeRelative(value: string): boolean {
+  return value.startsWith("//") || value.startsWith("/\\");
+}
+
 function containsUnsafePathSyntax(value: string): boolean {
   return (
     value.includes("\\") ||
@@ -50,21 +66,22 @@ export function parseLocalePathname(pathname: string): ParsedLocalePathname {
     pathname.length === 0 ||
     pathname.length > 2_048 ||
     !pathname.startsWith("/") ||
-    pathname.startsWith("//") ||
+    isSchemeRelative(pathname) ||
     containsUnsafePathSyntax(pathname)
   ) {
-    return {
-      locale: DEFAULT_LOCALE,
-      pathname: INVALID_INTERNAL_PATH,
-      explicitLocale: null,
-      valid: false,
-    };
+    return INVALID_PARSED_PATHNAME;
   }
 
   for (const locale of SUPPORTED_LOCALES) {
     const prefix = `/${locale}`;
     if (pathname === prefix || pathname.startsWith(`${prefix}/`)) {
       const stripped = pathname.slice(prefix.length) || "/";
+      // `/en//evil.example` strips to the scheme-relative `//evil.example`.
+      // Every caller of this parser treats `pathname` as a same-origin path
+      // (redirect targets, localized hrefs), so such a value is never valid.
+      // Real request paths are unaffected: Next collapses `//` with a 308
+      // before the proxy runs.
+      if (isSchemeRelative(stripped)) return INVALID_PARSED_PATHNAME;
       return {
         locale,
         pathname: stripped,
@@ -140,7 +157,11 @@ export function localizeHref(href: string, locale: Locale): string {
       : localePath.pathname === "/"
         ? `/${locale}`
         : `/${locale}${localePath.pathname}`;
-  return `${pathname}${parsed.search}${parsed.hash}`;
+  const localized = `${pathname}${parsed.search}${parsed.hash}`;
+  // Last line of defense: the result is used as a navigation and redirect
+  // target, so it must never leave this origin, whatever the parser returned.
+  if (isSchemeRelative(localized)) return fallback;
+  return localized;
 }
 
 /** Routes that remain single, unprefixed infrastructure endpoints. */

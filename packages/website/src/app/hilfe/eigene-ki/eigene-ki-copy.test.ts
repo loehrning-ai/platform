@@ -269,7 +269,6 @@ describe("agent help numbers", () => {
       expect(copy.limits.chat(60, 32)).toContain("60");
       expect(copy.limits.tokens(5, 64)).toContain("5");
       expect(copy.chat.limits(60, 8)).toContain("8");
-      expect(copy.tokens.limit(5)).toContain("5");
     }
   });
 });

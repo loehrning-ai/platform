@@ -85,4 +85,17 @@ describe("demo component registries", () => {
       "Praxisbeispiel wird geladen…",
     );
   });
+
+  it.each(EXPECTED_SLUGS.filter((slug) => slug !== "prompt-scanner"))(
+    "holds the %s engine's height while its chunk loads, so the page does not shift",
+    (slug) => {
+      const Loading = getDemoComponent(slug)!;
+      const { container } = render(createElement(Loading));
+      const holder = container.firstElementChild;
+      expect(holder?.className).toMatch(/(?:^|\s)min-h-\[\d+px\](?:\s|$)/);
+      expect(screen.getByRole("status")).toHaveTextContent(
+        "Praxisbeispiel wird geladen…",
+      );
+    },
+  );
 });

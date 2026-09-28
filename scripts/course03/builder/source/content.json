@@ -16,9 +16,9 @@
    "name": "Expansion MRR",
    "sub": "a change, by country",
    "tray": "additive",
-   "ok": "Changes add across countries and months. Q2: CH 1,990 down to GB 705, total 12,895.",
+   "ok": "Changes add across countries and months: Q2 total 12,895.",
    "wrong": {
-    "semi": "Expansion is a change, so it also adds across months: Q2 total 12,895.",
+    "semi": "A change also adds across months: Q2 total 12,895.",
     "non": "It is not a rate. Countries add: Q2 total 12,895."
    }
   },
@@ -27,7 +27,7 @@
    "name": "Ending MRR",
    "sub": "a level, per month",
    "tray": "semi",
-   "ok": "Add across segments at one moment. Never across months: 334,675 + 344,450 + 387,015 = 1,066,140 describes nothing.",
+   "ok": "Add across segments at one moment, never across months: 334,675 + 344,450 + 387,015 = 1,066,140 describes nothing.",
    "wrong": {
     "additive": "Added across months, three levels give 1,066,140, which describes nothing.",
     "non": "Levels do add across segments at one moment. They only fail across time."
@@ -38,7 +38,7 @@
    "name": "Active accounts",
    "sub": "a count at month end",
    "tray": "semi",
-   "ok": "June: 44 + 44 + 44 = 132 across segments. Across months, 123 + 123 + 132 = 378 counts account-months; 141 distinct accounts were active in Q2.",
+   "ok": "June: 44 + 44 + 44 = 132 across segments. Across months, 123 + 123 + 132 = 378 counts account-months; Q2 had 141 distinct accounts.",
    "wrong": {
     "additive": "123 + 123 + 132 = 378 counts account-months, not accounts. Distinct in Q2: 141.",
     "non": "At one moment, segment counts add: 44 + 44 + 44 = 132."
@@ -52,7 +52,7 @@
    "ok": "Recompute from the counts: 12 of 120 = 10.0 %. Never add 10 + 10 + 10.",
    "wrong": {
     "additive": "10.0 + 10.0 + 10.0 = 30 % means nothing. Recompute: 12 of 120 = 10.0 %.",
-    "semi": "A rate never adds, not even across segments. Recompute: 12 of 120 = 10.0 %. And 4 of 48 = 8.33 % is the wrong base."
+    "semi": "A rate never adds, even across segments. Recompute: 12 of 120 = 10.0 %; 4 of 48 = 8.33 % uses the wrong base."
    }
   }
  ],
@@ -149,7 +149,7 @@
    "id": "retry",
    "label": "Retry duplicates",
    "layer": "core",
-   "fix": "core.stg_billing_events keeps one row per event_id, and core.mrr_movements has movement_id as its PRIMARY KEY, so a repeat cannot load.",
+   "fix": "core.stg_billing_events keeps one row per event_id, and movement_id is the PRIMARY KEY of core.mrr_movements, so a repeat cannot load.",
    "test": "G04, Q01"
   },
   {
@@ -163,14 +163,14 @@
    "id": "codes",
    "label": "Status codes A/C/N",
    "layer": "core",
-   "fix": "Decoded once in staging into active, churned and new. A CHECK rejects an unknown code, so it fails the build instead of turning into a silent NULL.",
+   "fix": "Decoded once in staging into active, churned and new. A CHECK fails the build on an unknown code.",
    "test": "G03, Q04"
   },
   {
    "id": "amount",
    "label": "amount = change",
    "layer": "analytics",
-   "fix": "The change is served as net_new_mrr_eur beside ending_mrr_eur in analytics.mrr_summary_monthly. The level comes from the account grain in core, not from a window of changes.",
+   "fix": "analytics.mrr_summary_monthly serves the change as net_new_mrr_eur beside ending_mrr_eur. The level comes from the account grain in core, not from a window of changes.",
    "test": "G01, Q02"
   }
  ],
@@ -191,7 +191,7 @@
     "date",
     "period"
    ],
-   "why": "dt means a month key here and a posting day in billing_events. Same name, two meanings."
+   "why": "dt means a month key here and a posting day in billing_events."
   },
   {
    "bad": "amount",
@@ -226,7 +226,7 @@
     "segment_cd",
     "seg_name"
    ],
-   "why": "An abbreviation forces a guess; the AI cannot walk over and ask."
+   "why": "An abbreviation forces a guess, and the AI cannot ask."
   },
   {
    "bad": "status = 'A' / 'C' / 'N'",
@@ -315,7 +315,7 @@
     "revenue_final_v2",
     "public.monthly_revenue"
    ],
-   "why": "“Three of them sound like the answer.” The AI picked by name."
+   "why": "The AI picked by name: “Three of them sound like the answer.”"
   },
   {
    "bad": "SUM(amount) AS ending_mrr",
@@ -382,7 +382,7 @@
     "need"
    ],
    "n": [
-    "Possible, but the base rule is easy to get wrong: serve analytics.logo_churn_by_segment_quarter.",
+    "The base rule is easy to get wrong: serve analytics.logo_churn_by_segment_quarter.",
     "Sums of MRR cannot tell who was in the starting base.",
     "Needs its own view with starting and churned accounts."
    ]
@@ -595,7 +595,7 @@
     ],
     [
      "Use when",
-     "Core is small or indexed and queries are fast enough. FOLDLINE uses views."
+     "Core is small or indexed and queries are fast. FOLDLINE uses views."
     ]
    ]
   },
@@ -647,7 +647,7 @@
     ],
     [
      "Tests before publish",
-     "Build into a new table, run the checks, then swap names in one transaction"
+     "Build a new table, check it, swap names in one transaction"
     ],
     [
      "Burden",
@@ -723,7 +723,7 @@
   {
    "id": "project",
    "tab": "Project setup",
-   "lead": "No code. Upload the approved files and paste the instructions. A Project has no database connection, so the files you upload are everything Claude can see. This is Project B in the live demo.",
+   "lead": "No code: upload the approved files and paste the instructions. A Project has no database, so Claude sees only what you upload. This is Project B in the live demo.",
    "tree": [
     {
      "dir": "Claude Project",
@@ -742,7 +742,7 @@
   {
    "id": "code",
    "tab": "Claude Code setup",
-   "lead": "A repository with written guidance, a Skill and a hook. Claude Code reads CLAUDE.md and loads the Skill when its description matches the question.",
+   "lead": "A repository with CLAUDE.md, a Skill and a hook. Claude Code loads the Skill when its description matches the question.",
    "tree": [
     {
      "dir": "your-repo/",
@@ -774,7 +774,7 @@
   {
    "id": "connector",
    "tab": "Connector setup",
-   "lead": "Claude Code queries PostgreSQL through an MCP connector that logs in as the read-only reader. The hook checks each query; the role is the lock. Add this to the Claude Code setup.",
+   "lead": "Add this to the Claude Code setup: an MCP connector queries PostgreSQL as the read-only reader. The hook checks each query; the role is the lock.",
    "tree": [
     {
      "dir": "your-repo/",
@@ -806,7 +806,7 @@
  "files": {
   "PROJECT-INSTRUCTIONS.txt": {
    "badge": "guides",
-   "job": "Tells Claude how to behave: read the data status first, ask back, refuse, and end every answer with a trace. It guides; it cannot stop Claude from reading a file you uploaded.",
+   "job": "Tells Claude to read the data status first, ask back or refuse when needed, and end every answer with a trace. It cannot stop Claude reading an uploaded file.",
    "src": "claude/project/PROJECT-INSTRUCTIONS.txt",
    "pick": [
     [
@@ -826,7 +826,7 @@
   },
   "metric-definitions.md": {
    "badge": "guides",
-   "job": "The compiled copy of semantic/metric.yml for this reader. Loaded is not the same as used: the instructions must require the citation.",
+   "job": "semantic/metric.yml compiled for this reader. The instructions must require citing it; loading alone does not make Claude use it.",
    "src": "claude/project/metric-definitions.md",
    "pick": [
     [
@@ -838,7 +838,7 @@
   },
   "mrr_summary_monthly.csv": {
    "badge": "enforces",
-   "job": "The MRR summary view as a file. In a Project there is no database, so the files you upload are the edge of what Claude can see. That upload set plays the part of the grants: upload approved views only, never the export tables “for context”.",
+   "job": "The MRR summary view as a file. In a Project the upload set plays the part of the grants, so upload approved views only, never the export tables “for context”.",
    "src": "claude/project/mrr_summary_monthly.csv",
    "pick": [
     [
@@ -854,7 +854,7 @@
   },
   "logo_churn_by_segment_quarter.csv": {
    "badge": "enforces",
-   "job": "The churn view as a file, with starting and churned accounts beside the rate. Part of the upload set that plays the part of the grants.",
+   "job": "The churn view as a file, with starting and churned accounts beside the rate.",
    "src": "claude/project/logo_churn_by_segment_quarter.csv",
    "pick": [
     [
@@ -870,7 +870,7 @@
   },
   "expansion_mrr_by_country_monthly.csv": {
    "badge": "enforces",
-   "job": "The dense month-by-country grid as a file: 18 months × 8 countries = 144 rows, zeros explicit. Part of the upload set.",
+   "job": "The dense month-by-country grid as a file: 18 months × 8 countries = 144 rows, zeros explicit.",
    "src": "claude/project/expansion_mrr_by_country_monthly.csv",
    "pick": [
     [
@@ -886,7 +886,7 @@
   },
   "account_mrr_monthly.csv": {
    "badge": "enforces",
-   "job": "Pseudonymous account keys only: 144 accounts × 18 months. Pseudonymous is not anonymous, so the instructions keep a row limit. Part of the upload set.",
+   "job": "Pseudonymous account keys only: 144 accounts × 18 months. Pseudonymous is not anonymous, so the instructions keep a row limit.",
    "src": "claude/project/account_mrr_monthly.csv",
    "pick": [
     [
@@ -902,7 +902,7 @@
   },
   "data_status_by_view.csv": {
    "badge": "enforces",
-   "job": "Load time, last complete month, quality gate and thresholds for the four data views. Claude computes the age against the stated clock. Part of the upload set.",
+   "job": "Load time, last complete month, quality gate and thresholds for the four data views. Claude computes the age against the stated clock.",
    "src": "claude/project/data_status_by_view.csv",
    "pick": [
     [
@@ -918,7 +918,7 @@
   },
   "CLAUDE.md": {
    "badge": "guides",
-   "job": "Project memory for Claude Code. It guides every session in this repository. It never holds a connection string.",
+   "job": "Project memory that guides every Claude Code session in this repository. It never holds a connection string.",
    "src": "claude/CLAUDE.example.md",
    "pick": [
     [
@@ -962,14 +962,14 @@
   },
   "settings.json": {
    "badge": "guardrail",
-   "job": "Registers the hook that runs before every database tool call. It changes what Claude Code does; it does not change what the database allows.",
+   "job": "Registers the hook that runs before every database tool call. What the database allows stays the same.",
    "src": "claude/settings.example.json",
    "pick": null,
    "dest": "Copy to .claude/settings.json"
   },
   "sql_guard.py": {
    "badge": "guardrail",
-   "job": "A deterministic check before the query runs: one read-only SELECT on the five allowlisted views. Exit code 2 blocks the call and tells Claude why. Another client on the same login skips it: a guardrail, not a lock.",
+   "job": "Before each query it allows only one read-only SELECT on the five allowlisted views; exit code 2 blocks the call and tells Claude why. Another client on the same login skips it.",
    "src": "claude/hooks/sql_guard.py",
    "pick": [
     [
@@ -985,14 +985,14 @@
   },
   ".mcp.json": {
    "badge": "guardrail",
-   "job": "Tells Claude Code which connector to start and which environment variable holds the connection. It names the secret; it never contains it. A connector's read-only switch is a guardrail too.",
+   "job": "Tells Claude Code which connector to start and which environment variable holds the connection. A connector's read-only switch is a guardrail too.",
    "src": "claude/mcp.example.json",
    "pick": null,
    "dest": "Copy to .mcp.json at the repository root"
   },
   "60_access.sql": {
    "badge": "enforces",
-   "job": "The only file here that enforces. The database denies everything else with 42501, whatever the instructions say.",
+   "job": "The only file here that enforces: the database denies everything else with 42501, whatever the instructions say.",
    "src": "warehouse/sql/60_access.sql",
    "pick": [
     [
@@ -1027,7 +1027,7 @@
     "rec-exp"
    ],
    "col": "values",
-   "say": "Caught by G01 and Q02 in the database plane, and by value grading in the AI plane: the export tables matched 0 of 3."
+   "say": "Caught by G01 and Q02, and by value grading in the AI plane: the export tables matched 0 of 3."
   },
   {
    "id": "AP-M06",
@@ -1111,7 +1111,7 @@
     "rec-app"
    ],
    "col": "cited",
-   "say": "No database check can catch it. Only the AI plane's citation grade shows it: the approved-lane runs cited the definition 0 of 3."
+   "say": "Only the AI plane's citation grade shows it: the approved-lane runs cited the definition 0 of 3."
   },
   {
    "id": "AP-E02",
@@ -1124,7 +1124,7 @@
     "dry-b"
    ],
    "col": "runs",
-   "say": "Only the run log shows it: one run each. Aim for three per case, and call each an observation."
+   "say": "Only the run log shows it: one run each. Aim for three per case."
   }
  ],
  "domains": [
@@ -1327,7 +1327,7 @@
    "wrong": "17 h",
    "wrongWhy": "median resolution: the average of monthly medians 12, 26 and 13 h",
    "right": "Cannot compute",
-   "rightWhy": "from medians alone; from all 910 closed tickets it is 14 h",
+   "rightWhy": "from medians alone; all 910 closed tickets give 14 h",
    "renames": [
     [
      "status 'O'",
@@ -1350,7 +1350,7 @@
    "title": "Pick the question and the owner",
    "who": "Question owner",
    "output": "The five boxes in QUESTION-CARD.md",
-   "done": "A second person restates the period, the kind of number, the rows and the unit without asking a question.",
+   "done": "A second person restates period, kind of number, rows and unit without asking.",
    "foldline": "“Show ending MRR by month for the last complete quarter.” Owner: revenue_analytics.",
    "prevents": "AP-Q01 vague question, AP-Q02 no owner"
   },
@@ -1368,7 +1368,7 @@
    "title": "Write the truth",
    "who": "Question owner and tester, independently",
    "output": "expected_rows and truth_source for every answer case",
-   "done": "Both people get the same numbers. No placeholder row is left. The AI under test was not used.",
+   "done": "Both people get the same numbers, no placeholder row is left, and the AI under test was not used.",
    "foldline": "G01 334,675 / 344,450 / 387,015; G02 32,380; G03 4 of 40 = 10.0 %.",
    "prevents": "AP-T02 placeholder rows, AP-T04 truth from the AI"
   },
@@ -1377,7 +1377,7 @@
    "title": "Inventory the sources and name things",
    "who": "Data builder",
    "output": "naming/NAMING-REVIEW.md and a rename map",
-   "done": "Every served column has a name a stranger can read. The lint prints the known failures on the old tables.",
+   "done": "A stranger can read every served column name. The lint prints the known failures on the old tables.",
    "foldline": "amount → net_new_mrr_eur; dt → month_start; seg → customer_segment; A/C/N → words.",
    "prevents": "AP-N01 to AP-N04"
   },
@@ -1432,7 +1432,7 @@
    "who": "Tester",
    "output": "The printed output of 70_checks.sql, saved as a receipt",
    "done": "DB CHECKS n of n PASS, with date, dataset and definition version on the receipt.",
-   "foldline": "22 of 22 PASS as the login (the deck showed 9 of 9; C01, R01 and R02 move to step 11). “These test the database and course rules, not the AI.”",
+   "foldline": "22 of 22 PASS as the login (the deck showed 9 of 9; C01, R01 and R02 move to step 11).",
    "prevents": "AP-E03 database checks read as an AI score"
   },
   {
@@ -1449,7 +1449,7 @@
    "title": "Run the AI cases and gate",
    "who": "Tester, a second person",
    "output": "claude-demo/AI-RUN-LOG.md with 3 runs per case; READY-CANVAS.md filled",
-   "done": "Each run graded on value, behaviour, relation, citation and freshness. The weakest control sets the verdict.",
+   "done": "Each run is graded on value, behaviour, relation, citation and freshness; the weakest control sets the verdict.",
    "foldline": "Values 3 of 3, definition cited 0 of 3, one run each. C01, R01 and R02 are graded here.",
    "prevents": "AP-C02, AP-E01, AP-E02, AP-E04"
   }

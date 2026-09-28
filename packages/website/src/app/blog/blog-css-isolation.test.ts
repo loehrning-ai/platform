@@ -70,17 +70,24 @@ describe("blog stylesheet isolation", () => {
   });
 
   it("paints the article title in its settled position", () => {
+    // Every post opens with the shared header (PostHead): the H1 is one
+    // text run in .wz-hero__title, with no entrance motion.
+    const wzRoot = postcss.parse(
+      readFileSync(join(__dirname, "_styles/post-wz.css"), "utf8"),
+    );
     const declarations = new Map<string, string>();
-    postRoot.walkRules(".hero__title .word", (rule) => {
+    wzRoot.walkRules(/\.wz-hero__title\b/, (rule) => {
       rule.walkDecls((declaration) => {
         declarations.set(declaration.prop, declaration.value);
       });
     });
 
-    expect(declarations.get("display")).toBe("inline-block");
+    expect(declarations.get("font-weight")).toBe("700");
     expect(declarations.has("transform")).toBe(false);
     expect(declarations.has("animation")).toBe(false);
+    expect(heroSource).toContain("<PostHead");
     expect(heroSource).not.toContain("animationDelay");
+    expect(postCss).not.toMatch(/\.hero__title/);
   });
 
   it("restores a high-contrast focus-visible indicator on range sliders", () => {
@@ -95,29 +102,65 @@ describe("blog stylesheet isolation", () => {
     expect(declarations.get("outline-offset")).toBe("5px");
   });
 
-  it("keeps the article visual panel visible and bounded on narrow screens", () => {
-    let baseDisplayLine = 0;
-    let mobileMinHeightLine = 0;
-
-    indexRoot.walkRules(".blog-root .row__art", (rule) => {
-      rule.walkDecls("display", (declaration) => {
-        const line = declaration.source?.start?.line ?? 0;
-        if (declaration.value === "flex") baseDisplayLine = line;
-        expect(declaration.value).not.toBe("none");
-      });
-      rule.walkDecls("min-height", (declaration) => {
-        if (
-          declaration.value === "280px" &&
-          rule.parent?.type === "atrule" &&
-          rule.parent.name === "media" &&
-          rule.parent.params.replaceAll(" ", "") === "(max-width:900px)"
-        ) {
-          mobileMinHeightLine = declaration.source?.start?.line ?? 0;
-        }
-      });
+  it("scopes every index rule under the blog boundary", () => {
+    const unscoped: string[] = [];
+    indexRoot.walkRules((rule) => {
+      for (const selector of rule.selectors) {
+        if (!selector.trim().startsWith(".blog-root")) unscoped.push(selector);
+      }
     });
 
-    expect(baseDisplayLine).toBeGreaterThan(0);
-    expect(mobileMinHeightLine).toBeGreaterThan(baseDisplayLine);
+    expect(unscoped).toEqual([]);
+  });
+});
+
+describe("Werkzeichnung article stylesheet isolation (post-wz.css)", () => {
+  const wzRoot = postcss.parse(
+    readFileSync(join(__dirname, "_styles/post-wz.css"), "utf8"),
+  );
+
+  it("defines no :root rule", () => {
+    const rootRules: string[] = [];
+    wzRoot.walkRules((rule) => {
+      if (rule.selectors.some((selector) => selector.includes(":root"))) {
+        rootRules.push(rule.selector);
+      }
+    });
+    expect(rootRules).toEqual([]);
+  });
+
+  it("scopes every selector to the article, its wz- parts or the print scope", () => {
+    const unscoped: string[] = [];
+    wzRoot.walkRules((rule) => {
+      for (const raw of rule.selectors) {
+        const selector = raw.trim();
+        if (
+          selector.startsWith(".post-wz") ||
+          selector.startsWith(".wz-") ||
+          selector.startsWith("html[data-print-scope")
+        ) {
+          continue;
+        }
+        unscoped.push(selector);
+      }
+    });
+    expect(unscoped).toEqual([]);
+  });
+
+  it("leaves the shared railbar alone, also on paper", () => {
+    const railbar: string[] = [];
+    wzRoot.walkRules((rule) => {
+      if (rule.selectors.some((selector) => selector.includes("railbar"))) {
+        railbar.push(rule.selector);
+      }
+    });
+    expect(railbar).toEqual([]);
+  });
+
+  it("is loaded after the editorial post stylesheet", () => {
+    const post = layoutSource.indexOf('import "./_styles/post.css";');
+    const wz = layoutSource.indexOf('import "./_styles/post-wz.css";');
+    expect(post).toBeGreaterThan(-1);
+    expect(wz).toBeGreaterThan(post);
   });
 });

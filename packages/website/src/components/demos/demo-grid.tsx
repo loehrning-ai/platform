@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import {
   DEMO_CATEGORIES,
   DEMO_LEVELS,
@@ -18,7 +18,9 @@ import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 import { notifyUrlStateChanged } from "@/lib/navigation/url-state";
 import { trackDemoFilter } from "@/lib/analytics";
+import { BUTTON_CLASSES, cx, FILTER_CHIP_CLASS } from "@/components/werk";
 import { DemoTile } from "./demo-tile";
+import { DisclosureGlyph } from "./evidence-badge";
 
 export interface DemoGridInitialFilters {
   readonly level: DemoLevel | "alle";
@@ -63,6 +65,12 @@ export function DemoGrid({
     [catalog, level, cat, industry],
   );
   const isFiltered = level !== "alle" || cat !== "Alle" || Boolean(industry);
+  const activeFilterCount =
+    Number(level !== "alle") + Number(cat !== "Alle") + Number(Boolean(industry));
+  // Below sm the three selects sit behind one "Filter" button, so the first
+  // examples reach the first screen. From sm up the chip rows always show.
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const filterPanelId = useId();
 
   useEffect(() => {
     trackDemoFilter(cat, level, industry || "alle");
@@ -154,36 +162,85 @@ export function DemoGrid({
     return () => window.removeEventListener("keydown", handler);
   }, [clearAll]);
 
+  // 16px below lg: iOS (phone and iPad) zooms into any focused control
+  // under 16px.
+  const selectClass =
+    "min-h-11 w-full rounded-none border border-border bg-background px-3 text-base text-foreground lg:text-label";
+
   return (
     <div ref={atlasRef} data-demo-atlas>
-      <div
-        className="border border-foreground/60 bg-card"
-        data-demo-filter-console
-      >
-        <div className="flex min-h-11 flex-wrap items-center justify-between gap-2 border-b border-border px-3 py-2 sm:px-4">
-          <p
-            role="status"
-            aria-live="polite"
-            className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-foreground"
+      <div data-demo-filter-console>
+        {/* Below sm: the heading and the "Filter" button share the first
+            line; the live count and the reset take a second line once a
+            filter is set. From sm up the button is gone and the count sits
+            beside the heading, as before. */}
+        <header className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-t-2 border-scene-line pt-4 max-sm:items-center max-sm:gap-x-3 max-sm:gap-y-0 max-sm:pt-3">
+          <h2
+            id="demo-gallery-heading"
+            className="text-fluid-h2 font-bold text-foreground"
           >
-            <span className="text-brand-orange tabular-nums">
-              {String(filtered.length).padStart(2, "0")}
-            </span>{" "}
-            {filtered.length === 1 ? copy.resultSingular : copy.resultPlural}
-            {industry ? ` · ${copy.industryPrefix}: ${industry}` : ""}
-          </p>
-          {isFiltered && filtered.length > 0 ? (
-            <button
-              type="button"
-              onClick={clearAll}
-              className="inline-flex min-h-11 items-center border border-border bg-background px-3 py-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground outline-none transition-[background-color,border-color,color] duration-150 hover:border-brand-orange hover:text-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange motion-reduce:transition-none"
+            {copy.galleryHeading}
+          </h2>
+          <button
+            type="button"
+            onClick={() => setFiltersOpen((open) => !open)}
+            aria-expanded={filtersOpen}
+            aria-controls={filterPanelId}
+            data-demo-filter-toggle
+            className="inline-flex min-h-11 items-center gap-2 border border-border px-3 text-label text-foreground tabular-nums transition-colors duration-[120ms] hover:border-foreground aria-expanded:border-foreground motion-reduce:transition-none sm:hidden"
+          >
+            <span>
+              {copy.filterToggle}
+              {activeFilterCount > 0 ? (
+                <>
+                  <span aria-hidden="true"> · {activeFilterCount}</span>
+                  <span className="sr-only">
+                    , {copy.activeFilters(activeFilterCount)}
+                  </span>
+                </>
+              ) : null}
+            </span>
+            <DisclosureGlyph open={filtersOpen} />
+          </button>
+          <div className="flex flex-wrap items-center gap-x-4 max-sm:basis-full max-sm:justify-between">
+            <p
+              role="status"
+              aria-live="polite"
+              className="text-caption text-muted-foreground tabular-nums"
             >
-              {copy.reset}
-            </button>
-          ) : null}
-        </div>
+              {/* The unfiltered total already shows in the stat row and the
+                  "Alle (12)" chips; the live count appears once a filter is
+                  set, and the empty live region announces nothing. */}
+              {isFiltered ? (
+                <>
+                  {filtered.length}{" "}
+                  {filtered.length === 1
+                    ? copy.resultSingular
+                    : copy.resultPlural}
+                  {industry ? ` · ${copy.industryPrefix}: ${industry}` : ""}
+                </>
+              ) : null}
+            </p>
+            {isFiltered && filtered.length > 0 ? (
+              <button
+                type="button"
+                onClick={clearAll}
+                className={BUTTON_CLASSES.paper.text}
+              >
+                {copy.reset}
+              </button>
+            ) : null}
+          </div>
+        </header>
 
-        <div className="grid divide-y divide-border lg:grid-cols-3 lg:divide-x lg:divide-y-0">
+        <div
+          id={filterPanelId}
+          data-demo-filter-panel
+          className={cx(
+            "mt-4 border-b border-hairline max-sm:mt-3",
+            filtersOpen ? null : "max-sm:hidden",
+          )}
+        >
           <FilterRow
             label={copy.level}
             mobileControl={
@@ -194,7 +251,7 @@ export function DemoGrid({
                 onChange={(event) =>
                   setParam("level", event.currentTarget.value, "alle")
                 }
-                className="min-h-11 w-full border border-border bg-background px-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+                className={selectClass}
               >
                 <option value="alle">
                   {copy.all} ({catalog.length})
@@ -242,9 +299,11 @@ export function DemoGrid({
                 onChange={(event) =>
                   setParam("cat", event.currentTarget.value, "Alle")
                 }
-                className="min-h-11 w-full border border-border bg-background px-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+                className={selectClass}
               >
-                <option value="Alle">{copy.all}</option>
+                <option value="Alle">
+                  {copy.all} ({catalog.length})
+                </option>
                 {DEMO_CATEGORIES.map((item) => {
                   const count = catalog.filter(
                     (demo) => demo.category === item,
@@ -263,7 +322,7 @@ export function DemoGrid({
               active={cat === "Alle"}
               onClick={() => setParam("cat", "Alle", "Alle")}
             >
-              {copy.all}
+              {copy.all} ({catalog.length})
             </Chip>
             {DEMO_CATEGORIES.map((c) => {
               const n = catalog.filter((d) => d.category === c).length;
@@ -290,7 +349,7 @@ export function DemoGrid({
                 onChange={(event) =>
                   setParam("industry", event.currentTarget.value, "")
                 }
-                className="min-h-11 w-full border border-border bg-background px-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+                className={cx(selectClass, "sm:max-w-xs")}
               >
                 <option value="">{copy.all}</option>
                 {industries.map((item) => (
@@ -306,40 +365,26 @@ export function DemoGrid({
 
       {/* Grid / empty state */}
       {filtered.length === 0 ? (
-        <div className="mt-6 flex flex-col items-start gap-3 border border-border border-l-[3px] border-l-brand-orange px-4 py-6">
-          <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
-            {copy.emptyKicker}
-          </div>
-          <div className="text-xl font-bold tracking-[-0.02em] text-foreground">
+        <div className="mt-8 flex max-w-[64ch] flex-col items-start gap-3 border-b border-hairline pb-8">
+          <h3 className="text-fluid-h3 font-bold text-foreground">
             {copy.emptyTitle}
-          </div>
-          <p className="max-w-md text-sm text-muted-foreground">
-            {copy.emptyBody}
-          </p>
+          </h3>
+          <p className="text-body text-muted-foreground">{copy.emptyBody}</p>
           <button
             type="button"
             onClick={clearAll}
-            className="inline-flex min-h-11 items-center gap-2 border border-brand-orange bg-brand-orange px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-white hover:border-foreground hover:bg-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+            className={BUTTON_CLASSES.paper.ink}
           >
             {copy.reset}
           </button>
         </div>
       ) : (
-        <div className="mt-4 grid grid-flow-row-dense grid-cols-1 gap-3 sm:grid-cols-2 lg:auto-rows-[minmax(16rem,auto)] lg:grid-cols-4">
-          {/* grid-flow-row-dense is a safety net for FILTERED subsets, not the
-              mechanism. The unfiltered catalog packs exactly (see the tiling
-              invariant in lib/demos.ts), so dense changes nothing in the
-              default view. An arbitrary filtered subset can leave a span-area
-              that no four-column packing closes; dense backfills those gaps
-              instead of leaving visible holes. DOM order stays catalog order,
-              so reading and tab order are unaffected. */}
+        <div className="mt-8 grid grid-cols-1 gap-x-6 gap-y-0 sm:grid-cols-2 sm:gap-y-12 lg:grid-cols-3 max-sm:mt-1 max-sm:divide-y max-sm:divide-hairline">
+          {/* Uniform 3/2/1 grid (blueprint 6.14): no spans, no tile borders,
+              whitespace between tiles. Works for any filtered subset. Below
+              sm the tiles are ledger rows split by hairlines. */}
           {filtered.map((d) => (
-            <DemoTile
-              key={d.slug}
-              demo={d}
-              total={catalog.length}
-              locale={locale}
-            />
+            <DemoTile key={d.slug} demo={d} locale={locale} />
           ))}
         </div>
       )}
@@ -360,21 +405,31 @@ function FilterRow({
   mobileControl?: React.ReactNode;
 }) {
   return (
-    <div className="min-w-0 px-3 py-3 sm:px-4" role="group" aria-label={label}>
-      <span className="mb-2 block font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
-        {label}:
-      </span>
+    <div
+      className="grid min-w-0 grid-cols-[6.5rem_minmax(0,1fr)] items-center gap-x-3 gap-y-2 border-t border-hairline py-2 sm:grid-cols-[7rem_minmax(0,1fr)] sm:py-3"
+      role="group"
+      aria-label={label}
+    >
+      <span className="text-label text-muted-foreground">{label}</span>
+      {/* Below sm the select stands in for the chips; the hidden one takes
+          no grid cell, so the label column pairs with whichever is shown. */}
       {children ? (
         <>
-          {mobileControl ? <div className="sm:hidden">{mobileControl}</div> : null}
+          {mobileControl ? (
+            <div className="min-w-0 sm:hidden">{mobileControl}</div>
+          ) : null}
           <div
-            className={`flex flex-wrap gap-1.5 ${mobileControl ? "hidden sm:flex" : ""}`}
+            className={
+              mobileControl
+                ? "hidden min-w-0 flex-wrap gap-x-1.5 gap-y-2 sm:flex"
+                : "flex min-w-0 flex-wrap gap-x-1.5 gap-y-2"
+            }
           >
             {children}
           </div>
         </>
       ) : (
-        mobileControl
+        <div className="min-w-0">{mobileControl}</div>
       )}
     </div>
   );
@@ -395,11 +450,13 @@ function Chip({
       data-filter-chip
       onClick={onClick}
       aria-pressed={active}
-      className={`min-h-11 border px-3 py-2 font-mono text-xs font-bold uppercase tracking-[0.08em] outline-none transition-[background-color,border-color,color] duration-150 focus-visible:ring-2 focus-visible:ring-brand-orange motion-reduce:transition-none ${
-        active
-          ? "border-brand-orange bg-brand-orange text-white"
-          : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"
-      }`}
+      // Below the IDEA band the chosen filter takes the scene line (Kobalt,
+      // 7.15:1 against Kalkweiß), like the tab marker, instead of a third,
+      // unrelated Druckschwarz fill next to the Himbeere title.
+      className={cx(
+        FILTER_CHIP_CLASS,
+        "tabular-nums aria-pressed:border-scene-line aria-pressed:bg-scene-line aria-pressed:text-background",
+      )}
     >
       {children}
     </button>

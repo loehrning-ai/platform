@@ -316,8 +316,8 @@ export function MetricsSim() {
           : text("ad-hoc path", "Ad-hoc-Pfad")
       }
       caption={text(
-        "Constructed scenario with illustrative values. The registered path records definition and source context; the ad-hoc path is intentionally broken.",
-        "Konstruiertes Szenario mit Beispielwerten. Der registrierte Pfad erfasst Definitions- und Quellenkontext; der Ad-hoc-Pfad ist absichtlich fehlerhaft.",
+        "Illustrative values. The ad-hoc path is broken on purpose.",
+        "Beispielwerte. Der Ad-hoc-Pfad ist absichtlich fehlerhaft.",
       )}
     >
       <div className="aa-question-row">

@@ -12,13 +12,13 @@ const STEPS_EN: readonly TimelineStepEn[] = [
     num: "01",
     date: "1 Aug 2024",
     title: "Entry into force, before obligations applied",
-    body: "The Regulation entered into force 20 days after publication in the Official Journal on 12 July 2024. This date started the clock for every later stage. (Source: Article 113, Regulation 2024/1689)",
+    body: "The Regulation entered into force 20 days after publication in the Official Journal on 12 July 2024. (Source: Article 113, Regulation 2024/1689)",
   },
   {
     num: "02",
     date: "2 Feb 2025",
     title: "Prohibitions and AI literacy",
-    body: "Chapters I and II began to apply: the prohibited practices in Article 5 and the AI literacy obligation in Article 4. Both have been applicable law since this date. (Source: Article 113(a), Regulation 2024/1689)",
+    body: "Chapters I and II began to apply: the prohibited practices in Article 5 and the AI literacy obligation in Article 4. (Source: Article 113(a), Regulation 2024/1689)",
   },
   {
     num: "03",
@@ -52,8 +52,8 @@ export function ZeitplanEn() {
         <span className="em">applies from 2 August 2026.</span>
       </h2>
       <p className="dek">
-        Article 113 stages application over several years. 2 August 2026 is an
-        important date, but it is neither the beginning nor the end.
+        Article 113 stages application over several years; 2 August 2026 is
+        one key date among several.
       </p>
 
       <div className="pipeline">
@@ -76,14 +76,15 @@ export function ZeitplanEn() {
       <div className="premise" style={{ marginTop: 48 }}>
         <div className="premise__body">
           <p>
-            The penalties provide context. Breaches of Article 5 prohibitions
-            can be fined up to EUR 35 million or 7% of total worldwide annual
-            turnover, whichever is higher. For most other obligations, including
-            the Article 50 transparency rules, the ceiling is EUR 15 million or
-            3%. Supplying incorrect, incomplete, or misleading information to
-            authorities can lead to fines of up to EUR 7.5 million or 1%. For
-            small and medium-sized enterprises, the lower of the two amounts
-            applies in each case. (Source: EU AI Act, Article 99(3) to (6),
+            Fines: breaches of the Article 5 prohibitions can be fined up to
+            EUR 35 million
+            or 7% of total worldwide annual turnover, whichever is higher.
+          </p>
+          <p>
+            For most other obligations, including the Article 50 transparency
+            rules, the ceiling is EUR 15 million or 3%; for incorrect,
+            incomplete, or misleading information to authorities, EUR 7.5
+            million or 1%. For SMEs, the lower amount applies in each case. (Source: EU AI Act, Article 99(3) to (6),
             Regulation 2024/1689)
           </p>
         </div>

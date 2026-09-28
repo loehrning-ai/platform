@@ -26,8 +26,12 @@ describe("technical course landing design contract", () => {
       expect(
         source.match(/className=\{TECHNICAL_COURSE_PRIMARY_ACTION_CLASS\}/g),
       ).toHaveLength(1);
+      // The secondary action only jumps to the landing's own syllabus, which
+      // follows the hero directly on a phone, so it is hidden below sm.
       expect(
-        source.match(/className=\{TECHNICAL_COURSE_SECONDARY_ACTION_CLASS\}/g),
+        source.match(
+          /className=\{`\$\{TECHNICAL_COURSE_SECONDARY_ACTION_CLASS\} max-sm:hidden`\}/g,
+        ),
       ).toHaveLength(1);
       expect(source).toContain("generateMetadata");
       expect(source).toContain("buildTechnicalCourseJsonLd");

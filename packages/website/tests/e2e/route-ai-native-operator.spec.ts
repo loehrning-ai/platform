@@ -176,7 +176,7 @@ async function openLessonReference(page: Page) {
     .waitFor({ state: "attached" });
   const reference = page.locator("details[data-lesson-reference]");
   await expect(reference).toHaveCount(1);
-  await reference.locator("summary").click();
+  // The lesson text renders open by default (LessonReference).
   await expect(reference).toHaveAttribute("open", "");
 }
 
@@ -581,9 +581,7 @@ test.describe("AI-Native Operator Course golden path", () => {
 
     const assessment = page.locator("#final-assessment");
     await expect(assessment).toHaveAttribute("data-assessment-state", "locked");
-    await expect(assessment.getByRole("status")).toContainText(
-      "1 lesson remaining",
-    );
+    await expect(assessment.getByText("38 of 39 lessons complete")).toBeVisible();
     await expect(assessment.locator(`a[href="${QUIZ_ROUTE}"]`)).toHaveCount(0);
     await expect(assessment.locator(`a[href="${CERT_ROUTE}"]`)).toHaveCount(0);
   });
@@ -619,7 +617,7 @@ test.describe("AI-Native Operator Course golden path", () => {
     const assessment = page.locator("#final-assessment");
     await expect(assessment).toHaveAttribute("data-assessment-state", "ready");
     const startQuiz = assessment.getByRole("link", {
-      name: "Start workshop quiz",
+      name: "Start quiz",
     });
     await expect(startQuiz).toHaveAttribute("href", QUIZ_ROUTE);
     await startQuiz.click();
@@ -643,7 +641,7 @@ test.describe("AI-Native Operator Course golden path", () => {
     ).toHaveAttribute("href", QUIZ_ROUTE);
     const certificate = assessment.getByRole("link", {
       // Copy lock updated: English UI copy names completion documents "certificate of participation".
-      name: "Download Certificate of Participation",
+      name: "Download Certificate of participation",
     });
     await expect(certificate).toHaveAttribute("href", CERT_ROUTE);
     await certificate.click();
@@ -688,10 +686,10 @@ test.describe("AI-Native Operator Course golden path", () => {
       "xpath=ancestor::*[@data-widget-frame][1]",
     );
     await expect(
-      // Copy lock updated: the exercise now says take rather than list, and
-      // names the run time instead of the elapsed time.
+      // Copy lock updated: the exercise now says pick rather than take, and
+      // "took over" rather than "ran longer than".
       widgetFrame.getByText(
-        "Take three tasks from this week that ran longer than 30 minutes",
+        "Pick three tasks from this week that took over 30 minutes",
         { exact: false },
       ),
     ).toBeVisible();

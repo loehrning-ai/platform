@@ -186,8 +186,8 @@ export function ABSim() {
         `Tag ${s.day.toFixed(1)} / 28`,
       )}
       caption={text(
-        "The shaded band is an unadjusted, normal-approximation 95% interval for Δconversion in one locally generated Bernoulli stream. A crossing at an interim look is not a stopping rule. The sample estimate assumes equal independent arms, α=0.05, 80% power, no attrition, and a fixed horizon.",
-        "Das schattierte Band ist ein unkorrigiertes 95%-Intervall mit Normalapproximation für ΔConversion in einem lokal erzeugten Bernoulli-Verlauf. Eine Kreuzung bei einer Zwischenanalyse ist keine Stoppregel. Die Stichprobenschätzung setzt gleich große unabhängige Gruppen, α=0.05, 80% Power, keine Ausfälle und einen festen Endzeitpunkt voraus.",
+        "Shaded band: unadjusted normal-approximation 95% interval for Δconversion in one local Bernoulli stream; crossing it at an interim look is not a stopping rule. The sample estimate assumes equal independent arms, α=0.05, 80% power, no attrition and a fixed horizon.",
+        "Schattiertes Band: unkorrigiertes 95%-Intervall mit Normalapproximation für ΔConversion in einem lokalen Bernoulli-Verlauf; eine Kreuzung bei einer Zwischenanalyse ist keine Stoppregel. Die Stichprobenschätzung setzt gleich große unabhängige Gruppen, α=0.05, 80% Power, keine Ausfälle und einen festen Endzeitpunkt voraus.",
       )}
     >
       <div className="sim-row" style={{ gridTemplateColumns: "280px 1fr" }}>

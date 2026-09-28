@@ -6,6 +6,7 @@ const push = vi.fn();
 vi.mock("next/navigation", () => ({
   useParams: () => ({ chapterId: "fund" }),
   useRouter: () => ({ push }),
+  usePathname: () => "/kurse/open-source/data-engineering-fundamentals/fund",
 }));
 
 import { DEF_CHAPTERS } from "@/lib/data-engineering-fundamentals/types";

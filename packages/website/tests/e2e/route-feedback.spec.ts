@@ -40,7 +40,7 @@ test.describe("/feedback surface", () => {
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
     await expect(page.getByRole("status")).toContainText(
-      "Es werden keine Formulardaten gespeichert.",
+      "Hier wird nichts gespeichert.",
     );
     await expect(page.getByRole("group", { name: /Art der Rückmeldung/i })).toHaveCount(0);
     await expect(page.getByLabel(/Nachricht/i)).toHaveCount(0);

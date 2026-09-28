@@ -68,8 +68,8 @@ const MOCKED_SESSION_PROJECT = "konto-dom-mocked";
 // src/app/login/page.tsx. "zzz-unbekannt" is any unknown reason and must hit
 // the default fallback branch.
 const REASON_COPY: ReadonlyArray<readonly [string, RegExp]> = [
-  ["progress-save", /Eine Anmeldung ist in dieser Umgebung nicht freigegeben/],
-  ["auth-not-configured", /Eine Anmeldung ist in dieser Umgebung nicht freigegeben/],
+  ["progress-save", /Die Anmeldung ist hier nicht freigegeben/],
+  ["auth-not-configured", /Die Anmeldung ist hier nicht freigegeben/],
   ["abgelaufen", /Dieser Link ist abgelaufen/],
   ["ungueltig", /Dieser Link ist ungültig/],
   ["zzz-unbekannt", /Die Anmeldung konnte nicht abgeschlossen werden/],
@@ -140,7 +140,7 @@ test.describe("signed-out surface (login gate + reason copy)", () => {
     const alerts = page.locator('[role="alert"]:not(#__next-route-announcer__)');
     await expect(alerts).toHaveCount(0);
     await expect(
-      page.getByRole("note").filter({ hasText: /Anmeldung ist in dieser Umgebung nicht konfiguriert/ }),
+      page.getByRole("note").filter({ hasText: /Keine Anmeldemethode verfügbar/ }),
     ).toBeVisible();
     await expect(page.getByRole("status")).toHaveCount(0);
 
@@ -160,7 +160,7 @@ test.describe("signed-out surface (login gate + reason copy)", () => {
     await expect(email).toHaveCount(0);
     await expect(page.getByRole("button", { name: /Login-Link/i })).toHaveCount(0);
     await expect(
-      page.getByRole("note").filter({ hasText: /Anmeldung ist in dieser Umgebung nicht konfiguriert/ }),
+      page.getByRole("note").filter({ hasText: /Keine Anmeldemethode verfügbar/ }),
     ).toBeVisible();
     await expect(page.getByText(/verschickt/i)).toHaveCount(0);
   });

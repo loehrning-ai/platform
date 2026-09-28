@@ -18,14 +18,9 @@ export interface DataInfraCourseCopy {
     }[];
     readonly courseEyebrow: string;
     readonly courseTitle: string;
-    readonly courseIntro: string;
     readonly lessonLabel: (number: number) => string;
     readonly progressEyebrow: string;
     readonly progressTitle: string;
-    readonly finalEyebrow: string;
-    readonly finalTitle: string;
-    readonly finalBody: string;
-    readonly finalCta: string;
     readonly breadcrumbs: readonly [string, string, string];
     readonly jsonLdDescription: string;
   };
@@ -86,13 +81,13 @@ export const DATA_INFRA_COURSE_COPY = Object.freeze({
     landingMetadata: {
       title: "Data Infrastructure: Systemdesign für Datenplattformen",
       description:
-        "Zwölf Lektionen zu Datenmodellen, Speicherformaten, Batch, Streaming, CDC, Idempotenz, Datenqualität und prüfbarem Systemdesign.",
+        "Zwölf Lektionen zu Datenmodellen, Speicherformaten, Batch, Streaming, CDC und Datenqualität.",
     },
     landing: {
       eyebrow: "Data Infrastructure / Kurs",
-      title: "Datenplattformen anhand ihrer Systemgrenzen entwerfen.",
+      title: "Datenplattformen entwerfen.",
       intro:
-        "Der Kurs verfolgt Daten von der Quelle bis zur Nutzung. Jede Lektion trennt Anforderungen, technische Entscheidung, Ausfallmodus und Betriebsnachweis. Interaktive Modelle veranschaulichen Konsistenz, Speicherlayout, Streaming-Zeit und Wiederanläufe mit festen Beispieldaten.",
+        "In jeder Lektion triffst du eine Entwurfsentscheidung und prüfst, wie sie ausfallen kann und woran du das im Betrieb erkennst.",
       start: "Lektion 01 starten",
       map: "Kursübersicht",
       facts: [
@@ -108,32 +103,23 @@ export const DATA_INFRA_COURSE_COPY = Object.freeze({
         { value: "System", label: "Entwurfsprüfung" },
       ],
       courseEyebrow: "Kursaufbau",
-      courseTitle:
-        "Vier Tracks. Zwölf Lektionen. Ein vollständiger Entwurfsfall.",
-      courseIntro:
-        "Bearbeite die Lektionen in Reihenfolge. Lektion 12 verbindet Anforderungen, APIs, Datenmodell, Pipeline, Speicher, Bereitstellung und Betrieb in einer Systemdesign-Übung.",
+      courseTitle: "Zwölf Lektionen in vier Tracks.",
       lessonLabel: (number) => `Lektion ${String(number).padStart(2, "0")}`,
       progressEyebrow: "Lernstand",
-      progressTitle: "Fortschritt pro Track auf diesem Gerät.",
-      finalEyebrow: "Einstieg",
-      finalTitle: "Lektion 01: der gesamte Datenfluss",
-      finalBody:
-        "Ordne zuerst jede Systemkomponente einer von sechs Schichten zu. Danach lassen sich Speicher-, Konsistenz- und Laufzeitentscheidungen getrennt prüfen.",
-      finalCta: "Beginnen",
+      progressTitle: "Dein Fortschritt",
       breadcrumbs: ["Start", "Kurse", "Data Infrastructure"],
       jsonLdDescription:
-        "Zwölf deutschsprachige Lektionen zum Systemdesign von Datenplattformen über vier Tracks.",
+        "Zwölf Lektionen zum Systemdesign von Datenplattformen.",
     },
     indexMetadata: {
       title: "Lektionen: Data Infrastructure",
       description:
-        "Alle zwölf Lektionen zu Grundlagen, Speicherung, Datentransport und Betrieb von Datenplattformen.",
+        "Zwölf Lektionen zu Speicherung, Datentransport und Betrieb von Datenplattformen.",
     },
     index: {
       eyebrow: "Kursübersicht",
-      title: "Vier Tracks. Zwölf Lektionen.",
-      intro:
-        "Arbeite die Lektionen in Reihenfolge durch. Jede Lektion benennt Entscheidung, Ausfallmodus und Betriebsnachweis.",
+      title: "Zwölf Lektionen in vier Tracks.",
+      intro: "Arbeite der Reihe nach. Lektion 12 ist der Systemdesign-Fall.",
       trackLabel: (number) => `Track ${String(number).padStart(2, "0")}`,
       lessonLabel: (number) => `Lektion ${String(number).padStart(2, "0")}`,
       duration: (minutes) => `geschätzt ${minutes} Min.`,
@@ -148,7 +134,7 @@ export const DATA_INFRA_COURSE_COPY = Object.freeze({
       simulatorTitle: (plural) =>
         plural ? "Interaktive Modelle" : "Interaktives Modell",
       simulatorBody:
-        "Die Modelle verwenden feste Beispieldaten und vereinfachte Regeln. Sie erklären Zusammenhänge; sie messen weder Produktleistung noch reale Latenz oder Kapazität.",
+        "Die Modelle nutzen feste Beispieldaten und vereinfachte Regeln; sie messen weder Produktleistung noch reale Latenz oder Kapazität.",
       complete: "Lektion abschließen",
       completed: "Lektion abgeschlossen",
       next: "Nächste Lektion →",
@@ -159,22 +145,22 @@ export const DATA_INFRA_COURSE_COPY = Object.freeze({
     certificateMetadata: {
       title: "Teilnahmebestätigung: Data Infrastructure",
       description:
-        "Lokale Teilnahmebestätigung für den abgeschlossenen Kurs Data Infrastructure herunterladen.",
+        "Lokale Teilnahmebestätigung für Data Infrastructure herunterladen.",
     },
     verificationMetadata: {
-      title: "Teilnahmebestätigungsdaten prüfen: Data Infrastructure",
+      title: "Zertifikatdaten lesen: Data Infrastructure",
       description:
-        "Lokal kodierte Abschlussdaten lesen. Die Daten sind nicht servergeprüft oder kryptografisch signiert.",
+        "Liest die lokal kodierten Daten einer Teilnahmebestätigung. Sie sind nicht servergeprüft und nicht kryptografisch signiert.",
     },
     error: {
       title: "Data Infrastructure konnte nicht geladen werden",
-      body: "Die Kursansicht ist in diesem Browserlauf fehlgeschlagen. Es wurde kein Lernstand verändert.",
+      body: "Die Kursansicht ist fehlgeschlagen. Dein Lernstand ist unverändert.",
       retry: "Erneut laden",
       back: "Zur Kursübersicht",
     },
     notFound: {
       title: "Lektion nicht gefunden",
-      body: "Die angeforderte Lektions-ID gehört nicht zu Data Infrastructure.",
+      body: "Diese Lektion gibt es in Data Infrastructure nicht.",
       back: "Alle Lektionen anzeigen",
     },
   },
@@ -182,13 +168,13 @@ export const DATA_INFRA_COURSE_COPY = Object.freeze({
     landingMetadata: {
       title: "Data Infrastructure: system design for data platforms",
       description:
-        "Twelve lessons on data models, storage formats, batch, streaming, CDC, idempotency, data quality, and reviewable system design.",
+        "Twelve lessons on data models, storage formats, batch, streaming, CDC, and data quality.",
     },
     landing: {
       eyebrow: "Data Infrastructure / course",
-      title: "Design data platforms from explicit system boundaries.",
+      title: "Design data platforms.",
       intro:
-        "The course follows data from source to use. Each lesson separates requirements, technical decisions, failure modes, and operating evidence. Interactive models show consistency, storage layout, streaming time, and retries on fixed sample data.",
+        "In each lesson you make one design decision and check how it can fail and how you would see that in production.",
       start: "Start lesson 01",
       map: "Course map",
       facts: [
@@ -204,31 +190,23 @@ export const DATA_INFRA_COURSE_COPY = Object.freeze({
         { value: "system", label: "design review" },
       ],
       courseEyebrow: "Course structure",
-      courseTitle: "Four tracks. Twelve lessons. One complete design case.",
-      courseIntro:
-        "Work through the lessons in order. Lesson 12 combines requirements, APIs, data model, pipeline, storage, serving, and operations in a system-design exercise.",
+      courseTitle: "Twelve lessons in four tracks.",
       lessonLabel: (number) => `Lesson ${String(number).padStart(2, "0")}`,
       progressEyebrow: "Progress",
-      progressTitle: "Track progress on this device.",
-      finalEyebrow: "Entry point",
-      finalTitle: "Lesson 01: the complete data flow",
-      finalBody:
-        "First assign every component to one of six layers. Then evaluate storage, consistency, and runtime decisions separately.",
-      finalCta: "Begin",
+      progressTitle: "Your progress",
       breadcrumbs: ["Home", "Courses", "Data Infrastructure"],
       jsonLdDescription:
-        "Twelve English lessons on data-platform system design across four tracks.",
+        "Twelve lessons on data-platform system design.",
     },
     indexMetadata: {
       title: "Lessons: Data Infrastructure",
       description:
-        "All twelve lessons on foundations, storage, data movement, and operating data platforms.",
+        "Twelve lessons on storage, data movement, and operating data platforms.",
     },
     index: {
       eyebrow: "Course map",
-      title: "Four tracks. Twelve lessons.",
-      intro:
-        "Take the lessons in order. Each one names a decision, a failure mode, and operating evidence.",
+      title: "Twelve lessons in four tracks.",
+      intro: "Work in order. Lesson 12 is the system-design case.",
       trackLabel: (number) => `Track ${String(number).padStart(2, "0")}`,
       lessonLabel: (number) => `Lesson ${String(number).padStart(2, "0")}`,
       duration: (minutes) => `estimated ${minutes} min`,
@@ -243,7 +221,7 @@ export const DATA_INFRA_COURSE_COPY = Object.freeze({
       simulatorTitle: (plural) =>
         plural ? "Interactive models" : "Interactive model",
       simulatorBody:
-        "These models use fixed sample data and simplified rules. They explain relationships; they do not benchmark product latency, throughput, or capacity.",
+        "These models use fixed sample data and simplified rules; they do not benchmark product latency, throughput, or capacity.",
       complete: "Complete lesson",
       completed: "Lesson complete",
       next: "Next lesson →",
@@ -254,22 +232,22 @@ export const DATA_INFRA_COURSE_COPY = Object.freeze({
     certificateMetadata: {
       title: "Certificate of participation: Data Infrastructure",
       description:
-        "Download the locally generated completion record for Data Infrastructure.",
+        "Download the local completion record for Data Infrastructure.",
     },
     verificationMetadata: {
       title: "Read completion-record data: Data Infrastructure",
       description:
-        "Read locally encoded completion data. The data is not server-verified or cryptographically signed.",
+        "Reads the locally encoded data of a completion record. The data is not server-verified or cryptographically signed.",
     },
     error: {
       title: "Data Infrastructure could not load",
-      body: "The course view failed in this browser session. No learning progress was changed.",
+      body: "The course view failed. Your progress is unchanged.",
       retry: "Reload",
       back: "Back to course map",
     },
     notFound: {
       title: "Lesson not found",
-      body: "The requested lesson ID does not belong to Data Infrastructure.",
+      body: "Data Infrastructure has no such lesson.",
       back: "View all lessons",
     },
   },

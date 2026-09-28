@@ -2,36 +2,35 @@
 
 ## In plain words
 
-Ten minutes, one table, one question per column: **would a stranger guess right?**
+Ten minutes, one table, one question per column: **would a stranger guess right?** A stranger is
+anyone who has not seen the data: a new colleague, an auditor, or an AI. Read each name aloud and
+write down what a stranger would think it holds. If that differs from what it really holds, the
+name forces a guess, and an AI will guess too.
 
-A stranger is anyone who has not seen the data: a new colleague, an auditor, or an AI.
-Read each column name out loud. Write down what a stranger would think it means. If that is not
-what it holds, the name forces a guess, and an AI will guess too.
-
-At FOLDLINE, `monthly_revenue.amount` sounded like revenue. It was each month's change. The AI
-guessed "ending MRR" and answered −€19,960 for April. The true ending MRR was €334,675.
+At FOLDLINE, `monthly_revenue.amount` sounded like revenue but held each month's change. The AI
+guessed "ending MRR" and answered −€19,960 for April; the true ending MRR was €334,675.
 
 **How to use this sheet**
 
 1. Pick one table or view that you plan to show an AI.
-2. Copy its column names into the blank table at the bottom. Names only, no data.
-3. For each column, fill in the five boxes. Use the rules in `NAMING-RULES.md` (R1–R7).
-4. Count the rows where the stranger's guess is wrong or impossible. Write the score line.
-5. Ask a second person to fill in column 2 without looking at yours. Compare.
-6. Run `lint_names.sql` on the same schema. The lint catches patterns; you catch meaning.
+2. Copy its column names (no data) into the blank table at the bottom.
+3. Fill in the boxes for each column, using the rules in `NAMING-RULES.md` (R1–R7).
+4. Count the rows where the stranger's guess is wrong or impossible, and write the score line.
+5. Ask a second person to fill in column 2 without looking at yours, then compare.
+6. Run `lint_names.sql` on the same schema: the lint catches patterns, you catch meaning.
 
-Optional stranger test with an AI: paste only the table name and column names into a chat with no
-other context, and ask "What does each column hold, in which unit, at which moment?" Every wrong
-answer is a name that forces a guess. Use synthetic or already-public names only; never paste
-data or anything your employer has not approved.
+Optional AI stranger test: paste only the table and column names into a chat with no other
+context and ask "What does each column hold, in which unit, at which moment?" Each wrong answer
+is a name that forces a guess. Use synthetic or already-public names only; never paste data or
+anything your employer has not approved.
 
 ---
 
 ## Worked example: FOLDLINE's export lane (all 33 columns)
 
 Rule codes: R1 shape, R2 unit, R3 time, R4 grain, R5 words not codes, R6 keys, R7 schema;
-"banned" = on the banned list. The "What it really holds" column is verified against the builder's
-`saas_bad` database.
+"banned" = on the banned list. "What it really holds" is verified against the builder's `saas_bad`
+database.
 
 ### `public.customer_master` (one row per account, 144 rows)
 
@@ -42,13 +41,13 @@ Rule codes: R1 shape, R2 unit, R3 time, R4 grain, R5 words not codes, R6 keys, R
 | `country` | Country name | ISO 3166-1 alpha-2 code (`AT`, `DE`) | R5 | `country_code` | ISO 3166-1 alpha-2 country of the account. | no (rename for consistency) |
 | `plan` | Plan name | Plan label (`Growth`, `Scale`) | minor | `plan_name` | Current plan name. | no |
 | `status` | Active or not | `A` / `C` / `N`; `N` = joined this quarter | R5, banned | `account_status` = `active` / `churned` / `new` | Account state in words. Never count `new` accounts in a churn base. | yes |
-| `status_dt` | Some date | Day of the last status change | R3 | `churned_on` (when churned) | Day the account churned; NULL if it never did. | yes |
+| `status_dt` | Some date | Day of the last status change | R3 | `churned_on` (when churned); `started_on` comes from the CRM's start date | Day the account churned; NULL if it never did. | yes |
 
 ### `public.subscription_export` (144 rows, June 2026 only)
 
 | Current name | What would a stranger guess? | What it really holds | Rule broken | Proposed name | Description sentence (COMMENT) | Forces a guess? |
 | --- | --- | --- | --- | --- | --- | --- |
-| (table) | All subscriptions | One month, June 2026 | R4 | not served; use `analytics.account_mrr_monthly` | — | yes |
+| (table) | All subscriptions | One month, June 2026 | R4 | not served; use `analytics.account_mrr_monthly` with `complete_through_month` | — | yes |
 | `customer_id` | A customer number, maybe a CRM id | The same account number as `customer_master.id` | R6 | `account_key` | Pseudonymous analytics key. Not anonymous. | yes |
 | `date` | Subscription start? Invoice day? | First day of the month (`2026-06-01`) | R3, banned | `month_start` | First day of the calendar month (UTC). | yes |
 | `amount` | Price? Invoice? | June month-end MRR level, EUR | R1, R2, banned | `ending_mrr_eur` | Level: the account's recurring value at month end, EUR. Never sum across months. | yes |
@@ -106,11 +105,11 @@ Rule codes: R1 shape, R2 unit, R3 time, R4 grain, R5 words not codes, R6 keys, R
 ### Score
 
 > **Names that force a guess: 24 of 33.**
-> For comparison, the five approved views have 43 columns. `lint_names.sql` returns 0 rows on
-> them. A reviewer's target for a served view is **0 of m**.
+> The five approved views have 43 columns and 0 lint rows. The target for a served view is
+> **0 of m**.
 
-The score is a judgement, not a measurement. Two reviewers may disagree on a row, and that
-disagreement is useful: write down the reason and settle it with the owner.
+The score is a judgement. When two reviewers disagree on a row, write down the reason and settle
+it with the owner.
 
 ---
 
@@ -136,7 +135,7 @@ Reviewer 1: `________`  Reviewer 2: `________`  Date: `________`
 
 - [ ] Every "yes" has a proposed name and a one-sentence description with a "never".
 - [ ] Every proposed name passes the checklist in `NAMING-RULES.md` §10.
-- [ ] The rename map is written down (old name → new name → layer). The build order uses it
-      (`../BUILD-ORDER.md`, the naming step).
+- [ ] The rename map (old name → new name → layer) is written down for `../BUILD-ORDER.md`,
+      step 3.
 - [ ] Anything already published is renamed with an alias view, not in place (`NAMING-RULES.md` §7).
 - [ ] `lint_names.sql` has been run on the old and on the new schema.

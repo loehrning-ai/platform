@@ -62,7 +62,7 @@ export default async function AiNativeOperatorLandingPage() {
     name: bundle.config.title,
     description: courseMeta.subtitle,
     teaches: modules.map((module) => module.name),
-    timeRequired: "PT14H",
+    timeRequired: "PT4H",
   });
   const { "@context": _context, ...courseNode } = course;
   const courseJsonLd: JsonLdGraph = {
@@ -140,7 +140,7 @@ export default async function AiNativeOperatorLandingPage() {
           secondaryAction={
             <Link
               href="#syllabus"
-              className={TECHNICAL_COURSE_SECONDARY_ACTION_CLASS}
+              className={`${TECHNICAL_COURSE_SECONDARY_ACTION_CLASS} max-sm:hidden`}
             >
               {copy.syllabusLink}
             </Link>

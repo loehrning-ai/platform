@@ -123,7 +123,7 @@ const KNOWN_ANSWERS: readonly {
 
 const FALLBACK_ANSWER: KnownAnswer = {
   answer:
-    "Ich habe zu dieser Frage keinen direkten Treffer in Ihrem Vertragsarchiv gefunden. Möchten Sie, dass ich **ähnliche Klauseln** vorschlage oder die Frage an Ihr Legal-Team weiterleite?",
+    "Zu dieser Frage finde ich im Beispielarchiv keinen direkten Treffer. Soll ich **ähnliche Klauseln** vorschlagen oder die Frage an das Legal-Team weitergeben?",
   sources: [],
   follow: ["Was sind typische Klauseln?", "An Legal weiterleiten"],
 };
@@ -282,12 +282,12 @@ export function ChatDemo(): JSX.Element {
             />
             <DemoOverline>Retrieval Augmented Generation</DemoOverline>
             <h3 className="mt-2.5 max-w-[460px] text-[24px] font-bold leading-[1.1] tracking-[-0.03em] text-foreground md:text-[28px]">
-              Fragen Sie Ihre Verträge.{" "}
-              <span className="text-brand-orange">Antworten mit Quelle.</span>
+              Frag das{" "}
+              <span className="text-brand-orange">Beispiel-Vertragsarchiv</span>
             </h3>
             <p className="mt-3 max-w-[420px] text-[13.5px] leading-[1.5] text-muted-foreground">
-              Jede Antwort verweist auf Beispielquellen. Kein Rechtsrat, keine
-              Garantie auf Vollständigkeit.
+              Jede Antwort verweist auf Beispielquellen. Beispieldaten, kein
+              Rechtsrat; Antworten können unvollständig sein.
             </p>
             <div className="mt-6 grid w-full max-w-[480px] grid-cols-1 gap-1.5 md:grid-cols-2">
               {SUGGESTED.map((s, i) => (
@@ -442,7 +442,7 @@ export function ChatDemo(): JSX.Element {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={onKeyDown}
           maxLength={500}
-          placeholder="Fragen Sie zu Ihren Verträgen…"
+          placeholder="Frag zu den Beispielverträgen…"
           className="min-h-11 min-w-0 flex-1 border border-border bg-card/40 px-3.5 py-2.5 text-[14px] text-foreground outline-none placeholder:text-muted-foreground focus-visible:border-brand-orange focus-visible:ring-2 focus-visible:ring-brand-orange"
           aria-label="Frage eingeben"
         />

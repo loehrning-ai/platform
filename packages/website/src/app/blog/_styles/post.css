@@ -1,8 +1,16 @@
 /* ================================================================
    EDITORIAL ARTICLE — bold reading experience
    ================================================================ */
+/* One face for every post: Loehrning Sans, the site sans (SPEC D5). The
+   railbar sits outside the article, so it reads the token from .blog-root. */
+.blog-root {
+  --post-sans:
+    var(--font-loehrning-sans, "Loehrning Sans"), "Loehrning Sans Fallback",
+    "Inter", system-ui, sans-serif;
+}
 .post-shell {
   position: relative;
+  font-family: var(--post-sans);
 }
 
 /* left rail — only on truly wide screens (content 1200 + 2*(200+40) ≈ 1680). */
@@ -11,8 +19,11 @@
   display: none !important;
 }
 
-/* Horizontal section dock — sticky directly below the site Nav.
-   Includes a "Zurück" back-link and the article's anchor items. */
+/* Horizontal section dock: sticky directly below the site Nav, shared by
+   every post. Werkzeichnung chrome in the site sans: sentence case, Schiefer
+   items, the active item marked by ink text and a 2px scene-line bar (Kobalt
+   below the IDEA blog hub). The row scrolls sideways on a phone; the end fade
+   says so, and the active item scrolls into view (rail-nav.tsx). */
 .railbar {
   /* Pin to the header height so no strip of article content bleeds between
      the nav and the railbar while scrolling. Below lg that header is the 48px
@@ -24,6 +35,10 @@
   border-bottom: 1px solid var(--leinen);
   overflow-x: auto;
   scrollbar-width: none;
+  /* An item under the inner side padding counts as off-screen, so a focused
+     item scrolls fully into view (WCAG 2.4.11). */
+  scroll-padding-inline: 40px;
+  transition: transform 0.2s var(--ease-out);
 }
 @media (min-width: 64rem) {
   .railbar {
@@ -33,17 +48,21 @@
 .railbar::-webkit-scrollbar {
   display: none;
 }
+/* Phones: the rail slides under the header while the reader scrolls down and
+   comes back on the way up (rail-nav.tsx sets data-tucked). */
+.railbar[data-tucked] {
+  transform: translateY(-100%);
+}
 .railbar__inner {
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
   gap: 4px;
   align-items: center;
-  padding: 4px 40px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  padding: 0 40px;
+  font-family: var(--post-sans);
+  font-size: 14px;
+  font-weight: 600;
   white-space: nowrap;
 }
 .railbar__back {
@@ -51,35 +70,24 @@
   align-items: center;
   gap: 6px;
   min-height: 44px;
-  padding: 6px 12px;
-  margin-right: 16px;
-  border: 1px solid var(--druckertinte);
+  padding: 0 12px 0 0;
+  margin-right: 12px;
+  border-right: 1px solid var(--leinen);
   background: transparent;
   color: var(--druckertinte);
   font-weight: 700;
   font-family: inherit;
   font-size: inherit;
-  letter-spacing: inherit;
-  text-transform: inherit;
   text-decoration: none;
-  transition:
-    background 0.15s,
-    color 0.15s;
 }
 .railbar__back:hover {
-  background: var(--druckertinte);
-  color: var(--kalkweiss);
-}
-.railbar__back span {
-  color: var(--kupfer);
-  font-weight: 700;
-}
-.railbar__back:hover span {
-  color: var(--kupfer-light);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 .railbar__kicker {
   color: var(--schiefer);
-  margin-right: 14px;
+  font-weight: 400;
+  margin-right: 12px;
 }
 .railbar__item {
   display: inline-flex;
@@ -87,44 +95,56 @@
   text-decoration: none;
   min-height: 44px;
   color: var(--schiefer);
-  padding: 6px 10px;
+  padding: 0 10px;
   cursor: pointer;
-  border: 1px solid transparent;
+  border: 0;
+  /* The active marker: a 2px bar on the rail's bottom edge. */
+  box-shadow: inset 0 -2px 0 transparent;
   background: transparent;
   font-family: inherit;
   font-size: inherit;
-  letter-spacing: inherit;
-  text-transform: inherit;
   transition:
     color 0.15s,
-    border-color 0.15s,
-    background 0.15s;
+    box-shadow 0.15s;
 }
 .railbar__item:hover {
   color: var(--druckertinte);
-  border-color: var(--leinen);
+}
+/* Inset rings: the scroller clips anything outside the 44px row. */
+.railbar__back:focus-visible,
+.railbar__item:focus-visible {
+  outline-offset: -3px;
 }
 .railbar__item--active {
-  color: var(--kalkweiss);
-  background: var(--druckertinte);
-  border-color: var(--druckertinte);
+  color: var(--druckertinte);
+  box-shadow: inset 0 -2px 0 var(--color-scene-line, var(--druckertinte));
 }
 .railbar__num {
-  color: var(--kupfer);
-  margin-right: 5px;
-  font-weight: 700;
+  color: inherit;
+  margin-right: 6px;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
 }
-.railbar__item--active .railbar__num {
-  color: var(--kupfer-light);
+/* Desktop: the back link, kicker and nine sections fit one 1280 row. */
+@media (min-width: 701px) and (max-width: 1440px) {
+  .railbar__inner {
+    padding: 0 24px;
+    gap: 2px;
+  }
+  .railbar__item {
+    padding: 0 8px;
+  }
 }
 @media (max-width: 700px) {
-  .railbar__inner {
-    padding: 4px 20px;
-    gap: 3px;
+  .railbar {
+    scroll-padding-inline: 20px;
+    /* The row runs past the screen edge: fade its end so the scroll reads
+       as intended, not as a clipped chip. */
+    mask-image: linear-gradient(to right, #000 calc(100% - 32px), transparent);
   }
-  .railbar__back {
-    padding: 6px 10px;
-    margin-right: 10px;
+  .railbar__inner {
+    padding: 0 32px 0 16px;
+    gap: 0;
   }
   .railbar__kicker {
     display: none;
@@ -187,71 +207,6 @@
   margin-right: 8px;
 }
 
-/* hero */
-.hero {
-  min-height: auto;
-  padding: 48px clamp(16px, 4vw, 40px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  position: relative;
-}
-.hero__meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px 22px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--schiefer);
-  margin-bottom: 24px;
-  align-items: center;
-}
-.hero__meta .tag {
-  border: 1px solid var(--kupfer);
-  color: var(--kupfer);
-  padding: 4px 10px;
-  font-weight: 700;
-}
-.hero__title {
-  font-family: var(--font-serif);
-  font-weight: 400;
-  font-size: clamp(54px, 9vw, 148px);
-  line-height: 0.88;
-  letter-spacing: -0.045em;
-  margin-bottom: 32px;
-  max-width: 15ch;
-}
-.hero__title .em {
-  font-style: italic;
-  color: var(--kupfer);
-}
-/* Primary article copy paints in its settled position. Above-fold title motion
-   delayed visual completion and kept the LCP candidate moving for 1.78 s. */
-.hero__title .word {
-  display: inline-block;
-}
-.hero__lede {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: clamp(20px, 2vw, 28px);
-  line-height: 1.45;
-  max-width: 46ch;
-  color: var(--schiefer);
-}
-
-/* hero ambient field */
-.hero__field {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: -1;
-  opacity: 0.3;
-}
-
 /* section chrome */
 .section {
   max-width: 1200px;
@@ -269,15 +224,17 @@
   padding: 48px clamp(16px, 4vw, 40px);
 }
 
+/* Section kicker: the Werkzeichnung paper label (sentence case, site sans,
+   ink), as in the post header. */
 .kicker {
   display: flex;
   align-items: center;
   gap: 14px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--kupfer);
+  font-family: var(--post-sans);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--druckertinte);
   margin-bottom: 22px;
 }
 .kicker__num {
@@ -286,9 +243,10 @@
   height: 28px;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--kupfer);
-  color: var(--kupfer);
+  border: 1.5px solid var(--druckertinte);
+  color: var(--druckertinte);
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 .kicker__line {
   flex: 1;
@@ -297,23 +255,25 @@
   max-width: 60px;
 }
 
+/* Section heads sit one step below the post H1 (post-wz.css .wz-hero__title). */
 .heading {
-  font-family: var(--font-serif);
-  font-weight: 400;
-  font-size: clamp(40px, 5.6vw, 76px);
-  line-height: 1.02;
-  letter-spacing: -0.03em;
+  font-family: var(--post-sans);
+  font-weight: 700;
+  font-size: clamp(1.75rem, 1.25rem + 1.6vw, 2.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.012em;
   margin-bottom: 16px;
-  max-width: 18ch;
+  max-width: 22ch;
+  text-wrap: balance;
 }
 .heading .em {
-  font-style: italic;
-  color: var(--kupfer);
+  font-style: normal;
+  color: inherit;
 }
 
 .dek {
-  font-family: var(--font-serif);
-  font-style: italic;
+  font-family: var(--post-sans);
+  font-style: normal;
   font-size: clamp(18px, 1.7vw, 22px);
   line-height: 1.5;
   color: var(--schiefer);
@@ -346,8 +306,8 @@
   margin-top: 18px;
 }
 .premise__body .dropcap::first-letter {
-  font-family: var(--font-serif);
-  font-style: italic;
+  font-family: var(--post-sans);
+  font-style: normal;
   font-size: 5.5em;
   float: left;
   line-height: 0.85;
@@ -410,7 +370,7 @@
   font-weight: 700;
 }
 .axis-card__title {
-  font-family: var(--font-serif);
+  font-family: var(--post-sans);
   font-size: 30px;
   line-height: 1.05;
   letter-spacing: -0.02em;
@@ -467,8 +427,8 @@
   margin-bottom: 8px;
 }
 .bar__label {
-  font-family: var(--font-serif);
-  font-style: italic;
+  font-family: var(--post-sans);
+  font-style: normal;
   font-size: 24px;
 }
 .bar__val {
@@ -493,8 +453,8 @@
   transform: scaleX(var(--w, 1));
 }
 .distribution__note {
-  font-family: var(--font-serif);
-  font-style: italic;
+  font-family: var(--post-sans);
+  font-style: normal;
   font-size: 22px;
   line-height: 1.5;
   color: var(--schiefer);
@@ -542,18 +502,18 @@
   opacity: 0.8;
 }
 .pull__body {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-weight: 400;
-  font-size: clamp(32px, 4.4vw, 68px);
-  line-height: 1.12;
-  letter-spacing: -0.025em;
-  max-width: 20ch;
+  font-family: var(--post-sans);
+  font-style: normal;
+  font-weight: 700;
+  font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.25rem);
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+  max-width: 24ch;
   margin: 0 auto;
   position: relative;
 }
 .pull__body .em {
-  color: var(--kupfer-light);
+  color: inherit;
 }
 .pull__attr {
   margin-top: 24px;
@@ -614,7 +574,7 @@
   color: #ffffff;
 }
 .source__title {
-  font-family: var(--font-serif);
+  font-family: var(--post-sans);
   font-size: 22px;
   letter-spacing: -0.01em;
   line-height: 1.1;
@@ -653,14 +613,14 @@
   border-bottom: 1px solid var(--leinen);
 }
 .pipeline__num {
-  font-family: var(--font-serif);
-  font-style: italic;
+  font-family: var(--post-sans);
+  font-style: normal;
   font-size: 72px;
   line-height: 0.85;
   color: var(--kupfer);
 }
 .pipeline__body h3 {
-  font-family: var(--font-serif);
+  font-family: var(--post-sans);
   font-size: 32px;
   letter-spacing: -0.02em;
   margin-bottom: 8px;
@@ -695,6 +655,36 @@
   }
   .pipeline__num {
     font-size: 48px;
+  }
+}
+/* Smallest phones: stack number, budget and body in one column, so a long
+   German heading wraps inside 320px instead of being clipped. */
+.pipeline__body {
+  min-width: 0;
+}
+.pipeline__body h3,
+.pipeline__body p {
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+@media (max-width: 479px) {
+  .pipeline__step {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+  .pipeline__budget {
+    grid-column: 1;
+    grid-row: 2;
+    margin-top: 0;
+  }
+  .pipeline__body {
+    grid-row: 3;
+  }
+  .pipeline__num {
+    font-size: 40px;
+  }
+  .pipeline__body h3 {
+    font-size: 26px;
   }
 }
 
@@ -777,8 +767,8 @@
   align-items: baseline;
 }
 .sim__slider-label .v {
-  font-family: var(--font-serif);
-  font-style: italic;
+  font-family: var(--post-sans);
+  font-style: normal;
   font-size: 44px;
   color: var(--sim-color);
   letter-spacing: -0.02em;
@@ -854,8 +844,8 @@
   color: var(--kupfer);
 }
 .sim__delta {
-  font-family: var(--font-serif);
-  font-style: italic;
+  font-family: var(--post-sans);
+  font-style: normal;
   font-size: 116px;
   line-height: 0.92;
   letter-spacing: -0.035em;
@@ -875,8 +865,8 @@
   margin-bottom: 22px;
 }
 .sim__narrative {
-  font-family: var(--font-serif);
-  font-style: italic;
+  font-family: var(--post-sans);
+  font-style: normal;
   font-size: 17px;
   line-height: 1.5;
   color: var(--druckertinte);
@@ -978,14 +968,14 @@
   }
 }
 .ladder__num {
-  font-family: var(--font-serif);
-  font-style: italic;
+  font-family: var(--post-sans);
+  font-style: normal;
   font-size: 48px;
   color: var(--axis-daten);
   line-height: 0.9;
 }
 .ladder__title {
-  font-family: var(--font-serif);
+  font-family: var(--post-sans);
   font-size: 26px;
   letter-spacing: -0.01em;
   line-height: 1.1;
@@ -1033,8 +1023,8 @@
   }
 }
 .limit__mark {
-  font-family: var(--font-serif);
-  font-style: italic;
+  font-family: var(--post-sans);
+  font-style: normal;
   font-size: 60px;
   line-height: 0.8;
   color: var(--kupfer);
@@ -1042,7 +1032,7 @@
   opacity: 0.35;
 }
 .limit__title {
-  font-family: var(--font-serif);
+  font-family: var(--post-sans);
   font-size: 24px;
   letter-spacing: -0.01em;
   line-height: 1.2;
@@ -1135,19 +1125,19 @@
   text-align: center;
 }
 .cta__quote {
-  font-family: var(--font-serif);
-  font-style: italic;
+  font-family: var(--post-sans);
+  font-style: normal;
   font-size: clamp(32px, 4vw, 56px);
   line-height: 1.15;
   letter-spacing: -0.02em;
   margin-bottom: 16px;
 }
 .cta__quote .em {
-  color: var(--kupfer);
+  color: inherit;
 }
 .cta__sub {
-  font-family: var(--font-serif);
-  font-style: italic;
+  font-family: var(--post-sans);
+  font-style: normal;
   font-size: 18px;
   color: var(--schiefer);
   margin-bottom: 48px;
@@ -1161,8 +1151,8 @@
 .signoff {
   margin-top: 32px;
   text-align: center;
-  font-family: var(--font-serif);
-  font-style: italic;
+  font-family: var(--post-sans);
+  font-style: normal;
   font-size: 16px;
   color: var(--schiefer);
 }
@@ -1174,26 +1164,6 @@
    EDITORIAL primitives — add for essay voice (v2)
    ================================================================ */
 
-/* byline slug above headline */
-.byline {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--schiefer);
-  margin-bottom: 22px;
-  display: flex;
-  gap: 14px;
-  align-items: center;
-}
-.byline__author {
-  color: var(--druckertinte);
-  font-weight: 700;
-}
-.byline .dot {
-  color: var(--kupfer);
-}
-
 /* opening scene — narrative italic lede */
 .scene {
   max-width: 720px;
@@ -1201,12 +1171,11 @@
   padding: 32px clamp(16px, 4vw, 40px) 0;
 }
 .scene__dateline {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--kupfer);
-  font-weight: 700;
+  font-family: var(--post-sans);
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  color: var(--schiefer);
+  font-weight: 600;
   margin-bottom: 20px;
   display: flex;
   align-items: center;
@@ -1219,7 +1188,7 @@
   background: var(--leinen);
 }
 .scene__body {
-  font-family: var(--font-serif);
+  font-family: var(--post-sans);
   font-size: clamp(19px, 1.5vw, 22px);
   line-height: 1.65;
   color: var(--druckertinte);
@@ -1229,8 +1198,8 @@
   text-indent: 2.4em;
 }
 .scene__body p:first-child::first-letter {
-  font-family: var(--font-serif);
-  font-style: italic;
+  font-family: var(--post-sans);
+  font-style: normal;
   font-size: 5em;
   float: left;
   line-height: 0.85;
@@ -1239,7 +1208,7 @@
 }
 .scene__body em {
   color: var(--kupfer);
-  font-style: italic;
+  font-style: normal;
 }
 
 /* essay prose: narrower column, margin-annotations hang off on wide */
@@ -1247,7 +1216,7 @@
   max-width: 720px;
   margin: 0 auto;
   padding: 0 40px;
-  font-family: var(--font-serif);
+  font-family: var(--post-sans);
   font-size: 19px;
   line-height: 1.7;
   color: var(--druckertinte);
@@ -1262,9 +1231,9 @@
   color: var(--druckertinte);
 }
 .prose h3 {
-  font-family: var(--font-serif);
+  font-family: var(--post-sans);
   font-weight: 400;
-  font-style: italic;
+  font-style: normal;
   font-size: 28px;
   line-height: 1.1;
   letter-spacing: -0.015em;
@@ -1290,29 +1259,26 @@
 
 /* hanging margin note (only on wide) */
 .margin-note {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  line-height: 1.55;
+  font-family: var(--post-sans);
+  font-size: 14px;
+  line-height: 1.5;
   color: var(--schiefer);
-  letter-spacing: 0.02em;
-  border-left: 2px solid var(--kupfer);
+  border-left: 1px solid var(--leinen);
   padding: 4px 0 4px 12px;
   margin: 24px 0;
 }
 .margin-note b {
   color: var(--druckertinte);
-  font-family: var(--font-sans);
-  font-weight: 600;
-  letter-spacing: 0;
+  font-family: inherit;
+  font-weight: 700;
   display: block;
   margin-bottom: 4px;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
+  font-size: 14px;
+  letter-spacing: 0.02em;
 }
 /* Margin-note stays inline at all widths — absolute-positioning variant
    in the original design collided with the prose column at our 1200px content
-   width. Keep as an indented note with the copper left-rule. */
+   width. Keep as an indented note with a hairline (no coloured left rule). */
 
 /* field notes — inline anecdote block */
 .field-note {
@@ -1320,8 +1286,8 @@
   padding: 24px 28px;
   background: var(--birke);
   border-left: 4px solid var(--kupfer);
-  font-family: var(--font-serif);
-  font-style: italic;
+  font-family: var(--post-sans);
+  font-style: normal;
   font-size: 18px;
   line-height: 1.55;
   color: var(--druckertinte);
@@ -1353,8 +1319,8 @@
   border-bottom: 1px solid var(--leinen);
 }
 .qa__mark {
-  font-family: var(--font-serif);
-  font-style: italic;
+  font-family: var(--post-sans);
+  font-style: normal;
   font-size: 44px;
   color: var(--kupfer);
   line-height: 0.8;
@@ -1377,7 +1343,7 @@
   margin-bottom: 14px;
 }
 .qa__a {
-  font-family: var(--font-serif);
+  font-family: var(--post-sans);
   font-size: 17px;
   line-height: 1.6;
   color: var(--druckertinte);
@@ -1391,8 +1357,8 @@
   max-width: 720px;
   margin: 48px auto;
   padding: 0 clamp(16px, 4vw, 40px);
-  font-family: var(--font-serif);
-  font-style: italic;
+  font-family: var(--post-sans);
+  font-style: normal;
   font-size: clamp(22px, 2.3vw, 30px);
   line-height: 1.4;
   color: var(--schiefer);
@@ -1414,7 +1380,7 @@
   max-width: 720px;
   margin: 48px auto 0;
   padding: 0 clamp(16px, 4vw, 40px) 48px;
-  font-family: var(--font-serif);
+  font-family: var(--post-sans);
   font-size: 19px;
   line-height: 1.7;
   color: var(--druckertinte);
@@ -1449,8 +1415,8 @@
   max-width: 720px;
   margin: 24px auto 0;
   padding: 0 clamp(16px, 4vw, 40px) 48px;
-  font-family: var(--font-serif);
-  font-style: italic;
+  font-family: var(--post-sans);
+  font-style: normal;
   font-size: 16px;
   color: var(--schiefer);
   display: flex;
@@ -1518,13 +1484,13 @@
   font-weight: 700;
 }
 .also-in__item .t {
-  font-family: var(--font-serif);
+  font-family: var(--post-sans);
   font-size: 26px;
   line-height: 1.1;
   letter-spacing: -0.01em;
 }
 .also-in__item .t .em {
-  font-style: italic;
+  font-style: normal;
   color: var(--kupfer);
 }
 .also-in__item .meta {

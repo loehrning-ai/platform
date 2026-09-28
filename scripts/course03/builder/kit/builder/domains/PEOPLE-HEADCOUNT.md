@@ -2,15 +2,15 @@
 
 ## In plain words
 
-A company counts its employees at the end of every month. That count is a **level**. Hires
-minus leavers is the **change**. Attrition is a **rate**: leavers divided by a base. Two bases
-are common, so the owner must write down which one counts: 19 ÷ 200 = **9.5 %** (headcount at the
-start) or 19 ÷ 203.5 = **9.34 %** (average headcount). The export gives an AI one monthly
-`attrition` column. The AI averages three months and reports **3.12 %** for the quarter, about a
-third of the real rate. People data also needs a privacy rule: no person rows, no group under 5.
+Month-end headcount is a **level**. Hires minus leavers is the **change**. Attrition is a
+**rate**: leavers divided by a base. The owner writes down which of two common bases counts:
+19 ÷ 200 = **9.5 %** (headcount at the start) or 19 ÷ 203.5 = **9.34 %** (average headcount). The
+export gives an AI one monthly `attrition` column; the AI averages three months and reports **3.12 %**
+for the quarter, about a third of the real rate. People data also needs a privacy rule: no person
+rows, no group under 5.
 
-FOLDLINE twin: logo churn, 4 of 40 = 10 %. The base is "active at the end of the prior period";
-joiners are excluded. The deck's export-lane check used the wrong base: 4 of 48 = 8.33 %.
+FOLDLINE twin: logo churn, 4 of 40 = 10 %, with the base "active at the end of the prior period",
+joiners excluded. The deck's export-lane check used the wrong base: 4 of 48 = 8.33 %.
 
 All data is synthetic: no real people. Clock: 2026-07-01 09:00 UTC. Last complete quarter: Q2 2026.
 
@@ -149,23 +149,21 @@ metrics:
 
 ## What an AI plausibly answers from the export
 
-Not recorded runs: the arithmetic a reader gets by trusting the export names. Use them as tests.
-
 | Plausible answer | How it happens | Why it is wrong |
 | --- | --- | --- |
-| "Q2 attrition: 3.12 %." | `AVG(attrition)` over three monthly rows | The average of monthly rates is a monthly rate. It is reported as the quarter. Q2 is 19 ÷ 200 = 9.5 % |
+| "Q2 attrition: 3.12 %." | `AVG(attrition)` over three monthly rows | An average of monthly rates is a monthly rate, reported as the quarter. Q2 is 19 ÷ 200 = 9.5 % |
 | "Average headcount in Q2: 614." | `SUM(hc)` | Three month-end levels added |
-| Any Legal-only figure, such as "Legal: 25 %". | Person rows grouped by `dept` | Legal has 4 people. With so few, one leaver is 25 %, and the figure points at a person. It is not a statistic |
+| Any Legal-only figure, such as "Legal: 25 %". | Person rows grouped by `dept` | Legal has 4 people, so one leaver is 25 % and the figure points at a person |
 
 ## What works, what does not
 
 | Works | Does not work | Why |
 | --- | --- | --- |
-| Write the base: "headcount the day before the period" | "Attrition = leavers ÷ headcount" | 9.5 % and 9.34 % are both defensible. Unwritten, the AI picks one silently |
+| Write the base: "headcount the day before the period" | "Attrition = leavers ÷ headcount" | 9.5 % and 9.34 % are both defensible; unwritten, the AI picks one silently |
 | Ship `leavers` and `starting_headcount` beside the rate | Ship `attrition` alone | Nobody can pool a quarter or the company |
 | Merge small groups in core before serving | Serve every department, suppress small rows in the report | The company total minus the other rows reveals the small group |
-| Serve department-month counts only | Give the AI the employee table "to be flexible" | Names and exit reasons are one join away. Grants, not prompts, keep them out |
-| Leavers counted from the starting base | Count every leaver, including Q2 hires who left in Q2 | The numerator then contains people the denominator never held. FOLDLINE's 4 of 48 is the mirror image: it put joiners in the denominator; this puts them in the numerator |
+| Serve department-month counts only | Give the AI the employee table "to be flexible" | Names and exit reasons are one join away; only grants keep them out |
+| Leavers counted from the starting base | Count every leaver, including Q2 hires who left in Q2 | The numerator holds people the denominator never held. FOLDLINE's 4 of 48 is the mirror image, with joiners in the denominator |
 
 <details>
 <summary>For builders</summary>
@@ -176,7 +174,7 @@ Not recorded runs: the arithmetic a reader gets by trusting the export names. Us
   Record the exception, or name them `ending_employees`.
 - Owner assumption, written in the SQL file: none of the 25 Q2 hires left in Q2. If one does,
   add `leavers_from_starting_headcount` in core and use it as the numerator.
-- Row-level security is the next step if managers may see only their own department. It does
-  not replace the minimum group size.
+- If managers may see only their own department, add row-level security. It does not replace the
+  minimum group size.
 
 </details>

@@ -1,0 +1,51 @@
+/* limits: five plain rows, one per press, each with its number, a pictogram and a short label. */
+
+#limits > .lm-rows {
+  position: absolute;
+  top: 244px;
+  left: var(--margin-x);
+  display: grid;
+  width: 1728px;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#limits .lm-row {
+  display: grid;
+  grid-template-columns: 56px 48px minmax(0, 1fr);
+  align-items: start;
+  gap: 24px;
+  padding: 14px 28px 16px 20px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+#limits .lm-n {
+  display: grid;
+  width: 56px;
+  height: 56px;
+  place-items: center;
+  background: var(--ink);
+  color: var(--papier);
+  font-size: var(--t-lead);
+  font-weight: 700;
+}
+
+#limits .lm-row .icon {
+  margin-top: 4px;
+}
+
+#limits .lm-row p {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: 1.35;
+}
+
+#limits .lm-row b {
+  font-size: 28px;
+  line-height: 1.2;
+}

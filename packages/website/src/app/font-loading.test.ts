@@ -73,7 +73,9 @@ describe("global font loading contract", () => {
       .map((file) => readFileSync(resolve(process.cwd(), file), "utf8"))
       .join("\n");
 
-    expect(shellSource).toContain("font-ui-mono");
+    // The shell's last mono text, the footer's second "Updated" ISO date
+    // (font-ui-mono), was cut for one date line; any future shell mono must
+    // still use the system font-ui-mono stack, never Geist Mono.
     expect(shellSource).not.toMatch(/\bfont-mono\b/);
   });
 

@@ -1,0 +1,131 @@
+/* your-bill: the transfer sheet with the Werk Süd example in slate beside each box. Presses 1 to 5
+   frame one box in Mennige; the line at the bottom says what to write now. */
+
+#your-bill > .yb-privacy {
+  position: absolute;
+  top: 236px;
+  left: var(--margin-x);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0;
+  font-size: var(--t-body);
+  font-weight: 600;
+}
+
+#your-bill > .yb-sheet {
+  position: absolute;
+  top: 304px;
+  left: var(--margin-x);
+  display: grid;
+  width: 1728px;
+  border: 4px solid var(--ink);
+  background: var(--papier);
+}
+
+#your-bill .yb-head,
+#your-bill .yb-row {
+  display: grid;
+  grid-template-columns: 250px 520px minmax(0, 1fr);
+}
+
+#your-bill .yb-head span {
+  padding: 10px 20px 8px;
+  border-bottom: 3px solid var(--ink);
+  color: var(--slate);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+#your-bill .yb-row {
+  position: relative;
+  min-height: 98px;
+  border-top: 1px solid var(--leinen);
+}
+
+#your-bill .yb-head + .yb-row {
+  border-top: 0;
+}
+
+#your-bill .yb-row > span[role="cell"] {
+  padding: 14px 20px;
+  line-height: 1.3;
+}
+
+#your-bill .yb-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  font-size: var(--t-body);
+  font-weight: 700;
+}
+
+#your-bill .yb-n {
+  display: grid;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  background: var(--ink);
+  color: var(--papier);
+  font-size: 22px;
+}
+
+/* The writing column: what goes in the box, over two ruled lines, as on the paper sheet. */
+#your-bill .yb-what {
+  border-right: 1px solid var(--leinen);
+  border-left: 1px solid var(--leinen);
+  font-size: 24px;
+}
+
+#your-bill .yb-ex {
+  color: var(--slate);
+  font-size: 22px;
+}
+
+#your-bill .yb-mark {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  bottom: -4px;
+  left: -4px;
+  z-index: 1;
+  border: 4px solid var(--mennige);
+  pointer-events: none;
+}
+
+#your-bill .yb-mark::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  left: -4px;
+  width: 12px;
+  background: var(--mennige);
+}
+
+#your-bill > .yb-now {
+  position: absolute;
+  top: 888px;
+  left: var(--margin-x);
+  display: flex;
+  width: 1728px;
+  align-items: center;
+  gap: 20px;
+}
+
+#your-bill .yb-now__text {
+  margin: 0;
+  font-size: var(--t-lead);
+  line-height: 1.25;
+}
+
+/* The lines share one slot: only the current one takes space. */
+#your-bill .yb-now__text.is-step-hidden {
+  display: none;
+}
+
+#your-bill .yb-ex .w-mono {
+  font-size: 20px;
+}

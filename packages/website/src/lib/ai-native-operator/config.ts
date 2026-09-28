@@ -8,7 +8,7 @@
 //
 // Unlike codex/data-infrastructure/data-engineering-fundamentals/
 // data-science, this course DOES have a real quiz gate: 9 module
-// knowledge-checks pooled into one 22-question workshop quiz (
+// knowledge-checks pooled into one 22-question final quiz (
 // stage 3), so it follows claude's quiz-gated `CourseConfig` shape rather
 // than generic "completion" fallback.
 
@@ -36,7 +36,7 @@ export const AI_NATIVE_OPERATOR_CONFIG = {
   workshopQuizPassThreshold: 0.7,
   certificateTitle: "Certificate of participation: AI-Native Operator",
   certificateSubtitle:
-    "Locally generated certificate of participation from the independent learning platform loehrning.ai. It is not server-verified, externally assessed, accredited, or evidence of regulatory compliance.",
+    "Local certificate of participation from the independent learning platform loehrning.ai. It is not server-verified, externally assessed or accredited, and it is no evidence of regulatory compliance.",
   certificateModules: [
     "Mindset & Culture",
     "Engineering Practices",
@@ -49,11 +49,11 @@ export const AI_NATIVE_OPERATOR_CONFIG = {
     "Measurement & ROI",
   ],
   certificateReferenceLabel:
-    "Personal certificate of participation: model-assisted operations across task selection, engineering, product, workflows, people, organization, data, governance, and measurement",
-  quizPassMessage: "You passed the AI-Native Operator workshop quiz.",
+    "Personal certificate of participation: model-assisted operations",
+  quizPassMessage: "You passed the AI-Native Operator final quiz.",
   certificateFileStem: "AI-Native-Operator",
   recordNoun: {
-    label: "Certificate of Participation",
+    label: "Certificate of participation",
     possessive: "Your certificate of participation",
     demonstrative: "This certificate of participation",
   },
@@ -64,7 +64,7 @@ export const AI_NATIVE_OPERATOR_CONFIG_DE =
     title: "AI-Native Operator: Praxiskurs",
     certificateTitle: "Teilnahmebestätigung: AI-Native Operator",
     certificateSubtitle:
-      "Lokal erzeugte Teilnahmebestätigung der unabhängigen Lernplattform loehrning.ai. Sie ist nicht servergeprüft, nicht fremdbewertet, nicht akkreditiert und kein Nachweis regulatorischer Konformität.",
+      "Lokal erzeugte Teilnahmebestätigung der unabhängigen Lernplattform loehrning.ai. Sie ist weder servergeprüft noch fremdbewertet oder akkreditiert und kein Nachweis regulatorischer Konformität.",
     certificateModules: [
       "Mindset und Arbeitskultur",
       "Technische Praxis",
@@ -77,7 +77,7 @@ export const AI_NATIVE_OPERATOR_CONFIG_DE =
       "Messung und Wirtschaftlichkeit",
     ],
     certificateReferenceLabel:
-      "Persönliche Teilnahmebestätigung: modellgestützte Arbeit über Aufgabenauswahl, Technik, Produkt, Abläufe, Personal, Organisation, Daten, Steuerung und Messung",
+      "Persönliche Teilnahmebestätigung: modellgestützte Arbeit",
     quizPassMessage:
       "Das Abschlussquiz des Kurses AI-Native Operator ist bestanden.",
     certificateFileStem: "AI-Native-Operator-Praxiskurs",

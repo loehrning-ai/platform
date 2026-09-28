@@ -37,7 +37,7 @@ working archives are not dependencies and are not part of the public tree.
 
 Original governance templates under `packages/website/content/vorlagen/**` are licensed under the Creative Commons Attribution 4.0 International license in [LICENSES/CC-BY-4.0.txt](LICENSES/CC-BY-4.0.txt).
 
-Attribution: `loehrning.ai, Tim Löhr, https://loehrning.ai/vorlagen`.
+Attribution: `loehrning.ai, Tim Löhr` and the URL of the page that publishes the template, as stated in the template's `attribution` field. The source files are also served unchanged at `https://loehrning.ai/vorlagen/<file>.md`.
 
 The project-specific adaptation in `CODE_OF_CONDUCT.md` is also licensed under CC BY 4.0. Its upstream Contributor Covenant attribution and modification notice are retained in that file.
 

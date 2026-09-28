@@ -11,11 +11,11 @@ const LID = checkpointLessonId("streaming");
 const lesson: DataInfraLesson = {
   id: "streaming",
   number: 8,
-  title: "Streaming: Kafka, Watermarks, Windows",
+  title: "Streaming: Kafka, watermarks, windows",
   subtitle: "Partitions · groups · event time",
   durationMinutes: 15,
   trackId: "movement",
-  hook: "Why event time ≠ processing time, and how watermarks let you reason about late data.",
+  hook: "Event time differs from processing time. Watermarks handle late data.",
   keyConcepts: [
     "Event time vs processing time",
     "Watermark",
@@ -30,28 +30,28 @@ const lesson: DataInfraLesson = {
       title: "Two clocks",
       readTimeMinutes: 2,
       content:
-        "A stream has no end-of-file. Input is *unbounded*, so the system itself must define when intermediate results are emitted, revised, or considered final enough for a consumer.\n\nTwo timestamps matter. **Event time** is when an event occurred according to its source; **processing time** is when an operator observed it. They differ because devices buffer events, networks retry, queues accumulate lag, and clocks drift. Use event time when the business rule concerns occurrence and the source timestamp is trustworthy, processing time when the requirement concerns arrival or system handling. Neither is a universal default.",
+        "A stream has no end-of-file. Input is *unbounded*, so the system decides when a result is emitted, revised or final enough for a consumer.\n\n**Event time** is when an event occurred according to its source; **processing time** is when an operator saw it. They drift apart because devices buffer, networks retry, queues lag and clocks drift. Use event time when the business rule concerns occurrence and the source timestamp is trustworthy, and processing time when the rule concerns arrival or handling.",
     },
     {
       id: "s2",
       title: "Kafka's core model",
       readTimeMinutes: 3,
       content:
-        "Five concepts define the core model:\n\n- **Topic**, a named sequence of records split into partitions.\n- **Partition**, an ordered log. Kafka ordering is defined within a partition, never across a topic.\n- **Producer**, writes records and selects a partition through an explicit partition, a configured partitioner, or client behavior for keyed or unkeyed records.\n- **Consumer group**, coordinates consumers so one group member owns a given partition at a time. Partitions bound active consumption parallelism for that topic.\n- **Offset**, a record position within a partition. A group stores committed offsets; replay works only while the required records stay retained and compatible.\n\nA stable key, a stable partitioner, and an unchanged partition count keep a key's records in one partition. Raise the partition count and the mapping of later records can change, so key-local history may span partitions. Choose counts from measured throughput, per-partition limits, ordering, recovery, and operational overhead. Not from a fixed safety number.",
+        "- **Topic**, a named sequence of records split into partitions.\n- **Partition**, an ordered log. Kafka orders within a partition, never across a topic.\n- **Producer**, writes records to a partition chosen explicitly, by a partitioner or by client default.\n- **Consumer group**, gives each partition to one member at a time, so partitions cap active parallelism.\n- **Offset**, a record's position in a partition. Replay from committed offsets works only while records stay retained and compatible.\n\nA stable key, partitioner and partition count keep a key's records in one partition. Raise the count and later records can map elsewhere. Size it from measured throughput, per-partition limits, ordering, recovery and operating overhead.",
     },
     {
       id: "s3",
       title: "Event vs processing time",
       readTimeMinutes: 3,
       content:
-        "You are counting events per minute. At processing time 14:35, the job receives an event whose event timestamp is 14:32. An event-time aggregation assigns it to the 14:32 window; a processing-time aggregation assigns it by arrival. The product definition decides which is correct.\n\nA **watermark** is the engine's progress signal for event time. It says the system no longer expects substantially earlier timestamps, based on a configured or generated policy. It is not proof that every earlier event arrived. When a watermark passes a window boundary, an engine may trigger output and later drop, retain, route, or revise results for late events according to its APIs and configuration.",
+        "You count events per minute. At processing time 14:35 an event arrives stamped 14:32. Event-time aggregation puts it in the 14:32 window, processing-time aggregation counts it on arrival; the product definition decides which is right.\n\nA **watermark** is the engine's event-time progress signal: it declares that, under a configured or generated policy, much earlier timestamps are no longer expected. It does not prove every earlier event arrived. Past a window boundary, the engine may emit output and then drop, retain, route or revise late events, per its APIs and configuration.",
     },
     {
       id: "s4",
-      title: "Watermark visualization",
+      title: "Choosing a lateness threshold",
       readTimeMinutes: 2,
       content:
-        "The visualization uses a fixed four-second lateness threshold and synthetic events. It shows how a threshold moves the model's on-time and late classifications. It is not a production recommendation.\n\nChoose a watermark policy from the observed lateness distribution, idle partitions, clock quality, source behavior, allowed state size, revision semantics, and consumer SLO. A percentile informs the choice. The accepted loss or correction policy stays a product decision, and it must be measured after deployment.",
+        "The watermark model above uses synthetic events and a fixed four-second lateness threshold to show how a threshold shifts on-time and late labels. It is not a production recommendation.\n\nDerive the policy from observed lateness, idle partitions, clock quality, source behavior, allowed state size, revision semantics and consumer SLO. A percentile informs the choice; how much loss or correction is acceptable is a product decision you measure after deployment.",
     },
     {
       id: "s5",
@@ -65,16 +65,14 @@ const lesson: DataInfraLesson = {
       title: "Delivery semantics",
       readTimeMinutes: 3,
       content:
-        'Every delivery or processing claim has to name its boundary, failure model, and observable state:\n\n- **At-most-once.** A failure can omit an effect, while the protocol avoids replaying acknowledged work within its scope.\n- **At-least-once.** The system retries or replays work after uncertain failures, so the same logical record can affect processing more than once unless the consumer controls duplicate effects. "No loss" still rests on source durability, retention, acknowledgements, and the stated failures.\n- **Exactly-once.** A scoped system makes the committed output look as if each input affected that output once. Transactions, checkpoints, replayable sources, idempotent sinks, or coordinated offsets implement it. It does not automatically cover external APIs or every upstream and downstream system.\n\nKafka transactions can atomically publish output records and consumed offsets for a Kafka-to-Kafka read-process-write path when producers, consumers, isolation, and broker configuration all participate. Flink documents end-to-end exactly-once as requiring replayable sources and transactional or idempotent sinks. Whatever the design, enumerate every side effect and verify recovery with failure injection.',
-      keyTakeaway:
-        "A processing guarantee is valid only for the named source, state, sink, configuration, and failure model.",
+        'Every delivery claim names its boundary, failure model and observable state:\n\n- **At-most-once.** A failure can omit an effect; acknowledged work is not replayed within the scope.\n- **At-least-once.** Retries after uncertain failures can apply a record twice unless the consumer controls duplicates. "No loss" still rests on source durability, retention and acknowledgements.\n- **Exactly-once.** Within a scope, committed output looks as if each input took effect once, through transactions, checkpoints, replayable sources, idempotent sinks or coordinated offsets. External APIs are not covered automatically.\n\nKafka transactions atomically publish output and consumed offsets on a Kafka-to-Kafka read-process-write path when producers, consumers, isolation and brokers all take part. Flink requires replayable sources and transactional or idempotent sinks for end-to-end exactly-once.',
     },
     {
       id: "s5c",
       title: "Select a streaming engine",
       readTimeMinutes: 3,
       content:
-        'Engine capabilities and defaults change. Compare the exact supported version and connectors against a reproducible workload:\n\n| Decision | Evidence |\n|---|---|\n| Processing mode | How records or micro-batches are scheduled, and which APIs change by mode |\n| State | Size, backend, checkpoint duration, recovery time, rescaling, and schema evolution |\n| Event time | Watermark generation, idle inputs, windows, joins, timers, and late-data updates |\n| Guarantees | Source replay, state semantics, sink participation, offset commits, and failure tests |\n| Latency and throughput | Measured percentiles under normal load, backpressure, checkpointing, and recovery |\n| Operations | Deployment, upgrades, savepoints/checkpoints, observability, cost, and team ownership |\n\nCurrent official documentation describes Spark Structured Streaming\'s default micro-batch mode and separate continuous-processing behavior with different guarantees; Flink likewise separates state guarantees from end-to-end sink guarantees. Do not reduce either product to a fixed latency band or a single "exactly-once" label.',
+        'Engine capabilities and defaults change. Compare the exact version and connectors on a reproducible workload:\n\n| Decision | Evidence |\n|---|---|\n| Processing mode | Record or micro-batch scheduling; APIs per mode |\n| State | Size, backend, checkpoint time, recovery, rescaling, schema evolution |\n| Event time | Watermarks, idle inputs, windows, joins, timers, late updates |\n| Guarantees | Source replay, state semantics, sink participation, offset commits, failure tests |\n| Latency and throughput | Measured percentiles under load, backpressure, checkpoints, recovery |\n| Operations | Deployment, upgrades, savepoints, observability, cost, ownership |\n\nSpark Structured Streaming, for example, defaults to micro-batches and offers a separate continuous mode with other guarantees. Flink likewise separates state guarantees from end-to-end sink guarantees. No engine name implies a latency band or one exactly-once guarantee.',
     },
     {
       id: "s6",
@@ -87,14 +85,14 @@ const lesson: DataInfraLesson = {
       title: "Key takeaways",
       readTimeMinutes: 2,
       content:
-        "- **Choose event or processing time from the business rule and timestamp quality.** Test delayed, duplicated, and out-of-order input.\n- **A watermark is an event-time progress policy, not proof of completeness.** Define late-data revision, retention, and consumer behavior explicitly.\n- **Scope delivery guarantees.** Name source replay, state, sink, configuration, and failure model; test every external side effect.\n- **Select engines from current versioned capabilities and measured workloads.** A product name implies no latency and no processing guarantee.\n- **Kafka partitions bound active consumers in one group for that topic.** Raising the count can remap later keyed records; plan migration and ordering for it.",
+        "- Test with delayed, duplicated and out-of-order input, and inject failures around every external side effect.",
     },
     {
       id: "s8",
       title: "Vocab",
       readTimeMinutes: 2,
       content:
-        "- **Compacted topic**, a Kafka topic where background compaction retains at least the latest value for each key, subject to segment, tombstone, and retention behavior. Older records do not disappear immediately.\n- **ISR**, in-sync replicas according to broker rules. Producer acknowledgements, replication settings, leader election, and failure assumptions jointly decide durability.\n- **At-most-once**, a scoped policy that can omit effects after uncertain failure while avoiding replay within that scope.\n- **At-least-once**, retries can repeat effects; idempotency needs a stable operation identity and a sink rule.\n- **Exactly-once**, a scoped committed-output property that requires a participating source, processing state, sink, and configuration.\n- **Backpressure**, downstream capacity limits propagate or accumulate according to the broker and processing topology; monitor lag, buffers, checkpoints, and source throttling.\n- **Allowed lateness**, an engine-specific policy for retaining state and accepting or revising results after event-time progress passes a boundary.",
+        "- **Compacted topic**, keeps at least the latest value per key and drops older ones with a delay.\n- **ISR**, replicas in sync under broker rules; with producer acks they set durability.\n- **Backpressure**, downstream limits that slow or pile up upstream work.\n- **Allowed lateness**, how long a window keeps state to accept or revise late events.",
     },
   ],
   widgets: [
@@ -109,14 +107,14 @@ const lesson: DataInfraLesson = {
         question:
           "A team picks 4 partitions for their `page_views` topic. A year later they want 50 consumers in the consumer group for parallelism. What's wrong?",
         options: [
-          "Nothing; Kafka auto-scales.",
-          "At most four consumers can own those four partitions at once. Increasing partitions is possible, but later keyed records may map differently and require an ordering-aware migration.",
-          "They need more brokers.",
-          "They should use Kinesis.",
+          "Nothing; Kafka scales consumers automatically.",
+          "Only four consumers work at once; more partitions can later remap keys.",
+          "They need more brokers in the cluster.",
+          "They should switch to Kinesis.",
         ],
         correct: 1,
         explanation:
-          "Within one consumer group, one member owns a partition at a time, so four partitions support at most four active owners for that topic. Raising the count later is supported, and a default key mapping can change for subsequent records. Select and migrate the count from measured throughput, ordering, recovery, broker limits, and operational overhead.",
+          "One group member owns a partition at a time, so four partitions allow four active consumers and 46 stay idle. Adding partitions later works, but keyed records can map differently, so plan an ordering-aware migration.",
       },
     },
     {
@@ -128,16 +126,16 @@ const lesson: DataInfraLesson = {
         title: "Late data policy",
         copy: DATA_INFRA_QUIZ_COPY,
         question:
-          'Your stream job aggregates "revenue per minute." Watermark is 30 seconds behind max event time. An event with event-time 14:32:15 arrives at 14:34:00 (processing time). What happens?',
+          'A job sums revenue per minute, watermark 30 seconds behind max event time. An event stamped 14:32:15 arrives at processing time 14:34:00. What happens?',
         options: [
           "It's included in the 14:32 result.",
-          "It depends on the configured window and late-data policy: the engine may drop, route, retain, or emit a revision.",
+          "The window and late-data policy decide: drop, route, retain or revise.",
           "It's included in the 14:34 result (re-bucketed by processing time).",
           "It triggers a re-computation of all windows.",
         ],
         correct: 1,
         explanation:
-          "The timestamps put the event behind the stated watermark policy. The result still depends on how the engine generates watermarks, handles idle partitions, retains window state, and treats late events. Your design must say whether downstream output is final, revisable, or shipped with corrections.",
+          "The event lands behind the watermark, but watermark generation, idle partitions, state retention and late-event handling decide what the engine does. Your design says whether output is final, revisable or corrected later.",
       },
     },
     {
@@ -149,16 +147,16 @@ const lesson: DataInfraLesson = {
         title: "Session windows",
         copy: DATA_INFRA_QUIZ_COPY,
         question:
-          'You\'re computing "user session duration", a session is a sequence of events with no gap longer than 30 minutes. Which window type fits?',
+          'You compute "user session duration": a session is a run of events with no gap over 30 minutes. Which window type fits?',
         options: [
           "Tumbling, every 30 minutes.",
-          "Session, with a 30-minute inactivity gap. Tumbling would split a long session across multiple windows; session windows close dynamically when the gap is hit.",
+          "Session, with a 30-minute inactivity gap.",
           "Hopping, sized 30 minutes.",
           "Global, with a manual trigger.",
         ],
         correct: 1,
         explanation:
-          "A session window groups events for a key while consecutive event-time gaps stay within the configured threshold. Closure and later merging follow watermark and late-data behavior. A fixed tumbling boundary splits one behavioral session in two.",
+          "A session window stays open per key while event-time gaps stay under the threshold, and closes by watermark. A tumbling boundary splits a 32-minute session into two.",
       },
     },
     {
@@ -173,37 +171,37 @@ const lesson: DataInfraLesson = {
           {
             term: "Compacted topic",
             q: "What is it?",
-            a: "Background compaction retains at least the latest value for each key, subject to segment and tombstone rules. It supports rebuilding keyed state. It is not an immediate or fully constrained table.",
+            a: "Compaction keeps at least the latest value per key and removes old values with a delay. It supports rebuilding keyed state.",
           },
           {
             term: "ISR",
             q: "In-Sync Replicas",
-            a: "Replicas considered in sync under broker rules. Producer acks, min.insync.replicas, replication factor, leader election, and the assumed failures together decide durability.",
+            a: "Replicas in sync under broker rules. Producer acks, min.insync.replicas, replication factor, leader election and assumed failures together decide durability.",
           },
           {
             term: "At-most-once",
             q: "How is it achieved, and when is it acceptable?",
-            a: "Commit the position before the effect and a crash can omit that effect. Use it only when the defined loss risk is explicitly acceptable and independently monitored.",
+            a: "Commit the position before the effect; a crash can then omit it. Use it only when someone accepts and monitors that loss risk.",
           },
           {
             term: "At-least-once",
             q: "How is it achieved?",
-            a: "Committing position after an effect replays work when failure lands between the two. Control duplicate effects with a stable identity and sink semantics; source durability and retention still matter.",
+            a: "Commit the position after the effect; a failure in between replays work. Control duplicates with a stable identity and sink semantics.",
           },
           {
             term: "Exactly-once",
             q: "How does Kafka achieve it?",
-            a: "For a Kafka-to-Kafka read-process-write path, transactions atomically publish output and consumed offsets, with participating producers and read-committed consumers. External sinks need their own transactional or idempotent integration.",
+            a: "On a Kafka-to-Kafka path, transactions publish output and consumed offsets atomically for read-committed consumers. External sinks need their own transactional or idempotent integration.",
           },
           {
             term: "Backpressure",
             q: "What happens when a consumer is slow?",
-            a: "A slow consumer raises broker retention pressure and lag. In a processing topology, downstream limits fill buffers and propagate toward sources. Monitor the whole path instead of assuming one component stays unaffected.",
+            a: "Lag and broker retention pressure grow. In a processing topology, downstream limits fill buffers and propagate toward the sources, so monitor the whole path.",
           },
           {
             term: "Allowed lateness",
             q: "Window setting",
-            a: "An engine-specific policy for how long state stays available and what late events may do after event-time progress passes a window. Downstream consumers must support any revisions the policy emits.",
+            a: "How long a window keeps state after the watermark passes, and whether late events still count. Consumers must handle the revisions it emits.",
           },
         ],
       },

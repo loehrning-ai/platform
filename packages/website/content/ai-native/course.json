@@ -1,7 +1,7 @@
 {
   "courseId": "ai-native-arbeitskurs",
   "title": "AI-Native Arbeitskurs",
-  "tagline": "Du definierst Aufgabe, Grenzen und Prüfung. Claude entwirft, analysiert, recherchiert.",
+  "tagline": "Du legst Aufgabe, Grenzen und Prüfung fest, Claude liefert Entwürfe.",
   "language": "de",
   "createdAt": "2026-04-18",
   "version": "1.0",
@@ -17,7 +17,7 @@
   },
   "prerequisites": {
     "recommended": "ki-fuehrerschein",
-    "note": "KI-Führerschein empfohlen, aber nicht erzwungen."
+    "note": "KI-Führerschein empfohlen, nicht Pflicht."
   },
   "totalLessons": 27,
   "totalModules": 4,

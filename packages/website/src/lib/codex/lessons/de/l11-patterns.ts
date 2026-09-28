@@ -8,13 +8,6 @@ function prose(sectionIndex: number, blockIndex: number): string {
   return block.markdown;
 }
 
-function pullQuote(sectionIndex: number, blockIndex: number): string {
-  const block = canonical.sections[sectionIndex]?.blocks[blockIndex];
-  if (block?.kind !== "pull-quote")
-    throw new Error("Codex L11 translation expected a pull quote.");
-  return block.text;
-}
-
 function card(
   sectionIndex: number,
   blockIndex: number,
@@ -83,21 +76,17 @@ export default localizeCodexLessonToGerman(canonical, {
     [canonical.sections[0].title, "Die Musterbibliothek"],
     [
       prose(0, 0),
-      "Die Form eines Auftrags entscheidet, was sich später prüfen und korrigieren lässt. Die Muster hier machen Anforderungen, Repository-Nachweise und Prüfgrenzen ausdrücklich. Erfolg garantieren sie nicht. Jedes braucht eine passende Umgebung und ein menschliches Review.\n\nDer Katalog hilft bei drei Entscheidungen: welche Nachweise vor der ersten Änderung vorliegen, welche Transformationen sich mechanisch begrenzen lassen und wann ein Versuch mit korrigierter Spezifikation neu startet.",
-    ],
-    [
-      pullQuote(0, 1),
-      "Anfrage, Repository-Kontext, Umgebung, Diff und Prüfungen diagnostizierst du getrennt. Jeder Teil kann das Ergebnis kippen.",
+      "Die Form eines Auftrags entscheidet, was sich später prüfen lässt. Die Muster hier machen Anforderungen, Repository-Nachweise und Prüfgrenzen ausdrücklich; jedes braucht trotzdem eine passende Umgebung und ein menschliches Review. Ist ein Ergebnis falsch, prüfe Anfrage, Repository-Kontext, Umgebung, Diff und Prüfungen einzeln.",
     ],
     [canonical.sections[1].title, "Muster 01: TDD mit KI"],
     [
       prose(1, 0),
-      "**Muster:** Verhalten in Tests festlegen, bevor implementiert wird, sofern sich die Anforderung so ausdrücken lässt.\n\n**Wert:** Ein geprüfter fehlschlagender Test ist ein ausführbares Beispiel und beweist, dass der Test das fehlende Verhalten bemerkt. Wird er später grün, ist das ein brauchbarer Nachweis, aber keiner für ungetestete Sicherheits-, Leistungs- oder Integrationsanforderungen.\n\n**Form in zwei Phasen:**\n\n1. *Testentwurf:* Tests ohne Produktionsänderung anfordern. Assertions, Fixtures, Grenzen und Fehlergrund prüfen.\n2. *Umsetzung:* Die begrenzte Änderung anfordern, die geprüften Tests und relevante Regressionstests verlangen.\n\nBei klarem Umfang dürfen Tests und Umsetzung auch aus einem Auftrag kommen. Geprüft werden sie trotzdem getrennt. Das Risiko heißt zirkulärer Nachweis: Erzeugte Tests können dasselbe Missverständnis enthalten wie der erzeugte Code.",
+      "Lässt sich die Anforderung in Tests ausdrücken, schreib sie vor der Umsetzung. Ein geprüfter fehlschlagender Test ist ein ausführbares Beispiel und zeigt, dass der Test das fehlende Verhalten bemerkt; wird er später grün, belegt das nur dieses Verhalten, nicht ungeprüfte Sicherheits-, Performance- oder Integrationsanforderungen.\n\n1. *Testentwurf:* Tests ohne Produktionsänderung. Assertions, Fixtures, Grenzen und Fehlergrund prüfen.\n2. *Umsetzung:* die begrenzte Änderung, dazu die geprüften Tests und relevante Regressionstests.\n\nBei klarem Umfang dürfen beide aus einem Auftrag kommen. Prüf sie trotzdem getrennt, denn erzeugte Tests können das Missverständnis des Codes teilen.",
     ],
-    [callout(1, 1, "title"), "Die Testgrenze benennen:"],
+    [callout(1, 1, "title"), "Die Testgrenze benennen."],
     [
       callout(1, 1, "body"),
-      "Ein Test mit gemocktem Kollaborateur prüft Abbildung oder Fehlerbehandlung, nicht das Verhalten des Kollaborateurs. Gehört das Verhalten zur Anforderung, kommt ein Test über die echte Grenze dazu.",
+      "Ein Test mit gemocktem Kollaborateur kann Abbildung oder Fehlerbehandlung prüfen; der Kollaborateur selbst bleibt ungeprüft. Gehört sein Verhalten zur Anforderung, ergänze einen Test über die echte Grenze.",
     ],
     [
       canonical.sections[2].title,
@@ -105,43 +94,43 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       prose(2, 0),
-      "**Muster:** In einem unbekannten Repository beginnt der Auftrag schreibgeschützt. Verlange Dateipfade, Aufrufpfade, vorhandene Hilfsfunktionen, Konfiguration und relevante Tests als Nachweise.\n\n**Vor der ersten Änderung geklärt:**\n\n- Von welchem Code und welchen externen Systemen hängt das Verhalten ab?\n- Welche vorhandene Hilfsfunktion oder Abstraktion deckt schon einen Teil ab?\n- Welche Repository-Anweisungen und Konventionen gelten?\n- Welche Tests führen das aktuelle Verhalten aus?\n- Welche Sicherheits- und Betriebsgrenzen kann die Änderung berühren?\n\nLies die Untersuchung, bevor du eine breitere Schreib- oder Netzwerkgrenze freigibst. Sind wichtige Aussagen unbelegt, verlange direkte Repository-Nachweise statt einer Architekturzusammenfassung.\n\n**Risiko:** Wer auf einem unvollständigen Modell ändert, kann Infrastruktur duplizieren, Konventionen umgehen oder Aufrufer brechen. Die Untersuchung senkt das Risiko. Den finalen Diff liest du trotzdem.",
+      "In einem unbekannten Repository beginnt die Arbeit lesend, mit Dateipfaden, Aufrufpfaden, vorhandenen Hilfsfunktionen, Konfiguration und Tests als Nachweis. Kläre vor der ersten Änderung:\n\n- Von welchem Code und welchen externen Systemen hängt das Verhalten ab?\n- Welche vorhandene Hilfsfunktion deckt schon einen Teil ab?\n- Welche Repository-Anweisungen und Konventionen gelten?\n- Welche Tests führen das aktuelle Verhalten aus?\n- Welche Sicherheits- und Betriebsgrenzen kann die Änderung berühren?\n\nLies die Untersuchung, bevor du breiteren Schreib- oder Netzwerkzugriff freigibst. Wer auf Basis eines unvollständigen Bilds ändert, dupliziert Infrastruktur, umgeht Konventionen und bricht Aufrufer. Fehlen Belege, verlange Repository-Nachweise statt einer Architekturzusammenfassung. Den finalen Diff liest du trotzdem.",
     ],
     [canonical.sections[3].title, "Muster 03: Refactoring mit KI"],
     [
       prose(3, 0),
-      '**Muster:** Eine Transformation, die das Verhalten erhält: altes Beispiel, akzeptiertes Zielbeispiel, ausdrückliche Dateimenge, Regressionstests.\n\n**Felder der Spezifikation:**\n\n- Altes und neues Muster mit Codebeispielen benennen.\n- Auf ein vorhandenes Repository-Beispiel verweisen, wenn es maßgeblich ist.\n- Eingeschlossene Dateien und ausdrückliche Ausschlüsse festlegen.\n- Öffentliche Schnittstellen und Verhalten benennen, die unverändert bleiben.\n- Wo relevant, Prüfungen für Aufrufer, generierte Ausgabe, Typen und Migrationen angeben.\n\n**Risiko:** "Räume die Codebasis auf" delegiert Architektur- und Benennungsentscheidungen, die niemand festgelegt hat. Eine begrenzte mechanische Transformation ist leicht zu prüfen. Breite Wiederholung kann ein fehlerhaftes Zielmuster trotzdem vervielfältigen.',
+      "Leg eine verhaltenserhaltende Transformation fest, mit:\n\n- altem und neuem Muster samt Codebeispielen;\n- einem maßgeblichen Repository-Beispiel, falls vorhanden;\n- eingeschlossenen Dateien und ausdrücklichen Ausschlüssen;\n- öffentlichen Schnittstellen und Verhalten, die unverändert bleiben;\n- Regressionstests für Aufrufer, generierte Ausgabe, Typen und Migrationen, wo relevant.\n\n**Risiko:** \"Räume die Codebasis auf\" delegiert Architektur- und Benennungsentscheidungen, die niemand festgelegt hat. Eine begrenzte Transformation ist leichter zu prüfen. Über die ganze Codebasis wiederholt, vervielfältigt sie aber auch jeden Fehler im Zielmuster.",
     ],
     [canonical.sections[4].title, "Muster 04: Debugging mit KI"],
     [
       prose(4, 0),
-      "**Muster:** Symptom, Umgebung, exakte Fehlerausgabe, Reproduktionsschritte und bekannte Ausschlüsse liefern. Vor jeder Korrektur eine Hypothese verlangen, die an Datei und Aufrufpfad hängt.\n\n**Nützliche Eingaben:**\n\n- exakter Fehlertext und Stacktrace, Geheimnisse entfernt;\n- minimale Reproduktion oder ein fehlschlagender Test;\n- relevante Versionen, Konfiguration und Laufzeitbedingungen;\n- schon verworfene Hypothesen samt Nachweis.\n\nWo es passt, kommt vor der Produktionsänderung ein Regressionstest, der am gemeldeten Fehler scheitert. Fehlergrund bestätigen, dann Korrektur und breitere Checks prüfen.\n\n**Risiko:** Ohne reproduzierbares Symptom kann ein plausibler Diff benachbartes Verhalten ändern, ohne die Ursache zu belegen.",
+      "Symptom, Umgebung, exakte Fehlerausgabe, Reproduktionsschritte und bekannte Ausschlüsse liefern und vor jeder Korrektur eine Hypothese verlangen, die an Datei und Aufrufpfad hängt. Nützliche Eingaben:\n\n- exakter Fehlertext und Stacktrace, Geheimnisse entfernt;\n- minimale Reproduktion oder ein fehlschlagender Test;\n- relevante Versionen, Konfiguration und Laufzeitbedingungen;\n- schon verworfene Hypothesen samt Nachweis.\n\nWo es geht, zuerst einen Regressionstest ergänzen, der am gemeldeten Fehler scheitert, und den Grund bestätigen. Ohne reproduzierbares Symptom ändert ein plausibler Diff benachbartes Verhalten und belegt die Ursache nie.",
     ],
     [canonical.sections[5].title, "Muster 05: Neustartkriterien"],
     [
       prose(5, 0),
-      "**Muster:** Mit korrigierter Spezifikation neu beginnen, sobald Überarbeitungen eine falsche Prämisse konservieren oder den Diff aufblähen.\n\n**Signale:**\n\n- dieselbe Anforderung wird anders umgesetzt, ohne auf die Review-Nachweise einzugehen;\n- Kommentare definieren Ziel oder Architektur neu, statt einen lokalen Fehler zu korrigieren;\n- der Diff wächst über fremde Dateien oder Anliegen;\n- akzeptiertes Verhalten fliegt wiederholt raus; oder\n- die Sitzung enthält widersprüchliche Anweisungen.\n\nVor dem Neustart sicherst du belegte Repository-Erkenntnisse, verworfene Ansätze mit Begründung und relevante Befehlsausgabe. Spekulative Erklärungen und das ganze Transkript bleiben zurück. Eine feste Zahl von Überarbeitungen taugt nicht als Grenze. Konvergenz und Gültigkeit des Auftrags entscheiden.",
+      "Mit korrigierter Spezifikation neu beginnen, sobald Überarbeitungen eine falsche Prämisse beibehalten oder den Diff aufblähen. Signale: Dieselbe Anforderung wird anders umgesetzt, ohne auf Review-Nachweise einzugehen, Kommentare definieren Ziel oder Architektur neu, der Diff wächst in fremde Dateien, akzeptiertes Verhalten verschwindet wiederholt, oder die Sitzung enthält widersprüchliche Anweisungen.\n\nÜbernimm belegte Erkenntnisse, verworfene Ansätze mit Begründung und relevante Befehlsausgabe.",
     ],
     [canonical.sections[6].title, "Drei riskante Aufgabenformen"],
     [card(6, 0, 0, "eyebrow"), "Fehler 01"],
     [card(6, 0, 0, "title"), "Die Wunschlisten-Aufgabe"],
     [
       card(6, 0, 0, "body"),
-      '"Verbessere die Codebasis" und "mach sie schneller" nennen weder Zielverhalten noch Nachweis. Ersetze sie durch ein gemessenes Problem, begrenzten Umfang und Akzeptanzprüfungen.',
+      "\"Verbessere die Codebasis\" nennt weder Ziel noch Nachweis. Ersetze das durch ein gemessenes Problem, begrenzten Umfang und Akzeptanzprüfungen.",
     ],
     [card(6, 0, 1, "eyebrow"), "Fehler 02"],
     [card(6, 0, 1, "title"), "Die Aufgabe ohne Tests"],
     [
       card(6, 0, 1, "body"),
-      "Eine Verhaltensänderung ohne ausführbare Prüfung lässt sich kaum verifizieren. Geht kein automatisierter Test, definiere einen anderen reproduzierbaren Prüfpfad und schreib das Restrisiko auf.",
+      "Eine Verhaltensänderung ohne ausführbare Prüfung lässt sich kaum verifizieren. Ohne automatisierte Tests definierst du eine andere reproduzierbare Prüfung und notierst das Restrisiko.",
     ],
     [card(6, 0, 2, "eyebrow"), "Fehler 03"],
     [card(6, 0, 2, "title"), "Das große Refactoring"],
     [
       card(6, 0, 2, "body"),
-      '"Refaktoriere die gesamte Architektur" mischt Entwurf, Migration, Umsetzung und Rollout. Trenne akzeptierte Zielarchitektur, Kompatibilitätsschritte und begrenzte Transformationen.',
+      "\"Refaktoriere die gesamte Architektur\" mischt Entwurf, Migration, Umsetzung und Rollout. Trenne Zielarchitektur, Kompatibilitätsschritte und begrenzte Transformationen.",
     ],
-    [prose(7, 0), "Zwei Fragen zu brauchbaren und riskanten Aufgabenmustern."],
+    [prose(7, 0), "Fragen am Ende der Lektion."],
     [
       widgetString(0, "title"),
       "Bestehende Codebasis: mit und ohne Untersuchung",
@@ -150,15 +139,15 @@ export default localizeCodexLessonToGerman(canonical, {
     [widgetString(0, "goodLabel"), "Zuerst untersuchen"],
     [
       widgetString(0, "bad"),
-      'Auftrag: "Rate Limiting zur API ergänzen."\n\nKein Wort zu vorhandener Middleware, Fehlervertrag, Konfigurationsverantwortung, Schlüsselregeln oder Prüfung. Der Diff, der daraus entsteht, baut einen zweiten Limiter und einen eigenen Konfigurationspfad.\n\nReview-Ergebnis: Umfang und Architektur sind nicht belegt.',
+      "Auftrag: \"Rate Limiting zur API ergänzen.\"\n\nKein Wort zu vorhandener Middleware, Fehlervertrag, Konfigurationsverantwortung, Schlüsselregeln oder Prüfung. Der Diff baut einen zweiten Limiter und einen eigenen Konfigurationspfad.\n\nReview-Ergebnis: Umfang und Architektur sind nicht belegt.",
     ],
     [
       widgetString(0, "good"),
-      'Auftrag: "Nenne vor Änderungen die Dateien, die vorhandenes Rate Limiting, API-Fehlerantworten, Konfiguration und Tests definieren. Verfolge den relevanten Aufrufpfad und schlage eine begrenzte Änderung vor. Schreibe erst nach Review der Nachweise."\n\nDie Untersuchung findet den vorhandenen throttle-Dekorator, den Fehlerformatierer, die Konfigurationsverantwortung und die aktuellen Tests. Der Umsetzungsauftrag kann sie jetzt beim Namen nennen.',
+      "Auftrag: \"Nenne vor Änderungen die Dateien, die vorhandenes Rate Limiting, API-Fehlerantworten, Konfiguration und Tests definieren. Verfolge den relevanten Aufrufpfad und schlage eine begrenzte Änderung vor. Schreibe erst nach Review der Nachweise.\"\n\nDie Untersuchung findet den vorhandenen throttle-Dekorator, den Fehlerformatierer, die Konfigurationsverantwortung und die aktuellen Tests, die der Umsetzungsauftrag jetzt beim Namen nennen kann.",
     ],
     [
       widgetString(0, "note"),
-      "Schreibgeschützte Untersuchung holt Annahmen ans Licht, bevor sie im Diff landen. Prüfe jede genannte Datei und jeden Aufrufpfad. Auch eine Untersuchungszusammenfassung kann Lücken haben.",
+      "Schreibgeschützte Untersuchung zeigt Annahmen, bevor sie im Diff landen. Prüfe trotzdem jede genannte Datei und jeden Aufrufpfad; die Zusammenfassung kann Lücken haben.",
     ],
     [
       widgetString(1, "question"),
@@ -170,7 +159,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       widgetStrings(1, "options")[1],
-      "Die Tests können dasselbe Missverständnis wie die Umsetzung enthalten. Prüfe ihre Assertions und bestätige, dass sie ohne das erforderliche Verhalten fehlschlagen.",
+      "Die Tests können das Missverständnis der Umsetzung teilen.",
     ],
     [
       widgetStrings(1, "options")[2],
@@ -178,11 +167,11 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       widgetStrings(1, "options")[3],
-      "Die Tests sind wahrscheinlich zu langsam.",
+      "Der Test-Runner hat wohl die falsche Sprache genutzt.",
     ],
     [
       widgetString(1, "explanation"),
-      "Erzeugte Tests sind nicht automatisch unabhängiger Nachweis. Prüfe, ob Anforderung und Assertion zusammenpassen, dazu Fixtures, Mocks und Fehlerverhalten. Eine getrennte Testphase macht das leichter, Pflicht ist sie nicht für jeden Auftrag.",
+      "Erzeugte Tests sind nicht automatisch unabhängiger Nachweis. Prüfe, wie Assertions, Fixtures und Mocks zur Anforderung passen und ob die Tests ohne das Verhalten fehlschlagen. Eine getrennte Testphase hilft, ist aber freiwillig.",
     ],
     [
       widgetString(2, "question"),
@@ -194,7 +183,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       widgetStrings(2, "options")[1],
-      "Die aktuelle Iteration stoppen, belegte Erkenntnisse sichern und mit korrigierter Spezifikation und Grenze neu beginnen.",
+      "Stoppen, Belegtes sichern, mit korrigierter Spezifikation neu starten.",
     ],
     [
       widgetStrings(2, "options")[2],
@@ -203,7 +192,7 @@ export default localizeCodexLessonToGerman(canonical, {
     [widgetStrings(2, "options")[3], "Zu einem anderen KI-Werkzeug wechseln."],
     [
       widgetString(2, "explanation"),
-      "Ändern Kommentare die Prämisse und läuft der Diff auseinander, passt keine lokale Korrektur mehr. Beginne mit einem widerspruchsfreien Vertrag neu. Konvergenz entscheidet, nicht eine feste Zahl von Versuchen.",
+      "Ändern Kommentare die Prämisse und läuft der Diff auseinander, passt keine lokale Korrektur mehr. Beginne mit einem widerspruchsfreien Vertrag neu; Konvergenz entscheidet, egal nach wie vielen Versuchen.",
     ],
   ],
 });

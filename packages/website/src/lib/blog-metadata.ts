@@ -39,15 +39,33 @@ export const BLOG_POSTS: readonly BlogPost[] = [
     titleDe: "Der EU AI Act: was er bedeutet, wenn du keine Juristin bist",
     titleEn: "The EU AI Act: what it means if you are not a lawyer",
     summary:
-      "Was der EU AI Act regelt, was schon gilt und was ab 2. August 2026 dazukommt. Mit dem Stand zum AI Omnibus (Juli 2026), deinen Rechten nach Art. 50, 85 und 86 und praktischen Schritten. Alle Angaben mit Primärquellen.",
+      "Was schon gilt und was ab 2. August 2026 dazukommt. Stand: AI Omnibus, Juli 2026.",
     summaryEn:
-      "What the EU AI Act regulates, what already applies, and what changes on 2 August 2026. Covers the July 2026 AI Omnibus position, rights under Articles 50, 85, and 86, and practical steps. Every legal claim links to a primary source.",
+      "What already applies and what changes on 2 August 2026. As of the AI Omnibus, July 2026.",
     datePublished: "2026-07-16",
     dateModified: "2026-07-28",
     tags: ["EU AI Act", "Rechtliche Grundlagen"],
     tagsEn: ["EU AI Act", "Legal foundations"],
     readingTimeMin: 11,
     postNumber: 1,
+  },
+  {
+    slug: "ki-in-der-ausbildung",
+    titleDe: "KI in der Ausbildung: Fragen für JAV und Betriebsrat",
+    titleEn:
+      "AI in apprenticeships: questions for youth representatives and works councils",
+    // The hub card teaser: one line, at most 12 words.
+    summary: "Rechte von JAV und Betriebsrat, 20 Fragen zum Drucken, mit Quellen.",
+    summaryEn:
+      "Rights of youth reps and works councils, 20 printable questions, with sources.",
+    datePublished: "2026-09-27",
+    dateModified: "2026-09-27",
+    tags: ["KI in der Ausbildung", "Mitbestimmung"],
+    tagsEn: ["AI in apprenticeships", "Co-determination"],
+    // German page: about 3,800 rendered words with the sheet, 16.5 minutes
+    // at 230 words per minute (smoke.test.tsx checks the band).
+    readingTimeMin: 17,
+    postNumber: 2,
   },
 ];
 

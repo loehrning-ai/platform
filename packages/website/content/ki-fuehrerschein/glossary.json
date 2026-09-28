@@ -1,7 +1,7 @@
 [
   {
     "term": "3-Schritt-Prüfung",
-    "definition": "Basisschema für Ausgaben, die vor ihrer Verwendung geprüft werden müssen: (1) Faktisch korrekt? Stimmen Fakten, Zahlen, Daten und Namen? (2) Vollständig? Fehlen relevante Aspekte? (3) Angemessen? Passt der Tonfall, und enthält die Formulierung diskriminierende Aussagen? Prüftiefe und zusätzliche Kontrollen richten sich nach Zweck und Auswirkung.",
+    "definition": "Grundsichtung jeder Ausgabe vor der Verwendung: (1) Faktisch korrekt, also stimmen Fakten, Zahlen, Daten und Namen? (2) Vollständig, oder fehlen relevante Aspekte? (3) Angemessen im Ton und frei von diskriminierenden Aussagen? Prüftiefe und zusätzliche Kontrollen richten sich nach Zweck und Auswirkung.",
     "english": "3-Step Verification",
     "category": "praxis",
     "relatedTerms": ["Halluzination", "Human-in-the-Loop"],
@@ -17,14 +17,14 @@
   },
   {
     "term": "Attention-Mechanismus",
-    "definition": "Mechanismus, der gewichtete Beziehungen zwischen Repräsentationen von Tokens berechnet. Er hilft Transformer-Modellen, Kontextinformationen zu verknüpfen; er belegt weder Relevanz noch Verständnis.",
+    "definition": "Mechanismus, der gewichtete Beziehungen zwischen Token-Repräsentationen berechnet und Transformer-Modellen hilft, Kontext zu verknüpfen. Relevanz oder Verständnis belegt er nicht.",
     "english": "Attention Mechanism",
     "category": "technik",
     "relatedTerms": ["Transformer", "Large Language Model (LLM)"]
   },
   {
     "term": "Auftragsverarbeitung (AVV)",
-    "definition": "Vertragliche Regelung nach DSGVO Art. 28, wenn ein Verantwortlicher einen Auftragsverarbeiter mit der Verarbeitung personenbezogener Daten beauftragt. Ob ein AVV erforderlich und ausreichend ist, hängt von Rollen und Verarbeitung ab.",
+    "definition": "Vertrag nach DSGVO Art. 28, wenn ein Verantwortlicher einen Auftragsverarbeiter mit der Verarbeitung personenbezogener Daten beauftragt. Ob er nötig ist und ausreicht, hängt von Rollen und Verarbeitung ab.",
     "english": "Data Processing Agreement (DPA)",
     "category": "regulatorik",
     "relatedTerms": [
@@ -53,7 +53,7 @@
   },
   {
     "term": "Bias",
-    "definition": "Systematische Abweichung, die unter anderem aus Datenerhebung, Labels, Zielgrößen, Modellierung, Bewertung oder Einsatzkontext entstehen kann. Sie kann Gruppen unterschiedlich betreffen, führt aber nicht in jedem Fall automatisch zu Diskriminierung.",
+    "definition": "Systematische Abweichung, die etwa aus Datenerhebung, Labels, Zielgrößen, Modellierung, Bewertung oder Einsatzkontext entsteht. Sie kann Gruppen unterschiedlich treffen und ist nicht automatisch Diskriminierung.",
     "english": "Bias",
     "category": "technik",
     "relatedTerms": ["Trainingsdaten", "Halluzination"],
@@ -61,7 +61,7 @@
   },
   {
     "term": "Compliance-Mappe",
-    "definition": "Sammlung relevanter Unterlagen zur EU-KI-Verordnung: KI-Bestandsaufnahme, Risikoklassifizierungen, Schulungsbelege, Nutzungsrichtlinien und Incident-Response-Protokolle. Sie unterstützt die Dokumentation, ersetzt aber keine Rechtsprüfung.",
+    "definition": "Sammlung der Unterlagen zur EU-KI-Verordnung: KI-Bestandsaufnahme, Risikoklassifizierungen, Schulungsbelege, Nutzungsrichtlinien und Incident-Response-Protokolle. Eine Rechtsprüfung ersetzt sie nicht.",
     "english": "Compliance Documentation",
     "category": "regulatorik",
     "relatedTerms": ["KI-Kompetenz", "Konformitätsbewertung"],
@@ -69,14 +69,14 @@
   },
   {
     "term": "Computer Vision",
-    "definition": "KI-Teilgebiet für die Verarbeitung und Analyse von Bildern und Videos. Anwendungen: Gesichtserkennung, Qualitätskontrolle, autonomes Fahren.",
+    "definition": "KI-Teilgebiet, das Bilder und Videos verarbeitet, etwa für Gesichtserkennung, Qualitätskontrolle und autonomes Fahren.",
     "english": "Computer Vision",
     "category": "technik",
     "relatedTerms": ["Deep Learning", "Neuronales Netz"]
   },
   {
     "term": "Datenschutz-Folgenabschätzung (DSFA)",
-    "definition": "Bewertung nach DSGVO Art. 35, wenn eine geplante Verarbeitung voraussichtlich ein hohes Risiko für Rechte und Freiheiten natürlicher Personen zur Folge hat. Der Einsatz von KI kann ein Risikofaktor sein, löst aber nicht automatisch eine DSFA aus.",
+    "definition": "Bewertung nach DSGVO Art. 35, wenn eine geplante Verarbeitung voraussichtlich ein hohes Risiko für Rechte und Freiheiten natürlicher Personen hat. KI kann ein Risikofaktor sein, löst eine DSFA aber nicht automatisch aus.",
     "english": "Data Protection Impact Assessment (DPIA)",
     "category": "regulatorik",
     "relatedTerms": ["Auftragsverarbeitung (AVV)", "Betroffenenrechte"],
@@ -84,7 +84,7 @@
   },
   {
     "term": "Datenklassifizierung (4-Stufen-Modell)",
-    "definition": "Beispielmodell zur Einteilung von Unternehmensdaten in vier Schutzstufen. Die Organisation legt Bezeichnungen, Kriterien und zulässige Arbeitsabläufe fest; die Stufe allein bestimmt keine Produktfreigabe.",
+    "definition": "Beispielmodell mit vier Schutzstufen für Unternehmensdaten. Bezeichnungen, Kriterien und zulässige Arbeitsabläufe legt die Organisation fest; die Stufe allein gibt kein Produkt frei.",
     "english": "Data Classification",
     "category": "praxis",
     "relatedTerms": ["Auftragsverarbeitung (AVV)", "Shadow AI"],
@@ -92,21 +92,21 @@
   },
   {
     "term": "Deep Learning",
-    "definition": "Unterbereich des maschinellen Lernens mit künstlichen neuronalen Netzen aus vielen Schichten. Ermöglicht Mustererkennung in komplexen Daten (Bilder, Sprache, Text).",
+    "definition": "Teilbereich des maschinellen Lernens mit neuronalen Netzen aus vielen Schichten, der Muster in komplexen Daten wie Bildern, Sprache und Text erkennt.",
     "english": "Deep Learning",
     "category": "technik",
     "relatedTerms": ["Neuronales Netz", "Maschinelles Lernen (ML)"]
   },
   {
     "term": "Deepfake",
-    "definition": "Mit KI erzeugter oder manipulierter Bild-, Audio- oder Videoinhalt, der echten Personen, Gegenständen, Orten oder Ereignissen ähnelt und fälschlich authentisch erscheinen kann. Die rechtliche Definition richtet sich nach dem jeweiligen Regelwerk.",
+    "definition": "Mit KI erzeugter oder manipulierter Bild-, Audio- oder Videoinhalt, der echten Personen, Gegenständen, Orten oder Ereignissen ähnelt und fälschlich echt wirken kann. Die rechtliche Definition hängt vom Regelwerk ab.",
     "english": "Deepfake",
     "category": "technik",
     "relatedTerms": ["Generative KI", "Bias"]
   },
   {
     "term": "Fine-Tuning",
-    "definition": "Weiteres Training eines vortrainierten Modells auf ausgewählten Daten oder Präferenzen, um sein Verhalten für bestimmte Aufgaben oder Domänen anzupassen. Der Erfolg muss mit getrennten Evaluationen geprüft werden.",
+    "definition": "Weiteres Training eines vortrainierten Modells auf ausgewählten Daten oder Präferenzen, um sein Verhalten für bestimmte Aufgaben oder Domänen anzupassen. Ob es wirkt, zeigen getrennte Evaluationen.",
     "english": "Fine-Tuning",
     "category": "technik",
     "relatedTerms": ["Large Language Model (LLM)", "Trainingsdaten"]
@@ -121,7 +121,7 @@
   },
   {
     "term": "Halluzination",
-    "definition": "Plausibel wirkende Ausgabe eines generativen Modells, die unbelegt, inkonsistent oder sachlich falsch ist. Sprachmodellgenerierung enthält keine automatische Garantie auf Faktenprüfung.",
+    "definition": "Plausibel wirkende Ausgabe eines generativen Modells, die unbelegt, inkonsistent oder sachlich falsch ist. Sprachmodelle prüfen Fakten nicht automatisch.",
     "english": "Hallucination",
     "category": "technik",
     "relatedTerms": ["3-Schritt-Prüfung", "Human-in-the-Loop"],
@@ -136,7 +136,7 @@
   },
   {
     "term": "Human-in-the-Loop",
-    "definition": "Gestaltung, bei der Menschen definierte Überwachungs-, Eingriffs- oder Entscheidungsbefugnisse haben. Artikel 14 der EU-KI-Verordnung verlangt für Hochrisiko-Systeme wirksame menschliche Aufsicht; eine menschliche Letztentscheidung ist nicht für jeden Anwendungsfall identisch ausgestaltet.",
+    "definition": "Gestaltung, bei der Menschen festgelegte Überwachungs-, Eingriffs- oder Entscheidungsbefugnisse haben. Artikel 14 der EU-KI-Verordnung verlangt für Hochrisiko-Systeme wirksame menschliche Aufsicht; wie eine menschliche Letztentscheidung aussieht, hängt vom Anwendungsfall ab.",
     "english": "Human-in-the-Loop",
     "category": "praxis",
     "relatedTerms": ["3-Schritt-Prüfung", "Hochrisiko-KI-System"],
@@ -144,7 +144,7 @@
   },
   {
     "term": "Inferenz",
-    "definition": "Der Vorgang, bei dem ein trainiertes Modell eine Eingabe verarbeitet und eine Ausgabe erzeugt. Jede ChatGPT-Antwort ist eine Inferenz.",
+    "definition": "Vorgang, in dem ein trainiertes Modell aus einer Eingabe eine Ausgabe erzeugt. Jede ChatGPT-Antwort ist eine Inferenz.",
     "english": "Inference",
     "category": "technik",
     "relatedTerms": ["Modell", "Token"]
@@ -167,7 +167,7 @@
   },
   {
     "term": "Konformitätsbewertung",
-    "definition": "Verfahren zur Prüfung, ob die für ein Hochrisiko-KI-System geltenden Anforderungen erfüllt sind. Verfahren und Beteiligung einer notifizierten Stelle hängen von System und Rechtsgrundlage ab; eine CE-Kennzeichnung folgt nur, soweit das Regelwerk sie vorsieht.",
+    "definition": "Verfahren, das prüft, ob ein Hochrisiko-KI-System die geltenden Anforderungen erfüllt. Ablauf und Beteiligung einer notifizierten Stelle hängen von System und Rechtsgrundlage ab; eine CE-Kennzeichnung folgt nur, wo das Regelwerk sie vorsieht.",
     "english": "Conformity Assessment",
     "category": "regulatorik",
     "relatedTerms": ["Hochrisiko-KI-System", "Compliance-Mappe"]
@@ -182,14 +182,14 @@
   },
   {
     "term": "Large Language Model (LLM)",
-    "definition": "Großes Modell für Tokenfolgen, das auf umfangreichen Daten trainiert wird und Wahrscheinlichkeiten für Ausgaben modelliert. Je nach Modell verarbeitet es neben Text weitere Modalitäten; Produktname und Modellversion sind zu unterscheiden.",
+    "definition": "Großes, auf umfangreichen Daten trainiertes Modell, das Wahrscheinlichkeiten für Tokenfolgen modelliert. Manche verarbeiten neben Text weitere Modalitäten; Produktname und Modellversion sind nicht dasselbe.",
     "english": "Large Language Model",
     "category": "technik",
     "relatedTerms": ["Token", "Transformer", "Halluzination"]
   },
   {
     "term": "Maschinelles Lernen (ML)",
-    "definition": "Teilgebiet der KI, in dem Modellparameter anhand von Daten und Optimierungszielen angepasst werden. Überwachtes, unüberwachtes, selbstüberwachtes und bestärkendes Lernen sind verbreitete, nicht abschließende Kategorien.",
+    "definition": "Teilgebiet der KI, in dem Modellparameter anhand von Daten und Optimierungszielen angepasst werden. Verbreitete Kategorien sind unter anderem überwachtes, unüberwachtes, selbstüberwachtes und bestärkendes Lernen.",
     "english": "Machine Learning (ML)",
     "category": "technik",
     "relatedTerms": [
@@ -200,7 +200,7 @@
   },
   {
     "term": "Modell",
-    "definition": "Das trainierte Ergebnis eines ML-Prozesses. Enthält die gelernten Parameter (Gewichte) und kann auf neue Eingaben angewendet werden.",
+    "definition": "Trainiertes Ergebnis eines ML-Prozesses. Es enthält die gelernten Parameter (Gewichte) und wird auf neue Eingaben angewendet.",
     "english": "Model",
     "category": "technik",
     "relatedTerms": ["Parameter", "Fine-Tuning"]
@@ -214,28 +214,28 @@
   },
   {
     "term": "Neuronales Netz",
-    "definition": "Rechenmodell nach dem Vorbild biologischer Neuronen. Besteht aus Schichten verbundener Knoten. Grundlage für Deep Learning.",
+    "definition": "Rechenmodell aus Schichten verbundener Knoten nach dem Vorbild biologischer Neuronen. Es ist die Grundlage für Deep Learning.",
     "english": "Neural Network",
     "category": "technik",
     "relatedTerms": ["Deep Learning", "Parameter"]
   },
   {
     "term": "Overfitting",
-    "definition": "Ein Modell passt sich zu stark an Besonderheiten oder Rauschen der Trainingsdaten an und generalisiert dadurch schlechter auf neue Daten. Auswendiglernen kann ein Symptom sein, ist aber nicht die einzige Form.",
+    "definition": "Ein Modell passt sich zu stark an Besonderheiten oder Rauschen der Trainingsdaten an und generalisiert dadurch schlechter auf neue Daten. Auswendiglernen ist eine mögliche Form.",
     "english": "Overfitting",
     "category": "technik",
     "relatedTerms": ["Trainingsdaten", "Parameter"]
   },
   {
     "term": "Parameter",
-    "definition": "Während des Trainings angepasste Werte eines Modells, etwa Gewichte und Bias-Terme. Die Parameterzahl allein erlaubt keinen belastbaren Vergleich von Qualität, Kosten oder Eignung.",
+    "definition": "Beim Training angepasste Werte eines Modells, etwa Gewichte und Bias-Terme. Die Parameterzahl allein erlaubt keinen belastbaren Vergleich von Qualität, Kosten oder Eignung.",
     "english": "Parameters",
     "category": "technik",
     "relatedTerms": ["Modell", "Fine-Tuning"]
   },
   {
     "term": "Prompt",
-    "definition": "Eingabe an ein generatives System, etwa Anweisung, Frage, Daten und Kontext. Ein klarer Prompt kann die Ausgabe beeinflussen, bestimmt aber weder Richtigkeit noch Qualität allein.",
+    "definition": "Eingabe an ein generatives System, etwa Anweisung, Frage, Daten und Kontext. Ein klarer Prompt beeinflusst die Ausgabe, garantiert aber weder Richtigkeit noch Qualität.",
     "english": "Prompt",
     "category": "praxis",
     "relatedTerms": ["Prompt-Bibliothek", "RCTFC-Schema"],
@@ -243,7 +243,7 @@
   },
   {
     "term": "Prompt-Bibliothek",
-    "definition": "Versionierte Sammlung von Prompt-Vorlagen für wiederkehrende Aufgaben mit Zweck, zulässigen Eingaben, Beispielausgaben, Prüfschritten und Evaluationsergebnissen. Nutzen und Grenzen müssen im konkreten Prozess gemessen werden.",
+    "definition": "Versionierte Sammlung von Prompt-Vorlagen für wiederkehrende Aufgaben, mit Zweck, zulässigen Eingaben, Beispielausgaben, Prüfschritten und Evaluationsergebnissen. Nutzen und Grenzen misst du im eigenen Prozess.",
     "english": "Prompt Library",
     "category": "praxis",
     "relatedTerms": ["Prompt", "RCTFC-Schema"],
@@ -251,7 +251,7 @@
   },
   {
     "term": "Prompt Injection",
-    "definition": "Angriff oder Fehlsteuerung, bei der Anweisungen in Nutzereingaben oder verarbeiteten Inhalten das vorgesehene Verhalten eines Modells beeinflussen. OWASP führt Prompt Injection in den Top 10 für LLM-Anwendungen 2025 als LLM01.",
+    "definition": "Angriff oder Fehlsteuerung, bei der Anweisungen in Nutzereingaben oder verarbeiteten Inhalten ein Modell von seinem vorgesehenen Verhalten abbringen. OWASP führt Prompt Injection in den Top 10 für LLM-Anwendungen 2025 als LLM01.",
     "english": "Prompt Injection",
     "category": "technik",
     "relatedTerms": ["Prompt", "Large Language Model (LLM)"]
@@ -265,7 +265,7 @@
   },
   {
     "term": "RCTFC-Schema",
-    "definition": "Kursvorlage mit den Feldern Rolle, Kontext, Aufgabe, Format und Grenzen. Sie hilft, Anforderungen sichtbar zu machen; nicht jede Aufgabe braucht alle Felder, und die Vorlage garantiert keine korrekte Ausgabe.",
+    "definition": "Kursvorlage mit den Feldern Rolle, Kontext, Aufgabe, Format und Grenzen, die Anforderungen sichtbar macht. Nicht jede Aufgabe braucht alle Felder, und eine korrekte Ausgabe garantiert die Vorlage nicht.",
     "english": "RCTFC Prompt Framework",
     "category": "praxis",
     "relatedTerms": ["Prompt", "Prompt-Bibliothek"],
@@ -273,14 +273,14 @@
   },
   {
     "term": "Reinforcement Learning",
-    "definition": "ML-Typ, bei dem ein Agent durch Versuch und Irrtum lernt. Belohnung für erwünschtes Verhalten, Bestrafung für unerwünschtes. Einsatz: Robotik, Spielstrategien.",
+    "definition": "ML-Typ, bei dem ein Agent durch Versuch und Irrtum lernt, mit Belohnung für erwünschtes und Bestrafung für unerwünschtes Verhalten. Einsatz etwa in Robotik und bei Spielstrategien.",
     "english": "Reinforcement Learning",
     "category": "technik",
     "relatedTerms": ["Maschinelles Lernen (ML)", "Supervised Learning"]
   },
   {
     "term": "Shadow AI",
-    "definition": "Nutzung von KI-Diensten oder -Funktionen außerhalb des genehmigten Inventars und der vorgesehenen Kontrollen. Das kann Verbraucherangebote, Erweiterungen, integrierte Funktionen oder lokale Modelle betreffen.",
+    "definition": "Nutzung von KI-Diensten oder -Funktionen außerhalb des genehmigten Inventars und der vorgesehenen Kontrollen, etwa Verbraucherangebote, Erweiterungen, integrierte Funktionen oder lokale Modelle.",
     "english": "Shadow AI",
     "category": "praxis",
     "relatedTerms": [
@@ -291,14 +291,14 @@
   },
   {
     "term": "Supervised Learning",
-    "definition": "ML-Typ mit gelabelten Trainingsdaten. Das Modell lernt die Zuordnung Eingabe zu Ausgabe aus Beispielen. Einsatz: Spamfilter, Kreditscoring, Bilderkennung.",
+    "definition": "ML-Typ, der aus gelabelten Beispielen die Zuordnung von Eingabe zu Ausgabe lernt, etwa für Spamfilter, Kreditscoring und Bilderkennung.",
     "english": "Supervised Learning",
     "category": "technik",
     "relatedTerms": ["Maschinelles Lernen (ML)", "Unsupervised Learning"]
   },
   {
     "term": "Token",
-    "definition": "Kleinste Verarbeitungseinheit eines LLM. Kann ein Wort, Wortteil oder Satzzeichen sein. Modelle generieren Text Token für Token.",
+    "definition": "Kleinste Verarbeitungseinheit eines LLM, etwa ein Wort, Wortteil oder Satzzeichen. Modelle erzeugen Text Token für Token.",
     "english": "Token",
     "category": "technik",
     "relatedTerms": ["Large Language Model (LLM)", "Inferenz"]
@@ -312,14 +312,14 @@
   },
   {
     "term": "Transformer",
-    "definition": "2017 vorgestellte neuronale Netzarchitektur, die Attention und positionsbezogene Informationen nutzt. Sie bildet die Grundlage vieler aktueller Sprachmodelle und erlaubt stark parallelisierbares Training; nicht jedes moderne Modell ist identisch aufgebaut.",
+    "definition": "2017 vorgestellte Architektur neuronaler Netze, die Attention und Positionsinformationen nutzt. Sie liegt vielen aktuellen Sprachmodellen zugrunde und erlaubt stark parallelisiertes Training; moderne Modelle sind unterschiedlich aufgebaut.",
     "english": "Transformer",
     "category": "technik",
     "relatedTerms": ["Attention-Mechanismus", "Large Language Model (LLM)"]
   },
   {
     "term": "Unsupervised Learning",
-    "definition": "ML-Typ ohne gelabelte Daten. Das Modell findet selbständig Muster und Strukturen. Einsatz: Kundensegmentierung, Anomalieerkennung, Clustering.",
+    "definition": "ML-Typ ohne gelabelte Daten, bei dem das Modell selbst Muster und Strukturen findet, etwa für Kundensegmentierung, Anomalieerkennung und Clustering.",
     "english": "Unsupervised Learning",
     "category": "technik",
     "relatedTerms": ["Maschinelles Lernen (ML)", "Supervised Learning"]

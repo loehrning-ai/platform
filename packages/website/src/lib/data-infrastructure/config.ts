@@ -28,7 +28,7 @@ export const DATA_INFRASTRUCTURE_CONFIG = {
   workshopQuizPassThreshold: 0.7,
   certificateTitle: "Data Infrastructure",
   certificateSubtitle:
-    "Certificate of participation. Issued by loehrning.ai, an independent education platform. This confirmation is not an accredited qualification.",
+    "Locally generated certificate of participation from the independent learning platform loehrning.ai. Not a state-recognized or accredited qualification.",
   certificateModules: [
     "Foundations: mental model, CAP/PACELC, modeling",
     "Storage: row vs columnar, Parquet internals, the lakehouse, partitioning",
@@ -40,7 +40,7 @@ export const DATA_INFRASTRUCTURE_CONFIG = {
   quizPassMessage: "Data Infrastructure course completed.",
   certificateFileStem: "Data-Infrastructure",
   recordNoun: {
-    label: "Certificate of Participation",
+    label: "Certificate of participation",
     possessive: "Your certificate of participation",
     demonstrative: "This certificate of participation",
   },

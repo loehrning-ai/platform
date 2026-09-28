@@ -13,7 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
     title:
       locale === "de"
         ? `Abschlussquiz: ${bundle.config.title}`
-        : `Workshop quiz: ${bundle.config.title}`,
+        : `Final quiz: ${bundle.config.title}`,
     description:
       locale === "de"
         ? "19 Übungsfragen, 70 Prozent zum Bestehen, 25 Minuten Zeitlimit."

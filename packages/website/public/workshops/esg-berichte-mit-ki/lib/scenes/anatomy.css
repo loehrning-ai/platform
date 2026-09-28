@@ -1,0 +1,158 @@
+/* anatomy: the location-based waterfall from the raw-folder answer (hatch) to the right total (solid
+   ink); one bar per correction (ink), running total in slate. Press 5 draws the swing band in Mennige. */
+
+#anatomy > .an-chart {
+  position: absolute;
+  top: 236px;
+  left: var(--margin-x);
+}
+
+#anatomy .wf {
+  display: block;
+  overflow: visible;
+}
+
+#anatomy .wf-bar--raw {
+  fill: url(#story-hatch);
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+#anatomy .wf-bar--change {
+  fill: var(--ink);
+}
+
+#anatomy .wf-bar--ink {
+  fill: var(--ink);
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+#anatomy .wf-link {
+  fill: none;
+  stroke: var(--slate-soft);
+  stroke-width: 3;
+}
+
+#anatomy .wf-axis {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+#anatomy .wf-break {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+#anatomy .wf-val {
+  fill: var(--ink);
+  font-family: var(--sans);
+  font-size: 30px;
+  font-weight: 700;
+  font-feature-settings: "tnum" 1;
+}
+
+#anatomy .wf-name {
+  fill: var(--ink);
+  font-family: var(--sans);
+  font-size: 24px;
+  font-weight: 600;
+}
+
+#anatomy .wf-name--sub {
+  fill: var(--slate);
+  font-weight: 500;
+}
+
+#anatomy .wf-swing__line {
+  fill: none;
+  stroke: var(--mennige);
+  stroke-width: 3;
+  stroke-dasharray: 10 8;
+}
+
+#anatomy .wf-swing__bracket {
+  fill: none;
+  stroke: var(--mennige);
+  stroke-width: 4;
+}
+
+#anatomy .wf-swing__label {
+  fill: var(--mennige);
+  font-family: var(--sans);
+  font-size: 26px;
+  font-weight: 700;
+}
+
+#anatomy > .an-cards {
+  position: absolute;
+  top: 260px;
+  right: var(--margin-x);
+  display: grid;
+  width: 360px;
+  gap: 20px;
+}
+
+#anatomy .an-card {
+  display: grid;
+  gap: 10px;
+  max-width: none;
+  font-size: 22px;
+}
+
+#anatomy .an-card p {
+  margin: 0;
+}
+
+#anatomy > .an-caption {
+  position: absolute;
+  top: 790px;
+  left: var(--margin-x);
+  max-width: 1300px;
+}
+
+#anatomy > .an-accident {
+  position: absolute;
+  top: 860px;
+  left: var(--margin-x);
+}
+
+#anatomy > .an-predict {
+  position: absolute;
+  top: 800px;
+  left: var(--margin-x);
+  display: flex;
+  width: 1728px;
+  align-items: center;
+  gap: 24px;
+  padding: 24px 32px;
+  border-top: 3px solid var(--ink);
+  background: var(--beton);
+}
+
+#anatomy .an-predict p {
+  margin: 0;
+  font-size: var(--t-h2);
+  font-weight: 700;
+}
+
+/* The right total is written inside its own bar, clear of the swing band's top line. */
+#anatomy .wf-val--end {
+  fill: var(--papier);
+  font-size: 26px;
+}
+
+/* The title asks until the swing band answers it (press 5); the hidden half takes no space. */
+#anatomy .scene-title .is-step-hidden {
+  display: none;
+}
+
+/* Until the prediction vote is over, the right total is a question mark, not a bar. */
+#anatomy .wf-pending {
+  fill: var(--slate);
+  font-family: var(--sans);
+  font-size: 72px;
+  font-weight: 700;
+}

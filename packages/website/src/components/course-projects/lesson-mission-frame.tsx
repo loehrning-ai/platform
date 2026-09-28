@@ -41,7 +41,7 @@ export function LessonMissionFrame({
           compactOnMobile && !showHeading && "sr-only sm:not-sr-only",
         )}
       >
-        <p className="font-mono text-xs font-black uppercase tracking-[0.16em] text-brand-orange-dark">
+        <p className="text-label text-muted-foreground">
           {frame.label}
         </p>
         {showHeading ? (
@@ -56,7 +56,12 @@ export function LessonMissionFrame({
           )
         ) : null}
       </div>
-      <div className="min-w-0 border-l-4 border-brand-orange pl-3">
+      <div
+        className={cn(
+          "min-w-0 border-l-2 border-scene-line pl-3",
+          compactOnMobile && "max-sm:border-l-0 max-sm:pl-0",
+        )}
+      >
         <p className="break-words text-sm font-semibold leading-snug text-foreground">
           {frame.objective}
         </p>
@@ -72,9 +77,11 @@ export function LessonMissionFrame({
               <li
                 key={concept}
                 className={cn(
-                  "max-w-full break-words border border-border bg-background px-2 py-1 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground",
+                  "max-w-full break-words border border-hairline px-2 py-1 text-caption font-semibold text-foreground",
+                  // On a phone the concepts read as a sentence-case caption
+                  // run; from sm they are hairline tags.
                   compactOnMobile &&
-                    "border-0 bg-transparent px-0 py-0 sm:border sm:bg-background sm:px-2 sm:py-1",
+                    "max-sm:border-0 max-sm:px-0 max-sm:py-0 max-sm:text-muted-foreground",
                 )}
               >
                 {concept}

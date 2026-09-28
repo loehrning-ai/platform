@@ -50,15 +50,20 @@ describe("<MarkdownRenderer>", () => {
     expect(link).toHaveAttribute("href", "https://loehrning.ai");
     expect(link).toHaveAttribute("target", "_blank");
     expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    expect(link.className).toContain("text-foreground");
+    expect(link.className).not.toContain("text-brand-orange");
   });
 
-  it("styles inline code with the orange accent (no block class)", () => {
+  it("styles inline code as a quiet ink token on a recessed tone (no block class)", () => {
     render(<MarkdownRenderer content={"Ein `inlineWort` im Satz."} />);
 
     const inline = screen.getByText("inlineWort");
     expect(inline.tagName).toBe("CODE");
-    expect(inline.className).toContain("text-brand-orange");
-    expect(inline.className).not.toContain("block");
+    expect(inline.className).toContain("text-foreground");
+    expect(inline.className).toContain("bg-inset");
+    expect(inline.className).not.toContain("text-brand-orange");
+    expect(inline.className).not.toMatch(/(^|\s)border(\s|$)/);
+    expect(inline.className).not.toMatch(/(^|\s)block(\s|$)/);
   });
 
   it("styles a fenced code block with the block class", () => {

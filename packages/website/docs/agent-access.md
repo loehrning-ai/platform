@@ -47,7 +47,7 @@ answer.
 | Path | Method | What it does | Gate |
 | --- | --- | --- | --- |
 | `/oauth/consent` | GET | The consent page the Supabase OAuth server sends a learner to (`?authorization_id=`). Shows client name and id, registered site, redirect host, and one sentence per requested scope. | `isOAuthServerReady()`, else 404 |
-| `/oauth/consent/entscheidung` | POST | Approve or deny. Origin and `sec-fetch-site` checks, 2 KB form ceiling, then a 303 either to the client's redirect or back to the page with a named error. | same |
+| `/oauth/consent/entscheidung` | POST | Approve or deny. Origin and `sec-fetch-site` checks, 2 KB form ceiling, then either a private same-origin page that continues to the client's redirect (zero-delay refresh plus a visible link, because the enforced `form-action 'self'` makes Chromium refuse a cross-origin 303 after a form POST) or a 303 back to the page with a named error. | same |
 | `/konto/ki` | GET | The account page: personal access tokens, granted OAuth clients, the last 50 agent events, and the chat on the learner's own key. | account runtime |
 | `/api/account/agent-tokens` | POST, DELETE | Mint a personal access token (shown once) or revoke one by id. | `isAgentAccessReady()`, else 503 `agent_access_disabled` |
 | `/api/account/llm-key` | POST, DELETE | Store, replace or delete the learner's own provider key. | `isByoChatReady()`, else 503 `byo_chat_not_ready` |
@@ -120,6 +120,12 @@ the token:
    tolerance for a client clock running ahead.
 5. `sub` must be a UUID. That value, and nothing claimed by the client, becomes
    the account id.
+
+None of these steps asks whether the grant still stands. An access token
+issued before the learner revoked the grant or signed out keeps working on this
+endpoint until `exp`, so keep the OAuth access-token lifetime at 3600 seconds
+or less. The Auth session check that closes this gap ships with its migration
+(security audit F5 follow-up).
 
 Audit-trail label: `oauth:<client id>`.
 

@@ -30,6 +30,12 @@ describe("DsChapterSidebar ", () => {
     const fundamentals = screen.getByText("Fundamentals").closest("a");
     expect(fundamentals).toHaveAttribute("aria-current", "page");
     expect(fundamentals?.className).toContain("active");
+    // Werkzeichnung: an ink square marker and 600 weight, no copper tint.
+    expect(fundamentals).toHaveClass("font-semibold");
+    expect(fundamentals?.className).not.toMatch(/bg-brand-orange|kupfer-mist/);
+    expect(
+      fundamentals?.querySelector("[data-active-marker]"),
+    ).toHaveClass("bg-foreground");
   });
 
   it("points home at the bare course root and numbered chapters at their own slug", () => {

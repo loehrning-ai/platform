@@ -250,7 +250,7 @@ describe("covered course outcomes", () => {
       english.find((item) => item.id === "ki-grundlagen-verstehen"),
     ).toMatchObject({
       label: "Understand AI fundamentals",
-      courseTitle: "AI Fundamentals",
+      courseTitle: "Everyday AI Literacy",
     });
     expect(
       german.find((item) => item.id === "metric-before-model"),

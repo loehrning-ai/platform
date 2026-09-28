@@ -47,7 +47,9 @@ describe("English demo surfaces", () => {
     vi.useFakeTimers();
     renderEnglish(<WordDemo />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Build sample brief" }));
+    // Final state first: the sample brief is already built on load.
+    expect(screen.getByText("Approval pending")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Rebuild sample brief" }));
 
     // The generate button now runs the same staged ladder as German
     // (style-match → draft → export) instead of resolving instantly.
@@ -58,7 +60,7 @@ describe("English demo surfaces", () => {
       vi.advanceTimersByTime(2400);
     });
 
-    expect(screen.getByText("APPROVAL PENDING")).toBeInTheDocument();
+    expect(screen.getByText("Approval pending")).toBeInTheDocument();
     expect(
       screen.getByText(/It is an assumption, not an approval/),
     ).toBeInTheDocument();
@@ -81,7 +83,7 @@ describe("English demo surfaces", () => {
     );
     expect(screen.getByText(/Document the lawful basis/)).toBeInTheDocument();
     // Default score threshold (70) qualifies Beta's 74/100 sample score.
-    expect(screen.getByText(/QUALIFIED . NOT SENT/)).toBeInTheDocument();
+    expect(screen.getByText("Qualified, not sent")).toBeInTheDocument();
   });
 
   it("returns sourced contract copy and an explicit no-match state", () => {

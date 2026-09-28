@@ -76,8 +76,8 @@ export function FeatureStoreDiagram() {
         "Feature Store und Training-Serving-Skew",
       )}
       caption={text(
-        "The toggle swaps two hard-coded teaching scenarios; it does not run a feature store or measure skew. Shared definitions can reduce duplicated logic, but parity still depends on versions, data freshness, point-in-time joins, and online/offline tests.",
-        "Der Schalter wechselt zwischen zwei fest programmierten Lehrszenarien; er führt keinen Feature Store aus und misst keinen Skew. Gemeinsame Definitionen können doppelte Logik reduzieren, doch Parität hängt weiterhin von Versionen, Datenfrische, zeitpunktkorrekten Joins und Online-/Offline-Tests ab.",
+        "The toggle swaps two hard-coded scenarios and does not measure skew. Parity still depends on versions, data freshness, point-in-time joins and online/offline tests.",
+        "Der Schalter wechselt zwischen zwei festen Szenarien und misst keinen Skew. Parität hängt weiterhin von Versionen, Datenfrische, zeitpunktkorrekten Joins und Online-/Offline-Tests ab.",
       )}
     >
       <div

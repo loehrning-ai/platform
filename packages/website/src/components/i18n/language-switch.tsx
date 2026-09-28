@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { cx as cn } from "@/components/werk/cx";
 import { GLOBAL_NAVIGATION_COPY } from "@/lib/i18n/global-copy";
 import { localizeHref } from "@/lib/i18n/locale";
 import { URL_STATE_CHANGE_EVENT } from "@/lib/navigation/url-state";
@@ -10,6 +10,16 @@ import { useLocale } from "./locale-context";
 
 interface LanguageSwitchProps {
   readonly className?: string;
+}
+
+interface CompactLanguageSwitchProps extends LanguageSwitchProps {
+  /**
+   * Below lg the bar has no room for a pair whose current half does nothing
+   * when tapped. `compact` renders one link to the other language there and
+   * keeps the DE/EN pair from lg, which only the no-script layout reaches in
+   * the compact cluster.
+   */
+  readonly compact?: boolean;
 }
 
 interface SwitchLinksProps extends LanguageSwitchProps {
@@ -32,7 +42,7 @@ function SwitchLinks({
       aria-label={copy.language}
       data-language-switch
       className={cn(
-        "relative isolate inline-flex min-h-11 shrink-0 items-center overflow-hidden rounded-xl border border-foreground/15 bg-paper p-0.5",
+        "relative inline-flex min-h-11 shrink-0 items-center",
         className,
       )}
     >
@@ -49,22 +59,33 @@ function SwitchLinks({
             key={targetLocale}
             href={`${localizeHref(pathname, targetLocale)}${suffix}`}
             aria-current={active ? "page" : undefined}
-            aria-label={active ? `${label}, ${copy.language}` : actionLabel}
+            aria-label={
+              active
+                ? `${targetLocale.toUpperCase()}, ${label}, ${copy.language}`
+                : actionLabel
+            }
             hrefLang={targetLocale}
             className={cn(
-              "relative inline-flex min-h-11 min-w-11 items-center justify-center rounded-[0.55rem] px-2 pb-1 font-ui-mono text-xs font-bold uppercase tracking-[0.08em] outline-none transition-[background-color,color,transform] duration-150 focus-visible:z-10 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-cobalt motion-reduce:transition-none",
+              "relative inline-flex min-h-11 min-w-11 items-center justify-center px-2 text-label tabular-nums outline-none transition-colors duration-[120ms] focus-visible:z-10 focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange motion-reduce:transition-none",
               active
-                ? "bg-brand-acid/85 text-foreground"
-                : "text-muted-foreground hover:bg-brand-pink/45 hover:text-foreground",
+                ? "text-foreground"
+                : "font-medium text-muted-foreground hover:text-foreground",
             )}
           >
             {targetLocale.toUpperCase()}
-            {active ? (
-              <span
-                aria-hidden="true"
-                className="absolute bottom-1 left-1/2 h-0.5 w-4 -translate-x-1/2 bg-brand-cobalt"
-              />
-            ) : null}
+            {/* A square ink underline marks the active language; weight and
+                aria-current carry the same state without colour. It sits on
+                the bottom edge of the 44px target, the same baseline as the
+                current-page rule of the nav items beside it.
+                The focus ring is `inset-ring`: with the --color-inset token,
+                Tailwind v4 also reads `ring-inset` as a (Beton) ring colour. */}
+            <span
+              aria-hidden="true"
+              className={cn(
+                "absolute bottom-0 left-1/2 h-0.5 w-5 -translate-x-1/2",
+                active ? "bg-foreground" : "bg-transparent",
+              )}
+            />
           </a>
         );
       })}
@@ -72,7 +93,45 @@ function SwitchLinks({
   );
 }
 
-export function LanguageSwitch({ className }: LanguageSwitchProps) {
+/**
+ * One 44px link to the other language: "EN" on German pages, "DE" on English
+ * ones. It names its action, declares the target language and carries the
+ * same Mennige inset ring as the pair.
+ */
+function OtherLanguageLink({
+  className,
+  locale,
+  pathname,
+  suffix,
+}: SwitchLinksProps) {
+  const copy = GLOBAL_NAVIGATION_COPY[locale];
+  const targetLocale = locale === "de" ? "en" : "de";
+  const actionLabel =
+    targetLocale === "de" ? copy.switchToGerman : copy.switchToEnglish;
+  // The wrapper carries the hook every language-switch query uses, so a
+  // `[data-language-switch] a` lookup finds this link the way it finds the
+  // pair's.
+  return (
+    <span
+      data-language-switch="compact"
+      className={cn("inline-flex shrink-0", className)}
+    >
+      <a
+        href={`${localizeHref(pathname, targetLocale)}${suffix}`}
+        aria-label={actionLabel}
+        hrefLang={targetLocale}
+        className="relative inline-flex min-h-11 min-w-11 items-center justify-center px-2 text-label tabular-nums text-foreground outline-none transition-colors duration-[120ms] hover:bg-card-hover focus-visible:z-10 focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange motion-reduce:transition-none"
+      >
+        {targetLocale.toUpperCase()}
+      </a>
+    </span>
+  );
+}
+
+export function LanguageSwitch({
+  className,
+  compact = false,
+}: CompactLanguageSwitchProps) {
   const locale = useLocale();
   const pathname = usePathname() ?? "/";
   const [suffix, setSuffix] = useState("");
@@ -92,9 +151,28 @@ export function LanguageSwitch({ className }: LanguageSwitchProps) {
     };
   }, [pathname]);
 
-  // The server and first client render use the same two concrete anchors.
+  // The server and first client render use the same concrete anchors.
   // Query and fragment state only update their href attributes after hydration;
   // no Suspense fallback or template replacement can move the root cursor.
+  if (compact) {
+    return (
+      <>
+        <SwitchLinks
+          className={cn("hidden lg:inline-flex", className)}
+          locale={locale}
+          pathname={pathname}
+          suffix={suffix}
+        />
+        <OtherLanguageLink
+          className={cn("lg:hidden", className)}
+          locale={locale}
+          pathname={pathname}
+          suffix={suffix}
+        />
+      </>
+    );
+  }
+
   return (
     <SwitchLinks
       className={className}

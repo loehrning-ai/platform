@@ -133,7 +133,7 @@ const DEFAULT_CASES: readonly FailureCase[] = [
     output:
       "Ihr Geschäftskonto weist aktuell einen Stand von 48.213,77 EUR auf, zuletzt aktualisiert am 14. Mai um 09:42 Uhr.",
     correct: "halluzination",
-    why: "Das Modell hat keinen Zugriff auf Ihr Bankkonto. Saldo, Datum und Uhrzeit sind frei erfunden, klingen aber plausibel.",
+    why: "Das Modell hat keinen Zugriff auf das Bankkonto. Saldo, Datum und Uhrzeit sind erfunden, klingen aber plausibel.",
   },
   {
     id: "c2",
@@ -142,7 +142,7 @@ const DEFAULT_CASES: readonly FailureCase[] = [
     output:
       "Das kann ich leider nicht tun, da ich keine personenbezogenen Daten zu echten Personen oder Unternehmen generieren darf.",
     correct: "verweigerung",
-    why: "Die Bitte war völlig harmlos: ausdrücklich fiktive Beispieldaten. Das ist eine klassische, übervorsichtige Verweigerung.",
+    why: "Gefragt waren harmlose, fiktive Beispieldaten. Die Verweigerung war unnötig.",
   },
   {
     id: "c3",
@@ -151,7 +151,7 @@ const DEFAULT_CASES: readonly FailureCase[] = [
     output:
       "Gerne! Hier ist eine Übersicht Ihrer Artikel:\n\n- A-1001: Schraube M6 (240 Stück)\n- A-1002: Dichtung NBR (58 Stück)\n- A-1003: Lagerbock (12 Stück)\n\nSoll ich noch etwas ergänzen?",
     correct: "formatdrift",
-    why: "Es war ausdrücklich eine reine CSV ohne Erklärung gefordert. Geliefert wurde eine Aufzählung mit Begrüßung und Rückfrage.",
+    why: "Gefordert war eine reine CSV ohne Erklärung. Geliefert kam eine Liste mit Einleitung und Rückfrage.",
   },
   {
     id: "c4",
@@ -160,7 +160,7 @@ const DEFAULT_CASES: readonly FailureCase[] = [
     output:
       "Reklamationen lassen sich oft vermeiden. Hier sind sieben bewährte Tipps für ein gutes Beschwerdemanagement: 1. Schnell reagieren 2. Verständnis zeigen 3. Lösung anbieten ...",
     correct: "themaverfehlung",
-    why: "Statt das konkrete Schreiben zusammenzufassen, ist das Modell auf allgemeine Ratschläge zum Beschwerdemanagement abgeschweift.",
+    why: "Das Modell gibt allgemeine Tipps, statt das konkrete Schreiben zusammenzufassen.",
   },
   {
     id: "c5",
@@ -169,7 +169,7 @@ const DEFAULT_CASES: readonly FailureCase[] = [
     output:
       "Aktuell freigegeben ist Version 3.2 der Angebots-Vorlage, ausgerollt am 3. April mit überarbeitetem Rabatt-Block und neuem Footer.",
     correct: "halluzination",
-    why: "Das Modell kann Ihre interne Versionierung nicht kennen. Versionsnummer, Datum und Änderungen sind erfunden.",
+    why: "Das Modell kann die interne Versionierung nicht kennen. Versionsnummer, Datum und Änderungen sind erfunden.",
   },
 ];
 
@@ -177,7 +177,7 @@ export function FailureTaggerWidget({
   lessonId,
   cpId,
   title = "Benenne den Fehlertyp",
-  scenario = "Fünf echt aussehende KI-Antworten, jede auf ihre Art kaputt. Ordne jeder zu, wie sie schiefgelaufen ist. Wer einen Fehlertyp benennen kann, kann ihn auch abstellen.",
+  scenario = "Fünf KI-Antworten, jede auf eine Art falsch. Ordne jeder ihren Fehlertyp zu.",
   cases = DEFAULT_CASES,
   modes = DEFAULT_MODES,
   passThreshold,

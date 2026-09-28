@@ -21,15 +21,15 @@ const QUEUE_COPY = {
     current: "Aktuelle Lektion",
     unavailableShort: "Lokal nicht aktiviert",
     unavailable:
-      "Der lokale Lernstand ist für die aktuelle Identität noch nicht verfügbar.",
+      "Dein lokaler Lernstand ist noch nicht verfügbar.",
     unscheduled:
-      "Noch kein Abrufplan. Schließe den Abruf dieser Lektionsmission ab, um den 1/7/21-Tage-Zyklus zu starten.",
+      "Noch kein Abrufplan. Der 1/7/21-Tage-Zyklus startet nach dem Abruf dieser Mission.",
     dueNow: "Jetzt fällig",
     dueInstruction:
-      "Gehe zur Lektionsmission und wähle dort den Schritt Abruf.",
+      "Wähle in der Lektionsmission den Schritt Abruf.",
     legacyDue: "Erneute Evidenz erforderlich",
     legacyInstruction:
-      "Dieser frühere Abruf enthält keinen neuen Ausführungsbeleg. Gehe zur Lektionsmission und schließe Ausführen, Evidenz und Revision erneut ab; erst danach ist Abruf verfügbar.",
+      "Diesem Abruf fehlt ein aktueller Ausführungsbeleg. Schließ in der Lektionsmission Ausführen, Evidenz und Revision erneut ab, dann ist Abruf wieder verfügbar.",
     scheduled: "Noch nicht fällig",
     nextDue: "Fällig am",
     open: "Zur aktuellen Lektionsmission",
@@ -40,7 +40,7 @@ const QUEUE_COPY = {
     openDueLesson: "Fällige Lektion öffnen",
     remainingDue: (count: number) => `und ${count} weitere`,
     localBoundary:
-      "Die Anzeige liest nur feste Lektions-IDs, Stufen und Zeitpunkte aus dem lokalen Lernspeicher. Geschriebene Abrufe werden weder angezeigt noch gespeichert.",
+      "Deine geschriebenen Abrufe werden hier weder angezeigt noch gespeichert.",
     standings: {
       "repair-required": "Reparatur erforderlich",
       passed: "einmal bestanden",
@@ -56,14 +56,14 @@ const QUEUE_COPY = {
     current: "Current lesson",
     unavailableShort: "Local mode inactive",
     unavailable:
-      "Local learning state is not available for the current identity yet.",
+      "Your local learning state is not available yet.",
     unscheduled:
-      "No retrieval schedule yet. Complete this lesson mission's retrieval to start the 1/7/21-day cycle.",
+      "No retrieval schedule yet. The 1/7/21-day cycle starts after this mission's retrieval.",
     dueNow: "Due now",
-    dueInstruction: "Go to the lesson mission, then select the Retrieve step.",
+    dueInstruction: "Select the Retrieve step in the lesson mission.",
     legacyDue: "Fresh evidence required",
     legacyInstruction:
-      "This earlier review has no current Run receipt. Go to the lesson mission and complete Run, Inspect, and Revise again; Retrieve becomes available afterward.",
+      "This review lacks a current Run receipt. Complete Run, Inspect and Revise again in the lesson mission to unlock Retrieve.",
     scheduled: "Not due yet",
     nextDue: "Due on",
     open: "Go to current lesson mission",
@@ -74,7 +74,7 @@ const QUEUE_COPY = {
     openDueLesson: "Open due lesson",
     remainingDue: (count: number) => `and ${count} more`,
     localBoundary:
-      "This view reads only fixed lesson IDs, levels, and timestamps from local learning storage. Written recall is neither displayed nor stored.",
+      "Your written recall is neither shown nor saved here.",
     standings: {
       "repair-required": "repair required",
       passed: "passed once",
@@ -158,19 +158,30 @@ export function RetrievalQueue({
     locale,
   );
   const currentLessonPath = currentLessonHref.split("#", 1)[0];
+  // On phones an empty queue ("0 reviews are due", or no local state yet)
+  // is an 80px box with nothing to do, sitting between the mission and the
+  // lesson text. It stays out of the phone layout until a review is due.
+  // From sm it renders as before; the server markup matches the empty state,
+  // so nothing jumps after hydration.
+  const phoneQuiet = manuallyExpanded === null && dueCount === 0;
 
   return (
     <section
       aria-labelledby="course-retrieval-queue-title"
-      className="mb-6 min-w-0 border-2 border-foreground bg-card [overflow-wrap:anywhere]"
+      data-retrieval-queue-quiet={phoneQuiet ? "" : undefined}
+      className={`mb-6 min-w-0 border-2 border-foreground bg-card [overflow-wrap:anywhere] max-sm:border ${phoneQuiet ? "max-sm:hidden" : ""}`}
     >
       <div
         data-retrieval-queue-header
-        className="grid min-h-14 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 px-3 py-3 sm:flex sm:px-4"
+        className="grid min-h-14 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 px-3 py-3 max-sm:py-2 sm:flex sm:px-4"
       >
-        <span className="h-3 w-3 shrink-0 rounded-full bg-brand-orange ring-4 ring-brand-orange/20" />
+        <span
+          aria-hidden="true"
+          className={`h-3 w-3 shrink-0 rounded-full ${dueCount > 0 ? "bg-brand-orange ring-4 ring-brand-orange/20" : "bg-muted-foreground ring-0"}`}
+        />
         <span className="min-w-0 flex-1">
-          <span className="block font-mono text-xs font-black uppercase tracking-[0.16em] text-brand-orange-dark">
+          {/* Below sm the labels are sentence case; from sm unchanged. */}
+          <span className="block font-mono text-xs font-black uppercase tracking-[0.16em] text-brand-orange-dark max-sm:font-sans max-sm:text-[13px] max-sm:font-semibold max-sm:normal-case max-sm:tracking-normal max-sm:text-muted-foreground">
             {copy.eyebrow}
           </span>
           <span
@@ -183,7 +194,7 @@ export function RetrievalQueue({
         <span
           role="status"
           aria-live="polite"
-          className="col-start-2 row-start-2 min-w-0 text-left font-mono text-xs font-black uppercase tracking-[0.06em] text-foreground [overflow-wrap:anywhere] sm:shrink-0 sm:text-right"
+          className="col-start-2 row-start-2 min-w-0 text-left font-mono text-xs font-black uppercase tracking-[0.06em] text-foreground [overflow-wrap:anywhere] max-sm:font-sans max-sm:text-[13px] max-sm:font-normal max-sm:normal-case max-sm:tracking-normal max-sm:text-muted-foreground sm:shrink-0 sm:text-right"
         >
           {available ? copy.due(dueCount) : copy.unavailableShort}
         </span>

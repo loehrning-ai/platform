@@ -2,14 +2,12 @@
 
 ## In plain words
 
-FOLDLINE is a subscription company. Your data may be about helmets, people, web visits or support
-tickets. The traps are the same. Every business has **levels** (how much is there at one moment),
+FOLDLINE sells subscriptions. Your data may be about helmets, people, web visits or support
+tickets, with the same traps. Every business has **levels** (how much is there at one moment),
 **changes** (what flowed in or out during a period) and **rates** (one count divided by another).
-An AI that has to guess which is which will add the wrong things. Each pack below shows one
-business, one question, the wrong answer an AI can plausibly give from a raw export, and the
-approved view that makes the right answer the easy one.
-
-Each pack is one page. Read the one closest to your own work first.
+An AI that has to guess which is which adds the wrong things. Each one-page pack shows one
+business, one question, a plausible wrong AI answer from a raw export, and the approved view that
+makes the right answer easy. Start with the one closest to your work.
 
 ## The transfer table
 
@@ -23,18 +21,6 @@ Each pack is one page. Read the one closest to your own work first.
 
 Every pack uses Q2 2026 (April to June), month-end levels, the clock 2026-07-01 09:00 UTC and
 synthetic data.
-
-## What every pack contains
-
-1. The business question, and the decision it changes.
-2. The level / change / rate table, with "May I add it?" for each.
-3. The five boxes of the [question card](../../QUESTION-CARD.md), filled in.
-4. Bad export names next to good serving names, with the naming rule each one breaks.
-5. The serving view as SQL (runnable, in [`sql/`](sql/)).
-6. Metric YAML in the same fields as [`../semantic/metric.yml`](../semantic/metric.yml).
-7. One verified question with real expected rows.
-8. The wrong answers an AI can plausibly give from the export, and why each is wrong.
-9. A "what works / what does not" table.
 
 ## Exercise (15 minutes)
 
@@ -56,7 +42,6 @@ synthetic data.
 | Rule | FOLDLINE | Bike shop | Headcount | Web shop | Support desk |
 | --- | --- | --- | --- | --- | --- |
 | Never add a level across time (AP-M02) | 1,066,140 | 315 | 614 | (not served) | 220 |
-| Changes add within complete periods | +32,380 | −10 | +6 | 21,000 sessions | 900 opened |
 | Last level + change = new level (identity test) | 354,635 + 32,380 = 387,015 | 120 + 180 − 190 = 110 | 200 + 25 − 19 = 206 | n/a | 80 + 900 − 910 = 70 |
 | Pool rates; never average them (AP-M05) | right by luck: 12 of 120 | 63.3 %, not 37.6 % | 9.5 %, not 3.12 % or 9.8 % | 2.29 %, not 5.00 % | 71.4 % closed within 24 h |
 | Write the denominator (AP-M06) | 4 of 40, not 4 of 48 | starting + received | start base (9.5 %) vs average base (9.34 %) | sessions, not visitors | tickets closed in the period |
@@ -79,16 +64,16 @@ dropdb domain_packs
 ```
 
 Each file prints the right answer, then the wrong ones, and ends with a line such as
-`RETAIL INVENTORY CHECKS PASS`. If a number drifts, the file raises an error instead. The files
-refuse to run inside `saas_ready` or `saas_bad`. They create no roles and no passwords.
+`RETAIL INVENTORY CHECKS PASS`, or raises an error if a number drifts. The files refuse to run
+inside `saas_ready` or `saas_bad` and create no roles or passwords.
 
 ## Honesty notes
 
-- The wrong answers in these packs are **plausible**, not recorded. They are what the arithmetic
-  gives when a reader trusts the export names. FOLDLINE's recorded run is the only recorded AI
-  evidence in this course, and one run is an observation, not a benchmark.
-- These database checks test the views and the numbers, not an AI. To test an AI on a domain,
-  run each question 3 or more times and log it the way `../claude-demo/AI-RUN-LOG.md` does.
+- The wrong answers in these packs are **plausible**, not recorded: the arithmetic a reader gets
+  by trusting the export names. Use them as test cases. FOLDLINE's recorded run is the course's
+  only recorded AI evidence, and one run is an observation, not a benchmark.
+- The database checks test the views and the numbers, not an AI. To test an AI on a domain, run
+  each question 3 or more times and log it as `../claude-demo/AI-RUN-LOG.md` does.
 - A pack is a pattern, not a certified design. Your owner still writes the definitions.
 
 ## What works, what does not
@@ -97,17 +82,17 @@ refuse to run inside `saas_ready` or `saas_bad`. They create no roles and no pas
 | --- | --- | --- |
 | Start from one question with a period, a shape and a grain | Start from "make the HR data AI-ready" | Nothing to test, so nothing to build |
 | Copy the shape of a pack and change the numbers | Copy the numbers | The numbers are synthetic. Your truth comes from your owner and a second person |
-| Name every trap as a test case (`known_wrong_patterns`) | Only test the happy path | A test that only checks the right answer cannot show which mistake came back |
+| Name every trap as a test case (`known_wrong_patterns`) | Only test the happy path | It cannot show which mistake came back |
 | Serve counts next to every rate | Serve the rate alone | Nobody can pool it, check it or roll it up |
 | Keep identifiers in core; grant one view by name | Grant the schema "for flexibility" | Instructions guide; grants enforce |
 
 <details>
 <summary>For builders</summary>
 
-- The naming lint (`../naming/lint_names.sql`) finds 0 problems in the web shop and support views.
-  It flags LINT-02 on `*_units_on_hand` and `*_headcount`: the heuristic only knows plural counts
-  and unit suffixes. Record them as accepted exceptions, or rename (`ending_on_hand_units`,
-  `ending_employees`). On the six `export_lane` tables of the four packs it lists 64 problems.
+- The naming lint (`../naming/lint_names.sql`) finds 0 problems in the web shop and support views,
+  and 64 on the six `export_lane` tables of the four packs. It flags LINT-02 on `*_units_on_hand`
+  and `*_headcount`, because it only knows plural counts and unit suffixes. Record these as
+  accepted exceptions, or rename (`ending_on_hand_units`, `ending_employees`).
 - All four packs share `sql/00_common.sql`: schemas `export_lane`, `core`, `analytics`, and one
   `core.load_status` row per subject area. Every view carries `complete_through_month`,
   `data_loaded_at_utc` and `quality_status`, and none calls `now()`.

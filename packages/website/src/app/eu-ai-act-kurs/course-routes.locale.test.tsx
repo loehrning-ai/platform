@@ -80,7 +80,7 @@ describe("EU AI Act locale propagation across the course lifecycle", () => {
 
   it("localizes quiz, completion-record, and public record-reader metadata", async () => {
     expect(await generateQuizMetadata()).toMatchObject({
-      title: "Workshop quiz: EU AI Act Course",
+      title: "Final quiz: EU AI Act Course",
       robots: { index: false, follow: false },
       alternates: { canonical: null },
     });

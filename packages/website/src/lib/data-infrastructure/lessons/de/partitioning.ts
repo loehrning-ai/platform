@@ -18,98 +18,77 @@ export default localizeDataInfraLessonToGerman(canonical, {
     {
       id: "s1",
       title: "Warum partitionieren?",
-      content: `Was darf eine Abfrage überspringen? Partitionsmetadaten erlauben dem Query Planner, Dateigruppen auszuschließen, deren Partitionswerte ein Prädikat nicht erfüllen können. Das spart Planung und Daten-I/O. Die Laufzeit hängt trotzdem nicht allein an der Partitionszahl: Dateistatistiken, Speicheranfragen, Cache, Parallelität, Engine-Planung und das Restdatenvolumen wirken mit.
+      content: `Mit Partitionsmetadaten schließt der Query Planner Dateigruppen aus, deren Partitionswerte ein Prädikat nicht erfüllen können. Das spart Planung und Daten-I/O. Die Laufzeit hängt außerdem an Dateistatistiken, Speicheranfragen, Cache, Parallelität, Engine-Planung und den Daten, die nach dem Pruning übrig bleiben.
 
-Drei Prüfungen vor jeder Wahl.
-
-1. **Prädikatbezug.** Kandidatenschlüssel aus echten Filtern und Joins ableiten, nicht aus semantischer Vorliebe.
-2. **Entstehende Dateiverteilung.** Bytes und Dateien je Partition für typische und schiefe Werte schätzen. Eine universelle Zielgröße gibt es nicht; Engines und Lasten haben verschiedene Zielkonflikte.
-3. **Kardinalität und Entwicklung.** Ein hochkardinaler Schlüssel kann viele kleine Partitionen erzeugen, ein grober breite Scans. Neue Werte, verspätete Daten und künftige Granularitätswechsel mitdenken.`,
+1. **Prädikatbezug.** Leite Kandidatenschlüssel aus echten Filtern und Joins ab.
+2. **Dateiverteilung.** Schätze Bytes und Dateien je Partition für typische und schiefe Werte. Keine Zielgröße passt zu jeder Engine und Last.
+3. **Kardinalität und Entwicklung.** Ein hochkardinaler Schlüssel erzeugt viele kleine Partitionen, ein grober breite Scans. Denk neue Werte, verspätete Daten und künftige Granularitätswechsel mit.`,
     },
     {
       id: "s1b",
       title: "Bereich, Hash und Liste",
-      content: `Drei Strategien, drei Fehlerbilder.
+      content: `- **Bereichspartitionierung.** Ordnet Zeilen Wertebereichen zu, etwa einem Monat von \`order_date\`. Sie erhält Bereichslokalität und bündelt Schreibvorgänge im aktuellen Zeitraum.
+- **Hash-Partitionierung.** Ordnet einen Schlüssel einem von N Buckets zu, etwa \`hash(user_id) % 16\`. Sie verteilt einen geeigneten Schlüssel, aber Bereichsabfragen fassen meist jedes Bucket an, und schiefe Schlüssel bleiben heiß.
+- **Listenpartitionierung.** Ordnet deklarierte Werte wie Regionen Partitionen zu. Neue oder leere Werte brauchen explizite Validierung und einen Rückfall.
 
-- **Bereichspartitionierung.** Ordnet Zeilen Wertebereichen zu, etwa einem Monat von \`order_date\`. Erhält Bereichslokalität, kann aber Schreibvorgänge im aktuellen Zeitraum bündeln.
-- **Hash-Partitionierung.** Ordnet einen Schlüssel einem von N Buckets zu, etwa \`hash(user_id) % 16\`. Kann einen geeigneten Schlüssel verteilen; Bereichsabfragen müssen meist jedes Bucket anfassen, schiefe Schlüssel bleiben heiß.
-- **Listenpartitionierung.** Ordnet deklarierte Werte wie Regionen Partitionen zu. Trägt kategoriales Routing; neue oder leere Werte brauchen explizite Validierung und Rückfallverhalten.
-
-Zeitbasierte oberste Partitionen sind verbreitet, weil viele analytische Abfragen Zeitprädikate tragen und Aufbewahrung nach Zeit arbeitet. Eine Vorgabe sind sie nicht. Tenant-Isolation, Rechtsraum, Ereignisverteilung und Abfragemuster können einen anderen Schlüssel begründen, oder gar keinen.`,
+Zeit ist ein verbreiteter oberster Schlüssel, weil viele analytische Abfragen nach Zeit filtern und Aufbewahrung nach Zeit arbeitet. Tenant-Isolation, Rechtsraum, Ereignisverteilung und Abfragemuster können einen anderen Schlüssel begründen oder gar keine explizite Partitionierung.`,
     },
     {
       id: "s1c",
       title: "Hive-Stil und verborgene Partitionierung",
-      content: `Aus dem Pfad und aus Transformationen abgeleitete Partitionswerte sind zwei Verträge für Writer.
+      content: `**Partitionierung im Hive-Stil** legt den Partitionswert in einen Pfad wie \`s3://lake/orders/order_date=2026-05-01/part-001.parquet\`. Writer müssen ihn konsistent berechnen, ein Granularitätswechsel kann das Verschieben oder Neuschreiben von Dateien verlangen, und abweichend abgeleitete Werte für \`order_date\` erzeugen ein falsches Layout.
 
-**Partitionierung im Hive-Stil** legt den Partitionswert in einen Pfad wie \`s3://lake/orders/order_date=2026-05-01/part-001.parquet\`. Writer müssen den Wert konsistent berechnen. Der Wert kann zusätzlich in der Datei stehen, ein Granularitätswechsel kann das Verschieben oder Neuschreiben bestehender Dateien verlangen, und abweichende Ableitungen von \`order_date\` erzeugen ein falsches Layout.
+**Verborgene Partitionierung**, von Iceberg seit Spezifikation v1 unterstützt, deklariert eine Transformation wie \`PARTITIONED BY (days(order_ts))\` in den Tabellenmetadaten. Kompatible Writer leiten den Wert ab, und Abfragen filtern weiter nach \`order_ts\`. Partitionsentwicklung kann \`days(order_ts)\` für neue Dateien auf \`hours(order_ts)\` umstellen, während alte Dateien ihre Spezifikation behalten; Reader planen über beide.
 
-**Verborgene Partitionierung**, von Iceberg seit Spezifikation v1 unterstützt, deklariert eine Transformation wie \`PARTITIONED BY (days(order_ts))\` in den Tabellenmetadaten. Kompatible Writer leiten den Wert ab; Abfragen filtern weiter nach \`order_ts\`. Partitionsentwicklung kann \`days(order_ts)\` für neue Dateien durch \`hours(order_ts)\` ersetzen, während alte Dateien ihre frühere Spezifikation behalten. Reader müssen beide Layouts zusammen planen.
-
-Das verringert die direkte Kopplung zwischen Anwendungscode und physischem Partitionswert. Die Korrektheitsanforderungen bleiben: Engine-Unterstützung, Transformationssemantik, Metadatenintegrität, Zeitzonenbehandlung und Pruning-Verhalten prüfst du für die eingesetzten Versionen.`,
-      keyTakeaway:
-        "Bei Partitionsentwicklung können neue Dateien eine neue Transformation verwenden, während alte ihr Layout behalten. Kompatible Reader müssen beide Spezifikationen planen.",
+Engine-Unterstützung, Transformationssemantik, Metadatenintegrität, Zeitzonen und Pruning prüfst du trotzdem für die eingesetzten Versionen.`,
     },
     {
       id: "s2",
       title: "Einen Schlüssel wählen",
-      content: `Das interaktive Modell wirft eine feste Abfrage auf fünf synthetische Layouts. Dateizahlen und gescannte Bytes sind Lerneingaben, keine Messungen und keine empfohlenen Schwellen.
+      content: `Das Modell oben führt eine feste Abfrage auf fünf synthetischen Layouts aus.
 
-Vergleich das relative Verhalten, dann wiederhol es mit Produktionsverteilungen. Stündliche Partitionen können bei wenig Volumen kleine Dateien erzeugen, Partitionen je Person können Schlüsselschiefe offenlegen, keine Partitionierung kann breite Scans erzwingen. Die richtige Wahl hängt an Daten und Engine.`,
+Vergleiche das relative Verhalten und wiederhole es dann mit Produktionsverteilungen. Stündliche Partitionen erzeugen bei wenig Volumen kleine Dateien, Partitionen je Person legen Schiefe offen, und ohne Partitionierung kommt es zu breiten Scans.`,
     },
     {
       id: "s3",
       title: "Kleine Dateien",
-      content: `Häufige Commits können Dateien erzeugen, die kleiner sind als die effiziente Scan-Einheit der Engine, vor allem wenn jede Partition pro Commit wenig Daten bekommt. Viele Dateien heißen mehr Metadaten-, Planungs-, Open-Request- und Scheduling-Arbeit. Wie viel, hängt an Speicher und Engine.
+      content: `Häufige Commits erzeugen Dateien, die kleiner sind als die effiziente Scan-Einheit der Engine, vor allem wenn jede Partition pro Commit wenig Daten bekommt. Viele Dateien heißen mehr Metadaten-, Planungs-, Open-Request- und Scheduling-Arbeit.
 
-**Kompaktierung** schreibt ausgewählte Dateien in ein neues Layout. Das kostet Compute und I/O, veröffentlicht eine weitere Tabellenversion und kann mit parallelen Änderungen kollidieren. Löse sie aus gemessener Dateizahl, Größenverteilung und Query-Evidenz aus, nicht nach einem universellen Nachtplan.
-
-Kompaktierungsbefehle und Optionen sind hersteller- und versionsabhängig. Prüf aktuelle Syntax, Isolationsverhalten, Zielgrößensemantik und Rollback-Prozess in der konkreten Engine, bevor du eine Tabelle betreibst.`,
+**Kompaktierung** schreibt ausgewählte Dateien in ein neues Layout. Sie kostet Compute und I/O, veröffentlicht eine weitere Tabellenversion und kann mit parallelen Änderungen kollidieren. Löse sie deshalb aus gemessener Dateizahl, Größenverteilung und Abfragesignalen aus statt nach festem Nachtplan, und prüf vorher Syntax, Isolation, Zielgrößensemantik und Rollback in deiner Engine, weil die Befehle hersteller- und versionsabhängig sind.`,
     },
     {
       id: "s4",
       title: "Clustering und Z-Order",
-      content: `Nicht alle Abfragen filtern dieselbe Spalte. Eine Tabelle kann nach einer Transformation oder einer zusammengesetzten Spezifikation partitionieren und die Datensätze innerhalb der entstehenden Dateigruppen clustern oder sortieren.
+      content: `Eine Tabelle kann nach einer Transformation oder einer zusammengesetzten Spezifikation partitionieren und die Datensätze innerhalb der Dateigruppen für weitere Filter clustern oder sortieren.
 
-Sortierung kann die Minimum-/Maximumbereiche der Sortierspalten verengen. **Z-Ordering** und verwandte mehrdimensionale Clustering-Techniken versuchen, Lokalität über mehrere Spalten zu halten; der Nutzen hängt an Datenverteilung und Prädikatmix. Jede weitere Spalte verwässert Lokalität und erhöht Wartung. Eine universell sinnvolle Anzahl gibt es nicht.
+Sortierung verengt die Minimum-/Maximumbereiche der Sortierspalten. **Z-Ordering** und verwandtes mehrdimensionales Clustering versuchen, Lokalität über mehrere Spalten zu halten. Der Nutzen hängt an Datenverteilung und Prädikatmix, und jede weitere Spalte verwässert ihn und erhöht die Wartung.
 
-Wähle Partitions- und Clustering-Spalten aus Query-Telemetrie, schätze Schreibverstärkung und prüf Pruning mit Plänen auf Dateiebene. Brauchen zwei Zugriffsmuster inkompatible Layouts, ist eine getrennte materialisierte Projektion klarer.`,
+Wähle Partitions- und Clustering-Spalten aus Query-Telemetrie, schätze die Schreibverstärkung und prüf Pruning in Plänen auf Dateiebene. Brauchen zwei Zugriffsmuster inkompatible Layouts, bau eine getrennte materialisierte Projektion.`,
     },
     {
       id: "s5",
       title: "Sharding ist nicht Partitionierung",
-      content: `Die Begriffe überlappen sich von Produkt zu Produkt. Definier sie im Kontext.
+      content: `Produkte verwenden beide Wörter unscharf; hier gilt:
 
-- **Analytische Partitionierung** gruppiert Tabellendaten meist für Pruning, Aufbewahrung und Wartung. Sie braucht weiterhin Metadaten und kann koordinierte Commits einschließen.
-- **Datenbank-Sharding** verteilt Datensätze meist über unabhängig skalierbare Datenbankpartitionen oder Instanzen. Daraus folgen Routing-, Rebalancing-, Cross-Shard-Query- und Transaktionsfragen.
+- **Analytische Partitionierung** gruppiert Tabellendaten für Pruning, Aufbewahrung und Wartung.
+- **Datenbank-Sharding** verteilt Datensätze über unabhängig skalierbare Datenbankpartitionen oder Instanzen und bringt Fragen zu Routing, Rebalancing, Cross-Shard-Queries und Transaktionen mit.
 
-Hash-Routing kann geeignete Schlüssel verteilen und schwächt dabei die Bereichslokalität. Bereichs-Routing erhält Lokalität und kann heiße Bereiche erzeugen. Zusammengesetzte Schlüssel, virtuelle Shards und Online-Rebalancing bearbeiten je einen Teil dieses Zielkonflikts; die Schiefe messen musst du trotzdem.`,
+Hash-Routing verteilt Schlüssel, verliert aber Bereichslokalität; Bereichs-Routing hält Lokalität, erzeugt aber heiße Bereiche. Zusammengesetzte Schlüssel, virtuelle Shards und Online-Rebalancing mildern je einen Teil davon, die Schiefe misst du trotzdem.`,
     },
     {
       id: "s6",
       title: "Kurzprüfung",
-      content: "Zwei Fragen zu Schiefe und Z-Order.",
+      content: "Zwei Fragen zu Schiefe und Layout, unter den Begriffen.",
     },
     {
       id: "s7",
       title: "Kernaussagen",
-      content: `- **Layout an gemessene Prädikate und Datenverteilung anpassen.** Pläne auf Dateiebene und gelesene Bytes prüfen, nicht nur den SQL-Text.
-- **Bereich, Hash und Liste haben je ein Fehlerbild.** Heiße Bereiche, schiefe Schlüssel, neue Werte, Nullwerte und verspätete Daten vor der Wahl durchspielen.
-- **Überpartitionierung erhöht Metadaten- und Small-File-Arbeit.** Dateigrößen aus Engine-Hinweisen und Lastmessungen wählen, nicht aus einer universellen Schwelle.
-- **Verborgene Partitionierung und Partitionsentwicklung reduzieren die Kopplung von Writer und Query.** Alte und neue Spezifikationen koexistieren; Kompatibilität und Wartung bleiben deine Aufgabe.
-- **Clustering trägt sekundäre Prädikate nur bei passender Last.** Re-Clustering-Kosten und Schreibverstärkung gehören in die Entscheidung.`,
+      content: `- Prüf gelesene Bytes im Plan auf Dateiebene, nicht nur den SQL-Text.`,
     },
     {
       id: "s8",
       title: "Begriffe",
-      content: `- **Partition Pruning**, schließt Dateigruppen über Partitionsmetadaten und Prädikate aus, bevor Daten gelesen werden.
-- **Bereichspartition**, erhält Bereichslokalität und kann Schreibvorgänge in aktuellen oder beliebten Bereichen bündeln.
-- **Hash-Partition**, kann einen geeigneten Schlüssel verteilen, schwächt Bereichslokalität und beseitigt keine Schlüsselschiefe.
-- **Listenpartition**, ordnet Kategorien explizit zu und braucht darum Validierung für neue, leere und Fallback-Werte.
-- **Verborgene Partitionierung**, deklariert Transformationen in Tabellenmetadaten, sodass kompatible Writer und Reader Partitionswerte ableiten.
-- **Überpartitionierung**, erzeugt durch hohe Kardinalität oder unnötig feine Granularität zu viele Metadaten oder kleine Dateien.
-- **Liquid Clustering**, eine Delta-Lake-Layoutfunktion, deren Fähigkeiten und Grenzen du für die eingesetzte Version prüfst.
-- **Salt**, ergänzt einen deterministischen oder kontrollierten Teilschlüssel zur Verteilung eines Hot Keys; nachgelagerte Lesevorgänge oder Aggregate müssen die Teilschlüssel korrekt zusammenführen.`,
+      content: `Die Lernkarten unter den Fragen erklären Partition Pruning, Bereichs-, Hash- und Listenpartitionen, verborgene Partitionierung, Überpartitionierung, Liquid Clustering und Salt.`,
     },
   ],
   widgets: [
@@ -118,30 +97,30 @@ Hash-Routing kann geeignete Schlüssel verteilen und schwächt dabei die Bereich
       cpId: "q1",
       title: "Die Falle schiefer Verteilungen",
       question:
-        "Du partitionierst `events` nach `user_id`. Der Datensatz enthält 10M Personen. In Produktion sind 90% der Partitionen <100MB groß, aber 5 Partitionen jeweils >500GB. Welche IDs liegen dort?",
+        "Du partitionierst `events` nach `user_id` über 10M Personen. In Produktion sind 90% der Partitionen <100MB groß, aber 5 Partitionen jeweils >500GB. Welche IDs liegen dort?",
       options: [
         "Zufällige IDs; so sehen Verteilungen aus.",
-        "Interne Konten mit hohem Volumen: Bots, Testkonten, eine geteilte ID für Gäste oder nicht angemeldete Personen, dazu ein paar echte Großkunden, etwa Enterprise-Tenants.",
+        "Bots, Testkonten, eine geteilte Gast-ID und Enterprise-Tenants.",
         "Die neuesten Personen.",
         "Das muss ein Programmfehler sein.",
       ],
       explanation:
-        "Geteilte anonyme IDs, interner Verkehr, Automatisierung und große Tenants sind die üblichen Quellen für Schiefe. Denselben schiefen Schlüssel zu hashen verschiebt den Hotspot nur. Gegenmaßnahmen: ein deterministischer Salt wie `user_id + (event_id % 16)` mit korrekter Zusammenführung, getrennte Behandlung bekannter Verkehrsklassen oder Zeitpartitionierung plus Clustering nach Person. Jede Variante gegen Ordnungs- und Abfrageanforderungen messen.",
+        "Geteilte anonyme IDs, interner Verkehr, Automatisierung und große Tenants erzeugen die meiste Schiefe; Hashen desselben Schlüssels verschiebt sie nur. Salze deterministisch (`user_id + (event_id % 16)`), behandle bekannten Verkehr getrennt oder partitioniere nach Zeit und clustere nach Person, und prüf danach Ordnungsanforderungen.",
     },
     {
       kind: "quiz",
       cpId: "q2",
       title: "Z-Order oder Partition",
       question:
-        "Die Tabelle ist nach `order_date` partitioniert. Die Hälfte der Abfragen filtert zusätzlich nach `country`. Welche Antwort ist die stärkste erste Entwurfshypothese?",
+        "Die Tabelle ist nach `order_date` partitioniert, und die Hälfte der Abfragen filtert zusätzlich nach `country`. Was ist die stärkste erste Entwurfshypothese?",
       options: [
-        "Nach `(order_date, country)` in verschachtelten Partitionen partitionieren.",
+        "Verschachtelte Partitionen nach `(order_date, country)`.",
         "Stattdessen nach `country` neu partitionieren.",
-        "`order_date` als Partition behalten und innerhalb jeder Partition nach `country` Z-ordnen oder einfach sortieren.",
-        "Eine zweite Tabellenkopie anlegen, partitioniert nach `country`.",
+        "`order_date` behalten, darin nach `country` Z-ordnen oder sortieren.",
+        "Eine zweite Tabellenkopie, partitioniert nach `country`.",
       ],
       explanation:
-        "Ein zusammengesetztes `(order_date, country)`-Layout kann bis zu 73,000 Wertekombinationen pro Jahr erzeugen, bevor fehlende Kombinationen und mehrere Dateien mitzählen. Sortieren oder Clustern nach `country` innerhalb der Datumspartitionen ist eine plausible Hypothese und spart das Partitionsverzeichnis je Kombination. Dateistatistiken und Query-Pläne an repräsentativen Daten prüfen.",
+        "365 Tage × rund 200 Länder ergeben bis zu 73000 Partitionen pro Jahr. Sortieren oder Clustern nach `country` innerhalb der Datumspartitionen spart ein Verzeichnis je Kombination; prüf das mit Dateistatistiken und Query-Plänen.",
     },
     {
       kind: "flashcards",
@@ -151,42 +130,42 @@ Hash-Routing kann geeignete Schlüssel verteilen und schwächt dabei die Bereich
         {
           term: "Partition Pruning",
           q: "Wie sortiert die Engine Partitionen aus?",
-          a: "Der Planner wendet die Prädikate auf die Partitionsmetadaten an und streicht Dateigruppen, die nicht passen können. Die Metadaten kosten weiterhin Planung; gestrichene Datendateien muss niemand öffnen.",
+          a: "Der Planner wendet die Prädikate auf die Partitionsmetadaten an und streicht Dateigruppen, die nicht passen können. Planung kostet weiter Zeit; gestrichene Dateien öffnet niemand.",
         },
         {
           term: "Bereichspartition",
           q: "Geeignet wofür, mit welchem Fehlerfall?",
-          a: "Geeignet für Zeitreihen mit Abfragen über aktuelle Bereiche. Fehlerfall: die Hot Partition. Der aktuelle Zeitraum nimmt alle Schreibvorgänge, historische Partitionen sind nur lesbar. Rollierende Fenster oder verteilte Schreibvorgänge helfen.",
+          a: "Zeitreihen mit Abfragen über aktuelle Bereiche. Fehlerfall: Die aktuelle Partition nimmt alle Schreibvorgänge, ältere werden nur gelesen. Rollierende Fenster oder verteilte Schreibvorgänge helfen.",
         },
         {
           term: "Hash-Partition",
           q: "Geeignet wofür, mit welchem Fehlerfall?",
-          a: "Geeignet für gleichmäßige Schreibverteilung über N Gruppen. Fehlerfall: verlorene Bereichslokalität, eine Bereichsabfrage muss alle N Gruppen lesen. Bei bereichslastigen analytischen Abfragen lieber Bereich oder Liste.",
+          a: "Gleichmäßige Schreibverteilung über N Buckets. Fehlerfall: keine Bereichslokalität, also liest eine Datumsabfrage alle N Buckets. Für bereichslastige Analysen passen Bereich oder Liste besser.",
         },
         {
           term: "Listenpartition",
           q: "Geeignet wofür, mit welchem Fehlerfall?",
-          a: "Geeignet für deklariertes kategoriales Routing. Neue und leere Werte brauchen explizite Validierung; ein abgewiesener Schreibvorgang, ein Quarantänewert oder ein kontrollierter Rückfall kann sicherer sein als ein automatischer Auffangtopf.",
+          a: "Deklariertes kategoriales Routing. Neue und leere Werte brauchen Validierung; Abweisen, Quarantäne oder ein kontrollierter Rückfall ist sicherer als ein automatischer Auffangtopf.",
         },
         {
           term: "Verborgene Partitionierung",
           q: "Iceberg im Vergleich zum Hive-Stil",
-          a: "Pfadbasierte Layouts legen physische Partitionswerte gegenüber Writern offen. Verborgene Partitionierung deklariert days(order_ts) in den Metadaten; bei Partitionsentwicklung nehmen neue Dateien eine neue Spezifikation, alte behalten ihr Layout.",
+          a: "Pfade im Hive-Stil legen Partitionswerte gegenüber Writern offen. Verborgene Partitionierung deklariert days(order_ts) in den Metadaten, und bei Partitionsentwicklung nehmen neue Dateien eine neue Spezifikation, alte behalten ihre.",
         },
         {
           term: "Überpartitionierung",
           q: "Das Antimuster",
-          a: "Zu viele winzige Partitionen. Symptome: langsames Auflisten, hohe Metadatenkosten, Dateien <10MB. Ursache: ein hochkardinaler Schlüssel wie user_id oder event_id, oder Zeitgranularität in Minuten. Abhilfe: gröber einteilen oder stattdessen clustern.",
+          a: "Zu viele winzige Partitionen mit langsamem Auflisten, hohen Metadatenkosten und Dateien <10MB. Ursache sind hochkardinale Schlüssel (user_id, event_id) oder Minutengranularität; teile gröber ein oder clustere.",
         },
         {
           term: "Liquid Clustering",
           q: "Was muss geprüft werden?",
-          a: "Eine Delta-Lake-Layoutfunktion. Unterstützte Runtimes, Protokollanforderungen, Clustering Keys, Wartungsverhalten und Interoperabilität für die eingesetzte Version prüfen.",
+          a: "Delta-Lake-Clustering auf deklarierten Schlüsseln, das feste Partitionen und Z-Order ersetzt. Prüf Runtimes, Protokollanforderungen, Wartung und Interoperabilität für deine Version.",
         },
         {
           term: "Salt",
           q: "Wann wird ein Schlüssel gesalzen?",
-          a: "Wenn ein Schlüssel heiß ist: Datensätze mit einer deterministischen oder kontrollierten Regel auf begrenzte Teilschlüssel wie 0..15 verteilen. Nachgelagerte Lesevorgänge oder Aggregate müssen sie wieder zusammenführen. Der Verteilungsgewinn muss die zusätzliche Lesearbeit überwiegen und die Reihenfolge erhalten.",
+          a: "Wenn ein Schlüssel heiß ist, verteilst du ihn nach fester Regel auf begrenzte Teilschlüssel wie 0..15. Lesevorgänge und Aggregate führen sie wieder zusammen, und der Gewinn muss die zusätzliche Lesearbeit überwiegen, ohne die nötige Reihenfolge zu brechen.",
         },
       ],
     },

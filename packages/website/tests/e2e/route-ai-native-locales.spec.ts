@@ -142,7 +142,9 @@ test.describe("AI-Native course DE/EN integration", () => {
         await expect(page).not.toHaveURL(/\/login/);
         await expect(page.locator("html")).toHaveAttribute("lang", locale);
         await expect(page.getByRole("heading", { level: 1 })).toContainText(
-          locale === "en" ? "Define the task" : "Aufgabe definieren",
+          locale === "en"
+            ? "Automate routine work with Claude"
+            : "Routinearbeit mit Claude automatisieren",
         );
         await expect(
           page
@@ -346,7 +348,10 @@ test.describe("AI-Native course DE/EN integration", () => {
             expect(geometry.right).toBeLessThanOrEqual(
               geometry.viewportWidth + 0.5,
             );
-            expect(geometry.scrollWidth).toBeGreaterThan(geometry.clientWidth);
+            // The phone sheet is sized to fit 320px without sideways
+            // scrolling; the region keeps overflow-x:auto as a fallback for
+            // larger text settings.
+            expect(geometry.scrollWidth).toBeLessThanOrEqual(geometry.clientWidth);
             expect(geometry.overflowX).toBe("auto");
           }
           expect(

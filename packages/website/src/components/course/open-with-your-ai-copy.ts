@@ -47,27 +47,27 @@ const DE: OpenWithYourAiCopy = {
   kinds: {
     lesson: {
       heading: "Diesen Block mit deiner KI öffnen",
-      body: "Kopiere den Auftrag und gib ihn deinem eigenen KI-Programm. Es liest die Lektionen dieses Blocks direkt von der Plattform, im gleichen Wortlaut wie du.",
+      body: "Gib den Auftrag deinem KI-Programm. Es liest die Lektionen des Blocks direkt von der Plattform, im Originalwortlaut.",
       promptOpening: (contextTitle) =>
         `Ich lerne gerade auf loehrning.ai: ${contextTitle}.`,
       promptTask:
-        "Fasse den Inhalt in eigenen Worten zusammen, nenne die drei wichtigsten Punkte und stelle mir danach drei Verständnisfragen. Nimm nur, was im Text steht, und erfinde nichts dazu.",
+        "Fasse den Inhalt zusammen, nenne die drei wichtigsten Punkte und stell mir dann drei Verständnisfragen. Nutze nur die gelesenen Inhalte und erfinde nichts.",
     },
     chapter: {
       heading: "Dieses Kapitel mit deiner KI öffnen",
-      body: "Kopiere den Auftrag und gib ihn deinem eigenen KI-Programm. Es liest dieses Kapitel direkt von der Plattform, im gleichen Wortlaut wie du.",
+      body: "Gib den Auftrag deinem KI-Programm. Es liest das Kapitel direkt von der Plattform, im Originalwortlaut.",
       promptOpening: (contextTitle) =>
         `Ich lese gerade auf loehrning.ai: ${contextTitle}.`,
       promptTask:
-        "Fasse das Kapitel in eigenen Worten zusammen, nenne die drei wichtigsten Punkte und sage mir, welche Aussage im Text belegt ist und welche nicht. Nimm nur, was im Text steht.",
+        "Fasse das Kapitel zusammen, nenne die drei wichtigsten Punkte und sag mir, welche Aussagen der Text belegt und welche nicht. Nutze nur die gelesenen Inhalte und erfinde nichts.",
     },
     workshop: {
       heading: "Diesen Workshop mit deiner KI öffnen",
-      body: "Kopiere den Auftrag und gib ihn deinem eigenen KI-Programm. Es liest den Ablauf und die Materialien direkt von der Plattform.",
+      body: "Gib den Auftrag deinem KI-Programm. Es liest Ablauf und Materialien direkt von der Plattform.",
       promptOpening: (contextTitle) =>
         `Ich arbeite gerade einen Workshop auf loehrning.ai durch: ${contextTitle}.`,
       promptTask:
-        "Führe mich Schritt für Schritt durch den Ablauf. Nimm mir die Entscheidungsaufgaben nicht ab, sondern stelle mir die Fragen und warte auf meine Antwort. Nimm nur, was im Text steht.",
+        "Führe mich Schritt für Schritt durch den Ablauf. Nimm mir die Entscheidungsaufgaben nicht ab: Stell mir die Fragen und warte auf meine Antwort. Nutze nur die gelesenen Inhalte und erfinde nichts.",
     },
   },
   promptServerLine: (serverUrl) => `Server (HTTP): ${serverUrl}`,
@@ -79,7 +79,7 @@ const DE: OpenWithYourAiCopy = {
   copyAction: "Auftrag kopieren",
   copiedNotice: "Auftrag kopiert.",
   copyFailedNotice:
-    "Kopieren hat nicht geklappt. Der Auftrag steht jetzt hier, du kannst ihn selbst markieren.",
+    "Kopieren hat nicht geklappt. Markiere den Auftrag unten selbst.",
   promptLabel: "Auftrag für dein Programm",
   helpLink: "Programm einrichten",
 };
@@ -89,27 +89,27 @@ const EN: OpenWithYourAiCopy = {
   kinds: {
     lesson: {
       heading: "Open this block with your AI",
-      body: "Copy the prompt and hand it to your own AI program. It reads the lessons of this block straight from the platform, in the same wording you see.",
+      body: "Give the prompt to your AI program. It reads the block's lessons straight from the platform, word for word.",
       promptOpening: (contextTitle) =>
         `I am working through this on loehrning.ai: ${contextTitle}.`,
       promptTask:
-        "Summarise the content in your own words, name the three most important points, and then ask me three comprehension questions. Use only what the text says and invent nothing.",
+        "Summarise the content, name the three most important points, then ask me three comprehension questions. Use only the content you read and invent nothing.",
     },
     chapter: {
       heading: "Open this chapter with your AI",
-      body: "Copy the prompt and hand it to your own AI program. It reads this chapter straight from the platform, in the same wording you see.",
+      body: "Give the prompt to your AI program. It reads the chapter straight from the platform, word for word.",
       promptOpening: (contextTitle) =>
         `I am reading this on loehrning.ai: ${contextTitle}.`,
       promptTask:
-        "Summarise the chapter in your own words, name the three most important points, and tell me which claim the text supports and which it does not. Use only what the text says.",
+        "Summarise the chapter, name the three most important points, and tell me which claims the text supports and which it does not. Use only the content you read and invent nothing.",
     },
     workshop: {
       heading: "Open this workshop with your AI",
-      body: "Copy the prompt and hand it to your own AI program. It reads the steps and the materials straight from the platform.",
+      body: "Give the prompt to your AI program. It reads the steps and materials straight from the platform.",
       promptOpening: (contextTitle) =>
         `I am working through a workshop on loehrning.ai: ${contextTitle}.`,
       promptTask:
-        "Walk me through the steps one at a time. Do not settle the decision labs for me: ask me the question and wait for my answer. Use only what the text says.",
+        "Walk me through the steps one at a time. Do not settle the decision labs for me: ask me the questions and wait for my answer. Use only the content you read and invent nothing.",
     },
   },
   promptServerLine: (serverUrl) => `Server (HTTP): ${serverUrl}`,
@@ -121,7 +121,7 @@ const EN: OpenWithYourAiCopy = {
   copyAction: "Copy prompt",
   copiedNotice: "Prompt copied.",
   copyFailedNotice:
-    "Copying did not work. The prompt is written out below, so you can select it yourself.",
+    "Copying did not work. Select the prompt below yourself.",
   promptLabel: "Prompt for your program",
   helpLink: "Set up your program",
 };

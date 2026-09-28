@@ -2,7 +2,7 @@
 
 Eine Bestenliste für KI-Tools veraltet schneller, als du sie liest. Preise, Modellnamen und Limits ändern sich ständig. Was bleibt, ist die Methode, mit der du auswählst.
 
-> **Prüfregel:** Preise und Funktionen kontrollierst du immer auf der offiziellen Produktseite. Bei Datenschutz und Sicherheit liest du zusätzlich die aktuellen Vertragsunterlagen, DPA/AVV, Unterauftragnehmerliste und technische Konfiguration. Standort, Zertifikat oder Herstellername beweisen für sich allein keine DSGVO-Konformität.
+> **Prüfregel:** Preise und Funktionen kontrollierst du immer auf der offiziellen Produktseite. Bei Datenschutz und Sicherheit liest du zusätzlich die aktuellen Vertragsunterlagen, DPA/AVV, Unterauftragnehmerliste und technische Konfiguration. Standort, Zertifizierung oder Herstellername beweisen für sich allein keine DSGVO-Konformität.
 
 ## Starte mit der Aufgabe
 
@@ -28,9 +28,7 @@ Beispiele:
 | **Sicherheit** | Berechtigungen, Verschlüsselung, Schlüsselverwaltung, Updates, Backups und Incident-Prozess |
 | **Kosten** | aktueller Grundpreis, nutzungsabhängige Kosten, Korrekturzeit, Betrieb und Exit-Aufwand |
 
-Die Oberfläche sagt dir nichts.
-
-Zwei Tarife desselben Anbieters können unterschiedliche Verträge und Datenkontrollen haben. Und ein Self-Hosted-Produkt bleibt ein System, das du absichern, aktualisieren und rechtmäßig betreiben musst.
+Zwei Tarife desselben Anbieters können unterschiedliche Verträge und Datenkontrollen haben, und ein Self-Hosted-Produkt bleibt ein System, das du absichern, aktualisieren und rechtmäßig betreiben musst.
 
 ## Allgemeine Assistenten
 
@@ -109,4 +107,4 @@ Bei Lexware Office, sevDesk, FastBill oder anderen Fachprodukten zählt nicht nu
 - Erfüllt das Produkt den gemessenen Zweck weiterhin?
 - Gibt es einen einfacheren Exit?
 
-Die beste Toolbox ist nicht die längste. Sie besteht aus wenigen freigegebenen Werkzeugen, deren Zweck, Datenfluss, Vertrag, Kosten und Ausstieg du erklären kannst.
+Halte deine Toolbox bei wenigen freigegebenen Werkzeugen, deren Zweck, Datenfluss, Vertrag, Kosten und Ausstieg du erklären kannst.

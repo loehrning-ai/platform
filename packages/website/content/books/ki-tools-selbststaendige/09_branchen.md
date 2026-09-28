@@ -1,18 +1,10 @@
 # KI nach Branche: dein individueller Fahrplan
 
-Ein IT-Berater hat andere Probleme als eine Yogalehrerin. Ein Handwerksmeister braucht andere Prompts als eine Grafikdesignerin. Ein Coach arbeitet anders als ein Webentwickler.
-
-"KI für Freelancer" klingt gut und bringt dich keinen Schritt weiter. Bisher war alles allgemein. Jetzt wird es persönlich.
-
-7 Branchen liegen vor dir. Finde deine. Wenn du genau dazwischen liegst, lies beide. Die KRAFT-Prompts sind in jeder Branche sofort einsetzbar, die Workflows bauen auf den Kapiteln 3 bis 7 auf.
+Ein IT-Berater hat andere Probleme als eine Yogalehrerin, und ein Handwerksmeister braucht andere Prompts als eine Grafikdesignerin. Dieses Kapitel behandelt 7 Branchen. Liegst du dazwischen, lies beide Abschnitte. Die Workflows bauen auf den Kapiteln 3 bis 7 auf.
 
 ## Berater und Consultants
 
-**Fiktives Ausgangsszenario:** Ein Beratungstag besteht aus E-Mails, Terminvorbereitung, Workshop, Konzept, Angebot und Kommunikation. Wie lange jeder Schritt bei dir dauert, misst du selbst.
-
-**Testszenario mit KI:** Setze KI nur für klar abgegrenzte Entwürfe ein und vergleiche Bearbeitungszeit, Nacharbeit und Fehler mit dem Ausgangsszenario. Ein früherer Feierabend ist ein mögliches Ziel, kein versprochenes Ergebnis.
-
-**Fiktives Pilotdesign:** Plane einen Workshop einmal mit und einmal ohne KI-Unterstützung. Gleiche Anforderungen, dann bewertest du Zeit, Quellenqualität, fachliche Korrekturen und Teilnehmerfeedback. Erst deine eigenen Messwerte zeigen, ob der KI-Entwurf den Ablauf besser macht.
+**Fiktives Pilotdesign:** Ein Beratungstag besteht aus E-Mails, Terminvorbereitung, Workshop, Konzept, Angebot und Kommunikation. Setze KI nur für klar abgegrenzte Entwürfe ein, plane etwa einen Workshop einmal mit und einmal ohne KI, und vergleiche Zeit, Quellenqualität, Korrekturen und Teilnehmerfeedback. Ein früherer Feierabend ist ein mögliches Ziel, kein versprochenes Ergebnis.
 
 **Die 3 wichtigsten KI-Workflows:**
 
@@ -70,17 +62,15 @@ Format: Slide-by-Slide-Gliederung mit Sprechernotizen.
 Ton: Kompetent, nahbar, kein Verkaufsdruck.
 ```
 
-**Stolperfalle:** Wenn dein Konzept klingt wie jedes andere KI-Konzept, hast du dein Alleinstellungsmerkmal verloren. Die KI liefert die Struktur. Dein Domänenwissen, deine Erfahrung, deine Meinung machen den Unterschied. Ohne das bist du austauschbar.
+**Stolperfalle:** Klingt dein Konzept wie jedes andere KI-Konzept, hast du dein Alleinstellungsmerkmal verloren. Die KI liefert die Struktur, dein Domänenwissen und deine Meinung liefern den Inhalt.
 
 **Tool-Tipp:** Notion AI für Wissensdatenbank und Konzepte. Miro mit KI-Features für Workshop-Planung.
 
 ## Kreative, Texter, Designer, Fotografen
 
-KI ersetzt keine kreative Vision. Aber sie nimmt dir die Arbeit ab, die deine kreative Vision blockiert.
+Bezahlt wirst du für die kreative Arbeit, nicht für Angebote, Briefing-Rückfragen oder Instagram-Captions. Diese Nebenarbeit übernimmt KI.
 
-Du wirst nicht für Angebote bezahlt, nicht für Briefing-Rückfragen, nicht für Instagram-Captions. Bezahlt wirst du für die kreative Arbeit, und die passiert zwischen 10 und 16 Uhr. Alles andere frisst den Rest. Genau da setzt KI an.
-
-**Briefing-Erweiterung.** Kunden-Briefings sind oft dünn. "Wir brauchen ein modernes Logo." Ende. Keine Zielgruppe, keine Farbpräferenzen, kein Zeitplan. Statt dreimal nachzufragen, lässt du KI das Briefing analysieren und die richtigen Rückfragen generieren, bevor du anfängst zu arbeiten. Ein KRAFT-Prompt dafür:
+**Briefing-Erweiterung.** Kunden-Briefings sind oft dünn, etwa "Wir brauchen ein modernes Logo" ohne Zielgruppe, Farbpräferenzen oder Zeitplan. Statt dreimal nachzufragen, lässt du KI vorab die richtigen Rückfragen generieren:
 
 ```
 Kontext: Mein Kunde hat mir folgendes Briefing gegeben: [BRIEFING].
@@ -92,7 +82,7 @@ Format: Nummerierte Liste. Pro Frage: Warum sie wichtig ist.
 Ton: Professionell, hilfreich.
 ```
 
-**Texte, die nicht dein Ding sind.** Produktbeschreibungen, Website-Texte für Kunden-Portfolios, Alt-Texte für SEO, Bildunterschriften, alles Textarbeit, die du nebenbei erledigen musst. Kein Designer wird Grafikdesigner, weil er gerne Alt-Texte schreibt. Lass KI den ersten Entwurf machen:
+**Nebenbei-Texte.** Produktbeschreibungen, Website-Texte für Kunden-Portfolios, Alt-Texte und Bildunterschriften entwirft die KI:
 
 ```
 Kontext: Ich bin [DESIGNER/FOTOGRAF] und brauche Texte für
@@ -118,23 +108,23 @@ LinkedIn: max. 200 Wörter + Hook in der ersten Zeile.
 Ton: Authentisch, stolz ohne anzugeben, einladend.
 ```
 
-**Angebote und Nachkalkulation.** Kreative hassen Angebote schreiben. Verständlich, du willst gestalten, nicht kalkulieren. Aber ein gutes Angebot ist der Unterschied zwischen "Danke, wir melden uns" und einem unterschriebenen Vertrag. Gib KI deine Leistungen, Stundensätze und den Projektumfang. Sie formuliert, du prüfst die Zahlen.
+**Angebote und Nachkalkulation.** Ein gutes Angebot führt eher zum unterschriebenen Vertrag. Gib KI deine Leistungen, Stundensätze und den Projektumfang. Sie formuliert, du prüfst die Zahlen.
 
 **Tool-Tipp für Kreative:** Neuroflash ist ein Beispiel für ein auf deutschsprachiges Marketing ausgerichtetes Textwerkzeug. Prüfe vor dem Einsatz die aktuelle Produktfunktion, Preise, Vertragsrolle, DPA/AVV, Hosting-Option, Unterauftragnehmer und Datenkontrollen. Herkunft oder Marketingaussagen allein belegen keine DSGVO-Konformität. Details zur Auswahlmethodik stehen in Kapitel 12.
 
-**Achtung: KI-Erkennung wird ein Thema.** Content-Plattformen und Auftraggeber setzen zunehmend KI-Erkennungstools ein. Wenn du Texte für Kunden schreibst und diese als "KI-generiert" erkannt werden, hast du ein Glaubwürdigkeitsproblem. Die Lösung: Nutze KI für den Entwurf, aber schreibe den Text aktiv um. Dein Stil, deine Wortwahl, deine Perspektive. Das ist nicht nur ethisch richtig, es ist auch der Grund, warum dein Kunde dich bezahlt statt selbst ChatGPT zu öffnen.
+**Achtung: KI-Erkennung.** Content-Plattformen und Auftraggeber setzen zunehmend KI-Erkennungstools ein. Werden deine Kundentexte als "KI-generiert" erkannt, leidet deine Glaubwürdigkeit. Nutze KI für den Entwurf und schreib den Text in deinem Stil und deiner Perspektive um. Dafür bezahlt dich dein Kunde, statt selbst ChatGPT zu öffnen.
 
 **Menschliche Verantwortung als Differenzierungsmerkmal.** Lege offen, wofür du KI einsetzt, soweit Vertrag, Plattform oder Kunde das verlangen. Behaupte keine „100 Prozent menschliche" Umsetzung, wenn KI am Ergebnis beteiligt war. Urheber-, Marken-, Persönlichkeits- und Nutzungsrechte prüfst du davon unabhängig.
 
-KI generiert Varianten, beschreibt Moodboards, schlägt Farbpaletten vor. Die Idee, die dein Werk einzigartig macht, kommt von dir. Wenn du anfängst, KI für die kreative Arbeit selbst zu nutzen statt für alles drumherum, verlierst du genau das, wofür Kunden dich buchen. Midjourney und DALL-E sind gut für Konzeptvisualisierungen. Nicht für Endprodukte.
+KI generiert Varianten, beschreibt Moodboards und schlägt Farbpaletten vor. Die Idee, die dein Werk einzigartig macht, kommt von dir, und dafür buchen dich Kunden. Midjourney und DALL-E taugen für Konzeptvisualisierungen, für Endprodukte nicht.
 
 ## IT-Freelancer und Entwickler
 
-Du weißt wahrscheinlich mehr über KI als die meisten Leser dieses Buches. GitHub Copilot, Claude, Cursor, du nutzt das alles schon fürs Coding. Trotzdem: Die meisten IT-Freelancer verpassen den Zeitgewinn bei allem, was nicht Code ist. 40 Prozent deines Tages sind Tickets, Dokumentation, Kundenkommunikation, Zeiterfassung, Angebote. Da liegt das Potenzial.
+GitHub Copilot, Claude und Cursor nutzt du wahrscheinlich schon fürs Coding. Den Zeitgewinn verpassen die meisten IT-Freelancer bei allem außer Code: Tickets, Dokumentation, Kundenkommunikation, Zeiterfassung und Angebote machen 40 Prozent des Tages aus.
 
 **1. Kundenkommunikation übersetzen**
 
-Fang nicht beim Code an, fang beim Kunden an. Der Klassiker: Der Kunde fragt "Wie lange dauert das?" und meint "Warum dauert das so lange?" KI übersetzt dir technische Sachverhalte in Kundensprache.
+Der Kunde fragt "Wie lange dauert das?" und meint "Warum dauert das so lange?" KI übersetzt technische Sachverhalte in Kundensprache.
 
 ```
 Kontext: Mein Kunde [ANONYMISIERT] fragt, warum [TECHNISCHES PROBLEM]
@@ -148,7 +138,7 @@ Ton: Professionell, lösungsorientiert, beruhigend.
 
 **2. Technische Dokumentation**
 
-Die ungeliebte Pflicht, die jedes Projekt am Ende einholt. Lass die KI den Rohbau machen:
+Den Rohbau der Dokumentation macht die KI:
 
 ```
 Kontext: Ich bin IT-Freelancer und habe gerade [FEATURE/SYSTEM]
@@ -163,17 +153,17 @@ Ton: Technisch präzise, aber verständlich für [ZIELGRUPPE].
 
 **3. Angebote für IT-Projekte**
 
-IT-Angebote sind komplex, Scope, Technologie-Stack, Meilensteine, Risiken. KI strukturiert den Entwurf. Du gibst ihr dein Template, den Projektumfang und die technischen Anforderungen. Sie liefert einen strukturierten Entwurf mit Meilensteinen und Risikobewertung. Du korrigierst die Schätzungen, denn die kann nur jemand machen, der das schon 50 Mal gebaut hat.
+Gib der KI dein Template, den Projektumfang und die technischen Anforderungen. Sie liefert einen Entwurf mit Scope, Technologie-Stack, Meilensteinen und Risikobewertung. Die Schätzungen korrigierst du, denn die kann nur jemand machen, der das schon 50 Mal gebaut hat.
 
 **4. Code-Erklärungen für nicht-technische Stakeholder**
 
-Du hast gerade ein komplexes Refactoring gemacht. Der Product Owner will wissen, warum das 3 Sprints gedauert hat. KI übersetzt deine Git-History in eine Zusammenfassung, die auch ein BWLer versteht.
+Will der Product Owner wissen, warum ein Refactoring 3 Sprints gedauert hat, übersetzt KI deine Git-History in eine verständliche Zusammenfassung.
 
 **5. Testabdeckung erhöhen**
 
-Du weißt, dass du Tests schreiben solltest. Du weißt auch, dass du es selten tust, weil die Deadline drängt. KI generiert Unit-Test-Scaffolds aus deinem bestehenden Code. Nicht perfekt, aber ein Startpunkt, und besser als 0% Coverage.
+Wenn die Deadline drängt, fallen Tests oft weg. KI generiert Unit-Test-Scaffolds aus deinem bestehenden Code als Startpunkt, besser als 0% Coverage.
 
-**6. MCP, die neue Skill, die keiner kennt**
+**6. MCP**
 
 Model Context Protocol (MCP) ist ein offenes Protokoll, über das KI-Anwendungen standardisiert auf Werkzeuge und Datenquellen zugreifen können. Mehr dazu in Kapitel 10.
 
@@ -181,7 +171,7 @@ Warum das für IT-Freelancer relevant ist: Standardisierte Tool-Schnittstellen k
 
 **7. Agentic Workflows als Service**
 
-Die nächste Stufe nach Automatisierung: KI-Agenten, die 5-15 Schritte autonom ausführen. "Prüfe den Posteingang, kategorisiere neue Anfragen, erstelle Entwürfe, sende mir eine Zusammenfassung." Ein Prompt, mehrere Ergebnisse.
+KI-Agenten führen 5-15 Schritte autonom aus, etwa "Prüfe den Posteingang, kategorisiere neue Anfragen, erstelle Entwürfe, sende mir eine Zusammenfassung."
 
 Für IT-Freelancer kann "Agentic Workflow Development" ein Dienstleistungsangebot sein. Nachfrage und Reifegrad unterscheiden sich je nach Branche. Belege Bedarf, Haftungsgrenze, Review-Schritte und Betriebskosten im konkreten Kundenprojekt.
 
@@ -193,19 +183,15 @@ Blinder Verlass auf KI-generierten Code ist gefährlich. KI-Code kann plausible 
 
 Fiktives Szenario: Freitagabend liegen drei Angebote, die Nachkalkulation für „Beispielprojekt Beta" und ein Fortbildungsnachweis offen. Die Namen und Zahlen in diesem Abschnitt sind reine Übungsdaten.
 
-Viele Handwerksbetriebe kombinieren weiterhin Papier, Tabellen und Branchensoftware. Der Digitalisierungsstand unterscheidet sich stark nach Gewerk und Betriebsgröße. Frag bei Verbänden und im Betrieb nach, welcher Prozess tatsächlich Zeit kostet, statt aus Finanzierungs- oder Kundenzahlen einzelner Anbieter einen allgemeinen Bedarf abzuleiten.
+Viele Handwerksbetriebe kombinieren Papier, Tabellen und Branchensoftware, und der Digitalisierungsstand unterscheidet sich stark nach Gewerk und Betriebsgröße. Miss deshalb eine Woche lang Angebotsarbeit, Dokumentation, Terminabstimmung und Nachkalkulation, statt den Büroanteil aus Zahlen einzelner Anbieter abzuleiten. Diese Zeitaufnahme zeigt, wo Automatisierung sinnvoll ist.
 
-Den Büroanteil kann niemand seriös für jeden Betrieb pauschalisieren. Miss deshalb eine Woche lang Angebotsarbeit, Dokumentation, Terminabstimmung und Nachkalkulation. Diese eigene Zeitaufnahme bestimmt, wo Automatisierung sinnvoll ist.
+An deiner Arbeit auf der Baustelle ändert KI nichts. Potenzial liegt in den gemessenen, wiederkehrenden Büroaufgaben.
 
-An deiner Arbeit auf der Baustelle ändert KI nichts. Ein Prompt verlegt keine Fliesen. Kein Chatbot zieht Kabel. Potenzial liegt in den gemessenen, wiederkehrenden Büroaufgaben.
-
-**Wer die KI wirklich nutzt.** Reden wir ehrlich: Der Elektriker auf der Baustelle hat keine Zeit für ChatGPT. Um 6:30 Uhr geht es los, um 17 Uhr ist er fertig, dann fährt er zum nächsten Kunden. Die Person, die KI im Handwerksbetrieb wirklich nutzt, ist meistens jemand anderes.
-
-Deine Partnerin im Büro, deine Assistentin, die Meisterfrau, die abends die Angebote schreibt. Die Person, die deine Stichworte in professionelle E-Mails verwandelt, die Nachkalkulationen pflegt und die Terminplanung jongliert. Sie ist die KI-Nutzerin Nummer eins im Handwerk, und dieses Kapitel ist auch für sie geschrieben.
+**Wer die KI wirklich nutzt.** Der Elektriker ist von 6:30 bis 17 Uhr auf der Baustelle und hat keine Zeit für ChatGPT. KI nutzt im Handwerksbetrieb meist die Partnerin im Büro, die Assistentin oder die Meisterfrau, die abends Angebote schreibt, Nachkalkulationen pflegt und Termine plant. Dieser Abschnitt ist auch für sie geschrieben.
 
 **1. Baustellen-Dokumentation: Fotos werden Bericht.**
 
-Die Schreinermeisterin fotografiert den fertigen Einbauschrank. 12 Bilder auf dem Handy. Der Kunde will eine saubere Dokumentation für die Versicherung. Früher: 45 Minuten am Laptop, Bilder sortieren, Beschreibungen tippen. Jetzt: Stichworte diktieren, KI formuliert.
+Die Schreinermeisterin hat 12 Handyfotos vom fertigen Einbauschrank, und der Kunde will eine Dokumentation für die Versicherung. Statt 45 Minuten Bilder zu sortieren und Beschreibungen zu tippen, diktiert sie Stichworte, und die KI formuliert.
 
 ```
 Kontext: Ich bin Schreinermeisterin und habe einen Einbauschrank
@@ -225,7 +211,7 @@ Ob der Ablauf Zeit spart, zeigt ein Vergleich aus Dokumentation, Prüfung und Ko
 
 **2. Nachkalkulation: Was hat die Baustelle wirklich gekostet?**
 
-Der Elektriker kalkuliert einen Auftrag mit 4.800 Euro. Material: 2.100. Arbeitszeit: 16 Stunden. Fahrt: 3 Anfahrten. Am Ende? Material: 2.640 Euro, weil der Verteilerkasten nicht gepasst hat. Arbeitszeit: 22 Stunden, weil die alten Leitungen nicht dokumentiert waren. Fahrt: 5 Anfahrten.
+Der Elektriker kalkuliert einen Auftrag mit 4.800 Euro, davon 2.100 Euro Material, 16 Stunden Arbeitszeit und 3 Anfahrten. Am Ende kostet das Material 2.640 Euro, weil der Verteilerkasten nicht gepasst hat, die Arbeit dauert 22 Stunden, weil die alten Leitungen nicht dokumentiert waren, und er fährt 5-mal hin.
 
 Eine Nachkalkulation zeigt Abweichungen zwischen Plan und Ist. KI bereitet die Darstellung vor; die Zahlen, Kostenarten und Rechenlogik stammen aus freigegebenen Betriebsdaten und werden unabhängig geprüft:
 
@@ -248,7 +234,7 @@ Das Beispiel enthält vereinfachte Plan- und Ist-Werte. Ein „effektiver Stunde
 
 **3. Angebotserstellung: Vom Aufmaß zum fertigen Angebot.**
 
-Der Fliesenleger kommt vom Aufmaß zurück. 14 qm Bodenfliesen, 22 qm Wandfliesen, Duschbereich mit Gefälle, bodengleiche Dusche. Er tippt die Zahlen in sein Handy. Abends formuliert seine Partnerin das Angebot, oder KI übernimmt den Entwurf:
+Der Fliesenleger kommt mit dem Aufmaß zurück: 14 qm Bodenfliesen, 22 qm Wandfliesen, bodengleiche Dusche mit Gefälle. Den Angebotsentwurf übernimmt die KI:
 
 ```
 Kontext: Ich bin Fliesenlegermeister. Aufmaß beim Kunden:
@@ -287,21 +273,21 @@ Ton: Freundlich, professionell, wie ein Innungsbetrieb.
 
 **5. Fortbildungsnachweise und Innungsdokumentation**
 
-Die Handwerkskammer will den Nachweis zur Fortbildung. Die Innung fragt nach dem Qualitätsmanagement-Bericht. KI strukturiert beides schneller, als du denkst, Stichworte rein, formatierter Bericht raus.
+Fortbildungsnachweis für die Handwerkskammer und Qualitätsmanagement-Bericht für die Innung formatiert die KI aus deinen Stichworten.
 
 **6. Kundenbewertungen professionell beantworten**
 
 Bewertungen können öffentlich sichtbar und personenbezogen sein. KI erstellt einen neutralen Antwortentwurf. Entferne personenbezogene oder vertrauliche Details und prüfe die Antwort vor Veröffentlichung. Behaupte keine Tatsachen, die du nicht belegen kannst.
 
-**Tool-Auswahl:** Vergleiche aktuelle Funktionen, Preise, Verträge, Datenflüsse und Exportmöglichkeiten. Für Buchhaltung und Angebote gelten andere Anforderungen als für unverbindliche Textentwürfe. Ein einzelnes Werkzeug deckt nicht automatisch alle Zwecke sicher ab.
+**Tool-Auswahl:** Für Buchhaltung und Angebote gelten andere Anforderungen an Funktionen, Verträge, Datenflüsse und Export als für unverbindliche Textentwürfe, und ein einzelnes Werkzeug deckt nicht automatisch alle Zwecke sicher ab.
 
-**ROI mit eigenen Daten:** Miss pro Angebot Bearbeitungszeit, Korrekturen, Toolkosten und Fehlerkosten. Zeitgewinn ist nicht automatisch Gewinn: Nur vermiedene Kosten oder tatsächlich produktiv genutzte Kapazität haben einen wirtschaftlichen Gegenwert.
+**ROI mit eigenen Daten:** Miss pro Angebot Bearbeitungszeit, Korrekturen, Tool- und Fehlerkosten. Wirtschaftlichen Gegenwert haben nur vermiedene Kosten oder tatsächlich produktiv genutzte Kapazität.
 
-**Was KI nicht kann im Handwerk.** KI kann nicht auf die Baustelle fahren. Sie sieht keinen Riss in der Wand, riecht kein feuchtes Mauerwerk, spürt keine lose Fliese. Sie kennt keine Bauvorschriften, die sich regional unterscheiden, die DIN-Normen vielleicht, aber nicht die Auflagen deiner Baubehörde. Sie ersetzt kein Gesellenstück, keinen Meisterbrief, keine 20 Jahre Erfahrung.
+**Was KI im Handwerk nicht kann.** Sie sieht keinen Riss in der Wand und riecht kein feuchtes Mauerwerk. Regionale Bauvorschriften und die Auflagen deiner Baubehörde kennt sie nicht, und 20 Jahre Erfahrung ersetzt sie nicht.
 
-Vertrauliche Preise und Kalkulationen gehören nur in einen dafür freigegebenen Ablauf. Für allgemeine Textentwürfe reichen Platzhalter oder fiktive Zahlen.
+Vertrauliche Preise und Kalkulationen gehören nur in einen dafür freigegebenen Ablauf, für allgemeine Textentwürfe reichen Platzhalter oder fiktive Zahlen.
 
-Passe die Prompts mit fiktiven Fällen an dein Gewerk an. Führe danach einen begrenzten Test durch und dokumentiere Zeit, Fehler, Nacharbeit und Nutzen. Erst diese Messwerte tragen deine Entscheidung.
+Passe die Prompts mit fiktiven Fällen an dein Gewerk an, teste begrenzt und dokumentiere Zeit, Fehler, Nacharbeit und Nutzen, bevor du entscheidest.
 
 ## Coaches, Therapeuten, Trainer
 
@@ -311,9 +297,9 @@ Bei Coaching, Therapie und Training unterscheiden sich zulässige Anwendungsfäl
 
 Sitzungsnotizen, Therapieverläufe oder persönliche Coachingprotokolle gehören nicht in einen ungeprüften KI-Dienst. Auch lokale Software ist nicht automatisch sicher. Betriebssystem, Backups, Plugins, Logs, Netzwerkzugriffe und Zugriffsrechte zählen zum Datenfluss. Für sensible Workflows sind eine dokumentierte Rechtsgrundlage, technische Schutzmaßnahmen, Datenschutz-Folgenprüfung soweit erforderlich und berufsrechtliche Freigabe notwendig.
 
-Mit dieser Grenze im Kopf, hier die Workflows, die dir den Verwaltungsteil abnehmen.
+Innerhalb dieser Grenze nehmen dir folgende Workflows Verwaltung ab.
 
-**Übungsblätter und Arbeitsblätter.** Hier ein konkreter Prompt, den du sofort nutzen kannst:
+**Übungsblätter und Arbeitsblätter:**
 
 ```
 Kontext: Ich bin [COACH/THERAPEUT/TRAINER] und brauche ein
@@ -343,7 +329,7 @@ Ton: Didaktisch durchdacht, praxisorientiert.
 
 **Gruppenübungen und Reflexionsfragen generieren.** KI schlägt Varianten vor. Beurteile jede Übung nach Lernziel, Zielgruppe, möglicher Belastung, Zeitbedarf und fachlicher Eignung. Verwende keine erfundenen Erfahrungswerte als Begründung.
 
-**Workshop-Marketing.** Der Prozess hat 3 Schritte. Erstens, du definierst Zielgruppe, Thema und Kanal. Zweitens, KI schreibt den Werbetext, Landing Page, E-Mail oder LinkedIn-Post. Drittens, du liest ihn laut vor. Klingt er nach dir, geht er raus. Klingt er nach Werbeagentur, schreibst du um. So sieht der KRAFT-Prompt dafür aus:
+**Workshop-Marketing.** Du definierst Zielgruppe, Thema und Kanal, die KI schreibt den Werbetext, und du liest ihn laut vor. Klingt er nach Werbeagentur, schreibst du um:
 
 ```
 Kontext: Ich biete einen [ONLINE/OFFLINE]-Workshop an: [THEMA].
@@ -358,9 +344,7 @@ Ton: Einladend, empathisch, nicht reißerisch.
 
 ## Immobilienmakler und Hausverwaltung
 
-Ein Exposé dauert 45 Minuten. Macht 14 Exposés diese Woche. Die Fotos sind fertig, der Grundriss liegt vor, jedes Mal fehlt nur der Text. Und jedes Mal greifst du zu denselben Wörtern.
-
-Der größte Zeitfresser im Maklergeschäft ist nicht die Besichtigung, nicht das Verhandeln. Es ist die Texterei. "Lichtdurchflutete Räume." "Ruhige Lage." "Ideal für Paare und Singles." Du schreibst sie hin, weil sie funktionieren, und merkst gleichzeitig, dass sie nach jedem zweiten Inserat auf ImmoScout klingen.
+Ein Exposé dauert 45 Minuten, bei 14 Exposés pro Woche. Fotos und Grundriss liegen vor, es fehlt der Text, und der größte Zeitfresser im Maklergeschäft ist die Texterei. Phrasen wie "lichtdurchflutete Räume", "ruhige Lage" oder "ideal für Paare und Singles" klingen wie jedes zweite Inserat auf ImmoScout.
 
 KI liefert dir Varianten für einen Exposé-Entwurf. Sie garantiert weder Qualität noch Verkauf und darf keine Merkmale erfinden.
 
@@ -383,7 +367,7 @@ wie "lichtdurchflutet" oder "ideal gelegen."
 
 **2. Marktpreiseinschätzung vorbereiten**
 
-Du brauchst eine Einschätzung für das Erstgespräch mit dem Eigentümer? Einen Marktwert berechnet dir KI nicht, das kann nur ein Gutachter oder deine Erfahrung. Beim Strukturieren der Argumente hilft sie dir sehr wohl:
+Einen Marktwert für das Erstgespräch mit dem Eigentümer berechnet dir KI nicht, das können nur ein Gutachter oder deine Erfahrung. Beim Strukturieren der Argumente hilft sie:
 
 "Ich brauche eine Marktpreisargumentation für [IMMOBILIENTYP] in [STADTTEIL]. Vergleichsobjekte: [2-3 REFERENZEN MIT QM-PREIS]. Stärken: [AUFZÄHLEN]. Schwächen: [AUFZÄHLEN]. Erstelle eine Tabelle: Faktor | Einfluss auf Preis | Begründung."
 
@@ -406,19 +390,19 @@ Ton: Professionell, einladend, nicht verkäuferisch.
 
 **DSGVO-Hinweis:** Kundendaten gehören nicht in die KI. Anonymisiere: "Interessent A fragt nach Objekt B." Niemals Kontaktdaten, Bonitätsinformationen oder Personalausweiskopien in ChatGPT eingeben.
 
-**ROI mit eigenen Daten:** Erfasse pro Exposé und Anfrage Entwurfszeit, Prüfung, Korrekturen und Toolkosten. Rechne nur mit gemessenen, tatsächlich frei werdenden Stunden. Kostenlose Tarife können Limits oder andere Bedingungen haben und sind nicht kostenfrei im Betrieb.
+**ROI mit eigenen Daten:** Erfasse pro Exposé und Anfrage Entwurfszeit, Prüfung, Korrekturen und Toolkosten und rechne nur mit tatsächlich frei werdenden Stunden. Auch kostenlose Tarife haben Limits und sind im Betrieb nicht kostenfrei.
 
 ## Gesundheitsberufe und Praxen
 
-Die Physiotherapeutin hat 8 Patienten am Tag. Zwischen den Terminen: Dokumentation. Nach dem letzten Termin: Dokumentation. Am Wochenende: Praxis-Marketing, weil die Webseite seit 2019 nicht aktualisiert wurde.
+Die Physiotherapeutin hat 8 Patienten am Tag, dokumentiert zwischen und nach den Terminen und macht am Wochenende Praxis-Marketing, weil die Webseite seit 2019 nicht aktualisiert wurde.
 
-Gemeint sind Physiotherapeuten, Heilpraktiker, Zahnarztpraxen, Logopäden und Ergotherapeuten. Nicht Ärzte, die haben andere regulatorische Anforderungen. Es geht um die Solo-Praxis oder Kleinpraxis, in der eine Person alles macht.
+Dieser Abschnitt richtet sich an Solo- und Kleinpraxen von Physiotherapeuten, Heilpraktikern, Zahnarztpraxen, Logopäden und Ergotherapeuten. Für Ärzte gelten andere regulatorische Anforderungen.
 
 > **Rechtlicher Hinweis:** DSGVO Art. 9 behandelt Gesundheitsdaten als besondere Kategorie. Keine Patientennamen, keine Diagnosen, keine Behandlungsverläufe in ChatGPT, Claude oder andere Cloud-KI-Tools, auch nicht mit DPA. Für jede Aufgabe mit Patientenbezug: Anonymisiere konsequent oder nutze lokale KI (Ollama, LM Studio). Details in Kapitel 8.
 
 **1. Patienteninformationen erstellen**
 
-Deine Patienten fragen immer dasselbe. "Was soll ich zu Hause machen?" "Wie oft?" "Worauf muss ich achten?" KI erstellt Informationsblätter, die du einmal erstellst und immer wieder ausgibst:
+Patienten fragen immer wieder, was sie zu Hause wie oft machen sollen und worauf sie achten müssen. KI entwirft Informationsblätter, die du immer wieder ausgibst:
 
 ```
 Kontext: Ich bin Physiotherapeutin und behandle häufig Patienten
@@ -462,17 +446,16 @@ KI bereitet Entwürfe für Terminerinnerungen und Kommunikation zu Ausfallregeln
 
 **Tool-Auswahl:** „Lokal" oder „EU-Server" belegt allein keine Zulässigkeit. Prüfe für jeden Zweck Datenkategorien, Vertrag, Speicherorte, Unterauftragnehmer, Telemetrie, Löschung, Zugriffe und berufsrechtliche Anforderungen. Verwende Patientenbezug nur in ausdrücklich freigegebenen Systemen.
 
-**Nutzenmessung:** Erfasse Entwurfszeit, fachliche Prüfung, Korrekturen, Freigabe und Toolkosten getrennt. Unterstelle nicht, dass frei werdende Verwaltungszeit automatisch in zusätzliche Patientenzeit oder Umsatz übergeht.
+**Nutzenmessung:** Erfasse Entwurf, fachliche Prüfung, Korrekturen, Freigabe und Toolkosten getrennt. Frei werdende Verwaltungszeit wird nicht automatisch zu Patientenzeit oder Umsatz.
 
 ---
 
 > **Jetzt bist du dran:** Dein Branchen-Playbook
 >
 > 1. Wähle deine Branche (oder die nächstliegende).
-> 2. Identifiziere deine 3 größten Zeitfresser außerhalb der Kernarbeit. Nicht raten, eine Woche tracken, wenn du unsicher bist.
+> 2. Identifiziere deine 3 größten Zeitfresser außerhalb der Kernarbeit, im Zweifel mit einer Woche Tracking.
 > 3. Erstelle für jeden einen KRAFT-Prompt.
-> 4. Teste alle 3 heute, nicht morgen.
-> 5. Speichere die Prompts, die funktionieren, lösche den Rest.
+> 4. Teste alle 3 heute und speichere die Prompts, die funktionieren.
 >
 > Danach hast du einen ersten Entwurf für dein Branchen-Playbook. Test und fachliche Freigabe folgen.
 
@@ -485,4 +468,4 @@ KI bereitet Entwürfe für Terminerinnerungen und Kommunikation zu Ausfallregeln
 > | Fehler, Risiken und Nacharbeit | ___ |
 > | Messbarer Nutzen nach Kosten | ___ |
 
-So sieht KI in deiner Branche aus. Kapitel 10 zeigt dir, wie du das Ganze automatisierst.
+Kapitel 10 zeigt, wie du diese Abläufe automatisierst.

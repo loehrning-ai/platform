@@ -108,7 +108,7 @@ describe("login locale surface", () => {
       // Copy lock updated: the German platform issues two completion documents
       // (Teilnahmebestätigung, and a Lernnachweis for ki-und-gesellschaft), so the
       // login description names both instead of only the first.
-      "Optionales Lernkonto für Kursfortschritt, Teilnahmebestätigungen und Lernnachweise auf loehrning.ai.",
+      "Optionales Lernkonto für Kursfortschritt und Teilnahmebestätigungen auf loehrning.ai.",
     ],
     [
       "en",
@@ -143,7 +143,7 @@ describe("login locale surface", () => {
       }),
     ).toBeVisible();
     expect(screen.getByRole("alert")).toHaveTextContent(
-      "Sign-in is not enabled in this environment.",
+      "Sign-in is not enabled here, so the four foundation courses are unavailable for now.",
     );
     expect(
       screen.getByRole("link", { name: "View all courses" }),
@@ -167,7 +167,7 @@ describe("login locale surface", () => {
     expect(screen.getAllByRole("alert")).toHaveLength(1);
   });
 
-  it("states what an account adds, and that local progress is not carried over", async () => {
+  it("states what an account adds, and that local progress is imported only once on request", async () => {
     mocks.getRequestLocale.mockResolvedValue("en");
 
     render(await LoginPage({ searchParams: Promise.resolve({}) }));
@@ -179,31 +179,31 @@ describe("login locale surface", () => {
       name: "What an account adds",
     });
     expect(
-      within(section).getByText("One learning thread across devices"),
+      within(section).getByText("Progress on every device"),
     ).toBeVisible();
     expect(
       within(section).getByText("Your tools with your documents"),
     ).toBeVisible();
     expect(
-      within(section).getByText("Your own AI connected"),
+      within(section).getByText("Connect your own AI"),
     ).toBeVisible();
     expect(
       within(section).getByText(/certificate of participation/),
     ).toBeVisible();
     expect(
-      within(section).getByText(/Export, reset, delete/),
+      within(section).getByText(/export, reset or delete your data/),
     ).toBeVisible();
     // Two of the three regions are gated behind readiness predicates on
     // /konto, so the panel says they appear only once configured rather than
     // promising a region that renders nothing.
     expect(
-      within(section).getByText(/once this server has them configured/),
+      within(section).getByText(/once they are set up here/),
     ).toBeVisible();
-    // Anonymous progress is never merged into an account by design
-    // (lib/progress/store.ts), so the page has to say so BEFORE sign-in
-    // rather than leave a learner to discover an empty dashboard after.
+    // Anonymous progress is not merged automatically; /konto offers a one-time
+    // import (import-progress-island.tsx), so the page has to say so BEFORE
+    // sign-in rather than leave a learner to discover an empty dashboard after.
     expect(
-      within(section).getByText(/is not carried over when you sign in/),
+      within(section).getByText(/you can import it into your account once/),
     ).toBeVisible();
   });
 
@@ -289,6 +289,48 @@ describe("login locale surface", () => {
     ).rejects.toBe(REDIRECT);
     expect(mocks.redirect).toHaveBeenCalledWith("/en/kurse");
   });
+
+  // Open redirect: a signed-in learner opening
+  // /login?next=/en//evil.example was answered with Location //evil.example.
+  it.each(
+    (["de", "en"] as const).flatMap((locale) =>
+      [
+        "/en//evil.example/fake-login",
+        "/de//evil.example",
+        "/en/%2e//evil.example",
+        "/en/.//evil.example",
+        "/en/x/..//evil.example",
+      ].map((next) => [locale, next] as const),
+    ),
+  )(
+    "keeps a signed-in %s visitor on this origin for next=%s",
+    async (locale, next) => {
+      mocks.getRequestLocale.mockResolvedValue(locale);
+      mocks.getAuthenticatedUser.mockResolvedValue({
+        configured: true,
+        user: { id: "user-redirect" },
+        error: null,
+      });
+      mocks.getRuntimeFeatures.mockReturnValue({
+        account: true,
+        magicLink: false,
+        google: true,
+        github: false,
+        turnstileSiteKey: null,
+      });
+
+      await expect(
+        LoginPage({ searchParams: Promise.resolve({ next }) }),
+      ).rejects.toBe(REDIRECT);
+      expect(mocks.redirect).toHaveBeenCalledTimes(1);
+      const target = mocks.redirect.mock.calls[0]?.[0] as string;
+      expect(target).toBe(locale === "de" ? "/konto" : "/en/konto");
+      expect(target.startsWith("//")).toBe(false);
+      expect(new URL(target, "https://loehrning.invalid").origin).toBe(
+        "https://loehrning.invalid",
+      );
+    },
+  );
 });
 
 describe("login layout branches", () => {
@@ -346,7 +388,7 @@ describe("login layout branches", () => {
       "Weiter ohne Konto.",
       "Konfiguration offen",
       "Die Anmeldung ist noch nicht freigeschaltet.",
-      /Hier ist nichts zu tun/,
+      /Sobald das geprüft ist/,
     ],
     [
       "methods",
@@ -354,8 +396,8 @@ describe("login layout branches", () => {
       { ...NO_RUNTIME, account: true },
       "Weiter ohne Konto.",
       "Keine Methode freigegeben",
-      "Weder Google noch der Login-Link sind hier geprüft.",
-      /Eine bestehende Sitzung bleibt gültig/,
+      "Die Anmeldung ist hier noch nicht eingerichtet.",
+      /Die offenen Inhalte unten/,
     ],
     [
       "disabled",
@@ -364,7 +406,7 @@ describe("login layout branches", () => {
       "Weiter ohne Konto.",
       "Hier nicht eingerichtet",
       "Diese Umgebung läuft ohne Konto.",
-      /Bücher, Demos, KI-Check und die technischen Kurse bleiben vollständig offen/,
+      /^Hier ist nichts zu tun\.$/,
     ],
   ] as const)(
     "gives the %s branch one column and its own status, headline and next step",

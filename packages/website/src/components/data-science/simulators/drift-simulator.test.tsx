@@ -17,7 +17,7 @@ describe("DriftSimulator ", () => {
   it("renders the real panel copy and both charts", () => {
     render(<DriftSimulator />);
     expect(screen.getByText("Drift simulator")).toBeInTheDocument();
-    expect(screen.getByText("Model accuracy (AUC) over 60 days")).toBeInTheDocument();
+    expect(screen.getByText("Model AUC over 60 days")).toBeInTheDocument();
     expect(screen.getByText("PSI (Population Stability Index)")).toBeInTheDocument();
     expect(screen.getByText("Day 1 / 60")).toBeInTheDocument();
   });

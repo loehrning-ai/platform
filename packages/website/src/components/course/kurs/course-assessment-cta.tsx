@@ -50,7 +50,7 @@ interface AssessmentCopy {
     minutes: number,
   ) => string;
   readonly progress: (completed: number, total: number) => string;
-  readonly locked: (remaining: number, total: number) => string;
+  readonly locked: (total: number) => string;
   readonly ready: (total: number) => string;
   readonly passed: (recordPossessive: string) => string;
   readonly projectEligible: (recordPossessive: string) => string;
@@ -65,54 +65,47 @@ interface AssessmentCopy {
 const ASSESSMENT_COPY: Readonly<Record<"de" | "en", AssessmentCopy>> = {
   de: {
     eyebrow: "Abschluss",
-    heading: (recordLabel) => `Workshop-Quiz und ${recordLabel}`,
+    heading: (recordLabel) => `Abschlussquiz und ${recordLabel}`,
     loading: "Fortschritt wird geprüft…",
     details: (questions, passPercentage, minutes) =>
       `${questions} Fragen · ${passPercentage}% zum Bestehen · ${minutes} Minuten`,
     progress: (completed, total) =>
       `${completed} von ${total} Lektionen abgeschlossen`,
-    locked: (remaining, total) =>
-      `Schließe alle ${total} Lektionen ab, um das Workshop-Quiz freizuschalten. Noch ${remaining} ${
-        remaining === 1 ? "Lektion" : "Lektionen"
-      }.`,
-    ready: (total) =>
-      `Alle ${total} Lektionen sind abgeschlossen. Das Workshop-Quiz ist jetzt freigeschaltet.`,
+    locked: (total) =>
+      `Schließe alle ${total} Lektionen ab, um das Quiz freizuschalten.`,
+    ready: () => "Das Abschlussquiz ist freigeschaltet.",
     passed: (recordPossessive) =>
-      `Bestanden. Du kannst das Quiz wiederholen. ${recordPossessive} steht zum Download bereit.`,
+      `Bestanden. ${recordPossessive} steht zum Download bereit.`,
     projectEligible: (recordPossessive) =>
-      `Alle Lektionen und das angewandte Projekt sind abgeschlossen. Das Projekt ist eine lokal gespeicherte Lernleistung, aber kein serverbestätigter Abschlussnachweis. Bestehe das Quiz, um ${recordPossessive} freizuschalten.`,
+      `Alle Lektionen und das angewandte Projekt sind abgeschlossen, doch das lokal gespeicherte Projekt ist kein serverbestätigter Abschlussnachweis. ${recordPossessive} schaltest du mit dem bestandenen Quiz frei.`,
     legacyCapstoneEligible: (recordPossessive) =>
-      `Alle Lektionen und deine frühere Capstone-Selbstprüfung sind abgeschlossen. ${recordPossessive} steht weiterhin zum Download bereit; das neue angewandte Projekt ist damit nicht verifiziert.`,
+      `Alle Lektionen und deine frühere Capstone-Selbstprüfung sind abgeschlossen, doch die Selbstprüfung verifiziert das neue angewandte Projekt nicht. ${recordPossessive} bleibt abrufbar.`,
     localRecordNotice:
-      "Die PDF wird lokal erzeugt, ist nicht servergeprüft und kein akkreditierter Abschluss.",
+      "Die PDF entsteht lokal, ist nicht servergeprüft und kein akkreditierter Abschluss.",
     lockedLabel: "Quiz gesperrt",
-    startQuiz: "Workshop-Quiz starten",
+    startQuiz: "Quiz starten",
     retakeQuiz: "Quiz wiederholen",
     downloadRecord: (recordLabel) => `${recordLabel} herunterladen`,
   },
   en: {
     eyebrow: "Final assessment",
-    heading: (recordLabel) => `Workshop quiz and ${recordLabel}`,
+    heading: (recordLabel) => `Final quiz and ${recordLabel}`,
     loading: "Checking course progress…",
     details: (questions, passPercentage, minutes) =>
       `${questions} questions · ${passPercentage}% to pass · ${minutes} minutes`,
     progress: (completed, total) => `${completed} of ${total} lessons complete`,
-    locked: (remaining, total) =>
-      `Complete all ${total} lessons to unlock the workshop quiz. ${remaining} ${
-        remaining === 1 ? "lesson" : "lessons"
-      } remaining.`,
-    ready: (total) =>
-      `All ${total} lessons are complete. The workshop quiz is now unlocked.`,
+    locked: (total) => `Complete all ${total} lessons to unlock the quiz.`,
+    ready: () => "The final quiz is unlocked.",
     passed: (recordPossessive) =>
-      `Passed. You can retake the quiz. ${recordPossessive} is ready to download.`,
+      `Passed. ${recordPossessive} is ready to download.`,
     projectEligible: (recordPossessive) =>
-      `Every lesson and the applied project are complete. The project is locally stored learning evidence, not a server-attested completion record. Pass the quiz to unlock ${recordPossessive}.`,
+      `Every lesson and the applied project are complete, but the locally stored project is not a server-attested completion record. ${recordPossessive} unlocks when you pass the quiz.`,
     legacyCapstoneEligible: (recordPossessive) =>
-      `Every lesson and your historical capstone self-review are complete. ${recordPossessive} remains ready to download; this does not verify the new applied project.`,
+      `Every lesson and your earlier capstone self-review are complete, but the self-review does not verify the new applied project. ${recordPossessive} stays available.`,
     localRecordNotice:
-      "The PDF is generated locally, is not server-verified, and is not an accredited qualification.",
+      "The PDF is created locally, not server-verified and not an accredited qualification.",
     lockedLabel: "Quiz locked",
-    startQuiz: "Start workshop quiz",
+    startQuiz: "Start quiz",
     retakeQuiz: "Retake quiz",
     downloadRecord: (recordLabel) => `Download ${recordLabel}`,
   },
@@ -178,14 +171,10 @@ export function CourseAssessmentCta({
     };
   }, [courseSlug]);
 
-  const remainingLessons = progress
-    ? Math.max(0, totalLessons - progress.completedLessons)
-    : totalLessons;
-
   let stateCopy = copy.loading;
   if (progress) {
     if (!progress.courseCompleted) {
-      stateCopy = copy.locked(remainingLessons, totalLessons);
+      stateCopy = copy.locked(totalLessons);
     } else if (progress.quizPassed) {
       stateCopy = copy.passed(config.recordNoun.possessive);
     } else if (courseSlug === "ai-native" && progress.projectCompleted) {
@@ -209,7 +198,7 @@ export function CourseAssessmentCta({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: EASE_OUT_EXPO }}
         className={cn(
-          "mt-12 scroll-mt-24 border-2 border-foreground bg-card/40 p-6 md:p-8",
+          "mt-12 scroll-mt-24 border-t-2 border-foreground pt-5",
           className,
         )}
         aria-labelledby={headingId}
@@ -225,17 +214,17 @@ export function CourseAssessmentCta({
               : "locked"
         }
       >
-        <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
+        <p className="text-label text-muted-foreground">
           <Award size={12} className="mr-1.5 inline" aria-hidden="true" />
           {copy.eyebrow}
         </p>
         <h2
           id={headingId}
-          className="mt-2 text-[22px] font-bold tracking-[-0.02em] text-foreground"
+          className="mt-2 text-fluid-h2 font-bold text-foreground"
         >
           {copy.heading(config.recordNoun.label)}
         </h2>
-        <p className="mt-2 font-mono text-xs text-muted-foreground">
+        <p className="mt-2 text-caption text-muted-foreground tabular-nums">
           {copy.details(
             config.workshopQuizQuestionCount,
             passPercentage,
@@ -243,7 +232,7 @@ export function CourseAssessmentCta({
           )}
         </p>
         <p
-          className="mt-3 max-w-[680px] text-[14.5px] leading-[1.55] text-muted-foreground"
+          className="mt-3 max-w-[64ch] text-body text-muted-foreground"
           role="status"
           aria-live="polite"
           aria-atomic="true"
@@ -252,7 +241,7 @@ export function CourseAssessmentCta({
         </p>
 
         {progress && (
-          <p className="mt-2 font-mono text-xs text-muted-foreground">
+          <p className="mt-2 text-caption text-muted-foreground tabular-nums">
             {copy.progress(progress.completedLessons, totalLessons)}
           </p>
         )}
@@ -262,7 +251,7 @@ export function CourseAssessmentCta({
             <>
               <Link
                 href={quizHref}
-                className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-7 py-3 text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-foreground hover:text-background"
+                className="inline-flex min-h-11 max-w-full items-center gap-2 break-words bg-foreground px-5 py-3 text-left text-[0.9375rem] font-semibold text-background transition-colors duration-[120ms] hover:bg-muted-foreground motion-reduce:transition-none"
               >
                 <Trophy className="h-4 w-4" aria-hidden="true" />
                 {progress.quizPassed ? copy.retakeQuiz : copy.startQuiz}
@@ -271,7 +260,7 @@ export function CourseAssessmentCta({
               {progress.certificateEligible && (
                 <Link
                   href={certificateHref}
-                  className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-card px-5 py-3 text-sm font-bold uppercase tracking-wide text-foreground transition-colors hover:bg-foreground hover:text-background"
+                  className="inline-flex min-h-11 items-center gap-2 border border-foreground bg-transparent px-5 py-3 text-[0.9375rem] font-semibold text-foreground transition-colors duration-[120ms] hover:bg-card-hover motion-reduce:transition-none"
                 >
                   <GraduationCap className="h-4 w-4" aria-hidden="true" />
                   {copy.downloadRecord(config.recordNoun.label)}
@@ -282,7 +271,7 @@ export function CourseAssessmentCta({
             <button
               type="button"
               disabled
-              className="inline-flex min-h-11 cursor-not-allowed items-center gap-2 border border-border bg-background px-5 py-3 text-sm font-bold uppercase tracking-wide text-muted-foreground"
+              className="inline-flex min-h-11 cursor-not-allowed items-center gap-2 border border-dashed border-border bg-transparent px-5 py-3 text-[0.9375rem] font-semibold text-muted-foreground"
             >
               <LockKeyhole className="h-4 w-4" aria-hidden="true" />
               {copy.lockedLabel}
@@ -291,7 +280,7 @@ export function CourseAssessmentCta({
         </div>
 
         {progress?.certificateEligible && (
-          <p className="mt-4 max-w-[680px] text-xs leading-relaxed text-muted-foreground">
+          <p className="mt-4 max-w-[64ch] text-caption text-muted-foreground">
             {copy.localRecordNotice}
           </p>
         )}

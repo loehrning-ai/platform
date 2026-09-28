@@ -19,7 +19,6 @@
       "durationMinutes": 14,
       "premiumGated": false,
       "refreshCadence": "QUARTERLY",
-      "voiceAnchor": "Self-hosting gives you technical control and transfers operations, security, and data-protection assessment to you.",
       "keyConcepts": [
         "n8n",
         "Hetzner",
@@ -37,29 +36,25 @@
           "id": "modul_4_lesson_1_section_1",
           "title": "The stage without a manual trigger",
           "readTimeMinutes": 2,
-          "content": "Claude, Skills, Plugins, Obsidian: everything so far was **manually triggered**. You do something, Claude responds.\n\nNow comes the stage where things run without you. An email arrives, gets classified, a CRM draft is ready, and a person checks the next step.\n\nn8n is an open-source, self-hostable workflow tool. Self-hosting can make data flows and configuration more controllable. A GDPR guarantee it is not. You are responsible, among other things, for the legal basis, contracts with hosting and API providers, HTTPS, secrets, access, updates, backups, logging, deletion, and incident handling.",
-          "keyTakeaway": "Self-hosting creates control, not automatic compliance. Only data flow, contracts, security, and operations make a workflow approvable."
+          "content": "So far you started Claude, Skills, Plugins and Obsidian **manually**: you do something, Claude responds.\n\nNow workflows start without you. An email arrives, gets classified, a CRM draft is ready, and a person checks the next step.\n\nn8n is an open-source, self-hostable workflow tool. Self-hosting can make data flows and configuration more controllable, but it does not guarantee GDPR compliance. You are responsible for, among other things, the legal basis, contracts with hosting and API providers, HTTPS, secrets, access, updates, backups, logging, deletion and incident handling."
         },
         {
           "id": "modul_4_lesson_1_section_2",
-          "title": "Why n8n, not Zapier/Make",
+          "title": "Why the course uses n8n",
           "readTimeMinutes": 3,
-          "content": "**Three operating models, three trade-offs:**\n\n| | Managed SaaS | n8n Cloud | n8n self-hosted |\n|---|-------------|-----------|------------------|\n| Operations | Provider | Provider | your organization |\n| Costs | check current pricing and usage units | check current plans | hosting plus operating time |\n| Data protection | check roles, DPA/AVV, transfers, and options | check the contract and specific region | hosting contract and all connected APIs remain relevant |\n| Security | provider plus your own configuration | provider plus your own configuration | patches, HTTPS, secrets, backups, and monitoring yourself |\n\nWhat fits is decided by data classes, operational expertise, integrations, volume, and exit requirements. We teach n8n because the workflow logic transfers. Not because one product wins by default.",
-          "keyTakeaway": "Managed or self-hosted is a responsibility decision. Compare data flow, contract, operations, costs, and exit for the specific workflow."
+          "content": "| | Managed SaaS | n8n Cloud | n8n self-hosted |\n|---|---|---|---|\n| Operations | Provider | Provider | your organization |\n| Costs | check current pricing and usage units | check current plans | hosting plus operating time |\n| Data protection | check roles, DPA/AVV, transfers and options | check the contract and region | check the hosting contract and all connected APIs |\n| Security | provider plus your own configuration | provider plus your own configuration | patches, HTTPS, secrets, backups and monitoring yourself |\n\nWhich model fits depends on data classes, operational expertise, integrations, volume, exit requirements, and operational responsiveness and recovery. The course uses n8n because the workflow logic transfers to other tools."
         },
         {
           "id": "modul_4_lesson_1_section_3",
           "title": "Prepare self-hosted n8n securely",
           "readTimeMinutes": 5,
-          "content": "**Before installing:**\n1. Define data classes and permitted integrations.\n2. Check the hosting region, contract, DPA/AVV, and subprocessors.\n3. Choose an appropriate server size based on the current n8n requirements and expected load.\n4. Set up SSH with keys only, a restrictive firewall, and automatic security updates.\n5. Pin a tested n8n version; do not use uncontrolled `latest`.\n6. Do not expose n8n to the internet unencrypted on port 80. Configure the domain, HTTPS reverse proxy, and access protection first.\n7. Manage secrets outside workflow exports and minimize access rights.\n8. Define encrypted backups with a recovery test, logging, monitoring, and a patch process.\n\nThe current Docker and configuration steps are in the official n8n documentation. An old one-line installation has no place in a production environment. First an isolated sandbox with no real personal, customer, or access data.\n\nA successful login is the start, not the finish. HTTPS, secrets, permissions, updates, backups, recovery, and monitoring make the installation operationally reliable.",
-          "keyTakeaway": "An accessible n8n instance is not yet a secure service. Check version pinning, HTTPS, secrets, permissions, updates, backups, and recovery before using real data."
+          "content": "**Before installing:**\n1. Define data classes and permitted integrations.\n2. Check the hosting region, contract, DPA/AVV and subprocessors.\n3. Choose a server size based on current n8n requirements and expected load.\n4. Set up SSH with keys only, a restrictive firewall and automatic security updates.\n5. Pin a tested n8n version instead of an uncontrolled `latest`.\n6. Set up the domain, HTTPS reverse proxy and access protection before n8n is reachable; never unencrypted on port 80.\n7. Manage secrets outside workflow exports and minimize access rights.\n8. Define encrypted backups with a recovery test, logging, monitoring and a patch process.\n\nThe current Docker and configuration steps are in the official n8n documentation; old one-line installations are unfit for production. Start in an isolated sandbox with no real personal, customer or access data. A successful login only shows that n8n runs."
         },
         {
           "id": "modul_4_lesson_1_section_4",
           "title": "First flow + n8n.cloud fallback",
           "readTimeMinutes": 3,
-          "content": "**Hello world: webhook-to-review text**\n\n1. **Trigger:** Webhook node via the protected HTTPS test URL, method POST\n2. **Action:** Prepare review text\n   - Subject: \"New webhook message\"\n   - Body: `{{ $json.message }}` (dynamic)\n3. **Save** + **Test** with synthetic data\n\nResult: visible review text in the test run, no automatic sending.\n\n**Managed fallback:**\n- The provider takes over parts of operations, patching, and availability.\n- Contract, DPA/AVV, region, subprocessors, access, logging, export, and deletion you still check for your organization.\n- The sandbox patterns in module 4 generally also run managed.\n\n**Self-hosted or managed is more than a pricing question:**\n- Check data flow and access control\n- Assess operational effort and responsiveness\n- Clarify contracts, logging, exit, and recovery",
-          "keyTakeaway": "Choose managed or self-hosted based on data flow, contract, security controls, operational expertise, costs, and exit."
+          "content": "**Hello world: webhook to review text**\n\n1. **Trigger:** Webhook node via the protected HTTPS test URL, method POST\n2. **Action:** Prepare review text\n   - Subject: \"New webhook message\"\n   - Body: `{{ $json.message }}` (dynamic)\n3. **Save** + **Test** with synthetic data\n\nResult: visible review text in the test run, with no automatic sending.\n\n**Managed fallback:** The provider takes over parts of operations, patching and availability; you still check contract, DPA/AVV, region, subprocessors, access, logging, export and deletion. The sandbox patterns in module 4 generally also run managed."
         }
       ],
       "quiz": [
@@ -69,7 +64,7 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Self-hosting provides more technical control, but transfers HTTPS, secrets, updates, backups, and monitoring to the organization itself; contracts with hosting and API providers still need to be checked",
+              "text": "More control, but you run it; hosting and API contracts still need checks",
               "isCorrect": true
             },
             {
@@ -84,11 +79,11 @@
             },
             {
               "id": "d",
-              "text": "Managed services are generally inadmissible",
+              "text": "Managed services are never permissible",
               "isCorrect": false
             }
           ],
-          "explanation": "Self-hosting increases control. A compliance shortcut it is not: hosting, connected APIs, and other service providers stay in the data flow, and secure operation is yours on top."
+          "explanation": "Hosting, connected APIs and other service providers stay in the data flow. On top of that, you run HTTPS, secrets, updates, backups and monitoring yourself."
         },
         {
           "id": "modul_4_lesson_1_q2",
@@ -96,26 +91,26 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Always; self-hosted is worse",
+              "text": "Always, because self-hosting is the worse choice",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "When the contract, data flow, and controls fit, and the organization does not want to operate it securely itself",
+              "text": "When contract and data flow fit and you won't self-host",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "Only if you do not have a computer",
+              "text": "Only if you do not own a computer",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Never; always self-host",
+              "text": "Never; you should always self-host n8n",
               "isCorrect": false
             }
           ],
-          "explanation": "The number of flows does not decide on its own. Data classes, contract, security requirements, integrations, operational capability, costs, and exit determine the operating model."
+          "explanation": "The operating model follows from data classes, contract, security requirements, integrations, operational capability, costs and exit."
         }
       ]
     },
@@ -128,7 +123,6 @@
       "durationMinutes": 12,
       "premiumGated": false,
       "refreshCadence": "QUARTERLY",
-      "voiceAnchor": "Your inbox is not automated blindly. It first receives a review list.",
       "keyConcepts": [
         "Mail Trigger",
         "Claude HTTP Node",
@@ -144,7 +138,7 @@
             "lessonId": "modul_4_lesson_2",
             "moduleId": "modul_4",
             "title": "Build the email triage pipeline",
-            "scenario": "n8n sandbox: new sample email, Claude classifies (offer / support / spam), Switch routes to the appropriate review list. Arrange the nodes.",
+            "scenario": "n8n sandbox: a new sample email arrives, Claude classifies it, simplified, as offer, support or spam, Switch routes it to the matching review list. Arrange the nodes.",
             "palette": [
               {
                 "id": "trigger-gmail",
@@ -220,29 +214,25 @@
           "id": "modul_4_lesson_2_section_1",
           "title": "The flow in 5 nodes",
           "readTimeMinutes": 3,
-          "content": "Inquiries, leads, and follow-ups land on a sales lead's desk, to be sorted into the CRM. Whether automating pays off is answered by measured volume, handling time, and error rate, not a hunch.\n\nIn this sandbox, you build a flow that prepares a review list from synthetic emails.\n\n```\n  [Sample email trigger]\n         |\n         v\n  [Model classifier]: Lead / customer / internal / spam?\n         |\n         v\n  [Switch node]\n    ├── Lead → [Field extraction] → [CRM review entry]\n    ├── Customer → [Activity review entry]\n    └── Rest → [Ignore suggestion]\n```\n\nClassification and extraction stay separate. Each step gets its own schema, model configuration, tests, and failure handling.",
-          "keyTakeaway": "The sandbox separates classification, extraction, and review. Write access remains disabled until subject-matter and technical approval."
+          "content": "Inquiries, leads and follow-ups land on a sales lead's desk and need sorting into the CRM. Measured volume, handling time and error rate show whether automation pays off.\n\nIn this sandbox a flow prepares a review list from synthetic emails:\n\n```\n  [Sample email trigger]\n         |\n         v\n  [Model classifier]: Lead / customer / internal / spam?\n         |\n         v\n  [Switch node]\n    ├── Lead → [Field extraction] → [CRM review entry]\n    ├── Customer → [Activity review entry]\n    └── Rest → [Ignore suggestion]\n```\n\nClassification and extraction stay separate, each step with its own schema, model configuration, tests and failure handling."
         },
         {
           "id": "modul_4_lesson_2_section_2",
           "title": "Build the flow",
           "readTimeMinutes": 5,
-          "content": "**1. Sample email trigger:**\n- Trigger: \"New sample email\"\n- Filter: no internal test data\n\n**2. Claude classifier node (HTTP Request):**\n- POST to `https://api.anthropic.com/v1/messages`\n- Prompt:\n```\nClassify this email:\n- LEAD: new inquiry, potential new customer\n- KUNDE: existing customer\n- INTERN: internal communication\n- SPAM: advertising, newsletter\n\nEmail text: {{ $json.body }}\n\nRespond STRICTLY: only \"LEAD\", \"KUNDE\", \"INTERN\", or \"SPAM\".\n```\n\n**3. Switch node:**\n- Route 1: \"LEAD\" → lead review path\n- Route 2: \"KUNDE\" → customer review path\n- Route 3: otherwise → nothing\n\n**4. Lead path, Claude extractor:**\n```\nFrom this lead email, strictly extract JSON:\n{\n  \"firma\": \"...\",\n  \"ansprechpartner\": \"...\",\n  \"email\": \"...\",\n  \"dringlichkeit\": \"hoch | mittel | niedrig\"\n}\n```\n\n**5. Lead path:** Prepare a review entry.\n\n**6. Customer path:** Prepare an activity review entry.",
-          "keyTakeaway": "The model returns a classification and structured fields. Schema validation and the Switch node route only valid results to review paths."
+          "content": "**1. Sample email trigger:**\n- Trigger: \"New sample email\"\n- Filter: no internal test data\n\n**2. Claude classifier node (HTTP Request):**\n- POST to `https://api.anthropic.com/v1/messages`\n- Prompt:\n```\nClassify this email:\n- LEAD: new inquiry, potential new customer\n- KUNDE: existing customer\n- INTERN: internal communication\n- SPAM: advertising, newsletter\n\nEmail text: {{ $json.body }}\n\nRespond STRICTLY: only \"LEAD\", \"KUNDE\", \"INTERN\", or \"SPAM\".\n```\n\n**3. Switch node:**\n- Route 1: \"LEAD\" → lead review path\n- Route 2: \"KUNDE\" → customer review path\n- Route 3: otherwise → nothing\n\n**4. Lead path, Claude extractor:**\n```\nFrom this lead email, strictly extract JSON:\n{\n  \"firma\": \"...\",\n  \"ansprechpartner\": \"...\",\n  \"email\": \"...\",\n  \"dringlichkeit\": \"hoch | mittel | niedrig\"\n}\n```\n\n**5. Lead path:** Prepare a review entry.\n\n**6. Customer path:** Prepare an activity review entry.\n\nOnly results that pass schema validation go to the review paths."
         },
         {
           "id": "modul_4_lesson_2_section_3",
           "title": "Testing + GDPR",
           "readTimeMinutes": 2,
-          "content": "- Save the flow in the n8n UI\n- Test: send a synthetic sample email\n- The flow runs: the trigger detects it, Claude classifies it, and a review entry is prepared\n\n**Data-protection and operations gate:** Before production, check:\n- Determine the roles of every service; a DPA/AVV is required if processing on behalf actually takes place\n- Clarify legal basis, purpose limitation, data minimization, transparency, transfers, retention, and deletion\n- Check GDPR Article 22 separately if a decision is made solely by automated means and has legal or similarly significant effects\n- Activate CRM write access only after technical and subject-matter approval\n\nThe flow is **modular**. CRM export for CRM API, sample email for an approved mailbox: swappable after the gate.",
-          "keyTakeaway": "Sandbox first. Move to production only after checking roles, legal basis, data flow, security, and approvals."
+          "content": "Save the flow in the n8n UI and send a synthetic sample email. The trigger detects it, Claude classifies it, a review entry is created.\n\n**Data-protection and operations gate** before production:\n- Determine the roles of every service; a DPA/AVV is required if processing on behalf actually takes place\n- Clarify legal basis, purpose limitation, data minimization, transparency, transfers, retention and deletion\n- Check GDPR Article 22 separately if a decision is made solely by automated means and has legal or similarly significant effects\n- Activate CRM write access only after technical and subject-matter approval\n\nOnly after the gate do you swap the CRM export for the CRM API and the sample email for an approved mailbox."
         },
         {
           "id": "modul_4_lesson_2_section_4",
-          "title": "Control system, not autopilot",
+          "title": "The flow as a control system",
           "readTimeMinutes": 2,
-          "content": "**The first good flow is a control system, not an autopilot.**\n\nUntil now, Claude was a tool you invoked. In the flow, Claude is a processing step with boundaries, logs, and review. That is the shift.\n\n**Homework:** Adapt the flow as a pilot.\n1. Copy patterns from the course materials\n2. Adapt the sample categories to your work\n3. Run it with anonymized test emails\n4. Evaluate the classification manually\n5. Only then decide whether a real data flow is permitted\n\nDocument 5 examples + Claude classification + your assessment.",
-          "keyTakeaway": "First flow = control system. No automatic CRM action until test data, review, and approvals are correct."
+          "content": "Until now Claude was a tool you invoked. In the flow, Claude is a processing step with boundaries, logs and review.\n\n**Homework:** Run the flow as a pilot.\n1. Copy patterns from the course materials\n2. Adapt the sample categories to your work\n3. Run it with anonymized test emails\n4. Evaluate the classification manually\n5. Only then decide whether a real data flow is permitted\n\nDocument 5 examples with Claude's classification and your assessment."
         }
       ],
       "quiz": [
@@ -252,12 +242,12 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "One call for security",
+              "text": "Because a single call is more secure",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Each step can use its own schema, model configuration, tests, and failure rules",
+              "text": "Each step gets its own schema, tests and failure rules",
               "isCorrect": true
             },
             {
@@ -267,11 +257,11 @@
             },
             {
               "id": "d",
-              "text": "Anthropic recommends it",
+              "text": "Because Anthropic recommends it across the board",
               "isCorrect": false
             }
           ],
-          "explanation": "Kept apart, each step is testable alone. Model choice, cost, and quality you measure with your data and the current provider configuration, not a course number."
+          "explanation": "Kept apart, each step is testable on its own. You measure model choice, cost and quality with your data and the current provider configuration."
         },
         {
           "id": "modul_4_lesson_2_q2",
@@ -284,21 +274,21 @@
             },
             {
               "id": "b",
-              "text": "Determine roles and data flows, assess required DPAs/AVVs, meet transparency duties, and review Article 22 separately for significant automated decisions",
+              "text": "Roles, data flows, DPAs/AVVs, transparency, Article 22 for significant effects",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "Only when data is transferred abroad",
+              "text": "Only when personal data is transferred abroad",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "The email server must be located in Germany",
+              "text": "Only that the email server must be located in Germany",
               "isCorrect": false
             }
           ],
-          "explanation": "A GDPR Article 28 agreement is required where a service processes personal data on behalf of a controller. Check the GDPR Article 13 transparency duties. In this sandbox, the classifier only prepares a review list; it does not make a solely automated decision with legal or similarly significant effect. Reassess Article 22 if downstream use changes."
+          "explanation": "A GDPR Article 28 agreement is needed where a service processes personal data on behalf of a controller. The sandbox only prepares a review list; if downstream use changes, reassess Article 22."
         }
       ]
     },
@@ -311,7 +301,6 @@
       "durationMinutes": 10,
       "premiumGated": false,
       "refreshCadence": "QUARTERLY",
-      "voiceAnchor": "A transcript is raw material. Structured extraction and subject-matter review are required before it becomes a reliable task list.",
       "keyConcepts": [
         "tl;dv",
         "Webhook",
@@ -328,22 +317,19 @@
           "id": "modul_4_lesson_3_section_1",
           "title": "From transcript to review list",
           "readTimeMinutes": 2,
-          "content": "A transcript is not minutes. Decisions and tasks sit in there somewhere, scattered and unconfirmed. Before an assignee confirms anything, the material has to be structured.\n\nIn this sandbox, you build a flow that prepares a task list from a synthetic example transcript.\n\n**Architecture:**\n```\n  [Example transcript] → [Structured extraction] → [Task list] + [Review note]\n```\n\n- The transcript contains example data only\n- The model returns structured JSON\n- The output is validated against a schema\n- Assignees, dates, and decisions are confirmed before transfer",
-          "keyTakeaway": "Meeting follow-up is prepared, not replaced. Transcript → task list → review."
+          "content": "A transcript is raw material: decisions and tasks sit in it scattered and unconfirmed. Before an assignee can confirm anything, the material has to be structured.\n\nIn this sandbox a flow prepares a task list from a synthetic example transcript:\n```\n  [Example transcript] → [Structured extraction] → [Task list] + [Review note]\n```\n\n- The transcript contains example data only.\n- The model returns JSON that is validated against a schema.\n- Assignees, dates and decisions are confirmed before transfer."
         },
         {
           "id": "modul_4_lesson_3_section_2",
-          "title": "tl;dv + Claude extractor",
+          "title": "Transcript webhook + Claude extractor",
           "readTimeMinutes": 4,
-          "content": "**Prepare the webhook:**\n\nWhether your plan offers webhooks, the event name, signature verification, and the payload is in the transcription service's current documentation, nowhere else. The endpoint is HTTPS and protected, no exceptions.\n\n**n8n side:** Create the webhook trigger, verify the signature or shared secret, and pass on only the fields the workflow needs.\n\n**Extraction with JSON output:**\n\n```\nExtract JSON from this meeting transcript using this schema:\n\n{\n  \"meeting\": {\n    \"topic\": \"...\",\n    \"date\": \"YYYY-MM-DD\",\n    \"participants\": [\"...\"]\n  },\n  \"decisions\": [\n    {\"text\": \"...\", \"context\": \"...\"}\n  ],\n  \"action_items\": [\n    {\n      \"text\": \"...\",\n      \"assignee\": \"... (name)\",\n      \"due_date\": \"YYYY-MM-DD or null\",\n      \"priority\": \"high | medium | low\"\n    }\n  ],\n  \"open_questions\": [\n    {\"text\": \"...\", \"owner\": \"...\"}\n  ]\n}\n\nTranscript: {{ $json.transcript }}\n\nReturn one JSON object only. If a field is unsupported, use `null`; do not fill it from an assumption.\n```\n\nThe response is validated technically against a JSON schema. Asking for hidden reasoning? It buys neither valid JSON nor a better subject-matter review.",
-          "keyTakeaway": "Schema, null rule, technical validation. Structured output needs no more foundation than that."
+          "content": "**Prepare the webhook:** Whether your plan with the transcription service offers webhooks, the event name, signature verification and the payload is in its current documentation. The endpoint is always HTTPS and protected.\n\n**n8n side:** Create the webhook trigger, verify the signature or shared secret, and pass on only the fields the workflow needs.\n\n**Extraction with JSON output:**\n\n```\nExtract JSON from this meeting transcript using this schema:\n\n{\n  \"meeting\": {\n    \"topic\": \"...\",\n    \"date\": \"YYYY-MM-DD\",\n    \"participants\": [\"...\"]\n  },\n  \"decisions\": [\n    {\"text\": \"...\", \"context\": \"...\"}\n  ],\n  \"action_items\": [\n    {\n      \"text\": \"...\",\n      \"assignee\": \"... (name)\",\n      \"due_date\": \"YYYY-MM-DD or null\",\n      \"priority\": \"high | medium | low\"\n    }\n  ],\n  \"open_questions\": [\n    {\"text\": \"...\", \"owner\": \"...\"}\n  ]\n}\n\nTranscript: {{ $json.transcript }}\n\nReturn one JSON object only. If a field is unsupported, use `null`; do not fill it from an assumption.\n```\n\nThe response is validated technically against a JSON schema. Having the model print its internal reasoning buys neither valid JSON nor a better subject-matter review."
         },
         {
           "id": "modul_4_lesson_3_section_3",
           "title": "Task list + review",
           "readTimeMinutes": 4,
-          "content": "**Task list node:** creates a review artifact\n- Fields: text, assignee, due date, priority, meeting reference\n- Loop through the `action_items` array\n\n**Review note:**\n- Content: meeting topic + three-sentence summary\n- Assignees are informed only after review\n\nThe flow is complete.\n\nThe goal is not to remove human follow-up. It is to turn raw notes into a reviewable list before a task goes missing.",
-          "keyTakeaway": "Every meeting ends in a structured review artifact. Review first, then share."
+          "content": "**Task list node:** creates a review artifact\n- Fields: text, assignee, due date, priority, meeting reference\n- Loop through the `action_items` array\n\n**Review note:**\n- Content: meeting topic + three-sentence summary\n- Assignees are informed only after review\n\nRaw notes become a reviewable list before a task goes missing. People still do the follow-up."
         }
       ],
       "quiz": [
@@ -358,12 +344,12 @@
             },
             {
               "id": "b",
-              "text": "Using your own consented test corpus and reviewing data flows, contract, retention, access rights, and export",
+              "text": "Own consented test corpus plus review of data flow, contract, retention and export",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "Using a single online benchmark without checking your own accent and domain vocabulary",
+              "text": "By one online benchmark, without testing your own accent and vocabulary",
               "isCorrect": false
             },
             {
@@ -372,7 +358,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Language, accent, audio quality, domain vocabulary: that is what transcription quality rests on. Your own test with approved material, plus a contract and data-flow review, carries more than any product ranking."
+          "explanation": "Transcription quality depends on language, accent, audio quality and domain vocabulary. Your own test with approved material, plus a contract and data-flow review, tells you more than any product ranking."
         },
         {
           "id": "modul_4_lesson_3_q2",
@@ -385,7 +371,7 @@
             },
             {
               "id": "b",
-              "text": "An explicit schema, a null rule for unsupported values, and subsequent technical validation",
+              "text": "Schema, null rule and technical validation",
               "isCorrect": true
             },
             {
@@ -399,7 +385,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "A schema constrains structure and data types; the null rule avoids invented required values. The workflow must still parse and validate the response, then stop or route it to review when validation fails."
+          "explanation": "The schema constrains structure and data types, and the null rule prevents invented required values. The workflow must still parse, validate and stop or route to review on failure."
         }
       ]
     },
@@ -412,7 +398,6 @@
       "durationMinutes": 12,
       "premiumGated": false,
       "refreshCadence": "QUARTERLY",
-      "voiceAnchor": "The weekly report is prepared as a draft first. Review remains mandatory.",
       "keyConcepts": [
         "Cron trigger",
         "Vault query",
@@ -495,29 +480,25 @@
           "id": "modul_4_lesson_4_section_1",
           "title": "Friday afternoon ritual",
           "readTimeMinutes": 2,
-          "content": "Friday afternoon. You have not written your weekly report yet. Client calls, meetings, and half-solved problems are fragmented across notes.\n\nThe pattern behind the exercise: collect the recurring notes, synthesize a draft, and the person reviews and sends it.\n\n**Architecture:**\n```\n[Cron trigger Friday 16:00]\n         |\n         v\n[Example notes]: Daily Notes + active MOCs\n         |\n         v\n[Claude]: synthesizes weekly report\n         |\n         v\n[Review draft]: waits for human review\n         |\n         v\n[Team note]: \"Weekly report draft awaits review\"\n```",
-          "keyTakeaway": "Cron → draft → review. The course shows the pattern, not a connected production installation."
+          "content": "Friday afternoon, and your weekly report is still missing. Client calls, meetings and half-solved problems sit scattered across notes.\n\nThe pattern: collect the recurring notes, generate a draft, and a person reviews and sends it.\n\n**Architecture:**\n```\n[Cron trigger Friday 16:00]\n         |\n         v\n[Example notes]: Daily Notes + active MOCs\n         |\n         v\n[Claude]: synthesizes weekly report\n         |\n         v\n[Review draft]: waits for human review\n         |\n         v\n[Team note]: \"Weekly report draft awaits review\"\n```"
         },
         {
           "id": "modul_4_lesson_4_section_2",
-          "title": "Critical: draft, not send",
+          "title": "The flow only saves drafts",
           "readTimeMinutes": 3,
-          "content": "**The critical part:** The flow **creates a draft**. Nothing gets sent. A named reviewer checks sources, figures, recipients, and approval status.\n\nWhether automated sending is acceptable depends on the content, recipients, consequences of error, and existing controls. In this course, manual review stays the gate.\n\n**Cron trigger + note query:**\n\n1. **Cron trigger:**\n   - Cron expression: `0 16 * * 5` (Friday, 16:00)\n   - Timezone: Europe/Berlin\n\n2. **Note query node**:\n   - Query 1: Daily Notes from the current week\n   - Query 2: active project MOCs\n   - Query 3: notes with the `#entscheidung` tag from the last 7 days\n\nThe node aggregates raw data into structured JSON.\n\n**Technical note:** The course shows the pattern using example data. A real integration requires permission checks, logging, fallback, and a review process.",
-          "keyTakeaway": "Draft rather than send. Sources, figures, recipients, and approval are checked before any distribution."
+          "content": "The flow **creates a draft** and sends nothing. A named reviewer checks sources, figures, recipients and approval status. Whether automated sending would be acceptable depends on content, recipients, consequences of error and controls; in this course, manual review stays the gate.\n\n**Cron trigger + note query:**\n\n1. **Cron trigger:**\n   - Cron expression: `0 16 * * 5` (Friday, 16:00)\n   - Timezone: Europe/Berlin\n\n2. **Note query node:**\n   - Query 1: Daily Notes from the current week\n   - Query 2: active project MOCs\n   - Query 3: notes with the `#entscheidung` tag from the last 7 days\n\nThe node gathers the raw data into structured JSON.\n\nThe course shows the pattern with example data. A real integration needs permission checks, logging, fallback and a review process."
         },
         {
           "id": "modul_4_lesson_4_section_3",
           "title": "Claude synthesis + Gmail draft",
           "readTimeMinutes": 4,
-          "content": "**Claude synthesis:**\n\n```\nYou are writing a weekly report for managers.\n\nTone: factual, concise, specific.\nLength: 3 paragraphs + bullet points.\n\nHere are the raw data from the example week:\n\nDAILY NOTES: {{ $json.daily_notes }}\nACTIVE PROJECTS: {{ $json.active_projects }}\nDECISIONS: {{ $json.decisions }}\n\nStructure:\n1. Highlights of the week (2-3 sentences)\n2. Challenges / blockers (bullet points)\n3. Next week: focus (2-3 sentences)\n\nWhen in doubt: specific > general. Use names + numbers only when they come from the approved notes.\n```\n\nClaude generates a review draft.\n\n**Draft node:**\n- Recipient: internal review required\n- Subject: \"Weekly report CW {{ Kalenderwoche }}\"\n- Body: Claude output\n\n**Note node:**\n- \"Weekly report draft awaits review.\"\n\nThe flow is complete.",
-          "keyTakeaway": "Claude synthesizes from approved notes. Draft + note, no automatic send."
+          "content": "**Claude synthesis:**\n\n```\nYou are writing a weekly report for managers.\n\nTone: factual, concise, specific.\nLength: 3 paragraphs + bullet points.\n\nHere are the raw data from the example week:\n\nDAILY NOTES: {{ $json.daily_notes }}\nACTIVE PROJECTS: {{ $json.active_projects }}\nDECISIONS: {{ $json.decisions }}\n\nStructure:\n1. Highlights of the week (2-3 sentences)\n2. Challenges / blockers (bullet points)\n3. Next week: focus (2-3 sentences)\n\nWhen in doubt: specific > general. Use names + numbers only when they come from the approved notes.\n```\n\n**Draft node:**\n- Recipient: internal review required\n- Subject: \"Weekly report CW {{ Kalenderwoche }}\"\n- Body: Claude output\n\n**Note node:**\n- \"Weekly report draft awaits review.\""
         },
         {
           "id": "modul_4_lesson_4_section_4",
           "title": "The general pattern",
           "readTimeMinutes": 3,
-          "content": "**You no longer write weekly reports from scratch. You review a draft.**\n\nThis flow shows a broader pattern: recurring report + structured notes + Claude synthesis + manual review.\n\n**Homework:** First recreate the pattern using example data.\n\n1. Copy the `F004-wochenbericht-obsidian` pattern from the course materials\n2. Decide: use real data only after data-protection and permission checks\n3. Test it manually once\n4. Review, correct, and document the result\n5. Measure time before/after with three runs\n\nShare only anonymized screenshots or descriptions.",
-          "keyTakeaway": "Template for recurring reports. First example data, then permission checks, then a pilot."
+          "content": "From now on you review the weekly report as a draft. The pattern fits other recurring reports too: schedule, structured notes, Claude draft, manual review.\n\n**Homework:** First rebuild the pattern with example data.\n1. Copy the `F004-wochenbericht-obsidian` pattern from the course materials\n2. Use real data only after data-protection and permission checks\n3. Test it manually once\n4. Review, correct and document the result\n5. Measure time before and after over three runs\n\nShare only anonymized screenshots or descriptions."
         }
       ],
       "quiz": [
@@ -527,22 +508,22 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "The Gmail API does not allow sending",
+              "text": "Because the Gmail API does not allow sending",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Review checks sources, figures, recipients, and approval before distribution",
+              "text": "A person checks sources, figures, recipients and approval",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "A draft is faster than sending",
+              "text": "A draft is faster than sending directly",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "The GDPR prohibits automatic sending",
+              "text": "Because the GDPR prohibits automatic sending",
               "isCorrect": false
             }
           ],
@@ -559,7 +540,7 @@
             },
             {
               "id": "b",
-              "text": "A candidate pattern for recurring reports: schedule + approved sources + model draft + review",
+              "text": "Schedule, approved sources, model draft, review",
               "isCorrect": true
             },
             {
@@ -586,7 +567,6 @@
       "durationMinutes": 10,
       "premiumGated": false,
       "refreshCadence": "SEMI-ANNUAL",
-      "voiceAnchor": "Local processing can limit data outflows when the device, application, and model are operated under control.",
       "keyConcepts": [
         "LM Studio",
         "Llama",
@@ -604,29 +584,25 @@
           "id": "modul_4_lesson_5_section_1",
           "title": "When local, when cloud",
           "readTimeMinutes": 3,
-          "content": "\"Local is safe, cloud is risky.\" Wrong, in both directions. What counts is the data, the purpose, the approval, and the specific technical and contractual setup.\n\nFor a commercial AI service, review the product variant, roles, contract and DPA/AVV, training use, retention, region and transfers, access, and deletion, among other things. At Anthropic, the documented rules for commercial Claude-for-Work/API offerings differ from consumer offerings; a brand assessment does not replace this review.\n\nLocal processing can be right for approved confidential data. It is local only as long as prompts and documents do not leave the device through search, extensions, telemetry, synchronization, backups, or remote APIs. Device encryption, user rights, updates, model provenance, and deletion also need review.\n\n**Decision questions:**\n\n| Question | Cloud service | Local application |\n|------|--------------|------------------|\n| Is the specific service approved? | Review contract and configuration | Review application, model, and device |\n| Where do inputs flow? | Review documented provider and subprocess flows | Review network traffic, extensions, sync, and backups |\n| Is the quality sufficient? | Test with representative tasks | Test with the specific runnable model |\n| Who operates the controls? | Provider and your organization | Your organization |\n\nNo general percentage rule for cloud versus local. No fixed quality ratio between model families either.",
-          "keyTakeaway": "Decide per data class and use case. Cloud needs product and contract review, local needs device, application, model, and network review."
+          "content": "Local is not automatically safe, and cloud is not automatically risky. What counts is the data, the purpose, the approval and the technical and contractual setup.\n\nFor a commercial AI service, review the product variant, roles, contract and DPA/AVV, training use, retention, region and transfers, access and deletion, among other things. At Anthropic, the documented rules for commercial Claude-for-Work and API offerings differ from those for consumer offerings; a brand assessment does not replace this review.\n\nLocal processing can suit approved confidential data as long as prompts and documents do not leave the device through search, extensions, telemetry, synchronization, backups or remote APIs. Your organization then runs all controls itself, including device encryption, user rights, updates, model provenance and deletion.\n\nTest quality with representative tasks and the model that actually runs on your device. There is no general percentage rule for cloud versus local, and no fixed quality ratio between model families."
         },
         {
           "id": "modul_4_lesson_5_section_2",
           "title": "Install LM Studio",
           "readTimeMinutes": 3,
-          "content": "1. Obtain the current application only from the official LM Studio site.\n2. Review system requirements, signature, and current privacy information.\n3. First choose a model whose memory requirement according to the application is safely below the available RAM or VRAM.\n4. Review the license, publisher, file format, and origin of the specific model artifact.\n5. Load it with synthetic test data and measure quality, speed, and memory use.\n6. After downloading the model, test offline mode: disconnect the network, run a request, and where greater protection is required, technically monitor outbound network traffic.\n\nLM Studio documents that its core functions can operate offline after a model has been downloaded. Model search, downloads, and updates require network access; extensions or other system services may have their own data flows.\n\nA large quantized model does not automatically fit your device. Quantization, context window, parallelism, and the operating system eat extra memory. Trust the current memory estimate in the application, not a claim about a device or a model.",
-          "keyTakeaway": "Choose a model based on current memory requirements, license, provenance, and your own measurements. Verify offline processing technically; do not merely assume it."
+          "content": "1. Obtain the application only from the official LM Studio site.\n2. Review system requirements, signature and current privacy information.\n3. Choose a model whose memory requirement, according to the application, is safely below the available RAM or VRAM.\n4. Review the license, publisher, file format and origin of the model artifact.\n5. Load it with synthetic test data and measure quality, speed and memory use.\n6. After downloading the model, test offline mode: disconnect the network, run a request and, where greater protection is required, technically monitor outbound network traffic.\n\nAccording to the LM Studio documentation, the core functions can run offline after a model has been downloaded. Model search, downloads and updates need network access; extensions and other system services may have their own data flows.\n\nQuantization, context window, parallelism and the operating system need extra memory. Rely on the application's current memory estimate."
         },
         {
           "id": "modul_4_lesson_5_section_3",
           "title": "Confidential document summary",
           "readTimeMinutes": 2,
-          "content": "First test with a fictional strategy paper:\n\n```\nHere is a synthetic strategy paper. Summarize it in:\n- 3-sentence executive summary\n- 5 initiatives\n- 3 risks\n\nAnswer in English. Flag uncertainties and do not invent facts.\n```\n\nAssess the output against a predefined target list: factual accuracy, completeness, format, omissions, and invented statements. Measure runtime and memory use on your device.\n\nDid the processing really stay local? You check that separately. A locally loaded model proves nothing on its own; network traffic, extensions, clipboard, synchronization, backups, and logs are more ways out.\n\nA pilot with real data comes only once the data class, device, application, model, network, and deletion process are approved. Subject-matter review happens anyway. And whether local or cloud fits is decided by the specific comparison, not by a usage ratio.",
-          "keyTakeaway": "Test quality and local data retention separately. Use synthetic data first; use real confidential data only after technical and organizational approval."
+          "content": "First test with a fictional strategy paper:\n\n```\nHere is a synthetic strategy paper. Summarize it in:\n- 3-sentence executive summary\n- 5 initiatives\n- 3 risks\n\nAnswer in English. Flag uncertainties and do not invent facts.\n```\n\nAssess the output against a predefined target list: factual accuracy, completeness, format, omissions and invented statements. Measure runtime and memory use on your device.\n\nCheck separately whether processing stayed local. A locally loaded model does not prove it, and the clipboard and logs can leak data too.\n\nReal data enters a pilot only once the data class, device, application, model, network and deletion process are approved; subject-matter review happens even then."
         },
         {
           "id": "modul_4_lesson_5_section_4",
           "title": "Comparison exercise + notes",
           "readTimeMinutes": 2,
-          "content": "**Comparison exercise with a synthetic document:**\n1. Use an organization-approved cloud product variant, if one is available.\n2. Process the same document with a currently compatible local model.\n3. Assess both outputs blindly against the same criteria: factual accuracy, completeness, format, runtime, and cost.\n4. Document data flows and operational controls separately.\n\nOllama is another local runtime with its own configuration and its own security reviews. A model on a rented GPU instance is remote hosting, however local it feels. And EU hosting alone means neither GDPR compliance nor data sovereignty; the contract, access, subprocessors, security, and transfers still need review.\n\nPublish only synthetic results or fully reviewed, anonymized excerpts.",
-          "keyTakeaway": "Compare cloud and local with the same synthetic test and the same rubric. Remote hosting remains an external data flow."
+          "content": "**Comparison exercise with a synthetic document:**\n1. Use an approved cloud product variant, if one is available.\n2. Process the same document with a currently compatible local model.\n3. Assess both outputs blindly against the same criteria: factual accuracy, completeness, format, runtime and cost.\n4. Document data flows and operational controls separately.\n\nOllama is another local runtime with its own configuration and security reviews. A model on a rented GPU instance is remote hosting. EU hosting alone means neither GDPR compliance nor data sovereignty; the contract, access, subprocessors, security and transfers still need review.\n\nPublish only synthetic results or fully reviewed, anonymized excerpts."
         }
       ],
       "quiz": [
@@ -636,26 +612,26 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Always, safer",
+              "text": "Always, because local is always safer",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "When the use case is approved for local use and the device, application, model, network, rights, backups, and deletion are controlled",
+              "text": "When device, model and network are approved and controlled",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "Only without internet",
+              "text": "Only on machines without internet access",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "With more than 10 users",
+              "text": "As soon as more than 10 people on the team use the tool",
               "isCorrect": false
             }
           ],
-          "explanation": "Confidential does not automatically mean safe locally. What has to be approved and controlled is the whole local processing chain and the specific use case."
+          "explanation": "Confidential data is not safe just because it is processed locally. The whole local processing chain, including rights, backups and deletion, must be approved and controlled for the use case."
         },
         {
           "id": "modul_4_lesson_5_q2",
@@ -668,7 +644,7 @@
             },
             {
               "id": "b",
-              "text": "With representative test cases and a shared rubric for factual accuracy, completeness, format, runtime, and cost",
+              "text": "With representative test cases and one shared rubric",
               "isCorrect": true
             },
             {
@@ -682,7 +658,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Quality depends on the task, specific model, quantization, prompt, context, and hardware. Only a reproducible comparison using the same rubric supports the decision."
+          "explanation": "Quality depends on the task, model, quantization, prompt, context and hardware. The rubric scores factual accuracy, completeness, format, runtime and cost reproducibly."
         }
       ]
     },
@@ -695,7 +671,6 @@
       "durationMinutes": 12,
       "premiumGated": false,
       "refreshCadence": "ON-TOOL-RELEASE",
-      "voiceAnchor": "High-risk status follows from intended purpose, role, and Article 6 with the annexes, not from an industry rule of thumb.",
       "keyConcepts": [
         "Annex III",
         "Provider",
@@ -712,7 +687,7 @@
             "lessonId": "modul_4_lesson_6",
             "moduleId": "modul_4",
             "title": "High-risk or not? Everyday Annex III classification",
-            "scenario": "Choose your area. For each fictional system, review the intended purpose against Article 6 and Annex III. 'High-risk' or 'not under Annex III' says nothing yet about data protection, Article 4, Article 50, or other law.",
+            "scenario": "Choose your area and review each fictional system's intended purpose against Article 6 and Annex III. The result says nothing yet about data protection, Article 4, Article 50 or other law.",
             "roles": [
               {
                 "id": "hr",
@@ -727,25 +702,25 @@
                         "id": "a",
                         "label": "Annex III: concerns HR",
                         "correct": false,
-                        "explanation": "Pure text generation without assessing / selecting people = not Annex III. Prompt tool."
+                        "explanation": "Writing text without assessing or selecting people is not Annex III."
                       },
                       {
                         "id": "b",
                         "label": "Not Annex III on this purpose alone: text drafting",
                         "correct": true,
-                        "explanation": "No selection or assessment mechanism. Claude only helps you with wording."
+                        "explanation": "There is no selection or assessment mechanism; Claude only drafts wording."
                       },
                       {
                         "id": "c",
                         "label": "Prohibited: AI in HR",
                         "correct": false,
-                        "explanation": "The EU AI Act does not prohibit AI in HR generally. Only some practices (emotion recognition in the workplace)."
+                        "explanation": "Only certain practices are prohibited, such as emotion recognition in the workplace."
                       },
                       {
                         "id": "d",
                         "label": "Depends on GPAI",
                         "correct": false,
-                        "explanation": "GPAI is the model layer (Anthropic). Whoever deploys the system is the Deployer, and this is not even Annex III."
+                        "explanation": "GPAI is the model layer (Anthropic); you are the Deployer."
                       }
                     ]
                   },
@@ -757,13 +732,13 @@
                         "id": "a",
                         "label": "Minimal risk: ranking only",
                         "correct": false,
-                        "explanation": "Ranking = influence on access to employment. This IS Annex III."
+                        "explanation": "A ranking influences access to employment. That falls under Annex III."
                       },
                       {
                         "id": "b",
                         "label": "Annex III high-risk: employment + automated assessment",
                         "correct": true,
-                        "explanation": "Annex III no. 4 covers certain systems for employment and personnel selection. Review Article 6(3), deployer obligations under Article 26, as well as GDPR and co-determination separately. Article 27 does not apply solely because of private HR use."
+                        "explanation": "Annex III no. 4 covers certain systems for personnel selection. Review Article 6(3) and deployer obligations under Article 26; Article 27 does not apply solely because of private HR use."
                       },
                       {
                         "id": "c",
@@ -775,7 +750,7 @@
                         "id": "d",
                         "label": "Depends on whether it is Europe-wide",
                         "correct": false,
-                        "explanation": "Geography is irrelevant; Annex III also applies to 5 applicants in Bavaria."
+                        "explanation": "Geography plays no role; Annex III also applies to 5 applicants in Bavaria."
                       }
                     ]
                   },
@@ -787,25 +762,25 @@
                         "id": "a",
                         "label": "Annex III: employee assessment",
                         "correct": false,
-                        "explanation": "The described purpose is not employee assessment under Annex III no. 4. Article 22 does not apply solely because of a transcript; data protection, confidentiality, co-determination, and the lawfulness of the recording still require separate review."
+                        "explanation": "The purpose is not employee assessment under Annex III no. 4, and a transcript alone does not trigger Article 22."
                       },
                       {
                         "id": "b",
                         "label": "Not high-risk under Annex III alone; other obligations remain",
                         "correct": true,
-                        "explanation": "A pure draft of minutes without assessment does not fall under Annex III no. 4 alone. The appropriate legal basis depends on the context; consent and Article 9 are not automatically required. Recording and processing require their own review."
+                        "explanation": "A draft of minutes without assessment does not fall under Annex III no. 4 alone. Consent and Article 9 are not automatically required; review recording and processing separately."
                       },
                       {
                         "id": "c",
                         "label": "Prohibited: emotion recognition",
                         "correct": false,
-                        "explanation": "Only emotion recognition IN THE WORKPLACE is prohibited (Article 5 AI Act). A conversation summary is not emotion recognition."
+                        "explanation": "Only emotion recognition in the workplace is prohibited (Article 5 AI Act). A conversation summary does not detect emotions."
                       },
                       {
                         "id": "d",
                         "label": "Provider obligation, not Deployer obligation",
                         "correct": false,
-                        "explanation": "The organization is regularly the deployer of the system in use. Article 4 and other applicable law remain relevant even outside Annex III."
+                        "explanation": "The organization is, as a rule, the deployer of the system. Article 4 applies outside Annex III too."
                       }
                     ]
                   }
@@ -824,25 +799,25 @@
                         "id": "a",
                         "label": "Annex III: financial data are sensitive",
                         "correct": false,
-                        "explanation": "Sensitive does not automatically mean Annex III. The Annex III catalogue is narrowly defined."
+                        "explanation": "Sensitive does not automatically mean Annex III; the catalogue is narrowly defined."
                       },
                       {
                         "id": "b",
                         "label": "Not Annex III on this purpose alone: extraction and structuring",
                         "correct": true,
-                        "explanation": "Pure data extraction does not fall under Annex III alone. Data protection, confidentiality, tax and retention obligations, and subject-matter control remain relevant depending on the data and process."
+                        "explanation": "Pure data extraction does not fall under Annex III alone. Tax and retention obligations remain."
                       },
                       {
                         "id": "c",
                         "label": "Prohibited",
                         "correct": false,
-                        "explanation": "Not prohibited at all."
+                        "explanation": "This is not prohibited."
                       },
                       {
                         "id": "d",
                         "label": "Provider obligations",
                         "correct": false,
-                        "explanation": "You are a Deployer, but the use case is not Annex III."
+                        "explanation": "Here you are the Deployer."
                       }
                     ]
                   },
@@ -854,13 +829,13 @@
                         "id": "a",
                         "label": "Not high-risk because credit is always a business matter",
                         "correct": false,
-                        "explanation": "Annex III no. 5(b) refers to the creditworthiness of natural persons or their credit score and excludes fraud detection."
+                        "explanation": "Annex III no. 5(b) covers the creditworthiness and credit score of natural persons, except fraud detection."
                       },
                       {
                         "id": "b",
                         "label": "Annex III high-risk: credit decision",
                         "correct": true,
-                        "explanation": "Annex III no. 5(b) covers this intended purpose. GDPR Article 22 must also be reviewed if the decision is solely automated and has legal or similarly significant effects."
+                        "explanation": "Annex III no. 5(b) covers this purpose. If the decision is solely automated with legal or similarly significant effects, also review GDPR Article 22."
                       },
                       {
                         "id": "c",
@@ -872,7 +847,7 @@
                         "id": "d",
                         "label": "Depends on the loan amount",
                         "correct": false,
-                        "explanation": "Regardless of the amount."
+                        "explanation": "The amount plays no role."
                       }
                     ]
                   },
@@ -884,25 +859,25 @@
                         "id": "a",
                         "label": "Annex III: financial analyses",
                         "correct": false,
-                        "explanation": "Pure data analysis, no link to people, no decision about access to anything. Not Annex III."
+                        "explanation": "Pure data analysis with no link to people and no access decision is not Annex III."
                       },
                       {
                         "id": "b",
                         "label": "Not Annex III on this purpose alone: internal aggregation",
                         "correct": true,
-                        "explanation": "The described internal analysis purpose does not fall under Annex III alone. Article 4, confidentiality, security, subject-matter review, and, where applicable, data protection remain relevant."
+                        "explanation": "The internal analysis purpose does not fall under Annex III alone; Article 4 still applies."
                       },
                       {
                         "id": "c",
                         "label": "Prohibited because of financial advice",
                         "correct": false,
-                        "explanation": "AI support for internal analysis is not investment advice under MiFID."
+                        "explanation": "AI-supported internal analysis is not investment advice under MiFID."
                       },
                       {
                         "id": "d",
                         "label": "GDPR Article 22",
                         "correct": false,
-                        "explanation": "Article 22 concerns automated decisions about people. A company is not a person."
+                        "explanation": "GDPR Article 22 concerns automated decisions about natural persons; a company is not one."
                       }
                     ]
                   }
@@ -921,13 +896,13 @@
                         "id": "a",
                         "label": "Minimal risk: internal production only",
                         "correct": false,
-                        "explanation": "Annex III no. 2 covers safety components for the management and operation of certain critical digital infrastructure, as well as road traffic and the supply of water, gas, heat, or electricity."
+                        "explanation": "Annex III no. 2 covers safety components for managing and operating certain critical digital infrastructure, road traffic and the supply of water, gas, heat or electricity."
                       },
                       {
                         "id": "b",
                         "label": "Annex III high-risk: safety-critical",
                         "correct": true,
-                        "explanation": "The described purpose generally falls under Annex III no. 2. Review additional sectoral safety rules separately."
+                        "explanation": "The purpose generally falls under Annex III no. 2. Review sectoral safety rules separately."
                       },
                       {
                         "id": "c",
@@ -939,7 +914,7 @@
                         "id": "d",
                         "label": "The Machinery Directive is sufficient",
                         "correct": false,
-                        "explanation": "Sectoral law may apply in parallel, but does not replace the AI Act review."
+                        "explanation": "Sectoral law may apply in parallel but does not replace the AI Act review."
                       }
                     ]
                   },
@@ -951,25 +926,25 @@
                         "id": "a",
                         "label": "Annex III: quality data are critical",
                         "correct": false,
-                        "explanation": "Analysis + report without intervention in control = not Annex III."
+                        "explanation": "Analysis and reporting without intervening in control are not Annex III."
                       },
                       {
                         "id": "b",
                         "label": "Not Annex III on this purpose alone: analysis and reporting",
                         "correct": true,
-                        "explanation": "Claude reads, structures, and reports. Humans make decisions. Not Annex III."
+                        "explanation": "Claude reads, structures and reports; people decide."
                       },
                       {
                         "id": "c",
                         "label": "Prohibited",
                         "correct": false,
-                        "explanation": "No grounds for prohibition."
+                        "explanation": "There are no grounds for prohibition."
                       },
                       {
                         "id": "d",
                         "label": "Provider obligation",
                         "correct": false,
-                        "explanation": "Anthropic is the Provider. You are a Deployer, but this is not Annex III."
+                        "explanation": "Anthropic is the Provider; you are a Deployer."
                       }
                     ]
                   },
@@ -981,25 +956,25 @@
                         "id": "a",
                         "label": "Minimal risk: internal access control",
                         "correct": false,
-                        "explanation": "Annex III no. 1(a) covers remote biometric identification. Systems whose sole purpose is to confirm a claimed identity are excluded from this point."
+                        "explanation": "Annex III no. 1(a) covers remote biometric identification. Systems whose sole purpose is to confirm a claimed identity are excluded."
                       },
                       {
                         "id": "b",
                         "label": "Annex III high-risk: biometric identification",
                         "correct": true,
-                        "explanation": "The described remote identification purpose generally falls under Annex III no. 1(a). Biometric data under GDPR Article 9 and co-determination must be reviewed separately based on the specific deployment."
+                        "explanation": "The remote identification purpose generally falls under Annex III no. 1(a). Review biometric data under GDPR Article 9 and co-determination separately for the specific deployment."
                       },
                       {
                         "id": "c",
                         "label": "Prohibited generally",
                         "correct": false,
-                        "explanation": "Article 5 contains a narrowly defined prohibition on certain real-time remote biometric identification in publicly accessible spaces for law-enforcement purposes, with exceptions. This does not support a blanket statement about private factory use or consent."
+                        "explanation": "Article 5 narrowly prohibits certain real-time remote biometric identification in publicly accessible spaces for law enforcement, with exceptions. It says nothing blanket about private factory use or consent."
                       },
                       {
                         "id": "d",
                         "label": "Depends on the provider",
                         "correct": false,
-                        "explanation": "Independent of the provider."
+                        "explanation": "The provider plays no role."
                       }
                     ]
                   }
@@ -1014,29 +989,25 @@
           "id": "modul_4_lesson_6_section_1",
           "title": "The three roles",
           "readTimeMinutes": 3,
-          "content": "**Up front:** Not legal advice. For a specific case you go to a specialist IT lawyer.\n\nWhat I provide: a framework that lets you sort many cases more cleanly at an early stage.\n\n**Provider:** builds the AI system or has it built and places it on the market under its own brand.\n\n**Deployer:** deploys the AI system under its own authority (other than for purely personal, non-professional purposes).\n\n**Importer:** places an AI system from a third country (outside the EU) on the EU market.\n\n**Important for employees in mid-sized companies and students:** In a company, the organization is usually the deployer. You act on its behalf.\n\n- Your company uses Claude, Copilot, or n8n + Claude. The company is regularly the deployer.\n- Anthropic, Microsoft, or the respective provider remain providers of their systems.\n\n**Deployer obligations** (abbreviated):\n- For high-risk systems: use in accordance with instructions, monitoring, human oversight, and logs under Article 26; FRIA only for Article 27 cases.\n- Transparency toward affected persons under Article 50 where the use case falls within it.\n- Article 4: role- and risk-appropriate AI literacy measures; a certificate of participation alone is not enough.\n- For non-high-risk systems: fewer special obligations, but data protection, works council, confidentiality, and subject-matter review remain relevant.",
-          "keyTakeaway": "Your organization is often the deployer. Provider and deployer obligations differ; FRIA is not a standard item for every high-risk case."
+          "content": "**Up front:** This is not legal advice. For a specific case you ask a specialist IT lawyer; the framework below helps you pre-sort many cases.\n\n**Provider:** builds the AI system or has it built and places it on the market under its own brand.\n\n**Deployer:** deploys the AI system under its own authority (other than for purely personal, non-professional purposes).\n\n**Importer:** places an AI system from a third country (outside the EU) on the EU market.\n\nIn a company, the organization is usually the deployer, and you act on its behalf. With Claude, Copilot or n8n with Claude, Anthropic, Microsoft or the respective provider remain providers of their systems.\n\n**Deployer obligations** (abbreviated):\n- High-risk systems: use in accordance with instructions, monitoring, human oversight and logs under Article 26; FRIA only for Article 27 cases.\n- Transparency toward affected persons under Article 50 where the use case falls within it.\n- Article 4: role- and risk-appropriate AI literacy measures; a certificate of participation alone is not enough.\n- Non-high-risk systems: fewer special obligations; data protection, works council, confidentiality and subject-matter review remain relevant."
         },
         {
           "id": "modul_4_lesson_6_section_2",
           "title": "Annex III: the high-risk categories",
           "readTimeMinutes": 3,
-          "content": "Annex III divides high-risk use cases into eight areas: biometrics; critical infrastructure; education and vocational training; employment; access to essential private and public services; law enforcement; migration, asylum, and border control; administration of justice and democratic processes. The sub-points are narrower than these headings.\n\n**Review:**\n1. document the intended purpose and actual use;\n2. review the matching Annex III sub-point in its wording;\n3. review Article 6(3) and (4); profiling of natural persons receives particular treatment;\n4. determine the role and application date;\n5. review other obligations separately.\n\n**Examples:**\n\n| Use case | Initial classification |\n|---|---|\n| pure marketing draft | not Annex III alone; Article 4, data protection, confidentiality, and subject-matter review remain |\n| system for screening or filtering job applications | generally Annex III no. 4(a); review Article 6(3) |\n| credit score of natural persons, not fraud detection | generally Annex III no. 5(b) |\n| FAQ chatbot | not Annex III alone; transparency under Article 50 may apply |",
-          "keyTakeaway": "Eight areas with narrow sub-points. Always review intended purpose, Article 6(3) and (4), role, application date, and parallel obligations."
+          "content": "Annex III divides high-risk use cases into eight areas: biometrics; critical infrastructure; education and vocational training; employment; access to essential private and public services; law enforcement; migration, asylum, and border control; administration of justice and democratic processes. The sub-points are narrower than these headings.\n\nTwo examples of a first classification:\n\n| Use case | Initial classification |\n|---|---|\n| pure marketing draft | not Annex III alone; Article 4, data protection, confidentiality, and subject-matter review remain |\n| credit score of natural persons, not fraud detection | generally Annex III no. 5(b) |"
         },
         {
           "id": "modul_4_lesson_6_section_3",
           "title": "The 4-step self-audit",
           "readTimeMinutes": 3,
-          "content": "For each use case:\n\n**Step 1: System and purpose.** Document version, intended purpose, actual use, affected persons, and consequential action.\n\n**Step 2: Role.** Justify provider, deployer, and potential role changes under Article 25.\n\n**Step 3: Classification.** Review Article 5, Article 6 with Annex I and III, and Article 50 in their wording in each case. Human review alone does not automatically remove a purpose listed in Annex III from the high-risk category.\n\n**Step 4: Obligations and date.** For high-risk systems, assign deployer obligations under Article 26; FRIA only to the group addressed by Article 27; review GDPR, DPIA, co-determination, confidentiality, and sector-specific law separately. Article 4 and other applicable obligations remain even outside high-risk status.",
-          "keyTakeaway": "Four steps: system and purpose, role, classification in the wording, then obligations including the application date."
+          "content": "For each use case:\n\n**Step 1: System and purpose.** Document version, intended purpose, actual use, affected persons, and consequential action.\n\n**Step 2: Role.** Justify provider, deployer, and potential role changes under Article 25.\n\n**Step 3: Classification.** Review Article 5, Article 6 with Annex I and III (the matching sub-point in its wording), Article 6(3) and (4), and Article 50; profiling of natural persons receives particular treatment. Human review alone does not automatically remove a purpose listed in Annex III from the high-risk category.\n\n**Step 4: Obligations and application date.** For high-risk systems, assign deployer obligations under Article 26; FRIA only to the group addressed by Article 27; review GDPR, DPIA, co-determination, confidentiality, and sector-specific law separately. Article 4 and other applicable obligations remain even outside high-risk status."
         },
         {
           "id": "modul_4_lesson_6_section_4",
           "title": "Worked examples",
           "readTimeMinutes": 3,
-          "content": "**Example 1: Email triage as a draft for review.** No purpose listed in Annex III in the described use. Article 4, data protection, confidentiality, security, and subject-matter approval remain.\n\n**Example 2: A system filters job applications for a shortlist.** Generally Annex III no. 4(a). Review Article 6(3), deployer obligations, data protection, and co-determination. A FRIA does not follow for a private employer solely from this HR purpose.\n\n**Example 3: Generic FAQ chatbot.** Not Annex III alone. Article 50(1) may require information about the AI interaction, provided this is not obvious; data protection and consumer law remain depending on the deployment.\n\nRegulation (EU) 2026/1744, applicable since 27 July 2026, sets 2 December 2027 for stand-alone Annex III high-risk systems and 2 August 2028 for product-integrated Annex I systems. Review the current consolidated legal position before deployment.\n\n**Exercise:** Document three use cases with system, purpose, role, classification rationale, application date, and open review points.",
-          "keyTakeaway": "Non-high-risk does not mean free of obligations. Justify each classification and review role, date, and parallel law."
+          "content": "**Example 1: Email triage as a draft for review.** No purpose listed in Annex III in the described use. Article 4, data protection, confidentiality, security, and subject-matter approval remain.\n\n**Example 2: A system filters job applications for a shortlist.** Generally Annex III no. 4(a). Review Article 6(3), deployer obligations, data protection, and co-determination. A FRIA does not follow for a private employer solely from this HR purpose.\n\n**Example 3: Generic FAQ chatbot.** Not Annex III alone. Article 50(1) may require information about the AI interaction, provided this is not obvious; data protection and consumer law remain depending on the deployment.\n\nRegulation (EU) 2026/1744, applicable since 27 July 2026, sets 2 December 2027 for stand-alone Annex III high-risk systems and 2 August 2028 for product-integrated Annex I systems. Review the current consolidated legal position before deployment.\n\n**Exercise:** Document three use cases with system, purpose, role, classification rationale, application date, and open review points."
         }
       ],
       "quiz": [
@@ -1051,7 +1022,7 @@
             },
             {
               "id": "b",
-              "text": "The intended purpose of the specific system, the matching sub-point, Article 6(3) and (4), and the actual role",
+              "text": "Intended purpose, sub-point, Article 6(3) and (4), role",
               "isCorrect": true
             },
             {
@@ -1092,7 +1063,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "The provider develops a system or model, or has it developed, and places it on the market or puts it into service under its own name or brand. The deployer uses an AI system under its own responsibility. The specific action determines the outcome; Article 25 can shift roles."
+          "explanation": "The provider develops a system or model, itself or by commission, and places it on the market or puts it into service under its own name or brand. The deployer uses it under its own responsibility; Article 25 can shift roles."
         }
       ]
     },
@@ -1105,7 +1076,6 @@
       "durationMinutes": 8,
       "premiumGated": false,
       "refreshCadence": "EVERGREEN",
-      "voiceAnchor": "The capstone applies one course method to a bounded, measurable workflow.",
       "keyConcepts": [
         "Capstone",
         "Capstone rubric",
@@ -1132,15 +1102,15 @@
               },
               "task": {
                 "minChars": 40,
-                "hint": "What exactly are you building? Not an objective (more productivity), but a concrete artifact: n8n workflow, CLAUDE.md + 3 Skills, dashboard, etc."
+                "hint": "What exactly are you building? A concrete artifact instead of an objective like \"more productivity\": n8n workflow, CLAUDE.md + 3 Skills, dashboard."
               },
               "format": {
                 "minChars": 25,
-                "hint": "What will you submit? (Live demo + repo? Video + screenshot? Production URL?) Include length / scope."
+                "hint": "What do you submit, and at what scope? For example a live demo with repo, a video with screenshot or a production URL."
               },
               "constraints": {
                 "minChars": 30,
-                "hint": "Hard limits: GDPR, internal data only with redaction, costs < X €/month, build time < Y hours. Also: what is EXPLICITLY NOT in scope."
+                "hint": "Hard limits: GDPR, internal data only redacted, costs < X €/month, build time < Y hours. Also what is not in scope."
               }
             }
           }
@@ -1151,22 +1121,19 @@
           "id": "modul_4_lesson_7_section_1",
           "title": "Why a capstone",
           "readTimeMinutes": 2,
-          "content": "Reading lessons proves nothing. Whether you can apply a method shows up on a real workflow, checked against defined criteria.\n\nSo the capstone is **one concrete workflow documented as a bounded pilot**. Tested with approved data, compared against the previous process, and never put into production unreviewed.\n\nSeven days is the suggested window. Scope and time budget you set from your availability and the risk.",
-          "keyTakeaway": "The capstone carries one course method into a bounded, measurable pilot with review."
+          "content": "A real workflow, checked against fixed criteria, shows whether you can apply a method. So the capstone is **one concrete workflow documented as a bounded pilot**: tested with approved data, compared with the previous process and never put into production unreviewed.\n\nSeven days is the suggested window; you set scope and time budget by availability and risk."
         },
         {
           "id": "modul_4_lesson_7_section_2",
           "title": "What makes a good capstone",
           "readTimeMinutes": 3,
-          "content": "**Reviewable capstone:**\n- **Relevant:** addresses a real, recurring problem\n- **Measurable:** captures at least quality, errors, review effort, or cycle time before and after the pilot\n- **Bounded:** has a clear start, end, allowed data, and fallback\n- **Documented:** includes a workflow diagram, risk and data-protection review, and failure handling\n- **Transferable:** states prerequisites, operating steps, ownership, and shutdown path\n\n**Not sufficient:**\n- unchanged tutorial replication\n- no application to the selected workflow\n- an unsubstantiated benefit claim without a baseline\n- no handling for errors, outages, or incorrect results\n\n**Three possible pilot patterns:**\n\n1. **Sales, quote follow-up draft.** Quote recorded → draft after a defined interval → person checks recipient, content, and sending.\n2. **Finance, invoice ingestion.** synthetic invoices → extract fields → validate CSV → subject-matter review before import.\n3. **HR, onboarding pack.** approved master data → document drafts → HR checks permissions, completeness, and distribution.",
-          "keyTakeaway": "Relevant, measurable, bounded, documented, and transferable. The capstone remains a pilot until production approvals exist."
+          "content": "**A reviewable capstone is:**\n- **relevant:** addresses a real, recurring problem\n- **measurable:** captures at least quality, errors, review effort or cycle time before and after the pilot\n- **bounded:** has a clear start, end, allowed data and fallback\n- **documented:** includes a workflow diagram, risk and data-protection review, and failure handling\n- **transferable:** states prerequisites, operating steps, ownership and shutdown path\n\n**Not enough:** an unchanged tutorial copy, a workflow not applied to your own process, benefit claims without a baseline, or no plan for errors, outages or wrong results.\n\n**Three possible pilot patterns:**\n\n1. **Sales, quote follow-up draft.** Quote recorded → draft after a defined interval → person checks recipient, content, and sending.\n2. **Finance, invoice ingestion.** synthetic invoices → extract fields → validate CSV → subject-matter review before import.\n3. **HR, onboarding pack.** approved master data → document drafts → HR checks permissions, completeness, and distribution."
         },
         {
           "id": "modul_4_lesson_7_section_3",
-          "title": "Scope in 7 days",
+          "title": "Limit the scope",
           "readTimeMinutes": 3,
-          "content": "**Set the time budget:**\n- Record available work time and review capacity\n- Plan one reviewable run within that budget\n- Reserve time for test data, failure cases, documentation, and rollback\n\n**Scope is too large:**\n- \"I will build a complete CRM system with AI\"\n- \"I will digitize the entire accounting function\"\n- \"I will migrate all company documentation\"\n\n**Bounded scope:**\n- \"Quote draft from an approved brief and versioned price list\"\n- \"Lead-email triage with synthetic test messages and a review list\"\n- \"Weekly report from a defined set of approved notes\"\n\n**Scope reduction:** Find the smallest run that tests the central assumption. Extra data sources, automatic write actions, edge cases: all out, until start, end, review, and fallback are explicit.\n\n**Seven required elements of the capstone rubric:**\n1. Problem statement\n2. Workflow diagram (trigger → steps → output)\n3. Tool-choice rationale\n4. Risk and data-protection review\n5. Measurement using at least three comparable runs\n6. Failure case + fallback\n7. Open decisions and next steps\n\n**Homework:** Select a workflow and document it internally: title, problem, allowed data, planned stack, time budget, review criteria, and stop condition. Check it against the rubric before building.",
-          "keyTakeaway": "Set the time budget before the scope. Reduce the work to one reviewable run and document the seven rubric elements."
+          "content": "**Time budget:** Plan one reviewable run within your available work and review time, and reserve time for test data, failure cases, documentation and rollback.\n\n**Scope is too large:**\n- \"I will build a complete CRM system with AI\"\n- \"I will digitize the entire accounting function\"\n- \"I will migrate all company documentation\"\n\n**Bounded scope:**\n- \"Quote draft from an approved brief and versioned price list\"\n- \"Lead-email triage with synthetic test messages and a review list\"\n- \"Weekly report from a defined set of approved notes\"\n\n**Reduce the scope:** Find the smallest run that tests the central assumption. Extra data sources, automatic write actions and edge cases stay out until start, end, review and fallback are defined.\n\n**Seven required elements of the capstone rubric:**\n1. Problem statement\n2. Workflow diagram (trigger → steps → output)\n3. Tool-choice rationale\n4. Risk and data-protection review\n5. Measurement using at least three comparable runs\n6. Failure case + fallback\n7. Open decisions and next steps\n\n**Homework:** Select a workflow and record internally its title, problem, allowed data, planned stack, time budget, review criteria and stop condition. Check that against the rubric before building."
         }
       ],
       "quiz": [
@@ -1203,26 +1170,26 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Double the scope when in doubt",
+              "text": "Double the scope when in doubt, to be safe",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Reduce it to the smallest run that tests the central assumption with review and fallback",
+              "text": "To the smallest run that tests the central assumption",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "Always use at most 10% of the original",
+              "text": "Always cut it to at most 10% of the original",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Scope cannot be adjusted",
+              "text": "Not at all; scope cannot be adjusted",
               "isCorrect": false
             }
           ],
-          "explanation": "A small reviewable run beats any broad, unfinished build. You extend only after evaluating the pilot."
+          "explanation": "A small run can be checked with review and fallback. You extend only after evaluating the pilot."
         }
       ]
     },
@@ -1235,7 +1202,6 @@
       "durationMinutes": 10,
       "premiumGated": false,
       "refreshCadence": "EVERGREEN",
-      "voiceAnchor": "A capstone is reliable when its purpose, boundaries, measurement, failure handling, and data approval are documented.",
       "keyConcepts": [
         "Self-assessment",
         "Capstone example collection",
@@ -1251,7 +1217,7 @@
             "lessonId": "modul_4_lesson_8",
             "moduleId": "modul_4",
             "title": "Redaction before publication: what do you black out?",
-            "scenario": "All details in the following capstone example are invented dummy data. Still mark every token that would need to be anonymized or removed before a real publication: names, customers, revenue, contact details, salaries, and internal metrics.",
+            "scenario": "All details are invented dummy data. Still mark every token that would need to be anonymized or removed before a real publication: names, customers, revenue, contact details, salaries and internal metrics.",
             "text": "The workflow has been running at Fictitious Works Example Ltd in Sampletown for three weeks. Our key account Fictitious Contact increased monthly volume from 340000 euros to 520000 euros. Contact managing director: demo.kontakt@example.invalid or +49-000-000000-DUMMY. Internal: the operations lead's fixed gross salary is 78000, and the EBIT margin increased from 8% to 11%.",
             "piiIndices": [
               4,
@@ -1277,29 +1243,25 @@
           "id": "modul_4_lesson_8_section_1",
           "title": "Capstone assessment and rubric",
           "readTimeMinutes": 3,
-          "content": "The capstone has a reviewable state. Two separate decisions: how does it score against the documented rubric, and does it stay internal or may it be shared?\n\n**Self-assessment using the capstone rubric:**\n\nThe certificate of participation rests on your own statement against the seven criteria, met or not met. An external assessment of system or competence it is not.\n\n**Process:**\n1. **Document the capstone:** record the workflow, test data, results, and failure cases\n2. **Check the rubric:** attach evidence to each criterion\n3. **Make a separate release decision:** sharing requires explicit opt-in plus data-protection, confidentiality, and security review\n4. **Optional iteration:** record feedback and measurements in a new version\n\n**Self-assessment questions:**\n- Does the workflow operate within its defined automation and review boundaries?\n- Are relevant failures, stop conditions, and fallbacks documented?\n- Can a named person operate and shut down the workflow safely?",
-          "keyTakeaway": "The seven criteria need evidence. The certificate of participation is self-reported; sharing and subject-matter approval are separate decisions."
+          "content": "For the finished capstone you make two separate decisions: how does it score against the rubric, and may it be shared?\n\nThe certificate of participation rests on your own statement against the seven criteria, met or not met. It is not an external assessment of the system or your competence, and it does not prove safe production operation.\n\n**Process:**\n1. **Document:** record the workflow, test data, results and failure cases\n2. **Check the rubric:** back each criterion with evidence, including that the workflow stays within its automation and review boundaries\n3. **Decide on release separately:** sharing requires opt-in plus data-protection, confidentiality and security review\n4. **Optional iteration:** record feedback and measurements in a new version"
         },
         {
           "id": "modul_4_lesson_8_section_2",
           "title": "Three operational questions",
           "readTimeMinutes": 3,
-          "content": "Three questions for the review:\n\n**1. Can the workflow be handed over?**\n\nCan your substitute start, review, stop, and restore it from the documentation alone? Whatever lives only in your head, access credentials included, is an open issue.\n\n**2. Are the material failure cases explicit?**\n\nCover at least errors in input data, model response, schema validation, destination system, and authorization. For each relevant risk, specify how to detect and log it, when to stop or retry safely, who is notified, and how to switch to a manual process. Retry counts and intervals depend on the failure type and side effects.\n\n**3. Is the method traceable?**\n\nAnother person must understand the purpose, assumptions, data flow, measurements, and boundaries. Reuse comes only after they have reassessed those points for the new purpose.",
-          "keyTakeaway": "Review handover, risk-based failure handling, and traceable method."
+          "content": "**1. Can the workflow be handed over?**\n\nCan your substitute start, review, stop and restore it from the documentation alone? Whatever lives only in your head, access credentials included, is an open issue.\n\n**2. Are the material failure cases written down?**\n\nCover at least errors in input data, model response, schema validation, destination system and authorization. For each risk, specify how to detect and log it, when to stop or retry in isolation, who is notified and how to switch to a manual process. Retry counts and intervals depend on the failure type and side effects.\n\n**3. Is the method traceable?**\n\nAnother person must understand the purpose, assumptions, data flow, measurements and boundaries, and reassess them for a new purpose before reusing the workflow."
         },
         {
           "id": "modul_4_lesson_8_section_3",
           "title": "Privacy primer",
           "readTimeMinutes": 2,
-          "content": "A capstone quickly carries personal, customer, or confidential business data. Before any distribution you check data classes and recipients. Redaction replaces neither a legal basis nor an approval.\n\n```\nBEFORE SHARING, CHECK AND REMOVE OR REPLACE AS REQUIRED:\n- names of real people → context-free placeholder\n- customer and supplier names → neutral placeholder\n- email addresses and phone numbers → synthetic sample data\n- account, tax, and contract identifiers → remove\n- special categories of personal data → do not include in the example\n- prices, margins, and internal metrics → include only with documented approval; otherwise remove\n- IP addresses, internal URLs, and hostnames → remove\n- API keys, tokens, cookies, and secrets → always remove and rotate after possible exposure\n```\n\n**Additional review:**\n- controller, recipients, purpose, legal basis, and retention\n- contractual confidentiality, copyright, and internal classification\n- indirect identifiability from the remaining combination of details\n\nIf a gallery or another public channel is offered, moderation there is an extra control, not the approval. That comes from the responsible organization.",
-          "keyTakeaway": "Data classification and approval precede redaction. Remove secrets and rotate them after possible exposure."
+          "content": "A capstone quickly contains personal, customer or confidential business data. Before any distribution you check data classes and recipients; redaction replaces neither a legal basis nor an approval.\n\n```\nBEFORE SHARING, CHECK AND REMOVE OR REPLACE AS REQUIRED:\n- names of real people → context-free placeholder\n- customer and supplier names → neutral placeholder\n- email addresses and phone numbers → synthetic sample data\n- account, tax, and contract identifiers → remove\n- special categories of personal data → do not include in the example\n- prices, margins, and internal metrics → include only with documented approval; otherwise remove\n- IP addresses, internal URLs, and hostnames → remove\n- API keys, tokens, cookies, and secrets → always remove and rotate after possible exposure\n```\n\n**Also check:**\n- controller, recipients, purpose, legal basis and retention\n- contractual confidentiality, copyright and internal classification\n- indirect identifiability from the remaining combination of details\n\nModeration in a gallery or another public channel is an extra control. The approval comes from the responsible organization."
         },
         {
           "id": "modul_4_lesson_8_section_4",
           "title": "Conclusion",
           "readTimeMinutes": 2,
-          "content": "Module 4 completes the work course.\n\n27 lessons: task analysis, model use, knowledge bases, workflow automation. Completion records what you covered and how you assessed the capstone yourself. An external audit it is not, and it certifies no safe production operation.\n\nYou download the certificate of participation after the quiz or the capstone. Its QR code carries readable completion data for technical verification. It confirms no external assessment.\n\n**Completion work:**\n1. Review two other or older workflows using the rubric\n2. Document your capstone with measurements, failure cases, and data approval\n3. Record which assumptions were confirmed, rejected, or remain open",
-          "keyTakeaway": "Completion = documented learning status and capstone rubric, not an external audit."
+          "content": "Module 4 completes the work course: 27 lessons on task analysis, model use, knowledge bases and workflow automation.\n\nYou download the certificate of participation after the quiz or the capstone. Its QR code carries readable completion data for technical verification.\n\n**Completion work:**\n1. Review two other or older workflows using the rubric\n2. Document your capstone with measurements, failure cases and data approval\n3. Record which assumptions were confirmed, rejected or remain open"
         }
       ],
       "quiz": [
@@ -1314,12 +1276,12 @@
             },
             {
               "id": "b",
-              "text": "Handover / risk-based failure handling / traceable method",
+              "text": "Handover / failure handling / traceable method",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "Documented / tested / distributed",
+              "text": "Documented / tested / shared with the team",
               "isCorrect": false
             },
             {
@@ -1341,7 +1303,7 @@
             },
             {
               "id": "b",
-              "text": "Data-protection duties + contractual confidentiality + protection of secrets and internal information",
+              "text": "Data protection, confidentiality and protected secrets",
               "isCorrect": true
             },
             {

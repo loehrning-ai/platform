@@ -16,8 +16,8 @@ import { settleFontsAndFrame } from "./fixtures/settle";
  *   3. The chapter contents open as a sheet above that bar, with 44px targets,
  *      and close again once a heading is chosen. The desktop TOC landmark stays
  *      hidden below lg, as responsive.spec.ts already requires.
- *   4. The lesson shell keeps its sticky toolbar under the compact top bar and
- *      derives that offset from the shell token.
+ *   4. The lesson shell adds no sticky toolbar under the compact top bar: the
+ *      reader bar is the one drawer control, so phones keep 105px of chrome.
  *   5. At desktop widths nothing changes: no reader bar, the sidebar TOC.
  *
  * Assertions target GEOMETRY, roles and the stable `data-reader-focus-bar` /
@@ -36,7 +36,7 @@ const CHAPTER_URL = "/buecher/ki-landschaft/01_eisberg";
  * assertion below would fail on a body that has no reader in it.
  *
  * The open-source course routes are reachable in that server and render the
- * same `LessonShell` with the same mobile toolbar, so the shell assertions run
+ * same `LessonShell` with the same reader bar, so the shell assertions run
  * against one of those. Block-specific header flow is covered in the server
  * component test; actual protected block geometry is not proven by this tier.
  */
@@ -48,8 +48,8 @@ const SHEET_PANEL = "[data-chapter-toc-sheet-panel]";
 const LESSON_TOOLBAR = "[data-lesson-shell-mobile-toolbar]";
 /** `--tabbar-h` in globals.css: 3.5rem. */
 const TAB_BAR_HEIGHT = 56;
-/** Technical readers have no sticky course subheader below lg. */
-const LESSON_TOOLBAR_TOP = 48;
+/** `--nav-h-compact`: the only fixed chrome above a lesson below lg. */
+const COMPACT_HEADER_HEIGHT = 48;
 const MIN_TARGET = 44;
 
 async function openAt(page: Page, url: string, width: number): Promise<void> {
@@ -199,7 +199,7 @@ test.describe("reader focus mode: chapter reader below lg", () => {
 });
 
 test.describe("reader focus mode: lesson shell below lg", () => {
-  test("a lesson page is in focus mode and keeps its toolbar under the compact bar", async ({
+  test("a lesson page is in focus mode with no second navigation toolbar", async ({
     page,
   }) => {
     const response = await page.request.get(LESSON_URL);
@@ -211,59 +211,47 @@ test.describe("reader focus mode: lesson shell below lg", () => {
       page.locator('[data-lesson-shell][data-reader="focus"]'),
     ).toHaveCount(1);
     await expect(page.locator(TAB_BAR)).toBeHidden();
-
-    const toolbar = page.locator(LESSON_TOOLBAR);
-    await expect(toolbar).toBeVisible();
-    const offset = await toolbar.evaluate((element) => ({
-      position: getComputedStyle(element).position,
-      top: getComputedStyle(element).top,
-    }));
-    expect(offset.position).toBe("sticky");
-    expect(
-      Math.round(Number.parseFloat(offset.top)),
-      "toolbar touches the real compact header without an invented subheader",
-    ).toBe(LESSON_TOOLBAR_TOP);
+    await expect(page.locator(LESSON_TOOLBAR)).toHaveCount(0);
+    // Exactly one visible control opens the lesson drawer.
+    await expect(
+      page.getByRole("button", { name: "Lektionsnavigation öffnen" }),
+    ).toHaveCount(1);
   });
 
   for (const width of [390, 768]) {
-    test(`the ${width}px toolbar occupies only the real compact-header band`, async ({
+    test(`the ${width}px lesson content starts directly under the compact header`, async ({
       page,
     }, testInfo) => {
       await openAt(page, LESSON_URL, width);
       await page.evaluate(() =>
         window.scrollTo({ top: 500, behavior: "instant" }),
       );
-      const toolbar = page.locator(LESSON_TOOLBAR);
-      await expect(toolbar).toBeVisible();
-      await expect
-        .poll(async () =>
-          toolbar.evaluate((element) =>
-            Math.round(element.getBoundingClientRect().top),
-          ),
-        )
-        .toBe(LESSON_TOOLBAR_TOP);
-      const geometry = await toolbar.evaluate((element) => ({
-        height: element.getBoundingClientRect().height,
-        top: element.getBoundingClientRect().top,
-        headerBottom: document
+      const geometry = await page.evaluate(() => {
+        const header = document
           .querySelector("[data-nav-header-row]")
-          ?.getBoundingClientRect().bottom,
-      }));
-      expect(Math.round(geometry.height)).toBe(48);
-      expect(geometry.headerBottom).toBeDefined();
+          ?.getBoundingClientRect();
+        const stickies = Array.from(
+          document.querySelectorAll<HTMLElement>("[data-lesson-shell] *"),
+        ).filter((element) => getComputedStyle(element).position === "sticky")
+          .filter((element) => element.getBoundingClientRect().height > 0)
+          .map((element) => element.getBoundingClientRect().top);
+        return { headerBottom: header?.bottom, stickies };
+      });
+      expect(Math.round(geometry.headerBottom ?? 0)).toBe(
+        COMPACT_HEADER_HEIGHT,
+      );
+      // No sticky band inside the shell pins itself under the header.
       expect(
-        Math.abs(geometry.top - geometry.headerBottom!),
-      ).toBeLessThanOrEqual(1);
+        geometry.stickies.filter(
+          (top) => Math.abs(top - COMPACT_HEADER_HEIGHT) <= 1,
+        ),
+      ).toEqual([]);
       await page.screenshot({
-        path: testInfo.outputPath(`reader-toolbar-${width}.png`),
+        path: testInfo.outputPath(`reader-top-${width}.png`),
       });
-      await testInfo.attach(`reader-toolbar-${width}`, {
-        path: testInfo.outputPath(`reader-toolbar-${width}.png`),
+      await testInfo.attach(`reader-top-${width}`, {
+        path: testInfo.outputPath(`reader-top-${width}.png`),
         contentType: "image/png",
-      });
-      await testInfo.attach("reader-toolbar-geometry", {
-        body: JSON.stringify({ route: LESSON_URL, width, ...geometry }),
-        contentType: "application/json",
       });
     });
   }

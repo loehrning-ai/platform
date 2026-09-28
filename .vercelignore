@@ -1,3 +1,14 @@
+# A Vercel CLI deploy uploads the working copy from this directory. The CLI
+# does not read .gitignore, and its built-in defaults drop only a few paths
+# (.git, .vercel, node_modules, .env.local, .env.*.local and similar). So this
+# file must exclude everything .gitignore excludes: otherwise a local .env,
+# key file, Playwright session or agent note would ship in the deployment
+# source. Git-integration builds start from the tracked tree, so leaving out
+# untracked files can never remove a build input, and no rule here may match a
+# tracked file. packages/website/src/lib/security/vercelignore.test.ts proves
+# both: every untracked path .gitignore ignores is ignored here, and no tracked
+# file is.
+
 # Vercel installs dependencies and runs the build remotely, so neither the
 # local dependency tree nor a local build output belongs in the upload. Without
 # this file the CLI uploads ~782 MB (2.0 GB node_modules + 1.7 GB .next before
@@ -6,9 +17,120 @@ node_modules
 .next
 packages/website/.next
 
-# Local-only verification and test output.
+# Local-only verification and test output. Playwright reports, traces and
+# failure artifacts can hold cookies and screenshots of signed-in pages.
 .lighthouseci
 coverage
-packages/website/playwright-report
-packages/website/test-results
-packages/website/blob-report
+**/playwright-report/
+**/test-results/
+**/blob-report/
+
+# Environment files. `next build` loads .env and .env.production from the app
+# directory, so an uploaded file would reach the build as configuration. Hosted
+# configuration comes only from the Vercel project's environment variables.
+# The value-free .env*.example templates are tracked and stay uploadable.
+**/.env*
+!**/.env*.example
+# The CLI already skips its project link, where `vercel pull` writes env files.
+# Listed so this file stays a complete mirror of .gitignore.
+.vercel
+
+# Credentials and private keys.
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+**/id_rsa
+**/id_dsa
+**/id_ecdsa
+**/id_ed25519
+**/.npmrc
+**/.netrc
+**/.pypirc
+**/.dockercfg
+**/.git-credentials
+**/.docker/config.json
+**/.aws/
+**/.kube/
+**/.ssh/
+**/kubeconfig
+**/credentials.json
+**/service-account*.json
+
+# Session state: Playwright storage state can hold a real session token, and
+# the Supabase CLI caches the linked project here.
+**/tests/e2e/.auth/
+**/supabase/.temp/
+
+# Local agent instructions, agent tool state, scratch work and internal
+# planning notes. They describe private workflows and can quote credentials or
+# production details. Three .gitignore rules for internal note files are not
+# repeated here: the publication scanner forbids naming those files in any
+# tracked file except .gitignore, and the test derives that exception from the
+# scanner's own rules.
+**/CLAUDE.md
+**/AGENTS.md
+**/AGENT.md
+**/INTEGRATION.md
+**/.claude/
+**/.claude-code/
+**/.claude.json
+**/.agents/
+**/.cursor/
+**/.cursorrules
+**/.codex/
+**/.gemini/
+**/.windsurf/
+**/.windsurfrules
+**/.roo/
+**/.roorules
+**/.cline/
+**/.continue/
+**/.aider*
+.github/copilot-instructions.md
+**/scratchpad/
+**/plans/
+**/discuss-*.md
+**/NOTES.md
+**/*.local.md
+docs/privacy/
+docs/operations/
+docs/launch-readiness.md
+docs/open-source/github-org-release.md
+docs/overhaul-*/
+
+# Caches, other build output, other package managers' lockfiles, local-only
+# test harnesses and editor litter. None is a build input.
+.turbo/
+.cache/
+.bun-cache/
+.firecrawl/
+.swc/
+.output/
+dist/
+build/
+out/
+*.log
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.DS_Store
+*.tsbuildinfo
+.dev-ports.json
+packages/website/tests/e2e/_*.spec.ts
+**/bun.lock
+!/bun.lock
+**/bun.lockb
+package-lock.json
+npm-shrinkwrap.json
+pnpm-lock.yaml
+yarn.lock
+*.swp
+*.swo
+*.swn
+*~
+.*.sw[a-p]

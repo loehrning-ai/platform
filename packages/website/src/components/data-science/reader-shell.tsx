@@ -140,6 +140,7 @@ export function DsReaderShell({
           title={currentChapter?.title ?? copy.navLabel}
           objective={currentChapter?.subtitle}
           headingLevel={isProjectCheckpoint ? 2 : 1}
+          objectiveRepeatedAbove={isProjectCheckpoint}
         >
           {children}
         </LessonReference>

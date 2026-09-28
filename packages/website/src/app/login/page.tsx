@@ -101,9 +101,6 @@ export default async function LoginPage({
       >
         {copy.accountValue.heading}
       </h2>
-      <p className="mt-2 max-w-prose break-words text-sm leading-relaxed text-muted-foreground">
-        {copy.accountValue.lead}
-      </p>
       <ol className="mt-5 grid gap-4">
         {copy.accountValue.items.map((item, index) => (
           <li
@@ -167,9 +164,6 @@ export default async function LoginPage({
       >
         {copy.publicAccess.heading}
       </h2>
-      <p className="mt-3 max-w-prose break-words text-sm leading-relaxed text-muted-foreground">
-        {copy.publicAccess.lead}
-      </p>
       <ul className="mt-2 grid min-w-0 gap-0 sm:grid-cols-2 sm:gap-x-6">
         {copy.publicAccess.links.map((link) => (
           <li key={link.path} className="min-w-0">
@@ -218,8 +212,7 @@ export default async function LoginPage({
                   ? copy.introduction.configuration
                   : unavailableReason === "methods"
                     ? copy.introduction.methodsUnavailable
-                    : copy.introduction.accountUnavailable}{" "}
-            {copy.introduction.records}
+                    : copy.introduction.accountUnavailable}
           </p>
         </header>
         {params.reason ? (
@@ -267,9 +260,11 @@ export default async function LoginPage({
               >
                 {unavailableCopy.headline}
               </h2>
-              <p className="mt-2 max-w-prose break-words text-sm leading-relaxed text-muted-foreground">
-                {unavailableCopy.body}
-              </p>
+              {unavailableCopy.body ? (
+                <p className="mt-2 max-w-prose break-words text-sm leading-relaxed text-muted-foreground">
+                  {unavailableCopy.body}
+                </p>
+              ) : null}
               <p className="mt-4 max-w-prose break-words border-t border-border pt-4 text-sm leading-relaxed text-foreground">
                 {unavailableCopy.next}
               </p>

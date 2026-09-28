@@ -325,8 +325,20 @@ a crawler or a shared URL burn it silently.
 On the happy path that route verifies the cookie session, charges a per-account
 budget (5 per minute per account, with an independent 30 per minute per client),
 asks Supabase Auth Admin for a one-time magic-link token for the signed-in
-address, and answers `303` to
+address, and continues the browser to
 `https://cv.loehrning.ai/auth/handoff#token_hash=...&type=magiclink`.
+
+"Continues" is not a `303`. The enforced CSP carries `form-action 'self'`, and
+Chromium applies it to every redirect a form submission follows, so a
+cross-origin `303` from this POST is refused and the learner never leaves the
+account page. The route answers with a private (`private, no-store`,
+`Referrer-Policy: no-referrer`, `noindex`) same-origin page instead. It names
+the destination host and continues through a zero-delay
+`<meta http-equiv="refresh">` plus a visible link, both ordinary navigations
+that `form-action` does not govern. The refresh replaces the POST result in
+history, so Back returns to the account page instead of resubmitting. The
+builder is `src/lib/security/redirect-interstitial.ts`; do not "fix" a blocked
+handoff by widening `form-action`.
 
 The token rides in the URL fragment on purpose. Browsers never send a fragment
 to a server, so it cannot appear in a Caddy log, a proxy log or a `Referer`
@@ -336,7 +348,8 @@ location with the editor. The Flask process never sees the token, and a test
 asserts that over the source.
 
 Every failure that is not a security refusal ends in the same harmless place:
-`303` to `https://cv.loehrning.ai/?hinweis=anmelden`, which carries no
+the same interstitial, continuing to
+`https://cv.loehrning.ai/?hinweis=anmelden`, which carries no
 credential and lands on cv-engine's own sign-in with a short notice. That covers
 an admin API that will not mint a magic link for an account which only ever
 signed in through an identity provider, a timeout, and a payload the route
@@ -467,9 +480,10 @@ Not logged:
   exception class names only: never owner identifiers, claim tokens, object
   keys, credentials or exception messages.
 - **No handoff token anywhere.** It travels in a fragment, the platform route
-  never logs it, its named errors carry no payload, and the redirect it issues
-  carries `Referrer-Policy: no-referrer` so the account URL the learner came
-  from does not reach this host either.
+  never logs it, its named errors carry no payload, and the interstitial that
+  hands it to the browser is `private, no-store` and carries
+  `Referrer-Policy: no-referrer` so the account URL the learner came from does
+  not reach this host either.
 - **No analytics.** With `POSTHOG_KEY` unset the module makes no network call.
 
 Logged, and worth knowing about:

@@ -1,6 +1,6 @@
 # Anhang: 50+ Prompts nach Kategorie
 
-Kopieren, anpassen, einsetzen. Alle Prompts aus diesem Buch plus ein paar Extras, im KRAFT-Format, mit [PLATZHALTERN] zum Ersetzen.
+Hier stehen alle Prompts aus diesem Buch und einige Extras im KRAFT-Format, mit [PLATZHALTERN] zum Ersetzen.
 
 ---
 
@@ -308,7 +308,7 @@ Ton: Sachlich, datengetrieben.
 Kontext: Ich bin [BERUF], [ERFAHRUNG] Jahre, Umsatz [BETRAG] EUR/Jahr.
 Zielgruppe: [ZIELGRUPPE]. Positionierung: [USP].
 Rolle: Strategischer Unternehmensberater.
-Aufgabe: SWOT-Analyse + 3 Handlungsempfehlungen.
+Aufgabe: SWOT-Analyse + 3 Handlungsempfehlungen. Berücksichtige den deutschen Markt.
 Format: SWOT-Matrix (Tabelle) + Empfehlungen.
 Ton: Direkt, analytisch.
 ```

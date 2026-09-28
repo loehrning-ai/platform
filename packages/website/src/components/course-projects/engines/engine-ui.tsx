@@ -2,6 +2,7 @@
 
 import { createContext, useContext, type ReactNode } from "react";
 
+import { getLessonMissionProfile } from "@/lib/course-projects/lesson-missions";
 import type {
   CourseProjectConfig,
   LocalizedProjectText,
@@ -28,19 +29,17 @@ const EngineLocaleContext = createContext<"de" | "en">("en");
 interface EngineFrameProps {
   config: CourseProjectConfig;
   locale: "de" | "en";
-  engineLabel: string;
   children: ReactNode;
 }
 
 export function EngineFrame({
   config,
   locale,
-  engineLabel,
   children,
 }: EngineFrameProps) {
-  const scenarioLabel = locale === "de" ? "Szenario" : "Scenario";
-  const safetyLabel = locale === "de" ? "Sicherheitsgrenze" : "Safety boundary";
-
+  // The heading reuses the mission instrument name, so the button that opens
+  // the engine and the panel it opens carry the same name.
+  const instrument = getLessonMissionProfile(config.courseSlug).instrument;
   return (
     <EngineLocaleContext.Provider value={locale}>
       <section
@@ -48,38 +47,24 @@ export function EngineFrame({
         className="min-w-0 border-2 border-foreground bg-card shadow-[5px_5px_0_0_rgba(11,9,8,0.16)]"
       >
         <header className="border-b-2 border-foreground bg-foreground px-4 py-4 text-background sm:px-6">
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-[#ffc6aa]">
-            {engineLabel} · {config.id}
-          </p>
           <h2
             id={`${config.id}-project-title`}
-            className="mt-2 break-words text-xl font-black leading-tight sm:text-2xl"
+            className="break-words text-xl font-black leading-tight sm:text-2xl"
           >
-            {projectText(config.title, locale)}
+            {projectText(instrument, locale)}
           </h2>
-          <p className="mt-2 max-w-4xl text-sm leading-relaxed text-background/85">
-            {projectText(config.mission, locale)}
-          </p>
         </header>
 
-        <div className="grid min-w-0 border-b border-foreground/20 lg:grid-cols-2">
-          <div className="min-w-0 border-b border-foreground/20 p-4 lg:border-b-0 lg:border-r sm:p-5">
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.15em] text-muted-foreground">
-              {scenarioLabel}
-            </p>
-            <p className="mt-2 break-words text-sm leading-relaxed">
-              {projectText(config.scenario, locale)}
-            </p>
-          </div>
-          <div className="min-w-0 bg-brand-orange/[0.06] p-4 sm:p-5">
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.15em] text-brand-orange-dark">
-              {safetyLabel}
-            </p>
-            <p className="mt-2 break-words text-sm leading-relaxed">
-              {projectText(config.safety, locale)}
-            </p>
-          </div>
-        </div>
+        <p className="min-w-0 break-words border-b border-foreground/20 p-4 text-sm leading-relaxed sm:px-6">
+          <span className="font-bold">
+            {locale === "de" ? "Fall: " : "Case: "}
+          </span>
+          {projectText(config.scenario, locale)}
+        </p>
+
+        <p className="min-w-0 break-words border-b border-foreground/20 bg-brand-orange/[0.06] p-4 text-sm leading-relaxed sm:px-6">
+          {projectText(config.safety, locale)}
+        </p>
 
         <div className="min-w-0 p-4 sm:p-6">{children}</div>
       </section>

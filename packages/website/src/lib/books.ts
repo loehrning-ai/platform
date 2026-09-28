@@ -63,13 +63,13 @@ export const allBooks: readonly Book[] = [
     readingTimeMinutes: 63,
     resourceType: "HTML-Lesefassung",
     accessLabel: "kostenlos · jetzt lesen",
-    statusLabel: "Reader online",
+    statusLabel: "Lesefassung online",
     accessPolicy: "open-reader",
     readerHref: "/buecher/ki-landschaft",
     relatedResourceHref: "/eu-ai-act-kurs",
     relatedResourceLabel: "EU AI Act Kurs öffnen",
     description:
-      "Das Datenfundament entscheidet, nicht die Tool-Auswahl. Das Buch zeigt, wie ein Team seinen Ausgangspunkt ohne Score qualitativ erfasst, was fünf Arbeitsfelder digitaler und KI-bezogener Reife verlangen und wie du einen Benchmark liest, ohne mehr hineinzulesen, als drinsteht.",
+      "Warum das Datenfundament mehr zählt als die Tool-Auswahl, wie ein Team seinen Ausgangspunkt ohne Score erfasst und wie du einen Benchmark liest, ohne ihn zu überdehnen.",
     highlights: [
       "Qualitative Selbstprüfung ohne proprietären Score",
       "Fünf Arbeitsfelder für digitale und KI-bezogene Reife",
@@ -87,7 +87,7 @@ export const allBooks: readonly Book[] = [
     sourceInputs: [
       "Public primary sources cited in the book",
       "Qualitative AI-readiness frameworks",
-      "Simplified learning-platform editorial review",
+      "Editorial review of the learning-platform edition",
     ],
     licensePolicy:
       "Kostenlos online lesbar; PDF-Download nach Login verfügbar.",
@@ -132,7 +132,7 @@ export const allBooks: readonly Book[] = [
     sourceInputs: [
       "KI-Führerschein lesson content",
       "European Commission AI literacy guidance",
-      "Simplified learning-platform editorial review",
+      "Editorial review of the learning-platform edition",
     ],
     licensePolicy:
       "Kostenlos online lesbar; keine öffentliche PDF-Distribution in dieser Version.",
@@ -177,7 +177,7 @@ export const allBooks: readonly Book[] = [
     sourceInputs: [
       "AI-Native course content",
       "Tool-selection editorial notes",
-      "Simplified learning-platform editorial review",
+      "Editorial review of the learning-platform edition",
     ],
     licensePolicy:
       "Kostenlos online lesbar; keine öffentliche PDF-Distribution in dieser Version.",

@@ -47,10 +47,11 @@ test.describe("/hilfe Help & FAQ", () => {
     for (const question of [
       "Wo fange ich an?",
       "Warum brauche ich ein Konto?",
-      // Copy lock updated: the heading names both documents the platform issues.
-      // Narrowing it to one was a confirmed finding of the fidelity audit: the
-      // Article 4 disclaimer has to cover the Lernnachweis as well.
-      "Was bedeuten Teilnahmebestätigung und Lernnachweis?",
+      // Copy lock updated: the heading uses the umbrella term "Abschlussdokumente",
+      // which covers both documents the platform issues (Teilnahmebestätigung and
+      // the ki-und-gesellschaft record). The fidelity audit found that the Article 4
+      // disclaimer must not narrow to one of them, so the heading must stay generic.
+      "Was bedeuten die Abschlussdokumente?",
     ] as const) {
       await expect(
         page.getByText(question, { exact: true }),
@@ -133,7 +134,7 @@ test.describe("/hilfe Help & FAQ", () => {
     await expect(
       page
         .getByRole("complementary")
-        .getByRole("link", { name: "/neuigkeiten", exact: true }),
+        .getByRole("link", { name: "Neuigkeiten", exact: true }),
     ).toHaveAttribute("href", "/neuigkeiten");
   });
 });

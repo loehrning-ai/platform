@@ -28,24 +28,21 @@
       "sections": [
         {
           "id": "arbeit-1-1-s1",
-          "title": "Vier Begriffe, vier verschiedene Aussagen",
+          "title": "Was eine Jobzahl misst",
           "readTimeMinutes": 2,
-          "content": "Bevor du die nächste Zahl über bedrohte Jobs weitererzählst: Welche Größe misst sie? Arbeitsmarktstudien messen nicht alle dasselbe. Vier Begriffe, vier Aussagen:\n\n1. Aufgabenexposition: Eine Technologie überschneidet sich mit Tätigkeiten eines Berufs. Mehr sagt der Wert nicht.\n2. Technisches Substituierbarkeitspotenzial: Tätigkeiten könnten nach dem Stand der Technik automatisiert erledigt werden. Könnten.\n3. Einsatz: Ein Betrieb führt die Technik tatsächlich ein und baut den Arbeitsablauf um.\n4. Beschäftigungswirkung: Arbeitszeit, Stellenzahl, Lohn oder Qualifikationsbedarf ändern sich.\n\nFrey und Osborne schätzten 2013 für US-Berufe eine theoretische Automatisierungswahrscheinlichkeit. Der OECD Employment Outlook 2023 arbeitet mit anderen Daten und Methoden und berichtet für die untersuchten OECD-Länder den Beschäftigungsanteil in Berufen mit hohem Automatisierungsrisiko. Eine Deutschland-Prognose ist das nicht. Eine Vorhersage konkreter Jobverluste auch nicht.\n\nDas IAB rechnet auf Basis von BERUFENET aus, welcher Anteil der Kerntätigkeiten eines Berufs mit der jeweils verfügbaren Technik prinzipiell vollautomatisch erledigt werden könnte. Und das IAB schreibt ausdrücklich dazu: Substituierbarkeit heißt nicht, dass die Tätigkeit tatsächlich automatisiert wird.\n\nQuellen: OECD Employment Outlook 2023, Kapitel 3; IAB-Kurzbericht 5/2024 zur Neuberechnung 2022.",
-          "keyTakeaway": "Exposition, technisches Potenzial, betrieblicher Einsatz und Beschäftigungswirkung sind vier verschiedene Größen. Keine davon sagt dir allein, wie viele Stellen verschwinden."
+          "content": "Zahlen über bedrohte Jobs messen verschiedene Größen:\n\n1. Aufgabenexposition: Eine Technologie überschneidet sich mit Tätigkeiten eines Berufs.\n2. Technisches Substituierbarkeitspotenzial: Tätigkeiten könnten nach dem Stand der Technik automatisiert werden.\n3. Einsatz: Ein Betrieb führt die Technik ein und baut den Ablauf um.\n4. Beschäftigungswirkung: Arbeitszeit, Stellenzahl, Lohn oder Qualifikationsbedarf ändern sich.\n\nFrey und Osborne schätzten 2013 eine theoretische Automatisierungswahrscheinlichkeit für US-Berufe. Der OECD Employment Outlook 2023 berichtet mit anderen Daten und Methoden den Beschäftigungsanteil in Berufen mit hohem Automatisierungsrisiko in den untersuchten OECD-Ländern, ohne Prognose für Deutschland oder für Jobverluste.\n\nDas IAB berechnet auf Basis von BERUFENET, welcher Anteil der Kerntätigkeiten eines Berufs mit verfügbarer Technik prinzipiell vollautomatisch erledigt werden könnte, und betont: Substituierbarkeit heißt nicht, dass die Tätigkeit tatsächlich automatisiert wird.\n\nQuellen: OECD Employment Outlook 2023, Kapitel 3; IAB-Kurzbericht 5/2024 zur Neuberechnung 2022."
         },
         {
           "id": "arbeit-1-1-s2",
-          "title": "Besser als der Mensch? Worin genau?",
+          "title": "Was „besser als Menschen“ heißt",
           "readTimeMinutes": 2,
-          "content": "\"KI ist besser als Menschen.\" Besser worin? Gemessen woran? Ohne Testbedingungen ist der Satz wertlos. Prüfe vier Punkte:\n\n- Aufgabe: Sind Eingang, gewünschter Ausgang und Qualitätsmaß klar definiert?\n- Daten: Entsprechen die Testdaten der realen Zielgruppe und dem späteren Einsatz?\n- Folgen: Was kostet ein Fehler, und wer prüft die Grenzfälle?\n- Umgebung: Ist die Situation standardisiert, oder wechselt sie physisch und sozial ständig?\n\nEin Modell kann in einem begrenzten Bildklassifikationstest hohe Werte erreichen und im Klinikbetrieb trotzdem ungeeignet sein. Ein Sprachmodell kann einen Textentwurf beschleunigen und im selben Absatz erfundene Angaben liefern. Ein Planungssystem kann alle Standardfälle bearbeiten und an einer einzigen seltenen Ausnahme scheitern.\n\nRechtliche Verantwortung, Freigaben und Interessenabwägungen liegen bei Menschen und Organisationen. Das sagt nichts über eine biologische Fähigkeit des Modells. Es sagt etwas über Zuständigkeit und Rechenschaft.",
-          "keyTakeaway": "Bewerte ein System für eine konkrete Aufgabe, eine konkrete Zielgruppe und eine konkrete Fehlerfolge. Ein Benchmark belegt keine allgemeine Überlegenheit. Eine flüssige Ausgabe auch nicht."
+          "content": "\"KI ist besser als Menschen\" sagt ohne Testbedingungen nichts. Prüfe:\n\n- Aufgabe: Sind Eingang, Ausgang und Qualitätsmaß klar definiert?\n- Daten: Passen die Testdaten zur realen Zielgruppe und zum späteren Einsatz?\n- Folgen: Was kostet ein Fehler, und wer prüft Grenzfälle?\n- Umgebung: Ist die Situation standardisiert oder wechselt sie physisch und sozial?\n\nEin Modell kann in einem begrenzten Bildklassifikationstest hohe Werte erreichen und im Klinikbetrieb ungeeignet sein. Ein Sprachmodell kann einen Entwurf beschleunigen und darin Angaben erfinden, ein Planungssystem alle Standardfälle bearbeiten und an einer seltenen Ausnahme scheitern.\n\nAuch wenn das System besser abschneidet, tragen Menschen und Organisationen die rechtliche Verantwortung, geben frei und wägen Interessen ab."
         },
         {
           "id": "arbeit-1-1-s3",
-          "title": "Eine Aufgabe wird automatisierbar. Und der Beruf?",
+          "title": "Wenn eine Aufgabe automatisierbar wird",
           "readTimeMinutes": 1,
-          "content": "Ein Beruf ist ein Bündel aus Aufgaben. Wird eine davon technisch automatisierbar, ist über den Beruf noch nichts entschieden. Der Betrieb kann Zeit sparen, mehr Fälle bearbeiten, Aufgaben neu verteilen, die Qualität erhöhen oder Stellen abbauen. Nachfrage, Kosten, Haftung, Mitbestimmung und neue Aufgaben ziehen gleichzeitig in verschiedene Richtungen.\n\nNimm eine radiologische Software, die Auffälligkeiten in Bildern markiert. Spart sie der Radiologin Arbeit oder erzeugt sie zusätzliche Prüfung? Das hängt von Treffer- und Fehlerraten ab, vom Patientenkollektiv, von der Integration und von der vorgeschriebenen Kontrolle. Aus einer Markierung folgt nicht automatisch eine Diagnose, und erst recht keine Behandlung. Beides bleibt ärztliche Arbeit.\n\nFür deine eigene Arbeit bringt dich eine Aufgabenanalyse deshalb weiter als jede Berufsprognose. Welche Schritte sind standardisiert? Wo entstehen Fehler? Welche Entscheidungen brauchen Fachwissen, Kontext oder eine Freigabe? Und wo erzeugt das neue Werkzeug erst einmal zusätzliche Kontrolle?",
-          "keyTakeaway": "Aus einer automatisierbaren Teilaufgabe folgt keine Berufsprognose. Entscheidend ist, wie Technik, Kontrolle und die übrigen Aufgaben im echten Arbeitsablauf zusammenspielen."
+          "content": "Ein Beruf ist ein Bündel aus Aufgaben. Wird eine davon automatisierbar, kann der Betrieb Zeit sparen, mehr Fälle bearbeiten, Aufgaben neu verteilen, die Qualität erhöhen oder Stellen abbauen. Nachfrage, Kosten, Haftung, Mitbestimmung und neue Aufgaben wirken dabei mit.\n\nOb eine Radiologie-Software, die Auffälligkeiten in Bildern markiert, Arbeit spart oder zusätzliche Prüfung erzeugt, hängt von Treffer- und Fehlerraten, Patientenkollektiv, Integration und vorgeschriebener Kontrolle ab. Diagnose und Behandlung bleiben ärztliche Arbeit.\n\nFür deine Arbeit hilft eine Aufgabenanalyse mehr als jede Berufsprognose: Welche Schritte sind standardisiert, wo entstehen Fehler, welche Entscheidungen brauchen Fachwissen, Kontext oder Freigabe, und wo erzeugt das Werkzeug zusätzliche Kontrolle?"
         }
       ],
       "quiz": [
@@ -74,7 +71,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Exposition und technisches Substituierbarkeitspotenzial beschreiben, wo sich Technik und Aufgaben überschneiden könnten. Ob ein Betrieb die Technik einführt und was das mit den Stellen macht, entscheiden weitere wirtschaftliche, rechtliche und organisatorische Faktoren."
+          "explanation": "Exposition und Substituierbarkeit zeigen mögliche Überschneidungen. Einsatz und Stellenwirkung hängen zusätzlich von wirtschaftlichen, rechtlichen und organisatorischen Faktoren ab."
         },
         {
           "id": "arbeit-1-1-q2",
@@ -101,7 +98,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Das IAB ordnet Kerntätigkeiten danach ein, was die jeweils verfügbare Technik könnte. Gemessen wird technisches Potenzial. Nicht der tatsächliche Einsatz, nicht die Wirtschaftlichkeit, nicht künftige Stellenverluste."
+          "explanation": "Gemessen wird technisches Potenzial. Tatsächlicher Einsatz, Wirtschaftlichkeit und künftige Stellenverluste stecken nicht in der Zahl."
         },
         {
           "id": "arbeit-1-1-q3",
@@ -124,11 +121,11 @@
             },
             {
               "id": "d",
-              "text": "Der Arbeitsablauf kann sich ändern; die Beschäftigungswirkung muss gesondert untersucht werden",
+              "text": "Der Arbeitsablauf kann sich ändern; die Beschäftigungswirkung ist gesondert zu prüfen",
               "isCorrect": true
             }
           ],
-          "explanation": "Technisches Potenzial beschreibt erst einmal nur eine Aufgabe. Ob daraus Zeitersparnis wird, zusätzliche Prüfung, höhere Fallzahlen oder weniger Stellen, entscheidet der konkrete Einsatz im Betrieb."
+          "explanation": "Ob aus technischem Potenzial Zeitersparnis, zusätzliche Prüfung, mehr Fälle oder weniger Stellen werden, entscheidet der Einsatz im Betrieb."
         }
       ]
     },
@@ -136,7 +133,7 @@
       "id": "arbeit-1-2",
       "blockId": "block_1",
       "number": 2,
-      "title": "KI als Assistenz: messen statt glauben",
+      "title": "KI als Assistenz: den Nutzen selbst messen",
       "subtitle": "Wer prüft, wer gibt frei, welche Daten dürfen hinein",
       "durationMinutes": 6,
       "owner": "editorial:ki-und-gesellschaft",
@@ -155,22 +152,19 @@
           "id": "arbeit-1-2-s1",
           "title": "Assistenz ohne Leistungsversprechen",
           "readTimeMinutes": 2,
-          "content": "Der Hersteller verspricht Zeitersparnis. Dein Prozess hat davon noch nichts gesehen. Ein Assistenz-Workflow gibt dem System einen begrenzten Schritt und lässt Freigabe und Verantwortung bei einer benannten Person. Ob das Zeit spart, misst du in deinem eigenen Prozess. Sonst weißt du es nicht.\n\nDrei synthetische Beispiele, keine Fallberichte:\n- Eine Pflegefachkraft lässt aus freigegebenen, datenschutzkonformen Stichpunkten einen Entwurf schreiben und prüft jede Angabe gegen die Dokumentation. Patientendaten gehören ausschließlich in ein dafür freigegebenes System.\n- Eine Buchhalterin lässt ungewöhnliche Einträge markieren. Die Markierung ist ein Prüfhinweis. Kein Betrugsbefund, kein Fehlerbefund.\n- Ein Kommunikationsteam erzeugt Bildentwürfe. Vor der Veröffentlichung prüft es Rechte, Sachbezug, Kennzeichnung und Freigabe.\n\nEin kontrollierter Test legt vorher fest: die Aufgabe, die erlaubten Daten, die Qualitätskriterien, wer prüft, wann abgebrochen wird und was protokolliert wird. Erst die Messdaten aus diesem Test sagen dir, ob der Einsatz nützt.",
-          "keyTakeaway": "Assistenz ist ein Arbeitsablauf, kein Leistungsversprechen. Begrenze die Aufgabe, schütze die Daten, prüfe die Ergebnisse und miss den Nutzen selbst."
+          "content": "Ein Assistenz-Workflow gibt dem System einen begrenzten Schritt; Freigabe und Verantwortung bleiben bei einer benannten Person. Ob das Zeit spart, misst du im eigenen Prozess.\n\nDrei erfundene Beispiele:\n- Eine Pflegefachkraft lässt aus freigegebenen, datenschutzkonformen Stichpunkten einen Entwurf schreiben und prüft jede Angabe gegen die Dokumentation. Patientendaten gehören nur in ein dafür freigegebenes System.\n- Eine Buchhalterin lässt ungewöhnliche Einträge markieren. Die Markierung heißt: genauer prüfen. Einen Betrug oder Fehler belegt sie nicht.\n- Ein Kommunikationsteam erzeugt Bildentwürfe und prüft sie vor der Veröffentlichung auf Rechte, Sachbezug, Kennzeichnung und Freigabe.\n\nEin kontrollierter Test legt vorher Aufgabe, erlaubte Daten, Qualitätskriterien, Prüfer, Abbruchpunkt und Protokollierung fest. Erst seine Messdaten zeigen den Nutzen."
         },
         {
           "id": "arbeit-1-2-s2",
-          "title": "KI-Kompetenz: fünf Fähigkeiten, kein Programmierkurs",
+          "title": "Was KI-Kompetenz umfasst",
           "readTimeMinutes": 2,
-          "content": "Die Sachbearbeiterin, die einen KI-Entwurf freigibt, braucht keinen Python-Kurs. Fünf Dinge braucht sie:\n\n1. Aufgabe beschreiben: Zweck, Kontext, gewünschtes Format und Grenzen nennen.\n2. Ausgabe prüfen: Behauptungen, Zahlen und Quellen gegen verlässliche Unterlagen halten.\n3. Risiko erkennen: Bei personenbezogenen Daten, vertraulichen Informationen oder folgenreichen Entscheidungen stoppen und die zuständige Stelle einbeziehen.\n4. Werkzeug einordnen: Freigabestatus, Datenverarbeitung, bekannte Grenzen und Versionsänderungen kennen.\n5. Arbeit dokumentieren: Eingaben, relevante Ausgaben, eigene Änderungen und Freigaben nachvollziehbar festhalten, wenn der Prozess es verlangt.\n\nArt. 4 der KI-Verordnung verpflichtet Anbieter und Betreiber seit der Änderung durch Verordnung (EU) 2026/1744, Maßnahmen zu ergreifen, die die Entwicklung der KI-Kompetenz ihrer Mitarbeitenden und weiterer für sie handelnder Personen unterstützen. Ein garantiertes Kompetenzniveau für jede einzelne Person verlangt die Norm nicht.",
-          "keyTakeaway": "KI-Kompetenz heißt: Aufgabe und Risiko einordnen, Daten schützen, Ausgaben prüfen, Entscheidungen nachvollziehbar festhalten. Programmieren steht nicht auf der Liste."
+          "content": "Wer einen KI-Entwurf freigibt, braucht fünf Fähigkeiten, und Programmieren gehört nicht dazu:\n\n1. Aufgabe beschreiben: Zweck, Kontext, Format und Grenzen nennen.\n2. Ausgabe prüfen: Behauptungen, Zahlen und Quellen gegen verlässliche Unterlagen halten.\n3. Risiko erkennen: Bei personenbezogenen Daten, vertraulichen Informationen oder folgenreichen Entscheidungen stoppen und die zuständige Stelle einbeziehen.\n4. Werkzeug einordnen: Freigabestatus, Datenverarbeitung, Grenzen und Versionsänderungen kennen.\n5. Arbeit dokumentieren: Eingaben, relevante Ausgaben, Änderungen und Freigaben festhalten, wenn der Prozess es verlangt.\n\nArt. 4 der KI-Verordnung verpflichtet Anbieter und Betreiber seit der Änderung durch Verordnung (EU) 2026/1744, Maßnahmen zu ergreifen, die die Entwicklung der KI-Kompetenz ihrer Mitarbeitenden und weiterer für sie handelnder Personen unterstützen. Ein garantiertes Kompetenzniveau je Person verlangt die Norm nicht."
         },
         {
           "id": "arbeit-1-2-s3",
           "title": "Wann der Betriebsrat mitbestimmt",
           "readTimeMinutes": 2,
-          "content": "Ein Tool zählt, wie schnell die Kollegin ihre Tickets schließt. Darf der Arbeitgeber das allein entscheiden? § 87 Abs. 1 Nr. 6 BetrVG gibt dem Betriebsrat, soweit keine gesetzliche oder tarifliche Regelung besteht, ein Mitbestimmungsrecht bei Einführung und Anwendung technischer Einrichtungen, die dazu bestimmt sind, Verhalten oder Leistung der Arbeitnehmer zu überwachen. Ob ein KI-System darunter fällt, entscheiden Funktion und Einsatz. Und das Recht liegt beim Betriebsrat, nicht bei jeder einzelnen beschäftigten Person.\n\nFünf Fragen, die im Betrieb auf den Tisch gehören:\n- Welcher Zweck und welche konkrete Entscheidung werden unterstützt?\n- Welche Beschäftigtendaten werden erhoben, abgeleitet oder gespeichert?\n- Wer sieht die Auswertungen, und wie lange bleiben sie gespeichert?\n- Welche menschliche Kontrolle, Fehlerkorrektur und Beschwerdemöglichkeit gibt es?\n- Welche Schulung und welche verbindlichen Nutzungsregeln gelten?\n\nEinigen sich Arbeitgeber und Betriebsrat in einer mitbestimmungspflichtigen Angelegenheit nicht, entscheidet nach § 87 Abs. 2 die Einigungsstelle. Ob dein konkretes System darunter fällt, klärt eine fachkundige arbeitsrechtliche Prüfung, nicht diese Lektion.",
-          "keyTakeaway": "§ 87 Abs. 1 Nr. 6 BetrVG kann bei KI-Systemen, die Verhalten oder Leistung überwachen sollen, die Mitbestimmung des Betriebsrats auslösen. Zweck und konkrete Funktion entscheiden, nicht das Etikett KI."
+          "content": "Ein Tool zählt, wie schnell eine Kollegin ihre Tickets schließt. Soweit keine gesetzliche oder tarifliche Regelung besteht, bestimmt der Betriebsrat nach § 87 Abs. 1 Nr. 6 BetrVG mit, wenn technische Einrichtungen eingeführt und angewendet werden, die Verhalten oder Leistung der Arbeitnehmer überwachen sollen.\n\nOb ein KI-System darunter fällt, entscheiden Funktion und Einsatz. Das Recht hat der Betriebsrat, nicht die einzelne beschäftigte Person.\n\nSprich im Betrieb diese Punkte an:\n- Zweck und unterstützte Entscheidung\n- erhobene, abgeleitete oder gespeicherte Beschäftigtendaten\n- wer die Auswertungen sieht und wie lange sie gespeichert bleiben\n- menschliche Kontrolle, Fehlerkorrektur und Beschwerdeweg\n- Schulung und verbindliche Nutzungsregeln\n\nEinigen sich Arbeitgeber und Betriebsrat in einer mitbestimmungspflichtigen Angelegenheit nicht, entscheidet nach § 87 Abs. 2 die Einigungsstelle. Ob dein System erfasst ist, klärt eine fachkundige arbeitsrechtliche Prüfung."
         }
       ],
       "quiz": [
@@ -199,7 +193,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Ein kontrollierter Workflow begrenzt die Aufgabe des Systems, schützt die Daten, legt Qualitätskriterien fest und gibt Prüfung und Freigabe einer verantwortlichen Person. Ob dabei Zeit oder Qualität gewonnen wird, belegst du in deinem eigenen Prozess, nicht mit dem Prospekt des Herstellers."
+          "explanation": "Begrenzte Aufgabe, geschützte Daten, Qualitätskriterien und verantwortliche Freigabe machen den Nutzen im eigenen Prozess messbar."
         },
         {
           "id": "arbeit-1-2-q2",
@@ -226,7 +220,7 @@
               "isCorrect": true
             }
           ],
-          "explanation": "Praktische KI-Kompetenz heißt: Aufgabe beschreiben, Quellen und Qualität prüfen, Risiko einordnen, das Werkzeug kennen, die Arbeit nachvollziehbar festhalten. Programmieren kann helfen. Voraussetzung ist es nicht."
+          "explanation": "KI-Kompetenz heißt Ausgaben prüfen und Grenzen kennen. Programmieren ist keine Voraussetzung."
         },
         {
           "id": "arbeit-1-2-q3",
@@ -253,7 +247,7 @@
               "isCorrect": true
             }
           ],
-          "explanation": "§ 87 Abs. 1 Nr. 6 BetrVG erfasst Einführung und Anwendung technischer Einrichtungen, die dazu bestimmt sind, Verhalten oder Leistung zu überwachen. Ob die Voraussetzungen erfüllt sind, entscheiden das konkrete System und sein Einsatz."
+          "explanation": "Die Norm erfasst technische Einrichtungen, die Verhalten oder Leistung überwachen sollen. Ob sie greift, entscheiden das konkrete System und sein Einsatz."
         }
       ]
     },
@@ -262,7 +256,7 @@
       "blockId": "block_1",
       "number": 3,
       "title": "Welche Aufgaben sich verändern können und was du selbst prüfst",
-      "subtitle": "Tätigkeitsmerkmale statt Berufslisten",
+      "subtitle": "Welche Tätigkeitsmerkmale zählen",
       "durationMinutes": 5,
       "owner": "editorial:ki-und-gesellschaft",
       "lastReviewed": "2026-09-05",
@@ -273,24 +267,21 @@
       "sections": [
         {
           "id": "arbeit-1-3-s1",
-          "title": "Wiederholt, digital, regelbasiert",
+          "title": "Wo das technische Potenzial hoch ist",
           "readTimeMinutes": 2,
-          "content": "Der Schritt wiederholt sich jeden Tag. Die Eingaben sind digital. Es gibt klare Regeln oder ein Qualitätsmaß, und die physische Umgebung wechselt kaum. Dann ist das technische Potenzial eher hoch. Typische Beispiele: strukturierte Daten übertragen, formale Vollständigkeit prüfen, einen Entwurf nach Vorlage erstellen.\n\nAuch dann bleibt die Einführung offen. Schlechte Daten, seltene Ausnahmen, Haftungsrisiken, Integrationskosten oder die nötige Nachkontrolle können den Nutzen schmälern. Und umgekehrt kann Technik einzelne Schritte in fast jedem Beruf unterstützen.\n\nDas IAB ordnet Kerntätigkeiten anhand marktreifer Technik ein und aktualisiert diese Momentaufnahme regelmäßig. Die Einheit der Analyse ist die Tätigkeit im Beruf. Nicht der Beruf, und schon gar nicht seine Zukunft.",
-          "keyTakeaway": "Standardisierte digitale Schritte haben oft ein höheres technisches Potenzial. Ob sie automatisiert werden, entscheidet sich im konkreten Betrieb, nirgendwo sonst."
+          "content": "Das technische Potenzial ist eher hoch, wenn sich ein Schritt täglich wiederholt, digitale Eingaben hat, klaren Regeln oder einem Qualitätsmaß folgt und in einer kaum wechselnden physischen Umgebung stattfindet. Beispiele sind strukturierte Daten übertragen, formale Vollständigkeit prüfen und Entwürfe nach Vorlage erstellen.\n\nDie Einführung bleibt trotzdem offen: Schlechte Daten, seltene Ausnahmen, Haftungsrisiken, Integrationskosten oder Nachkontrolle können den Nutzen schmälern. Umgekehrt kann Technik einzelne Schritte in fast jedem Beruf unterstützen.\n\nDas IAB ordnet Kerntätigkeiten im Beruf anhand marktreifer Technik ein und aktualisiert diese Momentaufnahme regelmäßig."
         },
         {
           "id": "arbeit-1-3-s2",
           "title": "Was Automatisierung schwer macht",
           "readTimeMinutes": 1,
-          "content": "Der Handwerker steht auf einer Baustelle, die er noch nie gesehen hat. Die Pflegekraft hat lückenhafte Informationen und einen Angehörigen im Zimmer. In diesem Alltag wird Automatisierung schwer. Schwieriger wird sie, wenn eine Tätigkeit mehrere dieser Merkmale verbindet:\n\n- wechselnde physische Umgebung und feinmotorische Arbeit\n- unvollständige Informationen und seltene Ausnahmen\n- unmittelbare Verantwortung für Sicherheit oder Grundrechte\n- Verhandlung mit mehreren Beteiligten\n- Beziehung, Vertrauen oder Kenntnis der Verhältnisse vor Ort\n\n\"KI-sicher\" macht das keinen Beruf. Dokumentation, Planung oder Informationssuche können sich auch in Pflege, Handwerk, Pädagogik und Beratung verändern. Robotik kann physische Aufgaben langfristig verschieben. Deshalb schaust du auf einzelne Aufgaben, nicht auf Berufslabels.",
-          "keyTakeaway": "Physischer, sozialer und rechtlicher Kontext kann Automatisierung erschweren. Eine Garantie, dass dein Beruf unverändert bleibt, ist das nicht."
+          "content": "Automatisierung wird schwer, wenn eine Tätigkeit mehrere der folgenden Merkmale verbindet, etwa auf einer unbekannten Baustelle oder in der Pflege mit lückenhaften Informationen und Angehörigen im Zimmer:\n\n- wechselnde physische Umgebung und feinmotorische Arbeit\n- unvollständige Informationen und seltene Ausnahmen\n- unmittelbare Verantwortung für Sicherheit oder Grundrechte\n- Verhandlung mit mehreren Beteiligten\n- Beziehung, Vertrauen oder Kenntnis der Verhältnisse vor Ort\n\n\"KI-sicher\" wird ein Beruf dadurch nicht. Dokumentation, Planung und Informationssuche können sich auch in Pflege, Handwerk, Pädagogik und Beratung ändern, und Robotik kann physische Aufgaben langfristig verschieben. Schau deshalb auf einzelne Aufgaben."
         },
         {
           "id": "arbeit-1-3-s3",
-          "title": "Drei Schritte, die dich weiterbringen",
+          "title": "Was du selbst tun kannst",
           "readTimeMinutes": 2,
-          "content": "Keine Berufsprognose. Drei Schritte:\n\n1. Aufgaben inventarisieren: Schreib deine wiederkehrenden Schritte auf, dazu Fehlerfolgen, benötigte Daten und Freigaben.\n2. Sicher testen: Nur freigegebene Werkzeuge, nur Testdaten ohne vertrauliche oder personenbezogene Inhalte. Vergleiche die Ergebnisse mit einer vorher festgelegten Referenz.\n3. Rechte und Zuständigkeiten klären: Die Bundesagentur für Arbeit bietet \"Berufsberatung im Erwerbsleben\" und Informationen zu Weiterbildung und Förderung. Im Betrieb sind Führungskraft, Datenschutz, Informationssicherheit und gegebenenfalls der Betriebsrat deine Anlaufstellen.\n\nArt. 5 der KI-Verordnung verbietet seit 2. Februar 2025 bestimmte Praktiken, darunter, von Ausnahmen abgesehen, Emotionserkennung am Arbeitsplatz. Systeme für Einstellung oder Auswahl können unter Anhang III fallen. Für eigenständige Anhang-III-Systeme beginnen die Hochrisiko-Regeln nach Verordnung (EU) 2026/1744 am 2. Dezember 2027. AGG, DSGVO und Arbeitsrecht können unabhängig davon längst gelten.\n\nLäuft dein Bewerbungsverfahren über so ein System, stellst du fünf Fragen: Wozu dient es? Welche Daten nutzt es? Was bedeutet seine Ausgabe? Wo ist ein Mensch beteiligt? Wer ist verantwortlich?",
-          "keyTakeaway": "Analysiere Aufgaben, teste nur im freigegebenen Rahmen, kläre Zuständigkeiten. Welche Rechtsfolgen greifen, hängt vom konkreten System und seinem Einsatz ab."
+          "content": "1. Aufgaben inventarisieren: wiederkehrende Schritte, Fehlerfolgen, benötigte Daten und Freigaben aufschreiben.\n2. Sicher testen: nur freigegebene Werkzeuge und Testdaten ohne vertrauliche oder personenbezogene Inhalte nutzen und mit einer vorher festgelegten Referenz vergleichen.\n3. Beraten lassen: Die Bundesagentur für Arbeit bietet \"Berufsberatung im Erwerbsleben\" mit Informationen zu Weiterbildung und Förderung.\n4. Im Betrieb fragen: Führungskraft, Datenschutz, Informationssicherheit und, wo vorhanden, Betriebsrat.\n\nArt. 5 der KI-Verordnung verbietet seit 2. Februar 2025 bestimmte Praktiken, darunter, von Ausnahmen abgesehen, Emotionserkennung am Arbeitsplatz. Einstellungs- und Auswahlsysteme können unter Anhang III fallen; für eigenständige Anhang-III-Systeme gelten die Hochrisiko-Regeln nach Verordnung (EU) 2026/1744 ab 2. Dezember 2027. AGG, DSGVO und Arbeitsrecht können schon heute gelten.\n\nLäuft deine Bewerbung über so ein System, frag nach Zweck, Daten, Bedeutung der Ausgabe, menschlicher Beteiligung und Verantwortung."
         }
       ],
       "quiz": [
@@ -319,7 +310,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Wiederholte, digital vorliegende und klar prüfbare Schritte haben oft das höhere technische Potenzial. Ob der konkrete Betrieb sie automatisiert, ist damit nicht gesagt."
+          "explanation": "Wiederholte, digitale und klar prüfbare Schritte haben oft das höhere technische Potenzial. Ob ein Betrieb sie automatisiert, bleibt offen."
         },
         {
           "id": "arbeit-1-3-q2",
@@ -346,7 +337,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Die Bundesagentur für Arbeit bietet die Berufsberatung im Erwerbsleben an. Was du konkret bekommst, ob eine Maßnahme förderfähig ist und wer sie bezahlt, hängt von dir, der Maßnahme und den geltenden Voraussetzungen ab."
+          "explanation": "Die Beratung informiert zu Weiterbildung und Förderung. Ob gefördert wird, hängt von dir, der Maßnahme und den geltenden Voraussetzungen ab."
         },
         {
           "id": "arbeit-1-3-q3",
@@ -369,11 +360,11 @@
             },
             {
               "id": "d",
-              "text": "Art. 5 verbietet seit 2. Februar 2025 bestimmte Praktiken; Recruiting-KI ist separat nach Anhang III und bestehendem Recht zu prüfen",
+              "text": "Art. 5 verbietet seit 2. Februar 2025 bestimmte Praktiken am Arbeitsplatz",
               "isCorrect": true
             }
           ],
-          "explanation": "Art. 5 gilt seit dem 2. Februar 2025 für genau bezeichnete Verbote, darunter, von Ausnahmen abgesehen, Emotionserkennung am Arbeitsplatz. Einstellungs- und Auswahlsysteme können unter Anhang III fallen. Die verschobenen Hochrisiko-Termine prüfst du gesondert, genau wie AGG, DSGVO und Mitbestimmung."
+          "explanation": "Art. 5 verbietet genau bezeichnete Praktiken wie Emotionserkennung am Arbeitsplatz, von Ausnahmen abgesehen. Einstellungssysteme prüfst du gesondert nach Anhang III, AGG, DSGVO und Mitbestimmung."
         }
       ]
     }

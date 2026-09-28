@@ -33,8 +33,6 @@ export const COURSE_GALLERY_COPY = {
     openCourse: "Kurs öffnen",
     externalNewTab: "extern in neuem Tab",
     pendingDetails: "Details",
-    workshopLead:
-      "Angewandte Selbstlernmaterialien auf Basis von Workshop-Inhalten findest du unter",
   },
   en: {
     linkCopied: "Link copied",
@@ -68,7 +66,5 @@ export const COURSE_GALLERY_COPY = {
     openCourse: "Open course",
     externalNewTab: "external, opens in a new tab",
     pendingDetails: "Details",
-    workshopLead:
-      "Applied self-study materials based on workshop content are listed under",
   },
 } as const satisfies Readonly<Record<Locale, Record<string, unknown>>>;

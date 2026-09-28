@@ -1,7 +1,7 @@
 {
   "courseId": "ai-native-arbeitskurs",
   "title": "AI-Native Workflow Course",
-  "tagline": "You define task, limits and review. Claude drafts, analyses, researches.",
+  "tagline": "You set task, limits and review; Claude supplies drafts.",
   "language": "en",
   "createdAt": "2026-04-18",
   "version": "1.0",
@@ -17,7 +17,7 @@
   },
   "prerequisites": {
     "recommended": "ki-fuehrerschein",
-    "note": "AI Fundamentals is recommended, not required."
+    "note": "Everyday AI Literacy is recommended, not required."
   },
   "totalLessons": 27,
   "totalModules": 4,

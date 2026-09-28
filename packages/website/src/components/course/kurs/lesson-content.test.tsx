@@ -269,7 +269,7 @@ describe("<LessonContent>", () => {
     fireEvent.click(screen.getByRole("tab", { name: /Quiz/ }));
 
     expect(
-      await screen.findByRole("link", { name: /Englische Oberfläche/ }),
+      await screen.findByRole("link", { name: /englische Oberfläche/ }),
     ).toHaveAttribute("href", "/en/ki-fuehrerschein/kurs/block_1?tab=quiz");
   });
 

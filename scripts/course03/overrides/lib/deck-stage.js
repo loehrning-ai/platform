@@ -81,10 +81,11 @@
       touch-action: auto;
     }
 
-    /* The letterbox follows the active scene, so the dark cover never sits between paper bands. */
+    /* The letterbox follows the active scene, so the cover never sits between paper bands. The cover's
+       ground is the workshop's poster scene (--cover-ground in lib/tokens.css); graphit without it. */
     :host([data-dark]),
     :host([data-dark]) .canvas {
-      background: #141414;
+      background: var(--cover-ground, #141414);
     }
 
     .stage {
@@ -326,6 +327,12 @@
       .progress__rail {
         display: none;
       }
+
+      /* A phone gets a one-line toast above the toolbar, not a card over the slide. */
+      .notice {
+        padding: 8px 12px;
+        font-size: 14px;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -526,6 +533,11 @@
       rotate.querySelector("button").addEventListener("click", () => {
         rotate.setAttribute("data-dismissed", "");
         writeStorage("sessionStorage", ROTATE_DISMISSED_KEY, "1");
+        // One notice at a time: a touch hint held back by this note shows now.
+        if (this._touchHintPending) {
+          this._touchHintPending = false;
+          this._maybeShowTouchHint();
+        }
       });
 
       const live = document.createElement("div");
@@ -571,13 +583,15 @@
 
     _collectSlides() {
       this._slides = this._slot.assignedElements({ flatten: true }).filter((element) => element.matches("section.slide"));
-      const total = this._slides.length;
+      // Numbered like the visible counter and the live region (_position): main scenes out of the
+      // main count, appendix pages out of the appendix count, so a screen reader hears one total.
       this._slides.forEach((slide, index) => {
         const label = slide.dataset.label || slide.querySelector("h1,h2")?.textContent?.trim() || "Scene";
+        const { appendix, number, count } = this._position(slide);
         slide.dataset.deckIndex = String(index);
         slide.setAttribute("role", "group");
         slide.setAttribute("aria-roledescription", "slide");
-        slide.setAttribute("aria-label", `${index + 1} of ${total}: ${label}`);
+        slide.setAttribute("aria-label", `${appendix ? "Appendix page" : "Scene"} ${number} of ${count}: ${label}`);
       });
     }
 
@@ -944,6 +958,12 @@
       if (this._controls.hidden || !window.matchMedia?.("(pointer: coarse)").matches) return;
       this._showControls(TOOLBAR_TOUCH_MS);
       if (readStorage("localStorage", TOUCH_HINT_KEY) === "1") return;
+      // One notice at a time: while the rotate note is on screen, the touch hint waits for it.
+      if (this._rotate && !this._rotate.hasAttribute("data-dismissed")
+        && window.getComputedStyle(this._rotate).display !== "none") {
+        this._touchHintPending = true;
+        return;
+      }
       writeStorage("localStorage", TOUCH_HINT_KEY, "1");
       this._showNotice("Swipe, or tap the right or left edge, to step through.", TOOLBAR_TOUCH_MS);
     }

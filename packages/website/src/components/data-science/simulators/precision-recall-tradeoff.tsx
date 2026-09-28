@@ -343,17 +343,11 @@ export function PrecisionRecallTradeoff() {
             {threshold > 0.25 && threshold <= 0.45 && (
               <>
                 <strong style={{ color: "var(--lime-ink)" }}>
-                  {text(
-                    "Sweet spot (0.25–0.45):",
-                    "Geeigneter Bereich (0.25–0.45):",
-                  )}
+                  {text("Middle threshold:", "Mittlerer Schwellenwert:")}
                 </strong>{" "}
                 {text("Threshold", "Schwellenwert")} {threshold.toFixed(2)}{" "}
                 {text("catches", "erkennt")} ~{round(current.recall * 100, 0)}%{" "}
-                {text(
-                  "of fraud with manageable false-positive rate.",
-                  "der Betrugsfälle bei vertretbarer Falsch-Positiv-Rate.",
-                )}
+                {text("of fraud.", "der Betrugsfälle.")}
               </>
             )}
             {threshold > 0.45 && (

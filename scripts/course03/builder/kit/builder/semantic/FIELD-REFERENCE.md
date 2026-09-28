@@ -2,8 +2,8 @@
 
 ## In plain words
 
-You do not need every field on day one. Start with the six starter fields. They answer the four
-blanks plus "in what unit?" and "who decides?".
+Start with the six starter fields. They answer the four blanks plus "in what unit?" and "who
+decides?".
 
 | Starter field | Plain question it answers | FOLDLINE `ending_mrr` |
 | --- | --- | --- |
@@ -14,15 +14,14 @@ blanks plus "in what unit?" and "who decides?".
 | `unit` | Measured in what? | `EUR` |
 | `owner` | Who approves a change? | `revenue_analytics` |
 
-Everything else makes those six testable, or stops them drifting.
+The other fields make those six testable or stop them drifting.
 
 ---
 
 ## Metric fields (`metric.yml`)
 
-Deck column: the name the workshop appendix used for the same idea ("The full ending MRR
-contract"). The kit keeps its own names; this column resolves the difference.
-Product column: the nearest concept, not exact syntax. Verify against current product docs.
+The deck column gives the name used in the workshop appendix ("The full ending MRR contract").
+The product column gives the nearest concept; check exact syntax in current product docs.
 
 | Field | Plain meaning | FOLDLINE value | Read by | Deck appendix name | Nearest product concept |
 | --- | --- | --- | --- | --- | --- |
@@ -110,34 +109,31 @@ Product column: the nearest concept, not exact syntax. Verify against current pr
 | Could mean two or more metrics | `ambiguous_terms` | Asks back once (C01) | "MRR", "revenue", "churn" |
 | Means a metric that is not defined | nothing; the policy refuses | Refuses (R01) | "profit", "LTV" |
 
-Counter-example: putting "MRR" under `synonyms` of `ending_mrr`. Then "How much MRR did we add in
-Q2?" returns a level (387,015) when a change (32,380) was asked.
+Counter-example: with "MRR" under `synonyms` of `ending_mrr`, "How much MRR did we add in Q2?"
+returns a level (387,015) where a change (32,380) was asked.
 
 ---
 
 ## Checklist: adding a sixth metric
 
-1. Write the question and its owner. Get the owner to agree in writing.
-2. Fill the four blanks. If any blank says "it depends", split it into two metrics.
+1. Write the question and its owner, and get the owner's agreement in writing.
+2. Fill the four blanks; split any "it depends" into two metrics.
 3. Pick the shape. Write `additivity` for segments, time and the quarter rollup.
 4. For a rate or average: write `numerator`, `denominator`, `population` and `zero_denominator`.
    Serve both parts in the view.
-5. Check the view has the grain the question needs. If not, the view comes first (`../warehouse/SERVING-VIEWS.md`).
-6. Add the metric to `policy.yml` `allow.metrics`. A metric not listed is refused.
-7. Write at least one db_check case with expected rows computed by two people, and one ai_run case.
-8. Add synonyms and ambiguous terms. Add a clarify case for each ambiguous term.
-9. Compile by hand into each reader's file (full table: `SEMANTIC-LAYER.md`, "Compile"):
-   Claude Project: `../claude/project/metric-definitions.md`; Claude Code: the Agent Skill's
-   `../claude/skills/foldline-analytics/references/metrics.md` (copied to
-   `.claude/skills/foldline-analytics/`) and `../claude/CLAUDE.example.md`; the database connector (Setup C)
-   reads the same Skill; people: `COMMENT ON` in `40_analytics.sql`. Formats: `../claude/README.md`.
+5. Check the view has the grain the question needs; if not, build the view first (`../warehouse/SERVING-VIEWS.md`).
+6. Add the metric to `policy.yml` `allow.metrics`; unlisted metrics are refused.
+7. Write at least one db_check case, with expected rows computed by two people, and one ai_run case.
+8. Add synonyms and ambiguous terms, with a clarify case for each ambiguous term.
+9. Compile by hand into each reader's file, as listed in `SEMANTIC-LAYER.md`, "Compile" (the
+   database connector, Setup C, reads the same Skill). Formats: `../claude/README.md`.
 10. Run all cases. A new metric is a minor version bump for the file's consumers.
 
 ---
 
 ## Blank skeletons
 
-Copy one. Replace every `# Ask your owner:` line with an answer before the metric is used.
+Copy one and answer every `# Ask your owner:` line before the metric is used.
 
 ### Level (snapshot)
 

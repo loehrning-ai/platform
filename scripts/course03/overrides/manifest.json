@@ -10,7 +10,6 @@
     "assets/fonts/Typing-Static-500.ttf": "d88596e9745ddfa95b1b5516cbf1d47bc541a7bd19a25970549aa6fe0c3ef2c8",
     "assets/fonts/Typing-Static-600.ttf": "d097fe311c80163e77ea6f7398414ad7276d7fa86bdf57d16a41e12540e6d380",
     "assets/fonts/Typing-Static-700.ttf": "762229d8e1bcb0000852b2bb6f2ae9ae72b4e71c81986fc7d10f0defb85227c3",
-    "assets/globe.svg": "b77a3581fe56ed9cb53bacaf88e5af451176f962cecec5129c5b6b33ac70f980",
     "assets/lockup-horizontal-dark.svg": "13ff70fa608cdf421a8b3ff3046e22cda7ba8d5e72271b4ad64c659bb1bfe1e2",
     "assets/lockup-horizontal.svg": "477a5b796f82ea5afb453b6ab03e6dbdf5abc066aa11cd710e4fbdec079d75ed",
     "assets/mark-black.svg": "ca6b5b231a7d577fcfddea82d63300f9652e4da0c4e39fa1c596bc58ad8d1384",
@@ -25,7 +24,6 @@
     "data-readiness-kit/semantic-template/model.yml": "dfc94d00ae7b94c13c88ee0ced415428356d22a8bf97d085c82bf0db4990d515",
     "data-readiness-kit/semantic-template/policy.yml": "cb209aaeca81c16a857ee3beaa8846b9a483e479987e49bf3c8c78a2a87c296a",
     "data-readiness-kit/semantic-template/verified-questions.yml": "a899e9e7b31315004b87fd56f28efe6b88eb7f58004ba600af6a59c2cdb97249",
-    "lib/cover-globe.css": "6e8ce0bbbc03f9807853472202af2f29a00d3683f2c08d653437a62fcdd36cba",
     "lib/deck-runtime.js": "c44c12bfedf1136655fe2289b907149e8abf20241a052bd75af440dca07b1e6c",
     "lib/deck-stage.js": "de4da3214d3cb262b7776606fbbab1b74cb87928f0044b95de51b6523fb0f5dd",
     "lib/demo-adapter.js": "50fa9b643d17a25e3b2b33cc1b14e785bef1d129128f4642cb5f6a5d00134c5e",
@@ -70,27 +68,27 @@
   "files": {
     "data-readiness-kit/FOLDLINE-SCENARIOS.md": {
       "original": "7ae913626a5910cffe3c41f7be10ba03ea28f12684cd96cadf0a22a3fed7e65e",
-      "override": "9e18e00eb2c014a4444d3677ab5f939af2c0667a4e062875ee078aced5d60b7e"
+      "override": "13b340acea8ec8e8d8d3d5e1c34904ddc44807d52216b0e2d62f6590ca48cc03"
     },
     "data-readiness-kit/QUESTION-CARD.md": {
       "original": "a5077847b18892fececaa060d9732c33ebbd8f3182e4e978dfc94135c8f7d429",
-      "override": "281b5f0748898403392e61a5f9634618d14ee5a9610d1afcca9af20c3738cb45"
+      "override": "4cd2c7ccf2bf75907126a0792b2beda54a056f6d44f81ee65157afde30ee38db"
     },
     "data-readiness-kit/READY-CANVAS.md": {
       "original": "b970c75eb79754d5ac28c6b14b2439d26af1412240494b7ae5fb0e851dbb8ee4",
-      "override": "9ae484bfc6e95cd13bd28a885f12884e60b57f9ef8ba268b4d9e85ec8e895b1e"
+      "override": "34884a445d0e0c5b1193f7f69835e216c168f2ea2d5d0289fe8ff5450e7b808c"
     },
     "data-readiness-kit/START-HERE.md": {
       "original": "f0da28bb4af0c9fef81ec27edbbaa900436a0c4ca2dd69b7c92f9798281a2cea",
-      "override": "b7343c92cd4625d0696f3f34072ece84910e8dd9bb3eed960c1fe122e165fc71"
+      "override": "e75b18bc9e4eb37af113b542ce33ff747eb74dbd8b88f7257c862ee5f4090fea"
     },
     "data-readiness-kit/agent/CLAUDE.example.md": {
       "original": "40f1c65fe8496ac93d3f62e02714845e09db3aeb6af3bc9ce228d49d4ce16c14",
-      "override": "f8b16c1cca9789789f38007a0f461326963a434dbdaa91ebb7c46c7e22934fee"
+      "override": "d3c2183fa1e0ca352c562af070a6115e48413838e0fd7382ae3a2cd9d5b34d43"
     },
     "data-readiness-kit/readiness-lab.html": {
       "original": "b779d2d693282a2a6c6025921e5537bb435ba264d2fe67aec0d59511ffeffad8",
-      "override": "ee7ca48c869e29b464339457d65a66333b4093e6596fd6c9ad0987e547698e4b"
+      "override": "3c795c333ceae0b9b78a04a54dc901f613cb8c80a9b95046f803fbf5dd38e43a"
     },
     "data-readiness-kit/semantic-template/metric.yml": {
       "original": "b48caed51267d39a779d14258dc6243091c8ce19c1da132b14f1b1eddc381842",
@@ -114,11 +112,11 @@
     },
     "lib/deck-stage.js": {
       "original": "de4da3214d3cb262b7776606fbbab1b74cb87928f0044b95de51b6523fb0f5dd",
-      "override": "36e41460c9ccb9b4f7f20218142ae8cc37fe0e532c597944472ab25eff06a2ae"
+      "override": "5ec4006cdfc2ba8613d5c0126b49e07373f86aef1eb63361885da75d190cd70f"
     },
     "lib/presenter-notes.js": {
       "original": "a446b5d1620dc0c797561637d574554700fc482c9668a2309dd7aec8293460e8",
-      "override": "f0dc529d5553bcb9fb19c8ad036d62a8e87a638b11ccb8887866533dcd8032c1"
+      "override": "c85eb7ed52ea0c0b7481d116ed3d981d3b2da39118258168946bc47c1e2db0be"
     },
     "lib/presenter.css": {
       "original": "bd08d3b6cbb941c66b41655eae56b9415f81c29d983bb436858b0ced37f234d2",
@@ -178,7 +176,7 @@
     },
     "lib/scenes/cover.css": {
       "original": "b9ab6a8cf8b53a8bd8163cffe5417276ef4d721e68148615914fd4017401456b",
-      "override": "e7236e163f951d41bfe3799ee8beb04a0316171392b8f918b5e3a26004c712c0"
+      "override": "914187987ac57dd11e8a2da6c8db4521d9b35df864a655a08664eb36c4811cd8"
     },
     "lib/scenes/evaluation.css": {
       "original": "558032cc89d7502e43948d50e0c027464a8d8243300ab2380be456df8a22d44d",
@@ -234,19 +232,19 @@
     },
     "lib/story.css": {
       "original": "3c33a71d5a80d2cc420ebccace57ffb47cf4373e42708b430148b974eb7284fc",
-      "override": "04d275a7d13c0d9b7a9268c841b9fce14c87183b7680876cee490e25de78b150"
+      "override": "4100114b2991af1e8a94a761867bb3d3b96a9aa459cdca50a16f23c63c5ffd8d"
     },
     "lib/tokens.css": {
       "original": "65d4509f960200a581547060664ee4e99adda7310e7f2beda2dcebeb64401134",
-      "override": "e871354d871766d2fa0adacd23b5ae4ccb0cb929d9807bcba2c361b41ea0b694"
+      "override": "b5c2131e80906e59466b8eb8a22b167d66a15847c9f0b688ac1d988f3cfa63a9"
     },
     "presenter.html": {
       "original": "7779628c833430709a4a5c1d5eb39aa31b7694ed7a516ce150eec0eaa09634db",
-      "override": "0dd671a4e95b70a7068c287f8088bab999827907df3ff0f6ba7a915e4c42f95b"
+      "override": "5a27688984f6804f8f22bddc7f87eb65f06eaa0170e4bd895f932d59e633ed3a"
     },
     "slides.html": {
       "original": "7da1ad2f4e46b636302a970a0ca822253861ebab40465fc5d004311a1c96c783",
-      "override": "a2e098c003a83655632dd135d06b46cd7ef74869ab79b5a122a8fe182e0faed7"
+      "override": "86e376d00f903c33ebc2b8ecc597915c53f44fc51c98d38b1ac89e4c3c801e9a"
     }
   }
 }

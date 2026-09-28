@@ -261,6 +261,10 @@ const PUBLIC_MACHINE_PATHS = [
   // route under /skills, so a sibling path falls through to the fail-closed
   // default instead of inheriting the machine class.
   "/skills/:name/SKILL.md",
+  // CC BY 4.0 template sources under content/vorlagen, served byte for byte.
+  // Crawlable, never in the sitemap; the canonical is the page named in the
+  // Link header. /vorlagen itself stays unlisted and fails closed.
+  "/vorlagen/:file",
 ] as const;
 
 const PUBLIC_ASSET_PATHS = [

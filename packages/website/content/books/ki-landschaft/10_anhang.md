@@ -11,7 +11,7 @@
 | **DSFA**                  | Datenschutz-Folgenabschätzung nach Art. 35 DSGVO, wenn eine Verarbeitung voraussichtlich ein hohes Risiko zur Folge hat.                            |
 | **FRIA**                  | Grundrechte-Folgenabschätzung nach Art. 27 AI Act für den dort bestimmten Adressatenkreis und Hochrisiko-Einsatz.                                   |
 | **Hochrisiko-KI**         | KI-Systeme, die unter Art. 6 mit Anhang I oder III fallen; Ausnahmen und konkrete Zweckbestimmung sind zu prüfen.                                   |
-| **KI-Kompetenz**          | Fähigkeiten, Wissen und Verständnis nach Art. 3 Nr. 56; Art. 4 verlangt kontextgerechte Maßnahmen, kein bestimmtes Zertifikat.                      |
+| **KI-Kompetenz**          | Fähigkeiten, Wissen und Verständnis nach Art. 3 Nr. 56; Art. 4 verlangt kontextgerechte Maßnahmen, keine bestimmte Zertifizierung.                  |
 | **Menschliche Aufsicht**  | Organisatorische und technische Möglichkeit kompetenter, befugter Personen, ein System zu verstehen, zu überwachen, zu übersteuern oder zu stoppen. |
 | **Pilot**                 | Begrenzter, messbarer Test mit definierten Daten, Nutzern, Kontrollen, Stopkriterien und Auswertung.                                                |
 | **Technische Exposition** | Überschneidung zwischen Aufgaben und technischen Systemfähigkeiten; nicht gleichbedeutend mit Einführung, Automatisierung oder Arbeitsplatzverlust. |

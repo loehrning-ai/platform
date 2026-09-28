@@ -1482,5 +1482,50 @@
   "ending_mrr": "  - name: ending_mrr\n    label: Ending MRR\n    description: >-\n      Monthly recurring revenue active at the last instant of a complete calendar month,\n      in EUR, one row per month. Never add it across months.\n    type: snapshot\n    relation: analytics.mrr_summary_monthly\n    expression: ending_mrr_eur\n    result_grain: one row per complete calendar month\n    valid_dimensions: [month_start]\n    period_rule: >-\n      For a quarter, return each complete month-end (three rows). If the user needs ONE\n      number, return the last month-end of the period and say so. Never sum or average\n      month-ends unless the question explicitly asks for an average balance.\n    completeness: month_start <= complete_through_month\n    additivity:\n      class: semi-additive\n      across_segments: sum\n      across_accounts: sum\n      across_time: none\n      time_rollup: last_value\n    unit: EUR\n    precision: 0\n    population: >-\n      All 144 FOLDLINE business accounts; an account contributes its MRR at month end,\n      or 0 if it has not started or has churned.\n    inclusions:\n      - Recurring subscription fees active at month end.\n    exclusions:\n      - Setup fees\n      - Usage charges\n      - Taxes\n      - Subscriptions whose service ended before month end\n    synonyms: [month-end mrr, closing mrr, mrr balance at month end]\n    ambiguous_terms: [mrr, revenue]\n    reconciliation: >-\n      ending_mrr(previous month) + net_new_mrr(month) = ending_mrr(month).\n      Q2 2026: 354,635 + 32,380 = 387,015.\n    owner: revenue_analytics\n    version: 1.0.0\n    status: approved\n    verified_questions: [G01, F00, F01]\n    limitations:\n      - Not revenue, cash collected, ARR or profit.\n      - Never sum ending MRR across months.\n    expected_q2_2026:\n      \"2026-04-01\": 334675\n      \"2026-05-01\": 344450\n      \"2026-06-01\": 387015",
   "net_new_mrr": "  - name: net_new_mrr\n    label: Net new MRR\n    description: >-\n      Change in MRR during a complete calendar month, in EUR: new + expansion\n      - contraction - churned. One row per month. Never read it as a balance.\n    type: movement\n    relation: analytics.mrr_summary_monthly\n    expression: net_new_mrr_eur\n    formula: new_mrr_eur + expansion_mrr_eur - contraction_mrr_eur - churned_mrr_eur\n    result_grain: one row per complete calendar month\n    valid_dimensions: [month_start]\n    period_rule: >-\n      For a quarter, add the three complete monthly movements. The result equals\n      ending MRR at the end of the quarter minus ending MRR at the end of the previous\n      quarter. Partial months are never added.\n    completeness: month_start <= complete_through_month\n    additivity:\n      class: additive\n      across_segments: sum\n      across_accounts: sum\n      across_time: sum\n      time_rollup: sum\n    unit: EUR\n    precision: 0\n    sign_convention: >-\n      Negative means MRR shrank during the month. April 2026 is -19,960.\n    synonyms: [net mrr change, mrr movement net, net new mrr]\n    ambiguous_terms: [mrr, mrr growth, revenue]\n    reconciliation: >-\n      sum(net_new_mrr over Q2 2026) = ending_mrr(2026-06) - ending_mrr(2026-03)\n      = 387,015 - 354,635 = 32,380.\n    owner: revenue_analytics\n    version: 1.0.0\n    status: approved\n    verified_questions: [G02]\n    limitations:\n      - A monthly change, not a balance. Not revenue, cash or profit.\n    expected_q2_2026:\n      \"2026-04-01\": -19960\n      \"2026-05-01\": 9775\n      \"2026-06-01\": 42565\n      quarter_total: 32380",
   "logo_churn_rate": "  - name: logo_churn_rate\n    label: Logo churn rate\n    description: >-\n      Share of the accounts active at the start of a quarter that were no longer\n      active at its end, in percent (0-100), one row per customer segment and\n      quarter. Never average segment rates; recompute from the counts.\n    type: ratio\n    relation: analytics.logo_churn_by_segment_quarter\n    numerator: churned_accounts\n    denominator: starting_accounts\n    expression: round(100.0 * churned_accounts / nullif(starting_accounts, 0), 1)\n    result_grain: one row per customer_segment per quarter\n    valid_dimensions: [period_start, period_end_exclusive, customer_segment]\n    period_rule: >-\n      Quarters only, as half-open ranges [period_start, period_end_exclusive). A rate\n      for a longer period is recomputed from that period's own base, never built by\n      averaging or adding quarterly rates.\n    completeness: period_end_exclusive <= complete_through_month + 1 month\n    population: >-\n      Accounts active at the end of the month before period_start. Accounts that\n      joined during the quarter are NOT in the base, even if they churn.\n    zero_denominator: \"null\"\n    additivity:\n      class: non-additive\n      across_segments: recompute_from_components\n      across_time: recompute_from_components\n      time_rollup: recompute_from_components\n    unit: percent\n    scale: 0-100\n    precision: 1\n    synonyms: [customer churn rate, account churn rate, logo churn]\n    ambiguous_terms: [churn, churn rate]\n    reconciliation: >-\n      starting_accounts - churned_accounts + new accounts in the quarter\n      = accounts active at the quarter's end. Q2 2026 per segment: 40 - 4 + 8 = 44.\n    owner: revenue_analytics\n    version: 1.0.0\n    status: approved\n    verified_questions: [G03, Q04]\n    limitations:\n      - Counts accounts, not money. MRR churn is churned_mrr_eur on analytics.mrr_summary_monthly.\n      - An account that leaves and returns inside one quarter counts by its end state.\n    expected_q2_2026:\n      starting_accounts: 40\n      churned_accounts: 4\n      logo_churn_rate_pct: 10.0"
- }
+ },
+ "recorded": {
+  "capturedAtUtc": "2026-08-23T11:49:52.374Z",
+  "summary": {
+   "bad": {
+    "metricCitationPasses": null,
+    "readyEvidencePasses": null,
+    "relationCorrectnessPasses": null,
+    "trials": 3,
+    "uncachedRealClaude": 3,
+    "valueCorrectnessPasses": 0,
+    "verifiedQueryEvidencePasses": null
+   },
+   "ready": {
+    "metricCitationPasses": 0,
+    "readyEvidencePasses": 0,
+    "relationCorrectnessPasses": 3,
+    "trials": 3,
+    "uncachedRealClaude": 3,
+    "valueCorrectnessPasses": 3,
+    "verifiedQueryEvidencePasses": 3
+   },
+   "totalTrials": 6,
+   "uncachedRealClaude": 6
+  }
+ },
+ "rules": [
+  {
+   "id": "C01",
+   "question": "How much MRR?",
+   "behavior": "clarify",
+   "message": "Specify the MRR meaning: ending MRR, net-new MRR, or an MRR movement component."
+  },
+  {
+   "id": "R01",
+   "question": "Profit by plan?",
+   "behavior": "refuse",
+   "message": "Profit cannot be calculated because the approved dataset contains no cost, COGS, recognized-revenue, or approved profit definition. MRR is not a profit proxy."
+  },
+  {
+   "id": "R02",
+   "question": "Customer emails and lifetime value",
+   "behavior": "refuse",
+   "message": "Direct customer identifiers are outside the approved AI data surface. Use approved pseudonymous analytics keys or an authorized operational workflow."
+  }
+ ]
 }

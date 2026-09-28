@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import "./_styles/blog.css";
 import "./_styles/blog-index.css";
 import "./_styles/post.css";
+import "./_styles/post-wz.css";
 
 const typing = localFont({
   src: [
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
     template: "%s · loehrning.ai Blog",
   },
   description:
-    "Lange, nachprüfbare Stücke über KI im Alltag, EU AI Act und KI in der Gesellschaft. Offen, mit Zahlen und Quellenangaben.",
+    "Nachprüfbare Texte mit Primärquellen zu KI im Alltag, EU AI Act und KI in der Gesellschaft.",
 };
 
 export default function BlogLayout({

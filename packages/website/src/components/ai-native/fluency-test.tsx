@@ -35,14 +35,14 @@ const DIMENSIONS: readonly DimensionMeta[] = [
     label: "Drafting",
     shortDesc: "Wie kommst du von Quellenmaterial zu einem prüfbaren Entwurf?",
     weakestRecommendation:
-      "Beginne mit Modul 1, Lektion 1.1 und 1.4. Sie behandeln begrenzte Briefings und wiederkehrende Entwurfsaufgaben.",
+      "Starte mit Modul 1, Lektion 1.1 und 1.4: begrenzte Briefings und wiederholbare Entwürfe.",
   },
   {
     id: "delegation",
     label: "Delegation",
     shortDesc: "Definierst du Kontext, Grenzen und Prüfkriterien?",
     weakestRecommendation:
-      "Nutze Modul 1, Lektion 1.3 und Modul 2, Lektion 2.1, um Aufgaben und ihren dauerhaften Kontext zu definieren.",
+      "Modul 1, Lektion 1.3 und Modul 2, Lektion 2.1: Aufgaben und dauerhaften Kontext definieren.",
   },
   {
     id: "automation",
@@ -50,21 +50,21 @@ const DIMENSIONS: readonly DimensionMeta[] = [
     shortDesc:
       "Welche wiederkehrenden Schritte haben ausdrückliche Kontrollen?",
     weakestRecommendation:
-      "Nutze die drei begrenzten Workflow-Übungen in Modul 4, Lektion 4.2 bis 4.4.",
+      "Übe mit den drei begrenzten Workflows in Modul 4, Lektion 4.2 bis 4.4.",
   },
   {
     id: "knowledge",
     label: "Knowledge",
     shortDesc: "Kannst du Entscheidungen mit ihrem Quellenkontext abrufen?",
     weakestRecommendation:
-      "Modul 3 behandelt gepflegte Notizen, Abruf und Quellenprüfung mit Obsidian und Claude.",
+      "Arbeite Modul 3 durch: gepflegte Notizen, Abruf und Quellenprüfung mit Obsidian und Claude.",
   },
   {
     id: "governance",
     label: "Governance",
     shortDesc: "Erkennst du Daten- und Regulierungsprüfpunkte?",
     weakestRecommendation:
-      "Prüfe zuerst den KI-Führerschein und danach Modul 4, Lektion 4.6. Das Material dient der Bildung und ist keine Rechtsberatung.",
+      "Mach zuerst den KI-Führerschein, dann Modul 4, Lektion 4.6. Das ist keine Rechtsberatung.",
   },
 ];
 
@@ -74,35 +74,35 @@ const DIMENSIONS_EN: readonly DimensionMeta[] = [
     label: "Drafting",
     shortDesc: "How do you move from source material to a reviewable draft?",
     weakestRecommendation:
-      "Start with module 1, lessons 1.1 and 1.4. They cover bounded briefs and repeatable drafting tasks.",
+      "Start with module 1, lessons 1.1 and 1.4: bounded briefs and repeatable drafts.",
   },
   {
     id: "delegation",
     label: "Delegation",
     shortDesc: "Do you provide context, constraints and review criteria?",
     weakestRecommendation:
-      "Use module 1, lesson 1.3 and module 2, lesson 2.1 to define a task and maintain its context.",
+      "Module 1, lesson 1.3 and module 2, lesson 2.1: define tasks and lasting context.",
   },
   {
     id: "automation",
     label: "Automation",
     shortDesc: "Which repeated steps have explicit controls?",
     weakestRecommendation:
-      "Use the three bounded workflow exercises in module 4, lessons 4.2 to 4.4.",
+      "Practise with the three bounded workflows in module 4, lessons 4.2 to 4.4.",
   },
   {
     id: "knowledge",
     label: "Knowledge",
     shortDesc: "Can you retrieve decisions with their source context?",
     weakestRecommendation:
-      "Module 3 covers maintained notes, retrieval and source review with Obsidian and Claude.",
+      "Work through module 3: maintained notes, retrieval and source review with Obsidian and Claude.",
   },
   {
     id: "governance",
     label: "Governance",
     shortDesc: "Can you identify data and regulatory review points?",
     weakestRecommendation:
-      "Review AI Fundamentals first, then module 4, lesson 4.6. The material is educational and not legal advice.",
+      "Take Everyday AI Literacy first, then module 4, lesson 4.6. This is not legal advice.",
   },
 ];
 
@@ -123,7 +123,7 @@ const SCENARIOS: readonly Scenario[] = [
     question: "Eine Kundenmail braucht heute eine Antwort. Wie beginnst du?",
     options: [
       {
-        label: "Ich schreibe sie in einem leeren Dokument vollständig selbst",
+        label: "Ich schreibe sie selbst in einem leeren Dokument",
         score: 0,
       },
       {
@@ -132,12 +132,12 @@ const SCENARIOS: readonly Scenario[] = [
       },
       {
         label:
-          "Ich gebe freigegebene Mail, Rolle, Kontext, Auftrag und Ausgabegrenzen vor",
+          "Ich gebe freigegebene Mail, Rolle, Kontext, Auftrag und Grenzen vor",
         score: 2,
       },
       {
         label:
-          "Ich nutze einen gepflegten Skill mit Pflichtkontext und Review-Checkliste",
+          "Ich nutze einen gepflegten Skill mit Pflichtkontext und Checkliste",
         score: 3,
       },
     ],
@@ -149,17 +149,17 @@ const SCENARIOS: readonly Scenario[] = [
     options: [
       { label: "Ich schreibe sie vollständig selbst", score: 0 },
       {
-        label: "Ich fordere ohne weitere Angaben eine Stellenausschreibung an",
+        label: "Ich fordere ohne Angaben eine Stellenausschreibung an",
         score: 1,
       },
       {
         label:
-          "Ich gebe Rolle, freigegebenen Firmenkontext, Tätigkeitsprofil, Gehaltsrahmen und Format vor",
+          "Ich gebe Rolle, Firmenkontext, Tätigkeiten, Gehaltsrahmen und Format vor",
         score: 2,
       },
       {
         label:
-          "Ich nutze ein gepflegtes Project mit Quellenmaterial und Freigabekriterien",
+          "Ich nutze ein gepflegtes Project mit Quellen und Freigabekriterien",
         score: 3,
       },
     ],
@@ -177,7 +177,7 @@ const SCENARIOS: readonly Scenario[] = [
       },
       {
         label:
-          "Ein überwachter Ablauf validiert, weist einen Review zu und führt ein Audit-Protokoll",
+          "Ein überwachter Ablauf prüft, leitet zur Freigabe weiter und protokolliert",
         score: 3,
       },
     ],
@@ -196,7 +196,7 @@ const SCENARIOS: readonly Scenario[] = [
       { label: "Ich durchsuche eine gepflegte Wissensbasis", score: 2 },
       {
         label:
-          "Ich rufe Entscheidung, Quelle, verantwortliche Person und spätere Änderungen zusammen ab",
+          "Ich rufe Entscheidung, Quelle, Verantwortliche und spätere Änderungen gemeinsam ab",
         score: 3,
       },
     ],
@@ -211,12 +211,12 @@ const SCENARIOS: readonly Scenario[] = [
       { label: "Ich nehme pauschal an, die DSGVO verbiete es", score: 1 },
       {
         label:
-          "Ich klassifiziere die Daten und prüfe Werkzeug sowie Verarbeitungsbedingungen",
+          "Ich klassifiziere die Daten und prüfe Werkzeug und Bedingungen",
         score: 2,
       },
       {
         label:
-          "Ich wende Organisationsrichtlinie, Werkzeugregister und Eskalationsweg an",
+          "Ich wende Richtlinie, Werkzeugregister und Eskalationsweg an",
         score: 3,
       },
     ],
@@ -236,12 +236,12 @@ const SCENARIOS: readonly Scenario[] = [
       },
       {
         label:
-          "Ich gebe Quellenmaterial, Zielgruppe, Länge, Ton und Ausgabestruktur vor",
+          "Ich gebe Quellen, Zielgruppe, Länge, Ton und Struktur vor",
         score: 2,
       },
       {
         label:
-          "Ich nutze ein gepflegtes Muster mit Quellen und Review-Checkliste je Folie",
+          "Ich nutze ein gepflegtes Muster mit Quellen und Checkliste je Folie",
         score: 3,
       },
     ],
@@ -258,12 +258,12 @@ const SCENARIOS: readonly Scenario[] = [
       { label: "Ich lasse Stichpunkte in Fließtext umwandeln", score: 1 },
       {
         label:
-          "Ich erstelle einen Entwurf aus gepflegten Notizen und prüfe jede Aussage",
+          "Ich entwerfe aus gepflegten Notizen und prüfe jede Aussage",
         score: 2,
       },
       {
         label:
-          "Ein geplanter Entwurf enthält Quellenlinks, Ausnahmehinweise und menschliche Freigabe",
+          "Ein geplanter Entwurf kommt mit Quellenlinks, Ausnahmen und menschlicher Freigabe",
         score: 3,
       },
     ],
@@ -277,12 +277,12 @@ const SCENARIOS: readonly Scenario[] = [
       { label: "Ich lasse Aufgaben ohne festes Schema extrahieren", score: 1 },
       {
         label:
-          "Ich nutze ein gepflegtes Muster und prüfe Namen, Termine und Verantwortliche",
+          "Ich nutze ein gepflegtes Muster und prüfe Namen, Termine, Verantwortliche",
         score: 2,
       },
       {
         label:
-          "Ein Ablauf validiert den Entwurf und holt Freigaben ein, bevor nachgelagerte Systeme schreiben",
+          "Ein Ablauf prüft den Entwurf und holt Freigaben, bevor er in Folgesysteme schreibt",
         score: 3,
       },
     ],
@@ -301,7 +301,7 @@ const SCENARIOS: readonly Scenario[] = [
       },
       {
         label:
-          "Ich verknüpfe sie mit aktueller Arbeit und dokumentiere, welche Aussage sie stützt oder infrage stellt",
+          "Ich verknüpfe sie und notiere, welche Aussage sie stützt oder infrage stellt",
         score: 3,
       },
     ],
@@ -316,12 +316,12 @@ const SCENARIOS: readonly Scenario[] = [
       { label: "Ob personenbezogene Daten verarbeitet werden", score: 1 },
       {
         label:
-          "Zweck, Daten, Rollen, Risikoklassifikation, Anbieterbedingungen und menschliche Prüfung",
+          "Zweck, Daten, Rollen, Risikoklasse, Anbieterbedingungen und menschliche Prüfung",
         score: 2,
       },
       {
         label:
-          "Ein dokumentiertes Pilot-Gate mit Verantwortlichen, Belegen, nötiger Rechtsprüfung und Stoppbedingung",
+          "Ein Pilot-Gate mit Verantwortlichen, Belegen, nötiger Rechtsprüfung und Stoppbedingung",
         score: 3,
       },
     ],
@@ -361,7 +361,7 @@ const SCENARIOS_EN: readonly Scenario[] = [
       },
       {
         label:
-          "Use a maintained Project with source material and explicit approval criteria",
+          "Use a maintained Project with sources and approval criteria",
         score: 3,
       },
     ],
@@ -369,7 +369,7 @@ const SCENARIOS_EN: readonly Scenario[] = [
   {
     id: "s3",
     dimension: "automation",
-    question: "A website enquiry enters your organization.",
+    question: "A website enquiry comes in.",
     options: [
       { label: "Copy it from email into the CRM", score: 0 },
       { label: "Send the form directly to the CRM", score: 1 },
@@ -379,7 +379,7 @@ const SCENARIOS_EN: readonly Scenario[] = [
       },
       {
         label:
-          "Use a monitored workflow with validation, human approval and an audit trail",
+          "Run a monitored workflow with validation, approval and an audit trail",
         score: 3,
       },
     ],
@@ -387,14 +387,14 @@ const SCENARIOS_EN: readonly Scenario[] = [
   {
     id: "s4",
     dimension: "knowledge",
-    question: "A manager asks what was decided about a topic in January.",
+    question: "A manager asks about a decision from January.",
     options: [
       { label: "Answer from memory", score: 0 },
       { label: "Search email, notes and folders separately", score: 1 },
       { label: "Search a maintained knowledge base", score: 2 },
       {
         label:
-          "Retrieve the decision, source note, owner and later changes together",
+          "Retrieve decision, source, owner and later changes together",
         score: 3,
       },
     ],
@@ -409,12 +409,12 @@ const SCENARIOS_EN: readonly Scenario[] = [
       { label: "Assume it is prohibited because of the GDPR", score: 1 },
       {
         label:
-          "Classify the data and check the approved tool and processing terms",
+          "Classify the data; check the tool and processing terms",
         score: 2,
       },
       {
         label:
-          "Apply the organization policy, approved-tool register and escalation route",
+          "Apply policy, approved-tool register and escalation route",
         score: 3,
       },
     ],
@@ -428,12 +428,12 @@ const SCENARIOS_EN: readonly Scenario[] = [
       { label: "Ask Claude to make a presentation about the topic", score: 1 },
       {
         label:
-          "Provide source material, audience, length, tone and output structure",
+          "Provide sources, audience, length, tone and structure",
         score: 2,
       },
       {
         label:
-          "Use a maintained pattern with citations and a slide-level review checklist",
+          "Use a maintained pattern with citations and per-slide checklist",
         score: 3,
       },
     ],
@@ -446,7 +446,7 @@ const SCENARIOS_EN: readonly Scenario[] = [
       { label: "Write it manually at the end of the week", score: 0 },
       { label: "Ask Claude to turn notes into prose", score: 1 },
       {
-        label: "Create a draft from maintained notes and verify every claim",
+        label: "Draft from maintained notes and verify every claim",
         score: 2,
       },
       {
@@ -465,12 +465,12 @@ const SCENARIOS_EN: readonly Scenario[] = [
       { label: "Ask Claude to extract action items", score: 1 },
       {
         label:
-          "Use a maintained summary pattern and review names, dates and owners",
+          "Use a maintained pattern and check names, dates and owners",
         score: 2,
       },
       {
         label:
-          "Route a draft through validation and owner approval before writing downstream systems",
+          "Validate and get owner approval before anything reaches downstream systems",
         score: 3,
       },
     ],
@@ -484,12 +484,12 @@ const SCENARIOS_EN: readonly Scenario[] = [
       { label: "Save the URL in a note", score: 1 },
       {
         label:
-          "Capture the article with title, date, source and your own summary",
+          "Capture title, date, source and your own summary",
         score: 2,
       },
       {
         label:
-          "Connect it to current work and record what claim it supports or challenges",
+          "Link it to your work; note which claim it supports or challenges",
         score: 3,
       },
     ],
@@ -504,12 +504,12 @@ const SCENARIOS_EN: readonly Scenario[] = [
       { label: "Whether personal data is processed", score: 1 },
       {
         label:
-          "Purpose, data, roles, risk classification, provider terms and human review",
+          "Purpose, data, roles, risk class, provider terms and human review",
         score: 2,
       },
       {
         label:
-          "A documented pilot gate with owners, evidence, legal review where required and a stop condition",
+          "A pilot gate with owners, evidence, legal review if needed and a stop condition",
         score: 3,
       },
     ],
@@ -584,28 +584,28 @@ function FluencyTestContent({ locale = "de" }: { readonly locale?: Locale }) {
       ? {
           title: "Explorer",
           desc: isEnglish
-            ? "Your answers show limited use of documented AI-supported workflows. Start with module 1."
-            : "Deine Antworten zeigen wenig dokumentierte KI-gestützte Abläufe. Beginne mit Modul 1.",
+            ? "Few documented AI workflows so far. Start with module 1."
+            : "Bisher wenig dokumentierte KI-Abläufe. Beginne mit Modul 1.",
         }
       : percent < 50
         ? {
             title: "User",
             desc: isEnglish
-              ? "You use AI tools, but context and review criteria are not yet consistent. Modules 1 and 2 address that gap."
-              : "Du nutzt KI-Werkzeuge, aber Kontext und Prüfkriterien sind noch nicht konsistent. Die Module 1 und 2 behandeln diese Lücke.",
+              ? "You use AI tools, but context and review criteria vary. Modules 1 and 2 cover that."
+              : "Du nutzt KI-Werkzeuge, aber Kontext und Prüfkriterien schwanken. Daran arbeiten Modul 1 und 2.",
           }
         : percent < 75
           ? {
               title: "Practitioner",
               desc: isEnglish
-                ? "You use several structured practices. Modules 3 and 4 focus on maintained knowledge and controlled automation."
-                : "Du nutzt mehrere strukturierte Praktiken. Die Module 3 und 4 behandeln gepflegtes Wissen und kontrollierte Automatisierung.",
+                ? "You use several structured practices. Modules 3 and 4 cover maintained knowledge and controlled automation."
+                : "Du nutzt mehrere strukturierte Praktiken. Modul 3 und 4 behandeln gepflegtes Wissen und kontrollierte Automatisierung.",
             }
           : {
               title: "Operator",
               desc: isEnglish
-                ? "Your answers show a documented working method. Use the course to test it against explicit exercises and controls."
-                : "Deine Antworten zeigen eine dokumentierte Arbeitsmethode. Nutze den Kurs, um sie anhand klarer Übungen und Kontrollen zu prüfen.",
+                ? "You work with a documented method. Test it against the course exercises and controls."
+                : "Du arbeitest mit einer dokumentierten Methode. Prüfe sie an den Übungen und Kontrollen im Kurs.",
             };
 
   /* ─── Result view ─── */
@@ -727,7 +727,7 @@ function FluencyTestContent({ locale = "de" }: { readonly locale?: Locale }) {
               className="inline-flex min-h-11 items-center gap-2 border-b border-border px-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-muted-foreground transition-colors hover:border-brand-orange hover:text-brand-orange focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
             >
               <RotateCcw size={14} aria-hidden="true" />
-              {isEnglish ? "Start again" : "Nochmal bearbeiten"}
+              {isEnglish ? "Start again" : "Neu starten"}
             </button>
           </div>
         </div>
@@ -749,8 +749,8 @@ function FluencyTestContent({ locale = "de" }: { readonly locale?: Locale }) {
             </h1>
             <p className="mt-4 max-w-[680px] text-sm leading-relaxed text-muted-foreground">
               {isEnglish
-                ? "Ten workplace scenarios across five dimensions. The result stays local and is neither a standardized test nor a comparison with other people."
-                : "Zehn Arbeitsszenarien in fünf Dimensionen. Das Ergebnis bleibt lokal und ist weder standardisierter Test noch Vergleich mit anderen Personen."}
+                ? "Ten scenarios in five dimensions. Not a standardized test; the result stays in your browser."
+                : "Zehn Szenarien in fünf Dimensionen. Kein standardisierter Test; das Ergebnis bleibt in deinem Browser."}
             </p>
           </div>
 
@@ -838,7 +838,7 @@ function FluencyTestContent({ locale = "de" }: { readonly locale?: Locale }) {
               id={`scenario-heading-${current.id}`}
               className="mt-2 max-w-[800px] text-[26px] font-bold leading-tight tracking-[-0.025em] text-foreground sm:text-[32px]"
             >
-              „{current.question}“
+              {current.question}
             </h2>
 
             <div className="mt-5 grid border-t border-foreground">
@@ -927,7 +927,7 @@ function FluencyTestContent({ locale = "de" }: { readonly locale?: Locale }) {
               href={localizeHref("/ki-fuehrerschein", locale)}
               className="border-b border-brand-orange text-brand-orange transition-colors hover:text-brand-amber"
             >
-              {isEnglish ? "AI Fundamentals" : "KI-Führerschein"}
+              {isEnglish ? "Everyday AI Literacy" : "KI-Führerschein"}
             </Link>{" "}
             {isEnglish
               ? "is free and recommended before this course."

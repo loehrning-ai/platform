@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, type JSX } from "react";
-import { cn } from "@/lib/utils";
+import { useMemo, useState, type JSX } from "react";
+import { cx as cn } from "@/components/werk/cx";
 import {
   genericAnswer,
   simulatedDelayMs,
@@ -57,7 +57,7 @@ CONSTRAINTS
 
 FORMAT
 Subject line, then body. No sign-off.`,
-    note: "Role, context, task, constraints, and format are explicit. Fewer details are left to inference.",
+    note: "Role, context, task, constraints and format are stated, so less is left to inference.",
   },
 ];
 
@@ -97,7 +97,7 @@ VORGABEN
 
 FORMAT
 Zuerst die Betreffzeile, dann der Text. Keine Grußformel.`,
-    note: "Rolle, Kontext, Aufgabe, Vorgaben und Format sind explizit. Weniger Details bleiben offen.",
+    note: "Rolle, Kontext, Aufgabe, Vorgaben und Format sind genannt; weniger bleibt offen.",
   },
 ];
 
@@ -113,9 +113,6 @@ const COPY = {
     output: "Simulierte Ausgabe",
     disclosure: "Feste lokale Regeln; kein Modell- oder API-Aufruf.",
     result: "Ergebnis",
-    waiting: "Noch nicht ausgeführt",
-    empty: (stage: number) =>
-      `Führe Stufe ${stage} aus, um die simulierte Antwort zu sehen. Vergleiche anschließend die drei Stufen.`,
   },
   en: {
     prompt: "Prompt",
@@ -128,9 +125,6 @@ const COPY = {
     output: "Simulated output",
     disclosure: "Fixed local rules; no model or API call.",
     result: "Result",
-    waiting: "Not run yet",
-    empty: (stage: number) =>
-      `Run stage ${stage} to see the simulated response, then compare all three stages.`,
   },
 } as const;
 
@@ -142,7 +136,14 @@ export function HeroTransform({
   const stages = locale === "de" ? STAGES_DE : STAGES_EN;
   const copy = COPY[locale];
   const [stageIdx, setStageIdx] = useState(0);
-  const [outputs, setOutputs] = useState<(string | null)[]>([null, null, null]);
+  // Final state first: every stage's simulated output is on screen from the
+  // first paint, so the comparison works without pressing play. The run
+  // button replays the current stage. genericAnswer is deterministic, so
+  // server and client render the same text.
+  const outputs = useMemo(
+    () => stages.map((stage) => genericAnswer(stage.prompt, locale)),
+    [stages, locale],
+  );
   const [loading, setLoading] = useState(false);
 
   const active = stages[stageIdx];
@@ -152,19 +153,20 @@ export function HeroTransform({
     await new Promise((resolve) =>
       setTimeout(resolve, simulatedDelayMs(active.prompt)),
     );
-    const result = genericAnswer(active.prompt, locale);
-    setOutputs((prev) => prev.map((o, i) => (i === stageIdx ? result : o)));
     setLoading(false);
   };
 
   return (
-    <div className="grid gap-0 border-2 border-foreground shadow-[6px_6px_0_var(--color-foreground)] md:grid-cols-2">
-      <div className="border-b border-border bg-card p-6 md:border-b-0 md:border-r">
+    // Werkzeichnung: 1px ink frame, no offset shadows, square stage buttons and
+    // sentence-case labels. The frame is the only box: assessment and output
+    // sit under hairlines. Prompt text and output stay pre-formatted because
+    // they are data. The replay button is ink; the landing keeps Mennige for
+    // "Lektion 01 starten" only.
+    <div className="grid gap-0 border border-foreground md:grid-cols-2">
+      <div className="border-b border-border bg-card p-4 sm:p-6 md:border-b-0 md:border-r">
         <div className="mb-4 flex items-center justify-between">
           <div>
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
-              {copy.prompt}
-            </p>
+            <p className="text-label text-muted-foreground">{copy.prompt}</p>
             <p className="mt-1 text-[16px] font-semibold text-foreground">
               {copy.stage} {stageIdx + 1} / 3 · {active.label}
             </p>
@@ -177,7 +179,7 @@ export function HeroTransform({
                 aria-pressed={i === stageIdx}
                 onClick={() => setStageIdx(i)}
                 className={cn(
-                  "flex min-h-11 min-w-11 items-center justify-center rounded-full border font-mono text-[12px]",
+                  "flex min-h-11 min-w-11 items-center justify-center border text-label tabular-nums focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange",
                   i === stageIdx
                     ? "border-foreground bg-foreground text-background"
                     : "border-border bg-background text-muted-foreground",
@@ -188,26 +190,24 @@ export function HeroTransform({
             ))}
           </div>
         </div>
-        <pre className="max-h-[220px] overflow-y-auto whitespace-pre-wrap border border-border bg-background p-3 text-[12.5px] leading-[1.5] text-foreground">
+        <pre className="max-h-[220px] overflow-y-auto whitespace-pre-wrap border-y border-hairline py-3 text-[12.5px] leading-[1.5] text-foreground">
           {active.prompt}
         </pre>
-        <div className="mt-3 border border-border bg-background p-3">
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-amber">
-            {copy.diagnosis}
-          </p>
+        <div className="mt-3">
+          <p className="text-label text-foreground">{copy.diagnosis}</p>
           <p className="mt-1 text-[13px] leading-[1.5] text-muted-foreground">
             {active.note}
           </p>
         </div>
         <div className="mt-4 flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0 flex-1">
-            <p className="mb-1 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
+            <p className="mb-1 text-caption text-muted-foreground">
               {copy.structure}
             </p>
-            <div className="h-[6px] w-full overflow-hidden rounded-full bg-border">
+            <div className="h-[6px] w-full overflow-hidden bg-border">
               <div
                 className={cn(
-                  "h-full transition-[width] duration-500",
+                  "h-full transition-[width] duration-500 motion-reduce:transition-none",
                   active.quality > 80
                     ? "bg-risk-green"
                     : active.quality > 40
@@ -222,34 +222,29 @@ export function HeroTransform({
             type="button"
             onClick={run}
             disabled={loading}
-            className="min-h-11 w-full border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-white shadow-[3px_3px_0_0_var(--color-foreground)] transition-transform hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-[4px_4px_0_0_var(--color-foreground)] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none sm:w-auto sm:shrink-0"
+            className="inline-flex min-h-11 w-full items-center justify-center rounded-none bg-foreground px-4 py-2 text-[0.9375rem] font-semibold text-background transition-colors duration-[120ms] hover:bg-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none sm:w-auto sm:shrink-0"
           >
             {loading ? copy.running : copy.run(stageIdx + 1)}
           </button>
         </div>
       </div>
-      <div className="bg-background p-6">
-        <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
-          {copy.output}
-        </p>
-        <p className="mt-1 font-mono text-xs text-muted-foreground">
+      <div className="bg-background p-4 sm:p-6">
+        <p className="text-label text-muted-foreground">{copy.output}</p>
+        <p className="mt-1 text-caption text-muted-foreground">
           {copy.disclosure}
         </p>
         <p className="mt-1 text-[16px] font-semibold text-foreground">
-          {outputs[stageIdx] ? copy.result : copy.waiting}
+          {copy.result} · {copy.stage} {stageIdx + 1}
         </p>
         <div
-          className={cn(
-            "mt-4 min-h-[260px] overflow-auto whitespace-pre-wrap break-words border p-4 text-[13.5px] leading-[1.6] text-foreground",
-            stageIdx === 2
-              ? "border-brand-amber/40 bg-brand-amber/5"
-              : "border-border bg-card/40",
-          )}
+          aria-live="polite"
+          aria-busy={loading}
+          className="mt-4 overflow-auto whitespace-pre-wrap break-words border-t border-hairline pt-4 text-[13.5px] leading-[1.6] text-foreground sm:min-h-[260px]"
         >
-          {outputs[stageIdx] ?? (
-            <span className="italic text-muted-foreground">
-              {copy.empty(stageIdx + 1)}
-            </span>
+          {loading ? (
+            <span className="text-muted-foreground">{copy.running}</span>
+          ) : (
+            outputs[stageIdx]
           )}
         </div>
       </div>

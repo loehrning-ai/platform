@@ -42,9 +42,9 @@ const READER_COPY = {
     tocRegion: "Kapitelinhalt",
     tocHeading: "In diesem Kapitel",
     pdfAvailable:
-      "Der Reader ist die verlässliche Lesefassung. Angemeldete Nutzer finden den PDF-Download auf der Buchübersicht.",
+      "Maßgeblich ist der Reader; nach der Anmeldung lädst du das PDF auf der Buchübersicht herunter.",
     pdfUnavailable:
-      "Der Reader ist die verlässliche Lesefassung. Für dieses Buch gibt es derzeit keine PDF-Fassung.",
+      "Für dieses Buch gibt es derzeit kein PDF.",
     allChapters: "Alle Kapitel",
     // Reader bar below lg. The visible strip shows the bare fraction; this is
     // the sentence assistive technology reads instead.
@@ -72,9 +72,9 @@ const READER_COPY = {
     tocRegion: "Chapter contents",
     tocHeading: "In this chapter",
     pdfAvailable:
-      "The reader is the maintained reading edition. Signed-in users can find the German PDF on the book overview.",
+      "The reader is the maintained edition; after signing in, download the German PDF from the book overview.",
     pdfUnavailable:
-      "The reader is the maintained reading edition. No PDF edition is currently available for this book.",
+      "No PDF is currently available for this book.",
     allChapters: "All chapters",
     barPosition: (chapter: number, total: number) =>
       `Chapter ${chapter} of ${total}`,

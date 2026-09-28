@@ -2,7 +2,7 @@
 
 # The iceberg problem
 
-The loud AI debate is about software development and new models. The work where a system could genuinely help every day sits somewhere else, in administration, finance, customer service, procurement. Nobody there calls it AI work. So hardly anyone checks it.
+The loud AI debate is about software development and new models. The work where a system could genuinely help every day sits somewhere else, in administration, finance, customer service, procurement. Because nobody there calls it AI work, hardly anyone checks it.
 
 ## What the Iceberg Index measures
 
@@ -15,13 +15,13 @@ Two figures carry the paper:
 | Visible exposure | 2.2% of US wage value | concentrated in computer and technology occupations |
 | Broader technical exposure | 11.7% of US wage value | additional cognitive tasks in administration, finance, and professional services |
 
-Both values measure a modelled overlap between tasks and technical capabilities. Nothing else. No productivity gain, no actual adoption, no job loss, no German market share.
+Both values measure only a modelled overlap between tasks and technical capabilities. They do not measure productivity gains, actual adoption, job loss or German market share.
 
 ## What an organization can infer from this
 
-These US numbers are not a German statistic. Anyone who presents them as one overstates the source. The question underneath still carries: which tasks consist of recurring information work, and under what conditions may a system help with them?
+Anyone who presents these US numbers as a German statistic overstates the source. The question underneath still carries: which tasks consist of recurring information work, and under what conditions may a system help with them?
 
-So do not look at products first. Look at tasks:
+So look at tasks before products:
 
 - gather information from several sources
 - classify or structure content
@@ -39,10 +39,10 @@ An honest stocktake separates two questions:
 1. **Which AI systems and features are already running?** Record approved and unapproved accounts, embedded features, integrations, and automated decisions.
 2. **Which tasks could use support?** Record volume, the cost of errors, data classes, the domain review needed, and measurable success criteria.
 
-The first inventory creates control. The second creates a prioritized list for learning and pilots. Neither needs a company ranking or an externally calculated readiness score.
+The first inventory creates control. The second produces a prioritized list for learning and pilots. Neither needs a company ranking or an externally calculated readiness score.
 
 ## The right starting point
 
-Take a process whose input data is approved, whose output a person checks before use, and whose success you can measure. Document the baseline. Test with representative cases. Write down every error.
+Take a process whose input data is approved, whose output a person checks before use, and whose success you can measure. Document the baseline, test with representative cases and write down every error.
 
-The iceberg problem is not the spectacular application nobody spotted. It is the everyday information work that nobody examines systematically and nobody improves under control.
+The iceberg problem is the everyday information work that nobody examines systematically or improves in a controlled way.

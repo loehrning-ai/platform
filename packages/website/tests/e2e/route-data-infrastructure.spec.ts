@@ -130,8 +130,7 @@ async function openLessonReference(page: Page) {
   const reference = page.locator("details[data-lesson-reference]");
   await expect(reference).toHaveCount(1);
   await expect(reference).toBeVisible();
-  await expect(reference).toHaveJSProperty("open", false);
-  await reference.locator(":scope > summary").click();
+  // The lesson text renders open by default (LessonReference).
   await expect(reference).toHaveJSProperty("open", true);
 }
 
@@ -242,7 +241,7 @@ test.describe("Data Infrastructure golden path", () => {
     // mental-model.ts): option index 1 is correct, and
     // DATA_INFRA_QUIZ_COPY's correctLabel is "Correct."
     const correctAnswer = page.getByRole("radio", {
-      name: "B The log, because this scenario explicitly gives it complete retained change history.",
+      name: "B The log, which holds the complete retained change history.",
     });
     await expect(correctAnswer).toBeVisible();
     await correctAnswer.click();
@@ -292,7 +291,7 @@ test.describe("Data Infrastructure golden path", () => {
 
     const finalLessonCertificate = page.getByRole("link", {
       // Copy lock updated: English UI copy names completion documents "certificate of participation".
-      name: "Open Certificate of Participation",
+      name: "Open Certificate of participation",
     });
     await expect(finalLessonCertificate).toHaveAttribute("href", CERT_ROUTE);
     await finalLessonCertificate.click();
@@ -302,7 +301,7 @@ test.describe("Data Infrastructure golden path", () => {
     await page.goto(COURSE_PATH, { waitUntil: "domcontentloaded" });
     await expect(
       page.getByRole("link", {
-        name: "Open Certificate of Participation",
+        name: "Open Certificate of participation",
       }),
     ).toHaveAttribute("href", CERT_ROUTE);
   });

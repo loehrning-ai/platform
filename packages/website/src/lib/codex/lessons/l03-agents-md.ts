@@ -10,12 +10,12 @@ import {
 const lesson: CodexLesson = {
   id: "L03",
   number: 3,
-  title: "AGENTS.md: Repository Instructions",
+  title: "AGENTS.md: repository instructions",
   subtitle:
-    "Versioned instructions give Codex explicit project rules, commands, and boundaries.",
+    "Versioned instructions give Codex project rules, commands, and boundaries.",
   durationMinutes: 11,
   trackId: "fundamentals",
-  hook: "Make repository rules explicit.",
+  hook: "Write the repository rules down.",
   keyConcepts: [
     "AGENTS.md",
     "Convention file",
@@ -32,11 +32,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "`AGENTS.md` is not memory. It is versioned project context, and Codex reads it before it starts work. Put rules there that should hold across every task.\n\nDiscovery is layered. Codex can load global guidance from the Codex home directory, then project guidance from the project root down to the current working directory. In each directory, `AGENTS.override.md` takes precedence over `AGENTS.md`. Instructions closer to the working directory come later and can override the broader ones.\n\nWhat earns a place in the repository-level file? Anything that changes the work. Exact setup and verification commands, architectural boundaries, test expectations, known constraints, actions that require approval. Task-specific goals and acceptance criteria stay in the task request.",
-        },
-        {
-          kind: "pull-quote",
-          text: "Use AGENTS.md for durable project rules. Use the task request for the current change.",
+            "`AGENTS.md` is versioned project context that Codex reads before it starts work. Put rules there that hold across every task.\n\nDiscovery is layered: global guidance from the Codex home directory, then project guidance from the project root down to the current working directory. In each directory, `AGENTS.override.md` takes precedence over `AGENTS.md`, and files closer to the working directory can override broader ones.\n\nThe repository file holds what changes the work: exact setup and check commands with their prerequisites, architectural boundaries, test expectations, known constraints and actions that need approval. Task goals and acceptance criteria stay in the task request.",
         },
       ],
     },
@@ -48,7 +44,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "AGENTS.md is Markdown. No required schema. Organize it around rules the agent can apply and checks it can run.",
+            "AGENTS.md is plain Markdown without a required schema. Instruction files take up context space, just like the task and code. Leave out marketing copy, meeting notes, preferences with no testable effect and vague goals like \"write clean code\". Keep an instruction if it prevents a known error, sets a boundary or makes verification possible.",
         },
       ],
     },
@@ -60,7 +56,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "An illustrative `AGENTS.md`, not a universal template. What makes it work is specificity.\n\n```\n# AGENTS.md\n\n## What this repo is\nPayments service. Python 3.11, Flask, Postgres, Stripe.\nCritical path: /checkout endpoint.\n\n## Running locally\n$ make setup       # installs dependencies\n$ make test         # pytest; required before review\n$ make lint         # ruff + mypy; also required\n\n## Conventions we enforce\n- No bare except: clauses. Catch specific exceptions.\n- Every endpoint gets an integration test in tests/api/.\n- Log with structlog, never print. Log context as kwargs, not f-strings.\n- Migrations go in db/migrations/, numbered, never edited after merge.\n- We use pydantic v2. Flag v1 patterns; migration is in progress.\n\n## Known constraints\n- tests/integration/test_webhooks.py is flaky. Re-run once before debugging.\n- user_service.py is already oversized. Do not add responsibilities to it.\n- Tests use non-production fixtures; never request or print live credentials.\n\n## Requires explicit approval\n- Changes under legacy/.\n- New top-level dependencies.\n- Any edit to deprecated server_v1.py.\n```",
+            "An illustrative `AGENTS.md`. Each line is specific enough to check.\n\n```\n# AGENTS.md\n\n## What this repo is\nPayments service. Python 3.11, Flask, Postgres, Stripe.\nCritical path: /checkout endpoint.\n\n## Running locally\n$ make setup       # installs dependencies\n$ make test         # pytest; required before review\n$ make lint         # ruff + mypy; also required\n\n## Conventions we enforce\n- No bare except: clauses. Catch specific exceptions.\n- Every endpoint gets an integration test in tests/api/.\n- Log with structlog, never print. Log context as kwargs, not f-strings.\n- Migrations go in db/migrations/, numbered, never edited after merge.\n- We use pydantic v2. Flag v1 patterns; migration is in progress.\n\n## Known constraints\n- tests/integration/test_webhooks.py is flaky. Re-run once before debugging.\n- user_service.py is already oversized. Do not add responsibilities to it.\n- Tests use non-production fixtures; never request or print live credentials.\n\n## Requires approval\n- Changes under legacy/.\n- New top-level dependencies.\n- Any edit to deprecated server_v1.py.\n```",
         },
       ],
     },
@@ -72,12 +68,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            'Both patches below answer "add a /health endpoint that checks the database". Only the second one also follows the repository rules stated in `AGENTS.md`.',
-        },
-        {
-          kind: "callout",
-          title: "Both versions work.",
-          body: "The second one also follows the stated project rules. structlog, a specific OperationalError branch, an integration test under tests/api/. Now the review can check those choices against written instructions instead of inferred preferences.",
+            "Both patches below answer \"add a /health endpoint that checks the database\" and both work. Only the second follows the rules in `AGENTS.md`.",
         },
       ],
     },
@@ -88,7 +79,7 @@ const lesson: CodexLesson = {
       blocks: [
         {
           kind: "prose",
-          markdown: "One question on writing a good AGENTS.md entry.",
+          markdown: "One question at the end of the lesson.",
         },
       ],
     },
@@ -100,12 +91,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            'Build it from what the project actually needs.\n\n1. **Start with executable basics.** State the repository purpose, setup command, required checks, and boundaries that are not obvious from code.\n2. **Update it from reviews.** When a recurring project rule causes a rejected change, add the precise rule and its safe path.\n3. **Review it with code.** When commands or conventions change, update the instruction file in the same change.\n\n### Context management: what goes in, what stays out\n\nInstruction files consume context alongside the task and code. Keep them specific:\n\n- **Include:** rules that affect implementation, review, or safety.\n- **Exclude:** marketing copy, meeting notes, and preferences with no testable effect.\n- **Include:** exact commands such as `make test`, with prerequisites when needed.\n- **Exclude:** vague goals such as "write clean code." Replace them with observable rules.\n\nLength proves nothing. Keep the instructions that prevent a known error, define a boundary, or make verification possible.',
-        },
-        {
-          kind: "callout",
-          title: "Directory-specific rules.",
-          body: "Codex discovers one instruction file per directory from the project root to the current working directory. Put repository-wide rules at the root and narrower rules near the code they govern. An AGENTS.override.md file takes precedence within its directory.",
+            "1. **Start with executable basics:** repository purpose, setup command, required checks and boundaries the code does not show.\n2. **Update it from reviews.** When a recurring project rule causes a rejected change, add the precise rule and its safe path.\n3. **Change it with the code.** When commands or conventions change, update the file in the same change.",
         },
       ],
     },
@@ -120,13 +106,16 @@ const lesson: CodexLesson = {
         cpId: "spec-1",
         threshold: 4,
         title: "Assemble a useful AGENTS.md",
-        desc: "Toggle each section on if you'd include it in your team's first draft. Aim for at least four.",
+        desc: "Switch on each section you'd put in a first draft. Aim for at least four.",
         goal: "Onboard Codex to a Python payments service in one file.",
         tierLabels: CODEX_TASK_SPEC_TIER_LABELS,
+        fileName: "AGENTS.md",
+        goalHeading: "Goal",
+        signalsLabel: "signals",
         items: [
           {
             section: "What this repo is",
-            hint: "One paragraph. Business purpose, not architecture.",
+            hint: "One paragraph on the business purpose.",
             body: [
               "Payments service. Python 3.11, Flask, Postgres.",
               "Critical path: /checkout endpoint.",
@@ -142,7 +131,7 @@ const lesson: CodexLesson = {
           },
           {
             section: "Conventions we enforce",
-            hint: 'Not "be clean." Specific rules.',
+            hint: 'Specific rules instead of "be clean".',
             body: [
               "No bare except:. Catch specific exceptions.",
               "Log with structlog, not print.",
@@ -150,7 +139,7 @@ const lesson: CodexLesson = {
           },
           {
             section: "Known quirks",
-            hint: "The undocumented minefields. Saves wasted runs.",
+            hint: "Undocumented traps that waste runs.",
             body: [
               "test_webhooks.py has a documented intermittent failure; preserve the first log before retrying.",
               "Do not add responsibilities to user_service.py; a separate extraction is planned.",
@@ -158,7 +147,7 @@ const lesson: CodexLesson = {
           },
           {
             section: "Definitely don't",
-            hint: "Hard stops. More useful than style preferences.",
+            hint: "Hard stops the agent must respect.",
             body: [
               "Never edit legacy/. Runs in prod, unowned.",
               "No new top-level deps without asking.",
@@ -166,7 +155,7 @@ const lesson: CodexLesson = {
           },
           {
             section: "Our favorite color",
-            hint: "Not useful. Not even a joke, don't add noise.",
+            hint: "Noise. Leave it out.",
             body: ["#3B82F6"],
           },
         ],
@@ -177,7 +166,7 @@ const lesson: CodexLesson = {
       placement: "end",
       courseSlug: "codex",
       props: {
-        title: "Without AGENTS.md, generic, doesn't match repo",
+        title: "Without AGENTS.md: generic code",
         file: "api/health.py · +15 / −0",
         lines: [
           { type: "add", text: "from flask import Blueprint, jsonify" },
@@ -205,7 +194,7 @@ const lesson: CodexLesson = {
       placement: "end",
       courseSlug: "codex",
       props: {
-        title: "With AGENTS.md, fits the codebase, tests included",
+        title: "With AGENTS.md: repo conventions and a test",
         file: "api/health.py · +12 / −0",
         lines: [
           { type: "add", text: "from flask import Blueprint, jsonify" },
@@ -232,7 +221,7 @@ const lesson: CodexLesson = {
             text: "# --- tests/api/test_health.py, also added ---",
           },
         ],
-        note: "Notice the specifics: OperationalError (not generic Exception), structlog with kwargs (not f-strings), 503 not 500, and a test file in tests/api/. None of this was in the task. All of it was in AGENTS.md.",
+        note: "OperationalError instead of Exception, structlog with kwargs, 503 instead of 500 and a test in tests/api/ all come from AGENTS.md. The task named none of them.",
       },
     },
     {
@@ -248,13 +237,13 @@ const lesson: CodexLesson = {
           'Which is the better AGENTS.md entry for "how we handle errors"?',
         options: [
           '"Handle errors thoughtfully and follow best practices."',
-          '"Catch specific exceptions, never bare except. Log with structlog. Return 4xx for client errors, 5xx only for server bugs. Don\'t swallow exceptions in endpoints, let the global handler format them."',
+          "\"Catch specific exceptions. Log with structlog. 4xx for client errors, 5xx for server bugs. Let the global handler format errors.\"",
           '"Errors should be handled."',
           '"TODO: document error handling."',
         ],
         correct: 1,
         explanation:
-          '"Best practices" does not define observable behavior. Concrete rules name the required exception type, logging API, status-code boundary, and error-formatting path, so both the agent and reviewer can check them.',
+          "\"Best practices\" defines no observable behavior. The specific entry names exception type, logging API, status-code boundary and formatting path, so agent and reviewer can check each.",
       },
     },
   ],

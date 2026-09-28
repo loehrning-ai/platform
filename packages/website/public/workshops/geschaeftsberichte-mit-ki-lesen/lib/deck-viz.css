@@ -14,7 +14,7 @@
   display: block;
   max-height: 760px; width: auto; max-width: 100%;
   border: 1px solid var(--line);
-  background: #fff;
+  background: #f9f7f2;
 }
 /* layered "stack of pages" — lead in front, a second page peeking behind */
 .report-stack .report-shot.lead {
@@ -48,12 +48,12 @@
 /* rank / tension chart */
 .viz-rank { width: 100%; }
 .viz-rank .vr-row {
-  display: grid; grid-template-columns: 128px 1fr 152px;
-  align-items: center; gap: 20px; padding: 9px 0;
+  display: grid; grid-template-columns: 128px 1fr 290px;
+  align-items: center; gap: 20px; padding: 6px 0;
   border-bottom: 1px solid var(--line);
 }
-.viz-rank .vr-name { font-weight: 600; font-size: 20px; letter-spacing: -.01em; }
-.viz-rank .vr-track { position: relative; height: 26px; background: transparent; }
+.viz-rank .vr-name { font-weight: 600; font-size: 22px; letter-spacing: 0; }
+.viz-rank .vr-track { position: relative; height: 24px; background: transparent; }
 .viz-rank .vr-fill {
   position: absolute; left: 0; top: 0; bottom: 0; width: 0;
   background: var(--card-hover);
@@ -61,19 +61,21 @@
 }
 .viz-rank .vr-row.hot .vr-fill { background: var(--mennige); }
 .viz-rank .vr-val {
-  text-align: right; font-family: var(--mono); font-size: 17px;
+  text-align: right; font-family: var(--mono); font-size: 20px;
   font-feature-settings: "tnum" 1; color: var(--muted);
 }
 .viz-rank .vr-row.hot .vr-name,
 .viz-rank .vr-row.hot .vr-val { color: var(--mennige); }
 
 /* two-months NCR motif (on dark) */
-.viz-ncr { display: flex; align-items: flex-end; gap: 28px; }
+.viz-ncr { display: flex; align-items: flex-end; gap: 18px; }
 .viz-ncr .nc-col { display: flex; flex-direction: column; align-items: center; gap: 10px; }
 .viz-ncr .nc-bar {
-  width: 74px; height: 0; background: var(--mennige);
+  width: 56px; height: 0; background: var(--mennige);
   transition: height .8s var(--ease);
 }
-.viz-ncr .nc-bar.ghost { background: rgba(183,58,21,.32); }
-.viz-ncr .nc-cap { font-family: var(--mono); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; opacity: .8; }
+.viz-ncr .nc-bar.ghost { background: #655c54; }
+.viz-ncr .nc-cap { font-family: var(--sans); font-size: 19px; font-weight: 600; letter-spacing: .01em; color: var(--muted); }
+.slide.dark .viz-ncr .nc-cap, .slide.ink .viz-ncr .nc-cap { color: #d4cec5; }
 .viz-ncr .nc-val { font-family: var(--mono); font-size: 24px; font-weight: 700; }
+.viz-ncr .nc-col { gap: 6px; }

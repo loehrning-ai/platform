@@ -43,13 +43,13 @@ export function LearningOwnerPanel({
             className="text-xs font-semibold text-foreground"
           >
             {locale === "de"
-              ? "Fortschritt bleibt getrennt."
-              : "Progress stays isolated."}
+              ? "Dein Fortschritt wird noch nicht gespeichert."
+              : "Your progress is not saved yet."}
           </p>
           <p className="mt-0.5 hidden text-xs leading-snug text-muted-foreground sm:block">
             {locale === "de"
-              ? "Speichern beginnt erst nach Kontoprüfung oder deiner lokalen Wahl."
-              : "Saving starts only after account verification or your local choice."}
+              ? "Das beginnt, sobald dein Konto geprüft ist oder du lokal weiterlernst."
+              : "Saving starts once your account is checked or you continue locally."}
           </p>
         </div>
         <button

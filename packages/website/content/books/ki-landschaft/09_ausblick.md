@@ -56,4 +56,4 @@ Eine Strategie, die nur bei einer bestimmten AGI-Prognose funktioniert, ist kein
 - messbare Fehlerarten
 - Fallback und Stopkriterium
 
-Das ist kein Unternehmensranking. Das ist die Grundlage für eine prüfbare Entscheidung.
+Diese Angaben sind die Grundlage für eine prüfbare Entscheidung.

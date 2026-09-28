@@ -1,30 +1,22 @@
 # Rollout: Wie du KI in dein Team bringst
 
-Bei Red Bull habe ich ein Analytics-Dashboard eingeführt. Die Hälfte des Teams fand es großartig. Die andere Hälfte hat es ignoriert. Drei Monate lang.
+Bei Red Bull habe ich ein Analytics-Dashboard eingeführt. Die Hälfte des Teams fand es großartig, die andere Hälfte ignorierte es drei Monate lang. Dann beantwortete ein Skeptiker damit in einem Meeting eine Frage des Geschäftsführers in zehn Sekunden, während alle anderen erst nachschauen mussten. Am nächsten Montag war das Dashboard auf jedem Bildschirm.
 
-Der Wendepunkt? Ein Skeptiker hat es in einem Meeting benutzt, um eine Frage des Geschäftsführers in Echtzeit zu beantworten. Alle anderen mussten sagen: „Müsste ich nachschauen." Er hatte die Antwort in zehn Sekunden.
-
-Am nächsten Montag war das Dashboard auf jedem Bildschirm.
-
-Das ist kein Dashboard-Phänomen. Das ist ein Adoptions-Prinzip: Menschen ändern Verhalten nicht durch Anweisung. Sie ändern es durch Beweis.
+Menschen ändern ihr Verhalten, wenn sie den Nutzen sehen, selten auf Anweisung.
 
 ## Die vier Barrieren
 
-Du kennst diese Sätze. Vielleicht hast du sie selbst gesagt.
+**„Das ist zu kompliziert."** Gemeint ist: Die Hemmschwelle ist hoch, weil die Person es noch nie benutzt hat. Zeig es live in zwei Minuten mit einer echten Aufgabe in ChatGPT, das wirkt mehr als jede Schulung.
 
-**„Das ist zu kompliziert."** Übersetzung: Ich habe es noch nie benutzt und die Hemmschwelle ist hoch. Lösung: nicht erklären, zeigen. Öffne ChatGPT, nimm eine echte Aufgabe, tippe den Prompt. Zwei Minuten, live. Das wirkt mehr als jede Schulung.
+**„Ich hab keine Zeit."** Gemeint ist: Die Einarbeitung scheint sich nicht zu lohnen. Zeig die Rechnung: Eine E-Mail dauert mit KI 4 statt 12 Minuten, bei fünf Mails sind das 40 Minuten pro Tag.
 
-**„Ich hab keine Zeit."** Übersetzung: Ich glaube nicht, dass sich die Einarbeitungszeit lohnt. Lösung: Zeig die Rechnung. Eine E-Mail, die 12 Minuten dauert, dauert mit KI 4 Minuten. Bei fünf Mails am Tag sind das 40 Minuten. Pro Tag.
+**„Das ist nicht für mich."** Gemeint ist: KI sei nur etwas für IT-Leute, nicht für Einkauf, Vertrieb oder Lager. Zeig Beispiele aus diesen Bereichen, etwa den Einkaufsleiter, der Lieferantenmails mit KI beantwortet, die Vertriebsleiterin, die Angebote in der halben Zeit erstellt, oder den Produktionsleiter, der Schichtübergaben per Sprachmemo diktiert und KI das Protokoll schreiben lässt.
 
-**„Das ist nicht für mich."** Übersetzung: KI ist was für IT-Leute, nicht für mich im Einkauf/Vertrieb/Lager. Lösung: Branchenbeispiel. Der Einkaufsleiter, der seine Lieferantenmails mit KI beantwortet. Die Vertriebsleiterin, die Angebote in der halben Zeit erstellt. Der Produktionsleiter, der Schichtübergabe-Protokolle per Sprachmemo diktiert und KI das Protokoll schreiben lässt.
-
-**„Ich hab Angst um meinen Job."** Übersetzung: Wenn KI meine Arbeit kann, braucht man mich nicht mehr. Lösung: Ehrlichkeit. KI ersetzt keine Jobs, sie ersetzt Aufgaben innerhalb von Jobs. Dein Wissen über Kunden, Produkte und Prozesse, das kann keine KI. Was sie kann: dir die langweilige Hälfte abnehmen, damit du mehr Zeit für die wichtige hast.
+**„Ich hab Angst um meinen Job."** Gemeint ist: Wenn KI die Arbeit kann, braucht man die Person nicht mehr. Sei ehrlich: KI übernimmt Aufgaben innerhalb von Jobs, das Wissen über Kunden, Produkte und Prozesse bleibt beim Menschen.
 
 ## Mach ich schon immer so
 
-Einen fünften Satz wirst du auch hören. „Mach ich schon immer so." Keine direkte Ablehnung, einfach der Wunsch, die bisherige Arbeitsweise zu verteidigen. Das ist der mächtigste Gegenspieler, weil er nicht diskutabel ist. Gegen Logik verliert „immer so" nie.
-
-Der Weg drumherum: nicht die bisherige Arbeit abwerten, sondern zeigen, wo KI die bisherige Arbeit **schneller** macht. Nicht „das war falsch", sondern „das war richtig, und so geht es jetzt zusätzlich schneller". Kleiner Unterschied, riesige Wirkung.
+Den fünften Satz, „Mach ich schon immer so", hörst du auch. Er ist der stärkste Gegenspieler. Er verteidigt die bisherige Arbeitsweise und lässt sich mit Logik nicht widerlegen. Erkenne die bisherige Arbeit an und zeig, wo KI sie **schneller** macht: „Das war richtig, und so geht es jetzt schneller."
 
 ## Die Stakeholder-Karte
 
@@ -37,35 +29,31 @@ Bevor du eine Tool-Einführung startest, kennst du vier Gesprächspartner:
 | Datenschutz | DSGVO, AVV, Art. 4 Kompetenz-Nachweis | Kursabschluss, Richtlinien-Entwurf |
 | Betriebsrat | Mitbestimmung nach § 87 BetrVG | Transparente Regeln, Freiwilligkeit |
 
-Du musst nicht alle gleichzeitig überzeugen. Aber du solltest wissen, wen du wann ansprichst. Wer das überspringt, wird überrascht, meistens spät, meistens unangenehm.
+Du musst nicht alle gleichzeitig überzeugen, aber wissen, wen du wann ansprichst. Sonst wirst du spät und unangenehm überrascht.
 
 ## Der 30-Tage-Plan
 
-Vier Wochen, vier Schritte. Überschaubar und reversibel.
+Der Plan läuft über vier Wochen und lässt sich jederzeit zurückdrehen.
 
-**Woche 1, Einzel-Test.** Du nutzt das Tool selbst, real, an echten Aufgaben. Du dokumentierst, was geklappt hat und was nicht. Wo war die Zeitersparnis? Wo kam KI ans Limit? Drei bis fünf konkrete Beispiele reichen.
+**Woche 1, Einzel-Test.** Du nutzt das Tool selbst an echten Aufgaben und dokumentierst drei bis fünf Beispiele: wo es Zeit gespart hat und wo KI ans Limit kam.
 
-**Woche 2, Zwei, drei Kolleg:innen.** Du lässt andere mitprobieren. Keine Präsentation, einfach: „Hey, guck mal, das hab ich hiermit gelöst, willst du das auch?" Beobachte, wo sie hängen bleiben. Das sind die Hürden, die du in der Schulung adressierst.
+**Woche 2, Zwei, drei Kolleg:innen.** Du lässt andere ohne Präsentation mitprobieren („Guck mal, das hab ich hiermit gelöst"). Wo sie hängen bleiben, liegen die Hürden für die Schulung.
 
-**Woche 3, Ergebnis-Bericht.** Eine Seite lang. Oben: was der Test gebracht hat. Mitte: welche Aufgaben sich eignen. Unten: was es kostet (Lizenz) und was es spart (Stunden pro Woche). Zahlen, nicht Vibes.
+**Woche 3, Ergebnis-Bericht.** Auf einer Seite stehen, was der Test gebracht hat, welche Aufgaben sich eignen, was es kostet (Lizenz) und was es spart (Stunden pro Woche), belegt mit Zahlen.
 
-**Woche 4, Vorschlag.** Du legst den Bericht dem Chef vor, zusammen mit der KI-Nutzungsrichtlinie aus Kapitel 11. Zwei Dinge in einem Rutsch: konkreter Nutzen und dokumentierte Regeln. Schwerer abzulehnen als eine reine Tool-Anfrage.
+**Woche 4, Vorschlag.** Du legst den Bericht zusammen mit der KI-Nutzungsrichtlinie aus Kapitel 11 dem Chef vor. Konkreter Nutzen plus dokumentierte Regeln ist schwerer abzulehnen als eine reine Tool-Anfrage.
 
 ## Deine Rolle als KI-Champion
 
-Du hast den KI-Führerschein gemacht. Du hast dieses Buch gelesen. Du weißt mehr über KI-Nutzung als 90% deiner Kollegen. Das macht dich zum KI-Champion.
+Mit KI-Führerschein und diesem Buch weißt du mehr über KI-Nutzung als 90% deiner Kollegen. Damit bist du, auch ohne Titel, der KI-Champion im Team:
 
-Nicht offiziell, nicht mit Titel, aber praktisch.
+**Du zeigst, statt zu predigen.** Sitzt jemand 15 Minuten an einer E-Mail, sagst du „Gib mir mal den Text, ich zeig dir was" und machst es vor.
 
-Konkret heißt das dreierlei.
+**Du sammelst Erfolgsgeschichten.** Hat KI jemandem im Team Zeit oder Frust gespart, notierst du es in zwei Sätzen. Diese Notizen helfen, wenn die Geschäftsführung fragt, ob es etwas bringt.
 
-**Du zeigst, statt zu predigen.** Wenn jemand 15 Minuten an einer E-Mail sitzt, sagst du nicht „Nimm doch KI." Du sagst: „Gib mir mal den Text, ich zeig dir was." Und dann machst du es vor.
+**Du bist die erste Anlaufstelle.** Wer bei einer Reklamation nicht weiß, wie er die KI nutzen soll, kommt zu dir, weil du es kannst.
 
-**Du sammelst Erfolgsgeschichten.** Jedes Mal, wenn KI jemandem im Team geholfen hat, Zeit gespart, besseres Ergebnis, weniger Frust, schreibst du es auf. Zwei Sätze reichen. Diese Geschichten sind Gold, wenn die Geschäftsführung fragt: „Bringt das was?"
-
-**Du bist die erste Anlaufstelle.** „Ich hab eine Reklamation und weiß nicht, wie ich die KI nutzen soll", das kommt zu dir. Nicht weil du IT bist, sondern weil du es kannst.
-
-Bei Meta sehe ich das täglich. Die Teams, die KI am besten nutzen, haben keinen KI-Beauftragten. Sie haben eine Person, die es vorgemacht hat. Der Rest folgt.
+Bei Meta sehe ich täglich: Am besten nutzen Teams KI, in denen eine Person es vorgemacht hat. Einen eigenen KI-Beauftragten brauchen sie dafür nicht.
 
 ## Die fünf Dokumente, die du jetzt hast
 
@@ -77,18 +65,12 @@ Wenn du den KI-Führerschein abgeschlossen und dieses Buch durchgearbeitet hast,
 4. **3-Schritt-Prüfung** (Kapitel 10), Qualitätssicherung für jeden Output
 5. **KI-Nutzungsrichtlinie** (Kapitel 11), Das Regelwerk
 
-Zwei davon, das Inventar und die Klassifizierungs-Karte, füllst du im Anhang direkt aus. Keine Theorie, zwei Tabellen mit Beispielzeile. Das sind mehr Governance-Dokumente als 90% der deutschen Unternehmen haben. Kein Witz.
+Inventar und Klassifizierungs-Karte füllst du im Anhang direkt aus, zwei Tabellen mit Beispielzeile. Das sind mehr Governance-Dokumente, als 90% der deutschen Unternehmen haben.
 
 ## Was jetzt kommt
 
-Druck die Richtlinie aus. Häng sie auf. Lass jeden unterschreiben. Und dann: Review in drei Monaten.
-
-KI-Kompetenz ist kein Aushang an der Wand. Es ist ein lebendiges System. Die Tools ändern sich. Die Gesetze ändern sich. Dein Wissen muss mithalten.
-
-Aber der erste Schritt ist getan. Du weißt, was du tust und worauf du achten musst. Und du kannst es anderen zeigen.
-
-Das ist mehr als die meisten.
+Druck die Richtlinie aus, häng sie auf, lass jeden unterschreiben und plan das Review in drei Monaten. Weil sich Tools und Gesetze ändern, hältst du dein Wissen danach aktuell.
 
 ---
 
-> **Jetzt bist du dran:** Identifiziere eine Person in deinem Team, die offen für Neues ist. Zeig ihr morgen einen Prompt aus Kapitel 6. Nicht erklären, vormachen. Der Rest kommt von allein.
+> **Jetzt bist du dran:** Such dir eine Person im Team, die offen für Neues ist, und mach ihr morgen einen Prompt aus Kapitel 6 vor.

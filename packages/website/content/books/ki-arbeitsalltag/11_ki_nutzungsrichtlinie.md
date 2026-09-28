@@ -1,41 +1,33 @@
 # Die KI-Nutzungsrichtlinie: Was sie bedeutet und warum sie dich schützt
 
-Samsung, Frühjahr 2023. ChatGPT wird intern eingeführt. Ohne Regeln, ohne Richtlinie, ohne Training.
-
-Innerhalb von 20 Tagen: drei Datenlecks. Mitarbeiter geben Quellcode ein, Meeting-Protokolle, Testdaten für Halbleiter. Samsung muss ChatGPT unternehmensweit sperren und eine eigene Lösung bauen. Monate Verzögerung, Reputationsschaden, interne Reorganisation.
-
-Das ist keine Horrorgeschichte. Das ist die Realität in Unternehmen ohne KI-Richtlinie.
+Im Frühjahr 2023 führte Samsung ChatGPT intern ein, ohne Regeln, Richtlinie oder Training. Innerhalb von 20 Tagen gab es drei Datenlecks, weil Mitarbeiter Quellcode, Meeting-Protokolle und Testdaten für Halbleiter eingaben. Samsung musste ChatGPT unternehmensweit sperren und eine eigene Lösung bauen, mit Monaten Verzögerung, Reputationsschaden und interner Reorganisation.
 
 ## Warum du eine brauchst, auch als Einzelner
 
-Etwa jeder Zehnte nutzt KI ohne Wissen des Arbeitgebers, und rund vier von zehn Unternehmen vermuten private KI-Nutzung im Team (Bitkom 2025). Das sind keine Rebellen. Das sind Leute wie du, die eine Aufgabe schneller erledigen wollen und dafür ChatGPT öffnen. Verständlich, aber gefährlich.
+Etwa jeder Zehnte nutzt KI ohne Wissen des Arbeitgebers, und rund vier von zehn Unternehmen vermuten private KI-Nutzung im Team (Bitkom 2025). Meist wollen diese Leute eine Aufgabe schneller erledigen und öffnen dafür ChatGPT, verständlich, aber gefährlich.
 
-Bei Apple war Datenklassifizierung Pflicht, Public/Internal/Confidential/Restricted, ab Tag 1. Vor jedem KI-Hype, einfach gute Hygiene. Als ich dann bei Red Bull ohne diese Struktur gearbeitet habe, habe ich verstanden, warum Apple das macht. Die Bürokratie der Klassifizierung schützt dich vor der Katastrophe des Lecks.
-
-Dein Unternehmen braucht keine Apple-Level-Security. Es braucht eine Seite Papier.
+Bei Apple war Datenklassifizierung (Public/Internal/Confidential/Restricted) ab Tag 1 Pflicht. Erst bei Red Bull, wo diese Struktur fehlte, habe ich verstanden, dass die Klassifizierung vor Lecks schützt. Dein Unternehmen braucht dafür keine Apple-Security, eine Seite Papier reicht.
 
 ## Die 6 Bausteine
 
-Eine KI-Nutzungsrichtlinie hat sechs Teile, nicht mehr.
+Eine KI-Nutzungsrichtlinie hat sechs Teile.
 
-**1. Geltungsbereich.** Für wen gilt das? Alle. Festangestellte, Freelancer, externe Dienstleister mit Datenzugriff, keine Ausnahmen.
+**1. Geltungsbereich.** Sie gilt ohne Ausnahme für Festangestellte, Freelancer und externe Dienstleister mit Datenzugriff.
 
-**2. Genehmigte Tools.** Liste: Toolname, Anbieter, erlaubte Datenstufe, verantwortliche Person. Kostenlose Tools, ChatGPT Free, Gemini Free, Claude Free, sind verboten. Ohne AVV können Eingaben fürs Training verwendet werden. Das ist nicht Paranoia, das ist DSGVO.
+**2. Genehmigte Tools.** Die Liste nennt Toolname, Anbieter, erlaubte Datenstufe und verantwortliche Person. Kostenlose Tools wie ChatGPT Free, Gemini Free und Claude Free sind verboten, weil ohne AVV Eingaben fürs Training verwendet werden können.
 
-**3. Datenregeln.** Die vier Stufen aus Kapitel 4 werden hier verbindlich. Stufe 1 und 2: genehmigte Tools. Stufe 3: nur Enterprise-KI mit Vertrag. Stufe 4: nie, in keinem Tool.
+**3. Datenregeln.** Die vier Stufen aus Kapitel 4 werden verbindlich: Stufe 1 und 2 in genehmigten Tools, Stufe 3 nur in Enterprise-KI mit Vertrag, Stufe 4 in keinem Tool.
 
-**4. Prüfpflicht.** Jeder KI-Output durchläuft die 3-Schritt-Prüfung aus Kapitel 10. Sachlich korrekt? Vollständig? Angemessen? Externe Dokumente, alles, was das Unternehmen verlässt, brauchen eine Vier-Augen-Kontrolle.
+**4. Prüfpflicht.** Jeder KI-Output durchläuft die 3-Schritt-Prüfung aus Kapitel 10. Alles, was das Unternehmen verlässt, braucht eine Vier-Augen-Kontrolle.
 
-**5. Eskalationspfad.** Ein KI-Vorfall ist: vertrauliche Daten in nicht genehmigtem Tool, ODER KI-generierte Fehlinformation versandt, ODER personenbezogene Daten ohne Rechtsgrundlage verarbeitet.
-
-Was du tust.
+**5. Eskalationspfad.** Ein KI-Vorfall liegt vor, wenn vertrauliche Daten in ein nicht genehmigtes Tool gelangt sind, KI-generierte Fehlinformation versandt wurde oder personenbezogene Daten ohne Rechtsgrundlage verarbeitet wurden. Dann gilt:
 
 - Sofort: Vorgesetzten informieren
 - Innerhalb von 4 Stunden: IT-Leitung + Datenschutzbeauftragte
 - Innerhalb von 24 Stunden: Geschäftsführung
 - DSGVO Art. 33: Meldung an die Aufsichtsbehörde innerhalb von 72 Stunden
 
-**6. Review-Zyklus.** Quartalsweise Überprüfung. Sofort bei neuem Tool, Sicherheitsvorfall, Gesetzesänderung. Jede Änderung bekommt eine Versionsnummer.
+**6. Review-Zyklus.** Die Richtlinie wird quartalsweise überprüft und sofort bei neuem Tool, Sicherheitsvorfall oder Gesetzesänderung. Jede Änderung bekommt eine Versionsnummer.
 
 ## EU AI Act: Was dich direkt betrifft
 
@@ -47,7 +39,7 @@ Dieses Buch oder eine Teilnahmebestätigung kann eine Kompetenzmaßnahme dokumen
 
 ## Die Vorlage
 
-Hier ist die Rohfassung. Eine bis zwei Seiten. Kopiere, passe an, gib sie der Geschäftsführung oder IT-Leitung:
+Passe diese Rohfassung von ein bis zwei Seiten an und gib sie der Geschäftsführung oder IT-Leitung:
 
 ```
 KI-NUTZUNGSRICHTLINIE, [Firma]
@@ -112,21 +104,19 @@ Geschäftsführung · IT-Leitung · Datenschutzbeauftragte/r ·
 Betriebsrat (falls vorhanden) · Mitarbeitende/r
 ```
 
-Das ist keine juristische Beratung, aber eine Struktur, mit der du in den meisten Unternehmen anschlussfähig bist. Der Datenschutzbeauftragte deines Unternehmens wird die Klauseln auf eure Situation anpassen.
+Die Vorlage ist keine juristische Beratung, passt aber als Struktur für die meisten Unternehmen. Euer Datenschutzbeauftragter passt die Klauseln an eure Situation an.
 
 > **So bekommst du die Richtlinie in einem 25-Personen-Betrieb verabschiedet:**
-> 1. Schick die Rohfassung an Geschäftsführung und IT-Verantwortliche mit einem Satz: „Art. 4 EU-KI-Verordnung gilt seit Februar 2025, hier ist die Seite, die uns absichert."
-> 2. Plan keinen Workshop, sondern fünfzehn Minuten am Ende eines bestehenden Termins (Jour fixe, Teamrunde). Geh die sechs Punkte durch, halte Einwände direkt fest.
-> 3. Trag Datum und Version ein, lass im selben Termin unterschreiben, häng eine Kopie an den gemeinsamen Drucker. In kleinen Betrieben sterben Richtlinien an der Vertagung, nicht am Widerspruch.
+> 1. Schick die Rohfassung an Geschäftsführung und IT-Verantwortliche mit einem Satz: „Art. 4 EU-KI-Verordnung gilt seit Februar 2025. Hier ist eine Seite, mit der wir unsere Maßnahmen dokumentieren."
+> 2. Plan dafür fünfzehn Minuten am Ende eines bestehenden Termins (Jour fixe, Teamrunde). Geh die sechs Punkte durch, halte Einwände direkt fest.
+> 3. Trag Datum und Version ein, lass im selben Termin unterschreiben, häng eine Kopie an den gemeinsamen Drucker.
 
-Das bringt dir zwei Dinge. Rechtssicherheit gegenüber Art. 4. Und eine Karte, auf der du als KI-Verantwortliche/r stehen kannst, falls es mal Richtung Beförderung geht.
+Damit hat dein Betrieb einen dokumentierten Baustein für Art. 4. Dein Name steht als KI-Verantwortliche/r darauf, und das kann bei einer Beförderung zählen.
 
 ## Das unterschreibst du
 
-Unterschrieben wird von Geschäftsführung, IT-Leitung, Datenschutzbeauftragten, Betriebsrat (falls vorhanden). Und von dir. Nicht als Kontrolle, als Schutz. Wenn etwas schiefgeht und du dich an die Richtlinie gehalten hast, stehst du nicht allein da.
-
-Bei Meta unterschreibe ich regelmäßig Policy-Updates. Das dauert zwei Minuten. Und es gibt Sicherheit, weil klar ist, was erlaubt ist und was nicht.
+Geschäftsführung, IT-Leitung, Datenschutzbeauftragte, Betriebsrat (falls vorhanden) und du unterschreiben. Die Unterschrift schützt dich: Hast du dich an die Richtlinie gehalten und etwas geht schief, stehst du nicht allein da.
 
 ---
 
-> **Jetzt bist du dran:** Frag deine IT-Abteilung, ob es eine KI-Nutzungsrichtlinie gibt. Wenn ja: lies sie. Wenn nein: zeig ihnen die sechs Bausteine aus diesem Kapitel. Das ist ein konkreter Beitrag, den du heute leisten kannst.
+> **Jetzt bist du dran:** Frag deine IT-Abteilung, ob es eine KI-Nutzungsrichtlinie gibt. Wenn ja, lies sie, wenn nein, zeig ihnen die sechs Bausteine aus diesem Kapitel.

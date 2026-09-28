@@ -140,7 +140,7 @@ describe.each(COURSES)(
       );
 
       expect(await screen.findByRole("alert")).toHaveTextContent(
-        /Link konnte nicht kopiert werden\. (?:Bitte )?versuche es erneut\./i,
+        /^Link konnte nicht kopiert werden\.$/,
       );
       expect(consoleError).not.toHaveBeenCalled();
     });
@@ -163,7 +163,7 @@ describe.each(COURSES)(
       expect(window.location.hash).toBe("");
       const alert = await screen.findByRole("alert");
       expect(alert).toHaveTextContent(
-        "Dieser Fortschrittslink ist ungültig oder veraltet. Es wurde kein Fortschritt importiert.",
+        "Der Fortschrittslink ist ungültig oder veraltet. Es wurde nichts importiert.",
       );
       expect(screen.queryByText(privatePayload)).toBeNull();
       expect(consoleError).not.toHaveBeenCalled();
@@ -186,7 +186,7 @@ describe.each(COURSES)(
       expect(window.location.search).toBe("?source=qr");
       expect(window.location.hash).toBe("");
       expect(await screen.findByRole("status")).toHaveTextContent(
-        "Fortschritt erfolgreich importiert.",
+        "Fortschritt importiert.",
       );
     });
 
@@ -221,7 +221,7 @@ describe.each(COURSES)(
       expect(window.location.search).toBe("?source=handoff");
       expect(window.location.hash).toBe("");
       expect(await screen.findByRole("status")).toHaveTextContent(
-        "Fortschritt erfolgreich importiert.",
+        "Fortschritt importiert.",
       );
     });
 

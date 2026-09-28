@@ -172,7 +172,7 @@ describe("AiNativeOperatorLessonReader ", () => {
     expect(completion).toHaveAttribute("aria-busy", "true");
   });
 
-  it("renders the header, objective, sections, and callout for a reading lesson", () => {
+  it("renders the header, sections, and callout for a reading lesson; the shell owns the objective", () => {
     render(
       <AiNativeOperatorLessonReader
         lesson={READING_LESSON}
@@ -182,7 +182,9 @@ describe("AiNativeOperatorLessonReader ", () => {
       />,
     );
     expect(screen.getByText("Test reading lesson")).toBeInTheDocument();
-    expect(screen.getByText("Learn the thing.")).toBeInTheDocument();
+    // The objective is the lesson shell's lede (LessonReference); the reader
+    // does not repeat it under the lesson label.
+    expect(screen.queryByText("Learn the thing.")).toBeNull();
     expect(screen.getByText("Section one prose.")).toBeInTheDocument();
     expect(screen.getByText("A note")).toBeInTheDocument();
     expect(screen.getByText("Note text.")).toBeInTheDocument();

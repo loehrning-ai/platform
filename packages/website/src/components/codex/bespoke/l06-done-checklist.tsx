@@ -30,7 +30,7 @@ const ITEMS_EN: readonly ChecklistItem[] = [
     ambiguous: "should work well",
     options: [
       "works",
-      "the documented unit-test command exits successfully; review its failures, skips, and log",
+      "the documented unit-test command passes; its log and skips are reviewed",
       "QA is happy",
     ],
     correct: 1,
@@ -39,7 +39,7 @@ const ITEMS_EN: readonly ChecklistItem[] = [
     ambiguous: "handles edge cases",
     options: [
       "does not crash",
-      "empty input returns 400, null input returns 400, 2GB input is rejected with 413",
+      "empty or null input returns 400; 2GB input is rejected with 413",
       "tested some edges",
     ],
     correct: 1,
@@ -48,7 +48,7 @@ const ITEMS_EN: readonly ChecklistItem[] = [
     ambiguous: "performant",
     options: [
       "fast enough",
-      "the named load test meets the service's documented p95 latency and error-rate budgets",
+      "the named load test meets the documented p95 latency and error-rate budgets",
       "no slow queries",
     ],
     correct: 1,
@@ -57,7 +57,7 @@ const ITEMS_EN: readonly ChecklistItem[] = [
     ambiguous: "looks good",
     options: [
       "no broken layout",
-      "the agreed viewport and keyboard-flow checks pass; attach visual evidence",
+      "agreed viewport and keyboard checks pass; visual evidence attached",
       "design approved",
     ],
     correct: 1,
@@ -75,7 +75,7 @@ const ITEMS_EN: readonly ChecklistItem[] = [
     ambiguous: "tested",
     options: [
       "has tests",
-      "tests cover the changed branches and fail when the required behavior is removed",
+      "tests cover changed branches and fail without the required behavior",
       "manually verified",
     ],
     correct: 1,
@@ -84,7 +84,7 @@ const ITEMS_EN: readonly ChecklistItem[] = [
     ambiguous: "secure",
     options: [
       "no bugs",
-      "configured security checks pass; authorization, secret handling, and new dependencies are reviewed",
+      "security checks pass; authorization, secrets and new dependencies reviewed",
       "reviewed by security",
     ],
     correct: 1,
@@ -96,7 +96,7 @@ const ITEMS_DE: readonly ChecklistItem[] = [
     ambiguous: "soll gut funktionieren",
     options: [
       "funktioniert",
-      "der dokumentierte Unit-Test-Befehl endet erfolgreich; Fehler, übersprungene Tests und Protokoll werden geprüft",
+      "der dokumentierte Unit-Test-Befehl besteht; Protokoll und übersprungene Tests sind geprüft",
       "QA ist zufrieden",
     ],
     correct: 1,
@@ -105,7 +105,7 @@ const ITEMS_DE: readonly ChecklistItem[] = [
     ambiguous: "behandelt Randfälle",
     options: [
       "stürzt nicht ab",
-      "leere und null-Eingaben liefern 400; Eingaben über 2 GB werden mit 413 abgelehnt",
+      "leere und null-Eingaben liefern 400; über 2 GB folgt 413",
       "einige Randfälle getestet",
     ],
     correct: 1,
@@ -114,7 +114,7 @@ const ITEMS_DE: readonly ChecklistItem[] = [
     ambiguous: "performant",
     options: [
       "schnell genug",
-      "der benannte Lasttest erfüllt die dokumentierten p95-Latenz- und Fehlerratenbudgets des Dienstes",
+      "der benannte Lasttest erfüllt die dokumentierten p95-Latenz- und Fehlerratenbudgets",
       "keine langsamen Queries",
     ],
     correct: 1,
@@ -123,7 +123,7 @@ const ITEMS_DE: readonly ChecklistItem[] = [
     ambiguous: "sieht gut aus",
     options: [
       "kein defektes Layout",
-      "die vereinbarten Viewport- und Tastaturprüfungen bestehen; visuelle Nachweise sind beigefügt",
+      "vereinbarte Viewport- und Tastaturprüfungen bestehen; visuelle Nachweise beigefügt",
       "Design freigegeben",
     ],
     correct: 1,
@@ -141,7 +141,7 @@ const ITEMS_DE: readonly ChecklistItem[] = [
     ambiguous: "getestet",
     options: [
       "hat Tests",
-      "Tests decken die geänderten Verzweigungen ab und schlagen ohne das geforderte Verhalten fehl",
+      "Tests decken geänderte Zweige ab und scheitern ohne das geforderte Verhalten",
       "manuell geprüft",
     ],
     correct: 1,
@@ -150,7 +150,7 @@ const ITEMS_DE: readonly ChecklistItem[] = [
     ambiguous: "sicher",
     options: [
       "keine Fehler",
-      "konfigurierte Sicherheitsprüfungen bestehen; Autorisierung, Umgang mit Zugangsdaten und neue Abhängigkeiten sind geprüft",
+      "Sicherheitsprüfungen bestehen; Autorisierung, Zugangsdaten und neue Abhängigkeiten geprüft",
       "von Security geprüft",
     ],
     correct: 1,
@@ -162,14 +162,14 @@ const COPY = {
     heading: "◆ Exercise · Acceptance checklist",
     definition: "definition of done",
     rewrite: (source: string) => `Rewrite for "${source}"`,
-    select: "pick rewrite",
+    select: "Choose a testable version",
     ready: "READY",
     draft: "DRAFT",
     check: "Check",
     items: ITEMS_EN,
   },
   de: {
-    heading: "◆ Praxis · Definition of Done",
+    heading: "◆ Praxis · Akzeptanz-Checkliste",
     definition: "Fertigstellungskriterien",
     rewrite: (source: string) => `Prüfbare Fassung für „${source}“`,
     select: "Prüfbare Fassung wählen",

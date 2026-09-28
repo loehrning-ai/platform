@@ -8,13 +8,6 @@ function prose(sectionIndex: number, blockIndex: number): string {
   return block.markdown;
 }
 
-function pullQuote(sectionIndex: number, blockIndex: number): string {
-  const block = canonical.sections[sectionIndex]?.blocks[blockIndex];
-  if (block?.kind !== "pull-quote")
-    throw new Error("Codex L10 translation expected a pull quote.");
-  return block.text;
-}
-
 function card(
   sectionIndex: number,
   blockIndex: number,
@@ -72,9 +65,9 @@ export default localizeCodexLessonToGerman(canonical, {
     [canonical.title, "Parallele Aufgaben in einem Repository"],
     [
       canonical.subtitle,
-      "Worktrees, Abhängigkeitsreihenfolge und klare Dateiverantwortung trennen gleichzeitige Änderungen und zeigen Merge-Risiken.",
+      "Worktrees, Abhängigkeitsreihenfolge und klare Dateiverantwortung trennen gleichzeitige Änderungen.",
     ],
-    [canonical.hook, "Parallel läuft nur, was unabhängig ist."],
+    [canonical.hook, "Nur unabhängige Änderungen parallel laufen lassen."],
     [canonical.keyConcepts[0], "Git-Worktrees"],
     [canonical.keyConcepts[1], "Aufgabenzerlegung"],
     [canonical.keyConcepts[2], "Unabhängige und abhängige Aufgaben"],
@@ -82,68 +75,64 @@ export default localizeCodexLessonToGerman(canonical, {
     [canonical.sections[0].title, "Parallelität verändert das Review-Problem"],
     [
       prose(0, 0),
-      "Mehrere Aufträge gleichzeitig laufen zu lassen ist leicht. Unabhängig werden sie davon nicht. Jeder Auftrag frisst Review-Kapazität und kann über gemeinsame Dateien, Schemas, APIs, generierte Artefakte, Abhängigkeiten oder Deployment-Zustand mit den anderen kollidieren.\n\nFinde diese Abhängigkeiten, bevor du parallelisierst. Getrennte Arbeitskopien verhindern, dass zwei Prozesse denselben Checkout bearbeiten. Fachliche Konflikte beim Merge verhindern sie nicht.",
-    ],
-    [
-      pullQuote(0, 1),
-      "Parallelität ist ein Strukturproblem, kein Geschwindigkeitsproblem.",
+      "Parallele Aufträge sind schnell gestartet. Jeder braucht trotzdem Review und kann über gemeinsame Dateien, Schemas, APIs, generierte Artefakte, Abhängigkeiten oder Deployment-Zustand mit den anderen kollidieren.\n\nFinde diese Abhängigkeiten, bevor du parallelisierst. Getrennte Arbeitskopien verhindern, dass zwei Prozesse denselben Checkout bearbeiten; fachliche Konflikte zeigen sich trotzdem beim Merge.",
     ],
     [
       prose(1, 0),
-      "Zwei lokale Sitzungen im selben Arbeitsverzeichnis teilen sich den Dateizustand. Was die eine schreibt, kann ändern, was die andere liest oder testet.\n\n**Git-Worktrees** geben dir getrennte Arbeitsverzeichnisse auf derselben Git-Objektdatenbank. Jeder Worktree hat normalerweise seinen eigenen Branch.\n\n```\n# Worktrees auf getrennten Branches anlegen\ngit worktree add ../myrepo-feat-auth feat/auth\ngit worktree add ../myrepo-feat-export feat/export\ngit worktree add ../myrepo-feat-api feat/api\n\n# Das konfigurierte Entwicklungswerkzeug in jedem Worktree starten.\n# Vor Änderungen Pfad und Branch prüfen.\n\n# Worktree entfernen, nachdem seine Änderungen integriert oder gesichert sind\ngit worktree remove ../myrepo-feat-auth\n```\n\nWorktrees isolieren nicht committete Dateiänderungen. Git-Metadaten teilen sie sich weiterhin, externen Zustand wie Abhängigkeits-Caches, Datenbanken, Ports und generierte Dateien außerhalb des Worktrees können sie ebenfalls teilen. Und beim Merge können die Branches trotzdem fachlich kollidieren.",
+      "Zwei lokale Sitzungen im selben Arbeitsverzeichnis teilen sich den Dateizustand. Was die eine schreibt, ändert, was die andere liest und testet.\n\n**Git-Worktrees** geben dir getrennte Arbeitsverzeichnisse auf derselben Git-Objektdatenbank, normalerweise mit je einem eigenen Branch.\n\n```\n# Worktrees auf getrennten Branches anlegen\ngit worktree add ../myrepo-feat-auth feat/auth\ngit worktree add ../myrepo-feat-export feat/export\ngit worktree add ../myrepo-feat-api feat/api\n\n# Das konfigurierte Entwicklungswerkzeug in jedem Worktree starten.\n# Vor Änderungen Pfad und Branch prüfen.\n\n# Worktree entfernen, nachdem seine Änderungen integriert oder gesichert sind\ngit worktree remove ../myrepo-feat-auth\n```\n\nWorktrees isolieren nicht committete Dateiänderungen. Sie teilen sich Git-Metadaten und können Abhängigkeits-Caches, Datenbanken, Ports und generierte Dateien außerhalb des Worktrees teilen.",
     ],
     [
       prose(2, 0),
-      "Diese Zerlegungsmuster können unabhängige Arbeit freilegen, sofern du gemeinsame Verträge und Seiteneffekte vorher prüfst:",
+      "Drei Arten, Arbeit aufzuteilen, nachdem du gemeinsame Verträge und Seiteneffekte geprüft hast:",
     ],
     [card(2, 1, 0, "eyebrow"), "Muster 01"],
     [card(2, 1, 0, "title"), "Aufteilung nach Entitäten"],
     [
       card(2, 1, 0, "body"),
-      "Eine Aufgabe pro Entität, wenn jede Entität eigene Code- und Datenpfade hat. Ein gemeinsames Schema, eine gemeinsame Hilfsfunktion oder ein gemeinsames Audit-Ziel ist eine Abhängigkeit, die ausdrücklich behandelt gehört.",
+      "Eine Aufgabe pro Entität mit eigenen Code- und Datenpfaden. Ein gemeinsames Schema, eine Hilfsfunktion oder ein Audit-Ziel ist eine ausdrückliche Abhängigkeit.",
     ],
     [card(2, 1, 1, "eyebrow"), "Muster 02"],
     [card(2, 1, 1, "title"), "Aufteilung nach Verzeichnissen"],
     [
       card(2, 1, 1, "body"),
-      "Jede Aufgabe bekommt einen Teilbaum. Gemeinsame Exporte, generierte Indizes, Konfiguration und modulübergreifende Tests dürfen dabei nicht gleichzeitig angefasst werden.",
+      "Ein Teilbaum pro Aufgabe. Gemeinsame Exporte, generierte Indizes, Konfiguration und modulübergreifende Tests dürfen sich nicht gleichzeitig ändern.",
     ],
     [card(2, 1, 2, "eyebrow"), "Muster 03"],
     [card(2, 1, 2, "title"), "Aufteilung der Testabdeckung"],
     [
       card(2, 1, 2, "body"),
-      "Testerweiterungen nach Verhalten und eigenem Fixture-Satz trennen. Gemeinsame Snapshots, Fixtures, Testkonfiguration und Produktionsschnittstellen können trotzdem kollidieren.",
+      "Testerweiterungen nach Verhalten und eigenen Fixtures trennen. Gemeinsame Snapshots, Fixtures, Testkonfiguration und Produktionsschnittstellen können trotzdem kollidieren.",
     ],
     [
       prose(2, 2),
-      "Schreib pro Aufgabe auf, welche Dateien, Schnittstellen, generierten Ausgaben, Dienste, Ports und Datenspeicher sie anfasst. Überschneidung verbietet Parallelität nicht immer, verlangt aber Integrationsreihenfolge und eindeutige Konfliktverantwortung.",
+      "Schreib pro Aufgabe Dateien, Schnittstellen, generierte Ausgaben, Dienste, Ports und Datenspeicher auf. Überschneidende Aufgaben brauchen eine Integrationsreihenfolge und eine benannte Konfliktverantwortung.",
     ],
     [canonical.sections[3].title, "Das Gegenmuster"],
     [
       prose(3, 0),
-      'Vermeide parallele Aufträge, in denen jeweils "gemeinsame Hilfsfunktionen bei Bedarf refaktorieren" steht. Der Halbsatz lässt die Verantwortung für dieselbe Abhängigkeit in jeder Aufgabe offen. Was beim Merge passiert, weiß dann niemand.',
+      "Aufgaben, in denen jeweils \"gemeinsame Hilfsfunktionen bei Bedarf refaktorieren\" steht, wie im Validator-Beispiel oben, besitzen alle dieselbe Abhängigkeit. Was beim Merge passiert, weiß dann niemand.",
     ],
-    [callout(3, 1, "title"), "Die Korrektur:"],
+    [callout(3, 1, "title"), "Die Korrektur."],
     [
       callout(3, 1, "body"),
-      "Brauchen mehrere Aufgaben dieselbe Infrastrukturänderung, wird dieser Vertrag zuerst definiert und geprüft. Abhängige Aufgaben setzen auf der akzeptierten Revision auf. Parallel laufen danach nur die unabhängigen Anpassungen.",
+      "Definiere und prüfe den gemeinsamen Vertrag zuerst, setz abhängige Aufgaben darauf auf und lass dann nur die unabhängigen Anpassungen parallel laufen.",
     ],
     [canonical.sections[4].title, "Unabhängig oder abhängig"],
     [
       prose(4, 0),
-      "Bevor etwas gleichzeitig startet, bekommt jede Aufgabe ein Etikett:\n\n- **Unabhängig:** weder gemeinsamer Code oder Vertrag noch generierter Zustand oder externer Seiteneffekt in Sicht. Parallel ist vertretbar, solange das Review mitkommt.\n- **Sequenziell abhängig:** Die Aufgabe braucht das akzeptierte Ergebnis einer anderen. Abhängigkeit zuerst ausführen und prüfen.\n- **Konfliktanfällig:** Die Aufgaben ändern dieselben Dateien, Schnittstellen, Schemas, Fixtures oder Dienste. Umbauen, Verantwortung zuweisen oder nacheinander laufen lassen.\n\nDisjunkte Dateilisten sind ein nützlicher Hinweis, kein Beweis für Unabhängigkeit. Fachliche Überschneidung prüfen weiterhin Integrationstests und Merge-Review.",
+      "Ordne jede Aufgabe vor dem Start ein:\n\n- **Unabhängig:** kein gemeinsamer Code, Vertrag, generierter Zustand oder externer Seiteneffekt zu erwarten. Parallel laufen lassen, solange das Review mitkommt.\n- **Sequenziell abhängig:** braucht das akzeptierte Ergebnis einer anderen Aufgabe. Die Abhängigkeit zuerst ausführen und prüfen.\n- **Konfliktanfällig:** ändert gemeinsame Dateien, Schnittstellen, Schemas, Fixtures oder Dienste. Umbauen, Verantwortung zuweisen oder nacheinander laufen lassen.\n\nDisjunkte Dateilisten deuten auf Unabhängigkeit hin, beweisen sie aber nicht; fachliche Überschneidung prüfen Integrationstests und Merge-Review.",
     ],
-    [callout(4, 1, "title"), "Planungsmuster:"],
+    [callout(4, 1, "title"), "Reihenfolge planen."],
     [
       callout(4, 1, "body"),
-      "1) Abhängigkeiten und gemeinsamen Zustand erfassen. 2) Gemeinsame Verträge vor ihren Nutzern integrieren. 3) Jede gleichzeitige Aufgabe bekommt Verantwortliche, Basisrevision, Umfang und Prüfungen. 4) In kontrollierter Reihenfolge integrieren, übergreifende Prüfungen noch einmal laufen lassen.",
+      "1) Abhängigkeiten und gemeinsamen Zustand erfassen. 2) Gemeinsame Verträge vor ihren Nutzern integrieren. 3) Jeder gleichzeitigen Aufgabe Verantwortliche, Basisrevision, Umfang und Prüfungen geben. 4) In kontrollierter Reihenfolge integrieren und übergreifende Prüfungen erneut laufen lassen.",
     ],
     [canonical.sections[5].title, "Arbeitsfluss im Team"],
     [
       prose(5, 0),
-      "Gleichzeitige Ausführung braucht Menschen, die ausdrücklich zuständig sind.\n\n- Jeder betroffene Funktionsbereich und jede Vertrauensgrenze bekommt eine Reviewerin, die sich dort auskennt.\n- Für jede Aufgabe stehen Basisrevision, Abhängigkeitsreihenfolge und Integrationsverantwortung fest.\n- Aktive Aufgaben bleiben auf das begrenzt, was das Team an Diffs und Prüfnachweisen bewerten kann, ohne Sicherheits- oder Freigabeprüfungen aufzuschieben.\n- Produkt-, Architektur- und Risikoentscheidungen bleiben bei verantwortlichen Menschen. Umsetzung wird erst delegiert, wenn diese Entscheidungen festgehalten sind.\n\nEine allgemeingültige Parallelitätszahl gibt es nicht. Wartezeit, Review-Komplexität, Überschneidung und Deployment-Risiko sagen dir, ob die nächste Aufgabe starten darf.",
+      "Parallele Arbeit braucht benannte Zuständige: eine kundige Reviewerin für jeden betroffenen Bereich und jede Vertrauensgrenze, und für jede Aufgabe festgehaltene Basisrevision, Abhängigkeitsreihenfolge und Integrationsverantwortung. Starte nicht mehr Aufgaben, als das Team prüfen kann, ohne Sicherheits- oder Freigabeprüfungen aufzuschieben. Produkt-, Architektur- und Risikoentscheidungen bleiben bei verantwortlichen Menschen; Umsetzung wird delegiert, sobald sie festgehalten sind.\n\nEine allgemeingültige Parallelitätszahl gibt es nicht. Wartezeit, Review-Komplexität, Überschneidung und Deployment-Risiko entscheiden, wann die nächste Aufgabe startet.",
     ],
-    [prose(6, 0), "Zwei Fragen zur Parallelisierung von Agentenarbeit."],
+    [prose(6, 0), "Fragen am Ende der Lektion."],
     [widgetString(0, "title"), "Dieselbe Arbeit, zwei Strukturen"],
     [widgetString(0, "badLabel"), "Parallelisierung verhindert"],
     [widgetString(0, "goodLabel"), "Parallelisierung ermöglicht"],
@@ -157,7 +146,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       widgetString(0, "note"),
-      "Arbeit an gemeinsamen Grundlagen läuft nacheinander. Parallel werden die Folgeaufgaben erst, wenn ihre Abhängigkeit stabil ist.",
+      "Gemeinsame Grundlagen nacheinander, danach die Folgeaufgaben parallel.",
     ],
     [
       widgetString(1, "question"),
@@ -165,11 +154,11 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       widgetStrings(1, "options")[0],
-      "Fünf parallele Aufgaben, je eine pro Dienst. Jede schreibt die Middleware selbst.",
+      "Fünf parallele Aufgaben, jede schreibt ihre eigene Middleware.",
     ],
     [
       widgetStrings(1, "options")[1],
-      "Zuerst eine Aufgabe für die Middleware in einer gemeinsamen Bibliothek. Danach fünf parallele Aufgaben, je eine für die Einbindung in einen Dienst.",
+      "Middleware in eine gemeinsame Bibliothek, dann fünf parallele Einbindungen.",
     ],
     [
       widgetStrings(1, "options")[2],
@@ -181,19 +170,19 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       widgetString(1, "explanation"),
-      "Die Middleware wird einmal gebaut und einmal geprüft. Danach fasst jede Einbindungsaufgabe nur ihren eigenen Dienst an. Eine akzeptierte Implementierung statt mehrerer abweichender Kopien.",
+      "Wird die Middleware einmal gebaut und geprüft, gibt es eine einzige gültige Fassung. Jede Einbindungsaufgabe fasst dann nur ihren eigenen Dienst an, also kollidiert nichts.",
     ],
     [
       widgetString(2, "question"),
-      "Zwei lokale Agentensitzungen sollen gleichzeitig am selben Repository arbeiten, ohne sich gegenseitig den Dateizustand zu verändern. Welches Setup passt?",
+      "Zwei lokale Agentensitzungen sollen gleichzeitig am selben Repository arbeiten, ohne einander die Dateien zu verändern. Welches Setup passt?",
     ],
     [
       widgetStrings(2, "options")[0],
-      "Zwei Terminalfenster im selben Verzeichnis. Sorgfältige Agenten kommen sich nicht in die Quere.",
+      "Zwei Terminalfenster im selben Verzeichnis; sorgfältige Agenten kollidieren nicht.",
     ],
     [
       widgetStrings(2, "options")[1],
-      "Git-Worktrees verwenden und jeden Branch in ein eigenes Verzeichnis auschecken, damit jede Sitzung eine isolierte Arbeitskopie erhält.",
+      "Git-Worktrees nutzen, ein Branch pro Verzeichnis.",
     ],
     [
       widgetStrings(2, "options")[2],
@@ -205,7 +194,7 @@ export default localizeCodexLessonToGerman(canonical, {
     ],
     [
       widgetString(2, "explanation"),
-      "Git-Worktrees geben jeder Sitzung ein eigenes Arbeitsverzeichnis auf derselben Objektdatenbank und isolieren nicht committete Änderungen. Getrennte Branches, gemeinsame Dienste, generierter Zustand und spätere Merge-Konflikte bleiben dein Problem.",
+      "Worktrees geben jeder Sitzung ein eigenes Arbeitsverzeichnis auf derselben Objektdatenbank und isolieren nicht committete Änderungen. Getrennte Branches, gemeinsame Dienste, generierter Zustand und Merge-Konflikte bleiben deine Aufgabe.",
     ],
   ],
 });

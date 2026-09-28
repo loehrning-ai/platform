@@ -99,4 +99,23 @@ describe("agent account copy", () => {
     expect(AGENT_ACCOUNT_COPY.de.tokenOnceBody).toContain("nicht gespeichert");
     expect(AGENT_ACCOUNT_COPY.en.tokenOnceBody).toContain("not stored");
   });
+
+  it("does not promise that revoking a grant stops a token already issued", () => {
+    // The agent interface verifies an OAuth access token by signature and
+    // expiry only, so a token issued before the revocation keeps working
+    // there until it expires. "Access revoked." alone promised more.
+    expect(AGENT_ACCOUNT_COPY.de.grantRevokedNotice).toContain(
+      "bis zu seinem Ablauf",
+    );
+    expect(AGENT_ACCOUNT_COPY.de.grantRevokedNotice).toContain(
+      "Agenten-Schnittstelle",
+    );
+    expect(AGENT_ACCOUNT_COPY.en.grantRevokedNotice).toContain("until it expires");
+    expect(AGENT_ACCOUNT_COPY.en.grantRevokedNotice).toContain("agent interface");
+    for (const locale of ["de", "en"] as const) {
+      expect(AGENT_ACCOUNT_COPY[locale].grantRevokedNotice).not.toMatch(
+        /Minute|minute/,
+      );
+    }
+  });
 });

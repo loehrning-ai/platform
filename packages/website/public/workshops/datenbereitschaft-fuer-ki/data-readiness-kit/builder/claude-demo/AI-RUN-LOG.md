@@ -2,18 +2,18 @@
 
 ## In plain words
 
-Write down what Claude answered, one line per run. Then compare it with `CHECK-YOUR-RESULT.md`.
-This log is the evidence about the AI. The database checks (`warehouse/sql/70_checks.sql`) and
-`check_numbers.py` are separate evidence about the data. Never merge them into one score.
+Write down what Claude answered, one line per run, and compare it with `CHECK-YOUR-RESULT.md`.
+This log is the evidence about the AI; the database checks (`warehouse/sql/70_checks.sql`) and
+`check_numbers.py` are evidence about the data. Never merge them into one score.
 
-Rules this log follows:
+Rules:
 
 - One run is an observation, not a benchmark. Aim for 3 runs per case, each in a fresh chat.
-- Say "same AI route", not just the model name. Record the route: the product, the model name the app
-  shows, the setup (A, B or C), and the files or connector used.
+- Say "same AI route", not just the model name. Record the product, the model name the app shows,
+  the setup (A, B or C) and the files or connector.
 - The database checks test the setup and the course rules, not the AI.
-- Loaded is not the same as used. The workshop's recorded runs cited the definition 0 of 3. Record
-  whether the trace names the metric **and** its version.
+- Loaded is not the same as used: the recorded runs cited the definition 0 of 3. Record whether
+  the trace names the metric **and** its version.
 - Two locks: refuse early, enforce anyway. A good refusal here does not replace the database grants.
 - Keep this file outside Claude, like the check sheet.
 
@@ -39,13 +39,13 @@ Rules this log follows:
 | | Row | Why |
 | --- | --- | --- |
 | Good | `2026-07-01 · Claude app, model as shown · A · G01 · run 2 · 75,890 / 85,665 / 128,230 labelled Ending MRR · answer (wrong) · monthly_revenue.csv · none · not stated · fail · caveat below the table` | Anyone can repeat it and see the same kind of result. |
-| Counter-example | `Claude got it right, looks good.` | No route, no case, no values, no run count. Nobody can repeat it or catch a change later. |
+| Counter-example | `Claude got it right, looks good.` | No route, case, values or run count, so nobody can repeat it or catch a change. |
 
 ## Pre-filled: rehearsal runs (observations)
 
-These are the rehearsal transcripts kept while building the course, one run per row. The model name
-was not recorded: that is itself a logging fault to avoid. How those rehearsal files differ from the
-current ones is in `PRESENTER-NOTES.md`. Your own runs start in the next section.
+The rehearsal transcripts kept while building the course, one run per row. The model name was
+not recorded, a logging fault to avoid. `PRESENTER-NOTES.md` lists how the rehearsal files differ
+from the current ones.
 
 | Date | AI route | Setup | Case | Run | Value | Behaviour | Source named | Metric + version | Freshness | Pass? | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -59,10 +59,9 @@ current ones is in `PRESENTER-NOTES.md`. Your own runs start in the next section
 | rehearsal | Claude Project, model not recorded | B | G02 | 1 | 32,380 (−19,960 + 9,775 + 42,565) | answer (expected) | `mrr_summary_monthly.csv`, `net_new_mrr_eur` | `net_new_mrr` 1.0.0 | 60 h (clock from the previous prompt) | pass | Cross-checked 387,015 − 354,635. |
 | rehearsal | Claude Project, model not recorded | B | G03 | 1 | 10.0 % × 3 (4 of 40) | answer (expected) | `logo_churn_by_segment_quarter.csv` | `logo_churn_rate` 1.0.0 | 60 h | pass | Noted the churn file lacked quality columns: fixed in the current files. |
 
-**Summary, stated honestly.** Chat A, G01: the running-total pattern observed in 2 of 2 kept runs;
-not a benchmark. Project B: expected behaviour observed on 7 of 7 cases, one run each; not a
-benchmark. The Project B traces named metric and version in every answer; the instructions require
-it. That is not evidence that the next run will.
+**Summary.** Chat A, G01: the running-total pattern in 2 of 2 kept runs. Project B: expected
+behaviour on 7 of 7 cases, one run each. Neither is a benchmark. The Project B traces named metric
+and version in every answer, as the instructions require; that does not show the next run will.
 
 ## Your runs
 
@@ -93,6 +92,5 @@ Counter-example: `Claude passes 9 of 9.` The nine are database checks; they do n
 
 ## When old rows stop counting
 
-Start a new block, and do not reuse the old rows, after any of these: a new model or AI route, changed
-instructions or definitions, new or regenerated files, a new metric version, or a changed connector
-or login.
+Start a new block, without reusing old rows, after a new model or AI route, changed instructions
+or definitions, new or regenerated files, a new metric version, or a changed connector or login.

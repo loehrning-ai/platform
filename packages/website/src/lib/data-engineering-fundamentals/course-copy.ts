@@ -13,19 +13,10 @@ export interface DataEngineeringFundamentalsCourseCopy {
     readonly start: string;
     readonly browse: string;
     readonly facts: readonly string[];
-    readonly stats: readonly {
-      readonly value: string;
-      readonly label: string;
-    }[];
     readonly courseEyebrow: string;
     readonly courseTitle: string;
-    readonly courseIntro: string;
     readonly chapterLabel: (displayNumber: string, id: DefChapterId) => string;
     readonly duration: (minutes: number) => string;
-    readonly finalEyebrow: string;
-    readonly finalTitle: string;
-    readonly finalBody: string;
-    readonly finalCta: string;
     readonly breadcrumbs: readonly [string, string, string];
     readonly jsonLdDescription: string;
   };
@@ -73,13 +64,13 @@ export const DATA_ENGINEERING_FUNDAMENTALS_COURSE_COPY = Object.freeze({
       title:
         "Data Engineering Fundamentals: Datenpipelines von der Quelle bis zur Bereitstellung",
       description:
-        "Zwölf Kapitel und 17 interaktive Simulationen zu Speicherformaten, Datenaufnahme, Streaming, Verarbeitung, Orchestrierung, Qualität, Bereitstellung und Governance.",
+        "Zwölf Kapitel und 17 Simulationen zu Speicherformaten, Streaming, Orchestrierung, Datenqualität und Governance.",
     },
     landing: {
       eyebrow: "Data Engineering / Grundlagen",
-      title: "Eine Datenpipeline ist ein zusammenhängendes System.",
+      title: "Datenpipelines Station für Station.",
       intro:
-        "Daten von der Quelle bis zur Nutzung, Station für Station. Ereigniszeit, Dateiformate, verteilte Verarbeitung, Idempotenz, Qualitätsprüfungen, Metadaten, Metrikschichten und Freigabeschranken stehen hier als ausführbare Simulationen, nicht als Aufzählung.",
+        "Zu jeder Station probierst du die Entscheidung in einer Simulation aus.",
       start: "Überblick öffnen",
       browse: "Kapitel anzeigen",
       facts: [
@@ -88,27 +79,14 @@ export const DATA_ENGINEERING_FUNDAMENTALS_COURSE_COPY = Object.freeze({
         "ca. 90 Minuten",
         "ohne Anmeldung",
       ],
-      stats: [
-        { value: "12", label: "Kapitel" },
-        { value: "17", label: "Simulationen" },
-        { value: "10", label: "Pipeline-Stationen" },
-        { value: "1", label: "Abschlussprojekt" },
-      ],
       courseEyebrow: "Kursaufbau",
-      courseTitle: "Eine Pipeline. Zwölf Kapitel. Ein durchgängiger Fall.",
-      courseIntro:
-        "Die Kapitel bauen aufeinander auf. Beginne bei Speicher und Abfrage-Engines, verfolge danach den Datenfluss, und im Abschlussprojekt laufen sechs ausgewählte Kurskontrollen zusammen.",
+      courseTitle: "Zwölf Kapitel entlang einer Pipeline.",
       chapterLabel: (displayNumber, id) =>
         id === "home" ? "Kursüberblick" : `Kapitel ${displayNumber}`,
       duration: (minutes) => `${minutes} Min.`,
-      finalEyebrow: "Einstieg",
-      finalTitle: "Erst die ganze Pipeline. Dann die Teile.",
-      finalBody:
-        "Der Überblick ordnet jede technische Entscheidung einer Pipeline-Station zu. Jedes Kapitel danach nimmt sich einen Teil dieses Systems vor.",
-      finalCta: "Überblick starten",
       breadcrumbs: ["Start", "Kurse", "Data Engineering Fundamentals"],
       jsonLdDescription:
-        "Zwölf Kapitel zu Entwurf und Betrieb von Datenpipelines mit 17 interaktiven Simulationen und einem durchgängigen Abschlussprojekt.",
+        "Zwölf Kapitel zu Entwurf und Betrieb von Datenpipelines, mit 17 Simulationen und Abschlussprojekt.",
     },
     reader: {
       navLabel: "Kapitelnavigation",
@@ -123,23 +101,23 @@ export const DATA_ENGINEERING_FUNDAMENTALS_COURSE_COPY = Object.freeze({
     certificateMetadata: {
       title: "Teilnahmebestätigung: Data Engineering Fundamentals",
       description:
-        "Die lokal erzeugte Teilnahmebestätigung für den abgeschlossenen Kurs Data Engineering Fundamentals herunterladen.",
+        "Lokale Teilnahmebestätigung für Data Engineering Fundamentals herunterladen.",
     },
     verificationMetadata: {
-      title: "Teilnahmebestätigungsdaten lesen: Data Engineering Fundamentals",
+      title: "Zertifikatdaten lesen: Data Engineering Fundamentals",
       description:
-        "Lokal kodierte Abschlussdaten lesen. Nicht servergeprüft, nicht kryptografisch signiert.",
+        "Liest die lokal kodierten Daten einer Teilnahmebestätigung. Sie sind nicht servergeprüft und nicht kryptografisch signiert.",
     },
     error: {
       eyebrow: "Data Engineering / Fehler",
       title: "Das Kapitel konnte nicht geladen werden",
-      body: "Die Kursansicht ist in diesem Browserlauf fehlgeschlagen. Dein gespeicherter Lernstand bleibt unverändert.",
+      body: "Die Kursansicht ist fehlgeschlagen. Dein Lernstand ist unverändert.",
       retry: "Erneut laden",
       back: "Zur Kursübersicht",
     },
     notFound: {
       title: "Kapitel nicht gefunden",
-      body: "Diese Kapitel-ID gehört nicht zu diesem Kurs. Die Kursübersicht listet alle zwölf gültigen Kapitel.",
+      body: "Dieses Kapitel gibt es im Kurs nicht.",
       back: "Alle Kapitel anzeigen",
     },
     socialImage: {
@@ -155,13 +133,13 @@ export const DATA_ENGINEERING_FUNDAMENTALS_COURSE_COPY = Object.freeze({
       title:
         "Data Engineering Fundamentals: data pipelines from source to serving",
       description:
-        "Twelve chapters and 17 interactive simulations on storage formats, ingestion, streaming, compute, orchestration, quality, serving, and governance.",
+        "Twelve chapters and 17 simulations on storage formats, streaming, orchestration, data quality, and governance.",
     },
     landing: {
       eyebrow: "Data engineering / fundamentals",
-      title: "A data pipeline is one connected system.",
+      title: "Data pipelines, stage by stage.",
       intro:
-        "Data from source to use, stage by stage. Event time, file formats, distributed compute, idempotency, quality checks, metadata, metrics layers, and release gates run here as executable simulations.",
+        "At each stage you try the decision in a simulation.",
       start: "Open the overview",
       browse: "View the chapters",
       facts: [
@@ -170,27 +148,14 @@ export const DATA_ENGINEERING_FUNDAMENTALS_COURSE_COPY = Object.freeze({
         "about 90 minutes",
         "no account required",
       ],
-      stats: [
-        { value: "12", label: "chapters" },
-        { value: "17", label: "simulations" },
-        { value: "10", label: "pipeline stages" },
-        { value: "1", label: "capstone" },
-      ],
       courseEyebrow: "Course structure",
-      courseTitle: "One pipeline. Twelve chapters. One end-to-end case.",
-      courseIntro:
-        "The chapters build on one another. Start with storage and query engines, trace the data flow, then inspect six selected course controls in the capstone.",
+      courseTitle: "Twelve chapters along one pipeline.",
       chapterLabel: (displayNumber, id) =>
         id === "home" ? "Course overview" : `Chapter ${displayNumber}`,
       duration: (minutes) => `${minutes} min`,
-      finalEyebrow: "Entry point",
-      finalTitle: "The whole pipeline first. Then the parts.",
-      finalBody:
-        "The overview assigns every technical decision to a pipeline stage. Each chapter after it takes one part of that system.",
-      finalCta: "Start the overview",
       breadcrumbs: ["Home", "Courses", "Data Engineering Fundamentals"],
       jsonLdDescription:
-        "Twelve chapters on data-pipeline design and operation with 17 interactive simulations and one end-to-end capstone.",
+        "Twelve chapters on data-pipeline design and operation, with 17 simulations and a capstone.",
     },
     reader: {
       navLabel: "Chapter navigation",
@@ -205,23 +170,23 @@ export const DATA_ENGINEERING_FUNDAMENTALS_COURSE_COPY = Object.freeze({
     certificateMetadata: {
       title: "Certificate of participation: Data Engineering Fundamentals",
       description:
-        "Download the locally generated completion record for Data Engineering Fundamentals.",
+        "Download the local completion record for Data Engineering Fundamentals.",
     },
     verificationMetadata: {
       title: "Read completion-record data: Data Engineering Fundamentals",
       description:
-        "Read locally encoded completion data. The data is not server-verified or cryptographically signed.",
+        "Reads the locally encoded data of a completion record. The data is not server-verified or cryptographically signed.",
     },
     error: {
       eyebrow: "Data Engineering / error",
       title: "The chapter could not load",
-      body: "The course view failed in this browser session. Stored learning progress was not changed.",
+      body: "The course view failed. Your progress is unchanged.",
       retry: "Reload",
       back: "Back to course overview",
     },
     notFound: {
       title: "Chapter not found",
-      body: "The requested chapter ID does not belong to this course. The course overview lists all twelve valid chapters.",
+      body: "This course has no such chapter.",
       back: "View all chapters",
     },
     socialImage: {

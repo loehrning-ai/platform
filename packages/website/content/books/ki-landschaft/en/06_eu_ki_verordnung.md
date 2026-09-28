@@ -33,7 +33,7 @@ Providers and deployers must take measures to support AI literacy among their st
 The [European Commission Q&A](https://digital-strategy.ec.europa.eu/en/faqs/ai-literacy-questions-answers) makes that clear:
 
 - no uniform mandatory training for every role
-- no prescribed certificate
+- no prescribed credential
 - no prescribed "AI officer"
 - no blanket minimum number of hours
 
@@ -74,4 +74,4 @@ The GDPR, trade-secret protection, copyright, labor and co-determination law, eq
 6. Define Art. 4 measures that fit the roles and the risks.
 7. Document approval, oversight, logs, escalation, incidents, and review.
 
-The free course at `/ki-fuehrerschein` can be one learning measure. Completing it is not a certificate required by law and does not on its own prove that Art. 4 is met for a concrete use case.
+The free course at `/ki-fuehrerschein` can be one learning measure. Completing it is not a credential required by law and does not on its own prove that Art. 4 is met for a concrete use case.

@@ -15,61 +15,59 @@ import {
 const lesson: ClaudeLesson = {
   id: "context",
   number: 3,
-  title: "Context Windows, Tokens, and Retrieval",
-  subtitle: "What enters a request, how it is tokenized, and what to verify.",
+  title: "Context windows, tokens, and retrieval",
+  subtitle: "Token counts and what to check in the context.",
   durationMinutes: 10,
   trackId: "foundations",
-  hook: "Context is finite. Relevance, source quality, and placement decide the answer.",
+  hook: "The context window is limited, so choose relevant sources.",
   keyConcepts: [
     "Context engineering",
-    "Semantic space",
-    "Positional attention",
     "Tokens",
-    "Document delimiting",
+    "Source labels",
   ],
   quiz: [],
   sections: [
     {
       id: "context-is-the-product",
       title: "Context is the product",
-      readTimeMinutes: 3,
+      readTimeMinutes: 1,
       content:
-        "More context is not better context. Context engineering means choosing and arranging what a model can see for a task: instructions, source documents, examples, prior messages, and tool results. Clear wording still matters. It cannot supply a fact you never pasted or repair an unreliable source.\n\nTwo technical ideas matter.\n\n**Semantic representations.** Models represent tokens as high-dimensional numerical states. Related terms can land in related places, but a two-dimensional map is an illustration, never a view into a Claude request.\n\n**Finite context.** Every model and product documents a context limit. Long inputs still fail when the relevant material is hard to locate, sources conflict, or the output eats part of the budget. Test with the model and input distribution you will use.",
+        "Context engineering means choosing and arranging what a model sees: instructions, documents, examples, prior messages and tool results. Clear wording cannot supply a missing fact or fix an unreliable source.\n\nModels hold tokens as high-dimensional states where related terms land close together; the map below only illustrates this.\n\nEvery model has a documented context limit. Long inputs still fail when the key passage is buried, sources conflict or the output eats the budget, so test with your real model and inputs.",
     },
     {
       id: "meaning-in-space",
-      title: "Meaning lives in space",
+      title: "Make vague words precise",
       readTimeMinutes: 1,
       content:
-        'The exercise below is a local, rule-based illustration. It assigns words to predefined topic groups. It does not call Claude and it computes no embeddings.\n\n> **Why it matters.** Terms such as "concise" and "exhaustive" imply different output requirements. Turn those terms into testable limits when consistency matters.',
+        "The map shows which terms sit close together. Words like \"concise\" or \"exhaustive\" still leave the target open, so turn them into testable limits such as \"at most 150 words\".",
     },
     {
       id: "window-as-budget",
-      title: "The window is a budget: spend it well",
-      readTimeMinutes: 2,
+      title: "The window is a budget",
+      readTimeMinutes: 1,
       content:
-        'A request carries system and product instructions, user messages, documents, prior turns, and tool results. The response spends tokens too, so input and output share the model\'s budget.\n\nThree controls matter.\n\n1. **Separate documents from the question.** Anthropic\'s long-context guidance puts source documents before the query for multi-document tasks. Validate that arrangement with your own evaluations.\n2. **Label each source.** Tags such as `<document index="1" source="…">` preserve source boundaries and make citation formats easier to specify.\n3. **State the evidence rule beside the task.** Define whether the model may use general knowledge, which sources are authoritative, and what to return when support is missing.\n\nNever submit a large document set without a retrieval or relevance strategy. More text adds more conflicts and buries the passage the question needs.',
+        "Instructions, messages, documents, prior turns and tool results share the window with the response.\n\n1. **Documents before the question.** Anthropic's long-context guidance puts source documents before the query for multi-document tasks. Confirm it with your evals.\n2. **Label each source.** Tags such as `<document index=\"1\" source=\"…\">` keep boundaries visible and simplify citations.\n3. **State the evidence rule.** Say which sources count and what to return without support.\n\nWithout retrieval, a large document set adds conflicts and buries the passage you need.",
     },
     {
       id: "long-context-template",
       title: "The long-context template",
       readTimeMinutes: 2,
       content:
-        'Use a structure like this when an answer must come from the supplied documents.\n\n```\n<documents>\n  <document index="1" source="rollout-plan.md">\n  [full text of doc 1]\n  </document>\n  <document index="2" source="oncall-guide.md">\n  [full text of doc 2]\n  </document>\n</documents>\n\n<instructions>\nAnswer using ONLY the documents above. If the answer isn\'t there, say so.\nCite sources as [doc-1] or [doc-2] inline.\n</instructions>\n\n<question>\nWhat\'s our rollback procedure if the forced cutover fails?\n</question>\n```\n\nThe structure separates sources, rules, and the question. Citations make claims inspectable. They still need checking against the cited passage.',
+        "When an answer must come from supplied documents:\n\n```\n<documents>\n  <document index=\"1\" source=\"rollout-plan.md\">\n  [full text of doc 1]\n  </document>\n  <document index=\"2\" source=\"oncall-guide.md\">\n  [full text of doc 2]\n  </document>\n</documents>\n\n<instructions>\nAnswer using ONLY the documents above. If the answer isn't there, say so.\nCite sources as [doc-1] or [doc-2] inline.\n</instructions>\n\n<question>\nWhat's our rollback procedure if the forced cutover fails?\n</question>\n```\n\nCitations make claims checkable; someone still reads the cited passage.",
     },
     {
       id: "tokens-briefly",
       title: "Tokens, briefly",
       readTimeMinutes: 1,
       content:
-        "Claude API inputs are tokenized before inference. Token counts shift with the selected model, language, punctuation, and content type, so word-to-token formulas are planning estimates, not guarantees.\n\nUse Anthropic's token-counting endpoint, or the tooling for the selected product, when context fit or cost matters.",
+        "Claude API inputs are tokenized before inference. Counts depend on model, language, punctuation and content type, so word-to-token formulas are estimates. For fit or cost, use Anthropic's token-counting endpoint or your product's tooling.",
     },
     {
       id: "too-big-docs",
       title: "When your docs are too big",
       readTimeMinutes: 1,
       content:
-        "When the source set outgrows the useful context budget, pick a workflow that keeps traceability.\n\n1. **Retrieve, then answer.** Select the relevant passages and keep their source identifiers. Measure retrieval recall on known questions.\n2. **Stage the task.** Split extraction, classification, drafting, and review when each stage has a checkable output.\n3. **Use tools for changing sources.** File search, database queries, or web retrieval fetch current evidence. Restrict permissions and record which sources were used.\n\nA summary is a derived source and it drops detail. Keep links to the original passages and verify critical claims there.",
+        "When sources outgrow the budget, keep them traceable:\n\n1. **Retrieve, then answer.** Select passages with source IDs and measure recall on known questions.\n2. **Stage the task.** Split extraction, classification, drafting and review when each stage has a checkable output.\n3. **Use tools for changing sources.** File, database or web search fetch current evidence; restrict permissions and log the sources.\n\nA summary drops detail, so verify critical claims in the original passage.",
     },
   ],
   widgets: [
@@ -80,9 +78,9 @@ const lesson: ClaudeLesson = {
       props: {
         lessonId: "context",
         cpId: "drop",
-        title: "Meaning lives in space",
+        title: "Words in meaning space",
         scenario:
-          "This local illustration maps words to predefined topic groups. It does not call Claude or calculate embeddings.",
+          "Sorts words into fixed topic groups, without Claude or embeddings.",
         seed: CLAUDE_SEMANTIC_SPACE_SEED,
         clusterKeywords: CLAUDE_SEMANTIC_SPACE_KEYWORDS,
         clusterLabels: CLAUDE_SEMANTIC_SPACE_CLUSTER_LABELS,
@@ -107,7 +105,7 @@ const lesson: ClaudeLesson = {
         lessonId: "context",
         cpId: "feel",
         title: "Context in, context out",
-        hint: "Paste something, a thread, a PR description, then ask something that depends on it.",
+        hint: "Paste a thread or a PR description, then ask something that depends on it.",
         placeholder:
           '<documents>\n<document index="1">\n[paste a short doc here]\n</document>\n</documents>\n\n<question>\nAsk something only answerable from the doc\n</question>',
       },
@@ -120,10 +118,10 @@ const lesson: ClaudeLesson = {
         lessonId: "context",
         cpId: "q1",
         question:
-          "A critical fact sits inside a long document set. Which workflow gives you the strongest evidence for the answer?",
+          "A critical fact sits in a long document set. Which workflow gives the strongest evidence?",
         options: [
           "Submit every document without labels and trust the summary.",
-          "Retrieve the relevant passage, request a source citation, and verify the cited text.",
+          "Retrieve the passage, request a citation and verify it.",
           "Convert every file to PDF before asking.",
           "Repeat the same request until two answers match.",
         ],
@@ -142,7 +140,7 @@ const lesson: ClaudeLesson = {
         lessonId: "context",
         cpId: "q2",
         question:
-          "How should you determine whether a long document set fits the selected model's context budget?",
+          "How do you check whether a long document set fits the model's context budget?",
         options: [
           "Assume one token per ten words.",
           "Use the file size in kilobytes.",
@@ -173,7 +171,7 @@ const lesson: ClaudeLesson = {
         ],
         correct: 1,
         explanation:
-          "Anthropic's long-context guidance places documents before the query for multi-document tasks. Confirm the arrangement with evaluations for your own model and inputs.",
+          "Anthropic's long-context guidance places documents before the query for multi-document tasks. Confirm this with evaluations on your own model and inputs.",
         title: CLAUDE_QUIZ_TITLE,
         copy: CLAUDE_QUIZ_COPY,
       },

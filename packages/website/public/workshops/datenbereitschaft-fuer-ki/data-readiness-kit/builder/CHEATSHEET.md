@@ -1,7 +1,6 @@
 # Builder cheat sheet
 
-One page. Print it on A4 in two columns. Every block has a good line (**Do**) and a bad line (**Don't**).
-FOLDLINE numbers are synthetic and match the workshop deck.
+Print on A4 in two columns. FOLDLINE numbers are synthetic and match the workshop deck.
 
 ---
 
@@ -12,7 +11,7 @@ FOLDLINE numbers are synthetic and match the workshop deck.
 - Last level + change = new level: **354,635 + 32,380 = 387,015**.
 
 - **Do:** "Ending MRR, end of June: €387,015."
-- **Don't:** "Ending MRR, April: −€19,960." That is April's change. A level cannot be negative here.
+- **Don't:** "Ending MRR, April: −€19,960." That is April's change; a level cannot be negative here.
 
 ### 2. Can I add it?
 
@@ -23,7 +22,7 @@ FOLDLINE numbers are synthetic and match the workshop deck.
 | Rate | recompute | recompute | recompute: 12 of 120 = **10 %** |
 
 - **Do:** Rate = total numerator ÷ total denominator: 480 ÷ 21,000 = **2.29 %**.
-- **Don't:** Average of rates: (2 % + 8 %) ÷ 2 = **5.00 %**. Averages ignore the size of each group.
+- **Don't:** Average of rates: (2 % + 8 %) ÷ 2 = **5.00 %**. It ignores group size.
 - **Don't:** Wrong base: 4 of 48 = 8.33 % (new joiners counted in the churn base).
 - **Don't:** 0 ÷ 0 shown as 0 %. Say "no rate".
 

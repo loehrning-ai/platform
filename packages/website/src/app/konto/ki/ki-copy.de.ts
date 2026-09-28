@@ -5,12 +5,12 @@ export const AGENT_ACCOUNT_COPY_DE: AgentAccountCopy = {
   metadata: {
     title: "Konto · Deine KI | Freie Lernplattform",
     description:
-      "Zugriff eigener KI-Programme auf dein Lernkonto verwalten: Zugriffsschlüssel, erteilte Freigaben, Aktivität und der Chat mit deinem eigenen Anthropic-Schlüssel.",
+      "Eigene KI-Programme mit deinem Lernkonto verbinden: Zugriffsschlüssel, Freigaben, Aktivität und Chat.",
   },
   eyebrow: "Freie Lernplattform · Konto",
   title: "Deine KI.",
   intro:
-    "Hier verbindest du dein eigenes KI-Programm mit der Lernplattform, siehst was es getan hat und chattest mit deinem eigenen Anthropic-Schlüssel über die Kursinhalte.",
+    "Verbinde dein eigenes KI-Programm mit der Plattform und chatte mit deinem Anthropic-Schlüssel über die Kurse.",
   backToAccount: "Zurück zum Lernstand",
   sectionNavigationLabel: "Bereiche auf dieser Seite",
   sections: {
@@ -22,7 +22,7 @@ export const AGENT_ACCOUNT_COPY_DE: AgentAccountCopy = {
 
   accountUnavailableTitle: "Dein Anmeldestatus ist gerade nicht abrufbar.",
   accountUnavailableBody:
-    "Du wurdest nicht abgemeldet. Die Seite zeigt deshalb bewusst keine leeren Listen für Aktivität, Freigaben und Zugriffsschlüssel. Lade sie in einigen Minuten neu.",
+    "Du wurdest nicht abgemeldet. Lade die Seite in einigen Minuten neu.",
 
   endpointHeading: "Verbindung",
   endpointBody:
@@ -31,18 +31,18 @@ export const AGENT_ACCOUNT_COPY_DE: AgentAccountCopy = {
   endpointHelpLink: "Anleitung für dein Programm",
   endpointOffTitle: "Der Zugang für Programme ist gerade nicht eingerichtet.",
   endpointOffBody:
-    "Sobald er in dieser Umgebung aktiv ist, erscheint hier die Adresse für dein Programm. Zugriffsschlüssel und Freigaben bleiben so lange ohne Wirkung.",
+    "Sobald er aktiv ist, erscheint hier die Adresse. Bis dahin wirken Zugriffsschlüssel und Freigaben nicht.",
 
   chatHeading: "Chat mit deiner KI",
   chatIntro:
-    "Der Chat läuft auf deinem eigenen Anthropic-Schlüssel und liest dieselben Kursinhalte wie dein Programm.",
+    "Der Chat liest dieselben Kursinhalte wie dein Programm.",
   chatOffTitle: "Der Chat ist in dieser Umgebung nicht eingerichtet.",
   chatOffBody:
-    "Es wird kein Schlüssel gespeichert und keine Anfrage gestellt, solange der Betreiber den Chat nicht freischaltet.",
+    "Solange der Betreiber ihn nicht freischaltet, wird kein Schlüssel gespeichert und keine Anfrage gestellt.",
 
   keyHeading: "Dein Anthropic-Schlüssel",
   keyDisclosure:
-    "Deine Nachrichten gehen mit deinem Schlüssel an Anthropic und damit unter deinen eigenen Vertragsbedingungen und auf deine Kosten.",
+    "Deine Nachrichten gehen mit deinem Schlüssel an Anthropic, zu deinen Vertragsbedingungen und auf deine Kosten.",
   keyStored: (hint) => `Gespeichert. Dein Schlüssel endet auf ${hint}.`,
   keyValidated: (moment) => `Zuletzt geprüft: ${moment}.`,
   keyMissing: "Noch kein Schlüssel gespeichert.",
@@ -59,7 +59,7 @@ export const AGENT_ACCOUNT_COPY_DE: AgentAccountCopy = {
     "Das sieht nicht nach einem Anthropic-Schlüssel aus. Er beginnt mit sk-ant-.",
   keyUnknownError: "Der Schlüssel konnte nicht gespeichert werden.",
   keyStateUnavailable:
-    "Der gespeicherte Schlüssel ist gerade nicht abrufbar. Lade die Seite später neu, bevor du ihn ersetzt.",
+    "Dein Schlüssel lässt sich gerade nicht laden. Lade die Seite neu, bevor du ihn ersetzt.",
 
   modelLabel: "Modell",
   modelHint: "Freigegebene Modelle dieser Installation.",
@@ -70,8 +70,7 @@ export const AGENT_ACCOUNT_COPY_DE: AgentAccountCopy = {
   chatSending: "Antwort läuft",
   chatStop: "Abbrechen",
   chatClear: "Verlauf löschen",
-  chatEmpty:
-    "Noch keine Nachrichten. Der Verlauf bleibt nur in diesem Browser und wird nicht auf dem Server gespeichert.",
+  chatEmpty: "Noch keine Nachrichten.",
   chatNeedsKey: "Speichere zuerst deinen Anthropic-Schlüssel.",
   chatRoleUser: "Du",
   chatRoleAssistant: "KI",
@@ -79,7 +78,7 @@ export const AGENT_ACCOUNT_COPY_DE: AgentAccountCopy = {
   chatLessonChip: (lesson) => `Kontext: ${lesson}`,
   chatLessonRemove: "Kontext entfernen",
   chatTranscriptNote:
-    "Der Verlauf liegt nur in diesem Browser, im Namensraum deines Kontos.",
+    "Der Verlauf liegt nur in diesem Browser, getrennt nach Konto, nie auf dem Server.",
   chatUnknownError: "Die Antwort konnte nicht geladen werden.",
   chatLogLabel: "Verlauf",
 
@@ -92,7 +91,7 @@ export const AGENT_ACCOUNT_COPY_DE: AgentAccountCopy = {
   tokenCreating: "Wird erzeugt",
   tokenOnceTitle: "Dein neuer Zugriffsschlüssel",
   tokenOnceBody:
-    "Kopiere ihn jetzt. Er wird nicht gespeichert und kann später nicht erneut angezeigt werden.",
+    "Kopiere ihn jetzt. Er wird nicht gespeichert und später nicht mehr angezeigt.",
   tokenCopy: "Kopieren",
   tokenCopied: "Kopiert",
   tokenDismiss: "Ausblenden",
@@ -109,7 +108,7 @@ export const AGENT_ACCOUNT_COPY_DE: AgentAccountCopy = {
   tokenNameRequired: "Gib dem Schlüssel einen Namen.",
   tokenUnknownError: "Der Schlüssel konnte nicht erzeugt werden.",
   tokensUnavailable:
-    "Deine Zugriffsschlüssel sind gerade nicht abrufbar. Die Liste bleibt deshalb leer statt falsch.",
+    "Deine Zugriffsschlüssel lassen sich gerade nicht laden. Lade die Seite neu.",
 
   grantsHeading: "Erteilte Freigaben",
   grantsIntro:
@@ -120,22 +119,23 @@ export const AGENT_ACCOUNT_COPY_DE: AgentAccountCopy = {
   grantGranted: (moment) => `Erteilt: ${moment}`,
   grantRevoke: "Freigabe zurückziehen",
   grantRevoking: "Wird zurückgezogen",
-  grantRevokedNotice: "Freigabe zurückgezogen.",
+  grantRevokedNotice:
+    "Freigabe zurückgezogen. Ein Zugriffstoken, das das Programm schon hat, gilt bis zu seinem Ablauf weiter, auch an der Agenten-Schnittstelle.",
   grantUnknownError: "Die Freigabe konnte nicht zurückgezogen werden.",
   grantsSetupTitle: "Freigaben sind noch nicht eingerichtet.",
   grantsSetupBody:
-    "Solange der Anmeldedienst keine Freigaben ausstellt, verbindest du dein Programm über einen Zugriffsschlüssel weiter unten.",
+    "Verbinde dein Programm bis dahin mit einem Zugriffsschlüssel weiter unten.",
   grantsUnavailable:
-    "Deine Freigaben sind gerade nicht abrufbar. Die Liste bleibt deshalb leer statt falsch.",
+    "Deine Freigaben lassen sich gerade nicht laden. Lade die Seite neu.",
   grantsListLabel: "Erteilte Freigaben",
 
   activityHeading: "Aktivität",
   activityIntro:
-    "Die letzten 50 Zugriffe von Programmen auf dein Konto. Aufgezeichnet werden Programm, Werkzeug, Ergebnis und Dauer, nie Eingaben oder Ergebnisse.",
+    "Die letzten 50 Zugriffe von Programmen. Protokolliert werden Programm, Werkzeug, Erfolg oder Fehler und Dauer, nie Inhalte.",
   activityEmpty: "Noch kein Programm hat auf dein Konto zugegriffen.",
   activityRetention: "Einträge werden nach 30 Tagen automatisch gelöscht.",
   activityUnavailable:
-    "Die Aktivität ist gerade nicht abrufbar. Die Liste bleibt deshalb leer statt falsch.",
+    "Die Aktivität lässt sich gerade nicht laden. Lade die Seite neu.",
   activityTableLabel: "Letzte Zugriffe von Programmen",
   activityColumnMoment: "Zeitpunkt",
   activityColumnClient: "Programm",

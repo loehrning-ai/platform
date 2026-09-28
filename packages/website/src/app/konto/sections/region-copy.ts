@@ -88,10 +88,10 @@ export const AGENT_ACCESS_COPY = {
   de: {
     heading: "Deine KI",
     intro:
-      "Du kannst deinen eigenen KI-Client mit diesem Konto verbinden. Der Client spricht dabei nicht mit deinem Browser, sondern mit dem Endpunkt unten.",
+      "Verbinde deinen eigenen KI-Client über den Endpunkt unten mit diesem Konto.",
     endpointLabel: "MCP-Endpunkt",
     endpointNote:
-      "Diese Adresse ist für alle Konten gleich. Was dein Client sehen darf, entscheidet allein der Zugang, den du in deinem Konto ausstellst.",
+      "Die Adresse ist für alle Konten gleich. Was dein Client sehen darf, legt der Zugang fest, den du ausstellst.",
     installHeading: "In deinem Client eintragen",
     clients: [
       {
@@ -113,13 +113,13 @@ export const AGENT_ACCESS_COPY = {
     ],
     statusLabel: "Status",
     status:
-      "Der Endpunkt ist in dieser Umgebung eingeschaltet. Ohne einen Zugang aus deinem Konto beantwortet er keine Anfrage, und jeder Aufruf steht im Protokoll.",
+      "Der Endpunkt ist eingeschaltet. Ohne einen Zugang aus deinem Konto beantwortet er keine Anfrage, und jeder Aufruf wird protokolliert.",
     grantsLink: "Zugänge und Protokoll",
     grantsSummary:
-      "Zugang ausstellen, Reichweite begrenzen, jederzeit zurückziehen und nachlesen, was ein Client abgerufen hat.",
+      "Zugänge ausstellen, begrenzen, zurückziehen und nachlesen, was ein Client abgerufen hat.",
     helpLink: "Anleitung: eigene KI verbinden",
     helpSummary:
-      "Schritt für Schritt, mit den Fällen, in denen ein Client die Verbindung ablehnt.",
+      "Einrichtung und was hilft, wenn ein Client die Verbindung ablehnt.",
     copyAction: "Kopieren",
     copiedAction: "Kopiert",
     endpointCopyLabel: "MCP-Endpunkt",
@@ -128,10 +128,10 @@ export const AGENT_ACCESS_COPY = {
   en: {
     heading: "Your AI",
     intro:
-      "You can connect your own AI client to this account. The client does not talk to your browser; it talks to the endpoint below.",
+      "Connect your own AI client to this account through the endpoint below.",
     endpointLabel: "MCP endpoint",
     endpointNote:
-      "This address is the same for every account. What your client may see is decided solely by the grant you issue in your account.",
+      "The address is the same for every account. The grant you issue decides what your client may see.",
     installHeading: "Enter it in your client",
     clients: [
       {
@@ -153,13 +153,13 @@ export const AGENT_ACCESS_COPY = {
     ],
     statusLabel: "Status",
     status:
-      "The endpoint is switched on in this environment. Without a grant from your account it answers no request, and every call is recorded.",
+      "The endpoint is switched on. Without a grant from your account it answers no request, and every call is logged.",
     grantsLink: "Grants and audit trail",
     grantsSummary:
-      "Issue a grant, limit its reach, withdraw it at any time, and read what a client actually retrieved.",
+      "Issue, limit and revoke grants, and see what a client retrieved.",
     helpLink: "Guide: connect your own AI",
     helpSummary:
-      "Step by step, including the cases where a client refuses the connection.",
+      "Setup, and what helps when a client refuses the connection.",
     copyAction: "Copy",
     copiedAction: "Copied",
     endpointCopyLabel: "MCP endpoint",
@@ -176,12 +176,12 @@ export const RECORD_VERIFICATION_COPY = {
   de: {
     link: "Prüfseite",
     summary:
-      "Dort wird der Code aus deiner Bestätigung geprüft, ohne Anmeldung.",
+      "prüft den Code deiner Bestätigung, ohne Anmeldung.",
   },
   en: {
     link: "Verification page",
     summary:
-      "That is where the code on your certificate of participation is checked, without a sign-in.",
+      "checks the code on your certificate of participation, no sign-in needed.",
   },
 } as const satisfies Readonly<Record<Locale, RecordVerificationCopy>>;
 
@@ -210,48 +210,48 @@ export interface AccountControlsCopy {
 export const ACCOUNT_CONTROLS_COPY = {
   de: {
     intro:
-      "Export, Zurücksetzen und Löschen laufen in der Datenverwaltung. Jede der drei Aktionen bestätigst du dort, damit sie nicht versehentlich ausgelöst wird.",
+      "Jede dieser Aktionen bestätigst du in der Datenverwaltung, damit nichts versehentlich passiert.",
     items: [
       {
         id: "export",
         title: "Daten exportieren",
-        body: "Eine JSON-Datei mit E-Mail-Adresse, Kursfortschritt, vorhandenen Quizversuchen und Exportzeitpunkt.",
+        body: "Eine JSON-Datei mit deinen Konto- und Lerndaten.",
         action: "Öffnen",
       },
       {
         id: "reset",
         title: "Kursfortschritt zurücksetzen",
-        body: "Setzt einen einzelnen Kurs auf dem Server und in diesem Browser zurück. Andere Kurse bleiben unberührt.",
+        body: "Setzt einen Kurs auf dem Server und in diesem Browser zurück. Andere Kurse bleiben unberührt.",
         action: "Öffnen",
       },
       {
         id: "delete",
         title: "Konto löschen",
-        body: "Löscht Konto, E-Mail-Adresse und serverseitigen Fortschritt dauerhaft. Das lässt sich nicht rückgängig machen.",
+        body: "Löscht Konto, E-Mail-Adresse und serverseitigen Fortschritt endgültig.",
         action: "Öffnen",
       },
     ],
   },
   en: {
     intro:
-      "Export, reset, and deletion run in the data controls. You confirm each of the three there, so that none of them can be triggered by accident.",
+      "You confirm each of these in the data controls, so nothing happens by accident.",
     items: [
       {
         id: "export",
         title: "Export data",
-        body: "A JSON file with your email address, course progress, existing quiz attempts, and the export time.",
+        body: "A JSON file with your account and learning data.",
         action: "Open",
       },
       {
         id: "reset",
         title: "Reset course progress",
-        body: "Resets a single course on the server and in this browser. Other courses stay untouched.",
+        body: "Resets one course on the server and in this browser. Other courses stay untouched.",
         action: "Open",
       },
       {
         id: "delete",
         title: "Delete account",
-        body: "Permanently deletes the account, the email address, and server-side progress. This cannot be undone.",
+        body: "Permanently deletes account, email address and server-side progress.",
         action: "Open",
       },
     ],

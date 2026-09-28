@@ -5,12 +5,11 @@
   "subtitle": "Prompts, CLAUDE.md und Evals als gemeinsam gepflegte Arbeitsmittel.",
   "durationMinutes": 10,
   "trackId": "team",
-  "hook": "Läuft der Prompt nur bei dir, ist er kein Team-Prompt.",
+  "hook": "Ein Team-Prompt braucht Eigentümer, Einsatzfall und Tests.",
   "keyConcepts": [
     "Prompt-Bibliothek",
     "Geteiltes CLAUDE.md",
-    "Evaluierungs-Set",
-    "Checkliste für die Teilbarkeit"
+    "Evaluierungs-Set"
   ],
   "quiz": [],
   "sections": [
@@ -18,25 +17,25 @@
       "id": "why-share",
       "title": "Warum Prompts teilen",
       "readTimeMinutes": 1,
-      "content": "Die Kollegin kopiert deinen Prompt, und das Ergebnis passt nicht. Ein Prompt für eine Person trägt versteckten Kontext: lokale Pfade, Teamnamen, unausgesprochenen Quellenzugriff, ein Ausgabeformat, das nur die Autorin kennt. Den Text zu teilen macht den Ablauf nicht wiederverwendbar.\n\nWiederkehrende Prompts sind gepflegte Artefakte. Dokumentiert werden Aufgabe, nötige Eingaben, Modell- und Tool-Annahmen, erwartete Ausgabe, Eigentümer und Eval-Fälle."
+      "content": "Ein Prompt für eine Person trägt versteckten Kontext: lokale Pfade, Teamnamen, unausgesprochenen Quellenzugriff, ein Ausgabeformat, das nur die Autorin kennt. Behandle wiederkehrende Prompts als gepflegte Artefakte mit Aufgabe, Eingaben, Modell- und Tool-Annahmen, erwarteter Ausgabe, Eigentümer und Eval-Fällen."
     },
     {
       "id": "three-artifacts",
-      "title": "Drei gemeinsam gepflegte Arbeitsmittel",
-      "readTimeMinutes": 2,
-      "content": "- **01 · Prompt-Bibliothek.** Ein Repository oder Gdoc mit benannten, getesteten Prompts für das Wiederkehrende: PR-Review, Standup-Zusammenfassung, Post-Mortem-Entwurf, Release Notes.\n- **02 · CLAUDE.md.** Im Repository eingecheckt. Wie Code überprüft. Aktualisiert, wenn sich Konventionen ändern.\n- **03 · Evaluierungs-Set.** Eine Handvoll realistischer Beispiele, Eingabe plus erwartete Art der Ausgabe. Damit prüfst du, ob eine Prompt-Änderung etwas kaputt gemacht hat."
+      "title": "Gemeinsame Arbeitsmittel",
+      "readTimeMinutes": 1,
+      "content": "- **01 · Prompt-Bibliothek.** Ein Repository oder Gdoc mit benannten, getesteten Prompts für Wiederkehrendes wie PR-Review, Standup-Zusammenfassung oder Release Notes.\n- **02 · CLAUDE.md.** Liegt im Repository, wird wie Code reviewt und ändert sich mit den Konventionen.\n- **03 · Evaluierungs-Set.** Einige realistische Eingaben mit der erwarteten Art der Ausgabe, nach jeder Prompt-Änderung erneut ausgeführt."
     },
     {
       "id": "sharing-well",
-      "title": "Einen Prompt für andere nutzbar machen",
-      "readTimeMinutes": 2,
-      "content": "Vor der Veröffentlichung.\n\n- **Lokales parametrisieren.** Feste Projekt- und Pfadnamen werden benannte Eingaben wie `<PROJECT>`.\n- **Umfang und Voraussetzungen nennen.** Einsatzfall, benötigte Quellen, erlaubte Aktionen.\n- **Ein geprüftes Beispiel mitgeben.** Als Illustration markiert, sensible Daten entfernt.\n- **Bekannte Fehler dokumentieren.** Die wesentlichen hängen an Eval-Fällen oder technischen Kontrollen."
+      "title": "Einen Prompt teilen",
+      "readTimeMinutes": 1,
+      "content": "Vor der Veröffentlichung:\n\n- **Lokales ersetzen,** etwa Projekt- und Pfadnamen durch Platzhalter wie `<PROJECT>`.\n- **Umfang und Voraussetzungen nennen:** Einsatzfall, benötigte Quellen, erlaubte Aktionen.\n- **Ein geprüftes Beispiel mitgeben,** als Illustration markiert und ohne sensible Daten.\n- **Bekannte Fehler dokumentieren** und die wesentlichen an Eval-Fälle oder Kontrollen hängen."
     },
     {
       "id": "rituals",
       "title": "Regelmäßige kurze Reviews",
       "readTimeMinutes": 1,
-      "content": "Ein kurzes, wiederkehrendes Review reicht, mit einem Ablauf, seinen Belegen und einem Fehlerfall. In die gemeinsame Bibliothek kommt der Ablauf erst, wenn eine andere Person ihn allein anhand der Dokumentation ausführt und das Ergebnis reproduziert."
+      "content": "Prüfe in einem kurzen, wiederkehrenden Termin einen Ablauf, seine Belege und einen Fehlerfall. Ein Prompt kommt erst in die gemeinsame Bibliothek, wenn eine andere Person sein Ergebnis allein anhand der Dokumentation reproduziert."
     }
   ],
   "widgets": [
@@ -59,12 +58,12 @@
         "question": "Dein teamweit geteilter Prompt funktioniert für dich, aber nicht für andere. Was ist die wahrscheinlichste Ursache?",
         "options": [
           "Unterschiedliche Claude-Modelle.",
-          "Fest codierte Spezifika (Projektnamen, Pfade) und fehlende Hinweise zum \"Wann zu verwenden\".",
+          "Feste Projektnamen und Pfade, dazu kein Hinweis, wann er passt.",
           "Tageszeit.",
           "Nicht genügend Adjektive."
         ],
         "correct": 1,
-        "explanation": "Teilbare Prompts sind parametrisiert und dokumentiert. Spezifika raus, Einsatzfall rein, Beispielausgabe dazu.",
+        "explanation": "Teilbare Prompts sind parametrisiert und dokumentiert. Ersetze feste Namen durch Platzhalter, nenn den Einsatzfall und gib eine Beispielausgabe mit.",
         "title": "Kurzprüfung",
         "copy": {
           "kindLabel": "Kurzprüfung",

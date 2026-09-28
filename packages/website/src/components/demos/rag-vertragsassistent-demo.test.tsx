@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import RagVertragsassistentDemo from "./rag-vertragsassistent-demo";
 
 /**
@@ -8,8 +8,11 @@ import RagVertragsassistentDemo from "./rag-vertragsassistent-demo";
  * Drives the real <RagVertragsassistentDemo>, exercising its private keyword
  * router (findAnswer) end-to-end through the chat UI:
  *
- *  - a matched question ("Kündigungsfrist") resolves to the grounded answer with
- *    its bold key figure, matched-term chips and expandable sources, and
+ *  - the chat opens on one answered exchange ("Kündigungsfrist", final state
+ *    first) instead of an empty prompt, with the remaining suggestions in one
+ *    rail above the input,
+ *  - a matched question ("Haftungsgrenzen") resolves to the grounded answer
+ *    with its bold key figure, matched-term chips and expandable sources, and
  *  - the built-in "Grenzfall" query (no document matches) resolves to the honest
  *    no-hit state with the default follow-ups.
  *
@@ -47,14 +50,17 @@ describe("<RagVertragsassistentDemo>", () => {
     window.matchMedia = originalMatchMedia;
   });
 
-  it("renders the empty state: header, disclosure, suggestions and a disabled send button", () => {
-    render(<RagVertragsassistentDemo />);
+  it("opens on a worked example: header, cited answer, open suggestions and a disabled send button", () => {
+    const { container } = render(<RagVertragsassistentDemo />);
 
     expect(screen.getByText("Vertrags-Assistent")).toBeInTheDocument();
+    // The avatar header repeats the H1, so it hides below sm.
+    expect(container.querySelector("[data-rag-header]")).toHaveClass("max-sm:hidden");
     expect(
-      screen.getByText("Keyword-Suche · 8 Beispieldokumente"),
+      screen.getByText("Keyword-Suche · 6 Beispieldokumente"),
     ).toBeInTheDocument();
-    expect(screen.getByText("● DEMO-MODUS")).toBeInTheDocument();
+    // The green DEMO-MODUS pill restated the shell's evidence line.
+    expect(screen.queryByText(/DEMO-MODUS/)).toBeNull();
 
     // The engine no longer restates the simulation mode: the detail shell says
     // it once via EvidenceBadge, and the mode belongs stated once, and
@@ -66,30 +72,118 @@ describe("<RagVertragsassistentDemo>", () => {
       screen.queryByRole("note", { name: "Hinweis zur Simulation" }),
     ).not.toBeInTheDocument();
 
-    // Empty-state prompt heading.
-    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
-      "Fragen Sie das Beispielarchiv.",
+    // One plain sr-only landmark heading; no empty-state prompt, and the
+    // search limit is said once above the conversation, in du-form.
+    const heading = screen.getByRole("heading", { level: 2 });
+    expect(heading).toHaveClass("sr-only");
+    expect(heading).toHaveTextContent(
+      "Vertragsassistent: Fragen an das Beispielarchiv",
     );
-
-    // All four suggested questions render as buttons.
+    expect(screen.queryByText("Frag das Beispielarchiv.")).toBeNull();
+    expect(screen.queryByText(/Fragen Sie/)).toBeNull();
     expect(
-      screen.getByRole("button", { name: /Wie ist die Kündigungsfrist/ }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /Welche Haftungsgrenzen gelten/ }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /Wer darf unterzeichnen/ }),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /Gibt es Sonderkündigungsrechte/ }),
+      screen.getByText(/kann Treffer übersehen/),
     ).toBeInTheDocument();
 
-    // Grenzfall trigger + send button (send is disabled while the input is empty).
+    // Final state first: the example question is answered without a tap,
+    // with its key figure, its source count and the keyword definition.
+    expect(screen.getByText("Wie ist die Kündigungsfrist?")).toBeInTheDocument();
+    expect(screen.getByText("3 Monate zum Quartalsende")).toBeInTheDocument();
+    expect(screen.getByText(/Keyword-Suche · 2 Quellen/)).toBeInTheDocument();
+    expect(screen.getByText(/Konfidenz = Anzahl Treffer/)).toBeVisible();
     expect(
-      screen.getByRole("button", { name: /Grenzfall testen/ }),
+      screen.getByRole("button", {
+        name: /Alle 2 Quellen: zur Antwort.*Wie ist die Kündigungsfrist/,
+      }),
+    ).toHaveAttribute("aria-expanded", "false");
+
+    // Below sm (jsdom has no sm match) the first Fundstelle is one caption
+    // line right under the answer, before the terms and the sources link.
+    expect(
+      screen.getByText("Quelle: Rahmenvereinbarung v3.2, §12.3 Kündigung"),
+    ).toHaveClass("sm:hidden");
+    // The terms join with breakable separators, so a long term never pushes
+    // the chat log sideways at 320.
+    const terms = container.querySelector("[data-rag-matched-terms]");
+    expect(terms).toHaveTextContent(
+      "Treffer: Gefundene Schlüsselwörter (Konfidenz = Anzahl Treffer): Kündigung · Kündigungsfrist · Quartalsende",
+    );
+    expect(terms).toHaveClass("[overflow-wrap:anywhere]");
+    expect(terms?.className).not.toMatch(/rgba\(37/);
+
+    // The asked question leaves the rail; a suggestion that is already a
+    // follow-up shows once. getByRole throws on a duplicate. Below sm the
+    // follow-ups lead the one rail above the input.
+    const rail = screen.getByRole("group", { name: "Weitere Beispielfragen" });
+    expect(
+      within(rail).queryByRole("button", { name: /Kündigungsfrist/ }),
+    ).toBeNull();
+    expect(
+      within(rail).getByRole("button", { name: /Welche Haftungsgrenzen gelten/ }),
     ).toBeInTheDocument();
+    expect(
+      within(rail).getByRole("button", { name: /Wer darf unterzeichnen/ }),
+    ).toBeInTheDocument();
+    const railNames = within(rail)
+      .getAllByRole("button")
+      .map((b) => b.textContent?.replace(/^→/, ""));
+    expect(railNames).toEqual([
+      "Gibt es Sonderkündigungsrechte?",
+      "Welche Pflichten gelten während der Frist?",
+      "Welche Haftungsgrenzen gelten?",
+      "Wer darf unterzeichnen?",
+      "Grenzfall: Wer hat Prokura für ausländische Verträge?",
+    ]);
+    // One hairline style below sm (the sm-up arrow prefix hides), and a
+    // right fade marks the cut-off.
+    expect(within(rail).getAllByText("→")[0]).toHaveClass("max-sm:hidden");
+    expect(rail.className).toMatch(/max-sm:\[mask-image:/);
+
+    // Grenzfall trigger (last chip of the rail) + send button (disabled while
+    // the input is empty). Rail chips keep their 44px target.
+    // No aria-label: the visible text is the accessible name (WCAG 2.5.3).
+    const edgeCase = within(rail).getByRole("button", {
+      name: "Grenzfall: Wer hat Prokura für ausländische Verträge?",
+    });
+    expect(edgeCase).not.toHaveAttribute("aria-label");
+    expect(edgeCase).toHaveClass("min-h-11");
     expect(screen.getByRole("button", { name: "Frage senden" })).toBeDisabled();
+  });
+
+  it("keeps follow-ups under the answer from sm up", () => {
+    const original = window.matchMedia;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).matchMedia = (query: string) => ({
+      matches: query.includes("reduce") || query.includes("min-width"),
+      media: query,
+      onchange: null,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      addListener: () => {},
+      removeListener: () => {},
+      dispatchEvent: () => false,
+    });
+    try {
+      render(<RagVertragsassistentDemo />);
+      const rail = screen.getByRole("group", { name: "Weitere Beispielfragen" });
+      expect(
+        within(rail).queryByRole("button", { name: /Sonderkündigungsrechte/ }),
+      ).toBeNull();
+      expect(
+        screen.getByRole("button", { name: /Gibt es Sonderkündigungsrechte/ }),
+      ).toBeInTheDocument();
+    } finally {
+      window.matchMedia = original;
+    }
+  });
+
+  it("sizes the question field at 16px below lg so iOS does not zoom", () => {
+    render(<RagVertragsassistentDemo />);
+    const field = screen.getByRole("textbox", {
+      name: "Frage an den Vertrags-Assistenten",
+    });
+    expect(field).toHaveClass("text-base", "lg:text-[13px]");
+    expect(field.style.fontSize).toBe("");
   });
 
   it("enables the send button once the input has content", () => {
@@ -109,22 +203,22 @@ describe("<RagVertragsassistentDemo>", () => {
     render(<RagVertragsassistentDemo />);
 
     fireEvent.click(
-      screen.getByRole("button", { name: /Wie ist die Kündigungsfrist/ }),
+      screen.getByRole("button", { name: /Welche Haftungsgrenzen gelten/ }),
     );
 
-    // The keyword router resolves to the Kündigung answer with its bold key figure.
+    // The keyword router resolves to the Haftung answer with its bold key figure.
     expect(
-      await screen.findByText("3 Monate zum Quartalsende"),
+      await screen.findByText("3-fache des Jahreshonorars"),
     ).toBeInTheDocument();
-    // Two grounded sources are reported.
-    expect(screen.getByText(/Keyword-Suche · 2 Quellen/)).toBeInTheDocument();
+    // Two grounded sources are reported for each of the two answers.
+    expect(screen.getAllByText(/Keyword-Suche · 2 Quellen/)).toHaveLength(2);
     // Matched keyword chip (distinct from the bold answer figure).
-    expect(screen.getByText("Quartalsende")).toBeInTheDocument();
+    expect(screen.getByText("Jahreshonorar")).toBeInTheDocument();
 
     // Sources are collapsed behind a toggle; expanding reveals the document + chip.
     fireEvent.click(
       screen.getByRole("button", {
-        name: /Quellen anzeigen: 2 Quellen.*Kündigungsfrist/,
+        name: /Alle 2 Quellen: zur Antwort.*Haftungsgrenzen/,
       }),
     );
     expect(screen.getByText("Rahmenvereinbarung v3.2")).toBeInTheDocument();
@@ -132,20 +226,16 @@ describe("<RagVertragsassistentDemo>", () => {
     // The metric definition relocated out of the removed SimulationDisclosure.
     // It must stay VISIBLE rather than hover-only: the chip reads as a model
     // score otherwise, and it is really a keyword-hit count.
-    expect(
-      screen.getByText(/Konfidenz = Anzahl Treffer/),
-    ).toBeVisible();
+    for (const definition of screen.getAllByText(/Konfidenz = Anzahl Treffer/)) {
+      expect(definition).toBeVisible();
+    }
   });
 
   it("keeps accumulated source disclosures tied to their query context", async () => {
     render(<RagVertragsassistentDemo />);
 
-    fireEvent.click(
-      screen.getByRole("button", { name: /Wie ist die Kündigungsfrist/ }),
-    );
-    expect(
-      await screen.findByText("3 Monate zum Quartalsende"),
-    ).toBeInTheDocument();
+    // The opening example is the first answered query.
+    expect(screen.getByText("3 Monate zum Quartalsende")).toBeInTheDocument();
 
     fireEvent.change(
       screen.getByRole("textbox", {
@@ -159,10 +249,10 @@ describe("<RagVertragsassistentDemo>", () => {
     ).toBeInTheDocument();
 
     const terminationSources = screen.getByRole("button", {
-      name: /Quellen anzeigen: 2 Quellen.*Wie ist die Kündigungsfrist/,
+      name: /Alle 2 Quellen: zur Antwort.*Wie ist die Kündigungsfrist/,
     });
     const liabilitySources = screen.getByRole("button", {
-      name: /Quellen anzeigen: 2 Quellen.*Welche Haftungsgrenzen gelten/,
+      name: /Alle 2 Quellen: zur Antwort.*Welche Haftungsgrenzen gelten/,
     });
     expect(terminationSources).toBeInTheDocument();
     expect(liabilitySources).toBeInTheDocument();
@@ -175,7 +265,7 @@ describe("<RagVertragsassistentDemo>", () => {
   it("returns an honest no-hit state for the built-in Grenzfall query", async () => {
     render(<RagVertragsassistentDemo />);
 
-    fireEvent.click(screen.getByRole("button", { name: /Grenzfall testen/ }));
+    fireEvent.click(screen.getByRole("button", { name: /^Grenzfall: / }));
 
     // No document matches -> the empty-answer message and "Kein Treffer" label.
     expect(

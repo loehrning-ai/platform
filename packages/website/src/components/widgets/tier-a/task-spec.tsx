@@ -56,6 +56,12 @@ export interface TaskSpecWidgetProps {
   /** How many items must be on to count as "stark" and record completion. Default 3. */
   readonly threshold?: number;
   readonly tierLabels?: Partial<TaskSpecTierLabels>;
+  /** File name in the preview header, e.g. "auftrag.md" or "task.md". */
+  readonly fileName?: string;
+  /** Heading of the goal line in the preview. */
+  readonly goalHeading?: string;
+  /** Word after the "n / total" counter. */
+  readonly signalsLabel?: string;
 }
 
 type TierLevel = "weak" | "meh" | "strong";
@@ -70,11 +76,14 @@ export function TaskSpecWidget({
   lessonId,
   cpId,
   title = "Bau eine Aufgaben-Spezifikation",
-  desc = "Schalte die Bausteine an, die in eine starke Spezifikation gehören. Rechts siehst du die zusammengesetzte Vorgabe.",
+  desc = "Schalte die Bausteine an, die in eine starke Spezifikation gehören.",
   goal = "Beschreibe die Änderung in einem Satz.",
   items,
   threshold = 3,
   tierLabels,
+  fileName = "auftrag.md",
+  goalHeading = "Ziel",
+  signalsLabel = "Signale",
 }: TaskSpecWidgetProps): JSX.Element {
   const labels = { ...DEFAULT_TIER_LABELS, ...tierLabels };
   const { done, complete } = useCheckpoint(lessonId, cpId);
@@ -100,14 +109,14 @@ export function TaskSpecWidget({
   const pct = total === 0 ? 0 : Math.round((count / total) * 100);
 
   const assembled = useMemo(() => {
-    const lines: string[] = ["# aufgabe.md", "", "## Ziel", goal];
+    const lines: string[] = [`# ${fileName}`, "", `## ${goalHeading}`, goal];
     items.forEach((it, i) => {
       if (!on.has(i)) return;
       lines.push("", `## ${it.section}`);
       (it.body ?? []).forEach((b) => lines.push(`  ${b}`));
     });
     return lines.join("\n");
-  }, [items, on, goal]);
+  }, [items, on, goal, fileName, goalHeading]);
 
   return (
     <WidgetFrame kindLabel="Drill" title={title} scenario={desc} done={done}>
@@ -166,7 +175,7 @@ export function TaskSpecWidget({
                 {count}
               </span>
               <span className="font-mono text-xs tracking-[0.1em] text-muted-foreground">
-                / {total} Signale
+                / {total} {signalsLabel}
               </span>
               <span
                 data-tier={tierLevel}

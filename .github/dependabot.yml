@@ -7,9 +7,37 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    # A version is proposed only once it is 3 days old. A hijacked or broken
+    # release is usually caught and pulled within that window, before its code
+    # reaches a pull request or a preview build. Cooldown applies to version
+    # updates only; security updates still arrive immediately.
+    cooldown:
+      default-days: 3
+    # Minor and patch updates arrive together in one pull request. Majors stay
+    # one pull request each, so every migration is reviewed on its own.
+    groups:
+      bun-minor-and-patch:
+        applies-to: version-updates
+        patterns: ["*"]
+        update-types: [minor, patch]
+    ignore:
+      # @vitejs/plugin-react 6 requires vite 8, and the workspace pins vite 7
+      # through the root package.json overrides. The major update (PR #69)
+      # breaks Vitest. Remove this rule together with the vite 8 migration.
+      # The rule also holds back a security update that would need the major;
+      # `bun audit` in CI would still report such an advisory.
+      - dependency-name: "@vitejs/plugin-react"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    cooldown:
+      default-days: 3
+    groups:
+      actions-minor-and-patch:
+        applies-to: version-updates
+        patterns: ["*"]
+        update-types: [minor, patch]

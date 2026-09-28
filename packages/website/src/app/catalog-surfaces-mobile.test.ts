@@ -64,7 +64,7 @@ describe("catalog surfaces below lg", () => {
     },
   );
 
-  it("puts the decision first on the two routes that stack a row", () => {
+  it("reorders a stacked row only on the books route", () => {
     const reordering = SURFACES.filter((path) =>
       classLists(source(path)).some(
         (list) =>
@@ -72,13 +72,12 @@ describe("catalog surfaces below lg", () => {
       ),
     );
 
-    // Books and workshops are the two catalog rows whose decision sits under
-    // a summary and a fact list. The demo and open-source rows already lead
-    // with theirs, so a reorder there would be motion for its own sake.
-    expect(reordering).toEqual([
-      "buecher/buecher-content.tsx",
-      "workshops/workshops-content.tsx",
-    ]);
+    // Books is the one catalog row whose decision sits under a summary and a
+    // fact list. The workshop row already reads in phone order in the DOM
+    // (cover, kicker, title, question, link), and the demo and open-source
+    // rows lead with their decision, so a reorder there would be motion for
+    // its own sake.
+    expect(reordering).toEqual(["buecher/buecher-content.tsx"]);
   });
 
   it.each(SURFACES)(
@@ -114,48 +113,43 @@ describe("catalog surfaces below lg", () => {
     expect(buecher).toContain("sm:w-56 md:w-full");
   });
 
-  it("leads the workshop row with its numbered title and hides the catalogue index", () => {
+  it("keeps the workshop row in phone order and compacts it below md", () => {
     const workshops = source("workshops/workshops-content.tsx");
-    const heading =
-      workshops.match(/<h3\s+id=\{headingId\}\s+className="([^"]+)"/)?.[1] ??
-      "";
-    const decision =
-      workshops.match(/data-workshop-decision\s+className="([^"]+)"/)?.[1] ??
-      "";
+    const row = workshops.slice(workshops.indexOf("function WorkshopRow"));
 
-    // The "Workshop NN: title" heading leads the row on a phone; the quoted
-    // first decision follows it in source order at every width.
-    expect(heading).toContain("order-first");
-    expect(heading).toContain("md:order-none");
-    expect(heading).toContain("text-2xl");
-    expect(heading).toContain("sm:text-4xl");
-    expect(decision).not.toContain("order-first");
-    expect(decision).toContain("font-semibold");
-    // The hero's catalogue index repeats the cards directly below it, so it
-    // costs nothing on a phone and returns from sm.
-    expect(workshops).toContain(
-      '<ol className="mt-5 hidden space-y-2 sm:block">',
+    // Phone order is source order: the poster thumb, then the duration line,
+    // the title, what you leave with and the one link. From md the same DOM
+    // becomes the two-column sheet (poster cover left), so nothing needs `order`.
+    expect(row.indexOf("<figure")).toBeLessThan(row.indexOf("<h3"));
+    expect(row.indexOf("data-workshop-meta")).toBeLessThan(row.indexOf("<h3"));
+    expect(row.indexOf("<h3")).toBeLessThan(row.indexOf("<Link"));
+    // The fixed question lives on the workshop page, not on a hub row.
+    expect(row).not.toContain("data-workshop-question");
+    // A phone row is an 80px poster thumb beside the text; md returns the
+    // sheet with the poster cover at 14rem, 18rem from lg (SPEC §3.3).
+    expect(row).toContain(
+      "grid-cols-[5rem_minmax(0,1fr)] items-start gap-x-4 border-b border-hairline py-4",
     );
-    expect(workshops).toContain("py-6 sm:py-14");
-    expect(workshops).toContain("gap-6 sm:gap-12");
-  });
-
-  it("keeps the demo cover compact without moving the desktop console", () => {
-    const demos = source("demos/page.tsx");
-
-    expect(demos).toContain(
-      'className="border-b border-border px-3 py-4 sm:px-6 sm:py-8 md:px-10"',
+    expect(row).toContain(
+      "md:grid-cols-[14rem_minmax(0,1fr)] md:items-start md:gap-10 md:py-10 lg:grid-cols-[18rem_minmax(0,1fr)]",
     );
-    expect(demos).toContain(
-      "lg:grid-cols-[minmax(0,1.55fr)_minmax(18rem,0.45fr)]",
+    // The summary is md-only; "Du nimmst mit" is one clamped sentence.
+    expect(row).toContain('className="mt-3 hidden max-w-[56ch] text-body text-muted-foreground text-pretty md:block"');
+    expect(row).toContain("max-md:line-clamp-2");
+    // The link covers the row on a phone; the text keeps the full width.
+    expect(row).toContain("max-md:absolute max-md:inset-0");
+    expect(row).not.toContain("grid-cols-[minmax(0,1fr)_2.75rem]");
+    // The list is the index: the band carries no anchor row at any width.
+    expect(workshops).not.toContain("data-workshop-index");
+    expect(workshops).toContain('className="pt-5 sm:pt-16"');
+    expect(workshops).toContain('layout="rail"');
+    // The route section starts at sm and follows the list, so the posters
+    // follow the cover at every width.
+    expect(workshops).toContain('className="hidden pt-16 sm:block"');
+    expect(workshops.indexOf('aria-labelledby="workshop-list-heading"')).toBeLessThan(
+      workshops.indexOf('aria-labelledby="workshop-route-heading"'),
     );
-    // The three figures are one row each on a phone and a stacked cell from
-    // sm, so the label keeps its own line where there is room for it.
-    expect(demos).toContain("px-3 py-2 sm:block sm:px-5 sm:py-3");
-    expect(demos).toContain(
-      'className="text-xl font-bold tracking-[-0.04em] text-foreground sm:mt-1 sm:text-3xl"',
-    );
-    expect(demos).toContain("sm:grid-cols-3");
+    expect(workshops).toContain('"pb-10 pt-4 sm:pb-24 sm:pt-12"');
   });
 
   it("keeps the open-source cover and ledger frames bounded on phones", () => {
@@ -179,6 +173,80 @@ describe("catalog surfaces below lg", () => {
       "lg:grid-cols-[minmax(0,1.3fr)_minmax(18rem,0.7fr)]",
     );
     expect(ledger).toContain("grid-cols-2 border-l border-t border-foreground");
-    expect(ledger).toContain("sm:grid-cols-4");
+    expect(ledger).toContain("sm:grid-cols-3");
+  });
+});
+
+// /kurse is the fifth catalog surface. Its atlas is a client island (goal and
+// level state), so it sits outside the server-only list above, but it follows
+// the same pairing rule: every phone value is handed back at a breakpoint.
+const KURSE = [
+  "kurse/page.tsx",
+  "kurse/learning-atlas.tsx",
+  "kurse/course-ledger-row.tsx",
+] as const;
+
+function kurseSource(path: (typeof KURSE)[number]): string {
+  return readFileSync(join(__dirname, path), "utf8");
+}
+
+describe("/kurse below lg", () => {
+  it.each(KURSE)(
+    "restores every element %s hides or reorders on phones",
+    (path) => {
+      for (const list of classLists(kurseSource(path))) {
+        if (hasUtility(list, "hidden")) {
+          expect(list).toMatch(/\b(?:sm|md|lg|xl):(?:block|flex|inline|inline-flex|inline-block|grid)\b/);
+        }
+        if (hasUtility(list, "order-first") || hasUtility(list, "-order-1")) {
+          expect(list).toMatch(/\b(?:sm|md|lg|xl):order-none\b/);
+        }
+      }
+    },
+  );
+
+  it("sets the hero, heads and rows one step smaller on phones and pairs each with its reviewed size", () => {
+    const page = kurseSource("kurse/page.tsx");
+    const atlas = kurseSource("kurse/learning-atlas.tsx");
+    const row = kurseSource("kurse/course-ledger-row.tsx");
+
+    // Hero: the poster title on paper (SPEC §4, fit to its column, 36 to
+    // 50px on a phone); the lead token from sm, and no lead on a phone,
+    // where the kicker and the grouped ledger carry it.
+    expect(page).toContain('className="poster-title mt-2 max-w-[16ch] text-foreground sm:mt-3"');
+    expect(page).toContain("style={posterTitleFallbackStyle(copy.heading)}");
+    expect(page).toContain("mt-4 max-w-[58ch] text-lead text-muted-foreground text-pretty max-sm:hidden");
+    expect(page).toContain("px-4 pb-6 pt-4 sm:px-6 sm:pb-14 sm:pt-12 lg:pb-16 lg:pt-10");
+    // The "Unsicher?" line is the link's 44px target on a phone, and one
+    // cost note renders at every width (no phone/desktop swap).
+    expect(page).toContain("max-sm:flex max-sm:flex-wrap max-sm:items-center");
+    expect(page).not.toContain("accessBodyShort");
+    expect(page).toMatch(/\{copy\.accessBody\}/);
+    expect(page).toContain('size="compact"');
+
+    // Atlas and ledger heads: 22px on a phone, the fluid h2 from sm.
+    // The goal question leaves the phone page (the chips read as the
+    // question); the ledger head stays.
+    expect(atlas).toContain("text-[1.375rem]/[1.15] font-bold text-foreground max-sm:sr-only sm:text-fluid-h2");
+    expect(atlas).toContain("text-[1.375rem]/[1.15] font-bold text-foreground sm:text-fluid-h2");
+    // The goal rail scrolls below lg and is a joined grid from lg.
+    expect(atlas).toContain("flex w-max gap-2 px-4 sm:px-6 lg:grid lg:w-auto lg:grid-cols-4 lg:gap-0 lg:px-0");
+
+    // A row keeps its 44px title target while giving 6px back on a phone.
+    expect(row).toContain("-my-1.5 flex min-h-11");
+    expect(row).toContain("sm:my-0 sm:inline-flex");
+    // The number column became the poster thumbnail column (SPEC §3.4):
+    // 72px on a phone, 80px from sm.
+    expect(row).toContain("grid-cols-[4.5rem_minmax(0,1fr)] gap-x-4 sm:grid-cols-[5rem_minmax(0,1fr)]");
+    expect(row).toMatch(/<PosterThumb[\s\S]*?size="sm"/);
+    // From lg the right-hand cells span both rows, so the links line stays
+    // directly under the promise as it did inside the text column.
+    expect(row).toContain("lg:col-start-3 lg:row-span-2 lg:row-start-1");
+    expect(row).toContain("xl:col-start-4 xl:row-span-2 xl:row-start-1");
+    // The phone moves the action first; the DOM keeps the desktop order.
+    expect(row).toContain("max-lg:order-first xl:col-start-4");
+    // Short promise below sm, full promise from sm.
+    expect(row).toContain('className="sm:hidden"');
+    expect(row).toContain('className="max-sm:sr-only"');
   });
 });

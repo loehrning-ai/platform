@@ -38,7 +38,7 @@ const PARTS: readonly PromptPart[] = [
     weight: 18,
     default: true,
     content: "Du bist ein erfahrener Vertriebsleiter im Maschinenbau.",
-    hint: "Wer Claude sein soll. Legt Vokabular, Seniorität und Ton fest.",
+    hint: "Wer Claude sein soll. Legt Vokabular und Ton fest.",
   },
   {
     id: "context",
@@ -47,7 +47,7 @@ const PARTS: readonly PromptPart[] = [
     default: true,
     content:
       "Wir führen kommende Woche ein neues Angebots-Tool ein, das die alte Excel-Vorlage ablöst.",
-    hint: "Hintergrund, den das Modell nicht kennen kann. Die Welt der Aufgabe.",
+    hint: "Hintergrund, den das Modell nicht kennen kann.",
   },
   {
     id: "task",
@@ -55,7 +55,7 @@ const PARTS: readonly PromptPart[] = [
     weight: 28,
     default: true,
     content: "Schreibe die interne Ankündigungs-Mail.",
-    hint: "Die eine Sache, die du willst. Ein Verb, ein Objekt.",
+    hint: "Was Claude tun soll, in einem Satz.",
   },
   {
     id: "constraints",
@@ -64,7 +64,7 @@ const PARTS: readonly PromptPart[] = [
     default: false,
     content:
       "Unter 180 Wörter. Keine Marketing-Sprache. Eine klare Handlungsaufforderung ganz oben.",
-    hint: "Die unsichtbaren Leitplanken. Verhindert, dass Claude abschweift.",
+    hint: "Grenzen, die Claude beim Thema halten.",
   },
   {
     id: "format",
@@ -72,7 +72,7 @@ const PARTS: readonly PromptPart[] = [
     weight: 16,
     default: false,
     content: "Betreffzeile, dann Fließtext. Keine Grußformel.",
-    hint: "Die Form der Antwort. Wo die Struktur lebt.",
+    hint: "Die Form der Antwort.",
   },
 ];
 
@@ -81,7 +81,7 @@ function qualityLabel(q: number): string {
   if (q >= 70) return "solide";
   if (q >= 40) return "dünn";
   if (q >= 20) return "schwach";
-  return "ein Wunsch, kein Prompt";
+  return "nur ein Wunsch";
 }
 
 export interface PromptOrreryWidgetProps {
@@ -97,7 +97,7 @@ export function PromptOrreryWidget({
   lessonId,
   cpId,
   title = "Die Prompt-Schmiede",
-  scenario = "Fünf Bausteine. Schalte jeden zu oder ab und beobachte, wie der Qualitätswert reagiert.",
+  scenario = "Schalte die fünf Bausteine zu oder ab und beobachte den Qualitätswert.",
   locale = "de",
   model,
 }: PromptOrreryWidgetProps): JSX.Element {

@@ -101,6 +101,7 @@ export function AiNativeOperatorLessonPage({
         title={lesson.title}
         objective={lesson.objective}
         headingLevel={isProjectCheckpoint ? 2 : 1}
+        objectiveRepeatedAbove={isProjectCheckpoint}
       >
         <AiNativeOperatorLessonReader
           locale={locale}

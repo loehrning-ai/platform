@@ -64,12 +64,12 @@ export function PathwayStageBanner({
       role="note"
       aria-label={copy.regionLabel}
       className={cn(
-        "flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-y border-border bg-brand-sky/10 py-4",
+        "flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 border-y border-hairline py-4",
         className,
       )}
     >
       <div className="min-w-0">
-        <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-brand-orange">
+        <p className="text-label text-muted-foreground tabular-nums">
           {copy.pathwayLabel} ·{" "}
           {copy.position(stageIndex + 1, PATHWAY_STAGES.length)}
         </p>
@@ -81,7 +81,7 @@ export function PathwayStageBanner({
           {current.subtitle}
         </p>
       </div>
-      <p className="font-mono text-[12px] leading-relaxed text-muted-foreground">
+      <p className="text-caption text-muted-foreground">
         {nextStage ? (
           <>
             {copy.nextLabel}:{" "}

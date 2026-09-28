@@ -1,10 +1,14 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useId, useMemo, useState, type ReactNode } from "react";
 import type { Locale } from "@/lib/i18n/locale";
 import { DEMO } from "@/lib/demo-tokens";
 import { DEMO_HEIGHT } from "./demo-utils";
 import { useDemoLocale } from "./demo-locale";
+import { DisclosureGlyph } from "./evidence-badge";
+
+/** Sheet rows a phone shows before "Alle 9 Zeilen" opens the rest. */
+const PHONE_SHEET_ROWS = 5;
 
 type RegionKey = "Nord" | "Süd" | "West";
 
@@ -67,7 +71,7 @@ const TASKS: readonly Task[] = [
   },
   {
     id: "forecast",
-    title: { de: "Forecast KW 17–20", en: "Forecast, weeks 17–20" },
+    title: { de: "Forecast KW 17 bis 20", en: "Forecast, weeks 17 to 20" },
     detail: {
       de: "Lineare Projektion mit 90 %-Konfidenz",
       en: "Linear projection with a 90% confidence band",
@@ -139,10 +143,11 @@ export default function ExcelDemo() {
         "Excel-Lab mit KI-Assistent",
         "Spreadsheet analysis example",
       )}
+      // Tighter rhythm below sm so the first task reaches the first screen.
+      className="gap-3 sm:gap-[18px]"
       style={{
         display: "flex",
         flexDirection: "column",
-        gap: 18,
         fontFamily: DEMO.font.sans,
         color: DEMO.ink,
         minHeight: DEMO_HEIGHT,
@@ -150,68 +155,20 @@ export default function ExcelDemo() {
         minWidth: 0,
       }}
     >
-      {/* Header */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: 12,
-            flexWrap: "wrap",
-          }}
-        >
-          <Overline>
-            {text("Excel-Lab mit KI-Assistent", "Spreadsheet lab · fixed sample data")}
-          </Overline>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              fontFamily: DEMO.font.mono,
-              fontSize: 12,
-              color: DEMO.schiefer,
-              letterSpacing: "0.08em",
-            }}
-          >
-            <span
-              style={{
-                width: 6,
-                height: 6,
-                borderRadius: 999,
-                background: DEMO.schiefer,
-              }}
-            />
-            {text("Manuell", "Manual")}
-          </div>
-        </div>
-        <h2
-          style={{
-            fontSize: "clamp(18px, 2.6vw, 22px)",
-            fontWeight: 700,
-            letterSpacing: "-0.03em",
-            lineHeight: 1.15,
-            margin: 0,
-          }}
-        >
-          {text("Formeln, Pivots und Forecasts im Beispiel-Lab,", "Inspect the calculation,")}{" "}
-          <span style={{ color: "var(--color-brand-orange)" }}>
-            {text("ohne Microsoft-365-Verbindung.", "then challenge it.")}
-          </span>
+      {/* Header: the page H1 and lead name the demo, so the engine keeps
+          only an sr-only landmark heading and its one-line scope note. */}
+      {/* display:contents below sm: with the note hidden the wrapper would
+          only add an empty flex gap above the sheet. */}
+      <div className="flex flex-col gap-1.5 max-sm:contents">
+        <h2 className="sr-only">
+          {text("Excel-Beispiel mit KI-Assistent", "Spreadsheet example with an AI assistant")}
         </h2>
-        <p
-          style={{
-            margin: 0,
-            maxWidth: 720,
-            color: DEMO.schiefer,
-            fontSize: 12,
-            lineHeight: 1.55,
-          }}
-        >
+        {/* Below sm the evidence line above ("Synthetisch · Was heißt das?")
+            and the run table's data row carry this, so the note hides. */}
+        <p className="text-caption text-muted-foreground max-sm:hidden" style={{ margin: 0, maxWidth: 720 }}>
           {text(
-            "Neun fiktive Verkaufszeilen, rein im Browser. Keine Verbindung zu Excel, Microsoft 365 oder einem KI-Anbieter.",
-            "This browser-only example uses nine fictional sales rows. It does not connect to Excel, Microsoft 365, or an AI provider.",
+            "Läuft nur im Browser, ohne Excel, Microsoft 365 oder KI-Anbieter.",
+            "Runs in the browser only, without Excel, Microsoft 365 or an AI provider.",
           )}
         </p>
       </div>
@@ -244,69 +201,56 @@ export default function ExcelDemo() {
 
 function Spreadsheet({ locale }: { readonly locale: Locale }) {
   const isDe = locale === "de";
+  // Below sm the sheet shows its first five rows; the status bar's button
+  // opens the other four. From sm up every row always shows.
+  const [allRows, setAllRows] = useState(false);
+  const tableId = useId();
   return (
     <div
       style={{
         background: DEMO.kalk,
         border: `1px solid ${DEMO.ink}`,
-        boxShadow: `2px 2px 0 0 ${DEMO.leinen}`,
         display: "flex",
         flexDirection: "column",
         minWidth: 0,
       }}
     >
-      {/* File bar */}
+      {/* File bar: ink band with the file name as data; no product
+          colours or logo. Below sm it merges with the formula bar into one
+          light row ("Absatz-KW14-16.xlsx · F2 = Wachstum W/W"). */}
       <div
+        data-excel-file-bar
+        className="min-h-8 bg-[#0B0908] px-2.5 py-[7px] text-[12px] text-[#F3F0E9] max-sm:bg-[#F7F4ED] max-sm:py-1 max-sm:text-[13px] max-sm:text-[#0B0908]"
         style={{
           display: "flex",
           alignItems: "center",
           flexWrap: "wrap",
           gap: 8,
-          padding: "7px 10px",
-          background: "#107C41",
-          color: "white",
+          borderBottom: `1px solid ${DEMO.leinen}`,
           fontFamily: DEMO.font.mono,
-          fontSize: 12,
-          letterSpacing: "0.1em",
-          fontWeight: 700,
           minWidth: 0,
         }}
       >
-        <div
-          style={{
-            width: 16,
-            height: 16,
-            background: "white",
-            color: "#107C41",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 12,
-            fontWeight: 900,
-            flexShrink: 0,
-          }}
-        >
-          X
-        </div>
-        <span
-          style={{
-            overflowWrap: "anywhere",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-          }}
-        >
-          {isDe ? "Absatz-KW14-16.xlsx" : "sales-weeks-14-16.xlsx"}
+        {/* Below sm the formula moves as one unit: on a 320px screen it
+            drops under the file name instead of being clipped. */}
+        <span className="min-w-0 max-w-full truncate max-sm:overflow-visible max-sm:whitespace-normal">
+          {isDe ? "Absatz-KW14-16.xlsx" : "sales-weeks-14-16.xlsx"}{" "}
+          <span
+            className="inline-block whitespace-nowrap sm:hidden"
+            style={{ color: DEMO.schiefer }}
+          >
+            {isDe ? "· F2 = Wachstum W/W" : "· F2 = Growth W/W"}
+          </span>
         </span>
-        <span style={{ marginLeft: "auto", opacity: 0.7, fontSize: 12 }}>
+        <span className="max-sm:hidden" style={{ marginLeft: "auto", fontSize: 12 }}>
           {isDe ? "· gespeichert" : "· local sample"}
         </span>
       </div>
 
-      {/* Formula bar */}
+      {/* Formula bar (from sm up; below sm it joins the file bar) */}
       <div
+        className="flex max-sm:hidden"
         style={{
-          display: "flex",
           alignItems: "center",
           gap: 8,
           padding: "5px 10px",
@@ -329,8 +273,8 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
         >
           F2
         </span>
-        <span style={{ opacity: 0.6 }}>ƒx</span>
-        <span style={{ color: "var(--color-brand-orange)", fontWeight: 600 }}>
+        <span style={{ color: DEMO.schiefer }}>ƒx</span>
+        <span style={{ color: DEMO.ink, fontWeight: 600 }}>
           {isDe ? "Wachstum W/W" : "Growth W/W"}
         </span>
       </div>
@@ -340,6 +284,7 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
           route-ai-native-locales.spec.ts, which checks that every horizontally
           scrolling region stays contained inside the lesson column. */}
       <div
+        id={tableId}
         data-course-horizontal-scroll
         role="region"
         aria-label={isDe ? "Beispiel-Arbeitsblatt" : "Sample worksheet data"}
@@ -347,21 +292,23 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
         className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
         style={{ overflowX: "auto", overscrollBehaviorX: "contain" }}
       >
+        {/* Below sm the five columns fit a 320px screen (no hidden
+            "Umsatz" column) and the data reads at 13px; from sm up the
+            desktop sheet returns: 12px, 430px minimum, wider cell padding. */}
         <table
+          className="min-w-[280px] text-[13px] leading-[1.35] sm:min-w-[430px] sm:text-[12px] sm:leading-[inherit] [&_td]:px-1.5 [&_td]:py-[3px] [&_th]:px-1.5 [&_th]:py-1 sm:[&_td]:px-2 sm:[&_td]:py-1 sm:[&_th]:px-2 sm:[&_th]:py-[5px]"
           style={{
             width: "100%",
-            minWidth: 430,
             borderCollapse: "collapse",
             fontFamily: DEMO.font.mono,
-            fontSize: 12,
             tableLayout: "fixed",
           }}
         >
           <colgroup>
-            <col style={{ width: 28 }} />
-            <col style={{ width: "22%" }} />
-            <col style={{ width: "22%" }} />
-            <col style={{ width: "16%" }} />
+            <col className="w-[26px] sm:w-[28px]" />
+            <col className="w-[20%] sm:w-[22%]" />
+            <col className="w-[24%] sm:w-[22%]" />
+            <col className="w-[14%] sm:w-[16%]" />
             <col />
           </colgroup>
           <thead>
@@ -373,16 +320,16 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
                 <th
                   key={h + i}
                   style={{
-                    padding: "5px 8px",
                     borderBottom: `1px solid ${DEMO.ink}`,
-                    fontSize: 12,
                     textAlign: i > 2 ? "right" : "left",
                     fontWeight: i === 0 ? 400 : 700,
                     letterSpacing: "0.06em",
                     color: i === 0 ? DEMO.schiefer : DEMO.ink,
                   }}
                 >
-                  {h}
+                  {h || (
+                    <span className="sr-only">{isDe ? "Zeile" : "Row"}</span>
+                  )}
                 </th>
               ))}
             </tr>
@@ -391,31 +338,30 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
             {ROWS.map((r, i) => (
               <tr
                 key={`${r.w}-${r.region}`}
+                className={
+                  i >= PHONE_SHEET_ROWS && !allRows ? "max-sm:hidden" : undefined
+                }
                 style={{
                   borderBottom: `1px solid ${DEMO.leinen}`,
-                  background: i % 3 === 2 ? "rgba(249,115,22,0.04)" : "transparent",
+                  background: "transparent",
                 }}
               >
                 <td
+                  className="px-1!"
                   style={{
-                    padding: "4px 8px",
                     background: DEMO.birke,
                     color: DEMO.schiefer,
-                    fontSize: 12,
                     textAlign: "center",
                     borderRight: `1px solid ${DEMO.leinen}`,
                   }}
                 >
                   {i + 2}
                 </td>
-                <td style={{ padding: "4px 8px" }}>{weekLabel(r.w, locale)}</td>
-                <td style={{ padding: "4px 8px" }}>
-                  {isDe ? r.region : REGION_EN[r.region]}
-                </td>
-                <td style={{ padding: "4px 8px", textAlign: "right" }}>{r.stk}</td>
+                <td>{weekLabel(r.w, locale)}</td>
+                <td>{isDe ? r.region : REGION_EN[r.region]}</td>
+                <td style={{ textAlign: "right" }}>{r.stk}</td>
                 <td
                   style={{
-                    padding: "4px 8px",
                     textAlign: "right",
                     fontWeight: 600,
                     whiteSpace: "nowrap",
@@ -438,7 +384,6 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
           fontFamily: DEMO.font.mono,
           fontSize: 12,
           color: DEMO.schiefer,
-          letterSpacing: "0.08em",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
@@ -446,10 +391,23 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
           marginTop: "auto",
         }}
       >
-        <span>{isDe ? "Blatt1 · 9 Zeilen" : "Sheet1 · 9 rows"}</span>
+        <span className="max-sm:hidden">
+          {isDe ? "Blatt1 · 9 Zeilen" : "Sheet1 · 9 rows"}
+        </span>
+        <button
+          type="button"
+          onClick={() => setAllRows((open) => !open)}
+          aria-expanded={allRows}
+          aria-controls={tableId}
+          className="-my-[7px] inline-flex min-h-11 items-center gap-1.5 text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground sm:hidden"
+          style={{ ...DEMO.label, background: "transparent", border: 0, padding: 0, cursor: "pointer" }}
+        >
+          {isDe ? `Alle ${ROWS.length} Zeilen` : `All ${ROWS.length} rows`}
+          <DisclosureGlyph open={allRows} />
+        </button>
         <span
           style={{
-            color: "var(--color-brand-orange)",
+            color: DEMO.ink,
             fontWeight: 700,
             display: "inline-flex",
             alignItems: "center",
@@ -457,13 +415,8 @@ function Spreadsheet({ locale }: { readonly locale: Locale }) {
           }}
         >
           <span
-            style={{
-              width: 6,
-              height: 6,
-              background: "var(--color-brand-orange)",
-              borderRadius: 999,
-              boxShadow: "0 0 0 3px rgba(249,115,22,0.18)",
-            }}
+            aria-hidden
+            style={{ width: 6, height: 6, background: DEMO.ink }}
           />
           Claude-Add-In
         </span>
@@ -486,9 +439,19 @@ function TaskPicker({
   readonly text: (de: string, en: string) => string;
 }) {
   const isDe = locale === "de";
+  // From sm up each task is a bordered card and the selected one is filled
+  // in the page's scene line (Kobalt on the IDEA demo pages, 7.15:1 with
+  // Kalkweiß type; ink where no scene is set). Below sm the tasks are hairline ledger rows: the
+  // selected row carries a 2px ink tick on the left instead of a black
+  // fill, and the "Formel generieren" line drops because the whole row is
+  // the button.
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 10, minWidth: 0 }}>
+    <div
+      className="gap-0 sm:gap-2.5"
+      style={{ display: "flex", flexDirection: "column", minWidth: 0 }}
+    >
       <div
+        className="max-sm:border-b max-sm:border-[#0B0908] max-sm:pb-1.5"
         style={{
           display: "flex",
           justifyContent: "space-between",
@@ -499,11 +462,8 @@ function TaskPicker({
         <Overline>{text("Aufgabe an Claude", "Task for Claude")}</Overline>
         <span
           style={{
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
+            ...DEMO.label,
             color: DEMO.schiefer,
-            letterSpacing: "0.1em",
-            textTransform: "uppercase",
           }}
         >
           {TASKS.length} {text("Aufgaben", "tasks")}
@@ -512,42 +472,25 @@ function TaskPicker({
 
       {TASKS.map((t, i) => {
         const active = activeId === t.id;
+        const muted = active
+          ? "text-[rgba(11,9,8,0.62)] sm:text-[rgba(243,240,233,0.85)]"
+          : "text-[rgba(11,9,8,0.62)]";
         return (
           <button
             key={t.id}
             type="button"
             onClick={() => onSelect(t.id)}
             aria-pressed={active}
-            style={{
-              position: "relative",
-              minHeight: 44,
-              width: "100%",
-              minWidth: 0,
-              textAlign: "left",
-              padding: "11px 13px",
-              background: active ? DEMO.ink : DEMO.birke,
-              color: active ? DEMO.kalk : DEMO.ink,
-              border: `1px solid ${active ? "var(--color-brand-orange)" : DEMO.leinen}`,
-              boxShadow: active ? `3px 3px 0 0 var(--color-brand-orange)` : "none",
-              transform: active ? "translate(-2px,-2px)" : "translate(0,0)",
-              cursor: "pointer",
-              fontFamily: "inherit",
-              transition:
-                "transform 160ms ease, box-shadow 160ms ease, background 160ms ease",
-              overflow: "hidden",
-            }}
-            onMouseEnter={(e) => {
-              if (!active) {
-                e.currentTarget.style.borderColor = "var(--color-brand-orange)";
-                e.currentTarget.style.background = DEMO.kalk;
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!active) {
-                e.currentTarget.style.borderColor = DEMO.leinen;
-                e.currentTarget.style.background = DEMO.birke;
-              }
-            }}
+            data-excel-task={t.id}
+            className={[
+              "relative min-h-11 w-full min-w-0 cursor-pointer overflow-hidden text-left transition-colors duration-[120ms] motion-reduce:transition-none",
+              "max-sm:border-b max-sm:border-l-2 max-sm:border-b-[#E3DFD6] max-sm:bg-transparent max-sm:py-2.5 max-sm:pl-3 max-sm:pr-0",
+              "sm:border sm:px-[13px] sm:py-[11px]",
+              active
+                ? "text-[#0B0908] max-sm:border-l-[#0B0908] sm:border-scene-line sm:bg-scene-line sm:text-[#F3F0E9]"
+                : "text-[#0B0908] max-sm:border-l-transparent sm:border-[#E3DFD6] sm:bg-[#F7F4ED] sm:hover:border-[#0B0908] sm:hover:bg-[#F3F0E9]",
+            ].join(" ")}
+            style={{ fontFamily: "inherit" }}
           >
             <div
               style={{
@@ -559,11 +502,9 @@ function TaskPicker({
             >
               <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 0 }}>
                 <span
+                  className={`text-[13px] sm:text-[12px] ${muted}`}
                   style={{
                     fontFamily: DEMO.font.mono,
-                    fontSize: 12,
-                    letterSpacing: "0.1em",
-                    color: active ? "var(--color-brand-orange)" : DEMO.schiefer,
                     fontWeight: 700,
                     flexShrink: 0,
                   }}
@@ -571,8 +512,8 @@ function TaskPicker({
                   0{i + 1}
                 </span>
                 <span
+                  className="text-[14px] sm:text-[13px]"
                   style={{
-                    fontSize: 13,
                     fontWeight: 700,
                     overflow: "hidden",
                     textOverflow: "ellipsis",
@@ -583,11 +524,9 @@ function TaskPicker({
                 </span>
               </div>
               <span
+                className={`text-[13px] sm:text-[12px] ${muted}`}
                 style={{
                   fontFamily: DEMO.font.mono,
-                  fontSize: 12,
-                  color: active ? "rgba(243,240,233,0.7)" : DEMO.schiefer,
-                  letterSpacing: "0.06em",
                   flexShrink: 0,
                 }}
               >
@@ -595,23 +534,19 @@ function TaskPicker({
               </span>
             </div>
             <div
+              className={`text-[13px] sm:text-[12px] ${muted}`}
               style={{
-                fontSize: 12,
                 marginTop: 4,
                 lineHeight: 1.45,
-                color: active ? "rgba(243,240,233,0.75)" : DEMO.schiefer,
               }}
             >
               {isDe ? t.detail.de : t.detail.en}
             </div>
             <div
+              className="max-sm:hidden"
               style={{
                 marginTop: 7,
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                color: "var(--color-brand-orange)",
-                letterSpacing: "0.12em",
-                fontWeight: 700,
+                ...DEMO.label,
               }}
             >
               {(isDe ? t.action.de : t.action.en)} →
@@ -627,16 +562,7 @@ function TaskPicker({
 
 function Overline({ children }: { readonly children: ReactNode }) {
   return (
-    <div
-      style={{
-        fontFamily: DEMO.font.mono,
-        fontSize: 12,
-        color: "var(--color-brand-orange)",
-        letterSpacing: "0.14em",
-        textTransform: "uppercase",
-        fontWeight: 700,
-      }}
-    >
+    <div style={{ ...DEMO.label, color: DEMO.ink }}>
       {children}
     </div>
   );
@@ -653,16 +579,14 @@ function OutputShell({
   readonly caption: string;
   readonly children: ReactNode;
 }) {
+  // An open section under a 2px ink rule, not a framed panel: the demo
+  // shell is already the frame, and a box never sits inside another box.
+  // Inside it only the code line (Beton fill) and tables carry a surface.
   return (
     <div
       style={{
-        background: DEMO.kalk,
-        borderTop: `3px solid var(--color-brand-orange)`,
-        borderRight: `1px solid ${DEMO.ink}`,
-        borderBottom: `1px solid ${DEMO.ink}`,
-        borderLeft: `1px solid ${DEMO.ink}`,
-        boxShadow: `3px 3px 0 0 ${DEMO.ink}`,
-        padding: "14px 16px 16px",
+        borderTop: `2px solid ${DEMO.ink}`,
+        padding: "14px 0 0",
       }}
     >
       <div
@@ -675,15 +599,8 @@ function OutputShell({
           flexWrap: "wrap",
         }}
       >
-        <Overline>◆ {label}</Overline>
-        <span
-          style={{
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            color: DEMO.schiefer,
-            letterSpacing: "0.08em",
-          }}
-        >
+        <Overline>{label}</Overline>
+        <span className="text-caption" style={{ color: DEMO.schiefer }}>
           {caption}
         </span>
       </div>
@@ -706,11 +623,10 @@ function FormulaOutput({ text }: OutputProps) {
       <div
         style={{
           background: "rgba(11,9,8,0.04)",
-          border: `1px solid ${DEMO.leinen}`,
           padding: "12px 14px",
           fontFamily: DEMO.font.mono,
-          fontSize: "clamp(12px, 1.6vw, 12px)",
-          color: "var(--color-brand-orange)",
+          fontSize: 12,
+          color: DEMO.ink,
           lineHeight: 1.65,
           overflowWrap: "anywhere",
         }}
@@ -721,13 +637,9 @@ function FormulaOutput({ text }: OutputProps) {
           'IF(INDIRECT("E"&ROW()-3)=0,"",(E2-INDIRECT("E"&ROW()-3))/INDIRECT("E"&ROW()-3))',
         )}
       </div>
-      <div
-        style={{
-          display: "grid",
-          gap: 8,
-          gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
-          marginTop: 12,
-        }}
+      <dl
+        className="grid gap-0 sm:grid-cols-[repeat(auto-fit,minmax(140px,1fr))] sm:gap-x-4"
+        style={{ marginTop: 12, marginBottom: 0 }}
       >
         <FormulaNote
           k={text("Region-Bezug", "Region reference")}
@@ -741,21 +653,18 @@ function FormulaOutput({ text }: OutputProps) {
           k={text("Format", "Format")}
           v={text("Prozent, 1 Nachk.", "Percent, 1 decimal")}
         />
-      </div>
+      </dl>
       <p
         style={{
           fontSize: 12,
           color: DEMO.schiefer,
           lineHeight: 1.55,
-          fontStyle: "italic",
-          borderLeft: `2px solid var(--color-brand-orange)`,
-          paddingLeft: 10,
           margin: "12px 0 0",
         }}
       >
         {text(
-          "Greift auf die Vorwoche derselben Region zu und berechnet die relative Veränderung. Zieh die Formel herunter, sie läuft für alle Regionen.",
-          "Reaches back to the prior week for the same region and computes the relative change. Fill the formula down; it works for every region.",
+          "Berechnet die relative Veränderung zur Vorwoche derselben Region. Zieh die Formel herunter, sie gilt für alle Regionen.",
+          "Computes the relative change from the same region's prior week. Fill the formula down; it works for every region.",
         )}
       </p>
     </OutputShell>
@@ -763,29 +672,27 @@ function FormulaOutput({ text }: OutputProps) {
 }
 
 function FormulaNote({ k, v }: { readonly k: string; readonly v: string }) {
+  // A hairline-ruled row below sm, a hairline-topped column from sm up:
+  // never a box, so the result section holds no nested frames.
   return (
     <div
-      style={{
-        border: `1px solid ${DEMO.leinen}`,
-        background: DEMO.birke,
-        padding: "7px 9px",
-        minWidth: 0,
-      }}
+      className="flex items-baseline justify-between gap-3 border-b border-[#E3DFD6] py-2 first:border-t sm:block sm:border-b-0 sm:border-t sm:pb-0"
+      style={{ minWidth: 0 }}
     >
-      <div
+      <dt
         style={{
-          fontFamily: DEMO.font.mono,
-          fontSize: 12,
+          ...DEMO.label,
           color: DEMO.schiefer,
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
         }}
       >
         {k}
-      </div>
-      <div style={{ fontSize: 12, color: DEMO.ink, fontWeight: 700, marginTop: 2 }}>
+      </dt>
+      <dd
+        className="m-0 text-right text-[13px] sm:mt-0.5 sm:text-left sm:text-[12px]"
+        style={{ color: DEMO.ink, fontWeight: 700 }}
+      >
         {v}
-      </div>
+      </dd>
     </div>
   );
 }
@@ -799,11 +706,8 @@ function PivotOutput({ locale, text }: OutputProps) {
     >
       <div
         style={{
-          fontFamily: DEMO.font.mono,
-          fontSize: 12,
-          fontWeight: 700,
-          color: "var(--color-brand-orange)",
-          letterSpacing: "0.06em",
+          ...DEMO.label,
+          color: DEMO.ink,
           marginBottom: 10,
         }}
       >
@@ -829,14 +733,10 @@ function PivotOutput({ locale, text }: OutputProps) {
                 <th
                   key={h}
                   style={{
+                    ...DEMO.label,
                     textAlign: i > 0 ? "right" : "left",
                     padding: "8px 8px",
-                    fontFamily: DEMO.font.mono,
-                    fontSize: 12,
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
                     color: DEMO.schiefer,
-                    fontWeight: 700,
                   }}
                 >
                   {h}
@@ -850,14 +750,14 @@ function PivotOutput({ locale, text }: OutputProps) {
                 key={r.region}
                 style={{
                   borderBottom: `1px solid ${DEMO.leinen}`,
-                  background: i === 0 ? DEMO.kupferMist : "transparent",
+                  background: "transparent",
                 }}
               >
                 <td
                   style={{
                     padding: "10px 8px",
                     fontWeight: 700,
-                    color: i === 0 ? "var(--color-brand-orange)" : DEMO.ink,
+                    color: DEMO.ink,
                     display: "flex",
                     alignItems: "center",
                     gap: 6,
@@ -868,11 +768,11 @@ function PivotOutput({ locale, text }: OutputProps) {
                       style={{
                         fontFamily: DEMO.font.mono,
                         fontSize: 12,
+                        // The pivot's one Mennige mark: paper on Mennige, 5.4:1.
                         background: "var(--color-brand-orange)",
-                        color: DEMO.kalk,
+                        color: "#f9f7f2",
                         padding: "1px 5px",
-                        letterSpacing: "0.06em",
-                        fontWeight: 800,
+                        fontWeight: 700,
                       }}
                     >
                       #1
@@ -905,7 +805,7 @@ function PivotOutput({ locale, text }: OutputProps) {
                     padding: "10px 8px",
                     textAlign: "right",
                     fontFamily: DEMO.font.mono,
-                    color: i === 0 ? "var(--color-brand-orange)" : DEMO.schiefer,
+                    color: i === 0 ? DEMO.ink : DEMO.schiefer,
                     fontWeight: 700,
                   }}
                 >
@@ -921,9 +821,6 @@ function PivotOutput({ locale, text }: OutputProps) {
           fontSize: 12,
           color: DEMO.schiefer,
           lineHeight: 1.55,
-          fontStyle: "italic",
-          borderLeft: `2px solid var(--color-brand-orange)`,
-          paddingLeft: 10,
           margin: "14px 0 0",
         }}
       >
@@ -944,7 +841,7 @@ function ForecastOutput({ locale, text }: OutputProps) {
 
   return (
     <OutputShell
-      label={text("Forecast · KW 17–20", "Forecast · weeks 17–20")}
+      label={text("Forecast · KW 17 bis 20", "Forecast · weeks 17 to 20")}
       caption={text("Konfidenz 90 %", "90% confidence")}
     >
       <label
@@ -965,12 +862,8 @@ function ForecastOutput({ locale, text }: OutputProps) {
         >
           <span
             style={{
-              fontFamily: DEMO.font.mono,
-              fontSize: 12,
+              ...DEMO.label,
               color: DEMO.schiefer,
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              fontWeight: 700,
             }}
           >
             {text("Angenommenes Wachstum / Woche", "Assumed growth / week")}
@@ -980,9 +873,7 @@ function ForecastOutput({ locale, text }: OutputProps) {
               fontFamily: DEMO.font.mono,
               fontSize: 13,
               fontWeight: 800,
-              color: exceedsRange
-                ? "var(--color-destructive)"
-                : "var(--color-brand-orange)",
+              color: exceedsRange ? "var(--color-destructive)" : DEMO.ink,
               fontVariantNumeric: "tabular-nums",
             }}
           >
@@ -1008,7 +899,7 @@ function ForecastOutput({ locale, text }: OutputProps) {
           style={{
             minHeight: 44,
             width: "100%",
-            accentColor: "var(--color-brand-orange)",
+            accentColor: DEMO.ink,
           }}
         />
       </label>
@@ -1028,8 +919,8 @@ function ForecastOutput({ locale, text }: OutputProps) {
           }}
         >
           {text(
-            `Bei +${growthRate} % pro Woche übersteigt die obere Schätzung für KW 20 den sinnvollen Darstellungsbereich. Eine lineare Fortschreibung wird bei diesem Wachstum unzuverlässig.`,
-            `At +${growthRate}% per week the upper estimate for week 20 exceeds a sensible display range. A linear extrapolation stops being trustworthy at this rate.`,
+            `Bei +${growthRate} % pro Woche sprengt die obere Schätzung für KW 20 die Skala, und die lineare Fortschreibung wird unzuverlässig.`,
+            `At +${growthRate}% per week the upper estimate for week 20 leaves the scale, and the linear extrapolation becomes unreliable.`,
           )}
         </p>
       ) : null}
@@ -1089,10 +980,11 @@ function ForecastOutput({ locale, text }: OutputProps) {
                   width: "62%",
                   maxWidth: 40,
                   height: `${hiH - loH}%`,
-                  background: DEMO.kupferMist,
+                  // Dashed = an estimate (deck grammar); no tint.
+                  background: "transparent",
                   position: "absolute",
                   bottom: `${loH}%`,
-                  border: `1px dashed var(--color-brand-orange)`,
+                  border: `1px dashed ${DEMO.ink}`,
                 }}
               />
               {/* Prediction bar */}
@@ -1104,7 +996,6 @@ function ForecastOutput({ locale, text }: OutputProps) {
                   background: "var(--color-brand-orange)",
                   position: "absolute",
                   bottom: 0,
-                  boxShadow: `2px 2px 0 0 ${DEMO.ink}`,
                 }}
               />
               {/* Value label */}
@@ -1131,7 +1022,6 @@ function ForecastOutput({ locale, text }: OutputProps) {
                   color: DEMO.ink,
                   position: "absolute",
                   bottom: -22,
-                  letterSpacing: "0.06em",
                   whiteSpace: "nowrap",
                 }}
               >
@@ -1160,7 +1050,7 @@ function ForecastOutput({ locale, text }: OutputProps) {
             label={text("Prognose", "Forecast")}
           />
           <LegendDot
-            color={DEMO.kupferMist}
+            color="transparent"
             label={text("Konfidenz-Band", "Confidence band")}
             border
           />
@@ -1171,15 +1061,12 @@ function ForecastOutput({ locale, text }: OutputProps) {
             fontSize: 12,
             color: DEMO.ink,
             fontWeight: 700,
-            letterSpacing: "0.08em",
           }}
         >
           {text("Trend", "Trend")}{" "}
           <span
             style={{
-              color: exceedsRange
-                ? "var(--color-destructive)"
-                : "var(--color-brand-orange)",
+              color: exceedsRange ? "var(--color-destructive)" : DEMO.ink,
             }}
           >
             {locale === "de" ? `+${growthRate} %` : `+${growthRate}%`}
@@ -1194,15 +1081,12 @@ function ForecastOutput({ locale, text }: OutputProps) {
           color: DEMO.schiefer,
           marginTop: 12,
           lineHeight: 1.55,
-          fontStyle: "italic",
-          borderLeft: `2px solid var(--color-brand-orange)`,
-          paddingLeft: 10,
           margin: "12px 0 0",
         }}
       >
         {text(
-          "Lineare Projektion mit leichter Quartals-Saisonalität. Die Konfidenz weitet sich mit jeder Woche, realistisch, nicht geschönt.",
-          "A linear projection with light quarterly seasonality. The confidence band widens each week: realistic, not flattering.",
+          "Lineare Projektion mit leichter Quartals-Saisonalität. Das Konfidenzband wird mit jeder Woche breiter.",
+          "A linear projection with light quarterly seasonality. The confidence band widens with each week.",
         )}
       </p>
     </OutputShell>
@@ -1227,7 +1111,6 @@ function LegendDot({
         fontFamily: DEMO.font.mono,
         fontSize: 12,
         color: DEMO.schiefer,
-        letterSpacing: "0.06em",
       }}
     >
       <span
@@ -1235,7 +1118,7 @@ function LegendDot({
           width: 10,
           height: 10,
           background: color,
-          border: border ? `1px dashed var(--color-brand-orange)` : "none",
+          border: border ? `1px dashed ${DEMO.ink}` : "none",
         }}
       />
       {label}

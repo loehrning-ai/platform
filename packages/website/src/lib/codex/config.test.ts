@@ -27,7 +27,7 @@ describe("CODEX_CONFIG ", () => {
 
   // Copy lock updated: English UI copy names completion documents "certificate of participation".
   it("carries a certificate recordNoun consistent with an English certificate of participation", () => {
-    expect(CODEX_CONFIG.recordNoun.label).toBe("Certificate of Participation");
+    expect(CODEX_CONFIG.recordNoun.label).toBe("Certificate of participation");
     expect(CODEX_CONFIG.recordNoun.possessive).toContain("certificate");
     expect(CODEX_CONFIG.recordNoun.demonstrative).toContain("certificate");
   });

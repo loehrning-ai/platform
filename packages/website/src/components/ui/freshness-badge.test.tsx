@@ -62,6 +62,20 @@ describe("<FreshnessBadge>", () => {
     expect(screen.getByText("Aktualisierung ausstehend")).toBeInTheDocument();
   });
 
+  it("draws the overdue warning as a square status outline with no tint", () => {
+    render(<FreshnessBadge lastReviewed="2020-01-01" nextReview={FAR_PAST} />);
+    const warning = screen.getByText("Aktualisierung ausstehend");
+    expect(warning).toHaveClass(
+      "border",
+      "border-risk-yellow",
+      "px-1.5",
+      "py-0.5",
+      "text-risk-yellow",
+    );
+    // No amber wash (about 2.54:1 on paper), no radius, no OS dark variant.
+    expect(warning.className).not.toMatch(/\bbg-|amber|\brounded|dark:/);
+  });
+
   it("hides the overdue warning when nextReview is in the future", () => {
     render(<FreshnessBadge lastReviewed="2026-01-01" nextReview={FAR_FUTURE} />);
     expect(screen.queryByText("Aktualisierung ausstehend")).toBeNull();

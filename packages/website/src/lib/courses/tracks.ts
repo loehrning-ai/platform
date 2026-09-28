@@ -33,7 +33,7 @@ export const BRAINSTER_COURSE_CATALOG: readonly BrainsterCourse[] = [
     title: "Geschäftsberichte mit KI lesen",
     tagline: "Baue live einen KI-Analysten für monatliche Geschäftsberichte.",
     description:
-      "Du baust in der Claude-App Schritt für Schritt einen Analysten, der Monatsberichte einliest, Kennzahlen exakt berechnet und Auffälligkeiten erklärt. Mit Übungs-Kit zum Nachbauen.",
+      "Du baust in der Claude-App einen Analysten, der Monatsberichte einliest, Kennzahlen berechnet und Auffälligkeiten erklärt, mit Übungs-Kit.",
     href: "/workshops/geschaeftsberichte-mit-ki-lesen",
     duration: "ca. 75 Min.",
     language: "Deutsch",
@@ -46,7 +46,7 @@ export const BRAINSTER_COURSE_CATALOG: readonly BrainsterCourse[] = [
     title: "AI-Forecasting",
     tagline: "Nachfrage und Kennzahlen mit KI vorhersagen und prüfen.",
     description:
-      "Drei interaktive Entscheidungslabore, ein durchgerechneter Geschäftsfall und eine Übung verbinden Baseline, Fehlerkosten, Puffer, Rücktest und Freigabetor.",
+      "Drei Entscheidungslabore, ein durchgerechneter Geschäftsfall und eine Übung zu Baseline, Fehlerkosten, Puffer, Rücktest und Freigabetor.",
     href: "/workshops/ki-prognosen-einschaetzen",
     duration: "ca. 90 Min.",
     language: "Deutsch",
@@ -387,30 +387,30 @@ export const COURSE_SECTIONS: Readonly<
 > = {
   spine: {
     title: "Grundlagenpfad",
-    eyebrow: "4 Kurse · DE + EN · fester Ablauf",
+    eyebrow: "4 Kurse · fester Ablauf",
     blurb:
-      "Vier Kurse bauen in fester Reihenfolge aufeinander auf. Alle Inhalte gibt es auf Deutsch und Englisch. Fortschritt, Umfang und Abschlussbedingung stehen an jedem Kurs. Teilnahmebestätigung und Lernnachweis werden von loehrning.ai selbst ausgestellt.",
+      "Vier Kurse in fester Reihenfolge; Teilnahmebestätigung und Lernnachweis werden von loehrning.ai selbst ausgestellt.",
   },
   deeper: {
     title: "Technikkurse",
-    eyebrow: "6 Kurse · DE + EN · offener Quellstand",
+    eyebrow: "6 Kurse · Quellcode auf GitHub",
     blurb:
-      "Sechs Kurse zu Prompting, Coding Agents, Datenarbeit und technischen Betriebsmodellen. Alle Inhalte gibt es auf Deutsch und Englisch. Umfang, Voraussetzungen, Lizenz und übernommener Quellstand bleiben sichtbar. Die Teilnahmebestätigung wird von loehrning.ai selbst ausgestellt.",
+      "Sechs Kurse zu Prompting, Coding-Agenten, Daten und Betriebsmodellen; die Teilnahmebestätigung wird von loehrning.ai selbst ausgestellt.",
   },
 };
 
 const COURSE_SECTIONS_EN: typeof COURSE_SECTIONS = {
   spine: {
     title: "Foundation path",
-    eyebrow: "4 courses · DE + EN · fixed sequence",
+    eyebrow: "4 courses · fixed sequence",
     blurb:
-      "Four courses build on one another in a fixed sequence. Every course is available in English and German. Each course states its progress model, scope, and completion conditions. Participation and learning records are issued by loehrning.ai.",
+      "Four courses in a fixed sequence; loehrning.ai issues the participation and learning records itself.",
   },
   deeper: {
     title: "Technical courses",
-    eyebrow: "6 courses · DE + EN · traceable source revision",
+    eyebrow: "6 courses · source on GitHub",
     blurb:
-      "Six courses cover prompting, coding agents, data work, and technical operating models. Every course is available in English and German. Each course states its scope, prerequisites, licence, and imported source revision. Completion documents are issued by loehrning.ai.",
+      "Six courses on prompting, coding agents, data and operating models; loehrning.ai issues the completion documents itself.",
   },
 };
 

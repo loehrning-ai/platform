@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { DemoGrid, type DemoGridInitialFilters } from "./demo-grid";
 import { trackDemoFilter } from "@/lib/analytics";
@@ -60,15 +60,42 @@ describe("<DemoGrid>", () => {
   it("renders every demo when no filter is seeded and reports the total count", () => {
     const { container } = render(<DemoGrid initialFilters={DEFAULT_FILTERS} />);
     expect(screen.queryAllByTestId("demo-tile")).toHaveLength(12);
-    expect(screen.getByRole("status")).toHaveTextContent("12 Praxisbeispiele");
+    // The live region stays mounted but says nothing while unfiltered: the
+    // total already shows in the stat row and in both "Alle (12)" chips.
+    expect(screen.getByRole("status")).toBeEmptyDOMElement();
+    expect(
+      within(screen.getByRole("group", { name: "Kategorie" })).getByRole(
+        "button",
+        { name: "Alle (12)" },
+      ),
+    ).toHaveAttribute("aria-pressed", "true");
     // The mount effect reports the complete unfiltered state explicitly.
     expect(trackDemoFilter).toHaveBeenCalledWith("Alle", "alle", "alle");
     const levelFilters = screen.getByRole("group", { name: "Reifegrad" });
-    expect(levelFilters.lastElementChild).toHaveClass("flex", "flex-wrap");
+    expect(levelFilters.lastElementChild).toHaveClass("sm:flex", "flex-wrap");
     expect(levelFilters.lastElementChild).not.toHaveClass("overflow-x-auto");
     expect(container.querySelector("[data-demo-filter-console]")).toBeTruthy();
     expect(container.querySelector("[data-demo-atlas]")).toBeTruthy();
-    expect(container.querySelector(".lg\\:grid-cols-4")).toBeTruthy();
+    expect(container.querySelector(".lg\\:grid-cols-3")).toBeTruthy();
+    // Section head with a Kopflinie in the page's scene line (Kobalt under
+    // the IDEA band, SPEC §3.7); square filter chips, ink fill when pressed.
+    const galleryHeading = screen.getByRole("heading", {
+      level: 2,
+      name: "Alle Beispiele",
+    });
+    expect(galleryHeading.closest("header")).toHaveClass(
+      "border-t-2",
+      "border-scene-line",
+    );
+    expect(galleryHeading.closest("header")).not.toHaveClass("border-foreground");
+    const allChip = within(
+      screen.getByRole("group", { name: "Reifegrad" }),
+    ).getByRole("button", { name: /Alle \(12\)/ });
+    expect(allChip).toHaveAttribute("aria-pressed", "true");
+    // The chosen filter takes the IDEA scene line (Kobalt), not ink.
+    expect(allChip).toHaveClass("min-h-11", "aria-pressed:bg-scene-line", "aria-pressed:text-background");
+    expect(allChip).not.toHaveClass("aria-pressed:bg-foreground");
+    expect(allChip.className).not.toMatch(/rounded|uppercase|font-mono/);
   });
 
   it("seeds filter state from the server-provided filters", () => {
@@ -109,6 +136,35 @@ describe("<DemoGrid>", () => {
     });
     expect(tileSlugs()).toEqual([]);
     expect(window.location.search).toBe("?level=einstieg&cat=RAG");
+  });
+
+  it("puts the phone selects behind one Filter button that counts active filters", () => {
+    render(
+      <DemoGrid initialFilters={{ ...DEFAULT_FILTERS, category: "RAG" }} />,
+    );
+    const toggle = screen.getByRole("button", { name: /^Filter(?:,|$)/ });
+    const panel = document.getElementById(
+      toggle.getAttribute("aria-controls") ?? "",
+    );
+    // Closed: the panel is hidden below sm only; from sm up the chip rows
+    // always show and the button itself is sm:hidden.
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    expect(toggle).toHaveClass("min-h-11", "sm:hidden");
+    expect(toggle).toHaveAccessibleName("Filter, 1 aktiv");
+    expect(panel).toHaveAttribute("data-demo-filter-panel");
+    expect(panel).toHaveClass("max-sm:hidden");
+
+    fireEvent.click(toggle);
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+    expect(panel).not.toHaveClass("max-sm:hidden");
+    // 16px below lg, so iOS does not zoom when a select takes focus.
+    expect(screen.getByRole("combobox", { name: "Reifegrad" })).toHaveClass(
+      "text-base",
+      "lg:text-label",
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /Filter zurücksetzen/ }));
+    expect(toggle).toHaveAccessibleName("Filter");
   });
 
   it("filters to a single category match", () => {
@@ -179,8 +235,12 @@ describe("<DemoGrid>", () => {
     act(() => {
       window.dispatchEvent(new KeyboardEvent("keydown", { key: "/" }));
     });
+    // The first chip in DOM order is the level group's "Alle (12)".
     expect(document.activeElement).toBe(
-      screen.getByRole("button", { name: /Alle \(12\)/ }),
+      within(screen.getByRole("group", { name: "Reifegrad" })).getByRole(
+        "button",
+        { name: /Alle \(12\)/ },
+      ),
     );
 
     act(() => {

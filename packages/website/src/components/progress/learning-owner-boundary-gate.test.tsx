@@ -90,6 +90,10 @@ function tree(content: ReactNode, locale: "de" | "en" = "de") {
 }
 
 beforeEach(async () => {
+  // The choice exists only where a public auth provider is configured; a
+  // provider-free build resolves the owner by itself (see the test below).
+  vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "https://fake-project.supabase.co");
+  vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "fake-public-key");
   navigation.pathname = "/ai-native";
   chunk.arrived = true;
   chunk.requests = 0;
@@ -117,9 +121,18 @@ beforeEach(async () => {
 
 afterEach(() => {
   cleanup();
+  vi.unstubAllEnvs();
 });
 
 describe("LearningOwnerBoundary route gate", () => {
+  it("renders no choice in a provider-free build, where the owner resolves by itself", () => {
+    vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "");
+    vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "");
+    const markup = renderToString(tree(<button type="button">Complete lesson</button>));
+    expect(markup).not.toContain("data-learning-owner-panel");
+    expect(chunk.requests).toBe(0);
+  });
+
   it("keeps the store, its storage and the runtime out of the root-layout graph", () => {
     const boundary = source(
       "src/components/progress/learning-owner-boundary.tsx",

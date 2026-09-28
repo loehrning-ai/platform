@@ -1,31 +1,30 @@
 # Question card
 
-## Start here: the five boxes from the lesson
+## The five boxes from the lesson
 
 Use a synthetic or generic example. Do not enter employer, customer, personal, or sensitive data.
 
-New word? The [guide glossary](https://loehrning.ai/workshops/datenbereitschaft-fuer-ki/guide.html#glossary) explains it.
+Terms: [guide glossary](https://loehrning.ai/workshops/datenbereitschaft-fuer-ki/guide.html#glossary).
 
-Fill only these five boxes during the lesson. You can also copy the five rows onto paper. The
-detailed prompts further down are optional follow-up.
+During the lesson, fill only these five boxes (on paper works too). The prompts further down are
+optional follow-up.
 
 | Box | Your answer | Worked FOLDLINE example |
 | --- | --- | --- |
-| 1. Question |  | Show ending MRR by month for the last complete quarter (April–June 2026). |
-| 2. Approved view |  | The approved monthly MRR summary. A view is a saved way to show selected data. |
-| 3. Four blanks + who counts |  | Kind: month-end balance. Rows: one per month. Months: Apr–Jun. Table: MRR summary. Who counts: subscriptions still active at month end; cancelled ones are out. |
+| 1. Question |  | Show ending MRR by month for the last complete quarter (April to June 2026). |
+| 2. Approved view |  | The approved monthly MRR summary (a view is a saved selection of data). |
+| 3. Four blanks + who counts |  | Kind: month-end balance. Rows: one per month. Months: Apr to Jun. Table: MRR summary. Who counts: subscriptions still active at month end; cancelled ones are out. |
 | 4. Boundary |  | The AI cannot read customer contact details. Database permissions enforce this. |
 | 5. Test |  | April must equal €334,675 (true value from the finance-approved month-end report). A request for customer emails must be refused. |
 
-**Box 3 has one extra line: who counts?** Fill the four blanks first: kind of number, rows per
-what, which months, which table. Then write who is in and who is out. Most real questions hide
-their trap here. For example, "active members" may or may not include paused or trial members.
+**Box 3 adds one line: who counts?** After the four blanks, write who is in and who is out. Most
+real questions hide their trap here: "active members" may or may not include paused or trial members.
 
-**Box 5 needs a source for the true value.** Name where the right answer comes from, for example
-last month's official board report or a finance-approved figure.
+**Box 5 needs a source for the true value**, for example last month's board report or a
+finance-approved figure.
 
-MRR means monthly recurring revenue. Ten subscriptions at €20 per month give €200 MRR.
-A monthly change is different: gaining one more €20 subscription increases MRR by €20, to €220.
+MRR is monthly recurring revenue: ten subscriptions at €20 per month give €200 MRR. One more €20
+subscription is a change of +€20, and MRR rises to €220.
 
 ## Optional detail for a future implementation
 
@@ -39,9 +38,9 @@ A monthly change is different: gaining one more €20 subscription increases MRR
 
 > Replace this line with the exact user question.
 
-### Four blanks and who counts (same as box 3)
+### Four blanks and who counts (box 3)
 
-These map to the definition template `semantic-template/metric.yml`.
+These map to `semantic-template/metric.yml`.
 
 - Kind of number (balance or change) → `aggregation`:
 - Rows per what → `result_grain`:

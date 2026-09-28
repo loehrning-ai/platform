@@ -29,19 +29,21 @@ describe("profile locale copy", () => {
 
   it("keeps explicit no-endorsement framing in both languages", () => {
     expect(PROFILE_COPY.de.stations.notice).toMatch(
-      /ausschließlich der biografischen Einordnung/,
+      /nur als berufliche Stationen/,
     );
     expect(PROFILE_COPY.de.stations.notice).toMatch(/nicht/);
-    expect(PROFILE_COPY.en.stations.notice).toMatch(
-      /biographical context only/,
-    );
+    expect(PROFILE_COPY.en.stations.notice).toMatch(/only as past roles/);
     expect(PROFILE_COPY.en.stations.notice).toMatch(
       /do not endorse or support/,
     );
-    expect(PROFILE_COPY.de.timeline.intro).not.toMatch(
+    // The timeline section itself (heading and rows) never implies a
+    // partnership or endorsement; only the notice speaks to it.
+    expect(JSON.stringify(PROFILE_COPY.de.timeline)).not.toMatch(
       /Partnerschaft|bestätig/u,
     );
-    expect(PROFILE_COPY.en.timeline.intro).not.toMatch(/partner|endorse/iu);
+    expect(JSON.stringify(PROFILE_COPY.en.timeline)).not.toMatch(
+      /partner|endorse/iu,
+    );
   });
 
   it("uses direct editorial language without promotional stock phrases", () => {

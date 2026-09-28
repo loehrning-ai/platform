@@ -13,8 +13,8 @@ import type { ReactElement, ReactNode } from "react";
  *
  * <AuthStatus> is the nav login/konto pill. Its real logic is the `signedIn`
  * flag that flips href (`/login` <-> `/konto`), the visible label
- * (`Login` <-> `Konto`) and the icon, driven entirely by the browser Supabase
- * client:
+ * (`Anmelden` <-> `Konto`, EN `Login` <-> `Account`) and the icon, driven
+ * entirely by the browser Supabase client:
  *   - no client configured        -> stays signed-out (default paint),
  *   - `auth.getUser()` resolves a user -> flips to the Konto link,
  *   - `auth.onAuthStateChange` fires    -> flips live on sign-in / sign-out,
@@ -123,29 +123,29 @@ describe("<AuthStatus>", () => {
       await Promise.resolve();
     });
 
-    expect(screen.getByRole("link", { name: /login/i })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Anmelden" })).toHaveAttribute(
       "href",
       "/login",
     );
     expect(mockCreateBrowserSupabaseClient).not.toHaveBeenCalled();
   });
 
-  it("renders the signed-out Login link when no Supabase client is configured", () => {
+  it("renders the signed-out Anmelden link when no Supabase client is configured", () => {
     mockCreateBrowserSupabaseClient.mockReturnValue(null);
     renderGerman(<AuthStatus />);
 
-    const link = screen.getByRole("link", { name: /login/i });
+    const link = screen.getByRole("link", { name: "Anmelden" });
     expect(link).toHaveAttribute("href", "/login");
     expect(screen.queryByRole("link", { name: /konto/i })).toBeNull();
   });
 
-  it("stays on the Login link when getUser resolves without a user", async () => {
+  it("stays on the Anmelden link when getUser resolves without a user", async () => {
     const sb = makeSupabase(null);
     mockCreateBrowserSupabaseClient.mockReturnValue(sb.client);
 
     renderGerman(<AuthStatus />);
 
-    const link = await screen.findByRole("link", { name: /login/i });
+    const link = await screen.findByRole("link", { name: "Anmelden" });
     expect(link).toHaveAttribute("href", "/login");
     expect(sb.getUser).toHaveBeenCalledTimes(1);
   });
@@ -158,7 +158,7 @@ describe("<AuthStatus>", () => {
 
     const link = await screen.findByRole("link", { name: /konto/i });
     expect(link).toHaveAttribute("href", "/konto");
-    expect(screen.queryByRole("link", { name: /login/i })).toBeNull();
+    expect(screen.queryByRole("link", { name: "Anmelden" })).toBeNull();
   });
 
   it("reacts to onAuthStateChange, flipping to Konto on sign-in and back on sign-out", async () => {
@@ -167,7 +167,7 @@ describe("<AuthStatus>", () => {
 
     renderGerman(<AuthStatus />);
     // Flush the initial getUser(null) resolution: still signed out.
-    await screen.findByRole("link", { name: /login/i });
+    await screen.findByRole("link", { name: "Anmelden" });
 
     act(() => sb.emit({ user: { id: "user-2" } }));
     expect(screen.getByRole("link", { name: /konto/i })).toHaveAttribute(
@@ -176,7 +176,7 @@ describe("<AuthStatus>", () => {
     );
 
     act(() => sb.emit(null));
-    expect(screen.getByRole("link", { name: /login/i })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Anmelden" })).toHaveAttribute(
       "href",
       "/login",
     );
@@ -188,8 +188,18 @@ describe("<AuthStatus>", () => {
     const { rerender } = renderGerman(<AuthStatus mobile />);
     const mobileLink = screen.getByRole("link");
     expect(mobileLink.className).toContain("min-h-11");
-    expect(mobileLink.className).toContain("min-w-[6.75rem]");
-    expect(mobileLink.className).toContain("bg-brand-cobalt");
+    // Wide enough for the longest label, "Anmelden", so resolving the
+    // session to "Konto" never changes the control's width.
+    expect(mobileLink.className).toContain("min-w-[7.25rem]");
+    // In the phone sheet the icon and word sit together in the middle of the
+    // full-width control, not at its two far ends.
+    expect(mobileLink).toHaveClass("justify-center");
+    expect(mobileLink.className).not.toContain("justify-between");
+    // A square secondary ink control: no cobalt fill, no pill, no lift.
+    expect(mobileLink.className).toContain("border-foreground");
+    expect(mobileLink.className).not.toMatch(
+      /bg-brand-|\brounded-|uppercase|-translate-y-/,
+    );
     expect(mobileLink.className).toContain("w-full");
 
     rerender(<AuthStatus />);
@@ -197,12 +207,31 @@ describe("<AuthStatus>", () => {
     expect(screen.getByRole("link").className).not.toContain("w-full");
   });
 
+  it("renders a quiet text link for the phone menu sheet", () => {
+    mockCreateBrowserSupabaseClient.mockReturnValue(null);
+    const onNavigate = vi.fn();
+
+    renderGerman(<AuthStatus variant="quiet" onNavigate={onNavigate} />);
+    const link = screen.getByRole("link", { name: "Anmelden" });
+    expect(link).toHaveAttribute("href", "/login");
+    // A 44px target with no border, fill or icon: the Konto tab owns sign-in.
+    expect(link.className).toContain("min-h-11");
+    expect(link.className).toContain("min-w-11");
+    expect(link.className).not.toMatch(/\bborder\b|border-foreground|bg-brand-/);
+    expect(link.querySelector("svg")).toBeNull();
+    expect(link.className).toContain("focus-visible:inset-ring-brand-orange");
+    expect(link.className).toContain("motion-reduce:transition-none");
+
+    fireEvent.click(link);
+    expect(onNavigate).toHaveBeenCalledTimes(1);
+  });
+
   it("notifies the mobile navigation shell before following its link", () => {
     mockCreateBrowserSupabaseClient.mockReturnValue(null);
     const onNavigate = vi.fn();
 
     renderGerman(<AuthStatus mobile onNavigate={onNavigate} />);
-    fireEvent.click(screen.getByRole("link", { name: /login/i }));
+    fireEvent.click(screen.getByRole("link", { name: "Anmelden" }));
 
     expect(onNavigate).toHaveBeenCalledTimes(1);
   });
@@ -212,7 +241,7 @@ describe("<AuthStatus>", () => {
     mockCreateBrowserSupabaseClient.mockReturnValue(sb.client);
 
     const { unmount } = renderGerman(<AuthStatus />);
-    await screen.findByRole("link", { name: /login/i });
+    await screen.findByRole("link", { name: "Anmelden" });
     expect(sb.client.auth.onAuthStateChange).toHaveBeenCalledTimes(1);
 
     unmount();
@@ -231,7 +260,7 @@ describe("<AuthStatus>", () => {
 
     renderGerman(<AuthStatus />);
 
-    expect(await screen.findByRole("link", { name: /login/i })).toHaveAttribute(
+    expect(await screen.findByRole("link", { name: "Anmelden" })).toHaveAttribute(
       "href",
       "/login",
     );
@@ -312,7 +341,7 @@ describe("<AuthStatus>", () => {
 
     renderGerman(<AuthStatus />);
 
-    expect(await screen.findByRole("link", { name: /login/i })).toHaveAttribute(
+    expect(await screen.findByRole("link", { name: "Anmelden" })).toHaveAttribute(
       "href",
       "/login",
     );
@@ -333,7 +362,7 @@ describe("<AuthStatus>", () => {
       </LocaleProvider>,
     );
 
-    expect(screen.getByRole("link", { name: "Login" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Log in" })).toHaveAttribute(
       "href",
       "/en/login",
     );

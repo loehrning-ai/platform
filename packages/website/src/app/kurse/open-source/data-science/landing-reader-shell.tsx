@@ -26,9 +26,13 @@ interface DataScienceLandingReaderShellProps {
 /**
  * Landing-only reader chrome. The numbered chapter reader mounts the project
  * studio immediately because the learner has selected a canonical lesson.
- * The noncanonical landing keeps the same navigation but does not mount a
+ * The noncanonical landing keeps the same desktop rail but does not mount a
  * second project surface. Its authored overview already contains the course
  * map and interactive loop; the first canonical checkpoint owns project state.
+ *
+ * Below lg the landing is a marketing page, not a reader: it stays out of
+ * reader focus mode, so the site tab bar remains and no reader bar or drawer
+ * control repeats the chapter list the overview already shows.
  */
 export function DataScienceLandingReaderShell({
   locale,
@@ -69,6 +73,7 @@ export function DataScienceLandingReaderShell({
   return (
     <div className={`ds-v8-scope ${DS_FONT_VARIABLES}`}>
       <LessonShell
+        readerFocus={false}
         navOpen={navOpen}
         onNavOpenChange={setNavOpen}
         navLabel={copy.navLabel}

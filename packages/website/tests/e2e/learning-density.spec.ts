@@ -4,36 +4,42 @@ const TECHNICAL_COURSE_CASES = [
   {
     label: "Claude",
     slug: "claude",
+    phoneFoldHidden: true,
     checkpoint: "/en/kurse/open-source/claude/kurs/mental-model",
     nonCheckpoint: "/en/kurse/open-source/claude/kurs/anatomy",
   },
   {
     label: "Codex",
     slug: "codex",
+    phoneFoldHidden: true,
     checkpoint: "/kurse/open-source/codex/kurs/L01",
     nonCheckpoint: "/kurse/open-source/codex/kurs/L02",
   },
   {
     label: "Data Infrastructure",
     slug: "data-infrastructure",
+    phoneFoldHidden: true,
     checkpoint: "/en/kurse/open-source/data-infrastructure/kurs/mental-model",
     nonCheckpoint: "/en/kurse/open-source/data-infrastructure/kurs/cap-pacelc",
   },
   {
     label: "Data Engineering Fundamentals",
     slug: "data-engineering-fundamentals",
+    phoneFoldHidden: false,
     checkpoint: "/en/kurse/open-source/data-engineering-fundamentals/home",
     nonCheckpoint: "/en/kurse/open-source/data-engineering-fundamentals/fund",
   },
   {
     label: "Data Science",
     slug: "data-science",
+    phoneFoldHidden: true,
     checkpoint: "/en/kurse/open-source/data-science/fund",
     nonCheckpoint: "/en/kurse/open-source/data-science/explore",
   },
   {
     label: "AI-Native Operator",
     slug: "ai-native-operator",
+    phoneFoldHidden: true,
     checkpoint: "/en/kurse/open-source/ai-native-operator/mindset/1",
     nonCheckpoint: "/en/kurse/open-source/ai-native-operator/mindset/2",
   },
@@ -41,6 +47,8 @@ const TECHNICAL_COURSE_CASES = [
 const WORKSHOP_ROUTES = [
   "/workshops/ki-prognosen-einschaetzen",
   "/workshops/geschaeftsberichte-mit-ki-lesen",
+  "/workshops/datenbereitschaft-fuer-ki",
+  "/workshops/esg-berichte-mit-ki",
 ] as const;
 
 async function openLearningRoute(page: Page, route: string): Promise<void> {
@@ -163,7 +171,7 @@ test.describe("learning density and value contract", () => {
   });
 
   for (const course of TECHNICAL_COURSE_CASES) {
-    test(`${course.label} checkpoint starts with one mission, studio, and closed reference`, async ({
+    test(`${course.label} checkpoint starts with one mission, studio, and the open lesson text`, async ({
       page,
     }) => {
       await openLearningRoute(page, course.checkpoint);
@@ -179,15 +187,23 @@ test.describe("learning density and value contract", () => {
 
       const reference = page.locator("details[data-lesson-reference]");
       await expect(reference).toHaveCount(1);
-      await expect(reference.locator("summary")).toBeVisible();
+      // Where a checkpoint's mission already repeats the objective
+      // (phoneFoldHidden), the lesson text stays open below sm without a fold
+      // control; from sm, and in the other readers, it can fold.
+      const phone = (page.viewportSize()?.width ?? 1280) < 640;
+      if (phone && course.phoneFoldHidden) {
+        await expect(reference.locator("summary")).toBeHidden();
+      } else {
+        await expect(reference.locator("summary")).toBeVisible();
+      }
       expect(
         await reference.evaluate(
           (details) => (details as HTMLDetailsElement).open,
         ),
-      ).toBe(false);
+      ).toBe(true);
     });
 
-    test(`${course.label} non-checkpoint starts directly on one closed reference`, async ({
+    test(`${course.label} non-checkpoint starts directly on the open lesson text`, async ({
       page,
     }) => {
       await openLearningRoute(page, course.nonCheckpoint);
@@ -198,8 +214,10 @@ test.describe("learning density and value contract", () => {
       const content = page.locator("[data-lesson-shell-content]");
       const reference = page.locator("details[data-lesson-reference]");
       await expect(reference).toHaveCount(1);
+      // The lesson head (Kopflinie, title) and the open text form one block,
+      // and that block is the first thing in the reader.
       await expect(content.locator(":scope > *").first()).toHaveAttribute(
-        "data-lesson-reference",
+        "data-lesson-reference-block",
         "true",
       );
       await expect(reference.locator("summary")).toBeVisible();
@@ -207,7 +225,7 @@ test.describe("learning density and value contract", () => {
         await reference.evaluate(
           (details) => (details as HTMLDetailsElement).open,
         ),
-      ).toBe(false);
+      ).toBe(true);
       await expectToStartInFirstViewportBand(
         page,
         reference,
@@ -216,16 +234,49 @@ test.describe("learning density and value contract", () => {
     });
   }
 
+  // The workshop detail page follows workshop-standard 4.1 and
+  // design-direction 7.2: the cover answers what the workshop is about and
+  // where to start, a compact agenda follows, and the decision lab comes
+  // right after it as a taste of the first act. The lab therefore does not
+  // start in the first viewport (on a 390x664 phone the compact cover alone
+  // nearly fills it). What stays pinned: the cover's start action is inside
+  // the first viewport, nothing but the agenda sits between the cover and the
+  // lab, and the lab starts within 1.7 viewports on a phone and 1.85 on the
+  // desktop project. The compact phone cover and the agenda rail keep it at
+  // 1.35 to 1.56 on a 390x664 phone even with the wider fallback face (it was
+  // 2.3 to 2.6 with the stacked agenda); desktop sits near 1.6 at 1280x720.
+  // The bound fails as soon as the agenda turns back into a vertical stack
+  // or any other section is moved above the lab.
   for (const route of WORKSHOP_ROUTES) {
-    test(`${route} starts its decision lab in the first viewport`, async ({
+    test(`${route} keeps its start action in the first viewport and the decision lab right after the agenda`, async ({
       page,
     }) => {
       await openLearningRoute(page, route);
-      await expectToStartInFirstViewportBand(
-        page,
-        page.locator("[data-workshop-decision-lab]"),
-        `${route} decision lab`,
-      );
+      const start = page.locator("[data-cover-band] a:not([data-cover-back])").first();
+      await expectFullyInFirstViewportBand(page, start, `${route} start action`);
+
+      const lab = page.locator("[data-workshop-decision-lab]");
+      await expect(lab, `${route} decision lab must render`).toBeVisible();
+      const order = await lab.evaluate((element) => {
+        const agenda = element.previousElementSibling;
+        return {
+          agendaHasRoute: Boolean(agenda?.querySelector("ol[data-route-mode]")),
+          coverBeforeAgenda: Boolean(
+            agenda?.previousElementSibling?.matches("[data-cover-band]"),
+          ),
+        };
+      });
+      expect(order.agendaHasRoute, `${route} agenda precedes the lab`).toBe(true);
+      expect(order.coverBeforeAgenda, `${route} cover precedes the agenda`).toBe(true);
+
+      const viewport = page.viewportSize()!;
+      const limit = viewport.width < 640 ? 1.7 : 1.85;
+      const bounds = await lab.boundingBox();
+      expect(bounds, `${route} decision lab needs bounds`).not.toBeNull();
+      expect(
+        bounds!.y,
+        `${route} decision lab must start within ${limit} viewports`,
+      ).toBeLessThan(viewport.height * limit);
     });
   }
 });

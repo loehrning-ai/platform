@@ -9,12 +9,12 @@ import { CODEX_QUIZ_COPY, CODEX_QUIZ_TITLE } from "../widget-copy";
 const lesson: CodexLesson = {
   id: "L12",
   number: 12,
-  title: "A Reviewable Development Workflow",
+  title: "A reviewable development workflow",
   subtitle:
-    "Move from request to release through explicit decisions, bounded implementation, independent review, and verified deployment.",
+    "Take one change from request to release with recorded decisions, bounded tasks, independent review and verified deployment.",
   durationMinutes: 15,
   trackId: "advanced",
-  hook: "Keep intent, evidence, and accountability connected.",
+  hook: "Take one task from spec to merge with evidence.",
   keyConcepts: [
     "Discuss-plan-implement-review-ship-learn",
     "Workflow chain",
@@ -31,11 +31,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "One change, from a chat message to a deployed endpoint. At each stage, name the decision owner, the repository evidence, the execution boundary and the review gate.\n\nThe alternatives look like reasonable shortcuts. Judge them by the risk they leave unowned.",
-        },
-        {
-          kind: "pull-quote",
-          text: "A defensible workflow makes each decision, assumption, diff, and verification result inspectable by the accountable reviewer.",
+            "One change, from a chat message to a deployed endpoint. At each stage, name the decision owner, the repository evidence, the execution boundary and the review gate. Judge each tempting shortcut by the risk it leaves unowned.",
         },
       ],
     },
@@ -47,7 +43,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "A repeatable workflow leaves fewer hidden assumptions. Adapt the phases to the change and keep ownership explicit from request through post-deployment verification.",
+            "Adapt the six phases to the change; ownership stays named from request to post-deployment checks.",
         },
         {
           kind: "card-grid",
@@ -55,39 +51,39 @@ const lesson: CodexLesson = {
             {
               eyebrow: "phase 01",
               title: "Discuss",
-              body: "Capture the user problem, affected systems, success conditions, constraints, data sensitivity, and unresolved decisions. Do not begin implementation while a material product or security choice remains implicit.",
+              body: "Capture problem, affected systems, success conditions, constraints, data sensitivity and open decisions. Settle product and security choices first.",
             },
             {
               eyebrow: "phase 02",
               title: "Plan",
-              body: "Map dependencies and valid intermediate states. Split coherent tasks, assign acceptance evidence, record the base revision, and state which steps require approval. A task may produce a local diff or pull request depending on the workflow.",
+              body: "Map dependencies and valid intermediate states. Split tasks, assign acceptance evidence, record the base revision, mark approval steps.",
             },
             {
               eyebrow: "phase 03",
               title: "Implement",
-              body: "Use the configured local or cloud environment for each bounded task. Serialize dependencies, isolate genuinely independent work, and record the commands and environment assumptions used.",
+              body: "Run each bounded task in its configured environment. Serialize dependencies, isolate independent work, record commands and environment assumptions.",
             },
             {
               eyebrow: "phase 04",
               title: "Review",
-              body: "Compare the complete diff with the task and excluded scope. Read tests and logs, inspect security and operational effects, and re-run trusted checks. Restart when the premise is wrong or revisions diverge; use targeted comments for local defects.",
+              body: "Compare the full diff with task and excluded scope, read tests and logs, check security and operational effects, rerun trusted checks. Comment on local defects; restart on a wrong premise.",
             },
             {
               eyebrow: "phase 05",
               title: "Ship",
-              body: "Use the repository's normal merge, deployment, rollback, and change-approval process. Verify the deployed artifact and relevant behavior in the target environment; local or task-environment success is not deployment proof.",
+              body: "Use the normal merge, deployment, rollback and approval process. Verify the deployed artifact and its behavior in the target environment; local success is no deployment proof.",
             },
             {
               eyebrow: "phase 06",
               title: "Learn",
-              body: "Record durable, non-obvious repository rules only when the task exposed a real gap. Keep task-specific findings in the issue or pull request, and preserve incident or deployment evidence in the system that owns it.",
+              body: "Record a durable, non-obvious repository rule only for a real gap. Task findings go in the issue or pull request; incident and deployment evidence stays in the system that owns it.",
             },
           ],
         },
         {
           kind: "prose",
           markdown:
-            "Ceremony follows risk and reversibility. A small local change needs a brief task and one check. An authentication, data, payment or migration change needs explicit security and rollout evidence. A short implementation is not a reason to skip a gate.",
+            "Scale the process to risk and reversibility. A small local change needs a brief task and one check; authentication, data, payment or migration changes need security and rollout evidence, however short the code.",
         },
       ],
     },
@@ -112,7 +108,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "You have decomposed it. First task: *add a /admin/exports/subscriptions.csv endpoint that streams active subscriptions as CSV*. Nightly scheduling and delivery become separate follow-on tasks.\n\nNow the spec. Which opener is strongest?",
+            "First task after decomposition: *add a /admin/exports/subscriptions.csv endpoint that streams active subscriptions as CSV*. Nightly scheduling and delivery follow as separate tasks. Which spec opener is strongest? Answer it at the end of the lesson.",
         },
       ],
     },
@@ -124,7 +120,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "The implementation returns a diff and reports passing checks. Read what actually changed.",
+            "The diff arrives with passing checks. It is at the end of the lesson; read what actually changed.",
         },
       ],
     },
@@ -136,7 +132,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "The test replaces active_subscriptions() and then checks serialization of the returned fixture. That covers endpoint formatting but not active-subscription selection. Which review comment states the missing evidence precisely?",
+            "The test replaces active_subscriptions() and checks how the returned fixture is serialized, so selecting active subscriptions stays untested. Which comment names the missing evidence precisely? Answer it at the end of the lesson.",
         },
       ],
     },
@@ -148,19 +144,19 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "The revised tests cover selection and serialization. The full diff has been reviewed and trusted checks pass. Before the scheduler task, preserve any durable decision the next task depends on.",
+            "The revised tests cover selection and serialization, the full diff is reviewed and trusted checks pass. Before the scheduler task, record any durable decision it depends on.",
         },
       ],
     },
     {
       id: "s8",
-      title: "Course complete",
+      title: "Operating rules",
       readTimeMinutes: 2,
       blocks: [
         {
           kind: "prose",
           markdown:
-            "Three operating rules to take with you.\n\n1. **Separate facts from hypotheses.** Keep file references, exact command results, and verified constraints. Discard unsupported explanations.\n2. **Restart on a false premise.** Use targeted revision for local defects; write a new task when the goal, architecture, or scope must change.\n3. **Bound work by review capacity.** Do not launch more concurrent tasks than the team can inspect, integrate, and verify at the required risk level.\n\nThe output of a coding agent remains a proposed change. The accountable human owns acceptance, merge, deployment, and incident response.",
+            "1. **Separate facts from hypotheses.** Keep file references, exact command results and verified constraints; drop unsupported explanations.\n2. **Restart on a false premise.** Correct local defects in place; write a new task when goal, architecture or scope must change.\n3. **Bound work by review capacity.** Launch no more concurrent tasks than the team can inspect, integrate and verify at the required risk level.\n\nA coding agent's output is a proposed change. The accountable human owns acceptance, merge, deployment and incident response.",
         },
       ],
     },
@@ -178,14 +174,14 @@ const lesson: CodexLesson = {
         question:
           'The ask is "CSV export, nightly, live by Friday." What do you do first?',
         options: [
-          "Open the agent, paste Priya's message verbatim, hit run.",
-          "Clarify columns, authorization, data volume, delivery destination, retention, and deadline; then separate the endpoint, schedule, and delivery work along real dependency boundaries.",
-          "Ask Priya for the exact CSV columns and ship it as one big task.",
-          "Tell Priya it is not feasible this week.",
+          "Open the agent, paste the request verbatim, hit run.",
+          "Clarify columns, access, volume, destination, retention and deadline, then split by real dependencies.",
+          "Ask the requester for the exact CSV columns and ship it as one big task.",
+          "Tell the requester it is not feasible this week.",
         ],
         correct: 1,
         explanation:
-          "The request combines data contract, authorization, export generation, scheduling, and delivery. Resolve the missing product and security decisions, then split only where the intermediate state is valid and independently reviewable.",
+          "The request mixes data contract, authorization, export, scheduling and delivery. Settle the open product and security decisions, then split only where each intermediate state is valid and reviewable.",
       },
     },
     {
@@ -197,7 +193,7 @@ const lesson: CodexLesson = {
         cpId: "q2",
         title: CODEX_QUIZ_TITLE,
         copy: CODEX_QUIZ_COPY,
-        question: "Best opening for the spec of task (a), the export endpoint?",
+        question: "Best opening for the spec of task 01, the export endpoint?",
         options: [
           '"Add a CSV export of subscriptions."',
           '"Goal: GET /admin/exports/subscriptions.csv returns all active subscriptions as CSV, streamed (not loaded into memory). Columns: id, customer_email, plan, status, current_period_end."',
@@ -206,7 +202,7 @@ const lesson: CodexLesson = {
         ],
         correct: 1,
         explanation:
-          "The specification names the route, fields, selection rule, and memory constraint. It still needs authorization and CSV-safety criteria, but it defines substantially more reviewable behavior than the other options.",
+          "It names route, fields, selection rule and memory constraint. Authorization and CSV-safety criteria are still missing, yet it defines far more reviewable behavior than the other options.",
       },
     },
     {
@@ -302,13 +298,13 @@ const lesson: CodexLesson = {
         question: "First scan of the PR. What is the biggest concern?",
         options: [
           "The endpoint does not use streaming.",
-          "The test covers CSV serialization of a supplied record but does not prove that only active subscriptions are selected.",
+          "The test never proves that only active subscriptions are selected.",
           "The imports are in the wrong order.",
           "Nothing, tests pass.",
         ],
         correct: 1,
         explanation:
-          "The test supplies the repository output, so it can exercise endpoint serialization but not the repository's active-status filter. Add evidence through the real selection boundary and retain focused serialization tests where useful.",
+          "The test supplies the repository output, so it exercises serialization but never the active-status filter. Add evidence through the real selection boundary and keep focused serialization tests where useful.",
       },
     },
     {
@@ -324,12 +320,12 @@ const lesson: CodexLesson = {
         options: [
           '"test is weak, please improve"',
           '"make it test the real thing"',
-          '"tests/api/admin/test_exports.py::test_export_subscriptions verifies serialization but not active-status selection. Add an integration test that seeds active and canceled rows, calls the endpoint through the real repository, and asserts that only active rows appear. Keep a focused serialization test if it covers separate behavior."',
+          "\"tests/api/admin/test_exports.py::test_export_subscriptions checks serialization only. Add an integration test through the real repository that seeds active and canceled rows and asserts that only active rows appear.\"",
           '"add more tests"',
         ],
         correct: 2,
         explanation:
-          'The precise comment identifies the existing coverage, the missing behavior, the test location, and the required boundary. The reviewer can evaluate the revision against those statements without inferring intent from words such as "weak" or "more."',
+          "It names existing coverage, missing behavior, test location and required boundary, so the revision can be checked against it. \"Weak\" or \"more\" leave the intent to guesswork.",
       },
     },
     {
@@ -345,13 +341,13 @@ const lesson: CodexLesson = {
           "Before you move to task 02, which habit preserves the evidence and decisions from task 01?",
         options: [
           "Close the PR tab and move on.",
-          '"Note the lesson learned, \\"tests that mock their own subject are a failure mode here\\", and add a line to your agent instructions file so the next run does not repeat it."',
+          "Add \"tests that mock their own subject are an anti-pattern here\" to the agent instructions so the next run avoids it.",
           "Rewrite the PR description yourself.",
           "Archive the PR in a private document.",
         ],
         correct: 1,
         explanation:
-          "Record a rule in AGENTS.md only when it is durable, repository-specific, and not already enforced by tests or tooling. Preserve task-specific decisions and evidence in the issue or pull request so future work can trace their context.",
+          "A rule belongs in AGENTS.md only when it is durable, repository-specific and not already enforced by tests or tooling. Task-specific decisions and evidence stay in the issue or pull request, with their context.",
       },
     },
   ],

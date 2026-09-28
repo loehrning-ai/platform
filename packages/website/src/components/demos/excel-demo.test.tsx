@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import ExcelDemo from "./excel-demo";
 
 /**
@@ -13,7 +13,7 @@ import ExcelDemo from "./excel-demo";
 
 function openForecastTab() {
   render(<ExcelDemo />);
-  fireEvent.click(screen.getByRole("button", { name: /Forecast KW 17–20/ }));
+  fireEvent.click(screen.getByRole("button", { name: /Forecast KW 17 bis 20/ }));
 }
 
 describe("<ExcelDemo> forecast tab", () => {
@@ -48,5 +48,26 @@ describe("<ExcelDemo> forecast tab", () => {
 
     expect(screen.getAllByText("+25 %").length).toBe(2);
     expect(screen.getByRole("alert")).toHaveTextContent(/unzuverlässig/);
+  });
+});
+
+describe("<ExcelDemo> sheet on phones", () => {
+  it("shows five rows below sm until the status bar opens all nine", () => {
+    render(<ExcelDemo />);
+    const sheet = screen.getByRole("region", { name: "Beispiel-Arbeitsblatt" });
+    const rows = within(sheet).getAllByRole("row").slice(1);
+    expect(rows).toHaveLength(9);
+    expect(rows.slice(0, 5).every((row) => !row.classList.contains("max-sm:hidden"))).toBe(true);
+    expect(rows.slice(5).every((row) => row.classList.contains("max-sm:hidden"))).toBe(true);
+
+    const toggle = screen.getByRole("button", { name: "Alle 9 Zeilen" });
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    expect(toggle).toHaveAttribute("aria-controls", sheet.id);
+    expect(toggle).toHaveClass("min-h-11", "sm:hidden");
+    fireEvent.click(toggle);
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+    expect(
+      within(sheet).getAllByRole("row").some((row) => row.classList.contains("max-sm:hidden")),
+    ).toBe(false);
   });
 });

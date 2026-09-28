@@ -23,8 +23,8 @@ export async function generateMetadata(): Promise<Metadata> {
       : "Capstone-Veröffentlichungsregeln: AI-Native Arbeitskurs";
   const description =
     locale === "en"
-      ? "Publication criteria and the current empty state of the AI-Native capstone collection. No entries are published without evidence and explicit consent."
-      : "Veröffentlichungskriterien und aktueller leerer Stand der AI-Native-Capstone-Sammlung. Keine Veröffentlichung ohne Beleg und ausdrückliche Freigabe.";
+      ? "Publication criteria and the current empty state of the AI-Native capstone collection. No entry is published without evidence and author consent."
+      : "Veröffentlichungskriterien und aktueller leerer Stand der AI-Native-Capstone-Sammlung. Keine Veröffentlichung ohne Beleg und Freigabe der Urheber.";
   const localizedPath = localizeHref("/ai-native/capstone-gallery", locale);
   const url = `${SITE_URL}${localizedPath}`;
   const alternates = buildLocaleAlternates("/ai-native/capstone-gallery", [
@@ -49,62 +49,62 @@ export async function generateMetadata(): Promise<Metadata> {
 const RUBRIC: readonly (readonly [string, string])[] = [
   [
     "Problem ist echt",
-    "Der Workflow löst ein Problem, das wirklich existiert, nicht eins, das für den Kurs erfunden wurde.",
+    "Der Workflow löst einen Bedarf, der im Arbeitsalltag beobachtet wurde.",
   ],
   [
     "Scope realistisch",
-    "Der Capstone ist in 7 Tagen / 10-15 Stunden als Pilot prüfbar. Kein Moonshot.",
+    "Als Pilot in 7 Tagen und 10 bis 15 Stunden prüfbar, mit festem Abbruchkriterium.",
   ],
   [
-    "Claude-first Architektur",
-    "Claude steht im Zentrum, nicht als Plugin neben anderer Logik.",
+    "Klare Rolle für Claude",
+    "Festgehalten ist, wobei Claude hilft und was bei Menschen bleibt.",
   ],
   [
-    "Pilotiert im Arbeitsalltag",
-    "Wird begrenzt eingesetzt oder anhand echter Arbeitsdaten nachgestellt. Keine reine Folienübung.",
+    "Im Kontext getestet",
+    "Getestet im begrenzten Arbeitseinsatz oder mit repräsentativen synthetischen Daten.",
   ],
   [
-    "DSGVO-dokumentiert",
-    "Datenklassifikation, AVV-Status, Zweckbindung klar benannt.",
+    "Datenumgang dokumentiert",
+    "Datenkategorien, Zweck, freigegebene Tools und Verarbeitungsbedingungen (etwa AVV) sind festgehalten.",
   ],
   [
-    "AI-Act-Check gemacht",
-    "Annex-III-Klassifikation dokumentiert. Provider- vs. Deployer-Rolle bekannt.",
+    "AI-Act-Prüfung notiert",
+    "Rolle und Risikoklasse nach Annex III sind als Fragen dokumentiert. Der Kurs trifft keine rechtliche Feststellung.",
   ],
   [
-    "Ablösbar",
-    "Eine andere Person kann Eingaben, Kontrollen, Zuständigkeit und Wiederanlauf aus der Dokumentation nachvollziehen.",
+    "Übergabefähig",
+    "Eine andere Person versteht aus der Dokumentation Eingaben, Kontrollen, Zuständigkeit und Wiederanlauf.",
   ],
 ];
 
 const RUBRIC_EN: readonly (readonly [string, string])[] = [
   [
     "Real problem",
-    "The workflow addresses an observed need rather than a problem invented for the course.",
+    "The workflow addresses a need observed at work.",
   ],
   [
     "Bounded scope",
-    "The pilot can be tested within seven days and 10 to 15 hours, with a defined stop condition.",
+    "Testable as a pilot in 7 days and 10 to 15 hours, with a defined stop condition.",
   ],
   [
     "Clear role for Claude",
-    "The workflow states what Claude assists with and what remains a human responsibility.",
+    "It records what Claude assists with and what stays with people.",
   ],
   [
     "Tested in context",
-    "The process is tested in a bounded work context or with representative synthetic data, not only described in slides.",
+    "Tested in bounded work use or with representative synthetic data.",
   ],
   [
     "Data handling documented",
-    "Data categories, purpose, approved tools and processing terms are recorded where relevant.",
+    "Data categories, purpose, approved tools and processing terms (such as a DPA) are recorded.",
   ],
   [
     "AI Act review recorded",
-    "The relevant role and risk-classification questions are documented. The course does not provide a legal determination.",
+    "Role and Annex III risk-class questions are documented. The course makes no legal determination.",
   ],
   [
     "Transferable",
-    "Another person can understand the inputs, controls, owner and recovery steps from the documentation.",
+    "Another person understands inputs, controls, owner and recovery from the documentation.",
   ],
 ];
 
@@ -120,8 +120,8 @@ export default async function CapstoneGalleryPage() {
       <TechnicalCourseHeader
         eyebrow={
           isEnglish
-            ? "Publication policy · current state"
-            : "Veröffentlichungsregeln · aktueller Stand"
+            ? "Publication policy"
+            : "Veröffentlichungsregeln"
         }
         title={
           isEnglish
@@ -130,8 +130,8 @@ export default async function CapstoneGalleryPage() {
         }
         intro={
           isEnglish
-            ? "The collection stays empty until a real project meets every publication criterion and its author explicitly consents."
-            : "Die Sammlung bleibt leer, bis ein reales Projekt jedes Veröffentlichungskriterium erfüllt und die Autorin oder der Autor ausdrücklich zustimmt."
+            ? "The collection stays empty until a real project meets every criterion and its author consents."
+            : "Die Sammlung bleibt leer, bis ein reales Projekt alle Kriterien erfüllt und die Autorin oder der Autor zustimmt."
         }
         primaryAction={
           <Link
@@ -153,14 +153,12 @@ export default async function CapstoneGalleryPage() {
           </Link>
         }
         facts={[
-          isEnglish ? "0 published entries" : "0 veröffentlichte Einträge",
-          isEnglish ? "7 publication criteria" : "7 Veröffentlichungskriterien",
           isEnglish
             ? "Evidence and privacy review required"
             : "Belege und Datenschutzprüfung nötig",
           isEnglish
-            ? "Explicit consent required"
-            : "Ausdrückliche Freigabe nötig",
+            ? "Author consent required"
+            : "Freigabe der Urheber nötig",
         ]}
         factsLabel={
           isEnglish ? "Publication boundary" : "Veröffentlichungsgrenze"
@@ -178,8 +176,8 @@ export default async function CapstoneGalleryPage() {
             }
             intro={
               isEnglish
-                ? "Five points meet the course self-review threshold. Publication requires all seven plus evidence, privacy review, and consent."
-                : "Fünf Punkte erfüllen die Kursschwelle der Selbstprüfung. Veröffentlichung verlangt alle sieben plus Belege, Datenschutzprüfung und Freigabe."
+                ? "Five points pass the course self-review; publication needs all seven."
+                : "Fünf Punkte reichen für die Selbstprüfung im Kurs, eine Veröffentlichung braucht alle sieben."
             }
           />
 
@@ -193,7 +191,7 @@ export default async function CapstoneGalleryPage() {
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <h3 className="text-sm font-bold text-foreground">{title}</h3>
-                <p className="text-[13px] leading-relaxed text-muted-foreground">
+                <p className="col-start-2 text-[13px] leading-relaxed text-muted-foreground sm:col-start-auto">
                   {description}
                 </p>
               </li>
@@ -203,7 +201,7 @@ export default async function CapstoneGalleryPage() {
 
         <section
           role="status"
-          className="mt-10 grid min-w-0 gap-3 border-y border-foreground py-5 sm:grid-cols-[12rem_minmax(0,1fr)] sm:gap-6"
+          className="mt-10 min-w-0 border-y border-foreground py-5"
         >
           <div>
             <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
@@ -213,11 +211,6 @@ export default async function CapstoneGalleryPage() {
               0 {isEnglish ? "entries" : "Einträge"}
             </p>
           </div>
-          <p className="max-w-[680px] text-sm leading-relaxed text-muted-foreground">
-            {isEnglish
-              ? "No capstone has been approved. An entry appears only after every criterion, privacy review, supporting evidence, and documented consent have been checked."
-              : "Kein Capstone ist freigegeben. Ein Eintrag erscheint erst nach Prüfung aller Kriterien, Datenschutzprüfung, Belegen und dokumentierter Freigabe."}
-          </p>
         </section>
 
         <details className="mt-10 border-y border-border">
@@ -232,13 +225,13 @@ export default async function CapstoneGalleryPage() {
           <div className="border-t border-border py-4 text-[13px] leading-relaxed text-muted-foreground">
             <p>
               {isEnglish
-                ? "No invented projects, placeholder profiles, or promised publication dates are used. The empty state is deliberate."
-                : "Es gibt keine erfundenen Projekte, Platzhalterprofile oder angekündigten Veröffentlichungstermine. Der leere Zustand ist beabsichtigt."}
+                ? "This page shows no invented projects, placeholder profiles or announced dates."
+                : "Hier stehen keine erfundenen Projekte, Platzhalterprofile oder angekündigten Termine."}
             </p>
             <p className="mt-2">
               {isEnglish
-                ? "Course completion and publication are separate. Publishing a capstone is never required to complete the course."
-                : "Kursabschluss und Veröffentlichung sind getrennt. Ein veröffentlichter Capstone ist nie Voraussetzung für den Kursabschluss."}
+                ? "You can complete the course without publishing a capstone."
+                : "Für den Kursabschluss musst du keinen Capstone veröffentlichen."}
             </p>
           </div>
         </details>

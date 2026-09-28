@@ -183,7 +183,7 @@ export function BiasVarianceSim() {
         `Grad ${complexity} · ${resampleFits.length} Bootstraps`,
       )}
       caption={text(
-        "Gray cloud = the range of fits you'd get from resampling. Narrow cloud + close to truth = good. Narrow + far = bias. Wide & wild = variance. The tradeoff is the dance.",
+        "The gray cloud shows fits from resampling. Narrow and close to the truth is good; narrow and far means bias; wide means high variance.",
         "Die graue Wolke zeigt Anpassungen aus wiederholten Stichproben. Schmal und nah an der wahren Funktion ist günstig. Schmal und weit entfernt bedeutet Bias; breit bedeutet hohe Varianz.",
       )}
     >

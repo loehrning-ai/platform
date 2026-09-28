@@ -21,23 +21,23 @@ interface Layer {
 }
 
 const LAYERS: readonly Layer[] = [
-  { n: 7, key: "app", name: "Application", sub: "Hex · Mode · dashboards · notebooks · BI tools", api: "Natural language · SQL · REST", hue: "L7", fail: "User-facing surface dark. No new queries can enter the system." },
-  { n: 6, key: "engine", name: "Query engine", sub: "Trino (interactive) · Spark (batch) · Snowflake", api: "SQL → distributed plan", hue: "L6", fail: "Planning or execution can queue, reject, or fail according to resource and timeout settings." },
-  { n: 5, key: "catalog", name: "Catalog / Metastore", sub: "Glue Catalog · schema + physical location of registered tables", api: "Thrift: getPartitions · getTableSchema", hue: "L5", fail: "Planning may fail before a read when required schema or partition metadata is unavailable." },
-  { n: 4, key: "table", name: "Table abstraction", sub: "Namespaces → Tables → Partitions → Rows · ds-partitioned", api: "SELECT … WHERE ds = '2024-01-15'", hue: "L4", fail: "Partition resolution unreliable. Engine may scan too many or miss data." },
-  { n: 3, key: "format", name: "File format", sub: "Parquet · ORC · Avro · text", api: "Read/write by row group or stripe · predicate pushdown", hue: "L3", fail: "Missing or corrupt metadata can disable skipping or prevent the file from being read." },
+  { n: 7, key: "app", name: "Application", sub: "Hex · Mode · dashboards · notebooks · BI tools", api: "Natural language · SQL · REST", hue: "L7", fail: "The user-facing surface is down. No new queries enter." },
+  { n: 6, key: "engine", name: "Query engine", sub: "Trino (interactive) · Spark (batch) · Snowflake", api: "SQL → distributed plan", hue: "L6", fail: "Queries queue, get rejected or fail, depending on resource and timeout settings." },
+  { n: 5, key: "catalog", name: "Catalog / Metastore", sub: "Glue Catalog · schema + physical location of registered tables", api: "Thrift: getPartitions · getTableSchema", hue: "L5", fail: "Planning fails before any read when schema or partition metadata is missing." },
+  { n: 4, key: "table", name: "Table abstraction", sub: "Namespaces → Tables → Partitions → Rows · ds-partitioned", api: "SELECT … WHERE ds = '2024-01-15'", hue: "L4", fail: "Partition resolution breaks. The engine scans too much or misses data." },
+  { n: 3, key: "format", name: "File format", sub: "Parquet · ORC · Avro · text", api: "Read/write by row group or stripe · predicate pushdown", hue: "L3", fail: "Missing or corrupt metadata disables skipping or makes the file unreadable." },
   { n: 2, key: "blob", name: "Blob layer", sub: "S3 · blob API · object placement", api: "put(blob) · get(blob_id)", hue: "L2", fail: "Higher latency or errors can trigger configured retries and query timeouts." },
-  { n: 1, key: "physical", name: "Physical storage", sub: "SSD tier · flash tier · replicated", api: "Raw bytes", hue: "L1", fail: "Unavailable bytes cause dependent reads to wait, retry, or fail according to configuration." },
+  { n: 1, key: "physical", name: "Physical storage", sub: "SSD tier · flash tier · replicated", api: "Raw bytes", hue: "L1", fail: "Dependent reads wait, retry or fail, depending on configuration." },
 ];
 
 const LAYERS_DE: readonly Layer[] = [
-  { n: 7, key: "app", name: "Anwendung", sub: "Hex · Mode · Dashboards · Notebooks · BI-Werkzeuge", api: "Natürliche Sprache · SQL · REST", hue: "L7", fail: "Die sichtbare Anwendung fällt aus. Es gelangen keine neuen Abfragen in das System." },
-  { n: 6, key: "engine", name: "Abfrage-Engine", sub: "Trino (interaktiv) · Spark (Batch) · Snowflake", api: "SQL → verteilter Plan", hue: "L6", fail: "Planung oder Ausführung kann gemäß Ressourcen- und Zeitüberschreitungseinstellungen warten, ablehnen oder fehlschlagen." },
-  { n: 5, key: "catalog", name: "Katalog / Metastore", sub: "Glue Catalog · Schema und physischer Speicherort registrierter Tabellen", api: "Thrift: getPartitions · getTableSchema", hue: "L5", fail: "Die Planung kann vor dem Lesen scheitern, wenn benötigte Schema- oder Partitionsmetadaten fehlen." },
-  { n: 4, key: "table", name: "Tabellenabstraktion", sub: "Namespaces → Tabellen → Partitionen → Zeilen · nach ds partitioniert", api: "SELECT … WHERE ds = '2024-01-15'", hue: "L4", fail: "Die Partitionsauflösung ist unzuverlässig. Die Engine liest zu viel oder übersieht Daten." },
-  { n: 3, key: "format", name: "Dateiformat", sub: "Parquet · ORC · Avro · Text", api: "Lesen/Schreiben nach Row Group oder Stripe · Predicate Pushdown", hue: "L3", fail: "Fehlende oder beschädigte Metadaten können das Überspringen verhindern oder die Datei unlesbar machen." },
+  { n: 7, key: "app", name: "Anwendung", sub: "Hex · Mode · Dashboards · Notebooks · BI-Werkzeuge", api: "Natürliche Sprache · SQL · REST", hue: "L7", fail: "Die sichtbare Anwendung fällt aus. Keine neuen Abfragen kommen herein." },
+  { n: 6, key: "engine", name: "Abfrage-Engine", sub: "Trino (interaktiv) · Spark (Batch) · Snowflake", api: "SQL → verteilter Plan", hue: "L6", fail: "Abfragen warten, werden abgelehnt oder scheitern, je nach Ressourcen- und Timeout-Einstellungen." },
+  { n: 5, key: "catalog", name: "Katalog / Metastore", sub: "Glue Catalog · Schema und physischer Speicherort registrierter Tabellen", api: "Thrift: getPartitions · getTableSchema", hue: "L5", fail: "Die Planung scheitert vor dem Lesen, wenn Schema- oder Partitionsmetadaten fehlen." },
+  { n: 4, key: "table", name: "Tabellenabstraktion", sub: "Namespaces → Tabellen → Partitionen → Zeilen · nach ds partitioniert", api: "SELECT … WHERE ds = '2024-01-15'", hue: "L4", fail: "Die Partitionsauflösung versagt. Die Engine liest zu viel oder übersieht Daten." },
+  { n: 3, key: "format", name: "Dateiformat", sub: "Parquet · ORC · Avro · Text", api: "Lesen/Schreiben nach Row Group oder Stripe · Predicate Pushdown", hue: "L3", fail: "Fehlende oder beschädigte Metadaten verhindern das Überspringen oder machen die Datei unlesbar." },
   { n: 2, key: "blob", name: "Blob-Schicht", sub: "S3 · Blob-API · Objektplatzierung", api: "put(blob) · get(blob_id)", hue: "L2", fail: "Höhere Latenz oder Fehler können konfigurierte Wiederholungen und Zeitüberschreitungen auslösen." },
-  { n: 1, key: "physical", name: "Physischer Speicher", sub: "SSD-Schicht · Flash-Schicht · repliziert", api: "Rohbytes", hue: "L1", fail: "Nicht verfügbare Bytes lassen abhängige Lesevorgänge gemäß Konfiguration warten, wiederholen oder fehlschlagen." },
+  { n: 1, key: "physical", name: "Physischer Speicher", sub: "SSD-Schicht · Flash-Schicht · repliziert", api: "Rohbytes", hue: "L1", fail: "Abhängige Lesevorgänge warten, wiederholen oder scheitern, je nach Konfiguration." },
 ];
 
 interface Pulse {
@@ -93,7 +93,7 @@ export function LayerCake() {
       eyebrow={text("live · interactive", "live · interaktiv")}
       title={text("The 7-layer stack", "Der Stack aus sieben Schichten")}
       meta={text("hover a layer · click trace · toggle failure mode", "Schicht auswählen · Abfrage verfolgen · Fehlermodus umschalten")}
-      caption={text("This reference path separates seven diagnostic layers; a deployment may combine or replace them.", "Dieser Referenzpfad trennt sieben Diagnoseschichten; ein System kann sie zusammenfassen oder ersetzen.")}
+      caption={text("A real deployment may combine or replace layers.", "Ein echtes System kann Schichten zusammenfassen oder ersetzen.")}
     >
       <div className="lc-wrap">
         <div className="lc-stack">
@@ -167,7 +167,7 @@ export function LayerCake() {
             <div className="lc-detail-empty">
               <div className="lc-de-dot" />
               <div className="lc-de-lab">{text("Hover any layer", "Eine Schicht auswählen")}</div>
-              <div className="lc-de-sub">{text("See what it stores, the API it exposes, and what sits above & below.", "Anzeigen, was sie speichert, welche API sie bereitstellt und welche Schichten darüber und darunter liegen.")}</div>
+              <div className="lc-de-sub">{text("See what it stores, its API and its neighbours.", "Was sie speichert, ihre API und ihre Nachbarn.")}</div>
             </div>
           )}
         </aside>
@@ -186,7 +186,7 @@ export function LayerCake() {
             }}
           />
           <span>{text("Failure mode", "Fehlermodus")}</span>
-          <span className="lc-fm-sub">{failMode ? text("click any layer to mark it down", "Schicht auswählen und als ausgefallen markieren") : text("see what breaks when a layer fails", "Auswirkungen eines Schichtausfalls anzeigen")}</span>
+          <span className="lc-fm-sub">{failMode ? text("click a layer to mark it down", "Schicht anklicken, um sie ausfallen zu lassen") : text("see what breaks above a failed layer", "Folgen eines Ausfalls anzeigen")}</span>
         </label>
       </div>
     </Panel>

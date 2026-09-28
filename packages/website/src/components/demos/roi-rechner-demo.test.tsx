@@ -54,12 +54,11 @@ describe("<RoiRechnerDemo>", () => {
   it("renders the header and the initial model output from the default inputs", () => {
     render(<RoiRechnerDemo />);
 
-    expect(
-      screen.getByText("Annahmen-Rechner · Transparente Formel"),
-    ).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
-      "Bauchgefühl.",
-    );
+    // No kicker and no "Zahlen statt Bauchgefühl" slogan.
+    expect(screen.queryByText(/Bauchgefühl/)).toBeNull();
+    const heading = screen.getByRole("heading", { level: 2 });
+    expect(heading).toHaveClass("sr-only");
+    expect(heading).toHaveTextContent("Annahmen-Rechner");
 
     // Yearly value is rendered twice: the big KPI (animated, snapped) and the
     // transparent inline formula (raw). Both must show the exact computed total.
@@ -73,7 +72,7 @@ describe("<RoiRechnerDemo>", () => {
   it("exposes the four sliders with their default values and accessible ranges", () => {
     render(<RoiRechnerDemo />);
 
-    const adoption = screen.getByLabelText("Adoption");
+    const adoption = screen.getByLabelText("Nutzungsquote");
     expect(adoption).toHaveAttribute("aria-valuenow", "55");
     expect(adoption).toHaveAttribute("aria-valuemin", "10");
     expect(adoption).toHaveAttribute("aria-valuemax", "90");
@@ -115,16 +114,16 @@ describe("<RoiRechnerDemo>", () => {
     const toggle = screen.getByRole("button", { name: /Annahmen & Methodik/ });
     expect(toggle).toHaveAttribute("aria-expanded", "false");
     // Panel body is not mounted while collapsed.
-    expect(screen.queryByText(/Rollout scheitert/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Ersetze den Wert durch die gemessene Nutzung/)).not.toBeInTheDocument();
 
     fireEvent.click(toggle);
 
     expect(toggle).toHaveAttribute("aria-expanded", "true");
-    expect(screen.getByText(/Rollout scheitert/)).toBeInTheDocument();
+    expect(screen.getByText(/Ersetze den Wert durch die gemessene Nutzung/)).toBeInTheDocument();
 
     fireEvent.click(toggle);
 
     expect(toggle).toHaveAttribute("aria-expanded", "false");
-    expect(screen.queryByText(/Rollout scheitert/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Ersetze den Wert durch die gemessene Nutzung/)).not.toBeInTheDocument();
   });
 });

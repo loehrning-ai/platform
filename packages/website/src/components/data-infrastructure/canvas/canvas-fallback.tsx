@@ -36,8 +36,8 @@ export function CanvasFallbackNotice({
       </p>
       <p className="break-words text-xs text-muted-foreground/70 [overflow-wrap:anywhere]">
         {text(
-          "Canvas rendering is unavailable in this browser. The model is summarized as text instead.",
-          "Die Canvas-Darstellung ist in diesem Browser nicht verfügbar. Das Modell wird stattdessen als Text zusammengefasst.",
+          "This browser cannot draw the canvas, so the model is shown as text.",
+          "Dieser Browser kann die Canvas-Grafik nicht zeichnen, deshalb steht das Modell hier als Text.",
         )}
       </p>
     </div>

@@ -44,7 +44,7 @@ describe("FeedbackPage locale and provider boundary", () => {
     await renderPage("de");
 
     expect(screen.getByRole("status")).toHaveTextContent(
-      "Es werden keine Formulardaten gespeichert.",
+      "Hier wird nichts gespeichert.",
     );
     expect(screen.queryByRole("textbox", { name: /Nachricht/i })).toBeNull();
     expect(
@@ -79,7 +79,7 @@ describe("FeedbackPage locale and provider boundary", () => {
       }),
     ).toBeVisible();
     expect(screen.getByRole("status")).toHaveTextContent(
-      "No form data is stored.",
+      "Nothing is stored here.",
     );
     expect(document.body).not.toHaveTextContent("Formular deaktiviert");
   });

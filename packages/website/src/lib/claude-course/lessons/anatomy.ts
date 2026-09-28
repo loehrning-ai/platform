@@ -8,48 +8,45 @@ import { CLAUDE_DRAG_REORDER_COPY } from "../widget-copy";
 const lesson: ClaudeLesson = {
   id: "anatomy",
   number: 2,
-  title: "Anatomy of a Great Prompt",
-  subtitle:
-    "A practical checklist: context, task, constraints, examples, and output format.",
+  title: "Anatomy of a great prompt",
+  subtitle: "Six parts and when each one helps.",
   durationMinutes: 12,
   trackId: "foundations",
-  hook: "Useful prompts make the task and acceptance criteria explicit.",
+  hook: "A useful prompt states the task and acceptance criteria.",
   keyConcepts: [
-    "Role, context, task, constraints, examples, format",
     "XML tags",
-    "Reasoning controls",
     "Structured outputs",
-    "Insufficient-evidence handling",
+    "Missing-evidence rule",
   ],
   quiz: [],
   sections: [
     {
       id: "contracts-not-incantations",
-      title: "Prompts are contracts, not incantations",
-      readTimeMinutes: 2,
+      title: "A prompt is a specification",
+      readTimeMinutes: 1,
       content:
-        "You type one line into the box and get back a wall of hedging. The prompt was not wrong, it was underspecified. A prompt is a specification: state the task, supply the context, define constraints, describe an output that can be checked. Add a role or an example only when it carries information the task needs.\n\nThe six parts below are a checklist, not a syntax and not a required order. Short tasks need one direct instruction. Repeated tasks earn explicit sections and acceptance criteria.\n\n> Write requirements a reviewer or test can verify.",
+        "State the task, supply the context, set constraints and describe a checkable output. Add a role or an example only when it carries information the task needs.\n\nA short task needs one direct instruction. For repeated tasks, use the six parts below and write criteria a reviewer or test can check.",
     },
     {
       id: "six-parts",
       title: "The six parts",
-      readTimeMinutes: 4,
+      readTimeMinutes: 1,
       content:
-        "- **01 · Role: whose perspective?** A role sets domain, audience, or review standard. It is not evidence of expertise.\n  ```\n  Review this as a technical editor for internal documentation.\n  ```\n- **02 · Context: which facts does the task depend on?** Name the audience and the authorized source material. Strip secrets and unrelated data.\n  ```\n  Audience: SREs. Release cadence: weekly. Planned auth-library migration: Q2.\n  ```\n- **03 · Task: what action is required?** One direct verb. Split several deliverables into numbered items.\n  ```\n  Draft a rollout document with an overview, risks, and an on-call runbook.\n  ```\n- **04 · Constraints: what must the output satisfy?** State length, exclusions, and required facts as testable rules.\n  ```\n  At most 600 words. No marketing language. Include the kill-switch procedure.\n  ```\n- **05 · Examples: what does an accepted result look like?** A reviewed input-output pair fixes tone or structure. Check that it is representative and shareable.\n  ```\n  <example>\n  Input: …\n  Output: …\n  </example>\n  ```\n- **06 · Format: how will the result be consumed?** Ask for Markdown, JSON, a table, or a schema when downstream use depends on it. Validate machine-readable output.\n  ```\n  Output Markdown with H2 sections and bullet lists.\n  ```\n\nThis is one readable arrangement. Move documents or instructions when the guidance for your tested model and use case calls for it.",
+        "- **01 · Role:** sets domain, audience or review standard and proves no expertise. Example: `Review this as a technical editor for internal documentation.`\n- **02 · Context:** the facts the task depends on, with audience and authorized sources. Strip secrets and unrelated data.\n- **03 · Task:** one direct verb. Number several deliverables.\n- **04 · Constraints:** length, exclusions and required facts as testable rules.\n- **05 · Examples:** a reviewed, representative input-output pair that fixes tone or structure.\n- **06 · Format:** Markdown, JSON, a table or a schema. Validate machine-readable output.\n\nChange the order when your model's documentation or your evals call for it.",
     },
     {
       id: "xml-tags",
       title: "XML tags for clear boundaries",
       readTimeMinutes: 2,
       content:
-        "Anthropic documents XML tags as one way to separate instructions, context, examples, and variable input. They help most when a prompt mixes several content types. They replace neither clear requirements nor evaluation.\n\nThe pattern:\n\n```\n<context>\nWe're migrating the auth service from cookies to OAuth 2.1 over Q2.\nAudience for this doc: SREs on the infra team.\n</context>\n\n<task>\nDraft a rollout doc with four sections: overview, risks, on-call runbook, rollback plan.\n</task>\n\n<constraints>\n- Under 600 words.\n- No marketing language.\n- Must mention the kill-switch procedure.\n</constraints>\n\n<example>\n[paste a prior rollout doc here that matches the voice you want]\n</example>\n\n<format>\nMarkdown. H2 for each section. Code blocks for shell commands.\n</format>\n```\n\nUse consistent, descriptive tag names. Nest them only where the content has a real hierarchy, then test the prompt on representative inputs.",
+        "Anthropic documents XML tags as one way to separate instructions, context, examples and variable input. They help most when a prompt mixes content types and replace neither clear requirements nor evaluation.\n\n```\n<context>\nWe're migrating the auth service from cookies to OAuth 2.1 over Q2.\nAudience for this doc: SREs on the infra team.\n</context>\n\n<task>\nDraft a rollout doc with four sections: overview, risks, on-call runbook, rollback plan.\n</task>\n\n<constraints>\n- Under 600 words.\n- No marketing language.\n- Must mention the kill-switch procedure.\n</constraints>\n\n<example>\n[paste a prior rollout doc here that matches the voice you want]\n</example>\n\n<format>\nMarkdown. H2 for each section. Code blocks for shell commands.\n</format>\n```\n\nUse consistent, descriptive tag names, nest only for real hierarchy and test on representative inputs.",
     },
     {
       id: "pro-moves",
-      title: "Three current controls",
-      readTimeMinutes: 2,
+      title: "Current controls",
+      readTimeMinutes: 1,
       content:
-        "- **Use supported reasoning controls.** Where a model and API support extended thinking, configure it through the documented API. Ask for conclusions and evidence. Do not depend on exposing private chain-of-thought text.\n- **Use supported output controls.** Prefer structured outputs or an explicit schema where available. Claude 4.6 and later do not support assistant-response prefilling. Check the selected model's API documentation before reaching for that pattern.\n- **Define insufficient evidence.** State the exact response expected when required information is missing. That lowers the pressure to guess. It guarantees nothing about accuracy; evaluate and verify the result.",
+        "- **Reasoning.** Where model and API support extended thinking, configure it through the documented API. Ask for conclusions and evidence instead of private chain-of-thought.\n- **Output.** Prefer structured outputs or a JSON schema. Claude 4.6 and later do not support assistant-response prefilling; check your model's API documentation.\n- **Missing evidence.** State the exact response for missing information. That lowers the pressure to guess but guarantees no accuracy.",
     },
   ],
   widgets: [
@@ -72,10 +69,10 @@ const lesson: ClaudeLesson = {
       props: {
         lessonId: "anatomy",
         cpId: "reorder",
-        title: "Put them in order",
+        title: "Order the six parts",
         prompt:
-          "Arrange the sections into the example order used in this lesson.",
-        hint: "Drag a card or use the up/down buttons. One readable order, not a universal rule.",
+          "Put the sections in this lesson's example order.",
+        hint: "Drag a card or use the up and down buttons.",
         blocks: [
           {
             id: "role",
@@ -138,7 +135,7 @@ const lesson: ClaudeLesson = {
           },
           {
             label: "Format",
-            hint: "bullets? sections? markdown? specific structure?",
+            hint: "bullets, sections, Markdown or a fixed structure",
           },
         ],
       },
@@ -154,7 +151,7 @@ const lesson: ClaudeLesson = {
         original:
           "write release notes for our new changes this week plz, make it good",
         criteria:
-          "presence of role, context, task, constraints, and format; specificity; use of XML tags; few-shot example; absence of filler",
+          "Task, context, constraints and format present; specific; role, example or XML tags only where they help; no filler.",
       },
     },
     {
@@ -166,7 +163,7 @@ const lesson: ClaudeLesson = {
         cpId: "grade",
         task: "Rewrite a rambling Slack message into a crisp update with tl;dr, status, blockers, and next step.",
         rubric:
-          "Must state the task, relevant context, testable constraints, and output format. Add a role, example, rubric, or XML boundaries only where they clarify the work.",
+          "States the task, relevant context, testable constraints and output format. Role, example, rubric or XML only where they clarify the work.",
       },
     },
   ],

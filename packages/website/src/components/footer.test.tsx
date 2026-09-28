@@ -49,7 +49,7 @@ describe("Footer locale and information architecture", () => {
       screen
         .getAllByRole("heading", { level: 2 })
         .map((heading) => heading.textContent),
-    ).toEqual(["Kurse", "Praxis", "Blog", "Über mich"]);
+    ).toEqual(["Lernen", "Praxis", "Blog und Kontakt"]);
     expect(screen.getByRole("link", { name: "Alle Kurse" })).toHaveAttribute(
       "href",
       "/kurse",
@@ -64,6 +64,10 @@ describe("Footer locale and information architecture", () => {
     expect(screen.getByRole("link", { name: "Blog" })).toHaveAttribute(
       "href",
       "/blog",
+    );
+    expect(screen.getByRole("link", { name: "KI-Check" })).toHaveAttribute(
+      "href",
+      "/ki-check",
     );
     expect(screen.getByRole("link", { name: "Über mich" })).toHaveAttribute(
       "href",
@@ -87,7 +91,7 @@ describe("Footer locale and information architecture", () => {
       screen
         .getAllByRole("heading", { level: 2 })
         .map((heading) => heading.textContent),
-    ).toEqual(["Courses", "Practice", "Blog", "About me"]);
+    ).toEqual(["Learning", "Practice", "Blog and contact"]);
     expect(
       screen.queryByText(/Free courses, workshops, and open-source materials/),
     ).not.toBeInTheDocument();
@@ -101,6 +105,10 @@ describe("Footer locale and information architecture", () => {
     expect(
       screen.getByRole("link", { name: "Technical courses" }),
     ).toHaveAttribute("href", "/en/kurse#tiefer-gehen");
+    expect(screen.getByRole("link", { name: "AI check" })).toHaveAttribute(
+      "href",
+      "/en/ki-check",
+    );
 
     for (const link of document.querySelectorAll<HTMLAnchorElement>(
       "a[href^='/']",
@@ -155,7 +163,45 @@ describe("Footer semantics and stable public dates", () => {
     }
   });
 
-  it("uses compact editorial geometry with a restrained Berlin backdrop", async () => {
+  it("mirrors the header's task groups and never heads a group with its only link", async () => {
+    await renderFooter("de");
+
+    const nav = screen.getByRole("navigation", {
+      name: "Navigation in der Fußzeile",
+    });
+    for (const section of nav.querySelectorAll("section")) {
+      const heading = section.querySelector("h2")?.textContent;
+      const links = Array.from(section.querySelectorAll("a")).map(
+        (link) => link.textContent,
+      );
+      expect(links.length).toBeGreaterThan(1);
+      expect(links[0]).not.toBe(heading);
+    }
+  });
+
+  it("sits on the 75rem page column and starts every desktop column on one rule", async () => {
+    await renderFooter("de");
+
+    const inner = document.querySelector("footer > div");
+    expect(inner).toHaveClass("max-w-[75rem]", "px-4", "sm:px-6");
+    expect(inner).not.toHaveClass("max-w-6xl");
+    const brandColumn = screen
+      .getByText("Freie Lernplattform")
+      .closest("div");
+    expect(brandColumn).toHaveClass("lg:border-t", "lg:border-hairline");
+  });
+
+  it("sets the wordmark in the footer ink (Butter), with no Mennige", async () => {
+    await renderFooter("de");
+
+    const home = screen.getByRole("link", { name: "loehrning.ai - Startseite" });
+    expect(home).toHaveTextContent(/^loehrning\.ai$/);
+    expect(home.innerHTML).not.toMatch(/brand-orange|mennige/);
+    expect(home.className).not.toMatch(/\b(?:text|bg)-(?:brand-orange|mennige|kupfer)\b/);
+    expect(home).toHaveClass("font-bold", "tracking-[-0.015em]", "text-foreground");
+  });
+
+  it("is a flat graphit band with hairlines and no decorative shapes", async () => {
     await renderFooter("de");
 
     const footer = document.querySelector("footer");
@@ -165,8 +211,15 @@ describe("Footer semantics and stable public dates", () => {
       /Freie Kurse, Workshops und quelloffene Materialien/,
     );
     expect(footer?.innerHTML).not.toMatch(/text-\[(?:9|10|11)px\]/);
-    expect(footer).toHaveClass("dark-section");
-    expect(footer?.innerHTML).toMatch(/rounded-(?:full|xl)|shadow-/);
+    expect(footer).toHaveClass("dark-section", "plakat-footer");
+    // Werkzeichnung: square geometry, no stamp shadows, no decorative
+    // circles, no hover lift and no mono-uppercase labels.
+    expect(footer?.innerHTML).not.toMatch(/rounded-|shadow-|-translate-y-/);
+    expect(footer?.querySelectorAll('[aria-hidden="true"].absolute')).toHaveLength(0);
+    expect(footer?.innerHTML).not.toMatch(/\buppercase\b/);
+    for (const heading of footer?.querySelectorAll("h2") ?? []) {
+      expect(heading).toHaveClass("text-label");
+    }
   });
 
   it("derives the copyright year from reviewed content instead of the wall clock", async () => {
@@ -187,8 +240,9 @@ describe("Footer semantics and stable public dates", () => {
     const pill = screen.getByTestId("footer-data-pill");
 
     expect(pill).toHaveTextContent("Content date: Q3 2026");
-    expect(pill).toHaveTextContent(/Updated: \d{4}-\d{2}-\d{2}/);
-    expect(within(pill).getByText(/\d{4}-\d{2}-\d{2}/)).toHaveAttribute(
+    // One date line: no second "Updated" date beside it.
+    expect(pill).not.toHaveTextContent(/Updated/);
+    expect(within(pill).getByText("Q3 2026")).toHaveAttribute(
       "datetime",
       expect.stringMatching(/^\d{4}-\d{2}-\d{2}$/),
     );
@@ -208,13 +262,13 @@ describe("Footer link disclosure below lg", () => {
     getRequestLocaleMock.mockReset();
   });
 
-  it("collapses the four link columns into a disclosure that starts closed", async () => {
+  it("collapses the three link columns into a disclosure that starts closed", async () => {
     await renderFooter("de");
 
     const disclosure = screen.getByTestId("footer-group-disclosure");
     expect(disclosure.tagName).toBe("DETAILS");
     // Closed markup is what the first paint of a phone gets. An `open`
-    // attribute here would restore the roughly 350px column stack the
+    // attribute here would restore the roughly 450px column stack the
     // disclosure exists to remove.
     expect(disclosure).not.toHaveAttribute("open");
 
@@ -223,9 +277,10 @@ describe("Footer link disclosure below lg", () => {
     expect(summary?.parentElement).toBe(disclosure);
     expect(summary).toHaveTextContent("Alle Bereiche");
     // The summary is the only way into the columns on a phone: 44px floor,
-    // and a label at 14px rather than anything below the 12px typography floor.
+    // and a label at 14px (the text-label token, 0.875rem) rather than
+    // anything below the 12px typography floor.
     expect(summary?.className).toContain("min-h-11");
-    expect(summary?.className).toContain("text-sm");
+    expect(summary?.className).toContain("text-label");
 
     const indicator = summary?.querySelector("[aria-hidden='true']");
     expect(indicator).toHaveTextContent("+");
@@ -248,6 +303,7 @@ describe("Footer link disclosure below lg", () => {
       "Alle Kurse",
       "Grundlagenpfad",
       "Technikkurse",
+      "KI-Check",
       "Lernbücher",
       "Workshops",
       "Praxisbeispiele",
@@ -302,9 +358,99 @@ describe("Footer link disclosure below lg", () => {
 
     const grid = disclosure.querySelector("summary + div");
     expect(grid?.className).toContain("grid-cols-2");
-    expect(grid?.className).toContain("md:grid-cols-4");
+    expect(grid?.className).toContain("md:grid-cols-3");
     // Open-state breathing room below lg only; desktop spacing is untouched.
     expect(grid?.className).toContain("lg:pt-0");
+  });
+
+  it("sets the wordmark and two profile squares on one phone row and restores the column from sm", async () => {
+    await renderFooter("de");
+
+    const kicker = screen.getByText("Freie Lernplattform");
+    expect(kicker).toHaveClass("hidden", "sm:block");
+    const brandColumn = kicker.closest("div");
+    expect(brandColumn).toHaveClass(
+      "flex",
+      "items-center",
+      "justify-between",
+      "sm:block",
+    );
+
+    for (const name of [
+      "GitHub (öffnet in einem neuen Tab)",
+      "LinkedIn (öffnet in einem neuen Tab)",
+    ]) {
+      const link = screen.getByRole("link", { name });
+      expect(brandColumn).toContainElement(link);
+      // A 44px square below sm; the visible word returns from sm, and the
+      // accessible name never depends on it.
+      expect(link.className).toContain("min-h-11");
+      expect(link.className).toContain("min-w-11");
+      expect(link.className).toContain("sm:px-3");
+      const word = Array.from(link.querySelectorAll("span")).find(
+        (span) => !span.classList.contains("sr-only"),
+      );
+      expect(word).toHaveClass("hidden", "sm:inline");
+    }
+  });
+
+  it("keeps the phone caption to the holder and one date, and restores the domain from sm", async () => {
+    await renderFooter("de");
+
+    const copyright = screen.getByTestId("footer-copyright");
+    const pill = screen.getByTestId("footer-data-pill");
+    const caption = copyright.parentElement as HTMLElement;
+    expect(caption).toContainElement(pill);
+    expect(caption).toHaveClass("flex-wrap", "sm:flex-col", "md:flex-row");
+    // The pill's own box only exists from sm; below it the content date joins
+    // the copyright's line.
+    expect(pill).toHaveClass("contents", "sm:flex");
+
+    // Below sm the caption reads "© 2026 Tim Löhr  Datenstand: Q3 2026": the
+    // domain repeats the wordmark. One date line at every width.
+    const domain = within(copyright).getByText("loehrning.ai").parentElement;
+    expect(domain).toHaveClass("hidden", "sm:inline");
+    expect(pill).not.toHaveTextContent(/Aktualisiert|\d{4}-\d{2}-\d{2}/);
+
+    // "Q3 2026" is a label in the site face; mono would widen its space.
+    const stand = within(pill).getByText("Q3 2026");
+    expect(stand).not.toHaveClass("font-ui-mono");
+  });
+
+  it("sizes the phone wordmark like the header's lockup and restores it from sm", async () => {
+    await renderFooter("de");
+
+    const home = screen.getByRole("link", { name: "loehrning.ai - Startseite" });
+    expect(home).toHaveClass("text-xl", "sm:text-[2rem]");
+    expect(home.className).not.toContain("text-[1.75rem]");
+  });
+
+  it("groups Praxis exactly as the header does", async () => {
+    await renderFooter("de");
+
+    const praxis = screen
+      .getByRole("heading", { level: 2, name: "Praxis" })
+      .closest("section");
+    expect(
+      Array.from(praxis?.querySelectorAll("a") ?? []).map((link) =>
+        link.getAttribute("href"),
+      ),
+    ).toEqual(["/workshops", "/demos", "/open-source"]);
+  });
+
+  it("opens the phone disclosure as two columns plus one contact row", async () => {
+    await renderFooter("de");
+
+    const contact = screen
+      .getByRole("heading", { level: 2, name: "Blog und Kontakt" })
+      .closest("section");
+    expect(contact).toHaveClass("col-span-2", "sm:col-span-1");
+    const list = contact?.querySelector("ul");
+    expect(list).toHaveClass("flex", "flex-wrap", "sm:block");
+    for (const link of contact?.querySelectorAll("a") ?? []) {
+      expect(link.className).toContain("min-h-11");
+      expect(link.className).toContain("min-w-11");
+    }
   });
 
   it("opens and closes without any JavaScript in the footer", () => {

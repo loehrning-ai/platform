@@ -1,0 +1,13 @@
+factor_id;bezeichnung;wert;einheit;basis;jahr;region;hinweis;status (illustrative teaching values)
+F-GAS-HI;Erdgas;0,20;kg CO2e/kWh(Hi);Hi;alle;DE;bezogen auf Heizwert (Hi);Lehrwert, kein amtlicher Faktor
+F-GAS-HS;Erdgas (Brennwert);0,18;kg CO2e/kWh(Hs);Hs;alle;DE;"bezogen auf Brennwert (Hs); rund 0,20 / 1,11";Lehrwert, kein amtlicher Faktor
+F-EL-LB-2025;Strom Netz DE, standortbasiert;0,40;kg CO2e/kWh;;2025;DE;"Lehrwert; UBA 2024: 363 g CO2/kWh (nur CO2)";Lehrwert, kein amtlicher Faktor
+F-EL-LB-2024;Strom Netz DE, standortbasiert;0,42;kg CO2e/kWh;;2024;DE;"Lehrwert; UBA 2023: 386 g CO2/kWh (nur CO2)";Lehrwert, kein amtlicher Faktor
+F-EL-LB-2023;Strom Netz DE, standortbasiert;0,45;kg CO2e/kWh;;2023;DE;"Lehrwert; nur für die Anhang-Variante";Lehrwert, kein amtlicher Faktor
+F-EL-RM-2025;Residualmix DE, marktbasiert;0,60;kg CO2e/kWh;;2025;DE;"Lehrwert; absichtlich gleich wie 2024";Lehrwert, kein amtlicher Faktor
+F-EL-RM-2024;Residualmix DE, marktbasiert;0,60;kg CO2e/kWh;;2024;DE;"Lehrwert; echte Residualmixe ändern sich jedes Jahr";Lehrwert, kein amtlicher Faktor
+F-EL-RM-2023;Residualmix DE, marktbasiert;0,60;kg CO2e/kWh;;2023;DE;"Lehrwert; nur für die Anhang-Variante";Lehrwert, kein amtlicher Faktor
+F-EL-GO;Strom mit entwerteten Herkunftsnachweisen, marktbasiert;0,00;kg CO2e/kWh;;alle;DE;nur für die kWh, die der Nachweis abdeckt;Lehrwert, kein amtlicher Faktor
+F-DSL;Diesel, Straße;2,50;kg CO2e/l;;alle;DE;"Lehrwert; veröffentlichte Werte rund 2,5 bis 2,7";Lehrwert, kein amtlicher Faktor
+C-DSL-E;Energiegehalt Diesel;10,0;kWh/l;Hi;alle;DE;Heizwert;Lehrwert, kein amtlicher Faktor
+C-HS-HI;Verhältnis Brennwert zu Heizwert, Erdgas;1,11;Verhältnis;;alle;DE;;Lehrwert, kein amtlicher Faktor

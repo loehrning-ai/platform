@@ -510,7 +510,7 @@ describe("WerkzeugeRegionView", () => {
     expect(within(region).queryByRole("button", { name: /Öffnen/ })).toBeNull();
     expect(region.querySelector("form")).toBeNull();
     expect(
-      within(region).getByText(/läuft das Werkzeug nicht gehostet/),
+      within(region).getByText(/Hier wird es nicht gehostet/),
     ).toBeVisible();
   });
 

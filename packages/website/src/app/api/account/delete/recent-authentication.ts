@@ -1,7 +1,12 @@
+import { isFirstPartySessionClaims } from "@/lib/supabase/first-party-session";
+
 export const RECENT_AUTH_MAX_AGE_SECONDS = 15 * 60;
 const MAX_AUTH_CLOCK_SKEW_SECONDS = 60;
 const SESSION_ID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+// `oauth` is the AMR method of this site's own Google sign-in, so it stays.
+// A token the Supabase OAuth server issued to a third-party client is told
+// apart by its client_id claim, not by this list (see below).
 const APP_AUTH_METHODS = new Set([
   "magiclink",
   "otp",
@@ -16,6 +21,9 @@ export function hasRecentSessionAuthentication(
   maxAgeSeconds = RECENT_AUTH_MAX_AGE_SECONDS,
 ): boolean {
   if (!Number.isFinite(maxAgeSeconds) || maxAgeSeconds < 0) return false;
+  // Only a first-party session can prove a recent sign-in by the learner. An
+  // OAuth client's token (client_id present) never can, however fresh.
+  if (!isFirstPartySessionClaims(claims, userId)) return false;
   const audience = claims.aud;
   const authenticatedAudience =
     audience === "authenticated" ||

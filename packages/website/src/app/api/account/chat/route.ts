@@ -203,10 +203,7 @@ export async function POST(request: Request): Promise<Response> {
   }
   const chat = parsed.value;
 
-  if (
-    chat.expectedOwnerId !== undefined &&
-    chat.expectedOwnerId !== auth.user.id
-  ) {
+  if (chat.expectedOwnerId !== auth.user.id) {
     // The cookie-bound session changed after the browser picked its local
     // transcript namespace. Never run account A's conversation on account B's
     // key.

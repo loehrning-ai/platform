@@ -34,14 +34,14 @@ const STAGES: readonly Stage[] = [
     label: "vage",
     quality: 18,
     prompt: "schreib eine Ankündigungs-Mail",
-    note: "Keine Rolle. Kein Publikum. Kein Ziel. Kein Format. Claude muss alles raten.",
+    note: "Ohne Rolle, Publikum, Ziel und Format muss Claude alles raten.",
   },
   {
     label: "konkret",
     quality: 58,
     prompt:
       "Schreibe eine Ankündigungs-Mail für unser neues Angebots-Tool an die interne Vertriebsmannschaft. Halte sie kurz.",
-    note: "Besser: Publikum, Thema, Tonhinweis. Es fehlen noch Struktur und Erfolgskriterien.",
+    note: "Publikum, Thema und Ton sind da. Es fehlen Struktur und Erfolgskriterien.",
   },
   {
     label: "strukturiert",
@@ -64,7 +64,7 @@ CONSTRAINTS
 
 FORMAT
 Betreffzeile, dann Fließtext. Keine Grußformel.`,
-    note: "Rolle. Kontext. Auftrag. Constraints. Format. Claude hat alles, um es beim ersten Versuch zu treffen.",
+    note: "Mit Rolle, Kontext, Auftrag, Constraints und Format hat Claude alles für den ersten Versuch.",
   },
 ];
 
@@ -81,7 +81,7 @@ export function PromptTransformWidget({
   lessonId,
   cpId,
   title = "Vom Wunsch zum Auftrag",
-  scenario = "Dieselbe Aufgabe, drei Stufen Prompt-Handwerk. Spüre den Sprung von Stufe 1 zu Stufe 3.",
+  scenario = "Dieselbe Aufgabe in drei Stufen. Vergleiche Stufe 1 mit Stufe 3.",
   locale = "de",
   model,
 }: PromptTransformWidgetProps): JSX.Element {

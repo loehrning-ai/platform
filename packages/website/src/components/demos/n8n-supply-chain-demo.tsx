@@ -308,36 +308,41 @@ function eventsForStep(
   return first3;
 }
 
-function StatusPill({ status }: { status: NodeStatus }) {
+// Graphit frame tokens: Leinen text (11.8:1), control edge (3.5:1) and a
+// decorative hairline, as in .dark-section.
+const DARK_MUTED = "rgba(243,240,233,0.72)";
+const DARK_EDGE = "rgba(243,240,233,0.4)";
+const DARK_HAIRLINE = "rgba(243,240,233,0.16)";
+// Paper text on the Mennige node: 5.40:1 (#edded4 at 0.9 alpha was 4.4:1).
+const ON_MENNIGE = "#f9f7f2";
+
+function StatusPill({
+  status,
+  settled = false,
+}: {
+  status: NodeStatus;
+  /** A finished run: the node is paper, so "Run" takes the Mennige ink. */
+  settled?: boolean;
+}) {
   const map: Record<NodeStatus, { label: string; color: string; bg: string }> =
     {
-      pending: {
-        label: "WAIT",
-        color: "rgba(243,240,233,0.5)",
-        bg: "rgba(243,240,233,0.08)",
-      },
-      active: {
-        label: "RUN",
-        color: DEMO.ink,
-        bg: "var(--color-brand-orange)",
-      },
-      done: {
-        label: "OK",
-        color: DEMO.statusGreen,
-        bg: "rgba(34,197,94,0.15)",
-      },
+      // No pastel pill: a word in the node's own ink. "OK" carries the
+      // pass tick, so the state never rests on colour alone.
+      pending: { label: "Wait", color: DEMO.schiefer, bg: "transparent" },
+      active: { label: "Run", color: ON_MENNIGE, bg: "transparent" },
+      done: { label: "✓ OK", color: DEMO.ink, bg: "transparent" },
     };
-  const s = map[status];
+  const s =
+    status === "active" && settled
+      ? { ...map.active, color: "var(--color-mennige)" }
+      : map[status];
   return (
     <span
       style={{
-        fontFamily: DEMO.font.mono,
-        fontSize: 12,
-        fontWeight: 700,
-        letterSpacing: "0.12em",
+        ...DEMO.label,
         color: s.color,
         background: s.bg,
-        padding: "1px 5px",
+        padding: "1px 0 1px 5px",
         flexShrink: 0,
       }}
     >
@@ -355,8 +360,10 @@ export default function N8nSupplyChainDemo() {
   const reduced = usePrefersReducedMotion();
   const { ref, visible } = useVisibleAutoplay<HTMLDivElement>();
   const [scenario, setScenario] = useState<Scenario>("delay");
-  const [activeStep, setActiveStep] = useState(-1);
-  const [autoPlaying, setAutoPlaying] = useState(true);
+  // Final state first: the finished run renders on load, and "Neu
+  // abspielen" is the only way into a replay.
+  const [activeStep, setActiveStep] = useState(3);
+  const [autoPlaying, setAutoPlaying] = useState(false);
 
   // The low-confidence branch never reaches step 3 (the automated actions) —
   // it stops at step 2 and the log shows an escalation line instead.
@@ -364,6 +371,8 @@ export default function N8nSupplyChainDemo() {
   const events = eventsForStep(activeStep, scenario, sourceEvents, lowConfidenceEvent);
   const totalEvents = scenario === "lowConfidence" ? 4 : sourceEvents.length;
   const allDone = activeStep >= maxStep;
+  // Below sm the log folds to its last line behind "Protokoll".
+  const [logOpen, setLogOpen] = useState(false);
 
   // Reduced motion: jump straight to the scenario's final state. Deliberately
   // NOT keyed on activeStep, so a manual Zurück/Weiter click after this fires
@@ -397,10 +406,11 @@ export default function N8nSupplyChainDemo() {
     setAutoPlaying(true);
     setActiveStep(-1);
   };
+  // A new scenario opens on its own final state; replay stays separate.
   const handleScenario = (next: Scenario) => {
     setScenario(next);
-    setAutoPlaying(true);
-    setActiveStep(-1);
+    setAutoPlaying(false);
+    setActiveStep(next === "lowConfidence" ? 2 : 3);
   };
 
   const stepLabel =
@@ -420,54 +430,29 @@ export default function N8nSupplyChainDemo() {
         "Simulierter n8n-Lieferkettenablauf",
         "Simulated n8n supply-chain flow",
       )}
+      className="gap-3 sm:gap-3.5"
       style={{
         display: "flex",
         flexDirection: "column",
-        gap: 14,
         fontFamily: DEMO.font.sans,
         color: DEMO.kalk,
         minHeight: DEMO_HEIGHT,
       }}
     >
-      <div>
-        <div
-          style={{
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            color: "var(--color-brand-orange)",
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            fontWeight: 700,
-          }}
-        >
-          {text(
-            "n8n · Supply-Chain-Automation",
-            "n8n · supply-chain automation",
-          )}
-        </div>
-        <h2
-          style={{
-            fontSize: 22,
-            fontWeight: 700,
-            letterSpacing: "-0.03em",
-            marginTop: 6,
-            color: DEMO.kalk,
-          }}
-        >
-          {text("Lieferverzug erkannt.", "Delivery delay detected.")}{" "}
-          {/* The accent carries the scope of the claim: this timeline shows
-              the ORDER of the six steps, not how long they take. The stamped
-              seconds and the "Beispiel-Laufzeit" total would otherwise read as
-              a performance figure. The shell's EvidenceBadge already states
-              that the run is simulated, so that half is not repeated here. */}
-          <span style={{ color: "var(--color-brand-orange)" }}>
-            {text(
-              "Entwurf vorbereitet. Die Reihenfolge zählt, nicht die Laufzeit.",
-              "Draft prepared. Sequence is the point, not the timings.",
-            )}
-          </span>
-        </h2>
-      </div>
+      {/* The page H1 and lead name the demo; this heading only gives
+          screen-reader users a landmark into the instrument. */}
+      <h2 className="sr-only">
+        {text("Lieferverzug im n8n-Workflow", "Delivery delay in the n8n workflow")}
+      </h2>
+      {/* Scope of the timeline, stated where it applies: the stamped
+          seconds show the order of the six steps, not a performance figure.
+          The shell's evidence line already says the run is simulated. */}
+      <p className="text-caption text-muted-foreground" style={{ margin: 0, maxWidth: 720 }}>
+        {text(
+          "Die Sekundenangaben sind Beispielwerte und zeigen nur die Reihenfolge der sechs Schritte.",
+          "The timestamps are sample values and only show the order of the six steps.",
+        )}
+      </p>
 
       <div
         className="demo-n8n-controls"
@@ -485,74 +470,76 @@ export default function N8nSupplyChainDemo() {
             flexWrap: "wrap",
             alignItems: "center",
             gap: 8,
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            letterSpacing: "0.08em",
-            color: "rgba(243,240,233,0.6)",
-            fontWeight: 700,
+            ...DEMO.label,
+            color: DARK_MUTED,
+            fontVariantNumeric: "tabular-nums",
           }}
         >
-          <span>{stepLabel}</span>
+          {/* "Schritt 4 / 4" from sm up; below sm the count alone, so the
+              step and the three icon buttons share one 44px row. */}
+          <span>
+            <span className="max-sm:hidden">
+              {stepLabel.replace(/\s\S+ \/ \d+$/, " ")}
+            </span>
+            {stepLabel.replace(/^\S+\s/, "")}
+          </span>
           <button
             type="button"
             onClick={handleBack}
+            className="px-3 max-sm:px-0"
             disabled={activeStep <= 0}
             style={{
               minHeight: 44,
               minWidth: 44,
-              padding: "0 12px",
               background: "transparent",
-              color: activeStep <= 0 ? "rgba(243,240,233,0.3)" : DEMO.kalk,
-              border: `1px solid ${activeStep <= 0 ? "rgba(243,240,233,0.15)" : "rgba(243,240,233,0.3)"}`,
+              color: activeStep <= 0 ? "rgba(243,240,233,0.45)" : DEMO.kalk,
+              border: `1px solid ${activeStep <= 0 ? DARK_HAIRLINE : DARK_EDGE}`,
               cursor: activeStep <= 0 ? "not-allowed" : "pointer",
-              fontFamily: "inherit",
-              fontSize: 12,
-              fontWeight: 700,
+              ...DEMO.label,
             }}
           >
-            {text("◀ Zurück", "◀ Back")}
+            <span aria-hidden="true">◀</span>
+            <span className="max-sm:sr-only">{text(" Zurück", " Back")}</span>
           </button>
           <button
             type="button"
             onClick={handleNext}
+            className="px-3 max-sm:px-0"
             disabled={activeStep >= maxStep}
             style={{
               minHeight: 44,
               minWidth: 44,
-              padding: "0 12px",
               background: "transparent",
-              color: activeStep >= maxStep ? "rgba(243,240,233,0.3)" : DEMO.kalk,
-              border: `1px solid ${activeStep >= maxStep ? "rgba(243,240,233,0.15)" : "rgba(243,240,233,0.3)"}`,
+              color: activeStep >= maxStep ? "rgba(243,240,233,0.45)" : DEMO.kalk,
+              border: `1px solid ${activeStep >= maxStep ? DARK_HAIRLINE : DARK_EDGE}`,
               cursor: activeStep >= maxStep ? "not-allowed" : "pointer",
-              fontFamily: "inherit",
-              fontSize: 12,
-              fontWeight: 700,
+              ...DEMO.label,
             }}
           >
-            {text("Weiter ▶", "Next ▶")}
+            <span className="max-sm:sr-only">{text("Weiter ", "Next ")}</span>
+            <span aria-hidden="true">▶</span>
           </button>
           <button
             type="button"
             onClick={handleReplay}
+            className="px-3 max-sm:px-0"
             style={{
               minHeight: 44,
               minWidth: 44,
-              padding: "0 12px",
               background: "transparent",
-              color: "var(--color-brand-orange)",
-              border: "1px solid var(--color-brand-orange)",
+              color: DEMO.kalk,
+              border: `1px solid ${DARK_EDGE}`,
               cursor: "pointer",
-              fontFamily: "inherit",
-              fontSize: 12,
-              fontWeight: 700,
+              ...DEMO.label,
             }}
           >
-            {text("↻ Neu abspielen", "↻ Replay")}
+            <span aria-hidden="true">↻</span>
+            <span className="max-sm:sr-only">{text(" Neu abspielen", " Replay")}</span>
           </button>
         </div>
 
         <div
-          style={{ display: "flex", flexWrap: "wrap", gap: 6 }}
+          className="flex flex-wrap gap-1.5 max-sm:grid max-sm:w-full max-sm:grid-cols-2 max-sm:gap-0"
           role="group"
           aria-label={text("Szenario wählen", "Choose scenario")}
         >
@@ -570,15 +557,13 @@ export default function N8nSupplyChainDemo() {
               style={{
                 minHeight: 44,
                 padding: "0 12px",
-                background:
-                  scenario === key ? "var(--color-brand-orange)" : "transparent",
-                color: scenario === key ? DEMO.ink : "rgba(243,240,233,0.7)",
-                border: `1px solid ${scenario === key ? "var(--color-brand-orange)" : "rgba(243,240,233,0.25)"}`,
+                // Selected = filled (paper on graphit), like the site's
+                // filter chips; the Mennige mark stays on the current node.
+                background: scenario === key ? DEMO.kalk : "transparent",
+                color: scenario === key ? "#141414" : DEMO.kalk,
+                border: `1px solid ${scenario === key ? DEMO.kalk : DARK_EDGE}`,
                 cursor: "pointer",
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                fontWeight: 700,
-                letterSpacing: "0.04em",
+                ...DEMO.label,
               }}
             >
               {label}
@@ -591,11 +576,7 @@ export default function N8nSupplyChainDemo() {
       <div
         className="demo-n8n-grid"
         style={{
-          background: "rgba(243,240,233,0.03)",
-          backgroundImage:
-            "radial-gradient(rgba(243,240,233,0.08) 1px, transparent 1px)",
-          backgroundSize: "16px 16px",
-          border: `1px solid rgba(243,240,233,0.12)`,
+          border: `1px solid ${DARK_HAIRLINE}`,
           padding: "16px 14px",
           display: "flex",
           flexDirection: "column",
@@ -608,21 +589,17 @@ export default function N8nSupplyChainDemo() {
             style={{ display: "flex", flexDirection: "column", gap: 14 }}
           >
             <div
+              className="gap-1.5 sm:gap-2"
               style={{
                 display: "flex",
                 flexDirection: "column",
-                gap: 8,
                 minWidth: 0,
               }}
             >
               <div
                 style={{
-                  fontFamily: DEMO.font.mono,
-                  fontSize: 12,
-                  color: "rgba(243,240,233,0.55)",
-                  letterSpacing: "0.16em",
-                  textTransform: "uppercase",
-                  fontWeight: 700,
+                  ...DEMO.label,
+                  color: DARK_MUTED,
                 }}
               >
                 {col.label}
@@ -630,27 +607,29 @@ export default function N8nSupplyChainDemo() {
               {col.nodes.map((n) => {
                 const status = statusFor(n.step, activeStep);
                 const isActive = status !== "pending";
-                const isCurrent = status === "active";
+                // A finished run draws its last step as run nodes (paper,
+                // solid ink) with only "Run" in Mennige; the Mennige fill
+                // marks the one step that is animating.
+                const settled = allDone;
+                const isCurrent = status === "active" && !settled;
                 return (
                   <div
                     key={n.id}
+                    className="px-2.5 py-[9px] max-sm:py-[7px]"
                     style={{
+                      // Constant Mennige: inside the dark frame the accent token
+                      // flips to #e07050, where paper text drops to 2.8:1.
                       background: isCurrent
-                        ? "var(--color-brand-orange)"
+                        ? "var(--color-mennige)"
                         : DEMO.kalk,
-                      color: isCurrent ? DEMO.kalk : DEMO.ink,
-                      borderTop: `1px solid ${isActive ? "var(--color-brand-orange)" : DEMO.ink}`,
-                      borderRight: `1px solid ${isActive ? "var(--color-brand-orange)" : DEMO.ink}`,
-                      borderBottom: `1px solid ${isActive ? "var(--color-brand-orange)" : DEMO.ink}`,
-                      borderLeft: `3px solid var(--color-brand-orange)`,
-                      padding: "9px 10px",
-                      boxShadow: isActive
-                        ? `3px 3px 0 0 var(--color-brand-orange)`
-                        : `3px 3px 0 0 ${DEMO.ink}`,
+                      color: isCurrent ? ON_MENNIGE : DEMO.ink,
+                      // Pending nodes are drawn dashed (not yet run), run
+                      // nodes solid; no coloured left rule.
+                      border: `1px ${isActive ? "solid" : "dashed"} ${isCurrent ? "var(--color-mennige)" : DEMO.ink}`,
+
                       transition: reduced
                         ? "none"
-                        : "background-color 200ms ease-out, color 200ms ease-out, border-color 200ms ease-out, box-shadow 200ms ease-out, transform 200ms ease-out",
-                      transform: isCurrent ? "translate(-1px,-1px)" : "none",
+                        : "background-color 200ms ease-out, color 200ms ease-out, border-color 200ms ease-out",
                     }}
                   >
                     <div
@@ -661,7 +640,7 @@ export default function N8nSupplyChainDemo() {
                           width: 24,
                           height: 24,
                           background: DEMO.ink,
-                          color: "var(--color-brand-orange)",
+                          color: DEMO.kalk,
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
@@ -674,45 +653,40 @@ export default function N8nSupplyChainDemo() {
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div
                           style={{
-                            fontSize: 12,
+                            fontSize: 13,
                             fontWeight: 700,
-                            letterSpacing: "-0.02em",
                             lineHeight: 1.25,
                             wordBreak: "break-word",
                           }}
                         >
                           {n.t}
                         </div>
+                        {/* Below sm the node kind leads the note line, so a
+                            node is two lines instead of three. */}
                         <div
+                          className="max-sm:hidden"
                           style={{
-                            fontFamily: DEMO.font.mono,
-                            fontSize: 12,
-                            color: isCurrent
-                              ? "rgba(243,240,233,0.7)"
-                              : DEMO.schiefer,
-                            letterSpacing: "0.12em",
-                            textTransform: "uppercase",
+                            ...DEMO.label,
+                            color: isCurrent ? ON_MENNIGE : DEMO.schiefer,
                             marginTop: 1,
                           }}
                         >
                           {n.k}
                         </div>
                       </div>
-                      <StatusPill status={status} />
+                      <StatusPill status={status} settled={settled} />
                     </div>
                     <div
                       style={{
                         fontFamily: DEMO.font.mono,
                         fontSize: 12,
-                        color: isCurrent
-                          ? "rgba(243,240,233,0.9)"
-                          : DEMO.schiefer,
+                        color: isCurrent ? ON_MENNIGE : DEMO.schiefer,
                         marginTop: 5,
-                        letterSpacing: "0.04em",
                         lineHeight: 1.45,
                         wordBreak: "break-word",
                       }}
                     >
+                      <span className="sm:hidden">{n.k} · </span>
                       {n.note}
                     </div>
                   </div>
@@ -726,10 +700,7 @@ export default function N8nSupplyChainDemo() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  color:
-                    activeStep > ci
-                      ? "var(--color-brand-orange)"
-                      : "rgba(243,240,233,0.35)",
+                  color: activeStep > ci ? DEMO.kalk : DARK_MUTED,
                   transition: "color 200ms",
                   fontFamily: DEMO.font.mono,
                   fontSize: 16,
@@ -745,8 +716,12 @@ export default function N8nSupplyChainDemo() {
         ))}
       </div>
 
-      {/* Terminal-style log */}
+      {/* Terminal-style log. Below sm it folds to its last line behind a
+          44px "Protokoll · 6 Ereignisse" button; the nodes above already
+          show each step. From sm up it reads in full, as before. */}
       <div
+        className="sm:min-h-[150px]"
+        data-n8n-log
         style={{
           background: DEMO.ink,
           color: DEMO.kalk,
@@ -754,69 +729,53 @@ export default function N8nSupplyChainDemo() {
           fontFamily: DEMO.font.mono,
           fontSize: 12,
           lineHeight: 1.7,
-          minHeight: 150,
-          borderTop: "1px solid rgba(243,240,233,0.14)",
-          borderRight: "1px solid rgba(243,240,233,0.14)",
-          borderBottom: "1px solid rgba(243,240,233,0.14)",
-          borderLeft: `3px solid var(--color-brand-orange)`,
+          border: `1px solid ${DARK_HAIRLINE}`,
+          borderTop: `2px solid ${DARK_EDGE}`,
         }}
       >
-        {/* Terminal chrome */}
-        <div
+        <button
+          type="button"
+          onClick={() => setLogOpen((open) => !open)}
+          aria-expanded={logOpen}
+          className="-mt-2.5 flex min-h-11 w-full items-center justify-between gap-2 text-left sm:hidden"
           style={{
-            display: "flex",
+            ...DEMO.label,
+            background: "transparent",
+            border: 0,
+            padding: 0,
+            color: DEMO.kalk,
+            cursor: "pointer",
+            fontVariantNumeric: "tabular-nums",
+          }}
+        >
+          {text("Protokoll", "Log")} · {events.length}{" "}
+          {text("Ereignisse", "events")}
+          <span aria-hidden="true" style={{ fontSize: 16 }}>
+            {logOpen ? "−" : "+"}
+          </span>
+        </button>
+        <div
+          className="flex max-sm:hidden"
+          style={{
             justifyContent: "space-between",
             alignItems: "center",
-            borderBottom: "1px solid rgba(243,240,233,0.1)",
+            borderBottom: `1px solid ${DARK_HAIRLINE}`,
             paddingBottom: 5,
             marginBottom: 7,
             fontSize: 12,
-            color: "rgba(243,240,233,0.55)",
-            letterSpacing: "0.14em",
+            color: DARK_MUTED,
             gap: 8,
             flexWrap: "wrap",
           }}
         >
-          <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ display: "inline-flex", gap: 4 }}>
-              <span
-                style={{
-                  width: 7,
-                  height: 7,
-                  background: DEMO.statusRed,
-                  borderRadius: "50%",
-                  display: "inline-block",
-                }}
-              />
-              <span
-                style={{
-                  width: 7,
-                  height: 7,
-                  background: DEMO.statusAmber,
-                  borderRadius: "50%",
-                  display: "inline-block",
-                }}
-              />
-              <span
-                style={{
-                  width: 7,
-                  height: 7,
-                  background: DEMO.statusGreen,
-                  borderRadius: "50%",
-                  display: "inline-block",
-                }}
-              />
-            </span>
-            <span>› DEMO-LOG · WORKFLOW SC-042</span>
-          </span>
-          <span>
-            {events.length}/{totalEvents} {text("EREIGNISSE", "EVENTS")}
+          <span>workflow-sc-042.log</span>
+          <span style={{ ...DEMO.label, color: DARK_MUTED, fontVariantNumeric: "tabular-nums" }}>
+            {events.length}/{totalEvents} {text("Ereignisse", "events")}
           </span>
         </div>
         {events.length === 0 && (
-          <div style={{ color: "rgba(243,240,233,0.5)" }}>
-            //{" "}
-            {text("warte auf Webhook-Ereignis…", "waiting for webhook event…")}
+          <div className={logOpen ? undefined : "max-sm:hidden"} style={{ color: DARK_MUTED }}>
+            {text("Wartet auf das Webhook-Ereignis …", "Waiting for the webhook event …")}
           </div>
         )}
         {events.map((e) => {
@@ -827,28 +786,28 @@ export default function N8nSupplyChainDemo() {
                 ? DEMO.statusRed
                 : e.lvl === "ok"
                   ? DEMO.statusGreen
-                  : DEMO.kupferLight;
+                  : DARK_MUTED;
           return (
             <div
               key={e.id}
+              className={
+                logOpen || (!allDone && e.id === events.length - 1)
+                  ? "flex"
+                  : "flex max-sm:hidden"
+              }
               style={{
-                display: "flex",
                 gap: 8,
                 flexWrap: "wrap",
                 alignItems: "baseline",
               }}
             >
-              <span style={{ color: "rgba(243,240,233,0.45)", flexShrink: 0 }}>
+              <span style={{ color: DARK_MUTED, flexShrink: 0 }}>
                 {e.t}
               </span>
-              <span
-                style={{ color: c, letterSpacing: "0.08em", flexShrink: 0 }}
-              >
+              <span style={{ color: c, flexShrink: 0 }}>
                 [{e.lvl.toUpperCase().padEnd(4)}]
               </span>
-              <span
-                style={{ color: "var(--color-brand-orange)", flexShrink: 0 }}
-              >
+              <span style={{ color: DEMO.kalk, fontWeight: 700, flexShrink: 0 }}>
                 {e.src}
               </span>
               <span
@@ -868,7 +827,6 @@ export default function N8nSupplyChainDemo() {
             style={{
               marginTop: 6,
               color: DEMO.statusGreen,
-              letterSpacing: "0.08em",
             }}
           >
             {text(
@@ -881,8 +839,7 @@ export default function N8nSupplyChainDemo() {
           <div
             style={{
               marginTop: 6,
-              color: "#d97706",
-              letterSpacing: "0.08em",
+              color: DEMO.statusAmber,
             }}
           >
             {text(
@@ -893,88 +850,48 @@ export default function N8nSupplyChainDemo() {
         )}
       </div>
 
+      {/* One figure only, labelled as a sample. The former tiles added
+          invented usage numbers (runs per month, a manual baseline). */}
       <div
         className="demo-n8n-metrics"
         style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4,minmax(0,1fr))",
-          gap: 8,
+          display: "flex",
+          alignItems: "baseline",
+          justifyContent: "space-between",
+          gap: 12,
+          borderTop: `1px solid ${DARK_HAIRLINE}`,
+          borderBottom: `1px solid ${DARK_HAIRLINE}`,
+          padding: "8px 0",
         }}
       >
-        {(
-          [
-            [
-              text("Beispiel-Reaktionszeit", "Sample response time"),
-              "4 s",
-              true,
-            ],
-            [text("Manuelle Annahme", "Manual assumption"), "≈ 45 min", false],
-            [
-              text("Beispiel-Läufe / Monat", "Sample runs / month"),
-              text("1.240", "1,240"),
-              false,
-            ],
-            [text("Hosting", "Hosting"), "Self-hosted", false],
-          ] as const
-        ).map(([l, v, hero]) => (
-          <div
-            key={l}
-            style={{
-              background: hero
-                ? "rgba(249,115,22,0.12)"
-                : "rgba(243,240,233,0.05)",
-              border: `1px solid ${hero ? "var(--color-brand-orange)" : "rgba(243,240,233,0.15)"}`,
-              padding: 10,
-              minWidth: 0,
-            }}
-          >
-            <div
-              style={{
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                color: hero
-                  ? "var(--color-brand-orange)"
-                  : "rgba(243,240,233,0.55)",
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                fontWeight: 700,
-              }}
-            >
-              {l}
-            </div>
-            <div
-              style={{
-                fontFamily: DEMO.font.mono,
-                fontSize: hero ? 22 : 18,
-                fontWeight: 700,
-                color: hero ? "var(--color-brand-orange)" : DEMO.kalk,
-                marginTop: 3,
-                letterSpacing: "-0.02em",
-                lineHeight: 1.1,
-              }}
-            >
-              {v}
-            </div>
-          </div>
-        ))}
+        <span style={{ ...DEMO.label, color: DARK_MUTED }}>
+          {text("Beispiel-Reaktionszeit", "Sample response time")}
+        </span>
+        <span
+          style={{
+            fontFamily: DEMO.font.mono,
+            fontSize: 18,
+            fontWeight: 700,
+            color: DEMO.kalk,
+            fontVariantNumeric: "tabular-nums",
+          }}
+        >
+          4 s
+        </span>
       </div>
 
       {/* Failure mode beat: low-confidence branch */}
       <div
         style={{
-          border: "1px solid rgba(217,119,6,0.3)",
-          background: "rgba(217,119,6,0.05)",
+          // Dashed = the path the run does not take by default.
+          border: `1px dashed ${DARK_EDGE}`,
           padding: "10px 14px",
         }}
       >
         <div
           style={{
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            letterSpacing: "0.12em",
-            textTransform: "uppercase",
-            fontWeight: 700,
-            color: "#d97706",
+            ...DEMO.label,
+            color: DEMO.kalk,
             marginBottom: 6,
           }}
         >
@@ -983,9 +900,11 @@ export default function N8nSupplyChainDemo() {
             "Alternate path: low confidence → human review",
           )}
         </div>
+        {/* The chain is what the "Konfidenz niedrig" scenario above already
+            draws, so below sm only the heading and the sentence stay. */}
         <div
+          className="flex max-sm:hidden"
           style={{
-            display: "flex",
             alignItems: "center",
             gap: 8,
             fontSize: 12,
@@ -996,22 +915,22 @@ export default function N8nSupplyChainDemo() {
           {[
             {
               label: "Trigger",
-              color: "#d97706",
+              color: DEMO.kalk,
               sub: text("Verspätung unklar", "Delay unclear"),
             },
-            { label: "→", color: "rgba(243,240,233,0.4)", sub: "" },
+            { label: "→", color: DARK_MUTED, sub: "" },
             {
               label: text("IF: Konfidenz niedrig", "IF: low confidence"),
-              color: "#d97706",
+              color: DEMO.kalk,
               sub: text("Score < Schwellenwert", "Score below threshold"),
             },
-            { label: "→", color: "rgba(243,240,233,0.4)", sub: "" },
+            { label: "→", color: DARK_MUTED, sub: "" },
             {
               label: text(
                 "Manuelle Prüfung erforderlich",
                 "Manual review required",
               ),
-              color: "#f59e0b",
+              color: DEMO.kalk,
               sub: text("Disposition entscheidet", "Dispatcher decides"),
             },
           ].map((n, i) =>
@@ -1027,21 +946,17 @@ export default function N8nSupplyChainDemo() {
                 key={i}
                 style={{
                   padding: "5px 10px",
-                  background: "rgba(217,119,6,0.1)",
-                  border: `1px solid rgba(217,119,6,0.4)`,
-                  borderLeft: `3px solid ${n.color}`,
-                  fontFamily: DEMO.font.mono,
-                  fontSize: 12,
+                  border: `1px solid ${DARK_EDGE}`,
+                  fontSize: 13,
                   color: n.color,
                   fontWeight: 700,
-                  letterSpacing: "0.04em",
                 }}
               >
                 <div>{n.label}</div>
                 {n.sub && (
                   <div
                     style={{
-                      color: "rgba(243,240,233,0.5)",
+                      color: "rgba(243,240,233,0.78)",
                       fontWeight: 400,
                       marginTop: 2,
                       fontSize: 12,
@@ -1058,9 +973,8 @@ export default function N8nSupplyChainDemo() {
           style={{
             marginTop: 8,
             fontSize: 12,
-            color: "rgba(243,240,233,0.6)",
+            color: DARK_MUTED,
             lineHeight: 1.5,
-            fontFamily: DEMO.font.mono,
           }}
         >
           {text(
@@ -1070,9 +984,21 @@ export default function N8nSupplyChainDemo() {
         </div>
       </div>
 
+      {/* Below sm the canvas drops its own frame and inset: the dark shell
+          band already frames it, so the nodes are the first box. */}
       <style>{`
         [data-demo-id="n8n-supply-chain"] .demo-n8n-arrow-h { display: none; }
         [data-demo-id="n8n-supply-chain"] .demo-n8n-arrow-v { display: inline; }
+        @media (max-width: 639.98px) {
+          [data-demo-id="n8n-supply-chain"] .demo-n8n-grid {
+            border: 0 !important;
+            padding: 0 !important;
+            gap: 16px !important;
+          }
+          /* The stacked columns read top to bottom; a 16px gap replaces
+             the down arrows. */
+          [data-demo-id="n8n-supply-chain"] .demo-n8n-arrow { display: none !important; }
+        }
         @media (min-width: 640px) {
           [data-demo-id="n8n-supply-chain"] .demo-n8n-grid {
             display: grid !important;
@@ -1086,11 +1012,6 @@ export default function N8nSupplyChainDemo() {
           }
           [data-demo-id="n8n-supply-chain"] .demo-n8n-arrow-h { display: inline; }
           [data-demo-id="n8n-supply-chain"] .demo-n8n-arrow-v { display: none; }
-        }
-        @media (max-width: 480px) {
-          [data-demo-id="n8n-supply-chain"] .demo-n8n-metrics {
-            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-          }
         }
       `}</style>
     </div>

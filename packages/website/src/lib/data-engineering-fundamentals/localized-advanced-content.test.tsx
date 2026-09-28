@@ -169,11 +169,11 @@ describe("Data Engineering Fundamentals German chapters 7-12", () => {
   it("renders reviewed German prose and callout copy across the slice", async () => {
     const expected = {
       orch: ["Pipelines sind Graphen", "Idempotenz im Simulator", "Fehlmuster"],
-      qual: ["Vier Prüfungen für unterschiedliche Fehlerarten.", "Signaltabelle als Schranke"],
+      qual: ["Jede Prüfung fängt einen anderen Fehler.", "Signaltabelle als Schranke"],
       disc: ["Die sechs Kürzel", "Lineage als Kamera"],
       serve: ["Metrikversion und Ausführungskontext deklarieren.", "Eine Metrik, mehrere Schnittstellen."],
       gov: ["Akteur-Annotationen", "Richtlinienzonen und abgeschottete Transformationen"],
-      cap: ["Die laufende Pipeline", "Simulierte Zeilen durchlaufen sechs ausgewählte Kontrollen."],
+      cap: ["Die laufende Pipeline", "Simulierte Zeilen durchlaufen die Pipeline."],
     } satisfies Record<DefTranslatedAdvancedChapterId, readonly string[]>;
 
     for (const id of DEF_TRANSLATED_ADVANCED_CHAPTER_IDS) {
@@ -193,7 +193,7 @@ describe("Data Engineering Fundamentals German chapters 7-12", () => {
       disc: ["Katalogbefehle üben", "Lineage von fct_events"],
       serve: ["Dieselbe Frage mit und ohne Metrikschicht"],
       gov: ["Berechtigungsschranke"],
-      cap: ["Kontrollkonsole", "Sechs modellierte Kontrollen. Jeden Fehlerzustand prüfen."],
+      cap: ["Kontrollkonsole", "Jeden Fehlerzustand prüfen."],
     } satisfies Record<DefTranslatedAdvancedChapterId, readonly string[]>;
 
     let panelCount = 0;
@@ -307,9 +307,9 @@ describe("Data Engineering Fundamentals German chapters 7-12", () => {
   it("does not leak representative English source copy into German UI", async () => {
     const forbidden = [
       "Pipelines are graphs",
-      "Checks are cheap",
+      "The core checks",
       "The six shortcuts",
-      "What a metrics layer actually is",
+      "What a metrics layer is",
       "Actor annotations",
       "The living pipeline",
       "Active checks",

@@ -34,8 +34,8 @@ export default function ClaudeCourseError({
       </h1>
       <p className="mt-3 text-muted-foreground">
         {english
-          ? "No progress data was changed. Retry the page or return to the course overview."
-          : "Fortschrittsdaten wurden nicht verändert. Lade die Seite erneut oder kehre zur Kursübersicht zurück."}
+          ? "Your progress is unchanged."
+          : "Dein Fortschritt bleibt erhalten."}
       </p>
       <div className="mt-6 flex flex-wrap gap-3">
         <button

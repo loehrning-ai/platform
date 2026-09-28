@@ -38,7 +38,7 @@ const CONNECTORS: readonly Connector[] = [
     color: "c2",
     stats: { "shards read": "12", "bytes read": "180 MB", "predicate pushdown": "row-group stats" },
     workers: "local-ssd",
-    note: "The model places shards on worker-local SSD and omits an object-store fetch. A real deployment can still use networked coordination or replication.",
+    note: "The model places shards on worker-local SSD and skips the object-store fetch. Real deployments may still use the network for coordination or replication.",
   },
   {
     id: "system",
@@ -48,7 +48,7 @@ const CONNECTORS: readonly Connector[] = [
     color: "c3",
     stats: { rows: "8", bytes: "1 KB", "predicate pushdown": "N/A (in-memory)" },
     workers: "coordinator",
-    note: "The model returns coordinator metadata from memory. Actual system-table work depends on the connector and requested metadata.",
+    note: "The model serves coordinator metadata from memory. Real system-table work depends on the connector.",
   },
 ];
 
@@ -71,7 +71,7 @@ const CONNECTORS_DE: readonly Connector[] = [
     color: "c2",
     stats: { "gelesene Shards": "12", "gelesene Bytes": "180 MB", "Predicate Pushdown": "Row-Group-Statistiken" },
     workers: "local-ssd",
-    note: "Das Modell legt Shards auf lokalen Worker-SSDs ab und lässt den Object-Store-Abruf aus. Ein reales System kann weiterhin Netzwerk für Koordination oder Replikation nutzen.",
+    note: "Das Modell legt Shards auf lokale Worker-SSDs und überspringt den Object-Store-Abruf. Reale Systeme können trotzdem Netzwerk für Koordination oder Replikation nutzen.",
   },
   {
     id: "system",
@@ -81,7 +81,7 @@ const CONNECTORS_DE: readonly Connector[] = [
     color: "c3",
     stats: { Zeilen: "8", Bytes: "1 KB", "Predicate Pushdown": "nicht anwendbar (im Arbeitsspeicher)" },
     workers: "coordinator",
-    note: "Das Modell liefert Koordinator-Metadaten aus dem Arbeitsspeicher. Reale Systemtabellen hängen vom Konnektor und den angeforderten Metadaten ab.",
+    note: "Das Modell liefert Koordinator-Metadaten aus dem Arbeitsspeicher. Reale Systemtabellen hängen vom Konnektor ab.",
   },
 ];
 
@@ -96,7 +96,7 @@ export function ConnectorSwitcher() {
       eyebrow={text("live · pluggable", "live · austauschbar")}
       title={text("Same SQL. Different physics.", "Gleiches SQL. Andere Laufzeitbedingungen.")}
       meta={`${text("connector", "Konnektor")}: ${C.name}`}
-      caption={text("Illustrative connector paths. Values are scenario inputs, not vendor benchmarks.", "Beispielhafte Konnektorpfade. Werte sind Szenarioeingaben und keine Anbieter-Benchmarks.")}
+      caption={text("Illustrative values, not vendor benchmarks.", "Beispielwerte, keine Anbieter-Benchmarks.")}
     >
       <div className="cs-wrap">
         <div className="cs-sql">

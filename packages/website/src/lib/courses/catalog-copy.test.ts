@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { COURSE_CATALOG } from "./catalog";
 import { localizeCatalog } from "./catalog-copy";
-import { COURSE_HUB_COPY } from "./course-hub-copy";
+import {
+  COURSE_DURATIONS_SHORT,
+  COURSE_HUB_COPY,
+  COURSE_PROMISES,
+  COURSE_PROMISES_SHORT,
+} from "./course-hub-copy";
 import { courseBadges, courseSections } from "./tracks";
 
 describe("course catalogue locale copy", () => {
@@ -36,7 +41,7 @@ describe("course catalogue locale copy", () => {
     const english = localizeCatalog(COURSE_CATALOG, "en");
 
     expect(english.slice(0, 4).map((course) => course.title)).toEqual([
-      "AI Fundamentals",
+      "Everyday AI Literacy",
       "AI and Society",
       "EU AI Act Course",
       "AI-Native Work Course",
@@ -76,12 +81,63 @@ describe("course catalogue locale copy", () => {
     expect(COURSE_HUB_COPY.de.intro.split(/\s+/).length).toBeLessThanOrEqual(20);
     expect(COURSE_HUB_COPY.en.intro.split(/\s+/).length).toBeLessThanOrEqual(20);
     expect(COURSE_HUB_COPY.en.metadataTitle).toContain("AI courses");
+    // The access note gives the reason for the account in the same sentence.
+    expect(COURSE_HUB_COPY.de.accessBody).toContain("damit dein Fortschritt");
+    expect(COURSE_HUB_COPY.en.accessBody).toContain("to keep your progress");
+    // Every course has a down-to-earth promise in both locales.
+    for (const course of COURSE_CATALOG) {
+      // The ledger intro states the frame once; a row opens with the action.
+      expect(COURSE_PROMISES.de[course.slug], course.slug).toMatch(/\.$/);
+      expect(COURSE_PROMISES.en[course.slug], course.slug).toMatch(/\.$/);
+      expect(COURSE_PROMISES.de[course.slug], course.slug).not.toMatch(/^Nach dem Kurs/);
+      expect(COURSE_PROMISES.en[course.slug], course.slug).not.toMatch(/^After this/);
+    }
+    // The phone preview: one clause of at most 45 characters for every
+    // course, never an ellipsis.
+    for (const course of COURSE_CATALOG) {
+      for (const locale of ["de", "en"] as const) {
+        const short = COURSE_PROMISES_SHORT[locale][course.slug];
+        expect(short, `${locale} ${course.slug}`).toBeDefined();
+        expect(short?.length, `${locale} ${course.slug}`).toBeLessThanOrEqual(45);
+        expect(short).not.toMatch(/…|\.$/);
+      }
+    }
+    // The one cost note (every width) keeps the three facts in at most two
+    // sentences.
+    for (const locale of ["de", "en"] as const) {
+      const note = COURSE_HUB_COPY[locale].accessBody;
+      expect(note.split(/(?<=\.)\s/).length).toBeLessThanOrEqual(2);
+      expect(Object.keys(COURSE_HUB_COPY[locale])).not.toContain("accessBodyShort");
+    }
+    expect(COURSE_HUB_COPY.de.accessBody).toContain("nicht akkreditiert");
+    expect(COURSE_HUB_COPY.en.accessBody).toContain("not accredited");
+    for (const text of [
+      ...Object.values(COURSE_PROMISES_SHORT.de),
+      ...Object.values(COURSE_PROMISES_SHORT.en),
+      ...Object.values(COURSE_DURATIONS_SHORT.de),
+      ...Object.values(COURSE_DURATIONS_SHORT.en),
+      ...Object.values(COURSE_PROMISES.de),
+      ...Object.values(COURSE_PROMISES.en),
+      COURSE_HUB_COPY.de.accessBody,
+      COURSE_HUB_COPY.en.accessBody,
+      COURSE_HUB_COPY.de.intro,
+      COURSE_HUB_COPY.en.intro,
+    ]) {
+      expect(text).not.toMatch(/[\u2013\u2014]/);
+    }
     expect(COURSE_HUB_COPY.de.metadataTitle).toContain("KI-Kurse");
     expect(COURSE_HUB_COPY.de.accessBody).toContain(
-      "das PDF des veröffentlichten Lernbuchs benötigt ein Konto",
+      "und für das Buch-PDF",
     );
     expect(COURSE_HUB_COPY.en.accessBody).toContain(
-      "the published learning book's PDF requires an account",
+      "and the book PDF",
+    );
+    // The account is needed only in those two cases.
+    expect(COURSE_HUB_COPY.de.accessBody).toContain(
+      "nur für die vier Grundlagenkurse",
+    );
+    expect(COURSE_HUB_COPY.en.accessBody).toContain(
+      "need an account only for the four foundation courses",
     );
     expect(COURSE_HUB_COPY.de.accessBody).not.toContain(
       "Downloads bleiben ohne Konto erreichbar",

@@ -11,7 +11,7 @@ interface Quelle {
 const QUELLEN: readonly Quelle[] = [
   {
     title: "Verordnung (EU) 2024/1689",
-    desc: "Der vollständige Gesetzestext auf Deutsch. Maßgeblich ist immer diese Fassung, nicht eine Zusammenfassung.",
+    desc: "Der vollständige Gesetzestext auf Deutsch. Maßgeblich ist dieser Text.",
     href: "https://eur-lex.europa.eu/legal-content/DE/TXT/?uri=CELEX:32024R1689",
     badge: "Primärquelle",
     example: "EUR-Lex · Amtsblatt 12. Juli 2024",
@@ -25,7 +25,7 @@ const QUELLEN: readonly Quelle[] = [
   },
   {
     title: "Rat der EU: Billigung des Omnibus",
-    desc: "Die Pressemitteilung zur endgültigen Zustimmung des Rates mit den neuen Hochrisiko-Terminen.",
+    desc: "Pressemitteilung zur endgültigen Zustimmung des Rates, mit den neuen Hochrisiko-Terminen.",
     href: "https://www.consilium.europa.eu/en/press/press-releases/2026/06/29/artificial-intelligence-council-gives-final-green-light-to-simplify-and-streamline-rules/",
     badge: "Primärquelle",
     example: "Consilium · 29. Juni 2026",
@@ -39,14 +39,14 @@ const QUELLEN: readonly Quelle[] = [
   },
   {
     title: "Zeitplan und Umsetzungshilfen",
-    desc: "Die offizielle Übersicht der Kommission zum AI Act, inklusive GPAI-Kodex und AI Act Service Desk.",
+    desc: "Übersicht der Kommission zum AI Act, mit GPAI-Kodex und AI Act Service Desk.",
     href: "https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai",
     badge: "Kommission",
     example: "digital-strategy.ec.europa.eu",
   },
   {
     title: "KI-MIG im Bundestag",
-    desc: "Der Beschluss zum deutschen Durchführungsgesetz, das die Bundesnetzagentur zur zentralen Aufsicht macht.",
+    desc: "Beschluss zum deutschen Durchführungsgesetz, das die Bundesnetzagentur zur zentralen Aufsicht macht.",
     href: "https://www.bundestag.de/dokumente/textarchiv/2026/kw24-de-ki-1183820",
     badge: "Primärquelle",
     example: "bundestag.de · 11. Juni 2026",
@@ -80,11 +80,11 @@ export function Quellen() {
           <span className="kicker__line" />
         </div>
         <h2 className="heading">
-          Glaub nicht mir, glaub <span className="em">dem Amtsblatt.</span>
+          Maßgeblich ist der Text <span className="em">im Amtsblatt.</span>
         </h2>
         <p className="dek">
-          Jede Aussage in diesem Text lässt sich hier nachprüfen. Alle
-          Quellen zuletzt geprüft am 28. Juli 2026.
+          Hier prüfst du jede Aussage nach. Alle Quellen zuletzt geprüft am
+          28. Juli 2026.
         </p>
 
         <div className="sources">
@@ -116,17 +116,13 @@ export function Quellen() {
 
       <section className="essay-close">
         <p>
-          Der EU AI Act ist kein Grund zur Panik und kein Papiertiger. Er
-          ist ein gestaffeltes Gesetz, dessen wichtigste Bürgerrechte am
-          2. August 2026 anwendbar werden, während die schwersten
-          Unternehmenspflichten nun verbindlich auf Ende 2027 und 2028
-          verschoben sind. Wer beides auseinanderhält, versteht neunzig Prozent der
-          Debatte.
+          Der EU AI Act gilt gestaffelt: Die wichtigsten Bürgerrechte werden
+          am 2. August 2026 anwendbar, die schwersten Unternehmenspflichten
+          sind verbindlich auf Ende 2027 und 2028 verschoben.
         </p>
         <p>
-          Dieser Artikel wird bei relevanten Änderungen aktualisiert. Der
-          deutsche Behördenweg bleibt bis zur amtlich verifizierten
-          Verkündung des KI-MIG ausdrücklich vorläufig.
+          Seit dem 29. Juli 2026 ist die Bundesnetzagentur nach dem KI-MIG
+          die zentrale Beschwerdestelle.
         </p>
         <div className="essay-close__signoff">
           <span>
@@ -138,7 +134,7 @@ export function Quellen() {
 
       <div className="foot-cta">
         <span>
-          Tiefer einsteigen? Zwei kostenlose Kurse auf loehrning.ai:
+          Kostenlose Kurse auf loehrning.ai:
         </span>
         <span>
           <Link href="/eu-ai-act-kurs">EU AI Act Kurs</Link>

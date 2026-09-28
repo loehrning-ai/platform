@@ -129,6 +129,27 @@ test("standard deviation is the population deviation of sentence lengths", () =>
   assert.equal(metrics.sentenceLengthMean, 4);
   assert.ok(Math.abs(metrics.sentenceLengthSd - Math.sqrt(8 / 3)) < 1e-12);
   assert.equal(metrics.sentenceLengthSumSq, 4 + 16 + 36);
+  assert.ok(Math.abs(metrics.sentenceLengthCv - Math.sqrt(8 / 3) / 4) < 1e-12, "CV is SD over mean");
+  assert.equal(metrics.shortSentences, 2, "two and four words are short; six are not");
+  assert.equal(metrics.shortSentenceShare, 2 / 3);
+});
+
+test("slop metrics: staged contrasts, colon reveals and tailing negations per 1,000 words", () => {
+  const unit = extractProseUnits(
+    "content/books/testbuch/03_kapitel.md",
+    [
+      "Das ist kein Tippfehler. Das ist der teuerste Satz im Text.",
+      "",
+      "Das Ergebnis: 40 Prozent der Mails gehen an den Vertrieb, nicht an den Support.",
+      "",
+      "Der Login ist nicht das Ende, sondern der Anfang.",
+    ].join("\n"),
+  );
+  const metrics = computeVoiceMetrics(unit);
+  assert.equal(metrics.contrastHits, 2, "the split-sentence contrast and one nicht ..., sondern");
+  assert.equal(metrics.colonReveals, 1);
+  assert.equal(metrics.tailNegations, 1);
+  assert.ok(Math.abs(metrics.tailNegationsPer1k - (1 / metrics.words) * 1000) < 1e-12);
 });
 
 test("form markers ignore sentence-initial Sie and lower-case sie", () => {
@@ -198,6 +219,7 @@ test("surface aggregation marks files missing at the baseline as new and renders
   assert.match(summary, /baseline `origin\/main`/);
   assert.match(summary, /\| content\/ki-fuehrerschein \| 2 \(1 new\) \|/);
   assert.match(summary, /\| 1 -> 0 \|/, "bans column shows before -> after");
+  assert.match(summary, /\| CV \| Short <=4 \|.*\| Bans \| Contrast \|/, "the slop columns are in the header");
 
   const files = renderFilesMarkdown(after, before);
   assert.match(files, /content\/ki-fuehrerschein\/b\.md \(new\)/);
@@ -224,8 +246,15 @@ test("finishAggregate derives mean, deviation and shares from sums", () => {
     connectors: 0,
     du: 0,
     sie: 0,
+    shortSentences: 2,
+    contrastHits: 1,
+    colonReveals: 0,
+    tailNegations: 1,
   });
   assert.equal(finished.sentenceLengthMean, 4);
+  assert.ok(Math.abs(finished.sentenceLengthCv - Math.sqrt(8 / 3) / 4) < 1e-12);
+  assert.equal(finished.shortSentenceShare, 2 / 3);
+  assert.equal(finished.tailNegationsPer1k, 100);
   assert.ok(Math.abs(finished.sentenceLengthSd - Math.sqrt(8 / 3)) < 1e-12);
   assert.equal(finished.longParagraphShare, 0.25);
   assert.equal(finished.threeItemListShare, 2 / 3);

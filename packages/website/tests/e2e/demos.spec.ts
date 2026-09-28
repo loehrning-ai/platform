@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { demos } from "../../src/lib/demos";
+import { demoName, demos } from "../../src/lib/demos";
 import { getDemosForLocale } from "../../src/lib/demos-localization";
 import { DEMOS_PAGE_COPY } from "../../src/lib/demos-ui-copy";
 
@@ -10,38 +10,78 @@ test.describe("/demos gallery", () => {
     await page.goto("/demos", { waitUntil: "domcontentloaded" });
     await expect(page).toHaveURL(/\/demos$/);
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
-      "Arbeitsabläufe prüfen. Annahmen sichtbar machen.",
+      DEMOS_PAGE_COPY.de.catalog.heading,
     );
     await expect(page.locator("[data-demo-atlas-hero]")).toBeVisible();
     await expect(page.locator("[data-demo-filter-console]")).toBeVisible();
     const leadTile = page.locator("[data-demo-tile]").first();
     await expect(leadTile).toBeVisible();
     await expect(leadTile).toHaveAttribute("data-demo-size", demos[0].size);
-    await expect(leadTile.locator("[data-demo-preview]")).toBeVisible();
+    // The drawing belongs to the card from sm up; a phone row has none.
+    const width = page.viewportSize()?.width ?? 0;
+    const preview = leadTile.locator("[data-demo-preview]");
+    if (width >= 640) await expect(preview).toBeVisible();
+    else await expect(preview).toBeHidden();
   });
 
   test("query-state URL remains public", async ({ page }) => {
     await page.goto("/demos?cat=RAG&level=einstieg");
     await expect(page).toHaveURL(/\/demos\?cat=RAG&level=einstieg/);
     await expect(page.getByRole("heading", { level: 1 })).toContainText(
-      "Arbeitsabläufe prüfen. Annahmen sichtbar machen.",
+      DEMOS_PAGE_COPY.de.catalog.heading,
     );
     await expect(page).not.toHaveURL(/\/login/);
   });
 
-  test("keeps compact filters and the preview atlas usable at 390px", async ({
+  test("keeps compact filters and the ledger rows usable at 390px", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/demos", { waitUntil: "domcontentloaded" });
 
+    // Below sm one "Filter" button stands in for the three stacked selects,
+    // so the first example sits inside the first screen (above the 57px tab
+    // bar at the bottom of an 844px viewport).
+    const toggle = page.locator("[data-demo-filter-toggle]");
+    await expect(toggle).toBeVisible();
+    await expect(toggle).toHaveAttribute("aria-expanded", "false");
     await expect(
       page.getByRole("combobox", { name: "Reifegrad" }),
-    ).toBeVisible();
+    ).toBeHidden();
+    const firstTitle = page.locator("[data-demo-tile] h3").first();
+    await expect(firstTitle).toBeVisible();
+    const titleBox = await firstTitle.boundingBox();
+    expect(titleBox?.y ?? Number.POSITIVE_INFINITY).toBeLessThanOrEqual(700);
+
+    // Opening it shows the selects at 16px (no iOS focus zoom) with the same
+    // URL state contract as the desktop chips. A tap before hydration does
+    // nothing, so retry until the button reports itself open.
+    await expect(async () => {
+      if ((await toggle.getAttribute("aria-expanded")) !== "true") {
+        await toggle.click();
+      }
+      await expect(toggle).toHaveAttribute("aria-expanded", "true", {
+        timeout: 1_000,
+      });
+    }).toPass();
+    const level = page.getByRole("combobox", { name: "Reifegrad" });
+    await expect(level).toBeVisible();
     await expect(
       page.getByRole("combobox", { name: "Kategorie" }),
     ).toBeVisible();
-    await expect(page.locator("[data-demo-preview]").first()).toBeVisible();
+    expect(
+      await level.evaluate((element) =>
+        Number.parseFloat(getComputedStyle(element).fontSize),
+      ),
+    ).toBeGreaterThanOrEqual(16);
+    await level.selectOption("einstieg");
+    await expect(page).toHaveURL(/\/demos\?level=einstieg$/);
+    await expect(toggle).toContainText("1");
+    await expect(page.locator("[data-demo-tile]")).toHaveCount(3);
+
+    // Below sm the gallery is a ledger: tiles stay, drawings are hidden.
+    await expect(page.locator("[data-demo-tile]").first()).toBeVisible();
+    await expect(page.locator("[data-demo-preview]").first()).toBeHidden();
 
     const { scrollWidth, innerWidth } = await page.evaluate(() => ({
       scrollWidth: document.scrollingElement?.scrollWidth ?? 0,
@@ -75,7 +115,7 @@ test.describe("/demos/[slug] detail routes", () => {
     {
       slug: "cost-drift-observability",
       action: /Rechnungs-Extraktion/,
-      result: "€412.08",
+      result: "412,08 €",
     },
   ] as const) {
     test(`${engineCase.slug} stays contained and keyboard-operable at 390px`, async ({
@@ -159,6 +199,85 @@ test.describe("/demos/[slug] detail routes", () => {
     });
   }
 
+  test("puts the first Excel task and a cited RAG answer in the first screen at 390px", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.emulateMedia({ reducedMotion: "reduce" });
+
+    await page.goto("/demos/excel", { waitUntil: "domcontentloaded" });
+    const firstTask = page.getByRole("button", { name: /Formel für Wachstum/ });
+    await expect(firstTask).toBeVisible();
+    const taskBox = await firstTask.boundingBox();
+    // The whole first task row clears the 57px tab bar (it starts at 787).
+    expect(
+      (taskBox?.y ?? Number.POSITIVE_INFINITY) + (taskBox?.height ?? 0),
+    ).toBeLessThanOrEqual(740);
+    // All five sheet columns fit; the sheet does not scroll sideways.
+    const sheet = page.getByRole("region", { name: "Beispiel-Arbeitsblatt" });
+    const sheetScroll = await sheet.evaluate((element) => ({
+      scrollWidth: element.scrollWidth,
+      clientWidth: element.clientWidth,
+    }));
+    expect(sheetScroll.scrollWidth).toBeLessThanOrEqual(
+      sheetScroll.clientWidth + 1,
+    );
+
+    await page.goto("/demos/rag-vertragsassistent", {
+      waitUntil: "domcontentloaded",
+    });
+    // Final state first: an answered example, not an empty prompt.
+    await expect(page.getByText("3 Monate zum Quartalsende")).toBeVisible();
+    await expect(page.getByText("Frag das Beispielarchiv.")).toHaveCount(0);
+    // The first Fundstelle sits under the answer, above the tab bar. The
+    // server paints a static first frame with the same line; measure the
+    // interactive engine's line, which replaces it once the chunk loads, so
+    // the box is not read mid-swap.
+    const citation = page
+      .locator("[data-rag-inline-source]")
+      .filter({ hasText: "Quelle: Rahmenvereinbarung v3.2, §12.3 Kündigung" });
+    await expect(citation).toBeVisible();
+    const citationBox = await citation.boundingBox();
+    expect(
+      (citationBox?.y ?? Number.POSITIVE_INFINITY) + (citationBox?.height ?? 0),
+    ).toBeLessThanOrEqual(787);
+    const field = page.getByRole("textbox", {
+      name: "Frage an den Vertrags-Assistenten",
+    });
+    expect(
+      await field.evaluate((element) =>
+        Number.parseFloat(getComputedStyle(element).fontSize),
+      ),
+    ).toBeGreaterThanOrEqual(16);
+  });
+
+  test("keeps the RAG chat log from scrolling sideways and starts engines early at 320px", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 320, height: 568 });
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto("/demos/rag-vertragsassistent", {
+      waitUntil: "domcontentloaded",
+    });
+    await expect(page.getByText("3 Monate zum Quartalsende")).toBeVisible();
+    const log = page.locator("[data-rag-chat-log]");
+    const logScroll = await log.evaluate((element) => ({
+      scrollWidth: element.scrollWidth,
+      clientWidth: element.clientWidth,
+    }));
+    expect(logScroll.scrollWidth).toBeLessThanOrEqual(logScroll.clientWidth);
+
+    // Back link and kicker share one row and the lead is one sentence, so
+    // the engine starts inside the first screen.
+    for (const path of ["/demos/rag-vertragsassistent", "/demos/excel"]) {
+      await page.goto(path, { waitUntil: "domcontentloaded" });
+      const shell = page.locator("[data-demo-shell]");
+      await expect(shell).toBeVisible();
+      const box = await shell.boundingBox();
+      expect(box?.y ?? Number.POSITIVE_INFINITY).toBeLessThanOrEqual(230);
+    }
+  });
+
   test("legacy demo briefing PDF endpoint remains protected or gone", async ({
     request,
   }) => {
@@ -221,7 +340,7 @@ test("English demo hub links every registry item and renders a localized detail"
   expect(hubResponse?.status()).toBe(200);
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
-    `${DEMOS_PAGE_COPY.en.catalog.headingLead} ${DEMOS_PAGE_COPY.en.catalog.headingAccent}`,
+    DEMOS_PAGE_COPY.en.catalog.heading,
   );
   await expect(page.locator("[data-demo-tile]")).toHaveCount(
     englishDemos.length,
@@ -241,8 +360,9 @@ test("English demo hub links every registry item and renders a localized detail"
   });
   expect(response?.status()).toBe(200);
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText(
-    `${representative.title} ${representative.titleKicker}`,
+  // The detail H1 is the plain demo name; the task phrase is not repeated.
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+    demoName(representative),
   );
   await expect(
     page.getByRole("link", {

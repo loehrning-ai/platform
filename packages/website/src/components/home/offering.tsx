@@ -1,6 +1,11 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { CourseArtwork } from "@/components/home/course-artwork";
+import { PosterThumb } from "@/components/plakat/poster-thumb";
+import { coursePlakat } from "@/lib/plakat/palettes";
+import { HOME_CONTAINER } from "@/components/home/home-container";
+import { HomeSectionHead } from "@/components/home/home-section-head";
+import { ArrowGlyph } from "@/components/werk/arrow-glyph";
+import { BUTTON_CLASSES } from "@/components/werk/button-link";
 import { HOME_COPY, homeCourseCopy } from "@/components/home/home-copy";
 import { COURSE_CATALOG } from "@/lib/courses/catalog";
 import { courseGroupFor } from "@/lib/courses/tracks";
@@ -10,150 +15,123 @@ const SPINE_HOME_COURSES = COURSE_CATALOG.filter(
   (course) => courseGroupFor(course.slug) !== "deeper",
 );
 
+const SPINE_LESSON_COUNT = SPINE_HOME_COURSES.reduce(
+  (sum, course) => sum + course.totalLessons,
+  0,
+);
+
 const TECHNICAL_COURSE_COUNT = COURSE_CATALOG.filter(
   (course) => courseGroupFor(course.slug) === "deeper",
 ).length;
 
-const COURSE_TONES = [
-  "bg-brand-acid/42",
-  "bg-brand-peach/38",
-  "bg-brand-sky/42",
-  "bg-brand-pink/34",
-] as const;
-
-const COURSE_PLATES = [
-  "bg-brand-acid/55",
-  "bg-brand-pink/45",
-  "bg-brand-sky/55",
-  "bg-brand-peach/50",
-] as const;
-
-// Solid tones for the per-card hover bar and number badge, positionally keyed
-// to the same index COURSE_TONES uses. This list was previously identical to
-// COURSE_TONES, so every badge and hover bar printed the card's own hue on
-// itself and vanished into it. Each accent is now its card tone's complement:
-// acid takes pink, peach takes sky, sky takes peach, pink takes acid. Warm
-// tones get a cool accent and vice versa, so the accent reads as a distinct
-// mark while staying inside the same family. All four stay in the light half
-// of the palette because the badge prints foreground ink on them; cobalt and
-// teal are too dark to carry it.
-const COURSE_ACCENTS = [
-  "bg-brand-pink",
-  "bg-brand-sky",
-  "bg-brand-peach",
-  "bg-brand-acid",
-] as const;
-
+/**
+ * Kurse: the four spine courses in their order, then the one path to the
+ * full atlas.
+ *
+ * From lg the route reads left to right as four flat sheets: the course
+ * poster (the Grundlagenpfad in Lemons, numbered 01 to 04; the poster's
+ * numeral is the sheet's only number), the lesson count, the title, one
+ * sentence and the duration. Below lg each course is one hairline row led by
+ * a 56px crop of its poster, with the duration as its one meta line. The number is the only
+ * numbering on the page: these four are a sequence. No tints, no shadows and
+ * no hover lift: hover underlines the title and nudges the arrow; focus is
+ * the global Mennige ring.
+ */
 export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
   const copy = HOME_COPY[locale].offering;
 
   return (
     <section
       id="kurse"
-      className="relative scroll-mt-24 overflow-hidden border-b border-border/60 bg-background/65 py-12 max-lg:py-5 md:py-20 lg:py-24"
+      className="scroll-mt-24 bg-background pt-16 pb-12 max-lg:py-5 max-lg:pt-8 lg:pt-20"
       data-testid="kurse-section"
     >
-      <div className="mx-auto max-w-6xl px-6 md:px-12">
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] lg:items-end lg:gap-16">
-          <header className="max-w-xl">
-            <p className="overline border-l-[3px] border-brand-orange pl-3">
-              {copy.overline}
-            </p>
-            <h2 className="mt-4 text-fluid-h2 font-bold tracking-[-0.035em] text-foreground max-lg:mt-3 max-lg:text-2xl max-lg:tracking-[-0.03em]">
-              {copy.headline[0]}{" "}
-              <span className="text-muted-foreground">{copy.headline[1]}</span>
-            </h2>
-            <p className="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground max-lg:hidden">
-              {copy.introduction}
-            </p>
-          </header>
-          <div className="flex items-center gap-3 rounded-2xl border border-foreground/10 bg-brand-sky/45 px-4 py-3 shadow-card max-lg:hidden sm:px-5 sm:py-4 lg:justify-end">
-            <span className="font-ui-mono text-2xl font-bold tabular-nums text-brand-orange sm:text-3xl">
-              01–04
-            </span>
-            <span className="max-w-48 text-sm leading-snug text-muted-foreground">
-              {copy.routeSignal}
-            </span>
-          </div>
-        </div>
+      <div className={HOME_CONTAINER}>
+        <HomeSectionHead
+          id="kurse-heading"
+          note={copy.routeSignal(SPINE_LESSON_COUNT)}
+          title={copy.headline}
+        />
 
         <ol
-          className="relative mt-8 grid gap-3 max-lg:mt-5 max-lg:gap-2 sm:gap-4 md:grid-cols-2 lg:mt-10 lg:grid-cols-12 lg:gap-6"
+          className="mt-10 grid grid-cols-4 gap-x-8 max-lg:mt-4 max-lg:grid-cols-1 max-lg:gap-0 max-lg:border-t max-lg:border-hairline"
           data-testid="foundation-route"
           aria-label={copy.routeLabel}
         >
           {SPINE_HOME_COURSES.map((course, index) => {
             const courseCopy = homeCourseCopy(locale, course.slug);
-            const wideCard = index === 0 || index === 3;
-            const tone = COURSE_TONES[index] ?? COURSE_TONES[0];
-            const accent = COURSE_ACCENTS[index] ?? COURSE_ACCENTS[0];
+            const number = String(index + 1).padStart(2, "0");
+            const poster = coursePlakat(course.slug);
             return (
-              <li
-                key={course.slug}
-                className={wideCard ? "lg:col-span-7" : "lg:col-span-5"}
-              >
+              <li key={course.slug} className="min-w-0">
                 <Link
                   href={localizeHref(course.href, locale)}
-                  className={`group relative grid h-full min-w-0 grid-cols-[4.5rem_minmax(0,1fr)] overflow-hidden rounded-[1.5rem] border border-foreground/10 max-sm:rounded-2xl ${tone} shadow-card outline-none transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-1.5 hover:border-brand-cobalt/45 hover:shadow-card-hover focus-visible:-translate-y-1 focus-visible:border-brand-cobalt focus-visible:ring-2 focus-visible:ring-brand-cobalt focus-visible:ring-offset-4 focus-visible:ring-offset-background motion-reduce:transform-none motion-reduce:transition-none sm:grid-cols-1 sm:rounded-[1.75rem]`}
+                  className="group flex h-full min-w-0 flex-col transition-colors duration-[120ms] motion-reduce:transition-none max-lg:grid max-lg:grid-cols-[3.5rem_minmax(0,1fr)_auto] max-lg:items-center max-lg:gap-4 max-lg:border-b max-lg:border-hairline max-lg:py-2 max-lg:hover:bg-card-hover"
                   data-home-course-card
                 >
-                  <span className="relative block">
-                    {course.coverImage ? (
-                      <CourseArtwork
-                        src={course.coverImage}
-                        wide={wideCard}
-                        plateClassName={
-                          COURSE_PLATES[index] ?? COURSE_PLATES[0]
-                        }
-                        accentClassName={accent}
+                  {/* Below lg the wide poster steps out and a 56px portrait
+                      crop of the same Lemons poster, numeral included, leads
+                      the row. */}
+                  <span className="block max-lg:contents">
+                    <CourseArtwork slug={course.slug} />
+                    {poster ? (
+                      <PosterThumb
+                        plakat={poster.plakat}
+                        motif={poster.motif}
+                        numeral={poster.numeral ?? number}
+                        size="xs"
+                        className="w-14 lg:hidden"
                       />
-                    ) : null}
-                    <span
-                      className={`absolute left-4 top-4 flex size-11 items-center justify-center rounded-xl border border-foreground/25 font-ui-mono text-sm font-bold tabular-nums text-foreground shadow-[3px_3px_0_var(--color-foreground)] max-sm:left-2 max-sm:top-2 max-sm:size-8 max-sm:rounded-lg max-sm:text-xs max-sm:shadow-[2px_2px_0_var(--color-foreground)] ${accent}`}
-                    >
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <span className="absolute bottom-3 right-3 hidden rounded-full border border-foreground/10 bg-paper/90 px-3 py-1.5 font-ui-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground shadow-card backdrop-blur-sm sm:inline-flex">
-                      {courseCopy.duration}
-                    </span>
+                    ) : (
+                      <span className="text-sm font-semibold tabular-nums text-muted-foreground lg:hidden">
+                        {number}
+                      </span>
+                    )}
                   </span>
 
-                  <span className="grid min-w-0 grid-cols-1 gap-3 p-4 max-sm:p-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-5 sm:p-5 md:p-6">
-                    <span className="min-w-0">
-                      <span className="block font-ui-mono text-xs font-bold uppercase leading-relaxed tracking-[0.08em] text-brand-orange max-sm:leading-tight sm:tracking-[0.1em]">
-                        {course.unitCount} {course.unitLabel} ·{" "}
+                  <span className="mt-4 flex min-w-0 flex-1 flex-col max-lg:mt-0">
+                    {/* Below lg: title first, then the duration as the one
+                        meta line. From lg: the lesson count above the
+                        title (the poster carries the number), the duration
+                        at the foot of the sheet. */}
+                    <span className="order-1 text-label text-muted-foreground tabular-nums max-lg:order-2 max-lg:mt-0.5 max-lg:text-caption max-lg:font-normal max-lg:leading-snug max-lg:tracking-normal">
+                      <span className="max-lg:hidden">
                         {course.totalLessons} {copy.lessonLabel}
                       </span>
-                      <span className="mt-1 block font-ui-mono text-xs font-bold uppercase leading-relaxed tracking-[0.08em] text-muted-foreground max-sm:mt-0.5 max-sm:normal-case max-sm:leading-tight sm:hidden">
+                      <span className="whitespace-nowrap lg:hidden">
                         {courseCopy.duration}
                       </span>
-                      <span className="mt-2 block text-lg font-bold tracking-[-0.025em] text-foreground transition-colors duration-150 group-hover:text-brand-orange group-focus-visible:text-brand-orange max-sm:mt-0.5 max-sm:text-base sm:text-xl">
-                        {courseCopy.title}
-                      </span>
-                      <span className="mt-1.5 block max-w-xl text-sm leading-relaxed text-muted-foreground max-sm:hidden sm:mt-2">
-                        {courseCopy.tagline}
-                      </span>
                     </span>
-                    <span className="hidden size-11 shrink-0 items-center justify-center self-end rounded-xl border border-foreground/15 bg-paper text-brand-cobalt shadow-card transition-[background-color,color,transform] duration-200 group-hover:translate-x-1 group-hover:bg-brand-cobalt group-hover:text-white group-focus-visible:translate-x-1 group-focus-visible:bg-brand-cobalt group-focus-visible:text-white motion-reduce:transform-none motion-reduce:transition-none sm:flex">
-                      <ArrowRight aria-hidden="true" size={18} />
+                    <span className="order-2 mt-1 text-fluid-h3 font-bold text-foreground underline decoration-transparent underline-offset-4 transition-colors duration-[120ms] group-hover:decoration-current motion-reduce:transition-none max-lg:order-1 max-lg:mt-0 max-lg:text-base max-lg:leading-snug max-lg:no-underline">
+                      {courseCopy.title}
+                    </span>
+                    <span className="order-3 mt-2 text-body text-muted-foreground text-pretty max-lg:hidden">
+                      {courseCopy.tagline}
+                    </span>
+                    <span className="order-4 mt-auto pt-4 max-lg:hidden">
+                      <span className="flex items-center justify-between gap-3 border-t border-hairline pt-3 text-caption text-muted-foreground tabular-nums">
+                        <span>{courseCopy.duration}</span>
+                        <ArrowGlyph className="text-foreground" />
+                      </span>
                     </span>
                   </span>
+                  <ArrowGlyph className="mr-1 text-foreground lg:hidden" />
                 </Link>
               </li>
             );
           })}
         </ol>
 
-        <div className="mt-6 grid gap-3 rounded-2xl border border-foreground/10 bg-brand-acid/65 p-4 shadow-card max-lg:mt-4 max-lg:grid-cols-[minmax(0,1fr)_auto] max-lg:items-center max-lg:p-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:px-6 sm:py-5 lg:mt-7">
-          <p className="text-sm leading-relaxed text-foreground max-lg:text-xs">
+        <div className="mt-10 flex items-center justify-between gap-6 border-t border-hairline pt-4 max-lg:mt-3 max-lg:grid max-lg:grid-cols-[minmax(0,1fr)_auto] max-lg:items-center max-lg:gap-4 max-lg:border-t-0 max-lg:pt-0">
+          <p className="text-body text-muted-foreground max-lg:text-caption max-lg:leading-snug">
             {copy.deeperSummary(TECHNICAL_COURSE_COUNT)}
           </p>
           <Link
             href={localizeHref("/kurse", locale)}
-            className="inline-flex min-h-11 shrink-0 items-center gap-2 justify-self-start border-b border-brand-orange font-ui-mono text-xs font-bold uppercase tracking-[0.08em] text-brand-orange outline-none transition-[border-color,color] duration-150 hover:border-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:justify-self-end"
+            className={`${BUTTON_CLASSES.paper.text} shrink-0 text-[0.9375rem] max-lg:text-sm`}
           >
             {copy.viewAllCourses}
-            <ArrowRight aria-hidden="true" size={16} />
+            <ArrowGlyph />
           </Link>
         </div>
       </div>

@@ -29,18 +29,18 @@
     <div class="cue-column">
       <section class="pairing-guide" id="pairing-guide" aria-labelledby="pairing-title">
         <h2 id="pairing-title">This console is not connected to a deck</h2>
-        <p id="pairing-lead">The console only follows and drives a deck that opened it. Nothing here moves the projector yet.</p>
+        <p id="pairing-lead">The console only follows and drives the deck that opened it. Nothing here moves the projector yet.</p>
         <ol class="pairing-steps">
           <li><strong>Open the deck from this console.</strong> <button type="button" class="guide-action" id="open-deck">Open the deck in a new tab</button> This tab stays the console.</li>
-          <li><strong>In the deck, press P</strong> (or its presenter button). This console connects within a few seconds and the controls unlock.</li>
+          <li><strong>In the deck, press P</strong> (or its presenter button). The controls unlock once this console connects.</li>
           <li><strong>Deck already open elsewhere?</strong> Press P there instead. It opens its own console window; close this tab.</li>
         </ol>
       </section>
 
       <section class="now-card current-panel" aria-labelledby="current-counter current-label">
         <div class="now-head">
-          <p class="now-scene"><span id="current-counter" class="now-counter">— / —</span> <span id="current-label" class="now-label">Waiting for deck</span></p>
-          <p class="press-state"><span class="press-meter" id="press-meter" aria-hidden="true"></span><span id="fragment-state">press — / —</span></p>
+          <p class="now-scene"><span id="current-counter" class="now-counter">…</span> <span id="current-label" class="now-label">Waiting for deck</span></p>
+          <p class="press-state"><span class="press-meter" id="press-meter" aria-hidden="true"></span><span id="fragment-state">press 0 / 0</span></p>
         </div>
         <p class="appendix-banner" id="appendix-banner" hidden>Appendix · <span id="appendix-banner-text">Esc returns to the main path</span></p>
 
@@ -74,8 +74,8 @@
 
       <section class="notes-panel" id="notes-panel" tabindex="0" aria-labelledby="notes-title" data-note-key="none">
         <details id="note-details" open>
-          <summary><h2 id="notes-title">Full speaker note</h2><span class="notes-meta"><span id="current-section">—</span> · <code id="current-id">no-scene</code> · <code id="note-hook">note:none</code></span></summary>
-          <p class="notes-hint">Lines for the current press are marked. ↑ and ↓ scroll this note when it has focus.</p>
+          <summary><h2 id="notes-title">Full speaker note</h2><span class="notes-meta"><span id="current-section">…</span> · <code id="current-id">no-scene</code> · <code id="note-hook">note:none</code></span></summary>
+          <p class="notes-hint">Lines for the current press are marked. ↑ and ↓ scroll the focused note.</p>
           <div id="speaker-note">Open the deck and press P to load the notes.</div>
           <div class="note-detail-grid">
             <section><h3>Ask</h3><div id="audience-asks">—</div></section>
@@ -94,7 +94,7 @@
           <p id="pace-state" class="pace-pill" data-pace="not-started">NOT STARTED</p>
         </div>
         <div class="clock-bar" aria-hidden="true"><span class="clock-bar__window" id="clock-window"></span><span class="clock-bar__fill" id="clock-fill"></span></div>
-        <p class="pace-detail"><span>Scene <span id="scene-window">—</span></span><span>State <span id="state-age">—</span></span></p>
+        <p class="pace-detail"><span>Scene <span id="scene-window">…</span></span><span>State <span id="state-age">…</span></span></p>
         <p class="pace-cut" id="pace-cut" hidden></p>
         <div class="timer-actions">
           <button type="button" data-timer-command="toggle">Start</button>
@@ -116,7 +116,7 @@
           <button type="button" data-deck-command="next">Next scene</button>
           <button type="button" class="wide return-control" data-deck-command="appendix-return" disabled>Return from appendix (Esc)</button>
         </div>
-        <p class="up-next"><span class="up-next__label">Next scene</span> <span id="next-label">—</span> <code id="next-id" class="sr-only">—</code><span id="next-kind" class="sr-only">—</span></p>
+        <p class="up-next"><span class="up-next__label">Next scene</span> <span id="next-label">…</span> <code id="next-id" class="sr-only">…</code><span id="next-kind" class="sr-only">…</span></p>
         <div class="scene-jump">
           <label for="scene-select">Jump to scene</label>
           <div class="scene-jump__row">

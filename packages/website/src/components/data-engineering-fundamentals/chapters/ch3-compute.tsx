@@ -1,4 +1,4 @@
-import { Hero, SectionLabel, AntiPatterns, BestPractices, Takeaway } from "../primitives";
+import { Hero, SectionLabel, AntiPatterns, BestPractices } from "../primitives";
 import { ShuffleSim } from "../simulators/shuffle-sim";
 import type { ChapterMeta } from "@/lib/data-engineering-fundamentals/types";
 
@@ -7,9 +7,9 @@ import type { ChapterMeta } from "@/lib/data-engineering-fundamentals/types";
 
 function EngineMatrix() {
   const rows = [
-    { n: "Presto", s: "Distributed SQL", d: "Interactive SQL across connectors. Spill, retry, and resource behavior depend on the engine version and cluster configuration." },
-    { n: "Spark", s: "Batch processing", d: "DataFrame and SQL workloads with partitioned execution, shuffle, recomputation, and configurable spill." },
-    { n: "Snowflake", s: "Managed SQL warehouse", d: "Managed storage and virtual warehouses. Performance and cost depend on warehouse size, query shape, caching, and concurrency." },
+    { n: "Presto", s: "Distributed SQL", d: "Interactive SQL across connectors. Spill, retry and resources depend on engine version and cluster configuration." },
+    { n: "Spark", s: "Batch processing", d: "DataFrame and SQL jobs with partitioned execution, shuffle, recomputation and configurable spill." },
+    { n: "Snowflake", s: "Managed SQL warehouse", d: "Managed storage and virtual warehouses. Speed and cost depend on warehouse size, query shape, caching and concurrency." },
   ];
   return (
     <div className="cards-3">
@@ -34,8 +34,8 @@ export function Ch3Compute({ chapter }: Ch3ComputeProps) {
       <Hero
         accent={chapter.inkHex}
         eyebrow={`Chapter ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
-        title="Compute: <span class='accent'>the planner bets on statistics.</span> Wrong stats, wrong plan."
-        hook="A cost-based planner picks join strategies from table statistics and configuration. Stale or incomplete statistics pick badly: a build side that exceeds worker memory, or a distribution that concentrates work on a few partitions."
+        title="Compute: <span class='accent'>the planner relies on statistics.</span>"
+        hook="A cost-based planner picks join strategies from table statistics and configuration. Stale statistics can pick a build side that exceeds worker memory or pile work onto a few partitions."
         meta={[
           { k: "Engines", v: '<span class="chip">Presto</span><span class="chip">Spark</span><span class="chip">Snowflake</span>' },
           { k: "Planners", v: "CBO · statistics-driven" },
@@ -44,47 +44,38 @@ export function Ch3Compute({ chapter }: Ch3ComputeProps) {
       />
 
       <section className="section">
-        <SectionLabel n="4.1">Pick the engine for the query.</SectionLabel>
-        <h2 className="h2">Three engines, one set of bytes.</h2>
-        <p className="prose">Engines that speak the same table format and catalog read the same Parquet data. So choose on measured workload: startup and response time, shuffle volume, memory and spill, retry behavior, concurrency, operational ownership, cost.</p>
+        <SectionLabel n="4.1">Engine choice</SectionLabel>
+        <h2 className="h2">Trino, Spark and Snowflake read the same Parquet files.</h2>
+        <p className="prose">Engines on the same table format and catalog read the same Parquet data. Choose by measured workload: startup and response time, shuffle, memory and spill, retries, concurrency, ownership and cost.</p>
         <EngineMatrix />
       </section>
 
       <section className="section">
         <SectionLabel n="4.2">The planner, visualized</SectionLabel>
-        <h2 className="h2">Watch a join actually happen.</h2>
+        <h2 className="h2">How a join runs.</h2>
         <p className="prose">
-          A partitioned <b>hash join</b> redistributes rows by join key. Uneven key frequency can leave one worker with much more data than the
-          others. A <b>broadcast join</b> copies the build side to workers and is appropriate only when it fits in each worker&apos;s memory with
-          headroom for the rest of the query.
+          A partitioned <b>hash join</b> redistributes rows by join key, so one frequent key can leave one worker with far more data. A{" "}
+          <b>broadcast join</b> copies the build side to every worker and only works if it fits in each worker&apos;s memory with headroom.
         </p>
         <p className="prose">
-          Push the skew slider up and watch worker 0 receive more modeled load. A frequent sentinel value such as
-          <code> user_id = 0</code> can produce this distribution when it is included in a join key.
+          Raise the skew slider and worker 0 gets more load. A frequent sentinel value such as <code>user_id = 0</code> in the join key causes
+          this.
         </p>
         <ShuffleSim />
       </section>
 
       <AntiPatterns
         items={[
-          '<b>Broadcasting an unmeasured build side.</b> Check its compressed and in-memory size, worker count, concurrent work, and configured memory limits before adding a hint.',
-          "<b>Hash-joining on a column with a single hot key.</b> Classic: <code>user_id = 0</code> for logged-out traffic. Salt the key, or filter first.",
-          "<b>Assuming an engine cannot or will spill.</b> Verify the exact engine version, operator support, and cluster settings before assigning a large join.",
-          "<b>Using stale table statistics.</b> Refresh statistics after material data changes and compare estimates with runtime rows in the plan.",
+          '<b>Broadcasting an unmeasured build side.</b> Check compressed and in-memory size, worker count, concurrent work and memory limits before adding a hint.',
+          "<b>Hash-joining on a column with one hot key</b>, such as <code>user_id = 0</code> for logged-out traffic. Salt the key or filter first.",
+          "<b>Assuming the engine can or cannot spill.</b> Check engine version, operator support and cluster settings before giving it a large join.",
+          "<b>Using stale table statistics.</b> Refresh them after large data changes and compare plan estimates with runtime rows.",
         ]}
       />
       <BestPractices
         items={[
           "<b>Inspect join-key distributions</b> on representative data and compare the largest key or partition with the median.",
-          "Use <b>broadcast hints</b> only when you've measured the small side. <code>/*+ BROADCAST(x) */</code> is a contract with the planner.",
-          "For sustained skew, evaluate filtering, pre-aggregation, splitting hot keys, or <b>salting</b>. Salting adds replication and a second aggregation step; verify that trade-off.",
-        ]}
-      />
-      <Takeaway
-        items={[
-          "The planner selects <b>shuffle or broadcast</b> from statistics, configuration, and hints. Validate estimates against runtime evidence.",
-          "Skew concentrates work. Inspect key and partition distributions before treating cluster size as the cause.",
-          "Engine choice is part of job design. Test the target query with the target engine configuration and data distribution.",
+          "For sustained skew, try filtering, pre-aggregation, splitting hot keys or <b>salting</b>. Salting adds replication and a second aggregation step.",
         ]}
       />
     </>

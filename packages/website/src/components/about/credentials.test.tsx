@@ -26,8 +26,15 @@ describe("<Credentials>", () => {
     const cards = container.querySelectorAll("article");
     expect(cards).toHaveLength(3);
     expect(container.querySelector("[data-credential-spread]")).not.toBeNull();
-    expect(cards[0]).toHaveClass("bg-brand-peach/45", "md:col-span-7");
-    expect(cards[1]).toHaveClass("bg-brand-sky/45", "md:col-span-5");
+    // Flat columns on paper: no tints, and subtitles in Schiefer (the
+    // Mennige-on-peach subtitle failed colour contrast at 4.2:1).
+    for (const card of cards) {
+      expect(card.className).not.toMatch(/bg-brand-|shadow-card|ring-/);
+      expect(card.innerHTML).not.toMatch(/text-(?:brand-orange|kupfer)/);
+    }
+    expect(screen.getByText("FAU Erlangen-Nürnberg")).toHaveClass(
+      "text-muted-foreground",
+    );
   });
 
   it("renders research evidence only on the research card", () => {

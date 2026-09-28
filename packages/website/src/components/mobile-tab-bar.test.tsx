@@ -45,6 +45,11 @@ vi.mock("next/link", () => ({
 
 import { MobileTabBar, buildMobileTabs } from "./mobile-tab-bar";
 import { isActiveTab } from "./mobile-tab-bar-links";
+import {
+  ACCOUNT_ROUTES,
+  LEARNING_ROUTES,
+  PRACTICE_ROUTES,
+} from "@/lib/navigation/site-sections";
 
 const SESSION_COOKIE = "sb-abcdefghijklmnopqrst-auth-token";
 
@@ -86,16 +91,17 @@ describe("mobile tab bar destinations and copy", () => {
     const bar = screen.getByRole("navigation", { name: "Schnellnavigation" });
     const links = within(bar).getAllByRole("link");
 
+    // The two middle tabs are the header's two groups, under the same names.
     expect(links.map((link) => link.textContent)).toEqual([
       "Start",
-      "Kurse",
-      "Werkzeuge",
+      "Lernen",
+      "Praxis",
       "Konto",
     ]);
     expect(links.map((link) => link.getAttribute("href"))).toEqual([
       "/",
       "/kurse",
-      "/open-source",
+      "/workshops",
       "/konto",
     ]);
   });
@@ -108,14 +114,14 @@ describe("mobile tab bar destinations and copy", () => {
 
     expect(links.map((link) => link.textContent)).toEqual([
       "Home",
-      "Courses",
-      "Tools",
+      "Learning",
+      "Practice",
       "Account",
     ]);
     expect(links.map((link) => link.getAttribute("href"))).toEqual([
       "/en",
       "/en/kurse",
-      "/en/open-source",
+      "/en/workshops",
       "/en/konto",
     ]);
     for (const link of links) {
@@ -134,16 +140,15 @@ describe("mobile tab bar destinations and copy", () => {
     ).toBe(tabBar());
   });
 
-  it("keeps the Werkzeuge tab on the public tools surface, which has an anchor that exists", async () => {
-    // `/konto#werkzeuge` was the earlier signed-in destination and no element
+  it("lands the Praxis tab on the workshops, a public page, never on an account anchor", async () => {
+    // `/konto#werkzeuge` was an earlier signed-in destination and no element
     // on the account page carries that id, so it resolved to the top of
     // `/konto` - the Konto tab's own destination.
     await renderTabBar({ locale: "de" });
 
-    expect(screen.getByRole("link", { name: "Werkzeuge" })).toHaveAttribute(
-      "href",
-      "/open-source",
-    );
+    const praxis = screen.getByRole("link", { name: "Praxis" });
+    expect(praxis).toHaveAttribute("href", "/workshops");
+    expect(praxis.getAttribute("href")).not.toContain("#");
   });
 });
 
@@ -167,7 +172,7 @@ describe("mobile tab bar cache variance", () => {
     expect(links.map((link) => link.getAttribute("href"))).toEqual([
       "/",
       "/kurse",
-      "/open-source",
+      "/workshops",
       "/konto",
     ]);
   });
@@ -179,7 +184,7 @@ describe("mobile tab bar cache variance", () => {
     expect(links.map((link) => link.getAttribute("href"))).toEqual([
       "/en",
       "/en/kurse",
-      "/en/open-source",
+      "/en/workshops",
       "/en/konto",
     ]);
   });
@@ -209,7 +214,13 @@ describe("mobile tab bar active state", () => {
     });
 
     const current = within(tabBar()).getAllByRole("link", { current: "page" });
-    expect(current.map((link) => link.textContent)).toEqual(["Kurse"]);
+    expect(current.map((link) => link.textContent)).toEqual(["Lernen"]);
+    // The active tab is a scene-line rule plus weight, so the state is not
+    // carried by colour alone and the persistent chrome spends no Mennige.
+    expect(current[0]).toHaveClass("border-scene-line", "font-semibold");
+    expect(current[0]).toHaveAttribute("aria-current", "page");
+    expect(current[0]).not.toHaveClass("border-foreground");
+    expect(current[0].className).not.toContain("brand-orange");
   });
 
   it("resolves the locale prefix before deciding the active tab", async () => {
@@ -230,12 +241,101 @@ describe("mobile tab bar active state", () => {
   });
 
   it("matches the start tab exactly and never as a prefix", () => {
-    expect(isActiveTab("/", "/")).toBe(true);
-    expect(isActiveTab("/", "/en")).toBe(true);
-    expect(isActiveTab("/", "/kurse")).toBe(false);
-    expect(isActiveTab("/kurse", "/kurse")).toBe(true);
-    expect(isActiveTab("/kurse", "/kurse/open-source")).toBe(true);
-    expect(isActiveTab("/kurse", "/kursebesteller")).toBe(false);
+    expect(isActiveTab(["/"], "/")).toBe(true);
+    expect(isActiveTab(["/"], "/en")).toBe(true);
+    expect(isActiveTab(["/"], "/kurse")).toBe(false);
+    expect(isActiveTab(["/kurse"], "/kurse")).toBe(true);
+    expect(isActiveTab(["/kurse"], "/kurse/open-source")).toBe(true);
+    expect(isActiveTab(["/kurse"], "/kursebesteller")).toBe(false);
+    expect(isActiveTab(["/kurse", "/demos"], "/en/demos/excel")).toBe(true);
+    expect(isActiveTab(["/kurse", "/demos"], "/demosammlung")).toBe(false);
+  });
+
+  // Each row: a route a reader lands on, and the one tab that has to say so.
+  const SECTION_CASES = [
+    ["/", "Start"],
+    ["/en", "Home"],
+    ["/kurse", "Lernen"],
+    ["/kurse/open-source/claude/kurs/mental-model", "Lernen"],
+    ["/ki-fuehrerschein", "Lernen"],
+    ["/ki-fuehrerschein/kurs", "Lernen"],
+    ["/eu-ai-act-kurs", "Lernen"],
+    ["/ki-und-gesellschaft", "Lernen"],
+    ["/ai-native/kurs", "Lernen"],
+    ["/buecher/ki-landschaft", "Lernen"],
+    ["/ki-check", "Lernen"],
+    ["/en/kurse", "Learning"],
+    ["/workshops", "Praxis"],
+    ["/workshops/esg-berichte-mit-ki", "Praxis"],
+    ["/en/workshops", "Practice"],
+    ["/demos", "Praxis"],
+    ["/demos/excel", "Praxis"],
+    ["/en/demos/rag-vertragsassistent", "Practice"],
+    ["/open-source", "Praxis"],
+    ["/open-source/lizenzrichtlinie", "Praxis"],
+    ["/konto", "Konto"],
+    ["/login", "Konto"],
+  ] as const;
+
+  for (const [pathname, label] of SECTION_CASES) {
+    it(`marks ${label} and only ${label} on ${pathname}`, async () => {
+      await renderTabBar({
+        locale: pathname.startsWith("/en") ? "en" : "de",
+        pathname,
+      });
+
+      const current = within(tabBar()).getAllByRole("link", {
+        current: "page",
+      });
+      expect(current.map((link) => link.textContent)).toEqual([label]);
+      expect(
+        tabBar().querySelectorAll('[data-active="true"]'),
+      ).toHaveLength(1);
+    });
+  }
+
+  it("marks no tab on pages outside the four sections", async () => {
+    for (const pathname of ["/blog", "/ueber-mich", "/impressum", "/hilfe"]) {
+      await renderTabBar({ locale: "de", pathname });
+      expect(
+        within(tabBar()).queryAllByRole("link", { current: "page" }),
+        pathname,
+      ).toHaveLength(0);
+      cleanup();
+    }
+  });
+
+  it("derives every section from the table the header menus use, with no path in two tabs", () => {
+    const tabs = buildMobileTabs("de");
+    const byId = Object.fromEntries(tabs.map((tab) => [tab.id, tab]));
+
+    // The Lernen and Praxis tabs are exactly the header's Lernen and Praxis
+    // groups, so the tab bar, the header, the menu sheet and the footer group
+    // every page the same way.
+    expect(byId.lernen.matchPaths).toEqual([...LEARNING_ROUTES]);
+    expect(byId.praxis.matchPaths).toEqual([...PRACTICE_ROUTES]);
+    expect(byId.konto.matchPaths).toEqual([...ACCOUNT_ROUTES]);
+    for (const route of [...LEARNING_ROUTES, ...PRACTICE_ROUTES]) {
+      expect(
+        tabs.filter((tab) => isActiveTab(tab.matchPaths, route)),
+        route,
+      ).toHaveLength(1);
+    }
+
+    // Every section path, and a page below it, resolves to exactly one tab.
+    for (const tab of tabs) {
+      for (const route of tab.matchPaths) {
+        for (const pathname of [route, `${route}/unterseite`]) {
+          if (route === "/" && pathname !== "/") continue;
+          const owners = tabs
+            .filter((candidate) =>
+              isActiveTab(candidate.matchPaths, pathname),
+            )
+            .map((candidate) => candidate.id);
+          expect(owners, pathname).toEqual([tab.id]);
+        }
+      }
+    }
   });
 
   it("marks no tab when the router has no pathname yet", async () => {
@@ -267,6 +367,26 @@ describe("mobile tab bar shell contract", () => {
     expect(bar.querySelector("[data-mobile-tab-row]")?.className).toContain(
       "h-[var(--tabbar-h)]",
     );
+  });
+
+  it("draws its hairline inside the band, so it is exactly the reserved height", async () => {
+    await renderTabBar({ locale: "de" });
+    const className = tabBar().className;
+
+    // A border-t would add 1px on top of --tabbar-h and cover the last pixel
+    // of every page, which reserves only --tabbar-band-h.
+    expect(className).not.toMatch(/\bborder-t\b/);
+    expect(className).toContain("shadow-[inset_0_1px_0_var(--color-hairline)]");
+  });
+
+  it("fades behind the open menu sheet, where it is inert", async () => {
+    await renderTabBar({ locale: "de" });
+    // The row fades, never the bar: a translucent bar would let the page
+    // show through its paper.
+    expect(tabBar().className).not.toMatch(/opacity-/);
+    const row = tabBar().querySelector("[data-mobile-tab-row]");
+    expect(row?.className).toContain("[body:has(#mobile-menu)_&]:opacity-50");
+    expect(row?.className).toContain("motion-reduce:transition-none");
   });
 
   it("gives every tab the 44px product target floor", async () => {
@@ -303,21 +423,19 @@ describe("mobile tab bar shell contract", () => {
   it("builds one tab per destination with a stable identity", () => {
     expect(buildMobileTabs("de").map((tab) => tab.id)).toEqual([
       "start",
-      "kurse",
-      "werkzeuge",
+      "lernen",
+      "praxis",
       "konto",
     ]);
-    expect(buildMobileTabs("de").map((tab) => tab.matchPath)).toEqual([
-      "/",
-      "/kurse",
-      "/open-source",
-      "/konto",
-    ]);
-    // Every destination is the tab's own match path, locale prefix aside.
+    // Every destination is the first path of the tab's own section, locale
+    // prefix aside, so a tab always lands inside the section it marks.
+    for (const tab of buildMobileTabs("de")) {
+      expect(tab.href).toBe(tab.matchPaths[0]);
+    }
     expect(buildMobileTabs("en").map((tab) => tab.href)).toEqual([
       "/en",
       "/en/kurse",
-      "/en/open-source",
+      "/en/workshops",
       "/en/konto",
     ]);
   });

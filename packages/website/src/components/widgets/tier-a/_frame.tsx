@@ -40,6 +40,11 @@ export function WidgetFrame({
   doneLabel = "✓",
   children,
 }: WidgetFrameProps): JSX.Element {
+  // A title that only repeats the kind chip ("◆ Kurzprüfung" over
+  // "Kurzprüfung") stays a heading for assistive technology but is not
+  // shown twice.
+  const titleRepeatsKind =
+    title.trim().toLocaleLowerCase() === kindLabel.trim().toLocaleLowerCase();
   return (
     <div
       className="border-l-[3px] border-brand-orange bg-card/40 p-5 md:p-6"
@@ -60,7 +65,13 @@ export function WidgetFrame({
           </span>
         ) : null}
       </div>
-      <h3 className="mb-2 text-[18px] font-bold leading-[1.25] tracking-[-0.02em] text-foreground md:text-[20px]">
+      <h3
+        className={
+          titleRepeatsKind
+            ? "sr-only"
+            : "mb-2 text-[18px] font-bold leading-[1.25] tracking-[-0.02em] text-foreground md:text-[20px]"
+        }
+      >
         {title}
       </h3>
       {scenario && (

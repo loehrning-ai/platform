@@ -9,33 +9,33 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Work-sample interviews with approved tools",
     subtitle:
-      "Use a job-relevant task and an anchored rubric to watch how a candidate works with the tools.",
+      "Watch how a candidate works with the tools, using a real task and a rubric.",
     objective:
-      "Use a job-relevant task and an anchored rubric to watch how a candidate works with the tools.",
-    durationMinutes: 20,
+      "Watch how a candidate works with the tools, using a real task and a rubric.",
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Choose a representative work sample",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
-          "What does an interview measure once the candidate may use the same tools as the job? The task should mirror important work in the role without demanding unpaid production work or confidential knowledge. Fit the scope to the time box, give every candidate the same materials, offer reasonable accommodations. Assess job requirements, not familiarity with an interview puzzle.",
+          "The task mirrors important work in the role without demanding unpaid production work or confidential knowledge. Fit the scope to the time box, give every candidate the same materials and offer reasonable accommodations. Assess what the job requires; puzzle familiarity does not count.",
       },
       {
         id: "s2",
         title: "Observe the working process",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
-          "Let candidates use the same approved tools the role allows. Watch how they clarify the request, decompose the task, specify the work, choose what to delegate, inspect outputs, test assumptions, and explain the result. Protect candidate data and intellectual property. Never require personal accounts or undisclosed data sharing.",
+          "Candidates use the approved tools the role allows. Watch how they clarify the request, decompose and specify the work, choose what to delegate, inspect outputs, test assumptions and explain the result. Protect candidate data and intellectual property, and do not require personal accounts or undisclosed data sharing.",
       },
       {
         id: "s3",
         title: "Score against anchored evidence",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
-          "Define observable indicators for specification quality, tool judgment, review quality, verification, communication, and the final result. Train assessors on the rubric, then compare independent ratings. Typing speed, tool volume, and a polished output say nothing when the candidate cannot explain or verify the work.",
+          "Define observable indicators for specification quality, tool judgment, review quality, verification, communication and the final result. Train assessors on the rubric and compare independent ratings. Credit speed and polish only when explanation and verification back them.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -49,7 +49,7 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
           cpId: "exercise",
           title: "Work-sample rubric",
           scenario:
-            "Draft one representative interview task. Record the allowed tools, supplied materials, time box, accommodations, assessment dimensions, and observable scoring anchors.",
+            "Draft one interview task with allowed tools, materials, time box, accommodations, assessment dimensions and scoring anchors.",
           rows: 5,
         },
       },
@@ -63,33 +63,33 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Model-assisted work in career expectations",
     subtitle:
-      "Define role-specific expectations for using, reviewing, and governing model-assisted workflows.",
+      "Set role-specific expectations for using, reviewing and governing model-assisted work.",
     objective:
-      "Define role-specific expectations for using, reviewing, and governing model-assisted workflows.",
-    durationMinutes: 18,
+      "Set role-specific expectations for using, reviewing and governing model-assisted work.",
+    durationMinutes: 10,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "A four-level capability rubric",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
-          "L1 uses approved assistance for bounded tasks and checks the result. L2 runs a repeatable workflow with documented inputs, review, and escalation. L3 designs controls, evaluations, and monitoring for shared workflows. L4 sets role or organizational standards and is accountable for how they run. Adapt the levels to the actual work; they are not universal promotion gates.",
+          "Level 1 uses approved assistance for bounded tasks and checks results; level 2 runs a repeatable workflow with documented inputs, review and escalation. Level 3 designs controls, evaluations and monitoring for shared workflows; level 4 sets standards and is accountable for their operation. Adapt the levels to the work; they are not promotion gates.",
       },
       {
         id: "s2",
         title: "Measure artifacts and decisions",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
-          "Look at specifications, evaluation sets, review records, incident responses, reusable workflows, documented decisions. Judge the person's reasoning, controls, and outcomes, not prompt volume or claimed productivity. Calibrate examples across reviewers so the same behavior earns comparable ratings.",
+          "Evidence means specifications, evaluation sets, review records, incident responses, reusable workflows and documented decisions. Judge reasoning, controls and outcomes, never prompt volume or claimed productivity. Calibrate examples across reviewers so the same behavior earns the same rating.",
       },
       {
         id: "s3",
         title: "Provide access, training, and due process",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
-          "Do not assess a capability before people have approved tools, role-relevant training, practice time, and clear expectations. Account for accommodations, and for roles where model use is restricted or inappropriate. Announce a change before it touches promotion or performance decisions, document the evidence, and leave a route to challenge an assessment.",
+          "Assess a capability only after people have approved tools, training, practice time and clear expectations, allowing for accommodations and roles where model use is restricted. Announce changes before they affect promotion or performance, document evidence and offer a route to challenge.",
       },
     ],
     exerciseKind: "slot-fill",
@@ -103,12 +103,12 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
           cpId: "exercise",
           title: "Capability ladder",
           scenario:
-            "Draft four capability levels for one role family. For each level, name the expected responsibility, one observable artifact, and the controls that apply.",
+            "Draft four capability levels for one role family, each with responsibility, one observable artifact and the controls that apply.",
           placeholders: [
-            "L1: bounded use with result checking",
-            "L2: repeatable workflow with review",
-            "L3: controls, evaluations, and monitoring",
-            "L4: standards and operational accountability",
+            "Level 1: bounded use with result checking",
+            "Level 2: repeatable workflow with review",
+            "Level 3: controls, evaluations, and monitoring",
+            "Level 4: standards and operational accountability",
           ],
         },
       },
@@ -122,39 +122,39 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Compensate for outcomes and controls",
     subtitle:
-      "Evaluate role-relevant results, quality, collaboration, and risk controls without rewarding tool activity itself.",
+      "Pay for results, quality, collaboration and controls, not tool activity.",
     objective:
-      "Evaluate role-relevant results, quality, collaboration, and risk controls without rewarding tool activity itself.",
-    durationMinutes: 22,
+      "Pay for results, quality, collaboration and controls, not tool activity.",
+    durationMinutes: 7,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
         title: "Keep tool use separate from compensation",
-        readTimeMinutes: 8,
+        readTimeMinutes: 1,
         content:
-          "Using a model is an input, not a result. Reward the input directly and you invite unnecessary processing, hidden manual work, and unsafe delegation. Compensation decisions weigh role-relevant outcomes, quality, collaboration, and control duties, including cases where the right choice was no model at all.",
+          "Model use is an input. Rewarding it invites needless processing, hidden manual work and unsafe delegation. Compensation weighs role-relevant outcomes, quality, collaboration and control duties, including cases where using no model was right.",
       },
       {
         id: "s2",
         title: "Use balanced evidence",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
-          "Pick measures that fit the role, and pair each one with a countermeasure. Faster cycle time needs quality and incident data. Throughput needs scope and complexity. Shared tooling needs adoption, maintenance, and support evidence. Do not impose one formula across teams whose work, risk, and measurement quality differ.",
+          "Pair each role-fitting measure with a countermeasure: cycle time with quality and incident data, throughput with scope and complexity, shared tooling with adoption, maintenance and support evidence. Use no single formula across teams whose work, risk and measurement quality differ.",
       },
       {
         id: "s3",
         title: "Control a high-stakes measurement process",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
-          "Compensation metrics can be incomplete, gameable, or biased. Document data sources and exclusions, review patterns across groups, use independent calibration, keep an appeal process. Bring in human resources and legal owners before you change compensation criteria, especially where employment, discrimination, privacy, or worker-monitoring rules apply.",
+          "Compensation metrics can be incomplete, gameable or biased. Document sources and exclusions, compare groups, calibrate independently and keep an appeal process. Involve HR and legal owners before changing criteria, especially under employment, discrimination, privacy or worker-monitoring rules.",
       },
     ],
     callout: {
       kind: "warn",
-      h: "Activity metrics are not performance evidence",
-      text: "Prompt counts, token volume, agent counts, time in a tool. Each can be raised without improving the work. Do not use them as direct compensation metrics. Evaluate verified outcomes and controls with enough context to spot quality loss, risk transfer, and metric gaming.",
+      h: "Keep activity metrics out of pay",
+      text: "Prompt counts, token volume, agent counts and time in a tool can rise while the work stays the same. Keep them out of compensation and watch for quality loss, risk transfer and metric gaming.",
     },
     exerciseKind: "reflect-box",
     widgets: [
@@ -167,7 +167,7 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
           cpId: "exercise",
           title: "Compensation evidence design",
           scenario:
-            "Choose one role. List the outcomes, quality indicators, collaboration evidence, control duties, countermeasures, calibration process, and appeal route relevant to compensation decisions.",
+            "For one role, list outcomes, quality indicators, collaboration evidence, control duties, countermeasures, calibration and appeal route for compensation.",
           rows: 5,
         },
       },
@@ -179,10 +179,10 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
     lessonNumber: 4,
     number: 4,
     kind: "quiz",
-    title: "Module 5 knowledge check",
+    title: "Module 5, knowledge check",
     subtitle: "Two questions on hiring and pay.",
     objective: "Two questions on hiring and pay.",
-    durationMinutes: 8,
+    durationMinutes: 3,
     keyConcepts: [],
     quiz: [
       {
@@ -202,7 +202,7 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
           {
             id: "c",
-            text: "Clarification, specification, tool judgment, review, verification, communication, and the final result.",
+            text: "How the candidate specifies, judges tools, verifies and explains.",
             isCorrect: true,
           },
           {
@@ -212,7 +212,7 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "A representative work sample shows how the candidate frames, performs, checks, and explains relevant work. Speed, tool volume, and a polished result with no reasoning behind it are not enough on their own.",
+          "A work sample shows how the candidate frames, performs, checks and explains relevant work. Speed, tool volume or a polished result without reasoning shows none of that.",
       },
       {
         id: "ano-talent-q2",
@@ -241,7 +241,7 @@ export const TALENT_LESSONS: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Prompt count measures tool activity, and it rises without any improvement in outcome or quality. The other measures mislead when used alone too, which is why each needs countermeasures, context, and calibration.",
+          "Prompt count measures tool activity and rises without better outcomes. The other measures also mislead alone, so each needs countermeasures, context and calibration.",
       },
     ],
     sections: [],

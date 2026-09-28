@@ -1,50 +1,47 @@
 {
   "id": "mental-model",
   "number": 1,
-  "title": "Was Claude tatsächlich ist",
-  "subtitle": "Ein mentales Modell, das unter Druck hält.",
+  "title": "Was Claude ist",
+  "subtitle": "Ein mentales Modell für Antworten, die sicher klingen.",
   "durationMinutes": 8,
   "trackId": "foundations",
-  "hook": "Claude erzeugt Antworten aus dem Kontext im Fenster. Suchen und Erinnern sind Produktfunktionen und Tools.",
+  "hook": "Claude erzeugt Antworten aus dem Kontext im Fenster. Suche und Gedächtnis sind Produktfunktionen.",
   "keyConcepts": [
-    "Vervollständigungs-Engine",
-    "Konstitutionelle KI",
     "Fundierung",
     "Halluzination",
-    "Hilfreich, harmlos, ehrlich"
+    "Konstitutionelle KI"
   ],
   "quiz": [],
   "sections": [
     {
       "id": "what-it-is",
       "title": "Was es ist (und was nicht)",
-      "readTimeMinutes": 3,
-      "content": "Eine flüssige Antwort beweist nichts. Claude erzeugt sie aus dem, was im Fenster liegt: Anfrage, Verlauf, Systemanweisungen, dazu Dokumente und Tool-Ergebnisse vom Produkt. Die Ausgabe ist probabilistisch. Dieselbe Anfrage kann morgen anders enden.\n\nDrei Grenzen gelten immer.\n\n**Generierung ist kein Retrieval.** Eine sichere Antwort belegt nicht, dass jemand nachgeschlagen hat. Websuche, Repository-Zugriff und Datenbankabfragen brauchen ein freigegebenes Tool und einen Tool-Aufruf, der gelaufen ist.\n\n**Das Modell ist kein Speicher.** Verlauf, Projektkontext oder Memory-Dateien kommen vom Produkt, wenn überhaupt. Prüfe, was aktiv ist, statt zu hoffen, dass ein Chat den nächsten kennt.\n\n**Flüssige Sprache ist keine Prüfung.** Das Modell kann auch einer falschen Prämisse folgen und Details ohne Beleg erzeugen. Wichtige Ausgaben sind Entwürfe. Quellen, Tests oder ein Reviewer entscheiden, was stimmt.\n\n> Belege und Prüfung zählen. Sprachfluss zählt nicht.",
-      "keyTakeaway": "Claude erzeugt Antworten aus dem Kontext im Fenster. Suche, Speicher und Prüfung sind Produktfunktionen oder Tools."
+      "readTimeMinutes": 1,
+      "content": "Claude erzeugt Text aus dem, was im Fenster liegt: Anfrage, Verlauf, Systemanweisungen und Dokumente oder Tool-Ergebnisse vom Produkt. Die Ausgabe ist probabilistisch; dieselbe Anfrage kann morgen anders ausfallen.\n\n**Generierung ist kein Retrieval.** Nachschlagen braucht ein freigegebenes Tool, das gelaufen ist, etwa Websuche oder eine Datenbankabfrage.\n\n**Das Modell ist kein Speicher.** Verlauf und Memory kommen vom Produkt, wenn überhaupt.\n\n**Flüssige Sprache ist keine Prüfung.** Das Modell kann einer falschen Prämisse folgen und Details erfinden. Wichtige Ausgaben bleiben Entwürfe, bis Quellen, Tests oder ein Reviewer sie bestätigen."
     },
     {
       "id": "three-things",
-      "title": "Die drei Dinge in jeder Interaktion",
-      "readTimeMinutes": 2,
-      "content": "Drei Eingaben formen jede Antwort.\n\n- **Der aktuelle Kontext.** Alles im aktiven Fenster, von der Systemanweisung bis zum letzten Tool-Ergebnis.\n- **Das Training.** Allgemeine Muster, Abdeckung und Stand variieren. Private oder frische Fakten fehlen dort. Die brauchen Quellen.\n- **Einstellungen und Schutzmechanismen.** Modell, Sampling, freigegebene Tools, Produktrichtlinien. Jede Stellschraube verändert die Antwort.\n\n> **Fundierungsregel.** Hängt die Antwort an aktuellen, privaten oder folgenreichen Fakten, gib eine autoritative Quelle mit und prüfe, ob die Antwort sich daraus ergibt."
+      "title": "Was eine Antwort formt",
+      "readTimeMinutes": 1,
+      "content": "Drei Eingaben formen jede Antwort:\n\n- **Kontext:** Anweisungen, Nachrichten, Anhänge und Tool-Ergebnisse im Fenster.\n- **Training:** allgemeine Muster mit ungleicher Abdeckung und ungleichem Stand, nie eine Quelle für private oder aktuelle Fakten.\n- **Einstellungen:** Modell, Sampling, freigegebene Tools und Produktrichtlinien.\n\n> **Fundierungsregel.** Bei aktuellen, privaten oder folgenreichen Fakten gib eine autoritative Quelle mit und prüfe, ob die Antwort daraus folgt."
     },
     {
       "id": "constitutional-ai",
-      "title": "Konstitutionelle KI in Kurzform",
-      "readTimeMinutes": 2,
-      "content": "Konstitutionelle KI ist eine Trainingsmethode von Anthropic. Eine schriftliche Sammlung von Prinzipien erzeugt Kritiken, Überarbeitungen und Präferenzdaten. Ein Baustein neben anderen Trainings- und Sicherheitsverfahren. Er macht keine Antwort automatisch richtig, keine Ablehnung konsistent.\n\nWas heißt das konkret?\n\n**Eine Ablehnung ist eine Modellausgabe, kein Richtlinienbescheid.** Fehlt bei einer legitimen Aufgabe Zweck oder Grenze, ergänze sie, ohne gültige Schutzmechanismen zu umgehen. **„Ich bin mir nicht sicher“ ist kein Konfidenzmaß.** Prüfe die Belege, egal wie der Ton klingt. **Ein definierter Ausstieg hilft:** Lege fest, was zurückkommt, wenn die Quellen nicht reichen, und teste bekannte wie unbekannte Fälle."
+      "title": "Konstitutionelle KI",
+      "readTimeMinutes": 1,
+      "content": "Konstitutionelle KI ist eine Trainingsmethode von Anthropic: Schriftliche Prinzipien erzeugen Kritiken, Überarbeitungen und Präferenzdaten. Die Methode wirkt neben anderen Sicherheitsverfahren und macht keine Antwort automatisch richtig.\n\nEine Ablehnung ist eine Modellausgabe, kein Richtlinienbescheid. Fehlen bei einer legitimen Aufgabe Zweck oder Grenzen, ergänze sie, ohne gültige Schutzmechanismen zu umgehen.\n\nVorsichtige Formulierungen sind kein Konfidenzmaß. Lege fest, was zurückkommt, wenn die Quellen nicht reichen, und teste bekannte wie unbekannte Fälle."
     },
     {
       "id": "feel-it",
-      "title": "Praxistest: Wissen ohne Kontext",
+      "title": "Frag nach Unbekanntem",
       "readTimeMinutes": 1,
-      "content": "Frag nach etwas, das nur in deinem Projekt steht, ohne es mitzugeben. Die Antwort lehnt ab, fragt nach Kontext oder behauptet etwas ohne Beleg. Was kommt, hängt von Modell, Produkt und Prompt ab.\n\nDas Kriterium bleibt gleich. Eine projektspezifische Aussage braucht projektspezifische Belege.\n\n> Quelle bereitstellen, Beleg anfordern, Beleg prüfen."
+      "content": "Frag nach Projektdaten, die du nie mitgegeben hast. Je nach Einstellung lehnt das Modell ab, fragt nach Kontext oder behauptet etwas ohne Beleg. Eine Projektaussage braucht Projektbelege: Gib die Quelle mit, fordere ein Zitat an und prüfe es."
     },
     {
       "id": "failure-modes",
-      "title": "Drei typische Fehlerbilder",
+      "title": "Den Fehler benennen",
       "readTimeMinutes": 1,
-      "content": "Diagnose vor Therapie. Benenne den Fehler, bevor du am Prompt drehst.\n\n- **Unbelegte Aussage.** Keine erlaubte Quelle stützt die Behauptung. Gib Quellen oder Retrieval dazu, fordere Belege ein und prüfe sie.\n- **Vorgabendrift.** Format oder Regel werden verletzt. Mach das Kriterium prüfbar, validiere gegen ein Schema oder teile die Aufgabe.\n- **Generische Ausgabe.** Fachdetails oder der geforderte Stil fehlen. Gib relevanten Kontext und ein geprüftes Beispiel mit, dann vergleiche repräsentative Fälle."
+      "content": "Benenne den Fehler, bevor du den Prompt änderst:\n\n- **Unbelegte Aussage:** Keine gelieferte Quelle stützt sie. Gib Quellen dazu und verlange Belege, die du prüfst.\n- **Vorgabendrift:** Format oder Regel werden verletzt. Mach das Kriterium prüfbar, validiere gegen ein Schema oder teile die Aufgabe.\n- **Generische Ausgabe:** Fachdetails oder Stil fehlen. Gib Kontext und ein geprüftes Beispiel mit und vergleiche repräsentative Fälle."
     }
   ],
   "widgets": [
@@ -56,8 +53,8 @@
         "lessonId": "mental-model",
         "cpId": "feel-it",
         "title": "Frag nach etwas, das Claude nicht wissen kann",
-        "hint": "Probier: „Welche Bereitschaftsrotation ist für den Authentifizierungsdienst in meinem Team zuständig?“ Dann schau, was zurückkommt.",
-        "placeholder": "Frage Claude etwas, das von Kontext abhängt, den du ihm nicht gegeben hast…"
+        "hint": "Probier: „Welche Bereitschaftsrotation betreut den Authentifizierungsdienst in meinem Team?“",
+        "placeholder": "Frag nach Kontext, den du Claude nicht gegeben hast…"
       }
     },
     {
@@ -71,11 +68,11 @@
         "options": [
           "Claude fragt deinen Observability-Stack ab und antwortet präzise.",
           "Claude weigert sich, ohne Daten zu antworten.",
-          "Jede konkrete Dienstangabe ist unbelegt; fordere Telemetrie an oder stelle sie bereit.",
+          "Jede genannte Dienstangabe ist geraten, bis du Telemetrie mitgibst.",
           "Claude gibt den String „unknown“ zurück."
         ],
         "correct": 2,
-        "explanation": "Ohne Telemetrie ist jeder genannte Dienst geraten. Gib Messwerte oder ein lesendes Metrik-Tool mit und prüfe daran.",
+        "explanation": "Claude sieht deine Telemetrie nur, wenn ein Tool sie liefert. Gib Messwerte oder ein lesendes Metrik-Tool mit und prüfe die Antwort daran.",
         "title": "Kurzprüfung",
         "copy": {
           "kindLabel": "Kurzprüfung",
@@ -92,15 +89,15 @@
       "props": {
         "lessonId": "mental-model",
         "cpId": "q2",
-        "question": "Erinnert sich Claude über zwei separate Chats hinweg daran, was du ihm letzte Woche erzählt hast?",
+        "question": "Erinnert sich Claude in einem neuen Chat daran, was du ihm letzte Woche erzählt hast?",
         "options": [
           "Ja, es hat ein persönliches Gedächtnis von dir.",
-          "Nein, es sei denn, die Produktoberfläche fügt explizit Speicher hinzu; jeder Chat ist ein leeres Fenster.",
+          "Nein, jeder Chat beginnt leer, außer das Produkt fügt Speicher hinzu.",
           "Ja, aber nur innerhalb desselben Kalendertages.",
           "Nur wenn du extra bezahlt hast."
         ],
         "correct": 1,
-        "explanation": "Persistenz ist eine Produktfunktion. Projects, CLAUDE.md oder auto-memory können sie liefern. Prüfe die Konfiguration, statt auf Erinnerung über Chats hinweg zu bauen.",
+        "explanation": "Persistenz ist eine Produktfunktion. Projects, CLAUDE.md oder auto-memory können sie liefern; prüfe die aktiven Einstellungen.",
         "title": "Kurzprüfung",
         "copy": {
           "kindLabel": "Kurzprüfung",
@@ -117,15 +114,15 @@
       "props": {
         "lessonId": "mental-model",
         "cpId": "q3",
-        "question": "Was ist die prägnanteste Zusammenfassung von Claudes Aufgabe während einer Generierung?",
+        "question": "Was beschreibt eine Generierung am genauesten?",
         "options": [
           "Die richtige Antwort aus seinen Trainingsdaten abrufen.",
-          "Die wahrscheinlichste hilfreiche Fortsetzung vorhersagen, basierend auf allem im Fenster.",
+          "Eine wahrscheinliche Fortsetzung aus allem im Fenster vorhersagen.",
           "Ablehnen, wenn unsicher.",
           "Unabhängig von der Eingabe aus ersten Prinzipien argumentieren."
         ],
         "correct": 1,
-        "explanation": "Das Modell erzeugt eine Fortsetzung aus Eingabe und Kontext. Ob sie stimmt, klären Belege und Prüfung.",
+        "explanation": "Das Modell setzt Eingabe und Kontext fort. Ob das stimmt, klären Belege und Prüfung.",
         "title": "Kurzprüfung",
         "copy": {
           "kindLabel": "Kurzprüfung",

@@ -36,7 +36,7 @@ const ENGLISH_REDACTION_SCENARIOS = [
       { text: "Dear Sir or Madam, I refer to order " },
       { text: "ORD-99214" },
       {
-        text: " from the explicitly fictional Fiktivwerk Example Ltd. The delivery arrived damaged. Please refund the amount to my account ",
+        text: " from the fictional Fiktivwerk Example Ltd. The delivery arrived damaged. Please refund the amount to my account ",
       },
       {
         text: "DE00 0000 0000 0000 0000 00 (DUMMY)",
@@ -100,7 +100,7 @@ const ENGLISH_FAILURE_CASES = [
     output:
       "I cannot do that because I am not allowed to generate personal data about real people or companies.",
     correct: "verweigerung",
-    why: "The request explicitly asked for fictional sample data and was harmless. The refusal was unnecessary.",
+    why: "The request asked for harmless fictional sample data, so the refusal was unnecessary.",
   },
   {
     id: "c3",
@@ -109,7 +109,7 @@ const ENGLISH_FAILURE_CASES = [
     output:
       "Here is an overview of your items:\n\n- A-1001: M6 screw (240 units)\n- A-1002: NBR seal (58 units)\n- A-1003: Bearing block (12 units)\n\nWould you like anything else?",
     correct: "formatdrift",
-    why: "The request required plain CSV with no explanation. The response supplied a bulleted list, an introduction, and a follow-up question.",
+    why: "Plain CSV without explanation was requested. The response added a list, an introduction and a follow-up question.",
   },
   {
     id: "c4",
@@ -149,8 +149,7 @@ const ENGLISH_REDACTION_COPY = {
   allScenariosCleanLabel: "Both scenarios are clean",
   scenarioOfWord: "of",
   safeHeadline: "Safe to paste.",
-  safeBodyTemplate:
-    "All {n} sensitive passages were found without redacting harmless text.",
+  safeBodyTemplate: "All {n} sensitive passages found.",
   notSafeHeadline: "Do not paste this yet.",
   missingSingularTemplate: "{n} sensitive passage remains exposed.",
   missingPluralTemplate: "{n} sensitive passages remain exposed.",
@@ -203,7 +202,7 @@ const ENGLISH_RISK_PYRAMID_NODES = [
 const ENGLISH_DIAGRAM_COPY = {
   kindLabel: "Risk map",
   inspectHeading: "Select a layer",
-  inspectBody: "Select a layer to inspect its role and consequences.",
+  inspectBody: "See what it does and what happens without it.",
   consequencePrefix: "If this layer is missing:",
   traceComplete: "Sequence complete.",
   tracing: "Sequence is running…",
@@ -235,12 +234,12 @@ const ENGLISH_RISK_REORDER_BLOCKS = [
 ] as const;
 
 const ENGLISH_RISK_REORDER_COPY = {
-  kindLabel: "Classification order",
+  kindLabel: "Classification",
   shuffleLabel: "Shuffle",
   moveUpSuffix: "move up",
   moveDownSuffix: "move down",
-  correctStatusLabel: "Correct. This is the classification sequence used by the exercise.",
-  wrongStatusLabel: "Not yet. Rows shown in green are in the correct position.",
+  correctStatusLabel: "Correct. This is the risk pyramid.",
+  wrongStatusLabel: "Not yet. Green rows are already in place.",
   idleStatusLabel: "Order the cards, then check the result.",
   checkLabel: "Check order",
 } as const;

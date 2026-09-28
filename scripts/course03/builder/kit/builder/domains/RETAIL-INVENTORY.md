@@ -2,14 +2,13 @@
 
 ## In plain words
 
-A bike shop counts its helmets at the end of every month. That count is a **level**: the water
-in the bathtub at one moment. Deliveries in and sales out are the **change**. Sell-through is a
-**rate**: helmets sold divided by the helmets the shop could have sold. The export gives an AI a
-column called `qty`. The AI adds three month-end counts and reports "Q2 stock = 315". The
-shop never held 315 helmets. On 30 June the shelf held 110.
+A bike shop's month-end helmet count is a **level**: the water in the bathtub at one moment.
+Deliveries in and sales out are the **change**. Sell-through is a **rate**: helmets sold divided by
+helmets the shop could have sold. The export gives an AI a column called `qty`; the AI adds three
+month-end counts and reports "Q2 stock = 315". On 30 June the shelf held 110.
 
-FOLDLINE twin: ending MRR (a level) vs net new MRR (a change). The recorded run added changes as
-if they were levels. Here the AI adds levels as if they were changes. Same bathtub, other side.
+FOLDLINE twin: ending MRR (a level) vs net new MRR (a change). The recorded run read changes as
+levels; here the AI adds levels as if they were changes.
 
 All data is synthetic. Stores: Harbour and Market. Clock: 2026-07-01 09:00 UTC. Q2 2026 is the
 last complete quarter.
@@ -39,7 +38,7 @@ Harbour 110 + Market 40 = 150 helmets on 30 June.
 | 1. Question | Show helmets on hand at month end for each month of Q2 2026 at the Harbour store. |
 | 2. Approved view | `analytics.inventory_by_store_category_monthly` |
 | 3. Four blanks | Kind: month-end level (units). Rows: one per store, category and month. Months: Apr–Jun 2026, complete only. Table: the inventory view above. |
-| 4. Boundary | The AI's login may SELECT this one view. It cannot see cost prices or supplier terms in core, so "margin by category" is refused. Database grants enforce this. |
+| 4. Boundary | The AI's login may SELECT this one view, so cost prices and supplier terms in core stay out and "margin by category" is refused. Database grants enforce this. |
 | 5. Test | April = 110, May = 95, June = 110. "Q2 stock = 315" fails the test. |
 
 ## Bad export names, good serving names
@@ -55,8 +54,7 @@ Harbour 110 + Market 40 = 150 helmets on 30 June.
 
 ## The serving view
 
-Full runnable file: [`sql/retail_inventory.sql`](sql/retail_inventory.sql) (core table,
-comments, checks). The view:
+The view is below. The full runnable file, with core table, comments and checks, is [`sql/retail_inventory.sql`](sql/retail_inventory.sql).
 
 ```sql
 CREATE VIEW analytics.inventory_by_store_category_monthly AS
@@ -150,12 +148,9 @@ metrics:
 
 ## What an AI plausibly answers from the export
 
-These wrong answers were not recorded from an AI run. They are what the arithmetic gives if a
-reader takes the export names at face value. Use them as test cases, not as evidence.
-
 | Plausible answer | How it happens | Why it is wrong |
 | --- | --- | --- |
-| "Q2 helmet stock: 315." | `SUM(qty)` over three `inv_export` rows | `qty` is a level. Three month-end counts added are no count at all |
+| "Q2 helmet stock: 315." | `SUM(qty)` over three `inv_export` rows | `qty` is a level. Three month-end counts added describe nothing |
 | "Net stock movement in Q2: +370." | `SUM(qty)` over `stock_moves` | Sales are stored positive with `type = 'S'`. The net change is 180 − 190 = −10 |
 | "Q2 sell-through: 37.6 %." | Average of three monthly rates | Each monthly rate has its own base. Recompute: 190 ÷ 300 = 63.3 % |
 
@@ -173,12 +168,12 @@ reader takes the export names at face value. Use them as test cases, not as evid
 <summary>For builders</summary>
 
 - Run it: `createdb domain_packs`, then `psql -X -d domain_packs -f domains/sql/retail_inventory.sql`.
-  The file ends with `RETAIL INVENTORY CHECKS PASS`, or it raises an exception.
-- Naming lint (`naming/lint_names.sql`) on this view: no findings except LINT-02 on
-  `starting_units_on_hand` and `ending_units_on_hand`. That heuristic only knows plural counts and
-  unit suffixes. Record it as an accepted exception, or rename to `ending_on_hand_units`.
+  It ends with `RETAIL INVENTORY CHECKS PASS`, or raises an exception.
+- Naming lint (`naming/lint_names.sql`): only LINT-02 on `starting_units_on_hand` and
+  `ending_units_on_hand` (the heuristic wants a plural or a unit). Record the exception, or rename
+  to `ending_on_hand_units`.
 - Average inventory (for turnover) is a legitimate metric. Name it `average_units_on_hand` and
-  write its formula (mean of the month-ends, or of daily counts). It is still never a sum.
+  write its formula (mean of the month-ends, or of daily counts). It is never a sum.
 - Value in EUR needs a cost price and a valuation rule (FIFO, average cost). Until the owner
   writes one, refuse "stock value".
 

@@ -10,7 +10,7 @@ import {
 const lesson: CodexLesson = {
   id: "L02",
   number: 2,
-  title: "Execution Environments and Permissions",
+  title: "Execution environments and permissions",
   subtitle:
     "Local Codex follows the configured workspace sandbox and approval policy. Cloud tasks run in dedicated environments with separate network controls.",
   durationMinutes: 9,
@@ -32,11 +32,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Two execution models, and they are not interchangeable.\n\n- **Local CLI and IDE sessions** run commands on your machine inside the configured OS-enforced sandbox. The common workspace-write configuration limits writes to the active workspace and keeps network access off unless enabled. The approval policy is a separate control that determines when Codex must ask before an action crosses the configured boundary.\n- **Cloud tasks** run in a dedicated OpenAI-managed container. Codex checks out the selected repository and commit, runs the environment setup, performs the task, and returns a summary and diff. Setup can use network access and setup-only secrets; those secrets are removed before the agent phase. Agent-phase network access is disabled by default and can be enabled per environment.\n\nFilesystem access, network access and approvals are configuration, not properties of the product. Read the active settings before you assume.",
-        },
-        {
-          kind: "pull-quote",
-          text: "A task is executable only when its files, commands, dependencies, credentials and network destinations fit the active environment policy.",
+            "- **Local CLI and IDE sessions** run commands on your machine in the configured OS-enforced sandbox. The common workspace-write setting allows writes only in the active workspace and keeps the network off until you enable it. A separate approval policy decides when Codex must ask first.\n- **Cloud tasks** run in a dedicated OpenAI-managed container: Codex checks out the chosen commit, runs setup, does the task and returns a summary and diff. Setup may use the network and setup-only secrets. The agent phase loses the secrets, and its network stays off unless you enable it per environment.\n\nRead the active settings before you rely on them.",
         },
       ],
     },
@@ -48,7 +44,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Three checks kill most environment surprises.\n\n**Make dependencies reproducible.** A cloud setup script installs project runtimes, packages and fixtures before the agent phase. A local session gets whatever the machine has and the sandbox permits. Write the exact setup and verification commands into the repository.\n\n**Declare network requirements.** A cloud agent phase reaches no external API unless network access is enabled for that environment and the destination is allowed. Local network access depends on the sandbox too. When live data is not required, take the versioned fixture.\n\n**Separate code changes from external-state verification.** Access to staging or production is a security decision, not a convenience. Where external validation is genuinely required, use scoped credentials and explicit authorization. Otherwise keep the coding task isolated and check externally through the normal release process.",
+            "**Make dependencies reproducible.** Locally, Codex has only what the machine has and the sandbox permits; in the cloud, the setup script provides it. Put the exact setup and check commands in the repository.\n\n**Declare network needs.** If the task needs no live data, use a versioned fixture and leave the network off.\n\n**Keep external checks separate.** Staging or production access is a security decision and needs scoped credentials and authorization. Otherwise the check runs through the normal release process.",
         },
       ],
     },
@@ -60,7 +56,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "A cloud environment is a base image plus your setup and your policy. Read these inputs before you assign a task.",
+            "A cloud environment is a base image plus the inputs below.",
         },
         {
           kind: "card-grid",
@@ -68,22 +64,22 @@ const lesson: CodexLesson = {
             {
               eyebrow: "provided by you",
               title: "Setup script",
-              body: "A reproducible command sequence that runs after checkout during setup. Use it to install project dependencies and prepare test fixtures required by the task.",
+              body: "Installs project dependencies and the task's test fixtures after checkout.",
             },
             {
               eyebrow: "provided by you",
               title: "Environment variables",
-              body: "Non-secret configuration can remain available for the task. Setup-only secrets are available during setup and removed before the agent phase; do not design the task around reading them later.",
+              body: "Non-secret values stay available. Setup-only secrets are gone in the agent phase, so the task must not depend on them.",
             },
             {
               eyebrow: "provided by you",
               title: "Network allow-list",
-              body: "Agent-phase internet access is configured per environment. When enabled, restrict destinations and HTTP methods to what the task requires.",
+              body: "Internet access is set per environment. If enabled, allow only the destinations and HTTP methods the task needs.",
             },
             {
               eyebrow: "provided by Codex",
               title: "The runtime",
-              body: "A dedicated container with a checked-out repository and the tools supplied by the base image. The setup script adds project-specific requirements.",
+              body: "A dedicated container with the checked-out repository and the base image's tools.",
             },
           ],
         },
@@ -97,7 +93,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "The task asks for a call to a Stripe test endpoint. The configured environment cannot resolve the destination. Report the boundary, then use a reviewed fixture where it represents the required behavior.",
+            "The task calls a Stripe test endpoint, and the environment cannot resolve the host. Codex reports the boundary and uses a reviewed fixture if one represents the required behavior.",
         },
       ],
     },
@@ -109,12 +105,12 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "A cloud task returns changes from its dedicated checkout. A local session changes the working tree you selected. Either way, Git structure decides how easily anyone can inspect and integrate the result.\n\n- **Give concurrent tasks separate working trees or cloud environments.** Separate branches prevent shared file state, but overlapping diffs can still conflict when merged.\n- **Keep each change coherent.** Scope by one reviewable behavior and its tests, not by an arbitrary line or file limit.\n- **Start from an intentional base commit.** Record which revision the task uses and refresh it when upstream changes affect the same area.\n- **Re-run trusted checks outside the task when risk warrants it.** Agent-produced logs show what ran in that environment; CI and reviewer-run checks provide independent evidence.",
+            "- **Separate working trees or cloud environments for concurrent tasks.** Separate branches avoid shared file state, but overlapping diffs can still conflict.\n- **One reviewable behavior and its tests per change**, whatever the line count.\n- **A deliberate base commit.** Record it and refresh it when upstream changes touch the same area.\n- **Trusted checks re-run outside the task when the risk warrants it.** Agent logs show what ran inside the task; CI and your own runs are independent evidence.",
         },
         {
           kind: "callout",
-          title: "Treat output as evidence, not approval.",
-          body: "Read the diff against the requested behavior and excluded scope. Inspect additions, deletions, dependencies, generated files, and test changes. Review command logs for what actually ran, then repeat security- or release-critical checks in the repository's trusted pipeline.",
+          title: "Output is evidence for your review.",
+          body: "Read the diff against requested behavior and excluded scope, including additions, deletions, dependencies, generated files and test changes.",
         },
       ],
     },
@@ -125,21 +121,20 @@ const lesson: CodexLesson = {
       blocks: [
         {
           kind: "prose",
-          markdown:
-            "Record the environment assumptions before the task starts. They decide execution and review.",
+          markdown: "Write down the environment assumptions before the task starts.",
         },
         {
           kind: "card-grid",
           cards: [
             {
-              eyebrow: "sandbox readiness",
+              eyebrow: "environment",
               title: "Sandbox readiness",
-              body: "Does the documented check command run from the selected revision? Are dependencies reproducible? Which checks require services, network, environment variables, or setup-only secrets?",
+              body: "Does the documented check command run on this revision with reproducible dependencies? Which checks need services, network, environment variables or setup-only secrets?",
             },
             {
-              eyebrow: "task readiness",
+              eyebrow: "task",
               title: "Task readiness",
-              body: "Is the observable goal explicit? Are acceptance checks runnable in this environment? Are excluded files and systems named? Who reviews the diff and verification logs before merge?",
+              body: "Is the observable goal stated, and do the acceptance checks run here? Are excluded files and systems named? Who reviews diff and logs before merge?",
             },
           ],
         },
@@ -149,9 +144,7 @@ const lesson: CodexLesson = {
       id: "s7",
       title: "Quick check",
       readTimeMinutes: 1,
-      blocks: [
-        { kind: "prose", markdown: "Two questions on the sandbox contract." },
-      ],
+      blocks: [{ kind: "prose", markdown: "Two questions at the end of the lesson." }],
     },
   ]),
   widgets: [
@@ -164,7 +157,7 @@ const lesson: CodexLesson = {
         kindLabel: CODEX_COMPARE_KIND_LABEL,
         bad: "Fetch our OpenAPI spec from https://docs.acme.com/v3/openapi.json and generate TypeScript types.",
         good: "Using the spec at ./schemas/openapi.json (committed to the repo), generate TypeScript types in src/types/api.ts. Regenerate on CI.",
-        note: "The repository fixture removes a network dependency and makes the input version-reviewable. If freshness is required, define a separate controlled update step.",
+        note: "The committed file removes the network dependency and puts the input under version control. If freshness matters, add a separate controlled update step.",
       },
     },
     {
@@ -172,6 +165,10 @@ const lesson: CodexLesson = {
       placement: "end",
       courseSlug: "codex",
       props: {
+        idleHint: '# press "Run replay" to watch this session play out',
+        runLabel: "▶ Run replay",
+        resetLabel: "↺ Reset",
+        speedLabel: "speed",
         lessonId: "L02",
         cpId: "term-1",
         title: "Illustrative session: unavailable network",
@@ -258,16 +255,16 @@ const lesson: CodexLesson = {
         title: CODEX_QUIZ_TITLE,
         copy: CODEX_QUIZ_COPY,
         question:
-          "A cloud task must run end-to-end tests against a staging API. What must be established before the run?",
+          "A cloud task must run end-to-end tests against a staging API. What must be in place first?",
         options: [
           "Nothing; naming the staging API in the task grants access.",
-          "The environment permits agent-phase network access to the destination, scoped credentials are available through an approved path, and the external test is authorized.",
+          "Agent-phase network access to the host, scoped credentials and authorization for the test.",
           "The cloud task automatically uses the developer's local network.",
           "A passing local unit test proves the staging check ran.",
         ],
         correct: 1,
         explanation:
-          "Cloud agent-phase network access is disabled by default and configured per environment. External verification also requires explicit authorization and appropriately scoped credentials. When those controls are unavailable, use fixtures for the coding task and keep staging verification separate.",
+          "Agent-phase network access is off by default and set per environment, and external checks need authorization and scoped credentials. Without them, the coding task uses fixtures and staging verification stays separate.",
       },
     },
     {
@@ -283,13 +280,13 @@ const lesson: CodexLesson = {
           "Which statement correctly distinguishes local and cloud Codex execution?",
         options: [
           "Both surfaces always run in a newly created cloud container.",
-          "Local commands follow the configured workspace sandbox and approvals; a cloud task uses a dedicated checked-out environment with its own setup and network policy.",
+          "Local runs under sandbox and approvals; cloud in a dedicated container with its own setup and network policy.",
           "Local sessions always have unrestricted network access.",
           "Cloud tasks automatically deploy an accepted diff.",
         ],
         correct: 1,
         explanation:
-          "The execution surface determines the boundary. Local work happens in the selected working tree under its sandbox and approval configuration. Cloud work happens in a dedicated container created from a selected repository revision; its final answer and diff still require human review.",
+          "Local work runs in the selected working tree under its sandbox and approval settings; cloud work runs in a dedicated container built from a chosen revision. Both results still need human review.",
       },
     },
   ],

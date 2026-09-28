@@ -214,7 +214,7 @@ describe("<FluencyTest>", () => {
       screen.getByText("Niedrigster Teilwert: Governance"),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/Prüfe zuerst den KI-Führerschein/),
+      screen.getByText(/Mach zuerst den KI-Führerschein/),
     ).toBeInTheDocument();
   });
 
@@ -225,7 +225,7 @@ describe("<FluencyTest>", () => {
     // On the result view now.
     expect(screen.getByText("Profil: Explorer.")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: /Nochmal bearbeiten/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Neu starten/ }));
     // Back to the first question.
     expect(screen.getByText("Wie arbeitest du heute?")).toBeInTheDocument();
     expect(screen.getByText("01 / 10")).toBeInTheDocument();

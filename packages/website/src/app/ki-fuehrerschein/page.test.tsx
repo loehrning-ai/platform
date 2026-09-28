@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import type { AnchorHTMLAttributes, ReactNode } from "react";
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
@@ -54,7 +56,7 @@ describe("KI-Führerschein landing page", () => {
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: /AI at work:\s*what you need to know\./,
+        name: /Which data may go\s*into an AI tool\./,
       }),
     ).toBeInTheDocument();
     expect(screen.getByText("AI is already here")).toBeInTheDocument();
@@ -98,14 +100,10 @@ describe("KI-Führerschein landing page", () => {
       url: "https://loehrning.ai/en/ki-fuehrerschein",
       locale: "en_GB",
       alternateLocale: ["de_DE"],
-      images: [
-        {
-          url: "https://loehrning.ai/course-covers/ki-fuehrerschein-cover-v3.webp",
-          width: 1440,
-          height: 630,
-          alt: "Editorial collage of an AI review passport with learning cards, data protection, and verification steps",
-        },
-      ],
     });
+    // No page image: the route's opengraph-image.tsx (the Lemons card) is the
+    // share image, and an explicit one here would replace it (SPEC §3.15).
+    expect(metadata.openGraph).not.toHaveProperty("images");
+    expect(existsSync(join(__dirname, "opengraph-image.tsx"))).toBe(true);
   });
 });

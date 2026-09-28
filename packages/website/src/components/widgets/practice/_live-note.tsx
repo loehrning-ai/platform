@@ -25,8 +25,7 @@ export function LiveNote({
         className,
       )}
     >
-      Live-Modus nicht verfügbar. Du siehst den statischen Qualitätswert. Die
-      Live-Ausführung mit Claude ist in dieser Umgebung nicht aktiviert.
+      Live-Modus nicht verfügbar. Du siehst den statischen Qualitätswert.
     </p>
   );
 }

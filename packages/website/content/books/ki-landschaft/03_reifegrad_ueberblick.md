@@ -17,18 +17,18 @@ Beantworte jede Frage mit **unbekannt**, **teilweise belegt** oder **belegt**. V
 4. Sind Datenherkunft, Datenklasse, Rechtsgrundlage und erlaubte Nutzung geklärt?
 5. Sind Zugriff, Aufbewahrung, Löschung und mögliche Transfers dokumentiert?
 6. Ist geprüft, ob die Daten für den Zweck reichen und repräsentativ sind?
+7. Sind Rolle, Risikoklassifizierung und einschlägige rechtliche Pflichten begründet dokumentiert?
 
 ### Technik und Betrieb
 
-7. Sind Systemversion, Anbieter, Integrationen und vollständiger Datenfluss bekannt?
-8. Sind Identität, Rechte, Secrets, Updates, Logging, Backups und Wiederherstellung getestet?
-9. Gibt es einen Exit- und Fallback-Pfad?
+8. Sind Systemversion, Anbieter, Integrationen und vollständiger Datenfluss bekannt?
+9. Sind Identität, Rechte, Secrets, Updates, Logging, Backups und Wiederherstellung getestet?
+10. Gibt es einen Exit- und Fallback-Pfad?
 
 ### Menschen und Governance
 
-10. Sind fachliche Prüfung, menschliche Aufsicht und Eskalation mit echter Befugnis besetzt?
-11. Sind Nutzer für Aufgabe, Systemgrenzen und Risiken qualifiziert?
-12. Sind Rolle, Risikoklassifizierung und einschlägige rechtliche Pflichten begründet dokumentiert?
+11. Sind fachliche Prüfung, menschliche Aufsicht und Eskalation mit echter Befugnis besetzt?
+12. Sind Nutzer für Aufgabe, Systemgrenzen und Risiken qualifiziert?
 
 ## Aus Antworten werden Maßnahmen
 

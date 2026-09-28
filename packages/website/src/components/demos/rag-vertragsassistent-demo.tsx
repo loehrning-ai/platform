@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { DEMO } from "@/lib/demo-tokens";
-import { DEMO_HEIGHT, usePrefersReducedMotion } from "./demo-utils";
+import { DEMO_HEIGHT, usePrefersReducedMotion, useSmUp } from "./demo-utils";
 import { useDemoLocale } from "./demo-locale";
 
 type KonfidenzLevel = "hoch" | "mittel" | "niedrig";
@@ -103,6 +103,32 @@ const CHAT_SUGGESTED = [
 // Grenzfall query: no document in the archive matches this
 const FAILURE_QUERY = "Wer hat Prokura für ausländische Verträge?";
 
+// The chat opens on one answered exchange (final state first) instead of an
+// empty "ask something" screen. It is the same keyword answer a click on the
+// first suggestion produces.
+const EXAMPLE_QUERY = CHAT_SUGGESTED[0];
+const EXAMPLE_ANSWER = CHAT_Q["kuendigung|kuendigungsfrist|kündigung|kündigungsfrist"];
+const INITIAL_MESSAGES: readonly Message[] = [
+  { role: "user", text: EXAMPLE_QUERY, id: 1 },
+  {
+    role: "assistant",
+    text: EXAMPLE_ANSWER.answer,
+    sources: EXAMPLE_ANSWER.sources,
+    follow: EXAMPLE_ANSWER.follow,
+    matchedTerms: EXAMPLE_ANSWER.matchedTerms,
+    isEmpty: false,
+    queryContext: EXAMPLE_QUERY,
+    id: 2,
+  },
+];
+
+/**
+ * Chip classes for the suggestion rail and the follow-ups: 44px targets,
+ * 14px text below sm (12px from sm up, as before), square, ink on hover.
+ */
+const SUGGESTION_CHIP_CLASS =
+  "inline-flex min-h-11 shrink-0 items-center gap-1.5 whitespace-nowrap border px-2.5 text-left text-[14px] leading-tight transition-colors duration-150 motion-reduce:transition-none sm:shrink sm:whitespace-normal sm:text-[12px]";
+
 function findAnswer(q: string): AnswerResult {
   const qL = q.toLowerCase();
   for (const [pattern, data] of Object.entries(CHAT_Q)) {
@@ -115,9 +141,11 @@ const KONFIDENZ_CONFIG: Record<
   KonfidenzLevel,
   { label: string; color: string; bg: string }
 > = {
-  hoch: { label: "Hoch", color: "#16a34a", bg: "rgba(22,163,74,0.1)" },
-  mittel: { label: "Mittel", color: "#d97706", bg: "rgba(217,119,6,0.1)" },
-  niedrig: { label: "Niedrig", color: "#dc2626", bg: "rgba(220,38,38,0.1)" },
+  // One accent: ink for a strong match, Schiefer for a medium one, Mennige
+  // only for the weak match a reader should question.
+  hoch: { label: "Hoch", color: "#121212", bg: "transparent" },
+  mittel: { label: "Mittel", color: "#4f4640", bg: "transparent" },
+  niedrig: { label: "Niedrig", color: "var(--color-brand-orange)", bg: "transparent" },
 };
 
 function KonfidenzChip({ level }: { level: KonfidenzLevel }) {
@@ -136,14 +164,11 @@ function KonfidenzChip({ level }: { level: KonfidenzLevel }) {
       <span
         style={
           {
+            ...DEMO.label,
             padding: "2px 6px",
-            fontSize: 12,
-            fontFamily: "var(--font-geist-mono, ui-monospace, monospace)",
-            fontWeight: 700,
-            letterSpacing: "0.08em",
-            textTransform: "uppercase",
             color: cfg.color,
             background: cfg.bg,
+            border: "1px solid currentColor",
             title:
               "Konfidenz = Übereinstimmung mit Schlüsselbegriffen im Dokument",
           } as React.CSSProperties
@@ -154,11 +179,8 @@ function KonfidenzChip({ level }: { level: KonfidenzLevel }) {
       </span>
       <span
         style={{
-          fontFamily: "var(--font-geist-mono, ui-monospace, monospace)",
-          fontSize: 12,
-          color: "#6b7280",
-          letterSpacing: "0.08em",
-          textTransform: "uppercase",
+          ...DEMO.label,
+          color: "#4f4640",
           marginTop: 2,
         }}
       >
@@ -168,40 +190,45 @@ function KonfidenzChip({ level }: { level: KonfidenzLevel }) {
   );
 }
 
+/** The Konfidenz definition, shown beside the terms (sm up) and the sources. */
+const KONFIDENZ_DEFINITION = "Konfidenz = Anzahl Treffer";
+
 function MatchedTermsPanel({ terms }: { terms: readonly string[] }) {
   if (terms.length === 0) return null;
   return (
+    // One unboxed caption line at every width, "Treffer: A · B · C" below
+    // sm and the full label from sm up, wrapping between terms. It sits
+    // under the answer sheet, not in a second box beside it. The Konfidenz
+    // definition also sits in the title and in the expanded sources.
     <div
+      className="text-[13px] [overflow-wrap:anywhere] sm:text-[12px]"
+      title={`${KONFIDENZ_DEFINITION} im Dokument`}
+      data-rag-matched-terms
       style={{
         marginTop: 6,
-        padding: "6px 10px",
-        background: "rgba(37,99,235,0.05)",
-        border: "1px solid rgba(37,99,235,0.2)",
         fontFamily: "var(--font-geist-mono, ui-monospace, monospace)",
-        fontSize: 12,
-        letterSpacing: "0.08em",
       }}
     >
       <span
         style={{
-          color: "#6b7280",
-          textTransform: "uppercase",
-          fontWeight: 700,
+          ...DEMO.label,
+          color: "#4f4640",
         }}
       >
+        <span className="sm:hidden">Treffer: </span>
         {/* Carries the definition the shell badge cannot: this engine's
-            "Konfidenz" is a keyword-hit count, not a model score. Relocated
-            here from the engine's own SimulationDisclosure, which restated
-            the simulation mode the detail shell already states once. */}
-        Gefundene Schlüsselwörter (Konfidenz = Anzahl Treffer):{" "}
+            "Konfidenz" is a keyword-hit count, not a model score. */}
+        <span className="max-sm:hidden">
+          Gefundene Schlüsselwörter ({KONFIDENZ_DEFINITION}):{" "}
+        </span>
       </span>
       {terms.map((term, i) => (
-        <span
-          key={i}
-          style={{ color: "#2563eb", fontWeight: 700, marginRight: 6 }}
-        >
-          {term}
-        </span>
+        <Fragment key={term}>
+          {i > 0 ? (
+            <span style={{ color: "#4f4640" }}>{" · "}</span>
+          ) : null}
+          <b style={{ color: DEMO.ink, fontWeight: 700 }}>{term}</b>
+        </Fragment>
       ))}
     </div>
   );
@@ -210,7 +237,7 @@ function MatchedTermsPanel({ terms }: { terms: readonly string[] }) {
 function renderBold(text: string) {
   return text.split(/(\*\*[^*]+\*\*)/g).map((c, i) =>
     c.startsWith("**") ? (
-      <strong key={i} style={{ color: "var(--color-brand-orange)" }}>
+      <strong key={i} style={{ color: DEMO.ink }}>
         {c.slice(2, -2)}
       </strong>
     ) : (
@@ -229,7 +256,7 @@ export default function RagVertragsassistentDemo() {
 }
 
 function RagVertragsassistentGerman() {
-  const [msgs, setMsgs] = useState<readonly Message[]>([]);
+  const [msgs, setMsgs] = useState<readonly Message[]>(INITIAL_MESSAGES);
   const [input, setInput] = useState("");
   const [typing, setTyping] = useState(false);
   const [expanded, setExpanded] = useState<Readonly<Record<number, boolean>>>(
@@ -238,15 +265,31 @@ function RagVertragsassistentGerman() {
   const [searchStage, setSearchStage] = useState(0);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const reduced = usePrefersReducedMotion();
+  // Below sm the follow-ups join the one rail above the input instead of
+  // wrapping under the answer, so each chip still exists once.
+  const smUp = useSmUp();
 
+  // Follow the newest message, but leave the opening example at its top:
+  // the question stays in view on first paint.
   useEffect(() => {
     const el = scrollRef.current;
-    if (!el) return;
+    if (!el || (msgs === INITIAL_MESSAGES && !typing)) return;
     el.scrollTo({
       top: el.scrollHeight,
       behavior: reduced ? "auto" : "smooth",
     });
   }, [msgs, typing, searchStage, reduced]);
+
+  // Suggestions not asked yet and not already offered as follow-ups.
+  const asked = new Set(
+    msgs.filter((m) => m.role === "user").map((m) => m.text),
+  );
+  const lastFollow = new Set(msgs.at(-1)?.follow ?? []);
+  const railSuggestions = CHAT_SUGGESTED.filter(
+    (q) => !asked.has(q) && !lastFollow.has(q),
+  );
+  const railFollowUps = smUp || typing ? [] : [...lastFollow];
+  const sendDisabled = typing || !input.trim();
 
   function submit(text?: string) {
     const q = (text ?? input).trim();
@@ -284,17 +327,26 @@ function RagVertragsassistentGerman() {
   return (
     <div
       data-demo-id="rag-vertragsassistent"
+      // The engine is as tall as its content at every width: no fixed frame
+      // height that the chat log stretches into, so the suggestion rail sits
+      // right under the conversation instead of below a dead gap. Below sm
+      // there is no inner scroll box either, so the page scrolls once.
       style={{
         display: "flex",
         flexDirection: "column",
-        minHeight: DEMO_HEIGHT,
         fontFamily: DEMO.font.sans,
         color: DEMO.ink,
       }}
     >
+      {/* The page H1 and lead name the demo; this heading only gives
+          screen-reader users a landmark into the instrument. */}
+      <h2 className="sr-only">Vertragsassistent: Fragen an das Beispielarchiv</h2>
+      {/* Below sm the page H1 already names the assistant, so the avatar
+          row gives its height to the conversation. */}
       <div
+        className="flex max-sm:hidden"
+        data-rag-header
         style={{
-          display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           gap: 8,
@@ -315,7 +367,7 @@ function RagVertragsassistentGerman() {
               width: 32,
               height: 32,
               flexShrink: 0,
-              background: "var(--color-brand-orange)",
+              background: DEMO.ink,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -331,7 +383,7 @@ function RagVertragsassistentGerman() {
               style={{
                 fontSize: 14,
                 fontWeight: 700,
-                letterSpacing: "-0.02em",
+                letterSpacing: "-0.01em",
                 whiteSpace: "nowrap",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
@@ -344,163 +396,38 @@ function RagVertragsassistentGerman() {
                 fontFamily: DEMO.font.mono,
                 fontSize: 12,
                 color: DEMO.schiefer,
-                letterSpacing: "0.08em",
                 whiteSpace: "nowrap",
                 overflow: "hidden",
                 textOverflow: "ellipsis",
               }}
             >
-              Keyword-Suche · 8 Beispieldokumente
+              Keyword-Suche · 6 Beispieldokumente
             </div>
           </div>
         </div>
-        <span
-          style={{
-            background: "rgba(34,197,94,0.12)",
-            color: DEMO.statusGreen,
-            padding: "3px 8px",
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            letterSpacing: "0.12em",
-            fontWeight: 700,
-            flexShrink: 0,
-            whiteSpace: "nowrap",
-          }}
-        >
-          ● DEMO-MODUS
-        </span>
       </div>
 
       <div
         ref={scrollRef}
+        className="flex-none sm:max-h-[400px] sm:min-h-[280px]"
+        data-rag-chat-log
         style={{
-          flex: "1 1 0",
-          minHeight: 280,
-          maxHeight: 400,
           overflowY: "auto",
+          overflowWrap: "anywhere",
           padding: "12px 4px",
           display: "flex",
           flexDirection: "column",
           gap: 12,
         }}
       >
-        {msgs.length === 0 && !typing && (
-          <div
-            style={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              textAlign: "center",
-              padding: 16,
-            }}
-          >
-            <div
-              style={{
-                width: 140,
-                height: 3,
-                background: "var(--color-brand-orange)",
-                marginBottom: 16,
-              }}
-            />
-            <div
-              style={{
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                color: "#2563eb",
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                fontWeight: 700,
-              }}
-            >
-              Keyword-Suche · Regelbasiert
-            </div>
-            <h2
-              style={{
-                fontSize: 22,
-                fontWeight: 700,
-                letterSpacing: "-0.03em",
-                marginTop: 8,
-                maxWidth: 440,
-                lineHeight: 1.15,
-              }}
-            >
-              Fragen Sie das Beispielarchiv.{" "}
-              <span style={{ color: "var(--color-brand-orange)" }}>
-                Antworten mit Quelle.
-              </span>
-            </h2>
-            <p
-              style={{
-                fontSize: 13,
-                color: DEMO.schiefer,
-                marginTop: 10,
-                maxWidth: 420,
-                lineHeight: 1.5,
-              }}
-            >
-              Antworten zeigen passende Fundstellen; Fehler und fehlende Treffer
-              bleiben möglich.
-            </p>
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                justifyContent: "center",
-                gap: 6,
-                marginTop: 18,
-                width: "100%",
-                maxWidth: 480,
-              }}
-            >
-              {CHAT_SUGGESTED.map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  onClick={() => submit(s)}
-                  style={{
-                    minHeight: 44,
-                    textAlign: "left",
-                    padding: "7px 10px",
-                    border: `1px solid ${DEMO.leinen}`,
-                    background: DEMO.birke,
-                    fontSize: 12,
-                    lineHeight: 1.3,
-                    cursor: "pointer",
-                    fontFamily: "inherit",
-                    color: DEMO.ink,
-                    flex: "1 1 auto",
-                    minWidth: 0,
-                    transition: reduced
-                      ? "none"
-                      : "background 150ms, border-color 150ms",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = DEMO.kupferMist;
-                    e.currentTarget.style.borderColor =
-                      "var(--color-brand-orange)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = DEMO.birke;
-                    e.currentTarget.style.borderColor = DEMO.leinen;
-                  }}
-                >
-                  <span
-                    style={{
-                      color: "var(--color-brand-orange)",
-                      fontWeight: 700,
-                      marginRight: 6,
-                    }}
-                  >
-                    →
-                  </span>
-                  {s}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+        {/* What the answers below can and cannot do, said once above the
+            conversation that opens with a worked example. */}
+        <p
+          className="text-caption"
+          style={{ margin: 0, color: DEMO.schiefer, maxWidth: 520 }}
+        >
+          Die Suche vergleicht nur Schlüsselwörter und kann Treffer übersehen.
+        </p>
         {msgs.map((m, idx) =>
           m.role === "user" ? (
             <div
@@ -508,12 +435,12 @@ function RagVertragsassistentGerman() {
               style={{ display: "flex", justifyContent: "flex-end" }}
             >
               <div
+                className="text-[14px] sm:text-[13px]"
                 style={{
                   maxWidth: "85%",
                   background: DEMO.ink,
                   color: DEMO.kalk,
                   padding: "9px 13px",
-                  fontSize: 13,
                   lineHeight: 1.55,
                   wordBreak: "break-word",
                 }}
@@ -522,66 +449,77 @@ function RagVertragsassistentGerman() {
               </div>
             </div>
           ) : (
-            <div key={m.id} style={{ maxWidth: "85%", minWidth: 0 }}>
+            <div
+              key={m.id}
+              className="max-sm:max-w-full sm:max-w-[85%]"
+              style={{ minWidth: 0 }}
+            >
               <div
                 style={{
-                  fontFamily: DEMO.font.mono,
-                  fontSize: 12,
-                  color: m.isEmpty ? "#6b7280" : "var(--color-brand-orange)",
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase",
-                  fontWeight: 700,
+                  ...DEMO.label,
+                  color: "#4f4640",
                   marginBottom: 4,
                 }}
               >
-                ⎯{" "}
                 {m.isEmpty
                   ? "Kein Treffer"
                   : `Keyword-Suche · ${m.sources?.length ?? 0} Quellen`}
               </div>
               <div
+                className="text-[14px] sm:text-[13px]"
                 style={{
-                  background: m.isEmpty ? "rgba(107,114,128,0.06)" : DEMO.birke,
+                  // An answer is an ink-framed sheet; "no match" is dashed
+                  // (a known gap). No coloured left rule.
+                  background: m.isEmpty ? "transparent" : DEMO.birke,
                   padding: "11px 13px",
-                  fontSize: 13,
-                  lineHeight: 1.65,
-                  borderLeft: `3px solid ${m.isEmpty ? "#6b7280" : "var(--color-brand-orange)"}`,
+                  lineHeight: 1.6,
+                  border: `1px ${m.isEmpty ? "dashed" : "solid"} ${m.isEmpty ? "#4f4640" : DEMO.ink}`,
                   wordBreak: "break-word",
-                  color: m.isEmpty ? "#6b7280" : "inherit",
+                  color: m.isEmpty ? "#4f4640" : "inherit",
                 }}
               >
                 {m.isEmpty
-                  ? "Keine Übereinstimmung gefunden, das System kann hier keine Antwort verankern. Kein Dokument im Beispielarchiv enthält ausreichend passende Schlüsselbegriffe für diese Anfrage."
+                  ? "Keine Übereinstimmung gefunden: Kein Dokument im Beispielarchiv enthält passende Schlüsselbegriffe."
                   : renderBold(m.text ?? "")}
               </div>
+              {/* Below sm the first Fundstelle sits right under the answer as
+                  one caption line; the full list stays behind the link. */}
+              {m.sources && m.sources.length > 0 && !expanded[m.id] ? (
+                <p
+                  className="text-[13px] sm:hidden"
+                  data-rag-inline-source
+                  style={{ margin: "6px 0 0", color: "#4f4640", lineHeight: 1.45 }}
+                >
+                  {`Quelle: ${m.sources[0].t}, ${m.sources[0].s}`}
+                </p>
+              ) : null}
               {!m.isEmpty && m.matchedTerms && m.matchedTerms.length > 0 && (
                 <MatchedTermsPanel terms={m.matchedTerms} />
               )}
               {m.sources && m.sources.length > 0 && (
                 <div style={{ marginTop: 6 }}>
+                  {/* A plain text link at every width, not a box under the
+                      answer box. */}
                   <button
                     type="button"
                     onClick={() =>
                       setExpanded((e) => ({ ...e, [m.id]: !e[m.id] }))
                     }
                     aria-expanded={!!expanded[m.id]}
-                    aria-label={`${expanded[m.id] ? "Quellen ausblenden" : "Quellen anzeigen"}: ${m.sources.length} Quellen zur Antwort auf „${m.queryContext}“`}
+                    aria-label={`${expanded[m.id] ? "Quellen ausblenden" : `Alle ${m.sources.length} Quellen`}: zur Antwort auf „${m.queryContext}“`}
+                    className="inline-flex min-h-11 items-center gap-1.5 border-0 bg-transparent p-0 underline decoration-[#4f4640]/50 underline-offset-4 hover:decoration-[#0B0908]"
                     style={{
-                      minHeight: 44,
-                      background: "transparent",
-                      border: `1px solid ${DEMO.leinen}`,
-                      padding: "4px 8px",
-                      fontFamily: DEMO.font.mono,
-                      fontSize: 12,
-                      letterSpacing: "0.12em",
-                      textTransform: "uppercase",
+                      ...DEMO.label,
                       cursor: "pointer",
                       color: DEMO.schiefer,
-                      fontWeight: 700,
                     }}
                   >
-                    {expanded[m.id] ? "▼" : "▶"} {m.sources.length}{" "}
-                    {expanded[m.id] ? "Quellen ausblenden" : "Quellen anzeigen"}
+                    <span aria-hidden="true" className="max-sm:hidden">
+                      {expanded[m.id] ? "−" : "+"}
+                    </span>
+                    {expanded[m.id]
+                      ? "Quellen ausblenden"
+                      : `Alle ${m.sources.length} Quellen`}
                   </button>
                   {expanded[m.id] && (
                     <div
@@ -592,18 +530,25 @@ function RagVertragsassistentGerman() {
                         gap: 5,
                       }}
                     >
+                      <p
+                        className="text-caption"
+                        style={{ margin: 0, color: "#4f4640" }}
+                      >
+                        {KONFIDENZ_DEFINITION} im Dokument.
+                      </p>
                       {m.sources.map((s, i) => {
                         const parText = s.s.split("·")[0]?.trim() ?? s.s;
                         return (
                           <div
                             key={i}
                             style={{
+                              // A hairline-ruled list row, not a card: the
+                              // answer sheet stays the only box.
                               display: "flex",
                               alignItems: "stretch",
                               gap: 8,
-                              background: DEMO.kalk,
-                              border: `1px solid ${DEMO.leinen}`,
-                              padding: "7px 10px",
+                              borderTop: `1px solid ${DEMO.leinen}`,
+                              padding: "7px 0",
                               minWidth: 0,
                             }}
                           >
@@ -611,14 +556,14 @@ function RagVertragsassistentGerman() {
                               style={{
                                 width: 22,
                                 flexShrink: 0,
-                                background: DEMO.kupferMist,
+                                background: "transparent",
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "center",
                                 fontFamily: DEMO.font.mono,
                                 fontSize: 12,
                                 fontWeight: 700,
-                                color: "var(--color-brand-orange)",
+                                color: DEMO.ink,
                               }}
                             >
                               {String(i + 1).padStart(2, "0")}
@@ -643,12 +588,9 @@ function RagVertragsassistentGerman() {
                                   display: "inline-flex",
                                   alignItems: "center",
                                   marginTop: 3,
-                                  padding: "1px 6px",
-                                  border: `1px solid ${DEMO.leinen}`,
-                                  background: DEMO.birke,
                                   fontFamily: DEMO.font.mono,
                                   fontSize: 12,
-                                  color: DEMO.ink,
+                                  color: DEMO.schiefer,
                                   letterSpacing: "0.02em",
                                   maxWidth: "100%",
                                   overflow: "hidden",
@@ -668,13 +610,16 @@ function RagVertragsassistentGerman() {
                   )}
                 </div>
               )}
-              {m.follow && idx === msgs.length - 1 && (
+              {m.follow && idx === msgs.length - 1 && smUp && (
+                // Follow-ups are underlined text actions, not bordered chips:
+                // they sit beside the answer sheet, and a box never sits in
+                // a box. Each keeps its 44px target.
                 <div
                   style={{
                     display: "flex",
                     flexWrap: "wrap",
-                    gap: 6,
-                    marginTop: 8,
+                    columnGap: 18,
+                    marginTop: 2,
                   }}
                 >
                   {m.follow.map((f) => (
@@ -682,24 +627,17 @@ function RagVertragsassistentGerman() {
                       key={f}
                       type="button"
                       onClick={() => submit(f)}
+                      className="inline-flex min-h-11 items-center text-[14px] underline decoration-[#0B0908]/40 underline-offset-4 hover:decoration-[#0B0908] sm:text-[12px]"
                       style={{
-                        minHeight: 44,
                         background: "transparent",
-                        border: `1px solid var(--color-brand-orange)`,
-                        color: "var(--color-brand-orange)",
-                        padding: "5px 9px",
-                        fontSize: 12,
+                        border: 0,
+                        color: DEMO.ink,
+                        padding: 0,
                         lineHeight: 1.3,
                         cursor: "pointer",
                         fontFamily: "inherit",
                         fontWeight: 600,
-                        transition: reduced ? "none" : "background 150ms",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = DEMO.kupferMist;
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = "transparent";
+                        textAlign: "left",
                       }}
                     >
                       {f} →
@@ -715,29 +653,21 @@ function RagVertragsassistentGerman() {
           <div style={{ maxWidth: "85%", minWidth: 0 }}>
             <div
               style={{
+                ...DEMO.label,
                 display: "flex",
                 alignItems: "center",
                 gap: 6,
                 marginBottom: 6,
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                fontWeight: 700,
-                color: "var(--color-brand-orange)",
+                color: "var(--color-muted-foreground)",
               }}
               aria-live="polite"
             >
               <span
+                aria-hidden
                 style={{
                   width: 6,
                   height: 6,
-                  borderRadius: 999,
-                  background: "var(--color-brand-orange)",
-                  animation: reduced
-                    ? "none"
-                    : "ragPulse 1.1s ease-in-out infinite",
-                  boxShadow: "0 0 0 3px rgba(249,115,22,0.15)",
+                  border: `1px dashed ${DEMO.ink}`,
                 }}
               />
               Simuliertes Retrieval · durchsucht Beispielarchiv…
@@ -746,7 +676,7 @@ function RagVertragsassistentGerman() {
               style={{
                 background: DEMO.birke,
                 padding: "10px 12px",
-                borderLeft: `3px solid #2563eb`,
+                border: `1px dashed ${DEMO.ink}`,
               }}
             >
               <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
@@ -759,7 +689,7 @@ function RagVertragsassistentGerman() {
                     },
                     {
                       stage: 2,
-                      label: "8 Dokumente durchsuchen",
+                      label: "6 Dokumente durchsuchen",
                       detail: "Schlüsselbegriff-Abgleich",
                     },
                     {
@@ -786,9 +716,9 @@ function RagVertragsassistentGerman() {
                         flexShrink: 0,
                         background:
                           searchStage > s.stage
-                            ? DEMO.statusGreen
+                            ? DEMO.ink
                             : searchStage === s.stage
-                              ? "#2563eb"
+                              ? DEMO.ink
                               : DEMO.leinen,
                       }}
                     />
@@ -827,52 +757,43 @@ function RagVertragsassistentGerman() {
           </div>
         )}
       </div>
-      <style>{`
-        @keyframes ragPulse {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          50% { opacity: 0.45; transform: scale(0.82); }
-        }
-      `}</style>
 
-      {/* Failure mode beat */}
+      {/* One rail above the input. Below sm it holds the follow-ups, then
+          the questions not asked yet, then the Grenzfall (no document
+          matches) as the last, dashed chip, all in one hairline style that
+          scrolls sideways under a 24px fade. From sm up the follow-ups stay
+          under the answer and the rail wraps at 12px, as before. */}
       <div
-        style={{
-          padding: "8px 12px",
-          background: "rgba(107,114,128,0.06)",
-          border: "1px solid rgba(107,114,128,0.2)",
-          fontSize: 12,
-          lineHeight: 1.5,
-          fontFamily: DEMO.font.mono,
-        }}
+        aria-label="Weitere Beispielfragen"
+        role="group"
+        data-rag-rail
+        className="flex gap-1.5 overflow-x-auto pb-2 pt-1 [scrollbar-width:none] max-sm:pr-6 max-sm:[mask-image:linear-gradient(to_right,#000_calc(100%-24px),transparent)] sm:flex-wrap sm:overflow-visible"
+        style={{ overscrollBehaviorX: "contain" }}
       >
-        <span
-          style={{
-            fontWeight: 700,
-            textTransform: "uppercase",
-            letterSpacing: "0.1em",
-            color: "#6b7280",
-            fontSize: 12,
-          }}
-        >
-          Grenzfall:{" "}
-        </span>
+        {[...railFollowUps, ...railSuggestions].map((q) => (
+          <button
+            key={q}
+            type="button"
+            onClick={() => submit(q)}
+            className={`${SUGGESTION_CHIP_CLASS} border-[#E3DFD6] bg-[#F7F4ED] hover:border-[#0B0908] hover:bg-[#F3F0E9] max-sm:bg-transparent`}
+            style={{ minHeight: 44, color: DEMO.ink, fontFamily: "inherit", cursor: "pointer" }}
+          >
+            <span aria-hidden className="max-sm:hidden" style={{ fontWeight: 700 }}>
+              →
+            </span>
+            {q}
+          </button>
+        ))}
         <button
           type="button"
           onClick={() => submit(FAILURE_QUERY)}
-          style={{
-            minHeight: 44,
-            background: "transparent",
-            border: "1px solid rgba(107,114,128,0.3)",
-            padding: "2px 8px",
-            fontSize: 12,
-            color: DEMO.ink,
-            cursor: "pointer",
-            fontFamily: DEMO.font.mono,
-            letterSpacing: "0.04em",
-          }}
-          aria-label={`Grenzfall testen: ${FAILURE_QUERY}`}
+          className={`${SUGGESTION_CHIP_CLASS} border-dashed border-[#4f4640] bg-transparent hover:border-[#0B0908]`}
+          style={{ minHeight: 44, color: DEMO.ink, fontFamily: "inherit", cursor: "pointer" }}
         >
-          &ldquo;{FAILURE_QUERY}&rdquo; testen &rarr;
+          {/* The visible text is the accessible name (no aria-label), so a
+              real space keeps "Grenzfall: …" identical for both. */}
+          <span style={{ fontWeight: 600, color: "#4f4640" }}>Grenzfall:</span>{" "}
+          {FAILURE_QUERY}
         </button>
       </div>
 
@@ -896,6 +817,8 @@ function RagVertragsassistentGerman() {
             e.currentTarget.style.borderColor = DEMO.leinen;
           }}
           placeholder="Frag zum Beispielarchiv…"
+          // 16px below lg: iOS (phone and iPad) zooms into any focused field under 16px.
+          className="text-base lg:text-[13px]"
           style={{
             flex: "1 1 0",
             minWidth: 0,
@@ -903,7 +826,6 @@ function RagVertragsassistentGerman() {
             background: DEMO.birke,
             border: `1px solid ${DEMO.leinen}`,
             padding: "9px 12px",
-            fontSize: 13,
             fontFamily: "inherit",
             outline: "none",
             color: DEMO.ink,
@@ -914,22 +836,23 @@ function RagVertragsassistentGerman() {
         <button
           type="button"
           onClick={() => submit()}
-          disabled={typing || !input.trim()}
+          disabled={sendDisabled}
           style={{
+            ...DEMO.label,
             minHeight: 44,
-            background: "var(--color-brand-orange)",
-            color: DEMO.kalk,
-            border: "none",
+            // Enabled: a solid ink button (the page's one Mennige button is
+            // the course link). Disabled: the same ink outline at reduced
+            // opacity, a faint frame rather than a grey block; disabled
+            // controls are exempt from contrast minimums, and the enabled
+            // ink edge on paper is far above 3:1.
+            background: sendDisabled ? "transparent" : DEMO.ink,
+            color: sendDisabled ? DEMO.ink : DEMO.kalk,
+            border: `1px solid ${DEMO.ink}`,
             padding: "9px 12px",
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            fontWeight: 700,
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            cursor: typing || !input.trim() ? "not-allowed" : "pointer",
-            opacity: typing || !input.trim() ? 0.5 : 1,
+            cursor: sendDisabled ? "not-allowed" : "pointer",
+            opacity: sendDisabled ? 0.4 : 1,
             flexShrink: 0,
-            transition: reduced ? "none" : "opacity 150ms",
+            transition: reduced ? "none" : "opacity 150ms, background 150ms",
           }}
           aria-label="Frage senden"
         >
@@ -964,6 +887,11 @@ const CONTRACT_ANSWERS_EN: Readonly<Record<string, EnglishContractAnswer>> = {
       {
         document: "Sample schedule B",
         section: "Clause 4",
+        confidence: "medium",
+      },
+      {
+        document: "Sample project terms",
+        section: "§8(2) Extraordinary termination",
         confidence: "medium",
       },
     ],
@@ -1022,11 +950,15 @@ function answerForEnglishContract(query: string): EnglishContractAnswer | null {
 }
 
 function RagContractAssistantEnglish() {
+  // Opens on one answered sample question (final state first), the same
+  // answer the first question chip returns.
   const [query, setQuery] = useState("");
-  const [submitted, setSubmitted] = useState("");
+  const [submitted, setSubmitted] = useState<string>(
+    CONTRACT_QUESTIONS_EN[0][1],
+  );
   const [answer, setAnswer] = useState<
     EnglishContractAnswer | null | undefined
-  >(undefined);
+  >(CONTRACT_ANSWERS_EN.termination);
 
   const runQuery = (value?: string) => {
     const next = (value ?? query).trim();
@@ -1052,42 +984,12 @@ function RagContractAssistantEnglish() {
       }}
     >
       <div>
-        <div
-          style={{
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            color: "var(--color-brand-orange)",
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            fontWeight: 700,
-          }}
-        >
-          Contract archive · deterministic retrieval
-        </div>
-        <h2
-          style={{
-            margin: "6px 0 0",
-            fontSize: "clamp(20px, 4vw, 28px)",
-            lineHeight: 1.08,
-          }}
-        >
-          Answer from the archive.{" "}
-          <span style={{ color: "var(--color-brand-orange)" }}>
-            Show the source and the gap.
-          </span>
-        </h2>
-        <p
-          style={{
-            margin: "8px 0 0",
-            maxWidth: 760,
-            color: DEMO.schiefer,
-            fontSize: 12,
-            lineHeight: 1.55,
-          }}
-        >
-          Three fictional contract records are searched with fixed keyword rules
-          in the browser. This is not legal advice and no model or document
-          service is called.
+        {/* The page H1 and lead name the demo; this heading only gives
+          screen-reader users a landmark into the instrument. */}
+        <h2 className="sr-only">Contract assistant: questions to the sample archive</h2>
+        <p className="text-caption text-muted-foreground" style={{ margin: 0, maxWidth: 720 }}>
+          Fixed keyword rules run in the browser; no model or document service
+          is called.
         </p>
       </div>
 
@@ -1100,6 +1002,7 @@ function RagContractAssistantEnglish() {
             key={key}
             type="button"
             onClick={() => runQuery(label)}
+            className="text-[14px] sm:text-[12px]"
             style={{
               minHeight: 44,
               border: `1px solid ${DEMO.ink}`,
@@ -1107,7 +1010,6 @@ function RagContractAssistantEnglish() {
               color: DEMO.ink,
               padding: "7px 10px",
               fontFamily: DEMO.font.mono,
-              fontSize: 12,
               cursor: "pointer",
             }}
           >
@@ -1120,12 +1022,12 @@ function RagContractAssistantEnglish() {
         style={{
           border: `1px solid ${DEMO.ink}`,
           background: DEMO.kalk,
-          boxShadow: `3px 3px 0 ${DEMO.ink}`,
           minWidth: 0,
         }}
       >
         <div
           style={{
+            ...DEMO.label,
             display: "flex",
             flexWrap: "wrap",
             alignItems: "center",
@@ -1133,16 +1035,10 @@ function RagContractAssistantEnglish() {
             padding: "8px 12px",
             background: DEMO.ink,
             color: DEMO.kalk,
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            textTransform: "uppercase",
-            letterSpacing: "0.1em",
           }}
         >
-          <span style={{ color: "var(--color-brand-orange)" }}>
-            Local sample index
-          </span>
-          <span>3 records · 14 sample clauses</span>
+          <span style={{ fontWeight: 700 }}>Local sample index</span>
+          <span>6 sample documents</span>
           <span style={{ marginLeft: "auto" }}>no external connection</span>
         </div>
 
@@ -1171,17 +1067,14 @@ function RagContractAssistantEnglish() {
             <div style={{ display: "grid", gap: 14 }}>
               <div
                 style={{
-                  borderLeft: "3px solid var(--color-brand-orange)",
-                  paddingLeft: 12,
+                  borderTop: `2px solid ${DEMO.ink}`,
+                  paddingTop: 8,
                 }}
               >
                 <div
                   style={{
-                    fontFamily: DEMO.font.mono,
-                    fontSize: 12,
+                    ...DEMO.label,
                     color: DEMO.schiefer,
-                    textTransform: "uppercase",
-                    letterSpacing: "0.12em",
                   }}
                 >
                   Query
@@ -1213,9 +1106,9 @@ function RagContractAssistantEnglish() {
                       <span
                         key={term}
                         style={{
-                          border: "1px solid rgba(37,99,235,0.3)",
-                          background: "rgba(37,99,235,0.07)",
-                          color: "#1d4ed8",
+                          border: `1px solid ${DEMO.leinen}`,
+                          background: DEMO.birke,
+                          color: DEMO.ink,
                           padding: "3px 7px",
                           fontFamily: DEMO.font.mono,
                           fontSize: 12,
@@ -1258,16 +1151,14 @@ function RagContractAssistantEnglish() {
                           </strong>
                           <span
                             style={{
+                              ...DEMO.label,
                               flexShrink: 0,
                               color:
                                 source.confidence === "high"
-                                  ? "#166534"
+                                  ? "#121212"
                                   : source.confidence === "medium"
-                                    ? "#b45309"
-                                    : "#b91c1c",
-                              fontFamily: DEMO.font.mono,
-                              fontSize: 12,
-                              textTransform: "uppercase",
+                                    ? "#4f4640"
+                                    : "var(--color-brand-orange)",
                             }}
                             // Locale parity with the German engine, which
                             // defines this metric beside its own chip: the
@@ -1295,8 +1186,8 @@ function RagContractAssistantEnglish() {
                 <div
                   role="alert"
                   style={{
-                    border: "1px solid rgba(220,38,38,0.35)",
-                    background: "rgba(220,38,38,0.05)",
+                    border: "1px dashed #4f4640",
+                    background: "transparent",
                     padding: 14,
                   }}
                 >
@@ -1335,6 +1226,8 @@ function RagContractAssistantEnglish() {
             }}
             aria-label="Question for the contract archive"
             placeholder="Enter a contract term…"
+            // 16px below lg: iOS (phone and iPad) zooms into any focused field under 16px.
+            className="text-base lg:text-[12px]"
             style={{
               flex: "1 1 220px",
               minWidth: 0,
@@ -1344,8 +1237,7 @@ function RagContractAssistantEnglish() {
               background: DEMO.birke,
               color: DEMO.ink,
               padding: "9px 11px",
-              font: "inherit",
-              fontSize: 12,
+              fontFamily: "inherit",
             }}
           />
           <button
@@ -1355,12 +1247,10 @@ function RagContractAssistantEnglish() {
             style={{
               minHeight: 44,
               border: `1px solid ${DEMO.ink}`,
-              background: "var(--color-brand-orange)",
-              color: "white",
+              background: DEMO.ink,
+              color: DEMO.kalk,
               padding: "9px 14px",
-              fontFamily: DEMO.font.mono,
-              fontSize: 12,
-              fontWeight: 700,
+              ...DEMO.label,
               cursor: query.trim() ? "pointer" : "not-allowed",
               opacity: query.trim() ? 1 : 0.5,
             }}
@@ -1370,6 +1260,7 @@ function RagContractAssistantEnglish() {
           <button
             type="button"
             onClick={() => runQuery("Which rules govern foreign contracts?")}
+            className="text-[14px] sm:text-[12px]"
             style={{
               minHeight: 44,
               border: `1px solid ${DEMO.ink}`,
@@ -1377,7 +1268,6 @@ function RagContractAssistantEnglish() {
               color: DEMO.ink,
               padding: "9px 12px",
               fontFamily: DEMO.font.mono,
-              fontSize: 12,
               cursor: "pointer",
             }}
           >

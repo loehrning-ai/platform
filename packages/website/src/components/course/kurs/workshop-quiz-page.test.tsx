@@ -266,7 +266,7 @@ describe("<WorkshopQuizPage>", () => {
       "sm:flex",
     );
     expect(screen.getByRole("link", { name: "Cancel" })).toBeInTheDocument();
-    expect(within(header).getByText("Workshop quiz")).toBeInTheDocument();
+    expect(within(header).getByText("Final quiz")).toBeInTheDocument();
     expect(
       screen.getByRole("progressbar", { name: "Question 1 of 1" }),
     ).toBeInTheDocument();
@@ -291,7 +291,7 @@ describe("<WorkshopQuizPage>", () => {
       }),
     ).toBeInTheDocument();
     expect(screen.getByRole("alert")).toHaveTextContent(
-      "The quiz questions could not be loaded.",
+      "Check your connection and try again.",
     );
     expect(
       screen.queryByText(/private provider detail/),
@@ -349,7 +349,7 @@ describe("<WorkshopQuizPage>", () => {
     expect(
       screen.getByRole("link", {
         // Copy lock updated: English UI copy names completion documents "certificate of participation".
-        name: "Download Certificate of Participation",
+        name: "Download Certificate of participation",
       }),
     ).toBeInTheDocument();
     expect(quizMocks.saveResult).toHaveBeenCalledWith("claude", 1, true);
@@ -376,7 +376,7 @@ describe("<WorkshopQuizPage>", () => {
     expect(
       screen.queryByRole("link", {
         // Copy lock updated: English UI copy names completion documents "certificate of participation".
-        name: "Download Certificate of Participation",
+        name: "Download Certificate of participation",
       }),
     ).not.toBeInTheDocument();
 
@@ -385,7 +385,7 @@ describe("<WorkshopQuizPage>", () => {
     expect(await screen.findByText("100%")).toBeInTheDocument();
     expect(
       screen.getByRole("link", {
-        name: "Download Certificate of Participation",
+        name: "Download Certificate of participation",
       }),
     ).toBeInTheDocument();
   });

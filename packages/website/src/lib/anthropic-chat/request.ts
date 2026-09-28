@@ -31,10 +31,11 @@ const messageSchema = z
 export const accountChatRequestSchema = z
   .object({
     /**
-     * Optional. When present it must match the signed-in account, so a stale
-     * tab cannot replay account A's transcript into account B's key.
+     * Required, like on every other account route. It must match the
+     * signed-in account, so a stale tab cannot replay account A's transcript
+     * into account B's key.
      */
-    expectedOwnerId: z.string().trim().min(1).max(256).optional(),
+    expectedOwnerId: z.string().trim().min(1).max(256),
     model: z.string().trim().min(1).max(64).optional(),
     locale: z.enum(SUPPORTED_LOCALES).optional(),
     /**
@@ -59,7 +60,7 @@ export interface AccountChatLessonContext {
 }
 
 export type ParsedAccountChatRequest = {
-  readonly expectedOwnerId?: string;
+  readonly expectedOwnerId: string;
   readonly model?: string;
   readonly locale?: Locale;
   readonly lesson?: AccountChatLessonContext;
@@ -138,9 +139,7 @@ export function parseAccountChatRequest(
   return {
     ok: true,
     value: {
-      ...(parsed.data.expectedOwnerId !== undefined
-        ? { expectedOwnerId: parsed.data.expectedOwnerId }
-        : {}),
+      expectedOwnerId: parsed.data.expectedOwnerId,
       ...(parsed.data.model !== undefined ? { model: parsed.data.model } : {}),
       ...(parsed.data.locale !== undefined
         ? { locale: parsed.data.locale }

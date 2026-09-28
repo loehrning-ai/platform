@@ -36,19 +36,19 @@ export const DATA_ENGINEERING_FUNDAMENTALS_CONFIG = {
   workshopQuizPassThreshold: 0.7,
   certificateTitle: "Data Engineering Fundamentals",
   certificateSubtitle:
-    "Certificate of participation. Issued by loehrning.ai, an independent education platform. This confirmation is not an accredited qualification.",
+    "Locally generated certificate of participation from the independent learning platform loehrning.ai. Not a state-recognized or accredited qualification.",
   certificateModules: [
     "Fundamentals: storage, formats, and query engines",
-    "Ingest and streaming: where data is born, watermarks, and the bridge to the warehouse",
-    "Store and compute: how data lives and how it is read",
-    "Orchestrate, quality, discovery, serving, and governance: idempotency, quality signals, and a reference deploy gate",
+    "Ingest and streaming: event time, watermarks, and the path to the warehouse",
+    "Store and compute: data models, file formats, partitioning, distributed execution",
+    "Orchestration and governance: idempotency, quality signals and a deploy gate",
   ],
   certificateReferenceLabel:
     "Personal certificate of participation: data-pipeline design from source to serving",
   quizPassMessage: "Data Engineering Fundamentals is complete.",
   certificateFileStem: "Data-Engineering-Fundamentals",
   recordNoun: {
-    label: "Certificate of Participation",
+    label: "Certificate of participation",
     possessive: "Your certificate of participation",
     demonstrative: "This certificate of participation",
   },
@@ -67,7 +67,7 @@ export const DATA_ENGINEERING_FUNDAMENTALS_CONFIG_DE =
         "Grundlagen: Speicher, Formate und Abfrage-Engines",
         "Datenaufnahme und Streaming: Ereigniszeit, Watermarks und der Weg ins Warehouse",
         "Speicherung und Verarbeitung: Datenmodelle, Dateiformate, Partitionierung und verteilte Ausführung",
-        "Orchestrierung, Qualität, Ermittlung, Bereitstellung und Governance: Idempotenz, Qualitätsnachweise und eine Referenz-Freigabeschranke",
+        "Orchestrierung und Governance: Idempotenz, Qualitätsnachweise und eine Freigabeschranke",
       ],
       certificateReferenceLabel:
         "Persönliche Teilnahmebestätigung: Entwurf von Datenpipelines von der Quelle bis zur Bereitstellung",

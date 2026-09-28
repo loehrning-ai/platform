@@ -117,7 +117,9 @@ describe("LessonProofCheckpoint", () => {
       screen.getByRole("button", { name: "Loading progress" }),
     ).toHaveAttribute("aria-busy", "true");
     expect(screen.getByText(/response is not saved or synced/i)).toBeVisible();
-    expect(screen.getByText(/not mastery or certification/i)).toBeVisible();
+    // The evidence boundary is stated once, in the saved state below, not as
+    // boilerplate on every open lesson.
+    expect(screen.queryByText(/mastery/i)).toBeNull();
 
     rerender(
       <LessonProofCheckpoint

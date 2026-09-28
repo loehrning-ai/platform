@@ -16,79 +16,65 @@ export default localizeDataInfraLessonToGerman(canonical, {
     {
       id: "s1",
       title: "Fünf Modellierungsansätze",
-      content: `„Wie modellieren wir das?“ Ohne Kontext hat die Frage keine Antwort. Erst kommen Schreibverhalten, Abfragemuster, benötigte Historie, Zuständigkeit und Änderungshäufigkeit. Dann eine Einteilung, die trägt:
+      content: `Kein Datenmodell passt zu jedem Kontext. Geh von Schreibverhalten, Abfragemustern, benötigter Historie, Zuständigkeit und Änderungshäufigkeit aus.
 
-1. **3NF / normalisiert**, speichert Fakten mit kontrollierter Redundanz. Trägt transaktionale Änderungen und Integritätsregeln; breitere Lesevorgänge zahlen mit Joins.
-2. **Sternschema nach Kimball**, legt analytische Ereignisse oder Messwerte in Faktentabellen und beschreibenden Kontext in Dimensionen. Häufige Aggregationen werden explizit.
-3. **Snowflake-Schema**, normalisiert Teile des Dimensionsmodells. Weniger Duplikation, dafür mehr Joins und Zuständigkeitsgrenzen.
-4. **One Big Table (OBT) / breite Tabelle**, materialisiert eine leseorientierte Projektion. Kann Joins zur Abfragezeit sparen; Build-Kosten, Duplikation und Folgen von Schemaänderungen steigen. Column Pruning spart Lese-I/O für ungenutzte Spalten, nicht Speicher und Wartung.
-5. **Data Vault**, trennt Geschäftsschlüssel, Beziehungen und beschreibende Historie in Hubs, Links und Satellites. Stark bei Nachverfolgbarkeit und paralleler Ingestion; nachgelagerte Präsentationsmodelle braucht es meist trotzdem.`,
+1. **3NF / normalisiert**, speichert Fakten mit kontrollierter Redundanz. Transaktionale Änderungen und Integritätsregeln werden leichter; breite Lesevorgänge zahlen mit Joins.
+2. **Sternschema nach Kimball**, legt analytische Ereignisse oder Messwerte in Faktentabellen und beschreibenden Kontext in Dimensionen, sodass häufige Aggregationen explizit werden.
+3. **Snowflake-Schema**, normalisiert Teile der Dimensionen, mit weniger Duplikation, aber mehr Joins und Zuständigkeitsgrenzen.
+4. **One Big Table (OBT) / breite Tabelle**, materialisiert eine leseorientierte Projektion. Sie spart Joins zur Abfragezeit und erhöht Build-Kosten, Duplikation und Folgen von Schemaänderungen; Column Pruning spart Lese-I/O, keinen Speicher und keine Wartung.
+5. **Data Vault**, trennt Geschäftsschlüssel, Beziehungen und beschreibende Historie in Hubs, Links und Satellites. Es stärkt Nachverfolgbarkeit und parallele Ingestion und braucht meist nachgelagerte Präsentationsmodelle.`,
     },
     {
       id: "s2",
       title: "Das Sternschema",
-      content: `Ein Kimball-Sternschema setzt eine oder mehrere **Faktentabellen** auf eine deklarierte Granularität und hängt **Dimensionstabellen** mit beschreibendem Kontext daran. Eine Faktzeile trägt meist Dimensionsschlüssel und Messwerte; Zeitstempel, Statusfelder oder degenerierte Dimensionen sind erlaubt, wenn das Modell sie braucht.
+      content: `Ein Kimball-Sternschema beginnt mit einer deklarierten Granularität. Eine oder mehrere **Faktentabellen** auf dieser Granularität hängen an **Dimensionstabellen** mit beschreibendem Kontext. Eine Faktzeile trägt meist Dimensionsschlüssel und Messwerte, bei Bedarf auch Zeitstempel, Statusfelder oder degenerierte Dimensionen.
 
-*„Umsatz nach Kategorie summieren, nach Land und Zeitraum filtern“*: Diese Abfrage joint eine Vertriebsfaktentabelle mit Produkt-, Kunden- und Datumsdimension. Das funktioniert, solange Definitionen und Granularitäten konsistent verwaltet werden.
+Eine Abfrage wie *„Umsatz nach Kategorie summieren, nach Land und Zeitraum filtern“* joint eine Vertriebsfaktentabelle mit Produkt-, Kunden- und Datumsdimension. Das funktioniert, solange Definitionen und Granularitäten konsistent bleiben.
 
-Zwei Muster sind dabei verbreitet.
-
-- **SCD Type 2 (Slowly Changing Dimensions).** Ändert sich ein Attribut, kommt eine versionierte Dimensionszeile mit Gültigkeitsgrenzen dazu. Ein historischer Fakt joint auf die Version, die zu seinem Ereigniszeitpunkt galt. Die Historie überlebt nur, wenn Gültigkeitsgrenzen und verspätete Korrekturen konsistent behandelt werden.
-- **Ersatzschlüssel.** Ein Schlüssel unter Kontrolle des Warehouse kann Dimensionsversionen von geänderten oder wiederverwendeten Quellidentitäten entkoppeln. Stabile natürliche Schlüssel können trotzdem passen; das entscheiden Quellsemantik und Integrationsanforderungen.`,
-      keyTakeaway:
-        "Zuerst die Faktgranularität deklarieren. Versionierte Dimensionen und Ersatzschlüssel kommen erst dazu, wenn Historie oder Integration sie verlangen.",
+- **SCD Typ 2 (Slowly Changing Dimensions).** Ändert sich ein Attribut, kommt eine versionierte Dimensionszeile mit Gültigkeitsgrenzen dazu. Ein historischer Fakt joint auf die Version, die zu seinem Ereigniszeitpunkt galt, sofern Gültigkeitsgrenzen und verspätete Korrekturen konsistent behandelt werden.
+- **Ersatzschlüssel.** Ein Schlüssel unter Kontrolle des Warehouse entkoppelt Dimensionsversionen von geänderten oder wiederverwendeten Quell-IDs; stabile natürliche Schlüssel können trotzdem passen.`,
     },
     {
       id: "s3",
       title: "Zeilen gegen Spalten",
-      content: `Eine zeilenorientierte Engine hält die Felder eines Datensatzes beieinander; Parquet gruppiert Werte innerhalb von Row Groups nach Spalten. Das interaktive Modell wendet \`SELECT SUM(amount) WHERE country='US'\` auf kleine feste Layouts an und zählt die Zellen, die es anfasst. Ein Datenbankbenchmark ist das nicht.
+      content: `Das Modell oben führt \`SELECT SUM(amount) WHERE country='US'\` auf einem Zeilen- und einem Spaltenlayout aus und zählt die Zellen, die jedes anfasst. Lektion 4 zeigt das Parquet-Layout im Detail.
 
-Ein Zeilenlayout passt meist zu Schlüsselzugriffen und Änderungen, die viele Felder weniger Datensätze brauchen. Ein Spaltenlayout passt meist zu Scans, die wenige Felder vieler Datensätze brauchen. Indizes, Kompression, Cache, Ausführungs-Engine und Lastform können das Bild drehen.`,
+Zeilenlayouts passen oft zu Schlüsselzugriffen und Änderungen vieler Felder weniger Datensätze, Spaltenlayouts zu Scans weniger Felder über viele Datensätze. Indizes, Kompression, Cache, Engine und Lastform können das umdrehen.`,
     },
     {
       id: "s4",
       title: "Dualität von Stream und Tabelle",
-      content: `Ein Änderungslog lässt sich zu einer Tabelle mit aktuellem Zustand falten. Die Änderungen einer Tabelle lassen sich manchmal als Stream darstellen. Nützlich, aber ohne Verträge zu Schlüsseln, Ordnung, Aufbewahrung, Löschung und Schemaentwicklung sind beide Darstellungen nicht austauschbar.
+      content: `Ein Änderungslog lässt sich zu einer Tabelle mit aktuellem Zustand falten, und die Änderungen einer Tabelle lassen sich manchmal als Stream darstellen. Austauschbar sind beide nur mit Verträgen zu Schlüsseln, Ordnung, Aufbewahrung, Löschung und Schemaentwicklung.
 
 - Ein **Änderungsstream** kann \`user 42 set country=US\` festhalten, danach \`UK\`, danach \`CA\`.
-- Eine **materialisierte Tabelle** behält unter Umständen nur das aktuelle Ergebnis: \`user 42 → CA\`.
+- Eine **materialisierte Tabelle** behält vielleicht nur das aktuelle Ergebnis: \`user 42 → CA\`.
 
-Datenbank-Transaktionslogs und Tabellenspeicher folgen demselben Muster; ihre Wiederherstellungssemantik ist Engine-spezifisch. Kafka Log Compaction behält nach Kompaktierungs- und Tombstone-Regeln mindestens den neuesten Datensatz je Schlüssel. Eine vollständig eingeschränkte Datenbanktabelle wird aus dem Topic dadurch nicht.
+Datenbank-Transaktionslogs und Tabellenspeicher folgen diesem Muster mit Engine-spezifischer Wiederherstellungssemantik. Kafka Log Compaction behält nach Kompaktierungs- und Tombstone-Regeln mindestens den neuesten Datensatz je Schlüssel, und dem Topic fehlen trotzdem die Constraints einer Datenbanktabelle.
 
-Frag, ob Consumer geordnete Historie brauchen, aktuellen Zustand oder beides. Und wie eine Darstellung aus der anderen neu gebaut und geprüft wird.`,
-      keyTakeaway:
-        "Ein Änderungsstream kann aktuellen Zustand nur materialisieren, wenn Schlüssel, Ordnung, Aufbewahrung, Löschung und Replay definiert sind.",
+Frag, ob Consumer geordnete Historie, aktuellen Zustand oder beides brauchen, und wie du eine Darstellung aus der anderen neu baust und prüfst.`,
     },
     {
       id: "s5",
       title: "Data Vault",
-      content: `Data Vault integriert mehrere Quellen und behält dabei Quelle, Ladezeit, Schlüssel, Beziehung und beschreibende Historie. Das hilft bei Audits. Prüfbar wird ein System trotzdem erst durch unveränderliche Quellevidenz, Zugriffskontrollen, Lineage, Aufbewahrung und Reconciliation.
-
-Drei Kernstrukturen tragen das Modell.
+      content: `Data Vault integriert mehrere Quellen und behält Quelle, Ladezeit, Schlüssel, Beziehungen und beschreibende Historie. Das hilft bei Audits; prüfbar wird ein System aber erst durch unveränderliche Quellbelege, Zugriffskontrollen, Lineage, Aufbewahrung und Reconciliation.
 
 1. **Hub.** Ein eindeutiger Geschäftsschlüssel mit Quell- und Lademetadaten, etwa \`hub_customer(customer_hk, customer_id, load_dts, rec_src)\`.
 2. **Link.** Eine Beziehung zwischen Hub-Schlüsseln, etwa \`link_order_product(order_product_hk, order_hk, product_hk, load_dts, rec_src)\`.
 3. **Satellite.** Beschreibende Attribute samt Ladehistorie für einen Hub oder Link, etwa \`sat_customer_details(customer_hk, load_dts, load_end_dts, email, country, rec_src)\`.
 
-Raw-Vault-Muster sind meist insert-orientiert. Hash-Kollisionen, doppelte Quellereignisse, verspätete Daten, Effectivity-Regeln und parallele Ladevorgänge brauchen trotzdem explizite Idempotenz und Konfliktbehandlung. Business Vault und Präsentationsschichten liefern abgeleitete Regeln und nutzbare Abfragemodelle obendrauf.
+Raw-Vault-Ladevorgänge sind meist insert-orientiert. Hash-Kollisionen, doppelte Quellereignisse, verspätete Daten, Effectivity-Regeln und parallele Ladevorgänge brauchen trotzdem explizite Idempotenz und Konfliktbehandlung. Business Vault und Präsentationsschichten ergänzen abgeleitete Regeln und nutzbare Abfragemodelle.
 
-Wähle diese Struktur, wenn Nachverfolgbarkeit und Mehrquellenintegration die zusätzlichen Objekte und Transformationsschichten wert sind. Für eine kleine Domäne mit stabilen Quellen und direkten Analysefragen kann ein normalisiertes oder dimensionales Modell leichter zu betreiben sein.`,
+Nimm Data Vault, wenn Nachverfolgbarkeit und Mehrquellenintegration die zusätzlichen Objekte und Schichten rechtfertigen. Eine kleine Domäne mit stabilen Quellen und direkten Analysefragen läuft mit einem normalisierten oder dimensionalen Modell leichter.`,
     },
     {
       id: "s6",
       title: "Kurzprüfung",
-      content: "Zwei Fragen zu breiter Tabelle und Historie.",
+      content: "Zwei Fragen zu breiter Tabelle und Historie, unter den Begriffen.",
     },
     {
       id: "s7",
       title: "Begriffe",
-      content: `- **Konforme Dimension**, eine Dimension, deren Schlüssel und Definitionen mehrere Faktentabellen teilen; so werden kompatible Messwerte vergleichbar.
-- **Granularität**, was eine Faktzeile darstellt. Nimm die feinste, die nachgelagerte Fragen brauchen und die erwartete Last trägt.
-- **Ersatzschlüssel**, eine Identität unter Kontrolle des Warehouse, um Dimensionsversionen zu trennen oder wechselnde Quellschlüssel zu integrieren. Eine Entwurfsoption, keine Pflicht.
-- **Brückentabelle**, bildet eine n:m-Beziehung ab, etwa \`fact_orders ↔ bridge_order_promo ↔ dim_promo\`.
-- **Materialisierte Sicht**, speichert ein Abfrageergebnis und frischt es nach einer Engine-spezifischen Regel auf. Consumer müssen Freshness und Verhalten bei Refresh-Fehlern kennen.
-- **Data-Vault-Hub**, speichert eindeutige Geschäftsschlüssel mit Lade- und Quellmetadaten. Paralleles Laden braucht weiterhin deterministische Schlüssel und Duplikatbehandlung.
-- **Data-Vault-Satellite**, speichert beschreibende Attribute über die Ladezeit. Was „aktueller Zustand“ heißt, entscheidet die gewählte Effectivity- und End-Dating-Regel.`,
+      content: `Die Lernkarten unter den Fragen erklären konforme Dimensionen, Granularität, Ersatzschlüssel, Brückentabellen, materialisierte Sichten sowie Hubs und Satellites im Data Vault.`,
     },
   ],
   widgets: [
@@ -97,30 +83,30 @@ Wähle diese Struktur, wenn Nachverfolgbarkeit und Mehrquellenintegration die zu
       cpId: "q1",
       title: "Wann passt OBT?",
       question:
-        'Das ML-Team will eine "Featuretabelle": eine Zeile pro Person, 800 Spalten mit vorberechneten Signalen. Sternschema oder One Big Table?',
+        'Das ML-Team will eine "Featuretabelle" mit einer Zeile pro Person und 800 Spalten vorberechneter Signale. Sternschema oder One Big Table?',
       options: [
         "Sternschema. Normalisieren, immer.",
-        "Eine leseoptimierte breite Projektion kann passen, wenn Consumer viele Features je Person abrufen. Prüf Aktualisierungskosten, Zuständigkeit, Point-in-Time-Korrektheit und ob die Serving Engine ungenutzte Spalten wegschneidet.",
+        "Eine breite Projektion, wenn Consumer viele Features je Person abrufen.",
         "Snowflake-Schema, um Speicher zu sparen.",
         "Data Vault, wegen der Prüfbarkeit.",
       ],
       explanation:
-        "Eine breite Projektion kann dem Feature Serving die wiederholten Joins zur Abfragezeit ersparen. Bezahlt wird trotzdem: Speicher, Neuberechnung, Schema, Zuständigkeit, Point-in-Time-Korrektheit. Benchmarke Engine und Zugriffspfad, statt Joins oder ungenutzte Spalten für kostenlos zu halten.",
+        "Eine breite Projektion spart dem Feature Serving wiederholte Joins zur Abfragezeit. Prüf Aktualisierungskosten, Zuständigkeit, Point-in-Time-Korrektheit und ob die Engine ungenutzte Spalten wegschneidet, und miss den echten Zugriffspfad.",
     },
     {
       kind: "quiz",
       cpId: "q2",
       title: "SCD2 in der Praxis",
       question:
-        "Eine Person registriert sich in US (1. Januar), zieht nach UK (1. Juni), kauft am 1. März und noch einmal am 1. September. Mit SCD Type 2 joint die März-Bestellung auf country=___ und die September-Bestellung auf country=___:",
+        "Eine Person meldet sich am 1. Januar in den USA an und zieht am 1. Juni nach Großbritannien. Mit welchem Land joinen unter SCD Typ 2 ihre Bestellungen vom 1. März und 1. September?",
       options: [
-        "US, US, das Land wird bei der Registrierung festgeschrieben.",
-        "UK, UK, Berichte zeigen immer das aktuelle Land.",
-        "US, UK, genau dafür gibt es SCD2: Die Bestellung joint auf die Dimensionszeile, die zum Bestellzeitpunkt galt.",
-        "NULL, UK, die Historie geht verloren.",
+        "US, US; das Land steht ab der Registrierung fest.",
+        "UK, UK; Berichte zeigen immer das aktuelle Land.",
+        "US, UK; SCD2 joint jede Bestellung auf die damals gültige Zeile.",
+        "NULL, UK; die Historie geht verloren.",
       ],
       explanation:
-        "SCD Type 2 hält Versionen mit Gültigkeitszeitraum. Stimmen die Grenzen und die Behandlung verspäteter Änderungen, joint der Fakt auf die Version zum Ereigniszeitpunkt: US im März, UK im September.",
+        "SCD Typ 2 hält Versionen mit Gültigkeitszeitraum. Stimmen Grenzen und Behandlung verspäteter Änderungen, joint jeder Fakt auf die Version zum Ereigniszeitpunkt, also US im März und UK im September.",
     },
     {
       kind: "flashcards",
@@ -130,37 +116,37 @@ Wähle diese Struktur, wenn Nachverfolgbarkeit und Mehrquellenintegration die zu
         {
           term: "Konforme Dimension",
           q: "Was ist eine konforme Dimension?",
-          a: "Eine Dimension, deren Schlüssel und Definitionen mehrere kompatible Faktentabellen teilen. Faktenübergreifend analysieren kannst du nur, wenn auch Granularität, Kennzahlen und Join-Verhalten zusammenpassen.",
+          a: "Ihre Schlüssel und Definitionen teilen sich mehrere kompatible Faktentabellen. Faktenübergreifende Analyse braucht zusätzlich passende Granularität, Kennzahlen und Join-Verhalten.",
         },
         {
           term: "Granularität",
           q: "Was bezeichnet die Granularität einer Faktentabelle?",
-          a: 'Was eine Faktzeile darstellt. "Eine Zeile pro Bestellposition" ist feiner als "eine Zeile pro Bestellung". Nimm die feinste, die nachgelagerte Fragen brauchen und das erwartete Volumen trägt.',
+          a: 'Was eine Faktzeile darstellt. "Eine Zeile pro Bestellposition" ist feiner als "eine Zeile pro Bestellung". Nimm die feinste, die deine Fragen brauchen und dein Volumen trägt.',
         },
         {
           term: "Ersatzschlüssel",
           q: "Warum eignen sich natürliche Schlüssel nicht?",
-          a: "Ein Schlüssel unter Kontrolle des Warehouse kann Dimensionsversionen trennen und das Modell vor wechselnden Quellschlüsseln abschirmen. Stabile natürliche Schlüssel bleiben gültig, solange ihre Semantik kontrolliert ist.",
+          a: "Ein Schlüssel unter Kontrolle des Warehouse trennt Dimensionsversionen und schirmt das Modell vor wechselnden Quellschlüsseln ab. Stabile natürliche Schlüssel bleiben gültig, solange ihre Semantik kontrolliert ist.",
         },
         {
           term: "Brückentabelle",
           q: "Wann wird sie benötigt?",
-          a: "Sie bildet eine kontrollierte n:m-Beziehung zwischen Fakt und Dimension ab, etwa fact_orders ↔ bridge_order_promo ↔ dim_promo. Neben der Join-Struktur im Stil von 3NF kommen unter Umständen Allokationsregeln und Gültigkeitszeiträume dazu.",
+          a: "Für eine kontrollierte n:m-Beziehung, etwa fact_orders ↔ bridge_order_promo ↔ dim_promo. Neben dem Join im Stil von 3NF brauchst du eventuell Allokationsregeln und Gültigkeitszeiträume.",
         },
         {
           term: "Materialisierte Sicht",
           q: "Wie unterscheidet sie sich von einer normalen Sicht?",
-          a: "Eine normale Sicht speichert eine Abfragedefinition. Eine materialisierte Sicht speichert Ergebnisse unter einem Engine-spezifischen Refresh- und Konsistenzmodell. Consumer müssen Datenalter und Fehlerverhalten kennen.",
+          a: "Eine normale Sicht speichert eine Abfragedefinition, eine materialisierte Sicht Ergebnisse unter einem Engine-spezifischen Refresh-Modell. Consumer müssen Datenalter und Fehlerverhalten kennen.",
         },
         {
           term: "Data-Vault-Hub",
           q: "Was enthält ein Hub?",
-          a: "Einen eindeutigen Geschäftsschlüssel plus Lade- und Quellmetadaten. Mehrere Quellen dürfen darauf zielen, sobald Schlüsselstandardisierung, Kollisionsbehandlung und Duplikatverhalten definiert sind.",
+          a: "Einen eindeutigen Geschäftsschlüssel plus Lade- und Quellmetadaten. Mehrere Quellen können einen Hub speisen, sobald Schlüsselstandardisierung, Kollisionen und Duplikate geregelt sind.",
         },
         {
           term: "Data-Vault-Satellite",
           q: "Wie bleibt die Historie erhalten?",
-          a: "Satellites speichern beschreibende Attribute über die Ladezeit. Insert-orientierte Muster bewahren Versionen. Aktueller Zustand und Audit-Aussagen hängen trotzdem an Gültigkeitsregel, Lineage, Aufbewahrung und Kontrollen.",
+          a: "Beschreibende Attribute, gespeichert über die Ladezeit. Inserts bewahren Versionen; aktueller Zustand und Audit-Aussagen hängen trotzdem an Gültigkeitsregel, Lineage, Aufbewahrung und Kontrollen.",
         },
       ],
     },

@@ -6,20 +6,20 @@ export const OPEN_SOURCE_PAGE_COPY = {
     metadata: {
       title: "Open Source",
       description:
-        "Offene Werkzeuge von loehrning.ai: echte Produktansichten, öffentlicher Quellstand, Lizenz und Betriebsanleitung.",
+        "Offene Werkzeuge von loehrning.ai mit öffentlichem Quellstand, Lizenz und Betriebsanleitung.",
       socialDescription:
-        "Offene Werkzeuge mit echten Ansichten, öffentlichem Quellstand und klaren Betriebsgrenzen.",
+        "Offene Werkzeuge mit öffentlichem Quellstand, die du selbst betreibst.",
     },
     eyebrow: "Open Source · selbst betreibbar",
-    title: "Freie Open-Source-Projekte.",
+    title: "Open-Source-Werkzeuge",
     introduction:
-      "Echte Ansichten zuerst, Quellstand und Grenzen direkt daneben. Prüfe, was ein Werkzeug leistet, bevor du es auf deinem Rechner betreibst.",
+      "Prüfe an echten Ansichten und am Quellstand, was ein Werkzeug leistet, bevor du es auf deinem Rechner betreibst.",
     externalTab: ", öffnet in neuem Tab",
     showcase: {
       heading: "Jetzt veröffentlicht",
       entryCount: (count: number) =>
         count === 1 ? "1 offenes Werkzeug" : `${count} offene Werkzeuge`,
-      detail: "Detail ansehen",
+      detail: "Details ansehen",
       source: "Quellcode",
       previewGroup: "Produktansichten auswählen",
       previewCounter: (current: number, total: number) =>
@@ -27,7 +27,6 @@ export const OPEN_SOURCE_PAGE_COPY = {
       previewSelect: (label: string) => `${label} anzeigen`,
       previewLabels: ["Editor", "Formular", "YAML", "Darstellung", "PDF"],
       facts: {
-        kind: "Typ",
         delivery: "Betrieb",
         license: "Lizenz",
         status: "Status",
@@ -44,9 +43,9 @@ export const OPEN_SOURCE_PAGE_COPY = {
         "Gelistet erst mit öffentlichem Repository, unveränderlichem Commit, eindeutiger Lizenz und vollständiger Betriebsanleitung.",
       licensePolicy: "Lizenzrichtlinie",
     },
-    footnoteTitle: "Offen heißt nachvollziehbar.",
+    footnoteTitle: "Rechte und Lizenzen",
     footnote:
-      "Code, Lerntexte und Medien haben getrennte Rechte. Welche Lizenz wofür gilt, steht am Artefakt; die technischen Kurse findest du im Kursatlas.",
+      "Code, Lerntexte und Medien haben getrennte Lizenzen. Welche gilt, steht jeweils am Projekt.",
     platformCode: "Plattform-Code",
     licensePolicy: "Lizenzrichtlinie",
     courses: "Zu den technischen Kursen",
@@ -55,14 +54,14 @@ export const OPEN_SOURCE_PAGE_COPY = {
     metadata: {
       title: "Open source",
       description:
-        "Open loehrning.ai tools: real product views, a public source revision, license, and operating guide.",
+        "Open loehrning.ai tools with a public source revision, license and operating guide.",
       socialDescription:
-        "Open tools with real product views, public source revisions, and clear operating boundaries.",
+        "Open tools with a public source revision that you run yourself.",
     },
     eyebrow: "Open source · self-hosted",
-    title: "Free open source projects.",
+    title: "Open source tools",
     introduction:
-      "Real product views first, with source and limits beside them. Inspect what a tool does before running it on your machine.",
+      "Check real views and the source revision to see what a tool does before you run it on your machine.",
     externalTab: ", opens in a new tab",
     showcase: {
       heading: "Published now",
@@ -76,7 +75,6 @@ export const OPEN_SOURCE_PAGE_COPY = {
       previewSelect: (label: string) => `Show ${label}`,
       previewLabels: ["Editor", "Form", "YAML", "Display", "PDF"],
       facts: {
-        kind: "Type",
         delivery: "Run",
         license: "License",
         status: "Status",
@@ -93,9 +91,9 @@ export const OPEN_SOURCE_PAGE_COPY = {
         "Listed only with a public repository, immutable commit, unambiguous license, and complete operating guide.",
       licensePolicy: "License policy",
     },
-    footnoteTitle: "Open means inspectable.",
+    footnoteTitle: "Rights and licenses",
     footnote:
-      "Code, learning text, and media carry separate rights. Which license covers what stays on the artifact; the technical courses sit in the course atlas.",
+      "Code, learning text and media carry separate licenses. Each project states which one applies.",
     platformCode: "Platform source",
     licensePolicy: "License policy",
     courses: "Browse technical courses",
@@ -198,7 +196,7 @@ export const SOFTWARE_GUIDE_COPY = {
     dataFlow: "Datenfluss",
     shortDemo: "Kurzdemo",
     demoIntroduction:
-      "Vier Aufnahmen aus dem Werkzeug, in der Reihenfolge, in der du es benutzt. Alle stammen aus dem gepinnten Quellstand.",
+      "Vier Aufnahmen aus dem gepinnten Quellstand, in der Reihenfolge der Nutzung.",
     prerequisites: "Voraussetzungen",
     installation: "Installation",
     usage: "Verwendung",
@@ -215,7 +213,7 @@ export const SOFTWARE_GUIDE_COPY = {
     dataFlow: "Data flow",
     shortDemo: "Short walkthrough",
     demoIntroduction:
-      "Four captures from the tool, in the order you use it. All of them come from the pinned source revision.",
+      "Four captures from the pinned source revision, in the order you use the tool.",
     prerequisites: "Requirements",
     installation: "Installation",
     usage: "Use",
@@ -229,144 +227,144 @@ export const SOFTWARE_GUIDE_COPY = {
 const CV_ENGINE_ENGLISH_COPY = {
   eyebrow: "Tool · CV rendering",
   description:
-    "Local YAML-to-PDF build for one-page CVs, with a browser editor, A4 preview, and optional AI. The build rejects overflow instead of printing it.",
+    "Local YAML-to-PDF build for one-page CVs, with a browser editor, A4 preview and optional AI. The build rejects a second page.",
   language: "English",
   guide: {
     statusNote:
-      "Experimental: the cv.yaml schema and templates may still change, no hosted instance exists, and issue responses are not guaranteed. You run the tool yourself on your own computer. Before configuring it, read docs/data-flow.md in the repository. Its diagram shows which data paths stay local and which do not.",
+      "The cv.yaml schema and templates may still change, there is no hosted instance, and issue responses are not guaranteed. You run the tool yourself on your own computer. Before configuring it, read docs/data-flow.md in the repository. Its diagram shows which data paths stay local.",
     dataFlow:
-      "The core renderer runs entirely locally. cv.yaml, fonts, and CSS stay in the checkout; the PDF build opens no socket and needs no API key. Without extra configuration, the browser editor talks only to 127.0.0.1 and keeps documents in server memory. Documents persist only if you operate the Supabase variant in your own project. The optional AI functions for import and text generation are the only external calls and use your own key. Pointing them at a local Ollama instance also keeps that call on your computer because you choose where the model runs. The complete diagram is in docs/data-flow.md in the repository.",
+      "The core runs entirely locally: cv.yaml, fonts and CSS stay in the checkout; the PDF build opens no socket, needs no API key. Unconfigured, the editor talks only to 127.0.0.1 and keeps documents in memory; only the self-hosted Supabase variant (DEPLOY.md) saves them. Optional AI import and text generation call out with your key, or stay local with Ollama.",
     prerequisites: [
       {
         label: "Python 3.13",
         detail:
-          "The engine and editor run on CPython 3.13. Older versions have not been tested.",
+          "The engine and editor run on CPython 3.13; older versions are untested.",
       },
       {
         label: "Pango and Cairo",
         detail:
-          "WeasyPrint uses these system libraries to typeset the PDF. If they are missing, the first build fails with a library error rather than a tool error.",
+          "WeasyPrint uses these system libraries to typeset the PDF. Without them, the first build fails with a library error.",
       },
       {
         label: "Your own API key, optional",
         detail:
-          "Required only for PDF or DOCX import and generated text. The form, preview, and PDF build work unchanged without a key.",
+          "Only for PDF or DOCX import and generated text. The form, preview and PDF build work without a key.",
       },
     ],
     installation: {
       summary:
-        "The checkout is pinned to the reviewed source revision and installed in a dedicated virtual environment. No account, external server, or API key is required first.",
+        "You pin the checkout to the reviewed source revision and install it in its own virtual environment, with no account, external server or key.",
       steps: [
         {
           title: "Install system libraries",
           detail:
-            "On macOS, the command below is sufficient. On Debian or Ubuntu, use sudo apt install libpango-1.0-0 libpangoft2-1.0-0 libcairo2.",
+            "On macOS, the command below is enough; on Debian or Ubuntu, use sudo apt install libpango-1.0-0 libpangoft2-1.0-0 libcairo2.",
         },
         {
           title: "Check out the reviewed source revision",
           detail:
-            "Clone the public repository and switch to the exact revision covered by this guide, its screenshots, and its checksums.",
+            "This guide, its screenshots and checksums belong to exactly this revision.",
         },
         {
           title: "Create a Python virtual environment",
           detail:
-            "The environment isolates the tool's dependencies from the global Python installation. Every subsequent Python command calls its interpreter directly.",
+            "It keeps the dependencies apart from your global Python installation.",
         },
         {
           title: "Install hash-pinned dependencies",
           detail:
-            "requirements.lock records the expected hash for every package. pip stops if an artifact does not match instead of installing it.",
+            "requirements.lock records the expected hash for every package; pip stops on any mismatch.",
         },
         {
           title: "Verify the installation with the test suite",
           detail:
-            "The suite covers the renderer, schema, importer, and security rules without requiring a running server. End-to-end tests are excluded because they expect a running editor.",
+            "The suite checks the renderer, schema, importer and security rules without a running server. End-to-end tests need a running editor and are excluded.",
         },
       ],
     },
     usage: {
       summary:
-        "The YAML file is the durable source, the browser editor is the working surface, and the build rejects a second page.",
+        "You write in the YAML file, try things in the editor and let the build check the page count.",
       steps: [
         {
           title: "Create and edit your local file",
           detail:
-            "content/cv.yaml is the durable local source for the CV. The repository deliberately ignores it so personal data cannot enter a fork by accident. Edit it with your normal editor.",
+            "content/cv.yaml is the durable local source for your CV. Git ignores it so personal data cannot reach a fork by accident.",
         },
         {
           title: "Try the form and preview",
           detail:
-            "Flask binds to 127.0.0.1:5567, so it is reachable only from your computer. The form or raw YAML appears on the left, and the same A4 page later printed by WeasyPrint appears on the right. The badge above the preview reports the page count: green for one page and red from page two. This mode keeps all data only in server memory. It does not write content/cv.yaml, and restarting clears it. Download the PDF before stopping the process. To persist form edits, self-host the Supabase variant documented in DEPLOY.md.",
+            "Flask binds only to 127.0.0.1:5567. Form or raw YAML is on the left, the A4 page WeasyPrint prints on the right; the badge shows the page count, green for one page and red from two. This mode keeps everything in memory and does not write content/cv.yaml, so download the PDF before you stop the process.",
         },
         {
           title: "Change the layout instead of deleting content",
           detail:
-            "Eight templates are included: classic, modern, sidebar, executive, technical, ats-compact, consulting, and minimal. Themes control accent colour, font, and density; density can also be overridden per build.",
+            "Eight templates are included: classic, modern, sidebar, executive, technical, ats-compact, consulting and minimal. Themes set accent colour, font and density; you can override density per build.",
         },
         {
           title: "Let the build decide",
           detail:
-            "engine/build.py renders the PDF and counts its pages. One page returns exit code 0 and writes output/cv.pdf. Two pages instead report the first heading on the overflow page to stderr, for example First section on the overflow page: 'Projects', and return exit code 1. No two-page PDF is produced.",
+            "engine/build.py renders the PDF and counts its pages. One page returns exit code 0 and writes output/cv.pdf. With two pages, no PDF is written; the command reports the first heading on the overflow page to stderr, for example First section on the overflow page: 'Projects', and returns exit code 1.",
         },
       ],
     },
     integration: {
       summary:
-        "content/cv.yaml is an ordinary text file. Version control, imports, and pipeline execution all connect through it.",
+        "content/cv.yaml is a plain text file, so Git, the importer and CI work with it directly.",
       steps: [
         {
           title: "Version the CV",
           detail:
-            "One file produces one diff. Changes remain visible years later instead of becoming another Word file. content/cv.yaml is deliberately ignored in the tool repository; version it only in your own private repository.",
+            "Every change becomes a diff you can still read years later. Version content/cv.yaml only in your own private repository.",
         },
         {
           title: "Import existing files",
           detail:
-            "The importer converts rendercv YAML and plain text deterministically, without a provider or network request. PDF and DOCX use the selected AI provider with your key. Without a key, this path fails explicitly instead of guessing.",
+            "The importer converts rendercv YAML and plain text deterministically, without a provider or network. PDF and DOCX go through the selected AI provider with your key; without a key, this path stops with an error.",
         },
         {
           title: "Add the build to a pipeline",
           detail:
-            "The exit code is the interface: 0 only when the output is exactly one page. This makes the command usable as a CI gate without additional code.",
+            "The exit code is the interface: 0 only for exactly one page. That makes the command a CI gate without extra code.",
         },
       ],
     },
     documentation: { label: "README in the repository" },
     screenshot: {
-      alt: "The two-column editor: YAML for the stored CV on the left, including opening comments that state the one-page rule, and the A4 page preview on the right with a green 1 page badge in the header.",
+      alt: "The editor: YAML on the left, the A4 preview with its 1 page badge on the right.",
     },
     demo: [
       {
-        alt: "The editor form with the Experience section open. Each entry is a card with labelled fields for role, company, period, and bullet points, plus controls for reordering.",
+        alt: "The editor form at Experience: one card per entry with labelled fields for role, company, period and bullet points, plus reorder arrows.",
         caption:
-          "Every field has a visible label. Lists can be reordered and shortened without editing YAML.",
+          "Every field has a visible label. Reorder and shorten lists without touching YAML.",
       },
       {
-        alt: "The same screen with the YAML tab active: raw CV text with syntax highlighting on the left and the unchanged A4 preview on the right.",
+        alt: "The same screen with the YAML tab active: raw text with syntax highlighting on the left, the unchanged A4 preview on the right.",
         caption:
-          "Switch to the YAML tab to work in text. The form and file share one source and cannot drift apart.",
+          "The YAML tab lets you write text directly. Form and file share one source.",
       },
       {
-        alt: "The display controls open above the form: accent colour, font, density, and paper tone, followed by named presets such as Default, Forest, and Harvard Crimson.",
+        alt: "The display panel open above the form: controls for accent colour, font, density and paper tone, then presets such as Default, Forest and Harvard Crimson.",
         caption:
-          "If the text does not fit on one page, adjust the accent, font, or density instead of deleting content.",
+          "If the text does not fit on one page, change the accent, font or density.",
       },
       {
-        alt: "The completed PDF rasterised as one A4 page, with a header, experience, education, skills, and projects.",
+        alt: "The finished PDF as one A4 page with header, experience, education, skills and projects.",
         caption:
-          "The build renders exactly one page. If the CV overflows, the command fails and identifies the heading that no longer fits.",
+          "The build delivers exactly one page.",
       },
     ],
     relatedLearning: [
       {
         title: "AI-native work course",
         description:
-          "The workflow behind the tool: state intent, provide context, and review the output. These are the same three steps required when importing an existing PDF.",
+          "Practise reviewing AI output, such as the import from your old PDF.",
       },
       {
         title: "Claude course",
         description:
-          "An English open-source course on prompting, context, and evaluations. Use it to assess the optional AI functions instead of treating them as a black box.",
+          "An English open-source course on prompting, context and evals that helps you assess the optional AI functions.",
       },
     ],
   },

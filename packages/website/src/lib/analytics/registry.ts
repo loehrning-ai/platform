@@ -94,6 +94,7 @@ export const ANALYTICS_WORKSHOP_SLUGS = [
   "ki-prognosen-einschaetzen",
   "geschaeftsberichte-mit-ki-lesen",
   "datenbereitschaft-fuer-ki",
+  "esg-berichte-mit-ki",
 ] as const;
 export type AnalyticsWorkshopSlug = (typeof ANALYTICS_WORKSHOP_SLUGS)[number];
 

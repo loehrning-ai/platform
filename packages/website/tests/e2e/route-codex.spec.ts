@@ -135,8 +135,7 @@ async function openLessonReference(page: Page) {
   const reference = page.locator("details[data-lesson-reference]");
   await expect(reference).toHaveCount(1);
   await expect(reference).toBeVisible();
-  await expect(reference).toHaveJSProperty("open", false);
-  await reference.locator(":scope > summary").click();
+  // The lesson text renders open by default (LessonReference).
   await expect(reference).toHaveJSProperty("open", true);
 }
 
@@ -197,7 +196,7 @@ test.describe("Codex Course golden path", () => {
     // L01's "q1" quiz widget (lib/codex/lessons/l01-mental-model.ts): option
     // index 1 is correct, and CODEX_QUIZ_COPY's correctLabel is "Correct."
     const correctAnswer = page.getByRole("radio", {
-      name: /The task was ambiguous, "refactor auth" spans a huge scope/,
+      name: /The task was ambiguous: "refactor auth" spans a huge scope/,
     });
     await expect(correctAnswer).toBeVisible();
     await correctAnswer.click();
@@ -249,7 +248,7 @@ test.describe("Codex Course golden path", () => {
 
     const finalLessonCertificate = page.getByRole("link", {
       // Copy lock updated: English UI copy names completion documents "certificate of participation".
-      name: "Open Certificate of Participation",
+      name: "Open Certificate of participation",
     });
     await expect(finalLessonCertificate).toHaveAttribute("href", CERT_ROUTE);
     await finalLessonCertificate.click();
@@ -259,7 +258,7 @@ test.describe("Codex Course golden path", () => {
     await page.goto(COURSE_PATH, { waitUntil: "domcontentloaded" });
     await expect(
       page.getByRole("link", {
-        name: "Open Certificate of Participation",
+        name: "Open Certificate of participation",
       }),
     ).toHaveAttribute("href", CERT_ROUTE);
   });

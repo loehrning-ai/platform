@@ -72,8 +72,8 @@ export function PermutationImportance() {
         `Ausgangsgenauigkeit ${PERM_BASELINE.toFixed(3)}`,
       )}
       caption={text(
-        "This panel does not fit a model or shuffle a dataset. It adds seeded jitter to five fixed accuracy-drop values to illustrate how permutation importance is read. In real data, the result depends on the metric, sample, feature dependence, and repeat scheme.",
-        "Dieses Panel passt kein Modell an und permutiert keinen Datensatz. Es ergänzt fünf feste Genauigkeitsrückgänge um initialisiertes Rauschen, um die Lesart der Permutationswichtigkeit zu zeigen. Bei echten Daten hängt das Ergebnis von Metrik, Stichprobe, Merkmalsabhängigkeit und Wiederholung ab.",
+        "Five fixed accuracy drops plus seeded jitter show how to read permutation importance; no model is fitted. In real data the result depends on metric, sample, feature dependence and repeats.",
+        "Fünf feste Genauigkeitsrückgänge plus initialisiertes Rauschen zeigen, wie du Permutationswichtigkeit liest; kein Modell wird angepasst. Bei echten Daten hängt das Ergebnis von Metrik, Stichprobe, Merkmalsabhängigkeit und Wiederholungen ab.",
       )}
     >
       <div className="sim-row">

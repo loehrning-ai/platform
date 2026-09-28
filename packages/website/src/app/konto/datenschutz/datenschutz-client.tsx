@@ -49,20 +49,20 @@ function exportPreflightErrorMessage(
     case "auth_unavailable":
       return localized(
         locale,
-        "Die Anmeldung kann vorübergehend nicht geprüft werden. Es wurde kein Export gestartet.",
-        "The sign-in cannot be verified at present. No export was started.",
+        "Die Anmeldung lässt sich gerade nicht prüfen. Es wurde kein Export gestartet.",
+        "Your sign-in cannot be checked right now. No export was started.",
       );
     case "export_store_unavailable":
       return localized(
         locale,
-        "Der geschützte Export-Datenspeicher ist vorübergehend nicht verfügbar.",
-        "The protected export data store is temporarily unavailable.",
+        "Der Export-Speicher ist gerade nicht erreichbar.",
+        "The export store is unavailable right now.",
       );
     case "unauthorized":
       return localized(
         locale,
-        "Die Anmeldung ist nicht mehr gültig. Melde dich erneut an und starte den Export noch einmal.",
-        "The sign-in is no longer valid. Sign in again and restart the export.",
+        "Deine Anmeldung ist abgelaufen. Melde dich neu an und starte den Export erneut.",
+        "Your sign-in has expired. Sign in again and restart the export.",
       );
     default:
       return localized(
@@ -76,8 +76,8 @@ function exportPreflightErrorMessage(
 function unknownDeleteStatusMessage(locale: Locale): string {
   return localized(
     locale,
-    "Der Löschstatus konnte nicht sicher ermittelt werden. Sende die Löschung nicht erneut. Lade die Seite neu: Wenn die Anmeldung nicht mehr möglich ist, wurde das Konto bereits gelöscht. Bleibt es erreichbar, wende dich an tim@loehrning.ai.",
-    "The deletion status could not be determined safely. Do not submit the deletion again. Reload the page: if sign-in is no longer possible, the account has already been deleted. If it remains accessible, contact tim@loehrning.ai.",
+    "Der Löschstatus ist unklar. Sende die Löschung nicht erneut. Lade die Seite neu: Klappt keine Anmeldung mehr, ist das Konto gelöscht. Sonst schreib an tim@loehrning.ai.",
+    "The deletion status is unclear. Do not submit the deletion again. Reload the page: if you cannot sign in, the account is deleted. Otherwise email tim@loehrning.ai.",
   );
 }
 
@@ -95,15 +95,15 @@ function definiteDeleteFailureMessage(
   if (status === 403 && errorCode === "reauthentication_required") {
     return localized(
       locale,
-      "Sicherheitsprüfung erforderlich: Melde dich ab und erneut mit einer verfügbaren Anmeldemethode an. Die Kontolöschung ist danach 15 Minuten lang freigegeben.",
-      "Security check required: sign out and sign in again using an available sign-in method. Account deletion is then available for 15 minutes.",
+      "Zur Sicherheit: Melde dich ab und erneut mit einer verfügbaren Anmeldemethode an. Danach ist die Kontolöschung 15 Minuten lang freigegeben.",
+      "For security, sign out and sign in again with an available sign-in method. Account deletion then stays unlocked for 15 minutes.",
     );
   }
   if (status === 503 && errorCode === "pre_delete_incomplete") {
     return localized(
       locale,
-      "Ein Vorbereitungsschritt der Löschung ist fehlgeschlagen. Dein Konto, deine Anmeldung und alle Daten sind unverändert. Versuche die Löschung später erneut.",
-      "A preparation step of the deletion failed. Your account, your sign-in, and all data are unchanged. Try the deletion again later.",
+      "Ein Vorbereitungsschritt der Löschung ist fehlgeschlagen. Konto, Anmeldung und Daten sind unverändert. Versuche es später erneut.",
+      "A preparation step of the deletion failed. Account, sign-in and data are unchanged. Try again later.",
     );
   }
   return localized(locale, `Fehler ${status}`, `Error ${status}`);
@@ -139,8 +139,8 @@ export function DatenschutzClient({
       setErrorMsg(
         localized(
           locale,
-          "Die Kontozuordnung ist noch nicht sicher bestätigt. Lade die Seite neu, bevor du den Export erneut startest.",
-          "The account assignment has not yet been verified safely. Reload the page before restarting the export.",
+          "Die Kontozuordnung ist noch nicht sicher bestätigt. Lade die Seite neu und starte den Export dann erneut.",
+          "The account assignment is not yet safely verified. Reload the page, then restart the export.",
         ),
       );
       return;
@@ -238,8 +238,8 @@ export function DatenschutzClient({
       setErrorMsg(
         localized(
           locale,
-          "Die Kontozuordnung ist noch nicht sicher bestätigt. Lade die Seite neu, bevor du den Fortschritt zurücksetzt.",
-          "The account assignment has not yet been verified safely. Reload the page before resetting progress.",
+          "Die Kontozuordnung ist noch nicht sicher bestätigt. Lade die Seite neu und setze den Kurs dann zurück.",
+          "The account assignment is not yet safely verified. Reload the page, then reset the course.",
         ),
       );
       return;
@@ -279,8 +279,8 @@ export function DatenschutzClient({
         throw new Error(
           localized(
             locale,
-            "Die Kontozuordnung hat sich während des Zurücksetzens geändert. Lokale Daten wurden nicht verändert.",
-            "The account assignment changed during the reset. Local data was not changed.",
+            "Die Kontozuordnung hat sich während des Zurücksetzens geändert. Lokale Daten sind unverändert.",
+            "The account assignment changed during the reset. Local data is unchanged.",
           ),
         );
       }
@@ -321,8 +321,8 @@ export function DatenschutzClient({
         setErrorMsg(
           localized(
             locale,
-            "Für dieses Browserprofil läuft bereits eine Kontolöschung oder ihre Bestätigung steht noch aus. Es wurde keine weitere Löschanfrage gesendet. Lade die Seite neu und prüfe den Kontostatus.",
-            "An account deletion is already running in this browser profile, or its confirmation is still pending. No further deletion request was sent. Reload the page and check the account status.",
+            "In diesem Browser läuft bereits eine Kontolöschung oder wartet auf Bestätigung, deshalb wurde keine weitere Anfrage gesendet. Lade die Seite neu und prüfe den Kontostatus.",
+            "An account deletion is already running or awaiting confirmation in this browser, so no further request was sent. Reload the page and check the account status.",
           ),
         );
       } else {
@@ -331,7 +331,7 @@ export function DatenschutzClient({
           localized(
             locale,
             "Die Löschung konnte lokal nicht sicher vorbereitet werden. Es wurde keine Löschanfrage gesendet. Lade die Seite neu und prüfe, ob der Browser Website-Daten speichern darf.",
-            "The deletion could not be prepared safely in the browser. No deletion request was sent. Reload the page and check whether the browser can store site data.",
+            "The deletion could not be prepared safely in the browser. No deletion request was sent. Reload the page and check that the browser may store site data.",
           ),
         );
       }
@@ -352,8 +352,8 @@ export function DatenschutzClient({
       setErrorMsg(
         localized(
           locale,
-          "Der Löschstatus konnte wegen eines Verbindungsfehlers nicht sicher ermittelt werden. Sende die Löschung nicht erneut. Lade die Seite neu: Wenn die Anmeldung nicht mehr möglich ist, wurde das Konto bereits gelöscht. Bleibt es erreichbar, wende dich an tim@loehrning.ai.",
-          "The deletion status could not be determined safely because of a connection error. Do not submit the deletion again. Reload the page: if sign-in is no longer possible, the account has already been deleted. If it remains accessible, contact tim@loehrning.ai.",
+          "Wegen eines Verbindungsfehlers ist der Löschstatus unklar. Sende die Löschung nicht erneut. Lade die Seite neu: Klappt keine Anmeldung mehr, ist das Konto gelöscht. Sonst schreib an tim@loehrning.ai.",
+          "Because of a connection error, the deletion status is unclear. Do not submit the deletion again. Reload the page: if you cannot sign in, the account is deleted. Otherwise email tim@loehrning.ai.",
         ),
       );
       return;
@@ -384,8 +384,8 @@ export function DatenschutzClient({
         setErrorMsg(
           localized(
             locale,
-            "Die Löschung wurde serverseitig abgelehnt, aber die lokale Sperre konnte nicht sicher aufgehoben werden. Sende die Löschung nicht erneut. Lade die Seite neu und prüfe den Kontostatus.",
-            "The server rejected the deletion, but the local block could not be released safely. Do not submit the deletion again. Reload the page and check the account status.",
+            "Der Server hat die Löschung abgelehnt, aber die lokale Sperre konnte nicht sicher aufgehoben werden. Sende sie nicht erneut, lade die Seite neu und prüfe den Kontostatus.",
+            "The server rejected the deletion, but the local block could not be released safely. Do not resubmit; reload the page and check the account status.",
           ),
         );
         return;
@@ -403,8 +403,8 @@ export function DatenschutzClient({
       setErrorMsg(
         localized(
           locale,
-          "Der Server hat die Löschung nicht eindeutig bestätigt. Sende die Löschung nicht erneut. Die lokalen Lerndaten bleiben erhalten, bis der Kontostatus geklärt ist.",
-          "The server did not confirm the deletion unambiguously. Do not submit the deletion again. Local learning data remains in place until the account status has been resolved.",
+          "Der Server hat die Löschung nicht eindeutig bestätigt. Sende sie nicht erneut; deine lokalen Lerndaten bleiben, bis der Kontostatus geklärt ist.",
+          "The server did not confirm the deletion unambiguously. Do not resubmit; your local learning data stays until the account status is resolved.",
         ),
       );
       return;
@@ -418,8 +418,8 @@ export function DatenschutzClient({
       setErrorMsg(
         localized(
           locale,
-          "Das Konto wurde serverseitig gelöscht, aber die lokale Bereinigung konnte nicht vollständig koordiniert werden. Die Fortschrittssynchronisierung bleibt sicherheitshalber gesperrt. Lade die Seite nicht in weiteren Tabs und wende dich an tim@loehrning.ai.",
-          "The account was deleted on the server, but the local cleanup could not be coordinated completely. Progress synchronisation remains blocked as a precaution. Do not load the page in additional tabs and contact tim@loehrning.ai.",
+          "Das Konto ist gelöscht, aber die lokale Bereinigung konnte nicht vollständig koordiniert werden. Die Synchronisierung bleibt gesperrt; öffne die Seite in keinem weiteren Tab und schreib an tim@loehrning.ai.",
+          "The account is deleted, but the local cleanup could not be coordinated completely. Sync stays blocked; do not open the page in other tabs and contact tim@loehrning.ai.",
         ),
       );
       return;
@@ -441,8 +441,8 @@ export function DatenschutzClient({
       setErrorMsg(
         localized(
           locale,
-          "Die Kontozuordnung ist noch nicht sicher bestätigt. Lade die Seite neu, bevor du die Löschung erneut startest.",
-          "The account assignment has not yet been verified safely. Reload the page before restarting the deletion.",
+          "Die Kontozuordnung ist noch nicht sicher bestätigt. Lade die Seite neu und starte die Löschung dann erneut.",
+          "The account assignment is not yet safely verified. Reload the page, then restart the deletion.",
         ),
       );
       return;
@@ -463,8 +463,8 @@ export function DatenschutzClient({
       setErrorMsg(
         localized(
           locale,
-          "In einem anderen Tab läuft bereits eine Kontolöschung. Es wurde keine weitere Löschanfrage gesendet. Warte dort auf das Ergebnis und lade diese Seite danach neu.",
-          "An account deletion is already running in another tab. No further deletion request was sent. Wait for the result there, then reload this page.",
+          "In einem anderen Tab läuft bereits eine Kontolöschung. Warte dort auf das Ergebnis und lade diese Seite danach neu; von hier wurde nichts gesendet.",
+          "An account deletion is already running in another tab. Wait for the result there, then reload this page; nothing was sent from here.",
         ),
       );
       return;
@@ -478,8 +478,8 @@ export function DatenschutzClient({
     setErrorMsg(
       localized(
         locale,
-        "Die Löschsperre konnte nicht sicher aktiviert werden; eine sichere tabübergreifende Kontolöschung ist in diesem Browser daher nicht möglich. Es wurde keine Löschanfrage gesendet.",
-        "The deletion lock could not be activated safely, so this browser cannot perform a safe cross-tab account deletion. No deletion request was sent.",
+        "Die Löschsperre konnte nicht sicher aktiviert werden, deshalb ist hier keine sichere tabübergreifende Kontolöschung möglich. Es wurde keine Löschanfrage gesendet.",
+        "The deletion lock could not be activated safely, so no safe cross-tab account deletion is possible here. No deletion request was sent.",
       ),
     );
   }
@@ -524,8 +524,8 @@ export function DatenschutzClient({
           <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
             {localized(
               locale,
-              "Hier kannst du deine gespeicherten Daten exportieren, Kursfortschritt zurücksetzen oder dein Konto vollständig löschen.",
-              "Export your stored data, reset course progress, or delete your account completely.",
+              "Daten exportieren, Kursfortschritt zurücksetzen oder das Konto löschen.",
+              "Export your data, reset course progress or delete your account.",
             )}
           </p>
         </header>
@@ -561,8 +561,8 @@ export function DatenschutzClient({
             <p className="max-w-4xl text-sm leading-relaxed text-muted-foreground">
               {localized(
                 locale,
-                "Du erhältst eine JSON-Datei mit deiner E-Mail-Adresse, deinem Kursfortschritt, vorhandenen historischen Quizversuchen, deinen Dokumenten aus dem Lebenslauf-Editor und dem Exportzeitpunkt. Enthalten sind außerdem die bei der Anmeldung gespeicherten Identitätsdaten: das Anmeldeverfahren, die Kontokennung beim Anmeldedienst, der Bestätigungsstatus der E-Mail-Adresse sowie, bei Anmeldung mit Google oder GitHub, der hinterlegte Name und die Adresse des Profilbilds, bei GitHub zusätzlich der Benutzername. Diese Angaben stehen außerdem für jede verknüpfte Anmeldeidentität einzeln in der Datei. Prüfe in der Datei, dass",
-                "You receive a JSON file containing your email address, course progress, existing historical quiz attempts, your resume editor documents, and the export time. It also contains the identity data stored at sign-in: the sign-in method, the account identifier held by the sign-in service, the verification status of the email address and, where you signed in with Google or GitHub, the stored name and the address of the profile picture, and with GitHub the username as well. These details are also listed separately for each linked sign-in identity. Check that",
+                "Du erhältst eine JSON-Datei mit E-Mail-Adresse, Kursfortschritt, historischen Quizversuchen, Dokumenten aus dem Lebenslauf-Editor und Exportzeitpunkt. Dazu kommen deine Identitätsdaten aus der Anmeldung, einzeln je verknüpfter Anmeldeidentität: Anmeldeverfahren, Kontokennung beim Anmeldedienst und Bestätigungsstatus der E-Mail, bei Google oder GitHub auch Name und Profilbild-Adresse, bei GitHub der Benutzername. Prüfe, dass",
+                "You receive a JSON file with your email address, course progress, historical quiz attempts, resume editor documents and the export time. It also holds your identity data from sign-in, listed for each linked sign-in identity: sign-in method, account identifier at the sign-in service and email verification status, with Google or GitHub also name and profile-picture address, with GitHub the username. Check that",
               )}{" "}
               <code className="mx-1 font-mono text-[0.9em] text-foreground">
                 export_complete
@@ -571,15 +571,14 @@ export function DatenschutzClient({
               <code className="font-mono text-[0.9em] text-foreground">
                 true
               </code>
-              {localized(locale, " steht.", ".")}{" "}
-              {localized(locale, "Die Liste unter", "The list under")}{" "}
+              {localized(locale, " steht. Das Feld", ". The field")}{" "}
               <code className="mx-1 font-mono text-[0.9em] text-foreground">
                 sections
               </code>{" "}
               {localized(
                 locale,
-                "nennt jeden Datenbereich der Datei mit seinem Status, auch die Dokumente der Werkzeuge, sobald dieser Server sie betreibt. So verwechselst du einen leeren Bereich nicht mit einem, der nicht gelesen werden konnte.",
-                "names every data area in the file with its status, including the documents from the tools once this server hosts them. That way an empty area cannot be mistaken for one that could not be read.",
+                "nennt jeden Datenbereich mit Status, auch Werkzeug-Dokumente, sobald dieser Server sie betreibt. So siehst du, ob ein Bereich leer oder unlesbar war.",
+                "lists every data area with its status, including tool documents once this server hosts them, so you can tell an empty area from an unreadable one.",
               )}
             </p>
             <button
@@ -603,8 +602,8 @@ export function DatenschutzClient({
               >
                 {localized(
                   locale,
-                  "Der Download wurde angefordert. Sobald der Browser eine JSON-Datei gespeichert hat, öffne sie erst nach Abschluss des Downloads und prüfe den Marker",
-                  "The download was requested. Once the browser has saved a JSON file, open it only after the download has finished and check the marker",
+                  "Der Download wurde angefordert. Öffne die JSON-Datei erst, wenn er fertig ist, und prüfe den Marker",
+                  "The download was requested. Open the JSON file once it has finished and check the marker",
                 )}{" "}
                 <code className="mx-1 font-mono text-[0.9em] text-foreground">
                   export_complete
@@ -635,15 +634,15 @@ export function DatenschutzClient({
             <summary className="flex min-h-11 cursor-pointer items-center px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.1em] text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange">
               {localized(
                 locale,
-                "Umfang und Exporthistorie",
-                "Scope and export history",
+                "Was zurückgesetzt wird",
+                "What a reset deletes",
               )}
             </summary>
             <p className="border-t border-border px-4 py-3 text-sm leading-relaxed text-muted-foreground">
               {localized(
                 locale,
-                "Löscht Lektionen, Quiz- und Abschlussstatus des ausgewählten Kurses auf dem Server und in diesem Browser. Andere Kurse bleiben erhalten. Kursübergreifende XP, Badges, Streaks und Checkpoints bleiben als historische Lernaktivität bestehen. Der Server behält den Zeitpunkt des Resets als Schutz gegen veraltete Geräte; dieser Marker erscheint im Datenexport und verschwindet bei der Kontolöschung.",
-                "Deletes lesson, quiz, and completion status for the selected course on the server and in this browser. Other courses remain intact. Cross-course XP, badges, streaks, and checkpoints remain as historical learning activity. The server retains the reset time to protect against stale devices; this marker appears in the data export and is removed when the account is deleted.",
+                "Löscht Lektionen, Quiz- und Abschlussstatus eines Kurses auf dem Server und in diesem Browser. Andere Kurse sowie kursübergreifende XP, Badges, Streaks und Checkpoints bleiben. Der Server behält den Reset-Zeitpunkt als Schutz gegen veraltete Geräte; er steht im Export und verschwindet mit dem Konto.",
+                "Deletes lesson, quiz and completion status for one course on the server and in this browser. Other courses and cross-course XP, badges, streaks and checkpoints stay. The server keeps the reset time to guard against stale devices; it appears in the export and is deleted with the account.",
               )}
             </p>
           </details>
@@ -721,8 +720,8 @@ export function DatenschutzClient({
                     >
                       {localized(
                         locale,
-                        `Fortschritt für ${course.title} wirklich zurücksetzen? Lektionen, Quiz- und Abschlussstatus dieses Kurses werden auf dem Server und in diesem Browser gelöscht.`,
-                        `Reset progress for ${course.title}? Lesson, quiz, and completion status for this course will be deleted on the server and in this browser.`,
+                        `Fortschritt für ${course.title} wirklich zurücksetzen? Lektionen, Quiz- und Abschlussstatus werden auf dem Server und in diesem Browser gelöscht.`,
+                        `Reset progress for ${course.title}? Lesson, quiz and completion status will be deleted on the server and in this browser.`,
                       )}
                     </p>
                   ) : null}
@@ -752,8 +751,8 @@ export function DatenschutzClient({
             <p className="max-w-4xl text-sm font-medium leading-relaxed text-foreground">
               {localized(
                 locale,
-                "Diese Aktion löscht dein Lernkonto, deine E-Mail-Adresse, den serverseitigen Kursfortschritt und historische Bewertungsversuche dauerhaft. Dabei wird auch der bei der Anmeldung gespeicherte Identitätsdatensatz gelöscht, bei Anmeldung mit Google einschließlich Kontokennung, Name und Adresse des Profilbilds. Die Löschung ist unwiderruflich.",
-                "This action permanently deletes your learning account, email address, server-side course progress, and historical assessment attempts. The identity record stored at sign-in is deleted as well, including, where you signed in with Google, the account identifier, name and profile-picture address. Deletion cannot be reversed.",
+                "Löscht dauerhaft dein Lernkonto, deine E-Mail-Adresse, den Kursfortschritt auf dem Server, historische Bewertungsversuche und den bei der Anmeldung gespeicherten Identitätsdatensatz, bei Google samt Kontokennung, Name und Profilbild-Adresse. Das lässt sich nicht rückgängig machen.",
+                "Permanently deletes your learning account, email address, server-side course progress, historical assessment attempts and the identity record stored at sign-in, with Google including account identifier, name and profile-picture address. This cannot be undone.",
               )}
             </p>
             <details className="mt-3 border border-border">
@@ -767,8 +766,8 @@ export function DatenschutzClient({
               <p className="border-t border-border px-3 py-3 text-sm leading-relaxed text-muted-foreground">
                 {localized(
                   locale,
-                  "Pseudonyme Missbrauchsschutz-Zähler und bereits zwischengespeicherte KI-Antworten enthalten keine rohe Kontokennung; sie laufen nach den in der Datenschutzerklärung genannten Fristen aus. Nach erfolgreich koordinierter Löschung bleibt ein lokaler Löschmarker mit der technischen Kontokennung höchstens 30 Tage gespeichert, damit auch pausierte Tabs die zugehörigen Browser-Lerndaten entfernen. Danach bleiben eine zufällige technische Generation und eine mit SHA-256 aus der technischen Kontokennung abgeleitete Löschkennung ohne rohe Kontokennung als dauerhafte Sperren gegen veraltete Tabs gespeichert. Höchstens 128 solcher Löschkennungen werden vorgehalten; danach ersetzt eine globale Generation die bisherigen einzelnen Kennungen. Nur die Kennung des aktuellen Löschvorgangs bleibt für dessen wiederholbare Verarbeitung gespeichert.",
-                  "Pseudonymous abuse-prevention counters and cached AI responses contain no raw account identifier; they expire under the periods stated in the privacy policy. After a successfully coordinated deletion, a local deletion marker containing the technical account identifier remains for no more than 30 days so that suspended tabs also remove the associated browser learning data. A random technical generation and a deletion identifier derived with SHA-256 from the technical account identifier then remain, without the raw account identifier, as permanent blocks against stale tabs. No more than 128 such deletion identifiers are retained; a global generation then replaces the previous individual identifiers. Only the identifier for the current deletion remains available for idempotent processing.",
+                  "Pseudonyme Zähler zum Missbrauchsschutz und zwischengespeicherte KI-Antworten enthalten keine rohe Kontokennung und laufen nach den Fristen der Datenschutzerklärung aus. Nach der Löschung bleibt ein lokaler Löschmarker mit der technischen Kontokennung höchstens 30 Tage, damit auch pausierte Tabs ihre Lerndaten entfernen. Danach sperren eine zufällige technische Generation und eine per SHA-256 aus der Kontokennung abgeleitete Löschkennung ohne rohe Kontokennung veraltete Tabs dauerhaft. Es bleiben höchstens 128 solcher Kennungen; bei mehr ersetzt eine globale Generation die einzelnen, nur die Kennung der laufenden Löschung bleibt, damit sie sich sicher erneut verarbeiten lässt.",
+                  "Pseudonymous abuse-prevention counters and cached AI responses hold no raw account identifier and expire under the periods in the privacy policy. After deletion, a local deletion marker with the technical account identifier stays for at most 30 days, so suspended tabs also remove their learning data. After that, a random technical generation and a deletion identifier derived with SHA-256 from the account identifier, without the raw identifier, block stale tabs permanently. At most 128 such identifiers are kept; beyond that, a global generation replaces the individual ones, and only the current deletion's identifier stays so it can be processed again safely.",
                 )}
               </p>
             </details>
@@ -780,8 +779,8 @@ export function DatenschutzClient({
               >
                 {localized(
                   locale,
-                  "Bist du sicher? Lernkonto, E-Mail-Adresse, Fortschritt und Bewertungsversuche werden dauerhaft gelöscht und können nicht wiederhergestellt werden.",
-                  "Are you sure? The learning account, email address, progress, and assessment attempts will be deleted permanently and cannot be restored.",
+                  "Bist du sicher? Lernkonto, E-Mail-Adresse, Fortschritt und Bewertungsversuche werden endgültig gelöscht.",
+                  "Are you sure? Learning account, email address, progress and assessment attempts will be deleted for good.",
                 )}
               </p>
             ) : null}

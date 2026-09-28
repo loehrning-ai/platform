@@ -80,7 +80,7 @@ async function openLessonReference(page: Page) {
     .waitFor({ state: "attached" });
   const reference = page.locator("details[data-lesson-reference]");
   await expect(reference).toHaveCount(1);
-  await reference.locator("summary").click();
+  // The lesson text renders open by default (LessonReference).
   await expect(reference).toHaveAttribute("open", "");
 }
 
@@ -93,6 +93,74 @@ async function expectCourseGeometryContained(page: Page, context: string) {
       const style = getComputedStyle(element);
       return style.display !== "none" && style.visibility !== "hidden";
     };
+
+    // Visually hidden means "renders exactly as the site's .sr-only": the
+    // class itself and responsive forms such as max-sm:sr-only, but not an
+    // .sr-only element that a variant (sm:not-sr-only, focus:not-sr-only)
+    // has made visible again. The reference comes from a probe carrying the
+    // real class, so the check follows the stylesheet instead of a copy.
+    const SR_ONLY_PROPERTIES = [
+      "position",
+      "width",
+      "height",
+      "overflow-x",
+      "overflow-y",
+      "clip",
+      "clip-path",
+      "white-space",
+      "margin-top",
+      "margin-right",
+      "margin-bottom",
+      "margin-left",
+      "padding-top",
+      "padding-right",
+      "padding-bottom",
+      "padding-left",
+      "border-top-width",
+      "border-right-width",
+      "border-bottom-width",
+      "border-left-width",
+    ] as const;
+    const probe = document.createElement("span");
+    probe.className = "sr-only";
+    document.body.append(probe);
+    const probeStyle = getComputedStyle(probe);
+    const srOnly = new Map(
+      SR_ONLY_PROPERTIES.map((property) => [
+        property,
+        probeStyle.getPropertyValue(property),
+      ]),
+    );
+    probe.remove();
+    // Without the utility in the stylesheet the probe would describe an
+    // ordinary box and exempt it; refuse to run on that reference.
+    if (
+      srOnly.get("position") !== "absolute" ||
+      srOnly.get("width") !== "1px" ||
+      srOnly.get("height") !== "1px" ||
+      srOnly.get("overflow-x") !== "hidden" ||
+      srOnly.get("overflow-y") !== "hidden"
+    ) {
+      throw new Error(
+        `.sr-only no longer renders visually hidden: ${JSON.stringify([...srOnly])}`,
+      );
+    }
+    const hiddenCache = new Map<Element, boolean>();
+    const insideVisuallyHidden = (element: Element): boolean => {
+      const cached = hiddenCache.get(element);
+      if (cached !== undefined) return cached;
+      const style = getComputedStyle(element);
+      const hidden =
+        SR_ONLY_PROPERTIES.every(
+          (property) =>
+            style.getPropertyValue(property) === srOnly.get(property),
+        ) ||
+        (element.parentElement !== null &&
+          insideVisuallyHidden(element.parentElement));
+      hiddenCache.set(element, hidden);
+      return hidden;
+    };
+
     const description = (element: Element) => ({
       tag: element.tagName.toLowerCase(),
       className:
@@ -109,7 +177,7 @@ async function expectCourseGeometryContained(page: Page, context: string) {
     const viewportOffenders = descendants
       .filter((element) => {
         if (!isVisible(element)) return false;
-        if (element.closest(".sr-only")) return false;
+        if (insideVisuallyHidden(element)) return false;
         if (
           element.closest("[data-horizontal-scroll]") &&
           !element.matches("[data-horizontal-scroll]")
@@ -129,7 +197,12 @@ async function expectCourseGeometryContained(page: Page, context: string) {
         if (!(element instanceof HTMLElement) || !isVisible(element)) {
           return false;
         }
-        if (element.closest(".sr-only,[data-horizontal-scroll]")) return false;
+        if (
+          insideVisuallyHidden(element) ||
+          element.closest("[data-horizontal-scroll]")
+        ) {
+          return false;
+        }
         const style = getComputedStyle(element);
         return (
           ["hidden", "clip"].includes(style.overflowX) &&

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { DEMO } from "@/lib/demo-tokens";
 import { DEMO_HEIGHT, usePrefersReducedMotion } from "./demo-utils";
 import { useDemoLocale } from "./demo-locale";
@@ -29,6 +29,64 @@ function isValidBudget(value: string): boolean {
   return value.trim() !== "" && Number.isFinite(n) && n > 0;
 }
 
+/**
+ * Below sm the finished draft comes first and the inputs fold behind one
+ * summary line and a 44px "Eckdaten ändern" button; from sm up the form
+ * shows beside the draft as before. The summary reads the brief the draft
+ * was built from, so it always matches the draft above it.
+ */
+function BriefSummary({
+  brief,
+  open,
+  onToggle,
+  controlsId,
+  locale,
+}: {
+  brief: FormState;
+  open: boolean;
+  onToggle: () => void;
+  controlsId: string;
+  locale: "de" | "en";
+}) {
+  const amount = Number(brief.budget || 0).toLocaleString(
+    locale === "de" ? "de-DE" : "en-GB",
+  );
+  const summary = [
+    brief.kunde.replace(/\s*\([^)]*\)\s*$/, ""),
+    brief.projekt,
+    locale === "de" ? `${amount} €` : `€${amount}`,
+    brief.zeitraum,
+  ].join(" · ");
+  return (
+    <div className="sm:hidden" data-word-brief-summary>
+      <p
+        className="text-[14px]"
+        style={{ margin: 0, lineHeight: 1.45, color: DEMO.ink, overflowWrap: "anywhere" }}
+      >
+        {summary}
+      </p>
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        aria-controls={controlsId}
+        className="mt-1 inline-flex min-h-11 items-center gap-1.5 underline decoration-[#E3DFD6] underline-offset-4"
+        style={{
+          ...DEMO.label,
+          background: "transparent",
+          border: 0,
+          padding: 0,
+          color: DEMO.ink,
+          cursor: "pointer",
+        }}
+      >
+        {locale === "de" ? "Eckdaten ändern" : "Change the inputs"}
+        <span aria-hidden="true">{open ? "−" : "+"}</span>
+      </button>
+    </div>
+  );
+}
+
 type StepState = "idle" | "running" | "done";
 
 /**
@@ -38,7 +96,9 @@ type StepState = "idle" | "running" | "done";
  * the result with no staging at all.
  */
 function useStagedGeneration() {
-  const [genStep, setGenStep] = useState<0 | 1 | 2 | 3 | 4>(0);
+  // Final state first: the brief for the default inputs renders on load.
+  // "Neu erstellen" replays the three steps with the learner's inputs.
+  const [genStep, setGenStep] = useState<0 | 1 | 2 | 3 | 4>(4);
   const [isGenerating, setIsGenerating] = useState(false);
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const reducedMotion = usePrefersReducedMotion();
@@ -94,9 +154,14 @@ export default function WordDemo() {
 
 function WordDemoGerman() {
   const [form, setForm] = useState<FormState>(INITIAL);
+  // The brief shows the inputs of the last generation, so an edit (or an
+  // invalid budget) never rewrites the finished draft until "Neu erstellen".
+  const [brief, setBrief] = useState<FormState>(INITIAL);
   const [focusedField, setFocusedField] = useState<keyof FormState | null>(
     null,
   );
+  const [editOpen, setEditOpen] = useState(false);
+  const fieldsId = useId();
   const {
     isGenerating,
     reducedMotion,
@@ -106,7 +171,8 @@ function WordDemoGerman() {
   } = useStagedGeneration();
   const budgetValid = isValidBudget(form.budget);
   const handleGenerate = () => {
-    if (!budgetValid) return;
+    if (!budgetValid || isGenerating) return;
+    setBrief(form);
     generate();
   };
 
@@ -128,21 +194,9 @@ function WordDemoGerman() {
         minHeight: DEMO_HEIGHT,
       }}
     >
-      <Overline>Word-Lab mit KI-Assistent</Overline>
-      <h2
-        style={{
-          fontSize: "clamp(18px, 3.5vw, 22px)",
-          fontWeight: 700,
-          letterSpacing: "-0.03em",
-          marginTop: 4,
-          lineHeight: 1.2,
-        }}
-      >
-        Projektbriefe, die{" "}
-        <span style={{ color: "var(--color-brand-orange)" }}>
-          prüfbar bleiben.
-        </span>
-      </h2>
+      {/* The page H1 and lead name the demo; this heading only gives
+          screen-reader users a landmark into the instrument. */}
+      <h2 className="sr-only">Projektbrief-Entwurf mit Prüfschritten</h2>
 
       <div
         style={{
@@ -152,7 +206,8 @@ function WordDemoGerman() {
           alignItems: "stretch",
         }}
       >
-        {/* FORM PANEL — flex 1 1 260px, stacks above preview on narrow screens */}
+        {/* FORM PANEL — flex 1 1 260px. Below sm it follows the draft and
+            folds behind a summary line. */}
         <div
           style={{
             flex: "1 1 260px",
@@ -162,6 +217,18 @@ function WordDemoGerman() {
             gap: 10,
           }}
         >
+          <BriefSummary
+            brief={brief}
+            open={editOpen}
+            onToggle={() => setEditOpen((v) => !v)}
+            controlsId={fieldsId}
+            locale="de"
+          />
+          <div
+            id={fieldsId}
+            data-word-fields
+            className={editOpen ? "flex flex-col gap-2.5" : "flex flex-col gap-2.5 max-sm:hidden"}
+          >
           <Overline>Eckdaten</Overline>
           {(
             [
@@ -179,14 +246,8 @@ function WordDemoGerman() {
               >
                 <span
                   style={{
-                    fontFamily: DEMO.font.mono,
-                    fontSize: 12,
-                    color: focused
-                      ? "var(--color-brand-orange)"
-                      : DEMO.schiefer,
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                    fontWeight: 700,
+                    ...DEMO.label,
+                    color: focused ? DEMO.ink : DEMO.schiefer,
                     transition: reducedMotion ? "none" : "color 0.15s",
                   }}
                 >
@@ -198,19 +259,22 @@ function WordDemoGerman() {
                   onFocus={() => setFocusedField(k)}
                   onBlur={() => setFocusedField(null)}
                   inputMode={k === "budget" ? "numeric" : undefined}
+                  // 16px below lg: iOS (phone and iPad) zooms into any focused field under 16px.
+                  className="text-base lg:text-[12px]"
                   style={{
                     minHeight: 44,
                     background: DEMO.birke,
                     border: `1px solid ${focused ? DEMO.ink : DEMO.leinen}`,
-                    boxShadow: focused ? `2px 2px 0 0 ${DEMO.ink}` : "none",
+                    // Focus: the site's Mennige ring instead of an offset
+                    // stamp shadow.
+                    outline: focused
+                      ? "3px solid var(--color-brand-orange)"
+                      : "none",
+                    outlineOffset: 2,
                     padding: "9px 11px",
                     fontFamily: k === "budget" ? DEMO.font.mono : "inherit",
-                    fontSize: 12,
-                    outline: "none",
                     color: DEMO.ink,
-                    transition: reducedMotion
-                      ? "none"
-                      : "border-color 120ms, box-shadow 120ms",
+                    transition: reducedMotion ? "none" : "border-color 120ms",
                     width: "100%",
                     minWidth: 0,
                   }}
@@ -251,28 +315,21 @@ function WordDemoGerman() {
             }}
           >
             <div
+              aria-hidden
               style={{
                 width: 22,
                 height: 22,
-                background: "#2B579A",
-                color: "white",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 12,
-                fontWeight: 900,
+                border: `1px solid ${DEMO.ink}`,
+                background: DEMO.kalk,
                 flexShrink: 0,
               }}
-            >
-              W
-            </div>
+            />
             <div style={{ minWidth: 0 }}>
               <div
                 style={{
                   fontFamily: DEMO.font.mono,
                   fontSize: 12,
                   color: DEMO.ink,
-                  letterSpacing: "0.08em",
                   fontWeight: 700,
                   whiteSpace: "nowrap",
                   overflow: "hidden",
@@ -298,12 +355,8 @@ function WordDemoGerman() {
           <div style={{ paddingTop: 6, paddingBottom: 2 }}>
             <div
               style={{
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
+                ...DEMO.label,
                 color: DEMO.schiefer,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                fontWeight: 700,
                 marginBottom: 8,
               }}
             >
@@ -344,44 +397,19 @@ function WordDemoGerman() {
             onClick={handleGenerate}
             disabled={isGenerating || !budgetValid}
             style={{
+              ...DEMO.label,
               marginTop: 4,
               minHeight: 44,
               padding: "10px 14px",
+              // Ink button (the page's one Mennige button is the course
+              // link): flat, no stamp shadow and no press offset.
               background:
-                isGenerating || !budgetValid
-                  ? DEMO.leinen
-                  : "var(--color-brand-orange)",
-              color: isGenerating || !budgetValid ? DEMO.schiefer : "#fff",
-              border: `2px solid ${DEMO.ink}`,
-              boxShadow:
-                isGenerating || !budgetValid
-                  ? "none"
-                  : `3px 3px 0 0 ${DEMO.ink}`,
-              fontFamily: DEMO.font.mono,
-              fontSize: 12,
-              fontWeight: 700,
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
+                isGenerating || !budgetValid ? DEMO.leinen : DEMO.ink,
+              color: isGenerating || !budgetValid ? DEMO.schiefer : DEMO.kalk,
+              border: `1px solid ${DEMO.ink}`,
               cursor: isGenerating || !budgetValid ? "not-allowed" : "pointer",
-              transition: reducedMotion
-                ? "none"
-                : "transform 0.12s, box-shadow 0.12s",
+              transition: reducedMotion ? "none" : "background-color 120ms",
               width: "100%",
-            }}
-            onMouseDown={(e) => {
-              if (reducedMotion || isGenerating || !budgetValid) return;
-              e.currentTarget.style.transform = "translate(2px, 2px)";
-              e.currentTarget.style.boxShadow = `1px 1px 0 0 ${DEMO.ink}`;
-            }}
-            onMouseUp={(e) => {
-              if (reducedMotion || isGenerating || !budgetValid) return;
-              e.currentTarget.style.transform = "";
-              e.currentTarget.style.boxShadow = `3px 3px 0 0 ${DEMO.ink}`;
-            }}
-            onMouseLeave={(e) => {
-              if (reducedMotion || isGenerating) return;
-              e.currentTarget.style.transform = "";
-              e.currentTarget.style.boxShadow = `3px 3px 0 0 ${DEMO.ink}`;
             }}
           >
             {isGenerating
@@ -390,10 +418,14 @@ function WordDemoGerman() {
                 ? "Neu erstellen"
                 : "Projektbrief erstellen"}
           </button>
+          </div>
         </div>
 
-        {/* WORD PREVIEW — flex 2 2 340px, takes more room on wide screens */}
+        {/* WORD PREVIEW — flex 2 2 340px, takes more room on wide screens;
+            first below sm, so the payoff opens the instrument. */}
         <div
+          className="max-sm:order-first"
+          data-word-draft
           style={{
             flex: "2 2 340px",
             minWidth: 0,
@@ -411,32 +443,15 @@ function WordDemoGerman() {
               alignItems: "center",
               gap: 8,
               padding: "6px 10px",
-              background: "#2B579A",
-              color: "white",
+              // Ink band with the file name as data; no product colours.
+              background: DEMO.ink,
+              color: DEMO.kalk,
               fontFamily: DEMO.font.mono,
               fontSize: 12,
-              letterSpacing: "0.1em",
-              fontWeight: 700,
               whiteSpace: "nowrap",
               overflow: "hidden",
             }}
           >
-            <div
-              style={{
-                width: 16,
-                height: 16,
-                background: "white",
-                color: "#2B579A",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 12,
-                fontWeight: 900,
-                flexShrink: 0,
-              }}
-            >
-              W
-            </div>
             <span
               style={{
                 overflow: "hidden",
@@ -447,10 +462,10 @@ function WordDemoGerman() {
             </span>
           </div>
           <div
+            className="text-[13px] sm:text-[12px]"
             style={{
               padding: "22px clamp(18px, 4vw, 30px)",
               fontFamily: "Georgia, serif",
-              fontSize: 12,
               lineHeight: 1.5,
               color: "#222",
               flex: 1,
@@ -460,31 +475,16 @@ function WordDemoGerman() {
               <div
                 style={{
                   display: "flex",
-                  flexDirection: "column",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: 12,
                   padding: "40px 20px",
                   minHeight: 280,
-                  color: "#999",
-                  fontStyle: "italic",
+                  color: DEMO.schiefer,
+                  fontFamily: DEMO.font.sans,
                   textAlign: "center",
                 }}
               >
-                <div style={{ fontSize: 28, lineHeight: 1 }} aria-hidden="true">
-                  ↑
-                </div>
-                Eckdaten ausfüllen und{" "}
-                <em
-                  style={{
-                    color: "var(--color-brand-orange)",
-                    fontStyle: "normal",
-                    fontWeight: 700,
-                  }}
-                >
-                  Projektbrief erstellen
-                </em>{" "}
-                klicken.
+                Der Entwurf wird aus deinen Eckdaten erstellt …
               </div>
             ) : (
               <div>
@@ -493,10 +493,9 @@ function WordDemoGerman() {
                     fontSize: 12,
                     color: "#666",
                     fontFamily: DEMO.font.mono,
-                    letterSpacing: "0.08em",
                   }}
                 >
-                  BEISPIELWERK GMBH · MUSTERSTRASSE 1 · 12345 MUSTERSTADT
+                  FIKTIVWERK · BEISPIELADRESSE · NICHT ZUM VERSAND
                 </div>
                 <hr
                   style={{
@@ -508,16 +507,16 @@ function WordDemoGerman() {
                   }}
                 />
                 <div style={{ marginTop: 14, fontSize: 12, color: "#555" }}>
-                  {form.kunde}
+                  {brief.kunde}
                   <br />
-                  z.Hd. Einkaufsleitung
+                  z. Hd. Prüfung Einkauf
                   <br />
                   <br />
                 </div>
                 <div
-                  style={{ fontSize: 12, color: "#777", textAlign: "right" }}
+                  style={{ fontSize: 12, color: "#595959", textAlign: "right" }}
                 >
-                  Berlin, {new Date().toLocaleDateString("de-DE")}
+                  Berlin · Beispieldatum 8. August 2026
                 </div>
                 <h3
                   style={{
@@ -527,48 +526,34 @@ function WordDemoGerman() {
                     marginBottom: 10,
                   }}
                 >
-                  Projektbrief: {form.projekt}
+                  Projektbrief: {brief.projekt}
                 </h3>
+                <p style={{ marginBottom: 10 }}>Sehr geehrtes Prüfteam,</p>
                 <p style={{ marginBottom: 10 }}>
-                  Sehr geehrte Damen und Herren,
+                  dieser Entwurf beschreibt die geplante Arbeit für{" "}
+                  <strong>{brief.projekt}</strong> im Zeitraum{" "}
+                  <strong>{brief.zeitraum}</strong>.
                 </p>
                 <p style={{ marginBottom: 10 }}>
-                  anbei der neutrale Prüfstand zur{" "}
-                  <strong>{form.projekt}</strong>, konzipiert für den Zeitraum{" "}
-                  <strong>{form.zeitraum}</strong>.
-                </p>
-                <p style={{ marginBottom: 10 }}>
-                  Unser Vorgehen folgt drei Phasen: Datenaufnahme, Pilotbetrieb,
-                  Integration. Der grobe interne Rahmenwert liegt bei{" "}
+                  Der Planungsbetrag von{" "}
                   <strong
                     style={{
                       fontFamily: DEMO.font.mono,
                       fontSize: 12,
                     }}
                   >
-                    {Number(form.budget || 0).toLocaleString("de-DE")} €
+                    {Number(brief.budget || 0).toLocaleString("de-DE")} €
                   </strong>{" "}
-                  als Planungsannahme. Keine Freigabe ohne Datenschutz- und
-                  Fachreview.
+                  ist eine Annahme, keine Freigabe und kein Lieferantenangebot.
                 </p>
-                <p
-                  style={{
-                    marginBottom: 10,
-                    color: "#555",
-                    fontSize: 12,
-                    fontStyle: "italic",
-                  }}
-                >
-                  […] weitere Abschnitte: Annahmen, Risiken, Datenquellen,
-                  Freigaben.
+                <p style={{ marginBottom: 10 }}>
+                  Vor der Nutzung nötig: fachliche Prüfung, Datenschutzprüfung,
+                  Budgetbestätigung und eine benannte Verantwortung.
                 </p>
                 <div style={{ marginTop: 14, fontSize: 12, color: "#555" }}>
-                  Interne Notiz
-                  <br />
-                  <br />
                   <strong style={{ color: "#000" }}>Freigabe ausstehend</strong>
                   <br />
-                  Review durch Fachbereich und Datenschutz
+                  Vor Export oder Versand prüft ein Mensch.
                 </div>
               </div>
             )}
@@ -579,76 +564,17 @@ function WordDemoGerman() {
                 position: "absolute",
                 top: 30,
                 right: 8,
-                background: "var(--color-brand-orange)",
-                color: DEMO.kalk,
+                background: DEMO.kalk,
+                color: DEMO.ink,
+                border: `1px solid ${DEMO.ink}`,
                 padding: "3px 8px",
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                letterSpacing: "0.12em",
-                fontWeight: 700,
+                ...DEMO.label,
               }}
             >
-              ◆ SIMULIERT
+              Simuliert
             </div>
           )}
         </div>
-      </div>
-
-      {/* Metric row — auto-fit keeps it 4-up on wide, 2-up on mid, 1-up on narrow */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
-          gap: 8,
-        }}
-      >
-        {(
-          [
-            ["Erstellzeit", "4,2 s"],
-            ["Manuell sonst", "≈ 3 h"],
-            ["Stil-Treffer (Beispiel)", "96 %"],
-            ["Review-Hinweis", "Pflicht"],
-          ] as const
-        ).map(([l, v]) => (
-          <div
-            key={l}
-            style={{
-              background: DEMO.kalk,
-              borderTop: `1px solid ${DEMO.leinen}`,
-              borderRight: `1px solid ${DEMO.leinen}`,
-              borderBottom: `1px solid ${DEMO.leinen}`,
-              borderLeft: `3px solid var(--color-brand-orange)`,
-              padding: 10,
-              minWidth: 0,
-            }}
-          >
-            <div
-              style={{
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                color: DEMO.schiefer,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                fontWeight: 700,
-              }}
-            >
-              {l}
-            </div>
-            <div
-              style={{
-                fontFamily: DEMO.font.mono,
-                fontSize: 18,
-                fontWeight: 700,
-                color: DEMO.ink,
-                marginTop: 3,
-                letterSpacing: "-0.02em",
-                visibility: generated ? "visible" : "hidden",
-              }}
-            >
-              {v}
-            </div>
-          </div>
-        ))}
       </div>
     </div>
   );
@@ -663,6 +589,7 @@ const INITIAL_EN: FormState = {
 
 function WordDemoEnglish() {
   const [form, setForm] = useState<FormState>(INITIAL_EN);
+  const [brief, setBrief] = useState<FormState>(INITIAL_EN);
   const {
     isGenerating,
     reducedMotion,
@@ -672,13 +599,16 @@ function WordDemoEnglish() {
   } = useStagedGeneration();
   const budgetValid = isValidBudget(form.budget);
   const handleGenerate = () => {
-    if (!budgetValid) return;
+    if (!budgetValid || isGenerating) return;
+    setBrief(form);
     generate();
   };
   const fileName = useMemo(
     () => `project-brief_${form.kunde.split(" ")[0].toLowerCase()}_sample.docx`,
     [form.kunde],
   );
+  const [editOpen, setEditOpen] = useState(false);
+  const fieldsId = useId();
   const fields = [
     ["kunde", "Recipient"],
     ["projekt", "Project title"],
@@ -702,30 +632,12 @@ function WordDemoEnglish() {
       }}
     >
       <div>
-        <Overline>Document lab · editable sample</Overline>
-        <h2
-          style={{
-            margin: "6px 0 0",
-            fontSize: "clamp(20px, 4vw, 28px)",
-            lineHeight: 1.08,
-          }}
-        >
-          Draft a project brief.{" "}
-          <span style={{ color: "var(--color-brand-orange)" }}>
-            Keep the approval visible.
-          </span>
-        </h2>
-        <p
-          style={{
-            margin: "8px 0 0",
-            maxWidth: 720,
-            color: DEMO.schiefer,
-            fontSize: 12,
-            lineHeight: 1.55,
-          }}
-        >
-          The output is assembled from fixed browser templates. No Word file,
-          Microsoft 365 tenant, or AI provider is contacted.
+        {/* The page H1 and lead name the demo; this heading only gives
+          screen-reader users a landmark into the instrument. */}
+        <h2 className="sr-only">Project brief draft with review steps</h2>
+        <p className="text-caption text-muted-foreground max-sm:hidden" style={{ margin: 0, maxWidth: 720 }}>
+          Built from fixed browser templates, without Word, Microsoft 365 or
+          an AI provider.
         </p>
       </div>
 
@@ -747,15 +659,24 @@ function WordDemoEnglish() {
             gap: 10,
           }}
         >
+          <BriefSummary
+            brief={brief}
+            open={editOpen}
+            onToggle={() => setEditOpen((v) => !v)}
+            controlsId={fieldsId}
+            locale="en"
+          />
+          <div
+            id={fieldsId}
+            data-word-fields
+            className={editOpen ? "flex flex-col gap-2.5" : "flex flex-col gap-2.5 max-sm:hidden"}
+          >
           <Overline>Brief inputs</Overline>
           {fields.map(([key, label]) => (
             <label key={key} style={{ display: "grid", gap: 4, minWidth: 0 }}>
               <span
                 style={{
-                  fontFamily: DEMO.font.mono,
-                  fontSize: 12,
-                  textTransform: "uppercase",
-                  letterSpacing: "0.12em",
+                  ...DEMO.label,
                   color: DEMO.schiefer,
                 }}
               >
@@ -779,9 +700,9 @@ function WordDemoEnglish() {
                   background: DEMO.birke,
                   color: DEMO.ink,
                   padding: "10px 11px",
-                  font: "inherit",
-                  fontSize: 12,
+                  fontFamily: "inherit",
                 }}
+                className="text-base lg:text-[12px]"
                 aria-invalid={key === "budget" && !budgetValid}
                 aria-describedby={
                   key === "budget" && !budgetValid
@@ -808,12 +729,8 @@ function WordDemoEnglish() {
           <div style={{ paddingTop: 2, paddingBottom: 2 }}>
             <div
               style={{
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
+                ...DEMO.label,
                 color: DEMO.schiefer,
-                letterSpacing: "0.14em",
-                textTransform: "uppercase",
-                fontWeight: 700,
                 marginBottom: 8,
               }}
             >
@@ -853,23 +770,13 @@ function WordDemoEnglish() {
             onClick={handleGenerate}
             disabled={isGenerating || !budgetValid}
             style={{
+              ...DEMO.label,
               minHeight: 44,
-              border: `2px solid ${DEMO.ink}`,
+              border: `1px solid ${DEMO.ink}`,
               background:
-                isGenerating || !budgetValid
-                  ? DEMO.leinen
-                  : "var(--color-brand-orange)",
-              color: isGenerating || !budgetValid ? DEMO.schiefer : "white",
-              boxShadow:
-                isGenerating || !budgetValid
-                  ? "none"
-                  : `3px 3px 0 ${DEMO.ink}`,
+                isGenerating || !budgetValid ? DEMO.leinen : DEMO.ink,
+              color: isGenerating || !budgetValid ? DEMO.schiefer : DEMO.kalk,
               padding: "10px 14px",
-              fontFamily: DEMO.font.mono,
-              fontSize: 12,
-              fontWeight: 700,
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
               cursor: isGenerating || !budgetValid ? "not-allowed" : "pointer",
             }}
           >
@@ -879,10 +786,13 @@ function WordDemoEnglish() {
                 ? "Rebuild sample brief"
                 : "Build sample brief"}
           </button>
+          </div>
         </section>
 
         <section
           aria-live="polite"
+          className="max-sm:order-first"
+          data-word-draft
           style={{
             minWidth: 0,
             display: "flex",
@@ -897,26 +807,23 @@ function WordDemoEnglish() {
               flexWrap: "wrap",
               gap: 8,
               alignItems: "center",
-              background: "#2B579A",
-              color: "white",
+              background: DEMO.ink,
+              color: DEMO.kalk,
               padding: "8px 10px",
               fontFamily: DEMO.font.mono,
               fontSize: 12,
             }}
           >
-            <strong style={{ border: "1px solid white", padding: "1px 5px" }}>
-              W
-            </strong>
             <span style={{ overflowWrap: "anywhere" }}>{fileName}</span>
             <span style={{ marginLeft: "auto", opacity: 0.75 }}>simulated</span>
           </div>
           <div
+            className="text-[13px] sm:text-[12px]"
             style={{
               flex: 1,
               padding: "clamp(18px, 5vw, 32px)",
               color: "#222",
               fontFamily: "Georgia, serif",
-              fontSize: 12,
               lineHeight: 1.62,
               overflowWrap: "anywhere",
             }}
@@ -928,10 +835,10 @@ function WordDemoEnglish() {
                   display: "grid",
                   placeItems: "center",
                   textAlign: "center",
-                  color: "#777",
+                  color: DEMO.schiefer,
                 }}
               >
-                Enter the brief inputs, then build the fixed sample document.
+                The draft is being built from your inputs …
               </div>
             ) : (
               <>
@@ -952,7 +859,7 @@ function WordDemoEnglish() {
                   }}
                 />
                 <div>
-                  {form.kunde}
+                  {brief.kunde}
                   <br />
                   For the attention of: procurement review
                 </div>
@@ -962,18 +869,18 @@ function WordDemoEnglish() {
                   Berlin · sample dated 8 August 2026
                 </div>
                 <h3 style={{ margin: "18px 0 10px", fontSize: 16 }}>
-                  Project brief: {form.projekt}
+                  Project brief: {brief.projekt}
                 </h3>
                 <p>Dear review team,</p>
                 <p>
                   This draft covers the proposed work for{" "}
-                  <strong>{form.projekt}</strong> during{" "}
-                  <strong>{form.zeitraum}</strong>.
+                  <strong>{brief.projekt}</strong> during{" "}
+                  <strong>{brief.zeitraum}</strong>.
                 </p>
                 <p>
                   The planning amount is{" "}
                   <strong>
-                    €{Number(form.budget || 0).toLocaleString("en-GB")}
+                    €{Number(brief.budget || 0).toLocaleString("en-GB")}
                   </strong>
                   . It is an assumption, not an approval or supplier offer.
                 </p>
@@ -990,7 +897,7 @@ function WordDemoEnglish() {
                     fontSize: 12,
                   }}
                 >
-                  <strong style={{ color: "#b45309" }}>APPROVAL PENDING</strong>
+                  <strong style={{ color: "#b45309" }}>Approval pending</strong>
                   <br />
                   Human review required before export or delivery.
                 </div>
@@ -1016,13 +923,14 @@ function Step({
 }) {
   const isDone = state === "done";
   const isRunning = state === "running";
-  const accent =
-    isDone || isRunning ? "var(--color-brand-orange)" : DEMO.leinen;
-  const labelColor = isDone
-    ? DEMO.ink
-    : isRunning
-      ? "var(--color-brand-orange)"
+  // Route grammar: past steps filled ink, the running step filled Mennige,
+  // future steps outlined.
+  const accent = isRunning
+    ? "var(--color-brand-orange)"
+    : isDone
+      ? DEMO.ink
       : DEMO.schiefer;
+  const labelColor = isDone || isRunning ? DEMO.ink : DEMO.schiefer;
 
   return (
     <li
@@ -1054,7 +962,7 @@ function Step({
               left: "50%",
               transform: "translateX(-50%)",
               width: 1,
-              background: isDone ? "var(--color-brand-orange)" : DEMO.leinen,
+              background: isDone ? DEMO.ink : DEMO.leinen,
               transition: reducedMotion ? "none" : "background 0.2s",
             }}
           />
@@ -1065,11 +973,10 @@ function Step({
             width: 10,
             height: 10,
             border: `1.5px solid ${accent}`,
-            background: isDone ? "var(--color-brand-orange)" : "transparent",
-            transform: isRunning ? "rotate(45deg)" : "none",
+            background: isDone || isRunning ? accent : "transparent",
             transition: reducedMotion
               ? "none"
-              : "transform 0.2s, background 0.2s, border-color 0.2s",
+              : "background-color 0.2s, border-color 0.2s",
             position: "relative",
           }}
         />
@@ -1079,49 +986,20 @@ function Step({
           fontFamily: DEMO.font.mono,
           fontSize: 12,
           color: labelColor,
-          letterSpacing: "0.08em",
           lineHeight: 1.4,
           fontWeight: isDone || isRunning ? 700 : 500,
           transition: reducedMotion ? "none" : "color 0.2s",
         }}
       >
         {label}
-        {isRunning && !reducedMotion && (
-          <span
-            aria-hidden="true"
-            style={{
-              marginLeft: 6,
-              display: "inline-block",
-              width: 4,
-              height: 10,
-              background: "var(--color-brand-orange)",
-              verticalAlign: "middle",
-              animation: "demoBlink 0.9s steps(2, start) infinite",
-            }}
-          />
-        )}
       </span>
-      <style>{`
-        @keyframes demoBlink {
-          to { visibility: hidden; }
-        }
-      `}</style>
     </li>
   );
 }
 
 function Overline({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      style={{
-        fontFamily: DEMO.font.mono,
-        fontSize: 12,
-        color: "var(--color-brand-orange)",
-        letterSpacing: "0.14em",
-        textTransform: "uppercase",
-        fontWeight: 700,
-      }}
-    >
+    <div style={{ ...DEMO.label, color: DEMO.ink }}>
       {children}
     </div>
   );

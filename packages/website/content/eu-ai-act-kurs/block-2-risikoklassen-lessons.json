@@ -15,7 +15,7 @@
       "blockId": "block_2",
       "number": 1,
       "title": "Verbotene Praktiken (Art. 5)",
-      "subtitle": "Acht KI-Praktiken, die seit 2. Februar 2025 in der EU nicht existieren dürfen",
+      "subtitle": "Acht KI-Praktiken, die seit 2. Februar 2025 in der EU verboten sind",
       "durationMinutes": 4,
       "keyConcepts": [
         "Art. 5 KI-VO",
@@ -29,28 +29,25 @@
           "id": "block_2_lesson_1_section_1",
           "title": "Risikobasierter Ansatz und der Aus-Schalter",
           "readTimeMinutes": 2,
-          "content": "Der AI Act verbietet wenig. Acht Praktiken, aufgezählt in **Art. 5**, Stufe unannehmbares Risiko. Darunter folgen in der KI-Verordnung (VO (EU) 2024/1689) Hochrisiko (Art. 6 i.V.m. Anhang I und III), begrenztes Risiko mit Transparenzpflicht (Art. 50) und die Restmenge mit minimalem Risiko. Vier Stufen.\n\nArt. 5 ist die einzige Stufe ohne Compliance-Pfad. Entweder das System ist eines der acht verbotenen Muster, dann muss es weg. Oder es ist es nicht. Die Verbote gelten seit dem **2. Februar 2025** (Art. 113 lit. a). Keine Übergangsfrist, keine KMU-Ausnahme.\n\nVerboten heißt: nicht in Verkehr bringen, nicht in Betrieb nehmen, nicht verwenden (Art. 5 Abs. 1). Die Sanktion ist der schärfste Rahmen der ganzen Verordnung: **bis 35 Mio. EUR oder 7 % des weltweiten Jahresumsatzes** (Art. 99 Abs. 3), je nachdem, welcher Betrag höher ist.\n\nAutoritative Auslegungshilfe zu Art. 5 sind die **Commission Guidelines on prohibited AI practices** (4. Februar 2025). Sie erläutern jede der acht Kategorien lit. a bis h anhand konkreter Fallgruppen.",
-          "keyTakeaway": "Art. 5 kennt keinen Mittelweg. Acht Praktiken sind seit 2. Februar 2025 verboten, mit dem schärfsten Bußgeldrahmen der Verordnung: bis 35 Mio. EUR oder 7 % Jahresumsatz (Art. 99 Abs. 3)."
+          "content": "Der AI Act (VO (EU) 2024/1689) kennt vier Stufen: unannehmbares Risiko mit acht verbotenen Praktiken (**Art. 5**), Hochrisiko (Art. 6 i.V.m. Anhang I und III), begrenztes Risiko mit Transparenzpflicht (Art. 50) und die Restmenge mit minimalem Risiko.\n\nNur Art. 5 hat keinen Compliance-Pfad: Entspricht ein System einem der acht verbotenen Muster, muss es weg. Verboten sind Inverkehrbringen, Inbetriebnahme und Verwendung (Art. 5 Abs. 1), seit dem **2. Februar 2025** (Art. 113 lit. a), ohne Übergangsfrist und ohne KMU-Ausnahme.\n\nEs droht der schärfste Bußgeldrahmen der Verordnung, **bis 35 Mio. EUR oder 7 % des weltweiten Jahresumsatzes**, je nachdem, welcher Betrag höher ist (Art. 99 Abs. 3).\n\nDie **Commission Guidelines on prohibited AI practices** vom 4. Februar 2025 legen die Kategorien lit. a bis h aus."
         },
         {
           "id": "block_2_lesson_1_section_2",
           "title": "Die acht verbotenen Praktiken (Art. 5 Abs. 1 lit. a bis h)",
           "readTimeMinutes": 3,
-          "content": "Art. 5 Abs. 1 zählt acht Kategorien auf, und jede trifft einen realen Anwendungsfall:\n\n- **lit. a**: Manipulative oder unterschwellige Techniken mit spürbarem Schaden. Beispiel: ein Dark-Pattern-Bot, der Verbrauchern Versicherungen aufschwatzt.\n- **lit. b**: Ausnutzung von Schutzbedürftigkeit aufgrund Alter, Behinderung oder sozialer Lage. Beispiel: KI-Marketing, das Verschuldete gezielt mit Kreditangeboten bespielt.\n- **lit. c**: Social Scoring mit kontextfremder Schlechterstellung. Beispiel: ein Lieferantenscoring, das Social-Media-Aktivitäten der Geschäftsführung mit Zahlungskonditionen koppelt.\n- **lit. d**: Predictive Policing rein auf Basis von Profiling.\n- **lit. e**: Ungezieltes Scraping von Gesichtsbildern zum Aufbau von Datenbanken (Clearview-AI-Verbot).\n- **lit. f**: Emotionserkennung am Arbeitsplatz und in Bildungseinrichtungen. Ausnahme nur aus medizinischen oder sicherheitstechnischen Gründen. Beispiel: Software, die in Bewerbungsvideos Mimik bewertet, ist seit Februar 2025 verboten.\n- **lit. g**: Biometrische Kategorisierung nach Rasse, politischer Überzeugung, Religion, Gewerkschaftszugehörigkeit oder Sexualleben.\n- **lit. h**: Biometrische Echtzeit-Fernidentifikation im öffentlichen Raum. Eng begrenzte Ausnahmen nur für Strafverfolgung (Art. 5 Abs. 2 bis 7, Anhang II).",
-          "keyTakeaway": "Die acht Kategorien lit. a bis h sind abschließend. Emotionserkennung am Arbeitsplatz (lit. f) und biometrische Kategorisierung (lit. g) treffen den Mittelstand am häufigsten."
+          "content": "Art. 5 Abs. 1 zählt acht Kategorien abschließend auf. Den Mittelstand treffen lit. f und lit. g am häufigsten.\n\n- **lit. a:** manipulative oder unterschwellige Techniken mit spürbarem Schaden, etwa ein Dark-Pattern-Bot, der Verbrauchern Versicherungen aufschwatzt.\n- **lit. b:** Ausnutzung von Schutzbedürftigkeit wegen Alter, Behinderung oder sozialer Lage, etwa KI-Marketing, das Verschuldete gezielt mit Kreditangeboten bespielt.\n- **lit. c:** Social Scoring mit kontextfremder Schlechterstellung, etwa ein Lieferantenscoring, das Social-Media-Aktivitäten der Geschäftsführung an Zahlungskonditionen koppelt.\n- **lit. d:** Predictive Policing allein auf Basis von Profiling.\n- **lit. e:** ungezieltes Scraping von Gesichtsbildern für Datenbanken (Clearview-AI-Verbot).\n- **lit. f:** Emotionserkennung am Arbeitsplatz und in Bildungseinrichtungen, außer aus medizinischen oder Sicherheitsgründen. Software, die in Bewerbungsvideos Mimik oder Persönlichkeit bewertet, ist seit Februar 2025 verboten, auch wenn Anbieter sie 2026 noch bewerben.\n- **lit. g:** biometrische Kategorisierung nach Rasse, politischer Überzeugung, Religion, Gewerkschaftszugehörigkeit oder Sexualleben.\n- **lit. h:** biometrische Echtzeit-Fernidentifikation im öffentlichen Raum, mit eng begrenzten Ausnahmen für die Strafverfolgung (Art. 5 Abs. 2 bis 7, Anhang II)."
         },
         {
           "id": "block_2_lesson_1_section_3",
-          "title": "Was der Mittelstand wirklich prüfen muss",
+          "title": "Was der Mittelstand prüfen muss",
           "readTimeMinutes": 2,
-          "content": "Die Faustregel: **Misst ein Tool Emotionen, Biometrie oder Sozialverhalten und knüpft Konsequenzen daran, gehört es auf den Prüfstand.**\n\nTypische Fälle aus dem Alltag:\n\n- Ein Kunststoff-Hersteller will per Webcam Stress bei Maschinenbedienern erkennen, um Schichten zu optimieren. Verboten nach lit. f.\n- Recruiting-Anbieter werben 2026 weiter mit Persönlichkeitsanalyse aus Bewerbungsvideos. Klassischer lit. f-Verstoß.\n- Ein Versicherer scort Antragsteller anhand öffentlicher Social-Media-Posts. Verboten nach lit. c, sobald die Schlechterstellung kontextfremd ist.\n\nDer Check: Gehen Sie jede Software mit einer Frage durch. Misst sie Emotionen, Biometrie oder Sozialverhalten, oder manipuliert sie Entscheidungen? 30 bis 60 Minuten pro System.\n\nKostenlose Erstauskunft gibt seit Juli 2025 der KI-Servicedesk der BNetzA. Einwilligung der Betroffenen oder Zustimmung des Betriebsrats heilen einen Art. 5-Verstoß nicht. Das Verbot gilt absolut.\n\n**Ihr nächster Schritt:** Findet sich so ein Tool bei Ihnen, stoppen Sie den Einsatz und holen Sie Rechtsberatung. Art. 5-Verstöße kosten bis 35 Mio. EUR oder 7 % Umsatz.",
-          "keyTakeaway": "Einfacher Check in 60 Minuten pro Tool. Einwilligung heilt nichts: Art. 5 ist ein absolutes Verbot, kein zustimmungspflichtiger Tatbestand."
+          "content": "**Misst ein Tool Emotionen, Biometrie oder Sozialverhalten und knüpft Konsequenzen daran, prüfen Sie es gegen Art. 5.** Typische Fälle:\n\n- Ein Kunststoff-Hersteller will per Webcam Stress bei Maschinenbedienern erkennen, um Schichten zu optimieren: verboten nach lit. f.\n- Ein Versicherer scort Antragsteller anhand öffentlicher Social-Media-Posts: verboten nach lit. c, sobald die Schlechterstellung kontextfremd ist.\n\nPlanen Sie für diesen Art.-5-Check 30 bis 60 Minuten pro System ein und prüfen Sie dabei auch, ob das Tool Entscheidungen manipuliert (lit. a). Einwilligung der Betroffenen oder Zustimmung des Betriebsrats heilen einen Art.-5-Verstoß nicht. Eine kostenlose Erstauskunft gibt seit Juli 2025 der KI-Servicedesk der BNetzA.\n\nFinden Sie so ein Tool, stoppen Sie den Einsatz und holen Sie Rechtsberatung."
         }
       ],
       "quiz": [
         {
           "id": "block_2_lesson_1_q1",
-          "questionText": "Ein Kunststoff-Hersteller (120 Mitarbeiter) möchte per Webcam erkennen, ob Maschinenbediener gestresst sind, um Schichten zu optimieren. Ist das erlaubt?",
+          "questionText": "Ein Kunststoff-Hersteller (120 Mitarbeiter) will per Webcam Stress bei Maschinenbedienern erkennen, um Schichten zu optimieren. Ist das erlaubt?",
           "answerOptions": [
             {
               "id": "a",
@@ -64,7 +61,7 @@
             },
             {
               "id": "c",
-              "text": "Nein, Emotionserkennung am Arbeitsplatz ist nach Art. 5 Abs. 1 lit. f verboten",
+              "text": "Nein, Art. 5 Abs. 1 lit. f verbietet Emotionserkennung am Arbeitsplatz",
               "isCorrect": true
             },
             {
@@ -73,7 +70,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 5 Abs. 1 lit. f verbietet Emotionserkennung am Arbeitsplatz und in Bildungseinrichtungen. Einwilligung oder Betriebsrat heilen den Verstoß nicht. Einzige Ausnahme sind medizinische oder sicherheitstechnische Zwecke wie Müdigkeitserkennung bei Berufskraftfahrern."
+          "explanation": "Art. 5 Abs. 1 lit. f verbietet Emotionserkennung am Arbeitsplatz, Einwilligung oder Betriebsrat heilen das nicht. Ausgenommen sind nur medizinische oder Sicherheitszwecke wie Müdigkeitserkennung bei Berufskraftfahrern."
         },
         {
           "id": "block_2_lesson_1_q2",
@@ -100,11 +97,11 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 99 Abs. 3 setzt für Verstöße gegen Art. 5 die höchste Bußgeldstufe: bis 35 Mio. EUR oder 7 % des weltweiten Jahresumsatzes, je nachdem welcher Betrag höher ist. Hochrisiko-Verstöße liegen mit 15 Mio. EUR oder 3 % nach Art. 99 Abs. 4 eine Stufe darunter."
+          "explanation": "Art. 99 Abs. 3 setzt für Art.-5-Verstöße die höchste Stufe; die Pflichten nach Art. 99 Abs. 4 liegen mit 15 Mio. EUR oder 3 % darunter."
         },
         {
           "id": "block_2_lesson_1_q3",
-          "questionText": "Eine Versicherung scort Antragsteller anhand öffentlicher Social-Media-Posts und stellt sie ohne Sachzusammenhang zur Versicherungssparte schlechter. Welche Praktik liegt vor?",
+          "questionText": "Ein Versicherer scort Antragsteller anhand öffentlicher Social-Media-Posts und stellt sie ohne Bezug zur Versicherungssparte schlechter. Welche Praktik liegt vor?",
           "answerOptions": [
             {
               "id": "a",
@@ -127,7 +124,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 5 Abs. 1 lit. c verbietet Bewertungen anhand sozialer Verhaltensmerkmale, wenn dies zu kontextfremder Schlechterstellung führt. Social-Media-Daten in die Versicherungstarifierung einfließen zu lassen, ist der klassische Kontextbruch. Dass die Daten öffentlich sind, ändert daran nichts."
+          "explanation": "Art. 5 Abs. 1 lit. c verbietet Bewertungen nach sozialem Verhalten, die zu kontextfremder Schlechterstellung führen. Dass die Daten öffentlich sind, ändert daran nichts."
         }
       ]
     },
@@ -136,7 +133,7 @@
       "blockId": "block_2",
       "number": 2,
       "title": "Hochrisiko: Anhang I und Anhang III",
-      "subtitle": "Zwei Wege in die Hochrisiko-Klasse, mit acht Anwendungsbereichen und einer dokumentationspflichtigen Ausnahme",
+      "subtitle": "Zwei Wege in die Hochrisiko-Klasse und eine Ausnahme",
       "durationMinutes": 5,
       "keyConcepts": [
         "Art. 6 Abs. 1 (Anhang I)",
@@ -150,37 +147,34 @@
           "id": "block_2_lesson_2_section_1",
           "title": "Weg 1: Sicherheitsbauteil eines regulierten Produkts (Art. 6 Abs. 1)",
           "readTimeMinutes": 2,
-          "content": "Eine KI in der Aufzugssteuerung ist Hochrisiko. Nicht wegen Anhang III, sondern weil der erste Weg in die Hochrisiko-Klasse über **Anhang I** führt. Dort listet die Verordnung rund 20 EU-Harmonisierungsrechtsakte: Maschinen-VO 2023/1230, Medizinprodukte-VO 2017/745, IVDR 2017/746, Spielzeug-RL 2009/48/EG, Funkanlagen-RL 2014/53/EU, Aufzugs-RL 2014/33/EU, Kfz-Typgenehmigung, Luftfahrt (EASA), Eisenbahn und Schiffsausrüstung.\n\nDie Logik aus **Art. 6 Abs. 1** ist zweistufig. Ein KI-System ist automatisch Hochrisiko, wenn es entweder (a) Sicherheitsbauteil eines Anhang-I-Produkts ist oder (b) selbst ein solches Produkt ist **und** die sektoriale Konformitätsbewertung durch Dritte verlangt.\n\nMittelstand-Beispiele:\n\n- Ein Maschinenbauer integriert ein KI-Modul in eine Anlagensteuerung mit Schutzabschaltung. Sicherheitsbauteil unter der Maschinen-VO, also Hochrisiko.\n- KI in der Aufzugssteuerung unter Aufzugs-RL 2014/33/EU.\n- Medizinisches KI-Device unter der Medizinprodukte-VO.\n\nRechtsfolge: sektoriale Konformitätsbewertung **plus** die KI-VO-Pflichten aus Art. 8 bis 15 (Risikomanagement, Datenqualität, Doku, Logging, Transparenz, menschliche Aufsicht, Robustheit).",
-          "keyTakeaway": "Wer KI in ein Produkt unter Anhang I einbaut, ist automatisch Hochrisiko. Die Prüfung läuft über den sektoralen Rechtsakt plus Art. 8 bis 15 der KI-VO."
+          "content": "Eine KI als Sicherheitsbauteil einer Aufzugssteuerung ist über **Anhang I** Hochrisiko, den ersten Weg in die Hochrisiko-Klasse. Er listet rund 20 EU-Harmonisierungsrechtsakte, darunter Maschinen-VO 2023/1230, Medizinprodukte-VO 2017/745, IVDR 2017/746, Spielzeug-RL 2009/48/EG, Funkanlagen-RL 2014/53/EU, Aufzugs-RL 2014/33/EU, Kfz-Typgenehmigung, Luftfahrt (EASA), Eisenbahn und Schiffsausrüstung.\n\nNach **Art. 6 Abs. 1** ist ein KI-System Hochrisiko, wenn es Sicherheitsbauteil eines Anhang-I-Produkts oder selbst ein solches Produkt ist **und** der sektorale Rechtsakt eine Konformitätsbewertung durch Dritte verlangt. Beispiele sind ein KI-Modul in einer Anlagensteuerung mit Schutzabschaltung (Maschinen-VO) und ein medizinisches KI-Device (Medizinprodukte-VO).\n\nRechtsfolge: sektorale Konformitätsbewertung **plus** die Pflichten aus Art. 8 bis 15, die Block 3 behandelt."
         },
         {
           "id": "block_2_lesson_2_section_2",
-          "title": "Weg 2: Standalone-Hochrisiko (Art. 6 Abs. 2 und die acht Anhang-III-Bereiche)",
+          "title": "Weg 2: eigenständige Hochrisiko-Systeme (Art. 6 Abs. 2 und die acht Anhang-III-Bereiche)",
           "readTimeMinutes": 3,
-          "content": "**Art. 6 Abs. 2** ist der zweite Weg, unabhängig vom ersten: Ein KI-System ist Hochrisiko, wenn es in einem der **acht Anhang-III-Bereiche** eingesetzt wird. Abs. 1 und Abs. 2 stehen nebeneinander; Abs. 3 kennt eine eng umrissene Rückausnahme für reine Hilfsfunktionen:\n\n1. **Biometrie**: Fernidentifizierung, biometrische Kategorisierung sensibler Merkmale, Emotionserkennung (soweit nicht durch Art. 5 verboten).\n2. **Kritische Infrastruktur**: KI als Sicherheitsbauteil im Betrieb digitaler Infrastruktur, Straßenverkehr, Wasser, Gas, Heizung, Strom. Mittelstand-Fall: Stadtwerke und regionale Energieversorger.\n3. **Bildung und Berufsausbildung**: Zulassungs- und Bewertungs-KI, Prüfungsüberwachung. Beispiel: Ausbildungsbetriebe mit E-Learning, Berufsschulen mit Prüfungssoftware.\n4. **Beschäftigung und HR**: Recruiting, **CV-Screening** und Kandidatenbewertung (Nr. 4 lit. a) sowie Arbeitsverhältnisse, Beförderung, Kündigung, Aufgabenverteilung, Leistungsmonitoring (Nr. 4 lit. b). ATS-CV-Ranking kann unter Nr. 4 lit. a fallen; der konkrete vorgesehene Zweck bleibt zu prüfen.\n5. **Wesentliche Dienste**: Sozialleistungs-Eligibility, Bonitätsbewertung und Kreditscoring, Lebens- und Krankenversicherungstarifierung, Notrufpriorisierung. Mittelstand-Fall: Versicherungsmakler, Finanzdienstleister.\n6. **Strafverfolgung** und 7. **Migration, Asyl, Grenzkontrolle**: Behördenkontext, für den Mittelstand selten relevant.\n8. **Justiz und demokratische Prozesse**: Rechtsauslegungs-Assistenten (Anhang III Nr. 8 lit. a), Wahlbeeinflussungs-KI (lit. b). Mittelstand-Fall: Legal-Tech in Kanzleien.\n\nDas Pflichtenpaket: Anbieter erfüllen Art. 16 mit Art. 9 bis 15 (Risikomanagement, Datenqualität nach Art. 10, technische Doku nach Art. 11, Logging nach Art. 12, Transparenz nach Art. 13, menschliche Aufsicht nach Art. 14, Robustheit nach Art. 15). Betreiber erfüllen Art. 26. Die Grundrechtefolgenabschätzung nach Art. 27 trifft nur den dort genannten Adressatenkreis, nicht jeden privaten Hochrisiko-Betreiber. Die seit dem 27. Juli 2026 geltende Verordnung (EU) 2026/1744 setzt den **2. Dezember 2027** für eigenständige Anhang-III-Systeme und den **2. August 2028** für produktintegrierte Hochrisiko-Systeme.",
-          "keyTakeaway": "Anhang III nennt acht Bereiche mit konkreten Unterfällen. HR-Ranking kann unter Nr. 4 fallen. Die Hochrisiko-Termine 2027/2028 sind seit dem 27. Juli 2026 geltendes Recht; Art. 27 FRIA gilt nur für den dort genannten Adressatenkreis."
+          "content": "Nach **Art. 6 Abs. 2**, unabhängig von Abs. 1, ist ein KI-System Hochrisiko, wenn es in einem der **acht Anhang-III-Bereiche** eingesetzt wird. Abs. 3 enthält eine enge Rückausnahme für reine Hilfsfunktionen.\n\n1. **Biometrie:** Fernidentifizierung, Kategorisierung nach sensiblen Merkmalen, Emotionserkennung, soweit nicht nach Art. 5 verboten.\n2. **Kritische Infrastruktur:** KI als Sicherheitsbauteil in digitaler Infrastruktur, Straßenverkehr, Wasser, Gas, Heizung und Strom, etwa bei Stadtwerken.\n3. **Bildung und Berufsausbildung:** Zulassungs- und Bewertungs-KI, Prüfungsüberwachung, etwa Prüfungssoftware an Berufsschulen.\n4. **Beschäftigung und HR:** Recruiting, **CV-Screening** und Kandidatenbewertung (Nr. 4 lit. a) sowie Bedingungen von Arbeitsverhältnissen, Beförderung, Kündigung, Aufgabenverteilung und Leistungsmonitoring (Nr. 4 lit. b). CV-Ranking in einem Bewerbermanagementsystem (ATS) kann unter Nr. 4 lit. a fallen, maßgeblich ist der vorgesehene Zweck.\n5. **Wesentliche Dienste:** Sozialleistungen, Bonitätsbewertung und Kreditscoring, Tarifierung von Lebens- und Krankenversicherungen, Notrufpriorisierung, etwa bei Versicherungsmaklern.\n6. **Strafverfolgung:** Behördenkontext, für den Mittelstand selten relevant.\n7. **Migration, Asyl, Grenzkontrolle:** ebenfalls Behördenkontext.\n8. **Justiz und demokratische Prozesse:** Assistenten zur Recherche und Auslegung von Sachverhalt und Recht (Anhang III Nr. 8 lit. a), KI zur Wahlbeeinflussung (lit. b).\n\nAnbieter erfüllen Art. 16 und die Anforderungen aus Art. 9 bis 15 (Block 3), Betreiber Art. 26. Die Grundrechtefolgenabschätzung nach Art. 27 trifft nur den dort genannten Adressatenkreis. Anwendbar sind die Regeln ab dem **2. Dezember 2027** für eigenständige Anhang-III-Systeme und ab dem **2. August 2028** für produktintegrierte Systeme (Verordnung (EU) 2026/1744, seit 27. Juli 2026 in Kraft)."
         },
         {
           "id": "block_2_lesson_2_section_3",
           "title": "Die Ausnahme: Art. 6 Abs. 3",
           "readTimeMinutes": 2,
-          "content": "**Art. 6 Abs. 3** erlaubt eine Ausnahme von der Hochrisiko-Einstufung, obwohl das System in einem Anhang-III-Bereich eingesetzt wird. Die Ausnahme greift, wenn das KI-System:\n\n- (a) nur eine eng begrenzte verfahrenstechnische Aufgabe erfüllt,\n- (b) ein menschliches Ergebnis lediglich verbessert,\n- (c) ein Entscheidungsmuster nur erkennt, ohne die menschliche Bewertung zu ersetzen, oder\n- (d) eine rein vorbereitende Aufgabe leistet.\n\n**Profiling schließt die Ausnahme aus.** Wer die Ausnahme in Anspruch nimmt, dokumentiert die Selbstbewertung nach Art. 6 Abs. 4 und registriert das System in der EU-Datenbank nach Art. 49 Abs. 2.\n\nPraxisbeispiel: Ein ATS-Anbieter könnte sein Vorsortier-Modul über Art. 6 Abs. 3 aus der Hochrisiko-Klasse herausnehmen. Ob die Einstufung trägt, prüft der **Betreiber** trotzdem selbst. Wer blind dem Anbieter vertraut, haftet bei einer Fehleinschätzung.\n\nDie Marktüberwachung darf jederzeit prüfen, ob die Ausnahme greift. Art. 6 Abs. 3 ist kein Freibrief, sondern eine dokumentationspflichtige Selbstbewertung.",
-          "keyTakeaway": "Art. 6 Abs. 3 kann reine Hilfsfunktionen, die alle gesetzlichen Voraussetzungen erfüllen, aus der Hochrisiko-Klasse herausnehmen, verlangt aber Dokumentation (Abs. 4) und Registrierung (Art. 49 Abs. 2). Profiling ist immer ausgeschlossen."
+          "content": "Nach **Art. 6 Abs. 3** ist ein System in einem Anhang-III-Bereich kein Hochrisiko, wenn es kein erhebliches Risiko für Gesundheit, Sicherheit oder Grundrechte birgt und das Entscheidungsergebnis nicht wesentlich beeinflusst. Das kommt in Frage, wenn es:\n\n- (a) eine eng begrenzte verfahrenstechnische Aufgabe erfüllt,\n- (b) das Ergebnis einer abgeschlossenen menschlichen Tätigkeit verbessert,\n- (c) Entscheidungsmuster oder Abweichungen erkennt, ohne die zuvor abgeschlossene menschliche Bewertung ohne angemessene menschliche Überprüfung zu ersetzen oder zu beeinflussen, oder\n- (d) eine vorbereitende Aufgabe für eine Anhang-III-Bewertung erledigt.\n\n**Profiling schließt die Ausnahme aus.** Wer sie nutzt, dokumentiert die Bewertung nach Art. 6 Abs. 4 und registriert das System in der EU-Datenbank nach Art. 49 Abs. 2.\n\nDie Marktüberwachung darf jederzeit prüfen, ob die Ausnahme greift. Nimmt ein ATS-Anbieter sein Vorsortier-Modul so aus der Hochrisiko-Klasse, prüft der **Betreiber** die Einstufung trotzdem selbst; wer blind vertraut, haftet für die Fehleinschätzung."
         }
       ],
       "quiz": [
         {
           "id": "block_2_lesson_2_q1",
-          "questionText": "Ein Mittelständler nutzt Personio. Die Funktion AI Performance Summaries fasst 360-Grad-Feedback automatisch zusammen, bevor der Vorgesetzte es liest. Wie ist sie einzustufen?",
+          "questionText": "Die Personio-Funktion AI Performance Summaries fasst 360-Grad-Feedback zusammen, bevor die Führungskraft es liest. Wie ist dieser Einsatz einzustufen?",
           "answerOptions": [
             {
               "id": "a",
-              "text": "Begrenztes Risiko, weil nur Zusammenfassung",
+              "text": "Begrenztes Risiko, weil sie nur zusammenfasst",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Hochrisiko nach Art. 6 Abs. 2 i.V.m. Anhang III Nr. 4 lit. b",
+              "text": "Hochrisiko nach Anhang III Nr. 4 lit. b",
               "isCorrect": true
             },
             {
@@ -194,15 +188,15 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Anhang III Nr. 4 lit. b erfasst KI zur Leistungsbewertung im Beschäftigungskontext. Eine KI, die entscheidet, welche Feedback-Aspekte hervorgehoben werden, beeinflusst die Bewertung. Das Argument Mensch entscheidet final trägt nicht, sobald die KI den Input formt."
+          "explanation": "Über Art. 6 Abs. 2 erfasst Anhang III Nr. 4 lit. b KI zur Leistungsbewertung. Die KI bestimmt, welches Feedback die Führungskraft sieht, und prägt so die Bewertung, auch wenn ein Mensch entscheidet."
         },
         {
           "id": "block_2_lesson_2_q2",
-          "questionText": "Welches der folgenden Systeme ist Hochrisiko über Art. 6 Abs. 1 (Anhang I), nicht über Anhang III?",
+          "questionText": "Welches System ist über Art. 6 Abs. 1 (Anhang I) Hochrisiko und nicht über Anhang III?",
           "answerOptions": [
             {
               "id": "a",
-              "text": "KI in der Aufzugssteuerung als Sicherheitsbauteil unter Aufzugs-RL 2014/33/EU",
+              "text": "KI als Sicherheitsbauteil einer Aufzugssteuerung (RL 2014/33/EU)",
               "isCorrect": true
             },
             {
@@ -221,34 +215,34 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Aufzugssteuerung ist ein klassischer Anhang-I-Fall: KI als Sicherheitsbauteil eines Produkts unter EU-Harmonisierungsrecht (Art. 6 Abs. 1). HR-Ranking fällt unter Anhang III Nr. 4, Bonitätsscoring unter Anhang III Nr. 5 lit. b, Prüfungsüberwachung unter Anhang III Nr. 3. Alle drei laufen über Art. 6 Abs. 2."
+          "explanation": "Die Aufzugssteuerung ist Sicherheitsbauteil eines Produkts nach Anhang I (Art. 6 Abs. 1); die anderen drei Fälle stehen in Anhang III."
         },
         {
           "id": "block_2_lesson_2_q3",
-          "questionText": "Was passiert, wenn ein Anbieter Art. 6 Abs. 3 nutzt, um die Anhang-III-Einstufung zu vermeiden?",
+          "questionText": "Was muss ein Anbieter tun, der ein Anhang-III-System über Art. 6 Abs. 3 nicht als Hochrisiko einstuft?",
           "answerOptions": [
             {
               "id": "a",
-              "text": "Er muss nichts dokumentieren",
+              "text": "Nichts dokumentieren, die Einstufung genügt",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Er muss die Bewertung nach Art. 6 Abs. 4 dokumentieren und das System nach Art. 49 Abs. 2 registrieren",
+              "text": "Bewertung dokumentieren (Art. 6 Abs. 4), System registrieren (Art. 49 Abs. 2)",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "Er ist von allen KI-VO-Pflichten befreit",
+              "text": "Nichts, das System ist von allen KI-VO-Pflichten befreit",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Er darf Profiling einsetzen, solange es vorbereitend ist",
+              "text": "Profiling einsetzen, solange es vorbereitend ist",
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 6 Abs. 3 ist kein Freibrief. Die Bewertung muss schriftlich dokumentiert (Abs. 4) und das System in der EU-Datenbank registriert werden (Art. 49 Abs. 2). Die Marktüberwachung darf jederzeit prüfen. Profiling ist ohnehin ausgeschlossen."
+          "explanation": "Die Bewertung muss dokumentiert (Art. 6 Abs. 4) und das System registriert werden (Art. 49 Abs. 2); Profiling schließt die Ausnahme aus."
         }
       ]
     },
@@ -257,7 +251,7 @@
       "blockId": "block_2",
       "number": 3,
       "title": "Begrenztes Risiko: Transparenz nach Art. 50",
-      "subtitle": "Wenn KI mit Menschen interagiert oder Inhalte erzeugt, gilt Offenlegungspflicht ab 2. August 2026",
+      "subtitle": "Offenlegungspflichten für Chatbots und KI-Inhalte ab 2. August 2026",
       "durationMinutes": 4,
       "keyConcepts": [
         "Art. 50 KI-VO",
@@ -271,30 +265,27 @@
           "id": "block_2_lesson_3_section_1",
           "title": "Wer ist verpflichtet und ab wann",
           "readTimeMinutes": 2,
-          "content": "Woher weiß eine Kundin, dass sie mit einer Maschine chattet? Ab 2. August 2026 ist das keine Höflichkeitsfrage mehr, sondern Art. 50. Die Transparenzstufe trifft **Anbieter** (Abs. 1 und 2) und **Betreiber** (Abs. 3 und 4): Anbieter bauen das System, Betreiber setzen es im eigenen Haus ein.\n\nGeltung: ab **2. August 2026** (Art. 113 lit. c). Die Ratio steht in Erwägungsgrund 132: Nutzer müssen wissen, wann sie mit einer Maschine sprechen oder künstliche Inhalte sehen. Transparenz ist der Preis für den Massenmarkt.\n\nBußgeld bei Verstoß: **bis 15 Mio. EUR oder 3 % des weltweiten Jahresumsatzes** (Art. 99 Abs. 4 lit. g), je nachdem welcher Betrag höher ist. Eine Stufe unter Art. 5, aber für einen Mittelständler immer noch existenzbedrohend.\n\nTransparenz ist hier keine Formalie. Eine der vier Fallgruppen reicht, und Hochrisiko daneben hebt die Pflicht nicht auf.",
-          "keyTakeaway": "Art. 50 gilt ab 2. August 2026, trifft Anbieter und Betreiber, Bußgeld bis 15 Mio. EUR oder 3 % Jahresumsatz nach Art. 99 Abs. 4 lit. g."
+          "content": "Ab **2. August 2026** (Art. 113 lit. c) verpflichtet Art. 50 **Anbieter** (Abs. 1 und 2), die ein System bauen, und **Betreiber** (Abs. 3 und 4), die es im eigenen Haus einsetzen. Nach Erwägungsgrund 132 müssen Menschen wissen, wann sie mit einer Maschine sprechen oder künstliche Inhalte sehen.\n\nVerstöße kosten **bis 15 Mio. EUR oder 3 % des weltweiten Jahresumsatzes**, je nachdem, welcher Betrag höher ist (Art. 99 Abs. 4 lit. g)."
         },
         {
           "id": "block_2_lesson_3_section_2",
           "title": "Die vier Transparenz-Tatbestände",
           "readTimeMinutes": 3,
-          "content": "Art. 50 zählt vier Fallgruppen auf:\n\n- **Abs. 1, KI-Interaktion**: Anbieter müssen Systeme zur direkten Interaktion mit natürlichen Personen grundsätzlich so gestalten, dass Betroffene erkennen, dass sie mit einem KI-System interagieren. Ausnahmen: offensichtliche KI-Natur und, unter engen Voraussetzungen, Strafverfolgung.\n- **Abs. 2, Synthetische Inhalte**: Anbieter generativer Systeme für Audio-, Bild-, Video- oder Textinhalte müssen erfasste Outputs **maschinenlesbar** markieren. Die Lösung muss nach dem Stand der Technik wirksam, interoperabel, robust und zuverlässig sein, soweit technisch machbar; die Verordnung schreibt keine einzelne Technologie vor.\n- **Abs. 3, Emotionserkennung und biometrische Kategorisierung**: Betreiber müssen Betroffene informieren, soweit das System nach Art. 5 überhaupt zulässig ist.\n- **Abs. 4, Deepfakes und KI-Texte zu Themen öffentlichen Interesses**: Betreiber müssen Deepfakes grundsätzlich sichtbar offenlegen; für künstlerische, kreative, satirische oder fiktionale Werke gilt eine angepasste Form. Bestimmte KI-generierte Texte zu Themen öffentlichen Interesses müssen offengelegt werden, sofern eine natürliche oder juristische Person nicht redaktionell verantwortlich ist.\n\nEin gewöhnliches synthetisches Produktbild ist nicht automatisch ein Deepfake. Der Anbieter des generativen Systems kann dennoch der maschinenlesbaren Markierungspflicht aus Abs. 2 unterliegen. Bei einem KI-Blogartikel über öffentliche Angelegenheiten ohne redaktionelle Verantwortung kann Abs. 4 greifen.",
-          "keyTakeaway": "Vier Tatbestände: Chatbot-Hinweis, maschinenlesbare Kennzeichnung synthetischer Inhalte, Info bei Emotion und Biometrie, Deepfake-Offenlegung plus KI-Text-Kennzeichnung ohne Redaktion."
+          "content": "Art. 50 kennt vier Fallgruppen:\n\n- **Abs. 1, KI-Interaktion:** Anbieter gestalten Systeme zur direkten Interaktion so, dass Menschen erkennen, dass sie mit KI interagieren. Ausgenommen sind offensichtliche Fälle und, unter engen Voraussetzungen, die Strafverfolgung.\n- **Abs. 2, synthetische Inhalte:** Anbieter generativer Systeme für Audio, Bild, Video oder Text markieren erfasste Ausgaben **maschinenlesbar**. Die Lösung muss nach dem Stand der Technik wirksam, interoperabel, robust und zuverlässig sein, soweit technisch machbar; eine bestimmte Technologie schreibt die Verordnung nicht vor.\n- **Abs. 3, Emotionserkennung und biometrische Kategorisierung:** Betreiber informieren die Betroffenen, soweit das System nach Art. 5 überhaupt zulässig ist.\n- **Abs. 4, Deepfakes und KI-Texte:** Betreiber legen Deepfakes sichtbar offen, bei künstlerischen, kreativen, satirischen oder fiktionalen Werken in angepasster Form. KI-generierte Texte zu Themen öffentlichen Interesses sind offenzulegen, wenn keine natürliche oder juristische Person redaktionell verantwortlich ist. Ein synthetisches Produktbild ist nicht automatisch ein Deepfake."
         },
         {
           "id": "block_2_lesson_3_section_3",
           "title": "Was begrenztes Risiko nicht ist",
           "readTimeMinutes": 2,
-          "content": "Art. 50 verlangt **keine** technischen Hochrisiko-Pflichten. Kein Risikomanagementsystem, keine technische Dokumentation, keine Konformitätsbewertung. Nur sichtbare oder maschinenlesbare Offenlegung.\n\nAber: Art. 50 **entfällt nicht**, wenn ein System zugleich Hochrisiko ist. Ein HR-Chatbot, der Bewerber screent, unterliegt beiden Regimen parallel: Art. 50 Abs. 1 für den Chatbot-Hinweis **und** Art. 6 Abs. 2 i.V.m. Anhang III Nr. 4 für Risikomanagement, Logging und menschliche Aufsicht.\n\nArt. 50 trifft immer den konkreten Rollenträger. Bei Chatbots und synthetischen Inhalten den **Anbieter**, bei Emotionserkennung, biometrischer Kategorisierung, Deepfakes und KI-Texten den **Betreiber**. Plattformen, auf denen Inhalte erscheinen, unterliegen separaten DSA-Regeln.\n\nEine pauschale Footer-Notiz reicht nicht. Die Kennzeichnung gehört dorthin, wo der Nutzer den Inhalt sieht.",
-          "keyTakeaway": "Begrenztes Risiko bedeutet nur Offenlegung, keine technischen Pflichten. Aber Art. 50 und Hochrisiko gelten parallel, wenn beide Tatbestände erfüllt sind."
+          "content": "Art. 50 verlangt **keine** Hochrisiko-Pflichten wie Risikomanagementsystem, technische Dokumentation oder Konformitätsbewertung, nur sichtbare oder maschinenlesbare Offenlegung.\n\nIst ein System zugleich Hochrisiko, gilt Art. 50 trotzdem. Ein HR-Chatbot, der Bewerber screent, braucht den Hinweis nach Art. 50 Abs. 1 **und** Risikomanagement, Logging und menschliche Aufsicht nach Art. 6 Abs. 2 i.V.m. Anhang III Nr. 4.\n\nPlattformen, auf denen die Inhalte erscheinen, unterliegen eigenen DSA-Regeln. Die Kennzeichnung gehört dorthin, wo der Nutzer den Inhalt sieht, eine pauschale Footer-Notiz reicht nicht."
         },
         {
           "id": "block_2_lesson_3_section_4",
           "title": "Ihre Rechte als KI-Nutzer:in",
           "_claimRef": "ai-act-transparency-application-2026-08-02",
           "readTimeMinutes": 4,
-          "content": "Art. 50 verpflichtet Anbieter und Betreiber. Den Nutzen haben Sie.\n\n**Ab dem 2. August 2026 muss die KI-Interaktion grundsätzlich erkennbar sein.** Anbieter von Systemen zur direkten Interaktion müssen diese so gestalten, dass Betroffene vor oder bei der ersten Interaktion informiert werden, sofern die KI-Natur nicht ohnehin offensichtlich ist (Art. 50 Abs. 1).\n\n**Deepfake-Offenlegung und technische Markierung sind zwei verschiedene Pflichten:** Anbieter erfasster generativer Systeme markieren Ausgaben nach Abs. 2 maschinenlesbar. Betreiber, die Deepfakes veröffentlichen, legen die künstliche Erzeugung oder Manipulation nach Abs. 4 grundsätzlich sichtbar offen, bei künstlerischen, kreativen, satirischen oder fiktionalen Werken in angepasster Form.\n\n**Code of Practice Transparenz (10. Juni 2026):** Der freiwillige Verhaltenskodex unterstützt die Umsetzung von Art. 50 Abs. 2, 4 und 5. Er ist ein Compliance-Hilfsmittel, kein Ersatz für den Gesetzestext und kein automatischer Konformitätsnachweis.\n\n**Was können Sie konkret tun?**\n\n1. **Melden:** Verdächtige oder irreführende Inhalte über den veröffentlichten Meldeweg der jeweiligen Plattform melden.\n2. **Prüfen:** Herkunft, Kontext und Originalquelle kontrollieren; Erkennungstools liefern Indizien, keinen sicheren Echtheitsbeweis.\n3. **Beschwerdeweg prüfen:** Art. 85 sieht Beschwerden bei der zuständigen Marktüberwachungsbehörde vor. Das deutsche KI-MIG ist am 29. Juli 2026 in Kraft getreten und weist der Bundesnetzagentur die Rolle als Marktüberwachungsbehörde, Anlaufstelle und Beschwerdestelle zu, soweit keine Fachbehörde zuständig ist. Nutzen Sie für die konkrete Einreichung die aktuell veröffentlichten Behördenwege.\n\nTechnische Erkennungsmethoden für KI-generierte Inhalte werden im Deepfakes-Modul des Lernpfads vertieft.\n\n(Quelle: Art. 50 und 85 Verordnung (EU) 2024/1689; Europäische Kommission, Code of Practice on Transparency of AI-Generated Content, 10. Juni 2026; Bundestagsbeschluss zum KI-MIG, 11. Juni 2026)",
-          "keyTakeaway": "Ab dem 2. August 2026 greifen die rollenbezogenen Pflichten aus Art. 50. Technische Markierung und sichtbare Offenlegung sind getrennt zu prüfen; im Beschwerdefall prüfen Sie den aktuellen Beschwerdeweg direkt bei der BNetzA.",
+          "content": "Ab dem 2. August 2026 müssen Sie vor oder bei der ersten Interaktion erfahren, dass Sie mit KI sprechen, sofern das nicht ohnehin offensichtlich ist (Art. 50 Abs. 1).\n\nDer freiwillige **Code of Practice Transparenz** vom 10. Juni 2026 unterstützt die Umsetzung von Art. 50 Abs. 2, 4 und 5. Er ist ein Compliance-Hilfsmittel, ersetzt den Gesetzestext nicht und ist kein automatischer Konformitätsnachweis.\n\n**Was Sie tun können:**\n\n1. **Melden:** verdächtige oder irreführende Inhalte über den Meldeweg der jeweiligen Plattform.\n2. **Prüfen:** Herkunft, Kontext und Originalquelle. Erkennungstools liefern Indizien, keinen sicheren Echtheitsbeweis.\n3. **Beschweren:** Art. 85 sieht Beschwerden bei der zuständigen Marktüberwachungsbehörde vor. Das deutsche KI-MIG ist am 29. Juli 2026 in Kraft getreten und macht die Bundesnetzagentur zur Marktüberwachungsbehörde, Anlaufstelle und Beschwerdestelle, soweit keine Fachbehörde zuständig ist. Nutzen Sie die aktuell veröffentlichten Einreichungswege.\n\n(Quelle: Art. 50 und 85 Verordnung (EU) 2024/1689; Europäische Kommission, Code of Practice on Transparency of AI-Generated Content, 10. Juni 2026; Bundestagsbeschluss zum KI-MIG, 11. Juni 2026)",
+          "keyTakeaway": "Ab dem 2. August 2026 greifen die rollenbezogenen Pflichten aus Art. 50. Technische Markierung (Anbieter, Abs. 2) und sichtbare Deepfake-Offenlegung (Betreiber, Abs. 4) sind getrennte Pflichten.",
           "sources": [
             {
               "claimId": "ai-act-transparency-application-2026-08-02"
@@ -305,7 +296,7 @@
       "quiz": [
         {
           "id": "block_2_lesson_3_q1",
-          "questionText": "Ein Marketing-Team einer Druckerei publiziert Blogartikel, die eine KI eigenständig schreibt. Niemand redigiert. Welche Pflicht greift?",
+          "questionText": "Das Marketing einer Druckerei veröffentlicht Blogartikel, die eine KI allein schreibt. Niemand redigiert. Welche Pflicht greift?",
           "answerOptions": [
             {
               "id": "a",
@@ -319,7 +310,7 @@
             },
             {
               "id": "c",
-              "text": "Sichtbare Kennzeichnung jedes Artikels als KI-generiert nach Art. 50 Abs. 4 Unterabs. 2",
+              "text": "Sichtbare Kennzeichnung jedes Artikels nach Art. 50 Abs. 4 Unterabs. 2",
               "isCorrect": true
             },
             {
@@ -328,11 +319,11 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 50 Abs. 4 Unterabs. 2 verlangt die Offenlegung KI-generierter Texte zu Themen öffentlichen Interesses, wenn kein Mensch redaktionell verantwortet. Eine pauschale Footer-Notiz reicht nicht. Die Kennzeichnung muss am Inhalt selbst sichtbar sein."
+          "explanation": "Für KI-Texte zu Themen öffentlichen Interesses ohne redaktionelle Verantwortung verlangt Art. 50 Abs. 4 Unterabs. 2 eine sichtbare Offenlegung am Text, eine Footer-Notiz reicht nicht."
         },
         {
           "id": "block_2_lesson_3_q2",
-          "questionText": "Eine Bauunternehmung setzt einen Chatbot auf der Karriereseite ein, der Bewerberfragen beantwortet und Lebensläufe nach Erfahrung vorsortiert. Welches Regime greift?",
+          "questionText": "Ein Chatbot auf der Karriereseite einer Baufirma beantwortet Bewerberfragen und sortiert Lebensläufe nach Erfahrung vor. Welches Regime greift?",
           "answerOptions": [
             {
               "id": "a",
@@ -341,21 +332,21 @@
             },
             {
               "id": "b",
-              "text": "Nur Art. 6 Abs. 2 i.V.m. Anhang III Nr. 4",
+              "text": "Nur Art. 6 Abs. 2 mit Anhang III Nr. 4",
               "isCorrect": false
             },
             {
               "id": "c",
-              "text": "Beides parallel: Art. 50 Abs. 1 und Art. 6 Abs. 2 i.V.m. Anhang III Nr. 4 lit. a",
+              "text": "Beides: Art. 50 Abs. 1 und Anhang III Nr. 4 lit. a",
               "isCorrect": true
             },
             {
               "id": "d",
-              "text": "Weder Art. 50 noch Anhang III, weil es nur Vorsortierung ist",
+              "text": "Weder noch, weil es nur vorsortiert",
               "isCorrect": false
             }
           ],
-          "explanation": "Die Risikoklassen schließen einander nicht aus. Sobald ein System eine Anhang-III-Funktion erfüllt, gelten die Hochrisiko-Pflichten zusätzlich zu Art. 50. Die Bauunternehmung braucht den Chatbot-Hinweis plus Risikomanagement, Logging und menschliche Aufsicht."
+          "explanation": "Die Risikoklassen schließen einander nicht aus. Die Vorsortierung ist eine Anhang-III-Funktion, also braucht die Firma zusätzlich zum Chatbot-Hinweis Risikomanagement, Logging und menschliche Aufsicht."
         },
         {
           "id": "block_2_lesson_3_q3",
@@ -382,7 +373,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 50 Abs. 4 adressiert ausdrücklich den Betreiber, also denjenigen, der das Deepfake einsetzt und veröffentlicht. Anbieter haben separat nach Abs. 2 die Pflicht zur maschinenlesbaren Markierung. Plattformen unterliegen den DSA-Regeln."
+          "explanation": "Art. 50 Abs. 4 richtet sich an den Betreiber, der das Deepfake einsetzt und veröffentlicht. Anbieter markieren maschinenlesbar nach Abs. 2, Plattformen unterliegen dem DSA."
         }
       ]
     },
@@ -391,7 +382,7 @@
       "blockId": "block_2",
       "number": 4,
       "title": "Minimales Risiko und der Entscheidungsbaum",
-      "subtitle": "Die meiste KI im Mittelstand landet hier. Sechs Fragen entscheiden, ob Ihre dazugehört.",
+      "subtitle": "Wie Sie mit sechs Fragen die Risikoklasse bestimmen",
       "durationMinutes": 5,
       "keyConcepts": [
         "Minimales Risiko als Default",
@@ -405,28 +396,25 @@
           "id": "block_2_lesson_4_section_1",
           "title": "Was minimales Risiko konkret heißt",
           "readTimeMinutes": 2,
-          "content": "Die größte Risikoklasse im Mittelstand benennt die KI-VO nicht ausdrücklich. **Minimales Risiko** ist die Restmenge: alles, was nicht unter Art. 5, nicht unter Art. 6 (Anhang I oder III) und nicht unter Art. 50 fällt.\n\nTypische Mittelstand-Beispiele:\n\n- ChatGPT für interne E-Mail-Entwürfe\n- DeepL für Übersetzungen ohne Personenbezug\n- QS-Bilderkennung auf der Produktionslinie ohne Personenbezug\n- Spamfilter im Mailserver\n- Predictive Maintenance auf Maschinendaten\n- Routenplanung, Lagerverwaltung\n- GitHub Copilot für Code-Vervollständigung\n\nPflichten: **keine speziellen KI-VO-Pflichten**. Aber **Art. 4 KI-Kompetenz** gilt für alle Klassen, auch die minimale. Art. 95 ermuntert zusätzlich zu freiwilligen Verhaltenskodizes.\n\nMinimales Risiko heißt nicht: kein KI-System. Erfüllt das Tool die Definition aus Art. 3 Nr. 1 (maschinengestütztes System mit Autonomiegrad, das Ausgaben wie Vorhersagen, Empfehlungen oder Entscheidungen erzeugt), bleibt es ein KI-System. Nur in der niedrigsten Klasse.",
-          "keyTakeaway": "Minimales Risiko ist die Restklasse. Keine speziellen Pflichten, aber Art. 4 KI-Kompetenz greift trotzdem seit 2. Februar 2025."
+          "content": "**Minimales Risiko** ist die Restmenge und im Mittelstand die größte Klasse: alles, was weder unter Art. 5 noch unter Art. 6 (Anhang I oder III) noch unter Art. 50 fällt. Typische Beispiele:\n\n- ChatGPT für interne E-Mail-Entwürfe\n- DeepL für Übersetzungen ohne Personenbezug\n- QS-Bilderkennung auf der Produktionslinie ohne Personenbezug\n- Spamfilter im Mailserver\n- Predictive Maintenance auf Maschinendaten\n- Routenplanung, Lagerverwaltung\n- GitHub Copilot für Code-Vervollständigung\n\nSpezielle KI-VO-Pflichten gibt es hier nicht, **Art. 4 (KI-Kompetenz)** gilt aber für alle Klassen, und Art. 95 ermuntert zu freiwilligen Verhaltenskodizes. Die Tools bleiben trotzdem KI-Systeme nach Art. 3 Nr. 1."
         },
         {
           "id": "block_2_lesson_4_section_2",
-          "title": "Der Entscheidungsbaum: 6 Fragen in dieser Reihenfolge",
+          "title": "Der Entscheidungsbaum in sechs Fragen",
           "readTimeMinutes": 3,
-          "content": "Gehen Sie für jeden Anwendungsfall (nicht pro Tool) diese sechs Fragen der Reihe nach durch:\n\n1. **Ist es ein KI-System nach Art. 3 Nr. 1?** Wenn nein (zum Beispiel eine festcodierte Excel-Formel), ist die KI-VO nicht einschlägig.\n2. **Fällt es unter Art. 5 Abs. 1 (Verbote)?** Wenn ja, abschalten oder umbauen. Fertig.\n3. **Ist es Sicherheitsbauteil unter Anhang I (Art. 6 Abs. 1)?** Wenn ja, Hochrisiko. Sektoriale Konformitätsbewertung plus Art. 8 bis 15.\n4. **Beeinflusst es eine Entscheidung in einem der 8 Anhang-III-Bereiche (Art. 6 Abs. 2)?** Wenn ja, Hochrisiko. Art. 8 bis 15 plus Art. 26 und 27. Ausnahme nach Art. 6 Abs. 3 prüfen, dokumentationspflichtig.\n5. **Fällt es unter einen der vier Art. 50-Tatbestände?** (Chatbot, synthetische Inhalte, Emotion oder Biometrie, Deepfake oder KI-Text ohne Redaktion). Wenn ja, begrenztes Risiko mit Transparenzpflicht.\n6. **Alle nein**, minimales Risiko. Pflichtenkanon: Art. 4 plus freiwillige Verhaltenskodizes nach Art. 95.\n\nDer Baum läuft **pro Anwendungsfall**, nicht pro Tool. ChatGPT für die Meeting-Zusammenfassung: minimal. ChatGPT zum Vorsortieren von Bewerbungen: Anhang III Nr. 4, also Hochrisiko. Gleiches Tool, andere Klasse.",
-          "keyTakeaway": "Sechs Fragen, in dieser Reihenfolge, pro Anwendungsfall. Dasselbe ChatGPT ist minimal für E-Mails und Hochrisiko für die Bewerbervorsortierung."
+          "content": "Gehen Sie pro Anwendungsfall, nicht pro Tool, diese Fragen der Reihe nach durch:\n\n1. **Ist es ein KI-System nach Art. 3 Nr. 1**, also ein maschinengestütztes System mit Autonomiegrad, das Vorhersagen, Empfehlungen oder Entscheidungen erzeugt? Wenn nein, etwa bei einer festcodierten Excel-Formel, gilt die KI-VO nicht.\n2. **Fällt es unter die Verbote des Art. 5 Abs. 1?** Wenn ja, abschalten oder umbauen.\n3. **Ist es Sicherheitsbauteil unter Anhang I (Art. 6 Abs. 1)?** Wenn ja, Hochrisiko: sektorale Konformitätsbewertung plus Art. 8 bis 15.\n4. **Beeinflusst es eine Entscheidung in einem der 8 Anhang-III-Bereiche (Art. 6 Abs. 2)?** Wenn ja, Hochrisiko: Art. 8 bis 15 plus Art. 26 und, für die dort genannten Betreiber, Art. 27. Die Ausnahme nach Art. 6 Abs. 3 prüfen und dokumentieren.\n5. **Trifft einer der vier Art.-50-Tatbestände zu** (Chatbot, synthetische Inhalte, Emotion oder Biometrie, Deepfake oder KI-Text ohne Redaktion)? Wenn ja, begrenztes Risiko mit Transparenzpflicht.\n6. **Alles nein:** minimales Risiko mit Art. 4 und freiwilligen Verhaltenskodizes nach Art. 95.\n\nChatGPT für die Meeting-Zusammenfassung ist minimal, ChatGPT zum Vorsortieren von Bewerbungen fällt unter Anhang III Nr. 4 und ist Hochrisiko."
         },
         {
           "id": "block_2_lesson_4_section_3",
           "title": "Asymmetrie der Fehlklassifikation",
           "readTimeMinutes": 2,
-          "content": "Wer falsch klassifiziert, verpasst nötige Kontrollen oder bezahlt für unnötige.\n\n**Zu niedrig einstufen** (Hochrisiko als minimal behandeln): Risikomanagement, Logging oder menschliche Aufsicht können fehlen. Sobald die einschlägigen Pflichten anwendbar sind, kommen Maßnahmen der Marktüberwachung und der Sanktionsrahmen des Art. 99 in Betracht; Parallelrecht wie AGG oder DSGVO kann schon vorher relevant sein.\n\n**Zu hoch einstufen** (Minimales als Hochrisiko behandeln): unnötiger Compliance-Aufwand pro System.\n\n**Vorgehen:** Zweck, Rolle und Art. 6 mit den Anhängen dokumentieren. Im Zweifel kein Etikett aus dem Bauch, sondern die offene Rechtsfrage festhalten, dazu eine risikoadäquate Zwischenkontrolle.\n\nDie seit dem 27. Juli 2026 geltende Verordnung (EU) 2026/1744 setzt den 2. Dezember 2027 als Anwendungsbeginn für eigenständige Anhang-III-Systeme. Bis dahin zu warten wäre ein Fehler.\n\n**Jetzt anwenden:** Nehmen Sie Ihr wichtigstes KI-System und gehen Sie die sechs Fragen durch. Risikoklasse plus Begründung gehören in Ihr KI-Inventar, Spalte Risikoklassifizierung.",
-          "keyTakeaway": "Falsche Einstufung kostet in beide Richtungen. Bei Zweifeln die offene Rechtsfrage dokumentieren und eine risikoadäquate Zwischenkontrolle festlegen."
+          "content": "**Zu niedrig** (Hochrisiko als minimal behandelt): Risikomanagement, Logging oder menschliche Aufsicht können fehlen. Sobald die Pflichten anwendbar sind, kommen Maßnahmen der Marktüberwachung und Sanktionen nach Art. 99 in Betracht; Parallelrecht wie AGG oder DSGVO kann schon vorher greifen.\n\n**Zu hoch** (Minimales als Hochrisiko behandelt): unnötiger Compliance-Aufwand pro System.\n\nDokumentieren Sie Zweck, Rolle und die Prüfung nach Art. 6 mit den Anhängen. Bleibt eine Rechtsfrage offen, notieren Sie sie und legen Sie bis zur Klärung eine Kontrolle fest, die zum Risiko passt. Warten Sie damit nicht bis zum 2. Dezember 2027.\n\n**Jetzt anwenden:** Gehen Sie für Ihr wichtigstes KI-System die sechs Fragen durch und tragen Sie Risikoklasse und Begründung in Ihr KI-Inventar ein (Spalte Risikoklassifizierung)."
         }
       ],
       "quiz": [
         {
           "id": "block_2_lesson_4_q1",
-          "questionText": "Ein Steuerberater nutzt DATEV mit KI-gestützter Belegerfassung (erkennt Rechnungsbeträge, ordnet Konten zu). Wie ist das Risikoprofil?",
+          "questionText": "Ein Steuerberater nutzt in DATEV die KI-Belegerfassung, die Rechnungsbeträge erkennt und Konten zuordnet. Welches Risikoprofil hat das?",
           "answerOptions": [
             {
               "id": "a",
@@ -440,7 +428,7 @@
             },
             {
               "id": "c",
-              "text": "Minimales Risiko: keine Entscheidung über Personen, kein Anhang-III-Bereich, kein Art. 50-Tatbestand",
+              "text": "Minimales Risiko: keine Personenentscheidung, kein Anhang III, kein Art. 50",
               "isCorrect": true
             },
             {
@@ -449,7 +437,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Belegerfassung ordnet Daten Konten zu. Kein verbotener Tatbestand (Art. 5), kein Sicherheitsbauteil (Art. 6 Abs. 1), kein Anhang-III-Bereich (Art. 6 Abs. 2), kein Art. 50-Auslöser. Restmenge: minimal. Art. 4 KI-Kompetenz gilt trotzdem."
+          "explanation": "Die Belegerfassung erfüllt keinen Tatbestand aus Art. 5, 6 oder 50 und ist minimales Risiko; Art. 4 gilt trotzdem."
         },
         {
           "id": "block_2_lesson_4_q2",
@@ -476,11 +464,11 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Art. 4 KI-Kompetenz gilt über alle Risikoklassen hinweg, seit dem 2. Februar 2025 (Art. 113 lit. a). Art. 14 greift nur bei Hochrisiko, Art. 50 nur bei Transparenztatbeständen, Art. 27 nur bei Hochrisiko-Betreibern öffentlicher Stellen und bestimmter Anhang-III-Bereiche."
+          "explanation": "Art. 4 gilt seit dem 2. Februar 2025 für alle Risikoklassen; Art. 14, 50 und 27 greifen nur bei Hochrisiko, Transparenzfällen oder bestimmten Betreibern."
         },
         {
           "id": "block_2_lesson_4_q3",
-          "questionText": "Ein IT-Dienstleister (40 Mitarbeiter) nutzt ChatGPT für (a) Meeting-Zusammenfassungen, (b) E-Mail-Entwürfe und (c) Vorauswahl von Freelancer-Profilen. Wie ist jeweils zu klassifizieren?",
+          "questionText": "Ein IT-Dienstleister (40 Mitarbeiter) nutzt ChatGPT für (a) Meeting-Zusammenfassungen, (b) E-Mail-Entwürfe und (c) die Vorauswahl von Freelancer-Profilen. Wie ist jeweils einzustufen?",
           "answerOptions": [
             {
               "id": "a",
@@ -489,7 +477,7 @@
             },
             {
               "id": "b",
-              "text": "(a) und (b) minimal, (c) Hochrisiko nach Anhang III Nr. 4 lit. a",
+              "text": "(a) und (b) minimal, (c) Hochrisiko (Anhang III Nr. 4 lit. a)",
               "isCorrect": true
             },
             {
@@ -503,7 +491,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Der Entscheidungsbaum läuft pro Anwendungsfall, nicht pro Tool. Meeting-Zusammenfassung und E-Mail-Entwürfe sind keine Personalentscheidungen, also minimal. Die Vorauswahl von Freelancern ist Filterung zur Beschäftigung und fällt unter Anhang III Nr. 4 lit. a. GPAI-Modelle werden bei Hochrisiko-Einsatz mit den Pflichten ihres konkreten Anwendungsfalls gekoppelt."
+          "explanation": "Eingestuft wird pro Anwendungsfall. Die Vorauswahl von Freelancer-Profilen ist Personalauswahl nach Anhang III Nr. 4 lit. a, Zusammenfassungen und E-Mails sind es nicht. Dass ChatGPT ein GPAI-Modell ist, macht nicht jeden Einsatz zu Hochrisiko."
         }
       ],
       "widgets": [
@@ -515,7 +503,7 @@
             "lessonId": "block_2_lesson_4",
             "cpId": "risikopyramide",
             "title": "Die Risikopyramide der Verordnung (EU) 2024/1689",
-            "caption": "Spielen Sie den Verlauf ab: von der strengsten Stufe oben (verboten) bis zur freiesten unten (minimal). Genau diese vier Stufen prüft der Entscheidungsbaum."
+            "caption": "Spielen Sie den Verlauf ab, von der strengsten Stufe oben (verboten) bis zur freiesten unten (minimal)."
           }
         },
         {
@@ -526,7 +514,7 @@
             "lessonId": "block_2_lesson_4",
             "cpId": "risikostufen-ordnen",
             "title": "Ordnen Sie die vier Risikostufen",
-            "prompt": "Sortieren Sie die Risikoklassen der Verordnung (EU) 2024/1689 von der höchsten Eingriffstiefe oben bis zur niedrigsten unten. Ziehen Sie die Karten oder nutzen Sie die Pfeil-Schaltflächen.",
+            "prompt": "Sortieren Sie die vier Risikoklassen von der höchsten Eingriffstiefe oben bis zur niedrigsten unten. Ziehen Sie die Karten oder nutzen Sie die Pfeil-Schaltflächen.",
             "hint": "Erste Frage: Ist es verboten? Dann: hochriskant? Dann: trifft eine Transparenzpflicht zu? Was übrig bleibt, ist minimales Risiko."
           }
         }

@@ -66,22 +66,22 @@ export const STATISTIK_COPY = {
     eyebrow: "Konto",
     title: "Betriebsstatistik",
     intro:
-      "Zusammengefasste Anzahlen zur Nutzung der Plattform. Die Werte werden bei jedem Aufruf neu berechnet und nicht gespeichert.",
+      "Die Seite zählt die Nutzung bei jedem Aufruf neu und speichert nichts.",
     unavailableTitle: "Statistik vorübergehend nicht verfügbar",
     unavailableBody:
-      "Die Anmeldung konnte gerade nicht geprüft werden. Deshalb werden keine Zahlen angezeigt. Bitte später erneut versuchen.",
+      "Die Anmeldung ließ sich gerade nicht prüfen, deshalb erscheinen keine Zahlen. Versuche es später erneut.",
     reauthTitle: "Erneute Anmeldung erforderlich",
     reauthBody:
-      "Die Betriebsstatistik öffnet sich nur innerhalb von 24 Stunden nach einer echten Anmeldung. Eine länger bestehende Sitzung reicht dafür nicht aus.",
+      "Die Statistik öffnet sich nur bis 24 Stunden nach einer echten Anmeldung. Eine ältere Sitzung reicht nicht.",
     reauthSignOutStep: "1. Zuerst abmelden.",
     reauthSignOut: "Abmelden",
-    reauthSignInStep: "2. Danach erneut anmelden, um zur Statistik zurückzukehren.",
+    reauthSignInStep: "2. Danach erneut anmelden.",
     reauthSignIn: "Erneut anmelden",
     platformHeading: "Lernplattform",
     platformUnavailable:
-      "Die Anzahlen der Lernplattform konnten gerade nicht gelesen werden. Es werden keine Ersatzwerte angezeigt.",
+      "Die Anzahlen der Lernplattform ließen sich gerade nicht lesen.",
     insufficientData:
-      "Zu wenige Daten: Solange die Plattform nur sehr wenige Lernstände führt, werden keine Einzelwerte angezeigt.",
+      "Es gibt noch zu wenige Lernstände, deshalb erscheinen keine Einzelwerte.",
     totalsLabel: "Gesamtanzahlen",
     totalLabels: {
       courseProgress: "Gespeicherte Kurs-Lernstände",
@@ -99,20 +99,20 @@ export const STATISTIK_COPY = {
     countColumn: "Anzahl",
     coursesNone: "Kein Kurs erreicht derzeit die Mindestgröße.",
     coursesIncomplete:
-      "Für mindestens einen Kurs konnte die Anzahl nicht gelesen werden; er fehlt in der Tabelle.",
+      "Mindestens ein Kurs fehlt, weil seine Anzahl nicht lesbar war.",
     accountTotalsNote:
-      "Die Zahl der Konten wird bewusst nicht angezeigt: Konten zu zählen hieße, Nutzerdatensätze zu lesen.",
+      "Die Zahl der Konten wird nicht angezeigt, weil man dafür Nutzerdatensätze lesen müsste.",
     ownerRowsNote:
       "Die eigenen Einträge des Betreibers sind in jeder Anzahl enthalten.",
     thresholdNote: (floor: number, minimum: number) =>
       `Unter ${floor} gespeicherten Lernständen wird keine Anzahl angezeigt. Einzelwerte unter ${minimum} werden nie als Zahl angezeigt.`,
     reachHeading: "Reichweite und Nutzungsereignisse",
     reachIntro: (days: number) =>
-      `Zusammengefasste Werte aus Vercel Web Analytics für die letzten ${days} Tage, bei jedem Aufruf serverseitig abgefragt und nicht gespeichert.`,
+      `Die Seite fragt Vercel Web Analytics für die letzten ${days} Tage bei jedem Aufruf ab und speichert nichts.`,
     reachDisabled:
-      "Die Abfrage von Vercel Web Analytics ist für diese Bereitstellung nicht eingerichtet.",
+      "Die Abfrage von Vercel Web Analytics ist hier nicht eingerichtet.",
     reachNotEnabled:
-      "Vercel Web Analytics ist für dieses Projekt nicht aktiviert. Es liegen keine Werte vor.",
+      "Vercel Web Analytics ist für dieses Projekt nicht aktiviert.",
     reachTotalsLabel: "Gesamtwerte",
     pageviews: "Seitenaufrufe",
     visitors: "Besuchende",
@@ -137,22 +137,22 @@ export const STATISTIK_COPY = {
     eyebrow: "Account",
     title: "Operating statistics",
     intro:
-      "Aggregated counts describing how the platform is used. The figures are recalculated on each request and are not stored.",
+      "The page recounts usage on each request and stores nothing.",
     unavailableTitle: "Statistics temporarily unavailable",
     unavailableBody:
-      "Your sign-in could not be verified just now, so no figures are shown. Please try again later.",
+      "Your sign-in could not be verified just now, so no figures are shown. Try again later.",
     reauthTitle: "Sign in again",
     reauthBody:
-      "The operating statistics open only within 24 hours of an actual sign-in. A session that has lasted longer is not sufficient.",
+      "The statistics open only within 24 hours of an actual sign-in. An older session is not enough.",
     reauthSignOutStep: "1. Sign out first.",
     reauthSignOut: "Sign out",
-    reauthSignInStep: "2. Then sign in again to return to the statistics.",
+    reauthSignInStep: "2. Then sign in again.",
     reauthSignIn: "Sign in again",
     platformHeading: "Learning platform",
     platformUnavailable:
-      "The learning platform counts could not be read just now. No substitute figures are shown.",
+      "The learning platform counts could not be read just now.",
     insufficientData:
-      "Not enough data: while the platform holds only very few course progress records, no individual figures are shown.",
+      "There are still too few progress records, so no individual figures are shown.",
     totalsLabel: "Totals",
     totalLabels: {
       courseProgress: "Stored course progress records",
@@ -170,19 +170,19 @@ export const STATISTIK_COPY = {
     countColumn: "Count",
     coursesNone: "No course currently reaches the minimum size.",
     coursesIncomplete:
-      "The count for at least one course could not be read; it is missing from the table.",
+      "At least one course is missing because its count could not be read.",
     accountTotalsNote:
-      "The number of accounts is deliberately not shown: counting accounts would mean reading user records.",
+      "The number of accounts is not shown, because counting them would mean reading user records.",
     ownerRowsNote: "The operator's own records are included in every figure.",
     thresholdNote: (floor: number, minimum: number) =>
       `Below ${floor} stored progress records no figure is shown. Individual figures below ${minimum} are never shown as a number.`,
     reachHeading: "Reach and usage events",
     reachIntro: (days: number) =>
-      `Aggregated figures from Vercel Web Analytics for the last ${days} days, retrieved server-side on each request and not stored.`,
+      `The page fetches the last ${days} days from Vercel Web Analytics on each request and stores nothing.`,
     reachDisabled:
-      "Retrieving Vercel Web Analytics is not set up for this deployment.",
+      "Vercel Web Analytics retrieval is not set up here.",
     reachNotEnabled:
-      "Vercel Web Analytics is not enabled for this project. No figures are available.",
+      "Vercel Web Analytics is not enabled for this project.",
     reachTotalsLabel: "Totals",
     pageviews: "Page views",
     visitors: "Visitors",

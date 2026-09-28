@@ -21,8 +21,8 @@ interface Message {
 /** Failures every one of the four routes can answer with. */
 const SHARED: Readonly<Record<string, Message>> = {
   unsupported_media_type: {
-    de: "Die Anfrage hatte das falsche Format. Lade die Seite neu und versuche es erneut.",
-    en: "The request had the wrong format. Reload the page and try again.",
+    de: "Die Anfrage hatte das falsche Format. Lade die Seite neu.",
+    en: "The request had the wrong format. Reload the page.",
   },
   unauthorized: {
     de: "Deine Anmeldung ist nicht mehr gültig. Melde dich erneut an.",
@@ -37,12 +37,12 @@ const SHARED: Readonly<Record<string, Message>> = {
     en: "Sign-in is not configured in this environment.",
   },
   account_owner_mismatch: {
-    de: "Die Kontozuordnung hat sich geändert. Lade die Seite neu, bevor du es erneut versuchst.",
-    en: "The account assignment changed. Reload the page before trying again.",
+    de: "Die Kontozuordnung hat sich geändert. Lade die Seite neu.",
+    en: "The account assignment changed. Reload the page.",
   },
   invalid_owner_binding: {
-    de: "Die Kontozuordnung fehlte. Lade die Seite neu und versuche es erneut.",
-    en: "The account binding was missing. Reload the page and try again.",
+    de: "Die Kontozuordnung fehlte. Lade die Seite neu.",
+    en: "The account binding was missing. Reload the page.",
   },
   payload_too_large: {
     de: "Die Anfrage war zu groß. Kürze deine Eingabe.",
@@ -64,15 +64,15 @@ const KEY_MESSAGES: Readonly<Record<string, Message>> = {
     en: "The chat is not configured in this environment. No key was stored.",
   },
   invalid_llm_key_request: {
-    de: "Die Anfrage war unvollständig. Lade die Seite neu und versuche es erneut.",
-    en: "The request was incomplete. Reload the page and try again.",
+    de: "Die Anfrage war unvollständig. Lade die Seite neu.",
+    en: "The request was incomplete. Reload the page.",
   },
   invalid_llm_key: {
     de: "Das sieht nicht nach einem Anthropic-Schlüssel aus. Er beginnt mit sk-ant-.",
     en: "That does not look like an Anthropic key. It starts with sk-ant-.",
   },
   llm_key_rejected: {
-    de: "Anthropic hat diesen Schlüssel abgelehnt. Prüfe ihn in deinem Anthropic-Konto und füge ihn erneut ein.",
+    de: "Anthropic hat diesen Schlüssel abgelehnt. Prüfe ihn in deinem Anthropic-Konto und füge ihn neu ein.",
     en: "Anthropic rejected this key. Check it in your Anthropic account and paste it again.",
   },
   provider_timeout: {
@@ -84,7 +84,7 @@ const KEY_MESSAGES: Readonly<Record<string, Message>> = {
     en: "Anthropic was unreachable, so the key was not stored. That says nothing about the key itself.",
   },
   llm_key_store_unavailable: {
-    de: "Der Speicher für Schlüssel ist gerade nicht verfügbar. Es wurde nichts geändert.",
+    de: "Der Schlüsselspeicher ist gerade nicht erreichbar. Es wurde nichts geändert.",
     en: "The key store is unavailable right now. Nothing was changed.",
   },
   llm_key_write_failed: {
@@ -99,8 +99,8 @@ const KEY_MESSAGES: Readonly<Record<string, Message>> = {
 
 const TOKEN_MESSAGES: Readonly<Record<string, Message>> = {
   agent_access_disabled: {
-    de: "Der Zugang für Programme ist in dieser Umgebung nicht aktiv, deshalb wird kein Schlüssel erzeugt.",
-    en: "Program access is not active in this environment, so no key is created.",
+    de: "Der Zugang für Programme ist hier nicht aktiv, deshalb wird kein Schlüssel erzeugt.",
+    en: "Program access is not active here, so no key is created.",
   },
   invalid_token_name: {
     de: "Der Name ist nicht zulässig. Wähle einen kurzen Namen ohne Sonderzeichen.",
@@ -115,8 +115,8 @@ const TOKEN_MESSAGES: Readonly<Record<string, Message>> = {
     en: "You have reached the maximum number of active keys. Revoke one before creating another.",
   },
   token_store_unavailable: {
-    de: "Der Speicher für Zugriffsschlüssel ist gerade nicht verfügbar. Es wurde nichts geändert.",
-    en: "The access key store is unavailable right now. Nothing was changed.",
+    de: "Der Speicher für Zugriffsschlüssel ist gerade nicht erreichbar. Es wurde nichts geändert.",
+    en: "The access key store is unreachable right now. Nothing was changed.",
   },
   token_mint_failed: {
     de: "Der Schlüssel konnte nicht erzeugt werden. Es wurde keiner ausgegeben.",
@@ -161,19 +161,19 @@ const CHAT_MESSAGES: Readonly<Record<string, Message>> = {
     en: "The request was incomplete. Reload the page and write the message again.",
   },
   chat_owner_mismatch: {
-    de: "Die Kontozuordnung hat sich geändert. Lade die Seite neu, bevor du weiterschreibst.",
-    en: "The account assignment changed. Reload the page before continuing.",
+    de: "Die Kontozuordnung hat sich geändert. Lade die Seite neu.",
+    en: "The account assignment changed. Reload the page.",
   },
   model_not_allowed: {
     de: "Dieses Modell ist hier nicht freigegeben. Wähle eines aus der Liste.",
     en: "That model is not allowed here. Pick one from the list.",
   },
   llm_key_missing: {
-    de: "Es ist noch kein Anthropic-Schlüssel gespeichert. Speichere ihn oben.",
-    en: "No Anthropic key is stored yet. Store one above.",
+    de: "Speichere zuerst oben deinen Anthropic-Schlüssel.",
+    en: "Store your Anthropic key above first.",
   },
   llm_key_unavailable: {
-    de: "Dein gespeicherter Schlüssel ist gerade nicht lesbar. Es wurde keine Anfrage gestellt.",
+    de: "Dein Schlüssel ist gerade nicht lesbar. Es wurde keine Anfrage gestellt.",
     en: "Your stored key cannot be read right now. No request was made.",
   },
   llm_key_rejected: {
@@ -205,7 +205,7 @@ const CHAT_MESSAGES: Readonly<Record<string, Message>> = {
     en: "No answer came back. Send your message again.",
   },
   tool_budget_exhausted: {
-    de: "Die Antwort hat zu viele Werkzeuge nacheinander benutzt und wurde beendet.",
+    de: "Die Antwort hat zu viele Werkzeuge nacheinander benutzt und wurde gestoppt.",
     en: "The answer used too many tools in a row and was stopped.",
   },
   tool_input_invalid: {

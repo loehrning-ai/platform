@@ -369,7 +369,7 @@ export function KafkaTopic({ lessonId, cpId }: KafkaTopicProps): JSX.Element {
           summary={
             locale === "de"
               ? "Ein Producer ordnet Nachrichten anhand ihres Schlüssels vier Partitionen zu. Eine Gruppe aus drei Consumern liest sie; der Ausfall eines Consumers löst ein Rebalancing aus."
-              : "A producer routes messages by key into 4 ordered partitions; a 3-consumer group pulls from them, and killing a consumer triggers a rebalance."
+              : "A producer routes messages by key into 4 ordered partitions; a group of 3 consumers reads them, and stopping one triggers a rebalance."
           }
         />
       ) : (

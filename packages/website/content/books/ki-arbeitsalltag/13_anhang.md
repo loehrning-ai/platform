@@ -6,7 +6,7 @@ Alphabetisch. Jeder Begriff mit kurzer Definition und, wo es hilft, dem Kapitel,
 
 | Begriff | Erklärung |
 |---------|-----------|
-| **Agent** | KI-System, das eigenständig Aktionen ausführt, nicht nur Text erzeugt. Ruft Tools auf, plant Schritte, führt sie aus. Beispiel: ein KI-Agent, der im Kalender nach einem freien Slot sucht und die Einladung verschickt. |
+| **Agent** | KI-System, das eigenständig Aktionen ausführt. Ruft Tools auf, plant Schritte, führt sie aus. Beispiel: ein KI-Agent, der im Kalender nach einem freien Slot sucht und die Einladung verschickt. |
 | **API** | Application Programming Interface, Schnittstelle, über die Software mit einem KI-Modell kommuniziert. Für dich als Nutzer meist unsichtbar; wird relevant, wenn die IT eigene Integrationen baut. |
 | **AVV (Auftragsverarbeitungsvertrag)** | Vertrag nach Art. 28 DSGVO, wenn ein Anbieter personenbezogene Daten im Auftrag des Verantwortlichen verarbeitet. Rollen und Produktstufe zuerst prüfen; nicht jeder Anbieter handelt in jedem Kontext als Auftragsverarbeiter. → Kapitel 4, 7, 11 |
 | **Bias** | Systematische Verzerrung in KI-Ausgaben durch unausgewogene Trainingsdaten. Führt dazu, dass Modelle Stereotype reproduzieren, etwa männliche Pronomen bei „Chefarzt". → Kapitel 9 |
@@ -26,7 +26,7 @@ Alphabetisch. Jeder Begriff mit kurzer Definition und, wo es hilft, dem Kapitel,
 | **Halluzination** | Phänomen, bei dem ein KI-System plausibel klingende, aber sachlich falsche Informationen erzeugt. Entsteht durch Token-Vorhersage ohne Faktenprüfung. → Kapitel 9 |
 | **Hochrisiko-KI** | KI-System nach Anhang III der EU-KI-Verordnung. Strenge Pflichten: Risikomanagement, Dokumentation, menschliche Aufsicht, Konformitätsbewertung. → Kapitel 5 |
 | **Internal (Daten-Stufe)** | Zweite Stufe im 4-Stufen-Modell. Interne, aber nicht öffentlich bestimmte Daten. Nur in einem für diesen Zweck und diese Datenklasse freigegebenen Produkt verwenden. → Kapitel 4, 11 |
-| **KI-Beauftragte/r** | Person im Unternehmen, die für KI-Einsatz, Compliance und Richtlinie verantwortlich ist. Keine gesetzliche Pflicht-Rolle, aber praktisch unerlässlich. → Kapitel 11, 12 |
+| **KI-Beauftragte/r** | Person im Unternehmen, die für KI-Einsatz, Compliance und Richtlinie verantwortlich ist. Keine gesetzliche Pflicht-Rolle, in der Praxis aber meist nötig. → Kapitel 11, 12 |
 | **KI-Kompetenz (Art. 4)** | Pflicht aus EU-KI-Verordnung Art. 4: Anbieter und Betreiber müssen die Entwicklung der KI-Kompetenz ihres Personals durch kontextgerechte Maßnahmen unterstützen; ein bestimmtes individuelles Niveau ist nicht garantiert. Gilt seit 2. Februar 2025, geändert durch Verordnung (EU) 2026/1744. → Kapitel 5, 11 |
 | **Kontext-Fenster** | Maximale Menge an Text, die ein LLM in einer Anfrage verarbeitet. Gemessen in Token. Aktuelle Modelle der GPT-, Claude- und Gemini-Reihen reichen von 200.000 bis über 1 Mio. Token (mehrere hundert bis über tausend Seiten). |
 | **KRAFT-Framework** | Prompt-Struktur: **K**ontext, **R**olle, **A**ufgabe, **F**ormat, **T**on. Die Reihenfolge zählt. Macht aus einer vagen Anfrage einen nutzbaren Prompt. → Kapitel 8 |
@@ -51,11 +51,11 @@ Alphabetisch. Jeder Begriff mit kurzer Definition und, wo es hilft, dem Kapitel,
 
 ## Prompt-Bibliothek: 8 Vorlagen für deinen Arbeitsalltag
 
-Das ganze Buch sagt dir: Bau dir eine Prompt-Bibliothek. Hier ist sie. Acht getestete Vorlagen, sortiert nach Aufgabe, nicht nach Tool. Du suchst nicht nach der Technik, sondern nach dem Problem, das du gerade hast.
+Hier sind acht getestete Vorlagen, sortiert nach der Aufgabe, die du gerade lösen willst.
 
-Jede Vorlage folgt dem KRAFT-Schema aus Kapitel 8. Die angegebene **Datenstufe** ist eine konservative Orientierung, keine automatische Toolfreigabe. Maßgeblich bleiben deine Unternehmensrichtlinie sowie der konkrete Zweck, Vertrag und Datenfluss.
+Jede Vorlage folgt dem KRAFT-Schema aus Kapitel 8. Die angegebene **Datenstufe** ist eine konservative Orientierung und ersetzt keine Toolfreigabe. Maßgeblich bleiben deine Unternehmensrichtlinie sowie der konkrete Zweck, Vertrag und Datenfluss.
 
-Kopiere, passe an, speichere in deinem eigenen Dokument. Nach einem Monat hast du deine persönliche Sammlung.
+Speichere deine angepassten Versionen in einem eigenen Dokument.
 
 **1. E-Mail höflich absagen** (Profil A · Büro)
 
@@ -105,7 +105,7 @@ Kopiere, passe an, speichere in deinem eigenen Dokument. Nach einem Monat hast d
 
 > **Datenstufe:** Internal. Brainstorming bleibt oft vage, das ist gut. Sobald echte Strategiedetails, Zahlen oder Kundennamen ins Spiel kommen: Confidential, also Enterprise-Tool mit AVV.
 
-> **Jetzt bist du dran:** Nimm die Vorlage, die du diese Woche am dringendsten brauchst. Kopiere sie. Nutze sie einmal echt. Wenn das Ergebnis nicht passt, ändere einen einzigen Teil: meist die Rolle oder den Ton. Notiere die Version, die funktioniert hat. Das ist der erste Eintrag in deiner eigenen Bibliothek.
+> **Jetzt bist du dran:** Nutze die Vorlage, die du diese Woche am dringendsten brauchst, einmal an einer echten Aufgabe. Passt das Ergebnis nicht, ändere einen einzigen Teil, meist Rolle oder Ton. Die Version, die funktioniert, ist der erste Eintrag in deiner Bibliothek.
 
 ## Checklisten
 
@@ -128,7 +128,7 @@ Kopiere, passe an, speichere in deinem eigenen Dokument. Nach einem Monat hast d
 
 ## Deine zwei Arbeitsblätter zum Ausfüllen
 
-Kapitel 12 sagt, du hast am Ende fünf Dokumente. Zwei davon füllst du hier aus. Jetzt, mit Bleistift, oder kopier die Tabellen in ein eigenes Dokument. Eine ausgefüllte Karte schützt dich mehr als zehn gelesene Kapitel.
+Zwei der fünf Dokumente aus Kapitel 12 füllst du hier aus, mit Bleistift oder in einer Kopie der Tabellen.
 
 ### Datenklassifizierungs-Karte
 
@@ -142,7 +142,7 @@ Trag die Datenarten ein, mit denen du wirklich arbeitest, und ordne sie den vier
 | | | |
 | | | |
 
-Faustregel beim Ausfüllen: Im Zweifel eine Stufe höher einordnen, nicht tiefer. Eine zu vorsichtige Einordnung kostet dich nichts, eine zu lockere kostet dich den Datenschutzvorfall.
+Im Zweifel ordnest du eine Stufe höher ein. Eine zu vorsichtige Einordnung kostet nichts, eine zu lockere kann einen Datenschutzvorfall auslösen.
 
 ### KI-Inventar
 
@@ -156,11 +156,11 @@ Liste die KI-Tools, die du dienstlich nutzt oder nutzen willst, aus deiner Inven
 | | | | | |
 | | | | | |
 
-Ein leeres Feld bei „Freigegeben?" ist ein To-do, kein Schönheitsfehler. Genau die Zeilen ohne Häkchen sind dein Shadow-AI-Risiko. Klär sie, bevor du das Tool an echten Daten benutzt.
+Jede Zeile mit leerem Feld bei „Freigegeben?" ist ein Shadow-AI-Risiko. Klär sie, bevor du das Tool an echten Daten benutzt.
 
 ## Weiterführende Ressourcen
 
-**Dein Kurs:** /ki-fuehrerschein, alle 5 Blöcke und Quiz. Ein plattformeigener Abschlussnachweis ist kein behördliches Zertifikat und ersetzt keinen organisationsbezogenen Kompetenznachweis.
+**Dein Kurs:** /ki-fuehrerschein, alle 5 Blöcke und Quiz. Eine plattformeigene Teilnahmebestätigung ist kein behördlicher Nachweis und ersetzt keinen organisationsbezogenen Kompetenznachweis.
 
 **Diese Buchreihe:**
 - *KI im deutschen Mittelstand*, evidenzbasierte Selbstprüfung ohne private Firmendaten oder proprietäre Rankings.

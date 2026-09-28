@@ -1,13 +1,20 @@
+## 2026-09-27: Question list on AI in apprenticeships
+
+### Added
+
+- Blog post Nº 02 "AI in apprenticeships: questions for youth representatives and works councils" in German and English: the rights both bodies have when a company uses AI in training
+- Question list with legal bases and notes on what an answer should contain, to print and to download as Markdown under CC BY 4.0
+
 ## 2026-08-09: Bilingual platform revision
 
-This revision organizes learning material into foundations, technical courses, workshops, and books. Public pages and released learning material are available in German and English. Access conditions, sources, simulations, and external dependencies are stated next to the relevant material.
+Learning material is organized into foundations, technical courses, workshops, and books, in German and English.
 
 ### Changed
 
-- Persistent language control with German and English routes
-- Redesigned course catalog with original covers, explicit learning outcomes, and responsive cards
-- Revised course, workshop, demo, and platform copy with narrower claims and explicit limitations
-- Published English reader for “AI in German SMEs”; two unreviewed book drafts remain without public reader routes
+- Language control with persistent German and English routes
+- Redesigned course catalog with original covers, learning outcomes, and responsive cards
+- Course, workshop, demo, and platform copy with narrower claims; access, sources, simulations, and external dependencies are stated next to the material
+- English reader for “AI in German SMEs”; two unreviewed book drafts remain without public reader routes
 - Localized metadata, sitemaps, structured data, and install manifests
 - Stricter security headers and fail-closed authentication; Google sign-in appears only after documented provider configuration
 
@@ -19,17 +26,11 @@ This revision organizes learning material into foundations, technical courses, w
 
 ## 2026-07-16: Blog published
 
-The blog launched with an introductory article about the EU AI Act. The article states its legal review date and links legal claims to primary sources.
-
 ### Added
 
-- Blog section with the first introductory EU AI Act article
-- Dated legal review status in the article
-- Primary sources for legal claims
+- Blog with the first introductory EU AI Act article, with a dated legal review status and primary sources for legal claims
 
 ## 2026-07-14: First platform release
-
-The first public release included courses, learning books, demos, and the AI check. Access conditions, sources, and known limitations were stated on the relevant pages.
 
 ### Added
 
@@ -38,3 +39,4 @@ The first public release included courses, learning books, demos, and the AI che
 - AI check for learning-path orientation
 - Technical introduction to how AI works
 - License policy for source code and editorial material
+- Access conditions, sources, and known limitations on the relevant pages

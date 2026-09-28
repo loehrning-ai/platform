@@ -321,6 +321,7 @@ const FRAME_COPY = {
     resized: "Projektbriefbreite",
     brief: "Projektbrief",
     workspace: "Projektarbeitsbereich",
+    phoneToggle: "Projektwerkstatt",
   },
   en: {
     controls: "Workspace layout",
@@ -335,6 +336,7 @@ const FRAME_COPY = {
     resized: "Project brief width",
     brief: "Project brief",
     workspace: "Project workspace",
+    phoneToggle: "Project workshop",
   },
 } as const;
 
@@ -373,6 +375,23 @@ export interface CourseWorkspaceFrameProps {
   readonly workspace: ReactNode;
   readonly projectId: string;
   readonly engineKind: string;
+  /**
+   * Below md (phones) the frame starts as its header plus one toggle row, so
+   * a lesson reaches its text within the first two phone screens. The brief,
+   * layout toolbar and workspace open on that row or whenever `phoneExpanded`
+   * is true (the studio passes it once the learner activates the workspace,
+   * so the mission's "open workshop" step always lands on visible controls).
+   * From md nothing changes: the toggle row is `md:hidden` and the collapse
+   * is `max-md:hidden`, plain CSS on server markup, so tablet stacking and
+   * the desktop frame are identical from the first paint.
+   */
+  readonly phoneExpanded?: boolean;
+  /**
+   * Short status appended to the collapsed phone row ("… · noch nicht
+   * verifiziert"). While the frame is collapsed below md the header band is
+   * hidden, so the frame is one row; the band returns once the body opens.
+   */
+  readonly phoneStatus?: ReactNode;
 }
 
 export function CourseWorkspaceFrame({
@@ -386,8 +405,11 @@ export function CourseWorkspaceFrame({
   workspace,
   projectId,
   engineKind,
+  phoneExpanded = false,
+  phoneStatus,
 }: CourseWorkspaceFrameProps): JSX.Element {
   const copy = FRAME_COPY[locale];
+  const [phoneOpen, setPhoneOpen] = useState(false);
   const storageKey = `${COURSE_WORKSPACE_STORAGE_PREFIX}${storageId}`;
   const briefId = `${storageId}-brief-pane`;
   const workspaceId = `${storageId}-workspace-pane`;
@@ -624,6 +646,9 @@ export function CourseWorkspaceFrame({
   // a break a German compound holds the pane wider than its track and the text
   // is silently cut off instead of wrapping.
   const splitFeasible = dockedLayoutViewport && splitBounds.feasible;
+  const phoneBodyOpen = phoneOpen || phoneExpanded || fullscreen;
+  const phoneBodyId = `${storageId}-phone-body`;
+  const phoneCollapseClass = phoneBodyOpen ? "" : "max-md:hidden";
   const splitActive = docked && !briefCollapsed && splitFeasible;
   const paneGridStyle = splitActive
     ? {
@@ -659,121 +684,156 @@ export function CourseWorkspaceFrame({
             // with the shell's safe-area tokens (pt-safe, pb-safe, px-safe)
             // rather than reading env() directly, like every other fixed
             // shell surface.
-            "fixed inset-0 z-[100] m-0 flex h-dvh min-w-0 flex-col overflow-hidden border-2 border-foreground bg-background pt-safe pb-safe px-safe shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-inset [overflow-wrap:anywhere]"
-          : "relative my-10 min-w-0 overflow-hidden border-2 border-foreground bg-background shadow-[7px_7px_0_0_var(--color-foreground)] [overflow-wrap:anywhere]"
+            "fixed inset-0 z-[100] m-0 flex h-dvh min-w-0 flex-col overflow-hidden border border-foreground bg-background pt-safe pb-safe px-safe shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-inset [overflow-wrap:anywhere]"
+          : "relative my-10 min-w-0 overflow-hidden border border-foreground bg-background [overflow-wrap:anywhere] max-md:my-6"
       }
     >
-      {header}
-
-      <div
-        role="toolbar"
-        aria-label={copy.controls}
-        className="flex min-w-0 flex-wrap items-center gap-2 border-b-2 border-foreground bg-card px-3 py-2 sm:px-5"
-      >
-        <button
-          type="button"
-          aria-controls={briefId}
-          aria-expanded={!briefCollapsed}
-          className="inline-flex min-h-11 max-w-full items-center text-center border-2 border-foreground/30 bg-background px-3 py-2 font-mono text-xs font-black uppercase tracking-wide hover:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2"
-          onClick={() => {
-            setPreferencesTouched(true);
-            setBriefCollapsed((current) => !current);
-          }}
-        >
-          {briefCollapsed ? copy.expand : copy.collapse}
-        </button>
-        <button
-          type="button"
-          disabled={!splitFeasible || briefCollapsed}
-          className="inline-flex min-h-11 max-w-full items-center text-center border-2 border-foreground/30 bg-background px-3 py-2 font-mono text-xs font-black uppercase tracking-wide hover:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-          onClick={() => {
-            if (!splitFeasible || briefCollapsed) return;
-            setPreferencesTouched(true);
-            setDocked((current) => !current);
-          }}
-        >
-          {splitActive ? copy.stack : copy.dock}
-        </button>
-        <button
-          ref={fullscreenButtonRef}
-          type="button"
-          className="inline-flex min-h-11 max-w-full items-center text-center border-2 border-foreground bg-foreground px-3 py-2 font-mono text-xs font-black uppercase tracking-wide text-background hover:bg-brand-orange hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:ml-auto"
-          onClick={() => (fullscreen ? exitFullscreen() : enterFullscreen())}
-        >
-          {fullscreen ? copy.exitFullscreen : copy.enterFullscreen}
-        </button>
-        {fullscreen ? (
-          <span
-            id={fullscreenHintId}
-            className="w-full font-mono text-xs font-bold text-muted-foreground sm:w-auto"
-          >
-            {copy.fullscreenHint}
-          </span>
-        ) : null}
+      {/* Collapsed on a phone, the dark band only repeats the row below it,
+          so the frame is a single row until it opens. */}
+      <div className={phoneBodyOpen ? undefined : "max-md:hidden"}>
+        {header}
       </div>
 
-      <div
-        ref={panesRef}
-        className={`${
-          fullscreen
-            ? "min-h-0 flex-1 overflow-y-auto lg:overflow-hidden"
-            : "min-w-0"
-        } ${splitActive ? "min-w-0 lg:grid" : "min-w-0"}`}
-        style={paneGridStyle}
-      >
-        <div
-          id={briefId}
-          hidden={briefCollapsed}
-          role="region"
-          aria-label={copy.brief}
-          className={`${
-            fullscreen
-              ? "lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain"
-              : "min-w-0"
-          } min-w-0 border-b-2 border-foreground ${
-            splitActive ? "lg:border-b-0" : ""
-          }`}
+      {fullscreen || phoneExpanded ? null : (
+        <button
+          type="button"
+          aria-expanded={phoneBodyOpen}
+          aria-controls={phoneBodyId}
+          onClick={() => setPhoneOpen((current) => !current)}
+          className="js-shell-only flex min-h-11 w-full min-w-0 items-center justify-between gap-4 bg-card px-4 py-3 text-left text-label text-foreground transition-colors duration-[120ms] hover:bg-card-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange motion-reduce:transition-none md:hidden"
+          data-course-workspace-phone-toggle
         >
-          {brief}
+          <span className="min-w-0">
+            {copy.phoneToggle}: {title}
+            {phoneStatus ? (
+              <>
+                {" "}
+                <span className="text-muted-foreground">· {phoneStatus}</span>
+              </>
+            ) : null}
+          </span>
+          <span
+            aria-hidden="true"
+            className="w-4 shrink-0 text-center leading-none tabular-nums"
+          >
+            {phoneBodyOpen ? "−" : "+"}
+          </span>
+        </button>
+      )}
+
+      <div id={phoneBodyId} className={`min-w-0 ${phoneCollapseClass}`}>
+        <div
+          role="toolbar"
+          aria-label={copy.controls}
+          className="flex min-w-0 flex-wrap items-center gap-2 border-b border-hairline bg-card px-3 py-2 max-md:border-t sm:px-5"
+        >
+          <button
+            type="button"
+            aria-controls={briefId}
+            aria-expanded={!briefCollapsed}
+            className="inline-flex min-h-11 max-w-full items-center text-center border border-border bg-transparent px-3 py-2 text-label text-foreground transition-colors duration-[120ms] hover:border-foreground hover:bg-card-hover motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2"
+            onClick={() => {
+              setPreferencesTouched(true);
+              setBriefCollapsed((current) => !current);
+            }}
+          >
+            {briefCollapsed ? copy.expand : copy.collapse}
+          </button>
+          {/* Docking needs the lg layout, so on a phone the button would only
+            ever be a disabled 44px row; it is hidden there, not removed. */}
+          <button
+            type="button"
+            disabled={!splitFeasible || briefCollapsed}
+            className="inline-flex min-h-11 max-w-full items-center text-center border border-border bg-transparent px-3 py-2 text-label text-foreground max-md:hidden transition-colors duration-[120ms] hover:border-foreground hover:bg-card-hover motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            onClick={() => {
+              if (!splitFeasible || briefCollapsed) return;
+              setPreferencesTouched(true);
+              setDocked((current) => !current);
+            }}
+          >
+            {splitActive ? copy.stack : copy.dock}
+          </button>
+          <button
+            ref={fullscreenButtonRef}
+            type="button"
+            className="inline-flex min-h-11 max-w-full items-center text-center border border-scene-line bg-transparent px-3 py-2 text-label text-foreground transition-colors duration-[120ms] hover:bg-card-hover motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:ml-auto"
+            onClick={() => (fullscreen ? exitFullscreen() : enterFullscreen())}
+          >
+            {fullscreen ? copy.exitFullscreen : copy.enterFullscreen}
+          </button>
+          {fullscreen ? (
+            <span
+              id={fullscreenHintId}
+              className="w-full text-caption text-muted-foreground sm:w-auto"
+            >
+              {copy.fullscreenHint}
+            </span>
+          ) : null}
         </div>
 
-        {splitActive ? (
-          <div
-            role="separator"
-            tabIndex={0}
-            aria-label={copy.resize}
-            aria-controls={`${briefId} ${workspaceId}`}
-            aria-orientation="vertical"
-            aria-valuemin={splitBounds.minimum}
-            aria-valuemax={splitBounds.maximum}
-            aria-valuenow={effectiveBriefPercent}
-            aria-valuetext={`${copy.resized}: ${effectiveBriefPercent}%`}
-            className="group z-10 -mx-4 hidden min-h-full min-w-11 cursor-col-resize touch-none items-stretch justify-center bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-inset lg:flex"
-            onKeyDown={handleSeparatorKeyDown}
-            onPointerDown={handleSeparatorPointerDown}
-            onPointerMove={handleSeparatorPointerMove}
-            onPointerUp={handleSeparatorPointerEnd}
-            onPointerCancel={handleSeparatorPointerEnd}
-            onLostPointerCapture={handleSeparatorLostPointerCapture}
-          >
-            <span
-              className="w-0.5 bg-foreground/35 transition-colors group-hover:bg-brand-orange"
-              aria-hidden="true"
-            />
-          </div>
-        ) : null}
-
         <div
-          id={workspaceId}
-          role="region"
-          aria-label={copy.workspace}
+          ref={panesRef}
           className={`${
             fullscreen
-              ? "lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain"
+              ? "min-h-0 flex-1 overflow-y-auto lg:overflow-hidden"
               : "min-w-0"
-          } min-w-0`}
+          } ${splitActive ? "min-w-0 lg:grid" : "min-w-0"}`}
+          style={paneGridStyle}
         >
-          {workspace}
+          <div
+            id={briefId}
+            hidden={briefCollapsed}
+            role="region"
+            aria-label={copy.brief}
+            className={`${
+              fullscreen
+                ? "lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain"
+                : "min-w-0"
+            } min-w-0 border-b-2 border-foreground ${
+              splitActive ? "lg:border-b-0" : ""
+            }`}
+          >
+            {brief}
+          </div>
+
+          {splitActive ? (
+            <div
+              role="separator"
+              tabIndex={0}
+              aria-label={copy.resize}
+              aria-controls={`${briefId} ${workspaceId}`}
+              aria-orientation="vertical"
+              aria-valuemin={splitBounds.minimum}
+              aria-valuemax={splitBounds.maximum}
+              aria-valuenow={effectiveBriefPercent}
+              aria-valuetext={`${copy.resized}: ${effectiveBriefPercent}%`}
+              className="group z-10 -mx-4 hidden min-h-full min-w-11 cursor-col-resize touch-none items-stretch justify-center bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-inset lg:flex"
+              onKeyDown={handleSeparatorKeyDown}
+              onPointerDown={handleSeparatorPointerDown}
+              onPointerMove={handleSeparatorPointerMove}
+              onPointerUp={handleSeparatorPointerEnd}
+              onPointerCancel={handleSeparatorPointerEnd}
+              onLostPointerCapture={handleSeparatorLostPointerCapture}
+            >
+              <span
+                className="w-0.5 bg-foreground/35 transition-colors group-hover:bg-foreground motion-reduce:transition-none"
+                aria-hidden="true"
+              />
+            </div>
+          ) : null}
+
+          <div
+            id={workspaceId}
+            role="region"
+            aria-label={copy.workspace}
+            className={`${
+              fullscreen
+                ? "lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain"
+                : "min-w-0"
+            } min-w-0`}
+          >
+            {workspace}
+          </div>
         </div>
       </div>
     </section>

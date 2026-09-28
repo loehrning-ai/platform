@@ -118,7 +118,7 @@ export default async function DataInfrastructureLandingPage() {
           secondaryAction={
             <Link
               href="#tracks"
-              className={TECHNICAL_COURSE_SECONDARY_ACTION_CLASS}
+              className={`${TECHNICAL_COURSE_SECONDARY_ACTION_CLASS} max-sm:hidden`}
             >
               {copy.map}
             </Link>

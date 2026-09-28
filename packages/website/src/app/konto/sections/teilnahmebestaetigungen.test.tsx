@@ -62,7 +62,7 @@ describe("Teilnahmebestätigungen region", () => {
       within(region).getByRole("link", { name: "Prüfseite" }),
     ).toHaveAttribute("href", "/kurse/open-source/codex/verifizierung");
     expect(region).toHaveTextContent(
-      "Dort wird der Code aus deiner Bestätigung geprüft, ohne Anmeldung.",
+      "prüft den Code deiner Bestätigung, ohne Anmeldung.",
     );
   });
 

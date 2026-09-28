@@ -2,11 +2,13 @@
 /**
  * content-voice-report.mjs
  *
- * Per-file voice metrics for learner-facing prose: sentence count, mean and
- * standard deviation of sentence length (words), share of paragraphs with
- * more than five sentences, list-size histogram and share of three-item
- * lists, banned-phrase hits (the lint's tables, allowlist applied), connector
- * counts and Du/Sie counts. File discovery, prose extraction and rule tables
+ * Per-file voice metrics for learner-facing prose: sentence count, mean,
+ * standard deviation and coefficient of variation of sentence length (words),
+ * share of sentences with four words or fewer, share of paragraphs with more
+ * than five sentences, list-size histogram and share of three-item lists,
+ * banned-phrase hits (the lint's tables, allowlist applied), staged-contrast
+ * hits, colon reveals, tailing negations per 1,000 words, connector counts
+ * and Du/Sie counts. File discovery, prose extraction and rule tables
  * are shared with content-lint.mjs, so both tools agree on what counts.
  *
  * Usage:
@@ -65,6 +67,9 @@ export const BAN_RULES = new Set([
   "VOICE-CLAIM",
   "VOICE-COUNT-COURSE",
   "VOICE-COUNT-LESSON",
+  "VOICE-CONTRAST",
+  "VOICE-PUFFERY",
+  "VOICE-RESIDUE",
 ]);
 
 // ---------------------------------------------------------------------------
@@ -235,6 +240,10 @@ const EMPTY_AGGREGATE = () => ({
   connectors: 0,
   du: 0,
   sie: 0,
+  shortSentences: 0,
+  contrastHits: 0,
+  colonReveals: 0,
+  tailNegations: 0,
 });
 
 function addRow(aggregate, row) {
@@ -253,6 +262,10 @@ function addRow(aggregate, row) {
   aggregate.connectors += m.connectorTotal;
   aggregate.du += m.du;
   aggregate.sie += m.sie;
+  aggregate.shortSentences += m.shortSentences;
+  aggregate.contrastHits += m.contrastHits;
+  aggregate.colonReveals += m.colonReveals;
+  aggregate.tailNegations += m.tailNegations;
 }
 
 /** Derived values for an aggregate: mean, sd and shares. */
@@ -260,10 +273,16 @@ export function finishAggregate(aggregate) {
   const n = aggregate.sentences;
   const mean = n === 0 ? 0 : aggregate.sentenceLengthSum / n;
   const variance = n === 0 ? 0 : Math.max(0, aggregate.sentenceLengthSumSq / n - mean * mean);
+  const sd = Math.sqrt(variance);
+  const words = aggregate.words ?? 0;
+  const tails = aggregate.tailNegations ?? 0;
   return {
     ...aggregate,
     sentenceLengthMean: mean,
-    sentenceLengthSd: Math.sqrt(variance),
+    sentenceLengthSd: sd,
+    sentenceLengthCv: mean === 0 ? 0 : sd / mean,
+    shortSentenceShare: n === 0 ? 0 : (aggregate.shortSentences ?? 0) / n,
+    tailNegationsPer1k: words === 0 ? 0 : (tails / words) * 1000,
     longParagraphShare: aggregate.paragraphs === 0 ? 0 : aggregate.longParagraphs / aggregate.paragraphs,
     threeItemListShare: aggregate.lists === 0 ? 0 : aggregate.threeItemLists / aggregate.lists,
   };
@@ -321,9 +340,12 @@ function metricCells(before, after) {
   return [
     cell(before?.sentenceLengthMean, after.sentenceLengthMean, fixed),
     cell(before?.sentenceLengthSd, after.sentenceLengthSd, fixed),
+    cell(before?.sentenceLengthCv, after.sentenceLengthCv, (v) => fixed(v, 2)),
+    cell(before?.shortSentenceShare, after.shortSentenceShare, percent),
     cell(before?.longParagraphShare, after.longParagraphShare, percent),
     cell(before?.threeItemListShare, after.threeItemListShare, percent),
     cell(before?.bans, after.bans, String),
+    cell(before?.contrastHits, after.contrastHits, String),
     cell(before?.connectors ?? before?.connectorTotal, after.connectors ?? after.connectorTotal, String),
     `${cell(before?.du, after.du, String)} / ${cell(before?.sie, after.sie, String)}`,
   ];
@@ -336,7 +358,7 @@ function table(header, rows) {
 
 /** Markdown summary table per surface (before -> after when a baseline is set). */
 export function renderSummaryMarkdown(surfaceRows, { baseline = null } = {}) {
-  const header = ["Surface", "Files", "Words", "Sentences", "Mean len", "SD len", "Para > 5", "Lists = 3", "Bans", "Connectors", "Du / Sie"];
+  const header = ["Surface", "Files", "Words", "Sentences", "Mean len", "SD len", "CV", "Short <=4", "Para > 5", "Lists = 3", "Bans", "Contrast", "Connectors", "Du / Sie"];
   const rows = surfaceRows.map(({ surface, current, baseline: before }) => [
     surface === "Total" ? "**Total**" : surface,
     current.newFiles > 0 ? `${current.files} (${current.newFiles} new)` : String(current.files),
@@ -350,7 +372,7 @@ export function renderSummaryMarkdown(surfaceRows, { baseline = null } = {}) {
 
 /** Markdown rows per file; a file missing at the baseline is marked new. */
 export function renderFilesMarkdown(current, baseline) {
-  const header = ["File", "Lang", "Form", "Words", "Sentences", "Mean len", "SD len", "Para > 5", "Lists = 3", "Bans", "Connectors", "Du / Sie"];
+  const header = ["File", "Lang", "Form", "Words", "Sentences", "Mean len", "SD len", "CV", "Short <=4", "Para > 5", "Lists = 3", "Bans", "Contrast", "Connectors", "Du / Sie"];
   const rows = [];
   for (const [relFile, row] of [...current].sort(([a], [b]) => a.localeCompare(b))) {
     const before = baseline ? baseline.get(relFile) : null;

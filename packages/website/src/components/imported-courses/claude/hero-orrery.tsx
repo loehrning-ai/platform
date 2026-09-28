@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, type JSX } from "react";
-import { cn } from "@/lib/utils";
+import { cx as cn } from "@/components/werk/cx";
 import {
   genericAnswer,
   simulatedDelayMs,
@@ -219,38 +219,46 @@ export function HeroOrrery({
         ? "bg-brand-amber"
         : "bg-destructive";
 
+  // Werkzeichnung: a 1px ink frame with no offset shadow, sentence-case
+  // labels, and each component as a hairline row with a square switch. The
+  // frame is the only box: the score is a stat behind a hairline and the
+  // output sits under a hairline, not in a second frame. The score, the
+  // percentages and the output stay mono because they are data. The run
+  // button is ink; the landing's one Mennige action is "Lektion 01 starten".
   return (
-    <div className="border-2 border-foreground bg-card p-6 shadow-[6px_6px_0_var(--color-foreground)] md:p-8">
-      <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-start">
+    <div className="border border-foreground bg-card p-4 sm:p-6 md:p-8">
+      <div className="grid gap-4 md:grid-cols-[1fr_auto] md:items-start md:gap-6">
         <div>
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
+          {/* Below lg the landing's toggle row already names the workbench. */}
+          <p className="text-label text-muted-foreground max-lg:hidden">
             {copy.kind}
           </p>
-          <h2 className="mt-2 text-[22px] font-bold tracking-[-0.02em] text-foreground">
+          <h2 className="mt-2 text-[22px] max-lg:mt-0 font-bold tracking-[-0.02em] text-foreground">
             {copy.title}
           </h2>
           <p className="mt-1 max-w-[380px] text-[14px] leading-[1.5] text-muted-foreground">
             {copy.intro}
           </p>
         </div>
-        <div className="min-w-[120px] border border-border bg-background p-4 text-right">
-          <p className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
-            {copy.score}
-          </p>
+        <div className="flex flex-wrap items-baseline gap-x-2 md:block md:min-w-[120px] md:border-l md:border-hairline md:pl-6 md:text-right">
+          <p className="text-caption text-muted-foreground">{copy.score}</p>
           <p
             className={cn(
-              "mt-1 font-mono text-[32px] font-bold leading-none",
+              "font-mono text-[22px] font-bold leading-none tabular-nums md:mt-1 md:text-[32px]",
               qColor,
             )}
           >
             {quality}
           </p>
-          <p className="mt-1 font-mono text-xs uppercase tracking-[0.06em] text-muted-foreground">
+          <p className="text-caption text-muted-foreground md:mt-1">
             {structureLabel(quality, copy.labels)}
           </p>
-          <div className="mt-3 h-[3px] w-full overflow-hidden rounded-full bg-border">
+          <div className="mt-2 h-[3px] w-full basis-full overflow-hidden bg-border md:mt-3">
             <div
-              className={cn("h-full transition-[width] duration-500", qBar)}
+              className={cn(
+                "h-full transition-[width] duration-500 motion-reduce:transition-none",
+                qBar,
+              )}
               style={{ width: `${quality}%` }}
             />
           </div>
@@ -260,7 +268,7 @@ export function HeroOrrery({
       <div
         role="group"
         aria-label={copy.group}
-        className="mt-6 flex flex-col gap-2"
+        className="mt-5 flex flex-col border-t border-hairline md:mt-6"
       >
         {parts.map((part) => {
           const on = !!active[part.id];
@@ -270,20 +278,22 @@ export function HeroOrrery({
               type="button"
               aria-pressed={on}
               onClick={() => toggle(part.id)}
-              className={cn(
-                "flex min-h-11 flex-col gap-0.5 border-2 px-4 py-2.5 text-left transition-colors",
-                on
-                  ? "border-brand-orange bg-brand-orange/10"
-                  : "border-border bg-background hover:border-brand-orange/60",
-              )}
+              className="grid min-h-11 grid-cols-[1rem_minmax(0,1fr)] gap-x-3 gap-y-0.5 border-b border-hairline px-1 py-2.5 text-left transition-colors duration-[120ms] hover:bg-card-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange motion-reduce:transition-none"
             >
-              <span className="flex items-center justify-between font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
+              <span
+                aria-hidden="true"
+                className={cn(
+                  "mt-0.5 h-4 w-4 border border-foreground",
+                  on ? "bg-foreground" : "bg-background",
+                )}
+              />
+              <span className="flex min-w-0 items-baseline justify-between gap-3 text-label text-foreground">
                 {part.label}
-                <span className="text-muted-foreground">
+                <span className="shrink-0 font-normal text-muted-foreground tabular-nums">
                   {on ? copy.on : copy.off} · +{part.weight}
                 </span>
               </span>
-              <span className="text-[13px] leading-[1.45] text-muted-foreground">
+              <span className="col-start-2 text-[14px] leading-[1.45] text-muted-foreground">
                 {on ? part.content : part.hint}
               </span>
             </button>
@@ -291,17 +301,17 @@ export function HeroOrrery({
         })}
       </div>
 
-      <div className="mt-5 flex items-center gap-3">
+      <div className="mt-5 flex flex-wrap items-center gap-3">
         <button
           type="button"
           onClick={run}
           disabled={loading || !assembled.trim()}
-          className="min-h-11 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-[12px] font-bold uppercase tracking-[0.1em] text-white transition-colors hover:bg-foreground disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex min-h-11 items-center rounded-none bg-foreground px-4 py-2 text-[0.9375rem] font-semibold text-background transition-colors duration-[120ms] hover:bg-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none"
         >
           {loading ? copy.running : output ? copy.rerun : copy.run}
         </button>
         {!loading && output && (
-          <span className="font-mono text-xs text-muted-foreground">
+          <span className="text-caption text-muted-foreground tabular-nums">
             {output.split(/\s+/).filter(Boolean).length} {copy.words} ·{" "}
             {copy.from} {activeParts.length} {copy.parts}
           </span>
@@ -310,10 +320,10 @@ export function HeroOrrery({
 
       {output && (
         <div className="mt-3">
-          <p className="mb-1 font-mono text-xs text-muted-foreground">
+          <p className="mb-1 text-caption text-muted-foreground">
             {copy.disclosure}
           </p>
-          <pre className="max-h-[260px] overflow-auto whitespace-pre-wrap break-words border border-border bg-background p-4 text-[13px] leading-[1.55] text-foreground">
+          <pre className="max-h-[260px] overflow-auto whitespace-pre-wrap break-words border-t border-hairline pt-3 text-[13px] leading-[1.55] text-foreground">
             {output}
           </pre>
         </div>

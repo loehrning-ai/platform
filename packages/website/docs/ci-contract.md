@@ -23,8 +23,20 @@ The root workflow and Vercel must install with
 the same lifecycle-script denial for ordinary Bun installs. Required Sharp,
 esbuild, Sentry CLI, and Playwright binaries resolve from packages pinned in
 `bun.lock`, including their relevant optional platform packages; no dependency
-install script is part of the build contract. CI has read-only repository
-permissions and no deployment step.
+install script is part of the build contract. No workflow has a deployment
+step; Vercel builds deployments through its Git integration, outside these
+workflows.
+
+Every workflow in `.github/workflows/` sets its default token to
+`contents: read`. Two jobs hold more, each granted at the job level only:
+
+| Workflow                   | Job            | Token permissions                     | Why                                                                                                                                                                                                              |
+| -------------------------- | -------------- | ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ci.yml`                   | `voice-report` | `contents: read`, `pull-requests: write` | Upserts the advisory voice-report comment. It runs only on pull requests, comments only for same-repository heads (a fork pull request gets a read-only token), and edits only a comment `github-actions[bot]` wrote. |
+| `dependency-submission.yml` | `submit`       | `contents: write`, `actions: read`    | Submits the Bun dependency snapshot to the dependency graph. It runs only on `main`, downloads the snapshot that the read-only `generate` job built, and neither checks out the tree nor runs repository code.   |
+
+Every other job, including all of `dependency-review.yml`, runs with
+`contents: read` alone.
 
 ## Browser gates
 
@@ -52,21 +64,50 @@ action at `.github/actions/setup`.
 | `lighthouse`          | `bun run lighthouse:ci:built`                                  | yes           |
 | `e2e` (18-way matrix) | `bun run --cwd packages/website e2e:shard:built`               | yes           |
 | `auth-scaffold`       | `bun run test:e2e:auth-scaffold:built`                         | yes           |
+| `konto-dom-mocked`    | `bun run --cwd packages/website test:e2e:konto-dom-mocked` (builds its own public-config-only bundle) | yes           |
 | `server-log-privacy`  | `bun run --cwd packages/website test:server-log-privacy:built` | yes           |
-| `voice-report`        | `bun run content:voice-report -- --markdown --baseline origin/main` (pull requests only, advisory PR comment, not in `verify`) | no            |
+| `merge-reports`       | merges the `e2e` blob reports into one HTML report              | no            |
+| `voice-report`        | `bun run --cwd packages/website content:voice-report -- --markdown --baseline origin/main` (pull requests only, advisory PR comment, not in `verify`) | no            |
 | `verify`              | aggregation only                                               | no            |
 
-Each build-dependent job runs `bun run --cwd packages/website verify:build`
-itself. The build is deliberately **not** passed between jobs as an artifact:
-the build-freshness receipt re-hashes the artifact digest, the input digest, and
-the captured toolchain, so a transported `.next` must land byte-identical on an
-identically-imaged runner or every `:built` gate fails preflight. Rebuilding
-costs runner-minutes, which are free on a public repository, and buys a gate
-that cannot fail for transport reasons.
+Each build-dependent job builds for itself: `konto-dom-mocked` builds its own
+public-config-only bundle, and every other one runs
+`bun run --cwd packages/website verify:build`. The build is deliberately
+**not** passed between jobs as an artifact: the build-freshness receipt
+re-hashes the artifact digest, the input digest, and the captured toolchain, so
+a transported `.next` must land byte-identical on an identically-imaged runner
+or every `:built` gate fails preflight. Rebuilding costs runner-minutes, which
+are free on a public repository, and buys a gate that cannot fail for transport
+reasons.
 
-`verify` is the only required status check. It declares `if: always()` and fails
-when any dependency did not succeed. That `always()` is load-bearing — a
-required job that is _skipped_ is treated as passing by branch protection.
+### Required status checks
+
+Branch-protection ruleset 19653327 on `main` requires three status checks:
+
+| Check               | Source                                                                                    |
+| ------------------- | ----------------------------------------------------------------------------------------- |
+| `verify`            | The aggregate job in `ci.yml`, described below.                                           |
+| `dependency-review` | The `dependency-review` job in `dependency-review.yml`: frozen install, `bun audit` and GitHub's dependency-review action. |
+| `CodeQL`            | GitHub's default code-scanning setup. It has no workflow file in this repository.        |
+
+The ruleset also requires the branch to be up to date with `main` before a
+merge, allows squash merges only, and blocks a merge on new code-scanning
+alerts at its configured severity threshold. It requires no approving review
+and no code-owner review. The ruleset lives in the repository settings, not in
+this tree; this section records it and changes only when the ruleset does.
+
+A pull request runs its own copy of `ci.yml` and `dependency-review.yml`. When
+it edits those files, the scripts they call, `.github/`, the lockfile, a
+`package.json`, `bunfig.toml`, `vercel.json` or the security configuration, a
+green `verify` or `dependency-review` comes from the edited checks, not from
+the ones on `main`. Review such a diff by hand before merging. `CodeQL` runs
+from GitHub's configuration, so a pull request cannot change it.
+
+No matrix job is required on its own; `verify` stands for all of them. It
+declares `if: always()` and fails when any dependency did not succeed. That
+`always()` is load-bearing — a required job that is _skipped_ is treated as
+passing by branch protection. `voice-report` is advisory and is not among
+`verify`'s dependencies.
 
 The public browser gate is sharded across the matrix instead of looping shards
 inside one process. `scripts/run-e2e-suite.mjs` retains the serial loop for

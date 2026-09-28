@@ -59,7 +59,7 @@ export const DEF_TRANSLATED_ADVANCED_IDENTITY: DefAdvancedContentIdentity = {
   checkpointKeys: [],
   scoringKeys: [],
   codeArtifacts: [
-    "pipeline.py · the Airflow-approved write",
+    "pipeline.py · an idempotent partition write",
     "pipeline.py · ExpectationSuite + ExternalTaskSensor",
     "dim_users.spec.yaml · dataset metadata",
     "dim_users.spec.yaml · the shipped annotation",

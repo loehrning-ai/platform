@@ -5,6 +5,8 @@ export type LegalInstrument =
   | "TDDDG"
   | "BFSG"
   | "BA funding"
+  | "BetrVG"
+  | "BBiG"
   | "other";
 
 export type LegalClaimStatus =
@@ -572,6 +574,55 @@ export const LEGAL_CLAIMS: readonly LegalClaim[] = [
     sourceKind: "primary",
     lastVerified: "2026-07-14",
     summary: "The Commission adopted the EU-US Data Privacy Framework adequacy decision on 10 July 2023.",
+  },
+  // The three claims below were recorded for blog post Nº 02 on 27 September
+  // 2026, when gesetze-im-internet.de could not be opened. They rest on
+  // secondary sources, so sourceKind is "secondary" and sourceUrl names one
+  // of them. The post itself links readers to the statute text.
+  {
+    claimId: "de-betrvg-64-jav-election-start-2026-10-01",
+    instrument: "BetrVG",
+    article: "§ 64 Abs. 1",
+    jurisdiction: "DE",
+    status: "binding",
+    effectiveDate: "2026-10-01",
+    displayDateDE: "1. Oktober 2026",
+    sourceUrl:
+      "https://www.bzo-wissen.de/wissen/artikel/64-betrvg-zeitpunkt-der-wahlen-und-amtszeit",
+    sourceKind: "secondary",
+    lastVerified: "2026-09-27",
+    summary:
+      "Section 64(1) BetrVG holds regular JAV elections every two years between 1 October and 30 November; 2026 is an election year, so the window opens on 1 October 2026. Evidence: secondary sources, primary text not opened (a 2022 copy of the statute text and search results from legal publishers and unions).",
+  },
+  {
+    claimId: "de-betrvg-64-jav-election-end-2026-11-30",
+    instrument: "BetrVG",
+    article: "§ 64 Abs. 1",
+    jurisdiction: "DE",
+    status: "binding",
+    effectiveDate: "2026-11-30",
+    displayDateDE: "30. November 2026",
+    sourceUrl:
+      "https://www.bzo-wissen.de/wissen/artikel/64-betrvg-zeitpunkt-der-wahlen-und-amtszeit",
+    sourceKind: "secondary",
+    lastVerified: "2026-09-27",
+    summary:
+      "The 2026 regular JAV election window under Section 64(1) BetrVG closes on 30 November 2026. Evidence: secondary sources, primary text not opened (a 2022 copy of the statute text and search results from legal publishers and unions).",
+  },
+  {
+    claimId: "de-bbig-43-record-without-signature-2024-08-01",
+    instrument: "BBiG",
+    article: "§ 43 Abs. 1 Nr. 2",
+    jurisdiction: "DE",
+    status: "binding",
+    effectiveDate: "2024-08-01",
+    displayDateDE: "1. August 2024",
+    sourceUrl:
+      "https://www.ihk.de/schwaben/produktmarken/aus-und-weiterbildung/ausbildung/ausbildung-von-a-z/berufsbildungsvalidierungs-und-digitalisierungsgesetz-6237538",
+    sourceKind: "secondary",
+    lastVerified: "2026-09-27",
+    summary:
+      "Since the BVaDiG took effect on 1 August 2024, Section 43(1) no. 2 BBiG requires that the training record be submitted in writing or electronically through the training employer; the statute no longer requires it to be signed by trainer and trainee. Evidence: secondary sources, primary text not opened (search results from chamber and legal-publisher pages).",
   },
 ];
 

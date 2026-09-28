@@ -55,54 +55,54 @@ const QUESTIONS_EN: readonly Question[] = [
   {
     id: "g1",
     dimensionId: "grundlagen",
-    text: "How confidently could you explain what an AI language model actually does?",
+    text: "Could you explain what an AI language model does?",
     options: [
       {
         score: 1,
-        text: "I could not explain it. AI is a black box to me.",
-        meaning: "Starting point: the underlying idea is still unclear.",
+        text: "No, AI is a black box to me.",
+        meaning: "The basic idea is still missing.",
       },
       {
         score: 2,
-        text: "I have a rough idea, but my explanation would be vague.",
-        meaning: "You have an initial picture, but no clear model yet.",
+        text: "Roughly, but it would stay vague.",
+        meaning: "You have a first picture, but no clear model yet.",
       },
       {
         score: 3,
-        text: "I can explain in my own words how a model generates text.",
-        meaning: "You have a sound basis and can explain it to someone else.",
+        text: "Yes, I can say in my own words how it writes text.",
+        meaning: "You can explain it to others.",
       },
       {
         score: 4,
-        text: "I can also explain terms such as training and hallucination.",
-        meaning: "You understand the concepts that later decisions rely on.",
+        text: "Yes, including terms like training and hallucination.",
+        meaning: "You know the terms everything else builds on.",
       },
     ],
   },
   {
     id: "g2",
     dimensionId: "grundlagen",
-    text: "An AI chat gives you a convincing answer. What do you assume?",
+    text: "An AI chat answers convincingly. What do you assume?",
     options: [
       {
         score: 1,
-        text: "If it reads fluently, it is probably correct.",
+        text: "If it reads fluently, it is probably right.",
         meaning: "A confident answer can still be wrong.",
       },
       {
         score: 2,
-        text: "I know errors are possible, but I rarely check.",
-        meaning: "You recognise the risk, but do not yet have a routine.",
+        text: "Errors are possible, but I rarely check.",
+        meaning: "You see the risk, but have no routine yet.",
       },
       {
         score: 3,
-        text: "I know models can invent details, so I check important claims.",
-        meaning: "You treat model output as material to verify.",
+        text: "AI can invent details, so I check important claims.",
+        meaning: "You treat AI answers as material to check.",
       },
       {
         score: 4,
-        text: "I can identify high-risk answers and choose a suitable check.",
-        meaning: "You connect known failure modes to concrete controls.",
+        text: "I spot high-risk answers and choose a suitable check.",
+        meaning: "You link known failure modes to suitable controls.",
       },
     ],
   },
@@ -113,25 +113,25 @@ const QUESTIONS_EN: readonly Question[] = [
     options: [
       {
         score: 1,
-        text: "I would initially accept the video as genuine.",
+        text: "I take the video as genuine for now.",
         meaning:
-          "Synthetic or manipulated video is not yet part of your assessment.",
+          "You do not yet check for deepfakes.",
       },
       {
         score: 2,
-        text: "I would be sceptical, but would not know how to check it.",
-        meaning: "You recognise uncertainty but lack a verification method.",
+        text: "I am sceptical but cannot tell how to spot a fake.",
+        meaning: "You have doubts but no method to check.",
       },
       {
         score: 3,
-        text: "I would inspect common warning signs and find the original source.",
-        meaning: "You verify before treating the video as evidence.",
+        text: "I look for typical warning signs and the original source.",
+        meaning: "You check before you share.",
       },
       {
         score: 4,
-        text: "I can identify manipulation patterns and explain the checks to others.",
+        text: "I spot manipulation patterns and show others how to check.",
         meaning:
-          "You can apply and communicate a repeatable verification process.",
+          "Others can repeat your checking method.",
       },
     ],
   },
@@ -142,30 +142,30 @@ const QUESTIONS_EN: readonly Question[] = [
     options: [
       {
         score: 1,
-        text: "I do not know. I assumed AI systems were neutral.",
-        meaning: "Training data and system design can carry existing bias.",
+        text: "No idea, I thought AI was neutral.",
+        meaning: "Training data can carry existing bias.",
       },
       {
         score: 2,
         text: "I have heard about bias, but could not explain it.",
-        meaning: "You know the term but not yet the mechanism.",
+        meaning: "You know the word bias, but not the mechanism.",
       },
       {
         score: 3,
-        text: "I know models can reproduce patterns and bias from their data.",
-        meaning: "You understand one central source of discriminatory output.",
+        text: "I know AI takes on bias from its training data.",
+        meaning: "You know where bias comes from.",
       },
       {
         score: 4,
-        text: "I can name examples and suitable ways to detect or reduce bias.",
-        meaning: "You connect the risk to concrete evaluation and controls.",
+        text: "I know examples and ways to detect and reduce bias.",
+        meaning: "You link the risk to tests and countermeasures.",
       },
     ],
   },
   {
     id: "r1",
     dimensionId: "recht",
-    text: "How familiar are you with the EU regulation governing AI, the AI Act?",
+    text: "How well do you know the AI Act, the EU's AI regulation?",
     options: [
       {
         score: 1,
@@ -174,100 +174,100 @@ const QUESTIONS_EN: readonly Question[] = [
       },
       {
         score: 2,
-        text: "I know the name, but not what the regulation covers.",
-        meaning: "You know rules exist but cannot yet apply them.",
+        text: "I know the name, but not the content.",
+        meaning: "You know that rules exist.",
       },
       {
         score: 3,
-        text: "I understand the basic risk-based structure.",
-        meaning: "You can place a use case in the regulation's broad logic.",
+        text: "I know the basic idea of the risk classes.",
+        meaning: "You can roughly follow its logic.",
       },
       {
         score: 4,
-        text: "I can distinguish relevant roles and obligations for a use case.",
-        meaning: "You can move from the regulation to a concrete assessment.",
+        text: "I know the roles and duties for a concrete case.",
+        meaning: "You can assess concrete cases.",
       },
     ],
   },
   {
     id: "r2",
     dimensionId: "recht",
-    text: "When must people be told that they are interacting with AI or seeing AI-generated content?",
+    text: "When must people be told they are talking to AI or seeing AI content?",
     options: [
       {
         score: 1,
-        text: "I have not considered that question.",
+        text: "No idea, I have never thought about it.",
         meaning: "AI transparency duties are new to you.",
       },
       {
         score: 2,
-        text: "I assume rules exist, but I do not know the cases.",
-        meaning: "You recognise a likely duty but cannot yet classify it.",
+        text: "I assume there are rules but do not know them.",
+        meaning: "You suspect a duty but cannot place it yet.",
       },
       {
         score: 3,
-        text: "I know chatbots and some synthetic content require disclosure.",
-        meaning: "You know the main transparency principle.",
+        text: "I know chatbots and certain AI content must be labelled.",
+        meaning: "You know the labelling duty.",
       },
       {
         score: 4,
-        text: "I can identify relevant cases and plan an appropriate disclosure.",
-        meaning: "You can turn the transparency duty into an operating step.",
+        text: "I know which cases need disclosure and how to do it.",
+        meaning: "You turn the duty into a working step.",
       },
     ],
   },
   {
     id: "v1",
     dimensionId: "verantwortung",
-    text: "You want to paste work material into an AI chat. What do you check first?",
+    text: "You want to paste work content into an AI chat. What do you check first?",
     options: [
       {
         score: 1,
-        text: "I paste in whatever I need for the task.",
+        text: "I paste in whatever I have.",
         meaning: "The data-protection check is still missing.",
       },
       {
         score: 2,
-        text: "I hesitate with sensitive data, but decide case by case without a rule.",
-        meaning: "You recognise the issue but lack a reliable boundary.",
+        text: "I hesitate with sensitive data but decide by gut feeling.",
+        meaning: "You see the issue but lack clear rules.",
       },
       {
         score: 3,
-        text: "I check for personal, confidential, or restricted information.",
-        meaning: "You assess the data before choosing the tool or input.",
+        text: "I check for personal or confidential data.",
+        meaning: "You check the data before you enter it.",
       },
       {
         score: 4,
-        text: "I follow explicit rules for permitted data, tools, and retention.",
-        meaning: "Your handling is consistent and can be reviewed.",
+        text: "I follow clear rules on which data may go in.",
+        meaning: "Your handling is consistent and reviewable.",
       },
     ],
   },
   {
     id: "v2",
     dimensionId: "verantwortung",
-    text: "AI influenced an important decision. What do you record?",
+    text: "AI helped you with an important decision. What do you record?",
     options: [
       {
         score: 1,
-        text: "Nothing. Only the final result matters.",
+        text: "Nothing, the result is what counts.",
         meaning:
-          "The contribution of the system cannot be reconstructed later.",
+          "Later, no one can see what the AI contributed.",
       },
       {
         score: 2,
-        text: "I remember the broad process, but do not document it.",
-        meaning: "The reasoning remains dependent on memory.",
+        text: "I remember roughly but write nothing down.",
+        meaning: "The reasoning depends on your memory.",
       },
       {
         score: 3,
-        text: "I record that AI was used and what it contributed.",
-        meaning: "The role of the system remains traceable.",
+        text: "I note that I used AI and for what.",
+        meaning: "Your AI use is traceable.",
       },
       {
         score: 4,
-        text: "I record the input, checks, output, and final human decision.",
-        meaning: "Another person can inspect how the decision was reached.",
+        text: "I record prompt, check, output and my decision.",
+        meaning: "Others can check how the decision was reached.",
       },
     ],
   },
@@ -278,50 +278,50 @@ const QUESTIONS_EN: readonly Question[] = [
     options: [
       {
         score: 1,
-        text: "I complete it manually and do not consider AI.",
-        meaning: "AI is not yet part of your tool selection.",
+        text: "I do everything by hand; AI does not occur to me.",
+        meaning: "AI is not yet one of your tools.",
       },
       {
         score: 2,
-        text: "I enter a short request and use the first response.",
-        meaning: "You are experimenting, but without a defined method.",
+        text: "I type a short line and take what comes.",
+        meaning: "You try things, but without a method.",
       },
       {
         score: 3,
-        text: "I state the context and goal, then refine the work through questions.",
-        meaning: "You give the system enough structure to work deliberately.",
+        text: "I give role, context and goal and refine with follow-ups.",
+        meaning: "You steer the AI with clear instructions.",
       },
       {
         score: 4,
-        text: "I design reusable workflows for recurring tasks and their checks.",
-        meaning: "You turn repeated use into a controlled process.",
+        text: "I build reusable workflows for recurring tasks.",
+        meaning: "You work with AI systematically.",
       },
     ],
   },
   {
     id: "p2",
     dimensionId: "praxis",
-    text: "How do you check AI-generated work before using it?",
+    text: "How do you check what AI delivers for your work?",
     options: [
       {
         score: 1,
-        text: "I normally use the output as provided.",
+        text: "I usually take the result as it is.",
         meaning: "A review step is still missing.",
       },
       {
         score: 2,
-        text: "I read it once, but tend to trust it when uncertain.",
-        meaning: "You inspect the output but do not yet test it.",
+        text: "I skim it, but trust it when in doubt.",
+        meaning: "You read it but do not test it.",
       },
       {
         score: 3,
-        text: "I verify facts and edit the output for its intended use.",
-        meaning: "You remain responsible for the final work.",
+        text: "I check facts and adjust the tone before I use it.",
+        meaning: "You stay responsible for the result.",
       },
       {
         score: 4,
-        text: "I use defined checks based on the task's likely failure modes.",
-        meaning: "Review is a repeatable part of your workflow.",
+        text: "I have fixed checks and know where AI tends to fail.",
+        meaning: "Review is a fixed step in your work.",
       },
     ],
   },
@@ -334,7 +334,7 @@ const STAGE_BANDS_EN: readonly StageBand[] = [
     min: 0,
     max: 20,
     blurb:
-      "The basic concepts and checks are still new. Start with how models work, what can fail, and which data must stay out.",
+      "The basic concepts and checks are new. Start with how models work, typical errors and data rules.",
   },
   {
     level: 2,
@@ -342,7 +342,7 @@ const STAGE_BANDS_EN: readonly StageBand[] = [
     min: 20,
     max: 40,
     blurb:
-      "You recognise the main topics. A consistent method for verification, data handling, and rules is the next requirement.",
+      "You know several topics but do not yet check output and data with a fixed method.",
   },
   {
     level: 3,
@@ -350,7 +350,7 @@ const STAGE_BANDS_EN: readonly StageBand[] = [
     min: 40,
     max: 60,
     blurb:
-      "You can use AI for ordinary work and identify several risks. Focused practice can make the weaker fields reliable.",
+      "You use AI for everyday tasks and spot several risks. Work on the weaker fields.",
   },
   {
     level: 4,
@@ -358,7 +358,7 @@ const STAGE_BANDS_EN: readonly StageBand[] = [
     min: 60,
     max: 80,
     blurb:
-      "You use AI deliberately and can explain your checks. Refine the legal and operational details that matter in your role.",
+      "You use AI deliberately and can explain your checks. Clarify the legal and operational details of your role.",
   },
   {
     level: 5,
@@ -366,7 +366,7 @@ const STAGE_BANDS_EN: readonly StageBand[] = [
     min: 80,
     max: 100,
     blurb:
-      "You evaluate AI critically, protect data, and document important decisions. Use the field scores to choose a narrow advanced topic.",
+      "You check AI output critically, protect data and document important decisions. Deepen the field with your lowest score.",
   },
 ];
 
@@ -382,7 +382,7 @@ export const KI_CHECK_UI_COPY = {
     resultEyebrow: "KI-Check · Dein Ergebnis",
     resultTitle: "Hier stehst du gerade.",
     resultIntroduction:
-      "Dein Profil über fünf Kompetenzfelder und ein passender nächster Kurs. Die Auswertung findet nur in diesem Browser statt.",
+      "Dein Ergebnis beruht auf deiner Selbsteinschätzung.",
     overall: "Gesamtstand",
     scorePlateLabel: "Auswertung des KI-Checks",
     competencyLegendLabel: "Kompetenzwerte im Profil",
@@ -393,16 +393,15 @@ export const KI_CHECK_UI_COPY = {
     alsoGap: "Auch offen",
     answered: "Beantwortet",
     fieldsTitle: "Deine fünf Kompetenzfelder",
-    fieldsBody: "Die Balken zeigen den berechneten Stand je Feld.",
     nextStep: "Dein nächster Schritt",
     startCourse: "Kurs starten",
-    courseOverview: "Erst zur Kursübersicht",
+    courseOverview: "Zur Kursübersicht",
     pathway: "Dein Platz auf dem KI-Kompetenzweg",
     restart: "Check erneut starten",
     quizEyebrow: "KI-Kompetenzweg · KI-Check",
     quizTitle: "Wo stehst du?",
     quizIntroduction:
-      "Zehn kurze Fragen, kein Login, keine Datenspeicherung. Danach erhältst du ein Kompetenzprofil und eine Kursempfehlung.",
+      "Zehn Fragen, ohne Login und ohne Speicherung. Danach siehst du dein Profil und eine Kursempfehlung.",
     question: "Frage",
     of: "von",
     progressLabel: "Fortschritt im KI-Check",
@@ -411,22 +410,20 @@ export const KI_CHECK_UI_COPY = {
     result: "Zum Ergebnis",
     next: "Weiter",
     reassurance:
-      "Antworte nach deiner tatsächlichen Praxis. Es gibt kein bestanden oder nicht bestanden.",
-    chooseHint: "Wähle eine Antwort. Danach siehst du, was sie bedeutet.",
-    scaleLabel: "Selbsteinschätzung",
+      "Antworte nach deiner tatsächlichen Praxis. Durchfallen kannst du nicht.",
+    chooseHint: "Wähle eine Antwort, um ihre Bedeutung zu sehen.",
     railFactsLabel: "Rahmen",
     railFacts: [
       "Kein Login",
       "Keine Speicherung",
       "Auswertung im Browser",
     ],
-    fieldKeyLabel: "Kompetenzfelder",
     methodSummary: "Methode und Grenzen der Auswertung",
     methodTitle: "So wird das Profil berechnet",
     methodBody:
-      "Zwei Selbstauskünfte pro Feld werden auf 0 bis 100 normiert. Der Gesamtstand ist der Mittelwert der fünf Felder. Liegen die Grundlagen unter 50, führt die Empfehlung zuerst zum Grundlagenkurs; sonst zum schwächsten Feld. Das Ergebnis ist eine Orientierung, keine Prüfung oder Zertifizierung.",
+      "Je Feld ergeben zwei Selbstauskünfte einen Wert von 0 bis 100, der Gesamtstand ist ihr Mittelwert. Unter 50 bei den Grundlagen empfiehlt der Check den Grundlagenkurs, sonst den Kurs zum schwächsten Feld; eine Prüfung ist das nicht.",
     privacyBody:
-      "Die Berechnung läuft nur in diesem Browser. Antworten werden nicht gespeichert und verlassen diese Seite nicht.",
+      "Die Antworten werden nur in diesem Browser ausgewertet und nicht gespeichert.",
     pathwayLabels: {
       pruefen: "Prüfen",
       grundlagen: "Verstehen",
@@ -438,9 +435,9 @@ export const KI_CHECK_UI_COPY = {
   },
   en: {
     resultEyebrow: "AI check · Result",
-    resultTitle: "Current profile.",
+    resultTitle: "Where you stand now.",
     resultIntroduction:
-      "Your scores across five fields and one relevant next course. The calculation stays in this browser.",
+      "Your result is based on your own self-assessment.",
     overall: "Overall score",
     scorePlateLabel: "AI check result",
     competencyLegendLabel: "Competency values in the profile",
@@ -451,16 +448,15 @@ export const KI_CHECK_UI_COPY = {
     alsoGap: "Also developing",
     answered: "Answered",
     fieldsTitle: "Five competency fields",
-    fieldsBody: "Each bar shows the calculated score for one field.",
     nextStep: "Next course",
     startCourse: "Start course",
-    courseOverview: "View course overview first",
+    courseOverview: "Course overview",
     pathway: "Position in the AI competency path",
     restart: "Restart check",
     quizEyebrow: "AI competency path · AI check",
     quizTitle: "What is your current level?",
     quizIntroduction:
-      "Ten short questions, no login, and no stored answers. You receive a competency profile and one course recommendation.",
+      "Ten questions, no login and nothing stored. Then you see your profile and one course recommendation.",
     question: "Question",
     of: "of",
     progressLabel: "Progress through the AI check",
@@ -469,18 +465,16 @@ export const KI_CHECK_UI_COPY = {
     result: "View result",
     next: "Next",
     reassurance:
-      "Answer for your actual working practice. This is not a pass or fail test.",
-    chooseHint: "Choose an answer. You then see what it means.",
-    scaleLabel: "Self-assessment",
+      "Answer for how you actually work. You cannot fail.",
+    chooseHint: "Choose an answer to see what it means.",
     railFactsLabel: "Scope",
     railFacts: ["No login", "Nothing stored", "Scored in your browser"],
-    fieldKeyLabel: "Competency fields",
     methodSummary: "Method and limits of this result",
     methodTitle: "How the profile is calculated",
     methodBody:
-      "Two self-reported answers per field are normalised to a score from 0 to 100. The overall score is the mean of the five fields. If the fundamentals score is below 50, the recommendation starts with the foundation course; otherwise it targets the weakest field. This result is orientation, not an exam or certification.",
+      "Two self-reported answers per field give a score from 0 to 100, and the overall score is their mean. Below 50 in Basics, the check recommends the foundation course, otherwise the course for your weakest field; it is not an exam.",
     privacyBody:
-      "The calculation runs only in this browser. Answers are not stored and do not leave this page.",
+      "Answers are scored only in this browser and are not stored.",
     pathwayLabels: {
       pruefen: "Assess",
       grundlagen: "Understand",

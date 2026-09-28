@@ -75,6 +75,7 @@ const COPY: Record<
     readonly phases: string;
     readonly allScheduled: string;
     readonly yourDay: string;
+    readonly emptyDay: string;
     readonly complete: string;
   }
 > = {
@@ -83,6 +84,7 @@ const COPY: Record<
     phases: "phases",
     allScheduled: "All phases sequenced.",
     yourDay: "workflow and evidence",
+    emptyDay: "Pick a phase to see its evidence.",
     complete: "Workflow sequence recorded.",
   },
   de: {
@@ -90,6 +92,7 @@ const COPY: Record<
     phases: "Phasen",
     allScheduled: "Alle Phasen sind geordnet.",
     yourDay: "Arbeitsablauf und Nachweis",
+    emptyDay: "Wähle eine Phase, um ihren Nachweis zu sehen.",
     complete: "Ablaufreihenfolge dokumentiert.",
   },
 };
@@ -144,6 +147,9 @@ export function L12DailyLoop({
           <p className="mb-2 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
             {copy.yourDay}
           </p>
+          {scheduled.length === 0 ? (
+            <p className="text-sm text-muted-foreground">{copy.emptyDay}</p>
+          ) : null}
           <ol className="flex flex-col gap-1 font-mono text-[12.5px] text-foreground">
             {scheduled.map((id, i) => {
               const block = BLOCKS.find((b) => b.id === id)!;

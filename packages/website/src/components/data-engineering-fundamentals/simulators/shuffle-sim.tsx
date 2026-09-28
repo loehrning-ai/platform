@@ -121,8 +121,8 @@ export function ShuffleSim() {
       )}
       meta={`${workers} Worker`}
       caption={text(
-        "Illustrative join model. Adjust skew and strategy; row counts, load units, and latency are scenario inputs rather than engine benchmarks.",
-        "Beispielhaftes Join-Modell. Skew und Strategie verändern; Zeilenzahlen, Lasteinheiten und Latenz sind Szenarioeingaben und keine Engine-Benchmarks.",
+        "Illustrative model. Row counts, load and latency are not engine benchmarks.",
+        "Beispielmodell. Zeilenzahlen, Last und Latenz sind keine Engine-Benchmarks.",
       )}
     >
       <div className="qp-stage">

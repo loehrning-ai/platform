@@ -2,7 +2,7 @@
 
 # Das Eisberg-Problem
 
-Die laute KI-Debatte dreht sich um Softwareentwicklung und neue Modelle. Die Arbeit, bei der ein System im Alltag wirklich helfen könnte, steckt woanders: in Verwaltung, Finanzen, Kundenservice, Einkauf. Dort sagt niemand KI-Arbeit dazu. Deshalb prüft sie kaum jemand.
+Die laute KI-Debatte dreht sich um Softwareentwicklung und neue Modelle. Die Arbeit, bei der ein System im Alltag wirklich helfen könnte, steckt woanders: in Verwaltung, Finanzen, Kundenservice, Einkauf. Weil dort niemand sie KI-Arbeit nennt, prüft sie kaum jemand.
 
 ## Was der Iceberg Index misst
 
@@ -15,13 +15,13 @@ Zwei Größen stehen im Zentrum:
 | Sichtbare Exposition | 2,2 % des US-Lohnwerts | Schwerpunkt in Computer- und Technologieberufen |
 | Breitere technische Exposition | 11,7 % des US-Lohnwerts | zusätzliche kognitive Aufgaben in Verwaltung, Finanzen und professionellen Dienstleistungen |
 
-Beide Werte messen eine modellierte Überschneidung von Aufgaben und technischen Fähigkeiten. Mehr nicht. Kein Produktivitätsgewinn, keine tatsächliche Einführung, kein Arbeitsplatzverlust, kein deutscher Marktanteil.
+Beide Werte messen nur eine modellierte Überschneidung von Aufgaben und technischen Fähigkeiten. Produktivitätsgewinn, tatsächliche Einführung, Arbeitsplatzverlust und deutschen Marktanteil messen sie nicht.
 
 ## Was du daraus ableiten darfst
 
-Diese US-Zahlen sind keine deutsche Statistik. Wer sie als solche ausgibt, überdehnt die Quelle. Die Frage dahinter trägt trotzdem: Welche Aufgaben bestehen aus wiederkehrender Informationsarbeit, und unter welchen Bedingungen darf ein System dabei helfen?
+Wer diese US-Zahlen als deutsche Statistik ausgibt, überdehnt die Quelle. Die Frage dahinter trägt trotzdem: Welche Aufgaben bestehen aus wiederkehrender Informationsarbeit, und unter welchen Bedingungen darf ein System dabei helfen?
 
-Schau also nicht zuerst auf Produkte. Schau auf Aufgaben:
+Schau deshalb zuerst auf Aufgaben statt auf Produkte:
 
 - Informationen aus mehreren Quellen zusammentragen
 - Inhalte klassifizieren oder strukturieren
@@ -39,10 +39,10 @@ Eine ehrliche Bestandsaufnahme trennt zwei Fragen:
 1. **Welche KI-Systeme und Funktionen laufen schon?** Erfasse freigegebene und nicht freigegebene Konten, eingebettete Funktionen, Integrationen und automatisierte Entscheidungen.
 2. **Welche Aufgaben könnten Unterstützung vertragen?** Erfasse Volumen, Fehlerkosten, Datenklassen, nötige Fachprüfung und messbare Erfolgskriterien.
 
-Die erste Inventur schafft Kontrolle. Die zweite eine priorisierte Lern- und Pilotliste. Keine davon braucht ein Firmenranking oder einen extern berechneten Reifegrad-Score.
+Die erste Inventur schafft Kontrolle. Die zweite ergibt eine priorisierte Lern- und Pilotliste. Keine davon braucht ein Firmenranking oder einen extern berechneten Reifegrad-Score.
 
 ## Der richtige Ausgangspunkt
 
-Nimm einen Prozess, dessen Eingangsdaten freigegeben sind, dessen Ergebnis ein Mensch vor der Verwendung prüft und dessen Erfolg du messen kannst. Dokumentiere die Ausgangslage. Teste mit repräsentativen Fällen. Schreib jeden Fehler mit.
+Nimm einen Prozess, dessen Eingangsdaten freigegeben sind, dessen Ergebnis ein Mensch vor der Verwendung prüft und dessen Erfolg du messen kannst. Dokumentiere die Ausgangslage, teste mit repräsentativen Fällen und schreib jeden Fehler mit.
 
-Das Eisberg-Problem ist nicht die übersehene spektakuläre Anwendung. Es ist die alltägliche Informationsarbeit, die niemand systematisch prüft und niemand kontrolliert verbessert.
+Das Eisberg-Problem ist die alltägliche Informationsarbeit, die niemand systematisch prüft und kontrolliert verbessert.

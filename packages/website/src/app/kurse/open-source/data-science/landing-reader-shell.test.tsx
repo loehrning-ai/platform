@@ -13,11 +13,13 @@ vi.mock("@/components/course/lesson-shell", () => ({
   LessonShell: ({
     sidebar,
     children,
+    readerFocus,
   }: {
     readonly sidebar: ReactNode;
     readonly children: ReactNode;
+    readonly readerFocus?: boolean;
   }) => (
-    <div>
+    <div data-reader={readerFocus === false ? undefined : "focus"}>
       {sidebar}
       <main>{children}</main>
     </div>
@@ -47,6 +49,16 @@ describe("DataScienceLandingReaderShell", () => {
     expect(
       screen.queryByRole("button", { name: "Open project preview" }),
     ).not.toBeInTheDocument();
+  });
+
+  it("stays out of reader focus mode, so phones keep the site tab bar", () => {
+    const { container } = render(
+      <DataScienceLandingReaderShell locale="de" chapters={DS_CHAPTERS}>
+        <p>Überblick</p>
+      </DataScienceLandingReaderShell>,
+    );
+
+    expect(container.querySelector('[data-reader="focus"]')).toBeNull();
   });
 
   it("retains the landing reader's next-chapter shortcut", () => {

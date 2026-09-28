@@ -58,7 +58,7 @@ test.describe("edge: unknown route renders not-found.tsx", () => {
     await expect(page.getByText("404", { exact: true }).first()).toBeVisible();
     await expect(
       page.getByText(
-        "Die angeforderte Seite existiert nicht oder wurde verschoben.",
+        "Diese Seite gibt es nicht oder sie ist umgezogen.",
       ),
     ).toBeVisible();
 
@@ -164,10 +164,10 @@ test.describe("edge: provider-free /feedback fallback", () => {
     await page.goto(FEEDBACK, { waitUntil: "load" });
 
     await expect(
-      page.getByText(/serverseitige Speicherung ist .* nicht freigeschaltet/),
+      page.getByText(/Das Formular ist hier nicht freigeschaltet/),
     ).toBeVisible();
     await expect(page.getByRole("status")).toContainText(
-      "Es werden keine Formulardaten gespeichert.",
+      "Hier wird nichts gespeichert.",
     );
     await expect(page.getByRole("textbox", { name: /Nachricht/i })).toHaveCount(0);
     await expect(page.getByRole("button", { name: /Rückmeldung senden/i })).toHaveCount(0);

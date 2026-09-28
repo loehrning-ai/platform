@@ -68,8 +68,8 @@ export function DifferenceInDifferences() {
         `DiD-Schätzung = ${round(DiD, 1)}`,
       )}
       caption={text(
-        "This two-period arithmetic example hard-codes the untreated trend and, in the violated setting, a +5-point bias. Real DiD also requires defensible parallel trends, no anticipation or interference, stable composition, and suitable uncertainty estimates.",
-        "Dieses arithmetische Beispiel mit zwei Perioden programmiert den unbehandelten Trend und im verletzten Szenario einen Bias von +5 Punkten fest. Reale DiD benötigt zusätzlich begründbare parallele Trends, keine Antizipation oder Interferenz, stabile Zusammensetzung und passende Unsicherheitsschätzungen.",
+        "This two-period example hard-codes the untreated trend and, when violated, a +5-point bias. Real DiD also needs defensible parallel trends, no anticipation or interference, stable composition and uncertainty estimates.",
+        "Dieses Beispiel mit zwei Perioden legt den unbehandelten Trend und im verletzten Fall einen Bias von +5 Punkten fest. Reale DiD braucht zusätzlich begründbare parallele Trends, keine Antizipation oder Interferenz, stabile Zusammensetzung und Unsicherheitsschätzungen.",
       )}
     >
       <div className="sim-row" style={{ gridTemplateColumns: "220px 1fr" }}>

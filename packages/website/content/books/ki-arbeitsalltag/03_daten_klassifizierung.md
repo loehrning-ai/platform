@@ -1,32 +1,20 @@
 # Wohin gehen deine Daten wirklich?
 
-Du tippst einen Kundennamen in ChatGPT. Wohin geht dieser Name?
+Tippst du einen Kundennamen in ChatGPT, landet er auf Servern von OpenAI, einem US-Unternehmen in San Francisco. Es verarbeitet die Daten nach seiner Privacy Policy und nur dann nach DSGVO-Vertrag, wenn dein Unternehmen einen Auftragsverarbeitungsvertrag geschlossen hat.
 
-Kurze Antwort: zu OpenAI, nach San Francisco.
+Bei Apple war Datenklassifizierung Pflicht-Kurs am ersten Tag, lange vor jedem KI-Hype. Jedes Dokument trug ein Label: Public, Internal, Confidential, Restricted. Bei Red Bull fehlte das. In einem Konzern mit 13.000 Mitarbeitenden konnte niemand sagen, wo die Daten liegen, und die ehrliche Antwort lautete: 47 Excel-Tabellen auf Netzlaufwerken.
 
-Längere Antwort: auf Server eines US-Unternehmens, das deine Daten nach den Regeln seiner Privacy Policy verarbeitet, und nicht nach DSGVO, außer dein Unternehmen hat einen Auftragsverarbeitungsvertrag geschlossen. Welchen du als Mitarbeiter nicht geschlossen hast.
-
-Bei Apple war Datenklassifizierung Pflicht-Kurs am ersten Tag. Jedes Dokument trug ein Label: Public, Internal, Confidential, Restricted. Lange vor jedem KI-Hype, einfach als Hygiene.
-
-Bei Red Bull fehlte das. Ein Konzern mit 13.000 Mitarbeitenden, und niemand konnte sagen, wo unsere Daten liegen. Die ehrliche Antwort lautete: 47 Excel-Tabellen auf Netzlaufwerken.
-
-Erste Grundregel deines KI-Alltags: Bevor du tippst, frag dich, welche Art Daten du da gerade eintippst.
+Die erste Grundregel für deinen KI-Alltag: Frag dich vor jedem Prompt, welche Art Daten du eintippst.
 
 ## Das mentale Modell
 
-Du brauchst keine 40-seitige Richtlinie. Du brauchst einen Reflex.
-
-Jede Information, die du in ein KI-Tool tippst, fällt in eine von vier Stufen. Von links (harmlos) nach rechts (gefährlich):
+Statt einer 40-seitigen Richtlinie brauchst du einen Reflex. Jede Information fällt in eine von vier Stufen, von links (harmlos) nach rechts (gefährlich):
 
 **Public → Internal → Confidential → Restricted.**
 
-Je weiter rechts, desto kleiner der Kreis der Menschen, die das sehen dürfen. Public sieht jeder, Restricted sieht fast niemand. Das ist das ganze Modell. Sitzt die Reihenfolge einmal, erledigt den Rest dein Bauchgefühl.
-
-Die genauen Definitionen, Beispiele und Grenzfälle pro Stufe stehen im nächsten Kapitel. Hier geht es nur um die eine Frage, die du dir vor jedem Prompt stellst: Wie weit rechts liegt das, was ich gerade eintippen will?
+Je weiter rechts, desto kleiner der Kreis der Menschen, die das sehen dürfen: Public sieht jeder, Restricted fast niemand. Vor jedem Prompt fragst du, wie weit rechts dein Text liegt. Definitionen und Grenzfälle stehen im nächsten Kapitel.
 
 ## Die Regel für KI
-
-Einfache Entscheidungsmatrix:
 
 | Klassifizierung | Kostenlose KI (ChatGPT Free, Claude Free) | Enterprise-KI mit AVV (Copilot, ChatGPT Business, Claude Team) |
 |-----------------|---------|---------|
@@ -35,14 +23,9 @@ Einfache Entscheidungsmatrix:
 | **Confidential** | Nein | Mit klarer Freigabe |
 | **Restricted** | Nein | Nein |
 
-Vier typische Fälle.
+Kundennamen, Preise, Margen und Verträge sind Confidential und gehören nicht in die Free-Version. Passwörter und API-Keys sind Restricted und gehören in kein KI-Tool, auch in kein Enterprise-Tool.
 
-- **Kundennamen** sind Confidential. Nicht in die Free-Version.
-- **Preise und Margen** sind Confidential. Nicht in die Free-Version.
-- **Verträge** sind Confidential. Nicht in die Free-Version.
-- **Passwörter und API-Keys** sind Restricted. Niemals irgendwo hin, auch nicht in Enterprise-Tools.
-
-> **Das Wichtigste:** Microsoft 365 Copilot kann eine kontrollierte Enterprise-Option sein, wenn IT und Datenschutz die konkrete Tenant-Geografie, Berechtigungen, Verträge und Datenklassen freigegeben haben. Ein vorhandenes M365-Konto allein beweist weder EU-Datenresidenz noch die Zulässigkeit vertraulicher Eingaben. Nicht freigegebene Verbraucherangebote bleiben für vertrauliche Firmendaten ungeeignet.
+> **Achtung:** Microsoft 365 Copilot kann eine kontrollierte Enterprise-Option sein, wenn IT und Datenschutz die konkrete Tenant-Geografie, Berechtigungen, Verträge und Datenklassen freigegeben haben. Ein vorhandenes M365-Konto allein beweist weder EU-Datenresidenz noch die Zulässigkeit vertraulicher Eingaben. Nicht freigegebene Verbraucherangebote bleiben für vertrauliche Firmendaten ungeeignet.
 
 ## Beispiele
 
@@ -50,21 +33,19 @@ Vier typische Fälle.
 
 > Prompt: „Hilf mir, eine E-Mail an Kunde Alpha zu schreiben. Der Jahreswert beträgt 150.000 Euro und der Rabatt 15 Prozent."
 
-Problem: Kundenname, Umsatz, Rabatt, alles Confidential. Die Free-KI sieht es jetzt.
+Kundenname, Umsatz und Rabatt sind Confidential, und die Free-KI sieht sie jetzt.
 
 ### Richtig
 
 > Prompt: „Entwirf eine Wertschätzungs-E-Mail für einen langjährigen Industriekunden mit Großmengen-Rabatt. Ton: professionell, nicht unterwürfig."
 
-Keine Namen, keine Zahlen, ein generisches Szenario. Die konkreten Daten ergänzt du erst beim Versand, in deinem Mail-Client, nicht im Prompt.
+Das Szenario ist generisch, ohne Namen und Zahlen. Die konkreten Daten ergänzt du erst beim Versand in deinem Mail-Client.
 
 ## Das unsichtbare Risiko
 
-Das größte Problem ist nicht die KI, die deine IT kennt. Sondern die, von der sie nichts weiß.
+Gefährlicher als die KI, die deine IT kennt, ist die, von der sie nichts weiß. Ein Online-Tool verspricht „Lade deine Daten hoch, wir analysieren sie kostenlos", du lädst die Kundenliste hoch, und drei Monate später sitzt der Anbieter auf einem Datensatz, den nie jemand freigegeben hat. Das heißt **Shadow AI** (mehr in Kapitel 5).
 
-Du findest ein neues KI-Tool online. „Lade deine Daten hoch, wir analysieren sie kostenlos." Du lädst die Kundenliste hoch. Drei Monate später sitzt der Anbieter auf einem Datensatz, den nie jemand freigegeben hat. Dafür gibt es einen Namen, **Shadow AI**, und einen ganzen Abschnitt in Kapitel 5. Merk dir für jetzt nur die Regel:
-
-**Regel:** Frag IT oder Security, bevor du ein neues KI-Tool nutzt. Zwei Minuten Mail spart dir zwei Wochen Eskalation.
+**Regel:** Frag IT oder Security, bevor du ein neues KI-Tool nutzt. Zwei Minuten Mail sparen dir zwei Wochen Eskalation.
 
 ## Checkliste vor jedem Prompt
 
@@ -75,7 +56,7 @@ Bevor du Text in die Free-Version von ChatGPT (oder vergleichbar) kippst:
 - [ ] Habe ich Passwörter oder Zugangsdaten eingebaut?
 - [ ] Würde mein Unternehmen wollen, dass OpenAI diese Daten sieht?
 
-Eine einzige Ja-Antwort? Dann nicht in die Free-Version. Entweder anonymisieren, oder in die Enterprise-Variante mit AVV.
+Bei einer einzigen Ja-Antwort gehört der Text nicht in die Free-Version. Anonymisiere ihn oder nutze die Enterprise-Variante mit AVV.
 
 ---
 

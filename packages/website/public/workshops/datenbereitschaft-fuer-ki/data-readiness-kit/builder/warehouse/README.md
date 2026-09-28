@@ -5,19 +5,19 @@
 In the workshop, one question got two answers.
 
 - **Export lane.** Seven undocumented tables. An AI answered "ending MRR" with −19,960 / 9,775 / 42,565.
-- **Approved lane.** Five approved views, a written definition, a read-only login and tests. The answer was 334,675 / 344,450 / 387,015.
+- **Approved lane.** Five approved views, a written definition, a read-only login and tests. The answer: 334,675 / 344,450 / 387,015.
 
-This folder builds both lanes on your own PostgreSQL. It takes one command and about a minute. You get:
+This folder builds both lanes on your own PostgreSQL with one command in about a minute. You get:
 
 - two small databases: `saas_bad` (the export lane) and `saas_ready` (the approved lane);
 - three roles with **no passwords**: an owner, the AI's reader and the export reader;
 - a checker that asserts the workshop's numbers, and a replay that makes the wrong answers happen on purpose.
 
-All data is synthetic: FOLDLINE is a made-up company with 144 business accounts. There are no real people, no email addresses and no credentials anywhere in this folder.
+All data is synthetic: FOLDLINE is a made-up company with 144 business accounts. This folder holds no real people, email addresses or credentials.
 
 ## Quick start: one command
 
-You need `psql` and PostgreSQL 14 or newer (tested on 16). Your login must be allowed to create databases and roles: a superuser, or a role with CREATEDB and CREATEROLE. Point psql at your server the usual way (`PGHOST`, `PGPORT`, `PGUSER`, or `-h -p -U`). Keep any password in your shell or in `~/.pgpass`, never in a file here.
+You need `psql` and PostgreSQL 14 or newer (tested on 16), and a login that may create databases and roles: a superuser, or a role with CREATEDB and CREATEROLE. Point psql at your server as usual (`PGHOST`, `PGPORT`, `PGUSER`, or `-h -p -U`). Keep any password in your shell or `~/.pgpass`, never in a file here.
 
 From this `warehouse/` folder:
 
@@ -25,7 +25,7 @@ From this `warehouse/` folder:
 psql -X -v ON_ERROR_STOP=1 -d postgres -f sql/00_build_all.sql
 ```
 
-It builds everything, runs the database checks as the AI's reader, and replays the export lane's wrong answers. It is safe to run again: every step drops and rebuilds what it owns. The exit code is 0 when every check passes and 3 when one fails.
+It builds everything, runs the database checks as the AI's reader, and replays the export lane's wrong answers. Every step drops and rebuilds what it owns, so you can run it again. Exit code 0 means every check passed; 3 means one failed.
 
 ## What you should see
 
@@ -60,17 +60,17 @@ REPLAY OK: every recorded and deck export-lane number above was reproduced exact
 
 | Line | What it proves |
 | --- | --- |
-| G01 PASS | The approved view returns the workshop's ending MRR, 334,675 / 344,450 / 387,015, using the deck's exact SQL. |
-| G02 PASS | Net new MRR for Q2 is 32,380, and it adds up: −19,960 + 9,775 + 42,565. |
-| G03 PASS | Logo churn is 4 of 40 = 10.0 % in every segment. Joiners are not in the base. |
-| D01 PASS | Reading `core.accounts.contact_email` as the AI's reader fails with SQLSTATE 42501. The database is the lock. |
+| G01 PASS | The approved view returns the workshop's ending MRR, 334,675 / 344,450 / 387,015, with the deck's exact SQL. |
+| G02 PASS | Net new MRR for Q2 is 32,380 = −19,960 + 9,775 + 42,565. |
+| G03 PASS | Logo churn is 4 of 40 = 10.0 % in every segment; joiners are not in the base. |
+| D01 PASS | The AI's reader gets SQLSTATE 42501 on `core.accounts.contact_email`. The database is the lock. |
 | B-T01 PASS | The reader cannot create a temporary table, even after `BEGIN READ WRITE`. |
-| B-S01 SKIP | `SET ROLE` does not load a role's login settings. That is a lesson, not a bug; see "Full proof" below. |
-| Q02 PASS | The bathtub identity holds: 354,635 + 32,380 = 387,015, and every month's last level plus its change gives its new level. |
-| Q07 PASS | The lineage written in `semantic/model.yml` is exactly what each view reads, according to PostgreSQL's own dependency catalog (`pg_depend`). |
-| F01 PASS | At 60 hours the data is past the 36-hour warning. The answer is still given, with a warning. As the deck says: "No age-based block rule was written." |
+| B-S01 SKIP | `SET ROLE` does not load a role's login settings. This is expected; see "Full proof" below. |
+| Q02 PASS | The bathtub identity holds: 354,635 + 32,380 = 387,015, and each month's opening level plus its change gives its closing level. |
+| Q07 PASS | The lineage in `semantic/model.yml` matches what each view reads, according to PostgreSQL's dependency catalog (`pg_depend`). |
+| F01 PASS | At 60 hours the data is past the 36-hour warning. The answer comes with a warning. As the deck says: "No age-based block rule was written." |
 | DB CHECKS ... PASS | The database and the course rules behave. **This is not an AI score.** |
-| REPLAY OK | The export lane still produces the recorded wrong answers, so the lesson stays reproducible. |
+| REPLAY OK | The export lane still produces the recorded wrong answers. |
 
 ## Full proof: log in as the reader
 
@@ -85,17 +85,17 @@ Expected: `DB CHECKS 22 of 22 PASS. 0 SKIP. 0 FAIL.`
 
 Built with other names? Pass the same `-v bad_db=...` (and `-d` your ready database) here.
 
-Step one works only when your server trusts local connections (`trust` or `peer` in `pg_hba.conf`), which is typical for a laptop sandbox. On a shared server, a person with the right to do so creates the login outside version control. ACCESS.md, "Credentials", explains how.
+Step one works only when your server trusts local connections (`trust` or `peer` in `pg_hba.conf`), as a laptop sandbox usually does. On a shared server, someone with the right to do so creates the login outside version control (ACCESS.md, "Credentials").
 
 ## What-if: the same data, 60 hours old
 
-The checks use a frozen clock: loaded 2026-07-01 06:00 UTC, checked 2026-07-01 09:00 UTC, so the data is 3 hours old. To see your own clock, pass it in:
+The checks use a frozen clock: loaded 2026-07-01 06:00 UTC, checked 2026-07-01 09:00 UTC, so the data is 3 hours old. To try another clock, pass it in:
 
 ```sh
 psql -X -d saas_ready -v eval_clock=2026-07-03T18:00:00Z -f sql/70_checks.sql
 ```
 
-The extra line reads `60 | stale_disclosed: answer with warning`. The verdicts in the table do not move, because F00 and F01 always use their own frozen clocks. FRESHNESS-LINEAGE.md explains the rule.
+The extra line reads `60 | stale_disclosed: answer with warning`. The table's verdicts stay the same, because F00 and F01 use their own frozen clocks. FRESHNESS-LINEAGE.md explains the rule.
 
 ## Clean up
 
@@ -135,27 +135,27 @@ Guides in this folder:
 
 | You see | It means | Do this |
 | --- | --- | --- |
-| `relation "mrr_summary_monthly" does not exist` | You used an unqualified name as the logged-in reader. That is intended (B-S01). | Write `analytics.mrr_summary_monthly`. |
+| `relation "mrr_summary_monthly" does not exist` | You used an unqualified name as the logged-in reader. The error is intended (B-S01). | Write `analytics.mrr_summary_monthly`. |
 | `permission denied for schema core` | The lock works (D01). | Nothing. Use the approved views. |
-| `cannot execute CREATE TABLE in a read-only transaction` | The read-only default fired. It is a guardrail, not the lock. | Nothing. B-W01 shows the lock underneath. |
-| `must be able to SET ROLE "foldline_owner"` | You are not a superuser and lack membership (PostgreSQL 16 or newer). | Re-run 00. Step 1 grants the membership. If it still fails, your role lacks CREATEROLE. |
+| `cannot execute CREATE TABLE in a read-only transaction` | The read-only default fired. It is a guardrail; the grants are the lock. | Nothing. B-W01 shows the lock underneath. |
+| `must be able to SET ROLE "foldline_owner"` | You are not a superuser and lack membership (PostgreSQL 16 or newer). | Re-run 00; step 1 grants the membership. If it still fails, your role lacks CREATEROLE. |
 | `role "foldline_owner" already exists` | Nothing. The scripts create roles only when they are missing. | Nothing. |
 | `database "saas_ready" is being accessed by other users` at teardown | Another session is open. | Close it, then re-run 99. |
 | `DB CHECKS ... FAIL` and exit code 3 | A number or a privilege drifted. | Read the `actual` column. Re-run `sql/60_access.sql` to repair grants, or 00 to rebuild. |
 
 ## Regenerating the seed (optional)
 
-You never need this to run the kit. If you change the seed:
+Only needed if you change the seed:
 
 ```sh
 python3 seed/generate_seed.py            # rewrites the generated SQL, the CSVs and builder-data.json
 python3 seed/generate_seed.py --check    # exit 1 if a committed file differs (for CI)
 ```
 
-The generator asserts every fixed fact before it writes anything. The generated SQL asserts them again when it loads.
+The generator asserts every fixed fact before writing, and the generated SQL asserts them again on load.
 
 ## Limits
 
 - This is a teaching starter. It certifies nothing about production readiness.
-- The database checks test the setup and the course rules, not the AI. Grade AI runs separately, at least three runs per case (TESTS.md).
-- C01, R01 and R02 (clarify, refuse) are policy-plane cases. This kit has no policy engine. See `claude/README.md` for the guidance files and `claude/hooks/sql_guard.py` for the optional SQL guard hook.
+- The database checks test the setup and the course rules, not the AI. Grade AI runs separately, at least three per case (TESTS.md).
+- C01, R01 and R02 (clarify, refuse) are policy-plane cases, and this kit has no policy engine. See `claude/README.md` for the guidance files and `claude/hooks/sql_guard.py` for the optional SQL guard hook.

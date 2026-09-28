@@ -1,20 +1,14 @@
 # Buchhaltung, Angebote, Rechnungen
 
-Niemand wird Freelancer, weil er Rechnungen schreiben will.
+Niemand wird Freelancer, weil er Rechnungen schreiben will, und trotzdem tippt jeder Selbstständige am Monatsende Rechnungspositionen in Lexware Office oder eine Excel-Tabelle.
 
-Und trotzdem sitzt jeder Selbstständige in Deutschland am Monatsende vor Lexware Office oder, Gott bewahre, einer Excel-Tabelle und tippt Rechnungspositionen ein.
-
-KI schreibt dir die Rechnungstexte, formuliert Angebote, verfasst Mahnungen und beschleunigt die Steuervorbereitung. Was sie nicht kann: deine Steuererklärung. Dafür brauchst du immer noch deinen Steuerberater. Oder viel Selbstvertrauen und ein bisschen Leichtsinn.
-
-Manches im Finanzkram nimmt KI dir ab. An anderes lässt du sie besser nicht ran.
+KI schreibt dir Rechnungstexte, Angebote und Mahnungen und beschleunigt die Steuervorbereitung. Deine Steuererklärung macht weiterhin dein Steuerberater.
 
 ## Angebote schreiben, die sitzen
 
-Kapitel 4 hat das Thema angerissen. Jetzt gehen wir tiefer.
+Ein gutes Angebot ist professionell und verkauft. Die meisten Freelancer-Angebote bestehen nur aus Leistungsbeschreibung und Preis, ohne Bezug zum Kunden und ohne Begründung für den Preis.
 
-Ein gutes Angebot hat zwei Eigenschaften: Es ist professionell und es verkauft. Die meisten Freelancer-Angebote sind weder noch. Sie sind funktional, Leistungsbeschreibung, Preis, fertig. Kein Bezug zum Kunden. Keine Begründung für den Preis. Kein Gefühl von "Ich verstehe dein Problem."
-
-Mein erstes Angebot als Selbstständiger hat 4 Stunden gedauert. Ein dreiseitiges Dokument, bei dem ich jeden Satz dreimal umformuliert habe. Heute mache ich das in 20 Minuten. Und die Angebote sind besser.
+Mein erstes Angebot als Selbstständiger, drei Seiten mit jedem Satz dreimal umformuliert, hat 4 Stunden gedauert. Heute brauche ich 20 Minuten, und die Angebote sind besser.
 
 > **KRAFT-Prompt: Angebot aus Gesprächsnotizen**
 >
@@ -33,7 +27,7 @@ Mein erstes Angebot als Selbstständiger hat 4 Stunden gedauert. Ein dreiseitige
 > Ton: Verbindlich, wertschätzend, selbstbewusst beim Preis.
 > ```
 
-**Preisargumentation** ist der Teil, bei dem die meisten Freelancer schwach werden. "Ist das zu teuer? Soll ich weniger nehmen?" KI formuliert dir, was der Kunde konkret gewinnt, statt wie viel Aufwand du hattest.
+Bei der **Preisargumentation** werden die meisten Freelancer unsicher. KI formuliert dir, was der Kunde konkret gewinnt, statt wie viel Aufwand du hattest.
 
 ```
 Kontext: Mein Angebot für [LEISTUNG] kostet [BETRAG] EUR.
@@ -46,13 +40,13 @@ Format: 3 Argumente, je max. 2 Sätze.
 Ton: Selbstbewusst, nicht defensiv.
 ```
 
-"Mein Tagessatz ist 1.200 Euro" klingt teuer. "Die Analyse spart Ihnen 3 Monate Fehlentwicklung und 40.000 Euro Budget" klingt günstig. Dieselbe Leistung, andere Perspektive. KI hilft dir, diese Perspektive zu finden.
+"Mein Tagessatz ist 1.200 Euro" klingt teuer. "Die Analyse spart Ihnen 3 Monate Fehlentwicklung und 40.000 Euro Budget" klingt günstig. KI hilft dir, diese Perspektive zu finden.
 
 ## Rechnungen und Mahnungen
 
-Rechnungen schreiben ist nicht schwer. Aber Rechnungen professionell formulieren, mit einer Leistungsbeschreibung, die der Kunde versteht und die den Wert deiner Arbeit widerspiegelt, das braucht Sorgfalt. Und Sorgfalt braucht Zeit. Und Zeit hast du nicht.
+Eine Leistungsbeschreibung, die der Kunde versteht und die den Wert deiner Arbeit zeigt, braucht Sorgfalt.
 
-**Rechnungstool:** Nutze ein professionelles Tool, Lexware Office, sevDesk oder FastBill. Alle drei können Rechnungen erstellen, versenden und die Buchhaltung vorbereiten. KI ergänzt, was die Tools nicht können: professionelle Leistungsbeschreibungen.
+**Rechnungstool:** Lexware Office, sevDesk und FastBill erstellen und versenden Rechnungen und bereiten die Buchhaltung vor. KI ergänzt die Leistungsbeschreibungen.
 
 "Website-Entwicklung" auf der Rechnung → der Kunde fragt sich, ob er 5.000 Euro für drei Klicks bezahlt hat.
 
@@ -72,9 +66,9 @@ Ton: Sachlich, wertschätzend.
 
 > **Kostenfalle: E-Rechnungs-Versand bei Lexware Office**
 >
-> Pass auf, bevor du dich an einen Tarif bindest. Den reinen Empfang von E-Rechnungen kann Lexware Office schon im kleinen Paket. Das aktive Versenden von E-Rechnungen steckt dort aber im XL-Tarif: 32,90 EUR im Monat. Solange noch keiner deiner Kunden zwingend eine E-Rechnung verlangt, fällt das kaum auf. Mit der E-Rechnungs-Versandpflicht ab 2027 wird genau das zur Pflichtfunktion, und dein Tarif springt nach oben. Ich sag dir das, weil ich es selbst übersehen habe: sevDesk hat den Versand schon ab 12,90 EUR im Monat drin. Rechne das auf zwölf Monate hoch, dann siehst du den Unterschied. Prüf das, bevor 2027 dein Budget überrascht.
+> Pass auf, bevor du dich an einen Tarif bindest. Den reinen Empfang von E-Rechnungen kann Lexware Office schon im kleinen Paket. Das aktive Versenden von E-Rechnungen steckt dort aber im XL-Tarif: 32,90 EUR im Monat. Solange noch keiner deiner Kunden zwingend eine E-Rechnung verlangt, fällt das kaum auf. Mit der E-Rechnungs-Versandpflicht ab 2027 wird genau das zur Pflichtfunktion, und dein Tarif springt nach oben. Ich habe es selbst übersehen: sevDesk hat den Versand schon ab 12,90 EUR im Monat drin. Rechne beide Tarife auf zwölf Monate hoch.
 
-**Mahnungen:** Keiner schreibt gerne Mahnungen. Sie fühlen sich unangenehm an. KI nimmt dir das Unbehagen, und macht sie professioneller.
+**Mahnungen** schreibt keiner gern. Mit KI fallen sie leichter und klingen professioneller.
 
 > **KRAFT-Prompt: Zahlungserinnerung**
 >
@@ -93,13 +87,13 @@ Ton: Sachlich, wertschätzend.
 > Ton: Höflich aber bestimmt. Nicht passiv-aggressiv.
 > ```
 
-Meine Mahnungen klingen jetzt höflich, bestimmt und professionell. Früher klangen sie entweder zu nett ("Ich wollte nur mal nachfragen...") oder passiv-aggressiv ("Wie bereits in meiner letzten E-Mail erwähnt..."). Die KI ist der bessere Diplomat.
+Früher klangen meine Mahnungen zu nett ("Ich wollte nur mal nachfragen...") oder passiv-aggressiv ("Wie bereits in meiner letzten E-Mail erwähnt..."). Mit KI klingen sie höflich und bestimmt.
 
 ## Buchhaltung vorbereiten
 
-KI ersetzt keinen Steuerberater. KI ersetzt kein Buchhaltungstool. Was KI kann: dir bei der Vorbereitung helfen.
+KI ersetzt weder Steuerberater noch Buchhaltungstool, hilft dir aber bei der Vorbereitung.
 
-**Belege kategorisieren:** "Ich habe folgende Ausgaben dieses Monats: [LISTE]. Kategorisiere sie nach: Betriebsausgaben (voll absetzbar), gemischte Nutzung (anteilig absetzbar), privat (nicht absetzbar)."
+**Belege kategorisieren** lässt du mit diesem Prompt. "Ich habe folgende Ausgaben dieses Monats: [LISTE]. Kategorisiere sie nach: Betriebsausgaben (voll absetzbar), gemischte Nutzung (anteilig absetzbar), privat (nicht absetzbar)."
 
 Wie das aussieht, wenn du eine echte Liste reinwirfst (ChatGPT Plus, Februar 2026):
 
@@ -116,25 +110,21 @@ Wie das aussieht, wenn du eine echte Liste reinwirfst (ChatGPT Plus, Februar 202
 > | Netflix | 13 EUR | Privat | Nicht absetzbar |
 > | Bahnticket Kundentermin | 67 EUR | Betriebsausgabe | Voll absetzbar, Reisezweck dokumentieren |
 
-Drei Sekunden statt drei Minuten Sortieren. Die Bewirtungs- und Abschreibungs-Hinweise prüfst du trotzdem gegen, das ist genau die Stelle, wo dein Steuerberater sein Geld verdient.
+Das Sortieren dauert drei Sekunden statt drei Minuten. Die Bewirtungs- und Abschreibungs-Hinweise prüfst du trotzdem mit deinem Steuerberater.
 
-**Geschäftsreisen:** "Erstelle eine Reisekostenabrechnung für folgende Geschäftsreise: [DETAILS]. Pauschalen für Verpflegungsmehraufwand: [Aktuelle Pauschalen HIER EINFÜGEN, siehe bundesfinanzministerium.de]." LLMs kennen die aktuellen Verpflegungspauschalen nicht zuverlässig. Die Sätze ändern sich. Trag sie selbst ein.
+Für **Geschäftsreisen** nutzt du diesen Prompt. "Erstelle eine Reisekostenabrechnung für folgende Geschäftsreise: [DETAILS]. Pauschalen für Verpflegungsmehraufwand: [Aktuelle Pauschalen HIER EINFÜGEN, siehe bundesfinanzministerium.de]." LLMs kennen die aktuellen Verpflegungspauschalen nicht zuverlässig, also trägst du sie selbst ein.
 
 **Gewinn-und-Verlust-Übersicht:**
 
-> **Achtung:** Falsche USt-Voranmeldungen führen zu Nachzahlungen plus Säumniszuschläge (§240 AO). Prüfe JEDES Ergebnis mit deinem Steuerberater. Die KI rechnet manchmal falsch, besonders bei Umsatzsteuer. Kein theoretisches Risiko. Das kostet dich Geld.
+> **Achtung:** Falsche USt-Voranmeldungen führen zu Nachzahlungen plus Säumniszuschläge (§240 AO). Prüfe JEDES Ergebnis mit deinem Steuerberater, denn die KI rechnet manchmal falsch, besonders bei Umsatzsteuer.
 
 "Hier sind meine Einnahmen und Ausgaben der letzten 3 Monate: [DATEN]. Erstelle eine Übersicht mit monatlichem Gewinn, kumuliertem Gewinn und Umsatzsteuer-Voranmeldungsbetrag."
 
-Alles Startpunkte. Alles mit Prüfpflicht. Kontrollier jede Zahl, bevor sie das Haus verlässt.
+Kontrollier jede Zahl, bevor sie das Haus verlässt.
 
 ## Steuervorbereitung: weniger Panik im Januar
 
-Jeder Selbstständige kennt den Januar-Stress. Der Steuerberater will die Unterlagen. Du hast 12 Monate lang alles in eine Schublade gestopft. Physisch oder digital, egal. Das Chaos ist dasselbe.
-
-KI kann den Schmerz lindern. Nicht eliminieren, lindern.
-
-**Quartalsweise Vorbereitung** statt einmal im Jahr alles auf einmal:
+Im Januar will der Steuerberater die Unterlagen, die 12 Monate lang in einer Schublade lagen. Mit KI bereitest du sie quartalsweise vor:
 
 ```
 Kontext: Ich bin [BERUF] und bereite meine Steuerunterlagen für
@@ -149,13 +139,9 @@ Format: Checkliste mit Kategorien. Max. 300 Wörter.
 Ton: Strukturiert, verständlich, keine Fachsprache.
 ```
 
-**Die KI-Kosten als Betriebsausgabe:** ChatGPT Plus, Claude Pro, Perplexity, alles absetzbar. Wie dein Office-Abo oder dein Handyvertrag. Wenn du die Tools beruflich nutzt: Betriebsausgabe. Beleg aufheben, fertig.
-
-Bei gemischter Nutzung (beruflich + privat): Den beruflichen Anteil schätzen und dokumentieren. 80 Prozent beruflich? 80 Prozent absetzbar. Mehr dazu in Kapitel 8.
+**Die KI-Kosten als Betriebsausgabe:** Beruflich genutzte Tools wie ChatGPT Plus, Claude Pro und Perplexity sind absetzbar wie dein Office-Abo. Heb den Beleg auf. Bei gemischter Nutzung schätzt und dokumentierst du den beruflichen Anteil, bei 80 Prozent beruflich sind 80 Prozent absetzbar. Mehr dazu in Kapitel 8.
 
 ## E-Rechnungspflicht 2025: was du wissen musst
-
-Der Fahrplan in drei Zeilen:
 
 | Was | Wann | Für wen |
 |-----|------|---------|
@@ -167,26 +153,20 @@ Der Fahrplan in drei Zeilen:
 
 Wenn dein Jahresumsatz unter 800.000 EUR liegt, und das trifft auf die meisten Freelancer zu, musst du E-Rechnungen empfangen können. Versenden kannst du noch bis 2028 mit PDF oder Papier.
 
-**Was musst du tun?**
-
-1. Prüfe, ob dein Rechnungstool XRechnung oder ZUGFeRD unterstützt.
-2. Wenn ja: nichts weiter tun.
-3. Wenn nein: Wechsle zu Lexware Office, sevDesk oder FastBill.
-
-Kein Grund zur Panik. Aber auch kein Grund, es zu ignorieren.
+Prüfe, ob dein Rechnungstool XRechnung oder ZUGFeRD unterstützt. Wenn nicht, wechsle zu Lexware Office, sevDesk oder FastBill.
 
 Wichtig für Kleinunternehmer: Auch wenn du keine Umsatzsteuer ausweist, bist du seit 2025 verpflichtet, E-Rechnungen EMPFANGEN zu können. Das hat das BMF im Oktober 2024 klargestellt. Und: Die Aufbewahrungspflicht gilt auch für dich, 10 Jahre, revisionssicher (§147 AO). Dein Buchhaltungstool muss das können.
 
-Noch ein Wort zur Rechtssicherheit: GoBD (Grundsätze zur ordnungsmäßigen Führung und Aufbewahrung von Büchern). Klingt sperrig, ist aber Pflicht. Deine digitalen Rechnungen und Buchungsunterlagen müssen unveränderbar archiviert werden, mit Verfahrensdokumentation und Zugriffsprotokoll. Lexware Office, sevDesk und FastBill erfüllen die GoBD-Anforderungen. Word-Dokumente und Excel-Tabellen tun das nicht.
+Pflicht sind auch die GoBD (Grundsätze zur ordnungsmäßigen Führung und Aufbewahrung von Büchern). Deine digitalen Rechnungen und Buchungsunterlagen müssen unveränderbar archiviert werden, mit Verfahrensdokumentation und Zugriffsprotokoll. Lexware Office, sevDesk und FastBill erfüllen die GoBD-Anforderungen. Word-Dokumente und Excel-Tabellen tun das nicht.
 
 > **Jetzt bist du dran: Dein Finanz-Setup prüfen**
 >
-> 1. Welches Rechnungstool nutzt du? Unterstützt es E-Rechnungen?
+> 1. Prüfe, ob dein Rechnungstool E-Rechnungen unterstützt.
 > 2. Erstelle mit KI ein Angebot für ein aktuelles oder fiktives Projekt (15 Min.)
 > 3. Erstelle mit KI eine Zahlungserinnerung für eine offene Rechnung (5 Min.)
 > 4. Erstelle eine Steuervorbereitung-Checkliste für das aktuelle Quartal (5 Min.)
 >
-> 25 Minuten. Dein Finanzkram ist danach organisierter als in den letzten 12 Monaten.
+> Das dauert 25 Minuten.
 
 > **Zeitgewinn-Tracker**
 >
@@ -196,4 +176,4 @@ Noch ein Wort zur Rechtssicherheit: GoBD (Grundsätze zur ordnungsmäßigen Füh
 > | +112 EUR/Woche | 750 EUR/Woche |
 > | Toolkosten: +8 EUR/Mo (Lexware Office) | Gesamt: 48 EUR/Mo |
 
-Das Geld ist geregelt. Und der Teil, den die meisten ignorieren, bis es zu spät ist?
+Kapitel 8 geht an den Teil, den die meisten ignorieren, bis es zu spät ist: das Recht.

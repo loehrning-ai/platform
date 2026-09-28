@@ -1,21 +1,18 @@
 # Analytics routing guidance (example)
 
-> **Guidance only. This file enforces nothing.** Instructions guide, grants enforce. An AI can
-> ignore or misread an instruction. Only database permissions (grants) make a forbidden read fail.
+> **Guidance only. This file enforces nothing.** An AI can ignore or misread an instruction. Only
+> database permissions (grants) make a forbidden read fail.
 
-New word? The [guide glossary](https://loehrning.ai/workshops/datenbereitschaft-fuer-ki/guide.html#glossary) explains the terms used here.
+Terms: [guide glossary](https://loehrning.ai/workshops/datenbereitschaft-fuer-ki/guide.html#glossary).
 
 ## What this file is
 
-- An example of instructions for Claude Code. To use it, copy it into your project's root folder
-  and rename it to `CLAUDE.md`. Claude Code reads that file when it works in the project.
-- Other AI tools and API integrations do not read it automatically.
-- It assumes the definition files from `semantic-template/`: `metric.yml`, `model.yml` and
-  `policy.yml`. Adapt the names to your own files.
-- It does not connect Claude to a database. Use a read-only database login (in the example:
-  `ai_analytics_reader`; the deck's FOLDLINE login is `foldline_ready_reader`) that has only the
-  grants listed in `policy.yml`. The builder kit (`builder/README.md` in the kit folder) describes
-  the setup steps.
+- Example instructions for Claude Code: copy this file into your project's root folder as `CLAUDE.md`.
+  Other AI tools and API integrations do not read it automatically.
+- It assumes `metric.yml`, `model.yml` and `policy.yml` from `semantic-template/`; adapt the names.
+- It does not connect Claude to a database. Use a read-only login (here `ai_analytics_reader`; in
+  the deck `foldline_ready_reader`) with only the grants in `policy.yml`. Setup steps:
+  `builder/README.md` in the kit folder.
 
 ## Approved route
 
@@ -25,8 +22,8 @@ New word? The [guide glossary](https://loehrning.ai/workshops/datenbereitschaft-
 - Never query `raw`, `core`, or `staging` assets directly.
 - Never request or return direct customer or contact identifiers (names, emails, phone numbers,
   addresses).
-- Never add month-end balances across months. A snapshot metric such as ending MRR is a balance at
-  one moment; summing three balances gives a meaningless number.
+- Never add month-end balances across months. Ending MRR is a balance at one moment; the sum of
+  three balances means nothing.
 
 ## Decision rules
 

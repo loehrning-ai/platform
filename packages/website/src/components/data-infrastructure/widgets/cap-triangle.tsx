@@ -81,7 +81,7 @@ export function CapTriangle({ lessonId, cpId }: CapTriangleProps): JSX.Element {
   const [statusText, setStatusText] = useState(
     locale === "de"
       ? "Wähle ein Paar und löse danach eine Netzpartition aus."
-      : "Pick a pair · then inject a partition to see the trade in action.",
+      : "Pick a pair, then inject a partition.",
   );
 
   const picksRef = useRef(0);
@@ -301,8 +301,8 @@ export function CapTriangle({ lessonId, cpId }: CapTriangleProps): JSX.Element {
           title={locale === "de" ? "CAP-Dreieck" : "CAP theorem triangle"}
           summary={
             locale === "de"
-              ? "Wähle zwei Eigenschaften aus Konsistenz, Verfügbarkeit und Partitionstoleranz und löse eine Netzteilung im Cluster aus."
-              : "Pick two of Consistency, Availability, and Partition tolerance, then inject a network split to see the real trade-off play out against a 4-node cluster."
+              ? "Wähle zwei Eigenschaften aus Konsistenz, Verfügbarkeit und Partitionstoleranz und teile danach das Netz eines Clusters mit 4 Knoten."
+              : "Pick two of Consistency, Availability and Partition tolerance, then split the network of a 4-node cluster."
           }
         />
       ) : (

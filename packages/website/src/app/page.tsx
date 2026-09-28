@@ -7,9 +7,11 @@ import { MobileRails } from "@/components/home/mobile-rails";
 import { Offering } from "@/components/home/offering";
 import { Workflow } from "@/components/home/workflow";
 import { HOME_COPY } from "@/components/home/home-copy";
+import { HorizonGlobeFrame } from "@/components/werk/horizon-globe-frame";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import { buildLocaleAlternates, localizeHref } from "@/lib/i18n/locale";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
+import { HOME_SCENE } from "@/lib/plakat/palettes";
 import { createPublicPageMetadata } from "@/lib/seo/page-metadata";
 
 // Next applies a layout's title template to its CHILD segments, not to the
@@ -51,15 +53,24 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function HomePage() {
   const locale = await getRequestLocale();
 
+  // The page's scene (SPEC §2.3): the lemons band opens the page, and below
+  // it the Kopflinien and the tab marker take Ultramarin. The graphit
+  // fallback (HOME_SCENE) has no page scene.
   return (
-    <>
-      {/* 0. Companion shell only (below lg): the seat for "where you left
-             off". Reserved in the server HTML, filled in the browser once the
-             active learning namespace is known. */}
-      <ContinueSlot locale={locale} courses={homeContinueCourses(locale)} />
-
-      {/* 1. Hero — the promise, stated once */}
-      <HeroSection locale={locale} />
+    <div data-plakat-page={HOME_SCENE === "lemons" ? "lemons" : undefined}>
+      {/* 1. Hero — the promise, stated once. Below lg it is one poster
+             band: the promise, the primary action, the companion seat for
+             "where you left off" and the horizon globe (its first frame
+             computed here on the server). The seat is reserved in the server
+             HTML and filled in the browser once the active learning
+             namespace is known. */}
+      <HeroSection
+        locale={locale}
+        phoneGlobe={<HorizonGlobeFrame />}
+        continueSlot={
+          <ContinueSlot locale={locale} courses={homeContinueCourses(locale)} />
+        }
+      />
 
       {/* 2. Kurse — the learning path + deeper labs */}
       <Offering locale={locale} />
@@ -74,6 +85,6 @@ export default async function HomePage() {
 
       {/* 5. Platform principles / trust */}
       <CredibilityStrip locale={locale} />
-    </>
+    </div>
   );
 }

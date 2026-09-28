@@ -79,7 +79,7 @@ function completeWorkflowSetup() {
         "Analyze the task. Output a table and do not add unsupported claims.",
     },
   });
-  fireEvent.click(screen.getByLabelText(/I confirm that the inputs/));
+  fireEvent.click(screen.getByLabelText(/My inputs are synthetic/));
   fireEvent.click(screen.getByLabelText(/Human approval before/));
   fireEvent.click(screen.getByLabelText(/Testable stop condition/));
   fireEvent.click(screen.getByLabelText(/Owner, fallback/));
@@ -107,7 +107,7 @@ function completeClaudeSetup() {
   fireEvent.click(screen.getByLabelText(/Human approval before/));
   fireEvent.click(screen.getByLabelText(/Testable stop condition/));
   fireEvent.click(screen.getByLabelText(/Owner, fallback/));
-  fireEvent.click(screen.getByLabelText(/I confirm that the inputs/));
+  fireEvent.click(screen.getByLabelText(/My inputs are synthetic/));
 }
 
 function completeGroundingEvidence() {
@@ -164,7 +164,7 @@ describe("PromptLab", () => {
   it("excludes consent and model selection but signals a prompt diagnostic edit synchronously", () => {
     const { onMeaningfulInteraction } = renderLab();
 
-    fireEvent.click(screen.getByLabelText(/I confirm that the inputs/));
+    fireEvent.click(screen.getByLabelText(/My inputs are synthetic/));
     fireEvent.change(screen.getByLabelText("Requested model"), {
       target: { value: "google/gemini-2.5-flash-lite" },
     });
@@ -215,7 +215,7 @@ describe("PromptLab", () => {
     });
     fireEvent.click(
       screen.getByLabelText(
-        "I confirm that the inputs are synthetic or approved for disclosure.",
+        "My inputs are synthetic or approved for disclosure.",
       ),
     );
     fireEvent.click(screen.getByLabelText(/Human approval before/));
@@ -600,9 +600,9 @@ describe("PromptLab", () => {
       fireEvent.click(
         screen.getByRole("button", { name: "Acknowledge degraded mode" }),
       );
-      fireEvent.click(screen.getByLabelText(/explicit policy stop/));
+      fireEvent.click(screen.getByLabelText(/record the policy stop/));
       expect(
-        screen.getByText(/separate, non-equivalent learning path/i),
+        screen.getByText(/verifies neither the provider artifact nor the course certificate/i),
       ).toBeInTheDocument();
       expect(
         screen.getByRole("button", { name: "Verify project" }),
@@ -805,14 +805,14 @@ describe("PromptLab", () => {
     fireEvent.click(screen.getByLabelText(/Human approval before/));
     fireEvent.click(screen.getByLabelText(/Testable stop condition/));
     fireEvent.click(screen.getByLabelText(/Owner, fallback/));
-    fireEvent.click(screen.getByLabelText(/I confirm that the inputs/));
+    fireEvent.click(screen.getByLabelText(/My inputs are synthetic/));
     fireEvent.click(screen.getByRole("button", { name: "Run provider" }));
 
     expect(
       await screen.findByText("Preserved primary Claude answer"),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/primary Claude response remains visible/i),
+      screen.getByText(/first Claude response stays visible/i),
     ).toBeInTheDocument();
     expect(
       screen.getByText("Failure class: Malformed response"),
@@ -890,14 +890,14 @@ describe("PromptLab", () => {
           "Analyze the task. Output a table and do not add unsupported claims.",
       },
     });
-    fireEvent.click(screen.getByLabelText(/I confirm that the inputs/));
+    fireEvent.click(screen.getByLabelText(/My inputs are synthetic/));
     fireEvent.click(screen.getByLabelText(/Human approval before/));
     fireEvent.click(screen.getByLabelText(/Testable stop condition/));
     fireEvent.click(screen.getByLabelText(/Owner, fallback/));
     fireEvent.click(screen.getByRole("button", { name: "Run provider" }));
 
     expect(
-      await screen.findByText(/usage or provider budget was exhausted/i),
+      await screen.findByText(/usage or provider budget is exhausted/i),
     ).toBeInTheDocument();
     expect(screen.queryByText(/Tagesbudget/)).not.toBeInTheDocument();
   });
@@ -964,7 +964,7 @@ describe("PromptLab", () => {
       target: { value: "a-stronger" },
     });
     expect(
-      screen.getByText(/verdict must agree with the totals/i),
+      screen.getByText(/verdict must match the rubric totals/i),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Verify project" }),
@@ -1035,7 +1035,7 @@ describe("PromptLab", () => {
     fireEvent.click(screen.getByLabelText(/Human approval before/));
     fireEvent.click(screen.getByLabelText(/Testable stop condition/));
     fireEvent.click(screen.getByLabelText(/Critic intervention/));
-    fireEvent.click(screen.getByLabelText(/I confirm that the inputs/));
+    fireEvent.click(screen.getByLabelText(/My inputs are synthetic/));
     fireEvent.click(screen.getByRole("button", { name: "Run provider" }));
     await screen.findByText("Run trace");
     fireEvent.click(screen.getByLabelText(/Stop the faulty path/));
@@ -1116,7 +1116,7 @@ describe("PromptLab", () => {
     });
 
     expect(
-      screen.getByText(/remains locked until all five/i),
+      screen.getByText(/Verification unlocks after all five project stages/i),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Verify project" }),

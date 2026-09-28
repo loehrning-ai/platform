@@ -46,14 +46,17 @@ export function SectionReader({
       )}
 
       {section.keyTakeaway && (
-        <div className="border-l-2 border-brand-orange bg-brand-orange/5 px-5 py-4">
+        <div className="border border-hairline bg-card px-5 py-4">
           <div className="flex items-start gap-2.5">
-            <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-brand-orange" />
+            <Lightbulb
+              className="mt-0.5 h-4 w-4 shrink-0 text-foreground"
+              aria-hidden="true"
+            />
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider text-brand-orange">
+              <p className="text-label text-foreground">
                 {copy.takeaway}
               </p>
-              <p className="mt-1.5 text-sm leading-relaxed text-foreground">
+              <p className="mt-1.5 text-body text-foreground">
                 {section.keyTakeaway}
               </p>
             </div>

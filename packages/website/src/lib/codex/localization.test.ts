@@ -180,9 +180,9 @@ describe("Codex bilingual course contract", () => {
     const enLessons = registry.get("en").content.lessons;
     const deLessons = registry.get("de").content.lessons;
 
-    expect(enLessons[0].title).toBe("What Codex Actually Is");
-    expect(deLessons[0].title).toBe("Was Codex tatsächlich ist");
-    expect(enLessons[11].title).toBe("A Reviewable Development Workflow");
+    expect(enLessons[0].title).toBe("What Codex is");
+    expect(deLessons[0].title).toBe("Was Codex ist");
+    expect(enLessons[11].title).toBe("A reviewable development workflow");
     expect(deLessons[11].title).toBe("Ein prüfbarer Entwicklungsablauf");
     for (const [index, enLesson] of enLessons.entries()) {
       const deLesson = deLessons[index];

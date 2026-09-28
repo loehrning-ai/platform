@@ -27,12 +27,12 @@ export interface GlobalNavigationCopy {
   readonly openSource: string;
   /**
    * Tab-bar labels. Short by contract: each one has a quarter of a 320px
-   * viewport, which `home` ("Startseite") and `allCourses` ("Alle Kurse")
-   * do not fit. `account` is the fourth tab label and is shared.
+   * viewport, which `home` ("Startseite") does not fit. The two middle tabs
+   * reuse the group labels `learning` and `practice`, so the bar names the
+   * same groups as the header; `account` is the fourth tab label and is
+   * shared.
    */
   readonly start: string;
-  readonly courses: string;
-  readonly tools: string;
   readonly account: string;
   readonly login: string;
   readonly githubOrganisation: string;
@@ -51,8 +51,8 @@ export const GLOBAL_NAVIGATION_COPY: Readonly<
     language: "Sprache",
     german: "Deutsch",
     english: "Englisch",
-    switchToGerman: "Deutsche Oberfläche öffnen",
-    switchToEnglish: "Englische Oberfläche öffnen",
+    switchToGerman: "DE, deutsche Oberfläche öffnen",
+    switchToEnglish: "EN, englische Oberfläche öffnen",
     learning: "Lernen",
     practice: "Praxis",
     allCourses: "Alle Kurse",
@@ -66,10 +66,8 @@ export const GLOBAL_NAVIGATION_COPY: Readonly<
     aboutTim: "Über mich",
     openSource: "Open Source",
     start: "Start",
-    courses: "Kurse",
-    tools: "Werkzeuge",
     account: "Konto",
-    login: "Login",
+    login: "Anmelden",
     githubOrganisation: "loehrning-ai auf GitHub",
   },
   en: {
@@ -82,8 +80,8 @@ export const GLOBAL_NAVIGATION_COPY: Readonly<
     language: "Language",
     german: "German",
     english: "English",
-    switchToGerman: "Open the German interface",
-    switchToEnglish: "Open the English interface",
+    switchToGerman: "DE, open the German interface",
+    switchToEnglish: "EN, open the English interface",
     learning: "Learning",
     practice: "Practice",
     allCourses: "All courses",
@@ -95,12 +93,10 @@ export const GLOBAL_NAVIGATION_COPY: Readonly<
     appliedExamples: "Applied examples",
     blog: "Blog",
     aboutTim: "About me",
-    openSource: "Open Source",
+    openSource: "Open source",
     start: "Home",
-    courses: "Courses",
-    tools: "Tools",
     account: "Account",
-    login: "Login",
+    login: "Log in",
     githubOrganisation: "loehrning-ai on GitHub",
   },
 };

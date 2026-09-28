@@ -5,21 +5,21 @@ export const AGENT_HELP_COPY_DE: AgentHelpCopy = {
   metadata: {
     title: "Deine eigene KI anschließen | Freie Lernplattform",
     description:
-      "Anleitung: Claude Desktop, Claude Code und Codex mit der Lernplattform verbinden, Zugriffsschlüssel anlegen und im Konto mit dem eigenen Anthropic-Schlüssel chatten.",
+      "Claude Desktop, Claude Code und Codex mit der Lernplattform verbinden, Zugriffsschlüssel anlegen und im Konto mit dem eigenen Anthropic-Schlüssel chatten.",
   },
   eyebrow: "Freie Lernplattform · Hilfe",
   title: "Deine eigene KI anschließen.",
   intro:
-    "Die Plattform hat eine zweite Tür: einen MCP-Server. Dein eigenes KI-Programm liest darüber die Kurse, Lektionen, Workshops, Buchkapitel und Open-Source-Werkzeuge, im gleichen Wortlaut wie du im Browser. Diese Seite zeigt Schritt für Schritt, wie du es einrichtest.",
+    "Über einen MCP-Server liest dein KI-Programm Kurse, Lektionen, Workshops, Buchkapitel und Open-Source-Werkzeuge im selben Wortlaut wie du im Browser.",
   indexLabel: "Auf dieser Seite",
   endpointLabel: "Adresse für dein Programm",
   statusReady: {
     title: "Der Zugang ist aktiv.",
-    body: "Die Adresse antwortet. Für die öffentlichen Inhalte brauchst du kein Konto und keinen Schlüssel.",
+    body: "Für die öffentlichen Inhalte brauchst du weder Konto noch Schlüssel.",
   },
   statusOff: {
     title: "Der Zugang ist in dieser Umgebung nicht aktiv.",
-    body: "Die Adresse unten antwortet gerade mit einem Fehler statt mit Inhalten. Die Anleitung stimmt trotzdem und gilt, sobald der Betreiber den Zugang einschaltet.",
+    body: "Bis der Betreiber ihn einschaltet, liefert die Adresse einen Fehler.",
   },
   sectionTitles: {
     overview: "Was das ist",
@@ -34,25 +34,24 @@ export const AGENT_HELP_COPY_DE: AgentHelpCopy = {
   },
   overview: {
     intro:
-      "MCP ist ein offenes Protokoll, mit dem ein KI-Programm fremde Inhalte lesen kann. Statt dir eine Lektion in den Chat zu kopieren, holt dein Programm sie selbst und arbeitet mit dem echten Text.",
+      "MCP ist ein offenes Protokoll, über das dein KI-Programm eine Lektion selbst holt. Du musst nichts in den Chat kopieren.",
     facts: (toolCount) => [
-      "Die Adresse spricht kein HTML. Trägst du sie in den Browser ein, bekommst du eine kurze Erklärseite statt einer Fehlermeldung.",
-      `Öffentlich stehen ${toolCount} Werkzeuge bereit: Kurse auflisten, einen Kurs oder eine Lektion holen, Workshops mit ihren Materialien, Buchkapitel, die Open-Source-Werkzeuge, eine Suche über die Inhalte und der Lernpfad als Graph.`,
-      "Jedes Werkzeug nimmt eine Sprache an: de oder en. Ohne Angabe bekommt dein Programm den deutschen Text.",
+      "Im Browser zeigt die Adresse eine kurze Erklärseite.",
+      `${toolCount} öffentliche Werkzeuge: Kurse auflisten, Kurs oder Lektion holen, Workshops mit Materialien, Buchkapitel, Open-Source-Werkzeuge, Suche und Lernpfad als Graph.`,
+      "Jedes Werkzeug nimmt die Sprache de oder en an. Ohne Angabe kommt der deutsche Text.",
     ],
     readOnlyTitle: "Nur lesend.",
     readOnlyBody:
-      "Kein Werkzeug schreibt deinen Fortschritt, setzt einen Haken, meldet dich zu etwas an oder stellt eine Teilnahmebestätigung aus. Was du gelernt hast, entscheidest weiterhin du im Browser.",
+      "Kein Werkzeug speichert Fortschritt, setzt Haken, meldet dich an oder stellt eine Teilnahmebestätigung aus.",
   },
   desktop: {
     title: "Claude Desktop",
-    intro:
-      "In Claude Desktop heißt eine solche Verbindung eigener Connector. Du brauchst dafür kein Terminal.",
+    intro: "Claude Desktop nennt das einen eigenen Connector. Du brauchst kein Terminal.",
     steps: [
-      "Öffne die Einstellungen und dort den Bereich Connectors.",
+      "Öffne in den Einstellungen den Bereich Connectors.",
       "Wähle Eigenen Connector hinzufügen.",
-      "Gib der Verbindung einen Namen, zum Beispiel loehrning, und trage die Adresse von oben ein.",
-      "Speichere und starte einen neuen Chat. Die Werkzeuge der Plattform stehen dann in der Werkzeugliste.",
+      "Gib einen Namen ein, zum Beispiel loehrning, und die Adresse von oben.",
+      "Speichere und starte einen neuen Chat. Die Werkzeuge stehen dann in der Werkzeugliste.",
     ],
     snippetLabel: "Oder direkt in die Konfigurationsdatei",
     snippet: (serverUrl) => `{
@@ -63,78 +62,76 @@ export const AGENT_HELP_COPY_DE: AgentHelpCopy = {
     }
   }
 }`,
-    note: "Frag danach zum Prüfen: Welche Kurse gibt es auf loehrning.ai? Kommt eine Liste mit den Kursen zurück, steht die Verbindung.",
+    note: "Zum Prüfen frag: Welche Kurse gibt es auf loehrning.ai? Kommt eine Kursliste zurück, steht die Verbindung.",
   },
   code: {
     title: "Claude Code",
-    intro: "Im Terminal, einmalig. Danach kennt jede Sitzung den Server.",
+    intro: "Du trägst den Server einmal im Terminal ein, danach kennt ihn jede Sitzung.",
     steps: [
       "Führe den Befehl unten in einem Terminal aus.",
       "Prüfe mit claude mcp list, ob loehrning aufgeführt ist.",
-      "Starte Claude Code und frag nach einer Lektion. Das Programm holt sie selbst.",
+      "Frag in Claude Code nach einer Lektion. Das Programm holt sie selbst.",
     ],
     snippetLabel: "Befehl",
     snippet: (serverUrl) =>
       `claude mcp add --transport http loehrning ${serverUrl}`,
-    note: "Der Server läuft über HTTP, nicht als lokaler Prozess. Deshalb braucht der Befehl --transport http und keinen Pfad zu einem Programm auf deinem Rechner.",
+    note: "Der Server läuft über HTTP, deshalb braucht der Befehl --transport http statt eines lokalen Programmpfads.",
   },
   codex: {
     title: "Codex",
     intro: "Auch hier ein einmaliger Befehl im Terminal.",
     steps: [
       "Führe den Befehl unten aus.",
-      "Prüfe mit codex mcp list, ob der Server steht.",
-      "Frag in einer Sitzung nach einem Workshop. Codex liest den Ablauf und die Materialliste.",
+      "Prüfe mit codex mcp list, ob der Server eingetragen ist.",
+      "Frag in einer Sitzung nach einem Workshop. Codex liest Ablauf und Materialliste.",
     ],
     snippetLabel: "Befehl",
     snippet: (serverUrl) => `codex mcp add loehrning --url ${serverUrl}`,
-    note: "Ältere Versionen kennen nur lokale Server. Wenn der Befehl die Adresse nicht annimmt, aktualisiere Codex zuerst.",
+    note: "Ältere Versionen kennen nur lokale Server. Nimmt der Befehl die Adresse nicht an, aktualisiere Codex.",
   },
   tokens: {
     intro:
-      "Die öffentlichen Inhalte gehen ohne alles. Für deinen eigenen Lernstand muss dein Programm belegen, für wen es arbeitet. Dafür gibt es Zugriffsschlüssel: eine Zeichenfolge, die du in deinem Konto anlegst und in deinem Programm hinterlegst.",
+      "Öffentliche Inhalte brauchen keinen Schlüssel. Für deinen eigenen Lernstand legst du im Konto einen Zugriffsschlüssel an und hinterlegst ihn in deinem Programm.",
     steps: [
       "Melde dich an und öffne Konto, Deine KI.",
-      "Lege einen Zugriffsschlüssel an und gib ihm einen Namen, der dir sagt, welches Gerät ihn benutzt.",
-      "Kopiere den Schlüssel sofort. Er wird genau einmal angezeigt und danach nur noch als Kürzel.",
-      "Hinterlege ihn in deinem Programm als Kopfzeile Authorization mit dem Wort Bearer davor.",
+      "Lege einen Schlüssel an und benenne ihn nach dem Gerät, das ihn nutzt.",
+      "Kopiere ihn sofort. Er wird nur einmal ganz angezeigt, danach nur als Kürzel.",
+      "Hinterlege ihn im Programm als Kopfzeile Authorization mit dem Wort Bearer davor.",
     ],
     snippetLabel: "Claude Code mit Schlüssel",
     snippet: (serverUrl) =>
       `claude mcp add --transport http loehrning ${serverUrl} \\
   --header "Authorization: Bearer lat_..."`,
     format:
-      "Ein Schlüssel beginnt immer mit lat_ und ist danach zufällig. Gespeichert wird nur ein Prüfwert, nicht der Schlüssel selbst: Auch der Betreiber kann ihn dir nicht noch einmal zeigen. Verlierst du ihn, widerrufst du ihn und legst einen neuen an.",
-    limit: (maxActive) =>
-      `Du kannst bis zu ${maxActive} Schlüssel gleichzeitig aktiv haben und jeden einzeln widerrufen. Ein widerrufener Schlüssel gilt ab der nächsten Anfrage nicht mehr.`,
+      "Ein Schlüssel beginnt mit lat_. Gespeichert wird nur ein Prüfwert, deshalb kann auch der Betreiber ihn nicht erneut anzeigen. Verlierst du ihn, widerrufst du ihn und legst einen neuen an.",
     bearerActive:
-      "Schickst du deinen Schlüssel mit, kommen zwei Werkzeuge dazu: dein Lernstand und dein nächster Schritt. Beide lesen nur, geschrieben wird nichts. Ohne Schlüssel bleibt dein Konto unerreichbar, und ein widerrufener Schlüssel wird abgewiesen statt still auf die öffentlichen Werkzeuge zurückzufallen.",
+      "Mit Schlüssel kommen zwei lesende Werkzeuge dazu: dein Lernstand und dein nächster Schritt. Ab der nächsten Anfrage weist der Server einen widerrufenen Schlüssel ab, auch für die öffentlichen Werkzeuge.",
     bearerPending: "",
     oauthPending:
-      "Die zweite Möglichkeit, eine Freigabe für ein Programm über eine Anmeldeseite, ist noch nicht eingerichtet. Bis dahin ist der Zugriffsschlüssel der dokumentierte Weg.",
+      "Eine Freigabe über eine Anmeldeseite ist noch nicht eingerichtet. Bis dahin nutzt du den Zugriffsschlüssel.",
     accountLink: "Zu Konto, Deine KI",
   },
   chat: {
     intro:
-      "Wenn du kein eigenes Programm einrichten willst, gibt es den Chat im Konto. Er läuft auf deinem eigenen Anthropic-Schlüssel und liest dieselben Inhalte wie ein Programm von außen.",
+      "Ohne eigenes Programm nutzt du den Chat im Konto. Er läuft auf deinem Anthropic-Schlüssel und liest dieselben Inhalte.",
     steps: [
       "Melde dich an und öffne Konto, Deine KI.",
-      "Speichere dort deinen Anthropic-Schlüssel. Sichtbar bleibt danach nur seine letzte Stelle.",
-      "Wähle ein Modell aus der freigegebenen Liste und schreibe los.",
+      "Speichere deinen Anthropic-Schlüssel. Danach siehst du nur noch sein Ende.",
+      "Wähle ein Modell und schreib los.",
     ],
-    cost: "Deine Nachrichten gehen mit deinem Schlüssel an Anthropic, also unter deinen eigenen Vertragsbedingungen und auf deine Kosten. Der Betreiber verwendet dafür keinen eigenen Schlüssel.",
+    cost: "Deine Nachrichten gehen mit deinem Schlüssel an Anthropic, zu deinen Vertragsbedingungen und auf deine Kosten.",
     transcript:
-      "Der Gesprächsverlauf bleibt in deinem Browser und wird nicht auf dem Server gespeichert. Löschst du die Daten der Seite, ist er weg.",
+      "Der Verlauf liegt nur in deinem Browser. Löschst du die Seitendaten, ist er weg.",
     limits: (messagesPerHour, toolCalls) =>
-      `Pro Stunde sind ${messagesPerHour} Nachrichten möglich, pro Nachricht bis zu ${toolCalls} Werkzeugaufrufe. Danach wartet der Chat, statt weiter zu fragen.`,
+      `Pro Stunde ${messagesPerHour} Nachrichten, pro Nachricht bis zu ${toolCalls} Werkzeugaufrufe. Danach hält der Chat an.`,
     offTitle: "Der Chat ist in dieser Umgebung nicht eingerichtet.",
     offBody:
-      "Es wird kein Schlüssel gespeichert und keine Anfrage gestellt, solange der Betreiber ihn nicht freischaltet.",
+      "Bis der Betreiber ihn freischaltet, wird kein Schlüssel gespeichert und keine Anfrage gestellt.",
     accountLink: "Zum Chat im Konto",
   },
   addresses: {
     intro:
-      "Lektionen, Workshops und Buchkapitel haben feste Adressen. Dein Programm kann sie speichern und Wochen später wieder aufrufen, ohne die Plattform noch einmal zu durchsuchen.",
+      "Lektionen, Workshops und Buchkapitel haben feste Adressen, die dein Programm speichern und später wieder aufrufen kann.",
     examples: [
       {
         uri: "lesson://ki-fuehrerschein/block_1_lesson_1",
@@ -143,41 +140,39 @@ export const AGENT_HELP_COPY_DE: AgentHelpCopy = {
       { uri: "workshop://ki-prognosen-einschaetzen", label: "Ein Workshop" },
       { uri: "book://ki-landschaft/01_eisberg", label: "Ein Buchkapitel" },
     ],
-    localeNote:
-      "Hängst du ?locale=en an, kommt der englische Text. Ohne Angabe bekommst du den deutschen.",
+    localeNote: "Mit ?locale=en kommt der englische Text, sonst der deutsche.",
     islandNote:
-      "Auf Lektions-, Kapitel- und Workshopseiten steht dafür ein Knopf: Mit deiner KI öffnen. Er kopiert einen fertigen Auftrag mit der Serveradresse und den Adressen der Seite, auf der du gerade bist.",
+      "Auf Lektions-, Kapitel- und Workshopseiten kopiert der Knopf „Mit deiner KI öffnen“ einen fertigen Auftrag mit der Serveradresse und den Adressen der Seite.",
   },
   limits: {
-    intro:
-      "Der Zugang ist offen, aber nicht unbegrenzt. Die Grenzen stehen fest und gelten für alle gleich.",
+    intro: "Diese Grenzen gelten für alle gleich.",
     requests: (maxPerHour) =>
-      `${maxPerHour} Anfragen pro Stunde und Adresse. Danach antwortet der Server mit einer Absage, bis die Stunde vorbei ist.`,
+      `${maxPerHour} Anfragen pro Stunde und IP-Adresse. Danach lehnt der Server bis zum Ende der Stunde ab.`,
     output: (maxKilobytes) =>
-      `Jede Antwort ist auf ${maxKilobytes} KB begrenzt. Ein längerer Text wird gekürzt und trägt die Adresse der Originalseite, damit dein Programm den Rest dort liest.`,
+      `Jede Antwort ist auf ${maxKilobytes} KB begrenzt. Längere Texte werden gekürzt und nennen die Adresse der Originalseite.`,
     search: (maxResults, maxQueryChars) =>
-      `Die Suche gibt höchstens ${maxResults} Treffer zurück, die Suchanfrage darf bis zu ${maxQueryChars} Zeichen lang sein.`,
+      `Die Suche liefert höchstens ${maxResults} Treffer, Suchbegriffe dürfen bis zu ${maxQueryChars} Zeichen lang sein.`,
     chat: (messagesPerHour, messageKibibytes) =>
-      `Der Chat im Konto: ${messagesPerHour} Nachrichten pro Stunde, ${messageKibibytes} KiB pro Nachricht.`,
+      `Chat im Konto: ${messagesPerHour} Nachrichten pro Stunde, ${messageKibibytes} KiB pro Nachricht.`,
     tokens: (maxActive, nameChars) =>
-      `${maxActive} aktive Zugriffsschlüssel pro Konto, der Name bis zu ${nameChars} Zeichen.`,
+      `${maxActive} aktive Zugriffsschlüssel pro Konto, Namen bis ${nameChars} Zeichen.`,
     unavailable:
-      "Kann der Server seine Zähler nicht erreichen, lehnt er die Anfrage ab, statt sie ungezählt durchzulassen.",
+      "Kann der Server Anfragen gerade nicht zählen, lehnt er sie ab.",
   },
   privacy: {
     intro:
-      "Öffentliche Anfragen laufen ohne Konto und ohne Kennung. Sobald ein Programm für dich arbeitet, führt dein Konto darüber ein Protokoll, damit du siehst, was passiert ist.",
+      "Öffentliche Anfragen laufen ohne Konto und Kennung. Arbeitet ein Programm für dich, protokolliert dein Konto seine Aufrufe.",
     logged: [
-      "Welches Programm es war, welches Werkzeug es benutzt hat, ob der Aufruf geklappt hat und wie lange er gedauert hat.",
-      "Die letzten 50 Einträge stehen in deinem Konto. Nach 30 Tagen werden sie automatisch gelöscht.",
+      "Protokolliert werden Programm, Werkzeug, Erfolg und Dauer jedes Aufrufs.",
+      "Die letzten 50 Einträge stehen in deinem Konto und werden nach 30 Tagen gelöscht.",
     ],
     notLogged: [
-      "Keine Suchanfrage, kein Text aus einer Antwort, keine Nachricht aus dem Chat und kein Schlüssel.",
-      "Kein Zugriffsschlüssel und kein Anthropic-Schlüssel steht im Klartext in einem Protokoll oder in einer Fehlermeldung.",
+      "Nicht protokolliert werden Suchanfragen, Antworttexte, Chatnachrichten und Schlüssel.",
+      "Auch in Fehlermeldungen steht weder ein Zugriffs- noch ein Anthropic-Schlüssel im Klartext.",
     ],
     revoke:
-      "Du kannst jeden Zugriffsschlüssel und jede Freigabe in deinem Konto sofort widerrufen. Löschst du dein Konto, verschwinden Schlüssel, Freigaben und Protokoll mit.",
-    accountLink: "Protokoll im Konto ansehen",
+      "Jeden Schlüssel und jede Freigabe kannst du im Konto sofort widerrufen. Löschst du das Konto, verschwinden sie samt Protokoll.",
+    accountLink: "Protokoll ansehen",
   },
   backToHelp: "Zurück zur Hilfe",
 };

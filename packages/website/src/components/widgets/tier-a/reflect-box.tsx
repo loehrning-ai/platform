@@ -67,8 +67,8 @@ export function ReflectBoxWidget({
   const localizedPlaceholder =
     placeholder ??
     (locale === "de"
-      ? "Hier eingeben. Wird nur lokal in diesem Browser gespeichert."
-      : "Type here. Stored only in this browser.");
+      ? "Wird nur in diesem Browser gespeichert."
+      : "Stored only in this browser.");
 
   return (
     <WidgetFrame

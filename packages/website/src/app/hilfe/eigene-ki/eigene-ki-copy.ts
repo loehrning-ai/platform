@@ -87,7 +87,6 @@ export interface AgentHelpCopy {
     readonly snippetLabel: string;
     readonly snippet: (serverUrl: string) => string;
     readonly format: string;
-    readonly limit: (maxActive: number) => string;
     /** What a token unlocks today. Always rendered. */
     readonly bearerActive: string;
     /**

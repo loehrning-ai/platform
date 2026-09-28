@@ -385,6 +385,7 @@ export function LessonLayout({
             title={activeLesson.title}
             objective={activeLesson.subtitle}
             headingLevel={isProjectCheckpoint ? 2 : 1}
+            objectiveRepeatedAbove={isProjectCheckpoint}
           >
             <LessonContent
               courseSlug={courseSlug}

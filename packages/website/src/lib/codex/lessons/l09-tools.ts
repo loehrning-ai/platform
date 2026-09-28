@@ -10,9 +10,9 @@ import {
 const lesson: CodexLesson = {
   id: "L09",
   number: 9,
-  title: "Choosing a Coding-Agent Workflow",
+  title: "Choosing a coding-agent workflow",
   subtitle:
-    "Compare interaction model, execution boundary, provider constraints, and review path before selecting a tool.",
+    "Compare interaction model, execution boundary, provider limits and review path before you pick a tool.",
   durationMinutes: 11,
   trackId: "in-the-loop",
   hook: "Choose by operating requirements.",
@@ -27,7 +27,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Inline completion, editor chat, terminal agents, IDE agents, background tasks that return a diff or pull request. Most products now span more than one of these, and the capabilities move.\n\nChoose from operating requirements, not a vendor ranking. Check what repository context the tool reads, where commands execute, which writes need approval, whether network access is enabled, how model and data policies are configured, and how the result reaches review.\n\nThe unit that matters is the workflow and its controls. Not the product label.",
+            "Coding tools mix inline completion, editor chat, terminal and IDE agents, and background tasks that return a diff or pull request. Choose by what the tool reads, where commands run, which writes need approval, network access, model and data policy, and how results reach review.",
         },
       ],
     },
@@ -42,32 +42,32 @@ const lesson: CodexLesson = {
             {
               eyebrow: "GitHub Copilot",
               title: "Editor and GitHub workflows",
-              body: "Offers inline completion, chat, and agent workflows across supported editors and GitHub surfaces. Confirm repository access, execution location, and review controls for the mode you use.",
+              body: "Completion, chat and agents in editors and on GitHub. Check access and review controls per mode.",
             },
             {
               eyebrow: "Cursor",
               title: "AI-focused editor",
-              body: "Combines editor context, chat, and agent execution in an IDE. It can support interactive repository exploration and multi-file work, subject to the selected model and permission settings.",
+              body: "An IDE that combines editor context, chat and agent runs for multi-file work.",
             },
             {
               eyebrow: "Claude Code",
               title: "Terminal-oriented agent",
-              body: "Runs from a terminal and can use repository files and shell tools within configured permissions. Hooks and scripts can connect it to an existing development workflow.",
+              body: "Uses repository files and shell tools from the terminal, within set permissions. Hooks connect it to existing workflows.",
             },
             {
               eyebrow: "Aider",
-              title: "Open-source CLI interface",
-              body: "Supports multiple model providers through a command-line workflow. Offline or isolated operation depends on the chosen model endpoint and local infrastructure, not on the CLI alone.",
+              title: "Open-source CLI",
+              body: "A CLI for many model providers. Offline use depends on the model endpoint and local infrastructure.",
             },
             {
               eyebrow: "Cline (formerly Claude Dev)",
               title: "Agent as an editor extension",
-              body: "Adds multi-provider agent workflows and MCP integrations to VS Code. Review its command approvals, provider configuration, and data path before enabling write access.",
+              body: "Multi-provider agents and MCP in VS Code. Check approvals, provider setup and data path before granting writes.",
             },
             {
               eyebrow: "Codex (OpenAI)",
               title: "Local and cloud Codex surfaces",
-              body: "Codex supports interactive local CLI and IDE work plus background cloud tasks in dedicated environments. Select the surface according to environment, permission, and review requirements.",
+              body: "Local CLI and IDE work plus background cloud tasks in dedicated environments.",
             },
           ],
         },
@@ -81,7 +81,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Match the workflow to the task and the control boundary.\n\n- **Small, local edit with a known implementation** → use direct editing or inline completion when delegation overhead adds no value.\n- **Unfamiliar codebase** → begin with a read-oriented interactive workflow that can cite files and call paths before allowing edits.\n- **Well-specified background task** → use a dedicated environment, explicit checks, and a diff or pull-request review gate.\n- **Terminal-centered workflow** → use a CLI agent that can run the repository's existing commands inside the required sandbox and approval policy.\n- **Provider, residency, or offline constraint** → evaluate the complete model endpoint, telemetry, credential, and network path. A local client does not by itself make a workflow offline.\n\nSecurity or procurement decision? Read the current product documentation. These capabilities change.",
+            "Match the workflow to the task and its control boundary:\n\n- **Small local edit, known implementation** → edit directly or use inline completion.\n- **Unfamiliar codebase** → start read-oriented and interactive, with cited files and call paths, before any edits.\n- **Well-specified background task** → dedicated environment, named checks, diff or pull-request review gate.\n- **Terminal-centered workflow** → a CLI agent that runs the repository's commands inside the required sandbox and approval policy.\n- **Provider, residency or offline constraint** → check model endpoint, telemetry, credentials and network path; a local client alone does not make a workflow offline.\n\nFor security or procurement decisions, read the current product documentation.",
         },
       ],
     },
@@ -93,7 +93,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "MCP stands for Model Context Protocol. It standardizes how a client discovers and calls tools, resources, and prompts exposed by an MCP server.\n\nMCP does not itself grant access. The server, transport, credentials, client policy, and user approvals determine what a tool can read or change. A database or GitHub integration should expose the narrowest useful operations and separate read actions from consequential writes.\n\nConceptually:\n\n```\n# 1. Configure a reviewed MCP server in the client.\n# 2. The server advertises named capabilities with input schemas.\n# 3. The client may call an allowed capability when the task requires it.\n# 4. Authentication, authorization, logging, and approval still apply.\n```\n\nMCP replaces manual copy-and-paste with structured calls. It also widens the agent's trust boundary. Treat every configured server as an integration that needs an owner, least privilege and an audit trail.",
+            "MCP (Model Context Protocol) standardizes how a client discovers and calls the tools, resources and prompts an MCP server exposes. It grants no access by itself: server, transport, credentials, client policy and your approvals decide what a tool can read or change. Expose the narrowest useful operations and separate reads from consequential writes.\n\n```\n# 1. Configure a reviewed MCP server in the client.\n# 2. The server advertises named capabilities with input schemas.\n# 3. The client may call an allowed capability when the task requires it.\n# 4. Authentication, authorization, logging, and approval still apply.\n```\n\nEach configured server widens the agent's trust boundary and needs an owner, least privilege and an audit trail.",
         },
       ],
     },
@@ -105,7 +105,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Editor and terminal workflows can share the same repository controls:\n\n- **Review the diff:** inspect changed files, tests, deletions, and generated artifacts in the normal Git review surface.\n- **Run repository checks:** use the documented lint, type, test, and build commands rather than tool-specific claims of success.\n- **Limit context deliberately:** provide the files and logs required for the task; do not broaden repository or secret access for convenience.\n- **Isolate concurrent work:** separate branches or worktrees reduce file conflicts, but shared dependencies and generated state can still conflict.\n\nIntegration preserves the project's review and security gates. It does not route around them.",
+            "Editor and terminal workflows use the same repository controls:\n\n- **Review the diff:** changed files, tests, deletions and generated artifacts in the normal Git review.\n- **Run repository checks:** the documented lint, type, test and build commands, instead of trusting the tool's success message.\n- **Limit context:** only the files and logs the task needs; no wider repository or secret access for convenience.\n- **Isolate concurrent work:** separate branches or worktrees reduce file conflicts; shared dependencies and generated state can still collide.",
         },
       ],
     },
@@ -114,7 +114,7 @@ const lesson: CodexLesson = {
       title: "Quick check",
       readTimeMinutes: 1,
       blocks: [
-        { kind: "prose", markdown: "Two questions on tool selection and MCP." },
+        { kind: "prose", markdown: "Questions at the end of the lesson." },
       ],
     },
   ]),
@@ -128,9 +128,9 @@ const lesson: CodexLesson = {
         kindLabel: CODEX_COMPARE_KIND_LABEL,
         badLabel: "Over-engineered",
         goodLabel: "Right-sized",
-        bad: "Task: add a missing JSDoc comment to one function.\n\nApproach: create a background environment and a separate pull request for an edit that can be reviewed directly in place.\n\nCost: additional environment and review state without a corresponding reduction in risk.",
-        good: "Task: add a missing JSDoc comment to one function.\n\nApproach: edit or generate the comment beside the function, inspect it against the implementation, and include it in the existing change.\n\nCost: no separate execution environment or review object.",
-        note: "Delegated tasks add environment, context and review overhead. Take that separation when it buys isolation, verification or parallelism. Otherwise keep the change where you are.",
+        bad: "Task: add a missing JSDoc comment to one function.\n\nApproach: a background environment and a separate pull request for an edit you could review in place.\n\nCost: extra environment and review state, same risk.",
+        good: "Approach: write the comment next to the function, check it against the code, add it to the current change.\n\nCost: nothing extra.",
+        note: "Delegate when the extra environment, context and review buy isolation, verification or parallelism.",
       },
     },
     {
@@ -143,16 +143,16 @@ const lesson: CodexLesson = {
         title: CODEX_QUIZ_TITLE,
         copy: CODEX_QUIZ_COPY,
         question:
-          "You need to understand authentication in an unfamiliar codebase before making changes. Which workflow is the safest first step?",
+          "Before changing an unfamiliar codebase, you must understand its authentication. What is the safest first step?",
         options: [
           "Grant write and network access immediately so exploration is unrestricted.",
-          "Start read-oriented, require file and call-path evidence, then define a separate bounded change after reviewing the trace.",
+          "Explore read-only with file evidence, then scope a separate change.",
           "Choose whichever product has the shortest setup flow.",
           "Ask for an architecture summary without repository access.",
         ],
         correct: 1,
         explanation:
-          "Read-oriented exploration limits accidental changes and produces evidence you can verify. Once the authentication path and trust boundaries are known, create a separate task with explicit scope and checks.",
+          "Read-only exploration avoids accidental changes and yields verifiable evidence. Once the authentication path and trust boundaries are known, scope a separate task with named checks.",
       },
     },
     {
@@ -166,10 +166,10 @@ const lesson: CodexLesson = {
         copy: CODEX_QUIZ_COPY,
         question: "What does MCP add to a coding-agent workflow?",
         options: [
-          "Write code faster.",
-          "A standard interface for discovering and calling capabilities exposed by configured servers, subject to authentication and policy.",
-          "Run inside a sandboxed environment.",
-          "Understand more programming languages.",
+          "Faster code generation.",
+          "A standard way to discover and call configured servers' capabilities, within auth and policy.",
+          "A sandboxed runtime.",
+          "Support for more programming languages.",
         ],
         correct: 1,
         explanation:

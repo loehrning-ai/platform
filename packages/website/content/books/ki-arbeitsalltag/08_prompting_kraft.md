@@ -1,16 +1,12 @@
 # Prompting: Von der Anfrage zum Ergebnis
 
-Du stellst einen neuen Mitarbeiter ein. Erster Tag. Du sagst: "Mach mal was."
-
-Er liefert dann auch. Irgendetwas. Nicht das, was du wolltest, nicht mal in der Nähe.
-
-Genau so nutzen 90 Prozent der Leute ChatGPT.
+Sagst du einem neuen Mitarbeiter am ersten Tag nur "Mach mal was", liefert er irgendetwas, aber nicht das, was du wolltest. So nutzen 90 Prozent der Leute ChatGPT.
 
 ## Prompt A vs. Prompt B
 
 **Prompt A:** "Schreib mir einen LinkedIn-Post."
 
-Output: generisch und roboterhaft. Jeder Satz klingt wie aus dem Lehrbuch, Floskeln, Buzzwords, austauschbar. Kein Mensch würde das lesen, geschweige denn liken.
+Der Output ist generisch und voller Floskeln und Buzzwords, jeder Satz klingt wie aus dem Lehrbuch.
 
 **Prompt B:**
 
@@ -29,17 +25,17 @@ verkäuferisch.
 
 Output: „40 Geschäftsführer, 90 Minuten, und eine Frage, die keiner beantworten konnte." Konkret, persönlich, ohne Nachbearbeitung postbar.
 
-30 Sekunden mehr Arbeit am Prompt. 10x besseres Ergebnis.
+30 Sekunden mehr Arbeit am Prompt ergeben ein deutlich besseres Ergebnis.
 
 ## Die KRAFT-Methode
 
-Fünf Buchstaben, in dieser Reihenfolge. Jeder davon macht den Output besser.
+KRAFT hat fünf Buchstaben, in dieser Reihenfolge.
 
-**K, Kontext:** Wer bist du? Was ist die Situation? Was muss die KI wissen, um deine Aufgabe überhaupt zu verstehen? Je konkreter, desto besser. Nicht „ich arbeite im Marketing", sondern „ich verantworte B2B-Leadgenerierung für einen Maschinenbauer mit 80 Mitarbeitenden, Zielregion DACH."
+**K, Kontext:** Wer bist du, wie ist die Situation, und was muss die KI wissen, um die Aufgabe zu verstehen? Je konkreter, desto besser, etwa „ich verantworte B2B-Leadgenerierung für einen Maschinenbauer mit 80 Mitarbeitenden, Zielregion DACH" statt „ich arbeite im Marketing".
 
 **R, Rolle:** Welche Expertise soll die KI einnehmen? „Du bist erfahrener Texter" produziert anderen Output als „Du bist Datenschutz-Berater mit 15 Jahren Erfahrung in der Industrie." Die Rolle stellt Stil, Fachsprache und Perspektive scharf.
 
-**A, Aufgabe:** Was genau soll passieren? Ein Verb, ein Objekt, ein Ziel. Nicht „Schreib was über KI", sondern „Fasse die drei Kernaussagen des folgenden Papers in einem Blogpost für Nicht-Techniker zusammen."
+**A, Aufgabe:** Was genau soll passieren? Nenne Verb, Objekt und Ziel, etwa „Fasse die drei Kernaussagen des folgenden Papers in einem Blogpost für Nicht-Techniker zusammen" statt „Schreib was über KI".
 
 **F, Format:** Wie soll das Ergebnis aussehen? E-Mail, Aufzählung, Tabelle, Code-Block, 100 Wörter oder 500, mit Überschriften oder ohne. Ohne Format-Angabe bekommst du einen Essay, wo du eine Mail wolltest.
 
@@ -49,9 +45,7 @@ Nicht jeder Prompt braucht alle fünf. „Übersetze diesen Satz" braucht kein K
 
 ## Die Restaurant-Analogie
 
-Du bestellst nicht "Bring mir Essen." Du bestellst: "Ich hätte gern den Lachs, medium, mit Reis, ohne Soße."
-
-Genau so bestellst du bei der KI.
+Im Restaurant bestellst du "den Lachs, medium, mit Reis, ohne Soße" statt "Bring mir Essen". Genauso konkret bestellst du bei der KI.
 
 ## Die 10 häufigsten Fehler
 
@@ -59,12 +53,12 @@ Genau so bestellst du bei der KI.
 2. **Zu lang.** 3 Seiten Prompt. Sweet Spot: 50-200 Wörter.
 3. **Keine Rolle.** Ohne Rolle: generischer Output. Mit Rolle: Spezialisten-Expertise.
 4. **Kein Format.** Du bekommst einen Essay statt einer E-Mail.
-5. **Erste Antwort akzeptieren.** Die erste Antwort ist immer der Rohentwurf. 3-5 Runden Feedback machen sie 10x besser.
+5. **Erste Antwort akzeptieren.** Die erste Antwort ist der Rohentwurf, 3-5 Runden Feedback verbessern sie deutlich.
 6. **Vertrauliche Daten eingeben.** Nutze für Übungen „Kunde Alpha (fiktiv), Maschinenbau, fiktive Umsatzbandbreite" und prüfe auch indirekte Re-Identifizierbarkeit.
 7. **Output nicht prüfen.** KI halluziniert Zahlen, Quellen, Gesetze. (Dazu mehr im nächsten Kapitel.)
 8. **Falsche Erwartungen.** KI liefert 80 % Entwurf. Deine Expertise liefert die letzten 20 %.
-9. **Immer dasselbe Tool.** ChatGPT für alles ist wie Hammer für alles.
-10. **Prompts nicht speichern.** Bau dir eine Prompt-Bibliothek. Deine getesteten Prompts werden dein bestes Asset.
+9. **Immer dasselbe Tool.** Nicht jede Aufgabe passt zu ChatGPT.
+10. **Prompts nicht speichern.** Bau dir eine Bibliothek getesteter Prompts.
 
 ## Ein kompletter KRAFT-Prompt
 
@@ -81,11 +75,11 @@ Ton: Verständnisvoll aber sachlich. Biete eine Lösung an,
 mache keine Zusagen ohne Rücksprache mit dem Vertrieb.
 ```
 
-Der letzte Satz ist die kritische Leitplanke: "keine Zusagen ohne Rücksprache." KI liebt es, Rabatte, Express-Versand und Erstattungen anzubieten. Ohne deine Genehmigung.
+Die kritische Leitplanke ist "keine Zusagen ohne Rücksprache", denn KI bietet ungefragt Rabatte, Express-Versand und Erstattungen an.
 
 ## Drei weitere KRAFT-Prompts
 
-Vier Situationen, vier Vorlagen. Kopiere, passe an, nutze.
+Die folgenden Vorlagen passt du an deine Situation an.
 
 **Meeting-Zusammenfassung aus Transkript:**
 
@@ -112,9 +106,9 @@ Vier Situationen, vier Vorlagen. Kopiere, passe an, nutze.
 > Rolle: Erfahrener Vertriebstexter im B2B.
 > Aufgabe: Schreibe den Begleittext zum Angebot, keinen Preis, nur Rahmen, Nutzen, Nächste Schritte.
 > Format: 180-220 Wörter. Anrede, drei kurze Absätze, Schlussformel. Keine Aufzählungen.
-> Ton: Vertrauensvoll, verbindlich, ohne Floskeln. Keine „innovativen Lösungen", keine „maßgeschneiderten Ansätze".
+> Ton: Vertrauensvoll, verbindlich, ohne Floskeln wie „innovative Lösungen".
 
-Bisher alles Büro und Schreibtisch. KRAFT funktioniert genauso im Kreativen. Wenn du Kampagnen briefst, Web-Texte umschreibst oder ein Konzept aufsetzt, brauchst du dieselbe Struktur. Sonst liefert die KI bunte Floskeln statt eines Konzepts, das du dem Kunden zeigen kannst.
+KRAFT funktioniert genauso für Kampagnen, Web-Texte und Konzepte. Ohne diese Struktur liefert die KI Floskeln statt eines Konzepts, das du dem Kunden zeigen kannst.
 
 **Kampagnenkonzept aus einem Briefing:**
 
@@ -125,24 +119,22 @@ Bisher alles Büro und Schreibtisch. KRAFT funktioniert genauso im Kreativen. We
 > Format: Drei nummerierte Blöcke. Je Block: Leitidee in einem Satz, Claim, zwei Sätze Bildtenor, ein fertiger Post-Text mit maximal 280 Zeichen.
 > Ton: Frisch, jung, regional verwurzelt. Kein Marketing-Sprech, keine austauschbaren Buzzwords wie „Lifestyle" oder „Genussmoment".
 
-Lies dir die drei Vorschläge laut vor. Welcher Claim bleibt hängen? Den nimmst du, die anderen zwei wirfst du weg. Genau dafür lässt du dir drei geben, nicht einen.
+Lies die drei Vorschläge laut vor und nimm den Claim, der hängen bleibt. Deshalb lässt du dir drei geben.
 
-Web-Copy umschreiben geht nach demselben Muster. Du gibst der KI deinen alten Text als Beispiel mit, sagst, was nervt, und lässt sie drei Varianten liefern. Du wählst, schärfst nach, fertig. Die KI macht den ersten Wurf. Den Geschmack lieferst du.
+Für Web-Copy gibst du der KI deinen alten Text mit, sagst, was dich stört, und lässt drei Varianten liefern. Du wählst aus und schärfst nach.
 
 > **Achtung:** Lass dir bei Bildern und Claims nie etwas „erfinden", das es nicht gibt. KI behauptet gern Auszeichnungen, Testsiege oder Bio-Siegel. Prüf jede Aussage, bevor sie auf ein Plakat kommt.
 
-Sechs Prompts, sechs Szenarien, ein Muster: Kontext → Rolle → Aufgabe → Format → Ton. Und immer konkret.
-
 ## Fortgeschrittene Techniken
 
-**Chain-of-Thought:** Füge "Denke Schritt für Schritt nach, bevor du antwortest" hinzu. Verändert die Antwortqualität bei komplexen Aufgaben, Strategien, Analysen, Entscheidungen.
+**Chain-of-Thought:** Füge "Denke Schritt für Schritt nach, bevor du antwortest" hinzu. Das verbessert Antworten bei Strategien, Analysen und Entscheidungen.
 
 **Few-Shot Learning:** Gib der KI 2-3 Beispiele deines Schreibstils. "Hier sind drei E-Mails, die ich geschrieben habe. Schreibe die nächste im gleichen Stil." Funktioniert für E-Mails, Angebote, Posts.
 
-**Iteration:** Die erste Antwort ist der Rohentwurf. "Mach den Ton sachlicher." "Kürze auf 100 Wörter." "Ersetze den letzten Absatz durch einen CTA." 3-5 Runden. Dann hast du etwas Brauchbares.
+**Iteration:** Den Rohentwurf verbesserst du in 3-5 Runden mit Anweisungen wie "Mach den Ton sachlicher", "Kürze auf 100 Wörter" oder "Ersetze den letzten Absatz durch einen CTA".
 
-> **Tipp:** Speichere deine besten Prompts in einer Datei. Nach 10 Prompts hast du ein System. Nach 50 hast du ein Asset, das dein ganzes Team nutzen kann.
+> **Tipp:** Speichere deine besten Prompts in einer Datei. Nach 50 Prompts hast du eine Sammlung, die dein ganzes Team nutzen kann.
 
 ---
 
-Im nächsten Kapitel: Warum KI lügt, und warum das kein Bug ist, der gepatcht wird.
+Das nächste Kapitel erklärt, warum KI lügt und warum sich das nicht einfach patchen lässt.

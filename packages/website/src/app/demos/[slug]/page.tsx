@@ -8,7 +8,6 @@ import {
 import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { getDemoCopy } from "@/lib/demos-copy";
 import { DemoDetailLayout } from "@/components/demos/demo-detail-layout";
-import { ResourceContextBanner } from "@/components/learning/resource-context-banner";
 import { JsonLd, ORG_ID, SITE_URL } from "@/lib/seo/json-ld";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import { buildLocaleAlternates, localizeHref } from "@/lib/i18n/locale";
@@ -121,7 +120,6 @@ export default async function DemoDetailPage({ params }: Props) {
   return (
     <>
       <JsonLd data={jsonLd} id={`demo-${demo.slug}-jsonld`} />
-      {locale === "de" ? <ResourceContextBanner nodeId={`demo:${demo.slug}`} /> : null}
       <DemoDetailLayout demo={demo} locale={locale} />
     </>
   );

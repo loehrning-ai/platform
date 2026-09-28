@@ -24,7 +24,7 @@ const COPY: Readonly<
     title: "KI im Alltag verstehen: kostenloser KI-Kurs auf Deutsch",
     description:
       "Kostenloser KI-Grundlagenkurs mit 5 Blöcken, 18 Lektionen und ca. 1 Std. 40 Min. Lernzeit. Ein Lernkonto ist erforderlich.",
-    graphName: "KI im Alltag: Was du wissen solltest",
+    graphName: "KI-Führerschein: Welche Daten ins KI-Tool dürfen",
     graphDescription:
       "Online-Grundlagenkurs zur KI-Kompetenz mit 5 Blöcken, 18 Lektionen und ca. 1 Std. 40 Min. Lernzeit.",
     audience: "Erwachsene ohne technische Vorkenntnisse",
@@ -33,7 +33,7 @@ const COPY: Readonly<
     title: "Everyday AI Literacy: course reader",
     description:
       "Foundation course with 5 blocks, 18 lessons, and about 1 hour 40 minutes of study. A learning account is required.",
-    graphName: "Everyday AI Literacy: what you need to know",
+    graphName: "Everyday AI Literacy: which data may go into an AI tool",
     graphDescription:
       "Online foundation course on practical AI literacy with 5 blocks, 18 lessons, and about 1 hour 40 minutes of study.",
     audience: "Adults without a technical background",

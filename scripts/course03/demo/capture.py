@@ -6,7 +6,8 @@ Builds nothing itself. Run the kit first (warehouse/sql/00_build_all.sql) with
 then run this script with the same names:
   python3 capture.py --bad-db saas_bad --ready-db saas_ready --build-log build.log
 Connection settings come from the usual PGHOST / PGPORT / PGUSER variables.
-It writes demo-data.json next to this file and embeds the same JSON into demo.html.
+It writes demo-data.json next to this file, embeds the same JSON into demo.html and
+refreshes the static values in the page (sync-values.mjs). Pass --date to keep a capture date.
 All data is synthetic (FOLDLINE is a made-up company).
 """
 import argparse
@@ -62,6 +63,29 @@ def load_captures():
         "process.stdout.write(JSON.stringify(w.FOLDLINE_MODEL_CAPTURES));" % js
     )
     return json.loads(subprocess.run(["node", "-e", code], capture_output=True, text=True, check=True).stdout)
+
+
+def load_replay():
+    js = os.path.join(LIB, "replay-data.js")
+    code = (
+        "const fs=require('fs');const vm=require('vm');const w={};"
+        "vm.runInNewContext(fs.readFileSync(%r,'utf8'),{window:w,Object});"
+        "process.stdout.write(JSON.stringify(w.FOLDLINE_REPLAY));" % js
+    )
+    return json.loads(subprocess.run(["node", "-e", code], capture_output=True, text=True, check=True).stdout)
+
+
+# The deck's labels for the three requests the course rules answer before any query (scene honest-no).
+RULE_QUESTIONS = {"C01": "How much MRR?", "R01": "Profit by plan?", "R02": "Customer emails and lifetime value"}
+
+
+def course_rules():
+    responses = load_replay()["responses"]
+    rules = []
+    for rid, question in RULE_QUESTIONS.items():
+        ev = responses["ready:" + rid]["evidence"]
+        rules.append({"id": rid, "question": question, "behavior": ev["behavior"], "message": ev["message"]})
+    return rules
 
 
 def find_sql_cases(obj, acc):
@@ -147,7 +171,8 @@ def main():
     dbs = {"bad": a.bad_db, "ready": a.ready_db}
 
     ver, _, _ = psql(a.ready_db, "SHOW server_version;")
-    caps = find_sql_cases(load_captures(), {})
+    recorded_raw = load_captures()
+    caps = find_sql_cases(recorded_raw, {})
     cases = []
     for cid in ("G01", "G02", "G03"):
         entry = {"id": cid}
@@ -176,6 +201,8 @@ def main():
         "forbidden": forbidden,
         "checks": check_lines(a.build_log),
         "definitions": {n: metric_text(n) for n in ("ending_mrr", "net_new_mrr", "logo_churn_rate")},
+        "recorded": {"capturedAtUtc": recorded_raw["capturedAtUtc"], "summary": recorded_raw["summary"]},
+        "rules": course_rules(),
     }
     blob = json.dumps(data, ensure_ascii=False, indent=1)
     with open(os.path.join(HERE, "demo-data.json"), "w", encoding="utf-8") as f:
@@ -190,6 +217,8 @@ def main():
         )
         with open(page, "w", encoding="utf-8") as f:
             f.write(html)
+        # The page also shows the values as static text (final state without JavaScript); refresh them.
+        subprocess.run(["node", os.path.join(HERE, "sync-values.mjs")], check=True)
     print("captured", len(cases), "cases;", sum(len(v["relations"]) for v in data["lanes"].values()), "relations")
 
 

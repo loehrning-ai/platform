@@ -3,14 +3,17 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import {
   TECHNICAL_COURSE_LEDGER_LINK_CLASS,
+  TECHNICAL_COURSE_LESSON_ROW_COLUMNS,
   TECHNICAL_COURSE_PRIMARY_ACTION_CLASS,
   TECHNICAL_COURSE_SECONDARY_ACTION_CLASS,
   TechnicalCourseFrame,
   TechnicalCourseHeader,
+  TechnicalCourseLessonNumber,
   TechnicalCourseSectionHeading,
 } from "@/components/course/technical-course-landing";
 import { HeroOrrery } from "@/components/imported-courses/claude/hero-orrery";
 import { HeroTransform } from "@/components/imported-courses/claude/hero-transform";
+import { PhoneDisclosure } from "@/components/course/phone-disclosure";
 import { getClaudeCourseBundle } from "@/lib/claude-course/localization";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
@@ -30,7 +33,7 @@ const LANDING_COPY = {
     eyebrow: "Technischer Claude-Kurs",
     title: "Claude mit klarer Struktur einsetzen.",
     intro:
-      "Zwölf Lektionen zeigen, wie du Aufgaben präzise beschreibst, relevante Fakten bereitstellst und Ergebnisse prüfst. Jede Lektion enthält eine interaktive Übung.",
+      "Du gibst Claude Aufgaben mit Kontext, Beispielen und Ausgabeformat und prüfst die Ergebnisse.",
     startLesson: "Lektion 01 starten",
     courseMap: "Zum Kursplan",
     facts: [
@@ -41,17 +44,11 @@ const LANDING_COPY = {
     ],
     demoEyebrow: "Prompt-Bausteine",
     demoIntro:
-      "Aktiviere einzelne Bestandteile und vergleiche die simulierten Ergebnisse.",
+      "Schalte Bausteine an und vergleiche die simulierten Ergebnisse.",
+    demoToggle: "Prompt-Werkbank ausprobieren",
     courseEyebrow: "Kursplan",
     courseTitle: "Vier Themenbereiche, zwölf Lektionen",
-    courseIntro:
-      "Beginne mit dem mentalen Modell. Danach folgen wiederverwendbare Arbeitsabläufe, Agenten, Prüfverfahren und Teamregeln.",
     lessonLabel: "Lektion",
-    finalEyebrow: "Einstieg",
-    finalTitle: "Lektion 01: Was Claude tatsächlich ist",
-    finalBody:
-      "Die erste Lektion erklärt Kontextfenster, Grounding und typische Fehlerbilder. Bearbeitungszeit: acht Minuten.",
-    begin: "Beginnen",
     teaches: [
       "Prompt-Struktur und Kontextfenster",
       "CLAUDE.md und wiederverwendbare Arbeitsabläufe",
@@ -66,7 +63,7 @@ const LANDING_COPY = {
     eyebrow: "Technical Claude course",
     title: "Use Claude with clear structure.",
     intro:
-      "Twelve lessons cover precise task briefs, relevant context, and verifiable output. Every lesson includes an interactive exercise.",
+      "You give Claude tasks with context, examples and output format, then check the results.",
     startLesson: "Start lesson 01",
     courseMap: "View course map",
     facts: [
@@ -77,17 +74,11 @@ const LANDING_COPY = {
     ],
     demoEyebrow: "Prompt components",
     demoIntro:
-      "Toggle individual components and compare the simulated results.",
+      "Toggle components and compare the simulated results.",
+    demoToggle: "Try the prompt workbench",
     courseEyebrow: "Course map",
     courseTitle: "Four tracks, twelve lessons",
-    courseIntro:
-      "Start with the mental model, then move through reusable workflows, agents, evaluation methods, and team rules.",
     lessonLabel: "Lesson",
-    finalEyebrow: "Start here",
-    finalTitle: "Lesson 01: What Claude actually is",
-    finalBody:
-      "The first lesson explains context windows, grounding, and common failure modes. Estimated time: eight minutes.",
-    begin: "Begin",
     teaches: [
       "Prompt structure and context windows",
       "CLAUDE.md and reusable workflows",
@@ -98,6 +89,7 @@ const LANDING_COPY = {
 } as const;
 
 const BASE_PATH = TECHNICAL_COURSE_ROUTES.claude.basePath;
+
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getRequestLocale();
@@ -152,32 +144,45 @@ export default async function ClaudeCourseLandingPage() {
           secondaryAction={
             <Link
               href="#lessons"
-              className={TECHNICAL_COURSE_SECONDARY_ACTION_CLASS}
+              className={`${TECHNICAL_COURSE_SECONDARY_ACTION_CLASS} max-sm:hidden`}
             >
               {copy.courseMap}
             </Link>
           }
         />
 
-        <section className="mt-12 min-w-0" aria-labelledby="prompt-lab-heading">
-          <h2
-            id="prompt-lab-heading"
-            className="text-[26px] font-bold leading-tight tracking-[-0.025em] text-foreground sm:text-[32px]"
+        {/* Below lg the two workbenches (about 1600px) collapse into one row,
+            so the course plan follows the hero instead of three screens later.
+            From lg they render open, exactly as before. */}
+        <section
+          className="mt-12 min-w-0 max-sm:mt-4"
+          aria-labelledby="prompt-lab-heading"
+        >
+          {/* The same Kopflinie head as the course plan below. Below lg the
+              heading and intro stay for assistive technology only; the
+              toggle row names the workbench (no second line repeating the
+              intro). */}
+          <div className="max-lg:sr-only">
+            <TechnicalCourseSectionHeading
+              headingId="prompt-lab-heading"
+              title={copy.demoEyebrow}
+              intro={copy.demoIntro}
+            />
+          </div>
+          <PhoneDisclosure
+            id="prompt-lab-instruments"
+            label={copy.demoToggle}
           >
-            {copy.demoEyebrow}
-          </h2>
-          <p className="mt-2 max-w-[640px] text-sm leading-[1.55] text-muted-foreground">
-            {copy.demoIntro}
-          </p>
-          <div className="mt-5 [&_.font-mono]:!text-xs [&_button]:!min-h-11 [&_button]:!min-w-11">
-            <HeroOrrery locale={locale} />
-          </div>
-          <div className="mt-6 [&_.font-mono]:!text-xs [&_button]:!min-h-11 [&_button]:!min-w-11">
-            <HeroTransform locale={locale} />
-          </div>
+            <div className="lg:mt-5 [&_.font-mono]:!text-xs [&_button]:!min-h-11 [&_button]:!min-w-11">
+              <HeroOrrery locale={locale} />
+            </div>
+            <div className="mt-6 [&_.font-mono]:!text-xs [&_button]:!min-h-11 [&_button]:!min-w-11">
+              <HeroTransform locale={locale} />
+            </div>
+          </PhoneDisclosure>
         </section>
 
-        <section id="lessons" className="mt-12 scroll-mt-24">
+        <section id="lessons" className="mt-12 scroll-mt-24 max-sm:mt-6">
           <TechnicalCourseSectionHeading
             eyebrow={copy.courseEyebrow}
             title={copy.courseTitle}
@@ -210,16 +215,17 @@ export default async function ClaudeCourseLandingPage() {
                             lessonId: lesson.id,
                           })}
                           prefetch={false}
-                          className={`${TECHNICAL_COURSE_LEDGER_LINK_CLASS} grid-cols-[4.75rem_minmax(0,1fr)_1rem]`}
+                          className={`${TECHNICAL_COURSE_LEDGER_LINK_CLASS} ${TECHNICAL_COURSE_LESSON_ROW_COLUMNS}`}
                         >
-                          <p className="font-mono text-xs font-bold uppercase tracking-[0.06em] text-brand-orange">
-                            {copy.lessonLabel} {lesson.number}
-                          </p>
+                          <TechnicalCourseLessonNumber
+                            label={`${copy.lessonLabel} ${lesson.number}`}
+                            number={lesson.number}
+                          />
                           <div className="min-w-0">
                             <h4 className="break-words text-[15px] font-semibold text-foreground">
                               {lesson.title}
                             </h4>
-                            <p className="mt-0.5 break-words text-[13px] leading-[1.4] text-muted-foreground">
+                            <p className="mt-0.5 break-words text-[13px] leading-[1.4] text-muted-foreground max-sm:text-[14px]">
                               {lesson.subtitle}
                             </p>
                           </div>

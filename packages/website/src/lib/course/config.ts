@@ -62,7 +62,7 @@ export const KI_FUEHRERSCHEIN_CONFIG: CourseConfig = {
   certificateReferenceLabel:
     "Persönliche Teilnahmebestätigung: KI im Alltag verstehen",
   quizPassMessage:
-    "Herzlichen Glückwunsch! Du hast den KI-Führerschein bestanden.",
+    "Du hast den KI-Führerschein bestanden.",
   certificateFileStem: "KI-Fuehrerschein",
   recordNoun: {
     label: "Teilnahmebestätigung",
@@ -74,7 +74,7 @@ export const KI_FUEHRERSCHEIN_CONFIG: CourseConfig = {
 export const KI_FUEHRERSCHEIN_EN_CONFIG: CourseConfig =
   createLocalizedCourseConfig(KI_FUEHRERSCHEIN_CONFIG, "en", {
     title: "Everyday AI Literacy",
-    certificateTitle: "Certificate of Participation: Everyday AI Literacy",
+    certificateTitle: "Certificate of participation: Everyday AI Literacy",
     certificateSubtitle:
       "Participation record. Issued by loehrning.ai, an independent learning platform. This record is not an accredited qualification.",
     certificateModules: [
@@ -86,10 +86,10 @@ export const KI_FUEHRERSCHEIN_EN_CONFIG: CourseConfig =
     ],
     certificateReferenceLabel:
       "Personal participation record: understanding AI in everyday work",
-    quizPassMessage: "You passed the Everyday AI Literacy workshop quiz.",
+    quizPassMessage: "You passed the Everyday AI Literacy final quiz.",
     certificateFileStem: "Everyday-AI-Literacy",
     recordNoun: {
-      label: "Certificate of Participation",
+      label: "Certificate of participation",
       possessive: "Your certificate of participation",
       demonstrative: "This certificate of participation",
     },
@@ -120,7 +120,7 @@ export const EU_AI_ACT_KURS_CONFIG: CourseConfig = {
   ],
   certificateReferenceLabel: "Kursinhalt: Verordnung (EU) 2024/1689",
   quizPassMessage:
-    "Herzlichen Glückwunsch! Du hast den EU AI Act Kurs bestanden.",
+    "Sie haben den EU AI Act Kurs bestanden.",
   certificateFileStem: "EU-AI-Act-Kurs",
   recordNoun: {
     label: "Teilnahmebestätigung",
@@ -132,7 +132,7 @@ export const EU_AI_ACT_KURS_CONFIG: CourseConfig = {
 export const EU_AI_ACT_KURS_EN_CONFIG: CourseConfig =
   createLocalizedCourseConfig(EU_AI_ACT_KURS_CONFIG, "en", {
     title: "EU AI Act Course",
-    certificateTitle: "Certificate of Participation: EU AI Act",
+    certificateTitle: "Certificate of participation: EU AI Act",
     certificateSubtitle:
       "Participation record. Issued by loehrning.ai, an independent learning platform. This record confirms completion of this course only; it is not an accredited qualification, legal advice, or evidence of regulatory compliance.",
     certificateModules: [
@@ -145,10 +145,10 @@ export const EU_AI_ACT_KURS_EN_CONFIG: CourseConfig =
     ],
     certificateReferenceLabel:
       "Course content: Regulation (EU) 2024/1689, as amended",
-    quizPassMessage: "You passed the EU AI Act Course workshop quiz.",
+    quizPassMessage: "You passed the EU AI Act Course final quiz.",
     certificateFileStem: "EU-AI-Act-Course",
     recordNoun: {
-      label: "Certificate of Participation",
+      label: "Certificate of participation",
       possessive: "Your certificate of participation",
       demonstrative: "This certificate of participation",
     },
@@ -185,7 +185,7 @@ export const AI_NATIVE_CONFIG: CourseConfig = {
   certificateReferenceLabel:
     "Capstone selbst eingereicht (nicht fremdbeurteilt)",
   quizPassMessage:
-    "Herzlichen Glückwunsch! Du hast den AI-Native Arbeitskurs bestanden.",
+    "Du hast den AI-Native Arbeitskurs bestanden.",
   certificateFileStem: "AI-Native-Arbeitskurs",
   recordNoun: {
     label: "Teilnahmebestätigung",
@@ -199,7 +199,7 @@ export const AI_NATIVE_EN_CONFIG: CourseConfig = createLocalizedCourseConfig(
   "en",
   {
     title: "AI-Native Workflow Course",
-    certificateTitle: "Certificate of Participation: AI-Native Workflow Course",
+    certificateTitle: "Certificate of participation: AI-Native Workflow Course",
     certificateSubtitle:
       "Participation record. Issued by loehrning.ai, an independent learning platform. This record confirms course completion only; it is not an accredited qualification or an external assessment.",
     certificateModules: [
@@ -210,10 +210,10 @@ export const AI_NATIVE_EN_CONFIG: CourseConfig = createLocalizedCourseConfig(
     ],
     certificateReferenceLabel:
       "Capstone rubric self-reported; no external assessment",
-    quizPassMessage: "You passed the AI-Native Workflow Course workshop quiz.",
+    quizPassMessage: "You passed the AI-Native Workflow Course final quiz.",
     certificateFileStem: "AI-Native-Workflow-Course",
     recordNoun: {
-      label: "Certificate of Participation",
+      label: "Certificate of participation",
       possessive: "Your certificate of participation",
       demonstrative: "This certificate of participation",
     },
@@ -238,7 +238,7 @@ export const KI_UND_GESELLSCHAFT_CONFIG: CourseConfig = {
   certificateReferenceLabel:
     "Selbst ausgestellt: lokal generiert, nicht servergeprüft",
   quizPassMessage:
-    "Herzlichen Glückwunsch! Du hast KI und Gesellschaft abgeschlossen.",
+    "Du hast KI und Gesellschaft abgeschlossen.",
   certificateFileStem: "lernnachweis-ki-gesellschaft",
   recordNoun: {
     label: "Lernnachweis",
@@ -250,7 +250,7 @@ export const KI_UND_GESELLSCHAFT_CONFIG: CourseConfig = {
 export const KI_UND_GESELLSCHAFT_EN_CONFIG: CourseConfig =
   createLocalizedCourseConfig(KI_UND_GESELLSCHAFT_CONFIG, "en", {
     title: "AI and Society",
-    certificateTitle: "Certificate of Participation: AI and Society",
+    certificateTitle: "Certificate of participation: AI and Society",
     certificateSubtitle: "Work · Deepfakes · Bias and ethics",
     certificateModules: [
       "AI and work",
@@ -259,10 +259,10 @@ export const KI_UND_GESELLSCHAFT_EN_CONFIG: CourseConfig =
     ],
     certificateReferenceLabel:
       "Self-issued: generated locally, not server-verified",
-    quizPassMessage: "You passed the AI and Society workshop quiz.",
+    quizPassMessage: "You passed the AI and Society final quiz.",
     certificateFileStem: "AI-and-Society-course-record",
     recordNoun: {
-      label: "Certificate of Participation",
+      label: "Certificate of participation",
       possessive: "Your certificate of participation",
       demonstrative: "This certificate of participation",
     },
@@ -310,7 +310,7 @@ export const CLAUDE_CONFIG: CourseConfig & { readonly slug: "claude" } = {
   workshopQuizPassThreshold: 0.7,
   certificateTitle: "Claude Course",
   certificateSubtitle:
-    "Certificate of participation. Issued by loehrning.ai, an independent education platform. This confirmation is not an accredited qualification.",
+    "Issued by loehrning.ai, an independent education platform. Not an accredited qualification.",
   certificateModules: [
     "Foundations: mental model, prompt anatomy, context windows",
     "Workflows: CLAUDE.md, iteration, Google Docs",
@@ -320,10 +320,10 @@ export const CLAUDE_CONFIG: CourseConfig & { readonly slug: "claude" } = {
   certificateReferenceLabel:
     "Personal certificate of participation: prompting Claude effectively",
   quizPassMessage:
-    "Congratulations! You passed the Claude Course workshop quiz.",
+    "Congratulations! You passed the Claude Course final quiz.",
   certificateFileStem: "Claude-Course",
   recordNoun: {
-    label: "Certificate of Participation",
+    label: "Certificate of participation",
     possessive: "Your certificate of participation",
     demonstrative: "This certificate of participation",
   },
@@ -336,7 +336,7 @@ export const CLAUDE_CONFIG_DE = createLocalizedTechnicalCourseConfig(
     title: "Claude-Kurs",
     certificateTitle: "Teilnahmebestätigung: Claude-Kurs",
     certificateSubtitle:
-      "Teilnahmebestätigung für den abgeschlossenen Claude-Kurs. Ausgestellt von loehrning.ai, einer unabhängigen Lernplattform. Diese Bestätigung ist kein akkreditierter Abschluss.",
+      "Ausgestellt von loehrning.ai, einer unabhängigen Lernplattform. Kein akkreditierter Abschluss.",
     certificateModules: [
       "Grundlagen: mentales Modell, Prompt-Struktur und Kontextfenster",
       "Arbeitsabläufe: CLAUDE.md, Iteration und Google Docs",
@@ -447,7 +447,7 @@ export function getCourseBlockIds(
   return config(courseSlug, locale).blockIds;
 }
 
-// ─── Workshop quiz config queries ──────────────────────────────
+// ─── Final quiz config queries ──────────────────────────────
 
 export function getWorkshopPassThreshold(
   courseSlug: CourseSlug,

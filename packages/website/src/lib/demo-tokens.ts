@@ -1,6 +1,8 @@
 /**
  * Shared design tokens for all demo dashboard components.
- * Berliner Werkzeug v3.0: Kalkweiss bg, Kupfer accent, rounded-none.
+ * Werkzeichnung: Kalkweiß ground, ink lines, one Mennige accent, square
+ * geometry. Accent fills are gone (selection is ink fill or an outline), and
+ * labels are sentence case in the sans face; mono is kept for data only.
  */
 export const DEMO = {
   // Text colors (dark on light)
@@ -20,8 +22,9 @@ export const DEMO = {
   fill: {
     node: "rgba(11,9,8,0.03)",
     nodeHover: "rgba(11,9,8,0.06)",
-    accent: "rgba(249,115,22,0.08)",
-    accentStrong: "rgba(249,115,22,0.15)",
+    // Retired tints: a selection is an outline or an ink fill, not a wash.
+    accent: "transparent",
+    accentStrong: "transparent",
     danger: "rgba(239,68,68,0.08)",
   },
   timing: {
@@ -37,6 +40,20 @@ export const DEMO = {
     sublabel: 10,
     tick: 10,
     score: 20,
+  },
+
+  /**
+   * Sentence-case label (design direction 5.2 `label`): replaces the
+   * mono-uppercase, 0.1-0.16em tracked kickers inside the engines. Spread it
+   * last so it overrides a style object's own font settings; the colour
+   * stays the caller's.
+   */
+  label: {
+    fontFamily: "var(--font-loehrning-sans)",
+    fontSize: 13,
+    fontWeight: 600,
+    letterSpacing: "0.02em",
+    textTransform: "none",
   },
 
   // Status colors
@@ -55,8 +72,9 @@ export const DEMO = {
   // 0.55 alpha was only ~4.3:1 on the preview surfaces (Kalkweiß/Birke/white),
   // sub-AA for label text. 0.62 reaches >=5.4:1 on all of them.
   schiefer: "rgba(11,9,8,0.62)",
-  kupferLight: "rgba(249,115,22,0.85)",
-  kupferMist: "rgba(249,115,22,0.12)",
+  // Mennige, scope-aware: #b73a15 on paper, #e07050 inside .dark-section.
+  kupferLight: "var(--color-brand-orange)",
+  kupferMist: "transparent",
 
   // Dashboard layout tokens (Tailwind class strings)
   container:

@@ -27,7 +27,7 @@ export default function Ch12Capstone() {
       <Hero
         eyebrow="Chapter 12 · Capstone"
         title='<em>Credit card fraud detection:</em> <span class="accent">the full DS loop.</span>'
-        hook="A public dataset: 284,807 transactions, 492 recorded fraud cases. Connect exploration, leakage control, evaluation, threshold policy, and deployment review on it. Never mistake the teaching simulation for a production model."
+        hook="One public dataset with 284,807 transactions and 492 recorded fraud cases ties together exploration, leakage control, evaluation, threshold policy and deployment review."
         meta={[
           { k: "Dataset", v: "Kaggle · 284K transactions" },
           { k: "Target", v: "Fraud · 0.17% base rate" },
@@ -42,13 +42,12 @@ export default function Ch12Capstone() {
           cases per fraud case.
         </h2>
         <p className="prose">
-          The public Credit Card Fraud dataset is a standard case for studying
-          severe class imbalance, anonymized inputs, and evaluation choices. A
-          baseline that calls every transaction legitimate hits about{" "}
-          <strong>99.83% accuracy</strong> and catches no fraud at all. Accuracy
-          alone hides the failure. PR-AUC summarizes ranking quality under
-          imbalance, and the operating threshold still needs costs, capacity,
-          calibration, and time-aware validation.
+          The public Credit Card Fraud dataset combines severe class imbalance,
+          anonymized inputs and hard evaluation choices. A baseline that calls
+          every transaction legitimate hits about{" "}
+          <strong>99.83% accuracy</strong> and catches no fraud. PR-AUC
+          summarizes ranking under imbalance; the operating threshold also
+          needs costs, capacity, calibration and time-aware validation.
         </p>
         <DatasetExplorer />
       </section>
@@ -56,31 +55,27 @@ export default function Ch12Capstone() {
       <section className="section">
         <SectionLabel n="12.2">The pipeline, step by step</SectionLabel>
         <h2 className="h2">
-          Six decisions. Each one a chapter in this course.
+          Six steps, each with a decision from the course.
         </h2>
         <p className="prose">
-          Run each pipeline step in order. The output of one is the input of
-          the next. Watch the log. Notice where leakage could enter: scaling
-          before the split is the classic mistake, and this local sequence
-          blocks that error while validating no real pipeline.
+          The log shows where leakage can enter; scaling before the split is
+          the classic mistake. This sequence rules it out, and it validates no
+          real pipeline.
         </p>
         <PipelineProgress />
       </section>
 
       <AntiPatterns
         items={[
-          "<b>Fitting the scaler on the full dataset.</b> Scaler must be fit on train only, then applied to test. Fitting on all data leaks test statistics into training.",
-          "<b>Stratifying after scaling.</b> Split first, scale after. Order matters.",
-          "<b>Using accuracy alone.</b> At a 0.17% event rate, the trivial majority prediction looks accurate. Add ranking, calibration, threshold, and cost-sensitive evaluation.",
-          "<b>Leaving imbalance handling untested.</b> Compare weighting, resampling, thresholding, and suitable objectives inside the validation design. No single method is mandatory.",
+          "<b>Leaving imbalance handling untested.</b> Compare weighting, resampling, thresholding and suitable objectives inside the validation design; no single method is mandatory.",
         ]}
       />
       <BestPractices
         items={[
-          "<b>Split before learned preprocessing.</b> Fit transformations on the training partition inside the validation procedure, then apply them to held-out data.",
-          "<b>Treat scale_pos_weight = N_legit / N_fraud as a candidate, not a rule.</b> Validate weighting and probability calibration against the decision objective.",
-          "<b>Evaluate ranking, calibration, and the operating threshold separately.</b> Choose the threshold from explicit error costs and operational capacity.",
-          "<b>Record each experiment.</b> Store data and code versions, parameters, metrics, artifacts, and decision notes in a reproducible tracking system.",
+          "<b>Split before learned preprocessing.</b> Fit transformations on the training partition inside validation, then apply them to held-out data; a scaler fitted on all data leaks test statistics.",
+          "<b>Treat scale_pos_weight = N_legit / N_fraud as a candidate.</b> Validate weighting and probability calibration against the decision objective.",
+          "<b>Evaluate ranking, calibration and the operating threshold separately.</b> At a 0.17% event rate, accuracy alone looks good for a trivial prediction.",
+          "<b>Record each experiment.</b> Store data and code versions, parameters, metrics, artifacts and decision notes in a reproducible tracking system.",
         ]}
       />
 
@@ -93,14 +88,13 @@ export default function Ch12Capstone() {
           decision.
         </h2>
         <p className="prose">
-          Every fraud model produces a probability score per transaction. You
-          decide the cutoff. Too low and you flag half your legitimate customers
-          as fraudsters, and the ops cost explodes. Too high and you miss real
-          fraud, which costs revenue and reputation.
+          A fraud model scores each transaction, and you set the cutoff. If it
+          is too low, reviewers check many legitimate customers at high cost;
+          if it is too high, real fraud costs revenue and reputation.
           <strong>
             {" "}
-            Use the cost calculator on this synthetic cost model, then replace
-            its assumptions with reviewed domain inputs.
+            The cost calculator uses a synthetic cost model; real decisions
+            need reviewed domain inputs.
           </strong>
         </p>
         <PrecisionRecallTradeoff />
@@ -111,41 +105,25 @@ export default function Ch12Capstone() {
           Shipping to production, the checklist
         </SectionLabel>
         <h2 className="h2">
-          A model in a notebook is a demo. A model in prod is an engineering
-          system.
+          Before going live, collect evidence for every review area.
         </h2>
         <p className="prose">
-          Before a fraud model touches a live transaction, collect evidence for
-          every relevant review area. This eight-item teaching checklist
-          prompts that review. Ticking it in the browser removes no failure mode
-          and approves no deployment.
+          These eight teaching items prompt the review; ticking them does not
+          remove a failure mode or approve a deployment.
         </p>
         <PostDeployChecklist />
       </section>
 
       <AntiPatterns
         items={[
-          "<b>No representative pre-promotion evidence.</b> Use replay, batch evaluation, shadowing, or staged exposure according to risk and data constraints.",
-          "<b>No model documentation.</b> Record intended use, exclusions, training and evaluation data, metrics, thresholds, owners, limitations, and known failure modes.",
-          "<b>No monitoring contract.</b> Fraud patterns, input quality, label delay, and operating costs all change. Wire each monitored signal to an owner and a response.",
-          "<b>An unreviewed permanent threshold.</b> Reassess after material cost, prevalence, calibration, policy, or capacity changes on a documented cadence.",
-        ]}
-      />
-      <BestPractices
-        items={[
-          "<b>Choose rollout evidence from risk.</b> Define representative traffic, observation length, delayed labels, guardrails, and abort behavior instead of using a fixed shadow period.",
-          "<b>Promote immutable candidates against a written contract.</b> Require uncertainty-aware outcome metrics and safety guardrails, not a fixed sprint ritual.",
-          "<b>Calibrate alerts to business and user impact.</b> Quantiles and drift statistics are inputs, not self-justifying action thresholds.",
-          "<b>Use model cards as documentation, not proof of compliance.</b> Applicable legal and governance duties require a separate system-specific assessment.",
+          "<b>No model documentation.</b> Record intended use, exclusions, training and evaluation data, metrics, thresholds, owners, limits and known failure modes; a model card does not prove legal compliance, and legal duties need a separate, system-specific check.",
+          "<b>No monitoring contract.</b> Fraud patterns, input quality, label delay and operating costs change; give each signal an owner and a response.",
+          "<b>A permanent threshold nobody reviews.</b> Reassess on a documented schedule after major changes in cost, prevalence, calibration, policy or capacity.",
         ]}
       />
       <Takeaway
         items={[
-          "<b>Class imbalance changes what a metric reveals.</b> Report the base rate, and evaluate ranking, calibration, and threshold behavior next to accuracy.",
-          "<b>Learned preprocessing belongs inside validation.</b> Leakage inflates offline results. Provenance and time-aware tests expose it before release.",
-          "<b>The threshold encodes consequences.</b> Select it from explicit costs, capacity, policy, and calibrated probabilities, then monitor it.",
-          "<b>Production performance is system behavior.</b> Model quality, features, services, data contracts, monitoring, incident response, and rollback all contribute.",
-          "<b>Re-evaluate after material change.</b> New data, fraud patterns, costs, policy, and infrastructure can invalidate the previous decision.",
+          "<b>Model quality, features, services, data contracts, monitoring, incident response and rollback together determine performance in production.</b>",
         ]}
       />
 
@@ -153,9 +131,8 @@ export default function Ch12Capstone() {
         <div className="ov-cta-eyebrow">You&apos;ve reached the end.</div>
         <div className="ov-cta-title">Go build something.</div>
         <div className="ov-cta-sub">
-          Pick one real dataset. Run the full loop. Ship a v1. Come back and
-          iterate. The fastest way to learn data science is to <em>do</em> it on
-          a problem you care about.
+          Pick a real dataset you care about, run the full loop once, ship a
+          v1 and iterate on what you observe.
         </div>
         <div className="ov-cta-row">
           <Link

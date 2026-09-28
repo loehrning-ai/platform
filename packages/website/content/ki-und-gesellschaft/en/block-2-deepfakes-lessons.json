@@ -29,24 +29,21 @@
       "sections": [
         {
           "id": "deepfake-2-1-s1",
-          "title": "Three cases, not the same thing",
+          "title": "Three invented cases",
           "readTimeMinutes": 2,
-          "content": "Three cases. All three are invented, none describes a real event:\n\n1. A manipulated video puts words in a known person's mouth she never said.\n2. A fraud call uses a cloned voice and demands a transfer under time pressure.\n3. An account builds trust with a generated profile picture and an invented biography.\n\nThe same check for all three? No. Cases one and two can be deepfakes in law, because an existing person or event is deceptively reproduced. The invented face in case three is synthetic content, not automatically a deepfake under the AI Regulation, as long as it resembles no existing person or entity.\n\nAnd in none of them does appearance or sound prove anything. Neither authenticity nor manipulation.",
-          "keyTakeaway": "Deepfake and synthetic content are not synonyms. The question is whether existing people, objects, places, entities or events are deceptively reproduced."
+          "content": "1. A manipulated video puts words in a known person's mouth that they never said.\n2. A fraud call uses a cloned voice to demand a transfer under time pressure.\n3. An account builds trust with a fully generated profile picture and an invented biography.\n\nCases one and two can be deepfakes in law, because they deceptively reproduce an existing person or event. The invented face in case three is synthetic content, but not automatically a deepfake under the AI Regulation, as long as it resembles no existing person or entity.\n\nIn none of the cases do appearance or sound prove authenticity or manipulation."
         },
         {
           "id": "deepfake-2-1-s2",
           "title": "What the law calls a deepfake",
           "readTimeMinutes": 1,
-          "content": "The word has a legal definition, narrower than everyday use. Article 3(60) of the AI Regulation calls a deepfake AI-generated or manipulated image, audio or video content that resembles existing people, objects, places, entities or events and would falsely appear to a person to be authentic or truthful.\n\nDifferent techniques sit behind it. Face swapping, lip synchronisation, speech synthesis, voice cloning, generative image and video models. How much reference material, at what quality, depends on the technique. No fixed number of images or minutes of audio exists.\n\nThe definition describes the result and its deceptive effect, not one model technique. Conventional editing can deceive too. It falls under this AI Act definition only when the content is AI-generated or AI-manipulated.",
-          "keyTakeaway": "The AI Regulation defines deepfakes through three marks: AI generation or manipulation, resemblance to something existing, a false impression of authenticity."
+          "content": "Article 3(60) of the AI Regulation defines a deepfake more narrowly than everyday use: AI-generated or manipulated image, audio or video content that resembles existing people, objects, places, entities or events and would falsely appear to a person to be authentic or truthful.\n\nThe definition describes the result and its deceptive effect. Conventional editing can deceive too, but falls under it only when the content is AI-generated or AI-manipulated.\n\nTechniques include face swapping, lip synchronisation, speech synthesis, voice cloning and generative image and video models. The reference material needed depends on the technique; no fixed number of images or minutes of audio exists."
         },
         {
           "id": "deepfake-2-1-s3",
-          "title": "Two duties since August 2026, and no proof of authenticity",
+          "title": "Article 50: marking and disclosure",
           "readTimeMinutes": 1,
-          "content": "Article 50 asks two different things of two different roles:\n\n- Providers of covered generative systems must, as a general rule, mark synthetic output in machine-readable form as artificially generated or manipulated.\n- Deployers who generate or manipulate a deepfake and disclose it must, as a general rule, state visibly that the content was artificially generated or manipulated. Evidently artistic, creative, satirical, fictional or analogous works get an adapted disclosure; further statutory exceptions have to be assessed.\n\nArticle 50 has applied since 2 August 2026. Providers of systems already on the market before that date must meet Article 50(2) from 2 December 2026 under the transition in Regulation (EU) 2026/1744. A marking can support provenance. Its absence proves nothing about authenticity. Not before that date, not after, because markings can be removed and exceptions can apply.\n\nSources: Regulation (EU) 2024/1689, Article 3(60) and Article 50; Regulation (EU) 2026/1744, Article 1(39)(b).",
-          "keyTakeaway": "Article 50 separates machine-readable marking by providers from visible disclosure by deployers. Both depend on context, and neither proves authenticity."
+          "content": "Article 50 of the AI Regulation asks different things of two roles:\n\n- Providers of covered generative systems must, as a general rule, mark synthetic output in machine-readable form as artificially generated or manipulated (paragraph 2).\n- Deployers who generate or manipulate a deepfake and disclose it must, as a general rule, state visibly that the content was artificially generated or manipulated (paragraph 4). Evidently artistic, creative, satirical, fictional or analogous works get an adapted disclosure; further statutory exceptions have to be assessed.\n\nArticle 50 has applied since 2 August 2026. For systems already on the market before that date, paragraph 2 applies from 2 December 2026 under the transition in Regulation (EU) 2026/1744. A marking can support provenance; its absence proves no authenticity, because markings can be removed and exceptions can apply.\n\nSources: Regulation (EU) 2024/1689, Article 3(60) and Article 50; Regulation (EU) 2026/1744, Article 1(39)(b)."
         }
       ],
       "quiz": [
@@ -75,7 +72,7 @@
               "isCorrect": true
             }
           ],
-          "explanation": "Article 3(60) needs three things at once: AI generation or manipulation, resemblance to existing people, objects, places, entities or events, and a false impression of authenticity or truth."
+          "explanation": "Article 3(60) needs all three marks: AI generation or manipulation, resemblance to something existing, and a false impression of authenticity or truth."
         },
         {
           "id": "deepfake-2-1-q2",
@@ -102,7 +99,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Deepfakes are made with very different techniques. How much reference data and handwork it takes changes from technique to technique. No universal minimum exists."
+          "explanation": "The reference data and handwork needed depend on the technique. No universal minimum exists."
         },
         {
           "id": "deepfake-2-1-q3",
@@ -129,7 +126,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Article 50 has applied since 2 August 2026. Providers of covered systems mark in machine-readable form under paragraph 2; deployers disclose deepfakes visibly under paragraph 4, as a general rule. For generative systems on the market before that date, the paragraph 2 transition runs to 2 December 2026."
+          "explanation": "Article 50 has applied since 2 August 2026. For generative systems already on the market before then, the transition for marking under paragraph 2 runs to 2 December 2026."
         }
       ]
     },
@@ -138,7 +135,7 @@
       "blockId": "block_2",
       "number": 2,
       "title": "How to check provenance and context",
-      "subtitle": "Source work, not a detector verdict",
+      "subtitle": "Check sources, read detectors correctly",
       "durationMinutes": 6,
       "owner": "editorial:ki-und-gesellschaft",
       "lastReviewed": "2026-09-05",
@@ -154,24 +151,21 @@
       "sections": [
         {
           "id": "deepfake-2-2-s1",
-          "title": "Tools for provenance, not for truth",
+          "title": "Tools for tracing provenance",
           "readTimeMinutes": 2,
-          "content": "No tool tells you whether an image is true. Three tool classes tell you where it came from:\n\n1. Reverse image search: Google Lens and TinEye (tineye.com) can show earlier or similar appearances. An early hit points to context, not to the original source.\n2. Video decomposition: InVID/WeVerify (weverify.eu) splits videos into keyframes, triggers reverse searches and shows available metadata. A research tool. Whether a video is true, it does not decide.\n3. Provenance data: Content Credentials or other signed provenance information can document editing steps and issuers. Missing provenance does not prove manipulation. Where it exists, check validity and issuer.\n\nAnd before you upload: confidential, intimate or personal content does not go to a third party unchecked. Check data protection, terms of use and local alternatives first.",
-          "keyTakeaway": "Reverse search, keyframes and provenance data give signals. None of these tools decides authenticity or meaning alone."
+          "content": "No tool tells you whether an image is true. Three tool classes give clues to its origin:\n\n1. Reverse image search: Google Lens and TinEye (tineye.com) can show earlier or similar appearances. An early hit points to context, not automatically to the original source.\n2. Video decomposition: InVID/WeVerify (weverify.eu) can split videos into keyframes, trigger reverse searches and show available metadata. The extension does not decide whether a video is true.\n3. Provenance data: Content Credentials or other signed provenance information can document editing steps and issuers. Missing provenance does not prove manipulation; where it exists, check validity and issuer.\n\nUpload confidential, intimate or personal content only after checking data protection, terms of use and local alternatives."
         },
         {
           "id": "deepfake-2-2-s2",
-          "title": "Five steps before you believe anything",
+          "title": "Before you believe a post",
           "readTimeMinutes": 2,
-          "content": "1. Pin the claim: what should the content prove, when and where was it supposedly made?\n2. Open the source: the earliest reachable post, the complete video, the account or outlet behind it. A screenshot without a link is no source.\n3. Cross-check context: date, place, language, weather, visible signs and the uncut sequence against independent sources.\n4. Look for provenance: use reverse image search or keyframes. Compare concrete image details, not just similar motifs.\n5. Bound the result: write down what is confirmed, disproved, still open. \"Not verified\" is a permissible result.\n\nHands, hair, blinking, light, compression artefacts. Such oddities may make you look harder. A checklist they are not. Generators change, and the same oddities come from camera, cut or compression.",
-          "keyTakeaway": "Start with claim, source and context. Visual artefacts are signals, neither necessary nor sufficient to prove a deepfake."
+          "content": "1. Pin the claim: what should the content prove, when and where was it supposedly made?\n2. Open the source: the earliest reachable post, the complete video, the account or outlet behind it. A screenshot without a link is no reliable source.\n3. Cross-check context: compare date, place, language, weather, visible signs and the uncut sequence with independent sources.\n4. Look for provenance: use reverse search or keyframes to compare concrete image details instead of similar motifs.\n5. Bound the result: record what is confirmed, disproved or open. \"Not verified\" is a permissible result.\n\nOddities in hands, hair, blinking, light or compression justify a second look. They do not work as a checklist, because generators change and camera, cut or compression leave the same traces."
         },
         {
           "id": "deepfake-2-2-s3",
           "title": "What a detector's percentage means",
           "readTimeMinutes": 2,
-          "content": "The detector shows a percentage. What you see is a model-dependent estimate. How much it is worth depends on training data, tested generators, compression, crop, post-processing and threshold. That number is not automatically a calibrated probability for your case.\n\nTwo limits follow:\n- A negative result establishes no authenticity. The content can sit outside the known test distribution, or be altered.\n- A positive result establishes no manipulation. Genuine recordings can trigger features the model misreads.\n\nUse a detector as an extra signal at most. Anyone who wants to publish, accuse or litigate needs traceable provenance, context, further evidence and, where necessary, specialist forensic analysis.",
-          "keyTakeaway": "A detector score is a signal under known test conditions. It proves no authenticity, and alone no manipulation."
+          "content": "A detector's percentage is a model-dependent estimate and not automatically a calibrated probability for your case. Its worth depends on training data, tested generators, compression, crop, post-processing and threshold.\n\n- A negative result establishes no authenticity. The content can sit outside the known test distribution, or be altered.\n- A positive result establishes no manipulation. Genuine recordings can trigger features the model misreads.\n\nUse detectors as an extra signal at most. To publish, accuse or litigate, you need traceable provenance, context, further evidence and, where necessary, specialist forensic analysis."
         }
       ],
       "quiz": [
@@ -200,7 +194,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "A reverse search finds indexed identical or similar images. That can show earlier use or a different context. The earliest hit is still not necessarily the original source."
+          "explanation": "The search finds indexed identical or similar images and so shows earlier uses or other contexts. The earliest hit is not necessarily the original source."
         },
         {
           "id": "deepfake-2-2-q2",
@@ -227,7 +221,7 @@
               "isCorrect": true
             }
           ],
-          "explanation": "Visual oddities move with every generator generation and show up in genuine, compressed or edited footage too. Source and context give evidence others can check."
+          "explanation": "Visual oddities change with every generator generation and show up in genuine, compressed or edited footage too. Source and context give evidence others can check."
         },
         {
           "id": "deepfake-2-2-q3",
@@ -245,7 +239,7 @@
             },
             {
               "id": "c",
-              "text": "Under this detector's conditions no sufficient signal was found; authenticity is not established",
+              "text": "This detector found no sufficient signal under its conditions; authenticity is not established",
               "isCorrect": true
             },
             {
@@ -254,7 +248,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "A negative result holds for exactly one model, one threshold and the content tested. An unknown technique or some post-processing, and detection looks different."
+          "explanation": "The result holds only for this model, this threshold and the content tested. Unknown techniques or post-processing can change it."
         }
       ]
     },
@@ -263,7 +257,7 @@
       "blockId": "block_2",
       "number": 3,
       "title": "What to do when you find a deepfake",
-      "subtitle": "Preserve, report, protect. Do not share.",
+      "subtitle": "Preserve and report without sharing",
       "durationMinutes": 4,
       "owner": "editorial:ki-und-gesellschaft",
       "lastReviewed": "2026-09-05",
@@ -280,24 +274,21 @@
       "sections": [
         {
           "id": "deepfake-2-3-s1",
-          "title": "Five steps, and none of them is sharing",
+          "title": "What to do after you find it",
           "readTimeMinutes": 2,
-          "content": "1. Do not spread it: no sharing, quoting or public comment. Not with a warning either. Where safe, preserve URL, account name, timestamp and a screenshot locally.\n2. Check first, accuse later: a suspicion is no finding. Use the source check from Lesson 2.\n3. Report precisely: use the platform's current reporting route, name the URL and the possible legal or policy breach. Article 16 of the Digital Services Act obliges hosting services to offer an easily accessible electronic notice mechanism for allegedly illegal content. Sufficiently precise notices have to be handled and decided in a timely, diligent, objective and non-arbitrary way. No duty to remove every reported item follows from that.\n4. Tell the affected person privately: source location and evidence, without passing on the content.\n5. On a possible crime or immediate danger, bring in the police: the competent online police station is reachable through polizei.de. In an acute emergency, call the emergency number.",
-          "keyTakeaway": "Do not amplify, preserve evidence, report precisely, protect the affected. A notice triggers a review and a decision. Not automatic removal."
+          "content": "1. Do not spread it: no public sharing, quoting or comment, even with a warning. Where safe, save URL, account name, timestamp and a screenshot locally.\n2. Check first: use the source check from Lesson 2 before you accuse anyone.\n3. Report precisely: through the platform's reporting route, with the URL and the possible legal or policy breach.\n4. Tell the affected person privately: send source location and evidence without passing on the content.\n5. On a possible crime or immediate danger, involve the police: the competent online police station is at polizei.de; in an acute emergency, call the emergency number.\n\nArticle 16 of the Digital Services Act obliges hosting services to offer an easily accessible electronic notice mechanism for allegedly illegal content. They must handle and decide sufficiently precise notices in a timely, diligent, objective and non-arbitrary way; they need not remove every reported item."
         },
         {
           "id": "deepfake-2-3-s2",
-          "title": "Three procedures, three recipients",
+          "title": "Where your complaint goes",
           "readTimeMinutes": 1,
-          "content": "Who breached what? That decides where your complaint goes. Article 50 separates machine-readable marking by providers of covered generative systems from visible disclosure by deployers who generate or manipulate deepfakes and disclose them. Exceptions and transition rules you check per role. For systems already on the market before 2 August 2026, Article 50(2) applies from 2 December 2026 under Regulation (EU) 2026/1744.\n\nArticle 85 lets you complain to the competent market surveillance authority. Under the KI-MIG that is generally the Bundesnetzagentur, as market surveillance authority, single point of contact and complaints body, unless a sector authority is competent. What counts is the officially published channel, not the address from an old blog post.\n\nPlatform notice under the DSA, criminal complaint, AI Act complaint: three procedures, three recipients, three sets of conditions.\n\nSources: Regulation (EU) 2024/1689, Articles 50 and 85; Regulation (EU) 2026/1744; KI-MIG.",
-          "keyTakeaway": "Platform notice, criminal complaint and AI Act complaint have different conditions and recipients. Check role, exception and current channel separately."
+          "content": "Where you turn depends on who breached what. A platform notice under the DSA, a criminal complaint and an AI Act complaint have different recipients and conditions. For Article 50, check marking by providers and disclosure by deployers separately, each with the exceptions and transition rules from Lesson 1.\n\nArticle 85 lets you complain to the competent market surveillance authority. Under the KI-MIG that is generally the Bundesnetzagentur, as market surveillance authority, single point of contact and complaints body, unless a sector authority is competent. Use the officially published authority channel that is current.\n\nSources: Regulation (EU) 2024/1689, Articles 50 and 85; Regulation (EU) 2026/1744; KI-MIG."
         },
         {
           "id": "deepfake-2-3-s3",
-          "title": "When your image or voice is hit",
+          "title": "When your image or voice is used",
           "readTimeMinutes": 1,
-          "content": "Your face in a video you never shot. The basic rule is Section 22 KUG: portraits may be distributed or publicly displayed only with the consent of the person shown. The exceptions in Section 23 KUG and the balancing under Section 23(2) still apply. Whether a deepfake infringes them, and what claim follows, depends on content, context and distribution route.\n\nSection 22 KUG does not protect your voice alone. With cloned or manipulated audio, the general right of personality, data protection law and civil or criminal provisions can apply, depending on use. Nobody can promise a particular legal consequence without seeing your case.\n\nPreserve source location and evidence, without passing the content on. verbraucherzentrale.de and klicksafe.de give a first orientation. For your actual claims you need qualified media-law advice.",
-          "keyTakeaway": "Section 22 KUG holds the basic rule for portraits, Section 23 the exceptions. Voice, claim and route you check separately."
+          "content": "Under Section 22 KUG, portraits may be distributed or publicly displayed only with the consent of the person shown. The exceptions in Section 23 KUG and the balancing under Section 23(2) still need checking. Whether a deepfake infringes these rights, and what claim follows, depends on content, context and distribution route.\n\nSection 22 KUG does not protect your voice alone. With cloned or manipulated audio, the general right of personality, data protection law and civil or criminal provisions can apply, depending on use.\n\nMedia-law advice assesses your claims case by case; verbraucherzentrale.de and klicksafe.de give a first orientation."
         }
       ],
       "quiz": [
@@ -307,7 +298,7 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Forward the video to every media outlet you know for analysis",
+              "text": "Forward the video straight to every media outlet you know for analysis",
               "isCorrect": false
             },
             {
@@ -326,7 +317,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Every public pass-along grows the reach, including the well-meant kind. Preserve URL, account, time and a screenshot where safe, then take the right reporting or authority route."
+          "explanation": "Every public share can widen the reach, even a well-meant one. Preserve evidence first where that is safe, then report."
         },
         {
           "id": "deepfake-2-3-q2",
@@ -334,12 +325,12 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Federal Criminal Police Office (BKA)",
+              "text": "Report to the Federal Criminal Police Office (BKA)",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Federal Financial Supervisory Authority (BaFin)",
+              "text": "Write to the financial supervisor BaFin",
               "isCorrect": false
             },
             {
@@ -353,7 +344,7 @@
               "isCorrect": true
             }
           ],
-          "explanation": "Under the KI-MIG the Bundesnetzagentur is generally competent, unless a sector authority is. So check the current official competence information and the published channel first."
+          "explanation": "Under the KI-MIG the Bundesnetzagentur is generally competent unless a sector authority is. So first check the current official competence information and the published authority channel."
         },
         {
           "id": "deepfake-2-3-q3",
@@ -371,7 +362,7 @@
             },
             {
               "id": "c",
-              "text": "The basic rule that portraits may be distributed or publicly shown only with consent; statutory exceptions still need checking",
+              "text": "Portraits may be distributed or publicly shown only with consent; Section 23 sets the exceptions",
               "isCorrect": true
             },
             {
@@ -380,7 +371,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Section 22 KUG holds the consent rule for distributing and publicly displaying portraits. Section 23 KUG holds the exceptions and a balancing of interests. Whether a deepfake infringes a right is decided case by case."
+          "explanation": "Section 22 KUG holds the consent rule, Section 23 KUG the exceptions and balancing of interests. Whether a deepfake infringes a right is decided case by case."
         }
       ]
     }

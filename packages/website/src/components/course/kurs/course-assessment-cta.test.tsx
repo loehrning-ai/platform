@@ -251,7 +251,7 @@ describe("<CourseAssessmentCta>", () => {
     emitProgress(progressFor("claude", 11, true));
 
     expect(screen.getByRole("status")).toHaveTextContent(
-      "Complete all 12 lessons to unlock the workshop quiz. 1 lesson remaining.",
+      "Complete all 12 lessons to unlock the quiz.",
     );
     expect(screen.getByText("11 of 12 lessons complete")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Quiz locked" })).toBeDisabled();
@@ -274,15 +274,15 @@ describe("<CourseAssessmentCta>", () => {
     emitProgress(progressFor("claude", 12));
 
     expect(screen.getByRole("status")).toHaveTextContent(
-      "All 12 lessons are complete.",
+      "The final quiz is unlocked.",
     );
     expect(
-      screen.getByRole("link", { name: "Start workshop quiz" }),
+      screen.getByRole("link", { name: "Start quiz" }),
     ).toHaveAttribute("href", "/en/kurse/open-source/claude/kurs/quiz");
     expect(
       screen.queryByRole("link", {
         // Copy lock updated: English UI copy names completion documents "certificate of participation", including the Operator course that used to say "Course Completion Record".
-        name: "Download Certificate of Participation",
+        name: "Download Certificate of participation",
       }),
     ).not.toBeInTheDocument();
 
@@ -295,7 +295,7 @@ describe("<CourseAssessmentCta>", () => {
     );
     expect(
       screen.getByRole("link", {
-        name: "Download Certificate of Participation",
+        name: "Download Certificate of participation",
       }),
     ).toHaveAttribute("href", "/en/kurse/open-source/claude/kurs/zertifikat");
   });
@@ -316,14 +316,14 @@ describe("<CourseAssessmentCta>", () => {
       screen.getByText("22 questions · 70% to pass · 28 minutes"),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Start workshop quiz" }),
+      screen.getByRole("link", { name: "Start quiz" }),
     ).toHaveAttribute("href", "/en/kurse/open-source/ai-native-operator/quiz");
 
     emitProgress(progressFor("ai-native-operator", 39, true));
     expect(
       screen.getByRole("link", {
         // Copy lock updated: English UI copy names completion documents "certificate of participation", including the Operator course that used to say "Course Completion Record".
-        name: "Download Certificate of Participation",
+        name: "Download Certificate of participation",
       }),
     ).toHaveAttribute(
       "href",
@@ -349,10 +349,10 @@ describe("<CourseAssessmentCta>", () => {
       "frühere Capstone-Selbstprüfung",
     );
     expect(screen.getByRole("status")).toHaveTextContent(
-      "neue angewandte Projekt ist damit nicht verifiziert",
+      "verifiziert das neue angewandte Projekt nicht",
     );
     expect(
-      screen.getByRole("link", { name: "Workshop-Quiz starten" }),
+      screen.getByRole("link", { name: "Quiz starten" }),
     ).toHaveAttribute("href", "/ai-native/kurs/quiz");
     expect(
       screen.getByRole("link", {

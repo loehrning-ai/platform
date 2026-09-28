@@ -17,7 +17,7 @@ export default function Ch07InterpretDe() {
       <Hero
         eyebrow="Kapitel 07 · Interpretation"
         title="Erklärungsverfahren beantworten <em>bestimmte Fragen.</em>"
-        hook="Ein Modell, das gut vorhersagt, hat damit noch nichts erklärt. SHAP, LIME und Permutationswichtigkeit beschreiben jeweils einen Ausschnitt des Modellverhaltens, und zwar nur unter benannten Referenzdaten und Methodenannahmen."
+        hook="SHAP, LIME und Permutationswichtigkeit beschreiben je einen Ausschnitt des Modellverhaltens, unter Referenzdaten und Annahmen, die du benennen musst."
         meta={[
           { k: "Lesezeit", v: "10 min" },
           { k: "Inhalt", v: "SHAP · LIME · Permutation" },
@@ -29,15 +29,13 @@ export default function Ch07InterpretDe() {
         <SectionLabel n="07.1">
           Erklärungen einzelner Vorhersagen mit SHAP
         </SectionLabel>
-        <h2 className="h2">SHAP: Spieltheorie für ML.</h2>
+        <h2 className="h2">SHAP verteilt eine Vorhersage auf die Merkmale.</h2>
         <p className="prose">
           SHAP (SHapley Additive exPlanations) verteilt eine Vorhersage additiv
           auf Merkmale, über Shapley-Werte und eine gewählte
-          Hintergrundverteilung. Erklärt wird das Modell immer relativ zu dieser
-          Referenz; korrelierte Merkmale, bedingte oder interventionelle
-          Annahmen und Approximation verschieben die Zuweisung. Das Panel hier
-          ist ein handgebautes additives Lehrmodell, nicht die Ausgabe eines
-          angepassten SHAP-Explainers.
+          Hintergrundverteilung, und erklärt das Modell relativ zu dieser
+          Referenz. Korrelierte Merkmale, bedingte oder interventionelle
+          Annahmen und die Approximation verschieben die Zuweisung.
         </p>
         <SHAPWaterfallSim />
       </section>
@@ -45,19 +43,18 @@ export default function Ch07InterpretDe() {
       <section className="section">
         <SectionLabel n="07.2">Lokale Approximation mit LIME</SectionLabel>
         <h2 className="h2">
-          Komplexes Modell, einfache Erklärung in lokaler Nähe.
+          LIME nähert das Modell um einen Punkt linear an.
         </h2>
         <p className="prose">
-          LIME (Local Interpretable Model-agnostic Explanations) ersetzt die
-          Frage nach der globalen Komplexität durch eine lokale Frage:{" "}
+          LIME (Local Interpretable Model-agnostic Explanations) stellt eine
+          lokale Frage:{" "}
           <em>
             Welches lineare Modell bildet das Verhalten des Modells um diesen
             Punkt ab?
           </em>{" "}
           LIME zieht nahe Punkte, gewichtet sie nach Entfernung und passt ein
           kleines Ersatzmodell an. Die Güte hängt von Perturbationsstichprobe,
-          Merkmalsdarstellung, Kernelbreite und lokalem Modell ab. Der
-          Abfragepunkt untersucht hier eine feste Lehrfläche.
+          Merkmalsdarstellung, Kernelbreite und lokalem Modell ab.
         </p>
         <LIMEExplainer />
       </section>
@@ -66,15 +63,15 @@ export default function Ch07InterpretDe() {
         <SectionLabel n="07.3">
           Globale Merkmalswichtigkeit durch Permutation
         </SectionLabel>
-        <h2 className="h2">Eine Spalte zerstören. Den Schaden messen.</h2>
+        <h2 className="h2">
+          Mischst du eine Spalte, misst der Metrikverlust die Abhängigkeit.
+        </h2>
         <p className="prose">
-          Misch eine Spalte durch und das Merkmal verliert seinen Bezug zum
-          Ziel. Das Modell rechnet weiter, nur eben ohne diese Information, und
-          der Metrikverlust schätzt, wie stark es unter der
-          Evaluationsverteilung daran hing. Korrelierte oder ersetzbare
-          Prädiktoren decken einander dabei; das Ergebnis hängt an Metrik,
-          Datensatz, Gruppierung und Permutationsschema. Modellunabhängig heißt
-          nicht annahmenfrei.
+          Mischst du eine Spalte durch, verliert das Merkmal seinen Bezug zum
+          Ziel, und das Modell rechnet weiter. Der Metrikverlust schätzt, wie
+          stark es unter der Evaluationsverteilung daran hing. Korrelierte oder
+          ersetzbare Prädiktoren verdecken einander, und das Ergebnis hängt an
+          Metrik, Datensatz, Gruppierung und Permutationsschema.
         </p>
         <PermutationImportance />
       </section>
@@ -86,14 +83,10 @@ export default function Ch07InterpretDe() {
           <em>eine konkrete Person</em> falsch sein.
         </h2>
         <p className="prose">
-          Ein Merkmal kann global weit oben stehen und für eine einzelne
-          Vorhersage fast nichts tun. Umgekehrt genauso. Der Datenpunkt hier
-          stellt seinen lokalen SHAP-Beitrag neben die globale Wichtigkeit.
-          Individuelle Attribution, Untergruppenleistung, Kalibrierung und
-          Fairness-Metriken sind vier verschiedene Arten von Evidenz, und
-          anwendbare Governance verlangt oft mehrere davon. Eine lokale
-          Erklärung allein belegt weder Fairness noch regulatorische
-          Konformität.
+          Ein Merkmal kann global weit oben stehen und eine einzelne Vorhersage
+          kaum bewegen, oder umgekehrt. Individuelle Attribution, Untergruppenleistung, Kalibrierung und
+          Fairness-Metriken sind getrennte Evidenz, und eine lokale Erklärung
+          allein belegt weder Fairness noch Konformität.
         </p>
         <GlobalVsLocal />
       </section>
@@ -102,19 +95,18 @@ export default function Ch07InterpretDe() {
         <AntiPatterns
           title="Fehlmuster"
           items={[
-            "<b>Merkmalswichtigkeit als Kausalität lesen.</b> Ein hoher SHAP-Wert bedeutet, dass das Modell ein Merkmal <em>verwendet</em>, nicht dass eine Änderung des Merkmals das Ergebnis verändert; siehe Kapitel 09.",
-            "<b>Einzelentscheidungen mit globaler Wichtigkeit begründen.</b> Eine globale Rangfolge kann den Treiber einer einzelnen Vorhersage vollständig verfehlen.",
-            "<b>Den LIME-Radius zu groß wählen.</b> Dann spannt sich die lineare Approximation über nichtlineare Bereiche und erzählt Unsinn.",
+            "<b>Merkmalswichtigkeit als Kausalität lesen.</b> Ein hoher SHAP-Wert bedeutet, dass das Modell ein Merkmal <em>verwendet</em>; eine Änderung des Merkmals muss das Ergebnis nicht ändern (siehe Kapitel 09).",
+            "<b>Den LIME-Radius zu groß wählen.</b> Dann spannt sich die lineare Approximation über nichtlineare Bereiche und führt in die Irre.",
             "<b>Auf Trainingsdaten permutieren.</b> Nimm Evaluationsdaten, die den Einsatz abbilden; Trainingsrückgänge vermischen Abhängigkeit mit Overfitting.",
           ]}
         />
         <BestPractices
           title="Bewährte Verfahren"
           items={[
-            "<b>SHAP für additive Attribution:</b> Explainer, Ausgabeskala, Hintergrunddaten, Behandlung von Merkmalsabhängigkeit und Approximationsfehler angeben. Effizienz gilt für die gewählte SHAP-Formulierung, nicht jede Implementierungsausgabe.",
-            "<b>Permutation für Abhängigkeit auf Evaluationsdaten:</b> Metrik und Permutationseinheit wählen und korrelierte Merkmale bei Bedarf gemeinsam interpretieren.",
+            "<b>SHAP für additive Attribution:</b> Explainer, Ausgabeskala, Hintergrunddaten, Behandlung von Merkmalsabhängigkeit und Approximationsfehler angeben. Die SHAP-Werte summieren sich nur in der gewählten Formulierung exakt zur Vorhersage; Näherungen weichen ab.",
+            "<b>Permutation für Abhängigkeit auf Evaluationsdaten:</b> Metrik und Permutationseinheit wählen und korrelierte Merkmale bei Bedarf gemeinsam lesen.",
             "<b>LIME für ein lokales Ersatzmodell:</b> Lokalität, Perturbationsverteilung, Ersatzmodellgüte und Stabilität über Seeds berichten.",
-            "<b>Stabilität von Wichtigkeitsschätzungen zeigen.</b> Stochastische Verfahren wiederholen und Streuung berichten; nur bei begründeter Stichprobeninterpretation von Konfidenz sprechen.",
+            "<b>Stabilität von Wichtigkeitsschätzungen zeigen.</b> Stochastische Verfahren wiederholen und die Streuung berichten.",
           ]}
         />
       </section>
@@ -122,10 +114,7 @@ export default function Ch07InterpretDe() {
       <Takeaway
         title="Kernaussagen"
         items={[
-          "<b>Erklärungsbedarf vor dem Deployment definieren.</b> Zielgruppe, Entscheidung, Ausgabeskala, Referenzdaten und akzeptable Grenzen festlegen.",
-          "<b>Pass die Erklärung an die Frage an.</b> Additive Attribution, Abhängigkeit auf Evaluationsdaten und lokale Ersatzmodellgüte sind drei verschiedene Größen.",
-          "<b>Korrelation ≠ Mechanismus.</b> Merkmalswichtigkeit ist kein kausaler Einfluss; siehe Kapitel 09.",
-          "<b>Globale, gruppenbezogene und individuelle Evidenz unterscheiden.</b> Jede für die Entscheidung erforderliche Ebene prüfen und Fairness nicht aus einem Attributionsdiagramm ableiten.",
+          "<b>Erklärungsbedarf vor dem Deployment definieren.</b> Zielgruppe, Entscheidung, Ausgabeskala, Referenzdaten und akzeptierte Grenzen festlegen.",
         ]}
       />
     </DataScienceLocaleProvider>

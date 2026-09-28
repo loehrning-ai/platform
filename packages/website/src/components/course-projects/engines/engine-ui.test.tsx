@@ -6,17 +6,18 @@ import { getCourseProjectConfig } from "@/lib/course-projects/configs";
 import { EngineFrame, VerifyPanel } from "./engine-ui";
 
 describe("engine accessibility tokens", () => {
-  it("uses a light readable eyebrow on the dark engine header", () => {
+  it("uses light readable text for the engine heading on the dark header", () => {
     render(
       <EngineFrame
         config={getCourseProjectConfig("codex")}
         locale="en"
-        engineLabel="Repository lab"
       >
         body
       </EngineFrame>,
     );
-    expect(screen.getByText(/Repository lab ·/)).toHaveClass("text-[#ffc6aa]");
+    expect(
+      screen.getByRole("heading", { name: "Repository Workbench" }).closest("header"),
+    ).toHaveClass("bg-foreground", "text-background");
   });
 
   it("uses an explicit high-contrast neutral for the pending badge", () => {

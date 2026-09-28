@@ -146,28 +146,26 @@ function AiNativeLessonReaderContent({
           keyTakeaway: "Key point",
           lessonComplete: "Navigation checkpoint saved",
           progressSaved:
-            "The lesson route is recorded. This is not a mastery assessment or credential.",
+            "Lesson recorded. This is not a mastery assessment or credential.",
           proofPrerequisite: "Confirm every section as reviewed first.",
           capstoneQuestion: "Applied project recorded?",
           capstoneComplete:
-            "Your applied project evidence is stored in learning progress. It is not a server-attested completion record and does not replace the workshop quiz.",
+            "Your project evidence is saved in your progress. It is not a server-attested record and does not replace the final quiz.",
           legacyCapstoneQuestion: "Historical capstone self-review recorded",
           legacyCapstoneComplete:
-            "Your earlier capstone self-review remains an accepted certificate signal after every lesson is complete. It does not verify the new applied project artifact.",
+            "Once every lesson is complete, your earlier capstone self-review remains a valid route to completion. It does not verify the new project artifact.",
           downloadRecord: "Download completion record",
-          takeQuiz: "Complete workshop quiz",
+          takeQuiz: "Complete final quiz",
           capstonePrompt:
-            "Complete the course workspace and its verification gate. This status updates only after the project produces a checked artifact.",
+            "Complete the course workspace and its check. Reading or self-reporting does not count; the status changes once the project produces a checked artifact.",
           markRubric: "Open applied project",
-          selfReport:
-            "Reading completion or self-reporting does not satisfy the applied-project requirement.",
           knowledgeCheck: "Knowledge check",
           lessonQuiz: "Short lesson quiz",
           quizIntro: (count: number) =>
-            `${count} ${count === 1 ? "question" : "questions"}. Immediate feedback, repeatable. The best result is stored.`,
+            `${count} ${count === 1 ? "question" : "questions"}. Retake the quiz as often as you like; your best result is saved.`,
           moduleComplete: (number: number) => `Module ${number} complete`,
           moduleBody: (count: number) =>
-            `All ${count} lessons in this module are complete. Continue to the next module or return to the overview.`,
+            `All ${count} lessons in this module are complete.`,
           overview: "Back to overview",
           nextLesson: "Next lesson",
           previousShort: "Previous",
@@ -186,28 +184,26 @@ function AiNativeLessonReaderContent({
           keyTakeaway: "Kernaussage",
           lessonComplete: "Navigations-Checkpoint gespeichert",
           progressSaved:
-            "Die Lektionsroute ist erfasst. Das ist keine Kompetenzprüfung und kein Nachweis.",
+            "Lektion erfasst. Das ist keine Kompetenzprüfung und kein Nachweis.",
           proofPrerequisite: "Bestätige zuerst jeden Abschnitt als geprüft.",
           capstoneQuestion: "Angewandtes Projekt gespeichert?",
           capstoneComplete:
-            "Deine Projektnachweise sind im Lernfortschritt gespeichert. Sie sind kein serverbestätigter Abschlussnachweis und ersetzen das Workshop-Quiz nicht.",
+            "Deine Projektnachweise sind im Fortschritt gespeichert. Sie sind kein serverbestätigter Nachweis und ersetzen das Abschlussquiz nicht.",
           legacyCapstoneQuestion: "Frühere Capstone-Selbstprüfung gespeichert",
           legacyCapstoneComplete:
-            "Deine frühere Capstone-Selbstprüfung bleibt nach Abschluss aller Lektionen als Abschlussweg gültig. Sie bestätigt nicht das neue angewandte Projektartefakt.",
+            "Nach Abschluss aller Lektionen gilt deine frühere Capstone-Selbstprüfung weiter als Abschlussweg. Sie bestätigt das neue Projektartefakt nicht.",
           downloadRecord: "Teilnahmebestätigung herunterladen",
-          takeQuiz: "Workshop-Quiz abschließen",
+          takeQuiz: "Abschlussquiz abschließen",
           capstonePrompt:
-            "Schließe den Kurs-Workspace und seine Prüfschranke ab. Der Status ändert sich erst, wenn das Projekt ein geprüftes Artefakt erzeugt.",
+            "Schließ den Kurs-Workspace mit seiner Prüfung ab. Lesen oder Selbstbestätigung zählen nicht; der Status ändert sich, wenn das Projekt ein geprüftes Artefakt erzeugt.",
           markRubric: "Angewandtes Projekt öffnen",
-          selfReport:
-            "Lesefortschritt oder Selbstbestätigung erfüllen die Projektanforderung nicht.",
           knowledgeCheck: "Verständnis-Check",
           lessonQuiz: "Kurzes Quiz zu dieser Lektion",
           quizIntro: (count: number) =>
-            `${count} ${count === 1 ? "Frage" : "Fragen"}. Sofortiges Feedback, beliebig oft wiederholbar. Das beste Ergebnis wird gespeichert.`,
+            `${count} ${count === 1 ? "Frage" : "Fragen"}. Du kannst das Quiz beliebig oft wiederholen; dein bestes Ergebnis wird gespeichert.`,
           moduleComplete: (number: number) => `Modul ${number} abgeschlossen`,
           moduleBody: (count: number) =>
-            `Alle ${count} Lektionen dieses Moduls sind erledigt. Gehe zum nächsten Modul oder zurück zur Übersicht.`,
+            `Alle ${count} Lektionen dieses Moduls sind erledigt.`,
           overview: "Zurück zur Übersicht",
           nextLesson: "Nächste Lektion",
           previousShort: "Vorher",
@@ -644,9 +640,6 @@ function AiNativeLessonReaderContent({
                   {copy.markRubric} <CheckCircle2 size={12} />
                 </a>
               </div>
-              <p className="mt-3 text-[13px] text-muted-foreground">
-                {copy.selfReport}
-              </p>
             </>
           )}
         </div>

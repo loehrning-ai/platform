@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { DemoDetailLayout } from "./demo-detail-layout";
 import { demos } from "@/lib/demos";
 
@@ -29,9 +29,10 @@ vi.mock("next/link", async () => {
  * (modul_x_lesson_y -> "Modul x · Lektion y"; block_n -> "Block n"), lessonHref
  * (module deep-link vs block deep-link), the KI-Kompetenzweg Stufe mapping per
  * demo level, the getNextDemo hand-off, and the related-books lookup. We drive
- * these through the DOM with REAL catalog entries and mock only the three heavy
- * presentational children (DemoShell, AnimatedMetaTable, EvidenceBadge) so the
- * assertions target the derivations rather than framer-motion / timers.
+ * these through the DOM with REAL catalog entries and mock only the heavy
+ * presentational children (DemoShell, which also carries the evidence line,
+ * and AnimatedMetaTable) so the assertions target the derivations rather than
+ * framer-motion / timers.
  */
 
 vi.mock("./demo-shell", () => ({
@@ -42,10 +43,6 @@ vi.mock("./demo-shell", () => ({
 
 vi.mock("./animated-meta-table", () => ({
   AnimatedMetaTable: () => <div data-testid="animated-meta-table" />,
-}));
-
-vi.mock("./evidence-badge", () => ({
-  EvidenceBadge: () => <div data-testid="evidence-badge" />,
 }));
 
 // excel: ai-native / modul_2_lesson_2 / einstieg
@@ -61,12 +58,51 @@ describe("<DemoDetailLayout>", () => {
     expect(
       screen.getByRole("link", { name: "Alle Praxisbeispiele" }),
     ).toHaveAttribute("href", "/demos");
-    expect(
-      screen.getByText(/Praxisbeispiel 01 · Grundlagen · Einstieg/),
-    ).toBeInTheDocument();
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "Claude in Excel.",
+    // The kicker drops its "Praxisbeispiel" word below sm, where it shares
+    // one row with the back link; the text content keeps the full phrase.
+    const kicker = screen.getByText((_, el) =>
+      el?.tagName === "P" &&
+      /^Praxisbeispiel 01 · Grundlagen · Einstieg$/.test(el.textContent ?? ""),
     );
+    expect(kicker.querySelector("span")).toHaveClass("max-sm:hidden");
+    // The H1 is the plain name: no full stop, no second sentence.
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
+      /^Claude in Excel$/,
+    );
+  });
+
+  it("shares one phone row between back link and kicker and leads with the teaser", () => {
+    const { container } = render(<DemoDetailLayout demo={excel} />);
+    const top = container.querySelector("[data-demo-detail-top]");
+    // One flex row below sm, stacked from sm up.
+    expect(top).toHaveClass("flex", "flex-wrap", "sm:block");
+    expect(top?.querySelector("nav a")).toHaveClass("min-h-11");
+    // The phone lead is the one-sentence teaser; the full description
+    // returns from sm up. Neither is clamped.
+    const teaser = container.querySelector("[data-demo-detail-teaser]");
+    expect(teaser).toHaveTextContent(excel.teaser);
+    expect(teaser).toHaveClass("sm:hidden");
+    const description = screen.getByText(excel.description);
+    expect(description).toHaveClass("max-sm:hidden", "text-[1.0625rem]");
+    expect(`${teaser?.className} ${description.className}`).not.toMatch(/line-clamp/);
+  });
+
+  it("folds the checks and the run table behind one closed phone button", () => {
+    const { container } = render(<DemoDetailLayout demo={excel} />);
+    const toggle = screen.getByRole("button", { name: "So prüfst du das Beispiel" });
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    expect(toggle).toHaveClass("min-h-11", "sm:hidden");
+    const panels = Array.from(container.querySelectorAll("[data-demo-notes-panel]"));
+    expect(panels.map((p) => p.getAttribute("data-demo-notes-panel"))).toEqual(["checks", "run"]);
+    expect(toggle.getAttribute("aria-controls")?.split(" ")).toEqual(panels.map((p) => p.id));
+    for (const panel of panels) expect(panel).toHaveClass("max-sm:hidden");
+    // Execution and actions repeat the engine's evidence line, so they stay
+    // off the phone even when the panel is open.
+    const rows = Array.from(container.querySelectorAll("[data-demo-run-rows] > div"));
+    expect(rows.map((r) => r.classList.contains("max-sm:hidden"))).toEqual([false, true, true, false]);
+    fireEvent.click(toggle);
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+    for (const panel of panels) expect(panel).not.toHaveClass("max-sm:hidden");
   });
 
   it("derives a module lesson label + deep link for a modul_x_lesson_y lessonId", () => {
@@ -95,27 +131,39 @@ describe("<DemoDetailLayout>", () => {
     );
   });
 
-  it("maps each demo level to its KI-Kompetenzweg Stufe", () => {
-    const { rerender } = render(<DemoDetailLayout demo={excel} />);
-    expect(screen.getByText(/Stufe 3: Anwenden/)).toBeInTheDocument();
-
-    rerender(<DemoDetailLayout demo={rag} />);
-    expect(screen.getByText(/Stufe 4: Umsetzen/)).toBeInTheDocument();
-
-    rerender(<DemoDetailLayout demo={agent} />);
-    expect(screen.getByText(/Stufe 5: Gestalten/)).toBeInTheDocument();
+  it("names the course once, in the continuation, without a stage label", () => {
+    const { container } = render(<DemoDetailLayout demo={agent} />);
+    const continuation = container.querySelector("[data-demo-continuation]");
+    expect(continuation).toHaveTextContent(/Im Kurs · Modul \d+ · Lektion \d+/);
+    // The stage label contradicted the learning graph; the page no longer
+    // carries one, and no second "Weiterlernen" block repeats the course.
+    expect(container.textContent).not.toMatch(/Stufe \d|Weiterlernen/);
+    expect(screen.queryByRole("heading", { name: "Im Kurs" })).toBeNull();
   });
 
   it("links to the next demo in catalog order", () => {
-    render(<DemoDetailLayout demo={excel} />);
+    const { container } = render(<DemoDetailLayout demo={excel} />);
     // excel is index 0 -> next is word (index 1).
     expect(
       screen.getByText(/Nächstes Praxisbeispiel · 02/),
     ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Weiter" })).toHaveAttribute(
-      "href",
-      "/demos/word?source=next-demo",
-    );
+    // Same order as the course side: kicker, title, action. The title names
+    // the target, the button keeps the tile's verb, and its accessible name
+    // starts with that visible text and adds the target.
+    const next = container.querySelector("[data-demo-next]");
+    expect(next?.children[1]).toHaveTextContent(/^Claude in Word$/);
+    // The next example carries its full one-sentence teaser, never clamped.
+    const word = demos.find((d) => d.slug === "word")!;
+    expect(next?.children[2]).toHaveTextContent(word.teaser);
+    expect(next?.children[2]?.className).not.toMatch(/line-clamp/);
+    expect(next?.children[1]).toHaveClass("text-fluid-h3", "font-bold");
+    const link = screen.getByRole("link", {
+      name: "Beispiel öffnen: Claude in Word",
+    });
+    expect(link).toHaveAttribute("href", "/demos/word?source=next-demo");
+    expect(link).toHaveTextContent(/^Beispiel öffnen$/);
+    // Below md the halves stack, so a hairline separates them.
+    expect(next).toHaveClass("max-md:border-t", "max-md:border-hairline");
   });
 
   it("surfaces no related book while its bookSlugs target is unpublished", () => {
@@ -130,9 +178,70 @@ describe("<DemoDetailLayout>", () => {
     expect(hrefs).not.toContain("/buecher/ki-tools-selbststaendige");
   });
 
-  it("renders the synthetic-data boundary label verbatim", () => {
-    render(<DemoDetailLayout demo={excel} />);
+  it("states what is invented once, in the four-row run table", () => {
+    const { container } = render(<DemoDetailLayout demo={excel} />);
+    // getByText throws on duplicates: the data row says it once. The
+    // evidence line now lives in the (mocked) engine header, not the page.
     expect(screen.getByText(excel.syntheticDataLabel)).toBeInTheDocument();
+    expect(container.querySelector("[data-evidence-line]")).toBeNull();
+    const labels = Array.from(
+      container.querySelectorAll("[data-demo-run-rows] dt"),
+    ).map((dt) => dt.textContent);
+    expect(labels).toEqual(["Daten", "Ausführung", "Externe Aktionen", "Abbruch"]);
+    // Fixed label column, baseline-aligned with the value.
+    const row = container.querySelector("[data-demo-run-rows] > div");
+    expect(row).toHaveClass("grid-cols-[8.5rem_minmax(0,1fr)]", "items-baseline");
+    expect(screen.queryByText(/^Sandbox-Szenario/)).toBeNull();
+    expect(screen.queryByText("Sandbox-Grenze")).toBeNull();
+  });
+
+  it("gives the actions row a short value, not the evidence-line phrase", () => {
+    // outbound-workflow is the review_gated demo.
+    const outbound = demos.find((d) => d.slug === "outbound-workflow")!;
+    const { container } = render(<DemoDetailLayout demo={outbound} />);
+    const values = Array.from(
+      container.querySelectorAll("[data-demo-run-rows] > div"),
+    ).map((row) => [
+      row.querySelector("dt")?.textContent,
+      row.querySelector("dd")?.textContent,
+    ]);
+    expect(values).toContainEqual(["Externe Aktionen", "Simuliert, mit Freigabe-Schritt"]);
+    expect(container.textContent).not.toContain("Freigabe-Schritt simuliert");
+  });
+
+  it("sets the header in the IDEA band and keeps a dark engine on paper", () => {
+    const { container } = render(<DemoDetailLayout demo={agent} />);
+    const h1 = screen.getByRole("heading", { level: 1 });
+    expect(h1).toHaveTextContent(/^Agent-Pipeline$/);
+    // One colour: the poster title in the scene mid, balanced by .poster-title.
+    expect(h1).toHaveClass("poster-title", "text-scene-mid", "hyphens-manual");
+    expect(h1.getAttribute("style")).toMatch(/--fit:\s*\d/);
+    // A face wider than the fit (a first visit on a system fallback) wraps
+    // the word inside the band instead of being clipped by it.
+    expect(h1).toHaveClass("break-words");
+    expect(h1.querySelector("span")).toBeNull();
+    const hero = container.querySelector("[data-demo-detail-hero]");
+    // The phone back link touches the band top, which clips overflow: its
+    // focus ring is drawn inset there (SPEC §3.9 edge rule).
+    const back = hero?.querySelector("nav a");
+    expect(back?.className).toContain("max-sm:focus-visible:outline-offset-[-3px]");
+    const band = hero?.querySelector("[data-cover-band]");
+    expect(band).toHaveClass("plakat-idea");
+    expect(band?.contains(h1)).toBe(true);
+    // Unnamed: a named band became a region whose name matched the engine's.
+    expect(band).not.toHaveAttribute("aria-labelledby");
+    // Band type budget (SPEC §3.1): caps line, poster title, 17px body.
+    expect(band?.querySelector(".text-caption, .text-label, .text-lead")).toBeNull();
+    expect(band?.querySelector(".plakat-caps")).toBeTruthy();
+    // The engine sits on paper below the band, never inside it.
+    const instrument = container.querySelector("[data-demo-instrument]");
+    expect(instrument?.closest("[data-cover-band]")).toBeNull();
+    expect(instrument?.querySelector("[data-testid=demo-shell]")).toBeTruthy();
+    expect(hero?.className ?? "").not.toContain("dark-section");
+    expect(
+      screen.getByRole("heading", { level: 2, name: "So läuft dieses Beispiel" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Aufgezeichnete Spur")).toBeInTheDocument();
   });
 
   it("places the instrument before evidence notes and the single primary continuation", () => {
@@ -152,6 +261,7 @@ describe("<DemoDetailLayout>", () => {
     expect(orderedSections).toEqual(["instrument", "notes", "continuation"]);
     const continuation = container.querySelector("[data-demo-continuation]");
     expect(continuation?.querySelectorAll("a")).toHaveLength(1);
+    expect(container.querySelectorAll("a.bg-brand-orange")).toHaveLength(1);
     expect(continuation?.querySelector("a")).toHaveClass("bg-brand-orange");
     expect(container.querySelector("[data-demo-detail-hero]")).toBeTruthy();
     expect(container.querySelector("[data-demo-detail-layout]")).toBeTruthy();
@@ -164,5 +274,12 @@ describe("<DemoDetailLayout>", () => {
       .getAllByRole("link")
       .map((l) => l.getAttribute("href"));
     expect(hrefs).toContain("/demos?industry=Controlling");
+    // Text links, not boxed chips that look like filter buttons.
+    const link = screen.getByRole("link", {
+      name: "Praxisbeispiele im Arbeitskontext Controlling",
+    });
+    expect(link).toHaveClass("min-h-11", "underline");
+    // decoration-border only colours the underline; no box border utilities.
+    expect(link.className).not.toMatch(/(?:^|\s)border(?:-|\s|$)/);
   });
 });

@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { NextRequest } from "next/server";
+import { readInterstitialHtml } from "@/test/redirect-interstitial";
 
 const mocks = vi.hoisted(() => ({
   getAuthenticatedUser: vi.fn(),
@@ -37,6 +38,33 @@ import { GET, POST } from "./route";
 const AUTHORIZATION_ID = "1f4d2a4e-5b6c-4d7e-8f90-a1b2c3d4e5f6";
 const APPROVED = "https://claude.ai/callback?code=abc&state=xyz";
 const DENIED = "https://claude.ai/callback?error=access_denied&state=xyz";
+
+/**
+ * The onward trip to the OAuth client is a same-origin page, not a redirect:
+ * the enforced `form-action 'self'` makes Chromium refuse a cross-origin 303
+ * after the consent form's POST. Asserts the page navigates to exactly
+ * `destination`, by refresh and by link, and is private in every way the 303
+ * was.
+ */
+async function expectContinuationTo(
+  response: Response,
+  destination: string,
+  locale: "de" | "en" = "de",
+): Promise<void> {
+  expect(response.status).toBe(200);
+  expect(response.headers.get("location")).toBeNull();
+  expect(response.headers.get("content-type")).toBe("text/html; charset=utf-8");
+  expect(response.headers.get("cache-control")).toBe("private, no-store");
+  expect(response.headers.get("referrer-policy")).toBe("no-referrer");
+  expect(response.headers.get("x-robots-tag")).toBe(
+    "noindex, nofollow, noarchive",
+  );
+  const page = readInterstitialHtml(await response.text());
+  expect(page.refreshes).toEqual([{ delay: 0, url: destination }]);
+  expect(page.linkHrefs).toEqual([destination]);
+  expect(page.lang).toBe(locale);
+  expect(page.document.querySelectorAll("script, form")).toHaveLength(0);
+}
 
 function decisionRequest(
   fields: Record<string, string> = {
@@ -161,8 +189,7 @@ describe("consent decision route origin checks", () => {
       decisionRequest(undefined, { omitFetchSite: true }),
     );
 
-    expect(response.status).toBe(303);
-    expect(response.headers.get("location")).toBe(APPROVED);
+    await expectContinuationTo(response, APPROVED);
   });
 });
 
@@ -280,12 +307,40 @@ describe("consent decision route decisions", () => {
     expect(mocks.approveAuthorization).toHaveBeenCalledWith(AUTHORIZATION_ID, {
       skipBrowserRedirect: true,
     });
-    expect(response.status).toBe(303);
-    expect(response.headers.get("location")).toBe(APPROVED);
-    expect(response.headers.get("cache-control")).toBe("private, no-store");
-    expect(response.headers.get("x-robots-tag")).toBe(
-      "noindex, nofollow, noarchive",
+    await expectContinuationTo(response, APPROVED);
+  });
+
+  it("names only the client host on the continuation page, never the code", async () => {
+    const response = await POST(decisionRequest());
+    const page = readInterstitialHtml(await response.text());
+
+    expect(page.title).toBe("Weiter zu claude.ai");
+    expect(page.visibleText).toContain("claude.ai");
+    expect(page.visibleText).not.toContain("code=abc");
+  });
+
+  it("continues an English submission on an English page", async () => {
+    const response = await POST(
+      decisionRequest({
+        authorization_id: AUTHORIZATION_ID,
+        entscheidung: "zustimmen",
+        sprache: "en",
+      }),
     );
+
+    await expectContinuationTo(response, APPROVED, "en");
+  });
+
+  it("carries a loopback redirect of a desktop client exactly", async () => {
+    const loopback = "http://127.0.0.1:33418/callback?code=abc&state=x'y";
+    mocks.approveAuthorization.mockResolvedValue({
+      data: { redirect_url: loopback },
+      error: null,
+    });
+
+    const response = await POST(decisionRequest());
+
+    await expectContinuationTo(response, new URL(loopback).href);
   });
 
   it("denies and sends the learner back to the client without access", async () => {
@@ -301,7 +356,7 @@ describe("consent decision route decisions", () => {
       skipBrowserRedirect: true,
     });
     expect(mocks.approveAuthorization).not.toHaveBeenCalled();
-    expect(response.headers.get("location")).toBe(DENIED);
+    await expectContinuationTo(response, DENIED);
   });
 
   it("returns an expired request to our own page, never to the client", async () => {

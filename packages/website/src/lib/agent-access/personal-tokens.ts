@@ -121,6 +121,11 @@ function touchLastUsedAt(tokenId: string, at: Date): void {
  * select names its columns so `token_hash` stays out of the result set even
  * for the service role, which means a verifier value cannot be read back out
  * of the table by this path at all.
+ *
+ * A token stays valid until its owner revokes it or deletes the account. The
+ * table has no expiry yet, and the owner's account standing (banned or
+ * soft-deleted) is not asked here: both belong to the security audit F5
+ * database follow-up, which ships once its migration has been applied.
  */
 export async function lookupPersonalAccessToken(
   token: string,

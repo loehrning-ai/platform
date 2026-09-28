@@ -104,6 +104,24 @@ describe("consent copy", () => {
     expect(CONSENT_COPY.en.platformAccess).toMatch(/never write or delete/);
   });
 
+  // The account routes refuse an OAuth client's token (first-party session
+  // check), yet the sign-in service still accepts it. The copy has to say
+  // both, and never that the token acts here with the learner's own rights.
+  it("describes where the app's token is refused and where it still works", () => {
+    for (const locale of SUPPORTED_LOCALES) {
+      const copy = CONSENT_COPY[locale];
+      expect(copy.platformAccess).toMatch(/loehrning\.ai/);
+      expect(copy.tokenPower).toMatch(/Supabase/);
+      expect(copy.tokenPower).not.toMatch(
+        /same rights as your own sign-in|mit denselben Rechten/,
+      );
+    }
+    expect(CONSENT_COPY.de.tokenPower).toMatch(/Kontoseiten .* lehnen .* ab/);
+    expect(CONSENT_COPY.en.tokenPower).toMatch(/account pages .* refuse/);
+    expect(CONSENT_COPY.de.tokenPower).toMatch(/nur Programmen, die du selbst installiert hast/);
+    expect(CONSENT_COPY.en.tokenPower).toMatch(/Only approve programs you installed yourself/);
+  });
+
   it("has a body for every error the consent flow can end with", () => {
     for (const locale of SUPPORTED_LOCALES) {
       for (const kind of CONSENT_ERROR_KINDS) {

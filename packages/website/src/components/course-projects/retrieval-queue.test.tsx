@@ -107,7 +107,7 @@ describe("RetrievalQueue", () => {
     expect(screen.queryByText(/spaced mastery/i)).not.toBeInTheDocument();
     expect(
       screen.getByText(
-        "Go to the lesson mission, then select the Retrieve step.",
+        "Select the Retrieve step in the lesson mission.",
       ),
     ).toBeInTheDocument();
     expect(
@@ -174,7 +174,7 @@ describe("RetrievalQueue", () => {
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "This earlier review has no current Run receipt. Go to the lesson mission and complete Run, Inspect, and Revise again; Retrieve becomes available afterward.",
+        "This review lacks a current Run receipt. Complete Run, Inspect and Revise again in the lesson mission to unlock Retrieve.",
       ),
     ).toBeInTheDocument();
     expect(
@@ -185,7 +185,7 @@ describe("RetrievalQueue", () => {
     expect(screen.queryByText("Due now · passed once")).not.toBeInTheDocument();
     expect(
       screen.queryByText(
-        "Go to the lesson mission, then select the Retrieve step.",
+        "Select the Retrieve step in the lesson mission.",
       ),
     ).not.toBeInTheDocument();
     expect(screen.queryByText(/Due on:/)).not.toBeInTheDocument();
@@ -205,6 +205,15 @@ describe("RetrievalQueue", () => {
     );
 
     expect(screen.getByText("0 reviews are due")).toBeInTheDocument();
+    // Nothing due: the queue stays out of the phone layout and its dot is
+    // neutral rather than the Mennige alarm colour.
+    const section = screen
+      .getByText("0 reviews are due")
+      .closest("section");
+    expect(section).toHaveClass("max-sm:hidden");
+    expect(section?.querySelector("[aria-hidden='true']")).toHaveClass(
+      "bg-muted-foreground",
+    );
     expect(
       screen.getByText("Not due yet · retrieval established"),
     ).toBeInTheDocument();
@@ -426,7 +435,7 @@ describe("RetrievalQueue", () => {
     });
     expect(
       screen.getByText(
-        "Local learning state is not available for the current identity yet.",
+        "Your local learning state is not available yet.",
       ),
     ).toBeInTheDocument();
     expect(screen.getByText("Local mode inactive")).toBeInTheDocument();
@@ -461,7 +470,7 @@ describe("RetrievalQueue", () => {
 
     expect(
       screen.getByText(
-        "Local learning state is not available for the current identity yet.",
+        "Your local learning state is not available yet.",
       ),
     ).toBeInTheDocument();
     expect(screen.getByText("Local mode inactive")).toBeInTheDocument();

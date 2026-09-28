@@ -1,169 +1,149 @@
 /**
- * Demo narrative copy: "why it matters" + proof points.
+ * Demo narrative copy: why the example is built this way, the OG subtitle
+ * and where the run stops.
  *
  * Single source of truth for the detail-page narrative body. Kept separate
  * from the structural `demos.ts` so copy rewrites don't require touching
  * type definitions.
  *
- * The `proof` field is ALWAYS displayed with an "Illustratives Beispiel"
- * badge. Keep examples as sandbox scenarios, not client proof.
+ * `why` opens with the case the learner works on (du-form, a concrete actor),
+ * never with an unsourced rule of thumb, and adds what the lede does not say.
+ * What is invented is stated once, in the registry's `syntheticDataLabel`
+ * (the "Daten" row on the detail page).
  */
 
 import type { Locale } from "@/lib/i18n/locale";
 
 export interface DemoCopy {
   readonly why: string;
-  readonly proof: string;
   readonly ogSubtitle: string;
+  /** Where the run stops or waits for a person: the "Abbruch" row. */
+  readonly stop: string;
 }
 
 export const demoCopy: Readonly<Record<string, DemoCopy>> = {
   excel: {
-    why: "Viele Analysen im Mittelstand entstehen in Excel. Also setzt das Praxisbeispiel dort an: bei den Formeln, Pivots und Plausibilitätschecks, die es ohnehin schon gibt.",
-    proof:
-      "Sandbox-Szenario: 42 fiktive Rollen im Controlling und eine angenommene Entlastung von 4,2 Stunden pro Woche und Person. Keine der beiden Zahlen ist ein Messergebnis.",
-    ogSubtitle: "Excel-Lab: Formel, Pivot, Prognose im Beispiel.",
+    why: "Du prüfst, ob die Formel die richtige Vorwoche greift und ob Pivot und Prognose zu den Zahlen passen.",
+    ogSubtitle: "Formeln, Pivot und Prognose in einer Beispieltabelle prüfen.",
+    stop: "Der Entwurf bleibt in der Tabelle, bis du Formel und Prognose übernimmst.",
   },
   word: {
-    why: "Memos, Briefe, Vorlagen: jeden Tag dieselbe Arbeit. Das Praxisbeispiel lässt einen Assistenten Dokumentmuster nutzen, ohne dass Stil, Quellen und Freigabe verloren gehen.",
-    proof:
-      "Sandbox-Szenario: ein fiktives Monatsvolumen von 180 Entwürfen mit klaren Prüfschritten. Es misst keinen produktiven Durchsatz.",
-    ogSubtitle: "Word-Lab mit Musterstil und Review.",
+    why: "Ein Assistent schreibt Memos und Briefe nach einem Dokumentmuster.",
+    ogSubtitle: "Word-Entwurf nach Musterstil, mit Prüfschritten vor der Freigabe.",
+    stop: "Der Entwurf steht auf „Freigabe ausstehend“, bis du Stil, Quellen und Datenschutz geprüft hast.",
   },
   "outbound-workflow": {
-    why: "Eine generische Nachricht kann niemand prüfen. Bezieht sich der Entwurf auf ein öffentliches Signal, siehst du, warum er geschrieben wurde und welche Quelle dahintersteht.",
-    proof:
-      "Sandbox-Szenario: Beispielkontakte, öffentliche Signale und ein Quellencheck vor Versand.",
+    why: "Jeder Entwurf nennt sein öffentliches Signal und die Quelle, damit du vor dem Versand prüfen kannst, warum er entstand.",
     ogSubtitle: "Nachrichten mit öffentlichen Signalen begründen.",
+    stop: "Jeder Entwurf hält vor dem Versand am Review an.",
   },
   "agent-pipeline": {
-    why: "Recherche, Synthese, Kritik, Redaktion: vier Schritte, vier Zuständigkeiten. Der Koordinationsaufwand lohnt sich nur, wenn eine unabhängige Prüfung die Aufgabe besser macht.",
-    proof:
-      "Sandbox-Szenario: ein protokollierter Ablauf mit vier Rollen und ein hypothetischer Vergleich manueller und assistierter Entwurfszeit. Es ist kein gemessenes Produktivitätsergebnis.",
-    ogSubtitle: "Vier spezialisierte Agenten, ein Memo.",
+    why: "Einer recherchiert, einer fasst zusammen, einer sucht Fehler und einer redigiert, und du prüfst, ob die Fehlersuche das Memo besser macht.",
+    ogSubtitle: "Vier Agenten arbeiten nacheinander an einem Memo.",
+    stop: "Die Spur endet beim Memoentwurf, den du selbst gegenliest.",
   },
   "n8n-supply-chain": {
-    why: "Verzug erkennen, Bestand prüfen, Nachricht entwerfen, Nachbestellung markieren. Ausnahmen in der Lieferkette folgen Regeln, und Regeln lassen sich automatisieren. Das Praxisbeispiel zeigt, wo die Automatik endet und ein Mensch entscheidet.",
-    proof:
-      "Sandbox-Szenario: Statusereignis, Bestandsprüfung, Nachricht, Fallback und Review-Schritt.",
-    ogSubtitle: "Supply-Chain-Ausnahmen automatisch koordiniert.",
+    why: "Du siehst, welche Schritte der n8n-Workflow allein erledigt und wo die Disponentin freigibt.",
+    ogSubtitle: "Lieferverzug: Workflow-Entwurf mit manueller Freigabe.",
+    stop: "Kundennachricht und Nachbestellung warten auf die Freigabe der Disponentin.",
   },
   "rag-vertragsassistent": {
-    why: "RAG spart Suchzeit. Aber nur, wenn das Archiv sauber ist und ein Review dahintersteht. Das Praxisbeispiel zeigt Fundstellen und Grenzen, keine rechtsverbindliche Auskunft.",
-    proof:
-      "Sandbox-Szenario: Beispielarchiv, Fundstellenkarten und angenommene Suchzeitreduktion im Kontext des Praxisbeispiels.",
+    why: "Du stellst dem Vertragsarchiv Fragen, auch solche, auf die das System nicht antworten sollte. Eine Rechtsauskunft ersetzt es nicht.",
     ogSubtitle: "Chat mit Beispielverträgen; Antworten zeigen Fundstellen.",
+    stop: "Findet die Suche keine Klausel, antwortet das System nicht.",
   },
   "rechnung-zu-sap": {
-    why: "Rechnungseingang ist in vielen Firmen Handarbeit. Das Praxisbeispiel begrenzt den KI-Einsatz auf das, was prüfbar bleibt: klare Felder, Validierung, menschliche Freigabe.",
-    proof:
-      "Sandbox-Szenario: PDF-Rechnung, Feldextraktion, Duplikatprüfung und Review vor Import.",
+    why: "Die KI liest die Felder der PDF-Rechnung aus, Regeln prüfen Pflichtangaben und Dubletten.",
     ogSubtitle: "PDF-Beispiel rein, IDoc-Entwurf zur Prüfung raus.",
+    stop: "Vor dem SAP-Import hält der Ablauf an, bis ein Mensch freigibt.",
   },
   "prompt-scanner": {
-    why: "Governance gehört vor den Prompt, nicht hinter den Vorfall. Das Praxisbeispiel markiert PII und Geschäftsgeheimnisse, bevor ein Text das Haus verlässt.",
-    proof:
-      "Sandbox-Szenario: Beispielvolumen für Prompt-Prüfung; PII-Blockade als Kontrollmechanismus.",
-    ogSubtitle: "PII-Hinweise markiert, bevor ein Prompt weitergegeben wird.",
+    why: "Ein Grenzfall zeigt eine Prompt-Injection, die die Regeln übersehen.",
+    ogSubtitle: "Personendaten markieren, bevor ein Prompt weitergegeben wird.",
+    stop: "Ein blockierender Treffer hält den Prompt an. Andere Treffer werden maskiert oder zur Prüfung markiert.",
   },
   "cost-drift-observability": {
-    why: "Ein LLM ohne Observability betreibst du blind. Logs, Budget-Alerts und Qualitätsmetriken zeigen, ob ein KI-Workflow stabil bleibt oder gerade kippt.",
-    proof:
-      "Sandbox-Szenario: 4 Beispiel-Anwendungen; Budget-Monitoring soll Overspend-Risiken früher zeigen.",
-    ogSubtitle: "Spend, Latenz und Drift als simulierte Betriebsansicht.",
+    why: "Die Latenzkurve zeigt, wie stark die Antwortzeit einer Anwendung schwankt.",
+    ogSubtitle: "Kosten, Antwortzeit und Drift als simulierte Betriebsansicht.",
+    stop: "Die Ansicht zeigt nur Messwerte. Ab welchem Wert jemand eingreift, legst du selbst fest.",
   },
   "llm-observability": {
-    why: "Wird dein LLM-System besser oder schlechter? Ohne eigene Messpunkte weißt du es nicht. Das Praxisbeispiel verbindet Eval-Metriken, Drift-Erkennung und menschlichen Review und zeigt, wo die automatische Bewertung aufhört zu taugen.",
-    proof:
-      "Sandbox-Szenario: 4 Beispielantworten mit Auto-Eval und menschlicher Bewertung; ein Fall, in dem beide Urteile auseinanderlaufen, und ein markierter Drift-Indikator.",
+    why: "Zu jeder Antwort siehst du Eval-Metriken und einen Drift-Indikator.",
     ogSubtitle: "Eval-Score, Drift und menschliches Urteil im Vergleich.",
+    stop: "Wo Score und menschliches Urteil auseinanderliegen, listet das Beispiel die Antwort auf.",
   },
   "fine-tune-playground": {
-    why: "Fine-Tuning verbessert Antworten nur, wenn Daten und Evaluation stimmen. Das Praxisbeispiel trennt deshalb Baseline, Anpassung und Holdout-Prüfung.",
-    proof:
-      "Sandbox-Szenario: 2.400 fiktive gelabelte Fragen und eine vorgegebene Scoredifferenz von 38 Punkten. Das sind keine Trainingsergebnisse.",
-    ogSubtitle: "Baseline vs. Domänenbeispiel: Unterschied in 3 Prompts.",
+    why: "Du prüfst, ob das angepasste Modell spürbar bessere Antworten liefert als das Basismodell.",
+    ogSubtitle: "Basismodell und Domänenantwort für dieselbe Frage vergleichen.",
+    stop: "Beide Antworten sind vorab geschrieben und ändern sich beim Abspielen nicht.",
   },
   "roi-rechner": {
-    why: "KI-Projekte scheitern selten an der Technik. Sie scheitern an Annahmen, die niemand aufgeschrieben hat. Der Rechner legt jede Zahl und die Formel offen: zum Prüfen, nicht zum Verkaufen.",
-    proof:
-      "Sandbox-Szenario: Teamgröße, Stundensatz, Adoption und gesparte Stunden als offen sichtbare Annahmen.",
-    ogSubtitle: "Teamgröße × Stundensatz × Adoption = Szenario.",
+    why: "Der Rechner zeigt jede Annahme als Zahl und die Formel dazu.",
+    ogSubtitle: "Teamgröße × Stundensatz × Nutzungsquote × gesparte Stunden = Szenario.",
+    stop: "Der Rechner endet bei einem Szenariowert, den du selbst bewertest.",
   },
 };
 
 const englishDemoCopy: Readonly<Record<string, DemoCopy>> = {
   excel: {
-    why: "Many business analyses happen in Excel. So the example starts there, with the formulas, pivots, and plausibility checks that already exist.",
-    proof:
-      "Sandbox scenario: 42 fictional controlling roles and a 4.2-hour weekly time-saving assumption per person. Neither figure is measured evidence.",
-    ogSubtitle: "Excel lab: formula, pivot, forecast in an example.",
+    why: "You check whether the formula picks the right prior week and whether pivot and forecast match the figures.",
+    ogSubtitle: "Check formulas, a pivot and a forecast in a sample sheet.",
+    stop: "The draft stays in the sheet until you accept the formula and the forecast.",
   },
   word: {
-    why: "Memos, letters, templates: the same work every day. The example lets an assistant use document patterns without losing style, sources, and approval.",
-    proof:
-      "Sandbox scenario: a fictional monthly volume of 180 drafts with explicit review steps. It does not measure production throughput.",
-    ogSubtitle: "Word lab with a sample style and review.",
+    why: "An assistant writes memos and letters from a document template.",
+    ogSubtitle: "A Word draft in a sample style, with review before approval.",
+    stop: "The draft stays at “Approval pending” until you have checked style, sources and data protection.",
   },
   "outbound-workflow": {
-    why: "Nobody can check a generic message. When the draft points at a public signal, you see why it was written and which source stands behind it.",
-    proof:
-      "Sandbox scenario: fictional contacts, public-signal examples, and a source check. No message is sent.",
+    why: "Each draft names its public signal and source, so you can check before sending why it was written.",
     ogSubtitle: "Ground a message in public signals.",
+    stop: "Every draft stops at the review before sending.",
   },
   "agent-pipeline": {
-    why: "Research, synthesis, criticism, editing. Four steps, four responsibilities. The coordination cost pays off only when an independent check makes the work better.",
-    proof:
-      "Sandbox scenario: a recorded four-role trace and a hypothetical comparison of manual and assisted drafting time. It is not a measured productivity result.",
-    ogSubtitle: "Four specialist agents, one memo.",
+    why: "One researches, one summarises, one looks for errors and one edits, and you check whether the error search makes the memo better.",
+    ogSubtitle: "Four agents work on one memo in turn.",
+    stop: "The trace ends at the memo draft, which you proofread yourself.",
   },
   "n8n-supply-chain": {
-    why: "Detect a delay, check stock, draft the message, flag the reorder. Supply-chain exceptions follow rules. The example shows where automation stops and a person decides.",
-    proof:
-      "Sandbox scenario: fictional status, inventory, message, fallback, and review events. No external action runs.",
-    ogSubtitle: "Supply-chain exceptions coordinated automatically.",
+    why: "You see which steps the n8n workflow handles alone and where the dispatcher signs off.",
+    ogSubtitle: "Delivery delay: a workflow draft with manual sign-off.",
+    stop: "The customer message and the reorder wait for the dispatcher's sign-off.",
   },
   "rag-vertragsassistent": {
-    why: "Retrieval saves search time. But only when the archive is clean and a review stands behind it. The example returns passages and limits, not legal advice.",
-    proof:
-      "Sandbox scenario: a fictional contract archive, source cards, and deterministic keyword matching.",
+    why: "You ask the contract archive questions, including some the system should not answer. It does not replace legal advice.",
     ogSubtitle: "Chat with sample contracts; answers show their sources.",
+    stop: "If the search finds no clause, the system does not answer.",
   },
   "rechnung-zu-sap": {
-    why: "In many companies, incoming invoices are still handwork. The example limits the AI to what stays checkable: clear fields, validation, human approval.",
-    proof:
-      "Sandbox scenario: a fictional PDF invoice, field extraction, duplicate checks, and review before a simulated import.",
+    why: "The AI reads the fields of the PDF invoice, and rules check mandatory fields and duplicates.",
     ogSubtitle: "Sample PDF in, IDoc draft out for review.",
+    stop: "The run stops before the SAP import until a person signs off.",
   },
   "prompt-scanner": {
-    why: "Governance belongs in front of the prompt, not behind the incident. The example marks personal data and trade secrets, and one injection case its rules miss.",
-    proof:
-      "Sandbox scenario: fictional text and local regular-expression checks. No prompt leaves the browser.",
-    ogSubtitle: "Personal-data flags before a prompt is passed on.",
+    why: "A boundary case shows a prompt injection the rules miss.",
+    ogSubtitle: "Flag personal data before a prompt is passed on.",
+    stop: "A blocking match stops the prompt. Other matches are masked or flagged for review.",
   },
   "cost-drift-observability": {
-    why: "Run an LLM without observability and you run it blind. Logs, budget alerts, and quality metrics show whether an AI workflow stays stable or tips over.",
-    proof:
-      "Sandbox scenario: four fictional applications with fixed cost, latency, error, and drift indicators.",
-    ogSubtitle: "Spend, latency, and drift as a simulated operating view.",
+    why: "The latency curve shows how much one application's response time varies.",
+    ogSubtitle: "Cost, latency and drift as a simulated operations view.",
+    stop: "The view shows measurements only. You decide at which value someone steps in.",
   },
   "llm-observability": {
-    why: "Is your LLM system getting better or worse? Without your own measurements, you cannot tell. Eval metrics, drift detection, and human review mark where automated scoring stops.",
-    proof:
-      "Sandbox scenario: four fictional answers, fixed automated scores, human ratings, and one seeded drift indicator.",
-    ogSubtitle: "Eval score, drift, and human judgement side by side.",
+    why: "For each answer you see eval metrics and a drift indicator.",
+    ogSubtitle: "Eval score, drift and human judgement side by side.",
+    stop: "Where the score and the human rating diverge, the example lists the answer.",
   },
   "fine-tune-playground": {
-    why: "Fine-tuning improves answers only when the data and the evaluation hold up. So the example separates baseline, adaptation, and holdout check.",
-    proof:
-      "Sandbox scenario: 2,400 fictional labelled questions and a seeded 38-point score difference. These are not training results.",
-    ogSubtitle: "Baseline vs. domain example: the difference in 3 prompts.",
+    why: "You check whether the adapted model gives clearly better answers than the base model.",
+    ogSubtitle: "Compare a base model and a domain answer to the same question.",
+    stop: "Both answers are written in advance and stay the same on every run.",
   },
   "roi-rechner": {
-    why: "AI projects rarely fail on the technology. They fail on assumptions nobody wrote down. The calculator shows every number and the formula, to check rather than sell.",
-    proof:
-      "Sandbox scenario: editable assumptions and a deterministic formula. The result is not a return promise.",
-    ogSubtitle: "Team size \u00d7 hourly rate \u00d7 adoption = scenario.",
+    why: "The calculator shows each assumption as a number, with the formula.",
+    ogSubtitle: "Team size × hourly rate × adoption × hours saved = scenario.",
+    stop: "The calculator ends at a scenario value that you judge yourself.",
   },
 };
 

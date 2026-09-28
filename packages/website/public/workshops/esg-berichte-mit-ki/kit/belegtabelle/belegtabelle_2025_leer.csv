@@ -1,0 +1,4 @@
+row_id;site_id;entity_on_document;in_boundary;carrier;period_start;period_end;months;qty_source;unit_source;basis;qty_norm;unit_norm;source_file;source_page;source_quote;invoice_no;meter_id;status;reason;instrument_id;factor_lb;factor_mb;factor_edition;dq;t_lb;t_mb;role_proposed_by;reviewed_by
+E-WN-03;WN;Kellbrunn Präzisionsteile GmbH, Werk Nord;ja;Strom;2025-03-01;2025-03-31;1;205.000;kWh;;205000;kWh;rohdaten_2025/werk_nord/strom/2025-03_strom_wn.md;1;Verbrauch 205.000 kWh;4711-03;DE0005678900WN01;actual;;;F-EL-LB-2025;F-EL-RM-2025;Lehrwerte v1.0, 2026-01-15;A;82,0;123,0;Reader (KI-Vorschlag);Controlling, 2026-01-20
+E-WS-01;WS;Kellbrunn Präzisionsteile GmbH, Werk Süd;ja;Strom;2025-01-01;2025-12-31;12;1.240;MWh;;?;kWh;rohdaten_2025/werk_sued/jahresuebersicht_2025_oekostrom.md;1;Verbrauch 2025: 1.240 MWh;;DE0005678900WS01;actual;;?;?;?;Lehrwerte v1.0, 2026-01-15;A;?;?;Reader (KI-Vorschlag);Controlling, 2026-01-20
+E-WN-10;;;;;;;;;;;;;;;;;;;;;;;;;;;;

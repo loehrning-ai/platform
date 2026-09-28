@@ -52,7 +52,7 @@ export function LineageCamera() {
       eyebrow={text("bonus sim · lineage camera", "Zusatzsimulation · Lineage-Ansicht")}
       title={`${text("Lineage of", "Lineage von")} ${focus}`}
       meta={text("click a node to pan", "Knoten auswählen und Ansicht fokussieren")}
-      caption={text("Illustrative catalog graph. Actual edges depend on emitted lineage, ingestion, and integration coverage.", "Beispielhafter Kataloggraph. Reale Kanten hängen von ausgegebener Lineage, Aufnahme und Integrationsabdeckung ab.")}
+      caption={text("Illustrative graph. Real edges depend on lineage coverage.", "Beispielgraph. Reale Kanten hängen von der Lineage-Abdeckung ab.")}
     >
       <div className="lc-stage">
         <svg viewBox="0 0 800 360" preserveAspectRatio="xMidYMid meet" style={{ width: "100%", display: "block", userSelect: "none" }}>

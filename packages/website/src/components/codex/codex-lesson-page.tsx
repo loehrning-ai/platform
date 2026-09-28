@@ -106,6 +106,7 @@ export function CodexLessonPage({
         title={lesson.title}
         objective={lesson.hook}
         headingLevel={isProjectCheckpoint ? 2 : 1}
+        objectiveRepeatedAbove={isProjectCheckpoint}
       >
         <CodexLessonReader
           locale={locale}

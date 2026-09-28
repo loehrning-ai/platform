@@ -7,87 +7,78 @@ export const ENTRY_COPY = {
     metadata: {
       title: "Was ist KI? Ein Einstieg ohne Vorwissen",
       description:
-        "Zehn Minuten, kein Konto, kein Vorwissen: eine Arbeitsdefinition von Künstlicher Intelligenz, drei Alltagsbeispiele, die wichtigste Grenze und der nächste Schritt.",
+        "Eine Arbeitsdefinition von KI mit drei Alltagsbeispielen und ihrer wichtigsten Grenze, lesbar in zehn Minuten ohne Konto.",
     },
     eyebrow: "Grundlagen / 01",
     title: "Was ist Künstliche Intelligenz?",
     intro:
-      "Eine Arbeitsdefinition, drei Beispiele, eine Grenze. Vorwissen brauchst du dafür nicht, ein Konto auch nicht.",
+      "Was ein KI-System tut und warum du seine Antworten prüfen musst.",
     facts: ["10 Minuten", "Ohne Konto", "Keine Vorkenntnisse"],
-    definitionIndex: "01 / Definition",
+    definitionIndex: "02 / Definition",
     definitionHeading: "Eine brauchbare Arbeitsdefinition",
     definition:
       "Ein KI-System nimmt Eingaben und leitet daraus Ausgaben ab: Vorhersagen, Inhalte, Empfehlungen, Entscheidungen. Was herauskommt, hängt vom Modell ab, von seinen Daten und vom Einsatzkontext.",
     definitionSourceLabel: "Zur Einordnung",
     definitionSource:
-      "Das ist die Kurzfassung. Die rechtliche Definition eines KI-Systems steht in Artikel 3 der EU-KI-Verordnung, ist länger und gilt bei Rechtsfragen.",
+      "Die rechtliche Definition steht in Artikel 3 der EU-KI-Verordnung und gilt bei Rechtsfragen.",
     examplesHeading: "Drei Anwendungen aus dem Alltag",
-    examplesIndex: "02 / Beispiele",
-    examplesIntro:
-      "KI ist kein Verfahren, sondern viele. Drei davon nutzt du täglich: klassifizieren, schätzen, ordnen.",
+    examplesIndex: "03 / Beispiele",
     examples: [
       {
         id: "gesicht",
         number: "01",
         heading: "Gesichtserkennung",
         task: "Klassifizieren",
-        body: "Dein Handy vergleicht beim Entsperren Merkmale deines Gesichts mit einem hinterlegten Muster. Das Ergebnis ist eine Wahrscheinlichkeit, keine Gewissheit.",
+        body: "Beim Entsperren vergleicht dein Handy Merkmale deines Gesichts mit einem gespeicherten Muster. Das Ergebnis ist eine Wahrscheinlichkeit.",
       },
       {
         id: "route",
         number: "02",
         heading: "Routenplanung",
         task: "Schätzen",
-        body: "Die Navigations-App verbindet Kartendaten, aktuelle Verkehrssignale und gelernte Muster. Daraus schätzt sie deine Fahrzeit und schlägt eine Route vor.",
+        body: "Die Navi-App schätzt aus Kartendaten, aktuellem Verkehr und gelernten Mustern deine Fahrzeit und schlägt eine Route vor.",
       },
       {
         id: "empfehlungen",
         number: "03",
         heading: "Medienempfehlungen",
         task: "Ordnen",
-        body: "Der Streamingdienst ordnet Inhalte nach dem, was du bisher angeklickt hast. Deine Absicht kennt er nicht, deinen Geschmack nur zum Teil, und er verstärkt, was du ohnehin schon siehst.",
+        body: "Der Streamingdienst ordnet Inhalte nach deinen bisherigen Klicks und verstärkt so, was du ohnehin siehst. Deine Absicht kennt er nicht.",
       },
     ],
     boundaryLabel: "Die wichtigste Grenze",
     boundaryHeading: "Ein plausibles Ergebnis kann falsch sein.",
     boundaryBody:
-      "Ein Modell prüft seine Antwort nicht gegen die Wirklichkeit. Das musst du tun. Bei wichtigen Entscheidungen heißt das: Quellen, fachliche Prüfung und ein Mensch, der die Verantwortung trägt.",
-    faqHeading: "Drei kurze Antworten",
-    faqIndex: "03 / Fragen",
+      "Ein Modell gleicht seine Antwort nicht mit der Wirklichkeit ab. Bei wichtigen Entscheidungen prüfst du das Ergebnis an Quellen und mit Fachwissen, und ein Mensch trägt die Verantwortung.",
+    faqHeading: "Kurze Antworten",
+    faqIndex: "04 / Fragen",
     faqs: [
-      {
-        question: "Brauche ich Programmierkenntnisse?",
-        answer:
-          "Nein. Weder diese Seite noch der KI-Check setzen technisches Vorwissen voraus.",
-      },
       {
         question: "Ist dieser Einstieg kostenlos?",
         answer:
-          "Ja. Diese Seite und der KI-Check laufen ohne Konto. Einzelne Kursreader haben eigene Zugangsbedingungen, und die stehen offen am Kurs.",
+          "Ja, und der KI-Check läuft wie diese Seite ohne Konto. Die Zugangsbedingungen der Kurse stehen am jeweiligen Kurs.",
       },
       {
         question: "Wer verantwortet die Inhalte?",
         answerBeforeLink:
-          "Tim Löhr entwickelt und prüft die Plattform. Beruflicher Hintergrund und Kontakt stehen auf der ",
+          "Tim Löhr entwickelt und prüft die Plattform. Hintergrund und Kontakt stehen auf der ",
         linkLabel: "Seite über Tim Löhr",
         answerAfterLink: ".",
       },
     ],
     nextHeading: "Nächster Schritt",
-    nextIndex: "04 / Auswahl",
-    nextIntro:
-      "Wähle nach Ziel. Der KI-Check sagt dir, wo du stehst; die beiden anderen Wege starten direkt mit Lernstoff.",
+    nextIndex: "01 / Auswahl",
     primaryLabel: "Stand einordnen",
     primaryTitle: "KI-Check",
     primaryMeta: "ca. 5 Minuten",
     primaryBody:
-      "{count} Fragen, eine begründete Kursempfehlung. Das Ergebnis bleibt in diesem Browser.",
+      "{count} Fragen, dann eine begründete Kursempfehlung, die nur in deinem Browser bleibt.",
     primaryCta: "KI-Check starten",
     courseLabel: "Grundkurs ansehen",
     courseTitle: "KI-Führerschein",
     courseBody:
-      "Inhalte, Umfang und Zugang stehen auf der Kursübersicht, bevor du startest.",
-    courseCta: "Kursübersicht öffnen",
+      "Welche Daten in ein KI-Tool dürfen und wie du Antworten prüfst.",
+    courseCta: "Zum Kurs",
     primerLabel: "Weiterlesen",
     primerTitle: "Blog",
     primerBody:
@@ -98,91 +89,82 @@ export const ENTRY_COPY = {
     metadata: {
       title: "What is AI? An introduction without prerequisites",
       description:
-        "Ten minutes, no account, no prior knowledge. A working definition, three everyday examples, the main limitation, the next step.",
+        "A working definition of AI with three everyday examples and its main limitation, readable in ten minutes without an account.",
     },
     eyebrow: "Foundations / 01",
     title: "What is artificial intelligence?",
     intro:
-      "A working definition, three examples, one limitation. You need no prior knowledge for this, and no account either.",
+      "What an AI system does and why you need to check its answers.",
     facts: ["10 minutes", "No account", "No prerequisites"],
-    definitionIndex: "01 / Definition",
+    definitionIndex: "02 / Definition",
     definitionHeading: "A useful working definition",
     definition:
       "An AI system takes inputs and derives outputs from them: predictions, content, recommendations, decisions. What comes out depends on the model, its data, and the context of use.",
     definitionSourceLabel: "Context",
     definitionSource:
-      "That is the short version. The legal definition of an AI system sits in Article 3 of the EU AI Act, is longer, and governs legal questions.",
+      "The legal definition is in Article 3 of the EU AI Act and governs legal questions.",
     examplesHeading: "Three everyday applications",
-    examplesIndex: "02 / Examples",
-    examplesIntro:
-      "AI is not one method but many. Three of them you use daily. Classify, estimate, rank.",
+    examplesIndex: "03 / Examples",
     examples: [
       {
         id: "gesicht",
         number: "01",
         heading: "Face recognition",
         task: "Classify",
-        body: "When you unlock it, your phone compares features of your face with a stored pattern. The result is a probability, not a certainty.",
+        body: "When you unlock it, your phone compares features of your face with a stored pattern. The result is a probability.",
       },
       {
         id: "route",
         number: "02",
         heading: "Route planning",
         task: "Estimate",
-        body: "The navigation app combines map data, current traffic signals, and learned patterns. From that it estimates your journey time and suggests a route.",
+        body: "The navigation app estimates your journey time from map data, current traffic and learned patterns, and suggests a route.",
       },
       {
         id: "empfehlungen",
         number: "03",
         heading: "Media recommendations",
         task: "Rank",
-        body: "The streaming service ranks content by what you clicked before. It does not know your intent, knows your taste only partly, and reinforces what you see.",
+        body: "The streaming service ranks content by your past clicks and so reinforces what you already see. It does not know your intent.",
       },
     ],
     boundaryLabel: "The main limitation",
     boundaryHeading: "A plausible output can still be wrong.",
     boundaryBody:
-      "A model does not check its answer against reality. You have to. Important decisions need sources, a subject-matter review, and a responsible person.",
-    faqHeading: "Three short answers",
-    faqIndex: "03 / Questions",
+      "A model does not check its answer against reality. For important decisions, you check it with sources and expertise, and a person takes responsibility.",
+    faqHeading: "Short answers",
+    faqIndex: "04 / Questions",
     faqs: [
-      {
-        question: "Do I need programming skills?",
-        answer:
-          "No. This introduction and the AI check require no technical background.",
-      },
       {
         question: "Is this introduction free?",
         answer:
-          "Yes. This page and the AI check are available without an account. Individual course readers state their own access conditions before entry.",
+          "Yes, and the AI check also runs without an account. Each course states its own access conditions.",
       },
       {
         question: "Who is responsible for the content?",
         answerBeforeLink:
-          "Tim Löhr develops and reviews the platform. His professional background and contact details are on the ",
+          "Tim Löhr develops and reviews the platform. Background and contact details are on the ",
         linkLabel: "About Tim Löhr page",
         answerAfterLink: ".",
       },
     ],
     nextHeading: "Next step",
-    nextIndex: "04 / Selection",
-    nextIntro:
-      "Choose by goal. The AI check tells you where you stand; the other two routes start directly with material.",
+    nextIndex: "01 / Selection",
     primaryLabel: "Assess your level",
     primaryTitle: "AI check",
     primaryMeta: "about 5 minutes",
     primaryBody:
-      "{count} questions, one reasoned course recommendation. The result stays in this browser.",
+      "{count} questions, then a reasoned course recommendation that stays in your browser.",
     primaryCta: "Start the AI check",
     courseLabel: "Review a foundation course",
-    courseTitle: "AI Fundamentals",
+    courseTitle: "Everyday AI Literacy",
     courseBody:
-      "Content, scope, and access are on the course overview before you start.",
-    courseCta: "Open the course overview",
+      "Which data may go into an AI tool and how to check answers.",
+    courseCta: "Open the course",
     primerLabel: "Continue reading",
     primerTitle: "Blog",
     primerBody:
-      "Source-backed articles examine everyday AI, regulation, and social consequences.",
+      "Articles with sources on everyday AI, regulation and social impact.",
     primerCta: "Open the blog",
   },
 } as const satisfies Localized<Record<string, unknown>>;
@@ -192,12 +174,12 @@ export const HELP_COPY = {
     metadata: {
       title: "Hilfe und häufige Fragen",
       description:
-        "Antworten zu Einstieg, Kurszugang, Lernfortschritt, Abschlussdokumenten, Büchern, Simulationen und Datenverwaltung auf loehrning.ai.",
+        "Antworten zu Zugang, Lernfortschritt, Abschlussdokumenten, Büchern und deinen Daten auf loehrning.ai.",
     },
     eyebrow: "Hilfe / Referenz",
     title: "Hilfe und häufige Fragen",
     intro:
-      "Kurze Antworten zu Zugang, Fortschritt, Abschluss und Daten. Was hier zur Anmeldung steht, folgt der Serverkonfiguration, die gerade läuft.",
+      "Kurze Antworten zu Zugang, Fortschritt, Abschluss und Daten.",
     indexLabel: "Themen auf dieser Seite",
     topics: [
       "Einstieg",
@@ -217,7 +199,7 @@ export const HELP_COPY = {
     updatesHeading: "Inhaltsänderungen",
     updatesEyebrow: "Änderungen",
     updatesBody: "Veröffentlichte Änderungen stehen unter",
-    updatesLink: "/neuigkeiten",
+    updatesLink: "Neuigkeiten",
     questions: {
       start: "Wo fange ich an?",
       account: "Warum brauche ich ein Konto?",
@@ -225,7 +207,7 @@ export const HELP_COPY = {
       signIn: "Wie melde ich mich an?",
       devices: "Kann ich auf mehreren Geräten lernen?",
       quiz: "Wie funktionieren Quiz und Neuversuche?",
-      records: "Was bedeuten Teilnahmebestätigung und Lernnachweis?",
+      records: "Was bedeuten die Abschlussdokumente?",
       simulations: "Was ist ein Praxisbeispiel oder eine Sandbox?",
       books: "Bücher: Was kann ich lesen oder herunterladen?",
       data: "Wie lösche ich mein Konto oder exportiere meine Daten?",
@@ -233,75 +215,70 @@ export const HELP_COPY = {
       limits: "Welche Einschränkungen sind bekannt?",
     },
     answers: {
-      startBeforeCheck: "Der ",
+      startBeforeCheck: "Fang mit dem ",
       startCheckLink: "KI-Check",
       startBetween:
-        " dauert etwa 5 Minuten und ordnet deinen Ausgangspunkt ein. Alle {courseCount} Kurse stehen in der ",
+        " an: Er dauert etwa 5 Minuten und empfiehlt dir einen Kurs. Alle {courseCount} Kurse stehen in der ",
       startCatalogLink: "Kursübersicht",
       startAfterCatalog: ".",
       accountAvailable:
-        "Bücher, Praxisbeispiele, KI-Check und 6 technische Kursreader laufen ohne Konto. Die 4 Grundlagen-Kursreader brauchen ein kostenloses Lernkonto. Das Konto synchronisiert Fortschritt und Abschlussstatus zwischen deinen Geräten. Teilnahmebestätigung und Lernnachweis bleiben selbst ausgestellt und sind nicht servergeprüft.",
+        "Bücher, Praxisbeispiele, KI-Check und 6 technische Kursreader laufen ohne Konto, die 4 Grundlagenkurse nur mit Lernkonto. Das Konto synchronisiert Fortschritt über deine Geräte.",
       accountUnavailable:
-        "Bücher, Praxisbeispiele, KI-Check und 6 technische Kursreader laufen ohne Konto. Die 4 Grundlagen-Kursreader brauchen ein Lernkonto. Solange keine Anmeldemethode vollständig freigeschaltet ist, sind diese 4 Reader vorübergehend nicht erreichbar.",
+        "Bücher, Praxisbeispiele, KI-Check und 6 technische Kursreader laufen ohne Konto, die 4 Grundlagenkurse nur mit Lernkonto. Hier sind diese 4 Reader vorübergehend nicht erreichbar.",
       progressSynced:
-        "Dein Fortschritt liegt zuerst im Browser. Mit angemeldetem Lernkonto wird er zusätzlich serverseitig synchronisiert. Gelöschte Website-Daten, ein privater Tab oder ein anderer Browser können den lokalen Stand löschen.",
+        "Dein Fortschritt liegt im Browser und mit angemeldetem Lernkonto auch auf dem Server. Was den lokalen Stand löschen kann, steht unten unter „Einschränkungen“.",
       progressLocal:
-        "Dein Fortschritt liegt nur im Browser. Gelöschte Website-Daten, ein privater Tab oder ein anderes Gerät können diesen Stand löschen. Serverseitige Synchronisierung gibt es aktuell nicht.",
+        "Dein Fortschritt liegt nur in diesem Browser. Was ihn löschen kann, steht unten unter „Einschränkungen“.",
       signInBoth:
-        "Die Login-Seite bietet Google-Anmeldung und einen Einmal-Link per E-Mail. Einmal-Links laufen ab und sind nur einmal nutzbar. Fordere bei einem abgelaufenen Link einen neuen an und prüfe den Spam-Ordner.",
+        "Die Login-Seite bietet Google und einen Einmal-Link per E-Mail. Ist ein Link abgelaufen oder benutzt, fordere einen neuen an und prüfe den Spam-Ordner.",
       signInGoogle:
-        "Die Login-Seite bietet aktuell Google-Anmeldung. Der Einmal-Link per E-Mail ist in dieser Konfiguration nicht freigeschaltet.",
+        "Die Login-Seite bietet aktuell Google-Anmeldung. Der Einmal-Link per E-Mail ist hier nicht freigeschaltet.",
       signInMagic:
-        "Die Login-Seite bietet aktuell einen Einmal-Link per E-Mail. Der Link läuft ab und ist nur einmal nutzbar. Fordere bei einem abgelaufenen Link einen neuen an und prüfe den Spam-Ordner.",
+        "Die Login-Seite bietet aktuell einen Einmal-Link per E-Mail. Ist er abgelaufen oder benutzt, fordere einen neuen an und prüfe den Spam-Ordner.",
       signInUnavailable:
-        "Aktuell ist keine Anmeldemethode vollständig freigeschaltet. Öffentliche Kurse, Bücher, Praxisbeispiele und der KI-Check bleiben ohne Anmeldung erreichbar.",
+        "Aktuell ist keine Anmeldemethode freigeschaltet. Öffentliche Kurse, Bücher, Praxisbeispiele und der KI-Check funktionieren ohne Anmeldung.",
       devicesSynced:
-        "Ja. Bei einem angemeldeten Lernkonto wird der Kursfortschritt synchronisiert. Ohne Anmeldung verwaltet jedes Gerät einen eigenen lokalen Stand.",
+        "Ja. Mit angemeldetem Lernkonto wird dein Fortschritt synchronisiert, ohne Anmeldung hat jedes Gerät seinen eigenen Stand.",
       devicesLocal:
-        "Ja, aber jedes Gerät verwaltet einen eigenen lokalen Stand. Eine geräteübergreifende Synchronisierung ist aktuell nicht verfügbar.",
-      quiz: "Quizze kannst du wiederholen, Zeitdruck gibt es keinen. Nach dem Absenden siehst du Ergebnis und Erklärung. Was als Kursabschluss zählt, hängt vom Kurs ab: ein bestandenes Abschlussquiz, eine eingereichte Abschlussaufgabe oder der Abschluss aller Lektionen.",
+        "Ja, aber jedes Gerät hat seinen eigenen Stand. Eine Synchronisierung gibt es aktuell nicht.",
+      quiz: "Quizze laufen ohne Zeitdruck, und jeder Versuch zeigt eine Erklärung. Je nach Kurs zählt als Abschluss das bestandene Abschlussquiz, eine eingereichte Aufgabe oder alle Lektionen.",
       recordsBeforeLimits:
-        "Sie halten fest, dass du einen Kurs auf dieser Plattform abgeschlossen hast. Je nach Kurs steht dahinter ein Quiz, eine eingereichte Aufgabe oder der Abschluss aller Lektionen. loehrning.ai stellt sie selbst aus. ",
+        "loehrning.ai stellt sie selbst aus, für einen hier abgeschlossenen Kurs. ",
       recordsLimitsLink:
-        "Sie sind nicht servergeprüft und belegen für sich allein keine Erfüllung von Artikel 4 der EU-KI-Verordnung.",
+        "Sie sind nicht servergeprüft und allein kein Nachweis für Artikel 4 der KI-Verordnung.",
       recordsAfterLimits: "",
       simulations:
-        "Ein Praxisbeispiel läuft mit synthetischen Daten und simulierten Abläufen. Es verschickt keine echte E-Mail, ruft keine produktive Drittanbieter-API auf und verarbeitet keine echten Kundendaten. Es erklärt ein Konzept. Ein produktives System ist es nicht.",
+        "Ein Praxisbeispiel erklärt ein Konzept mit synthetischen Daten und simulierten Abläufen. Seine Grenzen stehen unten unter „Einschränkungen“.",
       oneBookAvailable:
-        "Das Buch ist kostenlos im Browser lesbar. Mit Lernkonto lädst du zusätzlich die PDF-Datei. Es ist Lernmaterial, keine zitierfähige Rechtsquelle.",
+        "Das Buch ist kostenlos im Browser lesbar, mit Lernkonto auch als PDF. Es ist Lernmaterial, keine zitierfähige Rechtsquelle.",
       oneBookUnavailable:
-        "Das Buch ist kostenlos im Browser lesbar. Der kontogebundene PDF-Download ist aktuell nicht verfügbar. Es ist Lernmaterial, keine zitierfähige Rechtsquelle.",
+        "Das Buch ist kostenlos im Browser lesbar und ist Lernmaterial, keine zitierfähige Rechtsquelle. Ein PDF-Download ist aktuell nicht verfügbar.",
       manyBooks:
         "Alle {bookCount} Bücher sind kostenlos im Browser lesbar. Sie sind Lernmaterialien, keine zitierfähigen Rechtsquellen.",
       dataAvailableBeforeLink: "Datenexport und Kontolöschung stehen unter ",
       dataLink: "Datenschutz und Datenverwaltung",
       dataAvailableAfterLink:
-        ". Datenschutzanfragen sind zusätzlich per E-Mail an tim@loehrning.ai möglich.",
+        ". Datenschutzanfragen gehen auch per E-Mail an tim@loehrning.ai.",
       dataUnavailable:
-        "Aktuell ist kein nutzbares serverseitiges Lernkonto freigeschaltet. Lokalen Fortschritt entfernst du über die Website-Daten deines Browsers. Datenschutzanfragen gehen an tim@loehrning.ai.",
+        "Ohne Lernkonto löschst du lokalen Fortschritt über die Website-Daten deines Browsers. Datenschutzanfragen gehen an tim@loehrning.ai.",
       feedbackAvailableBeforeLink: "Nutze das ",
       feedbackLink: "Feedback-Formular",
       feedbackAvailableAfterLink:
         ". Es ist ohne Konto nutzbar und fragt keine E-Mail-Adresse ab.",
       feedbackUnavailable:
-        "Das serverseitige Feedback-Formular ist deaktiviert. Fehler und Rückmeldungen gehen per E-Mail an tim@loehrning.ai.",
-      limitsBeforeLink: "Bekannte Einschränkungen: ",
-      limitsLink:
-        "Teilnahmebestätigung und Lernnachweis sind selbst ausgestellt, Praxisbeispiele sind simuliert, Inhalte gelten für den ausgewiesenen Prüfstand, und Fortschritt kann nur lokal gespeichert sein",
-      limitsAfterLink:
-        ". Die konkrete Grenze steht auf der jeweiligen Kurs- oder Ressourcenseite.",
+        "Das Feedback-Formular ist deaktiviert. Fehler und Rückmeldungen gehen per E-Mail an tim@loehrning.ai.",
     },
   },
   en: {
     metadata: {
       title: "Help and frequently asked questions",
       description:
-        "Answers about course access, learning progress, completion records, books, simulations, and data management on loehrning.ai.",
+        "Answers about access, learning progress, completion documents, books and your data on loehrning.ai.",
     },
     eyebrow: "Help / Reference",
     title: "Help and frequently asked questions",
     intro:
-      "Short answers about access, progress, completion, and data. Sign-in information reflects the server configuration currently available.",
+      "Short answers about access, progress, completion and data.",
     indexLabel: "Topics on this page",
     topics: [
       "Starting point",
@@ -310,7 +287,7 @@ export const HELP_COPY = {
       "Sign-in",
       "Multiple devices",
       "Quizzes",
-      "Completion records",
+      "Completion documents",
       "Practical examples",
       "Books",
       "Data management",
@@ -321,7 +298,7 @@ export const HELP_COPY = {
     updatesHeading: "Content changes",
     updatesEyebrow: "Changes",
     updatesBody: "Published changes are listed under",
-    updatesLink: "/en/neuigkeiten",
+    updatesLink: "What's new",
     questions: {
       start: "Where should I start?",
       account: "Why do I need an account?",
@@ -329,7 +306,7 @@ export const HELP_COPY = {
       signIn: "How do I sign in?",
       devices: "Can I learn on more than one device?",
       quiz: "How do quizzes and retries work?",
-      records: "What does the certificate of participation mean?",
+      records: "What do the completion documents mean?",
       simulations: "What is a practical example or sandbox?",
       books: "Books: what can I read or download?",
       data: "How do I delete my account or export my data?",
@@ -337,64 +314,59 @@ export const HELP_COPY = {
       limits: "Which limitations are known?",
     },
     answers: {
-      startBeforeCheck: "The ",
+      startBeforeCheck: "Start with the ",
       startCheckLink: "AI check",
       startBetween:
-        " takes about 5 minutes and identifies a suitable starting point. All {courseCount} courses are listed in the ",
+        ": it takes about 5 minutes and recommends a course. All {courseCount} courses are listed in the ",
       startCatalogLink: "course catalog",
       startAfterCatalog: ".",
       accountAvailable:
-        "Books, demos, the AI check, and 6 technical course readers run without an account. The 4 foundation course readers need a free learning account that syncs progress and completion status between your devices. The certificate of participation stays self-issued and is not server-verified.",
+        "Books, practical examples, the AI check and 6 technical courses need no account, the 4 foundation courses do. An account syncs progress across your devices.",
       accountUnavailable:
-        "Books, demos, the AI check, and 6 technical course readers work without an account. 4 foundation course readers require a learning account. Because no sign-in method is currently fully enabled, these 4 readers are temporarily unavailable.",
+        "Books, practical examples, the AI check and 6 technical courses need no account, the 4 foundation courses do. Here those 4 are temporarily unavailable.",
       progressSynced:
-        "Progress is stored in the browser first and is also synchronized server-side when you are signed in. Clearing site data, using a private tab, or changing browsers can remove the local copy.",
+        "Progress is stored in your browser and, when signed in, on the server. Limitations below lists what can remove the local copy.",
       progressLocal:
-        "Progress is stored only in this browser. Clearing site data, using a private tab, or changing devices can remove it. Server-side synchronization is not currently available.",
+        "Progress is stored only in this browser. What can remove it is listed under Limitations below.",
       signInBoth:
-        "The sign-in page offers Google sign-in and a one-time email link. Email links expire and work once. Request a new link if it has expired and check the spam folder.",
+        "The sign-in page offers Google and a one-time email link. If a link has expired or was used, request a new one and check spam.",
       signInGoogle:
-        "The sign-in page currently offers Google sign-in. One-time email links are not enabled in this configuration.",
+        "The sign-in page currently offers Google sign-in. One-time email links are not enabled here.",
       signInMagic:
-        "The sign-in page currently offers a one-time email link. The link expires and works once. Request a new link if it has expired and check the spam folder.",
+        "The sign-in page offers a one-time email link. If it has expired or was used, request a new one and check spam.",
       signInUnavailable:
-        "No sign-in method is currently fully enabled. Public courses, books, demos, and the AI check remain available without signing in.",
+        "No sign-in method is currently enabled. Public courses, books, demos and the AI check work without signing in.",
       devicesSynced:
-        "Yes. A signed-in learning account synchronizes course progress. Without signing in, each device keeps its own local state.",
+        "Yes. A signed-in learning account syncs your progress, otherwise each device keeps its own state.",
       devicesLocal:
-        "Yes, but each device keeps its own local state. Cross-device synchronization is not currently available.",
-      quiz: "Quizzes can be repeated and have no time limit. After submission, the page shows the result and an explanation. Depending on the course, completion means passing a final quiz, submitting a final task, or completing every lesson.",
+        "Yes, but each device keeps its own state. Syncing is not currently available.",
+      quiz: "Quizzes have no time limit, and each try shows an explanation. By course, completion means passing the final quiz, submitting a task or finishing all lessons.",
       recordsBeforeLimits:
-        "It records that you completed a course here. Depending on the course, a quiz, a submitted task, or the full set of lessons stands behind it. ",
+        "loehrning.ai issues them itself for a course completed here. ",
       recordsLimitsLink:
-        "It is not server-verified and does not by itself establish compliance with Article 4 of the EU AI Act.",
+        "They are not server-verified and alone are no proof of Article 4 AI Act compliance.",
       recordsAfterLimits: "",
       simulations:
-        "Interactive examples use synthetic data and simulated processes. They do not send real email, call production third-party APIs, or process real customer data. They explain a concept; they are not production systems.",
+        "A practical example explains a concept with synthetic data and simulated processes. Its limits are listed under Limitations below.",
       oneBookAvailable:
-        "The book is free to read in the browser. Signed-in users can download the offered PDF. The book is learning material, not a citable legal source.",
+        "The book is free to read in the browser, and as a PDF when signed in. It is learning material, not a citable legal source.",
       oneBookUnavailable:
-        "The book is free to read in the browser. The account-bound PDF download is not currently available. The book is learning material, not a citable legal source.",
+        "The book is free to read in the browser and is learning material, not a citable legal source. No PDF download is currently available.",
       manyBooks:
         "All {bookCount} books are free to read in the browser. They are learning materials, not citable legal sources.",
       dataAvailableBeforeLink:
         "Data export and account deletion are available under ",
       dataLink: "Privacy and data management",
       dataAvailableAfterLink:
-        ". Privacy requests can also be sent to tim@loehrning.ai.",
+        ". You can also email privacy requests to tim@loehrning.ai.",
       dataUnavailable:
-        "No usable server-side learning account is currently enabled. Remove local progress through your browser's site-data controls. Send privacy requests to tim@loehrning.ai.",
+        "Without a learning account, remove local progress through your browser's site data. Send privacy requests to tim@loehrning.ai.",
       feedbackAvailableBeforeLink: "Use the ",
       feedbackLink: "feedback form",
       feedbackAvailableAfterLink:
         ". It works without an account and does not request an email address.",
       feedbackUnavailable:
-        "The server-side feedback form is disabled. Send error reports and feedback to tim@loehrning.ai.",
-      limitsBeforeLink: "Known limitations: ",
-      limitsLink:
-        "the certificate of participation is self-issued, practical examples are simulated, content holds for the stated review date, and progress may be stored only locally",
-      limitsAfterLink:
-        ". Each course or resource page states its specific limitation.",
+        "The feedback form is disabled. Send error reports and feedback to tim@loehrning.ai.",
     },
   },
 } as const satisfies Localized<Record<string, unknown>>;
@@ -407,7 +379,7 @@ export const HELP_COPY = {
 export const HELP_LIMITATIONS_COPY = {
   de: {
     intro:
-      "Lernhilfe, technische Funktion und belastbarer Nachweis sind drei verschiedene Dinge. Jede Grenze nennt deshalb, was sie praktisch bedeutet und was du als Nächstes prüfst.",
+      "Jede Grenze nennt, was sie bedeutet und was du als Nächstes prüfst.",
     scopeLabel: "Grenze",
     consequenceLabel: "Was du tun kannst:",
     sourceLabel: "Amtliche Quelle zum Rechtsstand",
@@ -417,47 +389,47 @@ export const HELP_LIMITATIONS_COPY = {
       record: {
         title: "Selbst ausgestellte Abschlussdokumente",
         description:
-          "Teilnahmebestätigung und Lernnachweis entstehen in deinem Browser. Keine serverseitige Prüfung, keine digitale Signatur, keine externe Zertifizierungsstelle. Für sich allein belegen sie nicht, dass eine Organisation Artikel 4 der EU-KI-Verordnung erfüllt.",
+          "Abschlussdokumente entstehen in deinem Browser, ohne Serverprüfung, Signatur oder Zertifizierungsstelle. Allein belegen sie nicht, dass eine Organisation Artikel 4 der KI-Verordnung erfüllt.",
         mitigation:
-          "Behandle das Dokument als persönliche Lernaufzeichnung. Artikel 4 verlangt Maßnahmen zur Förderung von KI-Kompetenz, abhängig von Kenntnissen, Erfahrung, Bildung, Nutzungskontext und betroffenen Personen. Ein garantiertes individuelles Kompetenzniveau verlangt er nicht. Welche Maßnahmen und Nachweise gelten, legt jede Organisation selbst fest und lässt es rechtlich prüfen.",
+          "Behandle sie als persönliche Lernaufzeichnung. Welche Nachweise Artikel 4 genügen, entscheidet deine Organisation mit rechtlicher Prüfung.",
       },
       simulations: {
         title: "Simulierte Praxisbeispiele",
         description:
-          "Interaktive Praxisbeispiele und Sandboxen laufen mit synthetischen Daten und simulierten Schnittstellen. Sie verschicken keine echte E-Mail, rufen keine produktive Drittanbieter-API auf und verarbeiten keine echten Kundendaten.",
+          "Praxisbeispiele und Sandboxen nutzen synthetische Daten und simulierte Schnittstellen. Sie senden keine echten E-Mails und berühren keine Produktivsysteme oder Kundendaten.",
         mitigation:
-          "Nutze die Beispiele, um den Ablauf zu verstehen. Vor dem echten Einsatz prüfst du Anbieter-Dokumentation, Datenflüsse, Berechtigungen, Protokollierung und interne Freigaben, jedes für sich.",
+          "Nutze die Beispiele, um den Ablauf zu verstehen. Vor echtem Einsatz prüfst du Anbieter-Doku, Datenflüsse, Berechtigungen, Protokolle und interne Freigaben.",
       },
       freshness: {
         title: "Keine Echtzeit-Aktualisierung",
         description:
-          "Rechtslage, Produkte, Preise und Statistiken ändern sich auch zwischen zwei redaktionellen Prüfungen. Die Plattform überwacht externe Quellen nicht in Echtzeit. Ein Prüfdatum sagt, wann geprüft wurde. Mehr nicht.",
+          "Recht, Produkte, Preise und Statistiken ändern sich, und die Plattform überwacht Quellen nicht laufend. Ein Prüfdatum sagt nur, wann geprüft wurde.",
         mitigation:
-          "Prüfe vor Entscheidungen die jeweils aktuelle Primärquelle. Für EU-Recht sind EUR-Lex und das Amtsblatt maßgeblich. Veröffentlichte inhaltliche Änderungen stehen unter /neuigkeiten.",
+          "Prüfe vor Entscheidungen die aktuelle Primärquelle, für EU-Recht EUR-Lex und das Amtsblatt.",
       },
       progress: {
         title: "Lokaler Lernfortschritt ohne Anmeldung",
         description:
-          "Ohne angemeldetes Lernkonto liegt der Fortschritt im Browser-Speicher. Gelöschte Website-Daten, private Tabs, ein anderer Browser oder ein anderes Gerät können diesen Stand entfernen.",
+          "Ohne Anmeldung liegt der Fortschritt im Browser. Gelöschte Website-Daten, private Tabs, ein anderer Browser oder ein anderes Gerät können ihn entfernen.",
         mitigationAvailable:
-          "Ein angemeldetes Lernkonto synchronisiert Fortschritt serverseitig. Der lokale Stand bleibt trotzdem von den Website-Daten des jeweiligen Browsers abhängig.",
+          "Mit angemeldetem Lernkonto liegt der Fortschritt auch auf dem Server. Der lokale Stand hängt weiter an den Website-Daten des Browsers.",
         mitigationUnavailable:
-          "Die serverseitige Synchronisierung ist aktuell nicht vollständig freigeschaltet. Der lokale Stand ist kein Backup. Sichere wichtige Ergebnisse sofort.",
+          "Sichere wichtige Ergebnisse sofort; der lokale Stand ist kein Backup.",
       },
       books: {
         title: "Lernbücher sind keine Primärquellen",
         descriptionOne:
-          "Das verfügbare Buch ist eine redaktionell bearbeitete Lernfassung. Es ist kein amtliches Dokument, keine zitierfähige Rechtsquelle und kein Ersatz für Rechtsberatung.",
+          "Jedes Lernbuch ist eine redaktionell bearbeitete Lernfassung, kein amtliches Dokument, keine zitierfähige Rechtsquelle und kein Ersatz für Rechtsberatung.",
         descriptionMany:
-          "Die {bookCount} verfügbaren Bücher sind redaktionell bearbeitete Lernfassungen. Sie sind keine amtlichen Dokumente, keine zitierfähigen Rechtsquellen und kein Ersatz für Rechtsberatung.",
+          "Die {bookCount} Bücher sind redaktionell bearbeitete Lernfassungen, keine amtlichen Dokumente, keine zitierfähigen Rechtsquellen und kein Ersatz für Rechtsberatung.",
         mitigation:
-          "Bei Rechtsfragen zählen der konsolidierte Rechtsakt und das Amtsblatt auf EUR-Lex. Steht eine konkrete rechtliche Entscheidung an, hol dir qualifizierte Beratung.",
+          "Bei Rechtsfragen zählen der konsolidierte Rechtsakt und das Amtsblatt auf EUR-Lex. Vor einer rechtlichen Entscheidung hol dir qualifizierte Beratung.",
       },
     },
   },
   en: {
     intro:
-      "Learning support, technical function, and reliable evidence are different things. Each limitation therefore states its practical consequence and the next verification step.",
+      "Each limitation states what it means and what you check next.",
     scopeLabel: "Limitation",
     consequenceLabel: "What you can do:",
     sourceLabel: "Official source for the legal position",
@@ -467,41 +439,41 @@ export const HELP_LIMITATIONS_COPY = {
       record: {
         title: "Self-issued completion documents",
         description:
-          "Certificates of participation and learning records are created in your browser. No server-side check, no digital signature, no external certification body. On their own they do not establish that an organisation complies with Article 4 of the EU AI Act.",
+          "Your browser creates completion documents with no server check, signature or certifier. Alone they do not prove an organisation meets AI Act Article 4.",
         mitigation:
-          "Treat the document as a personal learning record. Article 4 requires measures that support AI literacy while taking knowledge, experience, education, use context, and affected persons into account; it does not require a guaranteed individual level of AI literacy. Organisations must define and legally review their own measures and evidence.",
+          "Treat them as a personal learning record. Your organisation decides, with legal review, which evidence meets Article 4.",
       },
       simulations: {
         title: "Simulated practical examples",
         description:
-          "Interactive demos and sandboxes use synthetic data and simulated interfaces. They do not send real email, call production third-party APIs, or process real customer data.",
+          "Practical examples and sandboxes use synthetic data and simulated interfaces. They send no real email and touch no production systems or customer data.",
         mitigation:
-          "Use the examples to understand the process. Before a real implementation, review provider documentation, data flows, permissions, logging, and internal approvals separately.",
+          "Use the examples to understand the process. Before real use, check provider docs, data flows, permissions, logs and internal approvals.",
       },
       freshness: {
         title: "No real-time updates",
         description:
-          "Law, products, prices, and statistics change between two editorial reviews as well. The platform does not monitor external sources in real time. A review date says when the check happened. Nothing more.",
+          "Law, products, prices and statistics change, and the platform does not monitor sources continuously. A review date only says when the check happened.",
         mitigation:
-          "Check the current primary source before making a decision. For EU law, EUR-Lex and the Official Journal are authoritative. Published content changes are listed under /en/neuigkeiten.",
+          "Check the current primary source before a decision, for EU law EUR-Lex and the Official Journal.",
       },
       progress: {
         title: "Local learning progress without sign-in",
         description:
-          "Without a signed-in learning account, progress is stored in the browser. Clearing site data, using a private tab, changing browsers, or changing devices can remove it.",
+          "Without signing in, progress is stored in the browser. Clearing site data, private tabs, another browser or another device can remove it.",
         mitigationAvailable:
-          "A signed-in learning account synchronizes progress server-side. The local copy still depends on site data in the current browser.",
+          "With a signed-in learning account, progress is also stored on the server. The local copy still depends on the browser's site data.",
         mitigationUnavailable:
-          "Server-side synchronization is not currently fully enabled. Do not treat local progress as a permanent backup; save important results immediately.",
+          "Save important results right away; local progress is not a backup.",
       },
       books: {
         title: "Learning books are not primary sources",
         descriptionOne:
-          "The available book is an edited learning edition. It is not an official document, a citable legal source, or a substitute for legal advice.",
+          "Each learning book is an edited learning edition, not an official document, a citable legal source or a substitute for legal advice.",
         descriptionMany:
-          "The {bookCount} available books are edited learning editions. They are not official documents, citable legal sources, or substitutes for legal advice.",
+          "The {bookCount} books are edited learning editions, not official documents, citable legal sources or substitutes for legal advice.",
         mitigation:
-          "For legal questions, use the consolidated act and the Official Journal on EUR-Lex. Obtain qualified advice for a specific legal decision.",
+          "For legal questions, the consolidated act and the Official Journal on EUR-Lex apply. Get qualified advice before a legal decision.",
       },
     },
   },
@@ -517,7 +489,7 @@ export const NEWS_COPY = {
     eyebrow: "Änderungsprotokoll",
     title: "Was ist neu",
     intro:
-      "Datierte Hinweise zu neuen Inhalten und redaktionellen Änderungen. Ein Eintrag beschreibt eine Veröffentlichung. Dass die ganze Plattform an diesem Tag vollständig war, behauptet er nicht.",
+      "Datierte Hinweise zu neuen Inhalten und Änderungen.",
     statusLabel: "Einträge",
     statusValue: "{count} dokumentiert",
     sourceLabel: "Quelle",
@@ -531,9 +503,9 @@ export const NEWS_COPY = {
         "Dated releases, content changes, and corrections on loehrning.ai.",
     },
     eyebrow: "Change log",
-    title: "What is new",
+    title: "What's new",
     intro:
-      "Dated notes on new material and editorial changes. An entry records a release; it does not claim the whole platform was complete that day.",
+      "Dated notes on new material and changes.",
     statusLabel: "Entries",
     statusValue: "{count} documented",
     sourceLabel: "Source",
@@ -547,16 +519,16 @@ export const FEEDBACK_COPY = {
     metadata: {
       title: "Rückmeldung",
       description:
-        "Fehler oder Unklarheiten auf loehrning.ai melden. Das optionale Formular fragt weder Name noch E-Mail-Adresse ab und bleibt ohne freigeschaltete Speicherung deaktiviert.",
+        "Fehler oder Unklarheiten auf loehrning.ai melden. Das Formular fragt weder Name noch E-Mail-Adresse ab.",
     },
     eyebrow: "Rückmeldung / Beta",
     title: "Rückmeldung zu Fehlern oder Unklarheiten",
     introAvailable:
-      "Das Formular fragt weder Namen noch E-Mail-Adresse ab. Eine Antwort ist deshalb nicht möglich. Gib keine personenbezogenen, vertraulichen oder urheberrechtlich geschützten Inhalte ein.",
+      "Das Formular fragt weder Namen noch E-Mail-Adresse ab, eine Antwort ist also nicht möglich. Gib keine personenbezogenen, vertraulichen oder urheberrechtlich geschützten Inhalte ein.",
     introUnavailable:
-      "Die serverseitige Speicherung ist in dieser Konfiguration nicht freigeschaltet. Das Formular bleibt ausgeblendet und es werden keine Formulardaten angenommen.",
+      "Das Formular ist hier nicht freigeschaltet.",
     emailBefore: "Direkter Kontakt: ",
-    boundaryHeading: "Datenumfang",
+    boundaryHeading: "Was gesendet wird",
     boundaryEyebrow: "01 / Datenumfang",
     boundaryItems: [
       "Kategorie und Nachricht",
@@ -565,7 +537,7 @@ export const FEEDBACK_COPY = {
       "Keine Anfrageparameter oder URL-Fragmente im Seitenpfad",
     ],
     disabledStatus:
-      "Es werden keine Formulardaten gespeichert. Nutze für Rückmeldungen die angegebene E-Mail-Adresse.",
+      "Hier wird nichts gespeichert. Schick deine Rückmeldung per E-Mail.",
     disabledCodeLabel: "Status / Formular deaktiviert",
     form: {
       categoryLegend: "Art der Rückmeldung",
@@ -585,25 +557,24 @@ export const FEEDBACK_COPY = {
         "Das Sendelimit für 24 Stunden ist erreicht. Sende die Rückmeldung stattdessen an tim@loehrning.ai.",
       successTitle: "Rückmeldung gespeichert",
       successBody:
-        "Die Nachricht wurde ohne Kontaktdaten gespeichert. Veröffentlichte Korrekturen stehen unter Neuigkeiten.",
+        "Die Nachricht wurde ohne Kontaktdaten gespeichert. Korrekturen stehen unter Neuigkeiten.",
       sending: "Wird gesendet…",
       submit: "Rückmeldung senden",
-      privacyNote:
-        "Keine personenbezogenen oder vertraulichen Daten eingeben. Ohne Konto. Keine Antwortmöglichkeit.",
+      privacyNote: "Ohne Konto nutzbar. Keine personenbezogenen Daten eingeben.",
     },
   },
   en: {
     metadata: {
       title: "Feedback",
       description:
-        "Report an error or unclear passage on loehrning.ai. The optional form requests neither a name nor an email address and stays disabled until storage is explicitly enabled.",
+        "Report an error or unclear passage on loehrning.ai. The form requests neither a name nor an email address.",
     },
     eyebrow: "Feedback / Beta",
     title: "Report an error or unclear passage",
     introAvailable:
-      "The form does not request a name or email address, so a reply is not possible. Do not enter personal, confidential, or copyrighted material.",
+      "The form does not ask for a name or email address, so a reply is not possible. Do not enter personal, confidential or copyrighted material.",
     introUnavailable:
-      "Server-side storage is not enabled here. The form stays hidden and no form data is accepted.",
+      "The form is not enabled here.",
     emailBefore: "Direct contact: ",
     boundaryHeading: "Data submitted",
     boundaryEyebrow: "01 / Scope",
@@ -614,7 +585,7 @@ export const FEEDBACK_COPY = {
       "No query parameters or URL fragments in the page path",
     ],
     disabledStatus:
-      "No form data is stored. Use the stated email address to send feedback.",
+      "Nothing is stored here. Send your feedback by email.",
     disabledCodeLabel: "Status / Form disabled",
     form: {
       categoryLegend: "Feedback category",
@@ -634,11 +605,10 @@ export const FEEDBACK_COPY = {
         "The 24-hour submission limit has been reached. Send the feedback to tim@loehrning.ai instead.",
       successTitle: "Feedback stored",
       successBody:
-        "The message was stored without contact details. Published corrections are listed under Updates.",
+        "The message was stored without contact details. Corrections are listed under Updates.",
       sending: "Sending…",
       submit: "Send feedback",
-      privacyNote:
-        "Do not enter personal or confidential data. No account. No reply channel.",
+      privacyNote: "Works without an account. Do not enter personal data.",
     },
   },
 } as const satisfies Localized<Record<string, unknown>>;

@@ -28,14 +28,14 @@ const LOCALES = [
     locale: "de",
     prefix: "",
     landingTitle: "Claude mit klarer Struktur einsetzen.",
-    firstLessonTitle: "Was Claude tatsächlich ist",
+    firstLessonTitle: "Was Claude ist",
     completedLabel: "Navigations-Checkpoint gespeichert",
   },
   {
     locale: "en",
     prefix: "/en",
     landingTitle: "Use Claude with clear structure.",
-    firstLessonTitle: "What Claude actually is",
+    firstLessonTitle: "What Claude is",
     completedLabel: "Navigation checkpoint saved",
   },
 ] as const;
@@ -155,8 +155,7 @@ async function openLessonReference(page: Page) {
   const reference = page.locator("details[data-lesson-reference]");
   await expect(reference).toHaveCount(1);
   await expect(reference).toBeVisible();
-  await expect(reference).toHaveJSProperty("open", false);
-  await reference.locator(":scope > summary").click();
+  // The lesson text renders open by default (LessonReference).
   await expect(reference).toHaveJSProperty("open", true);
 }
 
@@ -487,8 +486,8 @@ async function expectLocalizedInterfaceChrome(
   ).replace(/\s+/g, " ");
   const forbidden =
     locale === "de"
-      ? /\b(?:Mark as read|Complete lesson|Lesson complete|Confirm section reviewed|Section reviewed|Transfer checkpoint|State your next move|Decision or revision|Save checkpoint|Navigation checkpoint saved|Next lesson|Previous lesson|Key takeaway|Run prompt|Run both|Grade prompt|Assess rewrite|Check entries|Start loop|Run final review|What Claude actually is)\b/i
-      : /(?:Als gelesen markieren|Lektion abschließen|Lektion abgeschlossen|Abschnitt als geprüft bestätigen|Abschnitt geprüft|Transfer-Checkpoint|Lege deinen nächsten Schritt fest|Entscheidung oder Änderung|Checkpoint speichern|Navigations-Checkpoint gespeichert|Nächste Lektion|Vorherige Lektion|Kernaussage|Prompt simulieren|Beide simulieren|Prompt bewerten|Überarbeitung prüfen|Eingaben prüfen|Schleife starten|Abschlussprüfung starten|Was Claude tatsächlich ist)/i;
+      ? /\b(?:Mark as read|Complete lesson|Lesson complete|Confirm section reviewed|Section reviewed|Transfer checkpoint|State your next move|Decision or revision|Save checkpoint|Navigation checkpoint saved|Next lesson|Previous lesson|Key takeaway|Run prompt|Run both|Grade prompt|Assess rewrite|Check entries|Start loop|Run final review|What Claude is)\b/i
+      : /(?:Als gelesen markieren|Lektion abschließen|Lektion abgeschlossen|Abschnitt als geprüft bestätigen|Abschnitt geprüft|Transfer-Checkpoint|Lege deinen nächsten Schritt fest|Entscheidung oder Änderung|Checkpoint speichern|Navigations-Checkpoint gespeichert|Nächste Lektion|Vorherige Lektion|Kernaussage|Prompt simulieren|Beide simulieren|Prompt bewerten|Überarbeitung prüfen|Eingaben prüfen|Schleife starten|Abschlussprüfung starten|Was Claude ist)/i;
   expect(chrome, `${context}: foreign-language interface chrome`).not.toMatch(
     forbidden,
   );
@@ -613,7 +612,7 @@ test.describe("Claude locale continuity and record surfaces", () => {
       page.getByText("Navigations-Checkpoint gespeichert", { exact: true }),
     ).toBeVisible();
 
-    const englishLink = visibleLanguageSwitchLink(page, /Englische Oberfläche/);
+    const englishLink = visibleLanguageSwitchLink(page, /englische Oberfläche/);
     await englishLink.click();
     await expect(page).toHaveURL(
       /\/en\/kurse\/open-source\/claude\/kurs\/mental-model$/,
@@ -644,7 +643,7 @@ test.describe("Claude locale continuity and record surfaces", () => {
       await expect(header).toBeVisible({ timeout: 15_000 });
       await expect(
         header.getByText(
-          localeCase.locale === "de" ? "Workshop-Quiz" : "Workshop quiz",
+          localeCase.locale === "de" ? "Abschlussquiz" : "Final quiz",
           { exact: true },
         ),
       ).toBeVisible();
@@ -742,7 +741,7 @@ test.describe("Claude locale continuity and record surfaces", () => {
       waitUntil: "domcontentloaded",
     });
     await settleFullPage(page);
-    const englishLink = visibleLanguageSwitchLink(page, /Englische Oberfläche/);
+    const englishLink = visibleLanguageSwitchLink(page, /englische Oberfläche/);
     await expect(englishLink).toHaveAttribute(
       "href",
       `/en/kurse/open-source/claude/verifizierung#${hash}`,

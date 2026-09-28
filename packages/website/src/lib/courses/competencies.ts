@@ -125,7 +125,7 @@ export const COURSE_OUTCOMES: Partial<
       id: "structured-prompting",
       label: "Structured prompting",
       description:
-        "Covers explicit role, context, task, constraints, examples, and output format.",
+        "Covers role, context, task, constraints, examples, and output format.",
     },
     {
       id: "context-engineering",
@@ -146,7 +146,7 @@ export const COURSE_OUTCOMES: Partial<
       id: "task-spec-authoring",
       label: "Task spec authoring",
       description:
-        "Covers goals, constraints, acceptance criteria, and explicit non-goals for agent tasks.",
+        "Covers goals, constraints, acceptance criteria, and non-goals for agent tasks.",
     },
     {
       id: "agent-pr-review",
@@ -179,7 +179,7 @@ export const COURSE_OUTCOMES: Partial<
       id: "data-quality-signal-barrier",
       label: "Data-quality signal barrier",
       description:
-        "Covers downstream release through an explicit quality signal after row-count, freshness, schema, and uniqueness checks.",
+        "Covers downstream release through a quality signal after row-count, freshness, schema, and uniqueness checks.",
     },
   ],
   // English course: same reasoning as claude/codex above.
@@ -312,7 +312,7 @@ const ENGLISH_COURSE_OUTCOME_COPY: Readonly<Record<string, CourseOutcomeCopy>> =
     "automatisierung-mit-governance": {
       label: "Automation with governance",
       description:
-        "Covers n8n automation, explicit controls, and EU AI Act boundaries.",
+        "Covers n8n automation, controls, and EU AI Act boundaries.",
     },
   };
 

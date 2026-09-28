@@ -10,7 +10,7 @@ import {
 const lesson: CodexLesson = {
   id: "L06",
   number: 6,
-  title: "Acceptance Criteria",
+  title: "Acceptance criteria",
   subtitle:
     "Define observable behavior, executable checks, and review evidence before implementation begins.",
   durationMinutes: 10,
@@ -32,17 +32,13 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "How will you know it is done? Answer before implementation, with observable examples, commands, tests, structural constraints. Cannot name a single relevant check? Then the behavior is still ambiguous or the verification path is missing.\n\nAcceptance criteria steer implementation and review. Codex runs the available checks and revises from their output. Green is not self-validating. Someone still has to confirm that the checks cover the requirement, ran in the intended environment, and were not weakened to earn the pass.",
-        },
-        {
-          kind: "pull-quote",
-          text: "Acceptance criteria define required evidence. They do not transfer the acceptance decision to the tool that produced the change.",
+            "Answer \"how will you know it is done?\" before implementation, with observable examples, commands, tests or structural constraints. If you cannot name one relevant check, the behavior is still ambiguous or the verification path is missing.\n\nCodex runs the available checks and revises from their output. A green run still needs someone to confirm that the checks cover the requirement, ran in the intended environment and were not weakened to pass.",
         },
       ],
     },
     {
       id: "s2",
-      title: "The three flavors",
+      title: "Three kinds of criteria",
       readTimeMinutes: 2,
       blocks: [
         {
@@ -51,17 +47,17 @@ const lesson: CodexLesson = {
             {
               eyebrow: "01 · executable",
               title: "Tests that must pass",
-              body: '"pytest tests/api/test_users.py::test_pagination must pass." This is directly executable and produces an unambiguous pass/fail result.',
+              body: "\"pytest tests/api/test_users.py::test_pagination must pass.\" Runs directly and gives a clear pass or fail.",
             },
             {
               eyebrow: "02 · observable",
               title: "Commands with known outputs",
-              body: '"curl /health returns {"ok": true} with status 200." Not a test file, but a verifiable signal the agent can check.',
+              body: "\"curl /health returns {\"ok\": true} with status 200.\" A signal the agent can verify without a test file.",
             },
             {
               eyebrow: "03 · structural",
               title: "Shape of the patch",
-              body: '"New files live in src/auth/. No changes outside that directory." The final diff can be compared with this boundary by both Codex and the reviewer.',
+              body: "\"New files live in src/auth/. No changes outside that directory.\" Codex and the reviewer can compare the final diff with this boundary.",
             },
           ],
         },
@@ -75,12 +71,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            'Tests make acceptance criteria executable. Three patterns worth knowing.\n\n**Write the tests yourself.** Commit failing tests that describe the required behavior, then ask Codex to make that file pass without weakening the assertions.\n\n**Separate test design from implementation.** Task A: "Given these requirements, write failing tests in tests/api/test_users.py. Do not implement." Review whether the tests capture the intent. Task B: "Make the reviewed tests pass."\n\n**Request both in one change.** Ask Codex to write tests for the new behavior, compare them with the goal, then implement. Review the tests apart from the production code. Generated tests can encode the same misunderstanding as the implementation.',
-        },
-        {
-          kind: "callout",
-          title: "What tests contribute:",
-          body: "Tests make selected examples executable and repeatable. They pin inputs, outputs and edge cases. They cover nothing their assertions and environment do not exercise. Review test design separately from implementation.",
+            "Three patterns:\n\n**Write the tests yourself.** Commit failing tests that describe the required behavior, then ask Codex to make them pass without weakening the assertions.\n\n**Separate test design from implementation.** Task A: \"Given these requirements, write failing tests in tests/api/test_users.py. Do not implement.\" Review whether the tests capture the intent. Task B: \"Make the reviewed tests pass.\"\n\n**Request both in one change.** Codex writes tests for the new behavior, compares them with the goal, then implements. Review the tests on their own, because generated tests can encode the same misunderstanding as the implementation.",
         },
       ],
     },
@@ -92,7 +83,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "The checks pass. Now verify that the criteria represent the intended behavior. A green suite lives happily alongside an incomplete requirement, an invalid test double or an untested integration path. Four failure shapes to review before merge.",
+            "A green suite can still hide an incomplete requirement, an invalid test double or an untested integration path. Check four failure shapes before merge.",
         },
         {
           kind: "card-grid",
@@ -100,34 +91,29 @@ const lesson: CodexLesson = {
             {
               eyebrow: "pattern 01",
               title: "Test overfitting",
-              body: "The implementation satisfies the named examples but not the general rule. Add representative boundaries and inspect whether production code special-cases fixture values or test-only paths.",
+              body: "The code satisfies the named examples but misses the general rule. Add representative boundaries and look for special cases for fixture values or test-only paths.",
             },
             {
               eyebrow: "pattern 02",
               title: "Adjacent problem solving",
-              body: "The checks are executable but omit a required interface or constraint. Compare passing output with the original user and system behavior, not only with the new assertions.",
+              body: "The checks run but omit a required interface or constraint. Compare the output with the original user and system behavior as well as the new assertions.",
             },
             {
               eyebrow: "pattern 03",
               title: "Hidden regression",
-              body: "New and existing tests pass, but an uncovered behavior changed. Inspect deletions and call sites, then use integration, end-to-end, or manual checks appropriate to the affected risk.",
+              body: "All tests pass, but an uncovered behavior changed. Inspect deletions and call sites, then run integration, end-to-end or manual checks that fit the risk.",
             },
             {
               eyebrow: "pattern 04",
               title: "Plausible but wrong library usage",
-              body: "A library call can be valid in isolation but incompatible with repository configuration, concurrency, lifecycle, or deployment assumptions. Verify the integration contract and current library documentation.",
+              body: "A library call that is valid in isolation can clash with the repository's configuration, concurrency, lifecycle or deployment. Check the integration contract and current library docs.",
             },
           ],
         },
         {
           kind: "prose",
           markdown:
-            "When a foreseeable wrong implementation could still pass the positive examples, add a *negative constraint*. It names a real performance, security, compatibility or scope boundary. It does not dictate an arbitrary internal detail. Example:\n\n```\n# incomplete: only names a command\n## Acceptance\n- pytest tests/api/test_pagination.py passes\n\n# explicit evidence and boundaries\n## Acceptance\n- pytest tests/api/test_pagination.py passes\n- pytest tests/api passes; attach the command result\n- Query-count evidence shows pagination does not fetch every row\n- Changes outside api/users.py and its tests require prior explanation\n```",
-        },
-        {
-          kind: "callout",
-          title: "The evaluation heuristic:",
-          body: "Ask which incorrect implementations could still pass these checks. Add the highest-risk missing example or constraint. Keep human review for the behavior the automated checks do not cover.",
+            "Ask which wrong implementation could still pass. If a foreseeable one passes the positive examples, add a *negative constraint*: a real performance, security, compatibility or scope boundary that leaves internal details open. Example:\n\n```\n# incomplete: only names a command\n## Acceptance\n- pytest tests/api/test_pagination.py passes\n\n# explicit evidence and boundaries\n## Acceptance\n- pytest tests/api/test_pagination.py passes\n- pytest tests/api passes; attach the command result\n- Query-count evidence shows pagination does not fetch every row\n- Changes outside api/users.py and its tests require prior explanation\n```",
         },
       ],
     },
@@ -139,7 +125,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Judge each criterion on executability, relevance and coverage. Keep the ones that give real evidence for this rate-limit change.",
+            "In the exercise above, keep only criteria that give real evidence for this rate-limit change.",
         },
       ],
     },
@@ -148,7 +134,7 @@ const lesson: CodexLesson = {
       title: "Quick check",
       readTimeMinutes: 1,
       blocks: [
-        { kind: "prose", markdown: "Two questions on acceptance criteria." },
+        { kind: "prose", markdown: "Two questions at the end of the lesson." },
       ],
     },
   ]),
@@ -162,9 +148,12 @@ const lesson: CodexLesson = {
         cpId: "spec-1",
         threshold: 3,
         title: "Build acceptance evidence for a rate-limit feature",
-        desc: "Each row is a potential acceptance criterion. Toggle on the ones that are actually useful.",
+        desc: "Each row is a possible acceptance criterion. Switch on the useful ones.",
         goal: "Limit /login to 5 attempts per IP per minute.",
         tierLabels: CODEX_TASK_SPEC_TIER_LABELS,
+        fileName: "task.md",
+        goalHeading: "Goal",
+        signalsLabel: "signals",
         items: [
           {
             section: "Executable: test_login_rate_limit.py passes",
@@ -217,13 +206,13 @@ const lesson: CodexLesson = {
           'Why is "make test passes" more useful than "the code should work" as one acceptance criterion?',
         options: [
           '"Make test" is shorter, so the agent reads it faster.',
-          '"Make test" names an executable check with inspectable output. "Should work" defines neither behavior nor evidence.',
+          "\"Make test\" is a runnable check with output; \"should work\" names no evidence.",
           "There is no meaningful difference.",
           '"Should work" implies higher quality.',
         ],
         correct: 1,
         explanation:
-          "An executable command produces repeatable evidence and can guide revision. The reviewer must still confirm that the command ran successfully and that its tests cover the requested behavior.",
+          "An executable command gives repeatable evidence and guides revision. The reviewer still confirms that it ran successfully and that its tests cover the requested behavior.",
       },
     },
     {
@@ -236,16 +225,16 @@ const lesson: CodexLesson = {
         title: CODEX_QUIZ_TITLE,
         copy: CODEX_QUIZ_COPY,
         question:
-          'For a difficult new feature, you are not sure how to define "done." Which step makes the acceptance boundary testable first?',
+          "You are unsure how to define \"done\" for a difficult new feature. Which step makes the acceptance boundary testable first?",
         options: [
           "Ship the task with vague criteria and iterate.",
-          'Spec a preliminary task: "write failing tests that capture the requirements, don\'t implement." Review the tests. Then spec the real task: "make those tests pass."',
+          "A first task that only writes failing tests for the requirements; review them, then \"make them pass\".",
           "Skip acceptance criteria entirely.",
           "Write a long prose description and hope.",
         ],
         correct: 1,
         explanation:
-          "Separate test design from implementation when the behavior needs clarification. Review the proposed tests against the requirement and confirm they fail for the intended reason before authorizing implementation. Passing those tests later remains one part of the final review.",
+          "Separate test design from implementation. Check the proposed tests against the requirement and confirm they fail for the intended reason before implementation starts. Passing them later is only part of the final review.",
       },
     },
   ],

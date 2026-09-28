@@ -119,6 +119,7 @@ const COPY: Record<
     readonly eyebrow: string;
     readonly sorted: string;
     readonly mistakes: string;
+    readonly instruction: string;
     readonly proven: string;
     readonly avoid: string;
     readonly flipCard: string;
@@ -129,6 +130,8 @@ const COPY: Record<
     eyebrow: "◆ Exercise · Task pattern classification",
     sorted: "sorted",
     mistakes: "mistakes",
+    instruction:
+      "Flip a card, then mark it as a usable pattern or an anti-pattern.",
     proven: "Use with review",
     avoid: "High risk",
     flipCard: "Flip card",
@@ -138,6 +141,8 @@ const COPY: Record<
     eyebrow: "◆ Interaktiv · Musterkarten",
     sorted: "sortiert",
     mistakes: "Fehler",
+    instruction:
+      "Dreh eine Karte um und ordne sie als brauchbares Muster oder Gegenmuster ein.",
     proven: "Mit Review nutzen",
     avoid: "Hohes Risiko",
     flipCard: "Karte umdrehen",
@@ -186,6 +191,7 @@ export function L11PatternCardsLab({
         {copy.sorted}: {sorted.size}/{CARDS.length} · {copy.mistakes}:{" "}
         {mistakes}
       </p>
+      <p className="mb-3 text-sm text-muted-foreground">{copy.instruction}</p>
       <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         {CARDS.map((card) => {
           const isFlipped = flipped.has(card.id);

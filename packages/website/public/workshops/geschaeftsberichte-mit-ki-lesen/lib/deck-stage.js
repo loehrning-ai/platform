@@ -80,13 +80,16 @@
   const VALIDATE_ATTR = 'no_overflowing_text,no_overlapping_text,slide_sized_text';
 
   const pad2 = (n) => String(n).padStart(2, '0');
+  const COVER_STRIP_W = 1056; // the cover's colophon strip width on the 1920 canvas (slides.html #cover)
 
   const stylesheet = `
+    /* The letterbox takes the active slide's own ground (set as --deck-letterbox in _applyIndex), so
+       a poster cover or a paper slide never sits in a black frame. */
     :host {
       position: fixed;
       inset: 0;
       display: block;
-      background: #000;
+      background: var(--deck-letterbox, #f3f0e9);
       color: #fff;
       font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
       overflow: hidden;
@@ -146,25 +149,27 @@
       .tapzones { display: none; }
     }
 
+    /* Toolbar in the W03 deck language: light, square, 2px ink edge, Mennige focus ring. */
     .overlay {
       position: fixed;
       left: 50%;
-      bottom: 22px;
-      transform: translate(-50%, 6px) scale(0.92);
-      filter: blur(6px);
+      bottom: 16px;
+      transform: translate(-50%, 6px);
       display: flex;
       align-items: center;
-      gap: 4px;
-      padding: 4px;
-      background: #000;
-      color: #fff;
-      border-radius: 999px;
-      font-size: 12px;
+      gap: 0;
+      padding: 0;
+      background: #f3f0e9;
+      color: #121212;
+      border: 2px solid #121212;
+      border-radius: 0;
+      font-family: "Typing", system-ui, sans-serif;
+      font-size: 15px;
       font-feature-settings: "tnum" 1;
-      letter-spacing: 0.01em;
+      letter-spacing: 0;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 260ms ease, transform 260ms cubic-bezier(.2,.8,.2,1), filter 260ms ease;
+      transition: opacity 160ms cubic-bezier(.16,1,.3,1), transform 160ms cubic-bezier(.16,1,.3,1);
       transform-origin: center bottom;
       z-index: 2147483000;
       user-select: none;
@@ -173,9 +178,11 @@
     .overlay[data-visible] {
       opacity: 1;
       pointer-events: auto;
-      transform: translate(-50%, 0) scale(1);
-      filter: blur(0);
+      transform: translate(-50%, 0);
     }
+    /* On the poster cover the toolbar centres on the colophon strip under the text column
+       (--deck-cover-nav-x, set in _fit), clear of the poster and its corner dots. */
+    :host([data-cover]) .overlay { left: var(--deck-cover-nav-x, 50%); }
 
     .btn {
       appearance: none;
@@ -184,64 +191,64 @@
       border: 0;
       margin: 0;
       padding: 0;
-      color: inherit;
       font: inherit;
-      cursor: default;
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      height: 28px;
-      min-width: 28px;
-      border-radius: 999px;
-      color: rgba(255,255,255,0.72);
-      transition: background 140ms ease, color 140ms ease;
+      height: 44px;
+      min-width: 44px;
+      border-radius: 0;
+      color: #121212;
+      transition: background 120ms ease, color 120ms ease;
       -webkit-tap-highlight-color: transparent;
     }
-    .btn:hover { background: rgba(255,255,255,0.12); color: #fff; }
-    .btn:active { background: rgba(255,255,255,0.18); }
-    .btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+    .btn:hover { background: #e5e4e2; color: #97300f; }
+    .btn:active { background: #d4cec5; }
+    .btn:focus-visible { outline: 3px solid #b73a15; outline-offset: 2px; position: relative; z-index: 1; }
     .btn::-moz-focus-inner { border: 0; }
-    .btn svg { width: 14px; height: 14px; display: block; }
+    .btn svg { width: 16px; height: 16px; display: block; }
     .btn.reset {
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.02em;
-      padding: 0 10px 0 12px;
-      gap: 6px;
-      color: rgba(255,255,255,0.72);
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0;
+      padding: 0 12px 0 14px;
+      gap: 8px;
+      color: #121212;
     }
     .btn.reset .kbd {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 16px;
-      height: 16px;
+      min-width: 20px;
+      height: 20px;
       padding: 0 4px;
-      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-      font-size: 10px;
+      font-family: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+      font-size: 13px;
       line-height: 1;
-      color: rgba(255,255,255,0.88);
-      background: rgba(255,255,255,0.12);
-      border-radius: 4px;
+      color: #121212;
+      background: transparent;
+      border: 1px solid #827970;
+      border-radius: 0;
     }
 
     .count {
       font-variant-numeric: tabular-nums;
-      color: #fff;
-      font-weight: 500;
-      padding: 0 8px;
-      min-width: 42px;
+      color: #121212;
+      font-weight: 600;
+      padding: 0 10px;
+      min-width: 64px;
       text-align: center;
-      font-size: 12px;
+      font-size: 15px;
     }
-    .count .sep { color: rgba(255,255,255,0.45); margin: 0 3px; font-weight: 400; }
-    .count .total { color: rgba(255,255,255,0.55); }
+    .count .sep { color: #4f4640; margin: 0 3px; font-weight: 400; }
+    .count .total { color: #4f4640; font-weight: 400; }
 
     .divider {
       width: 1px;
-      height: 14px;
-      background: rgba(255,255,255,0.18);
-      margin: 0 2px;
+      height: 44px;
+      background: #d4cec5;
+      margin: 0;
     }
 
     /* ── Print: one page per slide, no chrome ────────────────────────────
@@ -292,12 +299,13 @@
     .toast {
       position: fixed;
       left: 50%;
-      bottom: 68px;
+      bottom: 72px;
       transform: translateX(-50%);
-      padding: 8px 14px;
-      background: #000;
-      color: #fff;
-      font-size: 13px;
+      padding: 10px 16px;
+      background: #121212;
+      color: #f2f1ee;
+      font-family: "Typing", system-ui, sans-serif;
+      font-size: 15px;
       font-weight: 500;
       letter-spacing: 0.01em;
       opacity: 0;
@@ -319,7 +327,6 @@
       background: #f3f0e9;
       color: #121212;
       border: 2px solid #121212;
-      box-shadow: 3px 3px 0 #121212;
       padding: 12px 12px 12px 16px;
       font-size: 15px;
       line-height: 1.4;
@@ -333,7 +340,7 @@
       appearance: none; -webkit-appearance: none;
       flex: 0 0 auto;
       min-width: 44px; min-height: 44px;
-      background: #121212; color: #fff; border: 0;
+      background: #121212; color: #f2f1ee; border: 0;
       font: inherit; font-weight: 700; cursor: pointer;
     }
     @media (orientation: portrait) and (max-width: 600px) {
@@ -465,7 +472,7 @@
       const portrait = document.createElement('div');
       portrait.className = 'portrait export-hidden';
       portrait.innerHTML =
-        '<p>Turn your phone sideways, or <a href="' + WORKSHOP_URL + '">read the workshop page</a>.</p>' +
+        '<p>Turn your phone sideways for a larger view, or <a href="' + WORKSHOP_URL + '">read the workshop page</a>.</p>' +
         '<button type="button" aria-label="Dismiss hint">OK</button>';
       let dismissed = false;
       try { dismissed = sessionStorage.getItem(PORTRAIT_KEY) === '1'; } catch (e) { /* ignore */ }
@@ -586,6 +593,14 @@
         if (i === curr) s.setAttribute('data-deck-active', '');
         else s.removeAttribute('data-deck-active');
       });
+      const active = this._slides[curr];
+      this.toggleAttribute('data-cover', active.id === 'cover');
+      try {
+        const ground = getComputedStyle(active).backgroundColor;
+        if (ground && ground !== 'rgba(0, 0, 0, 0)' && ground !== 'transparent') this.style.setProperty('--deck-letterbox', ground);
+        else this.style.removeProperty('--deck-letterbox');
+      } catch (e) { /* ignore */ }
+      this._fit();
       if (this._countEl) this._countEl.textContent = String(curr + 1);
       this._persistIndex();
 
@@ -639,6 +654,14 @@
       const vh = window.innerHeight;
       const s = Math.min(vw / this.designWidth, vh / this.designHeight);
       this._canvas.style.transform = `scale(${s})`;
+      // Cover toolbar: centre of the colophon strip (x 0 to COVER_STRIP_W on the canvas), clamped
+      // so the whole toolbar stays in the viewport on narrow screens (there it sits in the letterbox).
+      if (this._overlay) {
+        const half = (this._overlay.offsetWidth || 280) / 2 + 8;
+        const left = (vw - this.designWidth * s) / 2;
+        const x = Math.min(Math.max(left + (COVER_STRIP_W / 2) * s, half), vw - half);
+        this.style.setProperty('--deck-cover-nav-x', `${Math.round(x)}px`);
+      }
     }
 
     _onResize() { this._fit(); }

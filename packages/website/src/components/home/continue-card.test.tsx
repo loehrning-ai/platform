@@ -166,8 +166,9 @@ describe("ContinueCard", () => {
     const link = screen.getByRole("link");
     expect(link).toHaveAttribute("data-home-continue-card", "start");
     expect(link).toHaveAttribute("href", "/ki-fuehrerschein/kurs");
-    expect(link).toHaveTextContent("Erster Schritt");
-    expect(link).toHaveTextContent("KI-Führerschein");
+    // Two lines: the decision and the course on one, access and time on the
+    // other.
+    expect(link).toHaveTextContent("Erster Schritt: KI-Führerschein");
     expect(link).toHaveTextContent("ca. 1 Std. 40 Min.");
     expect(link).toHaveTextContent("Lernkonto nötig");
     expect(link).toHaveAttribute("data-home-course-access", "account-required");
@@ -252,7 +253,7 @@ describe("ContinueCard", () => {
 
   it("fills its reserved seat exactly, so resolving progress shifts nothing", () => {
     render(<ContinueCard courses={courses} />);
-    // The seat is a fixed 4.75rem box in the server HTML (continue-slot.tsx).
+    // The seat is a fixed 3.5rem box in the server HTML (continue-slot.tsx).
     // The card must fill it and never set a height of its own.
     const link = screen.getByRole("link");
     expect(link.className).toContain("h-full");
@@ -280,7 +281,7 @@ describe("homeContinueCourses", () => {
     const slug = "ki-fuehrerschein" as CourseSlug;
 
     expect(de.find((c) => c.slug === slug)?.title).toBe("KI-Führerschein");
-    expect(en.find((c) => c.slug === slug)?.title).toBe("AI Fundamentals");
+    expect(en.find((c) => c.slug === slug)?.title).toBe("Everyday AI Literacy");
     expect(en.find((c) => c.slug === slug)?.duration).toBe("about 1 hr 40 min");
   });
 });

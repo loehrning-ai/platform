@@ -1315,7 +1315,7 @@ const CV_ENGINE_TOOL_ARTIFACT = {
   title: "CV Engine",
   eyebrow: "Werkzeug · Lebenslauf-Rendering",
   description:
-    "Lokaler YAML-zu-PDF-Build für einseitige Lebensläufe, mit Browser-Editor, A4-Vorschau und optionaler KI. Überläufe blockiert der Build, statt sie zu drucken.",
+    "Lokaler YAML-zu-PDF-Build für einseitige Lebensläufe, mit Browser-Editor, A4-Vorschau und optionaler KI. Eine zweite Seite lehnt der Build ab.",
   href: `/open-source/tools/${CV_ENGINE_SLUG}`,
   // Exact string, not a near miss: the detail route maps `"Englisch"` to
   // `inLanguage: "en"` in its JSON-LD and silently falls back to `"de"` for
@@ -1357,62 +1357,62 @@ const CV_ENGINE_TOOL_ARTIFACT = {
   guide: {
     status: "experimental",
     statusNote:
-      "Experimentell: das Schema in cv.yaml und die Vorlagen können sich noch ändern, es gibt keine gehostete Instanz, und Issues werden nicht garantiert beantwortet. Du betreibst das Werkzeug selbst, auf deinem eigenen Rechner. Bevor du etwas konfigurierst, lies docs/data-flow.md im Repository: dort steht als Diagramm, welcher Weg deiner Daten lokal bleibt und welcher nicht.",
+      "Das Schema in cv.yaml und die Vorlagen können sich noch ändern, es gibt keine gehostete Instanz, und Antworten auf Issues sind nicht garantiert. Du betreibst das Werkzeug selbst auf deinem Rechner. Lies vor dem Konfigurieren docs/data-flow.md im Repository. Das Diagramm darin zeigt, welche Datenwege lokal bleiben.",
     dataFlow:
-      "Der Kern rendert vollständig lokal. cv.yaml, Schriften und CSS liegen im Checkout, der PDF-Build öffnet keinen Socket und braucht keinen API-Schlüssel. Der Browser-Editor ohne Konfiguration spricht nur mit 127.0.0.1 und hält seine Dokumente im Arbeitsspeicher des Servers; erst wenn du die Supabase-Variante selbst betreibst, liegen sie dauerhaft in deinem eigenen Projekt. Nach außen gehen allein die optionalen KI-Funktionen für Import und Textgenerierung, und zwar mit deinem eigenen Schlüssel; zeigst du sie auf ein lokales Ollama, endet auch dieser Aufruf auf deinem Rechner, denn du wählst, wo die KI läuft. Das vollständige Diagramm liegt als docs/data-flow.md im Repository.",
+      "Der Kern rendert lokal: cv.yaml, Schriften und CSS bleiben im Checkout; der PDF-Build öffnet keinen Socket und braucht keinen API-Schlüssel. Ohne Konfiguration spricht der Editor nur mit 127.0.0.1 und hält Dokumente im Arbeitsspeicher; dauerhaft speichert nur die selbst betriebene Supabase-Variante (DEPLOY.md). Optionaler KI-Import und Textgenerierung rufen mit deinem Schlüssel nach außen oder bleiben mit Ollama lokal.",
     prerequisites: [
       {
         label: "Python 3.13",
         detail:
-          "Engine und Editor laufen auf CPython 3.13. Ältere Versionen sind nicht getestet.",
+          "Engine und Editor laufen auf CPython 3.13; ältere Versionen sind ungetestet.",
         href: "https://www.python.org/downloads/",
       },
       {
         label: "Pango und Cairo",
         detail:
-          "WeasyPrint setzt das PDF über diese beiden Systembibliotheken. Fehlen sie, scheitert schon der erste Build, und zwar mit einem Fehler aus der Bibliothek statt aus dem Werkzeug.",
+          "WeasyPrint setzt das PDF mit diesen Systembibliotheken. Fehlen sie, scheitert der erste Build mit einem Bibliotheksfehler.",
         href: "https://doc.courtbouillon.org/weasyprint/stable/first_steps.html",
       },
       {
         label: "Ein eigener API-Schlüssel, optional",
         detail:
-          "Nur für den Import aus PDF oder DOCX und für generierte Textbausteine. Ohne Schlüssel funktionieren Formular, Vorschau und PDF-Build unverändert.",
+          "Nur für den Import aus PDF oder DOCX und für generierte Texte. Formular, Vorschau und PDF-Build funktionieren ohne Schlüssel.",
       },
     ],
     installation: {
       summary:
-        "Der Checkout wird auf den geprüften Quellstand fixiert und in einer eigenen virtuellen Umgebung installiert. Es gibt keinen Account, keinen externen Server und keinen Schlüssel, den du vorher besorgen müsstest.",
+        "Du fixierst den Checkout auf den geprüften Quellstand und installierst ihn in einer eigenen virtuellen Umgebung, ohne Account, externen Server oder Schlüssel.",
       steps: [
         {
           title: "Systembibliotheken installieren",
           detail:
-            "Unter macOS genügt der Befehl unten. Unter Debian oder Ubuntu heißt er sudo apt install libpango-1.0-0 libpangoft2-1.0-0 libcairo2.",
+            "Unter macOS genügt der Befehl unten, unter Debian oder Ubuntu sudo apt install libpango-1.0-0 libpangoft2-1.0-0 libcairo2.",
           command: "brew install pango",
         },
         {
           title: "Geprüften Quellstand auschecken",
           detail:
-            "Klone das öffentliche Repository und wechsle exakt auf den Quellstand, zu dem diese Anleitung, die Screenshots und die Prüfsummen gehören.",
+            "Anleitung, Screenshots und Prüfsummen gehören zu genau diesem Quellstand.",
           command:
             "(git clone https://github.com/loehrning-ai/cv-engine.git && cd cv-engine && git checkout f4b2e92f0bb3e5f6844ba9e6b069b62bc9e38c2e)",
         },
         {
           title: "Virtuelle Python-Umgebung anlegen",
           detail:
-            "Die Umgebung hält die Abhängigkeiten des Werkzeugs von deiner globalen Python-Installation getrennt. Alle folgenden Python-Befehle verwenden ihren Interpreter direkt.",
+            "Sie trennt die Abhängigkeiten von deiner globalen Python-Installation.",
           command: "(cd cv-engine && python3 -m venv .venv)",
         },
         {
           title: "Abhängigkeiten hash-gepinnt installieren",
           detail:
-            "requirements.lock hinterlegt für jedes Paket den erwarteten Hash. Weicht ein Artefakt davon ab, bricht pip ab, statt es zu installieren.",
+            "requirements.lock enthält für jedes Paket den erwarteten Hash; bei einer Abweichung bricht pip ab.",
           command:
             "(cd cv-engine && .venv/bin/python -m pip install --require-hashes -r requirements.lock)",
         },
         {
           title: "Installation gegen die Testsuite prüfen",
           detail:
-            "Die Suite deckt Renderer, Schema, Importer und die Sicherheitsregeln ab und braucht keinen laufenden Server. Die End-to-End-Tests bleiben hier bewusst außen vor, weil sie einen gestarteten Editor erwarten.",
+            "Die Suite prüft Renderer, Schema, Importer und Sicherheitsregeln ohne laufenden Server. Die End-to-End-Tests brauchen einen gestarteten Editor und bleiben außen vor.",
           command:
             "(cd cv-engine && .venv/bin/python -m pytest tests/ --ignore=tests/e2e)",
         },
@@ -1420,40 +1420,40 @@ const CV_ENGINE_TOOL_ARTIFACT = {
     },
     usage: {
       summary:
-        "Deine YAML-Datei ist der dauerhafte Weg, der Browser-Editor ist die Probierfläche, und der Build lässt die zweite Seite nicht durch.",
+        "Du schreibst in die YAML-Datei, probierst im Editor aus und lässt den Build die Seitenzahl prüfen.",
       steps: [
         {
           title: "Die eigene Datei anlegen und schreiben",
           detail:
-            "content/cv.yaml ist der dauerhafte lokale Ort für deinen Lebenslauf, und die Datei ist im Repository bewusst von Git ausgenommen, damit deine Daten nicht versehentlich in einen Fork wandern. Du bearbeitest sie mit dem Editor, den du ohnehin benutzt.",
+            "content/cv.yaml ist die dauerhafte lokale Quelle deines Lebenslaufs. Git ignoriert die Datei, damit deine Daten nicht versehentlich in einen Fork gelangen.",
           command:
             "(cd cv-engine && cp content/cv.example.yaml content/cv.yaml)",
         },
         {
           title: "Formular und Vorschau ausprobieren",
           detail:
-            "Flask bindet auf 127.0.0.1:5567, also nur auf deinen eigenen Rechner: links das Formular oder wahlweise die Rohdatei als YAML, rechts dieselbe A4-Seite, die WeasyPrint später druckt. Die Plakette über der Vorschau zeigt die Seitenzahl, grün bei einer Seite und rot ab der zweiten. Wichtig: dieser Modus hält alles nur im Arbeitsspeicher des Servers. Er schreibt nicht in content/cv.yaml, und ein Neustart setzt ihn zurück. Lade das PDF aus der Oberfläche herunter, bevor du den Prozess beendest. Wer dauerhaft im Formular arbeiten will, betreibt die Supabase-Variante aus DEPLOY.md selbst.",
+            "Flask bindet nur an 127.0.0.1:5567. Links stehen Formular oder YAML, rechts die A4-Seite, die WeasyPrint druckt; die Plakette zeigt die Seitenzahl, grün bei einer Seite und rot ab zwei. Der Modus hält alles im Arbeitsspeicher und schreibt nicht in content/cv.yaml, also lade das PDF vor dem Beenden herunter.",
           command:
             "(cd cv-engine && ONEPAGER_DEMO_MODE=true .venv/bin/python tools/editor/server.py)",
         },
         {
           title: "Layout wechseln, statt Inhalt zu streichen",
           detail:
-            "Acht Vorlagen liegen bei: classic, modern, sidebar, executive, technical, ats-compact, consulting und minimal. Themes steuern Akzentfarbe, Schrift und Dichte, und die Dichte lässt sich pro Build übersteuern.",
+            "Acht Vorlagen liegen bei: classic, modern, sidebar, executive, technical, ats-compact, consulting und minimal. Themes steuern Akzentfarbe, Schrift und Dichte; die Dichte kannst du pro Build übersteuern.",
           command:
             "(cd cv-engine && .venv/bin/python engine/build.py --density tight)",
         },
         {
           title: "Den Build entscheiden lassen",
           detail:
-            "engine/build.py rendert das PDF und zählt die Seiten. Bei einer Seite endet der Befehl mit Exit-Code 0 und schreibt output/cv.pdf. Bei zwei Seiten schreibt er stattdessen die erste Überschrift der überzähligen Seite auf stderr, etwa First section on the overflow page: 'Projects', und endet mit Exit-Code 1. Ein zweiseitiges PDF entsteht dabei gar nicht erst.",
+            "engine/build.py rendert das PDF und zählt die Seiten. Bei einer Seite endet der Befehl mit Exit-Code 0 und schreibt output/cv.pdf. Bei zwei Seiten entsteht kein PDF; der Befehl nennt auf stderr die erste Überschrift der überzähligen Seite, etwa First section on the overflow page: 'Projects', und endet mit Exit-Code 1.",
           command: "(cd cv-engine && .venv/bin/python engine/build.py)",
         },
       ],
     },
     integration: {
       summary:
-        "content/cv.yaml ist eine gewöhnliche Textdatei. Alles Weitere hängt daran: Versionierung, Import aus vorhandenen Dateien und der Aufruf aus einer Pipeline.",
+        "content/cv.yaml ist eine gewöhnliche Textdatei: Git, Importer und CI arbeiten direkt mit ihr.",
       targets: [
         "YAML",
         "PDF",
@@ -1467,17 +1467,17 @@ const CV_ENGINE_TOOL_ARTIFACT = {
         {
           title: "Den Lebenslauf versionieren",
           detail:
-            "Eine Datei, ein Diff. Du siehst nach zwei Jahren, was du geändert hast, statt eine weitere Word-Datei anzulegen. Im Werkzeug-Repository ist content/cv.yaml absichtlich ignoriert, damit deine Daten dort nicht landen; versioniere sie in deinem eigenen privaten Repository.",
+            "Jede Änderung wird ein Diff, den du auch nach Jahren nachliest. Versioniere content/cv.yaml nur in deinem eigenen privaten Repository.",
         },
         {
           title: "Vorhandene Dateien einlesen",
           detail:
-            "rendercv-YAML und Klartext konvertiert der Importer deterministisch, ohne Anbieter und ohne Netz. PDF und DOCX laufen über den gewählten KI-Anbieter mit deinem Schlüssel; ohne Schlüssel scheitert dieser Pfad sauber, statt still etwas zu raten.",
+            "rendercv-YAML und Klartext wandelt der Importer deterministisch um, ohne Anbieter und ohne Netz. PDF und DOCX laufen über den gewählten KI-Anbieter mit deinem Schlüssel; ohne Schlüssel bricht dieser Weg mit einer Fehlermeldung ab.",
         },
         {
           title: "Den Build in eine Pipeline hängen",
           detail:
-            "Der Exit-Code ist die Schnittstelle: 0 nur dann, wenn genau eine Seite herauskommt. Damit taugt der Aufruf ohne weiteren Code als Gate in einer CI.",
+            "Der Exit-Code ist die Schnittstelle: 0 nur bei genau einer Seite. So taugt der Aufruf ohne weiteren Code als CI-Gate.",
           command:
             "(cd cv-engine && .venv/bin/python engine/build.py --output dist/cv.pdf)",
         },
@@ -1497,7 +1497,7 @@ const CV_ENGINE_TOOL_ARTIFACT = {
       // Rendered once and visibly: as the figure caption, which also labels
       // the figure (the img itself carries an empty alt so screen readers
       // hear the prose exactly once). Written as publishable prose.
-      alt: "Der Editor in zwei Spalten: links die YAML-Ansicht des gespeicherten Lebenslaufs, deren erste Kommentarzeilen die Einseitenregel festhalten, rechts die A4-Vorschau in Seitenansicht mit der grünen Plakette 1 page in der Kopfzeile.",
+      alt: "Der Editor: links YAML, rechts die A4-Vorschau mit der Plakette 1 page.",
       sha256: "8c402e73a3ac46498d5fbfe6f39e03eebf532e62fe4b5ae69941211e96492aff",
       sizeBytes: 132292,
       width: 1696,
@@ -1507,9 +1507,9 @@ const CV_ENGINE_TOOL_ARTIFACT = {
       {
         src: `/artifacts/tools/${CV_ENGINE_SLUG}/demo/form-experience.png`,
         sourcePath: "docs/screenshots/form-experience.png",
-        alt: "Das Formular des Editors, aufgeklappt bei Experience: pro Eintrag eine Karte mit beschrifteten Feldern für Rolle, Firma, Zeitraum und Stichpunkte, daneben Pfeile zum Umsortieren.",
+        alt: "Das Editor-Formular bei Experience: pro Eintrag eine Karte mit beschrifteten Feldern für Rolle, Firma, Zeitraum und Stichpunkte, dazu Pfeile zum Umsortieren.",
         caption:
-          "Jedes Feld ist ein beschriftetes Eingabefeld. Listen lassen sich umsortieren und kürzen, ohne YAML anzufassen.",
+          "Jedes Feld ist beschriftet. Listen sortierst und kürzt du, ohne YAML anzufassen.",
         sha256:
           "e9491465d35749032cb6a3c73939e63cbe22c8638a15e6f5cb3ea92d089867f3",
         sizeBytes: 581785,
@@ -1519,9 +1519,9 @@ const CV_ENGINE_TOOL_ARTIFACT = {
       {
         src: `/artifacts/tools/${CV_ENGINE_SLUG}/demo/yaml-view.png`,
         sourcePath: "docs/screenshots/yaml-view.png",
-        alt: "Dieselbe Ansicht mit aktivem YAML-Tab: links der Rohtext des Lebenslaufs mit Syntaxhervorhebung, rechts unverändert die A4-Vorschau.",
+        alt: "Dieselbe Ansicht mit aktivem YAML-Tab: links der Rohtext mit Syntaxhervorhebung, rechts die unveränderte A4-Vorschau.",
         caption:
-          "Wer lieber Text schreibt, wechselt auf den YAML-Tab. Formular und Datei sind dieselbe Quelle, sie laufen nicht auseinander.",
+          "Im YAML-Tab schreibst du direkt Text. Formular und Datei teilen eine Quelle.",
         sha256:
           "77532bbde5e16deee660c4632934dc7f4748fed190d24d2e8326f3ab666c4688",
         sizeBytes: 690749,
@@ -1535,9 +1535,9 @@ const CV_ENGINE_TOOL_ARTIFACT = {
         // font, density and paper tone. The eight Vorlagen named in the
         // Verwendung section (classic, modern, sidebar und so weiter) are a
         // different setting and are not shown here.
-        alt: "Das geöffnete Feld für die Darstellung über dem Formular: Regler für Akzentfarbe, Schrift, Dichte und Papierton, darunter benannte Voreinstellungen wie Default, Forest oder Harvard Crimson.",
+        alt: "Das geöffnete Darstellungsfeld über dem Formular: Regler für Akzentfarbe, Schrift, Dichte und Papierton, darunter Voreinstellungen wie Default, Forest oder Harvard Crimson.",
         caption:
-          "Passt der Text nicht auf eine Seite, änderst du Akzent, Schrift oder Dichte, statt Inhalt zu streichen.",
+          "Passt der Text nicht auf eine Seite, änderst du Akzent, Schrift oder Dichte.",
         sha256:
           "ea72ade6eb5739df78ca4e80c3fb6f9c700a413a9a730fd5a0b81d92c9c370a5",
         sizeBytes: 644467,
@@ -1547,9 +1547,9 @@ const CV_ENGINE_TOOL_ARTIFACT = {
       {
         src: `/artifacts/tools/${CV_ENGINE_SLUG}/demo/cv.png`,
         sourcePath: "docs/screenshots/cv.png",
-        alt: "Das fertige PDF als einzelne A4-Seite, aus der PDF-Datei gerastert: Kopfzeile, Erfahrung, Ausbildung, Fähigkeiten und Projekte auf einer Seite.",
+        alt: "Das fertige PDF als eine A4-Seite mit Kopfzeile, Erfahrung, Ausbildung, Fähigkeiten und Projekten.",
         caption:
-          "Der Build rendert genau eine Seite. Läuft der Lebenslauf über, endet der Befehl mit Fehler und nennt die Überschrift, die nicht mehr passt.",
+          "Der Build liefert genau eine Seite.",
         sha256:
           "179d73376d5c629723ec3bf6e041e2ab904ad5c984b57f8701b179cffa14e150",
         sizeBytes: 344513,
@@ -1561,13 +1561,13 @@ const CV_ENGINE_TOOL_ARTIFACT = {
       {
         title: "AI-Native Arbeitskurs",
         description:
-          "Die Arbeitsweise hinter dem Werkzeug: Intent formulieren, Kontext geben, Output prüfen. Genau die drei Schritte, die ein Import aus deinem alten PDF von dir verlangt.",
+          "Übt, KI-Output zu prüfen, etwa den Import aus deinem alten PDF.",
         href: "/ai-native",
       },
       {
         title: "Claude Course",
         description:
-          "Englischer Open-Source-Kurs zu Prompting, Kontext und Evals. Nützlich, wenn du die optionalen KI-Funktionen nicht nur anklicken, sondern beurteilen willst.",
+          "Englischer Open-Source-Kurs zu Prompting, Kontext und Evals, mit dem du die optionalen KI-Funktionen beurteilen kannst.",
         href: "/kurse/open-source/claude",
       },
     ],

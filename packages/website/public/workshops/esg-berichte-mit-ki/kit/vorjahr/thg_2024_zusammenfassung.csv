@@ -1,0 +1,8 @@
+zeile;standort;traeger;menge;einheit;faktor_lb;t_lb;faktor_mb;t_mb;grenze;dq;quelle
+V24-01;WN;Strom;2290000;kWh;F-EL-LB-2024;961,8;F-EL-RM-2024;1374,0;"operative Kontrolle; Talbrück ausgeschlossen";B;Berater, Zusammenfassung ohne Einzelrechnungen
+V24-02;WS;Strom;1250000;kWh;F-EL-LB-2024;525,0;F-EL-RM-2024;750,0;"operative Kontrolle; Talbrück ausgeschlossen";B;Berater
+V24-03;LO;Strom;110000;kWh;F-EL-LB-2024;46,2;F-EL-RM-2024;66,0;"operative Kontrolle; Talbrück ausgeschlossen";B;Berater
+V24-04;WN;Erdgas (Hs);1900000;kWh(Hs);F-GAS-HS;342,0;F-GAS-HS;342,0;operative Kontrolle;B;Berater
+V24-05;WS;Erdgas (Hs);250000;kWh(Hs);F-GAS-HS;45,0;F-GAS-HS;45,0;operative Kontrolle;B;Berater
+V24-06;FL;Diesel;39000;l;F-DSL;97,5;F-DSL;97,5;operative Kontrolle;B;Berater
+V24-SUM;alle;Summe Scope 1 + 2;;;;2017,5;;2674,5;;B;180 Beschäftigte 2024

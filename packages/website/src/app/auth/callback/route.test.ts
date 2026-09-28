@@ -8,6 +8,7 @@ const {
   getClaimsMock,
   getUserMock,
   isAccountRuntimeReadyMock,
+  isGithubOAuthRuntimeReadyMock,
   isGoogleOAuthRuntimeReadyMock,
   isMagicLinkRuntimeReadyMock,
   signOutMock,
@@ -18,6 +19,9 @@ const {
   const signOutMock = vi.fn();
   const isAccountRuntimeReadyMock = vi.fn(() => true);
   const isGoogleOAuthRuntimeReadyMock = vi.fn(() => true);
+  // GitHub is an optional, separately attested method; off unless a test
+  // attests it, as on a deployment that never confirmed it.
+  const isGithubOAuthRuntimeReadyMock = vi.fn(() => false);
   const isMagicLinkRuntimeReadyMock = vi.fn(() => true);
   const createAuthServerClientMock = vi.fn(async () => ({
     auth: {
@@ -33,6 +37,7 @@ const {
     getClaimsMock,
     getUserMock,
     isAccountRuntimeReadyMock,
+    isGithubOAuthRuntimeReadyMock,
     isGoogleOAuthRuntimeReadyMock,
     isMagicLinkRuntimeReadyMock,
     signOutMock,
@@ -45,6 +50,7 @@ vi.mock("@/lib/supabase/auth-server", () => ({
 
 vi.mock("@/lib/provider-readiness", () => ({
   isAccountRuntimeReady: isAccountRuntimeReadyMock,
+  isGithubOAuthRuntimeReady: isGithubOAuthRuntimeReadyMock,
   isGoogleOAuthRuntimeReady: isGoogleOAuthRuntimeReadyMock,
   isMagicLinkRuntimeReady: isMagicLinkRuntimeReadyMock,
 }));
@@ -76,6 +82,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   isAccountRuntimeReadyMock.mockReturnValue(true);
   isGoogleOAuthRuntimeReadyMock.mockReturnValue(true);
+  isGithubOAuthRuntimeReadyMock.mockReturnValue(false);
   isMagicLinkRuntimeReadyMock.mockReturnValue(true);
   exchangeCodeForSessionMock.mockResolvedValue({
     data: {
@@ -103,6 +110,8 @@ beforeEach(() => {
     data: {
       claims: {
         sub: "user-1",
+        aud: "authenticated",
+        role: "authenticated",
         amr: [{ method: "magiclink", timestamp: 1_786_140_000 }],
       },
     },
@@ -295,6 +304,8 @@ describe("Supabase PKCE callback session verification", () => {
       data: {
         claims: {
           sub: "user-1",
+          aud: "authenticated",
+          role: "authenticated",
           amr: [{ method: "oauth", timestamp: 1_786_140_000 }],
         },
       },
@@ -343,6 +354,8 @@ describe("Supabase PKCE callback session verification", () => {
       data: {
         claims: {
           sub: "user-1",
+          aud: "authenticated",
+          role: "authenticated",
           amr: [{ method: "oauth", timestamp: 1_786_140_000 }],
         },
       },
@@ -383,6 +396,8 @@ describe("Supabase PKCE callback session verification", () => {
       data: {
         claims: {
           sub: "user-1",
+          aud: "authenticated",
+          role: "authenticated",
           amr: [{ method: "oauth", timestamp: 1_786_140_000 }],
         },
       },
@@ -419,6 +434,8 @@ describe("Supabase PKCE callback session verification", () => {
       data: {
         claims: {
           sub: "user-1",
+          aud: "authenticated",
+          role: "authenticated",
           amr: [{ method: "oauth", timestamp: 1_786_140_000 }],
         },
       },
@@ -435,6 +452,187 @@ describe("Supabase PKCE callback session verification", () => {
       "auth-not-configured",
     );
     expect(signOutMock).toHaveBeenCalledWith({ scope: "local" });
+  });
+
+  // /login offers GitHub exactly when isGithubOAuthRuntimeReady() attests it.
+  // The callback reads the same attestation, so the button never leads into a
+  // sign-in this route refuses, and the Google attribution stays as strict.
+  describe("GitHub sign-in under its own attestation", () => {
+    const githubOnlyUser = {
+      id: "user-1",
+      app_metadata: { provider: "github", providers: ["github"] },
+      identities: [
+        { provider: "github", last_sign_in_at: "2026-08-07T22:00:00.000Z" },
+      ],
+    };
+    const oauthClaims = {
+      data: {
+        claims: {
+          sub: "user-1",
+          aud: "authenticated",
+          role: "authenticated",
+          amr: [{ method: "oauth", timestamp: 1_786_140_000 }],
+        },
+      },
+      error: null,
+    };
+
+    it("accepts an attested GitHub sign-in whose sole OAuth identity is GitHub", async () => {
+      isGithubOAuthRuntimeReadyMock.mockReturnValue(true);
+      getUserMock.mockResolvedValueOnce({ data: { user: githubOnlyUser }, error: null });
+      getClaimsMock.mockResolvedValueOnce(oauthClaims);
+
+      const response = await GET(
+        callbackRequest(
+          `https://loehrning.ai/auth/callback?code=${VALID_CODE}&next=/konto`,
+        ),
+      );
+
+      expectPrivateRedirect(response);
+      expect(location(response).href).toBe("https://loehrning.ai/konto");
+      expect(signOutMock).not.toHaveBeenCalled();
+    });
+
+    it("lets a direct callback through when GitHub is the only attested method", async () => {
+      isGithubOAuthRuntimeReadyMock.mockReturnValue(true);
+      isGoogleOAuthRuntimeReadyMock.mockReturnValue(false);
+      isMagicLinkRuntimeReadyMock.mockReturnValue(false);
+      getUserMock.mockResolvedValueOnce({ data: { user: githubOnlyUser }, error: null });
+      getClaimsMock.mockResolvedValueOnce(oauthClaims);
+
+      const response = await GET(
+        callbackRequest(
+          `https://loehrning.ai/auth/callback?code=${VALID_CODE}&next=/konto`,
+        ),
+      );
+
+      expect(exchangeCodeForSessionMock).toHaveBeenCalledWith(VALID_CODE);
+      expect(location(response).href).toBe("https://loehrning.ai/konto");
+    });
+
+    it("never lets the Google attestation admit a GitHub sign-in", async () => {
+      isGithubOAuthRuntimeReadyMock.mockReturnValue(false);
+      isGoogleOAuthRuntimeReadyMock.mockReturnValue(true);
+      getUserMock.mockResolvedValueOnce({ data: { user: githubOnlyUser }, error: null });
+      getClaimsMock.mockResolvedValueOnce(oauthClaims);
+
+      const response = await GET(
+        callbackRequest(
+          `https://loehrning.ai/auth/callback?code=${VALID_CODE}&next=/konto`,
+        ),
+      );
+
+      expect(location(response).searchParams.get("reason")).toBe(
+        "auth-not-configured",
+      );
+      expect(signOutMock).toHaveBeenCalledWith({ scope: "local" });
+    });
+
+    it("never lets the GitHub attestation admit a Google sign-in", async () => {
+      isGithubOAuthRuntimeReadyMock.mockReturnValue(true);
+      isGoogleOAuthRuntimeReadyMock.mockReturnValue(false);
+      getUserMock.mockResolvedValueOnce({
+        data: {
+          user: {
+            id: "user-1",
+            app_metadata: { provider: "google", providers: ["google"] },
+            identities: [{ provider: "google" }],
+          },
+        },
+        error: null,
+      });
+      getClaimsMock.mockResolvedValueOnce(oauthClaims);
+
+      const response = await GET(
+        callbackRequest(
+          `https://loehrning.ai/auth/callback?code=${VALID_CODE}&next=/konto`,
+        ),
+      );
+
+      expect(location(response).searchParams.get("reason")).toBe(
+        "auth-not-configured",
+      );
+      expect(signOutMock).toHaveBeenCalledWith({ scope: "local" });
+    });
+
+    it("still refuses an OAuth event it cannot attribute to one identity", async () => {
+      isGithubOAuthRuntimeReadyMock.mockReturnValue(true);
+      getUserMock.mockResolvedValueOnce({
+        data: {
+          user: {
+            id: "user-1",
+            app_metadata: { provider: "email", providers: ["email", "google", "github"] },
+            identities: [{ provider: "google" }, { provider: "github" }],
+          },
+        },
+        error: null,
+      });
+      getClaimsMock.mockResolvedValueOnce(oauthClaims);
+
+      const response = await GET(
+        callbackRequest(
+          `https://loehrning.ai/auth/callback?code=${VALID_CODE}&next=/konto`,
+        ),
+      );
+
+      expect(location(response).searchParams.get("reason")).toBe(
+        "auth-not-configured",
+      );
+      expect(signOutMock).toHaveBeenCalledWith({ scope: "local" });
+    });
+
+    it("refuses a GitHub identity the account metadata does not list", async () => {
+      isGithubOAuthRuntimeReadyMock.mockReturnValue(true);
+      getUserMock.mockResolvedValueOnce({
+        data: {
+          user: {
+            id: "user-1",
+            app_metadata: { provider: "email", providers: ["email"] },
+            identities: [{ provider: "email" }, { provider: "github" }],
+          },
+        },
+        error: null,
+      });
+      getClaimsMock.mockResolvedValueOnce(oauthClaims);
+
+      const response = await GET(
+        callbackRequest(
+          `https://loehrning.ai/auth/callback?code=${VALID_CODE}&next=/konto`,
+        ),
+      );
+
+      expect(location(response).searchParams.get("reason")).toBe(
+        "auth-not-configured",
+      );
+    });
+
+    it.each(["gitlab", "azure", "apple"])(
+      "refuses an attested-looking %s identity",
+      async (provider) => {
+        isGithubOAuthRuntimeReadyMock.mockReturnValue(true);
+        getUserMock.mockResolvedValueOnce({
+          data: {
+            user: {
+              id: "user-1",
+              app_metadata: { provider, providers: [provider] },
+              identities: [{ provider }],
+            },
+          },
+          error: null,
+        });
+        getClaimsMock.mockResolvedValueOnce(oauthClaims);
+
+        const response = await GET(
+          callbackRequest(
+            `https://loehrning.ai/auth/callback?code=${VALID_CODE}&next=/konto`,
+          ),
+        );
+
+        expect(location(response).searchParams.get("reason")).toBe(
+          "auth-not-configured",
+        );
+      },
+    );
   });
 
   it("rejects linked Google metadata when another OAuth identity owns the current AMR event", async () => {
@@ -464,6 +662,8 @@ describe("Supabase PKCE callback session verification", () => {
       data: {
         claims: {
           sub: "user-1",
+          aud: "authenticated",
+          role: "authenticated",
           amr: [{ method: "oauth", timestamp: 1_786_140_000 }],
         },
       },
@@ -502,6 +702,8 @@ describe("Supabase PKCE callback session verification", () => {
       data: {
         claims: {
           sub: "user-1",
+          aud: "authenticated",
+          role: "authenticated",
           amr: [{ method: "password", timestamp: 1_786_140_000 }],
         },
       },
@@ -518,6 +720,81 @@ describe("Supabase PKCE callback session verification", () => {
       "auth-not-configured",
     );
     expect(signOutMock).toHaveBeenCalledWith({ scope: "local" });
+  });
+
+  // The callback completes this site's own sign-in only. A session minted for
+  // an OAuth client carries client_id and must never become the learner's
+  // browser session, even when its AMR names a supported method.
+  it.each([
+    [
+      "an OAuth client_id",
+      { client_id: "b7f0c2d4-client", amr: [{ method: "magiclink", timestamp: 1_786_140_000 }] },
+    ],
+    [
+      "an OAuth-server AMR and client_id",
+      {
+        client_id: "b7f0c2d4-client",
+        amr: [{ method: "oauth_provider/authorization_code", timestamp: 1_786_140_000 }],
+      },
+    ],
+    [
+      "another audience",
+      { aud: "https://loehrning.ai/api/mcp", amr: [{ method: "magiclink", timestamp: 1_786_140_000 }] },
+    ],
+  ])("rejects an exchanged session with %s and clears it", async (_label, overrides) => {
+    getClaimsMock.mockResolvedValueOnce({
+      data: {
+        claims: {
+          sub: "user-1",
+          aud: "authenticated",
+          role: "authenticated",
+          ...overrides,
+        },
+      },
+      error: null,
+    });
+
+    const response = await GET(
+      callbackRequest(
+        `https://loehrning.ai/auth/callback?code=${VALID_CODE}&next=/konto`,
+      ),
+    );
+
+    expectPrivateRedirect(response);
+    const target = location(response);
+    expect(target.pathname).toBe("/login");
+    expect(target.searchParams.get("reason")).toBe("invalid-link");
+    expect(signOutMock).toHaveBeenCalledWith({ scope: "local" });
+  });
+
+  // The failed callback forwards `next` to /login, which redirects a signed-in
+  // learner there. A locale-prefixed double slash must not survive that hop.
+  it.each([
+    "/en//evil.example/fake-login",
+    "/de//evil.example",
+    "/en/%252e//evil.example",
+    "/en/.//evil.example",
+    "/en/x/..//evil.example",
+  ])("never forwards a scheme-relative continuation for next=%s", async (next) => {
+    const response = await GET(
+      callbackRequest(`https://loehrning.ai/auth/callback?next=${next}`),
+    );
+
+    expectPrivateRedirect(response);
+    const target = location(response);
+    expect(target.origin).toBe("https://loehrning.ai");
+    expect(target.searchParams.get("next")).toBe("/konto");
+    expect(target.searchParams.get("reason")).toBe("missing-code");
+  });
+
+  it("keeps a successful sign-in on this origin for a locale-prefixed double slash", async () => {
+    const response = await GET(
+      callbackRequest(
+        `https://loehrning.ai/auth/callback?code=${VALID_CODE}&next=/en//evil.example`,
+      ),
+    );
+
+    expect(location(response).href).toBe("https://loehrning.ai/konto");
   });
 
   it("redirects to a sanitized internal path only after exchange and getUser succeed", async () => {

@@ -353,9 +353,6 @@ function KiCheckClientContent({ locale = "de" }: { readonly locale?: Locale }) {
           <h2 className="text-xl font-bold tracking-[-0.02em] text-foreground sm:text-2xl">
             {ui.fieldsTitle}
           </h2>
-          <p className="mt-2 max-w-[60ch] text-sm leading-relaxed text-muted-foreground">
-            {ui.fieldsBody}
-          </p>
           <div className="mt-4 min-w-0">
             <DimensionBars dimensions={result.dimensions} />
           </div>

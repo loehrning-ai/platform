@@ -265,8 +265,8 @@ export function TrustMeterSim() {
       title={text("Check coverage", "Prüfungsabdeckung")}
       meta={`${Object.values(checks).filter(Boolean).length}/4 ${text("checks", "Prüfungen")} · ${corrupt ? `${text("corruption", "Fehler")}: ${corruptions[corrupt].label.split(" (")[0]}` : text("clean", "sauber")}`}
       caption={text(
-        "Four illustrative weighted checks. Thresholds, cost, coverage, signal dependencies, and alert routing must be configured per dataset.",
-        "Vier beispielhaft gewichtete Prüfungen. Schwellen, Kosten, Abdeckung, Signalabhängigkeiten und Alarm-Routing werden pro Datensatz festgelegt.",
+        "Four example checks. Configure thresholds, coverage and alert routing per dataset.",
+        "Vier Beispielprüfungen. Schwellen, Abdeckung und Alarm-Routing legst du pro Datensatz fest.",
       )}
     >
       <div className="tm-layout">
@@ -415,14 +415,14 @@ export function TrustMeterSim() {
               {dashState === "ok" &&
                 status === "ok" &&
                 text(
-                  "matches scenario reference · selected checks passed",
-                  "entspricht der Szenarioreferenz · ausgewählte Prüfungen bestanden",
+                  "matches reference · selected checks passed",
+                  "entspricht der Referenz · ausgewählte Prüfungen bestanden",
                 )}
               {dashState === "ok" &&
                 status !== "ok" &&
                 text(
-                  "idle · run the simulation to see impact",
-                  "wartet · Simulation starten, um die Auswirkung zu sehen",
+                  "idle · run the simulation",
+                  "wartet · Simulation starten",
                 )}
             </div>
           </div>
@@ -431,8 +431,8 @@ export function TrustMeterSim() {
           <div className="tm-impact-banner err">
             ⚠{" "}
             {text(
-              "Scenario anomaly reached the displayed result before the selected check caught it",
-              "Szenarioanomalie erreichte das angezeigte Ergebnis, bevor eine ausgewählte Prüfung sie erkannte",
+              "The anomaly reached the dashboard before a check caught it",
+              "Die Anomalie erreichte das Dashboard, bevor eine Prüfung sie fand",
             )}
           </div>
         )}
@@ -440,8 +440,8 @@ export function TrustMeterSim() {
           <div className="tm-impact-banner warn">
             ⏸{" "}
             {text(
-              "Modeled signal absent · configured consumers wait or retain prior data",
-              "Modelliertes Signal fehlt · konfigurierte Verbraucher warten oder behalten vorherige Daten",
+              "No signal · consumers wait or keep prior data",
+              "Kein Signal · Verbraucher warten oder behalten vorherige Daten",
             )}
           </div>
         )}
@@ -449,8 +449,8 @@ export function TrustMeterSim() {
           <div className="tm-impact-banner ok">
             ✓{" "}
             {text(
-              "30-day scenario completed · selected checks passed · signal recorded",
-              "30-Tage-Szenario abgeschlossen · ausgewählte Prüfungen bestanden · Signal erfasst",
+              "30 days completed · selected checks passed · signal recorded",
+              "30 Tage abgeschlossen · ausgewählte Prüfungen bestanden · Signal erfasst",
             )}
           </div>
         )}
@@ -572,8 +572,8 @@ export function TrustMeterSim() {
             <span style={{ color: "#8B5C00" }}>
               ✓{" "}
               {text(
-                "Selected check blocked the modeled signal and emitted a simulated alert",
-                "Ausgewählte Prüfung blockierte das modellierte Signal und erzeugte einen simulierten Alarm",
+                "A check blocked the signal and raised a simulated alert",
+                "Eine Prüfung blockierte das Signal und löste einen simulierten Alarm aus",
               )}
             </span>
           )}

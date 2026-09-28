@@ -71,54 +71,54 @@ export const QUESTIONS: readonly Question[] = [
   {
     id: "g1",
     dimensionId: "grundlagen",
-    text: "Wie sicher fühlst du dich, wenn jemand fragt, was ein KI-Sprachmodell eigentlich macht?",
+    text: "Könntest du erklären, was ein KI-Sprachmodell macht?",
     options: [
       {
         score: 1,
-        text: "Ich müsste passen. Für mich ist KI eine Blackbox.",
-        meaning: "Startpunkt: Die Grundidee fehlt noch.",
+        text: "Nein, für mich ist KI eine Blackbox.",
+        meaning: "Die Grundidee fehlt noch.",
       },
       {
         score: 2,
-        text: "Ich habe eine grobe Vorstellung, aber es bleibt schwammig.",
-        meaning: "Ein erstes Gefühl, aber noch keine klare Landkarte.",
+        text: "Grob, aber es bliebe schwammig.",
+        meaning: "Du hast ein erstes Bild, aber noch kein klares Modell.",
       },
       {
         score: 3,
-        text: "Ich kann in eigenen Worten erklären, wie so ein Modell Text erzeugt.",
-        meaning: "Solide Basis: Du kannst es weitergeben.",
+        text: "Ja, ich kann in eigenen Worten erklären, wie es Text erzeugt.",
+        meaning: "Du kannst es anderen erklären.",
       },
       {
         score: 4,
-        text: "Ich erkläre es anderen und ordne Begriffe wie Training oder Halluzination ein.",
-        meaning: "Sicheres Fundament, auf dem alles Weitere aufbaut.",
+        text: "Ja, auch Begriffe wie Training und Halluzination.",
+        meaning: "Du kennst die Begriffe, auf die alles Weitere baut.",
       },
     ],
   },
   {
     id: "g2",
     dimensionId: "grundlagen",
-    text: "Ein KI-Chat gibt dir eine Antwort, die überzeugend klingt. Was denkst du?",
+    text: "Ein KI-Chat antwortet überzeugend. Was nimmst du an?",
     options: [
       {
         score: 1,
         text: "Wenn es flüssig klingt, wird es schon stimmen.",
-        meaning: "Dass KI sicher klingen und trotzdem falsch liegen kann, ist neu.",
+        meaning: "Eine sicher klingende Antwort kann trotzdem falsch sein.",
       },
       {
         score: 2,
-        text: "Ich ahne, dass Fehler drin sein können, prüfe aber selten.",
+        text: "Fehler sind möglich, aber ich prüfe selten.",
         meaning: "Das Risiko ist dir bewusst, die Routine fehlt noch.",
       },
       {
         score: 3,
-        text: "Ich weiß, dass KI Dinge erfinden kann, und prüfe Wichtiges nach.",
-        meaning: "Gesundes Misstrauen: Du nutzt KI mündig.",
+        text: "KI kann Dinge erfinden, also prüfe ich Wichtiges nach.",
+        meaning: "Du behandelst KI-Antworten als Material zum Prüfen.",
       },
       {
         score: 4,
-        text: "Ich kann einschätzen, wann Halluzinationen wahrscheinlich sind, und steuere gegen.",
-        meaning: "Du verstehst die Grenzen im Detail.",
+        text: "Ich erkenne riskante Antworten und wähle die passende Prüfung.",
+        meaning: "Du verbindest bekannte Fehlerarten mit passenden Kontrollen.",
       },
     ],
   },
@@ -126,17 +126,17 @@ export const QUESTIONS: readonly Question[] = [
   {
     id: "u1",
     dimensionId: "urteil",
-    text: "Ein Video zeigt eine bekannte Person, die etwas Ungewöhnliches sagt. Deine Reaktion?",
+    text: "Ein Video zeigt eine bekannte Person, die etwas Ungewöhnliches sagt. Was tust du?",
     options: [
       {
         score: 1,
         text: "Video ist Video, das glaube ich erst einmal.",
-        meaning: "Deepfakes sind für dich noch kein Thema.",
+        meaning: "Deepfakes hast du noch nicht im Blick.",
       },
       {
         score: 2,
         text: "Ich bin skeptisch, weiß aber nicht, woran ich eine Fälschung erkenne.",
-        meaning: "Zweifel ja, Werkzeuge nein.",
+        meaning: "Du zweifelst, aber dir fehlt eine Prüfmethode.",
       },
       {
         score: 3,
@@ -146,7 +146,7 @@ export const QUESTIONS: readonly Question[] = [
       {
         score: 4,
         text: "Ich erkenne Manipulationsmuster und zeige anderen, wie sie prüfen.",
-        meaning: "Du bist eine verlässliche Instanz im Umfeld.",
+        meaning: "Andere können deine Prüfmethode wiederholen.",
       },
     ],
   },
@@ -157,23 +157,23 @@ export const QUESTIONS: readonly Question[] = [
     options: [
       {
         score: 1,
-        text: "Das wüsste ich nicht, KI ist doch neutral.",
-        meaning: "Dass Daten Vorurteile tragen, ist ein neuer Gedanke.",
+        text: "Keine Ahnung, ich dachte, KI ist neutral.",
+        meaning: "Trainingsdaten können bestehende Vorurteile enthalten.",
       },
       {
         score: 2,
         text: "Ich habe davon gehört, kann es aber nicht erklären.",
-        meaning: "Das Stichwort Bias sagt dir etwas.",
+        meaning: "Du kennst das Wort Bias, aber nicht den Mechanismus.",
       },
       {
         score: 3,
-        text: "Mir ist klar, dass KI Verzerrungen aus den Trainingsdaten übernimmt.",
+        text: "Ich weiß, dass KI Verzerrungen aus Trainingsdaten übernimmt.",
         meaning: "Du verstehst, woher Bias kommt.",
       },
       {
         score: 4,
-        text: "Ich kann Beispiele nennen und weiß, wie man solchen Verzerrungen begegnet.",
-        meaning: "Du denkst Wirkung und Gegenmaßnahmen zusammen.",
+        text: "Ich kenne Beispiele und Wege, Verzerrungen zu erkennen und zu senken.",
+        meaning: "Du verbindest das Risiko mit Tests und Gegenmaßnahmen.",
       },
     ],
   },
@@ -181,7 +181,7 @@ export const QUESTIONS: readonly Question[] = [
   {
     id: "r1",
     dimensionId: "recht",
-    text: "Kennst du die EU-Verordnung, die den Einsatz von KI regelt (den AI Act)?",
+    text: "Wie gut kennst du den AI Act, die KI-Verordnung der EU?",
     options: [
       {
         score: 1,
@@ -200,7 +200,7 @@ export const QUESTIONS: readonly Question[] = [
       },
       {
         score: 4,
-        text: "Ich weiß, welche Pflichten für Nutzer und Anbieter gelten.",
+        text: "Ich kenne Rollen und Pflichten für einen konkreten Fall.",
         meaning: "Du kannst konkrete Fälle einordnen.",
       },
     ],
@@ -208,7 +208,7 @@ export const QUESTIONS: readonly Question[] = [
   {
     id: "r2",
     dimensionId: "recht",
-    text: "Ab wann muss man Menschen sagen, dass sie mit einer KI sprechen oder KI-Inhalte sehen?",
+    text: "Wann muss man Menschen sagen, dass sie mit KI sprechen oder KI-Inhalte sehen?",
     options: [
       {
         score: 1,
@@ -218,17 +218,17 @@ export const QUESTIONS: readonly Question[] = [
       {
         score: 2,
         text: "Ich vermute, es gibt Regeln, kenne sie aber nicht.",
-        meaning: "Eine Ahnung ist da.",
+        meaning: "Du ahnst eine Pflicht, kannst sie aber nicht einordnen.",
       },
       {
         score: 3,
-        text: "Ich weiß, dass Chatbots und viele KI-Inhalte gekennzeichnet werden müssen.",
+        text: "Ich weiß, dass Chatbots und bestimmte KI-Inhalte gekennzeichnet werden müssen.",
         meaning: "Du kennst die Kennzeichnungspflicht.",
       },
       {
         score: 4,
-        text: "Ich kann sagen, welche Fälle Transparenz brauchen und wie man sie umsetzt.",
-        meaning: "Du bist praktisch handlungsfähig.",
+        text: "Ich weiß, welche Fälle Transparenz brauchen und wie man sie umsetzt.",
+        meaning: "Du setzt die Pflicht in einen Arbeitsschritt um.",
       },
     ],
   },
@@ -236,27 +236,27 @@ export const QUESTIONS: readonly Question[] = [
   {
     id: "v1",
     dimensionId: "verantwortung",
-    text: "Du willst einen KI-Chat mit Inhalten aus deiner Arbeit füttern. Woran denkst du zuerst?",
+    text: "Du willst Arbeitsinhalte in einen KI-Chat kopieren. Was prüfst du zuerst?",
     options: [
       {
         score: 1,
         text: "Ich kopiere rein, was gerade da ist.",
-        meaning: "Der Datenschutz-Reflex fehlt noch.",
+        meaning: "Die Datenschutz-Prüfung fehlt noch.",
       },
       {
         score: 2,
         text: "Ich zögere bei heiklen Daten, entscheide aber aus dem Bauch.",
-        meaning: "Ein Bewusstsein ist da, klare Regeln fehlen.",
+        meaning: "Du siehst das Problem, aber dir fehlen klare Regeln.",
       },
       {
         score: 3,
         text: "Ich prüfe, ob personenbezogene oder vertrauliche Daten enthalten sind.",
-        meaning: "Du triffst bewusste Entscheidungen.",
+        meaning: "Du prüfst die Daten, bevor du sie eingibst.",
       },
       {
         score: 4,
-        text: "Ich halte mich an klare Regeln, was rein darf und was nicht.",
-        meaning: "Du arbeitest sicher und nachvollziehbar.",
+        text: "Ich halte mich an klare Regeln, welche Daten rein dürfen.",
+        meaning: "Dein Umgang ist einheitlich und überprüfbar.",
       },
     ],
   },
@@ -268,12 +268,12 @@ export const QUESTIONS: readonly Question[] = [
       {
         score: 1,
         text: "Nichts, das Ergebnis zählt.",
-        meaning: "Nachvollziehbarkeit ist noch kein Thema.",
+        meaning: "Später sieht niemand, was die KI beigetragen hat.",
       },
       {
         score: 2,
-        text: "Ich merke es mir grob, dokumentiere aber nichts.",
-        meaning: "Im Kopf ja, auf Papier nein.",
+        text: "Ich merke es mir grob, schreibe aber nichts auf.",
+        meaning: "Die Begründung hängt an deinem Gedächtnis.",
       },
       {
         score: 3,
@@ -282,8 +282,8 @@ export const QUESTIONS: readonly Question[] = [
       },
       {
         score: 4,
-        text: "Ich halte Prompt, Prüfung und Entscheidung so fest, dass andere es nachvollziehen.",
-        meaning: "Du machst Verantwortung belegbar.",
+        text: "Ich halte Prompt, Prüfung, Ergebnis und meine Entscheidung fest.",
+        meaning: "Andere können nachprüfen, wie die Entscheidung entstand.",
       },
     ],
   },
@@ -301,12 +301,12 @@ export const QUESTIONS: readonly Question[] = [
       {
         score: 2,
         text: "Ich tippe einen kurzen Satz und nehme, was kommt.",
-        meaning: "Erste Versuche, aber ohne Methode.",
+        meaning: "Du probierst, aber ohne Methode.",
       },
       {
         score: 3,
         text: "Ich gebe Rolle, Kontext und Ziel an und arbeite mit Nachfragen.",
-        meaning: "Du führst die KI gezielt.",
+        meaning: "Du steuerst die KI mit klaren Vorgaben.",
       },
       {
         score: 4,
@@ -328,7 +328,7 @@ export const QUESTIONS: readonly Question[] = [
       {
         score: 2,
         text: "Ich lese drüber, verlasse mich im Zweifel aber darauf.",
-        meaning: "Ein kurzer Blick, aber kein echter Check.",
+        meaning: "Du liest es, testest es aber nicht.",
       },
       {
         score: 3,
@@ -338,7 +338,7 @@ export const QUESTIONS: readonly Question[] = [
       {
         score: 4,
         text: "Ich habe feste Prüfschritte und weiß, wo KI besonders fehleranfällig ist.",
-        meaning: "Review ist bei dir ein fester Arbeitsschritt.",
+        meaning: "Prüfen ist bei dir ein fester Arbeitsschritt.",
       },
     ],
   },
@@ -360,7 +360,7 @@ export const STAGE_BANDS: readonly StageBand[] = [
     min: 20,
     max: 40,
     blurb:
-      "Du kennst mehrere Themen. Es fehlt noch eine feste Methode für Prüfung, Datenverwendung und Regeln.",
+      "Du kennst mehrere Themen, prüfst Ergebnisse und Daten aber noch ohne feste Methode.",
   },
   {
     level: 3,
@@ -368,7 +368,7 @@ export const STAGE_BANDS: readonly StageBand[] = [
     min: 40,
     max: 60,
     blurb:
-      "Du kannst KI für gewöhnliche Aufgaben einsetzen und mehrere Risiken erkennen. Vertiefe gezielt die schwächeren Felder.",
+      "Du setzt KI für alltägliche Aufgaben ein und erkennst mehrere Risiken. Vertiefe die schwächeren Felder.",
   },
   {
     level: 4,
@@ -384,7 +384,7 @@ export const STAGE_BANDS: readonly StageBand[] = [
     min: 80,
     max: 100,
     blurb:
-      "Du prüfst KI-Ergebnisse kritisch, schützt Daten und dokumentierst wichtige Entscheidungen. Wähle anhand der Feldwerte ein enges Vertiefungsthema.",
+      "Du prüfst KI-Ergebnisse kritisch, schützt Daten und dokumentierst wichtige Entscheidungen. Vertiefe das Feld mit dem niedrigsten Wert.",
   },
 ] as const;
 

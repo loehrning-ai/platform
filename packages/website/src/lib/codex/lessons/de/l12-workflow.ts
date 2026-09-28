@@ -8,13 +8,6 @@ function prose(sectionIndex: number, blockIndex: number): string {
   return block.markdown;
 }
 
-function pullQuote(sectionIndex: number, blockIndex: number): string {
-  const block = canonical.sections[sectionIndex]?.blocks[blockIndex];
-  if (block?.kind !== "pull-quote")
-    throw new Error("Codex L12 translation expected a pull quote.");
-  return block.text;
-}
-
 function card(
   sectionIndex: number,
   blockIndex: number,
@@ -89,9 +82,9 @@ const translated = localizeCodexLessonToGerman(canonical, {
     [canonical.title, "Ein prüfbarer Entwicklungsablauf"],
     [
       canonical.subtitle,
-      "Von der Anfrage bis zur Freigabe: ausdrückliche Entscheidungen, begrenzte Umsetzung, unabhängiges Review und verifiziertes Deployment.",
+      "Bring eine Änderung von der Anfrage bis zur Freigabe, mit ausdrücklichen Entscheidungen, begrenzten Aufgaben, unabhängigem Review und verifiziertem Deployment.",
     ],
-    [canonical.hook, "Absicht, Nachweis und Verantwortung bleiben verbunden."],
+    [canonical.hook, "Einen Auftrag von der Spezifikation bis zum Merge nachweisbar führen."],
     [
       canonical.keyConcepts[0],
       "Besprechen, planen, umsetzen, prüfen, ausliefern, lernen",
@@ -102,86 +95,82 @@ const translated = localizeCodexLessonToGerman(canonical, {
     [canonical.sections[0].title, "Die Abschlussaufgabe"],
     [
       prose(0, 0),
-      "Eine Anfrage kommt rein, bis Freitag soll etwas laufen. Die Abschlussaufgabe verfolgt diese Änderung bis zum Deployment. In jeder Phase ermittelst du, wer entscheidet, welche Repository-Nachweise nötig sind, wo die Ausführungsgrenze liegt und wo das Review-Gate.\n\nDie Alternativen sind plausible Abkürzungen. Bewerte sie nach den Risiken, für die niemand zuständig ist, statt eine Werkzeugfolge auswendig zu lernen.",
-    ],
-    [
-      pullQuote(0, 1),
-      "Ein belastbarer Ablauf macht Entscheidungen, Annahmen, Diffs und Prüfergebnisse für die verantwortliche Reviewerin nachvollziehbar.",
+      "Eine Änderung, von der Chatnachricht bis zum deployten Endpunkt. Bestimme in jeder Phase, wer entscheidet, welche Repository-Nachweise nötig sind, wo die Ausführungsgrenze liegt und wo das Review-Gate. Bewerte jede verlockende Abkürzung nach dem Risiko, für das dann niemand zuständig ist.",
     ],
     [canonical.sections[1].title, "Die Ablaufkette"],
     [
       prose(1, 0),
-      "Ein wiederholbarer Ablauf lässt weniger Annahmen im Verborgenen. Pass die Phasen an die Änderung an, aber die Verantwortung bleibt von der Anfrage bis zur Prüfung nach dem Deployment ausdrücklich:",
+      "Pass die sechs Phasen an die Änderung an; die Verantwortung bleibt von der Anfrage bis zur Prüfung nach dem Deployment ausdrücklich.",
     ],
     [card(1, 1, 0, "eyebrow"), "Phase 01"],
     [card(1, 1, 0, "title"), "Besprechen"],
     [
       card(1, 1, 0, "body"),
-      "Nutzerproblem, betroffene Systeme, Erfolgskriterien, Grenzen, Datensensitivität und offene Entscheidungen festhalten. Solange eine wesentliche Produkt- oder Sicherheitsentscheidung unausgesprochen ist, wird nicht implementiert.",
+      "Problem, betroffene Systeme, Erfolgskriterien, Grenzen, Datensensitivität und offene Entscheidungen festhalten. Produkt- und Sicherheitsentscheidungen zuerst klären.",
     ],
     [card(1, 1, 1, "eyebrow"), "Phase 02"],
     [card(1, 1, 1, "title"), "Planen"],
     [
       card(1, 1, 1, "body"),
-      "Abhängigkeiten und gültige Zwischenzustände erfassen. Zusammenhängende Aufgaben trennen, jeder ihren Akzeptanznachweis, ihre Basisrevision und ihre genehmigungspflichtigen Schritte geben. Je nach Ablauf endet eine Aufgabe in einem lokalen Diff oder Pull Request.",
+      "Abhängigkeiten und gültige Zwischenzustände erfassen. Aufgaben trennen, Akzeptanznachweis und Basisrevision festlegen, Freigabeschritte markieren.",
     ],
     [card(1, 1, 2, "eyebrow"), "Phase 03"],
     [card(1, 1, 2, "title"), "Umsetzen"],
     [
       card(1, 1, 2, "body"),
-      "Jede begrenzte Aufgabe läuft in der konfigurierten lokalen oder Cloud-Umgebung. Abhängiges nacheinander, wirklich Unabhängiges getrennt, und die verwendeten Befehle und Umgebungsannahmen stehen im Protokoll.",
+      "Jede begrenzte Aufgabe läuft in ihrer konfigurierten Umgebung. Abhängige Aufgaben laufen nacheinander, unabhängige isoliert. Befehle und Umgebungsannahmen protokollieren.",
     ],
     [card(1, 1, 3, "eyebrow"), "Phase 04"],
     [
       card(1, 1, 3, "body"),
-      "Den vollständigen Diff gegen Auftrag und ausgeschlossenen Umfang lesen. Tests und Protokolle lesen, Sicherheits- und Betriebsfolgen prüfen, vertrauenswürdige Checks noch einmal laufen lassen. Falsche Prämisse oder auseinanderlaufende Überarbeitungen heißen Neustart. Lokale Fehler bekommen eine gezielte Korrektur.",
+      "Den vollständigen Diff mit Auftrag und ausgeschlossenem Umfang abgleichen, Tests und Protokolle lesen, Sicherheits- und Betriebsfolgen prüfen, vertrauenswürdige Checks erneut laufen lassen. Lokale Fehler gezielt korrigieren, bei falscher Prämisse neu starten.",
     ],
     [card(1, 1, 4, "eyebrow"), "Phase 05"],
     [card(1, 1, 4, "title"), "Ausliefern"],
     [
       card(1, 1, 4, "body"),
-      "Der reguläre Merge-, Deployment-, Rollback- und Freigabeprozess des Repositorys gilt. Artefakt und relevantes Verhalten in der Zielumgebung prüfen. Grün lokal oder in der Aufgabenumgebung belegt kein Deployment.",
+      "Über den regulären Merge-, Deployment-, Rollback- und Freigabeprozess ausliefern. Das deployte Artefakt und sein Verhalten in der Zielumgebung prüfen; lokaler Erfolg belegt kein Deployment.",
     ],
     [card(1, 1, 5, "eyebrow"), "Phase 06"],
     [card(1, 1, 5, "title"), "Lernen"],
     [
       card(1, 1, 5, "body"),
-      "Eine dauerhafte, nicht offensichtliche Repository-Regel dokumentierst du nur, wenn der Auftrag eine echte Lücke gezeigt hat. Aufgabenspezifische Erkenntnisse bleiben im Issue oder Pull Request, Incident- und Deployment-Nachweise im zuständigen System.",
+      "Eine dauerhafte, nicht offensichtliche Repository-Regel nur bei einer echten Lücke festhalten. Aufgabenerkenntnisse gehören ins Issue oder in den Pull Request, Incident- und Deployment-Nachweise in das System, das sie verwaltet.",
     ],
     [
       prose(1, 2),
-      "Wie viel Zeremonie? So viel, wie Risiko und Reversibilität verlangen. Eine kleine lokale Änderung kann mit knappem Auftrag und einer Prüfung auskommen. Authentifizierung, Daten, Zahlungen oder Migrationen brauchen ausdrückliche Sicherheits- und Rollout-Nachweise. Ein Gate fällt nicht weg, nur weil die Umsetzung kurz war.",
+      "Richte den Aufwand nach Risiko und Reversibilität. Eine kleine lokale Änderung braucht einen knappen Auftrag und eine Prüfung; Authentifizierung, Daten, Zahlungen oder Migrationen brauchen Sicherheits- und Rollout-Nachweise, auch bei kurzem Code.",
     ],
     [canonical.sections[2].title, "Szene 01 · Die Anfrage"],
     [prose(2, 0), "Eingehende Anfrage:"],
     [
       callout(2, 1, "body"),
-      '"Hi, Finance braucht einen CSV-Export aller aktiven Abonnements, jede Nacht aktualisiert. Bis Freitag wäre super. Übernimmst du das? Was würdest du zuerst tun?"',
+      '"Hi, Finance braucht einen CSV-Export aller aktiven Abonnements, jede Nacht aktualisiert. Muss bis Freitag live sein. Übernimmst du das? Was würdest du zuerst tun?"',
     ],
     [canonical.sections[3].title, "Szene 02 · Die Spezifikation"],
     [
       prose(3, 0),
-      "Du hast zerlegt. Erste Aufgabe: *Einen Endpunkt /admin/exports/subscriptions.csv ergänzen, der aktive Abonnements als CSV streamt.* Nächtliche Planung und Zustellung sind eigene Folgeaufgaben.\n\nJetzt die Spezifikation. Welcher Einstieg ist der stärkste?",
+      "Erste Aufgabe nach der Zerlegung: *Einen Endpunkt /admin/exports/subscriptions.csv ergänzen, der aktive Abonnements als CSV streamt.* Nächtliche Planung und Zustellung folgen als eigene Aufgaben. Welcher Einstieg in die Spezifikation ist der stärkste? Antworte am Lektionsende.",
     ],
     [canonical.sections[4].title, "Szene 03 · Den Diff prüfen"],
     [
       prose(4, 0),
-      "Der Diff ist da, Prüfungen laut Bericht grün. Lies die tatsächlichen Änderungen:",
+      "Der Diff ist da, die Prüfungen sind grün. Er steht am Lektionsende; lies, was sich tatsächlich geändert hat.",
     ],
     [canonical.sections[5].title, "Szene 04 · Die gezielte Korrektur"],
     [
       prose(5, 0),
-      "Der Test ersetzt active_subscriptions() und prüft dann die Serialisierung der gelieferten Testdaten. Das deckt die Formatierung des Endpunkts ab, nicht die Auswahl aktiver Abonnements. Welcher Review-Kommentar benennt den fehlenden Nachweis präzise?",
+      "Der Test ersetzt active_subscriptions() und prüft, wie die gelieferten Testdaten serialisiert werden; die Auswahl aktiver Abonnements bleibt ungeprüft. Welcher Kommentar benennt den fehlenden Nachweis präzise? Antworte am Lektionsende.",
     ],
     [canonical.sections[6].title, "Szene 05 · Nach dem Merge"],
     [
       prose(6, 0),
-      "Die überarbeiteten Tests decken Auswahl und Serialisierung ab, der vollständige Diff ist gelesen, die vertrauenswürdigen Checks sind grün. Bevor der Scheduler-Auftrag startet, sicherst du jede dauerhafte Entscheidung, an der die nächste Aufgabe hängt.",
+      "Die überarbeiteten Tests decken Auswahl und Serialisierung ab, der vollständige Diff ist gelesen, die vertrauenswürdigen Checks sind grün. Bevor der Scheduler-Auftrag startet, sicherst du jede dauerhafte Entscheidung, an der er hängt.",
     ],
-    [canonical.sections[7].title, "Kurs abgeschlossen"],
+    [canonical.sections[7].title, "Arbeitsregeln"],
     [
       prose(7, 0),
-      "Drei Arbeitsregeln für die Zeit nach dem Kurs:\n\n1. **Fakten von Hypothesen trennen.** Dateiverweise, exakte Befehlsergebnisse und belegte Grenzen bleiben. Unbelegte Erklärungen fliegen raus.\n2. **Bei falscher Prämisse neu beginnen.** Lokale Fehler gezielt korrigieren. Ändern sich Ziel, Architektur oder Umfang, schreib einen neuen Auftrag.\n3. **Arbeit an der Review-Kapazität begrenzen.** Nicht mehr Aufgaben gleichzeitig, als das Team auf dem nötigen Risikoniveau prüfen, integrieren und verifizieren kann.\n\nWas ein Coding-Agent liefert, bleibt ein Vorschlag. Annahme, Merge, Deployment und Incident gehören einem verantwortlichen Menschen.",
+      "1. **Fakten von Hypothesen trennen.** Dateiverweise, exakte Befehlsergebnisse und belegte Grenzen behalten; unbelegte Erklärungen streichen.\n2. **Bei falscher Prämisse neu beginnen.** Lokale Fehler gezielt korrigieren; ändern sich Ziel, Architektur oder Umfang, schreib einen neuen Auftrag.\n3. **Arbeit an der Review-Kapazität begrenzen.** Nur so viele Aufgaben gleichzeitig, wie das Team auf dem nötigen Risikoniveau prüfen, integrieren und verifizieren kann.\n\nWas ein Coding-Agent liefert, bleibt ein Vorschlag. Annahme, Merge, Deployment und Incident gehören einem verantwortlichen Menschen.",
     ],
     [
       widgetString(0, "question"),
@@ -189,27 +178,27 @@ const translated = localizeCodexLessonToGerman(canonical, {
     ],
     [
       widgetStrings(0, "options")[0],
-      "Agenten öffnen, Priyas Nachricht reinkopieren, Lauf starten.",
+      "Agenten öffnen, Anfrage reinkopieren, Lauf starten.",
     ],
     [
       widgetStrings(0, "options")[1],
-      "Spalten, Autorisierung, Datenmenge, Zustellungsziel, Aufbewahrung und Termin klären. Danach Endpunkt, Planung und Zustellung entlang realer Abhängigkeiten trennen.",
+      "Spalten, Zugriff, Menge, Ziel, Aufbewahrung und Termin klären, dann entlang echter Abhängigkeiten trennen.",
     ],
     [
       widgetStrings(0, "options")[2],
-      "Priya nach den CSV-Spalten fragen und alles als einen großen Auftrag bauen.",
+      "Die anfragende Person nach den CSV-Spalten fragen und alles als einen großen Auftrag bauen.",
     ],
     [
       widgetStrings(0, "options")[3],
-      "Priya sagen, dass das diese Woche nichts wird.",
+      "Der anfragenden Person sagen, dass das diese Woche nichts wird.",
     ],
     [
       widgetString(0, "explanation"),
-      "In der Anfrage stecken Datenvertrag, Autorisierung, Exporterzeugung, Planung und Zustellung. Kläre die fehlenden Produkt- und Sicherheitsentscheidungen. Getrennt wird nur dort, wo ein gültiger, unabhängig prüfbarer Zwischenzustand entsteht.",
+      "In der Anfrage stecken Datenvertrag, Autorisierung, Export, Planung und Zustellung. Kläre die offenen Produkt- und Sicherheitsentscheidungen und trenne nur dort, wo ein gültiger, prüfbarer Zwischenzustand entsteht.",
     ],
     [
       widgetString(1, "question"),
-      "Welcher Einstieg beschreibt Aufgabe (a), den Export-Endpunkt, am besten?",
+      "Welcher Einstieg beschreibt Aufgabe 01, den Export-Endpunkt, am besten?",
     ],
     [widgetStrings(1, "options")[0], '"CSV-Export der Abonnements ergänzen."'],
     [
@@ -220,7 +209,7 @@ const translated = localizeCodexLessonToGerman(canonical, {
     [widgetStrings(1, "options")[3], '"Ein Berichtssystem bauen."'],
     [
       widgetString(1, "explanation"),
-      "Route, Felder, Auswahlregel, Speichergrenze: alles benannt. Autorisierung und CSV-Sicherheit fehlen noch, aber das Verhalten ist prüfbar, anders als bei den übrigen Optionen.",
+      "Er nennt Route, Felder, Auswahlregel und Speichergrenze. Autorisierung und CSV-Sicherheit fehlen noch, trotzdem legt er weit mehr prüfbares Verhalten fest als die übrigen Optionen.",
     ],
     [
       widgetString(3, "question"),
@@ -229,7 +218,7 @@ const translated = localizeCodexLessonToGerman(canonical, {
     [widgetStrings(3, "options")[0], "Der Endpunkt verwendet kein Streaming."],
     [
       widgetStrings(3, "options")[1],
-      "Der Test prüft die CSV-Serialisierung eines gelieferten Datensatzes, belegt aber nicht, dass nur aktive Abonnements ausgewählt werden.",
+      "Der Test belegt nicht, dass nur aktive Abonnements ausgewählt werden.",
     ],
     [
       widgetStrings(3, "options")[2],
@@ -238,7 +227,7 @@ const translated = localizeCodexLessonToGerman(canonical, {
     [widgetStrings(3, "options")[3], "Keines, die Tests sind grün."],
     [
       widgetString(3, "explanation"),
-      "Der Test liefert die Repository-Ausgabe selbst. Er prüft die Serialisierung des Endpunkts, nicht den Aktivstatus-Filter im Repository. Ergänze einen Nachweis über die echte Auswahlgrenze. Getrennte Serialisierungstests bleiben, wo sie eigenes Verhalten abdecken.",
+      "Der Test liefert die Repository-Ausgabe selbst, prüft also die Serialisierung und nie den Aktivstatus-Filter. Ergänze einen Nachweis über die echte Auswahlgrenze und behalte fokussierte Serialisierungstests, wo sie nützen.",
     ],
     [
       widgetString(4, "question"),
@@ -251,12 +240,12 @@ const translated = localizeCodexLessonToGerman(canonical, {
     [widgetStrings(4, "options")[1], '"Prüfe das tatsächliche Verhalten."'],
     [
       widgetStrings(4, "options")[2],
-      '"tests/api/admin/test_exports.py::test_export_subscriptions prüft die Serialisierung, aber nicht die Auswahl nach Aktivstatus. Ergänze einen Integrationstest, der aktive und gekündigte Datensätze anlegt, den Endpunkt über das echte Repository aufruft und nur aktive Zeilen erwartet. Behalte einen fokussierten Serialisierungstest, wenn er getrenntes Verhalten abdeckt."',
+      "\"tests/api/admin/test_exports.py::test_export_subscriptions prüft nur die Serialisierung. Ergänze einen Integrationstest über das echte Repository, der aktive und gekündigte Datensätze anlegt und nur aktive Zeilen erwartet.\"",
     ],
     [widgetStrings(4, "options")[3], '"Mehr Tests ergänzen."'],
     [
       widgetString(4, "explanation"),
-      'Der präzise Kommentar nennt vorhandene Abdeckung, fehlendes Verhalten, Testort und verlangte Grenze. Die Überarbeitung lässt sich daran messen. Aus "schwach" oder "mehr" muss niemand eine Absicht herauslesen.',
+      "Er nennt vorhandene Abdeckung, fehlendes Verhalten, Testort und verlangte Grenze; daran lässt sich die Überarbeitung messen. Bei \"schwach\" oder \"mehr\" bleibt die Absicht geraten.",
     ],
     [
       widgetString(5, "question"),
@@ -265,7 +254,7 @@ const translated = localizeCodexLessonToGerman(canonical, {
     [widgetStrings(5, "options")[0], "Den PR-Tab schließen und weitermachen."],
     [
       widgetStrings(5, "options")[1],
-      'Die Erkenntnis "Tests, die ihr eigenes Prüfobjekt mocken, sind hier ein Fehlermuster" in die Agentenanweisungen aufnehmen, damit der nächste Lauf sie berücksichtigt.',
+      "\"Tests, die ihr eigenes Prüfobjekt mocken, sind hier ein Gegenmuster\" in die Agentenanweisungen aufnehmen, damit der nächste Lauf sie vermeidet.",
     ],
     [
       widgetStrings(5, "options")[2],
@@ -277,7 +266,7 @@ const translated = localizeCodexLessonToGerman(canonical, {
     ],
     [
       widgetString(5, "explanation"),
-      "In AGENTS.md gehört eine Regel nur, wenn sie dauerhaft und repository-spezifisch ist und Tests oder Werkzeuge sie nicht schon erzwingen. Aufgabenspezifische Entscheidungen und Nachweise bleiben im Issue oder Pull Request, wo ihr Kontext steht.",
+      "In AGENTS.md gehört eine Regel nur, wenn sie dauerhaft und repository-spezifisch ist und Tests oder Werkzeuge sie nicht schon erzwingen. Aufgabenspezifische Entscheidungen und Nachweise bleiben mit ihrem Kontext im Issue oder Pull Request.",
     ],
   ],
   preserve: [

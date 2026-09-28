@@ -89,9 +89,24 @@ describe("HeroTransform", () => {
     expect(screen.getByText(/stage 3 \/ 3 · structured/i)).toBeInTheDocument();
     expect(
       screen.getByText(
-        /Role, context, task, constraints, and format are explicit/,
+        /Role, context, task, constraints and format are stated/,
       ),
     ).toBeInTheDocument();
+  });
+
+  it("shows the stage's simulated output on load, with no empty press-play state", () => {
+    render(<HeroTransform locale="de" />);
+    expect(
+      screen.getByText(/Betreff: Neuer Authentifizierungsdienst/),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/Noch nicht ausgeführt/)).not.toBeInTheDocument();
+  });
+
+  it("keeps the label size on the stage buttons next to their text colour", () => {
+    render(<HeroTransform locale="en" />);
+    for (const name of ["1", "2", "3"]) {
+      expect(screen.getByRole("button", { name })).toHaveClass("text-label");
+    }
   });
 
   it("running a stage shows the fixed local output", async () => {

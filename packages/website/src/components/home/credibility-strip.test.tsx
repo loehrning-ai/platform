@@ -12,60 +12,79 @@ import { render, screen } from "@testing-library/react";
 import { CredibilityStrip } from "./credibility-strip";
 
 describe("CredibilityStrip", () => {
-  it("exposes the platform-principles section anchor and overline", () => {
+  it("exposes the platform-principles section anchor and heading, without a kicker", () => {
     render(<CredibilityStrip />);
     expect(screen.getByTestId("platform-principles")).toBeInTheDocument();
-    expect(screen.getByText("Betriebsprinzipien")).toBeInTheDocument();
     expect(
-      screen.getByText("Was hier nicht verhandelbar ist."),
+      screen.getByText("Grundregeln"),
     ).toBeInTheDocument();
+    expect(screen.queryByText("Betriebsprinzipien")).not.toBeInTheDocument();
   });
 
   it("renders the same operating facts in English without German labels", () => {
     const { container } = render(<CredibilityStrip locale="en" />);
 
-    expect(screen.getByText("Operating principles")).toBeInTheDocument();
+    expect(screen.getByText("Ground rules")).toBeInTheDocument();
     expect(screen.getByText("No paywall")).toBeInTheDocument();
     expect(
-      screen.getByText(/Four readers require a free learning account/),
+      screen.getByText(/Four courses need a free learning account/),
     ).toBeInTheDocument();
     expect(container.textContent).not.toMatch(
       /\b(?:Betriebsprinzipien|Zugang|Sprachen|Quellen|Redaktion|Deutsch|öffentlich|Konto)\b/,
     );
   });
 
-  it("renders all four principles with label and title", () => {
-    render(<CredibilityStrip />);
-    const expected: ReadonlyArray<readonly [string, string]> = [
-      ["Zugang", "Keine Paywall"],
-      ["Sprachen", "Zwei vollständige Fassungen"],
-      ["Quellen", "Stand und Herkunft sichtbar"],
-      ["Redaktion", "Von Tim Löhr redigiert"],
-    ];
-    for (const [label, title] of expected) {
-      expect(screen.getAllByText(new RegExp(label)).length).toBeGreaterThan(0);
-      expect(screen.getByText(title)).toBeInTheDocument();
+  it("renders all four principles as titles, without numbers or labels", () => {
+    const { container } = render(<CredibilityStrip />);
+    const titles = Array.from(container.querySelectorAll("dt")).map(
+      (dt) => dt.textContent,
+    );
+    expect(titles).toEqual([
+      "Keine Paywall",
+      "Zwei vollständige Fassungen",
+      "Quellen sind verlinkt",
+      "Von Tim Löhr redigiert",
+    ]);
+    // The four have no order: no "01 ·" numbering anywhere.
+    expect(container.textContent).not.toMatch(/0\d ·/);
+    // Every claim keeps its one-sentence explanation visible at every width:
+    // a bare title on a phone read as a cryptic, link-like row.
+    const bodies = container.querySelectorAll("dd");
+    expect(bodies).toHaveLength(4);
+    for (const dd of bodies) {
+      expect(dd.className).not.toMatch(/sr-only|line-clamp/);
+      expect(dd.textContent?.trim()).toMatch(/\.$/);
     }
   });
 
   it("states the commercial and account boundary directly", () => {
     render(<CredibilityStrip />);
-    expect(screen.getByText(/Kein Abo/)).toBeInTheDocument();
+    expect(screen.getByText("Keine Paywall")).toBeInTheDocument();
     expect(
-      screen.getByText(/Vier Reader benötigen ein kostenloses Lernkonto/),
+      screen.getByText(/Vier Kurse brauchen ein kostenloses Lernkonto/),
     ).toBeInTheDocument();
   });
 
   it("keeps authorship, evidence, access, and locale as the four operating facts", () => {
     render(<CredibilityStrip />);
     expect(
-      screen.getByText(/vollständig auf Deutsch und Englisch/),
+      screen.getByText(/Alle Kurse gibt es auf Deutsch und Englisch/),
     ).toBeInTheDocument();
     expect(
       screen.getByText(/Fakten verweisen auf Quellen/),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/Autorschaft, Überarbeitungsstand/),
+      screen.getByText(/Überarbeitungsstand und bekannte Grenzen bleiben sichtbar/),
+    ).toBeInTheDocument();
+  });
+
+  it("makes the visible headline the section heading, not the label", () => {
+    render(<CredibilityStrip />);
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "Grundregeln",
+      }),
     ).toBeInTheDocument();
   });
 });

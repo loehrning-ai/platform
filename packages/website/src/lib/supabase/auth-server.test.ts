@@ -28,30 +28,68 @@ type AuthCookieAdapter = {
   ) => void;
 };
 
-const { cookiesMock, store, createServerClientMock, getUserMock } = vi.hoisted(
-  () => {
-    const getUserMock = vi.fn(
-      async (): Promise<{ data: { user: unknown }; error?: unknown }> => ({
-        data: { user: null },
-      }),
-    );
-    const store = {
-      getAll: vi.fn((): { name: string; value: string }[] => []),
-      set: vi.fn(),
-    };
-    const cookiesMock = vi.fn(async () => store);
-    const createServerClientMock = vi.fn<
-      (
-        url: string,
-        key: string,
-        options: { readonly cookies: AuthCookieAdapter },
-      ) => { auth: { getUser: typeof getUserMock } }
-    >(() => ({
-      auth: { getUser: getUserMock },
-    }));
-    return { cookiesMock, store, createServerClientMock, getUserMock };
-  },
-);
+type ClaimsResult = {
+  data: { claims: Record<string, unknown> } | null;
+  error: unknown;
+};
+
+const {
+  cookiesMock,
+  store,
+  createServerClientMock,
+  getUserMock,
+  getClaimsMock,
+  signOutMock,
+} = vi.hoisted(() => {
+  const getUserMock = vi.fn(
+    async (): Promise<{ data: { user: unknown }; error?: unknown }> => ({
+      data: { user: null },
+    }),
+  );
+  // Verified claims of an ordinary first-party session for user-42, the user
+  // the happy-path tests sign in.
+  const getClaimsMock = vi.fn(
+    async (): Promise<ClaimsResult> => ({
+      data: {
+        claims: {
+          sub: "user-42",
+          aud: "authenticated",
+          role: "authenticated",
+        },
+      },
+      error: null,
+    }),
+  );
+  const signOutMock = vi.fn(async () => ({ error: null }));
+  const store = {
+    getAll: vi.fn((): { name: string; value: string }[] => []),
+    set: vi.fn(),
+  };
+  const cookiesMock = vi.fn(async () => store);
+  const createServerClientMock = vi.fn<
+    (
+      url: string,
+      key: string,
+      options: { readonly cookies: AuthCookieAdapter },
+    ) => {
+      auth: {
+        getUser: typeof getUserMock;
+        getClaims: typeof getClaimsMock;
+        signOut: typeof signOutMock;
+      };
+    }
+  >(() => ({
+    auth: { getUser: getUserMock, getClaims: getClaimsMock, signOut: signOutMock },
+  }));
+  return {
+    cookiesMock,
+    store,
+    createServerClientMock,
+    getUserMock,
+    getClaimsMock,
+    signOutMock,
+  };
+});
 
 vi.mock("next/headers", () => ({ cookies: cookiesMock }));
 vi.mock("@supabase/ssr", () => ({ createServerClient: createServerClientMock }));
@@ -235,5 +273,131 @@ describe("getAuthenticatedUser", () => {
 
     const result = await getAuthenticatedUser();
     expect("error" in result).toBe(false);
+  });
+});
+
+// An OAuth 2.1 access token issued to a third-party client passes getUser()
+// just like a first-party session. Wrapped in an auth cookie, it must not act
+// as the learner on the account routes.
+describe("getAuthenticatedUser first-party session boundary", () => {
+  function claimsFor(overrides: Record<string, unknown>): ClaimsResult {
+    return {
+      data: {
+        claims: {
+          sub: "user-42",
+          aud: "authenticated",
+          role: "authenticated",
+          ...overrides,
+        },
+      },
+      error: null,
+    };
+  }
+
+  it("accepts a verified first-party session and keeps its cookie", async () => {
+    configure();
+    getUserMock.mockResolvedValueOnce({ data: { user: { id: "user-42" } } });
+
+    const result = await getAuthenticatedUser();
+
+    expect(result).toEqual({ configured: true, user: { id: "user-42" } });
+    expect(getClaimsMock).toHaveBeenCalledTimes(1);
+    expect(signOutMock).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ["an OAuth client_id", { client_id: "9a1b7c3d-client" }],
+    ["an empty client_id", { client_id: "" }],
+    ["a null client_id", { client_id: null }],
+    ["the MCP resource audience", { aud: "https://loehrning.ai/api/mcp" }],
+    ["a widened audience", { aud: ["authenticated", "https://loehrning.ai/api/mcp"] }],
+    ["no audience", { aud: undefined }],
+    ["another role", { role: "service_role" }],
+    ["another subject", { sub: "user-99" }],
+  ])("treats a session with %s as signed out and clears it", async (_label, overrides) => {
+    configure();
+    getUserMock.mockResolvedValueOnce({ data: { user: { id: "user-42" } } });
+    getClaimsMock.mockResolvedValueOnce(claimsFor(overrides));
+
+    const result = await getAuthenticatedUser();
+
+    expect(result).toEqual({ configured: true, user: null });
+    expect("error" in result).toBe(false);
+    expect(signOutMock).toHaveBeenCalledWith({ scope: "local" });
+  });
+
+  it("accepts a single-element audience array", async () => {
+    configure();
+    getUserMock.mockResolvedValueOnce({ data: { user: { id: "user-42" } } });
+    getClaimsMock.mockResolvedValueOnce(claimsFor({ aud: ["authenticated"] }));
+
+    const result = await getAuthenticatedUser();
+
+    expect(result.user).toEqual({ id: "user-42" });
+    expect(signOutMock).not.toHaveBeenCalled();
+  });
+
+  it("stays signed out when clearing the rejected session fails", async () => {
+    configure();
+    getUserMock.mockResolvedValueOnce({ data: { user: { id: "user-42" } } });
+    getClaimsMock.mockResolvedValueOnce(claimsFor({ client_id: "client-1" }));
+    signOutMock.mockRejectedValueOnce(new Error("logout unreachable"));
+
+    const result = await getAuthenticatedUser();
+
+    expect(result).toEqual({ configured: true, user: null });
+  });
+
+  it("fails closed as an outage when the claims cannot be verified", async () => {
+    configure();
+    getUserMock.mockResolvedValueOnce({ data: { user: { id: "user-42" } } });
+    const outage = Object.assign(new Error("jwks unreachable"), {
+      name: "AuthRetryableFetchError",
+      status: 0,
+    });
+    getClaimsMock.mockResolvedValueOnce({ data: null, error: outage });
+
+    const result = await getAuthenticatedUser();
+
+    expect(result).toEqual({ configured: true, user: null, error: outage });
+    expect(signOutMock).not.toHaveBeenCalled();
+  });
+
+  it("fails closed as an outage when getClaims throws", async () => {
+    configure();
+    getUserMock.mockResolvedValueOnce({ data: { user: { id: "user-42" } } });
+    const outage = new Error("claims threw");
+    getClaimsMock.mockRejectedValueOnce(outage);
+
+    const result = await getAuthenticatedUser();
+
+    expect(result).toEqual({ configured: true, user: null, error: outage });
+    expect(signOutMock).not.toHaveBeenCalled();
+  });
+
+  it("treats a refused token as signed out", async () => {
+    configure();
+    getUserMock.mockResolvedValueOnce({ data: { user: { id: "user-42" } } });
+    getClaimsMock.mockResolvedValueOnce({
+      data: null,
+      error: Object.assign(new Error("Invalid JWT signature"), {
+        name: "AuthInvalidJwtError",
+        status: 400,
+      }),
+    });
+
+    const result = await getAuthenticatedUser();
+
+    expect(result).toEqual({ configured: true, user: null });
+    expect(signOutMock).toHaveBeenCalledWith({ scope: "local" });
+  });
+
+  it("never asks for claims when there is no user", async () => {
+    configure();
+    getUserMock.mockResolvedValueOnce({ data: { user: null } });
+
+    await getAuthenticatedUser();
+
+    expect(getClaimsMock).not.toHaveBeenCalled();
   });
 });

@@ -151,9 +151,9 @@ describe("DataLab", () => {
     const fetchMock = stubSuccessfulRun("data-science-experiment");
     const { onVerified } = renderLab("data-science");
     expect(
-      screen.getByText(/Executable experiment notebook/),
+      screen.getByText(/Experiment Test Rig/),
     ).toBeInTheDocument();
-    expect(screen.getByText(/Real Node 24 execution/)).toBeInTheDocument();
+    expect(screen.getByText(/Real Node 24 run/)).toBeInTheDocument();
     expect(
       screen.getByRole("heading", { name: "Attested execution results" }),
     ).toHaveClass("bg-[#e6e0d6]", "text-[#17130f]");
@@ -165,7 +165,7 @@ describe("DataLab", () => {
     );
     fireEvent.click(
       screen.getByRole("button", {
-        name: "Execute the isolated workspace for real",
+        name: "Run in sandbox",
       }),
     );
     expect(
@@ -189,7 +189,7 @@ describe("DataLab", () => {
     );
 
     fireEvent.click(
-      screen.getByLabelText(/Document only the safe \+5 pp comparison/i),
+      screen.getByLabelText(/Document the safe \+5 pp value/i),
     );
     const rationale =
       "Use the safe +5 pp metric, reject leakage and peeking, then reproduce the registered run.";
@@ -240,7 +240,7 @@ describe("DataLab", () => {
     );
     fireEvent.click(
       screen.getByRole("button", {
-        name: "Execute the isolated workspace for real",
+        name: "Run in sandbox",
       }),
     );
 
@@ -261,7 +261,7 @@ describe("DataLab", () => {
     );
     fireEvent.click(
       screen.getByRole("button", {
-        name: "Execute the isolated workspace for real",
+        name: "Run in sandbox",
       }),
     );
 
@@ -283,7 +283,7 @@ describe("DataLab", () => {
       }),
     );
     const runButton = screen.getByRole("button", {
-      name: "Execute the isolated workspace for real",
+      name: "Run in sandbox",
     });
 
     act(() => {
@@ -328,7 +328,7 @@ describe("DataLab", () => {
     );
     fireEvent.click(
       screen.getByRole("button", {
-        name: "Execute the isolated workspace for real",
+        name: "Run in sandbox",
       }),
     );
     const staleSignal = (fetchMock.mock.calls[0]?.[1] as RequestInit).signal;
@@ -341,7 +341,7 @@ describe("DataLab", () => {
     expect(staleSignal?.aborted).toBe(true);
     fireEvent.click(
       screen.getByRole("button", {
-        name: "Execute the isolated workspace for real",
+        name: "Run in sandbox",
       }),
     );
     expect(fetchMock).toHaveBeenCalledTimes(2);
@@ -386,7 +386,7 @@ describe("DataLab", () => {
     );
     fireEvent.click(
       screen.getByRole("button", {
-        name: "Execute the isolated workspace for real",
+        name: "Run in sandbox",
       }),
     );
     expect(await screen.findByRole("alert")).toHaveTextContent(
@@ -416,7 +416,7 @@ describe("DataLab", () => {
     );
     fireEvent.click(
       screen.getByRole("button", {
-        name: "Execute the isolated workspace for real",
+        name: "Run in sandbox",
       }),
     );
     await screen.findByText(/post-outcome leakage inflates/i);
@@ -426,7 +426,7 @@ describe("DataLab", () => {
     expect(JSON.stringify(requestBody)).not.toContain("SELECT");
 
     fireEvent.click(
-      screen.getByLabelText(/Document only the safe \+5 pp comparison/i),
+      screen.getByLabelText(/Document the safe \+5 pp value/i),
     );
     const rationale =
       "The +5 pp safe metric needs leakage and reproduction limits in the model card.";
@@ -453,12 +453,12 @@ describe("DataLab", () => {
     );
     fireEvent.click(
       screen.getByRole("button", {
-        name: "Execute the isolated workspace for real",
+        name: "Run in sandbox",
       }),
     );
     await screen.findByText(/post-outcome leakage inflates/i);
     fireEvent.click(
-      screen.getByLabelText(/Document only the safe \+5 pp comparison/i),
+      screen.getByLabelText(/Document the safe \+5 pp value/i),
     );
     fireEvent.change(
       screen.getByLabelText(
@@ -473,7 +473,7 @@ describe("DataLab", () => {
     );
 
     expect(
-      screen.getByText(/Final verification remains locked/i),
+      screen.getByText(/Final verification unlocks after all five/i),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Verify project" }),
@@ -491,11 +491,11 @@ describe("DataLab", () => {
       },
     );
     expect(screen.getByRole("status", { name: "" })).toHaveTextContent(
-      /bounded analysis contract/i,
+      /analysis contract is missing fields or exclusions/i,
     );
     expect(
       screen.getByRole("button", {
-        name: "Execute the isolated workspace for real",
+        name: "Run in sandbox",
       }),
     ).toBeDisabled();
     expect(fetchMock).not.toHaveBeenCalled();

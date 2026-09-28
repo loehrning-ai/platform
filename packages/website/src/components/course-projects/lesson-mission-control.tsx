@@ -44,7 +44,8 @@ import type {
   CourseProjectStage,
 } from "@/lib/course-projects/types";
 import type { Locale } from "@/lib/i18n/locale";
-import { cn } from "@/lib/utils";
+// cx is cn with the Werkzeichnung type scale registered (text-label survives a colour).
+import { cx as cn } from "@/components/werk";
 import { LessonMissionFrame } from "./lesson-mission-frame";
 import {
   focusMissionTarget,
@@ -77,13 +78,13 @@ const MISSION_COPY = {
     stage: "Projektphase",
     objective: "Aktueller Auftrag",
     expectedEvidence: "Gesuchter Beleg",
-    progress: "Phasen abgeschlossen",
+    progress: "Etappen erledigt",
     collapse: "Signalstrecke einklappen",
     expand: "Signalstrecke ausklappen",
     localBoundary:
-      "Gespeichert werden nur feste Auswahl-IDs, Abrufzähler und Fälligkeitszeitpunkte in diesem Browser. Geschriebene Abrufe und Notizen werden weder gespeichert noch gesendet.",
+      "Was du hier schreibst, wird weder gespeichert noch gesendet.",
     syntheticOnly: "Nur synthetischen Kontext verwenden.",
-    locked: "Vorherige Phase zuerst abschließen",
+    locked: "Vorherige Etappe zuerst abschließen",
     current: "aktuell",
     currentStep: "Aktueller Schritt",
     stepComplete: "abgeschlossen",
@@ -91,9 +92,9 @@ const MISSION_COPY = {
     stepLocked: "gesperrt",
     complete: "Lektionsschleife geschlossen",
     ownerRequired:
-      "Aktiviere den lokalen Lernmodus, bevor du diese Mission startest.",
+      "Aktiviere zuerst den lokalen Lernmodus.",
     stageLocked:
-      "Diese Projektphase ist gesperrt. Schließe zuerst die vorherigen Projektphasen ab.",
+      "Diese Projektphase ist gesperrt. Schließe zuerst die vorherigen ab.",
     correct: "Signal trägt.",
     incorrect: "Signal trägt noch nicht.",
     continue: "Nächstes Signal",
@@ -101,29 +102,27 @@ const MISSION_COPY = {
     committed: "Festgelegte Prognose",
     revealed: "Aufgedecktes Störsignal",
     predictionHint:
-      "Lege dich vor der Beobachtung fest. Die Auswahl wird nach dem Aufdecken gesperrt; revidiert wird später mit Evidenz.",
-    predictionHintCompact:
-      "Vor der Beobachtung festlegen; danach ist die Auswahl gesperrt.",
+      "Leg dich vor der Beobachtung fest; danach ist die Auswahl gesperrt.",
     openWorkspace: "Instrument öffnen",
     workspaceOpen: "Instrument offen",
     manipulateRequired:
-      "Ändere mindestens eine bereitgestellte Steuerung im Instrument. Das Öffnen allein zählt nicht als Manipulation.",
-    manipulated: "Eine Instrumentänderung wurde für diese Lektion erkannt.",
+      "Nur Öffnen zählt noch nicht.",
+    manipulated: "Instrumentänderung erkannt.",
     runRequired:
-      "Führe jetzt die sichtbare, begrenzte Ausführungsaktion im Instrument aus. Nur ein erfolgreicher fester Beleg öffnet die Evidenzprüfung.",
+      "Führe jetzt das Instrument aus. Erst ein erfolgreicher Beleg öffnet die Evidenzprüfung.",
     runInstrument: "Instrument zur Ausführung öffnen",
-    runComplete: "Erfolgreicher Ausführungsbeleg für diese Lektion erkannt.",
+    runComplete: "Ausführungsbeleg erkannt.",
     retrievalRecall: "Regel aus dem Gedächtnis",
     retrievalRecallPrompt:
-      "Rekonstruiere die entscheidende Regel schriftlich, bevor Antwortoptionen oder Begründungen erscheinen.",
+      "Schreib die entscheidende Regel auf, bevor die Optionen erscheinen.",
     retrievalRecallHint:
-      "12 bis 280 Zeichen. Dieser Abruf bleibt nur im Arbeitsspeicher dieser Seite.",
+      "12 bis 280 Zeichen.",
     retrievalRecallCommit: "Abruf festlegen und Optionen öffnen",
     retrievalRecallCommitted:
-      "Schriftlicher Abruf festgelegt. Jetzt die Regel prüfen.",
+      "Abruf festgelegt. Jetzt die Regel prüfen.",
     firstRetrievalChoice: "Erste Abrufauswahl",
     retrievalChoiceLocked:
-      "Die Auswahl dieses Versuchs ist gesperrt und kann nicht umgeschaltet werden.",
+      "Diese Auswahl ist gesperrt.",
     misconception: "Fehlvorstellung erkannt",
     repairRetrieval: "Reparaturabruf beginnen",
     retrievalDue: "Der nächste Abruf ist jetzt fällig.",
@@ -133,14 +132,14 @@ const MISSION_COPY = {
     retrievalAttempts: "Abrufversuche",
     scratch: "Temporäre Revisionsnotiz",
     scratchHint:
-      "Optional, maximal 280 Zeichen. Bleibt nur im Arbeitsspeicher dieser Seite.",
+      "Optional, bis 280 Zeichen, wird nicht gespeichert.",
     transferCase: "Neuer Fall",
     reset: "Lektionsmission zurücksetzen",
     resetLocked: "Zurücksetzen nach Projektverifikation gesperrt",
     resetLabel:
-      "Nur die lokal gespeicherten Auswahl-IDs dieser Lektionsmission löschen",
+      "Nur die gespeicherte Auswahl dieser Mission löschen",
     resetFailed:
-      "Zurücksetzen fehlgeschlagen: Der gespeicherte Missionsstand konnte nicht sicher gelöscht werden. Der bisherige Stand bleibt erhalten.",
+      "Zurücksetzen fehlgeschlagen. Der bisherige Stand bleibt erhalten.",
     steps: {
       predict: "Prognose",
       manipulate: "Manipulieren",
@@ -159,14 +158,14 @@ const MISSION_COPY = {
   en: {
     eyebrow: "Lesson mission",
     title: "Signal circuit",
-    stage: "Project phase",
+    stage: "Project stage",
     objective: "Current assignment",
     expectedEvidence: "Evidence target",
     progress: "beats complete",
     collapse: "Collapse signal circuit",
     expand: "Expand signal circuit",
     localBoundary:
-      "Only fixed choice IDs, retrieval counts, and due timestamps are stored in this browser. Written recall and scratch notes are neither saved nor sent.",
+      "What you write here is neither saved nor sent.",
     syntheticOnly: "Use synthetic context only.",
     locked: "Complete the previous beat first",
     current: "current",
@@ -175,38 +174,36 @@ const MISSION_COPY = {
     stepIncomplete: "incomplete",
     stepLocked: "locked",
     complete: "Lesson loop closed",
-    ownerRequired: "Activate local learning before starting this mission.",
+    ownerRequired: "Activate local learning first.",
     stageLocked:
-      "This project phase is locked. Complete the preceding project stages first.",
+      "This project stage is locked. Complete the earlier ones first.",
     correct: "Signal holds.",
     incorrect: "Signal does not hold yet.",
     continue: "Next signal",
     reveal: "Commit prediction and reveal signal",
     committed: "Committed prediction",
     revealed: "Revealed failure signal",
-    predictionHint:
-      "Commit before observing. The choice locks after reveal; revision happens later against evidence.",
-    predictionHintCompact: "Commit before observing; the choice then locks.",
+    predictionHint: "Commit before observing; the choice then locks.",
     openWorkspace: "Open instrument",
     workspaceOpen: "Instrument open",
     manipulateRequired:
-      "Change at least one supplied control in the instrument. Opening it alone does not count as manipulation.",
-    manipulated: "An instrument change was detected for this lesson.",
+      "Opening alone does not count yet.",
+    manipulated: "Instrument change detected.",
     runRequired:
-      "Now use the visible bounded run action in the instrument. Only its successful fixed receipt unlocks evidence inspection.",
+      "Now run the instrument. Only a successful receipt unlocks the evidence check.",
     runInstrument: "Open instrument to run",
-    runComplete: "A successful execution receipt was detected for this lesson.",
+    runComplete: "Execution receipt detected.",
     retrievalRecall: "Rule from memory",
     retrievalRecallPrompt:
-      "Reconstruct the governing rule in writing before answer options or rationales appear.",
+      "Write down the governing rule before the options appear.",
     retrievalRecallHint:
-      "12 to 280 characters. This recall remains only in this page's memory.",
+      "12 to 280 characters.",
     retrievalRecallCommit: "Commit recall and open options",
     retrievalRecallCommitted:
-      "Written recall committed. Now check the governing rule.",
+      "Recall committed. Now check the rule.",
     firstRetrievalChoice: "First retrieval choice",
     retrievalChoiceLocked:
-      "This attempt's choice is locked and cannot be switched.",
+      "This choice is locked.",
     misconception: "Misconception detected",
     repairRetrieval: "Begin repair retrieval",
     retrievalDue: "The next retrieval is due now.",
@@ -216,14 +213,14 @@ const MISSION_COPY = {
     retrievalAttempts: "retrieval attempts",
     scratch: "Temporary revision note",
     scratchHint:
-      "Optional, 280 characters maximum. It remains only in this page's memory.",
+      "Optional, up to 280 characters, not saved.",
     transferCase: "New case",
     reset: "Reset lesson mission",
     resetLocked: "Reset locked after project verification",
     resetLabel:
-      "Clear only the locally stored choice IDs for this lesson mission",
+      "Clear only this mission's stored choices",
     resetFailed:
-      "Reset failed: the stored mission state could not be removed safely. The prior state remains intact.",
+      "Reset failed. The previous state is kept.",
     steps: {
       predict: "Predict",
       manipulate: "Manipulate",
@@ -412,12 +409,13 @@ function ChoiceProbe({
       <Heading
         ref={headingRef}
         tabIndex={-1}
-        className="max-w-[62ch] text-balance text-xl font-black leading-tight text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:text-2xl"
+        className="max-w-[62ch] text-balance text-xl font-bold leading-tight text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:text-2xl"
       >
         {probe.prompt[locale]}
       </Heading>
+      {/* Below sm the choices are hairline rows, not boxes. */}
       <div
-        className="mt-5 grid gap-3"
+        className="mt-5 grid gap-3 max-sm:mt-3 max-sm:gap-0 max-sm:border-t max-sm:border-hairline"
         style={{
           gridTemplateColumns:
             "repeat(auto-fit, minmax(min(100%, 14rem), 1fr))",
@@ -441,22 +439,22 @@ function ChoiceProbe({
                 }
               }}
               className={cn(
-                "min-h-14 min-w-0 border-2 p-4 text-left outline-none transition-[border-color,background-color,color,transform] focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                "min-h-14 min-w-0 border p-4 text-left outline-none transition-[border-color,background-color,color] duration-[120ms] motion-reduce:transition-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background max-sm:min-h-12 max-sm:p-3",
                 selected
-                  ? "border-foreground bg-foreground text-background"
-                  : "border-border bg-background text-foreground hover:-translate-y-0.5 hover:border-brand-orange",
-                locked && "cursor-not-allowed opacity-75 hover:translate-y-0",
+                  ? "border-scene-line bg-scene-line text-background"
+                  : "border-border bg-background text-foreground hover:border-foreground hover:bg-card-hover max-sm:border-0 max-sm:border-b max-sm:border-hairline max-sm:bg-transparent",
+                locked && "cursor-not-allowed opacity-75",
               )}
             >
               <span
                 className={cn(
-                  "block font-mono text-xs font-black uppercase tracking-[0.16em]",
-                  selected ? "text-[#ffc6aa]" : "text-brand-orange-dark",
+                  "block text-label",
+                  selected ? "text-background" : "text-muted-foreground",
                 )}
               >
                 {String(index + 1).padStart(2, "0")}
               </span>
-              <span className="mt-2 block break-words text-sm font-bold leading-relaxed">
+              <span className="mt-2 block break-words text-sm font-bold leading-relaxed max-sm:mt-0.5">
                 {entry.label[locale]}
               </span>
             </button>
@@ -473,17 +471,15 @@ function ChoiceProbe({
           }
           data-mission-feedback
           className={cn(
-            "mt-5 border-l-4 p-4 text-sm leading-relaxed outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2",
-            correct
-              ? "border-risk-green bg-risk-green/10 text-foreground"
-              : "border-brand-orange bg-brand-orange/10 text-foreground",
+            "mt-5 border bg-card p-4 text-sm leading-relaxed text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2",
+            correct ? "border-pass" : "border-foreground",
           )}
         >
-          <p className="font-black">{correct ? correctCopy : incorrectCopy}</p>
+          <p className="font-bold">{correct ? correctCopy : incorrectCopy}</p>
           <p className="mt-1">{feedback ?? probe.rationale[locale]}</p>
           {completion ? (
             <div className="mt-4 border-t border-current/20 pt-4">
-              <p className="font-black">{completion.title}</p>
+              <p className="font-bold">{completion.title}</p>
               <p className="mt-1 text-muted-foreground">{completion.detail}</p>
             </div>
           ) : null}
@@ -998,7 +994,7 @@ export function LessonMissionControl({
     <button
       type="button"
       onClick={() => continueTo(nextStep)}
-      className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border-2 border-foreground bg-brand-orange px-5 font-mono text-xs font-black uppercase tracking-[0.12em] text-white outline-none transition-transform hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+      className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border border-scene-line bg-scene-line px-5 text-label text-background underline-offset-4 outline-none transition-colors duration-[120ms] hover:underline motion-reduce:transition-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       {copy.continue}{" "}
       <span aria-hidden="true" className="ml-2">
@@ -1011,7 +1007,10 @@ export function LessonMissionControl({
   // heading and label inside the mission break. German compounds such as
   // "Promptvariante" and "Grounding-Komparator" are wider than a mission
   // column at high browser zoom, and this section clips rather than scrolls,
-  // so without a break they are silently cut off.
+  // so without a break they are silently cut off. `break-word` only breaks a
+  // word that cannot fit on a line of its own; `anywhere` also shrinks the
+  // min-content width and split "Festlegen" into "Festleg|en" on phones.
+  // Flex and grid children therefore carry `min-w-0` so they can shrink.
   return (
     <section
       ref={missionRef}
@@ -1022,11 +1021,12 @@ export function LessonMissionControl({
       data-mission-collapsed={displayState.collapsed ? "true" : "false"}
       data-keyboard-shortcuts="ignore"
       aria-labelledby={headingId}
-      className="relative mb-6 min-w-0 scroll-mt-24 overflow-hidden border-2 border-foreground bg-background shadow-[5px_5px_0_0_var(--color-brand-orange)] [overflow-wrap:anywhere]"
+      className="relative mb-6 min-w-0 scroll-mt-24 overflow-hidden border-t-2 border-foreground bg-background [overflow-wrap:break-word]"
     >
-      <header className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] gap-0 border-b-2 border-foreground bg-foreground text-background sm:grid-cols-1 lg:grid-cols-[minmax(0,1fr)_auto]">
-        <div className="min-w-0 px-4 py-2 sm:px-5">
-          <p className="font-mono text-xs font-black uppercase tracking-[0.2em] text-[#ffc6aa]">
+      <header className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] gap-0 border-b border-hairline text-foreground sm:grid-cols-1 lg:grid-cols-[minmax(0,1fr)_auto]">
+        <div className="min-w-0 py-3">
+          {/* Phones drop the eyebrow: the title and the tabs below say it. */}
+          <p className="text-label text-muted-foreground max-sm:hidden">
             {copy.eyebrow} ·{" "}
             <span className="hidden sm:inline">{copy.title} · </span>
             {profile.instrument[locale]}
@@ -1037,19 +1037,19 @@ export function LessonMissionControl({
               {...(missionHeadingLevel === 1
                 ? { role: "heading", "aria-level": 1 }
                 : {})}
-              className="[overflow-wrap:anywhere] text-[clamp(1.35rem,3vw,2rem)] font-black leading-none tracking-[-0.04em]"
+              className="min-w-0 text-fluid-h2 font-bold"
             >
               {frame.title}
             </MissionHeading>
             <p
-              className="pb-1 font-mono text-xs font-bold uppercase tracking-[0.14em] text-background/70"
+              className="pb-1 text-caption text-muted-foreground tabular-nums"
               aria-live="polite"
             >
               {completedBeatCount}/{BEATS.length} {copy.progress}
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2 border-l border-background/30 px-1 py-1 sm:border-l-0 sm:border-t sm:px-3 lg:border-l lg:border-t-0">
+        <div className="flex items-center gap-2 py-2 pl-2 sm:pl-0 lg:pl-3">
           <button
             type="button"
             onClick={() =>
@@ -1061,7 +1061,7 @@ export function LessonMissionControl({
             aria-label={displayState.collapsed ? copy.expand : copy.collapse}
             aria-expanded={!displayState.collapsed}
             aria-controls={`${headingId}-body`}
-            className="inline-flex h-11 w-11 items-center justify-center border border-background/60 px-0 font-mono text-xs font-black uppercase tracking-[0.12em] text-background outline-none hover:border-[#ffc6aa] hover:text-[#ffc6aa] focus-visible:ring-2 focus-visible:ring-[#ffc6aa] sm:h-auto sm:w-auto sm:min-h-11 sm:px-4"
+            className="inline-flex h-11 w-11 items-center justify-center border border-foreground px-0 text-label text-foreground outline-none transition-colors duration-[120ms] hover:bg-card-hover focus-visible:ring-2 focus-visible:ring-brand-orange motion-reduce:transition-none sm:h-auto sm:w-auto sm:min-h-11 sm:px-4"
           >
             <span aria-hidden="true" className="text-lg sm:hidden">
               {displayState.collapsed ? "+" : "−"}
@@ -1074,8 +1074,10 @@ export function LessonMissionControl({
       </header>
 
       <div id={`${headingId}-body`} hidden={displayState.collapsed}>
-        <div className="min-w-0 border-b-2 border-foreground">
-          <div className="min-w-0 border-b border-border bg-card p-2 sm:p-4">
+        <div className="min-w-0 border-b border-hairline">
+          {/* Below sm the summary sits flat on the page; from sm it is the
+              lighter-paper card. */}
+          <div className="min-w-0 border-b border-hairline bg-card p-2 max-sm:bg-transparent max-sm:px-0 sm:p-4">
             <LessonMissionFrame
               frame={frame}
               locale={locale}
@@ -1084,21 +1086,21 @@ export function LessonMissionControl({
               compactOnMobile
             />
             <details className="mt-2 border-t border-border pt-2">
-              <summary className="min-h-11 cursor-pointer py-3 font-mono text-xs font-black uppercase tracking-[0.14em] text-muted-foreground hover:text-foreground">
+              <summary className="min-h-11 cursor-pointer py-3 text-label text-muted-foreground hover:text-foreground">
                 {copy.stage} · {String(projectStageIndex + 1).padStart(2, "0")}
                 /05 · {copy.expectedEvidence}
               </summary>
               <dl className="mt-3 grid min-w-0 gap-3 sm:grid-cols-2">
                 <div>
-                  <dt className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
+                  <dt className="text-label text-muted-foreground">
                     {copy.objective}
                   </dt>
                   <dd className="mt-1 break-words text-sm font-semibold leading-snug">
                     {projectStage.objective[locale]}
                   </dd>
                 </div>
-                <div className="border-l-2 border-brand-orange pl-3">
-                  <dt className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
+                <div>
+                  <dt className="text-label text-muted-foreground">
                     {copy.expectedEvidence}
                   </dt>
                   <dd className="mt-1 break-words text-sm leading-snug">
@@ -1112,7 +1114,7 @@ export function LessonMissionControl({
             </details>
           </div>
 
-          <div className="min-w-0 p-2 sm:p-4">
+          <div className="min-w-0 p-2 max-sm:px-0 sm:p-4">
             <ol
               className="grid min-w-0 grid-cols-3 gap-1"
               aria-label={copy.title}
@@ -1148,28 +1150,33 @@ export function LessonMissionControl({
                       className={cn(
                         "flex min-h-11 w-full min-w-0 items-center justify-center gap-2 border-b-[3px] px-2 py-1.5 text-center outline-none transition-[border-color,color,background-color] focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
                         selected
-                          ? "border-brand-orange bg-foreground text-background"
+                          ? "border-scene-line bg-scene-line text-background"
                           : complete
-                            ? "border-risk-green bg-risk-green/10 text-foreground"
+                            ? "border-pass bg-card text-foreground"
                             : available
-                              ? "border-brand-orange bg-background text-foreground hover:bg-brand-orange/10"
+                              ? "border-foreground bg-background text-foreground hover:bg-card-hover"
                               : "cursor-not-allowed border-border bg-card text-foreground/70",
                       )}
                     >
+                      {/* Below 420px the three tabs are about 110px wide, so
+                          the number chip gives way to the label. A finished
+                          beat keeps its "OK" chip, which is the only
+                          non-colour sign of completion on the tab. */}
                       <span
                         className={cn(
-                          "grid h-6 w-6 shrink-0 place-items-center rounded-full border font-mono text-xs font-black",
+                          "h-6 w-6 shrink-0 place-items-center border text-xs font-bold tabular-nums",
+                          complete ? "grid" : "hidden min-[420px]:grid",
                           selected
-                            ? "border-[#ffc6aa] text-[#ffc6aa]"
+                            ? "border-background text-background"
                             : complete
-                              ? "border-risk-green text-risk-green"
-                              : "border-brand-orange text-brand-orange-dark",
+                              ? "border-pass text-pass"
+                              : "border-foreground text-foreground",
                         )}
                         aria-hidden="true"
                       >
                         {complete ? "OK" : String(index + 1).padStart(2, "0")}
                       </span>
-                      <span className="min-w-0 max-w-full font-mono text-xs font-black uppercase tracking-[0.06em] [overflow-wrap:anywhere]">
+                      <span className="min-w-0 max-w-full text-label hyphens-auto [overflow-wrap:break-word]">
                         {label}
                       </span>
                     </button>
@@ -1177,11 +1184,13 @@ export function LessonMissionControl({
                 );
               })}
             </ol>
+            {/* The selected tab already shows the beat on a phone; the step
+                line stays for screen readers there. */}
             <p
               role="status"
               aria-live="polite"
               aria-atomic="true"
-              className="mt-2 font-mono text-xs font-black uppercase tracking-[0.1em] text-muted-foreground"
+              className="mt-2 text-label text-muted-foreground max-sm:sr-only"
             >
               {copy.currentStep}:{" "}
               {String(displayActivePanel + 1).padStart(2, "0")}/
@@ -1189,14 +1198,14 @@ export function LessonMissionControl({
               {copy.steps[currentStepId]}
             </p>
             <p id={`${headingId}-sequence-help`} className="sr-only">
-              {copy.locked}. {copy.predictionHint}
+              {copy.locked}.
             </p>
             {!controlsEnabled ? (
               <p
                 ref={noticeRef}
                 tabIndex={-1}
                 role="status"
-                className="mt-3 border-l-4 border-brand-orange bg-brand-orange/10 p-4 text-sm font-bold leading-relaxed"
+                className="mt-3 border border-foreground bg-card p-4 text-sm font-bold leading-relaxed"
               >
                 {ownerReady ? copy.stageLocked : copy.ownerRequired}
               </p>
@@ -1211,20 +1220,15 @@ export function LessonMissionControl({
                   <StepHeading
                     ref={panelHeadingRef}
                     tabIndex={-1}
-                    className="max-w-[62ch] text-balance text-lg font-black leading-tight text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:text-2xl"
+                    className="max-w-[62ch] text-balance text-lg font-bold leading-tight text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:text-2xl"
                   >
                     {profile.predictionPrompt[locale]}
                   </StepHeading>
                   <p className="mt-2 max-w-[72ch] text-[13px] leading-snug text-muted-foreground sm:mt-3 sm:text-sm sm:leading-relaxed">
-                    <span className="sm:hidden">
-                      {copy.predictionHintCompact}
-                    </span>
-                    <span className="hidden sm:inline">
-                      {copy.predictionHint}
-                    </span>
+                    {copy.predictionHint}
                   </p>
                   <fieldset
-                    className="mt-3 grid gap-3 sm:mt-5"
+                    className="mt-3 grid gap-2 max-sm:gap-0 max-sm:border-t max-sm:border-hairline sm:mt-5 sm:gap-3"
                     disabled={displayState.revealed || !controlsEnabled}
                     style={{
                       gridTemplateColumns:
@@ -1239,10 +1243,10 @@ export function LessonMissionControl({
                         key={entry.id}
                         data-lesson-prediction-choice
                         className={cn(
-                          "relative flex min-h-14 min-w-0 cursor-pointer items-start gap-3 border-2 p-3 transition-[border-color,background-color,transform] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand-orange has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-background sm:p-4",
+                          "relative flex min-h-12 min-w-0 cursor-pointer items-start gap-3 border p-3 sm:min-h-14 transition-[border-color,background-color,transform] has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand-orange has-[:focus-visible]:ring-offset-2 has-[:focus-visible]:ring-offset-background sm:p-4",
                           displayState.predictionId === entry.id
-                            ? "border-foreground bg-foreground text-background"
-                            : "border-border bg-background hover:-translate-y-0.5 hover:border-brand-orange",
+                            ? "border-scene-line bg-scene-line text-background"
+                            : "border-border bg-background hover:border-foreground hover:bg-card-hover max-sm:border-0 max-sm:border-b max-sm:border-hairline max-sm:bg-transparent",
                           displayState.revealed && "cursor-default",
                         )}
                       >
@@ -1257,10 +1261,10 @@ export function LessonMissionControl({
                               predictionId: entry.id,
                             }))
                           }
-                          className="mt-1 h-4 w-4 shrink-0 accent-[var(--color-brand-orange)]"
+                          className="mt-0.5 h-5 w-5 shrink-0 accent-[var(--color-brand-orange)]"
                         />
                         <span className="min-w-0 break-words text-sm font-bold leading-relaxed">
-                          <span className="mr-2 font-mono text-xs opacity-70">
+                          <span className="mr-2 text-label text-muted-foreground tabular-nums">
                             {String(index + 1).padStart(2, "0")}
                           </span>
                           {entry.label[locale]}
@@ -1273,14 +1277,14 @@ export function LessonMissionControl({
                     id={signalId}
                     tabIndex={-1}
                     hidden={!displayState.revealed}
-                    className="mt-5 border-l-4 border-brand-orange bg-brand-orange/10 p-5 outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2"
+                    className="mt-5 border border-foreground bg-card p-5 outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2"
                   >
                     {displayState.revealed ? (
                       <>
-                        <p className="font-mono text-xs font-black uppercase tracking-[0.14em] text-brand-orange-dark">
+                        <p className="text-label text-foreground">
                           {copy.committed}: {predictedLabel}
                         </p>
-                        <p className="mt-3 font-mono text-xs font-black uppercase tracking-[0.14em] text-foreground">
+                        <p className="mt-3 text-label text-foreground">
                           {copy.revealed}
                         </p>
                         <p className="mt-2 max-w-[72ch] text-sm leading-relaxed">
@@ -1297,7 +1301,7 @@ export function LessonMissionControl({
                       }
                       aria-controls={signalId}
                       onClick={revealPrediction}
-                      className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border-2 border-foreground bg-brand-orange px-5 font-mono text-xs font-black uppercase tracking-[0.1em] text-white outline-none disabled:cursor-not-allowed disabled:border-border disabled:bg-card disabled:text-muted-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                      className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border border-scene-line bg-scene-line px-5 text-label text-background underline-offset-4 outline-none disabled:cursor-not-allowed disabled:border-border disabled:bg-card disabled:text-muted-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                     >
                       {copy.reveal}
                     </button>
@@ -1311,7 +1315,7 @@ export function LessonMissionControl({
                   <StepHeading
                     ref={panelHeadingRef}
                     tabIndex={-1}
-                    className="max-w-[62ch] text-balance text-xl font-black leading-tight text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:text-2xl"
+                    className="max-w-[62ch] text-balance text-xl font-bold leading-tight text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:text-2xl"
                   >
                     {profile.manipulation[locale]}
                   </StepHeading>
@@ -1321,7 +1325,7 @@ export function LessonMissionControl({
                   {displayState.manipulated ? (
                     <div
                       role="status"
-                      className="mt-5 border-l-4 border-risk-green bg-risk-green/10 p-4 text-sm font-semibold"
+                      className="mt-5 border border-pass bg-card p-4 text-sm font-semibold"
                     >
                       {copy.manipulated}
                     </div>
@@ -1339,7 +1343,7 @@ export function LessonMissionControl({
                     }}
                     aria-controls={workspaceId}
                     aria-expanded={workspaceActive}
-                    className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border-2 border-foreground bg-foreground px-5 font-mono text-xs font-black uppercase tracking-[0.1em] text-background outline-none hover:border-brand-orange hover:text-[#ffc6aa] focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border border-scene-line bg-scene-line px-5 text-label text-background underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
                     {workspaceActive ? copy.workspaceOpen : copy.openWorkspace}:{" "}
                     {profile.instrument[locale]}
@@ -1353,7 +1357,7 @@ export function LessonMissionControl({
                   <StepHeading
                     ref={panelHeadingRef}
                     tabIndex={-1}
-                    className="max-w-[62ch] text-balance text-xl font-black leading-tight text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:text-2xl"
+                    className="max-w-[62ch] text-balance text-xl font-bold leading-tight text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:text-2xl"
                   >
                     {copy.steps.run}: {profile.instrument[locale]}
                   </StepHeading>
@@ -1363,7 +1367,7 @@ export function LessonMissionControl({
                   {stepCompletion[2] ? (
                     <div
                       role="status"
-                      className="mt-5 border-l-4 border-risk-green bg-risk-green/10 p-4 text-sm font-semibold"
+                      className="mt-5 border border-pass bg-card p-4 text-sm font-semibold"
                     >
                       {copy.runComplete}
                     </div>
@@ -1374,7 +1378,7 @@ export function LessonMissionControl({
                     onClick={onOpenWorkspace}
                     aria-controls={workspaceId}
                     aria-expanded={workspaceActive}
-                    className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border-2 border-foreground bg-foreground px-5 font-mono text-xs font-black uppercase tracking-[0.1em] text-background outline-none hover:border-brand-orange hover:text-[#ffc6aa] focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                    className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border border-scene-line bg-scene-line px-5 text-label text-background underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                   >
                     {copy.runInstrument}: {profile.instrument[locale]}
                   </button>
@@ -1418,7 +1422,7 @@ export function LessonMissionControl({
                       <StepHeading
                         ref={panelHeadingRef}
                         tabIndex={-1}
-                        className="max-w-[62ch] text-balance text-xl font-black leading-tight text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:text-2xl"
+                        className="max-w-[62ch] text-balance text-xl font-bold leading-tight text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:text-2xl"
                       >
                         {copy.retrievalRecall}
                       </StepHeading>
@@ -1427,7 +1431,7 @@ export function LessonMissionControl({
                       </p>
                       <label
                         htmlFor={`${headingId}-retrieval-recall`}
-                        className="mt-5 block font-mono text-xs font-black uppercase tracking-[0.14em] text-foreground"
+                        className="mt-5 block text-label text-foreground"
                       >
                         {copy.retrievalRecall}
                       </label>
@@ -1442,7 +1446,7 @@ export function LessonMissionControl({
                         onChange={(event) =>
                           setRetrievalRecall(event.target.value)
                         }
-                        className="mt-2 min-h-28 w-full resize-y border-2 border-border bg-background p-3 text-sm leading-relaxed text-foreground outline-none focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/30"
+                        className="mt-2 min-h-28 w-full resize-y border border-border bg-background p-3 text-sm max-lg:text-base leading-relaxed text-foreground outline-none focus:border-foreground focus:ring-2 focus:ring-brand-orange"
                       />
                       <p
                         id={`${headingId}-retrieval-recall-hint`}
@@ -1454,7 +1458,7 @@ export function LessonMissionControl({
                       <button
                         type="submit"
                         disabled={!controlsEnabled || !retrievalRecallReady}
-                        className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border-2 border-foreground bg-brand-orange px-5 font-mono text-xs font-black uppercase tracking-[0.1em] text-white outline-none disabled:cursor-not-allowed disabled:border-border disabled:bg-card disabled:text-muted-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                        className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border border-scene-line bg-scene-line px-5 text-label text-background underline-offset-4 outline-none disabled:cursor-not-allowed disabled:border-border disabled:bg-card disabled:text-muted-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                       >
                         {copy.retrievalRecallCommit}
                       </button>
@@ -1463,7 +1467,7 @@ export function LessonMissionControl({
                     <>
                       <p
                         role="status"
-                        className="mb-5 border-l-4 border-foreground bg-card p-4 text-sm font-semibold"
+                        className="mb-5 border border-hairline bg-card p-4 text-sm font-semibold"
                       >
                         {copy.retrievalRecallCommitted}
                       </p>
@@ -1487,8 +1491,8 @@ export function LessonMissionControl({
                         onSelect={commitRetrievalChoice}
                       />
                       {displayState.retrievalId !== null ? (
-                        <div className="mt-5 border-2 border-foreground/20 bg-card p-4 text-sm leading-relaxed">
-                          <p className="font-black">
+                        <div className="mt-5 border border-foreground/20 bg-card p-4 text-sm leading-relaxed">
+                          <p className="font-bold">
                             {copy.firstRetrievalChoice}: {firstRetrievalChoice}
                           </p>
                           <p className="mt-1 text-muted-foreground">
@@ -1503,7 +1507,7 @@ export function LessonMissionControl({
                         <button
                           type="button"
                           onClick={beginRetrievalRepair}
-                          className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border-2 border-foreground bg-foreground px-5 font-mono text-xs font-black uppercase tracking-[0.1em] text-background outline-none hover:border-brand-orange hover:text-[#ffc6aa] focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                          className="mt-5 inline-flex min-h-11 max-w-full items-center justify-center text-center [overflow-wrap:anywhere] border border-scene-line bg-scene-line px-5 text-label text-background underline-offset-4 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                         >
                           {copy.repairRetrieval}
                         </button>
@@ -1511,7 +1515,7 @@ export function LessonMissionControl({
                       {currentRetrievalCorrect ? (
                         <div
                           role="status"
-                          className="mt-5 border-l-4 border-risk-green bg-risk-green/10 p-4 text-sm font-semibold"
+                          className="mt-5 border border-pass bg-card p-4 text-sm font-semibold"
                         >
                           {copy.nextRetrieval}: {retrievalIntervalDays}{" "}
                           {retrievalIntervalUnit}.
@@ -1526,13 +1530,13 @@ export function LessonMissionControl({
                       <StepHeading
                         ref={panelHeadingRef}
                         tabIndex={-1}
-                        className="max-w-[62ch] text-balance text-xl font-black leading-tight text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:text-2xl"
+                        className="max-w-[62ch] text-balance text-xl font-bold leading-tight text-foreground outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 sm:text-2xl"
                       >
                         {copy.retrievalRecall}
                       </StepHeading>
                       <p
                         role="status"
-                        className="mt-5 border-l-4 border-risk-green bg-risk-green/10 p-4 text-sm font-semibold"
+                        className="mt-5 border border-pass bg-card p-4 text-sm font-semibold"
                       >
                         {retrievalDue
                           ? copy.retrievalDue
@@ -1547,8 +1551,8 @@ export function LessonMissionControl({
               {displayActivePanel === 4 ? (
                 <div>
                   {predictedLabel ? (
-                    <p className="mb-5 border-l-4 border-foreground bg-card p-4 text-sm">
-                      <span className="font-mono text-xs font-black uppercase tracking-[0.14em] text-brand-orange-dark">
+                    <p className="mb-5 border border-hairline bg-card p-4 text-sm">
+                      <span className="text-label text-foreground">
                         {copy.committed}
                       </span>
                       <span className="mt-1 block font-bold">
@@ -1575,7 +1579,7 @@ export function LessonMissionControl({
                   <div className="mt-5">
                     <label
                       htmlFor={`${headingId}-scratch`}
-                      className="font-mono text-xs font-black uppercase tracking-[0.14em] text-foreground"
+                      className="text-label text-foreground"
                     >
                       {copy.scratch}
                     </label>
@@ -1585,7 +1589,7 @@ export function LessonMissionControl({
                       maxLength={280}
                       onChange={(event) => setScratch(event.target.value)}
                       aria-describedby={`${headingId}-scratch-hint`}
-                      className="mt-2 min-h-24 w-full resize-y border-2 border-border bg-background p-3 text-sm leading-relaxed text-foreground outline-none focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/30"
+                      className="mt-2 min-h-24 w-full resize-y border border-border bg-background p-3 text-sm max-lg:text-base leading-relaxed text-foreground outline-none focus:border-foreground focus:ring-2 focus:ring-brand-orange"
                     />
                     <p
                       id={`${headingId}-scratch-hint`}
@@ -1600,8 +1604,8 @@ export function LessonMissionControl({
 
               {displayActivePanel === 6 ? (
                 <div>
-                  <div className="mb-5 border-2 border-foreground bg-card p-4">
-                    <p className="font-mono text-xs font-black uppercase tracking-[0.14em] text-brand-orange-dark">
+                  <div className="mb-5 border border-foreground bg-card p-4">
+                    <p className="text-label text-foreground">
                       {copy.transferCase}
                     </p>
                     <p className="mt-2 max-w-[72ch] text-sm leading-relaxed">
@@ -1621,7 +1625,7 @@ export function LessonMissionControl({
                       allComplete
                         ? {
                             title: copy.complete,
-                            detail: `${completedBeatCount}/${BEATS.length} ${copy.progress}. ${copy.localBoundary}`,
+                            detail: `${completedBeatCount}/${BEATS.length} ${copy.progress}.`,
                           }
                         : undefined
                     }
@@ -1636,13 +1640,21 @@ export function LessonMissionControl({
               ) : null}
             </div>
 
-            <div className="mt-7 flex justify-end border-t border-border pt-4">
+            {/* On a phone the reset row waits until there is something to
+                reset; before the first answer it was 70px of chrome. */}
+            <div
+              className={`mt-7 flex justify-end border-t border-border pt-4 max-sm:mt-4 max-sm:pt-3${
+                missionResetEnabled && !hasLessonMissionInteraction(state)
+                  ? " max-sm:hidden"
+                  : ""
+              }`}
+            >
               <button
                 type="button"
                 onClick={resetMission}
                 disabled={!missionResetEnabled}
                 title={missionResetEnabled ? copy.resetLabel : copy.resetLocked}
-                className="min-h-11 border border-border px-3 font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground outline-none hover:border-brand-orange hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-60"
+                className="min-h-11 border border-border px-3 text-label text-muted-foreground outline-none hover:border-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {missionResetEnabled ? copy.reset : copy.resetLocked}
               </button>
@@ -1650,7 +1662,7 @@ export function LessonMissionControl({
             {resetFailed ? (
               <p
                 role="alert"
-                className="mt-3 border-l-4 border-destructive bg-destructive/10 p-3 text-sm font-semibold leading-relaxed text-destructive"
+                className="mt-3 border border-destructive bg-card p-3 text-sm font-semibold leading-relaxed text-destructive"
               >
                 {copy.resetFailed}
               </p>

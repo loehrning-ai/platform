@@ -44,7 +44,7 @@ const CATEGORIES: readonly { readonly id: Category; readonly label: string }[] =
     { id: "chat-knowledge", label: "Chat & Wissen" },
     { id: "document-processing", label: "Dokumente" },
     { id: "agents-workflows", label: "Agents & Workflows" },
-    { id: "business-roi", label: "ROI & Reife" },
+    { id: "business-roi", label: "Wirtschaftlichkeit" },
     { id: "compliance-governance", label: "Compliance" },
     { id: "observability", label: "Observability" },
   ];
@@ -70,7 +70,7 @@ const DEMOS: readonly DemoEntry[] = [
   {
     kind: "demo-chat-rag",
     title: "RAG Vertrags-Assistent",
-    tagline: "Frag dein Vertragsarchiv. Antworten mit Paragraph + Quellen.",
+    tagline: "Fragen an ein synthetisches Vertragsarchiv stellen.",
     category: "chat-knowledge",
     teachesIn: "Modul 2 · Lektion 2.4 (Grounding + RAG)",
   },
@@ -78,60 +78,58 @@ const DEMOS: readonly DemoEntry[] = [
     kind: "demo-compliance",
     title: "Compliance Prompt-Scanner",
     tagline:
-      "Regelbasierter DSGVO-Prompt-Check. Beispielregeln, keine Live-Messung.",
+      "Regelbasierter Check mit Beispielregeln, der offensichtliche sensible Daten findet. Keine Compliance-Entscheidung.",
     category: "compliance-governance",
     teachesIn: "Modul 4 · Lektion 4.3 (DSGVO-sicher prompten)",
   },
   {
     kind: "demo-roi",
-    title: "ROI Calculator",
-    tagline: "Vier Regler. Drei-Jahres-Netto. Basiert auf Mittelstands-Daten.",
+    title: "ROI-Szenariorechner",
+    tagline: "Vier Annahmen ändern und das Drei-Jahres-Szenario prüfen.",
     category: "business-roi",
-    teachesIn: "Lernpfad / ROI-Modell",
+    teachesIn: "Kursreferenz · Business-Case-Methode",
   },
   {
     kind: "demo-doc",
-    title: "Invoice OCR",
-    tagline:
-      "PDF rein, strukturierte Daten raus. Beispiel-Output, synthetisch.",
+    title: "Rechnungsauslesung",
+    tagline: "Eine Rechnung in Felder und eine Review-Liste übertragen.",
     category: "document-processing",
     teachesIn: "Modul 2 · Lektion 2.3 (Artifacts + Dokumente)",
   },
   {
     kind: "demo-agent",
-    title: "Agent Workflow",
-    tagline: "Sub-Agents koordinieren einen mehrstufigen Task.",
+    title: "Agenten-Pipeline",
+    tagline: "Simulierter mehrstufiger Recherche- und Review-Ablauf mit Sub-Agents.",
     category: "agents-workflows",
     teachesIn: "Modul 2 · Lektion 2.5 (Claude Code + Sub-Agents)",
   },
   {
     kind: "demo-workflow",
     title: "n8n Workflow Builder",
-    tagline: "Knoten verbinden. Trigger setzen. Durchlauf simulieren.",
+    tagline: "Einen simulierten Workflow einstellen und seine Freigabestufen prüfen.",
     category: "agents-workflows",
     teachesIn: "Modul 4 · Lektion 4.4 (n8n-Automations)",
   },
   {
     kind: "demo-excel",
     title: "Excel-Automation",
-    tagline:
-      "Tabellen-Transformation mit Claude. Beispiel-Output, synthetisch.",
+    tagline: "Eine dokumentierte Transformation auf Tabellendaten anwenden.",
     category: "document-processing",
     teachesIn: "Modul 3 · Lektion 3.3 (Office-Integration)",
   },
   {
     kind: "demo-word",
     title: "Word-Dokumentengenerator",
-    tagline: "Briefing → strukturiertes Word-Doc mit Corporate-Template.",
+    tagline: "Aus einem Briefing einen prüfbaren Dokumententwurf erzeugen.",
     category: "document-processing",
     teachesIn: "Modul 3 · Lektion 3.4 (Dokumenten-Generierung)",
   },
   {
     kind: "demo-finetune",
-    title: "Fine-Tuning Viz",
-    tagline: "Wann lohnt Fine-Tuning? Und wann nicht?",
+    title: "Fine-Tuning-Entscheidung",
+    tagline: "Fine-Tuning mit Prompting und Retrieval unter festen Annahmen vergleichen.",
     category: "business-roi",
-    teachesIn: "Post-Arbeitskurs Reference",
+    teachesIn: "Nach dem Kurs zum Nachschlagen",
   },
 ];
 
@@ -139,60 +137,56 @@ const DEMOS_EN: readonly DemoEntry[] = [
   {
     kind: "demo-chat-rag",
     title: "Contract retrieval assistant",
-    tagline:
-      "Ask a synthetic contract archive and inspect source-linked answers.",
+    tagline: "Ask a synthetic contract archive and check each answer's sources.",
     category: "chat-knowledge",
     teachesIn: "Module 2 · Lesson 2.4 (grounding and retrieval)",
   },
   {
     kind: "demo-compliance",
     title: "Prompt data scanner",
-    tagline:
-      "A rule-based check for obvious sensitive-data patterns. Not a compliance decision.",
+    tagline: "A rule-based check that flags obvious sensitive data. Not a compliance decision.",
     category: "compliance-governance",
     teachesIn: "Module 4 · Lesson 4.3 (data-aware prompting)",
   },
   {
     kind: "demo-roi",
     title: "ROI scenario calculator",
-    tagline:
-      "Change explicit assumptions and inspect the resulting scenario. Not a forecast.",
+    tagline: "Change four assumptions and inspect the three-year scenario.",
     category: "business-roi",
-    teachesIn: "Course reference · business-case method",
+    teachesIn: "Reference · business-case method",
   },
   {
     kind: "demo-doc",
     title: "Invoice extraction",
-    tagline: "Map a synthetic invoice to structured fields and a review queue.",
+    tagline: "Map an invoice to fields and a review queue.",
     category: "document-processing",
     teachesIn: "Module 2 · Lesson 2.3 (Artifacts and documents)",
   },
   {
     kind: "demo-agent",
     title: "Agent pipeline",
-    tagline: "Inspect a simulated multi-step research and review process.",
+    tagline: "A simulated multi-step research and review run with sub-agents.",
     category: "agents-workflows",
     teachesIn: "Module 2 · Lesson 2.5 (Claude Code and sub-agents)",
   },
   {
     kind: "demo-workflow",
     title: "n8n supply-chain workflow",
-    tagline: "Configure a simulated workflow and inspect its review gates.",
+    tagline: "Set up a simulated workflow and check its review gates.",
     category: "agents-workflows",
     teachesIn: "Module 4 · Lesson 4.4 (n8n automation)",
   },
   {
     kind: "demo-excel",
     title: "Spreadsheet transformation",
-    tagline: "Apply a documented transformation to synthetic worksheet data.",
+    tagline: "Apply a documented transformation to worksheet data.",
     category: "document-processing",
     teachesIn: "Module 3 · Lesson 3.3 (office integration)",
   },
   {
     kind: "demo-word",
     title: "Document drafting",
-    tagline:
-      "Turn a structured brief into a reviewable synthetic document draft.",
+    tagline: "Turn a brief into a reviewable document draft.",
     category: "document-processing",
     teachesIn: "Module 3 · Lesson 3.4 (document generation)",
   },
@@ -339,8 +333,8 @@ export function DemosGalleryView({
             </h1>
             <p className="mt-4 max-w-[680px] text-sm leading-relaxed text-muted-foreground">
               {isEnglish
-                ? "Each lab uses synthetic data and runs in the browser. It demonstrates controls; it does not call a provider or measure live performance."
-                : "Jedes Lab nutzt synthetische Daten und läuft im Browser. Es zeigt Kontrollen; es ruft keinen Anbieter auf und misst keine reale Leistung."}
+                ? "Each lab runs in the browser on synthetic data and shows controls, with no provider call and no live measurement."
+                : "Jedes Lab läuft im Browser mit synthetischen Daten und zeigt Kontrollen, ohne Anbieteraufruf und ohne reale Leistungsmessung."}
             </p>
             <div className="mt-5 flex min-w-0 flex-wrap items-center gap-x-5 gap-y-2">
               <Link
@@ -450,7 +444,7 @@ export function DemosGalleryView({
         {groups.map((group, groupIndex) => (
           <section key={group.id} id={group.id} className="mt-10 scroll-mt-24">
             <TechnicalCourseSectionHeading
-              eyebrow={`${String(groupIndex + 1).padStart(2, "0")} · ${group.label}`}
+              eyebrow={String(groupIndex + 1).padStart(2, "0")}
               title={`${group.label}.`}
             />
             <div className="mt-5 border-t border-foreground">
@@ -463,8 +457,7 @@ export function DemosGalleryView({
                     <div className="min-w-0">
                       <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
                         {isEnglish ? "Simulation" : "Simulation"}{" "}
-                        {String(demos.indexOf(demo) + 1).padStart(2, "0")} ·{" "}
-                        {isEnglish ? "synthetic" : "synthetisch"}
+                        {String(demos.indexOf(demo) + 1).padStart(2, "0")}
                       </p>
                       <h3 className="mt-1.5 break-words text-xl font-bold leading-tight tracking-[-0.02em] text-foreground">
                         {demo.title}

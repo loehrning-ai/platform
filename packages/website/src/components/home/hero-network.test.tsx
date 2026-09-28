@@ -103,7 +103,7 @@ describe("HeroNetwork render branches", () => {
     expect(container.querySelectorAll("path").length).toBeGreaterThan(0);
     // The mobile static composition now matches the desktop first frame.
     expect(
-      container.querySelectorAll('path[stroke="#C4431A"]').length,
+      container.querySelectorAll('path[stroke="#e07050"]').length,
     ).toBeGreaterThan(0);
     expect(container.querySelector("[data-hero-network-shell]")).toBeNull();
     // Label + cursor are gated behind !mobile.
@@ -118,23 +118,40 @@ describe("HeroNetwork render branches", () => {
     const { container, rerender } = render(
       <HeroNetwork scrollProgress={motionValue(0)} />,
     );
-    const liveLayer = container.querySelector(
-      '[data-hero-network-live="grid-back"]',
+    // Every rAF-owned layer carries a stable name; e2e motion probes read
+    // grid-front, the one layer every scene redraws.
+    const liveLayers = Array.from(
+      container.querySelectorAll("[data-hero-network-live]"),
     );
+    expect(
+      liveLayers.map((layer) => layer.getAttribute("data-hero-network-live")),
+    ).toEqual([
+      "grid-back",
+      "grid-front-shadow",
+      "grid-front",
+      "country-glow",
+      "country-fill",
+      "country-outline",
+    ]);
 
     // Model the real rAF-owned DOM: these children are not part of React's
     // virtual tree and must be removed explicitly when static mode takes over.
-    const injectedPath = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "path",
-    );
-    liveLayer?.appendChild(injectedPath);
-    expect(injectedPath.isConnected).toBe(true);
+    const injectedPaths = liveLayers.map((layer) => {
+      const path = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "path",
+      );
+      layer.appendChild(path);
+      return path;
+    });
+    for (const path of injectedPaths) expect(path.isConnected).toBe(true);
 
     rerender(<HeroNetwork scrollProgress={motionValue(0)} mobile />);
 
-    expect(injectedPath.isConnected).toBe(false);
-    expect(liveLayer).toHaveAttribute("display", "none");
+    for (const path of injectedPaths) expect(path.isConnected).toBe(false);
+    for (const layer of liveLayers) {
+      expect(layer).toHaveAttribute("display", "none");
+    }
     expect(container.firstElementChild).toHaveAttribute(
       "data-hero-network-motion",
       "static",
@@ -163,7 +180,7 @@ describe("HeroNetwork render branches", () => {
     expect(container.querySelectorAll("path").length).toBeGreaterThan(0);
     // projectRings emitted at least one front-facing country outline (Berlin).
     expect(
-      container.querySelectorAll('path[stroke="#C4431A"]').length,
+      container.querySelectorAll('path[stroke="#e07050"]').length,
     ).toBeGreaterThan(0);
     // projectRingsClosed emitted at least one closed hatch fill.
     expect(
@@ -178,5 +195,31 @@ describe("HeroNetwork render branches", () => {
       "static",
     );
     expect(container.querySelector("[data-hero-network-shell]")).toBeNull();
+  });
+
+  it("paints the lemons scene as a flat Mennige disc: knockout graticule, one Butter country, no gradient", () => {
+    for (const props of [{ reducedMotion: true }, {}] as const) {
+      const { container, unmount } = render(
+        <HeroNetwork scrollProgress={motionValue(0)} scene="lemons" {...props} />,
+      );
+      const disc = container.querySelector("circle[data-hero-globe-disc]");
+      expect(disc).toHaveAttribute("fill", "#b73a15");
+      // SPEC §3.6: no sphere volume, glow, hatch or limb stroke.
+      expect(container.querySelector("radialGradient, pattern")).toBeNull();
+      expect(container.querySelector('[fill^="url("]')).toBeNull();
+      const lines = container.querySelectorAll('path[stroke="#152a79"]');
+      expect(lines.length).toBeGreaterThan(0);
+      for (const line of lines) {
+        expect(line).toHaveAttribute("stroke-width", "1.5");
+        expect(line).toHaveAttribute("vector-effect", "non-scaling-stroke");
+      }
+      // Germany alone, as a flat Butter shape; the typing word in Butter.
+      expect(container.querySelectorAll('path[fill="#fceeaf"]').length).toBeGreaterThan(0);
+      expect(container.querySelector('path[stroke="#e07050"]')).toBeNull();
+      for (const text of container.querySelectorAll("text")) {
+        expect(text).toHaveAttribute("fill", "#fceeaf");
+      }
+      unmount();
+    }
   });
 });

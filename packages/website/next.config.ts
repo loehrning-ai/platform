@@ -4,6 +4,7 @@ import { withSentryConfig } from "@sentry/nextjs/config";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { normalizeSupabaseOrigin } from "./src/lib/supabase/config.ts";
+import { buildResourcePolicyHeaderRules } from "./src/lib/security/resource-policy.ts";
 import { buildSecurityHeaders } from "./security-headers.ts";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -28,8 +29,44 @@ const nextConfig: NextConfig = {
   // those files as build inputs and would not ship them into this function.
   // Without this declaration the tool degrades honestly (body_available: false
   // plus the reader URL) rather than serving the chapter text.
+  //
+  // Blog post Nº 02 is dynamic (it reads the request locale) and renders the
+  // question sheet from content/vorlagen at request time through
+  // loadQuestionSheet, so both locale routes ship the sheet sources.
   outputFileTracingIncludes: {
     "/api/mcp": ["./content/books/**"],
+    "/blog/ki-in-der-ausbildung": ["./content/vorlagen/**"],
+    "/en/blog/ki-in-der-ausbildung": ["./content/vorlagen/**"],
+    // Node-runtime share cards read the site face (and the demo or blog halftone)
+    // with readFile(process.cwd() + ...) at request time, because they read
+    // the request locale; list the files so the trace never misses them.
+    // Keys are picomatch globs, so a dynamic segment's brackets are escaped.
+    "/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/en/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/einstieg/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/en/einstieg/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/kurse/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/en/kurse/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/kurse/twitter-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/en/kurse/twitter-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/ki-fuehrerschein/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/en/ki-fuehrerschein/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/ki-und-gesellschaft/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/en/ki-und-gesellschaft/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/eu-ai-act-kurs/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/en/eu-ai-act-kurs/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/ai-native/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/en/ai-native/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/kurse/open-source/data-engineering-fundamentals/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/en/kurse/open-source/data-engineering-fundamentals/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/open-source/\\[kind\\]/\\[slug\\]/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/en/open-source/\\[kind\\]/\\[slug\\]/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf"],
+    "/blog/ki-in-der-ausbildung/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf", "./public/plakat/halftone-blog.png"],
+    "/en/blog/ki-in-der-ausbildung/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf", "./public/plakat/halftone-blog.png"],
+    "/blog/eu-ai-act-grundlagen/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf", "./public/plakat/halftone-blog.png"],
+    "/en/blog/eu-ai-act-grundlagen/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf", "./public/plakat/halftone-blog.png"],
+    "/demos/\\[slug\\]/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf", "./public/plakat/halftone-demos.png"],
+    "/en/demos/\\[slug\\]/opengraph-image": ["./src/fonts/LoehrningSans-*.ttf", "./public/plakat/halftone-demos.png"],
   },
   // Drop the X-Powered-By: Next.js banner so we don't hand attackers a
   // free fingerprint of our stack version.
@@ -80,6 +117,12 @@ const nextConfig: NextConfig = {
       source: "/:path*",
       headers: SECURITY_HEADERS,
     },
+    // Cross-Origin-Resource-Policy: same-origin on the per-session surfaces
+    // (/api, the account and the OAuth consent trees). Not site-wide: social
+    // preview images, covers and fonts must stay loadable by other origins.
+    // See src/lib/security/resource-policy.ts for why CORS reads of the public
+    // machine JSON under /api are unaffected.
+    ...buildResourcePolicyHeaderRules(),
     {
       // Font filenames are explicitly versioned, so they can use immutable
       // caching without trapping a future face revision behind the same URL.

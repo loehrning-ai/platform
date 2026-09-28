@@ -41,16 +41,16 @@ afterEach(() => {
 });
 
 describe("L04SpecSurgeon", () => {
-  it("starts undefined with 0/5", () => {
+  it("starts with nothing defined at 0/5", () => {
     render(<L04SpecSurgeon lessonId="L04" cpId="bespoke" />);
-    expect(screen.getByText("0/5 undefined")).toBeInTheDocument();
+    expect(screen.getByText("0/5 nothing defined")).toBeInTheDocument();
   });
 
   it("toggling a section appends it to the assembled spec", () => {
     render(<L04SpecSurgeon lessonId="L04" cpId="bespoke" />);
     fireEvent.click(screen.getByRole("button", { name: "Goal" }));
     expect(screen.getByText(/Add per-IP rate limiting/)).toBeInTheDocument();
-    expect(screen.getByText("1/5 undefined")).toBeInTheDocument();
+    expect(screen.getByText("1/5 nothing defined")).toBeInTheDocument();
   });
 
   it("reaches complete and awards the checkpoint at 5/5", () => {

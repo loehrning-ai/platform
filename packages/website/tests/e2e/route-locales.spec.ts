@@ -35,13 +35,13 @@ test.describe("DE/EN locale-routing foundation", () => {
 
     const desktopNavigation = page.locator(".js-desktop-nav");
     await desktopNavigation
-      .getByRole("link", { name: "Englische Oberfläche öffnen" })
+      .getByRole("link", { name: "EN, englische Oberfläche öffnen" })
       .click();
     await expect(page).toHaveURL(/\/en\/kurse$/);
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
 
     await desktopNavigation
-      .getByRole("link", { name: "Open the German interface" })
+      .getByRole("link", { name: "DE, open the German interface" })
       .click();
     await expect(page).toHaveURL(/\/kurse$/);
     await expect(page.locator("html")).toHaveAttribute("lang", "de");
@@ -90,36 +90,52 @@ test.describe("DE/EN locale-routing foundation", () => {
         .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
         .waitFor({ state: "attached" });
 
-      let activeLanguageGroup: Locator;
       let activeLogin: Locator;
       if (width < 1024) {
-        activeLanguageGroup = page
-          .locator("[data-nav-header-row]")
-          .getByRole("group", { name: "Language" });
-        await expect(activeLanguageGroup).toBeVisible();
+        // Below lg the bar carries one link to the other language, and the
+        // menu sheet lies over the bar and repeats no language control.
+        // Measure it before the sheet covers it.
+        const compactLanguage = page.locator(
+          '[data-nav-header-row] [data-language-switch="compact"] a',
+        );
+        await expect(compactLanguage).toBeVisible();
+        await expect(compactLanguage).toHaveText("DE");
+        await expect(compactLanguage).toHaveAttribute("href", "/kurse");
+        await expect(compactLanguage).toHaveAttribute("hreflang", "de");
+        await expect(compactLanguage).toHaveAccessibleName(
+          "DE, open the German interface",
+        );
+        const box = await compactLanguage.boundingBox();
+        expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+        expect(box?.width ?? 0).toBeGreaterThanOrEqual(44);
+        await expect(
+          page
+            .locator("[data-nav-header-row]")
+            .getByRole("group", { name: "Language" }),
+        ).toHaveCount(0);
         await page.getByRole("button", { name: "Open menu" }).click();
         const dialog = page.getByRole("dialog", { name: "Primary navigation" });
-        await expect(
-          dialog.getByRole("group", { name: "Language" }),
-        ).toBeVisible();
-        activeLogin = dialog.getByRole("link", { name: "Login" });
+        await expect(dialog).toBeVisible();
+        await expect(dialog.getByRole("group", { name: "Language" })).toHaveCount(
+          0,
+        );
+        activeLogin = dialog.getByRole("link", { name: "Log in" });
       } else {
         const desktopNavigation = page.locator(".js-desktop-nav");
-        activeLanguageGroup = desktopNavigation.getByRole("group", {
+        const activeLanguageGroup = desktopNavigation.getByRole("group", {
           name: "Language",
         });
         await expect(activeLanguageGroup).toBeVisible();
-        activeLogin = desktopNavigation.getByRole("link", { name: "Login" });
+        activeLogin = desktopNavigation.getByRole("link", { name: "Log in" });
+        for (const target of await activeLanguageGroup.getByRole("link").all()) {
+          const box = await target.boundingBox();
+          expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+        }
       }
 
       await expect(activeLogin).toBeVisible();
-      for (const target of [
-        ...(await activeLanguageGroup.getByRole("link").all()),
-        activeLogin,
-      ]) {
-        const box = await target.boundingBox();
-        expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
-      }
+      const loginBox = await activeLogin.boundingBox();
+      expect(loginBox?.height ?? 0).toBeGreaterThanOrEqual(44);
 
       const geometry = await page.evaluate(() => ({
         viewport: window.innerWidth,
@@ -140,13 +156,24 @@ test.describe("DE/EN no-script navigation", () => {
       await page.setViewportSize({ width, height: 844 });
       await page.goto("/en", { waitUntil: "domcontentloaded" });
 
-      const language = page.getByRole("group", { name: "Language" });
-      await expect(language).toHaveCount(1);
+      // Below lg one link to the other language; from lg the DE/EN pair.
+      const pair = page.getByRole("group", { name: "Language" });
+      const single = page.locator('[data-language-switch="compact"] a');
+      if (width < 1024) {
+        await expect(pair).toHaveCount(0);
+        await expect(single).toHaveCount(1);
+        await expect(single).toBeVisible();
+        await expect(single).toHaveAttribute("href", "/");
+        await expect(single).toHaveAccessibleName(/German/);
+        return;
+      }
+      await expect(single).toBeHidden();
+      await expect(pair).toHaveCount(1);
       await expect(
-        language.getByRole("link", { name: /German/ }),
+        pair.getByRole("link", { name: /German/ }),
       ).toHaveAttribute("href", "/");
       await expect(
-        language.getByRole("link", { name: /English/ }),
+        pair.getByRole("link", { name: /English/ }),
       ).toHaveAttribute("aria-current", "page");
     });
   }

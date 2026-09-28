@@ -22,15 +22,29 @@ describe("<LanguageSwitch />", () => {
     );
 
     const group = screen.getByRole("group", { name: "Sprache" });
-    expect(group.className).toContain("rounded-xl");
-    expect(group.className).not.toMatch(/shadow-\[/);
-    expect(group.className).not.toContain("rounded-full");
+    // Werkzeichnung: square, flat, no fill. The active language is an ink
+    // underline plus weight; the text size stays above the 12px floor.
+    expect(group.className).not.toMatch(/\brounded-|shadow-|\bbg-/);
     for (const link of within(group).getAllByRole("link")) {
       expect(link.className).toContain("min-h-11");
       expect(link.className).toContain("min-w-11");
-      expect(link.className).toContain("text-xs");
-      expect(link.className).not.toContain("rounded-full");
+      expect(link.className).toContain("text-label");
+      expect(link.className).not.toMatch(/\brounded-|\bbg-brand-|uppercase/);
+      // A visible Mennige focus ring. `ring-inset` is banned here: with the
+      // --color-inset theme token Tailwind v4 also compiles it to a Beton
+      // ring colour that overrides ring-brand-orange (1.12:1 on paper).
+      expect(link.className).toContain("focus-visible:inset-ring-2");
+      expect(link.className).toContain(
+        "focus-visible:inset-ring-brand-orange",
+      );
+      expect(link.className).not.toMatch(/\bring-inset\b/);
     }
+    // The active underline sits on the bottom edge of the 44px target, the
+    // same baseline as the nav's current-page rule.
+    const underline = within(group)
+      .getByRole("link", { name: /Deutsch/ })
+      .querySelector("span[aria-hidden='true']");
+    expect(underline).toHaveClass("bottom-0", "bg-foreground");
   });
 
   it("marks German active and links English to the equivalent prefixed path", () => {
@@ -49,13 +63,13 @@ describe("<LanguageSwitch />", () => {
       within(group).getByRole("link", { name: /Deutsch/ }),
     ).toHaveAttribute("hreflang", "de");
     expect(
-      within(group).getByRole("link", { name: /Englische Oberfläche/ }),
+      within(group).getByRole("link", { name: /englische Oberfläche/ }),
     ).toHaveAttribute("href", "/en/kurse");
     expect(
-      within(group).getByRole("link", { name: /Englische Oberfläche/ }),
+      within(group).getByRole("link", { name: /englische Oberfläche/ }),
     ).toHaveAttribute("hreflang", "en");
     expect(
-      within(group).getByRole("link", { name: /Englische Oberfläche/ }),
+      within(group).getByRole("link", { name: /englische Oberfläche/ }),
     ).not.toHaveAttribute("lang");
   });
 
@@ -98,7 +112,7 @@ describe("<LanguageSwitch />", () => {
       within(group).getByRole("link", { name: /Deutsch/ }),
     ).toHaveAttribute("href", "/");
     expect(
-      within(group).getByRole("link", { name: /Englische Oberfläche/ }),
+      within(group).getByRole("link", { name: /englische Oberfläche/ }),
     ).toHaveAttribute("href", "/en");
   });
 
@@ -113,7 +127,7 @@ describe("<LanguageSwitch />", () => {
 
     const englishLink = within(
       screen.getByRole("group", { name: "Sprache" }),
-    ).getByRole("link", { name: /Englische Oberfläche/ });
+    ).getByRole("link", { name: /englische Oberfläche/ });
     await waitFor(() =>
       expect(englishLink).toHaveAttribute(
         "href",
@@ -138,7 +152,7 @@ describe("<LanguageSwitch />", () => {
 
     const englishLink = within(
       screen.getByRole("group", { name: "Sprache" }),
-    ).getByRole("link", { name: /Englische Oberfläche/ });
+    ).getByRole("link", { name: /englische Oberfläche/ });
     await waitFor(() =>
       expect(englishLink).toHaveAttribute(
         "href",
@@ -159,7 +173,7 @@ describe("<LanguageSwitch />", () => {
 
     const englishLink = within(
       screen.getByRole("group", { name: "Sprache" }),
-    ).getByRole("link", { name: /Englische Oberfläche/ });
+    ).getByRole("link", { name: /englische Oberfläche/ });
     await waitFor(() =>
       expect(englishLink).toHaveAttribute("href", "/en/kurse?goal=start"),
     );

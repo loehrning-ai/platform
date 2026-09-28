@@ -2,7 +2,8 @@
 
 import { useState, type CSSProperties, type JSX } from "react";
 import { DEMO } from "@/lib/demo-tokens";
-import { DEMO_HEIGHT } from "./demo-utils";
+
+import { DEMO_HEIGHT, useSmUp } from "./demo-utils";
 import { useDemoLocale } from "./demo-locale";
 import type { Locale } from "@/lib/i18n/locale";
 
@@ -50,7 +51,7 @@ const EVAL_ROWS: readonly EvalRow[] = [
     autoScore: "mittel",
     humanScore: "niedrig",
     driftFlag: false,
-    note: "Auto-Eval bewertet Fluenz und Länge, nicht Rechtsgenauigkeit. Der Satz ist missverständlich, Anwalt notwendig.",
+    note: "Die automatische Bewertung misst nur Sprachfluss und Länge. Die Aussage ist zu pauschal und braucht eine juristische Prüfung.",
   },
   {
     id: "r3",
@@ -117,21 +118,34 @@ const ENGLISH_EVAL_ROWS: readonly EvalRow[] = [
   },
 ];
 
+/**
+ * Status marks on the one-accent palette: a mismatch is the page's Mennige
+ * mark (text and a 1px border), drift is ink on a dashed ink border (a
+ * warning, not an error), agreement is plain ink on a hairline.
+ */
+export const LLM_OBS_STATUS = {
+  mismatch: { fg: "#b73a15", border: "1px solid #b73a15" },
+  drift: { fg: "#121212", border: "1px dashed #121212" },
+  neutral: { fg: "#121212", border: "1px solid #E3DFD6" },
+} as const;
+
 // Fixed, non-theme-reactive pairings — this engine renders a constant light
 // workbench surface regardless of site theme (matching every sibling DEMO.*
 // engine), so status colors are literal hex, not CSS custom properties.
 const SCORE_COLORS: Readonly<
   Record<"hoch" | "mittel" | "niedrig", { fg: string; bg: string }>
 > = {
-  hoch: { fg: "#166534", bg: "#dcfce7" },
-  mittel: { fg: "#78350f", bg: "rgba(120,53,15,0.12)" },
-  niedrig: { fg: "#991b1b", bg: "rgba(153,27,27,0.1)" },
+  // Word on a hairline paper chip: the rating reads from the word, not a
+  // traffic-light colour. Ink for high, Schiefer for medium and low.
+  hoch: { fg: "#121212", bg: DEMO.kalk },
+  mittel: { fg: "#4f4640", bg: DEMO.kalk },
+  niedrig: { fg: "#4f4640", bg: DEMO.kalk },
 };
 
 const SCORE_LABELS: Readonly<Record<"hoch" | "mittel" | "niedrig", string>> = {
-  hoch: "HOCH",
-  mittel: "MITTEL",
-  niedrig: "NIEDRIG",
+  hoch: "hoch",
+  mittel: "mittel",
+  niedrig: "niedrig",
 };
 
 function ScoreChip({
@@ -147,32 +161,143 @@ function ScoreChip({
   return (
     <span
       style={{
+        ...DEMO.label,
         display: "inline-flex",
         alignItems: "center",
         gap: 4,
-        border: `1px solid ${c.fg}`,
+        border: LLM_OBS_STATUS.neutral.border,
         background: c.bg,
         color: c.fg,
         padding: "2px 8px",
-        fontFamily: DEMO.font.mono,
-        fontSize: 12,
-        fontWeight: 700,
-        textTransform: "uppercase",
-        letterSpacing: "0.1em",
       }}
     >
       {label}:{" "}
       {locale === "de"
         ? SCORE_LABELS[score]
-        : ({ hoch: "HIGH", mittel: "MEDIUM", niedrig: "LOW" } as const)[score]}
+        : ({ hoch: "high", mittel: "medium", niedrig: "low" } as const)[score]}
     </span>
+  );
+}
+
+function OutputPanel({
+  row,
+  locale,
+  text,
+  inline = false,
+}: {
+  readonly row: EvalRow;
+  readonly locale: Locale;
+  readonly text: (de: string, en: string) => string;
+  /** Below sm, under its scenario row: no box, indented past the tick. */
+  readonly inline?: boolean;
+}): JSX.Element {
+  return (
+    <div
+      data-llmobs-output
+      className={inline ? "border-b border-[#E3DFD6] py-3 pl-3" : undefined}
+      style={
+        inline
+          ? undefined
+          : {
+              border: `1px solid ${DEMO.leinen}`,
+              background: DEMO.birke,
+              padding: 16,
+            }
+      }
+    >
+      <div
+        style={{
+          ...DEMO.label,
+          color: DEMO.schiefer,
+        }}
+      >
+        {text("Beispiel-Output", "Sample output")}
+      </div>
+      <p
+        className={inline ? "text-[14px]" : "text-[13px]"}
+        style={{
+          marginTop: inline ? 4 : 8,
+          lineHeight: 1.6,
+          color: DEMO.ink,
+        }}
+      >
+        {row.output}
+      </p>
+      <div
+        style={{
+          marginTop: inline ? 10 : 16,
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 8,
+        }}
+      >
+        <ScoreChip
+          score={row.autoScore}
+          label={text("Auto-Eval", "Automated evaluation")}
+          locale={locale}
+        />
+        {row.humanScore !== null ? (
+          <ScoreChip
+            score={row.humanScore}
+            label={text("Mensch", "Human review")}
+            locale={locale}
+          />
+        ) : (
+          <span
+            style={{
+              ...DEMO.label,
+              border: LLM_OBS_STATUS.neutral.border,
+              padding: "2px 8px",
+              color: DEMO.schiefer,
+            }}
+          >
+            {text("Mensch: ausstehend", "Human review: pending")}
+          </span>
+        )}
+        {row.driftFlag && (
+          <span
+            data-llmobs-badge="drift"
+            style={{
+              ...DEMO.label,
+              border: LLM_OBS_STATUS.drift.border,
+              background: DEMO.kalk,
+              color: LLM_OBS_STATUS.drift.fg,
+              padding: "2px 8px",
+            }}
+          >
+            {text("Drift-Indikator aktiv", "Drift flag active")}
+          </span>
+        )}
+      </div>
+      <div
+        style={{
+          marginTop: inline ? 10 : 12,
+          borderTop: `1px solid ${DEMO.leinen}`,
+          paddingTop: inline ? 10 : 12,
+        }}
+      >
+        <p
+          className={inline ? "text-[13px]" : "text-[12px]"}
+          style={{ lineHeight: 1.6, color: DEMO.schiefer }}
+        >
+          {row.note}
+        </p>
+      </div>
+    </div>
   );
 }
 
 export function LlmObservabilityDemo(): JSX.Element {
   const { locale, text } = useDemoLocale();
   const rows = locale === "de" ? EVAL_ROWS : ENGLISH_EVAL_ROWS;
-  const [selectedId, setSelectedId] = useState<string>(rows[0].id);
+  // Opens on the first mismatch (the lead's promise) as the worked example.
+  const firstMismatch =
+    rows.find((r) => r.humanScore !== null && r.humanScore !== r.autoScore) ??
+    rows[0];
+  const [selectedId, setSelectedId] = useState<string>(firstMismatch.id);
+  // Below sm the output opens inline under the tapped scenario (an
+  // accordion); from sm up it keeps its own panel under the list.
+  const smUp = useSmUp();
   const [showFailureBeat, setShowFailureBeat] = useState(false);
 
   const selected = rows.find((r) => r.id === selectedId) ?? rows[0];
@@ -191,10 +316,11 @@ export function LlmObservabilityDemo(): JSX.Element {
         "LLM-Qualitätsmessung Praxisbeispiel",
         "LLM quality measurement practice example",
       )}
+      // Tighter rhythm below sm so the scenario list reaches the first screen.
+      className="gap-3.5 sm:gap-5"
       style={{
         display: "flex",
         flexDirection: "column",
-        gap: 20,
         fontFamily: DEMO.font.sans,
         color: DEMO.ink,
         minHeight: DEMO_HEIGHT,
@@ -202,15 +328,20 @@ export function LlmObservabilityDemo(): JSX.Element {
         minWidth: 0,
       }}
     >
+      {/* Below sm the four KPIs are one caption line, so the scenario list
+          and its output reach the first screen; from sm up they are tiles. */}
       <style>{`
         [data-demo-id="llm-observability"] .demo-llmobs-kpis {
-          display: grid;
-          grid-template-columns: 1fr;
-          gap: 8px;
+          display: none;
         }
         @media (min-width: 640px) {
           [data-demo-id="llm-observability"] .demo-llmobs-kpis {
+            display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+          }
+          [data-demo-id="llm-observability"] .demo-llmobs-kpis > div {
+            padding: 14px;
           }
         }
         @media (min-width: 768px) {
@@ -221,6 +352,16 @@ export function LlmObservabilityDemo(): JSX.Element {
       `}</style>
 
       {/* Summary KPIs */}
+      <p
+        className="text-caption sm:hidden"
+        data-llmobs-kpi-line
+        style={{ margin: 0, color: DEMO.schiefer, fontVariantNumeric: "tabular-nums" }}
+      >
+        {text(
+          "4 Läufe · 1 Drift · 2 Abweichungen · Ø Auto-Score hoch",
+          "4 runs · 1 drift flag · 2 mismatches · average automated rating high",
+        )}
+      </p>
       <div className="demo-llmobs-kpis">
         {(
           [
@@ -257,19 +398,15 @@ export function LlmObservabilityDemo(): JSX.Element {
             key={label}
             style={{
               minWidth: 0,
-              border: `1px solid ${DEMO.leinen}`,
-              borderLeft: `3px solid ${accent ? DEMO.statusAmber : DEMO.schiefer}`,
+              // The mismatch tile is the row's one mark: an ink frame
+              // instead of a coloured left rule.
+              border: `1px solid ${accent ? DEMO.ink : DEMO.leinen}`,
               background: DEMO.birke,
-              padding: 14,
             }}
           >
             <div
               style={{
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: "0.14em",
+                ...DEMO.label,
                 color: DEMO.schiefer,
               }}
             >
@@ -282,7 +419,7 @@ export function LlmObservabilityDemo(): JSX.Element {
                 fontSize: 20,
                 fontWeight: 700,
                 lineHeight: 1.1,
-                letterSpacing: "-0.02em",
+                letterSpacing: "-0.01em",
                 color: DEMO.ink,
               }}
             >
@@ -305,201 +442,107 @@ export function LlmObservabilityDemo(): JSX.Element {
       {/* Eval row picker */}
       <div>
         <div
+          className="mb-2 max-sm:mb-0 max-sm:border-b max-sm:border-[#0B0908] max-sm:pb-1.5"
           style={{
-            marginBottom: 8,
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            fontWeight: 700,
-            textTransform: "uppercase",
-            letterSpacing: "0.14em",
-            color: "var(--color-brand-orange)",
+            ...DEMO.label,
+            color: "var(--color-muted-foreground)",
           }}
         >
           {text("Eval-Szenarien (Beispiele)", "Evaluation scenarios (samples)")}
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+        <div
+          className="flex flex-col gap-0 sm:gap-1.5"
+          data-llmobs-rows
+        >
           {rows.map((row) => {
             const active = selectedId === row.id;
+            const mismatch =
+              row.humanScore !== null && row.humanScore !== row.autoScore;
+            const panelId = `llmobs-output-${row.id}`;
             return (
-              <button
-                key={row.id}
-                type="button"
-                onClick={() => setSelectedId(row.id)}
-                aria-pressed={active}
-                style={{
-                  display: "flex",
-                  minHeight: 44,
-                  alignItems: "flex-start",
-                  justifyContent: "space-between",
-                  gap: 12,
-                  border: `1px solid ${active ? "var(--color-brand-orange)" : DEMO.leinen}`,
-                  background: active ? DEMO.ink : DEMO.birke,
-                  color: active ? DEMO.kalk : DEMO.ink,
-                  padding: 12,
-                  textAlign: "left",
-                  cursor: "pointer",
-                  transition: "background-color 120ms, border-color 120ms",
-                }}
-              >
-                <div style={{ minWidth: 0, flex: 1 }}>
-                  <div
-                    style={{
-                      overflowWrap: "anywhere",
-                      fontSize: 12,
-                      fontWeight: 700,
-                      lineHeight: 1.35,
-                      letterSpacing: "-0.01em",
-                    }}
-                  >
-                    {row.prompt}
-                  </div>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    flexShrink: 0,
-                    flexDirection: "column",
-                    alignItems: "flex-end",
-                    gap: 4,
-                  }}
+              <div key={row.id} className="min-w-0">
+                <button
+                  type="button"
+                  onClick={() => setSelectedId(row.id)}
+                  // An accordion row below sm, a pressed chip from sm up.
+                  aria-pressed={smUp ? active : undefined}
+                  aria-expanded={smUp ? undefined : active}
+                  aria-controls={smUp ? undefined : panelId}
+                  data-llmobs-row={row.id}
+                  className={[
+                    "flex min-h-11 w-full cursor-pointer items-start justify-between gap-3 text-left transition-colors duration-[120ms] motion-reduce:transition-none",
+                    "max-sm:border-b max-sm:border-l-2 max-sm:border-b-[#E3DFD6] max-sm:bg-transparent max-sm:py-2.5 max-sm:pl-3 max-sm:pr-0",
+                    "sm:border sm:p-3",
+                    active
+                      ? "text-[#0B0908] max-sm:border-l-[#0B0908] sm:border-[#0B0908] sm:bg-[#0B0908] sm:text-[#F3F0E9]"
+                      : "text-[#0B0908] max-sm:border-l-transparent sm:border-[#E3DFD6] sm:bg-[#F7F4ED]",
+                  ].join(" ")}
                 >
-                  {row.driftFlag && (
-                    <span
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <div
+                      className="text-[14px] sm:text-[12px]"
                       style={{
-                        border: `1px solid ${DEMO.statusAmber}`,
-                        background: "rgba(234,179,8,0.12)",
-                        color: DEMO.statusAmber,
-                        padding: "1px 6px",
-                        fontFamily: DEMO.font.mono,
-                        fontSize: 12,
+                        overflowWrap: "anywhere",
                         fontWeight: 700,
-                        textTransform: "uppercase",
-                        letterSpacing: "0.1em",
+                        lineHeight: 1.35,
+                        letterSpacing: "-0.01em",
                       }}
                     >
-                      DRIFT
-                    </span>
-                  )}
-                  {row.humanScore !== null &&
-                    row.humanScore !== row.autoScore && (
+                      {row.prompt}
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexShrink: 0,
+                      flexDirection: "column",
+                      alignItems: "flex-end",
+                      gap: 4,
+                    }}
+                  >
+                    {row.driftFlag && (
                       <span
+                        data-llmobs-badge="drift"
+                        className={active ? "sm:border-[#F3F0E9]! sm:text-[#F3F0E9]!" : undefined}
                         style={{
-                          border: `1px solid ${DEMO.statusRed}`,
-                          background: "rgba(239,68,68,0.12)",
-                          color: DEMO.statusRed,
+                          ...DEMO.label,
+                          border: LLM_OBS_STATUS.drift.border,
+                          color: LLM_OBS_STATUS.drift.fg,
                           padding: "1px 6px",
-                          fontFamily: DEMO.font.mono,
-                          fontSize: 12,
-                          fontWeight: 700,
-                          textTransform: "uppercase",
-                          letterSpacing: "0.1em",
                         }}
                       >
-                        {text("DIVERGENZ", "MISMATCH")}
+                        Drift
                       </span>
                     )}
-                </div>
-              </button>
+                    {mismatch && (
+                      <span
+                        data-llmobs-badge="mismatch"
+                        className={active ? "sm:border-[#F3F0E9]! sm:text-[#F3F0E9]!" : undefined}
+                        style={{
+                          ...DEMO.label,
+                          border: LLM_OBS_STATUS.mismatch.border,
+                          color: LLM_OBS_STATUS.mismatch.fg,
+                          padding: "1px 6px",
+                        }}
+                      >
+                        {text("Abweichung", "Mismatch")}
+                      </span>
+                    )}
+                  </div>
+                </button>
+                {!smUp && active ? (
+                  <div id={panelId} data-llmobs-inline-output>
+                    <OutputPanel row={row} locale={locale} text={text} inline />
+                  </div>
+                ) : null}
+              </div>
             );
           })}
         </div>
       </div>
 
-      {/* Selected row detail */}
-      <div
-        style={{
-          border: `1px solid ${DEMO.leinen}`,
-          background: DEMO.birke,
-          padding: 16,
-        }}
-      >
-        <div
-          style={{
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            fontWeight: 700,
-            textTransform: "uppercase",
-            letterSpacing: "0.14em",
-            color: DEMO.schiefer,
-          }}
-        >
-          {text("Beispiel-Output", "Sample output")}
-        </div>
-        <p
-          style={{
-            marginTop: 8,
-            fontSize: 13,
-            lineHeight: 1.7,
-            color: DEMO.ink,
-          }}
-        >
-          {selected.output}
-        </p>
-        <div
-          style={{
-            marginTop: 16,
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 8,
-          }}
-        >
-          <ScoreChip
-            score={selected.autoScore}
-            label={text("Auto-Eval", "Automated evaluation")}
-            locale={locale}
-          />
-          {selected.humanScore !== null ? (
-            <ScoreChip
-              score={selected.humanScore}
-              label={text("Mensch", "Human review")}
-              locale={locale}
-            />
-          ) : (
-            <span
-              style={{
-                border: `1px solid ${DEMO.leinen}`,
-                padding: "2px 8px",
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                textTransform: "uppercase",
-                letterSpacing: "0.1em",
-                color: DEMO.schiefer,
-              }}
-            >
-              {text("Mensch: ausstehend", "Human review: pending")}
-            </span>
-          )}
-          {selected.driftFlag && (
-            <span
-              style={{
-                border: `1px solid ${DEMO.statusAmber}`,
-                background: "rgba(234,179,8,0.12)",
-                color: DEMO.statusAmber,
-                padding: "2px 8px",
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: "0.1em",
-              }}
-            >
-              {text("DRIFT-INDIKATOR AKTIV", "DRIFT FLAG ACTIVE")}
-            </span>
-          )}
-        </div>
-        <div
-          style={{
-            marginTop: 12,
-            borderLeft: `2px solid ${DEMO.leinen}`,
-            background: "rgba(11,9,8,0.03)",
-            padding: 12,
-          }}
-        >
-          <p style={{ fontSize: 12, lineHeight: 1.6, color: DEMO.schiefer }}>
-            {selected.note}
-          </p>
-        </div>
-      </div>
+      {/* Selected row detail (sm up; below sm it opens inline above) */}
+      {smUp ? <OutputPanel row={selected} locale={locale} text={text} /> : null}
 
       {/* Failure-mode beat */}
       <div
@@ -534,12 +577,8 @@ export function LlmObservabilityDemo(): JSX.Element {
           >
             <div
               style={{
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                fontWeight: 700,
-                textTransform: "uppercase",
-                letterSpacing: "0.14em",
-                color: "var(--color-brand-orange)",
+                ...DEMO.label,
+                color: "var(--color-muted-foreground)",
               }}
             >
               {text(
@@ -556,7 +595,7 @@ export function LlmObservabilityDemo(): JSX.Element {
                 color: DEMO.schiefer,
               }}
             >
-              {showFailureBeat ? "▲" : "▼"}
+              {showFailureBeat ? "−" : "+"}
             </span>
           </div>
         </button>
@@ -578,8 +617,8 @@ export function LlmObservabilityDemo(): JSX.Element {
               <div
                 key={row.id}
                 style={{
-                  border: "1px solid rgba(153,27,27,0.3)",
-                  background: "rgba(153,27,27,0.05)",
+                  border: LLM_OBS_STATUS.mismatch.border,
+                  background: "transparent",
                   padding: 12,
                 }}
               >
@@ -621,9 +660,8 @@ export function LlmObservabilityDemo(): JSX.Element {
             ))}
             <div
               style={{
-                borderLeft: "2px solid var(--color-brand-orange)",
-                background: "rgba(249,115,22,0.05)",
-                padding: 12,
+                borderTop: `2px solid ${DEMO.ink}`,
+                paddingTop: 12,
               }}
             >
               <p style={{ fontSize: 12, lineHeight: 1.6, color: DEMO.ink }}>

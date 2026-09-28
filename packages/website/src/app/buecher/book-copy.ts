@@ -37,6 +37,7 @@ interface BookPageCopy {
     readonly headingAccent: string;
     readonly introduction: (count: number) => string;
     readonly collectionHeading: string;
+    readonly collectionCountLabel: string;
     readonly collectionDescription: string;
     readonly publicationNumber: (position: number) => string;
     readonly byAuthor: (author: string) => string;
@@ -55,8 +56,6 @@ interface BookPageCopy {
     readonly openOverview: string;
     readonly pdfAfterLogin: string;
     readonly pdfUnavailable: string;
-    readonly sourceNote: string;
-    readonly editorialOwner: (owner: string) => string;
     readonly detailsLabel: string;
     readonly sourceInputs: string;
     readonly nextReview: (date: string) => string;
@@ -76,7 +75,7 @@ interface BookPageCopy {
     readonly kicker: string;
     readonly chapterCount: (count: number) => string;
     readonly readingTime: (minutes: number) => string;
-    readonly lastReviewed: (date: string) => string;
+    readonly reviewedLabel: string;
     readonly materialLanguage: string;
     readonly materialLanguageValue: string;
     readonly format: string;
@@ -86,12 +85,10 @@ interface BookPageCopy {
     readonly coverAlt: (title: string) => string;
     readonly pdfAfterLogin: string;
     readonly pdfUnavailable: string;
-    readonly onlineAccessNote: string;
     readonly adaptationLabel: string;
     readonly contentsAria: string;
     readonly contentsHeading: string;
     readonly contentsIntro: string;
-    readonly chapterLanguage: string;
     readonly chapterAria: (title: string) => string;
     readonly minutesShort: (minutes: number) => string;
     readonly companionPrefix: string;
@@ -117,24 +114,24 @@ const BOOK_DISPLAY_EN: Readonly<Record<string, LocalizedBookDisplay>> = {
     statusLabel: "Reader available",
     relatedResourceLabel: "Open the EU AI Act course",
     description:
-      "The data foundation decides, not tool selection. How a team captures its starting point without a score, what five areas of digital and AI readiness demand, and how to read a benchmark without overstating it.",
+      "Why the data foundation matters more than the choice of tool, how a team records its starting point without a score, and how to read a benchmark without overstating it.",
     highlights: [
       "Qualitative assessment without a proprietary score",
       "Five areas of work for digital and AI readiness",
       "Interpretation of benchmarks, sectors, and limitations",
     ],
     adaptationNote:
-      "Consulting-market pricing, private company data, proprietary scores, and the rankings built on them: all out. Traceable self-assessments and linked primary sources instead.",
+      "This edition leaves out consulting prices, private company data, proprietary scores and rankings built on them. It uses traceable self-assessments and linked primary sources.",
   },
   "ki-arbeitsalltag": {
     title: "AI at Work",
-    subtitle: "Companion book for AI Fundamentals",
+    subtitle: "Companion book for Everyday AI Literacy",
     edition: "Working edition 2026",
     audience: "Employees and teams",
     resourceType: "HTML companion book",
     accessLabel: "Free online reader",
     statusLabel: "Reader available",
-    relatedResourceLabel: "Open the AI Fundamentals course",
+    relatedResourceLabel: "Open the Everyday AI Literacy course",
     description:
       "Core terms, common applications, prompting, data protection, and Article 4. Written for people who use AI at work and bring no technical background.",
     highlights: [
@@ -168,7 +165,7 @@ const BOOK_SOURCE_INPUTS_DE: Readonly<Record<string, string>> = {
   "Public primary sources cited in the book":
     "Im Buch zitierte öffentliche Primärquellen",
   "Qualitative AI-readiness frameworks": "Qualitative Rahmenwerke zur KI-Reife",
-  "Simplified learning-platform editorial review":
+  "Editorial review of the learning-platform edition":
     "Redaktionelle Prüfung der Lernplattform-Fassung",
   "KI-Führerschein lesson content": "Lektionsinhalte des KI-Führerscheins",
   "European Commission AI literacy guidance":
@@ -182,11 +179,11 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
     metadata: {
       title: "Bücher über KI und Datenreife",
       description: (count) =>
-        `${count} veröffentlichte${count === 1 ? " Lesefassung" : " Lesefassungen"}: KI-Reife, Datenfundament, prüfbare Entscheidungen. Online lesbar, ohne Konto.`,
+        `${count} ${count === 1 ? "Lernbuch" : "Lernbücher"} zu KI-Reife und Datenfundament, kostenlos online lesbar.`,
       openGraphTitle: (count) =>
         `${count} freie${count === 1 ? " Lesefassung" : " Lesefassungen"} über KI`,
       openGraphDescription:
-        "Lernbücher im offenen HTML-Reader. Die Quellen stehen dabei, die Grenzen auch.",
+        "Lernbücher im offenen HTML-Reader, mit Quellen und Grenzen.",
       detailTitleSuffix: "Lernbuch",
       detailDescription: (book) =>
         `${book.subtitle}. Deutsche HTML-Lesefassung, kostenlos und ohne Konto.`,
@@ -196,17 +193,18 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
       books: "Bücher",
       collectionName: "Bücher über KI und Datenreife",
       collectionDescription:
-        "Veröffentlichte deutsche Lernbücher im offenen HTML-Reader, mit Quellenhinweisen und ausgewiesenen Grenzen.",
+        "Deutsche Lernbücher im offenen HTML-Reader, mit Quellen und Grenzen.",
       freeReadingEdition: "Kostenlose HTML-Lesefassung",
     },
     catalog: {
       kicker: "Lernbibliothek · Offene Lesefassungen",
       heading: "Sachbücher mit",
       headingAccent: "sichtbaren Quellen und Grenzen.",
-      introduction: (count) =>
-        `${count} redaktionell freigegebene${count === 1 ? " Lesefassung" : " Lesefassungen"}. Autor, Lernziel, Quellenstand und Zugang stehen am Titel, nicht im Kleingedruckten.`,
+      introduction: () =>
+        "Alle Lesefassungen sind redaktionell freigegeben und kostenlos im Browser lesbar.",
       collectionHeading: "Der aktuelle Bestand",
-      collectionDescription: "Offener HTML-Reader. Kein Konto erforderlich.",
+      collectionCountLabel: "Lesefassungen online",
+      collectionDescription: "Kein Konto erforderlich.",
       publicationNumber: (position) =>
         `Ausgabe ${String(position).padStart(2, "0")}`,
       byAuthor: (author) => `von ${author}`,
@@ -226,9 +224,6 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
       openOverview: "Buch und Kapitel öffnen",
       pdfAfterLogin: "Deutsches PDF nach Login",
       pdfUnavailable: "PDF-Download nicht verfügbar",
-      sourceNote:
-        "Die Lesefassung entstand aus redaktioneller Arbeit in 2025 und 2026. Primärquellen und Einschränkungen stehen im jeweiligen Kapitel.",
-      editorialOwner: (owner) => `Redaktion: ${owner}`,
       detailsLabel: "Ausgabe, Quellen und Zugang",
       sourceInputs: "Dokumentierte Quellengrundlage",
       nextReview: (date) => `Nächste Prüfung: ${date}`,
@@ -246,28 +241,25 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
     detail: {
       context: "Lernpfad · Stufe 6: Vertiefen",
       contextBody:
-        "Der Kurs gibt die Regel. Das Lernbuch liefert Quellen, Einordnung und das längere Argument.",
+        "Das Lernbuch vertieft den begleitenden Kurs mit Quellen und Einordnung.",
       kicker: "Lernbuch · Offene HTML-Lesefassung",
       chapterCount: (count) => `${count} Kapitel`,
       readingTime: (minutes) => `ca. ${minutes} Min.`,
-      lastReviewed: (date) => `Geprüft ${date}`,
+      reviewedLabel: "Geprüft",
       materialLanguage: "Materialsprache",
       materialLanguageValue: "Deutsch",
       format: "Format",
       extent: "Umfang",
       access: "Online-Zugang",
-      freeAccess: "Ohne Konto",
+      freeAccess: "Kostenlos, ohne Konto",
       coverAlt: (title) => `Deutsche Titelseite: ${title}`,
       pdfAfterLogin: "Anmelden, um das deutsche PDF herunterzuladen",
       pdfUnavailable: "PDF-Download in dieser Version nicht verfügbar",
-      onlineAccessNote:
-        "Die deutsche HTML-Fassung ist kostenlos und ohne Konto lesbar.",
       adaptationLabel: "Redaktioneller Hinweis",
       contentsAria: "Inhaltsverzeichnis",
       contentsHeading: "Inhaltsverzeichnis",
       contentsIntro:
-        "Die Kapitel öffnen im deutschen Reader. Kapitelstand und Quellen gehören zu genau dieser Fassung.",
-      chapterLanguage: "Deutsch",
+        "Die Kapitel öffnen im deutschen Reader, der maßgeblichen Fassung.",
       chapterAria: (title) => `Kapitel „${title}“ öffnen`,
       minutesShort: (minutes) => `${minutes} Min.`,
       companionPrefix: "Begleitender Kurs",
@@ -276,7 +268,7 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
     error: {
       eyebrow: "Bücher",
       title: "Die Buchseite konnte nicht geladen werden.",
-      body: "Der Buchbestand wurde nicht ersetzt. Lade die geprüfte Fassung erneut.",
+      body: "Lade die Seite erneut.",
       retry: "Erneut laden",
       home: "Zur Startseite",
     },
@@ -285,31 +277,32 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
     metadata: {
       title: "Books on AI and data readiness",
       description: (count) =>
-        `${count} published English reading edition${count === 1 ? "" : "s"} on AI readiness, data foundations, and verifiable decisions. Free online, no account required.`,
+        `${count} English learning book${count === 1 ? "" : "s"} on AI readiness and data foundations, free to read online.`,
       openGraphTitle: (count) =>
         `${count} free English reading edition${count === 1 ? "" : "s"} on AI`,
       openGraphDescription:
-        "Learning books in an open HTML reader. Sources are named, limits too.",
+        "Learning books in an open HTML reader, with sources and limits.",
       detailTitleSuffix: "Learning book",
       detailDescription: (book) =>
-        `${book.subtitle}. English HTML reading edition, available without payment or an account.`,
+        `${book.subtitle}. English HTML reading edition, free and without an account.`,
     },
     schema: {
       home: "Home",
       books: "Books",
       collectionName: "Books on AI and data readiness",
       collectionDescription:
-        "Published English learning books with an open HTML reader, source notes, and explicit limitations.",
+        "English learning books in an open HTML reader, with sources and limits.",
       freeReadingEdition: "Free English HTML reading edition",
     },
     catalog: {
       kicker: "Learning library · Open reading editions",
       heading: "Reference books with",
       headingAccent: "visible sources and limits.",
-      introduction: (count) =>
-        `${count} editorially approved English reading edition${count === 1 ? "" : "s"}. Author, reading outcome, source record, and access are on the title, not in the small print.`,
+      introduction: () =>
+        "Every English reading edition is editorially approved and free to read in your browser.",
       collectionHeading: "The current collection",
-      collectionDescription: "Open HTML reader. No account required.",
+      collectionCountLabel: "Reading editions online",
+      collectionDescription: "No account required.",
       publicationNumber: (position) =>
         `Edition ${String(position).padStart(2, "0")}`,
       byAuthor: (author) => `by ${author}`,
@@ -322,15 +315,12 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
         format: "Format",
         materialLanguage: "Material language",
       },
-      chapterCount: (chapters) => `${chapters} chapters · HTML edition`,
+      chapterCount: (chapters) => `${chapters} chapters`,
       materialLanguageValue: "English",
       contents: "After reading",
       openOverview: "Open book and chapters",
       pdfAfterLogin: "German PDF after sign-in",
       pdfUnavailable: "PDF download unavailable",
-      sourceNote:
-        "The published English reading edition is based on editorial work from 2025 and 2026. Primary sources and limitations are stated in the relevant chapters.",
-      editorialOwner: (owner) => `Editorial owner: ${owner}`,
       detailsLabel: "Edition, sources, and access",
       sourceInputs: "Documented source basis",
       nextReview: (date) => `Next review: ${date}`,
@@ -348,28 +338,25 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
     detail: {
       context: "Learning path · Stage 6: Deepen",
       contextBody:
-        "The course gives the rule. The book gives sources, context, and the longer argument.",
+        "The book adds sources and context to its companion course.",
       kicker: "Learning book · Open HTML reading edition",
       chapterCount: (count) => `${count} chapters`,
       readingTime: (minutes) => `approx. ${minutes} min`,
-      lastReviewed: (date) => `Reviewed ${date}`,
+      reviewedLabel: "Reviewed",
       materialLanguage: "Material language",
       materialLanguageValue: "English",
       format: "Format",
       extent: "Extent",
       access: "Online access",
-      freeAccess: "No account",
+      freeAccess: "Free, no account",
       coverAlt: (title) => `Source-edition cover for ${title}`,
       pdfAfterLogin: "Sign in to download the German PDF",
       pdfUnavailable: "PDF download is unavailable in this version",
-      onlineAccessNote:
-        "The English HTML edition is free and needs no account.",
       adaptationLabel: "Editorial note",
       contentsAria: "Table of contents",
       contentsHeading: "Table of contents",
       contentsIntro:
-        "The chapters open in the English reader. Chapter versions and sources belong to that edition.",
-      chapterLanguage: "English",
+        "The chapters open in the English reader, the maintained edition.",
       chapterAria: (title) => `Open the chapter “${title}”`,
       minutesShort: (minutes) => `${minutes} min`,
       companionPrefix: "Companion course",
@@ -378,7 +365,7 @@ export const BOOK_PAGE_COPY: Readonly<Record<Locale, BookPageCopy>> = {
     error: {
       eyebrow: "Books",
       title: "The book page could not be loaded.",
-      body: "The catalogue has not been replaced. Reload the reviewed edition.",
+      body: "Reload the page.",
       retry: "Reload",
       home: "Back to home",
     },
@@ -407,7 +394,7 @@ export function getBookDisplay(
     highlights: book.highlights,
     adaptationNote:
       book.id === "ki-landschaft"
-        ? "Preise aus dem Beratungsmarkt, private Unternehmensdaten, proprietäre Scores und die Rankings daraus: alles raus. Stattdessen nachvollziehbare Selbstprüfungen und verlinkte Primärquellen."
+        ? "Diese Fassung lässt Beratungspreise, private Unternehmensdaten, proprietäre Scores und die Rankings daraus weg. Sie arbeitet mit nachvollziehbaren Selbstprüfungen und verlinkten Primärquellen."
         : "",
   };
 }

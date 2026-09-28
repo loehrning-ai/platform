@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { getBookDisplay } from "@/app/buecher/book-copy";
+import { DemoPosterThumb } from "@/components/demos/demo-poster";
+import { HOME_CONTAINER } from "@/components/home/home-container";
 import { HOME_COPY } from "@/components/home/home-copy";
+import { HomeSectionHead } from "@/components/home/home-section-head";
 import { books } from "@/lib/books";
 import { getDemosForLocale } from "@/lib/demos-localization";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
+import { RailList } from "./rail-list";
 
 /**
  * Two horizontal rails the companion home shows below `lg` instead of a third
@@ -19,56 +23,47 @@ import { localizeHref, type Locale } from "@/lib/i18n/locale";
  * height, so a rail that is off-screen costs no layout or paint while the
  * document height stays the same whether it is rendered or skipped.
  *
- * A rail lists items, never the subject's own landing page. `/demos` and
- * `/buecher` are two of the five cards the Ressourcen board renders directly
- * below this section at every width, and the shell is one document with two
- * layouts: a rail that closed with its own "all" tile would put those two
- * destinations in the document twice, visible together on a phone and a
- * second, hidden link set on desktop. See the "content is not duplicated into
- * a second DOM tree" rule in docs/experience-system.md.
+ * A rail lists items, never the subject's own landing page, and it replaces
+ * the subject's row in the Ressourcen board on a phone: while a rail is shown
+ * the board hides that row below lg (workflow.tsx), so every destination has
+ * one path per layout. The shell is one document with two layouts, so the
+ * rail never closes with its own "all" tile either: see the "content is not
+ * duplicated into a second DOM tree" rule in docs/experience-system.md.
  *
- * It ships zero client JavaScript and requests no image.
+ * A rail of one is no rail: the books rail renders only while more than one
+ * book is publicly routed (BOOK_RAIL_SHOWN); until then the board's
+ * Lernbücher row is the phone's path to the book.
+ *
+ * Each demo tile leads with a 72px square crop of the demo's flat IDEA
+ * poster (server-rendered SVG). It ships zero client JavaScript and requests
+ * no image.
  */
 
 /** How many applied examples the rail carries. */
 const RAIL_DEMO_COUNT = 6;
 
-const DEMO_TONES = [
-  "bg-brand-sky/50",
-  "bg-brand-acid/48",
-  "bg-brand-peach/45",
-  "bg-brand-pink/42",
-  "bg-brand-teal/15",
-  "bg-brand-sky/38",
-] as const;
-
-const BOOK_TONES = ["bg-brand-peach/50", "bg-brand-sky/45"] as const;
+/** The books rail needs at least two titles; one book is the board's row. */
+export const BOOK_RAIL_SHOWN = books.length > 1;
 
 const RAIL_CLASS =
-  "-mx-6 flex snap-x snap-mandatory list-none gap-3 overflow-x-auto overscroll-x-contain scroll-px-6 px-6 pb-1 [contain-intrinsic-height:auto_6.25rem] [content-visibility:auto]";
+  "-mx-4 mt-3 flex snap-x snap-mandatory list-none gap-2 overflow-x-auto overscroll-x-contain scroll-px-4 px-4 pb-1 [contain-intrinsic-height:auto_6.25rem] [content-visibility:auto] sm:-mx-6 sm:scroll-px-6 sm:px-6";
 
+/* Werkzeichnung tile: square, a hairline edge, no fill and no shadow. The
+   hover and focus states change tone only. */
 const TILE_CLASS =
-  "group flex h-full min-h-[6.25rem] flex-col justify-between gap-2 rounded-2xl border border-foreground/10 p-3 shadow-card outline-none transition-[border-color,box-shadow] duration-200 hover:border-brand-cobalt/45 hover:shadow-card-hover focus-visible:ring-2 focus-visible:ring-brand-cobalt focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+  "group flex h-full min-h-[6.25rem] flex-col justify-between gap-2 border border-hairline bg-card p-3 outline-none transition-colors duration-150 hover:border-foreground hover:bg-card-hover focus-visible:outline-2 focus-visible:outline-solid focus-visible:-outline-offset-2 focus-visible:outline-brand-orange motion-reduce:transition-none";
 
-const EYEBROW_CLASS =
-  "font-ui-mono text-xs font-bold uppercase tracking-[0.08em] text-brand-orange";
+/* The demo tile leads with its poster thumbnail, the title beside it. */
+const DEMO_TILE_CLASS = TILE_CLASS.replace(
+  "flex-col justify-between gap-2",
+  "flex-row items-start gap-3",
+);
 
-function RailHeading({
-  eyebrow,
-  title,
-}: {
-  readonly eyebrow: string;
-  readonly title: string;
-}) {
-  return (
-    <header className="mb-2">
-      <p className={EYEBROW_CLASS}>{eyebrow}</p>
-      <h2 className="mt-1 text-2xl font-bold tracking-[-0.03em] text-foreground">
-        {title}
-      </h2>
-    </header>
-  );
-}
+/* Sentence-case label for data (a book's edition) in Schiefer, never a
+   mono all-caps eyebrow. Demos are not a sequence, so their tiles carry no
+   number and open with the title. */
+const LABEL_CLASS =
+  "min-w-0 text-sm font-semibold leading-tight tracking-[0.02em] text-muted-foreground tabular-nums [overflow-wrap:anywhere]";
 
 export function MobileRails({ locale = "de" }: { readonly locale?: Locale }) {
   const copy = HOME_COPY[locale].companion;
@@ -76,67 +71,74 @@ export function MobileRails({ locale = "de" }: { readonly locale?: Locale }) {
 
   return (
     <section
-      className="border-b border-border/60 bg-background/65 py-5 lg:hidden"
+      className="bg-background py-5 lg:hidden"
       data-testid="companion-rails"
     >
-      <div className="mx-auto w-full max-w-6xl px-6">
-        <RailHeading eyebrow={copy.demosEyebrow} title={copy.demosTitle} />
-        <ul aria-label={copy.demosRailLabel} className={RAIL_CLASS}>
-          {demos.map((demo, index) => (
-            <li key={demo.slug} className="w-60 shrink-0 snap-start">
+      <div className={HOME_CONTAINER}>
+        <HomeSectionHead title={copy.demosTitle} />
+        <RailList aria-label={copy.demosRailLabel} className={RAIL_CLASS}>
+          {demos.map((demo) => (
+            <li
+              key={demo.slug}
+              className="w-[min(17rem,78vw)] shrink-0 snap-start"
+            >
               <Link
                 href={localizeHref(`/demos/${demo.slug}`, locale)}
                 prefetch={false}
                 data-home-rail-tile="demo"
-                className={`${TILE_CLASS} ${DEMO_TONES[index % DEMO_TONES.length]}`}
+                className={DEMO_TILE_CLASS}
               >
-                <span className={EYEBROW_CLASS}>{demo.n}</span>
+                <DemoPosterThumb slug={demo.slug} className="w-[4.5rem]" />
                 <span className="min-w-0">
-                  <span className="block text-base font-bold leading-snug tracking-[-0.02em] text-foreground">
+                  <span className="block text-base font-bold leading-snug text-foreground">
                     {demo.title}
                   </span>
-                  <span className="mt-1 block text-xs leading-snug text-muted-foreground">
+                  <span className="mt-1 block text-caption leading-snug text-muted-foreground">
                     {demo.titleKicker}
                   </span>
                 </span>
               </Link>
             </li>
           ))}
-        </ul>
+        </RailList>
       </div>
 
-      <div className="mx-auto mt-4 w-full max-w-6xl px-6">
-        <RailHeading eyebrow={copy.booksEyebrow} title={copy.booksTitle} />
-        {/* One tile per publicly routed title. The rail holds a single
-            published book today; titles on editorial hold are unroutable and
-            must not appear, so this list is driven by `books`, never by
-            `allBooks`. */}
-        <ul aria-label={copy.booksRailLabel} className={RAIL_CLASS}>
-          {books.map((book, index) => {
-            const display = getBookDisplay(book, locale);
-            return (
-              <li key={book.id} className="w-72 shrink-0 snap-start">
-                <Link
-                  href={localizeHref(book.readerHref, locale)}
-                  prefetch={false}
-                  data-home-rail-tile="book"
-                  className={`${TILE_CLASS} ${BOOK_TONES[index % BOOK_TONES.length]}`}
+      {BOOK_RAIL_SHOWN ? (
+        <div className={`${HOME_CONTAINER} mt-6`}>
+          <HomeSectionHead title={copy.booksTitle} />
+          {/* One tile per publicly routed title. Titles on editorial hold
+              are unroutable and must not appear, so this list is driven by
+              `books`, never by `allBooks`. */}
+          <RailList aria-label={copy.booksRailLabel} className={RAIL_CLASS}>
+            {books.map((book) => {
+              const display = getBookDisplay(book, locale);
+              return (
+                <li
+                  key={book.id}
+                  className="w-[min(18rem,78vw)] shrink-0 snap-start"
                 >
-                  <span className={EYEBROW_CLASS}>{display.edition}</span>
-                  <span className="min-w-0">
-                    <span className="block text-base font-bold leading-snug tracking-[-0.02em] text-foreground">
-                      {display.title}
+                  <Link
+                    href={localizeHref(book.readerHref, locale)}
+                    prefetch={false}
+                    data-home-rail-tile="book"
+                    className={TILE_CLASS}
+                  >
+                    <span className={LABEL_CLASS}>{display.edition}</span>
+                    <span className="min-w-0">
+                      <span className="block text-base font-bold leading-snug text-foreground">
+                        {display.title}
+                      </span>
+                      <span className="mt-1 block text-caption leading-snug text-muted-foreground">
+                        {copy.bookMeta(book.chapters, book.readingTimeMinutes)}
+                      </span>
                     </span>
-                    <span className="mt-1 block text-xs leading-snug text-muted-foreground">
-                      {copy.bookMeta(book.chapters, book.readingTimeMinutes)}
-                    </span>
-                  </span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+                  </Link>
+                </li>
+              );
+            })}
+          </RailList>
+        </div>
+      ) : null}
     </section>
   );
 }

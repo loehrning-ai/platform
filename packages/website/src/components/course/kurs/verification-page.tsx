@@ -206,9 +206,7 @@ export function VerificationPage({
               className="mb-8 inline-flex min-h-11 items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
               <ArrowLeft className="h-4 w-4" />
-              {config.language === "en"
-                ? `Back to ${config.title}`
-                : `Zurück zum ${config.title}`}
+              {config.language === "en" ? "Back to course" : "Zurück zum Kurs"}
             </Link>
 
             {/*
@@ -219,25 +217,28 @@ export function VerificationPage({
           */}
             <h1 className="sr-only">
               {config.language === "en"
-                ? "Verify certificate data"
-                : "Zertifikatdaten prüfen"}
+                ? "Read certificate data"
+                : "Zertifikatdaten lesen"}
             </h1>
 
             {data && (
-              <div className="border-2 border-brand-sand bg-card p-5 text-center sm:p-8">
-                <CheckCircle2 className="mx-auto h-12 w-12 text-brand-sand" />
-                <p className="mt-2 font-mono text-xs font-bold uppercase tracking-wider text-brand-sand">
+              <div className="border border-foreground bg-card p-5 text-center sm:p-8">
+                <CheckCircle2
+                  className="mx-auto h-10 w-10 text-pass"
+                  aria-hidden="true"
+                />
+                <p className="mt-2 text-label text-pass">
                   {config.language === "en"
                     ? "QR data read"
                     : "QR-Daten gelesen"}
                 </p>
-                <h2 className="mt-4 text-2xl font-bold tracking-[-0.03em]">
+                <h2 className="mt-4 text-fluid-h2 font-bold">
                   {config.certificateTitle}
                 </h2>
                 <p className="mt-1 text-sm text-muted-foreground">
                   {config.certificateSubtitle}
                 </p>
-                <div className="mx-auto mt-6 h-px w-16 bg-brand-sand" />
+                <div className="mx-auto mt-6 h-0.5 w-16 bg-foreground" />
                 <p className="mt-6 break-words text-lg font-semibold [overflow-wrap:anywhere]">
                   {data.n}
                 </p>
@@ -256,24 +257,22 @@ export function VerificationPage({
                     </p>
                   )}
                 </div>
-                <div className="mx-auto mt-6 h-px w-16 bg-border" />
+                <div className="mx-auto mt-6 h-px w-16 bg-hairline" />
                 <p className="mt-4 text-xs text-muted">
                   loehrning.ai | {config.certificateReferenceLabel}
                 </p>
-                <p className="mt-3 border border-border bg-background p-3 text-xs leading-relaxed text-muted-foreground">
+                <p className="mt-4 border-t border-hairline pt-3 text-caption text-muted-foreground">
                   {config.language === "en" ? (
                     <>
                       {config.recordNoun.label}, generated locally. The QR data
-                      is readable, but not server-verified, not
-                      cryptographically signed, and not an official or legally
-                      binding credential.
+                      is not server-verified, not cryptographically signed and
+                      not an official or legally binding credential.
                     </>
                   ) : (
                     <>
                       {config.recordNoun.label}, lokal erzeugt. Die QR-Daten
-                      sind lesbar, aber nicht servergeprüft, nicht
-                      kryptografisch signiert und keine behördliche oder
-                      rechtliche Bescheinigung.
+                      sind nicht servergeprüft, nicht kryptografisch signiert
+                      und keine behördliche oder rechtliche Bescheinigung.
                     </>
                   )}
                 </p>
@@ -281,25 +280,28 @@ export function VerificationPage({
             )}
 
             {invalidReason && (
-              <div className="border-2 border-destructive/30 bg-card p-5 text-center sm:p-8">
-                <XCircle className="mx-auto h-12 w-12 text-destructive" />
-                <h2 className="mt-4 text-2xl font-bold tracking-[-0.03em]">
+              <div className="border border-destructive bg-card p-5 text-center sm:p-8">
+                <XCircle
+                  className="mx-auto h-10 w-10 text-destructive"
+                  aria-hidden="true"
+                />
+                <h2 className="mt-4 text-fluid-h2 font-bold">
                   {config.language === "en"
                     ? invalidReason === "course-mismatch"
-                      ? "Certificate code doesn't match this course."
+                      ? "Certificate code doesn't match this course"
                       : "Certificate code unreadable"
                     : invalidReason === "course-mismatch"
-                      ? "Zertifikatcode passt nicht zu diesem Kurs."
+                      ? "Zertifikatcode passt nicht zu diesem Kurs"
                       : "Zertifikatcode nicht lesbar"}
                 </h2>
                 <p className="mt-2 text-sm text-muted-foreground">
                   {config.language === "en"
                     ? invalidReason === "course-mismatch"
-                      ? "The link contains readable data, but points to a different course."
-                      : "The link doesn't contain readable certificate data, or it's been corrupted."
+                      ? "Scan the QR code on your PDF again to open the right course's check page."
+                      : "The link holds no readable certificate data or is damaged."
                     : invalidReason === "course-mismatch"
-                      ? "Der Link enthält lesbare Daten, verweist aber auf einen anderen Kurs."
-                      : "Der Link enthält keine lesbaren Zertifikatdaten oder wurde beschädigt."}
+                      ? "Scanne den QR-Code auf deiner PDF erneut, um die Prüfseite des richtigen Kurses zu öffnen."
+                      : "Der Link enthält keine lesbaren Zertifikatdaten oder ist beschädigt."}
                 </p>
               </div>
             )}

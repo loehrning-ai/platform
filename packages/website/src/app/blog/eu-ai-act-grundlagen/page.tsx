@@ -203,8 +203,11 @@ export default async function EuAiActGrundlagenPage() {
         locale={locale}
       />
 
+      {/* Paper reading surface below the IDEA blog hub: only the Kopflinie
+          and the H1 take the scene line (as a lesson takes its track). */}
       <article
         className="post-shell"
+        data-plakat-page="idea"
         data-screen-label={
           locale === "de"
             ? "EU AI Act Grundlagen Artikel"

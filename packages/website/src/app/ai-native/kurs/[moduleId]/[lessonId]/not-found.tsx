@@ -17,8 +17,8 @@ export default async function LektionNotFound() {
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
           {isEnglish
-            ? "The link is outdated or the lesson has moved. The course overview lists every current lesson."
-            : "Der Link ist veraltet oder die Lektion wurde verschoben. Die Kursübersicht enthält alle aktuellen Lektionen."}
+            ? "The link is outdated or the lesson has moved."
+            : "Der Link ist veraltet oder die Lektion wurde verschoben."}
         </p>
         <Link
           href={localizeHref("/ai-native/kurs", locale)}

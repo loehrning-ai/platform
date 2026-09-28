@@ -143,7 +143,9 @@ test.describe("KI-Führerschein DE/EN integration", () => {
         await expect(page).not.toHaveURL(/\/login/);
         await expect(page.locator("html")).toHaveAttribute("lang", locale);
         await expect(page.getByRole("heading", { level: 1 })).toContainText(
-          locale === "en" ? "AI at work" : "KI im Alltag",
+          locale === "en"
+            ? "Which data may go into an AI tool"
+            : "Welche Daten ins KI-Tool dürfen",
         );
         await expect(
           page.getByRole("link", {

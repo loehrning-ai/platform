@@ -68,7 +68,9 @@ export function FreshnessBadge({
         </span>
       )}
       {overdue && (
-        <span className="rounded bg-amber-500/15 px-1.5 py-0.5 text-amber-600 dark:text-amber-400">
+        // A square outline in the status tone: no tint, no radius. The tone
+        // keeps AA on paper and in every scene (SPEC §7).
+        <span className="border border-risk-yellow px-1.5 py-0.5 text-risk-yellow">
           {copy.overdue}
         </span>
       )}

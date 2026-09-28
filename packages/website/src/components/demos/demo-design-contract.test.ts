@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
@@ -36,26 +36,93 @@ describe("demo atlas visual contract", () => {
     );
   });
 
-  it("uses the registry hierarchy for a preview-led bento atlas", () => {
+  it("never tells a preview mark from the drawing by hue alone", () => {
+    // SPEC §3.11 and §1.1: Kobalt and Himbeere are 1.37:1 under protanopia.
+    // The previews are flat posters (SPEC §3.12): decorative, aria-hidden
+    // art with no text and no meaning-bearing mark, so nothing is told
+    // apart by hue. Himbeere is the scene's mid shape, never a mark fill.
+    const previews = readFileSync(
+      join(__dirname, "demo-gallery-previews.tsx"),
+      "utf8",
+    );
+    const poster = readFileSync(join(__dirname, "demo-poster.tsx"), "utf8");
+    for (const text of [previews, poster]) {
+      expect(text).not.toMatch(/\bbg-scene-mark\b|\bfill-scene-mark\b/);
+      expect(text).not.toMatch(/text-scene-accent-text/);
+      expect(text).not.toMatch(/<text\b|font-mono|text-\[0\.75rem\]/);
+    }
+    expect(poster).toContain('aria-hidden="true"');
+    expect(poster).toContain("fill-scene-ink");
+    expect(poster).toContain("fill-scene-mid");
+  });
+
+  it("uses a uniform, preview-led grid with borderless tiles", () => {
     const grid = source("demo-grid.tsx");
     const tile = source("demo-tile.tsx");
     const hub = source("../../app/demos/page.tsx");
 
-    expect(grid).toContain("lg:grid-cols-4");
+    expect(grid).toContain("lg:grid-cols-3");
+    expect(grid).toContain("gap-y-12");
     expect(grid).toContain("data-demo-filter-console");
-    expect(tile).toContain("tileSizeClass(demo.size)");
-    expect(tile).toContain('case "s-hero"');
+    // Filters sit under a Kopflinie section head (scene line) as square chips.
+    expect(grid).toContain("border-t-2 border-scene-line");
+    expect(grid).toContain("FILTER_CHIP_CLASS");
     expect(tile).toContain("data-demo-preview");
-    expect(hub).toContain("copy.catalog.stats.map");
+    // Blueprint 6.14: no tile border and no card fill; the preview panel,
+    // a small IDEA poster (SPEC §3.12), is the only box, and meta is one
+    // caption line, not chips.
+    expect(tile).not.toMatch(/border border-hairline bg-card|<Chip/);
+    expect(tile).toContain("plakat-idea");
+    expect(tile).not.toContain("bg-inset");
+    expect(tile).toContain("text-caption text-muted-foreground");
+    expect(tile).not.toMatch(/bg-foreground|dark-section|demo\.dark/);
+    // Copy is written to fit: no clamp from sm up. Below sm the tile is a
+    // ledger row (blueprint 6.6) without the drawing and with two lines.
+    expect(tile).not.toMatch(/(?<!max-sm:)line-clamp/);
+    expect(tile).toContain("max-sm:hidden");
+    expect(grid).toContain("max-sm:divide-y max-sm:divide-hairline");
+    // The hub hero is the IDEA PlakatBand (SPEC §3.12) with the halftone
+    // and corner dots; its H1 is a poster title in the scene mid.
+    expect(hub).toMatch(/<PlakatBand\s+plakat="idea"/);
+    expect(hub).toContain('<Halftone field="demos"');
+    expect(hub).toContain("cornerDots");
+    expect(hub).toMatch(/className="poster-title[^"]*text-scene-mid/);
+    // Stats are the shared StatRow, with values derived from the registry.
+    expect(hub).toContain("<StatRow");
+    expect(hub).toContain("stats={stats}");
+    expect(hub).toContain("demos.length");
   });
 
-  it("limits tile motion and supplies a static reduced-motion state", () => {
+  it("aligns every demo surface to the site column", () => {
+    for (const path of ["../../app/demos/page.tsx", "demo-detail-layout.tsx"] as const) {
+      expect(source(path)).toContain("max-w-6xl");
+      expect(source(path)).not.toContain("max-w-[75rem]");
+    }
+  });
+
+  it.each(SURFACES)("keeps %s free of the brutalist look", (path) => {
+    const text = source(path);
+    // Offset stamp shadows, mono-uppercase eyebrows, orange left rules,
+    // two-tone accent headings and crushed display tracking are retired.
+    expect(text).not.toMatch(/shadow-\[\d+px_\d+px_0/);
+    expect(text).not.toMatch(/\buppercase\b/);
+    expect(text).not.toMatch(/border-l-\[[3-9]px\]/);
+    expect(text).not.toMatch(/font-black|tracking-\[-0\.0[3-9]/);
+    expect(text).not.toMatch(/bg-brand-(?:acid|sky|pink|peach|cobalt|teal)/);
+    expect(text).not.toMatch(/\brounded-(?:sm|md|lg|xl|2xl)\b/);
+  });
+
+  it("limits tile motion to a colour change with a static reduced-motion state", () => {
     const tile = source("demo-tile.tsx");
 
-    expect(tile).toContain("transition-[border-color,box-shadow]");
-    expect(tile).toContain("transition-transform");
+    expect(tile).toContain("transition-colors");
+    // Hover darkens the preview panel one tone: the scene's card-hover
+    // (Kreide to #d9dbd5, Kobalt on it 5.83:1).
+    expect(tile).toContain("group-hover:bg-[var(--color-card-hover)]");
     expect(tile).toContain("motion-reduce:transition-none");
     expect(tile).toContain("motion-reduce:transform-none");
+    // No hover lift, scale or offset shadow.
+    expect(tile).not.toMatch(/hover:shadow|group-hover:scale|hover:scale|translate-y/);
     expect(tile).not.toMatch(/animate-|repeat|autoplay/);
   });
 
@@ -65,5 +132,57 @@ describe("demo atlas visual contract", () => {
       /requestAnimationFrame|IntersectionObserver|useMotionAllowed/,
     );
     expect(table).toContain("{value}");
+  });
+});
+
+/*
+ * The interactive engines (*-demo.tsx) sit inside the calm detail frame, so
+ * they carry the same Werkzeichnung rules: no kicker or slogan header over
+ * the page H1, no Tailwind-orange washes or glows, no app chrome, no
+ * decorative textures, no looping animation, no coloured left rules and no
+ * mono-uppercase tracked labels.
+ */
+const ENGINES = readdirSync(__dirname)
+  .filter((file) => /-demo\.tsx$/.test(file))
+  .sort();
+
+function engine(file: string): string {
+  return readFileSync(join(__dirname, file), "utf8");
+}
+
+describe("demo engine visual contract", () => {
+  it("covers every engine file", () => {
+    expect(ENGINES.length).toBeGreaterThanOrEqual(12);
+  });
+
+  it.each(ENGINES)("keeps %s headings plain: no visible h2 slogan, no two-colour h2", (file) => {
+    const text = engine(file);
+    // The page H1 and lead name the demo; an engine h2 is an sr-only landmark.
+    for (const match of text.matchAll(/<h2\b[^>]*>/g)) {
+      expect(match[0], file).toContain('className="sr-only"');
+    }
+    expect(text).not.toMatch(
+      /<h2\b[^>]*>(?:(?!<\/h2>)[\s\S])*color: "var\(--color-brand-orange\)"(?:(?!<\/h2>)[\s\S])*<\/h2>/,
+    );
+  });
+
+  it.each(ENGINES)("keeps %s on the deck palette without glows, textures or app chrome", (file) => {
+    const text = engine(file);
+    // Off-palette Tailwind orange (#f97316) washes and glows.
+    expect(text).not.toMatch(/rgba\(\s*249\s*,\s*115\s*,\s*22/);
+    // Product title bars (Excel green, Word blue) and dot-grid canvases.
+    expect(text).not.toMatch(/#107C41|#2B579A/i);
+    expect(text).not.toMatch(/radial-gradient\(/);
+    // Offset stamp shadows, inline or in scoped CSS.
+    expect(text).not.toMatch(/\b\d+px \d+px 0(?: 0)? (?:var|\$\{|#|rgba)/);
+  });
+
+  it.each(ENGINES)("keeps %s motion finite and its rules and labels calm", (file) => {
+    const text = engine(file);
+    expect(text).not.toMatch(/\binfinite\b/);
+    expect(text).not.toMatch(/borderLeft:\s*[`"][3-9]px/);
+    expect(text).not.toMatch(/textTransform:\s*"uppercase"/);
+    expect(text).not.toMatch(/letterSpacing:\s*"0\.(?:0[89]|1\d?)\d*em"/);
+    expect(text).not.toMatch(/letterSpacing:\s*"-0\.0[2-9]/);
   });
 });

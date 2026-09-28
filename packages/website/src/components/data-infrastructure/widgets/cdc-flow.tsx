@@ -41,12 +41,12 @@ const KAPPA_STAGES_DE = [
 ];
 
 const KAPPA_NOTE =
-  "One pipeline. Re-process by replaying the topic from offset 0 of a long-retention compacted topic.";
+  "One pipeline. Re-process by replaying the topic from offset 0 while full history is retained.";
 const LAMBDA_NOTE =
-  "Two pipelines computing the same logic, then merged. Killer flaw: two codebases for one transform.";
+  "Two pipelines computing the same logic, then merged. Main drawback: two codebases for one transform.";
 
 const KAPPA_NOTE_DE =
-  "Eine Pipeline. Für eine Neuberechnung wird das Topic ab Offset 0 erneut gelesen; dafür braucht es lange Aufbewahrung und Kompaktierung.";
+  "Eine Pipeline. Für eine Neuberechnung wird das Topic ab Offset 0 erneut gelesen, solange die volle Historie aufbewahrt ist.";
 const LAMBDA_NOTE_DE =
   "Zwei Pipelines berechnen dieselbe Logik und werden danach zusammengeführt. Der zentrale Nachteil sind zwei Implementierungen derselben Transformation.";
 
@@ -72,15 +72,15 @@ const PAYLOAD_LINES: readonly { key: string; value: string; note: string }[] = [
 
 const WHY_CDC_WINS = [
   "captures DELETEs (no row to SELECT)",
-  "no load on source, reads WAL directly",
-  "ordered, gap-free by LSN",
+  "no polling queries; slots and decoding still cost the source",
+  "ordered per source position",
   "replayable from any offset",
 ];
 
 const WHY_CDC_WINS_DE = [
   "erfasst DELETEs, obwohl keine Zeile mehr per SELECT lesbar ist",
-  "liest das WAL ohne Abfragelast auf dem Quellsystem",
-  "ist über die LSN geordnet und lückenlos",
+  "keine Polling-Abfragen; Slots und Decoding belasten die Quelle trotzdem",
+  "nach Quellposition geordnet",
   "kann ab jedem Offset erneut gelesen werden",
 ];
 
@@ -572,8 +572,8 @@ function LambdaDiagram({ locale }: { readonly locale: Locale }): JSX.Element {
         className="fill-[#b85a4a] text-[11px] font-semibold"
       >
         {locale === "de"
-          ? "Zwei Codebasen: Jede Aggregation existiert als Stream- und Batch-Variante. Abweichungen zwischen beiden erhöhen den Betriebsaufwand."
-          : "⚠ Two codebases. Every aggregation expressed twice, once streaming, once batch. Drift between the two is the dominant operational pain."}
+          ? "⚠ Zwei Codebasen: Jede Aggregation gibt es als Stream- und Batch-Variante. Abweichungen erhöhen den Betriebsaufwand."
+          : "⚠ Two codebases: every aggregation exists twice, as stream and batch. Drift between them adds operating work."}
       </text>
     </svg>
   );

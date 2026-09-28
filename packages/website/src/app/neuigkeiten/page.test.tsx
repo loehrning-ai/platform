@@ -28,7 +28,10 @@ describe("Updates locale content", () => {
     expect(
       screen.getByRole("heading", { level: 1, name: "Was ist neu" }),
     ).toBeVisible();
-    expect(screen.getByText("3 dokumentiert")).toBeVisible();
+    expect(screen.getByText("4 dokumentiert")).toBeVisible();
+    expect(
+      screen.getByRole("heading", { name: /Fragenliste zu KI in der Ausbildung/ }),
+    ).toBeVisible();
     expect(
       screen.getByRole("heading", { name: /Zweisprachige Plattformrevision/ }),
     ).toBeVisible();
@@ -40,12 +43,15 @@ describe("Updates locale content", () => {
     await renderPage("en");
 
     expect(
-      screen.getByRole("heading", { level: 1, name: "What is new" }),
+      screen.getByRole("heading", { level: 1, name: "What's new" }),
     ).toBeVisible();
     expect(
       screen.getByRole("heading", { name: /Blog published/ }),
     ).toBeVisible();
-    expect(screen.getByText("3 documented")).toBeVisible();
+    expect(screen.getByText("4 documented")).toBeVisible();
+    expect(
+      screen.getByRole("heading", { name: /Question list on AI in apprenticeships/ }),
+    ).toBeVisible();
     expect(
       screen.getByRole("heading", { name: /Bilingual platform revision/ }),
     ).toBeVisible();

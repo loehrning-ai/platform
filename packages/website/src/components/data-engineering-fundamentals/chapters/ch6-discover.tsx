@@ -1,4 +1,4 @@
-import { Hero, SectionLabel, CodeBlock, AntiPatterns, BestPractices, Takeaway } from "../primitives";
+import { Hero, SectionLabel, CodeBlock, AntiPatterns } from "../primitives";
 import { DiscoverySpeedrun } from "../simulators/discovery-speedrun";
 import { LineageCamera } from "../simulators/lineage-camera";
 import type { ChapterMeta } from "@/lib/data-engineering-fundamentals/types";
@@ -37,7 +37,7 @@ export function Ch6Discover({ chapter }: Ch6DiscoverProps) {
         accent={chapter.inkHex}
         eyebrow={`Chapter ${chapter.displayNumber} · ${chapter.estimatedMinutes} min`}
         title="Discover: <span class='accent'>find ownership, contract, and lineage.</span>"
-        hook="A fictional command palette, a DatasetSpec metadata file, and a lineage graph carry the discovery practice here. These interfaces are reference designs, not industry standards."
+        hook="You practice with a fictional command palette, a DatasetSpec file and a lineage graph. They are reference designs, not industry standards."
         meta={[
           { k: "Glossary", v: "palette + wut" },
           { k: "Metadata", v: "DatasetSpec" },
@@ -49,44 +49,30 @@ export function Ch6Discover({ chapter }: Ch6DiscoverProps) {
         <SectionLabel n="7.1">The six shortcuts</SectionLabel>
         <h2 className="h2">Use the course palette before adopting a dataset.</h2>
         <p className="prose">
-          Before adopting a table, inspect its purpose, owner, status, upstream producer, and registered consumers. In the course palette,
-          <code> ht</code> shows table metadata, <code>fpl</code> opens the producing file, <code>ds produce</code> lists registered consumers,
-          <code> qbgs</code> searches examples, <code>udf</code> finds a function, and <code>wut</code> opens a glossary entry.
+          Before adopting a table, check its purpose, owner, status, upstream producer and registered consumers. In the course palette,{" "}
+          <code>ht</code> shows table metadata, <code>fpl</code> opens the producing file, <code>ds produce</code> lists registered consumers,{" "}
+          <code>qbgs</code> searches examples, <code>udf</code> finds a function, and <code>wut</code> opens a glossary entry.
         </p>
         <DiscoverySpeedrun />
       </section>
 
       <section className="section">
         <SectionLabel n="7.2">The metadata file</SectionLabel>
-        <p className="prose">In this reference design every dataset carries a versioned <b>DatasetSpec</b> next to its pipeline code, and integrations read its descriptions, owner, status, and actor annotations from there. The file is a declared contract. Check that catalog and lineage ingestion are current before you lean on either.</p>
+        <p className="prose">Here every dataset has a versioned <b>DatasetSpec</b> next to its pipeline code, and integrations read descriptions, owner, status and actor annotations from it. The file only declares the contract and can drift from the deployed table, so compare both and check that catalog and lineage ingestion are current.</p>
         <CodeBlock title="dim_users.spec.yaml · dataset metadata" lang="YAML" html={DATASETSPEC_YAML} />
       </section>
 
       <section className="section">
         <SectionLabel n="7.3">Lineage as a camera</SectionLabel>
-        <p className="prose">A lineage graph shows the emitted upstream and downstream edges, column-level relationships included when the integrations provide them. It is also incomplete. Pair it with owners, source code, catalog search, and runtime evidence before you estimate impact.</p>
+        <p className="prose">A lineage graph shows the emitted upstream and downstream edges, with column relationships when integrations provide them. It is rarely complete, so estimate impact with owners, source code, catalog search and runtime evidence too.</p>
         <LineageCamera />
       </section>
 
       <AntiPatterns
         items={[
-          "<b>Starting with broad code search.</b> Check the catalog entry and owner first, then use source search to verify details or fill metadata gaps.",
-          "<b>Adopting a table without checking the deprecation banner.</b> The table exists, returns data, has the right schema. The banner says 'deprecated 2023-06, migrate to v2.' You won't know until migration week.",
+          "<b>Starting with broad code search.</b> Check the catalog entry and owner first, then use source search for details or metadata gaps.",
+          "<b>Adopting a table without checking the deprecation banner.</b> A table with data and the right schema can still say 'deprecated 2023-06, migrate to v2.'",
           "<b>Assuming the lineage graph is complete.</b> Confirm the upstream owner and at least one critical consumer against code or runtime evidence.",
-        ]}
-      />
-      <BestPractices
-        items={[
-          "Use the course palette to inspect metadata before exploratory SQL.",
-          "Read both the declared DatasetSpec and the observed table. The contract and deployed state can drift.",
-          "<b>One hop up, one hop down.</b> Trace the upstream producer and at least one downstream consumer before relying on a table.",
-        ]}
-      />
-      <Takeaway
-        items={[
-          "A discovery workflow should expose purpose, owner, status, schema, and known lineage before adoption.",
-          "A DatasetSpec is a versioned declaration. Compare it with the deployed catalog and data when accuracy matters.",
-          "Lineage is evidence from instrumented systems, not a guaranteed inventory of every dependency.",
         ]}
       />
     </>

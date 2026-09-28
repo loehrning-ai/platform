@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
 import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
+import { request } from "node:http";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
+import { createPreviewServer, resolvePreviewFile } from "../course03/card-preview.mjs";
 import { buildKitArchive, crc32, kitArchiveFiles, KIT_SOURCE_FILES } from "../course03/kit-archive.mjs";
 import { check, isRepositoryAuthored, loadOverrides, resolveOverride, sha256, writeManifest } from "../course03/overrides.mjs";
 import { planRefresh } from "../course03/refresh-published.mjs";
@@ -70,4 +72,76 @@ test("the published ZIP, manifests and repository-authored files are up to date"
   assert.deepEqual(problems, []);
   assert.deepEqual(drift, [], "run: node scripts/course03/refresh-published.mjs");
   assert.deepEqual(removals, []);
+});
+
+/**
+ * A workshop folder beside a sibling that shares its name as a string prefix
+ * ("workshop-private"), plus a file directly in the parent.
+ */
+async function previewFixture(t) {
+  const dir = await mkdtemp(path.join(os.tmpdir(), "course03-preview-"));
+  t.after(() => rm(dir, { force: true, recursive: true }));
+  const folder = path.join(dir, "workshop");
+  await mkdir(path.join(folder, "lib"), { recursive: true });
+  await writeFile(path.join(folder, "slides.html"), "<!doctype html>");
+  await writeFile(path.join(folder, "lib/story.css"), "a{}");
+  await mkdir(path.join(dir, "workshop-private"));
+  await writeFile(path.join(dir, "workshop-private/secret.txt"), "private");
+  await writeFile(path.join(dir, "outside.txt"), "private");
+  return folder;
+}
+
+function previewGet(port, target) {
+  return new Promise((resolve, reject) => {
+    const outgoing = request({ host: "127.0.0.1", port, path: target, agent: false }, (response) => {
+      const chunks = [];
+      response.on("data", (chunk) => chunks.push(chunk));
+      response.on("end", () => resolve({ status: response.statusCode, body: Buffer.concat(chunks).toString("utf8") }));
+    });
+    outgoing.on("error", reject);
+    outgoing.end();
+  });
+}
+
+test("the card preview helper resolves only paths inside the workshop folder", async (t) => {
+  const folder = await previewFixture(t);
+  assert.deepEqual(resolvePreviewFile(folder, "/slides.html"), { file: path.join(folder, "slides.html") });
+  assert.deepEqual(resolvePreviewFile(folder, "/lib/story.css?v=1"), { file: path.join(folder, "lib/story.css") });
+  assert.deepEqual(resolvePreviewFile(folder, "/lib/%2e%2e/slides.html"), { file: path.join(folder, "slides.html") });
+  // Encoded separators survive URL parsing and decode into a climb out of the
+  // folder. The sibling shares the folder's name as a string prefix, which a
+  // plain startsWith(folder) check accepted.
+  for (const target of [
+    "/..%2fworkshop-private/secret.txt",
+    "/%2e%2e%2fworkshop-private%2fsecret.txt",
+    "/lib/..%2f..%2fworkshop-private/secret.txt",
+    "/..%2foutside.txt",
+    "/..%2f",
+    "/",
+  ]) {
+    assert.deepEqual(resolvePreviewFile(folder, target), { status: 403 }, target);
+  }
+  // A folder given with a trailing separator is contained just as strictly.
+  assert.deepEqual(resolvePreviewFile(`${folder}${path.sep}`, "/..%2fworkshop-private/secret.txt"), { status: 403 });
+  assert.deepEqual(resolvePreviewFile(`${folder}${path.sep}`, "/slides.html"), { file: path.join(folder, "slides.html") });
+  // Malformed percent-escapes are a client error, not an exception.
+  for (const target of ["/%E0%A4%A", "/%", "/slides%ZZ.html"]) {
+    assert.deepEqual(resolvePreviewFile(folder, target), { status: 400 }, target);
+  }
+});
+
+test("the card preview server refuses the sibling folder and survives malformed escapes", async (t) => {
+  const folder = await previewFixture(t);
+  const server = createPreviewServer(folder);
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  t.after(() => new Promise((resolve) => server.close(resolve)));
+  const { port } = server.address();
+
+  assert.deepEqual(await previewGet(port, "/slides.html"), { status: 200, body: "<!doctype html>" });
+  assert.deepEqual(await previewGet(port, "/..%2fworkshop-private/secret.txt"), { status: 403, body: "" });
+  assert.deepEqual(await previewGet(port, "/..%2foutside.txt"), { status: 403, body: "" });
+  assert.deepEqual(await previewGet(port, "/%E0%A4%A"), { status: 400, body: "" });
+  assert.deepEqual(await previewGet(port, "/missing.html"), { status: 404, body: "" });
+  // The malformed request did not take the process down.
+  assert.deepEqual(await previewGet(port, "/lib/story.css"), { status: 200, body: "a{}" });
 });

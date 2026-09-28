@@ -10,7 +10,7 @@ describe("<ArtifactLedger>", () => {
     render(<ArtifactLedger locale="de" />);
 
     const detail = screen.getByRole("link", {
-      name: `Detail ansehen: ${artifact.title}`,
+      name: `Details ansehen: ${artifact.title}`,
     });
     expect(detail).toHaveAttribute("href", artifact.href);
     expect(detail).toHaveClass("min-h-11", "bg-brand-orange");
@@ -39,7 +39,7 @@ describe("<ArtifactLedger>", () => {
     );
     const factRail = document.querySelector("[data-open-source-fact-rail]");
     expect(previewSheet).toHaveClass("order-1");
-    expect(factRail?.children).toHaveLength(4);
+    expect(factRail?.children).toHaveLength(3);
     expect(
       Array.from(factRail?.children ?? []).every((fact) =>
         fact.getAttribute("style")?.includes("--color-brand-"),

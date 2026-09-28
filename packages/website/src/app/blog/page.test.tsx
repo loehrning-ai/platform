@@ -1,6 +1,7 @@
 import { render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { BLOG_POSTS } from "@/lib/blog-metadata";
+import { capsLine, expectCapsInsideScene } from "@/test/plakat-scene";
 
 const { getRequestLocaleMock } = vi.hoisted(() => ({
   getRequestLocaleMock: vi.fn(),
@@ -29,14 +30,15 @@ describe("BlogIndexPage", () => {
       const link = screen.getByRole("link", {
         name: `Artikel lesen: ${post.titleDe}`,
       });
-      const row = within(link);
+      const row = within(link.closest("li")!);
       const number = String(post.postNumber).padStart(2, "0");
       expect(link).toHaveAttribute("href", `/blog/${post.slug}`);
+      expect(link).toHaveTextContent("Artikel lesen");
       expect(
-        row.getByRole("heading", { name: post.titleDe }),
+        row.getByRole("heading", { level: 3, name: post.titleDe }),
       ).toBeInTheDocument();
       expect(row.getByText(post.summary)).toBeInTheDocument();
-      expect(row.getByText(`Artikel Nº ${number}`)).toBeInTheDocument();
+      expect(row.getByText(number)).toBeInTheDocument();
       expect(
         row.getByText(`${post.readingTimeMin} Min. Lesezeit`),
       ).toBeInTheDocument();
@@ -51,10 +53,10 @@ describe("BlogIndexPage", () => {
       const link = screen.getByRole("link", {
         name: `Read article: ${post.titleEn}`,
       });
-      const row = within(link);
+      const row = within(link.closest("li")!);
       expect(link).toHaveAttribute("href", `/en/blog/${post.slug}`);
       expect(
-        row.getByRole("heading", { name: post.titleEn }),
+        row.getByRole("heading", { level: 3, name: post.titleEn }),
       ).toBeInTheDocument();
       expect(row.getByText(post.summaryEn)).toBeInTheDocument();
       expect(
@@ -68,7 +70,9 @@ describe("BlogIndexPage", () => {
   it("orders equal-date posts by descending manifest number", async () => {
     await renderPage("de");
     const renderedHrefs = Array.from(
-      document.querySelectorAll<HTMLAnchorElement>("a.row"),
+      document.querySelectorAll<HTMLAnchorElement>(
+        "[data-blog-article] a",
+      ),
     ).map((link) => link.getAttribute("href"));
     const expectedHrefs = [...BLOG_POSTS]
       .sort(
@@ -87,42 +91,78 @@ describe("BlogIndexPage", () => {
     expect(document.querySelector(".runline__track")).toBeNull();
   });
 
-  it("uses one useful editorial bento and a persistent article preview", async () => {
+  it("uses the IDEA hero band, a Kopflinie section and ledger rows", async () => {
     await renderPage("de");
 
-    expect(document.querySelector("[data-risograph-hero]")).not.toBeNull();
+    expect(screen.getByText(capsLine("Blog · 2 Artikel"))).toBeVisible();
+    const h1 = screen.getByRole("heading", {
+      level: 1,
+      name: "KI im Alltag, mit Quellen erklärt.",
+    });
+    expect(h1).toBeVisible();
+    // SPEC §2.3 and §3.12: the hero carries the IDEA scope, the page names
+    // its scene, the title takes the word fit and the band holds one
+    // halftone image instead of random dots, with three type sizes only.
+    const hero = h1.closest(".blog-index__hero");
+    expect(hero).toHaveClass("plakat-idea");
+    // The band checks (contrast, focus) find it like every other band.
+    expect(hero).toHaveAttribute("data-cover-band");
+    // The IDEA poster's caps line carries the hairline arrow, as on /demos.
+    expect(hero?.querySelector(".plakat-caps [data-caps-arrow]")).toBeTruthy();
+    expect(document.querySelector("[data-blog-index]")).toHaveAttribute(
+      "data-plakat-page",
+      "idea",
+    );
+    expect(h1.getAttribute("style")).toMatch(/--fit:\s*\d/);
+    expect(hero?.querySelectorAll("[data-halftone='blog']")).toHaveLength(1);
+    expect(hero?.querySelector("#hero-dots, .hero__field")).toBeNull();
+    expect(hero?.querySelector(".blog-index__caption, time")).toBeNull();
+    expect(hero?.querySelector(".plakat-caps")).toHaveTextContent("Blog · 2 Artikel");
+    expectCapsInsideScene(document.body);
+    // The update date moves to paper, under the section head.
     expect(
-      document.querySelector('[data-risograph-sheet="issue"]'),
-    ).not.toBeNull();
-    expect(document.querySelector("[data-editorial-bento]")).not.toBeNull();
-    expect(document.querySelectorAll("[data-link-preview]")).toHaveLength(
+      document.querySelector("[data-blog-ledger] .blog-index__updated time"),
+    ).toBeTruthy();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Alle Artikel" }),
+    ).toBeVisible();
+    expect(document.querySelector("[data-blog-ledger] ol")).not.toBeNull();
+    expect(document.querySelectorAll("[data-blog-article]")).toHaveLength(
       BLOG_POSTS.length,
     );
-    expect(document.querySelectorAll("[data-article-preview]")).toHaveLength(
-      BLOG_POSTS.length,
-    );
     expect(
-      screen.getByRole("img", {
-        name: /EU AI Act ab August 2026.*Art\. 50 Transparenz/,
-      }),
+      screen.getByRole("heading", { name: "Quellenstandard" }),
     ).toBeVisible();
-    expect(
-      screen.getByRole("heading", { name: "Behauptungen mit Belegspur." }),
-    ).toBeVisible();
-    expect(screen.getByText("Primärquellen")).toBeVisible();
-    expect(screen.getByText("Prüfdatum")).toBeVisible();
-    expect(screen.getByText("Kein Redaktionsplan.")).toBeVisible();
+    expect(screen.getByText(/verlinken auf Primärquellen/)).toBeVisible();
+    expect(screen.getByText(/Prüfdatum/)).toBeVisible();
+    expect(screen.getByText(/erscheint unregelmäßig/)).toBeVisible();
+  });
+
+  it("drops the risograph masthead, preview sheets and stacked panels", async () => {
+    await renderPage("de");
+
+    for (const selector of [
+      "[data-risograph-hero]",
+      "[data-risograph-sheet]",
+      "[data-editorial-bento]",
+      "[data-article-preview]",
+      ".blog-dateline",
+      ".mast__meta",
+      ".evidence-card__register",
+    ]) {
+      expect(document.querySelector(selector)).toBeNull();
+    }
   });
 
   it("localizes editorial support panels without German leakage", async () => {
     await renderPage("en");
 
     expect(
-      screen.getByRole("heading", { name: "Claims with an evidence trail." }),
+      screen.getByRole("heading", { name: "Source standard" }),
     ).toBeVisible();
-    expect(screen.getByText("Primary sources")).toBeVisible();
-    expect(screen.getByText("No publishing quota.")).toBeVisible();
-    expect(screen.queryByText("Prüfdatum")).not.toBeInTheDocument();
+    expect(screen.getByText(/link to primary sources/)).toBeVisible();
+    expect(screen.getByText(/published irregularly/)).toBeVisible();
+    expect(screen.queryByText(/Prüfdatum/)).not.toBeInTheDocument();
   });
 
   it.each([

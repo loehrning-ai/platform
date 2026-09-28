@@ -9,33 +9,33 @@ export const PRODUCT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Produktgrenze festlegen",
     subtitle:
-      "Bestimme das Kundenergebnis, das am Modellverhalten hängt, und den Ersatzweg bei einem Ausfall.",
+      "Bestimme das Kundenergebnis, das am Modell hängt, und seinen Ersatzweg.",
     objective:
-      "Bestimme das Kundenergebnis, das am Modellverhalten hängt, und den Ersatzweg bei einem Ausfall.",
-    durationMinutes: 13,
+      "Bestimme das Kundenergebnis, das am Modell hängt, und seinen Ersatzweg.",
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "Eine sichtbare KI-Funktion ist keine Produktstrategie",
-        readTimeMinutes: 4,
+        title: "Bei der Aufgabe der Kundin anfangen",
+        readTimeMinutes: 1,
         content:
-          "Eine Chatfunktion kann nützlich sein. Dass sie da ist, beweist nicht, dass das Produkt irgendein Problem besser löst. Fang bei der Aufgabe der Kundin an, bestimme die Verzögerung oder Entscheidung, die das Modell verändert, und lege fest, woran du Erfolg erkennst. Funktionen, die dieses Ergebnis nicht verbessern, fliegen raus.",
+          "Fang bei der Aufgabe der Kundin an: Welche Verzögerung oder Entscheidung ändert das Modell, und woran erkennst du Erfolg? Streiche jede Funktion, auch eine Chatfunktion, die dieses Ergebnis nicht verbessert.",
       },
       {
         id: "s2",
         title: "Fähigkeit in bestehende Kontrollen einbinden",
-        readTimeMinutes: 5,
+        readTimeMinutes: 1,
         content:
-          "Eine modellgestützte Fähigkeit braucht dieselben Produktgrenzen wie jedes andere System: unterstützte Eingaben, Berechtigungen, Fehlerzustände, Latenzerwartungen, Datenverarbeitung, verantwortliche Personen. Strukturierte Kontrollen bleiben, wo sie Klarheit schaffen oder Risiko begrenzen. Und die Modellbeteiligung wird sichtbar, sobald Kunden ein Ergebnis dadurch besser einordnen oder anfechten können.",
+          "Eine modellgestützte Fähigkeit braucht die üblichen Produktgrenzen: unterstützte Eingaben, Berechtigungen, Fehlerzustände, Latenz, Datenverarbeitung und verantwortliche Personen. Behalte strukturierte Kontrollen, wo sie Klarheit schaffen oder Risiko begrenzen, und zeig die Rolle des Modells, wenn Kunden ein Ergebnis anfechten wollen.",
       },
       {
         id: "s3",
         title: "Abhängigkeit und Ersatzweg prüfen",
-        readTimeMinutes: 4,
+        readTimeMinutes: 1,
         content:
-          "Nimm das Modell gedanklich heraus oder lass es schlechter arbeiten. Ändert sich kein wesentliches Kundenergebnis, hat die Fähigkeit ihren Zweck noch nicht bewiesen. Hängt ein Kernergebnis daran, brauchst du Ersatzweg, Wiederherstellung und eine Information an die Kundin. Eingebettete Funktionen und modellzentrierte Produkte können beide funktionieren, solange ihre Grenzen klar sind.",
+          "Frag, welches Kundenergebnis sich ändert, wenn das Modell fehlt oder schlechter arbeitet. Ändert sich keins, ist die Fähigkeit vielleicht unnötig. Hängt ein Kernergebnis daran, legst du Ersatzweg, Wiederherstellung und die Information an die Kundin fest.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -48,7 +48,7 @@ export const PRODUCT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           lessonId: "product/1",
           cpId: "exercise",
           scenario:
-            "Prüfe drei modellgestützte Abläufe. Nenne jeweils Kundenergebnis, modellabhängigen Schritt, Fehlerart und Ersatzweg bei einem Modellausfall.",
+            "Prüfe drei modellgestützte Abläufe. Nenne je Kundenergebnis, modellabhängigen Schritt, Fehlerart und Ersatzweg.",
           rows: 3,
         },
       },
@@ -62,33 +62,33 @@ export const PRODUCT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Delegierbare Grenze finden",
     subtitle:
-      "Trenne Kundenabsicht von Entscheidungen, Berechtigungen und Bestätigungen, die ausdrücklich bleiben müssen.",
+      "Trenne Kundenabsicht von Entscheidungen, Berechtigungen und Bestätigungen.",
     objective:
-      "Trenne Kundenabsicht von Entscheidungen, Berechtigungen und Bestätigungen, die ausdrücklich bleiben müssen.",
-    durationMinutes: 18,
+      "Trenne Kundenabsicht von Entscheidungen, Berechtigungen und Bestätigungen.",
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "Absicht ist keine Befugnis",
-        readTimeMinutes: 6,
+        title: "Festhalten, was beauftragt ist",
+        readTimeMinutes: 1,
         content:
-          "Eine Kundin tippt eine Suchanfrage, klickt, lädt ein Dokument hoch oder schreibt einen Auftrag. Damit hat sie ein Ziel geäußert, nicht jede Handlung erlaubt, die auf dem Weg dorthin nötig wird. Halte fest, was beauftragt wurde, welche Annahmen das System treffen darf und welche Nebenwirkungen eine eigene Bestätigung oder Berechtigungsprüfung brauchen.",
+          "Eine Suche, ein Klick, ein Upload oder ein Auftrag äußert ein Ziel und erlaubt sonst nichts. Halte fest, was beauftragt wurde, welche Annahmen das System treffen darf und welche Nebenwirkungen eine eigene Bestätigung oder Berechtigungsprüfung brauchen.",
       },
       {
         id: "s2",
         title: "Jeden Schritt vor der Verdichtung bewerten",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
-          "Prüfe jeden Schritt nach der Absicht auf vier Eigenschaften: eindeutig, umkehrbar, beobachtbar, von der Kundenbefugnis gedeckt. Erfüllt er die Kontrollanforderungen, delegiere ihn. Bei Mehrdeutigkeit, Geldbewegung, Datenoffenlegung, rechtlicher Wirkung oder anderen erheblichen Folgen bleibt Prüfung oder Bestätigung. Weniger Schritte sind nur ein Gewinn, wenn wichtige Information und Kontrolle nicht mit verschwinden.",
+          "Prüfe jeden Schritt nach der Absicht: Ist er eindeutig, umkehrbar, beobachtbar und von der Kundenbefugnis gedeckt? Delegiere Schritte, die alle vier erfüllen. Bei Mehrdeutigkeit, Geldbewegung, Datenoffenlegung, rechtlicher Wirkung oder anderen erheblichen Folgen bleibt Prüfung oder Bestätigung.",
       },
       {
         id: "s3",
         title: "Gespräch und strukturierte Kontrollen verbinden",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
-          "Ein Gespräch taugt für mehrdeutige Eingaben und Rückfragen. Strukturierte Kontrollen taugen für genaue Werte, begrenzte Auswahl, Vergleich und Bestätigung. Wähle die Oberfläche nach Information und Risiko des aktuellen Schritts. Chat ist kein Standard.",
+          "Ein Gespräch taugt für mehrdeutige Eingaben und Rückfragen, strukturierte Kontrollen für genaue Werte, begrenzte Auswahl, Vergleich und Bestätigung. Wähle die Oberfläche nach Information und Risiko des aktuellen Schritts.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -118,37 +118,32 @@ export const PRODUCT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
       "Erzeuge Oberflächen nur aus freigegebenen Komponenten, Datenformen, Zuständen und Barrierefreiheitsregeln.",
     objective:
       "Erzeuge Oberflächen nur aus freigegebenen Komponenten, Datenformen, Zuständen und Barrierefreiheitsregeln.",
-    durationMinutes: 21,
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "Kompositionen statt beliebiger Auszeichnung erzeugen",
-        readTimeMinutes: 7,
+        title: "Aus festem Vokabular zusammensetzen",
+        readTimeMinutes: 1,
         content:
-          "Das Modell bekommt ein Vokabular, keine Freiheit: Komponentenbibliothek, typisierte Datenverträge, erlaubte Anordnungen, bekannte Interaktionszustände. Daraus darf es auswählen und zusammensetzen. Prüfe die erzeugte Struktur vor der Darstellung und halte einen stabilen Ersatz bereit, falls die Prüfung scheitert.",
+          "Lege Komponentenbibliothek, typisierte Datenverträge, erlaubte Anordnungen und bekannte Interaktionszustände fest. Nur daraus setzt das Modell zusammen. Prüfe die Struktur vor der Darstellung und halte einen stabilen Ersatz für den Fehlerfall bereit.",
       },
       {
         id: "s2",
         title: "Hierarchie der Vorgaben festlegen",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
-          "Sicherheit, Barrierefreiheit, Berechtigungen, Datenintegrität und Recht sind feste Grenzen. Gestaltungsregeln und Produktkonventionen beschreiben den erlaubten Raum. Personalisierung findet nur darin statt. Protokolliere gewählte Komponenten und Eingaben, damit du unerwartetes Verhalten reproduzieren kannst.",
+          "Sicherheit, Barrierefreiheit, Berechtigungen, Datenintegrität und Recht sind feste Grenzen. Gestaltungsregeln und Produktkonventionen setzen den erlaubten Raum, und Personalisierung bleibt darin. Protokolliere gewählte Komponenten und Eingaben, damit du unerwartetes Verhalten reproduzieren kannst.",
       },
       {
         id: "s3",
         title: "Folgenreiche Oberflächen eindeutig halten",
-        readTimeMinutes: 7,
+        readTimeMinutes: 1,
         content:
-          "Zahlung, rechtliche Zustimmung, Kontowiederherstellung, Berechtigungsänderung, zerstörerische Aktionen und andere folgenreiche Schritte: dafür gibt es feste, geprüfte Abläufe. Eine generative Oberfläche darf erklären und vorbereiten. Die letzte Handlung und der Bestätigungszustand müssen vorhersehbar und prüfbar bleiben.",
+          "Zahlung, rechtliche Zustimmung, Kontowiederherstellung, Berechtigungsänderung, zerstörerische Aktionen und andere folgenreiche Schritte laufen über feste, geprüfte Abläufe. Eine generative Oberfläche darf erklären und vorbereiten. Die letzte Handlung und ihre Bestätigung bleiben vorhersehbar und prüfbar.",
       },
     ],
-    callout: {
-      kind: "note",
-      h: "Ein begrenzter Einstieg",
-      text: "Such dir eine umkehrbare Oberfläche mit geringen Auswirkungen und unterschiedlichen Informationsbedürfnissen. Begrenze die Erzeugung auf freigegebene Komponenten, ergänze Datenformprüfung und festen Ersatz. Erweitert wird erst nach echten Fehlern.",
-    },
     exerciseKind: "reflect-box",
     widgets: [
       {
@@ -159,7 +154,7 @@ export const PRODUCT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           lessonId: "product/3",
           cpId: "exercise",
           scenario:
-            "Bestimme eine umkehrbare Oberfläche mit geringen Auswirkungen, auf der Kunden Unterschiedliches wollen. Definiere freigegebene Komponenten, feste Grenzen, Prüfkriterium und statischen Ersatz.",
+            "Wähle eine umkehrbare Oberfläche mit geringen Auswirkungen, auf der Kunden Unterschiedliches wollen. Definiere freigegebene Komponenten, feste Grenzen, Prüfkriterium und statischen Ersatz, und erweitere erst nach echten Fehlern.",
           rows: 3,
         },
       },
@@ -173,33 +168,33 @@ export const PRODUCT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
     kind: "reading",
     title: "Produktionsevaluation und Beobachtbarkeit",
     subtitle:
-      "Miss modellgestütztes Verhalten in Produktion, ohne eine einzelne Kennzahl als Wahrheit zu behandeln.",
+      "Miss Modellverhalten in Produktion, ohne einer einzelnen Kennzahl zu trauen.",
     objective:
-      "Miss modellgestütztes Verhalten in Produktion, ohne eine einzelne Kennzahl als Wahrheit zu behandeln.",
-    durationMinutes: 17,
+      "Miss Modellverhalten in Produktion, ohne einer einzelnen Kennzahl zu trauen.",
+    durationMinutes: 6,
     keyConcepts: [],
     quiz: [],
     sections: [
       {
         id: "s1",
-        title: "Offline-Evaluationen decken Produktion nicht ab",
-        readTimeMinutes: 6,
+        title: "Produktion bringt neue Bedingungen",
+        readTimeMinutes: 1,
         content:
-          "Die Sammlung vor der Freigabe war grün. Dann kommt Produktion: neue Eingaben, veränderte Daten, Werkzeugfehler, Latenz, echtes Kundenverhalten, verschobene Verteilungen. Beobachte diese Bedingungen direkt. Datensparsame Ablaufspuren, Versionskennzeichen, Fehlerarten und Stichproben reichen, um einen Vorfall zu reproduzieren, ohne sensible Inhalte auf Vorrat zu sammeln.",
+          "Produktion bringt zu den bekannten Fällen neue Eingaben, veränderte Daten, Werkzeugfehler, Latenz, echtes Kundenverhalten und verschobene Verteilungen. Datensparsame Ablaufspuren, Versionskennzeichen, Fehlerarten und Stichproben machen Vorfälle reproduzierbar, ohne sensible Inhalte zu horten.",
       },
       {
         id: "s2",
         title: "Beobachtbare Signale messen",
-        readTimeMinutes: 6,
+        readTimeMinutes: 1,
         content:
-          "Erfasse überprüfbaren Aufgabenerfolg, Kundenkorrekturen, Werkzeugfehler, Ablehnungen, Latenz, Kosten, ausgelöste Sicherheitsregeln und die Nutzung von Ersatzwegen. Wo automatische Signale keine Qualität belegen, bewertet ein Mensch eine Stichprobe nach dokumentierten Regeln. Trenne nach Arbeitsablauf und Version, sonst verdeckt der Durchschnitt die Teilgruppe, bei der es brennt.",
+          "Erfasse überprüfbaren Aufgabenerfolg, Kundenkorrekturen, Werkzeugfehler, Ablehnungen, Latenz, Kosten, ausgelöste Sicherheitsregeln und Ersatzwege. Wo Signale keine Qualität belegen, bewertet ein Mensch eine dokumentierte Stichprobe. Trenne nach Ablauf und Version, damit kein Durchschnitt eine fehlerhafte Teilgruppe verdeckt.",
       },
       {
         id: "s3",
         title: "Warnung, Eindämmung und Rücknahme trennen",
-        readTimeMinutes: 5,
+        readTimeMinutes: 1,
         content:
-          "Schwellenwerte kommen aus Ausgangsverhalten und Fehlerkosten. Manche Signale wecken eine verantwortliche Person, andere schalten eine einzelne Fähigkeit ab oder rechtfertigen die Rücknahme auf eine bekannte Version. Teste diese Kontrollen vor dem Vorfall, nicht währenddessen. Automatische Maßnahmen brauchen Schutz gegen verrauschte Kennzahlen; eine benannte Person untersucht und schließt das Ereignis.",
+          "Leite Schwellen aus Ausgangsverhalten und Fehlerkosten ab: Manche Signale alarmieren eine verantwortliche Person, andere schalten eine Fähigkeit ab oder lösen die Rücknahme auf eine bekannte Version aus. Teste diese Kontrollen vorab, schütze automatische Maßnahmen vor verrauschten Kennzahlen und lass jedes Ereignis von einer benannten Person abschließen.",
       },
     ],
     exerciseKind: "reflect-box",
@@ -213,7 +208,7 @@ export const PRODUCT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           cpId: "exercise",
           title: "Produktionsevaluation entwerfen",
           scenario:
-            "Definiere für eine kundennahe Modellfähigkeit drei Produktionssignale, jeweils mit Ausgangswert, Warnschwelle, Eindämmungs- oder Rücknahmebedingung und verantwortlicher Person.",
+            "Definiere für eine kundennahe Modellfähigkeit drei Produktionssignale, je mit Ausgangswert, Warnschwelle, Eindämmungs- oder Rücknahmebedingung und verantwortlicher Person.",
           rows: 4,
         },
       },
@@ -230,7 +225,7 @@ export const PRODUCT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
       "Drei Fragen zu Produktgrenzen, Delegation, begrenzten Oberflächen und Produktionskontrollen.",
     objective:
       "Drei Fragen zu Produktgrenzen, Delegation, begrenzten Oberflächen und Produktionskontrollen.",
-    durationMinutes: 8,
+    durationMinutes: 4,
     keyConcepts: [],
     quiz: [
       {
@@ -250,7 +245,7 @@ export const PRODUCT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
           {
             id: "c",
-            text: "Welches Kundenergebnis hängt vom Modellverhalten ab, und welcher Ersatzweg bleibt bei einem Fehler?",
+            text: "Welches Kundenergebnis hängt am Modell, mit welchem Ersatzweg?",
             isCorrect: true,
           },
           {
@@ -260,7 +255,7 @@ export const PRODUCT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Eine Produktgrenze verbindet Modellverhalten mit einem konkreten Kundenergebnis, betrieblichen Vorgaben und einem Fehlerweg. Modellwahl, Werbesprache und Oberflächenform legen diese Grenze nicht fest.",
+          "Eine Produktgrenze verbindet Modellverhalten mit einem Kundenergebnis, betrieblichen Vorgaben und einem Fehlerweg. Modellwahl, Werbesprache und Oberflächenform legen sie nicht fest.",
       },
       {
         id: "ano-product-q2",
@@ -274,7 +269,7 @@ export const PRODUCT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
           {
             id: "b",
-            text: "Bestimmen, welche Schritte sicher delegierbar sind und wo Berechtigung, Prüfung oder Bestätigung bleiben müssen.",
+            text: "Klären, welche Schritte delegierbar sind und wo Bestätigung bleibt.",
             isCorrect: true,
           },
           {
@@ -289,7 +284,7 @@ export const PRODUCT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Weniger Schritte sind nur ein Gewinn, wenn Befugnis, wesentliche Information und Wiederherstellung erhalten bleiben. Ordne jeden Schritt vor der Delegation nach Umkehrbarkeit, Beobachtbarkeit, Berechtigung und Auswirkung ein.",
+          "Weniger Schritte helfen nur, wenn Befugnis, wesentliche Information und Wiederherstellung bleiben. Ordne jeden Schritt vor der Delegation nach Umkehrbarkeit, Beobachtbarkeit, Berechtigung und Auswirkung ein.",
       },
       {
         id: "ano-product-q3",
@@ -307,7 +302,7 @@ export const PRODUCT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
           {
             id: "c",
-            text: "Bei einer umkehrbaren Oberfläche mit geringen Auswirkungen, unterschiedlichen Bedürfnissen und freigegebenem Komponentensatz.",
+            text: "Bei einer umkehrbaren, folgenarmen Oberfläche mit freigegebenen Komponenten.",
             isCorrect: true,
           },
           {
@@ -317,7 +312,7 @@ export const PRODUCT_LESSONS_DE: readonly AiNativeOperatorLesson[] = [
           },
         ],
         explanation:
-          "Generative Zusammensetzung gehört zuerst dorthin, wo Variation nützt, Folgen begrenzt sind, eine Prüfung möglich ist und ein stabiler Ersatz existiert. Folgenreiche Bestätigungen bleiben eindeutig und prüfbar.",
+          "Generative Zusammensetzung passt, wo Variation nützt, Folgen klein sind, Prüfung möglich ist und ein stabiler Ersatz existiert. Folgenreiche Bestätigungen bleiben eindeutig und prüfbar.",
       },
     ],
     sections: [],

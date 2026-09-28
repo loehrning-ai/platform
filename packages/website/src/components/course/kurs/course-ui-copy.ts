@@ -97,7 +97,7 @@ export const COURSE_READER_COPY: Readonly<Record<Locale, CourseReaderCopy>> = {
       completed: "Lektion abgeschlossen",
       next: "Nächste Lektion",
       legalNote:
-        "Die blockbezogenen Prüfstände stehen oberhalb der Lektion. Keine Rechtsberatung.",
+        "Wann der Block zuletzt geprüft wurde, steht über der Lektion. Keine Rechtsberatung.",
     },
     section: {
       minutes: (count) => `~${count} Min`,
@@ -107,20 +107,20 @@ export const COURSE_READER_COPY: Readonly<Record<Locale, CourseReaderCopy>> = {
       markRead: "Als gelesen markieren",
     },
     quiz: {
-      empty: "Keine Quizfragen für diese Lektion verfügbar.",
+      empty: "Keine Quizfragen für diese Lektion.",
       correctFeedback: (explanation) => `Richtig. ${explanation}`,
       incorrectFeedback: (explanation) => `Nicht korrekt. ${explanation}`,
       completionAnnouncement: (score, total) =>
         `Quiz abgeschlossen: ${score} von ${total} Fragen richtig.`,
       score: (score, total) => `${score}/${total} richtig`,
       perfect: "Alle Antworten richtig.",
-      partial: "Gut gemacht! Versuch es nochmal für die volle Punktzahl.",
-      retryLesson: "Lies die Lektion nochmal und versuch es noch einmal.",
+      partial: "Lies die Erklärungen und versuch es erneut.",
+      retryLesson: "Lies die Lektion nochmal und versuch es erneut.",
       retry: "Nochmal",
       progress: (current, total) => `Frage ${current} von ${total}`,
       previousBest: (score, total) => `Bisher: ${score}/${total}`,
       correctAnswer: "Richtige Antwort.",
-      incorrectSelection: "Ihre Auswahl ist falsch.",
+      incorrectSelection: "Deine Auswahl ist falsch.",
       correct: "Richtig",
       incorrect: "Falsch",
       next: "Weiter",
@@ -162,7 +162,7 @@ export const COURSE_READER_COPY: Readonly<Record<Locale, CourseReaderCopy>> = {
       completed: "Lesson complete",
       next: "Next lesson",
       legalNote:
-        "Block-specific review dates appear above the lesson. Not legal advice.",
+        "The block's review date is shown above the lesson. Not legal advice.",
     },
     section: {
       minutes: (count) => `~${count} min`,
@@ -172,14 +172,14 @@ export const COURSE_READER_COPY: Readonly<Record<Locale, CourseReaderCopy>> = {
       markRead: "Mark as read",
     },
     quiz: {
-      empty: "No quiz questions are available for this lesson.",
+      empty: "No quiz questions for this lesson.",
       correctFeedback: (explanation) => `Correct. ${explanation}`,
       incorrectFeedback: (explanation) => `Incorrect. ${explanation}`,
       completionAnnouncement: (score, total) =>
         `Quiz complete: ${score} of ${total} questions correct.`,
       score: (score, total) => `${score}/${total} correct`,
       perfect: "All answers correct.",
-      partial: "Review the explanations, then retry for a full score.",
+      partial: "Review the explanations and try again.",
       retryLesson: "Review the lesson, then try again.",
       retry: "Retry",
       progress: (current, total) => `Question ${current} of ${total}`,

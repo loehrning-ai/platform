@@ -23,7 +23,7 @@ export default function Ch11Deploy() {
       <Hero
         eyebrow="Chapter 11 · Deploy"
         title="A deployed model is a <em>maintained system.</em>"
-        hook="Production ties together request handling, feature computation, model serving, monitoring, and rollback. Each control cuts one defined risk. None of them certifies the system."
+        hook="Production ties together request handling, feature computation, model serving, monitoring and rollback. Each control lowers one named risk, and none certifies the system."
         meta={[
           { k: "Read", v: "12 min" },
           {
@@ -40,10 +40,9 @@ export default function Ch11Deploy() {
           Trace the request path and assign each component a failure response.
         </h2>
         <p className="prose">
-          Production ML is not a model. It is a system: request routing,
-          feature retrieval, model serving, monitoring, all wired together. Give
-          every component an owner, timeouts, fallbacks, observability, and a
-          rollback behavior before you trust the end-to-end path.
+          Give every component an owner,
+          timeouts, fallbacks, observability and rollback behavior before you
+          trust the end-to-end path.
         </p>
         <ModelServingArchitecture />
       </section>
@@ -54,21 +53,18 @@ export default function Ch11Deploy() {
           Data drift and concept drift require different evidence.
         </h2>
         <p className="prose">
-          <strong>Data drift</strong> means the input distribution moved. Your
-          model trained on 2023 users and now sees 2025 users behaving
-          differently. Measure it with PSI (Population Stability Index): sum of
-          (actual − expected) × ln(actual/expected) over buckets. PSI reacts to
-          binning and sample size. A threshold like 0.2 is a contextual
-          heuristic, no universal retraining rule, and input drift proves no
-          performance loss.
+          <strong>Data drift</strong> means the input distribution moved: the
+          model trained on 2023 users and sees 2025 users behave differently.
+          PSI (Population Stability Index) sums (actual − expected) ×
+          ln(actual/expected) over buckets and reacts to binning and sample
+          size. Input drift does not prove a performance loss.
         </p>
         <p className="prose">
-          <strong>Concept drift</strong> hides better. The relationship between
-          features and labels changes while the inputs still look the same, and
-          the decision boundary is now wrong. Detecting it takes outcome labels
-          or another defensible proxy. Label delay runs from immediate to
-          months depending on the product, so the monitoring design has to state
-          that delay.
+          <strong>Concept drift</strong> is harder to see: the relationship
+          between features and labels changes while inputs look the same, so
+          the decision boundary is wrong. Detecting it takes outcome labels or
+          a defensible proxy, and the monitoring design must state the label
+          delay, which ranges from immediate to months.
         </p>
         <DriftSimulator />
       </section>
@@ -79,12 +75,12 @@ export default function Ch11Deploy() {
           Choose a rollout pattern from the failure cost and reversibility.
         </h2>
         <p className="prose">
-          Shadow evaluation compares candidate outputs without acting on them,
-          and it still burns capacity and can create logging, privacy, and
-          latency risks. A canary exposes an eligible traffic subset to the
-          candidate. Blue-green keeps two environments, though rollback speed
-          still hangs on state, schemas, caches, and downstream side effects.
-          Combine these patterns. They are no mandatory sequence.
+          Shadow evaluation compares candidate outputs without acting on them
+          and still costs capacity and brings logging, privacy and latency
+          risks. A canary exposes an eligible share of traffic to the
+          candidate. Blue-green keeps two environments, but state, schemas,
+          caches and side effects decide how fast rollback works; the patterns
+          combine in any order.
         </p>
         <ShadowDeployment />
       </section>
@@ -97,41 +93,35 @@ export default function Ch11Deploy() {
           Training and serving need a tested feature contract.
         </h2>
         <p className="prose">
-          Training-serving skew means the training pipeline and the serving
-          pipeline compute features differently. The model learned one
-          representation and receives another. Shared definitions, versioned
-          transformations, point-in-time-correct training joins, and parity
-          tests cut that risk. A feature store supports the contract. It
-          guarantees no matching data freshness, backfills, dependencies, or
-          online and offline semantics.
+          Training-serving skew means training and serving compute a feature
+          differently, so the model learned one representation and receives
+          another. Shared definitions, versioned transformations,
+          point-in-time-correct training joins and parity tests cut that risk.
+          A feature store supports the contract but guarantees neither
+          freshness and backfills nor dependencies or matching online and
+          offline semantics.
         </p>
         <FeatureStoreDiagram />
       </section>
 
       <AntiPatterns
         items={[
-          "<b>No tested rollback path.</b> A stored previous artifact is insufficient when schemas, state, caches, or downstream actions cannot be reversed with it.",
-          "<b>Independent feature logic.</b> Different SQL, scalers, windows, or imputation policies between training and serving create skew until parity is tested.",
-          "<b>Unobserved candidate behavior.</b> Before promotion, evaluate the candidate on representative inputs through a risk-appropriate replay, shadow, batch, or staged route.",
-          "<b>Monitoring only a delayed outcome metric.</b> Add input quality, feature and prediction distributions, latency, errors, and business guardrails without treating proxies as performance proof.",
-          "<b>Overwriting a model artifact in place.</b> Retraining needs immutable versions, evaluation, approval, staged release, and a recoverable rollback path.",
+          "<b>No tested rollback path.</b> The old artifact does not help if schemas, state, caches or downstream actions do not roll back with it. Rehearse recovery after major changes and record what actually recovers.",
+          "<b>Unobserved candidate behavior.</b> Before promotion, test the candidate on representative inputs via replay, shadow, batch or a staged route.",
+          "<b>Monitoring only a delayed outcome metric.</b> Add input quality, feature and prediction distributions, latency, errors and business guardrails, without treating proxies as proof of performance.",
+          "<b>Overwriting a model artifact in place.</b> Retraining needs immutable versions, evaluation, approval, staged release and a recoverable rollback path.",
         ]}
       />
       <BestPractices
         items={[
-          "<b>Write a rollout contract.</b> Define eligible traffic, observation window, acceptance metrics, guardrails, label delay, abort authority, and rollback behavior from the system's risk.",
-          "<b>Calibrate retraining triggers.</b> Establish baselines and error budgets, confirm that an alert is actionable, and require outcome evidence before retraining when labels are available.",
-          "<b>Version data, code, configuration, and model.</b> Retain privacy-safe lineage sufficient to reproduce the training and evaluation path.",
-          "<b>Share and test feature definitions.</b> Adopt a feature store only when its consistency, latency, ownership, and operating cost fit the system.",
-          "<b>Exercise recovery after material changes and on a risk-based cadence.</b> Record whether artifacts, schemas, state, and dependent services actually recover.",
+          "<b>Write a rollout contract.</b> Derive eligible traffic, observation window, acceptance metrics, guardrails, label delay, abort authority and rollback from the system's risk.",
+          "<b>Calibrate retraining triggers.</b> Set baselines and error budgets, tie alerts to business and user impact, check that an alert is actionable and require outcome evidence when labels exist.",
+          "<b>Version data, code, configuration and model.</b> Keep privacy-safe lineage that reproduces training and evaluation.",
         ]}
       />
       <Takeaway
         items={[
-          "<b>Model behavior depends on code, data, configuration, and context.</b> Monitor every layer and wire each alert to an owner and a response.",
-          "<b>Deployment strategy is risk management.</b> Select shadow, replay, canary, blue-green, or another pattern from exposure, evidence needs, and reversibility.",
-          "<b>Feature parity requires controls.</b> Shared definitions help; versioning, point-in-time joins, freshness checks, and online/offline parity tests remain necessary.",
-          "<b>Retraining is a release process.</b> Build immutable candidates, evaluate them against a contract, approve the promotion, and keep a tested recovery path.",
+          "<b>Model behavior depends on code, data, configuration and context.</b> Monitor every layer and give each alert an owner and a response.",
         ]}
       />
     </>

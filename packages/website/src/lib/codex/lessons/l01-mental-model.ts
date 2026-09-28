@@ -6,12 +6,12 @@ import { CODEX_QUIZ_COPY, CODEX_QUIZ_TITLE } from "../widget-copy";
 const lesson: CodexLesson = {
   id: "L01",
   number: 1,
-  title: "What Codex Actually Is",
+  title: "What Codex is",
   subtitle:
-    "A task-oriented coding agent that can inspect a repository, change files, run checks, and return work for review.",
+    "A task-oriented coding agent that inspects a repository, changes files, runs checks and returns work for review.",
   durationMinutes: 10,
   trackId: "fundamentals",
-  hook: "Agent, not assistant.",
+  hook: "How an agent runs commands on its own.",
   keyConcepts: [
     "Autonomous agent",
     "Sandbox",
@@ -23,26 +23,20 @@ const lesson: CodexLesson = {
   sections: buildSections([
     {
       id: "s1",
-      title: "An agent, not an assistant",
+      title: "What Codex does",
       readTimeMinutes: 3,
       blocks: [
         {
           kind: "prose",
           markdown:
-            "You write one sentence. Codex reads the repository, edits files, runs the checks it can find, and hands back a diff. That is a **task-oriented coding agent**. It works locally in the CLI or IDE and in dedicated cloud environments. Interface and permission model differ by surface, the loop underneath does not:\n\n1. It receives your request plus the context available in the current session and repository.\n2. It operates within configured filesystem, command, approval, and network boundaries.\n3. It examines the relevant code and determines a sequence of changes.\n4. It edits files, runs available checks, reads their output, and revises when needed.\n5. It returns a summary and a **diff** or patch for review. A cloud task can also open a pull request when that workflow is configured.\n\nDelegation with inspection points. Local sessions can be interactive, cloud tasks can continue in the background. Either way the result still needs review against the task and the repository evidence.",
-        },
-        {
-          kind: "pull-quote",
-          text: 'A bounded engineering task with review. Not "autocomplete at the cursor."',
+            "Codex is a **task-oriented coding agent**. It runs locally in the CLI or IDE or in a cloud environment, and every surface follows the same loop:\n\n1. Take the request plus the session and repository context.\n2. Stay within the configured filesystem, command, approval and network limits.\n3. Read the relevant code and plan the changes.\n4. Edit files, run the available checks, read their output and revise.\n5. Return a summary and a **diff** for review; a cloud task can also open a pull request if configured.\n\nLocal sessions can be interactive, cloud tasks run in the background. You review the result against the task and the repository either way.",
         },
         {
           kind: "prose",
           markdown:
-            "Why insist on the framing? It makes failures addressable. An ambiguous request permits several valid interpretations, missing acceptance criteria make done a matter of taste, and unavailable tests leave correctness unverified. The next lessons turn each gap into an explicit task input.\n\nThe active context is a **workboard**: the request, relevant code, instructions, command results, and the prior turns the current surface exposes. Nothing guarantees a new session inherits it. So durable repository guidance goes in `AGENTS.md`, verification commands stay executable, and task-specific constraints get restated in the request. Every time.",
+            "The active context is a **workboard**: request, relevant code, instructions, command results and the prior turns the surface exposes. A new session may not inherit it. Put durable guidance in `AGENTS.md`, keep check commands executable and restate task constraints in every request.",
         },
       ],
-      keyTakeaway:
-        "Codex inspects, edits, and tests inside configured boundaries. The output is a reviewable change, not proof the task is correct.",
     },
     {
       id: "s2",
@@ -52,7 +46,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Three inputs decide a Codex run. Name them and the failures stop being mysterious.",
+            "Three inputs decide a Codex run. Every technique in this course sharpens one of them.",
         },
         {
           kind: "card-grid",
@@ -60,24 +54,19 @@ const lesson: CodexLesson = {
             {
               eyebrow: "01 · the task",
               title: "What you're asking for",
-              body: "Goal, constraints, acceptance criteria, out-of-scope. The whole brief. A requirement that is not written here does not exist to Codex.",
+              body: "Goal, constraints, acceptance criteria and out-of-scope. A requirement that is not written here does not exist for Codex.",
             },
             {
               eyebrow: "02 · the repo",
               title: "What the agent can see",
-              body: "The files available in the selected repository or working directory, including tests, AGENTS.md instructions, and documented check commands.",
+              body: "Files in the selected repository or working directory, including tests, AGENTS.md and documented check commands.",
             },
             {
               eyebrow: "03 · the sandbox",
               title: "What the agent can do",
-              body: "The configured filesystem, command, approval, and network permissions. Local and cloud environments can expose different capabilities.",
+              body: "Configured filesystem, command, approval and network permissions. Local and cloud environments can differ.",
             },
           ],
-        },
-        {
-          kind: "callout",
-          title: "The contract rule.",
-          body: "An ambiguous task permits scope drift. Missing repository guidance leaves local conventions to guesswork. Unavailable checks leave changes unverified. Every technique in this course sharpens one of those three inputs.",
         },
       ],
     },
@@ -89,11 +78,9 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            'Words are cheap. Here is a condensed replay of one task, *"add rate limiting to the /login endpoint"*. Plan, probe, try, test, revise. That is the shape of a run.',
+            'The replay above condenses one run of *"add rate limiting to the /login endpoint"*: plan, inspect, edit, test, revise.',
         },
       ],
-      keyTakeaway:
-        "A run can include planning, inspection, edits, checks, revision, and a final diff.",
     },
     {
       id: "s4",
@@ -102,7 +89,7 @@ const lesson: CodexLesson = {
       blocks: [
         {
           kind: "prose",
-          markdown: "Two questions on what you just read.",
+          markdown: "Two questions at the end of the lesson.",
         },
       ],
     },
@@ -112,26 +99,22 @@ const lesson: CodexLesson = {
       readTimeMinutes: 1,
       blocks: [
         {
-          kind: "prose",
-          markdown: "Three patterns keep coming back. Each one is checkable.",
-        },
-        {
           kind: "card-grid",
           cards: [
             {
               eyebrow: "mode 01",
               title: "Vague spec",
-              body: "The agent interprets an ambiguous goal, picks the most plausible interpretation, and commits to it. PR arrives solving the wrong problem. Fix: tighten goal and acceptance criteria.",
+              body: "Codex picks the most plausible reading of an ambiguous goal and commits to it, so the PR solves the wrong problem. Fix: tighten goal and acceptance criteria.",
             },
             {
               eyebrow: "mode 02",
               title: "No conventions",
-              body: "Without repository guidance, Codex must infer conventions from code and configuration. Fix: document non-obvious rules and exact check commands in the repository.",
+              body: "Without repository guidance, Codex infers conventions from code and configuration. Fix: document non-obvious rules and exact check commands.",
             },
             {
               eyebrow: "mode 03",
               title: "Broken feedback loop",
-              body: "Required checks are unavailable or undocumented, so the returned result lacks verification evidence. Fix: make the relevant commands reproducible and inspect their output.",
+              body: "Required checks are missing or undocumented, so the result comes back without verification evidence. Fix: make the commands reproducible and read their output.",
             },
           ],
         },
@@ -145,7 +128,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Read the question, say your answer out loud, then flip the card. Self-check, not a grade.",
+            "The cards are at the end of the lesson. Answer out loud, then flip. Nothing is graded.",
         },
       ],
     },
@@ -156,6 +139,10 @@ const lesson: CodexLesson = {
       placement: "after-intro",
       courseSlug: "codex",
       props: {
+        idleHint: '# press "Run replay" to watch this session play out',
+        runLabel: "▶ Run replay",
+        resetLabel: "↺ Reset",
+        speedLabel: "speed",
         lessonId: "L01",
         cpId: "term-1",
         title: 'Session replay: "add rate limiting to /login"',
@@ -314,16 +301,16 @@ const lesson: CodexLesson = {
         title: CODEX_QUIZ_TITLE,
         copy: CODEX_QUIZ_COPY,
         question:
-          'You open a Codex task: "refactor our auth module." No other detail. The agent returns a PR that rewrites your user model and breaks three downstream services. What went wrong?',
+          'Your Codex task says only "refactor our auth module." The PR rewrites your user model and breaks three downstream services. What went wrong?',
         options: [
           "Codex has a bug and shouldn't be used for auth.",
-          'The task was ambiguous, "refactor auth" spans a huge scope and the agent picked an aggressive interpretation.',
-          "The sandbox didn't have the downstream services available.",
-          "You needed to give it write access to prod.",
+          'The task was ambiguous: "refactor auth" spans a huge scope.',
+          "The sandbox lacked the downstream services.",
+          "It needed write access to prod.",
         ],
         correct: 1,
         explanation:
-          'The request does not define the intended boundary between the auth module and the user model. Narrow it: "Extract token validation from api/auth.py into a standalone module. Keep the public interface unchanged. Do not modify User or Session."',
+          'The request sets no boundary between auth module and user model. Narrower: "Extract token validation from api/auth.py into its own module. Keep the public interface. Do not modify User or Session."',
       },
     },
     {
@@ -336,16 +323,16 @@ const lesson: CodexLesson = {
         title: CODEX_QUIZ_TITLE,
         copy: CODEX_QUIZ_COPY,
         question:
-          "What context should you assume will be available in a new Codex session?",
+          "What context can you assume in a new Codex session?",
         options: [
-          "The complete history of every earlier session on that repository.",
-          "Only context the current surface loads or you provide; keep durable project rules in versioned instructions and configuration.",
+          "The full history of every earlier session on the repository.",
+          "Only what the surface loads or you provide.",
           "Only the most recent pull-request description.",
           "All local terminal output from previous runs.",
         ],
         correct: 1,
         explanation:
-          "Session history and environment behavior vary by Codex surface and configuration. Versioned instructions, tests, and setup files are the reliable place for project rules; task-specific constraints still belong in the current request.",
+          "Session history depends on surface and configuration. Versioned instructions, tests and setup files carry project rules reliably; task constraints go into each request.",
       },
     },
     {
@@ -355,7 +342,7 @@ const lesson: CodexLesson = {
       props: {
         lessonId: "L01",
         cpId: "flash-1",
-        title: "One exercise before you move on",
+        title: "Review cards",
         copy: {
           kindLabel: "Review",
           revealHint: "Click to reveal ↻",
@@ -371,32 +358,32 @@ const lesson: CodexLesson = {
           {
             term: "Mental model",
             q: "What is Codex, in one sentence?",
-            a: "A task-oriented coding agent that can inspect and change a repository, run available checks, and return a diff or pull request for review.",
+            a: "A task-oriented coding agent that changes a repository, runs checks and returns a diff or pull request for review.",
           },
           {
             term: "Contract",
             q: "What are the three inputs to a coding-agent run?",
-            a: "The task, the repository context available to the session, and the environment permissions and tools.",
+            a: "The task, the repository context the session sees, and the environment's permissions and tools.",
           },
           {
             term: "Failure modes",
-            q: "Name the three classic ways agentic coding runs fail.",
-            a: "Vague spec (ambiguous goal), no conventions (no AGENTS.md / CLAUDE.md), and broken feedback loop (tests don't run). Each maps to one part of the contract.",
+            q: "Name the three classic ways coding-agent runs fail.",
+            a: "Vague spec, no conventions and a broken feedback loop. Each maps to one contract input.",
           },
           {
             term: "Persistence",
             q: 'How does an agentic coding tool "remember" things between runs?',
-            a: "Do not assume prior context transfers. Store durable rules in versioned instructions, tests, documentation, and environment configuration; restate task-specific constraints.",
+            a: "Not reliably. Keep durable rules in versioned files and restate task constraints in each request.",
           },
           {
             term: "The shift",
-            q: "How is an autonomous coding agent different from autocomplete tools like Copilot?",
-            a: "Autocomplete proposes code at the cursor. A coding agent can inspect multiple files, run tools, and carry a bounded task through to a reviewable diff; some agent surfaces are interactive and others run in the background.",
+            q: "How does a coding agent differ from autocomplete like Copilot?",
+            a: "Autocomplete suggests code at the cursor. A coding agent reads multiple files, runs tools and carries a bounded task to a reviewable diff.",
           },
           {
             term: "The blackboard",
-            q: "What mental model helps explain why context matters so much in agentic coding?",
-            a: "Treat active context as a workboard assembled from the current request, repository, instructions, tool results, and available conversation history. Put durable rules in versioned files.",
+            q: "Which mental model explains why context matters so much?",
+            a: "A workboard holding only the current request, repository, instructions, tool results and available history.",
           },
         ],
       },

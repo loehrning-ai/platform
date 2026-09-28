@@ -8,14 +8,14 @@ const ERROR_COPY = {
   de: {
     eyebrow: "Open Source",
     title: "Die Artefaktseite konnte nicht geladen werden.",
-    body: "Repository- und Publikationsdaten wurden nicht ersetzt. Lade die geprüften Angaben erneut.",
+    body: "Lade die Seite erneut.",
     retry: "Erneut laden",
     back: "Zum Werkverzeichnis",
   },
   en: {
     eyebrow: "Open source",
     title: "The artifact page could not be loaded.",
-    body: "Repository and publication data have not been replaced. Reload the verified record.",
+    body: "Reload the page.",
     retry: "Reload",
     back: "Back to the directory",
   },

@@ -65,6 +65,20 @@ const APP_NAMES_EN: Readonly<Record<string, string>> = {
   sales: "Request classification",
 };
 
+/** Euro amounts in the reader's locale: "186,42 €" in German, "€186.42" in English. */
+function formatEur(value: number, locale: string, digits: number): string {
+  return new Intl.NumberFormat(locale === "de" ? "de-DE" : "en-GB", {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits: digits,
+    maximumFractionDigits: digits,
+  }).format(value);
+}
+
+function formatNumber(value: number, locale: string): string {
+  return value.toLocaleString(locale === "de" ? "de-DE" : "en-GB");
+}
+
 function makeSeries(len: number, base: number, amp: number): readonly number[] {
   const arr: number[] = [];
   let v = base;
@@ -185,33 +199,11 @@ export default function CostDriftObservabilityDemo() {
           }
         }
       `}</style>
-      <div>
-        <div
-          style={{
-            fontFamily: DEMO.font.mono,
-            fontSize: 12,
-            color: "var(--color-brand-orange)",
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            fontWeight: 700,
-          }}
-        >
-          {text("Observability & Kosten", "Observability and cost")}
-        </div>
-        <h2
-          style={{
-            fontSize: 22,
-            fontWeight: 700,
-            letterSpacing: "-0.03em",
-            marginTop: 6,
-          }}
-        >
-          {text("LLM-Kosten und Drift:", "LLM cost and drift:")}{" "}
-          <span style={{ color: "var(--color-brand-orange)" }}>
-            {text("ein Beispiel-Szenario.", "a seeded scenario.")}
-          </span>
-        </h2>
-      </div>
+      {/* The page H1 and lead name the demo; this heading only gives
+          screen-reader users a landmark into the instrument. */}
+      <h2 className="sr-only">
+        {text("Kosten und Drift im Betrieb", "Cost and drift in production")}
+      </h2>
 
       <div
         className="demo-cdo-kpis"
@@ -223,9 +215,9 @@ export default function CostDriftObservabilityDemo() {
         {(
           [
             [
-              text("Spend · MTD", "Spend · month to date"),
-              `€${total.toFixed(0)}`,
-              text("+12 % vs. Vormo.", "+12% versus prior month"),
+              text("Kosten seit Monatsanfang", "Spend · month to date"),
+              formatEur(total, locale, 0),
+              text("+12 % ggü. Vormonat", "+12% versus prior month"),
               "var(--color-brand-orange)",
               true,
               [3, 4, 3, 5, 6, 7, 8, 9],
@@ -269,31 +261,19 @@ export default function CostDriftObservabilityDemo() {
               key={l}
               style={{
                 background: DEMO.kalk,
-                borderTop: alerting
+                // The alerting tile is this row's one Mennige mark: a
+                // Mennige frame, no glow and no coloured left rule.
+                border: alerting
                   ? `1px solid var(--color-brand-orange)`
                   : `1px solid ${DEMO.leinen}`,
-                borderRight: alerting
-                  ? `1px solid var(--color-brand-orange)`
-                  : `1px solid ${DEMO.leinen}`,
-                borderBottom: alerting
-                  ? `1px solid var(--color-brand-orange)`
-                  : `1px solid ${DEMO.leinen}`,
-                borderLeft: `3px solid ${c}`,
                 padding: 12,
                 minWidth: 0,
-                boxShadow: alerting
-                  ? "0 0 0 2px rgba(249,115,22,0.08)"
-                  : "none",
               }}
             >
               <div
                 style={{
-                  fontFamily: DEMO.font.mono,
-                  fontSize: 12,
+                  ...DEMO.label,
                   color: DEMO.schiefer,
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase",
-                  fontWeight: 700,
                 }}
               >
                 {l}
@@ -312,7 +292,6 @@ export default function CostDriftObservabilityDemo() {
                     fontFamily: DEMO.font.mono,
                     fontSize: 22,
                     fontWeight: 700,
-                    letterSpacing: "-0.02em",
                   }}
                 >
                   {v}
@@ -354,12 +333,8 @@ export default function CostDriftObservabilityDemo() {
         <div>
           <div
             style={{
-              fontFamily: DEMO.font.mono,
-              fontSize: 12,
-              color: "var(--color-brand-orange)",
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-              fontWeight: 700,
+              ...DEMO.label,
+              color: "var(--color-muted-foreground)",
               marginBottom: 6,
             }}
           >
@@ -377,16 +352,15 @@ export default function CostDriftObservabilityDemo() {
                   padding: "8px 10px",
                   background: selApp === a.id ? DEMO.ink : DEMO.birke,
                   color: selApp === a.id ? DEMO.kalk : DEMO.ink,
-                  border: `1px solid ${selApp === a.id ? "var(--color-brand-orange)" : DEMO.leinen}`,
+                  border: `1px solid ${selApp === a.id ? DEMO.ink : DEMO.leinen}`,
                   cursor: "pointer",
                   fontFamily: "inherit",
                 }}
               >
                 <div
                   style={{
-                    fontSize: 12,
+                    fontSize: 13,
                     fontWeight: 700,
-                    letterSpacing: "-0.02em",
                   }}
                 >
                   {appName(a)}
@@ -396,12 +370,11 @@ export default function CostDriftObservabilityDemo() {
                     fontFamily: DEMO.font.mono,
                     fontSize: 12,
                     color:
-                      selApp === a.id ? "rgba(243,240,233,0.6)" : DEMO.schiefer,
-                    letterSpacing: "0.1em",
+                      selApp === a.id ? "rgba(243,240,233,0.75)" : DEMO.schiefer,
                     marginTop: 2,
                   }}
                 >
-                  {a.model.toUpperCase()}
+                  {a.model}
                 </div>
                 <div
                   style={{
@@ -410,15 +383,11 @@ export default function CostDriftObservabilityDemo() {
                     marginTop: 4,
                     fontFamily: DEMO.font.mono,
                     fontSize: 12,
-                    color: selApp === a.id ? DEMO.kupferLight : DEMO.schiefer,
+                    color: selApp === a.id ? "rgba(243,240,233,0.75)" : DEMO.schiefer,
                   }}
                 >
-                  <span>€{a.cost.toFixed(0)}</span>
-                  <span>
-                    {a.calls.toLocaleString(
-                      locale === "de" ? "de-DE" : "en-GB",
-                    )}
-                  </span>
+                  <span>{formatEur(a.cost, locale, 0)}</span>
+                  <span>{formatNumber(a.calls, locale)}</span>
                 </div>
               </button>
             ))}
@@ -430,7 +399,6 @@ export default function CostDriftObservabilityDemo() {
             background: DEMO.ink,
             color: DEMO.kalk,
             padding: 14,
-            borderTop: `3px solid var(--color-brand-orange)`,
           }}
         >
           <div
@@ -446,18 +414,14 @@ export default function CostDriftObservabilityDemo() {
                 style={{
                   fontSize: 14,
                   fontWeight: 700,
-                  letterSpacing: "-0.02em",
                 }}
               >
                 {appName(activeApp)}
               </div>
               <div
                 style={{
-                  fontFamily: DEMO.font.mono,
-                  fontSize: 12,
-                  color: "rgba(243,240,233,0.55)",
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
+                  ...DEMO.label,
+                  color: "rgba(243,240,233,0.75)",
                   marginTop: 2,
                 }}
               >
@@ -480,21 +444,16 @@ export default function CostDriftObservabilityDemo() {
                 Both removed; the chip stays as a visual marker. */}
             <span
               style={{
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
+                ...DEMO.label,
                 padding: "3px 10px",
-                background: "#1e40af",
-                color: "#bfdbfe",
-                border: "1px solid #3b82f6",
-                letterSpacing: "0.14em",
-                fontWeight: 700,
+                color: DEMO.kalk,
+                border: "1px solid rgba(243,240,233,0.4)",
                 alignSelf: "flex-start",
                 display: "inline-flex",
                 alignItems: "center",
-                gap: 6,
               }}
             >
-              {text("◎ SEED-SZENARIO", "◎ SEEDED SCENARIO")}
+              {text("Seed-Szenario", "Seeded scenario")}
             </span>
           </div>
           <svg
@@ -508,20 +467,6 @@ export default function CostDriftObservabilityDemo() {
               "Latency series, last 60 minutes",
             )}
           >
-            <defs>
-              <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="0%"
-                  stopColor="var(--color-brand-orange)"
-                  stopOpacity="0.4"
-                />
-                <stop
-                  offset="100%"
-                  stopColor="var(--color-brand-orange)"
-                  stopOpacity="0"
-                />
-              </linearGradient>
-            </defs>
             {[0.25, 0.5, 0.75].map((g) => (
               <line
                 key={g}
@@ -533,18 +478,13 @@ export default function CostDriftObservabilityDemo() {
               />
             ))}
             <polyline
-              points={`0,${H} ${pts} ${W},${H}`}
-              fill="url(#area)"
-              stroke="none"
-            />
-            <polyline
               points={pts}
               fill="none"
               stroke="var(--color-brand-orange)"
-              strokeWidth="1.5"
+              strokeWidth="2"
               vectorEffect="non-scaling-stroke"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+              strokeLinecap="square"
+              strokeLinejoin="miter"
             />
           </svg>
           <div
@@ -561,24 +501,26 @@ export default function CostDriftObservabilityDemo() {
               [
                 [
                   text("Aufrufe", "Calls"),
-                  activeApp.calls.toLocaleString(
-                    locale === "de" ? "de-DE" : "en-GB",
-                  ),
+                  formatNumber(activeApp.calls, locale),
                 ],
-                [text("Kosten", "Cost"), `€${activeApp.cost.toFixed(2)}`],
-                [text("Ø Latenz", "Average latency"), `${activeApp.lat} s`],
-                [text("Fehler", "Errors"), `${activeApp.err} %`],
+                [text("Kosten", "Cost"), formatEur(activeApp.cost, locale, 2)],
+                [
+                  text("Ø Latenz", "Average latency"),
+                  `${formatNumber(activeApp.lat, locale)} s`,
+                ],
+                [
+                  text("Fehler", "Errors"),
+                  locale === "de"
+                    ? `${formatNumber(activeApp.err, locale)} %`
+                    : `${formatNumber(activeApp.err, locale)}%`,
+                ],
               ] as const
             ).map(([l, v]) => (
               <div key={l}>
                 <div
                   style={{
-                    fontFamily: DEMO.font.mono,
-                    fontSize: 12,
-                    color: "rgba(243,240,233,0.5)",
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                    fontWeight: 700,
+                    ...DEMO.label,
+                    color: "rgba(243,240,233,0.75)",
                   }}
                 >
                   {l}
@@ -611,12 +553,8 @@ export default function CostDriftObservabilityDemo() {
         >
           <div
             style={{
-              fontFamily: DEMO.font.mono,
-              fontSize: 12,
-              color: "var(--color-brand-orange)",
-              letterSpacing: "0.14em",
-              textTransform: "uppercase",
-              fontWeight: 700,
+              ...DEMO.label,
+              color: "var(--color-muted-foreground)",
             }}
           >
             {text("Log-Stream · Alter", "Event log · age")}
@@ -627,11 +565,8 @@ export default function CostDriftObservabilityDemo() {
                 display: "inline-flex",
                 alignItems: "center",
                 gap: 5,
-                fontFamily: DEMO.font.mono,
-                fontSize: 12,
-                letterSpacing: "0.1em",
-                fontWeight: 700,
-                color: live ? DEMO.statusGreen : DEMO.schiefer,
+                ...DEMO.label,
+                color: DEMO.schiefer,
               }}
             >
               <span
@@ -640,15 +575,19 @@ export default function CostDriftObservabilityDemo() {
                   display: "inline-block",
                   width: 6,
                   height: 6,
-                  borderRadius: "50%",
-                  background: live ? DEMO.statusGreen : DEMO.schiefer,
+                  background: live ? DEMO.ink : "transparent",
+                  border: `1px solid ${DEMO.ink}`,
                 }}
               />
-              {live ? text("LIVE", "LIVE") : text("Angehalten", "Paused")}
+              {live ? text("Läuft", "Running") : text("Angehalten", "Paused")}
             </span>
           ) : null}
         </div>
         <div
+          // Scrollable log: keyboard users need a focus stop to scroll it.
+          tabIndex={0}
+          role="region"
+          aria-label={text("Ereignisprotokoll", "Event log")}
           style={{
             background: DEMO.ink,
             color: DEMO.kalk,
@@ -718,13 +657,13 @@ export default function CostDriftObservabilityDemo() {
             ] as const
           ).map(([ageOffset, lvl, tag, msg, c], i) => (
             <div key={i}>
-              <span style={{ color: "rgba(243,240,233,0.4)" }}>
+              <span style={{ color: "rgba(243,240,233,0.62)" }}>
                 {`${ageOffset + tick}s`.padStart(4)}{" "}
               </span>
-              <span style={{ color: c, letterSpacing: "0.1em" }}>
+              <span style={{ color: c }}>
                 [{lvl.toUpperCase().padEnd(5)}]
               </span>
-              <span style={{ color: "var(--color-brand-orange)" }}>
+              <span style={{ color: "var(--color-kupfer-light)" }}>
                 {" "}
                 {tag.padEnd(14)}
               </span>

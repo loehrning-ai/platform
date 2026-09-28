@@ -18,6 +18,26 @@ afterEach(() => {
 });
 
 describe("RailNav", () => {
+  it("marks only the active section with aria-current", () => {
+    render(
+      <RailNav
+        kicker="Article sections"
+        locale="en"
+        items={[
+          { id: "one", num: "00", label: "One" },
+          { id: "two", num: "01", label: "Two" },
+        ]}
+      />,
+    );
+    expect(screen.getByRole("link", { name: /One/ })).toHaveAttribute(
+      "aria-current",
+      "location",
+    );
+    expect(screen.getByRole("link", { name: /Two/ })).not.toHaveAttribute(
+      "aria-current",
+    );
+  });
+
   it("uses an instant offset scroll and preserves the section hash under reduced motion", () => {
     vi.stubGlobal(
       "matchMedia",

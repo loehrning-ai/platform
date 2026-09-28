@@ -13,6 +13,7 @@ type DemoLocalizedFields = Pick<
   | "titleKicker"
   | "background"
   | "description"
+  | "teaser"
   | "tags"
   | "meta"
   | "industries"
@@ -23,10 +24,11 @@ type DemoLocalizedFields = Pick<
 const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
   excel: {
     title: "Claude in Excel.",
-    titleKicker: "Formulas, pivots, forecasts.",
+    titleKicker: "Check formulas and a forecast.",
     background: "Excel add-in · Microsoft 365 · no additional software",
     description:
-      "An analyst selects a sample range. The example shows how formula suggestions, pivot-table drafts, and forecast checks can fit into an existing spreadsheet workflow.",
+      "You select sales figures and get formula suggestions, a pivot draft and a forecast to check.",
+    teaser: "You check formulas and a forecast on sales figures.",
     tags: ["Excel add-in", "M365", "Fundamentals"],
     meta: [
       { label: "Learning objective", value: "Check formulas" },
@@ -36,15 +38,20 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
       { label: "Data protection", value: "Check tenant settings" },
     ],
     industries: ["Controlling", "Finance", "Small and medium-sized businesses"],
-    syntheticDataLabel: "Fictional spreadsheet values; no Microsoft 365 connection.",
-    riskNotes: ["Formulas and forecasts require a subject-matter review."],
+    syntheticDataLabel: "Nine fictional sales rows; the forecast is a simple linear projection.",
+    riskNotes: [
+      "Recalculate each suggested formula by hand for one row.",
+      "Compare the forecast with the same weeks last year.",
+      "Before real use, check whether your Microsoft 365 tenant allows Claude.",
+    ],
   },
   word: {
     title: "Claude in Word.",
-    titleKicker: "Structure documents.",
+    titleKicker: "A draft from a brief.",
     background: "Word lab · style checks with sample documents",
     description:
-      "Enter a brief and inspect a structured draft, followed by checks for style, sources, approval, and sensitive data.",
+      "Your brief becomes a structured draft that you check for style, sources and personal data.",
+    teaser: "You check a draft from a brief for style and facts.",
     tags: ["Word add-in", "M365", "Fundamentals"],
     meta: [
       { label: "Learning objective", value: "Refine a brief" },
@@ -54,16 +61,21 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
       { label: "Data protection", value: "Remove personal data" },
     ],
     industries: ["Engineering", "Skilled trades", "Professional services"],
-    syntheticDataLabel: "Fictional documents; no access to actual Word files.",
-    riskNotes: ["Remove or authorize sensitive data and sources before use."],
+    syntheticDataLabel: "Fictional briefs and sample documents.",
+    riskNotes: [
+      "Remove names and customer data before the brief goes into the assistant.",
+      "Check every figure and source in the draft against the original.",
+      "Release the letter only after the data protection check.",
+    ],
   },
   "outbound-workflow": {
     title: "Signals in the CRM.",
-    titleKicker: "Explain each message.",
+    titleKicker: "Messages with a source.",
     background: "Sample database · signal scan · draft · review gate",
     description:
-      "The pipeline takes fictional contacts, marks supported signals, and drafts a message that remains behind a review gate before any send action.",
-    tags: ["DAG", "GitOps", "Open workflow"],
+      "The pipeline marks CRM signals with their source and drafts a message for each contact.",
+    teaser: "A pipeline drafts messages that you review before sending.",
+    tags: ["Pipeline", "Review gate", "Sources"],
     meta: [
       { label: "Learning objective", value: "Ground messages in signals" },
       { label: "Tools", value: "Sample DB · LLM · review" },
@@ -72,17 +84,20 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
       { label: "Data protection", value: "Separate CRM data" },
     ],
     industries: ["B2B communications", "SaaS", "Services"],
-    syntheticDataLabel: "Fictional contacts and domains; no email is sent.",
+    syntheticDataLabel: "Invented contacts, domains and signals.",
     riskNotes: [
-      "Outbound communication requires source checks, a lawful basis, and an opt-out path.",
+      "Check the source and date behind each signal.",
+      "Establish the lawful basis before you contact anyone.",
+      "Give every message an opt-out link.",
     ],
   },
   "agent-pipeline": {
     title: "Agent pipeline.",
-    titleKicker: "Four roles, one memo.",
-    background: "Multi-agent pattern · specialist roles · recorded trace",
+    titleKicker: "A memo from four agent steps.",
+    background: "Four roles: research, synthesis, critique, editing",
     description:
-      "A scout researches, an analyst synthesizes, a critic challenges, and an editor writes. This is a recorded editorial workflow, not a live agent run.",
+      "You read the recorded trace of four agents writing one memo together.",
+    teaser: "You read the trace of four agents writing one memo together.",
     tags: ["Multi-agent", "Opus 4.5", "Recorded trace"],
     meta: [
       { label: "Learning objective", value: "Separate roles" },
@@ -92,15 +107,19 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
       { label: "Log", value: "Complete trace" },
     ],
     industries: ["Strategy", "Corporate development", "Investment"],
-    syntheticDataLabel: "Recorded sample trace; no live agents run in the browser.",
-    riskNotes: ["Role separation does not replace source and fact checks."],
+    syntheticDataLabel: "A recorded run; the brief, 42 documents and evidence scores are fictional.",
+    riskNotes: [
+      "Check the research sources yourself. The critique role only sees what the research delivered.",
+      "Compare the critique's objections with the final memo.",
+    ],
   },
   "n8n-supply-chain": {
-    title: "n8n supply chain.",
-    titleKicker: "A dispatcher workflow.",
+    title: "A delivery delay in n8n.",
+    titleKicker: "A workflow with sign-off.",
     background: "n8n pattern · simulated DHL, SAP, Slack, and email steps",
     description:
-      "A fictional delivery delay moves through stock checks, a customer-message draft, escalation, and manual approval.",
+      "A delivery delay runs through a stock check, a customer draft and an escalation until the dispatcher signs off.",
+    teaser: "A delivery delay runs through the n8n workflow to sign-off.",
     tags: ["n8n", "Self-hosted", "Supply chain"],
     meta: [
       { label: "Learning objective", value: "Read an automation flow" },
@@ -110,15 +129,19 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
       { label: "Data protection", value: "Define hosting" },
     ],
     industries: ["Logistics", "Manufacturing", "Wholesale"],
-    syntheticDataLabel: "Fictional DHL, SAP, Slack, and email events.",
-    riskNotes: ["External actions remain simulated; no order or message is sent."],
+    syntheticDataLabel: "Invented DHL, SAP, Slack and email events, in the browser only.",
+    riskNotes: [
+      "Read the customer message draft before you sign it off.",
+      "Decide who signs off the reorder when the dispatcher is away.",
+    ],
   },
   "rag-vertragsassistent": {
     title: "Contract assistant.",
     titleKicker: "Answers with clause references.",
-    background: "Keyword search · 8 sample documents · answers with source cards",
+    background: "Keyword search · 6 sample documents · answers with source cards",
     description:
-      "Keyword search finds and quotes sample clauses, then adds an uncertainty note. The example also shows when the system should refuse to answer.",
+      "Keyword search finds clauses in six company documents and quotes them with their location. Without a match, the system does not answer.",
+    teaser: "Quotes clauses with their location and stays silent without a match.",
     tags: ["Keyword search", "Rule-based", "DE / EN"],
     meta: [
       { label: "Learning objective", value: "Require sources" },
@@ -128,9 +151,10 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
       { label: "Data basis", value: "Document archive" },
     ],
     industries: ["Legal practice", "Procurement", "Legal operations"],
-    syntheticDataLabel: "Fictional contract archive; no real document search.",
+    syntheticDataLabel: "Six invented company documents.",
     riskNotes: [
-      "Citations reduce ambiguity but do not guarantee a correct legal interpretation.",
+      "Open the quoted clause and read it in context.",
+      "A clause reference is not a legal interpretation. Disputed cases go to your legal team.",
     ],
   },
   "rechnung-zu-sap": {
@@ -138,7 +162,8 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
     titleKicker: "Check the extraction.",
     background: "OCR pattern · structured extraction · simulated SAP check",
     description:
-      "A sample invoice is extracted, checked against explicit rules, and stopped for review before a simulated SAP import.",
+      "A sample invoice is extracted, checked against fixed rules, and stopped for review before a simulated SAP import.",
+    teaser: "A sample invoice is checked and stopped before the SAP import.",
     tags: ["OCR", "SAP · IDoc", "Invoice controls"],
     meta: [
       { label: "Learning objective", value: "Extract fields" },
@@ -148,15 +173,19 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
       { label: "Control", value: "Review before import" },
     ],
     industries: ["Manufacturing", "Accounting", "Small and medium-sized businesses"],
-    syntheticDataLabel: "Fictional invoice and simulated SAP check.",
-    riskNotes: ["Low extraction confidence must stop import and posting."],
+    syntheticDataLabel: "Two invented invoice variants and a simulated SAP import.",
+    riskNotes: [
+      "Stop import and posting when extraction confidence is low.",
+      "Check mandatory VAT fields and possible duplicates before sign-off.",
+    ],
   },
   "prompt-scanner": {
     title: "Prompt scanner.",
-    titleKicker: "Data and IP guard.",
+    titleKicker: "Flag personal data in a prompt.",
     background: "Rule-based token classification · runs locally in the browser",
     description:
-      "Rules mark personal data, IBANs, and confidential terms before a prompt is released. Matches are warnings, not complete classification.",
+      "Rules flag names, IBANs and confidential terms before a prompt is released. They miss some cases, so each flag is only a hint.",
+    teaser: "Flags names and IBANs in a prompt and misses some cases.",
     tags: ["GDPR", "On-premises", "Rule-based"],
     meta: [
       { label: "Learning objective", value: "Identify sensitive data" },
@@ -166,35 +195,41 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
       { label: "Rules", value: "Configurable" },
     ],
     industries: ["Insurance", "Financial services", "Healthcare"],
-    syntheticDataLabel: "Rule-based browser example with fictional text.",
-    riskNotes: ["False positives and false negatives remain possible."],
+    syntheticDataLabel: "Invented sample texts, checked with regular expressions in your browser.",
+    riskNotes: [
+      "Read the prompt yourself before you release it, even when nothing is flagged.",
+      "Check each flag, because harmless words get caught too.",
+    ],
   },
   "cost-drift-observability": {
-    title: "Cost and drift.",
-    titleKicker: "Inspect operating signals.",
+    title: "Cost and drift in production.",
+    titleKicker: "Read cost, latency and errors.",
     background: "Seeded scenarios · cost, errors, and drift as a learning trace",
     description:
-      "Seeded scenarios expose cost, error, and drift indicators. Values are fixed learning assumptions, not measured production telemetry.",
-    tags: ["OpenTelemetry", "Alerts", "Drift"],
+      "You compare cost, latency, errors and drift across four applications and read off which one costs most.",
+    teaser: "You compare cost, latency and errors across four sample applications.",
+    tags: ["OpenTelemetry", "Monitoring", "Drift"],
     meta: [
       { label: "Learning objective", value: "Measure operations" },
-      { label: "Budget", value: "Alert before overrun" },
+      { label: "Cost", value: "Per application" },
       { label: "Stack", value: "OTel + Grafana" },
       { label: "Retention", value: "90 days" },
       { label: "Drift", value: "Check regularly" },
     ],
     industries: ["FinTech", "Platforms", "IT operations"],
-    syntheticDataLabel: "Seeded scenarios; no live telemetry.",
+    syntheticDataLabel: "Four invented applications with invented measurements; the latency curve continues at random.",
     riskNotes: [
-      "Production observability requires system-specific measurements, budgets, and escalation rules.",
+      "Set your own measurement points and a budget for each application.",
+      "Decide in advance who acts on a budget alert.",
     ],
   },
   "fine-tune-playground": {
-    title: "Fine-tuning playground.",
-    titleKicker: "Base model versus domain examples.",
-    background: "Side-by-side baseline and domain-example responses",
+    title: "Fine-tuning against the base model.",
+    titleKicker: "Two answers side by side.",
+    background: "Base model compared with domain examples",
     description:
-      "Compare two sample answers to the same question: a baseline and a domain-adapted response. The example also identifies when retrieval or prompting is the simpler option.",
+      "You compare the answers of a base model and an adapted model to the same question.",
+    teaser: "You compare a base model with an adapted one.",
     tags: ["Fine-tuning", "Sonnet 4.6", "DACH"],
     meta: [
       { label: "Learning objective", value: "Compare against a baseline" },
@@ -204,17 +239,19 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
       { label: "Iteration", value: "Repeat evaluation" },
     ],
     industries: ["Manufacturing", "Technical services", "Specialist production"],
-    syntheticDataLabel: "Fictional training and holdout examples.",
+    syntheticDataLabel: "Seeded answers, metrics and training examples; no model was trained.",
     riskNotes: [
-      "Fine-tuning is not automatically better than retrieval, prompting, or a clearer process.",
+      "First check whether retrieval, a better prompt or a clearer process does the same job.",
+      "Score the adapted model only on holdout questions it was not trained on.",
     ],
   },
   "roi-rechner": {
     title: "Assumptions calculator.",
-    titleKicker: "Expose the formula.",
+    titleKicker: "A benefit from four assumptions.",
     background: "Headcount × hourly cost × adoption × hours saved",
     description:
-      "Which assumptions make an AI use case plausible? The calculator exposes the formula and uncertainty range instead of presenting a return promise.",
+      "You enter team size, hourly rate, adoption and hours saved and see the formula behind the result.",
+    teaser: "You see the formula behind your team's ROI.",
     tags: ["ROI", "Scenario model", "Transparent"],
     meta: [
       { label: "Inputs", value: "4 assumptions" },
@@ -224,15 +261,19 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
       { label: "Period", value: "12 months" },
     ],
     industries: ["Management", "Finance", "People operations"],
-    syntheticDataLabel: "Editable example assumptions in a deterministic formula.",
-    riskNotes: ["The result is a scenario calculation, not a return promise."],
+    syntheticDataLabel: "Sample assumptions that you change yourself.",
+    riskNotes: [
+      "The result is a scenario. Back each assumption with your own measurement.",
+      "Find the assumption that moves the result most and back it first.",
+    ],
   },
   "llm-observability": {
-    title: "LLM quality measurement.",
-    titleKicker: "Evaluation, drift, feedback.",
+    title: "Measuring answer quality.",
+    titleKicker: "Automated and human scores side by side.",
     background: "Fictional evaluation metrics · drift indicator · human review",
     description:
-      "Inspect evaluation metrics, drift detection, and the point at which automated and human assessments disagree. All values are fixed examples.",
+      "You check the automated score for four answers. A person rated three of them too, and twice the automated score is off.",
+    teaser: "You check where the automated score is wrong.",
     tags: ["Observability", "Evaluation", "Drift"],
     meta: [
       { label: "Learning objective", value: "Measure quality" },
@@ -242,10 +283,10 @@ const ENGLISH_DEMO_FIELDS: Readonly<Record<string, DemoLocalizedFields>> = {
       { label: "Data source", value: "Seeded scenarios" },
     ],
     industries: ["FinTech", "Platforms", "IT operations"],
-    syntheticDataLabel: "Fictional evaluation metrics; no live telemetry.",
+    syntheticDataLabel: "Invented answers, scores and ratings; the drift indicator is seeded.",
     riskNotes: [
-      "Automated evaluation scores do not replace human quality review.",
-      "Drift detection requires a use-case-specific baseline and thresholds.",
+      "Have people re-check automated scores on a regular schedule.",
+      "Set your own drift baseline and thresholds for each use case.",
     ],
   },
 };

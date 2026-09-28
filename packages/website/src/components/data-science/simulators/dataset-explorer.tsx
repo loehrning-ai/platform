@@ -48,8 +48,8 @@ export function DatasetExplorer() {
       )}
       meta={`${text("Strategy", "Strategie")}: ${s.label}`}
       caption={text(
-        "The fixed public-dataset counts make a constant legitimate prediction 99.83% accurate while detecting none of the 492 recorded fraud cases. Accuracy alone therefore omits the error of interest; resampling effects still require train-only, model-specific validation.",
-        "Bei den festen Zahlen des öffentlichen Datensatzes erreicht eine konstante legitime Vorhersage 99.83% Genauigkeit und erkennt keinen der 492 erfassten Betrugsfälle. Genauigkeit allein lässt damit den relevanten Fehler aus; Resampling muss weiterhin nur im Training und modellspezifisch validiert werden.",
+        "Resample only inside the training data and validate its effect per model.",
+        "Wende Resampling nur innerhalb der Trainingsdaten an und validier den Effekt je Modell.",
       )}
     >
       <div className="sim-row">

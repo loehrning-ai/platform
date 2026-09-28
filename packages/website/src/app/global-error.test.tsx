@@ -62,7 +62,7 @@ describe("src/app/global-error.tsx", () => {
     );
     expect(
       screen.getByText(
-        "Ein unerwarteter Fehler ist aufgetreten. Lade die Anwendung erneut.",
+        "Ein unerwarteter Fehler ist aufgetreten.",
       ),
     ).toBeInTheDocument();
 

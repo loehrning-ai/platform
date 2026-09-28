@@ -17,7 +17,7 @@ const ROUTES = [
     de: "/neuigkeiten",
     en: "/en/neuigkeiten",
     deHeading: "Was ist neu",
-    enHeading: "What is new",
+    enHeading: "What's new",
   },
   {
     de: "/feedback",

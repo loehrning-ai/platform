@@ -200,9 +200,6 @@ export function AiNativeOperatorLessonReader({
         <h1 className="mt-1 break-words text-[28px] font-bold tracking-[-0.03em] text-foreground md:text-[34px]">
           {lesson.title}
         </h1>
-        <p className="mt-2 max-w-[68ch] break-words text-[16px] leading-[1.55] text-muted-foreground">
-          {lesson.objective}
-        </p>
         <div className="mt-3 flex flex-wrap items-center gap-2 font-mono text-[12px] uppercase tracking-[0.06em] text-muted-foreground">
           <span>
             {lesson.kind === "quiz"

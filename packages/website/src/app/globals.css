@@ -1,6 +1,17 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/* `.overline` is the site's kicker class (below). Tailwind would also read it
+   as its `overline` text-decoration utility and draw a second rule over every
+   kicker, so the utility is never generated. */
+@source not inline("overline");
+
+/* The site has one light theme. Tailwind's default `dark:` variant follows
+   prefers-color-scheme, so single `dark:` utilities flipped on a phone in dark
+   mode while the page around them stayed paper. `dark:` now needs an explicit
+   .dark ancestor, which the site never sets. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Versioned, self-hosted brand faces. Regular and Bold cover the first-view
    copy; Medium and SemiBold remain demand-loaded. `optional` keeps a slow font
    response from replacing already-painted text, while the metric-adjusted
@@ -37,9 +48,24 @@
   font-weight: 700;
 }
 
+/* The metric fallback while Loehrning Sans loads (optional font display).
+   Liberation Sans and Arimo share Arial's metrics, so Linux and Android get
+   the face the overrides were tuned for instead of a wider system face; the
+   700 face keeps poster titles in a real bold rather than a synthetic one. */
 @font-face {
   font-family: "Loehrning Sans Fallback";
-  src: local("Arial");
+  src: local("Arial"), local("ArialMT"), local("Liberation Sans"), local("LiberationSans"), local("Arimo");
+  font-weight: 400;
+  ascent-override: 96.56%;
+  descent-override: 24.04%;
+  line-gap-override: 0%;
+  size-adjust: 100.33%;
+}
+
+@font-face {
+  font-family: "Loehrning Sans Fallback";
+  src: local("Arial Bold"), local("Arial-BoldMT"), local("Liberation Sans Bold"), local("LiberationSans-Bold"), local("Arimo Bold");
+  font-weight: 700;
   ascent-override: 96.56%;
   descent-override: 24.04%;
   line-gap-override: 0%;
@@ -47,38 +73,45 @@
 }
 
 @theme {
-  /* Berlin risograph palette. Copper remains the brand anchor; the broader
-     system now behaves like an independent learning journal instead of a
-     monochrome corporate dashboard. */
-  --color-brand-orange: #a5370f; /* Kupfer — oxidized copper, Berlin Altbau. Darkened from #C4431A (4.43:1, sub-AA) to #A5370F (5.85:1) so accent TEXT on Kalkweiß meets WCAG AA; dark sections override to the lighter #E07050 below. */
+  /* Werkzeichnung palette, taken from the Workshop 03 deck
+     (public/workshops/datenbereitschaft-fuer-ki/lib/tokens.css): calm paper,
+     precise ink and one red pencil. Mennige is the only accent. Contrast
+     ratios are against Kalkweiß #f3f0e9 unless stated. */
+  --color-brand-orange: #b73a15; /* Mennige, 5.08:1 as text. .dark-section flips it to #e07050 (5.79:1 on graphit). */
+  /* The unscoped Mennige for non-text marks that must stay Mennige inside a
+     dark band (question-card bar, globe trace). Never text on graphit (3.18:1). */
+  --color-mennige: #b73a15;
   /* Foreground-safe status/accent tones for light surfaces. These values also
-     remain AA when the same tone is used over its own 20% tint on Birke cards.
+     remain AA when the same tone is used over its own 20% tint on Bogen cards.
      Dark sections restore the lighter display tones below. */
   --color-brand-sand: #604b36;
   --color-brand-amber: #78350f;
   --color-destructive: #991b1b;
 
-  /* Light background system — warmer paper, blue-black ink. */
-  --color-background: #f7f1e7;
-  --color-foreground: #19232d;
-  --color-muted: #655c54; /* Darkened from #9c8f85 (2.76:1, fails AA as text) to #655c54 for legible secondary text on Kalkweiß (5.74:1) AND on the Birke card #E8E3D9 (5.11:1) — #6f665e was 4.39:1 on the card, sub-AA; dark sections override to #c5b9af below. */
-  /* Schiefer ratchet 2026-05-04: was #68605A (~4.8:1, AA only). Moved to
-     #4f4640 to reach ~7.0:1 against Kalkweiß #F3F0E9 — meets WCAG AAA per
-     Brand CI v3.0 contrast targets. */
-  --color-muted-foreground: #4f5356;
+  /* Paper, ink and slate. Elevation is tone: Bogen (+1), Kalkweiß (0), Beton (-1). */
+  --color-background: #f3f0e9; /* Kalkweiß: page ground */
+  --color-foreground: #121212; /* Druckschwarz: text, strokes, ink button, 16.46:1 */
+  --color-muted: #655c54; /* Schiefer hell: captions, future Route labels, 5.74:1 */
+  --color-muted-foreground: #4f4640; /* Schiefer: secondary text, 8.08:1 (AAA) */
   /* Structural boundaries and passive tracks have different contrast jobs.
-     Schiefer reaches 3.45:1 on Kalkweiss and 3.07:1 on Birke, so a 1px frame
-     stays visible. Leinen remains the quiet fill behind progress and inactive
-     states; the compatibility utilities below route legacy bg-border tracks to
-     this dedicated token without weakening border-border. */
+     Kante (#827970) reaches 3.75:1 on Kalkweiß and 3.99:1 on Bogen, so it can
+     be the only boundary of a control. Leinen (#d4cec5, 1.37:1) is decorative
+     only: hairlines between rows, chart grids, passive tracks. The
+     compatibility utilities below route legacy bg-border tracks to the track
+     token without weakening border-border. */
   --color-border: #827970;
-  --color-track: #d9d0c4;
-  --color-card: #fff9ed;
-  --color-card-hover: #f0e7d7;
+  --color-track: #d4cec5;
+  --color-hairline: #d4cec5;
+  --color-card: #f9f7f2; /* Bogen: raised sheet (question card, previews) */
+  --color-card-hover: #efebe2;
+  --color-inset: #e5e4e2; /* Beton: recessed bands (decision lab, code, table heads) */
+  --color-pass: #205b46; /* Befund grün: always with the pass icon and a word */
 
-  /* Expressive discovery surfaces. Bright values are backgrounds and
-     ornament; their darker twins carry normal-sized text. */
-  --color-paper: #fffcf5;
+  /* Alias of Bogen kept for existing classes (.berlin-hero, bg-paper). */
+  --color-paper: #f9f7f2;
+  /* Retired risograph accents. Still defined because home, books and
+     open-source routes use them; new code and the learning surfaces
+     (courses, workshops, demos) do not. */
   --color-brand-acid: #ddf45a;
   --color-brand-sky: #a9ddfc;
   --color-brand-pink: #ffb8c8;
@@ -86,35 +119,40 @@
   --color-brand-cobalt: #2747b5;
   --color-brand-teal: #006c67;
 
-  /* Kupfer scale — full CI palette */
-  --color-kupfer: #a5370f;
-  --color-kupfer-dark: #a5370f;
-  --color-kupfer-light: #e07050;
-  --color-kupfer-mist: #f5e8e2;
+  /* Mennige scale */
+  --color-kupfer: #b73a15;
+  --color-kupfer-dark: #97300f; /* Mennige tief: hover and pressed; Mennige text on Beton (6.02:1) */
+  --color-kupfer-light: #e07050; /* accent text on graphit, 5.79:1 */
+  --color-kupfer-mist: #f5e8e2; /* retired on learning surfaces */
 
-  /* Dark section overrides (scoped via .dark-section) */
-  --color-dark-bg: #242342;
-  --color-dark-fg: #f7f1e7;
-  --color-dark-muted: #9c8f85;
-  --color-dark-border: rgba(247, 241, 231, 0.4);
-  --color-dark-track: rgba(247, 241, 231, 0.14);
+  /* Graphit band (scoped via .dark-section): cover bands and the footer only. */
+  --color-dark-bg: #141414;
+  --color-dark-fg: #f2f1ee;
+  --color-dark-muted: #a8a097;
+  --color-dark-border: rgba(242, 241, 238, 0.4);
+  --color-dark-track: rgba(242, 241, 238, 0.16);
 
   /* Functional */
   --color-risk-green: #14532d;
   --color-risk-yellow: #713f12;
   /* #ef4444 (red-500) is only 3.19:1 as TEXT on warm light surfaces (sub-AA).
-     #b91c1c (red-700) reaches ≥5.0:1 as text on Kalkweiß/Birke and keeps
-     white-on-red badge fills well above AA. Used via text-/border-/bg-risk-red
+     #991b1b stays well above AA as text on Kalkweiß and Bogen and keeps
+     white-on-red badge fills above AA. Used via text-/border-/bg-risk-red
      utilities; no solid bg-risk-red+text pairing exists in the codebase. */
   --color-risk-red: #991b1b;
 
-  /* Soft editorial elevation with one optional ink-stamp shadow for the few
-     remaining brutalist signals. */
+  /* Flat: structure comes from lines and tone. Shadows belong to floating
+     overlays (menus, dialogs, popovers). shadow-card and shadow-card-hover
+     remain for routes that have not moved to Werkzeichnung yet. */
+  --shadow-overlay: 0 1px 2px rgba(18, 18, 18, 0.06), 0 12px 32px rgba(18, 18, 18, 0.1);
   --shadow-card:
-    0 2px 8px rgba(36, 35, 66, 0.05), 0 16px 44px rgba(36, 35, 66, 0.07);
+    0 2px 8px rgba(18, 18, 18, 0.05), 0 16px 44px rgba(18, 18, 18, 0.07);
   --shadow-card-hover:
-    0 4px 12px rgba(36, 35, 66, 0.07), 0 24px 56px rgba(36, 35, 66, 0.12);
-  --shadow-tile: 4px 4px 0 rgba(25, 35, 45, 0.92);
+    0 4px 12px rgba(18, 18, 18, 0.07), 0 24px 56px rgba(18, 18, 18, 0.12);
+
+  /* Motion from the deck's --m-* tokens, scaled for reading. */
+  --ease-deck: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-fade: cubic-bezier(0.4, 0, 0.2, 1);
 
   /* Typography — Loehrning Sans primary, Inter/system fallback.
      Geist Mono is bundled rather than resolved from an OS stack. Course and
@@ -126,15 +164,45 @@
   --font-sans: var(--font-loehrning-sans), "Inter", system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), monospace;
 
-  /* Fluid display type scale (responsive-layout hardening) — clamp()-based, no abrupt @media jumps.
-     Available as `text-fluid-h1/h2/h3` utilities AND as var(--text-fluid-h1) in
-     CSS modules (including editorial headings). */
-  --text-fluid-h1: clamp(2.5rem, 1.4rem + 5.2vw, 5.5rem);
-  --text-fluid-h1--line-height: 0.95;
-  --text-fluid-h2: clamp(1.875rem, 1.25rem + 3vw, 3.25rem);
-  --text-fluid-h2--line-height: 1.05;
-  --text-fluid-h3: clamp(1.5rem, 1.15rem + 1.6vw, 2rem);
-  --text-fluid-h3--line-height: 1.15;
+  /* Type scale derived from the deck (104/60/40/32/26/24/22 at 1920px,
+     times 0.75 for 1440px), tuned for reading. Clamp-based, no abrupt @media
+     jumps. Headlines are 700 and never tracked below -0.015em; the one
+     exception is the poster headline (--text-poster, only through
+     .poster-title). Available as `text-*` utilities and as var(--text-*) in
+     CSS modules. */
+  --text-display: clamp(2.75rem, 1.6rem + 4.2vw, 4.75rem);
+  --text-display--line-height: 1;
+  --text-display--letter-spacing: -0.015em;
+  --text-display--font-weight: 700;
+  --text-fluid-h1: clamp(2.25rem, 1.5rem + 2.6vw, 3.25rem);
+  --text-fluid-h1--line-height: 1.05;
+  --text-fluid-h1--letter-spacing: -0.012em;
+  --text-fluid-h2: clamp(1.625rem, 1.3rem + 1.2vw, 2.25rem);
+  --text-fluid-h2--line-height: 1.15;
+  --text-fluid-h2--letter-spacing: -0.01em;
+  --text-fluid-h3: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+  --text-fluid-h3--line-height: 1.2;
+  --text-fluid-h3--letter-spacing: -0.005em;
+  --text-lead: 1.25rem;
+  --text-lead--line-height: 1.45;
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.6;
+  /* Sentence-case labels replace mono-uppercase eyebrows. */
+  --text-label: 0.875rem;
+  --text-label--line-height: 1.3;
+  --text-label--letter-spacing: 0.02em;
+  --text-label--font-weight: 600;
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.45;
+  --text-num-lg: 2.5rem;
+  --text-num-lg--line-height: 1;
+  --text-num-lg--letter-spacing: -0.01em;
+  /* Poster headline: 50px at 390, 96px from 1280. Band H1s only, set through
+     .poster-title below, which adds the word-fit rule. The -0.04em tracking is
+     allowed nowhere else (docs/experience-system.md, Poster layer). */
+  --text-poster: clamp(3.125rem, 1.9rem + 5.2vw, 6rem);
+  --text-poster--line-height: 0.92;
+  --text-poster--letter-spacing: -0.04em;
 
   /* Nav height token — fixed so every sticky offset shares one geometry. */
   --nav-h: 4rem;
@@ -162,11 +230,76 @@
   --tabbar-band-h: calc(var(--tabbar-h) + var(--safe-area-bottom));
 }
 
+/* Poster layer ("Plakat"): four scenes of three colours each, sampled from
+   the reference posters. Lemons (Ultramarin, Butter, Mennige), IDEA (Kreide,
+   Kobalt, Himbeere), Bloom (Sand, Aubergine, Terrakotta), Autumn (Rost,
+   Creme, Ocker). Mennige stays the one red: the lemons mid is Mennige.
+   `static` keeps every value in the compiled :root even before a utility
+   uses it, because CSS files outside this entry (phone-hero.css,
+   blog-index.css) and inline SVG styles read them through var(), which
+   Tailwind's usage scan does not see. The TypeScript twin of these values is
+   src/lib/plakat/palettes.ts; palettes.test.ts keeps both equal. Every
+   pairing and ratio: docs/plakat-pairings.md. Ratios below are against
+   Kalkweiß unless stated. */
+@theme static {
+  --color-ultramarin: #152a79; /* lemons ground and paper ink, 11.26 */
+  --color-butter: #fceeaf; /* lemons ink, 10.97 on Ultramarin; never on paper (1.03) */
+  --color-kreide: #ecebdd; /* IDEA ground; never a card on paper (1.05) */
+  --color-kobalt: #2e4d90; /* IDEA ink, 6.78 on Kreide, 7.15 */
+  --color-himbeere: #c94a7f; /* IDEA mid, display only: 3.67 on Kreide */
+  --color-himbeere-tief: #b6386f; /* Himbeere at text size: 4.62 on Kreide, 4.88; never on Beton (4.37) */
+  --color-sand: #e6d3af; /* Bloom ground */
+  --color-aubergine: #3b1f45; /* Bloom ink, 9.74 on Sand, 12.57 */
+  --color-terrakotta: #d1733d; /* Bloom mid, shapes only: 2.30 on Sand */
+  --color-terrakotta-tief: #964305; /* Terrakotta at text size: 4.61 on Sand, 5.95 */
+  --color-rost: #944d44; /* Autumn ground and paper ink, 5.42 */
+  --color-creme: #f0e1ca; /* Autumn ink, 4.80 on Rost: 17px and 400 or more only */
+  --color-ocker: #e4a057; /* Autumn mid, decoration only: 2.78 on Rost */
+  --color-ocker-hell: #ebb16a; /* Autumn meaningful mark or giant numeral: 3.24 on Rost */
+  --color-ocker-tief: #9b5e07; /* ochre at text size on Kalkweiß (4.62) and Bogen only */
+
+  /* Scene roles with their paper defaults. A .plakat-* scope redefines them,
+     so one component reads correctly on paper and in every scene. Never use
+     an /alpha modifier on a scene-* utility: Tailwind writes the color-mix
+     fallback with the :root value, which is wrong inside a scope. */
+  --color-scene-ground: #f3f0e9; /* band or cover ground */
+  --color-scene-ink: #121212; /* the one strong pair: type, buttons, ring */
+  --color-scene-mid: #b73a15; /* decorative shapes, never text */
+  --color-scene-mark: #b73a15; /* a shape that carries meaning, 3:1 or more on the ground */
+  --color-scene-accent-text: #97300f; /* text in the mid hue, 4.5:1 or more */
+  --color-scene-line: #121212; /* Kopflinie and tab marker; page scenes set it below */
+}
+
 @layer base {
   * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+  }
+
+  /* One light theme: form controls, scrollbars and the canvas stay light on
+     an OS in dark mode, matching the paper page. */
+  :root {
+    color-scheme: light;
+  }
+
+  /* The page scene line. Below a band, the Kopflinie, the StatRow values and
+     the active tab-bar marker take the scene's paper ink, 4.85:1 or more on
+     Kalkweiß, Bogen and Beton. The header and the L tile never change. The tab
+     bar sits in the root layout, outside the page tree, hence :root:has() on
+     the route's own [data-plakat-page] wrapper. Without :has() support the
+     line stays Druckschwarz. */
+  :root:has([data-plakat-page="lemons"]) {
+    --color-scene-line: #152a79;
+  }
+  :root:has([data-plakat-page="idea"]) {
+    --color-scene-line: #2e4d90;
+  }
+  :root:has([data-plakat-page="bloom"]) {
+    --color-scene-line: #3b1f45;
+  }
+  :root:has([data-plakat-page="autumn"]) {
+    --color-scene-line: #944d44;
   }
 
   html {
@@ -226,13 +359,16 @@
     overflow-x: clip;
   }
 
-  /* One focus treatment for the whole site: a 3px Kupfer bracket held 2px off the
-     element. 3px is the card accent stroke, so the ring reads as part of the
-     system rather than a UA default, and the gap keeps it legible around a
-     Kupfer-filled button, where ring and fill share a hue. Kupfer stays ≥4.75:1
-     against every surface token (Kalkweiß, Birke, Birke-hover, Kupfer-Mist,
-     white); .dark-section swaps it to #E07050 at 6.18:1. The offset stays at 2px
-     because several bordered grids clip their children with overflow-hidden. */
+  /* One focus treatment for the whole site: a 3px Mennige ring held 2px off
+     the element, drawn instantly. The gap keeps it legible around a
+     Mennige-filled button, where ring and fill share a hue. Mennige is 5.08:1
+     on Kalkweiß, 5.40:1 on Bogen and 3.24:1 against an adjacent ink button;
+     .dark-section swaps it to #e07050 at 5.79:1 on graphit, and each
+     .plakat-* scene swaps it to its ink (Butter 10.97, Kobalt 6.78, Aubergine
+     9.74, Creme 4.80 on the scene ground). A control at a scene edge uses an
+     inset ring, so the ring never lands on paper. The offset stays at 2px
+     because several bordered grids clip their children with
+     overflow-hidden. */
   :focus-visible {
     outline: 3px solid var(--color-brand-orange);
     outline-offset: 2px;
@@ -371,31 +507,228 @@
     text-decoration-color: currentColor;
   }
 
-  /* Dark section — CSS custom property scoping for inverted sections */
+  /* Graphit band: CSS custom property scoping for the cover band and the
+     footer. Every token keeps AA on #141414; the accent flips to #e07050
+     (5.79:1) because Mennige text would be 3.18:1 there. A filled accent
+     button inside this scope takes dark ink (text-dark-bg) or becomes a paper
+     button: white on #e07050 is 3.18:1 and fails. */
   .dark-section {
-    --color-background: #242342;
-    --color-foreground: #f7f1e7;
-    /* Was #9c8f85 (~3.2:1 against #0d0b09 — sub-AA). Lifted to #c5b9af to
-       reach ~7.5:1 — meets WCAG AAA on the warm-stone dark background. */
-    --color-muted-foreground: #d7d0e4;
-    --color-muted: #d7d0e4;
-    /* Kupfer accent flips to the lighter copper on dark so accent text stays AA
-       (#A5370F would be ~2.4:1 on near-black; #E07050 is ~5.5:1). */
+    --color-background: #141414;
+    --color-foreground: #f2f1ee; /* 16.31:1 */
+    --color-muted-foreground: #d4cec5; /* Leinen, 11.79:1 */
+    --color-muted: #a8a097; /* 7.14:1 */
     --color-brand-orange: #e07050;
     --color-brand-sand: #d8c29e;
     --color-brand-amber: #ffc857;
     --color-kupfer: #e07050;
     --color-destructive: #ff7a59;
+    --color-pass: #6fbf9a; /* 8.42:1 */
     --color-risk-green: #4ade80;
     --color-risk-yellow: #facc15;
-    /* Coral remains visibly critical while clearing AA on the indigo ground. */
     --color-risk-red: #ff7a59;
-    --color-border: rgba(247, 241, 231, 0.4);
-    --color-track: rgba(247, 241, 231, 0.14);
-    --color-card: rgba(247, 241, 231, 0.08);
-    --color-card-hover: rgba(247, 241, 231, 0.14);
+    --color-border: rgba(242, 241, 238, 0.4); /* about 3.52:1, control edge */
+    --color-track: rgba(242, 241, 238, 0.16);
+    --color-hairline: rgba(242, 241, 238, 0.16);
+    --color-card: #1c1b1a;
+    --color-card-hover: #242321;
+    --color-inset: #1c1b1a;
+    /* The Kopflinie inside a graphit band stays the band's ink. */
+    --color-scene-line: #f2f1ee;
     background-color: var(--color-background);
     color: var(--color-foreground);
+  }
+
+  /* Plakat scenes: one ground, one ink, one mid. Every text token is the ink
+     (no muted tier on a poster), every control edge is the ink, hairlines are
+     decorative (below 2:1). The focus ring (--color-brand-orange) is the ink.
+     Paper and Mennige are never redefined, so bg-mennige text-paper stays
+     5.40:1 wherever it lands. The second selector lets a server component opt
+     a band into its page's scene without React context. Assign a scene only
+     through src/lib/plakat/palettes.ts. Ratios: docs/plakat-pairings.md. */
+  .plakat-lemons,
+  [data-plakat-page="lemons"] [data-plakat-band] {
+    --color-background: #152a79;
+    --color-foreground: #fceeaf; /* 10.97 */
+    --color-muted-foreground: #fceeaf;
+    --color-muted: #fceeaf;
+    --color-border: #fceeaf;
+    --color-track: #4f5b86; /* Butter 25% over Ultramarin, 1.94, decor */
+    --color-hairline: #4f5b86;
+    --color-card: #152a79;
+    --color-card-hover: #2c3e7e; /* Butter on it 8.58 */
+    --color-inset: #23367c; /* Butter on it 9.52 */
+    --color-brand-orange: #fceeaf; /* ring and accent text, 10.97 */
+    --color-kupfer: #fceeaf;
+    --color-kupfer-dark: #fceeaf;
+    --color-pass: #6fbf9a; /* 5.85 */
+    --color-destructive: #ff7a59; /* 4.99 */
+    --color-risk-red: #ff7a59; /* 4.99 */
+    --color-risk-yellow: #facc15; /* 8.37 */
+    --color-risk-green: #4ade80; /* 7.35 */
+    --color-brand-sand: #d8c29e; /* 7.40 */
+    --color-brand-amber: #ffc857; /* 8.33 */
+    --color-scene-ground: #152a79;
+    --color-scene-ink: #fceeaf;
+    --color-scene-mid: #b73a15; /* Mennige, 2.21, shapes only */
+    --color-scene-mark: #fceeaf;
+    --color-scene-accent-text: #fceeaf;
+    --color-scene-line: #fceeaf;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  .plakat-idea,
+  [data-plakat-page="idea"] [data-plakat-band] {
+    --color-background: #ecebdd;
+    --color-foreground: #2e4d90; /* 6.78 */
+    --color-muted-foreground: #2e4d90;
+    --color-muted: #2e4d90;
+    --color-border: #2e4d90;
+    --color-track: #b3bcc6; /* 1.60, decor */
+    --color-hairline: #b3bcc6;
+    --color-card: #ecebdd;
+    --color-card-hover: #d9dbd5; /* Kobalt on it 5.83 */
+    --color-inset: #e1e2d8; /* 6.23 */
+    --color-brand-orange: #2e4d90;
+    --color-kupfer: #2e4d90;
+    --color-kupfer-dark: #2e4d90;
+    /* Status tones keep their paper values: 6.61 to 7.59 on Kreide. */
+    --color-scene-ground: #ecebdd;
+    --color-scene-ink: #2e4d90;
+    --color-scene-mid: #c94a7f; /* 3.67: display type and shapes */
+    --color-scene-mark: #c94a7f;
+    --color-scene-accent-text: #b6386f; /* 4.62 */
+    --color-scene-line: #2e4d90;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  .plakat-bloom,
+  [data-plakat-page="bloom"] [data-plakat-band] {
+    --color-background: #e6d3af;
+    --color-foreground: #3b1f45; /* 9.74 */
+    --color-muted-foreground: #3b1f45;
+    --color-muted: #3b1f45;
+    --color-border: #3b1f45;
+    --color-track: #b39d8f; /* 1.76, decor */
+    --color-hairline: #b39d8f;
+    --color-card: #e6d3af;
+    --color-card-hover: #d5c1a4; /* 8.17 */
+    --color-inset: #dcc8a9; /* 8.77 */
+    --color-brand-orange: #3b1f45;
+    --color-kupfer: #3b1f45;
+    --color-kupfer-dark: #3b1f45;
+    /* Status tones keep their paper values: 5.40 to 6.20 on Sand. */
+    --color-scene-ground: #e6d3af;
+    --color-scene-ink: #3b1f45;
+    --color-scene-mid: #d1733d; /* 2.30, shapes only */
+    --color-scene-mark: #3b1f45;
+    --color-scene-accent-text: #964305; /* 4.61 */
+    --color-scene-line: #3b1f45;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  /* Rost rules (binding): Creme on Rost is 4.80:1, only 0.30 above AA. Text
+     here is 17px or larger at weight 400 or more; no muted tier, no reduced
+     opacity, no hover tint (a hover underlines or inverts the pair); no
+     question card, status or pass chip, badge, form field, progress bar,
+     text-caption, text-label or text-xs; a meaningful shape uses Ocker hell. */
+  .plakat-autumn,
+  [data-plakat-page="autumn"] [data-plakat-band] {
+    --color-background: #944d44;
+    --color-foreground: #f0e1ca; /* 4.80: 17px+ and 400+ only */
+    --color-muted-foreground: #f0e1ca;
+    --color-muted: #f0e1ca;
+    --color-border: #f0e1ca;
+    --color-track: #b0796c; /* 1.70, decor */
+    --color-hairline: #b0796c;
+    --color-card: #944d44;
+    --color-card-hover: #944d44; /* a 10% tint drops Creme to 4.00: no tint */
+    --color-inset: #944d44; /* a 6% tint drops Creme to 4.29: no tint */
+    --color-brand-orange: #f0e1ca;
+    --color-kupfer: #f0e1ca;
+    --color-kupfer-dark: #f0e1ca;
+    /* No status tone reaches 4.5 on Rost. Status UI is forbidden in this
+       scope; the tokens fall back to the ink so an accident stays legible. */
+    --color-pass: #f0e1ca;
+    --color-destructive: #f0e1ca;
+    --color-risk-red: #f0e1ca;
+    --color-risk-yellow: #f0e1ca;
+    --color-risk-green: #f0e1ca;
+    --color-brand-sand: #f0e1ca;
+    --color-brand-amber: #f0e1ca;
+    --color-scene-ground: #944d44;
+    --color-scene-ink: #f0e1ca;
+    --color-scene-mid: #e4a057; /* 2.78, shapes only */
+    --color-scene-mark: #ebb16a; /* 3.24 */
+    --color-scene-accent-text: #f0e1ca;
+    --color-scene-line: #f0e1ca;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  /* Footer: the graphit band set in Butter. The ring stays #e07050 (5.79). */
+  .dark-section.plakat-footer {
+    --color-foreground: #fceeaf; /* Butter on graphit 15.78 */
+    --color-muted-foreground: #fceeaf;
+    --color-muted: #fceeaf;
+    --color-hairline: rgba(252, 238, 175, 0.16); /* about #39372d, 1.54, decor */
+    --color-track: rgba(252, 238, 175, 0.16);
+    --color-border: rgba(252, 238, 175, 0.4); /* about 3.45, control edge */
+    --color-scene-line: #fceeaf;
+  }
+
+  /* Werkzeichnung helpers. Tailwind recipes live in src/components/werk. */
+  /* Sentence-case label (kicker): Schiefer, 14px, 600, +0.02em. */
+  .kicker {
+    font-size: var(--text-label);
+    line-height: var(--text-label--line-height);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--color-muted-foreground);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Kopflinie: the 2px rule above a section head, in the scene line: ink on
+     paper, the scene's paper ink below a band, the band's ink inside one. */
+  .kopflinie {
+    border-top: 2px solid var(--color-scene-line);
+    padding-top: 1rem;
+  }
+
+  /* The poster's one line of small spaced caps, set once per scene as a
+     graphic element. Never a UI label or a button, and only inside a
+     .plakat-* scope. The DOM text stays sentence case, so screen readers and
+     copy-paste get normal words. */
+  .plakat-caps {
+    font-size: 0.875rem; /* 14px */
+    line-height: 1.3;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-scene-ink);
+  }
+  .plakat-autumn .plakat-caps,
+  [data-plakat-page="autumn"] [data-plakat-band] .plakat-caps {
+    font-size: 1.0625rem; /* 17px: the Rost rule */
+    letter-spacing: 0.12em;
+  }
+
+  /* Poster headline: the longest unbreakable word always fits its column.
+     --fit is the em width of that word (src/lib/plakat/fit.ts), set inline by
+     the component. The column must be an inline-size container (@container).
+     The 2.125rem floor holds the display size for the longest German words:
+     "Geschäftsberichte" on the Arial-metric fallback face still fits 288px
+     at 320 (the optional font display can leave a first visit on it). */
+  .poster-title {
+    font-size: max(2.125rem, min(var(--text-poster), calc(100cqi / var(--fit, 0.01))));
+    line-height: var(--text-poster--line-height);
+    letter-spacing: var(--text-poster--letter-spacing);
+    font-weight: 700;
+    text-wrap: balance;
+    padding-bottom: 0.06em; /* descenders survive line-height 0.92 in overflow-hidden bands */
   }
 
   .card-hover {

@@ -129,7 +129,7 @@ describe("EU AI Act English blocks 3 and 4", () => {
     expect(block3).toContain("not automatically a substantial modification");
     expect(block3).toContain("does not prescribe a universal interval");
     expect(block4).toContain("not proof of compliance or a general quality rating");
-    expect(block4).toContain("not a statutory checklist");
+    expect(block4).toContain("One way to implement Article 4");
     expect(block4).toContain("does not mandate one technology");
   });
 });

@@ -22,14 +22,14 @@ const LOCALES = [
   {
     locale: "de",
     prefix: "",
-    landingTitle: "Datenplattformen anhand ihrer Systemgrenzen entwerfen.",
+    landingTitle: "Datenplattformen entwerfen.",
     firstLessonTitle: "Der Daten-Stack von oben nach unten",
   },
   {
     locale: "en",
     prefix: "/en",
-    landingTitle: "Design data platforms from explicit system boundaries.",
-    firstLessonTitle: "The Stack, Top to Bottom",
+    landingTitle: "Design data platforms.",
+    firstLessonTitle: "The stack, top to bottom",
   },
 ] as const;
 
@@ -94,8 +94,7 @@ async function openLessonReference(page: Page) {
   const reference = page.locator("details[data-lesson-reference]");
   await expect(reference).toHaveCount(1);
   await expect(reference).toBeVisible();
-  await expect(reference).toHaveJSProperty("open", false);
-  await reference.locator(":scope > summary").click();
+  // The lesson text renders open by default (LessonReference).
   await expect(reference).toHaveJSProperty("open", true);
 }
 
@@ -172,7 +171,7 @@ test("Data Infrastructure direct lesson deep links hydrate concurrently in DE an
     {
       locale: "en",
       path: "/en/kurse/open-source/data-infrastructure/kurs/mental-model",
-      title: "The Stack, Top to Bottom",
+      title: "The stack, top to bottom",
     },
   ] as const;
   const contexts = await Promise.all(

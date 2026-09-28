@@ -72,19 +72,19 @@ const FLASHCARDS_COPY = new Map([
   ["Review", "Wiederholung"],
   [
     "Click or press Enter to reveal ↻",
-    "Klicken oder Eingabetaste drücken, um die Antwort aufzudecken ↻",
+    "Klicken oder Enter zum Aufdecken ↻",
   ],
   ["Answer", "Antwort"],
   [
     "Click or press Enter to flip back",
-    "Klicken oder Eingabetaste drücken, um zurückzudrehen",
+    "Klicken oder Enter zum Umdrehen",
   ],
   ["← Prev", "← Zurück"],
   ["Next →", "Weiter →"],
   ["No cards available.", "Keine Karten verfügbar."],
   [
     "Flashcard {current} of {total}. Activate to reveal the answer.",
-    "Lernkarte {current} von {total}. Aktivieren, um die Antwort aufzudecken.",
+    "Lernkarte {current} von {total}. Aktivieren deckt die Antwort auf.",
   ],
 ]);
 

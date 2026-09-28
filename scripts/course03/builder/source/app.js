@@ -188,7 +188,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
   const y = v => FLOOR - (v / MAX) * H;
   // table for screen readers
   const tb = $('#tub-table tbody');
-  tub.forEach((t, i) => tb.appendChild(el('tr', {}, `<th scope="row">${t.label}</th><td>${eur(t.end)}</td><td>${i ? signed(t.chg) : 'starting level'}</td>`)));
+  tub.forEach((t, i) => tb.appendChild(el('tr', {}, `<th scope="row">${esc(t.label)}</th><td>${eur(t.end)}</td><td>${i ? signed(t.chg) : 'starting level'}</td>`)));
 
   // static drawing
   const g = svg('g');
@@ -335,9 +335,9 @@ function makeTabs(list, items, onSelect, idPrefix) {
     const raw = $('#tub-answer').value.trim().replace(/[−–]/g, '-').replace(/[.,]\d{1,2}(?=\D*$)/, '').replace(/[^0-9-]/g, '');
     const n = parseInt(raw, 10);
     let html;
-    if (n === D.q2.netNew) { html = `${passChip()} ${int(D.q2.netNew)} = ${int(D.q2.end)} ${MINUS} ${int(D.q2.start)}: the gap between the March and June water lines.`; showGap = true; go(6); }
-    else if (n === D.q2.levelsSum) html = `${failChip()} ${int(n)} adds three levels. Levels never add across months.`;
-    else if (n === D.recorded.g02) html = `${failChip()} ${int(n)} is June's change minus March's change, the recorded export-lane answer. Changes are not levels.`;
+    if (n === D.q2.netNew) { html = `${passChip()} ${int(D.q2.netNew)} = ${int(D.q2.end)} ${MINUS} ${int(D.q2.start)}: the gap between the March and June levels.`; showGap = true; go(6); }
+    else if (n === D.q2.levelsSum) html = `${failChip()} ${int(n)} adds three levels, and levels never add across months.`;
+    else if (n === D.recorded.g02) html = `${failChip()} ${int(n)} is June's change minus March's change, the recorded export-lane answer.`;
     else if (n === D.q2.end) html = `${failChip()} ${int(n)} is the June level. The question asks for the change.`;
     else if (n === D.tub[6].chg) html = `${failChip()} ${int(n)} is June's change only. Add April and May too.`;
     else if (Number.isNaN(n)) html = 'Type a number, for example 12,345.';
@@ -346,7 +346,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
   });
   $('#tub-reveal').addEventListener('click', () => {
     showGap = true; go(6);
-    verdict.innerHTML = `${'<span class="chip chip--muted">Answer</span>'} ${int(D.q2.end)} ${MINUS} ${int(D.q2.start)} = ${int(D.q2.netNew)}, and ${D.tub.slice(4).map(t => signed(t.chg)).join(' ')} = ${int(D.q2.netNew)}. Both roads give the same gap.`;
+    verdict.innerHTML = `${'<span class="chip chip--muted">Answer</span>'} ${int(D.q2.end)} ${MINUS} ${int(D.q2.start)} = ${int(D.q2.netNew)}, and ${D.tub.slice(4).map(t => signed(t.chg)).join(' ')} = ${int(D.q2.netNew)}. Both ways give the same gap.`;
   });
   render(false);
   window.__m1Final = () => { showGap = true; cur = 6; render(false); };
@@ -384,7 +384,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
     selected = null;
     $$('.mcard', list).forEach(x => x.setAttribute('aria-pressed', 'false'));
     const done = Object.keys(placed).length;
-    say(live, ok ? `${c.name} in ${trayName[tray]}: matches. ${c.ok} ${done} of ${cards.length} placed.` : `${c.name} in ${trayName[tray]}: doesn't match. ${c.wrong[tray]} Pick the card again and try another tray.`);
+    say(live, ok ? `${c.name} in ${trayName[tray]}: matches. ${c.ok} ${done} of ${cards.length} placed.` : `${c.name} in ${trayName[tray]}: doesn't match. ${c.wrong[tray]} Try another tray.`);
   }));
   window.__m2Final = () => cards.forEach(c => { if (!placed[c.id]) { selected = c.id; $(`[data-tray-btn="${c.tray}"]`).click(); } });
 
@@ -450,7 +450,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
       guess.innerHTML = `Answer: ${D.tub.slice(4).map(t => eur(t.end)).join(' / ')}. Trace: <code>ending_mrr</code> 1.0.0, <code>analytics.mrr_summary_monthly</code>. ${passChip()}`;
     }
     readersEl.style.setProperty('--drawn', m === 'with' ? 1 : 0.15);
-    say(live, m === 'with' ? 'With definitions: all four blanks are filled and the answer matches.' : 'Without definitions: four blanks, four guesses, and a wrong answer.');
+    say(live, m === 'with' ? 'With definitions: the blanks are filled and the answer matches.' : 'Without definitions: four guesses and a wrong answer.');
   }
   $$('[data-sem]').forEach(b => b.addEventListener('click', () => setMode(b.dataset.sem, true)));
   const readerBtns = D.readers.map((r, i) => {
@@ -485,6 +485,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
     const g = seq.start();
     clearLook();
     ledger.textContent = '';
+    ledger.hidden = false;
     edges.forEach(e => e.classList.remove('is-drawn'));
     const lines = [
       ['analytics', `analytics.mrr_summary_monthly · month_start 2026-04-01 · ending_mrr_eur ${int(D.trace.april)}`],
@@ -517,7 +518,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
       clearLook();
       b.setAttribute('aria-pressed', 'true');
       lanes[t.layer].classList.add('is-look');
-      const note = el('p', { class: 'fixnote rise' }, `<strong>Fixed in ${t.layer}.</strong> ${esc(t.fix)} <span class="label" style="margin-top:4px">Caught by ${esc(t.test)}</span>`);
+      const note = el('p', { class: 'fixnote rise' }, `<strong>Fixed in ${esc(t.layer)}.</strong> ${esc(t.fix)} <span class="label" style="margin-top:4px">Caught by ${esc(t.test)}</span>`);
       body(t.layer).appendChild(note);
       say(live, `${t.label}: fixed in ${t.layer}. ${t.fix} Caught by ${t.test}.`);
     });
@@ -528,7 +529,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
     seq.stop();
     Object.values(lanes).forEach(l => l.classList.remove('is-look'));
     dirBox.innerHTML = e.target.checked
-      ? `<div class="direct rise"><p style="margin:0 0 6px"><span class="endcap" aria-hidden="true"></span><strong>Question → saas_bad.public.monthly_revenue</strong>, no layers, no names, no definition.</p><p class="mono" style="margin:0 0 6px">SELECT dt, SUM(amount) AS ending_mrr … → ${D.recorded.g01.map(eur).join(' / ')}</p><p style="margin:0 0 8px">${failChip()}</p><p style="margin:0">The sums are the true monthly changes: ${D.tub.slice(4).map(t => signed(t.chg)).join(' ')} = ${int(D.q2.netNew)}, exactly Q2 net new. The table was unlabelled, not wrong.</p></div>`
+      ? `<div class="direct rise"><p style="margin:0 0 6px"><span class="endcap" aria-hidden="true"></span><strong>Question → saas_bad.public.monthly_revenue</strong>, no layers, no names, no definition.</p><p class="mono" style="margin:0 0 6px">SELECT dt, SUM(amount) AS ending_mrr … → ${D.recorded.g01.map(eur).join(' / ')}</p><p style="margin:0 0 8px">${failChip()}</p><p style="margin:0">The sums are the true monthly changes: ${D.tub.slice(4).map(t => signed(t.chg)).join(' ')} = ${int(D.q2.netNew)}, exactly Q2 net new. The numbers were right; the label was missing.</p></div>`
       : '';
     say(live, e.target.checked ? `Direct route: the AI read the export and answered ${D.recorded.g01.map(eur).join(', ')}. Doesn't match.` : 'Direct route removed.');
   });
@@ -715,10 +716,10 @@ function makeTabs(list, items, onSelect, idPrefix) {
     if (e.target.checked) {
       line.animate([{ opacity: 1, maxHeight: '2em' }, { opacity: 0, maxHeight: '0em' }], { duration: T('--m-wall'), easing: EASE_CSS.out }).onfinish = () => line.classList.add('is-gone');
       if (!T('--m-wall')) line.classList.add('is-gone');
-      ddlLive.innerHTML = `<p class="broken stamp"><span><strong>Pooled churn is now impossible.</strong> You still see ${D.churn.pct} %, ${D.churn.pct} %, ${D.churn.pct} %, but nothing to weigh them by: ${D.churn.pooledChurned} of ${D.churn.pooledStart} cannot be recomputed, and nobody can tell 4 of 40 from 4 of 48.</span> ${failChip()}</p>`;
+      ddlLive.innerHTML = `<p class="broken stamp"><span><strong>Pooled churn is now impossible.</strong> You still see ${esc(D.churn.pct)} %, ${esc(D.churn.pct)} %, ${esc(D.churn.pct)} %, but nothing to weigh them by: ${esc(D.churn.pooledChurned)} of ${esc(D.churn.pooledStart)} cannot be recomputed, and nobody can tell 4 of 40 from 4 of 48.</span> ${failChip()}</p>`;
     } else {
       line.classList.remove('is-gone');
-      ddlLive.innerHTML = `<p class="fig__note">Restored: with <code>starting_accounts</code> beside the rate, the company figure is ${D.churn.pooledChurned} of ${D.churn.pooledStart} = ${D.churn.pct} %.</p>`;
+      ddlLive.innerHTML = `<p class="fig__note">Restored: with <code>starting_accounts</code> beside the rate, the company figure is ${esc(D.churn.pooledChurned)} of ${esc(D.churn.pooledStart)} = ${esc(D.churn.pct)} %.</p>`;
     }
   });
 
@@ -735,7 +736,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
   const reqs = D.requests, gatesEl = $('#m7-gates'), result = $('#m7-result'), packet = $('#m7-packet');
   const fs = $('#m7-reqs');
   reqs.forEach((r, i) => {
-    const lab = el('label', { class: 'req' }, `<input type="radio" name="m7req" value="${r.id}"${i === 0 ? ' checked' : ''}><span>${r.label}</span>`);
+    const lab = el('label', { class: 'req' }, `<input type="radio" name="m7req" value="${esc(r.id)}"${i === 0 ? ' checked' : ''}><span>${md(r.label)}</span>`);
     fs.appendChild(lab);
   });
   const gateNodes = D.gates.map(g => {
@@ -745,43 +746,43 @@ function makeTabs(list, items, onSelect, idPrefix) {
   const M = D.messages;
   function evaluate(id, o) {
     const S = (state, title, detail) => ({ state, title, detail });
-    const approved = `${D.tub.slice(4).map(t => eur(t.end)).join(' / ')}`;
+    const approved = esc(D.tub.slice(4).map(t => eur(t.end)).join(' / '));
     const roleLock = o.superuser;
     switch (id) {
       case 'ending': return {
         g: [S('pass', 'Routes', 'Approved question: ending_mrr 1.0.0 in analytics.mrr_summary_monthly.'), S('pass', 'Allows', 'One SELECT on an allowlisted, schema-qualified view.'), S('pass', 'Allows', 'Read-only session, 5 s timeout.'),
             roleLock ? S('nolock', 'No lock', 'Superuser: every privilege check is skipped.') : S('pass', 'Allows', "SELECT granted on 5 views. search_path is '', so an unqualified name fails with 42P01.")],
-        res: roleLock ? `<p><strong>Answer: ${approved}</strong> ${passChip()}</p><p style="margin:0">Same answer, no lock. Every other request now depends on instructions alone.</p>` : `<p><strong>Answer: ${approved}</strong> ${passChip()}</p><p style="margin:0">Trace: <code>ending_mrr</code> 1.0.0 · <code>analytics.mrr_summary_monthly</code> · loaded ${D.fresh.loaded}, ${D.fresh.clockAge} h old.</p>`,
+        res: roleLock ? `<p><strong>Answer: ${approved}</strong> ${passChip()}</p><p style="margin:0">Same answer, no lock. Every other request now depends on instructions alone.</p>` : `<p><strong>Answer: ${approved}</strong> ${passChip()}</p><p style="margin:0">Trace: <code>ending_mrr</code> 1.0.0 · <code>analytics.mrr_summary_monthly</code> · loaded ${esc(D.fresh.loaded)}, ${esc(D.fresh.clockAge)} h old.</p>`,
         nolock: roleLock };
       case 'howmuch': return o.ignore ? {
-        g: [S('pass', 'Guesses', 'Instructions ignored: it picks a meaning instead of asking.'), S('pass', 'Allows', 'The SQL is a valid SELECT on an approved view.'), S('pass', 'Allows', 'Read-only SELECT.'), S('pass', 'Allows', 'The grant is fine. A database cannot see an ambiguous question.')],
-        res: `<p><strong>Answered without asking back.</strong> ${gapChip('Gap')}</p><p style="margin:0">No lock can catch a wrong meaning. Only the ask-back rule and its test (C01) can.</p>`, gap: true }
+        g: [S('pass', 'Guesses', 'Instructions ignored: it picks a meaning instead of asking.'), S('pass', 'Allows', 'The SQL is a valid SELECT on an approved view.'), S('pass', 'Allows', 'Read-only SELECT.'), S('pass', 'Allows', 'The grant is fine; a database cannot see an ambiguous question.')],
+        res: `<p><strong>Answered without asking back.</strong> ${gapChip('Gap')}</p><p style="margin:0">Only the ask-back rule and its test (C01) catch a wrong meaning.</p>`, gap: true }
         : { g: [S('stop', 'Asks back', `C01: “${M.C01}”`), S('idle', 'Not reached', 'No SQL is written.'), S('idle', 'Not reached', ''), S('idle', 'Not reached', '')],
             res: `<p><strong>Ask back.</strong> ${passChip('PASS')}</p><p style="margin:0">“${esc(M.C01)}”</p>`, stopAt: 0 };
       case 'profit': return o.ignore ? {
         g: [S('pass', 'Guesses', 'Instructions ignored: it uses MRR as a profit proxy.'), S('pass', 'Allows', 'Valid SELECT on an approved view.'), S('pass', 'Allows', 'Read-only SELECT.'), S('pass', 'Allows', 'The grant is fine.')],
-        res: `<p><strong>Answered with the wrong meaning.</strong> ${gapChip('Gap')}</p><p style="margin:0">MRR is not profit. Grants cannot stop a wrong meaning; the refusal rule and test R01 do.</p>`, gap: true }
+        res: `<p><strong>Answered with the wrong meaning.</strong> ${gapChip('Gap')}</p><p style="margin:0">MRR is not profit. Only the refusal rule and test R01 stop this.</p>`, gap: true }
         : { g: [S('stop', 'Refuses', `R01: “${M.R01}”`), S('idle', 'Not reached', ''), S('idle', 'Not reached', ''), S('idle', 'Not reached', '')],
             res: `<p><strong>Refuse before any query.</strong> ${passChip('PASS')}</p><p style="margin:0">“${esc(M.R01)}”</p>`, stopAt: 0 };
       case 'emails': return o.ignore ? {
         g: [S('pass', 'Writes SQL', 'Instructions ignored: SELECT contact_email FROM core.accounts.'), S('stop', 'Blocks', 'core.accounts is not on the allowlist. Exit code 2.'),
             S('idle', 'Not reached', 'A SELECT would pass a read-only session.'), roleLock ? S('nolock', 'Would return rows', 'Superuser: no lock behind the hook.') : S('idle', 'Would deny', '42501 permission denied for schema core.')],
-        res: roleLock ? `<p><strong>Only the hook stopped it.</strong> ${gapChip('One guardrail left')}</p><p style="margin:0">Another client on this superuser login would read the emails. No lock.</p>` : `<p><strong>Blocked by the hook.</strong> ${passChip('PASS')}</p><p style="margin:0">Without the hook, for example from another client on the same login, PostgreSQL still denies: <code>42501 permission denied for schema core</code>. Two locks: refuse early, enforce anyway.</p>`, stopAt: 1, nolock: roleLock }
+        res: roleLock ? `<p><strong>Only the hook stopped it.</strong> ${gapChip('One guardrail left')}</p><p style="margin:0">Another client on this superuser login would read the emails. No lock.</p>` : `<p><strong>Blocked by the hook.</strong> ${passChip('PASS')}</p><p style="margin:0">From another client on the same login, PostgreSQL still denies: <code>42501 permission denied for schema core</code>.</p>`, stopAt: 1, nolock: roleLock }
         : { g: [S('stop', 'Refuses', `R02: “${M.R02}”`), S('idle', 'Not reached', ''), S('idle', 'Not reached', ''), roleLock ? S('nolock', 'No lock', 'Superuser: would return the emails.') : S('idle', 'Would deny', '42501 permission denied for schema core.')],
             res: `<p><strong>Refuse before any query.</strong> ${passChip('PASS')}</p><p style="margin:0">“${esc(M.R02)}”</p>`, stopAt: 0 };
       case 'core': return {
         g: [S('skip', 'Bypassed', 'Sent straight to the database: no instructions apply.'), S('skip', 'Bypassed', 'Not through Claude Code: the hook never runs.'), S('pass', 'Allows', 'A read-only SELECT is allowed.'),
             roleLock ? S('nolock', 'No lock', 'Superuser: contact_email is returned.') : S('stop', 'Denies', '42501 permission denied for schema core.')],
-        res: roleLock ? `<p><strong>Rows returned.</strong> ${failChip('No lock')}</p><p style="margin:0">A superuser connection defeats everything.</p>` : `<p><strong>Denied by PostgreSQL: SQLSTATE 42501.</strong> ${passChip('PASS')}</p><p style="margin:0">Case D01. The instructions were never asked; the grant decided.</p>`, stopAt: 3, nolock: roleLock };
+        res: roleLock ? `<p><strong>Rows returned.</strong> ${failChip('No lock')}</p><p style="margin:0">A superuser connection defeats everything.</p>` : `<p><strong>Denied by PostgreSQL: SQLSTATE 42501.</strong> ${passChip('PASS')}</p><p style="margin:0">Case D01: the grant decided.</p>`, stopAt: 3, nolock: roleLock };
       case 'write': return {
         g: [S('skip', 'Bypassed', 'Sent straight to the database.'), S('skip', 'Bypassed', 'The hook never runs.'),
-            roleLock ? S('pass', 'Allows', 'This login has no read-only default.') : S('stop', 'Stops', '25006 cannot execute CREATE TABLE in a read-only transaction. A default, not a lock.'),
+            roleLock ? S('pass', 'Allows', 'This login has no read-only default.') : S('stop', 'Stops', '25006 cannot execute CREATE TABLE in a read-only transaction.'),
             roleLock ? S('nolock', 'No lock', 'Superuser: the table is created.') : S('idle', 'Would deny', '42501 permission denied for schema analytics, even after BEGIN READ WRITE (B-W01).')],
-        res: roleLock ? `<p><strong>Table created.</strong> ${failChip('No lock')}</p><p style="margin:0">A superuser connection defeats everything.</p>` : `<p><strong>Stopped by the read-only default: SQLSTATE 25006.</strong> ${gapChip('Guardrail')}</p><p style="margin:0">Read-only is a default the reader can switch off. Behind it, the missing CREATE privilege denies with 42501 (B-W01).</p>`, stopAt: 2, nolock: roleLock };
+        res: roleLock ? `<p><strong>Table created.</strong> ${failChip('No lock')}</p><p style="margin:0">A superuser connection defeats everything.</p>` : `<p><strong>Stopped by the read-only default: SQLSTATE 25006.</strong> ${gapChip('Guardrail')}</p><p style="margin:0">The reader can switch that default off; behind it, the missing CREATE privilege denies with 42501 (B-W01).</p>`, stopAt: 2, nolock: roleLock };
       case 'temp': return {
         g: [S('skip', 'Bypassed', 'Sent straight to the database.'), S('skip', 'Bypassed', 'The hook never runs.'), S('skip', 'Switched off', 'BEGIN READ WRITE overrides the read-only default.'),
             roleLock ? S('nolock', 'No lock', 'Superuser: the temp table is created.') : o.temp ? S('nolock', 'No lock', 'TEMP left to PUBLIC: the temp table is created.') : S('stop', 'Denies', '42501 permission denied to create temporary tables.')],
-        res: (roleLock || o.temp) ? `<p><strong>Temp table created.</strong> ${failChip('No lock')}</p><p style="margin:0">${o.temp && !roleLock ? 'PostgreSQL grants TEMP on a new database to PUBLIC. Verified on PostgreSQL 16. Fix: REVOKE ALL ON DATABASE … FROM PUBLIC (B-T01).' : 'A superuser connection defeats everything.'}</p>` : `<p><strong>Denied by PostgreSQL: SQLSTATE 42501.</strong> ${passChip('PASS')}</p><p style="margin:0">Case B-T01. The read-only default was switched off; the missing TEMP privilege held.</p>`, stopAt: 3, nolock: roleLock || o.temp };
+        res: (roleLock || o.temp) ? `<p><strong>Temp table created.</strong> ${failChip('No lock')}</p><p style="margin:0">${o.temp && !roleLock ? 'PostgreSQL grants TEMP on a new database to PUBLIC. Verified on PostgreSQL 16. Fix: REVOKE ALL ON DATABASE … FROM PUBLIC (B-T01).' : 'A superuser connection defeats everything.'}</p>` : `<p><strong>Denied by PostgreSQL: SQLSTATE 42501.</strong> ${passChip('PASS')}</p><p style="margin:0">Case B-T01: the read-only default was off, and the missing TEMP privilege held.</p>`, stopAt: 3, nolock: roleLock || o.temp };
     }
   }
   const seq = sequence();
@@ -831,8 +832,8 @@ function makeTabs(list, items, onSelect, idPrefix) {
   function showFile(name, btn) {
     const f = D.files[name];
     $$('.file', tree).forEach(b => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
-    excerpt.innerHTML = `<div class="fade"><h3><span>${esc(name)}</span><span class="badge badge--${f.badge} stamp">${badgeWord[f.badge]}</span></h3><p style="font-size:17px">${esc(f.job)}</p><p class="fig__note">Kit file: <a data-kit-file><code>${esc(f.src)}</code></a>. ${esc(f.dest)}.</p><pre class="code${/\.(txt|md)$/.test(name) ? ' prose' : ''}">${esc(f.excerpt)}</pre></div>`;
-    excerpt.querySelector('a[data-kit-file]').setAttribute('href', './data-readiness-kit/builder/' + f.src);
+    excerpt.innerHTML = `<div class="fade"><h3><span>${esc(name)}</span><span class="badge badge--${esc(f.badge)} stamp">${esc(badgeWord[f.badge])}</span></h3><p style="font-size:17px">${esc(f.job)}</p><p class="fig__note">Kit file: <a data-kit-file><code>${esc(f.src)}</code></a>. ${esc(f.dest)}.</p><pre class="code${/\.(txt|md)$/.test(name) ? ' prose' : ''}">${esc(f.excerpt)}</pre></div>`;
+    excerpt.querySelector('a[data-kit-file]').setAttribute('href', './data-readiness-kit/builder/' + f.src.split('/').map(segment => encodeURIComponent(segment)).join('/'));
   }
   let credOn = false;
   makeTabs($('#m8-tabs'), D.setups, (s, _i, user) => {
@@ -846,7 +847,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
         const f = D.files[fn];
         const fli = el('li');
         if (user) fli.style.animation = `rise var(--m-rise) var(--ease-out) ${k++ * STAGGER()}ms both`;
-        const b = el('button', { class: 'file', type: 'button', 'aria-pressed': 'false' }, `<span class="fname">${esc(fn.split('/').pop())}</span><span class="badge badge--${f.badge}">${badgeWord[f.badge]}</span>`);
+        const b = el('button', { class: 'file', type: 'button', 'aria-pressed': 'false' }, `<span class="fname">${esc(fn.split('/').pop())}</span><span class="badge badge--${esc(f.badge)}">${esc(badgeWord[f.badge])}</span>`);
         b.addEventListener('click', () => showFile(fn, b));
         fli.appendChild(b); ul.appendChild(fli);
         if (!first) first = [fn, b];
@@ -864,7 +865,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
   }
   cred.addEventListener('click', () => {
     credOn = !credOn; applyCred();
-    say(live, credOn ? 'Credentials go in none of these files. Set FOLDLINE_READY_DSN in your shell or a secret manager; .mcp.json only names it. A Claude Project has no database connection, so it needs no credential at all.' : '');
+    say(live, credOn ? 'No file holds credentials. Set FOLDLINE_READY_DSN in your shell or a secret manager; .mcp.json only names it. A Claude Project needs none.' : '');
   });
 })();
 
@@ -876,7 +877,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
   const tick = (h, cls) => { const t = el('span', { class: 'tick ' + cls }); t.style.left = `calc(${at(h)} - 1px)`; bar.appendChild(t); return t; };
   tick(F.clockAge, ''); const warnTick = tick(F.warn, 'warn'); tick(F.whatIf, '');
   const invTick = tick(F.invented, 'inv'); invTick.hidden = true;
-  const lab = (h, text) => { const s = el('span', {}, text); s.style.left = at(h); labels.appendChild(s); return s; };
+  const lab = (h, text) => { const s = el('span'); s.textContent = text; s.style.left = at(h); labels.appendChild(s); return s; };
   lab(F.clockAge, `${F.clockAge} h`); lab(F.warn, `${F.warn} h warn`); lab(F.whatIf, `${F.whatIf} h`);
   const invLab = lab(F.invented, `${F.invented} h?`); invLab.hidden = true;
   const fill = $('.fill', bar);
@@ -896,10 +897,10 @@ function makeTabs(list, items, onSelect, idPrefix) {
     let cls = '', head, extra = '', withheld = false;
     if (quality.checked) { cls = 'is-block'; withheld = true; head = `<span>Refuse: written rule.</span> ${failChip('Blocked')}`; extra = `<p style="margin:0">“${esc(D.messages.QUALITY)}”</p>`; }
     else if (q3.checked) { cls = 'is-block'; withheld = true; head = `<span>Refuse: written rule.</span> ${failChip('Blocked')}`; extra = `<p style="margin:0">“${esc(D.messages.Q3)}” Q3 2026 is not finished at this clock.</p>`; }
-    else if (invent.checked && h > F.invented) { cls = 'is-block'; withheld = true; head = `<span>Refused by an invented ${F.invented} h rule.</span> ${failChip()}`; extra = `<p class="antinote">Anti-pattern AP-F02. Nobody wrote a ${F.invented} h rule, and the owner never agreed. The next run behaves differently, and no test can be written. FOLDLINE's <code>hard_expiry_hours</code> is NULL: warn, answer, escalate.</p>`; }
-    else if (over) { cls = 'is-warn'; head = `<span>Answer with a warning.</span> ${gapChip('Stale, disclosed')}`; extra = `<p style="margin:0">“Data loaded at ${F.loaded}, ${h} h before the evaluation clock ${clk}. The warning threshold is ${F.warn} h.” Escalate to <code>revenue_analytics</code>; invent nothing.</p>`; }
-    else { head = `<span>Fresh: answer.</span> ${'<span class="chip chip--muted">Fresh</span>'}`; extra = `<p style="margin:0">Loaded ${F.loaded}, ${h} h before the clock ${clk}. Still stated in the trace.</p>`; }
-    const vals = D.tub.slice(4).map(t => eur(t.end)).join(' / ');
+    else if (invent.checked && h > F.invented) { cls = 'is-block'; withheld = true; head = `<span>Refused by an invented ${esc(F.invented)} h rule.</span> ${failChip()}`; extra = `<p class="antinote">Anti-pattern AP-F02. Nobody wrote or approved a ${esc(F.invented)} h rule, so the next run can behave differently and no test can be written. FOLDLINE's <code>hard_expiry_hours</code> is NULL: warn, answer, escalate.</p>`; }
+    else if (over) { cls = 'is-warn'; head = `<span>Answer with a warning.</span> ${gapChip('Stale, disclosed')}`; extra = `<p style="margin:0">“Data loaded at ${esc(F.loaded)}, ${esc(h)} h before the evaluation clock ${esc(clk)}. The warning threshold is ${esc(F.warn)} h.” Escalate to <code>revenue_analytics</code>; invent nothing.</p>`; }
+    else { head = `<span>Fresh: answer.</span> ${'<span class="chip chip--muted">Fresh</span>'}`; extra = `<p style="margin:0">Loaded ${esc(F.loaded)}, ${esc(h)} h before the clock ${esc(clk)}. Still stated in the trace.</p>`; }
+    const vals = esc(D.tub.slice(4).map(t => eur(t.end)).join(' / '));
     card.innerHTML = `<div class="answer-card__banner ${cls} rise">${head}</div><div class="answer-card__body${withheld ? ' is-withheld' : ''}"><p class="vals">${vals}</p>${withheld ? '<p class="fig__note">Not answered.</p>' : ''}${extra}</div>`;
   }
   [range, q3, quality, invent].forEach(i => i.addEventListener(i === range ? 'input' : 'change', render));
@@ -950,7 +951,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
     dbTotal.textContent = inval ? 'Receipts invalidated by definition 2.0.0. Re-run both planes.' : total;
     dbTotal.classList.toggle('inval', inval);
     vBtn.textContent = inval ? 'Back to definition 1.0.0' : 'Change the metric version to 2.0.0';
-    say(live, inval ? 'Metric version changed to 2.0.0. Every receipt in both planes is invalidated. Re-run the database checks and the AI cases.' : 'Back to definition 1.0.0: the old receipts describe this system again.');
+    say(live, inval ? 'Metric version 2.0.0 invalidates every receipt in both planes. Re-run the database checks and the AI cases.' : 'Back to definition 1.0.0: the old receipts describe this system again.');
   });
 })();
 
@@ -999,7 +1000,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
     yb.setAttribute('aria-expanded', open ? 'true' : 'false');
     if (open && !card.firstChild) {
       card.className = 'yours rise';
-      card.innerHTML = `<h3>Your four blanks</h3><p class="fig__note">Kept only in this page's memory. Nothing is saved or sent, and it disappears when you leave. Use invented examples, not employer data.</p><div class="field" style="margin-bottom:10px"><label for="y-q">Your question: period, shape, grain</label><input type="text" id="y-q" autocomplete="off"></div><div class="grid4">${D.blanks.map((b, k) => `<div class="field"><label for="y-b${k}">${esc(b.label)}</label><input type="text" id="y-b${k}" autocomplete="off"></div>`).join('')}</div><div class="field" style="margin-top:10px"><label for="y-w">One wrong answer an AI could give, and its arithmetic</label><input type="text" id="y-w" autocomplete="off"></div><p style="margin-top:12px"><button class="btn btn--small" type="button" id="y-clear">Clear</button></p>`;
+      card.innerHTML = `<h3>Your four blanks</h3><p class="fig__note">Nothing is saved or sent; it disappears when you leave. Use invented examples, not employer data.</p><div class="field" style="margin-bottom:10px"><label for="y-q">Your question: period, shape, grain</label><input type="text" id="y-q" autocomplete="off"></div><div class="grid4">${D.blanks.map((b, k) => `<div class="field"><label for="y-b${k}">${esc(b.label)}</label><input type="text" id="y-b${k}" autocomplete="off"></div>`).join('')}</div><div class="field" style="margin-top:10px"><label for="y-w">One wrong answer an AI could give, and its arithmetic</label><input type="text" id="y-w" autocomplete="off"></div><p style="margin-top:12px"><button class="btn btn--small" type="button" id="y-clear">Clear</button></p>`;
       $('#y-clear').addEventListener('click', () => $$('input', card).forEach(i => { i.value = ''; }));
     }
     if (open) $('#y-q').focus();
@@ -1012,7 +1013,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
   const done = new Set();
   const nodes = D.steps.map((s, i) => {
     const li = el('li', { class: 'step' });
-    li.innerHTML = `<span class="step__n" aria-hidden="true">${s.n}</span><details${i === 0 ? ' open' : ''}><summary><span><span class="sr-only">Step ${s.n}. </span>${esc(s.title)}</span><span class="who">${esc(s.who)}</span></summary><div class="step__body"><dl><dt>Output</dt><dd>${md(s.output)}</dd><dt>Done when</dt><dd>${md(s.done)}</dd><dt>FOLDLINE</dt><dd>${md(s.foldline)}</dd><dt>Prevents</dt><dd>${md(s.prevents)}</dd></dl><label class="toggle"><input type="checkbox" data-step="${s.n}"> Done when met</label>${i < D.steps.length - 1 ? ` <button class="btn btn--small no-print" type="button" data-next="${i + 1}">Next step</button>` : ''}</div></details>`;
+    li.innerHTML = `<span class="step__n" aria-hidden="true">${esc(s.n)}</span><details${i === 0 ? ' open' : ''}><summary><span><span class="sr-only">Step ${esc(s.n)}. </span>${esc(s.title)}</span><span class="who">${esc(s.who)}</span></summary><div class="step__body"><dl><dt>Output</dt><dd>${md(s.output)}</dd><dt>Done when</dt><dd>${md(s.done)}</dd><dt>FOLDLINE</dt><dd>${md(s.foldline)}</dd><dt>Prevents</dt><dd>${md(s.prevents)}</dd></dl><label class="toggle"><input type="checkbox" data-step="${esc(s.n)}"> Done when met</label>${i < D.steps.length - 1 ? ` <button class="btn btn--small no-print" type="button" data-next="${i + 1}">Next step</button>` : ''}</div></details>`;
     stepsEl.appendChild(li); return li;
   });
   const dets = nodes.map(n => $('details', n));
@@ -1034,7 +1035,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
     const weakNames = D.readyGates.filter((_, i) => rank[states[i]] === weakest).map(g => g.name);
     const v = weakest === 0 ? 'Not ready' : weakest === 1 ? 'Limited pilot, not signed off' : 'Bounded ready';
     const why = weakest === 0 ? `Unproven: ${weakNames.join(', ')}.` : weakest === 1 ? `Documented but not proven: ${weakNames.join(', ')}.` : 'Every gate is proven for the declared question and surface.';
-    verdict.innerHTML = `<span class="label">Verdict</span><span class="vd-v ${animate ? 'stamp' : ''}">${v}</span><p style="margin:6px 0 0;font-size:15px">${esc(why)}</p>` + (example ? `<p style="margin:8px 0 0;font-size:15px"><strong>Worked example: FOLDLINE.</strong> The database checks pass and the values matched 3 of 3, but the runs cited the definition 0 of 3 and there was one run per question. Step 11 is not met.</p>` : '');
+    verdict.innerHTML = `<span class="label">Verdict</span><span class="vd-v ${animate ? 'stamp' : ''}">${v}</span><p style="margin:6px 0 0;font-size:15px">${esc(why)}</p>` + (example ? `<p style="margin:8px 0 0;font-size:15px"><strong>FOLDLINE:</strong> the database checks pass and values matched 3 of 3, but the runs cited the definition 0 of 3, one run per question. Step 11 is not met.</p>` : '');
   }
   $('#m12-example').addEventListener('click', () => { done.clear(); D.foldlineDone.forEach(n => done.add(n)); update(true, true); dets[11].open = true; reveal(verdict); });
   $('#m12-clear').addEventListener('click', () => { done.clear(); update(true); });
@@ -1050,7 +1051,7 @@ function makeTabs(list, items, onSelect, idPrefix) {
   let group = 'All';
   const items = aps.map(a => {
     const li = el('li', { 'data-group': a.group });
-    li.innerHTML = `<details class="ap"><summary><span class="apid">${esc(a.id)}</span><span class="grp">${esc(a.group)}</span><span class="sym">${md(a.symptom)}</span></summary><div class="ap__body"><dl><dt>Bad</dt><dd class="ap__bad"><span>${md(a.instance)}</span></dd><dt>Why</dt><dd>${md(a.why)}</dd><dt>Good</dt><dd>${md(a.fix)}</dd><dt>Caught by</dt><dd>${md(a.caught)}</dd><dt>Module</dt><dd><a href="#${a.anchor}">${esc(a.module)}</a></dd></dl></div></details>`;
+    li.innerHTML = `<details class="ap"><summary><span class="apid">${esc(a.id)}</span><span class="grp">${esc(a.group)}</span><span class="sym">${md(a.symptom)}</span></summary><div class="ap__body"><dl><dt>Bad</dt><dd class="ap__bad"><span>${md(a.instance)}</span></dd><dt>Why</dt><dd>${md(a.why)}</dd><dt>Good</dt><dd>${md(a.fix)}</dd><dt>Caught by</dt><dd>${md(a.caught)}</dd><dt>Module</dt><dd><a href="#${esc(a.anchor)}">${esc(a.module)}</a></dd></dl></div></details>`;
     li._text = [a.id, a.group, a.symptom, a.instance, a.why, a.fix, a.caught].join(' ').toLowerCase();
     list.appendChild(li); return li;
   });

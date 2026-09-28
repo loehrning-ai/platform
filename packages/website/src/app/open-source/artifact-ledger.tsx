@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, ExternalLink } from "lucide-react";
+import { cx } from "@/components/werk/cx";
 import {
   ArtifactPreviewStack,
   type ArtifactPreviewFrame,
@@ -81,13 +82,10 @@ export function ArtifactLedger({ locale }: { readonly locale: Locale }) {
         >
           {copy.heading}
         </h2>
-        <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
-          {copy.entryCount(OPEN_SOURCE_ARTIFACTS.length)}
-        </p>
       </div>
 
       <ol>
-        {OPEN_SOURCE_ARTIFACTS.map((registryArtifact, index) => {
+        {OPEN_SOURCE_ARTIFACTS.map((registryArtifact) => {
           const artifact = localizeOpenSourceArtifact(registryArtifact, locale);
           const titleId = `open-source-artifact-${artifact.slug}`;
           const frames = softwarePreviewFrames(artifact, copy.previewLabels);
@@ -121,10 +119,9 @@ export function ArtifactLedger({ locale }: { readonly locale: Locale }) {
                       className="order-2 flex min-w-0 flex-col border-t border-foreground p-4 sm:p-6 lg:border-l lg:border-t-0"
                       style={{ background: "var(--color-paper, #f8f3e8)" }}
                     >
+                      {/* The hub states the count once, above the list; the
+                          card names only its kind. */}
                       <p className="font-mono text-xs font-bold uppercase tracking-[0.11em] text-brand-orange">
-                        <span className="mr-3 tabular-nums">
-                          {String(index + 1).padStart(2, "0")}
-                        </span>
                         {sharedCopy.kinds[artifact.kind]}
                       </p>
                       <h3
@@ -160,11 +157,10 @@ export function ArtifactLedger({ locale }: { readonly locale: Locale }) {
                       </p>
 
                       <dl
-                        className="mt-4 grid grid-cols-2 border-l border-t border-foreground text-sm sm:mt-5 sm:grid-cols-4"
+                        className="mt-4 grid grid-cols-2 border-l border-t border-foreground text-sm sm:mt-5 sm:grid-cols-3"
                         data-open-source-fact-rail
                       >
                         {[
-                          [copy.facts.kind, sharedCopy.kinds[artifact.kind]],
                           [
                             copy.facts.delivery,
                             artifactDelivery(artifact, locale),
@@ -174,7 +170,12 @@ export function ArtifactLedger({ locale }: { readonly locale: Locale }) {
                         ].map(([label, value], factIndex) => (
                           <div
                             key={label}
-                            className="min-w-0 border-b border-r border-foreground p-3"
+                            className={cx(
+                              "min-w-0 border-b border-r border-foreground p-3",
+                              // Three facts on a two-column phone rail: the
+                              // last spans the row so no empty cell remains.
+                              factIndex === 2 && "max-sm:col-span-2",
+                            )}
                             style={{
                               background: FACT_BACKGROUNDS[factIndex],
                             }}

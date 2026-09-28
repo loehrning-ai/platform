@@ -27,7 +27,7 @@ const STAGES: readonly RiskStage[] = [
     title: "Begrenztes Risiko",
     range: "Art. 50 · Transparenzpflichten ab 2. August 2026",
     desc:
-      "Erlaubt, aber kennzeichnungspflichtig: Chatbots müssen als KI erkennbar sein, generierte Inhalte maschinenlesbar markiert, Deepfakes offengelegt werden. Details im Rechte-Abschnitt.",
+      "Erlaubt, aber kennzeichnungspflichtig: Chatbots müssen als KI erkennbar sein, generierte Inhalte maschinenlesbar markiert, Deepfakes offengelegt werden.",
   },
   {
     stage: 4,
@@ -49,9 +49,9 @@ export function Risikoklassen() {
         Vier Stufen und <span className="em">ein Sonderfall.</span>
       </h2>
       <p className="dek">
-        Es zählt der Einsatzzweck, nicht die Technik. Dieselbe Modellfamilie
-        kann in einem Produkt harmlos sein und in einem anderen unter die
-        strengsten Pflichten fallen.
+        Es zählt der Einsatzzweck: Dieselbe Modellfamilie kann in einem
+        Produkt harmlos sein und in einem anderen unter die strengsten
+        Pflichten fallen.
       </p>
 
       <div className="ladder reveal">
@@ -77,19 +77,18 @@ export function Risikoklassen() {
           <p>
             Der Sonderfall sind <strong>KI-Modelle mit allgemeinem
             Verwendungszweck</strong> (GPAI), also die Modelle hinter
-            Werkzeugen wie ChatGPT, Claude oder Gemini. Sie werden nicht
-            nach Einsatzzweck sortiert, sondern haben ein eigenes Kapitel:
-            Ihre Anbieter müssen seit dem 2. August 2025 technische
+            Werkzeugen wie ChatGPT, Claude oder Gemini. Für sie gilt
+            unabhängig vom Einsatzzweck ein eigenes Kapitel: Ihre Anbieter
+            müssen seit dem 2. August 2025 technische
             Dokumentation bereitstellen, das EU-Urheberrecht achten und eine
             Zusammenfassung der Trainingsdaten veröffentlichen. (Quelle: EU
             AI Act Art. 51 bis 56, Art. 113)
           </p>
           <p>
-            Zur Umsetzung hat die Kommission am 10. Juli 2025 einen
-            freiwilligen GPAI-Verhaltenskodex veröffentlicht, den unter
-            anderem OpenAI, Anthropic, Google und Microsoft unterzeichnet
-            haben. Er hilft beim Nachweis, ersetzt aber keine
-            Konformitätsprüfung. Durchsetzen kann die Kommission die
+            Am 10. Juli 2025 veröffentlichte die Kommission einen freiwilligen
+            GPAI-Verhaltenskodex, den unter anderem OpenAI, Anthropic, Google
+            und Microsoft unterzeichnet haben. Er hilft beim Nachweis, ersetzt
+            aber keine Konformitätsprüfung. Durchsetzen kann die Kommission die
             GPAI-Pflichten ab dem 2. August 2026. (Quelle: Europäische
             Kommission, General-Purpose AI Code of Practice, 10. Juli 2025)
           </p>
@@ -99,8 +98,7 @@ export function Risikoklassen() {
             <b>Einordnung im Alltag</b>
             Ein FAQ-Chatbot ist Stufe 3.
             Dieselbe Sprach-KI, die Bewerbungen
-            bewertet, ist Stufe 2. Der Zweck
-            entscheidet, nicht das Modell.
+            bewertet, ist Stufe 2.
           </div>
           <div className="margin-note">
             <b>GPAI · Art. 51 bis 56</b>

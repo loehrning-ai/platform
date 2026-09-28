@@ -10,18 +10,24 @@ const COPY = {
   de: {
     open: "Ohne Lernkonto",
     recommendation: "Offener Einstieg ohne Lernkonto",
+    recommendationShort: "Ohne Konto",
     unavailable: "Hier nicht verfügbar",
+    groupUnavailable: "hier nicht verfügbar",
     overviewAction: "Hier nicht verfügbar · Kursübersicht",
-    alternative: "Offene Alternative ohne Lernkonto: Claude Course",
+    alternative: "Offene Alternative ohne Lernkonto: Claude-Kurs",
     foundation: "KI-Führerschein",
+    openCourse: "Claude-Kurs",
   },
   en: {
     open: "No account needed",
     recommendation: "Open starting point without an account",
+    recommendationShort: "No account",
     unavailable: "Unavailable here",
+    groupUnavailable: "unavailable here",
     overviewAction: "Unavailable here · Course overview",
     alternative: "Open alternative without an account: Claude Course",
-    foundation: "AI Fundamentals",
+    foundation: "Everyday AI Literacy",
+    openCourse: "Claude Course",
   },
 } as const;
 
@@ -123,14 +129,14 @@ for (const locale of ["de", "en"] as const) {
         await expect(card).toHaveAttribute("data-home-continue-card", "start");
         await expect(card).toHaveAttribute("data-home-course-access", "open");
         await expect(card).toHaveAttribute("href", lesson);
-        await expect(card).toContainText("Claude Course");
+        await expect(card).toContainText(copy.openCourse);
         const disclosure = card.locator("[data-home-access-label]");
         await expect(disclosure).toHaveText(copy.open);
         // No scroll before these checks: the first decision must already fit.
         await expectReadable(disclosure);
         await expectTapTarget(card);
         const cardBox = await card.boundingBox();
-        expect(cardBox!.height).toBe(76);
+        expect(cardBox!.height).toBe(56);
         await page.screenshot({
           path: testInfo.outputPath("home-before-tap.png"),
         });
@@ -153,7 +159,7 @@ for (const locale of ["de", "en"] as const) {
         await openHydrated(page, atlasRoute);
         const proof = page.getByTestId("next-proof");
         await expect(
-          proof.getByRole("heading", { name: "Claude Course" }),
+          proof.getByRole("heading", { name: copy.openCourse }),
         ).toBeVisible();
         await expect(
           proof.getByText(copy.recommendation, { exact: true }),
@@ -168,15 +174,32 @@ for (const locale of ["de", "en"] as const) {
           "data-course-access",
           "unavailable",
         );
+        // Every course in this group shares the state, so on a phone the
+        // group head discloses it once instead of each row repeating it.
         await expect(
           unavailable.locator("[data-course-access-label]"),
-        ).toHaveText(copy.unavailable);
+        ).toHaveCount(0);
+        const groupAccess = unavailable
+          .locator("xpath=ancestor::section[1]")
+          .locator("[data-group-access]");
+        await expect(groupAccess).toBeVisible();
+        await expect(groupAccess).toContainText(copy.groupUnavailable);
+        // The state words wrap as one unit; check that unit, not the inline
+        // wrapper whose " · " may end the line above.
+        const groupState = groupAccess.getByText(copy.groupUnavailable, {
+          exact: true,
+        });
+        await groupState.scrollIntoViewIfNeeded();
+        await settleFontsAndFrame(page);
+        await expectReadable(groupState);
         const action = proof.getByRole("link");
         await expect(action).toHaveAttribute("href", lesson);
         await proof.scrollIntoViewIfNeeded();
         await settleFontsAndFrame(page);
+        // Below sm the card prints the short label on one line; the full
+        // label stays in the accessible text (asserted above).
         await expectReadable(
-          proof.getByText(copy.recommendation, { exact: true }),
+          proof.getByText(copy.recommendationShort, { exact: true }),
         );
         await expectReadable(action.locator("span").first());
         await expectTapTarget(action);

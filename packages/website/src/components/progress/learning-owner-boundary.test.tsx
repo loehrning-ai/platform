@@ -95,7 +95,7 @@ describe("<LearningOwnerBoundary>", () => {
     expect(main).not.toHaveAttribute("aria-busy");
     expect(main).not.toHaveAttribute("data-learning-owner-unresolved");
     expect(
-      screen.getByRole("region", { name: "Fortschritt bleibt getrennt." }),
+      screen.getByRole("region", { name: "Dein Fortschritt wird noch nicht gespeichert." }),
     ).toBeVisible();
     expect(main).toContainElement(screen.getByRole("region"));
     expect(screen.getByRole("region")).toHaveClass("relative");
@@ -117,9 +117,9 @@ describe("<LearningOwnerBoundary>", () => {
     renderBoundary(<button type="button">Complete lesson</button>, "en");
 
     expect(
-      screen.getByRole("region", { name: "Progress stays isolated." }),
+      screen.getByRole("region", { name: "Your progress is not saved yet." }),
     ).toHaveTextContent(
-      "Saving starts only after account verification or your local choice.",
+      "Saving starts once your account is checked or you continue locally.",
     );
     expect(
       screen.getByRole("button", { name: "Continue locally" }),
@@ -157,7 +157,7 @@ describe("<LearningOwnerBoundary>", () => {
 
     expect(screen.getByRole("main")).not.toHaveAttribute("inert");
     expect(
-      screen.getByRole("region", { name: "Progress stays isolated." }),
+      screen.getByRole("region", { name: "Your progress is not saved yet." }),
     ).toBeVisible();
   });
 

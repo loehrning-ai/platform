@@ -83,11 +83,9 @@ export function SocraticTutorWidget({
       >
         {messages.length === 0 && (
           <p className="text-[13.5px] italic text-muted-foreground">
-            {german ? "Notiere einen Gedanken zu " : "Add a note about "}
+            {german ? "Thema: " : "Topic: "}
             <strong className="text-foreground">{topic}</strong>.
-            {german
-              ? " Die lokale Regel wählt anschließend eine Rückfrage."
-              : " The local rule then selects a follow-up question."}
+            {german ? " Notiere einen Gedanken dazu." : " Add a note."}
           </p>
         )}
         {messages.map((message, i) => (

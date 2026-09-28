@@ -26,7 +26,7 @@ const BLOCKS: readonly BlockSummary[] = [
 
 const COURSE_HUBS = [
   {
-    label: "AI Fundamentals",
+    label: "Everyday AI Literacy",
     slug: "ki-fuehrerschein",
     Component: AiFundamentalsHub,
   },

@@ -114,7 +114,7 @@ function verdictFor(detections: readonly Detection[]): {
     return {
       color: "text-destructive",
       tag: "BLOCKIERT",
-      sub: "PII darf dein Netzwerk nicht verlassen",
+      sub: "Personenbezogene Daten vor dem Teilen prüfen",
       borderColor: "border-l-destructive",
     };
   }
@@ -237,11 +237,11 @@ export function ComplianceDemo(): JSX.Element {
         <DemoOverline>Compliance-Sandbox</DemoOverline>
         <h3 className="mt-2 text-[24px] font-bold tracking-[-0.03em] text-foreground md:text-[26px]">
           Prompt-Scanner{" "}
-          <span className="text-brand-orange">für DSGVO &amp; IP.</span>
+          <span className="text-brand-orange">für DSGVO und IP</span>
         </h3>
         <p className="mt-1.5 text-[13px] text-muted-foreground">
-          Regelbasierte Token-Klassifikation, Beispielregeln, lokal simuliert.
-          Keine PII verlässt dein Netzwerk unkontrolliert.
+          Feste Beispielregeln markieren offensichtliche personenbezogene
+          Daten, direkt im Browser. Es wird nichts gesendet.
         </p>
       </div>
 
@@ -316,7 +316,7 @@ export function ComplianceDemo(): JSX.Element {
           ))}
         </div>
         <div className="font-mono text-[12px] text-muted-foreground">
-          {detections.length} Treffer · 42ms · local LLM
+          {detections.length} Treffer · im Browser · lokale Regeln
         </div>
       </div>
 

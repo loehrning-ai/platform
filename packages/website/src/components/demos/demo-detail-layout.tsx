@@ -1,22 +1,39 @@
+import type { CSSProperties } from "react";
 import Link from "next/link";
-import { ArrowLeft, ArrowUpRight, BookOpen } from "lucide-react";
-import type { Demo } from "@/lib/demos";
+import { demoName, type Demo } from "@/lib/demos";
 import {
   DEMO_CATEGORY_LABELS,
   DEMO_LEVEL_LABELS_BY_LOCALE,
   getNextDemoForLocale,
 } from "@/lib/demos-localization";
-import { DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
+import { DEMO_EVIDENCE_COPY, DEMOS_PAGE_COPY } from "@/lib/demos-ui-copy";
 import { books } from "@/lib/books";
 import { COURSE_CATALOG } from "@/lib/courses/catalog";
 import { localizeCatalogCourse } from "@/lib/courses/catalog-copy";
 import { getDemoCopy } from "@/lib/demos-copy";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
-import { cn } from "@/lib/utils";
+import { ArrowGlyph, SectionHead } from "@/components/werk";
+import { PlakatBand } from "@/components/plakat";
+import { posterTitleFallbackStyle } from "@/lib/plakat/fit";
 import { DemoShell } from "./demo-shell";
-import { AnimatedMetaTable } from "./animated-meta-table";
-import { EvidenceBadge } from "./evidence-badge";
 import { DemoCta } from "./demo-cta";
+import {
+  DemoNotesDisclosure,
+  DemoNotesPanel,
+  DemoNotesToggle,
+} from "./demo-notes-disclosure";
+
+/**
+ * The demo title takes the fallback headroom (POSTER_FALLBACK_HEADROOM).
+ * Titles such as "Vertragsassistent." are one long word that runs to the
+ * column edge; on a first visit (font-display: optional) the Arial-metric
+ * fallback face sets about 4.4% wider than Loehrning Sans and would be
+ * clipped by the band. A wider system face still cannot clip: the H1 breaks
+ * the word at the column edge (break-words).
+ */
+function demoTitleStyle(name: string): CSSProperties {
+  return posterTitleFallbackStyle(name);
+}
 
 /**
  * Derive a human-readable lesson label from a lessonId string.
@@ -65,6 +82,7 @@ export function DemoDetailLayout({
 }) {
   const copy = getDemoCopy(demo.slug, locale);
   const pageCopy = DEMOS_PAGE_COPY[locale].detail;
+  const tileCopy = DEMOS_PAGE_COPY[locale].tile;
   const next = getNextDemoForLocale(demo, locale);
   const baseCourse = COURSE_CATALOG.find(
     (item) => item.slug === demo.courseSlug,
@@ -76,7 +94,6 @@ export function DemoDetailLayout({
     .map((slug) => books.find((book) => book.id === slug))
     .filter((book): book is (typeof books)[number] => book !== undefined);
 
-  const stufe = pageCopy.stages[demo.level];
   const lessonLink =
     demo.lessonId && course
       ? lessonHref(demo.courseSlug, course.href, demo.lessonId)
@@ -87,295 +104,268 @@ export function DemoDetailLayout({
   const catalogHref = localizeHref("/demos", locale);
   const categoryLabel = DEMO_CATEGORY_LABELS[locale][demo.category];
   const levelLabel = DEMO_LEVEL_LABELS_BY_LOCALE[locale][demo.level];
+  const evidenceLabel = DEMO_EVIDENCE_COPY[locale][demo.evidenceMode].label;
+  const actionValue = pageCopy.actionValue[demo.externalActionMode];
   const localizedLessonLink = localizeHref(lessonLink, locale);
-  const localizedCourseLink = localizeHref(
-    course?.startHref ?? "/kurse",
-    locale,
-  );
-  // The bento-grid signature sizes (demo-tile.tsx: s-hero/s-wide are the
-  // horizontally prominent tiles) get the taller title on the detail page
-  // too, so the "this one's the flagship" signal survives the click-through.
-  const isSignature = demo.size === "s-hero" || demo.size === "s-wide";
+  const name = demoName(demo);
+  const nextName = demoName(next);
+  // Blueprint 7.6: four rows, values in body. The data row says once what
+  // is invented; the evidence line in the engine header does not repeat it.
+  // The actions row takes a short value ("Simuliert"), because its label
+  // already says "Externe Aktionen".
+  // Below sm the execution and actions rows drop out: the evidence line in
+  // the engine header already states both.
+  const notesPanels =
+    demo.riskNotes.length > 0 ? ["checks", "run"] : ["run"];
+  const runRows = [
+    { label: pageCopy.dataLabel, value: demo.syntheticDataLabel, phone: true },
+    { label: pageCopy.executionLabel, value: evidenceLabel, phone: false },
+    { label: pageCopy.actionsLabel, value: actionValue, phone: false },
+    ...(copy
+      ? [{ label: pageCopy.stopLabel, value: copy.stop, phone: true }]
+      : []),
+  ];
 
   return (
-    <article className="min-h-[100svh] overflow-x-clip" data-demo-detail-layout>
-      <header className="border-b border-border bg-background px-4 sm:px-6 md:px-10">
-        <div className="mx-auto max-w-7xl">
-          <div className="flex min-h-11 flex-wrap items-center justify-between gap-2 font-mono text-xs uppercase tracking-[0.11em] text-muted-foreground sm:tracking-[0.14em]">
-            <Link
-              href={catalogHref}
-              className="inline-flex min-h-11 items-center gap-2 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
-            >
-              <ArrowLeft size={14} strokeWidth={2.5} aria-hidden="true" />
-              {pageCopy.allExamples}
-            </Link>
-            <span className="break-words text-right">
-              {pageCopy.example} {demo.n} · {categoryLabel} · {levelLabel}
-            </span>
-          </div>
-
-          <div className="grid gap-2 border-t border-border py-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:gap-4">
-            <div className="flex min-w-0 items-start gap-3">
-              <BookOpen
-                size={16}
-                strokeWidth={2}
-                className="mt-0.5 shrink-0 text-brand-orange"
-                aria-hidden="true"
-              />
-              <div className="min-w-0">
-                <div className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground">
-                  {pageCopy.courseContext}
-                </div>
-                <div className="mt-1 break-words text-sm text-foreground">
-                  <span className="font-bold text-brand-orange">
-                    {course ? course.title : demo.courseSlug}
-                  </span>
-                  {lessonDisplay ? ` · ${lessonDisplay}` : ""} ·{" "}
-                  {pageCopy.pathway} · {stufe}
-                </div>
-              </div>
-            </div>
-            <Link
-              href={localizedLessonLink}
-              prefetch={false}
-              className="inline-flex min-h-11 items-center gap-2 border border-border px-3 py-2 font-mono text-xs font-bold uppercase tracking-[0.1em] text-foreground hover:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
-            >
-              {pageCopy.toLesson}
-              <ArrowUpRight size={14} strokeWidth={2.5} aria-hidden="true" />
-            </Link>
-          </div>
-        </div>
-      </header>
-
+    <article className="overflow-x-clip" data-demo-detail-layout data-plakat-page="idea">
       {/*
-        The instrument is the hero: title, one-line background, and
-        description lead straight into EvidenceBadge + DemoShell inside the
-        same band, so a learner reaches the working instrument without a
-        separate text-only hero gating it first. The engine itself never
-        server-renders (dynamic(..., {ssr:false})), so this band, not the
-        engine, has to carry first-paint weight.
+        Header band in the IDEA scene (SPEC §3.12): back link, caps line,
+        Himbeere poster H1 and a 17px Kobalt lede. Below sm the lede is the
+        one-sentence teaser; from sm up the full description returns. The
+        band is deliberately unnamed: named, it became a region landmark
+        whose name matched the engine's own region (landmark-unique).
 
-        Two real per-demo adaptations, both existing catalog data, neither
-        duplicating what EvidenceBadge already states: demo.dark flips the
-        whole band into the same dark-section scope DemoShell itself uses
-        (so a dark demo commits to its identity above the fold, not just
-        inside the widget), and demo.size gives the bento grid's "signature"
-        tiles (s-hero/s-wide) a taller title here too.
+        The engine sits on paper right below the band. It never
+        server-renders (dynamic(..., {ssr:false})), so the band carries first
+        paint. A dark engine only turns its own frame graphit (DemoShell).
       */}
-      <section
-        data-demo-detail-hero
-        data-demo-instrument
-        aria-labelledby="demo-title"
-        // Deliberately NOT dark-section for a dark demo. EvidenceBadge paints
-        // hardcoded light-theme inks (#1d4ed8, #92400e) that drop to ~2:1 on a
-        // dark ground, and DemoShell already carries the dark treatment for
-        // the widget itself. The band stays light; demo.size still adapts the
-        // title below.
-        className="border-y border-border bg-foreground/[0.035] px-4 py-5 sm:px-6 sm:py-8 md:px-10"
-      >
-        <div className="mx-auto max-w-7xl">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="border border-brand-orange bg-brand-orange/10 px-2.5 py-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
-              {categoryLabel}
-            </span>
-            <span className="border border-border px-2.5 py-1 font-mono text-xs font-bold uppercase tracking-[0.12em] text-foreground">
-              {levelLabel}
-            </span>
+      <div data-demo-detail-hero>
+        <PlakatBand plakat="idea" contentClassName="pt-0 max-[359px]:-mb-4 sm:pt-6 lg:pb-12 lg:pt-8">
+          {/* Below sm the back link is a 44px arrow and shares one row with
+              the caps line, so the engine starts inside the first screen even
+              at 320. It touches the band top there, so its focus ring is
+              drawn inset (SPEC §3.9 edge rule): the band clips anything
+              outside it. From sm up the link reads "Alle Praxisbeispiele" on its
+              own line above the caps line. */}
+          <div
+            className="flex flex-wrap items-center gap-x-2 sm:block"
+            data-demo-detail-top
+          >
+            <nav aria-label={pageCopy.catalog}>
+              <Link
+                href={catalogHref}
+                aria-label={pageCopy.allExamples}
+                className="-ml-3 inline-flex min-h-11 min-w-11 max-sm:focus-visible:outline-offset-[-3px] items-center justify-center gap-2 text-[1.0625rem] font-semibold text-scene-ink underline decoration-1 underline-offset-4 hover:decoration-2 sm:ml-0 sm:justify-start"
+              >
+                <ArrowGlyph className="rotate-180" />
+                <span className="max-sm:hidden">{pageCopy.allExamples}</span>
+              </Link>
+            </nav>
+            <p className="plakat-caps min-w-0 sm:mt-5">
+              <span className="max-sm:hidden">{pageCopy.example} </span>
+              {demo.n} · {categoryLabel}
+              {/* The level returns from sm up, so the phone row stays one line. */}
+              <span className="max-sm:hidden"> · {levelLabel}</span>
+            </p>
           </div>
           <h1
             id="demo-title"
-            className={cn(
-              "mt-4 max-w-5xl break-words font-bold leading-[0.91] tracking-[-0.055em]",
-              isSignature
-                ? "text-[clamp(2.75rem,7vw,6rem)]"
-                : "text-[clamp(2.25rem,5.5vw,4.5rem)]",
-            )}
+            className="poster-title mt-0.5 break-words text-scene-mid hyphens-manual max-[359px]:text-[2.25rem]! sm:mt-4"
+            style={demoTitleStyle(name)}
           >
-            {demo.title}{" "}
-            <span className="text-brand-orange">{demo.titleKicker}</span>
+            {name}
           </h1>
-          <div className="mt-4 flex min-w-0 max-w-3xl items-start gap-2 font-mono text-xs uppercase leading-relaxed tracking-[0.08em] text-muted-foreground">
-            <span className="shrink-0 text-brand-orange" aria-hidden="true">
-              ◆
-            </span>
-            <span className="min-w-0 break-words">{demo.background}</span>
-          </div>
-          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+          <p
+            className="mt-1.5 text-[1.0625rem] leading-normal text-scene-ink text-pretty sm:hidden"
+            data-demo-detail-teaser
+          >
+            {demo.teaser}
+          </p>
+          <p className="mt-5 max-w-[60ch] text-[1.0625rem] leading-normal text-scene-ink text-pretty max-sm:hidden">
             {demo.description}
           </p>
+        </PlakatBand>
+      </div>
 
-          <div className="mt-6 border-l-[3px] border-l-brand-orange pl-3 sm:pl-4">
-            <EvidenceBadge
-              evidenceMode={demo.evidenceMode}
-              externalActionMode={demo.externalActionMode}
-              locale={locale}
-            />
-            <DemoShell demo={demo} locale={locale} />
-          </div>
+      <section
+        data-demo-instrument
+        className="px-4 pb-10 pt-2 sm:px-6 sm:pb-12 sm:pt-8"
+      >
+        <div className="mx-auto max-w-6xl">
+          <DemoShell demo={demo} locale={locale} />
         </div>
       </section>
 
       <section
         id="demo-notes"
         data-demo-notes
-        className="scroll-mt-24 px-4 py-7 sm:px-6 md:px-10"
+        className="scroll-mt-24 px-4 pb-12 sm:px-6 sm:pb-16"
       >
-        <div className="mx-auto grid max-w-7xl gap-3 lg:grid-cols-12">
-          <div className="min-w-0 border border-foreground/50 bg-background p-4 sm:p-6 lg:col-span-7">
-            <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
-              {pageCopy.practiceData}
-            </div>
-            <h2 className="mt-2 text-2xl font-bold tracking-[-0.02em]">
-              {pageCopy.outputHeading}
-            </h2>
-            <div className="mt-4">
-              <AnimatedMetaTable meta={demo.meta} locale={locale} />
-            </div>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {demo.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="border border-border bg-card px-2.5 py-1 font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          <div className="min-w-0 border border-border bg-card p-4 sm:p-6 lg:col-span-5">
-            <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
-              {pageCopy.learningContext}
-            </div>
-            <h2 className="mt-2 text-2xl font-bold tracking-[-0.02em]">
-              {pageCopy.sandboxScenario}
-            </h2>
+        {/* Below sm the checks and the run table fold behind one closed
+            "So prüfst du das Beispiel" button; from sm up both columns read
+            as before. */}
+        <DemoNotesDisclosure
+          panels={notesPanels}
+          className="mx-auto grid max-w-6xl items-start gap-12 max-sm:gap-8 lg:grid-cols-12 lg:gap-x-12"
+        >
+          <div className="min-w-0 lg:col-span-7">
+            <SectionHead title={pageCopy.aboutHeading} />
             {copy ? (
-              <p className="mt-4 text-sm leading-relaxed text-foreground sm:text-base">
+              <p className="mt-6 max-w-[64ch] text-body text-foreground max-sm:mt-4">
                 {copy.why}
               </p>
             ) : null}
-            <div className="mt-4 border border-border bg-background p-4">
-              <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
-                {pageCopy.sandboxBoundary}
-              </div>
-              {copy ? (
-                <p className="mt-2 text-sm leading-relaxed text-foreground">
-                  {copy.proof}
-                </p>
-              ) : null}
-              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                {demo.syntheticDataLabel}
-              </p>
-              {demo.riskNotes.length > 0 ? (
-                <ul className="mt-3 space-y-2 text-sm leading-relaxed text-muted-foreground">
+
+            <DemoNotesToggle
+              label={pageCopy.notesToggle}
+              panels={notesPanels}
+              className="mt-6"
+            />
+
+            {demo.riskNotes.length > 0 ? (
+              <DemoNotesPanel part="checks" className="mt-10 max-sm:mt-4">
+                <h3 className="text-label text-foreground">
+                  {pageCopy.checksHeading}
+                </h3>
+                <ul className="mt-3 max-w-[64ch] border-t border-hairline text-body">
                   {demo.riskNotes.map((note) => (
                     <li
                       key={note}
-                      className="grid grid-cols-[0.75rem_minmax(0,1fr)] gap-1"
+                      className="flex items-baseline gap-3 border-b border-hairline py-3 text-body text-foreground"
                     >
-                      <span aria-hidden="true">/</span>
+                      <span
+                        className="size-2.5 shrink-0 bg-foreground"
+                        aria-hidden="true"
+                      />
                       <span className="min-w-0 break-words">{note}</span>
                     </li>
                   ))}
                 </ul>
-              ) : null}
-            </div>
-
-            <details className="mt-4 border border-border bg-background">
-              <summary className="flex min-h-11 cursor-pointer items-center px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.12em] text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange">
-                {pageCopy.workContexts}
-              </summary>
-              <div className="flex flex-wrap gap-2 border-t border-border p-3">
-                {demo.industries.map((industry) => (
-                  <Link
-                    key={industry}
-                    href={localizeHref(
-                      `/demos?industry=${encodeURIComponent(industry)}`,
-                      locale,
-                    )}
-                    className="inline-flex min-h-11 min-w-11 items-center justify-center break-words border border-border bg-background px-3 py-2 font-mono text-xs font-bold uppercase tracking-[0.08em] text-foreground hover:border-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
-                  >
-                    {industry}
-                  </Link>
-                ))}
-              </div>
-            </details>
-
-            {relatedBooks.length > 0 ? (
-              <details className="mt-3 border border-border bg-background">
-                <summary className="flex min-h-11 cursor-pointer items-center px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.12em] text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange">
-                  {pageCopy.relatedBooks}
-                </summary>
-                <div className="grid gap-px border-t border-border bg-border">
-                  {relatedBooks.map((book) => (
-                    <Link
-                      key={book.id}
-                      href={localizeHref(book.readerHref, locale)}
-                      className="flex min-h-11 items-center justify-between gap-3 bg-background px-3 py-2 text-sm font-medium text-foreground hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange"
-                    >
-                      <span className="min-w-0 break-words">
-                        {locale === "en" && book.id === "ki-landschaft"
-                          ? "AI in German small and medium-sized businesses"
-                          : book.title}
-                      </span>
-                      <span className="shrink-0 font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
-                        {pageCopy.publicLabel}
-                      </span>
-                    </Link>
-                  ))}
-                </div>
-              </details>
+              </DemoNotesPanel>
             ) : null}
           </div>
-        </div>
+
+          <div className="min-w-0 lg:col-span-5">
+            <DemoNotesPanel part="run" className="max-sm:mb-6">
+              <SectionHead title={pageCopy.runHeading} />
+              <dl className="mt-6 border-t border-hairline max-sm:mt-4" data-demo-run-rows>
+                {runRows.map((row) => (
+                  <div
+                    key={row.label}
+                    data-demo-run-row-phone={row.phone ? "true" : "false"}
+                    className={`grid grid-cols-[8.5rem_minmax(0,1fr)] items-baseline gap-4 border-b border-hairline py-3 max-sm:grid-cols-[6rem_minmax(0,1fr)] max-sm:gap-3${row.phone ? "" : " max-sm:hidden"}`}
+                  >
+                    <dt className="text-label text-muted-foreground">{row.label}</dt>
+                    <dd className="min-w-0 break-words text-body text-foreground">
+                      {row.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </DemoNotesPanel>
+
+            {/* Work contexts are real links into the filtered gallery, drawn
+                as text links so they do not pose as filter buttons. */}
+            <div className="mt-8 max-sm:mt-0">
+              <h3 className="text-label text-foreground">
+                {pageCopy.workContexts}
+              </h3>
+              <ul className="mt-1 flex flex-wrap gap-x-5">
+                {demo.industries.map((industry) => (
+                  <li key={industry}>
+                    <Link
+                      href={localizeHref(
+                        `/demos?industry=${encodeURIComponent(industry)}`,
+                        locale,
+                      )}
+                      aria-label={pageCopy.workContextAria(industry)}
+                      className="inline-flex min-h-11 min-w-6 items-center text-body text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground"
+                    >
+                      {industry}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {relatedBooks.length > 0 ? (
+              <div className="mt-8">
+                <h3 className="text-label text-foreground">
+                  {pageCopy.relatedBooks}
+                </h3>
+                <ul className="mt-2 border-t border-hairline">
+                  {relatedBooks.map((book) => (
+                    <li key={book.id} className="border-b border-hairline">
+                      <Link
+                        href={localizeHref(book.readerHref, locale)}
+                        className="flex min-h-11 items-center justify-between gap-3 py-2 text-body text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground"
+                      >
+                        <span className="min-w-0 break-words">
+                          {locale === "en" && book.id === "ki-landschaft"
+                            ? "AI in German small and medium-sized businesses"
+                            : book.title}
+                        </span>
+                        <span className="shrink-0 text-caption text-muted-foreground no-underline">
+                          {pageCopy.publicLabel}
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+          </div>
+        </DemoNotesDisclosure>
       </section>
 
-      <section
-        data-demo-continuation
-        className="border-y border-border bg-card px-4 py-5 sm:px-6 md:px-10"
-      >
-        <div className="mx-auto flex max-w-7xl flex-col gap-3 border-l-[3px] border-l-brand-orange pl-4 sm:flex-row sm:items-center sm:justify-between sm:pl-5">
-          <div className="min-w-0">
-            <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
-              {pageCopy.continueLearning}
-            </div>
-            <div className="mt-1 break-words text-sm font-semibold text-foreground">
+      {/* Continuation: the course lesson (the page's one Mennige button) and
+          the next example, each named once. */}
+      <section className="px-4 pb-12 sm:px-6 sm:pb-16">
+        <div className="mx-auto grid max-w-6xl gap-8 border-t-2 border-scene-line pt-6 md:grid-cols-2 md:gap-12">
+          <div data-demo-continuation className="flex min-w-0 flex-col items-start gap-3">
+            <p className="text-label text-muted-foreground tabular-nums">
+              {pageCopy.courseHeading}
+              {lessonDisplay ? ` · ${lessonDisplay}` : ""}
+            </p>
+            <p className="text-fluid-h3 font-bold text-foreground text-balance">
               {course ? course.title : demo.courseSlug}
-            </div>
+            </p>
+            <Link
+              href={localizedLessonLink}
+              prefetch={false}
+              className="group inline-flex min-h-11 items-center gap-2 border border-brand-orange bg-brand-orange px-5 text-[0.9375rem] font-semibold text-paper transition-colors duration-[120ms] hover:border-kupfer-dark hover:bg-kupfer-dark motion-reduce:transition-none"
+            >
+              {demo.lessonId ? pageCopy.toLesson : pageCopy.openCourse}
+              <ArrowGlyph />
+            </Link>
           </div>
-          <Link
-            href={localizedCourseLink}
-            prefetch={false}
-            className="inline-flex min-h-11 items-center gap-2 border border-brand-orange bg-brand-orange px-4 py-2 text-xs font-bold uppercase tracking-[0.08em] text-white hover:border-foreground hover:bg-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+          {/* Same order as the course side: kicker, title, action. Below md
+              the two stack, so a hairline separates them. */}
+          <div
+            data-demo-next
+            className="flex min-w-0 flex-col items-start gap-3 max-md:border-t max-md:border-hairline max-md:pt-6 md:border-l md:border-hairline md:pl-12"
           >
-            {course
-              ? pageCopy.openCourse(course.title)
-              : pageCopy.openSuitableCourse}
-            <ArrowUpRight size={14} strokeWidth={2.5} aria-hidden="true" />
-          </Link>
-        </div>
-      </section>
-
-      <section className="px-4 py-5 sm:px-6 md:px-10">
-        <div className="mx-auto flex max-w-7xl flex-col gap-3 border border-foreground/50 bg-background p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
-          <div>
-            <div className="font-mono text-xs font-bold uppercase tracking-[0.14em] text-muted-foreground">
+            <p className="text-label text-muted-foreground tabular-nums">
               {pageCopy.nextExample} · {next.n}
-            </div>
-            <div className="mt-1 text-lg font-bold tracking-[-0.02em]">
-              {next.title}{" "}
-              <span className="text-brand-orange">{next.titleKicker}</span>
-            </div>
+            </p>
+            <p className="text-fluid-h3 font-bold text-foreground text-balance">
+              {nextName}
+            </p>
+            {/* The one-sentence teaser, never clamped: a cut description
+                read as unfinished. */}
+            <p className="max-w-[48ch] text-caption text-muted-foreground max-sm:text-[0.875rem]">
+              {next.teaser}
+            </p>
+            <DemoCta
+              slug={demo.slug}
+              target="next-demo"
+              href={localizeHref(`/demos/${next.slug}?source=next-demo`, locale)}
+              variant="secondary"
+              ariaLabel={`${tileCopy.open}: ${nextName}`}
+            >
+              {tileCopy.open}
+            </DemoCta>
           </div>
-          <DemoCta
-            slug={demo.slug}
-            target="next-demo"
-            href={localizeHref(`/demos/${next.slug}?source=next-demo`, locale)}
-            variant="secondary"
-          >
-            {pageCopy.next}
-          </DemoCta>
         </div>
       </section>
     </article>

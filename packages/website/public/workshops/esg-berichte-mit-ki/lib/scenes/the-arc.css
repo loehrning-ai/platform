@@ -1,0 +1,127 @@
+/* the-arc: two lanes. Top: the raw folder (hatch) through the AI to answer 1 (dashed export lane).
+   Bottom: the prepared ledger (solid ink) through the same AI to answer 2 (approved lane). Press 1:
+   the route fades into the chrome (data-route="final") and a pointer names it. */
+
+#the-arc > .the-arc-lead {
+  position: absolute;
+  top: 840px;
+  left: var(--margin-x);
+  max-width: 1400px;
+  font-weight: 600;
+}
+
+#the-arc > .the-arc-wires {
+  position: absolute;
+  top: 290px;
+  left: var(--margin-x);
+  overflow: visible;
+}
+
+#the-arc > .the-arc-src {
+  position: absolute;
+  left: var(--margin-x);
+  display: flex;
+  width: 512px;
+  height: 180px;
+  align-items: stretch;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+#the-arc > #the-arc-raw { top: 310px; }
+#the-arc > #the-arc-ledger { top: 570px; border-width: 4px; }
+
+#the-arc .the-arc-swatch {
+  flex: none;
+  width: 96px;
+  border-right: 3px solid var(--ink);
+}
+
+#the-arc .the-arc-src--raw .the-arc-swatch {
+  background-color: var(--papier);
+  background-image: var(--hatch);
+  background-size: 14px 14px;
+}
+
+#the-arc .the-arc-src--ledger .the-arc-swatch {
+  background: var(--ink);
+}
+
+#the-arc .the-arc-src p {
+  display: grid;
+  align-content: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0 24px;
+  font-size: var(--t-body);
+  line-height: 1.3;
+}
+
+#the-arc .the-arc-src b {
+  font-size: var(--t-lead);
+}
+
+#the-arc .the-arc-src span {
+  color: var(--slate);
+}
+
+#the-arc > .the-arc-ai {
+  position: absolute;
+  left: 762px;
+}
+
+#the-arc > #the-arc-ai-1 { top: 332px; }
+#the-arc > #the-arc-ai-2 { top: 592px; }
+
+#the-arc > .the-arc-answer {
+  position: absolute;
+  left: 1064px;
+  display: grid;
+  width: 760px;
+  height: 180px;
+  align-content: center;
+  justify-items: start;
+  gap: 16px;
+  padding: 0 32px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+#the-arc > #the-arc-answer-1 { top: 310px; border-style: dashed; }
+#the-arc > #the-arc-answer-2 { top: 570px; border-width: 4px; }
+
+#the-arc .the-arc-answer p {
+  margin: 0;
+  font-size: var(--t-body);
+  line-height: 1.3;
+}
+
+/* Press 1: a pointer from the callout up to the route in the chrome. */
+#the-arc > .the-arc-pointer {
+  position: absolute;
+  top: 124px;
+  right: 380px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+#the-arc .the-arc-pointer svg {
+  flex: none;
+  overflow: visible;
+}
+
+#the-arc .the-arc-pointer__line {
+  fill: none;
+  stroke: var(--mennige);
+  stroke-width: 4;
+}
+
+#the-arc .the-arc-pointer__head {
+  fill: var(--mennige);
+}
+
+#the-arc .the-arc-pointer .callout {
+  margin: 48px 0 0;
+  max-width: 480px;
+}

@@ -10,9 +10,9 @@ import {
 const lesson: CodexLesson = {
   id: "L08",
   number: 8,
-  title: "Iteration Loops",
+  title: "Iteration loops",
   subtitle:
-    "Choose between a targeted correction, a revised specification, and a clean restart based on the defect and diff shape.",
+    "Correct, re-specify or restart, depending on the mismatch.",
   durationMinutes: 9,
   trackId: "in-the-loop",
   hook: "Respond to the cause of the mismatch.",
@@ -32,7 +32,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "The diff came back wrong. Before you reply, classify the mismatch. A local defect, a missing requirement, an invalid task boundary and stale session context call for different responses.\n\nA diagnostic aid, not a retry counter.",
+            "Before you reply to a wrong diff, classify the mismatch.",
         },
         {
           kind: "card-grid",
@@ -40,28 +40,24 @@ const lesson: CodexLesson = {
             {
               eyebrow: "bounded local defect",
               title: "Nudge",
-              body: "Use a targeted comment when the goal and architecture are correct and the required change is local. State what is wrong, where it is, and the required evidence.",
+              body: "Goal and architecture hold and the fix is local. Name defect, location and required evidence.",
             },
             {
               eyebrow: "requirement or framing gap",
               title: "Re-spec",
-              body: "Rewrite the task when several comments are restating missing goals, constraints, or acceptance criteria. Preserve useful findings, then start from the corrected contract.",
+              body: "Comments keep adding goals, constraints or criteria. Rewrite the task and keep verified findings.",
             },
             {
               eyebrow: "wrong problem or architecture",
               title: "Restart from evidence",
-              body: "Do not salvage a diff built on a false premise. Reinspect the relevant code and requirement, then create a new task with corrected evidence and boundaries.",
+              body: "The premise is false. Reread code and requirement, then start a new task with corrected evidence.",
             },
             {
               eyebrow: "multiple coupled concerns",
               title: "Decompose and restart",
-              body: "Split independently implementable or reviewable concerns. Define dependency order and valid intermediate states before running the new tasks.",
+              body: "Split separable concerns. Set the dependency order and valid intermediate states before the new tasks run.",
             },
           ],
-        },
-        {
-          kind: "pull-quote",
-          text: "Restart when corrections are changing the task's premise or causing the diff to diverge instead of converge.",
         },
       ],
     },
@@ -73,12 +69,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "A targeted correction works only while the existing task is still valid. Compare a vague comment with one that names defect, location and expected evidence.",
-        },
-        {
-          kind: "prose",
-          markdown:
-            "A useful correction states **what is wrong**, **where it is**, and **what result or check is required**. If that explanation rewrites the original goal or architecture, replace the task instead of accumulating comments.",
+            "A targeted correction works while the task itself is still valid. Like the specific comment above, it names **what is wrong**, **where** and **which result or check is required**. If it would rewrite goal or architecture, replace the task.",
         },
       ],
     },
@@ -86,7 +77,7 @@ const lesson: CodexLesson = {
       id: "s3",
       title: "Quick check",
       readTimeMinutes: 1,
-      blocks: [{ kind: "prose", markdown: "One question on when to re-spec." }],
+      blocks: [{ kind: "prose", markdown: "Question at the end of the lesson." }],
     },
     {
       id: "s4",
@@ -96,12 +87,12 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Restart when the diff is anchored to a wrong requirement, invalid architecture or over-broad scope. Continue from there and every later correction works around the same bad assumptions.\n\nBefore you throw the attempt away, record what the repository does not already show: a rejected approach and its reason, a newly discovered constraint, relevant command output, the files or call paths already traced. That evidence goes into the new, bounded specification.\n\nRevision count is not the rule. A run of small independent corrections can be efficient. One correction that changes the premise can justify an immediate restart.",
+            "Restart when the diff rests on a wrong requirement, invalid architecture or over-broad scope, or when corrections change the premise and the diff diverges. The revision count does not decide: many small corrections can be fine, and one premise change can justify an immediate restart.\n\nBefore you discard the attempt, record what the repository does not show: rejected approaches with reasons, new constraints, relevant command output, files and call paths already traced.",
         },
         {
           kind: "callout",
-          title: "Keep only verified findings:",
-          body: "An unsuccessful attempt can expose ambiguity or hidden coupling, but it can also contain incorrect assumptions. Carry forward findings only when they are supported by repository evidence or reproducible commands.",
+          title: "Keep only verified findings.",
+          body: "Failed attempts also contain wrong assumptions. Carry forward only what repository evidence or reproducible commands support.",
         },
       ],
     },
@@ -113,7 +104,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "Long interactive sessions pile up requests, corrections, logs and rejected approaches. Relevant instructions get harder to apply consistently, especially when later messages contradict earlier ones or the active context is compacted.\n\nWatch for a rejected approach coming back, an accepted correction quietly undone, a general rule applied while a later exception is ignored. Those same signs can mean an ambiguous task or a code change, so check the evidence before blaming context length.\n\nWhen the active history is no longer a clear contract, start a new session with a concise specification and only the verified findings needed to continue.",
+            "Long sessions pile up requests, corrections, logs and rejected approaches. Instructions then get harder to apply consistently, especially after contradictions or compaction.\n\nThe signals below can also mean an ambiguous task or changed code, so check the evidence first. If the history no longer forms one clear contract, start a new session with a short specification and the verified findings.",
         },
         {
           kind: "card-grid",
@@ -121,28 +112,24 @@ const lesson: CodexLesson = {
             {
               eyebrow: "signal 01",
               title: "Reverts fixed behavior",
-              body: "A previously accepted correction is removed without a code-based reason. Confirm the current requirement, then restate it in a clean task if the session has become contradictory.",
+              body: "An accepted correction disappears without a code reason. Confirm the requirement, then restate it in a clean task.",
             },
             {
               eyebrow: "signal 02",
               title: "Re-proposes rejected approaches",
-              body: "A rejected approach returns without addressing the recorded reason. Carry the explicit constraint and its evidence into a new specification.",
+              body: "A rejected approach returns and ignores the recorded reason. Put constraint and evidence into a new specification.",
             },
             {
               eyebrow: "signal 03",
               title: "Generic outputs from specific inputs",
-              body: "The output no longer cites the repository paths, conventions, or commands required by the task. Re-establish those inputs before more edits.",
+              body: "The output stops citing the required repository paths, conventions or commands. Restore those inputs first.",
             },
             {
               eyebrow: "signal 04",
               title: "Increasing correction rounds",
-              body: "Corrections expand or contradict one another instead of reducing the mismatch. Check whether the task, diff, or session context needs to be reset.",
+              body: "Corrections grow or contradict each other while the mismatch stays. Reset task, diff or session.",
             },
           ],
-        },
-        {
-          kind: "pull-quote",
-          text: "Reset context when the active conversation no longer expresses one consistent task contract.",
         },
       ],
     },
@@ -154,12 +141,7 @@ const lesson: CodexLesson = {
         {
           kind: "prose",
           markdown:
-            "A new session does not need the whole transcript. Carry forward the verified facts the repository and the original specification do not already contain. Discovered constraints, rejected approaches with reasons, relevant command results, unresolved questions.",
-        },
-        {
-          kind: "prose",
-          markdown:
-            "Separate evidence from narrative. Include file paths, exact error text, commands and outcomes, and the reason an approach was rejected. Exclude speculation, repeated discussion, and facts that the next session can read directly from versioned files.",
+            "Carry into a new session only verified facts that neither repository nor specification holds: file paths, exact errors, commands with outcomes, constraints, rejected approaches with reasons, open questions. Drop speculation and repeated discussion.",
         },
       ],
     },
@@ -168,7 +150,7 @@ const lesson: CodexLesson = {
       title: "Quick check",
       readTimeMinutes: 1,
       blocks: [
-        { kind: "prose", markdown: "One question on recognizing context rot." },
+        { kind: "prose", markdown: "Questions at the end of the lesson." },
       ],
     },
   ]),
@@ -184,7 +166,7 @@ const lesson: CodexLesson = {
         goodLabel: "Specific nudge",
         bad: '"the test isn\'t very good, can you make it better?"',
         good: '"tests/api/test_login.py::test_rate_limit_blocks_at_6 currently mocks is_allowed(), which means it\'s testing the mock, not the limiter.\n\nRewrite it to call /login six times against the real limiter and assert the 6th returns 429.\n\nKeep the existing assertion style (pytest, no unittest.mock wrappers)."',
-        note: "The specific comment names the defect, location, required setup, and assertion. The reviewer can compare the revised test directly with that request.",
+        note: "It names defect, location, setup and assertion, so you can check the revised test against it.",
       },
     },
     {
@@ -197,16 +179,16 @@ const lesson: CodexLesson = {
         title: CODEX_QUIZ_TITLE,
         copy: CODEX_QUIZ_COPY,
         question:
-          "A revised diff keeps changing the same requirement in different ways and grows beyond the original scope. What is the appropriate next move?",
+          "A revised diff keeps reworking the same requirement and grows beyond the original scope. What next?",
         options: [
           "Continue adding comments without changing the task contract.",
-          "Stop the iteration, retain verified findings, and restart from a corrected specification and scope.",
+          "Stop, keep verified findings, restart from a corrected specification.",
           "Merge the diff because some tests pass.",
           "Remove the failing checks and request another revision.",
         ],
         correct: 1,
         explanation:
-          "Repeated non-converging changes indicate that the task premise, boundary, or context is unstable. A clean specification gives the next attempt one reviewable contract. The decision is based on divergence, not a fixed number of retries.",
+          "Non-converging changes point to an unstable premise, boundary or context. Restart from one clean specification, whatever the retry count.",
       },
     },
     {
@@ -218,9 +200,9 @@ const lesson: CodexLesson = {
         kindLabel: CODEX_COMPARE_KIND_LABEL,
         badLabel: "Carrying noise",
         goodLabel: "Carrying signal",
-        bad: "CONTEXT FROM LAST SESSION:\n- We were working on the rate limiter\n- There was a conversation about caching\n- I asked about Redis vs. in-memory\n- You said something about TTLs\n- We discussed the test structure for a while\n- The second approach seemed better\n- Something about the limiter key format",
-        good: "CONTEXT FROM LAST SESSION (3 bullets):\n1. Constraint discovered: the limiter key must be (ip, user_id) not just ip, shared IPs (offices, proxies) would block unrelated users otherwise.\n2. Rejected approach: lru_cache is process-local; on multi-worker deployments counts don't accumulate. Use Redis.\n3. Hidden coupling: rate_limit_middleware runs before auth, so user_id is unavailable there, limiter logic must live in the view layer.",
-        note: "The test: would a fresh session be able to avoid the wrong turns without your bullets? If yes, drop it. If no, keep it. The caching discussion and TTL chatter are in the docs; the three discoveries above aren't.",
+        bad: "CONTEXT FROM LAST SESSION:\n- We were working on the rate limiter\n- There was a conversation about caching\n- You said something about TTLs\n- The second approach seemed better",
+        good: "CONTEXT FROM LAST SESSION (3 bullets):\n1. Constraint: the limiter key must be (ip, user_id). Keying on ip alone blocks unrelated users behind shared IPs (offices, proxies).\n2. Rejected: lru_cache is process-local, so counts don't add up across workers. Use Redis.\n3. Hidden coupling: rate_limit_middleware runs before auth, so user_id is unavailable there. Limiter logic belongs in the view layer.",
+        note: "Keep a bullet only if a fresh session would repeat a wrong turn without it. Caching and TTL basics are in the docs; these three discoveries are not.",
       },
     },
     {
@@ -233,16 +215,16 @@ const lesson: CodexLesson = {
         title: CODEX_QUIZ_TITLE,
         copy: CODEX_QUIZ_COPY,
         question:
-          "A session proposes an approach that was rejected earlier without addressing the recorded reason. What should you do?",
+          "A session re-proposes a rejected approach and ignores the recorded reason. What do you do?",
         options: [
-          "The model disagrees with you. Argue your position more forcefully.",
-          'Verify that the rejection still applies, then start a clean task that states "do not use [approach] because [evidence]."',
+          "Argue your position more forcefully.",
+          "Recheck the rejection, then restate it with evidence in a clean task.",
           "Repeat the rejection without its reason.",
-          "Accept the suggestion. The model may have found a better reason for it.",
+          "Accept it; the model may have found a better reason.",
         ],
         correct: 1,
         explanation:
-          "The repeated proposal may indicate inconsistent context or a changed codebase. Recheck the evidence, then encode the still-valid constraint and reason in a new, internally consistent task.",
+          "The repeat can mean inconsistent context or changed code. If the constraint still holds, write \"do not use [approach] because [evidence]\" into a new task.",
       },
     },
   ],

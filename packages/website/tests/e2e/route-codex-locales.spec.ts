@@ -28,15 +28,15 @@ const LOCALES = [
   {
     locale: "de",
     prefix: "",
-    landingTitle: "Codex kontrolliert im Repository einsetzen.",
-    firstLessonTitle: "Was Codex tatsächlich ist",
+    landingTitle: "Codex im Repository steuern.",
+    firstLessonTitle: "Was Codex ist",
     completed: "Navigations-Checkpoint gespeichert",
   },
   {
     locale: "en",
     prefix: "/en",
-    landingTitle: "Use Codex under explicit repository controls.",
-    firstLessonTitle: "What Codex Actually Is",
+    landingTitle: "Steer Codex in your repo.",
+    firstLessonTitle: "What Codex is",
     completed: "Navigation checkpoint saved",
   },
 ] as const;
@@ -163,8 +163,7 @@ async function openLessonReference(page: Page) {
   const reference = page.locator("details[data-lesson-reference]");
   await expect(reference).toHaveCount(1);
   await expect(reference).toBeVisible();
-  await expect(reference).toHaveJSProperty("open", false);
-  await reference.locator(":scope > summary").click();
+  // The lesson text renders open by default (LessonReference).
   await expect(reference).toHaveJSProperty("open", true);
 }
 
@@ -385,7 +384,7 @@ test.describe("Codex locale continuity and record surfaces", () => {
 
     const switchToEnglish = visibleLanguageSwitchLink(
       page,
-      /Englische Oberfläche/,
+      /englische Oberfläche/,
     );
     await switchToEnglish.click();
     await expect(page).toHaveURL(/\/en\/kurse\/open-source\/codex\/kurs\/L01$/);
@@ -463,7 +462,7 @@ test.describe("Codex locale continuity and record surfaces", () => {
       waitUntil: "domcontentloaded",
     });
     await settle(page);
-    const englishLink = visibleLanguageSwitchLink(page, /Englische Oberfläche/);
+    const englishLink = visibleLanguageSwitchLink(page, /englische Oberfläche/);
     await expect(englishLink).toHaveAttribute(
       "href",
       `/en/kurse/open-source/codex/verifizierung#${hash}`,

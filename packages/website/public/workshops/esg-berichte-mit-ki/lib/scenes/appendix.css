@@ -1,0 +1,708 @@
+/* Appendix scenes (A1 to A8 and sources), shown on request during Q&A. Shared parts first (ax-*),
+   then one block per scene. Small print uses --t-appendix (22 px): read on demand, not projected in
+   the talk. */
+
+section[data-kind="appendix"] .ax-head {
+  margin: 0 0 8px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--ink);
+  font-size: var(--t-small);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+section[data-kind="appendix"] .ax-note {
+  margin: 8px 0 0;
+  color: var(--slate);
+  font-size: var(--t-appendix);
+  line-height: 1.35;
+}
+
+section[data-kind="appendix"] .ax-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--t-appendix);
+  line-height: 1.3;
+  font-feature-settings: "tnum" 1;
+}
+
+section[data-kind="appendix"] .ax-table th {
+  padding: 4px 8px 6px;
+  border-bottom: 2px solid var(--ink);
+  color: var(--slate);
+  font-size: 20px;
+  font-weight: 600;
+  text-align: left;
+}
+
+section[data-kind="appendix"] .ax-table td {
+  padding: 5px 8px;
+  border-top: 1px solid var(--leinen);
+  vertical-align: top;
+}
+
+section[data-kind="appendix"] .ax-table .ax-num {
+  text-align: right;
+  white-space: nowrap;
+}
+
+section[data-kind="appendix"] .ax-table .num {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+section[data-kind="appendix"] .ax-sum td {
+  font-weight: 700;
+}
+
+section[data-kind="appendix"] .ax-sub td {
+  padding-top: 10px;
+  color: var(--slate);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------ A1 appendix-arithmetic */
+
+#appendix-arithmetic > .ax-col {
+  position: absolute;
+  top: 236px;
+}
+
+#appendix-arithmetic > .ax-col--totals { left: var(--margin-x); width: 500px; }
+#appendix-arithmetic > .ax-col--wf { left: 636px; width: 640px; }
+#appendix-arithmetic > .ax-col--drivers { right: var(--margin-x); width: 508px; }
+
+#appendix-arithmetic .ax-wf {
+  font-size: 20px;
+}
+
+#appendix-arithmetic .ax-rank {
+  margin: 0 0 10px;
+  font-size: 20px;
+  line-height: 1.35;
+}
+
+#appendix-arithmetic .ax-rank .num {
+  color: inherit;
+  font-size: inherit;
+  font-weight: 600;
+}
+
+#appendix-arithmetic .ax-col .ax-table + .ax-head,
+#appendix-arithmetic .ax-col .ax-lines + .ax-head {
+  margin-top: 22px;
+}
+
+#appendix-arithmetic .ax-lines {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--t-appendix);
+  line-height: 1.3;
+  font-feature-settings: "tnum" 1;
+}
+
+#appendix-arithmetic .ax-lines .num {
+  color: inherit;
+  font-size: inherit;
+  font-weight: 600;
+}
+
+#appendix-arithmetic .ax-wf td:first-child {
+  white-space: nowrap;
+}
+
+#appendix-arithmetic .ax-wf tbody tr:first-child td,
+#appendix-arithmetic .ax-wf tbody tr:last-child td {
+  font-weight: 700;
+}
+
+#appendix-arithmetic > .ax-foot {
+  position: absolute;
+  top: 940px;
+  left: var(--margin-x);
+  width: 1728px;
+  margin: 0;
+  padding-top: 10px;
+  border-top: 2px solid var(--leinen);
+  color: var(--slate);
+  font-size: var(--t-appendix);
+}
+
+/* ------------------------------------------------------------ A2 appendix-factors */
+
+#appendix-factors > .af-teach {
+  position: absolute;
+  top: 236px;
+  left: var(--margin-x);
+  width: 760px;
+}
+
+
+#appendix-factors > .af-real {
+  position: absolute;
+  top: 236px;
+  right: var(--margin-x);
+  display: grid;
+  width: 900px;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#appendix-factors .af-real li {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  align-items: start;
+  gap: 18px;
+  padding: 14px 20px 16px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+#appendix-factors .af-real p {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  font-size: var(--t-appendix);
+  line-height: 1.35;
+}
+
+#appendix-factors .af-real b {
+  font-size: var(--t-body);
+}
+
+#appendix-factors > .af-rule {
+  position: absolute;
+  top: 844px;
+  left: var(--margin-x);
+  width: 1728px;
+}
+
+/* ------------------------------------------------------------ A3 appendix-run-record */
+
+#appendix-run-record > .ar-status {
+  position: absolute;
+  top: 236px;
+  left: var(--margin-x);
+  display: grid;
+  width: 760px;
+  justify-items: start;
+  gap: 10px;
+}
+
+#appendix-run-record .ar-stamp {
+  margin-top: 8px;
+  font-size: var(--t-body);
+}
+
+#appendix-run-record > .ar-protocol {
+  position: absolute;
+  top: 452px;
+  left: var(--margin-x);
+  width: 760px;
+}
+
+#appendix-run-record .ar-text {
+  margin: 0 0 20px;
+  font-size: var(--t-appendix);
+  line-height: 1.35;
+}
+
+#appendix-run-record .ar-conds {
+  display: grid;
+  gap: 4px;
+  margin: 0 0 20px;
+  padding: 0 0 0 24px;
+  font-size: var(--t-appendix);
+}
+
+#appendix-run-record > .ar-table {
+  position: absolute;
+  top: 236px;
+  right: var(--margin-x);
+  width: 900px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+#appendix-run-record .ar-table th,
+#appendix-run-record .ar-table td {
+  padding-right: 14px;
+  padding-left: 14px;
+}
+
+#appendix-run-record .ar-empty {
+  color: var(--slate-soft);
+  font-size: 20px;
+}
+
+#appendix-run-record .ar-empty::before {
+  content: "";
+  display: inline-block;
+  width: 64px;
+  height: 0;
+  margin-right: 10px;
+  border-bottom: 2px dashed var(--slate-soft);
+  vertical-align: middle;
+}
+
+/* ------------------------------------------------------------ A4 appendix-regulation */
+
+#appendix-regulation > .rg-grid {
+  position: absolute;
+  top: 212px;
+  left: var(--margin-x);
+  display: grid;
+  width: 1728px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#appendix-regulation .rg-card {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 4px;
+  padding: 10px 16px 10px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+#appendix-regulation .rg-card p {
+  margin: 0;
+}
+
+#appendix-regulation .rg-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--t-small);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+#appendix-regulation .rg-n {
+  display: grid;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  background: var(--ink);
+  color: var(--papier);
+  font-size: 19px;
+}
+
+#appendix-regulation .rg-body {
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+#appendix-regulation .rg-src {
+  padding-top: 4px;
+  border-top: 1px solid var(--leinen);
+  color: var(--slate);
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+/* Dashed = not yet checked: unverified or secondary items can be dropped without breaking the scene. */
+#appendix-regulation .rg-tag {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 0 6px;
+  border: 2px dashed var(--slate);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+#appendix-regulation > .rg-foot {
+  position: absolute;
+  top: 948px;
+  left: var(--margin-x);
+  width: 1728px;
+  margin: 0;
+  color: var(--slate);
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+/* ------------------------------------------------------------ A5 appendix-claims */
+
+#appendix-claims > .cl-table {
+  position: absolute;
+  top: 244px;
+  left: var(--margin-x);
+  width: 1728px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+  font-size: var(--t-body);
+}
+
+#appendix-claims .cl-table th {
+  padding: 10px 18px 8px;
+  font-size: 22px;
+}
+
+#appendix-claims .cl-table td {
+  padding: 16px 18px;
+}
+
+#appendix-claims .cl-table td:first-child { width: 42%; }
+#appendix-claims .cl-table td:nth-child(2) { width: 34%; color: var(--slate); }
+
+#appendix-claims .cl-verdict {
+  font-weight: 700;
+}
+
+/* ------------------------------------------------------------ A6 appendix-baseline */
+
+#appendix-baseline > .bl-variant {
+  position: absolute;
+  top: 236px;
+  left: var(--margin-x);
+  width: 1728px;
+  margin: 0;
+  font-size: var(--t-small);
+  line-height: 1.35;
+}
+
+#appendix-baseline > .bl-cards {
+  position: absolute;
+  top: 348px;
+  left: var(--margin-x);
+  display: grid;
+  width: 1728px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+#appendix-baseline .bl-card {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  padding: 14px 20px 16px;
+  border: 3px solid var(--ink);
+  background: var(--papier);
+}
+
+#appendix-baseline .bl-card--main {
+  border-width: 4px;
+}
+
+#appendix-baseline .bl-card--wrong {
+  border-style: dashed;
+  color: var(--slate);
+}
+
+#appendix-baseline .bl-card p {
+  margin: 0;
+}
+
+#appendix-baseline .bl-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: var(--t-appendix);
+  font-feature-settings: "tnum" 1;
+}
+
+#appendix-baseline .bl-line .num {
+  color: inherit;
+  font-size: inherit;
+}
+
+#appendix-baseline .bl-line--sum {
+  padding-top: 6px;
+  border-top: 2px solid var(--ink);
+  font-size: var(--t-body);
+}
+
+#appendix-baseline .bl-big {
+  font-size: var(--t-num-md);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+#appendix-baseline .bl-big .num {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+#appendix-baseline .bl-big__t {
+  font-size: var(--t-body);
+  font-weight: 600;
+}
+
+#appendix-baseline .bl-text {
+  font-size: var(--t-appendix);
+  line-height: 1.35;
+}
+
+#appendix-baseline > .bl-mb {
+  position: absolute;
+  top: 660px;
+  left: var(--margin-x);
+  width: 1728px;
+  margin: 0;
+  font-size: var(--t-appendix);
+  line-height: 1.35;
+}
+
+#appendix-baseline > .bl-sentence {
+  position: absolute;
+  top: 740px;
+  left: var(--margin-x);
+  width: 1728px;
+  font-size: var(--t-body);
+  font-weight: 600;
+}
+
+#appendix-baseline > .bl-note {
+  position: absolute;
+  top: 872px;
+  left: var(--margin-x);
+  width: 1728px;
+  font-size: 20px;
+}
+
+/* ------------------------------------------------------------ A7 appendix-steel */
+
+#appendix-steel > .st-case {
+  position: absolute;
+  top: 240px;
+  left: var(--margin-x);
+  display: flex;
+  width: 1728px;
+  align-items: center;
+  gap: 18px;
+  margin: 0;
+  font-size: var(--t-body);
+}
+
+#appendix-steel > .st-opts {
+  position: absolute;
+  top: 332px;
+  left: var(--margin-x);
+  display: grid;
+  width: 1728px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#appendix-steel .st-opt {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding: 16px 22px 20px;
+  border: 3px dashed var(--ink);
+  background: var(--papier);
+}
+
+#appendix-steel .st-opt--right {
+  border: 4px solid var(--ink);
+}
+
+#appendix-steel .st-opt p {
+  margin: 0;
+}
+
+#appendix-steel .st-opt__head {
+  min-height: 56px;
+}
+
+#appendix-steel .st-opt__tag {
+  display: inline-flex;
+  height: 56px;
+  align-items: center;
+  padding: 0 16px;
+  border: 2px dashed var(--ink);
+  font-size: var(--t-body);
+  font-weight: 600;
+}
+
+#appendix-steel .st-opt__what {
+  font-size: var(--t-body);
+  font-weight: 700;
+}
+
+#appendix-steel .st-opt__calc {
+  color: var(--slate);
+  font-size: var(--t-appendix);
+}
+
+#appendix-steel .st-opt__big {
+  font-size: var(--t-num-md);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+#appendix-steel .st-opt__big .num {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+#appendix-steel .st-opt__pct {
+  margin-left: 8px;
+  color: var(--slate);
+  font-size: var(--t-body);
+}
+
+#appendix-steel .st-opt__pct .num {
+  font-size: inherit;
+}
+
+#appendix-steel .st-opt__note {
+  color: var(--slate);
+  font-size: var(--t-appendix);
+  line-height: 1.35;
+}
+
+#appendix-steel > .st-line {
+  position: absolute;
+  top: 708px;
+  left: var(--margin-x);
+  width: 1728px;
+}
+
+/* ------------------------------------------------------------ A8 appendix-scope2-order */
+
+#appendix-scope2-order > .so-lead {
+  position: absolute;
+  top: 240px;
+  left: var(--margin-x);
+  margin: 0;
+  font-size: var(--t-body);
+  font-weight: 600;
+}
+
+#appendix-scope2-order > .so-steps {
+  position: absolute;
+  top: 304px;
+  left: var(--margin-x);
+  display: grid;
+  width: 1728px;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+#appendix-scope2-order .so-step {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) 720px;
+  align-items: center;
+  gap: 28px;
+  min-height: 130px;
+  padding: 16px 24px;
+  border: 4px solid var(--ink);
+  background: var(--papier);
+}
+
+#appendix-scope2-order .so-step--empty {
+  border: 3px dashed var(--ink);
+}
+
+#appendix-scope2-order .so-n {
+  display: grid;
+  width: 64px;
+  height: 64px;
+  place-items: center;
+  background: var(--ink);
+  color: var(--papier);
+  font-size: var(--t-lead);
+  font-weight: 700;
+}
+
+#appendix-scope2-order .so-step--empty .so-n {
+  border: 3px dashed var(--ink);
+  background: var(--papier);
+  color: var(--ink);
+}
+
+#appendix-scope2-order .so-step p {
+  margin: 0;
+}
+
+#appendix-scope2-order .so-what {
+  display: grid;
+  gap: 4px;
+  font-size: var(--t-appendix);
+  line-height: 1.35;
+}
+
+#appendix-scope2-order .so-what b {
+  font-size: var(--t-body);
+}
+
+#appendix-scope2-order .so-case {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-left: 24px;
+  border-left: 2px solid var(--leinen);
+  font-size: var(--t-body);
+  line-height: 1.3;
+}
+
+#appendix-scope2-order .so-case .icon {
+  flex: none;
+}
+
+#appendix-scope2-order > .so-small {
+  position: absolute;
+  left: var(--margin-x);
+  width: 1728px;
+}
+
+#appendix-scope2-order > .so-small--a { top: 816px; }
+#appendix-scope2-order > .so-small--b { top: 880px; }
+
+/* ------------------------------------------------------------ appendix-sources */
+
+#appendix-sources > .sc-col {
+  position: absolute;
+  top: 228px;
+  left: var(--margin-x);
+  width: 840px;
+}
+
+#appendix-sources > .sc-col--right {
+  right: var(--margin-x);
+  left: auto;
+}
+
+#appendix-sources .sc-list {
+  display: grid;
+  gap: 3px;
+  margin: 0 0 18px;
+  padding: 0;
+  list-style: none;
+}
+
+#appendix-sources .sc-list li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 21px;
+  line-height: 1.35;
+}
+
+#appendix-sources .sc-list span {
+  flex: none;
+  color: var(--slate);
+  font-size: 18px;
+}

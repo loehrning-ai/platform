@@ -13,19 +13,18 @@ import type { Locale } from "@/lib/i18n/locale";
 const COPY = {
   de: {
     permanent:
-      "Die Server-Synchronisierung wurde wegen einer nicht wiederholbaren Antwort angehalten. Dein Fortschritt bleibt in diesem Browser gespeichert, ist auf anderen Geräten aber möglicherweise nicht aktuell.",
+      "Synchronisierung angehalten. Dein Fortschritt ist in diesem Browser gespeichert, neue Änderungen erreichen andere Geräte aber nicht.",
     retry_exhausted:
-      "Die Server-Synchronisierung ist nach mehreren Versuchen weiterhin fehlgeschlagen. Dein Fortschritt bleibt in diesem Browser gespeichert und wird bei einer neuen Änderung oder wiederhergestellter Verbindung erneut übertragen.",
+      "Synchronisierung fehlgeschlagen. Dein Fortschritt ist in diesem Browser gespeichert und wird bei der nächsten Änderung oder Verbindung erneut gesendet.",
     startup:
-      "Die Server-Synchronisierung konnte nicht gestartet werden. Dein Fortschritt bleibt in diesem Browser gespeichert, bis die Verbindung erneut geprüft werden kann.",
+      "Synchronisierung konnte nicht starten. Dein Fortschritt ist in diesem Browser gespeichert.",
   },
   en: {
     permanent:
-      "Server synchronisation stopped after a non-retryable response. Your progress remains stored in this browser, but it may not be current on other devices.",
+      "Sync stopped. Your progress is saved in this browser, but new changes do not reach other devices.",
     retry_exhausted:
-      "Server synchronisation still failed after several attempts. Your progress remains stored in this browser and will be sent again after a new change or when the connection is restored.",
-    startup:
-      "Server synchronisation could not start. Your progress remains stored in this browser until the connection can be checked again.",
+      "Sync failed. Your progress is saved in this browser and is sent again with your next change or when you are back online.",
+    startup: "Sync could not start. Your progress is saved in this browser.",
   },
 } as const;
 

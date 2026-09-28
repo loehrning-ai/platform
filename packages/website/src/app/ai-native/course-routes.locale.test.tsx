@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { isValidElement, type ReactElement, type ReactNode } from "react";
+import { render } from "@testing-library/react";
 
 vi.mock("@/lib/i18n/request-locale", () => ({
   getRequestLocale: vi.fn(),
@@ -72,16 +73,13 @@ describe("AI-Native locale propagation across the complete course lifecycle", ()
       courseId: "ai-native",
       lang: "en",
     });
-    const moduleDisclosureNames = findElements(landing, "summary")
-      .map(
-        (summary) =>
-          (summary.props as { readonly "aria-label"?: unknown })["aria-label"],
-      )
-      .filter((label): label is string => typeof label === "string");
+    const rendered = render(landing);
+    const moduleDisclosureNames = Array.from(
+      rendered.container.querySelectorAll("summary[aria-label]"),
+    ).map((summary) => summary.getAttribute("aria-label") ?? "");
+    rendered.unmount();
     expect(moduleDisclosureNames).toEqual(
-      getModules("en").map(
-        (module) => `Decisions and exercises: ${module.title}`,
-      ),
+      getModules("en").map((module) => `Topics in this module: ${module.title}`),
     );
     expect(new Set(moduleDisclosureNames).size).toBe(
       moduleDisclosureNames.length,
@@ -124,10 +122,10 @@ describe("AI-Native locale propagation across the complete course lifecycle", ()
       (lessonReference?.props as { children?: ReactNode }).children,
     );
     expect(lessonReferenceText).toContain(
-      "Start with the tools you already use. Connect them through explicit instructions, review points and repeatable handoffs.",
+      "Describe the task precisely and check the result before you use it.",
     );
     expect(lessonReferenceText).toContain(
-      "You already have tools. The relevant question is how to combine them.",
+      "You already have the tools and learn to combine them.",
     );
 
     expect((await QuizPage()).props).toMatchObject({
@@ -156,16 +154,11 @@ describe("AI-Native locale propagation across the complete course lifecycle", ()
         url: "https://loehrning.ai/en/ai-native",
         locale: "en_GB",
         alternateLocale: ["de_DE"],
-        images: [
-          {
-            url: "https://loehrning.ai/course-covers/ai-native-cover-v3.webp",
-            width: 1440,
-            height: 630,
-            alt: "Editorial illustration of a modular AI-native studio with context, tools, and a review loop",
-          },
-        ],
       },
     });
+    // No page image: the route's opengraph-image.tsx (the Lemons card) is the
+    // share image, and an explicit one here would replace it (SPEC §3.15).
+    expect((await generateLandingMetadata()).openGraph).not.toHaveProperty("images");
 
     expect(await generateCourseMetadata()).toMatchObject({
       title: "AI-Native Workflow Course: tasks, knowledge and automation",
@@ -205,7 +198,7 @@ describe("AI-Native locale propagation across the complete course lifecycle", ()
 
   it("localizes quiz, completion-record, and public record-reader metadata", async () => {
     expect(await generateQuizMetadata()).toMatchObject({
-      title: "Workshop quiz: AI-Native Workflow Course",
+      title: "Final quiz: AI-Native Workflow Course",
       robots: { index: false, follow: false },
       alternates: { canonical: null },
     });

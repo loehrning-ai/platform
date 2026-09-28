@@ -1,30 +1,24 @@
 # Excel und Datenanalyse: Zahlen, die stimmen
 
-Dein Chef will die Quartalszahlen. Bis 15 Uhr.
+Dein Chef will bis 15 Uhr die Quartalszahlen für vier Produktlinien, mit Wachstum, Einbrüchen, Ausreißern und einer Empfehlung.
 
-Vier Produktlinien, vier Quartale, sechzehn Zellen. Klingt harmlos.
-
-Dann die Fragen: Welches Produkt wächst? Wo bricht etwas ein? Gibt es Ausreißer? Und bitte mit Empfehlung.
-
-Bei Apple war ich Data Scientist. Was mir von Partnerteams an Excel-Dateien auf den Tisch kam, war erschreckend: Copy-Paste-Fehler in Formeln, vertauschte Spalten, veraltete Referenzen. Nicht weil die Leute schlecht waren. Weil Excel-Arbeit monoton ist und Monotonie Fehler produziert.
-
-KI löst nicht das Problem schlechter Daten. Aber sie fängt Fehler, die du nach der dritten Stunde nicht mehr siehst.
+Als Data Scientist bei Apple bekam ich von Partnerteams Excel-Dateien mit Copy-Paste-Fehlern in Formeln, vertauschten Spalten und veralteten Referenzen, weil monotone Excel-Arbeit Fehler produziert. Schlechte Daten repariert KI nicht, aber sie fängt Fehler, die du nach der dritten Stunde nicht mehr siehst.
 
 ## Welches Tool für welche Tabelle
 
-Bevor du eine Zelle markierst: Welche Daten stecken drin?
+Bevor du eine Zelle markierst, klärst du, welche Daten drinstecken.
 
 **Microsoft Copilot in Excel** kann eine geeignete Option sein, wenn dein Unternehmen Produkt, Vertrag, Tenant-Geografie, Berechtigungen und zulässige Datenklassen geprüft hat. Copilot arbeitet innerhalb der Microsoft-365-Dienstgrenze; daraus folgt aber nicht automatisch eine bestimmte EU-Datenresidenz für jede Tenant-Konfiguration. Prüfe aktuelle Funktionen, Limits und Datenstandorte in der Microsoft-Dokumentation und im Admin-Center. Für interne Daten gilt ausschließlich die betriebliche Freigabe.
 
-**ChatGPT Plus mit Data Analysis** kann Excel-Dateien hochladen und verarbeitet sie serverseitig bei OpenAI. Das heißt: gut für Public oder sauber anonymisierte Datensätze. Bei Internal-Daten heikel. Bei Confidential oder Restricted: nein.
+**ChatGPT Plus mit Data Analysis** kann Excel-Dateien hochladen und verarbeitet sie serverseitig bei OpenAI. Das passt für Public oder sauber anonymisierte Datensätze, ist bei Internal-Daten heikel und bei Confidential oder Restricted ausgeschlossen.
 
 **Claude Projects (Team-Tier)** erlaubt Excel-Upload mit DPA und Vertraulichkeits-Kontrolle. Eine Option, wenn dein Unternehmen Claude Team oder Enterprise lizenziert hat.
 
-> **Achtung:** Niemals eine Liste mit personenbezogenen Daten, Namen, E-Mails, Telefonnummern, Kunden-IDs, in ein Tool kippen, das keinen AVV hat. Kostenlose KI-Versionen scheiden damit aus, jede einzelne, immer.
+> **Achtung:** Listen mit personenbezogenen Daten wie Namen, E-Mails, Telefonnummern oder Kunden-IDs gehören nie in ein Tool ohne AVV. Damit scheiden alle kostenlosen KI-Versionen aus.
 
 ## Was Copilot in Excel kann
 
-Damit du mitrechnen kannst, hier die Tabelle. Vier Produktlinien, vier Quartale, alles in TEUR:
+Zum Mitrechnen hier die Tabelle, alle Werte in TEUR:
 
 | Produkt | Q1 | Q2 | Q3 | Q4 | Summe |
 |---------|----|----|----|----|-------|
@@ -33,43 +27,39 @@ Damit du mitrechnen kannst, hier die Tabelle. Vier Produktlinien, vier Quartale,
 | HZ-300 | 280 | 290 | 305 | 320 | 1.195 |
 | PV-100 | 175 | 182 | 190 | 200 | 747 |
 
-Du markierst diese Tabelle. Du fragst:
+Du markierst die Tabelle und fragst:
 
 > **Prompt-Vorlage:** Analysiere diese Quartalsdaten. Identifiziere das stärkste Produkt, den größten Rückgang und auffällige Trends. Zeige die Berechnung.
 
 Copilot liefert: KM-800 ist am stärksten (2.265 TEUR Jahresumsatz). LA-500 zeigt einen Rückgang von 395 auf 290 TEUR zwischen Q2 und Q4, ein Ausreißer. HZ-300 und PV-100 wachsen um 14% über vier Quartale.
 
-Soweit, so nützlich. Aber jetzt wird es wichtig.
-
 ## Die Spot-Check-Regel
 
-Copilot sagt: LA-500 Rückgang 23%. Du rechnest nach, am Höhepunkt in Q2. 395 minus 290 ist 105. 105 geteilt durch 395 ist 26,6%. Nicht 23%.
+Copilot nennt für LA-500 einen Rückgang von 23%. Du rechnest ab dem Höhepunkt in Q2 nach: 395 minus 290 ist 105, geteilt durch 395 sind 26,6%.
 
-Was ist passiert? Copilot hat einen anderen Referenzpunkt gewählt, Q1 (377) statt Q2 (395). 377 minus 290 ist 87, geteilt durch 377 sind 23%. Nicht falsch, aber anders als du es meinst, du denkst an den Absturz vom Hoch, Copilot rechnet vom Jahresanfang. Und genau das ist das Problem: KI-Analyse klingt präzise. Die Annahmen dahinter sind unsichtbar.
+Copilot hat Q1 (377) als Referenzpunkt gewählt: 377 minus 290 ist 87, geteilt durch 377 sind 23%. Du meinst den Absturz vom Hoch, Copilot rechnet vom Jahresanfang. KI-Analyse klingt präzise, aber die Annahmen dahinter bleiben unsichtbar.
 
 Drei Regeln für KI-Datenanalyse:
 
-**Regel 1: Zwei bis drei Werte manuell gegenprüfen.** Nicht alle. Aber genug, um zu wissen, ob die Logik stimmt. Taschenrechner, zehn Sekunden.
+**Regel 1: Zwei bis drei Werte manuell gegenprüfen.** Das reicht, um zu sehen, ob die Logik stimmt, und dauert mit dem Taschenrechner zehn Sekunden.
 
-**Regel 2: Kontext ergänzen, den die KI nicht hat.** Warum ist LA-500 eingebrochen? Ein Produktrückruf, ein Lieferengpass, oder einfach die Saison? Die Zahl allein erzählt keine Geschichte. Du kennst die Geschichte.
+**Regel 2: Kontext ergänzen, den die KI nicht hat.** Ob LA-500 wegen eines Produktrückrufs, eines Lieferengpasses oder der Saison eingebrochen ist, weißt nur du.
 
-**Regel 3: Prognosen sind Extrapolation, keine Marktanalyse.** Wenn Copilot sagt „LA-500 wird in Q1 2027 bei 250 TEUR liegen", das ist eine Linie auf einem Graphen. Kein Marktwissen, keine Wettbewerbsanalyse, keine abwandernden Kunden.
+**Regel 3: Prognosen sind Extrapolation.** „LA-500 wird in Q1 2027 bei 250 TEUR liegen" ist eine verlängerte Linie auf einem Graphen, ohne Marktwissen, Wettbewerbsanalyse oder abwandernde Kunden.
 
-Bei Red Bull, 13.000 Mitarbeitende, war die größte Hürde nie die Analyse, sondern die Daten. Antwort auf „wo liegen unsere Zahlen": 47 Excel-Tabellen auf Netzlaufwerken. Die gefährlichste Zahl in jeder dieser Tabellen ist die, die plausibel aussieht. Die hinterfragt niemand. Genau die musst du prüfen.
+Bei Red Bull mit 13.000 Mitarbeitenden lagen die Zahlen in 47 Excel-Tabellen auf Netzlaufwerken. Die gefährlichste Zahl in solchen Tabellen sieht plausibel aus, und deshalb hinterfragt sie niemand. Genau die prüfst du.
 
 ## Formeln, Bereinigung, Visualisierung
 
-Excel-Formeln schreiben ist das, was die meisten zuerst ausprobieren. „Schreib mir eine SVERWEIS-Formel für..." Funktioniert und spart 5 Minuten pro Formel.
+Die meisten probieren zuerst Formeln aus: „Schreib mir eine SVERWEIS-Formel für ..." spart 5 Minuten pro Formel.
 
-Nützlicher ist Datenbereinigung. Doppelte Einträge finden, Formate vereinheitlichen, fehlende Werte markieren. Das ist Arbeit, die in Unternehmen mit 20 Mitarbeitern oft drei bis vier Stunden pro Monat frisst. KI macht es in Minuten.
+Nützlicher ist Datenbereinigung: doppelte Einträge finden, Formate vereinheitlichen, fehlende Werte markieren. In Unternehmen mit 20 Mitarbeitern frisst das oft drei bis vier Stunden pro Monat, mit KI dauert es Minuten.
 
-Und Pivot-Tabellen: Statt fünf Minuten Klicken beschreibst du in einem Satz, was du sehen willst. „Gruppiere Umsatz nach Region und Quartal, sortiert absteigend."
+Für Pivot-Tabellen beschreibst du in einem Satz, was du sehen willst, statt fünf Minuten zu klicken: „Gruppiere Umsatz nach Region und Quartal, sortiert absteigend."
 
 ## Wo KI aufhört
 
-Ist dein Datensatz sauber, strukturiert und in Excel, perfekt. Stecken deine Daten in drei Systemen, die nicht miteinander reden, halb in PDF-Rechnungen und halb im Kopf deiner Kollegin, hilft kein Prompt.
-
-Das ist kein KI-Problem. Das ist ein Datenproblem. Und es zu lösen ist der erste Schritt, bevor du irgendetwas analysierst.
+KI hilft bei sauberen, strukturierten Excel-Daten. Stecken deine Daten in drei Systemen, die nicht miteinander reden, in PDF-Rechnungen und im Kopf deiner Kollegin, löst du zuerst dieses Datenproblem, bevor du analysierst.
 
 ## Die Rechnung
 
@@ -79,8 +69,8 @@ Das ist kein KI-Problem. Das ist ein Datenproblem. Und es zu lösen ist der erst
 | Formeln schreiben (5 Stk.) | 25 Min. | 5 Min. | 20 Min. |
 | Datenbereinigung | 60 Min. | 15 Min. | 45 Min. |
 
-Bei wöchentlicher Analyse und monatlicher Bereinigung: rund **40 Minuten pro Woche**. Über ein Jahr: **30 Stunden**, in denen du statt Formeln zu tippen tatsächlich Entscheidungen triffst.
+Bei wöchentlicher Analyse und monatlicher Bereinigung sparst du rund **40 Minuten pro Woche**, über ein Jahr **30 Stunden**.
 
 ---
 
-> **Jetzt bist du dran:** Öffne deine letzte Excel-Datei. Frag Copilot nach einer Zusammenfassung. Prüfe zwei Zahlen manuell. Wenn beide stimmen, gut. Wenn nicht, noch besser. Dann weißt du, worauf du achten musst.
+> **Jetzt bist du dran:** Lass Copilot deine letzte Excel-Datei zusammenfassen und prüfe zwei Zahlen manuell. Stimmt eine nicht, weißt du, worauf du achten musst.

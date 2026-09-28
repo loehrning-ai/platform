@@ -3,10 +3,12 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import {
   TECHNICAL_COURSE_LEDGER_LINK_CLASS,
+  TECHNICAL_COURSE_LESSON_ROW_COLUMNS,
   TECHNICAL_COURSE_PRIMARY_ACTION_CLASS,
   TECHNICAL_COURSE_SECONDARY_ACTION_CLASS,
   TechnicalCourseFrame,
   TechnicalCourseHeader,
+  TechnicalCourseLessonNumber,
   TechnicalCourseSectionHeading,
 } from "@/components/course/technical-course-landing";
 import { getCodexCourseCopy } from "@/lib/codex/course-copy";
@@ -117,14 +119,14 @@ export default async function CodexCourseLandingPage() {
           secondaryAction={
             <Link
               href="#lessons"
-              className={TECHNICAL_COURSE_SECONDARY_ACTION_CLASS}
+              className={`${TECHNICAL_COURSE_SECONDARY_ACTION_CLASS} max-sm:hidden`}
             >
               {copy.map}
             </Link>
           }
         />
 
-        <section id="lessons" className="mt-12 scroll-mt-24">
+        <section id="lessons" className="mt-12 scroll-mt-24 max-sm:mt-8">
           <TechnicalCourseSectionHeading
             eyebrow={copy.courseEyebrow}
             title={copy.courseTitle}
@@ -141,7 +143,7 @@ export default async function CodexCourseLandingPage() {
                   className="grid min-w-0 border-t border-border lg:grid-cols-[240px_minmax(0,1fr)]"
                 >
                   <div className="min-w-0 py-4 pr-5 lg:border-r lg:border-border">
-                    <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
+                    <p className="text-label text-muted-foreground">
                       {track.label}
                     </p>
                     <h3 className="mt-1 break-words text-lg font-bold text-foreground">
@@ -160,16 +162,17 @@ export default async function CodexCourseLandingPage() {
                             lessonId: lesson.id,
                           })}
                           prefetch={false}
-                          className={`${TECHNICAL_COURSE_LEDGER_LINK_CLASS} grid-cols-[4.75rem_minmax(0,1fr)_1rem]`}
+                          className={`${TECHNICAL_COURSE_LEDGER_LINK_CLASS} ${TECHNICAL_COURSE_LESSON_ROW_COLUMNS}`}
                         >
-                          <p className="font-mono text-xs font-bold uppercase tracking-[0.06em] text-brand-orange">
-                            {copy.lessonLabel(lesson.number)}
-                          </p>
+                          <TechnicalCourseLessonNumber
+                            label={copy.lessonLabel(lesson.number)}
+                            number={lesson.number}
+                          />
                           <div className="min-w-0">
                             <h4 className="break-words text-[15px] font-semibold text-foreground">
                               {lesson.title}
                             </h4>
-                            <p className="mt-0.5 break-words text-[13px] leading-[1.4] text-muted-foreground">
+                            <p className="mt-0.5 break-words text-[13px] leading-[1.4] text-muted-foreground max-sm:text-[14px]">
                               {lesson.hook}
                             </p>
                           </div>

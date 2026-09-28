@@ -26,9 +26,8 @@ const RECHTE: readonly Recht[] = [
         maschinenlesbar markieren (Abs. 2), und wer einen Deepfake
         veröffentlicht, muss die künstliche Erzeugung offenlegen (Abs. 4),
         mit Erleichterungen für erkennbar künstlerische oder satirische
-        Inhalte. Für bestimmte Altsysteme ist bei der technischen Markierung
-        eine Übergangsfrist bis zum 2. Dezember 2026 beschlossen, siehe
-        Abschnitt 04.
+        Inhalte. Für bestimmte Altsysteme gilt bei der technischen Markierung
+        eine Übergangsfrist bis zum 2. Dezember 2026.
       </>
     ),
   },
@@ -41,10 +40,9 @@ const RECHTE: readonly Recht[] = [
         Hochrisiko-Systems nach Anhang III eine Entscheidung mit rechtlicher
         oder ähnlich erheblicher Wirkung für dich, etwa bei Kredit,
         Einstellung oder Sozialleistungen, kannst du eine klare und
-        aussagekräftige Erklärung verlangen, welche Rolle das System bei der
-        Entscheidung gespielt hat. Praktisch greift das Recht in dem Maße,
-        in dem die Hochrisiko-Pflichten anwendbar werden, nach dem
-        beschlossenen Zeitplan also schrittweise ab Ende 2027.
+        aussagekräftige Erklärung zur Rolle des Systems verlangen. Praktisch
+        greift das Recht, soweit die Hochrisiko-Pflichten anwendbar werden,
+        nach dem beschlossenen Zeitplan also schrittweise ab Ende 2027.
       </>
     ),
   },
@@ -56,9 +54,8 @@ const RECHTE: readonly Recht[] = [
         Vor den verbotenen Praktiken: Social Scoring, Emotionserkennung am
         Arbeitsplatz und in Schulen (außer Medizin und Sicherheit),
         ungezieltem Aufbau von Gesichtsdatenbanken, gezielter Manipulation
-        und der Ausnutzung von Schutzbedürftigkeit. Diese Verbote gelten
-        seit dem 2. Februar 2025, mit dem höchsten Bußgeldrahmen des
-        Gesetzes.
+        und der Ausnutzung von Schutzbedürftigkeit. Für sie gilt der höchste
+        Bußgeldrahmen des Gesetzes.
       </>
     ),
   },
@@ -71,8 +68,8 @@ const RECHTE: readonly Recht[] = [
         einen Verstoß gegen die Verordnung vermutest. In Deutschland macht
         das seit dem 29. Juli 2026 geltende KI-MIG die Bundesnetzagentur zur
         zentralen Anlaufstelle und Beschwerdestelle, soweit keine Fachbehörde
-        zuständig ist; nutze den offiziell veröffentlichten Weg. Unabhängig
-        davon helfen Verbraucherzentralen bei rechtlicher Erstberatung.
+        zuständig ist; nutze den offiziell veröffentlichten Weg.
+        Verbraucherzentralen helfen bei rechtlicher Erstberatung.
       </>
     ),
   },
@@ -81,9 +78,9 @@ const RECHTE: readonly Recht[] = [
     artikel: "Art. 22 DSGVO · gilt seit 2018",
     antwort: (
       <>
-        Das kommt nicht aus dem AI Act. Art. 22 DSGVO gibt dir bei rein
-        automatisierten Einzelentscheidungen mit rechtlicher oder ähnlich
-        erheblicher Wirkung das Recht auf menschliches Eingreifen und darauf,
+        Das regelt die DSGVO: Art. 22 gibt dir bei rein automatisierten
+        Einzelentscheidungen mit rechtlicher oder ähnlich erheblicher Wirkung
+        das Recht auf menschliches Eingreifen und darauf,
         den eigenen Standpunkt darzulegen. AI Act und DSGVO gelten
         nebeneinander: Der eine regelt das System, die andere deine Daten.
       </>
@@ -102,9 +99,8 @@ export function DeineRechte() {
         Sechs Fragen, sechs <span className="em">Artikel.</span>
       </h2>
       <p className="dek">
-        Was du als Bürgerin oder Bürger konkret verlangen kannst, mit
-        Artikel und Datum. Diese Übersicht vereinfacht bewusst; im
-        Einzelfall gelten Ausnahmen und Übergangsregeln.
+        Was du verlangen kannst, mit Artikel und Datum. Im Einzelfall gelten
+        Ausnahmen und Übergangsregeln.
       </p>
 
       <div className="qa">

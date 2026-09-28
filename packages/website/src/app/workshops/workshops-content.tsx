@@ -1,290 +1,500 @@
-import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
-import type { Workshop } from "@/lib/workshops";
-import { HighlightedText } from "@/components/ui/highlighted-text";
+import type {
+  Workshop,
+  WorkshopMaterialRole,
+  WorkshopNumber,
+} from "@/lib/workshops";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
+import {
+  ArrowGlyph,
+  ButtonLink,
+  Callout,
+  Chip,
+  cx,
+  Kicker,
+  Route,
+  SectionHead,
+} from "@/components/werk";
+import {
+  CapsLine,
+  PlakatBand,
+  PosterCover,
+  PosterNumeral,
+  PosterThumb,
+} from "@/components/plakat";
+import { posterTitleFallbackStyle } from "@/lib/plakat/fit";
+import {
+  hubPlakat,
+  workshopPlakat,
+  type WorkshopPlakat,
+} from "@/lib/plakat/palettes";
 import { WORKSHOP_PAGE_COPY } from "./workshop-copy";
+import { splitTitle } from "./workshop-title";
 
 interface Props {
   readonly workshops: readonly Workshop[];
   readonly locale: Locale;
 }
 
-const WORKSHOP_WASHES = [
-  "bg-brand-sky/50",
-  "bg-brand-pink/50",
-  "bg-brand-peach/55",
-] as const;
+/** Workshops that carry the "Neu" meta chip on the hub. */
+const NEW_WORKSHOPS: ReadonlySet<WorkshopNumber> = new Set(["04"]);
 
-// Catalogue index bars in the hero aside, one per workshop, widest first.
-const INDEX_BARS = [
-  "w-full bg-brand-pink/70",
-  "w-[86%] bg-brand-sky/70",
-  "w-[68%] bg-brand-peach/75",
-] as const;
+/**
+ * The cover-band button is a recommendation, not "the newest": it stays on
+ * this workshop when a newer one leads the list (workshop-standard 4.2).
+ */
+const RECOMMENDED_START: WorkshopNumber = "03";
 
-// Offset sheets behind each card. All three stay in the light half of the
-// palette: brand-teal is the one dark, saturated hue here, and behind the
-// pink wash of card two it read as a muddy grey-green next to card one's
-// clean acid. Sky carries the same cool contrast without the mud.
-const WORKSHOP_SHEETS = [
-  "bg-brand-acid/75",
-  "bg-brand-sky/60",
-  "bg-brand-pink/65",
-] as const;
+/** Order of material nouns on a row; the list is capped at MATERIAL_CAP. */
+const MATERIAL_ORDER: readonly WorkshopMaterialRole[] = [
+  "deck",
+  "demo",
+  "kit",
+  "guide",
+  "lab",
+  "case",
+  "card",
+  "exercise",
+  "data",
+  "hub",
+  "presenter",
+  "builder",
+];
+const MATERIAL_CAP = 4;
+
+const CONTAINER = "mx-auto max-w-[75rem] px-4 sm:px-6";
+
+/**
+ * A workshop without a registered poster still gets one; palettes.test.ts
+ * keeps every published workshop mapped, so this only guards new entries.
+ */
+const FALLBACK_POSTER: WorkshopPlakat = { plakat: "lemons", motif: "fan" };
+
+/**
+ * Registry prose uses U+2212 for negative numbers. Loehrning Sans draws it as
+ * a long bar that reads like a dash, so the hub shows an ASCII hyphen-minus.
+ */
+function plainNumbers(text: string): string {
+  return text.replace(/\u2212/g, "-");
+}
+
+/** A negative amount after a space: "-19.960 €" or "-€19,960". */
+const NEGATIVE_AMOUNT = /((?<=^|\s)-€?\d(?:[\d.,]*\d)?(?:\s€)?)/;
+
+/**
+ * Prose with negative amounts kept on one line: a hyphen before "€" is a
+ * line-break opportunity, and "19.960 €" alone on a line reads as positive.
+ */
+function AmountText({ text }: { readonly text: string }) {
+  return plainNumbers(text)
+    .split(NEGATIVE_AMOUNT)
+    .map((part, position) =>
+      position % 2 === 1 ? (
+        <span key={position} className="whitespace-nowrap tabular-nums">
+          {part}
+        </span>
+      ) : (
+        part
+      ),
+    );
+}
+
+/**
+ * Hub order: newest first, so the latest workshop (and with it the cover-band
+ * button) leads. The registry order stays untouched for machine surfaces.
+ */
+export function orderWorkshopsForHub(
+  workshops: readonly Workshop[],
+): readonly Workshop[] {
+  return [...workshops].sort((a, b) => b.number.localeCompare(a.number));
+}
+
+/**
+ * A workshop that needs no AI account says so; otherwise the hub's short
+ * wording wins, then the first need.
+ */
+function limitingNeed(
+  workshop: Workshop,
+  browserOnly: string,
+  short: Readonly<Record<string, string>>,
+): string | undefined {
+  const noAccount = workshop.notNeeded.some((item) =>
+    /KI-Konto|AI account/i.test(item),
+  );
+  if (noAccount) return browserOnly;
+  return short[workshop.slug] ?? workshop.needs[0];
+}
+
+/** Material nouns of a row in a fixed order, capped, with "N weitere". */
+function materialNouns(workshop: Workshop, locale: Locale): readonly string[] {
+  const copy = WORKSHOP_PAGE_COPY[locale];
+  const present = new Set(workshop.materials.map((material) => material.role));
+  const nouns = MATERIAL_ORDER.filter((role) => present.has(role)).map(
+    (role) => copy.catalog.materialNouns[role] ?? copy.detail.roleLabels[role],
+  );
+  if (nouns.length <= MATERIAL_CAP + 1) return nouns;
+  return [
+    ...nouns.slice(0, MATERIAL_CAP),
+    copy.catalog.moreMaterials(nouns.length - MATERIAL_CAP),
+  ];
+}
+
+function formatDate(iso: string, locale: Locale): string {
+  return new Intl.DateTimeFormat(locale === "de" ? "de-DE" : "en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(`${iso}T00:00:00Z`));
+}
 
 export function WorkshopsContent({ workshops, locale }: Props) {
   const copy = WORKSHOP_PAGE_COPY[locale].catalog;
+  const ordered = orderWorkshopsForHub(workshops);
+  const index = [...workshops].sort((a, b) =>
+    a.number.localeCompare(b.number),
+  );
+  const first =
+    workshops.find((workshop) => workshop.number === RECOMMENDED_START) ??
+    ordered[0];
+  const scene = hubPlakat(workshops);
+  const withPresenter = index
+    .filter((workshop) =>
+      workshop.materials.some((material) => material.role === "presenter"),
+    )
+    .map((workshop) => workshop.number);
 
   return (
-    <>
-      {/* Phone-first geometry throughout: base values are the compact
-          companion values, and every `sm:`/`md:`/`lg:` variant restores the
-          reviewed desktop layout unchanged. */}
-      <section className="relative isolate overflow-hidden border-b border-border bg-paper py-6 sm:py-14">
-        <span
-          className="pointer-events-none absolute -right-10 top-12 h-28 w-80 rotate-3 bg-brand-sky/60"
-          aria-hidden="true"
-        />
-        <span
-          className="pointer-events-none absolute -left-20 bottom-10 h-20 w-72 -rotate-6 bg-brand-pink/55"
-          aria-hidden="true"
-        />
-        <div
-          className="relative mx-auto grid max-w-6xl gap-5 px-4 sm:gap-8 sm:px-6 lg:grid-cols-12 lg:items-center lg:gap-10"
-          data-workshop-editorial-spread
+    <div data-plakat-page={scene}>
+      {/* The band takes the newest workshop's scene. Its one poster object is
+          the key numeral, the workshop count, in the scene's mark colour: in
+          the lg art column, and as a strip after the button on phones. The
+          list below is the index, so the band carries no anchor row. */}
+      <PlakatBand
+        plakat={scene}
+        labelledBy="workshops-hub-heading"
+        // Phones: a 96px strip with a 10rem glyph, so the first row still
+        // starts inside the first screen with the wider fallback face.
+        // From sm the strip and its glyph grow with the width.
+        className="[&>[data-plakat-art-phone]]:mt-4 [&>[data-plakat-art-phone]]:h-24 sm:[&>[data-plakat-art-phone]]:h-40"
+        // lg: the glyph is sized to the band, so the "4" fills the art
+        // column as the poster object rather than sitting in its corner.
+        art={
+          <PosterNumeral
+            value={workshops.length}
+            plakat={scene}
+            className="[&_text]:text-[36rem]"
+          />
+        }
+        artPhone={
+          <PosterNumeral
+            value={workshops.length}
+            plakat={scene}
+            format="strip"
+            className="[&_text]:text-[10rem] sm:[&_text]:text-[16rem]"
+          />
+        }
+      >
+        <CapsLine>{copy.hubKicker(workshops.length)}</CapsLine>
+        <h1
+          id="workshops-hub-heading"
+          className="poster-title mt-3 max-w-[14ch] text-scene-ink sm:mt-4"
+          style={posterTitleFallbackStyle(copy.hubHeading)}
         >
-          <header className="relative min-w-0 py-1 sm:py-3 lg:col-span-8 lg:py-8">
-            <p className="flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
-              <span className="h-3 w-3 bg-brand-teal" aria-hidden="true" />
-              {copy.kicker}
-            </p>
-            <h1 className="relative mt-4 max-w-[15ch] text-[2.25rem] font-bold leading-[0.9] tracking-[-0.06em] text-foreground sm:mt-5 sm:text-[clamp(2.65rem,6vw,5.75rem)]">
-              {copy.headingLead}{" "}
-              <HighlightedText colorVar="--color-brand-sky">
-                {copy.headingSecond}
-              </HighlightedText>
-            </h1>
-            <p className="mt-4 max-w-2xl text-pretty text-sm leading-relaxed text-muted-foreground sm:mt-6 sm:text-lg">
-              {copy.introduction(workshops.length)}
-            </p>
-          </header>
-
-          <aside
-            className="relative min-w-0 pb-3 pr-3 lg:col-span-4 lg:-rotate-1"
-            aria-label={copy.catalogueIndex}
-          >
-            <span
-              className="absolute inset-0 translate-x-3 translate-y-3 bg-brand-acid/75"
-              aria-hidden="true"
-            />
-            <div className="relative bg-paper p-4 shadow-card ring-1 ring-foreground/30 sm:p-6">
-              <div className="flex items-baseline justify-between gap-4 border-b border-foreground pb-4">
-                <span className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
-                  {copy.catalogueIndex}
-                </span>
-                <strong className="text-3xl font-bold leading-none tracking-[-0.07em] text-foreground sm:text-4xl">
-                  {String(workshops.length).padStart(2, "0")}
-                </strong>
-              </div>
-              {/* Jump links to each card: hidden on phones, where the cards
-                  follow directly and the count above already says enough. */}
-              {workshops.length > 0 ? (
-                <ol className="mt-5 hidden space-y-2 sm:block">
-                  {workshops.map((workshop, index) => (
-                    <li key={workshop.slug}>
-                      <a
-                        href={`#workshop-${workshop.slug}`}
-                        className={`flex min-h-11 items-center gap-3 px-3 font-mono text-xs font-bold text-foreground underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange ${INDEX_BARS[index % INDEX_BARS.length]}`}
-                      >
-                        <span>{workshop.number}</span>
-                        <span className="font-sans text-sm">
-                          {workshop.topic}
-                        </span>
-                      </a>
-                    </li>
-                  ))}
-                </ol>
-              ) : null}
-            </div>
-          </aside>
+          {copy.hubHeading}
+        </h1>
+        <p className="mt-3 max-w-[40ch] text-body text-scene-ink text-pretty sm:mt-5 sm:max-w-[52ch]">
+          {copy.hubLead}
+        </p>
+        {/* Below 360px the button spans the column, so it never breaks into
+            two lines beside a ragged line. */}
+        <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 max-[359px]:grid max-[359px]:grid-cols-1 max-[359px]:[&>a]:w-full max-[359px]:[&>a]:justify-between sm:mt-8">
+          {first ? (
+            <ButtonLink
+              href={localizeHref(`/workshops/${first.slug}`, locale)}
+              tone="scene"
+              locale={locale}
+            >
+              {copy.hubStart(first.number)}
+            </ButtonLink>
+          ) : null}
+          <p className="text-body text-scene-ink">{copy.hubAccess}</p>
         </div>
-      </section>
+      </PlakatBand>
 
       <section
-        className="py-6 sm:py-12"
         aria-labelledby="workshop-list-heading"
+        className="pt-5 sm:pt-16"
       >
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <header className="mb-5 grid gap-3 border-b border-border pb-4 sm:mb-8 sm:grid-cols-[minmax(12rem,0.48fr)_minmax(0,1fr)] sm:items-end sm:gap-8">
-            <h2
-              id="workshop-list-heading"
-              className="text-2xl font-bold tracking-[-0.035em] sm:text-3xl"
-            >
-              {copy.available}
-            </h2>
-            <p className="max-w-xl text-sm leading-relaxed text-muted-foreground sm:justify-self-end sm:text-right">
-              {copy.availableDescription}
-            </p>
-          </header>
+        <div className={CONTAINER}>
+          <SectionHead
+            id="workshop-list-heading"
+            title={copy.listHeading}
+            caption={ordered.length > 1 ? copy.listCaption : undefined}
+            size="compact"
+          />
 
-          {workshops.length === 0 ? (
+          {ordered.length === 0 ? (
             <p
               role="status"
-              className="border-y border-border py-5 text-sm text-muted-foreground"
+              className="mt-8 border-b border-hairline pb-6 text-body text-muted-foreground"
             >
               {copy.empty}
             </p>
           ) : (
-            <ol className="grid gap-6 sm:gap-12">
-              {workshops.map((workshop, index) => (
+            <ol className="mt-2" data-workshop-list="">
+              {ordered.map((workshop) => (
                 <li key={workshop.slug} className="min-w-0">
-                  <WorkshopRow
-                    workshop={workshop}
-                    locale={locale}
-                    position={index + 1}
-                  />
+                  <WorkshopRow workshop={workshop} locale={locale} />
                 </li>
               ))}
             </ol>
           )}
+
+          {/* A note, not a section: two sentences do not earn a Kopflinie,
+              so it sits under the last row's hairline with no rule of its
+              own, its lead-in set in ink. */}
+          <p
+            data-workshop-teams=""
+            className="mt-6 max-w-[64ch] text-[0.9375rem]/[1.5] text-muted-foreground text-pretty sm:mt-10 sm:text-body"
+          >
+            <strong className="font-semibold text-foreground">
+              {copy.teamsHeading}.
+            </strong>{" "}
+            {copy.teamsBody(withPresenter)}
+            {withPresenter.length > 0 ? (
+              <span data-workshop-key-hint="" className="max-lg:hidden">
+                {" "}
+                {copy.teamsKeyHint}
+              </span>
+            ) : null}
+          </p>
         </div>
       </section>
-    </>
+
+      {/* The route follows the list, so the posters come right after the
+          band. Phones skip it: every workshop page opens with its own
+          agenda. */}
+      <section
+        aria-labelledby="workshop-route-heading"
+        className="hidden pt-16 sm:block"
+      >
+        <div className={CONTAINER}>
+          <SectionHead
+            id="workshop-route-heading"
+            title={copy.routeHeading}
+            caption={copy.routeCaption}
+            size="compact"
+          />
+          {/* Phones: the five station names on one scroll-snapped rail, no
+              captions. From sm the captions return at 14px so the five
+              columns do not wrap into ragged one-word lines; the route is
+              capped so it reads as deliberate. */}
+          <Route
+            stations={copy.routeStations.map((station) => ({
+              label: station.label,
+              caption: (
+                <span className="hidden text-[0.875rem] leading-snug text-pretty sm:block">
+                  {station.caption}
+                </span>
+              ),
+            }))}
+            mode="description"
+            label={copy.routeHeading}
+            locale={locale}
+            layout="rail"
+            className="mt-4 max-w-[60rem] sm:mt-8"
+          />
+        </div>
+      </section>
+
+      <div className={cx(CONTAINER, "pb-10 pt-4 sm:pb-24 sm:pt-12")}>
+        <Callout variant="boundary" className="max-w-[64ch]">
+          {copy.boundary}
+        </Callout>
+      </div>
+    </div>
   );
 }
 
 function WorkshopRow({
   workshop,
   locale,
-  position,
 }: {
   readonly workshop: Workshop;
   readonly locale: Locale;
-  readonly position: number;
 }) {
   const copy = WORKSHOP_PAGE_COPY[locale].catalog;
   const headingId = `workshop-${workshop.slug}-heading`;
+  const roles = materialNouns(workshop, locale);
+  const need = limitingNeed(
+    workshop,
+    copy.requirementBrowserOnly,
+    copy.requirementShort,
+  );
+  const times = [
+    workshop.minutesLive !== undefined
+      ? copy.minutesLive(workshop.minutesLive)
+      : null,
+    copy.minutesSelfStudy(workshop.minutesSelfStudy),
+  ].filter((part): part is string => part !== null);
+  const isNew = NEW_WORKSHOPS.has(workshop.number);
+  const isStart = workshop.number === RECOMMENDED_START;
+  const title = splitTitle(workshop.title);
+  const poster = workshopPlakat(workshop.slug) ?? FALLBACK_POSTER;
 
+  // Below md a row is a list line, not a card: an 80px poster thumb with the
+  // number, a duration line, the title head and one flowing "you leave with"
+  // sentence, with an arrow top right. The summary, the need, the
+  // materials and the live date live on the workshop page. The row bleeds
+  // to the screen edge so the tap highlight and hairline run full width. From
+  // md the same DOM is the two-column sheet with the poster cover left.
   return (
     <article
       id={`workshop-${workshop.slug}`}
       data-testid="workshop-row"
-      className="group relative isolate grid min-w-0 scroll-mt-24 bg-paper shadow-card ring-1 ring-foreground/20 transition-transform duration-200 motion-safe:hover:-translate-y-0.5 motion-reduce:transition-none md:grid-cols-[minmax(18rem,0.88fr)_minmax(0,1.12fr)]"
       aria-labelledby={headingId}
-      data-decision-card
+      // The link's ::after makes the whole row clickable, so keyboard focus
+      // rings the whole row too. Without :has() the link keeps its own ring.
+      className="group relative grid min-w-0 scroll-mt-24 grid-cols-[5rem_minmax(0,1fr)] items-start gap-x-4 border-b border-hairline py-4 outline-offset-4 transition-colors duration-[120ms] has-[a:active]:bg-card-hover has-[a:focus-visible]:outline has-[a:focus-visible]:outline-[3px] has-[a:focus-visible]:outline-brand-orange motion-reduce:transition-none max-md:-mx-4 max-md:px-4 max-md:outline-offset-[-3px] sm:max-md:-mx-6 sm:max-md:px-6 md:grid-cols-[14rem_minmax(0,1fr)] md:items-start md:gap-10 md:py-10 lg:grid-cols-[18rem_minmax(0,1fr)]"
     >
-      <span
-        className={`absolute inset-0 -z-10 translate-x-2 translate-y-2 transition-transform duration-200 group-hover:translate-x-3 group-hover:translate-y-3 motion-reduce:transition-none ${WORKSHOP_SHEETS[(position - 1) % WORKSHOP_SHEETS.length]}`}
-        aria-hidden="true"
-      />
-
-      <div
-        className={`relative min-w-0 overflow-hidden border-b border-foreground/20 p-4 md:flex md:flex-col md:justify-center md:border-b-0 md:border-r sm:p-6 ${
-          position % 2 === 0 ? "md:order-2 md:border-l md:border-r-0" : ""
-        } ${WORKSHOP_WASHES[(position - 1) % WORKSHOP_WASHES.length]}`}
-      >
-        <span className="absolute left-3 top-3 z-10 bg-paper px-2 py-1 font-mono text-xs font-bold text-foreground ring-1 ring-foreground/30">
-          {workshop.number}
-        </span>
-        <div className="relative mt-4 bg-paper p-2 shadow-card ring-1 ring-foreground/30 transition-transform duration-300 group-hover:-rotate-1 motion-reduce:transition-none sm:mt-5">
-          <Image
-            src={`/workshops/${workshop.slug}/card-preview.webp`}
-            alt=""
-            aria-hidden="true"
-            width={1024}
-            height={576}
-            {...(position === 1
-              ? { loading: "eager" as const, fetchPriority: "high" as const }
-              : { loading: "lazy" as const })}
-            sizes="(min-width: 1024px) 430px, (min-width: 768px) 42vw, calc(100vw - 64px)"
-            className="aspect-[16/7] h-auto w-full object-cover object-top ring-1 ring-foreground/20 sm:aspect-[16/9]"
+      <figure className="min-w-0">
+        {/* Each row shows its workshop's own poster, in its own palette, on
+            the paper list: an 80px thumb on a phone, the cover from md. Both
+            are decorative; the row's heading names the workshop. */}
+        <div aria-hidden="true" data-workshop-tile="" className="md:hidden">
+          <PosterThumb
+            plakat={poster.plakat}
+            motif={poster.motif}
+            numeral={workshop.number}
+            size="md"
           />
         </div>
-        <p className="mt-4 font-mono text-xs font-bold uppercase tracking-[0.1em] text-muted-foreground">
+        <div
+          aria-hidden="true"
+          data-workshop-mini-cover=""
+          className="hidden md:block"
+        >
+          <PosterCover
+            plakat={poster.plakat}
+            motif={poster.motif}
+            numeral={workshop.number}
+          />
+        </div>
+        <figcaption className="mt-2 hidden text-caption text-muted-foreground md:block">
           {workshop.format}
-        </p>
-      </div>
+        </figcaption>
+      </figure>
 
-      {/* On a phone the title comes first, then the link into the workshop,
-          with the decision, summary and facts after it. That is pure `order`
-          on this flex column (the link is the only control here, so focus
-          order still follows the screen), and from md the reviewed reading
-          order returns. */}
-      <div className="flex min-w-0 flex-col p-4 sm:p-7">
+      <div className="min-w-0">
+        {/* The arrow sits beside the title, so only the title keeps clear
+            of it (pr-8); the meta line uses the full width. */}
+        <p
+          data-workshop-meta=""
+          className="text-caption text-muted-foreground tabular-nums md:hidden"
+        >
+          {isStart ? (
+            <>
+              <span className="font-semibold text-foreground">
+                {copy.startHere}
+              </span>
+              {" · "}
+            </>
+          ) : null}
+          {isNew ? (
+            <>
+              <span className="font-semibold text-foreground">
+                {copy.newBadge}
+              </span>
+              {" · "}
+            </>
+          ) : null}
+          <span className="whitespace-nowrap">
+            {copy.rowTimes(workshop.minutesLive, workshop.minutesSelfStudy)}
+          </span>
+        </p>
+        <div className="hidden flex-wrap items-center gap-x-3 gap-y-2 md:flex">
+          <Kicker>
+            {[copy.workshopNumber(workshop.number), ...times].join(" · ")}
+          </Kicker>
+          {isNew ? <Chip>{copy.newBadge}</Chip> : null}
+        </div>
+        {/* A phone row shows the title head only; the subtitle stays in the
+            heading's text and accessible name. */}
         <h3
           id={headingId}
-          className="order-first max-w-[22ch] text-2xl font-bold leading-[1.05] tracking-[-0.04em] text-foreground sm:text-4xl md:order-none"
+          className="mt-0.5 max-w-[28ch] pr-8 text-[1.0625rem] font-bold leading-[1.2] tracking-[-0.01em] text-foreground text-balance decoration-2 underline-offset-4 group-hover:underline md:mt-2 md:text-[1.75rem]"
         >
-          <span className="mb-2 flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange sm:mb-3">
-            <span className="h-3 w-3 bg-brand-cobalt" aria-hidden="true" />
-            {copy.workshopHeading(workshop.number)}
-            <span className="sr-only">:</span>
-          </span>{" "}
-          {workshop.title}
+          {title.head}
+          {title.subtitle ? (
+            <span className="sr-only md:not-sr-only">: {title.subtitle}</span>
+          ) : null}
         </h3>
-
-        <p
-          data-workshop-decision
-          className="mt-4 max-w-2xl text-base font-semibold leading-snug text-foreground sm:text-lg"
-        >
-          {copy.firstDecision(workshop.decisionLab.title)}
+        {/* The title is the phone hook; the summary returns from md. */}
+        <p className="mt-3 hidden max-w-[56ch] text-body text-muted-foreground text-pretty md:block">
+          <AmountText text={workshop.summary} />
         </p>
 
-        <p className="mt-4 max-w-2xl border-l-[3px] border-foreground bg-brand-acid/35 px-4 py-3 text-sm leading-relaxed text-muted-foreground sm:mt-5">
-          {workshop.summary}
-        </p>
-
-        <dl className="mt-4 flex flex-wrap gap-x-6 gap-y-3 border-y border-border py-3 text-sm text-muted-foreground sm:mt-6 sm:gap-y-4 sm:py-4">
-          <div className="min-w-[7rem] flex-1">
-            <dt className="font-mono text-xs font-bold uppercase tracking-[0.08em] text-brand-orange">
-              {copy.duration}
-            </dt>
-            <dd className="mt-1 break-words text-xs font-semibold text-foreground">
-              {workshop.duration}
-            </dd>
-          </div>
-          <div className="min-w-[7rem] flex-1">
-            <dt className="font-mono text-xs font-bold uppercase tracking-[0.08em] text-brand-orange">
-              {copy.steps}
-            </dt>
-            <dd className="mt-1 break-words text-xs font-semibold text-foreground">
-              {copy.stepCount(workshop.steps.length)}
-            </dd>
-          </div>
-          <div className="min-w-[7rem] flex-1">
-            <dt className="font-mono text-xs font-bold uppercase tracking-[0.08em] text-brand-orange">
-              {copy.materials}
-            </dt>
-            <dd className="mt-1 break-words text-xs font-semibold text-foreground">
-              {copy.materialCount(workshop.materials.length)}
-            </dd>
-          </div>
-        </dl>
-
-        <div className="mt-4 flex items-baseline gap-3 sm:mt-5">
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange">
-            {copy.proofTarget}
-          </p>
-          <p
-            data-workshop-output
-            className="text-base font-semibold leading-snug text-foreground"
+        {/* 73ch at 13px is the 56ch measure of the 17px summary above, so
+            the facts line up with the prose instead of wrapping early. On a
+            phone only the first pair stays, as one flowing sentence over the
+            full width, capped at two lines: what you leave with. */}
+        <dl className="mt-1 grid max-w-[73ch] grid-cols-[auto_minmax(0,1fr)] gap-x-1.5 gap-y-1 text-caption max-md:line-clamp-2 md:mt-5 md:gap-x-4">
+          <dt className="font-semibold text-foreground max-md:mr-1 max-md:inline max-md:after:content-[':']">
+            {copy.leaveWith}
+          </dt>
+          <dd
+            data-workshop-output=""
+            className="text-muted-foreground max-md:inline"
           >
             {workshop.outcome}
+          </dd>
+          {need ? (
+            <>
+              <dt className="hidden font-semibold text-foreground md:block">
+                {copy.requirementLabel}
+              </dt>
+              <dd className="hidden text-muted-foreground text-pretty md:block">
+                {need}
+              </dd>
+            </>
+          ) : null}
+          <dt className="hidden font-semibold text-foreground md:block">
+            {copy.materialLabel}
+          </dt>
+          <dd
+            data-workshop-roles=""
+            className="hidden text-muted-foreground md:block"
+          >
+            {/* Each separator stays on the line of the word before it. */}
+            {roles.map((role, position) => (
+              <span key={role} className="whitespace-nowrap">
+                {role}
+                {position < roles.length - 1 ? " · " : ""}
+              </span>
+            ))}
+          </dd>
+        </dl>
+        {workshop.provenance.liveRunAt ? (
+          <p className="mt-2 hidden text-caption text-muted-foreground md:block">
+            {copy.liveTested(formatDate(workshop.provenance.liveRunAt, locale))}
           </p>
-        </div>
-        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          {workshop.accessNote}
-        </p>
+        ) : null}
 
+        {/* One link per row. Its ::after stretches over the whole row, so the
+            cover and the text are clickable too; the row carries the focus
+            ring where :has() is supported. On a phone the link itself covers
+            the row and shows only the arrow, top right beside the title; the
+            label stays its name. */}
         <Link
           href={localizeHref(`/workshops/${workshop.slug}`, locale)}
-          className="-order-1 mt-4 inline-flex min-h-11 items-center justify-between gap-2 self-start bg-brand-orange px-4 py-2 text-sm font-bold text-white ring-1 ring-foreground/20 transition-colors hover:bg-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange sm:mt-6 md:order-none"
+          // Starts with the visible label (WCAG 2.5.3). An sr-only span would
+          // be blockified inside inline-flex and put a space before the colon.
+          aria-label={`${copy.viewWorkshop}: ${workshop.title}`}
+          className="inline-flex min-h-11 min-w-11 items-center gap-1.5 font-semibold text-foreground underline decoration-border underline-offset-4 transition-colors duration-[120ms] [-webkit-tap-highlight-color:transparent] after:absolute after:inset-0 hover:decoration-foreground group-hover:decoration-foreground motion-reduce:transition-none supports-[selector(:has(*))]:focus-visible:outline-none max-md:absolute max-md:inset-0 max-md:items-start max-md:justify-end max-md:px-4 max-md:pt-[2.375rem] sm:max-md:px-6 md:mt-4"
         >
-          {copy.openWorkshop}
-          <span className="sr-only">: {workshop.title}</span>
-          <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+          <span className="max-md:sr-only">{copy.viewWorkshop}</span>
+          <ArrowGlyph />
         </Link>
       </div>
     </article>

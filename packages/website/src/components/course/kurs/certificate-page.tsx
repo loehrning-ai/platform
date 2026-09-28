@@ -225,8 +225,8 @@ export function CertificatePage({ courseSlug, locale }: CertificatePageProps) {
       setErrors({
         download:
           config.language === "en"
-            ? "The PDF could not be generated. No certificate was downloaded. Retry in a current browser."
-            : "Die PDF konnte nicht erzeugt werden. Es wurde keine Bescheinigung heruntergeladen. Versuche es erneut in einem aktuellen Browser.",
+            ? "The PDF could not be generated and nothing was downloaded. Try again in a current browser."
+            : "Die PDF konnte nicht erzeugt werden, es wurde nichts heruntergeladen. Versuch es in einem aktuellen Browser erneut.",
       });
     } finally {
       if (downloadAttemptRef.current === attempt) setLoading(false);
@@ -244,12 +244,12 @@ export function CertificatePage({ courseSlug, locale }: CertificatePageProps) {
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             {config.language === "en" ? "Back to course" : "Zurück zum Kurs"}
           </Link>
-          <section className="mt-5 border-2 border-brand-orange bg-card p-5 sm:p-7">
+          <section className="mt-5 border-t-2 border-foreground pt-5">
             <GraduationCap
-              className="h-10 w-10 text-brand-orange"
+              className="h-8 w-8 text-foreground"
               aria-hidden="true"
             />
-            <h1 className="mt-3 break-words text-3xl font-bold tracking-[-0.03em] [overflow-wrap:anywhere]">
+            <h1 className="mt-3 break-words text-fluid-h1 font-bold [overflow-wrap:anywhere]">
               {config.certificateTitle}
             </h1>
             <p
@@ -258,8 +258,8 @@ export function CertificatePage({ courseSlug, locale }: CertificatePageProps) {
             >
               {ownerKind === "unknown"
                 ? config.language === "en"
-                  ? "Choose Continue locally above or wait for account verification to load your completion record."
-                  : "Wähle oben Lokal weiterlernen oder warte auf die Kontoprüfung, um deinen Abschlussstand zu laden."
+                  ? "Choose Continue locally above or wait for the account check."
+                  : "Wähle oben Lokal weiterlernen oder warte auf die Kontoprüfung."
                 : config.language === "en"
                   ? "Checking the completion record."
                   : "Abschlussstand wird geprüft."}
@@ -290,15 +290,18 @@ export function CertificatePage({ courseSlug, locale }: CertificatePageProps) {
             </Link>
 
             {/* Certificate Preview */}
-            <div className="border-2 border-brand-orange bg-brand-acid/15 p-5 text-center sm:p-8">
-              <GraduationCap className="mx-auto h-12 w-12 text-brand-orange" />
-              <h1 className="mt-4 max-w-full break-words text-3xl font-bold tracking-[-0.03em] [overflow-wrap:anywhere]">
+            <div className="border border-foreground bg-card p-5 text-center sm:p-8">
+              <GraduationCap
+                className="mx-auto h-10 w-10 text-foreground"
+                aria-hidden="true"
+              />
+              <h1 className="mt-4 max-w-full break-words text-fluid-h2 font-bold [overflow-wrap:anywhere]">
                 {config.certificateTitle}
               </h1>
               <p className="mt-1 text-muted-foreground">
                 {config.certificateSubtitle}
               </p>
-              <div className="mx-auto mt-6 h-px w-20 bg-brand-orange" />
+              <div className="mx-auto mt-6 h-0.5 w-20 bg-foreground" />
               <p className="mt-6 font-mono text-sm text-muted-foreground">
                 {config.language === "en" ? "Completed on" : "Abgeschlossen am"}{" "}
                 {completionDate}
@@ -310,7 +313,7 @@ export function CertificatePage({ courseSlug, locale }: CertificatePageProps) {
                     : `Ergebnis: ${Math.round(quizResult.score * 100)}%`
                   : PREVIEW_COMPLETION_LABEL[config.language][completionMode]}
               </p>
-              <div className="mx-auto mt-6 h-px w-20 bg-border" />
+              <div className="mx-auto mt-6 h-px w-20 bg-hairline" />
               <p className="mt-4 break-words text-xs text-muted [overflow-wrap:anywhere]">
                 loehrning.ai | {config.certificateReferenceLabel}
               </p>
@@ -318,15 +321,13 @@ export function CertificatePage({ courseSlug, locale }: CertificatePageProps) {
 
             {/* Certificate form */}
             <div className="space-y-4">
-              <h2 className="text-lg font-semibold">
-                {config.language === "en"
-                  ? `Download ${config.recordNoun.label}`
-                  : `${config.recordNoun.label} herunterladen`}
+              <h2 className="border-t-2 border-foreground pt-4 text-fluid-h3 font-bold">
+                {config.language === "en" ? "Add your name" : "Name eintragen"}
               </h2>
               <p className="text-sm text-muted-foreground">
                 {config.language === "en"
-                  ? "Enter your name. The PDF is generated locally in your browser from your progress, it isn't issued server-side."
-                  : "Trag deinen Namen ein. Die PDF wird lokal in deinem Browser aus deinem Lernstand erstellt, sie wird nicht serverseitig ausgestellt."}
+                  ? "Your name goes only into the PDF, which your browser creates from your progress."
+                  : "Dein Name steht nur in der PDF, die dein Browser aus deinem Lernstand erstellt."}
               </p>
 
               <form className="space-y-3" onSubmit={handleDownload}>
@@ -379,10 +380,10 @@ export function CertificatePage({ courseSlug, locale }: CertificatePageProps) {
                   type="submit"
                   disabled={loading}
                   aria-busy={loading}
-                  className={`inline-flex min-h-11 max-w-full items-center gap-2 break-words border-2 border-foreground px-5 py-3.5 text-left text-sm font-bold uppercase tracking-wide transition-colors sm:px-7 ${
+                  className={`inline-flex min-h-11 max-w-full items-center gap-2 break-words px-5 py-3 text-left text-[0.9375rem] font-semibold transition-colors duration-[120ms] motion-reduce:transition-none sm:px-7 ${
                     !loading
-                      ? "bg-brand-orange text-white hover:bg-brand-orange/90"
-                      : "cursor-not-allowed bg-border text-muted-foreground"
+                      ? "bg-brand-orange text-paper hover:bg-kupfer-dark"
+                      : "cursor-not-allowed bg-inset text-muted-foreground"
                   }`}
                 >
                   {loading ? (
@@ -424,17 +425,15 @@ export function CertificatePage({ courseSlug, locale }: CertificatePageProps) {
               <p className="text-xs text-muted">
                 {config.language === "en" ? (
                   <>
-                    The name is only written into the downloaded file. Your
-                    course progress stays local in the browser; the PDF is not
-                    an official or legally binding credential.{" "}
+                    The PDF is not an official or legally binding
+                    credential.{" "}
                     {config.recordNoun.demonstrative} is based on your own
                     self-assessment, not an external exam.
                   </>
                 ) : (
                   <>
-                    Der Name wird nur in die heruntergeladene Datei geschrieben.
-                    Der Kursfortschritt bleibt lokal im Browser gespeichert; die
-                    PDF ist keine behördliche oder rechtliche Bescheinigung.{" "}
+                    Die PDF ist keine behördliche oder rechtliche
+                    Bescheinigung.{" "}
                     {config.recordNoun.demonstrative} basiert auf deiner eigenen
                     Einschätzung, nicht auf einer externen Prüfung.
                   </>

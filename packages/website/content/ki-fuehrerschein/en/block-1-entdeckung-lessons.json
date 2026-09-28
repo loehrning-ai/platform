@@ -13,7 +13,7 @@
       "blockId": "block_1",
       "number": 1,
       "title": "Recognize AI functions",
-      "subtitle": "Function, purpose, data. Not the product name",
+      "subtitle": "Function, purpose and data over the product name",
       "durationMinutes": 4,
       "keyConcepts": [
         "AI system",
@@ -26,15 +26,13 @@
           "id": "block_1_lesson_1_section_1",
           "title": "Check functions, not labels",
           "readTimeMinutes": 2,
-          "content": "Your spam filter sorts. Your keyboard guesses the next word. Your navigation app prices in the jam. Each can run on machine learning or another AI technique, depending on product and version. Same for image grouping, speech recognition, search ranking.\n\nThe product name tells you nothing. A spam filter runs on rules, on statistics, on machine learning, or on all three. Same label, different build.\n\nWrite down function, version, configuration. Then purpose, data touched, the unit that answers for it. What you cannot answer technically stays open until the product owner, the documentation or a technical review closes it. Guessing does not count.",
-          "keyTakeaway": "Function and version count. A product name settles neither the technical nor the legal classification as an AI system."
+          "content": "Spam filters, keyboard word prediction, traffic forecasts, image grouping, speech recognition and search ranking can run on machine learning or another AI technique, depending on product and version. A spam filter can also run on fixed rules or statistics. So the product name settles neither the technical nor the legal classification as an AI system.\n\nRecord function, version, configuration, purpose, data touched and the responsible unit. What you cannot answer technically stays open until the product owner, the vendor documentation or a technical review settles it."
         },
         {
           "id": "block_1_lesson_1_section_2",
           "title": "AI functions inside the workday",
           "readTimeMinutes": 2,
-          "content": "A case worker has documents read out, the project lead has the meeting transcribed, the buyer translates a supplier mail. Document processing, translation, search, forecasts: AI-supported functions sit anywhere. Whether one is an AI system under the Regulation is decided by how it works and how it is used.\n\nWithout an inventory you steer nothing. The list holds function and version, purpose, data, users, owner, approval. Only then can you assign data rules, review duties, training needs.\n\nArticle 4 of the EU AI Act, as it stands, obliges providers and deployers to take measures supporting the development of AI literacy in the people who handle the operation and use of AI systems on their behalf. Technical knowledge, experience, education and training, use context and the people or groups affected all count. The Article prescribes no inventory. Without one you do not know the context you are planning for.",
-          "keyTakeaway": "The inventory carries role- and risk-based AI literacy measures. It does not take the legal and technical assessment of the single case off your hands.",
+          "content": "Document reading, transcription, translation, search, forecasts and assistants can all contain AI-supported functions. Whether one is an AI system under the Regulation depends on how it works and how it is used. An AI inventory records function and version, purpose, data, users, owner and approval status, so you can assign data rules, review duties and training needs.\n\nArticle 4 of the EU AI Act, as it stands, obliges providers and deployers to take measures supporting the development of AI literacy in the people who handle the operation and use of AI systems on their behalf. Technical knowledge, experience, education and training, use context and the people or groups affected all count. The Article prescribes no inventory. It shows you which uses your literacy measures must cover.",
           "sources": [
             {
               "claimId": "ai-act-article-4-literacy-2025-02-02",
@@ -55,7 +53,7 @@
             },
             {
               "id": "b",
-              "text": "All three belong in the inventory with version, purpose and data; their classification is still open",
+              "text": "Record all three with version, purpose and data; check classification",
               "isCorrect": true
             },
             {
@@ -65,15 +63,15 @@
             },
             {
               "id": "d",
-              "text": "Record the functions only once their legal classification is finished",
+              "text": "Record the functions only after legal classification is finished",
               "isCorrect": false
             }
           ],
-          "explanation": "List first: function, version, purpose, data. Review after. Which entries are AI systems under the Regulation is settled by that review, not by the product name."
+          "explanation": "List function, version, purpose and data first. Whether an entry is an AI system is settled afterwards by technical and legal review."
         },
         {
           "id": "block_1_lesson_1_q2",
-          "questionText": "What does Article 4 of the EU AI Act require of providers and deployers of AI systems?",
+          "questionText": "What does Article 4 of the EU AI Act require of providers and deployers?",
           "answerOptions": [
             {
               "id": "a",
@@ -87,7 +85,7 @@
             },
             {
               "id": "c",
-              "text": "Providers and deployers must take measures supporting the development of AI literacy in people acting on their behalf",
+              "text": "Measures supporting the development of AI literacy in people acting on their behalf",
               "isCorrect": true
             },
             {
@@ -96,7 +94,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "No degree, no own AI, no IT monopoly. Article 4 asks for measures supporting the development of AI literacy in people who operate and use AI systems for providers or deployers. Technical knowledge, experience, training, use context and the people affected shape them."
+          "explanation": "Article 4 requires no degree, own AI or IT monopoly. It requires measures supporting the development of AI literacy in people acting on their behalf, matched to knowledge, experience, use context and the people affected."
         }
       ]
     },
@@ -105,7 +103,7 @@
       "blockId": "block_1",
       "number": 2,
       "title": "Select AI tools",
-      "subtitle": "Edition and configuration, not the brand",
+      "subtitle": "Check edition, contract and configuration",
       "durationMinutes": 3,
       "keyConcepts": [
         "Product selection",
@@ -117,17 +115,15 @@
       "sections": [
         {
           "id": "block_1_lesson_2_section_1",
-          "title": "Compare four operating models",
+          "title": "Compare operating models",
           "readTimeMinutes": 2,
-          "content": "Comparing brands gets you nowhere. Compare the product edition and the operation behind it:\n\n| Operating model | Minimum checks | Typical false conclusion |\n|---|---|---|\n| **Consumer service** | Terms of use, account settings, retention, training use, legal basis and permitted content | Well known or paid for means approved for company data |\n| **Enterprise SaaS** | Contract and DPA, roles and permissions, data region, retention, logging, connectors and training use | The enterprise contract covers every configuration and data class |\n| **Local or self-hosted** | Model source, device or infrastructure, patches, telemetry, extensions, access and logging | Local means offline, current and safe |\n| **Embedded function** | Concrete function and version, activation, data flows, inherited permissions and owner | Approval of the main product covers every new AI function |\n\nVendor documentation changes. So do contract terms. Check both at procurement, at every material change, and at the review triggers your organization set.",
-          "keyTakeaway": "Edition, configuration and approval decide what you may use. An operating model or a brand name assesses nothing."
+          "content": "Compare the product edition and how it runs:\n\n| Operating model | Minimum checks | Typical false conclusion |\n|---|---|---|\n| **Consumer service** | Terms of use, account settings, retention, training use, legal basis, permitted content | Well known or paid for means approved for company data |\n| **Enterprise SaaS** | Contract and DPA, roles and permissions, data region, retention, logging, connectors, training use | The enterprise contract covers every configuration and data class |\n| **Local or self-hosted** | Model source, device or infrastructure, patches, telemetry, extensions, access, logging | Local means offline, current and safe |\n| **Embedded function** | Function and version, activation, data flows, inherited permissions, owner | Approval of the main product covers every new AI function |\n\nCheck vendor documents and the contract at procurement, after every material change and at your organization's review triggers."
         },
         {
           "id": "block_1_lesson_2_section_2",
           "title": "Which tool fits when?",
           "readTimeMinutes": 1,
-          "content": "Never ask which tool is best. Ask: for what?\n\n- **Private learning and writing:** A consumer offer can fit if you may share the content and data controls, retention and terms suit the purpose. Placeholders instead of other people. Credentials never belong in a prompt. Never.\n\n- **Work tasks:** Only the product, configuration and workflow approved for this purpose and these data classes. A business subscription is no approval. Neither is an existing company account.\n\n- **Local models:** Local inference can limit data flows. Can. Extensions, telemetry, model downloads, shared machines and weak access controls bring the risk back in.\n\nThe whole check, from purpose to approval, comes in Block 2.",
-          "keyTakeaway": "Free, paid, cloud, local: none is a security class. Purpose, data, rights, contract, configuration and approval decide."
+          "content": "- **Private learning and writing:** A consumer offer can fit if you may share the content and data controls, retention and terms suit the purpose. Use placeholders for other people and never put credentials in a prompt.\n- **Work:** Only the product, configuration and workflow approved for this purpose and data class. A business subscription or company account is not an approval by itself.\n- **Local models:** They can limit data flows. Extensions, telemetry, model downloads, shared machines and missing access controls bring the risk back.\n\nBlock 2 covers the full check."
         }
       ],
       "quiz": [
@@ -137,7 +133,7 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "Only paid business tools are allowed for writing",
+              "text": "Only paid business tools are allowed for writing, private texts included",
               "isCorrect": false
             },
             {
@@ -147,7 +143,7 @@
             },
             {
               "id": "c",
-              "text": "No AI tool may be used to write text",
+              "text": "No AI tool may be used to write text, not even privately",
               "isCorrect": false
             },
             {
@@ -156,7 +152,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Private does not mean it does not matter. Content, rights, data controls, retention and terms decide here too. Placeholders for examples, credentials nowhere."
+          "explanation": "Private use still depends on content, rights, data controls, retention and terms. Use placeholders for examples. Credentials never go into a prompt."
         },
         {
           "id": "block_1_lesson_2_q2",
@@ -164,26 +160,26 @@
           "answerOptions": [
             {
               "id": "a",
-              "text": "A company workflow always delivers better answers",
+              "text": "A company workflow always delivers better answers than a private subscription",
               "isCorrect": false
             },
             {
               "id": "b",
-              "text": "Approval covers purpose, data classes, contract, configuration, permissions and responsibilities; a subscription does not",
+              "text": "Approval covers purpose, data classes, contract, configuration, permissions and responsibilities",
               "isCorrect": true
             },
             {
               "id": "c",
-              "text": "A paid subscription may process every data class",
+              "text": "A paid subscription may process every data class without further checks",
               "isCorrect": false
             },
             {
               "id": "d",
-              "text": "Only the provider's EU head office counts",
+              "text": "Only the provider's EU head office counts; everything else follows from it",
               "isCorrect": false
             }
           ],
-          "explanation": "An approval is always concrete: this purpose, this edition, this configuration, this data class, these roles. Price, brand and head office check none of it."
+          "explanation": "An approval covers one purpose, edition, configuration, data class and set of roles. Price, brand and head office say nothing about that."
         }
       ]
     },
@@ -200,21 +196,19 @@
           "id": "block_1_lesson_3_section_1",
           "title": "The AI inventory",
           "readTimeMinutes": 1,
-          "content": "Fill in the last columns. A product name alone is not worth a row. Note the function, the provider or deployer, the purpose, the data touched and the responsible unit. Whether a function is legally an AI system is settled by its version and how it works, not by this table.\n\n| No. | Product and function | Purpose | Data touched | Approval known? |\n|-----|----------------------|---------|--------------|-----------------|\n| 1 | Email: suggested replies | | | |\n| 2 | Spreadsheet: assistance or pattern detection | | | |\n| 3 | Conferencing software: transcription or assistance | | | |\n| 4 | Search engine: AI summary | | | |\n| 5 | Email: spam filter | | | |\n| 6 | Smartphone keyboard: word prediction | | | |\n| 7 | Navigation: route or traffic forecast | | | |\n| 8 | | | | |\n| 9 | | | | |\n| 10 | | | | |\n\nInto the empty rows goes what you really use. Invent nothing. Mark the gaps; product owners, IT or procurement close them.",
-          "keyTakeaway": "Function, purpose, data, approval, owner: that is what makes an inventory usable. It carries role- and risk-based literacy planning under Article 4."
+          "content": "For each row note the function, the provider or deployer, the purpose, the data touched and the responsible unit.\n\n| No. | Product and function | Purpose | Data touched | Approval known? |\n|-----|----------------------|---------|--------------|-----------------|\n| 1 | Email: suggested replies | | | |\n| 2 | Spreadsheet: assistance or pattern detection | | | |\n| 3 | Conferencing software: transcription or assistance | | | |\n| 4 | Search engine: AI summary | | | |\n| 5 | Email: spam filter | | | |\n| 6 | Smartphone keyboard: word prediction | | | |\n| 7 | Navigation: route or traffic forecast | | | |\n| 8 | | | | |\n| 9 | | | | |\n| 10 | | | | |\n\nAdd what you really use in the empty rows. Mark unknowns; product owners, IT or procurement close them."
         },
         {
           "id": "block_1_lesson_3_section_2",
           "title": "Reading the result",
           "readTimeMinutes": 2,
-          "content": "Walk every row again. Function and version, purpose, data, user roles, owner, approval status: miss one and the row is unfinished. Unknowns stay unknown. A guess is not an inventory entry.\n\nThen the open points. Each gets an owner and a next step. The result is a working document. Not a register of every AI system.\n\nArticle 4 prescribes no inventory format. A maintained inventory still attaches literacy measures, data rules and review routines to the functions actually in use. Block 2 adds data classes, rights, approvals.",
-          "keyTakeaway": "Open entries visible, owners named, changes tracked: that keeps an inventory reliable. It steers. Complete evidence under Article 4 it is not."
+          "content": "A row is finished when function and version, purpose, data, user roles, owner and approval status are filled in. Each open point gets an owner and a next review step.\n\nThe result is a working document, not a full AI register and not complete evidence under Article 4. With the inventory you attach literacy measures, data rules and review routines to the functions in use."
         }
       ],
       "quiz": [
         {
           "id": "block_1_lesson_3_q1",
-          "questionText": "A colleague uses suggested replies, a transcription function and a route forecast. What follows for certain?",
+          "questionText": "Your inventory lists a spam filter, word prediction and the search engine's AI summary. What follows for certain?",
           "answerOptions": [
             {
               "id": "a",
@@ -223,7 +217,7 @@
             },
             {
               "id": "b",
-              "text": "Exactly one AI system, because only transcription uses AI",
+              "text": "Exactly one AI system, because only the search summary uses AI",
               "isCorrect": false
             },
             {
@@ -233,11 +227,11 @@
             },
             {
               "id": "d",
-              "text": "The functions belong in the inventory; their technical and legal classification has to be checked against product and version",
+              "text": "Check each function's classification against product and version",
               "isCorrect": true
             }
           ],
-          "explanation": "Three functions, three names, zero certainty. AI-supported functions hide inside everyday products, and a name says nothing about how many standalone AI systems sit behind them in law. Record function and version; review afterwards."
+          "explanation": "A spam filter can also run on fixed rules, and a product name does not reveal how many standalone AI systems sit behind it in law. Check each function and version."
         },
         {
           "id": "block_1_lesson_3_q2",
@@ -250,7 +244,7 @@
             },
             {
               "id": "b",
-              "text": "Without an inventory you cannot judge which risks exist and which rules apply",
+              "text": "Without it you cannot judge risks and applicable rules",
               "isCorrect": true
             },
             {
@@ -264,7 +258,7 @@
               "isCorrect": false
             }
           ],
-          "explanation": "Without an inventory you guess. With one you have the base for risk assessment, data rules and responsibilities. It carries governance and literacy measures; on its own it does not meet the EU AI Act's requirements."
+          "explanation": "It is the basis for risk assessment, data rules and responsibilities and supports AI literacy measures. On its own it does not meet the AI Act's requirements."
         }
       ]
     }
