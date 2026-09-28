@@ -230,7 +230,7 @@ export function AgentDemo(): JSX.Element {
               className={cn(
                 "relative border p-3.5 transition-[background-color,border-color,color,opacity,transform,box-shadow] duration-200",
                 isActive
-                  ? "border-brand-orange border-t-[3px] border-t-brand-orange bg-foreground text-background"
+                  ? "border-brand-orange border-t-[3px] border-t-brand-orange bg-sky-sheet text-foreground"
                   : "border-border border-t-[3px] border-t-border bg-card/60 text-foreground",
               )}
             >
@@ -254,7 +254,7 @@ export function AgentDemo(): JSX.Element {
               <div
                 className={cn(
                   "mt-1 font-mono text-[12px]",
-                  isActive ? "text-background/70" : "text-muted-foreground",
+                  isActive ? "text-foreground" : "text-muted-foreground",
                 )}
               >
                 {a.model}
@@ -262,7 +262,7 @@ export function AgentDemo(): JSX.Element {
               <div
                 className={cn(
                   "mt-2 text-[12px] leading-[1.4]",
-                  isActive ? "text-background/85" : "text-muted-foreground",
+                  isActive ? "text-foreground" : "text-muted-foreground",
                 )}
               >
                 {a.task}
@@ -295,9 +295,9 @@ export function AgentDemo(): JSX.Element {
         {/* Live log */}
         <div
           ref={logRef}
-          className="dark-section min-h-[220px] overflow-y-auto border-l-[3px] border-brand-orange bg-[var(--color-dark-bg)] p-4 font-mono text-[12px] text-[var(--color-dark-fg)]"
+          className="min-h-[220px] overflow-y-auto border-l-[3px] border-brand-orange bg-inset p-4 font-mono text-[12px] text-foreground"
         >
-          <div className="sticky top-0 mb-2 flex items-center justify-between border-b border-[var(--color-dark-border)] bg-[var(--color-dark-bg)] pb-2 font-mono text-[12px] tracking-[0.14em] text-[var(--color-dark-muted)]">
+          <div className="sticky top-0 mb-2 flex items-center justify-between border-b border-border bg-inset pb-2 font-mono text-[12px] tracking-[0.14em] text-muted-foreground">
             <span>› AGENT.LOG</span>
             <span>{logs.length} ereignisse</span>
           </div>
@@ -312,7 +312,7 @@ export function AgentDemo(): JSX.Element {
               initial={{ opacity: 0, x: 12 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.2, ease: EASE_OUT_EXPO }}
-              className="py-0.5 text-[var(--color-dark-fg)]"
+              className="py-0.5 text-foreground"
             >
               <span className="mr-2 text-brand-orange">
                 [{String(i + 1).padStart(2, "0")}]

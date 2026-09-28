@@ -9,11 +9,19 @@ import {
   useRef,
   useState,
   type KeyboardEvent as ReactKeyboardEvent,
+  type ReactNode,
 } from "react";
-import { m, AnimatePresence } from "framer-motion";
+import {
+  m,
+  AnimatePresence,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+  type MotionValue,
+} from "framer-motion";
 import { Menu, X, ChevronDown } from "lucide-react";
 import { Github } from "@/components/icons/brand";
-import { cx as cn } from "@/components/werk/cx";
+import { cn } from "@/lib/utils";
 import { AuthStatus } from "@/components/auth/auth-status";
 import { GITHUB_ORG } from "@/lib/seo/entity";
 import { useFocusTrap } from "@/lib/a11y/use-focus-trap";
@@ -34,8 +42,9 @@ import {
   setSharedInertOwner,
 } from "@/lib/a11y/shared-inert";
 import {
+  EXAMPLE_ROUTES,
   LEARNING_ROUTES,
-  PRACTICE_ROUTES,
+  WORKSHOP_ROUTES,
   matchesSection,
 } from "@/lib/navigation/site-sections";
 
@@ -57,19 +66,25 @@ const lernenNavItems: readonly NavItem[] = [
   { href: "/buecher", label: "learningBooks" },
 ];
 
-// Praxis is what you try and reuse: the workshops, the applied examples and
-// the open-source material. The footer's Praxis column and the Praxis tab
-// hold the same three.
+// Praxis is what you try out: the workshops and the applied examples. Open
+// Source is a direct link in the header row, as it was in the studio header.
 const praxisNavItems: readonly NavItem[] = [
   { href: "/workshops", label: "workshops" },
   { href: "/demos", label: "appliedExamples" },
-  { href: "/open-source", label: "openSource" },
 ];
 
 // Which group is current comes from the site-section table, the same one
-// that marks the companion tab bar, so the two never disagree about a page.
+// that marks the companion tab bar, so the two never disagree about a
+// course or workshop page. Open Source has its own link, so the Praxis
+// trigger covers only the routes its menu lists.
+const PRAXIS_MENU_ROUTES: readonly string[] = [
+  ...WORKSHOP_ROUTES,
+  ...EXAMPLE_ROUTES,
+];
+
 const primaryLinks: readonly NavItem[] = [
   { href: "/blog", label: "blog" },
+  { href: "/open-source", label: "openSource" },
   { href: "/ueber-mich", label: "aboutTim" },
 ];
 
@@ -81,36 +96,13 @@ const NO_SCRIPT_DIRECT_ITEMS: readonly NavItem[] = [
 type DropdownId = "lernen" | "praxis" | null;
 
 /**
- * The current destination inside a menu: a small ink square plus a weight
- * change, so the state never rests on colour alone. The square hangs in the
- * row's left gutter, so row text lines up with its group label and marking a
- * row moves nothing. The row that renders it must be `relative`.
- */
-function ActiveMarker({ active }: { readonly active: boolean }) {
-  return (
-    <span
-      aria-hidden="true"
-      data-nav-active-marker={active ? "true" : undefined}
-      className={cn(
-        "absolute left-1.5 top-1/2 size-1.5 -translate-y-1/2",
-        active ? "bg-foreground" : "bg-transparent",
-      )}
-    />
-  );
-}
-
-/**
- * A cell in the phone sheet's two-column link grid. Each cell reaches one
- * gutter to the left (the sheet's px-4 / sm:px-6 for the first column, the
- * column gap for the second), so its text starts on the column edge, in line
- * with the group label, and the current-page square hangs in that gutter. The
- * focus ring is drawn inside the cell because the scrolling sheet clips
- * anything outside it. The links are body size in ink, a step above their
- * small muted group labels, so the sheet reads as destinations under
- * headings rather than one grey block.
+ * A row in the phone sheet's link grid. The current page carries the copper
+ * rule on its left edge plus ink text, so the state is a shape as well as a
+ * colour. The focus ring is drawn inside the row because the scrolling sheet
+ * clips anything outside it.
  */
 const MOBILE_CELL_CLASS =
-  "relative -ml-4 flex min-h-11 min-w-0 items-center gap-2 py-1 pl-4 pr-2 text-base leading-snug text-foreground outline-none transition-colors duration-[120ms] hover:bg-card-hover focus-visible:bg-card-hover focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange motion-reduce:transition-none sm:-ml-6 sm:pl-6";
+  "flex min-h-11 min-w-0 items-center border-l-[3px] px-3 py-1 text-sm leading-snug outline-none transition-[background-color,border-color,color] duration-150 hover:bg-card-hover hover:text-foreground focus-visible:bg-card-hover focus-visible:text-foreground focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange motion-reduce:transition-none";
 
 /**
  * The grid fills column by column, so a group reads down the left column
@@ -124,62 +116,109 @@ const MOBILE_GRID_ROWS: Readonly<Record<number, string>> = {
 };
 
 /**
- * From sm (landscape phones, tablets) the groups stand side by side as three
- * single-column lists, so the sheet is only as tall as its longest group and
- * never scrolls inside a 390px-high landscape screen. Portrait phones keep
- * the stacked two-column grids.
+ * Portrait phones get two-column grids, so the whole menu fits a 320x568
+ * screen above the tab bar without scrolling inside the sheet. From sm
+ * (landscape phones, tablets) the groups stand side by side as three
+ * single-column lists, so the sheet is only as tall as its longest group.
  */
 const MOBILE_GRID_CLASS =
-  "grid grid-flow-col grid-cols-2 gap-x-4 sm:grid-flow-row sm:grid-cols-1 sm:grid-rows-none sm:gap-x-6";
+  "mt-1 grid grid-flow-col grid-cols-2 gap-x-4 sm:grid-flow-row sm:grid-cols-1 sm:grid-rows-none";
 
 const MOBILE_GROUPS_CLASS = "sm:grid sm:grid-cols-3 sm:gap-x-6";
 
 const MOBILE_SECTION_CLASS =
-  "border-t border-hairline pt-2 first:border-t-0 sm:border-t-0";
+  "border-t border-border/60 pt-3 first:border-t-0 sm:border-t-0";
 
-/* ─── Brand lockup ───────────────────────────────────────────────────────── */
+const MOBILE_GROUP_LABEL_CLASS =
+  "font-ui-mono text-xs font-bold uppercase tracking-[0.1em] text-brand-orange";
+
+/* ─── Scroll-driven brand mark ───────────────────────────────────────────── */
+
+const LOCKUP_FONT_STACK =
+  '"Arial Black", "Helvetica Neue", Helvetica, Arial, sans-serif';
 
 /**
- * One static lockup: the Mennige square with a paper L, then the wordmark in
- * the site face, 700, at the headline tracking floor. It is the only Mennige
- * mark in the chrome and it matches the footer's wordmark. Nothing rotates,
- * collapses or moves on scroll.
+ * The studio lockup: the copper L tile and the LOEHRNING.AI wordmark.
+ *
+ * On scroll the tile tips a few degrees, and the wordmark's own leading L
+ * fades and folds away while the rest of the word slides toward the tile, so
+ * the tile's L takes its place: "L" + "OEHRNING.AI". The leading L keeps its
+ * layout box and only its transform changes, so the header never reflows.
+ * The distances are in em, so the move is the same at every wordmark size.
+ * Reduced motion keeps the complete lockup static.
+ *
+ * Below 360px the compact bar shows the tile alone; the language pill and the
+ * menu button need the rest of the row.
  */
 function LogoWordmark({
+  scrollY,
   locale,
   homeLabel,
   onNavigate,
 }: {
+  readonly scrollY: MotionValue<number>;
   readonly locale: Locale;
   readonly homeLabel: string;
   readonly onNavigate?: () => void;
 }) {
+  const prefersReducedMotion = Boolean(useReducedMotion());
+  const iconRotate = useTransform(scrollY, [0, 160], [0, -8]);
+  const leadingLOpacity = useTransform(scrollY, [40, 120], [1, 0]);
+  const leadingLScale = useTransform(scrollY, [40, 120], [1, 0]);
+  const remainderOffset = useTransform(scrollY, [40, 120], ["0em", "-1em"]);
+
   return (
     <Link
       href={localizeHref("/", locale)}
       prefetch={false}
       onClick={onNavigate}
-      // An inset ring: the link sits 2px inside the 48px bar, so an outer
-      // ring lost its top edge to the viewport and put its bottom edge on the
-      // band below (Mennige on Rost 1.07:1). The 6px side padding (and the
-      // equal negative margin, so the tile does not move) keeps the ring on
-      // paper, clear of the Mennige tile.
-      className="-mx-1.5 inline-flex min-h-11 min-w-0 shrink items-center px-1.5 outline-none focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange"
+      // An inset ring: on the flush compact bar an outer ring would lose its
+      // top edge to the viewport. The side padding (and the equal negative
+      // margin, so the tile does not move) keeps the ring clear of the tile.
+      className="-mx-1.5 inline-flex min-h-11 min-w-0 shrink items-center rounded-xl px-1.5 outline-none focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange"
     >
-      <span
+      <m.span
         data-logo-mark
         aria-hidden="true"
-        className="mr-3 flex size-[38px] shrink-0 items-center justify-center bg-mennige"
+        className="mr-3 flex size-[38px] shrink-0 items-center justify-center rounded-xl border border-foreground/40 bg-brand-orange"
+        style={{ rotate: prefersReducedMotion ? 0 : iconRotate }}
       >
-        <span className="text-lg font-bold leading-none text-paper">L</span>
-      </span>
+        <span
+          className="text-lg leading-none text-background"
+          style={{ fontFamily: LOCKUP_FONT_STACK, fontWeight: 900 }}
+        >
+          L
+        </span>
+      </m.span>
+
       <span
         data-logo-wordmark
         aria-hidden="true"
         translate="no"
-        className="inline whitespace-nowrap text-[1.25rem] font-bold leading-none tracking-[-0.015em] text-foreground"
+        className="hidden whitespace-nowrap text-[19px] uppercase leading-none text-foreground min-[360px]:flex min-[390px]:text-[22px]"
+        style={{
+          letterSpacing: "-0.035em",
+          fontFamily: LOCKUP_FONT_STACK,
+          fontWeight: 900,
+        }}
       >
-        loehrning.ai
+        <m.span
+          data-logo-wordmark-leading-l
+          className="inline-block w-[0.64em] origin-right overflow-hidden"
+          style={{
+            opacity: prefersReducedMotion ? 1 : leadingLOpacity,
+            scaleX: prefersReducedMotion ? 1 : leadingLScale,
+          }}
+        >
+          L
+        </m.span>
+        <m.span
+          data-logo-wordmark-remainder
+          className="inline-block"
+          style={{ x: prefersReducedMotion ? 0 : remainderOffset }}
+        >
+          OEHRNING<span className="text-brand-orange">.AI</span>
+        </m.span>
       </span>
       <span className="sr-only">loehrning.ai - {homeLabel}</span>
     </Link>
@@ -197,6 +236,7 @@ export function Nav() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileDialogLocked, setMobileDialogLocked] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<DropdownId>(null);
+  const { scrollY } = useScroll();
   const dropdownTimeout = useRef<ReturnType<typeof setTimeout>>(undefined);
   const mobileToggleRef = useRef<HTMLButtonElement>(null);
   const restoreMobileToggleAfterExit = useRef(false);
@@ -214,7 +254,7 @@ export function Nav() {
     { restoreFocus: false },
   );
   // The sheet's header row repeats the compact bar: the brand link, the
-  // account link, then the close button exactly where the menu button was.
+  // language pill, then the close button exactly where the menu button was.
   // The trap focuses the first control in DOM order; this effect runs after
   // it and hands initial focus to the close button, where it has always
   // landed.
@@ -231,7 +271,7 @@ export function Nav() {
   const isCurrentPage = (href: string) =>
     !href.includes("#") && routePathname === hrefPathname(href);
   const isLernenActive = matchesSection(LEARNING_ROUTES, routePathname);
-  const isPraxisActive = matchesSection(PRACTICE_ROUTES, routePathname);
+  const isPraxisActive = matchesSection(PRAXIS_MENU_ROUTES, routePathname);
 
   function openMenu(id: DropdownId) {
     clearTimeout(dropdownTimeout.current);
@@ -436,10 +476,10 @@ export function Nav() {
           onClick={() => setOpenDropdown(openDropdown === id ? null : id)}
           onKeyDown={handleTriggerKeyDown(id)}
           className={cn(
-            "relative inline-flex min-h-11 cursor-pointer items-center gap-1 border-y-2 border-t-transparent px-1 text-sm font-medium outline-none transition-colors duration-[120ms] hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
+            "relative inline-flex min-h-11 cursor-pointer items-center gap-1 border-b-[3px] px-1 text-sm outline-none transition-colors duration-150 hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
             active
-              ? "border-b-foreground text-foreground"
-              : "border-b-transparent text-muted-foreground",
+              ? "border-brand-orange text-foreground"
+              : "border-transparent text-muted-foreground",
           )}
         >
           {label}
@@ -454,9 +494,6 @@ export function Nav() {
         </button>
 
         <AnimatePresence>
-          {/* The sheet sizes to its longest row. It sits 16px left of the
-              trigger so each row's text starts under the trigger label, with
-              the current-row square hanging in the row's gutter. */}
           {openDropdown === id && (
             <m.div
               ref={menuRef}
@@ -465,7 +502,7 @@ export function Nav() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 2 }}
               transition={{ duration: 0.12 }}
-              className="absolute -left-4 top-full mt-2 w-max min-w-48 border border-foreground bg-card py-1 shadow-overlay"
+              className="absolute left-0 top-full mt-2 w-64 rounded-2xl border border-border/70 bg-paper p-2 shadow-card-hover"
               onKeyDown={handleMenuKeyDown(id)}
             >
               {items.map((item) => {
@@ -482,13 +519,12 @@ export function Nav() {
                       // inset-ring, never ring-inset: with the --color-inset
                       // token, Tailwind v4 also reads `ring-inset` as a ring
                       // colour (Beton) and it wins over ring-brand-orange.
-                      "relative flex min-h-11 items-center py-2 pl-5 pr-3 text-sm outline-none transition-colors duration-[120ms] hover:bg-card-hover focus-visible:bg-card-hover focus-visible:text-foreground focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange motion-reduce:transition-none",
+                      "flex min-h-11 items-center border-l-[3px] px-3 py-2 text-sm outline-none transition-[background-color,border-color,color] duration-150 hover:bg-card-hover focus-visible:bg-card-hover focus-visible:text-foreground focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange motion-reduce:transition-none",
                       isActivePath(item.href)
-                        ? "font-semibold text-foreground"
-                        : "text-muted-foreground hover:text-foreground",
+                        ? "border-brand-orange text-foreground"
+                        : "border-transparent text-muted-foreground hover:text-foreground",
                     )}
                   >
-                    <ActiveMarker active={isActivePath(item.href)} />
                     <span>{itemLabel}</span>
                   </Link>
                 );
@@ -501,24 +537,28 @@ export function Nav() {
   }
 
   // The mobile dialog uses the same task groups as desktop, each as a
-  // two-column grid of 44px cells, so the whole menu fits a 320x568 screen
+  // two-column grid of 44px rows, so the whole menu fits a 320x568 screen
   // above the tab bar without scrolling inside the sheet. The no-script
   // fallback renders the same groups, without the close handler.
   function renderMobileGroup(
     label: string | null,
     items: readonly NavItem[],
     onNavigate?: () => void,
+    footer?: ReactNode,
   ) {
     return (
       <section className={MOBILE_SECTION_CLASS}>
         {label === null ? (
           // The direct links carry no heading. From sm their column still
-          // starts on the same line as its neighbours' first cells.
-          <p aria-hidden="true" className="hidden text-caption sm:block">
+          // starts on the same line as its neighbours' first rows.
+          <p
+            aria-hidden="true"
+            className={cn(MOBILE_GROUP_LABEL_CLASS, "hidden sm:block")}
+          >
             {"\u00a0"}
           </p>
         ) : (
-          <p className="text-caption text-muted-foreground">{label}</p>
+          <p className={MOBILE_GROUP_LABEL_CLASS}>{label}</p>
         )}
         <div
           className={cn(
@@ -537,15 +577,18 @@ export function Nav() {
                 aria-current={isCurrentPage(item.href) ? "page" : undefined}
                 className={cn(
                   MOBILE_CELL_CLASS,
-                  isActivePath(item.href) && "font-semibold",
+                  label === null && "font-medium",
+                  isActivePath(item.href)
+                    ? "border-brand-orange text-foreground"
+                    : "border-transparent text-muted-foreground",
                 )}
               >
-                <ActiveMarker active={isActivePath(item.href)} />
                 {itemLabel}
               </Link>
             );
           })}
         </div>
+        {footer}
       </section>
     );
   }
@@ -553,49 +596,45 @@ export function Nav() {
   function renderMobileGroups(
     directItems: readonly NavItem[],
     onNavigate?: () => void,
+    directFooter?: ReactNode,
   ) {
     return (
       <div className={MOBILE_GROUPS_CLASS}>
         {renderMobileGroup(copy.learning, lernenNavItems, onNavigate)}
         {renderMobileGroup(copy.practice, praxisNavItems, onNavigate)}
-        {renderMobileGroup(null, directItems, onNavigate)}
+        {renderMobileGroup(null, directItems, onNavigate, directFooter)}
       </div>
     );
   }
 
   return (
-    // One flat paper band at every width. It is flush with the top edge of the
-    // viewport and exactly as tall as the offset <main> reserves:
-    // --nav-h-compact below lg, --nav-h from lg. A hairline separates it from
-    // the page; there is no pill, no inset and no shadow. The side padding is
-    // the page gutter (px-4, sm:px-6), and from lg it lines the wordmark and
-    // the Login edge up with the 75rem content column (144..1296 at 1440)
-    // while the band itself stays full bleed.
+    // Two shells, one markup tree. Below lg the bar is flush with the top edge
+    // of the viewport and exactly --nav-h-compact tall, which is the offset
+    // <main> reserves, so page content begins directly under it. From lg the
+    // floating glass pill returns: an inset, rounded, softly shadowed studio
+    // bar inside the --nav-h band. Both shells are translucent paper, never
+    // a dark surface.
     <nav
       aria-label={copy.mainNavigation}
-      className="no-js-primary-nav fixed top-0 z-50 w-full text-foreground"
+      className="no-js-primary-nav fixed top-0 z-50 w-full text-foreground lg:px-3 lg:pt-2"
     >
       <div
         data-nav-header-row
-        className="flex h-[var(--nav-h-compact)] w-full items-center justify-between border-b border-hairline bg-background px-4 sm:px-6 lg:h-[var(--nav-h)] lg:px-[max(1.5rem,calc(50%_-_36rem))]"
+        className="mx-auto flex h-[var(--nav-h-compact)] max-w-6xl items-center justify-between border-b border-border/60 bg-background/85 px-3 backdrop-blur-xl supports-[backdrop-filter]:bg-background/72 sm:px-5 lg:h-12 lg:rounded-2xl lg:border-x lg:border-t lg:shadow-card"
       >
-        <LogoWordmark locale={locale} homeLabel={copy.home} />
+        <LogoWordmark scrollY={scrollY} locale={locale} homeLabel={copy.home} />
 
         {/* Interactive desktop navigation. The no-script stylesheet hides
             these dropdown triggers and exposes the complete static link list
-            below instead. Two groups, as in the blueprint: the site's places
-            start after the wordmark, and the utilities (language, GitHub,
-            login) sit at the right behind a hairline, so the active language
-            never reads as a sixth current page. */}
-        {/* The desktop row is a size container. At real desktop widths it is
-            at least 51rem wide (1024px viewport), so nothing below changes.
-            When the page is zoomed so far that the layout is narrower than
-            that while the lg breakpoint still holds (CSS zoom, or a zoomed
-            embed), the gaps tighten, the GitHub icon steps back to the
-            footer (which always lists it) and the sign-in control drops to
-            its icon, so the utility cluster never runs past the right edge. */}
-        <div className="js-desktop-nav @container/desktop-nav hidden lg:flex lg:min-w-0 lg:flex-1 lg:items-center lg:justify-between">
-          <div className="ml-10 flex items-center gap-4 @max-[44rem]/desktop-nav:ml-4 @max-[44rem]/desktop-nav:gap-2">
+            below instead.
+            The cluster is a size container. At real desktop widths it is at
+            least 44rem wide (1024px viewport), so nothing below changes. When
+            the page is zoomed so far that the layout is narrower than that
+            while the lg breakpoint still holds, the gaps tighten, the GitHub
+            icon steps back to the footer (which always lists it) and the
+            sign-in pill drops to its icon, so nothing runs past the pill. */}
+        <div className="js-desktop-nav @container/desktop-nav hidden lg:flex lg:min-w-0 lg:flex-1 lg:items-center lg:justify-end">
+          <div className="ml-6 flex items-center gap-3 xl:gap-4 @max-[44rem]/desktop-nav:ml-3 @max-[44rem]/desktop-nav:gap-1.5">
             {renderDropdown(
               "lernen",
               copy.learning,
@@ -619,18 +658,16 @@ export function Nav() {
                   routePathname === hrefPathname(link.href) ? "page" : undefined
                 }
                 className={cn(
-                  "inline-flex min-h-11 min-w-11 items-center justify-center border-y-2 border-t-transparent px-1 text-sm font-medium transition-colors duration-[120ms] hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
+                  "inline-flex min-h-11 items-center whitespace-nowrap border-b-[3px] px-1 text-sm transition-colors duration-150 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
                   isActivePath(link.href)
-                    ? "border-b-foreground text-foreground"
-                    : "border-b-transparent text-muted-foreground",
+                    ? "border-brand-orange text-foreground"
+                    : "border-transparent text-muted-foreground",
                 )}
               >
                 {copy[link.label]}
               </Link>
             ))}
-          </div>
 
-          <div className="ml-6 flex items-center gap-2 border-l border-hairline pl-4 @max-[44rem]/desktop-nav:ml-3 @max-[44rem]/desktop-nav:gap-1 @max-[44rem]/desktop-nav:pl-3">
             <LanguageSwitch />
 
             {/* Site navigation points at the organisation that publishes this
@@ -641,7 +678,7 @@ export function Nav() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={copy.githubOrganisation}
-              className="inline-flex min-h-11 min-w-11 items-center justify-center text-muted-foreground @max-[44rem]/desktop-nav:hidden outline-none transition-colors duration-[120ms] hover:bg-card-hover hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
+              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl border border-transparent text-muted-foreground outline-none transition-[background-color,border-color,color] duration-150 hover:border-border hover:bg-brand-peach/45 hover:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none @max-[44rem]/desktop-nav:hidden"
             >
               <Github size={17} aria-hidden="true" />
             </a>
@@ -651,20 +688,16 @@ export function Nav() {
         </div>
 
         {/* The compact bar carries three controls and no fourth: the brand
-            lockup above, one link to the other language, and the menu button
-            that opens the complete navigation. Everything else lives inside
-            that dialog, so the row (155 + 44 + 4 + 44px) stays inside 320px
-            with the whole wordmark and every target keeps its 44px.
+            link above, the DE/EN pill, and the menu button that opens the
+            complete navigation. Everything else lives inside that dialog, so
+            the row stays inside 320px and every target keeps its 44px.
             The no-script stylesheet also exposes this compact group on wide
             screens while hiding its inert menu button. */}
         <div className="js-compact-nav flex items-center gap-1 lg:hidden">
-          {/* Hidden, like the menu button, while the sheet is open. The sheet
-              covers this bar and carries no second switch: the language is
-              one tap away here once the menu closes. */}
-          <LanguageSwitch
-            compact
-            className={mobileOpen ? "invisible" : undefined}
-          />
+          {/* Hidden, like the menu button, while the sheet is open: the
+              sheet's own header row carries the same pill in the same
+              place. */}
+          <LanguageSwitch className={mobileOpen ? "invisible" : undefined} />
           <button
             type="button"
             ref={mobileToggleRef}
@@ -672,7 +705,7 @@ export function Nav() {
             tabIndex={mobileOpen ? -1 : undefined}
             aria-hidden={mobileOpen || undefined}
             className={cn(
-              "js-mobile-nav-toggle inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center p-2 text-foreground outline-none transition-colors duration-[120ms] hover:bg-card-hover focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none",
+              "js-mobile-nav-toggle inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-xl p-2 text-muted-foreground outline-none transition-colors duration-150 hover:bg-brand-peach/45 hover:text-foreground focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange motion-reduce:transition-none",
               mobileOpen && "pointer-events-none invisible",
             )}
             aria-label={copy.openMenu}
@@ -690,14 +723,14 @@ export function Nav() {
           <noscript> stylesheet. It is the menu sheet's own grid. Sign-in
           joins the direct links here, because at desktop widths without
           scripting neither the tab bar nor the desktop cluster shows. */}
-      <div className="no-js-mobile-nav hidden border-b border-hairline bg-background px-4 pb-2 sm:px-6 lg:hidden">
+      <div className="no-js-mobile-nav mx-2 mt-2 hidden rounded-2xl border border-border/70 bg-paper px-4 pb-3 shadow-card sm:mx-3 sm:px-6 lg:mx-auto lg:max-w-6xl">
         {renderMobileGroups(NO_SCRIPT_DIRECT_ITEMS)}
       </div>
 
-      {/* Mobile menu. A full-width sheet that lies over the compact bar, so
-          its close button sits exactly where the menu button was and the
-          thumb opens and closes in one place. It ends above the tab bar band
-          at every width, so the tab bar is never covered, and the scrim
+      {/* Mobile menu. A paper sheet that lies over the compact bar, so its
+          close button sits exactly where the menu button was and the thumb
+          opens and closes in one place. It ends above the tab bar band at
+          every width, so the tab bar is never covered, and the paper veil
           behind it closes the menu on a tap outside the sheet. */}
       <AnimatePresence
         onExitComplete={() => {
@@ -714,7 +747,7 @@ export function Nav() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.16 }}
-            className="fixed inset-0 bg-foreground/20 lg:hidden"
+            className="fixed inset-0 bg-background/70 lg:hidden"
           />
         )}
         {mobileOpen && (
@@ -729,38 +762,40 @@ export function Nav() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.16 }}
-            className="absolute inset-x-0 top-0 flex max-h-[calc(100dvh-var(--tabbar-band-h))] flex-col overscroll-contain border-b border-foreground bg-card shadow-overlay lg:hidden"
+            className="absolute inset-x-0 top-0 flex max-h-[calc(100dvh-var(--tabbar-band-h))] flex-col overscroll-contain rounded-b-2xl border-b border-border/70 bg-paper shadow-card-hover lg:hidden"
           >
             {/* The bar again, on the sheet: same height token, same gutter,
-                same brand link. The account link takes the place of the
-                language switch, and the close button the menu button's. */}
+                same brand link and the same pill, with the close button in
+                the menu button's place. */}
             <div
               data-mobile-menu-header
-              className="flex h-[var(--nav-h-compact)] shrink-0 items-center justify-between gap-2 border-b border-hairline px-4 sm:px-6"
+              className="flex h-[var(--nav-h-compact)] shrink-0 items-center justify-between gap-2 border-b border-border/60 px-3 sm:px-5"
             >
               <LogoWordmark
+                scrollY={scrollY}
                 locale={locale}
                 homeLabel={copy.home}
                 onNavigate={() => setMobileOpen(false)}
               />
-              <div className="flex shrink-0 items-center">
-                <AuthStatus
-                  variant="quiet"
-                  onNavigate={() => setMobileOpen(false)}
-                />
+              <div className="flex shrink-0 items-center gap-1">
+                <LanguageSwitch />
                 <button
                   type="button"
                   ref={mobileCloseRef}
                   onClick={closeMobileMenu}
-                  className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center p-2 text-foreground outline-none transition-colors duration-[120ms] hover:bg-card-hover focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange motion-reduce:transition-none"
+                  className="inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-xl p-2 text-muted-foreground outline-none transition-colors duration-150 hover:bg-brand-pink/45 hover:text-foreground focus-visible:inset-ring-2 focus-visible:inset-ring-brand-orange motion-reduce:transition-none"
                   aria-label={copy.closeMenu}
                 >
                   <X size={19} aria-hidden="true" />
                 </button>
               </div>
             </div>
-            <div className="min-h-0 overflow-y-auto overscroll-contain px-4 pb-2 sm:px-6">
-              {renderMobileGroups(primaryLinks, () => setMobileOpen(false))}
+            <div className="min-h-0 overflow-y-auto overscroll-contain px-4 pb-4 sm:px-6">
+              {renderMobileGroups(
+                primaryLinks,
+                () => setMobileOpen(false),
+                <AuthStatus mobile onNavigate={() => setMobileOpen(false)} />,
+              )}
             </div>
           </m.div>
         )}

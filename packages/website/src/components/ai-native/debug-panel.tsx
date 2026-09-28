@@ -75,7 +75,7 @@ export function AiNativeDebugPanel() {
     <div
       role="dialog"
       aria-label="AI-Native debug panel"
-      className="dark-section fixed right-4 bottom-4 z-[9999] max-h-[70vh] w-[380px] overflow-auto overscroll-contain border-2 border-brand-orange bg-[var(--color-dark-bg)] p-3 font-mono text-xs text-[var(--color-dark-fg)] shadow-[6px_6px_0_0_#000]"
+      className="fixed right-4 bottom-4 z-[9999] max-h-[70vh] w-[380px] overflow-auto overscroll-contain border-2 border-brand-orange bg-inset p-3 font-mono text-xs text-foreground shadow-overlay"
     >
       <div className="mb-2 flex items-center justify-between">
         <span className="font-bold uppercase tracking-[0.14em] text-brand-orange">
@@ -84,24 +84,24 @@ export function AiNativeDebugPanel() {
         <button
           type="button"
           onClick={() => setOpen(false)}
-          className="text-[var(--color-dark-muted)] transition-colors hover:text-brand-orange"
+          className="text-muted-foreground transition-colors hover:text-brand-orange"
           aria-label="Schließen"
         >
           ✕
         </button>
       </div>
 
-      <section className="mb-3 border-t border-[var(--color-dark-border)] pt-2">
+      <section className="mb-3 border-t border-border pt-2">
         <p className="mb-1 font-bold text-brand-amber">Reveal Index</p>
         <p>{revealIndex === null ? "(not set)" : revealIndex}</p>
       </section>
 
-      <section className="mb-3 border-t border-[var(--color-dark-border)] pt-2">
+      <section className="mb-3 border-t border-border pt-2">
         <p className="mb-1 font-bold text-brand-amber">
           Active Widgets ({widgets.length})
         </p>
         {widgets.length === 0 ? (
-          <p className="text-[var(--color-dark-muted)]">(none)</p>
+          <p className="text-muted-foreground">(none)</p>
         ) : (
           <ul className="space-y-0.5">
             {widgets.map((w, i) => (
@@ -114,12 +114,12 @@ export function AiNativeDebugPanel() {
         )}
       </section>
 
-      <section className="mb-3 border-t border-[var(--color-dark-border)] pt-2">
+      <section className="mb-3 border-t border-border pt-2">
         <p className="mb-1 font-bold text-brand-amber">
           Recent Events ({events.length})
         </p>
         {events.length === 0 ? (
-          <p className="text-[var(--color-dark-muted)]">(no events)</p>
+          <p className="text-muted-foreground">(no events)</p>
         ) : (
           <ul className="space-y-0.5 text-xs">
             {events
@@ -134,11 +134,11 @@ export function AiNativeDebugPanel() {
         )}
       </section>
 
-      <section className="border-t border-[var(--color-dark-border)] pt-2">
+      <section className="border-t border-border pt-2">
         <p className="mb-1 font-bold text-brand-amber">
           Progress (localStorage)
         </p>
-        <pre className="max-h-[200px] overflow-auto whitespace-pre-wrap break-all text-xs text-[var(--color-dark-muted)]">
+        <pre className="max-h-[200px] overflow-auto whitespace-pre-wrap break-all text-xs text-muted-foreground">
           {progressRaw ?? "(empty)"}
         </pre>
       </section>

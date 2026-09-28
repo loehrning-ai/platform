@@ -628,7 +628,7 @@ export function WorkshopQuizPage({
             <button
               type="button"
               onClick={() => setLoadAttempt((attempt) => attempt + 1)}
-              className="inline-flex min-h-11 items-center gap-2 bg-foreground px-5 py-2.5 text-[0.9375rem] font-semibold text-background transition-colors duration-[120ms] hover:bg-muted-foreground motion-reduce:transition-none"
+              className="inline-flex min-h-11 items-center gap-2 bg-brand-cobalt px-5 py-2.5 text-[0.9375rem] font-semibold text-paper transition-colors duration-[120ms] hover:bg-[#1e3790] motion-reduce:transition-none"
             >
               <RotateCcw className="h-4 w-4" aria-hidden="true" />
               {copy.retry}
@@ -685,7 +685,7 @@ export function WorkshopQuizPage({
                   setResultSaveStatus("pending");
                   setResultSaveAttempt((attempt) => attempt + 1);
                 }}
-                className="inline-flex min-h-11 items-center gap-2 bg-foreground px-5 py-2.5 text-[0.9375rem] font-semibold text-background transition-colors duration-[120ms] hover:bg-muted-foreground motion-reduce:transition-none"
+                className="inline-flex min-h-11 items-center gap-2 bg-brand-cobalt px-5 py-2.5 text-[0.9375rem] font-semibold text-paper transition-colors duration-[120ms] hover:bg-[#1e3790] motion-reduce:transition-none"
               >
                 <RotateCcw className="h-4 w-4" aria-hidden="true" />
                 {copy.retrySave}
@@ -981,7 +981,7 @@ export function WorkshopQuizPage({
                     ref={nextButtonRef}
                     type="button"
                     onClick={handleNext}
-                    className="inline-flex min-h-11 items-center gap-2 bg-foreground px-5 py-2.5 text-[0.9375rem] font-semibold text-background transition-colors duration-[120ms] hover:bg-muted-foreground motion-reduce:transition-none"
+                    className="inline-flex min-h-11 items-center gap-2 bg-brand-cobalt px-5 py-2.5 text-[0.9375rem] font-semibold text-paper transition-colors duration-[120ms] hover:bg-[#1e3790] motion-reduce:transition-none"
                   >
                     {currentIndex < total - 1 ? copy.next : copy.result}
                     <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />

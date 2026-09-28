@@ -318,10 +318,10 @@ export function DocDemo(): JSX.Element {
             className={cn(
               "mt-3 min-h-11 w-full border-2 border-foreground px-4 py-2.5 font-mono text-[12px] font-bold uppercase tracking-[0.14em] text-white transition-[background-color,border-color,color,opacity,transform,box-shadow]",
               running
-                ? "cursor-wait bg-muted-foreground opacity-75"
+                ? "cursor-wait bg-brand-cobalt opacity-75"
                 : stage === 4
                   ? "bg-risk-green shadow-[4px_4px_0_0_var(--color-foreground)]"
-                  : "bg-foreground shadow-[4px_4px_0_0_var(--color-foreground)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-foreground)]",
+                  : "bg-brand-cobalt shadow-[4px_4px_0_0_var(--color-foreground)] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_var(--color-foreground)]",
             )}
           >
             {stage === 0

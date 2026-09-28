@@ -90,47 +90,48 @@ test.describe("DE/EN locale-routing foundation", () => {
         .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
         .waitFor({ state: "attached" });
 
+      const expectFullTargets = async (group: Locator) => {
+        const links = await group.getByRole("link").all();
+        expect(links).toHaveLength(2);
+        for (const target of links) {
+          const box = await target.boundingBox();
+          expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+          expect(box?.width ?? 0).toBeGreaterThanOrEqual(44);
+        }
+      };
+
       let activeLogin: Locator;
       if (width < 1024) {
-        // Below lg the bar carries one link to the other language, and the
-        // menu sheet lies over the bar and repeats no language control.
-        // Measure it before the sheet covers it.
-        const compactLanguage = page.locator(
-          '[data-nav-header-row] [data-language-switch="compact"] a',
-        );
-        await expect(compactLanguage).toBeVisible();
-        await expect(compactLanguage).toHaveText("DE");
-        await expect(compactLanguage).toHaveAttribute("href", "/kurse");
-        await expect(compactLanguage).toHaveAttribute("hreflang", "de");
-        await expect(compactLanguage).toHaveAccessibleName(
-          "DE, open the German interface",
-        );
-        const box = await compactLanguage.boundingBox();
-        expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
-        expect(box?.width ?? 0).toBeGreaterThanOrEqual(44);
+        // Below lg the bar carries the DE/EN pill, and the menu sheet's
+        // header repeats the same pill over it.
+        const barLanguage = page
+          .locator("[data-nav-header-row]")
+          .getByRole("group", { name: "Language" });
+        await expect(barLanguage).toBeVisible();
+        await expectFullTargets(barLanguage);
         await expect(
-          page
-            .locator("[data-nav-header-row]")
-            .getByRole("group", { name: "Language" }),
-        ).toHaveCount(0);
+          barLanguage.getByRole("link", {
+            name: "DE, open the German interface",
+          }),
+        ).toHaveAttribute("href", "/kurse");
+        await expect(
+          barLanguage.getByRole("link", { name: /^EN, English/ }),
+        ).toHaveAttribute("aria-current", "page");
         await page.getByRole("button", { name: "Open menu" }).click();
         const dialog = page.getByRole("dialog", { name: "Primary navigation" });
         await expect(dialog).toBeVisible();
-        await expect(dialog.getByRole("group", { name: "Language" })).toHaveCount(
-          0,
-        );
+        const sheetLanguage = dialog.getByRole("group", { name: "Language" });
+        await expect(sheetLanguage).toBeVisible();
+        await expectFullTargets(sheetLanguage);
         activeLogin = dialog.getByRole("link", { name: "Log in" });
       } else {
         const desktopNavigation = page.locator(".js-desktop-nav");
-        const activeLanguageGroup = desktopNavigation.getByRole("group", {
+        const desktopLanguage = desktopNavigation.getByRole("group", {
           name: "Language",
         });
-        await expect(activeLanguageGroup).toBeVisible();
+        await expect(desktopLanguage).toBeVisible();
+        await expectFullTargets(desktopLanguage);
         activeLogin = desktopNavigation.getByRole("link", { name: "Log in" });
-        for (const target of await activeLanguageGroup.getByRole("link").all()) {
-          const box = await target.boundingBox();
-          expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
-        }
       }
 
       await expect(activeLogin).toBeVisible();
@@ -156,24 +157,15 @@ test.describe("DE/EN no-script navigation", () => {
       await page.setViewportSize({ width, height: 844 });
       await page.goto("/en", { waitUntil: "domcontentloaded" });
 
-      // Below lg one link to the other language; from lg the DE/EN pair.
-      const pair = page.getByRole("group", { name: "Language" });
-      const single = page.locator('[data-language-switch="compact"] a');
-      if (width < 1024) {
-        await expect(pair).toHaveCount(0);
-        await expect(single).toHaveCount(1);
-        await expect(single).toBeVisible();
-        await expect(single).toHaveAttribute("href", "/");
-        await expect(single).toHaveAccessibleName(/German/);
-        return;
-      }
-      await expect(single).toBeHidden();
-      await expect(pair).toHaveCount(1);
+      // One DE/EN pill at every width: the compact cluster's, which the
+      // no-script stylesheet exposes on wide screens too.
+      const language = page.getByRole("group", { name: "Language" });
+      await expect(language).toHaveCount(1);
       await expect(
-        pair.getByRole("link", { name: /German/ }),
+        language.getByRole("link", { name: /German/ }),
       ).toHaveAttribute("href", "/");
       await expect(
-        pair.getByRole("link", { name: /English/ }),
+        language.getByRole("link", { name: /English/ }),
       ).toHaveAttribute("aria-current", "page");
     });
   }

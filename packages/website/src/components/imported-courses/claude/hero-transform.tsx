@@ -181,7 +181,7 @@ export function HeroTransform({
                 className={cn(
                   "flex min-h-11 min-w-11 items-center justify-center border text-label tabular-nums focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange",
                   i === stageIdx
-                    ? "border-foreground bg-foreground text-background"
+                    ? "border-foreground border-b-[3px] bg-sky-sheet text-foreground"
                     : "border-border bg-background text-muted-foreground",
                 )}
               >
@@ -222,7 +222,7 @@ export function HeroTransform({
             type="button"
             onClick={run}
             disabled={loading}
-            className="inline-flex min-h-11 w-full items-center justify-center rounded-none bg-foreground px-4 py-2 text-[0.9375rem] font-semibold text-background transition-colors duration-[120ms] hover:bg-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none sm:w-auto sm:shrink-0"
+            className="inline-flex min-h-11 w-full items-center justify-center rounded-none bg-brand-cobalt px-4 py-2 text-[0.9375rem] font-semibold text-paper transition-colors duration-[120ms] hover:bg-[#1e3790] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none sm:w-auto sm:shrink-0"
           >
             {loading ? copy.running : copy.run(stageIdx + 1)}
           </button>

@@ -1,7 +1,7 @@
 /**
- * Home sections below the hero share the footer's and /ueber-mich's measure
- * and gutter: 16px on a phone, 24px from sm, content 72rem wide from xl. The
- * phone hero and header sit on the same 16px line, so the hand-over from the
- * hero to the first section does not jog.
+ * The home sections' Werkzeichnung measure and gutter (the footer's and
+ * /ueber-mich's): 16px on a phone, 24px from sm, content 72rem wide from xl.
+ * Defined here rather than re-exported from the about page, so the home
+ * never depends on another route's module.
  */
-export { PROFILE_CONTAINER as HOME_CONTAINER } from "@/components/about/profile-container";
+export const HOME_CONTAINER = "mx-auto w-full max-w-[75rem] px-4 sm:px-6";

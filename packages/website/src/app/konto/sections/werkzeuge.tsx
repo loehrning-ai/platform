@@ -95,7 +95,7 @@ const MAX_DOCUMENT_TITLE_LENGTH = 80;
  * the same 44px minimum height and without decorative lift.
  */
 const OPEN_BUTTON_CLASS =
-  "inline-flex min-h-11 max-w-full items-center justify-center gap-2 rounded-xl border border-brand-orange bg-brand-orange px-4 py-2 text-center text-xs font-semibold tracking-[-0.01em] text-white hover:border-foreground hover:bg-foreground hover:text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+  "inline-flex min-h-11 max-w-full items-center justify-center gap-2 rounded-xl border border-brand-orange bg-brand-orange px-4 py-2 text-center text-xs font-semibold tracking-[-0.01em] text-white hover:border-kupfer-dark hover:bg-kupfer-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
 interface CvEngineTool {
   readonly sourceHref: string;

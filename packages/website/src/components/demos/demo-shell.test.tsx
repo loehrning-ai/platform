@@ -11,11 +11,11 @@ import { trackDemoOpen } from "@/lib/analytics";
  *
  * DemoShell resolves a demo slug to its interactive component via the registry,
  * fires trackDemoOpen exactly once on mount (origin = source ?? "deeplink"), and
- * frames the widget in a dark/light retro box. We mock the registry (so a
+ * frames every widget, the console-like ones included, in one light sheet. We mock the registry (so a
  * component can be returned or withheld without loading a real demo chunk), the
  * analytics helper (spy), and EngagementTracker (a timer/IntersectionObserver
  * widget irrelevant to this unit). Demo inputs are REAL entries from the demos
- * catalog so slug + dark come from production data.
+ * catalog so the slugs come from production data.
  */
 
 vi.mock("./demo-component-registry", () => ({
@@ -33,8 +33,10 @@ vi.mock("./engagement-tracker", () => ({
   ),
 }));
 
-const excel = demos.find((d) => d.slug === "excel")!; // dark: false
-const agent = demos.find((d) => d.slug === "agent-pipeline")!; // dark: true
+const excel = demos.find((d) => d.slug === "excel")!;
+// A console-like engine (a recorded agent trace), graphit before the
+// no-black rule.
+const agent = demos.find((d) => d.slug === "agent-pipeline")!;
 
 const mockedGetComponent = vi.mocked(getDemoComponent);
 
@@ -125,16 +127,14 @@ describe("<DemoShell>", () => {
     expect(shell.className).not.toContain("dark-section");
   });
 
-  it("scopes accessible colour tokens for a dark demo", () => {
+  it("frames a console-like engine on the same light sheet, never graphit", () => {
     const { container } = render(<DemoShell demo={agent} />);
     const shell = container.firstChild as HTMLElement;
-    expect(shell.className).toContain("dark-section");
-    expect(shell.className).toContain("border-border");
-    expect(shell.className).not.toContain("bg-foreground");
-    expect(shell.className).not.toContain("bg-background");
+    expect(shell).toHaveClass("bg-card", "border-foreground");
+    expect(shell.className).not.toMatch(/dark-section|bg-foreground|bg-black|dark-bg/);
   });
 
-  it("flattens the frame below sm: rules only for light, a full-bleed band for dark", () => {
+  it("flattens the frame below sm to its top rule, for every engine", () => {
     const { container, unmount } = render(<DemoShell demo={excel} />);
     const light = container.firstChild as HTMLElement;
     expect(light).toHaveClass("max-sm:border-x-0", "max-sm:border-b-0", "max-sm:bg-transparent");
@@ -144,9 +144,10 @@ describe("<DemoShell>", () => {
     ).toHaveClass("max-sm:hidden");
     unmount();
 
-    const dark = render(<DemoShell demo={agent} />).container
+    const consoleLike = render(<DemoShell demo={agent} />).container
       .firstChild as HTMLElement;
-    expect(dark).toHaveClass("max-sm:-mx-4", "max-sm:border-x-0");
+    expect(consoleLike).toHaveClass("max-sm:border-x-0", "max-sm:border-b-0", "max-sm:bg-transparent");
+    expect(consoleLike).not.toHaveClass("max-sm:-mx-4");
   });
 
   it("always mounts the EngagementTracker for the demo slug", () => {

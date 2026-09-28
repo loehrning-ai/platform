@@ -67,7 +67,7 @@ export interface ReaderFocusBarProps {
 }
 
 const ACTION_CLASS_NAME =
-  "inline-flex min-h-11 min-w-11 shrink-0 items-center gap-1.5 border border-foreground bg-brand-orange px-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-white outline-none transition-colors duration-150 hover:bg-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none";
+  "inline-flex min-h-11 min-w-11 shrink-0 items-center gap-1.5 border border-foreground bg-brand-orange px-3 font-mono text-xs font-bold uppercase tracking-[0.08em] text-white outline-none transition-colors duration-150 hover:bg-kupfer-dark focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none";
 
 function ReaderFocusAction({
   action,

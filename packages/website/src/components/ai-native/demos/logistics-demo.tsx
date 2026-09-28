@@ -141,7 +141,7 @@ const EVENTS: readonly LogEvent[] = [
 
 const LEVEL_COLOR: Record<LogEvent["level"], string> = {
   warn: "text-brand-amber",
-  info: "text-[var(--color-kupfer-light)]",
+  info: "text-kupfer-dark",
   ok: "text-risk-green",
 };
 
@@ -253,9 +253,7 @@ export function LogisticsDemo(): JSX.Element {
                       <div
                         className={cn(
                           "flex h-7 w-7 shrink-0 items-center justify-center text-[15px]",
-                          isCurrent
-                            ? "bg-foreground text-brand-orange"
-                            : "bg-foreground text-brand-orange",
+                          "border border-foreground bg-sky-sheet text-kupfer-dark",
                         )}
                       >
                         {n.icon}
@@ -330,8 +328,8 @@ export function LogisticsDemo(): JSX.Element {
       </div>
 
       {/* Simulated log */}
-      <div className="dark-section min-h-[170px] border-l-[3px] border-brand-orange bg-[var(--color-dark-bg)] px-4 py-3.5 font-mono text-xs leading-[1.7] text-[var(--color-dark-fg)]">
-        <div className="mb-2 flex items-center justify-between font-mono text-xs tracking-[0.14em] text-[var(--color-dark-muted)]">
+      <div className="min-h-[170px] border-l-[3px] border-brand-orange bg-inset px-4 py-3.5 font-mono text-xs leading-[1.7] text-foreground">
+        <div className="mb-2 flex items-center justify-between font-mono text-xs tracking-[0.14em] text-muted-foreground">
           <span>› BEISPIEL-LOG · WORKFLOW SC-042</span>
           <span>{events.length}/6 Ereignisse</span>
         </div>
@@ -352,7 +350,7 @@ export function LogisticsDemo(): JSX.Element {
               [{e.level.toUpperCase().padEnd(4)}]
             </span>
             <span className="text-brand-orange"> {e.source.padEnd(18)}</span>
-            <span className="text-[var(--color-dark-fg)]/90"> {e.message}</span>
+            <span className="text-foreground"> {e.message}</span>
           </m.div>
         ))}
       </div>

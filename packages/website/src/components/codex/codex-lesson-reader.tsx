@@ -249,7 +249,7 @@ export function CodexLessonReader({
             {nextHref && (
               <Link
                 href={nextHref}
-                className="ml-auto inline-flex min-h-11 items-center border border-foreground bg-brand-orange px-4 text-[13px] font-semibold text-white transition-colors hover:bg-foreground"
+                className="ml-auto inline-flex min-h-11 items-center border border-foreground bg-brand-orange px-4 text-[13px] font-semibold text-white transition-colors hover:bg-kupfer-dark"
               >
                 {copy.next}
               </Link>

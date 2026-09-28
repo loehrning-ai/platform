@@ -207,8 +207,11 @@ export default function RoiRechnerDemo() {
 
         <div
           style={{
-            background: DEMO.ink,
-            color: DEMO.kalk,
+            // The result sheet: the pastel Himmel-Blatt with ink type and the
+            // figures in Mennige tief (6.3:1), never a black pane.
+            background: "var(--color-sky-sheet)",
+            color: "var(--color-foreground)",
+            borderTop: "2px solid var(--color-foreground)",
             padding: 20,
             display: "flex",
             flexDirection: "column",
@@ -217,7 +220,7 @@ export default function RoiRechnerDemo() {
           <div
             style={{
               ...DEMO.label,
-              color: "rgba(243,240,233,0.6)",
+              color: "var(--color-muted-foreground)",
             }}
           >
             {text("Szenario-Wert pro Jahr", "Annual scenario value")}
@@ -229,7 +232,7 @@ export default function RoiRechnerDemo() {
               fontSize: isNarrow ? 40 : 48,
               lineHeight: 1.02,
               fontWeight: 800,
-              color: "var(--color-kupfer-light)",
+              color: "var(--color-kupfer-dark)",
               letterSpacing: "-0.01em",
               marginTop: 6,
               fontVariantNumeric: "tabular-nums",
@@ -240,7 +243,7 @@ export default function RoiRechnerDemo() {
           <div
             style={{
               ...DEMO.label,
-              color: "rgba(243,240,233,0.62)",
+              color: "var(--color-muted-foreground)",
               marginTop: 2,
             }}
           >
@@ -285,13 +288,13 @@ export default function RoiRechnerDemo() {
             style={{
               marginTop: 20,
               paddingTop: 14,
-              borderTop: "1px solid rgba(243,240,233,0.14)",
+              borderTop: "1px solid var(--color-border)",
             }}
           >
             <div
               style={{
                 ...DEMO.label,
-                color: "rgba(243,240,233,0.62)",
+                color: "var(--color-muted-foreground)",
                 marginBottom: 8,
               }}
             >
@@ -302,53 +305,53 @@ export default function RoiRechnerDemo() {
                 fontFamily: DEMO.font.mono,
                 fontSize: 12,
                 lineHeight: 1.7,
-                color: "rgba(243,240,233,0.75)",
+                color: "var(--color-muted-foreground)",
                 letterSpacing: "0.01em",
                 wordBreak: "break-word",
               }}
             >
-              <span style={{ color: DEMO.kalk, fontWeight: 700 }}>
+              <span style={{ color: "var(--color-foreground)", fontWeight: 700 }}>
                 {v.headcount}
               </span>
-              <span style={{ color: "rgba(243,240,233,0.62)" }}>
+              <span style={{ color: "var(--color-muted-foreground)" }}>
                 {" "}
                 {text("MA", "people")}{" "}
               </span>
-              <span style={{ color: "rgba(243,240,233,0.5)" }}>×</span>
-              <span style={{ color: DEMO.kalk, fontWeight: 700 }}>
+              <span style={{ color: "var(--color-muted-foreground)" }}>×</span>
+              <span style={{ color: "var(--color-foreground)", fontWeight: 700 }}>
                 {" "}
                 {v.hourly} €
               </span>
-              <span style={{ color: "rgba(243,240,233,0.62)" }}>/h </span>
-              <span style={{ color: "rgba(243,240,233,0.5)" }}>×</span>
-              <span style={{ color: DEMO.kalk, fontWeight: 700 }}>
+              <span style={{ color: "var(--color-muted-foreground)" }}>/h </span>
+              <span style={{ color: "var(--color-muted-foreground)" }}>×</span>
+              <span style={{ color: "var(--color-foreground)", fontWeight: 700 }}>
                 {" "}
                 {v.hoursPerWeek} h
               </span>
-              <span style={{ color: "rgba(243,240,233,0.62)" }}>
+              <span style={{ color: "var(--color-muted-foreground)" }}>
                 {text("/Wo", "/wk")}{" "}
               </span>
-              <span style={{ color: "rgba(243,240,233,0.5)" }}>×</span>
-              <span style={{ color: DEMO.kalk, fontWeight: 700 }}>
+              <span style={{ color: "var(--color-muted-foreground)" }}>×</span>
+              <span style={{ color: "var(--color-foreground)", fontWeight: 700 }}>
                 {" "}
                 {adoptionDecimal}
               </span>
-              <span style={{ color: "rgba(243,240,233,0.62)" }}>
+              <span style={{ color: "var(--color-muted-foreground)" }}>
                 {" "}
                 {text("Nutzungsquote", "adoption")}{" "}
               </span>
-              <span style={{ color: "rgba(243,240,233,0.5)" }}>×</span>
-              <span style={{ color: DEMO.kalk, fontWeight: 700 }}>
+              <span style={{ color: "var(--color-muted-foreground)" }}>×</span>
+              <span style={{ color: "var(--color-foreground)", fontWeight: 700 }}>
                 {" "}
                 {WEEKS_PER_YEAR}
               </span>
-              <span style={{ color: "rgba(243,240,233,0.62)" }}>
+              <span style={{ color: "var(--color-muted-foreground)" }}>
                 {" "}
                 {text("Wochen", "weeks")}{" "}
               </span>
-              <span style={{ color: "rgba(243,240,233,0.5)" }}> = </span>
+              <span style={{ color: "var(--color-muted-foreground)" }}> = </span>
               <span
-                style={{ color: "var(--color-kupfer-light)", fontWeight: 700 }}
+                style={{ color: "var(--color-kupfer-dark)", fontWeight: 700 }}
               >
                 {yearly.toLocaleString(numberLocale)} €
               </span>
@@ -552,13 +555,13 @@ function Row({
         justifyContent: "space-between",
         alignItems: "baseline",
         padding: "6px 0",
-        borderTop: "1px solid rgba(243,240,233,0.12)",
+        borderTop: "1px solid var(--color-border)",
       }}
     >
       <span
         style={{
           ...DEMO.label,
-          color: "rgba(243,240,233,0.6)",
+          color: "var(--color-muted-foreground)",
         }}
       >
         {label}
@@ -568,7 +571,7 @@ function Row({
           fontFamily: DEMO.font.mono,
           fontSize: highlight ? 17 : 13,
           fontWeight: 700,
-          color: highlight ? "var(--color-kupfer-light)" : DEMO.kalk,
+          color: highlight ? "var(--color-kupfer-dark)" : "var(--color-foreground)",
           letterSpacing: highlight ? "-0.01em" : undefined,
           fontVariantNumeric: "tabular-nums",
         }}
@@ -640,8 +643,8 @@ const craftsmanSliderCss = `
     height: 8px;
     background: linear-gradient(
       to right,
-      #0B0908 0%,
-      #0B0908 var(--roi-fill, 50%),
+      #2e4d90 0%,
+      #2e4d90 var(--roi-fill, 50%),
       rgba(11,9,8,0.12) var(--roi-fill, 50%),
       rgba(11,9,8,0.12) 100%
     );
@@ -657,7 +660,7 @@ const craftsmanSliderCss = `
   }
   .roi-craftsman-slider::-moz-range-progress {
     height: 8px;
-    background: #0B0908;
+    background: #2e4d90;
     border-radius: 0;
   }
 
@@ -669,7 +672,7 @@ const craftsmanSliderCss = `
     width: 22px;
     height: 22px;
     margin-top: -8px;
-    background: #0B0908;
+    background: #2e4d90;
     border: 2px solid #F3F0E9;
     outline: 1px solid #0B0908;
     border-radius: 0;
@@ -681,7 +684,7 @@ const craftsmanSliderCss = `
   .roi-craftsman-slider::-moz-range-thumb {
     width: 18px;
     height: 18px;
-    background: #0B0908;
+    background: #2e4d90;
     border: 2px solid #F3F0E9;
     outline: 1px solid #0B0908;
     border-radius: 0;

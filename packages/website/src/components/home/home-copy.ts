@@ -9,11 +9,8 @@ export const HOME_COPY = {
     },
     hero: {
       headline: ["KI", "verstehen.", "Sicher anwenden."],
-      /** The band's one caps line (SPEC §3.6). CSS sets the capitals. */
-      capsLine: "Frei · zweisprachig · quelloffen",
-      // One sentence on phones (lead + "."), the full introduction from lg:
-      // lead + detail + "." + facts. Below lg the facts sit above the
-      // headline as the band's label instead.
+      // The introduction card: one sentence on phones (lead + "."), from lg
+      // lead + detail + "." followed by the facts.
       introduction: {
         lead: "Freie Kurse, Praxisbeispiele und Workshops zu KI",
         detail: " mit Übungen und Quellen",
@@ -137,7 +134,6 @@ export const HOME_COPY = {
     },
     hero: {
       headline: ["Understand", "AI.", "Apply it safely."],
-      capsLine: "Free · bilingual · open source",
       introduction: {
         lead: "Free courses, examples and workshops on AI",
         detail: " with exercises and sources",

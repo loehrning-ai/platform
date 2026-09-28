@@ -175,10 +175,84 @@ test.describe("workshop self-study journey", () => {
     await expect(page).toHaveURL(/\/workshops\/geschaeftsberichte-mit-ki-lesen$/);
   });
 
+  test("keeps every poster numeral whole inside its frame from 320 to 1440px", async ({ page }) => {
+    // The glyphs' ink box (canvas metrics in the rendered face, whichever
+    // face loaded) mapped through the SVG's screen transform must sit inside
+    // every clipping ancestor: the nested poster viewport, the poster box and
+    // the band. A numeral cut at an edge reads as a bug, not as a bleed.
+    const routes = ["/workshops", "/workshops/esg-berichte-mit-ki", "/workshops/datenbereitschaft-fuer-ki"];
+    for (const width of [320, 390, 768, 1024, 1440]) {
+      await page.setViewportSize({ width, height: 900 });
+      for (const route of routes) {
+        await page.goto(route, { waitUntil: "load" });
+        await page.evaluate(() =>
+          Promise.race([document.fonts.ready, new Promise((resolve) => setTimeout(resolve, 5_000))]),
+        );
+        const cut = await page.evaluate(() => {
+          const context = document.createElement("canvas").getContext("2d")!;
+          const found: string[] = [];
+          for (const text of document.querySelectorAll<SVGTextElement>("svg text")) {
+            if (text.getBoundingClientRect().width === 0) continue;
+            const style = getComputedStyle(text);
+            if (style.visibility === "hidden" || text.closest("[hidden]")) continue;
+            context.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+            context.letterSpacing = style.letterSpacing;
+            const metrics = context.measureText(text.textContent ?? "");
+            const box = text.getBBox();
+            const baseline = (text.y.baseVal.length ? text.y.baseVal[0].value : 0) +
+              (text.dy.baseVal.length ? text.dy.baseVal[0].value : 0);
+            const matrix = text.getScreenCTM();
+            if (!matrix) continue;
+            const topLeft = new DOMPoint(box.x - metrics.actualBoundingBoxLeft, baseline - metrics.actualBoundingBoxAscent).matrixTransform(matrix);
+            const bottomRight = new DOMPoint(box.x + metrics.actualBoundingBoxRight, baseline + metrics.actualBoundingBoxDescent).matrixTransform(matrix);
+            let clip = { left: -Infinity, top: -Infinity, right: Infinity, bottom: Infinity };
+            for (let node = text.parentElement; node && node !== document.documentElement; node = node.parentElement) {
+              const nodeStyle = getComputedStyle(node);
+              let rect: { left: number; top: number; right: number; bottom: number } | null = null;
+              if (node instanceof SVGSVGElement && node.ownerSVGElement) {
+                if (node.getAttribute("overflow") === "visible") continue;
+                const parent = node.ownerSVGElement.getScreenCTM();
+                if (!parent) continue;
+                const a = new DOMPoint(node.x.baseVal.value, node.y.baseVal.value).matrixTransform(parent);
+                const b = new DOMPoint(node.x.baseVal.value + node.width.baseVal.value, node.y.baseVal.value + node.height.baseVal.value).matrixTransform(parent);
+                rect = { left: a.x, top: a.y, right: b.x, bottom: b.y };
+              } else if (nodeStyle.overflowX !== "visible" || nodeStyle.overflowY !== "visible") {
+                rect = node.getBoundingClientRect();
+              }
+              if (rect) {
+                clip = {
+                  left: Math.max(clip.left, rect.left),
+                  top: Math.max(clip.top, rect.top),
+                  right: Math.min(clip.right, rect.right),
+                  bottom: Math.min(clip.bottom, rect.bottom),
+                };
+              }
+            }
+            const over = Math.max(
+              clip.left - topLeft.x,
+              clip.top - topLeft.y,
+              bottomRight.x - clip.right,
+              bottomRight.y - clip.bottom,
+            );
+            if (over > 1) found.push(`"${text.textContent}" cut by ${over.toFixed(1)}px`);
+          }
+          return found;
+        });
+        expect(cut, `${route} at ${width}px`).toEqual([]);
+      }
+    }
+  });
+
   test("sets the four workshops as four posters in four palettes", async ({ page }) => {
     await openHub(page);
-    // The hub band takes the newest workshop's scene (Workshop 04, Autumn).
-    await expect(page.locator("[data-cover-band]")).toHaveAttribute("data-plakat", "autumn");
+    // The hub opens on a paper header (highlighted title, pastel geometry,
+    // catalogue card); the four posters are the rows.
+    await expect(page.locator("[data-cover-band]")).toHaveCount(0);
+    const hero = page.locator("[data-workshop-hero]");
+    await expect(hero).toBeVisible();
+    await expect(hero.locator("h1 span.box-decoration-clone")).toHaveText("mit Fall und Vorlage.");
+    await expect(hero.locator("[data-workshop-geometry]")).toHaveCount(2);
+    await expect(page.getByRole("complementary", { name: "Im Katalog" })).toBeVisible();
     const rows = page.getByTestId("workshop-row");
     await expect(rows).toHaveCount(4);
     // Each row shows its own poster; the four palettes are distinct and in

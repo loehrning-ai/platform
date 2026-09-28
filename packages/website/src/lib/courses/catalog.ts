@@ -168,7 +168,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     unitLabel: "Blöcke",
     unitCount: 5,
     audience: "Beschäftigte, die KI im Arbeitsalltag einsetzen",
-    coverImage: "/course-covers/ki-fuehrerschein-cover-v3.webp",
+    coverImage: "/course-covers/ki-fuehrerschein-cover-v4.webp",
     coverImageAlt:
       "Editoriale Collage eines KI-Prüfpasses mit Lernkarten, Datenschutz und Prüfschritten",
     nativeStatus: "live",
@@ -192,7 +192,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     unitLabel: "Blöcke",
     unitCount: 3,
     audience: "Ohne technische Vorkenntnisse",
-    coverImage: "/course-covers/ki-und-gesellschaft-cover-v3.webp",
+    coverImage: "/course-covers/ki-und-gesellschaft-cover-v4.webp",
     coverImageAlt:
       "Editoriale Collage eines Berliner öffentlichen Raums mit Menschen, Medienbildern und Prüfzeichen",
     nativeStatus: "live",
@@ -216,7 +216,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     unitLabel: "Blöcke",
     unitCount: 6,
     audience: "Compliance, IT-Leitung, Geschäftsführung",
-    coverImage: "/course-covers/eu-ai-act-kurs-cover-v3.webp",
+    coverImage: "/course-covers/eu-ai-act-kurs-cover-v4.webp",
     coverImageAlt:
       "Editoriale Illustration eines EU-AI-Act-Dossiers mit Risikokarten, Rollen und Prüfpfad",
     nativeStatus: "live",
@@ -240,7 +240,7 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     unitLabel: "Module",
     unitCount: 4,
     audience: "Beschäftigte, Selbstständige und Studierende",
-    coverImage: "/course-covers/ai-native-cover-v3.webp",
+    coverImage: "/course-covers/ai-native-cover-v4.webp",
     coverImageAlt:
       "Editoriale Illustration eines modularen AI-Native-Arbeitsstudios mit Kontext, Werkzeugen und Prüfschleife",
     nativeStatus: "live",

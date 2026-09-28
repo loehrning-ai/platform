@@ -5,6 +5,19 @@ import { DEMO } from "@/lib/demo-tokens";
 import { DEMO_HEIGHT } from "./demo-utils";
 import { useDemoLocale } from "./demo-locale";
 
+// The scanner sits on the light demo sheet, never graphit: ink text, Schiefer
+// for secondary text (8.08:1 on Kalkweiß), the Kante control edge (3.75:1),
+// the Leinen hairline for decoration, and the site's paper status tones for
+// the verdict (Mennige tief, Rost-Gelb, Befund grün, all AA as text).
+const INK = "var(--color-foreground)";
+const MUTED = "var(--color-muted-foreground)";
+const EDGE = "var(--color-border)";
+const HAIRLINE = "var(--color-hairline)";
+const SELECTED = "var(--color-sky-sheet)";
+const LEVEL_BLOCK = "var(--color-destructive)";
+const LEVEL_REVIEW = "var(--color-risk-yellow)";
+const LEVEL_SAFE = "var(--color-pass)";
+
 const SAMPLES = [
   "Fiktivperson Alpha (IBAN DE00 0000 0000 0000 0000 00, ungültige Dummy-Daten) fragt nach einem vertraulichen Vertragsdetail.",
   "Bitte senden Sie die interne Unterlage an demo.person@example.invalid; dies ist eine reservierte Beispieladresse.",
@@ -105,7 +118,7 @@ export default function PromptScannerDemo() {
 
   const verdicts = {
     block: {
-      c: DEMO.statusRedOnDark,
+      c: LEVEL_BLOCK,
       t: copy("Markiert", "Flagged"),
       s: copy(
         "PII-Treffer im Beispieltext: nicht ungeprüft weitergeben",
@@ -113,7 +126,7 @@ export default function PromptScannerDemo() {
       ),
     },
     review: {
-      c: DEMO.statusAmber,
+      c: LEVEL_REVIEW,
       t: copy("Prüfen", "Review"),
       s: copy("Geschäftsgeheimnis erkannt", "Confidential term detected"),
     },
@@ -123,7 +136,7 @@ export default function PromptScannerDemo() {
       s: copy("Maskierte Fassung erzeugt", "Masked version generated"),
     },
     safe: {
-      c: DEMO.statusGreen,
+      c: LEVEL_SAFE,
       t: copy("Keine Treffer im Beispiel", "No sample matches"),
       s: copy("Prüfung unvollständig möglich", "Rule check may be incomplete"),
     },
@@ -133,7 +146,7 @@ export default function PromptScannerDemo() {
   const rendered = useMemo(() => {
     if (detections.length === 0) {
       return (
-        <span style={{ fontSize: 13, lineHeight: 1.85, color: DEMO.kalk }}>
+        <span style={{ fontSize: 13, lineHeight: 1.85, color: INK }}>
           {text}
         </span>
       );
@@ -165,9 +178,10 @@ export default function PromptScannerDemo() {
           <span
             key={`m${i}`}
             style={{
-              background: DEMO.kalk,
-              color: DEMO.ink,
-              padding: "2px 6px",
+              background: SELECTED,
+              color: INK,
+              border: `1px solid ${INK}`,
+              padding: "1px 5px",
               fontWeight: 700,
               fontSize: 12,
             }}
@@ -184,7 +198,7 @@ export default function PromptScannerDemo() {
             fontFamily: DEMO.font.mono,
             fontSize: 12,
             lineHeight: 1.8,
-            color: DEMO.kalk,
+            color: INK,
           }}
         >
           {pieces}
@@ -198,9 +212,9 @@ export default function PromptScannerDemo() {
         els.push(<span key={`t${i}`}>{text.slice(last, d.start)}</span>);
       const c =
         d.level === "block"
-          ? DEMO.statusRedOnDark
+          ? LEVEL_BLOCK
           : d.level === "review"
-            ? DEMO.statusAmber
+            ? LEVEL_REVIEW
             : "var(--color-brand-orange)";
       els.push(
         <span
@@ -219,7 +233,7 @@ export default function PromptScannerDemo() {
           style={{
             // The level lives in the coloured underline and the type label;
             // the fill is one neutral tone, not a pastel per level.
-            background: "rgba(243,240,233,0.1)",
+            background: "var(--color-inset)",
             borderBottom: `2px solid ${c}`,
             padding: "1px 3px",
             animation: "promptScannerFlash 0.35s ease-out",
@@ -230,7 +244,7 @@ export default function PromptScannerDemo() {
             style={{
               fontFamily: DEMO.font.mono,
               fontSize: 12,
-              color: DEMO.kalk,
+              color: INK,
               marginLeft: 2,
               fontWeight: 700,
             }}
@@ -252,7 +266,7 @@ export default function PromptScannerDemo() {
     if (last < text.length)
       els.push(<span key="tail">{text.slice(last)}</span>);
     return (
-      <span style={{ fontSize: 13, lineHeight: 1.9, color: DEMO.kalk }}>
+      <span style={{ fontSize: 13, lineHeight: 1.9, color: INK }}>
         {els}
       </span>
     );
@@ -269,12 +283,12 @@ export default function PromptScannerDemo() {
         gap: 14,
         minHeight: DEMO_HEIGHT,
         fontFamily: DEMO.font.sans,
-        color: DEMO.kalk,
+        color: INK,
       }}
     >
       <style>{`
         @keyframes promptScannerFlash {
-          0% { background-color: rgba(243,240,233,0.9); }
+          0% { background-color: var(--color-sky-sheet); }
           100% { }
         }
         @media (prefers-reduced-motion: reduce) {
@@ -321,9 +335,10 @@ export default function PromptScannerDemo() {
                 minHeight: 44,
                 padding: "6px 11px",
                 minWidth: 44,
-                border: `1px solid ${active ? DEMO.kalk : "rgba(243,240,233,0.25)"}`,
-                background: active ? DEMO.kalk : "transparent",
-                color: active ? DEMO.ink : DEMO.kalk,
+                border: `1px solid ${active ? INK : EDGE}`,
+                borderBottomWidth: active ? 3 : 1,
+                background: active ? SELECTED : "transparent",
+                color: INK,
                 cursor: "pointer",
                 transition: "background 0.15s, color 0.15s, border-color 0.15s",
                 flexShrink: 0,
@@ -338,16 +353,17 @@ export default function PromptScannerDemo() {
       <div
         style={{
           position: "relative",
-          border: "1px solid rgba(243,240,233,0.18)",
-          background: "rgba(0,0,0,0.35)",
+          border: `1px solid ${EDGE}`,
+          borderTop: `2px solid ${INK}`,
+          background: "var(--color-inset)",
         }}
       >
         <div
           style={{
             ...DEMO.label,
-            color: "rgba(243,240,233,0.72)",
+            color: MUTED,
             padding: "6px 12px",
-            borderBottom: "1px solid rgba(243,240,233,0.1)",
+            borderBottom: `1px solid ${EDGE}`,
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
@@ -371,7 +387,7 @@ export default function PromptScannerDemo() {
             padding: 12,
             background: "transparent",
             border: "none",
-            color: DEMO.kalk,
+            color: INK,
             fontFamily: DEMO.font.mono,
             resize: "vertical",
             lineHeight: 1.7,
@@ -396,7 +412,7 @@ export default function PromptScannerDemo() {
         <div
           style={{
             display: "inline-flex",
-            border: "1px solid rgba(243,240,233,0.4)",
+            border: `1px solid ${EDGE}`,
           }}
         >
           {(["detect", "mask"] as const).map((m, idx) => {
@@ -411,14 +427,14 @@ export default function PromptScannerDemo() {
                   ...DEMO.label,
                   minHeight: 44,
                   padding: "7px 14px",
-                  // Selected = filled (paper on graphit), like the chips.
-                  background: active ? DEMO.kalk : "transparent",
-                  color: active ? "#141414" : DEMO.kalk,
+                  // Selected = the pastel sheet with a 3px ink foot, like the
+                  // chips; never a black fill.
+                  background: active ? SELECTED : "transparent",
+                  color: INK,
                   borderTop: "none",
                   borderRight: "none",
-                  borderBottom: "none",
-                  borderLeft:
-                    idx === 1 ? "1px solid rgba(243,240,233,0.4)" : "none",
+                  borderBottom: active ? `3px solid ${INK}` : "none",
+                  borderLeft: idx === 1 ? `1px solid ${EDGE}` : "none",
                   cursor: "pointer",
                   transition: "background 0.15s, color 0.15s",
                 }}
@@ -434,7 +450,7 @@ export default function PromptScannerDemo() {
           style={{
             fontFamily: DEMO.font.mono,
             fontSize: 12,
-            color: "rgba(243,240,233,0.65)",
+            color: MUTED,
             letterSpacing: "0.02em",
           }}
         >
@@ -446,9 +462,9 @@ export default function PromptScannerDemo() {
 
       <div
         style={{
-          background: "rgba(243,240,233,0.06)",
+          background: "var(--color-card)",
           padding: "16px 18px",
-          border: `1px solid rgba(243,240,233,0.15)`,
+          border: `1px solid ${HAIRLINE}`,
           minHeight: 90,
         }}
       >
@@ -460,7 +476,7 @@ export default function PromptScannerDemo() {
         aria-live="polite"
         style={{
           // No coloured left rule: the verdict is a word in its colour.
-          border: "1px solid rgba(243,240,233,0.16)",
+          border: `1px solid ${EDGE}`,
           padding: "12px 14px",
           display: "flex",
           alignItems: "center",
@@ -483,7 +499,7 @@ export default function PromptScannerDemo() {
           <div
             style={{
               fontSize: 12,
-              color: "rgba(243,240,233,0.82)",
+              color: MUTED,
               marginTop: 3,
             }}
           >
@@ -503,12 +519,12 @@ export default function PromptScannerDemo() {
               [
                 "PII",
                 detections.filter((d) => d.level === "block").length,
-                DEMO.statusRedOnDark,
+                LEVEL_BLOCK,
               ],
               [
                 copy("Prüfen", "Review"),
                 detections.filter((d) => d.level === "review").length,
-                DEMO.statusAmber,
+                LEVEL_REVIEW,
               ],
               [
                 copy("Maskiert", "Masked"),
@@ -523,7 +539,7 @@ export default function PromptScannerDemo() {
                   fontFamily: DEMO.font.mono,
                   fontSize: 20,
                   fontWeight: 700,
-                  color: n > 0 ? c : "rgba(243,240,233,0.72)",
+                  color: n > 0 ? c : MUTED,
                   lineHeight: 1,
                 }}
               >
@@ -532,7 +548,7 @@ export default function PromptScannerDemo() {
               <div
                 style={{
                   ...DEMO.label,
-                  color: "rgba(243,240,233,0.72)",
+                  color: MUTED,
                   marginTop: 3,
                 }}
               >
@@ -547,14 +563,14 @@ export default function PromptScannerDemo() {
       <div
         style={{
           // Dashed = a known gap (deck grammar), not a red alarm box.
-          border: "1px dashed rgba(243,240,233,0.4)",
+          border: `1px dashed ${EDGE}`,
           padding: "10px 14px",
         }}
       >
         <div
           style={{
             ...DEMO.label,
-            color: DEMO.kalk,
+            color: INK,
             marginBottom: 6,
           }}
         >
@@ -576,7 +592,7 @@ export default function PromptScannerDemo() {
             margin: "0 0 10px",
             fontSize: 12,
             lineHeight: 1.55,
-            color: "rgba(243,240,233,0.75)",
+            color: MUTED,
           }}
         >
           {copy(
@@ -592,8 +608,8 @@ export default function PromptScannerDemo() {
             ...DEMO.label,
             minHeight: 44,
             background: "transparent",
-            border: "1px solid rgba(243,240,233,0.4)",
-            color: DEMO.kalk,
+            border: `1px solid ${EDGE}`,
+            color: INK,
             padding: "5px 12px",
             cursor: "pointer",
           }}
@@ -608,10 +624,10 @@ export default function PromptScannerDemo() {
               style={{
                 fontSize: 12,
                 lineHeight: 1.55,
-                color: "rgba(243,240,233,0.75)",
-                background: "rgba(243,240,233,0.06)",
+                color: INK,
+                background: "var(--color-inset)",
                 padding: "8px 12px",
-                border: "1px solid rgba(243,240,233,0.1)",
+                border: `1px solid ${HAIRLINE}`,
                 marginBottom: 8,
                 fontFamily: DEMO.font.mono,
               }}
@@ -621,14 +637,14 @@ export default function PromptScannerDemo() {
             <div
               style={{
                 padding: "8px 12px",
-                border: "1px solid rgba(243,240,233,0.16)",
+                border: `1px solid ${EDGE}`,
                 fontSize: 12,
                 lineHeight: 1.55,
-                color: "rgba(243,240,233,0.85)",
+                color: INK,
               }}
             >
               {copy("Scan-Ergebnis: 0 Treffer. ", "Scan result: 0 matches. ")}
-              <strong style={{ color: DEMO.statusRedOnDark }}>
+              <strong style={{ color: LEVEL_BLOCK }}>
                 {copy(
                   "Dieser Angriff wurde nicht erkannt.",
                   "The attack was not detected.",

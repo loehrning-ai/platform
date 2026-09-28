@@ -13,7 +13,7 @@ vi.mock("next/navigation", () => ({
 }));
 
 describe("<LanguageSwitch />", () => {
-  it("uses editorial 44px language targets without pill geometry", () => {
+  it("renders the DE/EN pill with 44px targets and a visible active chip", () => {
     navigationMock.pathname = "/kurse";
     render(
       <LocaleProvider locale="de">
@@ -22,29 +22,57 @@ describe("<LanguageSwitch />", () => {
     );
 
     const group = screen.getByRole("group", { name: "Sprache" });
-    // Werkzeichnung: square, flat, no fill. The active language is an ink
-    // underline plus weight; the text size stays above the 12px floor.
-    expect(group.className).not.toMatch(/\brounded-|shadow-|\bbg-/);
+    // The studio pill: a rounded paper capsule, not a full-round badge and
+    // not a drop-shadowed chip.
+    expect(group).toHaveClass("rounded-xl", "bg-paper", "border");
+    expect(group.className).not.toMatch(/shadow-\[/);
+    expect(group.className).not.toContain("rounded-full");
+    // No padding around the 44px targets, so the capsule stays inside the
+    // 48px header row.
+    expect(group.className).not.toMatch(/\bp-0\.5\b|\bp-1\b/);
     for (const link of within(group).getAllByRole("link")) {
       expect(link.className).toContain("min-h-11");
       expect(link.className).toContain("min-w-11");
-      expect(link.className).toContain("text-label");
-      expect(link.className).not.toMatch(/\brounded-|\bbg-brand-|uppercase/);
-      // A visible Mennige focus ring. `ring-inset` is banned here: with the
-      // --color-inset theme token Tailwind v4 also compiles it to a Beton
-      // ring colour that overrides ring-brand-orange (1.12:1 on paper).
+      expect(link.className).toContain("text-xs");
+      expect(link.className).not.toContain("rounded-full");
+      // `ring-inset` is banned here: with the --color-inset theme token
+      // Tailwind v4 also compiles it to a Beton ring colour that overrides
+      // the intended one (1.12:1 on paper).
       expect(link.className).toContain("focus-visible:inset-ring-2");
-      expect(link.className).toContain(
-        "focus-visible:inset-ring-brand-orange",
-      );
+      expect(link.className).toContain("focus-visible:inset-ring-brand-cobalt");
       expect(link.className).not.toMatch(/\bring-inset\b/);
     }
-    // The active underline sits on the bottom edge of the 44px target, the
-    // same baseline as the nav's current-page rule.
-    const underline = within(group)
-      .getByRole("link", { name: /Deutsch/ })
-      .querySelector("span[aria-hidden='true']");
-    expect(underline).toHaveClass("bottom-0", "bg-foreground");
+    // The active language carries the acid chip and the cobalt underline, so
+    // the state is a shape as well as a colour; the other has neither.
+    const german = within(group).getByRole("link", { name: /Deutsch/ });
+    expect(german.querySelector("[data-language-chip='active']")).toHaveClass(
+      "bg-brand-acid/85",
+    );
+    expect(german.querySelector("[data-language-underline]")).toHaveClass(
+      "bg-brand-cobalt",
+    );
+    const english = within(group).getByRole("link", {
+      name: /englische Oberfläche/,
+    });
+    expect(english.querySelector("[data-language-chip='active']")).toBeNull();
+    expect(english.querySelector("[data-language-underline]")).toBeNull();
+    // Never an ink-filled chip.
+    expect(group.innerHTML).not.toMatch(/bg-(?:foreground|black|graphit)\b/);
+  });
+
+  it("starts every accessible name with the visible language code", () => {
+    navigationMock.pathname = "/kurse";
+    render(
+      <LocaleProvider locale="de">
+        <LanguageSwitch />
+      </LocaleProvider>,
+    );
+    const group = screen.getByRole("group", { name: "Sprache" });
+    const [german, english] = within(group).getAllByRole("link");
+    expect(german).toHaveTextContent(/^DE$/);
+    expect(german).toHaveAccessibleName("DE, Deutsch, Sprache");
+    expect(english).toHaveTextContent(/^EN$/);
+    expect(english).toHaveAccessibleName("EN, englische Oberfläche öffnen");
   });
 
   it("marks German active and links English to the equivalent prefixed path", () => {

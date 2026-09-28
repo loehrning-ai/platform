@@ -2,26 +2,26 @@
   "version": 1,
   "cards": {
     "datenbereitschaft-fuer-ki": {
-      "input": "50825f344ceb77e724bf77752179c1cfdb3edc8bb4da0da72cd184ea717d0a1f",
-      "output": "cd0e9878a470b9c8625e15aabb0c403f15f08964e538fc04c4a6df8bc4ccd140",
+      "input": "7fdb47e9b42d41bbabb60e937d143c9bd2813f49e777e1ea5a752317f2e1d11b",
+      "output": "2c53937bc33af0ae89a2098746c1376742cc8c1355c5732018688d7239bab4de",
       "width": 1200,
       "height": 630
     },
     "esg-berichte-mit-ki": {
-      "input": "4cf14b8e0f038672df401e163fb0c51d7632c191d1cd22b7454d412274cddadc",
-      "output": "77b4a5135e755dfbf448098736b8f308a3c3d30f75624a433aec055ae39cdd60",
+      "input": "59452c0e4252b8157d8d44481bccc1e87a131ddbfb066ddca1b3cd4f97bd1663",
+      "output": "d48b284079fff4c295fa3ae435aabbb9edb790b90c1d78587768086001fc25d5",
       "width": 1200,
       "height": 630
     },
     "geschaeftsberichte-mit-ki-lesen": {
-      "input": "790d4cac3d9ec2b5fccaaa70a31f1068ab82fb256924ec15e85672bd0a449e4d",
-      "output": "eae4a147ee325691e19bca7c33935466ae3a74ad7dafe91071e561243e2c31f8",
+      "input": "b39964dd3c0e313f5e6f3ecd216eb5703253038ba0b5c82ab85e7b710a3510ba",
+      "output": "3463028db4961e0916b1a6a846829226120a3cdcfae161cb461af529146259d1",
       "width": 1200,
       "height": 630
     },
     "ki-prognosen-einschaetzen": {
-      "input": "b7278b5f33b7bb6ae81bcc2483af5fd5bd1ca94f60ff33c233dc2e0a40d9db0f",
-      "output": "0cb639228b0cce37392644406e6d608a5996987185f816e8f99debc800895bcb",
+      "input": "01e034ecbbb0ecd119b39a456a10aa3030fca48bbab65e8dea14c6659bbf678a",
+      "output": "75e3a8fe65c23a2eac6380c7cef3d0677ccd0ef33c436608b7402cb0cd9d6cb1",
       "width": 1200,
       "height": 630
     }

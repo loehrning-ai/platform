@@ -40,7 +40,6 @@ import { FILTER_CHIP_CLASS } from "@/components/werk/chip";
 import { cx } from "@/components/werk/cx";
 import { getMotionAwareScrollBehavior } from "@/lib/animation-policy";
 import { notifyUrlStateChanged } from "@/lib/navigation/url-state";
-import { PosterThumb } from "@/components/plakat";
 import { coursePlakat, PLAKAT_KEYS, type PlakatKey } from "@/lib/plakat/palettes";
 import type { CourseAccess, CourseAccessBySlug } from "@/lib/courses/access";
 import {
@@ -53,8 +52,20 @@ import {
   type CourseStat,
   type LedgerRowCopy,
 } from "./course-ledger-row";
+import { CourseThumb } from "./course-thumb";
 
 const LIVE_COURSES = ALL_COURSE_CATALOG.filter(isLiveCourse);
+
+/**
+ * The pressed state of a goal tab or level chip: a Himmel fill with ink
+ * text (14:1) inside an Ultramarin edge, and a 3px Ultramarin bar along the
+ * bottom, so the state reads by shape as well as by colour. Never an ink
+ * fill: the page has no black grounds.
+ */
+const PRESSED_TAB =
+  "border-ultramarin bg-brand-sky text-foreground shadow-[inset_0_-3px_0_var(--color-ultramarin)]";
+const PRESSED_CHIP =
+  "aria-pressed:border-ultramarin aria-pressed:bg-brand-sky aria-pressed:text-foreground aria-pressed:shadow-[inset_0_-3px_0_var(--color-ultramarin)]";
 
 /**
  * Colour groups by track (SPEC §2.2, D8): inside a group the rows keep the
@@ -358,7 +369,6 @@ export function LearningAtlas({
       : undefined;
   const nextCourse =
     openDefault && isLiveCourse(openDefault) ? openDefault : pathNextCourse;
-  const nextPoster = nextCourse ? coursePlakat(nextCourse.slug) : undefined;
   const nextStat = nextCourse
     ? (stats[nextCourse.slug] ?? defaultStat(nextCourse))
     : null;
@@ -447,7 +457,8 @@ export function LearningAtlas({
             that bleeds to the screen edge, so the choice costs one 44px row
             and a cut chip shows there is more. From lg the same buttons are
             one joined row of 56px tabs on a shared hairline. The chosen goal
-            is an ink fill, which carries the state without colour. The
+            is a Himmel fill with an Ultramarin edge and bottom bar
+            (PRESSED_TAB), so the state does not rest on colour alone. The
             buttons stay aria-pressed toggles, so the choice keeps working as
             a plain form of four buttons, and each one is reachable by Tab.
             The rail scrolls, so it clips anything drawn outside its box:
@@ -480,7 +491,7 @@ export function LearningAtlas({
                     "relative flex min-h-11 min-w-0 shrink-0 snap-start items-center whitespace-nowrap border px-3.5 py-2 text-left text-label transition-colors duration-[120ms] focus-visible:z-[2] max-lg:focus-visible:outline-offset-[-3px] motion-reduce:transition-none lg:min-h-14 lg:shrink lg:whitespace-normal lg:px-4",
                     goalIndex > 0 && "lg:-ml-px",
                     selected
-                      ? "z-[1] border-foreground bg-foreground text-background"
+                      ? cx("z-[1]", PRESSED_TAB)
                       : "border-border bg-transparent text-foreground hover:z-[1] hover:border-foreground hover:bg-card-hover",
                   )}
                 >
@@ -508,9 +519,9 @@ export function LearningAtlas({
               {goal.summary}
             </p>
 
-            {/* The deck's Route, vertical: square stations on a 2px line.
-                Finished courses are solid, the recommended one carries the
-                inset square, open ones are outlined behind a dashed line. The
+            {/* The deck's Route, vertical: Kobalt square stations on a 2px
+                line. Finished courses are solid, the recommended one carries
+                the inset square, open ones are outlined behind a dashed line. The
                 state is also a word inside each link. On a phone each station
                 is one 44px line, title then duration and state; sm stacks
                 the caption under the title again. */}
@@ -553,7 +564,7 @@ export function LearningAtlas({
                         className={cx(
                           "absolute -bottom-[1.375rem] left-[9px] top-[1.375rem] border-l-2",
                           state === "past"
-                            ? "border-foreground"
+                            ? "border-brand-cobalt"
                             : "border-dashed border-muted",
                         )}
                       />
@@ -633,19 +644,15 @@ export function LearningAtlas({
                     </span>
                   </span>
                 </p>
-                {/* The recommended course's poster, 64 x 80, beside its
-                    title (SPEC §3.4). Decorative and without its numeral:
-                    the sequence numerals belong to the Grundlagenpfad rows
-                    below, so "01" prints once on the page (D9); the line
-                    above states the position as text. */}
+                {/* The recommended course's thumbnail, 64 x 80, beside its
+                    title (SPEC §3.4): its people picture or its poster.
+                    Decorative and without its numeral: the sequence numerals
+                    belong to the Grundlagenpfad rows below, so "01" prints
+                    once on the page (D9); the line above states the position
+                    as text. */}
                 <div className="mt-1 flex min-w-0 items-start gap-3 sm:mt-3 sm:gap-4">
-                  {nextPoster ? (
-                    <PosterThumb
-                      plakat={nextPoster.plakat}
-                      motif={nextPoster.motif}
-                      numeral={null}
-                      size="xs"
-                    />
+                  {nextCourse ? (
+                    <CourseThumb slug={nextCourse.slug} numeral={null} size="xs" />
                   ) : null}
                   <div className="min-w-0">
                     <h3 className="text-[1.25rem]/[1.2] font-bold text-foreground sm:text-fluid-h3">
@@ -730,14 +737,14 @@ export function LearningAtlas({
               <ArrowGlyph />
             </Link>
           </div>
-          {/* The key to the ink square on each row; the rows carry the
+          {/* The key to the Kobalt square on each row; the rows carry the
               same fact as text for screen readers. */}
           <p
             aria-hidden="true"
             data-path-legend
             className="mt-1.5 flex items-center gap-2 text-caption sm:mt-2 text-muted-foreground"
           >
-            <span className="size-2.5 shrink-0 bg-foreground" />
+            <span className="size-2.5 shrink-0 bg-brand-cobalt" />
             {copy.pathCourse}
           </p>
         </header>
@@ -768,7 +775,7 @@ export function LearningAtlas({
                   onClick={() => setLevelFilter(level)}
                   onFocus={revealInRail}
                   data-course-level-chip={level}
-                  className={cx(FILTER_CHIP_CLASS, "shrink-0 snap-start")}
+                  className={cx(FILTER_CHIP_CLASS, PRESSED_CHIP, "shrink-0 snap-start")}
                 >
                   {level === "alle" ? copy.allLevels : levelLabels[level]}
                 </button>
@@ -983,15 +990,15 @@ type StationState = "past" | "current" | "future";
 function StationSquare({ state }: { readonly state: StationState }) {
   if (state === "current") {
     return (
-      <span className="flex size-5 shrink-0 items-center justify-center bg-foreground">
+      <span className="flex size-5 shrink-0 items-center justify-center bg-brand-cobalt">
         <span className="size-2 bg-background" />
       </span>
     );
   }
   if (state === "future") {
     return (
-      <span className="size-4 shrink-0 border-2 border-foreground bg-background" />
+      <span className="size-4 shrink-0 border-2 border-brand-cobalt bg-background" />
     );
   }
-  return <span className="size-4 shrink-0 bg-foreground" />;
+  return <span className="size-4 shrink-0 bg-brand-cobalt" />;
 }

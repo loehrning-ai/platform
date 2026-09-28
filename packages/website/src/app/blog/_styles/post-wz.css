@@ -458,13 +458,16 @@
   padding-top: 12px;
   border-top: 2px solid var(--wz-ink);
 }
+/* The group letter is a pastel Himmel-Blatt tile with an ink edge and an ink
+   letter (15.4:1), never a black tile. */
 .wz-group__letter {
   width: 28px;
   height: 28px;
   display: grid;
   place-items: center;
-  background: var(--wz-ink);
-  color: var(--wz-sheet);
+  background: var(--color-sky-sheet, #d9ecf6);
+  border: 1.5px solid var(--wz-ink);
+  color: var(--wz-ink);
   font-size: 15px;
   font-weight: 700;
 }
@@ -886,8 +889,9 @@
     border-top-color: #000 !important;
   }
   .post-wz .wz-group__letter {
-    background: #000;
-    color: #fff;
+    background: #fff;
+    border-color: #000;
+    color: #000;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }

@@ -129,8 +129,16 @@ test.describe("QA visuals — representative route matrix", () => {
           page.getByRole("heading", { level: 1 }).first(),
         ).toBeVisible();
         if (route === "/" || route === "/en") {
+          // The desktop projection from lg, the phone window's server frame
+          // below it (reduced motion keeps it static).
           await expect(
-            page.locator("[data-hero-network-motion]").first(),
+            page
+              .locator(
+                viewport.width >= 1024
+                  ? "[data-hero-network-motion]"
+                  : "[data-home-globe-ssr]",
+              )
+              .first(),
           ).toBeAttached();
         }
         await page.evaluate(async () => document.fonts.ready);

@@ -24,6 +24,14 @@ export interface PlakatPalette {
   readonly mark: string;
   /** Text in the mid hue: 4.5:1 or more on the ground. */
   readonly accentText: string;
+  /**
+   * The filled scene button (`--color-scene-button`). The ink where the ink
+   * is light or a clear colour; never a near-black ink such as Aubergine,
+   * which reads as a black button on the site.
+   */
+  readonly button: string;
+  /** The filled button's label (`--color-scene-button-text`): 4.5:1 or more on `button`. */
+  readonly buttonText: string;
   /** The scene's ink on paper: Kopflinie, tab marker, StatRow values, lesson H1. */
   readonly line: string;
   /** Weight of the poster numeral: 700, or 400 for the light autumn "04". */
@@ -47,11 +55,13 @@ export const PLAKAT = {
     mid: "#b73a15", // Mennige, 2.21: shapes only
     mark: "#fceeaf",
     accentText: "#fceeaf",
-    line: "#152a79", // 11.26 on Kalkweiß
+    button: "#fceeaf", // Butter fill
+    buttonText: "#152a79", // Ultramarin label, 10.97
+    line: "#152a79", // 11.40 on Kalkweiß
     numWeight: 700,
     numRole: "ink",
     cornerDots: false,
-    chartAccent: "#b73a15", // Mennige, 5.08 on Kalkweiß
+    chartAccent: "#b73a15", // Mennige, 5.15 on Kalkweiß
   },
   idea: {
     ground: "#ecebdd", // Kreide
@@ -59,11 +69,13 @@ export const PLAKAT = {
     mid: "#c94a7f", // Himbeere, 3.67: display type and shapes
     mark: "#c94a7f",
     accentText: "#b6386f", // Himbeere tief, 4.62 on Kreide
-    line: "#2e4d90", // 7.15 on Kalkweiß
+    button: "#2e4d90", // Kobalt fill
+    buttonText: "#ecebdd", // Kreide label, 6.78
+    line: "#2e4d90", // 7.24 on Kalkweiß
     numWeight: 700,
     numRole: "mid",
     cornerDots: true,
-    chartAccent: "#b6386f", // Himbeere tief, 4.88 on Kalkweiß; hatch mandatory
+    chartAccent: "#b6386f", // Himbeere tief, 4.94 on Kalkweiß; hatch mandatory
   },
   bloom: {
     ground: "#e6d3af", // Sand
@@ -71,11 +83,13 @@ export const PLAKAT = {
     mid: "#d1733d", // Terrakotta, 2.30: shapes only
     mark: "#3b1f45",
     accentText: "#964305", // Terrakotta tief, 4.61 on Sand
-    line: "#3b1f45", // 12.57 on Kalkweiß
+    button: "#964305", // Terrakotta tief fill, not the Aubergine ink (reads black)
+    buttonText: "#fffcf5", // Bogen label, 6.61
+    line: "#3b1f45", // 12.73 on Kalkweiß
     numWeight: 700,
     numRole: "ink",
     cornerDots: false,
-    chartAccent: "#964305", // Terrakotta tief, 5.95 on Kalkweiß
+    chartAccent: "#964305", // Terrakotta tief, 6.03 on Kalkweiß
   },
   autumn: {
     ground: "#944d44", // Rost
@@ -83,11 +97,13 @@ export const PLAKAT = {
     mid: "#e4a057", // Ocker, 2.78: decoration only
     mark: "#ebb16a", // Ocker hell, 3.24
     accentText: "#f0e1ca",
-    line: "#944d44", // 5.42 on Kalkweiß
+    button: "#f0e1ca", // Creme fill
+    buttonText: "#944d44", // Rost label, 4.80
+    line: "#944d44", // 5.49 on Kalkweiß
     numWeight: 400,
     numRole: "ink",
     cornerDots: false,
-    chartAccent: "#9b5e07", // Ocker tief, 4.62 on Kalkweiß only; hatch mandatory
+    chartAccent: "#9b5e07", // Ocker tief, 4.68 on Kalkweiß only; hatch mandatory
   },
 } as const satisfies Record<string, PlakatPalette>;
 
@@ -175,9 +191,9 @@ export type CoursePlakatId = keyof typeof COURSE_PLAKAT;
 
 /**
  * `TechnicalCourseFrame` ids that stay paper on purpose, with no scene and no
- * `data-plakat-page` (SPEC §3.1 and §5): the AI-Native demos keep their
- * graphit engines, the glossary is a reading surface and the fluency test is
- * a form. A frame reads its scene through `coursePlakat(courseId)` and renders
+ * `data-plakat-page` (SPEC §3.1 and §5): the AI-Native demos keep their own
+ * light engine panels, the glossary is a reading surface and the fluency test
+ * is a form. A frame reads its scene through `coursePlakat(courseId)` and renders
  * no scene when it returns undefined; `palettes.test.ts` fails on any other
  * unmapped id.
  */
@@ -195,8 +211,8 @@ export const UNSCENED_COURSE_IDS = [
  * `--color-mennige` in globals.css.
  */
 export const PAPER = {
-  kalkweiss: "#f3f0e9",
-  bogen: "#f9f7f2",
+  kalkweiss: "#f7f1e7",
+  bogen: "#fffcf5",
   druckschwarz: "#121212",
   schiefer: "#4f4640",
   mennige: "#b73a15",
@@ -209,8 +225,12 @@ export const ROUTE_PLAKAT = {
   blog: "idea",
 } as const satisfies Record<string, PlakatKey>;
 
-/** "lemons", or the graphit fallback that keeps today's home hero (decision D7). */
-export const HOME_SCENE: "lemons" | "graphit" = "lemons";
+/**
+ * The home hero's ground: "lemons" (the Ultramarin poster) or "paper", the
+ * old paper hero with the ink line globe that the site keeps. There is no
+ * graphit fallback: the site has no black grounds.
+ */
+export const HOME_SCENE: "lemons" | "paper" = "paper";
 
 /** The class that scopes an element to a scene, e.g. `plakat-autumn`. */
 export function plakatClass(key: PlakatKey): `plakat-${PlakatKey}` {

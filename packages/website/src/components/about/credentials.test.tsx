@@ -26,15 +26,16 @@ describe("<Credentials>", () => {
     const cards = container.querySelectorAll("article");
     expect(cards).toHaveLength(3);
     expect(container.querySelector("[data-credential-spread]")).not.toBeNull();
-    // Flat columns on paper: no tints, and subtitles in Schiefer (the
-    // Mennige-on-peach subtitle failed colour contrast at 4.2:1).
-    for (const card of cards) {
-      expect(card.className).not.toMatch(/bg-brand-|shadow-card|ring-/);
-      expect(card.innerHTML).not.toMatch(/text-(?:brand-orange|kupfer)/);
+    expect(cards[0]).toHaveClass("bg-brand-peach/45", "md:col-span-7");
+    expect(cards[1]).toHaveClass("bg-brand-sky/45", "md:col-span-5");
+    // Mennige on the peach tint is 4.2:1; the subtitles use Mennige tief.
+    for (const subtitle of [
+      "FAU Erlangen-Nürnberg",
+      "Oxford ML Summer School · EELISA Pisa",
+    ]) {
+      expect(screen.getByText(subtitle)).toHaveClass("text-kupfer-dark");
+      expect(screen.getByText(subtitle)).not.toHaveClass("text-brand-orange");
     }
-    expect(screen.getByText("FAU Erlangen-Nürnberg")).toHaveClass(
-      "text-muted-foreground",
-    );
   });
 
   it("renders research evidence only on the research card", () => {

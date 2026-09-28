@@ -36,7 +36,7 @@ export default function Error({
           <button
             type="button"
             onClick={reset}
-            className="inline-flex min-h-11 items-center bg-foreground px-5 text-[0.9375rem] font-semibold text-background transition-colors duration-[120ms] hover:bg-muted-foreground motion-reduce:transition-none"
+            className="inline-flex min-h-11 items-center bg-brand-cobalt px-5 text-[0.9375rem] font-semibold text-paper transition-colors duration-[120ms] hover:bg-[#1e3790] motion-reduce:transition-none"
           >
             {copy.retry}
           </button>

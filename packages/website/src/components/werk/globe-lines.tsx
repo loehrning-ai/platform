@@ -24,9 +24,10 @@ export type GlobeLinesProps = {
 
 /**
  * Procedural line globe in the Workshop 03 deck style: an orthographic
- * graticule in thin paper strokes at low opacity, with an optional Mennige
- * trace of Germany. Decorative only, so it is always aria-hidden. It is meant
- * for graphit bands; on paper the strokes would disappear.
+ * graticule in thin ink strokes at low opacity on paper, with an optional
+ * Mennige trace of Germany. Decorative only, so it is always aria-hidden.
+ * The strokes take currentColor (the text ink by default), so the globe reads
+ * on paper and pastel grounds; the site has no graphit band any more.
  *
  * The SVG is computed at render time on the server (no client JS) and stays
  * around 4 KB of markup.
@@ -47,21 +48,21 @@ export function GlobeLines({
       data-werk-globe=""
       viewBox={`${-r - 2} ${-r - 2} ${2 * r + 4} ${2 * r + 4}`}
       fill="none"
-      className={cx("block select-none", className)}
+      className={cx("block select-none text-foreground", className)}
     >
       <circle
         cx="0"
         cy="0"
         r={r}
-        stroke="#f2f1ee"
-        strokeOpacity="0.28"
+        stroke="currentColor"
+        strokeOpacity="0.3"
         strokeWidth="1"
         vectorEffect="non-scaling-stroke"
       />
       <path
         d={graticulePath(view, step)}
-        stroke="#f2f1ee"
-        strokeOpacity="0.16"
+        stroke="currentColor"
+        strokeOpacity="0.14"
         strokeWidth="1"
         vectorEffect="non-scaling-stroke"
       />
@@ -70,7 +71,7 @@ export function GlobeLines({
           data-werk-globe-country="DE"
           d={germany}
           fill="#b73a15"
-          fillOpacity="0.14"
+          fillOpacity="0.1"
           stroke="#b73a15"
           strokeOpacity="0.7"
           strokeWidth="1.5"

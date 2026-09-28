@@ -401,12 +401,13 @@ function WordDemoGerman() {
               marginTop: 4,
               minHeight: 44,
               padding: "10px 14px",
-              // Ink button (the page's one Mennige button is the course
-              // link): flat, no stamp shadow and no press offset.
+              // Kobalt action button (the page's one Mennige button is the
+              // course link): flat, no stamp shadow, no press offset and
+              // never a black fill.
               background:
-                isGenerating || !budgetValid ? DEMO.leinen : DEMO.ink,
+                isGenerating || !budgetValid ? DEMO.leinen : DEMO.action,
               color: isGenerating || !budgetValid ? DEMO.schiefer : DEMO.kalk,
-              border: `1px solid ${DEMO.ink}`,
+              border: `1px solid ${isGenerating || !budgetValid ? DEMO.ink : DEMO.action}`,
               cursor: isGenerating || !budgetValid ? "not-allowed" : "pointer",
               transition: reducedMotion ? "none" : "background-color 120ms",
               width: "100%",
@@ -443,9 +444,11 @@ function WordDemoGerman() {
               alignItems: "center",
               gap: 8,
               padding: "6px 10px",
-              // Ink band with the file name as data; no product colours.
-              background: DEMO.ink,
-              color: DEMO.kalk,
+              // Himmel-Blatt band with the file name as data in ink; no
+              // product colours and no black bar.
+              background: DEMO.band,
+              color: DEMO.ink,
+              borderBottom: `1px solid ${DEMO.ink}`,
               fontFamily: DEMO.font.mono,
               fontSize: 12,
               whiteSpace: "nowrap",
@@ -772,9 +775,9 @@ function WordDemoEnglish() {
             style={{
               ...DEMO.label,
               minHeight: 44,
-              border: `1px solid ${DEMO.ink}`,
+              border: `1px solid ${isGenerating || !budgetValid ? DEMO.ink : DEMO.action}`,
               background:
-                isGenerating || !budgetValid ? DEMO.leinen : DEMO.ink,
+                isGenerating || !budgetValid ? DEMO.leinen : DEMO.action,
               color: isGenerating || !budgetValid ? DEMO.schiefer : DEMO.kalk,
               padding: "10px 14px",
               cursor: isGenerating || !budgetValid ? "not-allowed" : "pointer",
@@ -807,15 +810,16 @@ function WordDemoEnglish() {
               flexWrap: "wrap",
               gap: 8,
               alignItems: "center",
-              background: DEMO.ink,
-              color: DEMO.kalk,
+              background: DEMO.band,
+              color: DEMO.ink,
+              borderBottom: `1px solid ${DEMO.ink}`,
               padding: "8px 10px",
               fontFamily: DEMO.font.mono,
               fontSize: 12,
             }}
           >
             <span style={{ overflowWrap: "anywhere" }}>{fileName}</span>
-            <span style={{ marginLeft: "auto", opacity: 0.75 }}>simulated</span>
+            <span style={{ marginLeft: "auto", color: DEMO.schiefer }}>simulated</span>
           </div>
           <div
             className="text-[13px] sm:text-[12px]"

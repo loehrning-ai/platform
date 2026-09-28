@@ -137,7 +137,8 @@ export function DemoDetailLayout({
 
         The engine sits on paper right below the band. It never
         server-renders (dynamic(..., {ssr:false})), so the band carries first
-        paint. A dark engine only turns its own frame graphit (DemoShell).
+        paint. Every engine, the console-like ones included, sits on the
+        same light sheet (DemoShell); nothing here is graphit.
       */}
       <div data-demo-detail-hero>
         <PlakatBand plakat="idea" contentClassName="pt-0 max-[359px]:-mb-4 sm:pt-6 lg:pb-12 lg:pt-8">

@@ -135,7 +135,7 @@ export function ArtifactLedger({ locale }: { readonly locale: Locale }) {
                         <Link
                           href={localizeHref(artifact.href, locale)}
                           aria-label={`${copy.detail}: ${artifact.title}`}
-                          className="inline-flex min-h-11 items-center gap-2 border border-brand-orange bg-brand-orange px-4 py-2 text-sm font-bold text-white outline-none transition-[background-color,border-color] duration-150 hover:border-foreground hover:bg-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-card motion-reduce:transition-none"
+                          className="inline-flex min-h-11 items-center gap-2 border border-brand-orange bg-brand-orange px-4 py-2 text-sm font-bold text-white outline-none transition-[background-color,border-color] duration-150 hover:border-kupfer-dark hover:bg-kupfer-dark focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-card motion-reduce:transition-none"
                         >
                           {copy.detail}
                           <ArrowRight size={15} aria-hidden="true" />

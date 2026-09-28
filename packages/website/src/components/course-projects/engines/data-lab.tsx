@@ -736,8 +736,8 @@ export default function DataLab({
                 </>
               )}
 
-              <section className="mt-5 min-w-0 border-2 border-foreground bg-[#11100f] text-[#f8f5ee]">
-                <h4 className="border-b border-[#f8f5ee]/25 px-4 py-3 font-mono text-xs font-black uppercase tracking-[0.14em] text-[#ffb08a]">
+              <section className="mt-5 min-w-0 border-2 border-foreground bg-inset text-foreground">
+                <h4 className="border-b border-foreground/25 px-4 py-3 font-mono text-xs font-black uppercase tracking-[0.14em] text-kupfer-dark">
                   {copy.terminal}
                 </h4>
                 <div
@@ -747,10 +747,10 @@ export default function DataLab({
                 >
                   {result?.commands.map((command) => (
                     <div key={command.commandId} className="min-w-0">
-                      <p className="break-all font-bold text-[#ffb08a]">
+                      <p className="break-all font-bold text-kupfer-dark">
                         $ {command.command} · exit {command.exitCode}
                       </p>
-                      <pre className="mt-1 whitespace-pre-wrap break-words text-emerald-300">
+                      <pre className="mt-1 whitespace-pre-wrap break-words text-pass">
                         {command.stdout || "[no stdout]"}
                       </pre>
                     </div>

@@ -803,7 +803,7 @@ function FluencyTestContent({ locale = "de" }: { readonly locale?: Locale }) {
                 className={cn(
                   "inline-flex h-11 w-11 items-center justify-center border p-0 font-mono text-xs font-bold transition-[background-color,border-color,color] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange",
                   currentScenario
-                    ? "border-foreground bg-foreground text-background"
+                    ? "border-foreground border-b-[3px] bg-sky-sheet text-foreground"
                     : done
                       ? "border-brand-orange text-brand-orange"
                       : "border-border bg-transparent text-muted-foreground hover:border-foreground",

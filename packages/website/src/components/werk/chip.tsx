@@ -15,11 +15,12 @@ const VARIANTS: Record<ChipVariant, string> = {
 
 /**
  * Filter chip classes for interactive toggles (the element itself lives in the
- * page, usually a button with aria-pressed). Square, 44px target, ink fill
- * when pressed.
+ * page, usually a button with aria-pressed). Square, 44px target. Pressed is
+ * the pastel Himmel-Blatt with an ink edge and a 3px ink foot, never a black
+ * fill (ink on it 15.4:1; the state never rests on colour alone).
  */
 export const FILTER_CHIP_CLASS =
-  "inline-flex min-h-11 items-center gap-2 border border-border px-3 text-label text-foreground transition-colors duration-[120ms] hover:border-foreground aria-pressed:border-foreground aria-pressed:bg-foreground aria-pressed:text-background motion-reduce:transition-none";
+  "inline-flex min-h-11 items-center gap-2 border border-border px-3 text-label text-foreground transition-colors duration-[120ms] hover:border-foreground aria-pressed:border-foreground aria-pressed:bg-sky-sheet aria-pressed:text-foreground aria-pressed:border-b-[3px] motion-reduce:transition-none";
 
 export type ChipProps = {
   readonly children: ReactNode;

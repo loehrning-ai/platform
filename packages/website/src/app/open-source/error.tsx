@@ -46,7 +46,7 @@ export default function OpenSourceError({ reset }: { reset: () => void }) {
         <button
           type="button"
           onClick={reset}
-          className="min-h-11 border border-brand-orange bg-brand-orange px-4 py-2 text-sm font-bold text-white hover:border-foreground hover:bg-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+          className="min-h-11 border border-brand-orange bg-brand-orange px-4 py-2 text-sm font-bold text-white hover:border-kupfer-dark hover:bg-kupfer-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
         >
           {copy.retry}
         </button>

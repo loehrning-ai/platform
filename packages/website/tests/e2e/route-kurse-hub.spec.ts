@@ -430,10 +430,16 @@ for (const route of ["/kurse", "/en/kurse"] as const) {
       "href",
       route.startsWith("/en/") ? "/en/workshops" : "/workshops",
     );
-    // The ledger brief's zero-image rule, restored. Cover thumbnails were
-    // tried and removed: the artwork crops to mush at the size a dense row
-    // allows, and the imported courses carry only site screenshots.
-    await expect(atlas.locator("img")).toHaveCount(0);
+    // Pictures only on the Grundlagenpfad rows: each course's people
+    // picture, cropped to its subject in the 4:5 thumb. The Technikkurse keep
+    // their posters; their site screenshots never render in the ledger.
+    const pictures = atlas.locator('#lernpfad [data-course-thumb="picture"] img');
+    await expect(pictures).toHaveCount(4);
+    for (const picture of await pictures.all()) {
+      await expect(picture).toHaveAttribute("alt", "");
+      await expect(picture).toHaveAttribute("src", /cover-v4\.webp/);
+    }
+    await expect(atlas.locator("#tiefer-gehen img")).toHaveCount(0);
     await expect(
       page.getByRole("group", {
         name: route.startsWith("/en/")

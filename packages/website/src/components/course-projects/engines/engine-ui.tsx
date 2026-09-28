@@ -19,7 +19,7 @@ export const LAB_INPUT =
   "w-full min-w-0 border-2 border-foreground/20 bg-background px-3 py-2.5 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 disabled:cursor-not-allowed disabled:opacity-60";
 
 export const LAB_BUTTON =
-  "inline-flex min-h-11 items-center justify-center border-2 border-foreground bg-foreground px-4 py-2 text-sm font-bold text-background transition-colors hover:bg-brand-orange hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:border-foreground/20 disabled:bg-muted disabled:text-muted-foreground";
+  "inline-flex min-h-11 items-center justify-center border-2 border-brand-cobalt bg-brand-cobalt px-4 py-2 text-sm font-bold text-paper transition-colors hover:bg-brand-orange hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:border-foreground/20 disabled:bg-track disabled:text-muted-foreground";
 
 export const LAB_BUTTON_SECONDARY =
   "inline-flex min-h-11 items-center justify-center border-2 border-foreground/25 bg-card px-4 py-2 text-sm font-bold text-foreground transition-colors hover:border-brand-orange hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
@@ -46,7 +46,8 @@ export function EngineFrame({
         aria-labelledby={`${config.id}-project-title`}
         className="min-w-0 border-2 border-foreground bg-card shadow-[5px_5px_0_0_rgba(11,9,8,0.16)]"
       >
-        <header className="border-b-2 border-foreground bg-foreground px-4 py-4 text-background sm:px-6">
+        {/* A pastel Himmel-Blatt head with ink type, never a black bar. */}
+        <header className="border-b-2 border-foreground bg-sky-sheet px-4 py-4 text-foreground sm:px-6">
           <h2
             id={`${config.id}-project-title`}
             className="break-words text-xl font-black leading-tight sm:text-2xl"

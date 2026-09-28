@@ -1467,8 +1467,8 @@ export default function PromptLab({
           {missionCopy.workflowControls}
         </legend>
         {variant === "operator" ? (
-          <div className="mb-4 border-2 border-foreground bg-[#11100f] p-4 text-[#f8f5ee]">
-            <p className="font-mono text-xs font-black uppercase tracking-wide text-[#ffb08a]">
+          <div className="mb-4 border-2 border-foreground bg-inset p-4 text-foreground">
+            <p className="font-mono text-xs font-black uppercase tracking-wide text-kupfer-dark">
               {missionCopy.graph}
             </p>
             <label className="mt-4 block text-sm font-bold">
@@ -1583,22 +1583,22 @@ export default function PromptLab({
       <section
         aria-labelledby={`${config.id}-provider-output`}
         aria-busy={runState === "loading"}
-        className="mt-4 min-w-0 border-2 border-foreground bg-[#11100f] p-4 text-[#f8f5ee]"
+        className="mt-4 min-w-0 border-2 border-foreground bg-inset p-4 text-foreground"
       >
         <h3
           id={`${config.id}-provider-output`}
-          className="font-mono text-xs font-black uppercase tracking-[0.14em] text-[#ffb08a]"
+          className="font-mono text-xs font-black uppercase tracking-[0.14em] text-kupfer-dark"
         >
           {copy.providerTitle}
         </h3>
         <div aria-live="polite" className="mt-3 min-w-0">
           {runState === "success" ? (
             <>
-              <p className="text-xs font-bold text-emerald-300">
+              <p className="text-xs font-bold text-pass">
                 {copy.success}
               </p>
               {providerIdentity ? (
-                <p className="mt-2 font-mono text-xs uppercase tracking-wide text-[#aaa195]">
+                <p className="mt-2 font-mono text-xs uppercase tracking-wide text-muted-foreground">
                   {providerIdentity}
                 </p>
               ) : null}
@@ -1611,24 +1611,24 @@ export default function PromptLab({
                     ].map(([label, output]) => (
                       <div
                         key={label}
-                        className="min-w-0 border border-[#f8f5ee]/25 p-3"
+                        className="min-w-0 border border-foreground/25 p-3"
                       >
-                        <h4 className="font-mono text-xs font-black uppercase tracking-wide text-[#ffb08a]">
+                        <h4 className="font-mono text-xs font-black uppercase tracking-wide text-kupfer-dark">
                           {label}
                         </h4>
-                        <pre className="mt-2 max-h-72 overflow-auto whitespace-pre-wrap break-words font-mono text-sm leading-relaxed text-[#f8f5ee]">
+                        <pre className="mt-2 max-h-72 overflow-auto whitespace-pre-wrap break-words font-mono text-sm leading-relaxed text-foreground">
                           {output}
                         </pre>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <pre className="mt-3 max-h-96 overflow-auto whitespace-pre-wrap break-words border-l-2 border-emerald-500 pl-3 font-mono text-sm leading-relaxed text-[#f8f5ee]">
+                  <pre className="mt-3 max-h-96 overflow-auto whitespace-pre-wrap break-words border-l-2 border-pass pl-3 font-mono text-sm leading-relaxed text-foreground">
                     {providerOutput}
                   </pre>
                 )
               ) : (
-                <p className="mt-3 border-l-2 border-emerald-500 pl-3 text-sm leading-relaxed text-[#d7d0c4]">
+                <p className="mt-3 border-l-2 border-pass pl-3 text-sm leading-relaxed text-muted-foreground">
                   {copy.priorSuccess}
                 </p>
               )}
@@ -1636,26 +1636,26 @@ export default function PromptLab({
           ) : runState === "error" ? (
             <div className="space-y-4">
               {providerOutput ? (
-                <div className="border border-amber-300/50 bg-amber-300/10 p-3">
-                  <p className="text-xs font-bold leading-relaxed text-amber-200">
+                <div className="border border-risk-yellow/50 bg-amber-50 p-3">
+                  <p className="text-xs font-bold leading-relaxed text-risk-yellow">
                     {copy.partialPrimary}
                   </p>
                   {providerIdentity ? (
-                    <p className="mt-2 font-mono text-xs uppercase tracking-wide text-[#aaa195]">
+                    <p className="mt-2 font-mono text-xs uppercase tracking-wide text-muted-foreground">
                       {providerIdentity}
                     </p>
                   ) : null}
-                  <h4 className="mt-3 font-mono text-xs font-black uppercase tracking-wide text-[#ffb08a]">
+                  <h4 className="mt-3 font-mono text-xs font-black uppercase tracking-wide text-kupfer-dark">
                     {missionCopy.outputA}
                   </h4>
-                  <pre className="mt-2 max-h-72 overflow-auto whitespace-pre-wrap break-words border-l-2 border-amber-300 pl-3 font-mono text-sm leading-relaxed text-[#f8f5ee]">
+                  <pre className="mt-2 max-h-72 overflow-auto whitespace-pre-wrap break-words border-l-2 border-risk-yellow pl-3 font-mono text-sm leading-relaxed text-foreground">
                     {providerOutput}
                   </pre>
                 </div>
               ) : null}
               <div className="border-l-2 border-destructive pl-3">
                 {providerFailure ? (
-                  <p className="font-mono text-xs font-black uppercase tracking-wide text-[#ffb08a]">
+                  <p className="font-mono text-xs font-black uppercase tracking-wide text-kupfer-dark">
                     {copy.failureClass}:{" "}
                     {copy.failureClassLabels[providerFailure.kind]}
                   </p>
@@ -1668,12 +1668,12 @@ export default function PromptLab({
                 </p>
                 {providerFailure?.supportsDegradedCompletion ? (
                   <>
-                    <p className="mt-3 text-sm font-semibold leading-relaxed text-amber-200">
+                    <p className="mt-3 text-sm font-semibold leading-relaxed text-risk-yellow">
                       {copy.degradedNotice}
                     </p>
                     <button
                       type="button"
-                      className={`${LAB_BUTTON_SECONDARY} mt-3 border-[#f8f5ee]/50 bg-[#11100f] text-[#f8f5ee] hover:border-[#ffb08a] hover:text-[#ffb08a]`}
+                      className={`${LAB_BUTTON_SECONDARY} mt-3 border-border bg-inset text-foreground hover:border-kupfer-dark hover:text-kupfer-dark`}
                       disabled={degradedCompletionAcknowledged}
                       onClick={() => {
                         setLocalLearningCompleted(false);
@@ -1687,7 +1687,7 @@ export default function PromptLab({
                     </button>
                   </>
                 ) : (
-                  <p className="mt-3 text-sm font-semibold leading-relaxed text-[#f8f5ee]">
+                  <p className="mt-3 text-sm font-semibold leading-relaxed text-foreground">
                     {copy.operationalFailure}
                   </p>
                 )}
@@ -1702,17 +1702,17 @@ export default function PromptLab({
                         : copy.localLearningTitle
                     }
                     data-local-learning-feedback
-                    className="mt-4 border border-amber-300/50 bg-amber-300/10 p-3 outline-none focus-visible:ring-2 focus-visible:ring-amber-200 focus-visible:ring-offset-2"
+                    className="mt-4 border border-risk-yellow/50 bg-amber-50 p-3 outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2"
                   >
-                    <p className="font-mono text-xs font-black uppercase tracking-wide text-amber-200">
+                    <p className="font-mono text-xs font-black uppercase tracking-wide text-risk-yellow">
                       {copy.localLearningTitle}
                     </p>
-                    <p className="mt-2 text-sm leading-relaxed text-[#f8f5ee]">
+                    <p className="mt-2 text-sm leading-relaxed text-foreground">
                       {copy.localLearningNotice}
                     </p>
                     <button
                       type="button"
-                      className={`${LAB_BUTTON_SECONDARY} mt-3 border-[#f8f5ee]/50 bg-[#11100f] text-[#f8f5ee] hover:border-[#ffb08a] hover:text-[#ffb08a]`}
+                      className={`${LAB_BUTTON_SECONDARY} mt-3 border-border bg-inset text-foreground hover:border-kupfer-dark hover:text-kupfer-dark`}
                       disabled={!canRunLocalLearning || localLearningCompleted}
                       onClick={runLocalLearningCheck}
                     >
@@ -1725,7 +1725,7 @@ export default function PromptLab({
               </div>
             </div>
           ) : (
-            <p className="text-sm leading-relaxed text-[#d7d0c4]">
+            <p className="text-sm leading-relaxed text-muted-foreground">
               {runState === "loading" ? copy.running : copy.providerIdle}
             </p>
           )}

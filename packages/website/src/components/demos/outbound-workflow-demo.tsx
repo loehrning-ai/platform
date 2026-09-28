@@ -462,13 +462,16 @@ function OutboundReview({ copy }: { readonly copy: OutboundCopy }) {
               gap: 8,
               alignItems: "center",
               padding: "8px 12px",
-              background: DEMO.ink,
-              color: DEMO.kalk,
+              // The mail header is a pastel Himmel-Blatt strip with ink type,
+              // never a black bar; the status words take the paper tones.
+              background: "var(--color-sky-sheet)",
+              color: "var(--color-foreground)",
+              borderBottom: "1px solid var(--color-foreground)",
               fontFamily: DEMO.font.mono,
               fontSize: 12,
             }}
           >
-            <strong style={{ color: "var(--color-kupfer-light)" }}>
+            <strong style={{ color: "var(--color-kupfer-dark)" }}>
               {copy.draft}
             </strong>
             <span style={{ overflowWrap: "anywhere" }}>
@@ -478,7 +481,8 @@ function OutboundReview({ copy }: { readonly copy: OutboundCopy }) {
               role={gated ? "alert" : undefined}
               style={{
                 marginLeft: "auto",
-                color: gated ? "#fca5a5" : "#fbbf24",
+                color: gated ? "var(--color-destructive)" : "var(--color-risk-yellow)",
+                fontWeight: 700,
               }}
             >
               {gated ? copy.hold : copy.qualified}

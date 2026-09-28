@@ -35,9 +35,7 @@ describe("ContinueSlot", () => {
     expect(html).toContain('data-home-continue-slot="true"');
     // The seat is reserved before the browser can know which course to name,
     // so the geometry below it is final at first paint.
-    // 3.5rem plus the row's top hairline, which the seat carries so the
-    // band's structure is complete before the card arrives.
-    expect(html).toContain('class="box-content h-[3.5rem] border-t border-hairline"');
+    expect(html).toContain('class="h-[4.75rem]"');
     // Nothing about the learner is guessed on the server.
     expect(html).not.toContain("data-home-continue-card");
     expect(html).not.toContain("Weiter bei");
@@ -54,7 +52,7 @@ describe("ContinueSlot", () => {
     const slot = container.querySelector("[data-home-continue-slot]");
     const seat = slot?.firstElementChild;
 
-    expect(seat).toHaveClass("h-[3.5rem]", "border-t", "box-content");
+    expect(seat).toHaveClass("h-[4.75rem]");
     await waitFor(() =>
       expect(screen.getByRole("link")).toHaveAttribute(
         "data-home-continue-card",
@@ -63,7 +61,7 @@ describe("ContinueSlot", () => {
     // Still exactly one fixed-height child: the card lives inside the seat.
     expect(slot?.children).toHaveLength(1);
     expect(slot?.firstElementChild).toBe(seat);
-    expect(seat).toHaveClass("h-[3.5rem]", "border-t", "box-content");
+    expect(seat).toHaveClass("h-[4.75rem]");
   });
 
   it("passes the locale through to the card", async () => {

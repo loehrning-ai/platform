@@ -49,7 +49,7 @@ export function BookTeaser({
         aria-hidden="true"
         tabIndex={-1}
         onClick={onClose}
-        className="absolute inset-0 cursor-default bg-foreground/65 backdrop-blur-sm"
+        className="absolute inset-0 cursor-default bg-sky-wash/85 backdrop-blur-sm"
       />
 
       <div className="relative z-10 flex max-h-[92svh] w-full min-w-0 max-w-6xl flex-col overflow-hidden overscroll-contain bg-paper ring-1 ring-foreground/40">
@@ -70,7 +70,7 @@ export function BookTeaser({
             type="button"
             onClick={onClose}
             aria-label={copy.close}
-            className="relative inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center bg-paper text-muted-foreground ring-1 ring-foreground/30 transition-colors hover:bg-foreground hover:text-background focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
+            className="relative inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center bg-paper text-muted-foreground ring-1 ring-foreground/30 transition-colors hover:bg-sky-sheet hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
           >
             <X size={18} aria-hidden="true" />
           </button>

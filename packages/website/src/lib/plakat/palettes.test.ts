@@ -87,6 +87,21 @@ describe("palettes.ts matches the CSS scopes", () => {
     expect(scope.get("--color-scene-mark")).toBe(palette.mark);
     expect(scope.get("--color-scene-accent-text")).toBe(palette.accentText);
     expect(scope.get("--color-scene-line")).toBe(palette.ink);
+    expect(scope.get("--color-scene-button")).toBe(palette.button);
+    expect(scope.get("--color-scene-button-text")).toBe(palette.buttonText);
+  });
+
+  it.each(PLAKAT_KEYS)("%s: the filled scene button is never a near-black fill", (key) => {
+    const { button, buttonText } = PLAKAT[key];
+    // Luminance above #333 (0.033): Aubergine (0.023) reads as a black button.
+    const channel = (hex: string, offset: number) => {
+      const value = parseInt(hex.slice(offset, offset + 2), 16) / 255;
+      return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+    };
+    const luminance = (hex: string) => 0.2126 * channel(hex, 1) + 0.7152 * channel(hex, 3) + 0.0722 * channel(hex, 5);
+    expect(luminance(button), `${key} button ${button}`).toBeGreaterThan(0.033);
+    const [light, dark] = [luminance(button), luminance(buttonText)].sort((a, b) => b - a);
+    expect((light + 0.05) / (dark + 0.05), `${key} button label`).toBeGreaterThanOrEqual(4.5);
   });
 
   it.each(PLAKAT_KEYS)("%s: the page scene line on paper is the palette's line", (key) => {
@@ -98,8 +113,8 @@ describe("palettes.ts matches the CSS scopes", () => {
   it("uses only colours defined once as @theme tokens", () => {
     const tokenValues = new Set(theme.values());
     for (const key of PLAKAT_KEYS) {
-      const { ground, ink, mid, mark, accentText, line, chartAccent } = PLAKAT[key];
-      for (const hex of [ground, ink, mid, mark, accentText, line, chartAccent]) {
+      const { ground, ink, mid, mark, accentText, button, buttonText, line, chartAccent } = PLAKAT[key];
+      for (const hex of [ground, ink, mid, mark, accentText, button, buttonText, line, chartAccent]) {
         expect(hex).toMatch(/^#[0-9a-f]{6}$/);
         expect(tokenValues.has(hex), `${key}: ${hex} has no @theme token`).toBe(true);
       }
@@ -230,9 +245,10 @@ describe("course palettes (grouped by track)", () => {
     }
   });
 
-  it("keeps the fixed route scenes and the home fallback switch", () => {
+  it("keeps the fixed route scenes and a home switch with no graphit ground", () => {
     expect(ROUTE_PLAKAT).toEqual({ home: "lemons", demos: "idea", blog: "idea" });
-    expect(["lemons", "graphit"]).toContain(HOME_SCENE);
+    expect(["lemons", "paper"]).toContain(HOME_SCENE);
+    expect(HOME_SCENE).not.toBe("graphit");
   });
 });
 

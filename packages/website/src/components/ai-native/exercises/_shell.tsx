@@ -300,7 +300,7 @@ function ExerciseFallback({
             type="button"
             onClick={onSkip}
             disabled={!interactionReady}
-            className="mt-3 inline-flex min-h-11 items-center gap-1.5 border border-foreground bg-transparent px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-foreground transition-colors hover:bg-foreground hover:text-background"
+            className="mt-3 inline-flex min-h-11 items-center gap-1.5 border border-foreground bg-transparent px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-[0.12em] text-foreground transition-colors hover:bg-sky-sheet hover:text-foreground"
           >
             {isEnglish
               ? "Understood, continue"

@@ -280,6 +280,11 @@ describe("<WorkshopDecisionLab>", () => {
     const lab = document.querySelector("[data-workshop-decision-lab]");
     // The Kopflinie follows the scene line (SPEC §3.7), like every other one below the band.
     expect(lab).toHaveClass("border-t-2", "border-scene-line", "bg-inset");
+    // The check button is the site's Mennige action with a paper label,
+    // never an ink-black fill.
+    const submit = lab?.querySelector('button[type="submit"]');
+    expect(submit).toHaveClass("bg-mennige", "text-paper", "hover:bg-kupfer-dark", "min-h-11");
+    expect(submit?.className).not.toMatch(/\bbg-foreground\b/);
 
     const source = readFileSync(
       resolve(

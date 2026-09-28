@@ -49,12 +49,6 @@ export interface Demo {
   readonly category: DemoCategory;
   readonly level: DemoLevel;
   readonly size: DemoSize;
-  /**
-   * The interactive engine itself is dark (a terminal, a node canvas). Only
-   * the engine frame on the detail page turns graphit; gallery tiles and the
-   * page band stay paper.
-   */
-  readonly dark: boolean;
   readonly accent: boolean;
   readonly title: string;
   readonly titleKicker: string;
@@ -89,7 +83,6 @@ export const demos: readonly Demo[] = [
     category: "Grundlagen",
     level: "einstieg",
     size: "s-hero",
-    dark: false,
     accent: true,
     title: "Claude in Excel.",
     titleKicker: "Formeln und Prognose prüfen.",
@@ -128,7 +121,6 @@ export const demos: readonly Demo[] = [
     category: "Grundlagen",
     level: "einstieg",
     size: "s-tall",
-    dark: false,
     accent: false,
     title: "Claude in Word.",
     titleKicker: "Entwurf aus einem Briefing.",
@@ -167,7 +159,6 @@ export const demos: readonly Demo[] = [
     category: "Outbound",
     level: "mittel",
     size: "s-tall",
-    dark: false,
     accent: false,
     title: "Signale im CRM.",
     titleKicker: "Nachrichten mit Quelle.",
@@ -206,7 +197,6 @@ export const demos: readonly Demo[] = [
     category: "Agents",
     level: "fortg",
     size: "s-wide",
-    dark: true,
     accent: true,
     title: "Agent-Pipeline.",
     titleKicker: "Memo aus vier Agentenschritten.",
@@ -244,7 +234,6 @@ export const demos: readonly Demo[] = [
     category: "Automation",
     level: "mittel",
     size: "s-wide",
-    dark: true,
     accent: false,
     title: "Lieferverzug in n8n.",
     titleKicker: "Workflow mit Freigabe.",
@@ -282,7 +271,6 @@ export const demos: readonly Demo[] = [
     category: "RAG",
     level: "mittel",
     size: "s-tall",
-    dark: false,
     accent: true,
     title: "Vertragsassistent.",
     titleKicker: "Antworten mit Fundstelle.",
@@ -320,7 +308,6 @@ export const demos: readonly Demo[] = [
     category: "Automation",
     level: "mittel",
     size: "s-med",
-    dark: false,
     accent: true,
     title: "Rechnung zu SAP.",
     titleKicker: "Extraktion prüfen.",
@@ -358,7 +345,6 @@ export const demos: readonly Demo[] = [
     category: "Governance",
     level: "fortg",
     size: "s-med",
-    dark: true,
     accent: false,
     title: "Prompt-Scanner.",
     titleKicker: "Personendaten im Prompt markieren.",
@@ -396,7 +382,6 @@ export const demos: readonly Demo[] = [
     category: "Ops",
     level: "fortg",
     size: "s-med",
-    dark: false,
     accent: true,
     title: "Kosten und Drift im Betrieb.",
     titleKicker: "Kosten, Antwortzeit und Fehler ablesen.",
@@ -434,7 +419,6 @@ export const demos: readonly Demo[] = [
     category: "Modelle",
     level: "fortg",
     size: "s-med",
-    dark: false,
     accent: false,
     title: "Feintuning gegen Basismodell.",
     titleKicker: "Zwei Antworten im Vergleich.",
@@ -472,7 +456,6 @@ export const demos: readonly Demo[] = [
     category: "Grundlagen",
     level: "einstieg",
     size: "s-med",
-    dark: false,
     accent: true,
     title: "Annahmen-Rechner.",
     titleKicker: "Nutzen aus vier Annahmen.",
@@ -510,7 +493,6 @@ export const demos: readonly Demo[] = [
     category: "Ops",
     level: "fortg",
     size: "s-med",
-    dark: false,
     accent: false,
     title: "Antwortqualität messen.",
     titleKicker: "Automatik und Mensch im Vergleich.",

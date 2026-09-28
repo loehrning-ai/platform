@@ -306,7 +306,7 @@ export function HeroOrrery({
           type="button"
           onClick={run}
           disabled={loading || !assembled.trim()}
-          className="inline-flex min-h-11 items-center rounded-none bg-foreground px-4 py-2 text-[0.9375rem] font-semibold text-background transition-colors duration-[120ms] hover:bg-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none"
+          className="inline-flex min-h-11 items-center rounded-none bg-brand-cobalt px-4 py-2 text-[0.9375rem] font-semibold text-paper transition-colors duration-[120ms] hover:bg-[#1e3790] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange disabled:cursor-not-allowed disabled:opacity-50 motion-reduce:transition-none"
         >
           {loading ? copy.running : output ? copy.rerun : copy.run}
         </button>

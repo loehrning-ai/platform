@@ -158,14 +158,20 @@ const LEGAL_LINKS: readonly {
 ] as const;
 
 const INTERNAL_LINK_CLASS =
-  "inline-flex min-h-11 min-w-11 max-w-full items-center break-words py-2 text-sm leading-snug text-muted-foreground underline decoration-transparent underline-offset-4 outline-none transition-colors duration-[120ms] hover:text-foreground hover:decoration-current focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none";
+  "inline-flex min-h-11 min-w-11 max-w-full items-center break-words py-2 text-sm leading-snug text-muted-foreground underline decoration-transparent underline-offset-4 outline-none transition-colors duration-150 hover:text-foreground hover:decoration-current focus-visible:text-foreground focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-peach-wash motion-reduce:transition-none";
 
-// Square outline controls on graphit. The dark-section border token (about
-// 3.52:1) is a valid control edge; the hover is a tone step, never a lift.
-// Below sm they are 44px icon squares on the wordmark's row; the accessible
-// name comes from aria-label, and the word returns from sm.
+// The old studio controls, on the light Pfirsich-Wash ground: a rounded paper
+// chip with a Kante edge (3.45:1, a valid control edge), which lifts a
+// little and takes a Mennige edge on hover. Below sm they are 44px icon
+// squares on the wordmark's row; the accessible name comes from aria-label,
+// and the word returns from sm.
 const EXTERNAL_LINK_CLASS =
-  "inline-flex min-h-11 min-w-11 items-center justify-center gap-2 border border-border py-2 text-sm font-medium text-foreground outline-none transition-colors duration-[120ms] hover:bg-card-hover focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none sm:px-3";
+  "inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-xl border border-border bg-paper/70 py-2 text-sm font-medium text-foreground outline-none transition-[background-color,border-color,color,transform] duration-200 hover:-translate-y-0.5 hover:border-brand-orange hover:bg-paper focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-peach-wash motion-reduce:transform-none motion-reduce:transition-none sm:px-3";
+
+// Small mono caps in Mennige tief (6.47:1 on the wash), as the old footer
+// set its kicker and its column heads.
+const FOOTER_KICKER_CLASS =
+  "font-ui-mono text-xs font-bold uppercase tracking-[0.1em] text-kupfer-dark";
 
 // Below lg the three link columns are twelve 44px targets stacked two abreast,
 // roughly 450px of footer before the legal row even starts, so they live
@@ -186,7 +192,7 @@ const GROUP_DISCLOSURE_CLASS =
   "group min-w-0 lg:[&::details-content]:[block-size:auto] lg:[&::details-content]:[content-visibility:visible]";
 
 const GROUP_SUMMARY_CLASS =
-  "flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 border-t border-hairline py-2 text-label text-foreground outline-none hover:underline hover:underline-offset-4 focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none [&::-webkit-details-marker]:hidden lg:supports-[selector(::details-content)]:hidden";
+  "flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 border-t border-border/50 py-2 text-label font-medium text-foreground outline-none transition-colors duration-150 hover:text-kupfer-dark focus-visible:text-kupfer-dark focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-peach-wash motion-reduce:transition-none [&::-webkit-details-marker]:hidden lg:supports-[selector(::details-content)]:hidden";
 
 export async function Footer() {
   const locale = await getRequestLocale();
@@ -196,31 +202,47 @@ export async function Footer() {
   const year = LAST_UPDATED.slice(0, 4);
 
   return (
-    // A graphit band in normal flow, set in Butter (plakat-footer, 15.78:1):
-    // no decoration, no wash, no shapes. The solid #141414 keeps every text
-    // token resolvable for axe; structure comes from hairlines only. The ring
-    // stays the graphit #e07050 (5.79:1).
-    <footer className="dark-section plakat-footer">
-      {/* The 75rem page container: with sm:px-6 the content runs 144..1296 at
-          1440, the same column as the header's wordmark and Login edge. */}
+    // A light band, never graphit: the Pfirsich-Wash ground (brand-peach
+    // over Bogen, solid so axe resolves every token), ink text, Schiefer
+    // links and the old site's pastel geometry at the outer edges. Warm on
+    // purpose: the page above ends on paper, Beton, a sky or an acid wash,
+    // and the footer must not merge into any of them. The shapes sit behind
+    // the content, whole (never cut by the band's edge), and only where the
+    // page gutter is wide enough to hold them clear of any text.
+    <footer className="relative isolate overflow-hidden border-t border-border/40 bg-peach-wash text-foreground">
+      <span
+        aria-hidden="true"
+        data-footer-shape=""
+        className="pointer-events-none absolute -left-20 top-10 -z-10 hidden size-40 rotate-[-14deg] rounded-[2.25rem] bg-brand-sky/80 min-[84rem]:block"
+      />
+      <span
+        aria-hidden="true"
+        data-footer-shape=""
+        className="pointer-events-none absolute -right-20 bottom-12 -z-10 hidden size-44 rounded-full bg-brand-acid/70 min-[84rem]:block"
+      />
+      <span
+        aria-hidden="true"
+        data-footer-shape=""
+        className="pointer-events-none absolute right-8 top-8 -z-10 hidden size-14 rotate-12 rounded-xl bg-brand-pink/80 min-[84rem]:block"
+      />
       <div className="mx-auto w-full max-w-[75rem] px-4 py-6 sm:px-6 sm:py-12">
-        <div className="grid min-w-0 gap-2 border-b border-hairline sm:gap-6 lg:grid-cols-[minmax(13rem,0.55fr)_minmax(0,2fr)] lg:gap-8">
+        <div className="grid min-w-0 gap-2 border-b border-border/50 sm:gap-6 lg:grid-cols-[minmax(13rem,0.55fr)_minmax(0,2fr)] lg:gap-8">
           {/* From lg the brand column starts on the same hairline as the link
               groups, so the whole row hangs from one continuous rule. Below
               sm it is a single row: the wordmark, then the profile squares
               at the right edge, and the kicker stays for wider screens. */}
-          <div className="flex min-w-0 items-center justify-between gap-3 sm:block lg:border-t lg:border-hairline lg:pt-3">
-            <p className="hidden text-label text-muted-foreground sm:block">
+          <div className="flex min-w-0 items-center justify-between gap-3 sm:block lg:border-t lg:border-border/50 lg:pt-3">
+            <p className={cn("hidden sm:block", FOOTER_KICKER_CLASS)}>
               {copy.sectionLabel}
             </p>
             <Link
               href={localizeHref("/", locale)}
               prefetch={false}
-              className="inline-flex min-h-11 max-w-full items-center py-1 text-xl font-bold leading-none tracking-[-0.015em] text-foreground underline decoration-transparent underline-offset-4 outline-none transition-colors duration-[120ms] hover:decoration-current focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-4 focus-visible:ring-offset-background motion-reduce:transition-none sm:mt-1 sm:text-[2rem]"
+              className="inline-flex min-h-11 max-w-full items-center py-1 text-xl font-bold leading-none tracking-[-0.04em] text-foreground outline-none transition-colors duration-150 hover:text-kupfer-dark focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-4 focus-visible:ring-offset-peach-wash motion-reduce:transition-none sm:mt-1 sm:text-[2rem]"
               aria-label={`loehrning.ai - ${copy.homeLabel}`}
               translate="no"
             >
-              loehrning.ai
+              loehrning<span className="text-brand-orange">.ai</span>
             </Link>
 
             <div className="flex shrink-0 gap-2 sm:mt-3 sm:flex-wrap">
@@ -262,13 +284,13 @@ export async function Footer() {
                     − open. No rotation, no script. */}
                 <span
                   aria-hidden="true"
-                  className="shrink-0 text-lg leading-none group-open:hidden"
+                  className="shrink-0 font-ui-mono text-base leading-none group-open:hidden"
                 >
                   +
                 </span>
                 <span
                   aria-hidden="true"
-                  className="hidden shrink-0 text-lg leading-none group-open:inline"
+                  className="hidden shrink-0 font-ui-mono text-base leading-none group-open:inline"
                 >
                   {"\u2212"}
                 </span>
@@ -284,11 +306,11 @@ export async function Footer() {
                   <section
                     key={group.id}
                     className={cn(
-                      "min-w-0 border-t border-hairline pt-2 sm:pt-3",
+                      "min-w-0 border-t border-border/50 pt-2 sm:pt-3",
                       group.id === "contact" && "col-span-2 sm:col-span-1",
                     )}
                   >
-                    <h2 className="text-label text-foreground">
+                    <h2 className={FOOTER_KICKER_CLASS}>
                       {copy.groups[group.id]}
                     </h2>
                     <ul
@@ -347,7 +369,7 @@ export async function Footer() {
               content date. The domain (the wordmark says it two rows up) and
               the second date return from sm, where the caption is two lines
               again, and from md the two ends of one row. */}
-          <div className="mt-1 flex min-w-0 flex-wrap gap-x-5 gap-y-1 border-t border-hairline pt-3 text-caption text-muted-foreground sm:mt-3 sm:flex-col sm:flex-nowrap sm:gap-2 md:flex-row md:items-baseline md:justify-between">
+          <div className="mt-1 flex min-w-0 flex-wrap gap-x-5 gap-y-1 border-t border-border/50 pt-3 text-caption text-muted-foreground sm:mt-3 sm:flex-col sm:flex-nowrap sm:gap-2 md:flex-row md:items-baseline md:justify-between">
             <span data-testid="footer-copyright" className="break-words">
               &copy; {year}{" "}
               <span className="hidden sm:inline">

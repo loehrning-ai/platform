@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Fragment } from "react";
 import type {
   Workshop,
   WorkshopMaterialRole,
@@ -15,19 +16,9 @@ import {
   Route,
   SectionHead,
 } from "@/components/werk";
-import {
-  CapsLine,
-  PlakatBand,
-  PosterCover,
-  PosterNumeral,
-  PosterThumb,
-} from "@/components/plakat";
-import { posterTitleFallbackStyle } from "@/lib/plakat/fit";
-import {
-  hubPlakat,
-  workshopPlakat,
-  type WorkshopPlakat,
-} from "@/lib/plakat/palettes";
+import { PosterCover, PosterThumb } from "@/components/plakat";
+import { HighlightedText } from "@/components/ui/highlighted-text";
+import { workshopPlakat, type WorkshopPlakat } from "@/lib/plakat/palettes";
 import { WORKSHOP_PAGE_COPY } from "./workshop-copy";
 import { splitTitle } from "./workshop-title";
 
@@ -157,7 +148,6 @@ export function WorkshopsContent({ workshops, locale }: Props) {
   const first =
     workshops.find((workshop) => workshop.number === RECOMMENDED_START) ??
     ordered[0];
-  const scene = hubPlakat(workshops);
   const withPresenter = index
     .filter((workshop) =>
       workshop.materials.some((material) => material.role === "presenter"),
@@ -165,62 +155,8 @@ export function WorkshopsContent({ workshops, locale }: Props) {
     .map((workshop) => workshop.number);
 
   return (
-    <div data-plakat-page={scene}>
-      {/* The band takes the newest workshop's scene. Its one poster object is
-          the key numeral, the workshop count, in the scene's mark colour: in
-          the lg art column, and as a strip after the button on phones. The
-          list below is the index, so the band carries no anchor row. */}
-      <PlakatBand
-        plakat={scene}
-        labelledBy="workshops-hub-heading"
-        // Phones: a 96px strip with a 10rem glyph, so the first row still
-        // starts inside the first screen with the wider fallback face.
-        // From sm the strip and its glyph grow with the width.
-        className="[&>[data-plakat-art-phone]]:mt-4 [&>[data-plakat-art-phone]]:h-24 sm:[&>[data-plakat-art-phone]]:h-40"
-        // lg: the glyph is sized to the band, so the "4" fills the art
-        // column as the poster object rather than sitting in its corner.
-        art={
-          <PosterNumeral
-            value={workshops.length}
-            plakat={scene}
-            className="[&_text]:text-[36rem]"
-          />
-        }
-        artPhone={
-          <PosterNumeral
-            value={workshops.length}
-            plakat={scene}
-            format="strip"
-            className="[&_text]:text-[10rem] sm:[&_text]:text-[16rem]"
-          />
-        }
-      >
-        <CapsLine>{copy.hubKicker(workshops.length)}</CapsLine>
-        <h1
-          id="workshops-hub-heading"
-          className="poster-title mt-3 max-w-[14ch] text-scene-ink sm:mt-4"
-          style={posterTitleFallbackStyle(copy.hubHeading)}
-        >
-          {copy.hubHeading}
-        </h1>
-        <p className="mt-3 max-w-[40ch] text-body text-scene-ink text-pretty sm:mt-5 sm:max-w-[52ch]">
-          {copy.hubLead}
-        </p>
-        {/* Below 360px the button spans the column, so it never breaks into
-            two lines beside a ragged line. */}
-        <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 max-[359px]:grid max-[359px]:grid-cols-1 max-[359px]:[&>a]:w-full max-[359px]:[&>a]:justify-between sm:mt-8">
-          {first ? (
-            <ButtonLink
-              href={localizeHref(`/workshops/${first.slug}`, locale)}
-              tone="scene"
-              locale={locale}
-            >
-              {copy.hubStart(first.number)}
-            </ButtonLink>
-          ) : null}
-          <p className="text-body text-scene-ink">{copy.hubAccess}</p>
-        </div>
-      </PlakatBand>
+    <div>
+      <HubHero workshops={workshops} index={index} first={first} locale={locale} />
 
       <section
         aria-labelledby="workshop-list-heading"
@@ -317,6 +253,174 @@ export function WorkshopsContent({ workshops, locale }: Props) {
   );
 }
 
+/**
+ * Catalogue index bars in the hero card, one per workshop in number order,
+ * widest first. Four pastel washes of the brand palette; ink text on each
+ * stays above 12:1.
+ */
+const INDEX_WASHES = [
+  "bg-brand-pink/70",
+  "bg-brand-sky/70",
+  "bg-brand-peach/75",
+  "bg-brand-acid/80",
+] as const;
+const INDEX_WIDTHS = ["w-full", "w-[88%]", "w-[76%]", "w-[64%]"] as const;
+
+/**
+ * The hub header on paper (the reviewed look of 6f2617a): a mono kicker, the
+ * H1 with its tail on a sky highlight band, the lead and the start button on
+ * the left; a slightly tilted "Im Katalog" card on an acid offset sheet on
+ * the right. Two pastel geometry blocks, a sky band top right and a pink band
+ * bottom left, sit behind everything. No poster band and no key numeral: the
+ * count is set in the card, where it always fits.
+ */
+function HubHero({
+  workshops,
+  index,
+  first,
+  locale,
+}: {
+  readonly workshops: readonly Workshop[];
+  readonly index: readonly Workshop[];
+  readonly first: Workshop | undefined;
+  readonly locale: Locale;
+}) {
+  const copy = WORKSHOP_PAGE_COPY[locale].catalog;
+  const highlight = copy.hubHeading.endsWith(copy.hubHeadingHighlight)
+    ? copy.hubHeadingHighlight
+    : "";
+  const lead = copy.hubHeading.slice(
+    0,
+    copy.hubHeading.length - highlight.length,
+  ).trim();
+
+  return (
+    <section
+      aria-labelledby="workshops-hub-heading"
+      data-workshop-hero=""
+      className="relative isolate overflow-hidden border-b border-border bg-paper pb-6 pt-5 sm:py-14"
+    >
+      {/* Geometry: decorative pastel blocks, behind the text (isolate keeps
+          them inside this section's stacking context). */}
+      <span
+        aria-hidden="true"
+        data-workshop-geometry="sky"
+        // Phones: a short band in the free corner right of the kicker, above
+        // the H1, so it never sits under the lead or the highlight band.
+        className="pointer-events-none absolute -right-10 top-2 -z-10 h-10 w-[42vw] rotate-3 bg-brand-sky/60 sm:top-12 sm:h-28 sm:w-80"
+      />
+      <span
+        aria-hidden="true"
+        data-workshop-geometry="pink"
+        className="pointer-events-none absolute -left-20 bottom-10 -z-10 h-16 w-56 -rotate-6 bg-brand-pink/55 sm:h-20 sm:w-72"
+      />
+      <div className={cx(CONTAINER, "relative grid gap-5 sm:gap-8 md:grid-cols-12 md:items-center lg:gap-10")}>
+        <header className="relative min-w-0 py-1 sm:py-3 md:col-span-7 lg:col-span-8 lg:py-8">
+          <p className="flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange">
+            <span className="size-3 shrink-0 bg-brand-teal" aria-hidden="true" />
+            {copy.hubKicker(workshops.length)}
+          </p>
+          <h1
+            id="workshops-hub-heading"
+            className="mt-4 max-w-[15ch] text-[2.25rem] font-bold leading-[0.9] tracking-[-0.06em] text-foreground text-balance sm:mt-5 sm:text-[clamp(2.65rem,6vw,5.75rem)]"
+          >
+            {/* Positioned, so its glyphs paint above the next line's band:
+                a descender ("p") would otherwise sit under the sky wash. */}
+            <span className="relative">{lead}</span>
+            {highlight ? (
+              <>
+                {" "}
+                <HighlightedText colorVar="--color-brand-sky">
+                  {highlight}
+                </HighlightedText>
+              </>
+            ) : null}
+          </h1>
+          <p className="mt-4 max-w-2xl text-pretty text-[0.9375rem] leading-relaxed text-muted-foreground sm:mt-6 sm:text-lg">
+            {copy.hubLead}
+          </p>
+          {first ? (
+            // Below 360px the button spans the column, so its label never
+            // breaks into two lines.
+            <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 max-[359px]:grid max-[359px]:grid-cols-1 max-[359px]:[&>a]:w-full max-[359px]:[&>a]:justify-between sm:mt-8">
+              <ButtonLink
+                href={localizeHref(`/workshops/${first.slug}`, locale)}
+                locale={locale}
+              >
+                {copy.hubStart(first.number)}
+              </ButtonLink>
+              <p className="text-sm text-muted-foreground">{copy.hubAccess}</p>
+            </div>
+          ) : null}
+        </header>
+
+        <aside
+          aria-label={copy.catalogueIndex}
+          data-workshop-catalogue=""
+          className="relative min-w-0 max-w-md -rotate-1 pb-3 pr-3 md:col-span-5 md:max-w-none lg:col-span-4"
+        >
+          <span
+            aria-hidden="true"
+            className="absolute inset-0 translate-x-3 translate-y-3 bg-brand-acid/75"
+          />
+          <div className="relative bg-paper p-4 shadow-card ring-1 ring-foreground/30 sm:p-6">
+            <div className="flex items-baseline justify-between gap-4 border-b border-foreground pb-3 sm:pb-4">
+              <span className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange">
+                {copy.catalogueIndex}
+              </span>
+              <strong className="text-3xl font-bold leading-none tracking-[-0.07em] text-foreground tabular-nums sm:text-4xl">
+                {String(workshops.length).padStart(2, "0")}
+              </strong>
+            </div>
+            {/* Jump links to each row. Phones get one row of four numbered
+                squares (44px targets); from sm each bar names its topic. */}
+            {index.length > 0 ? (
+              <ol
+                data-workshop-catalogue-chips=""
+                className="mt-3 flex flex-wrap gap-2 sm:hidden"
+              >
+                {index.map((workshop, position) => (
+                  <li key={workshop.slug}>
+                    <a
+                      href={`#workshop-${workshop.slug}`}
+                      className={cx(
+                        "flex size-11 items-center justify-center font-mono text-xs font-bold text-foreground focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-brand-orange",
+                        INDEX_WASHES[position % INDEX_WASHES.length],
+                      )}
+                    >
+                      {workshop.number}
+                      <span className="sr-only"> {workshop.topic}</span>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            ) : null}
+            {index.length > 0 ? (
+              <ol className="mt-5 hidden space-y-2 sm:block">
+                {index.map((workshop, position) => (
+                  <li key={workshop.slug}>
+                    <a
+                      href={`#workshop-${workshop.slug}`}
+                      className={cx(
+                        "flex min-h-11 items-center gap-3 px-3 font-mono text-xs font-bold text-foreground underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-brand-orange",
+                        INDEX_WASHES[position % INDEX_WASHES.length],
+                        INDEX_WIDTHS[position % INDEX_WIDTHS.length],
+                      )}
+                    >
+                      <span>{workshop.number}</span>
+                      <span className="font-sans text-sm">{workshop.topic}</span>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            ) : null}
+          </div>
+        </aside>
+      </div>
+    </section>
+  );
+}
+
 function WorkshopRow({
   workshop,
   locale,
@@ -409,9 +513,23 @@ function WorkshopRow({
               {" · "}
             </>
           ) : null}
-          <span className="whitespace-nowrap">
-            {copy.rowTimes(workshop.minutesLive, workshop.minutesSelfStudy)}
-          </span>
+          {/* Each time stays whole, with its separator on the line before:
+              at 320px the pair no longer fits one line, and a single
+              unbreakable run would push into the arrow. */}
+          {copy
+            .rowTimes(workshop.minutesLive, workshop.minutesSelfStudy)
+            .split(" · ")
+            .map((part, position, parts) =>
+              position < parts.length - 1 ? (
+                <Fragment key={part}>
+                  <span className="whitespace-nowrap">{part} ·</span>{" "}
+                </Fragment>
+              ) : (
+                <span key={part} className="whitespace-nowrap">
+                  {part}
+                </span>
+              ),
+            )}
         </p>
         <div className="hidden flex-wrap items-center gap-x-3 gap-y-2 md:flex">
           <Kicker>

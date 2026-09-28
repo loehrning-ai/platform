@@ -3,8 +3,6 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { splitTitle } from "@/app/workshops/workshop-title";
-import { WORKSHOP_PAGE_COPY } from "@/app/workshops/workshop-copy";
-import { HOME_COPY } from "@/components/home/home-copy";
 import { BOOK_PAGE_COPY } from "@/app/buecher/book-copy";
 import { ENTRY_COPY } from "@/lib/i18n/public-info-copy";
 import { PROFILE_COPY } from "@/lib/i18n/profile-copy";
@@ -101,10 +99,6 @@ const COURSE_LITERALS = [
   { file: "src/app/ai-native/capstone-gallery/page.tsx", de: ["Noch keine veröffentlichten Capstones."], en: ["No published capstones."] },
 ] as const;
 
-const PAGE_LITERALS = [
-  { file: "src/app/blog/page.tsx", de: ["KI im Alltag, mit Quellen erklärt."], en: ["Everyday AI, explained with sources."] },
-] as const;
-
 /**
  * Every band H1 writes `posterTitleFallbackStyle()`: `font-display: optional`
  * can leave a first visit on the Arial-metric fallback face, about 4.4%
@@ -129,23 +123,9 @@ const SURFACES: readonly Surface[] = ([
       })),
     ),
   },
-  {
-    name: "workshops hub band",
-    layout: "band-art",
-    files: ["src/app/workshops/workshops-content.tsx"],
-    titles: LOCALES.map((locale) => ({ id: `hub ${locale}`, text: WORKSHOP_PAGE_COPY[locale].catalog.hubHeading })),
-  },
-  {
-    name: "home hero band",
-    layout: "band-art",
-    files: ["src/components/home/hero.tsx", "src/components/home/phone-hero.css"],
-    // hero.tsx binds the first two parts ("KI verstehen.") with a no-break
-    // space and adds the fallback headroom, so that line never breaks.
-    titles: LOCALES.map((locale) => {
-      const text = noBreakFirstLine(HOME_COPY[locale].hero.headline);
-      return { id: `home ${locale}`, text, fit: fallbackFitEm(text) };
-    }),
-  },
+  // The workshops hub and the home hero are no poster titles any more: the
+  // owner asked for the old highlighted hub heading and the old paper hero
+  // with the line globe back.
   {
     name: "demos hub band",
     layout: "band",
@@ -164,12 +144,8 @@ const SURFACES: readonly Surface[] = ([
       })),
     ),
   },
-  {
-    name: "blog index band",
-    layout: "band",
-    files: ["src/app/blog/page.tsx", "src/app/blog/_styles/blog-index.css"],
-    titles: LOCALES.map((locale) => literal(`blog ${locale}`, PAGE_LITERALS[0].file, PAGE_LITERALS[0][locale])),
-  },
+  // The blog index is the old bold index again (the giant "Blog."), not a
+  // poster band.
   {
     name: "/kurse headline on paper",
     layout: "band",
@@ -323,11 +299,8 @@ describe("the poster title registry", () => {
   it("covers every surface the spec sets in the poster size", () => {
     expect(SURFACES.map((surface) => surface.name)).toEqual([
       "workshop detail bands",
-      "workshops hub band",
-      "home hero band",
       "demos hub band",
       "demo detail bands",
-      "blog index band",
       "/kurse headline on paper",
       "paper page headlines",
       "course landing bands",

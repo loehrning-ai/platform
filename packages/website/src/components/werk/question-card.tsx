@@ -7,8 +7,11 @@ export type QuestionCardProps = {
   readonly question: ReactNode;
   /** Small label above the question ("Eine Frage, fest gehalten"). */
   readonly label?: ReactNode;
-  /** `dark` for a graphit cover band, as on the deck cover. */
-  readonly tone?: "paper" | "dark";
+  /**
+   * `paper` is the Bogen sheet; `sky` is the old pastel sheet (brand-sky at
+   * 40% over paper) for a cover. There is no graphit tone any more.
+   */
+  readonly tone?: "paper" | "sky";
   /** `hero` sets the question larger, for a cover. */
   readonly size?: "default" | "hero";
   /**
@@ -24,9 +27,9 @@ export type QuestionCardProps = {
  * an ink outline, and a Mennige bar on the left. It is the only element on
  * the site with a left bar, and it appears at most once per page.
  *
- * The dark tone scopes itself with .dark-section so its label and text take
- * the graphit tokens wherever it is placed. The bar stays true Mennige
- * (a non-text mark, 3.18:1 on graphit, above the 3:1 floor).
+ * Both tones are light grounds with the page's ink and Schiefer text
+ * (Schiefer 6.2:1 on the sky sheet). The bar stays true Mennige, a non-text
+ * mark above the 3:1 floor on either sheet.
  */
 export function QuestionCard({
   question,
@@ -36,7 +39,7 @@ export function QuestionCard({
   density = "default",
   className,
 }: QuestionCardProps) {
-  const dark = tone === "dark";
+  const sky = tone === "sky";
   const compact = density === "compact";
 
   return (
@@ -46,7 +49,7 @@ export function QuestionCard({
         "relative grid grid-cols-[2rem_minmax(0,1fr)] items-start gap-4 border py-5 pl-7 pr-6 sm:grid-cols-[2.5rem_minmax(0,1fr)]",
         compact &&
           "grid-cols-[1.5rem_minmax(0,1fr)] gap-3 py-3.5 pl-5 pr-4 sm:gap-4 sm:py-5 sm:pl-7 sm:pr-6",
-        dark ? "dark-section border-dark-fg bg-dark-bg" : "border-foreground bg-card",
+        sky ? "border-foreground bg-sky-sheet" : "border-foreground bg-card",
         className,
       )}
     >

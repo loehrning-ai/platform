@@ -26,8 +26,14 @@ import {
   PosterArt,
   ResultChart,
 } from "@/components/plakat";
+import { HighlightedText } from "@/components/ui/highlighted-text";
 import { posterTitleFallbackStyle } from "@/lib/plakat/fit";
-import { PLAKAT, workshopPlakat, type WorkshopPlakat } from "@/lib/plakat/palettes";
+import {
+  PLAKAT,
+  workshopPlakat,
+  type PlakatKey,
+  type WorkshopPlakat,
+} from "@/lib/plakat/palettes";
 import { materialLanguageLabel, WORKSHOP_PAGE_COPY } from "../workshop-copy";
 import { splitTitle } from "../workshop-title";
 import { WorkshopDecisionLab } from "./workshop-decision-lab";
@@ -86,6 +92,52 @@ const LAB_STATION: Readonly<Record<string, number>> = {
  * workshop mapped.
  */
 const FALLBACK_SCENE: WorkshopPlakat = { plakat: "lemons", motif: "fan" };
+
+/**
+ * The marker band behind the tail of the H1, per scene (HighlightedText: a
+ * 0.75em stripe, so the poster leading of 0.92 never lets two lines' bands
+ * touch). The words stay in the scene ink; the stripe is the scene's mid
+ * colour, strong enough to read as a band on the ground and never under 3:1
+ * against the ink (the title is display size):
+ * - lemons: Mennige, Butter on it 4.96.
+ * - idea: Himbeere at 35% over Kreide, Kobalt on it 4.38.
+ * - bloom: Terrakotta at 80% over Sand, Aubergine on it 5.03.
+ * - autumn: Ocker at 30% over Rost, Creme on it 3.43. Rost leaves little
+ *   room for a lighter wash (Creme is 4.80 on the plain ground), so the band
+ *   stays a tint and the 3:1 display floor keeps its margin.
+ */
+export const TITLE_HIGHLIGHT: Readonly<
+  Record<PlakatKey, { readonly colorVar: `--color-${string}`; readonly opacity: number }>
+> = {
+  lemons: { colorVar: "--color-scene-mid", opacity: 100 },
+  idea: { colorVar: "--color-scene-mid", opacity: 35 },
+  bloom: { colorVar: "--color-scene-mid", opacity: 80 },
+  autumn: { colorVar: "--color-scene-mid", opacity: 30 },
+};
+
+/** Longest two-word tail that still reads as a short marked phrase. */
+const HIGHLIGHT_PAIR_MAX = 12;
+
+/**
+ * The H1 split for its highlight: a short last pair goes on the band ("mit
+ * KI", "für KI?", "the future?"), otherwise only the last word
+ * ("vorhersagen?"), so the band marks a phrase and never fills two lines. A
+ * one-word title gets no band.
+ */
+export function titleHighlight(head: string): {
+  readonly lead: string;
+  readonly highlight: string;
+} {
+  const words = head.trim().split(/\s+/);
+  if (words.length < 2) return { lead: head, highlight: "" };
+  const pair = words.slice(-2).join(" ");
+  const count =
+    words.length >= 3 && pair.length <= HIGHLIGHT_PAIR_MAX ? 2 : 1;
+  return {
+    lead: words.slice(0, -count).join(" "),
+    highlight: words.slice(-count).join(" "),
+  };
+}
 
 /** Roles that make a sensible second cover button next to the primary one. */
 const SECONDARY_ROLES: readonly WorkshopMaterialRole[] = [
@@ -312,6 +364,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
   );
   const need = limitingNeed(workshop, copy);
   const title = splitTitle(workshop.title);
+  const heading = titleHighlight(title.head);
   // The leading minute facts, which the agenda caption repeats right below.
   const minuteFacts = (workshop.minutesLive ? 1 : 0) + 1;
   const scene = workshopPlakat(workshop.slug) ?? FALLBACK_SCENE;
@@ -478,7 +531,19 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
           className="poster-title mt-3 max-w-[16ch] text-scene-ink max-[359px]:mt-2 max-[359px]:[--text-poster:2.625rem] sm:mt-4"
           style={posterTitleFallbackStyle(title.head)}
         >
-          {title.head}
+          {/* Positioned, so a descender paints above the next line's band. */}
+          <span className="relative">{heading.lead}</span>
+          {heading.highlight ? (
+            <>
+              {" "}
+              <HighlightedText
+                colorVar={TITLE_HIGHLIGHT[scene.plakat].colorVar}
+                opacity={TITLE_HIGHLIGHT[scene.plakat].opacity}
+              >
+                {heading.highlight}
+              </HighlightedText>
+            </>
+          ) : null}
           {title.subtitle ? (
             <>
               {/* The colon stays visible, so the text, the accessible name

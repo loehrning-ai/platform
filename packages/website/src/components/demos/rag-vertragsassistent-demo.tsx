@@ -367,11 +367,13 @@ function RagVertragsassistentGerman() {
               width: 32,
               height: 32,
               flexShrink: 0,
-              background: DEMO.ink,
+              // A pastel avatar tile with an ink edge, never a black square.
+              background: DEMO.band,
+              border: `1px solid ${DEMO.ink}`,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: DEMO.kalk,
+              color: DEMO.ink,
               fontWeight: 700,
               fontSize: 12,
             }}
@@ -438,7 +440,8 @@ function RagVertragsassistentGerman() {
                 className="text-[14px] sm:text-[13px]"
                 style={{
                   maxWidth: "85%",
-                  background: DEMO.ink,
+                  // The question bubble takes the IDEA Kobalt, never ink.
+                  background: DEMO.action,
                   color: DEMO.kalk,
                   padding: "9px 13px",
                   lineHeight: 1.55,
@@ -845,9 +848,9 @@ function RagVertragsassistentGerman() {
             // opacity, a faint frame rather than a grey block; disabled
             // controls are exempt from contrast minimums, and the enabled
             // ink edge on paper is far above 3:1.
-            background: sendDisabled ? "transparent" : DEMO.ink,
+            background: sendDisabled ? "transparent" : DEMO.action,
             color: sendDisabled ? DEMO.ink : DEMO.kalk,
-            border: `1px solid ${DEMO.ink}`,
+            border: `1px solid ${sendDisabled ? DEMO.ink : DEMO.action}`,
             padding: "9px 12px",
             cursor: sendDisabled ? "not-allowed" : "pointer",
             opacity: sendDisabled ? 0.4 : 1,
@@ -1033,8 +1036,10 @@ function RagContractAssistantEnglish() {
             alignItems: "center",
             gap: 8,
             padding: "8px 12px",
-            background: DEMO.ink,
-            color: DEMO.kalk,
+            // Himmel-Blatt strip with ink type, never a black bar.
+            background: DEMO.band,
+            color: DEMO.ink,
+            borderBottom: `1px solid ${DEMO.ink}`,
           }}
         >
           <span style={{ fontWeight: 700 }}>Local sample index</span>
@@ -1246,8 +1251,8 @@ function RagContractAssistantEnglish() {
             onClick={() => runQuery()}
             style={{
               minHeight: 44,
-              border: `1px solid ${DEMO.ink}`,
-              background: DEMO.ink,
+              border: `1px solid ${DEMO.action}`,
+              background: DEMO.action,
               color: DEMO.kalk,
               padding: "9px 14px",
               ...DEMO.label,

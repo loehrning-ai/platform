@@ -1,8 +1,14 @@
 /**
  * Shared design tokens for all demo dashboard components.
  * Werkzeichnung: Kalkweiß ground, ink lines, one Mennige accent, square
- * geometry. Accent fills are gone (selection is ink fill or an outline), and
- * labels are sentence case in the sans face; mono is kept for data only.
+ * geometry. Labels are sentence case in the sans face; mono is kept for data
+ * only.
+ *
+ * No black grounds, not even small ones: a selection or a filled action is
+ * the IDEA Kobalt (`action`) with Kalkweiß text, a file or mail header strip
+ * is the pastel Himmel-Blatt (`band`) with ink text, and a console, log or
+ * trace is a recessed Beton pane (`pane`) with ink text. Ink stays for
+ * text, lines and small marks.
  */
 export const DEMO = {
   // Text colors (dark on light)
@@ -67,12 +73,18 @@ export const DEMO = {
   // onto the existing warm-stone palette, keeping the Berliner Werkzeug vocabulary)
   ink: "#0B0908",
   kalk: "#F3F0E9",
+  // Filled action or selection: IDEA Kobalt, Kalkweiß on it 7.1:1.
+  action: "#2e4d90",
+  // Header strip (file bar, mail header): Himmel-Blatt, ink on it 15.4:1.
+  band: "var(--color-sky-sheet)",
+  // Console, log or trace pane: Beton, ink 14.9:1, Schiefer 7.2:1.
+  pane: "var(--color-inset)",
   birke: "#F7F4ED",
   leinen: "#E3DFD6",
   // 0.55 alpha was only ~4.3:1 on the preview surfaces (Kalkweiß/Birke/white),
   // sub-AA for label text. 0.62 reaches >=5.4:1 on all of them.
   schiefer: "rgba(11,9,8,0.62)",
-  // Mennige, scope-aware: #b73a15 on paper, #e07050 inside .dark-section.
+  // Mennige, scope-aware: #b73a15 on paper, the scene ink inside a band.
   kupferLight: "var(--color-brand-orange)",
   kupferMist: "transparent",
 

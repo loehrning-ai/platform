@@ -41,9 +41,9 @@ test.describe("landing globe motion", () => {
       0,
     );
 
-    // Probe the front graticule: it is the one rAF-owned layer every home
-    // scene redraws each frame. The flat poster disc hides the far side, so
-    // its grid-back layer is empty by design and cannot show motion.
+    // Probe the front graticule: it is the one rAF-owned layer both the
+    // desktop cover and the phone window redraw each frame (the phone draws
+    // no far side, so its grid-back layer stays empty by design).
     const livePath = page
       .locator('[data-hero-network-live="grid-front"] path')
       .first();
@@ -155,7 +155,19 @@ test.describe("landing globe motion", () => {
 
     await page.setViewportSize({ width: 390, height: 844 });
 
+    await expect(page.locator("#home-hero-network")).toHaveCount(0);
     await expect(page.locator("[data-hero-globe-motion]")).toHaveCount(0);
-    await expect(page.locator("[data-hero-network-motion]")).toHaveCount(0);
+    // Below lg the only projection left is the phone window's own compact
+    // globe, inside its slot (home-phone-globe.spec.ts).
+    await expect
+      .poll(() =>
+        page.evaluate(
+          () =>
+            Array.from(
+              document.querySelectorAll("[data-hero-network-motion]"),
+            ).filter((node) => !node.closest("[data-home-globe]")).length,
+        ),
+      )
+      .toBe(0);
   });
 });

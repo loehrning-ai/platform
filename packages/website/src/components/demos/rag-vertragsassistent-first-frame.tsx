@@ -87,11 +87,13 @@ function GermanFrame() {
               width: 32,
               height: 32,
               flexShrink: 0,
-              background: DEMO.ink,
+              // A pastel avatar tile with an ink edge, never a black square.
+              background: DEMO.band,
+              border: `1px solid ${DEMO.ink}`,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: DEMO.kalk,
+              color: DEMO.ink,
               fontWeight: 700,
               fontSize: 12,
             }}
@@ -146,7 +148,8 @@ function GermanFrame() {
             className="text-[14px] sm:text-[13px]"
             style={{
               maxWidth: "85%",
-              background: DEMO.ink,
+              // The question bubble takes the IDEA Kobalt, never ink.
+              background: DEMO.action,
               color: DEMO.kalk,
               padding: "9px 13px",
               lineHeight: 1.55,
@@ -243,8 +246,10 @@ function EnglishFrame() {
             alignItems: "center",
             gap: 8,
             padding: "8px 12px",
-            background: DEMO.ink,
-            color: DEMO.kalk,
+            // Himmel-Blatt strip with ink type, never a black bar.
+            background: DEMO.band,
+            color: DEMO.ink,
+            borderBottom: `1px solid ${DEMO.ink}`,
           }}
         >
           <span style={{ fontWeight: 700 }}>{copy.strip[0]}</span>

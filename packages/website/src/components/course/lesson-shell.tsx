@@ -442,7 +442,7 @@ export function LessonShell({
         <>
           <div
             data-sidebar-backdrop
-            className="fixed inset-0 z-[60] bg-foreground/40 lg:hidden"
+            className="fixed inset-0 z-[60] bg-sky-wash/80 lg:hidden"
             role="presentation"
             onClick={closeNav}
           />

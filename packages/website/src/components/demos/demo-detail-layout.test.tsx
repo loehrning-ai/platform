@@ -209,7 +209,7 @@ describe("<DemoDetailLayout>", () => {
     expect(container.textContent).not.toContain("Freigabe-Schritt simuliert");
   });
 
-  it("sets the header in the IDEA band and keeps a dark engine on paper", () => {
+  it("sets the header in the IDEA band and keeps a console-like engine on paper", () => {
     const { container } = render(<DemoDetailLayout demo={agent} />);
     const h1 = screen.getByRole("heading", { level: 1 });
     expect(h1).toHaveTextContent(/^Agent-Pipeline$/);

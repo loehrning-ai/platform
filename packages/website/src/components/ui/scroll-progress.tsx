@@ -12,12 +12,12 @@ function ScrollProgressContent() {
       data-scroll-progress
       className="pointer-events-none fixed inset-0 z-[60]"
     >
-      {/* Ink, not Mennige: the logo square is the chrome's one red mark.
-          The empty track draws nothing, so an unscrolled page shows no line. */}
-      <div className="absolute inset-x-0 top-0 h-px bg-transparent">
+      {/* The old site's thread: Mennige on a faint Mennige track, never ink.
+          The site has no black marks in its chrome. */}
+      <div className="absolute inset-x-0 top-0 h-px bg-brand-orange/25">
         <m.div
           data-scroll-progress-fill="top"
-          className="h-[2px] w-full origin-left bg-foreground motion-reduce:hidden"
+          className="h-[2px] w-full origin-left bg-brand-orange motion-reduce:hidden"
           style={{ scaleX: scrollYProgress }}
         />
       </div>

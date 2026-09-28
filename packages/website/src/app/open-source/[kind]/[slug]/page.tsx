@@ -255,7 +255,7 @@ export default async function OpenSourceArtifactDetailPage({
                 href={launchHref}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex min-h-11 items-center gap-2 border border-brand-orange bg-brand-orange px-4 py-2 text-sm font-semibold text-white hover:border-foreground hover:bg-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+                className="inline-flex min-h-11 items-center gap-2 border border-brand-orange bg-brand-orange px-4 py-2 text-sm font-semibold text-white hover:border-kupfer-dark hover:bg-kupfer-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
               >
                 {copy.open}
                 <span className="sr-only">{copy.externalTab}</span>
@@ -264,7 +264,7 @@ export default async function OpenSourceArtifactDetailPage({
             ) : (
               <Link
                 href={localizeHref(launchHref, locale)}
-                className="inline-flex min-h-11 items-center border border-brand-orange bg-brand-orange px-4 py-2 text-sm font-semibold text-white hover:border-foreground hover:bg-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+                className="inline-flex min-h-11 items-center border border-brand-orange bg-brand-orange px-4 py-2 text-sm font-semibold text-white hover:border-kupfer-dark hover:bg-kupfer-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
               >
                 {copy.open}
               </Link>

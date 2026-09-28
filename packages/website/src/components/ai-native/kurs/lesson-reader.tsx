@@ -601,7 +601,7 @@ function AiNativeLessonReaderContent({
               <div className="mt-5 flex flex-wrap gap-3">
                 <Link
                   href={localizeHref("/ai-native/kurs/quiz", locale)}
-                  className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-foreground"
+                  className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-kupfer-dark"
                 >
                   {copy.takeQuiz} <ArrowRight size={12} />
                 </Link>
@@ -615,13 +615,13 @@ function AiNativeLessonReaderContent({
               <div className="mt-5 flex flex-wrap gap-3">
                 <Link
                   href={localizeHref("/ai-native/kurs/zertifikat", locale)}
-                  className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-foreground"
+                  className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-kupfer-dark"
                 >
                   {copy.downloadRecord} <ArrowRight size={12} />
                 </Link>
                 <a
                   href="#course-project-studio"
-                  className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-card px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-foreground transition-colors hover:bg-foreground hover:text-background"
+                  className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-card px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-foreground transition-colors hover:bg-sky-sheet hover:text-foreground"
                 >
                   {copy.markRubric} <CheckCircle2 size={12} />
                 </a>
@@ -635,7 +635,7 @@ function AiNativeLessonReaderContent({
               <div className="mt-5">
                 <a
                   href="#course-project-studio"
-                  className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-foreground"
+                  className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-5 py-2.5 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-kupfer-dark"
                 >
                   {copy.markRubric} <CheckCircle2 size={12} />
                 </a>
@@ -741,7 +741,7 @@ function AiNativeLessonReaderContent({
             <div className="mt-5 flex flex-wrap gap-3">
               <Link
                 href={localizeHref("/ai-native", locale)}
-                className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-foreground"
+                className="inline-flex min-h-11 items-center gap-2 border-2 border-foreground bg-brand-orange px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-kupfer-dark"
               >
                 {copy.overview} <ArrowRight size={12} />
               </Link>
@@ -751,7 +751,7 @@ function AiNativeLessonReaderContent({
                     `/ai-native/kurs/${module.id}/${nextLesson.id}`,
                     locale,
                   )}
-                  className="inline-flex min-h-11 items-center gap-2 border border-foreground bg-transparent px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-foreground transition-colors hover:bg-foreground hover:text-background"
+                  className="inline-flex min-h-11 items-center gap-2 border border-foreground bg-transparent px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-foreground transition-colors hover:bg-sky-sheet hover:text-foreground"
                 >
                   {copy.nextLesson} <ArrowRight size={12} />
                 </Link>

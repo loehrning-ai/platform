@@ -14,8 +14,8 @@ import { ArrowGlyph } from "@/components/werk/arrow-glyph";
 import { BUTTON_CLASSES } from "@/components/werk/button-link";
 import { cx } from "@/components/werk/cx";
 import { Pictogram } from "@/components/werk/pictogram";
-import { PosterThumb } from "@/components/plakat";
 import { coursePlakat } from "@/lib/plakat/palettes";
+import { CourseThumb } from "./course-thumb";
 
 /**
  * One row of the /kurse ledger. The atlas owns goal, level and progress
@@ -135,13 +135,13 @@ export function sourceRepository(sourceHref: string): SourceRepository {
 
 /**
  * One ledger row (design direction 6.6; Werkzeichnung v2, SPEC §3.4): the
- * course's poster thumbnail, title, the one-line promise, duration, level
- * and access as plain text, and the action as a text link. Rows are
- * separated by hairlines; there is no tonal fill and no row tint. Colour
- * lives only in the thumbnail, in the track's scene (Grundlagenpfad Lemons
- * with its numerals 01 to 04; Technikkurse IDEA and Bloom without one). A
- * course in the selected path gets an ink square before its title, so the
- * state never rests on colour.
+ * course's thumbnail, title, the one-line promise, duration, level and
+ * access as plain text, and the action as a text link. Rows are separated by
+ * hairlines; there is no tonal fill and no row tint. Colour lives only in the
+ * thumbnail: the Grundlagenpfad courses show their people picture with the
+ * numerals 01 to 04, the Technikkurse their IDEA or Bloom poster without
+ * one (course-thumb.tsx). A course in the selected path gets a Kobalt square
+ * before its title, so the state never rests on colour alone.
  *
  * The tracks are fixed so every row of both groups lines up: from xl the
  * facts and the action are two columns, at lg they share one right-hand cell
@@ -314,39 +314,34 @@ export function CourseLedgerRow({
               : "open"
       }
     >
-      {/* The poster thumbnail replaces the number column (SPEC §3.4): an
-          aria-hidden SVG, never an <img>, never focusable. Below lg a row is
+      {/* The thumbnail replaces the number column (SPEC §3.4): aria-hidden,
+          never focusable, a decorative picture or poster. Below lg a row is
           a dense list item: thumbnail, title, one line of promise, one
           caption of facts, then one wrapping line of links with the action
           first. From lg the links line is the second grid row under the
           title and the facts and action sit in the right-hand columns,
           spanning both rows so the links stay under the promise. */}
       <div className="grid min-w-0 grid-cols-[4.5rem_minmax(0,1fr)] gap-x-4 sm:grid-cols-[5rem_minmax(0,1fr)] sm:gap-x-5 lg:grid-cols-[6rem_minmax(0,1fr)_15rem] lg:gap-x-6 xl:grid-cols-[6rem_minmax(0,1fr)_10rem_15rem]">
-        {poster ? (
-          <PosterThumb
-            plakat={poster.plakat}
-            motif={poster.motif}
-            numeral={poster.numeral}
-            size="sm"
-            className="col-start-1 row-span-2 row-start-1 self-start"
-          />
-        ) : (
-          <span aria-hidden="true" className="col-start-1 row-span-2 row-start-1" />
-        )}
+        <CourseThumb
+          slug={course.slug}
+          numeral={poster?.numeral ?? null}
+          size="sm"
+          className="col-start-1 row-span-2 row-start-1 self-start"
+        />
 
         <div className="min-w-0 lg:col-start-2 lg:row-start-1">
           {/* The title link keeps its 44px target on a phone but gives 6px
               of it back above and below, into the row padding and the
               promise, which are not interactive. */}
           <h4 className="flex items-center gap-2 text-[1.0625rem] font-bold leading-snug text-foreground sm:text-[1.25rem]">
-            {/* The path marker, inline before the title: the ink square
-                keys "in your path" without colour; the words follow for
-                screen readers. */}
+            {/* The path marker, inline before the title: the Kobalt square
+                keys "in your path" by shape; the words follow for screen
+                readers. */}
             {inPath ? (
               <span
                 aria-hidden="true"
                 data-path-marker
-                className="size-2.5 shrink-0 bg-foreground"
+                className="size-2.5 shrink-0 bg-brand-cobalt"
               />
             ) : null}
             <Link

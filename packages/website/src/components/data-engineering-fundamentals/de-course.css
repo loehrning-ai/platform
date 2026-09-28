@@ -12773,3 +12773,219 @@
 .de-course .wm-stage-scroll {
   border-radius: 8px;
 }
+
+/* ==========================================================================
+   No black grounds. Every console, code block, query, log and closing band
+   in this course is a light sheet now, never the old navy-black #0a1220 /
+   #0d1117: code, consoles and logs are Beton (--color-inset) with ink type
+   (14.9:1), their head strips are the pastel Himmel-Blatt, and the closing
+   band and the tutorial banner are the Himmel-Wash. Syntax and log tones are
+   paper-safe (all 5:1 or more on Beton). Appended last, so it wins over the
+   dark rules above at equal specificity.
+   ========================================================================== */
+.de-course .code,
+.de-course .sc-query,
+.de-course .sched-log,
+.de-course .aa-stage-col.dark,
+.de-course .ds-terminal,
+.de-course .pg-console,
+.de-course .cap-shiplog,
+.de-course .sd-sql,
+.de-course .cs-sql {
+  background: var(--color-inset);
+  color: var(--color-foreground);
+  border: 1px solid var(--color-hairline);
+}
+.de-course .code-head,
+.de-course .aa-stage-col.dark .aa-stage-head,
+.de-course .aa-yaml-head,
+.de-course .ds-term-head,
+.de-course .pg-console-head {
+  background: var(--color-sky-sheet);
+  color: var(--color-muted-foreground);
+  border-bottom: 1px solid var(--color-hairline);
+}
+.de-course .code-head .lang,
+.de-course .ds-q b {
+  color: #1d4ed8;
+}
+.de-course .code-body,
+.de-course .aa-yaml,
+.de-course .ds-term-body,
+.de-course .ds-q,
+.de-course .pg-console-body,
+.de-course .sd-sql-pre,
+.de-course .cs-sql-q,
+.de-course .sched-log .info,
+.de-course .ds-prompt input,
+.de-course[data-code-theme="mono"] .tok-t {
+  color: var(--color-foreground);
+}
+.de-course .sc-q-hint,
+.de-course .ds-hint,
+.de-course .sched-log .t,
+.de-course .pg-console-body .empty,
+.de-course .pg-status.idle,
+.de-course .tok-c,
+.de-course .code-body .tok-c,
+.de-course[data-code-theme="mono"] .tok-c {
+  color: var(--color-muted-foreground);
+}
+.de-course .tok-k,
+.de-course .code-body .tok-k,
+.de-course .tok-t,
+.de-course .code-body .tok-t {
+  color: #6d28d9;
+}
+.de-course .tok-s,
+.de-course .code-body .tok-s {
+  color: #9a3412;
+}
+.de-course .tok-n,
+.de-course .code-body .tok-n {
+  color: #854d0e;
+}
+.de-course .tok-f,
+.de-course .code-body .tok-f,
+.de-course .pg-status.deploying,
+.de-course .cap-ship-ln.info {
+  color: #1d4ed8;
+}
+.de-course .sched-log .ok,
+.de-course .ds-q .q-lab,
+.de-course .ds-prompt .p,
+.de-course .pg-status.shipped,
+.de-course .pg-c-ln.ok,
+.de-course .cap-ship-ln.ok,
+.de-course .cap-ship-cursor {
+  color: var(--color-pass);
+}
+.de-course .sched-log .err,
+.de-course .pg-status.blocked,
+.de-course .pg-c-ln.err {
+  color: var(--color-destructive);
+}
+.de-course .ds-prompt {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+}
+.de-course .ds-prompt:focus-within {
+  border-color: var(--color-brand-orange);
+  box-shadow: 0 0 0 2px rgba(183, 58, 21, 0.2);
+}
+.de-course .ds-prompt input::placeholder {
+  color: var(--color-muted-foreground);
+}
+.de-course .ds-prompt kbd {
+  background: var(--color-inset);
+  border: 1px solid var(--color-border);
+  color: var(--color-muted-foreground);
+}
+.de-course .ds-help-btn,
+.de-course .ds-help-btn:disabled,
+.de-course .ds-help-btn:disabled:hover {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  color: var(--color-foreground);
+}
+.de-course .ds-help-btn:hover {
+  background: var(--color-sky-sheet);
+  border-color: var(--color-foreground);
+  color: var(--color-foreground);
+}
+.de-course .ds-help-btn.is-tip,
+.de-course .ds-help-btn.is-solution {
+  color: var(--color-foreground);
+}
+.de-course .ds-help-btn.is-tip:hover,
+.de-course .ds-help-btn.is-solution:hover {
+  background: var(--color-sky-sheet);
+}
+.de-course .ds-help-btn .cost {
+  color: #854d0e;
+}
+
+/* The takeaway sheet is Bogen (see the flat-shell rule above); its type is
+   ink now, not the old light-on-navy set. */
+.de-course .takeaway {
+  color: var(--color-foreground);
+}
+.de-course .takeaway-head {
+  color: var(--color-kupfer-dark);
+}
+.de-course .takeaway-item b {
+  color: var(--color-foreground);
+}
+.de-course .takeaway-item code,
+.de-course .ov-cta-sub code {
+  background: var(--color-inset);
+  border: 1px solid var(--color-hairline);
+  color: var(--color-foreground);
+}
+
+/* Closing band and the capstone tutorial banner: the Himmel-Wash. */
+.de-course .ov-cta-band,
+.de-course .lp-tutorial-banner {
+  background: var(--color-sky-wash);
+  color: var(--color-foreground);
+  border: 1px solid var(--color-hairline);
+}
+.de-course .ov-cta-title,
+.de-course .lp-tutorial-step-n,
+.de-course .lp-tutorial-title {
+  color: var(--color-foreground);
+}
+.de-course .ov-cta-eyebrow,
+.de-course .ov-cta-ghost {
+  color: var(--color-kupfer-dark);
+}
+.de-course .ov-cta-ghost:hover {
+  color: var(--color-foreground);
+}
+.de-course .ov-cta-sub,
+.de-course .lp-tutorial-step,
+.de-course .lp-tutorial-caption {
+  color: var(--color-muted-foreground);
+}
+.de-course .lp-tutorial-exit {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  color: var(--color-foreground);
+}
+.de-course .lp-tutorial-exit:hover {
+  background: var(--color-card-hover);
+  border-color: var(--color-foreground);
+}
+.de-course .lp-tutorial-progress {
+  background: rgba(18, 18, 18, 0.08);
+}
+
+/* Selected tabs, options and presets: the pastel Himmel-Blatt with an ink
+   edge and ink type, never an ink fill. Role nodes that were ink discs
+   (the coordinator, the arrived row, the step arrow) take the old site's
+   Kobalt with white type (7.9:1); answer heads and small pills are
+   Himmel-Blatt strips. */
+.de-course .sc-tab.on,
+.de-course .tw-opt.on,
+.de-course .sd-preset.on {
+  background: var(--color-sky-sheet);
+  border-color: var(--color-foreground);
+  color: var(--color-foreground);
+  box-shadow: inset 0 -3px 0 var(--color-foreground);
+}
+.de-course .sc-tab.on .sc-tab-sub {
+  color: var(--color-muted-foreground);
+}
+.de-course .sd-coord-dot,
+.de-course .cs-node.coord,
+.de-course .lp-row.lp-arrived,
+.de-course .cm2-step-arrow {
+  background: var(--color-brand-cobalt);
+  border-color: var(--color-brand-cobalt);
+  color: #fff;
+}
+.de-course .cap2-answer-head,
+.de-course .ov2-pill {
+  background: var(--color-sky-sheet);
+  color: var(--color-foreground);
+}

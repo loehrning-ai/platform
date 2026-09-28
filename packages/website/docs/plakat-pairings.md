@@ -12,21 +12,21 @@ The fifteen `@theme static` tokens against the three paper grounds. "Text on" li
 
 | Token | Name | Hex | Kalkweiß | Bogen | Beton | Text on | Large or non-text only on |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `--color-ultramarin` | Ultramarin | `#152a79` | 11.26 | 11.97 | 10.08 | Kalkweiß, Bogen, Beton | none |
-| `--color-butter` | Butter | `#fceeaf` | 1.03 | 1.09 | 1.09 | none | none |
-| `--color-kreide` | Kreide | `#ecebdd` | 1.05 | 1.12 | 1.06 | none | none |
-| `--color-kobalt` | Kobalt | `#2e4d90` | 7.15 | 7.60 | 6.40 | Kalkweiß, Bogen, Beton | none |
-| `--color-himbeere` | Himbeere | `#c94a7f` | 3.87 | 4.11 | 3.47 | none | Kalkweiß, Bogen, Beton |
-| `--color-himbeere-tief` | Himbeere tief | `#b6386f` | 4.88 | 5.18 | 4.37 | Kalkweiß, Bogen | Beton |
-| `--color-sand` | Sand | `#e6d3af` | 1.29 | 1.37 | 1.16 | none | none |
-| `--color-aubergine` | Aubergine | `#3b1f45` | 12.57 | 13.36 | 11.26 | Kalkweiß, Bogen, Beton | none |
-| `--color-terrakotta` | Terrakotta | `#d1733d` | 2.96 | 3.15 | 2.65 | none | Bogen |
-| `--color-terrakotta-tief` | Terrakotta tief | `#964305` | 5.95 | 6.32 | 5.33 | Kalkweiß, Bogen, Beton | none |
-| `--color-rost` | Rost | `#944d44` | 5.42 | 5.76 | 4.85 | Kalkweiß, Bogen, Beton | none |
-| `--color-creme` | Creme | `#f0e1ca` | 1.13 | 1.20 | 1.01 | none | none |
-| `--color-ocker` | Ocker | `#e4a057` | 1.95 | 2.07 | 1.75 | none | none |
-| `--color-ocker-hell` | Ocker hell | `#ebb16a` | 1.67 | 1.78 | 1.50 | none | none |
-| `--color-ocker-tief` | Ocker tief | `#9b5e07` | 4.62 | 4.91 | 4.13 | Kalkweiß, Bogen | Beton |
+| `--color-ultramarin` | Ultramarin | `#152a79` | 11.40 | 12.50 | 10.23 | Kalkweiß, Bogen, Beton | none |
+| `--color-butter` | Butter | `#fceeaf` | 1.04 | 1.14 | 1.07 | none | none |
+| `--color-kreide` | Kreide | `#ecebdd` | 1.07 | 1.17 | 1.04 | none | none |
+| `--color-kobalt` | Kobalt | `#2e4d90` | 7.24 | 7.94 | 6.50 | Kalkweiß, Bogen, Beton | none |
+| `--color-himbeere` | Himbeere | `#c94a7f` | 3.92 | 4.30 | 3.52 | none | Kalkweiß, Bogen, Beton |
+| `--color-himbeere-tief` | Himbeere tief | `#b6386f` | 4.94 | 5.42 | 4.43 | Kalkweiß, Bogen | Beton |
+| `--color-sand` | Sand | `#e6d3af` | 1.31 | 1.43 | 1.17 | none | none |
+| `--color-aubergine` | Aubergine | `#3b1f45` | 12.73 | 13.96 | 11.42 | Kalkweiß, Bogen, Beton | none |
+| `--color-terrakotta` | Terrakotta | `#d1733d` | 3.00 | 3.29 | 2.69 | none | Bogen |
+| `--color-terrakotta-tief` | Terrakotta tief | `#964305` | 6.03 | 6.61 | 5.41 | Kalkweiß, Bogen, Beton | none |
+| `--color-rost` | Rost | `#944d44` | 5.49 | 6.02 | 4.93 | Kalkweiß, Bogen, Beton | none |
+| `--color-creme` | Creme | `#f0e1ca` | 1.14 | 1.26 | 1.03 | none | none |
+| `--color-ocker` | Ocker | `#e4a057` | 1.97 | 2.17 | 1.77 | none | none |
+| `--color-ocker-hell` | Ocker hell | `#ebb16a` | 1.69 | 1.86 | 1.52 | none | none |
+| `--color-ocker-tief` | Ocker tief | `#9b5e07` | 4.68 | 5.13 | 4.19 | Kalkweiß, Bogen | Beton |
 
 ## Scenes
 
@@ -45,7 +45,8 @@ Ground Ultramarin `#152a79`, ink Butter `#fceeaf`, mid Mennige `#b73a15`. Numera
 | `--color-brand-orange` | Butter `#fceeaf` | Focus ring and accent text | 4.5 | 10.97 | pass |
 | `--color-kupfer` | Butter `#fceeaf` | Accent text | 4.5 | 10.97 | pass |
 | `--color-kupfer-dark` | Butter `#fceeaf` | Accent text, pressed | 4.5 | 10.97 | pass |
-| ground on ink | Ultramarin `#152a79` | Primary button label on an ink fill | 4.5 | 10.97 | pass |
+| button label on the fill | Ultramarin `#152a79` | Primary button label (never an ink fill when the ink is dark) | 4.5 | 10.97 | pass |
+| `--color-scene-button` | Butter `#fceeaf` | Filled button against the ground | 3 | 10.97 | pass |
 | ink on `--color-card-hover` | Butter `#fceeaf` on `#2c3e7e` | Hover tint | 4.5 | 8.58 | pass |
 | ink on `--color-inset` | Butter `#fceeaf` on `#23367c` | Recessed well | 4.5 | 9.52 | pass |
 | `--color-hairline` | `#4f5b86` | Hairline between rows | below 2 | 1.94 | pass (decor) |
@@ -77,7 +78,8 @@ Ground Kreide `#ecebdd`, ink Kobalt `#2e4d90`, mid Himbeere `#c94a7f`. Numeral w
 | `--color-brand-orange` | Kobalt `#2e4d90` | Focus ring and accent text | 4.5 | 6.78 | pass |
 | `--color-kupfer` | Kobalt `#2e4d90` | Accent text | 4.5 | 6.78 | pass |
 | `--color-kupfer-dark` | Kobalt `#2e4d90` | Accent text, pressed | 4.5 | 6.78 | pass |
-| ground on ink | Kreide `#ecebdd` | Primary button label on an ink fill | 4.5 | 6.78 | pass |
+| button label on the fill | Kreide `#ecebdd` | Primary button label (never an ink fill when the ink is dark) | 4.5 | 6.78 | pass |
+| `--color-scene-button` | Kobalt `#2e4d90` | Filled button against the ground | 3 | 6.78 | pass |
 | ink on `--color-card-hover` | Kobalt `#2e4d90` on `#d9dbd5` | Hover tint | 4.5 | 5.83 | pass |
 | ink on `--color-inset` | Kobalt `#2e4d90` on `#e1e2d8` | Recessed well | 4.5 | 6.23 | pass |
 | `--color-hairline` | `#b3bcc6` | Hairline between rows | below 2 | 1.60 | pass (decor) |
@@ -109,7 +111,8 @@ Ground Sand `#e6d3af`, ink Aubergine `#3b1f45`, mid Terrakotta `#d1733d`. Numera
 | `--color-brand-orange` | Aubergine `#3b1f45` | Focus ring and accent text | 4.5 | 9.74 | pass |
 | `--color-kupfer` | Aubergine `#3b1f45` | Accent text | 4.5 | 9.74 | pass |
 | `--color-kupfer-dark` | Aubergine `#3b1f45` | Accent text, pressed | 4.5 | 9.74 | pass |
-| ground on ink | Sand `#e6d3af` | Primary button label on an ink fill | 4.5 | 9.74 | pass |
+| button label on the fill | Bogen `#fffcf5` | Primary button label (never an ink fill when the ink is dark) | 4.5 | 6.61 | pass |
+| `--color-scene-button` | Terrakotta tief `#964305` | Filled button against the ground | 3 | 4.61 | pass |
 | ink on `--color-card-hover` | Aubergine `#3b1f45` on `#d5c1a4` | Hover tint | 4.5 | 8.17 | pass |
 | ink on `--color-inset` | Aubergine `#3b1f45` on `#dcc8a9` | Recessed well | 4.5 | 8.77 | pass |
 | `--color-hairline` | `#b39d8f` | Hairline between rows | below 2 | 1.76 | pass (decor) |
@@ -141,7 +144,8 @@ Ground Rost `#944d44`, ink Creme `#f0e1ca`, mid Ocker `#e4a057`. Numeral weight 
 | `--color-brand-orange` | Creme `#f0e1ca` | Focus ring and accent text | 4.5 | 4.80 | pass |
 | `--color-kupfer` | Creme `#f0e1ca` | Accent text | 4.5 | 4.80 | pass |
 | `--color-kupfer-dark` | Creme `#f0e1ca` | Accent text, pressed | 4.5 | 4.80 | pass |
-| ground on ink | Rost `#944d44` | Primary button label on an ink fill | 4.5 | 4.80 | pass |
+| button label on the fill | Rost `#944d44` | Primary button label (never an ink fill when the ink is dark) | 4.5 | 4.80 | pass |
+| `--color-scene-button` | Creme `#f0e1ca` | Filled button against the ground | 3 | 4.80 | pass |
 | `--color-card-hover` | Rost `#944d44` | Equals the ground: no tint | n/a | n/a | pass |
 | `--color-inset` | Rost `#944d44` | Equals the ground: no tint | n/a | n/a | pass |
 | `--color-hairline` | `#b0796c` | Hairline between rows | below 2 | 1.70 | pass (decor) |
@@ -168,25 +172,41 @@ Autumn carries the Rost rules: text 17px or larger at weight 400 or more, no mut
 
 | `data-plakat-page` | Scene line | Kalkweiß | Bogen | Beton | Result |
 | --- | --- | --- | --- | --- | --- |
-| none | Druckschwarz `#121212` | 16.46 | 17.50 | 14.74 | pass |
-| `lemons` | Ultramarin `#152a79` | 11.26 | 11.97 | 10.08 | pass |
-| `idea` | Kobalt `#2e4d90` | 7.15 | 7.60 | 6.40 | pass |
-| `bloom` | Aubergine `#3b1f45` | 12.57 | 13.36 | 11.26 | pass |
-| `autumn` | Rost `#944d44` | 5.42 | 5.76 | 4.85 | pass |
+| none | Druckschwarz `#121212` | 16.67 | 18.28 | 14.96 | pass |
+| `lemons` | Ultramarin `#152a79` | 11.40 | 12.50 | 10.23 | pass |
+| `idea` | Kobalt `#2e4d90` | 7.24 | 7.94 | 6.50 | pass |
+| `bloom` | Aubergine `#3b1f45` | 12.73 | 13.96 | 11.42 | pass |
+| `autumn` | Rost `#944d44` | 5.49 | 6.02 | 4.93 | pass |
 
-## Graphit bands
+## Light grounds (no graphit)
 
-`.dark-section` stays for the footer, the AI-Native demo engines and the home fallback. The footer adds `.plakat-footer` and sets its type in Butter.
+The site has no black grounds. The graphit band (`.dark-section`, `--color-dark-*`) is retired: the footer is the Pfirsich-Wash (`--color-peach-wash`, brand-peach over Bogen), a tinted band or panel is the Himmel-Wash (`--color-sky-wash`), and a pastel sheet, a selected state or a former console head is the Himmel-Blatt (`--color-sky-sheet`). Code, logs and consoles are Beton. A filled action that is not the page's Mennige primary is Kobalt with paper text, never an ink fill; a filled scene button uses `--color-scene-button`, which is never a near-black ink (Bloom fills with Terrakotta tief, not Aubergine).
 
-| Pairing | Colour | Use | Floor | Ratio | Result |
+| Ground | Pairing | Colour | Use | Floor | Ratio | Result |
+| --- | --- | --- | --- | --- | --- | --- |
+| Pfirsich-Wash | `--color-foreground` | Druckschwarz `#121212` | Text, wordmark | 4.5 | 15.86 | pass |
+| Himmel-Wash | `--color-foreground` | Druckschwarz `#121212` | Text, wordmark | 4.5 | 15.14 | pass |
+| Himmel-Blatt | `--color-foreground` | Druckschwarz `#121212` | Text, wordmark | 4.5 | 15.41 | pass |
+| Pfirsich-Wash | `--color-muted-foreground` | `#4f4640` | Links and secondary text | 4.5 | 7.79 | pass |
+| Himmel-Wash | `--color-muted-foreground` | `#4f4640` | Links and secondary text | 4.5 | 7.44 | pass |
+| Himmel-Blatt | `--color-muted-foreground` | `#4f4640` | Links and secondary text | 4.5 | 7.57 | pass |
+| Pfirsich-Wash | `--color-muted` | `#655c54` | Captions | 4.5 | 5.53 | pass |
+| Himmel-Wash | `--color-muted` | `#655c54` | Captions | 4.5 | 5.28 | pass |
+| Himmel-Blatt | `--color-muted` | `#655c54` | Captions | 4.5 | 5.38 | pass |
+| Pfirsich-Wash | `--color-kupfer-dark` | Mennige tief `#97300f` | Kicker and column heads | 4.5 | 6.47 | pass |
+| Himmel-Wash | `--color-kupfer-dark` | Mennige tief `#97300f` | Kicker and column heads | 4.5 | 6.18 | pass |
+| Himmel-Blatt | `--color-kupfer-dark` | Mennige tief `#97300f` | Kicker and column heads | 4.5 | 6.29 | pass |
+| Pfirsich-Wash | `--color-brand-orange` | Mennige `#b73a15` | Wordmark `.ai`, focus ring | 4.5 | 4.90 | pass |
+| Himmel-Wash | `--color-brand-orange` | Mennige `#b73a15` | Wordmark `.ai`, focus ring | 4.5 | 4.68 | pass |
+| Himmel-Blatt | `--color-brand-orange` | Mennige `#b73a15` | Wordmark `.ai`, focus ring | 4.5 | 4.76 | pass |
+| Pfirsich-Wash | `--color-border` | `#827970` | Control edge | 3 | 3.61 | pass |
+| Himmel-Wash | `--color-border` | `#827970` | Control edge | 3 | 3.45 | pass |
+| Himmel-Blatt | `--color-border` | `#827970` | Control edge | 3 | 3.51 | pass |
+
+| Fill | Colour | Use | Floor | Ratio | Result |
 | --- | --- | --- | --- | --- | --- |
-| `.dark-section` scene line | `#f2f1ee` | Kopflinie in a graphit band | 4.5 | 16.31 | pass |
-| `.dark-section` ring | `#e07050` | Focus ring (footer included) | 3 | 5.79 | pass |
-| footer `--color-foreground` | Butter `#fceeaf` | Footer text in Butter | 4.5 | 15.78 | pass |
-| footer `--color-muted-foreground` | Butter `#fceeaf` | Footer secondary text | 4.5 | 15.78 | pass |
-| footer `--color-border` | `#716b52` | Control edge (Butter at 40%) | 3 | 3.45 | pass |
-| footer `--color-hairline` | `#39372d` | Hairline (Butter at 16%) | below 2 | 1.54 | pass (decor) |
-| footer scene line | Butter `#fceeaf` | Kopflinie in the footer | 4.5 | 15.78 | pass |
+| IDEA Kobalt | Kobalt `#2e4d90` | Filled action or selection, paper text | 4.5 | 7.94 | pass |
+| Kobalt (old site) | `#2747b5` | Filled action or selection, paper text | 4.5 | 7.72 | pass |
 
 ## Charts on Kalkweiß
 
@@ -194,10 +214,10 @@ A result chart sits on Kalkweiß, never Beton. Series 1 is the scene line, serie
 
 | Scene | Series 1 | Series 2 | Normal | Protan | Deutan | Tritan | Required cue |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Lemons | Ultramarin `#152a79` 11.26 | Mennige `#b73a15` 5.08 | 34.1 / 2.21 | 23.0 / 1.50 | 32.5 / 2.56 | 33.2 / 1.98 | direct labels |
-| IDEA | Kobalt `#2e4d90` 7.15 | Himbeere tief `#b6386f` 4.88 | 23.7 / 1.47 | 7.6 / 1.07 | 18.4 / 1.75 | 28.5 / 1.40 | hatch plus direct labels |
-| Bloom | Aubergine `#3b1f45` 12.57 | Terrakotta tief `#964305` 5.95 | 24.2 / 2.11 | 21.0 / 1.81 | 25.1 / 2.30 | 22.8 / 2.06 | direct labels |
-| Autumn | Rost `#944d44` 5.42 | Ocker tief `#9b5e07` 4.62 | 7.9 / 1.17 | 8.0 / 1.19 | 6.9 / 1.17 | 3.6 / 1.16 | hatch plus direct labels |
+| Lemons | Ultramarin `#152a79` 11.40 | Mennige `#b73a15` 5.15 | 34.1 / 2.21 | 23.0 / 1.50 | 32.5 / 2.56 | 33.2 / 1.98 | direct labels |
+| IDEA | Kobalt `#2e4d90` 7.24 | Himbeere tief `#b6386f` 4.94 | 23.7 / 1.47 | 7.6 / 1.07 | 18.4 / 1.75 | 28.5 / 1.40 | hatch plus direct labels |
+| Bloom | Aubergine `#3b1f45` 12.73 | Terrakotta tief `#964305` 6.03 | 24.2 / 2.11 | 21.0 / 1.81 | 25.1 / 2.30 | 22.8 / 2.06 | direct labels |
+| Autumn | Rost `#944d44` 5.49 | Ocker tief `#9b5e07` 4.68 | 7.9 / 1.17 | 8.0 / 1.19 | 6.9 / 1.17 | 3.6 / 1.16 | hatch plus direct labels |
 
 ## Rejected pairings
 
@@ -207,19 +227,19 @@ Each of these misses its floor, which is why the rule beside it exists. The gene
 | --- | --- | --- | --- |
 | Creme `#f0e1ca` on Rost plus a 10% Creme tint `#9d5c51` | 4.00 | 4.5 | No hover tint in autumn: a hover underlines or inverts the pair |
 | Creme `#f0e1ca` on Rost plus a 6% Creme tint `#9a564c` | 4.29 | 4.5 | No inset tint in autumn |
-| Paper and graphit status tones on Rost | 1.29 to 4.03 | 4.5 | No status UI, chip, badge or form in autumn; the scope maps every status token to the ink |
-| Himbeere tief `#b6386f` on Beton | 4.37 | 4.5 | No tief variant on Beton (`bg-inset`) |
-| Ocker tief `#9b5e07` on Beton | 4.13 | 4.5 | No tief variant on Beton (`bg-inset`) |
+| Paper status tones on Rost | 1.29 to 1.48 | 4.5 | No status UI, chip, badge or form in autumn; the scope maps every status token to the ink |
+| Himbeere tief `#b6386f` on Beton | 4.43 | 4.5 | No tief variant on Beton (`bg-inset`) |
+| Ocker tief `#9b5e07` on Beton | 4.19 | 4.5 | No tief variant on Beton (`bg-inset`) |
 | Ocker tief `#9b5e07` on Creme | 4.08 | 4.5 | Ocker tief is for Kalkweiß and Bogen only |
 | Ocker tief `#9b5e07` on Sand | 3.58 | 4.5 | Ocker tief is for Kalkweiß and Bogen only |
 | Himbeere `#c94a7f` as text on Kreide | 3.67 | 4.5 | Himbeere is display only (24px, or 18.66px at 700); text uses Himbeere tief |
 | Terrakotta `#d1733d` as text on Sand | 2.30 | 4.5 | Terrakotta is never text; text uses Terrakotta tief |
 | Ocker `#e4a057` as text on Rost | 2.78 | 4.5 | Ocker is decoration only; a meaningful mark uses Ocker hell |
-| Butter `#fceeaf` as a card on Kalkweiß | 1.03 | 3 | Never a card fill or row tint on paper |
-| Kreide `#ecebdd` as a card on Kalkweiß | 1.05 | 3 | Never a card fill or row tint on paper |
-| Sand `#e6d3af` as a card on Kalkweiß | 1.29 | 3 | Never a card fill or row tint on paper |
-| Creme `#f0e1ca` as a card on Kalkweiß | 1.13 | 3 | Never a card fill or row tint on paper |
-| Butter `#fceeaf` focus ring landing on Kalkweiß | 1.03 | 3 | A control at a band edge uses an inset ring |
-| Creme `#f0e1ca` focus ring landing on Kalkweiß | 1.13 | 3 | A control at a band edge uses an inset ring |
+| Butter `#fceeaf` as a card on Kalkweiß | 1.04 | 3 | Never a card fill or row tint on paper |
+| Kreide `#ecebdd` as a card on Kalkweiß | 1.07 | 3 | Never a card fill or row tint on paper |
+| Sand `#e6d3af` as a card on Kalkweiß | 1.31 | 3 | Never a card fill or row tint on paper |
+| Creme `#f0e1ca` as a card on Kalkweiß | 1.14 | 3 | Never a card fill or row tint on paper |
+| Butter `#fceeaf` focus ring landing on Kalkweiß | 1.04 | 3 | A control at a band edge uses an inset ring |
+| Creme `#f0e1ca` focus ring landing on Kalkweiß | 1.14 | 3 | A control at a band edge uses an inset ring |
 | Mennige `#b73a15` fill edge on Lemons | 2.21 | 3 | No Mennige fill inside the Lemons scope |
 | Mennige `#b73a15` fill edge on Autumn | 1.07 | 3 | No Mennige fill inside the Autumn scope |

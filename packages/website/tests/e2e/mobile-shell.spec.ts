@@ -305,10 +305,22 @@ test.describe("mobile shell: the tab of the current section", () => {
       await expect(
         page.locator(`${TAB_BAR} [data-mobile-tab="${tab}"]`),
       ).toHaveAttribute("aria-current", "page");
-      // The desktop header marks the same group for the same page.
-      await expect(
-        page.locator(`[data-nav-dropdown="${tab}"] > button`),
-      ).toHaveAttribute("aria-current", "true");
+      // The desktop header marks the same place for the same page: the
+      // group trigger, or Open Source's own direct link, which the header
+      // keeps outside the Praxis menu.
+      if (path.endsWith("/open-source")) {
+        await expect(
+          // The DE/EN pill also links to this page; hreflang tells it apart.
+          page.locator(`.js-desktop-nav a[href="${path}"]:not([hreflang])`),
+        ).toHaveAttribute("aria-current", "page");
+        await expect(
+          page.locator(`[data-nav-dropdown="${tab}"] > button`),
+        ).not.toHaveAttribute("aria-current");
+      } else {
+        await expect(
+          page.locator(`[data-nav-dropdown="${tab}"] > button`),
+        ).toHaveAttribute("aria-current", "true");
+      }
     });
   }
 });
@@ -359,7 +371,9 @@ test.describe("mobile shell: the menu sheet", () => {
         "the sheet ends above the tab bar",
       ).toBeLessThanOrEqual(sheet.barTop + 1);
       expect(sheet.scrolling, "no scrolling inside the sheet").toBe(0);
-      expect(sheet.languageSwitches, "DE/EN is not repeated").toBe(0);
+      // The sheet's header carries the same DE/EN pill as the bar it covers,
+      // and only that one.
+      expect(sheet.languageSwitches, "one DE/EN pill in the sheet").toBe(1);
 
       // The close button sits on the menu button's own 44px square.
       const close = await rectOf(
@@ -461,49 +475,76 @@ test.describe("mobile shell: the menu sheet", () => {
     expect(new URL(page.url()).pathname).toBe("/");
   });
 
-  test("@320: the bar shows the whole wordmark and one language link", async ({
+  test("@320: the bar shows the tile, the DE/EN pill and the menu button", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 320, height: 568 });
     await page.goto("/", { waitUntil: "domcontentloaded" });
     await settleFontsAndFrame(page);
 
-    const wordmark = page.locator("[data-nav-header-row] [data-logo-wordmark]");
-    await expect(wordmark).toBeVisible();
-    const language = page.locator(
-      '[data-nav-header-row] [data-language-switch="compact"] a',
-    );
-    await expect(language).toBeVisible();
-    await expect(language).toHaveText("EN");
-    await expect(language).toHaveAttribute("href", "/en");
-    const wordmarkBox = await rectOf(
-      page,
-      "[data-nav-header-row] [data-logo-wordmark]",
-    );
-    const languageBox = await rectOf(
-      page,
-      '[data-nav-header-row] [data-language-switch="compact"] a',
-    );
-    expect(languageBox.width).toBeGreaterThanOrEqual(MIN_TARGET);
-    expect(languageBox.height).toBeGreaterThanOrEqual(MIN_TARGET);
-    expect(wordmarkBox.x + wordmarkBox.width).toBeLessThanOrEqual(
-      languageBox.x,
-    );
+    // Below 360px the compact bar shows the brand tile alone, so the pill
+    // and the menu button keep their 44px targets.
+    await expect(
+      page.locator("[data-nav-header-row] [data-logo-mark]"),
+    ).toBeVisible();
+    await expect(
+      page.locator("[data-nav-header-row] [data-logo-wordmark]"),
+    ).toBeHidden();
+    const pill = page
+      .locator("[data-nav-header-row] .js-compact-nav")
+      .getByRole("group", { name: "Sprache" });
+    await expect(pill).toBeVisible();
+    await expect(
+      pill.getByRole("link", { name: "EN, englische Oberfläche öffnen" }),
+    ).toHaveAttribute("href", "/en");
+    for (const link of await pill.getByRole("link").all()) {
+      const box = await link.boundingBox();
+      expect(box?.width ?? 0).toBeGreaterThanOrEqual(MIN_TARGET);
+      expect(box?.height ?? 0).toBeGreaterThanOrEqual(MIN_TARGET);
+    }
+    const tile = await rectOf(page, "[data-nav-header-row] [data-logo-mark]");
+    const pillBox = await pill.boundingBox();
+    expect(tile.x + tile.width).toBeLessThanOrEqual(pillBox?.x ?? 0);
 
-    // The sheet's header repeats the bar with a quiet sign-in link, and the
-    // wordmark still clears it.
-    await openSheet(page);
-    const sheetWordmark = await rectOf(
-      page,
-      "[data-mobile-menu-header] [data-logo-wordmark]",
-    );
-    const login = await rectOf(page, '[data-mobile-menu-header] [data-auth-status="quiet"]');
-    expect(sheetWordmark.x + sheetWordmark.width).toBeLessThanOrEqual(login.x);
-    expect(login.height).toBeGreaterThanOrEqual(MIN_TARGET);
+    // The sheet's header repeats the bar, pill included, and the sign-in
+    // pill sits at the foot of the links.
+    const dialog = await openSheet(page);
+    await expect(
+      dialog
+        .locator("[data-mobile-menu-header]")
+        .getByRole("group", { name: "Sprache" }),
+    ).toBeVisible();
+    const login = dialog.getByRole("link", { name: "Anmelden" });
+    await expect(login).toBeInViewport();
+    const loginBox = await login.boundingBox();
+    expect(loginBox?.height ?? 0).toBeGreaterThanOrEqual(MIN_TARGET);
     const width = await page.evaluate(
       () => document.documentElement.scrollWidth,
     );
     expect(width).toBe(320);
+  });
+
+  test("@390: the bar shows the whole LOEHRNING.AI wordmark beside the pill", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+    await settleFontsAndFrame(page);
+
+    const wordmark = page.locator("[data-nav-header-row] [data-logo-wordmark]");
+    await expect(wordmark).toBeVisible();
+    const wordmarkBox = await rectOf(
+      page,
+      "[data-nav-header-row] [data-logo-wordmark]",
+    );
+    const pillBox = await rectOf(
+      page,
+      "[data-nav-header-row] .js-compact-nav [data-language-switch]",
+    );
+    expect(wordmarkBox.x + wordmarkBox.width).toBeLessThanOrEqual(pillBox.x);
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth),
+    ).toBe(390);
   });
 });
 

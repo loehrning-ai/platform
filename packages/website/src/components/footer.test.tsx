@@ -188,37 +188,52 @@ describe("Footer semantics and stable public dates", () => {
     const brandColumn = screen
       .getByText("Freie Lernplattform")
       .closest("div");
-    expect(brandColumn).toHaveClass("lg:border-t", "lg:border-hairline");
+    expect(brandColumn).toHaveClass("lg:border-t", "lg:border-border/50");
   });
 
-  it("sets the wordmark in the footer ink (Butter), with no Mennige", async () => {
+  it("sets the old wordmark: ink with the .ai in Mennige", async () => {
     await renderFooter("de");
 
     const home = screen.getByRole("link", { name: "loehrning.ai - Startseite" });
     expect(home).toHaveTextContent(/^loehrning\.ai$/);
-    expect(home.innerHTML).not.toMatch(/brand-orange|mennige/);
-    expect(home.className).not.toMatch(/\b(?:text|bg)-(?:brand-orange|mennige|kupfer)\b/);
-    expect(home).toHaveClass("font-bold", "tracking-[-0.015em]", "text-foreground");
+    expect(home).toHaveClass("font-bold", "text-foreground");
+    const suffix = home.querySelector("span");
+    expect(suffix).toHaveTextContent(".ai");
+    expect(suffix).toHaveClass("text-brand-orange");
   });
 
-  it("is a flat graphit band with hairlines and no decorative shapes", async () => {
+  it("is a light pastel band, never black or graphit, with the old geometry at its edges", async () => {
     await renderFooter("de");
 
     const footer = document.querySelector("footer");
     expect(footer).not.toBeNull();
-    expect(footer?.querySelector(".bg-grid-dark")).toBeNull();
     expect(footer?.textContent).not.toMatch(
       /Freie Kurse, Workshops und quelloffene Materialien/,
     );
     expect(footer?.innerHTML).not.toMatch(/text-\[(?:9|10|11)px\]/);
-    expect(footer).toHaveClass("dark-section", "plakat-footer");
-    // Werkzeichnung: square geometry, no stamp shadows, no decorative
-    // circles, no hover lift and no mono-uppercase labels.
-    expect(footer?.innerHTML).not.toMatch(/rounded-|shadow-|-translate-y-/);
-    expect(footer?.querySelectorAll('[aria-hidden="true"].absolute')).toHaveLength(0);
-    expect(footer?.innerHTML).not.toMatch(/\buppercase\b/);
+    // The warm Pfirsich-Wash ground with ink text (never the sky wash of a
+    // band above it); no graphit scope, no dark token and no black fill
+    // anywhere inside.
+    expect(footer).toHaveClass("bg-peach-wash", "text-foreground");
+    expect(footer).not.toHaveClass("bg-sky-wash");
+    expect(footer?.className).not.toMatch(/dark-section|plakat-footer/);
+    expect(footer?.outerHTML).not.toMatch(
+      /\bbg-(?:foreground|black|graphit|dark-bg|neutral-9\d\d|zinc-9\d\d|stone-9\d\d)\b|#141414|#111111|#1a1a1a/,
+    );
+    // The pastel geometry is decorative: hidden from assistive technology,
+    // never interactive, kept out of the phone layout, and never a negative
+    // top offset that would let the band's overflow cut a shape flat.
+    const shapes = footer?.querySelectorAll("[data-footer-shape]") ?? [];
+    expect(shapes.length).toBeGreaterThan(0);
+    for (const shape of shapes) {
+      expect(shape).toHaveAttribute("aria-hidden", "true");
+      expect(shape).toHaveClass("pointer-events-none", "absolute", "hidden");
+      expect(shape.className).toMatch(/\bbg-brand-(?:pink|acid|peach|sky)\//);
+      expect(shape.className).not.toMatch(/(?:^|\s)-top-/);
+    }
+    // Column heads and the kicker are the old mono caps in Mennige tief.
     for (const heading of footer?.querySelectorAll("h2") ?? []) {
-      expect(heading).toHaveClass("text-label");
+      expect(heading).toHaveClass("font-ui-mono", "uppercase", "text-kupfer-dark");
     }
   });
 

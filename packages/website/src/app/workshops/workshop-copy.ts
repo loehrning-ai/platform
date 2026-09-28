@@ -29,6 +29,10 @@ export interface WorkshopPageCopy {
     readonly hubKicker: (count: number) => string;
     /** The H1. Describes the format; not a slogan. */
     readonly hubHeading: string;
+    /** The tail of hubHeading set on the highlight band (HighlightedText). */
+    readonly hubHeadingHighlight: string;
+    /** Label of the tilted catalogue card beside the H1. */
+    readonly catalogueIndex: string;
     /** One-sentence lead at every width. */
     readonly hubLead: string;
     /** The band's one action: into the recommended first workshop. */
@@ -181,6 +185,8 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       hubKicker: (count) =>
         `Workshops · ${count} ${count === 1 ? "Fall" : "Fälle"}`,
       hubHeading: "Workshops mit Fall und Vorlage.",
+      hubHeadingHighlight: "mit Fall und Vorlage.",
+      catalogueIndex: "Im Katalog",
       hubLead:
         "Du rechnest oder prüfst an den Daten einer erfundenen Firma und nimmst eine Vorlage für deine Arbeit mit.",
       hubStart: (number) => `Mit Workshop ${number} beginnen`,
@@ -360,6 +366,8 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       hubKicker: (count) =>
         `Workshops · ${count} ${count === 1 ? "case" : "cases"}`,
       hubHeading: "Workshops with a case and a template.",
+      hubHeadingHighlight: "with a case and a template.",
+      catalogueIndex: "In the catalogue",
       hubLead:
         "You work through an invented company's data and leave with a template for your own work.",
       hubStart: (number) => `Start with Workshop ${number}`,

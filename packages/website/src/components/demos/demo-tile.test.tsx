@@ -52,7 +52,6 @@ function makeDemo(overrides: Partial<Demo> = {}): Demo {
     category: "Grundlagen",
     level: "einstieg",
     size: "s-med",
-    dark: false,
     accent: true,
     title: "Claude in Excel.",
     titleKicker: "Formel, Pivot, Prognose.",
@@ -199,8 +198,8 @@ describe("<DemoTile>", () => {
     expect(container.textContent).not.toContain("Controlling");
   });
 
-  it("renders a dark-engine demo on the same paper sheet as every other tile", () => {
-    render(<DemoTile demo={makeDemo({ dark: true })} />);
+  it("renders a console-like demo on the same paper sheet as every other tile", () => {
+    render(<DemoTile demo={makeDemo({ slug: "agent-pipeline", id: "agent-pipeline" })} />);
     const link = screen.getByRole("link");
     // Borderless like every tile; the preview panel is the only box.
     expect(link.className).not.toMatch(/\bborder\b|bg-card|bg-foreground|dark-section/);

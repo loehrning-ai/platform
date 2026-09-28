@@ -308,11 +308,20 @@ function eventsForStep(
   return first3;
 }
 
-// Graphit frame tokens: Leinen text (11.8:1), control edge (3.5:1) and a
-// decorative hairline, as in .dark-section.
-const DARK_MUTED = "rgba(243,240,233,0.72)";
-const DARK_EDGE = "rgba(243,240,233,0.4)";
-const DARK_HAIRLINE = "rgba(243,240,233,0.16)";
+// Light sheet tokens, never graphit: ink text, Schiefer for secondary text
+// (8.08:1 on Kalkweiß, 7.2:1 on Beton), the Kante control edge (3.75:1) and
+// the Leinen hairline for decoration. The log is a recessed Beton pane with
+// ink type; a selected scenario takes the pastel Himmel-Blatt.
+const INK = "var(--color-foreground)";
+const MUTED = "var(--color-muted-foreground)";
+const EDGE = "var(--color-border)";
+const HAIRLINE = "var(--color-hairline)";
+const LOG_GROUND = "var(--color-inset)";
+const SELECTED = "var(--color-sky-sheet)";
+// Log levels on Beton, AA as text: Befund grün, Rost-Gelb, Mennige tief.
+const LOG_OK = "var(--color-pass)";
+const LOG_WARN = "var(--color-risk-yellow)";
+const LOG_ERR = "var(--color-destructive)";
 // Paper text on the Mennige node: 5.40:1 (#edded4 at 0.9 alpha was 4.4:1).
 const ON_MENNIGE = "#f9f7f2";
 
@@ -435,7 +444,7 @@ export default function N8nSupplyChainDemo() {
         display: "flex",
         flexDirection: "column",
         fontFamily: DEMO.font.sans,
-        color: DEMO.kalk,
+        color: INK,
         minHeight: DEMO_HEIGHT,
       }}
     >
@@ -471,7 +480,7 @@ export default function N8nSupplyChainDemo() {
             alignItems: "center",
             gap: 8,
             ...DEMO.label,
-            color: DARK_MUTED,
+            color: MUTED,
             fontVariantNumeric: "tabular-nums",
           }}
         >
@@ -492,8 +501,8 @@ export default function N8nSupplyChainDemo() {
               minHeight: 44,
               minWidth: 44,
               background: "transparent",
-              color: activeStep <= 0 ? "rgba(243,240,233,0.45)" : DEMO.kalk,
-              border: `1px solid ${activeStep <= 0 ? DARK_HAIRLINE : DARK_EDGE}`,
+              color: activeStep <= 0 ? MUTED : INK,
+              border: `1px solid ${activeStep <= 0 ? HAIRLINE : EDGE}`,
               cursor: activeStep <= 0 ? "not-allowed" : "pointer",
               ...DEMO.label,
             }}
@@ -510,8 +519,8 @@ export default function N8nSupplyChainDemo() {
               minHeight: 44,
               minWidth: 44,
               background: "transparent",
-              color: activeStep >= maxStep ? "rgba(243,240,233,0.45)" : DEMO.kalk,
-              border: `1px solid ${activeStep >= maxStep ? DARK_HAIRLINE : DARK_EDGE}`,
+              color: activeStep >= maxStep ? MUTED : INK,
+              border: `1px solid ${activeStep >= maxStep ? HAIRLINE : EDGE}`,
               cursor: activeStep >= maxStep ? "not-allowed" : "pointer",
               ...DEMO.label,
             }}
@@ -527,8 +536,8 @@ export default function N8nSupplyChainDemo() {
               minHeight: 44,
               minWidth: 44,
               background: "transparent",
-              color: DEMO.kalk,
-              border: `1px solid ${DARK_EDGE}`,
+              color: INK,
+              border: `1px solid ${EDGE}`,
               cursor: "pointer",
               ...DEMO.label,
             }}
@@ -557,11 +566,13 @@ export default function N8nSupplyChainDemo() {
               style={{
                 minHeight: 44,
                 padding: "0 12px",
-                // Selected = filled (paper on graphit), like the site's
-                // filter chips; the Mennige mark stays on the current node.
-                background: scenario === key ? DEMO.kalk : "transparent",
-                color: scenario === key ? "#141414" : DEMO.kalk,
-                border: `1px solid ${scenario === key ? DEMO.kalk : DARK_EDGE}`,
+                // Selected = the pastel sheet with an ink edge and a 3px ink
+                // foot, like the site's filter chips; never a black fill. The
+                // Mennige mark stays on the current node.
+                background: scenario === key ? SELECTED : "transparent",
+                color: INK,
+                border: `1px solid ${scenario === key ? INK : EDGE}`,
+                borderBottomWidth: scenario === key ? 3 : 1,
                 cursor: "pointer",
                 ...DEMO.label,
               }}
@@ -576,7 +587,7 @@ export default function N8nSupplyChainDemo() {
       <div
         className="demo-n8n-grid"
         style={{
-          border: `1px solid ${DARK_HAIRLINE}`,
+          border: `1px solid ${HAIRLINE}`,
           padding: "16px 14px",
           display: "flex",
           flexDirection: "column",
@@ -599,7 +610,7 @@ export default function N8nSupplyChainDemo() {
               <div
                 style={{
                   ...DEMO.label,
-                  color: DARK_MUTED,
+                  color: MUTED,
                 }}
               >
                 {col.label}
@@ -617,8 +628,8 @@ export default function N8nSupplyChainDemo() {
                     key={n.id}
                     className="px-2.5 py-[9px] max-sm:py-[7px]"
                     style={{
-                      // Constant Mennige: inside the dark frame the accent token
-                      // flips to #e07050, where paper text drops to 2.8:1.
+                      // Constant Mennige with paper text (5.40:1), unscoped, so
+                      // a poster scene never swaps it.
                       background: isCurrent
                         ? "var(--color-mennige)"
                         : DEMO.kalk,
@@ -639,8 +650,11 @@ export default function N8nSupplyChainDemo() {
                         style={{
                           width: 24,
                           height: 24,
-                          background: DEMO.ink,
-                          color: DEMO.kalk,
+                          // A pastel icon tile with an ink edge, never a
+                          // black square.
+                          background: SELECTED,
+                          color: INK,
+                          border: `1px solid ${INK}`,
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
@@ -700,7 +714,7 @@ export default function N8nSupplyChainDemo() {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  color: activeStep > ci ? DEMO.kalk : DARK_MUTED,
+                  color: activeStep > ci ? INK : MUTED,
                   transition: "color 200ms",
                   fontFamily: DEMO.font.mono,
                   fontSize: 16,
@@ -723,14 +737,14 @@ export default function N8nSupplyChainDemo() {
         className="sm:min-h-[150px]"
         data-n8n-log
         style={{
-          background: DEMO.ink,
-          color: DEMO.kalk,
+          background: LOG_GROUND,
+          color: INK,
           padding: "10px 14px 12px",
           fontFamily: DEMO.font.mono,
           fontSize: 12,
           lineHeight: 1.7,
-          border: `1px solid ${DARK_HAIRLINE}`,
-          borderTop: `2px solid ${DARK_EDGE}`,
+          border: `1px solid ${HAIRLINE}`,
+          borderTop: `2px solid ${INK}`,
         }}
       >
         <button
@@ -743,7 +757,7 @@ export default function N8nSupplyChainDemo() {
             background: "transparent",
             border: 0,
             padding: 0,
-            color: DEMO.kalk,
+            color: INK,
             cursor: "pointer",
             fontVariantNumeric: "tabular-nums",
           }}
@@ -759,34 +773,34 @@ export default function N8nSupplyChainDemo() {
           style={{
             justifyContent: "space-between",
             alignItems: "center",
-            borderBottom: `1px solid ${DARK_HAIRLINE}`,
+            borderBottom: `1px solid ${EDGE}`,
             paddingBottom: 5,
             marginBottom: 7,
             fontSize: 12,
-            color: DARK_MUTED,
+            color: MUTED,
             gap: 8,
             flexWrap: "wrap",
           }}
         >
           <span>workflow-sc-042.log</span>
-          <span style={{ ...DEMO.label, color: DARK_MUTED, fontVariantNumeric: "tabular-nums" }}>
+          <span style={{ ...DEMO.label, color: MUTED, fontVariantNumeric: "tabular-nums" }}>
             {events.length}/{totalEvents} {text("Ereignisse", "events")}
           </span>
         </div>
         {events.length === 0 && (
-          <div className={logOpen ? undefined : "max-sm:hidden"} style={{ color: DARK_MUTED }}>
+          <div className={logOpen ? undefined : "max-sm:hidden"} style={{ color: MUTED }}>
             {text("Wartet auf das Webhook-Ereignis …", "Waiting for the webhook event …")}
           </div>
         )}
         {events.map((e) => {
           const c =
             e.lvl === "warn"
-              ? DEMO.statusAmber
+              ? LOG_WARN
               : e.lvl === "err"
-                ? DEMO.statusRed
+                ? LOG_ERR
                 : e.lvl === "ok"
-                  ? DEMO.statusGreen
-                  : DARK_MUTED;
+                  ? LOG_OK
+                  : MUTED;
           return (
             <div
               key={e.id}
@@ -801,18 +815,18 @@ export default function N8nSupplyChainDemo() {
                 alignItems: "baseline",
               }}
             >
-              <span style={{ color: DARK_MUTED, flexShrink: 0 }}>
+              <span style={{ color: MUTED, flexShrink: 0 }}>
                 {e.t}
               </span>
               <span style={{ color: c, flexShrink: 0 }}>
                 [{e.lvl.toUpperCase().padEnd(4)}]
               </span>
-              <span style={{ color: DEMO.kalk, fontWeight: 700, flexShrink: 0 }}>
+              <span style={{ color: INK, fontWeight: 700, flexShrink: 0 }}>
                 {e.src}
               </span>
               <span
                 style={{
-                  color: "rgba(243,240,233,0.9)",
+                  color: INK,
                   minWidth: 0,
                   wordBreak: "break-word",
                 }}
@@ -826,7 +840,7 @@ export default function N8nSupplyChainDemo() {
           <div
             style={{
               marginTop: 6,
-              color: DEMO.statusGreen,
+              color: LOG_OK,
             }}
           >
             {text(
@@ -839,7 +853,7 @@ export default function N8nSupplyChainDemo() {
           <div
             style={{
               marginTop: 6,
-              color: DEMO.statusAmber,
+              color: LOG_WARN,
             }}
           >
             {text(
@@ -859,12 +873,12 @@ export default function N8nSupplyChainDemo() {
           alignItems: "baseline",
           justifyContent: "space-between",
           gap: 12,
-          borderTop: `1px solid ${DARK_HAIRLINE}`,
-          borderBottom: `1px solid ${DARK_HAIRLINE}`,
+          borderTop: `1px solid ${HAIRLINE}`,
+          borderBottom: `1px solid ${HAIRLINE}`,
           padding: "8px 0",
         }}
       >
-        <span style={{ ...DEMO.label, color: DARK_MUTED }}>
+        <span style={{ ...DEMO.label, color: MUTED }}>
           {text("Beispiel-Reaktionszeit", "Sample response time")}
         </span>
         <span
@@ -872,7 +886,7 @@ export default function N8nSupplyChainDemo() {
             fontFamily: DEMO.font.mono,
             fontSize: 18,
             fontWeight: 700,
-            color: DEMO.kalk,
+            color: INK,
             fontVariantNumeric: "tabular-nums",
           }}
         >
@@ -884,14 +898,14 @@ export default function N8nSupplyChainDemo() {
       <div
         style={{
           // Dashed = the path the run does not take by default.
-          border: `1px dashed ${DARK_EDGE}`,
+          border: `1px dashed ${EDGE}`,
           padding: "10px 14px",
         }}
       >
         <div
           style={{
             ...DEMO.label,
-            color: DEMO.kalk,
+            color: INK,
             marginBottom: 6,
           }}
         >
@@ -915,22 +929,22 @@ export default function N8nSupplyChainDemo() {
           {[
             {
               label: "Trigger",
-              color: DEMO.kalk,
+              color: INK,
               sub: text("Verspätung unklar", "Delay unclear"),
             },
-            { label: "→", color: DARK_MUTED, sub: "" },
+            { label: "→", color: MUTED, sub: "" },
             {
               label: text("IF: Konfidenz niedrig", "IF: low confidence"),
-              color: DEMO.kalk,
+              color: INK,
               sub: text("Score < Schwellenwert", "Score below threshold"),
             },
-            { label: "→", color: DARK_MUTED, sub: "" },
+            { label: "→", color: MUTED, sub: "" },
             {
               label: text(
                 "Manuelle Prüfung erforderlich",
                 "Manual review required",
               ),
-              color: DEMO.kalk,
+              color: INK,
               sub: text("Disposition entscheidet", "Dispatcher decides"),
             },
           ].map((n, i) =>
@@ -946,7 +960,7 @@ export default function N8nSupplyChainDemo() {
                 key={i}
                 style={{
                   padding: "5px 10px",
-                  border: `1px solid ${DARK_EDGE}`,
+                  border: `1px solid ${EDGE}`,
                   fontSize: 13,
                   color: n.color,
                   fontWeight: 700,
@@ -956,7 +970,7 @@ export default function N8nSupplyChainDemo() {
                 {n.sub && (
                   <div
                     style={{
-                      color: "rgba(243,240,233,0.78)",
+                      color: MUTED,
                       fontWeight: 400,
                       marginTop: 2,
                       fontSize: 12,
@@ -973,7 +987,7 @@ export default function N8nSupplyChainDemo() {
           style={{
             marginTop: 8,
             fontSize: 12,
-            color: DARK_MUTED,
+            color: MUTED,
             lineHeight: 1.5,
           }}
         >
@@ -984,8 +998,8 @@ export default function N8nSupplyChainDemo() {
         </div>
       </div>
 
-      {/* Below sm the canvas drops its own frame and inset: the dark shell
-          band already frames it, so the nodes are the first box. */}
+      {/* Below sm the canvas drops its own frame and inset: the shell sheet
+          already frames it, so the nodes are the first box. */}
       <style>{`
         [data-demo-id="n8n-supply-chain"] .demo-n8n-arrow-h { display: none; }
         [data-demo-id="n8n-supply-chain"] .demo-n8n-arrow-v { display: inline; }

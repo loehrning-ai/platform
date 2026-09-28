@@ -11,20 +11,23 @@ test.describe("Homepage learning-platform transparency", () => {
     await kurse.scrollIntoViewIfNeeded();
     await expect(kurse).toContainText("Vier Kurse");
     await expect(kurse).toContainText("KI-Führerschein");
-    // Each course row carries its server-rendered poster (PosterArt,
-    // landscape; SPEC §3.5), an inline SVG with no image request.
-    const posters = kurse.locator("[data-course-artwork] svg[data-poster]");
-    await expect(posters).toHaveCount(4);
-    // Below lg the course rows carry no artwork (course-artwork.tsx); from
-    // lg every poster shows.
-    const wide = (page.viewportSize()?.width ?? 1280) >= 1024;
-    for (const poster of await posters.all()) {
-      if (!wide) {
-        await expect(poster).toBeHidden();
-        continue;
-      }
-      await expect(poster).toBeVisible();
-      await expect(poster).toHaveAttribute("data-poster-format", "landscape");
+    // Each course card leads with its people picture (course-artwork.tsx)
+    // at every width: a 72px crop on a phone, the 16:7 plate from sm.
+    const courseImages = kurse.locator("[data-course-artwork] img");
+    await expect(courseImages).toHaveCount(4);
+    for (const image of await courseImages.all()) {
+      await expect(image).toHaveAttribute("src", /cover-v4\.webp/);
+      await image.scrollIntoViewIfNeeded();
+      await expect
+        .poll(() =>
+          image.evaluate(
+            (node) =>
+              node instanceof HTMLImageElement &&
+              node.complete &&
+              node.naturalWidth > 0,
+          ),
+        )
+        .toBe(true);
     }
     // ...and the supporting resources in their own Ressourcen section.
     const ressourcen = page.getByTestId("ressourcen-section");

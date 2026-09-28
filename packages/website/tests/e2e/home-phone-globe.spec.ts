@@ -1,8 +1,9 @@
 import { expect, test } from "@playwright/test";
 
 /**
- * The phone home hero's horizon globe (docs/experience-system.md, "Phone
- * globe: narrow continuous-motion exception"). Chromium only: the checks read
+ * The phone home hero's globe: a window onto the paper hero's line globe
+ * (home/hero-globe-frame.tsx server frame, home/phone-globe.tsx loader,
+ * home/hero-network.tsx in compact mode). Chromium only: the checks read
  * computed animations and dispatch touch input through the page.
  */
 
@@ -34,10 +35,20 @@ test.describe("phone home globe", () => {
     expect(Math.round((box?.y ?? 0) + (box?.height ?? 0))).toBeLessThanOrEqual(
       Math.ceil(tabBarTop),
     );
-    await expect(page.locator("[data-home-globe]")).toHaveAttribute(
-      "aria-hidden",
-      "true",
+    const slot = page.locator("[data-home-globe]");
+    await expect(slot).toHaveAttribute("aria-hidden", "true");
+    // The window starts below the actions: no text sits on the globe.
+    const actions = await page.locator("[data-hero-actions]").boundingBox();
+    const globe = await slot.boundingBox();
+    expect(globe?.y ?? 0).toBeGreaterThanOrEqual(
+      (actions?.y ?? 0) + (actions?.height ?? 0),
     );
+    // Paper, never a dark band.
+    const ground = await hero.evaluate(
+      (element) => getComputedStyle(element).backgroundColor,
+    );
+    const [r, g, b] = (ground.match(/\d+/g) ?? []).map(Number);
+    expect(Math.min(r, g, b)).toBeGreaterThan(200);
   });
 
   test("stays a static frame under reduced motion", async ({ page }) => {
@@ -50,15 +61,17 @@ test.describe("phone home globe", () => {
     await expect(slot).toHaveAttribute("data-home-globe-motion", "static");
     await expect(slot).not.toHaveAttribute("data-home-globe-live", "");
     await expect(page.locator("[data-home-globe-toggle]")).toHaveCount(0);
-    const running = await page.evaluate(() =>
-      document
-        .querySelector("[data-home-globe]")
-        ?.getAnimations({ subtree: true }).length ?? 0,
+    await expect(slot.locator("[data-hero-network-motion]")).toHaveCount(0);
+    const running = await page.evaluate(
+      () =>
+        document
+          .querySelector("[data-home-globe]")
+          ?.getAnimations({ subtree: true }).length ?? 0,
     );
     expect(running).toBe(0);
   });
 
-  test("goes live after the opening, pauses, and never captures vertical scroll", async ({
+  test("goes live after the opening, tours and pauses, and never captures vertical scroll", async ({
     page,
   }) => {
     await page.goto("/");
@@ -67,6 +80,13 @@ test.describe("phone home globe", () => {
       timeout: 20_000,
     });
     await expect(slot).toHaveAttribute("data-home-globe-motion", "running");
+    // The live globe replaced the server frame and types its first word.
+    await expect(slot.locator("[data-home-globe-ssr]")).toBeHidden();
+    await expect
+      .poll(() => slot.locator("[data-hero-network-word]").textContent(), {
+        timeout: 15_000,
+      })
+      .toMatch(/\S/);
 
     const toggle = page.locator("[data-home-globe-toggle]");
     const size = await toggle.boundingBox();
@@ -77,6 +97,12 @@ test.describe("phone home globe", () => {
     await expect(slot).toHaveAttribute("data-home-globe-motion", "paused", {
       timeout: 5000,
     });
+    const livePath = slot
+      .locator('[data-hero-network-live="grid-front"] path')
+      .first();
+    const pausedPath = await livePath.getAttribute("d");
+    await page.waitForTimeout(400);
+    expect(await livePath.getAttribute("d")).toBe(pausedPath);
 
     const cdp = await page.context().newCDPSession(page);
     const touch = (
@@ -90,11 +116,6 @@ test.describe("phone home globe", () => {
       });
     const globe = await slot.boundingBox();
     const y = Math.round((globe?.y ?? 400) + 120);
-
-    await touch("touchStart", 320, y);
-    for (let i = 1; i <= 10; i++) await touch("touchMove", 320 - i * 24, y);
-    await touch("touchEnd", 0, 0);
-    expect(await page.evaluate(() => window.scrollY)).toBe(0);
 
     await touch("touchStart", 200, y + 80);
     for (let i = 1; i <= 10; i++) await touch("touchMove", 200, y + 80 - i * 30);

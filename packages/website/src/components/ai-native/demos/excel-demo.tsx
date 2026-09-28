@@ -283,7 +283,7 @@ export function ExcelDemo(): JSX.Element {
                 className={cn(
                   "min-h-11 border p-3.5 text-left transition-[background-color,border-color,color,opacity,transform,box-shadow]",
                   active
-                    ? "border-brand-orange bg-foreground text-background shadow-[3px_3px_0_0_var(--color-foreground)]"
+                    ? "border-brand-orange bg-sky-sheet text-foreground shadow-[3px_3px_0_0_var(--color-brand-orange)]"
                     : "border-border bg-card/60 text-foreground hover:-translate-x-0.5 hover:-translate-y-0.5 hover:border-foreground hover:shadow-[3px_3px_0_0_var(--color-foreground)]",
                   loading && "cursor-wait",
                 )}
@@ -294,7 +294,7 @@ export function ExcelDemo(): JSX.Element {
                 <div
                   className={cn(
                     "mt-1 text-[12px]",
-                    active ? "text-background/75" : "text-muted-foreground",
+                    active ? "text-foreground" : "text-muted-foreground",
                   )}
                 >
                   {t.description}
@@ -326,21 +326,21 @@ export function ExcelDemo(): JSX.Element {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -12 }}
             transition={{ duration: 0.28, ease: EASE_OUT_EXPO }}
-            className="dark-section border-t-[3px] border-brand-orange bg-[var(--color-dark-bg)] p-4 text-[var(--color-dark-fg)]"
+            className="border-t-[3px] border-brand-orange bg-sky-sheet p-4 text-foreground"
           >
             <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
               <DemoOverline>◆ Formel · Zelle {output.cell}</DemoOverline>
-              <span className="inline-flex items-center gap-1 bg-brand-orange px-2 py-0.5 font-mono text-[12px] font-bold tracking-[0.12em] text-[var(--color-dark-bg)]">
+              <span className="inline-flex items-center gap-1 bg-brand-orange px-2 py-0.5 font-mono text-[12px] font-bold tracking-[0.12em] text-paper">
                 Formel kopieren
               </span>
             </div>
-            <pre className="break-all bg-[rgba(243,240,233,0.06)] p-3 font-mono text-[12px] leading-[1.6] text-[var(--color-kupfer-light)]">
+            <pre className="break-all bg-card p-3 font-mono text-[12px] leading-[1.6] text-kupfer-dark">
               {output.formula}
             </pre>
-            <p className="mt-3 text-[12px] leading-[1.55] text-[var(--color-dark-fg)]/75">
+            <p className="mt-3 text-[12px] leading-[1.55] text-foreground">
               {output.explain}
             </p>
-            <div className="mt-3 grid grid-cols-2 border-t border-[var(--color-dark-border)] pt-3 font-mono text-[12px] sm:grid-cols-3 md:grid-cols-6">
+            <div className="mt-3 grid grid-cols-2 border-t border-border pt-3 font-mono text-[12px] sm:grid-cols-3 md:grid-cols-6">
               {output.preview.map((r, i) => {
                 const negative = r.wachstum.startsWith("−");
                 return (
@@ -349,10 +349,10 @@ export function ExcelDemo(): JSX.Element {
                     className={cn(
                       "px-1 py-1",
                       i < output.preview.length - 1 &&
-                        "border-r border-[var(--color-dark-border)]",
+                        "border-r border-border",
                     )}
                   >
-                    <div className="font-mono text-[12px] tracking-[0.08em] text-[var(--color-dark-muted)]">
+                    <div className="font-mono text-[12px] tracking-[0.08em] text-muted-foreground">
                       {r.w} · {r.region}
                     </div>
                     <div

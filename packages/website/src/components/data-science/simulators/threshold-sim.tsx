@@ -341,7 +341,7 @@ export function ThresholdSim() {
                 width="32"
                 height="14"
                 rx="3"
-                fill="#141216"
+                fill="#2747b5"
               />
               <text
                 x={xMap(thr)}

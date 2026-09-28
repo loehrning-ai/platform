@@ -11,8 +11,7 @@ const root = postcss.parse(css);
  * Declarations of every rule whose selector list contains `selector`, so
  * `.plakat-lemons` also finds `.plakat-lemons, [data-plakat-page="lemons"]
  * [data-plakat-band] { ... }`. A compound selector such as
- * `.dark-section.plakat-footer` is its own entry and never matches
- * `.dark-section`.
+ * `.plakat-lemons.foo` is its own entry and never matches `.plakat-lemons`.
  */
 function getDeclarations(selector: string): Map<string, string> {
   const declarations = new Map<string, string>();
@@ -143,7 +142,6 @@ describe("global interaction and typography defaults", () => {
 
 describe("semantic palette contrast", () => {
   const theme = getThemeDeclarations();
-  const dark = getDeclarations(".dark-section");
   const lightSurfaces = [
     theme.get("--color-background"),
     theme.get("--color-card"),
@@ -176,18 +174,19 @@ describe("semantic palette contrast", () => {
   it.each([
     "--color-brand-orange",
     ...foregroundTokens,
-  ] as const)("%s has an AA dark-section override", (token) => {
-    const color = dark.get(token);
-    const darkBackground = theme.get("--color-dark-bg");
-    expect(color, `${token} dark override must exist`).toBeDefined();
-    expect(darkBackground, "--color-dark-bg must exist").toBeDefined();
-    expect(contrastRatio(color!, darkBackground!)).toBeGreaterThanOrEqual(4.5);
+  ] as const)("%s stays AA on the pastel Himmel-Wash, Himmel-Blatt and Pfirsich-Wash grounds", (token) => {
+    const color = theme.get(token);
+    expect(color, `${token} must exist`).toBeDefined();
+    for (const ground of ["--color-sky-wash", "--color-sky-sheet", "--color-peach-wash"] as const) {
+      const surface = theme.get(ground);
+      expect(surface, `${ground} must exist`).toBeDefined();
+      expect(contrastRatio(color!, surface!)).toBeGreaterThanOrEqual(4.5);
+    }
   });
 });
 
 describe("Werkzeichnung palette contrast", () => {
   const theme = getThemeDeclarations();
-  const dark = getDeclarations(".dark-section");
   const token = (name: string): string => {
     const value = theme.get(name);
     if (!value) throw new Error(`${name} must exist in @theme`);
@@ -218,27 +217,44 @@ describe("Werkzeichnung palette contrast", () => {
     expect(contrastRatio(token("--color-paper"), token("--color-kupfer-dark"))).toBeGreaterThanOrEqual(4.5);
   });
 
-  it("keeps every graphit text token AA on the dark band", () => {
-    const darkBackground = token("--color-dark-bg");
-    expect(dark.get("--color-background")).toBe(darkBackground);
-    for (const name of ["--color-foreground", "--color-muted-foreground", "--color-muted", "--color-pass"]) {
-      const value = dark.get(name);
-      expect(value, `${name} dark override must exist`).toBeDefined();
-      expect(contrastRatio(value!, darkBackground)).toBeGreaterThanOrEqual(4.5);
+  it("retires the graphit band: no dark scope, no dark token and no near-black ground", () => {
+    // The owner's rule: never a black, graphit or near-black background.
+    expect(getRules(".dark-section")).toHaveLength(0);
+    for (const name of ["--color-dark-bg", "--color-dark-fg", "--color-dark-muted", "--color-dark-border", "--color-dark-track"]) {
+      expect(theme.has(name), name).toBe(false);
     }
-    expect(contrastRatio(token("--color-dark-fg"), darkBackground)).toBeGreaterThanOrEqual(4.5);
-    expect(contrastRatio(token("--color-dark-muted"), darkBackground)).toBeGreaterThanOrEqual(4.5);
+    expect(css).not.toMatch(/\.plakat-footer|\.bg-dot-pattern-dark|\.bg-grid-dark/);
+    // No rule outside print paints a near-black ground (luminance below
+    // 0.05, about #3a3a3a); the poster grounds are colours well above it.
+    root.walkDecls(/^background(?:-color)?$/, (declaration) => {
+      let node = declaration.parent?.parent;
+      while (node && node.type !== "root") {
+        if (node.type === "atrule" && (node as { name?: string }).name === "media" && /print/.test((node as { params?: string }).params ?? "")) return;
+        node = node.parent;
+      }
+      for (const hex of declaration.value.match(/#[0-9a-f]{6}\b/gi) ?? []) {
+        expect(relativeLuminance(hex), hex).toBeGreaterThanOrEqual(0.05);
+      }
+    });
   });
 
-  it("never offers white text on the lightened dark accent", () => {
-    // White on #e07050 is about 3.2:1; dark ink is the only safe text on it.
-    const darkAccent = dark.get("--color-brand-orange")!;
-    expect(contrastRatio("#ffffff", darkAccent)).toBeLessThan(4.5);
-    expect(contrastRatio(token("--color-dark-bg"), darkAccent)).toBeGreaterThanOrEqual(4.5);
+  it("keeps every footer text token AA on the Pfirsich-Wash, with a visible control edge", () => {
+    const ground = token("--color-peach-wash");
+    for (const name of ["--color-foreground", "--color-muted-foreground", "--color-muted", "--color-kupfer-dark", "--color-brand-orange"]) {
+      expect(contrastRatio(token(name), ground), name).toBeGreaterThanOrEqual(4.5);
+    }
+    expect(contrastRatio(token("--color-border"), ground)).toBeGreaterThanOrEqual(3);
   });
 
-  it("keeps the Mennige bar above the 3:1 non-text floor on graphit", () => {
-    expect(contrastRatio(token("--color-mennige"), token("--color-dark-bg"))).toBeGreaterThanOrEqual(3);
+  it("keeps the Mennige bar above the 3:1 non-text floor on the pastel sheet", () => {
+    expect(contrastRatio(token("--color-mennige"), token("--color-sky-sheet"))).toBeGreaterThanOrEqual(3);
+  });
+
+  it("sets code blocks in any prose on Beton, never the plugin's near-black pre", () => {
+    const prose = getDeclarations(".prose");
+    expect(prose.get("--tw-prose-pre-bg")).toBe("var(--color-inset)");
+    expect(prose.get("--tw-prose-pre-code")).toBe("var(--color-foreground)");
+    expect(contrastRatio(token("--color-foreground"), token("--color-inset"))).toBeGreaterThanOrEqual(4.5);
   });
 
   it("drops the offset stamp shadow and keeps an overlay shadow", () => {
@@ -301,6 +317,8 @@ describe("Plakat scenes (poster palettes)", () => {
     "--color-scene-mark",
     "--color-scene-accent-text",
     "--color-scene-line",
+    "--color-scene-button",
+    "--color-scene-button-text",
   ] as const;
 
   it("keeps the raw palette and the scene roles in an always-emitted @theme block", () => {
@@ -323,6 +341,11 @@ describe("Plakat scenes (poster palettes)", () => {
     expect(token("--color-scene-mark")).toBe(token("--color-mennige"));
     expect(token("--color-scene-accent-text")).toBe(token("--color-kupfer-dark"));
     expect(token("--color-scene-line")).toBe(token("--color-foreground"));
+    // The paper default of the filled scene button is the old site's Kobalt
+    // with a Bogen label, never an ink (near-black) fill.
+    expect(token("--color-scene-button")).toBe(token("--color-brand-cobalt"));
+    expect(token("--color-scene-button-text")).toBe(token("--color-paper"));
+    expect(contrastRatio(token("--color-scene-button-text"), token("--color-scene-button"))).toBeGreaterThanOrEqual(4.5);
     for (const surface of ["--color-background", "--color-card", "--color-inset"]) {
       expect(contrastRatio(token("--color-scene-accent-text"), token(surface))).toBeGreaterThanOrEqual(4.5);
     }
@@ -360,7 +383,13 @@ describe("Plakat scenes (poster palettes)", () => {
     for (const name of ["--color-foreground", "--color-muted-foreground", "--color-muted", "--color-kupfer", "--color-kupfer-dark"]) {
       expect(contrastRatio(own(name), ground), name).toBeGreaterThanOrEqual(4.5);
     }
-    expect(contrastRatio(ground, ink), "primary label: ground on an ink fill").toBeGreaterThanOrEqual(4.5);
+    // The filled scene button: its label AA on the fill, the fill a visible
+    // control against the ground (3:1), and never a near-black fill (the
+    // owner's rule: Aubergine at luminance 0.023 reads as a black button).
+    const button = own("--color-scene-button");
+    expect(contrastRatio(own("--color-scene-button-text"), button), "button label on the button fill").toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(button, ground), "button fill against the ground").toBeGreaterThanOrEqual(3);
+    expect(relativeLuminance(button), "button fill luminance").toBeGreaterThan(0.033);
     expect(contrastRatio(own("--color-scene-accent-text"), ground)).toBeGreaterThanOrEqual(4.5);
 
     // Control edge, focus ring and meaningful marks: the 3:1 non-text floor.
@@ -427,30 +456,8 @@ describe("Plakat scenes (poster palettes)", () => {
     }
   });
 
-  it("draws the Kopflinie in the scene line, and keeps it the band ink on graphit", () => {
+  it("draws the Kopflinie in the scene line", () => {
     expect(getDeclarations(".kopflinie").get("border-top")).toBe("2px solid var(--color-scene-line)");
-    const darkLine = getDeclarations(".dark-section").get("--color-scene-line");
-    expect(darkLine).toBe(token("--color-dark-fg"));
-    expect(contrastRatio(darkLine!, token("--color-dark-bg"))).toBeGreaterThanOrEqual(4.5);
-  });
-
-  it("sets the footer in Butter on graphit with a visible edge and the graphit ring", () => {
-    const footer = getDeclarations(".dark-section.plakat-footer");
-    const ground = token("--color-dark-bg");
-    const colour = (name: string): string => {
-      const value = footer.get(name);
-      if (!value) throw new Error(`.plakat-footer must set ${name}`);
-      return resolveColour(value, ground);
-    };
-    for (const name of ["--color-foreground", "--color-muted-foreground", "--color-muted", "--color-scene-line"]) {
-      expect(contrastRatio(colour(name), ground), name).toBeGreaterThanOrEqual(4.5);
-    }
-    expect(contrastRatio(colour("--color-border"), ground)).toBeGreaterThanOrEqual(3);
-    expect(contrastRatio(colour("--color-hairline"), ground)).toBeLessThan(2);
-    expect(contrastRatio(colour("--color-track"), ground)).toBeLessThan(2);
-    // The ring is inherited from .dark-section, unchanged.
-    expect(footer.has("--color-brand-orange")).toBe(false);
-    expect(contrastRatio(getDeclarations(".dark-section").get("--color-brand-orange")!, ground)).toBeGreaterThanOrEqual(3);
   });
 
   it("defines one caps line at 14px or more, set by CSS from sentence-case text", () => {

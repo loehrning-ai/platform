@@ -586,7 +586,7 @@ export function DatenschutzClient({
               onClick={handleExport}
               disabled={exportState === "loading"}
               aria-busy={exportState === "loading"}
-              className="mt-4 inline-flex min-h-11 items-center gap-2 border border-brand-orange bg-brand-orange px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.06em] text-white hover:border-foreground hover:bg-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange disabled:opacity-50"
+              className="mt-4 inline-flex min-h-11 items-center gap-2 border border-brand-orange bg-brand-orange px-4 py-2 font-mono text-xs font-bold uppercase tracking-[0.06em] text-white hover:border-kupfer-dark hover:bg-kupfer-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange disabled:opacity-50"
             >
               {exportState === "loading"
                 ? localized(locale, "Wird exportiert…", "Exporting…")

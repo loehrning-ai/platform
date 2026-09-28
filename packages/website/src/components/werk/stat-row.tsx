@@ -15,8 +15,8 @@ export type StatRowProps = {
 
 /**
  * Evidence row: label, large tabular value, optional caption. No boxes and
- * no icons; stats are separated by hairlines from sm up. Inside .dark-section
- * the hairline token switches to the dark hairline automatically.
+ * no icons; stats are separated by hairlines from sm up. Inside a poster
+ * scene the hairline token switches to the scene's hairline automatically.
  *
  * Values take the scene line: Druckschwarz on plain paper, the scene's paper
  * ink below a poster band (4.85:1 or more on Kalkweiß, Bogen and Beton), the

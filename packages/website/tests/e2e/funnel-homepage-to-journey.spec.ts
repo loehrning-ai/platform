@@ -87,12 +87,14 @@ test("navigation remains task-oriented on both viewports", async ({ page }) => {
         name: "Workshops",
       }),
     ).toHaveAttribute("href", "/workshops");
-    // Open Source is part of Praxis, as in the menu sheet, the footer and
-    // the tab bar.
+    // Open Source is a direct link in the header row, next to Blog.
     await expect(
       page.locator("#praxis-nav-menu").getByRole("link", {
         name: "Open Source",
       }),
+    ).toHaveCount(0);
+    await expect(
+      nav.getByRole("link", { name: "Open Source", exact: true }),
     ).toHaveAttribute("href", "/open-source");
 
     // The trigger's click handler still has to work, so exercise it on the

@@ -76,20 +76,25 @@
   /* Werkzeichnung palette, taken from the Workshop 03 deck
      (public/workshops/datenbereitschaft-fuer-ki/lib/tokens.css): calm paper,
      precise ink and one red pencil. Mennige is the only accent. Contrast
-     ratios are against Kalkweiß #f3f0e9 unless stated. */
-  --color-brand-orange: #b73a15; /* Mennige, 5.08:1 as text. .dark-section flips it to #e07050 (5.79:1 on graphit). */
-  /* The unscoped Mennige for non-text marks that must stay Mennige inside a
-     dark band (question-card bar, globe trace). Never text on graphit (3.18:1). */
+     ratios in these comments were measured on the cooler Kalkweiß #f3f0e9
+     unless stated; every dark text colour gains a little on the warmer
+     #f7f1e7 ground, and docs/plakat-pairings.md has the current values. */
+  --color-brand-orange: #b73a15; /* Mennige, 5.08:1 as text. Poster scenes swap it to their ink. */
+  /* The unscoped Mennige for non-text marks and fills that must stay Mennige
+     inside a poster scene (question-card bar, globe trace, primary button). */
   --color-mennige: #b73a15;
   /* Foreground-safe status/accent tones for light surfaces. These values also
      remain AA when the same tone is used over its own 20% tint on Bogen cards.
-     Dark sections restore the lighter display tones below. */
+     The site has no dark grounds; only the Ultramarin poster scene restores
+     lighter display tones below. */
   --color-brand-sand: #604b36;
   --color-brand-amber: #78350f;
   --color-destructive: #991b1b;
 
-  /* Paper, ink and slate. Elevation is tone: Bogen (+1), Kalkweiß (0), Beton (-1). */
-  --color-background: #f3f0e9; /* Kalkweiß: page ground */
+  /* Paper, ink and slate. Elevation is tone: Bogen (+1), Kalkweiß (0), Beton (-1).
+     The warm cream of the old site (6f2617a), not a grey: Kalkweiß #f7f1e7,
+     Bogen #fffcf5, and a Beton that stays in the same warm family. */
+  --color-background: #f7f1e7; /* Kalkweiß: page ground */
   --color-foreground: #121212; /* Druckschwarz: text, strokes, ink button, 16.46:1 */
   --color-muted: #655c54; /* Schiefer hell: captions, future Route labels, 5.74:1 */
   --color-muted-foreground: #4f4640; /* Schiefer: secondary text, 8.08:1 (AAA) */
@@ -102,13 +107,13 @@
   --color-border: #827970;
   --color-track: #d4cec5;
   --color-hairline: #d4cec5;
-  --color-card: #f9f7f2; /* Bogen: raised sheet (question card, previews) */
-  --color-card-hover: #efebe2;
-  --color-inset: #e5e4e2; /* Beton: recessed bands (decision lab, code, table heads) */
+  --color-card: #fffcf5; /* Bogen: raised sheet (question card, previews) */
+  --color-card-hover: #f0e7d7;
+  --color-inset: #ece5d8; /* Beton: recessed bands (decision lab, code, table heads) */
   --color-pass: #205b46; /* Befund grün: always with the pass icon and a word */
 
   /* Alias of Bogen kept for existing classes (.berlin-hero, bg-paper). */
-  --color-paper: #f9f7f2;
+  --color-paper: #fffcf5;
   /* Retired risograph accents. Still defined because home, books and
      open-source routes use them; new code and the learning surfaces
      (courses, workshops, demos) do not. */
@@ -122,15 +127,25 @@
   /* Mennige scale */
   --color-kupfer: #b73a15;
   --color-kupfer-dark: #97300f; /* Mennige tief: hover and pressed; Mennige text on Beton (6.02:1) */
-  --color-kupfer-light: #e07050; /* accent text on graphit, 5.79:1 */
+  --color-kupfer-light: #e07050; /* marks and bars only: 3.18:1 on paper, never text */
   --color-kupfer-mist: #f5e8e2; /* retired on learning surfaces */
 
-  /* Graphit band (scoped via .dark-section): cover bands and the footer only. */
-  --color-dark-bg: #141414;
-  --color-dark-fg: #f2f1ee;
-  --color-dark-muted: #a8a097;
-  --color-dark-border: rgba(242, 241, 238, 0.4);
-  --color-dark-track: rgba(242, 241, 238, 0.16);
+  /* No black grounds. The graphit band (.dark-section, --color-dark-*) is
+     retired: the site is paper with pastel blocks, and a surface that was
+     graphit (footer, terminal, log, engine canvas) is now paper, Beton or a
+     pastel wash with ink text. Himmel-Wash is a tinted band or panel ground:
+     brand-sky at 28% over the old Kalkweiß, solid so every text token
+     resolves for axe (ink 15.1:1, Schiefer 7.4:1, Mennige 4.68:1, Kante
+     3.45:1). */
+  --color-sky-wash: #dde9ef;
+  /* Pfirsich-Wash, the footer ground: brand-peach at 28% over Bogen, solid.
+     Warm, so the footer never merges with a sky, acid or paper band above
+     it (ink 15.9:1, Schiefer 7.8:1, Mennige tief 6.5:1, Mennige 4.90:1,
+     Kante 3.61:1). */
+  --color-peach-wash: #ffe8d7;
+  /* Himmel-Blatt: brand-sky at 40% over Bogen, the pastel sheet of a
+     QuestionCard or a formerly graphit panel (ink 15.4:1, Schiefer 7.6:1). */
+  --color-sky-sheet: #d9ecf6;
 
   /* Functional */
   --color-risk-green: #14532d;
@@ -247,7 +262,7 @@
   --color-kreide: #ecebdd; /* IDEA ground; never a card on paper (1.05) */
   --color-kobalt: #2e4d90; /* IDEA ink, 6.78 on Kreide, 7.15 */
   --color-himbeere: #c94a7f; /* IDEA mid, display only: 3.67 on Kreide */
-  --color-himbeere-tief: #b6386f; /* Himbeere at text size: 4.62 on Kreide, 4.88; never on Beton (4.37) */
+  --color-himbeere-tief: #b6386f; /* Himbeere at text size: 4.62 on Kreide, 4.94; never on Beton (4.43) */
   --color-sand: #e6d3af; /* Bloom ground */
   --color-aubergine: #3b1f45; /* Bloom ink, 9.74 on Sand, 12.57 */
   --color-terrakotta: #d1733d; /* Bloom mid, shapes only: 2.30 on Sand */
@@ -262,8 +277,13 @@
      so one component reads correctly on paper and in every scene. Never use
      an /alpha modifier on a scene-* utility: Tailwind writes the color-mix
      fallback with the :root value, which is wrong inside a scope. */
-  --color-scene-ground: #f3f0e9; /* band or cover ground */
-  --color-scene-ink: #121212; /* the one strong pair: type, buttons, ring */
+  --color-scene-ground: #f7f1e7; /* band or cover ground */
+  --color-scene-ink: #121212; /* the one strong pair: type, outlines, ring */
+  /* The filled scene button and its label. Never the ink when the ink is
+     dark: an Aubergine or Druckschwarz fill reads as a black button. Paper
+     default: the old site's Kobalt with a Bogen label (7.72:1). */
+  --color-scene-button: #2747b5;
+  --color-scene-button-text: #fffcf5;
   --color-scene-mid: #b73a15; /* decorative shapes, never text */
   --color-scene-mark: #b73a15; /* a shape that carries meaning, 3:1 or more on the ground */
   --color-scene-accent-text: #97300f; /* text in the mid hue, 4.5:1 or more */
@@ -362,9 +382,8 @@
   /* One focus treatment for the whole site: a 3px Mennige ring held 2px off
      the element, drawn instantly. The gap keeps it legible around a
      Mennige-filled button, where ring and fill share a hue. Mennige is 5.08:1
-     on Kalkweiß, 5.40:1 on Bogen and 3.24:1 against an adjacent ink button;
-     .dark-section swaps it to #e07050 at 5.79:1 on graphit, and each
-     .plakat-* scene swaps it to its ink (Butter 10.97, Kobalt 6.78, Aubergine
+     on Kalkweiß, 5.40:1 on Bogen and 4.68:1 on the Himmel-Wash footer, and
+     each .plakat-* scene swaps it to its ink (Butter 10.97, Kobalt 6.78, Aubergine
      9.74, Creme 4.80 on the scene ground). A control at a scene edge uses an
      inset ring, so the ring never lands on paper. The offset stays at 2px
      because several bordered grids clip their children with
@@ -452,13 +471,6 @@
     mix-blend-mode: multiply;
   }
 
-  .bg-grid-dark {
-    background-image:
-      linear-gradient(rgba(243, 240, 233, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(243, 240, 233, 0.04) 1px, transparent 1px);
-    background-size: 64px 64px;
-  }
-
   .glow-orange {
     box-shadow: 0 0 60px -12px rgba(196, 67, 26, 0.25);
   }
@@ -507,37 +519,6 @@
     text-decoration-color: currentColor;
   }
 
-  /* Graphit band: CSS custom property scoping for the cover band and the
-     footer. Every token keeps AA on #141414; the accent flips to #e07050
-     (5.79:1) because Mennige text would be 3.18:1 there. A filled accent
-     button inside this scope takes dark ink (text-dark-bg) or becomes a paper
-     button: white on #e07050 is 3.18:1 and fails. */
-  .dark-section {
-    --color-background: #141414;
-    --color-foreground: #f2f1ee; /* 16.31:1 */
-    --color-muted-foreground: #d4cec5; /* Leinen, 11.79:1 */
-    --color-muted: #a8a097; /* 7.14:1 */
-    --color-brand-orange: #e07050;
-    --color-brand-sand: #d8c29e;
-    --color-brand-amber: #ffc857;
-    --color-kupfer: #e07050;
-    --color-destructive: #ff7a59;
-    --color-pass: #6fbf9a; /* 8.42:1 */
-    --color-risk-green: #4ade80;
-    --color-risk-yellow: #facc15;
-    --color-risk-red: #ff7a59;
-    --color-border: rgba(242, 241, 238, 0.4); /* about 3.52:1, control edge */
-    --color-track: rgba(242, 241, 238, 0.16);
-    --color-hairline: rgba(242, 241, 238, 0.16);
-    --color-card: #1c1b1a;
-    --color-card-hover: #242321;
-    --color-inset: #1c1b1a;
-    /* The Kopflinie inside a graphit band stays the band's ink. */
-    --color-scene-line: #f2f1ee;
-    background-color: var(--color-background);
-    color: var(--color-foreground);
-  }
-
   /* Plakat scenes: one ground, one ink, one mid. Every text token is the ink
      (no muted tier on a poster), every control edge is the ink, hairlines are
      decorative (below 2:1). The focus ring (--color-brand-orange) is the ink.
@@ -573,6 +554,8 @@
     --color-scene-mark: #fceeaf;
     --color-scene-accent-text: #fceeaf;
     --color-scene-line: #fceeaf;
+    --color-scene-button: #fceeaf; /* Butter fill, Ultramarin label 10.97 */
+    --color-scene-button-text: #152a79;
     background-color: var(--color-background);
     color: var(--color-foreground);
   }
@@ -599,6 +582,8 @@
     --color-scene-mark: #c94a7f;
     --color-scene-accent-text: #b6386f; /* 4.62 */
     --color-scene-line: #2e4d90;
+    --color-scene-button: #2e4d90; /* Kobalt fill, Kreide label 6.78 */
+    --color-scene-button-text: #ecebdd;
     background-color: var(--color-background);
     color: var(--color-foreground);
   }
@@ -625,6 +610,10 @@
     --color-scene-mark: #3b1f45;
     --color-scene-accent-text: #964305; /* 4.61 */
     --color-scene-line: #3b1f45;
+    /* Never an Aubergine fill: it reads as a black button. Terrakotta tief
+       with a Bogen label (6.61), 4.61 against the Sand ground. */
+    --color-scene-button: #964305;
+    --color-scene-button-text: #fffcf5;
     background-color: var(--color-background);
     color: var(--color-foreground);
   }
@@ -664,19 +653,10 @@
     --color-scene-mark: #ebb16a; /* 3.24 */
     --color-scene-accent-text: #f0e1ca;
     --color-scene-line: #f0e1ca;
+    --color-scene-button: #f0e1ca; /* Creme fill, Rost label 4.80 */
+    --color-scene-button-text: #944d44;
     background-color: var(--color-background);
     color: var(--color-foreground);
-  }
-
-  /* Footer: the graphit band set in Butter. The ring stays #e07050 (5.79). */
-  .dark-section.plakat-footer {
-    --color-foreground: #fceeaf; /* Butter on graphit 15.78 */
-    --color-muted-foreground: #fceeaf;
-    --color-muted: #fceeaf;
-    --color-hairline: rgba(252, 238, 175, 0.16); /* about #39372d, 1.54, decor */
-    --color-track: rgba(252, 238, 175, 0.16);
-    --color-border: rgba(252, 238, 175, 0.4); /* about 3.45, control edge */
-    --color-scene-line: #fceeaf;
   }
 
   /* Werkzeichnung helpers. Tailwind recipes live in src/components/werk. */
@@ -751,15 +731,6 @@
   /* ──────────────────────────────────────────────────────────────
      AI-Native Arbeitskurs — design primitives (Claude Design)
      ────────────────────────────────────────────────────────────── */
-
-  /* Dot-grid texture for dark sections — paired with existing .bg-dot-pattern */
-  .bg-dot-pattern-dark {
-    background-image: radial-gradient(
-      rgba(243, 240, 233, 0.06) 1px,
-      transparent 1px
-    );
-    background-size: 24px 24px;
-  }
 
   /* Marginalia track — numbered §-marker in left margin, lg+ only */
   .ai-marginalia {
@@ -1066,4 +1037,16 @@
   * {
     border-color: #e5e7eb !important;
   }
+}
+
+/* Code blocks in any prose (lessons, book chapters, simulators): ink on
+   Beton, never the typography plugin's near-black <pre>.
+   Unlayered on purpose, so it wins over the plugin's layered prose colour
+   themes (prose-stone, prose-neutral, prose-invert) without !important.
+   Ink on Beton is 14.9:1. */
+.prose {
+  --tw-prose-pre-bg: var(--color-inset);
+  --tw-prose-pre-code: var(--color-foreground);
+  --tw-prose-invert-pre-bg: var(--color-inset);
+  --tw-prose-invert-pre-code: var(--color-foreground);
 }

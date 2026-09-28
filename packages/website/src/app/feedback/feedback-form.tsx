@@ -244,7 +244,7 @@ export function FeedbackForm({ locale = "de" }: { readonly locale?: Locale }) {
       <button
         type="submit"
         disabled={status === "sending"}
-        className="inline-flex min-h-12 w-full select-none items-center justify-between gap-4 border border-brand-orange bg-brand-orange px-5 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.08em] text-white hover:border-foreground hover:bg-foreground disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:w-auto sm:min-w-56"
+        className="inline-flex min-h-12 w-full select-none items-center justify-between gap-4 border border-brand-orange bg-brand-orange px-5 py-3.5 font-mono text-xs font-bold uppercase tracking-[0.08em] text-white hover:border-kupfer-dark hover:bg-kupfer-dark disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background sm:w-auto sm:min-w-56"
       >
         <span>{status === "sending" ? copy.sending : copy.submit}</span>
         <span aria-hidden="true">{status === "sending" ? "···" : "→"}</span>

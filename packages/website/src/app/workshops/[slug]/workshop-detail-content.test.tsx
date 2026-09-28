@@ -3,9 +3,33 @@ import { resolve } from "node:path";
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { getWorkshopBySlug, getWorkshops } from "@/lib/workshops";
-import { WORKSHOP_PLAKAT } from "@/lib/plakat/palettes";
+import { PLAKAT, PLAKAT_KEYS, WORKSHOP_PLAKAT } from "@/lib/plakat/palettes";
 import { expectCapsInsideScene, expectNoMennigeInScene } from "@/test/plakat-scene";
-import { phoneDescription, WorkshopDetailContent } from "./workshop-detail-content";
+import {
+  phoneDescription,
+  TITLE_HIGHLIGHT,
+  titleHighlight,
+  WorkshopDetailContent,
+} from "./workshop-detail-content";
+
+type Rgb = readonly [number, number, number];
+
+function rgb(hex: string): Rgb {
+  return [1, 3, 5].map((at) => Number.parseInt(hex.slice(at, at + 2), 16)) as unknown as Rgb;
+}
+
+function luminance(colour: Rgb): number {
+  const [r, g, b] = colour.map((value) => {
+    const c = value / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+function contrast(a: Rgb, b: Rgb): number {
+  const [light, dark] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+  return (light + 0.05) / (dark + 0.05);
+}
 
 function follows(first: Element, second: Element): boolean {
   return Boolean(
@@ -104,7 +128,12 @@ describe("<WorkshopDetailContent>", () => {
       // The text reads as the full title, colon included; only the subtitle
       // moves to its own line.
       expect(h1.textContent).toBe(workshop.title);
-      expect(h1.firstChild?.textContent).toBe(head);
+      // The head is split only for the highlight band: the positioned lead,
+      // then the marked tail.
+      const lead = h1.firstElementChild;
+      const mark = h1.querySelector("span.box-decoration-clone");
+      expect(lead).toHaveClass("relative");
+      expect(`${lead?.textContent} ${mark?.textContent}`).toBe(head);
       expect(h1.querySelector("[data-title-subtitle]")?.textContent).toBe(subtitle);
       unmount();
     }
@@ -114,6 +143,48 @@ describe("<WorkshopDetailContent>", () => {
     render(<WorkshopDetailContent workshop={w03} locale="de" />);
     const h1 = screen.getByRole("heading", { level: 1, name: w03.title });
     expect(h1.querySelector("[data-title-subtitle]")).toBeNull();
+  });
+
+  it("marks a short phrase at the end of the H1, never two full lines", () => {
+    expect(titleHighlight("ESG-Berichte mit KI")).toEqual({
+      lead: "ESG-Berichte",
+      highlight: "mit KI",
+    });
+    expect(titleHighlight("Sind deine Daten bereit für KI?")).toEqual({
+      lead: "Sind deine Daten bereit",
+      highlight: "für KI?",
+    });
+    expect(titleHighlight("Can AI predict the future?")).toEqual({
+      lead: "Can AI predict",
+      highlight: "the future?",
+    });
+    // A long last pair keeps only its last word on the band.
+    expect(titleHighlight("Kann KI die Zukunft vorhersagen?")).toEqual({
+      lead: "Kann KI die Zukunft",
+      highlight: "vorhersagen?",
+    });
+    expect(titleHighlight("Workshop Eins")).toEqual({
+      lead: "Workshop",
+      highlight: "Eins",
+    });
+    expect(titleHighlight("Workshop")).toEqual({ lead: "Workshop", highlight: "" });
+  });
+
+  it("keeps every scene's title band readable and visible", () => {
+    for (const key of PLAKAT_KEYS) {
+      const { ground, ink, mid } = PLAKAT[key];
+      const band = TITLE_HIGHLIGHT[key];
+      expect(band.colorVar).toBe("--color-scene-mid");
+      // The browser composites the colour-mix over the ground in sRGB.
+      const alpha = band.opacity / 100;
+      const painted = rgb(mid).map((value, channel) =>
+        Math.round(value * alpha + rgb(ground)[channel] * (1 - alpha)),
+      ) as unknown as Rgb;
+      // Display type (50px and up): the 3:1 floor, with margin.
+      expect(contrast(rgb(ink), painted), `${key} ink on its band`).toBeGreaterThanOrEqual(3.4);
+      // A band that matches the ground would mark nothing.
+      expect(contrast(rgb(ground), painted), `${key} band on its ground`).toBeGreaterThanOrEqual(1.35);
+    }
   });
 
   it("aligns the case figures when a label wraps", () => {
@@ -226,6 +297,14 @@ describe("<WorkshopDetailContent>", () => {
         // h1 at the band's body size.
         expect(h1).toHaveClass("poster-title", "text-scene-ink");
         expect(h1.style.getPropertyValue("--fit")).not.toBe("");
+        // The tail of the title sits on a marker band in the scene's mid
+        // colour; the words keep the scene ink (text-foreground in scope).
+        const mark = h1.querySelector("span.box-decoration-clone") as HTMLElement;
+        expect(mark).not.toBeNull();
+        expect(mark.style.backgroundImage).toContain("var(--color-scene-mid)");
+        expect(mark.style.backgroundSize).toBe("100% 0.75em");
+        expect(mark).toHaveClass("text-foreground");
+        expect(workshop.title.startsWith(`${h1.firstElementChild?.textContent} ${mark.textContent}`)).toBe(true);
         const subtitle = h1.querySelector("[data-title-subtitle]");
         if (subtitle) expect(subtitle).toHaveClass("text-[1.0625rem]", "tracking-normal");
         // Type budget: one caps line, the title and 17px body. No question
@@ -244,12 +323,16 @@ describe("<WorkshopDetailContent>", () => {
             expect(name, "a translucent colour in the band").not.toMatch(/(^|:)(text|decoration|border|bg|fill|stroke)-[\w-]+\/\d+$/);
           }
         }
-        // Scene buttons: the ink fill and the ink outline, never Mennige.
+        // Scene buttons: the scene's button pair and the ink outline, never
+        // Mennige, and never an ink fill: Bloom's Aubergine ink would read
+        // as a black button on the Sand poster.
         const [primary, secondary] = within(band)
           .getAllByRole("link")
           .filter((link) => !link.hasAttribute("data-cover-back"));
-        expect(primary).toHaveClass("bg-scene-ink", "text-scene-ground", "min-h-12");
+        expect(primary).toHaveClass("bg-scene-button", "text-scene-button-text", "min-h-12");
+        expect(primary).not.toHaveClass("bg-scene-ink");
         expect(secondary).toHaveClass("border-scene-ink", "text-scene-ink", "min-h-12");
+        expect(secondary.className).not.toMatch(/(^|\s)hover:bg-scene-ink(\s|$)/);
         // The poster: the lg art and the phone poster row (16:9, full
         // bleed), decorative, numbered.
         const posters = band.querySelectorAll("svg[data-poster]");

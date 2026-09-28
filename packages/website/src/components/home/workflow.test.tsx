@@ -29,7 +29,7 @@ describe("Ressourcen section (Workflow)", () => {
         name: "Material zum Nachlesen und Ausprobieren",
       }),
     ).toBeInTheDocument();
-    // No kicker; the caption is a fact.
+    // No kicker; the acid pill is a fact.
     expect(screen.queryByText("Ressourcen")).not.toBeInTheDocument();
     expect(screen.getByText("5 Bereiche · ohne Konto")).toBeInTheDocument();
   });
@@ -84,7 +84,15 @@ describe("Ressourcen section (Workflow)", () => {
     });
   });
 
-  it("gives each destination one path on a phone and never truncates a row", async () => {
+  it("stacks the account band below 360px instead of squeezing the sentence", () => {
+    render(<Workflow />);
+    const band = screen.getByRole("link", { name: /Zum Konto/ }).parentElement;
+    // A rem query: it sorts after max-lg in Tailwind's cascade (a px query
+    // would sort before it and lose), and it follows the browser font size.
+    expect(band).toHaveClass("max-[22.5rem]:grid-cols-1");
+  });
+
+  it("gives each destination one path on a phone and never truncates a card", async () => {
     const { BOOK_RAIL_SHOWN } = await import("./mobile-rails");
     const { container } = render(<Workflow />);
     const rowFor = (href: string) =>
@@ -99,15 +107,36 @@ describe("Ressourcen section (Workflow)", () => {
       expect(rowFor(href)).not.toHaveClass("max-lg:hidden");
     }
     expect(container.innerHTML).not.toContain("max-lg:truncate");
-    // Every row carries one short line at every width (one line at 320px);
-    // no desktop-only body repeats it.
+    // Every card carries its one short line at every width; no desktop-only
+    // body repeats it.
     const short = screen.getByText("KI und Recht, mit Quellen");
     expect(short).not.toHaveClass("lg:hidden");
     expect(short.className).not.toMatch(/truncate|line-clamp/);
     expect(screen.queryByText("KI und Recht, mit Primärquellen.")).toBeNull();
-    // Resource names sit a step under the course titles (18px, not 24px).
+    // Resource names are the pastel cards' 20px title (16px on a phone),
+    // never a section-sized heading.
     const name = screen.getByText("Blog");
-    expect(name).toHaveClass("text-lg");
+    expect(name).toHaveClass("text-xl", "max-lg:text-base");
     expect(name).not.toHaveClass("text-fluid-h3");
+  });
+});
+
+describe("Ressourcen board: the paper look", () => {
+  it("sets each destination on its own pastel card with an icon tile", () => {
+    const { container } = render(<Workflow />);
+    const cards = container.querySelectorAll("[data-home-resource-card]");
+    expect(cards).toHaveLength(5);
+    const tones = Array.from(cards).map((card) =>
+      card.className.match(/bg-brand-[a-z]+\/\d+/)?.[0],
+    );
+    expect(new Set(tones).size).toBe(5);
+    for (const card of cards) {
+      expect(card.className).toContain("rounded-[1.5rem]");
+      expect(card.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
+    }
+    // The section itself is a peach wash, never a dark band.
+    expect(screen.getByTestId("ressourcen-section")).toHaveClass(
+      "bg-brand-peach/20",
+    );
   });
 });

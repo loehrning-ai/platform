@@ -38,7 +38,12 @@ describe("Werkzeichnung primitives: source contract", () => {
     expect(source).not.toMatch(/\bfont-black\b/);
     expect(source).not.toMatch(/\buppercase\b/);
     expect(source).not.toMatch(/\btransition-all\b/);
-    expect(source).not.toMatch(/\bbg-brand-(?:acid|sky|pink|peach|cobalt|teal)\b/);
+    // Kobalt is the old site's action fill (the `ink` ButtonLink variant);
+    // the other risograph blocks stay out of the primitives.
+    expect(source).not.toMatch(/\bbg-brand-(?:acid|sky|pink|peach|teal)\b/);
+    // No black grounds in any primitive, not even a pressed chip or a hover.
+    // Ink stays for text, lines and the small route marks.
+    expect(source).not.toMatch(/\b(?:aria-pressed|hover):bg-foreground\b|\bbg-(?:black|graphit|dark-bg)\b|dark-section/);
     expect(source).not.toMatch(/\brotate-\d/);
     expect(source).not.toMatch(/tracking-\[-0\.0[2-9]/);
     expect(source).not.toMatch(/^["']use client["']/m);
@@ -273,15 +278,18 @@ describe("QuestionCard", () => {
     expect(container.querySelector('[data-pictogram="question"]')).toHaveAttribute("aria-hidden", "true");
   });
 
-  it("scopes the dark tone with the graphit tokens", () => {
-    const { container } = render(<QuestionCard tone="dark" question="Zeige den MRR." />);
-    expect(container.querySelector("figure")).toHaveClass("dark-section", "border-dark-fg", "bg-dark-bg");
+  it("sets the sky tone as the pastel sheet, never a graphit ground", () => {
+    const { container } = render(<QuestionCard tone="sky" question="Zeige den MRR." />);
+    const figure = container.querySelector("figure");
+    expect(figure).toHaveClass("border-foreground", "bg-sky-sheet");
+    expect(figure?.className).not.toMatch(/dark-section|dark-bg|bg-foreground/);
+    expect(container.querySelector("[data-question-card-bar]")).toHaveClass("bg-mennige");
   });
 
   it("tightens only below sm in the compact density", () => {
-    const { container } = render(<QuestionCard tone="dark" density="compact" question="Zeige den MRR." />);
+    const { container } = render(<QuestionCard tone="sky" density="compact" question="Zeige den MRR." />);
     const figure = container.querySelector("figure");
-    expect(figure).toHaveClass("py-3.5", "pl-5", "sm:py-5", "sm:pl-7", "dark-section");
+    expect(figure).toHaveClass("py-3.5", "pl-5", "sm:py-5", "sm:pl-7", "bg-sky-sheet");
     expect(figure).not.toHaveClass("py-5");
     expect(container.querySelector('[data-pictogram="question"]')).toHaveClass("size-6", "sm:size-10");
     expect(container.querySelector("blockquote")).toHaveClass("text-[1.0625rem]", "sm:text-[1.375rem]");
@@ -300,15 +308,17 @@ describe("ButtonLink", () => {
     expect(link.className).not.toMatch(/rounded|shadow/);
   });
 
-  it("never pairs white text with the lightened accent on dark", () => {
+  it("fills the ink variant with the old site's Kobalt, never black", () => {
     render(
-      <ButtonLink href="/x" tone="dark">
+      <ButtonLink href="/x" variant="ink">
         Deck öffnen
       </ButtonLink>,
     );
     const link = screen.getByRole("link", { name: "Deck öffnen" });
-    expect(link).toHaveClass("bg-dark-fg", "text-dark-bg");
-    expect(link.className).not.toMatch(/bg-brand-orange|text-white/);
+    expect(link).toHaveClass("bg-brand-cobalt", "text-paper", "min-h-11");
+    expect(link.className).not.toMatch(/\bbg-(?:foreground|black|dark-bg)\b|hover:bg-muted-foreground/);
+    // The graphit tone is retired with the graphit band.
+    expect(Object.keys(BUTTON_CLASSES)).toEqual(["paper", "scene"]);
   });
 
   it("renders the scene tone as the one strong pair of a poster band", () => {
@@ -323,28 +333,34 @@ describe("ButtonLink", () => {
       </div>,
     );
     const primary = screen.getByRole("link", { name: "Deck öffnen" });
-    // Ink fill, ground label, 2px ink edge, 48px tall, 17px for the Rost floor.
+    // The scene's button fill and label, a 2px edge in the fill, 48px tall,
+    // 17px for the Rost floor. Never a scene-ink fill: Bloom's Aubergine ink
+    // reads as a black button.
     expect(primary).toHaveClass(
       "min-h-12",
       "border-2",
-      "border-scene-ink",
-      "bg-scene-ink",
-      "text-scene-ground",
+      "border-scene-button",
+      "bg-scene-button",
+      "text-scene-button-text",
       "text-[1.0625rem]",
       "font-semibold",
     );
+    expect(primary).not.toHaveClass("bg-scene-ink");
     expect(primary).not.toHaveClass("min-h-11");
     expect(primary).not.toHaveClass("text-[0.9375rem]");
     const secondary = screen.getByRole("link", { name: "Demo starten" });
     expect(secondary).toHaveClass("min-h-12", "border-2", "border-scene-ink", "bg-transparent", "text-scene-ink");
-    // Hover inverts the pair instead of tinting it.
-    expect(secondary).toHaveClass("hover:bg-scene-ink", "hover:text-scene-ground");
+    // Hover fills with the button pair instead of tinting it.
+    expect(secondary).toHaveClass("hover:bg-scene-button", "hover:text-scene-button-text");
+    expect(secondary).not.toHaveClass("hover:bg-scene-ink");
   });
 
   it("keeps every scene recipe free of Mennige, paper text, tints and alpha on scene colours", () => {
     for (const [variant, classes] of Object.entries(BUTTON_CLASSES.scene)) {
       expect(classes, variant).not.toMatch(/\b(?:bg|text|border)-(?:mennige|kupfer|brand-orange|paper|white)\b/);
-      expect(classes, variant).not.toMatch(/hover:bg-(?!scene-ink\b)/);
+      expect(classes, variant).not.toMatch(/hover:bg-(?!scene-button\b)/);
+      // No scene-ink fill at rest or on hover: a dark ink reads as black.
+      expect(classes, variant).not.toMatch(/(?:^|\s|:)bg-scene-ink\b/);
       expect(classes, variant).not.toMatch(/scene-[a-z-]+\/\d/);
       expect(classes, variant).toMatch(/\bmin-h-1[12]\b/);
       expect(classes, variant).toContain("text-[1.0625rem]");
@@ -499,19 +515,23 @@ describe("GlobeLines and CoverBand", () => {
     const markup = renderToStaticMarkup(<GlobeLines />);
     expect(markup).toContain('aria-hidden="true"');
     expect(markup).toContain('data-werk-globe-country="DE"');
-    expect(markup).toContain("#f2f1ee");
+    // Ink strokes at low opacity (currentColor, the text ink): the old line
+    // globe on paper, never the paper strokes of a graphit band.
+    expect(markup).toContain('stroke="currentColor"');
+    expect(markup).not.toContain("#f2f1ee");
     expect(markup.length).toBeLessThan(6500);
     expect(renderToStaticMarkup(<GlobeLines highlightGermany={false} />)).not.toContain("data-werk-globe-country");
   });
 
-  it("renders the cover band as an in-flow graphit section with a hidden-on-phone globe", () => {
+  it("renders the cover band as an in-flow paper section with a hidden-on-phone globe", () => {
     const { container } = render(
       <CoverBand labelledBy="cover-title">
         <h1 id="cover-title">Sind deine Daten bereit für KI?</h1>
       </CoverBand>,
     );
     const section = container.querySelector("section");
-    expect(section).toHaveClass("dark-section", "relative", "overflow-hidden");
+    expect(section).toHaveClass("bg-paper", "text-foreground", "relative", "overflow-hidden");
+    expect(section).not.toHaveClass("dark-section");
     expect(section).toHaveAttribute("aria-labelledby", "cover-title");
     expect(screen.getByRole("region", { name: "Sind deine Daten bereit für KI?" })).toBe(section);
     const globe = container.querySelector("[data-cover-globe]");

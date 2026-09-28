@@ -215,7 +215,7 @@ describe("TechnicalCourseLanding", () => {
     expectNoMennigeInScene(container);
   });
 
-  it("puts the Grundlagenpfad numeral on the Lemons band art and keeps unscened frames paper", () => {
+  it("puts the Grundlagenpfad numeral and people picture on the Lemons band and keeps unscened frames paper", () => {
     const { container, unmount } = render(
       <TechnicalCourseFrame courseId="ki-fuehrerschein">
         <TechnicalCourseHeader
@@ -229,16 +229,35 @@ describe("TechnicalCourseLanding", () => {
       </TechnicalCourseFrame>,
     );
     expect(container.firstElementChild).toHaveAttribute("data-plakat-page", "lemons");
-    expect(
-      container.querySelector("[data-plakat-art] [data-poster-numeral-text]"),
-    ).toHaveTextContent("01");
-    // Below lg the same poster is a full-bleed 16:9 row after the facts, so
-    // a phone band carries the numeral and the motif too.
-    const phoneArt = container.querySelector("[data-plakat-art-phone]");
-    expect(phoneArt).toHaveAttribute("aria-hidden", "true");
-    expect(phoneArt).toHaveClass("col-span-full", "aspect-[16/9]", "lg:hidden");
-    expect(phoneArt?.querySelector("svg[data-poster-format='landscape']")).not.toBeNull();
-    expect(phoneArt?.querySelector("[data-poster-numeral-text]")).toHaveTextContent("01");
+    // The course's people picture replaces the poster shapes: one decorative
+    // picture for both layouts, no poster art and no second copy.
+    expect(container.querySelector("[data-plakat-art]")).toBeNull();
+    expect(container.querySelector("[data-plakat-art-phone]")).toBeNull();
+    expect(container.querySelector("svg[data-poster]")).toBeNull();
+    const art = container.querySelector("[data-course-picture-art]");
+    expect(art).toHaveAttribute("aria-hidden", "true");
+    const images = container.querySelectorAll("img");
+    expect(images).toHaveLength(1);
+    expect(decodeURIComponent(images[0].getAttribute("src") ?? "")).toContain(
+      "/course-covers/ki-fuehrerschein-cover-v4.webp",
+    );
+    expect(images[0]).toHaveAttribute("alt", "");
+    expect(images[0]).toHaveClass("object-cover");
+    // The picture sits in a Butter frame (the scene ink) over a Mennige
+    // offset plate (the scene mid, a shape): 16:9 below lg, 16:10 from lg.
+    const pictureFrame = images[0].parentElement;
+    expect(pictureFrame).toHaveClass("aspect-[16/9]", "lg:aspect-[16/10]", "border-scene-ink", "overflow-hidden");
+    expect(pictureFrame?.previousElementSibling).toHaveClass("bg-scene-mid");
+    // The numeral is Butter on the band ground at every width: a tab cut
+    // into the picture's corner below lg, the poster numeral above it from
+    // lg, where the art is the text column's grid neighbour inside the
+    // 72rem track (nothing bleeds, nothing is clipped).
+    const numeral = container.querySelector("[data-course-picture-numeral]");
+    expect(numeral).toHaveTextContent("01");
+    expect(numeral).toHaveClass("text-scene-ink", "bg-scene-ground", "lg:static", "lg:bg-transparent");
+    const column = art?.parentElement;
+    expect(column).toHaveClass("col-start-2", "lg:grid");
+    expect(column?.className).not.toMatch(/lg:pr-\[max/);
     expectNoMennigeInScene(container);
     unmount();
 

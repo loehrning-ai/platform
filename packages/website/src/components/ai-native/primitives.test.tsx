@@ -43,15 +43,16 @@ describe("<SectionShell>", () => {
     expect(container.textContent).not.toContain("§");
   });
 
-  it("adds the dark-section class and an id when dark + id are set", () => {
+  it("tints the section with the pastel wash, never a dark ground, when tinted + id are set", () => {
     const { container } = render(
-      <SectionShell id="os-bundle" dark>
+      <SectionShell id="os-bundle" tinted>
         <p>x</p>
       </SectionShell>,
     );
     const section = sectionOf(container);
     expect(section.id).toBe("os-bundle");
-    expect(section.className).toContain("dark-section");
+    expect(section.className).toContain("bg-sky-wash");
+    expect(section.className).not.toMatch(/dark-section|dark-bg|bg-foreground|bg-black/);
   });
 
   it("renders the marginalia only when BOTH num and label are provided", () => {
@@ -77,7 +78,7 @@ describe("<SectionShell>", () => {
     expect(numOnly.container.textContent).not.toContain("§");
   });
 
-  it("selects the light dot-grid background when dotGrid is set without dark", () => {
+  it("selects the light dot-grid background when dotGrid is set", () => {
     const { container } = render(
       <SectionShell dotGrid>
         <p>x</p>
@@ -88,13 +89,15 @@ describe("<SectionShell>", () => {
     expect(cls).not.toContain("bg-dot-pattern-dark");
   });
 
-  it("selects the dark dot-grid background when dotGrid + dark are set", () => {
+  it("keeps the light dot-grid on a tinted section", () => {
     const { container } = render(
-      <SectionShell dotGrid dark>
+      <SectionShell dotGrid tinted>
         <p>x</p>
       </SectionShell>,
     );
-    expect(sectionOf(container).className).toContain("bg-dot-pattern-dark");
+    const cls = sectionOf(container).className;
+    expect(cls).toContain("bg-dot-pattern");
+    expect(cls).not.toContain("bg-dot-pattern-dark");
   });
 });
 

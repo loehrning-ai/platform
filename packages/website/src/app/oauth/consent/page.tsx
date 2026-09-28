@@ -234,7 +234,7 @@ function ConsentScreen({
             type="submit"
             name="entscheidung"
             value="zustimmen"
-            className={`${DECISION_BUTTON_CLASS} border-brand-orange bg-brand-orange text-white hover:border-foreground hover:bg-foreground hover:text-background`}
+            className={`${DECISION_BUTTON_CLASS} border-brand-orange bg-brand-orange text-white hover:border-kupfer-dark hover:bg-kupfer-dark`}
           >
             {copy.approve}
           </button>

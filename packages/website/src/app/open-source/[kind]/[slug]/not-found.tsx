@@ -40,7 +40,7 @@ export default async function OpenSourceArtifactNotFound() {
       </p>
       <Link
         href={localizeHref("/open-source", locale)}
-        className="mt-6 inline-flex min-h-11 items-center border border-brand-orange bg-brand-orange px-4 py-2 text-sm font-bold text-white hover:border-foreground hover:bg-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
+        className="mt-6 inline-flex min-h-11 items-center border border-brand-orange bg-brand-orange px-4 py-2 text-sm font-bold text-white hover:border-kupfer-dark hover:bg-kupfer-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
       >
         {copy.back}
       </Link>

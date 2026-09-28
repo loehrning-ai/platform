@@ -79,12 +79,19 @@ const AGENTS_EN: readonly Agent[] = [
   },
 ];
 
-// Muted text on the graphit frame (Leinen, 11.8:1 on #141414).
-const DARK_MUTED = "rgba(243,240,233,0.72)";
-const DARK_EDGE = "rgba(243,240,233,0.4)";
-const DARK_HAIRLINE = "rgba(243,240,233,0.16)";
-// Mennige on graphit (5.79:1), for the one mark in this frame: the step.
-const DARK_ACCENT = "#e07050";
+// The engine sits on the light demo sheet, never graphit: ink text, Schiefer
+// for secondary text (8.08:1 on Kalkweiß, 7.2:1 on Beton), the Kante edge for
+// controls (3.75:1) and the Leinen hairline for decoration.
+const INK = "var(--color-foreground)";
+const MUTED = "var(--color-muted-foreground)";
+const EDGE = "var(--color-border)";
+const HAIRLINE = "var(--color-hairline)";
+// Mennige, for the one mark in this frame: the current step's edge.
+const ACCENT = "var(--color-mennige)";
+// The log is a recessed Beton pane with ink type, the site's code ground.
+const LOG_GROUND = "var(--color-inset)";
+// A selected scenario and the current card take the pastel Himmel-Blatt.
+const SELECTED = "var(--color-sky-sheet)";
 
 interface LogEntry {
   readonly id: number;
@@ -246,8 +253,8 @@ function controlButtonStyle(disabled: boolean) {
     padding: "8px 14px",
     ...DEMO.label,
     background: "transparent",
-    color: disabled ? "rgba(243,240,233,0.45)" : DEMO.kalk,
-    border: `1px solid ${disabled ? DARK_HAIRLINE : DARK_EDGE}`,
+    color: disabled ? MUTED : INK,
+    border: `1px solid ${disabled ? HAIRLINE : EDGE}`,
     cursor: disabled ? "not-allowed" : "pointer",
   } as const;
 }
@@ -256,20 +263,22 @@ const replayButtonStyle = {
   padding: "8px 14px",
   ...DEMO.label,
   background: "transparent",
-  color: DEMO.kalk,
-  border: `1px solid ${DARK_EDGE}`,
+  color: INK,
+  border: `1px solid ${EDGE}`,
   cursor: "pointer",
 } as const;
 
-// Selected = filled (paper on graphit), like the site's filter chips.
+// Selected = the pastel sheet with an ink edge and a 3px ink foot, like the
+// site's filter chips; never a black fill.
 function scenarioButtonStyle(active: boolean) {
   return {
     padding: "8px 12px",
     textAlign: "left",
     ...DEMO.label,
-    background: active ? DEMO.kalk : "transparent",
-    color: active ? "#141414" : DEMO.kalk,
-    border: `1px solid ${active ? DEMO.kalk : DARK_EDGE}`,
+    background: active ? SELECTED : "transparent",
+    color: INK,
+    border: `1px solid ${active ? INK : EDGE}`,
+    borderBottomWidth: active ? 3 : 1,
     cursor: "pointer",
   } as const;
 }
@@ -376,7 +385,7 @@ export default function AgentPipelineDemo() {
         gap: 12,
         minHeight: DEMO_HEIGHT,
         fontFamily: DEMO.font.sans,
-        color: DEMO.kalk,
+        color: INK,
       }}
     >
       <style>{`
@@ -426,7 +435,7 @@ export default function AgentPipelineDemo() {
       >
         {agents.map((a, i) => {
           const activeCard = active === i;
-          const inactiveTextBase = DARK_MUTED;
+          const inactiveTextBase = MUTED;
           return (
             <div
               key={a.id}
@@ -434,12 +443,10 @@ export default function AgentPipelineDemo() {
               style={{
                 // Flat: the current step is marked by tone and a Mennige
                 // edge, with no glow and no looping pulse.
-                background: activeCard
-                  ? "rgba(243,240,233,0.08)"
-                  : "transparent",
-                color: DEMO.kalk,
+                background: activeCard ? SELECTED : "transparent",
+                color: INK,
                 padding: 12,
-                border: `1px solid ${activeCard ? DARK_ACCENT : DARK_HAIRLINE}`,
+                border: `1px solid ${activeCard ? ACCENT : HAIRLINE}`,
                 transition: "background-color 120ms, border-color 120ms",
                 position: "relative",
                 minWidth: 0,
@@ -448,7 +455,7 @@ export default function AgentPipelineDemo() {
               <div
                 style={{
                   ...DEMO.label,
-                  color: activeCard ? DEMO.kalk : DARK_MUTED,
+                  color: activeCard ? INK : MUTED,
                   fontVariantNumeric: "tabular-nums",
                 }}
               >
@@ -460,7 +467,7 @@ export default function AgentPipelineDemo() {
                   fontWeight: 700,
                   letterSpacing: "-0.005em",
                   marginTop: 3,
-                  color: DEMO.kalk,
+                  color: INK,
                 }}
               >
                 {a.n}
@@ -469,9 +476,7 @@ export default function AgentPipelineDemo() {
                 style={{
                   fontFamily: DEMO.font.mono,
                   fontSize: 12,
-                  color: activeCard
-                    ? "rgba(243,240,233,0.8)"
-                    : inactiveTextBase,
+                  color: activeCard ? INK : inactiveTextBase,
                   marginTop: 3,
                   letterSpacing: "0.04em",
                 }}
@@ -483,9 +488,7 @@ export default function AgentPipelineDemo() {
                   fontSize: 12,
                   lineHeight: 1.4,
                   marginTop: 6,
-                  color: activeCard
-                    ? "rgba(243,240,233,0.88)"
-                    : "rgba(243,240,233,0.65)",
+                  color: activeCard ? INK : MUTED,
                   overflowWrap: "anywhere",
                 }}
               >
@@ -524,7 +527,7 @@ export default function AgentPipelineDemo() {
           <span
             style={{
               ...DEMO.label,
-              color: DARK_MUTED,
+              color: MUTED,
               fontVariantNumeric: "tabular-nums",
             }}
           >
@@ -572,8 +575,8 @@ export default function AgentPipelineDemo() {
           role="region"
           aria-label={text("Agentenprotokoll", "Agent log")}
           style={{
-            background: "#070606",
-            color: DEMO.kalk,
+            background: LOG_GROUND,
+            color: INK,
             padding: 14,
             fontFamily: DEMO.font.mono,
             fontSize: 12,
@@ -582,7 +585,7 @@ export default function AgentPipelineDemo() {
             // state shows the log from its first line.
             maxHeight: 400,
             minHeight: 180,
-            borderTop: `2px solid ${DARK_EDGE}`,
+            borderTop: `2px solid ${INK}`,
           }}
         >
           <div
@@ -592,16 +595,16 @@ export default function AgentPipelineDemo() {
               alignItems: "center",
               marginBottom: 10,
               paddingBottom: 6,
-              borderBottom: `1px solid ${DARK_HAIRLINE}`,
+              borderBottom: `1px solid ${EDGE}`,
               fontSize: 12,
-              color: DARK_MUTED,
+              color: MUTED,
             }}
           >
             <span>agent.log</span>
             <span
               style={{
                 ...DEMO.label,
-                color: DARK_MUTED,
+                color: MUTED,
                 fontVariantNumeric: "tabular-nums",
               }}
             >
@@ -609,7 +612,7 @@ export default function AgentPipelineDemo() {
             </span>
           </div>
           {logs.length === 0 && active < 0 && (
-            <div style={{ color: DARK_MUTED }}>
+            <div style={{ color: MUTED }}>
               {text("Wartet auf den ersten Schritt …", "Waiting for the first step …")}
             </div>
           )}
@@ -622,22 +625,22 @@ export default function AgentPipelineDemo() {
                   flexWrap: "wrap",
                   gap: 6,
                   padding: "2px 0",
-                  color: "rgba(243,240,233,0.85)",
+                  color: INK,
                   fontVariantNumeric: "tabular-nums",
                   animation: reduced
                     ? undefined
                     : "agent-pipeline-log-in 200ms ease-out",
                 }}
               >
-                <span style={{ color: DARK_MUTED, flexShrink: 0 }}>
+                <span style={{ color: MUTED, flexShrink: 0 }}>
                   {String(i + 1).padStart(2, "0")}
                 </span>
-                <span style={{ color: DARK_MUTED, flexShrink: 0 }}>
+                <span style={{ color: MUTED, flexShrink: 0 }}>
                   {l.ts}
                 </span>
                 <span
                   style={{
-                    color: DEMO.kalk,
+                    color: INK,
                     fontWeight: 700,
                     flexShrink: 0,
                   }}
@@ -664,8 +667,9 @@ export default function AgentPipelineDemo() {
         <div
           data-agent-memo
           style={{
-            border: `1px solid ${DARK_HAIRLINE}`,
-            borderTop: `2px solid ${DARK_EDGE}`,
+            border: `1px solid ${EDGE}`,
+            borderTop: `2px solid ${INK}`,
+            background: "var(--color-card)",
             padding: 14,
             minHeight: 200,
           }}
@@ -687,21 +691,21 @@ export default function AgentPipelineDemo() {
                 flexWrap: "wrap",
               }}
             >
-              <div style={{ ...DEMO.label, color: DEMO.kalk }}>
+              <div style={{ ...DEMO.label, color: INK }}>
                 {text("Memo an die Geschäftsführung", "Memo to management")}
               </div>
               <span
                 style={{
                   fontFamily: DEMO.font.mono,
                   fontSize: 12,
-                  color: DARK_MUTED,
+                  color: MUTED,
                   fontVariantNumeric: "tabular-nums",
                 }}
               >
                 {text(...MEMO_CONTENT[scenario].meta)}
               </span>
             </div>
-            <div style={{ ...DEMO.label, color: DARK_MUTED, marginTop: 4 }}>
+            <div style={{ ...DEMO.label, color: MUTED, marginTop: 4 }}>
               {text("Empfehlung", "Recommendation")}
             </div>
             <h3
@@ -711,7 +715,7 @@ export default function AgentPipelineDemo() {
                 letterSpacing: "-0.005em",
                 margin: "2px 0 10px",
                 lineHeight: 1.3,
-                color: DEMO.kalk,
+                color: INK,
               }}
             >
               {text(...MEMO_CONTENT[scenario].recommendation)}
@@ -720,7 +724,7 @@ export default function AgentPipelineDemo() {
               style={{
                 fontSize: 13,
                 lineHeight: 1.55,
-                color: "rgba(243,240,233,0.86)",
+                color: INK,
                 flex: 1,
                 display: "flex",
                 flexDirection: "column",
@@ -757,11 +761,11 @@ export default function AgentPipelineDemo() {
 
 function MemoSection({ title, body }: { title: string; body: string }) {
   return (
-    <div style={{ borderTop: `1px solid ${DARK_HAIRLINE}`, paddingTop: 6 }}>
+    <div style={{ borderTop: `1px solid ${HAIRLINE}`, paddingTop: 6 }}>
       <div
         style={{
           ...DEMO.label,
-          color: DEMO.kalk,
+          color: INK,
           marginBottom: 2,
           fontVariantNumeric: "tabular-nums",
         }}

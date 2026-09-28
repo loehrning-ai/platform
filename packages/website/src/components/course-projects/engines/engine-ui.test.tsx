@@ -6,7 +6,7 @@ import { getCourseProjectConfig } from "@/lib/course-projects/configs";
 import { EngineFrame, VerifyPanel } from "./engine-ui";
 
 describe("engine accessibility tokens", () => {
-  it("uses light readable text for the engine heading on the dark header", () => {
+  it("sets the engine heading in ink on a light pastel header, never a black bar", () => {
     render(
       <EngineFrame
         config={getCourseProjectConfig("codex")}
@@ -15,9 +15,11 @@ describe("engine accessibility tokens", () => {
         body
       </EngineFrame>,
     );
-    expect(
-      screen.getByRole("heading", { name: "Repository Workbench" }).closest("header"),
-    ).toHaveClass("bg-foreground", "text-background");
+    const header = screen
+      .getByRole("heading", { name: "Repository Workbench" })
+      .closest("header");
+    expect(header).toHaveClass("bg-sky-sheet", "text-foreground");
+    expect(header?.className).not.toMatch(/\bbg-(?:foreground|black|graphit|dark-bg)\b/);
   });
 
   it("uses an explicit high-contrast neutral for the pending badge", () => {

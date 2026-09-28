@@ -338,7 +338,7 @@ export function LoginForm({
               type="submit"
               disabled={!supabase || !captchaToken || busy}
               aria-busy={state === "sending-otp"}
-              className="inline-flex h-12 items-center justify-center gap-2 border border-brand-orange bg-brand-orange px-5 font-mono text-xs font-bold uppercase tracking-[0.08em] text-white hover:border-foreground hover:bg-foreground disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="inline-flex h-12 items-center justify-center gap-2 border border-brand-orange bg-brand-orange px-5 font-mono text-xs font-bold uppercase tracking-[0.08em] text-white hover:border-kupfer-dark hover:bg-kupfer-dark disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               {state === "sending-otp" ? (
                 <Loader2

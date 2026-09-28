@@ -89,7 +89,7 @@ export const viewport: Viewport = {
   // report zero unless the viewport covers the whole screen. Zoom stays
   // unrestricted: no maximumScale, no userScalable.
   viewportFit: "cover",
-  themeColor: "#f3f0e9",
+  themeColor: "#f7f1e7",
   // The site has one light theme. Poster scenes are fixed colour pairs, so a
   // browser dark mode must not recolour form controls or scrollbars under
   // them. Matches `:root { color-scheme: light }` in globals.css.

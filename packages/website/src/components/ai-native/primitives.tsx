@@ -19,12 +19,14 @@ export function Marginalia({ num, label }: { num: string; label: string }) {
   );
 }
 
-/* SectionShell — light or dark section with optional marginalia track */
+/* SectionShell — paper or pastel-tinted section with optional marginalia
+   track. There is no dark section: the site has no black grounds. */
 interface SectionShellProps {
   readonly id?: string;
   readonly num?: string;
   readonly label?: string;
-  readonly dark?: boolean;
+  /** Pastel Himmel-Wash ground instead of paper (ink text stays 15.4:1). */
+  readonly tinted?: boolean;
   readonly dotGrid?: boolean;
   readonly className?: string;
   readonly innerClassName?: string;
@@ -35,7 +37,7 @@ export function SectionShell({
   id,
   num,
   label,
-  dark = false,
+  tinted = false,
   dotGrid = false,
   className,
   innerClassName,
@@ -46,8 +48,8 @@ export function SectionShell({
       id={id}
       className={cn(
         "relative py-12",
-        dark && "dark-section bg-[var(--color-dark-bg)]",
-        dotGrid && (dark ? "bg-dot-pattern-dark" : "bg-dot-pattern"),
+        tinted && "bg-sky-wash",
+        dotGrid && "bg-dot-pattern",
         className,
       )}
     >
@@ -145,11 +147,9 @@ export function ClipHeading({
 /* DrawRule — animated hairline, scaleX from 0 to 1 */
 export function DrawRule({
   className,
-  dark = false,
   delay = 0,
 }: {
   readonly className?: string;
-  readonly dark?: boolean;
   readonly delay?: number;
 }) {
   void delay;
@@ -157,8 +157,7 @@ export function DrawRule({
     <div
       style={{ transformOrigin: "left" }}
       className={cn(
-        "h-px w-full",
-        dark ? "bg-[var(--color-dark-border)]" : "bg-border",
+        "h-px w-full bg-border",
         className,
       )}
     />

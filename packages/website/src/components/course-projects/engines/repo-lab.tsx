@@ -615,16 +615,16 @@ export default function RepoLab({
 
             <section
               aria-labelledby={`${config.id}-terminal`}
-              className="min-w-0 border-2 border-foreground bg-[#11100f] text-[#f8f5ee]"
+              className="min-w-0 border-2 border-foreground bg-inset text-foreground"
             >
-              <header className="border-b border-[#f8f5ee]/25 px-4 py-3">
+              <header className="border-b border-foreground/25 px-4 py-3">
                 <h3
                   id={`${config.id}-terminal`}
-                  className="font-mono text-xs font-black uppercase tracking-[0.14em] text-[#ffb08a]"
+                  className="font-mono text-xs font-black uppercase tracking-[0.14em] text-kupfer-dark"
                 >
                   {copy.terminal}
                 </h3>
-                <p className="mt-1 text-xs leading-relaxed text-[#d7d0c4]">
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                   {copy.allowlist} {ALLOWED_COMMANDS.join(" · ")}
                 </p>
               </header>
@@ -638,17 +638,17 @@ export default function RepoLab({
                 {entries.map((entry) => (
                   <div key={entry.id} className="min-w-0">
                     {entry.command ? (
-                      <p className="break-all font-bold text-[#ffb08a]">
+                      <p className="break-all font-bold text-kupfer-dark">
                         $ {entry.command}
                       </p>
                     ) : null}
                     <pre
                       className={`mt-1 whitespace-pre-wrap break-words font-mono ${
                         entry.tone === "success"
-                          ? "text-emerald-300"
+                          ? "text-pass"
                           : entry.tone === "warning"
-                            ? "text-amber-200"
-                            : "text-[#f8f5ee]"
+                            ? "text-risk-yellow"
+                            : "text-foreground"
                       }`}
                     >
                       {entry.output}
@@ -658,7 +658,7 @@ export default function RepoLab({
               </div>
 
               <form
-                className="min-w-0 border-t border-[#f8f5ee]/25 p-3"
+                className="min-w-0 border-t border-foreground/25 p-3"
                 onSubmit={(event) => {
                   event.preventDefault();
                   executeCommand(command);
@@ -670,7 +670,7 @@ export default function RepoLab({
                 <div className="flex min-w-0 flex-col gap-2 sm:flex-row">
                   <input
                     id={commandId}
-                    className={`${LAB_INPUT} border-[#f8f5ee]/40 bg-[#1c1a18] font-mono text-[#f8f5ee] placeholder:text-[#aaa195] focus:border-[#ffb08a] sm:flex-1`}
+                    className={`${LAB_INPUT} border-border bg-card font-mono text-foreground placeholder:text-muted-foreground focus:border-brand-orange sm:flex-1`}
                     value={command}
                     autoComplete="off"
                     spellCheck={false}
@@ -686,14 +686,14 @@ export default function RepoLab({
           </div>
         </>
       ) : (
-        <section className="mt-5 min-w-0 border-2 border-foreground bg-[#11100f] p-4 text-[#f8f5ee]">
-          <h3 className="font-mono text-xs font-black uppercase tracking-[0.14em] text-[#ffb08a]">
+        <section className="mt-5 min-w-0 border-2 border-foreground bg-inset p-4 text-foreground">
+          <h3 className="font-mono text-xs font-black uppercase tracking-[0.14em] text-kupfer-dark">
             {copy.sandboxTitle}
           </h3>
-          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-[#d7d0c4]">
+          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
             {copy.sandboxBoundary}
           </p>
-          <p className="mt-2 font-mono text-xs uppercase tracking-wide text-[#aaa195]">
+          <p className="mt-2 font-mono text-xs uppercase tracking-wide text-muted-foreground">
             {copy.sandboxRuntime}
           </p>
           <button
@@ -719,25 +719,25 @@ export default function RepoLab({
             {sandboxResult ? (
               <div className="mt-5 min-w-0 space-y-5">
                 <div>
-                  <h4 className="font-mono text-xs font-black uppercase tracking-wide text-[#ffb08a]">
+                  <h4 className="font-mono text-xs font-black uppercase tracking-wide text-kupfer-dark">
                     {copy.sandboxResult}
                   </h4>
-                  <div className="mt-2 max-h-[30rem] min-w-0 space-y-4 overflow-auto border border-[#f8f5ee]/25 p-3 font-mono text-xs">
+                  <div className="mt-2 max-h-[30rem] min-w-0 space-y-4 overflow-auto border border-foreground/25 p-3 font-mono text-xs">
                     {sandboxResult.commands.map((result, index) => (
                       <div
                         key={`${result.command}-${index}`}
                         className="min-w-0"
                       >
-                        <p className="break-all font-bold text-[#ffb08a]">
+                        <p className="break-all font-bold text-kupfer-dark">
                           $ {result.command} · exit {result.exitCode}
                         </p>
                         {result.stdout ? (
-                          <pre className="mt-1 whitespace-pre-wrap break-words text-[#f8f5ee]">
+                          <pre className="mt-1 whitespace-pre-wrap break-words text-foreground">
                             {result.stdout}
                           </pre>
                         ) : null}
                         {result.stderr ? (
-                          <pre className="mt-1 whitespace-pre-wrap break-words text-amber-200">
+                          <pre className="mt-1 whitespace-pre-wrap break-words text-risk-yellow">
                             {result.stderr}
                           </pre>
                         ) : null}
@@ -746,14 +746,14 @@ export default function RepoLab({
                   </div>
                 </div>
                 <div>
-                  <h4 className="font-mono text-xs font-black uppercase tracking-wide text-[#ffb08a]">
+                  <h4 className="font-mono text-xs font-black uppercase tracking-wide text-kupfer-dark">
                     {copy.sandboxDiff}
                   </h4>
                   <pre
                     tabIndex={0}
                     role="region"
                     aria-label={copy.sandboxDiff}
-                    className="mt-2 max-h-80 max-w-full overflow-auto whitespace-pre-wrap break-words border-l-2 border-emerald-500 pl-3 font-mono text-xs text-emerald-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffb08a]"
+                    className="mt-2 max-h-80 max-w-full overflow-auto whitespace-pre-wrap break-words border-l-2 border-pass pl-3 font-mono text-xs text-pass focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange"
                   >
                     {sandboxResult.diff}
                   </pre>

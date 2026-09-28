@@ -103,7 +103,7 @@ export function SocraticTutorWidget({
               className={cn(
                 "whitespace-pre-wrap break-words px-3 py-2 text-[13.5px] leading-[1.5]",
                 message.role === "user"
-                  ? "bg-foreground text-background"
+                  ? "bg-brand-cobalt text-paper"
                   : "border border-border bg-background text-foreground",
               )}
             >

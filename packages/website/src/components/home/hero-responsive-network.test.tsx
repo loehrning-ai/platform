@@ -124,7 +124,7 @@ describe("HeroSection responsive globe", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("gives phones the horizon globe slot, never the projection tree", async () => {
+  it("gives phones the server-frame globe slot, never the desktop projection", async () => {
     setDesktopMatch(false);
     const { container } = render(
       <HeroSection
@@ -137,7 +137,8 @@ describe("HeroSection responsive globe", () => {
       await Promise.resolve();
     });
     // The phone globe has its own namespace and is hidden from lg up by CSS;
-    // the desktop projection and its surface control stay desktop-only.
+    // the desktop projection and its control stay desktop-only. The phone's
+    // own live globe arrives only after load and idle (phone-globe.test.tsx).
     const slot = container.querySelector("[data-home-globe]");
     expect(slot).not.toBeNull();
     expect(slot).toHaveClass("lg:hidden");

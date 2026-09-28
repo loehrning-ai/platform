@@ -677,7 +677,9 @@ export function WorkshopDecisionLab({
                 key="submit"
                 type="submit"
                 disabled={!hydrated}
-                className="inline-flex min-h-11 items-center justify-center bg-foreground px-5 text-[0.9375rem] font-semibold text-background transition-colors duration-[120ms] hover:bg-muted-foreground focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-brand-orange disabled:cursor-wait disabled:opacity-60"
+                // Mennige with a paper label (5.40, hover 7.14), the site's
+                // primary action; never an ink-black fill.
+                className="inline-flex min-h-11 items-center justify-center bg-mennige px-5 text-[0.9375rem] font-semibold text-paper transition-colors duration-[120ms] hover:bg-kupfer-dark focus-visible:outline focus-visible:outline-[3px] focus-visible:outline-offset-2 focus-visible:outline-brand-orange disabled:cursor-wait disabled:opacity-60"
               >
                 {config.submitLabel}
               </button>

@@ -3195,6 +3195,28 @@
   font-weight: 400;
 }
 
+/* No black grounds. The active chapter row and the panel label take the
+   pastel Himmel-Blatt with ink type (15.4:1) and Schiefer secondary text
+   (7.6:1); the brand mark is the old site's Kobalt. Nothing in this scope is
+   an ink fill any more. It sits after every ink rule above (the phone rule
+   for the active chip included), so it wins at equal specificity. */
+.ds-v8-scope .sb-mark {
+  background: var(--color-brand-cobalt);
+}
+.ds-v8-scope .sb-item.active {
+  background: var(--color-sky-sheet);
+  color: var(--color-foreground);
+}
+.ds-v8-scope .sb-item.active .sb-sub,
+.ds-v8-scope .sb-item.active .sb-time {
+  color: var(--color-muted-foreground);
+}
+.ds-v8-scope .panel-title .lab {
+  background: var(--color-sky-sheet);
+  border-color: var(--color-foreground);
+  color: var(--color-foreground);
+}
+
 /* ========================================================================
    Landing on phones (below sm): Werkzeichnung
    ------------------------------------------------------------------------
@@ -3841,3 +3863,4 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+

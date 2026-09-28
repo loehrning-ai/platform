@@ -337,7 +337,7 @@ export function RetrievalQueue({
           <button
             type="button"
             onClick={refresh}
-            className="inline-flex min-h-11 items-center justify-center border-2 border-foreground bg-foreground px-4 font-mono text-xs font-black uppercase tracking-[0.1em] text-background outline-none hover:border-brand-orange hover:text-[#ffc6aa] focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+            className="inline-flex min-h-11 items-center justify-center border-2 border-brand-cobalt bg-brand-cobalt px-4 font-mono text-xs font-black uppercase tracking-[0.1em] text-paper outline-none hover:border-brand-orange hover:text-[#ffc6aa] focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-card"
           >
             {copy.refresh}
           </button>

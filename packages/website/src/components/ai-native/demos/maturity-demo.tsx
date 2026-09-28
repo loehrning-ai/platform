@@ -252,8 +252,8 @@ const BANDS: readonly MaturityBand[] = [
       de: "Mehrere Voraussetzungen bestehen. Prüf Skalierung, Zuständigkeiten und gemeinsame Regeln für parallel genutzte Werkzeuge.",
       en: "Several prerequisites are in place. Review scaling, ownership, and shared controls for tools used in parallel.",
     },
-    accentClass: "text-[var(--color-kupfer-light)]",
-    fillClass: "bg-[var(--color-kupfer-light)]",
+    accentClass: "text-kupfer-dark",
+    fillClass: "bg-brand-orange",
   },
   {
     min: 18,
@@ -352,7 +352,7 @@ export function MaturityDemo(): JSX.Element {
                 onClick={() => pickOption(opt)}
                 className={cn(
                   "flex items-center gap-3 border border-border bg-card/60 px-4 py-3 text-left text-[14px] transition-[background-color,border-color,color,opacity,transform,box-shadow]",
-                  "hover:-translate-x-0.5 hover:-translate-y-0.5 hover:border-brand-orange hover:bg-foreground hover:text-background hover:shadow-[4px_4px_0_0_var(--color-brand-orange)]",
+                  "hover:-translate-x-0.5 hover:-translate-y-0.5 hover:border-brand-orange hover:bg-sky-sheet hover:text-foreground hover:shadow-[4px_4px_0_0_var(--color-brand-orange)]",
                 )}
               >
                 <span className="min-w-[22px] font-mono text-[12px] font-bold text-brand-orange">
@@ -370,9 +370,9 @@ export function MaturityDemo(): JSX.Element {
           transition={{ duration: 0.4, ease: EASE_OUT_EXPO }}
           className="flex flex-col gap-5"
         >
-          {/* Headline result card — dark */}
+          {/* Headline result card: the pastel Himmel-Blatt, never dark */}
           <div
-            className="dark-section border-t-4 bg-[var(--color-dark-bg)] px-6 py-7"
+            className="border-t-4 bg-sky-sheet px-6 py-7"
             style={{
               borderTopColor:
                 band.label === "Explorer"
@@ -380,7 +380,7 @@ export function MaturityDemo(): JSX.Element {
                   : band.label === "Starter"
                     ? "var(--color-brand-orange)"
                     : band.label === "Operator"
-                      ? "var(--color-kupfer-light)"
+                      ? "var(--color-kupfer-dark)"
                       : "var(--color-risk-green)",
             }}
           >
@@ -393,7 +393,7 @@ export function MaturityDemo(): JSX.Element {
               {copy.result}
             </div>
             <div className="mt-2 flex flex-wrap items-baseline gap-3">
-              <div className="text-[40px] font-bold leading-none tracking-[-0.04em] text-[var(--color-dark-fg)] md:text-[48px]">
+              <div className="text-[40px] font-bold leading-none tracking-[-0.04em] text-foreground md:text-[48px]">
                 {band.label}.
               </div>
               <div
@@ -405,10 +405,10 @@ export function MaturityDemo(): JSX.Element {
                 {total}/20
               </div>
             </div>
-            <p className="mt-3.5 max-w-[540px] text-[14px] leading-[1.55] text-[var(--color-dark-fg)]/85 md:text-[15px]">
+            <p className="mt-3.5 max-w-[540px] text-[14px] leading-[1.55] text-foreground md:text-[15px]">
               {band.description[locale]}
             </p>
-            <p className="mt-3 max-w-[540px] font-mono text-xs uppercase tracking-[0.08em] text-[var(--color-dark-muted)]">
+            <p className="mt-3 max-w-[540px] font-mono text-xs uppercase tracking-[0.08em] text-muted-foreground">
               {copy.boundary}
             </p>
           </div>
@@ -454,7 +454,7 @@ export function MaturityDemo(): JSX.Element {
             <button
               type="button"
               onClick={restart}
-              className="border border-foreground bg-transparent px-4 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-foreground transition-colors hover:bg-foreground hover:text-background"
+              className="border border-foreground bg-transparent px-4 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em] text-foreground transition-colors hover:bg-sky-sheet hover:text-foreground"
             >
               ↺ {copy.restart}
             </button>

@@ -1,7 +1,7 @@
 /**
  * credibility-strip.test.tsx (regression coverage)
  *
- * CredibilityStrip maps a fixed set of platform principles into a divider grid.
+ * CredibilityStrip maps a fixed set of platform principles into pastel cards.
  * These assertions guard the data -> DOM contract: all four principles render
  * with their label + title, the section keeps its testid anchor, and the
  * no-selling / public-vs-protected positioning copy stays intact.
@@ -54,6 +54,35 @@ describe("CredibilityStrip", () => {
     for (const dd of bodies) {
       expect(dd.className).not.toMatch(/sr-only|line-clamp/);
       expect(dd.textContent?.trim()).toMatch(/\.$/);
+    }
+  });
+
+  it("marks each card with a solid, tilted pastel block, never a control look-alike", () => {
+    const { container } = render(<CredibilityStrip />);
+    const marks = Array.from(
+      container.querySelectorAll("dl > div > span[aria-hidden='true']"),
+    );
+    expect(marks).toHaveLength(4);
+    const fills = marks.map(
+      (mark) => mark.className.match(/\bbg-brand-(acid|sky|pink|peach)\b/)?.[1],
+    );
+    // A different solid colour per card, each standing off its card's tone.
+    expect(fills).toEqual(["pink", "sky", "acid", "peach"]);
+    for (const mark of marks) {
+      expect(mark.className).toMatch(/(?:^|\s)-?rotate-(?:6|12)\b/);
+      // No round or outlined markers: those read as radio buttons and
+      // checkboxes.
+      expect(mark.className).not.toMatch(/rounded-full|\bborder\b|bg-paper/);
+    }
+  });
+
+  it("keeps every word inside its card at 320px", () => {
+    const { container } = render(<CredibilityStrip />);
+    const grid = container.querySelector("dl");
+    // One column below 22.5rem (a rem query, so it outranks max-lg).
+    expect(grid?.className).toContain("max-[22.5rem]:grid-cols-1");
+    for (const dd of container.querySelectorAll("dd")) {
+      expect(dd.className).toContain("hyphens-auto");
     }
   });
 
