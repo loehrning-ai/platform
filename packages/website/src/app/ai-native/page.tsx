@@ -64,7 +64,7 @@ const LANDING_COPY = {
     outcomesHeading: "Was du danach kannst",
     outcomes: [
       { title: "Messen, ob sich KI für eine Aufgabe netto lohnt, und die richtigen Aufgaben zuerst wählen" },
-      { title: "Dauerhaften Kontext schlank halten und Werkzeugrechte so vergeben, dass Prompt-Injection ins Leere läuft" },
+      { title: "Dauerhaften Kontext schlank halten und Werkzeugrechte so vergeben, dass Prompt-Injection wenig anrichten kann" },
       { title: "Zitierte Antworten gegen Quellen prüfen und veraltete Notizen erkennen" },
       { title: "Einen Ablauf mit Prüfungen, Fehlerpfad und Freigabe testen und einen Pilot mit Stoppkriterium planen" },
     ],
@@ -79,7 +79,7 @@ const LANDING_COPY = {
     boundarySummary: "Zugang, Nachweis und Herkunft",
     boundary: [
       "Der Kurs braucht ein kostenloses Lernkonto, ohne Zahlungsdaten.",
-      "Live-Übungen nutzen ein echtes Modell, wenn der Live-Modus verfügbar ist. Sonst siehst du aufgezeichnete, als solche gekennzeichnete Beispiele.",
+      "Die Live-Übung nutzt ein echtes Modell, wenn der Live-Modus verfügbar ist. Sonst siehst du aufgezeichnete, als solche gekennzeichnete Beispiele.",
       "Der Kurs erklärt keine einzelnen Produkte. Wie du Werkzeuge einrichtest, steht in deren Dokumentation; die Prinzipien hier gelten für jedes.",
       "Die lokale Teilnahmebestätigung beruht auf gespeichertem Fortschritt und Selbstprüfung und ist keine externe Prüfung, Akkreditierung oder Konformitätsbestätigung.",
     ],
@@ -116,7 +116,7 @@ const LANDING_COPY = {
     outcomesHeading: "What you can do afterwards",
     outcomes: [
       { title: "Measure whether AI pays off net for a task and pick the right tasks first" },
-      { title: "Keep persistent context lean and grant tool permissions so prompt injection goes nowhere" },
+      { title: "Keep persistent context lean and grant tool permissions so prompt injection can do little damage" },
       { title: "Check cited answers against sources and spot stale notes" },
       { title: "Test a workflow with checks, a fallback path and approval, and plan a pilot with a stop criterion" },
     ],
@@ -131,7 +131,7 @@ const LANDING_COPY = {
     boundarySummary: "Access, record, and provenance",
     boundary: [
       "The course needs a free learning account, with no payment details.",
-      "Live exercises use a real model when live mode is available. Otherwise you see recorded examples, labelled as such.",
+      "The live exercise uses a real model when live mode is available. Otherwise you see recorded examples, labelled as such.",
       "The course does not teach individual products. How to set up a tool is in its documentation; the principles here apply to any of them.",
       "The local completion record rests on stored progress and self-review and is not an external examination, accreditation or compliance finding.",
     ],

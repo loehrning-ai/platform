@@ -19,7 +19,7 @@
       "number": 2,
       "title": "Context and tools",
       "subtitle": "Lean context, least privilege",
-      "description": "You decide what a model should always know and grant tool permissions so that prompt injection goes nowhere.",
+      "description": "You decide what a model should always know and grant tool permissions so that prompt injection can do little damage.",
       "durationMinutes": 15,
       "lessonCount": 2,
       "premiumGated": false,

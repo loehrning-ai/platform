@@ -24,7 +24,7 @@
         "Baseline"
       ],
       "concept": {
-        "body": "Zwei kontrollierte Experimente, zwei gegensätzliche Ergebnisse:\n\n| Studie | Aufgabe | Mit KI |\n|---|---|---|\n| Noy und Zhang 2023, 453 Fachkräfte | kurze Standardtexte | 40 % schneller, Qualität 18 % besser |\n| METR 2025, 16 erfahrene Entwickler | Aufgaben im eigenen, großen Code | 19 % langsamer |\n\nDie Entwickler der METR-Studie erwarteten vorher 24 % Zeitgewinn und schätzten ihn auch hinterher noch auf 20 %. **Gefühl und Messung lagen weit auseinander.**\n\nDer Unterschied liegt in der Aufgabe: Wie lange dauern Prüfen und Nacharbeiten? Darum misst du, bevor du entscheidest. Netto-Zeit ist Entwurf plus Prüfung plus Nacharbeit, verglichen mit derselben Aufgabe ohne KI.",
+        "body": "Zwei kontrollierte Experimente, zwei gegensätzliche Ergebnisse:\n\n| Studie | Aufgabe | Mit KI |\n|---|---|---|\n| Noy und Zhang 2023, 453 Fachkräfte | berufliche Schreibaufgaben, z. B. Pressemitteilung | 40 % schneller, Qualität 18 % besser |\n| METR 2025, 16 erfahrene Entwickler | Aufgaben im eigenen, großen Code | 19 % langsamer |\n\nDie Entwickler der METR-Studie erwarteten vorher 24 % Zeitgewinn und schätzten ihn auch hinterher noch auf 20 %. **Gefühl und Messung lagen weit auseinander.**\n\nDer Unterschied liegt in der Aufgabe: Wie lange dauern Prüfen und Nacharbeiten? Darum misst du, bevor du entscheidest. Netto-Zeit ist Entwurf plus Prüfung plus Nacharbeit, verglichen mit derselben Aufgabe ohne KI.",
         "takeaway": "Miss die Netto-Zeit: Entwurf, Prüfung und Nacharbeit gegen dieselbe Aufgabe ohne KI.",
         "sources": [
           {
@@ -192,7 +192,7 @@
               "id": "forty",
               "label": "Finde eine Einstellung mit mindestens 40 % Ersparnis pro Durchgang.",
               "when": "saved >= base * 0.4",
-              "insight": "Das entspricht dem Effekt bei Standardtexten bei Noy und Zhang. Typisch für kurze, schnell prüfbare Texte."
+              "insight": "Das entspricht dem Effekt bei Noy und Zhang. Typisch für Texte, die du schnell prüfen kannst."
             },
             {
               "id": "rework",
@@ -241,7 +241,7 @@
             },
             {
               "id": "b",
-              "text": "Die Aufgaben unterscheiden sich: Kurze Standardtexte sind schnell geprüft, Änderungen in großem eigenem Code nicht.",
+              "text": "Die Aufgaben unterscheiden sich: Kurze Schreibaufgaben sind schnell geprüft, Änderungen in großem eigenem Code nicht.",
               "correct": true
             },
             {

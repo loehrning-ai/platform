@@ -212,7 +212,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Cut off at least one of the three and an injected instruction goes nowhere.",
+    "explanation": "Without one of the three, an injected instruction can no longer leak data. That limits the damage; injection itself cannot be reliably prevented.",
     "version": 1,
     "active": true
   },

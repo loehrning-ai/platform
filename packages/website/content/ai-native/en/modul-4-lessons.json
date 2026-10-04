@@ -158,7 +158,7 @@
           "goal": "passed == total && minutes <= 60",
           "successTitle": "Run passed: safeguarded without reading everything by hand",
           "successBody": "Fixed checks catch what rules can detect. Approval catches what only a person can. Nobody has to read every email.",
-          "goalMissHint": "Every case passes, but review time is too high. Which building block makes the automatic checks needlessly expensive?",
+          "goalMissHint": "Every case passes, but review time is too high. Which building block costs the most time, even though fixed checks and approval catch the same errors?",
           "note": "Invented emails and assumptions. Your tool names the building blocks differently; the logic stays."
         }
       },
@@ -226,7 +226,7 @@
         "Fixed costs"
       ],
       "concept": {
-        "body": "Whether a model runs on your own hardware or at a provider comes down to three questions:\n\n1. **Which data?** If a cloud provider processes personal data on your behalf, you need a data processing agreement (GDPR Art. 28). If the data goes to a country outside the EU, you also need a basis under Chapter V (GDPR Art. 44 et seq.). On your own hardware there is no processor; the other duties remain.\n2. **How much?** The cloud charges per use; locally you mainly pay once for hardware plus operation. Fixed costs only pay off with enough use.\n3. **How good?** Models for typical in-house hardware are usually smaller than large cloud models. Only a test with your own cases shows whether that is enough.\n\nThe calculator uses your assumptions. Plug in real quotes before you decide.",
+        "body": "Whether a model runs on your own hardware or at a provider comes down to three questions:\n\n1. **Which data?** If a cloud provider processes personal data on your behalf, you need a data processing agreement (GDPR Art. 28). If the data goes to a country outside the EU and EEA, you also need a basis under Chapter V (GDPR Art. 44 et seq.). On your own hardware there is no processor; the other duties remain.\n2. **How much?** The cloud charges per use; locally you mainly pay once for hardware plus operation. Fixed costs only pay off with enough use.\n3. **How good?** Models for typical in-house hardware are usually smaller than large cloud models. Only a test with your own cases shows whether that is enough.\n\nThe calculator uses your assumptions. Plug in real quotes before you decide.",
         "takeaway": "First the contract, then the maths, then the test with your own cases.",
         "sources": [
           {
@@ -364,6 +364,12 @@
               "tone": "bad",
               "title": "Cloud without a contract is out",
               "body": "Special-category data does not go to a provider without a contract. Local or not at all, and involve data protection early."
+            },
+            {
+              "when": "data == 3",
+              "tone": "warn",
+              "title": "A contract alone is not enough",
+              "body": "Health data also needs an exception under GDPR Art. 9(2) and often a data protection impact assessment (Art. 35). Settle that with data protection before you compare costs."
             },
             {
               "when": "data == 2 && dpa == 0",

@@ -212,7 +212,7 @@
         "isCorrect": false
       }
     ],
-    "explanation": "Trenne mindestens eins der drei ab, dann läuft eine eingeschleuste Anweisung ins Leere.",
+    "explanation": "Fehlt eins der drei, kann eine eingeschleuste Anweisung keine Daten mehr abfließen lassen. Den Schaden begrenzt das, verhindern lässt sich Injection nicht sicher.",
     "version": 1,
     "active": true
   },

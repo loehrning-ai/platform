@@ -19,7 +19,7 @@
       "number": 2,
       "title": "Kontext und Werkzeuge",
       "subtitle": "Schlanker Kontext, minimale Rechte",
-      "description": "Du entscheidest, was ein Modell dauerhaft wissen soll, und vergibst Werkzeugrechte so, dass Prompt-Injection ins Leere läuft.",
+      "description": "Du entscheidest, was ein Modell dauerhaft wissen soll, und vergibst Werkzeugrechte so, dass Prompt-Injection wenig anrichten kann.",
       "durationMinutes": 15,
       "lessonCount": 2,
       "premiumGated": false,

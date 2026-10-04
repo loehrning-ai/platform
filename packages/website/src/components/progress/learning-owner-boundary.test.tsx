@@ -163,7 +163,7 @@ describe("<LearningOwnerBoundary>", () => {
 
   it.each([
     "/ai-native/glossar",
-    "/ai-native/demos",
+    "/demos",
     "/buecher/ki-landschaft/03_reifegrad_ueberblick",
     "/kurse/open-source/data-infrastructure/verifizierung",
   ])(

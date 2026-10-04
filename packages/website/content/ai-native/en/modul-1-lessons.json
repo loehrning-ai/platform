@@ -24,7 +24,7 @@
         "Baseline"
       ],
       "concept": {
-        "body": "Two controlled experiments, two opposite results:\n\n| Study | Task | With AI |\n|---|---|---|\n| Noy and Zhang 2023, 453 professionals | short routine writing | 40% faster, quality 18% higher |\n| METR 2025, 16 experienced developers | tasks in their own large codebases | 19% slower |\n\nBefore the METR study the developers expected a 24% speed-up, and afterwards they still estimated it at 20%. **Feeling and measurement were far apart.**\n\nThe difference lies in the task: how long do review and rework take? So you measure before you decide. Net time is drafting plus review plus rework, compared with the same task without AI.",
+        "body": "Two controlled experiments, two opposite results:\n\n| Study | Task | With AI |\n|---|---|---|\n| Noy and Zhang 2023, 453 professionals | professional writing tasks, e.g. a press release | 40% faster, quality 18% higher |\n| METR 2025, 16 experienced developers | tasks in their own large codebases | 19% slower |\n\nBefore the METR study the developers expected a 24% speed-up, and afterwards they still estimated it at 20%. **Feeling and measurement were far apart.**\n\nThe difference lies in the task: how long do review and rework take? So you measure before you decide. Net time is drafting plus review plus rework, compared with the same task without AI.",
         "takeaway": "Measure net time: drafting, review and rework against the same task without AI.",
         "sources": [
           {
@@ -192,7 +192,7 @@
               "id": "forty",
               "label": "Find a setting with at least 40% saving per run.",
               "when": "saved >= base * 0.4",
-              "insight": "That matches the effect on routine writing in Noy and Zhang. Typical for short texts you can check quickly."
+              "insight": "That matches the effect in Noy and Zhang. Typical for texts you can check quickly."
             },
             {
               "id": "rework",
@@ -241,7 +241,7 @@
             },
             {
               "id": "b",
-              "text": "The tasks differ: short routine texts are quick to check, changes in a large codebase are not.",
+              "text": "The tasks differ: short writing tasks are quick to check, changes in a large codebase are not.",
               "correct": true
             },
             {

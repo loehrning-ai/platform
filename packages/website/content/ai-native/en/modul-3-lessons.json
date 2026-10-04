@@ -46,12 +46,12 @@
             {
               "id": "A",
               "label": "Note A: returns (as of 3 Feb 2025, Sales)",
-              "text": "Returns are possible within 30 days of delivery. Customers pay the shipping costs."
+              "text": "Returns without giving a reason are possible within 30 days of delivery. Customers pay for return shipping."
             },
             {
               "id": "B",
               "label": "Note B: returns (as of 1 Sep 2026, Sales)",
-              "text": "Returns within 14 days of delivery, valid from 1 September 2026. For defects we pay the shipping costs."
+              "text": "Returns without giving a reason within 14 days of delivery, valid from 1 September 2026. We pay for return shipping on goods worth €100 or more."
             },
             {
               "id": "C",
@@ -59,7 +59,7 @@
               "text": "We deliver spare parts for model K2 within 5 working days."
             }
           ],
-          "draftLabel": "AI answer to a colleague. Question: how long can a customer return a defective K2, and who pays for shipping?",
+          "draftLabel": "AI answer to a colleague. Question: how long can a customer return a K2 without giving a reason, and who pays for return shipping?",
           "draft": [
             {
               "text": "According to the knowledge base: "
@@ -72,7 +72,7 @@
               "text": ". "
             },
             {
-              "text": "For a defect we pay for shipping [B]",
+              "text": "We pay for return shipping on goods worth €100 or more [B]",
               "claimId": "shipping"
             },
             {
@@ -98,7 +98,7 @@
               "id": "days",
               "verdict": "contradicted",
               "sourceId": "B",
-              "evidence": "Returns within 14 days of delivery",
+              "evidence": "Returns without giving a reason within 14 days of delivery",
               "correction": "14 days after delivery (note B, as of 1 Sep 2026)",
               "why": "Note A matches the citation but is outdated. The newer note B replaces the period."
             },
@@ -106,7 +106,7 @@
               "id": "shipping",
               "verdict": "supported",
               "sourceId": "B",
-              "evidence": "For defects we pay the shipping costs.",
+              "evidence": "We pay for return shipping on goods worth €100 or more.",
               "why": "That is what the current note says."
             },
             {
@@ -207,13 +207,13 @@
           "variants": [
             {
               "label": "Without knowledge base",
-              "prompt": "A customer asks: how long can he return a defective model K2 device, and who pays for shipping? Write a short answer for my colleague.",
-              "recorded": "Model K2 usually comes with a 30-day return period. Shipping is normally paid by the customer; for defects the retailer usually covers it. We also generally swap defective devices on site."
+              "prompt": "A customer asks: how long can he return a K2 without giving a reason, and who pays for return shipping? Write a short answer for my colleague.",
+              "recorded": "Model K2 usually comes with a 30-day return period. Return shipping is normally paid by the customer. We also generally swap devices on site if there is a problem."
             },
             {
               "label": "With notes",
-              "prompt": "Answer the question using only the notes below. Support every statement with the note ID in square brackets. If notes contradict each other, name the conflict and follow the newer one. If something is missing, write \"Not in the notes\".\n\nQuestion: how long can a customer return a defective model K2 device, and who pays for shipping?\n\n[A] As of 3 Feb 2025: returns are possible within 30 days of delivery. Customers pay the shipping costs.\n[B] As of 1 Sep 2026: returns within 14 days of delivery. For defects we pay the shipping costs.\n[C] As of 12 Jun 2026: we deliver spare parts for model K2 within 5 working days.",
-              "recorded": "Returns within 14 days of delivery [B]. Note: [A] still says 30 days but is older (as of 3 Feb 2025) and replaced by [B]. For a defect we pay the shipping costs [B]."
+              "prompt": "Answer the question using only the notes below. Support every statement with the note ID in square brackets. If notes contradict each other, name the conflict and follow the newer one. If something is missing, write \"Not in the notes\".\n\nQuestion: how long can a customer return a K2 without giving a reason, and who pays for return shipping?\n\n[A] As of 3 Feb 2025: returns without giving a reason are possible within 30 days of delivery. Customers pay for return shipping.\n[B] As of 1 Sep 2026: returns without giving a reason within 14 days of delivery. We pay for return shipping on goods worth €100 or more.\n[C] As of 12 Jun 2026: we deliver spare parts for model K2 within 5 working days.",
+              "recorded": "Returns without giving a reason within 14 days of delivery [B]. Note: [A] still says 30 days but is older (as of 3 Feb 2025) and replaced by [B]. We pay for return shipping on goods worth €100 or more [B]. Who pays below that: Not in the notes."
             }
           ],
           "rubric": [

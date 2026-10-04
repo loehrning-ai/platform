@@ -46,12 +46,12 @@
             {
               "id": "A",
               "label": "Notiz A: Rückgaben (Stand 03.02.2025, Vertrieb)",
-              "text": "Rückgaben sind innerhalb von 30 Tagen nach Lieferung möglich. Versandkosten trägt die Kundschaft."
+              "text": "Rückgaben ohne Angabe von Gründen sind innerhalb von 30 Tagen nach Lieferung möglich. Den Rückversand zahlt die Kundschaft."
             },
             {
               "id": "B",
               "label": "Notiz B: Rückgaben (Stand 01.09.2026, Vertrieb)",
-              "text": "Rückgaben innerhalb von 14 Tagen nach Lieferung, gültig ab 01.09.2026. Bei Mängeln übernehmen wir die Versandkosten."
+              "text": "Rückgaben ohne Angabe von Gründen innerhalb von 14 Tagen nach Lieferung, gültig ab 01.09.2026. Ab 100 € Warenwert zahlen wir den Rückversand."
             },
             {
               "id": "C",
@@ -59,7 +59,7 @@
               "text": "Ersatzteile für Modell K2 liefern wir innerhalb von 5 Werktagen."
             }
           ],
-          "draftLabel": "KI-Antwort an einen Kollegen. Frage: Wie lange kann ein Kunde ein defektes K2 zurückgeben, und wer zahlt den Versand?",
+          "draftLabel": "KI-Antwort an einen Kollegen. Frage: Wie lange kann ein Kunde ein K2 ohne Angabe von Gründen zurückgeben, und wer zahlt den Rückversand?",
           "draft": [
             {
               "text": "Laut Wissensbasis gilt: "
@@ -72,7 +72,7 @@
               "text": ". "
             },
             {
-              "text": "Bei einem Mangel übernehmen wir den Versand [B]",
+              "text": "Ab 100 € Warenwert zahlen wir den Rückversand [B]",
               "claimId": "shipping"
             },
             {
@@ -98,7 +98,7 @@
               "id": "days",
               "verdict": "contradicted",
               "sourceId": "B",
-              "evidence": "Rückgaben innerhalb von 14 Tagen nach Lieferung",
+              "evidence": "Rückgaben ohne Angabe von Gründen innerhalb von 14 Tagen nach Lieferung",
               "correction": "14 Tage nach Lieferung (Notiz B, Stand 01.09.2026)",
               "why": "Notiz A deckt das Zitat, ist aber veraltet. Die neuere Notiz B ersetzt die Frist."
             },
@@ -106,7 +106,7 @@
               "id": "shipping",
               "verdict": "supported",
               "sourceId": "B",
-              "evidence": "Bei Mängeln übernehmen wir die Versandkosten.",
+              "evidence": "Ab 100 € Warenwert zahlen wir den Rückversand.",
               "why": "Steht so in der aktuellen Notiz."
             },
             {
@@ -207,13 +207,13 @@
           "variants": [
             {
               "label": "Ohne Wissensbasis",
-              "prompt": "Ein Kunde fragt: Wie lange kann er ein defektes Gerät vom Modell K2 zurückgeben, und wer zahlt den Versand? Schreib eine kurze Antwort für meinen Kollegen.",
-              "recorded": "Für das Modell K2 gilt in der Regel ein Rückgaberecht von 30 Tagen. Die Versandkosten trägt üblicherweise der Kunde, bei Defekten übernimmt sie meist der Händler. Außerdem tauschen wir defekte Geräte in der Regel direkt vor Ort aus."
+              "prompt": "Ein Kunde fragt: Wie lange kann er ein K2 ohne Angabe von Gründen zurückgeben, und wer zahlt den Rückversand? Schreib eine kurze Antwort für meinen Kollegen.",
+              "recorded": "Für das Modell K2 gilt in der Regel ein Rückgaberecht von 30 Tagen. Den Rückversand zahlt üblicherweise der Kunde. Außerdem tauschen wir Geräte bei Problemen in der Regel direkt vor Ort aus."
             },
             {
               "label": "Mit Notizen",
-              "prompt": "Beantworte die Frage nur mit den Notizen unten. Belege jede Aussage mit der Notiz-ID in eckigen Klammern. Wenn sich Notizen widersprechen, nenne den Widerspruch und folge der neueren. Wenn etwas fehlt, schreib \"Nicht in den Notizen\".\n\nFrage: Wie lange kann ein Kunde ein defektes Gerät vom Modell K2 zurückgeben, und wer zahlt den Versand?\n\n[A] Stand 03.02.2025: Rückgaben sind innerhalb von 30 Tagen nach Lieferung möglich. Versandkosten trägt die Kundschaft.\n[B] Stand 01.09.2026: Rückgaben innerhalb von 14 Tagen nach Lieferung. Bei Mängeln übernehmen wir die Versandkosten.\n[C] Stand 12.06.2026: Ersatzteile für Modell K2 liefern wir innerhalb von 5 Werktagen.",
-              "recorded": "Rückgabe innerhalb von 14 Tagen nach Lieferung [B]. Achtung: Notiz [A] nennt noch 30 Tage, ist aber älter (Stand 03.02.2025) und durch [B] ersetzt. Bei einem Defekt übernehmen wir die Versandkosten [B]."
+              "prompt": "Beantworte die Frage nur mit den Notizen unten. Belege jede Aussage mit der Notiz-ID in eckigen Klammern. Wenn sich Notizen widersprechen, nenne den Widerspruch und folge der neueren. Wenn etwas fehlt, schreib \"Nicht in den Notizen\".\n\nFrage: Wie lange kann ein Kunde ein K2 ohne Angabe von Gründen zurückgeben, und wer zahlt den Rückversand?\n\n[A] Stand 03.02.2025: Rückgaben ohne Angabe von Gründen sind innerhalb von 30 Tagen nach Lieferung möglich. Den Rückversand zahlt die Kundschaft.\n[B] Stand 01.09.2026: Rückgaben ohne Angabe von Gründen innerhalb von 14 Tagen nach Lieferung. Ab 100 € Warenwert zahlen wir den Rückversand.\n[C] Stand 12.06.2026: Ersatzteile für Modell K2 liefern wir innerhalb von 5 Werktagen.",
+              "recorded": "Rückgabe ohne Angabe von Gründen innerhalb von 14 Tagen nach Lieferung [B]. Achtung: Notiz [A] nennt noch 30 Tage, ist aber älter (Stand 03.02.2025) und durch [B] ersetzt. Ab 100 € Warenwert zahlen wir den Rückversand [B]. Wer ihn darunter zahlt: Nicht in den Notizen."
             }
           ],
           "rubric": [

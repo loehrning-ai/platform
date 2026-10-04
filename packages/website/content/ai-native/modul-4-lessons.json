@@ -158,7 +158,7 @@
           "goal": "passed == total && minutes <= 60",
           "successTitle": "Lauf bestanden: abgesichert, ohne alles von Hand zu lesen",
           "successBody": "Feste Prüfungen fangen, was Regeln erkennen. Die Freigabe fängt, was nur ein Mensch erkennt. Niemand muss jede Mail lesen.",
-          "goalMissHint": "Alle Fälle bestehen, aber die Prüfzeit ist zu hoch. Welcher Baustein macht die automatischen Prüfungen überflüssig teuer?",
+          "goalMissHint": "Alle Fälle bestehen, aber die Prüfzeit ist zu hoch. Welcher Baustein kostet am meisten Zeit, obwohl feste Prüfungen und die Freigabe dasselbe abfangen?",
           "note": "Erfundene Mails und Annahmen. Dein Werkzeug nennt die Bausteine anders, die Logik bleibt."
         }
       },
@@ -226,7 +226,7 @@
         "Fixkosten"
       ],
       "concept": {
-        "body": "Ob ein Modell auf eigener Hardware oder beim Anbieter läuft, entscheiden drei Fragen:\n\n1. **Welche Daten?** Verarbeitet ein Cloud-Anbieter personenbezogene Daten in deinem Auftrag, brauchst du einen Vertrag zur Auftragsverarbeitung (Art. 28 DSGVO). Gehen die Daten in ein Land außerhalb der EU, brauchst du zusätzlich eine Grundlage nach Kapitel V (Art. 44 ff. DSGVO). Auf eigener Hardware entfällt der Auftragsverarbeiter, die übrigen Pflichten bleiben.\n2. **Wie viel?** Die Cloud kostet pro Nutzung, lokal zahlst du vor allem einmalig für Hardware plus Betrieb. Fixkosten lohnen sich erst ab genug Nutzung.\n3. **Wie gut?** Modelle für übliche eigene Hardware sind meist kleiner als große Cloud-Modelle. Ob das reicht, zeigt nur ein Test mit deinen eigenen Fällen.\n\nDer Rechner arbeitet mit deinen Annahmen. Setze echte Angebote ein, bevor du entscheidest.",
+        "body": "Ob ein Modell auf eigener Hardware oder beim Anbieter läuft, entscheiden drei Fragen:\n\n1. **Welche Daten?** Verarbeitet ein Cloud-Anbieter personenbezogene Daten in deinem Auftrag, brauchst du einen Vertrag zur Auftragsverarbeitung (Art. 28 DSGVO). Gehen die Daten in ein Land außerhalb von EU und EWR, brauchst du zusätzlich eine Grundlage nach Kapitel V (Art. 44 ff. DSGVO). Auf eigener Hardware entfällt der Auftragsverarbeiter, die übrigen Pflichten bleiben.\n2. **Wie viel?** Die Cloud kostet pro Nutzung, lokal zahlst du vor allem einmalig für Hardware plus Betrieb. Fixkosten lohnen sich erst ab genug Nutzung.\n3. **Wie gut?** Modelle für übliche eigene Hardware sind meist kleiner als große Cloud-Modelle. Ob das reicht, zeigt nur ein Test mit deinen eigenen Fällen.\n\nDer Rechner arbeitet mit deinen Annahmen. Setze echte Angebote ein, bevor du entscheidest.",
         "takeaway": "Erst der Vertrag, dann die Rechnung, dann der Test mit deinen Fällen.",
         "sources": [
           {
@@ -364,6 +364,12 @@
               "tone": "bad",
               "title": "Cloud ohne Vertrag ausgeschlossen",
               "body": "Besonders geschützte Daten gehen ohne Vertrag nicht zu einem Anbieter. Lokal oder gar nicht, und den Datenschutz früh einbeziehen."
+            },
+            {
+              "when": "data == 3",
+              "tone": "warn",
+              "title": "Vertrag allein reicht nicht",
+              "body": "Gesundheitsdaten brauchen zusätzlich eine Ausnahme nach Art. 9 Abs. 2 DSGVO und oft eine Datenschutz-Folgenabschätzung (Art. 35). Kläre das mit dem Datenschutz, bevor du Kosten vergleichst."
             },
             {
               "when": "data == 2 && dpa == 0",
