@@ -9,8 +9,9 @@ export const COUNT_UP_DURATION_MS = 450;
 /**
  * A real count from the page that ticks up once when it first scrolls into
  * view. The server renders the final value, so the markup is complete without
- * JavaScript, and the count only restarts from zero when it is still below the
- * fold at hydration (never a visible flash back to zero). Reduced motion, a
+ * JavaScript and keeps it until the count is half in view: only then does it
+ * restart from zero and tick up, so a jump past it (End key, anchor link, a
+ * full-page capture) never leaves a stuck zero. Reduced motion, a
  * missing IntersectionObserver or a count already on screen keep the final
  * value. Assistive tech reads the full phrase once from a visually hidden copy;
  * the ticking digits are hidden from it.
@@ -46,12 +47,12 @@ export function CountUp({
       cancelAnimationFrame(frame);
       digits.nodeValue = token;
     };
-    digits.nodeValue = "0";
 
     const observer = new IntersectionObserver(
       (entries) => {
         if (!entries.some((entry) => entry.isIntersecting)) return;
         observer.disconnect();
+        digits.nodeValue = "0";
         const start = performance.now();
         const tick = (now: number) => {
           const progress = Math.min((now - start) / COUNT_UP_DURATION_MS, 1);
@@ -61,7 +62,7 @@ export function CountUp({
         };
         frame = requestAnimationFrame(tick);
       },
-      { threshold: 1 },
+      { threshold: 0.5 },
     );
     observer.observe(host);
     // A printout never shows a count that has not run yet.

@@ -103,10 +103,12 @@ describe("CountUp", () => {
   it("counts up once, eased, when a below-fold count scrolls into view", () => {
     setTop(5000);
     render(<CountUp value={57} text="57 Lektionen" />);
-    expect(digits().textContent).toBe("0");
+    // Off screen the final count stays: a jump past it never shows a zero.
+    expect(digits().textContent).toBe("57");
     expect(observers).toHaveLength(1);
 
     act(() => observers[0]!.callback([{ isIntersecting: true }]));
+    expect(digits().textContent).toBe("0");
     runFrames(COUNT_UP_DURATION_MS / 2);
     const midway = Number(digits().textContent);
     expect(midway).toBeGreaterThan(28);
@@ -121,7 +123,9 @@ describe("CountUp", () => {
     setTop(5000);
     const { unmount } = render(<CountUp value={12} text="12 lessons" />);
     const node = digits();
-    expect(node.textContent).toBe("0");
+    act(() => observers[0]!.callback([{ isIntersecting: true }]));
+    runFrames(COUNT_UP_DURATION_MS / 3);
+    expect(Number(node.textContent)).toBeLessThan(12);
     unmount();
     expect(node.textContent).toBe("12");
   });
