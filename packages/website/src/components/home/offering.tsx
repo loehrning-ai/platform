@@ -1,7 +1,13 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { CountUp } from "@/components/home/count-up";
 import { CourseArtwork } from "@/components/home/course-artwork";
 import { HOME_COPY, homeCourseCopy } from "@/components/home/home-copy";
+import { PointerDepthList } from "@/components/home/pointer-depth";
+import {
+  POINTER_DEPTH_CARD,
+  POINTER_DEPTH_LIGHT,
+} from "@/components/home/pointer-depth-classes";
 import { COURSE_CATALOG } from "@/lib/courses/catalog";
 import { courseGroupFor } from "@/lib/courses/tracks";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
@@ -53,6 +59,8 @@ const COURSE_ACCENTS = [
  * registration frame (course-artwork.tsx); on a phone the picture is a 72px
  * crop at the row's left edge. The meta line is Mennige tief, which keeps
  * 4.5:1 on every tint (Mennige itself drops to 4.3:1 on the peach card).
+ * Under a mouse the cards take hover depth (pointer-depth.tsx): a small tilt
+ * towards the pointer and a paper light that follows it.
  */
 export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
   const copy = HOME_COPY[locale].offering;
@@ -76,17 +84,19 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
           >
             {copy.headline}
           </h2>
-          <p className="flex items-center gap-3 justify-self-start rounded-2xl border border-foreground/10 bg-brand-sky/45 px-4 py-3 shadow-card max-lg:hidden sm:px-5 sm:py-4 lg:justify-self-end">
-            <span className="font-ui-mono text-2xl font-bold tabular-nums text-brand-orange sm:text-3xl">
-              01–04
-            </span>
-            <span className="max-w-48 text-sm leading-snug text-foreground">
-              {copy.routeSignal(SPINE_LESSON_COUNT)}
-            </span>
+          {/* The route's one fact, number first: the lesson count ticks up
+              once when it scrolls into view (count-up.tsx). */}
+          <p className="justify-self-start rounded-2xl border border-foreground/10 bg-brand-sky/45 px-4 py-3 text-sm leading-snug text-foreground shadow-card max-lg:hidden sm:px-5 sm:py-4 lg:justify-self-end">
+            <CountUp
+              value={SPINE_LESSON_COUNT}
+              text={copy.routeSignal(SPINE_LESSON_COUNT)}
+              digitsClassName="mr-0.5 font-ui-mono text-3xl font-bold leading-none text-kupfer-dark"
+            />
           </p>
         </div>
 
-        <ol
+        <PointerDepthList
+          as="ol"
           className="relative mt-8 grid gap-3 max-lg:mt-5 max-lg:gap-2 sm:gap-4 md:grid-cols-2 lg:mt-10 lg:grid-cols-12 lg:gap-6"
           data-testid="foundation-route"
           aria-label={copy.routeLabel}
@@ -103,9 +113,11 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
               >
                 <Link
                   href={localizeHref(course.href, locale)}
-                  className={`group relative grid h-full min-w-0 grid-cols-[4.5rem_minmax(0,1fr)] overflow-hidden rounded-[1.5rem] border border-foreground/10 max-sm:rounded-2xl ${tone} shadow-card outline-none transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-1.5 hover:border-brand-cobalt/45 hover:shadow-card-hover focus-visible:-translate-y-1 focus-visible:border-brand-cobalt focus-visible:ring-2 focus-visible:ring-brand-cobalt focus-visible:ring-offset-4 focus-visible:ring-offset-background motion-reduce:transform-none motion-reduce:transition-none sm:grid-cols-1 sm:grid-rows-[auto_1fr] sm:rounded-[1.75rem]`}
+                  className={`group relative grid h-full min-w-0 grid-cols-[4.5rem_minmax(0,1fr)] overflow-hidden rounded-[1.5rem] border border-foreground/10 max-sm:rounded-2xl ${tone} ${POINTER_DEPTH_CARD} shadow-card outline-none transition-[border-color,box-shadow,transform,translate] duration-300 hover:-translate-y-1.5 hover:border-brand-cobalt/45 hover:shadow-card-hover focus-visible:-translate-y-1 focus-visible:border-brand-cobalt focus-visible:ring-2 focus-visible:ring-brand-cobalt focus-visible:ring-offset-4 focus-visible:ring-offset-background motion-reduce:transform-none motion-reduce:translate-none motion-reduce:transition-none sm:grid-cols-1 sm:grid-rows-[auto_1fr] sm:rounded-[1.75rem]`}
                   data-home-course-card
+                  data-depth-card
                 >
+                  <span aria-hidden="true" className={POINTER_DEPTH_LIGHT} />
                   <span className="relative block">
                     <CourseArtwork
                       slug={course.slug}
@@ -115,7 +127,7 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
                     />
                     <span
                       aria-hidden="true"
-                      className={`absolute left-4 top-4 flex size-11 items-center justify-center rounded-xl border border-foreground/25 font-ui-mono text-sm font-bold tabular-nums text-foreground shadow-[3px_3px_0_var(--color-foreground)] max-sm:left-2 max-sm:top-2 max-sm:size-8 max-sm:rounded-lg max-sm:text-xs max-sm:shadow-[2px_2px_0_var(--color-foreground)] ${accent}`}
+                      className={`absolute left-4 top-4 flex size-11 items-center justify-center rounded-xl border border-foreground/25 font-ui-mono text-sm font-bold tabular-nums text-foreground shadow-[3px_3px_0_var(--color-foreground)] transition-[rotate] duration-200 group-hover:-rotate-6 group-focus-visible:-rotate-6 motion-reduce:rotate-none motion-reduce:transition-none max-sm:left-2 max-sm:top-2 max-sm:size-8 max-sm:rounded-lg max-sm:text-xs max-sm:shadow-[2px_2px_0_var(--color-foreground)] ${accent}`}
                     >
                       {String(index + 1).padStart(2, "0")}
                     </span>
@@ -124,7 +136,7 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
                     </span>
                   </span>
 
-                  <span className="grid min-w-0 grid-cols-1 gap-3 p-4 max-sm:p-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-5 sm:p-5 md:p-6">
+                  <span className="relative grid min-w-0 grid-cols-1 gap-3 p-4 max-sm:p-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:gap-5 sm:p-5 md:p-6">
                     <span className="min-w-0">
                       <span className="block font-ui-mono text-xs font-bold uppercase leading-relaxed tracking-[0.08em] text-kupfer-dark max-sm:leading-tight sm:tracking-[0.1em]">
                         {course.totalLessons} {copy.lessonLabel}
@@ -139,7 +151,7 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
                         {courseCopy.tagline}
                       </span>
                     </span>
-                    <span className="hidden size-11 shrink-0 items-center justify-center self-end rounded-xl border border-foreground/15 bg-paper text-brand-cobalt shadow-card transition-[background-color,color,transform] duration-200 group-hover:translate-x-1 group-hover:bg-brand-cobalt group-hover:text-white group-focus-visible:translate-x-1 group-focus-visible:bg-brand-cobalt group-focus-visible:text-white motion-reduce:transform-none motion-reduce:transition-none sm:flex">
+                    <span className="hidden size-11 shrink-0 items-center justify-center self-end rounded-xl border border-foreground/15 bg-paper text-brand-cobalt shadow-card transition-[background-color,color,translate] duration-200 group-hover:translate-x-1 group-hover:bg-brand-cobalt group-hover:text-white group-focus-visible:translate-x-1 group-focus-visible:bg-brand-cobalt group-focus-visible:text-white motion-reduce:translate-none motion-reduce:transition-none sm:flex">
                       <ArrowRight aria-hidden="true" size={18} />
                     </span>
                   </span>
@@ -147,7 +159,7 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
               </li>
             );
           })}
-        </ol>
+        </PointerDepthList>
 
         <div className="mt-6 grid gap-3 rounded-2xl border border-foreground/10 bg-brand-acid/65 p-4 shadow-card max-lg:mt-4 max-lg:grid-cols-[minmax(0,1fr)_auto] max-lg:items-center max-lg:p-3 max-sm:grid-cols-1 max-sm:gap-1 max-sm:px-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:px-6 sm:py-5 lg:mt-7">
           <p className="text-sm leading-relaxed text-foreground max-lg:text-xs">

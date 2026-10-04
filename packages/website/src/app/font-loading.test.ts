@@ -67,7 +67,9 @@ describe("global font loading contract", () => {
       "src/components/home/hero-network.tsx",
       "src/components/home/offering.tsx",
       "src/components/home/workflow.tsx",
-      "src/components/home/credibility-strip.tsx",
+      "src/components/home/count-up.tsx",
+      "src/components/home/pointer-depth.tsx",
+      "src/components/home/pointer-depth-classes.ts",
     ];
     const shellSource = shellFiles
       .map((file) => readFileSync(resolve(process.cwd(), file), "utf8"))

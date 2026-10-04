@@ -27,7 +27,7 @@ test.describe.configure({ timeout: 60_000 });
 
 const CHAPTER = "/buecher/ki-landschaft/03_reifegrad_ueberblick";
 const HOMEPAGE_STATIC_REVEAL_ROOTS =
-  '[data-testid="kurse-section"], [data-testid="ressourcen-section"], [data-testid="platform-principles"]';
+  '[data-testid="kurse-section"], [data-testid="ressourcen-section"]';
 
 /** Effective opacity of the first `h1`: product of its own + ancestor opacity. */
 function firstH1Opacity(page: Page): Promise<number> {

@@ -106,7 +106,8 @@ for (const width of [320, 390, 768, 1440] as const) {
       if (locale === "en") {
         expect(state.mainText).toContain("Understand");
         expect(state.mainText).toContain("Four courses in a set order");
-        expect(state.mainText).toContain("Ground rules");
+        expect(state.mainText).toContain("Material to read and try");
+        expect(state.mainText).not.toContain("Ground rules");
         expect(state.mainText).not.toMatch(GERMAN_ONLY_HOME_TOKENS);
         expect(state.internalHrefs.length).toBeGreaterThan(0);
         expect(state.internalHrefs.every((href) => href === "/en" || href.startsWith("/en/"))).toBe(true);
@@ -125,7 +126,8 @@ for (const width of [320, 390, 768, 1440] as const) {
       } else {
         expect(state.mainText).toContain("KI");
         expect(state.mainText).toContain("Vier Kurse in fester Reihenfolge");
-        expect(state.mainText).toContain("Grundregeln");
+        expect(state.mainText).toContain("Material zum Nachlesen und Ausprobieren");
+        expect(state.mainText).not.toContain("Grundregeln");
       }
     }
   });

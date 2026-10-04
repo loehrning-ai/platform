@@ -14,7 +14,7 @@ export const revealUp: Variants = {
   },
   // End-state uses a negative bottom inset so descenders (g, y, p, j, q)
   // never get clipped by the animation's end frame. `-0.3em` matches the
-  // convention already used by home/credibility-strip, services-preview,
+  // convention already used by services-preview,
   // differentiator, final-cta — readable, scales with font-size.
   visible: (i: number = 0) => ({
     clipPath: "inset(0 0 -0.3em 0)",

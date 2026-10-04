@@ -75,7 +75,7 @@ describe("Ressourcen section (Workflow)", () => {
     render(<Workflow />);
     expect(
       screen.getByText(
-        /synchronisiert Fortschritt und Arbeitsbelege geräteübergreifend/,
+        "Kostenloses Konto: Fortschritt und Arbeitsbelege auf jedem Gerät.",
       ),
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Zum Konto/ })).toMatchObject({
@@ -133,6 +133,18 @@ describe("Ressourcen board: the paper look", () => {
     for (const card of cards) {
       expect(card.className).toContain("rounded-[1.5rem]");
       expect(card.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
+    }
+    // Every card carries hover depth: it reads the pointer list's tilt
+    // variables, holds flat under reduced motion, and its paper light sits
+    // first, behind the icon and the text.
+    expect(container.querySelector("ul[aria-label]")?.tagName).toBe("UL");
+    for (const card of cards) {
+      expect(card).toHaveAttribute("data-depth-card");
+      expect(card.className).toContain("rotateX(var(--depth-rx,0deg))");
+      expect(card).toHaveClass("motion-reduce:transform-none", "motion-reduce:translate-none");
+      const light = card.firstElementChild;
+      expect(light).toHaveAttribute("aria-hidden", "true");
+      expect(light?.className).toContain("var(--depth-x,50%)");
     }
     // The section itself is a peach wash, never a dark band.
     expect(screen.getByTestId("ressourcen-section")).toHaveClass(

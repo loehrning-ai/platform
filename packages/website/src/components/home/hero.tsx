@@ -39,6 +39,13 @@ function usePrefersReducedMotion(): boolean {
   return prefersReduced;
 }
 
+/** One tilted pastel block per hero fact, in the pillar cards' palette. */
+const FACT_MARKS = [
+  "bg-brand-acid rotate-12",
+  "bg-brand-sky -rotate-6",
+  "bg-brand-pink rotate-6",
+] as const;
+
 /* ──────────────────────────────────────────────────────────────────────────
    Tiny decorative atoms
    ────────────────────────────────────────────────────────────────────────── */
@@ -312,10 +319,21 @@ function HeroSectionContent({
               className="mt-6 max-w-xl rounded-2xl border border-foreground/10 bg-paper px-4 py-3 text-[1.125rem] leading-relaxed text-muted-foreground shadow-card"
             >
               {copy.introduction.lead}
-              <span className="max-lg:hidden">
-                {copy.introduction.detail}. {copy.introduction.facts}
+              <span className="max-lg:hidden">{copy.introduction.detail}</span>.
+              {/* From lg: the facts as one tag line under the sentence, each
+                  behind a small tilted block in the hero's pastel geometry.
+                  A phone keeps the one sentence. */}
+              <span className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 font-ui-mono text-xs font-bold uppercase tracking-[0.08em] text-kupfer-dark max-lg:hidden">
+                {copy.introduction.facts.map((fact, index) => (
+                  <span key={fact} className="inline-flex items-center gap-2">
+                    <span
+                      aria-hidden="true"
+                      className={`size-2.5 rounded-[3px] border border-foreground/20 ${FACT_MARKS[index] ?? FACT_MARKS[0]}`}
+                    />
+                    {fact}
+                  </span>
+                ))}
               </span>
-              <span className="lg:hidden">.</span>
             </p>
 
             <div data-hero-actions className="mt-7 flex items-center gap-3">
@@ -420,7 +438,7 @@ function HeroSectionContent({
             <li
               key={pillar.title}
               className={
-                "min-w-0 rounded-2xl border border-foreground/10 p-4 shadow-card transition-[box-shadow,transform] duration-200 hover:-translate-y-1 hover:shadow-card-hover motion-reduce:transform-none motion-reduce:transition-none sm:p-5 " +
+                "min-w-0 rounded-2xl border border-foreground/10 p-4 shadow-card transition-[box-shadow,translate] duration-200 hover:-translate-y-1 hover:shadow-card-hover motion-reduce:translate-none motion-reduce:transition-none sm:p-5 " +
                 (pillarTones[index] ?? pillarTones[0])
               }
             >
