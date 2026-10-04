@@ -83,15 +83,13 @@ function addCurrentLessonEvidence(
             quizScore:
               slug === "data-infrastructure" ||
               slug === "data-engineering-fundamentals" ||
-              slug === "data-science" ||
-              (slug === "ai-native" && lessonId === "modul_3_lesson_0")
+              slug === "data-science"
                 ? null
                 : 1,
             quizTotal:
               slug === "data-infrastructure" ||
               slug === "data-engineering-fundamentals" ||
-              slug === "data-science" ||
-              (slug === "ai-native" && lessonId === "modul_3_lesson_0")
+              slug === "data-science"
                 ? null
                 : 1,
           }
@@ -557,16 +555,10 @@ describe("canonical course completion", () => {
   });
 
   it("accepts the versioned checkpoint as transfer proof for zero-quiz evidence lessons", () => {
-    const aiNativeLessonId = "modul_3_lesson_0";
     const dataLessonId = CANONICAL_LESSON_IDS["data-science"][0];
-    const aiNative = withCurrentLessonEvidence("ai-native", [aiNativeLessonId]);
     const dataScience = withCurrentLessonEvidence("data-science", [
       dataLessonId,
     ]);
-
-    expect(
-      isLessonCompletionEvidenceBacked(aiNative, "ai-native", aiNativeLessonId),
-    ).toBe(true);
     expect(
       isLessonCompletionEvidenceBacked(
         dataScience,
@@ -574,5 +566,35 @@ describe("canonical course completion", () => {
         dataLessonId,
       ),
     ).toBe(true);
+  });
+
+  it("requires the exercise step and a perfect check score for AI-Native engine lessons", () => {
+    const lessonId = "messen-1-1";
+    expect(CANONICAL_SECTION_IDS["ai-native"][lessonId]).toEqual([
+      "messen-1-1_exercise",
+    ]);
+    const complete = withCurrentLessonEvidence("ai-native", [lessonId]);
+    expect(
+      isLessonCompletionEvidenceBacked(complete, "ai-native", lessonId),
+    ).toBe(true);
+    const slice = complete.courses["ai-native"]!;
+    const halfRight = {
+      ...complete,
+      courses: {
+        ...complete.courses,
+        "ai-native": {
+          ...slice,
+          lessons: {
+            ...slice.lessons,
+            [lessonId]: { ...slice.lessons[lessonId], quizScore: 0.5 },
+          },
+        },
+      },
+    };
+    expect(
+      isLessonCompletionEvidenceBacked(halfRight, "ai-native", lessonId),
+    ).toBe(false);
+    // The quizless pre-engine transfer lesson is retired.
+    expect(CANONICAL_LESSON_IDS["ai-native"]).not.toContain("modul_3_lesson_0");
   });
 });

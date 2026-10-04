@@ -197,11 +197,11 @@ describe("Module 1 hostile framing removed", () => {
     expect(text).not.toContain("Dieser Kurs zeigt dir");
   });
 
-  it("module 1 has the new honest title", () => {
+  it("module 1 leads with measurement, not a slogan", () => {
     const raw = readText("content/ai-native/modules.json");
     const data = JSON.parse(raw) as { modules: Array<{ id: string; title: string }> };
     const modul1 = data.modules.find((m) => m.id === "modul_1");
-    expect(modul1?.title).toBe("Von der Aufgabe zum Workflow");
+    expect(modul1?.title).toBe("Messen statt glauben");
   });
 });
 

@@ -350,6 +350,120 @@ function sequenceOrder(props: Props, problems: string[]): void {
   }
 }
 
+function triageMatrix(props: Props, problems: string[]): void {
+  const items = records(props.items);
+  if (items.length < 4) problems.push("triage-matrix: needs at least 4 items");
+  for (const dupe of duplicates(items.map((item) => str(item.id)))) {
+    problems.push(`triage-matrix: duplicate item ${dupe}`);
+  }
+  for (const item of items) {
+    const id = str(item.id);
+    if (!str(item.text) || !str(item.why)) problems.push(`triage-matrix: item ${id} needs text and why`);
+    const reference = isRecord(item.reference) ? item.reference : {};
+    for (const axis of ["f", "c", "k"]) {
+      const value = reference[axis];
+      if (typeof value !== "number" || !Number.isInteger(value) || value < 1 || value > 3) {
+        problems.push(`triage-matrix: item ${id} reference.${axis} must be 1, 2 or 3`);
+      }
+    }
+  }
+  if (props.score !== undefined) {
+    checkFormula(str(props.score), new Set(["f", "c", "k"]), "triage-matrix score", problems);
+  }
+  if (props.pick !== undefined) {
+    const pick = Number(props.pick);
+    if (!Number.isInteger(pick) || pick < 1 || pick >= items.length) {
+      problems.push("triage-matrix: pick must be at least 1 and below the item count");
+    }
+  }
+}
+
+const IDENTIFIER = /^[A-Za-z_][A-Za-z0-9_]*$/;
+
+function scenarioRun(props: Props, problems: string[]): void {
+  const steps = records(props.steps);
+  const cases = records(props.cases);
+  const metrics = records(props.metrics);
+  if (!steps.some((step) => step.optional !== false)) problems.push("scenario-run: needs at least one switchable step");
+  if (cases.length < 2) problems.push("scenario-run: needs at least 2 cases");
+  if (!str(props.goalLabel) || !str(props.successTitle)) {
+    problems.push("scenario-run: needs goalLabel and successTitle");
+  }
+  const stepIds = new Set<string>();
+  for (const step of steps) {
+    const id = str(step.id);
+    if (!IDENTIFIER.test(id)) problems.push(`scenario-run: step id "${id}" must be an identifier`);
+    if (stepIds.has(id)) problems.push(`scenario-run: duplicate step ${id}`);
+    stepIds.add(id);
+    if (!str(step.label)) problems.push(`scenario-run: step ${id} needs a label`);
+  }
+  const known = new Set(stepIds);
+  const caseIds = new Set<string>();
+  for (const entry of cases) {
+    const id = str(entry.id);
+    if (!IDENTIFIER.test(id)) problems.push(`scenario-run: case id "${id}" must be an identifier`);
+    if (caseIds.has(id)) problems.push(`scenario-run: duplicate case ${id}`);
+    caseIds.add(id);
+    if (!str(entry.label) || !str(entry.text) || !str(entry.passText) || !str(entry.failText)) {
+      problems.push(`scenario-run: case ${id} needs label, text, passText and failText`);
+    }
+    checkFormula(str(entry.pass), stepIds, `scenario-run case ${id}`, problems);
+  }
+  for (const id of caseIds) known.add(`ok_${id}`);
+  for (const name of ["passed", "total", "active"]) known.add(name);
+  for (const metric of metrics) {
+    const id = str(metric.id);
+    checkFormula(str(metric.formula), known, `scenario-run metric ${id}`, problems);
+    if (known.has(id)) problems.push(`scenario-run: duplicate id ${id}`);
+    known.add(id);
+  }
+  checkFormula(str(props.goal), known, "scenario-run goal", problems);
+  if (problems.length) return;
+
+  // The goal must be reachable, and the default switches must not reach it.
+  const switchable = steps.filter((step) => step.optional !== false);
+  if (switchable.length > 12) {
+    problems.push("scenario-run: at most 12 switchable steps");
+    return;
+  }
+  const evaluate = (values: Record<string, number>): boolean => {
+    const scope: Record<string, number> = {};
+    let active = 0;
+    for (const step of steps) {
+      const on = step.optional === false ? 1 : values[str(step.id)] ? 1 : 0;
+      scope[str(step.id)] = on;
+      if (step.optional !== false && on) active += 1;
+    }
+    let passed = 0;
+    for (const entry of cases) {
+      const ok = evaluateCondition(str(entry.pass), scope);
+      scope[`ok_${str(entry.id)}`] = ok ? 1 : 0;
+      if (ok) passed += 1;
+    }
+    scope.passed = passed;
+    scope.total = cases.length;
+    scope.active = active;
+    for (const metric of metrics) {
+      try {
+        scope[str(metric.id)] = Number(compileExpression(str(metric.formula)).evaluate(scope));
+      } catch {
+        scope[str(metric.id)] = Number.NaN;
+      }
+    }
+    return evaluateCondition(str(props.goal), scope);
+  };
+  const defaults = Object.fromEntries(switchable.map((step) => [str(step.id), step.default ? 1 : 0]));
+  if (evaluate(defaults)) problems.push("scenario-run: the default switches already meet the goal");
+  let reachable = false;
+  for (let mask = 0; mask < 2 ** switchable.length && !reachable; mask += 1) {
+    const values = Object.fromEntries(
+      switchable.map((step, index) => [str(step.id), (mask >> index) & 1]),
+    );
+    reachable = evaluate(values);
+  }
+  if (!reachable) problems.push("scenario-run: the goal is unreachable");
+}
+
 const VALIDATORS: Readonly<Record<string, (props: Props, problems: string[]) => void>> = {
   "bucket-sort": bucketSort,
   "claim-checker": claimChecker,
@@ -361,6 +475,8 @@ const VALIDATORS: Readonly<Record<string, (props: Props, problems: string[]) => 
   "pii-redactor": piiRedactor,
   "timeline-check": timelineCheck,
   "sequence-order": sequenceOrder,
+  "triage-matrix": triageMatrix,
+  "scenario-run": scenarioRun,
 };
 
 /** Validate the props of one exercise. Non-lab kinds are not checked here. */

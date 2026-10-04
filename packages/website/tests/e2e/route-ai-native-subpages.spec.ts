@@ -8,9 +8,11 @@ import {
 /**
  * AI-Native sub-page smoke + interaction coverage (regression coverage, wave 2).
  *
- * The four /ai-native/* leaves courses.spec.ts never touches: Glossar,
- * Fluency-Test, Demos, Capstone-Gallery. All four sit in PUBLIC_ACCESS_PATHS
- * (src/lib/crawl/contract.ts): public-noindex, reachable without login.
+ * The /ai-native/* leaf courses.spec.ts never touches: the glossary. It sits
+ * in PUBLIC_ACCESS_PATHS (src/lib/crawl/contract.ts): public-noindex,
+ * reachable without login. The fluency test, simulation gallery and capstone
+ * rules page were retired with the tool-neutral rebuild and now redirect
+ * (route-ai-native-locales.spec.ts covers the 301s).
  * Assertions target ROLES, aria-labels, or state-derived counters rather than
  * marketing copy, so a wording refresh stays green while a real regression
  * (dead page, unwired search, broken funnel link, mobile overflow) fails.
@@ -25,21 +27,6 @@ const SUBPAGES: ReadonlyArray<{
     path: "/ai-native/glossar",
     anchor: (page) =>
       page.getByRole("searchbox", { name: "Glossar durchsuchen" }),
-  },
-  {
-    path: "/ai-native/fluency-test",
-    anchor: (page) =>
-      page.getByRole("button", { name: "Szenario 1", exact: true }),
-  },
-  {
-    path: "/ai-native/demos",
-    anchor: (page) =>
-      page.getByRole("searchbox", { name: "Kurssimulationen durchsuchen" }),
-  },
-  {
-    path: "/ai-native/capstone-gallery",
-    anchor: (page) =>
-      page.getByRole("complementary", { name: "Veröffentlichungsgrenze" }),
   },
 ];
 
@@ -107,28 +94,4 @@ test.describe("ai-native sub-page interactions", () => {
     await page.getByRole("button", { name: /^(?:Leeren|Clear)$/ }).click();
     await expect(search).toHaveValue("");
   });
-
-  test("demos search narrows the result counter and clears", async ({
-    page,
-  }) => {
-    // "load" so the client island hydrates before the search input reacts to fill().
-    await page.goto("/ai-native/demos", { waitUntil: "load" });
-    const search = page.getByRole("searchbox", {
-      name: "Kurssimulationen durchsuchen",
-    });
-
-    await search.fill("qxzkwvzznope");
-    // Counter renders `${totalFiltered}/${DEMOS.length}`; no match drives it to 0.
-    await expect(page.getByText(/^0\/\d+$/)).toBeVisible();
-
-    await page.getByRole("button", { name: "Leeren", exact: true }).click();
-    await expect(search).toHaveValue("");
-  });
-
-  // NOTE (regression coverage): deeper fluency-test step-navigation and
-  // capstone-gallery funnel-link tests were trimmed here because the
-  // authored assertions did not match the live components (scenario-button
-  // roles and the Modul-1 link name differ). The per-route smoke and
-  // no-overflow tests above still cover both routes; a follow-up can re-add
-  // the interactions against the real component structure.
 });

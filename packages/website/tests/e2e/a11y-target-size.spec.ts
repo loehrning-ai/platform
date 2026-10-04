@@ -132,25 +132,16 @@ test.describe("a11y: 44px product target floor at 390x844", () => {
     // provider-free login fallback.
     await page.goto("/ai-native", { waitUntil: "domcontentloaded" });
     await expectMinTargetSize(
-      page.getByRole("link", { name: /Mit Modul 1 beginnen/i }),
-      "AI-Native start-module link",
+      page.getByRole("link", { name: /Mit Lektion 1 beginnen/i }),
+      "AI-Native start-lesson link",
     );
     await expectMinTargetSize(
-      page.getByRole("link", { name: /Kursstand öffnen/i }),
-      "AI-Native course-progress link",
+      page.getByRole("link", { name: /Kursübersicht öffnen/i }),
+      "AI-Native course-hub link",
     );
-
-    await page.goto("/en/ai-native/demos", {
-      waitUntil: "domcontentloaded",
-    });
-    const demoBreadcrumb = page.getByRole("navigation", {
-      name: "Breadcrumb",
-    });
     await expectMinTargetSize(
-      demoBreadcrumb.getByRole("link", {
-        name: "AI-Native Workflow Course",
-      }),
-      "AI-Native demo breadcrumb",
+      page.getByRole("link", { name: "AI-Native Operator" }),
+      "AI-Native scope link to the Operator course",
     );
 
     await page.goto("/ai-native/glossar", {

@@ -233,10 +233,9 @@ export const HOME_COURSE_COPY: Readonly<
       duration: "ca. 1 Std.",
     },
     "ai-native": {
-      title: "AI-Native Arbeitskurs",
-      tagline: "Gib der KI Absicht und Kontext, dann prüfe das Ergebnis.",
-      // /kurse states "ca. 5 Std. Lektionen, 12 Std. mit Übungen".
-      duration: "ca. 5 Std. + Übungen",
+      title: "Mit KI arbeiten",
+      tagline: "Miss den Nutzen, begrenze die Rechte, teste den Ablauf.",
+      duration: "ca. 70 Min.",
     },
   },
   en: {
@@ -256,10 +255,9 @@ export const HOME_COURSE_COPY: Readonly<
       duration: "about 1 hr",
     },
     "ai-native": {
-      title: "AI-Native Work Course",
-      tagline: "Give the AI intent and context, then check the result.",
-      // /kurse states "about 5 hrs of lessons, 12 hrs with exercises".
-      duration: "about 5 hr + exercises",
+      title: "Working with AI",
+      tagline: "Measure the benefit, limit permissions, test the workflow.",
+      duration: "about 70 min",
     },
   },
 };

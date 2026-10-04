@@ -320,7 +320,7 @@ describe("fetchUnifiedProgressForUser", () => {
   });
 
   it("upgrades pre-cutover server rows without changing schema v3 or awarding marker XP", async () => {
-    const lessonId = "modul_1_lesson_1";
+    const lessonId = "messen-1-1";
     table.rows.set(key(USER, "ai-native"), {
       user_id: USER,
       course_slug: "ai-native",
@@ -362,7 +362,7 @@ describe("fetchUnifiedProgressForUser", () => {
   });
 
   it("does not grandfather a raw completion on a post-cutover server row", async () => {
-    const lessonId = "modul_1_lesson_1";
+    const lessonId = "messen-1-1";
     table.rows.set(key(USER, "ai-native"), {
       user_id: USER,
       course_slug: "ai-native",
@@ -667,7 +667,7 @@ describe("upsertUnifiedProgressForUser", () => {
         courses: {
           "ai-native": slice({
             lessons: {
-              modul_1_lesson_1: {
+              "messen-1-1": {
                 sectionsRead: [],
                 quizScore: null,
                 quizTotal: null,
@@ -686,7 +686,7 @@ describe("upsertUnifiedProgressForUser", () => {
         courses: {
           "ai-native": slice({
             lessons: {
-              modul_1_lesson_2: {
+              "messen-1-2": {
                 sectionsRead: [],
                 quizScore: null,
                 quizTotal: null,
@@ -707,8 +707,8 @@ describe("upsertUnifiedProgressForUser", () => {
     const lessons =
       fetched.result.progress?.courses["ai-native"]?.lessons ?? {};
     expect(Object.keys(lessons).sort()).toEqual([
-      "modul_1_lesson_1",
-      "modul_1_lesson_2",
+      "messen-1-1",
+      "messen-1-2",
     ]);
   });
 
@@ -968,7 +968,7 @@ describe("resetCourseProgressRow", () => {
         courses: {
           "ai-native": slice({
             lessons: {
-              modul_1_lesson_1: {
+              "messen-1-1": {
                 sectionsRead: [],
                 quizScore: null,
                 quizTotal: null,
@@ -995,7 +995,7 @@ describe("resetCourseProgressRow", () => {
         courses: {
           "ai-native": slice({
             lessons: {
-              modul_1_lesson_2: {
+              "messen-1-2": {
                 sectionsRead: [],
                 quizScore: null,
                 quizTotal: null,
@@ -1019,7 +1019,7 @@ describe("resetCourseProgressRow", () => {
         courses: {
           "ai-native": slice({
             lessons: {
-              modul_1_lesson_3: {
+              "kontext-2-1": {
                 sectionsRead: [],
                 quizScore: null,
                 quizTotal: null,
@@ -1036,7 +1036,7 @@ describe("resetCourseProgressRow", () => {
     fetched = await fetchUnifiedProgressForUser(fakeSupabase(table), USER);
     if (!fetched.ok) throw new Error("unreachable");
     expect(
-      fetched.result.progress?.courses["ai-native"]?.lessons.modul_1_lesson_3,
+      fetched.result.progress?.courses["ai-native"]?.lessons["kontext-2-1"],
     ).toBeDefined();
   });
 

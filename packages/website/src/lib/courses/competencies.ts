@@ -100,22 +100,22 @@ export const COURSE_OUTCOMES: Partial<
   ],
   "ai-native": [
     {
-      id: "ai-native-arbeiten",
-      label: "AI-native arbeiten",
+      id: "ki-nutzen-messen",
+      label: "KI-Nutzen messen",
       description:
-        "Behandelt Intent, Kontext und systematische Output-Prüfung.",
+        "Behandelt Netto-Zeit, Baseline und die Auswahl geeigneter Aufgaben.",
     },
     {
-      id: "claude-stack-nutzen",
-      label: "Den Claude-Stack nutzen",
+      id: "kontext-und-rechte-begrenzen",
+      label: "Kontext und Rechte begrenzen",
       description:
-        "Behandelt Projects, Skills und MCP für wiederkehrende Aufgaben.",
+        "Behandelt schlanken Kontext, minimale Rechte und Prompt-Injection.",
     },
     {
-      id: "automatisierung-mit-governance",
-      label: "Automatisierung mit Governance",
+      id: "ablauf-mit-freigabe",
+      label: "Abläufe mit Freigabe bauen",
       description:
-        "Behandelt n8n-Automationen, Kontrollen und EU-AI-Act-Grenzen.",
+        "Behandelt belegte Antworten, Prüfungen, Fehlerpfade und Freigaben.",
     },
   ],
   // English course: the labels/descriptions stay English to match the
@@ -260,18 +260,20 @@ const ENGLISH_COURSE_OUTCOME_COPY: Readonly<Record<string, CourseOutcomeCopy>> =
       description:
         "Covers implementation planning and applicable deadlines through 2028.",
     },
-    "ai-native-arbeiten": {
-      label: "Work with AI systematically",
-      description: "Covers intent, context, and systematic output review.",
-    },
-    "claude-stack-nutzen": {
-      label: "Use the Claude tool stack",
-      description: "Covers Projects, Skills, and MCP for repeatable tasks.",
-    },
-    "automatisierung-mit-governance": {
-      label: "Automation with governance",
+    "ki-nutzen-messen": {
+      label: "Measure the benefit of AI",
       description:
-        "Covers n8n automation, controls, and EU AI Act boundaries.",
+        "Covers net time, baselines, and choosing suitable tasks.",
+    },
+    "kontext-und-rechte-begrenzen": {
+      label: "Limit context and permissions",
+      description:
+        "Covers lean context, least privilege, and prompt injection.",
+    },
+    "ablauf-mit-freigabe": {
+      label: "Build workflows with approval",
+      description:
+        "Covers sourced answers, checks, fallback paths, and approvals.",
     },
   };
 

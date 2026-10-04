@@ -341,7 +341,7 @@ describe("course catalog (shared course architecture)", () => {
   });
 
   it("getCatalogCourse resolves by slug and returns undefined for unknown", () => {
-    expect(getCatalogCourse("ai-native")?.title).toBe("AI-Native Arbeitskurs");
+    expect(getCatalogCourse("ai-native")?.title).toBe("Mit KI arbeiten");
     expect(getCatalogCourse("data-infrastructure")?.title).toBe(
       "Data Infrastructure",
     );

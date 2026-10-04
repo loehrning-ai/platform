@@ -178,7 +178,6 @@ export const COURSE_PLAKAT = {
   "ki-und-gesellschaft": { plakat: "lemons", motif: "pair", numeral: "02" },
   "eu-ai-act-kurs": { plakat: "lemons", motif: "ring", numeral: "03" },
   "ai-native": { plakat: "lemons", motif: "steps", numeral: "04" },
-  "ai-native-capstone-policy": { plakat: "lemons", motif: "steps", numeral: null },
   "ai-native-operator": { plakat: "idea", motif: "halfdisc", numeral: null },
   "data-infrastructure": { plakat: "bloom", motif: "slab", numeral: null },
   "data-engineering-fundamentals": { plakat: "bloom", motif: "band", numeral: null },
@@ -189,18 +188,12 @@ export type CoursePlakatId = keyof typeof COURSE_PLAKAT;
 
 /**
  * `TechnicalCourseFrame` ids that stay paper on purpose, with no scene and no
- * `data-plakat-page` (SPEC §3.1 and §5): the AI-Native demos keep their own
- * light engine panels, the glossary is a reading surface and the fluency test
- * is a form. A frame reads its scene through `coursePlakat(courseId)` and renders
+ * `data-plakat-page` (SPEC §3.1 and §5): the AI-Native glossary is a reading
+ * surface. A frame reads its scene through `coursePlakat(courseId)` and renders
  * no scene when it returns undefined; `palettes.test.ts` fails on any other
  * unmapped id.
  */
-export const UNSCENED_COURSE_IDS = [
-  "ai-native-demos",
-  "ai-native-glossary",
-  "ai-native-fluency-test",
-  "ai-native-fluency-result",
-] as const;
+export const UNSCENED_COURSE_IDS = ["ai-native-glossary"] as const;
 
 /**
  * The paper and ink of the chrome, for renderers that cannot read CSS tokens

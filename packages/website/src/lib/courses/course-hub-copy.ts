@@ -86,7 +86,7 @@ export const COURSE_PROMISES: Readonly<
     "eu-ai-act-kurs":
       "Risikoklasse, Rolle, Pflichten und Fristen eines KI-Tools bestimmen.",
     "ai-native":
-      "Du baust ein Claude-Projekt und einen n8n-Ablauf mit Freigabe.",
+      "Du misst, ob KI sich lohnt, und testest einen Ablauf mit Freigabe.",
     "data-infrastructure":
       "Du begründest Tabellenformat, Partitionierung und Streaming-Garantien im Design-Review.",
     "data-engineering-fundamentals":
@@ -104,7 +104,7 @@ export const COURSE_PROMISES: Readonly<
     "eu-ai-act-kurs":
       "Determine an AI tool's risk class, role, duties and deadlines.",
     "ai-native":
-      "You build a Claude project and an n8n workflow with sign-off.",
+      "You measure whether AI pays off and test a workflow with sign-off.",
     "data-infrastructure":
       "You justify table format, partitioning and streaming guarantees in a design review.",
     "data-engineering-fundamentals":
@@ -135,7 +135,7 @@ export const COURSE_PROMISES_SHORT: Readonly<
     "ki-fuehrerschein": "Daten richtig einsetzen, KI-Antworten prüfen",
     "ki-und-gesellschaft": "Jobzahlen, Fakes und Fairness prüfen",
     "eu-ai-act-kurs": "Risikoklasse, Rolle und Pflichten bestimmen",
-    "ai-native": "Claude-Projekt und n8n-Ablauf einrichten",
+    "ai-native": "Nutzen messen, Abläufe absichern",
     "data-infrastructure": "Design einer Datenplattform begründen",
     "data-engineering-fundamentals": "Pipelines zeichnen, Bruchstellen kennen",
     "data-science": "Kennzahlen und A/B-Tests hinterfragen",
@@ -145,7 +145,7 @@ export const COURSE_PROMISES_SHORT: Readonly<
     "ki-fuehrerschein": "Share data safely, check AI answers",
     "ki-und-gesellschaft": "Check jobs figures, fakes and fairness",
     "eu-ai-act-kurs": "Name risk class, role and duties",
-    "ai-native": "Set up a Claude project and an n8n workflow",
+    "ai-native": "Measure the payoff, safeguard workflows",
     "data-infrastructure": "Justify a data platform's design choices",
     "data-engineering-fundamentals": "Sketch pipelines, know where they break",
     "data-science": "Question metrics and A/B tests",
@@ -168,8 +168,8 @@ export function coursePromiseShort(
 export const COURSE_DURATIONS_SHORT: Readonly<
   Record<Locale, Readonly<Record<string, string>>>
 > = {
-  de: { "ai-native": "ca. 5 bis 12 Std." },
-  en: { "ai-native": "about 5 to 12 hrs" },
+  de: {},
+  en: {},
 };
 
 export function courseDurationShort(

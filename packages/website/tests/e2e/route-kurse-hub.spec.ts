@@ -26,7 +26,7 @@ const NATIVE_TRACKS = [
   "KI-Führerschein",
   "KI und Gesellschaft",
   "EU AI Act Kurs",
-  "AI-Native Arbeitskurs",
+  "Mit KI arbeiten",
 ] as const;
 
 test.describe("/kurse hub", () => {
@@ -156,7 +156,7 @@ test.describe("/kurse hub", () => {
       {
         label: "Ich baue mit KI",
         goal: "build",
-        course: "AI-Native Arbeitskurs",
+        course: "Mit KI arbeiten",
         href: "/ai-native",
         alternative: {
           course: "The AI-Native Operator",

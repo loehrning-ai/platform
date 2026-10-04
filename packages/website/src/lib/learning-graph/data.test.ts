@@ -125,11 +125,11 @@ describe("course node derivation", () => {
     expect(node?.audience).toEqual(["mitarbeitende"]);
   });
 
-  it("marks the AI-Native course advanced and self-attested", () => {
+  it("marks the AI-Native course intermediate and source-backed", () => {
     const node = nodeById("course:ai-native");
-    expect(node?.level).toBe("advanced");
+    expect(node?.level).toBe("intermediate");
     expect(node?.stage).toBe("anwenden");
-    expect(node?.evidenceMode).toBe("self_attested");
+    expect(node?.evidenceMode).toBe("source_backed");
     expect(node?.audience).toEqual(["praktiker"]);
   });
 

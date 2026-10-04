@@ -158,28 +158,28 @@ export const EU_AI_ACT_KURS_EN_CONFIG: CourseConfig =
 
 export const AI_NATIVE_CONFIG: CourseConfig = {
   slug: "ai-native",
-  title: "AI-Native Arbeitskurs",
+  title: "Mit KI arbeiten",
   language: "de",
   basePath: "/ai-native",
   coursePath: "/ai-native/kurs",
   blockIds: [],
-  workshopQuizQuestionCount: 20,
-  workshopQuizTimeLimitMinutes: 25,
+  workshopQuizQuestionCount: 15,
+  workshopQuizTimeLimitMinutes: 20,
   workshopQuizPassThreshold: 0.7,
-  certificateTitle: "AI-Native Arbeitskurs",
+  certificateTitle: "Mit KI arbeiten",
   certificateSubtitle:
     "Teilnahmebestätigung. Ausgestellt von loehrning.ai, einer unabhängigen Bildungsplattform. Diese Bestätigung ist kein akkreditierter Abschluss.",
   certificateModules: [
-    "Die Mindset-Operation: orchestrieren statt ausführen",
-    "Der Claude-Stack: Projects, Skills, Plugins, MCP",
-    "Zweites Gehirn: Obsidian + Claude als Business-Intelligence",
-    "Automatisierung mit n8n, Local AI und EU AI Act",
+    "Messen statt glauben: Netto-Zeit und Triage",
+    "Kontext und Werkzeuge: schlanker Kontext, minimale Rechte",
+    "Wissen, das zitiert werden kann",
+    "Ein Workflow mit Freigabe und Pilotplan",
   ],
   certificateReferenceLabel:
-    "Capstone selbst eingereicht (nicht fremdbeurteilt)",
+    "Pilotplan selbst erstellt (nicht fremdbeurteilt)",
   quizPassMessage:
-    "Du hast den AI-Native Arbeitskurs bestanden.",
-  certificateFileStem: "AI-Native-Arbeitskurs",
+    "Du hast die Abschlussprüfung von Mit KI arbeiten bestanden.",
+  certificateFileStem: "Mit-KI-arbeiten",
   recordNoun: {
     label: "Teilnahmebestätigung",
     possessive: "Deine Teilnahmebestätigung",
@@ -191,20 +191,20 @@ export const AI_NATIVE_EN_CONFIG: CourseConfig = createLocalizedCourseConfig(
   AI_NATIVE_CONFIG,
   "en",
   {
-    title: "AI-Native Workflow Course",
-    certificateTitle: "Certificate of participation: AI-Native Workflow Course",
+    title: "Working with AI",
+    certificateTitle: "Certificate of participation: Working with AI",
     certificateSubtitle:
       "Participation record. Issued by loehrning.ai, an independent learning platform. This record confirms course completion only; it is not an accredited qualification or an external assessment.",
     certificateModules: [
-      "From task to workflow",
-      "Claude as a work assistant",
-      "A searchable knowledge base",
-      "Automating repeatable work with controls",
+      "Measure, don't guess: net time and triage",
+      "Context and tools: lean context, least privilege",
+      "Knowledge you can cite",
+      "A workflow with approval and a pilot plan",
     ],
     certificateReferenceLabel:
-      "Capstone rubric self-reported; no external assessment",
-    quizPassMessage: "You passed the AI-Native Workflow Course final quiz.",
-    certificateFileStem: "AI-Native-Workflow-Course",
+      "Pilot plan self-authored; no external assessment",
+    quizPassMessage: "You passed the Working with AI final quiz.",
+    certificateFileStem: "Working-with-AI",
     recordNoun: {
       label: "Certificate of participation",
       possessive: "Your certificate of participation",

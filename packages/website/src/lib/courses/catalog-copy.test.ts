@@ -50,7 +50,7 @@ describe("course catalogue locale copy", () => {
       "Everyday AI Literacy",
       "AI and Society",
       "EU AI Act Course",
-      "AI-Native Work Course",
+      "Working with AI",
     ]);
     expect(english).toHaveLength(8);
     expect(english.find(({ slug }) => slug === "data-infrastructure")).toMatchObject({

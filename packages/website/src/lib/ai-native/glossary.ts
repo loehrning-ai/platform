@@ -2,14 +2,7 @@ import glossaryData from "../../../content/ai-native/glossary.json";
 import glossaryDataEn from "../../../content/ai-native/en/glossary.json";
 import type { Locale } from "@/lib/i18n/locale";
 
-export type GlossaryCategory =
-  | "claude"
-  | "obsidian"
-  | "automation"
-  | "mindset"
-  | "regulatorik"
-  | "pedagogy"
-  | "technik";
+export type GlossaryCategory = "messen" | "kontext" | "wissen" | "workflow";
 
 export interface GlossaryEntry {
   readonly term: string;
@@ -78,12 +71,10 @@ export function getCategoryLabel(
   return glossary(locale).categories[category];
 }
 
+/** Display order follows the course modules. */
 export const CATEGORY_ORDER: readonly GlossaryCategory[] = [
-  "mindset",
-  "claude",
-  "obsidian",
-  "automation",
-  "technik",
-  "regulatorik",
-  "pedagogy",
+  "messen",
+  "kontext",
+  "wissen",
+  "workflow",
 ];

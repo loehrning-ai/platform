@@ -110,7 +110,7 @@ describe("LearningAtlas", () => {
     );
     expect(rowAction).toHaveAccessibleName(
       locale === "de"
-        ? "Hier nicht verfügbar · Kursübersicht: AI-Native Arbeitskurs"
+        ? "Hier nicht verfügbar · Kursübersicht: Mit KI arbeiten"
         : /^Unavailable here · Course overview: /,
     );
     expect(row?.querySelector("[data-course-meta]")).toHaveTextContent(
@@ -505,16 +505,16 @@ describe("LearningAtlas", () => {
     ).toHaveAttribute("aria-pressed", "true");
     const path = screen.getByTestId("selected-path-sequence");
     for (const title of [
-      "AI-Native Arbeitskurs",
+      "Mit KI arbeiten",
       "The AI-Native Operator",
     ]) {
       expect(within(path).getByText(title)).toBeInTheDocument();
     }
     expect(
       within(screen.getByTestId("next-proof")).getByRole("link", {
-        name: "Kurs starten · Lernkonto nötig: AI-Native Arbeitskurs",
+        name: "Kurs starten · Lernkonto nötig: Mit KI arbeiten",
       }),
-    ).toHaveAttribute("href", "/ai-native/kurs/modul_1");
+    ).toHaveAttribute("href", "/ai-native/kurs");
     expect(
       container.querySelector('[data-course-slug="ai-native-operator"]'),
     ).toHaveAttribute("data-in-path", "true");
@@ -932,12 +932,11 @@ describe("LearningAtlas phone ledger", () => {
       }
     }
 
-    // The phone duration for the one long catalog label.
+    // Every catalog duration is short enough to print at every width now
+    // (the former long AI-Native label had a phone variant).
     const aiNative = container.querySelector('[data-course-slug="ai-native"] [data-course-level-label]');
-    expect(aiNative?.querySelector(".sm\\:hidden")).toHaveTextContent("ca. 5 bis 12 Std.");
-    expect(aiNative?.querySelector(".max-sm\\:hidden")).toHaveTextContent(
-      "ca. 5 Std. Lektionen, 12 Std. mit Übungen",
-    );
+    expect(aiNative).toHaveTextContent("ca. 70 Min.");
+    expect(aiNative?.querySelector(".sm\\:hidden")).toBeNull();
 
     // The level chips run to the screen edge like the goal rail.
     const levels = screen.getByRole("group", { name: "Kursstufe wählen" });

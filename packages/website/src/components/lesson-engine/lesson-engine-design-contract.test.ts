@@ -100,9 +100,11 @@ describe("lesson-engine design contract", () => {
       "widgets/lab/doc-builder.tsx",
       "widgets/lab/live-prompt-ab.tsx",
       "widgets/lab/pii-redactor.tsx",
+      "widgets/lab/scenario-run.tsx",
       "widgets/lab/sequence-order.tsx",
       "widgets/lab/threshold-lab.tsx",
       "widgets/lab/timeline-check.tsx",
+      "widgets/lab/triage-matrix.tsx",
     ]);
   });
 

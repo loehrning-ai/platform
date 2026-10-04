@@ -5,9 +5,6 @@ import type { Locale } from "./locale";
 const ENGLISH_CONTENT_PARITY_PATHS = new Set<string>([
   "/",
   "/ai-native",
-  "/ai-native/capstone-gallery",
-  "/ai-native/demos",
-  "/ai-native/fluency-test",
   "/ai-native/glossar",
   "/ai-native/verifizierung",
   "/blog",

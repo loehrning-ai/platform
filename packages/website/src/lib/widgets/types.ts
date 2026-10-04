@@ -125,6 +125,8 @@ export const LAB_KINDS = [
   "pii-redactor",
   "timeline-check",
   "sequence-order",
+  "triage-matrix",
+  "scenario-run",
 ] as const;
 
 export type DemoKind = (typeof DEMO_KINDS)[number];

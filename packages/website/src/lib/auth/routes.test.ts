@@ -37,10 +37,7 @@ describe("platform route access model", () => {
     for (const path of [
       "/kurse/open-source/data-infrastructure/kurs",
       "/kurse/open-source/data-infrastructure/kurs/mental-model",
-      "/ai-native/demos",
-      "/ai-native/fluency-test",
       "/ai-native/glossar",
-      "/ai-native/capstone-gallery",
       "/demos",
       "/demos/excel",
       "/buecher",

@@ -14,7 +14,6 @@ const CONTENT_FILES = [
   "course.json",
   "modules.json",
   "glossary.json",
-  "challenges.json",
   "quiz/questions.json",
 ] as const;
 
@@ -28,16 +27,6 @@ const COPY_KEYS: Readonly<Record<(typeof CONTENT_FILES)[number], ReadonlySet<str
     "topics",
   ]),
   "glossary.json": new Set(["title", "definition"]),
-  "challenges.json": new Set([
-    "title",
-    "rotationNote",
-    "role",
-    "scenario",
-    "stack",
-    "timeBudget",
-    "modelSolution",
-    "rubric",
-  ]),
   "quiz/questions.json": new Set([
     "questionText",
     "text",
@@ -45,26 +34,7 @@ const COPY_KEYS: Readonly<Record<(typeof CONTENT_FILES)[number], ReadonlySet<str
   ]),
 };
 
-const ALLOWED_UNCHANGED_COPY = new Set([
-  "AI Challenge of the Week",
-  "Buffer",
-  "Claude",
-  "Claude Code",
-  "Excel",
-  "Federal Reporting Information Act.",
-  "Final Review Internal Audit.",
-  "Free Risk Insurance Agreement.",
-  "LinkedIn Analytics",
-  "Managed Cloud Platform.",
-  "Manual Copy Protocol.",
-  "Obsidian",
-  "Obsidian Web Clipper",
-  "Outlook",
-  "People, Assets, Risks, Audits.",
-  "Plan, Act, Review, Adjust.",
-  "Print, Archive, Read, Approve.",
-  "n8n",
-]);
+const ALLOWED_UNCHANGED_COPY = new Set<string>([]);
 
 function loadJson(
   locale: "de" | "en",
@@ -185,7 +155,7 @@ describe("AI-Native English metadata and assessment bundle", () => {
     );
   });
 
-  it("preserves glossary identity, categories and relation keys", () => {
+  it("preserves glossary categories, order and relation counts", () => {
     type Glossary = {
       _meta: Record<string, JsonValue>;
       categories: Record<string, JsonValue>;
@@ -199,39 +169,18 @@ describe("AI-Native English metadata and assessment bundle", () => {
       date: source._meta.last_updated,
     });
     expect(Object.keys(translation.categories)).toEqual(Object.keys(source.categories));
+    // Terms are localized ("Netto-Zeit" / "Net time"); category and the number
+    // of related terms stay identical entry by entry.
     expect(
-      translation.entries.map(({ term, category, related }) => ({ term, category, related })),
+      translation.entries.map(({ category, related }) => ({
+        category,
+        related: (related as JsonValue[]).length,
+      })),
     ).toEqual(
-      source.entries.map(({ term, category, related }) => ({ term, category, related })),
-    );
-  });
-
-  it("preserves challenge rotation, order and array cardinality", () => {
-    type ChallengeBundle = {
-      _meta: Record<string, JsonValue>;
-      challenges: Array<Record<string, JsonValue>>;
-    };
-    const source = loadJson("de", "challenges.json") as ChallengeBundle;
-    const translation = loadJson("en", "challenges.json") as ChallengeBundle;
-
-    expect({
-      version: translation._meta.version,
-      authored: translation._meta.authored,
-      rotationWeeks: translation._meta.rotationWeeks,
-    }).toEqual({
-      version: source._meta.version,
-      authored: source._meta.authored,
-      rotationWeeks: source._meta.rotationWeeks,
-    });
-    expect(translation._meta.language).toBe("en");
-    expect(translation.challenges.map(({ weekOffset }) => weekOffset)).toEqual(
-      source.challenges.map(({ weekOffset }) => weekOffset),
-    );
-    expect(translation.challenges.map(({ stack }) => (stack as JsonValue[]).length)).toEqual(
-      source.challenges.map(({ stack }) => (stack as JsonValue[]).length),
-    );
-    expect(translation.challenges.map(({ rubric }) => (rubric as JsonValue[]).length)).toEqual(
-      source.challenges.map(({ rubric }) => (rubric as JsonValue[]).length),
+      source.entries.map(({ category, related }) => ({
+        category,
+        related: (related as JsonValue[]).length,
+      })),
     );
   });
 

@@ -112,11 +112,7 @@ _None._
 
 | Pattern | Explanation |
 | --- | --- |
-| `/ai-native/demos` | Public learning content intentionally accessible without login but not listed in sitemap. |
-| `/ai-native/demos/:path*` | Public learning content intentionally accessible without login but not listed in sitemap. |
-| `/ai-native/fluency-test` | Public learning content intentionally accessible without login but not listed in sitemap. |
 | `/ai-native/glossar` | Public learning content intentionally accessible without login but not listed in sitemap. |
-| `/ai-native/capstone-gallery` | Public learning content intentionally accessible without login but not listed in sitemap. |
 | `/kurse/open-source/data-infrastructure/kurs` | Public learning content intentionally accessible without login but not listed in sitemap. |
 | `/kurse/open-source/data-infrastructure/kurs/:path*` | Public learning content intentionally accessible without login but not listed in sitemap. |
 | `/kurse/open-source/data-engineering-fundamentals/:path*` | Public learning content intentionally accessible without login but not listed in sitemap. |
@@ -227,6 +223,10 @@ _None._
 
 | Pattern | Explanation |
 | --- | --- |
+| `/ai-native/fluency-test` | The retired self-assessment resolves to the course landing. |
+| `/ai-native/capstone-gallery` | The retired capstone rules page resolves to the course landing. |
+| `/ai-native/demos` | The course simulation gallery merged into the demo gallery. |
+| `/ai-native/demos/:path*` | Course simulations merged into the demo gallery. |
 | `/kurse/open-source/claude` | A removed course landing now resolves to the course hub. |
 | `/kurse/open-source/claude/:path*` | Removed course lessons and records now resolve to the course hub. |
 | `/kurse/open-source/codex` | A removed course landing now resolves to the course hub. |

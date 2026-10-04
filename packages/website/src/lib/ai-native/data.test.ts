@@ -25,7 +25,7 @@ describe("ai-native data layer (shared course architecture)", () => {
   it("loads lessons per module via async dynamic import", async () => {
     const lessons = await getModuleLessons("modul_1");
     expect(lessons.length).toBeGreaterThan(0);
-    expect(lessons[0].id).toMatch(/^modul_1_lesson_/);
+    expect(lessons.map((lesson) => lesson.id)).toEqual(["messen-1-1", "messen-1-2"]);
   });
 
   it("module lessonCount matches the dynamically-loaded lesson count", async () => {
@@ -37,8 +37,10 @@ describe("ai-native data layer (shared course architecture)", () => {
   });
 
   it("getLesson resolves a single lesson asynchronously", async () => {
-    const lesson = await getLesson("modul_2", "modul_2_lesson_1");
-    expect(lesson?.id).toBe("modul_2_lesson_1");
+    const lesson = await getLesson("modul_2", "kontext-2-1");
+    expect(lesson?.id).toBe("kontext-2-1");
+    // Retired pre-engine ids no longer resolve.
+    expect(await getLesson("modul_2", "modul_2_lesson_1")).toBeUndefined();
     expect(await getLesson("modul_2", "does_not_exist")).toBeUndefined();
   });
 
@@ -81,7 +83,7 @@ describe("ai-native data layer (shared course architecture)", () => {
     expect(englishModules.map((module) => module.id)).toEqual(
       germanModules.map((module) => module.id),
     );
-    expect(englishModules[0]?.title).toBe("From task to workflow");
+    expect(englishModules[0]?.title).toBe("Measure, don't guess");
     expect(englishModules[0]?.title).not.toBe(germanModules[0]?.title);
 
     for (const moduleId of MODULE_IDS) {
@@ -95,8 +97,18 @@ describe("ai-native data layer (shared course architecture)", () => {
     expect(getCourseMeta("en")).toMatchObject({
       courseId: getCourseMeta("de").courseId,
       language: "en",
-      title: "AI-Native Workflow Course",
+      title: "Working with AI",
     });
+  });
+
+  it("projects every engine lesson into one concept section and a two-question quiz", async () => {
+    const all = await getAllLessons();
+    expect(all).toHaveLength(9);
+    for (const lesson of all) {
+      expect(lesson.sections.map((section) => section.id)).toEqual([`${lesson.id}_concept`]);
+      expect(lesson.quiz).toHaveLength(2);
+      expect(lesson.widgets ?? []).toEqual([]);
+    }
   });
 
   it("every lesson with quiz data exposes well-formed questions for the inline quiz", async () => {

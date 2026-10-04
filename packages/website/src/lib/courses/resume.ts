@@ -41,8 +41,8 @@ function blockForGermanLesson(
  *
  * The three block-based German readers render several lessons at one URL, so
  * they use a validated fragment that LessonLayout resolves client-side. Every
- * other course has one lesson/chapter per route, except the German AI-Native
- * course whose lesson IDs already encode the containing module.
+ * other course has one lesson/chapter per route; AI-Native lesson IDs encode
+ * the containing module ("messen-1-2" lives at /ai-native/kurs/modul_1/...).
  */
 export function courseLessonHref(slug: CourseSlug, lessonId: string): string {
   const config = getCourseConfig(slug);
@@ -52,9 +52,10 @@ export function courseLessonHref(slug: CourseSlug, lessonId: string): string {
   }
 
   if (slug === "ai-native") {
-    const moduleId = /^(modul_\d+)_lesson_\d+$/.exec(lessonId)?.[1];
-    return moduleId
-      ? `${config.coursePath}/${moduleId}/${lessonId}`
+    // Engine IDs end in "-<module>-<lesson>" and live at /modul_<module>/<id>.
+    const moduleNumber = ENGINE_LESSON_ID_SUFFIX.exec(lessonId)?.[1];
+    return moduleNumber
+      ? `${config.coursePath}/modul_${moduleNumber}/${lessonId}`
       : config.coursePath;
   }
 

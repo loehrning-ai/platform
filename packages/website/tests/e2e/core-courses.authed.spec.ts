@@ -38,9 +38,9 @@ const CORE_ROUTES = [
   },
   {
     hub: "/ai-native/kurs",
-    hubHeading: "AI-Native Arbeitskurs: Kurs",
-    lesson: "/ai-native/kurs/modul_1/modul_1_lesson_1",
-    lessonHeading: "Der Moment, in dem du aufhörst, selbst zu schreiben.",
+    hubHeading: "Mit KI arbeiten",
+    lesson: "/ai-native/kurs/modul_1/messen-1-1",
+    lessonHeading: "Lohnt sich KI hier wirklich?",
   },
 ] as const;
 

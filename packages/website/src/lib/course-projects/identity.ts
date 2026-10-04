@@ -30,7 +30,7 @@ export const COURSE_PROJECT_IDENTITIES = {
   },
   "ai-native": {
     id: "project-ai-native-workflow-control",
-    progressLessonId: "modul_4_lesson_8",
+    progressLessonId: "workflow-4-3",
     engineKind: "prompt",
   },
   "ki-und-gesellschaft": {

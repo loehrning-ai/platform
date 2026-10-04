@@ -112,7 +112,7 @@ const PROTECTED_READERS: readonly CanonicalCourseCase[] = [
     slug: "ai-native",
     name: "AI Native",
     locale: "de",
-    route: "/ai-native/kurs/modul_1/modul_1_lesson_1",
+    route: "/ai-native/kurs/modul_1/messen-1-1",
     engine: "prompt",
     surface: "protected-login",
   },

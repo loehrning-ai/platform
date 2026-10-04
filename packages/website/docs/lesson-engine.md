@@ -17,7 +17,7 @@ free-text checkpoints. Completion is written automatically.
 | `ki-fuehrerschein` | On the engine (pilot): 4 modules, 8 lessons, about 45 min |
 | `ki-und-gesellschaft` | On the engine: 3 modules, 8 lessons, about 40 min |
 | `eu-ai-act-kurs` | On the engine: 5 modules, 10 lessons, about 60 min |
-| `ai-native` | Legacy reader, port pending. The reader already dispatches engine lessons (see "Porting AI-Native") |
+| `ai-native` | On the engine as "Mit KI arbeiten" / "Working with AI": 4 modules, 9 lessons, about 70 min, tool-neutral |
 
 ## Transition model
 
@@ -457,6 +457,65 @@ health data and trade secrets need a human check.
   "freeText": true
 }
 ```
+
+### `triage-matrix`
+
+The learner rates each task on three axes with three levels each: how often
+(`f`), what an error costs (`c`) and how quickly a result can be checked
+(`k`). A matrix plots every rated task (x frequency, y error cost, dot size
+checkability) and a transparent score ranks them. Learners may add up to three
+tasks of their own (`allowOwn`, default true). "Auswerten" marks the top
+`pick` (default 3) and compares the learner's ratings of the authored tasks
+with `reference`, explaining every item with `why`. Done on evaluation.
+
+```json
+{
+  "items": [
+    { "id": "faq", "text": "Standardantwort auf eine FAQ-Mail",
+      "reference": { "f": 3, "c": 1, "k": 3 }, "why": "Täglich, billig, auf einen Blick prüfbar." }
+  ],
+  "pick": 3,
+  "score": "f * k * (4 - c)",
+  "scoreLabel": "optional, the score in words",
+  "axes": { "k": { "label": "optional relabel", "levels": ["a", "b", "c"] } },
+  "note": "optional"
+}
+```
+
+Use at least 4 items. `score` may only use `f`, `c` and `k` (each 1 to 3).
+
+### `scenario-run`
+
+A deterministic test run. The learner switches building blocks on or off
+(guard steps of a workflow, permission scopes of an agent) and runs a fixed set
+of synthetic cases. Each case passes when its `pass` formula over the step ids
+is true and explains itself with `passText` or `failText`. Metrics are
+formulas over the steps, `ok_<caseId>`, `passed`, `total`, `active` (switched-on
+optional steps) and earlier metrics. Done once a run meets `goal`.
+
+```json
+{
+  "layout": "flow",
+  "goalLabel": "Bring alle Fälle durch, ohne jede Mail von Hand zu prüfen.",
+  "successTitle": "Lauf bestanden",
+  "goalMissHint": "optional, shown when every case passes but the goal is missed",
+  "steps": [
+    { "id": "classify", "label": "KI ordnet ein", "optional": false },
+    { "id": "mask", "label": "Daten maskieren", "detail": "optional", "default": 0, "group": "grid only" }
+  ],
+  "cases": [
+    { "id": "iban", "label": "Mail mit IBAN", "text": "...", "pass": "mask",
+      "passText": "...", "failText": "..." }
+  ],
+  "metrics": [{ "id": "minutes", "label": "Prüfminuten pro Tag", "formula": "mask * 5", "format": "int" }],
+  "goal": "passed == total && minutes <= 30"
+}
+```
+
+Step and case ids must be identifiers. `layout: "grid"` groups steps under
+`group` headings (for a permission matrix). The validator rejects unknown
+variables, goals the default switches already meet and goals no switch setting
+reaches (at most 12 switchable steps).
 
 ### Legacy widgets inside the engine
 

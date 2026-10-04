@@ -45,7 +45,7 @@ vi.mock("./animated-meta-table", () => ({
   AnimatedMetaTable: () => <div data-testid="animated-meta-table" />,
 }));
 
-// excel: ai-native / modul_2_lesson_2 / einstieg
+// excel: ai-native (course link, no lesson) / einstieg
 const excel = demos.find((d) => d.slug === "excel")!;
 // rag: eu-ai-act-kurs / block_2 / mittel
 const rag = demos.find((d) => d.slug === "rag-vertragsassistent")!;
@@ -105,14 +105,15 @@ describe("<DemoDetailLayout>", () => {
     for (const panel of panels) expect(panel).not.toHaveClass("max-sm:hidden");
   });
 
-  it("derives a module lesson label + deep link for a modul_x_lesson_y lessonId", () => {
+  it("links an AI-Native demo to the course, since the rebuilt course has no tool lessons", () => {
     render(<DemoDetailLayout demo={excel} />);
-    expect(screen.getByText(/Modul 2 · Lektion 2/)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Zur Lektion" })).toHaveAttribute(
+    expect(excel.lessonId).toBeUndefined();
+    expect(screen.queryByText(/Modul \d+ · Lektion \d+/)).toBeNull();
+    expect(screen.getByRole("link", { name: "Zum Kurs" })).toHaveAttribute(
       "href",
-      "/ai-native/kurs/modul_2/modul_2_lesson_2",
+      "/ai-native/kurs",
     );
-    expect(screen.getByRole("link", { name: "Zur Lektion" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Zum Kurs" })).toHaveAttribute(
       "data-prefetch",
       "false",
     );
@@ -134,7 +135,8 @@ describe("<DemoDetailLayout>", () => {
   it("names the course once, in the continuation, without a stage label", () => {
     const { container } = render(<DemoDetailLayout demo={agent} />);
     const continuation = container.querySelector("[data-demo-continuation]");
-    expect(continuation).toHaveTextContent(/Im Kurs · Modul \d+ · Lektion \d+/);
+    expect(continuation).toHaveTextContent("Im Kurs");
+    expect(continuation).toHaveTextContent("Mit KI arbeiten");
     // The stage label contradicted the learning graph; the page no longer
     // carries one, and no second "Weiterlernen" block repeats the course.
     expect(container.textContent).not.toMatch(/Stufe \d|Weiterlernen/);

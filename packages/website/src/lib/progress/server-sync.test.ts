@@ -103,8 +103,8 @@ function progress(over: Partial<UnifiedProgress> = {}): UnifiedProgress {
   };
 }
 
-const AI_NATIVE_LESSON = "modul_1_lesson_1";
-const AI_NATIVE_SECTION = "modul_1_lesson_1_section_1";
+const AI_NATIVE_LESSON = "messen-1-1";
+const AI_NATIVE_SECTION = "messen-1-1_exercise";
 const KF_LESSON = "daten-1-1";
 const KF_SECTION = "daten-1-1_exercise";
 const EU_LESSON = "block_1_lesson_1";
