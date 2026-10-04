@@ -1,4 +1,4 @@
-// ─── AI-Native Arbeitskurs Types ─────────────────────────────────────
+// ─── AI-Native (Mit KI arbeiten) Types ───────────────────────────────
 //
 // Extension of the KI-Führerschein course schema with optional media metadata
 // and bundle references. Some legacy JSON still carries old access flags;

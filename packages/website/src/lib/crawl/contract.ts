@@ -165,7 +165,7 @@ const PUBLIC_NOINDEX_PATHS = [
 //     for the same QR-payload-in-URL reason.
 // Any other bespoke top-level route a course plan builds (a glossary, a
 // demo gallery, ...) follows the same PUBLIC_ACCESS_PATHS pattern as
-// "/ai-native/glossar"/"/ai-native/demos" above: public, accessible, out of
+// "/ai-native/glossar" above: public, accessible, out of
 // the sitemap unless there is a specific reason to index it.
 //
 // Exception — the 4 native certified courses (ki-fuehrerschein,
@@ -176,11 +176,7 @@ const PUBLIC_NOINDEX_PATHS = [
 // /verifizierung stay public.
 
 const PUBLIC_ACCESS_PATHS = [
-  "/ai-native/demos",
-  "/ai-native/demos/:path*",
-  "/ai-native/fluency-test",
   "/ai-native/glossar",
-  "/ai-native/capstone-gallery",
   // Data Infrastructure course — see the noindex entries above.
   "/kurse/open-source/data-infrastructure/kurs",
   "/kurse/open-source/data-infrastructure/kurs/:path*",
@@ -335,6 +331,33 @@ const PROTECTED_PATHS = [
 ] as const;
 
 const RETIRED_ROUTES: readonly CrawlRoute[] = [
+  // "Mit KI arbeiten" (ai-native) was rebuilt as nine tool-neutral lessons
+  // (2026-10-04). Its self-assessment, simulation gallery and capstone rules
+  // pages no longer serve the course; the simulations live on in /demos.
+  route(
+    "/ai-native/fluency-test",
+    "retired",
+    "The retired self-assessment resolves to the course landing.",
+    { auth: "redirect", cache: "public-short", redirectTo: "/ai-native", status: 301 },
+  ),
+  route(
+    "/ai-native/capstone-gallery",
+    "retired",
+    "The retired capstone rules page resolves to the course landing.",
+    { auth: "redirect", cache: "public-short", redirectTo: "/ai-native", status: 301 },
+  ),
+  route(
+    "/ai-native/demos",
+    "retired",
+    "The course simulation gallery merged into the demo gallery.",
+    { auth: "redirect", cache: "public-short", redirectTo: "/demos", status: 301 },
+  ),
+  route(
+    "/ai-native/demos/:path*",
+    "retired",
+    "Course simulations merged into the demo gallery.",
+    { auth: "redirect", cache: "public-short", redirectTo: "/demos", status: 301 },
+  ),
   // The Claude and Codex courses were removed from the catalogue. Their
   // landing pages, readers, quizzes, certificates and verification pages
   // resolve to the course hub; the /en mirror resolves to /en/kurse.

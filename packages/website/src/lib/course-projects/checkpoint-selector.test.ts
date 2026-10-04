@@ -31,11 +31,11 @@ const EXPECTED_CHECKPOINT_LESSONS = {
     "block_6_lesson_1",
   ],
   "ai-native": [
-    "modul_1_lesson_1",
-    "modul_2_lesson_1",
-    "modul_3_lesson_1",
-    "modul_4_lesson_1",
-    "modul_4_lesson_7",
+    "messen-1-1",
+    "kontext-2-1",
+    "wissen-3-1",
+    "workflow-4-1",
+    "workflow-4-3",
   ],
   "data-infrastructure": [
     "mental-model",

@@ -339,15 +339,15 @@ describe("<CourseAssessmentCta>", () => {
     render(<AiNativeQuizCertCta />);
     resolveOwner();
 
-    emitProgress(progressFor("ai-native", 26));
+    emitProgress(progressFor("ai-native", 8));
 
     expect(screen.getByRole("status")).toHaveTextContent(
-      "Schließe alle 27 Lektionen ab",
+      "Schließe alle 9 Lektionen ab",
     );
     expect(screen.getByText("Quiz gesperrt")).toBeInTheDocument();
     expect(document.querySelector('a[href="/ai-native/kurs/quiz"]')).toBeNull();
 
-    emitProgress(progressFor("ai-native", 27, false, true));
+    emitProgress(progressFor("ai-native", 9, false, true));
 
     expect(screen.getByRole("status")).toHaveTextContent(
       "frühere Capstone-Selbstprüfung",
@@ -364,7 +364,7 @@ describe("<CourseAssessmentCta>", () => {
       }),
     ).toHaveAttribute("href", "/ai-native/kurs/zertifikat");
 
-    emitProgress(progressFor("ai-native", 27, true));
+    emitProgress(progressFor("ai-native", 9, true));
     expect(
       screen.getByRole("link", { name: "Quiz wiederholen" }),
     ).toBeInTheDocument();
@@ -374,7 +374,7 @@ describe("<CourseAssessmentCta>", () => {
     render(<AiNativeQuizCertCta />);
     resolveOwner();
 
-    emitProgress(progressFor("ai-native", 27, false, false, true));
+    emitProgress(progressFor("ai-native", 9, false, false, true));
 
     expect(screen.getByRole("status")).toHaveTextContent(
       "angewandte Projekt sind abgeschlossen",

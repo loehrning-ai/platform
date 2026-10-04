@@ -3,80 +3,58 @@
     {
       "id": "modul_1",
       "number": 1,
-      "title": "Von der Aufgabe zum Workflow",
-      "subtitle": "Vom Ausführen zum Orchestrieren",
-      "description": "Du machst aus wiederkehrenden Aufgaben wiederholbare Abläufe.",
-      "voiceAnchor": "Beschreibe die Aufgabe genau und prüfe das Ergebnis, bevor du es verwendest.",
-      "durationMinutes": 50,
-      "lessonCount": 5,
+      "title": "Messen statt glauben",
+      "subtitle": "Netto-Zeit und Triage",
+      "description": "Du misst, ob sich KI für eine Aufgabe lohnt, und wählst die Aufgaben, mit denen du anfängst.",
+      "durationMinutes": 15,
+      "lessonCount": 2,
       "premiumGated": false,
       "topics": [
-        "Wann du nicht mehr selbst schreibst",
-        "Warum Teams Arbeit an KI delegieren",
-        "Claude als Arbeitswerkzeug: festlegen, begrenzen, prüfen",
-        "Zehn wiederkehrende Aufgaben als Delegationskandidaten",
-        "AI-Native Fluency Test (Selbst-Assessment)"
+        "Lohnt sich KI hier wirklich?",
+        "Welche Aufgaben zuerst?"
       ]
     },
     {
       "id": "modul_2",
       "number": 2,
-      "title": "Claude in einem definierten Arbeitskontext",
-      "subtitle": "Der Claude-Stack: Projects, Skills, Plugins, MCP",
-      "description": "Du richtest ein Claude-Projekt mit Anweisungen, Beispieldateien und Skills ein.",
-      "voiceAnchor": "Lege den Kontext fest und gib Claude nur die Rechte, die die Aufgabe braucht.",
-      "durationMinutes": 76,
-      "lessonCount": 7,
+      "title": "Kontext und Werkzeuge",
+      "subtitle": "Schlanker Kontext, minimale Rechte",
+      "description": "Du entscheidest, was ein Modell dauerhaft wissen soll, und vergibst Werkzeugrechte so, dass Prompt-Injection ins Leere läuft.",
+      "durationMinutes": 15,
+      "lessonCount": 2,
       "premiumGated": false,
       "topics": [
-        "Projects, Memory, Artifacts: dein Claude-Arbeitsplatz",
-        "Connector-Prinzip: Gmail, Kalender, Drive als simulierte OAuth-Übung",
-        "Skills: wiederverwendbare Befehlsabläufe",
-        "Plugins und MCP: Claude kontrolliert mit Systemen verbinden",
-        "Design-Skill und Artifacts",
-        "Claude Code für Nicht-Entwickler",
-        "Memory und CLAUDE.md"
+        "Was das Modell dauerhaft wissen soll",
+        "Rechte für Werkzeuge vergeben"
       ]
     },
     {
       "id": "modul_3",
       "number": 3,
-      "title": "Eine durchsuchbare Wissensbasis",
-      "subtitle": "Obsidian und Claude für strukturiertes Geschäftswissen",
-      "description": "Du führst Mails, Notizen und Ordner in Obsidian zusammen.",
-      "voiceAnchor": "Eine gepflegte Wissensbasis zeigt Herkunft und Stand jeder Notiz.",
-      "durationMinutes": 89,
-      "lessonCount": 7,
+      "title": "Wissen, das zitiert werden kann",
+      "subtitle": "Retrieval, Zitate, veraltete Notizen",
+      "description": "Du prüfst zitierte Antworten gegen Quellen und schreibst Aufträge, die Widersprüche sichtbar machen.",
+      "durationMinutes": 15,
+      "lessonCount": 2,
       "premiumGated": false,
       "topics": [
-        "Setup-Walkthrough (optional, ohne Zeitlimit)",
-        "Warum eine gepflegte Wissensbasis wichtig ist",
-        "PARA und MOC als Ablagestruktur für KMU",
-        "Smart Connections und Copilot",
-        "Obsidian Web Clipper",
-        "Täglicher Ablauf, Prompts mit RCTFC und JSON-Ausgabe",
-        "Claude und Obsidian über MCP"
+        "Antworten mit Beleg",
+        "Dieselbe Frage, mit und ohne Notizen"
       ]
     },
     {
       "id": "modul_4",
       "number": 4,
-      "title": "Wiederkehrende Arbeit automatisieren",
-      "subtitle": "n8n, EU AI Act und Abschlussprojekt",
-      "description": "Du zerlegst wiederkehrende Handarbeit und prüfst, ob ein begrenzter n8n-Ablauf passt.",
-      "voiceAnchor": "Automatisiere erst, wenn Eingaben, Prüfpunkt, Fehlerpfad und Verantwortung klar sind.",
-      "durationMinutes": 88,
-      "lessonCount": 8,
+      "title": "Ein Workflow mit Freigabe",
+      "subtitle": "Testlauf, Betriebsmodell, Pilotplan",
+      "description": "Du sicherst einen Ablauf mit Prüfungen, Fehlerpfad und Freigabe ab, wählst lokal oder Cloud und planst deinen Pilot.",
+      "durationMinutes": 23,
+      "lessonCount": 3,
       "premiumGated": false,
       "topics": [
-        "n8n selbst hosten: Grundlagen zu Datenschutz und Betrieb",
-        "Sandbox-Build 1: E-Mail-Triage → Review-Liste",
-        "Sandbox-Build 2: Meeting → To-Do-Entwurf",
-        "Sandbox-Build 3: Wochenbericht aus Notizen",
-        "Local AI mit LM Studio",
-        "EU AI Act vertieft (Anhang III)",
-        "Abschlussprojekt (Capstone): Pilot in 7 Tagen planen",
-        "Abschlussprojekt prüfen, Datenschutz-Grundlagen"
+        "Ein Ablauf, der Fehler abfängt",
+        "Lokal oder in der Cloud?",
+        "Dein Pilot auf einer Seite"
       ]
     }
   ]

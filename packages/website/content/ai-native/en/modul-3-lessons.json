@@ -1,910 +1,315 @@
 {
   "moduleId": "modul_3",
   "owner": "tim@loehrning.ai",
-  "lastReviewed": "2026-09-05",
-  "nextReview": "2027-03-07",
-  "reviewCadence": "vendor",
-  "riskClass": "vendor",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-04-05",
+  "format": "lesson-engine/v1",
+  "reviewCadence": "evergreen",
+  "riskClass": "evergreen",
   "triggerEvents": [
-    "vendor-api-change",
-    "model-deprecation"
+    "major-conceptual-update",
+    "new-primary-study"
   ],
   "lessons": [
     {
-      "id": "modul_3_lesson_1",
-      "moduleId": "modul_3",
-      "number": 1,
-      "title": "Why a maintained knowledge base matters",
-      "subtitle": "Traceable knowledge retrieval for one person",
-      "durationMinutes": 8,
-      "premiumGated": false,
-      "refreshCadence": "EVERGREEN",
-      "keyConcepts": [
-        "External knowledge base",
-        "BI",
-        "Retrieval"
-      ],
-      "widgets": [
-        {
-          "kind": "demo-observ",
-          "placement": "after-intro"
-        }
-      ],
-      "sections": [
-        {
-          "id": "modul_3_lesson_1_section_1",
-          "title": "The documentation paradox",
-          "readTimeMinutes": 2,
-          "content": "\"We discussed this. I just cannot find the decision.\" A record is missing here: the search costs time, and the decision waits.\n\nA CRM or a decision log holds the decision, owners and sources. Interpreting, settling conflicts and approving stay with you."
-        },
-        {
-          "id": "modul_3_lesson_1_section_2",
-          "title": "BI for one person",
-          "readTimeMinutes": 3,
-          "content": "A BI system answers a controller's defined questions from maintained data. Your notes sit in several places, and you search by hand. An Obsidian vault with Smart Connections or Copilot does that search for one person.\n\nYou ask: \"Which decisions about Customer Y are documented in the last 90 days?\" The answer must carry source paths, and you check them before you believe it.\n\nMore notes help only when maintenance, metadata, provenance and retrieval quality are right."
-        }
-      ],
-      "quiz": [
-        {
-          "id": "modul_3_lesson_1_q1",
-          "questionText": "Which capability can AI-assisted search add to a knowledge base?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Retrieval: finding knowledge again quickly",
-              "isCorrect": true
-            },
-            {
-              "id": "b",
-              "text": "Storage: more notes per GB",
-              "isCorrect": false
-            },
-            {
-              "id": "c",
-              "text": "Synchronization between devices",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Nicer formatting",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "Embeddings find notes that match in meaning, even without the same words. Quality, cost and data flow depend on model, index and configuration."
-        }
-      ]
-    },
-    {
-      "id": "modul_3_lesson_0",
-      "moduleId": "modul_3",
-      "number": 0,
-      "title": "Setup walkthrough (bonus)",
-      "subtitle": "Set up Obsidian and five core plugins",
-      "durationMinutes": 25,
-      "premiumGated": false,
-      "refreshCadence": "QUARTERLY",
-      "keyConcepts": [
-        "Obsidian",
-        "Templater",
-        "Dataview",
-        "Smart Connections",
-        "Copilot",
-        "Web Clipper"
-      ],
-      "sections": [
-        {
-          "id": "modul_3_lesson_0_section_1",
-          "title": "Installing Obsidian",
-          "readTimeMinutes": 3,
-          "content": "No time limit: finish and check each step before the next.\n\n**Step 1:** Download the current build for your operating system from `obsidian.md`, verify the source and install it.\n\n**Step 2: decide on synchronization.** Data can leave the device even from a local vault. Before any sync service, check encryption, accounts, device access, recovery and your organization's approval.\n\n**Step 3: import the vault template.**\n\nOption A: Create an empty practice vault, unzip `vault-template.zip` and copy its contents into it.\n\nOption B: Back up an existing vault and copy only the directories you need. Overwrite no file without a diff and a backup."
-        },
-        {
-          "id": "modul_3_lesson_0_section_2",
-          "title": "The 5 core plugins",
-          "readTimeMinutes": 8,
-          "content": "A community plugin is someone else's code with access to your vault. Check the publisher, repository, version, change history, permissions, data flow and maintenance first. Enable only what the exercise needs, and record version, permissions and how to roll it back.\n\n**Course configuration:**\n1. **Templater:** template folder `_System/Templates`, JavaScript only for a reviewed need\n2. **Dataview:** JavaScript queries only after a code review\n3. **Smart Connections:** verify the embedding model and network access\n4. **Obsidian Copilot:** verify provider, model, billing, retention and API-key storage\n5. **Note Companion:** optional, automatic moves off\n\nTest every plugin with fictional data. For models, prices and menus, current documentation applies."
-        },
-        {
-          "id": "modul_3_lesson_0_section_3",
-          "title": "Web Clipper + your first daily note",
-          "readTimeMinutes": 8,
-          "content": "**Obsidian Web Clipper in the browser:**\n1. Install the extension from the official Clipper page.\n2. Select the practice vault and `00 Inbox/` as the target.\n3. Leave the AI Interpreter off for now. It sends content to a model provider. Before switching it on, check provider, key storage and retention.\n\nTest with a non-sensitive public page and check the title, URL, capture date and content of the new note.\n\n**First daily note:**\nCmd/Ctrl+P → `Templater: insert template` → `_System/Templates/daily-note.md`.\n\nThen verify:\n- plugins and versions as expected\n- Clipper writes to the practice folder\n- template produces file name and fields\n- chat features use only the documented configuration\n\nIf a check fails, stop there, fix the error and only then use real data."
-        }
-      ],
-      "quiz": []
-    },
-    {
-      "id": "modul_3_lesson_2",
-      "moduleId": "modul_3",
-      "number": 2,
-      "title": "PARA and MOC: a simple knowledge structure",
-      "subtitle": "Structure a small practice vault",
-      "durationMinutes": 12,
-      "premiumGated": false,
-      "refreshCadence": "EVERGREEN",
-      "keyConcepts": [
-        "PARA",
-        "MOC",
-        "Zettelkasten",
-        "Tagging policy"
-      ],
-      "widgets": [
-        {
-          "kind": "exercise-role-scenario",
-          "placement": "before-quiz",
-          "props": {
-            "exerciseId": "modul_3_lesson_2_ex_1",
-            "lessonId": "modul_3_lesson_2",
-            "moduleId": "modul_3",
-            "title": "Where do you file the note?",
-            "scenario": "Choose your role and file each note. Projects have a deadline, Areas are ongoing responsibilities, Resources are reference material, Archive holds what is done.",
-            "roles": [
-              {
-                "id": "fuehrung",
-                "label": "Management / business owner",
-                "description": "Runs a mid-sized company",
-                "scenarios": [
-                  {
-                    "id": "gf_s1",
-                    "question": "Note: proposal draft for a new customer, due this coming Friday.",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Projects: has a clear deadline",
-                        "correct": true,
-                        "explanation": "A deadline means Project. After the decision the note goes to Archive."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Areas: sales is ongoing",
-                        "correct": false,
-                        "explanation": "Sales in general is an Area; this proposal has a deadline."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Resources: look up proposal templates",
-                        "correct": false,
-                        "explanation": "That fits the template; this proposal is a Project."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Archive: after submission",
-                        "correct": false,
-                        "explanation": "Only after submission. Today it is an active Project."
-                      }
-                    ]
-                  },
-                  {
-                    "id": "gf_s2",
-                    "question": "Note: annual review framework for employee feedback.",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Projects: you do have annual reviews",
-                        "correct": false,
-                        "explanation": "Each review is a Project; you reuse the framework."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Areas: ongoing leadership responsibility",
-                        "correct": false,
-                        "explanation": "Only if you keep developing it. Otherwise it is a Resource."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Resources: reference material for recurring tasks",
-                        "correct": true,
-                        "explanation": "Frameworks, templates and checklists are Resources."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Archive: it mattered in April",
-                        "correct": false,
-                        "explanation": "You need it every week, so it does not belong in Archive."
-                      }
-                    ]
-                  },
-                  {
-                    "id": "gf_s3",
-                    "question": "Note: minutes from the 2023 bank negotiation (credit terms rejected).",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Projects: it might still come up again",
-                        "correct": false,
-                        "explanation": "Without an active deadline it is not a Project."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Areas: finance is ongoing",
-                        "correct": false,
-                        "explanation": "Ongoing finances are an Area; the 2023 record is closed."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Resources: to prepare for the next negotiation",
-                        "correct": false,
-                        "explanation": "Resources are reusable templates and references. File the closed single case in Archive and link it from the next negotiation."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Archive: closed, but findable",
-                        "correct": true,
-                        "explanation": "Closed means Archive. Search and Copilot still find the note."
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "id": "vertrieb",
-                "label": "Sales / key account",
-                "description": "Manages customer accounts over multiple years",
-                "scenarios": [
-                  {
-                    "id": "vt_s1",
-                    "question": "Note: customer call on March 15, order confirmed for July.",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Projects: the July order is a deadline",
-                        "correct": true,
-                        "explanation": "Deadline and outcome are clear. In July the note goes to Archive."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Areas: customer relationship XYZ",
-                        "correct": false,
-                        "explanation": "The relationship is an Area; this commitment is a Project."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Resources: call-notes template",
-                        "correct": false,
-                        "explanation": "The record belongs to the relationship; the template would be a Resource."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Archive: it already happened",
-                        "correct": false,
-                        "explanation": "The commitment is not fulfilled yet."
-                      }
-                    ]
-                  },
-                  {
-                    "id": "vt_s2",
-                    "question": "Note: customer dossier for Customer Alpha (fictitious; product history, contacts, buying patterns).",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Projects: every customer is a project",
-                        "correct": false,
-                        "explanation": "An ongoing relationship with no fixed end is an Area."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Areas/Customers/Customer Alpha (fictitious): ongoing relationship",
-                        "correct": true,
-                        "explanation": "The relationship has no deadline and grows with every contact."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Resources: customer list",
-                        "correct": false,
-                        "explanation": "A Resource would be a general key-account playbook."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Archive: the customer already buys from us",
-                        "correct": false,
-                        "explanation": "Active customers belong in Areas."
-                      }
-                    ]
-                  },
-                  {
-                    "id": "vt_s3",
-                    "question": "Note: objection-handling catalog (50 typical customer objections + best responses).",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Projects: it still needs to be expanded",
-                        "correct": false,
-                        "explanation": "Expanding it is maintenance without a deadline."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Areas: sales enablement, ongoing",
-                        "correct": false,
-                        "explanation": "You only look things up in the catalog."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Resources: reusable regardless of time or customer",
-                        "correct": true,
-                        "explanation": "Reusable reference material is a Resource."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Archive: old objections rarely come up",
-                        "correct": false,
-                        "explanation": "You use it actively, so it does not belong in Archive."
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                "id": "hr",
-                "label": "HR / people",
-                "description": "Handles recruiting and employee development",
-                "scenarios": [
-                  {
-                    "id": "hr_s1",
-                    "question": "Note: onboarding plan for a new working student, starting June 1.",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Projects: the June 1 start is a deadline",
-                        "correct": true,
-                        "explanation": "End and outcome are clear. Afterwards the note goes to Archive."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Areas: onboarding in general",
-                        "correct": false,
-                        "explanation": "Onboarding in general is an Area; this one is a Project."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Resources: onboarding template",
-                        "correct": false,
-                        "explanation": "That fits the template; this onboarding is a Project."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Archive: it'll get deleted anyway",
-                        "correct": false,
-                        "explanation": "It has not started yet."
-                      }
-                    ]
-                  },
-                  {
-                    "id": "hr_s2",
-                    "question": "Note: applicant pool for a mechanical engineer role (ongoing, 5-10 open).",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Projects: every hire is a project",
-                        "correct": false,
-                        "explanation": "A single hire, yes; the ongoing pool is an Area."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Areas: engineering recruiting",
-                        "correct": true,
-                        "explanation": "Ongoing with no endpoint means Area, with one Project per hire."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Resources: mechanical-engineering job-description template",
-                        "correct": false,
-                        "explanation": "Templates yes, current applications no."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Archive: the applicant pool shrinks anyway",
-                        "correct": false,
-                        "explanation": "Active applications do not belong in Archive."
-                      }
-                    ]
-                  },
-                  {
-                    "id": "hr_s3",
-                    "question": "Note: research on four-day-week models (you're currently considering introducing one).",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Projects: decision due by Q3",
-                        "correct": true,
-                        "explanation": "A decision with a target date is a Project."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Areas: ongoing, no decision pending",
-                        "correct": false,
-                        "explanation": "With a deadline it is a Project, without one an Area."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Resources: reference material on working-time models",
-                        "correct": false,
-                        "explanation": "General material would be a Resource; your active decision is a Project."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Archive: it came up once before",
-                        "correct": false,
-                        "explanation": "The decision is still open."
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        }
-      ],
-      "sections": [
-        {
-          "id": "modul_3_lesson_2_section_1",
-          "title": "PARA as a four-part storage structure",
-          "readTimeMinutes": 2,
-          "content": "PARA = **Projects, Areas, Resources, Archive.**\n\n- **Projects:** anything with an endpoint, such as the fictitious project \"Close the proposal for Customer Alpha\"\n- **Areas:** ongoing responsibilities with no endpoint, such as sales, finance or team\n- **Resources:** reference material like articles, PDFs and templates\n- **Archive:** completed projects and inactive resources\n\nWhere findability, retention or data protection require something else, they take priority over PARA."
-        },
-        {
-          "id": "modul_3_lesson_2_section_2",
-          "title": "The skeleton in the vault",
-          "readTimeMinutes": 3,
-          "content": "```\nvault-root/\n├── 00 Inbox/              ← new input\n├── 10 Projects/\n│   └── Projekt-Angebot-Mueller/\n│       └── _MOC.md       ← overview note\n├── 20 Areas/\n│   ├── Vertrieb/\n│   ├── Finanzen/\n│   ├── Team/\n│   └── Strategie/\n├── 30 Resources/\n│   ├── Branche/\n│   ├── KI-Tools/\n│   └── Vorlagen/\n├── 40 Archive/\n├── 50 Daily/\n└── _System/\n    ├── Templates/\n    └── Dashboards/\n```\n\nThe German folder names come from the supplied template. If you imported it in Lesson 3.0, the structure is already there.\n\n**Bounded migration exercise:**\n1. Check the inbox\n2. Move in three to five active Projects\n3. Create only the Areas you need now\n4. File a small, representative set of references\n5. Move completed material to Archive\n\nEverything else waits until search, links and backup work on this sample."
-        },
-        {
-          "id": "modul_3_lesson_2_section_3",
-          "title": "MOC: the master-note concept",
-          "readTimeMinutes": 4,
-          "content": "**MOC = Map of Content.** One master note per project serves as the status hub for everything else.\n\nFictitious structure from `10 Projects/Projekt-Kunde-Alpha/_MOC.md`:\n\n```markdown\n---\nstatus: aktiv\nprojekt: Kunde-Alpha-Fiktivfall\n---\n\n# Proposal for Customer Alpha (fictitious)\n\n## Goal\nDraft for three fictitious sample machines; price and delivery date are unverified placeholders.\n\n## Status\n- [x] fictitious inquiry recorded\n- [ ] verify technical details\n- [ ] approve the proposal internally\n\n## Participants\n- Fictitious role Alpha: decision\n- Fictitious role Beta: price approval\n\n## Open questions\n- Have price, availability and discount been confirmed?\n```\n\nThe YAML fields keep the template's German identifiers. A real MOC carries only necessary, approved data with matching access rights."
-        },
-        {
-          "id": "modul_3_lesson_2_section_4",
-          "title": "Tagging policy",
-          "readTimeMinutes": 3,
-          "content": "Start with a small, documented tag set, for example:\n- `#todo`: open action\n- `#entscheidung`: documented decision\n- `#warten-auf`: blocked action\n- `#idee`: untested proposal\n- `#followup`: item to review again\n- `#archivieren`: archive candidate\n\nUse folders for coarse filing, MOCs for Project context and tags for the few states that cut across everything. Keep personal names and sensitive attributes out of tags unless a data policy covers them.\n\nStart with ten tags at most. If the set grows, check overlaps, write down meanings and test whether your queries still answer predictably."
-        }
-      ],
-      "quiz": [
-        {
-          "id": "modul_3_lesson_2_q1",
-          "questionText": "What does PARA stand for?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Projects, Areas, Resources, Archive",
-              "isCorrect": true
-            },
-            {
-              "id": "b",
-              "text": "Plan, Action, Report, Audit",
-              "isCorrect": false
-            },
-            {
-              "id": "c",
-              "text": "Process, Analyze, Respond, Adjust",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Priority, Area, Research, Action",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "The scheme comes from Tiago Forte."
-        },
-        {
-          "id": "modul_3_lesson_2_q2",
-          "questionText": "What is a MOC?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Marketing Outreach Content for campaigns",
-              "isCorrect": false
-            },
-            {
-              "id": "b",
-              "text": "Map of Content: one overview note per project",
-              "isCorrect": true
-            },
-            {
-              "id": "c",
-              "text": "Module Orchestrator Config",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Multi-Object Collection",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "One maintained overview note gathers a Project's goal, status, next action, participants and links."
-        }
-      ]
-    },
-    {
-      "id": "modul_3_lesson_3",
-      "moduleId": "modul_3",
-      "number": 3,
-      "title": "Smart Connections + Copilot",
-      "subtitle": "Semantic retrieval with source review",
-      "durationMinutes": 10,
-      "premiumGated": false,
-      "refreshCadence": "QUARTERLY",
-      "keyConcepts": [
-        "Smart Connections",
-        "Copilot for Obsidian",
-        "Embeddings"
-      ],
-      "widgets": [
-        {
-          "kind": "demo-chat-rag",
-          "placement": "after-intro"
-        }
-      ],
-      "sections": [
-        {
-          "id": "modul_3_lesson_3_section_1",
-          "title": "Smart Connections in action",
-          "readTimeMinutes": 3,
-          "content": "You create a new, fictitious note: volume discount for Customer Alpha, yes or no? Smart Connections suggests older discount notes and a current policy.\n\nA similarity score proves nothing. Whether the current approval rule still allows these terms shows only in the source note, with date and context.\n\nSmart Connections works with embeddings, vectors for semantic similarity. Model, where it runs, network access and cost are in your plugin configuration."
-        },
-        {
-          "id": "modul_3_lesson_3_section_2",
-          "title": "Copilot as a vault search interface",
-          "readTimeMinutes": 4,
-          "content": "In the isolated practice vault you ask Copilot: \"Which fictitious discount decisions are documented in the last 90 days? Give the file path and date for each statement.\"\n\nYou get a search draft back, say on Customer Alpha, Beta and Gamma. Open every linked note, check the context and look for gaps and contradictions.\n\nSecond practice question: \"Summarize the approved practice notes on Customer Alpha and flag every statement without a source.\"\n\nCopilot guarantees neither speed nor accuracy. Source links make the result checkable; the checking is yours."
-        },
-        {
-          "id": "modul_3_lesson_3_section_3",
-          "title": "Asking the right questions",
-          "readTimeMinutes": 3,
-          "content": "Copilot answers as well as your question and index allow. Three rules help:\n\n**Concrete:** \"Which discount decisions are documented in the last 90 days?\" instead of \"What do I think about pricing policy?\"\n\n**Time-bound:** a period such as \"Q1 2026\" or \"since March 2026\", when it fits the task.\n\n**Source-linked:** for every statement the file path, date and passage.\n\nMeasure retrieval time, missing-source rate and correction effort against your old workflow. If the numbers do not improve, switch the configuration off again. Both tools are retrieval aids; the source note stays the authoritative record."
-        }
-      ],
-      "quiz": [
-        {
-          "id": "modul_3_lesson_3_q1",
-          "questionText": "How does Smart Connections work technically?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Cloud-based keyword search",
-              "isCorrect": false
-            },
-            {
-              "id": "b",
-              "text": "Embeddings: vectors compared by meaning",
-              "isCorrect": true
-            },
-            {
-              "id": "c",
-              "text": "Full-text search with Elasticsearch",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "GraphRAG with an external vector store",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "Smart Connections compares meaning, not keywords. Which model computes the vectors, and where your note content goes, is in your current configuration."
-        },
-        {
-          "id": "modul_3_lesson_3_q2",
-          "questionText": "Three principles of good Copilot questions?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Concrete, time-bound, with sources",
-              "isCorrect": true
-            },
-            {
-              "id": "b",
-              "text": "Polite, short, in English",
-              "isCorrect": false
-            },
-            {
-              "id": "c",
-              "text": "Abstract, open-ended, creative",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Technical, detailed, with code",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "Concrete, time-bound questions that demand sources narrow the hits and make them checkable. They do not guarantee accuracy."
-        }
-      ]
-    },
-    {
-      "id": "modul_3_lesson_4",
-      "moduleId": "modul_3",
-      "number": 4,
-      "title": "Obsidian Web Clipper",
-      "subtitle": "From browser content to a reviewed vault note",
-      "durationMinutes": 8,
-      "premiumGated": false,
-      "refreshCadence": "QUARTERLY",
-      "keyConcepts": [
-        "Obsidian Web Clipper",
-        "AI Interpreter"
-      ],
-      "widgets": [
-        {
-          "kind": "exercise-pii-spotter",
-          "placement": "before-quiz",
-          "props": {
-            "exerciseId": "modul_3_lesson_4_ex_1",
-            "lessonId": "modul_3_lesson_4",
-            "moduleId": "modul_3",
-            "title": "Remove PII from a clipping before it goes into the vault",
-            "scenario": "All details are invented dummy data. Still mark every token a real clipping must not store permanently: names, email, phone, internal revenue and customer data.",
-            "text": "A fictitious person posted on LinkedIn yesterday: our fictitious company Fiktivwerk GmbH made 2.4 million euros in Q1 revenue, the sales lead Fictitious Contact reported a deal with Customer Beta worth 450000 euros. Contact at Fiktivwerk: demo.person@example.invalid or +49-000-000000-DUMMY. The analysis: we should also talk to Customer Gamma in Q2.",
-            "piiIndices": [
-              0,
-              1,
-              7,
-              8,
-              19,
-              20,
-              26,
-              27,
-              31,
-              35,
-              36,
-              38,
-              47,
-              48
-            ],
-            "passThreshold": 0.6
-          }
-        }
-      ],
-      "sections": [
-        {
-          "id": "modul_3_lesson_4_section_1",
-          "title": "The browser-tab reality",
-          "readTimeMinutes": 2,
-          "content": "Count your open tabs: how many are for reading later, how many for reference? A tab has no fixed location, no metadata and no way back.\n\nThe workflow: Web Clipper saves the article, the AI Interpreter proposes metadata, Obsidian indexes the note. Time each article yourself; the course deliberately gives no number."
-        },
-        {
-          "id": "modul_3_lesson_4_section_2",
-          "title": "Review a clip with the AI Interpreter",
-          "readTimeMinutes": 3,
-          "content": "Take a non-sensitive public article and start Web Clipper. The panel offers title, target folder, tags, template and an optional summary.\n\nBefore saving, verify:\n- title, canonical URL and capture date\n- the target folder against the storage rule\n- tags against the documented tag set\n- every summary statement against the article\n- that embedded personal or confidential details are removed\n\nWith the AI Interpreter active, the article goes to the configured model provider. So check provider, model, API-key storage, retention and cost, and store every summary with its source."
-        },
-        {
-          "id": "modul_3_lesson_4_section_3",
-          "title": "A capture criterion",
-          "readTimeMinutes": 3,
-          "content": "Save an article when it touches an active Project, supplies reference material you use regularly, or is a documented source that is hard to replace. Duplicates, articles with no foreseeable use and unsupported claims stay out.\n\nThe test before saving: \"I will use this source for [Project or Area] to answer [specific question].\" If that sentence does not hold, close the tab.\n\n**Exercise:** Take no more than three open tabs. Store source, capture date and intended use, review the generated fields and process the notes in the next scheduled inbox session."
-        }
-      ],
-      "quiz": [
-        {
-          "id": "modul_3_lesson_4_q1",
-          "questionText": "What does the AI Interpreter do in Web Clipper?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Translates the article into German",
-              "isCorrect": false
-            },
-            {
-              "id": "b",
-              "text": "Summarizes, tags and suggests a folder",
-              "isCorrect": true
-            },
-            {
-              "id": "c",
-              "text": "Blocks trackers and ads",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Converts PDF to Markdown",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "It proposes a summary, tags and a folder before import. Which provider sees the content to do that is in your configuration."
-        }
-      ]
-    },
-    {
-      "id": "modul_3_lesson_5",
+      "id": "wissen-3-1",
       "moduleId": "modul_3",
       "number": 5,
-      "title": "Daily workflow and precise prompts",
-      "subtitle": "Inbox maintenance with RCTFC and reviewable output",
-      "durationMinutes": 12,
-      "premiumGated": false,
-      "refreshCadence": "EVERGREEN",
+      "title": "Answers with a source",
+      "subtitle": "Sourced does not mean error-free",
+      "durationMinutes": 7,
       "keyConcepts": [
-        "RCTFC",
-        "Structured Output",
-        "Few-shot",
-        "Chain-of-Thought"
+        "Retrieval",
+        "Citation",
+        "Stale note"
       ],
-      "widgets": [
-        {
-          "kind": "exercise-prompt-diff",
-          "placement": "before-quiz",
-          "props": {
-            "exerciseId": "modul_3_lesson_5_ex_1",
-            "lessonId": "modul_3_lesson_5",
-            "moduleId": "modul_3",
-            "title": "Which daily Obsidian prompt is reviewable?",
-            "scenario": "You want to summarize last week's work from the practice vault for the weekly report. Which prompt sets sources, format and boundaries?",
-            "candidates": [
-              {
-                "label": "Variant A: the blanket ask",
-                "prompt": "Summarize this week for me.",
-                "critique": "Role, time frame and format are missing. Copilot guesses and often returns generic bullets or, lacking context, a refusal.",
-                "rating": 1
-              },
-              {
-                "label": "Variant B: structured, but open-ended",
-                "prompt": "Based on the daily notes from the last 7 days: summarize the key decisions and blockers for the weekly report.",
-                "critique": "Time frame, source and goal are there. Without a format (structure, word limit) and a role (for whom?), results vary a lot.",
-                "rating": 3
-              },
-              {
-                "label": "Variant C: RCTFC + structured output",
-                "prompt": "Role: Chief of Staff, writing for management.\nContext: daily notes from 2026-04-14 to 2026-04-20 in the vault.\nTask: create a weekly report.\n\nFormat: Markdown, 3 sections (1. Highlights, 3 bullet points, max 15 words each; 2. Blockers with a proposed solution, max 3; 3. Next week, max 5 lines).\n\nOff-limits: adverbs like \"successful\", \"productive\", \"focused\".\nSource: facts from the notes only, no additions or opinions.\nConstraint: if the time frame has no data, say so and make nothing up.",
-                "critique": "The brief sets RCTFC fields, an output schema, banned wording and a source rule. That makes repeated outputs comparable and reviewable.",
-                "rating": 5
-              }
-            ]
+      "concept": {
+        "body": "Retrieval means the system looks up matching documents and passes them to the model (Lewis et al. 2020). Answers can then be checked against a source. That does not make them error-free. Magesh et al. (2025) tested legal research tools that use retrieval: they invented or distorted something in 17 to 33% of queries.\n\nThree errors keep coming back:\n\n1. **Miscited:** the source exists but says something else.\n2. **Unsupported:** the statement is in no source but carries a citation.\n3. **Stale:** the source was right once, a newer one contradicts it.\n\nSo every note in your knowledge base needs a date and an owner, and every answer shows where it comes from.",
+        "takeaway": "A citation invites you to look. It proves nothing.",
+        "sources": [
+          {
+            "label": "Lewis et al. 2020, Retrieval-Augmented Generation",
+            "url": "https://arxiv.org/abs/2005.11401"
+          },
+          {
+            "label": "Magesh et al. 2025",
+            "url": "https://arxiv.org/abs/2405.20362"
           }
+        ]
+      },
+      "exercise": {
+        "kind": "claim-checker",
+        "title": "Check a cited AI answer",
+        "instructions": "Judge every marked statement against the three notes: supported, contradicted or unsupported. Watch the dates. Evaluate shows the key.",
+        "props": {
+          "sources": [
+            {
+              "id": "A",
+              "label": "Note A: returns (as of 3 Feb 2025, Sales)",
+              "text": "Returns are possible within 30 days of delivery. Customers pay the shipping costs."
+            },
+            {
+              "id": "B",
+              "label": "Note B: returns (as of 1 Sep 2026, Sales)",
+              "text": "Returns within 14 days of delivery, valid from 1 September 2026. For defects we pay the shipping costs."
+            },
+            {
+              "id": "C",
+              "label": "Note C: spare parts (as of 12 Jun 2026, Service)",
+              "text": "We deliver spare parts for model K2 within 5 working days."
+            }
+          ],
+          "draftLabel": "AI answer to a colleague. Question: how long can a customer return a defective K2, and who pays for shipping?",
+          "draft": [
+            {
+              "text": "According to the knowledge base: "
+            },
+            {
+              "text": "returns are possible within 30 days of delivery [A]",
+              "claimId": "days"
+            },
+            {
+              "text": ". "
+            },
+            {
+              "text": "For a defect we pay for shipping [B]",
+              "claimId": "shipping"
+            },
+            {
+              "text": ". "
+            },
+            {
+              "text": "A spare part arrives within 5 working days [C]",
+              "claimId": "parts"
+            },
+            {
+              "text": ", "
+            },
+            {
+              "text": "and we swap defective devices on site immediately [C]",
+              "claimId": "swap"
+            },
+            {
+              "text": "."
+            }
+          ],
+          "claims": [
+            {
+              "id": "days",
+              "verdict": "contradicted",
+              "sourceId": "B",
+              "evidence": "Returns within 14 days of delivery",
+              "correction": "14 days after delivery (note B, as of 1 Sep 2026)",
+              "why": "Note A matches the citation but is outdated. The newer note B replaces the period."
+            },
+            {
+              "id": "shipping",
+              "verdict": "supported",
+              "sourceId": "B",
+              "evidence": "For defects we pay the shipping costs.",
+              "why": "That is what the current note says."
+            },
+            {
+              "id": "parts",
+              "verdict": "supported",
+              "sourceId": "C",
+              "evidence": "We deliver spare parts for model K2 within 5 working days.",
+              "why": "Covered by note C."
+            },
+            {
+              "id": "swap",
+              "verdict": "missing",
+              "why": "No note mentions an on-site swap. The citation [C] only pretends to be evidence."
+            }
+          ],
+          "passRatio": 0
         }
-      ],
-      "sections": [
+      },
+      "checks": [
         {
-          "id": "modul_3_lesson_5_section_1",
-          "title": "A bounded maintenance workflow",
-          "readTimeMinutes": 3,
-          "content": "Without maintenance a knowledge base turns back into a pile of files. A fixed, bounded session in four steps prevents that:\n\n1. **Inspect the inbox:** count new entries; never forward real data automatically without approval.\n2. **Classify:** assign each entry to Project, Area, Resource or Archive; unclear entries stay flagged in the inbox.\n3. **Update MOCs:** add status, next action and source link for the affected Projects.\n4. **Create the daily note:** carry priorities and open points over from reviewed records.\n\nThe time box follows your volume. Record backlog and misclassification, because an empty inbox proves nothing when entries sit in the wrong place."
-        },
-        {
-          "id": "modul_3_lesson_5_section_2",
-          "title": "RCTFC: the prompt schema",
-          "readTimeMinutes": 3,
-          "content": "**RCTFC** means **Role, Context, Task, Format, Constraints.**\n\nOpen request:\n> \"Write a customer decline email.\"\n\nStructured brief:\n- **Role:** sales representative at a mid-sized mechanical-engineering company\n- **Context:** fictional established Customer Alpha; a documented request cannot be fulfilled\n- **Task:** prepare an internal decline-email draft\n- **Format:** subject, greeting, two paragraphs, signature\n- **Constraints:** fewer than 120 words, no invented reasons or commitments, any alternative only as a reviewed placeholder\n\nEvery field takes a decision off the model that it would otherwise guess. You still review the draft. The template is `P020-rctfc-template` in the course materials."
-        },
-        {
-          "id": "modul_3_lesson_5_section_3",
-          "title": "Structured Output (JSON) + Few-shot + CoT",
-          "readTimeMinutes": 4,
-          "content": "**Structured output (JSON):** When a machine processes the answer further, it needs a fixed schema and technical validation.\n\n```\nAnalyze this fictitious meeting transcript. Return strictly valid JSON:\n{\n  \"entscheidungen\": [{\"text\": \"...\", \"verantwortlich\": null}],\n  \"action_items\": [{\"text\": \"...\", \"fälligkeit\": null, \"verantwortlich\": null}],\n  \"offene_fragen\": [{\"text\": \"...\", \"wer_antwortet\": null}]\n}\nUse null for unknown values. Do not invent details.\n```\n\nLater workflow steps may depend on the German keys, so they stay. Validate the result against the schema before n8n or Python use it; invalid JSON goes to a documented error path.\n\n**Few-shot:** Two or three representative examples show the model the pattern, but they prove no accuracy.\n\n**Reviewable intermediate results (CoT):** For complex tasks, ask for short evidence and assumptions. Do not ask for hidden reasoning, and skip intermediate steps on simple text tasks.\n\nMeasure on your own task whether the routine, schema or examples pay off."
-        }
-      ],
-      "quiz": [
-        {
-          "id": "modul_3_lesson_5_q1",
-          "questionText": "What does RCTFC stand for?",
-          "answerOptions": [
+          "id": "wissen-3-1-c1",
+          "prompt": "An AI answer quotes a note correctly, but a newer note says something else. Which error is that?",
+          "options": [
             {
               "id": "a",
-              "text": "Role, Context, Task, Format, Constraints",
-              "isCorrect": true
+              "text": "An invented statement.",
+              "correct": false,
+              "feedback": "The statement is in a source. The problem is the source's age."
             },
             {
               "id": "b",
-              "text": "Read, Code, Test, Fix, Commit",
-              "isCorrect": false
+              "text": "No error; the answer is supported.",
+              "correct": false,
+              "feedback": "Supported by an outdated note is still wrong. Date and version are part of the check."
             },
             {
               "id": "c",
-              "text": "Research, Create, Test, Feedback, Close",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Request, Confirm, Transfer, Finalize, Complete",
-              "isCorrect": false
+              "text": "A stale source.",
+              "correct": true
             }
           ],
-          "explanation": "Each of the five fields takes a decision off the model that it would otherwise guess from general patterns."
+          "explanation": "Without a date on every note nobody notices this error."
         },
         {
-          "id": "modul_3_lesson_5_q2",
-          "questionText": "Which request is appropriate for a complex analysis?",
-          "answerOptions": [
+          "id": "wissen-3-1-c2",
+          "prompt": "What does the Magesh et al. study show about research tools that use retrieval?",
+          "options": [
             {
               "id": "a",
-              "text": "Request complete hidden reasoning for every task",
-              "isCorrect": false
+              "text": "Errors stay common even with sources, so you check important citations at the source.",
+              "correct": true
             },
             {
               "id": "b",
-              "text": "Ask for short, reviewable evidence and assumptions",
-              "isCorrect": true
+              "text": "Retrieval eliminates invented answers.",
+              "correct": false,
+              "feedback": "The tested tools still invented or distorted something in 17 to 33% of queries."
             },
             {
               "id": "c",
-              "text": "Review it only through an API and never through a user interface",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Tie the method to one fixed model name",
-              "isCorrect": false
+              "text": "Only free tools make such errors.",
+              "correct": false,
+              "feedback": "The tools tested were commercial professional products. Price does not protect against errors."
             }
           ],
-          "explanation": "Evidence and assumptions make the analysis checkable. You do not need hidden reasoning for that, and it proves nothing about quality."
+          "explanation": "A citation makes an answer checkable, not correct."
         }
       ]
     },
     {
-      "id": "modul_3_lesson_6",
+      "id": "wissen-3-2",
       "moduleId": "modul_3",
       "number": 6,
-      "title": "Claude + Obsidian via MCP",
-      "subtitle": "Advanced vault integration",
-      "durationMinutes": 14,
-      "premiumGated": false,
-      "refreshCadence": "QUARTERLY",
+      "title": "The same question, with and without notes",
+      "subtitle": "What retrieval changes in the brief",
+      "durationMinutes": 8,
       "keyConcepts": [
-        "obsidian-claude-code-mcp",
-        "WebSocket bridge"
+        "Retrieval",
+        "Citation",
+        "Flag conflicts"
       ],
-      "widgets": [
-        {
-          "kind": "demo-workflow",
-          "placement": "after-intro"
+      "concept": {
+        "body": "Without sources a model answers from its training data. It does not know your prices, deadlines or responsibilities and fills the gap with something plausible. With sources it can rely on your material, provided the brief asks for three things:\n\n1. **Answer only from the notes** and otherwise say what is missing.\n2. **Support every statement with a note ID**, so you can check it in seconds.\n3. **Flag conflicts** and follow the newer note instead of silently picking one.\n\nBelow you ask the same question once without and once with notes. If live mode is available, a real model answers. Otherwise you see recorded examples showing exactly the typical errors. Rate both answers against the same criteria.",
+        "takeaway": "Sources only, every statement supported, conflicts flagged.",
+        "sources": [
+          {
+            "label": "Lewis et al. 2020, Retrieval-Augmented Generation",
+            "url": "https://arxiv.org/abs/2005.11401"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "live-prompt-ab",
+        "title": "Compare two answers to the same question",
+        "instructions": "Run both briefs and mark which criteria each answer meets. You are done once you evaluate.",
+        "props": {
+          "task": "Goal: an answer to a colleague that you can check against the notes in one minute.",
+          "variants": [
+            {
+              "label": "Without knowledge base",
+              "prompt": "A customer asks: how long can he return a defective model K2 device, and who pays for shipping? Write a short answer for my colleague.",
+              "recorded": "Model K2 usually comes with a 30-day return period. Shipping is normally paid by the customer; for defects the retailer usually covers it. We also generally swap defective devices on site."
+            },
+            {
+              "label": "With notes",
+              "prompt": "Answer the question using only the notes below. Support every statement with the note ID in square brackets. If notes contradict each other, name the conflict and follow the newer one. If something is missing, write \"Not in the notes\".\n\nQuestion: how long can a customer return a defective model K2 device, and who pays for shipping?\n\n[A] As of 3 Feb 2025: returns are possible within 30 days of delivery. Customers pay the shipping costs.\n[B] As of 1 Sep 2026: returns within 14 days of delivery. For defects we pay the shipping costs.\n[C] As of 12 Jun 2026: we deliver spare parts for model K2 within 5 working days.",
+              "recorded": "Returns within 14 days of delivery [B]. Note: [A] still says 30 days but is older (as of 3 Feb 2025) and replaced by [B]. For a defect we pay the shipping costs [B]."
+            }
+          ],
+          "rubric": [
+            {
+              "id": "short",
+              "label": "Short enough for a chat message",
+              "expected": {
+                "a": true,
+                "b": true
+              }
+            },
+            {
+              "id": "cites",
+              "label": "Every statement names a source",
+              "expected": {
+                "a": false,
+                "b": true
+              }
+            },
+            {
+              "id": "current",
+              "label": "States the current 14-day period",
+              "expected": {
+                "a": false,
+                "b": true
+              }
+            },
+            {
+              "id": "conflict",
+              "label": "Flags the conflict between old and new note",
+              "expected": {
+                "a": false,
+                "b": true
+              }
+            },
+            {
+              "id": "invent",
+              "label": "Invents nothing",
+              "hint": "Is every statement in a note?",
+              "expected": {
+                "a": false,
+                "b": true
+              }
+            }
+          ],
+          "allowEdit": true
         }
-      ],
-      "sections": [
+      },
+      "checks": [
         {
-          "id": "modul_3_lesson_6_section_1",
-          "title": "The third connection",
-          "readTimeMinutes": 3,
-          "content": "You know two ways into the vault: the plugin inside Obsidian, and copy and paste. The third is MCP, a programmatic interface. It lets Claude do more, so you review more.\n\nThe course reference `obsidian-claude-code-mcp` describes a WebSocket bridge. Before using it, review the repository, version, maintainer, license, dependencies, security notices and compatibility.\n\nDepending on its tools, the server reads, searches, creates or modifies notes. Start on a copy of the practice vault, read-only and with one folder."
-        },
-        {
-          "id": "modul_3_lesson_6_section_2",
-          "title": "Setup",
-          "readTimeMinutes": 4,
-          "content": "The course bundle contains `install-obsidian-claude-code-mcp.sh`. Read every setup script before you run it.\n\n**Before execution:**\n1. Read the script and pinned dependency versions\n2. Verify the repository URL and commit\n3. Back up the Claude Code configuration\n4. Set the path to a copied practice vault\n5. Review loopback binding, port and authentication for the bridge\n6. Confirm that existing MCP entries are not overwritten\n7. Do not provide secrets as command arguments\n\nThen test start and stop, and record changed files, running processes and the complete rollback."
-        },
-        {
-          "id": "modul_3_lesson_6_section_3",
-          "title": "The first query",
-          "readTimeMinutes": 4,
-          "content": "The first test is read-only, in the copied practice vault:\n\n> \"List the top-level directories and count Markdown files in each. Do not open file contents and do not perform any write action.\"\n\nCompare the output with a local file listing. If an unapproved directory shows up, the test failed.\n\nThen a bounded task:\n> \"Read only approved MOCs in `10 Projects/` with `status: aktiv`. Prepare an internal status draft with source path and date for every statement. Do not write a file yet.\"\n\nClaude may write only after sources, permissions and output are reviewed, and then only to a separate output directory. You measure runtime and correction effort yourself."
-        },
-        {
-          "id": "modul_3_lesson_6_section_4",
-          "title": "More use cases",
-          "readTimeMinutes": 3,
-          "content": "**Follow-up extraction:**\n> \"Find all open `#warten-auf` entries in the approved practice notes. Create internal drafts and name the source file for each statement. Don't send anything.\"\n\n**Decision overview:**\n> \"List practice notes tagged `#entscheidung`. Give the date, topic, decision, follow-up action and source file for each. Flag any contradictions.\"\n\n**Fictitious customer profile:**\n> \"Build a profile for Customer Alpha (fictitious) from the approved practice notes. Don't use any real personal or contact data.\"\n\nMCP does not make your notes more correct. Permissions, data minimization, source review and read-only tests stay, and for roadmaps and integrations the current official documentation applies."
-        }
-      ],
-      "quiz": [
-        {
-          "id": "modul_3_lesson_6_q1",
-          "questionText": "What does MCP do differently than Copilot for Obsidian?",
-          "answerOptions": [
+          "id": "wissen-3-2-c1",
+          "prompt": "Why does the answer without the knowledge base say 30 days?",
+          "options": [
             {
               "id": "a",
-              "text": "MCP exposes tools; Copilot is an Obsidian interface",
-              "isCorrect": true
+              "text": "Because note A says 30 days.",
+              "correct": false,
+              "feedback": "Without the knowledge base the model never saw note A. The number is a guess that happens to match the old rule."
             },
             {
               "id": "b",
-              "text": "MCP costs money",
-              "isCorrect": false
+              "text": "It fills the gap with a plausible default because it does not know your notes.",
+              "correct": true
             },
             {
               "id": "c",
-              "text": "MCP always uses GPT-4, Copilot always Claude",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "They're identical",
-              "isCorrect": false
+              "text": "Because 30 days is required by law.",
+              "correct": false,
+              "feedback": "No note mentions such a requirement and the answer does not support it. Those are exactly the claims you check."
             }
           ],
-          "explanation": "MCP is a tool interface for compatible clients. Transport and available actions depend on the specific server."
+          "explanation": "Without sources an answer sounds just as confident as with them. Only the citation makes the difference visible."
+        },
+        {
+          "id": "wissen-3-2-c2",
+          "prompt": "Which instruction stops the model from silently using the old note?",
+          "options": [
+            {
+              "id": "a",
+              "text": "\"Answer precisely.\"",
+              "correct": false,
+              "feedback": "Precise can also be precisely wrong. The model needs a rule for conflicts."
+            },
+            {
+              "id": "b",
+              "text": "\"Use only the first note.\"",
+              "correct": false,
+              "feedback": "Order says nothing about recency. Here the first note is the outdated one."
+            },
+            {
+              "id": "c",
+              "text": "\"If notes contradict each other, name the conflict and follow the newer one.\"",
+              "correct": true
+            }
+          ],
+          "explanation": "A rule for conflicts plus a date on every note makes stale knowledge visible."
         }
       ]
     }

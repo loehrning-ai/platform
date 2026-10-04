@@ -5,7 +5,6 @@ import {
   getCourseMeta,
   getModules,
 } from "./data";
-import { getAllChallenges } from "./challenges";
 import { getGlossary } from "./glossary";
 import { getCourseConfig } from "@/lib/course/config";
 import { getWorkshopQuestions } from "@/lib/course/data";
@@ -67,7 +66,7 @@ function widgetIdentity(value: unknown): unknown {
 }
 
 describe("AI-Native audited English runtime bundle", () => {
-  it("registers the complete course, glossary, challenge, and quiz bundle behind one gate", async () => {
+  it("registers the complete course, glossary and quiz bundle behind one gate", async () => {
     __resetLessonCacheForTests();
     expect(getAuditedCourseContentLocales(COURSE_SLUG)).toEqual(["de", "en"]);
     expect(hasAuditedCourseContentLocale(COURSE_SLUG, "en")).toBe(true);
@@ -77,19 +76,18 @@ describe("AI-Native audited English runtime bundle", () => {
     const modules = getModules("en");
     const lessons = await getAllLessons("en");
     const glossary = getGlossary("en");
-    const challenges = getAllChallenges("en");
     const syncQuestions = getWorkshopQuestions(COURSE_SLUG, "en");
     const asyncQuestions = await loadWorkshopQuestions(COURSE_SLUG, "en");
 
     expect(config).toMatchObject({
       slug: COURSE_SLUG,
       language: "en",
-      title: "AI-Native Workflow Course",
+      title: "Working with AI",
     });
     expect(modules).toHaveLength(4);
     expect(lessons).toHaveLength(getCourseMeta("en").totalLessons);
-    expect(glossary.entries.length).toBeGreaterThan(40);
-    expect(challenges).toHaveLength(12);
+    expect(lessons).toHaveLength(9);
+    expect(glossary.entries).toHaveLength(16);
     expect(syncQuestions.length).toBeGreaterThanOrEqual(
       config.workshopQuizQuestionCount,
     );
@@ -160,20 +158,17 @@ describe("AI-Native audited English runtime bundle", () => {
         question.answerOptions.map(({ id, isCorrect }) => ({ id, isCorrect })),
       ),
     );
-    expect(getGlossary("en").entries.map(({ term }) => term)).toEqual(
-      getGlossary("de").entries.map(({ term }) => term),
+    expect(getGlossary("en").entries.map(({ category }) => category)).toEqual(
+      getGlossary("de").entries.map(({ category }) => category),
     );
-    expect(getAllChallenges("en").map(({ weekOffset }) => weekOffset)).toEqual(
-      getAllChallenges("de").map(({ weekOffset }) => weekOffset),
+    expect(enLessons.map((lesson) => lesson.exercise?.kind)).toEqual(
+      deLessons.map((lesson) => lesson.exercise?.kind),
     );
   });
 
   it("declares parity only for reviewed public surfaces", () => {
     for (const pathname of [
       "/ai-native",
-      "/ai-native/capstone-gallery",
-      "/ai-native/demos",
-      "/ai-native/fluency-test",
       "/ai-native/glossar",
       "/ai-native/verifizierung",
     ]) {
@@ -181,5 +176,9 @@ describe("AI-Native audited English runtime bundle", () => {
     }
     expect(hasEnglishContentParity("/ai-native/kurs")).toBe(false);
     expect(hasEnglishContentParity("/ai-native/kurs/modul_1")).toBe(false);
+    // Retired supplementary routes are no longer declared.
+    for (const retired of ["/ai-native/demos", "/ai-native/fluency-test", "/ai-native/capstone-gallery"]) {
+      expect(hasEnglishContentParity(retired), retired).toBe(false);
+    }
   });
 });

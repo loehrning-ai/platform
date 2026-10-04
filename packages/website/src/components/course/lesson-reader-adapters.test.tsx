@@ -80,14 +80,18 @@ describe.each(["de", "en"] as const)("reader adapters: %s", (locale) => {
       ? `${prefix}/kurse/open-source/data-engineering-fundamentals/${ids[index + 1]}` : `${prefix}/kurse/open-source/data-engineering-fundamentals` });
   });
 
+  // Engine ids end in "-<module>-<lesson>" (for example "messen-1-2").
+  const aiNativeModuleNumber = (id: string) => Number(/-(\d+)-\d+$/.exec(id)![1]);
+  const aiNativeNavItem = (id: string) => ({
+    lessonId: id, moduleId: `modul_${aiNativeModuleNumber(id)}` as ModuleId,
+    moduleNumber: aiNativeModuleNumber(id), moduleTitle: "Fixture",
+    lessonNumber: Number(/-(\d+)$/.exec(id)![1]), title: "Fixture",
+  });
+
   it.each(positions)("AI-Native crosses modules and finishes at assessment (%s)", (position) => {
     const ids = CANONICAL_LESSON_IDS["ai-native"];
     const index = indexFor(position, ids.length);
-    const lessons = ids.map((id) => ({
-      lessonId: id, moduleId: /^(modul_\d+)_/.exec(id)![1] as ModuleId,
-      moduleNumber: Number(id.split("_")[1]), moduleTitle: "Fixture",
-      lessonNumber: Number(id.split("_")[3]), title: "Fixture",
-    }));
+    const lessons = ids.map(aiNativeNavItem);
     render(<AiNativeLessonPageShell locale={locale} lessonId={ids[index]} lessons={lessons}>Fixture</AiNativeLessonPageShell>);
     expect(screen.getByRole("status")).toHaveTextContent(`${index + 1} / ${ids.length}`);
     expect(observed.options?.next).toMatchObject({ href: ids[index + 1]
@@ -96,13 +100,9 @@ describe.each(["de", "en"] as const)("reader adapters: %s", (locale) => {
 
   it("AI-Native's final lesson of a module points into the next module", () => {
     const ids = CANONICAL_LESSON_IDS["ai-native"];
-    const index = ids.findIndex((id, current) => ids[current + 1] && id.split("_")[1] !== ids[current + 1].split("_")[1]);
+    const index = ids.findIndex((id, current) => ids[current + 1] && aiNativeModuleNumber(id) !== aiNativeModuleNumber(ids[current + 1]));
     expect(index).toBeGreaterThanOrEqual(0);
-    const lessons = ids.map((id) => ({
-      lessonId: id, moduleId: /^(modul_\d+)_/.exec(id)![1] as ModuleId,
-      moduleNumber: Number(id.split("_")[1]), moduleTitle: "Fixture",
-      lessonNumber: Number(id.split("_")[3]), title: "Fixture",
-    }));
+    const lessons = ids.map(aiNativeNavItem);
     render(<AiNativeLessonPageShell locale={locale} lessonId={ids[index]} lessons={lessons}>Fixture</AiNativeLessonPageShell>);
     expect(observed.options?.next).toMatchObject({ href: localizeHref(courseLessonHref("ai-native", ids[index + 1]), locale) });
   });

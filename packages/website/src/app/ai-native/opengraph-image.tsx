@@ -5,7 +5,7 @@ import { resolveFoundationCourseContentLocale } from "@/lib/course/localization"
 import { COURSE_PLAKAT } from "@/lib/plakat/palettes";
 import { CourseOgCard, courseOgFonts } from "../kurse/course-og-card";
 
-export const alt = "AI-Native Arbeitskurs / AI-Native Workflow Course on loehrning.ai";
+export const alt = "Mit KI arbeiten / Working with AI on loehrning.ai";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -19,16 +19,16 @@ export default async function Image() {
   const copy =
     locale === "en"
       ? {
-          caps: "AI-Native Workflow Course",
-          title: "Automate routine work with Claude.",
-          subtitle: `${totalModules} modules, ${totalLessons} lessons, no code.`,
+          caps: "Working with AI",
+          title: "Measure first. Then automate.",
+          subtitle: `${totalModules} modules, ${totalLessons} lessons, any tool.`,
           trailing: "/en/ai-native",
           titleSize: 68,
         }
       : {
-          caps: "AI-Native Arbeitskurs · Grundlagenkurs",
-          title: "Routinearbeit mit Claude automatisieren.",
-          subtitle: `${totalModules} Module, ${totalLessons} Lektionen, ohne Programmieren.`,
+          caps: "Mit KI arbeiten · Grundlagenkurs",
+          title: "Erst messen. Dann automatisieren.",
+          subtitle: `${totalModules} Module, ${totalLessons} Lektionen, jedes Werkzeug.`,
           trailing: "/ai-native",
           titleSize: 68,
         };

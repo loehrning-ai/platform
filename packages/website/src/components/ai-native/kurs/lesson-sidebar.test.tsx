@@ -15,7 +15,7 @@ const ITEMS = [
     moduleId: "modul_1" as const,
     moduleNumber: 1,
     moduleTitle: "Denkweise",
-    lessonId: "modul_1_lesson_1",
+    lessonId: "messen-1-1",
     lessonNumber: 1,
     title: "Vom Werkzeug zum System",
   },
@@ -23,7 +23,7 @@ const ITEMS = [
     moduleId: "modul_2" as const,
     moduleNumber: 2,
     moduleTitle: "Arbeitsfluss",
-    lessonId: "modul_2_lesson_1",
+    lessonId: "kontext-2-1",
     lessonNumber: 1,
     title: "Kontext bauen",
   },
@@ -44,11 +44,11 @@ describe("AiNativeLessonSidebar", () => {
     expect(screen.getByText(/Module 2/)).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /Vom Werkzeug zum System/ }),
-    ).toHaveAttribute("href", "/en/ai-native/kurs/modul_1/modul_1_lesson_1");
+    ).toHaveAttribute("href", "/en/ai-native/kurs/modul_1/messen-1-1");
   });
 
   it("keeps a legacy completion bit open until current evidence exists", async () => {
-    markLessonCompleted("ai-native", "modul_1_lesson_1");
+    markLessonCompleted("ai-native", "messen-1-1");
     render(<AiNativeLessonSidebar lessons={ITEMS} locale="de" />);
 
     const link = await screen.findByRole("link", {
@@ -57,17 +57,12 @@ describe("AiNativeLessonSidebar", () => {
     expect(link.querySelector("svg")).toBeNull();
 
     act(() => {
-      for (const sectionId of [
-        "modul_1_lesson_1_section_1",
-        "modul_1_lesson_1_section_2",
-        "modul_1_lesson_1_section_3",
-        "modul_1_lesson_1_section_4",
-      ]) {
-        markSectionRead("ai-native", "modul_1_lesson_1", sectionId);
+      for (const sectionId of ["messen-1-1_exercise"]) {
+        markSectionRead("ai-native", "messen-1-1", sectionId);
       }
-      saveLessonQuizScore("ai-native", "modul_1_lesson_1", 1, 1);
+      saveLessonQuizScore("ai-native", "messen-1-1", 1, 1);
       completeCheckpoint(
-        "modul_1_lesson_1",
+        "messen-1-1",
         lessonCompletionEvidenceCheckpointId("ai-native"),
       );
     });

@@ -269,14 +269,14 @@ describe("workshop-quiz config queries", () => {
   it("reads the per-course question count", () => {
     expect(getWorkshopQuestionCount("ki-fuehrerschein")).toBe(20);
     expect(getWorkshopQuestionCount("eu-ai-act-kurs")).toBe(27);
-    expect(getWorkshopQuestionCount("ai-native")).toBe(20);
+    expect(getWorkshopQuestionCount("ai-native")).toBe(15);
     expect(getWorkshopQuestionCount("ki-und-gesellschaft")).toBe(15);
   });
 
   it("reads the per-course time limit in minutes", () => {
     expect(getWorkshopTimeLimitMinutes("ki-fuehrerschein")).toBe(25);
     expect(getWorkshopTimeLimitMinutes("eu-ai-act-kurs")).toBe(30);
-    expect(getWorkshopTimeLimitMinutes("ai-native")).toBe(25);
+    expect(getWorkshopTimeLimitMinutes("ai-native")).toBe(20);
     expect(getWorkshopTimeLimitMinutes("ki-und-gesellschaft")).toBe(20);
   });
 

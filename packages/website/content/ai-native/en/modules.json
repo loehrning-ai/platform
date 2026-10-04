@@ -3,80 +3,58 @@
     {
       "id": "modul_1",
       "number": 1,
-      "title": "From task to workflow",
-      "subtitle": "From executing to orchestrating",
-      "description": "You turn recurring tasks into repeatable workflows.",
-      "voiceAnchor": "Describe the task precisely and check the result before you use it.",
-      "durationMinutes": 50,
-      "lessonCount": 5,
+      "title": "Measure, don't guess",
+      "subtitle": "Net time and triage",
+      "description": "You measure whether AI pays off for a task and pick the tasks to start with.",
+      "durationMinutes": 15,
+      "lessonCount": 2,
       "premiumGated": false,
       "topics": [
-        "When you stop writing it yourself",
-        "Why teams delegate work to AI",
-        "Claude in the workflow: specify, constrain and review",
-        "Ten recurring tasks as delegation candidates",
-        "AI-Native Fluency Test (self-assessment)"
+        "Is AI actually worth it here?",
+        "Which tasks first?"
       ]
     },
     {
       "id": "modul_2",
       "number": 2,
-      "title": "Claude in a defined work context",
-      "subtitle": "The Claude stack: Projects, Skills, Plugins and MCP",
-      "description": "You set up a Claude project with instructions, sample files and skills.",
-      "voiceAnchor": "Set the context and give Claude only the permissions the task needs.",
-      "durationMinutes": 76,
-      "lessonCount": 7,
+      "title": "Context and tools",
+      "subtitle": "Lean context, least privilege",
+      "description": "You decide what a model should always know and grant tool permissions so that prompt injection goes nowhere.",
+      "durationMinutes": 15,
+      "lessonCount": 2,
       "premiumGated": false,
       "topics": [
-        "Projects, Memory and Artifacts: your Claude workspace",
-        "Connector principles: Gmail, Calendar and Drive in a simulated OAuth exercise",
-        "Skills: reusable command workflows",
-        "Plugins and MCP: connecting Claude to systems",
-        "Design Skill and Artifacts",
-        "Claude Code for non-developers",
-        "Memory and CLAUDE.md"
+        "What the model should always know",
+        "Granting permissions to tools"
       ]
     },
     {
       "id": "modul_3",
       "number": 3,
-      "title": "A searchable knowledge base",
-      "subtitle": "Obsidian and Claude for structured business knowledge",
-      "description": "You bring emails, notes and folders together in Obsidian.",
-      "voiceAnchor": "A maintained knowledge base shows where each note comes from and how current it is.",
-      "durationMinutes": 89,
-      "lessonCount": 7,
+      "title": "Knowledge you can cite",
+      "subtitle": "Retrieval, citations, stale notes",
+      "description": "You check cited answers against sources and write briefs that surface conflicts.",
+      "durationMinutes": 15,
+      "lessonCount": 2,
       "premiumGated": false,
       "topics": [
-        "Setup walkthrough (optional, without a time limit)",
-        "Why a maintained knowledge base matters",
-        "PARA and MOC as a filing structure for SMEs",
-        "Smart Connections and Copilot",
-        "Obsidian Web Clipper",
-        "Daily workflow, prompts with RCTFC and JSON output",
-        "Claude and Obsidian through MCP"
+        "Answers with a source",
+        "The same question, with and without notes"
       ]
     },
     {
       "id": "modul_4",
       "number": 4,
-      "title": "Automate repeatable work",
-      "subtitle": "n8n, EU AI Act and the capstone",
-      "description": "You take recurring manual work apart and test whether a bounded n8n workflow fits.",
-      "voiceAnchor": "Automate only once inputs, review point, failure path and accountability are clear.",
-      "durationMinutes": 88,
-      "lessonCount": 8,
+      "title": "A workflow with approval",
+      "subtitle": "Test run, deployment choice, pilot plan",
+      "description": "You safeguard a workflow with checks, a fallback path and approval, choose local or cloud and plan your pilot.",
+      "durationMinutes": 23,
+      "lessonCount": 3,
       "premiumGated": false,
       "topics": [
-        "Self-hosting n8n: data-protection and operations basics",
-        "Sandbox build 1: email triage to a review list",
-        "Sandbox build 2: meeting notes to a to-do draft",
-        "Sandbox build 3: weekly report from notes",
-        "Local AI with LM Studio",
-        "EU AI Act analysis (Annex III)",
-        "Capstone brief: a bounded seven-day pilot",
-        "Capstone review and privacy primer"
+        "A workflow that catches errors",
+        "Local or cloud?",
+        "Your pilot on one page"
       ]
     }
   ]

@@ -83,7 +83,7 @@ test.describe("/kurse unified hub", () => {
 
     await expect(page.locator("body")).toContainText("KI-Führerschein");
     await expect(page.locator("body")).toContainText("EU AI Act Kurs");
-    await expect(page.locator("body")).toContainText("AI-Native Arbeitskurs");
+    await expect(page.locator("body")).toContainText("Mit KI arbeiten");
 
     await expect(page.locator("body")).toContainText("Grundlagenpfad");
     await expect(page.locator("body")).toContainText("Visuelles Lernen");
@@ -223,7 +223,7 @@ test.describe("AI-Native public preview and login-gated course app (: /ai-native
   for (const path of [
     "/ai-native/kurs",
     "/ai-native/kurs/modul_4",
-    "/ai-native/kurs/modul_4/modul_4_lesson_1",
+    "/ai-native/kurs/modul_4/workflow-4-1",
     "/ai-native/kurs/zertifikat",
     "/ai-native/kurs/quiz",
   ]) {

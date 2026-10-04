@@ -97,18 +97,12 @@ export const COURSE_PROJECT_MILESTONE_MANIFEST: CourseProjectMilestoneManifest =
       transfer: authoredUnits("eu-ai-act-kurs", ["block_6_lesson_"]),
     }),
     "ai-native": defineCourseMilestones("ai-native", {
-      ground: authoredUnits("ai-native", ["modul_1_lesson_"]),
-      build: authoredUnits("ai-native", ["modul_2_lesson_"]),
-      run: authoredUnits("ai-native", ["modul_3_lesson_"]),
-      verify: [
-        "modul_4_lesson_1",
-        "modul_4_lesson_2",
-        "modul_4_lesson_3",
-        "modul_4_lesson_4",
-        "modul_4_lesson_5",
-        "modul_4_lesson_6",
-      ],
-      transfer: ["modul_4_lesson_7", "modul_4_lesson_8"],
+      // Lesson-engine IDs (four modules): measure, context, knowledge, workflow.
+      ground: authoredUnits("ai-native", ["messen-"]),
+      build: authoredUnits("ai-native", ["kontext-"]),
+      run: authoredUnits("ai-native", ["wissen-"]),
+      verify: ["workflow-4-1", "workflow-4-2"],
+      transfer: ["workflow-4-3"],
     }),
     "ki-und-gesellschaft": defineCourseMilestones("ki-und-gesellschaft", {
       ground: authoredUnits("ki-und-gesellschaft", ["arbeit-"]),

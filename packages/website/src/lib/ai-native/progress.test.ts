@@ -71,16 +71,14 @@ import {
   __resetCacheForTests,
 } from "./progress";
 
-const CANONICAL_LESSON_ID = "modul_1_lesson_1";
-const CANONICAL_SECTION_ID = "modul_1_lesson_1_section_1";
+const CANONICAL_LESSON_ID = "messen-1-1";
+const CANONICAL_SECTION_ID = "messen-1-1_exercise";
 
 function recordCurrentLessonEvidence(lessonId: string): void {
   for (const sectionId of CANONICAL_SECTION_IDS["ai-native"][lessonId] ?? []) {
     markUnifiedSectionRead("ai-native", lessonId, sectionId);
   }
-  if (lessonId !== "modul_3_lesson_0") {
-    saveLessonQuizScore("ai-native", lessonId, 1, 1);
-  }
+  saveLessonQuizScore("ai-native", lessonId, 1, 1);
   completeCheckpoint(
     lessonId,
     lessonCompletionEvidenceCheckpointId("ai-native"),
@@ -136,29 +134,29 @@ describe("ai-native progress", () => {
 
   describe("lesson completion", () => {
     it("marks and queries lesson completion", () => {
-      expect(isLessonCompleted("modul_1_lesson_1")).toBe(false);
-      markLessonCompleted("modul_1_lesson_1");
-      expect(isLessonCompleted("modul_1_lesson_1")).toBe(true);
+      expect(isLessonCompleted("messen-1-1")).toBe(false);
+      markLessonCompleted("messen-1-1");
+      expect(isLessonCompleted("messen-1-1")).toBe(true);
     });
 
     it("counts completed lessons across module", () => {
-      recordCurrentLessonEvidence("modul_1_lesson_1");
-      recordCurrentLessonEvidence("modul_1_lesson_2");
+      recordCurrentLessonEvidence("messen-1-1");
+      recordCurrentLessonEvidence("messen-1-2");
       expect(
         getModuleCompletedLessonCount("modul_1", [
-          "modul_1_lesson_1",
-          "modul_1_lesson_2",
-          "modul_1_lesson_3",
+          "messen-1-1",
+          "messen-1-2",
+          "kontext-2-1",
         ]),
       ).toBe(2);
     });
 
     it("areAllModuleLessonsCompleted requires all completed", () => {
-      const ids = ["modul_1_lesson_1", "modul_1_lesson_2"];
+      const ids = ["messen-1-1", "messen-1-2"];
       expect(areAllModuleLessonsCompleted(ids)).toBe(false);
-      recordCurrentLessonEvidence("modul_1_lesson_1");
+      recordCurrentLessonEvidence("messen-1-1");
       expect(areAllModuleLessonsCompleted(ids)).toBe(false);
-      recordCurrentLessonEvidence("modul_1_lesson_2");
+      recordCurrentLessonEvidence("messen-1-2");
       expect(areAllModuleLessonsCompleted(ids)).toBe(true);
     });
 
@@ -171,16 +169,16 @@ describe("ai-native progress", () => {
     });
 
     it("getOverallProgress returns rounded percentage", () => {
-      recordCurrentLessonEvidence("modul_1_lesson_1");
-      recordCurrentLessonEvidence("modul_1_lesson_2");
-      recordCurrentLessonEvidence("modul_1_lesson_3");
+      recordCurrentLessonEvidence("messen-1-1");
+      recordCurrentLessonEvidence("messen-1-2");
+      recordCurrentLessonEvidence("kontext-2-1");
       expect(getOverallProgress(10)).toBe(30);
     });
   });
 
   describe("exercise results", () => {
     it("saves and retrieves", () => {
-      saveExerciseResult("modul_1", "modul_1_lesson_1", {
+      saveExerciseResult("modul_1", "messen-1-1", {
         exerciseId: "ex_1",
         kind: "exercise-fix-prompt",
         completed: true,
@@ -189,14 +187,14 @@ describe("ai-native progress", () => {
         completedAt: new Date().toISOString(),
         skipped: false,
       });
-      const r = getExerciseResult("modul_1_lesson_1", "ex_1");
+      const r = getExerciseResult("messen-1-1", "ex_1");
       expect(r?.completed).toBe(true);
       expect(r?.score).toBe(0.75);
-      expect(isExerciseCompleted("modul_1_lesson_1", "ex_1")).toBe(true);
+      expect(isExerciseCompleted("messen-1-1", "ex_1")).toBe(true);
     });
 
     it("keeps higher score on repeat submit", () => {
-      saveExerciseResult("modul_1", "modul_1_lesson_1", {
+      saveExerciseResult("modul_1", "messen-1-1", {
         exerciseId: "ex_1",
         kind: "exercise-fix-prompt",
         completed: true,
@@ -205,7 +203,7 @@ describe("ai-native progress", () => {
         completedAt: null,
         skipped: false,
       });
-      saveExerciseResult("modul_1", "modul_1_lesson_1", {
+      saveExerciseResult("modul_1", "messen-1-1", {
         exerciseId: "ex_1",
         kind: "exercise-fix-prompt",
         completed: true,
@@ -214,13 +212,13 @@ describe("ai-native progress", () => {
         completedAt: null,
         skipped: false,
       });
-      const r = getExerciseResult("modul_1_lesson_1", "ex_1");
+      const r = getExerciseResult("messen-1-1", "ex_1");
       expect(r?.score).toBe(0.5);
       expect(r?.attempts).toBe(2);
     });
 
     it("sticks to completed once completed (even if later submit isn't)", () => {
-      saveExerciseResult("modul_1", "modul_1_lesson_1", {
+      saveExerciseResult("modul_1", "messen-1-1", {
         exerciseId: "ex_1",
         kind: "exercise-fix-prompt",
         completed: true,
@@ -229,7 +227,7 @@ describe("ai-native progress", () => {
         completedAt: null,
         skipped: false,
       });
-      saveExerciseResult("modul_1", "modul_1_lesson_1", {
+      saveExerciseResult("modul_1", "messen-1-1", {
         exerciseId: "ex_1",
         kind: "exercise-fix-prompt",
         completed: false,
@@ -238,7 +236,7 @@ describe("ai-native progress", () => {
         completedAt: null,
         skipped: false,
       });
-      expect(isExerciseCompleted("modul_1_lesson_1", "ex_1")).toBe(true);
+      expect(isExerciseCompleted("messen-1-1", "ex_1")).toBe(true);
     });
 
     it("does not track a submission when durable storage rejects it", () => {
@@ -250,7 +248,7 @@ describe("ai-native progress", () => {
         });
 
       expect(
-        saveExerciseResult("modul_1", "modul_1_lesson_1", {
+        saveExerciseResult("modul_1", "messen-1-1", {
           exerciseId,
           kind: "exercise-fix-prompt",
           completed: true,
@@ -274,8 +272,8 @@ describe("ai-native progress", () => {
 
   describe("URL-hash serialize/import", () => {
     it("round-trips progress", () => {
-      markLessonCompleted("modul_1_lesson_1");
-      saveExerciseResult("modul_1", "modul_1_lesson_1", {
+      markLessonCompleted("messen-1-1");
+      saveExerciseResult("modul_1", "messen-1-1", {
         exerciseId: "ex_1",
         kind: "exercise-fix-prompt",
         completed: true,
@@ -291,8 +289,8 @@ describe("ai-native progress", () => {
       resetProgress();
       const ok = importProgress(encoded);
       expect(ok).toBe(true);
-      expect(isLessonCompleted("modul_1_lesson_1")).toBe(true);
-      expect(isExerciseCompleted("modul_1_lesson_1", "ex_1")).toBe(true);
+      expect(isLessonCompleted("messen-1-1")).toBe(true);
+      expect(isExerciseCompleted("messen-1-1", "ex_1")).toBe(true);
     });
 
     it("rejects malformed base64", () => {
@@ -595,7 +593,7 @@ describe("ai-native progress", () => {
     });
 
     it("buildProgressUrl returns hash-fragment URL with encoded progress", () => {
-      markLessonCompleted("modul_1_lesson_1");
+      markLessonCompleted("messen-1-1");
       const url = buildProgressUrl("https://example.com/ai-native");
       expect(url).toMatch(
         /^https:\/\/example\.com\/ai-native#ai-native-progress=/,
@@ -603,7 +601,7 @@ describe("ai-native progress", () => {
     });
 
     it("sanitizeForExport excludes completedAt (privacy constraint)", () => {
-      saveExerciseResult("modul_1", "modul_1_lesson_1", {
+      saveExerciseResult("modul_1", "messen-1-1", {
         exerciseId: "ex_1",
         kind: "exercise-fix-prompt",
         completed: true,
@@ -626,7 +624,7 @@ describe("ai-native progress", () => {
             .join(""),
         ),
       );
-      const result = json.lessons.modul_1_lesson_1.exercisesCompleted.ex_1;
+      const result = json.lessons["messen-1-1"].exercisesCompleted.ex_1;
       expect(result).not.toHaveProperty("completedAt");
     });
   });
@@ -639,7 +637,7 @@ describe("ai-native progress", () => {
         JSON.stringify({
           schemaVersion: AI_NATIVE_SCHEMA_VERSION,
           lessons: {
-            modul_1_lesson_1: {
+            "messen-1-1": {
               sectionsRead: [CANONICAL_SECTION_ID],
               quizScore: null,
               quizTotal: null,
@@ -655,7 +653,7 @@ describe("ai-native progress", () => {
       );
       __resetCacheForTests();
       // First read migrates the legacy payload forward.
-      expect(isLessonCompleted("modul_1_lesson_1")).toBe(true);
+      expect(isLessonCompleted("messen-1-1")).toBe(true);
       expect(isSectionRead(CANONICAL_LESSON_ID, CANONICAL_SECTION_ID)).toBe(
         true,
       );
@@ -669,7 +667,7 @@ describe("ai-native progress", () => {
         JSON.stringify({
           schemaVersion: 999,
           lessons: {
-            modul_1_lesson_1: {
+            "messen-1-1": {
               sectionsRead: [],
               quizScore: null,
               quizTotal: null,
@@ -684,16 +682,16 @@ describe("ai-native progress", () => {
       );
       __resetCacheForTests();
       // Forward-migrated, NOT wiped: progress survives.
-      expect(isLessonCompleted("modul_1_lesson_1")).toBe(true);
+      expect(isLessonCompleted("messen-1-1")).toBe(true);
       expect(window.localStorage.getItem(AI_NATIVE_STORAGE_KEY)).not.toBe(null);
     });
   });
 
   describe("reset", () => {
     it("clears the ai-native slice in the unified store", () => {
-      markLessonCompleted("modul_1_lesson_1");
+      markLessonCompleted("messen-1-1");
       resetProgress();
-      expect(isLessonCompleted("modul_1_lesson_1")).toBe(false);
+      expect(isLessonCompleted("messen-1-1")).toBe(false);
     });
   });
 });

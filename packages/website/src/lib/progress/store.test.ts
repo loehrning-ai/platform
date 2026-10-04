@@ -113,7 +113,7 @@ const KF_LESSON_1 = "daten-1-1";
 const KF_LESSON_2 = "daten-1-2";
 const KF_SECTION_1 = "daten-1-1_exercise";
 const EU_LESSON_1 = "block_1_lesson_1";
-const AI_NATIVE_LESSON_1 = "modul_1_lesson_1";
+const AI_NATIVE_LESSON_1 = "messen-1-1";
 
 function recordEvidenceBackedLessonCompletion(
   courseSlug: CourseSlug,
@@ -126,8 +126,7 @@ function recordEvidenceBackedLessonCompletion(
     const transferOnly =
       courseSlug === "data-infrastructure" ||
       courseSlug === "data-engineering-fundamentals" ||
-      courseSlug === "data-science" ||
-      (courseSlug === "ai-native" && lessonId === "modul_3_lesson_0");
+      courseSlug === "data-science";
     if (!transferOnly) saveLessonQuizScore(courseSlug, lessonId, 1, 1);
     completeCheckpoint(
       lessonId,
@@ -1561,18 +1560,19 @@ describe("forward migration from legacy schemas (golden files)", () => {
     ).not.toBe(null);
   });
 
-  it("migrates an AI-Native payload forward, preserving exercises", () => {
+  it("migrates a pre-engine AI-Native payload forward, keeping course state and dropping retired lessons", () => {
     window.localStorage.setItem(
       LEGACY_AI_NATIVE_KEY,
       JSON.stringify(GOLDEN_AI_NATIVE),
     );
     __resetCacheForTests();
     const slice = getCourseSlice("ai-native");
-    expect(slice.lessons["modul_1_lesson_1"].completed).toBe(true);
+    // AI-Native moved to the lesson engine: modul_N_lesson_M IDs are retired
+    // and removed at the trust boundary instead of failing it.
+    expect(slice.lessons["modul_1_lesson_1"]).toBeUndefined();
+    expect(Object.keys(slice.lessons)).toEqual([]);
     expect(slice.capstoneSubmitted).toBe(true);
-    const ex = slice.lessons["modul_1_lesson_1"].exercisesCompleted["ex_fix"];
-    expect(ex.score).toBe(0.9);
-    expect(ex.attempts).toBe(2);
+    expect(slice.startedAt).toBe("2026-04-01T10:00:00.000Z");
     expect(window.localStorage.getItem(LEGACY_AI_NATIVE_KEY)).not.toBe(null);
   });
 
@@ -1591,8 +1591,8 @@ describe("forward migration from legacy schemas (golden files)", () => {
       "ai-native",
       "ki-fuehrerschein",
     ]);
-    // The KI-Führerschein lessons in the golden file use retired IDs.
-    expect(getTotalCompletedLessons()).toBe(1);
+    // Both golden files use retired lesson IDs.
+    expect(getTotalCompletedLessons()).toBe(0);
     expect(isWorkshopQuizPassed("ki-fuehrerschein")).toBe(true);
     // Unified payload persisted under the v2 key.
     expect(window.localStorage.getItem(UNIFIED_STORAGE_KEY)).not.toBe(null);

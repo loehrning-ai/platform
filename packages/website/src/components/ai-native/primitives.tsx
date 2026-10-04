@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import type { Locale } from "@/lib/i18n/locale";
 
 /* ──────────────────────────────────────────────────────────────
-   AI-Native Arbeitskurs, design primitives
+   Mit KI arbeiten (ai-native), design primitives
    Translated from Claude Design's common.jsx, typed + Framer Motion.
    ────────────────────────────────────────────────────────────── */
 

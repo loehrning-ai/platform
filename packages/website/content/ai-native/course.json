@@ -1,17 +1,16 @@
 {
   "courseId": "ai-native-arbeitskurs",
-  "title": "AI-Native Arbeitskurs",
-  "tagline": "Du legst Aufgabe, Grenzen und Prüfung fest, Claude liefert Entwürfe.",
+  "title": "Mit KI arbeiten",
+  "tagline": "Messen, absichern, belegen: KI in deiner eigenen Arbeit, unabhängig vom Werkzeug.",
   "language": "de",
   "createdAt": "2026-04-18",
-  "version": "1.0",
+  "version": "2.0",
   "pricing": {
     "free": true,
     "includes": [
-      "Module 1-4 komplett (27 Lektionen + Setup)",
-      "AI-Native Lernmaterialien",
-      "öffentliche Kursmaterialien",
-      "Capstone-Rubrik",
+      "4 Module, 9 Lektionen, jede mit einer Übung",
+      "Live-Übungen mit aufgezeichneten Beispielen als Rückfall",
+      "Pilotplan als Markdown-Vorlage",
       "Teilnahmebestätigung mit QR-Verifikation"
     ]
   },
@@ -19,8 +18,10 @@
     "recommended": "ki-fuehrerschein",
     "note": "KI-Führerschein empfohlen, nicht Pflicht."
   },
-  "totalLessons": 27,
+  "totalLessons": 9,
   "totalModules": 4,
-  "targetDurationHours": 12,
-  "supportedLanguages": ["de"]
+  "targetDurationHours": 1,
+  "supportedLanguages": [
+    "de"
+  ]
 }

@@ -143,19 +143,23 @@ test.describe("AI-Native course DE/EN integration", () => {
         await expect(page.locator("html")).toHaveAttribute("lang", locale);
         await expect(page.getByRole("heading", { level: 1 })).toContainText(
           locale === "en"
-            ? "Automate routine work with Claude"
-            : "Routinearbeit mit Claude automatisieren",
+            ? "Measure first. Then automate."
+            : "Erst messen. Dann automatisieren.",
         );
         await expect(
           page
             .getByRole("link", {
               name:
                 locale === "en"
-                  ? /Start with module 1/
-                  : /Mit Modul 1 beginnen/,
+                  ? /Start with lesson 1/
+                  : /Mit Lektion 1 beginnen/,
             })
             .first(),
-        ).toHaveAttribute("href", `${prefix}/ai-native/kurs/modul_1`);
+        ).toHaveAttribute("href", `${prefix}/ai-native/kurs/modul_1/messen-1-1`);
+        // One line separates this course from the organisation-level one.
+        await expect(page.locator("[data-course-scope]")).toContainText(
+          "AI-Native Operator",
+        );
         await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
           "href",
           `https://loehrning.ai${landing}`,
@@ -234,18 +238,6 @@ test.describe("AI-Native course DE/EN integration", () => {
         path: "/ai-native/glossar",
         heading: { de: "Glossar", en: "Glossary" },
       },
-      {
-        path: "/ai-native/demos",
-        heading: { de: "Ablauf prüfen", en: "Inspect the process" },
-      },
-      {
-        path: "/ai-native/fluency-test",
-        heading: { de: "Wie arbeitest du heute", en: "How do you work today" },
-      },
-      {
-        path: "/ai-native/capstone-gallery",
-        heading: { de: "Noch keine", en: "No published" },
-      },
     ] as const;
 
     for (const width of WIDTHS) {
@@ -271,89 +263,6 @@ test.describe("AI-Native course DE/EN integration", () => {
             /noindex/,
           );
           await settleWholePage(page);
-          if (
-            width === 320 &&
-            locale === "de" &&
-            view.path === "/ai-native/demos"
-          ) {
-            const chat = page.getByRole("region", {
-              name: "Praxisbeispiel: RAG-Vertragsassistent",
-            });
-            const composer = chat.locator("[data-chat-composer]");
-            const composerGeometry = await composer.evaluate((element) => {
-              const input = element.querySelector("input");
-              const button = element.querySelector("button");
-              if (
-                !(input instanceof HTMLInputElement) ||
-                !(button instanceof HTMLButtonElement)
-              ) {
-                throw new Error("Chat composer controls are missing");
-              }
-              const composerRect = element.getBoundingClientRect();
-              const inputRect = input.getBoundingClientRect();
-              const buttonRect = button.getBoundingClientRect();
-              return {
-                composerLeft: composerRect.left,
-                composerRight: composerRect.right,
-                viewportWidth: window.innerWidth,
-                clientWidth: element.clientWidth,
-                scrollWidth: element.scrollWidth,
-                inputLeft: inputRect.left,
-                inputRight: inputRect.right,
-                buttonLeft: buttonRect.left,
-                buttonRight: buttonRect.right,
-              };
-            });
-            expect(composerGeometry.composerLeft).toBeGreaterThanOrEqual(-0.5);
-            expect(composerGeometry.composerRight).toBeLessThanOrEqual(
-              composerGeometry.viewportWidth + 0.5,
-            );
-            expect(composerGeometry.scrollWidth).toBeLessThanOrEqual(
-              composerGeometry.clientWidth,
-            );
-            expect(composerGeometry.inputLeft).toBeGreaterThanOrEqual(
-              composerGeometry.composerLeft - 0.5,
-            );
-            expect(composerGeometry.inputRight).toBeLessThanOrEqual(
-              composerGeometry.buttonLeft,
-            );
-            expect(composerGeometry.buttonRight).toBeLessThanOrEqual(
-              composerGeometry.composerRight + 0.5,
-            );
-          }
-          if (
-            width === 320 &&
-            locale === "en" &&
-            view.path === "/ai-native/demos"
-          ) {
-            const worksheetScroll = page.locator(
-              '[data-demo-id="excel"] [data-course-horizontal-scroll]',
-            );
-            await expect(worksheetScroll).toHaveAttribute(
-              "aria-label",
-              "Sample worksheet data",
-            );
-            const geometry = await worksheetScroll.evaluate((element) => {
-              const rect = element.getBoundingClientRect();
-              return {
-                left: rect.left,
-                right: rect.right,
-                viewportWidth: window.innerWidth,
-                clientWidth: element.clientWidth,
-                scrollWidth: element.scrollWidth,
-                overflowX: getComputedStyle(element).overflowX,
-              };
-            });
-            expect(geometry.left).toBeGreaterThanOrEqual(-0.5);
-            expect(geometry.right).toBeLessThanOrEqual(
-              geometry.viewportWidth + 0.5,
-            );
-            // The phone sheet is sized to fit 320px without sideways
-            // scrolling; the region keeps overflow-x:auto as a fallback for
-            // larger text settings.
-            expect(geometry.scrollWidth).toBeLessThanOrEqual(geometry.clientWidth);
-            expect(geometry.overflowX).toBe("auto");
-          }
           expect(
             await horizontalEscapes(page),
             `${path} horizontal escapes at ${width}px`,
@@ -365,13 +274,30 @@ test.describe("AI-Native course DE/EN integration", () => {
     expect(consoleErrors).toEqual([]);
   });
 
+  test("retired companion views redirect permanently, keeping the locale", async ({
+    request,
+  }) => {
+    for (const [path, target] of [
+      ["/ai-native/fluency-test", "/ai-native"],
+      ["/ai-native/capstone-gallery", "/ai-native"],
+      ["/ai-native/demos", "/demos"],
+      ["/en/ai-native/demos", "/en/demos"],
+      ["/en/ai-native/fluency-test", "/en/ai-native"],
+    ] as const) {
+      const response = await request.get(path, { maxRedirects: 0 });
+      expect(response.status(), path).toBe(301);
+      const location = new URL(response.headers().location, "http://localhost");
+      expect(location.pathname, path).toBe(target);
+    }
+  });
+
   test("anonymous English reader routes preserve /en in login redirects", async ({
     request,
   }) => {
     for (const path of [
       "/en/ai-native/kurs",
       "/en/ai-native/kurs/modul_1?step=2",
-      "/en/ai-native/kurs/modul_1/modul_1_lesson_1",
+      "/en/ai-native/kurs/modul_1/messen-1-1",
       "/en/ai-native/kurs/quiz",
       "/en/ai-native/kurs/zertifikat",
     ] as const) {

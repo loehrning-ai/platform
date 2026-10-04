@@ -1,912 +1,422 @@
 {
   "moduleId": "modul_1",
   "owner": "tim@loehrning.ai",
-  "lastReviewed": "2026-09-05",
-  "nextReview": "2027-03-07",
-  "reviewCadence": "vendor",
-  "riskClass": "vendor",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-04-05",
+  "format": "lesson-engine/v1",
+  "reviewCadence": "evergreen",
+  "riskClass": "evergreen",
   "triggerEvents": [
-    "vendor-api-change",
-    "model-deprecation"
+    "major-conceptual-update",
+    "new-primary-study"
   ],
   "lessons": [
     {
-      "id": "modul_1_lesson_1",
+      "id": "messen-1-1",
       "moduleId": "modul_1",
       "number": 1,
-      "title": "When you stop drafting from scratch",
-      "subtitle": "From a blank document to a Claude brief",
-      "durationMinutes": 10,
-      "premiumGated": false,
-      "refreshCadence": "EVERGREEN",
-      "voiceAnchor": "You already have the tools and learn to combine them.",
+      "title": "Is AI actually worth it here?",
+      "subtitle": "Net time instead of gut feeling",
+      "durationMinutes": 8,
       "keyConcepts": [
-        "Role",
-        "Context",
-        "Task",
-        "Claude.ai",
-        "RCTFC"
+        "Net time",
+        "Review cost",
+        "Baseline"
       ],
-      "widgets": [
-        {
-          "kind": "exercise-fix-prompt",
-          "placement": "before-quiz",
-          "props": {
-            "exerciseId": "modul_1_lesson_1_ex_1",
-            "lessonId": "modul_1_lesson_1",
-            "moduleId": "modul_1",
-            "title": "Write a better brief for Claude",
-            "scenario": "A customer emails asking for a solution by Friday. Add a role, context, a clear task and a specific output format to the weak prompt below.",
-            "startingPrompt": "Draft a reply to the customer.",
-            "criteria": [
-              {
-                "id": "role",
-                "label": "Names a role, such as sales assistant, master craftsperson or HR",
-                "pattern": "role:"
-              },
-              {
-                "id": "context",
-                "label": "Gives context: customer and subject",
-                "pattern": "context:"
-              },
-              {
-                "id": "task",
-                "label": "States the task: confirm, ask or escalate",
-                "pattern": "task:"
-              },
-              {
-                "id": "format",
-                "label": "Defines format: word limit and tone",
-                "pattern": "(under|max|tone):",
-                "regex": true
-              },
-              {
-                "id": "ask",
-                "label": "At least one open question for the customer",
-                "pattern": "(batch|number|quantity|please)",
-                "regex": true
-              }
-            ],
-            "passThreshold": 0.6
+      "concept": {
+        "body": "Two controlled experiments, two opposite results:\n\n| Study | Task | With AI |\n|---|---|---|\n| Noy and Zhang 2023, 453 professionals | short routine writing | 40% faster, quality 18% higher |\n| METR 2025, 16 experienced developers | tasks in their own large codebases | 19% slower |\n\nBefore the METR study the developers expected a 24% speed-up, and afterwards they still estimated it at 20%. **Feeling and measurement were far apart.**\n\nThe difference lies in the task: how long do review and rework take? So you measure before you decide. Net time is drafting plus review plus rework, compared with the same task without AI.",
+        "takeaway": "Measure net time: drafting, review and rework against the same task without AI.",
+        "sources": [
+          {
+            "label": "Noy and Zhang 2023, Science",
+            "url": "https://doi.org/10.1126/science.adh2586"
+          },
+          {
+            "label": "METR 2025, Becker et al.",
+            "url": "https://arxiv.org/abs/2507.09089"
           }
+        ]
+      },
+      "exercise": {
+        "kind": "calculator",
+        "title": "Run the numbers on one of your tasks",
+        "instructions": "Set the sliders to a task from your week and meet the three goals. You are done once all three have been reached.",
+        "props": {
+          "inputs": [
+            {
+              "id": "base",
+              "label": "Without AI: minutes per run",
+              "type": "slider",
+              "min": 2,
+              "max": 120,
+              "step": 1,
+              "default": 20,
+              "format": "int"
+            },
+            {
+              "id": "draft",
+              "label": "With AI: brief and draft (min)",
+              "type": "slider",
+              "min": 0,
+              "max": 60,
+              "step": 1,
+              "default": 3,
+              "format": "int"
+            },
+            {
+              "id": "review",
+              "label": "With AI: review (min)",
+              "type": "slider",
+              "min": 0,
+              "max": 60,
+              "step": 1,
+              "default": 8,
+              "format": "int"
+            },
+            {
+              "id": "rework",
+              "label": "Share that needs rework",
+              "type": "slider",
+              "min": 0,
+              "max": 1,
+              "step": 0.05,
+              "default": 0.3,
+              "format": "percent"
+            },
+            {
+              "id": "reworkMin",
+              "label": "Rework per affected run (min)",
+              "type": "slider",
+              "min": 0,
+              "max": 60,
+              "step": 1,
+              "default": 15,
+              "format": "int"
+            },
+            {
+              "id": "perWeek",
+              "label": "Runs per week",
+              "type": "slider",
+              "min": 1,
+              "max": 50,
+              "step": 1,
+              "default": 10,
+              "format": "int"
+            }
+          ],
+          "outputs": [
+            {
+              "id": "withAi",
+              "label": "With AI per run (min)",
+              "formula": "draft + review + rework * reworkMin",
+              "format": "number",
+              "decimals": 1
+            },
+            {
+              "id": "saved",
+              "label": "Saved per run (min)",
+              "formula": "base - withAi",
+              "format": "number",
+              "decimals": 1
+            },
+            {
+              "id": "weekly",
+              "label": "Net per week (min)",
+              "formula": "saved * perWeek",
+              "format": "int",
+              "emphasis": true,
+              "help": "Negative means slower with AI."
+            },
+            {
+              "id": "checkShare",
+              "label": "Review and rework as share of AI time",
+              "formula": "withAi > 0 ? (review + rework * reworkMin) / withAi : 0",
+              "format": "percent"
+            }
+          ],
+          "chart": {
+            "kind": "bars",
+            "title": "Minutes per run",
+            "format": "number",
+            "bars": [
+              {
+                "label": "Without AI",
+                "formula": "base",
+                "tone": "neutral"
+              },
+              {
+                "label": "With AI: draft",
+                "formula": "draft",
+                "tone": "accent"
+              },
+              {
+                "label": "With AI: review",
+                "formula": "review",
+                "tone": "warn"
+              },
+              {
+                "label": "With AI: average rework",
+                "formula": "rework * reworkMin",
+                "tone": "bad"
+              }
+            ]
+          },
+          "verdicts": [
+            {
+              "when": "weekly < 0",
+              "tone": "bad",
+              "title": "Slower with AI",
+              "body": "Review and rework eat the gain. Keep the task yourself or shrink it until review is quick."
+            },
+            {
+              "when": "saved < base * 0.2",
+              "tone": "warn",
+              "title": "Hardly any gain",
+              "body": "Below 20% saving a fixed workflow rarely pays. A template may be enough."
+            },
+            {
+              "when": "true",
+              "tone": "good",
+              "title": "Net gain",
+              "body": "Confirm the number with a week of real measurement before you fix the workflow."
+            }
+          ],
+          "goals": [
+            {
+              "id": "slower",
+              "label": "Set a review time at which AI is slower net.",
+              "when": "weekly < 0",
+              "insight": "That is how the METR study ended: review and correction cost more than the draft saved."
+            },
+            {
+              "id": "forty",
+              "label": "Find a setting with at least 40% saving per run.",
+              "when": "saved >= base * 0.4",
+              "insight": "That matches the effect on routine writing in Noy and Zhang. Typical for short texts you can check quickly."
+            },
+            {
+              "id": "rework",
+              "label": "Bring the rework share down to 10% or less.",
+              "when": "rework <= 0.1",
+              "insight": "Less rework pays off on every run. A better brief or a template earns its keep here."
+            }
+          ],
+          "note": "Your numbers, your assumptions. Time it for a week before you decide."
         }
-      ],
-      "sections": [
+      },
+      "checks": [
         {
-          "id": "modul_1_lesson_1_section_1",
-          "title": "Answer the customer email twice",
-          "readTimeMinutes": 2,
-          "content": "Fictional customer Alpha writes about a late delivery. Answer twice, by hand and with Claude drafting, and record drafting time, factual errors, corrections needed and tone for each.\n\nThe Claude version stays an internal draft until a person approves it. Your comparison shows whether the workflow pays off for this task; no time saving is promised."
-        },
-        {
-          "id": "modul_1_lesson_1_section_2",
-          "title": "When the blank document is the wrong starting point",
-          "readTimeMinutes": 2,
-          "content": "In a blank document you write every sentence yourself. With a Claude draft you start at briefing and review.\n\nMany still start at zero: out of habit, because they want to know exactly what is in the text, or because writing is a core part of their role. The brief pays off only if it cuts effort and keeps accuracy and tone."
-        },
-        {
-          "id": "modul_1_lesson_1_section_3",
-          "title": "The three-part Claude brief",
-          "readTimeMinutes": 3,
-          "content": "\"Write a reply to this customer inquiry\" hands the model every decision that belongs to you. Give three constraints:\n\n**Role:** \"You are my sales assistant at an 80-person mechanical-engineering company in Bavaria. Use a pragmatic, direct and plain-spoken tone.\"\n\n**Context:** the customer email, if its contents are approved for the tool.\n\n**Task:** \"Draft a reply. Confirm Friday as the target, but ask for the batch number and number of affected parts. Stay polite and under 150 words.\"\n\nBefore sending, fix wrong statements, uncovered commitments and tonal slips, and measure time and correction effort."
-        },
-        {
-          "id": "modul_1_lesson_1_section_4",
-          "title": "Why three constraints are enough",
-          "readTimeMinutes": 2,
-          "content": "Each constraint takes one degree of freedom from the model. The **role** sets perspective and style, so the draft sounds like an industrial company instead of startup advertising, and the **context** supplies only approved facts. The **task** makes the result checkable: under 150 words, one confirmation, one question, a defined tone.\n\nDrop one and the text turns generic or the model invents assumptions, which is a briefing error."
-        }
-      ],
-      "quiz": [
-        {
-          "id": "modul_1_lesson_1_q1",
-          "questionText": "Which three elements make an effective prompt?",
-          "answerOptions": [
+          "id": "messen-1-1-c1",
+          "prompt": "A team feels much faster with AI. What is the next step?",
+          "options": [
             {
               "id": "a",
-              "text": "Politeness, length and closing phrase",
-              "isCorrect": false
+              "text": "Roll the workflow out to everyone.",
+              "correct": false,
+              "feedback": "A feeling is not a measurement. In the METR study participants estimated a 20% gain and were 19% slower."
             },
             {
               "id": "b",
-              "text": "Role, context and task",
-              "isCorrect": true
+              "text": "Time the work with and without AI for a week, including review and rework.",
+              "correct": true
             },
             {
               "id": "c",
-              "text": "Question, example and instruction",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Introduction, main section and conclusion",
-              "isCorrect": false
+              "text": "Ask the team how satisfied they are.",
+              "correct": false,
+              "feedback": "Satisfaction matters, but it says nothing about time. For that you need the clock."
             }
           ],
-          "explanation": "Role, context and task fix who writes, from which facts and what to produce. RCTFC adds format and constraints later."
+          "explanation": "You measure net time by adding drafting, review and rework and comparing the sum with the baseline."
         },
         {
-          "id": "modul_1_lesson_1_q2",
-          "questionText": "Where does your time belong in an AI-assisted role?",
-          "answerOptions": [
+          "id": "messen-1-1-c2",
+          "prompt": "Why can both studies be right although their results are opposite?",
+          "options": [
             {
               "id": "a",
-              "text": "Mostly typing, little reviewing",
-              "isCorrect": false
+              "text": "One of the two studies must have miscalculated.",
+              "correct": false,
+              "feedback": "Both are controlled experiments. The difference lies in the task and the review effort."
             },
             {
               "id": "b",
-              "text": "Define the task, brief the model and check quality",
-              "isCorrect": true
+              "text": "The tasks differ: short routine texts are quick to check, changes in a large codebase are not.",
+              "correct": true
             },
             {
               "id": "c",
-              "text": "Give Claude more time and review less yourself",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Delegate every task to Claude without review",
-              "isCorrect": false
+              "text": "Models got worse between 2023 and 2025.",
+              "correct": false,
+              "feedback": "The METR study used the tools current at the time. What mattered was how much review and correction the task needed."
             }
           ],
-          "explanation": "You can hand over the draft when the task suits it. Judgment, fact-checking and approval stay with you."
+          "explanation": "The benefit depends on the task. So you measure per task, not across the board."
         }
       ]
     },
     {
-      "id": "modul_1_lesson_2",
+      "id": "messen-1-2",
       "moduleId": "modul_1",
       "number": 2,
-      "title": "Why I use my IDE differently now",
-      "subtitle": "Orchestrate instead of executing every step",
-      "durationMinutes": 10,
-      "premiumGated": false,
-      "refreshCadence": "EVERGREEN",
+      "title": "Which tasks first?",
+      "subtitle": "Frequency, error cost, checkability",
+      "durationMinutes": 7,
       "keyConcepts": [
-        "Orchestrator",
-        "Execution",
-        "Judgment",
-        "AI-native"
+        "Jagged frontier",
+        "Error cost",
+        "Checkability"
       ],
-      "widgets": [
-        {
-          "kind": "demo-chat-rag",
-          "placement": "after-intro"
-        },
-        {
-          "kind": "exercise-rctfc-checklist",
-          "placement": "before-quiz",
-          "props": {
-            "exerciseId": "modul_1_lesson_2_ex_1",
-            "lessonId": "modul_1_lesson_2",
-            "moduleId": "modul_1",
-            "title": "RCTFC: your first structured brief",
-            "scenario": "You are a sales manager and want Claude to draft a quotation summary. Complete all five RCTFC fields.",
-            "criteria": {
-              "role": {
-                "minChars": 15,
-                "hint": "Who performs the task? For example, a sales assistant in mechanical engineering."
-              },
-              "context": {
-                "minChars": 40,
-                "hint": "Background on company, industry and customer relationship"
-              },
-              "task": {
-                "minChars": 20,
-                "hint": "What should be produced: quotation, summary or follow-up question?"
-              },
-              "format": {
-                "minChars": 15,
-                "hint": "Structure, length, output format, such as Markdown, max 200 words, three sections"
-              },
-              "constraints": {
-                "minChars": 15,
-                "hint": "State exclusions, such as promotional language or unapproved prices."
-              }
-            }
+      "concept": {
+        "body": "Dell'Acqua et al. (2023) gave 758 consultants realistic tasks. Inside the model's capabilities they completed 12.2% more tasks with AI, 25.1% faster and at more than 40% higher quality. On a task just outside, they were 19 percentage points less likely to be correct with AI. The frontier is jagged: from the outside you cannot see which side a task is on.\n\nThree questions sort your candidates:\n\n- **Frequency:** how often does the task come up? Rare work does not justify a workflow.\n- **Error cost:** what happens if an error slips through?\n- **Checkability:** can you spot an error at a glance?\n\nFrequent, cheap when wrong and quick to check: that is where you start.",
+        "takeaway": "Start where errors are cheap and show up quickly.",
+        "sources": [
+          {
+            "label": "Dell'Acqua et al. 2023",
+            "url": "https://doi.org/10.2139/ssrn.4573321"
           }
-        }
-      ],
-      "sections": [
-        {
-          "id": "modul_1_lesson_2_section_1",
-          "title": "From my own working week, anonymized",
-          "readTimeMinutes": 2,
-          "content": "I work as a data engineer at a large US technology company. Experienced developers around me increasingly generate a first code version from a specification. They still inspect the repository, read the output, run tests, fix defects and approve the change themselves, in an IDE that stays open for navigation, debugging and review.\n\nThe shift is smaller than the hype claims: less routine typing, more time on what gets built and whether it holds. It works outside software too, if the task has a describable output and a reliable review step."
-        },
-        {
-          "id": "modul_1_lesson_2_section_2",
-          "title": "Orchestrating instead of executing",
-          "readTimeMinutes": 3,
-          "content": "**Executing** means you do every step: typing, formatting, calculating, carrying data between tools. **Orchestrating** means you **describe the result you need**, supply the permitted inputs, check what comes back and decide the final action.\n\nClaude produces output from instructions and context. It understands no intent, does not verify every fact on its own and carries no responsibility. So you set brief, data and review criteria up front and hand over only bounded, reviewable steps."
-        },
-        {
-          "id": "modul_1_lesson_2_section_3",
-          "title": "What changes in your role",
-          "readTimeMinutes": 3,
-          "content": "The same shift applies in other departments:\n\n- **Sales:** Claude drafts the quotation; pricing strategy and commitments stay with you.\n- **Finance:** Claude drafts a read-only SQL query; you validate it and read the figures.\n- **HR:** Claude drafts the job ad; you check legal, factual and organizational requirements.\n- **Operations:** Claude structures the process data; you decide what changes.\n\nClaude can take over routine drafts; expertise, judgment and responsibility stay with you."
-        }
-      ],
-      "quiz": [
-        {
-          "id": "modul_1_lesson_2_q1",
-          "questionText": "Which part of an AI-assisted role can often be reduced?",
-          "answerOptions": [
+        ]
+      },
+      "exercise": {
+        "kind": "triage-matrix",
+        "title": "Rate eight tasks and add your own",
+        "instructions": "Rate every task on the three axes, and add up to three of your own if you like. Evaluate shows the ranking, the matrix and the reference with reasons.",
+        "props": {
+          "items": [
             {
-              "id": "a",
-              "text": "Your ability to make decisions",
-              "isCorrect": false
-            },
-            {
-              "id": "b",
-              "text": "Routine typing and first-draft production",
-              "isCorrect": true
-            },
-            {
-              "id": "c",
-              "text": "Customer relationships",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Domain expertise",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "Routine drafting can shrink. Judgment, domain expertise and customer relationships stay."
-        },
-        {
-          "id": "modul_1_lesson_2_q2",
-          "questionText": "What distinguishes model output from an accountable work result?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "The model owns final approval",
-              "isCorrect": false
-            },
-            {
-              "id": "b",
-              "text": "Model output needs defined review; people and organizations keep accountability and approval",
-              "isCorrect": true
-            },
-            {
-              "id": "c",
-              "text": "The model automatically checks every statement against all relevant sources",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "The model may make binding commitments without approval",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "Model output becomes a work result only through task-specific review, documented approval and a responsible person."
-        }
-      ]
-    },
-    {
-      "id": "modul_1_lesson_3",
-      "moduleId": "modul_1",
-      "number": 3,
-      "title": "Claude in the workflow: you specify and review",
-      "subtitle": "Three basic patterns for working with AI",
-      "durationMinutes": 10,
-      "premiumGated": false,
-      "refreshCadence": "QUARTERLY",
-      "keyConcepts": [
-        "Claude Project",
-        "System prompt",
-        "Drafting",
-        "Analysis",
-        "Research"
-      ],
-      "widgets": [
-        {
-          "kind": "exercise-prompt-diff",
-          "placement": "before-quiz",
-          "props": {
-            "exerciseId": "modul_1_lesson_3_ex_1",
-            "lessonId": "modul_1_lesson_3",
-            "moduleId": "modul_1",
-            "title": "Which prompt provides the clearest direction?",
-            "scenario": "Three colleagues want Claude to draft a quotation for the same customer and situation. Which prompt is enough for a useful first draft?",
-            "candidates": [
-              {
-                "label": "Option A: vague request",
-                "prompt": "Draft a quotation for the customer who called today.",
-                "critique": "Role, usable context and output requirements are missing. Claude would have to guess company, industry, tone, product and commercial terms.",
-                "rating": 1
+              "id": "faq",
+              "text": "Standard reply to a frequent customer question",
+              "reference": {
+                "f": 3,
+                "c": 1,
+                "k": 3
               },
-              {
-                "label": "Option B: partly specified",
-                "prompt": "As a sales assistant in mechanical engineering, draft a quotation for fictional Customer Alpha for three fictional XR-200 sample machines. Delivery in December.",
-                "critique": "Role, context and task are present. Without format (length, sections) and constraints (tone, price, payment terms), Claude invents details or stays vague.",
-                "rating": 3
+              "why": "Daily, an error is quickly corrected, and you see at a glance whether the reply fits."
+            },
+            {
+              "id": "minutes",
+              "text": "Minutes from meeting notes",
+              "reference": {
+                "f": 2,
+                "c": 2,
+                "k": 2
               },
-              {
-                "label": "Option C: structured brief",
-                "prompt": "Role: sales assistant in mechanical engineering. Context: fictional Customer Alpha has 12 employees and needs three fictional XR-200 sample machines; use a pragmatic tone and informal address. Task: prepare an internal quotation draft with three line items; use placeholders for delivery date, payment term and price, and mark each for review. Format: Markdown, no more than 280 words. Constraints: do not invent commitments or use promotional language.",
-                "critique": "The RCTFC brief sets role, context, task, format and constraints and aims at a reviewable draft without invented commercial terms.",
-                "rating": 5
-              }
-            ]
-          }
-        }
-      ],
-      "sections": [
-        {
-          "id": "modul_1_lesson_3_section_1",
-          "title": "Three basic patterns",
-          "readTimeMinutes": 3,
-          "content": "**Pattern 1: Drafting.** Claude delivers V1 of an email, report or presentation; you turn it into V2 and note time and correction effort.\n> \"Draft V1 of [output] using [approved context]. Follow [tone]. Length: [limit].\"\n\n**Pattern 2: Analysis.** You pull something specific out of data or text. The workflow depends on size, sensitivity and how much checking it needs.\n> \"Here is [input]. Extract [fields] and summarize [patterns]. Format: [table, list or prose]. State uncertainty.\"\n\n**Pattern 3: Research.** You use a tool that can search, then open the cited primary sources yourself.\n> \"Research [topic] and answer [specific questions] using [required source types]. Return [structure] with links and publication dates.\"\n\nFor all three, the task-specific check stays with you."
-        },
-        {
-          "id": "modul_1_lesson_3_section_2",
-          "title": "Write the context once",
-          "readTimeMinutes": 3,
-          "content": "A Claude Project holds stable, non-confidential context and communication rules for recurring tasks, so you stop retyping them every week. Example for a Project \"Sales drafts\":\n\n```\nI work in sales at an 80-person mechanical-engineering company\nin Bavaria with customers in Germany and Austria.\nOur products are specialist machines for metal processing.\nTypical price range: EUR 15,000 to EUR 200,000 per machine.\n\nCustomer communication rules:\n- Informal address for established customers; formal address for new customers\n- Pragmatic, plain language\n- No buzzwords or promotional claims\n- Do not make delivery, price or contract commitments without approval\n```\n\nOnly approved recurring context goes in, nothing sensitive or case-specific. The request then carries only the case:\n> \"New-customer inquiry for three Type X machines. Draft a reply and mark missing commercial details.\""
-        },
-        {
-          "id": "modul_1_lesson_3_section_3",
-          "title": "How deep to revise",
-          "readTimeMinutes": 2,
-          "content": "V1 rarely lands. When revising, say how much should change and why:\n\n- **Narrow**, change one sentence: \"Remove the second paragraph. Make the tone one level more direct.\"\n- **Medium**, change the structure: \"Reorder the arguments and put the strongest evidence first.\"\n- **Deep**, new premise: \"V1 is too generic. Rewrite it with a direct tone and focus on the customer's time cost rather than our features.\""
-        }
-      ],
-      "quiz": [
-        {
-          "id": "modul_1_lesson_3_q1",
-          "questionText": "Which three basic patterns does this lesson introduce?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Automating, delegating and reviewing",
-              "isCorrect": false
+              "why": "Weekly. An invented decision or a wrong deadline causes damage, and you have to check against your notes."
             },
             {
-              "id": "b",
-              "text": "Drafting, analysis and research",
-              "isCorrect": true
-            },
-            {
-              "id": "c",
-              "text": "Writing, reading and translating",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Creating, checking and distributing",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "Drafting creates an initial text, analysis structures supplied input and research gathers evidence from sources."
-        },
-        {
-          "id": "modul_1_lesson_3_q2",
-          "questionText": "Why use a reusable Project brief instead of repeating the same context?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Approved recurring context stays available within the Project",
-              "isCorrect": true
-            },
-            {
-              "id": "b",
-              "text": "Claude can process only one instruction per session",
-              "isCorrect": false
-            },
-            {
-              "id": "c",
-              "text": "Every piece of context must be documented permanently",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Projects always store more text than regular chats",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "It avoids repeating stable, approved context. Review it when role, policy or data boundary changes."
-        }
-      ]
-    },
-    {
-      "id": "modul_1_lesson_4",
-      "moduleId": "modul_1",
-      "number": 4,
-      "title": "Ten tasks to test for AI assistance",
-      "subtitle": "Concrete use cases and prompts",
-      "durationMinutes": 10,
-      "premiumGated": false,
-      "refreshCadence": "QUARTERLY",
-      "keyConcepts": [
-        "Use case",
-        "Excel cleanup",
-        "SQL",
-        "Meeting follow-up",
-        "Normalization"
-      ],
-      "widgets": [
-        {
-          "kind": "exercise-role-scenario",
-          "placement": "before-quiz",
-          "props": {
-            "exerciseId": "modul_1_lesson_4_ex_1",
-            "lessonId": "modul_1_lesson_4",
-            "moduleId": "modul_1",
-            "title": "Which task suits AI assistance in your role?",
-            "scenario": "Pick your role and, in three situations, choose between a bounded AI workflow, manual work and unsafe automation.",
-            "roles": [
-              {
-                "id": "vertrieb",
-                "label": "Sales / Account Management",
-                "description": "Field sales, inside sales and sales management",
-                "scenarios": [
-                  {
-                    "id": "vertrieb_s1",
-                    "question": "A prospective customer sends five technical questions at 16:40. The reply is due today, and your workday ends at 17:00.",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Write every answer by hand and work until 18:30.",
-                        "correct": false,
-                        "explanation": "Legitimate for sensitive questions, but it never tests a structured draft."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Wait until tomorrow; careful work takes time.",
-                        "correct": false,
-                        "explanation": "Sensible if facts are missing. If they exist, a reviewed draft makes the deadline."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Brief Claude with role, approved email, the five questions and 200 words; review, send after approval.",
-                        "correct": true,
-                        "explanation": "First draft, technical check and approval stay three separate steps."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Find and adapt an old template.",
-                        "correct": false,
-                        "explanation": "Helps, but old wording comes along and still needs checking against the case."
-                      }
-                    ]
-                  },
-                  {
-                    "id": "vertrieb_s2",
-                    "question": "At 15:00: practice meeting with fictional Customer Alpha. Three sample emails and the latest notes are four weeks old.",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Open the CRM five minutes before and rely on memory.",
-                        "correct": false,
-                        "explanation": "A quick look misses open points."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Have Claude pull open points, concerns and three questions from the approved emails and notes; review.",
-                        "correct": true,
-                        "explanation": "The analysis pattern from Lesson 3: structured extraction from a bounded source set."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Ask a colleague who knows the fictional case.",
-                        "correct": false,
-                        "explanation": "Adds context, but recollection does not replace the records."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Cancel the meeting because there is too little preparation time.",
-                        "correct": false,
-                        "explanation": "Three emails and a few notes can be prepared in time."
-                      }
-                    ]
-                  },
-                  {
-                    "id": "vertrieb_s3",
-                    "question": "For the weekly review you need the top 20 customers by revenue from the database. You do not write SQL.",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Ask Controlling, wait two days.",
-                        "correct": false,
-                        "explanation": "The same dependency every week. A reviewed query shortens the first step."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Rebuild the analysis in Excel, 90 minutes of clicking.",
-                        "correct": false,
-                        "explanation": "Works, but manual joins are fragile and repeat weekly."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Give Claude the table schema, request read-only SQL, have a qualified person review it before running.",
-                        "correct": true,
-                        "explanation": "Claude only drafts the query, with no database access. You check result and meaning."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Skip the analysis.",
-                        "correct": false,
-                        "explanation": "Without the top 20, sales planning loses its basis."
-                      }
-                    ]
-                  }
-                ]
+              "id": "contract",
+              "text": "Liability clause in a customer contract",
+              "reference": {
+                "f": 1,
+                "c": 3,
+                "k": 1
               },
-              {
-                "id": "hr",
-                "label": "HR / People / Management",
-                "description": "Recruiting, staff communication and personnel decisions",
-                "scenarios": [
-                  {
-                    "id": "hr_s1",
-                    "question": "You need a job ad today: mechanical-engineering working student, 20 hours per week.",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Copy the 2023 ad and change the date.",
-                        "correct": false,
-                        "explanation": "Outdated facts and language; the ad needs a full review anyway."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Use an HR Project with approved company context and tone, request a draft, verify every condition.",
-                        "correct": true,
-                        "explanation": "Maintained context shortens the brief. You still check legal, factual and contract terms."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Hire an agency and wait three weeks.",
-                        "correct": false,
-                        "explanation": "A first draft needs no agency."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Ask ChatGPT for a working-student ad without any context.",
-                        "correct": false,
-                        "explanation": "Without context you get stock text with invented requirements."
-                      }
-                    ]
-                  },
-                  {
-                    "id": "hr_s2",
-                    "question": "Email to 80 employees: remote work two days a week from June, no HR jargon.",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Polish the wording for three hours, then get management sign-off.",
-                        "correct": false,
-                        "explanation": "The policy needs care; a reviewed draft can supply the wording."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Brief Claude with HR role, approved facts, reasons, 180 words and FAQ link, then get sign-off.",
-                        "correct": true,
-                        "explanation": "Saves the writing. Decision, sign-off and accountability stay where they were."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Ask an executive assistant to draft it.",
-                        "correct": false,
-                        "explanation": "Legitimate, but it only moves the routine work to someone else."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Announce the rule only in the monthly meeting.",
-                        "correct": false,
-                        "explanation": "Nobody can look up a spoken announcement."
-                      }
-                    ]
-                  },
-                  {
-                    "id": "hr_s3",
-                    "question": "Your manager asks: \"What did we decide about remote work in January?\"",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Say you do not remember and search your email later.",
-                        "correct": false,
-                        "explanation": "The answer is in the decision record; look there first."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Search Notion, files, email and CRM by hand for 20 minutes.",
-                        "correct": false,
-                        "explanation": "Sometimes needed, but four stores make it slow and patchy."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Query the approved decision log via Claude or Obsidian and have it cite the source note.",
-                        "correct": true,
-                        "explanation": "Reliable when it names the authoritative record and you open it."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Promise to check and then forget.",
-                        "correct": false,
-                        "explanation": "That is what a decision log exists to prevent."
-                      }
-                    ]
-                  }
-                ]
+              "why": "Rare, expensive when wrong and only checkable with expertise. Not a workflow candidate."
+            },
+            {
+              "id": "translate",
+              "text": "Translate an internal email into German",
+              "reference": {
+                "f": 2,
+                "c": 1,
+                "k": 3
               },
-              {
-                "id": "operations",
-                "label": "Operations / Production / IT",
-                "description": "Process control, production management and IT coordination",
-                "scenarios": [
-                  {
-                    "id": "ops_s1",
-                    "question": "A fictional ERP export has 4,800 rows with inconsistent names for Customer Alpha and mixed date formats.",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Write an Excel macro and spend four hours debugging it.",
-                        "correct": false,
-                        "explanation": "Pays off only with tested normalization rules for a recurring process."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Give Claude a fictional CSV and fixed rules, request a change log, validate before replacing.",
-                        "correct": true,
-                        "explanation": "Bounded, reversible, with a fixed review point: a good test case."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Assign an intern for two days.",
-                        "correct": false,
-                        "explanation": "Slow, not reproducible, and needed again with the next export."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Leave the data as is; the dashboard can take it.",
-                        "correct": false,
-                        "explanation": "Each spelling becomes its own row, and no total is right."
-                      }
-                    ]
-                  },
-                  {
-                    "id": "ops_s2",
-                    "question": "A 45-minute production-management meeting transcript is ready. The action items go to tomorrow's stand-up.",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Read it all and extract every item by hand, 60 minutes.",
-                        "correct": false,
-                        "explanation": "You read it anyway; an extraction can prepare the first pass."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Have Claude tabulate decisions, action items with owners and dates, and open questions; verify.",
-                        "correct": true,
-                        "explanation": "Structured extraction; the transcript stays authoritative."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Ask each participant for their action items.",
-                        "correct": false,
-                        "explanation": "Everyone sends a different format; cross-team decisions go missing."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Remember the top three and ignore the rest.",
-                        "correct": false,
-                        "explanation": "Unrecorded actions come back later as escalations."
-                      }
-                    ]
-                  },
-                  {
-                    "id": "ops_s3",
-                    "question": "Management wants a weekly status on five projects: highlights, problems, next week.",
-                    "options": [
-                      {
-                        "id": "a",
-                        "label": "Block 90 minutes every Friday and write it from scratch.",
-                        "correct": false,
-                        "explanation": "Works, but a fixed-structure report suits a reviewed template."
-                      },
-                      {
-                        "id": "b",
-                        "label": "Provide an approved activity list, request a factual three-section draft, cut unsupported claims.",
-                        "correct": true,
-                        "explanation": "The structure stays the same each week. Time it afterwards instead of assuming a saving."
-                      },
-                      {
-                        "id": "c",
-                        "label": "Call every project lead, then summarize.",
-                        "correct": false,
-                        "explanation": "Call when something needs deciding; collect routine updates in writing and check them."
-                      },
-                      {
-                        "id": "d",
-                        "label": "Tell management there is no report this week.",
-                        "correct": false,
-                        "explanation": "A skipped report hides project risks and costs credibility."
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
+              "why": "Weekly, internal, and you read the result yourself."
+            },
+            {
+              "id": "figures",
+              "text": "Summarise monthly figures for management",
+              "reference": {
+                "f": 1,
+                "c": 3,
+                "k": 2
+              },
+              "why": "Monthly, and wrong figures feed decisions. Every number needs a check against the source."
+            },
+            {
+              "id": "tickets",
+              "text": "Assign incoming tickets to a category",
+              "reference": {
+                "f": 3,
+                "c": 2,
+                "k": 3
+              },
+              "why": "Daily and checkable at a glance. A wrong category delays the reply, so the error cost is noticeable."
+            },
+            {
+              "id": "applicants",
+              "text": "Pre-sort job applications",
+              "reference": {
+                "f": 2,
+                "c": 3,
+                "k": 1
+              },
+              "why": "Errors hit people and stay invisible, because you never see the rejected ones again. Such uses also fall under special rules, see the EU AI Act course."
+            },
+            {
+              "id": "weekly",
+              "text": "Weekly report from the ticket list",
+              "reference": {
+                "f": 2,
+                "c": 1,
+                "k": 2
+              },
+              "why": "Weekly and internal, but you have to reconcile the numbers with the list."
+            }
+          ],
+          "pick": 3,
+          "score": "f * k * (4 - c)",
+          "note": "The formula is deliberately simple. It does not replace measuring; it only decides what you measure first."
         }
-      ],
-      "sections": [
+      },
+      "checks": [
         {
-          "id": "modul_1_lesson_4_section_1",
-          "title": "Tasks 1 to 5",
-          "readTimeMinutes": 3,
-          "content": "**1. Email draft from bullet points**\n> \"Fictional notes: Customer Alpha, delayed delivery, unverified target date, request for batch number. Create an internal email draft and mark every commitment for review.\"\n\n**2. Meeting prep from approved records**\n> \"Practice meeting with Customer Alpha at 15:00. From these fictional emails and notes, list open points, documented interests and three questions. Do not infer motives.\"\n\n**3. Action items from a meeting**\n> \"From this approved or fictional transcript, extract decisions, action items with owners and dates, and open questions. Mark uncertainty.\"\n\n**4. Research for a decision**\n> \"Compare accounting systems using current official sources. Separate documented features, current prices and unresolved contract or privacy questions.\"\n\n**5. Form draft**\n> \"Fill the quotation template for a fictional sample machine for Customer Alpha only with confirmed information. Use placeholders for price, payment term and delivery date and mark them for review.\""
-        },
-        {
-          "id": "modul_1_lesson_4_section_2",
-          "title": "Tasks 6 to 10",
-          "readTimeMinutes": 3,
-          "content": "**6. Data cleanup in Excel**\n> \"Normalize this fictional CSV export with inconsistent names (Kunde Alpha GmbH, Kunde-Alpha Gmbh, Kunde Alpha & Co.) and mixed date formats according to the supplied rules. Log every change.\"\n\n**7. Presentation from source material**\n> \"From these approved notes and three charts, propose a structure with source references and mark unsupported statements.\"\n\n**8. SQL query**\n> \"Write read-only SQL for revenue by fictional customer last quarter in a test database and explain your assumptions.\"\n\n**9. Translation and localization**\n> \"Translate this fictional German customer letter into English and flag legally or culturally uncertain wording for review.\"\n\n**10. Status update**\n> \"From this approved activity list, prepare a factual draft with highlights, problems, uncertainties and next steps.\""
-        },
-        {
-          "id": "modul_1_lesson_4_section_3",
-          "title": "The main source of friction",
-          "readTimeMinutes": 2,
-          "content": "A bounded test needs neither an AI program nor a large project. Your organization may need to approve it before any data moves. Take one task with low-risk or fictional data, fix input, expected result and review criteria, and do it by hand and with Claude; compare time, accuracy and correction effort.\n\nScale only when the test shows a benefit and the data use is approved."
-        }
-      ],
-      "quiz": [
-        {
-          "id": "modul_1_lesson_4_q1",
-          "questionText": "What often prevents a practical AI test in a mid-sized company?",
-          "answerOptions": [
+          "id": "messen-1-2-c1",
+          "prompt": "What does the study with 758 consultants show about the frontier of AI capabilities?",
+          "options": [
             {
               "id": "a",
-              "text": "The technical complexity of every tool",
-              "isCorrect": false
+              "text": "AI helps evenly with all knowledge tasks.",
+              "correct": false,
+              "feedback": "Outside the frontier participants were 19 percentage points less likely to be correct with AI."
             },
             {
               "id": "b",
-              "text": "Treating every low-risk experiment as a large program",
-              "isCorrect": true
+              "text": "It is jagged: tasks that look similar can lie on different sides.",
+              "correct": true
             },
             {
               "id": "c",
-              "text": "A lack of any time for training",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "The purchase price of all AI tools",
-              "isCorrect": false
+              "text": "AI only helps beginners.",
+              "correct": false,
+              "feedback": "The study found gains inside the frontier and losses outside it. The task matters, not only the person."
             }
           ],
-          "explanation": "A low-risk, reversible test needs only defined inputs, review criteria and approval."
+          "explanation": "Because the frontier is invisible from outside, you start with tasks whose errors you spot quickly."
         },
         {
-          "id": "modul_1_lesson_4_q2",
-          "questionText": "How should you estimate the effort required to start one use case?",
-          "answerOptions": [
+          "id": "messen-1-2-c2",
+          "prompt": "Which task belongs at the top of your list?",
+          "options": [
             {
               "id": "a",
-              "text": "Measure preparation, execution and review time for the actual task",
-              "isCorrect": true
+              "text": "The monthly management pack, because it takes the most time.",
+              "correct": false,
+              "feedback": "Rare and expensive when wrong: an error weighs heavily and you learn little."
             },
             {
               "id": "b",
-              "text": "Thirty minutes in every case",
-              "isCorrect": false
+              "text": "Liability clauses, because they are demanding.",
+              "correct": false,
+              "feedback": "Demanding means hard to check and expensive when wrong. That is exactly where you automate last."
             },
             {
               "id": "c",
-              "text": "Three hours in every case",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Assume three minutes without measuring the workflow",
-              "isCorrect": false
+              "text": "Daily standard replies you can check at a glance.",
+              "correct": true
             }
           ],
-          "explanation": "There is no universal three-minute estimate. Record setup, execution and review time for the selected use case."
-        }
-      ]
-    },
-    {
-      "id": "modul_1_lesson_5",
-      "moduleId": "modul_1",
-      "number": 5,
-      "title": "AI-Native Fluency self-assessment",
-      "subtitle": "Ten scenarios across five dimensions",
-      "durationMinutes": 10,
-      "premiumGated": false,
-      "refreshCadence": "SEMI-ANNUAL",
-      "keyConcepts": [
-        "Fluency",
-        "Drafting",
-        "Delegation",
-        "Automation",
-        "Knowledge",
-        "Governance"
-      ],
-      "widgets": [
-        {
-          "kind": "demo-maturity",
-          "placement": "after-intro"
-        }
-      ],
-      "sections": [
-        {
-          "id": "modul_1_lesson_5_section_1",
-          "title": "The five dimensions",
-          "readTimeMinutes": 3,
-          "content": "The test scores your behavior in five dimensions. It is a diagnostic model, not an externally validated competency standard.\n\n1. **Drafting:** do first drafts for suitable tasks come from Claude?\n2. **Delegation:** do you hand over whole, bounded tasks with context instead of text fragments?\n3. **Automation:** do approved workflows run without your click at every step?\n4. **Knowledge:** do you query an approved knowledge base and cite every record?\n5. **Governance:** do you classify data and apply your organization's rules, GDPR and the EU AI Act included?\n\nEach dimension has five levels: 0 never, 1 occasional and unstructured, 2 regular and deliberate, 3 default for suitable tasks, 4 consistent with defined controls. Score what you do today and record it as your baseline."
-        },
-        {
-          "id": "modul_1_lesson_5_section_2",
-          "title": "The test: scenarios 1 to 5",
-          "readTimeMinutes": 5,
-          "content": "For each scenario, pick what you **actually do today**.\n\n**1 · Drafting:** A customer email needs a reply today.\n- A) I write it myself in a blank document\n- B) A draft from a few bullet points\n- C) Approved email with role, context, task and limits, draft reviewed\n- D) A maintained skill with required context and review checklist\n\n**2 · Delegation:** You need a job advertisement.\n- A) I write it myself\n- B) A request without further details\n- C) Role, company context, work profile, salary range and format given\n- D) A maintained Project with sources and approval criteria\n\n**3 · Automation:** A website inquiry arrives.\n- A) I copy it into the CRM by hand\n- B) The form writes directly to the CRM\n- C) The form writes to the CRM and a reply draft is prepared for review\n- D) A monitored workflow with validation, review assignment and audit log\n\n**4 · Knowledge:** Someone asks about a decision from January.\n- A) From memory\n- B) Separate searches in email, notes and files\n- C) A maintained knowledge base, cited record opened\n- D) Decision, source, owner and later changes in one retrieval\n\n**5 · Governance:** May customer data go into an AI tool?\n- A) I do not know\n- B) I assume GDPR forbids it\n- C) Classify the data, check the approved tool and terms\n- D) Apply the policy, tool register and escalation path\n\n_(Scenarios 6 to 10 are in the [Fluency Test](/en/ai-native/fluency-test).)_"
-        },
-        {
-          "id": "modul_1_lesson_5_section_3",
-          "title": "What your score tells you",
-          "readTimeMinutes": 2,
-          "content": "Each dimension has two scenarios; A scores 0 and D scores 3, so 0 to 6 in total.\n\n**Reading per dimension:**\n- **0 to 2:** little observed use; pick one controlled practice task\n- **3 to 4:** regular, but not across every suitable task\n- **5 to 6:** consistent use of the assessed behaviors\n\nThere is no comparison value; this course has not measured a representative average. Repeat the test after Modules 2 to 4 and compare the evidence behind each answer: completed workflows, source checks, approvals, governance controls."
-        }
-      ],
-      "quiz": [
-        {
-          "id": "modul_1_lesson_5_q1",
-          "questionText": "What are the five dimensions in this AI-Native Fluency assessment?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Typing, reading, calculating, analyzing and presenting",
-              "isCorrect": false
-            },
-            {
-              "id": "b",
-              "text": "Drafting, delegation, automation, knowledge and governance",
-              "isCorrect": true
-            },
-            {
-              "id": "c",
-              "text": "Input, output, quality, speed and cost",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Tools, skills, workflows, data and results",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "The five dimensions are drafting, delegation, automation, knowledge and governance."
-        },
-        {
-          "id": "modul_1_lesson_5_q2",
-          "questionText": "Which baseline should you use to measure progress?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "An unsupported industry average",
-              "isCorrect": false
-            },
-            {
-              "id": "b",
-              "text": "Your own score using the same scenarios and criteria",
-              "isCorrect": true
-            },
-            {
-              "id": "c",
-              "text": "The highest score reported by another learner",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "A score generated by Claude without evidence",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "Record your own baseline and repeat the same assessment. This course has no representative average."
+          "explanation": "Frequent, cheap when wrong, quick to check: there you learn fastest and risk least."
         }
       ]
     }

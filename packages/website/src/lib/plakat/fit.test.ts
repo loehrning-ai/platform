@@ -93,8 +93,7 @@ const COURSE_LITERALS = [
   { file: "src/app/ki-fuehrerschein/page.tsx", de: ["Welche Daten", "ins KI-Tool dürfen."], en: ["Which data may go", "into an AI tool."] },
   { file: "src/app/eu-ai-act-kurs/page.tsx", de: ["Rollen, Risiken und", "Pflichten einordnen."], en: ["Map roles, risks,", "and duties."] },
   { file: "src/app/ki-und-gesellschaft/page.tsx", de: ["Arbeit, Deepfakes", "und Bias einordnen."], en: ["Assess work, deepfakes,", "and bias."] },
-  { file: "src/app/ai-native/page.tsx", de: ["Routinearbeit mit Claude automatisieren."], en: ["Automate routine work with Claude."] },
-  { file: "src/app/ai-native/capstone-gallery/page.tsx", de: ["Noch keine veröffentlichten Capstones."], en: ["No published capstones."] },
+  { file: "src/app/ai-native/page.tsx", de: ["Erst messen. Dann automatisieren."], en: ["Measure first. Then automate."] },
 ] as const;
 
 /**

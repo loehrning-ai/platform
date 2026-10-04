@@ -9,9 +9,6 @@ describe("translated-content parity registry", () => {
     for (const path of [
       "/",
       "/ai-native",
-      "/ai-native/capstone-gallery",
-      "/ai-native/demos",
-      "/ai-native/fluency-test",
       "/ai-native/glossar",
       "/ai-native/verifizierung",
       "/blog",

@@ -17,7 +17,7 @@ free-text checkpoints. Completion is written automatically.
 | `ki-fuehrerschein` | On the engine (pilot): 4 modules, 8 lessons, about 45 min |
 | `ki-und-gesellschaft` | Legacy section reader, port pending |
 | `eu-ai-act-kurs` | Legacy section reader, port pending |
-| `ai-native` | Legacy reader, port pending. The reader already dispatches engine lessons (see "Porting AI-Native") |
+| `ai-native` | On the engine as "Mit KI arbeiten" / "Working with AI": 4 modules, 9 lessons, about 70 min, tool-neutral |
 
 ## Transition model
 

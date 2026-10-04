@@ -27,7 +27,12 @@ describe("lesson mission binding", () => {
       }
     }
 
-    expect(resolved).toBe(143);
+    // Every canonical lesson of every course resolves (derived, so course
+    // rewrites only change CANONICAL_LESSON_IDS).
+    expect(resolved).toBe(
+      COURSE_SLUGS.reduce((sum, slug) => sum + CANONICAL_LESSON_IDS[slug].length, 0),
+    );
+    expect(resolved).toBeGreaterThan(100);
   });
 
   it("makes adjacent lesson frames visibly distinct using authored metadata", () => {

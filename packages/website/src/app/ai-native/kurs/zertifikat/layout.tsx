@@ -11,8 +11,8 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title:
       locale === "en"
-        ? "Certificate of participation: AI-Native Workflow Course"
-        : "Teilnahmebestätigung: AI-Native Arbeitskurs",
+        ? "Certificate of participation: Working with AI"
+        : "Teilnahmebestätigung: Mit KI arbeiten",
     description:
       locale === "en"
         ? "Download a locally generated certificate of participation. It is unsigned, not server-verified and not an external assessment."

@@ -1,17 +1,16 @@
 {
   "courseId": "ai-native-arbeitskurs",
-  "title": "AI-Native Workflow Course",
-  "tagline": "You set task, limits and review; Claude supplies drafts.",
+  "title": "Working with AI",
+  "tagline": "Measure, safeguard, cite: AI in your own work, whatever the tool.",
   "language": "en",
   "createdAt": "2026-04-18",
-  "version": "1.0",
+  "version": "2.0",
   "pricing": {
     "free": true,
     "includes": [
-      "Modules 1 to 4 in full (27 lessons plus setup)",
-      "AI-native learning materials",
-      "Public course materials",
-      "Capstone rubric",
+      "4 modules, 9 lessons, each with an exercise",
+      "Live exercises with recorded examples as fallback",
+      "Pilot plan as a Markdown template",
       "Certificate of participation with QR verification"
     ]
   },
@@ -19,8 +18,10 @@
     "recommended": "ki-fuehrerschein",
     "note": "Everyday AI Literacy is recommended, not required."
   },
-  "totalLessons": 27,
+  "totalLessons": 9,
   "totalModules": 4,
-  "targetDurationHours": 12,
-  "supportedLanguages": ["en"]
+  "targetDurationHours": 1,
+  "supportedLanguages": [
+    "en"
+  ]
 }

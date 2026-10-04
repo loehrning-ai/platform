@@ -79,12 +79,12 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
       "Editorial illustration of an EU AI Act dossier with risk cards, roles, and a review path",
   },
   "ai-native": {
-    title: "AI-Native Work Course",
-    eyebrow: "Step 04 · Working method",
-    tagline: "Clarify intent, provide context, and check execution and output.",
+    title: "Working with AI",
+    eyebrow: "Step 04 · Your own work",
+    tagline: "Measure net time, limit permissions, check sources, safeguard workflows.",
     description:
-      "Four modules on repeatable workflows for research, documentation and automation. Every exercise names its tool, input, review step and stopping condition.",
-    duration: "about 5 hrs of lessons, 12 hrs with exercises",
+      "Nine short lessons with exercises, whatever the tool: measure whether AI pays off for a task, limit context and tool permissions against prompt injection, check cited answers and test a workflow with approval. You finish with a pilot plan for your own work.",
+    duration: "about 70 min",
     unitLabel: "modules",
     audience: "Employees, independent professionals, students",
     coverImageAlt:

@@ -46,8 +46,8 @@ const ROUTES = [
   {
     id: "ai-native",
     renderPage: AiNativePage,
-    action: "Start with module 1",
-    href: "/en/ai-native/kurs/modul_1",
+    action: "Start with lesson 1",
+    href: "/en/ai-native/kurs/modul_1/messen-1-1",
   },
   {
     id: "eu-ai-act-kurs",

@@ -170,7 +170,7 @@ const BOOK_SOURCE_INPUTS_DE: Readonly<Record<string, string>> = {
   "KI-Führerschein lesson content": "Lektionsinhalte des KI-Führerscheins",
   "European Commission AI literacy guidance":
     "Leitlinien der Europäischen Kommission zur KI-Kompetenz",
-  "AI-Native course content": "Kursinhalte des AI-Native-Arbeitskurses",
+  "AI-Native course content": "Kursinhalte von Mit KI arbeiten",
   "Tool-selection editorial notes": "Redaktionelle Notizen zur Werkzeugauswahl",
 };
 

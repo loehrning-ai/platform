@@ -1559,7 +1559,7 @@ const CV_ENGINE_TOOL_ARTIFACT = {
     ],
     relatedLearning: [
       {
-        title: "AI-Native Arbeitskurs",
+        title: "Mit KI arbeiten",
         description:
           "Übt, KI-Output zu prüfen, etwa den Import aus deinem alten PDF.",
         href: "/ai-native",

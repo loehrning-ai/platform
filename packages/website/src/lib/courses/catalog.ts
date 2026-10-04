@@ -148,7 +148,7 @@ export interface ImportedCourse {
 //  - KI-Führerschein: 4 modules, 8 lesson-engine lessons (see lib/course/data.ts)
 //  - KI und Gesellschaft: 3 blocks, 9 lessons
 //  - EU-AI-Act-Kurs: 6 blocks, 24 lessons
-//  - AI-Native: 4 modules, 27 lessons
+//  - AI-Native (Mit KI arbeiten): 4 modules, 9 lessons
 export const COURSE_CATALOG: readonly CatalogCourse[] = [
   {
     slug: "ki-fuehrerschein",
@@ -224,18 +224,18 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
   {
     slug: "ai-native",
     step: 4,
-    title: "AI-Native Arbeitskurs",
-    eyebrow: "Schritt 04 · Arbeitsweise",
+    title: "Mit KI arbeiten",
+    eyebrow: "Schritt 04 · Eigene Arbeit",
     tagline:
-      "Absicht klären, Kontext bereitstellen, Ausführung und Ergebnis prüfen.",
+      "Netto-Zeit messen, Rechte begrenzen, Quellen prüfen, Abläufe absichern.",
     description:
-      "Vier Module zu wiederholbaren Abläufen für Recherche, Dokumentation und Automatisierung. Jede Übung nennt Werkzeug, Eingabe, Prüfschritt und Abbruchkriterium.",
+      "Neun kurze Lektionen mit Übung, unabhängig vom Werkzeug: messen, ob sich KI für eine Aufgabe lohnt, Kontext und Werkzeugrechte gegen Prompt-Injection begrenzen, zitierte Antworten prüfen und einen Ablauf mit Freigabe testen. Am Ende steht ein Pilotplan für deine eigene Arbeit.",
     href: "/ai-native",
-    startHref: "/ai-native/kurs/modul_1",
-    continueHref: "/ai-native/kurs/modul_1/modul_1_lesson_1",
-    duration: "ca. 5 Std. Lektionen, 12 Std. mit Übungen",
-    durationMinutes: 720,
-    totalLessons: 27,
+    startHref: "/ai-native/kurs",
+    continueHref: "/ai-native/kurs",
+    duration: "ca. 70 Min.",
+    durationMinutes: 68,
+    totalLessons: 9,
     level: "mittel",
     unitLabel: "Module",
     unitCount: 4,

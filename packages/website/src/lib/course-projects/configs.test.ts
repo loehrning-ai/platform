@@ -34,7 +34,7 @@ describe("course project configs", () => {
       "ki-fuehrerschein": "regeln-4-2",
       "ki-und-gesellschaft": "ethik-3-3",
       "eu-ai-act-kurs": "block_6_lesson_4",
-      "ai-native": "modul_4_lesson_8",
+      "ai-native": "workflow-4-3",
       "data-infrastructure": "interview-playbook",
       "data-engineering-fundamentals": "cap",
       "data-science": "cap",

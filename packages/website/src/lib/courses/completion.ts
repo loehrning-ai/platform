@@ -37,14 +37,22 @@ const KI_FUEHRERSCHEIN_LESSON_IDS = [
 const EU_AI_ACT_LESSON_IDS = Array.from({ length: 6 }, (_, index) =>
   numbered(`block_${index + 1}_lesson_`, 4),
 ).flat();
+/**
+ * AI-Native ("Mit KI arbeiten" / "Working with AI") runs on the lesson engine:
+ * four modules, nine lessons. The pre-engine `modul_N_lesson_M` IDs are
+ * retired and dropped like the KI-Führerschein ones.
+ */
 const AI_NATIVE_LESSON_IDS = [
-  ...numbered("modul_1_lesson_", 5),
-  ...numbered("modul_2_lesson_", 7),
-  "modul_3_lesson_1",
-  "modul_3_lesson_0",
-  ...numbered("modul_3_lesson_", 6).slice(1),
-  ...numbered("modul_4_lesson_", 8),
-];
+  "messen-1-1",
+  "messen-1-2",
+  "kontext-2-1",
+  "kontext-2-2",
+  "wissen-3-1",
+  "wissen-3-2",
+  "workflow-4-1",
+  "workflow-4-2",
+  "workflow-4-3",
+] as const;
 const OPERATOR_LESSON_IDS = OPERATOR_MODULE_IDS.flatMap((moduleId) =>
   Array.from({ length: OPERATOR_MODULE_LESSON_COUNTS[moduleId] }, (_, index) =>
     lessonProgressKey(moduleId, index + 1),
@@ -160,13 +168,7 @@ export const CANONICAL_SECTION_IDS: Readonly<
       lessonId === "block_2_lesson_3" ? 4 : 3,
     ),
   ),
-  "ai-native": sectionsByCount(
-    AI_NATIVE_LESSON_IDS,
-    [
-      4, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 2, 3, 4, 3, 3, 3, 4, 4, 4, 3, 4, 4, 4,
-      3, 4,
-    ],
-  ),
+  "ai-native": engineSteps(AI_NATIVE_LESSON_IDS),
   "data-infrastructure": DATA_INFRA_SECTION_IDS,
   "data-engineering-fundamentals": Object.fromEntries(
     DEF_CHAPTER_IDS.map((lessonId) => [lessonId, []]),
@@ -208,6 +210,7 @@ export const EVIDENCE_GATED_COURSE_SLUGS = [
  */
 export const LESSON_ENGINE_COURSE_SLUGS = [
   "ki-fuehrerschein",
+  "ai-native",
 ] as const satisfies readonly CourseSlug[];
 
 export function isLessonEngineCourse(slug: CourseSlug): boolean {
@@ -219,7 +222,6 @@ export type EvidenceGatedCourseSlug =
 
 export const LESSON_COMPLETION_EVIDENCE_VERSION = "lesson-proof-v1";
 
-const AI_NATIVE_TRANSFER_PROOF_LESSON_IDS = new Set(["modul_3_lesson_0"]);
 const TRANSFER_ONLY_COURSE_SLUGS = new Set<EvidenceGatedCourseSlug>([
   "data-infrastructure",
   "data-engineering-fundamentals",
@@ -330,10 +332,7 @@ export function isLessonCompletionEvidenceBacked(
     return false;
   }
 
-  if (
-    TRANSFER_ONLY_COURSE_SLUGS.has(slug) ||
-    (slug === "ai-native" && AI_NATIVE_TRANSFER_PROOF_LESSON_IDS.has(lessonId))
-  ) {
+  if (TRANSFER_ONLY_COURSE_SLUGS.has(slug)) {
     return true;
   }
   if (isLessonEngineCourse(slug)) {

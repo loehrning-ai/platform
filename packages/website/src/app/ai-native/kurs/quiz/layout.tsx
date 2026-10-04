@@ -11,12 +11,12 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title:
       locale === "en"
-        ? "Final quiz: AI-Native Workflow Course"
-        : "Abschlussquiz: AI-Native Arbeitskurs",
+        ? "Final quiz: Working with AI"
+        : "Abschlussquiz: Mit KI arbeiten",
     description:
       locale === "en"
-        ? "Twenty questions on bounded tasks, Claude workspaces, maintained knowledge and controlled automation. Pass mark: 70 percent. Time limit: 25 minutes."
-        : "20 Fragen zu klaren Aufgaben, Claude-Arbeitsumgebungen, gepflegtem Wissen und kontrollierter Automatisierung. 70 Prozent zum Bestehen, 25 Minuten Zeitlimit.",
+        ? "Fifteen questions on net time, triage, context, tool permissions, cited knowledge and safeguarded workflows. Pass mark: 70 percent. Time limit: 20 minutes."
+        : "15 Fragen zu Netto-Zeit, Triage, Kontext, Werkzeugrechten, zitiertem Wissen und abgesicherten Abläufen. 70 Prozent zum Bestehen, 20 Minuten Zeitlimit.",
     robots: { index: false, follow: false },
     alternates: { canonical: null },
   };

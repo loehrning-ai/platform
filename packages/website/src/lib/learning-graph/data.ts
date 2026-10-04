@@ -36,9 +36,9 @@ const COURSE_NODE_META: Partial<Record<CourseSlug, CourseNodeMeta>> = {
   },
   "ai-native": {
     audience: ["praktiker"],
-    level: "advanced",
+    level: "intermediate",
     stage: "anwenden",
-    evidenceMode: "self_attested",
+    evidenceMode: "source_backed",
   },
   // Data Infrastructure / Data Engineering Fundamentals
   // / Data Science: imported

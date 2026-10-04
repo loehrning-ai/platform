@@ -147,8 +147,8 @@ describe("Offering section", () => {
     expect(durations).toHaveLength(4);
     for (const duration of durations) expect(duration).toHaveClass("sm:hidden");
     expect(container.textContent).not.toMatch(/\b(?:Blöcke|Module)\b/);
-    // The AI-Native duration agrees with /kurse (5 hours of lessons).
-    expect(container.textContent).toContain("ca. 5 Std. + Übungen");
+    // The AI-Native duration agrees with /kurse (nine lessons with exercises).
+    expect(container.textContent).toContain("ca. 70 Min.");
     expect(container.textContent).not.toContain("ca. 12 Std.");
   });
 

@@ -18,12 +18,12 @@ export async function generateMetadata(): Promise<Metadata> {
   );
   const title =
     locale === "en"
-      ? "Glossary: AI-Native Workflow Course"
-      : "Glossar: AI-Native Arbeitskurs";
+      ? "Glossary: Working with AI"
+      : "Glossar: Mit KI arbeiten";
   const description =
     locale === "en"
-      ? "Seventy definitions for the technical, organizational and regulatory terms used in the AI-Native Workflow Course."
-      : "Siebzig Definitionen für die technischen, organisatorischen und regulatorischen Begriffe des AI-Native Arbeitskurses.";
+      ? "Sixteen definitions for the terms used in Working with AI, from baseline to stop criterion."
+      : "Sechzehn Definitionen für die Begriffe aus Mit KI arbeiten, von Baseline bis Stoppkriterium.";
   const localizedPath = localizeHref("/ai-native/glossar", locale);
   const url = `${SITE_URL}${localizedPath}`;
   const alternates = buildLocaleAlternates("/ai-native/glossar", ["de", "en"]);
