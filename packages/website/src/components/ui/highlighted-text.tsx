@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 /**
  * The band's height and its offset from the top of each line's content-area
  * box, both in em. An inline box-decoration-clone span's default background
- * positioning area tracks font ascent+descent (~1.21em for the brand face),
+ * positioning area tracks font ascent+descent (1.2em for Figtree),
  * not `line-height` -- painting the full content-area height is what causes
  * the band to overlap between wrapped lines at leading-[0.9]. Keeping
  * offset + height at or under the line-height-em stride guarantees adjacent
