@@ -429,12 +429,13 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
     };
   });
 
-  const phases = PHASE_ORDER.map((phase) => ({
-    phase,
-    materials: workshop.materials.filter(
-      (material) => material.phase === phase,
-    ),
-  })).filter((group) => group.materials.length > 0);
+  // One red line: the materials the outcomes need, in taught order, with the
+  // place to start first; optional files wait behind one disclosure.
+  const ordered = PHASE_ORDER.flatMap((phase) =>
+    workshop.materials.filter((material) => material.phase === phase),
+  );
+  const coreMaterials = ordered.filter((material) => !material.optional);
+  const optionalMaterials = ordered.filter((material) => material.optional);
   const hasPresenter = workshop.materials.some(
     (material) => material.role === "presenter",
   );
@@ -690,11 +691,6 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
             className="mt-4 sm:mt-6"
           />
           <div className="mt-2 flex flex-wrap items-center justify-between gap-x-6 sm:mt-4">
-            {copy.agendaSource[workshop.agendaSource] ? (
-              <p className="text-caption text-muted-foreground">
-                {copy.agendaSource[workshop.agendaSource]}
-              </p>
-            ) : null}
             {/* On a phone the lab starts right below, so the jump link
                 stays a tablet and desktop aid. */}
             <a
@@ -725,36 +721,43 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
             title={copy.materialHeading}
             size="compact"
           />
-          <div className="mt-3 grid gap-6 sm:mt-6 sm:gap-10">
-            {phases.map((group) => (
-              <div key={group.phase}>
-                <h3 className="text-label text-muted-foreground">
-                  {copy.phaseLabels[group.phase]}
-                </h3>
-                <ul className="mt-2 border-t border-hairline">
-                  {group.materials.map((material) => (
-                    <MaterialRow
-                      key={material.href}
-                      workshopSlug={workshop.slug}
-                      material={material}
-                      copy={copy}
-                      locale={locale}
-                    />
-                  ))}
-                </ul>
-                {/* A keyboard instruction: phones have no P key and open
-                    the presenter row above instead. */}
-                {group.phase === "during" && hasPresenter ? (
-                  <p className="mt-4 max-w-[64ch] text-caption text-muted-foreground max-lg:hidden">
-                    <span className="font-semibold text-foreground">
-                      {copy.selfHostHeading}:
-                    </span>{" "}
-                    {copy.selfHostBody}
-                  </p>
-                ) : null}
-              </div>
+          <ul className="mt-3 border-t border-hairline sm:mt-6">
+            {coreMaterials.map((material) => (
+              <MaterialRow
+                key={material.href}
+                workshopSlug={workshop.slug}
+                material={material}
+                copy={copy}
+                locale={locale}
+              />
             ))}
-          </div>
+          </ul>
+          {optionalMaterials.length > 0 ? (
+            <details className="group mt-4 sm:mt-6">
+              <summary className="inline-flex min-h-11 cursor-pointer items-center gap-2 text-caption font-semibold text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground">
+                {copy.moreMaterials(optionalMaterials.length)}
+              </summary>
+              <ul className="mt-2 border-t border-hairline">
+                {optionalMaterials.map((material) => (
+                  <MaterialRow
+                    key={material.href}
+                    workshopSlug={workshop.slug}
+                    material={material}
+                    copy={copy}
+                    locale={locale}
+                  />
+                ))}
+              </ul>
+            </details>
+          ) : null}
+          {hasPresenter ? (
+            <p className="mt-4 max-w-[64ch] text-caption text-muted-foreground max-lg:hidden">
+              <span className="font-semibold text-foreground">
+                {copy.selfHostHeading}:
+              </span>{" "}
+              {copy.selfHostBody}
+            </p>
+          ) : null}
         </div>
       </section>
 
@@ -792,17 +795,16 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
                 {caseStudy.decisionQuestion}
               </p>
             </div>
-            <Callout
-              variant="gap"
-              title={copy.limitations}
-              className="self-start px-4 py-3 sm:px-5 sm:py-4"
-            >
-              <ul className="mt-1 grid gap-1.5 text-[0.875rem] leading-normal text-muted-foreground sm:gap-2 sm:text-[0.9375rem]">
+            <details className="self-start border-t border-hairline pt-3">
+              <summary className="inline-flex min-h-11 cursor-pointer items-center text-caption font-semibold text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground">
+                {copy.limitations}
+              </summary>
+              <ul className="mt-2 grid gap-1.5 text-[0.875rem] leading-normal text-muted-foreground sm:gap-2 sm:text-[0.9375rem]">
                 {caseStudy.dataLimitations.map((limitation) => (
                   <li key={limitation}>{limitation}</li>
                 ))}
               </ul>
-            </Callout>
+            </details>
           </div>
           {/* justify-between keeps the values on one line when a label wraps. */}
           <StatRow
@@ -883,8 +885,23 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
         </div>
       </section>
 
-      <div className={cx(CONTAINER, SECTION)}>
-        <div className="grid gap-8 sm:gap-14 md:grid-cols-2 md:gap-12">
+      <section
+        aria-labelledby="workshop-details-heading"
+        className={cx(CONTAINER, SECTION)}
+      >
+        <details className="border-t-2 border-scene-line pt-3 sm:pt-4">
+          <summary className="flex min-h-11 cursor-pointer flex-wrap items-baseline gap-x-4 gap-y-1">
+            <h2
+              id="workshop-details-heading"
+              className="text-[1.125rem]/[1.2] font-bold text-foreground sm:text-fluid-h3"
+            >
+              {copy.detailsHeading}
+            </h2>
+            <span className="text-caption text-muted-foreground">
+              {copy.detailsSummary}
+            </span>
+          </summary>
+          <div className="mt-6 grid gap-8 sm:gap-12 md:grid-cols-2 md:gap-12">
           <section aria-labelledby="workshop-audience-heading">
             <MinorHead id="workshop-audience-heading" title={copy.forWhom} />
             <SquareList items={workshop.audience} className="mt-3 sm:mt-6" />
@@ -896,11 +913,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
             <MinorHead id="workshop-outcomes-heading" title={copy.outcomesHeading} />
             <SquareList items={workshop.outcomes} className="mt-3 sm:mt-6" />
           </section>
-        </div>
-      </div>
 
-      <div className={cx(CONTAINER, SECTION)}>
-        <div className="grid gap-8 sm:gap-14 md:grid-cols-2 md:gap-12">
           <section aria-labelledby="workshop-needs-heading">
             <MinorHead id="workshop-needs-heading" title={copy.needsHeading} />
             <SquareList items={workshop.needs} className="mt-3 sm:mt-6" />
@@ -929,8 +942,9 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
               ))}
             </ul>
           </section>
-        </div>
-      </div>
+          </div>
+        </details>
+      </section>
 
       <footer
         aria-label={copy.provenanceHeading}
@@ -963,12 +977,12 @@ function MinorHead({
 }) {
   return (
     <header className="border-t-2 border-scene-line pt-3 sm:pt-4">
-      <h2
+      <h3
         id={id}
-        className="text-[1.125rem]/[1.2] font-bold text-foreground sm:text-fluid-h3"
+        className="text-[1.0625rem]/[1.2] font-bold text-foreground"
       >
         {title}
-      </h2>
+      </h3>
     </header>
   );
 }

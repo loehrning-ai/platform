@@ -151,6 +151,9 @@ export interface WorkshopPageCopy {
     readonly published: string;
     readonly reviewed: string;
     readonly forWhom: string;
+    readonly detailsHeading: string;
+    readonly detailsSummary: string;
+    readonly moreMaterials: (count: number) => string;
     readonly needsHeading: string;
     readonly notNeededHeading: string;
     readonly notCoveredHeading: string;
@@ -331,6 +334,9 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       published: "veröffentlicht",
       reviewed: "geprüft",
       forWhom: "Für wen",
+      detailsHeading: "Details",
+      detailsSummary: "Für wen, was du brauchst, was nicht dazugehört",
+      moreMaterials: (count) => `${count} optionale ${count === 1 ? "Datei" : "Dateien"}`,
       needsHeading: "Das brauchst du",
       notNeededHeading: "Das brauchst du nicht",
       notCoveredHeading: "Nicht Teil dieses Workshops",
@@ -507,6 +513,9 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       published: "published",
       reviewed: "reviewed",
       forWhom: "Who this is for",
+      detailsHeading: "Details",
+      detailsSummary: "Who it is for, what you need, what it leaves out",
+      moreMaterials: (count) => `${count} optional ${count === 1 ? "file" : "files"}`,
       needsHeading: "What you need",
       notNeededHeading: "What you don't need",
       notCoveredHeading: "Not part of this workshop",

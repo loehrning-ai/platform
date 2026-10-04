@@ -1,7 +1,6 @@
 "use client";
 
 import type { ReactNode, JSX } from "react";
-import { cn } from "@/lib/utils";
 
 /**
  * Shared sub-components used across multiple demo ports (AI-native demo gallery implementation).
