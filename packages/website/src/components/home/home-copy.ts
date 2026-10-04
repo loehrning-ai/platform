@@ -43,7 +43,7 @@ export const HOME_COPY = {
       routeLabel: "Empfohlener Grundlagenpfad",
       lessonLabel: "Lektionen",
       deeperSummary: (count: number) =>
-        `Dazu ${count} Kurse zum visuellen Lernen zu Daten und KI-Betrieb.`,
+        `Dazu ${count} Kurse zum visuellen Lernen über Daten und KI-Betrieb.`,
       viewAllCourses: "Alle Kurse ansehen",
     },
     workflow: {

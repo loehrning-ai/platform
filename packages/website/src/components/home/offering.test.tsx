@@ -95,7 +95,7 @@ describe("Offering section", () => {
   it("routes visual learning through the single full-atlas action", () => {
     render(<Offering />);
     expect(
-      screen.getByText(/4 Kurse zum visuellen Lernen zu Daten und KI-Betrieb/),
+      screen.getByText(/4 Kurse zum visuellen Lernen über Daten und KI-Betrieb/),
     ).toBeInTheDocument();
     const atlasLinks = screen.getAllByRole("link", {
       name: /Alle Kurse ansehen/,

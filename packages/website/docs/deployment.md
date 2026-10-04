@@ -198,9 +198,10 @@ partial configuration and fails instead of surviving as stale release state.
   digest is guessed by source code. The route runs only each workspace's exact,
   ordered synthetic command-ID contract in a non-persistent,
   deny-all-network Sandbox and fails closed when any readiness input is absent.
-  The route covers the Codex repository fixture and the fixed Data Science,
-  Data Engineering, and Data Infrastructure programs. Their browser-entered
-  plans are not executable SQL and are never sent to Sandbox.
+  The route covers the fixed Data Science, Data Engineering, and Data
+  Infrastructure programs, plus the retired repository fixture of the removed
+  Codex course, which no page calls. Their browser-entered plans are not
+  executable SQL and are never sent to Sandbox.
 
 Outside CI, Vercel, and release validation, credential-free local development
 can continue after a validation warning. An invalid environment containing

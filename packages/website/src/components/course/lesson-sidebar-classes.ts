@@ -1,8 +1,8 @@
 import { cx } from "@/components/werk";
 
 /**
- * One recipe for every course reader's lesson list (course/kurs, Claude,
- * Codex, data infrastructure, operator, AI-Native, DEF, Data Science).
+ * One recipe for every course reader's lesson list (course/kurs, data
+ * infrastructure, operator, AI-Native, DEF, Data Science).
  * Werkzeichnung marks the current lesson by tone, weight and a small ink
  * square, never by an orange left bar or a pastel fill.
  */
@@ -40,8 +40,8 @@ export function lessonSidebarItemClass(active: boolean): string {
 }
 
 /**
- * Readers that keep the number visible on every row (Claude, Codex, data
- * infrastructure, operator, Data Science, data engineering) mark the current
+ * Readers that keep the number visible on every row (data infrastructure,
+ * operator, Data Science, data engineering) mark the current
  * row with a 6px ink square in the left padding instead of replacing the
  * number. The square sits on the first text line.
  */

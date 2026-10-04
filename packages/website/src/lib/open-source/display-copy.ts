@@ -48,7 +48,7 @@ export const OPEN_SOURCE_PAGE_COPY = {
       "Code, Lerntexte und Medien haben getrennte Lizenzen. Welche gilt, steht jeweils am Projekt.",
     platformCode: "Plattform-Code",
     licensePolicy: "Lizenzrichtlinie",
-    courses: "Zum visuellen Lernen",
+    courses: "Zu den Kursen zum visuellen Lernen",
   },
   en: {
     metadata: {
@@ -96,7 +96,7 @@ export const OPEN_SOURCE_PAGE_COPY = {
       "Code, learning text and media carry separate licenses. Each project states which one applies.",
     platformCode: "Platform source",
     licensePolicy: "License policy",
-    courses: "Browse visual learning",
+    courses: "Browse visual-learning courses",
   },
 } as const;
 

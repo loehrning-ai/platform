@@ -386,8 +386,8 @@ function GermanPrivacyContent() {
             )}
             {features.courseTerminal ? (
               <p className="mt-2">
-                Die Kursprojekte für Codex, Data Science, Data Engineering und
-                Data Infrastructure können auf ausdrücklichen Start jeweils eine
+                Die Kursprojekte für Data Science, Data Engineering und Data
+                Infrastructure können auf ausdrücklichen Start jeweils eine
                 feste Folge erlaubter Befehlskennungen an Vercel Sandbox
                 übertragen. Browserseitige Analysepläne werden nur strukturell
                 geprüft; sie sind kein ausführbares SQL und werden nicht an die
@@ -415,10 +415,9 @@ function GermanPrivacyContent() {
             ) : (
               <p className="mt-2">
                 Die echte isolierte Kursausführung über Vercel Sandbox ist in
-                dieser Bereitstellung deaktiviert. Das Codex-Repository-Labor
-                weist die getrennte Browser-Simulation ausdrücklich als
-                Simulation aus. Die drei Datenlabore geben ohne echten Lauf
-                keine simulierten Kennzahlen als Ausführung aus.
+                dieser Bereitstellung deaktiviert. Die drei Datenlabore geben
+                ohne echten Lauf keine simulierten Kennzahlen als Ausführung
+                aus.
               </p>
             )}
           </LegalSection>

@@ -227,7 +227,7 @@ describe("Datenschutz account-provider readiness copy", () => {
       within(
         aiSection(/KI-Lernfeedback und isolierte Kursausführung/),
       ).getByText(
-        /Codex, Data Science, Data Engineering und Data Infrastructure/,
+        /Kursprojekte für Data Science, Data Engineering und Data Infrastructure/,
       ),
     ).toBeVisible();
     german.unmount();
@@ -237,9 +237,27 @@ describe("Datenschutz account-provider readiness copy", () => {
       within(
         aiSection(/AI learning feedback and isolated course execution/),
       ).getByText(
-        /Codex, Data Science, Data Engineering, and Data Infrastructure/,
+        /the Data Science, Data Engineering,\s+and Data Infrastructure course projects/,
       ),
     ).toBeVisible();
+  });
+
+  it("names no removed course project in either language or terminal state", async () => {
+    for (const courseTerminal of [true, false]) {
+      runtime.courseTerminal = courseTerminal;
+      const german = render(await DatenschutzPage());
+      expect(
+        aiSection(/KI-Lernfeedback und isolierte Kursausführung/).textContent,
+      ).not.toMatch(/Codex|Repository-Labor/);
+      german.unmount();
+
+      const english = render(<EnglishPrivacyContent features={runtime} />);
+      expect(
+        aiSection(/AI learning feedback and isolated course execution/)
+          .textContent,
+      ).not.toMatch(/Codex|repository lab/);
+      english.unmount();
+    }
   });
 });
 

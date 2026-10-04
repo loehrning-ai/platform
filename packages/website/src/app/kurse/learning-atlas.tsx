@@ -103,7 +103,7 @@ function sceneRuns(
 
 /**
  * Level filter for the phone ledger. "alle" is the default on both the server
- * and the first client render, so the ten rows are complete without
+ * and the first client render, so the eight rows are complete without
  * JavaScript and hydration never flips the list. Selecting a level hides the
  * non-matching rows BELOW lg only (`hidden lg:list-item`): the desktop ledger
  * is a reviewed, complete document and stays complete at every width, while

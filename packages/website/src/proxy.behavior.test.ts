@@ -491,6 +491,11 @@ describe("locale routing and authentication boundaries", () => {
     ["/en/wie-ki-funktioniert/lektion-1-vorhersage", "/en/einstieg"],
     ["/en/bekannte-grenzen", "/en/hilfe#grenzen"],
     ["/en/ueber-die-plattform", "/en/ueber-mich"],
+    ["/kurse/open-source/claude", "/kurse"],
+    ["/kurse/open-source/claude/kurs/mental-model", "/kurse"],
+    ["/kurse/open-source/codex/verifizierung", "/kurse"],
+    ["/en/kurse/open-source/claude/kurs/quiz", "/en/kurse"],
+    ["/en/kurse/open-source/codex", "/en/kurse"],
   ])("permanently redirects retired route %s to %s", async (from, to) => {
     const response = await proxy(
       new NextRequest(`https://loehrning.ai${from}`),

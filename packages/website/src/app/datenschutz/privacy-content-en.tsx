@@ -311,8 +311,8 @@ export function EnglishPrivacyContent({
             )}
             {features.courseTerminal ? (
               <p className="mt-2">
-                When expressly started, the Codex, Data Science, Data
-                Engineering, and Data Infrastructure course projects can each
+                When expressly started, the Data Science, Data Engineering,
+                and Data Infrastructure course projects can each
                 transmit a fixed sequence of allowed command identifiers to
                 Vercel Sandbox. Browser-side analysis plans are structurally
                 checked only; they are not executable SQL and are not sent to
@@ -338,10 +338,8 @@ export function EnglishPrivacyContent({
             ) : (
               <p className="mt-2">
                 Real isolated course execution through Vercel Sandbox is
-                disabled in this deployment. The Codex repository lab explicitly
-                labels its separate browser fallback as a simulation. The three
-                data labs do not present simulated metrics as execution when no
-                real run exists.
+                disabled in this deployment. The three data labs do not present
+                simulated metrics as execution when no real run exists.
               </p>
             )}
           </LegalSection>

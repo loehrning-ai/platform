@@ -12,8 +12,6 @@ course records. The milestone is not server-signed evidence and is not a certifi
 | EU AI Act                     | Case lab         | Dated role, risk, obligation, and evidence file            |
 | AI-Native                     | Prompt lab       | One provider completion plus local control and handoff plan |
 | KI und Gesellschaft           | Case lab         | Provenance and stakeholder decision file                   |
-| Claude                        | Prompt lab       | Prompt comparison, output inspection, and evaluation       |
-| Codex                         | Repository lab   | Fixed server-seeded patch pipeline and inspected session diff |
 | Data Infrastructure           | Data lab         | Fixed-program incident metrics and recovery decision       |
 | Data Engineering Fundamentals | Data lab         | Fixed-program pipeline metrics and backfill decision       |
 | Data Science                  | Data lab         | Fixed-program experiment metrics and model-card decision   |
@@ -26,23 +24,9 @@ Course-specific copy, scenario, evidence, and criteria live in `src/lib/course-p
 
 - Case labs operate on resettable synthetic fixtures in the browser. They never claim to execute an
   operating-system shell, production database, or remote service.
-- The repository lab has two explicitly separate modes. Its default browser simulation changes only
-  in-browser exercise state, does not claim operating-system execution, and cannot verify or complete
-  the applied project. Its optional "isolated real run" calls `/api/course-workspace/terminal` with
-  one exact ten-step command-ID sequence. The route creates a fresh Vercel Sandbox Node 24 microVM
-  from the explicitly configured immutable `COURSE_TERMINAL_SANDBOX_IMAGE` digest, with
-  `networkPolicy: "deny-all"`, `persistent: false`, a 60-second lifetime, 10-second per-command
-  timeouts, and four server-seeded synthetic
-  files. It accepts no learner command text, arguments, repository, files, credentials, or network
-  destination. The request schema rejects subsets, reordered steps, and repetitions. The response
-  contains the real stdout, stderr, exit codes, and Git diff. Current-session project acceptance
-  unlocks only when the server
-  observes the expected baseline, failing pre-fix test, bounded fix, passing post-fix test, source
-  syntax check, clean `git diff --check`, one-file scoped diff, and untruncated canonical results.
-  The browser revalidates that session response before enabling local acceptance. Learning progress
-  stores only bounded fixed flags, never stdout, stderr, or diff. Those persisted flags are
-  client-validated learning evidence, not a durable server attestation. The VM is stopped in
-  `finally`.
+- No course uses a repository lab since the Codex course was removed. The terminal route still
+  accepts its retired ten-step `pipeline-quality` fixture; removing that server contract is a
+  separate change.
 - The three data workbenches use the isolated route with separate, exact two-command contracts. Each
   fresh Node 24 workspace receives one generated fixture program and two invariant tests. Data
   Science executes a 249-row leakage/peeking experiment and compares the registered +5 pp metric to

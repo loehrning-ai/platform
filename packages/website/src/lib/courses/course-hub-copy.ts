@@ -25,7 +25,7 @@ export const COURSE_HUB_COPY = {
     kicker: (count: number) => `${count} Kurse · Deutsch und Englisch`,
     heading: "Kostenlose KI-Kurse für den Arbeitsalltag.",
     intro:
-      "Vier Grundlagenkurse für alle, die KI im Job nutzen, und vier Kurse zum visuellen Lernen zu Daten und KI-Betrieb.",
+      "Vier Grundlagenkurse für alle, die KI im Job nutzen, und vier Kurse zum visuellen Lernen über Daten und KI-Betrieb.",
     firstStep: "Unsicher, wo du stehst?",
     /** The same question on a phone under 430px, so it and the link share one line. */
     firstStepShort: "Unsicher?",

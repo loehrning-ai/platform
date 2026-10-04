@@ -65,7 +65,7 @@ export interface CatalogCourse {
   readonly audience: string;
   /**
    * Card banner image. German core courses use owned editorial illustrations;
-   * the six ported courses retain provenance-pinned source screenshots.
+   * the four ported courses retain provenance-pinned source screenshots.
    */
   readonly coverImage?: string;
   readonly coverImageAlt?: string;
