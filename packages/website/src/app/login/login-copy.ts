@@ -143,7 +143,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
     },
     introduction: {
       publicAccess:
-        "Bücher, Demos, KI-Check und technische Kurse sind ohne Anmeldung offen.",
+        "Bücher, Demos, KI-Check und Kurse zum visuellen Lernen sind ohne Anmeldung offen.",
       outage: "Bestehende Sitzungen laufen weiter.",
       available: "Kostenlos. Nur die vier Grundlagenkurse brauchen ein Konto.",
       configuration:
@@ -269,7 +269,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
         {
           path: "/kurse",
           label: "Kurse",
-          note: "Lernpfade und technische Kurse.",
+          note: "Lernpfade und visuelles Lernen.",
         },
         {
           path: "/buecher",
@@ -314,7 +314,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
     },
     introduction: {
       publicAccess:
-        "Books, demos, the AI check and technical courses are open without signing in.",
+        "Books, demos, the AI check and visual-learning courses are open without signing in.",
       outage: "Existing sessions keep running.",
       available: "Free. Only the four foundation courses need an account.",
       configuration:
@@ -432,7 +432,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
         {
           path: "/kurse",
           label: "Courses",
-          note: "Learning paths and technical courses.",
+          note: "Learning paths and visual learning.",
         },
         {
           path: "/buecher",
