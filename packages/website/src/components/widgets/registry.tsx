@@ -198,6 +198,14 @@ const REGISTRY: Record<
     import("@/components/widgets/lab/pii-redactor").then((m) => ({
       default: m.PiiRedactorWidget as unknown as WidgetComponent,
     })),
+  "triage-matrix": () =>
+    import("@/components/widgets/lab/triage-matrix").then((m) => ({
+      default: m.TriageMatrixWidget as unknown as WidgetComponent,
+    })),
+  "scenario-run": () =>
+    import("@/components/widgets/lab/scenario-run").then((m) => ({
+      default: m.ScenarioRunWidget as unknown as WidgetComponent,
+    })),
 } as const satisfies Record<
   WidgetKind,
   () => Promise<{ default: WidgetComponent }>
