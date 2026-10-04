@@ -59,18 +59,26 @@ describe("<WorkshopDetailContent>", () => {
     expect(caps?.textContent).toBe(workshop.eyebrow);
     expect(caps).toHaveTextContent("Workshop 01 · Prognosen");
     expect(within(cover as HTMLElement).getByText(workshop.summary)).toBeInTheDocument();
-    // The fixed question sits in the paper q-card at the top of the agenda,
-    // once per page; the facts and the need follow it there (SPEC D11).
+    // No question card anywhere: the agenda opens with the red line, four
+    // numbered jumps in page order, then the facts and the one outcome.
     const agenda = sectionOf("Ablauf");
-    const questionCards = container.querySelectorAll("[data-question-card]");
-    expect(questionCards).toHaveLength(1);
-    expect(questionCards[0]).toHaveAttribute("data-question-card", "paper");
-    expect(questionCards[0]).toHaveTextContent(workshop.question);
-    expect(agenda).toContainElement(questionCards[0] as HTMLElement);
+    expect(container.querySelectorAll("[data-question-card]")).toHaveLength(0);
+    expect(container).not.toHaveTextContent(workshop.question);
+    const redLine = screen.getByRole("navigation", { name: "Der Weg durch den Workshop" });
+    expect(agenda).toContainElement(redLine);
+    expect(within(redLine).getAllByRole("link").map((link) => [link.textContent, link.getAttribute("href")])).toEqual([
+      ["1Ablauf", "#ablauf"],
+      ["2Ausprobieren", "#workshop-lab"],
+      ["3Material", "#material"],
+      ["4Der Fall", "#fall"],
+    ]);
+    for (const id of ["ablauf", "workshop-lab", "material", "fall"]) {
+      expect(container.querySelector(`#${id}`), id).not.toBeNull();
+    }
     expect(cover).not.toHaveTextContent("Selbstlernen ca. 90 Min.");
     expect(agenda).toHaveTextContent("Selbstlernen ca. 90 Min.");
-    expect(agenda).toHaveTextContent("Du nimmst mitGo/No-Go-Regel");
-    expect(agenda).toHaveTextContent("Du brauchsteinen Browser, kein KI-Konto");
+    expect(agenda).toHaveTextContent("Du nimmst mit: Go/No-Go-Regel");
+    expect(agenda).not.toHaveTextContent("Du brauchst");
     // The brief comes first in the agenda section, before its Kopflinie.
     expect(follows(agenda.querySelector("[data-workshop-brief]")!, agenda.querySelector("header")!)).toBe(true);
 
@@ -103,10 +111,8 @@ describe("<WorkshopDetailContent>", () => {
       "dashed",
     );
     expect(route).not.toHaveTextContent(/erledigt|aktuell|offen/);
-    const labLink = within(agenda).getByRole("link", {
-      name: `„${workshop.agenda[0].label}“ unten ausprobieren`,
-    });
-    expect(labLink).toHaveAttribute("href", "#workshop-lab");
+    // The red line carries the jump to the lab; no second link repeats it.
+    expect(within(agenda).queryByRole("link", { name: /unten ausprobieren/ })).toBeNull();
     expect(lab).toHaveAttribute("id", "workshop-lab");
     expect(agenda).not.toHaveTextContent(
       "Geplante Minuten, noch nicht mit Testpersonen gemessen.",
@@ -207,7 +213,9 @@ describe("<WorkshopDetailContent>", () => {
 
     const caseSection = sectionOf("Der Fall");
     expect(caseSection).toHaveTextContent(workshop.caseStudy.narrative);
-    expect(caseSection).toHaveTextContent(workshop.caseStudy.decisionQuestion);
+    // The case states its situation; its open question is not shown.
+    expect(caseSection).not.toHaveTextContent(workshop.caseStudy.decisionQuestion);
+    expect(caseSection).not.toHaveTextContent("Die offene Entscheidung");
     const stats = caseSection.querySelector("dl");
     expect(stats).not.toBeNull();
     expect(within(stats as HTMLElement).getAllByRole("term")).toHaveLength(
@@ -228,7 +236,7 @@ describe("<WorkshopDetailContent>", () => {
     expect(outcomes).not.toHaveTextContent("Du nimmst mit");
     expect(
       container.querySelector("[data-workshop-brief]"),
-    ).toHaveTextContent(`Du nimmst mit${workshop.outcome}`);
+    ).toHaveTextContent(`Du nimmst mit: ${workshop.outcome}`);
     // The invented case is named in the section caption only, not again under the narrative.
     expect(caseSection).not.toHaveTextContent("und alle Zahlen sind für diesen Workshop erfunden");
 

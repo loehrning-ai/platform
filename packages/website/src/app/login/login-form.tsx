@@ -270,23 +270,28 @@ export function LoginForm({
         </button>
       ) : null}
       {oauthAvailable ? (
-        // Layered Art. 13 notice: what the sign-in identity stores, stated at
-        // the control, with the full notice one link away. Deliberately not a
+        // Layered Art. 13 notice: a disclosure right at the control names what
+        // the sign-in identity stores, with the full notice one link away. Deliberately not a
         // checkbox, which would read as consent.
-        <p
+        <details
           data-login-oauth-notice={oauthNoticeVariant}
           className="mt-3 break-words text-xs leading-relaxed text-muted-foreground"
         >
-          {copy.oauthNotice[oauthNoticeVariant]}{" "}
-          {copy.oauthNotice.detailsBefore}
-          <Link
-            href={localizeHref("/datenschutz", locale)}
-            className="font-medium text-foreground underline underline-offset-4 hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-card"
-          >
-            {copy.oauthNotice.detailsLink}
-          </Link>
-          {copy.oauthNotice.detailsAfter}
-        </p>
+          <summary className="inline-flex min-h-11 cursor-pointer items-center font-medium text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground">
+            {copy.oauthNotice.summary}
+          </summary>
+          <p className="mt-1">
+            {copy.oauthNotice[oauthNoticeVariant]}{" "}
+            {copy.oauthNotice.detailsBefore}
+            <Link
+              href={localizeHref("/datenschutz", locale)}
+              className="font-medium text-foreground underline underline-offset-4 hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-card"
+            >
+              {copy.oauthNotice.detailsLink}
+            </Link>
+            {copy.oauthNotice.detailsAfter}
+          </p>
+        </details>
       ) : null}
       {oauthAvailable && magicLinkAvailable ? (
         <div className="my-5 flex items-center gap-3" aria-hidden="true">

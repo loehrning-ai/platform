@@ -210,10 +210,15 @@ test.describe("/login layout", () => {
     ).toBeVisible();
   });
 
-  test("says what an account adds in both layouts", async ({ page }) => {
+  test("says what an account adds only where one can be opened", async ({ page }) => {
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });
 
     const panel = page.locator("[data-login-account-value]");
+    if (!(await signInAvailable(page))) {
+      // A closed sign-in keeps the page short: status, form note, public rail.
+      await expect(panel).toHaveCount(0);
+      return;
+    }
     await expect(panel).toHaveCount(1);
     for (const claim of [
       "Fortschritt auf allen Geräten",

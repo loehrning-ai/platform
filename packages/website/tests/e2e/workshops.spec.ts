@@ -285,9 +285,10 @@ test.describe("workshop self-study journey", () => {
       await expect(band).toHaveAttribute("data-plakat", plakat);
       await expect(band).toHaveClass(new RegExp(`\\bplakat-${plakat}\\b`));
       bandGrounds.add(await band.evaluate((element) => getComputedStyle(element).backgroundColor));
-      // The question card sits on paper below the band, not inside it.
-      await expect(band.locator("[data-question-card]")).toHaveCount(0);
-      await expect(page.locator("[data-question-card]")).toHaveCount(1);
+      // No question card; the numbered red line sits on paper below the band.
+      await expect(page.locator("[data-question-card]")).toHaveCount(0);
+      await expect(band.locator("[data-workshop-redline]")).toHaveCount(0);
+      await expect(page.locator("[data-workshop-redline] li")).toHaveCount(4);
     }
     expect(bandGrounds.size).toBe(4);
   });

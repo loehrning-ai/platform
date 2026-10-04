@@ -101,11 +101,11 @@ export default async function LoginPage({
       >
         {copy.accountValue.heading}
       </h2>
-      <ol className="mt-5 grid gap-4">
+      <ol className="mt-4 grid gap-2">
         {copy.accountValue.items.map((item, index) => (
           <li
-            key={item.title}
-            className="grid min-w-0 grid-cols-[1.5rem_minmax(0,1fr)] gap-3 border-t border-border pt-4 first:border-t-0 first:pt-0"
+            key={item}
+            className="grid min-w-0 grid-cols-[1.5rem_minmax(0,1fr)] items-baseline gap-3 text-base font-bold leading-snug text-foreground"
           >
             <span
               aria-hidden="true"
@@ -113,40 +113,14 @@ export default async function LoginPage({
             >
               {String(index + 1).padStart(2, "0")}
             </span>
-            <div className="min-w-0">
-              <p className="break-words text-base font-bold leading-snug tracking-[-0.01em] text-foreground">
-                {item.title}
-              </p>
-              <p className="mt-1 break-words text-sm leading-relaxed text-muted-foreground">
-                {item.body}
-              </p>
-            </div>
+            <span className="min-w-0 break-words">{item}</span>
           </li>
         ))}
       </ol>
-      <ul className="mt-5 grid gap-2 border-t border-border pt-4">
-        {[copy.accountValue.records, copy.accountValue.control].map((line) => (
-          <li
-            key={line}
-            className="grid min-w-0 grid-cols-[0.75rem_minmax(0,1fr)] gap-2 text-sm leading-relaxed text-foreground"
-          >
-            <span aria-hidden="true" className="text-brand-orange">
-              /
-            </span>
-            <span className="min-w-0 break-words">{line}</span>
-          </li>
-        ))}
-      </ul>
-      {/* Fail-closed honesty: the tools and AI regions of the account only
-          appear once this deployment has them configured, so the panel says so
-          instead of advertising a region that may render nothing. */}
-      <p className="mt-4 break-words border-t border-border pt-4 text-sm leading-relaxed text-muted-foreground">
-        {copy.accountValue.availability}
-      </p>
       {/* Stated before signing in, not discovered after: anonymous progress is
           never merged into an account (see store.ts), so a learner who studied
           signed-out would otherwise meet an empty dashboard with no warning. */}
-      <p className="mt-3 break-words text-sm leading-relaxed text-muted-foreground">
+      <p className="mt-4 break-words border-t border-border pt-4 text-sm leading-relaxed text-muted-foreground">
         {copy.accountValue.localNote}
       </p>
     </section>
@@ -203,16 +177,17 @@ export default async function LoginPage({
                 : copy.heading.unavailable}
           </h1>
           <p className="mt-4 max-w-2xl break-words text-base leading-relaxed text-muted-foreground">
-            {copy.introduction.publicAccess}{" "}
             {loginAvailable
               ? copy.introduction.available
-              : unavailableReason === "outage"
-                ? copy.introduction.outage
-                : unavailableReason === "configuration"
-                  ? copy.introduction.configuration
-                  : unavailableReason === "methods"
-                    ? copy.introduction.methodsUnavailable
-                    : copy.introduction.accountUnavailable}
+              : `${copy.introduction.publicAccess} ${
+                  unavailableReason === "outage"
+                    ? copy.introduction.outage
+                    : unavailableReason === "configuration"
+                      ? copy.introduction.configuration
+                      : unavailableReason === "methods"
+                        ? copy.introduction.methodsUnavailable
+                        : copy.introduction.accountUnavailable
+                }`}
           </p>
         </header>
         {params.reason ? (
@@ -271,7 +246,6 @@ export default async function LoginPage({
             </section>
             {loginForm}
             {publicAccessPanel}
-            {accountValuePanel}
           </div>
         )}
       </div>

@@ -169,6 +169,19 @@ describe("login locale surface", () => {
 
   it("states what an account adds, and that local progress is imported only once on request", async () => {
     mocks.getRequestLocale.mockResolvedValue("en");
+    // The panel argues for an account only where one can be opened.
+    mocks.getAuthenticatedUser.mockResolvedValue({
+      configured: true,
+      user: null,
+      error: null,
+    });
+    mocks.getRuntimeFeatures.mockReturnValue({
+      account: true,
+      magicLink: true,
+      google: true,
+      github: false,
+      turnstileSiteKey: "1x00000000000000000000AA",
+    });
 
     render(await LoginPage({ searchParams: Promise.resolve({}) }));
 
@@ -187,18 +200,8 @@ describe("login locale surface", () => {
     expect(
       within(section).getByText("Connect your own AI"),
     ).toBeVisible();
-    expect(
-      within(section).getByText(/certificate of participation/),
-    ).toBeVisible();
-    expect(
-      within(section).getByText(/export, reset or delete your data/),
-    ).toBeVisible();
-    // Two of the three regions are gated behind readiness predicates on
-    // /konto, so the panel says they appear only once configured rather than
-    // promising a region that renders nothing.
-    expect(
-      within(section).getByText(/once they are set up here/),
-    ).toBeVisible();
+    // Titles only: the bodies and the fine print were cut to keep the page short.
+    expect(section).not.toHaveTextContent(/certificate of participation|once they are set up here/);
     // Anonymous progress is not merged automatically; /konto offers a one-time
     // import (import-progress-island.tsx), so the page has to say so BEFORE
     // sign-in rather than leave a learner to discover an empty dashboard after.
@@ -423,6 +426,8 @@ describe("login layout branches", () => {
         "single",
       );
       expect(screen.getByRole("heading", { level: 1, name: h1 })).toBeVisible();
+      // No sales pitch for an account that cannot be opened here.
+      expect(container.querySelector("[data-login-account-value]")).toBeNull();
 
       const status = container.querySelector("[data-login-status]");
       expect(status).toHaveAttribute("data-login-status", reason);

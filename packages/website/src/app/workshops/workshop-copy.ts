@@ -94,7 +94,8 @@ export interface WorkshopPageCopy {
     /** Phone back link in the cover kicker line. */
     readonly workshopsShort: string;
     /** Label above the q-card in the cover band. */
-    readonly questionLabel: string;
+    readonly redLineLabel: string;
+    readonly labHeading: string;
     /** Secondary cover-band button that jumps to the material list. */
     readonly seeMaterials: string;
     /** Cover-band buttons, chosen by the role of the material they open. */
@@ -123,7 +124,6 @@ export interface WorkshopPageCopy {
     /** Extra caption line on the station the decision lab mirrors. */
     readonly labStation: string;
     /** Link under the agenda to the decision lab, naming the station when known. */
-    readonly tryBelow: (stationLabel?: string) => string;
     readonly activityLabels: Readonly<Record<WorkshopActivity, string>>;
     readonly optional: string;
     readonly materialHeading: string;
@@ -144,7 +144,6 @@ export interface WorkshopPageCopy {
     readonly syntheticCase: string;
     readonly realCompanyData: string;
     readonly realExplanation: (companyName: string, period: string) => string;
-    readonly openDecision: string;
     readonly limitations: string;
     readonly realWorldHeading: string;
     readonly source: string;
@@ -245,7 +244,8 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       backAria: "Alle Workshops, zurück zur Übersicht",
       allWorkshops: "Alle Workshops",
       workshopsShort: "Workshops",
-      questionLabel: "Die Frage des Workshops",
+      redLineLabel: "Der Weg durch den Workshop",
+      labHeading: "Ausprobieren",
       seeMaterials: "Material ansehen",
       primaryAction: {
         deck: "Deck öffnen",
@@ -281,10 +281,6 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       },
       liveOnly: "nur live",
       labStation: "Übung unten",
-      tryBelow: (stationLabel) =>
-        stationLabel
-          ? `„${stationLabel}“ unten ausprobieren`
-          : "Unten ausprobieren",
       activityLabels: {
         listen: "Zuhören",
         vote: "Abstimmen",
@@ -327,7 +323,6 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       realCompanyData: "Echte Unternehmensdaten",
       realExplanation: (companyName, period) =>
         `${companyName}, ${period}: öffentlich zugängliche Zahlen aus den Angaben des Unternehmens.`,
-      openDecision: "Die offene Entscheidung",
       limitations: "Was die Daten nicht beantworten",
       realWorldHeading: "Dieselbe Methode an echten Zahlen",
       source: "Quelle",
@@ -426,7 +421,8 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       backAria: "Back to all workshops",
       allWorkshops: "All workshops",
       workshopsShort: "Workshops",
-      questionLabel: "The workshop's question",
+      redLineLabel: "The path through the workshop",
+      labHeading: "Try it",
       seeMaterials: "See materials",
       primaryAction: {
         deck: "Open the deck",
@@ -462,8 +458,6 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       },
       liveOnly: "live only",
       labStation: "Exercise below",
-      tryBelow: (stationLabel) =>
-        stationLabel ? `Try “${stationLabel}” below` : "Try it below",
       activityLabels: {
         listen: "Listen",
         vote: "Vote",
@@ -506,7 +500,6 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       realCompanyData: "Real company data",
       realExplanation: (companyName, period) =>
         `${companyName}, ${period}: publicly available figures from the company's own disclosures.`,
-      openDecision: "Decision to make",
       limitations: "What the data cannot answer",
       realWorldHeading: "The same method on real figures",
       source: "Source",

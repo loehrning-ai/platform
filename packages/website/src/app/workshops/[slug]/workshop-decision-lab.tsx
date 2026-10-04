@@ -7,6 +7,7 @@ import {
   useRef,
   useState,
   type FormEvent,
+  type ReactNode,
   type RefObject,
 } from "react";
 import { Chip, cx, Pictogram } from "@/components/werk";
@@ -22,6 +23,8 @@ interface WorkshopDecisionLabProps {
   readonly locale: Locale;
   /** Anchor id of the band, so the agenda can link to it. */
   readonly id?: string;
+  /** The red-line step label; replaces the kicker on the workshop page. */
+  readonly step?: ReactNode;
 }
 
 type ValidationError = "decision" | "evidence" | null;
@@ -388,6 +391,7 @@ export function WorkshopDecisionLab({
   config,
   locale,
   id,
+  step,
 }: WorkshopDecisionLabProps) {
   const copy = LAB_COPY[locale];
   const decisionName = `workshop-decision-${useId().replaceAll(":", "")}`;
@@ -504,18 +508,33 @@ export function WorkshopDecisionLab({
     >
       <div className="mx-auto grid max-w-[75rem] gap-5 px-4 py-6 sm:gap-8 sm:px-6 sm:py-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-12">
         <header className="min-w-0">
-          <p className="text-label text-muted-foreground tabular-nums">
-            {config.kicker}
-          </p>
+          {step ? (
+            <p className="text-[1.375rem] font-bold leading-[1.15] text-foreground sm:text-fluid-h2">
+              {step}
+            </p>
+          ) : (
+            <p className="text-label text-muted-foreground tabular-nums">
+              {config.kicker}
+            </p>
+          )}
           <h2
             id={`${decisionName}-title`}
-            className="mt-1.5 max-w-[24ch] text-[1.375rem]/[1.15] font-bold text-foreground text-balance sm:mt-3 sm:text-fluid-h2"
+            className={cx(
+              "mt-1.5 max-w-[24ch] font-bold text-foreground text-balance sm:mt-3",
+              step
+                ? "text-[1.125rem]/[1.2] sm:mt-5 sm:text-fluid-h3"
+                : "text-[1.375rem]/[1.15] sm:text-fluid-h2",
+            )}
           >
             {keepNumbersWithUnits(config.title)}
           </h2>
-          <p className="mt-2 max-w-[52ch] text-[0.9375rem]/[1.5] text-muted-foreground text-pretty sm:mt-4 sm:text-body">
-            <NumberUnitText text={config.prompt} />
-          </p>
+          {/* On the workshop page the step label and the facts carry the
+              situation; the prompt question stays off. */}
+          {step ? null : (
+            <p className="mt-2 max-w-[52ch] text-[0.9375rem]/[1.5] text-muted-foreground text-pretty sm:mt-4 sm:text-body">
+              <NumberUnitText text={config.prompt} />
+            </p>
+          )}
           {/* One row of equal columns wherever a column holds the widest
               value ("1.866,5 t CO₂e", 131px at 20px) beside a 24px gap: from
               34rem up to lg, and again from xl. Below 34rem, and in the

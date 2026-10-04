@@ -23,11 +23,6 @@ export interface LoginUnavailableCopy {
   readonly next: string;
 }
 
-export interface LoginAccountValueItem {
-  readonly title: string;
-  readonly body: string;
-}
-
 export interface LoginPublicLink {
   /** German path; the page localizes it before rendering. */
   readonly path: string;
@@ -93,6 +88,7 @@ export interface LoginCopy {
       readonly google: string;
       readonly github: string;
       readonly both: string;
+      readonly summary: string;
       readonly detailsBefore: string;
       readonly detailsLink: string;
       readonly detailsAfter: string;
@@ -113,10 +109,7 @@ export interface LoginCopy {
   };
   readonly accountValue: {
     readonly heading: string;
-    readonly items: readonly LoginAccountValueItem[];
-    readonly records: string;
-    readonly control: string;
-    readonly availability: string;
+    readonly items: readonly string[];
     readonly localNote: string;
   };
   readonly publicAccess: {
@@ -149,7 +142,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       publicAccess:
         "Bücher, Demos, KI-Check und technische Kurse sind ohne Anmeldung offen.",
       outage: "Bestehende Sitzungen laufen weiter.",
-      available: "Die vier Grundlagenkurse brauchen ein kostenloses Konto.",
+      available: "Kostenlos. Nur die vier Grundlagenkurse brauchen ein Konto.",
       configuration:
         "Dein Fortschritt bleibt vorerst in diesem Browser.",
       methodsUnavailable:
@@ -228,6 +221,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
         github:
           "Bei der Anmeldung über GitHub speichert diese Plattform deine GitHub-Kontokennung, deinen GitHub-Benutzernamen, deine E-Mail-Adresse und deren Bestätigungsstatus sowie den in deinem GitHub-Konto hinterlegten Namen und die Adresse deines Profilbilds. Benutzername, Name und Profilbild werden nicht angezeigt und nicht ausgewertet.",
         both: "Bei der Anmeldung über Google oder GitHub speichert diese Plattform deine Kontokennung beim gewählten Anbieter, deine E-Mail-Adresse und deren Bestätigungsstatus sowie den dort hinterlegten Namen und die Adresse deines Profilbilds; bei GitHub kommt dein Benutzername hinzu. Name, Profilbild und Benutzername werden nicht angezeigt und nicht ausgewertet.",
+        summary: "Was dabei gespeichert wird",
         detailsBefore: "Einzelheiten und Rechtsgrundlagen stehen in der ",
         detailsLink: "Datenschutzerklärung",
         detailsAfter: ", Abschnitt 8.",
@@ -259,25 +253,10 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
     accountValue: {
       heading: "Was ein Konto dazugibt",
       items: [
-        {
-          title: "Fortschritt auf allen Geräten",
-          body: "Du machst am Laptop dort weiter, wo du am Handy aufgehört hast.",
-        },
-        {
-          title: "Deine Werkzeuge mit deinen Dokumenten",
-          body: "Werkzeuge wie die Lebenslauf-Engine öffnen sich mit deinen gespeicherten Dokumenten.",
-        },
-        {
-          title: "Eigene KI anbinden",
-          body: "Du legst fest, worauf dein eigener Assistent zugreifen darf, und entziehst ihm den Zugriff jederzeit.",
-        },
+        "Fortschritt auf allen Geräten",
+        "Deine Werkzeuge mit deinen Dokumenten",
+        "Eigene KI anbinden",
       ],
-      records:
-        "Für jeden abgeschlossenen Kurs bekommst du eine Teilnahmebestätigung, die du jederzeit abrufen kannst.",
-      control:
-        "Du kannst deine Daten jederzeit exportieren, zurücksetzen oder löschen.",
-      availability:
-        "Werkzeuge und KI-Zugang erscheinen im Konto, sobald sie hier eingerichtet sind.",
       localNote:
         "Fortschritt ohne Konto bleibt in diesem Browser. Nach dem Anmelden kannst du ihn einmal ins Konto übernehmen.",
     },
@@ -332,7 +311,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       publicAccess:
         "Books, demos, the AI check and technical courses are open without signing in.",
       outage: "Existing sessions keep running.",
-      available: "The four foundation courses need a free account.",
+      available: "Free. Only the four foundation courses need an account.",
       configuration:
         "For now, your progress stays in this browser.",
       methodsUnavailable:
@@ -406,6 +385,7 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
         github:
           "When you sign in with GitHub, this platform stores your GitHub account identifier, your GitHub username, your email address and its verification status, and the name and profile-picture address held in your GitHub account. The username, name and profile picture are neither displayed nor evaluated.",
         both: "When you sign in with Google or GitHub, this platform stores your account identifier with the provider you choose, your email address and its verification status, and the name and profile-picture address held in that account; with GitHub, your username is stored as well. The name, profile picture and username are neither displayed nor evaluated.",
+        summary: "What sign-in stores",
         detailsBefore: "Details and legal bases are set out in the ",
         detailsLink: "privacy notice",
         detailsAfter: ", section 8.",
@@ -434,24 +414,10 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
     accountValue: {
       heading: "What an account adds",
       items: [
-        {
-          title: "Progress on every device",
-          body: "Continue on the laptop where you stopped on the phone.",
-        },
-        {
-          title: "Your tools with your documents",
-          body: "Tools such as the CV engine open with your saved documents.",
-        },
-        {
-          title: "Connect your own AI",
-          body: "You decide what your own assistant may access and can revoke that access any time.",
-        },
+        "Progress on every device",
+        "Your tools with your documents",
+        "Connect your own AI",
       ],
-      records:
-        "Each finished course gives you a certificate of participation you can retrieve any time.",
-      control: "You can export, reset or delete your data at any time.",
-      availability:
-        "Tools and the AI connection appear in your account once they are set up here.",
       localNote:
         "Progress without an account stays in this browser. After signing in you can import it into your account once.",
     },
