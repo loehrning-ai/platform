@@ -593,8 +593,8 @@ in `content/ai-native/modul-N-lessons.json` (and `en/`).
    links use `coursePath/<moduleId>#lesson=` for block courses, so AI-Native
    needs a small `lessonHref` prop or a sibling component.
 5. **Live tasks**: use `live-prompt-ab` for briefing and iteration tasks. It
-   already uses the practice API with recorded fallbacks. For the rest of
-   scout0's AI-Native plan, use `calculator` (triage matrix, local vs cloud),
+   already uses the practice API with recorded fallbacks. For the other
+   planned AI-Native exercises, use `calculator` (triage matrix, local vs cloud),
    `decision-wizard` (permission scopes) and `doc-builder` (capstone brief),
    or the existing `exercise-workflow-builder` and `exercise-context-budget`.
    Those two store results in the AI-Native exercise store and do not yet
