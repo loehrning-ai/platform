@@ -292,6 +292,9 @@ describe("companion home: hover depth on the two boards", () => {
     const classes = read("pointer-depth-classes.ts");
     expect(classes).not.toContain('"use client"');
     expect(classes).toContain("var(--depth-rx,0deg)");
+    // The 3D transform exists only on a hovered card with motion allowed:
+    // resting cards stay flat layers, reduced motion never tilts.
+    expect(classes).toContain("motion-safe:hover:[transform:perspective(");
   });
 });
 

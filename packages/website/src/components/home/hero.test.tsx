@@ -104,7 +104,11 @@ describe("HeroSection learning-platform positioning", () => {
     );
     expect(facts).toBeDefined();
     expect(facts).toHaveClass("max-lg:hidden");
-    expect(facts?.textContent).toBe("Ohne PaywallDeutsch und EnglischQuelloffen");
+    // Three tags to the eye, one comma-separated list to a screen reader.
+    expect(facts?.textContent).toBe(
+      "Ohne Paywall, Deutsch und Englisch, Quelloffen",
+    );
+    expect(facts?.querySelectorAll(":scope > .sr-only")).toHaveLength(2);
     // One sentence, no restated "Frei" after "Freie".
     expect(lead.textContent).not.toMatch(/Frei,/);
     unmount();

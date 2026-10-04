@@ -4,7 +4,7 @@ import { m, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
 import { HOME_COPY } from "@/components/home/home-copy";
 import { GlobeToggle } from "@/components/home/globe-toggle";
 import {
@@ -325,13 +325,19 @@ function HeroSectionContent({
                   A phone keeps the one sentence. */}
               <span className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 font-ui-mono text-xs font-bold uppercase tracking-[0.08em] text-kupfer-dark max-lg:hidden">
                 {copy.introduction.facts.map((fact, index) => (
-                  <span key={fact} className="inline-flex items-center gap-2">
-                    <span
-                      aria-hidden="true"
-                      className={`size-2.5 rounded-[3px] border border-foreground/20 ${FACT_MARKS[index] ?? FACT_MARKS[0]}`}
-                    />
-                    {fact}
-                  </span>
+                  <Fragment key={fact}>
+                    {/* Apart only visually: a screen reader hears a comma,
+                        never "PaywallDeutsch" run together. Absolute, so it
+                        takes no flex gap. */}
+                    {index > 0 ? <span className="sr-only">, </span> : null}
+                    <span className="inline-flex items-center gap-2">
+                      <span
+                        aria-hidden="true"
+                        className={`size-2.5 rounded-[3px] border border-foreground/20 ${FACT_MARKS[index] ?? FACT_MARKS[0]}`}
+                      />
+                      {fact}
+                    </span>
+                  </Fragment>
                 ))}
               </span>
             </p>
