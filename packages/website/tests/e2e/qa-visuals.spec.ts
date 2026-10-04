@@ -30,12 +30,11 @@ test.describe("QA visuals — homepage scroll capture", () => {
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 
     // Section list matches the compact homepage composition: globe-led hero,
-    // course route, resource ledger, and public operating principles.
+    // course route and resource board.
     const sections: Array<[string, string]> = [
       ["hero", "[data-section='hero']"],
       ["courses", "[data-testid='kurse-section']"],
       ["resources", "[data-testid='ressourcen-section']"],
-      ["principles", "[data-testid='platform-principles']"],
     ];
 
     for (const [name, selector] of sections) {

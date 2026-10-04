@@ -94,6 +94,31 @@ describe("HeroSection learning-platform positioning", () => {
     expect(focusables[0]).toBe(seat);
   });
 
+  it("states the facts once, as a tag line under the sentence from lg", () => {
+    const { unmount } = render(<HeroSection />);
+    const lead = screen.getByText(
+      /Freie Kurse, Praxisbeispiele und Workshops zu KI/,
+    );
+    const facts = Array.from(lead.querySelectorAll(":scope > span")).find(
+      (span) => span.classList.contains("font-ui-mono"),
+    );
+    expect(facts).toBeDefined();
+    expect(facts).toHaveClass("max-lg:hidden");
+    // Three tags to the eye, one comma-separated list to a screen reader.
+    expect(facts?.textContent).toBe(
+      "Ohne Paywall, Deutsch und Englisch, Quelloffen",
+    );
+    expect(facts?.querySelectorAll(":scope > .sr-only")).toHaveLength(2);
+    // One sentence, no restated "Frei" after "Freie".
+    expect(lead.textContent).not.toMatch(/Frei,/);
+    unmount();
+
+    render(<HeroSection locale="en" />);
+    expect(screen.getByText("No paywall")).toBeInTheDocument();
+    expect(screen.getByText("German and English")).toBeInTheDocument();
+    expect(screen.getByText("Open source")).toBeInTheDocument();
+  });
+
   it("renders the above-fold introduction without a delayed clipping reveal", () => {
     render(<HeroSection />);
     const introduction = screen.getByText(

@@ -10,11 +10,11 @@ export const HOME_COPY = {
     hero: {
       headline: ["KI", "verstehen.", "Sicher anwenden."],
       // The introduction card: one sentence on phones (lead + "."), from lg
-      // lead + detail + "." followed by the facts.
+      // lead + detail + "." and the facts as one tag line under it.
       introduction: {
         lead: "Freie Kurse, Praxisbeispiele und Workshops zu KI",
         detail: " mit Übungen und Quellen",
-        facts: "Frei, zweisprachig und quelloffen.",
+        facts: ["Ohne Paywall", "Deutsch und Englisch", "Quelloffen"],
       },
       primaryCta: "Lernroute wählen",
       globeToggle: "Globus anhalten",
@@ -84,7 +84,7 @@ export const HOME_COPY = {
         },
       ],
       accountBody:
-        "Ein kostenloses Konto synchronisiert Fortschritt und Arbeitsbelege geräteübergreifend.",
+        "Kostenloses Konto: Fortschritt und Arbeitsbelege auf jedem Gerät.",
       accountCta: "Zum Konto",
     },
     companion: {
@@ -104,27 +104,6 @@ export const HOME_COPY = {
       bookMeta: (chapters: number, minutes: number) =>
         `${chapters} Kapitel · ${minutes} Min.`,
     },
-    credibility: {
-      headline: "Grundregeln",
-      principles: [
-        {
-          title: "Keine Paywall",
-          body: "Vier Kurse brauchen ein kostenloses Lernkonto.",
-        },
-        {
-          title: "Zwei vollständige Fassungen",
-          body: "Alle Kurse gibt es auf Deutsch und Englisch.",
-        },
-        {
-          title: "Quellen sind verlinkt",
-          body: "Fakten verweisen auf Quellen. Annahmen und Simulationen sind markiert.",
-        },
-        {
-          title: "Von Tim Löhr redigiert",
-          body: "Überarbeitungsstand und bekannte Grenzen bleiben sichtbar.",
-        },
-      ],
-    },
   },
   en: {
     metadata: {
@@ -137,7 +116,7 @@ export const HOME_COPY = {
       introduction: {
         lead: "Free courses, examples and workshops on AI",
         detail: " with exercises and sources",
-        facts: "Free, bilingual and open source.",
+        facts: ["No paywall", "German and English", "Open source"],
       },
       primaryCta: "Choose a learning route",
       globeToggle: "Pause the globe",
@@ -205,7 +184,7 @@ export const HOME_COPY = {
         },
       ],
       accountBody:
-        "A free account syncs progress and work artifacts across devices.",
+        "Free account: progress and work artifacts on every device.",
       accountCta: "Go to account",
     },
     companion: {
@@ -224,27 +203,6 @@ export const HOME_COPY = {
       booksRailLabel: "Learning books on this platform",
       bookMeta: (chapters: number, minutes: number) =>
         `${chapters} chapters · ${minutes} min`,
-    },
-    credibility: {
-      headline: "Ground rules",
-      principles: [
-        {
-          title: "No paywall",
-          body: "Four courses need a free learning account.",
-        },
-        {
-          title: "Two complete editions",
-          body: "Every course is available in German and English.",
-        },
-        {
-          title: "Sources are linked",
-          body: "Facts link to sources. Assumptions and simulations are labelled.",
-        },
-        {
-          title: "Edited by Tim Löhr",
-          body: "Revision date and known limits stay visible.",
-        },
-      ],
     },
   },
 } as const satisfies Readonly<Record<Locale, object>>;

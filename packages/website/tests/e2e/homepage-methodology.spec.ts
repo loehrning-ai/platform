@@ -41,17 +41,18 @@ test.describe("Homepage learning-platform transparency", () => {
 
   test("homepage explains the public/account boundary", async ({ page }) => {
     await page.goto("/");
-    const section = page.getByTestId("platform-principles");
+    // The Ground rules strip is gone; the boundary now lives where it acts:
+    // the resource board says its areas need no account, and the cobalt
+    // band under it names what the free account adds.
+    await expect(page.locator('[data-testid="platform-principles"]')).toHaveCount(0);
+    const section = page.getByTestId("ressourcen-section");
     await section.scrollIntoViewIfNeeded();
-    await expect(section).toContainText("Keine Paywall");
-    await expect(section).toContainText("Zwei vollständige Fassungen");
-    await expect(section).toContainText("Quellen sind verlinkt");
-    await expect(section).toContainText("Von Tim Löhr redigiert");
     await expect(section).toContainText(
-      "Vier Kurse brauchen ein kostenloses Lernkonto.",
+      "Kostenloses Konto: Fortschritt und Arbeitsbelege auf jedem Gerät.",
     );
-    await expect(section).toContainText(
-      "Fakten verweisen auf Quellen. Annahmen und Simulationen sind markiert.",
+    await expect(section.getByRole("link", { name: /Zum Konto/ })).toHaveAttribute(
+      "href",
+      "/konto",
     );
   });
 

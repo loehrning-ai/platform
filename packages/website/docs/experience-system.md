@@ -185,6 +185,7 @@ WCAG 2.2 requires Pause, Stop, Hide at Level A for qualifying automatic motion o
 - One region may carry meaningful motion at a time.
 - Infinite tickers, status pulses, decorative loops, and universal reveal-on-scroll effects are removed. The homepage globe is the single narrow exception defined below: the desktop projection from 1024px, the phone horizon globe below it, never both.
 - Every gesture and animated comparison has a keyboard, tap, and static reduced-motion equivalent.
+- Homepage boards (course route, resources): under a mouse a card tilts at most 4 degrees towards the pointer and a soft paper light follows it, behind the text. Touch and pen get no tilt; reduced motion holds the cards flat. The route's lesson count ticks up once (450ms) when it first scrolls into view; the server renders the final number, and a count already on screen never restarts.
 
 ### Homepage globe: narrow continuous-motion exception
 

@@ -10,6 +10,11 @@ import {
 } from "lucide-react";
 import { HOME_COPY } from "@/components/home/home-copy";
 import { BOOK_RAIL_SHOWN } from "@/components/home/mobile-rails";
+import { PointerDepthList } from "@/components/home/pointer-depth";
+import {
+  POINTER_DEPTH_CARD,
+  POINTER_DEPTH_LIGHT,
+} from "@/components/home/pointer-depth-classes";
 import { localizeHref, type Locale } from "@/lib/i18n/locale";
 
 const RESOURCE_ICONS: readonly LucideIcon[] = [
@@ -49,7 +54,8 @@ const ICON_TONES = [
  * block tilted into its corner from lg; the cobalt account band closes the
  * board. Below lg a rail above this board already carries the demos (and
  * the books while that rail is shown), so their cards step out there: one
- * path per destination on a phone.
+ * path per destination on a phone. Under a mouse the cards take the course
+ * cards' hover depth (pointer-depth.tsx).
  */
 export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
   const copy = HOME_COPY[locale].workflow;
@@ -77,7 +83,8 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
           </p>
         </div>
 
-        <ul
+        <PointerDepthList
+          as="ul"
           className="mt-8 grid auto-rows-fr grid-cols-2 gap-3 max-lg:mt-5 max-lg:gap-2 sm:gap-4 lg:mt-10 lg:grid-cols-12"
           aria-label={copy.boardAriaLabel}
         >
@@ -91,9 +98,11 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
               >
                 <Link
                   href={localizeHref(resource.href, locale)}
-                  className={`group relative grid h-full min-w-0 overflow-hidden rounded-[1.5rem] border border-foreground/10 ${RESOURCE_TONES[index] ?? RESOURCE_TONES[0]} p-4 shadow-card outline-none transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-1.5 hover:border-brand-cobalt/45 hover:shadow-card-hover focus-visible:-translate-y-1 focus-visible:border-brand-cobalt focus-visible:ring-2 focus-visible:ring-brand-cobalt focus-visible:ring-offset-4 focus-visible:ring-offset-background motion-reduce:transform-none motion-reduce:transition-none max-lg:min-h-[6.5rem] max-lg:rounded-2xl max-lg:p-3 md:p-5 lg:min-h-48 lg:rounded-[1.6rem] lg:p-6`}
+                  className={`group relative grid h-full min-w-0 overflow-hidden rounded-[1.5rem] border border-foreground/10 ${RESOURCE_TONES[index] ?? RESOURCE_TONES[0]} ${POINTER_DEPTH_CARD} p-4 shadow-card outline-none transition-[border-color,box-shadow,transform,translate] duration-300 hover:-translate-y-1.5 hover:border-brand-cobalt/45 hover:shadow-card-hover focus-visible:-translate-y-1 focus-visible:border-brand-cobalt focus-visible:ring-2 focus-visible:ring-brand-cobalt focus-visible:ring-offset-4 focus-visible:ring-offset-background motion-reduce:transform-none motion-reduce:translate-none motion-reduce:transition-none max-lg:min-h-[6.5rem] max-lg:rounded-2xl max-lg:p-3 md:p-5 lg:min-h-48 lg:rounded-[1.6rem] lg:p-6`}
                   data-home-resource-card
+                  data-depth-card
                 >
+                  <span aria-hidden="true" className={POINTER_DEPTH_LIGHT} />
                   <span
                     aria-hidden="true"
                     className="absolute -right-8 -top-8 hidden size-36 rotate-6 rounded-[2.5rem] border border-foreground/10 bg-paper/30 opacity-75 transition-transform duration-300 group-hover:rotate-12 group-focus-visible:rotate-12 motion-reduce:transform-none motion-reduce:transition-none lg:block"
@@ -127,14 +136,14 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
                     <ArrowRight
                       aria-hidden="true"
                       size={20}
-                      className="shrink-0 text-brand-orange transition-transform duration-150 group-hover:translate-x-1 group-focus-visible:translate-x-1 motion-reduce:transform-none motion-reduce:transition-none max-lg:hidden"
+                      className="shrink-0 text-brand-orange transition-transform duration-150 group-hover:translate-x-1 group-focus-visible:translate-x-1 motion-reduce:translate-none motion-reduce:transition-none max-lg:hidden"
                     />
                   </span>
                 </Link>
               </li>
             );
           })}
-        </ul>
+        </PointerDepthList>
 
         {/* Below 22.5rem (360px) the button takes its own row under the
             sentence; a rem query, so it outranks max-lg in the cascade and

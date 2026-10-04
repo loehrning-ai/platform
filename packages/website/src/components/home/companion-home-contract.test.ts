@@ -195,7 +195,7 @@ describe("companion home: the wide layout stays separate", () => {
   });
 
   it("keeps the paper sections on the hero's gutter with a compact band below lg", () => {
-    for (const file of ["workflow.tsx", "credibility-strip.tsx"]) {
+    for (const file of ["workflow.tsx"]) {
       const source = read(file);
       expect(source, `${file} companion band`).toContain("max-lg:py-6");
       // The old paper home's measure: the hero's max-w-6xl column and its
@@ -245,7 +245,7 @@ describe("companion home: the paper look, never a dark ground", () => {
     "hero-network.tsx",
     "hero-globe-frame.tsx",
     "workflow.tsx",
-    "credibility-strip.tsx",
+    "pointer-depth-classes.ts",
     "mobile-rails.tsx",
     "continue-card.tsx",
     "continue-slot.tsx",
@@ -261,10 +261,40 @@ describe("companion home: the paper look, never a dark ground", () => {
 
   it("gives every section below the hero a pastel wash or pastel cards", () => {
     expect(read("workflow.tsx")).toContain("bg-brand-peach/20");
-    expect(read("credibility-strip.tsx")).toContain("bg-brand-sky/25");
     expect(read("mobile-rails.tsx")).toMatch(/bg-brand-(?:sky|acid|peach|pink)\//);
     expect(read("continue-card.tsx")).toContain("bg-brand-acid/60");
     expect(read("offering.tsx")).toMatch(/bg-brand-(?:acid|peach|sky|pink)\/\d+/);
+  });
+});
+
+describe("companion home: hover depth on the two boards", () => {
+  it("wraps the course route and the resource board in one pointer list each", () => {
+    for (const file of ["offering.tsx", "workflow.tsx"]) {
+      const source = read(file);
+      expect(source, `${file} list`).toContain("<PointerDepthList");
+      expect(source, `${file} card hook`).toContain("data-depth-card");
+      expect(source, `${file} card transform`).toContain("POINTER_DEPTH_CARD");
+      expect(source, `${file} light`).toContain("POINTER_DEPTH_LIGHT");
+      // Reduced motion holds the cards flat and still: no tilt, no lift.
+      expect(source).toContain("motion-reduce:transform-none");
+      expect(source).toContain("motion-reduce:translate-none");
+    }
+  });
+
+  it("keeps the depth to the pointer, small and server-static", () => {
+    const list = read("pointer-depth.tsx");
+    expect(list).toContain('"use client"');
+    expect(list).toContain('event.pointerType !== "mouse"');
+    expect(list).toContain("requestAnimationFrame");
+    expect(list).toContain('"(prefers-reduced-motion: reduce)"');
+    expect(list).toMatch(/POINTER_DEPTH_MAX_TILT = [1-5];/);
+    expect(list).not.toMatch(/setInterval|\binfinite\b/);
+    const classes = read("pointer-depth-classes.ts");
+    expect(classes).not.toContain('"use client"');
+    expect(classes).toContain("var(--depth-rx,0deg)");
+    // The 3D transform exists only on a hovered card with motion allowed:
+    // resting cards stay flat layers, reduced motion never tilts.
+    expect(classes).toContain("motion-safe:hover:[transform:perspective(");
   });
 });
 
@@ -276,7 +306,7 @@ describe("companion home: measured layout hooks stay in a vertical stack", () =>
   });
 
   it("never puts those sections into a horizontal scroller", () => {
-    for (const file of ["offering.tsx", "workflow.tsx", "credibility-strip.tsx"]) {
+    for (const file of ["offering.tsx", "workflow.tsx"]) {
       const source = read(file);
       expect(source, `${file} must not scroll horizontally`).not.toContain(
         "overflow-x-auto",
@@ -382,12 +412,19 @@ describe("companion home: page order", () => {
       "<Offering",
       "<MobileRails",
       "<Workflow",
-      "<CredibilityStrip",
     ].map((token) => {
       const index = page.indexOf(token);
       expect(index, `page.tsx is missing ${token}`).toBeGreaterThan(-1);
       return index;
     });
     expect(order).toEqual([...order].sort((a, b) => a - b));
+    // The resource board closes the page: the Ground rules strip is gone and
+    // its account boundary lives in the board's cobalt band.
+    expect(page).not.toContain("CredibilityStrip");
+    expect(page).not.toContain("credibility-strip");
+    const afterBoard = page.slice(page.indexOf("<Workflow") + 1);
+    expect(afterBoard, "no section after the resource board").not.toMatch(
+      /<[A-Z]/,
+    );
   });
 });

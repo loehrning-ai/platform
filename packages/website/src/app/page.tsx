@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { HeroSection } from "@/components/home/hero";
 import { ContinueSlot } from "@/components/home/continue-slot";
 import { homeContinueCourses } from "@/components/home/continue-courses";
-import { CredibilityStrip } from "@/components/home/credibility-strip";
 import { MobileRails } from "@/components/home/mobile-rails";
 import { Offering } from "@/components/home/offering";
 import { Workflow } from "@/components/home/workflow";
@@ -78,9 +77,6 @@ export default async function HomePage() {
 
       {/* 4. Ressourcen — supporting material, one clear home */}
       <Workflow locale={locale} />
-
-      {/* 5. Platform principles / trust */}
-      <CredibilityStrip locale={locale} />
     </>
   );
 }
