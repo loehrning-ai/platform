@@ -55,11 +55,12 @@ export function LoginScene({ pauseLabel }: { readonly pauseLabel: string }) {
   }, []);
 
   const toggle = useCallback(() => {
-    setPaused((current) => {
-      storePause(!current);
-      return !current;
-    });
-  }, []);
+    // Storage is a side effect, so it stays out of the state updater (which
+    // React may call twice in development).
+    const next = !paused;
+    storePause(next);
+    setPaused(next);
+  }, [paused]);
 
   return (
     <>
