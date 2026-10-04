@@ -1,7 +1,7 @@
 // ─── Data Engineering Fundamentals course types ──
 //
-// Own separate content module (mirroring `lib/data-infrastructure`/
-// `lib/codex`'s precedent), keyed by the source's own flat chapter-id scheme
+// Own separate content module (mirroring `lib/data-infrastructure`'s
+// precedent), keyed by the source's own flat chapter-id scheme
 // ("home".."cap", matching `src/chapters/App.js`'s `CHAPTERS` array), NOT the
 // shared BlockId JSON system. This course has no track/module grouping in
 // source (unlike data-infrastructure's 4 tracks) — 12 chapters, flat.

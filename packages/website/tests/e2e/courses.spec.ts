@@ -70,7 +70,7 @@ async function assertNoBlockingAxe(page: Page, label: string) {
 
 test.describe("/kurse unified hub", () => {
   test("the ported-course matrix is explicit and non-empty", () => {
-    expect(PORTED_COURSE_CATALOG).toHaveLength(6);
+    expect(PORTED_COURSE_CATALOG).toHaveLength(4);
   });
 
   test("renders the native progression and ported open-source lane (no 404)", async ({
@@ -86,7 +86,7 @@ test.describe("/kurse unified hub", () => {
     await expect(page.locator("body")).toContainText("AI-Native Arbeitskurs");
 
     await expect(page.locator("body")).toContainText("Grundlagenpfad");
-    await expect(page.locator("body")).toContainText("Technikkurse");
+    await expect(page.locator("body")).toContainText("Visuelles Lernen");
     for (const course of PORTED_COURSE_CATALOG) {
       await expect(page.locator("body")).toContainText(course.title);
     }
@@ -102,8 +102,6 @@ test.describe("/kurse unified hub", () => {
       "/kurse/open-source/data-engineering-fundamentals",
       "/kurse/open-source/data-science",
       "/kurse/open-source/data-infrastructure",
-      "/kurse/open-source/codex",
-      "/kurse/open-source/claude",
       "/kurse/open-source/ai-native-operator",
     ]) {
       await expect(main.locator(`a[href="${href}"]`).first()).toBeVisible();
@@ -130,7 +128,7 @@ test.describe("/kurse unified hub", () => {
   test("serves every ported screenshot and license asset", async ({
     request,
   }) => {
-    expect(PORTED_COURSE_CATALOG).toHaveLength(6);
+    expect(PORTED_COURSE_CATALOG).toHaveLength(4);
     for (const course of PORTED_COURSE_CATALOG) {
       const image = await request.get(course.imageSrc);
       expect(image.status(), `${course.slug} screenshot`).toBe(200);

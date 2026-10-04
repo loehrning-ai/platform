@@ -45,8 +45,6 @@ const EXPECTED_STAGE_STARTS = {
     "idempotency",
     "interview-playbook",
   ],
-  codex: ["L01", "L04", "L07", "L10", "L12"],
-  claude: ["mental-model", "claude-md", "agents", "team", "safety"],
   "ai-native-operator": [
     "mindset/1",
     "engineering/1",
@@ -64,13 +62,11 @@ const EXPECTED_STAGE_COUNTS = {
   "data-engineering-fundamentals": [2, 4, 2, 3, 1],
   "data-science": [3, 2, 3, 2, 2],
   "data-infrastructure": [3, 3, 3, 2, 1],
-  codex: [3, 3, 3, 2, 1],
-  claude: [3, 3, 3, 2, 1],
   "ai-native-operator": [5, 10, 4, 16, 4],
 } as const satisfies Readonly<Record<CourseSlug, readonly number[]>>;
 
 describe("course project milestone manifest", () => {
-  it("covers all 177 canonical lessons exactly once in monotone stage order", () => {
+  it("covers all 153 canonical lessons exactly once in monotone stage order", () => {
     let totalAssigned = 0;
 
     for (const courseSlug of COURSE_SLUGS) {
@@ -94,7 +90,7 @@ describe("course project milestone manifest", () => {
       totalAssigned += assigned.length;
     }
 
-    expect(totalAssigned).toBe(177);
+    expect(totalAssigned).toBe(153);
   });
 
   it("resolves every lesson from explicit membership independent of iteration order", () => {
@@ -116,10 +112,18 @@ describe("course project milestone manifest", () => {
   });
 
   it("fails closed for an unassigned insertion instead of shifting later lessons", () => {
-    const before = resolveCourseProjectMilestone("codex", "L12");
+    const before = resolveCourseProjectMilestone(
+      "data-infrastructure",
+      "interview-playbook",
+    );
     expect(
-      resolveCourseProjectMilestone("codex", "future-inserted-lesson"),
+      resolveCourseProjectMilestone(
+        "data-infrastructure",
+        "future-inserted-lesson",
+      ),
     ).toBeNull();
-    expect(resolveCourseProjectMilestone("codex", "L12")).toEqual(before);
+    expect(
+      resolveCourseProjectMilestone("data-infrastructure", "interview-playbook"),
+    ).toEqual(before);
   });
 });

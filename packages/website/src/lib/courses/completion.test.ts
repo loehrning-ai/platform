@@ -18,8 +18,6 @@ import {
 import { getAllLessons as getAllSpineLessons } from "@/lib/course/data";
 import { getAllLessons as getAllAiNativeLessons } from "@/lib/ai-native/data";
 import { getAllLessons as getAllOperatorLessons } from "@/lib/ai-native-operator/data";
-import { getAllClaudeLessons } from "@/lib/claude-course/data";
-import { getAllCodexLessons } from "@/lib/codex/data";
 import { getAllDataInfraLessons } from "@/lib/data-infrastructure/data";
 import type { CourseSlug } from "@/lib/course/types";
 import type {
@@ -79,8 +77,6 @@ function addCurrentLessonEvidence(
             ...lesson,
             sectionsRead: CANONICAL_SECTION_IDS[slug][lessonId] ?? [],
             quizScore:
-              slug === "claude" ||
-              slug === "codex" ||
               slug === "data-infrastructure" ||
               slug === "data-engineering-fundamentals" ||
               slug === "data-science" ||
@@ -88,8 +84,6 @@ function addCurrentLessonEvidence(
                 ? null
                 : 1,
             quizTotal:
-              slug === "claude" ||
-              slug === "codex" ||
               slug === "data-infrastructure" ||
               slug === "data-engineering-fundamentals" ||
               slug === "data-science" ||
@@ -209,8 +203,6 @@ describe("canonical course completion", () => {
       "ki-und-gesellschaft": getAllSpineLessons("ki-und-gesellschaft"),
       "eu-ai-act-kurs": getAllSpineLessons("eu-ai-act-kurs"),
       "ai-native": await getAllAiNativeLessons(),
-      claude: await getAllClaudeLessons(),
-      codex: await getAllCodexLessons("en"),
       "data-infrastructure": await getAllDataInfraLessons(),
       "ai-native-operator": await getAllOperatorLessons(),
     } as const;
@@ -287,6 +279,21 @@ describe("canonical course completion", () => {
     });
   });
 
+  it("drops progress slices of the removed Claude and Codex courses", () => {
+    const progress = withLessons("data-science", []);
+    const retired = progress.courses["data-science"]!;
+    const withRetired = {
+      ...progress,
+      courses: { ...progress.courses, claude: retired, codex: retired },
+    } as UnifiedProgress;
+
+    const normalized = normalizeCanonicalProgress(withRetired);
+
+    expect(Object.keys(normalized.courses)).not.toContain("claude");
+    expect(Object.keys(normalized.courses)).not.toContain("codex");
+    expect(normalized.courses["data-science"]).toBeDefined();
+  });
+
   it("ignores fabricated and stale lesson IDs", () => {
     const progress = withLessons("data-science", ["fake-1", "fake-2"]);
     expect(completedCanonicalLessonCount(progress, "data-science")).toBe(0);
@@ -358,14 +365,19 @@ describe("canonical course completion", () => {
   });
 
   it("does not let a non-AI capstone bit or applied project bypass its quiz", () => {
-    const progress = withLessons("claude", CANONICAL_LESSON_IDS.claude);
-    progress.courses.claude = {
-      ...progress.courses.claude!,
+    const progress = withLessons(
+      "ai-native-operator",
+      CANONICAL_LESSON_IDS["ai-native-operator"],
+    );
+    progress.courses["ai-native-operator"] = {
+      ...progress.courses["ai-native-operator"]!,
       capstoneSubmitted: true,
     };
-    addCompletedProject(progress, "claude");
+    addCompletedProject(progress, "ai-native-operator");
 
-    expect(isCourseCompletionEarned(progress, "claude")).toBe(false);
+    expect(isCourseCompletionEarned(progress, "ai-native-operator")).toBe(
+      false,
+    );
   });
 
   it("does not present an unmarked post-cutover completion bit as evidence", () => {
@@ -386,8 +398,6 @@ describe("canonical course completion", () => {
 
   it("rejects unmarked completion bits for every migrated technical reader", () => {
     const cases = [
-      ["claude", CANONICAL_LESSON_IDS.claude[0]],
-      ["codex", CANONICAL_LESSON_IDS.codex[0]],
       ["data-infrastructure", CANONICAL_LESSON_IDS["data-infrastructure"][0]],
       ["ai-native-operator", "mindset/1"],
     ] as const;
@@ -440,8 +450,8 @@ describe("canonical course completion", () => {
     expect(completedCanonicalLessonCount(legacy, slug)).toBe(0);
   });
 
-  it("accepts section plus transfer proof for Claude, Codex, and Data Infrastructure", () => {
-    for (const slug of ["claude", "codex", "data-infrastructure"] as const) {
+  it("accepts section plus transfer proof for Data Infrastructure", () => {
+    for (const slug of ["data-infrastructure"] as const) {
       const lessonId = CANONICAL_LESSON_IDS[slug][0];
       const progress = withCurrentLessonEvidence(slug, [lessonId]);
       expect(

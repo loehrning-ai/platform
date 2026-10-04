@@ -127,11 +127,11 @@ export const MOTIF_IDS = [
   "pair",
   "ring",
   "steps",
-  // Technikkurse, Prompting und Agenten
+  // Visuelles Lernen, Betriebsmodell (quarter and wedge are spare motifs)
   "quarter",
   "wedge",
   "halfdisc",
-  // Technikkurse, Daten
+  // Visuelles Lernen, Daten
   "slab",
   "band",
   "sun",
@@ -170,8 +170,8 @@ export interface CoursePlakat {
 /**
  * Track palettes. Keys equal the `TechnicalCourseFrame` `courseId` values and
  * the course catalogue slugs. Colour groups by track: Grundlagenpfad is
- * Lemons with its numerals, Technikkurse are IDEA (prompting and agents) and
- * Bloom (data), without numerals.
+ * Lemons with its numerals, the visual-learning courses are IDEA (operating
+ * model) and Bloom (data), without numerals.
  */
 export const COURSE_PLAKAT = {
   "ki-fuehrerschein": { plakat: "lemons", motif: "disc", numeral: "01" },
@@ -179,8 +179,6 @@ export const COURSE_PLAKAT = {
   "eu-ai-act-kurs": { plakat: "lemons", motif: "ring", numeral: "03" },
   "ai-native": { plakat: "lemons", motif: "steps", numeral: "04" },
   "ai-native-capstone-policy": { plakat: "lemons", motif: "steps", numeral: null },
-  claude: { plakat: "idea", motif: "quarter", numeral: null },
-  codex: { plakat: "idea", motif: "wedge", numeral: null },
   "ai-native-operator": { plakat: "idea", motif: "halfdisc", numeral: null },
   "data-infrastructure": { plakat: "bloom", motif: "slab", numeral: null },
   "data-engineering-fundamentals": { plakat: "bloom", motif: "band", numeral: null },

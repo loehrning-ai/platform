@@ -31,28 +31,12 @@ const COURSES = [
     title: /AI-Native/,
     lang: "de",
   },
-  //: claude's basePath is nested under /kurse/open-source/
+  //: data-infrastructure's basePath is nested under /kurse/open-source/
   // (unlike the other three courses' top-level paths), exercising the same
   // shared VerificationPage/decodeHash logic on a differently-shaped URL.
-  // Locale now follows the route tree. German routes render German chrome;
+  // Locale follows the route tree. German routes render German chrome;
   // their /en mirrors are covered by the course-specific locale suites.
-  {
-    route: "/kurse/open-source/claude/verifizierung",
-    slug: "claude",
-    title: /Claude-Kurs/,
-    lang: "de",
-  },
-  //: codex, same nested-path shape as claude and the same
-  // "completion" (all-lessons-done) eligibility path rather than a quiz —
-  // still exercises the identical hash-decode/course-match logic.
-  {
-    route: "/kurse/open-source/codex/verifizierung",
-    slug: "codex",
-    title: /Codex-Kurs/,
-    lang: "de",
-  },
-  //: data-infrastructure, same nested-path shape and
-  // "completion" eligibility path as codex. The m: "quiz" payload below is
+  // It uses the "completion" eligibility path. The m: "quiz" payload below is
   // shared test-mechanism scaffolding, not a claim this course actually
   // issues quiz-mode certificates — it only exercises decodeHash/course-
   // match/bit-flip-rejection generically, identically to every other row.
@@ -63,7 +47,7 @@ const COURSES = [
     lang: "de",
   },
   //: data-engineering-fundamentals, same nested-path shape
-  // and "completion" (all-12-chapters-visited) eligibility path as codex and
+  // and "completion" (all-12-chapters-visited) eligibility path as
   // data-infrastructure — no quiz/capstone mechanism exists in source. The
   // m: "quiz" payload below is shared test-mechanism scaffolding only; it
   // exercises decodeHash/course-match/bit-flip-rejection generically, same
@@ -76,7 +60,7 @@ const COURSES = [
   },
   //: data-science, same nested-path shape and
   // "completion" (all-12-numbered-chapters-visited) eligibility path as
-  // codex/data-infrastructure/data-engineering-fundamentals — no
+  // data-infrastructure/data-engineering-fundamentals — no
   // quiz/capstone mechanism exists in source. The m: "quiz" payload below
   // is shared test-mechanism scaffolding only; it exercises decodeHash/
   // course-match/bit-flip-rejection generically, same as every other row.
@@ -86,8 +70,8 @@ const COURSES = [
     title: /Data Science Fundamentals/,
     lang: "de",
   },
-  //: ai-native-operator, sixth and last imported course to
-  // flip. Same nested-path shape as claude/codex/data-*, but unlike the four
+  //: ai-native-operator, last imported course to
+  // flip. Same nested-path shape as data-*, but unlike the three
   // "completion"-eligibility siblings, this course genuinely has a
   // quiz-gated cert path (9 module knowledge-checks pooled into one
   // workshop quiz), so m: "quiz" here is a real payload shape, not

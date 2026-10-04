@@ -713,12 +713,14 @@ describe("<LessonLayout> usage events", () => {
   });
 
   it("does not report a reached lesson for a statically routed course", () => {
-    const codexLessonId = CANONICAL_LESSON_IDS.codex[0];
+    const routedLessonId = CANONICAL_LESSON_IDS["data-infrastructure"][0];
     render(
       <LessonLayout
-        courseSlug="codex"
-        lessons={[mkLesson({ id: codexLessonId, number: 1, title: "Codex" })]}
-        blockTitle="Codex"
+        courseSlug="data-infrastructure"
+        lessons={[
+          mkLesson({ id: routedLessonId, number: 1, title: "Data Infrastructure" }),
+        ]}
+        blockTitle="Data Infrastructure"
       />,
     );
 

@@ -221,9 +221,9 @@ afterEach(cleanup);
 
 describe("<CourseAssessmentCta>", () => {
   it("keeps owner-unknown progress unresolved and exposes no premature route", () => {
-    render(<CourseAssessmentCta courseSlug="claude" locale="en" />);
+    render(<CourseAssessmentCta courseSlug="ai-native-operator" locale="en" />);
 
-    emitProgress(progressFor("claude", 0));
+    emitProgress(progressFor("ai-native-operator", 0));
 
     expect(screen.getByRole("status")).toHaveTextContent(
       "Checking course progress…",
@@ -234,51 +234,51 @@ describe("<CourseAssessmentCta>", () => {
     );
     expect(
       document.querySelector(
-        'a[href="/en/kurse/open-source/claude/kurs/quiz"]',
+        'a[href="/en/kurse/open-source/ai-native-operator/quiz"]',
       ),
     ).toBeNull();
     expect(
       document.querySelector(
-        'a[href="/en/kurse/open-source/claude/kurs/zertifikat"]',
+        'a[href="/en/kurse/open-source/ai-native-operator/zertifikat"]',
       ),
     ).toBeNull();
   });
 
   it("keeps incomplete and corrupt passed-bit states locked with exact requirements", () => {
-    render(<CourseAssessmentCta courseSlug="claude" locale="en" />);
+    render(<CourseAssessmentCta courseSlug="ai-native-operator" locale="en" />);
     resolveOwner();
 
-    emitProgress(progressFor("claude", 11, true));
+    emitProgress(progressFor("ai-native-operator", 38, true));
 
     expect(screen.getByRole("status")).toHaveTextContent(
-      "Complete all 12 lessons to unlock the quiz.",
+      "Complete all 39 lessons to unlock the quiz.",
     );
-    expect(screen.getByText("11 of 12 lessons complete")).toBeInTheDocument();
+    expect(screen.getByText("38 of 39 lessons complete")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Quiz locked" })).toBeDisabled();
     expect(
       document.querySelector(
-        'a[href="/en/kurse/open-source/claude/kurs/quiz"]',
+        'a[href="/en/kurse/open-source/ai-native-operator/quiz"]',
       ),
     ).toBeNull();
     expect(
       document.querySelector(
-        'a[href="/en/kurse/open-source/claude/kurs/zertifikat"]',
+        'a[href="/en/kurse/open-source/ai-native-operator/zertifikat"]',
       ),
     ).toBeNull();
   });
 
-  it("updates Claude from ready to passed without remounting", () => {
-    render(<CourseAssessmentCta courseSlug="claude" locale="en" />);
+  it("updates the Operator course from ready to passed without remounting", () => {
+    render(<CourseAssessmentCta courseSlug="ai-native-operator" locale="en" />);
     resolveOwner();
 
-    emitProgress(progressFor("claude", 12));
+    emitProgress(progressFor("ai-native-operator", 39));
 
     expect(screen.getByRole("status")).toHaveTextContent(
       "The final quiz is unlocked.",
     );
     expect(
       screen.getByRole("link", { name: "Start quiz" }),
-    ).toHaveAttribute("href", "/en/kurse/open-source/claude/kurs/quiz");
+    ).toHaveAttribute("href", "/en/kurse/open-source/ai-native-operator/quiz");
     expect(
       screen.queryByRole("link", {
         // Copy lock updated: English UI copy names completion documents "certificate of participation", including the Operator course that used to say "Course Completion Record".
@@ -286,18 +286,18 @@ describe("<CourseAssessmentCta>", () => {
       }),
     ).not.toBeInTheDocument();
 
-    emitProgress(progressFor("claude", 12, true));
+    emitProgress(progressFor("ai-native-operator", 39, true));
 
     expect(screen.getByRole("status")).toHaveTextContent("Passed.");
     expect(screen.getByRole("link", { name: "Retake quiz" })).toHaveAttribute(
       "href",
-      "/en/kurse/open-source/claude/kurs/quiz",
+      "/en/kurse/open-source/ai-native-operator/quiz",
     );
     expect(
       screen.getByRole("link", {
         name: "Download Certificate of participation",
       }),
-    ).toHaveAttribute("href", "/en/kurse/open-source/claude/kurs/zertifikat");
+    ).toHaveAttribute("href", "/en/kurse/open-source/ai-native-operator/zertifikat");
   });
 
   it("uses the Operator configuration, isolated progress slice, and exact routes", () => {
@@ -305,7 +305,11 @@ describe("<CourseAssessmentCta>", () => {
     resolveOwner();
 
     emitProgress(
-      progressFor("claude", CANONICAL_LESSON_IDS.claude.length, true),
+      progressFor(
+        "data-science",
+        CANONICAL_LESSON_IDS["data-science"].length,
+        true,
+      ),
     );
     expect(screen.getByText("Quiz locked")).toBeInTheDocument();
     expect(screen.getByText("0 of 39 lessons complete")).toBeInTheDocument();

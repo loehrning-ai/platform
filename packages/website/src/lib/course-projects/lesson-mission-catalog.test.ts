@@ -114,7 +114,7 @@ describe("lesson mission catalog", () => {
 
   it("rejects duplicates and cross-course mission IDs", () => {
     const dataMission = getCourseLessonMissions("data-science")[0]!.id;
-    const codexMission = getCourseLessonMissions("codex")[0]!.id;
+    const otherMission = getCourseLessonMissions("data-infrastructure")[0]!.id;
     expect(
       normalizeCompletedLessonMissionIds("data-science", [
         dataMission,
@@ -122,7 +122,7 @@ describe("lesson mission catalog", () => {
       ]),
     ).toEqual([]);
     expect(
-      normalizeCompletedLessonMissionIds("data-science", [codexMission]),
+      normalizeCompletedLessonMissionIds("data-science", [otherMission]),
     ).toEqual([]);
   });
 

@@ -58,7 +58,7 @@ describe("Sentry certificate and payload privacy", () => {
     ).toBe(true);
     expect(
       isCertificateVerificationUrl(
-        "https://loehrning.ai/kurse/open-source/codex/%76erifizierung",
+        "https://loehrning.ai/kurse/open-source/data-infrastructure/%76erifizierung",
       ),
     ).toBe(true);
     expect(

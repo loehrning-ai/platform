@@ -1,8 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getAllLessons as getAiNativeLessons } from "@/lib/ai-native/data";
 import { getAllLessons as getOperatorLessons } from "@/lib/ai-native-operator/data";
-import { getAllClaudeLessons } from "@/lib/claude-course/data";
-import { getAllCodexLessons } from "@/lib/codex/data";
 import { getAllLessons as getCoreLessons } from "@/lib/course/data";
 import { getAllDataInfraLessons } from "@/lib/data-infrastructure/data";
 import { getAllDefLocalizedChapters } from "@/lib/data-engineering-fundamentals/content";
@@ -22,7 +20,7 @@ const CORE_COURSES = [
  * already-loaded active lesson projection and never import sibling lessons.
  */
 describe("authored lesson-frame content contract", () => {
-  it("wraps the shared course probes for all 177 canonical lessons in both reviewed locales", async () => {
+  it("wraps the shared course probes for all 153 canonical lessons in both reviewed locales", async () => {
     let boundCount = 0;
 
     for (const locale of LOCALES) {
@@ -50,24 +48,6 @@ describe("authored lesson-frame content contract", () => {
         bindLessonMission("ai-native-operator", lesson.id, locale, {
           title: lesson.title,
           objective: lesson.objective,
-          keyConcepts: lesson.keyConcepts,
-        });
-        boundCount += 1;
-      }
-
-      for (const lesson of await getAllCodexLessons(locale)) {
-        bindLessonMission("codex", lesson.id, locale, {
-          title: lesson.title,
-          objective: lesson.hook,
-          keyConcepts: lesson.keyConcepts,
-        });
-        boundCount += 1;
-      }
-
-      for (const lesson of await getAllClaudeLessons(locale)) {
-        bindLessonMission("claude", lesson.id, locale, {
-          title: lesson.title,
-          objective: lesson.hook,
           keyConcepts: lesson.keyConcepts,
         });
         boundCount += 1;
@@ -102,6 +82,6 @@ describe("authored lesson-frame content contract", () => {
       }
     }
 
-    expect(boundCount).toBe(354);
+    expect(boundCount).toBe(306);
   });
 });

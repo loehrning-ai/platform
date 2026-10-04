@@ -86,9 +86,9 @@ const TOOL = {
     },
     relatedLearning: [
       {
-        title: "Codex course",
+        title: "Data Science course",
         description: "Learn the workflow used to maintain the tool.",
-        href: "/kurse/open-source/codex",
+        href: "/kurse/open-source/data-science",
       },
     ],
   },
@@ -150,9 +150,9 @@ describe("SoftwareArtifactGuide", () => {
       "href",
       "/hilfe",
     );
-    expect(screen.getByRole("link", { name: "Codex course" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Data Science course" })).toHaveAttribute(
       "href",
-      "/kurse/open-source/codex",
+      "/kurse/open-source/data-science",
     );
   });
 
@@ -248,9 +248,9 @@ describe("SoftwareArtifactGuide", () => {
       "href",
       "/en/hilfe",
     );
-    expect(screen.getByRole("link", { name: "Codex course" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Data Science course" })).toHaveAttribute(
       "href",
-      "/en/kurse/open-source/codex",
+      "/en/kurse/open-source/data-science",
     );
   });
 });

@@ -60,7 +60,7 @@ const byPhrase = (findings, phrase) => findings.filter((f) => f.phrase === phras
 const GERMAN_JSON = "content/ki-fuehrerschein/block-1-test-lessons.json";
 const GERMAN_MD = "content/books/testbuch/01_kapitel.md";
 const ENGLISH_JSON = "content/ki-fuehrerschein/en/block-1-test-lessons.json";
-const ENGLISH_TS = "src/lib/codex/lessons/l99-fixture.ts";
+const ENGLISH_TS = "src/lib/data-infrastructure/lessons/l99-fixture.ts";
 
 const GERMAN_EXPECTATIONS = [
   ["VOICE-OPENER", "de-opener-heutige-zeit"],
@@ -410,17 +410,15 @@ test("path classification maps every surface and language", () => {
   const cases = [
     ["content/ki-fuehrerschein/block-1-entdeckung-lessons.json", "content/ki-fuehrerschein", "de"],
     ["content/ki-fuehrerschein/en/quiz/questions.json", "content/ki-fuehrerschein/en", "en"],
-    ["content/claude/de/lessons/agents.json", "content/claude", "de"],
-    ["content/claude/quiz/questions.json", "content/claude/en", "en"],
     ["content/ai-native-operator/quiz/questions.json", "content/ai-native-operator/en", "en"],
     ["content/books/ki-landschaft/01_eisberg.md", "content/books/ki-landschaft", "de"],
     ["content/books/ki-landschaft/en/01_eisberg.md", "content/books/ki-landschaft/en", "en"],
     ["content/changelog.en.md", "content/changelog/en", "en"],
-    ["src/lib/codex/lessons/l01-mental-model.ts", "src/lib/codex", "en"],
-    ["src/lib/codex/lessons/de/l01-mental-model.ts", "src/lib/codex/de", "de"],
+    ["src/lib/data-infrastructure/lessons/mental-model.ts", "src/lib/data-infrastructure", "en"],
+    ["src/lib/data-infrastructure/lessons/de/mental-model.ts", "src/lib/data-infrastructure/de", "de"],
     ["src/lib/ai-native-operator/modules/de/m01-mindset.ts", "src/lib/ai-native-operator/de", "de"],
-    ["src/lib/codex/config.ts", "src/lib/codex", "mixed"],
-    ["src/lib/codex/course-copy.ts", "src/lib/codex", "mixed"],
+    ["src/lib/data-infrastructure/config.ts", "src/lib/data-infrastructure", "mixed"],
+    ["src/lib/data-infrastructure/course-copy.ts", "src/lib/data-infrastructure", "mixed"],
     ["src/lib/workshops.ts", "copy modules", "mixed"],
     ["src/app/login/login-copy.ts", "copy modules", "mixed"],
   ];

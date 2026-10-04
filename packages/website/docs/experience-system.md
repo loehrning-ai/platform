@@ -46,7 +46,7 @@ Shared primitives live in `src/components/werk/` (Kicker, SectionHead, CoverBand
    - One `.plakat-caps` line per scene: 14px (17px in autumn), 600, +0.16em (+0.12em in autumn), uppercase by CSS from sentence-case text. Allowed only inside a scene, and never for UI labels or buttons.
    - Display tracking down to -0.04em, at 36px (2.25rem) or more, allowed only through `.poster-title` (`--text-poster`, line height 0.92, sized so the longest word fits its column). Everywhere else the -0.015em floor stays.
    - At most three type sizes per band: the caps line, the poster title and one 17px body size for the lede, the subtitle, the buttons and a short access line. No `text-caption` or `text-label`, no hairline, box, card, question card or meta list inside a band; facts move to paper directly below.
-7. **Numerals** only where a sequence exists: workshops 01 to 04 and the Grundlagenpfad 01 to 04. Technical courses carry none.
+7. **Numerals** only where a sequence exists: workshops 01 to 04 and the Grundlagenpfad 01 to 04. Visual-learning courses carry none.
 8. **The globe** is the home hero only. The line globe (`GlobeLines`) draws in ink at low opacity on paper, as on the old site; there is no graphit fallback. Workshop covers use posters.
 9. **Focus.** The ring follows the ground: each scope sets `--color-brand-orange` to its ink (Butter 10.97, Kobalt 6.78, Aubergine 9.74, Creme 4.80 on the ground). A control that is full-bleed, full-height or within 5px of a band edge uses an inset ring (`focus-visible:outline-offset-[-3px]`), so the ring never lands on paper, where Butter and Creme fall to 1.03 and 1.13.
 10. **Rost rules** (autumn scope, binding). Creme on Rost is 4.80:1, only 0.30 above AA.
@@ -257,7 +257,7 @@ That route stays deliberately unused. These surfaces are the platform's dense, c
 
 `/konto` stays a single route with labelled in-page sections. It is not split into `/konto/kurse`, `/konto/weiterlernen` and `/konto/nachweise`.
 
-Not for safety: `PROTECTED_PATHS` matches `/konto/:path*`, so sub-routes would inherit the auth gate, `noindex, nofollow, noarchive` and `private, no-store` automatically. The reason is that the split is not warranted. The catalog holds ten courses; filter and sort carry that on one page, while three routes would each need an English mirror, a page-inventory row, metadata and tests, and would strand a learner with no records on an empty `/konto/nachweise`.
+Not for safety: `PROTECTED_PATHS` matches `/konto/:path*`, so sub-routes would inherit the auth gate, `noindex, nofollow, noarchive` and `private, no-store` automatically. The reason is that the split is not warranted. The catalog holds eight courses; filter and sort carry that on one page, while three routes would each need an English mirror, a page-inventory row, metadata and tests, and would strand a learner with no records on an empty `/konto/nachweise`.
 
 "Account settings reachable from persistent navigation" is therefore satisfied in-page. A second `<nav>` must carry its own distinct accessible name: `getByRole("navigation", { name: "Account privacy" })` is a single-match query and an unnamed or similarly-named sibling makes it ambiguous and trips the axe landmark rule. Section labels must also avoid colliding with `continueLabel` ("Weiter lernen") and `resume` ("Weiterlernen"), which differ only by a space and are both asserted by exact-text queries.
 

@@ -81,9 +81,9 @@ const GUIDE = {
   },
   relatedLearning: [
     {
-      title: "Codex course",
+      title: "Data Science course",
       description: "Learn the workflow concepts used by the tool.",
-      href: "/kurse/open-source/codex",
+      href: "/kurse/open-source/data-science",
     },
   ],
 } as const satisfies SoftwareArtifactGuide;

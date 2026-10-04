@@ -27,8 +27,6 @@ vi.mock("next/navigation", () => ({
   usePathname: () => "/",
 }));
 
-import { ClaudeLessonPage } from "@/components/imported-courses/claude/claude-lesson-page";
-import { CodexLessonPage } from "@/components/codex/codex-lesson-page";
 import { DataInfraLessonPage } from "@/components/data-infrastructure/data-infra-lesson-page";
 import { AiNativeOperatorLessonPage } from "@/components/ai-native-operator/lesson-page";
 import { AiNativeLessonPageShell } from "@/components/ai-native/kurs/lesson-page-shell";
@@ -44,19 +42,17 @@ describe.each(["de", "en"] as const)("reader adapters: %s", (locale) => {
   const indexFor = (position: typeof positions[number], length: number) =>
     position === "first" ? 0 : position === "middle" ? Math.floor(length / 2) : length - 1;
 
-  for (const slug of ["claude", "codex", "data-infrastructure"] as const) {
+  for (const slug of ["data-infrastructure"] as const) {
     it.each(positions)(`${slug} supplies honest position and real %s destination`, (position) => {
       const ids = CANONICAL_LESSON_IDS[slug];
       const index = indexFor(position, ids.length);
       const nextHref = ids[index + 1] ? localizeHref(courseLessonHref(slug, ids[index + 1]), locale) : null;
-      const lesson = { id: ids[index], number: index + 1, title: "Fixture", subtitle: "", durationMinutes: 1, hook: "", trackId: slug === "codex" ? "fundamentals" : "foundations", sections: [], quiz: [], keyConcepts: [] };
+      const lesson = { id: ids[index], number: index + 1, title: "Fixture", subtitle: "", durationMinutes: 1, hook: "", trackId: "foundations", sections: [], quiz: [], keyConcepts: [] };
       const shared = { locale, totalLessons: ids.length, prevHref: null, nextHref, navItems: [], tracks: [] };
-      if (slug === "claude") render(<ClaudeLessonPage {...shared} lesson={lesson as ComponentProps<typeof ClaudeLessonPage>["lesson"]} />);
-      else if (slug === "codex") render(<CodexLessonPage {...shared} lesson={lesson as ComponentProps<typeof CodexLessonPage>["lesson"]} />);
-      else render(<DataInfraLessonPage {...shared} lesson={lesson as ComponentProps<typeof DataInfraLessonPage>["lesson"]} />);
+      render(<DataInfraLessonPage {...shared} lesson={lesson as ComponentProps<typeof DataInfraLessonPage>["lesson"]} />);
       expect(screen.getByRole("status")).toHaveTextContent(`${index + 1} / ${ids.length}`);
       expect(observed.options).toMatchObject({ courseSlug: slug, lessonId: ids[index], locale });
-      expect(observed.options?.next).toMatchObject({ kind: "link", href: nextHref ?? `${prefix}/kurse/open-source/${slug}/kurs${slug === "claude" ? "/quiz" : ""}` });
+      expect(observed.options?.next).toMatchObject({ kind: "link", href: nextHref ?? `${prefix}/kurse/open-source/${slug}/kurs` });
     });
   }
 

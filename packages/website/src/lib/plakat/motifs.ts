@@ -208,10 +208,10 @@ const PORTRAIT_MOTIFS = {
         rect(96 + index * 72, 440 - index * 66, index === 3 ? 98 : 72, 80 + index * 66),
       ),
     ),
-  // Technikkurse: one big flat shape plus one small counter shape, no numeral.
-  // Claude Course (idea)
+  // Visuelles Lernen: one big flat shape plus one small counter shape, no numeral.
+  // Spare idea motif (no course assigned)
   quarter: () => [shape("ink", sector(0, 500, 330, 270, 360)), shape("mid", circle(318, 118, 34))],
-  // Codex-Kurs (idea)
+  // Spare idea motif (no course assigned)
   wedge: () => [shape("ink", "M 60 520 L 420 160 L 420 520 Z"), shape("mid", rect(48, 96, 72, 72))],
   // The AI-Native Operator (idea)
   halfdisc: () => [shape("ink", sector(0, 290, 250, 270, 450)), shape("mid", rect(262, 404, 110, 30))],

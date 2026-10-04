@@ -1,7 +1,7 @@
 // ─── Data Infrastructure chrome-copy overrides ───
 //
-// English chrome copy for the reused Tier-A widgets (`quiz`/`flashcards`),
-// mirroring `lib/codex/widget-copy.ts`'s precedent. Source strings ported
+// English chrome copy for the reused Tier-A widgets (`quiz`/`flashcards`).
+// Source strings ported
 // verbatim from `js/widgets.js`'s `Quiz`/`Flashcards` functions — this
 // course's own `widgets.js` docstring ("Widgets — vanilla JS. Quiz +
 // Flashcards.") is the direct port source for these two constants.

@@ -53,8 +53,6 @@ export const ANALYTICS_COURSE_SLUGS = [
   "data-engineering-fundamentals",
   "data-science",
   "data-infrastructure",
-  "codex",
-  "claude",
   "ai-native-operator",
 ] as const;
 export type AnalyticsCourseSlug = (typeof ANALYTICS_COURSE_SLUGS)[number];

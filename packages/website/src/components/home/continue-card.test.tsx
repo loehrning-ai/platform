@@ -178,7 +178,7 @@ describe("ContinueCard", () => {
   it.each(["de", "en"] as const)("offers an open first task in provider-free %s", (locale) => {
     render(<ContinueCard locale={locale} courses={homeContinueCourses(locale, getCourseAccess(false))} />);
     const link = screen.getByRole("link");
-    expect(link).toHaveAttribute("href", `${locale === "en" ? "/en" : ""}/kurse/open-source/claude/kurs/mental-model`);
+    expect(link).toHaveAttribute("href", `${locale === "en" ? "/en" : ""}/kurse/open-source/data-infrastructure/kurs/mental-model`);
     expect(link).toHaveAttribute("data-home-course-access", "open");
     expect(link).toHaveTextContent(locale === "de" ? "Ohne Lernkonto" : "No account needed");
   });
@@ -232,7 +232,7 @@ describe("ContinueCard", () => {
       storeMock.slices.clear();
       for (const listener of storeMock.listeners) listener();
     });
-    expect(screen.getByRole("link")).toHaveAttribute("href", "/kurse/open-source/claude/kurs/mental-model");
+    expect(screen.getByRole("link")).toHaveAttribute("href", "/kurse/open-source/data-infrastructure/kurs/mental-model");
     expect(screen.getByRole("link")).not.toHaveTextContent("5 von 24");
   });
 

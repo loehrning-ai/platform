@@ -12,7 +12,6 @@ export function verifiedCourseProjectArtifact(
 ): CourseProjectArtifactState {
   if (
     courseSlug === "ai-native" ||
-    courseSlug === "claude" ||
     courseSlug === "ai-native-operator"
   ) {
     return {
@@ -29,42 +28,13 @@ export function verifiedCourseProjectArtifact(
         approvalGate: true,
         stopCondition: true,
         handoffDefined: true,
-        ...(courseSlug === "claude"
-          ? {
-              twoOutputEvidence: true,
-              comparisonDecision: "b-stronger",
-              claimReviewCode: 423153,
-              rubricScores: 22133344,
-            }
-          : {
-              secondaryReady: true,
-              evaluation:
-                courseSlug === "ai-native-operator" ? "intervene" : "workflow",
-            }),
+        secondaryReady: true,
+        evaluation:
+          courseSlug === "ai-native-operator" ? "intervene" : "workflow",
         providerEvidence: "success",
         completionMode: "provider-success",
         providerModel: "anthropic/claude-haiku-4.5",
         ...(courseSlug === "ai-native-operator" ? { budget: 4 } : {}),
-      },
-    };
-  }
-
-  if (courseSlug === "codex") {
-    return {
-      version: 1,
-      engineKind: "repo",
-      fields: {
-        stages: [...COURSE_PROJECT_STAGE_IDS],
-        executionReceipt: getCourseProjectExecutionReceipt(courseSlug),
-        specReady: true,
-        sandboxAttested: true,
-        attestationContract: "pipeline-quality-v1",
-        workspace: "pipeline-quality",
-        commandSequence: "canonical",
-        baselineFailed: true,
-        postfixPassed: true,
-        checksPassed: true,
-        diffScoped: true,
       },
     };
   }

@@ -37,10 +37,6 @@ const QUESTION_LOADERS: Partial<
     en: () =>
       import("../../../content/ki-und-gesellschaft/en/quiz/questions.json"),
   },
-  claude: {
-    de: () => import("../../../content/claude/de/quiz/questions.json"),
-    en: () => import("../../../content/claude/quiz/questions.json"),
-  },
   "ai-native-operator": {
     de: () =>
       import("@/lib/ai-native-operator/workshop-questions").then(

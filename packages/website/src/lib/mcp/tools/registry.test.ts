@@ -179,7 +179,9 @@ describe("public tools over the in-memory transport", () => {
   });
 
   it("get_course explains a reader-only course instead of inventing lessons", async () => {
-    const payload = await client.callToolJson("get_course", { slug: "claude" });
+    const payload = await client.callToolJson("get_course", {
+      slug: "data-infrastructure",
+    });
     expect(payload.blocks).toEqual([]);
     expect(String(payload.lesson_index_note)).toContain("own reader");
   });

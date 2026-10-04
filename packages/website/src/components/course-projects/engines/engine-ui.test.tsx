@@ -9,14 +9,14 @@ describe("engine accessibility tokens", () => {
   it("sets the engine heading in ink on a light pastel header, never a black bar", () => {
     render(
       <EngineFrame
-        config={getCourseProjectConfig("codex")}
+        config={getCourseProjectConfig("data-infrastructure")}
         locale="en"
       >
         body
       </EngineFrame>,
     );
     const header = screen
-      .getByRole("heading", { name: "Repository Workbench" })
+      .getByRole("heading", { name: "Streaming Control Room" })
       .closest("header");
     expect(header).toHaveClass("bg-sky-sheet", "text-foreground");
     expect(header?.className).not.toMatch(/\bbg-(?:foreground|black|graphit|dark-bg)\b/);

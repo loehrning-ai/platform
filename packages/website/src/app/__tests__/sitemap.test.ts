@@ -175,7 +175,7 @@ describe("sitemap()", () => {
       expect(url).not.toMatch(/\/eu-ai-act-kurs\/kurs/);
       expect(url).not.toMatch(/\/ai-native\/kurs/);
       expect(url).not.toMatch(/\/ai-native\/demos/);
-      expect(url).not.toMatch(/\/kurse\/open-source\/claude\/kurs/);
+      expect(url).not.toMatch(/\/kurse\/open-source\/data-infrastructure\/kurs/);
       expect(url).not.toMatch(/\/ai-native\/glossar/);
       expect(url).not.toMatch(/\/kontakt$/);
       expect(url).not.toMatch(/\/ki-transformation-check$/);
@@ -221,12 +221,20 @@ describe("sitemap()", () => {
     }
   });
 
-  it("still includes claude's /kurse/open-source/claude landing page after its flip to native", () => {
+  it("lists no page of the removed Claude and Codex courses", () => {
+    for (const { url } of result) {
+      expect(url).not.toMatch(/\/kurse\/open-source\/(?:claude|codex)(?:\/|$)/);
+    }
+  });
+
+  it("includes the data-infrastructure landing but not its reader", () => {
     const urls = result.map((entry) => entry.url);
-    expect(urls).toContain("https://loehrning.ai/kurse/open-source/claude");
-    // Its lesson-reader routes stay out of the sitemap, same as the 4
-    // German courses' /kurs sub-tree.
-    expect(urls).not.toContain("https://loehrning.ai/kurse/open-source/claude/kurs");
+    expect(urls).toContain(
+      "https://loehrning.ai/kurse/open-source/data-infrastructure",
+    );
+    expect(urls).not.toContain(
+      "https://loehrning.ai/kurse/open-source/data-infrastructure/kurs",
+    );
   });
 
   it("includes every chapter of every published book exactly once", () => {

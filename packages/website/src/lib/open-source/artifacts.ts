@@ -1564,12 +1564,6 @@ const CV_ENGINE_TOOL_ARTIFACT = {
           "Übt, KI-Output zu prüfen, etwa den Import aus deinem alten PDF.",
         href: "/ai-native",
       },
-      {
-        title: "Claude Course",
-        description:
-          "Englischer Open-Source-Kurs zu Prompting, Kontext und Evals, mit dem du die optionalen KI-Funktionen beurteilen kannst.",
-        href: "/kurse/open-source/claude",
-      },
     ],
   },
 } as const satisfies ToolArtifact;

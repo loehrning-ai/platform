@@ -24,7 +24,7 @@ describe("public course access facts", () => {
           : "open",
       );
     }
-    expect(Object.values(access).filter((value) => value === "open")).toHaveLength(6);
+    expect(Object.values(access).filter((value) => value === "open")).toHaveLength(4);
   });
 
   it("reads the existing server readiness predicate by default, not an identity", () => {

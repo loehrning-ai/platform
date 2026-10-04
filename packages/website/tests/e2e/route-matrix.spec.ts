@@ -31,12 +31,8 @@ const PUBLIC_ROUTES = [
   "/eu-ai-act-kurs",
   "/ai-native",
   "/ki-und-gesellschaft",
-  //: claude's landing (nested under /kurse/open-source/,
+  //: data-infrastructure's landing (nested under /kurse/open-source/,
   // unlike the four top-level German courses above).
-  "/kurse/open-source/claude",
-  //: codex's landing, same nested convention as claude.
-  "/kurse/open-source/codex",
-  //: data-infrastructure's landing, same nested convention.
   "/kurse/open-source/data-infrastructure",
   //: data-engineering-fundamentals's landing, same nested
   // convention — note its chapter tree has no "/kurs" segment (unlike the
@@ -219,28 +215,19 @@ test.describe("sitemap lists only contract-included paths", () => {
     expect(body).not.toContain("/ai-native/kurs");
   });
 
-  //: claude's reader tree is public-access (not indexed),
-  // same convention as the other three courses' /kurs subtrees above.
-  test("sitemap.xml does not contain /kurse/open-source/claude/kurs", async ({
+  // The removed Claude and Codex courses redirect to /kurse and never
+  // appear in the sitemap.
+  test("sitemap.xml does not contain the removed Claude and Codex courses", async ({
     request,
   }) => {
     const response = await request.get("/sitemap.xml");
     const body = await response.text();
-    expect(body).not.toContain("/kurse/open-source/claude/kurs");
-  });
-
-  //: codex's reader tree is public-access (not indexed),
-  // same convention as claude's above.
-  test("sitemap.xml does not contain /kurse/open-source/codex/kurs", async ({
-    request,
-  }) => {
-    const response = await request.get("/sitemap.xml");
-    const body = await response.text();
-    expect(body).not.toContain("/kurse/open-source/codex/kurs");
+    expect(body).not.toContain("/kurse/open-source/claude");
+    expect(body).not.toContain("/kurse/open-source/codex");
   });
 
   //: data-infrastructure's reader tree is public-access
-  // (not indexed), same convention as claude/codex above.
+  // (not indexed), same convention as the other courses' /kurs subtrees.
   test("sitemap.xml does not contain /kurse/open-source/data-infrastructure/kurs", async ({
     request,
   }) => {
@@ -250,7 +237,7 @@ test.describe("sitemap lists only contract-included paths", () => {
   });
 
   //: data-engineering-fundamentals's chapter tree has no
-  // "/kurs" segment (unlike claude/codex/data-infrastructure above) — the
+  // "/kurs" segment (unlike data-infrastructure above) — the
   // no-leak check instead confirms a real chapter path never appears,
   // while the bare course root DOES appear as its own public-indexable route.
   test("sitemap.xml lists the data-engineering-fundamentals landing but not its chapter routes", async ({

@@ -13,12 +13,14 @@ describe("GET /llms.txt", () => {
     }
   });
 
-  it("separates the ordered foundation path from technical courses without stale language claims", async () => {
+  it("separates the ordered foundation path from visual learning without stale language claims", async () => {
     const response = GET({} as never);
     const body = await response.text();
 
     expect(body).toContain("## Grundlagenpfad");
-    expect(body).toContain("## Technische Kurse");
+    expect(body).toContain("## Visuelles Lernen");
+    expect(body).not.toContain("## Technische Kurse");
+    expect(body).not.toMatch(/open-source\/(?:claude|codex)/);
     expect(body).toContain("## Sprachen und URLs / Languages and URLs");
     expect(body).not.toContain("## Englische technische Vertiefung");
     expect(
@@ -30,7 +32,7 @@ describe("GET /llms.txt", () => {
       COURSE_CATALOG.filter(
         (course) => courseFacts(course.slug).group === "deeper",
       ),
-    ).toHaveLength(6);
+    ).toHaveLength(4);
     expect(body).not.toContain("## Technische Labore");
   });
 });

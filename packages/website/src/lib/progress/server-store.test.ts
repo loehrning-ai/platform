@@ -741,7 +741,7 @@ describe("upsertUnifiedProgressForUser", () => {
       const result = await upsertUnifiedProgressForUser(
         fakeSupabase(table, { insertError }),
         USER,
-        progress({ courses: { codex: slice() } }),
+        progress({ courses: { "data-infrastructure": slice() } }),
       );
 
       expect(result).toEqual({ ok: false, error: insertError });
@@ -753,7 +753,7 @@ describe("upsertUnifiedProgressForUser", () => {
     const originalInsert = table.insert.bind(table);
     let raced = false;
     table.insert = (row) => {
-      if (!raced && row.course_slug === "codex") {
+      if (!raced && row.course_slug === "data-infrastructure") {
         raced = true;
         table.rows.set(key(row.user_id, row.course_slug), {
           ...row,
@@ -773,14 +773,14 @@ describe("upsertUnifiedProgressForUser", () => {
       USER,
       progress({
         courses: {
-          codex: slice({ capstoneSubmitted: true }),
+          "data-infrastructure": slice({ capstoneSubmitted: true }),
         },
       }),
     );
 
     expect(raced).toBe(true);
     expect(result.ok).toBe(true);
-    expect(table.selectOne(USER, "codex")?.progress).toMatchObject({
+    expect(table.selectOne(USER, "data-infrastructure")?.progress).toMatchObject({
       slice: { capstoneSubmitted: true },
     });
   });
@@ -793,11 +793,11 @@ describe("upsertUnifiedProgressForUser", () => {
         throwAfterCommittedInsertOnce: transportError,
       }),
       USER,
-      progress({ courses: { codex: slice({ capstoneSubmitted: true }) } }),
+      progress({ courses: { "data-infrastructure": slice({ capstoneSubmitted: true }) } }),
     );
 
     expect(result.ok).toBe(true);
-    expect(table.selectOne(USER, "codex")?.progress).toMatchObject({
+    expect(table.selectOne(USER, "data-infrastructure")?.progress).toMatchObject({
       slice: { capstoneSubmitted: true },
     });
   });
@@ -808,19 +808,19 @@ describe("upsertUnifiedProgressForUser", () => {
     await upsertUnifiedProgressForUser(
       fakeSupabase(table),
       USER,
-      progress({ courses: { codex: slice() } }),
+      progress({ courses: { "data-infrastructure": slice() } }),
     );
 
-    // Simulate a genuine optimistic-concurrency race: the "codex" row's
+    // Simulate a genuine optimistic-concurrency race: the "data-infrastructure" row's
     // updated_at moves between this test's read and write, every attempt,
     // via a monotonic counter (Date.now() can repeat within one tick, which
     // would coincidentally "resolve" the race instead of sustaining it).
-    const rowKey = key(USER, "codex");
+    const rowKey = key(USER, "data-infrastructure");
     const original = table.rows.get(rowKey)!;
     let raceCounter = 0;
     const staleUpdate = table.update.bind(table);
     table.update = (userId, courseSlug, expectedUpdatedAt, patch) => {
-      if (courseSlug === "codex") {
+      if (courseSlug === "data-infrastructure") {
         raceCounter += 1;
         table.rows.set(rowKey, {
           ...original,
@@ -833,7 +833,7 @@ describe("upsertUnifiedProgressForUser", () => {
     const result = await upsertUnifiedProgressForUser(
       fakeSupabase(table),
       USER,
-      progress({ courses: { codex: slice({ capstoneSubmitted: true }) } }),
+      progress({ courses: { "data-infrastructure": slice({ capstoneSubmitted: true }) } }),
     );
     expect(result.ok).toBe(false);
     if (result.ok || !result.conflict) {
@@ -850,7 +850,7 @@ describe("upsertUnifiedProgressForUser", () => {
     const result = await upsertUnifiedProgressForUser(
       rejectingRowReadSupabase(error),
       USER,
-      progress({ courses: { codex: slice() } }),
+      progress({ courses: { "data-infrastructure": slice() } }),
     );
 
     expect(result).toEqual({ ok: false, error });
@@ -900,10 +900,10 @@ describe("resetCourseProgressRow", () => {
     const del = await resetCourseProgressRow(
       fakeSupabase(table),
       USER,
-      "codex",
+      "data-infrastructure",
     );
     expect(del.ok).toBe(true);
-    expect(table.selectOne(USER, "codex")?.progress).toMatchObject({
+    expect(table.selectOne(USER, "data-infrastructure")?.progress).toMatchObject({
       schemaVersion: 3,
       reset: true,
     });
@@ -995,7 +995,7 @@ describe("resetCourseProgressRow", () => {
     const result = await resetCourseProgressRow(
       rejectingRowReadSupabase(error),
       USER,
-      "codex",
+      "data-infrastructure",
     );
 
     expect(result).toEqual({ ok: false, error });

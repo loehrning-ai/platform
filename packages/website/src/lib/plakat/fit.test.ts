@@ -8,7 +8,6 @@ import { ENTRY_COPY } from "@/lib/i18n/public-info-copy";
 import { PROFILE_COPY } from "@/lib/i18n/profile-copy";
 import { COURSE_HUB_COPY } from "@/lib/courses/course-hub-copy";
 import { getAiNativeOperatorCourseCopy } from "@/lib/ai-native-operator/course-copy";
-import { getCodexCourseCopy } from "@/lib/codex/course-copy";
 import { getDataEngineeringFundamentalsCourseCopy } from "@/lib/data-engineering-fundamentals/course-copy";
 import { getDataInfraCourseCopy } from "@/lib/data-infrastructure/course-copy";
 import { demoName } from "@/lib/demos";
@@ -95,7 +94,6 @@ const COURSE_LITERALS = [
   { file: "src/app/eu-ai-act-kurs/page.tsx", de: ["Rollen, Risiken und", "Pflichten einordnen."], en: ["Map roles, risks,", "and duties."] },
   { file: "src/app/ki-und-gesellschaft/page.tsx", de: ["Arbeit, Deepfakes", "und Bias einordnen."], en: ["Assess work, deepfakes,", "and bias."] },
   { file: "src/app/ai-native/page.tsx", de: ["Routinearbeit mit Claude automatisieren."], en: ["Automate routine work with Claude."] },
-  { file: "src/app/kurse/open-source/claude/page.tsx", de: ["Claude mit klarer Struktur einsetzen."], en: ["Use Claude with clear structure."] },
   { file: "src/app/ai-native/capstone-gallery/page.tsx", de: ["Noch keine veröffentlichten Capstones."], en: ["No published capstones."] },
 ] as const;
 
@@ -181,7 +179,6 @@ const SURFACES: readonly Surface[] = ([
     files: ["src/components/course/technical-course-landing.tsx"],
     titles: [
       ...LOCALES.flatMap((locale) => [
-        { id: `codex ${locale}`, text: getCodexCourseCopy(locale).landing.title },
         { id: `ai-native-operator ${locale}`, text: getAiNativeOperatorCourseCopy(locale).landing.title },
         { id: `data-infrastructure ${locale}`, text: getDataInfraCourseCopy(locale).landing.title },
         {

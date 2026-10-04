@@ -9,8 +9,6 @@
         "http://localhost:3000/einstieg",
         "http://localhost:3000/ki-check",
         "http://localhost:3000/kurse",
-        "http://localhost:3000/kurse/open-source/claude",
-        "http://localhost:3000/kurse/open-source/codex",
         "http://localhost:3000/kurse/open-source/data-infrastructure",
         "http://localhost:3000/kurse/open-source/data-engineering-fundamentals",
         "http://localhost:3000/kurse/open-source/data-science",

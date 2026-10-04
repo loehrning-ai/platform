@@ -145,7 +145,7 @@ describe("<LanguageSwitch />", () => {
   });
 
   it("preserves certificate data in the URL fragment across locale links", async () => {
-    navigationMock.pathname = "/kurse/open-source/codex/verifizierung";
+    navigationMock.pathname = "/kurse/open-source/data-infrastructure/verifizierung";
     window.location.hash = "#test_test-test";
     render(
       <LocaleProvider locale="de">
@@ -159,7 +159,7 @@ describe("<LanguageSwitch />", () => {
     await waitFor(() =>
       expect(englishLink).toHaveAttribute(
         "href",
-        "/en/kurse/open-source/codex/verifizierung#test_test-test",
+        "/en/kurse/open-source/data-infrastructure/verifizierung#test_test-test",
       ),
     );
     window.history.replaceState(null, "", "/");

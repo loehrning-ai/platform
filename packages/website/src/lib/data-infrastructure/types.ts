@@ -2,9 +2,8 @@
 //
 // Own separate content module, keyed by the source's own flat lesson-id
 // scheme ("mental-model".."interview-playbook", matching `js/lessons.js`'s
-// `window.LESSONS` ids), NOT the shared BlockId JSON system — mirroring
-// `lib/codex`/`lib/claude-course`'s precedent of extending `BaseLesson` with
-// a course-specific container id. Content loads per-lesson via dynamic
+// `window.LESSONS` ids), NOT the shared BlockId JSON system — extending
+// `BaseLesson` with a course-specific container id. Content loads per-lesson via dynamic
 // `import()` (see ./data), not one eagerly-imported module.
 //
 // Checkpoint-id collision guard: the unified progress store's `checkpoints`

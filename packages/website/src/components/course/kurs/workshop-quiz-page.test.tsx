@@ -164,7 +164,7 @@ afterEach(cleanup);
 describe("<WorkshopQuizPage>", () => {
   it("does not flash a false lock while the learning owner is unresolved", async () => {
     quizMocks.ownerKind = "unknown";
-    render(<WorkshopQuizPage courseSlug="claude" locale="en" />);
+    render(<WorkshopQuizPage courseSlug="ai-native-operator" locale="en" />);
 
     expect(screen.getByRole("status")).toHaveTextContent("Quiz is loading…");
     expect(
@@ -193,7 +193,7 @@ describe("<WorkshopQuizPage>", () => {
   });
 
   it("invalidates and resets an active quiz across learning-owner generations", async () => {
-    render(<WorkshopQuizPage courseSlug="claude" locale="en" />);
+    render(<WorkshopQuizPage courseSlug="ai-native-operator" locale="en" />);
 
     await screen.findByRole("heading", {
       level: 2,
@@ -208,7 +208,7 @@ describe("<WorkshopQuizPage>", () => {
           window.setTimeout(resolve, 1_100);
         }),
     );
-    expect(screen.getByRole("timer")).toHaveTextContent("24:59");
+    expect(screen.getByRole("timer")).toHaveTextContent("27:59");
 
     act(() => {
       quizMocks.ownerKind = "unknown";
@@ -243,14 +243,14 @@ describe("<WorkshopQuizPage>", () => {
       .forEach((radio) =>
         expect(radio).toHaveAttribute("aria-checked", "false"),
       );
-    expect(screen.getByRole("timer")).toHaveTextContent("25:00");
+    expect(screen.getByRole("timer")).toHaveTextContent("28:00");
     expect(screen.queryByText("Correct")).not.toBeInTheDocument();
     expect(quizMocks.saveResult).not.toHaveBeenCalled();
     expect(quizMocks.loadQuestions).toHaveBeenCalledTimes(2);
   });
 
   it("keeps the fixed quiz header below the global nav and localizes English chrome", async () => {
-    render(<WorkshopQuizPage courseSlug="claude" locale="en" />);
+    render(<WorkshopQuizPage courseSlug="ai-native-operator" locale="en" />);
 
     await screen.findByRole("heading", {
       level: 2,
@@ -271,7 +271,7 @@ describe("<WorkshopQuizPage>", () => {
       screen.getByRole("progressbar", { name: "Question 1 of 1" }),
     ).toBeInTheDocument();
     expect(screen.getByRole("timer")).toHaveAccessibleName(
-      /^Time remaining: 25 minutes \d+ seconds$/,
+      /^Time remaining: 28 minutes \d+ seconds$/,
     );
     expect(screen.queryByText(/Frage 1 von 1/)).not.toBeInTheDocument();
   });
@@ -283,7 +283,7 @@ describe("<WorkshopQuizPage>", () => {
       .mockRejectedValueOnce(privateLoaderError)
       .mockResolvedValueOnce(QUESTIONS);
 
-    render(<WorkshopQuizPage courseSlug="claude" locale="en" />);
+    render(<WorkshopQuizPage courseSlug="ai-native-operator" locale="en" />);
 
     expect(
       await screen.findByRole("heading", {
@@ -313,7 +313,7 @@ describe("<WorkshopQuizPage>", () => {
   });
 
   it("announces answer and result feedback and moves focus through the quiz", async () => {
-    render(<WorkshopQuizPage courseSlug="claude" locale="en" />);
+    render(<WorkshopQuizPage courseSlug="ai-native-operator" locale="en" />);
 
     await screen.findByRole("heading", {
       level: 2,
@@ -352,12 +352,12 @@ describe("<WorkshopQuizPage>", () => {
         name: "Download Certificate of participation",
       }),
     ).toBeInTheDocument();
-    expect(quizMocks.saveResult).toHaveBeenCalledWith("claude", 1, true);
+    expect(quizMocks.saveResult).toHaveBeenCalledWith("ai-native-operator", 1, true);
   });
 
   it("does not render a pass or certificate when durable result storage rejects the write", async () => {
     quizMocks.saveResult.mockReturnValue(false);
-    render(<WorkshopQuizPage courseSlug="claude" locale="en" />);
+    render(<WorkshopQuizPage courseSlug="ai-native-operator" locale="en" />);
 
     await screen.findByRole("heading", {
       level: 2,
@@ -393,7 +393,7 @@ describe("<WorkshopQuizPage>", () => {
   it("moves focus to the next question after the animated question swap", async () => {
     quizMocks.loadQuestions.mockResolvedValue([...QUESTIONS, SECOND_QUESTION]);
 
-    render(<WorkshopQuizPage courseSlug="claude" locale="en" />);
+    render(<WorkshopQuizPage courseSlug="ai-native-operator" locale="en" />);
 
     const firstHeading = await screen.findByRole("heading", { level: 2 });
     fireEvent.click(screen.getAllByRole("radio")[0]);
@@ -441,7 +441,7 @@ describe("<WorkshopQuizPage>", () => {
 describe("<WorkshopQuizPage> usage events", () => {
   const reportedSteps = () =>
     quizMocks.trackCourseCompletion.mock.calls.map(([course, step]) => {
-      expect(course).toBe("claude");
+      expect(course).toBe("ai-native-operator");
       return step;
     });
 
@@ -453,7 +453,7 @@ describe("<WorkshopQuizPage> usage events", () => {
   });
 
   it("reports the start and a pass once the result is saved", async () => {
-    render(<WorkshopQuizPage courseSlug="claude" locale="en" />);
+    render(<WorkshopQuizPage courseSlug="ai-native-operator" locale="en" />);
 
     await screen.findByRole("heading", {
       level: 2,
@@ -469,7 +469,7 @@ describe("<WorkshopQuizPage> usage events", () => {
   });
 
   it("reports a failed attempt without any score", async () => {
-    render(<WorkshopQuizPage courseSlug="claude" locale="en" />);
+    render(<WorkshopQuizPage courseSlug="ai-native-operator" locale="en" />);
 
     await screen.findByRole("heading", {
       level: 2,
@@ -487,7 +487,7 @@ describe("<WorkshopQuizPage> usage events", () => {
 
   it("reports an outcome only after the result is durably saved, and only once", async () => {
     quizMocks.saveResult.mockReturnValue(false);
-    render(<WorkshopQuizPage courseSlug="claude" locale="en" />);
+    render(<WorkshopQuizPage courseSlug="ai-native-operator" locale="en" />);
 
     await screen.findByRole("heading", {
       level: 2,
@@ -506,7 +506,7 @@ describe("<WorkshopQuizPage> usage events", () => {
 
   it("reports a blocked exam when the course is not fully completed", async () => {
     vi.mocked(isCourseFullyCompleted).mockReturnValue(false);
-    render(<WorkshopQuizPage courseSlug="claude" locale="en" />);
+    render(<WorkshopQuizPage courseSlug="ai-native-operator" locale="en" />);
 
     await waitFor(() => expect(reportedSteps()).toEqual(["exam_blocked"]));
     expect(quizMocks.loadQuestions).not.toHaveBeenCalled();
@@ -514,14 +514,14 @@ describe("<WorkshopQuizPage> usage events", () => {
 
   it("reports an unavailable exam when the questions cannot load", async () => {
     quizMocks.loadQuestions.mockRejectedValue(new Error("offline"));
-    render(<WorkshopQuizPage courseSlug="claude" locale="en" />);
+    render(<WorkshopQuizPage courseSlug="ai-native-operator" locale="en" />);
 
     await waitFor(() => expect(reportedSteps()).toEqual(["exam_unavailable"]));
   });
 
   it("reports the timer auto-finish as a timeout and never as a failure", async () => {
     quizMocks.timeLimitMinutes = 1 / 60;
-    render(<WorkshopQuizPage courseSlug="claude" locale="en" />);
+    render(<WorkshopQuizPage courseSlug="ai-native-operator" locale="en" />);
 
     await screen.findByRole("heading", {
       level: 2,
@@ -533,6 +533,6 @@ describe("<WorkshopQuizPage> usage events", () => {
       { timeout: 4000 },
     );
     expect(reportedSteps()).not.toContain("exam_failed");
-    expect(quizMocks.saveResult).toHaveBeenCalledWith("claude", 0, false);
+    expect(quizMocks.saveResult).toHaveBeenCalledWith("ai-native-operator", 0, false);
   });
 });

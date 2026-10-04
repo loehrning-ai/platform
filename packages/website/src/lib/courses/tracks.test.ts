@@ -46,7 +46,7 @@ describe("learner-first course model", () => {
     // stage 6 unified CatalogCourse/ImportedCourse behind nativeStatus,
     // which is orthogonal to which learner-facing shelf a course sits in).
     // A ported course can flip to nativeStatus "live" and join
-    // COURSE_CATALOG while staying "deeper" — claude did exactly this in
+    // COURSE_CATALOG while staying "deeper" — data-infrastructure did exactly this in
     //. Do NOT derive spine membership from COURSE_CATALOG
     // membership; assert against the explicit, confirmed spine slug set.
     const SPINE_SLUGS: readonly CourseSlug[] = [
@@ -77,7 +77,7 @@ describe("learner-first course model", () => {
   it("keeps the record badge honest against lib/course/config.ts", () => {
     // The native courses' record kind must match what the engine actually
     // issues: a "Lernnachweis"-titled record is a Lernnachweis, an English
-    // config (claude) issues a "certificate", otherwise a
+    // config issues a "certificate", otherwise a
     // Self-issued Teilnahmebestätigung.
     for (const course of COURSE_CATALOG) {
       const config = getCourseConfig(course.slug as CourseSlug);
@@ -114,11 +114,11 @@ describe("learner-first course model", () => {
       tone: "record",
     });
 
-    expect(courseBadges("codex", "de")).toEqual([
+    expect(courseBadges("data-infrastructure", "de")).toEqual([
       { label: "DE + EN", tone: "language" },
       { label: "mit Teilnahmebestätigung", tone: "record" },
     ]);
-    expect(courseBadges("codex", "en")).toEqual([
+    expect(courseBadges("data-infrastructure", "en")).toEqual([
       { label: "DE + EN", tone: "language" },
       { label: "completion certificate", tone: "record" },
     ]);
@@ -158,7 +158,9 @@ describe("learner-first course model", () => {
 
   it("exposes both learner-facing sections", () => {
     expect(COURSE_SECTIONS.spine.title).toBe("Grundlagenpfad");
-    expect(COURSE_SECTIONS.deeper.title).toBe("Technikkurse");
+    expect(COURSE_SECTIONS.deeper.title).toBe("Visuelles Lernen");
+    expect(COURSE_SECTIONS.deeper.eyebrow).toBe("4 Kurse · Quellcode auf GitHub");
+    expect(COURSE_SECTIONS.deeper.blurb).not.toMatch(/Prompting|Coding-Agenten/);
     expect(COURSE_SECTIONS.spine.blurb).toContain("selbst ausgestellt");
     expect(COURSE_SECTIONS.deeper.blurb).toContain("selbst ausgestellt");
   });

@@ -216,7 +216,7 @@ describe("OpenSourcePage", () => {
       );
     }
     expect(
-      screen.getByRole("link", { name: "Browse technical courses" }),
+      screen.getByRole("link", { name: "Browse visual learning" }),
     ).toHaveAttribute("href", "/en/kurse");
 
     const graph = JSON.parse(

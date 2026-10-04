@@ -7,7 +7,7 @@
 
 ## 2026-08-09: Zweisprachige Plattformrevision
 
-Lernangebote sind nach Grundlagen, technischen Kursen, Workshops und Büchern geordnet und stehen auf Deutsch und Englisch bereit.
+Lernangebote sind nach Grundlagen, visuellem Lernen, Workshops und Büchern geordnet und stehen auf Deutsch und Englisch bereit.
 
 ### Geändert
 

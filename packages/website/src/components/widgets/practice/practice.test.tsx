@@ -48,7 +48,64 @@ import { __resetCacheForTests, isCheckpointDone } from "@/lib/progress";
 
 import { PromptOrreryWidget } from "./prompt-orrery";
 import { PromptTransformWidget } from "./prompt-transform";
-import { SemanticSpaceWidget } from "./semantic-space";
+import {
+  SemanticSpaceWidget,
+  type Cluster as SemanticSpaceCluster,
+  type Point as SemanticSpacePoint,
+  type QuadrantLabel as SemanticSpaceQuadrantLabel,
+  type SemanticSpaceCopy,
+} from "./semantic-space";
+
+// Synthetic English override fixture: the widget keeps its German default
+// copy, so a host lesson in English passes seed, keyword lists and chrome.
+const EN_SEMANTIC_SPACE_SEED: readonly SemanticSpacePoint[] = [
+  { w: "database", x: 0.08, y: 0.18, cluster: "technik" },
+  { w: "kubernetes", x: 0.22, y: 0.14, cluster: "technik" },
+  { w: "roadmap", x: 0.7, y: 0.14, cluster: "vertrieb" },
+  { w: "stakeholder", x: 0.68, y: 0.38, cluster: "vertrieb" },
+  { w: "espresso", x: 0.4, y: 0.74, cluster: "werkstatt" },
+  { w: "latte", x: 0.56, y: 0.78, cluster: "werkstatt" },
+  { w: "violin", x: 0.1, y: 0.78, cluster: "verwaltung" },
+  { w: "sonata", x: 0.22, y: 0.9, cluster: "verwaltung" },
+];
+const EN_SEMANTIC_SPACE_KEYWORDS: Record<
+  Exclude<SemanticSpaceCluster, "user">,
+  readonly string[]
+> = {
+  technik: ["database", "kubernetes", "algorithm", "sprint", "deploy"],
+  vertrieb: ["roadmap", "stakeholder", "backlog", "milestone"],
+  werkstatt: ["espresso", "latte", "cappuccino", "beans"],
+  verwaltung: ["violin", "sonata", "cello", "piano"],
+};
+const EN_SEMANTIC_SPACE_QUADRANT_LABELS: readonly SemanticSpaceQuadrantLabel[] =
+  [
+    { label: "tech", x: 16, y: 4 },
+    { label: "product", x: 82, y: 4 },
+    { label: "music", x: 16, y: 68 },
+    { label: "coffee", x: 58, y: 68 },
+  ];
+const EN_SEMANTIC_SPACE_CLUSTER_LABELS: Record<
+  Exclude<SemanticSpaceCluster, "user">,
+  string
+> = {
+  technik: "tech",
+  vertrieb: "product",
+  werkstatt: "coffee",
+  verwaltung: "music",
+};
+const EN_SEMANTIC_SPACE_COPY: SemanticSpaceCopy = {
+  kindLabel: "Local illustration",
+  canvasAriaLabel: "Semantic space with placed words",
+  placeholder: "Try: sprint, cappuccino, algorithm, cello",
+  inputAriaLabel: "New word",
+  placingLabel: "Placing",
+  placeLabel: "Place in space →",
+  landedNearText: "landed near",
+  emptyStatusText: "Enter a word to run the local topic-matching rule.",
+  nearPlacedTemplate: "the local keyword list maps it to the {cluster} group.",
+  heuristicTemplate:
+    "no keyword matched, so the local fallback selected this group.",
+};
 
 /**
  * Practice Room widget tests. Each widget gets:
@@ -195,24 +252,17 @@ describe("SemanticSpaceWidget", () => {
   });
 });
 
-describe("SemanticSpaceWidget — claude-course English override ", () => {
-  it("renders the overridden English seed words, not the German defaults", async () => {
-    const {
-      CLAUDE_SEMANTIC_SPACE_SEED,
-      CLAUDE_SEMANTIC_SPACE_KEYWORDS,
-      CLAUDE_SEMANTIC_SPACE_CLUSTER_LABELS,
-      CLAUDE_SEMANTIC_SPACE_QUADRANT_LABELS,
-      CLAUDE_SEMANTIC_SPACE_COPY,
-    } = await import("@/lib/claude-course/widget-copy");
+describe("SemanticSpaceWidget — English override props", () => {
+  it("renders the overridden English seed words, not the German defaults", () => {
     render(
       <SemanticSpaceWidget
         lessonId="L"
         cpId="sem"
-        seed={CLAUDE_SEMANTIC_SPACE_SEED}
-        clusterKeywords={CLAUDE_SEMANTIC_SPACE_KEYWORDS}
-        clusterLabels={CLAUDE_SEMANTIC_SPACE_CLUSTER_LABELS}
-        quadrantLabels={CLAUDE_SEMANTIC_SPACE_QUADRANT_LABELS}
-        copy={CLAUDE_SEMANTIC_SPACE_COPY}
+        seed={EN_SEMANTIC_SPACE_SEED}
+        clusterKeywords={EN_SEMANTIC_SPACE_KEYWORDS}
+        clusterLabels={EN_SEMANTIC_SPACE_CLUSTER_LABELS}
+        quadrantLabels={EN_SEMANTIC_SPACE_QUADRANT_LABELS}
+        copy={EN_SEMANTIC_SPACE_COPY}
       />,
     );
     expect(screen.getByText("kubernetes")).toBeInTheDocument();
@@ -224,22 +274,15 @@ describe("SemanticSpaceWidget — claude-course English override ", () => {
   it("the offline heuristic matches an English word to the right group (functional, not just cosmetic)", async () => {
     const fetchMock = vi.fn();
     vi.stubGlobal("fetch", fetchMock);
-    const {
-      CLAUDE_SEMANTIC_SPACE_SEED,
-      CLAUDE_SEMANTIC_SPACE_KEYWORDS,
-      CLAUDE_SEMANTIC_SPACE_CLUSTER_LABELS,
-      CLAUDE_SEMANTIC_SPACE_QUADRANT_LABELS,
-      CLAUDE_SEMANTIC_SPACE_COPY,
-    } = await import("@/lib/claude-course/widget-copy");
     render(
       <SemanticSpaceWidget
         lessonId="L"
         cpId="sem"
-        seed={CLAUDE_SEMANTIC_SPACE_SEED}
-        clusterKeywords={CLAUDE_SEMANTIC_SPACE_KEYWORDS}
-        clusterLabels={CLAUDE_SEMANTIC_SPACE_CLUSTER_LABELS}
-        quadrantLabels={CLAUDE_SEMANTIC_SPACE_QUADRANT_LABELS}
-        copy={CLAUDE_SEMANTIC_SPACE_COPY}
+        seed={EN_SEMANTIC_SPACE_SEED}
+        clusterKeywords={EN_SEMANTIC_SPACE_KEYWORDS}
+        clusterLabels={EN_SEMANTIC_SPACE_CLUSTER_LABELS}
+        quadrantLabels={EN_SEMANTIC_SPACE_QUADRANT_LABELS}
+        copy={EN_SEMANTIC_SPACE_COPY}
       />,
     );
     const input = screen.getByLabelText("New word");

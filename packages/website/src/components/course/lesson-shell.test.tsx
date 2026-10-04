@@ -651,8 +651,7 @@ describe("<LessonShell> reader focus mode", () => {
 
 describe("<LessonShell> track scene", () => {
   it("reads the track scene from the course route, with or without /en", () => {
-    expect(lessonScene("/kurse/open-source/claude/kurs/anatomy")).toBe("idea");
-    expect(lessonScene("/en/kurse/open-source/codex/kurs/L01")).toBe("idea");
+    expect(lessonScene("/en/kurse/open-source/ai-native-operator/mindset/1")).toBe("idea");
     expect(lessonScene("/kurse/open-source/ai-native-operator/mindset/2")).toBe("idea");
     expect(lessonScene("/kurse/open-source/data-infrastructure/kurs/cap-pacelc")).toBe("bloom");
     expect(lessonScene("/en/kurse/open-source/data-science/fund")).toBe("bloom");
@@ -662,6 +661,8 @@ describe("<LessonShell> track scene", () => {
     // Book readers and unknown routes stay Druckschwarz; an explicit id wins.
     expect(lessonScene("/buecher/ki-landschaft/01")).toBeUndefined();
     expect(lessonScene("/kurse/open-source/claudette")).toBeUndefined();
+    expect(lessonScene("/kurse/open-source/claude/kurs/anatomy")).toBeUndefined();
+    expect(lessonScene("/en/kurse/open-source/codex/kurs/L01")).toBeUndefined();
     expect(lessonScene(null)).toBeUndefined();
     expect(lessonScene("/buecher/x", "data-science")).toBe("bloom");
   });
@@ -673,9 +674,9 @@ describe("<LessonShell> track scene", () => {
         navOpen={false}
         onNavOpenChange={() => {}}
         navLabel="Testnavigation"
-        courseId="claude"
+        courseId="ai-native-operator"
       >
-        <h1>Anatomie eines Prompts</h1>
+        <h1>Erst die Aufgabe wählen</h1>
       </LessonShell>,
     );
     const shell = document.querySelector("[data-lesson-shell]");

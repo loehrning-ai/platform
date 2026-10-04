@@ -7,6 +7,7 @@ import {
   getCrawlRoute,
   isProtectedRoute,
   isPublicRoute,
+  isRetiredRoute,
   matchesPattern,
   robotsAllowPaths,
   robotsDisallowPaths,
@@ -26,7 +27,7 @@ describe("crawl contract", () => {
       "/buecher/ki-arbeitsalltag",
       "/demos",
       "/demos/excel",
-      "/kurse/open-source/codex",
+      "/kurse/open-source/data-infrastructure",
       "/open-source/lizenzrichtlinie",
       "/open-source/tools/example-tool",
     ]) {
@@ -93,9 +94,9 @@ describe("crawl contract", () => {
 
   it("keeps exact course utilities ahead of public reader catch-alls", () => {
     for (const path of [
-      "/kurse/open-source/claude/kurs/quiz",
-      "/kurse/open-source/claude/kurs/zertifikat",
-      "/kurse/open-source/codex/kurs/zertifikat",
+      "/kurse/open-source/ai-native-operator/quiz",
+      "/kurse/open-source/data-infrastructure/kurs/zertifikat",
+      "/kurse/open-source/data-infrastructure/verifizierung",
     ]) {
       const entry = getCrawlRoute(path);
       expect(entry.routeClass, path).toBe("public-noindex");
@@ -103,47 +104,32 @@ describe("crawl contract", () => {
     }
   });
 
-  it("classifies the Claude Course routes registered ahead of their pages ", () => {
+  it("redirects every removed Claude and Codex course route permanently to /kurse", () => {
     for (const path of [
+      "/kurse/open-source/claude",
       "/kurse/open-source/claude/kurs",
       "/kurse/open-source/claude/kurs/mental-model",
-    ]) {
-      const entry = getCrawlRoute(path);
-      expect(entry.routeClass, path).toBe("public-access");
-      expect(entry.auth, path).toBe("public");
-      expect(entry.includeInSitemap, path).toBe(false);
-    }
-    for (const path of [
       "/kurse/open-source/claude/kurs/quiz",
       "/kurse/open-source/claude/kurs/zertifikat",
       "/kurse/open-source/claude/verifizierung",
-    ]) {
-      const entry = getCrawlRoute(path);
-      expect(entry.routeClass, path).toBe("public-noindex");
-      expect(entry.xRobotsTag, path).toContain("noindex");
-    }
-  });
-
-  it("classifies the Codex Course routes registered ahead of their pages ", () => {
-    for (const path of [
-      "/kurse/open-source/codex/kurs",
+      "/kurse/open-source/codex",
       "/kurse/open-source/codex/kurs/L01",
-    ]) {
-      const entry = getCrawlRoute(path);
-      expect(entry.routeClass, path).toBe("public-access");
-      expect(entry.auth, path).toBe("public");
-      expect(entry.includeInSitemap, path).toBe(false);
-    }
-    // Codex has no separate gating quiz (all-lessons-completion cert path),
-    // so unlike claude there is no "/kurs/quiz" noindex entry here.
-    for (const path of [
       "/kurse/open-source/codex/kurs/zertifikat",
       "/kurse/open-source/codex/verifizierung",
+      "/en/kurse/open-source/claude",
+      "/en/kurse/open-source/codex/kurs/L01",
     ]) {
       const entry = getCrawlRoute(path);
-      expect(entry.routeClass, path).toBe("public-noindex");
-      expect(entry.xRobotsTag, path).toContain("noindex");
+      expect(entry.routeClass, path).toBe("retired");
+      expect(entry.auth, path).toBe("redirect");
+      expect(entry.redirectTo, path).toBe("/kurse");
+      expect(entry.status, path).toBe(301);
+      expect(entry.includeInSitemap, path).toBe(false);
+      expect(isRetiredRoute(path), path).toBe(true);
     }
+    expect(getCrawlRoute("/kurse/open-source/claudette").routeClass).not.toBe(
+      "retired",
+    );
   });
 
   it("keeps retired blog slugs ahead of the broad blog pattern", () => {
@@ -221,7 +207,7 @@ describe("crawl contract", () => {
   });
 
   it("classifies imported course details as indexable discovery pages", () => {
-    const imported = getCrawlRoute("/kurse/open-source/codex");
+    const imported = getCrawlRoute("/kurse/open-source/data-infrastructure");
     expect(imported.routeClass).toBe("public-indexable");
     expect(imported.includeInSitemap).toBe(true);
     expect(imported.xRobotsTag).toBeUndefined();
@@ -319,8 +305,6 @@ describe("crawl contract", () => {
     expect(allow).toContain("/api/knowledge-graph.json");
     expect(allow).toContain("/schema/knowledge-graph/v1");
     for (const slug of [
-      "claude",
-      "codex",
       "data-infrastructure",
       "data-engineering-fundamentals",
       "data-science",

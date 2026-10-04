@@ -52,7 +52,7 @@ const FOOTER_COPY: Readonly<Record<Locale, FooterCopy>> = {
     links: {
       allCourses: "Alle Kurse",
       foundationPath: "Grundlagenpfad",
-      technicalCourses: "Technikkurse",
+      technicalCourses: "Visuelles Lernen",
       aiCheck: "KI-Check",
       learningBooks: "Lernbücher",
       workshops: "Workshops",
@@ -85,7 +85,7 @@ const FOOTER_COPY: Readonly<Record<Locale, FooterCopy>> = {
     links: {
       allCourses: "All courses",
       foundationPath: "Foundation path",
-      technicalCourses: "Technical courses",
+      technicalCourses: "Visual learning",
       aiCheck: "AI check",
       learningBooks: "Learning books",
       workshops: "Workshops",

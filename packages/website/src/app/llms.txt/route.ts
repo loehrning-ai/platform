@@ -196,7 +196,7 @@ function renderBody(): string {
     : "";
   const sections = [
     `## Grundlagenpfad\n\n${courseLines("spine")}`,
-    `## Technische Kurse\n\n${courseLines("deeper")}`,
+    `## Visuelles Lernen\n\n${courseLines("deeper")}`,
     `## Workshops\n\n${workshopLines()}`,
     externalLabsSection,
     openSourceSections(),
@@ -212,9 +212,9 @@ Free AI and data learning resources in German and English. Each page states its 
 
 ## Öffentlicher Bereich / Public access
 
-Öffentlich sind Landingpages, technische Kursreader, Bücher, Demos, Workshops, Blog, Open-Source-Artefakte und maschinenlesbare Metadaten. Die Reader der vier Grundlagenkurse brauchen ein Konto. Quiz-, Abschluss- und Verifizierungsseiten können direkt erreichbar sein, werden aber nicht indexiert.
+Öffentlich sind Landingpages, Kursreader zum visuellen Lernen, Bücher, Demos, Workshops, Blog, Open-Source-Artefakte und maschinenlesbare Metadaten. Die Reader der vier Grundlagenkurse brauchen ein Konto. Quiz-, Abschluss- und Verifizierungsseiten können direkt erreichbar sein, werden aber nicht indexiert.
 
-Public content: landing pages, technical course readers, books, demos, workshops, the blog, open-source artifacts and machine-readable metadata. The four foundation-course readers require an account. Quiz, completion and verification pages may be reachable directly but are not indexed.
+Public content: landing pages, visual-learning course readers, books, demos, workshops, the blog, open-source artifacts and machine-readable metadata. The four foundation-course readers require an account. Quiz, completion and verification pages may be reachable directly but are not indexed.
 
 ## Sprachen und URLs / Languages and URLs
 

@@ -19,7 +19,7 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 
 ## Indexable pages (class: public-indexable)
 
-### Static pages (26)
+### Static pages (24)
 
 | Canonical URL | Source/proof asset | Freshness evidence | In sitemap | Owner |
 | --- | --- | --- | --- | --- |
@@ -27,8 +27,6 @@ cd packages/website && bun scripts/generate-page-inventory.mjs
 | https://loehrning.ai/einstieg | src/app/einstieg/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
 | https://loehrning.ai/ki-check | src/app/ki-check/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
 | https://loehrning.ai/kurse | src/app/kurse/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
-| https://loehrning.ai/kurse/open-source/claude | src/app/kurse/open-source/claude/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
-| https://loehrning.ai/kurse/open-source/codex | src/app/kurse/open-source/codex/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
 | https://loehrning.ai/kurse/open-source/data-infrastructure | src/app/kurse/open-source/data-infrastructure/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
 | https://loehrning.ai/kurse/open-source/data-engineering-fundamentals | src/app/kurse/open-source/data-engineering-fundamentals/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
 | https://loehrning.ai/kurse/open-source/data-science | src/app/kurse/open-source/data-science/page.tsx | canonical content date 2026-09-27 | yes | Tim Löhr |
@@ -119,10 +117,6 @@ _None._
 | `/ai-native/fluency-test` | Public learning content intentionally accessible without login but not listed in sitemap. |
 | `/ai-native/glossar` | Public learning content intentionally accessible without login but not listed in sitemap. |
 | `/ai-native/capstone-gallery` | Public learning content intentionally accessible without login but not listed in sitemap. |
-| `/kurse/open-source/claude/kurs` | Public learning content intentionally accessible without login but not listed in sitemap. |
-| `/kurse/open-source/claude/kurs/:path*` | Public learning content intentionally accessible without login but not listed in sitemap. |
-| `/kurse/open-source/codex/kurs` | Public learning content intentionally accessible without login but not listed in sitemap. |
-| `/kurse/open-source/codex/kurs/:path*` | Public learning content intentionally accessible without login but not listed in sitemap. |
 | `/kurse/open-source/data-infrastructure/kurs` | Public learning content intentionally accessible without login but not listed in sitemap. |
 | `/kurse/open-source/data-infrastructure/kurs/:path*` | Public learning content intentionally accessible without login but not listed in sitemap. |
 | `/kurse/open-source/data-engineering-fundamentals/:path*` | Public learning content intentionally accessible without login but not listed in sitemap. |
@@ -145,11 +139,6 @@ _None._
 | `/eu-ai-act-kurs/verifizierung` | Public utility page; crawlable so crawlers can see noindex. |
 | `/ai-native/verifizierung` | Public utility page; crawlable so crawlers can see noindex. |
 | `/ki-und-gesellschaft/verifizierung` | Public utility page; crawlable so crawlers can see noindex. |
-| `/kurse/open-source/claude/kurs/quiz` | Public utility page; crawlable so crawlers can see noindex. |
-| `/kurse/open-source/claude/kurs/zertifikat` | Public utility page; crawlable so crawlers can see noindex. |
-| `/kurse/open-source/claude/verifizierung` | Public utility page; crawlable so crawlers can see noindex. |
-| `/kurse/open-source/codex/kurs/zertifikat` | Public utility page; crawlable so crawlers can see noindex. |
-| `/kurse/open-source/codex/verifizierung` | Public utility page; crawlable so crawlers can see noindex. |
 | `/kurse/open-source/data-infrastructure/kurs/zertifikat` | Public utility page; crawlable so crawlers can see noindex. |
 | `/kurse/open-source/data-infrastructure/verifizierung` | Public utility page; crawlable so crawlers can see noindex. |
 | `/kurse/open-source/data-engineering-fundamentals/zertifikat` | Public utility page; crawlable so crawlers can see noindex. |
@@ -238,6 +227,10 @@ _None._
 
 | Pattern | Explanation |
 | --- | --- |
+| `/kurse/open-source/claude` | A removed course landing now resolves to the course hub. |
+| `/kurse/open-source/claude/:path*` | Removed course lessons and records now resolve to the course hub. |
+| `/kurse/open-source/codex` | A removed course landing now resolves to the course hub. |
+| `/kurse/open-source/codex/:path*` | Removed course lessons and records now resolve to the course hub. |
 | `/wie-ki-funktioniert` | The retired AI explainer now resolves to the maintained introduction. |
 | `/wie-ki-funktioniert/:path*` | Retired AI explainer lessons now resolve to the maintained introduction. |
 | `/bekannte-grenzen` | Known platform limitations are maintained in the help reference. |

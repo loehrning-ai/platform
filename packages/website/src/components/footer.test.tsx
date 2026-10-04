@@ -57,7 +57,7 @@ describe("Footer locale and information architecture", () => {
     expect(
       screen.getByRole("link", { name: "Grundlagenpfad" }),
     ).toHaveAttribute("href", "/kurse#lernpfad");
-    expect(screen.getByRole("link", { name: "Technikkurse" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Visuelles Lernen" })).toHaveAttribute(
       "href",
       "/kurse#tiefer-gehen",
     );
@@ -103,7 +103,7 @@ describe("Footer locale and information architecture", () => {
       screen.getByRole("link", { name: "Foundation path" }),
     ).toHaveAttribute("href", "/en/kurse#lernpfad");
     expect(
-      screen.getByRole("link", { name: "Technical courses" }),
+      screen.getByRole("link", { name: "Visual learning" }),
     ).toHaveAttribute("href", "/en/kurse#tiefer-gehen");
     expect(screen.getByRole("link", { name: "AI check" })).toHaveAttribute(
       "href",
@@ -317,7 +317,7 @@ describe("Footer link disclosure below lg", () => {
     for (const name of [
       "Alle Kurse",
       "Grundlagenpfad",
-      "Technikkurse",
+      "Visuelles Lernen",
       "KI-Check",
       "Lernbücher",
       "Workshops",

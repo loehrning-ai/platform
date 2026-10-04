@@ -14,7 +14,7 @@ describe("German discovery record copy", () => {
   it("states the course catalogue scope accurately in metadata", () => {
     const description = COURSE_HUB_COPY.de.metadataDescription;
 
-    expect(description).toContain("Zehn Kurse auf Deutsch und Englisch");
+    expect(description).toContain("Acht Kurse auf Deutsch und Englisch");
     expect(description).toContain("Quellstand");
     expect(description).toContain("Workshops und Lernbücher");
     expect(description).not.toMatch(/\bZertifikat\b/i);

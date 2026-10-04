@@ -52,18 +52,19 @@ describe("loadWorkshopQuestions", () => {
     expect(english[0]?.questionText).not.toBe(german[0]?.questionText);
   });
 
-  it("loads the claude questions (19 questions, reusing the inline lesson Quiz content, )", async () => {
-    const questions = await loadWorkshopQuestions("claude", "en");
-    expect(questions).toHaveLength(19);
-    assertValidQuizQuestions(questions);
-    for (const q of questions) {
-      expect(q.explanation.trim().length).toBeGreaterThan(0);
-      expect(q.answerOptions.length).toBeGreaterThanOrEqual(3);
-    }
-    // English content: no German quiz chrome/explanations leaked in.
-    const allText = questions
-      .map((q) => q.questionText + q.explanation)
-      .join(" ");
-    expect(allText).not.toMatch(/\b(nicht|und|oder|der|die|das)\b/i);
+  it("loads the ai-native-operator questions in both locales with stable IDs", async () => {
+    const german = await loadWorkshopQuestions("ai-native-operator", "de");
+    const english = await loadWorkshopQuestions("ai-native-operator", "en");
+    expect(english.length).toBeGreaterThan(0);
+    assertValidQuizQuestions(english);
+    expect(english.map((question) => question.id)).toEqual(
+      german.map((question) => question.id),
+    );
+  });
+
+  it("rejects the removed Claude course instead of loading stale questions", async () => {
+    await expect(
+      loadWorkshopQuestions("claude" as unknown as CourseSlug),
+    ).rejects.toThrow(/not registered/);
   });
 });

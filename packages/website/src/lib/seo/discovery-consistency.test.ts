@@ -73,7 +73,7 @@ function courseItemListEntries(): readonly ItemListEntry[] {
 }
 
 describe("course discovery consistency", () => {
-  it("models the foundation as an ordered path and technical courses as an unordered collection", () => {
+  it("models the foundation as an ordered path and visual learning as an unordered collection", () => {
     const lists = COURSES_GRAPH["@graph"].filter(
       (node) => node["@type"] === "ItemList",
     );
@@ -84,7 +84,7 @@ describe("course discovery consistency", () => {
       numberOfItems: 4,
     });
     expect(lists[1]).toMatchObject({
-      name: "Technikkurse von loehrning.ai",
+      name: "Visuelles Lernen von loehrning.ai",
       itemListOrder: "https://schema.org/ItemListUnordered",
       numberOfItems: COURSE_CATALOG.length - 4 + IMPORTED_COURSE_CATALOG.length,
     });
@@ -152,7 +152,7 @@ describe("course discovery consistency", () => {
     );
     expect(lists.map((list) => list.name)).toEqual([
       "loehrning.ai foundation path",
-      "loehrning.ai technical courses",
+      "loehrning.ai visual learning",
     ]);
 
     const entries = lists.flatMap((list) => list.itemListElement);

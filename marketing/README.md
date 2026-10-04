@@ -77,8 +77,9 @@ correct, reuse, teach, or contribute.
 ## Current product language
 
 - Four German core courses form the ordered learning path.
-- Six native English courses provide technical depth.
-- All ten courses are hosted on loehrning.ai.
+- Four "Visuelles Lernen" (visual learning) courses cover data infrastructure,
+  data engineering, data science and AI operating models.
+- All eight courses are hosted on loehrning.ai.
 - A course completion record is not proof of legal compliance.
 - A pending open-source artifact is not a published artifact.
 - "Open source" describes the application code and explicitly licensed files,

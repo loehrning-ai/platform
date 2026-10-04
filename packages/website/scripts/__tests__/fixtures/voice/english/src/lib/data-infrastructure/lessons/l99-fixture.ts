@@ -1,8 +1,8 @@
-import type { CodexLesson } from "../types";
+import type { FixtureLesson } from "../types";
 import { buildSections } from "../blocks";
 
 // Furthermore in a comment must not count as a finding.
-const lesson: CodexLesson = {
+const lesson: FixtureLesson = {
   id: "L99",
   title: "Let's explore the fixture",
   sections: buildSections([

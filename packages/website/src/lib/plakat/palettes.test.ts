@@ -199,7 +199,7 @@ describe("workshop palettes (locked, decision D3)", () => {
 describe("course palettes (grouped by track)", () => {
   it("maps every TechnicalCourseFrame courseId in src, or lists it as paper on purpose", () => {
     const frames = technicalCourseIds();
-    expect(frames.length).toBeGreaterThanOrEqual(14);
+    expect(frames.length).toBeGreaterThanOrEqual(12);
     const unscened: readonly string[] = UNSCENED_COURSE_IDS;
     for (const { file, courseId } of frames) {
       if (unscened.includes(courseId)) {
@@ -213,7 +213,7 @@ describe("course palettes (grouped by track)", () => {
     for (const courseId of UNSCENED_COURSE_IDS) expect(used.has(courseId), courseId).toBe(true);
   });
 
-  it("maps every catalogue course: Grundlagenpfad Lemons 01 to 04, Technikkurse without numerals", () => {
+  it("maps every catalogue course: Grundlagenpfad Lemons 01 to 04, visual learning without numerals", () => {
     for (const course of COURSE_CATALOG) {
       const entry = coursePlakat(course.slug);
       expect(entry, course.slug).toBeDefined();
@@ -227,7 +227,7 @@ describe("course palettes (grouped by track)", () => {
     }
     const technical = COURSE_CATALOG.filter((course) => courseGroupFor(course.slug) !== "spine");
     const count = (plakat: string) => technical.filter((course) => coursePlakat(course.slug)?.plakat === plakat).length;
-    expect([count("idea"), count("bloom")]).toEqual([3, 3]);
+    expect([count("idea"), count("bloom")]).toEqual([1, 3]);
   });
 
   it("uses a sequence numeral once per value, only in the Grundlagenpfad", () => {

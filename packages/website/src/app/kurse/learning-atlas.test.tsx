@@ -59,7 +59,7 @@ describe("LearningAtlas", () => {
     render(<LearningAtlas locale={locale} access={getCourseAccess(false)} />);
     const next = screen.getByTestId("next-proof");
     expect(within(next).getAllByRole("link")).toHaveLength(1);
-    expect(within(next).getByRole("link")).toHaveAttribute("href", `${locale === "en" ? "/en" : ""}/kurse/open-source/claude/kurs/mental-model`);
+    expect(within(next).getByRole("link")).toHaveAttribute("href", `${locale === "en" ? "/en" : ""}/kurse/open-source/data-infrastructure/kurs/mental-model`);
     expect(next).toHaveTextContent(locale === "de" ? "Offener Einstieg ohne Lernkonto" : "Open starting point without an account");
     expect(next.textContent).not.toContain("0/4");
     // The sheet says why it offers a course off the path, and the Route
@@ -86,7 +86,7 @@ describe("LearningAtlas", () => {
     expect(links[0]).toHaveAttribute("href", `${prefix}/ai-native`);
     expect(links[0]).toHaveTextContent(locale === "de" ? "Hier nicht verfügbar" : "Unavailable here");
     expect(links[1]).toHaveAttribute("data-open-course-alternative");
-    expect(links[1]).toHaveAttribute("href", `${prefix}/kurse/open-source/claude/kurs/mental-model`);
+    expect(links[1]).toHaveAttribute("href", `${prefix}/kurse/open-source/ai-native-operator/mindset/1`);
     expect(links[1]).toHaveTextContent(locale === "de" ? "Offene Alternative ohne Lernkonto" : "Open alternative without an account");
     expect(window.location.pathname + window.location.search + window.location.hash).toBe(url);
     expect(container.querySelector('[data-learning-goal="build"]')).toHaveAttribute("aria-pressed", "true");
@@ -165,7 +165,7 @@ describe("LearningAtlas", () => {
       storeMock.isCertificateEligible.mockReturnValue(false);
       storeMock.subscribe.mock.calls.at(-1)?.[0](storeMock.progressState.current);
     });
-    expect(within(screen.getByTestId("next-proof")).getByRole("link")).toHaveAttribute("href", "/kurse/open-source/claude/kurs/mental-model");
+    expect(within(screen.getByTestId("next-proof")).getByRole("link")).toHaveAttribute("href", "/kurse/open-source/data-infrastructure/kurs/mental-model");
   });
 
   it("states the account requirement on configured English actions before the click", () => {
@@ -318,11 +318,11 @@ describe("LearningAtlas", () => {
       expect(screen.queryByTestId(`progress-dots-${course.slug}`)).toBeNull();
     }
 
-    // Exactly the six imported courses carry visible source attribution.
+    // Exactly the four imported courses carry visible source attribution.
     expect(container.querySelectorAll("[data-course-source]")).toHaveLength(
       COURSE_CATALOG.filter((course) => course.sourceHref).length,
     );
-    // Below lg the six rows share one repository and commit, so the group
+    // Below lg the four rows share one repository and commit, so the group
     // head prints the attribution once and each row's copy prints from lg.
     for (const source of container.querySelectorAll("[data-course-source]")) {
       expect(source).toHaveClass("max-lg:hidden");
@@ -339,12 +339,12 @@ describe("LearningAtlas", () => {
       "https://github.com/Mavengence/interactive-courses/tree/0e5dfd327ce44663696b52eb6643bab147947101",
     );
     expect(groupSource).toHaveAccessibleName(
-      /^interactive-courses auf GitHub: Quellcode aller Technikkurse \(Mavengence\/interactive-courses, Commit 0e5dfd3\)$/,
+      /^interactive-courses auf GitHub: Quellcode aller Kurse zum visuellen Lernen \(Mavengence\/interactive-courses, Commit 0e5dfd3\)$/,
     );
 
     // Pictures only where a course has a people picture: the four
     // Grundlagenpfad rows, cropped to their subject in the 4:5 thumb box.
-    // The six Technikkurse keep their posters; their catalog screenshots
+    // The four visual-learning courses keep their posters; their catalog screenshots
     // read as grey noise at thumbnail size and never render here.
     // (The next-course sheet may show the recommended course's picture
     // as well.)
@@ -395,20 +395,18 @@ describe("LearningAtlas", () => {
     }
     expect(foundation.querySelector("svg[data-poster]")).toBeNull();
 
-    // Technikkurse: IDEA ×3 then Bloom ×3, no numeral (D9).
+    // Visual learning: IDEA ×1 then Bloom ×3, no numeral (D9).
     const technicalPosters = Array.from(
       technical.querySelectorAll<SVGElement>("[data-poster-thumb] svg[data-poster]"),
     );
     expect(technicalPosters.map((svg) => svg.dataset.poster)).toEqual([
-      "idea",
-      "idea",
       "idea",
       "bloom",
       "bloom",
       "bloom",
     ]);
     expect(technical.querySelector("[data-poster-numeral-text]")).toBeNull();
-    // The colour change carries a label: each scene run inside Technikkurse
+    // The colour change carries a label: each scene run inside visual learning
     // is its own list named by a quiet subhead (SPEC §2.2). The Grundlagenpfad
     // holds one scene and gets none. Rows stay untinted (checked below).
     const runs = Array.from(technical.querySelectorAll<HTMLElement>("[data-scene-run]"));
@@ -416,7 +414,7 @@ describe("LearningAtlas", () => {
     expect(
       runs.map((run) => within(run).getByRole("list").getAttribute("aria-labelledby")),
     ).toEqual(["tiefer-gehen-idea", "tiefer-gehen-bloom"]);
-    expect(within(technical).getByRole("list", { name: "Prompting und Agenten" })).toBeInTheDocument();
+    expect(within(technical).getByRole("list", { name: "KI-Betrieb" })).toBeInTheDocument();
     expect(within(technical).getByRole("list", { name: "Daten" })).toBeInTheDocument();
     expect(foundation.querySelectorAll("[data-scene-run] ol[aria-labelledby]")).toHaveLength(0);
 
@@ -455,15 +453,15 @@ describe("LearningAtlas", () => {
     }
   });
 
-  it("shows the declared relationship between foundation and technical courses", () => {
+  it("shows the declared relationship between foundation and visual-learning courses", () => {
     const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);
     const foundation = document.getElementById("lernpfad") as HTMLElement;
     const technical = document.getElementById("tiefer-gehen") as HTMLElement;
 
     expect(within(foundation).getByText("Grundlagenpfad")).toBeInTheDocument();
-    expect(within(technical).getByText("Technikkurse")).toBeInTheDocument();
+    expect(within(technical).getByText("Visuelles Lernen")).toBeInTheDocument();
     expect(foundation.querySelectorAll("[data-course-slug]")).toHaveLength(4);
-    expect(technical.querySelectorAll("[data-course-slug]")).toHaveLength(6);
+    expect(technical.querySelectorAll("[data-course-slug]")).toHaveLength(4);
 
     // A readable ladder: the group head sits one step above the row titles
     // at every width (22px over 17px on phones, 26px over 20px from sm),
@@ -499,7 +497,7 @@ describe("LearningAtlas", () => {
     expect(
       within(screen.getByTestId("selected-path-sequence")).getByRole("heading", {
         level: 3,
-        name: "Dein Pfad · 4 Kurse: Ich baue mit KI",
+        name: "Dein Pfad · 2 Kurse: Ich baue mit KI",
       }),
     ).toBeInTheDocument();
     expect(
@@ -508,8 +506,6 @@ describe("LearningAtlas", () => {
     const path = screen.getByTestId("selected-path-sequence");
     for (const title of [
       "AI-Native Arbeitskurs",
-      "Claude-Kurs",
-      "Codex-Kurs",
       "The AI-Native Operator",
     ]) {
       expect(within(path).getByText(title)).toBeInTheDocument();
@@ -520,7 +516,7 @@ describe("LearningAtlas", () => {
       }),
     ).toHaveAttribute("href", "/ai-native/kurs/modul_1");
     expect(
-      container.querySelector('[data-course-slug="claude"]'),
+      container.querySelector('[data-course-slug="ai-native-operator"]'),
     ).toHaveAttribute("data-in-path", "true");
     expect(
       container.querySelector('[data-course-slug="ki-fuehrerschein"]'),
@@ -594,19 +590,19 @@ describe("LearningAtlas", () => {
     expect(container.querySelectorAll("[data-progress-fill]")).toHaveLength(0);
     expect(container.querySelectorAll('[role="progressbar"]')).toHaveLength(0);
 
-    const codex = container.querySelector<HTMLElement>(
-      '[data-course-slug="codex"]',
+    const dataInfra = container.querySelector<HTMLElement>(
+      '[data-course-slug="data-infrastructure"]',
     );
     expect(
-      codex?.querySelector('a[href*="github.com/Mavengence"]'),
+      dataInfra?.querySelector('a[href*="github.com/Mavengence"]'),
     ).not.toBeNull();
-    expect(codex).toHaveTextContent("#0e5dfd3");
+    expect(dataInfra).toHaveTextContent("#0e5dfd3");
   });
 
   it("links a course to its demo only where a demo actually exists", () => {
     const { container } = render(<LearningAtlas locale="de" access={getCourseAccess(true)} />);
 
-    // Twelve demos cover three of the ten courses. The other seven rows must
+    // Twelve demos cover three of the eight courses. The other five rows must
     // omit the teaser rather than borrow a demo from an unrelated course.
     const withTeaser = Array.from(
       container.querySelectorAll<HTMLElement>("[data-course-slug]"),
@@ -671,12 +667,12 @@ describe("LearningAtlas phone ledger", () => {
     const rows = Array.from(
       container.querySelectorAll<HTMLElement>("[data-course-slug]"),
     );
-    expect(rows).toHaveLength(10);
+    expect(rows).toHaveLength(8);
     for (const row of rows) {
       expect(row).not.toHaveClass("hidden");
       expect(row.dataset.courseLevel).toMatch(/^(?:einstieg|mittel|fortg)$/);
     }
-    expect(screen.getByText("10 von 10 Kursen")).toHaveAttribute(
+    expect(screen.getByText("8 von 8 Kursen")).toHaveAttribute(
       "aria-live",
       "polite",
     );
@@ -710,7 +706,7 @@ describe("LearningAtlas phone ledger", () => {
       "lg:block",
     );
     expect(document.getElementById("lernpfad")).not.toHaveClass("hidden");
-    expect(screen.getByText("2 von 10 Kursen")).toBeInTheDocument();
+    expect(screen.getByText("2 von 8 Kursen")).toBeInTheDocument();
     // The level is a phone view state, never a shareable URL state: only the
     // goal writes to the address bar.
     expect(window.location.search).toBe("");
@@ -757,12 +753,12 @@ describe("LearningAtlas phone ledger", () => {
   });
   it("keeps the full repository path and commit in the attribution's accessible name", () => {
     const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);
-    const codex = container.querySelector<HTMLElement>(
-      '[data-course-slug="codex"]',
+    const dataInfra = container.querySelector<HTMLElement>(
+      '[data-course-slug="data-infrastructure"]',
     ) as HTMLElement;
 
-    const repository = within(codex).getByRole("link", {
-      name: "Mavengence/interactive-courses: Quellcode, Codex-Kurs",
+    const repository = within(dataInfra).getByRole("link", {
+      name: "Mavengence/interactive-courses: Quellcode, Data Infrastructure",
     });
     expect(repository).toHaveAttribute(
       "href",
@@ -772,7 +768,7 @@ describe("LearningAtlas phone ledger", () => {
     const owner = repository.querySelector(".sr-only.lg\\:not-sr-only");
     expect(owner).toHaveTextContent("Mavengence/");
 
-    const commit = within(codex).getByRole("link", { name: "Commit #0e5dfd3" });
+    const commit = within(dataInfra).getByRole("link", { name: "Commit #0e5dfd3" });
     expect(commit.querySelector(".sr-only.lg\\:not-sr-only")).toHaveTextContent(
       "Commit",
     );
@@ -978,7 +974,7 @@ describe("LearningAtlas phone ledger", () => {
     ).toEqual(["All", "Entry", "Intermediate", "Advanced"]);
 
     fireEvent.click(within(chips).getByRole("button", { name: "Advanced" }));
-    expect(screen.getByText("3 of 10 courses")).toBeInTheDocument();
+    expect(screen.getByText("2 of 8 courses")).toBeInTheDocument();
   });
 
   it("gives every row one visible, addressable text-link action", () => {
@@ -1009,9 +1005,12 @@ describe("LearningAtlas phone ledger", () => {
     ).toHaveAttribute("href", "/ki-fuehrerschein/kurs");
     expect(
       within(ledger).getByRole("link", {
-        name: "Kurs starten: Codex-Kurs",
+        name: "Kurs starten: Data Infrastructure",
       }),
-    ).toHaveAttribute("href", "/kurse/open-source/codex/kurs/L01");
+    ).toHaveAttribute(
+      "href",
+      "/kurse/open-source/data-infrastructure/kurs/mental-model",
+    );
   });
   it("marks path courses with a Kobalt square and keeps the marker text in the accessibility tree", () => {
     const { container } = render(<LearningAtlas access={getCourseAccess(true)} />);

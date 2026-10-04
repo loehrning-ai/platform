@@ -9,7 +9,7 @@ import type { Locale } from "@/lib/i18n/locale";
  * Three tracks, folded into `CourseFacts.accent`/`.badge` below (
  * stage 3 — the former standalone `TRACK_META` table is gone):
  *   lernpfad    — the 4 ordered foundation courses with a self-issued record (Kupfer)
- *   github-lab  — the 6 source-pinned MIT technical courses (Sand)
+ *   github-lab  — the 4 source-pinned MIT visual-learning courses (Sand)
  *   brainster   — applied client workshops turned courses (Amber)
  */
 
@@ -168,40 +168,16 @@ export const COURSE_FACTS: Record<string, CourseFacts> = {
     badge: "Teilnahmebestätigung · DE + EN",
   },
 
-  // Deeper — six ported/imported technical courses. All expose reviewed
-  // German content on the unprefixed route and English content under /en.
-  // "claude" (plan
-  // 008), "codex", "data-infrastructure",
-  // "data-engineering-fundamentals", "data-science",
-  // and "ai-native-operator" all flipped nativeStatus to "live"
-  // (real routes, real progress, certificate), but stay in the "deeper"
-  // shelf per the confirmed /discuss decision: only the 4 ordered foundation
-  // courses form the ordered spine. nativeStatus and group are independent
-  // axes — joining COURSE_CATALOG does not mean joining the spine. Every
-  // one of the 6 ported courses is "deeper" — never "spine" — this is the
-  // single most important invariant in this migration (
-  // post-implementation correction note has the full story of the one
-  // time this was gotten wrong).
-  claude: {
-    group: "deeper",
-    iconName: "Sparkles",
-    language: "Englisch",
-    availableLanguages: ["de", "en"],
-    record: "teilnahmebestaetigung",
-    external: false,
-    accent: "sand",
-    badge: "Teilnahmebestätigung · DE + EN",
-  },
-  codex: {
-    group: "deeper",
-    iconName: "TerminalSquare",
-    language: "Englisch",
-    availableLanguages: ["de", "en"],
-    record: "teilnahmebestaetigung",
-    external: false,
-    accent: "sand",
-    badge: "Teilnahmebestätigung · DE + EN",
-  },
+  // Deeper — four ported/imported visual-learning courses. All expose
+  // reviewed German content on the unprefixed route and English content
+  // under /en. "data-infrastructure", "data-engineering-fundamentals",
+  // "data-science" and "ai-native-operator" all flipped nativeStatus to
+  // "live" (real routes, real progress, certificate), but stay in the
+  // "deeper" shelf per the confirmed /discuss decision: only the 4 ordered
+  // foundation courses form the ordered spine. nativeStatus and group are
+  // independent axes — joining COURSE_CATALOG does not mean joining the
+  // spine. Every ported course is "deeper" — never "spine" — this is the
+  // single most important invariant in this migration.
   "data-engineering-fundamentals": {
     group: "deeper",
     iconName: "Database",
@@ -309,14 +285,6 @@ const RECORD_LABEL_EN: typeof RECORD_LABEL = {
 const ENGLISH_FACT_OVERRIDES: Readonly<
   Partial<Record<string, Pick<CourseFacts, "record" | "badge">>>
 > = {
-  claude: {
-    record: "certificate",
-    badge: "Certificate · DE + EN",
-  },
-  codex: {
-    record: "certificate",
-    badge: "Certificate · DE + EN",
-  },
   "data-engineering-fundamentals": {
     record: "certificate",
     badge: "Certificate · DE + EN",
@@ -392,10 +360,10 @@ export const COURSE_SECTIONS: Readonly<
       "Vier Kurse in fester Reihenfolge; Teilnahmebestätigung und Lernnachweis werden von loehrning.ai selbst ausgestellt.",
   },
   deeper: {
-    title: "Technikkurse",
-    eyebrow: "6 Kurse · Quellcode auf GitHub",
+    title: "Visuelles Lernen",
+    eyebrow: "4 Kurse · Quellcode auf GitHub",
     blurb:
-      "Sechs Kurse zu Prompting, Coding-Agenten, Daten und Betriebsmodellen; die Teilnahmebestätigung wird von loehrning.ai selbst ausgestellt.",
+      "Vier Kurse mit Simulationen und Übungen zu Dateninfrastruktur, Data Engineering, Data Science und KI-Betriebsmodellen; die Teilnahmebestätigung wird von loehrning.ai selbst ausgestellt.",
   },
 };
 
@@ -407,10 +375,10 @@ const COURSE_SECTIONS_EN: typeof COURSE_SECTIONS = {
       "Four courses in a fixed sequence; loehrning.ai issues the participation and learning records itself.",
   },
   deeper: {
-    title: "Technical courses",
-    eyebrow: "6 courses · source on GitHub",
+    title: "Visual learning",
+    eyebrow: "4 courses · source on GitHub",
     blurb:
-      "Six courses on prompting, coding agents, data and operating models; loehrning.ai issues the completion documents itself.",
+      "Four courses with simulations and exercises on data infrastructure, data engineering, data science and AI operating models; loehrning.ai issues the completion documents itself.",
   },
 };
 

@@ -27,19 +27,19 @@ describe("lesson mission binding", () => {
       }
     }
 
-    expect(resolved).toBe(177);
+    expect(resolved).toBe(153);
   });
 
   it("makes adjacent lesson frames visibly distinct using authored metadata", () => {
-    const first = bindLessonMission("codex", "L01", "en", {
-      title: "A mental model for delegated work",
-      objective: "Separate intent, execution, and verification.",
-      keyConcepts: ["Bounded autonomy", "Verification"],
+    const first = bindLessonMission("data-infrastructure", "mental-model", "en", {
+      title: "A mental model for data systems",
+      objective: "Separate storage, compute, and serving decisions.",
+      keyConcepts: ["Storage", "Serving"],
     });
-    const second = bindLessonMission("codex", "L02", "en", {
-      title: "Work inside an isolated sandbox",
-      objective: "Limit filesystem and process effects before execution.",
-      keyConcepts: ["Sandbox", "Scope"],
+    const second = bindLessonMission("data-infrastructure", "cap-pacelc", "en", {
+      title: "Trade consistency against availability",
+      objective: "Name what a partition costs before choosing a store.",
+      keyConcepts: ["CAP", "PACELC"],
     });
 
     expect(first.frame.label).not.toBe(second.frame.label);
@@ -49,8 +49,8 @@ describe("lesson mission binding", () => {
   });
 
   it("retains the immutable base profile and all persisted choice IDs", () => {
-    const base = getLessonMissionProfile("claude");
-    const bound = bindLessonMission("claude", "mental-model", "de", {
+    const base = getLessonMissionProfile("data-infrastructure");
+    const bound = bindLessonMission("data-infrastructure", "mental-model", "de", {
       title: "Ein mentales Modell",
       objective: "Kontext, Modell und Ausgabe voneinander trennen.",
       keyConcepts: ["Kontext", "Ausgabe"],

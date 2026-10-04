@@ -29,8 +29,6 @@ export const COURSE_SLUGS = [
   "data-engineering-fundamentals",
   "data-science",
   "data-infrastructure",
-  "codex",
-  "claude",
   "ai-native-operator",
 ] as const;
 

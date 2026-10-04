@@ -44,15 +44,17 @@ e-mail address or free text cannot reach Vercel.
 
 ### Vocabularies
 
-- **Course slugs** (10): `ki-fuehrerschein`, `eu-ai-act-kurs`, `ai-native`,
+- **Course slugs** (8): `ki-fuehrerschein`, `eu-ai-act-kurs`, `ai-native`,
   `ki-und-gesellschaft`, `data-engineering-fundamentals`, `data-science`,
-  `data-infrastructure`, `codex`, `claude`, `ai-native-operator`.
+  `data-infrastructure`, `ai-native-operator`. Events recorded before the
+  Claude and Codex courses were removed may still carry the retired slugs
+  `claude` and `codex`; leave them out of current-course readings.
 - **Block-course slugs** (3, `lesson_reached` only): `ki-fuehrerschein`,
   `eu-ai-act-kurs`, `ki-und-gesellschaft`.
 - **Lesson ordinals** (39): `l01` to `l39`. The position of the lesson in the
   course's canonical order, never the lesson id. Canonical lengths at the time
   of writing: ki-fuehrerschein 18, eu-ai-act-kurs 24, ki-und-gesellschaft 9,
-  ai-native 27, ai-native-operator 39, and 12 each for claude, codex,
+  ai-native 27, ai-native-operator 39, and 12 each for
   data-infrastructure, data-engineering-fundamentals and data-science. The
   authoritative lengths are `CANONICAL_LESSON_IDS` in
   `src/lib/courses/completion.ts`.
@@ -131,12 +133,12 @@ listed for an event never sends it, so a missing row is not a zero:
 | --- | --- |
 | `lesson_reached` | `ki-fuehrerschein`, `eu-ai-act-kurs`, `ki-und-gesellschaft` |
 | `course_started`, `lesson_completed` | the three block courses, `ai-native`, `data-engineering-fundamentals`, `data-science` |
-| `course_completion` exam steps (`exam_*`) | the three block courses, `ai-native`, `ai-native-operator`, `claude` (the courses with a final exam page) |
-| `course_completion` `record_downloaded` | all ten courses (every course has a record page) |
+| `course_completion` exam steps (`exam_*`) | the three block courses, `ai-native`, `ai-native-operator` (the courses with a final exam page) |
+| `course_completion` `record_downloaded` | all eight courses (every course has a record page) |
 
-`claude`, `codex`, `data-infrastructure` and `ai-native-operator` report
+`data-infrastructure` and `ai-native-operator` report
 neither `course_started` nor `lesson_completed`; their lesson readers persist
-completions without sending an event. For those four, lesson reach is read
+completions without sending an event. For those two, lesson reach is read
 from pageviews only (rule 3), and there is no start or completion count.
 
 No event is derived from the progress store. The store replays its state to
@@ -172,7 +174,7 @@ get_web_analytics({ projectId: "<projectId>", teamId: "<teamId>", dataset: "even
 
 Read the course marginal with `by: ["eventData/subject"]` and the source marginal
 with `by: ["eventData/facet"]`. Only six courses send this event (see "Which
-courses report which course event"); an absent `claude`, `codex`,
+courses report which course event"); an absent
 `data-infrastructure` or `ai-native-operator` row means "not measured", not
 "nobody started".
 
@@ -189,7 +191,7 @@ Read it against the canonical length of that course (18 here). Swap
 two side by side.
 
 **Does anyone finish, and is the exam broken** (exam steps exist only for the
-six courses with a final exam page; `record_downloaded` exists for all ten):
+five courses with a final exam page; `record_downloaded` exists for all eight):
 
 ```js
 get_web_analytics({ projectId: "<projectId>", teamId: "<teamId>", dataset: "events", mode: "aggregate", by: ["eventData/subject", "eventData/facet"], filter: "eventName eq 'course_completion'", limit: 100, since: "<since>", until: "<until>" })
@@ -261,10 +263,10 @@ and must never land in the same table, chart or ratio.**
   lessons with a `#lesson=` fragment. A pageview cannot tell those lessons
   apart, so their drop-off comes from the `lesson_reached` custom event, which
   is deduplicated and counted at most once per lesson per document.
-- Routed courses (`ai-native`, `ai-native-operator`, `claude`, `codex`,
+- Routed courses (`ai-native`, `ai-native-operator`,
   `data-infrastructure`, `data-engineering-fundamentals`, `data-science`) have
   one `page.tsx` per lesson, for example `ai-native/kurs/[moduleId]/[lessonId]`,
-  `kurse/open-source/codex/kurs/[lessonId]`,
+  `kurse/open-source/data-infrastructure/kurs/[lessonId]`,
   `kurse/open-source/data-science/[chapterSlug]` or
   `kurse/open-source/ai-native-operator/[moduleId]/[lessonNum]`. Their drop-off
   comes from raw path pageviews, which count refreshes, back-navigation and
@@ -277,7 +279,7 @@ families.
 `lesson_completed` is comparable across the six courses that send it (the three
 block courses, `ai-native`, `data-engineering-fundamentals`, `data-science`),
 because in each of them it fires only on a newly persisted completion. It is
-not a ten-course series: `claude`, `codex`, `data-infrastructure` and
+not an eight-course series: `data-infrastructure` and
 `ai-native-operator` do not send it, so never read their absence as zero
 completions.
 

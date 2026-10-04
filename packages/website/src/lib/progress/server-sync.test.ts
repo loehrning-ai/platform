@@ -1113,10 +1113,10 @@ describe("mergeUnifiedProgress - lesson merge", () => {
 
 describe("mergeUnifiedProgress - exercise merge", () => {
   it("retains exact applied-project completion across device merge", () => {
-    const identity = getCourseProjectIdentity("claude");
+    const identity = getCourseProjectIdentity("ai-native-operator");
     const local = progress({
       courses: {
-        claude: slice({
+        "ai-native-operator": slice({
           lessons: {
             [identity.progressLessonId]: lesson({
               completed: false,
@@ -1128,7 +1128,7 @@ describe("mergeUnifiedProgress - exercise merge", () => {
     });
     const remote = progress({
       courses: {
-        claude: slice({
+        "ai-native-operator": slice({
           lessons: {
             [identity.progressLessonId]: lesson({
               completed: false,
@@ -1141,7 +1141,7 @@ describe("mergeUnifiedProgress - exercise merge", () => {
                   skipped: false,
                   summary: serializeCourseProjectProgress(
                     "Verified",
-                    verifiedCourseProjectArtifact("claude"),
+                    verifiedCourseProjectArtifact("ai-native-operator"),
                   ),
                 }),
               },
@@ -1153,7 +1153,7 @@ describe("mergeUnifiedProgress - exercise merge", () => {
 
     const merged = mergeUnifiedProgress(local, remote);
 
-    expect(hasAppliedProjectCompletion(merged, "claude")).toBe(true);
+    expect(hasAppliedProjectCompletion(merged, "ai-native-operator")).toBe(true);
   });
 
   it("merges a shared exercise: completed OR, score max, attempts max, completedAt latest, skipped OR", () => {

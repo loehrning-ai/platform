@@ -140,20 +140,6 @@ export const COURSE_PROJECT_MILESTONE_MANIFEST: CourseProjectMilestoneManifest =
       verify: ["idempotency", "sla-quality"],
       transfer: ["interview-playbook"],
     }),
-    codex: defineCourseMilestones("codex", {
-      ground: ["L01", "L02", "L03"],
-      build: ["L04", "L05", "L06"],
-      run: ["L07", "L08", "L09"],
-      verify: ["L10", "L11"],
-      transfer: ["L12"],
-    }),
-    claude: defineCourseMilestones("claude", {
-      ground: ["mental-model", "anatomy", "context"],
-      build: ["claude-md", "iteration", "gdocs"],
-      run: ["agents", "reviews", "grounding"],
-      verify: ["team", "evals"],
-      transfer: ["safety"],
-    }),
     "ai-native-operator": defineCourseMilestones("ai-native-operator", {
       ground: authoredUnits("ai-native-operator", ["mindset/"]),
       build: authoredUnits("ai-native-operator", ["engineering/", "product/"]),

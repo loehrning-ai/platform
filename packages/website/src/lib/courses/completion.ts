@@ -1,7 +1,5 @@
 import { COURSE_SLUGS, type CourseSlug } from "@/lib/course/types";
 import { getCourseConfig } from "@/lib/course/config";
-import { CLAUDE_LESSON_IDS } from "@/lib/claude-course/types";
-import { CODEX_LESSON_IDS } from "@/lib/codex/types";
 import { DATA_INFRA_LESSON_IDS } from "@/lib/data-infrastructure/types";
 import { DEF_CHAPTER_IDS } from "@/lib/data-engineering-fundamentals/types";
 import { DS_NUMBERED_CHAPTER_IDS } from "@/lib/data-science/types";
@@ -56,8 +54,6 @@ export const CANONICAL_LESSON_IDS: Readonly<
   ],
   "eu-ai-act-kurs": EU_AI_ACT_LESSON_IDS,
   "ai-native": AI_NATIVE_LESSON_IDS,
-  claude: CLAUDE_LESSON_IDS,
-  codex: CODEX_LESSON_IDS,
   "data-infrastructure": DATA_INFRA_LESSON_IDS,
   "data-engineering-fundamentals": DEF_CHAPTER_IDS,
   "data-science": DS_NUMBERED_CHAPTER_IDS,
@@ -98,50 +94,6 @@ function bareSequentialSectionsByCount(
     ]),
   );
 }
-
-const CLAUDE_SECTION_IDS: Readonly<Record<string, readonly string[]>> = {
-  "mental-model": [
-    "what-it-is",
-    "three-things",
-    "constitutional-ai",
-    "feel-it",
-    "failure-modes",
-  ],
-  anatomy: ["contracts-not-incantations", "six-parts", "xml-tags", "pro-moves"],
-  context: [
-    "context-is-the-product",
-    "meaning-in-space",
-    "window-as-budget",
-    "long-context-template",
-    "tokens-briefly",
-    "too-big-docs",
-  ],
-  "claude-md": [
-    "what-it-is",
-    "hierarchy",
-    "keep-in-leave-out",
-    "template",
-    "auto-memory",
-  ],
-  iteration: [
-    "the-loop",
-    "three-turn-loop",
-    "show-dont-tell",
-    "turn-2-vocabulary",
-  ],
-  gdocs: ["why-gdocs", "move-1-skeleton", "move-2-voice", "move-3-critique"],
-  agents: [
-    "agents-vs-chat",
-    "the-loop-explicit",
-    "four-guardrails",
-    "when-to-use",
-  ],
-  reviews: ["why-it-works", "review-template", "when-it-earns-its-keep"],
-  grounding: ["not-a-bug", "three-grounding-moves", "smell-test"],
-  team: ["why-share", "three-artifacts", "sharing-well", "rituals"],
-  evals: ["why-evals", "mvp-eval", "debugging", "llm-as-judge"],
-  safety: ["the-rule", "never-paste", "usually-fine", "prompt-injection"],
-};
 
 const DATA_INFRA_SECTION_IDS: Readonly<Record<string, readonly string[]>> = {
   "mental-model": sequentialSectionIds("", 6, "s"),
@@ -192,11 +144,6 @@ export const CANONICAL_SECTION_IDS: Readonly<
       3, 4,
     ],
   ),
-  claude: CLAUDE_SECTION_IDS,
-  codex: bareSequentialSectionsByCount(
-    CODEX_LESSON_IDS,
-    [6, 7, 6, 5, 6, 6, 6, 7, 6, 7, 8, 8],
-  ),
   "data-infrastructure": DATA_INFRA_SECTION_IDS,
   "data-engineering-fundamentals": Object.fromEntries(
     DEF_CHAPTER_IDS.map((lessonId) => [lessonId, []]),
@@ -223,8 +170,6 @@ export const EVIDENCE_GATED_COURSE_SLUGS = [
   "eu-ai-act-kurs",
   "ki-und-gesellschaft",
   "ai-native",
-  "claude",
-  "codex",
   "data-infrastructure",
   "data-engineering-fundamentals",
   "data-science",
@@ -238,8 +183,6 @@ export const LESSON_COMPLETION_EVIDENCE_VERSION = "lesson-proof-v1";
 
 const AI_NATIVE_TRANSFER_PROOF_LESSON_IDS = new Set(["modul_3_lesson_0"]);
 const TRANSFER_ONLY_COURSE_SLUGS = new Set<EvidenceGatedCourseSlug>([
-  "claude",
-  "codex",
   "data-infrastructure",
   "data-engineering-fundamentals",
   "data-science",

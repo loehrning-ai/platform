@@ -75,8 +75,8 @@ const REVIEW_ROUTES = [
   ["foundation-ai-native", "/ai-native"],
   ["foundation-eu-ai-act", "/eu-ai-act-kurs"],
   ["foundation-reader", "/ki-fuehrerschein/kurs/block_1"],
-  ["technical-codex", "/kurse/open-source/codex"],
-  ["technical-codex-reader", "/en/kurse/open-source/codex/kurs/L01"],
+  ["technical-data-infrastructure", "/kurse/open-source/data-infrastructure"],
+  ["technical-data-infrastructure-reader", "/en/kurse/open-source/data-infrastructure/kurs/mental-model"],
   ["technical-data-science", "/kurse/open-source/data-science"],
   ["technical-data-science-reader", "/en/kurse/open-source/data-science/fund"],
   [

@@ -70,10 +70,10 @@ describe("analytics event helpers", () => {
 
   it("course_started classifies the referrer when no source is given", () => {
     vi.spyOn(document, "referrer", "get").mockReturnValue("");
-    trackCourseStarted("codex");
+    trackCourseStarted("data-infrastructure");
     expect(lastCall()).toEqual([
       "course_started",
-      { subject: "codex", facet: "direct" },
+      { subject: "data-infrastructure", facet: "direct" },
     ]);
   });
 
@@ -91,10 +91,10 @@ describe("analytics event helpers", () => {
   });
 
   it("course_completion carries the outcome label only", () => {
-    trackCourseCompletion("claude", "exam_timeout");
+    trackCourseCompletion("ai-native-operator", "exam_timeout");
     expect(lastCall()).toEqual([
       "course_completion",
-      { subject: "claude", facet: "exam_timeout" },
+      { subject: "ai-native-operator", facet: "exam_timeout" },
     ]);
   });
 
@@ -216,6 +216,6 @@ describe("lessonOrdinal", () => {
     const [kiId] = CANONICAL_LESSON_IDS["ki-fuehrerschein"];
     expect(lessonOrdinal("ki-fuehrerschein", "not-a-lesson")).toBeNull();
     expect(lessonOrdinal("ki-fuehrerschein", "")).toBeNull();
-    expect(lessonOrdinal("claude", kiId ?? "")).toBeNull();
+    expect(lessonOrdinal("data-science", kiId ?? "")).toBeNull();
   });
 });

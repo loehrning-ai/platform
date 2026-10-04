@@ -398,7 +398,7 @@ describe("PosterArt", () => {
       expect(svg.querySelector("text") !== null, id).toBe(entry.numeral !== null);
     }
     const technical = Object.values(COURSE_PLAKAT).filter((entry) => entry.plakat !== "lemons");
-    expect(technical.length).toBe(6);
+    expect(technical.length).toBe(4);
     expect(technical.every((entry) => entry.numeral === null)).toBe(true);
   });
 

@@ -273,7 +273,6 @@ export function parseLessonMissionState(
     );
     const localLearningReceipt =
       profile.courseSlug === "ai-native" ||
-      profile.courseSlug === "claude" ||
       profile.courseSlug === "ai-native-operator"
         ? getCourseProjectLocalLearningReceipt(profile.courseSlug)
         : null;

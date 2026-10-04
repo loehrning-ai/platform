@@ -148,8 +148,8 @@ export const VOICE_ADVISORY_PHRASES = new Set([
   // "massgeschneidert" (ki-arbeitsalltag/08) and "praktisch unerlaesslich"
   // (ki-arbeitsalltag/13).
   "de-puffery-buzz",
-  // claude-course/lessons/grounding.ts quotes "studies show" as the bad
-  // example the lesson rewrites; allowlist it, then remove this entry.
+  // A removed course lesson quoted "studies show" as the bad example it
+  // rewrote; remove this entry once no strict file needs it.
   "en-claim-studies-show",
 ]);
 

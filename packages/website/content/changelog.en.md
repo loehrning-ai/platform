@@ -7,7 +7,7 @@
 
 ## 2026-08-09: Bilingual platform revision
 
-Learning material is organized into foundations, technical courses, workshops, and books, in German and English.
+Learning material is organized into foundations, visual learning, workshops, and books, in German and English.
 
 ### Changed
 

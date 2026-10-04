@@ -8,11 +8,11 @@ import { COURSE_PROJECT_CONFIGS, getCourseProjectConfig } from "./configs";
 import { COURSE_PROJECT_STAGE_IDS, COURSE_PROJECT_STAGE_LABELS } from "./types";
 
 describe("course project configs", () => {
-  it("covers exactly the ten registered course slugs", () => {
+  it("covers exactly the eight registered course slugs", () => {
     expect(Object.keys(COURSE_PROJECT_CONFIGS).sort()).toEqual(
       [...COURSE_SLUGS].sort(),
     );
-    expect(Object.keys(COURSE_PROJECT_CONFIGS)).toHaveLength(10);
+    expect(Object.keys(COURSE_PROJECT_CONFIGS)).toHaveLength(8);
 
     for (const slug of COURSE_SLUGS) {
       const config = getCourseProjectConfig(slug);
@@ -35,8 +35,6 @@ describe("course project configs", () => {
       "ki-und-gesellschaft": "ethik-3-3",
       "eu-ai-act-kurs": "block_6_lesson_4",
       "ai-native": "modul_4_lesson_8",
-      claude: "safety",
-      codex: "L12",
       "data-infrastructure": "interview-playbook",
       "data-engineering-fundamentals": "cap",
       "data-science": "cap",
@@ -80,14 +78,14 @@ describe("course project configs", () => {
     }
   });
 
-  it("assigns all four engine kinds and a distinct learning contract per course", () => {
+  it("assigns all three engine kinds and a distinct learning contract per course", () => {
     const configs = Object.values(COURSE_PROJECT_CONFIGS);
     expect(new Set(configs.map((config) => config.engineKind))).toEqual(
-      new Set(["prompt", "repo", "data", "case"]),
+      new Set(["prompt", "data", "case"]),
     );
-    expect(new Set(configs.map((config) => config.title.de)).size).toBe(10);
-    expect(new Set(configs.map((config) => config.mission.en)).size).toBe(10);
-    expect(new Set(configs.map((config) => config.artifact.de)).size).toBe(10);
+    expect(new Set(configs.map((config) => config.title.de)).size).toBe(8);
+    expect(new Set(configs.map((config) => config.mission.en)).size).toBe(8);
+    expect(new Set(configs.map((config) => config.artifact.de)).size).toBe(8);
     expect(
       new Set(
         configs.map((config) =>
@@ -96,7 +94,7 @@ describe("course project configs", () => {
             .join("::"),
         ),
       ).size,
-    ).toBe(10);
+    ).toBe(8);
 
     for (const config of configs) {
       expect(`${config.scenario.de} ${config.safety.de}`.toLowerCase()).toMatch(
@@ -132,10 +130,5 @@ describe("course project configs", () => {
         "Locally validated project evidence",
       );
     }
-
-    const codex = getCourseProjectConfig("codex");
-    expect(codex.mission.en).toContain("non-verifying browser simulation");
-    expect(codex.mission.en).toContain("fixed server-side Sandbox");
-    expect(codex.artifact.en).toContain("Locally validated project evidence");
   });
 });

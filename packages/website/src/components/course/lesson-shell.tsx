@@ -37,8 +37,6 @@ const LESSON_COURSE_ROUTES: readonly (readonly [prefix: string, courseId: string
   ["/kurse/open-source/data-engineering-fundamentals", "data-engineering-fundamentals"],
   ["/kurse/open-source/data-infrastructure", "data-infrastructure"],
   ["/kurse/open-source/data-science", "data-science"],
-  ["/kurse/open-source/claude", "claude"],
-  ["/kurse/open-source/codex", "codex"],
   ["/ki-fuehrerschein", "ki-fuehrerschein"],
   ["/ki-und-gesellschaft", "ki-und-gesellschaft"],
   ["/eu-ai-act-kurs", "eu-ai-act-kurs"],

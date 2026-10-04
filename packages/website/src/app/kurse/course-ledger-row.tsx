@@ -203,7 +203,7 @@ export function CourseLedgerRow({
         ? copy.accountRequired
         : copy.unavailable
       : null;
-  // Seven of the ten courses have no demo. Rather than substituting one from
+  // Most courses have no demo. Rather than substituting one from
   // another course, those rows simply omit the link.
   const courseDemos = live ? demosForCourse(course.slug) : [];
   const courseDemo = courseDemos[0];

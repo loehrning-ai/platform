@@ -1,6 +1,6 @@
 // ─── Data Infrastructure course config ───────────
 //
-// Own module (mirroring `lib/codex/config.ts`) so the course-config object
+// Own module so the course-config object
 // lives beside its own content module; `lib/course/config.ts` imports and
 // re-exports it into the shared registry, so `getCourseConfig("data-infrastructure")`
 // works exactly like every other course.
@@ -19,7 +19,7 @@ export const DATA_INFRASTRUCTURE_CONFIG = {
   // is a step-through system-design review, not a
   // scored gate. Certificate eligibility resolves via 's
   // generic all-lessons-completed "completion" path (src/lib/progress/store.ts's
-  // isCertificateEligible), same as codex/data-engineering-fundamentals/
+  // isCertificateEligible), same as data-engineering-fundamentals/
   // data-science. No `/kurs/quiz` route is built for this course; these three
   // fields are kept only for CourseConfig-shape compatibility and are never
   // read by any real UI.

@@ -43,7 +43,7 @@ export const HOME_COPY = {
       routeLabel: "Empfohlener Grundlagenpfad",
       lessonLabel: "Lektionen",
       deeperSummary: (count: number) =>
-        `Dazu ${count} technische Kurse zu Prompting, Coding-Agenten und Daten.`,
+        `Dazu ${count} Kurse zum visuellen Lernen zu Daten und KI-Betrieb.`,
       viewAllCourses: "Alle Kurse ansehen",
     },
     workflow: {
@@ -165,7 +165,7 @@ export const HOME_COPY = {
       routeLabel: "Recommended foundation path",
       lessonLabel: "lessons",
       deeperSummary: (count: number) =>
-        `Plus ${count} technical courses on prompting, coding agents and data.`,
+        `Plus ${count} visual-learning courses on data and AI operations.`,
       viewAllCourses: "View all courses",
     },
     workflow: {

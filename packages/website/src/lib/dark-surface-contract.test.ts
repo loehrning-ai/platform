@@ -44,7 +44,6 @@ const FORMERLY_DARK = [
   "components/course-projects/engines/engine-ui.tsx",
   "components/course-projects/engines/data-lab.tsx",
   "components/course-projects/engines/prompt-lab.tsx",
-  "components/course-projects/engines/repo-lab.tsx",
   "components/book-reader/callout-renderer.tsx",
   "components/book-reader/chapter-reader.tsx",
   "app/ki-check/ki-check-client.tsx",

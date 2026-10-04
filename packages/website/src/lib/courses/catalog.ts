@@ -245,128 +245,6 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
       "Editoriale Illustration eines modularen AI-Native-Arbeitsstudios mit Kontext, Werkzeugen und Prüfschleife",
     nativeStatus: "live",
   },
-  // Claude Course: first imported course flipped from
-  // "pending" to "live" now that it has real native routes, per-lesson
-  // content, and certificate/verification wiring. Its URL structure stays
-  // under /kurse/open-source/claude (not top-level like the 4 foundation
-  // courses) to keep the public URL stable across the imported-to-native
-  // flip; startHref/continueHref both still start with `href` per the
-  // catalog's own invariant. Provenance fields are retained (not deleted)
-  // so open-source attribution survives the flip, per catalog.ts's own
-  // documented convention for ImportedCourse-only fields on CatalogCourse.
-  {
-    slug: "claude",
-    step: 5,
-    title: "Claude-Kurs",
-    eyebrow: "Schritt 05 · Prompting",
-    tagline:
-      "Claude mit explizitem Kontext, Werkzeugen und Prüfungen einsetzen.",
-    description:
-      "Zwölf Lektionen mit je einer kurzen Übung in Claude behandeln Prompt-Aufbau, Kontextdateien, Tool-Nutzung, Grounding, Reviews, Evaluation und Zusammenarbeit.",
-    href: "/kurse/open-source/claude",
-    startHref: "/kurse/open-source/claude/kurs/mental-model",
-    continueHref: "/kurse/open-source/claude/kurs",
-    duration: "ca. 2 Std.",
-    durationMinutes: 120,
-    totalLessons: 12,
-    level: "mittel",
-    unitLabel: "Tracks",
-    unitCount: 4,
-    audience: "Wissensarbeiter, Entwickler, Teams mit Claude Code",
-    coverImage: "/imported-courses/screenshots/claude.jpg",
-    coverImageAlt: "Startseite des Claude Course",
-    nativeStatus: "live",
-    imageSrc: "/imported-courses/screenshots/claude.jpg",
-    imageAlt: "Screenshot des Claude Course",
-    launchHref: "https://www.timloehr.me/interactive-courses/claude/",
-    // IMPORTED_COURSE_SOURCE_COMMIT/BASE are declared further down this file
-    // (used by IMPORTED_COURSE_CATALOG below), so this entry inlines the same
-    // pinned commit literally rather than forward-referencing them.
-    sourceHref:
-      "https://github.com/Mavengence/interactive-courses/tree/0e5dfd327ce44663696b52eb6643bab147947101/claude",
-    sourceCommitHref:
-      "https://github.com/Mavengence/interactive-courses/tree/0e5dfd327ce44663696b52eb6643bab147947101/claude",
-    licenseHref:
-      "/imported-courses/licenses/interactive-courses-MIT-LICENSE.txt",
-    sourceImagePath: "docs/screenshots/claude.jpg",
-    sourceLicensePath: "LICENSE",
-    imageSha256:
-      "4d0c51a947792c1e8203e962eede06854c3ee946ab220a68fb844d0971fbdf0b",
-    licenseSha256:
-      "cc41d8f9e6580c3cd9ebe68f40af8e599d09beb147c3378ea010974ea76e07f3",
-    licenseSizeBytes: 1066,
-    sourceCommit: "0e5dfd327ce44663696b52eb6643bab147947101",
-    lessonCountLabel: "12 Lektionen",
-    language: "Deutsch + Englisch",
-    topics: ["Claude", "Claude Code", "MCP", "Prompting", "Evals"],
-    sourceFacts: [
-      "4 Tracks",
-      "12 Lektionen",
-      "Interaktive Übungen",
-      "Native Route in diesem Quellstand",
-    ],
-    integrationNote:
-      "Route, Fortschritt und Abschluss sind in diesem Quellstand integriert; die Bereitstellung braucht eine getrennte Live-Prüfung. Ursprünglich ein importierter Open-Source-Kurs.",
-  },
-  // Codex Course: second imported course flipped from
-  // "pending" to "live" now that it has real native routes, per-lesson
-  // content, and certificate/verification wiring. Its URL structure stays
-  // under /kurse/open-source/codex (not top-level like the 4 foundation
-  // courses) to keep the public URL stable across the imported-to-native
-  // flip; startHref/continueHref both still start with `href` per the
-  // catalog's own invariant. Provenance fields are retained (not deleted)
-  // so open-source attribution survives the flip, per catalog.ts's own
-  // documented convention for ImportedCourse-only fields on CatalogCourse.
-  {
-    slug: "codex",
-    step: 6,
-    title: "Codex-Kurs",
-    eyebrow: "Schritt 06 · Coding Agents",
-    tagline:
-      "Codeaufgaben mit Spezifikation, Tests und Review an Codex delegieren.",
-    description:
-      "Codex schreibt den Code, du Spezifikation, Akzeptanzkriterien und Review. Zwölf Lektionen zu Sandbox-Grenzen, AGENTS.md, Werkzeugwahl und paralleler Arbeit, dazu ein Abschlussfall.",
-    href: "/kurse/open-source/codex",
-    startHref: "/kurse/open-source/codex/kurs/L01",
-    continueHref: "/kurse/open-source/codex/kurs",
-    duration: "ca. 2 Std.",
-    durationMinutes: 120,
-    totalLessons: 12,
-    level: "fortg",
-    unitLabel: "Lektionen",
-    unitCount: 12,
-    audience: "Entwickler, die mit AI-Coding-Tools arbeiten",
-    coverImage: "/imported-courses/screenshots/codex.jpg",
-    coverImageAlt: "Startseite des Codex-Kurses",
-    nativeStatus: "live",
-    imageSrc: "/imported-courses/screenshots/codex.jpg",
-    imageAlt: "Screenshot des Codex-Kurses",
-    launchHref: "https://www.timloehr.me/interactive-courses/codex/",
-    sourceHref:
-      "https://github.com/Mavengence/interactive-courses/tree/0e5dfd327ce44663696b52eb6643bab147947101/codex",
-    sourceCommitHref:
-      "https://github.com/Mavengence/interactive-courses/tree/0e5dfd327ce44663696b52eb6643bab147947101/codex",
-    licenseHref: "/imported-courses/licenses/codex-MIT-LICENSE.txt",
-    sourceImagePath: "docs/screenshots/codex.jpg",
-    sourceLicensePath: "codex/LICENSE.txt",
-    imageSha256:
-      "6e67076e584ca88b8b497bacebc1f2b5373fe8c6a1547108f65f66b856ee5c46",
-    licenseSha256:
-      "7b42b5981763ae5341a686ac738900f07ca2b837ff0ffe3efaafef45ade801f6",
-    licenseSizeBytes: 1068,
-    sourceCommit: "0e5dfd327ce44663696b52eb6643bab147947101",
-    lessonCountLabel: "12 Lektionen + Capstone",
-    language: "Deutsch + Englisch",
-    topics: ["Codex", "OpenAI", "AGENTS.md", "Sandboxing", "Pull Requests"],
-    sourceFacts: [
-      "12 Lektionen",
-      "Abschlussfall",
-      "Parallele Arbeitsabläufe",
-      "Native Route in diesem Quellstand",
-    ],
-    integrationNote:
-      "Route, Fortschritt und Abschluss sind in diesem Quellstand integriert; die Bereitstellung braucht eine getrennte Live-Prüfung. Ursprünglich ein importierter Open-Source-Kurs.",
-  },
   // Data Infrastructure: third imported course flipped
   // from "pending" to "live" now that it has real native routes, per-lesson
   // content, and certificate/verification wiring. Its URL structure stays
@@ -378,12 +256,12 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
   // catalog.ts's own documented convention for ImportedCourse-only fields
   // on CatalogCourse. sourceHref/sourceCommitHref inline the pinned commit
   // literally (IMPORTED_COURSE_SOURCE_BASE/_COMMIT are declared further
-  // down, used by IMPORTED_COURSE_CATALOG) — same as claude/codex above.
+  // down, used by IMPORTED_COURSE_CATALOG).
   {
     slug: "data-infrastructure",
-    step: 7,
+    step: 5,
     title: "Data Infrastructure",
-    eyebrow: "Schritt 07 · System Design",
+    eyebrow: "Schritt 05 · System Design",
     tagline:
       "Speicher-, Streaming- und Konsistenzentscheidungen systematisch vergleichen.",
     description:
@@ -444,9 +322,9 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
   // course's own flat [chapterId] route tree.
   {
     slug: "data-engineering-fundamentals",
-    step: 8,
+    step: 6,
     title: "Data Engineering Fundamentals",
-    eyebrow: "Schritt 08 · Data Engineering",
+    eyebrow: "Schritt 06 · Data Engineering",
     tagline:
       "Eine Datenpipeline von der Quelle bis zur Nutzung entwerfen und absichern.",
     description:
@@ -503,9 +381,9 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
   // rather than at a "/home" sub-path.
   {
     slug: "data-science",
-    step: 9,
+    step: 7,
     title: "Data Science Fundamentals",
-    eyebrow: "Schritt 09 · Data Science",
+    eyebrow: "Schritt 07 · Data Science",
     tagline:
       "Modelle bewerten, Fehlinterpretationen erkennen und Betrieb überwachen.",
     description:
@@ -561,13 +439,13 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
   // directly under the course root. sourceHref/sourceCommitHref inline the
   // pinned commit literally (IMPORTED_COURSE_SOURCE_BASE/_COMMIT are
   // declared further down this file, used by IMPORTED_COURSE_CATALOG,
-  // which this entry left) — same as claude/codex/data-infrastructure/
+  // which this entry left) — same as data-infrastructure/
   // data-engineering-fundamentals/data-science above.
   {
     slug: "ai-native-operator",
-    step: 10,
+    step: 8,
     title: "The AI-Native Operator",
-    eyebrow: "Schritt 10 · AI Operating Model",
+    eyebrow: "Schritt 08 · AI Operating Model",
     tagline:
       "KI-gestützte Arbeit mit Zuständigkeit, Kontrolle und Messung organisieren.",
     description:
@@ -657,8 +535,8 @@ export const PORTED_COURSE_CATALOG: readonly PortedCourse[] =
 export const IMPORTED_COURSE_SOURCE_COMMIT =
   "0e5dfd327ce44663696b52eb6643bab147947101";
 
-// "claude"/"codex"/"data-infrastructure"/"data-engineering-fundamentals"/
-// "data-science"/"ai-native-operator" all moved to COURSE_CATALOG above
+// "data-infrastructure"/"data-engineering-fundamentals"/"data-science"/
+// "ai-native-operator" all moved to COURSE_CATALOG above
 // ( / / /
 // stage 12 / /: flipped to
 // nativeStatus "live" now that they have real native routes). Every

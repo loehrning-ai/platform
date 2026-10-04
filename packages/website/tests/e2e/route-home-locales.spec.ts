@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 const GERMAN_ONLY_HOME_TOKENS =
-  /\b(?:Freie KI-Lernplattform|Kostenfreie Kurse|Grundlagenpfad|Vier Kurse|Empfohlener Einstieg|Lektionen|Technikkurse|Ressourcen|Betriebsprinzipien|Keine Paywall|Den passenden Einstieg finden)\b/i;
+  /\b(?:Freie KI-Lernplattform|Kostenfreie Kurse|Grundlagenpfad|Vier Kurse|Empfohlener Einstieg|Lektionen|Technikkurse|Visuelles Lernen|Ressourcen|Betriebsprinzipien|Keine Paywall|Den passenden Einstieg finden)\b/i;
 
 for (const width of [320, 390, 768, 1440] as const) {
   test(`homepage DE/EN copy and geometry are complete at ${width}px`, async ({

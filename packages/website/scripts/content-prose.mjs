@@ -82,8 +82,6 @@ export const LEARNER_PROSE_LIST_KEYS = new Set([
 /** src/lib directories that hold a technical course (English source, German twin). */
 export const TECHNICAL_COURSE_DIRS = [
   "ai-native-operator",
-  "claude-course",
-  "codex",
   "data-engineering-fundamentals",
   "data-infrastructure",
   "data-science",
@@ -172,8 +170,7 @@ export function collectLearnerFacingFiles(root) {
 /**
  * Language by path. English lives under `en/` (native courses, books) or is
  * the authored source of a technical course (lessons/*.ts, modules/*.ts).
- * `content/claude` keeps its German twin under `de/`; the ai-native-operator
- * quiz is English. Modules that carry both locales are "mixed".
+ * The ai-native-operator quiz is English. Modules that carry both locales are "mixed".
  */
 export function classifyLearnerFile(relFile) {
   const rel = toPosix(relFile);
@@ -204,8 +201,7 @@ export function classifyLearnerFile(relFile) {
     }
     const course = parts[1];
     let lang = "de";
-    if (course === "claude") lang = parts[2] === "de" ? "de" : "en";
-    else if (course === "ai-native-operator") lang = "en";
+    if (course === "ai-native-operator") lang = "en";
     else if (parts[2] === "en") lang = "en";
     const base = `content/${course}`;
     return { kind, lang, surface: lang === "en" ? `${base}/en` : base };

@@ -33,13 +33,11 @@ describe("course engine union (shared course architecture + 6)", () => {
     expect(isCourseRegistered("ai-native")).toBe(true);
   });
 
-  it("getRegisteredCourseSlugs returns all ten courses ( adds ai-native-operator)", () => {
+  it("getRegisteredCourseSlugs returns all eight courses", () => {
     const slugs = getRegisteredCourseSlugs();
     expect([...slugs].sort()).toEqual([
       "ai-native",
       "ai-native-operator",
-      "claude",
-      "codex",
       "data-engineering-fundamentals",
       "data-infrastructure",
       "data-science",

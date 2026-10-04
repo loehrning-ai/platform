@@ -100,10 +100,10 @@ const PROGRESS_ROUTES = [
   "/ai-native/kurs/modul-1/lektion-1",
   "/buecher",
   "/kurse",
-  "/kurse/open-source/codex/verifizierung",
+  "/kurse/open-source/data-infrastructure/verifizierung",
   "/konto",
   "/konto/datenschutz",
-  "/en/kurse/open-source/codex/kurs/L01",
+  "/en/kurse/open-source/data-infrastructure/kurs/mental-model",
 ] as const;
 
 function source(relativePath: string): string {

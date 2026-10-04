@@ -14,9 +14,9 @@ const COPY = {
     unavailable: "Hier nicht verfügbar",
     groupUnavailable: "hier nicht verfügbar",
     overviewAction: "Hier nicht verfügbar · Kursübersicht",
-    alternative: "Offene Alternative ohne Lernkonto: Claude-Kurs",
+    alternative: "Offene Alternative ohne Lernkonto: Data Infrastructure",
     foundation: "KI-Führerschein",
-    openCourse: "Claude-Kurs",
+    openCourse: "Data Infrastructure",
   },
   en: {
     open: "No account needed",
@@ -25,9 +25,9 @@ const COPY = {
     unavailable: "Unavailable here",
     groupUnavailable: "unavailable here",
     overviewAction: "Unavailable here · Course overview",
-    alternative: "Open alternative without an account: Claude Course",
+    alternative: "Open alternative without an account: Data Infrastructure",
     foundation: "Everyday AI Literacy",
-    openCourse: "Claude Course",
+    openCourse: "Data Infrastructure",
   },
 } as const;
 
@@ -106,7 +106,7 @@ for (const locale of ["de", "en"] as const) {
     test.describe(`provider-free access: ${locale} at ${width}px`, () => {
       const copy = COPY[locale];
       const prefix = locale === "en" ? "/en" : "";
-      const lesson = `${prefix}/kurse/open-source/claude/kurs/mental-model`;
+      const lesson = `${prefix}/kurse/open-source/data-infrastructure/kurs/mental-model`;
       const overview = `${prefix}/ki-fuehrerschein`;
       const atlasRoute = `${prefix}/kurse`;
 
@@ -147,7 +147,7 @@ for (const locale of ["de", "en"] as const) {
         await card.tap();
         await expectDestination(page, lesson);
         await expect(
-          page.locator('[data-lesson-mission="claude"]'),
+          page.locator('[data-lesson-mission="data-infrastructure"]'),
         ).toBeVisible();
         expect(meaningfulBrowserErrors(errors)).toEqual([]);
       });
@@ -213,7 +213,7 @@ for (const locale of ["de", "en"] as const) {
         await action.tap();
         await expectDestination(page, lesson);
         await expect(
-          page.locator('[data-lesson-mission="claude"]'),
+          page.locator('[data-lesson-mission="data-infrastructure"]'),
         ).toBeVisible();
         expect(meaningfulBrowserErrors(errors)).toEqual([]);
       });
@@ -261,7 +261,7 @@ for (const locale of ["de", "en"] as const) {
         await alternative.tap();
         await expectDestination(page, lesson);
         await expect(
-          page.locator('[data-lesson-mission="claude"]'),
+          page.locator('[data-lesson-mission="data-infrastructure"]'),
         ).toBeVisible();
         expect(meaningfulBrowserErrors(errors)).toEqual([]);
       });

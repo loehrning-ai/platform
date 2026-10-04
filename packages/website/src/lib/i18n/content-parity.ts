@@ -48,8 +48,6 @@ const ENGLISH_CONTENT_PARITY_PATHS = new Set<string>([
   "/ki-und-gesellschaft",
   "/kurse",
   "/kurse/open-source/ai-native-operator",
-  "/kurse/open-source/claude",
-  "/kurse/open-source/codex",
   "/kurse/open-source/data-engineering-fundamentals",
   "/kurse/open-source/data-science",
   "/kurse/open-source/data-infrastructure",

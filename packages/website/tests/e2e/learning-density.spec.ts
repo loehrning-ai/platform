@@ -2,20 +2,6 @@ import { expect, test, type Locator, type Page } from "@playwright/test";
 
 const TECHNICAL_COURSE_CASES = [
   {
-    label: "Claude",
-    slug: "claude",
-    phoneFoldHidden: true,
-    checkpoint: "/en/kurse/open-source/claude/kurs/mental-model",
-    nonCheckpoint: "/en/kurse/open-source/claude/kurs/anatomy",
-  },
-  {
-    label: "Codex",
-    slug: "codex",
-    phoneFoldHidden: true,
-    checkpoint: "/kurse/open-source/codex/kurs/L01",
-    nonCheckpoint: "/kurse/open-source/codex/kurs/L02",
-  },
-  {
     label: "Data Infrastructure",
     slug: "data-infrastructure",
     phoneFoldHidden: true,
@@ -134,14 +120,19 @@ async function expectFullyInFirstViewportBand(
 }
 
 test.describe("learning density and value contract", () => {
-  test("Codex L01 puts the first prediction choice inside the initial mobile viewport", async ({
+  test("Data Infrastructure lesson 1 puts the first prediction choice inside the initial mobile viewport", async ({
     page,
   }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.emulateMedia({ reducedMotion: "reduce" });
-    await openLearningRoute(page, "/en/kurse/open-source/codex/kurs/L01");
+    await openLearningRoute(
+      page,
+      "/en/kurse/open-source/data-infrastructure/kurs/mental-model",
+    );
 
-    const mission = page.locator('[data-lesson-mission="codex"]');
+    const mission = page.locator(
+      '[data-lesson-mission="data-infrastructure"]',
+    );
     const firstChoice = mission
       .locator("[data-lesson-prediction-choice]")
       .first();
@@ -150,14 +141,14 @@ test.describe("learning density and value contract", () => {
     await expectFullyInFirstViewportBand(
       page,
       firstChoice,
-      "Codex L01 first prediction choice",
+      "Data Infrastructure lesson 1 first prediction choice",
     );
     await continueLocally(page);
     await expect(firstRadio).toBeEnabled();
     await expectFullyInFirstViewportBand(
       page,
       firstChoice,
-      "Codex L01 active first prediction choice",
+      "Data Infrastructure lesson 1 active first prediction choice",
     );
   });
 

@@ -37,8 +37,6 @@ const EXPECTED_CHECKPOINT_LESSONS = {
     "modul_4_lesson_1",
     "modul_4_lesson_7",
   ],
-  claude: ["mental-model", "claude-md", "agents", "team", "safety"],
-  codex: ["L01", "L04", "L07", "L10", "L12"],
   "data-infrastructure": [
     "mental-model",
     "storage-formats",
@@ -58,8 +56,8 @@ const EXPECTED_CHECKPOINT_LESSONS = {
 } as const satisfies Readonly<Record<CourseSlug, readonly string[]>>;
 
 describe("course project checkpoint selector", () => {
-  it("selects exactly five ordered stage-start checkpoints for all ten courses", () => {
-    expect(COURSE_SLUGS).toHaveLength(10);
+  it("selects exactly five ordered stage-start checkpoints for all eight courses", () => {
+    expect(COURSE_SLUGS).toHaveLength(8);
 
     for (const courseSlug of COURSE_SLUGS) {
       const checkpoints = selectCourseProjectCheckpoints(courseSlug);
@@ -92,7 +90,7 @@ describe("course project checkpoint selector", () => {
     }
   });
 
-  it("resolves only the fifty selected checkpoints and fails closed otherwise", () => {
+  it("resolves only the forty selected checkpoints and fails closed otherwise", () => {
     let selectedCount = 0;
 
     for (const courseSlug of COURSE_SLUGS) {
@@ -118,6 +116,6 @@ describe("course project checkpoint selector", () => {
       expect(isCourseProjectCheckpointLesson(courseSlug, "not-canonical")).toBe(false);
     }
 
-    expect(selectedCount).toBe(50);
+    expect(selectedCount).toBe(40);
   });
 });

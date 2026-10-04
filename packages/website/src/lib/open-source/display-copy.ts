@@ -48,7 +48,7 @@ export const OPEN_SOURCE_PAGE_COPY = {
       "Code, Lerntexte und Medien haben getrennte Lizenzen. Welche gilt, steht jeweils am Projekt.",
     platformCode: "Plattform-Code",
     licensePolicy: "Lizenzrichtlinie",
-    courses: "Zu den technischen Kursen",
+    courses: "Zum visuellen Lernen",
   },
   en: {
     metadata: {
@@ -96,7 +96,7 @@ export const OPEN_SOURCE_PAGE_COPY = {
       "Code, learning text and media carry separate licenses. Each project states which one applies.",
     platformCode: "Platform source",
     licensePolicy: "License policy",
-    courses: "Browse technical courses",
+    courses: "Browse visual learning",
   },
 } as const;
 
@@ -360,11 +360,6 @@ const CV_ENGINE_ENGLISH_COPY = {
         title: "AI-native work course",
         description:
           "Practise reviewing AI output, such as the import from your old PDF.",
-      },
-      {
-        title: "Claude course",
-        description:
-          "An English open-source course on prompting, context and evals that helps you assess the optional AI functions.",
       },
     ],
   },

@@ -25,7 +25,7 @@ export const PLAKAT_ROUTES = [
   "/demos",
   "/blog",
   "/ki-fuehrerschein",
-  "/kurse/open-source/claude",
+  "/kurse/open-source/ai-native-operator",
 ] as const;
 
 /** §8.3 viewports: the phone in the mobile project, desktop otherwise. */

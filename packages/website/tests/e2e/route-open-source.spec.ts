@@ -465,7 +465,7 @@ test.describe("/open-source hub", () => {
     }
   });
 
-  test("does not list imported courses and cross-links the technical courses to /kurse", async ({
+  test("does not list imported courses and cross-links the visual-learning courses to /kurse", async ({
     page,
   }) => {
     await page.goto(ROUTE, { waitUntil: "domcontentloaded" });

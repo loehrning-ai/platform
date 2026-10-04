@@ -113,14 +113,13 @@ export const PRIVATE_PATH_RULES = [
   },
   {
     id: "plans-directory",
-    // Any path segment named "plans" (internal planning tree). The teaching
-    // "claude" course directory has no leading dot and is unaffected.
+    // Any path segment named "plans" (internal planning tree).
     label: "internal plans directory",
     match: (_relPath, segments) => segments.includes("plans"),
   },
   {
     id: "ai-tooling-directories",
-    // Leading-dot AI tooling dirs only. The published "claude" course directory
+    // Leading-dot AI tooling dirs only. A plain directory with the same name
     // (no dot) is deliberately NOT matched here.
     label: "AI tooling directory",
     match: (_relPath, segments) =>

@@ -86,10 +86,6 @@ const ENGINE_COMPONENTS: Readonly<
     () => import("./engines/prompt-lab"),
     { ssr: false, loading: EngineLoading },
   ),
-  repo: dynamic<CourseProjectEngineProps>(() => import("./engines/repo-lab"), {
-    ssr: false,
-    loading: EngineLoading,
-  }),
   data: dynamic<CourseProjectEngineProps>(() => import("./engines/data-lab"), {
     ssr: false,
     loading: EngineLoading,
@@ -114,7 +110,6 @@ const MEANINGFUL_ARTIFACT_FIELDS: Readonly<
     "budget",
     "evaluation",
   ],
-  repo: ["specReady"],
   data: ["failureInjected", "decision"],
   case: ["responses", "sources"],
 };
@@ -264,9 +259,7 @@ function CourseProjectCheckpointStudio({
   const checkpointId = `${config.id}:verified`;
   const expectedExecutionReceipt = getCourseProjectExecutionReceipt(courseSlug);
   const expectedLocalLearningReceipt =
-    courseSlug === "ai-native" ||
-    courseSlug === "claude" ||
-    courseSlug === "ai-native-operator"
+    courseSlug === "ai-native" || courseSlug === "ai-native-operator"
       ? getCourseProjectLocalLearningReceipt(courseSlug)
       : null;
   const [activated, setActivated] = useState(false);

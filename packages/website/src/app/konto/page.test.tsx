@@ -195,9 +195,9 @@ describe("KontoPage course resume integration", () => {
 
   it("links an earned course record to the real certificate route", async () => {
     const state = progress({
-      codex: courseSlice(
-        "codex",
-        CANONICAL_LESSON_IDS.codex.length,
+      "data-infrastructure": courseSlice(
+        "data-infrastructure",
+        CANONICAL_LESSON_IDS["data-infrastructure"].length,
         "2026-07-29T11:00:00.000Z",
       ),
     });
@@ -206,10 +206,10 @@ describe("KontoPage course resume integration", () => {
     render(await kontoPage());
 
     expect(
-      within(courseCard("Codex-Kurs")).getByRole("link", {
+      within(courseCard("Data Infrastructure")).getByRole("link", {
         name: /Nachweis ansehen/,
       }),
-    ).toHaveAttribute("href", "/kurse/open-source/codex/kurs/zertifikat");
+    ).toHaveAttribute("href", "/kurse/open-source/data-infrastructure/kurs/zertifikat");
   });
 
   it("chooses the most recently active incomplete course for the primary continuation", async () => {
@@ -438,9 +438,9 @@ describe("KontoPage course resume integration", () => {
 describe("KontoPage catalog", () => {
   it("renders cover art for every course and splits my courses from available", async () => {
     const state = progress({
-      codex: courseSlice(
-        "codex",
-        CANONICAL_LESSON_IDS.codex.length,
+      "data-infrastructure": courseSlice(
+        "data-infrastructure",
+        CANONICAL_LESSON_IDS["data-infrastructure"].length,
         "2026-07-29T11:00:00.000Z",
       ),
     });
@@ -448,20 +448,20 @@ describe("KontoPage catalog", () => {
 
     const { container } = render(await kontoPage());
 
-    // All ten courses have cover art (verified against catalog.ts); every
+    // All eight courses have cover art (verified against catalog.ts); every
     // course renders somewhere on the page (my courses + available).
-    expect(container.querySelectorAll("img").length).toBe(10);
+    expect(container.querySelectorAll("img").length).toBe(8);
 
     expect(
       screen.getByRole("heading", { name: "Meine Kurse" }),
     ).toBeInTheDocument();
     expect(
-      within(courseCard("Codex-Kurs")).getByText("Nachweis erreicht"),
+      within(courseCard("Data Infrastructure")).getByText("Nachweis erreicht"),
     ).toBeInTheDocument();
 
     // A completed course appears once, under "my courses", not a second
     // time under "available".
-    expect(screen.getAllByRole("heading", { name: "Codex-Kurs" })).toHaveLength(
+    expect(screen.getAllByRole("heading", { name: "Data Infrastructure" })).toHaveLength(
       1,
     );
     expect(
@@ -479,15 +479,15 @@ describe("KontoPage catalog", () => {
       screen.getByRole("heading", { name: "Weitere Kurse" }),
     ).toBeInTheDocument();
     // All ten courses fall through to "available" with nothing started.
-    expect(courseCard("Codex-Kurs")).toBeInTheDocument();
+    expect(courseCard("Data Infrastructure")).toBeInTheDocument();
   });
 
   it("filters the catalog to one level via a real link, not client state", async () => {
     const { container } = render(await kontoPage({ level: "einstieg" }));
 
     // Only the two einstieg courses remain (ki-fuehrerschein,
-    // ki-und-gesellschaft); codex (fortg) drops out.
-    expect(screen.queryByText("Codex-Kurs")).not.toBeInTheDocument();
+    // ki-und-gesellschaft); data-infrastructure (fortg) drops out.
+    expect(screen.queryByText("Data Infrastructure")).not.toBeInTheDocument();
     expect(courseCard("KI-Führerschein")).toBeInTheDocument();
     expect(courseCard("KI und Gesellschaft")).toBeInTheDocument();
 
@@ -521,7 +521,7 @@ describe("KontoPage catalog", () => {
 
     expect(
       screen.getByText(
-        "Bei den vier Grundlagenkursen synchronisiert ein Konto Fortschritt und Abschluss geräteübergreifend. Die sechs Technikkurse gehen auch ohne Konto.",
+        "Bei den vier Grundlagenkursen synchronisiert ein Konto Fortschritt und Abschluss geräteübergreifend. Die vier Kurse zum visuellen Lernen gehen auch ohne Konto.",
       ),
     ).toBeInTheDocument();
 
@@ -570,9 +570,9 @@ describe("KontoPage catalog", () => {
 describe("KontoPage account regions", () => {
   it("renders the account regions in the published order", async () => {
     const state = progress({
-      codex: courseSlice(
-        "codex",
-        CANONICAL_LESSON_IDS.codex.length,
+      "data-infrastructure": courseSlice(
+        "data-infrastructure",
+        CANONICAL_LESSON_IDS["data-infrastructure"].length,
         "2026-07-29T11:00:00.000Z",
       ),
     });
@@ -633,9 +633,9 @@ describe("KontoPage account regions", () => {
 
   it("lists an earned record with the course's own record noun and certificate link", async () => {
     const state = progress({
-      codex: courseSlice(
-        "codex",
-        CANONICAL_LESSON_IDS.codex.length,
+      "data-infrastructure": courseSlice(
+        "data-infrastructure",
+        CANONICAL_LESSON_IDS["data-infrastructure"].length,
         "2026-07-29T11:00:00.000Z",
       ),
     });
@@ -647,9 +647,9 @@ describe("KontoPage account regions", () => {
     expect(records).not.toBeNull();
     expect(
       within(records).getByRole("link", {
-        name: /Codex-Kurs Teilnahmebestätigung öffnen/,
+        name: /Data Infrastructure Teilnahmebestätigung öffnen/,
       }),
-    ).toHaveAttribute("href", "/kurse/open-source/codex/kurs/zertifikat");
+    ).toHaveAttribute("href", "/kurse/open-source/data-infrastructure/kurs/zertifikat");
     // The unearned courses stay out of the record list.
     expect(
       within(records).queryByRole("link", { name: /KI-Führerschein/ }),
@@ -671,9 +671,9 @@ describe("KontoPage account regions", () => {
   it("names the record region and its boundary in English too", async () => {
     mocks.getRequestLocale.mockResolvedValue("en");
     const state = progress({
-      codex: courseSlice(
-        "codex",
-        CANONICAL_LESSON_IDS.codex.length,
+      "data-infrastructure": courseSlice(
+        "data-infrastructure",
+        CANONICAL_LESSON_IDS["data-infrastructure"].length,
         "2026-07-29T11:00:00.000Z",
       ),
     });
@@ -687,9 +687,9 @@ describe("KontoPage account regions", () => {
     const records = container.querySelector("#konto-nachweise") as HTMLElement;
     expect(
       within(records).getByRole("link", {
-        name: /Codex Course Open certificate of participation/,
+        name: /Data Infrastructure Open certificate of participation/,
       }),
-    ).toHaveAttribute("href", "/en/kurse/open-source/codex/kurs/zertifikat");
+    ).toHaveAttribute("href", "/en/kurse/open-source/data-infrastructure/kurs/zertifikat");
     expect(document.body).not.toHaveTextContent(/\bXP\b|streak|badge/i);
   });
 });

@@ -140,13 +140,13 @@ describe("TechnicalCourseLanding", () => {
 
   it("renders the header as a full-bleed band in the course's track scene", () => {
     const { container } = render(
-      <TechnicalCourseFrame courseId="claude" lang="de">
+      <TechnicalCourseFrame courseId="ai-native-operator" lang="de">
         <>
           <TechnicalCourseHeader
-            eyebrow="Claude Course · Technikkurs"
+            eyebrow="The AI-Native Operator · Visuelles Lernen"
             title={
               <>
-                Claude mit klarer <span className="sm:inline-block">Struktur einsetzen.</span>
+                KI-Arbeit mit klarer <span className="sm:inline-block">Zuständigkeit führen.</span>
               </>
             }
             intro="Intro"
@@ -162,7 +162,9 @@ describe("TechnicalCourseLanding", () => {
         <TechnicalCourseSectionHeading title="Lektionen" />
       </TechnicalCourseFrame>,
     );
-    const frame = container.querySelector('[data-technical-course="claude"]');
+    const frame = container.querySelector(
+      '[data-technical-course="ai-native-operator"]',
+    );
     // The page names its scene; the frame is a three-track grid with the
     // 72rem column in the middle (no viewport units, no negative margins).
     expect(frame).toHaveAttribute("data-plakat-page", "idea");
@@ -186,14 +188,14 @@ describe("TechnicalCourseLanding", () => {
     expect(caps).toHaveClass("max-h-[1.3em]", "overflow-hidden");
     const capsParts = Array.from(caps?.querySelectorAll("span > span") ?? []);
     expect(capsParts.map((part) => part.textContent)).toEqual([
-      "Claude Course",
-      "\u00a0· Technikkurs",
+      "The AI-Native Operator",
+      "\u00a0· Visuelles Lernen",
     ]);
     expect(capsParts[0]).toHaveClass("whitespace-nowrap");
     expect(capsParts[1]).toHaveClass("min-w-0", "break-words");
     expect(capsParts[1]).not.toHaveClass("whitespace-nowrap");
     // The course poster, from lg only, aria-hidden and without a numeral
-    // (Technikkurse carry none, D9); never an <img>. As on the workshop
+    // (visual-learning courses carry none, D9); never an <img>. As on the workshop
     // bands (SPEC §3.1) it fills the band's right edge at full height,
     // behind the text column, so its shapes bleed off real band edges.
     const art = header?.querySelector("[data-plakat-art]");
@@ -293,8 +295,8 @@ describe("TechnicalCourseLanding", () => {
   it("sets the same '·' separator in every band caps line", () => {
     const { container } = render(
       <TechnicalCourseHeader
-        courseId="codex"
-        eyebrow="Codex / Kurs"
+        courseId="data-infrastructure"
+        eyebrow="Data Infrastructure / Kurs"
         title="Titel"
         intro="Intro"
         primaryAction={<a href="/a">Start</a>}
@@ -303,7 +305,7 @@ describe("TechnicalCourseLanding", () => {
       />,
     );
     const caps = container.querySelector(".plakat-caps");
-    expect(caps?.textContent).toBe("Codex\u00a0· Kurs");
+    expect(caps?.textContent).toBe("Data Infrastructure\u00a0· Kurs");
     expect(caps?.textContent).not.toContain("/");
   });
 

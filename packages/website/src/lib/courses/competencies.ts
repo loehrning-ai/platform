@@ -117,51 +117,9 @@ export const COURSE_OUTCOMES: Partial<
         "Behandelt n8n-Automationen, Kontrollen und EU-AI-Act-Grenzen.",
     },
   ],
-  // English course: the labels/descriptions stay English
-  // to match the course's own content language (`CLAUDE_CONFIG.language`),
-  // unlike the four foundation-path outcome sets above.
-  claude: [
-    {
-      id: "structured-prompting",
-      label: "Structured prompting",
-      description:
-        "Covers role, context, task, constraints, examples, and output format.",
-    },
-    {
-      id: "context-engineering",
-      label: "Context engineering",
-      description:
-        "Covers grounding Claude in source data and structuring the context window.",
-    },
-    {
-      id: "safe-team-workflows",
-      label: "Safe team workflows",
-      description:
-        "Covers safe prompt and CLAUDE.md sharing, evaluations, and data boundaries.",
-    },
-  ],
-  // English course: same reasoning as claude above.
-  codex: [
-    {
-      id: "task-spec-authoring",
-      label: "Task spec authoring",
-      description:
-        "Covers goals, constraints, acceptance criteria, and non-goals for agent tasks.",
-    },
-    {
-      id: "agent-pr-review",
-      label: "Agent PR review",
-      description:
-        "Covers review checks for circular tests, scope creep, and agent-specific security gaps.",
-    },
-    {
-      id: "parallel-agent-workflows",
-      label: "Parallel agent workflows",
-      description:
-        "Covers task decomposition and conflict-aware parallel work across git worktrees.",
-    },
-  ],
-  // English course: same reasoning as claude/codex above.
+  // English course: the labels/descriptions stay English to match the
+  // course's own content language, unlike the four foundation-path outcome
+  // sets above.
   "data-engineering-fundamentals": [
     {
       id: "idempotent-pipeline-writes",
@@ -182,7 +140,7 @@ export const COURSE_OUTCOMES: Partial<
         "Covers downstream release through a quality signal after row-count, freshness, schema, and uniqueness checks.",
     },
   ],
-  // English course: same reasoning as claude/codex above.
+  // English course: same reasoning as above.
   "data-science": [
     {
       id: "metric-before-model",
@@ -203,7 +161,7 @@ export const COURSE_OUTCOMES: Partial<
         "Covers DAGs, confounders, mediators, colliders, and adjustment choices.",
     },
   ],
-  // English course: same reasoning as claude/codex above.
+  // English course: same reasoning as above.
   "data-infrastructure": [
     {
       id: "system-design-tradeoffs",
@@ -224,7 +182,7 @@ export const COURSE_OUTCOMES: Partial<
         "Covers a five-part system-design interview structure from clarification through trade-offs.",
     },
   ],
-  // English course: same reasoning as claude/codex above.
+  // English course: same reasoning as above.
   "ai-native-operator": [
     {
       id: "maturity-self-diagnosis",
@@ -318,36 +276,6 @@ const ENGLISH_COURSE_OUTCOME_COPY: Readonly<Record<string, CourseOutcomeCopy>> =
 
 const GERMAN_COURSE_OUTCOME_COPY: Readonly<Record<string, CourseOutcomeCopy>> =
   {
-    "structured-prompting": {
-      label: "Strukturiertes Prompting",
-      description:
-        "Behandelt Rolle, Kontext, Aufgabe, Grenzen, Beispiele und Ausgabeformat.",
-    },
-    "context-engineering": {
-      label: "Kontextgestaltung",
-      description:
-        "Behandelt Datengrundlage und bewusste Strukturierung des Kontextfensters.",
-    },
-    "safe-team-workflows": {
-      label: "Sichere Team-Workflows",
-      description:
-        "Behandelt sichere Freigabe von Prompts und CLAUDE.md-Dateien, Tests und Datengrenzen.",
-    },
-    "task-spec-authoring": {
-      label: "Aufgabenspezifikationen verfassen",
-      description:
-        "Behandelt Ziel, Grenzen, Akzeptanzkriterien und Nicht-Ziele für Coding-Agenten.",
-    },
-    "agent-pr-review": {
-      label: "Agenten-PRs prüfen",
-      description:
-        "Behandelt Prüfungen auf zirkuläre Tests, unnötigen Umfang und Sicherheitslücken.",
-    },
-    "parallel-agent-workflows": {
-      label: "Parallele Agenten-Workflows",
-      description:
-        "Behandelt Aufgabenteilung und konfliktarme parallele Arbeit in Git-Worktrees.",
-    },
     "idempotent-pipeline-writes": {
       label: "Idempotente Pipeline-Schreibvorgänge",
       description:

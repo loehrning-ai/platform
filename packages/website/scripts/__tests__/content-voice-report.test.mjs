@@ -278,8 +278,8 @@ test("path matchers accept directory prefixes and globs", () => {
   assert.ok(dir("content/ki-fuehrerschein/glossary.json"));
   assert.ok(!dir("content/ki-fuehrerschein-extra/glossary.json"));
   const glob = pathMatcher("src/lib/**/de/*.ts");
-  assert.ok(glob("src/lib/codex/lessons/de/l01.ts"));
-  assert.ok(!glob("src/lib/codex/lessons/l01.ts"));
+  assert.ok(glob("src/lib/data-infrastructure/lessons/de/streaming.ts"));
+  assert.ok(!glob("src/lib/data-infrastructure/lessons/streaming.ts"));
   const star = pathMatcher("content/*/en/*.json");
   assert.ok(star("content/ai-native/en/modul-1-lessons.json"));
   assert.ok(!star("content/ai-native/en/quiz/questions.json"));

@@ -18,7 +18,7 @@ const REQUIRED_LOCAL_LEARNING_FLAGS = [
 ] as const;
 
 function localLearningArtifact(
-  courseSlug: "ai-native" | "claude" | "ai-native-operator" = "ai-native",
+  courseSlug: "ai-native" | "ai-native-operator" = "ai-native",
 ): CourseProjectArtifactState {
   const receipt = getCourseProjectLocalLearningReceipt(courseSlug);
   return {
@@ -38,7 +38,6 @@ function localLearningArtifact(
       approvalGate: true,
       stopCondition: true,
       handoffDefined: true,
-      ...(courseSlug === "claude" ? { secondaryReady: true } : {}),
     },
   };
 }
@@ -112,7 +111,7 @@ describe("course project learning evidence", () => {
       hasCourseProjectLearningEvidence(
         {
           ...artifact,
-          fields: { ...artifact.fields, variant: "claude" },
+          fields: { ...artifact.fields, variant: "ai-native-operator" },
         },
         "ai-native",
         receipt,
@@ -122,7 +121,7 @@ describe("course project learning evidence", () => {
       hasCourseProjectLearningEvidence(
         artifact,
         "ai-native",
-        getCourseProjectLocalLearningReceipt("claude"),
+        getCourseProjectLocalLearningReceipt("ai-native-operator"),
       ),
     ).toBe(false);
   });
@@ -130,7 +129,7 @@ describe("course project learning evidence", () => {
   it.each([
     [
       "artifact receipt",
-      { learningReceipt: "prompt:claude:local-learning-v1" },
+      { learningReceipt: "prompt:ai-native-operator:local-learning-v1" },
     ],
     [
       "null execution receipt",
@@ -154,20 +153,20 @@ describe("course project learning evidence", () => {
     },
   );
 
-  it("requires Claude's secondary grounding prompt readiness", () => {
-    const artifact = localLearningArtifact("claude");
-    const receipt = getCourseProjectLocalLearningReceipt("claude");
+  it("accepts the Operator local receipt only with the Operator variant", () => {
+    const artifact = localLearningArtifact("ai-native-operator");
+    const receipt = getCourseProjectLocalLearningReceipt("ai-native-operator");
 
-    expect(hasCourseProjectLearningEvidence(artifact, "claude", receipt)).toBe(
-      true,
-    );
+    expect(
+      hasCourseProjectLearningEvidence(artifact, "ai-native-operator", receipt),
+    ).toBe(true);
     expect(
       hasCourseProjectLearningEvidence(
         {
           ...artifact,
-          fields: { ...artifact.fields, secondaryReady: false },
+          fields: { ...artifact.fields, variant: "ai-native" },
         },
-        "claude",
+        "ai-native-operator",
         receipt,
       ),
     ).toBe(false);

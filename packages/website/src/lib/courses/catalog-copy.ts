@@ -90,54 +90,9 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
     coverImageAlt:
       "Editorial illustration of a modular AI-native studio with context, tools, and a review loop",
   },
-  claude: {
-    title: "Claude Course",
-    eyebrow: "Technical course · Prompting",
-    tagline: "Use Claude with clear context, tools, and verification steps.",
-    description:
-      "Twelve lessons, each with a short exercise in Claude, cover prompt structure, context files, tool use, grounding, reviews, evaluation and collaboration.",
-    duration: "about 2 hrs",
-    unitLabel: "tracks",
-    audience: "Knowledge workers, developers, teams using Claude Code",
-    coverImageAlt: "Claude Course start page",
-    imageAlt: "Screenshot of the Claude Course",
-    lessonCountLabel: "12 lessons",
-    language: "English + German",
-    sourceFacts: [
-      "4 tracks",
-      "12 lessons",
-      "Interactive exercises",
-      "Native route in this source tree",
-    ],
-    integrationNote:
-      "Route, progress and completion ship in this source tree; deployment needs separate live verification. Originally an imported open-source course.",
-  },
-  codex: {
-    title: "Codex Course",
-    eyebrow: "Technical course · Coding agents",
-    tagline:
-      "Delegate coding tasks to Codex using specifications, tests, and review.",
-    description:
-      "Codex writes the code; you write the specification, acceptance criteria and review. Twelve lessons on sandbox boundaries, AGENTS.md, tool choice and parallel work, plus a capstone.",
-    duration: "about 2 hrs",
-    unitLabel: "lessons",
-    audience: "Developers working with AI coding tools",
-    coverImageAlt: "Codex Course start page",
-    imageAlt: "Screenshot of the Codex Course",
-    lessonCountLabel: "12 lessons and a capstone",
-    language: "English + German",
-    sourceFacts: [
-      "12 lessons",
-      "Capstone",
-      "Parallel workflows",
-      "Native route in this source tree",
-    ],
-    integrationNote:
-      "Route, progress and completion ship in this source tree; deployment needs separate live verification. Originally an imported open-source course.",
-  },
   "data-infrastructure": {
     title: "Data Infrastructure",
-    eyebrow: "Technical course · System design",
+    eyebrow: "Visual learning · System design",
     tagline: "Compare storage, streaming, and consistency decisions.",
     description:
       "Twelve lessons on CAP and PACELC, data models, file formats, lakehouse tables, streaming, CDC, idempotency and data SLAs. Simulations show at which load or failure a design stops holding.",
@@ -160,7 +115,7 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
   },
   "data-engineering-fundamentals": {
     title: "Data Engineering Fundamentals",
-    eyebrow: "Technical course · Data engineering",
+    eyebrow: "Visual learning · Data engineering",
     tagline: "Design and safeguard a data pipeline from source to consumption.",
     description:
       "Twelve chapters on ingestion, streaming, storage, compute, orchestration, quality, discovery, serving and governance. In 17 simulations and a final case you see how an error causes damage further down.",
@@ -181,7 +136,7 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
   },
   "data-science": {
     title: "Data Science Fundamentals",
-    eyebrow: "Technical course · Data science",
+    eyebrow: "Visual learning · Data science",
     tagline: "Evaluate models, spot misreadings, monitor production behavior.",
     description:
       "Twelve chapters on sampling, data cleaning, features, evaluation, interpretability, experiments, causality and drift. Thirty-seven simulations show where a good-looking metric misleads.",
@@ -202,7 +157,7 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
   },
   "ai-native-operator": {
     title: "The AI-Native Operator",
-    eyebrow: "Technical course · Operating model",
+    eyebrow: "Visual learning · Operating model",
     tagline:
       "Organize AI-supported work with ownership, controls, and measurement.",
     description:

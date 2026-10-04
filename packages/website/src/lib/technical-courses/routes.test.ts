@@ -13,10 +13,8 @@ import {
 } from "./routes";
 
 describe("technical course route contract", () => {
-  it("keeps all six existing course roots stable", () => {
+  it("keeps all four existing course roots stable", () => {
     expect(TECHNICAL_COURSE_SLUGS).toEqual([
-      "claude",
-      "codex",
       "data-infrastructure",
       "data-engineering-fundamentals",
       "data-science",
@@ -27,21 +25,23 @@ describe("technical course route contract", () => {
         `/kurse/open-source/${courseSlug}`,
       );
     }
+    expect(Object.keys(TECHNICAL_COURSE_ROUTES)).not.toContain("claude");
+    expect(Object.keys(TECHNICAL_COURSE_ROUTES)).not.toContain("codex");
   });
 
   it("keeps German unprefixed and puts English on the equivalent /en route", () => {
     expect(
-      technicalCourseHref("claude", "de", {
+      technicalCourseHref("data-infrastructure", "de", {
         kind: "lesson",
         lessonId: "mental-model",
       }),
-    ).toBe("/kurse/open-source/claude/kurs/mental-model");
+    ).toBe("/kurse/open-source/data-infrastructure/kurs/mental-model");
     expect(
-      technicalCourseHref("claude", "en", {
+      technicalCourseHref("data-infrastructure", "en", {
         kind: "lesson",
         lessonId: "mental-model",
       }),
-    ).toBe("/en/kurse/open-source/claude/kurs/mental-model");
+    ).toBe("/en/kurse/open-source/data-infrastructure/kurs/mental-model");
     expect(
       technicalCourseHref("data-science", "en", {
         kind: "chapter",
@@ -60,13 +60,13 @@ describe("technical course route contract", () => {
   it("preserves a bounded base64url certificate fragment exactly", () => {
     const hash = "#test_test-test" as const;
     expect(
-      technicalCourseHref("codex", "en", {
+      technicalCourseHref("data-infrastructure", "en", {
         kind: "verification",
         hash,
       }),
-    ).toBe(`/en/kurse/open-source/codex/verifizierung${hash}`);
+    ).toBe(`/en/kurse/open-source/data-infrastructure/verifizierung${hash}`);
     expect(() =>
-      technicalCourseCanonicalHref("codex", {
+      technicalCourseCanonicalHref("data-infrastructure", {
         kind: "verification",
         hash: "#contains/slash" as `#${string}`,
       }),
@@ -76,8 +76,8 @@ describe("technical course route contract", () => {
   it("rejects unknown runtime identities instead of redirecting to a root", () => {
     expect(() =>
       technicalCourseCanonicalHref(
-        "codex",
-        { kind: "lesson", lessonId: "L99" } as never,
+        "data-infrastructure",
+        { kind: "lesson", lessonId: "unknown-lesson" } as never,
       ),
     ).toThrow(/Unknown lesson identity/);
     expect(() =>
@@ -87,13 +87,11 @@ describe("technical course route contract", () => {
       ),
     ).toThrow(/Unknown lesson identity/);
     expect(() =>
-      technicalCourseCanonicalHref("codex", { kind: "quiz" } as never),
+      technicalCourseCanonicalHref("data-infrastructure", { kind: "quiz" } as never),
     ).toThrow(/no final quiz route/);
   });
 
   it("derives locale-independent static params from canonical IDs", () => {
-    expect(getTechnicalCourseStaticParams("claude")).toHaveLength(12);
-    expect(getTechnicalCourseStaticParams("codex")).toHaveLength(12);
     expect(getTechnicalCourseStaticParams("data-infrastructure")).toHaveLength(
       12,
     );
@@ -125,34 +123,34 @@ describe("technical course route contract", () => {
 describe("technical course SEO helpers", () => {
   it("noindexes English until reviewed parity is supplied", () => {
     const metadata = buildTechnicalCourseMetadata({
-      courseSlug: "codex",
+      courseSlug: "data-infrastructure",
       locale: "en",
       target: { kind: "landing" },
-      title: "Codex Course",
+      title: "Data Infrastructure",
       description: "A precise description.",
       availableContentLocales: ["de"],
     });
     expect(metadata.robots).toEqual({ index: false, follow: true });
     expect(metadata.alternates).toEqual({
-      canonical: "/en/kurse/open-source/codex",
+      canonical: "/en/kurse/open-source/data-infrastructure",
     });
   });
 
   it("keeps readers noindex even after both landing languages are reviewed", () => {
     const metadata = buildTechnicalCourseMetadata({
-      courseSlug: "codex",
+      courseSlug: "data-infrastructure",
       locale: "en",
-      target: { kind: "lesson", lessonId: "L01" },
+      target: { kind: "lesson", lessonId: "mental-model" },
       title: "Lesson",
       description: "Lesson description.",
       availableContentLocales: ["de", "en"],
     });
     expect(metadata.robots).toEqual({ index: false, follow: true });
     expect(metadata.alternates).toMatchObject({
-      canonical: "/en/kurse/open-source/codex/kurs/L01",
+      canonical: "/en/kurse/open-source/data-infrastructure/kurs/mental-model",
       languages: {
-        de: "/kurse/open-source/codex/kurs/L01",
-        en: "/en/kurse/open-source/codex/kurs/L01",
+        de: "/kurse/open-source/data-infrastructure/kurs/mental-model",
+        en: "/en/kurse/open-source/data-infrastructure/kurs/mental-model",
       },
     });
   });
@@ -160,10 +158,10 @@ describe("technical course SEO helpers", () => {
   it("rejects an SEO locale set that omits the German canonical language", () => {
     expect(() =>
       buildTechnicalCourseMetadata({
-        courseSlug: "codex",
+        courseSlug: "data-infrastructure",
         locale: "en",
         target: { kind: "landing" },
-        title: "Codex Course",
+        title: "Data Infrastructure",
         description: "A precise description.",
         availableContentLocales: ["en"],
       }),

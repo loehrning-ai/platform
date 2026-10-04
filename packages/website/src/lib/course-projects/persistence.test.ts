@@ -79,25 +79,25 @@ describe("course project persistence envelope", () => {
     const sentinel = "private-free-form-learner-text";
     const stored = serializeCourseProjectProgress(null, {
       version: 1,
-      engineKind: "repo",
+      engineKind: "data",
       fields: {
         context: sentinel,
-        specReady: true,
+        planValid: true,
       },
     });
     expect(stored).not.toContain(sentinel);
-    expect(parseCourseProjectProgress(stored, "repo").artifact?.fields).toEqual(
+    expect(parseCourseProjectProgress(stored, "data").artifact?.fields).toEqual(
       {
-        specReady: true,
+        planValid: true,
       },
     );
     expect(
       parseCourseProjectProgress(
         `@cp1:${JSON.stringify({
-          k: "repo",
-          f: { specReady: true, context: sentinel },
+          k: "data",
+          f: { planValid: true, context: sentinel },
         })}`,
-        "repo",
+        "data",
       ).artifact,
     ).toBeNull();
   });
@@ -105,20 +105,20 @@ describe("course project persistence envelope", () => {
   it("always stays inside the existing UTF-8 exercise-summary boundary", () => {
     const stored = serializeCourseProjectProgress("ä".repeat(400), {
       version: 1,
-      engineKind: "repo",
+      engineKind: "data",
       fields: {
-        workspace: `pipeline-quality-${"ß".repeat(300)}`,
-        commandSequence: `canonical-${"ß".repeat(300)}`,
-        attestationContract: `pipeline-quality-v1-${"ß".repeat(300)}`,
-        specReady: true,
-        sandboxAttested: true,
+        variant: `control-room-${"ß".repeat(300)}`,
+        decision: `isolate-replay-${"ß".repeat(300)}`,
+        executionReceipt: `di-partition-v1-${"ß".repeat(300)}`,
+        planValid: true,
+        executionVerified: true,
       },
     });
 
     expect(new TextEncoder().encode(stored).length).toBeLessThanOrEqual(
       MAX_EXERCISE_SUMMARY_BYTES,
     );
-    expect(parseCourseProjectProgress(stored, "repo").artifact).not.toBeNull();
+    expect(parseCourseProjectProgress(stored, "data").artifact).not.toBeNull();
   });
 
   it("cannot produce a truncated JSON envelope from escape-heavy input", () => {
@@ -201,10 +201,12 @@ describe("course project persistence envelope", () => {
   it("requires the expected engine at the completion boundary", () => {
     const stored = serializeCourseProjectProgress(
       "Verified",
-      verifiedCourseProjectArtifact("codex"),
+      verifiedCourseProjectArtifact("data-infrastructure"),
     );
 
-    expect(hasValidCourseProjectArtifact(stored, "repo", "codex")).toBe(true);
+    expect(
+      hasValidCourseProjectArtifact(stored, "data", "data-infrastructure"),
+    ).toBe(true);
     expect(hasValidCourseProjectArtifact(stored, "prompt", "ai-native")).toBe(
       false,
     );
@@ -212,9 +214,7 @@ describe("course project persistence envelope", () => {
 
   it.each([
     ["prompt", "ai-native"],
-    ["prompt", "claude"],
     ["prompt", "ai-native-operator"],
-    ["repo", "codex"],
     ["data", "data-science"],
     ["data", "data-engineering-fundamentals"],
     ["data", "data-infrastructure"],
@@ -268,49 +268,12 @@ describe("course project persistence envelope", () => {
       },
     ],
     [
-      "Claude prompt with only one provider output",
+      "Operator prompt with the workflow evaluation instead of an intervention",
       "prompt",
-      "claude",
+      "ai-native-operator",
       {
-        ...verifiedCourseProjectArtifact("claude").fields,
-        twoOutputEvidence: false,
-      },
-    ],
-    [
-      "Claude prompt with an arbitrary comparison verdict",
-      "prompt",
-      "claude",
-      {
-        ...verifiedCourseProjectArtifact("claude").fields,
-        comparisonDecision: "looks-good",
-      },
-    ],
-    [
-      "Claude prompt with a forged claim redline",
-      "prompt",
-      "claude",
-      {
-        ...verifiedCourseProjectArtifact("claude").fields,
-        claimReviewCode: 113153,
-      },
-    ],
-    [
-      "Claude prompt without four valid rubric dimensions",
-      "prompt",
-      "claude",
-      {
-        ...verifiedCourseProjectArtifact("claude").fields,
-        rubricScores: 5555,
-      },
-    ],
-    [
-      "Claude prompt with a comparison verdict contradicted by its rubric",
-      "prompt",
-      "claude",
-      {
-        ...verifiedCourseProjectArtifact("claude").fields,
-        comparisonDecision: "a-stronger",
-        rubricScores: 22133344,
+        ...verifiedCourseProjectArtifact("ai-native-operator").fields,
+        evaluation: "workflow",
       },
     ],
     [
@@ -320,15 +283,6 @@ describe("course project persistence envelope", () => {
       {
         ...verifiedCourseProjectArtifact("ai-native").fields,
         providerModel: "unknown/model",
-      },
-    ],
-    [
-      "repo without a passing post-fix test",
-      "repo",
-      "codex",
-      {
-        ...verifiedCourseProjectArtifact("codex").fields,
-        postfixPassed: false,
       },
     ],
     [
@@ -433,7 +387,7 @@ describe("course project persistence envelope", () => {
   });
 
   it("keeps every degraded prompt result outside provider-backed completion", () => {
-    const valid = verifiedCourseProjectArtifact("claude");
+    const valid = verifiedCourseProjectArtifact("ai-native-operator");
     const degraded = serializeCourseProjectProgress("Policy stop", {
       ...valid,
       fields: {
@@ -455,11 +409,15 @@ describe("course project persistence envelope", () => {
       },
     });
 
-    expect(hasValidCourseProjectArtifact(degraded, "prompt", "claude")).toBe(
-      false,
-    );
     expect(
-      hasValidCourseProjectArtifact(quotaFailure, "prompt", "claude"),
+      hasValidCourseProjectArtifact(degraded, "prompt", "ai-native-operator"),
+    ).toBe(false);
+    expect(
+      hasValidCourseProjectArtifact(
+        quotaFailure,
+        "prompt",
+        "ai-native-operator",
+      ),
     ).toBe(false);
   });
 });

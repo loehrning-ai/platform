@@ -37,13 +37,13 @@ describe("demosForCourse", () => {
     expect(total).toBe(demos.length);
   });
 
-  it("returns empty for the seven courses with no demo, never a substitute", () => {
+  it("returns empty for the five courses with no demo, never a substitute", () => {
     // The /kurse teaser renders nothing for these rather than showing a demo
     // from an unrelated course, so an empty result must stay empty.
     const withoutDemos = COURSE_CATALOG.filter(
       (course) => demosForCourse(course.slug).length === 0,
     );
-    expect(withoutDemos).toHaveLength(7);
+    expect(withoutDemos).toHaveLength(5);
     for (const course of withoutDemos) {
       expect(demosForCourse(course.slug)).toEqual([]);
     }

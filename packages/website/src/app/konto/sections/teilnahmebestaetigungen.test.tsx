@@ -7,18 +7,18 @@ import { ACCOUNT_COPY } from "../account-copy";
 import type { AccountCourseEntry } from "./account-data";
 import { TeilnahmebestaetigungenSection } from "./teilnahmebestaetigungen";
 
-function earnedCodexRecord(locale: Locale): AccountCourseEntry {
+function earnedDataInfraRecord(locale: Locale): AccountCourseEntry {
   const course = localizeCatalog(COURSE_CATALOG, locale).find(
-    (entry) => entry.slug === "codex",
+    (entry) => entry.slug === "data-infrastructure",
   );
-  if (!course) throw new Error("codex is missing from the course catalog");
+  if (!course) throw new Error("data-infrastructure is missing from the course catalog");
   return {
     course,
     done: course.totalLessons,
     pct: 100,
     recordEarned: true,
     started: true,
-    resumeHref: "/kurse/open-source/codex/kurs/zertifikat",
+    resumeHref: "/kurse/open-source/data-infrastructure/kurs/zertifikat",
     lastActivity: "2026-07-29T11:00:00.000Z",
   };
 }
@@ -45,7 +45,7 @@ beforeEach(() => {
 
 describe("Teilnahmebestätigungen region", () => {
   it("pairs each earned record with the route that verifies it", () => {
-    const record = earnedCodexRecord("de");
+    const record = earnedDataInfraRecord("de");
 
     const { container } = renderRecords("de", [record]);
 
@@ -54,20 +54,20 @@ describe("Teilnahmebestätigungen region", () => {
       within(region).getByRole("link", {
         name: `${record.course.title} Teilnahmebestätigung öffnen`,
       }),
-    ).toHaveAttribute("href", "/kurse/open-source/codex/kurs/zertifikat");
+    ).toHaveAttribute("href", "/kurse/open-source/data-infrastructure/kurs/zertifikat");
     // The verification route is public and hash driven: it is where a third
     // party checks the code the certificate carries, so it belongs on the
     // record rather than only on the printed document.
     expect(
       within(region).getByRole("link", { name: "Prüfseite" }),
-    ).toHaveAttribute("href", "/kurse/open-source/codex/verifizierung");
+    ).toHaveAttribute("href", "/kurse/open-source/data-infrastructure/verifizierung");
     expect(region).toHaveTextContent(
       "prüft den Code deiner Bestätigung, ohne Anmeldung.",
     );
   });
 
   it("localizes both halves of the record for the English mirror", () => {
-    const record = earnedCodexRecord("en");
+    const record = earnedDataInfraRecord("en");
 
     const { container } = renderRecords("en", [record]);
 
@@ -76,10 +76,10 @@ describe("Teilnahmebestätigungen region", () => {
       within(region).getByRole("link", {
         name: `${record.course.title} Open certificate of participation`,
       }),
-    ).toHaveAttribute("href", "/en/kurse/open-source/codex/kurs/zertifikat");
+    ).toHaveAttribute("href", "/en/kurse/open-source/data-infrastructure/kurs/zertifikat");
     expect(
       within(region).getByRole("link", { name: "Verification page" }),
-    ).toHaveAttribute("href", "/en/kurse/open-source/codex/verifizierung");
+    ).toHaveAttribute("href", "/en/kurse/open-source/data-infrastructure/verifizierung");
   });
 
   it("offers no link at all before a record has been earned", () => {
@@ -91,7 +91,7 @@ describe("Teilnahmebestätigungen region", () => {
   });
 
   it("keeps every record target at the 44px floor and adds no second heading level", () => {
-    const { container } = renderRecords("de", [earnedCodexRecord("de")]);
+    const { container } = renderRecords("de", [earnedDataInfraRecord("de")]);
 
     const region = container.querySelector("#konto-nachweise") as HTMLElement;
     for (const link of within(region).getAllByRole("link")) {

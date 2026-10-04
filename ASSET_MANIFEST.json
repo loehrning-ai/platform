@@ -297,15 +297,6 @@
       "redistribution": "Included for repository operation; no trademark or standalone reuse rights granted"
     },
     {
-      "path": "packages/website/public/imported-courses/licenses/codex-MIT-LICENSE.txt",
-      "sizeBytes": 1068,
-      "sha256": "7b42b5981763ae5341a686ac738900f07ca2b837ff0ffe3efaafef45ade801f6",
-      "owner": "Tim L\u00f6hr and the corresponding interactive-course project",
-      "source": "Commit-pinned source recorded in packages/website/src/lib/courses/catalog.ts",
-      "license": "MIT",
-      "redistribution": "Redistribution of this license notice is required with the corresponding MIT-licensed work"
-    },
-    {
       "path": "packages/website/public/imported-courses/licenses/data-engineering-fundamentals-MIT-LICENSE.txt",
       "sizeBytes": 1079,
       "sha256": "7cd9f643d6d743ff0600dda3da55383162723a0d5e874c5b73a3501c5e5b75e0",
@@ -327,24 +318,6 @@
       "path": "packages/website/public/imported-courses/screenshots/ai-native-operator.jpg",
       "sizeBytes": 220018,
       "sha256": "316f9b6a2a1aa2ea25ed27da113ed30028597fe0fb15416c52bad8fadbbdedf5",
-      "owner": "Tim L\u00f6hr and the corresponding interactive-course project",
-      "source": "Commit-pinned source recorded in packages/website/src/lib/courses/catalog.ts",
-      "license": "MIT",
-      "redistribution": "Permitted under the corresponding file in public/imported-courses/licenses/"
-    },
-    {
-      "path": "packages/website/public/imported-courses/screenshots/claude.jpg",
-      "sizeBytes": 232845,
-      "sha256": "4d0c51a947792c1e8203e962eede06854c3ee946ab220a68fb844d0971fbdf0b",
-      "owner": "Tim L\u00f6hr and the corresponding interactive-course project",
-      "source": "Commit-pinned source recorded in packages/website/src/lib/courses/catalog.ts",
-      "license": "MIT",
-      "redistribution": "Permitted under the corresponding file in public/imported-courses/licenses/"
-    },
-    {
-      "path": "packages/website/public/imported-courses/screenshots/codex.jpg",
-      "sizeBytes": 269791,
-      "sha256": "6e67076e584ca88b8b497bacebc1f2b5373fe8c6a1547108f65f66b856ee5c46",
       "owner": "Tim L\u00f6hr and the corresponding interactive-course project",
       "source": "Commit-pinned source recorded in packages/website/src/lib/courses/catalog.ts",
       "license": "MIT",

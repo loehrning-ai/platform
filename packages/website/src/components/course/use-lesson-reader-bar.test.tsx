@@ -32,13 +32,13 @@ function Harness({
 }: { readonly locale?: Locale; readonly lessonId?: string;
   readonly missionComplete?: boolean; readonly mission?: boolean; readonly collapsed?: boolean }) {
   const reader = useLessonReaderBar({
-    courseSlug: "claude", lessonId, ordinal: 1, total: 12, locale,
+    courseSlug: "data-infrastructure", lessonId, ordinal: 1, total: 12, locale,
     next: { kind: "link", label: locale === "de" ? "Weiter" : "Next",
       href: locale === "de" ? "/next" : "/en/next" },
   });
   return <>
     <div ref={reader.contentRef}>
-      {mission ? <section data-lesson-mission="claude" data-mission-complete={String(missionComplete)} data-mission-collapsed={String(collapsed)}>
+      {mission ? <section data-lesson-mission="data-infrastructure" data-mission-complete={String(missionComplete)} data-mission-collapsed={String(collapsed)}>
         <div hidden={collapsed}><div data-mission-current-panel><h2 tabIndex={-1}>Current decision</h2></div></div>
       </section> : null}
       <details data-lesson-reference>
@@ -90,13 +90,13 @@ describe("course-owned reader continuation", () => {
   it("lands on the lesson title in the reference head when there is no checkpoint", () => {
     function HeadHarness() {
       const reader = useLessonReaderBar({
-        courseSlug: "claude", lessonId: "anatomy", ordinal: 2, total: 12, locale: "de",
+        courseSlug: "data-infrastructure", lessonId: "cap-pacelc", ordinal: 2, total: 12, locale: "de",
         next: { kind: "link", label: "Weiter", href: "/next" },
       });
       return <>
         <div ref={reader.contentRef}>
           <div data-lesson-reference-block>
-            <div role="heading" aria-level={1}>Anatomie eines Prompts</div>
+            <div role="heading" aria-level={1}>CAP und PACELC</div>
             <details data-lesson-reference>
               <summary>Einklappen</summary>
               <h2>Erster Abschnitt</h2>
@@ -109,7 +109,7 @@ describe("course-owned reader continuation", () => {
     render(<HeadHarness />);
     fireEvent.click(screen.getByRole("button", { name: "Aufgabe öffnen" }));
     expect(document.querySelector("details")).toHaveAttribute("open");
-    expect(screen.getByRole("heading", { level: 1, name: "Anatomie eines Prompts" })).toHaveFocus();
+    expect(screen.getByRole("heading", { level: 1, name: "CAP und PACELC" })).toHaveFocus();
     expect(scroll).toHaveBeenLastCalledWith({ block: "start", behavior: "instant" });
   });
 
@@ -144,10 +144,10 @@ describe("course-owned reader continuation", () => {
     const view = render(<Harness />);
     expect(screen.getByRole("link", { name: "Weiter" })).toBeInTheDocument();
     state.completed = false;
-    view.rerender(<Harness lessonId="anatomy" />);
+    view.rerender(<Harness lessonId="cap-pacelc" />);
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
     view.unmount();
-    render(<Harness lessonId="anatomy" />);
+    render(<Harness lessonId="cap-pacelc" />);
     expect(screen.getByRole("button", { name: "Aufgabe öffnen" })).toBeInTheDocument();
     expect(scroll).not.toHaveBeenCalled();
   });

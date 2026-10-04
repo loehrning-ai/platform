@@ -79,8 +79,6 @@ describe("applied-project completion identity", () => {
       "data-engineering-fundamentals",
       "data-science",
       "data-infrastructure",
-      "codex",
-      "claude",
       "ai-native-operator",
     ] as const) {
       expect(hasAppliedProjectCompletion(progressWithProject(slug), slug)).toBe(

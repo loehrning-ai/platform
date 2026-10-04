@@ -117,8 +117,8 @@ export function createCoursesGraph(locale: Locale) {
         "@type": "ItemList" as const,
         name:
           locale === "de"
-            ? "Technikkurse von loehrning.ai"
-            : "loehrning.ai technical courses",
+            ? "Visuelles Lernen von loehrning.ai"
+            : "loehrning.ai visual learning",
         itemListOrder: "https://schema.org/ItemListUnordered" as const,
         numberOfItems: technicalItems.length,
         itemListElement: technicalItems.map(courseListItem),

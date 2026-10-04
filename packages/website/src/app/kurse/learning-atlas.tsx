@@ -70,7 +70,7 @@ const PRESSED_CHIP =
 /**
  * Colour groups by track (SPEC §2.2, D8): inside a group the rows keep the
  * catalogue order within each scene, and the scenes follow the series order
- * (Lemons, IDEA, Bloom), so the Technikkurse read IDEA ×3 then Bloom ×3.
+ * (Lemons, IDEA, Bloom), so the visual-learning courses read IDEA ×1 then Bloom ×3.
  */
 function byTrackScene(courses: readonly Course[]): Course[] {
   const rank = (course: Course) => {
@@ -85,7 +85,7 @@ function byTrackScene(courses: readonly Course[]): Course[] {
 
 /**
  * The rows of a group split into runs of one scene, in order. A group with
- * two scenes (the Technikkurse: IDEA, then Bloom) names each run, so the
+ * two scenes (visual learning: IDEA, then Bloom) names each run, so the
  * colour change always has a label (SPEC §2.2).
  */
 function sceneRuns(
@@ -156,9 +156,9 @@ const ATLAS_COPY = {
     unavailable: "Hier nicht verfügbar",
     groupUnavailable: "hier nicht verfügbar",
     groupAccountRequired: "Lernkonto nötig",
-    groupSource: "Quellcode aller Technikkurse",
+    groupSource: "Quellcode aller Kurse zum visuellen Lernen",
     onGitHub: "auf GitHub",
-    sceneSubheads: { idea: "Prompting und Agenten", bloom: "Daten" },
+    sceneSubheads: { idea: "KI-Betrieb", bloom: "Daten" },
     unavailableAction: "Hier nicht verfügbar · Kursübersicht",
     overview: "Kursübersicht",
     accessTerm: "Zugang",
@@ -201,9 +201,9 @@ const ATLAS_COPY = {
     unavailable: "Unavailable here",
     groupUnavailable: "unavailable here",
     groupAccountRequired: "account required",
-    groupSource: "source code of all technical courses",
+    groupSource: "source code of all visual-learning courses",
     onGitHub: "on GitHub",
-    sceneSubheads: { idea: "Prompting and agents", bloom: "Data" },
+    sceneSubheads: { idea: "AI operations", bloom: "Data" },
     unavailableAction: "Unavailable here · Course overview",
     overview: "Course overview",
     accessTerm: "Access",

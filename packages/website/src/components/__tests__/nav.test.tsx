@@ -184,7 +184,7 @@ describe("<Nav />", () => {
       within(menu).getByRole("link", { name: /Grundlagen/ }),
     ).not.toHaveAttribute("aria-current");
     expect(
-      within(menu).getByRole("link", { name: /Technik/ }),
+      within(menu).getByRole("link", { name: /Visuelles Lernen/ }),
     ).not.toHaveAttribute("aria-current");
   });
 
@@ -718,7 +718,7 @@ describe("<Nav />", () => {
       within(menu).getByRole("link", { name: "All courses" }),
     ).toHaveAttribute("href", "/en/kurse");
     expect(
-      within(menu).getByRole("link", { name: "Technical courses" }),
+      within(menu).getByRole("link", { name: "Visual learning" }),
     ).toHaveAttribute("href", "/en/kurse#tiefer-gehen");
     expect(screen.getAllByRole("link", { name: "Blog" })[0]).toHaveAttribute(
       "href",

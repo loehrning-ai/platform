@@ -53,16 +53,6 @@ export const COURSE_PROJECT_IDENTITIES = {
     progressLessonId: "interview-playbook",
     engineKind: "data",
   },
-  codex: {
-    id: "project-codex-repository-mission",
-    progressLessonId: "L12",
-    engineKind: "repo",
-  },
-  claude: {
-    id: "project-claude-evidence-lab",
-    progressLessonId: "safety",
-    engineKind: "prompt",
-  },
   "ai-native-operator": {
     id: "project-ai-native-operator-control-plane",
     progressLessonId: "measurement/4",
