@@ -191,13 +191,13 @@ describe("course resume routes", () => {
         progress("ki-fuehrerschein", 1),
         "ki-fuehrerschein",
       ),
-    ).toBe("/ki-fuehrerschein/kurs/block_1#lesson=block_1_lesson_2");
+    ).toBe("/ki-fuehrerschein/kurs/block_1#lesson=daten-1-2");
     expect(
       resolveCourseResumeHref(
         progress("ki-und-gesellschaft", 3),
         "ki-und-gesellschaft",
       ),
-    ).toBe("/ki-und-gesellschaft/kurs/block_2#lesson=deepfake-2-1");
+    ).toBe("/ki-und-gesellschaft/kurs/block_2#lesson=fakes-2-2");
   });
 
   it("routes one-page lessons and chapters directly", () => {
@@ -223,7 +223,7 @@ describe("course resume routes", () => {
     const legacy = { ...withEvidence, checkpoints: {} };
 
     expect(resolveCourseResumeHref(legacy, "ki-fuehrerschein")).toBe(
-      "/ki-fuehrerschein/kurs/block_1#lesson=block_1_lesson_1",
+      "/ki-fuehrerschein/kurs/block_1#lesson=daten-1-1",
     );
   });
 

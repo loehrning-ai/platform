@@ -1,6 +1,11 @@
 // ─── Course Types (Multi-course: KI-Führerschein + EU AI Act Kurs) ─
 
 import type { Widget } from "@/lib/widgets/types";
+import type {
+  LessonCheck,
+  LessonConcept,
+  LessonExercise,
+} from "@/lib/lesson-engine/types";
 
 export const BLOCK_IDS = [
   "block_1",
@@ -91,6 +96,16 @@ export interface BaseLesson {
    * unified-store checkpoints).
    */
   readonly widgets?: readonly Widget[];
+  /**
+   * Lesson-engine fields (docs/lesson-engine.md). When all three are present
+   * the lesson renders through the shared `LessonFlow` reader: concept →
+   * exercise → two checks, completion = exercise done + checks passed. The
+   * loaders project `sections`/`quiz` from them so search and MCP consumers
+   * keep working. Legacy lessons omit them and keep the section reader.
+   */
+  readonly concept?: LessonConcept;
+  readonly exercise?: LessonExercise;
+  readonly checks?: readonly LessonCheck[];
 }
 
 export interface Lesson extends BaseLesson {

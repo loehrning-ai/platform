@@ -42,7 +42,7 @@ export const KI_FUEHRERSCHEIN_CONFIG: CourseConfig = {
   language: "de",
   basePath: "/ki-fuehrerschein",
   coursePath: "/ki-fuehrerschein/kurs",
-  blockIds: ["block_1", "block_2", "block_3", "block_4", "block_5"],
+  blockIds: ["block_1", "block_2", "block_3", "block_4"],
   workshopQuizQuestionCount: 20,
   workshopQuizTimeLimitMinutes: 25,
   workshopQuizPassThreshold: 0.7,
@@ -50,11 +50,10 @@ export const KI_FUEHRERSCHEIN_CONFIG: CourseConfig = {
   certificateSubtitle:
     "Teilnahmebestätigung. Ausgestellt von loehrning.ai, einer unabhängigen Bildungsplattform. Diese Bestätigung ist kein akkreditierter Abschluss.",
   certificateModules: [
-    "KI-Systeme erkennen und verstehen",
-    "Datenschutz bei KI-Nutzung",
-    "Praktische KI-Anwendung",
-    "KI-Output verifizieren",
-    "KI-Nutzungsrichtlinie erstellen",
+    "Daten einstufen und schwärzen",
+    "Prüfbare Aufträge schreiben",
+    "KI-Ausgaben gegen Quellen prüfen",
+    "Freigaben und Team-Richtlinie",
   ],
   certificateReferenceLabel:
     "Persönliche Teilnahmebestätigung: KI im Alltag verstehen",
@@ -75,11 +74,10 @@ export const KI_FUEHRERSCHEIN_EN_CONFIG: CourseConfig =
     certificateSubtitle:
       "Participation record. Issued by loehrning.ai, an independent learning platform. This record is not an accredited qualification.",
     certificateModules: [
-      "Recognizing and understanding AI systems",
-      "Data protection when using AI",
-      "Practical AI use at work",
-      "Checking AI output",
-      "Creating an AI use policy",
+      "Classifying and redacting data",
+      "Writing checkable briefs",
+      "Checking AI output against sources",
+      "Approvals and a team policy",
     ],
     certificateReferenceLabel:
       "Personal participation record: understanding AI in everyday work",
@@ -230,8 +228,8 @@ export const KI_UND_GESELLSCHAFT_CONFIG: CourseConfig = {
   workshopQuizTimeLimitMinutes: 20,
   workshopQuizPassThreshold: 0.7,
   certificateTitle: "Lernnachweis: KI und Gesellschaft",
-  certificateSubtitle: "Arbeit · Deepfakes · Ethik",
-  certificateModules: ["KI und Arbeit", "Deepfakes erkennen", "Ethik und Bias"],
+  certificateSubtitle: "Jobzahlen · Fakes · Fairness",
+  certificateModules: ["Jobzahlen lesen", "Fakes prüfen", "Fairness messen"],
   certificateReferenceLabel:
     "Selbst ausgestellt: lokal generiert, nicht servergeprüft",
   quizPassMessage:
@@ -248,11 +246,11 @@ export const KI_UND_GESELLSCHAFT_EN_CONFIG: CourseConfig =
   createLocalizedCourseConfig(KI_UND_GESELLSCHAFT_CONFIG, "en", {
     title: "AI and Society",
     certificateTitle: "Certificate of participation: AI and Society",
-    certificateSubtitle: "Work · Deepfakes · Bias and ethics",
+    certificateSubtitle: "Jobs figures · Fakes · Fairness",
     certificateModules: [
-      "AI and work",
-      "Assessing deepfakes",
-      "Bias, ethics, and accountability",
+      "Reading jobs figures",
+      "Checking fakes",
+      "Measuring fairness",
     ],
     certificateReferenceLabel:
       "Self-issued: generated locally, not server-verified",

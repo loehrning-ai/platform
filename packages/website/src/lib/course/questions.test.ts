@@ -48,7 +48,7 @@ describe("loadWorkshopQuestions", () => {
     expect(english.map((question) => question.id)).toEqual(
       german.map((question) => question.id),
     );
-    expect(english[0]?.questionText).toContain("task exposure");
+    expect(english[0]?.questionText).toContain("Generative AI touches 60%");
     expect(english[0]?.questionText).not.toBe(german[0]?.questionText);
   });
 

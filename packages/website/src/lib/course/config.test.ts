@@ -226,13 +226,12 @@ describe("getCourseConfig", () => {
 });
 
 describe("getCourseBlockIds", () => {
-  it("returns the five KI-Führerschein blocks", () => {
+  it("returns the four KI-Führerschein modules", () => {
     expect(getCourseBlockIds("ki-fuehrerschein")).toEqual([
       "block_1",
       "block_2",
       "block_3",
       "block_4",
-      "block_5",
     ]);
   });
 

@@ -133,7 +133,7 @@ export const AGENT_HELP_COPY_EN: AgentHelpCopy = {
     intro:
       "Lessons, workshops and book chapters have stable addresses your program can store and open again later.",
     examples: [
-      { uri: "lesson://ki-fuehrerschein/block_1_lesson_1", label: "A lesson" },
+      { uri: "lesson://ki-fuehrerschein/daten-1-1", label: "A lesson" },
       { uri: "workshop://ki-prognosen-einschaetzen", label: "A workshop" },
       { uri: "book://ki-landschaft/01_eisberg", label: "A book chapter" },
     ],

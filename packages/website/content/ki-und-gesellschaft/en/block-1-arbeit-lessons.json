@@ -1,374 +1,427 @@
 {
   "blockId": "block_1",
   "owner": "tim@loehrning.ai",
-  "lastReviewed": "2026-09-05",
-  "nextReview": "2026-12-06",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-01-04",
+  "format": "lesson-engine/v1",
   "reviewCadence": "quarterly",
   "riskClass": "statistical",
-  "triggerEvents": ["major-conceptual-update"],
-  "blockLastVerified": "2026-08-09",
+  "triggerEvents": [
+    "major-conceptual-update",
+    "new-oecd-or-iab-release"
+  ],
   "lessons": [
     {
-      "id": "arbeit-1-1",
+      "id": "zahlen-1-1",
       "blockId": "block_1",
       "number": 1,
-      "title": "AI and work: exposure is not a forecast",
-      "subtitle": "What OECD and IAB figures say, and what they don't",
+      "title": "Decode jobs headlines",
+      "subtitle": "Exposure is not a forecast",
       "durationMinutes": 5,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-09-05",
-      "nextReview": "2026-12-06",
+      "lastReviewed": "2026-10-04",
+      "nextReview": "2027-01-04",
       "reviewCadence": "quarterly",
       "riskClass": "statistical",
       "keyConcepts": [
         "Task exposure",
         "Substitution potential",
-        "Employment effects"
+        "Employment effect"
       ],
-      "sections": [
-        {
-          "id": "arbeit-1-1-s1",
-          "title": "What a jobs figure measures",
-          "readTimeMinutes": 2,
-          "content": "Figures on threatened jobs measure different things:\n\n1. Task exposure: a technology overlaps with an occupation's tasks.\n2. Technical substitution potential: tasks could be automated with today's technology.\n3. Adoption: an employer introduces the technology and rebuilds the workflow.\n4. Employment effect: working time, headcount, wages or skill requirements change.\n\nFrey and Osborne estimated a theoretical automation probability for US occupations in 2013. With different data and methods, the OECD Employment Outlook 2023 reports the employment share in high-risk occupations across the OECD countries studied, with no forecast for Germany or for job losses.\n\nThe IAB uses BERUFENET to work out what share of an occupation's core tasks available technology could in principle perform fully automatically, and states that substitutability does not mean the task gets automated.\n\nSources: OECD Employment Outlook 2023, Chapter 3; IAB Brief Report 5/2024 on the 2022 recalculation."
-        },
-        {
-          "id": "arbeit-1-1-s2",
-          "title": "What \"better than people\" means",
-          "readTimeMinutes": 2,
-          "content": "\"AI is better than people\" says nothing without test conditions. Check:\n\n- Task: are input, output and quality measure defined?\n- Data: do the test data match the real population and later deployment?\n- Consequences: what does an error cost, and who reviews borderline cases?\n- Environment: standardised, or shifting physically and socially?\n\nA model can ace a narrow image-classification test and be unfit for the clinic. A language model can speed up a draft and invent facts in it; a planning system can handle every standard case and fail on one rare exception.\n\nEven when the system scores better, people and organisations keep legal responsibility, approvals and the weighing of interests."
-        },
-        {
-          "id": "arbeit-1-1-s3",
-          "title": "When one task becomes automatable",
-          "readTimeMinutes": 1,
-          "content": "An occupation is a bundle of tasks. When one becomes automatable, the employer can save time, handle more cases, redistribute work, raise quality or cut jobs. Demand, cost, liability, co-determination and new tasks play a part too.\n\nWhether radiology software that flags anomalies in images saves work or adds review turns on hit and error rates, the patient population, integration and required oversight. Diagnosis and treatment stay medical work.\n\nFor your own job, a task analysis helps more than any forecast: which steps are standardised, where do errors arise, which decisions need expertise, context or approval, and where does the tool add checking?"
+      "concept": {
+        "body": "Behind “X% of jobs” sit four different quantities:\n\n| Quantity | Question |\n|---|---|\n| **Exposure** | Does a technology overlap with tasks of an occupation? |\n| **Technical potential** | Could tasks be automated with today's technology? |\n| **Forecast** | What does a model expect for future jobs? |\n| **Measured effect** | What actually changed after a deployment? |\n\nFrey and Osborne estimated theoretical automation probabilities for US occupations in 2013. The OECD Employment Outlook 2023 reports employment shares in occupations at high risk of automation without forecasting job losses for Germany. The IAB calculates which share of core tasks could technically be substituted and stresses that substitutability does not mean automation happens.\n\nWhether an employer deploys depends on cost, liability, data quality, review effort and co-determination.",
+        "takeaway": "For every jobs figure, first ask which of the four quantities is being measured.",
+        "sources": [
+          {
+            "label": "OECD Employment Outlook 2023, chapter 3"
+          },
+          {
+            "label": "IAB-Kurzbericht 5/2024 (IAB short report)"
+          },
+          {
+            "label": "Frey & Osborne (2013): The Future of Employment"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "bucket-sort",
+        "title": "Sort eight headlines",
+        "instructions": "File each invented headline under the quantity it actually measures. Every placement is explained at once. You are done when all eight are sorted.",
+        "props": {
+          "buckets": [
+            {
+              "id": "exposure",
+              "label": "Exposure",
+              "hint": "overlap with tasks"
+            },
+            {
+              "id": "potential",
+              "label": "Technical potential",
+              "hint": "could be automated"
+            },
+            {
+              "id": "forecast",
+              "label": "Forecast",
+              "hint": "claim about future jobs"
+            },
+            {
+              "id": "measured",
+              "label": "Measured effect",
+              "hint": "observed change"
+            }
+          ],
+          "items": [
+            {
+              "id": "office",
+              "bucket": "exposure",
+              "text": "“Generative AI touches 60% of office tasks”",
+              "why": "“Touches” means overlap. The figure does not say whether jobs disappear or only workflows change."
+            },
+            {
+              "id": "lawyers",
+              "bucket": "exposure",
+              "text": "“Language models could affect 40% of lawyers' working time”",
+              "why": "“Affect” describes exposure. Affected time can also mean extra review work."
+            },
+            {
+              "id": "factory",
+              "bucket": "potential",
+              "text": "“70% of core tasks in manufacturing jobs could technically be substituted today”",
+              "why": "“Could be substituted” is the IAB logic of substitution potential: technically possible, not deployed."
+            },
+            {
+              "id": "bookkeeping",
+              "bucket": "potential",
+              "text": "“Half of all bookkeeping steps could be fully automated with market-ready software”",
+              "why": "Market-ready technology, conditional mood: this measures potential. Cost, data quality and liability decide deployment."
+            },
+            {
+              "id": "third",
+              "bucket": "forecast",
+              "text": "“One in three jobs will vanish by 2035”",
+              "why": "A statement about future jobs is a forecast. Check whether the source models it or merely relabels exposure."
+            },
+            {
+              "id": "millions",
+              "bucket": "forecast",
+              "text": "“AI will cost millions of jobs by 2030”",
+              "why": "A year plus a job count: a forecast. Without assumptions about adoption, demand and new tasks it cannot be checked."
+            },
+            {
+              "id": "callcenter",
+              "bucket": "measured",
+              "text": "“After introducing a chatbot, company X cut 12% of its call-centre jobs”",
+              "why": "An observed change in one company. It holds for that case, not for an industry."
+            },
+            {
+              "id": "survey",
+              "bucket": "measured",
+              "text": "“Survey: 15% of firms hired fewer people because of AI”",
+              "why": "Self-reported effect that already happened. Check the sample and the question wording."
+            }
+          ],
+          "passRatio": 0
         }
-      ],
-      "quiz": [
+      },
+      "checks": [
         {
-          "id": "arbeit-1-1-q1",
-          "questionText": "Which statement about labour-market studies on AI and automation is correct?",
-          "answerOptions": [
+          "id": "zahlen-1-1-c1",
+          "prompt": "A study reports “high exposure for tax clerks”. What follows?",
+          "options": [
             {
               "id": "a",
-              "text": "Every exposure figure directly forecasts future job losses",
-              "isCorrect": false
+              "text": "Many of their tasks overlap with the technology; it says nothing about jobs.",
+              "correct": true
             },
             {
               "id": "b",
-              "text": "Exposure, technical potential and employment effect are different measures",
-              "isCorrect": true
+              "text": "The occupation will disappear in the next few years.",
+              "correct": false,
+              "feedback": "That would be a forecast. Exposure only measures overlap with tasks."
             },
             {
               "id": "c",
-              "text": "The IAB measures only AI already in use in companies",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "The OECD Employment Outlook 2023 forecasts German unemployment caused by AI",
-              "isCorrect": false
+              "text": "Employers have already deployed the technology.",
+              "correct": false,
+              "feedback": "Exposure says nothing about actual deployment. That would be a measured effect."
             }
           ],
-          "explanation": "Exposure and substitution potential show possible overlaps. Adoption and the employment effect also turn on economic, legal and organisational factors."
+          "explanation": "Exposure is the starting point of an analysis, not a result about jobs."
         },
         {
-          "id": "arbeit-1-1-q2",
-          "questionText": "What does the IAB substitution potential based on BERUFENET measure?",
-          "answerOptions": [
+          "id": "zahlen-1-1-c2",
+          "prompt": "What does the IAB stress about substitution potential?",
+          "options": [
             {
               "id": "a",
-              "text": "How many employees already use generative AI",
-              "isCorrect": false
+              "text": "Technically substitutable does not mean the task will actually be automated.",
+              "correct": true
             },
             {
               "id": "b",
-              "text": "Which occupations disappear within a year",
-              "isCorrect": false
+              "text": "It is a forecast of job losses up to 2030.",
+              "correct": false,
+              "feedback": "The IAB works with today's market-ready technology and makes no jobs forecast."
             },
             {
               "id": "c",
-              "text": "What share of core tasks technology could in principle perform fully automatically",
-              "isCorrect": true
-            },
-            {
-              "id": "d",
-              "text": "Which companies must automate by law",
-              "isCorrect": false
+              "text": "It measures how many firms already use AI.",
+              "correct": false,
+              "feedback": "Use is deployment. Potential describes what would be technically possible."
             }
           ],
-          "explanation": "It measures technical potential. Actual adoption, viability and future job losses are not in the figure."
-        },
-        {
-          "id": "arbeit-1-1-q3",
-          "questionText": "What follows from an automatable sub-task?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "The whole occupation disappears within the next planning horizon",
-              "isCorrect": false
-            },
-            {
-              "id": "b",
-              "text": "The technology is economical in every organisation",
-              "isCorrect": false
-            },
-            {
-              "id": "c",
-              "text": "Every remaining task becomes more valuable to employees",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "The workflow can change; the employment effect needs separate examination",
-              "isCorrect": true
-            }
-          ],
-          "explanation": "The deployment in the organisation decides whether technical potential becomes time saved, extra review, more cases or fewer positions."
+          "explanation": "Potential is a snapshot of what is technically possible. Deployment and employment depend on further factors."
         }
       ]
     },
     {
-      "id": "arbeit-1-2",
+      "id": "zahlen-1-2",
       "blockId": "block_1",
       "number": 2,
-      "title": "AI as assistance: measure the benefit yourself",
-      "subtitle": "Who checks, who approves, which data go in",
-      "durationMinutes": 6,
-      "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-09-05",
-      "nextReview": "2026-12-06",
-      "reviewCadence": "quarterly",
-      "riskClass": "statistical",
-      "keyConcepts": [
-        "AI literacy",
-        "Assisted workflow",
-        "Works council",
-        "BetrVG"
-      ],
-      "sections": [
-        {
-          "id": "arbeit-1-2-s1",
-          "title": "Assistance without a performance promise",
-          "readTimeMinutes": 2,
-          "content": "An assisted workflow gives the system one bounded step; approval and accountability stay with a named person. You measure in your own process whether it saves time.\n\nThree invented examples:\n- A nurse drafts from approved, data-protection-compliant notes and checks every statement against the record. Patient data belong only in a system approved for them.\n- An accountant has unusual entries flagged. The flag means: look closer. It does not establish fraud or an error.\n- A communications team generates image drafts and checks them for rights, factual fit, disclosure and approval before publishing.\n\nA controlled test fixes task, permitted data, quality criteria, reviewer, stopping point and logging in advance. Only its measurements show the benefit."
-        },
-        {
-          "id": "arbeit-1-2-s2",
-          "title": "What AI literacy covers",
-          "readTimeMinutes": 2,
-          "content": "To approve an AI draft you need five abilities, and programming is not one of them:\n\n1. Describe the task: purpose, context, format, limits.\n2. Review the output: check claims, figures and sources against reliable material.\n3. Recognise risk: stop at personal data, confidential information or consequential decisions and involve the responsible function.\n4. Place the tool: approval status, data handling, limits, version changes.\n5. Record the work: where the process demands it, keep inputs, relevant outputs, changes and approvals.\n\nArticle 4 of the AI Act, as amended by Regulation (EU) 2026/1744, requires providers and deployers to take measures that support the development of AI literacy among their staff and others acting on their behalf. It does not demand a guaranteed level per person."
-        },
-        {
-          "id": "arbeit-1-2-s3",
-          "title": "When the works council has a say",
-          "readTimeMinutes": 2,
-          "content": "A tool counts how fast a colleague closes her tickets. Absent a statutory or collective-agreement rule, Section 87(1)(6) of the German Works Constitution Act (BetrVG) gives the works council co-determination over introducing and using technical equipment intended to monitor employees' behaviour or performance.\n\nFunction and use decide whether an AI system is covered. The right belongs to the works council, not to each employee.\n\nRaise these points in your organisation:\n- purpose and supported decision\n- employee data collected, inferred or stored\n- who sees the analyses and how long they are stored\n- human oversight, correction and complaint route\n- training and binding rules of use\n\nIf employer and works council cannot agree in a co-determination matter, the conciliation committee decides under Section 87(2). Whether your system is covered needs qualified employment-law analysis."
-        }
-      ],
-      "quiz": [
-        {
-          "id": "arbeit-1-2-q1",
-          "questionText": "How do you recognise a controlled assistance workflow?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "A fluent output counts as correct without further review",
-              "isCorrect": false
-            },
-            {
-              "id": "b",
-              "text": "Task, permitted data, review and accountable approval are fixed in advance",
-              "isCorrect": true
-            },
-            {
-              "id": "c",
-              "text": "Personal data may go into any available system",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "The benefit is taken from general vendor claims",
-              "isCorrect": false
-            }
-          ],
-          "explanation": "A bounded task, protected data, quality criteria and accountable approval make the benefit measurable in your own process."
-        },
-        {
-          "id": "arbeit-1-2-q2",
-          "questionText": "Which ability belongs to AI literacy if you have never programmed?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Training and calibrating your own models",
-              "isCorrect": false
-            },
-            {
-              "id": "b",
-              "text": "Writing Python code for AI applications",
-              "isCorrect": false
-            },
-            {
-              "id": "c",
-              "text": "Configuring and maintaining AI hardware",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Assessing AI output critically and seeing its limits",
-              "isCorrect": true
-            }
-          ],
-          "explanation": "AI literacy means checking output and knowing its limits. Programming is no prerequisite."
-        },
-        {
-          "id": "arbeit-1-2-q3",
-          "questionText": "Which rule can bite for an AI system meant to monitor employee behaviour or performance?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Article 4 AI Act (measures supporting AI literacy)",
-              "isCorrect": false
-            },
-            {
-              "id": "b",
-              "text": "Section 106 GewO (employer's right to issue instructions)",
-              "isCorrect": false
-            },
-            {
-              "id": "c",
-              "text": "Article 22 GDPR (automated individual decisions)",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Section 87(1)(6) BetrVG (co-determination for technical monitoring equipment)",
-              "isCorrect": true
-            }
-          ],
-          "explanation": "The rule covers technical equipment intended to monitor behaviour or performance. Whether it applies turns on the system and its deployment."
-        }
-      ]
-    },
-    {
-      "id": "arbeit-1-3",
-      "blockId": "block_1",
-      "number": 3,
-      "title": "Which tasks can change, and what you check yourself",
-      "subtitle": "Which task characteristics count",
+      "title": "Your task profile",
+      "subtitle": "Assess tasks, not occupations, and measure the benefit yourself",
       "durationMinutes": 5,
       "owner": "editorial:ki-und-gesellschaft",
-      "lastReviewed": "2026-09-05",
-      "nextReview": "2026-12-06",
+      "lastReviewed": "2026-10-04",
+      "nextReview": "2027-01-04",
       "reviewCadence": "quarterly",
       "riskClass": "statistical",
       "keyConcepts": [
-        "Task analysis",
-        "Continuing education",
-        "Skills development"
+        "Task bundle",
+        "Review effort",
+        "Co-determination"
       ],
-      "sections": [
-        {
-          "id": "arbeit-1-3-s1",
-          "title": "Where technical potential runs high",
-          "readTimeMinutes": 2,
-          "content": "The technical potential tends to be high when a step repeats daily, has digital inputs, follows clear rules or a quality measure and takes place in a physical setting that barely changes. Examples are transferring structured data, checking formal completeness and drafting from a template.\n\nAdoption stays open: bad data, rare exceptions, liability, integration cost or follow-up checks can eat the benefit. The other way round, technology can support single steps in almost any job.\n\nThe IAB sorts core tasks within occupations against market-ready technology and refreshes that snapshot regularly."
-        },
-        {
-          "id": "arbeit-1-3-s2",
-          "title": "What makes automation hard",
-          "readTimeMinutes": 1,
-          "content": "Automation gets hard when a task combines several of the following traits, as on an unfamiliar building site or in care with patchy information and a relative in the room:\n\n- a changing physical setting and fine-motor work\n- incomplete information and rare exceptions\n- direct responsibility for safety or fundamental rights\n- negotiation among several parties\n- relationship, trust or local knowledge\n\nNone of that makes an occupation \"AI-proof\". Documentation, planning and retrieval can shift in care, trades, teaching and advice too, and robotics can move physical tasks over time. So look at single tasks."
-        },
-        {
-          "id": "arbeit-1-3-s3",
-          "title": "What you can do yourself",
-          "readTimeMinutes": 2,
-          "content": "1. Inventory your tasks: write down recurring steps, error consequences, data needed and approvals.\n2. Test safely: approved tools and test data only, nothing confidential or personal, compared against a reference fixed in advance.\n3. Get advice: Germany's Federal Employment Agency offers \"Berufsberatung im Erwerbsleben\", career guidance for people in employment, with information on training and funding.\n4. Ask in your organisation: your manager, data protection, information security and any works council.\n\nArticle 5 of the AI Act has banned certain practices since 2 February 2025, among them emotion recognition at work, exceptions aside. Recruitment and selection systems can fall under Annex III; for stand-alone Annex III systems the high-risk rules apply from 2 December 2027 under Regulation (EU) 2026/1744. The AGG, GDPR and employment law can apply today.\n\nIf your application runs through such a system, ask about purpose, data, the meaning of the output, human involvement and accountability."
+      "concept": {
+        "body": "An occupation is a bundle of tasks. Technical potential tends to be high when a step repeats, has digital inputs and follows clear rules, such as transferring data or checking completeness. Automation gets hard with changing physical surroundings, rare exceptions, responsibility for safety and work with people. None of this makes a job “AI-proof”: documentation and planning change in care work and trades too.\n\nWhether AI saves you time is shown by a measurement, not a profile: the same task with and without the tool, including the time spent checking and correcting.\n\nIn Germany, if a tool records performance or behaviour, the works council has a co-determination right under Section 87(1) no. 6 BetrVG (Works Constitution Act), unless a statute or collective agreement already settles the matter.",
+        "takeaway": "Exposure describes tasks. You measure the benefit including review time, not by feel.",
+        "sources": [
+          {
+            "label": "IAB-Kurzbericht 5/2024 (IAB short report)"
+          },
+          {
+            "label": "Section 87(1) no. 6 BetrVG",
+            "url": "https://www.gesetze-im-internet.de/betrvg/__87.html"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "calculator",
+        "title": "Map your working week",
+        "instructions": "Spread your weekly hours across three task types and set two assumptions. The calculator shows your exposure profile and the net effect of your assumptions. You are done when both tasks are complete.",
+        "props": {
+          "inputs": [
+            {
+              "id": "rule",
+              "label": "Repetitive, digital, rule-based",
+              "help": "e.g. transferring data, checking forms, standard texts",
+              "type": "slider",
+              "min": 0,
+              "max": 40,
+              "step": 1,
+              "default": 0,
+              "format": "int",
+              "unit": "h"
+            },
+            {
+              "id": "judge",
+              "label": "Digital, with judgement",
+              "help": "e.g. analyses, drafts, advice by e-mail",
+              "type": "slider",
+              "min": 0,
+              "max": 40,
+              "step": 1,
+              "default": 0,
+              "format": "int",
+              "unit": "h"
+            },
+            {
+              "id": "people",
+              "label": "On site, physical or with people",
+              "help": "e.g. care, assembly, conversations, teaching",
+              "type": "slider",
+              "min": 0,
+              "max": 40,
+              "step": 1,
+              "default": 0,
+              "format": "int",
+              "unit": "h"
+            },
+            {
+              "id": "save",
+              "label": "Assumption: time saved on rule-based steps",
+              "type": "select",
+              "default": 0.3,
+              "options": [
+                {
+                  "value": 0.1,
+                  "label": "10 %"
+                },
+                {
+                  "value": 0.3,
+                  "label": "30 %"
+                },
+                {
+                  "value": 0.5,
+                  "label": "50 %"
+                }
+              ]
+            },
+            {
+              "id": "review",
+              "label": "Assumption: review effort as a share of the saving",
+              "type": "select",
+              "default": 0.5,
+              "options": [
+                {
+                  "value": 0,
+                  "label": "none"
+                },
+                {
+                  "value": 0.5,
+                  "label": "half"
+                },
+                {
+                  "value": 1,
+                  "label": "all of it"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "total",
+              "label": "Hours entered",
+              "formula": "rule + judge + people",
+              "format": "int"
+            },
+            {
+              "id": "high",
+              "label": "Share with high technical potential",
+              "formula": "rule / max(total, 1)",
+              "format": "percent",
+              "emphasis": true
+            },
+            {
+              "id": "net",
+              "label": "Net hours per week under your assumptions",
+              "formula": "rule * save * (1 - review)",
+              "format": "number",
+              "decimals": 1,
+              "help": "Only as good as your assumptions. Measuring beats estimating."
+            }
+          ],
+          "chart": {
+            "kind": "stacked",
+            "title": "Your week by task type",
+            "format": "percent",
+            "bars": [
+              {
+                "label": "High potential",
+                "formula": "rule / max(total, 1)",
+                "tone": "warn"
+              },
+              {
+                "label": "Partial",
+                "formula": "judge / max(total, 1)",
+                "tone": "accent"
+              },
+              {
+                "label": "Low",
+                "formula": "people / max(total, 1)",
+                "tone": "neutral"
+              }
+            ]
+          },
+          "verdicts": [
+            {
+              "when": "total == 0",
+              "tone": "neutral",
+              "title": "Enter your hours"
+            },
+            {
+              "when": "high >= 0.5",
+              "tone": "warn",
+              "title": "High exposure, not a forecast",
+              "body": "Many steps could technically be automated. Whether your job changes depends on deployment, review effort and new tasks."
+            },
+            {
+              "when": "high >= 0.2",
+              "tone": "neutral",
+              "title": "Mixed profile",
+              "body": "Individual steps may change. Test them with approved tools and test data."
+            },
+            {
+              "when": "true",
+              "tone": "good",
+              "title": "Low exposure, not AI-proof",
+              "body": "Documentation, planning and information search change here too."
+            }
+          ],
+          "goals": [
+            {
+              "id": "week",
+              "label": "Map a week of at least 20 hours",
+              "when": "total >= 20",
+              "insight": "That is your exposure profile. It describes tasks, not the future of your job."
+            },
+            {
+              "id": "review-all",
+              "label": "Set the review effort to “all of it”",
+              "when": "review >= 1 && rule > 0",
+              "insight": "Then nothing is left. Only a measurement that includes review time shows whether AI saves time."
+            }
+          ],
+          "note": "A rough split using the traits from the concept. Not an occupational forecast; you set the assumptions yourself."
         }
-      ],
-      "quiz": [
+      },
+      "checks": [
         {
-          "id": "arbeit-1-3-q1",
-          "questionText": "Which task typically carries the higher technical automation potential?",
-          "answerOptions": [
+          "id": "zahlen-1-2-c1",
+          "prompt": "Which task tends to have high technical potential?",
+          "options": [
             {
               "id": "a",
-              "text": "A negotiation among several parties in a new conflict",
-              "isCorrect": false
+              "text": "Transferring invoice data from PDFs into a spreadsheet.",
+              "correct": true
             },
             {
               "id": "b",
-              "text": "A repair in an unfamiliar physical environment",
-              "isCorrect": false
+              "text": "Agreeing a care plan with relatives at the bedside.",
+              "correct": false,
+              "feedback": "A changing situation, relationships and responsibility make automation hard."
             },
             {
               "id": "c",
-              "text": "A repeated formal completeness check on structured digital data",
-              "isCorrect": true
-            },
-            {
-              "id": "d",
-              "text": "A consequential single-case judgement on incomplete information",
-              "isCorrect": false
+              "text": "Inspecting a building site with unknown ground conditions.",
+              "correct": false,
+              "feedback": "Changing physical surroundings and rare exceptions argue against high potential."
             }
           ],
-          "explanation": "Repeated digital steps that can be checked clearly often carry the higher technical potential. Whether an employer automates them stays open."
+          "explanation": "Repetitive, digital and rule-based: these are the traits of high technical potential."
         },
         {
-          "id": "arbeit-1-3-q2",
-          "questionText": "What does Germany's Federal Employment Agency offer employees with training questions?",
-          "answerOptions": [
+          "id": "zahlen-1-2-c2",
+          "prompt": "Your team wants to know whether an AI tool saves time. What is the most reliable way?",
+          "options": [
             {
               "id": "a",
-              "text": "Automatic retraining for every occupation touched by AI",
-              "isCorrect": false
+              "text": "Measure the same task with and without the tool, including review and correction time.",
+              "correct": true
             },
             {
               "id": "b",
-              "text": "Career guidance for people in employment, with information on training and funding",
-              "isCorrect": true
+              "text": "Take the time saving from the vendor's claim.",
+              "correct": false,
+              "feedback": "Vendor claims come from other workflows and data. You measure your own process."
             },
             {
               "id": "c",
-              "text": "A guarantee that every course you want gets funded",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Mandatory certification under Article 4 of the AI Act",
-              "isCorrect": false
+              "text": "Ask after a week how it feels.",
+              "correct": false,
+              "feedback": "Perceived time often underestimates review. A measurement against a baseline is more reliable."
             }
           ],
-          "explanation": "The guidance covers training and funding. Whether a measure is funded turns on you, the measure and the rules in force."
-        },
-        {
-          "id": "arbeit-1-3-q3",
-          "questionText": "Which statement about the EU AI Act at work is correct?",
-          "answerOptions": [
-            {
-              "id": "a",
-              "text": "Article 5 prohibits every form of recruitment AI",
-              "isCorrect": false
-            },
-            {
-              "id": "b",
-              "text": "All high-risk obligations have applied since 2 February 2025",
-              "isCorrect": false
-            },
-            {
-              "id": "c",
-              "text": "Article 5 has nothing to do with the workplace",
-              "isCorrect": false
-            },
-            {
-              "id": "d",
-              "text": "Since 2 February 2025, Article 5 has banned certain practices at work",
-              "isCorrect": true
-            }
-          ],
-          "explanation": "Article 5 bans precisely named practices such as emotion recognition at work, exceptions aside. Check hiring systems separately under Annex III, the AGG, GDPR and co-determination."
+          "explanation": "A controlled comparison against a baseline shows the benefit. Review time is part of it."
         }
       ]
     }

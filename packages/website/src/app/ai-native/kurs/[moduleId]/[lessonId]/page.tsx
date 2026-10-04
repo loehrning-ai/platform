@@ -24,6 +24,8 @@ import { getRequestLocale } from "@/lib/i18n/request-locale";
 import { localizeHref } from "@/lib/i18n/locale";
 import { resolveFoundationCourseContentLocale } from "@/lib/course/localization";
 import { isCourseProjectCheckpointLesson } from "@/lib/course-projects/checkpoint-selector";
+import { LessonFlow } from "@/components/lesson-engine/lesson-flow";
+import { isEngineLesson } from "@/lib/lesson-engine/lesson";
 
 interface PageProps {
   params: Promise<{ moduleId: string; lessonId: string }>;
@@ -104,6 +106,41 @@ export default async function AiNativeLessonPage({ params }: PageProps) {
       }),
     )
   ).flat();
+  if (isEngineLesson(lesson)) {
+    // Lesson-engine lesson (docs/lesson-engine.md): the shared LessonFlow
+    // replaces the section reader, header, quiz and project studio.
+    const flatIndex = navigationItems.findIndex(
+      (item) => item.lessonId === lesson.id,
+    );
+    const following = navigationItems[flatIndex + 1];
+    return (
+      <AiNativeLessonPageShell lessons={navigationItems} locale={locale} lessonId={lesson.id}>
+        <div className="min-w-0 py-8 md:py-10">
+          <LessonFlow
+            courseSlug="ai-native"
+            lesson={lesson}
+            position={{ index: flatIndex + 1, total: navigationItems.length }}
+            moduleLabel={`${isEnglish ? "Module" : "Modul"} ${mod.number} · ${mod.title}`}
+            locale={locale}
+            next={
+              following
+                ? {
+                    kind: "link",
+                    href: localizeHref(`/ai-native/kurs/${following.moduleId}/${following.lessonId}`, locale),
+                    label: `${isEnglish ? "Next" : "Weiter"}: ${following.title}`,
+                  }
+                : {
+                    kind: "link",
+                    href: localizeHref("/ai-native/kurs/quiz", locale),
+                    label: isEnglish ? "Assessment" : "Zur Prüfung",
+                  }
+            }
+          />
+        </div>
+      </AiNativeLessonPageShell>
+    );
+  }
+
   const isProjectCheckpoint = isCourseProjectCheckpointLesson(
     "ai-native",
     lesson.id,

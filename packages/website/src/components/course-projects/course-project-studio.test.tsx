@@ -440,7 +440,7 @@ describe("CourseProjectStudio", () => {
     const { container } = render(
       <CourseProjectStudio
         courseSlug="ki-und-gesellschaft"
-        lessonId="arbeit-1-1"
+        lessonId="zahlen-1-1"
         locale="de"
       />,
     );

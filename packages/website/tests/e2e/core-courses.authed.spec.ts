@@ -22,7 +22,7 @@ const CORE_ROUTES = [
     hub: "/ki-fuehrerschein/kurs",
     hubHeading: "KI-Führerschein",
     lesson: "/ki-fuehrerschein/kurs/block_1",
-    lessonHeading: "KI ist schon da",
+    lessonHeading: "Was darf rein?",
   },
   {
     hub: "/eu-ai-act-kurs/kurs",
@@ -34,7 +34,7 @@ const CORE_ROUTES = [
     hub: "/ki-und-gesellschaft/kurs",
     hubHeading: "KI und Gesellschaft",
     lesson: "/ki-und-gesellschaft/kurs/block_1",
-    lessonHeading: "KI und Arbeit",
+    lessonHeading: "Jobzahlen lesen",
   },
   {
     hub: "/ai-native/kurs",

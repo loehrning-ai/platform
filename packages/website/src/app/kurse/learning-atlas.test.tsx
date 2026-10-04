@@ -884,7 +884,7 @@ describe("LearningAtlas phone ledger", () => {
     expect(next).toHaveClass("p-4", "sm:p-6");
     const kicker = next.querySelector("p");
     const phoneDuration = kicker?.querySelector(":scope > .sm\\:hidden:not([aria-hidden])");
-    expect(phoneDuration).toHaveTextContent("ca. 1 Std. 40 Min.");
+    expect(phoneDuration).toHaveTextContent("ca. 45 Min.");
     expect(within(next).getAllByRole("link")[0]).toHaveClass(
       "w-full",
       "justify-between",

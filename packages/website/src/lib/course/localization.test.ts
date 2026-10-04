@@ -58,7 +58,7 @@ describe("foundation-course locale contract", () => {
     const german = getBlocks("ki-und-gesellschaft", "de");
     const english = getBlocks("ki-und-gesellschaft", "en");
 
-    expect(english[0]?.title).toBe("AI and work");
+    expect(english[0]?.title).toBe("Reading jobs figures");
     expect(english[0]?.title).not.toBe(german[0]?.title);
     expect(english.flatMap((block) => block.lessons).map((lesson) => lesson.id)).toEqual(
       german.flatMap((block) => block.lessons).map((lesson) => lesson.id),

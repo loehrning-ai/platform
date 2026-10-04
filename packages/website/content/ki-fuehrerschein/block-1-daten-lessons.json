@@ -1,0 +1,322 @@
+{
+  "blockId": "block_1",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-04-05",
+  "format": "lesson-engine/v1",
+  "reviewCadence": "legal",
+  "riskClass": "legal",
+  "triggerEvents": [
+    "gdpr-guidance-update",
+    "major-conceptual-update"
+  ],
+  "lessons": [
+    {
+      "id": "daten-1-1",
+      "blockId": "block_1",
+      "number": 1,
+      "title": "Vier Stufen in einer Minute",
+      "subtitle": "Erst einstufen, dann eingeben",
+      "durationMinutes": 6,
+      "keyConcepts": [
+        "Datenschutz",
+        "Datenklasse",
+        "Freigabe",
+        "Datenminimierung"
+      ],
+      "concept": {
+        "body": "Ob eine Eingabe in ein KI-Tool zulässig ist, entscheiden drei Fragen: **Welche Datenklasse?** **Ist genau diese Kombination aus Tool, Zweck und Datenklasse freigegeben?** **Braucht der Zweck die Angabe überhaupt?** Die dritte Frage ist Datenminimierung, ein Grundsatz der DSGVO (Art. 5 Abs. 1 lit. c).\n\nEin Beispielmodell mit vier Stufen, das deine Organisation anpasst:\n\n| Stufe | Beispiel | Regel |\n|---|---|---|\n| Öffentlich | freigegebener Website-Text | Rechte und Aktualität prüfen |\n| Intern | Projektplan, Protokoll | nur in freigegebenen Tools |\n| Vertraulich | Kundenliste, Konditionen | Freigabe plus Vertrag, Konfiguration, Rechte |\n| Besonders geschützt | Gehalt, Gesundheit, Bewerbung | allgemeine Assistenten gesperrt |\n\nPasswörter und andere Zugangsdaten gehören auf keiner Stufe in einen Prompt.",
+        "takeaway": "Einstufen vor Eingeben: Stufe, Freigabe, Minimierung. Fehlt eine Antwort, gibst du nichts ein.",
+        "sources": [
+          {
+            "label": "DSGVO Art. 5",
+            "url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "bucket-sort",
+        "title": "Sortiere zwölf Datenschnipsel",
+        "instructions": "Lege jede Karte auf den passenden Stapel. Nach jeder Karte siehst du sofort, warum sie dorthin gehört. Die Stufen sind Annahmen für ein fiktives Unternehmen.",
+        "props": {
+          "buckets": [
+            {
+              "id": "public",
+              "label": "Öffentlich",
+              "hint": "schon veröffentlicht"
+            },
+            {
+              "id": "internal",
+              "label": "Intern",
+              "hint": "nicht für draußen"
+            },
+            {
+              "id": "confidential",
+              "label": "Vertraulich",
+              "hint": "Vertrag, Personen, Geschäft"
+            },
+            {
+              "id": "protected",
+              "label": "Besonders geschützt",
+              "hint": "schwerer Schaden möglich"
+            },
+            {
+              "id": "never",
+              "label": "Nie eingeben",
+              "hint": "auf keiner Stufe"
+            }
+          ],
+          "items": [
+            {
+              "id": "press",
+              "text": "Pressetext, der seit Montag auf der Website steht",
+              "bucket": "public",
+              "why": "Schon veröffentlicht. Prüfe trotzdem, ob du die aktuelle Fassung nimmst und die Rechte hast."
+            },
+            {
+              "id": "catalog",
+              "text": "Produktkatalog als PDF von der Website",
+              "bucket": "public",
+              "why": "Öffentlich verfügbar. Version und freigegebene Verwendung bleiben zu prüfen."
+            },
+            {
+              "id": "minutes",
+              "text": "Protokoll der Teamrunde von gestern",
+              "bucket": "internal",
+              "why": "Nicht für draußen, aber ohne besonderen Schutzbedarf. Nur in einem freigegebenen Tool, Namen nur, wenn der Zweck sie braucht."
+            },
+            {
+              "id": "plan",
+              "text": "Projektplan mit Meilensteinen",
+              "bucket": "internal",
+              "why": "Typisch intern: gehört in einen Arbeitsablauf, der für interne Daten freigegeben ist."
+            },
+            {
+              "id": "customers",
+              "text": "Kundenliste mit Namen und E-Mail-Adressen",
+              "bucket": "confidential",
+              "why": "Personenbezogene Daten: Zweck, Rechtsgrundlage, Auftragsverarbeitung und Minimierung müssen passen."
+            },
+            {
+              "id": "terms",
+              "text": "Einkaufskonditionen eines Lieferanten",
+              "bucket": "confidential",
+              "why": "Meist vertraglich vertraulich. Nur mit Freigabe für vertrauliche Daten und passenden Berechtigungen."
+            },
+            {
+              "id": "revenue",
+              "text": "Quartalsumsatz vor der Veröffentlichung",
+              "bucket": "confidential",
+              "why": "Unveröffentlichte Kennzahl: Geheimhaltung und Zugriffsrechte gelten, bis sie veröffentlicht ist."
+            },
+            {
+              "id": "payslip",
+              "text": "Gehaltsabrechnung einer Kollegin",
+              "bucket": "protected",
+              "why": "Schwerer Schaden bei Fehlverarbeitung. Nur in ausdrücklich dafür genehmigten Fachverfahren, nie in allgemeinen Assistenten."
+            },
+            {
+              "id": "sicknote",
+              "text": "Krankmeldung mit Diagnose",
+              "bucket": "protected",
+              "why": "Gesundheitsdaten sind eine besondere Kategorie nach DSGVO Art. 9 und brauchen besonderen Schutz."
+            },
+            {
+              "id": "application",
+              "text": "Bewerbungsunterlagen mit Lebenslauf",
+              "bucket": "protected",
+              "why": "Entscheidungen über Menschen, viele persönliche Angaben: nur im genehmigten Bewerbungsprozess."
+            },
+            {
+              "id": "apikey",
+              "text": "API-Schlüssel für das Shopsystem",
+              "bucket": "never",
+              "why": "Zugangsdaten öffnen Systeme. Sie gehören auf keiner Stufe in einen Prompt."
+            },
+            {
+              "id": "password",
+              "text": "Passwort für das Kundenportal",
+              "bucket": "never",
+              "why": "Wie jeder Zugang: nie eingeben. Bei Verdacht auf ein Leck sofort ändern und melden."
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "daten-1-1-c1",
+          "prompt": "Eine Kollegin will eine Kundenliste in ein KI-Tool laden. Das Tool hat eine Unternehmenslizenz. Was entscheidet, ob sie das darf?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Die Unternehmenslizenz reicht aus.",
+              "correct": false,
+              "feedback": "Eine Lizenz sagt nichts darüber, ob genau dieser Zweck mit dieser Datenklasse freigegeben ist."
+            },
+            {
+              "id": "b",
+              "text": "Ob Tool, Zweck und Datenklasse zusammen freigegeben sind und ob der Zweck alle Angaben braucht.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Ob die Trainingsnutzung ausgeschaltet ist.",
+              "correct": false,
+              "feedback": "Der Schalter ersetzt weder Vertrag noch Rechtsgrundlage oder Berechtigungen."
+            }
+          ],
+          "explanation": "Freigaben gelten für Kombinationen aus Tool, Zweck und Datenklasse. Dazu kommt Datenminimierung: Was der Zweck nicht braucht, bleibt draußen."
+        },
+        {
+          "id": "daten-1-1-c2",
+          "prompt": "Du findest nicht heraus, ob ein Tool für vertrauliche Daten freigegeben ist. Was tust du?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Vorsichtig eingeben und danach den Verlauf löschen.",
+              "correct": false,
+              "feedback": "Mit der Eingabe sind die Daten übertragen. Löschen danach macht das nicht rückgängig."
+            },
+            {
+              "id": "b",
+              "text": "Nichts eingeben und den Freigabeweg deiner Organisation fragen.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Die Daten ins Englische übersetzen und dann eingeben.",
+              "correct": false,
+              "feedback": "Eine Übersetzung ändert nichts an der Datenklasse."
+            }
+          ],
+          "explanation": "Fehlt eine Antwort auf Stufe, Freigabe oder Minimierung, gibst du nichts ein. Nachfragen ist schneller als ein Vorfall."
+        }
+      ]
+    },
+    {
+      "id": "daten-1-2",
+      "blockId": "block_1",
+      "number": 2,
+      "title": "Schwärzen, bevor du einfügst",
+      "subtitle": "Nur was der Zweck braucht",
+      "durationMinutes": 6,
+      "keyConcepts": [
+        "Datenminimierung",
+        "Pseudonymisierung"
+      ],
+      "concept": {
+        "body": "Frag bei jeder Angabe: **Braucht die Aufgabe das?** Für eine Antwort auf eine Reklamation braucht ein Modell den Sachverhalt, nicht IBAN, Handynummer oder Privatadresse. Weglassen oder durch Platzhalter ersetzen ist Datenminimierung (DSGVO Art. 5 Abs. 1 lit. c).\n\nZwei Grenzen:\n\n- **Schwärzen macht ein nicht freigegebenes Tool nicht zulässig.** Es senkt das Risiko innerhalb eines freigegebenen Ablaufs.\n- **Pseudonymisierte Daten bleiben personenbezogen**, solange sich die Person mit Zusatzwissen wieder bestimmen lässt (DSGVO Art. 4 Nr. 5, Erwägungsgrund 26).\n\nMustererkennung findet E-Mail-Adressen, Telefonnummern und IBANs. Namen im Fließtext, Gesundheitsangaben und Geschäftsgeheimnisse erkennt kein Muster zuverlässig: die prüfst du selbst.",
+        "takeaway": "Schwärze alles, was der Zweck nicht braucht. Das ersetzt keine Freigabe.",
+        "sources": [
+          {
+            "label": "DSGVO Art. 4, 5, ErwG 26",
+            "url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "pii-redactor",
+        "title": "Mach die Reklamation einfügefertig",
+        "instructions": "Du willst mit dem freigegebenen Firmen-Assistenten eine Antwort entwerfen. Tippe jede Angabe an, die der Entwurf nicht braucht, und prüf dann das Ergebnis. Alle Daten sind erfunden.",
+        "props": {
+          "segments": [
+            {
+              "text": "Guten Tag, hier schreibt "
+            },
+            {
+              "text": "Petra Sommerfeld",
+              "pii": "Name: Für den Entwurf reicht „die Kundin“."
+            },
+            {
+              "text": " von Bergmann Hydraulik. Unsere Bestellung über "
+            },
+            {
+              "text": "zwölf Hydraulikpumpen"
+            },
+            {
+              "text": " kam "
+            },
+            {
+              "text": "acht Arbeitstage zu spät"
+            },
+            {
+              "text": ". Die Erstattung bitte auf "
+            },
+            {
+              "text": "DE00 1111 2222 3333 4444 55",
+              "pii": "IBAN: Zahlungen laufen über die Buchhaltung, nie über einen Entwurf."
+            },
+            {
+              "text": ". Erreichbar bin ich unter "
+            },
+            {
+              "text": "+00 0000 000000",
+              "pii": "Private Handynummer: für den Text nicht nötig."
+            },
+            {
+              "text": " oder "
+            },
+            {
+              "text": "p.sommerfeld@example.com",
+              "pii": "E-Mail-Adresse: Die Antwort geht ohnehin an die Absenderin."
+            },
+            {
+              "text": ". Ich erwarte eine Erklärung, wie künftige Verspätungen verhindert werden."
+            }
+          ],
+          "freeText": true
+        }
+      },
+      "checks": [
+        {
+          "id": "daten-1-2-c1",
+          "prompt": "Du hast alle Namen und Nummern geschwärzt. Darfst du den Text jetzt in einen privaten, nicht freigegebenen Chatdienst kopieren?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Ja, geschwärzt darf der Text in jedes Tool.",
+              "correct": false,
+              "feedback": "Kontext, Geschäftsdetails und Rückschlüsse bleiben, und das Tool ist nicht geprüft."
+            },
+            {
+              "id": "b",
+              "text": "Nein. Schwärzen senkt das Risiko, ersetzt aber keine Freigabe des Tools.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Ja, wenn du danach den Verlauf löschst.",
+              "correct": false,
+              "feedback": "Die Übertragung ist mit der Eingabe passiert."
+            }
+          ],
+          "explanation": "Schwärzen ist ein Schritt innerhalb eines freigegebenen Ablaufs, kein Freifahrtschein für beliebige Dienste."
+        },
+        {
+          "id": "daten-1-2-c2",
+          "prompt": "Du ersetzt „Petra Sommerfeld“ durch „Kundin K-17“ und behältst eine Zuordnungsliste. Wie gelten die Daten nach der DSGVO?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Als anonym, also ohne Datenschutzregeln.",
+              "correct": false,
+              "feedback": "Anonym wären sie nur, wenn niemand die Person mit vertretbarem Aufwand wieder bestimmen kann."
+            },
+            {
+              "id": "b",
+              "text": "Als pseudonymisiert und damit weiter personenbezogen.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Als öffentlich, weil kein Name mehr dasteht.",
+              "correct": false,
+              "feedback": "Öffentlich ist eine Datenklasse für Veröffentlichtes, kein Ergebnis des Schwärzens."
+            }
+          ],
+          "explanation": "Mit der Zuordnungsliste lässt sich die Person wieder bestimmen. Solche Daten sind pseudonymisiert und bleiben personenbezogen (DSGVO Art. 4 Nr. 5, Erwägungsgrund 26)."
+        }
+      ]
+    }
+  ]
+}

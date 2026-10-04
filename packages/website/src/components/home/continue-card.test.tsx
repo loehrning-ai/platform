@@ -168,7 +168,7 @@ describe("ContinueCard", () => {
     expect(link).toHaveAttribute("href", "/ki-fuehrerschein/kurs");
     expect(link).toHaveTextContent("Erster Schritt");
     expect(link).toHaveTextContent("KI-Führerschein");
-    expect(link).toHaveTextContent("ca. 1 Std. 40 Min.");
+    expect(link).toHaveTextContent("ca. 45 Min.");
     expect(link).toHaveTextContent("Lernkonto nötig");
     expect(link).toHaveAttribute("data-home-course-access", "account-required");
     expect(link.querySelector("[data-home-access-label]")).toHaveClass("shrink-0");
@@ -218,7 +218,7 @@ describe("ContinueCard", () => {
     const link = screen.getByRole("link");
     expect(link).toHaveTextContent("Continue with");
     expect(link).toHaveTextContent("AI and Society");
-    expect(link).toHaveTextContent("3 of 9 lessons");
+    expect(link).toHaveTextContent("3 of 8 lessons");
     expect(link).toHaveTextContent("Account required");
     expect(link).toHaveAttribute("href", "/en/ki-und-gesellschaft/kurs");
   });
@@ -281,6 +281,6 @@ describe("homeContinueCourses", () => {
 
     expect(de.find((c) => c.slug === slug)?.title).toBe("KI-Führerschein");
     expect(en.find((c) => c.slug === slug)?.title).toBe("Everyday AI Literacy");
-    expect(en.find((c) => c.slug === slug)?.duration).toBe("about 1 hr 40 min");
+    expect(en.find((c) => c.slug === slug)?.duration).toBe("about 45 min");
   });
 });

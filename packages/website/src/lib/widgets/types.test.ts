@@ -21,6 +21,8 @@ import {
   EXERCISE_KINDS,
   TIER_A_KINDS,
   PRACTICE_KINDS,
+  LAB_KINDS,
+  isLabKind,
   ALL_WIDGET_KINDS,
   WIDGET_PLACEMENTS,
   WIDGET_COURSE_SLUGS,
@@ -153,19 +155,23 @@ describe("widgets/types: isWidgetKind", () => {
 });
 
 describe("widgets/types: kind partition invariant", () => {
-  it("ALL_WIDGET_KINDS is exactly the concatenation of the four groups", () => {
+  it("ALL_WIDGET_KINDS is exactly the concatenation of the five groups", () => {
     expect([...ALL_WIDGET_KINDS]).toEqual([
       ...DEMO_KINDS,
       ...EXERCISE_KINDS,
       ...TIER_A_KINDS,
       ...PRACTICE_KINDS,
+      ...LAB_KINDS,
     ]);
     expect(ALL_WIDGET_KINDS).toHaveLength(
       DEMO_KINDS.length +
         EXERCISE_KINDS.length +
         TIER_A_KINDS.length +
-        PRACTICE_KINDS.length,
+        PRACTICE_KINDS.length +
+        LAB_KINDS.length,
     );
+    expect(LAB_KINDS.every((kind) => isLabKind(kind))).toBe(true);
+    expect(isLabKind(DEMO_KINDS[0])).toBe(false);
   });
 
   it("contains no duplicate kind across the whole catalogue", () => {

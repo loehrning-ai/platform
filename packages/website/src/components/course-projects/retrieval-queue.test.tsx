@@ -312,7 +312,7 @@ describe("RetrievalQueue", () => {
       courseSlug,
     )
       .map(({ lessonId }) => lessonId)
-      .filter((lessonId) => lessonId.startsWith("deepfake-"));
+      .filter((lessonId) => lessonId.startsWith("fakes-"));
     seed(
       currentLessonId,
       1,

@@ -2,34 +2,33 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
+// Claim hygiene for the lesson-engine version of KI und Gesellschaft:
+// stable answer semantics across locales, no superseded claims, and the
+// legal and methodological boundaries the course must keep stating.
+
 type AnswerOption = { id: string; isCorrect: boolean };
 type Question = { id: string; answerOptions: AnswerOption[] };
+type CheckOption = { id: string; correct: boolean; feedback?: string };
 type Lesson = {
   id: string;
-  sections: Array<{ id: string }>;
-  quiz: Question[];
+  checks: Array<{ id: string; options: CheckOption[] }>;
+  exercise: { kind: string };
 };
 type Block = { blockId: string; lessons: Lesson[] };
 
 const BLOCK_FILES = [
   "block-1-arbeit-lessons.json",
-  "block-2-deepfakes-lessons.json",
-  "block-3-ethik-lessons.json",
+  "block-2-fakes-lessons.json",
+  "block-3-fairness-lessons.json",
 ] as const;
 
 const EXPECTED_LESSONS = [
-  ["arbeit-1-1", "arbeit-1-2", "arbeit-1-3"],
-  ["deepfake-2-1", "deepfake-2-2", "deepfake-2-3"],
-  ["ethik-3-1", "ethik-3-2", "ethik-3-3"],
+  ["zahlen-1-1", "zahlen-1-2"],
+  ["fakes-2-1", "fakes-2-2", "fakes-2-3"],
+  ["fair-3-1", "fair-3-2", "fair-3-3"],
 ] as const;
 
-const EXPECTED_LESSON_CORRECT = [
-  ["bcd", "bdd", "cbd"],
-  ["dbb", "cdc", "bdc"],
-  ["cbd", "bdd", "ddd"],
-] as const;
-
-const EXPECTED_WORKSHOP_CORRECT = "bbcb bbcc bdbbbdc".replaceAll(" ", "");
+const EXPECTED_WORKSHOP_CORRECT = "bcad bcad bcad bca".replaceAll(" ", "");
 
 function contentPath(locale: "de" | "en", filename: string): string {
   return resolve(
@@ -49,47 +48,36 @@ function correctAnswer(question: Question): string {
   return correct[0].id;
 }
 
-function assertQuestionShape(question: Question, expectedId: string): void {
-  expect(question.id).toBe(expectedId);
-  expect(question.answerOptions.map((option) => option.id)).toEqual([
-    "a",
-    "b",
-    "c",
-    "d",
-  ]);
-}
-
 describe("KI und Gesellschaft claim hygiene", () => {
   for (const locale of ["de", "en"] as const) {
-    it(`${locale} preserves stable lesson, section, question and answer semantics`, () => {
+    it(`${locale} preserves stable lesson, check, question and answer semantics`, () => {
       BLOCK_FILES.forEach((filename, blockIndex) => {
         const block = loadJson<Block>(locale, filename);
         expect(block.blockId).toBe(`block_${blockIndex + 1}`);
         expect(block.lessons.map((lesson) => lesson.id)).toEqual(
           EXPECTED_LESSONS[blockIndex],
         );
-
-        block.lessons.forEach((lesson, lessonIndex) => {
-          expect(lesson.sections.map((section) => section.id)).toEqual([
-            `${lesson.id}-s1`,
-            `${lesson.id}-s2`,
-            `${lesson.id}-s3`,
+        for (const lesson of block.lessons) {
+          expect(lesson.checks.map((check) => check.id)).toEqual([
+            `${lesson.id}-c1`,
+            `${lesson.id}-c2`,
           ]);
-          lesson.quiz.forEach((question, questionIndex) => {
-            assertQuestionShape(question, `${lesson.id}-q${questionIndex + 1}`);
-          });
-          expect(lesson.quiz.map(correctAnswer).join("")).toBe(
-            EXPECTED_LESSON_CORRECT[blockIndex][lessonIndex],
-          );
-        });
+          for (const check of lesson.checks) {
+            expect(check.options.filter((option) => option.correct)).toHaveLength(1);
+          }
+        }
       });
 
       const workshop = loadJson<Question[]>(locale, "quiz/questions.json");
+      expect(workshop).toHaveLength(15);
       workshop.forEach((question, index) => {
-        assertQuestionShape(
-          question,
-          `kug-q${String(index + 1).padStart(2, "0")}`,
-        );
+        expect(question.id).toBe(`kug-q${String(index + 1).padStart(2, "0")}`);
+        expect(question.answerOptions.map((option) => option.id)).toEqual([
+          "a",
+          "b",
+          "c",
+          "d",
+        ]);
       });
       expect(workshop.map(correctAnswer).join("")).toBe(
         EXPECTED_WORKSHOP_CORRECT,
@@ -122,6 +110,12 @@ describe("KI und Gesellschaft claim hygiene", () => {
       /The cause was the overrepresentation/i,
       /Plattformen sind nach EU Digital Services Act verpflichtet, gemeldete Inhalte zu überprüfen/i,
       /platforms must review reported content/i,
+      // Looks are not a test: no artefact checklists.
+      /typische Fälschungsmuster/i,
+      /typical forgery patterns/i,
+      // Detector percentages are not calibrated probabilities.
+      /Detektor (?:beweist|belegt)/i,
+      /detector (?:proves|establishes)/i,
     ];
 
     for (const pattern of supersededClaims) {
@@ -140,23 +134,33 @@ describe("KI und Gesellschaft claim hygiene", () => {
     ).join("\n");
 
     for (const required of [
-      "Aufgabenexposition",
-      "Art. 3 Nr. 60",
+      "Exposition",
+      "Substituierbarkeit heißt nicht, dass automatisiert wird",
+      "§ 87 Abs. 1 Nr. 6 BetrVG",
+      "Fehlen sie, beweist das keine Manipulation",
+      "nicht automatisch eine kalibrierte",
+      "Art. 16 DSA",
+      "Deine Stimme allein schützt § 22 KUG nicht",
       "Geschlechtsklassifikation",
-      "Art. 16 des Digital Services Act",
-      "Art. 22 Abs. 1 DSGVO",
-      "2. Dezember 2026",
+      "Synthetische Daten",
+      "ausschließlich automatisierten Entscheidungen",
+      "2. Dezember 2027",
     ]) {
       expect(german).toContain(required);
     }
 
     for (const required of [
-      "Task exposure",
-      "Article 3(60)",
+      "Exposure",
+      "substitutability does not mean automation happens",
+      "Section 87(1) no. 6 BetrVG",
+      "Their absence does not prove manipulation",
+      "not automatically a calibrated",
+      "Article 16 DSA",
+      "Your voice alone is not protected by Section 22 KUG",
       "gender classification",
-      "Article 16 of the Digital Services Act",
-      "Article 22(1) GDPR",
-      "2 December 2026",
+      "Synthetic data",
+      "solely automated decisions",
+      "2 December 2027",
     ]) {
       expect(english).toContain(required);
     }

@@ -1,0 +1,405 @@
+{
+  "blockId": "block_3",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-04-05",
+  "format": "lesson-engine/v1",
+  "reviewCadence": "evergreen",
+  "riskClass": "evergreen",
+  "triggerEvents": [
+    "major-conceptual-update"
+  ],
+  "lessons": [
+    {
+      "id": "pruefen-3-1",
+      "blockId": "block_3",
+      "number": 5,
+      "title": "Fehler gegen Quellen finden",
+      "subtitle": "Belegt, widersprochen oder fehlt",
+      "durationMinutes": 6,
+      "keyConcepts": [
+        "Primärquelle",
+        "Halluzination",
+        "Belegstatus"
+      ],
+      "concept": {
+        "body": "Sprachmodelle erzeugen wahrscheinliche Formulierungen, keine geprüften Fakten. Sie können Zahlen, Namen, Zitate und Zuständigkeiten falsch wiedergeben, auch mit Websuche oder Dokumentenzugriff. Im Fall Mata v. Avianca reichten Anwälte 2023 bei einem New Yorker Bundesgericht einen Schriftsatz mit erfundenen Urteilen aus einem Chatbot ein; das Gericht verhängte Sanktionen.\n\nPrüfe jede entscheidungsrelevante Aussage gegen die Primärquelle und gib ihr einen Status:\n\n- **belegt:** steht so in der Quelle,\n- **widersprochen:** die Quelle sagt etwas anderes,\n- **fehlt:** steht in keiner Quelle.\n\nWidersprochenes korrigierst du, Fehlendes streichst du oder markierst es als offen. Ein zweites Modell oder eine Suchmaschine ist keine Primärquelle.",
+        "takeaway": "Erst wenn jede Aussage einen Status hat, geht der Text raus.",
+        "sources": [
+          {
+            "label": "Mata v. Avianca, S.D.N.Y. 2023 (22-cv-1461)"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "claim-checker",
+        "title": "Prüfe einen Statusbericht",
+        "instructions": "Bewerte jede unterstrichene Aussage im Entwurf gegen das Quellenpaket, dann werte aus. Quellen, Entwurf und Namen sind erfunden.",
+        "props": {
+          "sources": [
+            {
+              "id": "A",
+              "label": "Quelle A: Beschlussprotokoll",
+              "text": "Budget für den Pilotbetrieb: 1,8 Mio. EUR. Freigegeben am 12. Mai."
+            },
+            {
+              "id": "B",
+              "label": "Quelle B: Projektstatus",
+              "text": "Juli ist ein Zielkorridor. Ein verbindlicher Starttermin wurde nicht beschlossen."
+            },
+            {
+              "id": "C",
+              "label": "Quelle C: Sicherheitsfreigabe",
+              "text": "Die Freigabe gilt nur für das EU-Kundenportal, Version 2.4, ohne Datei-Upload. Andere Produkte und Funktionen sind nicht umfasst."
+            }
+          ],
+          "draftLabel": "KI-Entwurf für den Vorstandsbericht",
+          "draft": [
+            {
+              "text": "Der Vorstand hat "
+            },
+            {
+              "text": "18 Mio. EUR für das Gesamtprogramm",
+              "claimId": "budget"
+            },
+            {
+              "text": " freigegeben, und zwar "
+            },
+            {
+              "text": "am 12. Mai",
+              "claimId": "date"
+            },
+            {
+              "text": ". Das Projekt startet "
+            },
+            {
+              "text": "verbindlich am 1. Juli",
+              "claimId": "start"
+            },
+            {
+              "text": " "
+            },
+            {
+              "text": "unter Leitung von Frau Keller",
+              "claimId": "lead"
+            },
+            {
+              "text": ". Die Sicherheitsfreigabe gilt "
+            },
+            {
+              "text": "für alle Kundenprodukte einschließlich Datei-Upload",
+              "claimId": "security"
+            },
+            {
+              "text": "."
+            }
+          ],
+          "claims": [
+            {
+              "id": "budget",
+              "verdict": "contradicted",
+              "sourceId": "A",
+              "evidence": "Budget für den Pilotbetrieb: 1,8 Mio. EUR.",
+              "correction": "1,8 Mio. EUR für den Pilotbetrieb",
+              "why": "Faktor zehn und falscher Umfang: Pilot statt Gesamtprogramm."
+            },
+            {
+              "id": "date",
+              "verdict": "supported",
+              "sourceId": "A",
+              "evidence": "Freigegeben am 12. Mai.",
+              "why": "Das Datum steht so im Beschlussprotokoll."
+            },
+            {
+              "id": "start",
+              "verdict": "contradicted",
+              "sourceId": "B",
+              "evidence": "Ein verbindlicher Starttermin wurde nicht beschlossen.",
+              "correction": "Juli ist ein Zielkorridor, ein Starttermin ist nicht beschlossen.",
+              "why": "Aus einem Zielkorridor wurde ein fester Termin."
+            },
+            {
+              "id": "lead",
+              "verdict": "missing",
+              "correction": "Streichen oder als offen markieren.",
+              "why": "Keine Quelle nennt eine Projektleitung. Plausibel heißt nicht belegt."
+            },
+            {
+              "id": "security",
+              "verdict": "contradicted",
+              "sourceId": "C",
+              "evidence": "Die Freigabe gilt nur für das EU-Kundenportal, Version 2.4, ohne Datei-Upload.",
+              "correction": "Freigabe nur für das EU-Kundenportal 2.4 ohne Datei-Upload.",
+              "why": "Der Entwurf weitet die Freigabe auf alle Produkte und genau die ausgeschlossene Funktion aus."
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "pruefen-3-1-c1",
+          "prompt": "Der Entwurf nennt „Frau Keller“ als Projektleitung. Keine Quelle erwähnt eine Leitung. Welcher Status?",
+          "options": [
+            {
+              "id": "a",
+              "text": "belegt",
+              "correct": false,
+              "feedback": "Belegt ist nur, was eine Quelle sagt."
+            },
+            {
+              "id": "b",
+              "text": "widersprochen",
+              "correct": false,
+              "feedback": "Widersprochen wäre es, wenn eine Quelle eine andere Person nennt."
+            },
+            {
+              "id": "c",
+              "text": "fehlt: streichen oder als offen markieren",
+              "correct": true
+            }
+          ],
+          "explanation": "Was in keiner Quelle steht, ist nicht belegt, auch wenn es plausibel klingt."
+        },
+        {
+          "id": "pruefen-3-1-c2",
+          "prompt": "Du willst eine Zahl aus einem KI-Entwurf prüfen. Was ist eine Primärquelle?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Ein zweites Sprachmodell, das dieselbe Zahl nennt.",
+              "correct": false,
+              "feedback": "Zwei Modelle können denselben Fehler machen."
+            },
+            {
+              "id": "b",
+              "text": "Das Dokument, das die Tatsache festhält, etwa Beschlussprotokoll oder Buchhaltung.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Eine Kollegin, die sich an die Zahl erinnert.",
+              "correct": false,
+              "feedback": "Erinnerung ist ein Hinweis, kein Beleg."
+            }
+          ],
+          "explanation": "Primärquelle ist das Dokument, das die Tatsache festhält. Dort prüfst du Definition, Zeitraum, Einheit und Stand."
+        }
+      ]
+    },
+    {
+      "id": "pruefen-3-2",
+      "blockId": "block_3",
+      "number": 6,
+      "title": "Wie tief prüfen?",
+      "subtitle": "Prüftiefe nach Wirkung, nicht nach Gefühl",
+      "durationMinutes": 5,
+      "keyConcepts": [
+        "Prüftiefe",
+        "Umkehrbarkeit",
+        "Vier-Augen-Prinzip"
+      ],
+      "concept": {
+        "body": "Nicht jede KI-Ausgabe braucht dieselbe Prüfung. Drei Fragen bestimmen die Tiefe:\n\n1. **Wirkung:** Was passiert, wenn die Aussage falsch ist? Ein holpriger Satz oder eine falsche Zahl in einer Entscheidung?\n2. **Umkehrbarkeit:** Lässt sich der Fehler leicht korrigieren, oder ist eine Zusage, Zahlung oder Entscheidung über Personen schon in der Welt?\n3. **Empfänger:** nur du, das Team, Kundschaft oder Öffentlichkeit?\n\nJe höher die Einstufung, desto mehr gehört dazu: vom Gegenlesen über Quellen- und Rechenprüfung bis zur fachlichen Freigabe im Vier-Augen-Prinzip. Rechtsaussagen, Finanzzahlen, Entscheidungen über Personen und Zusagen nach außen stehen immer oben. Eine feste Prüfdauer gibt es nicht. Dokumentiere die Prüfung, wenn die Wirkung es verlangt.",
+        "takeaway": "Je folgenreicher, schwerer umkehrbar und öffentlicher, desto gründlicher."
+      },
+      "exercise": {
+        "kind": "calculator",
+        "title": "Stufe drei Fälle ein",
+        "instructions": "Stelle die drei Regler für jeden Fall unten so ein, wie du ihn einschätzt. Der Rechner zeigt die Prüfstufe und was dazugehört.",
+        "props": {
+          "inputs": [
+            {
+              "id": "impact",
+              "label": "Wirkung eines Fehlers",
+              "type": "select",
+              "default": 1,
+              "options": [
+                {
+                  "value": 1,
+                  "label": "Kosmetisch"
+                },
+                {
+                  "value": 2,
+                  "label": "Inhaltlich"
+                },
+                {
+                  "value": 3,
+                  "label": "Folgenreich: Geld, Recht, Personen"
+                }
+              ]
+            },
+            {
+              "id": "reversal",
+              "label": "Umkehrbarkeit",
+              "type": "select",
+              "default": 1,
+              "options": [
+                {
+                  "value": 1,
+                  "label": "Leicht korrigierbar"
+                },
+                {
+                  "value": 2,
+                  "label": "Aufwändig"
+                },
+                {
+                  "value": 3,
+                  "label": "Kaum umkehrbar"
+                }
+              ]
+            },
+            {
+              "id": "audience",
+              "label": "Empfänger",
+              "type": "select",
+              "default": 1,
+              "options": [
+                {
+                  "value": 1,
+                  "label": "Nur ich"
+                },
+                {
+                  "value": 2,
+                  "label": "Team intern"
+                },
+                {
+                  "value": 3,
+                  "label": "Kundschaft oder Öffentlichkeit"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "points",
+              "label": "Punkte (3 bis 9)",
+              "formula": "impact + reversal + audience",
+              "format": "int"
+            },
+            {
+              "id": "level",
+              "label": "Prüfstufe",
+              "formula": "(impact == 3 || points >= 7) ? 3 : (points >= 5 ? 2 : 1)",
+              "format": "int",
+              "emphasis": true,
+              "help": "Folgenreiche Wirkung führt immer zu Stufe 3."
+            }
+          ],
+          "chart": {
+            "kind": "bars",
+            "title": "Woher die Punkte kommen",
+            "format": "int",
+            "bars": [
+              {
+                "label": "Wirkung",
+                "formula": "impact",
+                "tone": "accent"
+              },
+              {
+                "label": "Umkehrbarkeit",
+                "formula": "reversal",
+                "tone": "accent"
+              },
+              {
+                "label": "Empfänger",
+                "formula": "audience",
+                "tone": "accent"
+              }
+            ]
+          },
+          "verdicts": [
+            {
+              "when": "level == 3",
+              "tone": "bad",
+              "title": "Stufe 3: Fachprüfung und Freigabe",
+              "body": "Primärquellen öffnen, Zahlen unabhängig nachrechnen, zuständige Fachperson prüfen lassen, Vier-Augen-Freigabe, Prüfung dokumentieren."
+            },
+            {
+              "when": "level == 2",
+              "tone": "warn",
+              "title": "Stufe 2: Quellen- und Rechenprüfung",
+              "body": "Jede Zahl, jedes Datum und jede Person gegen die Quelle prüfen, offene Punkte markieren."
+            },
+            {
+              "when": "true",
+              "tone": "good",
+              "title": "Stufe 1: Gegenlesen",
+              "body": "Ton und offensichtliche Fehler prüfen. Keine ungeprüften Fakten weitergeben."
+            }
+          ],
+          "goals": [
+            {
+              "id": "notes",
+              "label": "Fall A: KI hat deine eigenen Stichpunkte umformuliert, nur für dich.",
+              "when": "impact == 1 && reversal == 1 && audience == 1",
+              "insight": "Stufe 1. Gegenlesen reicht, solange keine Fakten weitergehen."
+            },
+            {
+              "id": "status",
+              "label": "Fall B: Statusmail mit Projektzahlen an dein Team.",
+              "when": "impact == 2 && audience == 2",
+              "insight": "Stufe 2. Zahlen gegen das Projektcontrolling prüfen, bevor das Team damit plant."
+            },
+            {
+              "id": "refund",
+              "label": "Fall C: Antwort an einen Kunden, die eine Erstattung zusagt.",
+              "when": "impact == 3 && audience == 3",
+              "insight": "Stufe 3. Eine Zusage über Geld nach außen gibt die zuständige Person frei."
+            }
+          ],
+          "note": "Ein Lernmodell, keine Norm. Die Prüfregeln deiner Organisation gehen vor."
+        }
+      },
+      "checks": [
+        {
+          "id": "pruefen-3-2-c1",
+          "prompt": "Ein KI-Entwurf soll an eine Kundin gehen und verspricht eine Gutschrift. Welche Prüfung passt?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Kurz gegenlesen, der Ton passt ja.",
+              "correct": false,
+              "feedback": "Ein guter Ton sagt nichts über die Gutschrift. Eine Zusage über Geld nach außen braucht Quelle und Freigabe."
+            },
+            {
+              "id": "b",
+              "text": "Fakten gegen die Quellen prüfen und die Gutschrift von der zuständigen Person freigeben lassen.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Ein zweites Modell den Text prüfen lassen.",
+              "correct": false,
+              "feedback": "Ein zweites Modell ersetzt weder Quelle noch Befugnis."
+            }
+          ],
+          "explanation": "Zusage über Geld, nach außen, schwer umkehrbar: höchste Stufe."
+        },
+        {
+          "id": "pruefen-3-2-c2",
+          "prompt": "Warum gibt es keine feste Prüfdauer pro Text?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Weil KI-Texte meistens stimmen.",
+              "correct": false,
+              "feedback": "Gerade weil Fehler plausibel klingen, richtet sich die Prüfung nach den Folgen eines Fehlers."
+            },
+            {
+              "id": "b",
+              "text": "Weil die nötige Prüfung von Wirkung, Umkehrbarkeit und Empfängern abhängt, nicht von der Länge.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Weil nur lange Texte geprüft werden müssen.",
+              "correct": false,
+              "feedback": "Länge ist kein Maßstab. Ein einziger Satz kann eine folgenreiche Zahl enthalten."
+            }
+          ],
+          "explanation": "Ein Satz mit einer falschen Zahl kann folgenreicher sein als eine Seite Ideensammlung."
+        }
+      ]
+    }
+  ]
+}

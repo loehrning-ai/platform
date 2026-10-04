@@ -194,6 +194,27 @@
   --shadow-card-hover:
     0 4px 12px rgba(18, 18, 18, 0.07), 0 24px 56px rgba(18, 18, 18, 0.12);
 
+  /* Lesson engine ("Lab"): the lesson reader and its exercise widgets are a
+     calm, elevated learning surface, deliberately unlike the flat poster and
+     landing layer. Soft layered depth on paper, never a dark ground. Only
+     the lesson-engine and lab-widget files use these tokens
+     (lesson-engine-design-contract.test.ts). */
+  --shadow-lab-sm: 0 1px 2px rgba(18, 18, 18, 0.05), 0 2px 6px rgba(18, 18, 18, 0.04);
+  --shadow-lab:
+    0 1px 2px rgba(18, 18, 18, 0.05), 0 8px 24px -10px rgba(18, 18, 18, 0.16);
+  --shadow-lab-lg:
+    0 2px 4px rgba(18, 18, 18, 0.05), 0 24px 48px -20px rgba(39, 71, 181, 0.28);
+  --color-lab-ink: #121212;
+  --color-lab-accent: #2747b5; /* Kobalt: interactive accent, 7.6:1 on Bogen */
+  --color-lab-accent-soft: #e6ebf8;
+  --color-lab-good: #205b46;
+  --color-lab-good-soft: #e3f1ea;
+  --color-lab-bad: #991b1b;
+  --color-lab-bad-soft: #f9e5e2;
+  --color-lab-warn: #78350f;
+  --color-lab-warn-soft: #fbefd9;
+  --color-lab-line: #e4ddd2;
+
   /* Motion from the deck's --m-* tokens, scaled for reading. */
   --ease-deck: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-fade: cubic-bezier(0.4, 0, 0.2, 1);
@@ -1079,4 +1100,37 @@
   --tw-prose-pre-code: var(--color-foreground);
   --tw-prose-invert-pre-bg: var(--color-inset);
   --tw-prose-invert-pre-code: var(--color-foreground);
+}
+
+/* Lesson engine washes: brand-palette gradients on paper (no dark ground).
+   Text on every wash keeps Druckschwarz, 14:1 or more. */
+.lab-wash-sky {
+  background-image: linear-gradient(
+    135deg,
+    rgba(169, 221, 252, 0.45) 0%,
+    rgba(255, 252, 245, 0) 55%
+  );
+}
+
+.lab-wash-peach {
+  background-image: linear-gradient(
+    135deg,
+    rgba(255, 179, 138, 0.35) 0%,
+    rgba(255, 252, 245, 0) 60%
+  );
+}
+
+.lab-wash-acid {
+  background-image: linear-gradient(
+    120deg,
+    rgba(221, 244, 90, 0.38) 0%,
+    rgba(255, 252, 245, 0) 55%
+  );
+}
+
+.lab-grid-paper {
+  background-image:
+    linear-gradient(rgba(39, 71, 181, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(39, 71, 181, 0.06) 1px, transparent 1px);
+  background-size: 24px 24px;
 }

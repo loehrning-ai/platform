@@ -56,14 +56,19 @@ describe("KI und Gesellschaft course landing page", () => {
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: /Assess work, deepfakes,\s*and bias\./,
+        name: /Check numbers, fakes,\s*and fairness\./,
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText("AI and work")).toBeInTheDocument();
-    // Each topic has its own checks: work, media and decisions list separate steps.
-    expect(screen.getByText(/Assess tasks, occupations/)).toBeInTheDocument();
-    expect(screen.getByText(/independent checks/)).toBeInTheDocument();
-    expect(screen.getByText(/appeal route/)).toBeInTheDocument();
+    expect(screen.getByText("Reading jobs figures")).toBeInTheDocument();
+    // Outcomes are concrete abilities, one per module.
+    expect(
+      screen.getByText("Read any “X% of jobs” headline correctly"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Verify a viral clip in five steps")).toBeInTheDocument();
+    expect(
+      screen.getByText("Explain why two fairness measures cannot both hold"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("3 modules, 8 hands-on lessons")).toBeInTheDocument();
 
     const startLinks = screen.getAllByRole("link", {
       name: /Start with a learning account/,
@@ -87,6 +92,7 @@ describe("KI und Gesellschaft course landing page", () => {
       inLanguage: "en",
       url: "https://loehrning.ai/en/ki-und-gesellschaft",
       isAccessibleForFree: true,
+      hasCourseInstance: { courseWorkload: "PT40M" },
     });
   });
 
@@ -95,7 +101,7 @@ describe("KI und Gesellschaft course landing page", () => {
     const metadata = await generateMetadata();
 
     expect(metadata.title).toBe(
-      "AI and Society: assess work, deepfakes, and bias",
+      "AI and Society: check jobs figures, fakes, and fairness",
     );
     expect(metadata.alternates).toEqual({
       canonical: "/en/ki-und-gesellschaft",

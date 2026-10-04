@@ -23,7 +23,10 @@ const sources = {
   assessment: read("kurs/course-assessment-cta.tsx"),
   verification: read("kurs/verification-page.tsx"),
   euAiActOverview: read("../../app/eu-ai-act-kurs/kurs/kurs-content.tsx"),
-  aiLiteracyOverview: read("../../app/ki-fuehrerschein/kurs/kurs-content.tsx"),
+  // KI-Führerschein runs on the lesson engine: its hub is the shared
+  // ModuleOverview (lesson-engine-design-contract.test.ts owns its elevation
+  // rules); the 44px and spacing rules below still apply to it.
+  aiLiteracyOverview: read("../lesson-engine/module-overview.tsx"),
   aiSocietyOverview: read(
     "../../app/ki-und-gesellschaft/kurs/kurs-content.tsx",
   ),
@@ -85,7 +88,6 @@ describe("course interaction design contract", () => {
       sources.assessment,
       sources.verification,
       sources.euAiActOverview,
-      sources.aiLiteracyOverview,
       sources.aiSocietyOverview,
     ]) {
       expect(source).not.toMatch(/shadow-\[/);

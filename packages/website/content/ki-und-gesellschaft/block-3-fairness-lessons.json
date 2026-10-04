@@ -1,0 +1,470 @@
+{
+  "blockId": "block_3",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-01-04",
+  "format": "lesson-engine/v1",
+  "reviewCadence": "legal",
+  "riskClass": "legal",
+  "triggerEvents": [
+    "eu-ai-act-amendment",
+    "major-conceptual-update"
+  ],
+  "lessons": [
+    {
+      "id": "fair-3-1",
+      "blockId": "block_3",
+      "number": 6,
+      "title": "Was eine Gesamtzahl verdeckt",
+      "subtitle": "Gender Shades: Fehler je Gruppe statt Durchschnitt",
+      "durationMinutes": 4,
+      "owner": "editorial:ki-und-gesellschaft",
+      "lastReviewed": "2026-10-04",
+      "nextReview": "2027-01-04",
+      "reviewCadence": "legal",
+      "riskClass": "legal",
+      "keyConcepts": [
+        "Gender Shades",
+        "Disaggregierte Evaluation",
+        "Intersektionalität"
+      ],
+      "concept": {
+        "body": "Joy Buolamwini und Timnit Gebru prüften 2018, wie kommerzielle Systeme von IBM, Microsoft und Face++ binäres Geschlecht aus Gesichtsbildern klassifizierten. Es ging um Geschlechtsklassifikation, nicht um die Identifizierung von Personen.\n\nDie höchste berichtete Fehlerrate für hellhäutige Männer lag bei **0,8 %**, für dunkelhäutige Frauen je nach System bei **bis zu 34,7 %**. Sichtbar wurde das erst, weil die Studie nach Hauttyp und Geschlecht getrennt auswertete.\n\nEine einzige Gesamtgenauigkeit hängt davon ab, wer im Testsatz steckt. Ist eine Gruppe dort selten, kann ihr Fehler fast unsichtbar bleiben. Belastbar ist die gemessene Differenz im Studienaufbau; Ursache und heutige Produktleistung sind getrennt zu prüfen.",
+        "takeaway": "Verlange Fehlerraten je Gruppe, nicht nur eine Gesamtgenauigkeit.",
+        "sources": [
+          {
+            "label": "Buolamwini & Gebru (2018): Gender Shades. PMLR 81",
+            "url": "https://proceedings.mlr.press/v81/buolamwini18a.html"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "calculator",
+        "title": "Verstecke eine Fehlerrate im Durchschnitt",
+        "instructions": "Verändere die Zusammensetzung eines Testsatzes und beobachte die Gesamtfehlerrate. Fertig, wenn beide Aufgaben erledigt sind.",
+        "props": {
+          "inputs": [
+            {
+              "id": "share",
+              "label": "Anteil dunkelhäutiger Frauen im Testsatz",
+              "help": "Der Rest sind hellhäutige Männer.",
+              "type": "slider",
+              "min": 0,
+              "max": 0.5,
+              "step": 0.01,
+              "default": 0.25,
+              "format": "percent"
+            }
+          ],
+          "outputs": [
+            {
+              "id": "overall",
+              "label": "Gesamtfehlerrate des Testsatzes",
+              "formula": "share * 0.347 + (1 - share) * 0.008",
+              "format": "percent",
+              "decimals": 1,
+              "emphasis": true
+            },
+            {
+              "id": "err_df",
+              "label": "Fehler bei dunkelhäutigen Frauen je 1.000 Testbilder",
+              "formula": "1000 * share * 0.347",
+              "format": "int"
+            },
+            {
+              "id": "err_lm",
+              "label": "Fehler bei hellhäutigen Männern je 1.000 Testbilder",
+              "formula": "1000 * (1 - share) * 0.008",
+              "format": "int"
+            }
+          ],
+          "chart": {
+            "kind": "bars",
+            "title": "Fehlerrate je Gruppe und gesamt",
+            "format": "percent",
+            "decimals": 1,
+            "bars": [
+              {
+                "label": "Hellhäutige Männer",
+                "formula": "0.008",
+                "tone": "good"
+              },
+              {
+                "label": "Dunkelhäutige Frauen",
+                "formula": "0.347",
+                "tone": "bad"
+              },
+              {
+                "label": "Gesamt",
+                "formula": "overall",
+                "tone": "accent"
+              }
+            ]
+          },
+          "verdicts": [
+            {
+              "when": "overall < 0.05",
+              "tone": "warn",
+              "title": "Sieht gut aus, verdeckt 34,7 %",
+              "body": "Die Gesamtzahl wirkt unauffällig, weil die betroffene Gruppe im Testsatz selten ist."
+            },
+            {
+              "when": "true",
+              "tone": "neutral",
+              "title": "Die Lücke wird sichtbar",
+              "body": "Je ausgewogener der Testsatz, desto deutlicher zeigt die Gesamtzahl das Problem. Besser ist trotzdem: Fehler je Gruppe ausweisen."
+            }
+          ],
+          "goals": [
+            {
+              "id": "rare",
+              "label": "Stelle einen Testsatz mit höchstens 5 % dunkelhäutigen Frauen ein",
+              "when": "share <= 0.05",
+              "insight": "Gesamtfehler etwa 2,5 %: Die Zahl sieht gut aus. Doch von rund 25 Fehlern je 1.000 Testbildern treffen etwa 17 die kleine Gruppe."
+            },
+            {
+              "id": "balanced",
+              "label": "Stelle einen ausgewogenen Testsatz ein (50 %)",
+              "when": "share >= 0.5",
+              "insight": "Gesamtfehler etwa 17,8 %. Erst die Aufschlüsselung je Gruppe zeigt, wo das System versagt."
+            }
+          ],
+          "note": "Vereinfachtes Rechenbeispiel mit zwei Gruppen und den in der Studie berichteten Extremwerten (0,8 % und bis zu 34,7 %). Kein einzelnes Produkt."
+        }
+      },
+      "checks": [
+        {
+          "id": "fair-3-1-c1",
+          "prompt": "Ein Anbieter wirbt mit „98 % Genauigkeit“. Was fragst du zuerst?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Wie hoch sind die Fehlerraten je relevanter Gruppe, und wer war im Testsatz?",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Wie schnell das System rechnet.",
+              "correct": false,
+              "feedback": "Geschwindigkeit sagt nichts darüber, für wen die Fehler anfallen."
+            },
+            {
+              "id": "c",
+              "text": "Nichts, 98 % reichen für jeden Einsatz.",
+              "correct": false,
+              "feedback": "Eine Gesamtzahl kann eine sehr hohe Fehlerrate in einer kleinen Gruppe verdecken."
+            }
+          ],
+          "explanation": "Gesamtgenauigkeit hängt von der Zusammensetzung des Testsatzes ab. Erst Werte je Gruppe zeigen, wen Fehler treffen."
+        },
+        {
+          "id": "fair-3-1-c2",
+          "prompt": "Was hat Gender Shades gemessen?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Fehlerraten kommerzieller Systeme bei der Klassifikation von binärem Geschlecht aus Gesichtsbildern.",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Wie gut Gesichtserkennung einzelne Personen identifiziert.",
+              "correct": false,
+              "feedback": "Die Studie prüfte Geschlechtsklassifikation, nicht Identifizierung."
+            },
+            {
+              "id": "c",
+              "text": "Die Ursache der Fehler in den Trainingsdaten jedes Herstellers.",
+              "correct": false,
+              "feedback": "Ohne Zugang zu den Trainingsdaten belegt die Studie keine Ursache je Hersteller."
+            }
+          ],
+          "explanation": "Belegt ist die gemessene Differenz im Studienaufbau. Ursache und heutige Leistung sind eigene Fragen."
+        }
+      ]
+    },
+    {
+      "id": "fair-3-2",
+      "blockId": "block_3",
+      "number": 7,
+      "title": "Zwei Fairness-Maße, ein Zielkonflikt",
+      "subtitle": "COMPAS und warum nicht alles zugleich gleich sein kann",
+      "durationMinutes": 6,
+      "owner": "editorial:ki-und-gesellschaft",
+      "lastReviewed": "2026-10-04",
+      "nextReview": "2027-01-04",
+      "reviewCadence": "legal",
+      "riskClass": "legal",
+      "keyConcepts": [
+        "Fehlerraten-Gleichheit",
+        "Kalibrierung",
+        "Grundrate"
+      ],
+      "concept": {
+        "body": "ProPublica verglich 2016 mehr als 7.000 COMPAS-Risikowerte aus Broward County, Florida, mit späteren Festnahmen. Schwarze Beschuldigte ohne erneute Festnahme waren häufiger fälschlich als hohes Risiko eingestuft als weiße. Northpointe hielt dagegen: Innerhalb der Risikostufen seien die Werte für beide Gruppen ähnlich kalibriert.\n\nBeide Befunde können zugleich stimmen. Chouldechova (2017) und Kleinberg, Mullainathan und Raghavan (2016) zeigten: Unterscheiden sich die Grundraten zwischen Gruppen und ist die Vorhersage nicht perfekt, lassen sich gleiche Fehlerraten und gleiche Aussagekraft eines Alarms im Allgemeinen nicht gleichzeitig erreichen.\n\nWelches Maß zählen soll, ist keine technische Frage. Das müssen Menschen vor dem Einsatz festlegen, begründen und dokumentieren.",
+        "takeaway": "Fairness ist eine Entscheidung zwischen Maßen. Benenne, welches gilt und warum.",
+        "sources": [
+          {
+            "label": "Angwin et al., ProPublica (2016): Machine Bias"
+          },
+          {
+            "label": "Chouldechova (2017): Fair prediction with disparate impact. Big Data 5(2)"
+          },
+          {
+            "label": "Kleinberg, Mullainathan & Raghavan (2016): Inherent Trade-Offs in the Fair Determination of Risk Scores"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "threshold-lab",
+        "title": "Verschiebe die Schwelle eines Risikowerts",
+        "instructions": "Zwei synthetische Gruppen mit gleicher Score-Verteilung, aber unterschiedlicher Grundrate. Erfülle beide Aufgaben und beobachte, welche Kennzahl dabei auseinanderläuft.",
+        "props": {
+          "groups": [
+            {
+              "id": "a",
+              "label": "Gruppe A (Grundrate 50 %)",
+              "baseRate": 0.5,
+              "n": 200
+            },
+            {
+              "id": "b",
+              "label": "Gruppe B (Grundrate 30 %)",
+              "baseRate": 0.3,
+              "n": 200
+            }
+          ],
+          "separation": 1.6,
+          "initialThreshold": 0.5,
+          "allowSplit": true,
+          "goals": [
+            {
+              "id": "low-fpr",
+              "label": "Gemeinsame Schwelle: Falsch-Positiv-Rate in Gruppe A höchstens 10 %",
+              "when": "split == 0 && fpr_a <= 0.1",
+              "insight": "Die Fehlalarmrate ist in beiden Gruppen gleich. Aber ein Alarm stimmt in Gruppe B seltener: Die PPV liegt deutlich unter Gruppe A."
+            },
+            {
+              "id": "equal-ppv",
+              "label": "Getrennte Schwellen: gleicher PPV-Wert, also gleiche Aussagekraft eines Alarms",
+              "when": "split == 1 && abs(ppv_a - ppv_b) < 0.02",
+              "insight": "Jetzt bedeutet ein Alarm in beiden Gruppen dasselbe. Dafür laufen Fehlalarm- und Falsch-Negativ-Rate auseinander. Beides zugleich geht nicht."
+            }
+          ],
+          "scoreLabel": "Risikowert",
+          "positiveLabel": "tatsächlich erneut festgenommen",
+          "negativeLabel": "nicht erneut festgenommen",
+          "note": "Synthetische Daten, kein COMPAS-Datensatz. Gleiche Score-Verteilung je Klasse, nur die Grundraten unterscheiden sich."
+        }
+      },
+      "checks": [
+        {
+          "id": "fair-3-2-c1",
+          "prompt": "ProPublica und Northpointe kamen bei COMPAS zu gegensätzlichen Ergebnissen. Warum können beide recht haben?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Sie maßen verschiedene Fairness-Maße, die sich bei unterschiedlichen Grundraten nicht gleichzeitig erfüllen lassen.",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Eine Seite hat falsch gerechnet.",
+              "correct": false,
+              "feedback": "Der Widerspruch folgt aus der Mathematik, nicht aus einem Rechenfehler."
+            },
+            {
+              "id": "c",
+              "text": "Mit mehr Daten verschwindet der Konflikt.",
+              "correct": false,
+              "feedback": "Solange Grundraten verschieden und Vorhersagen unvollkommen sind, bleibt der Zielkonflikt."
+            }
+          ],
+          "explanation": "Fehlerraten-Gleichheit und Kalibrierung sind unterschiedliche Ziele. Bei ungleichen Grundraten muss man wählen."
+        },
+        {
+          "id": "fair-3-2-c2",
+          "prompt": "Wer entscheidet, welches Fairness-Maß für einen Einsatz gilt?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Die Verantwortlichen vor dem Einsatz, begründet und dokumentiert.",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Das Modell selbst während des Trainings.",
+              "correct": false,
+              "feedback": "Ein Modell optimiert, was man ihm vorgibt. Die Wahl des Maßes ist eine menschliche Wertentscheidung."
+            },
+            {
+              "id": "c",
+              "text": "Niemand, weil alle Maße dasselbe messen.",
+              "correct": false,
+              "feedback": "Die Maße messen Verschiedenes und können sich widersprechen, wie das Labor zeigt."
+            }
+          ],
+          "explanation": "Welche Fehler wen treffen dürfen, ist eine normative Entscheidung. Sie gehört vor den Einsatz und in die Dokumentation."
+        }
+      ]
+    },
+    {
+      "id": "fair-3-3",
+      "blockId": "block_3",
+      "number": 8,
+      "title": "Wer verantwortet was?",
+      "subtitle": "Pflichten zuordnen und eigene Rechte kennen",
+      "durationMinutes": 5,
+      "owner": "editorial:ki-und-gesellschaft",
+      "lastReviewed": "2026-10-04",
+      "nextReview": "2027-01-04",
+      "reviewCadence": "legal",
+      "riskClass": "legal",
+      "keyConcepts": [
+        "Anbieter und Betreiber",
+        "Automatisierte Entscheidung",
+        "Auskunftsrecht"
+      ],
+      "concept": {
+        "body": "„Die KI hat entschieden“ nennt weder Organisation noch Rechtsgrundlage. Pflichten hängen an Rolle und Handlung:\n\n- **Anbieter** entwickeln ein System und bringen es in Verkehr. Für Hochrisiko-Systeme sorgen sie etwa für Daten-Governance (Art. 10) und Protokollierbarkeit (Art. 12).\n- **Betreiber** setzen es ein: Sie folgen der Gebrauchsanweisung, übertragen die Aufsicht kompetenten Personen und bewahren Logs auf (Art. 26).\n- **Betroffene** können nach Art. 15 DSGVO Auskunft verlangen, bei ausschließlich automatisierten Entscheidungen mit erheblicher Wirkung auch über die involvierte Logik (Art. 15 Abs. 1 lit. h DSGVO).\n\nDie DSGVO gilt schon heute. Die Hochrisiko-Pflichten für eigenständige Anhang-III-Systeme, etwa im Recruiting, gelten nach Verordnung (EU) 2026/1744 ab 2. Dezember 2027. Rollen im Detail behandelt der [Kurs EU AI Act](/eu-ai-act-kurs).",
+        "takeaway": "Frag bei jeder automatisierten Entscheidung: Wer stellt bereit, wer setzt ein, wer entscheidet, und was darf ich verlangen?",
+        "sources": [
+          {
+            "label": "Verordnung (EU) 2024/1689, Art. 10, 12, 26",
+            "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+          },
+          {
+            "label": "DSGVO Art. 15 und 22",
+            "url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "bucket-sort",
+        "title": "Ordne acht Pflichten und Rechte zu",
+        "instructions": "Lies den erfundenen Fall und ordne jede Pflicht oder jedes Recht der Rolle zu, an der sie hängt. Fertig, wenn alle acht einsortiert sind.",
+        "props": {
+          "context": {
+            "label": "Fall (erfunden)",
+            "text": "Die Muster GmbH kauft bei einem Softwarehaus ein System, das Bewerbungen vorsortiert. Eine Personalerin entscheidet über Einladungen. Bewerber Alex wird nicht eingeladen und will wissen, warum."
+          },
+          "buckets": [
+            {
+              "id": "provider",
+              "label": "Softwarehaus (Anbieter)"
+            },
+            {
+              "id": "deployer",
+              "label": "Muster GmbH (Betreiber)"
+            },
+            {
+              "id": "person",
+              "label": "Alex (betroffene Person)"
+            }
+          ],
+          "items": [
+            {
+              "id": "data",
+              "bucket": "provider",
+              "text": "Trainings-, Validierungs- und Testdaten auf mögliche Verzerrungen prüfen (Art. 10)",
+              "why": "Daten-Governance ist eine Anforderung an das System, für die der Anbieter sorgt."
+            },
+            {
+              "id": "logging",
+              "bucket": "provider",
+              "text": "Automatische Protokollierung technisch ermöglichen (Art. 12)",
+              "why": "Das System muss Logs erzeugen können. Das baut der Anbieter ein."
+            },
+            {
+              "id": "instructions",
+              "bucket": "deployer",
+              "text": "Das System gemäß Gebrauchsanweisung verwenden (Art. 26 Abs. 1)",
+              "why": "Wer einsetzt, hält sich an die Gebrauchsanweisung des Anbieters."
+            },
+            {
+              "id": "oversight",
+              "bucket": "deployer",
+              "text": "Die Aufsicht Personen mit nötiger Kompetenz und Befugnis übertragen (Art. 26 Abs. 2)",
+              "why": "Menschliche Aufsicht im Betrieb organisiert der Betreiber."
+            },
+            {
+              "id": "logs",
+              "bucket": "deployer",
+              "text": "Automatisch erzeugte Logs grundsätzlich mindestens sechs Monate aufbewahren (Art. 26 Abs. 6)",
+              "why": "Der Anbieter ermöglicht Logs, der Betreiber bewahrt die Logs unter seiner Kontrolle auf."
+            },
+            {
+              "id": "access",
+              "bucket": "person",
+              "text": "Auskunft über die eigenen verarbeiteten Daten verlangen (Art. 15 DSGVO)",
+              "why": "Das Auskunftsrecht gilt schon heute und richtet sich an den Verantwortlichen, hier die Muster GmbH."
+            },
+            {
+              "id": "human",
+              "bucket": "person",
+              "text": "Menschliches Eingreifen verlangen, wenn eine Entscheidung ausschließlich automatisiert war (Art. 22 Abs. 3 DSGVO)",
+              "why": "Gilt nur bei ausschließlich automatisierten Entscheidungen mit erheblicher Wirkung und in den Ausnahmefällen nach Abs. 2 lit. a und c. Hier entscheidet eine Personalerin, das ist zu prüfen."
+            },
+            {
+              "id": "complaint",
+              "bucket": "person",
+              "text": "Beschwerde bei der zuständigen Marktüberwachungsbehörde einlegen (Art. 85)",
+              "why": "Jede Person, die einen Verstoß gegen die KI-Verordnung vermutet, kann sich beschweren."
+            }
+          ],
+          "passRatio": 0
+        }
+      },
+      "checks": [
+        {
+          "id": "fair-3-3-c1",
+          "prompt": "Ein System sortiert Bewerbungen vor, eine Personalerin entscheidet. Greift Art. 22 DSGVO automatisch?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Nicht automatisch: Art. 22 betrifft Entscheidungen, die ausschließlich automatisiert sind. Wie viel die Personalerin wirklich prüft, ist zu klären.",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Ja, sobald irgendeine KI beteiligt ist.",
+              "correct": false,
+              "feedback": "Art. 22 setzt eine ausschließlich automatisierte Entscheidung mit erheblicher Wirkung voraus."
+            },
+            {
+              "id": "c",
+              "text": "Nein, Bewerbungen fallen nie unter die DSGVO.",
+              "correct": false,
+              "feedback": "Bewerbungsdaten sind personenbezogen. Die DSGVO gilt, etwa das Auskunftsrecht nach Art. 15."
+            }
+          ],
+          "explanation": "Entscheidend ist, ob ein Mensch tatsächlich entscheidet oder nur formal bestätigt."
+        },
+        {
+          "id": "fair-3-3-c2",
+          "prompt": "Wer bewahrt die automatisch erzeugten Logs eines Hochrisiko-Systems im Betrieb auf?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Der Betreiber, soweit die Logs unter seiner Kontrolle stehen (Art. 26 Abs. 6).",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Die betroffene Person.",
+              "correct": false,
+              "feedback": "Betroffene haben Rechte, aber keine Aufbewahrungspflicht."
+            },
+            {
+              "id": "c",
+              "text": "Niemand, Logs sind freiwillig.",
+              "correct": false,
+              "feedback": "Für Hochrisiko-Systeme sind Protokollierung (Art. 12) und Aufbewahrung (Art. 26 Abs. 6) Pflicht, sobald die Vorschriften anwendbar sind."
+            }
+          ],
+          "explanation": "Der Anbieter macht Logs möglich, der Betreiber bewahrt sie grundsätzlich mindestens sechs Monate auf."
+        }
+      ]
+    }
+  ]
+}

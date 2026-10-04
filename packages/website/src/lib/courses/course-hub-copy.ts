@@ -82,7 +82,7 @@ export const COURSE_PROMISES: Readonly<
     "ki-fuehrerschein":
       "Du weißt, welche Daten ins KI-Tool dürfen, und prüfst Antworten vorm Weitergeben.",
     "ki-und-gesellschaft":
-      "Du prüfst die Daten hinter KI-Schlagzeilen und weißt, was bei Deepfake-Verdacht hilft.",
+      "Du entschlüsselst Jobschlagzeilen, prüfst ein virales Video und rechnest nach, was ein Detektoralarm wert ist.",
     "eu-ai-act-kurs":
       "Risikoklasse, Rolle, Pflichten und Fristen eines KI-Tools bestimmen.",
     "ai-native":
@@ -100,7 +100,7 @@ export const COURSE_PROMISES: Readonly<
     "ki-fuehrerschein":
       "You know what data AI may see and check answers before sharing.",
     "ki-und-gesellschaft":
-      "You trace AI headlines to their data and handle suspected deepfakes.",
+      "You decode jobs headlines, verify a viral video and work out what a detector alert is worth.",
     "eu-ai-act-kurs":
       "Determine an AI tool's risk class, role, duties and deadlines.",
     "ai-native":
@@ -133,7 +133,7 @@ export const COURSE_PROMISES_SHORT: Readonly<
 > = {
   de: {
     "ki-fuehrerschein": "Daten richtig einsetzen, KI-Antworten prüfen",
-    "ki-und-gesellschaft": "KI-Schlagzeilen und Deepfakes einordnen",
+    "ki-und-gesellschaft": "Jobzahlen, Fakes und Fairness prüfen",
     "eu-ai-act-kurs": "Risikoklasse, Rolle und Pflichten bestimmen",
     "ai-native": "Claude-Projekt und n8n-Ablauf einrichten",
     "data-infrastructure": "Design einer Datenplattform begründen",
@@ -143,7 +143,7 @@ export const COURSE_PROMISES_SHORT: Readonly<
   },
   en: {
     "ki-fuehrerschein": "Share data safely, check AI answers",
-    "ki-und-gesellschaft": "Read AI headlines and deepfakes critically",
+    "ki-und-gesellschaft": "Check jobs figures, fakes and fairness",
     "eu-ai-act-kurs": "Name risk class, role and duties",
     "ai-native": "Set up a Claude project and an n8n workflow",
     "data-infrastructure": "Justify a data platform's design choices",

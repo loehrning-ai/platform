@@ -63,10 +63,10 @@ describe("knowledge-graph locale representations", () => {
       pageLanguage: "en-GB",
       title: "Everyday AI Literacy",
     });
-    // Copy lock updated: the English summary now leads with what the model
-    // does and where it fails, rather than naming the topic.
+    // Copy lock updated with the lesson-engine pilot: the English summary
+    // leads with the hands-on lessons and what the learner does in them.
     expect(course?.localizedPages.en.summary).toMatch(
-      /how generative AI answers, where it fails/i,
+      /Eight short hands-on lessons: classify and redact data/i,
     );
   });
 

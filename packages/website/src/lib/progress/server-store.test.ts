@@ -508,7 +508,7 @@ describe("fetchUnifiedProgressForUser", () => {
     });
   });
 
-  it("ignores a canonical course row containing fabricated lesson IDs without poisoning valid rows", async () => {
+  it("drops fabricated or retired lesson IDs from a stored row instead of rejecting the row or poisoning valid rows", async () => {
     table.rows.set(key(USER, "ai-native"), {
       user_id: USER,
       course_slug: "ai-native",
@@ -546,8 +546,59 @@ describe("fetchUnifiedProgressForUser", () => {
     );
     expect(fetched.ok).toBe(true);
     if (!fetched.ok) throw new Error("unreachable");
-    expect(fetched.result.progress?.courses["ai-native"]).toBeUndefined();
+    // Lesson IDs can be retired by a content port (KI-Führerschein moved to
+    // the lesson engine). The row keeps its quiz and timestamps; only the
+    // unknown lesson entry is dropped, so later syncs of the row succeed.
+    expect(fetched.result.progress?.courses["ai-native"]?.lessons).toEqual({});
     expect(fetched.result.progress?.courses["ki-fuehrerschein"]).toBeDefined();
+  });
+
+  it("keeps a passed quiz from a pre-engine KI-Führerschein row while dropping its retired lessons", async () => {
+    table.rows.set(key(USER, "ki-fuehrerschein"), {
+      user_id: USER,
+      course_slug: "ki-fuehrerschein",
+      progress: {
+        schemaVersion: 3,
+        slice: slice({
+          lessons: {
+            block_1_lesson_1: {
+              sectionsRead: ["block_1_lesson_1_section_1"],
+              quizScore: 1,
+              quizTotal: 2,
+              completed: true,
+              exercisesCompleted: {},
+            },
+            "daten-1-1": {
+              sectionsRead: ["daten-1-1_exercise", "block_1_lesson_1_section_2"],
+              quizScore: null,
+              quizTotal: null,
+              completed: false,
+              exercisesCompleted: {},
+            },
+          },
+          workshopQuiz: {
+            passed: true,
+            score: 0.9,
+            completedAt: "2026-05-01T00:00:00.000Z",
+          },
+        }),
+      },
+      created_at: "2026-01-02T00:00:00.000Z",
+      updated_at: "2026-01-02T00:00:00.000Z",
+    });
+
+    const fetched = await fetchUnifiedProgressForUser(
+      fakeSupabase(table),
+      USER,
+    );
+    expect(fetched.ok).toBe(true);
+    if (!fetched.ok) throw new Error("unreachable");
+    const kf = fetched.result.progress?.courses["ki-fuehrerschein"];
+    expect(Object.keys(kf?.lessons ?? {})).toEqual(["daten-1-1"]);
+    expect(kf?.lessons["daten-1-1"]?.sectionsRead).toEqual([
+      "daten-1-1_exercise",
+    ]);
+    expect(kf?.workshopQuiz.passed).toBe(true);
   });
 
   it("returns a typed failure when the provider query rejects", async () => {

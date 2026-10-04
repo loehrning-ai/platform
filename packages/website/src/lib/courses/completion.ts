@@ -13,13 +13,42 @@ import {
   checkpointKey,
   legacyCompletionEvidenceCheckpointKey,
 } from "@/lib/progress/types";
+import { engineExerciseStepId } from "@/lib/lesson-engine/types";
 
 const numbered = (prefix: string, count: number): readonly string[] =>
   Array.from({ length: count }, (_, index) => `${prefix}${index + 1}`);
 
-const KI_FUEHRERSCHEIN_LESSON_IDS = [3, 3, 4, 4, 4].flatMap((count, index) =>
-  numbered(`block_${index + 1}_lesson_`, count),
-);
+/**
+ * KI-Führerschein runs on the lesson engine (docs/lesson-engine.md): four
+ * modules, eight lessons. The pre-engine `block_N_lesson_M` IDs are retired;
+ * stored progress under them is dropped by `normalizeCanonicalProgress` (browser) and
+ * `dropRetiredLessonEntries` in server-store.ts (stored rows) instead of failing validation.
+ */
+const KI_FUEHRERSCHEIN_LESSON_IDS = [
+  "daten-1-1",
+  "daten-1-2",
+  "briefen-2-1",
+  "briefen-2-2",
+  "pruefen-3-1",
+  "pruefen-3-2",
+  "regeln-4-1",
+  "regeln-4-2",
+] as const;
+/**
+ * KI und Gesellschaft runs on the lesson engine: three modules, eight
+ * lessons. The pre-engine arbeit-/deepfake-/ethik- IDs are retired and
+ * dropped the same way as the KI-Führerschein ones.
+ */
+const KI_UND_GESELLSCHAFT_LESSON_IDS = [
+  "zahlen-1-1",
+  "zahlen-1-2",
+  "fakes-2-1",
+  "fakes-2-2",
+  "fakes-2-3",
+  "fair-3-1",
+  "fair-3-2",
+  "fair-3-3",
+] as const;
 const EU_AI_ACT_LESSON_IDS = Array.from({ length: 6 }, (_, index) =>
   numbered(`block_${index + 1}_lesson_`, 4),
 ).flat();
@@ -41,17 +70,7 @@ export const CANONICAL_LESSON_IDS: Readonly<
   Record<CourseSlug, readonly string[]>
 > = {
   "ki-fuehrerschein": KI_FUEHRERSCHEIN_LESSON_IDS,
-  "ki-und-gesellschaft": [
-    "arbeit-1-1",
-    "arbeit-1-2",
-    "arbeit-1-3",
-    "deepfake-2-1",
-    "deepfake-2-2",
-    "deepfake-2-3",
-    "ethik-3-1",
-    "ethik-3-2",
-    "ethik-3-3",
-  ],
+  "ki-und-gesellschaft": KI_UND_GESELLSCHAFT_LESSON_IDS,
   "eu-ai-act-kurs": EU_AI_ACT_LESSON_IDS,
   "ai-native": AI_NATIVE_LESSON_IDS,
   "data-infrastructure": DATA_INFRA_LESSON_IDS,
@@ -79,6 +98,18 @@ function sectionsByCount(
     lessonIds.map((lessonId, index) => [
       lessonId,
       sequentialSectionIds(lessonId, counts[index] ?? 0, separator),
+    ]),
+  );
+}
+
+/** Lesson-engine courses track one step per lesson: the exercise. */
+function engineSteps(
+  lessonIds: readonly string[],
+): Readonly<Record<string, readonly string[]>> {
+  return Object.fromEntries(
+    lessonIds.map((lessonId) => [
+      lessonId,
+      [engineExerciseStepId(lessonId)],
     ]),
   );
 }
@@ -122,15 +153,8 @@ const DATA_INFRA_SECTION_IDS: Readonly<Record<string, readonly string[]>> = {
 export const CANONICAL_SECTION_IDS: Readonly<
   Record<CourseSlug, Readonly<Record<string, readonly string[]>>>
 > = {
-  "ki-fuehrerschein": sectionsByCount(
-    KI_FUEHRERSCHEIN_LESSON_IDS,
-    KI_FUEHRERSCHEIN_LESSON_IDS.map(() => 2),
-  ),
-  "ki-und-gesellschaft": sectionsByCount(
-    CANONICAL_LESSON_IDS["ki-und-gesellschaft"],
-    CANONICAL_LESSON_IDS["ki-und-gesellschaft"].map(() => 3),
-    "-s",
-  ),
+  "ki-fuehrerschein": engineSteps(KI_FUEHRERSCHEIN_LESSON_IDS),
+  "ki-und-gesellschaft": engineSteps(KI_UND_GESELLSCHAFT_LESSON_IDS),
   "eu-ai-act-kurs": sectionsByCount(
     EU_AI_ACT_LESSON_IDS,
     EU_AI_ACT_LESSON_IDS.map((lessonId) =>
@@ -175,6 +199,22 @@ export const EVIDENCE_GATED_COURSE_SLUGS = [
   "data-science",
   "ai-native-operator",
 ] as const satisfies readonly CourseSlug[];
+
+/**
+ * Courses whose lessons run on the lesson engine (docs/lesson-engine.md).
+ * Their lesson proof is "exercise step recorded" + "both checks answered
+ * correctly" (a perfect lesson quiz score). Add a slug here in the same change
+ * that ports its content and switches its CANONICAL_SECTION_IDS to
+ * `engineSteps(...)`.
+ */
+export const LESSON_ENGINE_COURSE_SLUGS = [
+  "ki-fuehrerschein",
+  "ki-und-gesellschaft",
+] as const satisfies readonly CourseSlug[];
+
+export function isLessonEngineCourse(slug: CourseSlug): boolean {
+  return (LESSON_ENGINE_COURSE_SLUGS as readonly CourseSlug[]).includes(slug);
+}
 
 export type EvidenceGatedCourseSlug =
   (typeof EVIDENCE_GATED_COURSE_SLUGS)[number];
@@ -297,6 +337,9 @@ export function isLessonCompletionEvidenceBacked(
     (slug === "ai-native" && AI_NATIVE_TRANSFER_PROOF_LESSON_IDS.has(lessonId))
   ) {
     return true;
+  }
+  if (isLessonEngineCourse(slug)) {
+    return lesson.quizScore === 1 && lesson.quizTotal !== null;
   }
   return lesson.quizScore !== null && lesson.quizTotal !== null;
 }

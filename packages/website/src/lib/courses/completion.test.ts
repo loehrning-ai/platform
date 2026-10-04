@@ -16,6 +16,10 @@ import {
   operatorLessonEvidenceCheckpointIds,
 } from "./completion";
 import { getAllLessons as getAllSpineLessons } from "@/lib/course/data";
+import {
+  engineLessonProgressStepIds,
+  isEngineLesson,
+} from "@/lib/lesson-engine/lesson";
 import { getAllLessons as getAllAiNativeLessons } from "@/lib/ai-native/data";
 import { getAllLessons as getAllOperatorLessons } from "@/lib/ai-native-operator/data";
 import { getAllDataInfraLessons } from "@/lib/data-infrastructure/data";
@@ -215,7 +219,11 @@ describe("canonical course completion", () => {
         CANONICAL_LESSON_IDS[slug],
       );
       for (const lesson of lessons) {
-        const authored = lesson.sections.map((section) => section.id);
+        // Lesson-engine lessons track their exercise step; legacy lessons
+        // track every authored section.
+        const authored = isEngineLesson(lesson)
+          ? [...engineLessonProgressStepIds(lesson.id)]
+          : lesson.sections.map((section) => section.id);
         expect(
           getCanonicalSectionIds(slug, lesson.id),
           `${slug}/${lesson.id}`,
@@ -239,18 +247,21 @@ describe("canonical course completion", () => {
 
   it("normalizes stale lesson and section keys while preserving canonical data and the historical ledger", () => {
     const progress = withLessons("ki-fuehrerschein", [
-      "block_1_lesson_1",
+      "daten-1-1",
       "retired-lesson",
+      // Pre-engine KI-Führerschein ID: retired with the lesson-engine port.
+      "block_1_lesson_1",
     ]);
     progress.courses["ki-fuehrerschein"] = {
       ...progress.courses["ki-fuehrerschein"]!,
       lessons: {
         ...progress.courses["ki-fuehrerschein"]!.lessons,
-        block_1_lesson_1: {
+        "daten-1-1": {
           ...completedLesson,
           sectionsRead: [
-            "block_1_lesson_1_section_1",
+            "daten-1-1_exercise",
             "stale-section",
+            "daten-1-1_exercise",
             "block_1_lesson_1_section_1",
           ],
         },
@@ -267,11 +278,11 @@ describe("canonical course completion", () => {
 
     expect(
       Object.keys(normalized.courses["ki-fuehrerschein"]!.lessons),
-    ).toEqual(["block_1_lesson_1"]);
+    ).toEqual(["daten-1-1"]);
     expect(
-      normalized.courses["ki-fuehrerschein"]!.lessons.block_1_lesson_1
+      normalized.courses["ki-fuehrerschein"]!.lessons["daten-1-1"]
         .sectionsRead,
-    ).toEqual(["block_1_lesson_1_section_1"]);
+    ).toEqual(["daten-1-1_exercise"]);
     expect(normalized.xp).toBe(777);
     expect(normalized.checkpoints).toEqual({ "historic::checkpoint": true });
     expect(normalized.badges).toEqual({

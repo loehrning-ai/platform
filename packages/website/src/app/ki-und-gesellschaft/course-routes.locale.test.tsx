@@ -28,12 +28,19 @@ describe("KI und Gesellschaft locale propagation across the course lifecycle", (
 
   it("passes the audited English locale and content through every route wrapper", async () => {
     const hub = await CourseHubPage();
-    expect(hub.props).toMatchObject({ locale: "en", totalLessons: 9 });
-    expect(hub.props.blocks).toHaveLength(3);
-    expect(hub.props.blocks[0]).toMatchObject({
+    expect(hub.props).toMatchObject({ locale: "en" });
+    expect(hub.props.modules).toHaveLength(3);
+    expect(hub.props.modules[0]).toMatchObject({
       id: "block_1",
-      title: "AI and work",
+      title: "Reading jobs figures",
+      durationMinutes: 10,
     });
+    expect(
+      hub.props.modules.flatMap(
+        (module: { lessons: readonly { id: string }[] }) =>
+          module.lessons.map((lesson) => lesson.id),
+      ),
+    ).toHaveLength(8);
 
     const block = await BlockPage({
       params: Promise.resolve({ blockId: "block_1" }),
@@ -58,26 +65,46 @@ describe("KI und Gesellschaft locale propagation across the course lifecycle", (
   });
 
   it("renders localized course-hub chrome and destinations", () => {
-    render(<KursContent blocks={[]} totalLessons={9} locale="en" />);
-
-    expect(screen.getByRole("link", { name: "Back to home" })).toHaveAttribute(
-      "href",
-      "/en",
+    render(
+      <KursContent
+        locale="en"
+        modules={[
+          {
+            id: "block_1",
+            title: "Reading jobs figures",
+            description: "Separate exposure from forecasts.",
+            durationMinutes: 10,
+            orderIndex: 0,
+            lessons: [
+              { id: "zahlen-1-1", title: "Decode jobs headlines", durationMinutes: 5 },
+              { id: "zahlen-1-2", title: "Your task profile", durationMinutes: 5 },
+            ],
+          },
+        ]}
+      />,
     );
+
+    expect(
+      screen.getByRole("link", { name: "Back to the course page" }),
+    ).toHaveAttribute("href", "/en/ki-und-gesellschaft");
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
       "AI and Society",
     );
-    expect(screen.getByText("Sources and limits")).toBeInTheDocument();
+    expect(screen.getByText(/Every lesson has an exercise/)).toBeInTheDocument();
     expect(
-      screen.getByText(/not legal, career, or case-specific advice/),
+      screen.getByText(/not legal advice and does not assess a specific/),
     ).toBeInTheDocument();
-    expect(screen.getByText("Final quiz")).toBeInTheDocument();
-    expect(screen.getByText(/15 practical questions/)).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /Decode jobs headlines/ }),
+    ).toHaveAttribute(
+      "href",
+      "/en/ki-und-gesellschaft/kurs/block_1#lesson=zahlen-1-1",
+    );
   });
 
   it("localizes protected reader and block metadata while keeping them noindex", async () => {
     expect(await generateCourseMetadata()).toMatchObject({
-      title: "AI and Society: work, deepfakes, and bias",
+      title: "AI and Society: check jobs figures, fakes, and fairness",
       robots: { index: false, follow: true },
       alternates: { canonical: "/en/ki-und-gesellschaft/kurs" },
       openGraph: {
@@ -89,7 +116,7 @@ describe("KI und Gesellschaft locale propagation across the course lifecycle", (
     const block = await generateBlockMetadata({
       params: Promise.resolve({ blockId: "block_1" }),
     });
-    expect(block.title).toContain("AI and work");
+    expect(block.title).toContain("Reading jobs figures");
     expect(block).toMatchObject({
       robots: { index: false, follow: true },
       openGraph: {

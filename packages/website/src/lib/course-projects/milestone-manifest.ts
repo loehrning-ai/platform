@@ -79,11 +79,12 @@ function defineCourseMilestones(
 export const COURSE_PROJECT_MILESTONE_MANIFEST: CourseProjectMilestoneManifest =
   Object.freeze({
     "ki-fuehrerschein": defineCourseMilestones("ki-fuehrerschein", {
-      ground: authoredUnits("ki-fuehrerschein", ["block_1_lesson_"]),
-      build: authoredUnits("ki-fuehrerschein", ["block_2_lesson_"]),
-      run: authoredUnits("ki-fuehrerschein", ["block_3_lesson_"]),
-      verify: authoredUnits("ki-fuehrerschein", ["block_4_lesson_"]),
-      transfer: authoredUnits("ki-fuehrerschein", ["block_5_lesson_"]),
+      // Lesson-engine IDs (four modules): data, briefing, checking, rules.
+      ground: authoredUnits("ki-fuehrerschein", ["daten-"]),
+      build: authoredUnits("ki-fuehrerschein", ["briefen-"]),
+      run: ["pruefen-3-1"],
+      verify: ["pruefen-3-2"],
+      transfer: authoredUnits("ki-fuehrerschein", ["regeln-"]),
     }),
     "eu-ai-act-kurs": defineCourseMilestones("eu-ai-act-kurs", {
       ground: authoredUnits("eu-ai-act-kurs", ["block_1_lesson_"]),
@@ -110,11 +111,12 @@ export const COURSE_PROJECT_MILESTONE_MANIFEST: CourseProjectMilestoneManifest =
       transfer: ["modul_4_lesson_7", "modul_4_lesson_8"],
     }),
     "ki-und-gesellschaft": defineCourseMilestones("ki-und-gesellschaft", {
-      ground: authoredUnits("ki-und-gesellschaft", ["arbeit-"]),
-      build: ["deepfake-2-1", "deepfake-2-2"],
-      run: ["deepfake-2-3"],
-      verify: ["ethik-3-1", "ethik-3-2"],
-      transfer: ["ethik-3-3"],
+      // Lesson-engine IDs (three modules): jobs figures, fakes, fairness.
+      ground: authoredUnits("ki-und-gesellschaft", ["zahlen-"]),
+      build: ["fakes-2-1", "fakes-2-2"],
+      run: ["fakes-2-3"],
+      verify: ["fair-3-1", "fair-3-2"],
+      transfer: ["fair-3-3"],
     }),
     "data-engineering-fundamentals": defineCourseMilestones(
       "data-engineering-fundamentals",

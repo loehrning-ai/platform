@@ -3,620 +3,620 @@
     "id": "q_w01",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "How do you record a spam filter in an AI inventory?",
+    "questionText": "What must you settle before entering data into an AI tool?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "Record function, version, purpose, data and owner; check classification against documents",
+        "text": "Data class, approval for tool and purpose, and whether the purpose needs every detail",
         "isCorrect": true
       },
       {
         "id": "b",
-        "text": "Count every spam filter as an AI system, unchecked",
+        "text": "Only whether the tool is paid for",
         "isCorrect": false
       },
       {
         "id": "c",
-        "text": "Record only the provider, skip function and version",
+        "text": "Only whether training use is switched off",
         "isCorrect": false
       },
       {
         "id": "d",
-        "text": "Never record spam filters; email is never AI",
+        "text": "Only whether colleagues use the tool too",
         "isCorrect": false
       }
     ],
-    "explanation": "Whether a spam filter uses AI depends on function and version; the product name alone does not tell you. Check the classification against vendor documents or have the responsible team assess it.",
-    "version": 1,
+    "explanation": "An input is acceptable only if data class, approval for exactly this combination and data minimisation all fit.",
+    "version": 2,
     "active": true
   },
   {
     "id": "q_w02",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "You want to draft a private text with an AI assistant. Which selection rule holds?",
+    "questionText": "In the example model, which level does a sick note with a diagnosis belong to?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "Only paid business tools may write text",
+        "text": "Internal",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "If sharing the content is allowed and data controls, retention and terms fit",
+        "text": "Specially protected",
         "isCorrect": true
       },
       {
         "id": "c",
-        "text": "Only the best-known product, because the brand guarantees security",
+        "text": "Public",
         "isCorrect": false
       },
       {
         "id": "d",
-        "text": "No AI tool may be used for writing",
+        "text": "Confidential, but allowed in any assistant",
         "isCorrect": false
       }
     ],
-    "explanation": "Private use raises the same questions as work. Price and brand say nothing about security, and never put passwords in a prompt.",
+    "explanation": "Health data is a special category under GDPR Art. 9. General assistants are blocked for it.",
     "version": 2,
     "active": true
   },
   {
     "id": "q_w03",
     "questionType": "single_choice",
-    "difficulty": "easy",
-    "questionText": "A colleague uses suggested replies, a transcription function and a route forecast. What follows for certain?",
+    "difficulty": "medium",
+    "questionText": "A colleague wants to enter a password into an approved company assistant to explain a login error. What applies?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "None of the functions can contain AI",
+        "text": "In an approved tool that is allowed.",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Exactly one function is AI, whatever the product and version",
+        "text": "It is allowed if he changes the password afterwards.",
         "isCorrect": false
       },
       {
         "id": "c",
-        "text": "They are automatically three standalone AI systems in law",
-        "isCorrect": false
+        "text": "Credentials never go into a prompt, at any level.",
+        "isCorrect": true
       },
       {
         "id": "d",
-        "text": "Only checking function and version shows which of them are AI",
-        "isCorrect": true
+        "text": "It is allowed if the history is deleted.",
+        "isCorrect": false
       }
     ],
-    "explanation": "AI functions often sit inside everyday products. You record function and version, then check how many standalone systems there are.",
-    "version": 1,
+    "explanation": "Passwords and API keys open systems. They are never entered; if a leak is suspected, change and report them.",
+    "version": 2,
     "active": true
   },
   {
     "id": "q_w04",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Why does a maintained inventory of the AI functions and systems in use matter?",
+    "questionText": "You replace customer names with codes and keep the mapping list. Which is true?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "It is needed for the tax return",
+        "text": "The data is anonymous; data protection no longer applies.",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "It is the reviewable basis for risk assessment, rules and ownership",
-        "isCorrect": true
+        "text": "The data is public.",
+        "isCorrect": false
       },
       {
         "id": "c",
-        "text": "It is mandatory only for companies with more than 250 employees",
+        "text": "The data may go into any tool.",
         "isCorrect": false
       },
       {
         "id": "d",
-        "text": "Its sole purpose is IT budget planning",
-        "isCorrect": false
+        "text": "The data is pseudonymised and stays personal data.",
+        "isCorrect": true
       }
     ],
-    "explanation": "Without an inventory there is no sound risk assessment, ownership or approval. Whether and how the law requires one depends on system and role.",
-    "version": 1,
+    "explanation": "With additional information the person can be identified again. Such data stays personal data (GDPR Art. 4(5), Recital 26).",
+    "version": 2,
     "active": true
   },
   {
     "id": "q_w05",
     "questionType": "single_choice",
-    "difficulty": "easy",
-    "questionText": "An employee wants to process a customer list with names and email addresses in an unapproved AI service. What holds?",
+    "difficulty": "hard",
+    "questionText": "You have redacted a complaint. Which detail may stay in for the reply draft?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "Business contact details are always unrestricted",
-        "isCorrect": false
+        "text": "The facts of the case: twelve pumps, eight working days late",
+        "isCorrect": true
       },
       {
         "id": "b",
-        "text": "A paid account is legal basis enough",
+        "text": "The customer's IBAN",
         "isCorrect": false
       },
       {
         "id": "c",
-        "text": "Stop until purpose, legal basis, data class, minimization and approval are clear",
-        "isCorrect": true
+        "text": "The private mobile number",
+        "isCorrect": false
       },
       {
         "id": "d",
-        "text": "Digitally stored data may not be processed",
+        "text": "The customer's e-mail address",
         "isCorrect": false
       }
     ],
-    "explanation": "Names and email addresses can be personal data. A paid account or a data processing agreement alone does not make processing lawful.",
-    "version": 1,
+    "explanation": "The draft needs the facts, not contact or payment details. What the purpose does not need stays out.",
+    "version": 2,
     "active": true
   },
   {
     "id": "q_w06",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Which basis is enough to approve an AI workflow?",
+    "questionText": "Which four building blocks make a brief checkable?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "The product name contains the word Enterprise",
+        "text": "Greeting, request, thanks, sign-off",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Documented review of purpose, data class, feature, contract, configuration, permissions and retention",
+        "text": "Context, task, format, limits",
         "isCorrect": true
       },
       {
         "id": "c",
-        "text": "The provider excludes customer data from training by default",
+        "text": "Length, language, font, colour",
         "isCorrect": false
       },
       {
         "id": "d",
-        "text": "The system runs on a local machine",
+        "text": "Model name, version, price, vendor",
         "isCorrect": false
       }
     ],
-    "explanation": "An approval covers one combination of purpose, data, feature and configuration, which contract, permissions, retention and region must fit. \"Enterprise\" in the name or a local machine checks none of it.",
-    "version": 1,
+    "explanation": "Context, task, format and limits make the result checkable. They do not make it automatically right.",
+    "version": 2,
     "active": true
   },
   {
     "id": "q_w07",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Why must unapproved consumer offers not be used with company data?",
+    "questionText": "An AI draft to a customer states a delivery cause that appeared nowhere. What happened?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "Because their answers are worse than the paid versions",
+        "text": "The model looked up the cause in internal systems.",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Because a reviewed contract, data controls and documented approval are usually missing",
-        "isCorrect": true
+        "text": "The cause was hidden in the customer e-mail.",
+        "isCorrect": false
       },
       {
         "id": "c",
-        "text": "Because they work in English only",
-        "isCorrect": false
+        "text": "The model filled a gap with plausible text.",
+        "isCorrect": true
       },
       {
         "id": "d",
-        "text": "Because they need no internet connection",
+        "text": "That is impossible; models invent nothing.",
         "isCorrect": false
       }
     ],
-    "explanation": "Without a reviewed DPA, binding data controls and an agreed data region, using personal company data can be unlawful.",
-    "version": 1,
+    "explanation": "Without limits, models fill gaps with likely-sounding details. That is why \"mark what is missing\" belongs in the brief.",
+    "version": 2,
     "active": true
   },
   {
     "id": "q_w08",
     "questionType": "single_choice",
-    "difficulty": "hard",
-    "questionText": "A colleague wants to analyse a supplier list with company names, contacts and purchasing terms. What holds?",
+    "difficulty": "medium",
+    "questionText": "How do you measure whether AI saves you time on reply e-mails?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "Allowed as soon as an enterprise product is used",
+        "text": "On the time saving the vendor promises",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Always prohibited, whatever the purpose and approved workflow",
+        "text": "On the feeling after the first try",
         "isCorrect": false
       },
       {
         "id": "c",
-        "text": "Check purpose, personal data, confidentiality, minimization and approval before input",
-        "isCorrect": true
+        "text": "On the length of the drafts",
+        "isCorrect": false
       },
       {
         "id": "d",
-        "text": "Supplier data may never go into an AI tool",
-        "isCorrect": false
+        "text": "On your own comparison cases: handling time and corrections needed",
+        "isCorrect": true
       }
     ],
-    "explanation": "The company name can be public, the contact personal data, the terms a trade secret. So the approval of purpose, data and system decides.",
-    "version": 1,
+    "explanation": "Only your own measurements show whether draft plus review is faster than without AI.",
+    "version": 2,
     "active": true
   },
   {
     "id": "q_w09",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "What is the main difference between a good prompt and a bad one?",
+    "questionText": "An AI summary names an owner who does not appear in the notes. How do you treat the item?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "A good prompt is longer than 500 words",
-        "isCorrect": false
-      },
-      {
-        "id": "b",
-        "text": "It names task, inputs, format, limits and how to handle gaps",
+        "text": "Delete the person and mark the item as open",
         "isCorrect": true
       },
       {
+        "id": "b",
+        "text": "Keep it, the person fits the topic",
+        "isCorrect": false
+      },
+      {
         "id": "c",
-        "text": "A good prompt uses English technical terms",
+        "text": "Add the person to the notes afterwards",
         "isCorrect": false
       },
       {
         "id": "d",
-        "text": "A good prompt always starts with 'Please'",
+        "text": "Delete the whole item, including the need",
         "isCorrect": false
       }
     ],
-    "explanation": "Clear inputs and limits make the output checkable; a role is optional. Even a precise prompt guarantees neither correctness nor completeness.",
-    "version": 1,
+    "explanation": "What is not in the notes is invented. The need stays as an open item until someone takes ownership.",
+    "version": 2,
     "active": true
   },
   {
     "id": "q_w10",
     "questionType": "single_choice",
-    "difficulty": "medium",
-    "questionText": "An AI assistant drafts an email to an important customer for you. It sounds professional. What do you do next?",
+    "difficulty": "hard",
+    "questionText": "You want to transcribe meetings automatically. You have a works council. What applies?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "Send it at once; AI assistants make no email mistakes",
+        "text": "The licence is enough if the feature is included.",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Check facts, sources, completeness, your authority, recipients and required approval",
+        "text": "Settle purpose, information, legal basis and works council co-determination first",
         "isCorrect": true
       },
       {
         "id": "c",
-        "text": "Have a second AI tool check the text",
+        "text": "Only external guests need to be informed.",
         "isCorrect": false
       },
       {
         "id": "d",
-        "text": "Send it next week to gain some distance",
+        "text": "Co-determination applies only to video recordings.",
         "isCorrect": false
       }
     ],
-    "explanation": "A professional tone proves nothing. Check sources, gaps, commitments and recipients according to the impact; a second AI tool is no review.",
-    "version": 1,
+    "explanation": "Transcription processes personal data and can make behaviour or performance visible; in Germany the works council has a say on such systems (BetrVG § 87(1) no. 6).",
+    "version": 2,
     "active": true
   },
   {
     "id": "q_w11",
     "questionType": "single_choice",
     "difficulty": "easy",
-    "questionText": "Which constraint should a good prompt for an email template carry?",
+    "questionText": "What is an AI hallucination?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "“Only supplied facts, mark gaps, no unauthorized commitments”",
-        "isCorrect": true
+        "text": "A program crash",
+        "isCorrect": false
       },
       {
         "id": "b",
-        "text": "“Write at least 1,000 words”",
+        "text": "A deliberate falsehood by the vendor",
         "isCorrect": false
       },
       {
         "id": "c",
-        "text": "“Use emojis to sound friendly”",
-        "isCorrect": false
+        "text": "A convincingly worded but false or unsupported statement",
+        "isCorrect": true
       },
       {
         "id": "d",
-        "text": "“Include as many technical terms as possible”",
+        "text": "A typo in the prompt",
         "isCorrect": false
       }
     ],
-    "explanation": "The constraint shows what the assistant invented and keeps commitments small. It replaces neither input-data approval nor specialist review.",
-    "version": 1,
+    "explanation": "Models produce likely wording, not checked facts. That is why you check against sources.",
+    "version": 2,
     "active": true
   },
   {
     "id": "q_w12",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "You have an AI assistant turn your meeting notes into minutes. They include a point that was never discussed. What do you do?",
+    "questionText": "The draft says \"budget EUR 18 million\"; the decision minutes say \"EUR 1.8 million for the pilot\". Which status?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "Keep it; the AI may have caught something you missed",
+        "text": "supported",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Check it against the primary source, cut unsupported content, tighten the prompt",
-        "isCorrect": true
+        "text": "missing: delete it",
+        "isCorrect": false
       },
       {
         "id": "c",
-        "text": "Discard the whole record and write it by hand",
+        "text": "irrelevant, the order of magnitude is roughly right",
         "isCorrect": false
       },
       {
         "id": "d",
-        "text": "Add a question mark and send it to everyone",
-        "isCorrect": false
+        "text": "contradicted: correct it",
+        "isCorrect": true
       }
     ],
-    "explanation": "Models sometimes add what the source does not contain. A tighter instruction only makes that rarer, so the source check stays.",
-    "version": 1,
+    "explanation": "The source says something else: a factor of ten and the wrong scope. You correct to the supported wording.",
+    "version": 2,
     "active": true
   },
   {
     "id": "q_w13",
     "questionType": "single_choice",
-    "difficulty": "easy",
-    "questionText": "What is an AI hallucination?",
+    "difficulty": "medium",
+    "questionText": "What is a primary source for a revenue figure?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "A technical system error in which the AI crashes",
-        "isCorrect": false
-      },
-      {
-        "id": "b",
-        "text": "A plausible-sounding output that is unsupported or wrong",
+        "text": "The report or system that records the figure",
         "isCorrect": true
       },
       {
+        "id": "b",
+        "text": "A second language model",
+        "isCorrect": false
+      },
+      {
         "id": "c",
-        "text": "Deliberate manipulation by hackers",
+        "text": "A blog post quoting the figure",
         "isCorrect": false
       },
       {
         "id": "d",
-        "text": "A visual error in the user interface",
+        "text": "A colleague's memory",
         "isCorrect": false
       }
     ],
-    "explanation": "A language model produces token sequences without checking facts automatically. So every claim a decision depends on goes back to a suitable source.",
-    "version": 1,
+    "explanation": "The primary source is the document that records the fact. There you check definition, period, unit and date.",
+    "version": 2,
     "active": true
   },
   {
     "id": "q_w14",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "Copilot's market analysis says the German AI market grew by 34.2% to EUR 12.8 billion in 2025 (source: Bitkom 2025). How do you check it?",
+    "questionText": "Which factors set the review depth of an AI output?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "The figure sounds plausible, that is enough",
+        "text": "Length of the text and time of day",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Open the Bitkom website and look for the named study",
+        "text": "Impact of an error, reversibility and audience",
         "isCorrect": true
       },
       {
         "id": "c",
-        "text": "Ask ChatGPT whether the figure is right",
+        "text": "Model name and price",
         "isCorrect": false
       },
       {
         "id": "d",
-        "text": "Replace the figure with your own estimate",
+        "text": "How confident the text sounds",
         "isCorrect": false
       }
     ],
-    "explanation": "Figure and citation can be generated without the study existing. Check definition, period and calculation in the primary source, not with ChatGPT.",
-    "version": 1,
+    "explanation": "The more consequential, irreversible and public, the more thoroughly you check.",
+    "version": 2,
     "active": true
   },
   {
     "id": "q_w15",
     "questionType": "single_choice",
-    "difficulty": "medium",
-    "questionText": "Which use needs specialist and organizational controls beyond a simple output review?",
+    "difficulty": "hard",
+    "questionText": "An AI draft is to promise a customer a refund. What is the fitting control?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "Writing an internal newsletter piece",
+        "text": "Proofread quickly and send",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Legal assessments, medical advice, decisions with serious consequences for people",
-        "isCorrect": true
+        "text": "Have a second model check the text",
+        "isCorrect": false
       },
       {
         "id": "c",
-        "text": "Translating an email from German into English",
-        "isCorrect": false
+        "text": "Check facts against sources and have the responsible person approve the commitment",
+        "isCorrect": true
       },
       {
         "id": "d",
-        "text": "Building an agenda for a team meeting",
+        "text": "Nothing, the commitment is politely worded",
         "isCorrect": false
       }
     ],
-    "explanation": "Legal, medical and employment decisions can have serious consequences. They need qualified accountability, suitable sources and, case by case, special controls.",
-    "version": 1,
+    "explanation": "Money, external, hard to reverse: the highest review level with sign-off. A second model replaces neither source nor authority.",
+    "version": 2,
     "active": true
   },
   {
     "id": "q_w16",
     "questionType": "single_choice",
-    "difficulty": "hard",
-    "questionText": "Copilot's summary of a 45-minute Teams meeting records a project start on 1 June. You remember the date stayed open. What follows?",
+    "difficulty": "easy",
+    "questionText": "What is shadow AI?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "Copilot is probably right; it analysed the whole audio",
+        "text": "An AI model that runs at night",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "The date stays open until the transcript or confirmed notes support it",
-        "isCorrect": true
+        "text": "Any AI use in dark mode",
+        "isCorrect": false
       },
       {
         "id": "c",
-        "text": "It was probably set while you were briefly distracted",
+        "text": "A prohibited AI practice under the EU AI Act",
         "isCorrect": false
       },
       {
         "id": "d",
-        "text": "Copilot invents no concrete dates, so the date is right",
-        "isCorrect": false
+        "text": "AI use for work outside approved tools and controls",
+        "isCorrect": true
       }
     ],
-    "explanation": "Neither memory nor summary is primary evidence. The participants confirm the record against the transcript or notes.",
-    "version": 1,
+    "explanation": "It includes private chat accounts, browser extensions, new features in bought software and personal API keys.",
+    "version": 2,
     "active": true
   },
   {
     "id": "q_w17",
     "questionType": "single_choice",
-    "difficulty": "easy",
-    "questionText": "Which of the following belongs in an AI usage policy?",
+    "difficulty": "medium",
+    "questionText": "What does Article 4 of the EU AI Act require in the version in force?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "A technical explanation of how neural networks process text, images and numbers",
-        "isCorrect": false
-      },
-      {
-        "id": "b",
-        "text": "An approval matrix with purpose, version, feature, data classes, configuration, owners and review status",
+        "text": "Providers and deployers take measures that support the AI literacy of their staff, matched to context and prior knowledge.",
         "isCorrect": true
       },
       {
+        "id": "b",
+        "text": "Every person needs an AI certificate.",
+        "isCorrect": false
+      },
+      {
         "id": "c",
-        "text": "The full original text of the EU AI Act",
+        "text": "A mandatory course with a fixed number of hours.",
         "isCorrect": false
       },
       {
         "id": "d",
-        "text": "Instructions for programming AI models",
+        "text": "Only makers of AI models are affected.",
         "isCorrect": false
       }
     ],
-    "explanation": "A policy governs approvals, with review duties, incident reporting, ownership and review triggers.",
-    "version": 1,
+    "explanation": "Article 4 has applied since 2 February 2025 and prescribes neither a format nor a certificate.",
+    "version": 2,
     "active": true
   },
   {
     "id": "q_w18",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "What does Article 4 of the EU AI Act require from companies that use AI systems?",
+    "questionText": "An employee accidentally entered salary data into an unapproved AI service. What is the right first step?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "A computer science degree for every employee",
+        "text": "Delete the history and say nothing",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Measures that support the AI literacy of people acting on their behalf",
+        "text": "Report internally at once and secure time, tool, data and output",
         "isCorrect": true
       },
       {
         "id": "c",
-        "text": "AI use by the IT department only",
+        "text": "Wait and see whether anything happens",
         "isCorrect": false
       },
       {
         "id": "d",
-        "text": "An annual AI audit by external auditors",
+        "text": "Overwrite the data in the tool",
         "isCorrect": false
       }
     ],
-    "explanation": "Article 4 has applied since 2 February 2025; as amended by Regulation (EU) 2026/1744, it requires supporting measures that consider knowledge, experience, training, use context and the people affected. It prescribes no attestation.",
-    "version": 1,
+    "explanation": "The controller assesses whether the supervisory authority must be notified (GDPR Art. 33). For that they need the secured facts.",
+    "version": 2,
     "active": true
   },
   {
     "id": "q_w19",
     "questionType": "single_choice",
     "difficulty": "medium",
-    "questionText": "An employee accidentally enters payroll data into an AI service. What is the right first step?",
+    "questionText": "Your office software gets a new AI feature through an update. From when may you use it with confidential data?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "Wait and see whether anyone notices",
+        "text": "Immediately, the software has already been bought",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Delete the chat history and tell nobody",
+        "text": "As soon as it is enabled by default",
         "isCorrect": false
       },
       {
         "id": "c",
-        "text": "Report at once via the incident channel, preserve evidence, let owners assess",
+        "text": "When the feature is approved for the purpose and data class",
         "isCorrect": true
       },
       {
         "id": "d",
-        "text": "Ask the provider for a legal assessment, report nothing internally",
+        "text": "After a week without problems",
         "isCorrect": false
       }
     ],
-    "explanation": "The controller assesses whether a notifiable personal data breach exists. Internal deadlines such as 4 or 24 hours are set by the organization; the law does not prescribe them.",
-    "version": 1,
+    "explanation": "Approvals cover features and configurations, not product names.",
+    "version": 2,
     "active": true
   },
   {
     "id": "q_w20",
     "questionType": "single_choice",
     "difficulty": "hard",
-    "questionText": "A new AI tool, say an industry chatbot, is to be introduced. An AI usage policy already exists. What has to happen?",
+    "questionText": "When is an AI use policy ready for approval?",
     "answerOptions": [
       {
         "id": "a",
-        "text": "Nothing; the existing policy covers new tools automatically",
+        "text": "As soon as the text is written",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Review purpose, features, data, contract, configuration, risks, owners first; update inventory and approval matrix",
-        "isCorrect": true
+        "text": "When it is at least ten pages long",
+        "isCorrect": false
       },
       {
         "id": "c",
-        "text": "Trial it with real data until the next review and collect problems",
+        "text": "When an AI tool has checked it",
         "isCorrect": false
       },
       {
         "id": "d",
-        "text": "Only inform IT; the policy stays unchanged",
-        "isCorrect": false
+        "text": "When every placeholder is replaced and the responsible functions have agreed",
+        "isCorrect": true
       }
     ],
-    "explanation": "A new product or feature triggers a review. The decision is recorded before real data goes in.",
-    "version": 1,
+    "explanation": "An open placeholder such as the reporting channel makes the policy useless when it counts. Depending on the organization, data protection, information security and the works council agree.",
+    "version": 2,
     "active": true
   }
 ]

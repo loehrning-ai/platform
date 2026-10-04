@@ -219,14 +219,13 @@ export const HOME_COURSE_COPY: Readonly<
   de: {
     "ki-fuehrerschein": {
       title: "KI-Führerschein",
-      tagline: "Aufgaben abgrenzen, Daten schützen und Antworten prüfen.",
-      duration: "ca. 1 Std. 40 Min.",
+      tagline: "Daten einstufen, prüfbar briefen, Fehler finden.",
+      duration: "ca. 45 Min.",
     },
     "ki-und-gesellschaft": {
       title: "KI und Gesellschaft",
-      tagline:
-        "Prüfe an Beispielen, was Deepfakes, Bias und KI für die Arbeit bedeuten.",
-      duration: "ca. 46 Min.",
+      tagline: "Jobzahlen lesen, Fakes prüfen, Fairness messen.",
+      duration: "ca. 40 Min.",
     },
     "eu-ai-act-kurs": {
       title: "EU AI Act Kurs",
@@ -243,13 +242,13 @@ export const HOME_COURSE_COPY: Readonly<
   en: {
     "ki-fuehrerschein": {
       title: "Everyday AI Literacy",
-      tagline: "Set task boundaries, protect data and verify responses.",
-      duration: "about 1 hr 40 min",
+      tagline: "Classify data, brief checkably, catch errors.",
+      duration: "about 45 min",
     },
     "ki-und-gesellschaft": {
       title: "AI and Society",
-      tagline: "Use examples to assess deepfakes, bias and effects on work.",
-      duration: "about 46 min",
+      tagline: "Read jobs figures, check fakes, measure fairness.",
+      duration: "about 40 min",
     },
     "eu-ai-act-kurs": {
       title: "EU AI Act Course",
