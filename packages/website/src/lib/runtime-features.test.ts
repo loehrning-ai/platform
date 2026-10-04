@@ -30,6 +30,10 @@ const KEYS = [
   "GEMINI_DPA_CONFIRMED_AT",
   "GEMINI_PAID_TIER_CONFIRMED_AT",
   "GEMINI_RETENTION_DAYS",
+  "OPENAI_API_KEY",
+  "OPENAI_DPA_CONFIRMED_AT",
+  "OPENAI_RETENTION_DAYS",
+  "OPENAI_PRACTICE_MODEL",
   "COURSE_TERMINAL_ENABLED",
   "COURSE_TERMINAL_DAILY_RUN_BUDGET",
   "COURSE_TERMINAL_POLICY_CONFIRMED_AT",
@@ -48,6 +52,7 @@ const KEYS = [
 const SERVICE_CREDENTIAL_ENV_KEY = "SUPABASE_SERVICE_ROLE_KEY";
 const AI_PROVIDER_CREDENTIAL_ENV_KEY = "ANTHROPIC_API_KEY";
 const GEMINI_PROVIDER_CREDENTIAL_ENV_KEY = "GEMINI_API_KEY";
+const OPENAI_PROVIDER_CREDENTIAL_ENV_KEY = "OPENAI_API_KEY";
 const VALID_LIMITER_SECRET = `rlh1_${"a".repeat(64)}`;
 const original = new Map<string, string | undefined>();
 
@@ -85,6 +90,8 @@ describe("getRuntimeFeatures", () => {
       anthropicRetentionDays: null,
       gemini: false,
       geminiRetentionDays: null,
+      openai: false,
+      openaiRetentionDays: null,
       practiceModels: [],
       courseTerminal: false,
       cvEngineHosted: false,
@@ -236,6 +243,37 @@ describe("getRuntimeFeatures", () => {
     expect(getRuntimeFeatures().practiceModels).toEqual([
       "google/gemini-2.5-flash-lite",
     ]);
+  });
+
+  it("reports OpenAI as its own provider flag only when its complete gate passes", () => {
+    process.env.AI_NATIVE_PRACTICE_ENABLED = "true";
+    process.env.AI_NATIVE_PRACTICE_ALLOWED_MODELS =
+      "anthropic/claude-haiku-4.5,openai/gpt-5-mini";
+    process.env.AI_NATIVE_PRACTICE_USER_DAILY_TOKEN_BUDGET = "10000";
+    process.env.AI_NATIVE_PRACTICE_GLOBAL_DAILY_TOKEN_BUDGET = "100000";
+    process.env[OPENAI_PROVIDER_CREDENTIAL_ENV_KEY] = "fake-openai-key";
+    process.env.OPENAI_DPA_CONFIRMED_AT = "2026-07-01";
+    process.env.NEXT_PUBLIC_SUPABASE_URL = "https://fake-project.supabase.co";
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY = "fake-public-key";
+    process.env.SUPABASE_URL = "https://fake-project.supabase.co";
+    process.env[SERVICE_CREDENTIAL_ENV_KEY] = "fake-service-key";
+    vi.stubEnv("RATE_LIMIT_HMAC_SECRET", VALID_LIMITER_SECRET);
+
+    // Retention is still missing: nothing is advertised.
+    expect(getRuntimeFeatures()).toMatchObject({
+      openai: false,
+      openaiRetentionDays: null,
+      practiceModels: [],
+    });
+
+    process.env.OPENAI_RETENTION_DAYS = "30";
+    expect(getRuntimeFeatures()).toMatchObject({
+      anthropic: false,
+      gemini: false,
+      openai: true,
+      openaiRetentionDays: 30,
+      practiceModels: ["openai/gpt-5-mini"],
+    });
   });
 
   it("reports the isolated terminal only when every runtime gate is ready", () => {

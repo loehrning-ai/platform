@@ -550,6 +550,120 @@ describe("POST /api/ai-native/practice", () => {
     expect(mockHashedClientRateLimitKey).not.toHaveBeenCalled();
   });
 
+  describe("OpenAI model", () => {
+    function configureOpenAI(): void {
+      vi.stubEnv(
+        "AI_NATIVE_PRACTICE_ALLOWED_MODELS",
+        "anthropic/claude-haiku-4.5,openai/gpt-5-mini",
+      );
+      vi.stubEnv("OPENAI_API_KEY", "obviously-fake-openai-key");
+      vi.stubEnv("OPENAI_DPA_CONFIRMED_AT", "2026-07-01");
+      vi.stubEnv("OPENAI_RETENTION_DAYS", "30");
+      vi.stubEnv("OPENAI_PRACTICE_MODEL", "");
+    }
+
+    const OPENAI_COMPLETE = {
+      mode: "complete",
+      prompt: "Write one synthetic sentence.",
+      model: "openai/gpt-5-mini",
+      locale: "en",
+    } as const;
+
+    it("runs an allowlisted, ready OpenAI model through the same quotas", async () => {
+      configureOpenAI();
+      const fetchMock = vi.fn().mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            output: [
+              {
+                type: "message",
+                content: [{ type: "output_text", text: "Synthetic answer." }],
+              },
+            ],
+            usage: { input_tokens: 40, output_tokens: 4 },
+          }),
+          { status: 200, headers: { "Content-Type": "application/json" } },
+        ),
+      );
+      vi.stubGlobal("fetch", fetchMock);
+
+      try {
+        const res = await POST(makeReq(OPENAI_COMPLETE));
+
+        expect(res.status).toBe(200);
+        expectPrivateNoStore(res);
+        expect(await res.json()).toEqual({
+          mode: "complete",
+          text: "Synthetic answer.",
+          model: "openai/gpt-5-mini",
+          provider: "openai",
+          cached: false,
+        });
+        expect(fetchMock).toHaveBeenCalledTimes(1);
+        expect(fetchMock.mock.calls[0]?.[0]).toBe(
+          "https://api.openai.com/v1/responses",
+        );
+        expect(mockedRateLimit).toHaveBeenCalledTimes(1);
+        expect(mockConsumeUsageBudget).toHaveBeenCalledTimes(1);
+        expect(mockCreate).not.toHaveBeenCalled();
+      } finally {
+        vi.unstubAllGlobals();
+      }
+    });
+
+    it("returns the policy code when the allowlist excludes OpenAI", async () => {
+      configureOpenAI();
+      vi.stubEnv(
+        "AI_NATIVE_PRACTICE_ALLOWED_MODELS",
+        "anthropic/claude-haiku-4.5",
+      );
+      const fetchMock = vi.fn();
+      vi.stubGlobal("fetch", fetchMock);
+
+      try {
+        const res = await POST(makeReq(OPENAI_COMPLETE));
+
+        expect(res.status).toBe(503);
+        expect(await res.json()).toMatchObject({ code: "model_not_allowed" });
+        expect(fetchMock).not.toHaveBeenCalled();
+        expect(mockConsumeUsageBudget).not.toHaveBeenCalled();
+      } finally {
+        vi.unstubAllGlobals();
+      }
+    });
+
+    it.each([
+      "OPENAI_API_KEY",
+      "OPENAI_DPA_CONFIRMED_AT",
+      "OPENAI_RETENTION_DAYS",
+    ])("returns model-not-ready without %s", async (missingVariable) => {
+      configureOpenAI();
+      vi.stubEnv(missingVariable, "");
+      const fetchMock = vi.fn();
+      vi.stubGlobal("fetch", fetchMock);
+
+      try {
+        const res = await POST(makeReq(OPENAI_COMPLETE));
+
+        expect(res.status).toBe(503);
+        expect(await res.json()).toMatchObject({ code: "model_not_ready" });
+        expect(fetchMock).not.toHaveBeenCalled();
+        expect(mockedRateLimit).not.toHaveBeenCalled();
+      } finally {
+        vi.unstubAllGlobals();
+      }
+    });
+
+    it("rejects an arbitrary OpenAI model name before any provider call", async () => {
+      configureOpenAI();
+      const res = await POST(makeReq({ ...OPENAI_COMPLETE, model: "openai/gpt-4o" }));
+
+      expect(res.status).toBe(400);
+      expect(mockedRateLimit).not.toHaveBeenCalled();
+      expect(mockConsumeUsageBudget).not.toHaveBeenCalled();
+    });
+  });
+
   it("returns one reported 503 when the auth helper rejects", async () => {
     const authError = new Error("auth helper rejected");
     mockedAuth.mockRejectedValueOnce(authError);

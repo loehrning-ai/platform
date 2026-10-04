@@ -176,7 +176,12 @@ partial configuration and fails instead of surviving as stale release state.
   `GEMINI_PAID_TIER_CONFIRMED_AT`, and `GEMINI_RETENTION_DAYS`. Do not enable
   Gemini free-tier traffic for learner text. The paid-tier date is a
   deployer-supplied review marker; application code does not inspect or prove
-  the Google billing tier. Keys never enter client code.
+  the Google billing tier. `openai/gpt-5-mini` requires the server-only
+  `OPENAI_API_KEY` from a dedicated OpenAI Platform project,
+  `OPENAI_DPA_CONFIRMED_AT`, and `OPENAI_RETENTION_DAYS`; the optional
+  `OPENAI_PRACTICE_MODEL` pins a dated `gpt-5-mini` snapshot. Set a monthly
+  spend limit on that project. A personal ChatGPT or Codex subscription cannot
+  back the site. Keys never enter client code.
   Practice and AI exercise grading reserve the caller and global daily ledgers
   together in one database transaction. Authenticated traffic from both routes
   shares the `ai-model-token-day` caller namespace; anonymous grading remains
@@ -205,7 +210,7 @@ partial configuration and fails instead of surviving as stale release state.
 Outside CI, Vercel, and release validation, credential-free local development
 can continue after a validation warning. An invalid environment containing
 `SENTRY_AUTH_TOKEN`, `SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`,
-`GEMINI_API_KEY`, or `VERCEL_ANALYTICS_API_TOKEN` fails
+`GEMINI_API_KEY`, `OPENAI_API_KEY`, or `VERCEL_ANALYTICS_API_TOKEN` fails
 instead because those credentials can authorize uploads, writes, or paid calls.
 
 ## Domain

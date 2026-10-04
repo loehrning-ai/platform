@@ -28,9 +28,11 @@ const COMPACT_EXECUTION_RECEIPTS = Object.values(
 const COMPACT_LOCAL_LEARNING_RECEIPTS = Object.values(
   COURSE_PROJECT_LOCAL_LEARNING_RECEIPTS,
 );
+// Append only: stored artifacts encode the model as an index into this list.
 const COMPACT_PROVIDER_MODELS = [
   "anthropic/claude-haiku-4.5",
   "google/gemini-2.5-flash-lite",
+  "openai/gpt-5-mini",
 ] as const;
 const ENGINE_KINDS = new Set<CourseProjectEngineKind>([
   "prompt",
@@ -506,6 +508,7 @@ const PROMPT_EVALUATIONS = {
 const PROMPT_MODELS = new Set([
   "anthropic/claude-haiku-4.5",
   "google/gemini-2.5-flash-lite",
+  "openai/gpt-5-mini",
 ]);
 const CLAUDE_COMPARISON_DECISIONS = new Set([
   "a-stronger",

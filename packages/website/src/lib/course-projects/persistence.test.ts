@@ -198,6 +198,30 @@ describe("course project persistence envelope", () => {
     },
   );
 
+  it("round-trips every approved provider model without shifting stored indices", () => {
+    for (const providerModel of [
+      "anthropic/claude-haiku-4.5",
+      "google/gemini-2.5-flash-lite",
+      "openai/gpt-5-mini",
+    ]) {
+      const artifact = verifiedCourseProjectArtifact("ai-native");
+      const stored = serializeCourseProjectProgress("Verified", {
+        ...artifact,
+        fields: { ...artifact.fields, providerModel },
+      });
+
+      expect(
+        parseCourseProjectProgress(stored, "prompt").artifact?.fields
+          .providerModel,
+        providerModel,
+      ).toBe(providerModel);
+      expect(
+        hasValidCourseProjectArtifact(stored, "prompt", "ai-native"),
+        providerModel,
+      ).toBe(true);
+    }
+  });
+
   it("requires the expected engine at the completion boundary", () => {
     const stored = serializeCourseProjectProgress(
       "Verified",

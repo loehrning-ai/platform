@@ -1,7 +1,7 @@
 // ─── Practice Room API types (shared course architecture) ──────────────────
 //
 // The Practice Room widgets (PromptOrrery, PromptTransform, SemanticSpace)
-// optionally call live Claude through this route. The route is feature-flagged
+// optionally call a live model through this route. The route is feature-flagged
 // OFF by default; when the flag/API is absent the widgets fall back to a
 // deterministic static quality score and show an honest "Live-Modus nicht
 // verfügbar" note. This keeps the public fallback contract explicit.
@@ -24,11 +24,23 @@ export type PracticeMode = (typeof PRACTICE_MODES)[number];
 export const PRACTICE_MODEL_IDS = [
   "anthropic/claude-haiku-4.5",
   "google/gemini-2.5-flash-lite",
+  "openai/gpt-5-mini",
 ] as const;
 export type PracticeModelId = (typeof PRACTICE_MODEL_IDS)[number];
 
 export const DEFAULT_PRACTICE_MODEL_ID: PracticeModelId =
   "anthropic/claude-haiku-4.5";
+
+/** Upstream provider family behind a public practice model id. */
+export type PracticeProviderName = "anthropic" | "google" | "openai";
+
+export const PRACTICE_PROVIDER_BY_MODEL: Readonly<
+  Record<PracticeModelId, PracticeProviderName>
+> = {
+  "anthropic/claude-haiku-4.5": "anthropic",
+  "google/gemini-2.5-flash-lite": "google",
+  "openai/gpt-5-mini": "openai",
+};
 
 export const PRACTICE_LOCALES = ["de", "en"] as const;
 export type PracticeLocale = (typeof PRACTICE_LOCALES)[number];
@@ -38,7 +50,7 @@ export interface PracticeCompleteResponse {
   /** Provider prose completion (capped server-side). */
   readonly text: string;
   readonly model: PracticeModelId;
-  readonly provider: "anthropic" | "google";
+  readonly provider: PracticeProviderName;
   readonly cached?: boolean;
 }
 
@@ -56,7 +68,7 @@ export interface PlacedWord {
 export interface PracticePlaceResponse extends PlacedWord {
   readonly mode: "place-word";
   readonly model: PracticeModelId;
-  readonly provider: "anthropic" | "google";
+  readonly provider: PracticeProviderName;
   readonly cached?: boolean;
 }
 

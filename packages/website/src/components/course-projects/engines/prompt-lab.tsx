@@ -6,7 +6,9 @@ import { focusMissionTarget } from "../focus-mission-target";
 import {
   DEFAULT_PRACTICE_MODEL_ID,
   PRACTICE_MODEL_IDS,
+  PRACTICE_PROVIDER_BY_MODEL,
   type PracticeModelId,
+  type PracticeProviderName,
 } from "@/app/api/ai-native/practice/types";
 import type {
   CourseProjectArtifactState,
@@ -77,7 +79,7 @@ type PracticeCompletePayload = {
 type ValidatedPracticeCompletion = {
   text: string;
   model: PracticeModelId;
-  provider: "anthropic" | "google";
+  provider: PracticeProviderName;
 };
 
 type ActiveProviderRequest = {
@@ -101,12 +103,6 @@ const QUOTA_FAILURE_ERRORS = new Set([
   "Das Provider-Budget ist ausgeschöpft.",
   "The provider budget is exhausted.",
 ]);
-const PROVIDER_BY_MODEL: Readonly<
-  Record<PracticeModelId, ValidatedPracticeCompletion["provider"]>
-> = {
-  "anthropic/claude-haiku-4.5": "anthropic",
-  "google/gemini-2.5-flash-lite": "google",
-};
 
 const COMPARISON_DECISIONS = new Set<ComparisonDecision>([
   "a-stronger",
@@ -296,7 +292,7 @@ const CONSTRAINT_PATTERN =
 function expectedProviderForModel(
   model: PracticeModelId,
 ): ValidatedPracticeCompletion["provider"] {
-  return PROVIDER_BY_MODEL[model];
+  return PRACTICE_PROVIDER_BY_MODEL[model];
 }
 
 function validatePracticeCompletion(
@@ -1568,6 +1564,7 @@ export default function PromptLab({
             <option value="google/gemini-2.5-flash-lite">
               Gemini 2.5 Flash-Lite · Google
             </option>
+            <option value="openai/gpt-5-mini">GPT-5 mini · OpenAI</option>
           </select>
         </div>
         <button

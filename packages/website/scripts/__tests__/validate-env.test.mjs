@@ -83,6 +83,10 @@ const CONTROLLED_KEYS = [
   "GEMINI_DPA_CONFIRMED_AT",
   "GEMINI_PAID_TIER_CONFIRMED_AT",
   "GEMINI_RETENTION_DAYS",
+  "OPENAI_API_KEY",
+  "OPENAI_DPA_CONFIRMED_AT",
+  "OPENAI_RETENTION_DAYS",
+  "OPENAI_PRACTICE_MODEL",
   "COURSE_TERMINAL_ENABLED",
   "COURSE_TERMINAL_DAILY_RUN_BUDGET",
   "COURSE_TERMINAL_POLICY_CONFIRMED_AT",
@@ -135,6 +139,16 @@ const OPERATOR_STATISTICS_VARIABLES = [
   "VERCEL_ANALYTICS_API_TOKEN",
   "VERCEL_ANALYTICS_TEAM_ID",
   "VERCEL_EVENT_ASSESSMENT_AT",
+];
+
+// The OpenAI practice provider sits in the same registries: classified by the
+// child-process policy, blanked by the provider-free defaults, documented
+// empty in .env.example, and validated by validate-env.mjs.
+const OPENAI_PROVIDER_VARIABLES = [
+  "OPENAI_API_KEY",
+  "OPENAI_DPA_CONFIRMED_AT",
+  "OPENAI_RETENTION_DAYS",
+  "OPENAI_PRACTICE_MODEL",
 ];
 
 function runValidateEnv(overrides) {
@@ -554,6 +568,7 @@ function main() {
     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: PUBLIC_KEY_FIXTURE,
     FEEDBACK_ENABLED: "false",
     SENTRY_ORG: "unexpected-test-telemetry",
+    OPENAI_PRACTICE_MODEL: "gpt-5-mini",
   });
   assert.equal(
     providerPollutedLiveAuthE2E.status,
@@ -562,6 +577,7 @@ function main() {
   );
   assert.match(combined(providerPollutedLiveAuthE2E), /FEEDBACK_ENABLED/);
   assert.match(combined(providerPollutedLiveAuthE2E), /SENTRY_ORG/);
+  assert.match(combined(providerPollutedLiveAuthE2E), /OPENAI_PRACTICE_MODEL/);
 
   const deployedLiveAuthE2E = runValidateEnv({
     E2E_AUTH_LIVE: "1",
@@ -1096,6 +1112,99 @@ function main() {
   assert.match(
     combined(geminiWithoutPaidTierContract),
     /GEMINI_PAID_TIER_CONFIRMED_AT/,
+  );
+
+  const openaiPractice = (overrides = {}) =>
+    completeSupabase({
+      AI_NATIVE_PRACTICE_ENABLED: "true",
+      AI_NATIVE_PRACTICE_ALLOWED_MODELS: "openai/gpt-5-mini",
+      AI_NATIVE_PRACTICE_USER_DAILY_TOKEN_BUDGET: "10000",
+      AI_NATIVE_PRACTICE_GLOBAL_DAILY_TOKEN_BUDGET: "100000",
+      OPENAI_API_KEY: "obviously-fake-openai-key",
+      OPENAI_DPA_CONFIRMED_AT: "2026-07-01",
+      OPENAI_RETENTION_DAYS: "30",
+      ...overrides,
+    });
+
+  const verifiedOpenAIOnly = runValidateEnv(openaiPractice());
+  assert.equal(
+    verifiedOpenAIOnly.status,
+    0,
+    `fully attested OpenAI-only practice must pass\n${combined(verifiedOpenAIOnly)}`,
+  );
+
+  const pinnedOpenAISnapshot = runValidateEnv(
+    openaiPractice({ OPENAI_PRACTICE_MODEL: "gpt-5-mini-2025-08-07" }),
+  );
+  assert.equal(pinnedOpenAISnapshot.status, 0, combined(pinnedOpenAISnapshot));
+
+  const openaiOtherModel = runValidateEnv(
+    openaiPractice({ OPENAI_PRACTICE_MODEL: "gpt-4o" }),
+  );
+  assert.equal(openaiOtherModel.status, 1, combined(openaiOtherModel));
+  assert.match(
+    combined(openaiOtherModel),
+    /OPENAI_PRACTICE_MODEL must be gpt-5-mini/,
+  );
+
+  const openaiSelectedWithoutKey = runValidateEnv(
+    openaiPractice({ OPENAI_API_KEY: "" }),
+  );
+  assert.equal(
+    openaiSelectedWithoutKey.status,
+    1,
+    combined(openaiSelectedWithoutKey),
+  );
+  assert.match(
+    combined(openaiSelectedWithoutKey),
+    /OpenAI is selected in AI_NATIVE_PRACTICE_ALLOWED_MODELS but OPENAI_API_KEY is not set/,
+  );
+
+  const openaiWithoutDpa = runValidateEnv(
+    openaiPractice({ OPENAI_DPA_CONFIRMED_AT: "" }),
+  );
+  assert.equal(openaiWithoutDpa.status, 1, combined(openaiWithoutDpa));
+  assert.match(combined(openaiWithoutDpa), /OPENAI_DPA_CONFIRMED_AT/);
+
+  const openaiFutureDpa = runValidateEnv(
+    openaiPractice({ OPENAI_DPA_CONFIRMED_AT: "2999-01-01" }),
+  );
+  assert.equal(openaiFutureDpa.status, 1, combined(openaiFutureDpa));
+
+  const openaiWithoutRetention = runValidateEnv(
+    openaiPractice({ OPENAI_RETENTION_DAYS: "" }),
+  );
+  assert.equal(
+    openaiWithoutRetention.status,
+    1,
+    combined(openaiWithoutRetention),
+  );
+  assert.match(combined(openaiWithoutRetention), /OPENAI_RETENTION_DAYS/);
+
+  const orphanedOpenAIMetadata = runValidateEnv(
+    completeSupabase({ OPENAI_DPA_CONFIRMED_AT: "2026-07-01" }),
+  );
+  assert.equal(
+    orphanedOpenAIMetadata.status,
+    1,
+    combined(orphanedOpenAIMetadata),
+  );
+  assert.match(
+    combined(orphanedOpenAIMetadata),
+    /OpenAI compliance metadata \(OPENAI_DPA_CONFIRMED_AT\) is present without OPENAI_API_KEY/,
+  );
+
+  const localOpenAIKeyOnly = runValidateEnv({
+    OPENAI_API_KEY: "obviously-fake-openai-key",
+  });
+  assert.equal(localOpenAIKeyOnly.status, 1, combined(localOpenAIKeyOnly));
+  assert.match(
+    combined(localOpenAIKeyOnly),
+    /credential-bearing local build[^\n]*OPENAI_API_KEY/,
+  );
+  assert.ok(
+    !combined(localOpenAIKeyOnly).includes("obviously-fake-openai-key"),
+    "the credential-bearing failure must name the variable, never its value",
   );
 
   const verifiedTerminal = runValidateEnv(
@@ -1749,6 +1858,26 @@ function main() {
     );
   }
   for (const name of OPERATOR_STATISTICS_VARIABLES) {
+    assert.ok(
+      APPLICATION_PROVIDER_ENVIRONMENT_KEYS.includes(name),
+      `${name} must be classified in APPLICATION_PROVIDER_ENVIRONMENT_KEYS`,
+    );
+    assert.equal(
+      PROVIDER_FREE_APPLICATION_ENVIRONMENT[name],
+      "",
+      `${name} must be cleared by PROVIDER_FREE_APPLICATION_ENVIRONMENT`,
+    );
+    assert.match(
+      environmentExample,
+      new RegExp(`^${name}=$`, "m"),
+      `${name} must be documented empty in .env.example`,
+    );
+    assert.ok(
+      validateEnvSource.includes(name),
+      `${name} must be validated by validate-env.mjs`,
+    );
+  }
+  for (const name of OPENAI_PROVIDER_VARIABLES) {
     assert.ok(
       APPLICATION_PROVIDER_ENVIRONMENT_KEYS.includes(name),
       `${name} must be classified in APPLICATION_PROVIDER_ENVIRONMENT_KEYS`,
