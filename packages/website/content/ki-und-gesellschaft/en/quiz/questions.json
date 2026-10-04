@@ -260,7 +260,7 @@
       },
       {
         "id": "b",
-        "text": "An easily accessible notice procedure and timely, diligent and objective processing of sufficiently precise notices",
+        "text": "An easily accessible notice procedure and timely, diligent, non-arbitrary and objective processing of notices",
         "isCorrect": true
       },
       {
@@ -348,17 +348,17 @@
     "answerOptions": [
       {
         "id": "a",
-        "text": "Because accuracy can never exceed 90%",
+        "text": "Because 98% falls below a statutory minimum accuracy for AI systems",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Because only processing speed matters",
+        "text": "Because accuracy is only meaningful for test sets of more than 10,000 images",
         "isCorrect": false
       },
       {
         "id": "c",
-        "text": "Because overall figures are prohibited by law",
+        "text": "Because the overall figure always reflects the error rate of the largest group",
         "isCorrect": false
       },
       {

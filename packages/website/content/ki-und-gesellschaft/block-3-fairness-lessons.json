@@ -240,13 +240,13 @@
           "goals": [
             {
               "id": "low-fpr",
-              "label": "Gemeinsame Schwelle: höchstens 10 % Fehlalarme in Gruppe A",
+              "label": "Gemeinsame Schwelle: Falsch-Positiv-Rate in Gruppe A höchstens 10 %",
               "when": "split == 0 && fpr_a <= 0.1",
               "insight": "Die Fehlalarmrate ist in beiden Gruppen gleich. Aber ein Alarm stimmt in Gruppe B seltener: Die PPV liegt deutlich unter Gruppe A."
             },
             {
               "id": "equal-ppv",
-              "label": "Getrennte Schwellen: gleiche Trefferquote der Markierung (PPV)",
+              "label": "Getrennte Schwellen: gleicher PPV-Wert, also gleiche Aussagekraft eines Alarms",
               "when": "split == 1 && abs(ppv_a - ppv_b) < 0.02",
               "insight": "Jetzt bedeutet ein Alarm in beiden Gruppen dasselbe. Dafür laufen Fehlalarm- und Falsch-Negativ-Rate auseinander. Beides zugleich geht nicht."
             }
@@ -326,7 +326,7 @@
         "Auskunftsrecht"
       ],
       "concept": {
-        "body": "„Die KI hat entschieden“ nennt weder Organisation noch Rechtsgrundlage. Pflichten hängen an Rolle und Handlung:\n\n- **Anbieter** entwickeln ein System und bringen es in Verkehr. Für Hochrisiko-Systeme sorgen sie etwa für Daten-Governance (Art. 10) und Protokollierbarkeit (Art. 12).\n- **Betreiber** setzen es ein: Sie folgen der Gebrauchsanweisung, übertragen die Aufsicht kompetenten Personen und bewahren Logs auf (Art. 26).\n- **Betroffene** können nach Art. 15 DSGVO Auskunft verlangen, bei ausschließlich automatisierten Entscheidungen mit erheblicher Wirkung auch über die involvierte Logik (Art. 22 DSGVO).\n\nDie DSGVO gilt schon heute. Die Hochrisiko-Pflichten für eigenständige Anhang-III-Systeme, etwa im Recruiting, gelten nach Verordnung (EU) 2026/1744 ab 2. Dezember 2027. Rollen im Detail behandelt der Kurs EU AI Act.",
+        "body": "„Die KI hat entschieden“ nennt weder Organisation noch Rechtsgrundlage. Pflichten hängen an Rolle und Handlung:\n\n- **Anbieter** entwickeln ein System und bringen es in Verkehr. Für Hochrisiko-Systeme sorgen sie etwa für Daten-Governance (Art. 10) und Protokollierbarkeit (Art. 12).\n- **Betreiber** setzen es ein: Sie folgen der Gebrauchsanweisung, übertragen die Aufsicht kompetenten Personen und bewahren Logs auf (Art. 26).\n- **Betroffene** können nach Art. 15 DSGVO Auskunft verlangen, bei ausschließlich automatisierten Entscheidungen mit erheblicher Wirkung auch über die involvierte Logik (Art. 15 Abs. 1 lit. h DSGVO).\n\nDie DSGVO gilt schon heute. Die Hochrisiko-Pflichten für eigenständige Anhang-III-Systeme, etwa im Recruiting, gelten nach Verordnung (EU) 2026/1744 ab 2. Dezember 2027. Rollen im Detail behandelt der [Kurs EU AI Act](/eu-ai-act-kurs).",
         "takeaway": "Frag bei jeder automatisierten Entscheidung: Wer stellt bereit, wer setzt ein, wer entscheidet, und was darf ich verlangen?",
         "sources": [
           {

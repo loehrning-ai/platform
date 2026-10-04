@@ -354,7 +354,7 @@
               "id": "c",
               "text": "In 99 % der Fälle.",
               "correct": false,
-              "feedback": "99 % ist der Anteil echter Inhalte, nicht die Trefferquote eines Alarms."
+              "feedback": "99 % ist der Anteil echter Inhalte. Gefragt ist, wie oft ein Alarm stimmt."
             }
           ],
           "explanation": "Je 1.000 Inhalte: rund 9 richtige Alarme gegen rund 79 Fehlalarme. Ein Alarm stimmt also nur zu etwa 10 %."
@@ -403,7 +403,7 @@
         "Beweissicherung"
       ],
       "concept": {
-        "body": "Nach einem Fund gilt: nicht weiterverbreiten, auch nicht mit Warnhinweis. URL, Konto, Zeitpunkt und Screenshot lokal sichern. Dann den passenden Weg wählen:\n\n| Lage | Weg |\n|---|---|\n| Täuschender Inhalt auf einer Plattform | Meldung nach Art. 16 DSA |\n| Betrug, Erpressung, Bedrohung, akute Gefahr | Polizei: Onlinewache über polizei.de, bei Gefahr Notruf |\n| Dein Bild ohne Einwilligung verbreitet | § 22 KUG, Ausnahmen nach § 23 KUG prüfen |\n\nArt. 16 DSA verpflichtet Hostingdienste zu einem leicht zugänglichen Meldeverfahren. Hinreichend genaue Meldungen müssen sie zeitnah, sorgfältig und objektiv bearbeiten; entfernen müssen sie nicht jeden Inhalt. Deine Stimme allein schützt § 22 KUG nicht; hier kommen Persönlichkeits- und Datenschutzrecht in Betracht.\n\nKennzeichnungspflichten für Deepfakes (Art. 50 KI-Verordnung) behandelt der Kurs EU AI Act.",
+        "body": "Nach einem Fund gilt: nicht weiterverbreiten, auch nicht mit Warnhinweis. URL, Konto, Zeitpunkt und Screenshot lokal sichern. Dann den passenden Weg wählen:\n\n| Lage | Weg |\n|---|---|\n| Täuschender Inhalt auf einer Plattform | Meldung nach Art. 16 DSA |\n| Betrug, Erpressung, Bedrohung, akute Gefahr | Polizei: Onlinewache über polizei.de, bei Gefahr Notruf |\n| Dein Bild ohne Einwilligung verbreitet | § 22 KUG, Ausnahmen nach § 23 KUG prüfen |\n\nArt. 16 DSA verpflichtet Hostingdienste zu einem leicht zugänglichen Meldeverfahren. Meldungen müssen sie zeitnah, sorgfältig, willkürfrei und objektiv bearbeiten; entfernen müssen sie nicht jeden Inhalt. Deine Stimme allein schützt § 22 KUG nicht; hier kommen Persönlichkeits- und Datenschutzrecht in Betracht.\n\nKennzeichnungspflichten für Deepfakes (Art. 50 KI-Verordnung) behandelt der [Kurs EU AI Act](/eu-ai-act-kurs).",
         "takeaway": "Sichern, nicht teilen, dann gezielt melden: Plattform, Polizei oder Bildrecht.",
         "sources": [
           {
@@ -547,14 +547,14 @@
           "options": [
             {
               "id": "a",
-              "text": "Ein leicht zugängliches Meldeverfahren und eine sorgfältige, objektive Bearbeitung genauer Meldungen.",
+              "text": "Ein leicht zugängliches Meldeverfahren und eine zeitnahe, sorgfältige und objektive Bearbeitung der Meldungen.",
               "correct": true
             },
             {
               "id": "b",
               "text": "Jeden gemeldeten Inhalt sofort zu löschen.",
               "correct": false,
-              "feedback": "Plattformen müssen bearbeiten und entscheiden, nicht jeden Inhalt entfernen."
+              "feedback": "Plattformen müssen Meldungen bearbeiten und entscheiden. Eine Pflicht, jeden Inhalt zu entfernen, gibt es nicht."
             },
             {
               "id": "c",

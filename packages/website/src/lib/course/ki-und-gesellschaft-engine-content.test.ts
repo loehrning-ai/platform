@@ -269,5 +269,12 @@ describe("KI und Gesellschaft lesson-engine content", () => {
     expect(fakes.de.lessons[2].concept?.body).toContain("Art. 50 KI-Verordnung");
     expect(fakes.de.lessons[2].concept?.body).toContain("Kurs EU AI Act");
     expect(fakes.en.lessons[2].concept?.body).toContain("EU AI Act course");
+    // Art. 50 and the role details are linked, not re-taught.
+    for (const lesson of [fakes.de.lessons[2], fairness.de.lessons[2]]) {
+      expect(lesson.concept?.body).toContain("](/eu-ai-act-kurs)");
+    }
+    for (const lesson of [fakes.en.lessons[2], fairness.en.lessons[2]]) {
+      expect(lesson.concept?.body).toContain("](/en/eu-ai-act-kurs)");
+    }
   });
 });

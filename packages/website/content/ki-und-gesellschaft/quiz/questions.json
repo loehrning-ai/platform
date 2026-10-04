@@ -260,7 +260,7 @@
       },
       {
         "id": "b",
-        "text": "Ein leicht zugängliches Meldeverfahren und die zeitnahe, sorgfältige und objektive Bearbeitung hinreichend genauer Meldungen",
+        "text": "Ein leicht zugängliches Meldeverfahren und die zeitnahe, sorgfältige, willkürfreie und objektive Bearbeitung der Meldungen",
         "isCorrect": true
       },
       {
@@ -348,17 +348,17 @@
     "answerOptions": [
       {
         "id": "a",
-        "text": "Weil Genauigkeit nie über 90 % liegen kann",
+        "text": "Weil 98 % unter einer gesetzlichen Mindestgenauigkeit für KI-Systeme liegen",
         "isCorrect": false
       },
       {
         "id": "b",
-        "text": "Weil nur die Rechengeschwindigkeit zählt",
+        "text": "Weil Genauigkeit nur bei Testsätzen über 10.000 Bildern aussagekräftig ist",
         "isCorrect": false
       },
       {
         "id": "c",
-        "text": "Weil Gesamtzahlen gesetzlich verboten sind",
+        "text": "Weil die Gesamtzahl immer die Fehlerrate der größten Gruppe wiedergibt",
         "isCorrect": false
       },
       {

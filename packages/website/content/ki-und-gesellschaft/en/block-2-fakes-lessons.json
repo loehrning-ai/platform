@@ -354,7 +354,7 @@
               "id": "c",
               "text": "99% of the time.",
               "correct": false,
-              "feedback": "99% is the share of genuine items, not how often an alert is right."
+              "feedback": "99% is the share of genuine items. The question is how often an alert is right."
             }
           ],
           "explanation": "Per 1,000 items: about 9 correct alerts against about 79 false alarms. An alert is right only about 10% of the time."
@@ -403,7 +403,7 @@
         "Preserving evidence"
       ],
       "concept": {
-        "body": "After a find: do not spread it, not even with a warning. Save the URL, account, time and a screenshot locally. Then pick the right route:\n\n| Situation | Route |\n|---|---|\n| Deceptive content on a platform | Notice under Article 16 DSA |\n| Fraud, extortion, threats, acute danger | Police: in Germany the online police station via polizei.de, emergency number if in danger |\n| Your image shared without consent | Section 22 KUG (German Art Copyright Act), check exceptions under Section 23 KUG |\n\nArticle 16 DSA requires hosting services to offer an easily accessible notice procedure. They must process sufficiently precise notices in a timely, diligent and objective manner; they do not have to remove every item. Your voice alone is not protected by Section 22 KUG; personality rights and data protection law may apply instead.\n\nLabelling duties for deepfakes (Article 50 AI Act) are covered in the EU AI Act course.",
+        "body": "After a find: do not spread it, not even with a warning. Save the URL, account, time and a screenshot locally. Then pick the right route:\n\n| Situation | Route |\n|---|---|\n| Deceptive content on a platform | Notice under Article 16 DSA |\n| Fraud, extortion, threats, acute danger | Police: in Germany the online police station via polizei.de, emergency number if in danger |\n| Your image shared without consent | Section 22 KUG (German Art Copyright Act), check exceptions under Section 23 KUG |\n\nArticle 16 DSA requires hosting services to offer an easily accessible notice procedure. They must process notices in a timely, diligent, non-arbitrary and objective manner; they do not have to remove every item. Your voice alone is not protected by Section 22 KUG; personality rights and data protection law may apply instead.\n\nLabelling duties for deepfakes (Article 50 AI Act) are covered in the [EU AI Act course](/en/eu-ai-act-kurs).",
         "takeaway": "Preserve, do not share, then report precisely: platform, police or image rights.",
         "sources": [
           {
@@ -547,14 +547,14 @@
           "options": [
             {
               "id": "a",
-              "text": "An easily accessible notice procedure and diligent, objective processing of precise notices.",
+              "text": "An easily accessible notice procedure and timely, diligent and objective processing of notices.",
               "correct": true
             },
             {
               "id": "b",
               "text": "To delete every reported item immediately.",
               "correct": false,
-              "feedback": "Platforms must process and decide, not remove every item."
+              "feedback": "Platforms must process notices and decide. There is no duty to remove every item."
             },
             {
               "id": "c",

@@ -7,12 +7,6 @@ import {
 } from "@/lib/courses/completion";
 import type { UnifiedProgress } from "@/lib/progress/types";
 
-const SOCIETY_BLOCK_BY_LESSON_PREFIX = Object.freeze({
-  arbeit: "block_1",
-  deepfake: "block_2",
-  ethik: "block_3",
-});
-
 /**
  * Lesson-engine IDs in block courses end in "-<module>-<lesson>" (for example
  * "daten-1-2" lives in block_1). See docs/lesson-engine.md.
@@ -28,16 +22,11 @@ function blockForGermanLesson(
   slug: CourseSlug,
   lessonId: string,
 ): string | null {
-  if (slug === "ki-und-gesellschaft") {
-    const prefix = lessonId.split("-", 1)[0];
-    return (
-      SOCIETY_BLOCK_BY_LESSON_PREFIX[
-        prefix as keyof typeof SOCIETY_BLOCK_BY_LESSON_PREFIX
-      ] ?? engineBlockForLesson(lessonId)
-    );
-  }
-
-  if (slug === "ki-fuehrerschein" || slug === "eu-ai-act-kurs") {
+  if (
+    slug === "ki-fuehrerschein" ||
+    slug === "ki-und-gesellschaft" ||
+    slug === "eu-ai-act-kurs"
+  ) {
     return (
       /^(block_\d+)_lesson_\d+$/.exec(lessonId)?.[1] ??
       engineBlockForLesson(lessonId)

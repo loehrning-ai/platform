@@ -122,8 +122,7 @@ replaces them.
 **Lesson id convention.** For block courses the id must end in
 `-<module>-<lesson>` (`daten-1-2` lives in `block_1`).
 `src/lib/courses/resume.ts` uses that suffix to build resume links
-(`/<slug>/kurs/block_1#lesson=daten-1-2`). `ki-und-gesellschaft` also keeps its
-prefix map (`arbeit`, `deepfake`, `ethik`) and falls back to the suffix rule.
+(`/<slug>/kurs/block_1#lesson=daten-1-2`).
 Use **new ids** when you rewrite a lesson. Stored progress under retired ids is
 dropped without errors (see below), so a reused id never inherits a stale
 completion.

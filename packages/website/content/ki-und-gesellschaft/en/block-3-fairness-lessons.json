@@ -240,13 +240,13 @@
           "goals": [
             {
               "id": "low-fpr",
-              "label": "Shared threshold: at most 10% false alarms in group A",
+              "label": "Shared threshold: false positive rate in group A at most 10%",
               "when": "split == 0 && fpr_a <= 0.1",
               "insight": "The false alarm rate is equal in both groups. But a flag is right less often in group B: its PPV is clearly below group A."
             },
             {
               "id": "equal-ppv",
-              "label": "Separate thresholds: equal precision of flags (PPV)",
+              "label": "Separate thresholds: equal PPV, so a flag means the same in both groups",
               "when": "split == 1 && abs(ppv_a - ppv_b) < 0.02",
               "insight": "Now a flag means the same in both groups. In exchange, the false alarm and false negative rates drift apart. You cannot have both."
             }
@@ -326,7 +326,7 @@
         "Right of access"
       ],
       "concept": {
-        "body": "“The AI decided” names neither an organisation nor a legal basis. Duties attach to role and action:\n\n- **Providers** develop a system and place it on the market. For high-risk systems they ensure, for example, data governance (Article 10) and logging capability (Article 12).\n- **Deployers** use it: they follow the instructions for use, assign oversight to competent people and keep logs (Article 26).\n- **Affected people** can request access under Article 15 GDPR, and for solely automated decisions with significant effects also information about the logic involved (Article 22 GDPR).\n\nThe GDPR applies today. The high-risk obligations for stand-alone Annex III systems, such as in recruiting, apply from 2 December 2027 under Regulation (EU) 2026/1744. The EU AI Act course covers the roles in detail.",
+        "body": "“The AI decided” names neither an organisation nor a legal basis. Duties attach to role and action:\n\n- **Providers** develop a system and place it on the market. For high-risk systems they ensure, for example, data governance (Article 10) and logging capability (Article 12).\n- **Deployers** use it: they follow the instructions for use, assign oversight to competent people and keep logs (Article 26).\n- **Affected people** can request access under Article 15 GDPR, and for solely automated decisions with significant effects also information about the logic involved (Article 15(1)(h) GDPR).\n\nThe GDPR applies today. The high-risk obligations for stand-alone Annex III systems, such as in recruiting, apply from 2 December 2027 under Regulation (EU) 2026/1744. The [EU AI Act course](/en/eu-ai-act-kurs) covers the roles in detail.",
         "takeaway": "For every automated decision ask: who provides, who deploys, who decides, and what may I request?",
         "sources": [
           {
