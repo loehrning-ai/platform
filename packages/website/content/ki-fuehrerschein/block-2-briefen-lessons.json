@@ -1,0 +1,305 @@
+{
+  "blockId": "block_2",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-04-05",
+  "format": "lesson-engine/v1",
+  "reviewCadence": "vendor",
+  "riskClass": "vendor",
+  "triggerEvents": [
+    "vendor-api-change",
+    "model-deprecation"
+  ],
+  "lessons": [
+    {
+      "id": "briefen-2-1",
+      "blockId": "block_2",
+      "number": 3,
+      "title": "Ein Auftrag, den du prüfen kannst",
+      "subtitle": "Kontext, Aufgabe, Format, Grenzen",
+      "durationMinutes": 6,
+      "keyConcepts": [
+        "Prompt-Struktur",
+        "Platzhalter",
+        "Prüfbarkeit"
+      ],
+      "concept": {
+        "body": "Ein guter Auftrag macht das Ergebnis **prüfbar**, nicht automatisch richtig. Vier Bausteine:\n\n1. **Kontext:** Was ist passiert, für wen ist der Text?\n2. **Aufgabe:** Was genau soll entstehen?\n3. **Format:** Länge, Aufbau, Ton.\n4. **Grenzen:** nur diese Fakten, Fehlendes in [eckigen Klammern] markieren, keine Zusagen.\n\nDie Grenzen sind der wichtigste Teil. Ein Modell füllt Lücken mit plausiblem Text, etwa einer erfundenen Ursache, einer Frist oder einem Rabatt. Markierte Lücken zeigen dir sofort, was du noch klären musst.\n\nMiss den Nutzen an deinen eigenen Fällen: Wie lange dauerte der Entwurf, wie viele Korrekturen brauchte er? Übernimm keine Zeitersparnis-Zahl, die nicht aus solchen Messungen stammt.",
+        "takeaway": "Grenzen im Auftrag machen Fehler sichtbar. Sie garantieren kein richtiges Ergebnis."
+      },
+      "exercise": {
+        "kind": "live-prompt-ab",
+        "title": "Gleiche Reklamation, zwei Aufträge",
+        "instructions": "Führe beide Aufträge aus und bewerte die Ausgaben mit den fünf Kriterien. Ohne Live-Modell siehst du aufgezeichnete Beispielausgaben.",
+        "props": {
+          "task": "Ziel: eine Antwort auf die Reklamation, die du nach kurzer Prüfung senden könntest.",
+          "input": {
+            "label": "Reklamation (erfunden)",
+            "text": "Unsere Bestellung über zwölf Hydraulikpumpen kam acht Arbeitstage zu spät. Wir erwarten eine Erklärung und verlässliche Gegenmaßnahmen.\n\nBekannt ist: Die Ursache ist intern noch nicht geklärt. Rabatte gibt nur der Vertrieb frei."
+          },
+          "variants": [
+            {
+              "label": "Schwacher Auftrag",
+              "prompt": "Schreib eine Antwort auf diese Kundenmail.",
+              "recorded": "Sehr geehrte Frau Sommerfeld,\n\nvielen Dank für Ihre Nachricht. Die Verzögerung entstand durch einen Engpass bei unserem Zulieferer, der inzwischen behoben ist. Als Entschuldigung erhalten Sie 10 % Rabatt auf Ihre nächste Bestellung. Künftige Lieferungen kommen garantiert pünktlich.\n\nMit freundlichen Grüßen"
+            },
+            {
+              "label": "Strukturierter Auftrag",
+              "prompt": "Kontext: Ein Stammkunde reklamiert eine Lieferung, die acht Arbeitstage zu spät kam.\nAufgabe: Entwirf eine sachliche, respektvolle Antwort.\nFormat: E-Mail, höchstens 120 Wörter, mit Anrede und Gruß.\nGrenzen: Verwende nur die genannten Fakten. Erfinde keine Ursache, Frist, Entschädigung oder Maßnahme. Markiere fehlende Angaben in [eckigen Klammern]. Keine Zusagen.",
+              "recorded": "Sehr geehrte Damen und Herren,\n\nvielen Dank für Ihre Rückmeldung. Ihre Bestellung über zwölf Hydraulikpumpen ist acht Arbeitstage später als vereinbart eingetroffen. Das bedauern wir.\n\nDie Ursache klären wir gerade: [Ursache nach interner Klärung]. Bis [Datum] erhalten Sie unsere Erklärung und die Maßnahmen gegen künftige Verspätungen: [Maßnahmen nach Freigabe].\n\nMit freundlichen Grüßen\n[Name, Funktion]"
+            }
+          ],
+          "rubric": [
+            {
+              "id": "cause",
+              "label": "Erfindet keine Ursache",
+              "expected": {
+                "a": false,
+                "b": true
+              }
+            },
+            {
+              "id": "promise",
+              "label": "Macht keine Zusage ohne Freigabe",
+              "hint": "Rabatt, Garantie, Frist",
+              "expected": {
+                "a": false,
+                "b": true
+              }
+            },
+            {
+              "id": "gaps",
+              "label": "Markiert fehlende Angaben sichtbar",
+              "expected": {
+                "a": false,
+                "b": true
+              }
+            },
+            {
+              "id": "facts",
+              "label": "Nennt den Sachverhalt korrekt",
+              "hint": "zwölf Pumpen, acht Arbeitstage",
+              "expected": {
+                "a": false,
+                "b": true
+              }
+            },
+            {
+              "id": "tone",
+              "label": "Höflicher, sachlicher Ton",
+              "expected": {
+                "a": true,
+                "b": true
+              }
+            }
+          ],
+          "allowEdit": true
+        }
+      },
+      "checks": [
+        {
+          "id": "briefen-2-1-c1",
+          "prompt": "Der Entwurf aus dem schwachen Auftrag verspricht 10 % Rabatt. Woher kommt die Zahl?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Aus der Kundenmail.",
+              "correct": false,
+              "feedback": "Die Mail nennt keinen Rabatt."
+            },
+            {
+              "id": "b",
+              "text": "Das Modell hat eine Lücke mit plausiblem Text gefüllt. Nichts deckt die Zahl.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Aus der Rabattrichtlinie des Unternehmens.",
+              "correct": false,
+              "feedback": "Eine Richtlinie stand nicht im Auftrag. Das Modell kannte sie nicht."
+            }
+          ],
+          "explanation": "Ohne Grenzen füllt ein Modell Lücken mit plausibel klingenden Details. Eine Zusage, die niemand freigegeben hat, kann trotzdem Erwartungen und Ansprüche auslösen, sobald sie rausgeht."
+        },
+        {
+          "id": "briefen-2-1-c2",
+          "prompt": "Welcher Baustein macht es am leichtesten, Erfundenes zu finden?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Eine höfliche Anrede im Auftrag.",
+              "correct": false
+            },
+            {
+              "id": "b",
+              "text": "Die Anweisung, fehlende Angaben in eckigen Klammern zu markieren.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Ein möglichst langer Auftrag.",
+              "correct": false,
+              "feedback": "Länge allein hilft nicht. Es kommt auf Grenzen und Format an."
+            }
+          ],
+          "explanation": "Markierte Lücken zeigen, was du klären musst, statt sie mit plausiblen Details zu füllen. Prüfen musst du den Entwurf trotzdem."
+        }
+      ]
+    },
+    {
+      "id": "briefen-2-2",
+      "blockId": "block_2",
+      "number": 4,
+      "title": "Beschluss oder Bemerkung",
+      "subtitle": "Was in ein KI-Protokoll darf",
+      "durationMinutes": 5,
+      "keyConcepts": [
+        "Protokoll",
+        "Verantwortliche",
+        "Mitbestimmung"
+      ],
+      "concept": {
+        "body": "KI-Zusammenfassungen von Besprechungen klingen fertig. Heikel sind genau die Teile, die später Arbeit auslösen: **Verantwortliche, Fristen und Beschlüsse, die niemand getroffen hat.** „Das könnten wir prüfen“ ist kein Beschluss.\n\nOrdne beim Gegenlesen jede Aussage ein:\n\n- **Belegt:** Beschluss oder Fakt, der so in den Notizen steht.\n- **Aufgabe:** mit genannter Person und Frist.\n- **Offen:** Vorschlag oder Bedarf ohne Person oder Frist.\n- **Erfunden:** steht in keiner Notiz, also streichen.\n\nVor jeder Aufzeichnung oder Transkription müssen Zweck, Information der Beteiligten und Rechtsgrundlage geklärt sein. Gibt es einen Betriebsrat, bestimmt er bei technischen Einrichtungen mit, die Verhalten oder Leistung überwachen können (BetrVG § 87 Abs. 1 Nr. 6).",
+        "takeaway": "Jede Person, Frist und Entscheidung im Protokoll braucht eine Fundstelle in den Notizen.",
+        "sources": [
+          {
+            "label": "BetrVG § 87",
+            "url": "https://www.gesetze-im-internet.de/betrvg/__87.html"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "bucket-sort",
+        "title": "Prüfe eine KI-Zusammenfassung",
+        "instructions": "Vergleiche jeden Satz der Zusammenfassung mit den Notizen und lege ihn auf den passenden Stapel.",
+        "props": {
+          "context": {
+            "label": "Notizen der Vertriebsrunde (erfunden)",
+            "text": "- Offene Pipeline 1,2 Mio. EUR, davon 400 Tsd. EUR priorisiert (beschlossen)\n- Pilot vorausschauende Wartung angefragt, 35 Tsd. EUR; Angebot bis 15.04. (Jana)\n- CRM-Daten teilweise veraltet, Bereinigung vorgeschlagen\n- Technisches Datenblatt für Werk 2 wird benötigt"
+          },
+          "buckets": [
+            {
+              "id": "backed",
+              "label": "Belegt",
+              "hint": "Beschluss oder Fakt"
+            },
+            {
+              "id": "task",
+              "label": "Aufgabe",
+              "hint": "mit Person und Frist"
+            },
+            {
+              "id": "open",
+              "label": "Offen markieren",
+              "hint": "ohne Person oder Frist"
+            },
+            {
+              "id": "invented",
+              "label": "Erfunden: streichen",
+              "hint": "steht in keiner Notiz"
+            }
+          ],
+          "items": [
+            {
+              "id": "prio",
+              "text": "400 Tsd. EUR der Pipeline werden priorisiert.",
+              "bucket": "backed",
+              "why": "Steht so in den Notizen und ist als beschlossen markiert."
+            },
+            {
+              "id": "pipeline",
+              "text": "Offene Pipeline: 1,2 Mio. EUR.",
+              "bucket": "backed",
+              "why": "Ein Fakt aus den Notizen, kein Beschluss, aber belegt."
+            },
+            {
+              "id": "quote",
+              "text": "Jana schickt das Angebot für den Wartungspiloten bis 15.04.",
+              "bucket": "task",
+              "why": "Person und Frist stehen in den Notizen."
+            },
+            {
+              "id": "crm-open",
+              "text": "CRM-Daten bereinigen (vorgeschlagen).",
+              "bucket": "open",
+              "why": "Nur ein Vorschlag, ohne Person und Frist."
+            },
+            {
+              "id": "sheet-open",
+              "text": "Für Werk 2 wird ein technisches Datenblatt benötigt.",
+              "bucket": "open",
+              "why": "Bedarf ohne Person und Frist: offen lassen und klären."
+            },
+            {
+              "id": "crm-invented",
+              "text": "Die CRM-Bereinigung ist beschlossen und startet im Mai.",
+              "bucket": "invented",
+              "why": "In den Notizen nur vorgeschlagen. Beschluss und Startmonat sind erfunden."
+            },
+            {
+              "id": "tom",
+              "text": "Tom erstellt das Datenblatt für Werk 2 bis Freitag.",
+              "bucket": "invented",
+              "why": "Weder Tom noch Freitag stehen in den Notizen."
+            },
+            {
+              "id": "pilot",
+              "text": "Der Wartungspilot über 35 Tsd. EUR ist freigegeben.",
+              "bucket": "invented",
+              "why": "Angefragt ist nicht freigegeben."
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "briefen-2-2-c1",
+          "prompt": "In der Zusammenfassung steht: „Tom erstellt das Datenblatt bis Freitag.“ In den Notizen steht nur, dass ein Datenblatt benötigt wird. Was tust du?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Übernehmen, Tom macht so etwas meistens.",
+              "correct": false,
+              "feedback": "Dann steht eine Vereinbarung im Protokoll, die nie getroffen wurde."
+            },
+            {
+              "id": "b",
+              "text": "Person und Frist streichen und den Punkt als offen markieren.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Den Satz lassen und Tom per Mail informieren.",
+              "correct": false,
+              "feedback": "Die Zuständigkeit klärt die Runde, nicht das Protokoll."
+            }
+          ],
+          "explanation": "Was nicht in Notizen oder Aufzeichnung steht, ist erfunden. Ein offener Punkt ist ehrlicher als eine falsche Zuständigkeit."
+        },
+        {
+          "id": "briefen-2-2-c2",
+          "prompt": "Ihr wollt Besprechungen künftig automatisch transkribieren. Was muss vorher geklärt sein?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Nur, ob die Lizenz die Funktion enthält.",
+              "correct": false
+            },
+            {
+              "id": "b",
+              "text": "Zweck, Information der Beteiligten, Rechtsgrundlage und, falls vorhanden, die Mitbestimmung des Betriebsrats.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Nichts, solange nur intern transkribiert wird.",
+              "correct": false,
+              "feedback": "Auch interne Transkripte verarbeiten personenbezogene Daten."
+            }
+          ],
+          "explanation": "Aufzeichnung und Transkription verarbeiten personenbezogene Daten und können Verhalten oder Leistung sichtbar machen. Datenschutz und, wo vorhanden, der Betriebsrat gehören deshalb vorab dazu."
+        }
+      ]
+    }
+  ]
+}

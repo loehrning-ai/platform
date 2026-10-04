@@ -20,7 +20,7 @@ const CORE_COURSES = [
  * already-loaded active lesson projection and never import sibling lessons.
  */
 describe("authored lesson-frame content contract", () => {
-  it("wraps the shared course probes for all 153 canonical lessons in both reviewed locales", async () => {
+  it("wraps the shared course probes for all 143 canonical lessons in both reviewed locales", async () => {
     let boundCount = 0;
 
     for (const locale of LOCALES) {
@@ -82,6 +82,6 @@ describe("authored lesson-frame content contract", () => {
       }
     }
 
-    expect(boundCount).toBe(306);
+    expect(boundCount).toBe(286);
   });
 });

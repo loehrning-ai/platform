@@ -164,6 +164,40 @@ const REGISTRY: Record<
     import("@/components/widgets/practice/semantic-space").then((m) => ({
       default: m.SemanticSpaceWidget as unknown as WidgetComponent,
     })),
+
+  // ─── Lesson-engine lab widgets (docs/lesson-engine.md) ───
+  "bucket-sort": () =>
+    import("@/components/widgets/lab/bucket-sort").then((m) => ({
+      default: m.BucketSortWidget as unknown as WidgetComponent,
+    })),
+  "claim-checker": () =>
+    import("@/components/widgets/lab/claim-checker").then((m) => ({
+      default: m.ClaimCheckerWidget as unknown as WidgetComponent,
+    })),
+  calculator: () =>
+    import("@/components/widgets/lab/calculator").then((m) => ({
+      default: m.CalculatorWidget as unknown as WidgetComponent,
+    })),
+  "threshold-lab": () =>
+    import("@/components/widgets/lab/threshold-lab").then((m) => ({
+      default: m.ThresholdLabWidget as unknown as WidgetComponent,
+    })),
+  "decision-wizard": () =>
+    import("@/components/widgets/lab/decision-wizard").then((m) => ({
+      default: m.DecisionWizardWidget as unknown as WidgetComponent,
+    })),
+  "live-prompt-ab": () =>
+    import("@/components/widgets/lab/live-prompt-ab").then((m) => ({
+      default: m.LivePromptAbWidget as unknown as WidgetComponent,
+    })),
+  "doc-builder": () =>
+    import("@/components/widgets/lab/doc-builder").then((m) => ({
+      default: m.DocBuilderWidget as unknown as WidgetComponent,
+    })),
+  "pii-redactor": () =>
+    import("@/components/widgets/lab/pii-redactor").then((m) => ({
+      default: m.PiiRedactorWidget as unknown as WidgetComponent,
+    })),
 } as const satisfies Record<
   WidgetKind,
   () => Promise<{ default: WidgetComponent }>

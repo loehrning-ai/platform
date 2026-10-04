@@ -27,6 +27,8 @@ import type { BlockFreshness } from "@/lib/course/data";
 import type { Locale } from "@/lib/i18n/locale";
 import { localizeHref } from "@/lib/i18n/locale";
 import { getCourseReaderCopy } from "./course-ui-copy";
+import { LessonFlow } from "@/components/lesson-engine/lesson-flow";
+import { isEngineLesson } from "@/lib/lesson-engine/lesson";
 import { getLearningOwnerContext } from "@/lib/progress/browser-learning-storage";
 import {
   persistForActiveLearningOwner,
@@ -105,6 +107,8 @@ interface LessonLayoutProps {
   readonly courseLessonCount?: number;
   readonly followingHref?: string;
   readonly followingLabel?: string;
+  /** Module label for lesson-engine lessons, e.g. "Modul 1 · Was darf rein?". */
+  readonly moduleLabel?: string;
 }
 
 export function LessonLayout({
@@ -116,6 +120,7 @@ export function LessonLayout({
   courseLessonCount = lessons.length,
   followingHref,
   followingLabel,
+  moduleLabel,
 }: LessonLayoutProps) {
   const copy = getCourseReaderCopy(locale);
   const [activeLessonId, setActiveLessonId] = useState(lessons[0]?.id ?? "");
@@ -317,6 +322,23 @@ export function LessonLayout({
     },
   });
 
+  const handleEngineLessonCompleted = useCallback(() => {
+    const ordinal = lessonOrdinal(courseSlug, activeLessonId);
+    if (ordinal !== null) trackLessonCompleted(courseSlug, ordinal);
+  }, [courseSlug, activeLessonId]);
+  const handleEngineFirstProgress = useCallback(() => {
+    // The first progress in this lesson starts the course only when no other
+    // lesson holds progress yet (read after the write, so exclude this one).
+    const otherLessonProgress = Object.entries(
+      getAllProgress(courseSlug).lessons,
+    ).some(
+      ([lessonId, lesson]) =>
+        lessonId !== activeLessonId &&
+        (lesson.sectionsRead.length > 0 || lesson.quizScore !== null),
+    );
+    if (!otherLessonProgress) reportCourseStarted(courseSlug);
+  }, [courseSlug, activeLessonId]);
+
   if (!activeLesson) return null;
   const isProjectCheckpoint = isCourseProjectCheckpointLesson(
     courseSlug,
@@ -332,6 +354,71 @@ export function LessonLayout({
       locale={locale}
     />
   );
+
+  if (isEngineLesson(activeLesson)) {
+    // Lesson-engine lessons: one scrolling flow (concept → exercise → two
+    // checks). No section read buttons, no tabs, no project studio.
+    const nextLesson = hasNextLesson ? lessons[activeLessonIndex + 1] : null;
+    return (
+      <MotionProvider>
+        <LessonShell
+          readerBar={reader.bar}
+          contentRef={reader.contentRef}
+          navOpen={sidebarOpen}
+          onNavOpenChange={setSidebarOpen}
+          navLabel={copy.shell.navigation}
+          openNavLabel={copy.shell.open}
+          closeNavLabel={copy.shell.close}
+          collapseNavLabel={
+            locale === "de"
+              ? "Lektionsnavigation einklappen"
+              : "Collapse lesson navigation"
+          }
+          expandNavLabel={
+            locale === "de"
+              ? "Lektionsnavigation ausklappen"
+              : "Expand lesson navigation"
+          }
+          sidebar={sidebar}
+        >
+          <Fragment key={readiness.checkpointKey}>
+            <LessonFlow
+              courseSlug={courseSlug}
+              lesson={activeLesson}
+              position={{
+                index: lessonOffset + activeLessonIndex + 1,
+                total: courseLessonCount,
+              }}
+              moduleLabel={moduleLabel}
+              locale={locale}
+              onCompleted={handleEngineLessonCompleted}
+              onFirstProgress={handleEngineFirstProgress}
+              next={
+                nextLesson
+                  ? {
+                      kind: "button",
+                      label:
+                        locale === "de"
+                          ? `Weiter: ${nextLesson.title}`
+                          : `Next: ${nextLesson.title}`,
+                      onSelect: handleNextLesson,
+                    }
+                  : {
+                      kind: "link",
+                      href:
+                        followingHref ??
+                        localizeHref(`/${courseSlug}/kurs`, locale),
+                      label:
+                        followingLabel ??
+                        (locale === "de" ? "Zum Kurs" : "Course hub"),
+                    }
+              }
+            />
+          </Fragment>
+        </LessonShell>
+      </MotionProvider>
+    );
+  }
 
   return (
     <MotionProvider>

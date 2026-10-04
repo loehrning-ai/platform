@@ -31,6 +31,10 @@ import {
 } from "./server-sync";
 import { upgradeHistoricalCompletionEvidence } from "./migrate";
 import {
+  isCanonicalLessonId,
+  isCanonicalSectionId,
+} from "@/lib/courses/completion";
+import {
   UNIFIED_SCHEMA_VERSION,
   normalizeWorkshopQuizScore,
   type UnifiedCourseSlice,
@@ -82,6 +86,45 @@ function isCourseRowPayload(
  * inflate a merge or certificate; every other field still has to satisfy the
  * current strict course-slice validator.
  */
+/**
+ * Courses can retire lesson IDs (KI-Führerschein moved to the lesson engine).
+ * A stored row written before that change still carries the old keys. Drop
+ * retired lesson entries and retired section IDs before validation so the
+ * row keeps its quiz result and timestamps instead of being rejected as a
+ * whole (which would also make every later sync of that row fail).
+ */
+function dropRetiredLessonEntries(value: unknown, slug: CourseSlug): unknown {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    return value;
+  }
+  return Object.fromEntries(
+    Object.entries(value as Record<string, unknown>)
+      .filter(([lessonId]) => isCanonicalLessonId(slug, lessonId))
+      .map(([lessonId, lesson]) => {
+        if (typeof lesson !== "object" || lesson === null) {
+          return [lessonId, lesson];
+        }
+        const record = lesson as Record<string, unknown>;
+        if (!Array.isArray(record.sectionsRead)) return [lessonId, lesson];
+        return [
+          lessonId,
+          {
+            ...record,
+            sectionsRead: Array.from(
+              new Set(
+                record.sectionsRead.filter(
+                  (sectionId): sectionId is string =>
+                    typeof sectionId === "string" &&
+                    isCanonicalSectionId(slug, lessonId, sectionId),
+                ),
+              ),
+            ),
+          },
+        ];
+      }),
+  );
+}
+
 function coerceStoredCourseRowPayload(
   value: unknown,
   slug: CourseSlug,
@@ -106,6 +149,7 @@ function coerceStoredCourseRowPayload(
   const rawWorkshopQuiz = rawSlice.workshopQuiz as Record<string, unknown>;
   const normalizedSlice = {
     ...rawSlice,
+    lessons: dropRetiredLessonEntries(rawSlice.lessons, slug),
     workshopQuiz: {
       ...rawWorkshopQuiz,
       score: normalizeWorkshopQuizScore(rawWorkshopQuiz.score) ?? 0,

@@ -10,11 +10,11 @@ import { COURSE_PROJECT_STAGE_IDS } from "./types";
 
 const EXPECTED_CHECKPOINT_LESSONS = {
   "ki-fuehrerschein": [
-    "block_1_lesson_1",
-    "block_2_lesson_1",
-    "block_3_lesson_1",
-    "block_4_lesson_1",
-    "block_5_lesson_1",
+    "daten-1-1",
+    "briefen-2-1",
+    "pruefen-3-1",
+    "pruefen-3-2",
+    "regeln-4-1",
   ],
   "ki-und-gesellschaft": [
     "arbeit-1-1",

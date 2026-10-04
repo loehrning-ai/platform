@@ -31,7 +31,7 @@ describe("course project configs", () => {
         ]),
       ),
     ).toEqual({
-      "ki-fuehrerschein": "block_5_lesson_4",
+      "ki-fuehrerschein": "regeln-4-2",
       "ki-und-gesellschaft": "ethik-3-3",
       "eu-ai-act-kurs": "block_6_lesson_4",
       "ai-native": "modul_4_lesson_8",

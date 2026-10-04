@@ -42,7 +42,7 @@ export const KI_FUEHRERSCHEIN_CONFIG: CourseConfig = {
   language: "de",
   basePath: "/ki-fuehrerschein",
   coursePath: "/ki-fuehrerschein/kurs",
-  blockIds: ["block_1", "block_2", "block_3", "block_4", "block_5"],
+  blockIds: ["block_1", "block_2", "block_3", "block_4"],
   workshopQuizQuestionCount: 20,
   workshopQuizTimeLimitMinutes: 25,
   workshopQuizPassThreshold: 0.7,
@@ -50,11 +50,10 @@ export const KI_FUEHRERSCHEIN_CONFIG: CourseConfig = {
   certificateSubtitle:
     "Teilnahmebestätigung. Ausgestellt von loehrning.ai, einer unabhängigen Bildungsplattform. Diese Bestätigung ist kein akkreditierter Abschluss.",
   certificateModules: [
-    "KI-Systeme erkennen und verstehen",
-    "Datenschutz bei KI-Nutzung",
-    "Praktische KI-Anwendung",
-    "KI-Output verifizieren",
-    "KI-Nutzungsrichtlinie erstellen",
+    "Daten einstufen und schwärzen",
+    "Prüfbare Aufträge schreiben",
+    "KI-Ausgaben gegen Quellen prüfen",
+    "Freigaben und Team-Richtlinie",
   ],
   certificateReferenceLabel:
     "Persönliche Teilnahmebestätigung: KI im Alltag verstehen",
@@ -75,11 +74,10 @@ export const KI_FUEHRERSCHEIN_EN_CONFIG: CourseConfig =
     certificateSubtitle:
       "Participation record. Issued by loehrning.ai, an independent learning platform. This record is not an accredited qualification.",
     certificateModules: [
-      "Recognizing and understanding AI systems",
-      "Data protection when using AI",
-      "Practical AI use at work",
-      "Checking AI output",
-      "Creating an AI use policy",
+      "Classifying and redacting data",
+      "Writing checkable briefs",
+      "Checking AI output against sources",
+      "Approvals and a team policy",
     ],
     certificateReferenceLabel:
       "Personal participation record: understanding AI in everyday work",

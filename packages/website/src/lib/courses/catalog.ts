@@ -145,7 +145,7 @@ export interface ImportedCourse {
 }
 
 // Step 1 → 2 → 3 → 4. Lesson counts mirror the live course content:
-//  - KI-Führerschein: 5 blocks, 18 lessons (see lib/course/data.ts)
+//  - KI-Führerschein: 4 modules, 8 lesson-engine lessons (see lib/course/data.ts)
 //  - KI und Gesellschaft: 3 blocks, 9 lessons
 //  - EU-AI-Act-Kurs: 6 blocks, 24 lessons
 //  - AI-Native: 4 modules, 27 lessons
@@ -155,18 +155,18 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     step: 1,
     title: "KI-Führerschein",
     eyebrow: "Schritt 01 · KI-Kompetenz",
-    tagline: "Aufgaben abgrenzen, Daten schützen und Antworten prüfen.",
+    tagline: "Daten einstufen, prüfbar briefen, Fehler finden.",
     description:
-      "Du lernst, wie generative KI antwortet, wo sie danebenliegt und welche Daten du nicht eingibst. Der Kurs erklärt Artikel 4 des AI Act in der seit 27. Juli 2026 geltenden Fassung; am Ende erstellst du lokal eine Teilnahmebestätigung.",
+      "Acht kurze Lektionen mit Übung: Daten einstufen und schwärzen, prüfbare Aufträge schreiben, KI-Entwürfe gegen Quellen prüfen und eine einseitige Team-Richtlinie erstellen. Artikel 4 des AI Act in der seit 27. Juli 2026 geltenden Fassung ordnet der Kurs knapp ein; am Ende erstellst du lokal eine Teilnahmebestätigung.",
     href: "/ki-fuehrerschein",
     startHref: "/ki-fuehrerschein/kurs",
     continueHref: "/ki-fuehrerschein/kurs",
-    duration: "ca. 1 Std. 40 Min.",
-    durationMinutes: 100,
-    totalLessons: 18,
+    duration: "ca. 45 Min.",
+    durationMinutes: 45,
+    totalLessons: 8,
     level: "einstieg",
-    unitLabel: "Blöcke",
-    unitCount: 5,
+    unitLabel: "Module",
+    unitCount: 4,
     audience: "Beschäftigte, die KI im Arbeitsalltag einsetzen",
     coverImage: "/course-covers/ki-fuehrerschein-cover-v4.webp",
     coverImageAlt:

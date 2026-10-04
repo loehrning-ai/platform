@@ -59,7 +59,7 @@ describe("KI-Führerschein landing page", () => {
         name: /Which data may go\s*into an AI tool\./,
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText("AI is already here")).toBeInTheDocument();
+    expect(screen.getByText("What may go in?")).toBeInTheDocument();
     expect(
       screen.getByText(/does not establish organization-wide compliance/),
     ).toBeInTheDocument();

@@ -20,7 +20,7 @@ export interface CourseProjectIdentity {
 export const COURSE_PROJECT_IDENTITIES = {
   "ki-fuehrerschein": {
     id: "project-ki-fuehrerschein-redline",
-    progressLessonId: "block_5_lesson_4",
+    progressLessonId: "regeln-4-2",
     engineKind: "case",
   },
   "eu-ai-act-kurs": {

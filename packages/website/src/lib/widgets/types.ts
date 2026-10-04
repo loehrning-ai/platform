@@ -23,6 +23,7 @@ export const WIDGET_COURSE_SLUGS = [
   "eu-ai-act-kurs",
   "ai-native",
   "ai-native-operator",
+  "ki-und-gesellschaft",
 ] as const;
 
 export type WidgetCourseSlug = (typeof WIDGET_COURSE_SLUGS)[number];
@@ -107,17 +108,41 @@ export const PRACTICE_KINDS = [
   "semantic-space",
 ] as const;
 
+/**
+ * Lesson-engine lab widgets (docs/lesson-engine.md). Data-driven from lesson
+ * JSON props, deterministic, reduced-motion safe, with a recorded fallback
+ * wherever a live model call is offered. Each reports exercise completion to
+ * the lesson-engine reader via the injected `lessonId`/`cpId` checkpoint.
+ */
+export const LAB_KINDS = [
+  "bucket-sort",
+  "claim-checker",
+  "calculator",
+  "threshold-lab",
+  "decision-wizard",
+  "live-prompt-ab",
+  "doc-builder",
+  "pii-redactor",
+] as const;
+
 export type DemoKind = (typeof DEMO_KINDS)[number];
 export type ExerciseKind = (typeof EXERCISE_KINDS)[number];
 export type TierAKind = (typeof TIER_A_KINDS)[number];
 export type PracticeKind = (typeof PRACTICE_KINDS)[number];
-export type WidgetKind = DemoKind | ExerciseKind | TierAKind | PracticeKind;
+export type LabKind = (typeof LAB_KINDS)[number];
+export type WidgetKind =
+  | DemoKind
+  | ExerciseKind
+  | TierAKind
+  | PracticeKind
+  | LabKind;
 
 export const ALL_WIDGET_KINDS: readonly WidgetKind[] = [
   ...DEMO_KINDS,
   ...EXERCISE_KINDS,
   ...TIER_A_KINDS,
   ...PRACTICE_KINDS,
+  ...LAB_KINDS,
 ];
 
 /** Placement slots inside a lesson. Additions require schema migration. */
@@ -213,6 +238,13 @@ export function isPracticeKind(value: unknown): value is PracticeKind {
   return (
     typeof value === "string" &&
     (PRACTICE_KINDS as readonly string[]).includes(value)
+  );
+}
+
+export function isLabKind(value: unknown): value is LabKind {
+  return (
+    typeof value === "string" &&
+    (LAB_KINDS as readonly string[]).includes(value)
   );
 }
 

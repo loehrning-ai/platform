@@ -109,9 +109,9 @@ import {
   subscribeLearningOwner,
 } from "./browser-learning-storage";
 
-const KF_LESSON_1 = "block_1_lesson_1";
-const KF_LESSON_2 = "block_1_lesson_2";
-const KF_SECTION_1 = "block_1_lesson_1_section_1";
+const KF_LESSON_1 = "daten-1-1";
+const KF_LESSON_2 = "daten-1-2";
+const KF_SECTION_1 = "daten-1-1_exercise";
 const EU_LESSON_1 = "block_1_lesson_1";
 const AI_NATIVE_LESSON_1 = "modul_1_lesson_1";
 
@@ -562,7 +562,8 @@ describe("unified progress store", () => {
       expect(getEarnedBadgeIds()).toEqual([]);
 
       recordEvidenceBackedLessonCompletion("ki-fuehrerschein", KF_LESSON_1);
-      expect(getXp()).toBe(XP.LESSON + XP.CHECKPOINT + 2 * XP.SECTION);
+      // A lesson-engine lesson tracks one step (its exercise).
+      expect(getXp()).toBe(XP.LESSON + XP.CHECKPOINT + XP.SECTION);
       expect(getTotalCompletedLessons()).toBe(1);
       expect(getEarnedBadgeIds()).toContain("first-light");
     });
@@ -1536,18 +1537,18 @@ describe("forward migration from legacy schemas (golden files)", () => {
     lastActivity: "2026-04-01T12:00:00.000Z",
   };
 
-  it("migrates a KI-Führerschein payload forward, preserving it", () => {
+  it("migrates a pre-engine KI-Führerschein payload forward, keeping the quiz and dropping retired lessons", () => {
     window.localStorage.setItem(
       `${LEGACY_COURSE_KEY_PREFIX}ki-fuehrerschein`,
       JSON.stringify(GOLDEN_KI_F),
     );
     __resetCacheForTests();
     const slice = getCourseSlice("ki-fuehrerschein");
-    expect(slice.lessons["block_1_lesson_1"].completed).toBe(true);
-    // Retired section IDs are not current authored progress and are removed at
-    // the v3 trust boundary. The canonical lesson completion, score, and course
-    // timestamps remain intact.
-    expect(slice.lessons["block_1_lesson_1"].sectionsRead).toEqual([]);
+    // KI-Führerschein moved to the lesson engine: the old block_N_lesson_M
+    // IDs are retired and removed at the trust boundary instead of failing
+    // it. The quiz result and course timestamps remain intact.
+    expect(slice.lessons["block_1_lesson_1"]).toBeUndefined();
+    expect(Object.keys(slice.lessons)).toEqual([]);
     expect(isWorkshopQuizPassed("ki-fuehrerschein")).toBe(true);
     expect(slice.workshopQuiz.score).toBe(0.92);
     // startedAt is carried forward, not reset to "now".
@@ -1590,7 +1591,9 @@ describe("forward migration from legacy schemas (golden files)", () => {
       "ai-native",
       "ki-fuehrerschein",
     ]);
-    expect(getTotalCompletedLessons()).toBe(2);
+    // The KI-Führerschein lessons in the golden file use retired IDs.
+    expect(getTotalCompletedLessons()).toBe(1);
+    expect(isWorkshopQuizPassed("ki-fuehrerschein")).toBe(true);
     // Unified payload persisted under the v2 key.
     expect(window.localStorage.getItem(UNIFIED_STORAGE_KEY)).not.toBe(null);
   });
@@ -1601,8 +1604,9 @@ describe("forward migration from legacy schemas (golden files)", () => {
       JSON.stringify(GOLDEN_KI_F),
     );
     __resetCacheForTests();
+    expect(isWorkshopQuizPassed("ki-fuehrerschein")).toBe(true);
     expect(isLessonCompleted("ki-fuehrerschein", "block_1_lesson_1")).toBe(
-      true,
+      false,
     );
   });
 
@@ -1639,8 +1643,9 @@ describe("forward migration from legacy schemas (golden files)", () => {
       JSON.stringify(GOLDEN_KI_F),
     );
     __resetCacheForTests();
-    expect(isLessonCompleted("ki-fuehrerschein", "block_1_lesson_1")).toBe(
-      true,
+    expect(isWorkshopQuizPassed("ki-fuehrerschein")).toBe(true);
+    expect(getCourseSlice("ki-fuehrerschein").startedAt).toBe(
+      "2026-03-10T08:00:00.000Z",
     );
   });
 

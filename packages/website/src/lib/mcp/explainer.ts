@@ -131,7 +131,7 @@ const COPY = {
 } as const;
 
 const RESOURCE_EXAMPLES = [
-  "lesson://ki-fuehrerschein/block_1_lesson_1",
+  "lesson://ki-fuehrerschein/daten-1-1",
   "workshop://ki-prognosen-einschaetzen",
   "book://ki-landschaft/01_eisberg?locale=en",
 ] as const;

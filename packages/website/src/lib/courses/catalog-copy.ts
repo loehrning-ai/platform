@@ -45,11 +45,11 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
   "ki-fuehrerschein": {
     title: "Everyday AI Literacy",
     eyebrow: "Step 01 · AI literacy",
-    tagline: "Define tasks, protect data, and check model output.",
+    tagline: "Classify data, brief checkably, catch errors.",
     description:
-      "You learn how generative AI answers, where it fails and which data you keep out. The course explains Article 4 of the AI Act in the version in force since 27 July 2026; at the end you create a certificate of participation locally.",
-    duration: "about 1 hr 40 min",
-    unitLabel: "units",
+      "Eight short hands-on lessons: classify and redact data, write checkable briefs, check AI drafts against sources and build a one-page team policy. The course briefly places Article 4 of the AI Act in the version in force since 27 July 2026; at the end you create a certificate of participation locally.",
+    duration: "about 45 min",
+    unitLabel: "modules",
     audience: "People who use AI in their day-to-day work",
     coverImageAlt:
       "Editorial collage of an AI review passport with learning cards, data protection, and verification steps",

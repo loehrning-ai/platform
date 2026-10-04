@@ -5,7 +5,7 @@
  * come back to: `lesson://`, `workshop://` and `book://`. The listing stays in
  * the canonical language so `resources/list` remains a small response; the
  * templates document the `?locale=` parameter, and every read callback honours
- * it, so `lesson://ki-fuehrerschein/block_1_lesson_1?locale=en` resolves.
+ * it, so `lesson://ki-fuehrerschein/daten-1-1?locale=en` resolves.
  */
 
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from "@/lib/i18n/locale";

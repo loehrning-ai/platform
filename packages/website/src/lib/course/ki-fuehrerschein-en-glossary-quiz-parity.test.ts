@@ -78,7 +78,9 @@ function collectCitationAnchors(value: JsonValue): string[] {
       for (const match of text.matchAll(
         /\b(?:Art(?:ikel|icle)?\.?)\s+(\d+(?:\(\d+\))?)/gi,
       )) {
-        anchors.push(`article:${match[1]}`);
+        // German cites sub-provisions as "Abs. 1 lit. c" / "Nr. 5", English
+        // as "(1)(c)" / "(5)": compare at article level.
+        anchors.push(`article:${match[1].replace(/\(.*$/, "")}`);
       }
       for (const match of text.matchAll(
         /\b(?:Verordnung|Regulation)\s+\(EU\)\s+(\d{4}\/\d+)\b/gi,

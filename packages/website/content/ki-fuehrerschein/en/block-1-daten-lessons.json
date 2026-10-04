@@ -1,0 +1,322 @@
+{
+  "blockId": "block_1",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-04-05",
+  "format": "lesson-engine/v1",
+  "reviewCadence": "legal",
+  "riskClass": "legal",
+  "triggerEvents": [
+    "gdpr-guidance-update",
+    "major-conceptual-update"
+  ],
+  "lessons": [
+    {
+      "id": "daten-1-1",
+      "blockId": "block_1",
+      "number": 1,
+      "title": "Four levels in one minute",
+      "subtitle": "Classify first, then type",
+      "durationMinutes": 6,
+      "keyConcepts": [
+        "Data protection",
+        "Data class",
+        "Approval",
+        "Data minimisation"
+      ],
+      "concept": {
+        "body": "Three questions decide whether an input may go into an AI tool: **Which data class?** **Is exactly this combination of tool, purpose and data class approved?** **Does the purpose need the detail at all?** The third question is data minimisation, a GDPR principle (Art. 5(1)(c)).\n\nAn example model with four levels that your organization adapts:\n\n| Level | Example | Rule |\n|---|---|---|\n| Public | approved website text | check rights and currency |\n| Internal | project plan, minutes | approved tools only |\n| Confidential | customer list, supplier terms | approval plus contract, configuration, permissions |\n| Specially protected | salary, health, applications | general assistants blocked |\n\nPasswords and other credentials never go into a prompt, at any level.",
+        "takeaway": "Classify before you type: level, approval, minimisation. If one answer is missing, enter nothing.",
+        "sources": [
+          {
+            "label": "GDPR Art. 5",
+            "url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "bucket-sort",
+        "title": "Sort twelve data snippets",
+        "instructions": "Put each card on the matching pile. After each card you see straight away why it belongs there. The levels are assumptions for a fictional company.",
+        "props": {
+          "buckets": [
+            {
+              "id": "public",
+              "label": "Public",
+              "hint": "already published"
+            },
+            {
+              "id": "internal",
+              "label": "Internal",
+              "hint": "not for outsiders"
+            },
+            {
+              "id": "confidential",
+              "label": "Confidential",
+              "hint": "contracts, people, business"
+            },
+            {
+              "id": "protected",
+              "label": "Specially protected",
+              "hint": "serious harm possible"
+            },
+            {
+              "id": "never",
+              "label": "Never enter",
+              "hint": "at no level"
+            }
+          ],
+          "items": [
+            {
+              "id": "press",
+              "text": "Press release that has been on the website since Monday",
+              "bucket": "public",
+              "why": "Already published. Still check that you use the current version and hold the rights."
+            },
+            {
+              "id": "catalog",
+              "text": "Product catalogue PDF from the website",
+              "bucket": "public",
+              "why": "Publicly available. Version and approved use still need checking."
+            },
+            {
+              "id": "minutes",
+              "text": "Minutes of yesterday's team meeting",
+              "bucket": "internal",
+              "why": "Not for outsiders, but no special protection need. Only in an approved tool, names only if the purpose needs them."
+            },
+            {
+              "id": "plan",
+              "text": "Project plan with milestones",
+              "bucket": "internal",
+              "why": "Typically internal: belongs in a workflow approved for internal data."
+            },
+            {
+              "id": "customers",
+              "text": "Customer list with names and e-mail addresses",
+              "bucket": "confidential",
+              "why": "Personal data: purpose, legal basis, processing agreement and minimisation must fit."
+            },
+            {
+              "id": "terms",
+              "text": "A supplier's purchasing terms",
+              "bucket": "confidential",
+              "why": "Usually confidential by contract. Only with approval for confidential data and matching permissions."
+            },
+            {
+              "id": "revenue",
+              "text": "Quarterly revenue before publication",
+              "bucket": "confidential",
+              "why": "Unpublished figure: confidentiality and access rules apply until it is published."
+            },
+            {
+              "id": "payslip",
+              "text": "A colleague's payslip",
+              "bucket": "protected",
+              "why": "Serious harm if mishandled. Only in specialist systems approved for it, never in general assistants."
+            },
+            {
+              "id": "sicknote",
+              "text": "Sick note with a diagnosis",
+              "bucket": "protected",
+              "why": "Health data is a special category under GDPR Art. 9 and needs special protection."
+            },
+            {
+              "id": "application",
+              "text": "Job application with CV",
+              "bucket": "protected",
+              "why": "Decisions about people, many personal details: only in the approved hiring process."
+            },
+            {
+              "id": "apikey",
+              "text": "API key for the shop system",
+              "bucket": "never",
+              "why": "Credentials open systems. They never go into a prompt, at any level."
+            },
+            {
+              "id": "password",
+              "text": "Password for the customer portal",
+              "bucket": "never",
+              "why": "Like any credential: never enter it. If you suspect a leak, change it and report it."
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "daten-1-1-c1",
+          "prompt": "A colleague wants to upload a customer list to an AI tool. The tool has an enterprise licence. What decides whether she may?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The enterprise licence is enough.",
+              "correct": false,
+              "feedback": "A licence says nothing about whether exactly this purpose with this data class is approved."
+            },
+            {
+              "id": "b",
+              "text": "Whether tool, purpose and data class are approved together and whether the purpose needs every detail.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Whether training use is switched off.",
+              "correct": false,
+              "feedback": "The switch replaces neither contract nor legal basis nor permissions."
+            }
+          ],
+          "explanation": "Approvals apply to combinations of tool, purpose and data class. Add data minimisation: what the purpose does not need stays out."
+        },
+        {
+          "id": "daten-1-1-c2",
+          "prompt": "You cannot find out whether a tool is approved for confidential data. What do you do?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Enter it carefully and delete the history afterwards.",
+              "correct": false,
+              "feedback": "The data is transferred the moment you enter it. Deleting afterwards does not undo that."
+            },
+            {
+              "id": "b",
+              "text": "Enter nothing and ask your organization's approval route.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Translate the data into another language, then enter it.",
+              "correct": false,
+              "feedback": "A translation does not change the data class."
+            }
+          ],
+          "explanation": "If one answer on level, approval or minimisation is missing, you enter nothing. Asking is faster than an incident."
+        }
+      ]
+    },
+    {
+      "id": "daten-1-2",
+      "blockId": "block_1",
+      "number": 2,
+      "title": "Redact before you paste",
+      "subtitle": "Only what the purpose needs",
+      "durationMinutes": 6,
+      "keyConcepts": [
+        "Data minimisation",
+        "Pseudonymisation"
+      ],
+      "concept": {
+        "body": "Ask about every detail: **Does the task need this?** To reply to a complaint, a model needs the facts of the case, not the IBAN, mobile number or home address. Leaving details out or replacing them with placeholders is data minimisation (GDPR Art. 5(1)(c)).\n\nTwo limits:\n\n- **Redaction does not make an unapproved tool acceptable.** It lowers the risk inside an approved workflow.\n- **Pseudonymised data stays personal data** as long as the person can be identified again with additional information (GDPR Art. 4(5), Recital 26).\n\nPattern matching finds e-mail addresses, phone numbers and IBANs. No pattern reliably finds names in running text, health details or trade secrets: you check those yourself.",
+        "takeaway": "Redact everything the purpose does not need. It does not replace an approval.",
+        "sources": [
+          {
+            "label": "GDPR Art. 4, 5, Recital 26",
+            "url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "pii-redactor",
+        "title": "Make the complaint ready to paste",
+        "instructions": "You want to draft a reply with the approved company assistant. Tap every detail the draft does not need, then check the result. All data is made up.",
+        "props": {
+          "segments": [
+            {
+              "text": "Hello, this is "
+            },
+            {
+              "text": "Petra Sommerfeld",
+              "pii": "Name: \"the customer\" is enough for the draft."
+            },
+            {
+              "text": " from Bergmann Hydraulik. Our order of "
+            },
+            {
+              "text": "twelve hydraulic pumps"
+            },
+            {
+              "text": " arrived "
+            },
+            {
+              "text": "eight working days late"
+            },
+            {
+              "text": ". Please refund to "
+            },
+            {
+              "text": "DE00 1111 2222 3333 4444 55",
+              "pii": "IBAN: payments go through accounting, never through a draft."
+            },
+            {
+              "text": ". You can reach me on "
+            },
+            {
+              "text": "+00 0000 000000",
+              "pii": "Private mobile number: not needed for the text."
+            },
+            {
+              "text": " or "
+            },
+            {
+              "text": "p.sommerfeld@example.com",
+              "pii": "E-mail address: the reply goes to the sender anyway."
+            },
+            {
+              "text": ". I expect an explanation of how future delays will be prevented."
+            }
+          ],
+          "freeText": true
+        }
+      },
+      "checks": [
+        {
+          "id": "daten-1-2-c1",
+          "prompt": "You redacted every name and number. May you now paste the text into a private, unapproved chat service?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Yes, once redacted the text may go into any tool.",
+              "correct": false,
+              "feedback": "Context, business details and inferences remain, and the tool has not been checked."
+            },
+            {
+              "id": "b",
+              "text": "No. Redaction lowers the risk but does not replace approval of the tool.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Yes, if you delete the history afterwards.",
+              "correct": false,
+              "feedback": "The transfer happened when you entered it."
+            }
+          ],
+          "explanation": "Redaction is one step inside an approved workflow, not a pass for any service."
+        },
+        {
+          "id": "daten-1-2-c2",
+          "prompt": "You replace \"Petra Sommerfeld\" with \"Customer K-17\" and keep a mapping list. How does the GDPR treat the data?",
+          "options": [
+            {
+              "id": "a",
+              "text": "As anonymous, so no data protection rules apply.",
+              "correct": false,
+              "feedback": "They would only be anonymous if nobody could identify the person again with reasonable effort."
+            },
+            {
+              "id": "b",
+              "text": "As pseudonymised, and therefore still personal data.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "As public, because no name remains.",
+              "correct": false,
+              "feedback": "Public is a data class for published material, not a result of redaction."
+            }
+          ],
+          "explanation": "With the mapping list the person can be identified again. Such data is pseudonymised and stays personal data (GDPR Art. 4(5), Recital 26)."
+        }
+      ]
+    }
+  ]
+}

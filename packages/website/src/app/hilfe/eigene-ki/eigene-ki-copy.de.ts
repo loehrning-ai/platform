@@ -134,7 +134,7 @@ export const AGENT_HELP_COPY_DE: AgentHelpCopy = {
       "Lektionen, Workshops und Buchkapitel haben feste Adressen, die dein Programm speichern und später wieder aufrufen kann.",
     examples: [
       {
-        uri: "lesson://ki-fuehrerschein/block_1_lesson_1",
+        uri: "lesson://ki-fuehrerschein/daten-1-1",
         label: "Eine Lektion",
       },
       { uri: "workshop://ki-prognosen-einschaetzen", label: "Ein Workshop" },

@@ -3,6 +3,7 @@
 import { type JSX, type ReactNode } from "react";
 import { CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLabEmbed } from "@/components/widgets/lab/lab-context";
 
 /**
  * WidgetFrame — shared, course-agnostic UI frame for the Tier-A drop-in
@@ -45,6 +46,22 @@ export function WidgetFrame({
   // shown twice.
   const titleRepeatsKind =
     title.trim().toLocaleLowerCase() === kindLabel.trim().toLocaleLowerCase();
+  const { embedded } = useLabEmbed();
+  if (embedded) {
+    // Inside the lesson-engine reader the stage already shows the exercise
+    // title and instructions; keep the heading for assistive technology only.
+    return (
+      <div data-widget-frame data-embedded="1" data-done={done ? "1" : "0"}>
+        <h3 className="sr-only">{title}</h3>
+        {scenario && (
+          <p className="mb-4 max-w-[640px] text-[15px] leading-[1.6] text-muted-foreground">
+            {scenario}
+          </p>
+        )}
+        {children}
+      </div>
+    );
+  }
   return (
     <div
       className="border-l-[3px] border-brand-orange bg-card/40 p-5 md:p-6"

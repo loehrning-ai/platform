@@ -15,6 +15,21 @@ vi.mock("@/components/course/kurs/lesson-layout", () => ({
   },
 }));
 
+const navigation = vi.hoisted(() => ({
+  redirect: vi.fn((href: string) => {
+    throw new Error(`NEXT_REDIRECT:${href}`);
+  }),
+  notFound: vi.fn(() => {
+    throw new Error("NEXT_NOT_FOUND");
+  }),
+}));
+
+vi.mock("next/navigation", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("next/navigation")>()),
+  redirect: navigation.redirect,
+  notFound: navigation.notFound,
+}));
+
 import { BlockPageShell } from "./block-page-shell";
 
 afterEach(cleanup);
@@ -49,14 +64,37 @@ describe("<BlockPageShell>", () => {
       />,
     );
 
-    expect(screen.getByRole("link", { name: "All blocks" })).toHaveAttribute(
+    // KI-Führerschein runs on the lesson engine and calls its units modules.
+    expect(screen.getByRole("link", { name: "All modules" })).toHaveAttribute(
       "href",
       "/en/ki-fuehrerschein/kurs",
     );
-    expect(screen.getByText("Block 1 / 5")).toBeInTheDocument();
+    expect(screen.getByText("Module 1 / 4")).toBeInTheDocument();
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "AI is already here",
+      "What may go in?",
     );
+    expect(observed.props?.moduleLabel).toBe("Module 1 · What may go in?");
+  });
+
+  it("sends retired lesson-engine block bookmarks to the hub and 404s unknown legacy blocks", () => {
+    expect(() =>
+      render(<BlockPageShell courseSlug="ki-fuehrerschein" blockId="block_5" locale="en" />),
+    ).toThrow("NEXT_REDIRECT:/en/ki-fuehrerschein/kurs");
+    expect(() =>
+      render(<BlockPageShell courseSlug="ki-und-gesellschaft" blockId="block_9" />),
+    ).toThrow("NEXT_NOT_FOUND");
+    expect(() =>
+      render(<BlockPageShell courseSlug="ki-fuehrerschein" blockId="not-a-block" />),
+    ).toThrow("NEXT_NOT_FOUND");
+  });
+
+  it("keeps the legacy block chrome for courses that are not ported yet", () => {
+    render(
+      <BlockPageShell courseSlug="eu-ai-act-kurs" blockId="block_1" locale="en" />,
+    );
+    expect(screen.getByRole("link", { name: "All blocks" })).toBeInTheDocument();
+    expect(screen.getByText("Block 1 / 6")).toBeInTheDocument();
+    expect(observed.props?.moduleLabel).toBeUndefined();
   });
 
   for (const locale of ["de", "en"] as const) {
@@ -75,7 +113,11 @@ describe("<BlockPageShell>", () => {
             ? `${coursePath}/${next.id}#lesson=${encodeURIComponent(next.lessons[0].id)}`
             : `${coursePath}/quiz`, locale),
           followingLabel: next
-            ? (locale === "de" ? "Nächster Block" : "Next block")
+            ? courseSlug === "ki-fuehrerschein"
+              ? locale === "de"
+                ? `Weiter mit Modul ${index + 2}: ${next.title}`
+                : `Continue with module ${index + 2}: ${next.title}`
+              : (locale === "de" ? "Nächster Block" : "Next block")
             : (locale === "de" ? "Zur Prüfung" : "Assessment"),
         });
       });

@@ -1,0 +1,402 @@
+{
+  "blockId": "block_3",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-04-05",
+  "format": "lesson-engine/v1",
+  "reviewCadence": "evergreen",
+  "riskClass": "evergreen",
+  "triggerEvents": [
+    "major-conceptual-update"
+  ],
+  "lessons": [
+    {
+      "id": "pruefen-3-1",
+      "blockId": "block_3",
+      "number": 5,
+      "title": "Find errors against sources",
+      "subtitle": "Supported, contradicted or missing",
+      "durationMinutes": 6,
+      "keyConcepts": [
+        "Primary source",
+        "Hallucination",
+        "Evidence status"
+      ],
+      "concept": {
+        "body": "Language models produce likely wording, not checked facts. They can misstate figures, names, quotes and responsibilities, even with web search or document access. In Mata v. Avianca, lawyers filed a brief with court decisions invented by a chatbot in a New York federal court in 2023; the court imposed sanctions.\n\nCheck every decision-relevant claim against the primary source and give it a status:\n\n- **supported:** the source says so,\n- **contradicted:** the source says something else,\n- **missing:** no source says it.\n\nCorrect what is contradicted; delete what is missing or mark it as open. A second model or a search engine is not a primary source.",
+        "takeaway": "The text goes out only once every claim has a status.",
+        "sources": [
+          {
+            "label": "Mata v. Avianca, S.D.N.Y. 2023 (22-cv-1461)"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "claim-checker",
+        "title": "Check a status report",
+        "instructions": "Judge every underlined claim in the draft against the source pack, then evaluate. Sources, draft and names are made up.",
+        "props": {
+          "sources": [
+            {
+              "id": "A",
+              "label": "Source A: decision minutes",
+              "text": "Budget for the pilot phase: EUR 1.8 million. Approved on 12 May."
+            },
+            {
+              "id": "B",
+              "label": "Source B: project status",
+              "text": "July is a target window. No binding start date has been decided."
+            },
+            {
+              "id": "C",
+              "label": "Source C: security approval",
+              "text": "The approval covers only the EU customer portal, version 2.4, without file upload. Other products and features are not covered."
+            }
+          ],
+          "draftLabel": "AI draft for the board report",
+          "draft": [
+            {
+              "text": "The board approved "
+            },
+            {
+              "text": "EUR 18 million for the entire programme",
+              "claimId": "budget"
+            },
+            {
+              "text": ", namely "
+            },
+            {
+              "text": "on 12 May",
+              "claimId": "date"
+            },
+            {
+              "text": ". The project starts "
+            },
+            {
+              "text": "on a binding date of 1 July",
+              "claimId": "start"
+            },
+            {
+              "text": " "
+            },
+            {
+              "text": "led by Ms Keller",
+              "claimId": "lead"
+            },
+            {
+              "text": ". The security approval covers "
+            },
+            {
+              "text": "all customer products including file upload",
+              "claimId": "security"
+            },
+            {
+              "text": "."
+            }
+          ],
+          "claims": [
+            {
+              "id": "budget",
+              "verdict": "contradicted",
+              "sourceId": "A",
+              "evidence": "Budget for the pilot phase: EUR 1.8 million.",
+              "correction": "EUR 1.8 million for the pilot phase",
+              "why": "A factor of ten and the wrong scope: pilot, not the whole programme."
+            },
+            {
+              "id": "date",
+              "verdict": "supported",
+              "sourceId": "A",
+              "evidence": "Approved on 12 May.",
+              "why": "The date matches the decision minutes."
+            },
+            {
+              "id": "start",
+              "verdict": "contradicted",
+              "sourceId": "B",
+              "evidence": "No binding start date has been decided.",
+              "correction": "July is a target window; no start date has been decided.",
+              "why": "A target window became a fixed date."
+            },
+            {
+              "id": "lead",
+              "verdict": "missing",
+              "correction": "Delete or mark as open.",
+              "why": "No source names a project lead. Plausible does not mean supported."
+            },
+            {
+              "id": "security",
+              "verdict": "contradicted",
+              "sourceId": "C",
+              "evidence": "The approval covers only the EU customer portal, version 2.4, without file upload.",
+              "correction": "Approval only for EU customer portal 2.4 without file upload.",
+              "why": "The draft extends the approval to all products and to exactly the excluded feature."
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "pruefen-3-1-c1",
+          "prompt": "The draft names \"Ms Keller\" as project lead. No source mentions a lead. Which status?",
+          "options": [
+            {
+              "id": "a",
+              "text": "supported",
+              "correct": false,
+              "feedback": "Only what a source says is supported."
+            },
+            {
+              "id": "b",
+              "text": "contradicted",
+              "correct": false,
+              "feedback": "It would be contradicted if a source named someone else."
+            },
+            {
+              "id": "c",
+              "text": "missing: delete or mark as open",
+              "correct": true
+            }
+          ],
+          "explanation": "What no source says is not supported, however plausible it sounds."
+        },
+        {
+          "id": "pruefen-3-1-c2",
+          "prompt": "You want to check a figure from an AI draft. What is a primary source?",
+          "options": [
+            {
+              "id": "a",
+              "text": "A second language model that gives the same figure.",
+              "correct": false,
+              "feedback": "Two models can make the same error."
+            },
+            {
+              "id": "b",
+              "text": "The document that records the fact, such as decision minutes or accounts.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "A colleague who remembers the figure.",
+              "correct": false,
+              "feedback": "Memory is a hint, not evidence."
+            }
+          ],
+          "explanation": "The primary source is the document that records the fact. There you check definition, period, unit and date."
+        }
+      ]
+    },
+    {
+      "id": "pruefen-3-2",
+      "blockId": "block_3",
+      "number": 6,
+      "title": "How deep to check?",
+      "subtitle": "Review depth by impact, not by gut feeling",
+      "durationMinutes": 5,
+      "keyConcepts": [
+        "Review depth",
+        "Reversibility",
+        "Four-eyes principle"
+      ],
+      "concept": {
+        "body": "Not every AI output needs the same review. Three questions set the depth:\n\n1. **Impact:** What happens if the statement is wrong? A clumsy sentence, or a wrong figure in a decision?\n2. **Reversibility:** Can the error be fixed easily, or is a commitment, payment or decision about people already out?\n3. **Audience:** only you, the team, customers or the public?\n\nThe higher the rating, the more it takes: from proofreading to source and calculation checks to specialist sign-off under the four-eyes principle. Legal statements, financial figures, decisions about people and external commitments always sit at the top. There is no fixed review time. Document the review when the impact requires it.",
+        "takeaway": "The more consequential, irreversible and public, the more thorough."
+      },
+      "exercise": {
+        "kind": "calculator",
+        "title": "Rate three cases",
+        "instructions": "Set the three controls for each case below as you judge it. The calculator shows the review level and what it involves.",
+        "props": {
+          "inputs": [
+            {
+              "id": "impact",
+              "label": "Impact of an error",
+              "type": "select",
+              "default": 1,
+              "options": [
+                {
+                  "value": 1,
+                  "label": "Cosmetic"
+                },
+                {
+                  "value": 2,
+                  "label": "Substantive"
+                },
+                {
+                  "value": 3,
+                  "label": "Serious: money, law, people"
+                }
+              ]
+            },
+            {
+              "id": "reversal",
+              "label": "Reversibility",
+              "type": "select",
+              "default": 1,
+              "options": [
+                {
+                  "value": 1,
+                  "label": "Easy to fix"
+                },
+                {
+                  "value": 2,
+                  "label": "Costly to fix"
+                },
+                {
+                  "value": 3,
+                  "label": "Hard to reverse"
+                }
+              ]
+            },
+            {
+              "id": "audience",
+              "label": "Audience",
+              "type": "select",
+              "default": 1,
+              "options": [
+                {
+                  "value": 1,
+                  "label": "Only me"
+                },
+                {
+                  "value": 2,
+                  "label": "Internal team"
+                },
+                {
+                  "value": 3,
+                  "label": "Customers or the public"
+                }
+              ]
+            }
+          ],
+          "outputs": [
+            {
+              "id": "points",
+              "label": "Points (3 to 9)",
+              "formula": "impact + reversal + audience",
+              "format": "int"
+            },
+            {
+              "id": "level",
+              "label": "Review level",
+              "formula": "(impact == 3 || points >= 7) ? 3 : (points >= 5 ? 2 : 1)",
+              "format": "int",
+              "emphasis": true,
+              "help": "Serious impact always means level 3."
+            }
+          ],
+          "chart": {
+            "kind": "bars",
+            "title": "Where the points come from",
+            "format": "int",
+            "bars": [
+              {
+                "label": "Impact",
+                "formula": "impact",
+                "tone": "accent"
+              },
+              {
+                "label": "Reversibility",
+                "formula": "reversal",
+                "tone": "accent"
+              },
+              {
+                "label": "Audience",
+                "formula": "audience",
+                "tone": "accent"
+              }
+            ]
+          },
+          "verdicts": [
+            {
+              "when": "level == 3",
+              "tone": "bad",
+              "title": "Level 3: specialist review and sign-off",
+              "body": "Open primary sources, recalculate figures independently, have the responsible specialist review, four-eyes sign-off, document the review."
+            },
+            {
+              "when": "level == 2",
+              "tone": "warn",
+              "title": "Level 2: source and calculation check",
+              "body": "Check every figure, date and person against the source, mark open points."
+            },
+            {
+              "when": "true",
+              "tone": "good",
+              "title": "Level 1: proofread",
+              "body": "Check tone and obvious errors. Do not pass on unchecked facts."
+            }
+          ],
+          "goals": [
+            {
+              "id": "notes",
+              "label": "Case A: AI rephrased your own bullet points, just for you.",
+              "when": "impact == 1 && reversal == 1 && audience == 1",
+              "insight": "Level 1. Proofreading is enough as long as no facts are passed on."
+            },
+            {
+              "id": "status",
+              "label": "Case B: status e-mail with project figures to your team.",
+              "when": "impact == 2 && audience == 2",
+              "insight": "Level 2. Check the figures against project controlling before the team plans with them."
+            },
+            {
+              "id": "refund",
+              "label": "Case C: reply to a customer that promises a refund.",
+              "when": "impact == 3 && audience == 3",
+              "insight": "Level 3. An external commitment about money needs sign-off by the responsible person."
+            }
+          ],
+          "note": "A learning model, not a standard. Your organization's review rules take precedence."
+        }
+      },
+      "checks": [
+        {
+          "id": "pruefen-3-2-c1",
+          "prompt": "An AI draft is going to a customer and promises a credit note. Which review fits?",
+          "options": [
+            {
+              "id": "a",
+              "text": "A quick proofread, the tone is fine.",
+              "correct": false
+            },
+            {
+              "id": "b",
+              "text": "Check the facts against the sources and have the responsible person approve the credit note.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Have a second model check the text.",
+              "correct": false,
+              "feedback": "A second model replaces neither source nor authority."
+            }
+          ],
+          "explanation": "A commitment about money, external, hard to reverse: the top level."
+        },
+        {
+          "id": "pruefen-3-2-c2",
+          "prompt": "Why is there no fixed review time per text?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Because AI texts are usually right.",
+              "correct": false
+            },
+            {
+              "id": "b",
+              "text": "Because the review needed depends on impact, reversibility and audience, not on length.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Because only long texts need checking.",
+              "correct": false
+            }
+          ],
+          "explanation": "One sentence with a wrong figure can matter more than a page of brainstorming."
+        }
+      ]
+    }
+  ]
+}

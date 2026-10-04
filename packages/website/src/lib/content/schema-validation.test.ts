@@ -16,6 +16,8 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { books } from "@/lib/books";
 import { demos } from "@/lib/demos";
+import type { BaseLesson } from "@/lib/course/types";
+import { validateEngineLesson } from "@/lib/lesson-engine/lesson";
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -55,26 +57,10 @@ interface Lesson {
 type LessonFile = Lesson[] | { lessons: Lesson[] } | { blockId?: string; lessons: Lesson[] };
 
 const COURSE_LESSON_FILES: [string, string][] = [
-  [
-    "KI-Führerschein block-1",
-    "content/ki-fuehrerschein/block-1-entdeckung-lessons.json",
-  ],
-  [
-    "KI-Führerschein block-2",
-    "content/ki-fuehrerschein/block-2-datenschutz-lessons.json",
-  ],
-  [
-    "KI-Führerschein block-3",
-    "content/ki-fuehrerschein/block-3-anwendung-lessons.json",
-  ],
-  [
-    "KI-Führerschein block-4",
-    "content/ki-fuehrerschein/block-4-verifikation-lessons.json",
-  ],
-  [
-    "KI-Führerschein block-5",
-    "content/ki-fuehrerschein/block-5-richtlinie-lessons.json",
-  ],
+  ["KI-Führerschein module 1", "content/ki-fuehrerschein/block-1-daten-lessons.json"],
+  ["KI-Führerschein module 2", "content/ki-fuehrerschein/block-2-briefen-lessons.json"],
+  ["KI-Führerschein module 3", "content/ki-fuehrerschein/block-3-pruefen-lessons.json"],
+  ["KI-Führerschein module 4", "content/ki-fuehrerschein/block-4-regeln-lessons.json"],
 ];
 
 function describeLessonFile(label: string, path: string): void {
@@ -118,9 +104,18 @@ function describeLessonFile(label: string, path: string): void {
       }
     });
 
-    it("each lesson has at least one non-empty section", () => {
+    it("each lesson has non-empty learning content", () => {
       if (loadError) return;
       for (const lesson of lessons) {
+        // Lesson-engine lessons carry concept + exercise + checks instead of
+        // sections; validateEngineLesson owns their full contract.
+        if ((lesson as unknown as BaseLesson).concept) {
+          expect(
+            validateEngineLesson(lesson as unknown as BaseLesson),
+            `engine lesson ${lesson.id}`,
+          ).toEqual([]);
+          continue;
+        }
         expect(
           lesson.sections?.length,
           `no sections in lesson ${lesson.id}`,

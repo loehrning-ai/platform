@@ -27,7 +27,7 @@ describe("lesson mission binding", () => {
       }
     }
 
-    expect(resolved).toBe(153);
+    expect(resolved).toBe(143);
   });
 
   it("makes adjacent lesson frames visibly distinct using authored metadata", () => {

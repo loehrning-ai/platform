@@ -1,0 +1,305 @@
+{
+  "blockId": "block_2",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-04-05",
+  "format": "lesson-engine/v1",
+  "reviewCadence": "vendor",
+  "riskClass": "vendor",
+  "triggerEvents": [
+    "vendor-api-change",
+    "model-deprecation"
+  ],
+  "lessons": [
+    {
+      "id": "briefen-2-1",
+      "blockId": "block_2",
+      "number": 3,
+      "title": "A brief you can check",
+      "subtitle": "Context, task, format, limits",
+      "durationMinutes": 6,
+      "keyConcepts": [
+        "Prompt structure",
+        "Placeholders",
+        "Checkability"
+      ],
+      "concept": {
+        "body": "A good brief makes the result **checkable**, not automatically right. Four building blocks:\n\n1. **Context:** What happened, who is the text for?\n2. **Task:** What exactly should come out?\n3. **Format:** length, structure, tone.\n4. **Limits:** only these facts, mark gaps in [square brackets], no commitments.\n\nThe limits matter most. A model fills gaps with plausible text, such as an invented cause, a deadline or a discount. Marked gaps show you at once what you still need to clarify.\n\nMeasure the benefit on your own cases: how long did the draft take, how many corrections did it need? Do not adopt a time-saving figure that does not come from such measurements.",
+        "takeaway": "Limits in the brief make errors visible. They do not guarantee a correct result."
+      },
+      "exercise": {
+        "kind": "live-prompt-ab",
+        "title": "Same complaint, two briefs",
+        "instructions": "Run both briefs and judge the outputs against the five criteria. Without a live model you see recorded example outputs.",
+        "props": {
+          "task": "Goal: a reply to the complaint that you could send after a short check.",
+          "input": {
+            "label": "Complaint (made up)",
+            "text": "Our order of twelve hydraulic pumps arrived eight working days late. We expect an explanation and reliable countermeasures.\n\nKnown so far: the cause has not been clarified internally. Only sales can approve discounts."
+          },
+          "variants": [
+            {
+              "label": "Weak brief",
+              "prompt": "Write a reply to this customer e-mail.",
+              "recorded": "Dear Ms Sommerfeld,\n\nThank you for your message. The delay was caused by a bottleneck at our supplier, which has since been resolved. As an apology you will receive a 10% discount on your next order. Future deliveries are guaranteed to arrive on time.\n\nKind regards"
+            },
+            {
+              "label": "Structured brief",
+              "prompt": "Context: A regular customer complains about a delivery that arrived eight working days late.\nTask: Draft a factual, respectful reply.\nFormat: e-mail, at most 120 words, with greeting and sign-off.\nLimits: Use only the facts given. Do not invent a cause, deadline, compensation or measure. Mark missing details in [square brackets]. No commitments.",
+              "recorded": "Dear Sir or Madam,\n\nThank you for your feedback. Your order of twelve hydraulic pumps arrived eight working days later than agreed. We regret this.\n\nWe are clarifying the cause: [cause after internal review]. By [date] you will receive our explanation and the measures against future delays: [measures after approval].\n\nKind regards\n[Name, role]"
+            }
+          ],
+          "rubric": [
+            {
+              "id": "cause",
+              "label": "Invents no cause",
+              "expected": {
+                "a": false,
+                "b": true
+              }
+            },
+            {
+              "id": "promise",
+              "label": "Makes no unapproved commitment",
+              "hint": "discount, guarantee, deadline",
+              "expected": {
+                "a": false,
+                "b": true
+              }
+            },
+            {
+              "id": "gaps",
+              "label": "Marks missing details visibly",
+              "expected": {
+                "a": false,
+                "b": true
+              }
+            },
+            {
+              "id": "facts",
+              "label": "States the facts correctly",
+              "hint": "twelve pumps, eight working days",
+              "expected": {
+                "a": false,
+                "b": true
+              }
+            },
+            {
+              "id": "tone",
+              "label": "Polite, factual tone",
+              "expected": {
+                "a": true,
+                "b": true
+              }
+            }
+          ],
+          "allowEdit": true
+        }
+      },
+      "checks": [
+        {
+          "id": "briefen-2-1-c1",
+          "prompt": "The draft from the weak brief promises a 10% discount. Where does the figure come from?",
+          "options": [
+            {
+              "id": "a",
+              "text": "From the customer e-mail.",
+              "correct": false,
+              "feedback": "The e-mail mentions no discount."
+            },
+            {
+              "id": "b",
+              "text": "The model filled a gap with plausible text. Nothing backs the figure.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "From the company's discount policy.",
+              "correct": false,
+              "feedback": "No policy was in the brief. The model did not know one."
+            }
+          ],
+          "explanation": "Without limits a model fills gaps with plausible-sounding details. A commitment nobody approved can still create expectations and claims once it is sent."
+        },
+        {
+          "id": "briefen-2-1-c2",
+          "prompt": "Which building block makes invented details easiest to find?",
+          "options": [
+            {
+              "id": "a",
+              "text": "A polite greeting in the brief.",
+              "correct": false
+            },
+            {
+              "id": "b",
+              "text": "The instruction to mark missing details in square brackets.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "A brief that is as long as possible.",
+              "correct": false,
+              "feedback": "Length alone does not help. Limits and format do."
+            }
+          ],
+          "explanation": "Marked gaps show what you need to clarify instead of filling them with plausible details. You still have to check the draft."
+        }
+      ]
+    },
+    {
+      "id": "briefen-2-2",
+      "blockId": "block_2",
+      "number": 4,
+      "title": "Decision or remark",
+      "subtitle": "What may go into AI meeting notes",
+      "durationMinutes": 5,
+      "keyConcepts": [
+        "Minutes",
+        "Owners",
+        "Co-determination"
+      ],
+      "concept": {
+        "body": "AI meeting summaries sound finished. The risky parts are exactly the ones that create work later: **owners, deadlines and decisions nobody made.** \"We could look into that\" is not a decision.\n\nWhen you review, sort every statement:\n\n- **Backed:** a decision or fact that is in the notes as stated.\n- **Task:** with a named person and deadline.\n- **Open:** a proposal or need without a person or deadline.\n- **Invented:** in none of the notes, so delete it.\n\nBefore any recording or transcription, purpose, information of participants and legal basis must be settled. In Germany, a works council has a say on technical systems that can monitor behaviour or performance (Works Constitution Act, BetrVG § 87(1) no. 6).",
+        "takeaway": "Every person, deadline and decision in the minutes needs a source line in the notes.",
+        "sources": [
+          {
+            "label": "BetrVG § 87 (German)",
+            "url": "https://www.gesetze-im-internet.de/betrvg/__87.html"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "bucket-sort",
+        "title": "Check an AI summary",
+        "instructions": "Compare each sentence of the summary with the notes and put it on the matching pile.",
+        "props": {
+          "context": {
+            "label": "Notes from the sales meeting (made up)",
+            "text": "- Open pipeline EUR 1.2 million, of which EUR 400k prioritised (decided)\n- Predictive maintenance pilot requested, EUR 35k; quote by 15 April (Jana)\n- CRM data partly outdated, clean-up proposed\n- Technical data sheet needed for plant 2"
+          },
+          "buckets": [
+            {
+              "id": "backed",
+              "label": "Backed",
+              "hint": "decision or fact"
+            },
+            {
+              "id": "task",
+              "label": "Task",
+              "hint": "with person and deadline"
+            },
+            {
+              "id": "open",
+              "label": "Mark as open",
+              "hint": "no person or deadline"
+            },
+            {
+              "id": "invented",
+              "label": "Invented: delete",
+              "hint": "in none of the notes"
+            }
+          ],
+          "items": [
+            {
+              "id": "prio",
+              "text": "EUR 400k of the pipeline is prioritised.",
+              "bucket": "backed",
+              "why": "In the notes as stated and marked as decided."
+            },
+            {
+              "id": "pipeline",
+              "text": "Open pipeline: EUR 1.2 million.",
+              "bucket": "backed",
+              "why": "A fact from the notes, not a decision, but backed."
+            },
+            {
+              "id": "quote",
+              "text": "Jana sends the quote for the maintenance pilot by 15 April.",
+              "bucket": "task",
+              "why": "Person and deadline are in the notes."
+            },
+            {
+              "id": "crm-open",
+              "text": "Clean up CRM data (proposed).",
+              "bucket": "open",
+              "why": "Only a proposal, without person or deadline."
+            },
+            {
+              "id": "sheet-open",
+              "text": "A technical data sheet is needed for plant 2.",
+              "bucket": "open",
+              "why": "A need without person or deadline: leave open and clarify."
+            },
+            {
+              "id": "crm-invented",
+              "text": "The CRM clean-up has been decided and starts in May.",
+              "bucket": "invented",
+              "why": "Only proposed in the notes. Decision and start month are invented."
+            },
+            {
+              "id": "tom",
+              "text": "Tom prepares the data sheet for plant 2 by Friday.",
+              "bucket": "invented",
+              "why": "Neither Tom nor Friday appear in the notes."
+            },
+            {
+              "id": "pilot",
+              "text": "The EUR 35k maintenance pilot is approved.",
+              "bucket": "invented",
+              "why": "Requested is not approved."
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "briefen-2-2-c1",
+          "prompt": "The summary says: \"Tom prepares the data sheet by Friday.\" The notes only say a data sheet is needed. What do you do?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Keep it, Tom usually does that.",
+              "correct": false,
+              "feedback": "Then the minutes record an agreement that was never made."
+            },
+            {
+              "id": "b",
+              "text": "Delete person and deadline and mark the item as open.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Keep the sentence and tell Tom by e-mail.",
+              "correct": false,
+              "feedback": "The meeting decides responsibility, not the minutes."
+            }
+          ],
+          "explanation": "What is not in the notes or recording is invented. An open item is more honest than a wrong owner."
+        },
+        {
+          "id": "briefen-2-2-c2",
+          "prompt": "You want to transcribe meetings automatically from now on. What must be settled first?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Only whether the licence includes the feature.",
+              "correct": false
+            },
+            {
+              "id": "b",
+              "text": "Purpose, information of participants, legal basis and, where one exists, works council co-determination.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Nothing, as long as transcripts stay internal.",
+              "correct": false,
+              "feedback": "Internal transcripts also process personal data."
+            }
+          ],
+          "explanation": "Recording and transcription process personal data and can make behaviour or performance visible. Data protection and, where one exists, the works council therefore come first."
+        }
+      ]
+    }
+  ]
+}

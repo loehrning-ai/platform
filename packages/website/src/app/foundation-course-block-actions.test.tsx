@@ -1,7 +1,6 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import type { BlockSummary } from "@/lib/course/types";
-import { KursContent as AiFundamentalsHub } from "./ki-fuehrerschein/kurs/kurs-content";
 import { KursContent as EuAiActHub } from "./eu-ai-act-kurs/kurs/kurs-content";
 import { KursContent as AiSocietyHub } from "./ki-und-gesellschaft/kurs/kurs-content";
 
@@ -24,12 +23,10 @@ const BLOCKS: readonly BlockSummary[] = [
   },
 ];
 
+// KI-Führerschein's lesson-engine hub links lessons, not blocks; its
+// accessible lesson links are covered in
+// components/lesson-engine/module-overview.test.tsx.
 const COURSE_HUBS = [
-  {
-    label: "Everyday AI Literacy",
-    slug: "ki-fuehrerschein",
-    Component: AiFundamentalsHub,
-  },
   {
     label: "EU AI Act",
     slug: "eu-ai-act-kurs",

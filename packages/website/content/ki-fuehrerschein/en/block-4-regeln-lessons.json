@@ -1,0 +1,399 @@
+{
+  "blockId": "block_4",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-04-05",
+  "format": "lesson-engine/v1",
+  "reviewCadence": "legal",
+  "riskClass": "legal",
+  "triggerEvents": [
+    "eu-ai-act-amendment",
+    "commission-qa-update"
+  ],
+  "lessons": [
+    {
+      "id": "regeln-4-1",
+      "blockId": "block_4",
+      "number": 7,
+      "title": "Am I allowed to?",
+      "subtitle": "The approval decision in a few questions",
+      "durationMinutes": 6,
+      "keyConcepts": [
+        "Shadow AI",
+        "Approval",
+        "Article 4"
+      ],
+      "concept": {
+        "body": "Shadow AI means AI use for work outside approved tools and controls. It includes private chat accounts, browser extensions, new AI features in software you bought long ago, and personal API keys. Such workflows often lack a contract, permissions, retention rules and a reporting route.\n\nArticle 4 of the EU AI Act has applied since 2 February 2025. Since the amendment by Regulation (EU) 2026/1744, providers and deployers must take measures to support the development of AI literacy of their staff, matched to knowledge, context of use and affected people. The article prescribes no particular course format or certificate.\n\nDay to day this means: before any new use you check tool, purpose, data class and approval. An incident is reported, not deleted.",
+        "takeaway": "Check tool, purpose, data class and approval first. When in doubt, ask; when something goes wrong, report.",
+        "sources": [
+          {
+            "label": "AI Act Art. 4",
+            "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+          },
+          {
+            "label": "Regulation (EU) 2026/1744"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "decision-wizard",
+        "title": "Decide three realistic situations",
+        "instructions": "Work through the questions for each case. At the end you see whether your outcome fits the case and why.",
+        "props": {
+          "start": "start",
+          "nodes": [
+            {
+              "id": "start",
+              "question": "What is the situation?",
+              "options": [
+                {
+                  "label": "I want to use an AI tool for a task.",
+                  "next": "tool"
+                },
+                {
+                  "label": "Data has already gone into an unapproved tool.",
+                  "result": "report"
+                }
+              ]
+            },
+            {
+              "id": "tool",
+              "question": "Is the tool approved in this edition and configuration?",
+              "options": [
+                {
+                  "label": "Yes, it is on the approval list.",
+                  "next": "purpose"
+                },
+                {
+                  "label": "No, or I do not know.",
+                  "result": "ask"
+                }
+              ]
+            },
+            {
+              "id": "purpose",
+              "question": "Is the purpose approved for this tool?",
+              "options": [
+                {
+                  "label": "Yes.",
+                  "next": "class"
+                },
+                {
+                  "label": "No, or unclear.",
+                  "result": "ask"
+                }
+              ]
+            },
+            {
+              "id": "class",
+              "question": "What data class is the input?",
+              "options": [
+                {
+                  "label": "Public or internal",
+                  "next": "minimise"
+                },
+                {
+                  "label": "Confidential",
+                  "next": "confidential"
+                },
+                {
+                  "label": "Specially protected, or credentials",
+                  "result": "stop"
+                }
+              ]
+            },
+            {
+              "id": "confidential",
+              "question": "Is the tool explicitly approved for confidential data?",
+              "options": [
+                {
+                  "label": "Yes.",
+                  "next": "minimise"
+                },
+                {
+                  "label": "No, or unclear.",
+                  "result": "ask"
+                }
+              ]
+            },
+            {
+              "id": "minimise",
+              "question": "Does the purpose need every detail you want to enter?",
+              "options": [
+                {
+                  "label": "Yes, only what is needed.",
+                  "result": "go"
+                },
+                {
+                  "label": "No, there is more in it.",
+                  "result": "minimise"
+                }
+              ]
+            }
+          ],
+          "results": [
+            {
+              "id": "go",
+              "tone": "good",
+              "title": "Go ahead, with review",
+              "body": "Approved tool, approved purpose, matching data class, only necessary details. You review the result by its impact before passing it on.",
+              "actions": [
+                "Choose the review depth",
+                "Mark open points"
+              ]
+            },
+            {
+              "id": "minimise",
+              "tone": "warn",
+              "title": "Minimise first",
+              "body": "Remove or replace details the purpose does not need. Then carry on.",
+              "actions": [
+                "Redact names, contact details and numbers"
+              ]
+            },
+            {
+              "id": "ask",
+              "tone": "warn",
+              "title": "Do not enter, request approval",
+              "body": "Without approval for exactly this combination of tool, purpose and data class you enter nothing.",
+              "actions": [
+                "Ask the approval route or the responsible function",
+                "Until then work without AI or with a made-up example"
+              ]
+            },
+            {
+              "id": "stop",
+              "tone": "bad",
+              "title": "Not into general assistants",
+              "body": "Specially protected data belongs only in specialist systems approved for it; credentials go into no prompt.",
+              "actions": [
+                "Use the approved specialist system",
+                "Ask data protection if unsure"
+              ]
+            },
+            {
+              "id": "report",
+              "tone": "bad",
+              "title": "Report internally at once",
+              "body": "Report the incident through the internal channel. Secure time, tool, account, data and output; do not delete evidence on your own. The controller decides under GDPR Art. 33 whether the supervisory authority must be notified; if so, where feasible within 72 hours of becoming aware.",
+              "source": "GDPR Art. 33"
+            }
+          ],
+          "scenarios": [
+            {
+              "id": "blog",
+              "text": "You want to shorten an already published blog post with the approved company assistant. Tool and purpose are on the approval list.",
+              "expected": "go",
+              "why": "Public data, approved tool and purpose: go ahead, then proofread."
+            },
+            {
+              "id": "cv",
+              "text": "You want the approved company assistant to summarise a job application including the CV. Summarising is an approved purpose.",
+              "expected": "stop",
+              "why": "Applications are specially protected. General assistants stay blocked for them, even with an approved purpose."
+            },
+            {
+              "id": "leak",
+              "text": "Yesterday a colleague copied a customer list into his private chat account.",
+              "expected": "report",
+              "why": "The data is already out. What counts now is the internal report, not deletion."
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "regeln-4-1-c1",
+          "prompt": "Your office software gets a new AI writing feature through an update. May you use it with customer data straight away?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Yes, the software has already been bought.",
+              "correct": false,
+              "feedback": "Approvals cover features and configurations, not the product name."
+            },
+            {
+              "id": "b",
+              "text": "Only once the new feature is approved for the purpose and data class.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Yes, if it is switched on by default.",
+              "correct": false
+            }
+          ],
+          "explanation": "New features in bought software are a common route into shadow AI. The combination stays blocked until it is approved."
+        },
+        {
+          "id": "regeln-4-1-c2",
+          "prompt": "What does Article 4 of the EU AI Act require in the version in force?",
+          "options": [
+            {
+              "id": "a",
+              "text": "A certificate for every person who uses AI.",
+              "correct": false
+            },
+            {
+              "id": "b",
+              "text": "That providers and deployers take measures that support the AI literacy of their staff, matched to context and prior knowledge.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "A mandatory course with a fixed number of hours.",
+              "correct": false
+            }
+          ],
+          "explanation": "Article 4 has applied since 2 February 2025 and prescribes neither a format nor a certificate. This course's record only shows that you completed this course."
+        }
+      ]
+    },
+    {
+      "id": "regeln-4-2",
+      "blockId": "block_4",
+      "number": 8,
+      "title": "Your team policy",
+      "subtitle": "One page that helps day to day",
+      "durationMinutes": 5,
+      "keyConcepts": [
+        "AI policy",
+        "Approval list",
+        "Reporting channel"
+      ],
+      "concept": {
+        "body": "An AI policy only helps if staff can apply it day to day. One page with six building blocks is enough to start, provided the approval list and procedures are maintained separately and linked:\n\n1. **Scope:** for whom and for which tools.\n2. **Approvals:** which tool for which purpose and data class.\n3. **Data rules:** levels, minimisation, never credentials.\n4. **Review:** review depth by impact, who signs off.\n5. **Incidents:** reporting channel and what to secure.\n6. **Maintenance:** who owns it and when it is reviewed.\n\nIt is finished only when every [placeholder] is replaced and the responsible functions have agreed, depending on the organization data protection, information security and the works council. It is one building block for Article 4 measures, not complete proof.",
+        "takeaway": "One page, six building blocks, no open placeholders: then the team can work with it."
+      },
+      "exercise": {
+        "kind": "doc-builder",
+        "title": "Build your policy",
+        "instructions": "Fill in the required fields. The preview shows the finished page; download it as Markdown or copy it.",
+        "props": {
+          "filename": "ai-use-policy.md",
+          "template": "# AI use policy: {{org}}\n\nVersion: [date] · Owner: {{owner}}\n\n## 1. Scope\nApplies to {{scope}}, for all AI features, including in software already in use.\n\n## 2. Approvals\n{{tools}}\n\nAny combination of tool, purpose and data class not listed here stays blocked until it is approved.\n\n## 3. Data rules\nBefore every input: check data class, approval and minimisation. Enter only details the purpose needs.\n\nNever enter:\n{{never}}\n\n## 4. Review\n{{review}}. Legal statements, financial figures, decisions about people and external commitments are always signed off by the responsible person.\n\n## 5. Incidents\nReport at once via: {{incident}}. Secure time, tool, account, data and output; delete nothing on your own.\n\n## 6. Maintenance\nReview {{cycle}} and immediately after new features, contract changes, incidents or legal changes.\n\n[Agreement: data protection, information security, works council where applicable]\n",
+          "fields": [
+            {
+              "id": "org",
+              "label": "Organization or team",
+              "type": "text",
+              "required": true,
+              "placeholder": "Sales team, Example Ltd"
+            },
+            {
+              "id": "scope",
+              "label": "Applies to",
+              "type": "text",
+              "required": true,
+              "placeholder": "all sales staff"
+            },
+            {
+              "id": "tools",
+              "label": "Approved tools and purposes",
+              "type": "textarea",
+              "required": true,
+              "placeholder": "Company assistant: drafts of internal texts, public and internal levels"
+            },
+            {
+              "id": "never",
+              "label": "Never enter",
+              "type": "checkboxes",
+              "required": true,
+              "options": [
+                "Passwords and credentials",
+                "Health data",
+                "Salary and HR data",
+                "Job applications",
+                "Unpublished financial figures"
+              ],
+              "default": [
+                "Passwords and credentials"
+              ]
+            },
+            {
+              "id": "review",
+              "label": "Review rule",
+              "type": "select",
+              "required": true,
+              "options": [
+                "Review depth by impact: proofread, source check, specialist sign-off",
+                "Everything external under the four-eyes principle"
+              ]
+            },
+            {
+              "id": "incident",
+              "label": "Reporting channel for incidents",
+              "type": "text",
+              "required": true,
+              "placeholder": "ticket category \"AI incident\""
+            },
+            {
+              "id": "owner",
+              "label": "Policy owner",
+              "type": "text",
+              "required": true,
+              "placeholder": "role, not only a name"
+            },
+            {
+              "id": "cycle",
+              "label": "Review cycle",
+              "type": "select",
+              "required": true,
+              "options": [
+                "every six months",
+                "annually"
+              ]
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "regeln-4-2-c1",
+          "prompt": "Your policy is fully drafted, but under \"Incidents\" it still says [reporting channel]. Is it ready for approval?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Yes, the rest matters more.",
+              "correct": false
+            },
+            {
+              "id": "b",
+              "text": "No. While a placeholder is open, nobody knows where to go when it counts.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Yes, if everyone has read it.",
+              "correct": false
+            }
+          ],
+          "explanation": "A policy is ready for approval only when every placeholder is replaced and the responsible functions are involved."
+        },
+        {
+          "id": "regeln-4-2-c2",
+          "prompt": "What does NOT have to be on the single page?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The reporting channel for incidents.",
+              "correct": false
+            },
+            {
+              "id": "b",
+              "text": "Every single tool configuration, if the approval list is maintained separately and linked.",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Who maintains the policy.",
+              "correct": false
+            }
+          ],
+          "explanation": "A short policy is enough if the approval list and procedures are maintained separately and clearly linked. Reporting channel and owner always belong in it."
+        }
+      ]
+    }
+  ]
+}

@@ -79,11 +79,12 @@ function defineCourseMilestones(
 export const COURSE_PROJECT_MILESTONE_MANIFEST: CourseProjectMilestoneManifest =
   Object.freeze({
     "ki-fuehrerschein": defineCourseMilestones("ki-fuehrerschein", {
-      ground: authoredUnits("ki-fuehrerschein", ["block_1_lesson_"]),
-      build: authoredUnits("ki-fuehrerschein", ["block_2_lesson_"]),
-      run: authoredUnits("ki-fuehrerschein", ["block_3_lesson_"]),
-      verify: authoredUnits("ki-fuehrerschein", ["block_4_lesson_"]),
-      transfer: authoredUnits("ki-fuehrerschein", ["block_5_lesson_"]),
+      // Lesson-engine IDs (four modules): data, briefing, checking, rules.
+      ground: authoredUnits("ki-fuehrerschein", ["daten-"]),
+      build: authoredUnits("ki-fuehrerschein", ["briefen-"]),
+      run: ["pruefen-3-1"],
+      verify: ["pruefen-3-2"],
+      transfer: authoredUnits("ki-fuehrerschein", ["regeln-"]),
     }),
     "eu-ai-act-kurs": defineCourseMilestones("eu-ai-act-kurs", {
       ground: authoredUnits("eu-ai-act-kurs", ["block_1_lesson_"]),

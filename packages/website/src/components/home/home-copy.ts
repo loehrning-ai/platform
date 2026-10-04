@@ -219,8 +219,8 @@ export const HOME_COURSE_COPY: Readonly<
   de: {
     "ki-fuehrerschein": {
       title: "KI-Führerschein",
-      tagline: "Aufgaben abgrenzen, Daten schützen und Antworten prüfen.",
-      duration: "ca. 1 Std. 40 Min.",
+      tagline: "Daten einstufen, prüfbar briefen, Fehler finden.",
+      duration: "ca. 45 Min.",
     },
     "ki-und-gesellschaft": {
       title: "KI und Gesellschaft",
@@ -243,8 +243,8 @@ export const HOME_COURSE_COPY: Readonly<
   en: {
     "ki-fuehrerschein": {
       title: "Everyday AI Literacy",
-      tagline: "Set task boundaries, protect data and verify responses.",
-      duration: "about 1 hr 40 min",
+      tagline: "Classify data, brief checkably, catch errors.",
+      duration: "about 45 min",
     },
     "ki-und-gesellschaft": {
       title: "AI and Society",

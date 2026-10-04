@@ -9,6 +9,7 @@ import type {
 } from "./types";
 import type { Widget } from "@/lib/widgets/types";
 import type { Locale } from "@/lib/i18n/locale";
+import { isEngineLesson, projectEngineLesson } from "@/lib/lesson-engine/lesson";
 
 // Course configs live in ./config (performance hardening) so config-only client
 // components avoid this module's heavy JSON graph. Re-exported below for
@@ -37,17 +38,15 @@ export {
 
 // ─── KI-Führerschein content ───────────────────────────────────
 
-import kfBlock1 from "../../../content/ki-fuehrerschein/block-1-entdeckung-lessons.json";
-import kfBlock2 from "../../../content/ki-fuehrerschein/block-2-datenschutz-lessons.json";
-import kfBlock3 from "../../../content/ki-fuehrerschein/block-3-anwendung-lessons.json";
-import kfBlock4 from "../../../content/ki-fuehrerschein/block-4-verifikation-lessons.json";
-import kfBlock5 from "../../../content/ki-fuehrerschein/block-5-richtlinie-lessons.json";
+import kfBlock1 from "../../../content/ki-fuehrerschein/block-1-daten-lessons.json";
+import kfBlock2 from "../../../content/ki-fuehrerschein/block-2-briefen-lessons.json";
+import kfBlock3 from "../../../content/ki-fuehrerschein/block-3-pruefen-lessons.json";
+import kfBlock4 from "../../../content/ki-fuehrerschein/block-4-regeln-lessons.json";
 import kfWorkshop from "../../../content/ki-fuehrerschein/quiz/questions.json";
-import kfEnBlock1 from "../../../content/ki-fuehrerschein/en/block-1-entdeckung-lessons.json";
-import kfEnBlock2 from "../../../content/ki-fuehrerschein/en/block-2-datenschutz-lessons.json";
-import kfEnBlock3 from "../../../content/ki-fuehrerschein/en/block-3-anwendung-lessons.json";
-import kfEnBlock4 from "../../../content/ki-fuehrerschein/en/block-4-verifikation-lessons.json";
-import kfEnBlock5 from "../../../content/ki-fuehrerschein/en/block-5-richtlinie-lessons.json";
+import kfEnBlock1 from "../../../content/ki-fuehrerschein/en/block-1-daten-lessons.json";
+import kfEnBlock2 from "../../../content/ki-fuehrerschein/en/block-2-briefen-lessons.json";
+import kfEnBlock3 from "../../../content/ki-fuehrerschein/en/block-3-pruefen-lessons.json";
+import kfEnBlock4 from "../../../content/ki-fuehrerschein/en/block-4-regeln-lessons.json";
 import kfEnWorkshop from "../../../content/ki-fuehrerschein/en/quiz/questions.json";
 
 // ─── EU AI Act Kurs content ────────────────────────────────────
@@ -125,46 +124,41 @@ type CourseData = {
 
 // ─── KI-Führerschein course config ─────────────────────────────
 
+// KI-Führerschein runs on the lesson engine (docs/lesson-engine.md): four
+// modules (block_1..block_4), two lessons each, about 45 minutes.
 const KI_FUEHRERSCHEIN: CourseData = {
   config: KI_FUEHRERSCHEIN_CONFIG,
   blockMeta: {
     block_1: {
-      title: "KI ist schon da",
+      title: "Was darf rein?",
       description:
-        "Welche KI-Funktionen du schon täglich nutzt.",
-      durationMinutes: 10,
+        "Daten einstufen und schwärzen, bevor sie in ein KI-Tool gehen.",
+      durationMinutes: 12,
     },
     block_2: {
-      title: "Datenschutz und KI",
+      title: "Gut briefen",
       description:
-        "Welche Daten in welches Tool dürfen, in vier Stufen.",
-      durationMinutes: 15,
+        "Aufträge schreiben, deren Ergebnis du prüfen kannst.",
+      durationMinutes: 11,
     },
     block_3: {
-      title: "KI anwenden",
+      title: "Prüfen",
       description:
-        "Vier Übungen zu Mail, Protokoll, Datenanalyse und Bericht.",
-      durationMinutes: 30,
+        "Fehler gegen Quellen finden und die Prüftiefe nach Wirkung wählen.",
+      durationMinutes: 11,
     },
     block_4: {
-      title: "KI-Output prüfen",
+      title: "Regeln fürs Team",
       description:
-        "KI-Antworten in drei Schritten prüfen und Halluzinationen erkennen.",
-      durationMinutes: 20,
-    },
-    block_5: {
-      title: "KI-Richtlinie Schritt für Schritt",
-      description:
-        "Eine KI-Richtlinie in sechs Bausteinen aufsetzen: Geltungsbereich, Tools, Datenregeln, Prüfpflicht, Eskalation, Review.",
-      durationMinutes: 25,
+        "Freigaben entscheiden und eine einseitige Team-Richtlinie erstellen.",
+      durationMinutes: 11,
     },
   },
   lessonData: {
-    block_1: kfBlock1 as RawBlockContent,
-    block_2: kfBlock2 as RawBlockContent,
-    block_3: kfBlock3 as RawBlockContent,
-    block_4: kfBlock4 as RawBlockContent,
-    block_5: kfBlock5 as RawBlockContent,
+    block_1: kfBlock1 as unknown as RawBlockContent,
+    block_2: kfBlock2 as unknown as RawBlockContent,
+    block_3: kfBlock3 as unknown as RawBlockContent,
+    block_4: kfBlock4 as unknown as RawBlockContent,
   },
   workshopQuestions: kfWorkshop as unknown as QuizQuestion[],
   glossary: kfGlossary as unknown as GlossaryEntry[],
@@ -175,42 +169,35 @@ const KI_FUEHRERSCHEIN_EN: CourseData = {
   config: KI_FUEHRERSCHEIN_EN_CONFIG,
   blockMeta: {
     block_1: {
-      title: "AI is already here",
+      title: "What may go in?",
       description:
-        "Which AI features you already use every day.",
-      durationMinutes: 10,
+        "Classify and redact data before it enters an AI tool.",
+      durationMinutes: 12,
     },
     block_2: {
-      title: "Data protection and AI",
+      title: "Brief well",
       description:
-        "Which data may go into which tool, in four levels.",
-      durationMinutes: 15,
+        "Write briefs whose results you can check.",
+      durationMinutes: 11,
     },
     block_3: {
-      title: "Applying AI at work",
+      title: "Check",
       description:
-        "Four exercises on email, meeting notes, data analysis and reports.",
-      durationMinutes: 30,
+        "Find errors against sources and choose the review depth by impact.",
+      durationMinutes: 11,
     },
     block_4: {
-      title: "Checking AI output",
+      title: "Rules for the team",
       description:
-        "Check AI answers in three steps and spot hallucinations.",
-      durationMinutes: 20,
-    },
-    block_5: {
-      title: "Building an AI use policy",
-      description:
-        "Draft an AI policy in six parts: scope, tools, data rules, review duty, escalation, maintenance.",
-      durationMinutes: 25,
+        "Decide approvals and build a one-page team policy.",
+      durationMinutes: 11,
     },
   },
   lessonData: {
-    block_1: kfEnBlock1 as RawBlockContent,
-    block_2: kfEnBlock2 as RawBlockContent,
-    block_3: kfEnBlock3 as RawBlockContent,
-    block_4: kfEnBlock4 as RawBlockContent,
-    block_5: kfEnBlock5 as RawBlockContent,
+    block_1: kfEnBlock1 as unknown as RawBlockContent,
+    block_2: kfEnBlock2 as unknown as RawBlockContent,
+    block_3: kfEnBlock3 as unknown as RawBlockContent,
+    block_4: kfEnBlock4 as unknown as RawBlockContent,
   },
   workshopQuestions: kfEnWorkshop as unknown as QuizQuestion[],
   glossary: kfEnGlossary as unknown as GlossaryEntry[],
@@ -453,6 +440,19 @@ function course(courseSlug: CourseSlug, locale?: Locale): CourseData {
   return data;
 }
 
+/**
+ * Authored lessons of one block. Lesson-engine lessons get their legacy
+ * `sections`/`quiz` projection here (see lib/lesson-engine/lesson.ts), so
+ * old- and new-format courses flow through the same queries during the
+ * transition.
+ */
+function authoredBlockLessons(
+  data: CourseData,
+  blockId: BlockId,
+): readonly Lesson[] {
+  return (data.lessonData[blockId]?.lessons ?? []).map(projectEngineLesson);
+}
+
 // ─── Glossary-driven flashcards injection (shared course architecture) ──
 //
 // The 42-term glossary is the single source: rather than copy card text into
@@ -518,6 +518,9 @@ function withGlossaryFlashcards(
   locale?: Locale,
 ): readonly Lesson[] {
   if (lessons.length === 0) return lessons;
+  // Lesson-engine lessons carry exactly one exercise; the glossary deck is a
+  // legacy add-on and is not injected into them.
+  if (lessons.some((lesson) => isEngineLesson(lesson))) return lessons;
   const widget = glossaryFlashcardsWidget(
     courseSlug,
     blockId,
@@ -555,7 +558,7 @@ export function getBlocks(
       lessons: withGlossaryFlashcards(
         courseSlug,
         id,
-        data.lessonData[id]?.lessons ?? [],
+        authoredBlockLessons(data, id),
         locale,
       ),
     };
@@ -578,7 +581,7 @@ export function getBlockLessons(
   return withGlossaryFlashcards(
     courseSlug,
     blockId,
-    course(courseSlug, locale).lessonData[blockId]?.lessons ?? [],
+    authoredBlockLessons(course(courseSlug, locale), blockId),
     locale,
   );
 }
@@ -592,7 +595,7 @@ export function getAllLessons(
     withGlossaryFlashcards(
       courseSlug,
       id,
-      data.lessonData[id]?.lessons ?? [],
+      authoredBlockLessons(data, id),
       locale,
     ),
   );

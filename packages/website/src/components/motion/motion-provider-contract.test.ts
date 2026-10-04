@@ -29,6 +29,18 @@ const ANCESTOR_SCOPED_CONSUMERS = new Set([
   "components/course/kurs/lesson-quiz.tsx",
   "components/course/kurs/section-reader.tsx",
   "components/nav.tsx",
+  // Lesson engine: LessonFlow and ModuleOverview own the scope for their
+  // children; lab widgets render through RenderWidget, which owns one.
+  "components/lesson-engine/lesson-checks.tsx",
+  "components/lesson-engine/progress-ring.tsx",
+  "components/widgets/lab/bucket-sort.tsx",
+  "components/widgets/lab/calculator.tsx",
+  "components/widgets/lab/claim-checker.tsx",
+  "components/widgets/lab/decision-wizard.tsx",
+  "components/widgets/lab/doc-builder.tsx",
+  "components/widgets/lab/live-prompt-ab.tsx",
+  "components/widgets/lab/pii-redactor.tsx",
+  "components/widgets/lab/threshold-lab.tsx",
   "components/widgets/tier-a/_frame.tsx",
   "components/widgets/tier-a/failure-tagger.tsx",
   "components/widgets/tier-a/quiz.tsx",

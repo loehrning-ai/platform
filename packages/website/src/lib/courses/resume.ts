@@ -13,6 +13,17 @@ const SOCIETY_BLOCK_BY_LESSON_PREFIX = Object.freeze({
   ethik: "block_3",
 });
 
+/**
+ * Lesson-engine IDs in block courses end in "-<module>-<lesson>" (for example
+ * "daten-1-2" lives in block_1). See docs/lesson-engine.md.
+ */
+const ENGINE_LESSON_ID_SUFFIX = /-(\d+)-\d+$/;
+
+function engineBlockForLesson(lessonId: string): string | null {
+  const moduleNumber = ENGINE_LESSON_ID_SUFFIX.exec(lessonId)?.[1];
+  return moduleNumber ? `block_${moduleNumber}` : null;
+}
+
 function blockForGermanLesson(
   slug: CourseSlug,
   lessonId: string,
@@ -22,12 +33,15 @@ function blockForGermanLesson(
     return (
       SOCIETY_BLOCK_BY_LESSON_PREFIX[
         prefix as keyof typeof SOCIETY_BLOCK_BY_LESSON_PREFIX
-      ] ?? null
+      ] ?? engineBlockForLesson(lessonId)
     );
   }
 
   if (slug === "ki-fuehrerschein" || slug === "eu-ai-act-kurs") {
-    return /^(block_\d+)_lesson_\d+$/.exec(lessonId)?.[1] ?? null;
+    return (
+      /^(block_\d+)_lesson_\d+$/.exec(lessonId)?.[1] ??
+      engineBlockForLesson(lessonId)
+    );
   }
 
   return null;
