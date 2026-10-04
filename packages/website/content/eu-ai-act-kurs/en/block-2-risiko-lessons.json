@@ -15,7 +15,7 @@
       "id": "risiko-2-1",
       "blockId": "block_2",
       "number": 3,
-      "title": "Six questions to the risk class",
+      "title": "Six questions to find the risk class",
       "subtitle": "Check top-down, including the Art. 6(3) exception",
       "durationMinutes": 7,
       "keyConcepts": [
@@ -195,9 +195,9 @@
             },
             {
               "id": "stress",
-              "text": "Webcam software is meant to detect stress in machine operators.",
+              "text": "Webcam software is meant to detect how satisfied employees seem in team meetings, as input for feedback talks.",
               "expected": "prohibited",
-              "why": "Emotion recognition in the workplace is prohibited under Art. 5(1)(f)."
+              "why": "Emotion recognition in the workplace is prohibited under Art. 5(1)(f). The exception for medical or safety reasons does not apply here."
             },
             {
               "id": "complete",

@@ -49,14 +49,14 @@
               "scale": "log",
               "min": 500000,
               "max": 5000000000,
-              "default": 20000000,
+              "default": 80000000,
               "format": "eur"
             },
             {
               "id": "tier",
               "label": "Verstoß",
               "type": "select",
-              "default": 3,
+              "default": 2,
               "options": [
                 {
                   "value": 3,
@@ -76,7 +76,7 @@
               "id": "sme",
               "label": "KMU oder Start-up (Art. 99 Abs. 6)",
               "type": "toggle",
-              "default": 1
+              "default": 0
             }
           ],
           "outputs": [

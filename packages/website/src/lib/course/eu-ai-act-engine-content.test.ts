@@ -12,6 +12,11 @@ import {
 } from "@/lib/lesson-engine/types";
 import { CANONICAL_LESSON_IDS } from "@/lib/courses/completion";
 import { LAB_KINDS } from "@/lib/widgets/types";
+import {
+  evaluateCondition,
+  evaluateNumber,
+  type ExpressionScope,
+} from "@/lib/lesson-engine/expression";
 
 // EU AI Act Kurs on the lesson engine: five module files, two lessons each,
 // German source ("Sie") with an English mirror of identical shape. Art. 4,
@@ -283,6 +288,24 @@ describe("EU AI Act lesson-engine content", () => {
     expect(formulas.fixed).toBe("tier == 3 ? 35000000 : (tier == 2 ? 15000000 : 7500000)");
     expect(formulas.rate).toBe("tier == 3 ? 0.07 : (tier == 2 ? 0.03 : 0.01)");
     expect(formulas.cap).toBe("sme ? min(fixed, share) : max(fixed, share)");
+  });
+
+  it("starts the fine calculator with every goal still open", () => {
+    // Goals must need real input changes; a goal met by the defaults teaches nothing.
+    const fines = pairs[3].de.lessons[0];
+    const props = fines.exercise?.props as {
+      inputs: { id: string; default: number }[];
+      outputs: { id: string; formula: string }[];
+      goals: { id: string; when: string }[];
+    };
+    const scope: Record<string, number> = {};
+    for (const input of props.inputs) scope[input.id] = input.default;
+    for (const output of props.outputs) {
+      scope[output.id] = evaluateNumber(output.formula, scope as ExpressionScope);
+    }
+    for (const goal of props.goals) {
+      expect(evaluateCondition(goal.when, scope as ExpressionScope), goal.id).toBe(false);
+    }
   });
 
   it("uses Sie in German and never du", () => {

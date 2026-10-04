@@ -474,7 +474,6 @@ export const demos: readonly Demo[] = [
     industries: ["Geschäftsführung", "Finance", "HR"],
     illustrative: true,
     courseSlug: "eu-ai-act-kurs",
-    lessonId: "block_6",
     bookSlugs: ["ki-landschaft"],
     templateSlugs: ["use-case-bewertungsmatrix"],
     evidenceMode: "rule_based",

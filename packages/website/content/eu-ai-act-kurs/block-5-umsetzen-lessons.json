@@ -257,7 +257,13 @@
       ],
       "concept": {
         "body": "Ein Inventar ist Ihr wichtigstes Arbeitsmittel: Es zeigt, welche Systeme laufen, wofür, in welcher Rolle und mit welcher Einstufung. Ein Format schreibt die Verordnung Betreibern nicht vor, und eine Tabelle allein belegt keine Compliance.\n\nNützliche Felder pro System: Name und Version, tatsächlich genutzte Funktion, Rolle, Risikoklasse mit Begründung, Pflichten und Stichtag, Verantwortliche, Anbieterunterlagen, nächster Prüfanlass.\n\nDanach ein 30-Tage-Plan: Schatten-KI über Beschaffung, Abrechnungen und SSO-Freigaben finden, alle Systeme einstufen, Lücken mit Verantwortlichen und Fristen belegen, Art.-4-Maßnahmen dokumentieren.\n\nNeu einstufen nach wesentlichen Änderungen an System, Zweck, Anbieter oder Daten, nach Vorfällen und Rechtsänderungen.",
-        "takeaway": "Ein Eintrag pro System, mit Begründung und Verantwortlichen, und ein Plan mit Fristen."
+        "takeaway": "Ein Eintrag pro System, mit Begründung und Verantwortlichen, und ein Plan mit Fristen.",
+        "sources": [
+          {
+            "label": "Verordnung (EU) 2024/1689 (KI-VO)",
+            "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+          }
+        ]
       },
       "exercise": {
         "kind": "doc-builder",

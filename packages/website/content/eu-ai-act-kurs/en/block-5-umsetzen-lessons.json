@@ -257,7 +257,13 @@
       ],
       "concept": {
         "body": "An inventory is your most important working tool: it shows which systems run, for what, in which role and with which class. The Regulation prescribes no format for deployers, and a spreadsheet alone does not prove compliance.\n\nUseful fields per system: name and version, function actually used, role, risk class with reasoning, obligations and deadline, owner, provider documents, next review trigger.\n\nThen a 30-day plan: find shadow AI through procurement, invoices and SSO approvals, classify every system, assign owners and deadlines to every gap, document Art. 4 measures.\n\nReclassify after substantial changes to system, purpose, provider or data, after incidents and after changes in law.",
-        "takeaway": "One entry per system, with reasoning and an owner, and a plan with deadlines."
+        "takeaway": "One entry per system, with reasoning and an owner, and a plan with deadlines.",
+        "sources": [
+          {
+            "label": "Regulation (EU) 2024/1689 (AI Act)",
+            "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+          }
+        ]
       },
       "exercise": {
         "kind": "doc-builder",

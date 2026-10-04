@@ -76,7 +76,7 @@ const COPY = {
       `${right} von ${total} Schritten an der richtigen Stelle. Markierte Schritte verschieben und erneut prüfen.`,
     solved: "Die Reihenfolge stimmt.",
     attempts: (n: number) => (n === 1 ? "beim ersten Prüfen" : `nach ${n} Prüfungen`),
-    again: "Neu mischen",
+    again: "Von vorn",
     why: "Warum diese Reihenfolge",
   },
   en: {
@@ -92,7 +92,7 @@ const COPY = {
       `${right} of ${total} steps in the right place. Move the marked steps and check again.`,
     solved: "The order is right.",
     attempts: (n: number) => (n === 1 ? "on the first check" : `after ${n} checks`),
-    again: "Shuffle again",
+    again: "Start over",
     why: "Why this order",
   },
 } as const;

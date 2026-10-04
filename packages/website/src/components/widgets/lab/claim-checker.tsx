@@ -71,7 +71,7 @@ const COPY = {
     notMarked: "nicht bewertet",
     previous: "Vorherige Aussage",
     next: "Nächste Aussage",
-    belowPass: "Mehrere Aussagen falsch bewertet. Lies die Belege und prüfe nochmal.",
+    belowPass: "Mehrere Aussagen falsch bewertet. Belege lesen und nochmal prüfen.",
   },
   en: {
     region: "Check claims against sources",

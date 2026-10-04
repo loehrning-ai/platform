@@ -95,7 +95,7 @@ const COPY = {
     wrongFirst: (bucket: string) => `Gehört zu: ${bucket}.`,
     score: (right: number, total: number) => `${right} von ${total} beim ersten Versuch richtig`,
     again: "Nochmal sortieren",
-    belowPass: "Noch nicht sicher genug. Lies die Begründungen und sortiere nochmal.",
+    belowPass: "Noch nicht sicher genug. Begründungen lesen und nochmal sortieren.",
     reviewTitle: "Diese Karten lagen zuerst falsch",
     count: (n: number) => `${n} Karten`,
   },

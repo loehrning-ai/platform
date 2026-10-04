@@ -195,9 +195,9 @@
             },
             {
               "id": "stress",
-              "text": "Webcam-Software soll Stress bei Maschinenbedienern erkennen.",
+              "text": "Webcam-Software soll in Teammeetings erkennen, wie zufrieden Beschäftigte wirken, als Grundlage für Feedbackgespräche.",
               "expected": "prohibited",
-              "why": "Emotionserkennung am Arbeitsplatz ist nach Art. 5 Abs. 1 lit. f verboten."
+              "why": "Emotionserkennung am Arbeitsplatz ist nach Art. 5 Abs. 1 lit. f verboten. Die Ausnahme für medizinische oder Sicherheitsgründe trifft hier nicht zu."
             },
             {
               "id": "complete",
