@@ -12,7 +12,7 @@
  *          and Ultramarin (2.21:1), so it keeps its paper
  *
  * Copy comes from src/lib/workshops.ts (German, the site's default locale),
- * colours, motifs and numerals from src/lib/plakat, the type is Loehrning Sans
+ * colours, motifs and numerals from src/lib/plakat, the type is Figtree
  * from public/fonts. Chromium (Playwright) renders the card at twice the size;
  * sharp scales it down and encodes WebP.
  *
@@ -73,9 +73,9 @@ const { getWorkshops } = await import(pathToFileURL(join(WEBSITE, "src/lib/works
 const { splitTitle } = await import(pathToFileURL(join(WEBSITE, "src/app/workshops/workshop-title.ts")).href);
 
 const FONTS = [
-  [400, "loehrning-sans-regular-v1.woff2"],
-  [600, "loehrning-sans-semibold-v1.woff2"],
-  [700, "loehrning-sans-bold-v1.woff2"],
+  [400, "figtree-regular-v1.woff2"],
+  [600, "figtree-semibold-v1.woff2"],
+  [700, "figtree-bold-v1.woff2"],
 ].map(([weight, file]) => {
   const bytes = readFileSync(join(WEBSITE, "public/fonts", file));
   return { weight, file, bytes, sha: sha256(bytes) };
@@ -125,7 +125,7 @@ function cardMarkup({ scene, workshop }) {
 @font-face-placeholder
 *{box-sizing:border-box;margin:0}
 html,body{width:${WIDTH}px;height:${HEIGHT}px;overflow:hidden}
-body{position:relative;background:${palette.ground};color:${palette.ink};font-family:"Loehrning Sans",sans-serif;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
+body{position:relative;background:${palette.ground};color:${palette.ink};font-family:"Figtree",sans-serif;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
 .art{position:absolute;top:0;right:0;width:${ART_WIDTH}px;height:${HEIGHT}px}
 .art svg{display:block;width:100%;height:100%}
 .text{position:absolute;top:${INSET}px;left:${INSET}px;width:${textWidth}px;bottom:${COLOPHON_HEIGHT + 40}px;display:flex;flex-direction:column}
@@ -152,7 +152,7 @@ ${title.subtitle ? `<p class="sub">${escapeHtml(title.subtitle)}</p>` : ""}
 function withFonts(markup) {
   const faces = FONTS.map(
     ({ weight, bytes }) =>
-      `@font-face{font-family:"Loehrning Sans";font-weight:${weight};font-style:normal;font-display:block;src:url(data:font/woff2;base64,${bytes.toString("base64")}) format("woff2")}`,
+      `@font-face{font-family:"Figtree";font-weight:${weight};font-style:normal;font-display:block;src:url(data:font/woff2;base64,${bytes.toString("base64")}) format("woff2")}`,
   ).join("\n");
   return markup.replace("@font-face-placeholder", faces);
 }

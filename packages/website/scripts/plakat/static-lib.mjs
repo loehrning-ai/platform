@@ -11,7 +11,7 @@
  *
  * A poster file is used as an <img> or a CSS background, where the page's web
  * fonts do not reach. The numeral is therefore drawn as outlines: the digits
- * of Loehrning Sans (src/fonts/LoehrningSans-{Bold,Regular}.ttf) are read from
+ * of Figtree (src/fonts/Figtree-{Bold,Regular}.ttf) are read from
  * the font's glyf table and placed where numeralLayout() sets the site's
  * numeral, with the same tracking, kerning and ground-coloured keyline.
  */
@@ -48,8 +48,8 @@ export function workshopScenes() {
 // ─── TrueType outlines ──────────────────────────────────────────────────────
 
 const FONT_FILES = {
-  700: join(WEBSITE, "src/fonts/LoehrningSans-Bold.ttf"),
-  400: join(WEBSITE, "src/fonts/LoehrningSans-Regular.ttf"),
+  700: join(WEBSITE, "src/fonts/Figtree-Bold.ttf"),
+  400: join(WEBSITE, "src/fonts/Figtree-Regular.ttf"),
 };
 
 function parseFont(bytes) {
@@ -227,7 +227,7 @@ export function numeralPath(text, { x, y, fontSize, letterSpacing, fontWeight })
   const characters = [...text];
   characters.forEach((character, index) => {
     const glyph = face.glyphIndex(character.codePointAt(0));
-    if (!glyph) throw new Error(`Loehrning Sans has no glyph for ${JSON.stringify(character)}`);
+    if (!glyph) throw new Error(`Figtree has no glyph for ${JSON.stringify(character)}`);
     const origin = pen;
     const place = (gx, gy) => [origin + gx * scale, y - gy * scale];
     d += face.contours(glyph).map((contour) => contourPath(contour, place)).join("");

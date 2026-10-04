@@ -62,8 +62,8 @@ const CONTAINER = "mx-auto max-w-[75rem] px-4 sm:px-6";
 const FALLBACK_POSTER: WorkshopPlakat = { plakat: "lemons", motif: "fan" };
 
 /**
- * Registry prose uses U+2212 for negative numbers. Loehrning Sans draws it as
- * a long bar that reads like a dash, so the hub shows an ASCII hyphen-minus.
+ * Registry prose uses U+2212 for negative numbers. Figtree draws it as a long
+ * bar (wider than its en dash) that reads like a dash, so the hub shows an ASCII hyphen-minus.
  */
 function plainNumbers(text: string): string {
   return text.replace(/\u2212/g, "-");

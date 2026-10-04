@@ -2,9 +2,13 @@
 
 This file records third-party material distributed or transformed by the repository. Package dependencies retain the licenses declared by their package manifests and bundled license files. Bun's lockfile pins package versions but is not a complete license inventory.
 
+## Figtree
+
+The site's sans-serif face is Figtree by Erik Kennedy, copyright 2022 The Figtree Project Authors (https://github.com/erikdkennedy/figtree), redistributed under SIL Open Font License 1.1. `packages/website/public/fonts/figtree-*-v1.woff2` (weights 400 to 900 and a 400 italic) and `packages/website/src/fonts/Figtree-{Regular,Bold}.ttf` (for the share images) are static weight instances of the Google Fonts release `Figtree[wght].ttf` and `Figtree-Italic[wght].ttf`, version 2.002, converted to WOFF2 or TrueType without other changes. The licence text ships next to the web faces as `packages/website/public/fonts/figtree-OFL.txt`; hashes are in `ASSET_MANIFEST.json`.
+
 ## Inter-derived fonts
 
-`Loehrning Sans` and `Typing` are modified, renamed derivatives of Inter by Rasmus Andersson and The Inter Project Authors. They are redistributed under SIL Open Font License 1.1. See `LICENSES/OFL-1.1.txt` and `ASSET_MANIFEST.json`.
+`Typing` is a modified, renamed derivative of Inter by Rasmus Andersson and The Inter Project Authors. It is redistributed under SIL Open Font License 1.1. See `LICENSES/OFL-1.1.txt` and `ASSET_MANIFEST.json`.
 
 ## JetBrains Mono
 

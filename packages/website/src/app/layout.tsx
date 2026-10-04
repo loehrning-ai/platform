@@ -109,12 +109,12 @@ export default async function RootLayout({
 }>) {
   const locale = await getRequestLocale();
   const globalCopy = GLOBAL_NAVIGATION_COPY[locale];
-  preload("/fonts/loehrning-sans-regular-v1.woff2", {
+  preload("/fonts/figtree-regular-v1.woff2", {
     as: "font",
     type: "font/woff2",
     crossOrigin: "anonymous",
   });
-  preload("/fonts/loehrning-sans-bold-v1.woff2", {
+  preload("/fonts/figtree-bold-v1.woff2", {
     as: "font",
     type: "font/woff2",
     crossOrigin: "anonymous",

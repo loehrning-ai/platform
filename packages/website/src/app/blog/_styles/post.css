@@ -1,11 +1,11 @@
 /* ================================================================
    EDITORIAL ARTICLE — bold reading experience
    ================================================================ */
-/* One face for every post: Loehrning Sans, the site sans (SPEC D5). The
+/* One face for every post: Figtree, the site sans (SPEC D5). The
    railbar sits outside the article, so it reads the token from .blog-root. */
 .blog-root {
   --post-sans:
-    var(--font-loehrning-sans, "Loehrning Sans"), "Loehrning Sans Fallback",
+    var(--font-loehrning-sans, "Figtree"), "Figtree Fallback",
     "Inter", system-ui, sans-serif;
 }
 .post-shell {

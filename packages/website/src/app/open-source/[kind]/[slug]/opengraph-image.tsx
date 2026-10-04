@@ -39,8 +39,8 @@ const INSET = 64;
 let fontData: Promise<{ bold: Buffer; regular: Buffer }> | undefined;
 async function ogFonts() {
   fontData ??= Promise.all([
-    readFile(join(process.cwd(), "src/fonts/LoehrningSans-Bold.ttf")),
-    readFile(join(process.cwd(), "src/fonts/LoehrningSans-Regular.ttf")),
+    readFile(join(process.cwd(), "src/fonts/Figtree-Bold.ttf")),
+    readFile(join(process.cwd(), "src/fonts/Figtree-Regular.ttf")),
   ]).then(([bold, regular]) => ({ bold, regular }));
   const { bold, regular } = await fontData;
   return [

@@ -7,8 +7,8 @@ import { BOLD_ASCENDER, BOLD_DESCENDER, UNITS_PER_EM } from "./type-metrics";
 /**
  * Shared pieces of the social and OG images (Werkzeichnung v2, SPEC §3.15),
  * written for Satori (`ImageResponse` from next/og): inline styles, flexbox,
- * no CSS variables. Load Loehrning Sans for them from src/fonts
- * (LoehrningSans-Bold.ttf, and LoehrningSans-Regular.ttf for the light
+ * no CSS variables. Load Figtree for them from src/fonts
+ * (Figtree-Bold.ttf, and Figtree-Regular.ttf for the light
  * autumn numeral) and pass it to ImageResponse under OG_FONT_FAMILY.
  */
 
@@ -18,7 +18,7 @@ export const OG_SIZE = { width: 1200, height: 630 } as const;
 export const OG_COLOPHON_HEIGHT = 80;
 
 /** The family name to register the site face under in ImageResponse `fonts`. */
-export const OG_FONT_FAMILY = "Loehrning Sans";
+export const OG_FONT_FAMILY = "Figtree";
 
 /**
  * The header's paper colours: Kalkweiß ground, the Mennige tile, its Bogen

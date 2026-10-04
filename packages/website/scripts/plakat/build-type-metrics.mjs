@@ -5,14 +5,14 @@
  * Writes src/lib/plakat/type-metrics.ts, the advance-width table behind the
  * poster headline fit rule (src/lib/plakat/fit.ts, SPEC §4):
  *
- * - the advance of every glyph that public/fonts/loehrning-sans-bold-v1.woff2
+ * - the advance of every glyph that public/fonts/figtree-bold-v1.woff2
  *   maps (the code points come from the font's own cmap table);
  * - the kerning of every pair of title characters (letters, digits, German
  *   and French accents, title punctuation), as the browser shapes them;
  * - the ink of each figure 0 to 9 as horizontal bands, which plakat.test.tsx
  *   uses to hold the poster numerals clear of neighbouring shapes;
  * - the same figure advances, kerning and ink for
- *   public/fonts/loehrning-sans-regular-v1.woff2, the light autumn numeral
+ *   public/fonts/figtree-regular-v1.woff2, the light autumn numeral
  *   (weight 400), so the 4.5% margin check covers every palette.
  *
  * Both are measured in Playwright's Chromium with canvas measureText at
@@ -37,10 +37,10 @@ import { brotliDecompressSync } from "node:zlib";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..", "..");
-const FONT_PATH = join(ROOT, "public", "fonts", "loehrning-sans-bold-v1.woff2");
-const FONT_LABEL = "public/fonts/loehrning-sans-bold-v1.woff2";
-const REGULAR_FONT_PATH = join(ROOT, "public", "fonts", "loehrning-sans-regular-v1.woff2");
-const REGULAR_FONT_LABEL = "public/fonts/loehrning-sans-regular-v1.woff2";
+const FONT_PATH = join(ROOT, "public", "fonts", "figtree-bold-v1.woff2");
+const FONT_LABEL = "public/fonts/figtree-bold-v1.woff2";
+const REGULAR_FONT_PATH = join(ROOT, "public", "fonts", "figtree-regular-v1.woff2");
+const REGULAR_FONT_LABEL = "public/fonts/figtree-regular-v1.woff2";
 const OUTPUT_PATH = join(ROOT, "src", "lib", "plakat", "type-metrics.ts");
 const OUTPUT_LABEL = "src/lib/plakat/type-metrics.ts";
 

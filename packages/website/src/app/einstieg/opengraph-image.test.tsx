@@ -115,7 +115,7 @@ describe("/einstieg social image", () => {
       "/en/einstieg/opengraph-image",
     ]) {
       expect(config).toContain(
-        `"${routeKey}": ["./src/fonts/LoehrningSans-*.ttf"]`,
+        `"${routeKey}": ["./src/fonts/Figtree-*.ttf"]`,
       );
     }
   });

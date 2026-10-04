@@ -12,64 +12,93 @@
    .dark ancestor, which the site never sets. */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Versioned, self-hosted brand faces. Regular and Bold cover the first-view
-   copy; Medium and SemiBold remain demand-loaded. `optional` keeps a slow font
-   response from replacing already-painted text, while the metric-adjusted
-   fallback prevents layout drift when the browser stays on Arial. */
+/* Figtree (SIL OFL 1.1, public/fonts/figtree-OFL.txt), self-hosted as
+   versioned static instances. Regular and Bold cover the first-view copy and
+   are preloaded; the other weights and the one italic load on demand.
+   `optional` keeps a slow font response from replacing already-painted text,
+   while the metric-adjusted fallback prevents layout drift when the browser
+   stays on Arial. */
 @font-face {
-  font-family: "Loehrning Sans";
-  src: url("/fonts/loehrning-sans-regular-v1.woff2") format("woff2");
+  font-family: "Figtree";
+  src: url("/fonts/figtree-regular-v1.woff2") format("woff2");
   font-display: optional;
   font-style: normal;
   font-weight: 400;
 }
 
 @font-face {
-  font-family: "Loehrning Sans";
-  src: url("/fonts/loehrning-sans-medium-v1.woff2") format("woff2");
+  font-family: "Figtree";
+  src: url("/fonts/figtree-medium-v1.woff2") format("woff2");
   font-display: optional;
   font-style: normal;
   font-weight: 500;
 }
 
 @font-face {
-  font-family: "Loehrning Sans";
-  src: url("/fonts/loehrning-sans-semibold-v1.woff2") format("woff2");
+  font-family: "Figtree";
+  src: url("/fonts/figtree-semibold-v1.woff2") format("woff2");
   font-display: optional;
   font-style: normal;
   font-weight: 600;
 }
 
 @font-face {
-  font-family: "Loehrning Sans";
-  src: url("/fonts/loehrning-sans-bold-v1.woff2") format("woff2");
+  font-family: "Figtree";
+  src: url("/fonts/figtree-bold-v1.woff2") format("woff2");
   font-display: optional;
   font-style: normal;
   font-weight: 700;
 }
 
-/* The metric fallback while Loehrning Sans loads (optional font display).
-   Liberation Sans and Arimo share Arial's metrics, so Linux and Android get
-   the face the overrides were tuned for instead of a wider system face; the
-   700 face keeps poster titles in a real bold rather than a synthetic one. */
 @font-face {
-  font-family: "Loehrning Sans Fallback";
-  src: local("Arial"), local("ArialMT"), local("Liberation Sans"), local("LiberationSans"), local("Arimo");
-  font-weight: 400;
-  ascent-override: 96.56%;
-  descent-override: 24.04%;
-  line-gap-override: 0%;
-  size-adjust: 100.33%;
+  font-family: "Figtree";
+  src: url("/fonts/figtree-extrabold-v1.woff2") format("woff2");
+  font-display: optional;
+  font-style: normal;
+  font-weight: 800;
 }
 
 @font-face {
-  font-family: "Loehrning Sans Fallback";
+  font-family: "Figtree";
+  src: url("/fonts/figtree-black-v1.woff2") format("woff2");
+  font-display: optional;
+  font-style: normal;
+  font-weight: 900;
+}
+
+@font-face {
+  font-family: "Figtree";
+  src: url("/fonts/figtree-italic-v1.woff2") format("woff2");
+  font-display: optional;
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* The metric fallback while Figtree loads (optional font display).
+   Liberation Sans and Arimo share Arial's metrics, so Linux and Android get
+   the face the overrides were tuned for instead of a wider system face; the
+   700 face keeps poster titles in a real bold rather than a synthetic one.
+   size-adjust is Figtree's advance width over Arial's on mixed German and
+   English copy, per weight; the overrides are Figtree's 950/250 hhea
+   ascent/descent divided by it. */
+@font-face {
+  font-family: "Figtree Fallback";
+  src: local("Arial"), local("ArialMT"), local("Liberation Sans"), local("LiberationSans"), local("Arimo");
+  font-weight: 400;
+  ascent-override: 95.07%;
+  descent-override: 25.02%;
+  line-gap-override: 0%;
+  size-adjust: 99.93%;
+}
+
+@font-face {
+  font-family: "Figtree Fallback";
   src: local("Arial Bold"), local("Arial-BoldMT"), local("Liberation Sans Bold"), local("LiberationSans-Bold"), local("Arimo Bold");
   font-weight: 700;
-  ascent-override: 96.56%;
-  descent-override: 24.04%;
+  ascent-override: 98.9%;
+  descent-override: 26.03%;
   line-gap-override: 0%;
-  size-adjust: 100.33%;
+  size-adjust: 96.06%;
 }
 
 @theme {
@@ -169,13 +198,14 @@
   --ease-deck: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-fade: cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* Typography — Loehrning Sans primary, Inter/system fallback.
+  /* Typography — Figtree primary (the token keeps its historical name),
+     Inter/system fallback.
      Geist Mono is bundled rather than resolved from an OS stack. Course and
      demo layouts are laid out against its advance widths, and a system stack
      resolves to a wider face on Linux than on macOS, so prompt and code blocks
      overflow their columns on some machines and not others. Deterministic
      monospace metrics are worth the bundle cost here. */
-  --font-loehrning-sans: "Loehrning Sans", "Loehrning Sans Fallback";
+  --font-loehrning-sans: "Figtree", "Figtree Fallback";
   --font-sans: var(--font-loehrning-sans), "Inter", system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), monospace;
 

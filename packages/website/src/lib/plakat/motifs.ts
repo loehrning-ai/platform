@@ -262,10 +262,11 @@ export interface NumeralLayout {
 }
 
 /**
- * Figure height of Loehrning Sans as the reference placed it: the digits'
- * top sits at `baseline - 0.727em`.
+ * Figure height of Figtree (the flat-topped digits; round ones overshoot to
+ * 0.713em), so the digits' top sits where the reference placed it:
+ * `baseline - 0.7em`.
  */
-const FIGURE_TOP = 0.727;
+const FIGURE_TOP = 0.7;
 
 /**
  * Where a numeral sits on each canvas.

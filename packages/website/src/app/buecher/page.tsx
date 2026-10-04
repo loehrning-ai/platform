@@ -17,11 +17,12 @@ import { getRequestLocale } from "@/lib/i18n/request-locale";
 
 const CATALOG_PATH = "/buecher";
 
-// Generated from both fixed catalog headings plus `0`, whose advance controls
-// the hero's `ch` width. The subset keeps the exact brand metrics while avoiding
-// a second transfer of the complete Bold face on this performance-critical route.
+// The catalog headings use the site's Figtree Bold file with `swap`, so the
+// hero's `ch` width (the advance of `0`) never settles on the fallback face.
+// The static Figtree instance is about 16 kB, so no separate route subset is
+// kept next to it.
 const catalogDisplayFont = localFont({
-  src: "../../fonts/LoehrningSans-Bold-BookDisplay.woff2",
+  src: "../../../public/fonts/figtree-bold-v1.woff2",
   weight: "700",
   style: "normal",
   display: "swap",
