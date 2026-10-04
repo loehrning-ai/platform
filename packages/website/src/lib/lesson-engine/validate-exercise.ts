@@ -73,6 +73,9 @@ function bucketSort(props: Props, problems: string[]): void {
       problems.push(`bucket-sort: bucket ${str(bucket.id)} has no item`);
     }
   }
+  if (props.layout !== undefined && props.layout !== "grid" && props.layout !== "pyramid") {
+    problems.push(`bucket-sort: layout must be "grid" or "pyramid"`);
+  }
 }
 
 function claimChecker(props: Props, problems: string[]): void {
@@ -294,6 +297,59 @@ function piiRedactor(props: Props, problems: string[]): void {
   }
 }
 
+const ISO_DAY = /^\d{4}-\d{2}-\d{2}$/;
+
+function isIsoDay(value: string): boolean {
+  if (!ISO_DAY.test(value)) return false;
+  const [year, month, day] = value.split("-").map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  return date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day;
+}
+
+function timelineCheck(props: Props, problems: string[]): void {
+  const milestones = records(props.milestones);
+  const questions = records(props.questions);
+  if (milestones.length < 2) problems.push("timeline-check: needs at least 2 milestones");
+  if (questions.length < 2) problems.push("timeline-check: needs at least 2 questions");
+  for (const dupe of duplicates(milestones.map((entry) => str(entry.id)))) {
+    problems.push(`timeline-check: duplicate milestone ${dupe}`);
+  }
+  for (const dupe of duplicates(questions.map((entry) => str(entry.id)))) {
+    problems.push(`timeline-check: duplicate question ${dupe}`);
+  }
+  const ids = new Set(milestones.map((entry) => str(entry.id)));
+  for (const milestone of milestones) {
+    if (!isIsoDay(str(milestone.date))) {
+      problems.push(`timeline-check: milestone ${str(milestone.id)} needs an ISO date (YYYY-MM-DD)`);
+    }
+    if (!str(milestone.title)) problems.push(`timeline-check: milestone ${str(milestone.id)} needs a title`);
+  }
+  for (const question of questions) {
+    if (!ids.has(str(question.milestone))) {
+      problems.push(`timeline-check: question ${str(question.id)} points to unknown milestone ${str(question.milestone)}`);
+    }
+    if (!str(question.text) || !str(question.why)) {
+      problems.push(`timeline-check: question ${str(question.id)} needs text and why`);
+    }
+  }
+  if (props.today !== undefined && !isIsoDay(str(props.today))) {
+    problems.push("timeline-check: today must be an ISO date (YYYY-MM-DD)");
+  }
+}
+
+function sequenceOrder(props: Props, problems: string[]): void {
+  const steps = records(props.steps);
+  if (steps.length < 3) problems.push("sequence-order: needs at least 3 steps");
+  for (const dupe of duplicates(steps.map((step) => str(step.id)))) {
+    problems.push(`sequence-order: duplicate step ${dupe}`);
+  }
+  for (const step of steps) {
+    if (!str(step.id) || !str(step.text) || !str(step.why)) {
+      problems.push(`sequence-order: step ${str(step.id)} needs id, text and why`);
+    }
+  }
+}
+
 const VALIDATORS: Readonly<Record<string, (props: Props, problems: string[]) => void>> = {
   "bucket-sort": bucketSort,
   "claim-checker": claimChecker,
@@ -303,6 +359,8 @@ const VALIDATORS: Readonly<Record<string, (props: Props, problems: string[]) => 
   "live-prompt-ab": livePromptAb,
   "doc-builder": docBuilder,
   "pii-redactor": piiRedactor,
+  "timeline-check": timelineCheck,
+  "sequence-order": sequenceOrder,
 };
 
 /** Validate the props of one exercise. Non-lab kinds are not checked here. */

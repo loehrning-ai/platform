@@ -49,9 +49,23 @@ const KI_UND_GESELLSCHAFT_LESSON_IDS = [
   "fair-3-2",
   "fair-3-3",
 ] as const;
-const EU_AI_ACT_LESSON_IDS = Array.from({ length: 6 }, (_, index) =>
-  numbered(`block_${index + 1}_lesson_`, 4),
-).flat();
+/**
+ * EU AI Act Kurs runs on the lesson engine: five modules, ten lessons. The
+ * pre-engine `block_N_lesson_M` IDs are retired and dropped like the
+ * KI-Führerschein ones above.
+ */
+const EU_AI_ACT_LESSON_IDS = [
+  "rolle-1-1",
+  "zeitplan-1-2",
+  "risiko-2-1",
+  "risiko-2-2",
+  "pflichten-3-1",
+  "pflichten-3-2",
+  "bussgeld-4-1",
+  "aufsicht-4-2",
+  "fall-5-1",
+  "plan-5-2",
+] as const;
 const AI_NATIVE_LESSON_IDS = [
   ...numbered("modul_1_lesson_", 5),
   ...numbered("modul_2_lesson_", 7),
@@ -155,12 +169,7 @@ export const CANONICAL_SECTION_IDS: Readonly<
 > = {
   "ki-fuehrerschein": engineSteps(KI_FUEHRERSCHEIN_LESSON_IDS),
   "ki-und-gesellschaft": engineSteps(KI_UND_GESELLSCHAFT_LESSON_IDS),
-  "eu-ai-act-kurs": sectionsByCount(
-    EU_AI_ACT_LESSON_IDS,
-    EU_AI_ACT_LESSON_IDS.map((lessonId) =>
-      lessonId === "block_2_lesson_3" ? 4 : 3,
-    ),
-  ),
+  "eu-ai-act-kurs": engineSteps(EU_AI_ACT_LESSON_IDS),
   "ai-native": sectionsByCount(
     AI_NATIVE_LESSON_IDS,
     [
@@ -210,6 +219,7 @@ export const EVIDENCE_GATED_COURSE_SLUGS = [
 export const LESSON_ENGINE_COURSE_SLUGS = [
   "ki-fuehrerschein",
   "ki-und-gesellschaft",
+  "eu-ai-act-kurs",
 ] as const satisfies readonly CourseSlug[];
 
 export function isLessonEngineCourse(slug: CourseSlug): boolean {

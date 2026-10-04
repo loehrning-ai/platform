@@ -189,7 +189,7 @@ describe("KontoPage course resume integration", () => {
       }),
     ).toHaveAttribute(
       "href",
-      "/eu-ai-act-kurs/kurs/block_2#lesson=block_2_lesson_2",
+      "/eu-ai-act-kurs/kurs/block_3#lesson=pflichten-3-2",
     );
   });
 
@@ -240,7 +240,7 @@ describe("KontoPage course resume integration", () => {
       }),
     ).toHaveAttribute(
       "href",
-      "/eu-ai-act-kurs/kurs/block_2#lesson=block_2_lesson_2",
+      "/eu-ai-act-kurs/kurs/block_3#lesson=pflichten-3-2",
     );
   });
 
@@ -506,7 +506,7 @@ describe("KontoPage catalog", () => {
       .getAllByRole("heading", { level: 3 })
       .map((h) => h.textContent);
     // ki-und-gesellschaft (40 min) sorts before ki-fuehrerschein (45 min)
-    // and eu-ai-act-kurs under duration order.
+    // and eu-ai-act-kurs (60 min) under duration order.
     const gesellschaft = cards.indexOf("KI und Gesellschaft");
     const fuehrerschein = cards.indexOf("KI-Führerschein");
     const euAiAct = cards.indexOf("EU AI Act Kurs");

@@ -236,7 +236,7 @@ describe("getCourseBlockIds", () => {
   });
 
   it("returns the six EU AI Act blocks", () => {
-    expect(getCourseBlockIds("eu-ai-act-kurs")).toHaveLength(6);
+    expect(getCourseBlockIds("eu-ai-act-kurs")).toHaveLength(5);
   });
 
   it("returns an empty block list for AI-Native (module-keyed lessons)", () => {
@@ -268,14 +268,14 @@ describe("workshop-quiz config queries", () => {
 
   it("reads the per-course question count", () => {
     expect(getWorkshopQuestionCount("ki-fuehrerschein")).toBe(20);
-    expect(getWorkshopQuestionCount("eu-ai-act-kurs")).toBe(27);
+    expect(getWorkshopQuestionCount("eu-ai-act-kurs")).toBe(20);
     expect(getWorkshopQuestionCount("ai-native")).toBe(20);
     expect(getWorkshopQuestionCount("ki-und-gesellschaft")).toBe(15);
   });
 
   it("reads the per-course time limit in minutes", () => {
     expect(getWorkshopTimeLimitMinutes("ki-fuehrerschein")).toBe(25);
-    expect(getWorkshopTimeLimitMinutes("eu-ai-act-kurs")).toBe(30);
+    expect(getWorkshopTimeLimitMinutes("eu-ai-act-kurs")).toBe(25);
     expect(getWorkshopTimeLimitMinutes("ai-native")).toBe(25);
     expect(getWorkshopTimeLimitMinutes("ki-und-gesellschaft")).toBe(20);
   });

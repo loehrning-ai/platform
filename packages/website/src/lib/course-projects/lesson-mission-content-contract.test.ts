@@ -5,8 +5,8 @@ import { getAllLessons as getCoreLessons } from "@/lib/course/data";
 import { getAllDataInfraLessons } from "@/lib/data-infrastructure/data";
 import { getAllDefLocalizedChapters } from "@/lib/data-engineering-fundamentals/content";
 import { getAllDsLocalizedChapters } from "@/lib/data-science/content";
-import { CANONICAL_LESSON_IDS } from "@/lib/courses/completion";
 import { COURSE_SLUGS } from "@/lib/course/types";
+import { CANONICAL_LESSON_IDS } from "@/lib/courses/completion";
 import { bindLessonMission } from "./lesson-mission-binding";
 
 const LOCALES = ["de", "en"] as const;

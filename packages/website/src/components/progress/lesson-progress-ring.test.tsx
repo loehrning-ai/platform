@@ -39,59 +39,46 @@ beforeEach(() => {
 afterEach(() => cleanup());
 
 describe("LessonProgressRing (shared)", () => {
-  it("reflects read sections from the unified store via subscribe", async () => {
+  // eu-ai-act-kurs runs on the lesson engine: each lesson has one canonical
+  // step, `<lessonId>_exercise`, plus the two inline checks (quiz score).
+  it("reflects the recorded exercise step from the unified store via subscribe", async () => {
     render(
       <LessonProgressRing
         courseSlug="eu-ai-act-kurs"
-        lessonId="block_2_lesson_3"
-        totalSections={4}
+        lessonId="risiko-2-1"
+        totalSections={1}
       />,
     );
 
     // After mount the subscribe callback runs with current (empty) state.
-    expect(await screen.findByText("0/4")).toBeInTheDocument();
+    expect(await screen.findByText("0/1")).toBeInTheDocument();
 
     act(() => {
-      markSectionRead(
-        "eu-ai-act-kurs",
-        "block_2_lesson_3",
-        "block_2_lesson_3_section_1",
-      );
-      markSectionRead(
-        "eu-ai-act-kurs",
-        "block_2_lesson_3",
-        "block_2_lesson_3_section_2",
-      );
+      markSectionRead("eu-ai-act-kurs", "risiko-2-1", "risiko-2-1_exercise");
     });
 
-    expect(await screen.findByText("2/4")).toBeInTheDocument();
+    expect(await screen.findByText("1/1")).toBeInTheDocument();
   });
 
   it("does not turn a legacy completion bit into a current completion check", async () => {
-    markLessonCompleted("eu-ai-act-kurs", "block_1_lesson_2");
+    markLessonCompleted("eu-ai-act-kurs", "zeitplan-1-2");
 
     render(
       <LessonProgressRing
         courseSlug="eu-ai-act-kurs"
-        lessonId="block_1_lesson_2"
-        totalSections={3}
+        lessonId="zeitplan-1-2"
+        totalSections={1}
       />,
     );
 
-    expect(await screen.findByText("0/3")).toBeInTheDocument();
+    expect(await screen.findByText("0/1")).toBeInTheDocument();
     expect(screen.queryByText("✓")).toBeNull();
 
     act(() => {
-      for (const sectionId of [
-        "block_1_lesson_2_section_1",
-        "block_1_lesson_2_section_2",
-        "block_1_lesson_2_section_3",
-      ]) {
-        markSectionRead("eu-ai-act-kurs", "block_1_lesson_2", sectionId);
-      }
-      saveLessonQuizScore("eu-ai-act-kurs", "block_1_lesson_2", 1, 1);
+      markSectionRead("eu-ai-act-kurs", "zeitplan-1-2", "zeitplan-1-2_exercise");
+      saveLessonQuizScore("eu-ai-act-kurs", "zeitplan-1-2", 1, 1);
       completeCheckpoint(
-        "block_1_lesson_2",
+        "zeitplan-1-2",
         lessonCompletionEvidenceCheckpointId("eu-ai-act-kurs"),
       );
     });

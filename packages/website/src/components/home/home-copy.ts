@@ -229,8 +229,8 @@ export const HOME_COURSE_COPY: Readonly<
     },
     "eu-ai-act-kurs": {
       title: "EU AI Act Kurs",
-      tagline: "Ordne deinen Anwendungsfall ein und leite Rolle und Pflichten ab.",
-      duration: "ca. 1 Std. 50 Min.",
+      tagline: "Rolle bestimmen, Risikoklasse einordnen, Pflichten ableiten.",
+      duration: "ca. 1 Std.",
     },
     "ai-native": {
       title: "AI-Native Arbeitskurs",
@@ -252,8 +252,8 @@ export const HOME_COURSE_COPY: Readonly<
     },
     "eu-ai-act-kurs": {
       title: "EU AI Act Course",
-      tagline: "Classify your use case, then derive your role and duties.",
-      duration: "about 1 hr 50 min",
+      tagline: "Determine your role, classify the use case, derive your duties.",
+      duration: "about 1 hr",
     },
     "ai-native": {
       title: "AI-Native Work Course",

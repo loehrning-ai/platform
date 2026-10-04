@@ -24,11 +24,11 @@ const EXPECTED_CHECKPOINT_LESSONS = {
     "fair-3-3",
   ],
   "eu-ai-act-kurs": [
-    "block_1_lesson_1",
-    "block_2_lesson_1",
-    "block_3_lesson_1",
-    "block_4_lesson_1",
-    "block_6_lesson_1",
+    "rolle-1-1",
+    "risiko-2-1",
+    "pflichten-3-1",
+    "bussgeld-4-1",
+    "fall-5-1",
   ],
   "ai-native": [
     "modul_1_lesson_1",

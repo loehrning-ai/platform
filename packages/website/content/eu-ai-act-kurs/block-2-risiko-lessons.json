@@ -1,0 +1,434 @@
+{
+  "blockId": "block_2",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-04-05",
+  "format": "lesson-engine/v1",
+  "reviewCadence": "legal",
+  "riskClass": "legal",
+  "triggerEvents": [
+    "eu-ai-act-amendment",
+    "commission-qa-update"
+  ],
+  "lessons": [
+    {
+      "id": "risiko-2-1",
+      "blockId": "block_2",
+      "number": 3,
+      "title": "Sechs Fragen zur Risikoklasse",
+      "subtitle": "Von oben nach unten prüfen, mit der Ausnahme nach Art. 6 Abs. 3",
+      "durationMinutes": 7,
+      "keyConcepts": [
+        "Risikoklasse",
+        "Anhang III",
+        "Art. 6 Abs. 3",
+        "Profiling"
+      ],
+      "concept": {
+        "body": "Die Verordnung ordnet Anwendungsfälle ein, nicht Tools: Dasselbe Sprachmodell ist beim Protokollieren minimal und beim Vorsortieren von Bewerbungen hochriskant (Anhang III Nr. 4 lit. a). Prüfen Sie von oben nach unten und hören Sie beim ersten Treffer auf:\n\n1. KI-System nach Art. 3 Nr. 1?\n2. Verbotene Praktik nach Art. 5? Dann gibt es keinen Compliance-Pfad.\n3. Sicherheitsbauteil eines Produkts nach Anhang I mit Drittprüfung (Art. 6 Abs. 1)?\n4. Einsatz in einem Bereich des Anhangs III (Art. 6 Abs. 2)?\n5. Ausnahme nach Art. 6 Abs. 3? Nur für eng begrenzte Hilfsaufgaben ohne wesentlichen Einfluss auf das Ergebnis. Profiling schließt sie aus, und der Anbieter dokumentiert sie (Art. 6 Abs. 4).\n6. Transparenzfall nach Art. 50? Sonst minimales Risiko.\n\nArt. 50 kann zusätzlich zu Hochrisiko gelten.",
+        "takeaway": "Pro Anwendungsfall prüfen, von oben nach unten, und die Begründung festhalten.",
+        "sources": [
+          {
+            "label": "Verordnung (EU) 2024/1689 (KI-VO)",
+            "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "decision-wizard",
+        "title": "Stufen Sie vier Fälle ein",
+        "instructions": "Beantworten Sie für jeden Fall die Fragen der Reihe nach. Das Ergebnis zeigt Klasse, Stichtag und Grundlage. Fertig nach dem vierten Fall.",
+        "props": {
+          "start": "ai",
+          "nodes": [
+            {
+              "id": "ai",
+              "question": "Leitet das System aus Eingaben Ergebnisse wie Vorhersagen, Inhalte, Empfehlungen oder Entscheidungen ab, mit einem gewissen Grad an Autonomie?",
+              "help": "Art. 3 Nr. 1. Eine festcodierte Tabellenformel ist kein KI-System.",
+              "options": [
+                {
+                  "label": "Nein",
+                  "result": "not-ai"
+                },
+                {
+                  "label": "Ja",
+                  "next": "art5"
+                }
+              ]
+            },
+            {
+              "id": "art5",
+              "question": "Entspricht der Einsatz einer verbotenen Praktik nach Art. 5 Abs. 1?",
+              "help": "Etwa Emotionserkennung am Arbeitsplatz (lit. f), Social Scoring (lit. c) oder biometrische Kategorisierung nach sensiblen Merkmalen (lit. g).",
+              "options": [
+                {
+                  "label": "Ja",
+                  "result": "prohibited"
+                },
+                {
+                  "label": "Nein",
+                  "next": "annex1"
+                }
+              ]
+            },
+            {
+              "id": "annex1",
+              "question": "Ist das System Sicherheitsbauteil eines Produkts nach Anhang I, das eine Konformitätsbewertung durch Dritte braucht, oder selbst ein solches Produkt?",
+              "help": "Etwa Maschinen, Medizinprodukte, Aufzüge (Art. 6 Abs. 1).",
+              "options": [
+                {
+                  "label": "Ja",
+                  "result": "high-annex1"
+                },
+                {
+                  "label": "Nein",
+                  "next": "annex3"
+                }
+              ]
+            },
+            {
+              "id": "annex3",
+              "question": "Wird es in einem Bereich des Anhangs III eingesetzt?",
+              "help": "Biometrie, kritische Infrastruktur, Bildung, Beschäftigung, wesentliche Dienste wie Kreditwürdigkeit, Strafverfolgung, Migration, Justiz und demokratische Prozesse.",
+              "options": [
+                {
+                  "label": "Ja",
+                  "next": "exception"
+                },
+                {
+                  "label": "Nein",
+                  "next": "art50"
+                }
+              ]
+            },
+            {
+              "id": "exception",
+              "question": "Art. 6 Abs. 3: Erledigt das System nur eine eng begrenzte verfahrenstechnische, vorbereitende oder nachbessernde Aufgabe, ohne das Ergebnis wesentlich zu beeinflussen und ohne Profiling von Personen?",
+              "options": [
+                {
+                  "label": "Nein, es beeinflusst die Entscheidung oder profiliert Personen",
+                  "result": "high-annex3"
+                },
+                {
+                  "label": "Ja, alle Bedingungen sind erfüllt",
+                  "result": "exception"
+                }
+              ]
+            },
+            {
+              "id": "art50",
+              "question": "Trifft ein Transparenzfall nach Art. 50 zu?",
+              "help": "Direkte Interaktion mit Menschen, erzeugte Audio-, Bild-, Video- oder Textinhalte, Emotionserkennung oder biometrische Kategorisierung, Deepfakes.",
+              "options": [
+                {
+                  "label": "Ja",
+                  "result": "transparency"
+                },
+                {
+                  "label": "Nein",
+                  "result": "minimal"
+                }
+              ]
+            }
+          ],
+          "results": [
+            {
+              "id": "not-ai",
+              "tone": "neutral",
+              "title": "Kein KI-System",
+              "body": "Die KI-Verordnung gilt nicht. Prüfen Sie neu, wenn ein Update KI-Funktionen bringt.",
+              "source": "Art. 3 Nr. 1 KI-VO"
+            },
+            {
+              "id": "prohibited",
+              "tone": "bad",
+              "title": "Verboten (Art. 5)",
+              "body": "Seit dem 2. Februar 2025 verboten, ohne Übergangsfrist und ohne KMU-Ausnahme. Einwilligung der Betroffenen oder Zustimmung des Betriebsrats heilen das nicht.",
+              "actions": [
+                "Einsatz stoppen",
+                "Rechtsberatung holen"
+              ],
+              "source": "Art. 5 Abs. 1, Art. 99 Abs. 3 KI-VO"
+            },
+            {
+              "id": "high-annex1",
+              "tone": "warn",
+              "title": "Hochrisiko über Anhang I (Art. 6 Abs. 1)",
+              "body": "Sektorale Konformitätsbewertung plus die Anforderungen der Art. 8 bis 15. Anwendbar ab dem 2. August 2028 (Verordnung (EU) 2026/1744).",
+              "source": "Art. 6 Abs. 1, Anhang I KI-VO"
+            },
+            {
+              "id": "high-annex3",
+              "tone": "warn",
+              "title": "Hochrisiko nach Anhang III (Art. 6 Abs. 2)",
+              "body": "Anbieter erfüllen Art. 16 mit Art. 9 bis 15, Betreiber Art. 26. Anwendbar ab dem 2. Dezember 2027 (Verordnung (EU) 2026/1744). Art. 50 kann zusätzlich gelten.",
+              "source": "Art. 6 Abs. 2, Anhang III KI-VO"
+            },
+            {
+              "id": "exception",
+              "tone": "neutral",
+              "title": "Kein Hochrisiko nach Art. 6 Abs. 3, mit Dokumentation",
+              "body": "Der Anbieter dokumentiert die Bewertung vor dem Inverkehrbringen (Art. 6 Abs. 4) und registriert das System (Art. 49 Abs. 2). Als Betreiber prüfen Sie die Begründung, statt ihr blind zu vertrauen. Art. 50 prüfen Sie trotzdem.",
+              "source": "Art. 6 Abs. 3 und 4 KI-VO"
+            },
+            {
+              "id": "transparency",
+              "tone": "neutral",
+              "title": "Transparenzpflicht nach Art. 50",
+              "body": "Ab dem 2. August 2026: KI-Hinweis, maschinenlesbare Markierung oder Offenlegung, je nach Fall und Rolle. Keine Hochrisiko-Pflichten.",
+              "source": "Art. 50 KI-VO"
+            },
+            {
+              "id": "minimal",
+              "tone": "good",
+              "title": "Minimales Risiko",
+              "body": "Keine besonderen Pflichten aus der Verordnung. Art. 4 (KI-Kompetenz) gilt trotzdem; freiwillige Verhaltenskodizes regelt Art. 95.",
+              "source": "Art. 4, Art. 95 KI-VO"
+            }
+          ],
+          "scenarios": [
+            {
+              "id": "ranking",
+              "text": "Ein Tool sortiert eingehende Bewerbungen nach einem Match-Score vor.",
+              "expected": "high-annex3",
+              "why": "Sichten und Filtern von Bewerbungen ist Anhang III Nr. 4 lit. a. Ein Match-Score bewertet Personen, also greift die Ausnahme nicht."
+            },
+            {
+              "id": "stress",
+              "text": "Webcam-Software soll in Teammeetings erkennen, wie zufrieden Beschäftigte wirken, als Grundlage für Feedbackgespräche.",
+              "expected": "prohibited",
+              "why": "Emotionserkennung am Arbeitsplatz ist nach Art. 5 Abs. 1 lit. f verboten. Die Ausnahme für medizinische oder Sicherheitsgründe trifft hier nicht zu."
+            },
+            {
+              "id": "complete",
+              "text": "Ein KI-Modul liest Bewerbungsunterlagen aus und meldet nur, ob alle Pflichtdokumente vorliegen. Es bewertet und rankt niemanden.",
+              "expected": "exception",
+              "why": "Eine eng begrenzte verfahrenstechnische Aufgabe ohne Profiling: Art. 6 Abs. 3 kommt in Frage, mit Dokumentation durch den Anbieter."
+            },
+            {
+              "id": "hours",
+              "text": "Ein Chatbot beantwortet auf der Website Fragen zu Öffnungszeiten.",
+              "expected": "transparency",
+              "why": "Direkte Interaktion mit Menschen: KI-Hinweis nach Art. 50 Abs. 1."
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "risiko-2-1-c1",
+          "prompt": "Ein Anbieter erklärt sein Vorsortier-Modul für Bewerbungen nach Art. 6 Abs. 3 für nicht hochriskant. Das Modul erstellt Profile der Bewerbenden. Was gilt?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Die Erklärung des Anbieters genügt",
+              "correct": false,
+              "feedback": "Die Marktüberwachung kann die Einstufung prüfen, und Profiling schließt die Ausnahme ohnehin aus."
+            },
+            {
+              "id": "b",
+              "text": "Die Ausnahme greift, wenn ein Mensch final entscheidet",
+              "correct": false,
+              "feedback": "Eine finale menschliche Entscheidung erfüllt Art. 6 Abs. 3 nicht, wenn das System die Auswahl wesentlich beeinflusst."
+            },
+            {
+              "id": "c",
+              "text": "Die Ausnahme greift nicht: Profiling schließt sie aus",
+              "correct": true
+            }
+          ],
+          "explanation": "Ein System nach Anhang III gilt immer als hochriskant, wenn es ein Profiling natürlicher Personen vornimmt (Art. 6 Abs. 3 UAbs. 3)."
+        },
+        {
+          "id": "risiko-2-1-c2",
+          "prompt": "Warum prüfen Sie pro Anwendungsfall statt pro Tool?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Weil dasselbe Tool je nach Zweck minimal oder hochriskant sein kann",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Weil Tools keine KI-Systeme sind",
+              "correct": false,
+              "feedback": "Viele Tools sind KI-Systeme nach Art. 3 Nr. 1. Die Klasse folgt trotzdem aus dem Zweck."
+            },
+            {
+              "id": "c",
+              "text": "Weil nur Anwendungsfälle Bußgelder auslösen",
+              "correct": false,
+              "feedback": "Bußgelder knüpfen an verletzte Pflichten. Welche Pflichten gelten, folgt aus dem Zweck."
+            }
+          ],
+          "explanation": "Anhang III beschreibt Einsatzbereiche. Ob ein Sprachmodell Protokolle schreibt oder Bewerbungen filtert, entscheidet die Klasse."
+        }
+      ]
+    },
+    {
+      "id": "risiko-2-2",
+      "blockId": "block_2",
+      "number": 4,
+      "title": "Zehn Fälle für die Risikopyramide",
+      "subtitle": "Typische Anwendungen aus dem Mittelstand einordnen",
+      "durationMinutes": 6,
+      "keyConcepts": [
+        "Risikopyramide",
+        "Verbotene Praktiken",
+        "Hochrisiko-System"
+      ],
+      "concept": {
+        "body": "Die vier Stufen verlangen sehr unterschiedlich viel:\n\n| Stufe | Folge |\n|---|---|\n| Verboten (Art. 5) | abschalten, seit dem 2. Februar 2025 |\n| Hochrisiko (Art. 6, Anhang I und III) | Anbieter nach Art. 16, Betreiber nach Art. 26 |\n| Transparenz (Art. 50) | Hinweis, Markierung oder Offenlegung, ab dem 2. August 2026 |\n| Minimal | keine besonderen Pflichten, Art. 4 gilt |\n\nZwei Fehler kosten. Zu niedrig eingestuft fehlen Aufsicht, Logs und Dokumentation, sobald die Pflichten gelten. Zu hoch eingestuft entsteht Aufwand ohne Grund. Entscheidend ist der Zweck: Ein Chatbot für Lieferzeiten ist ein Transparenzfall, ein Chatbot, der Bewerbende vorsortiert, ist Hochrisiko nach Anhang III Nr. 4 und braucht zusätzlich den KI-Hinweis.",
+        "takeaway": "Jeden Fall der höchsten zutreffenden Stufe zuordnen und Art. 50 zusätzlich prüfen.",
+        "sources": [
+          {
+            "label": "Verordnung (EU) 2024/1689 (KI-VO)",
+            "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "bucket-sort",
+        "title": "Füllen Sie die Risikopyramide",
+        "instructions": "Ordnen Sie jeden Fall der höchsten zutreffenden Stufe zu. Jede Zuordnung wird sofort begründet. Fertig, wenn alle zehn Fälle liegen.",
+        "props": {
+          "layout": "pyramid",
+          "buckets": [
+            {
+              "id": "prohibited",
+              "label": "Verboten",
+              "hint": "Art. 5: abschalten"
+            },
+            {
+              "id": "high",
+              "label": "Hochrisiko",
+              "hint": "Art. 6 mit Anhang I oder III"
+            },
+            {
+              "id": "transparency",
+              "label": "Transparenz",
+              "hint": "Art. 50: Hinweis, Markierung, Offenlegung"
+            },
+            {
+              "id": "minimal",
+              "label": "Minimal",
+              "hint": "keine besonderen Pflichten, Art. 4 gilt"
+            }
+          ],
+          "items": [
+            {
+              "id": "callcenter",
+              "text": "Software bewertet die Stimmung von Beschäftigten im Callcenter",
+              "bucket": "prohibited",
+              "why": "Emotionserkennung am Arbeitsplatz: Art. 5 Abs. 1 lit. f."
+            },
+            {
+              "id": "lobby",
+              "text": "Kamera am Empfang ordnet Besucher nach vermuteter Religion oder politischer Haltung",
+              "bucket": "prohibited",
+              "why": "Biometrische Kategorisierung nach sensiblen Merkmalen: Art. 5 Abs. 1 lit. g."
+            },
+            {
+              "id": "cv",
+              "text": "Ranking von Bewerbungen nach Match-Score",
+              "bucket": "high",
+              "why": "Bewerbungen sichten und filtern: Anhang III Nr. 4 lit. a."
+            },
+            {
+              "id": "credit",
+              "text": "Kreditwürdigkeitsprüfung von Privatkunden für den Ratenkauf",
+              "bucket": "high",
+              "why": "Kreditwürdigkeit natürlicher Personen: Anhang III Nr. 5 lit. b."
+            },
+            {
+              "id": "press",
+              "text": "KI-Sicherheitsabschaltung einer Presse, Konformitätsbewertung durch Dritte",
+              "bucket": "high",
+              "why": "Sicherheitsbauteil eines Produkts nach Anhang I: Art. 6 Abs. 1."
+            },
+            {
+              "id": "promotion",
+              "text": "Leistungsbewertung von Beschäftigten für Beförderungen",
+              "bucket": "high",
+              "why": "Entscheidungen über Beförderung und Leistungsbewertung: Anhang III Nr. 4 lit. b."
+            },
+            {
+              "id": "delivery",
+              "text": "Website-Chatbot beantwortet Fragen zu Lieferzeiten",
+              "bucket": "transparency",
+              "why": "Direkte Interaktion: KI-Hinweis nach Art. 50 Abs. 1."
+            },
+            {
+              "id": "deepfake",
+              "text": "Generiertes, täuschend echtes Video einer realen Geschäftsführerin für eine Kampagne",
+              "bucket": "transparency",
+              "why": "Deepfake: Offenlegung durch den Betreiber nach Art. 50 Abs. 4."
+            },
+            {
+              "id": "spam",
+              "text": "Spamfilter im Mailserver",
+              "bucket": "minimal",
+              "why": "Kein Verbot, kein Anhang, kein Art.-50-Fall."
+            },
+            {
+              "id": "maintenance",
+              "text": "Vorausschauende Wartung auf Basis von Maschinensensordaten",
+              "bucket": "minimal",
+              "why": "Maschinendaten ohne Personenbezug und ohne Sicherheitsfunktion: minimal."
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "risiko-2-2-c1",
+          "prompt": "Ein HR-Chatbot führt Vorgespräche und sortiert Bewerbende vor. Welche Pflichten kommen in Betracht?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Nur Art. 50, weil es ein Chatbot ist",
+              "correct": false,
+              "feedback": "Die Form Chatbot ändert nichts am Zweck: Vorsortieren ist Anhang III Nr. 4."
+            },
+            {
+              "id": "b",
+              "text": "Hochrisiko nach Anhang III Nr. 4 und zusätzlich der KI-Hinweis nach Art. 50 Abs. 1",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Nur Hochrisiko; Art. 50 entfällt",
+              "correct": false,
+              "feedback": "Art. 50 gilt auch für Hochrisiko-Systeme."
+            }
+          ],
+          "explanation": "Hochrisiko und Transparenz schließen sich nicht aus. Der Zweck bestimmt die Klasse, die Interaktion zusätzlich den Hinweis."
+        },
+        {
+          "id": "risiko-2-2-c2",
+          "prompt": "Was riskieren Sie mit einer zu niedrigen Einstufung?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Nur höheren Aufwand",
+              "correct": false,
+              "feedback": "Mehr Aufwand ist die Folge einer zu hohen Einstufung."
+            },
+            {
+              "id": "b",
+              "text": "Nichts, solange sich niemand beschwert",
+              "correct": false,
+              "feedback": "Die Marktüberwachung kann auch ohne Beschwerde prüfen."
+            },
+            {
+              "id": "c",
+              "text": "Fehlende Aufsicht, Logs und Dokumentation, sobald die Pflichten gelten, und Maßnahmen bis zu Bußgeldern nach Art. 99",
+              "correct": true
+            }
+          ],
+          "explanation": "Eine zu niedrige Einstufung lässt Pflichten unerfüllt. Halten Sie Zweck, Rolle und Prüfung nach Art. 6 schriftlich fest."
+        }
+      ]
+    }
+  ]
+}

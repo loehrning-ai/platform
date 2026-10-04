@@ -18,6 +18,10 @@ import {
   getWorkshopPassThreshold,
 } from "./data";
 import { isEngineLesson, validateEngineLesson } from "@/lib/lesson-engine/lesson";
+import {
+  ENGINE_EXERCISE_CHECKPOINT_ID,
+  engineCheckpointLessonKey,
+} from "@/lib/lesson-engine/types";
 
 // ─── Engine union ──────────────────────────────────────
 
@@ -122,7 +126,7 @@ describe("CourseConfig copy fields (collapsed route components)", () => {
 
   it("getBlocks returns the configured block count per course", () => {
     expect(getBlocks("ki-fuehrerschein").length).toBe(4);
-    expect(getBlocks("eu-ai-act-kurs").length).toBe(6);
+    expect(getBlocks("eu-ai-act-kurs").length).toBe(5);
   });
 });
 
@@ -218,14 +222,12 @@ describe("KI-Führerschein lesson-engine lessons", () => {
     }
   });
 
-  it("keeps legacy block courses on their flashcards deck during the transition", () => {
-    const lessons = getBlockLessons("eu-ai-act-kurs", "block_2");
-    const last = lessons[lessons.length - 1];
-    expect(
-      (last.widgets ?? []).some(
-        (widget) => widget.kind === "flashcards" && widget.placement === "end",
-      ),
-    ).toBe(true);
+  it("does not inject the deck into the EU AI Act engine lessons either", () => {
+    for (const block of getBlocks("eu-ai-act-kurs")) {
+      for (const lesson of block.lessons) {
+        expect(lesson.widgets ?? [], lesson.id).toEqual([]);
+      }
+    }
   });
 });
 
@@ -234,7 +236,8 @@ describe("KI-Führerschein lesson-engine lessons", () => {
 describe("EU-AI-Act-Kurs glossary (shared course architecture)", () => {
   it("loads the new Risikostufen glossary tied to Verordnung (EU) 2024/1689", () => {
     const terms = getGlossaryTerms("eu-ai-act-kurs");
-    expect(terms.length).toBeGreaterThanOrEqual(20);
+    // Trimmed to the vocabulary the ten lesson-engine lessons use.
+    expect(terms.length).toBeGreaterThanOrEqual(15);
     expect(getGlossaryTermCount("eu-ai-act-kurs")).toBe(terms.length);
     // Sorted by German term (immutable copy).
     const sorted = [...terms].sort((a, b) => a.term.localeCompare(b.term, "de"));
@@ -365,71 +368,63 @@ describe("KI und Gesellschaft course (KI und Gesellschaft course review)", () =>
   });
 });
 
-describe("EU-AI-Act-Kurs in-lesson interactivity (shared course architecture)", () => {
-  it("wires the risk-pyramid diagram into the Risikoklassen summary lesson", () => {
-    const lessons = getBlockLessons("eu-ai-act-kurs", "block_2");
-    const lesson = lessons.find((l) => l.id === "block_2_lesson_4");
-    const pyramid = (lesson?.widgets ?? []).find(
-      (w) => w.kind === "risk-pyramid",
-    );
-    expect(pyramid).toBeDefined();
-    expect(pyramid?.placement).toBe("after-intro");
-    expect(pyramid?.props?.lessonId).toBe("block_2_lesson_4");
-    expect(String(pyramid?.props?.title ?? "")).not.toMatch(/[—–]/);
+describe("EU AI Act lesson-engine lessons", () => {
+  const EXPECTED_EXERCISES = {
+    "rolle-1-1": "decision-wizard",
+    "zeitplan-1-2": "timeline-check",
+    "risiko-2-1": "decision-wizard",
+    "risiko-2-2": "bucket-sort",
+    "pflichten-3-1": "decision-wizard",
+    "pflichten-3-2": "bucket-sort",
+    "bussgeld-4-1": "calculator",
+    "aufsicht-4-2": "sequence-order",
+    "fall-5-1": "claim-checker",
+    "plan-5-2": "doc-builder",
+  } as const;
+
+  it("gives every lesson one concept, one registered exercise and two checks", () => {
+    for (const locale of ["de", "en"] as const) {
+      const lessons = getBlocks("eu-ai-act-kurs", locale).flatMap(
+        (block) => block.lessons,
+      );
+      expect(lessons.map((lesson) => lesson.id)).toEqual(
+        Object.keys(EXPECTED_EXERCISES),
+      );
+      for (const lesson of lessons) {
+        expect(isEngineLesson(lesson), lesson.id).toBe(true);
+        expect(validateEngineLesson(lesson), lesson.id).toEqual([]);
+        expect(lesson.exercise?.kind).toBe(
+          EXPECTED_EXERCISES[lesson.id as keyof typeof EXPECTED_EXERCISES],
+        );
+      }
+    }
   });
 
-  it("wires a DragReorder of the four risk tiers into block_2", () => {
-    const lessons = getBlockLessons("eu-ai-act-kurs", "block_2");
-    const lesson = lessons.find((l) => l.id === "block_2_lesson_4");
-    const reorder = (lesson?.widgets ?? []).find(
-      (w) => w.kind === "drag-reorder",
+  it("projects concept and checks onto sections/quiz for search and MCP readers", () => {
+    const [lesson] = getBlockLessons("eu-ai-act-kurs", "block_2");
+    expect(lesson.id).toBe("risiko-2-1");
+    expect(lesson.sections).toHaveLength(1);
+    expect(lesson.sections[0]?.id).toBe("risiko-2-1_concept");
+    expect(lesson.quiz.map((question) => question.id)).toEqual(
+      lesson.checks?.map((check) => check.id),
     );
-    expect(reorder).toBeDefined();
-    expect(reorder?.props?.cpId).toBe("risikostufen-ordnen");
-    // German copy, no em dashes.
-    expect(String(reorder?.props?.prompt ?? "")).not.toMatch(/[—–]/);
-    expect(String(reorder?.props?.prompt ?? "")).toMatch(/[äöüß]/);
   });
 
-  it("appends the auto-injected glossary deck to the last block_2 lesson", () => {
-    const lessons = getBlockLessons("eu-ai-act-kurs", "block_2");
-    const last = lessons[lessons.length - 1];
-    const deck = (last.widgets ?? []).find(
-      (w) => w.kind === "flashcards" && w.placement === "end",
+  it("stacks the risk-tier sort as a pyramid from prohibited to minimal", () => {
+    const lesson = getBlockLessons("eu-ai-act-kurs", "block_2").find(
+      (entry) => entry.id === "risiko-2-2",
     );
-    expect(deck).toBeDefined();
-    expect(deck?.props?.cpId).toBe("glossar-block_2");
-    expect(deck?.props?.lessonId).toBe(
-      "eu-ai-act-kurs:block_2_lesson_4",
-    );
-    const cards = deck?.props?.cards as ReadonlyArray<{ q: string; a: string }>;
-    expect(cards.length).toBeGreaterThan(0);
-    expect(cards.map((c) => c.q)).toContain("Verbotene Praktiken");
-  });
-
-  it("wires a GPAI-Transparenz FailureTagger into block_4 (Art. 50)", () => {
-    const lessons = getBlockLessons("eu-ai-act-kurs", "block_4");
-    const lesson = lessons.find((l) => l.id === "block_4_lesson_4");
-    const tagger = (lesson?.widgets ?? []).find(
-      (w) => w.kind === "failure-tagger",
-    );
-    expect(tagger).toBeDefined();
-    expect(tagger?.props?.lessonId).toBe("block_4_lesson_4");
-    expect(tagger?.props?.cpId).toBe("gpai-transparenz-tagger");
-    // Five authored cases, each mapping to one of the four FailureModeIds.
-    const cases = tagger?.props?.cases as ReadonlyArray<{ correct: string }>;
-    expect(cases.length).toBe(5);
-    const validIds = new Set([
-      "halluzination",
-      "verweigerung",
-      "formatdrift",
-      "themaverfehlung",
+    const props = lesson?.exercise?.props as {
+      layout: string;
+      buckets: { id: string }[];
+    };
+    expect(props.layout).toBe("pyramid");
+    expect(props.buckets.map((bucket) => bucket.id)).toEqual([
+      "prohibited",
+      "high",
+      "transparency",
+      "minimal",
     ]);
-    for (const c of cases) expect(validIds.has(c.correct)).toBe(true);
-    // German copy, no em dashes, real umlauts.
-    const scenario = String(tagger?.props?.scenario ?? "");
-    expect(scenario).not.toMatch(/[—–]/);
-    expect(scenario).toMatch(/[äöüß]/);
   });
 });
 
@@ -446,6 +441,14 @@ describe("shared widget checkpoint identity", () => {
     for (const courseSlug of courseSlugs) {
       for (const block of getBlocks(courseSlug)) {
         for (const lesson of block.lessons) {
+          // Engine lessons own exactly one exercise checkpoint, injected by
+          // the reader as "<course>:<lesson>" / "exercise".
+          if (isEngineLesson(lesson)) {
+            const key = `${engineCheckpointLessonKey(courseSlug, lesson.id)}::${ENGINE_EXERCISE_CHECKPOINT_ID}`;
+            const owner = `${courseSlug}/${block.id}/${lesson.id}/exercise`;
+            expect(owners.get(key), `checkpoint "${key}" is shared`).toBeUndefined();
+            owners.set(key, owner);
+          }
           for (const widget of lesson.widgets ?? []) {
             const lessonId = widget.props?.lessonId;
             const cpId = widget.props?.cpId;

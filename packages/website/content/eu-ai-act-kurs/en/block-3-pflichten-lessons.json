@@ -1,0 +1,477 @@
+{
+  "blockId": "block_3",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-04-05",
+  "format": "lesson-engine/v1",
+  "reviewCadence": "legal",
+  "riskClass": "legal",
+  "triggerEvents": [
+    "eu-ai-act-amendment",
+    "commission-qa-update"
+  ],
+  "lessons": [
+    {
+      "id": "pflichten-3-1",
+      "blockId": "block_3",
+      "number": 5,
+      "title": "Your obligation list from role and class",
+      "subtitle": "Provider and deployer, high-risk to minimal, GPAI on one card",
+      "durationMinutes": 7,
+      "keyConcepts": [
+        "Art. 26",
+        "Art. 16",
+        "AI literacy",
+        "GPAI model"
+      ],
+      "concept": {
+        "body": "Obligations follow from two questions: what is your role, and what class is the use case?\n\n**For everyone:** since 2 February 2025, providers and deployers take measures under Art. 4 that support the development of AI literacy among their staff, matched to knowledge, context of use and the people affected. Since Regulation (EU) 2026/1744 they need not guarantee a specific individual level.\n\n**High-risk providers** carry the heavy load: risk management, data governance, technical documentation under Annex IV, logging and oversight by design, conformity assessment, CE marking, registration.\n\n**High-risk deployers** meet Art. 26. A fundamental rights impact assessment (Art. 27) applies only to public bodies, private providers of public services, and creditworthiness and insurance pricing.\n\nWhoever only builds in a GPAI model is not its provider but needs its documents (Art. 53).",
+        "takeaway": "Role times class gives the list. Art. 4 is on every one.",
+        "sources": [
+          {
+            "label": "Regulation (EU) 2024/1689 (AI Act)",
+            "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+          },
+          {
+            "label": "Regulation (EU) 2026/1744"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "decision-wizard",
+        "title": "Generate four obligation lists",
+        "instructions": "Choose role and class for each case. The result is the obligation list with articles you can take away. Done after the fourth case.",
+        "props": {
+          "start": "role",
+          "nodes": [
+            {
+              "id": "role",
+              "question": "What is your role for this system?",
+              "options": [
+                {
+                  "label": "Deployer: we use it",
+                  "next": "d-class"
+                },
+                {
+                  "label": "Provider: we place it on the market under our own name",
+                  "next": "p-class"
+                },
+                {
+                  "label": "We build another provider's GPAI model into our product via an API",
+                  "result": "gpai"
+                }
+              ]
+            },
+            {
+              "id": "d-class",
+              "question": "What class is the use case?",
+              "options": [
+                {
+                  "label": "High-risk under Annex III",
+                  "next": "d-fria"
+                },
+                {
+                  "label": "Transparency case under Art. 50",
+                  "result": "d-art50"
+                },
+                {
+                  "label": "Minimal risk",
+                  "result": "d-min"
+                },
+                {
+                  "label": "Prohibited practice",
+                  "result": "prohibited"
+                }
+              ]
+            },
+            {
+              "id": "d-fria",
+              "question": "Are you a body governed by public law or a private provider of public services, or do you use the system for creditworthiness or life and health insurance pricing (Annex III point 5(b) and (c))?",
+              "options": [
+                {
+                  "label": "Yes",
+                  "result": "d-high-fria"
+                },
+                {
+                  "label": "No",
+                  "result": "d-high"
+                }
+              ]
+            },
+            {
+              "id": "p-class",
+              "question": "What class is the use case?",
+              "options": [
+                {
+                  "label": "High-risk under Annex I or III",
+                  "result": "p-high"
+                },
+                {
+                  "label": "Transparency case under Art. 50",
+                  "result": "p-art50"
+                },
+                {
+                  "label": "Minimal risk",
+                  "result": "p-min"
+                },
+                {
+                  "label": "Prohibited practice",
+                  "result": "prohibited"
+                }
+              ]
+            }
+          ],
+          "results": [
+            {
+              "id": "d-high",
+              "tone": "warn",
+              "title": "Deployer, high-risk: your Art. 26 list",
+              "body": "From 2 December 2027 for Annex III systems. Prepare contracts, roles and logs before then. Art. 4 applies already, Art. 50 on top where relevant.",
+              "actions": [
+                "Use according to the instructions for use (para. 1)",
+                "Human oversight by competent, trained and authorised people (para. 2)",
+                "Keep input data under your control relevant and representative (para. 4)",
+                "Monitor operation; on a risk inform provider and authority and suspend use (para. 5)",
+                "Keep automatically generated logs under your control for at least six months (para. 6)",
+                "Inform workers' representatives and staff before use in the workplace (para. 7)",
+                "Inform the people affected when the system decides on them or assists in deciding (para. 11)"
+              ],
+              "source": "Art. 26 AI Act"
+            },
+            {
+              "id": "d-high-fria",
+              "tone": "warn",
+              "title": "Deployer, high-risk, with fundamental rights impact assessment",
+              "body": "The Art. 26 list plus a fundamental rights impact assessment under Art. 27 before first use. You can combine it with a data protection impact assessment (Art. 27(4)).",
+              "actions": [
+                "Use according to the instructions for use (para. 1)",
+                "Human oversight by competent, trained and authorised people (para. 2)",
+                "Keep input data under your control relevant and representative (para. 4)",
+                "Monitor operation; on a risk inform provider and authority and suspend use (para. 5)",
+                "Keep automatically generated logs under your control for at least six months (para. 6)",
+                "Inform workers' representatives and staff before use in the workplace (para. 7)",
+                "Inform the people affected when the system decides on them or assists in deciding (para. 11)",
+                "Fundamental rights impact assessment before first use (Art. 27)"
+              ],
+              "source": "Art. 26, Art. 27 AI Act"
+            },
+            {
+              "id": "d-art50",
+              "tone": "neutral",
+              "title": "Deployer, transparency case",
+              "body": "From 2 August 2026. Notices must be clear and distinguishable and come at the latest at the first interaction (Art. 50(5)).",
+              "actions": [
+                "Disclose deepfakes visibly when publishing (para. 4)",
+                "Disclose AI text on matters of public interest unless a human reviews it and holds editorial responsibility (para. 4)",
+                "Inform people about emotion recognition or biometric categorisation (para. 3)",
+                "Check that the provider's AI notice reaches people in your integration (para. 1)",
+                "Document Art. 4 measures"
+              ],
+              "source": "Art. 50 AI Act"
+            },
+            {
+              "id": "d-min",
+              "tone": "good",
+              "title": "Deployer, minimal risk",
+              "body": "No specific obligations from the Regulation apart from Art. 4.",
+              "actions": [
+                "Document Art. 4 measures by role and risk",
+                "Enter the system in the AI inventory with the reason for its class",
+                "Reclassify after substantial updates"
+              ],
+              "source": "Art. 4 AI Act"
+            },
+            {
+              "id": "p-high",
+              "tone": "warn",
+              "title": "Provider, high-risk: your Art. 16 list",
+              "body": "From 2 December 2027 for Annex III, from 2 August 2028 for Annex I. SMEs may provide the technical documentation in simplified form using a Commission form (Art. 11(1)).",
+              "actions": [
+                "Risk management system across the life cycle (Art. 9)",
+                "Data governance for training, validation and test data (Art. 10)",
+                "Technical documentation under Annex IV, kept for ten years (Art. 11, 18)",
+                "Automatic logging by design (Art. 12)",
+                "Instructions for use and human oversight by design (Art. 13, 14)",
+                "Accuracy, robustness and cybersecurity (Art. 15)",
+                "Quality management system (Art. 17)",
+                "Conformity assessment, EU declaration of conformity, CE marking (Art. 43, 47, 48)",
+                "Registration in the EU database (Art. 49)",
+                "Post-market monitoring and reporting of serious incidents (Art. 72, 73)"
+              ],
+              "source": "Art. 16 AI Act"
+            },
+            {
+              "id": "p-art50",
+              "tone": "neutral",
+              "title": "Provider, transparency case",
+              "body": "From 2 August 2026. The voluntary Code of Practice on transparency of AI-generated content of 10 June 2026 helps with implementation but does not replace your own check.",
+              "actions": [
+                "Design systems for direct interaction so that people recognise the AI (para. 1)",
+                "Mark generated audio, image, video and text content in a machine-readable way (para. 2)",
+                "Document Art. 4 measures"
+              ],
+              "source": "Art. 50 AI Act"
+            },
+            {
+              "id": "p-min",
+              "tone": "good",
+              "title": "Provider, minimal risk",
+              "body": "No specific obligations from the Regulation apart from Art. 4.",
+              "actions": [
+                "Document Art. 4 measures",
+                "Justify and record the classification",
+                "Consider voluntary codes of conduct under Art. 95"
+              ],
+              "source": "Art. 4, Art. 95 AI Act"
+            },
+            {
+              "id": "prohibited",
+              "tone": "bad",
+              "title": "Prohibited: no obligation list",
+              "body": "There is no compliance path for prohibited practices.",
+              "actions": [
+                "Stop the use",
+                "Get legal advice"
+              ],
+              "source": "Art. 5 AI Act"
+            },
+            {
+              "id": "gpai",
+              "tone": "neutral",
+              "title": "GPAI model built in: what your model provider must deliver",
+              "body": "Since 2 August 2025 the model provider carries Art. 53: technical documentation, information for downstream providers under Annex XII, a copyright policy and a training data summary. For your own system you are provider or deployer yourself: determine the class and run the list again.",
+              "actions": [
+                "Request the Annex XII information",
+                "Check whether the provider signed the GPAI Code of Practice of 10 July 2025: a commitment, not proof of conformity",
+                "For providers outside the EU, ask for the EU authorised representative (Art. 54)"
+              ],
+              "source": "Art. 53, Art. 54 AI Act"
+            }
+          ],
+          "scenarios": [
+            {
+              "id": "cv",
+              "text": "Your private limited company uses a purchased CV ranking tool.",
+              "expected": "d-high",
+              "why": "Deployer of an Annex III system. Private employers do not fall under Art. 27."
+            },
+            {
+              "id": "bank",
+              "text": "A bank uses a purchased system to check consumers' creditworthiness.",
+              "expected": "d-high-fria",
+              "why": "Annex III point 5(b): Art. 26 plus a fundamental rights impact assessment under Art. 27."
+            },
+            {
+              "id": "bot",
+              "text": "A software company sells its own customer service chatbot under its own brand.",
+              "expected": "p-art50",
+              "why": "Provider of a system for direct interaction: Art. 50(1)."
+            },
+            {
+              "id": "api",
+              "text": "You build a large provider's language model into your software via an API and want to know what the model provider must deliver.",
+              "expected": "gpai",
+              "why": "Art. 53 binds the model provider. You need its documents for your own obligations."
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "pflichten-3-1-c1",
+          "prompt": "A private company uses a CV ranking tool (Annex III point 4). Does it need a fundamental rights impact assessment under Art. 27?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Yes, every high-risk system needs one",
+              "correct": false,
+              "feedback": "Art. 27 names a narrow group of addressees, not all deployers."
+            },
+            {
+              "id": "b",
+              "text": "Yes, as soon as there is a works council",
+              "correct": false,
+              "feedback": "Co-determination is a separate question of labour law. Art. 27 depends on who the deployer is."
+            },
+            {
+              "id": "c",
+              "text": "No: Art. 27 covers public bodies, private providers of public services and Annex III point 5(b) and (c)",
+              "correct": true
+            }
+          ],
+          "explanation": "Employment AI under Annex III point 4 is not among the Art. 27 addressees. The Art. 26 obligations remain."
+        },
+        {
+          "id": "pflichten-3-1-c2",
+          "prompt": "For how long, at minimum, does a deployer keep automatically generated logs of a high-risk system under its control?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Ten years",
+              "correct": false,
+              "feedback": "Ten years applies to the provider's technical documentation (Art. 18)."
+            },
+            {
+              "id": "b",
+              "text": "Six months, unless other law provides otherwise",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "30 days",
+              "correct": false,
+              "feedback": "Art. 26(6) says at least six months."
+            }
+          ],
+          "explanation": "Art. 26(6): at least six months, unless Union or national law, for example data protection law, provides otherwise."
+        }
+      ]
+    },
+    {
+      "id": "pflichten-3-2",
+      "blockId": "block_3",
+      "number": 6,
+      "title": "Which label is missing?",
+      "subtitle": "Art. 50: who marks, who discloses",
+      "durationMinutes": 5,
+      "keyConcepts": [
+        "Art. 50",
+        "Deepfake",
+        "Watermark"
+      ],
+      "concept": {
+        "body": "Art. 50 applies from 2 August 2026 and assigns four duties by technology and role:\n\n- **Para. 1 (provider):** systems for direct interaction make clear that people are talking to AI, unless that is obvious.\n- **Para. 2 (provider):** mark generated audio, image, video and text content in a machine-readable way.\n- **Para. 3 (deployer):** inform people about emotion recognition and biometric categorisation.\n- **Para. 4 (deployer):** disclose deepfakes, and AI text on matters of public interest, unless a human reviews it and holds editorial responsibility.\n\nNotices come clearly and at the latest at the first interaction (para. 5). The provider's marking does not replace your disclosure. Breaches cost up to EUR 15 million or 3% of worldwide annual turnover (Art. 99(4)).",
+        "takeaway": "Marking happens at generation, disclosure at publication.",
+        "sources": [
+          {
+            "label": "Regulation (EU) 2024/1689 (AI Act)",
+            "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "bucket-sort",
+        "title": "Find the labelling error",
+        "instructions": "Assign each of the seven cases to the error that makes transparency fail. Every placement is explained at once. Done when all cases are placed.",
+        "props": {
+          "buckets": [
+            {
+              "id": "missing",
+              "label": "Notice missing",
+              "hint": "duty applies, nothing disclosed"
+            },
+            {
+              "id": "machine",
+              "label": "Not machine-readable",
+              "hint": "visible to humans only (para. 2)"
+            },
+            {
+              "id": "over",
+              "label": "Duty does not apply",
+              "hint": "labelled without a trigger"
+            },
+            {
+              "id": "role",
+              "label": "Wrong role",
+              "hint": "duty put on the wrong party"
+            }
+          ],
+          "items": [
+            {
+              "id": "lisa",
+              "text": "The website chatbot greets visitors with: Hi, I'm Lisa from the service team. There is no AI notice.",
+              "bucket": "missing",
+              "why": "Art. 50(1): people must be able to tell they are interacting with AI unless that is obvious."
+            },
+            {
+              "id": "testimonial",
+              "text": "Your agency publishes a generated video in which a real person convincingly praises a product, without any notice.",
+              "bucket": "missing",
+              "why": "Deepfake: the deployer discloses under Art. 50(4) that the content is artificially generated."
+            },
+            {
+              "id": "news",
+              "text": "A publisher releases AI texts about local elections without human review and without a notice.",
+              "bucket": "missing",
+              "why": "AI text on matters of public interest without editorial responsibility: disclose under Art. 50(4)."
+            },
+            {
+              "id": "footnote",
+              "text": "A text generator notes the AI origin only as a clearly visible footnote in the PDF.",
+              "bucket": "machine",
+              "why": "Art. 50(2) requires the provider to mark output in a machine-readable way; a human-readable footnote is not enough."
+            },
+            {
+              "id": "logo",
+              "text": "An image generator only adds a visible logo. Metadata or a watermark are missing.",
+              "bucket": "machine",
+              "why": "The machine-readable marking under para. 2 is missing here too. The Regulation does not prescribe a specific technique."
+            },
+            {
+              "id": "minutes",
+              "text": "Internal meeting summaries carry a large notice as if they were published.",
+              "bucket": "over",
+              "why": "The text duty under para. 4 concerns publications on matters of public interest, not an internal summary. Marking under para. 2 is the provider's job."
+            },
+            {
+              "id": "vendor",
+              "text": "You run a purchased chatbot and assume, unchecked, that only the vendor is responsible for the notice. None appears on the website.",
+              "bucket": "role",
+              "why": "Para. 1 binds the provider. As deployer you still check that the delivered notice reaches people in your integration."
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "pflichten-3-2-c1",
+          "prompt": "Your agency publishes an AI video that makes a real person speak convincingly. Who must disclose it?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Only the provider of the video tool",
+              "correct": false,
+              "feedback": "The provider marks output machine-readably under para. 2. Disclosure on publication falls to the deployer."
+            },
+            {
+              "id": "b",
+              "text": "Nobody, if it is advertising",
+              "correct": false,
+              "feedback": "Advertising is no exception. Only evidently artistic, satirical or fictional works get an adapted form."
+            },
+            {
+              "id": "c",
+              "text": "The agency, as deployer, under Art. 50(4)",
+              "correct": true
+            }
+          ],
+          "explanation": "Whoever publishes a deepfake discloses that it was artificially generated or manipulated (Art. 50(4))."
+        },
+        {
+          "id": "pflichten-3-2-c2",
+          "prompt": "Is a visible footnote saying “AI-generated” enough for Art. 50(2)?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Yes, any visible notice is enough",
+              "correct": false,
+              "feedback": "Para. 2 expressly requires machine-readable marking."
+            },
+            {
+              "id": "b",
+              "text": "No, para. 2 requires the provider to mark output machine-readably",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Yes, if the footnote is on every page",
+              "correct": false,
+              "feedback": "A footnote on every page is still only readable by humans."
+            }
+          ],
+          "explanation": "Marking under para. 2 must be machine-readable and, as far as technically feasible, effective, interoperable, robust and reliable."
+        }
+      ]
+    }
+  ]
+}

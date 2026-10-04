@@ -12,8 +12,9 @@ import {
 /**
  * lesson-layout.test.tsx (regression coverage)
  *
- * Covers the legacy section reader path, driven through a course that has
- * not moved to the lesson engine yet (eu-ai-act-kurs). The lesson-engine
+ * Covers the section reader path (lessons without engine fields), driven
+ * through ki-und-gesellschaft and its canonical engine lesson ids now that
+ * every block course runs on the lesson engine. The lesson-engine
  * dispatch is covered at the end of this file and in
  * components/lesson-engine/lesson-flow.test.tsx.
  *
@@ -235,8 +236,8 @@ beforeEach(() => {
   }
   __resetCacheForTests();
   activateAnonymousProgress();
-  resetProgress("eu-ai-act-kurs");
-  window.history.replaceState({}, "", "/eu-ai-act-kurs/kurs/block_1");
+  resetProgress("ki-und-gesellschaft");
+  window.history.replaceState({}, "", "/ki-und-gesellschaft/kurs/block_1");
   scrollSpy = vi.fn();
   // jsdom does not implement scrollTo; install a spy so we can assert the call.
   Object.defineProperty(window, "scrollTo", {
@@ -270,7 +271,7 @@ function setReducedMotion(matches: boolean) {
 function renderLayout(lessons: readonly Lesson[] = LESSONS) {
   return render(
     <LessonLayout
-      courseSlug="eu-ai-act-kurs"
+      courseSlug="ki-und-gesellschaft"
       lessons={lessons}
       blockTitle="Block 1"
     />,
@@ -329,7 +330,7 @@ describe("<LessonLayout>", () => {
     window.history.replaceState(
       {},
       "",
-      "/eu-ai-act-kurs/kurs/block_1?source=resume#lesson=l2",
+      "/ki-und-gesellschaft/kurs/block_1?source=resume#lesson=l2",
     );
     const firstRender = renderLayout();
     expect(screen.getByTestId("active-title")).toHaveTextContent(
@@ -339,7 +340,7 @@ describe("<LessonLayout>", () => {
     fireEvent.click(
       screen.getByRole("button", { name: "Lektion 1: Erste Lektion" }),
     );
-    expect(window.location.pathname).toBe("/eu-ai-act-kurs/kurs/block_1");
+    expect(window.location.pathname).toBe("/ki-und-gesellschaft/kurs/block_1");
     expect(window.location.search).toBe("?source=resume");
     expect(window.location.hash).toBe("#lesson=l1");
 
@@ -354,7 +355,7 @@ describe("<LessonLayout>", () => {
     window.history.replaceState(
       {},
       "",
-      "/eu-ai-act-kurs/kurs/block_1#lesson=l2",
+      "/ki-und-gesellschaft/kurs/block_1#lesson=l2",
     );
     renderLayout();
 
@@ -365,7 +366,7 @@ describe("<LessonLayout>", () => {
     window.history.replaceState(
       {},
       "",
-      "/eu-ai-act-kurs/kurs/block_1#lesson=l1",
+      "/ki-und-gesellschaft/kurs/block_1#lesson=l1",
     );
     fireEvent(window, new HashChangeEvent("hashchange"));
     expect(screen.getByTestId("active-title")).toHaveTextContent(
@@ -377,7 +378,7 @@ describe("<LessonLayout>", () => {
     window.history.replaceState(
       {},
       "",
-      "/eu-ai-act-kurs/kurs/block_1#lesson=%E0%A4%A",
+      "/ki-und-gesellschaft/kurs/block_1#lesson=%E0%A4%A",
     );
     renderLayout();
     expect(screen.getByTestId("active-title")).toHaveTextContent(
@@ -387,7 +388,7 @@ describe("<LessonLayout>", () => {
     window.history.replaceState(
       {},
       "",
-      "/eu-ai-act-kurs/kurs/block_1#lesson=not-in-this-block",
+      "/ki-und-gesellschaft/kurs/block_1#lesson=not-in-this-block",
     );
     fireEvent(window, new HashChangeEvent("hashchange"));
     expect(screen.getByTestId("active-title")).toHaveTextContent(
@@ -436,15 +437,15 @@ describe("<LessonLayout>", () => {
   });
 
   it("the reader action advances a completed lesson through the bounded hash without completing the next lesson", () => {
-    const first = mkLesson({ id: "block_1_lesson_1", number: 1, title: "Erste Lektion" });
-    const second = mkLesson({ id: "block_1_lesson_2", number: 2, title: "Zweite Lektion" });
+    const first = mkLesson({ id: "zahlen-1-1", number: 1, title: "Erste Lektion" });
+    const second = mkLesson({ id: "zahlen-1-2", number: 2, title: "Zweite Lektion" });
     const { container } = renderLayout([first, second]);
     const action = () => container.querySelector<HTMLElement>("[data-reader-focus-action]")!;
     const persistFixturePrerequisites = (lessonId: string) => act(() => {
-      for (const sectionId of CANONICAL_SECTION_IDS["eu-ai-act-kurs"][lessonId]) {
-        markSectionRead("eu-ai-act-kurs", lessonId, sectionId);
+      for (const sectionId of CANONICAL_SECTION_IDS["ki-und-gesellschaft"][lessonId]) {
+        markSectionRead("ki-und-gesellschaft", lessonId, sectionId);
       }
-      saveLessonQuizScore("eu-ai-act-kurs", lessonId, 1, 1);
+      saveLessonQuizScore("ki-und-gesellschaft", lessonId, 1, 1);
     });
 
     expect(action()).toHaveTextContent("Aufgabe öffnen");
@@ -453,33 +454,27 @@ describe("<LessonLayout>", () => {
     expect(action()).toHaveTextContent("Weiter");
     fireEvent.click(action());
 
-    expect(window.location.hash).toBe("#lesson=block_1_lesson_2");
+    expect(window.location.hash).toBe("#lesson=zahlen-1-2");
     expect(screen.getByTestId("active-title")).toHaveTextContent("Zweite Lektion");
     expect(action()).toHaveTextContent("Aufgabe öffnen");
-    expect(isLessonCompleted("eu-ai-act-kurs", second.id)).toBe(false);
+    expect(isLessonCompleted("ki-und-gesellschaft", second.id)).toBe(false);
     expect(container.querySelector("[data-reader-focus-position]")).toHaveTextContent("2 / 2");
 
     persistFixturePrerequisites(second.id);
     fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
     expect(action()).toHaveTextContent("Zum Kurs");
-    expect(action()).toHaveAttribute("href", "/eu-ai-act-kurs/kurs");
+    expect(action()).toHaveAttribute("href", "/ki-und-gesellschaft/kurs");
   });
 
   it("rejects completion writes until persisted section and quiz evidence exist", () => {
     const section: LessonSection = {
-      id: "block_1_lesson_1_section_1",
+      id: "zahlen-1-1_exercise",
       title: "Prüfabschnitt",
       readTimeMinutes: 2,
       content: "Prüfe den Fall.",
     };
-    const secondSection: LessonSection = {
-      id: "block_1_lesson_1_section_2",
-      title: "Transferabschnitt",
-      readTimeMinutes: 2,
-      content: "Übertrage die Entscheidung.",
-    };
     const question: LessonQuizQuestion = {
-      id: "block_1_lesson_1_question_1",
+      id: "zahlen-1-1-question_1",
       questionText: "Was gilt?",
       answerOptions: [
         { id: "a", text: "A", isCorrect: true },
@@ -489,48 +484,36 @@ describe("<LessonLayout>", () => {
     };
     const protectedLesson: Lesson = {
       ...mkLesson({
-        id: "block_1_lesson_1",
+        id: "zahlen-1-1",
         number: 1,
         title: "Geschützte Lektion",
       }),
-      sections: [section, secondSection],
+      sections: [section],
       quiz: [question],
     };
 
     renderLayout([protectedLesson]);
     fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
-    expect(isLessonCompleted("eu-ai-act-kurs", protectedLesson.id)).toBe(
+    expect(isLessonCompleted("ki-und-gesellschaft", protectedLesson.id)).toBe(
       false,
     );
     expect(document.querySelector("[data-reader-focus-action]")).toHaveTextContent("Aufgabe öffnen");
 
     fireEvent.click(screen.getByRole("button", { name: "review-section" }));
     fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
-    expect(isLessonCompleted("eu-ai-act-kurs", protectedLesson.id)).toBe(
-      false,
-    );
-
-    markSectionRead("eu-ai-act-kurs", protectedLesson.id, secondSection.id);
-    // The EU AI Act lesson authors three canonical sections.
-    markSectionRead(
-      "eu-ai-act-kurs",
-      protectedLesson.id,
-      "block_1_lesson_1_section_3",
-    );
-    fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
-    expect(isLessonCompleted("eu-ai-act-kurs", protectedLesson.id)).toBe(
+    expect(isLessonCompleted("ki-und-gesellschaft", protectedLesson.id)).toBe(
       false,
     );
 
     fireEvent.click(screen.getByRole("button", { name: "finish-quiz" }));
     fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
-    expect(isLessonCompleted("eu-ai-act-kurs", protectedLesson.id)).toBe(
+    expect(isLessonCompleted("ki-und-gesellschaft", protectedLesson.id)).toBe(
       true,
     );
     expect(
       isCheckpointDone(
         protectedLesson.id,
-        lessonCompletionEvidenceCheckpointId("eu-ai-act-kurs"),
+        lessonCompletionEvidenceCheckpointId("ki-und-gesellschaft"),
       ),
     ).toBe(true);
     expect(screen.getByTestId("evidence-backed-completion")).toHaveTextContent(
@@ -541,14 +524,14 @@ describe("<LessonLayout>", () => {
 
   it("invalidates foundation-course writes when ownership becomes unresolved", () => {
     const section: LessonSection = {
-      id: "block_1_lesson_1_section_1",
+      id: "zahlen-1-1_exercise",
       title: "Prüfabschnitt",
       readTimeMinutes: 2,
       content: "Prüfe den Fall.",
     };
     const protectedLesson: Lesson = {
       ...mkLesson({
-        id: "block_1_lesson_1",
+        id: "zahlen-1-1",
         number: 1,
         title: "Geschützte Lektion",
       }),
@@ -568,7 +551,7 @@ describe("<LessonLayout>", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "review-section" }));
     fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
-    expect(isLessonCompleted("eu-ai-act-kurs", protectedLesson.id)).toBe(
+    expect(isLessonCompleted("ki-und-gesellschaft", protectedLesson.id)).toBe(
       false,
     );
     expect(screen.getByTestId("evidence-backed-completion")).toHaveTextContent(
@@ -578,19 +561,19 @@ describe("<LessonLayout>", () => {
 
   it("retains but does not present a legacy completion without the evidence checkpoint", () => {
     const section: LessonSection = {
-      id: "block_1_lesson_1_section_1",
+      id: "zahlen-1-1_exercise",
       title: "Prüfabschnitt",
       readTimeMinutes: 2,
       content: "Prüfe den Fall.",
     };
     const secondSection: LessonSection = {
-      id: "block_1_lesson_1_section_2",
+      id: "zahlen-1-1_concept",
       title: "Transferabschnitt",
       readTimeMinutes: 2,
       content: "Übertrage die Entscheidung.",
     };
     const question: LessonQuizQuestion = {
-      id: "block_1_lesson_1_q1",
+      id: "zahlen-1-1-q1",
       questionText: "Was gilt?",
       answerOptions: [
         { id: "a", text: "A", isCorrect: true },
@@ -600,7 +583,7 @@ describe("<LessonLayout>", () => {
     };
     const legacyLesson: Lesson = {
       ...mkLesson({
-        id: "block_1_lesson_1",
+        id: "zahlen-1-1",
         number: 1,
         title: "Frühere Lektion",
       }),
@@ -608,11 +591,11 @@ describe("<LessonLayout>", () => {
       quiz: [question],
     };
 
-    markSectionRead("eu-ai-act-kurs", legacyLesson.id, section.id);
-    markSectionRead("eu-ai-act-kurs", legacyLesson.id, secondSection.id);
-    saveLessonQuizScore("eu-ai-act-kurs", legacyLesson.id, 1, 1);
-    markLessonCompleted("eu-ai-act-kurs", legacyLesson.id);
-    expect(isLessonCompleted("eu-ai-act-kurs", legacyLesson.id)).toBe(true);
+    markSectionRead("ki-und-gesellschaft", legacyLesson.id, section.id);
+    markSectionRead("ki-und-gesellschaft", legacyLesson.id, secondSection.id);
+    saveLessonQuizScore("ki-und-gesellschaft", legacyLesson.id, 1, 1);
+    markLessonCompleted("ki-und-gesellschaft", legacyLesson.id);
+    expect(isLessonCompleted("ki-und-gesellschaft", legacyLesson.id)).toBe(true);
 
     renderLayout([legacyLesson]);
 
@@ -622,7 +605,7 @@ describe("<LessonLayout>", () => {
     expect(
       isCheckpointDone(
         legacyLesson.id,
-        lessonCompletionEvidenceCheckpointId("eu-ai-act-kurs"),
+        lessonCompletionEvidenceCheckpointId("ki-und-gesellschaft"),
       ),
     ).toBe(false);
   });
@@ -658,15 +641,15 @@ describe("<LessonLayout>", () => {
 
 describe("<LessonLayout> usage events", () => {
   const COMPLETABLE_LESSONS: readonly Lesson[] = [
-    mkLesson({ id: "block_1_lesson_1", number: 1, title: "Erste Lektion" }),
-    mkLesson({ id: "block_1_lesson_2", number: 2, title: "Zweite Lektion" }),
+    mkLesson({ id: "zahlen-1-1", number: 1, title: "Erste Lektion" }),
+    mkLesson({ id: "zahlen-1-2", number: 2, title: "Zweite Lektion" }),
   ];
   const READABLE_LESSONS: readonly Lesson[] = [
     {
-      ...mkLesson({ id: "block_1_lesson_1", number: 1, title: "Erste Lektion" }),
+      ...mkLesson({ id: "zahlen-1-1", number: 1, title: "Erste Lektion" }),
       sections: [
         {
-          id: "block_1_lesson_1_section_1",
+          id: "zahlen-1-1_exercise",
           title: "Prüfabschnitt",
           readTimeMinutes: 2,
           content: "Prüfe den Fall.",
@@ -692,7 +675,7 @@ describe("<LessonLayout> usage events", () => {
       activateAnonymousProgress();
     });
     expect(usageEvents.trackLessonReached.mock.calls).toEqual([
-      ["eu-ai-act-kurs", "l01"],
+      ["ki-und-gesellschaft", "l01"],
     ]);
 
     fireEvent.click(
@@ -702,8 +685,8 @@ describe("<LessonLayout> usage events", () => {
       screen.getByRole("button", { name: "Lektion 1: Erste Lektion" }),
     );
     expect(usageEvents.trackLessonReached.mock.calls).toEqual([
-      ["eu-ai-act-kurs", "l01"],
-      ["eu-ai-act-kurs", "l02"],
+      ["ki-und-gesellschaft", "l01"],
+      ["ki-und-gesellschaft", "l02"],
     ]);
   });
 
@@ -711,7 +694,7 @@ describe("<LessonLayout> usage events", () => {
     window.history.replaceState(
       {},
       "",
-      "/eu-ai-act-kurs/kurs/block_1#lesson=block_1_lesson_2",
+      "/ki-und-gesellschaft/kurs/block_1#lesson=zahlen-1-2",
     );
     renderLayout(COMPLETABLE_LESSONS);
 
@@ -719,7 +702,7 @@ describe("<LessonLayout> usage events", () => {
       "Zweite Lektion",
     );
     expect(usageEvents.trackLessonReached.mock.calls).toEqual([
-      ["eu-ai-act-kurs", "l02"],
+      ["ki-und-gesellschaft", "l02"],
     ]);
   });
 
@@ -754,11 +737,11 @@ describe("<LessonLayout> usage events", () => {
     fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
 
     expect(usageEvents.trackLessonCompleted.mock.calls).toEqual([
-      ["eu-ai-act-kurs", "l01"],
-      ["eu-ai-act-kurs", "l02"],
+      ["ki-und-gesellschaft", "l01"],
+      ["ki-und-gesellschaft", "l02"],
     ]);
     expect(usageEvents.trackCourseStarted.mock.calls).toEqual([
-      ["eu-ai-act-kurs"],
+      ["ki-und-gesellschaft"],
     ]);
   });
 
@@ -780,7 +763,7 @@ describe("<LessonLayout> usage events", () => {
     fireEvent.click(screen.getByRole("button", { name: "review-section" }));
 
     expect(usageEvents.trackCourseStarted.mock.calls).toEqual([
-      ["eu-ai-act-kurs"],
+      ["ki-und-gesellschaft"],
     ]);
     expect(usageEvents.trackLessonCompleted).not.toHaveBeenCalled();
   });
@@ -797,7 +780,7 @@ describe("<LessonLayout> usage events", () => {
         ...READABLE_LESSONS[0]!,
         sections: [
           {
-            id: "block_1_lesson_1_section_2",
+            id: "zahlen-1-1_concept",
             title: "Zweiter Prüfabschnitt",
             readTimeMinutes: 2,
             content: "Prüfe den nächsten Fall.",
@@ -809,16 +792,16 @@ describe("<LessonLayout> usage events", () => {
     fireEvent.click(screen.getByRole("button", { name: "review-section" }));
 
     expect(usageEvents.trackCourseStarted.mock.calls).toEqual([
-      ["eu-ai-act-kurs"],
+      ["ki-und-gesellschaft"],
     ]);
   });
 
   it("does not report a start on completion when a section read was persisted earlier", () => {
     act(() => {
       markSectionRead(
-        "eu-ai-act-kurs",
-        "block_1_lesson_1",
-        "block_1_lesson_1_section_1",
+        "ki-und-gesellschaft",
+        "zahlen-1-1",
+        "zahlen-1-1_exercise",
       );
     });
     vi.mocked(recordLessonCompletionEvidenceDurably).mockReturnValueOnce(true);
@@ -827,7 +810,7 @@ describe("<LessonLayout> usage events", () => {
     fireEvent.click(screen.getByRole("button", { name: "mark-complete" }));
 
     expect(usageEvents.trackLessonCompleted.mock.calls).toEqual([
-      ["eu-ai-act-kurs", "l01"],
+      ["ki-und-gesellschaft", "l01"],
     ]);
     expect(usageEvents.trackCourseStarted).not.toHaveBeenCalled();
   });

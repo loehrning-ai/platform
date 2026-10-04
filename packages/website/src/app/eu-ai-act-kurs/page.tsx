@@ -33,19 +33,19 @@ const LANDING_COPY = {
     metadata: {
       title: "EU AI Act Kurs: Rollen, Risiken und Pflichten",
       description:
-        "Kostenloser EU-AI-Act-Kurs mit 6 Blöcken und 24 Lektionen zu Rollen, Risikoklassen, Hochrisiko-Systemen, GPAI, Transparenz und Umsetzung.",
+        "Kostenloser EU-AI-Act-Kurs: 5 Module, 10 Lektionen mit Übung, ca. 1 Std. Rolle bestimmen, Risikoklasse einordnen, Pflichtenliste erzeugen, Bußgeldrahmen rechnen.",
     },
     graph: {
       home: "Start",
       courseName: "EU AI Act Kurs: Rollen, Risiken und Pflichten",
       description:
-        "Onlinekurs zu Geltungsbereich, Rollen, Risikoklassen, Hochrisiko-Systemen, GPAI, Transparenz und Umsetzung der Verordnung (EU) 2024/1689 in geänderter Fassung.",
+        "Onlinekurs mit Übungen zu Rolle, Stichtagen, Risikoklasse, Pflichten, Kennzeichnung, Bußgeldern und Umsetzung der Verordnung (EU) 2024/1689 in geänderter Fassung.",
       audience:
         "Erwachsene und beruflich Verantwortliche ohne juristische Vorkenntnisse",
       teaches: [
-        "Rollen und Geltungsbereich der EU-KI-Verordnung einordnen",
-        "Risikoklassen und einschlägige Pflichten unterscheiden",
-        "Umsetzungsmaßnahmen dokumentiert priorisieren",
+        "Rolle und Stichtage nach der EU-KI-Verordnung bestimmen",
+        "Anwendungsfälle einer Risikoklasse zuordnen und Pflichten ableiten",
+        "Bußgeldrahmen einschätzen und einen KI-Inventareintrag erstellen",
       ],
     },
     eyebrow: "EU AI Act Kurs · Grundlagen · kostenlos",
@@ -55,12 +55,12 @@ const LANDING_COPY = {
       "Sie bestimmen für ein KI-Tool aus Ihrem Unternehmen die Risikoklasse, Ihre Rolle und Ihre Pflichten.",
     start: "Kurs mit Lernkonto starten",
     allCourses: "Alle Kurse",
-    imageLabel: "EU AI Act · 6 Blöcke · 24 Lektionen",
+    imageLabel: "EU AI Act · 5 Module · 10 Lektionen",
     facts: [
-      "6 Blöcke",
-      "24 Lektionen",
-      "ca. 1 Std. 50 Min. Lernzeit",
-      "Abschlussquiz mit 27 Fragen",
+      "5 Module",
+      "10 Lektionen mit Übung",
+      "ca. 1 Std. Lernzeit",
+      "Abschlussquiz mit 20 Fragen",
       "VO (EU) 2024/1689, Fassung seit 27.\u00a0Juli\u00a02026",
     ],
     legalHeading: "Was Artikel 4 verlangt",
@@ -70,21 +70,23 @@ const LANDING_COPY = {
     minutes: (count: number) => `${count} Min.`,
     audienceHeading: "Für wen",
     audience: [
-      { title: "Blöcke 1 und 2: alle, die KI-Tools auswählen oder nutzen" },
-      { title: "Ab Block 3: Datenschutz, IT, Compliance, Einkauf, Personal, Fachverantwortliche" },
+      { title: "Module 1 und 2: alle, die KI-Tools auswählen oder nutzen" },
+      { title: "Ab Modul 3: Datenschutz, IT, Compliance, Einkauf, Personal, Fachverantwortliche" },
       { title: "Ohne Programmier- oder Jura-Vorkenntnisse" },
     ],
     outcomes: [
-      { title: "Ihre Rolle als Anbieter, Betreiber, Einführer oder Händler bestimmen" },
-      { title: "Verbotene Praktiken, Hochrisiko-Systeme und Transparenzfälle unterscheiden" },
-      { title: "Pflichten mit Zuständigen, Fristen, Rechtsstand und Quelle auflisten" },
+      { title: "Ihre Rolle bestimmen, auch wenn sie durch eigene Marke oder Änderung kippt" },
+      { title: "Einen Anwendungsfall in sechs Fragen einer Risikoklasse zuordnen" },
+      { title: "Ihre Pflichtenliste mit Artikeln und Stichtag erzeugen" },
+      { title: "Den Bußgeldrahmen nach Art. 99 einschätzen" },
+      { title: "Mit einem KI-Inventareintrag und 30-Tage-Plan starten" },
     ],
     // The EU AI Act course addresses the reader with "Sie" (CONTENT_GUIDE).
     outcomesHeading: "Was Sie danach können",
     evidenceHeading: "Was der Teilnahmenachweis belegt",
     evidence: [
       "Er dokumentiert den Abschluss dieses Kurses und das Ergebnis des lokalen Abschlussquiz.",
-      "Zeitabhängige Rechtsangaben im Kurs wurden zuletzt am 28.\u00a0Juli\u00a02026 geprüft.",
+      "Zeitabhängige Rechtsangaben im Kurs wurden zuletzt am 4.\u00a0Oktober\u00a02026 geprüft.",
     ],
     disclaimerLabel: "Hinweis:",
     disclaimer:
@@ -99,19 +101,19 @@ const LANDING_COPY = {
     metadata: {
       title: "EU AI Act Course: roles, risks, and duties",
       description:
-        "Free EU AI Act course with 6 blocks and 24 lessons on roles, risk classification, high-risk systems, GPAI, transparency, and implementation.",
+        "Free EU AI Act course: 5 modules, 10 hands-on lessons, about 1 hour. Determine your role, classify use cases, generate your obligation list, work out the fine range.",
     },
     graph: {
       home: "Home",
       courseName: "EU AI Act Course: roles, risks, and duties",
       description:
-        "Online course on scope, roles, risk classification, high-risk systems, GPAI, transparency, and implementation of Regulation (EU) 2024/1689 as amended.",
+        "Hands-on online course on role, application dates, risk class, obligations, labelling, fines, and implementation of Regulation (EU) 2024/1689 as amended.",
       audience:
         "Adults and workplace decision-makers without a legal background",
       teaches: [
-        "Classify roles and scope under the EU AI Act",
-        "Distinguish risk categories and applicable duties",
-        "Prioritize implementation measures with traceable evidence",
+        "Determine role and application dates under the EU AI Act",
+        "Assign use cases to a risk class and derive the obligations",
+        "Estimate the fine range and create an AI inventory entry",
       ],
     },
     eyebrow: "EU AI Act Course · Foundations · free",
@@ -121,12 +123,12 @@ const LANDING_COPY = {
       "For one AI tool your company uses, you work out its risk class, your role and your duties.",
     start: "Start with a learning account",
     allCourses: "All courses",
-    imageLabel: "EU AI Act · 6 blocks · 24 lessons",
+    imageLabel: "EU AI Act · 5 modules · 10 lessons",
     facts: [
-      "6 blocks",
-      "24 lessons",
-      "About 1 hr 50 min of study",
-      "Final quiz with 27 questions",
+      "5 modules",
+      "10 hands-on lessons",
+      "About 1 hr of study",
+      "Final quiz with 20 questions",
       "Reg. (EU) 2024/1689, version of 27\u00a0July\u00a02026",
     ],
     legalHeading: "What Article 4 requires",
@@ -136,20 +138,22 @@ const LANDING_COPY = {
     minutes: (count: number) => `${count} min`,
     audienceHeading: "Who it is for",
     audience: [
-      { title: "Blocks 1 and 2: anyone choosing or using AI tools" },
-      { title: "From block 3: data protection, IT, compliance, procurement, HR, business owners" },
+      { title: "Modules 1 and 2: anyone choosing or using AI tools" },
+      { title: "From module 3: data protection, IT, compliance, procurement, HR, business owners" },
       { title: "No coding or legal background needed" },
     ],
     outcomes: [
-      { title: "Identify your role as provider, deployer, importer or distributor" },
-      { title: "Tell prohibited practices, high-risk systems and transparency cases apart" },
-      { title: "List duties with owners, deadlines, legal status and source" },
+      { title: "Determine your role, including when your own brand or a modification flips it" },
+      { title: "Assign a use case to a risk class in six questions" },
+      { title: "Generate your obligation list with articles and deadline" },
+      { title: "Estimate the fine range under Art. 99" },
+      { title: "Start with an AI inventory entry and a 30-day plan" },
     ],
     outcomesHeading: "What you can do afterwards",
     evidenceHeading: "What the completion record establishes",
     evidence: [
       "It records completion of this course and the result of the locally administered final quiz.",
-      "Time-dependent legal statements in the course were last reviewed on 28 July 2026.",
+      "Time-dependent legal statements in the course were last reviewed on 4 October 2026.",
     ],
     disclaimerLabel: "Scope:",
     disclaimer:
@@ -233,7 +237,7 @@ function courseGraph(locale: Locale) {
         hasCourseInstance: {
           "@type": "CourseInstance",
           courseMode: "online",
-          courseWorkload: "PT1H50M",
+          courseWorkload: "PT1H",
           inLanguage: locale,
         },
       },

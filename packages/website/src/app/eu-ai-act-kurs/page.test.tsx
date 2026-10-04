@@ -51,7 +51,11 @@ describe("EU AI Act course landing page", () => {
     expect(
       screen.getByRole("heading", { name: /Map roles, risks, and duties/ }),
     ).toBeInTheDocument();
-    expect(screen.getByText("24 lessons")).toBeInTheDocument();
+    expect(screen.getByText("10 hands-on lessons")).toBeInTheDocument();
+    expect(screen.getByText("Final quiz with 20 questions")).toBeInTheDocument();
+    // The course plan lists all five modules by title.
+    expect(screen.getByText("Does it apply to me?")).toBeInTheDocument();
+    expect(screen.getByText("Put it into practice")).toBeInTheDocument();
     expect(
       screen.getByText(/Article 4 has applied since 2 February 2025/),
     ).toBeInTheDocument();

@@ -82,7 +82,7 @@ function undersizedControls(file: string): string[] {
 }
 
 describe("lesson-engine design contract", () => {
-  it("covers the reader, the overview and all eight lab widgets", () => {
+  it("covers the reader, the overview and every lab widget", () => {
     expect(FILES.map(name)).toEqual(
       expect.arrayContaining([
         "lesson-engine/lesson-flow.tsx",
@@ -100,7 +100,9 @@ describe("lesson-engine design contract", () => {
       "widgets/lab/doc-builder.tsx",
       "widgets/lab/live-prompt-ab.tsx",
       "widgets/lab/pii-redactor.tsx",
+      "widgets/lab/sequence-order.tsx",
       "widgets/lab/threshold-lab.tsx",
+      "widgets/lab/timeline-check.tsx",
     ]);
   });
 

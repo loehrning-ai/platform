@@ -1,0 +1,417 @@
+{
+  "blockId": "block_1",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-04-05",
+  "format": "lesson-engine/v1",
+  "reviewCadence": "legal",
+  "riskClass": "legal",
+  "triggerEvents": [
+    "eu-ai-act-amendment",
+    "commission-qa-update"
+  ],
+  "lessons": [
+    {
+      "id": "rolle-1-1",
+      "blockId": "block_1",
+      "number": 1,
+      "title": "Your role decides your obligations",
+      "subtitle": "Provider, deployer, importer, distributor and the role flip",
+      "durationMinutes": 6,
+      "keyConcepts": [
+        "Provider",
+        "Deployer",
+        "Role flip",
+        "Art. 25"
+      ],
+      "concept": {
+        "body": "Your obligations attach to your role, not to the tool. Art. 3 of Regulation (EU) 2024/1689 distinguishes:\n\n- **Provider (point 3):** develops an AI system, or has it developed, and places it on the market under its own name.\n- **Deployer (point 4):** uses an AI system under its own authority in a professional context. Most companies start here.\n- **Importer (point 6) and distributor (point 7):** bring other parties' systems into the EU or resell them.\n\nThe role flips under Art. 25: whoever puts their name on a high-risk system, substantially modifies it, or changes a system's purpose so that it becomes high-risk counts as its provider.\n\nPurely personal use is excluded (Art. 2(10)). Providers outside the EU are covered as soon as the output is used in the EU (Art. 2(1)(c)).",
+        "takeaway": "Settle the role per system first, then the obligations. Your own brand or a substantial modification makes you the provider.",
+        "sources": [
+          {
+            "label": "Regulation (EU) 2024/1689 (AI Act)",
+            "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "decision-wizard",
+        "title": "Determine the role in five cases",
+        "instructions": "Walk through the questions for each case. At the end you see whether your role fits the case and why. Done after the fifth case.",
+        "props": {
+          "start": "use",
+          "nodes": [
+            {
+              "id": "use",
+              "question": "What is the AI system used for?",
+              "options": [
+                {
+                  "label": "Purely personal use by a private individual",
+                  "result": "out"
+                },
+                {
+                  "label": "Professionally or for an organisation",
+                  "next": "brand"
+                }
+              ]
+            },
+            {
+              "id": "brand",
+              "question": "Who developed the system, or had it developed, and places it on the market under their own name?",
+              "options": [
+                {
+                  "label": "We do",
+                  "result": "provider"
+                },
+                {
+                  "label": "Another company",
+                  "next": "flip"
+                }
+              ]
+            },
+            {
+              "id": "flip",
+              "question": "Have you done any of these to the other company's system?",
+              "help": "Put your name or trademark on a high-risk system, substantially modified a high-risk system, or changed a system's intended purpose so that it becomes high-risk (Art. 25(1)).",
+              "options": [
+                {
+                  "label": "Yes, at least one of them",
+                  "result": "flip"
+                },
+                {
+                  "label": "No, the system stays as delivered",
+                  "next": "what"
+                }
+              ]
+            },
+            {
+              "id": "what",
+              "question": "What do you do with the system?",
+              "options": [
+                {
+                  "label": "We use it under our own authority",
+                  "result": "deployer"
+                },
+                {
+                  "label": "We are the first to place it on the EU market; the provider is based outside the EU",
+                  "result": "importer"
+                },
+                {
+                  "label": "We resell it; it is already on the EU market",
+                  "result": "distributor"
+                }
+              ]
+            }
+          ],
+          "results": [
+            {
+              "id": "out",
+              "tone": "neutral",
+              "title": "Not covered: purely personal use",
+              "body": "Art. 2(10) excludes natural persons who use AI purely for personal, non-professional activity. If the same person writes customer letters with it for their employer, the employer is the deployer.",
+              "source": "Art. 2(10) AI Act"
+            },
+            {
+              "id": "provider",
+              "tone": "warn",
+              "title": "Provider (Art. 3(3))",
+              "body": "You carry the provider obligations. For high-risk systems that is Art. 16 with conformity assessment, technical documentation and registration; for transparency cases the AI notice and machine-readable marking under Art. 50(1) and (2).",
+              "actions": [
+                "Determine the risk class (module 2)",
+                "Generate the provider obligation list (module 3)"
+              ],
+              "source": "Art. 3(3), Art. 16 AI Act"
+            },
+            {
+              "id": "flip",
+              "tone": "bad",
+              "title": "Role flip: you become the provider (Art. 25)",
+              "body": "For this system you count as the provider, with the obligations under Art. 16. The original provider no longer counts as its provider but must give you the necessary information and cooperate with you.",
+              "actions": [
+                "Document the change and test it against Art. 3(23)",
+                "Request documents from the original provider (Art. 25(2))"
+              ],
+              "source": "Art. 25 AI Act"
+            },
+            {
+              "id": "deployer",
+              "tone": "good",
+              "title": "Deployer (Art. 3(4))",
+              "body": "The most common case for small and mid-sized firms. Art. 4 (AI literacy) applies to every system. Further obligations depend on the risk class: Art. 26 for high-risk systems, Art. 50(3) and (4) for deepfakes, emotion recognition or biometric categorisation.",
+              "actions": [
+                "Determine the risk class (module 2)",
+                "Generate the deployer obligation list (module 3)"
+              ],
+              "source": "Art. 3(4), Art. 26 AI Act"
+            },
+            {
+              "id": "importer",
+              "tone": "warn",
+              "title": "Importer (Art. 3(6))",
+              "body": "Before you place a high-risk system on the market, check under Art. 23 that the conformity assessment, technical documentation, CE marking with declaration of conformity and the provider's authorised representative are in place.",
+              "source": "Art. 3(6), Art. 23 AI Act"
+            },
+            {
+              "id": "distributor",
+              "tone": "warn",
+              "title": "Distributor (Art. 3(7))",
+              "body": "Before you make a high-risk system available, check the CE marking, EU declaration of conformity and instructions for use under Art. 24. Put your own name on it and you become the provider (Art. 25).",
+              "source": "Art. 3(7), Art. 24 AI Act"
+            }
+          ],
+          "scenarios": [
+            {
+              "id": "advisor",
+              "text": "A tax firm uses a purchased AI assistant, unchanged, to draft client letters.",
+              "expected": "deployer",
+              "why": "Someone else's system, used under its own authority, unchanged: deployer."
+            },
+            {
+              "id": "machine",
+              "text": "A machine builder retrains a purchased AI safety module (high-risk under Annex I) on its own data, substantially modifying it, and sells the machine under its own brand.",
+              "expected": "flip",
+              "why": "Substantial modification and its own brand on a high-risk system: role flip under Art. 25."
+            },
+            {
+              "id": "import",
+              "text": "An HR consultant is the first to place a US provider's recruiting bot on the EU market; the provider has no EU establishment.",
+              "expected": "importer",
+              "why": "First placing of a non-EU system on the EU market: importer."
+            },
+            {
+              "id": "vendor",
+              "text": "A software company develops a customer service chatbot and sells it under its own name.",
+              "expected": "provider",
+              "why": "Own development under its own name: provider."
+            },
+            {
+              "id": "holiday",
+              "text": "An employee plans a personal holiday with a chatbot.",
+              "expected": "out",
+              "why": "Purely personal use is excluded (Art. 2(10))."
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "rolle-1-1-c1",
+          "prompt": "A systems integrator sells someone else's high-risk system under its own brand. What is its role for this system?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Distributor",
+              "correct": false,
+              "feedback": "A distributor passes a system on unchanged under someone else's name."
+            },
+            {
+              "id": "b",
+              "text": "Provider under Art. 25",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Deployer",
+              "correct": false,
+              "feedback": "A deployer uses a system itself. Here it is sold under the integrator's own brand."
+            }
+          ],
+          "explanation": "Whoever puts their name or trademark on a high-risk system counts as its provider, with the obligations under Art. 16."
+        },
+        {
+          "id": "rolle-1-1-c2",
+          "prompt": "A US provider with no EU establishment supplies AI output that a company in Bavaria uses. Does the AI Act apply to the US provider?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Yes, because the output is used in the EU (Art. 2(1)(c))",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "No, because it is based outside the EU",
+              "correct": false,
+              "feedback": "Location alone does not decide it. Art. 2(1)(c) attaches to the use of the output in the EU."
+            },
+            {
+              "id": "c",
+              "text": "Only if its servers are in the EU",
+              "correct": false,
+              "feedback": "Server location is not a criterion in the Regulation."
+            }
+          ],
+          "explanation": "The Regulation covers providers and deployers outside the EU as soon as their system's output is used in the EU, so a location abroad does not get around it."
+        }
+      ]
+    },
+    {
+      "id": "zeitplan-1-2",
+      "blockId": "block_1",
+      "number": 2,
+      "title": "What applies today, and what is still to come?",
+      "subtitle": "The timeline, checked against today's date",
+      "durationMinutes": 5,
+      "keyConcepts": [
+        "Application date",
+        "Art. 113",
+        "Regulation (EU) 2026/1744"
+      ],
+      "concept": {
+        "body": "Regulation (EU) 2024/1689 entered into force on 1 August 2024 and applies in stages (Art. 113). Regulation (EU) 2026/1744, in force since 27 July 2026, moved the high-risk timeline.\n\n| Applies from | What |\n|---|---|\n| 2 February 2025 | Art. 4 (AI literacy), prohibitions under Art. 5 |\n| 2 August 2025 | GPAI models, governance, penalty framework |\n| 2 August 2026 | most remaining provisions, including Art. 50 |\n| 2 December 2027 | high-risk under Art. 6(2) and Annex III |\n| 2 August 2028 | high-risk under Art. 6(1) and Annex I |\n\nEach deadline belongs to an obligation, not to a company. Systems placed on the market before a deadline have transition rules; a substantial modification can end them.",
+        "takeaway": "Look up the deadline per obligation and compare it with today instead of planning by feel.",
+        "sources": [
+          {
+            "label": "Regulation (EU) 2024/1689 (AI Act)",
+            "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+          },
+          {
+            "label": "Regulation (EU) 2026/1744"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "timeline-check",
+        "title": "Check six obligations against today",
+        "instructions": "Decide for each obligation whether it applies today. The timeline uses today's date and shows after each answer since when, or from when, it applies. Done once all six are answered.",
+        "props": {
+          "milestones": [
+            {
+              "id": "force",
+              "date": "2024-08-01",
+              "title": "AI Act enters into force",
+              "body": "Obligations then apply in stages.",
+              "source": "Art. 113 AI Act"
+            },
+            {
+              "id": "literacy",
+              "date": "2025-02-02",
+              "title": "AI literacy (Art. 4) and prohibitions (Art. 5)",
+              "source": "Art. 113(a) AI Act"
+            },
+            {
+              "id": "gpai",
+              "date": "2025-08-02",
+              "title": "GPAI models, governance, penalty framework",
+              "source": "Art. 113(b) AI Act"
+            },
+            {
+              "id": "omnibus",
+              "date": "2026-07-27",
+              "title": "Amending Regulation (EU) 2026/1744 in force",
+              "body": "Amends Art. 4 and the high-risk timeline, among other things.",
+              "source": "Regulation (EU) 2026/1744"
+            },
+            {
+              "id": "general",
+              "date": "2026-08-02",
+              "title": "Most remaining provisions, including Art. 50",
+              "body": "National supervision and enforcement begin.",
+              "source": "Art. 113 AI Act, Commission FAQ"
+            },
+            {
+              "id": "annex3",
+              "date": "2027-12-02",
+              "title": "High-risk: stand-alone systems under Annex III",
+              "source": "Regulation (EU) 2026/1744"
+            },
+            {
+              "id": "annex1",
+              "date": "2028-08-02",
+              "title": "High-risk: product-embedded systems under Annex I",
+              "source": "Regulation (EU) 2026/1744"
+            }
+          ],
+          "questions": [
+            {
+              "id": "literacy",
+              "text": "Your sales team uses an AI tool. You must take AI literacy measures (Art. 4).",
+              "milestone": "literacy",
+              "why": "Art. 4 has applied since 2 February 2025 to all providers and deployers, whatever the risk class."
+            },
+            {
+              "id": "emotion",
+              "text": "Software that infers emotions from application videos is prohibited (Art. 5(1)(f)).",
+              "milestone": "literacy",
+              "why": "The prohibitions have applied since 2 February 2025, with no transition period and no SME exemption."
+            },
+            {
+              "id": "vendor-docs",
+              "text": "The provider of your language model must give downstream providers the information listed in Annex XII (Art. 53).",
+              "milestone": "gpai",
+              "why": "The obligations for GPAI models (Chapter V) have applied since 2 August 2025."
+            },
+            {
+              "id": "chatbot",
+              "text": "Your website chatbot must make clear that people are talking to an AI (Art. 50(1)).",
+              "milestone": "general",
+              "why": "Art. 50 is among the provisions that apply from 2 August 2026."
+            },
+            {
+              "id": "cv",
+              "text": "The deployer obligations under Art. 26 apply to your purchased CV ranking tool.",
+              "milestone": "annex3",
+              "why": "CV ranking falls under Annex III point 4. Regulation (EU) 2026/1744 set these high-risk rules to apply from 2 December 2027."
+            },
+            {
+              "id": "machine",
+              "text": "The AI safety component in your machine (Annex I) needs high-risk conformity.",
+              "milestone": "annex1",
+              "why": "For product-embedded systems under Art. 6(1) and Annex I the high-risk rules apply from 2 August 2028."
+            }
+          ],
+          "note": "The check uses today's date on your device. Systems placed on the market before a deadline have their own transition rules; a substantial modification can end them."
+        }
+      },
+      "checks": [
+        {
+          "id": "zeitplan-1-2-c1",
+          "prompt": "From when do the deployer obligations under Art. 26 apply to a stand-alone high-risk system under Annex III?",
+          "options": [
+            {
+              "id": "a",
+              "text": "2 August 2026",
+              "correct": false,
+              "feedback": "That was the original date. Regulation (EU) 2026/1744 moved the high-risk rules."
+            },
+            {
+              "id": "b",
+              "text": "2 December 2027",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "2 August 2028",
+              "correct": false,
+              "feedback": "That is the date for product-embedded systems under Annex I."
+            }
+          ],
+          "explanation": "Regulation (EU) 2026/1744, in force since 27 July 2026, sets 2 December 2027 for stand-alone Annex III systems and 2 August 2028 for product-embedded Annex I systems."
+        },
+        {
+          "id": "zeitplan-1-2-c2",
+          "prompt": "Since when must a company that uses AI take AI literacy measures?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Since 2 February 2025",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "From 2 August 2026",
+              "correct": false,
+              "feedback": "That is when national supervision begins. Art. 4 has applied since February 2025."
+            },
+            {
+              "id": "c",
+              "text": "Only once a high-risk system is in use",
+              "correct": false,
+              "feedback": "Art. 4 applies to all providers and deployers, whatever the risk class."
+            }
+          ],
+          "explanation": "Under Art. 113(a), Art. 4 has applied since 2 February 2025 to every AI system that providers or deployers work with."
+        }
+      ]
+    }
+  ]
+}

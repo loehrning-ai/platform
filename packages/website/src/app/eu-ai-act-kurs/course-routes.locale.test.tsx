@@ -24,12 +24,22 @@ describe("EU AI Act locale propagation across the course lifecycle", () => {
 
   it("passes the audited English locale and content through every route wrapper", async () => {
     const hub = await CourseHubPage();
-    expect(hub.props).toMatchObject({ locale: "en", totalLessons: 24 });
-    expect(hub.props.blocks).toHaveLength(6);
-    expect(hub.props.blocks[0]).toMatchObject({
+    expect(hub.props).toMatchObject({ locale: "en" });
+    expect(hub.props.modules).toHaveLength(5);
+    expect(hub.props.modules[0]).toMatchObject({
       id: "block_1",
-      title: "Scope, roles, and application dates",
+      title: "Does it apply to me?",
+      lessons: [
+        expect.objectContaining({ id: "rolle-1-1" }),
+        expect.objectContaining({ id: "zeitplan-1-2" }),
+      ],
     });
+    expect(
+      hub.props.modules.reduce(
+        (sum: number, module: { lessons: unknown[] }) => sum + module.lessons.length,
+        0,
+      ),
+    ).toBe(10);
 
     const block = await BlockPage({
       params: Promise.resolve({ blockId: "block_1" }),
@@ -69,7 +79,7 @@ describe("EU AI Act locale propagation across the course lifecycle", () => {
     const block = await generateBlockMetadata({
       params: Promise.resolve({ blockId: "block_1" }),
     });
-    expect(block.title).toContain("Scope, roles, and application dates");
+    expect(block.title).toContain("Does it apply to me?");
     expect(block).toMatchObject({
       robots: { index: false, follow: true },
       openGraph: {

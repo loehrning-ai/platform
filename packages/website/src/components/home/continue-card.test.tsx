@@ -191,7 +191,7 @@ describe("ContinueCard", () => {
     expect(link).toHaveAttribute("data-home-continue-card", "resume");
     expect(link).toHaveAttribute("data-home-course-access", "unavailable");
     expect(link).toHaveTextContent(locale === "de" ? "Hier nicht verfügbar" : "Unavailable here");
-    expect(link).toHaveTextContent(locale === "de" ? "5 von 24 Lektionen" : "5 of 24 lessons");
+    expect(link).toHaveTextContent(locale === "de" ? "5 von 10 Lektionen" : "5 of 10 lessons");
   });
 
   it("resumes the last course touched and states its lesson count", () => {
@@ -205,9 +205,9 @@ describe("ContinueCard", () => {
     expect(link).toHaveAttribute("href", "/eu-ai-act-kurs/kurs");
     expect(link).toHaveTextContent("Weiter bei");
     expect(link).toHaveTextContent("EU AI Act Kurs");
-    // The course carries 24 canonical lessons; the card states counted
+    // The course carries 10 canonical lessons; the card states counted
     // progress, never a percentage it cannot evidence.
-    expect(link).toHaveTextContent("5 von 24 Lektionen");
+    expect(link).toHaveTextContent("5 von 10 Lektionen");
   });
 
   it("keeps the resume link inside the requested locale", () => {

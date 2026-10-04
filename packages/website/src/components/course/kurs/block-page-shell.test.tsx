@@ -89,13 +89,17 @@ describe("<BlockPageShell>", () => {
     ).toThrow("NEXT_NOT_FOUND");
   });
 
-  it("keeps the legacy block chrome for courses that are not ported yet", () => {
+  it("labels the ported EU AI Act course in modules and retires its block_6 bookmark", () => {
     render(
       <BlockPageShell courseSlug="eu-ai-act-kurs" blockId="block_1" locale="en" />,
     );
-    expect(screen.getByRole("link", { name: "All blocks" })).toBeInTheDocument();
-    expect(screen.getByText("Block 1 / 6")).toBeInTheDocument();
-    expect(observed.props?.moduleLabel).toBeUndefined();
+    expect(screen.getByRole("link", { name: "All modules" })).toBeInTheDocument();
+    expect(screen.getByText("Module 1 / 5")).toBeInTheDocument();
+    expect(observed.props?.moduleLabel).toBe("Module 1 · Does it apply to me?");
+    cleanup();
+    expect(() =>
+      render(<BlockPageShell courseSlug="eu-ai-act-kurs" blockId="block_6" />),
+    ).toThrow("NEXT_REDIRECT:/eu-ai-act-kurs/kurs");
   });
 
   for (const locale of ["de", "en"] as const) {

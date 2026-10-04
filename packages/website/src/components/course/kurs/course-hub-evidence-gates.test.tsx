@@ -63,7 +63,7 @@ function engineHubAdapter(
 
 const CASES: readonly (readonly [CourseSlug, ComponentType<LegacyHubProps>])[] = [
   ["ki-fuehrerschein", engineHubAdapter("ki-fuehrerschein", KiFuehrerscheinHub)],
-  ["eu-ai-act-kurs", EuAiActHub],
+  ["eu-ai-act-kurs", engineHubAdapter("eu-ai-act-kurs", EuAiActHub)],
   ["ki-und-gesellschaft", engineHubAdapter("ki-und-gesellschaft", SocietyHub)],
 ];
 

@@ -123,6 +123,8 @@ export const LAB_KINDS = [
   "live-prompt-ab",
   "doc-builder",
   "pii-redactor",
+  "timeline-check",
+  "sequence-order",
 ] as const;
 
 export type DemoKind = (typeof DEMO_KINDS)[number];

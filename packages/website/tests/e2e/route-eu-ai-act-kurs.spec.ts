@@ -10,7 +10,7 @@ import {
  * funnels into the hub at /eu-ai-act-kurs/kurs, which now requires login
  * (exception to policy D1 — see src/lib/crawl/contract.ts PROTECTED_PATHS).
  * An anonymous visitor following the funnel or a real block link
- * (EU_AI_ACT_KURS_CONFIG.blockIds = block_1..block_6) is redirected by
+ * (EU_AI_ACT_KURS_CONFIG.blockIds = block_1..block_5) is redirected by
  * src/proxy.ts to /login?next=<path>&reason=auth-not-configured in the
  * provider-free suite before reaching the hub/reader. These tests assert that
  * explicit fallback, not the reader content itself (which needs a live session; see

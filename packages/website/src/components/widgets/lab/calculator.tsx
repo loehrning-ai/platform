@@ -112,7 +112,7 @@ const COPY = {
     goalOpen: "offen",
     on: "Ja",
     off: "Nein",
-    explore: "Verändere die Annahmen und beobachte das Ergebnis.",
+    explore: "Annahmen verändern und das Ergebnis beobachten.",
   },
   en: {
     region: "Calculator",

@@ -50,6 +50,31 @@ export interface BucketSortProps extends LabBaseProps {
   readonly passRatio?: number;
   /** Optional source material shown above the cards (e.g. meeting notes). */
   readonly context?: { readonly label: string; readonly text: string };
+  /**
+   * "grid" (default) lays the piles side by side. "pyramid" stacks them as
+   * tiers that widen from the first bucket (top) to the last (base), for
+   * ordered classes such as risk tiers.
+   */
+  readonly layout?: "grid" | "pyramid";
+}
+
+/** Tier widths from top to base for the pyramid layout (sm and up). */
+const PYRAMID_WIDTHS = [
+  "sm:w-1/2",
+  "sm:w-7/12",
+  "sm:w-2/3",
+  "sm:w-3/4",
+  "sm:w-5/6",
+  "sm:w-11/12",
+  "sm:w-full",
+] as const;
+
+/** Width class for tier `index` of `count` (exported for tests). */
+export function pyramidWidth(index: number, count: number): string {
+  if (count <= 1) return "sm:w-full";
+  const last = PYRAMID_WIDTHS.length - 1;
+  const start = Math.max(0, last - (count - 1) * 2);
+  return PYRAMID_WIDTHS[Math.min(last, start + index * 2)];
 }
 
 interface Placement {
@@ -70,7 +95,7 @@ const COPY = {
     wrongFirst: (bucket: string) => `Gehört zu: ${bucket}.`,
     score: (right: number, total: number) => `${right} von ${total} beim ersten Versuch richtig`,
     again: "Nochmal sortieren",
-    belowPass: "Noch nicht sicher genug. Lies die Begründungen und sortiere nochmal.",
+    belowPass: "Noch nicht sicher genug. Begründungen lesen und nochmal sortieren.",
     reviewTitle: "Diese Karten lagen zuerst falsch",
     count: (n: number) => `${n} Karten`,
   },
@@ -112,6 +137,7 @@ export function BucketSortWidget({
   items,
   passRatio = 0,
   context,
+  layout = "grid",
   lessonId,
   cpId,
   locale,
@@ -295,9 +321,14 @@ export function BucketSortWidget({
 
       {/* Buckets */}
       <div
+        data-layout={layout}
         className={cn(
-          "mt-4 grid gap-3",
-          buckets.length >= 5
+          layout === "pyramid"
+            ? "mt-4 flex flex-col items-center gap-2"
+            : "mt-4 grid gap-3",
+          layout === "pyramid"
+            ? null
+            : buckets.length >= 5
             ? "sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5"
             : buckets.length === 4
               ? "sm:grid-cols-2 xl:grid-cols-4"
@@ -314,7 +345,10 @@ export function BucketSortWidget({
               onDragOver={(event) => event.preventDefault()}
               onDrop={(event) => onDrop(event, bucket.id)}
               data-bucket-id={bucket.id}
-              className="flex min-w-0 flex-col rounded-2xl border border-lab-line bg-paper p-2"
+              className={cn(
+                "flex min-w-0 flex-col rounded-2xl border border-lab-line bg-paper p-2",
+                layout === "pyramid" && cn("w-full", pyramidWidth(index, buckets.length)),
+              )}
             >
               <button
                 type="button"
@@ -337,7 +371,7 @@ export function BucketSortWidget({
                 ) : null}
                 {selected ? <span className="sr-only">: {copy.placeHere}</span> : null}
               </button>
-              <ul className="mt-1 space-y-1.5">
+              <ul className={cn("mt-1", layout === "pyramid" ? "flex flex-wrap gap-1.5" : "space-y-1.5")}>
                 <AnimatePresence initial={false}>
                   {inBucket.map((item) => {
                     const placement = placements[item.id];

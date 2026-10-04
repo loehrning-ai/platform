@@ -112,7 +112,7 @@ import {
 const KF_LESSON_1 = "daten-1-1";
 const KF_LESSON_2 = "daten-1-2";
 const KF_SECTION_1 = "daten-1-1_exercise";
-const EU_LESSON_1 = "block_1_lesson_1";
+const EU_LESSON_1 = "rolle-1-1";
 const AI_NATIVE_LESSON_1 = "modul_1_lesson_1";
 
 function recordEvidenceBackedLessonCompletion(
