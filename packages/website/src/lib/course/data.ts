@@ -66,15 +66,15 @@ import eaEnBlock5 from "../../../content/eu-ai-act-kurs/en/block-5-governance-le
 import eaEnBlock6 from "../../../content/eu-ai-act-kurs/en/block-6-praxis-lessons.json";
 import eaEnWorkshop from "../../../content/eu-ai-act-kurs/en/quiz/questions.json";
 
-// ─── KI und Gesellschaft content (KI und Gesellschaft course review) ────────────────────
+// ─── KI und Gesellschaft content (lesson engine) ────────────────────
 
 import kugBlock1 from "../../../content/ki-und-gesellschaft/block-1-arbeit-lessons.json";
-import kugBlock2 from "../../../content/ki-und-gesellschaft/block-2-deepfakes-lessons.json";
-import kugBlock3 from "../../../content/ki-und-gesellschaft/block-3-ethik-lessons.json";
+import kugBlock2 from "../../../content/ki-und-gesellschaft/block-2-fakes-lessons.json";
+import kugBlock3 from "../../../content/ki-und-gesellschaft/block-3-fairness-lessons.json";
 import kugWorkshop from "../../../content/ki-und-gesellschaft/quiz/questions.json";
 import kugEnBlock1 from "../../../content/ki-und-gesellschaft/en/block-1-arbeit-lessons.json";
-import kugEnBlock2 from "../../../content/ki-und-gesellschaft/en/block-2-deepfakes-lessons.json";
-import kugEnBlock3 from "../../../content/ki-und-gesellschaft/en/block-3-ethik-lessons.json";
+import kugEnBlock2 from "../../../content/ki-und-gesellschaft/en/block-2-fakes-lessons.json";
+import kugEnBlock3 from "../../../content/ki-und-gesellschaft/en/block-3-fairness-lessons.json";
 import kugEnWorkshop from "../../../content/ki-und-gesellschaft/en/quiz/questions.json";
 
 // ─── AI-Native workshop quiz (shared course architecture) ─
@@ -340,35 +340,35 @@ const AI_NATIVE_EN: CourseData = {
 
 // ─── KI und Gesellschaft ────────────────────────────────────────────────────
 //
-// Three-block mini-course: KI und Arbeit (block_1), Deepfakes erkennen
-// (block_2), Ethik und Bias (block_3). Workshop quiz (15 questions) wired in
-// the shared course engine.
+// Runs on the lesson engine (docs/lesson-engine.md): three modules
+// (block_1..block_3), eight lessons, about 40 minutes. Workshop quiz
+// (15 questions) wired in the shared course engine.
 const KI_UND_GESELLSCHAFT: CourseData = {
   config: KI_UND_GESELLSCHAFT_CONFIG,
   blockMeta: {
     block_1: {
-      title: "KI und Arbeit",
+      title: "Jobzahlen lesen",
       description:
-        "Wie KI einzelne Aufgaben verändert und was Studien dazu belegen.",
-      durationMinutes: 16,
+        "Exposition, Potenzial und Prognose trennen und das eigene Aufgabenprofil bewerten.",
+      durationMinutes: 10,
     },
     block_2: {
-      title: "Deepfakes erkennen",
+      title: "Fakes prüfen",
       description:
-        "Wie Deepfakes entstehen und wie du Quelle, Kontext und Werkzeuge prüfst.",
-      durationMinutes: 14,
+        "Herkunft prüfen, Detektorwerte nachrechnen und den richtigen Meldeweg wählen.",
+      durationMinutes: 15,
     },
     block_3: {
-      title: "Ethik und Bias",
+      title: "Fairness messen",
       description:
-        "An dokumentierten Fällen: wie Bias in Daten, Modelle und Entscheidungen gerät.",
-      durationMinutes: 16,
+        "Fehler je Gruppe lesen, den Zielkonflikt der Fairness-Maße erleben und Verantwortung zuordnen.",
+      durationMinutes: 15,
     },
   },
   lessonData: {
-    block_1: kugBlock1 as RawBlockContent,
-    block_2: kugBlock2 as RawBlockContent,
-    block_3: kugBlock3 as RawBlockContent,
+    block_1: kugBlock1 as unknown as RawBlockContent,
+    block_2: kugBlock2 as unknown as RawBlockContent,
+    block_3: kugBlock3 as unknown as RawBlockContent,
   },
   workshopQuestions: kugWorkshop as unknown as QuizQuestion[],
   glossary: [],
@@ -379,28 +379,28 @@ const KI_UND_GESELLSCHAFT_EN: CourseData = {
   config: KI_UND_GESELLSCHAFT_EN_CONFIG,
   blockMeta: {
     block_1: {
-      title: "AI and work",
+      title: "Reading jobs figures",
       description:
-        "How AI changes individual tasks and what studies show.",
-      durationMinutes: 16,
+        "Separate exposure, potential and forecasts, and assess your own task profile.",
+      durationMinutes: 10,
     },
     block_2: {
-      title: "Assessing deepfakes",
+      title: "Checking fakes",
       description:
-        "How deepfakes are made and how to check source, context and tools.",
-      durationMinutes: 14,
+        "Trace provenance, work out what detector scores mean and choose the right reporting route.",
+      durationMinutes: 15,
     },
     block_3: {
-      title: "Bias, ethics, and accountability",
+      title: "Measuring fairness",
       description:
-        "Documented cases of how bias enters data, models and decisions.",
-      durationMinutes: 16,
+        "Read errors per group, experience the trade-off between fairness measures and assign accountability.",
+      durationMinutes: 15,
     },
   },
   lessonData: {
-    block_1: kugEnBlock1 as RawBlockContent,
-    block_2: kugEnBlock2 as RawBlockContent,
-    block_3: kugEnBlock3 as RawBlockContent,
+    block_1: kugEnBlock1 as unknown as RawBlockContent,
+    block_2: kugEnBlock2 as unknown as RawBlockContent,
+    block_3: kugEnBlock3 as unknown as RawBlockContent,
   },
   workshopQuestions: kugEnWorkshop as unknown as QuizQuestion[],
   glossary: [],

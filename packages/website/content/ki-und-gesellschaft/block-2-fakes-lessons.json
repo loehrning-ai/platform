@@ -1,0 +1,595 @@
+{
+  "blockId": "block_2",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-01-04",
+  "format": "lesson-engine/v1",
+  "reviewCadence": "legal",
+  "riskClass": "legal",
+  "triggerEvents": [
+    "dsa-guidance-update",
+    "eu-ai-act-amendment"
+  ],
+  "lessons": [
+    {
+      "id": "fakes-2-1",
+      "blockId": "block_2",
+      "number": 3,
+      "title": "Herkunft vor Optik",
+      "subtitle": "Ein virales Video in fünf Schritten prüfen",
+      "durationMinutes": 6,
+      "owner": "editorial:ki-und-gesellschaft",
+      "lastReviewed": "2026-10-04",
+      "nextReview": "2027-01-04",
+      "reviewCadence": "legal",
+      "riskClass": "legal",
+      "keyConcepts": [
+        "Rückwärtssuche",
+        "Content Credentials",
+        "Kontextprüfung"
+      ],
+      "concept": {
+        "body": "Aussehen oder Klang beweisen weder Echtheit noch Fälschung. Auffällige Hände oder Licht rechtfertigen einen zweiten Blick, taugen aber nicht als Checkliste: Generatoren ändern sich, und Kompression erzeugt ähnliche Spuren. Häufig ist das Material sogar echt und nur falsch eingeordnet.\n\nPrüfe stattdessen in fünf Schritten:\n\n1. **Behauptung festhalten:** Was soll wann und wo passiert sein?\n2. **Quelle öffnen:** frühesten Beitrag und vollständiges Video suchen.\n3. **Herkunft suchen:** Rückwärtssuche (Google Lens, TinEye) oder Schlüsselbilder (InVID/WeVerify).\n4. **Kontext abgleichen:** Datum, Ort, Wetter, Schilder mit unabhängigen Quellen.\n5. **Ergebnis begrenzen:** bestätigt, widerlegt oder offen. „Nicht verifiziert“ ist zulässig.\n\nContent Credentials können Bearbeitungsschritte dokumentieren. Fehlen sie, beweist das keine Manipulation.",
+        "takeaway": "Nicht fragen „Sieht es echt aus?“, sondern „Woher stammt es, und passt der Kontext?“",
+        "sources": [
+          {
+            "label": "InVID/WeVerify-Plugin (weverify.eu)"
+          },
+          {
+            "label": "C2PA Content Credentials (c2pa.org)"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "claim-checker",
+        "title": "Prüfe einen viralen Beitrag",
+        "instructions": "Bewerte jede unterstrichene Behauptung gegen die drei Prüfergebnisse: belegt, widersprochen oder fehlt. Dann werte aus. Beitrag, Orte und Ergebnisse sind erfunden.",
+        "props": {
+          "sources": [
+            {
+              "id": "A",
+              "label": "Rückwärtssuche (Schlüsselbilder)",
+              "text": "Frühester Treffer: dasselbe Video, hochgeladen am 14. Juli 2021 von einem Lokalsender. Titel: Brückeneinsturz nach Starkregen in Musterau."
+            },
+            {
+              "id": "B",
+              "label": "Metadaten und Content Credentials",
+              "text": "Keine Content Credentials vorhanden. Die Metadaten wurden beim erneuten Hochladen entfernt."
+            },
+            {
+              "id": "C",
+              "label": "Kontext: Wetterarchiv und Lokalpresse",
+              "text": "Wetterarchiv Beispielstadt, gestern: trocken, 0 mm Niederschlag. Die Lokalzeitung meldet keine Schäden an Brücken."
+            }
+          ],
+          "draftLabel": "Viraler Beitrag",
+          "draft": [
+            {
+              "text": "EILT: Das Video zeigt, wie "
+            },
+            {
+              "text": "eine Brücke einstürzt",
+              "claimId": "collapse"
+            },
+            {
+              "text": ", und zwar "
+            },
+            {
+              "text": "in Beispielstadt",
+              "claimId": "place"
+            },
+            {
+              "text": " "
+            },
+            {
+              "text": "gestern Abend",
+              "claimId": "time"
+            },
+            {
+              "text": " "
+            },
+            {
+              "text": "nach dem Unwetter",
+              "claimId": "storm"
+            },
+            {
+              "text": ". "
+            },
+            {
+              "text": "Ein KI-Detektor bestätigt: 92 % echt",
+              "claimId": "detector"
+            },
+            {
+              "text": ". Teilen!"
+            }
+          ],
+          "claims": [
+            {
+              "id": "collapse",
+              "verdict": "supported",
+              "sourceId": "A",
+              "evidence": "Brückeneinsturz nach Starkregen in Musterau.",
+              "why": "Das Material ist echt: Ein Lokalsender hat den Einsturz gefilmt. Falsch ist die Einordnung."
+            },
+            {
+              "id": "place",
+              "verdict": "contradicted",
+              "sourceId": "A",
+              "evidence": "Brückeneinsturz nach Starkregen in Musterau.",
+              "correction": "Musterau, nicht Beispielstadt",
+              "why": "Der früheste Treffer nennt einen anderen Ort."
+            },
+            {
+              "id": "time",
+              "verdict": "contradicted",
+              "sourceId": "A",
+              "evidence": "hochgeladen am 14. Juli 2021",
+              "correction": "Juli 2021",
+              "why": "Ein Video kann nicht gestern entstanden sein, wenn es seit 2021 online ist."
+            },
+            {
+              "id": "storm",
+              "verdict": "contradicted",
+              "sourceId": "C",
+              "evidence": "gestern: trocken, 0 mm Niederschlag",
+              "correction": "Gestern gab es dort kein Unwetter.",
+              "why": "Das Wetterarchiv widerspricht dem behaupteten Anlass."
+            },
+            {
+              "id": "detector",
+              "verdict": "missing",
+              "correction": "Streichen: Ein Detektorwert ist kein Herkunftsbeleg.",
+              "why": "Keine der Prüfungen stützt das. Und selbst ein echtes Video kann falsch eingeordnet sein, wie hier."
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "fakes-2-1-c1",
+          "prompt": "Ein Video hat keine Content Credentials. Was folgt daraus?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Nichts Eindeutiges: Herkunft und Kontext musst du anders prüfen.",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Es ist manipuliert.",
+              "correct": false,
+              "feedback": "Credentials fehlen oft, etwa weil Plattformen Metadaten entfernen. Das beweist keine Manipulation."
+            },
+            {
+              "id": "c",
+              "text": "Es ist echt, weil keine KI-Markierung vorhanden ist.",
+              "correct": false,
+              "feedback": "Markierungen lassen sich entfernen, und nicht jedes Werkzeug setzt sie. Fehlen beweist keine Echtheit."
+            }
+          ],
+          "explanation": "Fehlende Herkunftsdaten sind ein offener Befund. Weiter geht es mit Quelle, Rückwärtssuche und Kontext."
+        },
+        {
+          "id": "fakes-2-1-c2",
+          "prompt": "Im Beispiel ist das Video echt, aber Jahre alt und von einem anderen Ort. Wie heißt das Ergebnis?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Echtes Material in falschem Kontext: die Behauptung ist widerlegt.",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Kein Problem, weil das Video nicht KI-generiert ist.",
+              "correct": false,
+              "feedback": "Die Behauptung über Ort und Zeit ist falsch. Täuschung braucht keine KI."
+            },
+            {
+              "id": "c",
+              "text": "Ein Deepfake.",
+              "correct": false,
+              "feedback": "Nichts deutet auf KI-Erzeugung hin. Das Material ist echt, nur falsch eingeordnet."
+            }
+          ],
+          "explanation": "Prüfe die Behauptung, nicht nur das Material. Viele Fälschungen sind alte Aufnahmen mit neuer Unterschrift."
+        }
+      ]
+    },
+    {
+      "id": "fakes-2-2",
+      "blockId": "block_2",
+      "number": 4,
+      "title": "Was ein Detektorwert bedeutet",
+      "subtitle": "Grundrate schlägt Prozentzahl",
+      "durationMinutes": 5,
+      "owner": "editorial:ki-und-gesellschaft",
+      "lastReviewed": "2026-10-04",
+      "nextReview": "2027-01-04",
+      "reviewCadence": "legal",
+      "riskClass": "legal",
+      "keyConcepts": [
+        "Grundrate",
+        "Fehlalarmrate",
+        "Positiver Vorhersagewert"
+      ],
+      "concept": {
+        "body": "Ein Detektor meldet „92 % Fake“. Ob der Inhalt wirklich gefälscht ist, hängt von drei Zahlen ab:\n\n- **Trefferquote:** Wie viele Fälschungen erkennt er?\n- **Fehlalarmrate:** Wie viele echte Inhalte markiert er fälschlich?\n- **Grundrate:** Wie viele der geprüften Inhalte sind überhaupt gefälscht?\n\nSind Fälschungen selten, überwiegen die Fehlalarme, selbst bei guter Trefferquote. Das ist der Satz von Bayes.\n\nDazu kommt: Die Prozentzahl eines Detektors ist eine modellabhängige Schätzung, nicht automatisch eine kalibrierte Wahrscheinlichkeit für deinen Fall. Sie hängt von Trainingsdaten, getesteten Generatoren, Kompression und Schwellenwert ab. Ein negatives Ergebnis belegt keine Echtheit, ein positives keine Manipulation. Wer veröffentlichen oder beschuldigen will, braucht Herkunft, Kontext und weitere Belege.",
+        "takeaway": "Ein Alarm ist ein Hinweis. Wie viel er wert ist, entscheidet die Grundrate.",
+        "sources": [
+          {
+            "label": "Satz von Bayes (positiver Vorhersagewert)"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "calculator",
+        "title": "Rechne einen Detektoralarm nach",
+        "instructions": "Verändere Fake-Anteil, Trefferquote und Fehlalarmrate. Der Rechner zeigt, wie viele Alarme pro 1.000 geprüften Inhalten stimmen. Fertig, wenn beide Aufgaben erledigt sind.",
+        "props": {
+          "inputs": [
+            {
+              "id": "prev",
+              "label": "Anteil Fälschungen unter den geprüften Inhalten",
+              "type": "slider",
+              "scale": "log",
+              "min": 0.001,
+              "max": 0.5,
+              "default": 0.1,
+              "format": "percent",
+              "decimals": 1
+            },
+            {
+              "id": "sens",
+              "label": "Trefferquote bei Fälschungen",
+              "type": "slider",
+              "min": 0.5,
+              "max": 0.99,
+              "step": 0.01,
+              "default": 0.92,
+              "format": "percent"
+            },
+            {
+              "id": "fpr",
+              "label": "Fehlalarme bei echten Inhalten",
+              "type": "slider",
+              "min": 0.01,
+              "max": 0.3,
+              "step": 0.01,
+              "default": 0.08,
+              "format": "percent"
+            }
+          ],
+          "outputs": [
+            {
+              "id": "tp",
+              "label": "Richtige Alarme je 1.000",
+              "formula": "1000 * prev * sens",
+              "format": "int"
+            },
+            {
+              "id": "fp",
+              "label": "Fehlalarme je 1.000",
+              "formula": "1000 * (1 - prev) * fpr",
+              "format": "int"
+            },
+            {
+              "id": "ppv",
+              "label": "Ein Alarm stimmt mit Wahrscheinlichkeit",
+              "formula": "tp / max(tp + fp, 0.000001)",
+              "format": "percent",
+              "emphasis": true
+            }
+          ],
+          "chart": {
+            "kind": "stacked",
+            "title": "Alle Alarme je 1.000 geprüfte Inhalte",
+            "format": "int",
+            "bars": [
+              {
+                "label": "Richtige Alarme",
+                "formula": "tp",
+                "tone": "good"
+              },
+              {
+                "label": "Fehlalarme",
+                "formula": "fp",
+                "tone": "bad"
+              }
+            ]
+          },
+          "verdicts": [
+            {
+              "when": "ppv < 0.5",
+              "tone": "bad",
+              "title": "Die meisten Alarme sind Fehlalarme",
+              "body": "Wer hier einem Alarm glaubt, beschuldigt meist echte Inhalte."
+            },
+            {
+              "when": "ppv < 0.9",
+              "tone": "warn",
+              "title": "Ein Alarm ist ein Hinweis, kein Beleg",
+              "body": "Prüfe Herkunft und Kontext, bevor du etwas behauptest."
+            },
+            {
+              "when": "true",
+              "tone": "neutral",
+              "title": "Hoher Vorhersagewert, trotzdem prüfen",
+              "body": "Deine echten Fehlerraten und die Grundrate kennst du selten so genau."
+            }
+          ],
+          "goals": [
+            {
+              "id": "rare",
+              "label": "Setze den Fake-Anteil auf 1 % oder weniger",
+              "when": "prev <= 0.01",
+              "insight": "Bei 1 % Fälschungen und den Startwerten stimmt nur etwa jeder zehnte Alarm."
+            },
+            {
+              "id": "reliable",
+              "label": "Finde eine Einstellung, bei der ein Alarm zu mindestens 90 % stimmt",
+              "when": "ppv >= 0.9",
+              "insight": "Dafür braucht es viele Fälschungen in der Menge oder sehr wenige Fehlalarme. Beides kennst du im Alltag selten."
+            }
+          ],
+          "note": "Rechenbeispiel mit erfundenen Werten, keine Herstellerangaben."
+        }
+      },
+      "checks": [
+        {
+          "id": "fakes-2-2-c1",
+          "prompt": "Ein Detektor erkennt 92 % der Fälschungen und markiert 8 % der echten Inhalte. Nur 1 % der geprüften Inhalte sind gefälscht. Wie oft stimmt ein Alarm etwa?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Etwa jeder zehnte Alarm.",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "In 92 % der Fälle.",
+              "correct": false,
+              "feedback": "92 % ist die Trefferquote bei Fälschungen. Bei seltenen Fälschungen überwiegen die Fehlalarme."
+            },
+            {
+              "id": "c",
+              "text": "In 99 % der Fälle.",
+              "correct": false,
+              "feedback": "99 % ist der Anteil echter Inhalte, nicht die Trefferquote eines Alarms."
+            }
+          ],
+          "explanation": "Je 1.000 Inhalte: rund 9 richtige Alarme gegen rund 79 Fehlalarme. Ein Alarm stimmt also nur zu etwa 10 %."
+        },
+        {
+          "id": "fakes-2-2-c2",
+          "prompt": "Ein Detektor meldet „echt“. Was darfst du daraus schließen?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Wenig: Der Inhalt kann außerhalb der Testverteilung liegen oder nachbearbeitet sein.",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Der Inhalt ist echt und darf geteilt werden.",
+              "correct": false,
+              "feedback": "Ein negatives Ergebnis belegt keine Echtheit. Herkunft und Kontext fehlen noch."
+            },
+            {
+              "id": "c",
+              "text": "Der Inhalt wurde forensisch geprüft.",
+              "correct": false,
+              "feedback": "Ein automatischer Detektor ersetzt keine forensische Fachprüfung."
+            }
+          ],
+          "explanation": "Detektoren sind höchstens ein zusätzlicher Hinweis, in beide Richtungen."
+        }
+      ]
+    },
+    {
+      "id": "fakes-2-3",
+      "blockId": "block_2",
+      "number": 5,
+      "title": "Wohin melden?",
+      "subtitle": "Plattform, Polizei oder Bildrecht",
+      "durationMinutes": 4,
+      "owner": "editorial:ki-und-gesellschaft",
+      "lastReviewed": "2026-10-04",
+      "nextReview": "2027-01-04",
+      "reviewCadence": "legal",
+      "riskClass": "legal",
+      "keyConcepts": [
+        "Meldeverfahren nach DSA",
+        "Recht am eigenen Bild",
+        "Beweissicherung"
+      ],
+      "concept": {
+        "body": "Nach einem Fund gilt: nicht weiterverbreiten, auch nicht mit Warnhinweis. URL, Konto, Zeitpunkt und Screenshot lokal sichern. Dann den passenden Weg wählen:\n\n| Lage | Weg |\n|---|---|\n| Täuschender Inhalt auf einer Plattform | Meldung nach Art. 16 DSA |\n| Betrug, Erpressung, Bedrohung, akute Gefahr | Polizei: Onlinewache über polizei.de, bei Gefahr Notruf |\n| Dein Bild ohne Einwilligung verbreitet | § 22 KUG, Ausnahmen nach § 23 KUG prüfen |\n\nArt. 16 DSA verpflichtet Hostingdienste zu einem leicht zugänglichen Meldeverfahren. Hinreichend genaue Meldungen müssen sie zeitnah, sorgfältig und objektiv bearbeiten; entfernen müssen sie nicht jeden Inhalt. Deine Stimme allein schützt § 22 KUG nicht; hier kommen Persönlichkeits- und Datenschutzrecht in Betracht.\n\nKennzeichnungspflichten für Deepfakes (Art. 50 KI-Verordnung) behandelt der Kurs EU AI Act.",
+        "takeaway": "Sichern, nicht teilen, dann gezielt melden: Plattform, Polizei oder Bildrecht.",
+        "sources": [
+          {
+            "label": "Art. 16 Verordnung (EU) 2022/2065 (DSA)",
+            "url": "https://eur-lex.europa.eu/eli/reg/2022/2065/oj"
+          },
+          {
+            "label": "§§ 22, 23 KUG",
+            "url": "https://www.gesetze-im-internet.de/kunsturhg/__22.html"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "decision-wizard",
+        "title": "Finde den Meldeweg für drei Fälle",
+        "instructions": "Geh den Entscheidungsbaum für jeden der drei erfundenen Fälle einmal durch. Fertig, wenn du alle Fälle bearbeitet hast.",
+        "props": {
+          "start": "start",
+          "nodes": [
+            {
+              "id": "start",
+              "question": "Was ist passiert?",
+              "options": [
+                {
+                  "label": "Jemand fordert unter Zeitdruck Geld oder Daten, etwa mit geklonter Stimme.",
+                  "result": "police"
+                },
+                {
+                  "label": "Ein Bild oder Video einer Person wurde ohne Einwilligung verbreitet.",
+                  "next": "harm"
+                },
+                {
+                  "label": "Ein Inhalt täuscht über eine Person, ein Ereignis oder eine Aussage.",
+                  "next": "where"
+                }
+              ]
+            },
+            {
+              "id": "harm",
+              "question": "Ist der Inhalt sexualisiert, bedrohend oder erpresserisch, oder besteht Gefahr?",
+              "options": [
+                {
+                  "label": "Ja",
+                  "result": "police"
+                },
+                {
+                  "label": "Nein, es geht um die Verbreitung ohne Einwilligung.",
+                  "result": "image"
+                }
+              ]
+            },
+            {
+              "id": "where",
+              "question": "Wo liegt der Inhalt?",
+              "help": "Ohne Fundstelle kannst du nicht präzise melden.",
+              "options": [
+                {
+                  "label": "Auf einer Plattform, z. B. sozialem Netzwerk oder Videoportal.",
+                  "result": "platform"
+                },
+                {
+                  "label": "Ich habe nur eine weitergeleitete Datei ohne Link.",
+                  "result": "trace"
+                }
+              ]
+            }
+          ],
+          "results": [
+            {
+              "id": "police",
+              "tone": "bad",
+              "title": "Polizei einschalten",
+              "body": "Möglicher Betrug, Erpressung oder Bedrohung. Nicht zahlen, nicht antworten. Bei akuter Gefahr den Notruf wählen.",
+              "actions": [
+                "Rückruf nur über eine bekannte Nummer",
+                "URL, Konto, Zeitpunkt, Screenshot lokal sichern",
+                "Anzeige über die Onlinewache (polizei.de)"
+              ],
+              "source": "polizei.de"
+            },
+            {
+              "id": "image",
+              "tone": "warn",
+              "title": "Bildrechte geltend machen",
+              "body": "Nach § 22 KUG dürfen Bildnisse nur mit Einwilligung verbreitet werden. Ausnahmen nach § 23 KUG und die Interessenabwägung sind zu prüfen. Parallel bei der Plattform melden.",
+              "actions": [
+                "Fundstellen sichern",
+                "Person zur Löschung auffordern oder Plattform melden",
+                "Ansprüche medienrechtlich beraten lassen"
+              ],
+              "source": "§§ 22, 23 KUG"
+            },
+            {
+              "id": "platform",
+              "tone": "neutral",
+              "title": "Bei der Plattform melden",
+              "body": "Nutze das Meldeverfahren nach Art. 16 DSA. Nenne URL und den konkreten Regel- oder Rechtsverstoß. Die Plattform muss die Meldung bearbeiten und entscheiden, aber nicht jeden Inhalt entfernen.",
+              "actions": [
+                "Nicht teilen, auch nicht mit Warnhinweis",
+                "Betroffene privat informieren, ohne den Inhalt weiterzugeben"
+              ],
+              "source": "Art. 16 Verordnung (EU) 2022/2065"
+            },
+            {
+              "id": "trace",
+              "tone": "neutral",
+              "title": "Erst Herkunft klären, nicht weiterleiten",
+              "body": "Frag nach dem Link und prüfe Quelle und Kontext wie in der Herkunftsprüfung. Erst mit Fundstelle kannst du gezielt melden.",
+              "actions": [
+                "Absender nach der Originalquelle fragen",
+                "Datei nicht weiterleiten"
+              ]
+            }
+          ],
+          "scenarios": [
+            {
+              "id": "mayor",
+              "expected": "platform",
+              "text": "Eine Bekannte schickt dir einen Link zu einem Video auf einem Videoportal, in dem deine Bürgermeisterin angeblich Wahlbetrug zugibt.",
+              "why": "Täuschender Inhalt auf einer Plattform: Meldung nach Art. 16 DSA, mit URL."
+            },
+            {
+              "id": "voice",
+              "expected": "police",
+              "text": "Dein Vater bekommt einen Anruf mit der Stimme deiner Schwester: Sie brauche sofort 3.000 EUR.",
+              "why": "Geldforderung unter Zeitdruck mit geklonter Stimme: möglicher Betrug, also Polizei."
+            },
+            {
+              "id": "photo",
+              "expected": "image",
+              "text": "Ein Kollege postet ohne zu fragen ein harmloses, KI-verändertes Foto von dir in einer öffentlichen Gruppe.",
+              "why": "Verbreitung deines Bildnisses ohne Einwilligung, ohne Gefahr: § 22 KUG, parallel Plattformmeldung."
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "fakes-2-3-c1",
+          "prompt": "Was verlangt Art. 16 DSA von Hostingdiensten?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Ein leicht zugängliches Meldeverfahren und eine sorgfältige, objektive Bearbeitung genauer Meldungen.",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Jeden gemeldeten Inhalt sofort zu löschen.",
+              "correct": false,
+              "feedback": "Plattformen müssen bearbeiten und entscheiden, nicht jeden Inhalt entfernen."
+            },
+            {
+              "id": "c",
+              "text": "Jede Meldung an die Polizei weiterzuleiten.",
+              "correct": false,
+              "feedback": "Das regelt Art. 16 nicht. Bei möglichen Straftaten zeigst du selbst an."
+            }
+          ],
+          "explanation": "Art. 16 DSA regelt das Meldeverfahren, nicht das Ergebnis."
+        },
+        {
+          "id": "fakes-2-3-c2",
+          "prompt": "Du findest einen Deepfake über eine Kollegin. Was tust du zuerst?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Fundstelle sichern, nicht teilen und sie privat informieren.",
+              "correct": true
+            },
+            {
+              "id": "b",
+              "text": "Mit Warnhinweis im Teamchat teilen, damit alle Bescheid wissen.",
+              "correct": false,
+              "feedback": "Auch mit Warnhinweis verbreitest du den Inhalt weiter."
+            },
+            {
+              "id": "c",
+              "text": "Den Urheber öffentlich beschuldigen.",
+              "correct": false,
+              "feedback": "Ohne geprüfte Herkunft riskierst du eine falsche Beschuldigung."
+            }
+          ],
+          "explanation": "Sichern, nicht verbreiten, Betroffene informieren. Dann den passenden Meldeweg wählen."
+        }
+      ]
+    }
+  ]
+}

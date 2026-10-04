@@ -17,11 +17,11 @@ const EXPECTED_CHECKPOINT_LESSONS = {
     "regeln-4-1",
   ],
   "ki-und-gesellschaft": [
-    "arbeit-1-1",
-    "deepfake-2-1",
-    "deepfake-2-3",
-    "ethik-3-1",
-    "ethik-3-3",
+    "zahlen-1-1",
+    "fakes-2-1",
+    "fakes-2-3",
+    "fair-3-1",
+    "fair-3-3",
   ],
   "eu-ai-act-kurs": [
     "block_1_lesson_1",

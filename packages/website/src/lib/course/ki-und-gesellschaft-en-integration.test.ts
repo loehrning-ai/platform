@@ -33,12 +33,13 @@ describe("KI und Gesellschaft audited English runtime bundle", () => {
       workshopQuizQuestionCount: 15,
     });
     expect(blocks).toHaveLength(3);
-    expect(lessons).toHaveLength(9);
+    expect(lessons).toHaveLength(8);
     expect(syncQuestions).toHaveLength(15);
     expect(asyncQuestions).toEqual(syncQuestions);
     expect(getGlossaryTerms(COURSE_SLUG, undefined, "en")).toEqual([]);
-    expect(blocks[0]?.title).toBe("AI and work");
-    expect(lessons[0]?.title).toBe("AI and work: exposure is not a forecast");
+    expect(blocks[0]?.title).toBe("Reading jobs figures");
+    expect(lessons[0]?.title).toBe("Decode jobs headlines");
+    expect(lessons.every((lesson) => lesson.exercise && lesson.checks?.length === 2)).toBe(true);
   });
 
   it("preserves route, progress, lesson, question, answer, and assessment identity", () => {

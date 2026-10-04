@@ -27,7 +27,13 @@ describe("lesson mission binding", () => {
       }
     }
 
-    expect(resolved).toBe(143);
+    // Derived from the registry so course ports do not edit a magic total.
+    const canonicalTotal = COURSE_SLUGS.reduce(
+      (sum, courseSlug) => sum + CANONICAL_LESSON_IDS[courseSlug].length,
+      0,
+    );
+    expect(canonicalTotal).toBeGreaterThan(100);
+    expect(resolved).toBe(canonicalTotal);
   });
 
   it("makes adjacent lesson frames visibly distinct using authored metadata", () => {

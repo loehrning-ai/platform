@@ -6,7 +6,11 @@ import type { BlockSummary } from "@/lib/course/types";
 import type { Locale } from "@/lib/i18n/locale";
 import { KursContent as EuAiActHub } from "@/app/eu-ai-act-kurs/kurs/kurs-content";
 import { KursContent as SocietyHub } from "@/app/ki-und-gesellschaft/kurs/kurs-content";
-import { CANONICAL_LESSON_IDS } from "@/lib/courses/completion";
+import {
+  CANONICAL_LESSON_IDS,
+  isLessonEngineCourse,
+} from "@/lib/courses/completion";
+import type { ModuleOverviewModule } from "@/components/lesson-engine/module-overview";
 import type { CourseSlug } from "@/lib/course/types";
 import {
   __resetCacheForTests,
@@ -22,34 +26,45 @@ type LegacyHubProps = {
   readonly locale?: Locale;
 };
 
-// KI-Führerschein's hub is the lesson-engine ModuleOverview, which takes
-// module summaries; adapt it to the shared legacy-hub harness below.
-function KiFuehrerscheinHubAdapter({ locale }: LegacyHubProps) {
-  return (
-    <KiFuehrerscheinHub
-      locale={locale}
-      modules={[
-        {
-          id: "block_1",
-          title: "Modul",
-          description: "",
-          durationMinutes: 45,
-          orderIndex: 0,
-          lessons: CANONICAL_LESSON_IDS["ki-fuehrerschein"].map((id) => ({
-            id,
-            title: id,
-            durationMinutes: 5,
-          })),
-        },
-      ]}
-    />
-  );
+// Lesson-engine hubs are the shared ModuleOverview, which takes module
+// summaries; adapt them to the shared legacy-hub harness below.
+type EngineHub = ComponentType<{
+  readonly modules: readonly ModuleOverviewModule[];
+  readonly locale?: Locale;
+}>;
+
+function engineHubAdapter(
+  slug: CourseSlug,
+  EngineHubComponent: EngineHub,
+): ComponentType<LegacyHubProps> {
+  function EngineHubAdapter({ locale }: LegacyHubProps) {
+    return (
+      <EngineHubComponent
+        locale={locale}
+        modules={[
+          {
+            id: "block_1",
+            title: "Modul",
+            description: "",
+            durationMinutes: 45,
+            orderIndex: 0,
+            lessons: CANONICAL_LESSON_IDS[slug].map((id) => ({
+              id,
+              title: id,
+              durationMinutes: 5,
+            })),
+          },
+        ]}
+      />
+    );
+  }
+  return EngineHubAdapter;
 }
 
 const CASES: readonly (readonly [CourseSlug, ComponentType<LegacyHubProps>])[] = [
-  ["ki-fuehrerschein", KiFuehrerscheinHubAdapter],
+  ["ki-fuehrerschein", engineHubAdapter("ki-fuehrerschein", KiFuehrerscheinHub)],
   ["eu-ai-act-kurs", EuAiActHub],
-  ["ki-und-gesellschaft", SocietyHub],
+  ["ki-und-gesellschaft", engineHubAdapter("ki-und-gesellschaft", SocietyHub)],
 ];
 
 beforeEach(() => {
@@ -104,7 +119,7 @@ describe("foundation course hub evidence gates", () => {
       await waitFor(() => {
         expect(screen.queryByRole("link", { name: /Passed:/ })).toBeNull();
         expect(screen.queryByRole("link", { name: /Download/ })).toBeNull();
-        if (slug === "ki-fuehrerschein") {
+        if (isLessonEngineCourse(slug)) {
           // The module overview counts evidence-backed lessons only.
           const total = CANONICAL_LESSON_IDS[slug].length;
           expect(

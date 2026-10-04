@@ -35,7 +35,7 @@ export const COURSE_PROJECT_IDENTITIES = {
   },
   "ki-und-gesellschaft": {
     id: "project-ki-gesellschaft-newsroom",
-    progressLessonId: "ethik-3-3",
+    progressLessonId: "fair-3-3",
     engineKind: "case",
   },
   "data-engineering-fundamentals": {

@@ -108,8 +108,8 @@ const AI_NATIVE_SECTION = "modul_1_lesson_1_section_1";
 const KF_LESSON = "daten-1-1";
 const KF_SECTION = "daten-1-1_exercise";
 const EU_LESSON = "block_1_lesson_1";
-const SOCIETY_LESSON = "arbeit-1-1";
-const SOCIETY_SECTION = "arbeit-1-1-s1";
+const SOCIETY_LESSON = "zahlen-1-1";
+const SOCIETY_SECTION = "zahlen-1-1_exercise";
 
 /** JSON round-trip clone (fixtures are JSON-safe: only primitives + null). */
 function clone<T>(value: T): T {

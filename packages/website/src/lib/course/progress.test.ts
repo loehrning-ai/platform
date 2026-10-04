@@ -101,8 +101,8 @@ const SHARE_COURSES = [
   },
   {
     courseSlug: "ki-und-gesellschaft",
-    lessonId: "arbeit-1-1",
-    sectionId: "arbeit-1-1-s1",
+    lessonId: "zahlen-1-1",
+    sectionId: "zahlen-1-1_exercise",
   },
 ] as const;
 

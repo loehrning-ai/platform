@@ -218,7 +218,7 @@ describe("ContinueCard", () => {
     const link = screen.getByRole("link");
     expect(link).toHaveTextContent("Continue with");
     expect(link).toHaveTextContent("AI and Society");
-    expect(link).toHaveTextContent("3 of 9 lessons");
+    expect(link).toHaveTextContent("3 of 8 lessons");
     expect(link).toHaveTextContent("Account required");
     expect(link).toHaveAttribute("href", "/en/ki-und-gesellschaft/kurs");
   });

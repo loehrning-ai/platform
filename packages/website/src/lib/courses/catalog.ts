@@ -146,7 +146,7 @@ export interface ImportedCourse {
 
 // Step 1 → 2 → 3 → 4. Lesson counts mirror the live course content:
 //  - KI-Führerschein: 4 modules, 8 lesson-engine lessons (see lib/course/data.ts)
-//  - KI und Gesellschaft: 3 blocks, 9 lessons
+//  - KI und Gesellschaft: 3 modules, 8 lesson-engine lessons
 //  - EU-AI-Act-Kurs: 6 blocks, 24 lessons
 //  - AI-Native: 4 modules, 27 lessons
 export const COURSE_CATALOG: readonly CatalogCourse[] = [
@@ -178,18 +178,17 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     step: 2,
     title: "KI und Gesellschaft",
     eyebrow: "Schritt 02 · Gesellschaft",
-    tagline:
-      "Deepfakes, Bias und Folgen für Arbeit anhand von Beispielen prüfen.",
+    tagline: "Jobzahlen lesen, Fakes prüfen, Fairness messen.",
     description:
-      "Drei Blöcke zu Arbeitsmarkt, Deepfakes und Bias. Zu jeder Aussage siehst du Quelle, Interessenlage und wie sicher der Befund ist.",
+      "Acht kurze Lektionen mit Übung: Jobschlagzeilen entschlüsseln, ein virales Video auf Herkunft prüfen, einen Detektoralarm nachrechnen, den Meldeweg finden und im Schwellenwert-Labor erleben, warum zwei Fairness-Maße nicht zugleich gelten können.",
     href: "/ki-und-gesellschaft",
     startHref: "/ki-und-gesellschaft/kurs",
     continueHref: "/ki-und-gesellschaft/kurs",
-    duration: "ca. 46 Min.",
-    durationMinutes: 46,
-    totalLessons: 9,
+    duration: "ca. 40 Min.",
+    durationMinutes: 40,
+    totalLessons: 8,
     level: "einstieg",
-    unitLabel: "Blöcke",
+    unitLabel: "Module",
     unitCount: 3,
     audience: "Ohne technische Vorkenntnisse",
     coverImage: "/course-covers/ki-und-gesellschaft-cover-v4.webp",

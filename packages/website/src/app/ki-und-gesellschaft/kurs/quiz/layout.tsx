@@ -15,8 +15,8 @@ export async function generateMetadata(): Promise<Metadata> {
         : "Abschlussquiz: KI und Gesellschaft",
     description:
       locale === "en"
-        ? "Fifteen questions on AI and work, deepfakes, and bias. Pass mark: 70 percent. Time limit: 20 minutes."
-        : "15 Fragen zu KI und Arbeit, Deepfakes und Bias. 70% zum Bestehen, 20 Minuten Zeitlimit.",
+        ? "Fifteen questions on jobs figures, fakes, and fairness. Pass mark: 70 percent. Time limit: 20 minutes."
+        : "15 Fragen zu Jobzahlen, Fakes und Fairness. 70% zum Bestehen, 20 Minuten Zeitlimit.",
     robots: { index: false, follow: false },
     alternates: { canonical: null },
   };

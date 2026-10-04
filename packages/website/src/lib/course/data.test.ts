@@ -284,42 +284,53 @@ describe("KI und Gesellschaft course (KI und Gesellschaft course review)", () =>
     expect(config.certificateModules.join(" ")).not.toMatch(/[—–]/);
   });
 
-  it("has three blocks with correct titles", () => {
+  it("has three modules with correct titles", () => {
     const blocks = getBlocks("ki-und-gesellschaft");
     expect(blocks.length).toBe(3);
-    expect(blocks[0].title).toBe("KI und Arbeit");
-    expect(blocks[1].title).toBe("Deepfakes erkennen");
-    expect(blocks[2].title).toBe("Ethik und Bias");
+    expect(blocks[0].title).toBe("Jobzahlen lesen");
+    expect(blocks[1].title).toBe("Fakes prüfen");
+    expect(blocks[2].title).toBe("Fairness messen");
+    expect(blocks.reduce((sum, block) => sum + block.durationMinutes, 0)).toBe(40);
   });
 
-  it("has 9 lessons total across the three blocks (3 per block)", () => {
+  it("has 8 lesson-engine lessons across the three modules (2/3/3)", () => {
     const b1 = getBlockLessons("ki-und-gesellschaft", "block_1");
     const b2 = getBlockLessons("ki-und-gesellschaft", "block_2");
     const b3 = getBlockLessons("ki-und-gesellschaft", "block_3");
-    expect(b1.length).toBe(3);
+    expect(b1.length).toBe(2);
     expect(b2.length).toBe(3);
     expect(b3.length).toBe(3);
+    for (const lesson of [...b1, ...b2, ...b3]) {
+      expect(lesson.exercise?.kind, lesson.id).toBeTruthy();
+      expect(lesson.checks, lesson.id).toHaveLength(2);
+      // The loader projects the concept into one section for search/MCP.
+      expect(lesson.sections.map((section) => section.id)).toEqual([
+        `${lesson.id}_concept`,
+      ]);
+      expect(lesson.widgets ?? []).toEqual([]);
+    }
   });
 
-  it("block 1 (Arbeit) lessons reference OECD and Bundesagentur", () => {
+  it("module 1 (Jobzahlen) cites OECD and IAB", () => {
     const lessons = getBlockLessons("ki-und-gesellschaft", "block_1");
     const allText = lessons
       .flatMap((l) => l.sections.map((s) => s.content))
       .join(" ");
     expect(allText).toMatch(/OECD/);
-    expect(allText).toMatch(/Bundesagentur/);
+    expect(allText).toMatch(/IAB/);
   });
 
-  it("block 2 (Deepfakes) lessons reference Art. 50 and WeVerify", () => {
+  it("module 2 (Fakes) teaches provenance tools and links Art. 50 to the EU AI Act course", () => {
     const lessons = getBlockLessons("ki-und-gesellschaft", "block_2");
     const allText = lessons
       .flatMap((l) => l.sections.map((s) => s.content))
       .join(" ");
     expect(allText).toMatch(/Art\. 50/);
-    expect(allText).toMatch(/weverify\.eu/i);
+    expect(allText).toMatch(/InVID\/WeVerify/);
+    expect(allText).toMatch(/Kurs EU AI Act/);
   });
 
-  it("block 3 (Ethik) lessons reference COMPAS and Buolamwini", () => {
+  it("module 3 (Fairness) references COMPAS and Buolamwini", () => {
     const lessons = getBlockLessons("ki-und-gesellschaft", "block_3");
     const allText = lessons
       .flatMap((l) => l.sections.map((s) => s.content))

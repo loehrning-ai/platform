@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import type { ComponentProps } from "react";
 import { getBlocks, getCourseConfig } from "@/lib/course/data";
 import { localizeHref } from "@/lib/i18n/locale";
+import { isLessonEngineCourse } from "@/lib/courses/completion";
 
 const observed = vi.hoisted(() => ({
   props: null as ComponentProps<typeof import("./lesson-layout").LessonLayout> | null,
@@ -82,7 +83,7 @@ describe("<BlockPageShell>", () => {
     ).toThrow("NEXT_REDIRECT:/en/ki-fuehrerschein/kurs");
     expect(() =>
       render(<BlockPageShell courseSlug="ki-und-gesellschaft" blockId="block_9" />),
-    ).toThrow("NEXT_NOT_FOUND");
+    ).toThrow("NEXT_REDIRECT:/ki-und-gesellschaft/kurs");
     expect(() =>
       render(<BlockPageShell courseSlug="ki-fuehrerschein" blockId="not-a-block" />),
     ).toThrow("NEXT_NOT_FOUND");
@@ -113,7 +114,7 @@ describe("<BlockPageShell>", () => {
             ? `${coursePath}/${next.id}#lesson=${encodeURIComponent(next.lessons[0].id)}`
             : `${coursePath}/quiz`, locale),
           followingLabel: next
-            ? courseSlug === "ki-fuehrerschein"
+            ? isLessonEngineCourse(courseSlug)
               ? locale === "de"
                 ? `Weiter mit Modul ${index + 2}: ${next.title}`
                 : `Continue with module ${index + 2}: ${next.title}`

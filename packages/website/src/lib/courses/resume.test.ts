@@ -197,7 +197,7 @@ describe("course resume routes", () => {
         progress("ki-und-gesellschaft", 3),
         "ki-und-gesellschaft",
       ),
-    ).toBe("/ki-und-gesellschaft/kurs/block_2#lesson=deepfake-2-1");
+    ).toBe("/ki-und-gesellschaft/kurs/block_2#lesson=fakes-2-2");
   });
 
   it("routes one-page lessons and chapters directly", () => {

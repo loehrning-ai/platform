@@ -34,6 +34,21 @@ const KI_FUEHRERSCHEIN_LESSON_IDS = [
   "regeln-4-1",
   "regeln-4-2",
 ] as const;
+/**
+ * KI und Gesellschaft runs on the lesson engine: three modules, eight
+ * lessons. The pre-engine arbeit-/deepfake-/ethik- IDs are retired and
+ * dropped the same way as the KI-Führerschein ones.
+ */
+const KI_UND_GESELLSCHAFT_LESSON_IDS = [
+  "zahlen-1-1",
+  "zahlen-1-2",
+  "fakes-2-1",
+  "fakes-2-2",
+  "fakes-2-3",
+  "fair-3-1",
+  "fair-3-2",
+  "fair-3-3",
+] as const;
 const EU_AI_ACT_LESSON_IDS = Array.from({ length: 6 }, (_, index) =>
   numbered(`block_${index + 1}_lesson_`, 4),
 ).flat();
@@ -55,17 +70,7 @@ export const CANONICAL_LESSON_IDS: Readonly<
   Record<CourseSlug, readonly string[]>
 > = {
   "ki-fuehrerschein": KI_FUEHRERSCHEIN_LESSON_IDS,
-  "ki-und-gesellschaft": [
-    "arbeit-1-1",
-    "arbeit-1-2",
-    "arbeit-1-3",
-    "deepfake-2-1",
-    "deepfake-2-2",
-    "deepfake-2-3",
-    "ethik-3-1",
-    "ethik-3-2",
-    "ethik-3-3",
-  ],
+  "ki-und-gesellschaft": KI_UND_GESELLSCHAFT_LESSON_IDS,
   "eu-ai-act-kurs": EU_AI_ACT_LESSON_IDS,
   "ai-native": AI_NATIVE_LESSON_IDS,
   "data-infrastructure": DATA_INFRA_LESSON_IDS,
@@ -149,11 +154,7 @@ export const CANONICAL_SECTION_IDS: Readonly<
   Record<CourseSlug, Readonly<Record<string, readonly string[]>>>
 > = {
   "ki-fuehrerschein": engineSteps(KI_FUEHRERSCHEIN_LESSON_IDS),
-  "ki-und-gesellschaft": sectionsByCount(
-    CANONICAL_LESSON_IDS["ki-und-gesellschaft"],
-    CANONICAL_LESSON_IDS["ki-und-gesellschaft"].map(() => 3),
-    "-s",
-  ),
+  "ki-und-gesellschaft": engineSteps(KI_UND_GESELLSCHAFT_LESSON_IDS),
   "eu-ai-act-kurs": sectionsByCount(
     EU_AI_ACT_LESSON_IDS,
     EU_AI_ACT_LESSON_IDS.map((lessonId) =>
@@ -208,6 +209,7 @@ export const EVIDENCE_GATED_COURSE_SLUGS = [
  */
 export const LESSON_ENGINE_COURSE_SLUGS = [
   "ki-fuehrerschein",
+  "ki-und-gesellschaft",
 ] as const satisfies readonly CourseSlug[];
 
 export function isLessonEngineCourse(slug: CourseSlug): boolean {

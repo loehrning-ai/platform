@@ -228,8 +228,8 @@ export const KI_UND_GESELLSCHAFT_CONFIG: CourseConfig = {
   workshopQuizTimeLimitMinutes: 20,
   workshopQuizPassThreshold: 0.7,
   certificateTitle: "Lernnachweis: KI und Gesellschaft",
-  certificateSubtitle: "Arbeit · Deepfakes · Ethik",
-  certificateModules: ["KI und Arbeit", "Deepfakes erkennen", "Ethik und Bias"],
+  certificateSubtitle: "Jobzahlen · Fakes · Fairness",
+  certificateModules: ["Jobzahlen lesen", "Fakes prüfen", "Fairness messen"],
   certificateReferenceLabel:
     "Selbst ausgestellt: lokal generiert, nicht servergeprüft",
   quizPassMessage:
@@ -246,11 +246,11 @@ export const KI_UND_GESELLSCHAFT_EN_CONFIG: CourseConfig =
   createLocalizedCourseConfig(KI_UND_GESELLSCHAFT_CONFIG, "en", {
     title: "AI and Society",
     certificateTitle: "Certificate of participation: AI and Society",
-    certificateSubtitle: "Work · Deepfakes · Bias and ethics",
+    certificateSubtitle: "Jobs figures · Fakes · Fairness",
     certificateModules: [
-      "AI and work",
-      "Assessing deepfakes",
-      "Bias, ethics, and accountability",
+      "Reading jobs figures",
+      "Checking fakes",
+      "Measuring fairness",
     ],
     certificateReferenceLabel:
       "Self-issued: generated locally, not server-verified",

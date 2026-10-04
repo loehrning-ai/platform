@@ -505,14 +505,14 @@ describe("KontoPage catalog", () => {
     const cards = screen
       .getAllByRole("heading", { level: 3 })
       .map((h) => h.textContent);
-    // ki-fuehrerschein (45 min) sorts before ki-und-gesellschaft (46 min)
-    // and eu-ai-act-kurs (110 min) under duration order.
+    // ki-und-gesellschaft (40 min) sorts before ki-fuehrerschein (45 min)
+    // and eu-ai-act-kurs under duration order.
     const gesellschaft = cards.indexOf("KI und Gesellschaft");
     const fuehrerschein = cards.indexOf("KI-Führerschein");
     const euAiAct = cards.indexOf("EU AI Act Kurs");
-    expect(fuehrerschein).toBeGreaterThanOrEqual(0);
-    expect(fuehrerschein).toBeLessThan(gesellschaft);
-    expect(gesellschaft).toBeLessThan(euAiAct);
+    expect(gesellschaft).toBeGreaterThanOrEqual(0);
+    expect(gesellschaft).toBeLessThan(fuehrerschein);
+    expect(fuehrerschein).toBeLessThan(euAiAct);
 
     const durationSort = screen.getByRole("link", { name: "Dauer" });
     expect(durationSort).toHaveAttribute("href", "/konto?sort=duration");

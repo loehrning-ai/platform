@@ -62,20 +62,21 @@ export const COURSE_OUTCOMES: Partial<
   "ki-und-gesellschaft": [
     {
       id: "ki-und-arbeit-einordnen",
-      label: "KI und Arbeit einordnen",
-      description: "Behandelt Wirkungen von KI auf Arbeit und Gesellschaft.",
+      label: "Jobzahlen einordnen",
+      description:
+        "Behandelt Exposition, technisches Potenzial und Prognosen und wie man den Nutzen selbst misst.",
     },
     {
       id: "deepfakes-erkennen",
-      label: "Deepfakes erkennen",
+      label: "Fakes prüfen",
       description:
-        "Behandelt manipulierte Medien und typische Fälschungsmuster.",
+        "Behandelt Herkunftsprüfung, die Aussagekraft von Detektorwerten und Meldewege.",
     },
     {
       id: "bias-und-ethik",
-      label: "Bias und Ethik",
+      label: "Fairness messen",
       description:
-        "Behandelt Ursachen algorithmischer Verzerrung und ethische Grenzen.",
+        "Behandelt Fehlerraten je Gruppe, Zielkonflikte zwischen Fairness-Maßen und Verantwortlichkeiten.",
     },
   ],
   "eu-ai-act-kurs": [

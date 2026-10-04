@@ -57,11 +57,11 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
   "ki-und-gesellschaft": {
     title: "AI and Society",
     eyebrow: "Step 02 · Society",
-    tagline: "Examine deepfakes, bias, and effects on work through examples.",
+    tagline: "Read jobs figures, check fakes, measure fairness.",
     description:
-      "Three units on the job market, deepfakes and bias. For every claim you see its source, who benefits from it and how certain the finding is.",
-    duration: "about 46 min",
-    unitLabel: "units",
+      "Eight short lessons, each with an exercise: decode jobs headlines, trace a viral video's origin, work out what a detector alert is worth, find the reporting route and see in a threshold lab why two fairness measures cannot both hold.",
+    duration: "about 40 min",
+    unitLabel: "modules",
     audience: "No technical background required",
     coverImageAlt:
       "Editorial collage of a Berlin public space with people, media images, and verification marks",
