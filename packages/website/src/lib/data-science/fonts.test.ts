@@ -16,7 +16,7 @@ describe("data-science local fonts", () => {
     expect(DS_FONT_VARIABLES).toBe("ds-fonts-local");
   });
 
-  it("uses the platform Loehrning Sans token without a mobile system-font override", () => {
+  it("uses the platform Figtree token (--font-loehrning-sans) without a mobile system-font override", () => {
     const scopeFontRules: string[] = [];
     const mobileFontRules: string[] = [];
 

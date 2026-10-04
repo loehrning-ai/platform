@@ -233,7 +233,7 @@ describe("de-course.css ", () => {
     expect(keyframesCount).toBeGreaterThan(20);
   });
 
-  it("uses the platform paper, ink, copper, Loehrning Sans, and Geist Mono identity without recoloring semantic data series", () => {
+  it("uses the platform paper, ink, copper, Figtree (the --font-loehrning-sans token), and Geist Mono identity without recoloring semantic data series", () => {
     expect(css).toContain("--theme-blue: var(--color-brand-orange, #a5370f)");
     expect(css).toContain("--bg-page: var(--color-background, #f3f0e9)");
     expect(css).toContain("--theme-black: var(--color-foreground, #0b0908)");

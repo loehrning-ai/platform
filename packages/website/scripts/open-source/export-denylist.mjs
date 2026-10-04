@@ -34,15 +34,20 @@ const JAVASCRIPT_PACKAGE_MANAGER_LOCKFILES = new Set([
   "yarn.lock",
 ]);
 
-// These four versioned files are the active, manifest-verified runtime faces.
-// Keep the allowlist exact so the obsolete public/fonts working directory does
-// not become a general publication channel again.
+// These seven versioned Figtree faces are the active, manifest-verified
+// runtime faces, and figtree-OFL.txt is the licence they ship with. Keep the
+// allowlist exact so the obsolete public/fonts working directory does not
+// become a general publication channel again.
 const APPROVED_PUBLIC_RUNTIME_FONT_PATHS = new Set([
   "packages/website/public/fonts",
-  "packages/website/public/fonts/loehrning-sans-bold-v1.woff2",
-  "packages/website/public/fonts/loehrning-sans-medium-v1.woff2",
-  "packages/website/public/fonts/loehrning-sans-regular-v1.woff2",
-  "packages/website/public/fonts/loehrning-sans-semibold-v1.woff2",
+  "packages/website/public/fonts/figtree-OFL.txt",
+  "packages/website/public/fonts/figtree-black-v1.woff2",
+  "packages/website/public/fonts/figtree-bold-v1.woff2",
+  "packages/website/public/fonts/figtree-extrabold-v1.woff2",
+  "packages/website/public/fonts/figtree-italic-v1.woff2",
+  "packages/website/public/fonts/figtree-medium-v1.woff2",
+  "packages/website/public/fonts/figtree-regular-v1.woff2",
+  "packages/website/public/fonts/figtree-semibold-v1.woff2",
 ]);
 
 function hasSegmentPair(segments, first, second) {

@@ -162,7 +162,7 @@ async function renderNameAsPng(name: string): Promise<string> {
   const availableWidth = canvas.width - 120;
   const family =
     getComputedStyle(document.body).fontFamily ||
-    '"Loehrning Sans", "Noto Sans", Arial, sans-serif';
+    '"Figtree", "Noto Sans", Arial, sans-serif';
   let fontSize = lines.length === 1 ? 104 : 78;
   const minimumFontSize = 24;
 

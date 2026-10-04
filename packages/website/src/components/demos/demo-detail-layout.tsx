@@ -27,7 +27,7 @@ import {
  * The demo title takes the fallback headroom (POSTER_FALLBACK_HEADROOM).
  * Titles such as "Vertragsassistent." are one long word that runs to the
  * column edge; on a first visit (font-display: optional) the Arial-metric
- * fallback face sets about 4.4% wider than Loehrning Sans and would be
+ * fallback face sets up to about 4% wider than Figtree and would be
  * clipped by the band. A wider system face still cannot clip: the H1 breaks
  * the word at the column edge (break-words).
  */

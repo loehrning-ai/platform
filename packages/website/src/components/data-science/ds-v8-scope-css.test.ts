@@ -256,6 +256,14 @@ describe("ds-v8-scope.css ", () => {
     );
   });
 
+  it("sets the site face without stylistic sets, so the course letterforms match the rest of the site", () => {
+    expect(finalDeclaration(".ds-v8-scope", "font-family")).toBe(
+      "var(--font-sans)",
+    );
+    expect(finalDeclarations("font-feature-settings").size).toBe(0);
+    expect(css).not.toMatch(/"ss0\d"|"cv\d\d"/);
+  });
+
   it("keeps semantic plot colors independent from the copper interface accent", () => {
     expect(finalDeclaration(".ds-v8-scope", "--good")).toBe("#1faf7e");
     expect(finalDeclaration(".ds-v8-scope", "--warn")).toBe("#e8a031");

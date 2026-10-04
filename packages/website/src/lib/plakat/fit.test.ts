@@ -99,8 +99,8 @@ const COURSE_LITERALS = [
 
 /**
  * Every band H1 writes `posterTitleFallbackStyle()`: `font-display: optional`
- * can leave a first visit on the Arial-metric fallback face, about 4.4%
- * wider, and "Geschäftsberichte" then ran 5px into the gutter at 390.
+ * can leave a first visit on the Arial-metric fallback face, up to about 4%
+ * wider than Figtree, and a long word would then run into the gutter.
  */
 function withFallbackFit(surface: Surface): Surface {
   return {
@@ -197,7 +197,7 @@ const SURFACES: readonly Surface[] = ([
 
 describe("poster title metrics", () => {
   it("were measured from the bold web font on disk", () => {
-    const font = readFileSync(join(WEBSITE, "public/fonts/loehrning-sans-bold-v1.woff2"));
+    const font = readFileSync(join(WEBSITE, "public/fonts/figtree-bold-v1.woff2"));
     expect(
       createHash("sha256").update(font).digest("hex"),
       "the font changed: run node scripts/plakat/build-type-metrics.mjs",
@@ -206,13 +206,13 @@ describe("poster title metrics", () => {
 
   it("match the headline widths Chromium sets with -0.04em tracking", () => {
     // DOM widths of a span at 1000px, 700, letter-spacing -0.04em (Chromium
-    // 141, Loehrning Sans Bold), measured when the table was built.
+    // 141, Figtree Bold), measured when the table was built.
     const measured = {
-      "Geschäftsberichte": 7.732109375,
-      "Arbeitsabläufe": 6.176328125,
-      Workshops: 4.837265625,
-      "verstehen.": 4.501859375,
-      "anwenden.": 4.699578125,
+      "Geschäftsberichte": 7.842,
+      "Arbeitsabläufe": 6.219,
+      Workshops: 4.765,
+      "verstehen.": 4.426,
+      "anwenden.": 4.633,
     };
     for (const [word, em] of Object.entries(measured)) {
       expect(segmentEm(word), word).toBeCloseTo(em, 3);
@@ -279,9 +279,9 @@ describe("fitEm", () => {
 
   it("gives the spec's reference sizes (SPEC §4)", () => {
     const report = fitEm("Geschäftsberichte mit KI lesen");
-    // 36px at 320 and about 45px at 390: one line, never broken.
+    // About 36px at 320 and 44px at 390 in Figtree Bold: one line, never broken.
     expect(posterTitleSize(report, column("band-art", 320), 320)).toBeCloseTo(36, 0);
-    expect(posterTitleSize(report, column("band-art", 390), 390)).toBeCloseTo(45, 0);
+    expect(posterTitleSize(report, column("band-art", 390), 390)).toBeCloseTo(44, 0);
     // KI-Arbeitsabläufe breaks after the hyphen: 45px at 320.
     expect(longestSegment("KI-Arbeitsabläufe prüfen").segment).toBe("Arbeitsabläufe");
     expect(posterTitleSize(fitEm("KI-Arbeitsabläufe prüfen"), 288, 320)).toBeCloseTo(45, 0);

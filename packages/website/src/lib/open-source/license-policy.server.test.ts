@@ -20,7 +20,10 @@ describe("public license policy source", () => {
       "`packages/website/public/fonts/**` are not",
     );
     expect(policy.markdown).toContain(
-      "versioned runtime faces under `packages/website/public/fonts/**` are modified and renamed derivatives of Inter",
+      "The versioned runtime faces under `packages/website/public/fonts/**` and the `Figtree-*.ttf` files under `packages/website/src/fonts/**` are Figtree",
+    );
+    expect(policy.markdown).toContain(
+      "The `Typing` faces under `packages/website/src/fonts/typing/**` are modified and renamed derivatives of Inter",
     );
   });
 

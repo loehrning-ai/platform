@@ -106,7 +106,8 @@
   background: var(--bg);
   color: var(--ink-1);
   font-family: var(--font-sans);
-  font-feature-settings: "ss01", "cv11";
+  /* No stylistic sets: Figtree's ss01 swaps in a single-storey "a", which
+     would set this course apart from the rest of the site. */
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
