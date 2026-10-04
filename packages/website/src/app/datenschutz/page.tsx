@@ -308,7 +308,7 @@ function GermanPrivacyContent() {
             id="ki"
             title="7. KI-Lernfeedback und isolierte Kursausführung"
           >
-            {features.anthropic || features.gemini ? (
+            {features.anthropic || features.gemini || features.openai ? (
               <>
                 <p>
                   Bei ausdrücklich gestarteten interaktiven KI-Übungen werden
@@ -341,6 +341,17 @@ function GermanPrivacyContent() {
                     gesetzte Prüfbestätigung; die Anwendung liest oder beweist
                     den Google-Abrechnungsstatus nicht. Diese technischen Marker
                     sind für sich kein Nachweis rechtlicher Konformität.
+                  </p>
+                ) : null}
+                {features.openai ? (
+                  <p className="mt-2">
+                    OpenAI API (OpenAI, USA) ist für das Modell GPT-5 mini
+                    aktiv. Die konfigurierte Aufbewahrungsdauer beträgt{" "}
+                    {features.openaiRetentionDays} Tage. Jede Anfrage bittet
+                    den Anbieter, die Antwort nicht für einen späteren Abruf zu
+                    speichern. Die Aktivierung verlangt einen datierten
+                    DPA-Prüfmarker; dieser technische Marker ist für sich kein
+                    Nachweis rechtlicher Konformität.
                   </p>
                 ) : null}
                 <p className="mt-2">
@@ -378,8 +389,8 @@ function GermanPrivacyContent() {
               </>
             ) : (
               <p>
-                Anthropic Claude und Google Gemini API sind in dieser
-                Bereitstellung für KI-Lernfeedback deaktiviert. Übungen
+                Anthropic Claude, Google Gemini API und OpenAI API sind in
+                dieser Bereitstellung für KI-Lernfeedback deaktiviert. Übungen
                 verwenden lokales oder regelbasiertes Feedback und übertragen
                 keine Eingaben an diese Modellanbieter.
               </p>
@@ -797,7 +808,7 @@ function GermanPrivacyContent() {
                   </li>
                 </>
               ) : null}
-              {features.anthropic ? (
+              {features.anthropic || features.gemini || features.openai ? (
                 <li>
                   KI-Antwort-Zwischenspeicher: höchstens eine Stunde im
                   Arbeitsspeicher eines Serverprozesses, maximal 500 Einträge je

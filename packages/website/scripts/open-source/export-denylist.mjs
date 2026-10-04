@@ -386,6 +386,12 @@ export const SECRET_VALUE_RULES = [
     re: envAssignmentPattern("GEMINI_API_KEY"),
   },
   {
+    id: "openai-key",
+    label: "OPENAI_API_KEY assignment",
+    kind: "assignment-name",
+    re: envAssignmentPattern("OPENAI_API_KEY"),
+  },
+  {
     id: "cron-secret",
     label: "CRON_SECRET assignment",
     kind: "assignment-name",

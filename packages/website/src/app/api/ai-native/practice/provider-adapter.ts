@@ -4,10 +4,17 @@ import type Anthropic from "@anthropic-ai/sdk";
 import { z } from "zod";
 
 import { tryGetAnthropicClient } from "@/lib/anthropic";
-import { isPracticeModelRuntimeReady } from "@/lib/provider-readiness";
+import {
+  isPracticeModelRuntimeReady,
+  openaiPracticeModel,
+} from "@/lib/provider-readiness";
 
 import { buildUserMessage, systemPromptFor } from "./prompt";
-import type { PracticeModelId } from "./types";
+import {
+  PRACTICE_PROVIDER_BY_MODEL,
+  type PracticeModelId,
+  type PracticeProviderName,
+} from "./types";
 import type { PracticeRequestParsed } from "./validation";
 
 const ANTHROPIC_MODEL = "claude-haiku-4-5-20251001";
@@ -15,7 +22,9 @@ const GEMINI_MODEL = "gemini-2.5-flash-lite";
 const GEMINI_ENDPOINT =
   `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
-export type PracticeProvider = "anthropic" | "google";
+const OPENAI_ENDPOINT = "https://api.openai.com/v1/responses";
+
+export type PracticeProvider = PracticeProviderName;
 export type PracticeProviderFailureKind =
   | "not_ready"
   | "bad_request"
@@ -55,6 +64,9 @@ interface AdapterDependencies {
   readonly anthropic?: Anthropic | null;
   readonly fetchImpl?: typeof fetch;
   readonly geminiApiKey?: string;
+  readonly openaiApiKey?: string;
+  /** Pinned upstream OpenAI model name; defaults to the readiness accessor. */
+  readonly openaiModel?: string;
   /** Test seam only. Production calls must retain the readiness predicate. */
   readonly readiness?: (model: PracticeModelId) => boolean;
 }
@@ -242,6 +254,129 @@ async function callGemini(
   };
 }
 
+const openaiResponseSchema = z
+  .object({
+    // `output_text` is an SDK convenience; accept it when present, but the
+    // REST contract is the `output` item list below.
+    output_text: z.string().nullish(),
+    output: z
+      .array(
+        z
+          .object({
+            type: z.string().optional(),
+            content: z
+              .array(
+                z
+                  .object({
+                    type: z.string().optional(),
+                    text: z.string().optional(),
+                  })
+                  .passthrough(),
+              )
+              .nullish(),
+          })
+          .passthrough(),
+      )
+      .nullish(),
+    usage: z
+      .object({
+        input_tokens: z.number().optional(),
+        output_tokens: z.number().optional(),
+        input_tokens_details: z
+          .object({ cached_tokens: z.number().optional() })
+          .passthrough()
+          .nullish(),
+      })
+      .passthrough()
+      .nullish(),
+  })
+  .passthrough();
+
+/**
+ * Text from a Responses API body. Only assistant `message` items with
+ * `output_text` parts count; reasoning summaries and refusals are ignored, so
+ * a refusal surfaces as a malformed response instead of as model output.
+ */
+function extractOpenAIOutputText(
+  body: z.infer<typeof openaiResponseSchema>,
+): string {
+  if (typeof body.output_text === "string" && body.output_text.trim()) {
+    return body.output_text;
+  }
+  return (body.output ?? [])
+    .filter((item) => item.type === "message")
+    .flatMap((item) => item.content ?? [])
+    .filter((part) => part.type === "output_text")
+    .map((part) => part.text ?? "")
+    .join("");
+}
+
+async function callOpenAI(
+  req: PracticeRequestParsed,
+  signal: AbortSignal,
+  apiKey: string,
+  model: string,
+  fetchImpl: typeof fetch,
+): Promise<PracticeProviderTextResult> {
+  let response: Response;
+  try {
+    response = await fetchImpl(OPENAI_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model,
+        instructions: systemPromptFor(req.mode, req.locale),
+        input: buildUserMessage(req),
+        // Reasoning tokens count toward this cap; minimal effort keeps the
+        // cap available for the visible answer. GPT-5 models reject a custom
+        // temperature, so none is sent.
+        max_output_tokens: req.mode === "complete" ? 800 : 200,
+        reasoning: { effort: "minimal" },
+        // Do not keep the response on the provider side for later retrieval.
+        store: false,
+      }),
+      cache: "no-store",
+      signal,
+    });
+  } catch {
+    throw providerFailure(undefined, signal);
+  }
+
+  if (!response.ok) {
+    // Do not parse or log provider error bodies: they can echo request data.
+    throw providerFailure(response.status, signal);
+  }
+
+  let parsed: z.infer<typeof openaiResponseSchema>;
+  try {
+    parsed = openaiResponseSchema.parse(await response.json());
+  } catch {
+    throw new PracticeProviderError("malformed_response", response.status);
+  }
+
+  const text = extractOpenAIOutputText(parsed);
+  if (!text.trim()) {
+    throw new PracticeProviderError("malformed_response", response.status);
+  }
+
+  return {
+    text,
+    model: req.model,
+    provider: "openai",
+    usage: {
+      inputTokens: finiteTokenCount(parsed.usage?.input_tokens),
+      outputTokens: finiteTokenCount(parsed.usage?.output_tokens),
+      cacheReadInputTokens: finiteTokenCount(
+        parsed.usage?.input_tokens_details?.cached_tokens,
+      ),
+      cacheCreationInputTokens: null,
+    },
+  };
+}
+
 /**
  * Server-only, fail-closed provider dispatcher. The request model is already a
  * Zod enum and is checked again against the deployment allowlist/readiness.
@@ -254,15 +389,32 @@ export async function callPracticeProvider(
   const ready = dependencies.readiness ?? isPracticeModelRuntimeReady;
   if (!ready(req.model)) throw new PracticeProviderError("not_ready");
 
-  if (req.model === "anthropic/claude-haiku-4.5") {
-    const anthropic = dependencies.anthropic ?? tryGetAnthropicClient();
-    if (!anthropic) throw new PracticeProviderError("not_ready");
-    return callAnthropic(req, signal, anthropic);
+  switch (PRACTICE_PROVIDER_BY_MODEL[req.model]) {
+    case "anthropic": {
+      const anthropic = dependencies.anthropic ?? tryGetAnthropicClient();
+      if (!anthropic) throw new PracticeProviderError("not_ready");
+      return callAnthropic(req, signal, anthropic);
+    }
+    case "google": {
+      const apiKey = dependencies.geminiApiKey ?? process.env.GEMINI_API_KEY;
+      if (!apiKey) throw new PracticeProviderError("not_ready");
+      return callGemini(req, signal, apiKey, dependencies.fetchImpl ?? fetch);
+    }
+    case "openai": {
+      const apiKey = dependencies.openaiApiKey ?? process.env.OPENAI_API_KEY;
+      const model = dependencies.openaiModel ?? openaiPracticeModel();
+      if (!apiKey || !model) throw new PracticeProviderError("not_ready");
+      return callOpenAI(
+        req,
+        signal,
+        apiKey,
+        model,
+        dependencies.fetchImpl ?? fetch,
+      );
+    }
+    default:
+      throw new PracticeProviderError("not_ready");
   }
-
-  const apiKey = dependencies.geminiApiKey ?? process.env.GEMINI_API_KEY;
-  if (!apiKey) throw new PracticeProviderError("not_ready");
-  return callGemini(req, signal, apiKey, dependencies.fetchImpl ?? fetch);
 }
 
 export function isPracticeProviderError(

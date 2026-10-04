@@ -15,8 +15,13 @@ import {
   isMagicLinkRuntimeReady,
   isOAuthServerReady,
   isPracticeModelRuntimeReady,
+  openaiRetentionDays,
   turnstileSiteKey,
 } from "@/lib/provider-readiness";
+import {
+  PRACTICE_MODEL_IDS,
+  type PracticeModelId,
+} from "@/app/api/ai-native/practice/types";
 
 export interface RuntimeFeatures {
   readonly account: boolean;
@@ -33,10 +38,9 @@ export interface RuntimeFeatures {
   readonly anthropicRetentionDays: number | null;
   readonly gemini: boolean;
   readonly geminiRetentionDays: number | null;
-  readonly practiceModels: readonly (
-    | "anthropic/claude-haiku-4.5"
-    | "google/gemini-2.5-flash-lite"
-  )[];
+  readonly openai: boolean;
+  readonly openaiRetentionDays: number | null;
+  readonly practiceModels: readonly PracticeModelId[];
   readonly courseTerminal: boolean;
   readonly cvEngineHosted: boolean;
   readonly agentAccess: boolean;
@@ -63,6 +67,7 @@ export function getRuntimeFeatures(): RuntimeFeatures {
   const retention = Number(process.env.SENTRY_RETENTION_DAYS);
   const anthropicRetention = anthropicRetentionDays();
   const geminiRetention = geminiRetentionDays();
+  const openaiRetention = openaiRetentionDays();
   const vercelHosting = process.env.VERCEL === "1";
   const supabaseRegion = process.env.SUPABASE_REGION || null;
   const accountReady = isAccountRuntimeReady();
@@ -75,10 +80,10 @@ export function getRuntimeFeatures(): RuntimeFeatures {
   const geminiReady = isPracticeModelRuntimeReady(
     "google/gemini-2.5-flash-lite",
   );
-  const practiceModels = ([
-    "anthropic/claude-haiku-4.5",
-    "google/gemini-2.5-flash-lite",
-  ] as const).filter(isPracticeModelRuntimeReady);
+  const openaiReady = isPracticeModelRuntimeReady("openai/gpt-5-mini");
+  const practiceModels = PRACTICE_MODEL_IDS.filter(
+    isPracticeModelRuntimeReady,
+  );
 
   return {
     account: accountReady,
@@ -99,6 +104,8 @@ export function getRuntimeFeatures(): RuntimeFeatures {
     anthropicRetentionDays: anthropicRetention,
     gemini: geminiReady,
     geminiRetentionDays: geminiRetention,
+    openai: openaiReady,
+    openaiRetentionDays: openaiRetention,
     practiceModels,
     courseTerminal: isCourseTerminalRuntimeReady(),
     cvEngineHosted: isCvEngineHostedReady(),

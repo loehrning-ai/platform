@@ -42,6 +42,7 @@ const SIDE_EFFECT_CREDENTIALS = [
   "ACCOUNT_LLM_KEK",
   "ANTHROPIC_API_KEY",
   "GEMINI_API_KEY",
+  "OPENAI_API_KEY",
   "SENTRY_AUTH_TOKEN",
   "SUPABASE_SERVICE_ROLE_KEY",
   // A Vercel access token carries team-wide authority even though the
@@ -53,6 +54,10 @@ const SIDE_EFFECT_CREDENTIALS = [
 const ACCOUNT_LLM_KEK_PATTERN = /^kek1_[a-f0-9]{64}$/;
 const BYO_CHAT_MODEL_PATTERN = /^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$/;
 const BYO_CHAT_MODEL_LIMIT = 8;
+// Pinned upstream name for the public practice id openai/gpt-5-mini: the
+// model itself or one of its dated snapshots. Mirrors openaiPracticeModel in
+// src/lib/provider-readiness.ts; both must agree.
+const OPENAI_PRACTICE_MODEL_PATTERN = /^gpt-5-mini(?:-\d{4}-\d{2}-\d{2})?$/;
 
 let hasError = false;
 
@@ -160,6 +165,7 @@ function isForbiddenLiveAuthE2EVariable(name) {
     name.startsWith("NEXT_PUBLIC_SENTRY_") ||
     name.startsWith("ANTHROPIC_") ||
     name.startsWith("GEMINI_") ||
+    name.startsWith("OPENAI_") ||
     name.startsWith("COURSE_TERMINAL_") ||
     name.startsWith("FEEDBACK_") ||
     name === "ACCOUNT_LLM_KEK" ||
@@ -759,6 +765,7 @@ const allowedModelEnv = process.env.AI_NATIVE_PRACTICE_ALLOWED_MODELS;
 const KNOWN_PRACTICE_MODELS = new Set([
   "anthropic/claude-haiku-4.5",
   "google/gemini-2.5-flash-lite",
+  "openai/gpt-5-mini",
 ]);
 const allowedModels = allowedModelEnv ? allowedModelEnv.split(",") : [];
 const modelAllowlistValid =
@@ -774,6 +781,7 @@ const anthropicSelected = allowedModels.includes(
   "anthropic/claude-haiku-4.5",
 );
 const geminiSelected = allowedModels.includes("google/gemini-2.5-flash-lite");
+const openaiSelected = allowedModels.includes("openai/gpt-5-mini");
 const anthropicKey = process.env.ANTHROPIC_API_KEY;
 const anthropicDpaAttestation = process.env.ANTHROPIC_DPA_CONFIRMED_AT;
 const anthropicRetention = process.env.ANTHROPIC_RETENTION_DAYS;
@@ -799,6 +807,18 @@ const configuredGeminiComplianceVariables = [
   .map(([name]) => name);
 const geminiComplianceMetadataPresent =
   configuredGeminiComplianceVariables.length > 0;
+const openaiKey = process.env.OPENAI_API_KEY;
+const openaiDpaAttestation = process.env.OPENAI_DPA_CONFIRMED_AT;
+const openaiRetention = process.env.OPENAI_RETENTION_DAYS;
+const openaiPracticeModel = process.env.OPENAI_PRACTICE_MODEL;
+const configuredOpenAIComplianceVariables = [
+  ["OPENAI_DPA_CONFIRMED_AT", openaiDpaAttestation],
+  ["OPENAI_RETENTION_DAYS", openaiRetention],
+]
+  .filter(([, value]) => Boolean(value))
+  .map(([name]) => name);
+const openaiComplianceMetadataPresent =
+  configuredOpenAIComplianceVariables.length > 0;
 
 if (aiEnabled && aiEnabled !== "true" && aiEnabled !== "false") {
   markError("AI_NATIVE_PRACTICE_ENABLED must be exactly true or false when set.");
@@ -808,7 +828,7 @@ if (
   (aiEnabled === "true" || Boolean(allowedModelEnv))
 ) {
   markError(
-    "AI_NATIVE_PRACTICE_ENABLED=true requires AI_NATIVE_PRACTICE_ALLOWED_MODELS as a nonempty, comma-separated, duplicate-free list containing only anthropic/claude-haiku-4.5 and google/gemini-2.5-flash-lite, with no whitespace.",
+    "AI_NATIVE_PRACTICE_ENABLED=true requires AI_NATIVE_PRACTICE_ALLOWED_MODELS as a nonempty, comma-separated, duplicate-free list containing only anthropic/claude-haiku-4.5, google/gemini-2.5-flash-lite, and openai/gpt-5-mini, with no whitespace.",
   );
 }
 if (aiEnabled === "true" && !supabaseConfigured) {
@@ -918,6 +938,52 @@ if (
 if (geminiKey && aiEnabled !== "true") {
   WARN(
     "GEMINI_API_KEY is present while AI_NATIVE_PRACTICE_ENABLED is not true. The key is configured but live AI practice remains disabled.",
+  );
+}
+
+// OpenAI runs only on an OpenAI Platform project key. A personal ChatGPT or
+// Codex subscription is not an API credential and is never accepted here.
+if (aiEnabled === "true" && openaiSelected && !openaiKey) {
+  markError(
+    "OpenAI is selected in AI_NATIVE_PRACTICE_ALLOWED_MODELS but OPENAI_API_KEY is not set.",
+  );
+}
+if (
+  openaiComplianceMetadataPresent &&
+  !openaiKey &&
+  !(aiEnabled === "true" && openaiSelected)
+) {
+  markError(
+    `OpenAI compliance metadata (${configuredOpenAIComplianceVariables.join(", ")}) is present without OPENAI_API_KEY or an enabled OpenAI model. Remove the orphaned attestations or fully configure the provider.`,
+  );
+}
+if (
+  openaiKey ||
+  (aiEnabled === "true" && openaiSelected) ||
+  openaiComplianceMetadataPresent
+) {
+  requireAttestation("OPENAI_DPA_CONFIRMED_AT", "OpenAI API");
+  const retentionDays = openaiRetention?.trim()
+    ? Number(openaiRetention)
+    : Number.NaN;
+  if (
+    !Number.isInteger(retentionDays) ||
+    retentionDays < 0 ||
+    retentionDays > 3650
+  ) {
+    markError(
+      "OpenAI is configured but OPENAI_RETENTION_DAYS is not an integer between 0 and 3650 matching the accepted API contract.",
+    );
+  }
+}
+if (openaiPracticeModel && !OPENAI_PRACTICE_MODEL_PATTERN.test(openaiPracticeModel)) {
+  markError(
+    "OPENAI_PRACTICE_MODEL must be gpt-5-mini or a dated gpt-5-mini-YYYY-MM-DD snapshot. Another model needs its own reviewed public practice id.",
+  );
+}
+if (openaiKey && aiEnabled !== "true") {
+  WARN(
+    "OPENAI_API_KEY is present while AI_NATIVE_PRACTICE_ENABLED is not true. The key is configured but live AI practice remains disabled.",
   );
 }
 

@@ -259,6 +259,47 @@ describe("PromptLab", () => {
     );
   });
 
+  it("accepts an exactly identified OpenAI completion for the selected GPT-5 mini model", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      makeJsonResponse(200, {
+        mode: "complete",
+        text: "OpenAI provider evidence",
+        model: "openai/gpt-5-mini",
+        provider: "openai",
+      }),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+    const { onArtifactChange } = renderLab();
+    expect(
+      screen.getByRole("option", { name: "GPT-5 mini · OpenAI" }),
+    ).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText("Requested model"), {
+      target: { value: "openai/gpt-5-mini" },
+    });
+    completeWorkflowSetup();
+    fireEvent.click(screen.getByRole("button", { name: "Run provider" }));
+
+    expect(
+      await screen.findByText("OpenAI provider evidence"),
+    ).toBeInTheDocument();
+    expect(
+      JSON.parse(String((fetchMock.mock.calls[0]?.[1] as RequestInit).body)),
+    ).toMatchObject({ model: "openai/gpt-5-mini" });
+    expect(
+      screen.getByText("openai · openai/gpt-5-mini"),
+    ).toBeInTheDocument();
+    await waitFor(() =>
+      expect(onArtifactChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          fields: expect.objectContaining({
+            providerEvidence: "success",
+            providerModel: "openai/gpt-5-mini",
+          }),
+        }),
+      ),
+    );
+  });
+
   it("keeps a rapid double activation to one provider request", async () => {
     const pending = deferred<Response>();
     const fetchMock = vi.fn().mockImplementation(() => pending.promise);
