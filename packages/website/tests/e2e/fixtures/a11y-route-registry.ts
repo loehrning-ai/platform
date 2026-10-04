@@ -18,6 +18,9 @@ export const SUPPLEMENTAL_A11Y_ROUTE_GROUPS: Readonly<
     "/neuigkeiten",
     "/en/neuigkeiten",
   ],
+  // /login is the one dark surface (the owner-requested scene): its card
+  // text is held to WCAG AA by this axe sweep, and the decorative canvas and
+  // its backdrop stay aria-hidden for the structural suite.
   "Hilfe & Konto": ["/hilfe", "/en/hilfe", "/login", "/en/login"],
 };
 

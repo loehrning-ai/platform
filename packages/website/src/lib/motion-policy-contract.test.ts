@@ -174,4 +174,40 @@ describe("website motion policy", () => {
     expect(css).toContain("prefers-reduced-motion: no-preference");
     expect(css).not.toMatch(/\binfinite\b/);
   });
+  it("bounds the /login dot-field continuous-motion exception", () => {
+    const scene = read("components/login/login-scene.tsx");
+    const field = read("components/login/dot-field.tsx");
+    const shapes = read("components/login/dot-field-shapes.ts");
+    const css = read("app/login/login-scene.css");
+    const policy = readFileSync(
+      join(SRC, "..", "docs/experience-system.md"),
+      "utf8",
+    );
+
+    // A lazy client chunk, never rendered on the server, and only loaded
+    // when motion is allowed.
+    expect(scene).toContain('import("@/components/login/dot-field")');
+    expect(scene).toContain("ssr: false");
+    expect(scene).toContain('"(prefers-reduced-motion: reduce)"');
+    expect(scene).toContain("{motionAllowed ? <DotField paused={paused} /> : null}");
+    // A visible 44px pause toggle with a fixed name and a pressed state.
+    expect(scene).toContain("aria-pressed={paused}");
+    expect(scene).toContain("aria-controls={LOGIN_SCENE_LAYER_ID}");
+    expect(css).toMatch(/\.login-scene-toggle\s*\{[^}]*width:\s*2\.75rem;[^}]*height:\s*2\.75rem/s);
+    // The renderer checks the media query itself, pauses on a hidden
+    // document, and paces itself at about 30fps.
+    expect(field).toContain('"(prefers-reduced-motion: reduce)"');
+    expect(field).toContain('document.addEventListener("visibilitychange", sync)');
+    expect(field).toContain('aria-hidden="true"');
+    expect(shapes).toContain("DOT_FIELD_FPS = 30");
+    expect(shapes).toContain("DOT_FIELD_MAX_DPR = 2");
+    // CSS hides the canvas under reduce too, and the card's rise is finite.
+    expect(css).toMatch(/prefers-reduced-motion:\s*reduce\)\s*\{\s*\.login-dot-field\s*\{\s*display:\s*none/s);
+    expect(css).toContain("prefers-reduced-motion: no-preference");
+    expect(css).not.toMatch(/\binfinite\b/);
+    expect(policy).toContain("Login dot field: narrow continuous-motion exception");
+    expect(policy).toContain(
+      "A visible 44px pause toggle sits at the top right of the scene whenever the shapes move",
+    );
+  });
 });

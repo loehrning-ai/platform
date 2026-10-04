@@ -16,12 +16,14 @@ import {
  * exact copy, so a wording refresh stays green while a real regression
  * (dropped email field, dead CTA, validation removed, mobile overflow) fails.
  *
- * The page has two layouts and they are asserted structurally through
- * data-login-layout: "split" (argument beside the form) when a provider is
- * approved, "single" (status, methods, public rail, argument stacked in one
- * column) when none is. CI runs provider-free, so the single-column branch and
- * its "disabled" reason are the ones exercised end to end; the other three
- * reasons are covered in src/app/login/page.test.tsx.
+ * The page is one centred column on a dark scene (the owner-requested /login
+ * background) and has two branches, asserted structurally through
+ * data-login-layout: "form" (the card with the methods, the account note
+ * under it) when a provider is approved, "status" (the card with the machine
+ * state and the method note, the public rail under it) when none is. CI runs
+ * provider-free, so the "status" branch and its "disabled" reason are the ones
+ * exercised end to end; the other three reasons are covered in
+ * src/app/login/page.test.tsx.
  */
 
 const ROUTE = "/login";
@@ -185,7 +187,7 @@ test.describe("/login layout", () => {
     const available = await signInAvailable(page);
 
     if (available) {
-      await expect(layout).toHaveAttribute("data-login-layout", "split");
+      await expect(layout).toHaveAttribute("data-login-layout", "form");
       // The public rail is the dead-end branch's replacement for a form; it
       // must not compete with a working form.
       await expect(page.locator("[data-login-public-access]")).toHaveCount(0);
@@ -193,7 +195,7 @@ test.describe("/login layout", () => {
       return;
     }
 
-    await expect(layout).toHaveAttribute("data-login-layout", "single");
+    await expect(layout).toHaveAttribute("data-login-layout", "status");
     // Provider-free CI reaches exactly one of the four machine states.
     await expect(page.locator("[data-login-status]")).toHaveAttribute(
       "data-login-status",
@@ -244,7 +246,7 @@ test.describe("/login layout", () => {
       // A working form is the shortest path; the rail is intentionally absent.
       await expect(page.locator("[data-login-layout]")).toHaveAttribute(
         "data-login-layout",
-        "split",
+        "form",
       );
       return;
     }
@@ -318,5 +320,100 @@ test.describe("/login mobile", () => {
       scrollWidth,
       `horizontal overflow at 390px: scrollWidth ${scrollWidth} > innerWidth ${innerWidth}`,
     ).toBeLessThanOrEqual(innerWidth + 1);
+  });
+});
+
+test.describe("/login scene", () => {
+  test("covers the viewport behind the card, stays decorative, and leaves the nav and footer paper", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto(ROUTE, { waitUntil: "load" });
+
+    const backdrop = page.locator("[data-login-scene-backdrop]");
+    await expect(backdrop).toHaveCount(1);
+    await expect(backdrop).toHaveAttribute("aria-hidden", "true");
+
+    const geometry = await page.evaluate(() => {
+      const layer = document.querySelector<HTMLElement>(
+        "[data-login-scene-backdrop]",
+      );
+      const scene = document.querySelector<HTMLElement>("[data-login-scene]");
+      const card = document.querySelector<HTMLElement>(".login-card");
+      const header = document.querySelector<HTMLElement>(
+        "[data-nav-header-row]",
+      );
+      const footer = document.querySelector<HTMLElement>("footer");
+      const rect = layer?.getBoundingClientRect();
+      const cardRect = card?.getBoundingClientRect();
+      return {
+        position: layer ? getComputedStyle(layer).position : "",
+        layer: rect?.toJSON() ?? null,
+        viewportWidth: document.documentElement.clientWidth,
+        viewportHeight: window.innerHeight,
+        sceneHeight: scene?.getBoundingClientRect().height ?? 0,
+        sceneGround: scene ? getComputedStyle(scene).backgroundColor : "",
+        cardCentre: cardRect ? cardRect.left + cardRect.width / 2 : 0,
+        cardWidth: cardRect?.width ?? 0,
+        navGround: header ? getComputedStyle(header).backgroundColor : "",
+        footerGround: footer ? getComputedStyle(footer).backgroundColor : "",
+      };
+    });
+
+    expect(geometry.position).toBe("fixed");
+    expect(geometry.layer?.left).toBeGreaterThanOrEqual(-1);
+    expect(geometry.layer?.right).toBeLessThanOrEqual(geometry.viewportWidth + 1);
+    expect(geometry.layer?.height).toBeGreaterThanOrEqual(
+      geometry.viewportHeight - 1,
+    );
+    // The scene fills at least the first screen, and the card is centred.
+    expect(geometry.sceneHeight).toBeGreaterThanOrEqual(
+      geometry.viewportHeight - 1,
+    );
+    expect(geometry.sceneGround).toBe("rgb(5, 5, 5)");
+    expect(
+      Math.abs(geometry.cardCentre - geometry.viewportWidth / 2),
+    ).toBeLessThanOrEqual(2);
+    expect(geometry.cardWidth).toBeGreaterThanOrEqual(340);
+    expect(geometry.cardWidth).toBeLessThanOrEqual(440);
+    // Kalkweiß nav, opaque on this route; the footer keeps its own wash.
+    expect(geometry.navGround).toBe("rgb(247, 241, 231)");
+    expect(geometry.footerGround).not.toBe("rgb(5, 5, 5)");
+  });
+
+  test("moving shapes come with a 44px pause toggle that reports its state", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    await page.goto(ROUTE, { waitUntil: "load" });
+
+    const toggle = page.locator("[data-login-scene-toggle]");
+    await expect(toggle).toBeVisible();
+    await expect(page.locator("[data-login-dot-field]")).toHaveCount(1);
+    await expect(toggle).toHaveAttribute("aria-pressed", "false");
+    await expect(toggle).toHaveAccessibleName("Hintergrundbewegung anhalten");
+    const box = await toggle.boundingBox();
+    expect(box?.width ?? 0).toBeGreaterThanOrEqual(44);
+    expect(box?.height ?? 0).toBeGreaterThanOrEqual(44);
+
+    await toggle.click();
+    await expect(toggle).toHaveAttribute("aria-pressed", "true");
+    await toggle.click();
+    await expect(toggle).toHaveAttribute("aria-pressed", "false");
+  });
+
+  test("reduced motion keeps the static grid only: no canvas, no toggle", async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto(ROUTE, { waitUntil: "load" });
+    await page
+      .locator('[data-app-hydration-marker="true"][data-hydrated="true"]')
+      .waitFor({ state: "attached" });
+
+    await expect(page.locator("[data-login-scene-backdrop]")).toHaveCount(1);
+    await expect(page.locator("[data-login-dot-field]")).toHaveCount(0);
+    await expect(page.locator("[data-login-scene-toggle]")).toHaveCount(0);
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   });
 });

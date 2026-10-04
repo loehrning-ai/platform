@@ -1,5 +1,5 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { readFileSync, readdirSync } from "node:fs";
+import { join, relative } from "node:path";
 import { describe, expect, it } from "vitest";
 
 const SOURCE_ROOT = join(__dirname, "..");
@@ -71,6 +71,33 @@ function nearBlackGrounds(text: string): string[] {
   return [...grounds].map((match) => match[1]).filter((hex) => luminance(hex) < 0.03);
 }
 
+/**
+ * The one documented exception: the /login scene. The owner asked for that
+ * page's background explicitly (a #050505 ground with a dot grid and drifting
+ * dot-matrix shapes under a dark card), so it is allowed there and nowhere
+ * else. The scope lives in one stylesheet and is applied by one page; the
+ * nav and the footer around it stay paper.
+ */
+const LOGIN_SCENE_EXCEPTION = {
+  stylesheet: "app/login/login-scene.css",
+  page: "app/login/page.tsx",
+} as const;
+
+function productionFiles(directory: string): string[] {
+  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const absolute = join(directory, entry.name);
+    if (entry.isDirectory()) {
+      return entry.name === "__tests__" || entry.name === "node_modules"
+        ? []
+        : productionFiles(absolute);
+    }
+    return /\.(?:css|tsx?)$/.test(entry.name) &&
+      !/\.(?:test|spec)\.tsx?$/.test(entry.name)
+      ? [relative(SOURCE_ROOT, absolute)]
+      : [];
+  });
+}
+
 describe("no dark surfaces", () => {
   it.each(FORMERLY_DARK)("%s paints no black, graphit or near-black ground", (path) => {
     const text = source(path);
@@ -115,5 +142,33 @@ describe("no dark surfaces", () => {
       const text = source(path);
       expect(text, path).not.toMatch(/statusRedOnDark|rgba\(243,\s*240,\s*233/);
     }
+  });
+  it("confines the one owner-requested dark ground to the /login scene", () => {
+    const css = source(LOGIN_SCENE_EXCEPTION.stylesheet);
+    // The scene paints the reference ground and keeps its tokens scoped.
+    expect(css).toMatch(/\.login-scene\s*\{[^}]*--login-ground:\s*#050505/s);
+    expect(css).toMatch(/\.login-scene-backdrop\s*\{[^}]*position:\s*fixed/s);
+    // Clipped to its section, so the fixed layer never reaches the footer.
+    expect(css).toMatch(/\.login-scene\s*\{[^}]*clip-path:\s*inset\(0\)/s);
+    // The nav stays paper on this route: opaque Kalkweiß, not a grey veil.
+    expect(css).toMatch(
+      /\[data-login-scene\][^{]*\[data-nav-header-row\]\s*\{[^}]*background-color:\s*var\(--color-background\)/s,
+    );
+    expect(source(LOGIN_SCENE_EXCEPTION.page)).toContain(
+      'import "./login-scene.css"',
+    );
+
+    // No other production file applies the scene or paints its ground.
+    const offenders = productionFiles(SOURCE_ROOT).filter((path) => {
+      if (
+        path.startsWith("app/login/") ||
+        path.startsWith("components/login/")
+      ) {
+        return false;
+      }
+      const text = source(path);
+      return /\blogin-scene\b|#050505\b/i.test(text);
+    });
+    expect(offenders).toEqual([]);
   });
 });

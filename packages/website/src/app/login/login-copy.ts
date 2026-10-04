@@ -35,7 +35,6 @@ export interface LoginCopy {
     readonly title: string;
     readonly description: string;
   };
-  readonly eyebrow: string;
   readonly heading: {
     readonly outage: string;
     readonly available: string;
@@ -116,6 +115,11 @@ export interface LoginCopy {
     readonly heading: string;
     readonly links: readonly LoginPublicLink[];
   };
+  /** The decorative background scene. */
+  readonly scene: {
+    /** Fixed name of the pause toggle; aria-pressed carries its state. */
+    readonly pauseMotion: string;
+  };
   readonly turnstile: {
     readonly label: string;
     readonly ready: string;
@@ -132,7 +136,6 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       description:
         "Optionales Lernkonto für Kursfortschritt und Teilnahmebestätigungen auf loehrning.ai.",
     },
-    eyebrow: "Freie Lernplattform · Konto",
     heading: {
       outage: "Anmeldung nicht verfügbar.",
       available: "Lernstand synchronisieren.",
@@ -285,6 +288,9 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
         },
       ],
     },
+    scene: {
+      pauseMotion: "Hintergrundbewegung anhalten",
+    },
     turnstile: {
       label: "Sicherheitsprüfung",
       ready: "Sicherheitsprüfung abgeschlossen.",
@@ -301,7 +307,6 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
       description:
         "Optional learning account for course progress and certificates of participation on loehrning.ai.",
     },
-    eyebrow: "Open learning platform · Account",
     heading: {
       outage: "Sign-in unavailable.",
       available: "Sync learning progress.",
@@ -445,6 +450,9 @@ export const LOGIN_COPY: Readonly<Record<Locale, LoginCopy>> = {
           note: "A short self-test of where you stand.",
         },
       ],
+    },
+    scene: {
+      pauseMotion: "Pause background motion",
     },
     turnstile: {
       label: "Security check",
