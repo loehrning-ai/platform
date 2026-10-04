@@ -316,8 +316,9 @@ export function EnglishPrivacyContent({
             ) : (
               <p>
                 Anthropic Claude, Google Gemini API, and OpenAI API are
-                disabled for AI learning feedback in this deployment. Exercises use local or
-                rule-based feedback and send no input to these model providers.
+                disabled for AI learning feedback in this deployment. Exercises
+                use local or rule-based feedback and send no input to these
+                model providers.
               </p>
             )}
             {features.courseTerminal ? (
