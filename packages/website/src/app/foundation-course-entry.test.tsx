@@ -102,7 +102,10 @@ describe("foundation course entry contract", () => {
       expect(progressSlot?.className).toContain("empty:hidden");
       expect(frame?.querySelector('[role="progressbar"]')).toBeNull();
       expect(frame?.querySelector("details")).not.toBeNull();
-      expect(frame?.querySelector("img")).toBeNull();
+      // The restored course picture is decorative: empty alt, nothing to read out.
+      for (const image of frame?.querySelectorAll("img") ?? []) {
+        expect(image).toHaveAttribute("alt", "");
+      }
 
       for (const link of frame?.querySelectorAll("a") ?? []) {
         expect(link.getAttribute("href")).toMatch(/^\/en\//);

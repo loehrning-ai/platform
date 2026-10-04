@@ -44,7 +44,7 @@ function sectionOf(name: string | RegExp): HTMLElement {
 }
 
 describe("<WorkshopDetailContent>", () => {
-  it("puts the cover, the agenda, the decision lab and the materials in that order, with no collapsed reference block", () => {
+  it("puts the cover, the agenda, the decision lab and the materials in that order, with only the reference folded away", () => {
     const workshop = getWorkshopBySlug("ki-prognosen-einschaetzen", "de")!;
     const { container } = render(
       <WorkshopDetailContent workshop={workshop} locale="de" />,
@@ -108,11 +108,16 @@ describe("<WorkshopDetailContent>", () => {
     });
     expect(labLink).toHaveAttribute("href", "#workshop-lab");
     expect(lab).toHaveAttribute("id", "workshop-lab");
-    expect(agenda).toHaveTextContent(
+    expect(agenda).not.toHaveTextContent(
       "Geplante Minuten, noch nicht mit Testpersonen gemessen.",
     );
 
-    expect(container.querySelectorAll("details")).toHaveLength(0);
+    // The red line stays open; optional files, data limits and the reference
+    // lists wait behind closed disclosures.
+    const disclosures = container.querySelectorAll("details");
+    expect(disclosures.length).toBeGreaterThan(0);
+    for (const disclosure of disclosures) expect(disclosure).not.toHaveAttribute("open");
+    expect(follows(materials, sectionOf("Details"))).toBe(true);
     expect(screen.queryByText("Referenz")).toBeNull();
     expect(container.querySelector('a[href^="mailto:"]')).toBeNull();
   });
@@ -194,7 +199,7 @@ describe("<WorkshopDetailContent>", () => {
     expect(stats).toHaveClass("[&>div]:justify-between");
   });
 
-  it("promotes the case, audience, outcomes, needs and limits into visible sections", () => {
+  it("keeps the case visible and folds the limits, audience, outcomes, needs and scope away", () => {
     const workshop = getWorkshopBySlug("datenbereitschaft-fuer-ki", "de")!;
     const { container } = render(
       <WorkshopDetailContent workshop={workshop} locale="de" />,
@@ -208,8 +213,8 @@ describe("<WorkshopDetailContent>", () => {
     expect(within(stats as HTMLElement).getAllByRole("term")).toHaveLength(
       workshop.caseStudy.metrics.length,
     );
-    const gap = caseSection.querySelector('[data-callout="gap"]');
-    expect(gap).toHaveTextContent("Was die Daten nicht beantworten");
+    const gap = caseSection.querySelector("details")!;
+    expect(gap.querySelector("summary")).toHaveTextContent("Was die Daten nicht beantworten");
     for (const limitation of workshop.caseStudy.dataLimitations) {
       expect(gap).toHaveTextContent(limitation);
     }
@@ -238,6 +243,12 @@ describe("<WorkshopDetailContent>", () => {
     for (const line of workshop.notCovered) {
       expect(notCovered).toHaveTextContent(line);
     }
+    // All four reference lists live in the one closed "Details" disclosure.
+    const details = sectionOf("Details");
+    for (const part of [audience, outcomes, needs, notCovered]) {
+      expect(details).toContainElement(part);
+    }
+    expect(details.querySelector("details")).not.toHaveAttribute("open");
 
     const provenance = container.querySelector(
       'footer[aria-label="Stand und Herkunft"]',
@@ -410,7 +421,8 @@ describe("<WorkshopDetailContent>", () => {
     expect(source).not.toMatch(/(?<!first-letter:)uppercase|font-black|font-mono/);
     expect(source).not.toMatch(/tracking-\[-0\.0[2-9]/);
     expect(source).not.toMatch(/bg-brand-(?:acid|sky|pink|peach|cobalt|teal)/);
-    expect(source).not.toMatch(/<details/);
+    // Three disclosures only: optional files, data limits, the reference.
+    expect(source.match(/<details/g)).toHaveLength(3);
     expect(source).not.toMatch(/from "lucide-react"/);
     // Stays a Server Component; only the material link and the lab hydrate.
     expect(source).not.toMatch(/^["']use client["']/m);
@@ -473,7 +485,7 @@ describe("<WorkshopDetailContent>", () => {
 
   for (const locale of ["de", "en"] as const) {
     for (const workshop of getWorkshops(locale)) {
-      it(`${locale}/${workshop.slug}: lists every material once, grouped by phase, with one link per row`, () => {
+      it(`${locale}/${workshop.slug}: lists every material once in taught order, optional files folded, one link per row`, () => {
         render(<WorkshopDetailContent workshop={workshop} locale={locale} />);
         const materialSection = sectionOf(locale === "de" ? "Material" : "Materials");
         const rows = materialSection.querySelectorAll("[data-material-row]");
@@ -489,18 +501,25 @@ describe("<WorkshopDetailContent>", () => {
           expect(link).toHaveAccessibleName(new RegExp(material.label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
         }
 
-        // Phase groups appear in the order before, during, after.
-        const groupHeadings = within(materialSection)
-          .getAllByRole("heading", { level: 3 })
-          .map((heading) => heading.textContent);
-        const phaseLabel = {
-          de: { before: "Vor dem Workshop", during: "Im Workshop", after: "Danach" },
-          en: { before: "Before the workshop", during: "During the workshop", after: "Afterwards" },
-        }[locale];
-        const expected = (["before", "during", "after"] as const)
-          .filter((phase) => workshop.materials.some((material) => material.phase === phase))
-          .map((phase) => phaseLabel[phase]);
-        expect(groupHeadings).toEqual(expected);
+        // Core materials first, in taught order; optional files sit in one
+        // closed disclosure below them.
+        const order = ["before", "during", "after"] as const;
+        const taught = [...workshop.materials].sort(
+          (a, b) => order.indexOf(a.phase) - order.indexOf(b.phase),
+        );
+        const expectedOrder = [
+          ...taught.filter((material) => !material.optional),
+          ...taught.filter((material) => material.optional),
+        ].map((material) => material.href);
+        expect(hrefs).toEqual(expectedOrder);
+        const optional = workshop.materials.filter((material) => material.optional);
+        const folded = materialSection.querySelector("details");
+        if (optional.length === 0) {
+          expect(folded).toBeNull();
+        } else {
+          expect(folded).not.toHaveAttribute("open");
+          expect(folded!.querySelectorAll("[data-material-row]")).toHaveLength(optional.length);
+        }
 
         // Exactly one row says where to start.
         expect(
