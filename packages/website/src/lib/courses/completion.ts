@@ -15,9 +15,6 @@ import {
 } from "@/lib/progress/types";
 import { engineExerciseStepId } from "@/lib/lesson-engine/types";
 
-const numbered = (prefix: string, count: number): readonly string[] =>
-  Array.from({ length: count }, (_, index) => `${prefix}${index + 1}`);
-
 /**
  * KI-Führerschein runs on the lesson engine (docs/lesson-engine.md): four
  * modules, eight lessons. The pre-engine `block_N_lesson_M` IDs are retired;
@@ -110,19 +107,6 @@ const sequentialSectionIds = (
     { length: count },
     (_, index) => `${lessonId}${separator}${index + 1}`,
   );
-
-function sectionsByCount(
-  lessonIds: readonly string[],
-  counts: readonly number[],
-  separator?: string,
-): Readonly<Record<string, readonly string[]>> {
-  return Object.fromEntries(
-    lessonIds.map((lessonId, index) => [
-      lessonId,
-      sequentialSectionIds(lessonId, counts[index] ?? 0, separator),
-    ]),
-  );
-}
 
 /** Lesson-engine courses track one step per lesson: the exercise. */
 function engineSteps(
