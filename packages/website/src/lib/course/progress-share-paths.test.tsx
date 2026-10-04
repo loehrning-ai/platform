@@ -40,7 +40,6 @@ vi.mock("@/lib/course/progress", () => ({
   isWorkshopQuizPassed: isWorkshopQuizPassedMock,
 }));
 
-import { KursContent as EuAiActKursContent } from "@/app/eu-ai-act-kurs/kurs/kurs-content";
 import { KursContent as KiGesellschaftKursContent } from "@/app/ki-und-gesellschaft/kurs/kurs-content";
 
 interface CourseCase {
@@ -52,14 +51,10 @@ interface CourseCase {
   }>;
 }
 
-// KI-Führerschein runs on the lesson engine; its hub (ModuleOverview) has
-// its own share/import coverage in components/lesson-engine/module-overview.test.tsx.
+// KI-Führerschein and the EU AI Act course run on the lesson engine; their
+// hub (ModuleOverview) has its own share/import coverage in
+// components/lesson-engine/module-overview.test.tsx.
 const COURSES: readonly CourseCase[] = [
-  {
-    slug: "eu-ai-act-kurs",
-    path: "/eu-ai-act-kurs/kurs",
-    Component: EuAiActKursContent,
-  },
   {
     slug: "ki-und-gesellschaft",
     path: "/ki-und-gesellschaft/kurs",

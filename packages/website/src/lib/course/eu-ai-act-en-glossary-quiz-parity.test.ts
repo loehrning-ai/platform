@@ -123,14 +123,17 @@ function collectPercentages(value: JsonValue): string[] {
 }
 
 function collectFineAmounts(value: JsonValue): string[] {
-  const sourcePattern = /\b(\d+)\s*Mio\.?\s*EUR\b/giu;
-  const translationPattern = /\bEUR\s*(\d+)\s*million\b/giu;
+  // Decimal amounts ("1,4 Mio. EUR" / "EUR 1.4 million") compare as one value.
+  const sourcePattern = /\b(\d+(?:,\d+)?)\s*Mio\.?\s*EUR\b/giu;
+  const translationPattern = /\bEUR\s*(\d+(?:\.\d+)?)\s*million\b/giu;
 
   return [
-    ...new Set([
-      ...uniqueMatches(value, sourcePattern),
-      ...uniqueMatches(value, translationPattern),
-    ]),
+    ...new Set(
+      [
+        ...uniqueMatches(value, sourcePattern),
+        ...uniqueMatches(value, translationPattern),
+      ].map((amount) => amount.replace(",", ".")),
+    ),
   ].sort((left, right) => Number(left) - Number(right));
 }
 
@@ -287,34 +290,32 @@ describe("EU AI Act English workshop quiz", () => {
     const english = collectStrings(translation).join("\n");
 
     for (const qualifier of [
-      "does not automatically mean that the same fine applies to every infringement",
-      "either trigger establishes the Regulation's applicability independently",
-      "unless applicable Union or national law requires a longer period",
-      "a notified body is not provided for here",
-      "do not have to guarantee that each person reaches a particular level of proficiency",
-      "does not create a presumption of conformity in the legal sense",
-      "unless the content has undergone human review or editorial control",
-      "whichever is higher",
-      "A private HR use listed under point 4 is outside that scope",
-      "required only where the processing is likely to result in a high risk",
-      "unless this is obvious",
-      "purely personal, non-professional activity",
+      "unless other law provides otherwise",
+      "except for medical or safety reasons",
+      "SMEs the lower under Art. 99(6)",
+      "purely for personal, non-professional purposes",
+      "at the latest at the first interaction",
+      "is always high-risk if it profiles natural persons",
+      "Employment AI under Annex III point 4 is not among the Art. 27 addressees",
+      "changed its content, not this date",
+      "Consent or works council approval does not cure it",
+      "as far as technically feasible",
     ]) {
       expect(english).toContain(qualifier);
     }
 
     for (const reference of [
-      "Art. 2(1)(a)",
       "Art. 2(1)(c)",
-      "Art. 5(1)(f)",
-      "Annex III, point 4(a)",
-      "Art. 43(2)",
-      "Annex III, points 5(b) and 5(c)",
-      "Art. 50(4)",
-      "Art. 51(2)",
-      "Art. 73(2)",
-      "Art. 99(3)",
       "Art. 2(10)",
+      "Art. 3(4)",
+      "Art. 5(1)(f)",
+      "Art. 6(3)",
+      "Annex III point 4(a)",
+      "Art. 25(1)",
+      "Art. 26(6)",
+      "Art. 50(4)",
+      "Art. 50(5)",
+      "Art. 99(6)",
     ]) {
       expect(english).toContain(reference);
     }

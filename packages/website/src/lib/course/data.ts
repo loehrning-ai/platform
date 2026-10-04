@@ -51,19 +51,17 @@ import kfEnWorkshop from "../../../content/ki-fuehrerschein/en/quiz/questions.js
 
 // ─── EU AI Act Kurs content ────────────────────────────────────
 
-import eaBlock1 from "../../../content/eu-ai-act-kurs/block-1-grundlagen-lessons.json";
-import eaBlock2 from "../../../content/eu-ai-act-kurs/block-2-risikoklassen-lessons.json";
-import eaBlock3 from "../../../content/eu-ai-act-kurs/block-3-hochrisiko-lessons.json";
-import eaBlock4 from "../../../content/eu-ai-act-kurs/block-4-gpai-transparenz-lessons.json";
-import eaBlock5 from "../../../content/eu-ai-act-kurs/block-5-governance-lessons.json";
-import eaBlock6 from "../../../content/eu-ai-act-kurs/block-6-praxis-lessons.json";
+import eaBlock1 from "../../../content/eu-ai-act-kurs/block-1-geltung-lessons.json";
+import eaBlock2 from "../../../content/eu-ai-act-kurs/block-2-risiko-lessons.json";
+import eaBlock3 from "../../../content/eu-ai-act-kurs/block-3-pflichten-lessons.json";
+import eaBlock4 from "../../../content/eu-ai-act-kurs/block-4-aufsicht-lessons.json";
+import eaBlock5 from "../../../content/eu-ai-act-kurs/block-5-umsetzen-lessons.json";
 import eaWorkshop from "../../../content/eu-ai-act-kurs/quiz/questions.json";
-import eaEnBlock1 from "../../../content/eu-ai-act-kurs/en/block-1-grundlagen-lessons.json";
-import eaEnBlock2 from "../../../content/eu-ai-act-kurs/en/block-2-risikoklassen-lessons.json";
-import eaEnBlock3 from "../../../content/eu-ai-act-kurs/en/block-3-hochrisiko-lessons.json";
-import eaEnBlock4 from "../../../content/eu-ai-act-kurs/en/block-4-gpai-transparenz-lessons.json";
-import eaEnBlock5 from "../../../content/eu-ai-act-kurs/en/block-5-governance-lessons.json";
-import eaEnBlock6 from "../../../content/eu-ai-act-kurs/en/block-6-praxis-lessons.json";
+import eaEnBlock1 from "../../../content/eu-ai-act-kurs/en/block-1-geltung-lessons.json";
+import eaEnBlock2 from "../../../content/eu-ai-act-kurs/en/block-2-risiko-lessons.json";
+import eaEnBlock3 from "../../../content/eu-ai-act-kurs/en/block-3-pflichten-lessons.json";
+import eaEnBlock4 from "../../../content/eu-ai-act-kurs/en/block-4-aufsicht-lessons.json";
+import eaEnBlock5 from "../../../content/eu-ai-act-kurs/en/block-5-umsetzen-lessons.json";
 import eaEnWorkshop from "../../../content/eu-ai-act-kurs/en/quiz/questions.json";
 
 // ─── KI und Gesellschaft content (KI und Gesellschaft course review) ────────────────────
@@ -206,53 +204,48 @@ const KI_FUEHRERSCHEIN_EN: CourseData = {
 
 // ─── EU AI Act Kurs course config ──────────────────────────────
 
+// EU AI Act Kurs runs on the lesson engine (docs/lesson-engine.md): five
+// modules (block_1..block_5), ten lessons, about 60 minutes.
 const EU_AI_ACT_KURS: CourseData = {
   config: EU_AI_ACT_KURS_CONFIG,
   blockMeta: {
     block_1: {
-      title: "Geltungsbereich, Rollen und Fristen",
+      title: "Gilt das für mich?",
       description:
-        "Wer erfasst ist, welche Rollen es gibt und welche Fristen gelten.",
-      durationMinutes: 16,
+        "Ihre Rolle bestimmen und die Stichtage gegen das heutige Datum prüfen.",
+      durationMinutes: 11,
     },
     block_2: {
-      title: "Die 4 Risikoklassen",
+      title: "Risikoklasse bestimmen",
       description:
-        "KI-Systeme als verboten, hochriskant, begrenzt oder minimal einordnen.",
-      durationMinutes: 18,
+        "Sechs Fragen zur Klasse, Ausnahme nach Art. 6 Abs. 3 und zehn Praxisfälle.",
+      durationMinutes: 13,
     },
     block_3: {
-      title: "Hochrisiko-Pflichten",
+      title: "Ihre Pflichten",
       description:
-        "Risikomanagement, Dokumentation, Aufsicht und Konformitätsbewertung (Art. 9-43).",
-      durationMinutes: 20,
+        "Pflichtenliste aus Rolle und Klasse erzeugen und Kennzeichnung nach Art. 50 prüfen.",
+      durationMinutes: 12,
     },
     block_4: {
-      title: "GPAI, Art. 4 & Transparenz",
+      title: "Aufsicht und Bußgelder",
       description:
-        "Basismodelle, KI-Kompetenz nach Art. 4 und Transparenz nach Art. 50.",
-      durationMinutes: 20,
+        "Höchstbeträge nach Art. 99 rechnen und auf eine Behördenanfrage reagieren.",
+      durationMinutes: 11,
     },
     block_5: {
-      title: "Governance & Sanktionen",
+      title: "Umsetzen",
       description:
-        "AI Office, nationale Behörden, Bußgelder bis 35 Mio. EUR oder 7 % des Umsatzes, Sandboxes, Meldewege.",
-      durationMinutes: 16,
-    },
-    block_6: {
-      title: "Praxis: Umsetzung im Mittelstand",
-      description:
-        "Audit in fünf Schritten, Abgleich mit der DSGVO, Vorlagen und ein Fallbeispiel aus dem Mittelstand.",
-      durationMinutes: 20,
+        "Ein CV-Screening-Memo gegen die Quellen prüfen und einen Inventareintrag erstellen.",
+      durationMinutes: 13,
     },
   },
   lessonData: {
-    block_1: eaBlock1 as RawBlockContent,
-    block_2: eaBlock2 as RawBlockContent,
-    block_3: eaBlock3 as RawBlockContent,
-    block_4: eaBlock4 as RawBlockContent,
-    block_5: eaBlock5 as RawBlockContent,
-    block_6: eaBlock6 as RawBlockContent,
+    block_1: eaBlock1 as unknown as RawBlockContent,
+    block_2: eaBlock2 as unknown as RawBlockContent,
+    block_3: eaBlock3 as unknown as RawBlockContent,
+    block_4: eaBlock4 as unknown as RawBlockContent,
+    block_5: eaBlock5 as unknown as RawBlockContent,
   },
   workshopQuestions: eaWorkshop as unknown as QuizQuestion[],
   glossary: eaGlossary as unknown as GlossaryEntry[],
@@ -263,49 +256,42 @@ const EU_AI_ACT_KURS_EN: CourseData = {
   config: EU_AI_ACT_KURS_EN_CONFIG,
   blockMeta: {
     block_1: {
-      title: "Scope, roles, and application dates",
+      title: "Does it apply to me?",
       description:
-        "Who is covered, which roles exist and which dates apply.",
-      durationMinutes: 16,
+        "Determine your role and check the application dates against today.",
+      durationMinutes: 11,
     },
     block_2: {
-      title: "Risk categories and classification",
+      title: "Determine the risk class",
       description:
-        "Classify AI systems as prohibited, high-risk, limited or minimal risk.",
-      durationMinutes: 18,
+        "Six questions to the class, the Art. 6(3) exception and ten real-world cases.",
+      durationMinutes: 13,
     },
     block_3: {
-      title: "High-risk system obligations",
+      title: "Your obligations",
       description:
-        "Risk management, documentation, oversight and conformity assessment (Art. 9-43).",
-      durationMinutes: 20,
+        "Generate the obligation list from role and class and check Art. 50 labelling.",
+      durationMinutes: 12,
     },
     block_4: {
-      title: "GPAI, AI literacy, and transparency",
+      title: "Supervision and fines",
       description:
-        "Foundation models, AI literacy under Article 4, transparency under Article 50.",
-      durationMinutes: 20,
+        "Work out maximum fines under Art. 99 and respond to an authority request.",
+      durationMinutes: 11,
     },
     block_5: {
-      title: "Governance and penalties",
+      title: "Put it into practice",
       description:
-        "AI Office, national authorities, fines up to EUR 35 million or 7% of turnover, sandboxes, reporting routes.",
-      durationMinutes: 16,
-    },
-    block_6: {
-      title: "Implementation for smaller organizations",
-      description:
-        "Five-step audit, alignment with GDPR, templates and an SME case study.",
-      durationMinutes: 20,
+        "Check a CV screening memo against the sources and create an inventory entry.",
+      durationMinutes: 13,
     },
   },
   lessonData: {
-    block_1: eaEnBlock1 as RawBlockContent,
-    block_2: eaEnBlock2 as RawBlockContent,
-    block_3: eaEnBlock3 as RawBlockContent,
-    block_4: eaEnBlock4 as RawBlockContent,
-    block_5: eaEnBlock5 as RawBlockContent,
-    block_6: eaEnBlock6 as RawBlockContent,
+    block_1: eaEnBlock1 as unknown as RawBlockContent,
+    block_2: eaEnBlock2 as unknown as RawBlockContent,
+    block_3: eaEnBlock3 as unknown as RawBlockContent,
+    block_4: eaEnBlock4 as unknown as RawBlockContent,
+    block_5: eaEnBlock5 as unknown as RawBlockContent,
   },
   workshopQuestions: eaEnWorkshop as unknown as QuizQuestion[],
   glossary: eaEnGlossary as unknown as GlossaryEntry[],

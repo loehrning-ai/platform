@@ -147,7 +147,7 @@ export interface ImportedCourse {
 // Step 1 → 2 → 3 → 4. Lesson counts mirror the live course content:
 //  - KI-Führerschein: 4 modules, 8 lesson-engine lessons (see lib/course/data.ts)
 //  - KI und Gesellschaft: 3 blocks, 9 lessons
-//  - EU-AI-Act-Kurs: 6 blocks, 24 lessons
+//  - EU-AI-Act-Kurs: 5 modules, 10 lesson-engine lessons
 //  - AI-Native: 4 modules, 27 lessons
 export const COURSE_CATALOG: readonly CatalogCourse[] = [
   {
@@ -205,16 +205,16 @@ export const COURSE_CATALOG: readonly CatalogCourse[] = [
     tagline:
       "Anwendungsfall klassifizieren, Rolle bestimmen, Pflichten zuordnen.",
     description:
-      "Jeder Anwendungsfall landet in einer Klasse: verboten, transparenzpflichtig, GPAI, Hochrisiko oder keine. Jede Aussage mit Frist nennt Rechtsstand und Primärquelle. Der Kurs ersetzt keine Rechtsberatung.",
+      "Zehn kurze Lektionen mit Übung: Rolle bestimmen, Stichtage gegen heute prüfen, Anwendungsfälle einer Risikoklasse zuordnen, Pflichtenliste erzeugen, Bußgeldrahmen rechnen und ein KI-Memo gegen die Quellen prüfen. Jede Aussage mit Frist nennt Rechtsstand und Primärquelle. Der Kurs ersetzt keine Rechtsberatung.",
     href: "/eu-ai-act-kurs",
     startHref: "/eu-ai-act-kurs/kurs",
     continueHref: "/eu-ai-act-kurs/kurs",
-    duration: "ca. 1 Std. 50 Min.",
-    durationMinutes: 110,
-    totalLessons: 24,
+    duration: "ca. 1 Std.",
+    durationMinutes: 60,
+    totalLessons: 10,
     level: "mittel",
-    unitLabel: "Blöcke",
-    unitCount: 6,
+    unitLabel: "Module",
+    unitCount: 5,
     audience: "Compliance, IT-Leitung, Geschäftsführung",
     coverImage: "/course-covers/eu-ai-act-kurs-cover-v4.webp",
     coverImageAlt:

@@ -21,9 +21,9 @@ describe("loadWorkshopQuestions", () => {
     }
   });
 
-  it("loads the EU AI Act questions (distinct loader, 27 questions)", async () => {
+  it("loads the EU AI Act questions (distinct loader, 20 questions)", async () => {
     const questions = await loadWorkshopQuestions("eu-ai-act-kurs");
-    expect(questions).toHaveLength(27);
+    expect(questions).toHaveLength(20);
     expect(questions.every((q) => q.answerOptions.length >= 3)).toBe(true);
   });
 

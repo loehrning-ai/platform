@@ -96,8 +96,8 @@ const SHARE_COURSES = [
   },
   {
     courseSlug: "eu-ai-act-kurs",
-    lessonId: "block_2_lesson_3",
-    sectionId: "block_2_lesson_3_section_4",
+    lessonId: "risiko-2-2",
+    sectionId: "risiko-2-2_exercise",
   },
   {
     courseSlug: "ki-und-gesellschaft",
@@ -251,7 +251,7 @@ describe("course progress facade", () => {
     it("keeps section/lesson state isolated per course slug", () => {
       markLessonCompleted(COURSE, KF_L1);
       expect(isLessonCompleted(COURSE, KF_L1)).toBe(true);
-      expect(isLessonCompleted("eu-ai-act-kurs", "block_1_lesson_1")).toBe(
+      expect(isLessonCompleted("eu-ai-act-kurs", "rolle-1-1")).toBe(
         false,
       );
       expect([...getCompletedLessonIds(COURSE)]).toEqual([KF_L1]);
@@ -336,12 +336,12 @@ describe("course progress facade", () => {
   describe("resetProgress", () => {
     it("clears a single course's progress", () => {
       markLessonCompleted(COURSE, KF_L1);
-      markLessonCompleted("eu-ai-act-kurs", "block_1_lesson_2");
+      markLessonCompleted("eu-ai-act-kurs", "zeitplan-1-2");
       resetProgress(COURSE);
       expect(isLessonCompleted(COURSE, KF_L1)).toBe(false);
       expect(getAllProgress(COURSE).lessons).toEqual({});
       // other courses are untouched
-      expect(isLessonCompleted("eu-ai-act-kurs", "block_1_lesson_2")).toBe(
+      expect(isLessonCompleted("eu-ai-act-kurs", "zeitplan-1-2")).toBe(
         true,
       );
     });

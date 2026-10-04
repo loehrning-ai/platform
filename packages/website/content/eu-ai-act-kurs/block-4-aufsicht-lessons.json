@@ -1,0 +1,344 @@
+{
+  "blockId": "block_4",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-04-05",
+  "format": "lesson-engine/v1",
+  "reviewCadence": "legal",
+  "riskClass": "legal",
+  "triggerEvents": [
+    "eu-ai-act-amendment",
+    "commission-qa-update"
+  ],
+  "lessons": [
+    {
+      "id": "bussgeld-4-1",
+      "blockId": "block_4",
+      "number": 7,
+      "title": "Was ein Verstoß kosten kann",
+      "subtitle": "Drei Stufen, fester Betrag oder Umsatzanteil, die KMU-Regel",
+      "durationMinutes": 6,
+      "keyConcepts": [
+        "Sanktionen",
+        "Art. 99",
+        "KMU-Regel"
+      ],
+      "concept": {
+        "body": "Art. 99 staffelt die Höchstbeträge in drei Stufen:\n\n| Verstoß | Höchstbetrag |\n|---|---|\n| Verbotene Praktik (Art. 5) | 35 Mio. EUR oder 7 % des weltweiten Jahresumsatzes (Abs. 3) |\n| Pflichten der Akteure, etwa Art. 16, 26, 50 | 15 Mio. EUR oder 3 % (Abs. 4) |\n| Falsche Angaben an Behörden | 7,5 Mio. EUR oder 1 % (Abs. 5) |\n\nUnternehmen trifft der höhere Wert, KMU einschließlich Start-ups der niedrigere (Abs. 6). Das sind Obergrenzen. Die Behörde wägt nach Abs. 7 unter anderem Schwere, Dauer, Vorsatz oder Fahrlässigkeit, Größe, Zusammenarbeit und Ihre technischen und organisatorischen Maßnahmen. Seit der Verordnung (EU) 2026/1744 gelten für kleine Mid-Caps eigene Höchstgrenzen.",
+        "takeaway": "Für KMU zählt der niedrigere Wert. Dokumentierte Maßnahmen fließen in die Abwägung ein, ohne einen Nachlass zu garantieren.",
+        "sources": [
+          {
+            "label": "Verordnung (EU) 2024/1689 (KI-VO)",
+            "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+          },
+          {
+            "label": "Verordnung (EU) 2026/1744"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "calculator",
+        "title": "Rechnen Sie drei Konstellationen durch",
+        "instructions": "Stellen Sie Umsatz, Verstoß und Unternehmensgröße so ein, dass Sie die drei Ziele erreichen. Der Rechner zeigt den Höchstbetrag und welcher Wert ihn bestimmt.",
+        "props": {
+          "inputs": [
+            {
+              "id": "turnover",
+              "label": "Weltweiter Jahresumsatz",
+              "type": "slider",
+              "scale": "log",
+              "min": 500000,
+              "max": 5000000000,
+              "default": 20000000,
+              "format": "eur"
+            },
+            {
+              "id": "tier",
+              "label": "Verstoß",
+              "type": "select",
+              "default": 3,
+              "options": [
+                {
+                  "value": 3,
+                  "label": "Verbotene Praktik"
+                },
+                {
+                  "value": 2,
+                  "label": "Pflichtverstoß, etwa Art. 26 oder 50"
+                },
+                {
+                  "value": 1,
+                  "label": "Falsche Angaben"
+                }
+              ]
+            },
+            {
+              "id": "sme",
+              "label": "KMU oder Start-up (Art. 99 Abs. 6)",
+              "type": "toggle",
+              "default": 1
+            }
+          ],
+          "outputs": [
+            {
+              "id": "fixed",
+              "label": "Fester Betrag",
+              "formula": "tier == 3 ? 35000000 : (tier == 2 ? 15000000 : 7500000)",
+              "format": "eur"
+            },
+            {
+              "id": "rate",
+              "label": "Umsatzanteil",
+              "formula": "tier == 3 ? 0.07 : (tier == 2 ? 0.03 : 0.01)",
+              "format": "percent"
+            },
+            {
+              "id": "share",
+              "label": "Betrag aus dem Umsatzanteil",
+              "formula": "turnover * rate",
+              "format": "eur"
+            },
+            {
+              "id": "cap",
+              "label": "Höchstbetrag",
+              "formula": "sme ? min(fixed, share) : max(fixed, share)",
+              "format": "eur",
+              "emphasis": true,
+              "help": "KMU: der niedrigere Wert. Andere Unternehmen: der höhere."
+            }
+          ],
+          "chart": {
+            "kind": "bars",
+            "title": "Fester Betrag gegen Umsatzanteil",
+            "format": "eur",
+            "bars": [
+              {
+                "label": "Fester Betrag",
+                "formula": "fixed",
+                "tone": "neutral"
+              },
+              {
+                "label": "Umsatzanteil",
+                "formula": "share",
+                "tone": "warn"
+              },
+              {
+                "label": "Höchstbetrag",
+                "formula": "cap",
+                "tone": "accent"
+              }
+            ]
+          },
+          "verdicts": [
+            {
+              "when": "sme == 1 && share < fixed",
+              "tone": "warn",
+              "title": "KMU: der Umsatzanteil ist die Obergrenze",
+              "body": "Für KMU gilt der niedrigere der beiden Werte (Art. 99 Abs. 6)."
+            },
+            {
+              "when": "sme == 1",
+              "tone": "warn",
+              "title": "KMU: der feste Betrag ist die Obergrenze",
+              "body": "Bei diesem Umsatz liegt der feste Betrag unter dem Umsatzanteil."
+            },
+            {
+              "when": "share > fixed",
+              "tone": "bad",
+              "title": "Großunternehmen: der Umsatzanteil übersteigt den festen Betrag",
+              "body": "Für Unternehmen, die kein KMU sind, gilt der höhere Wert."
+            },
+            {
+              "when": "true",
+              "tone": "bad",
+              "title": "Großunternehmen: der feste Betrag gilt",
+              "body": "Der höhere Wert ist hier der feste Betrag."
+            }
+          ],
+          "goals": [
+            {
+              "id": "sme",
+              "label": "Stellen Sie ein KMU mit höchstens 20 Mio. EUR Umsatz und eine verbotene Praktik ein",
+              "when": "sme == 1 && tier == 3 && turnover <= 20000000",
+              "insight": "Bei genau 20 Mio. EUR Umsatz wären es höchstens 1,4 Mio. EUR (7 %) statt 35 Mio. EUR."
+            },
+            {
+              "id": "large",
+              "label": "Finden Sie für ein Großunternehmen den Umsatz, ab dem 7 % mehr sind als 35 Mio. EUR",
+              "when": "sme == 0 && tier == 3 && share > fixed",
+              "insight": "Ab 500 Mio. EUR Umsatz übersteigen 7 % die 35 Mio. EUR."
+            },
+            {
+              "id": "info",
+              "label": "Sehen Sie sich die Stufe für falsche Angaben an",
+              "when": "tier == 1",
+              "insight": "Falsche, unvollständige oder irreführende Angaben an Behörden kosten bis 7,5 Mio. EUR oder 1 % (Art. 99 Abs. 5)."
+            }
+          ],
+          "note": "Höchstbeträge nach Art. 99 Abs. 3 bis 6 KI-VO, kein Bußgeldbescheid. Die tatsächliche Höhe wägt die Behörde nach Abs. 7 ab. Eigene Höchstgrenzen für kleine Mid-Caps nach der Verordnung (EU) 2026/1744 bildet der Rechner nicht ab."
+        }
+      },
+      "checks": [
+        {
+          "id": "bussgeld-4-1-c1",
+          "prompt": "Ein KMU mit 1,5 Mio. EUR Jahresumsatz setzt eine verbotene Praktik ein. Wie hoch ist der Höchstbetrag?",
+          "options": [
+            {
+              "id": "a",
+              "text": "35 Mio. EUR",
+              "correct": false,
+              "feedback": "Für KMU gilt nach Art. 99 Abs. 6 der niedrigere der beiden Werte."
+            },
+            {
+              "id": "b",
+              "text": "105.000 EUR, also 7 % des Umsatzes",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "1,5 Mio. EUR, also der ganze Umsatz",
+              "correct": false,
+              "feedback": "Die Obergrenze sind 7 % des Umsatzes, nicht der ganze Umsatz."
+            }
+          ],
+          "explanation": "7 % von 1,5 Mio. EUR sind 105.000 EUR. Weil das unter 35 Mio. EUR liegt, ist es für ein KMU die Obergrenze."
+        },
+        {
+          "id": "bussgeld-4-1-c2",
+          "prompt": "Welche Rolle spielen dokumentierte Art.-4-Maßnahmen, ein Risikoregister und ein Vorfallprozess bei einem Bußgeld?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Sie schließen ein Bußgeld aus",
+              "correct": false,
+              "feedback": "Kein Nachweis schließt ein Bußgeld aus. Er fließt in die Abwägung ein."
+            },
+            {
+              "id": "b",
+              "text": "Die Behörde berücksichtigt sie nach Art. 99 Abs. 7, ohne einen bestimmten Nachlass zu garantieren",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Sie spielen keine Rolle",
+              "correct": false,
+              "feedback": "Abs. 7 nennt technische und organisatorische Maßnahmen ausdrücklich als Kriterium."
+            }
+          ],
+          "explanation": "Art. 99 Abs. 7 listet Kriterien für die Höhe, darunter Verantwortung unter Berücksichtigung der getroffenen Maßnahmen und die Zusammenarbeit mit der Behörde."
+        }
+      ]
+    },
+    {
+      "id": "aufsicht-4-2",
+      "blockId": "block_4",
+      "number": 8,
+      "title": "Wenn die Behörde fragt",
+      "subtitle": "Zuständigkeit in Deutschland und ein Plan in fünf Schritten",
+      "durationMinutes": 5,
+      "keyConcepts": [
+        "Marktüberwachung",
+        "Bundesnetzagentur",
+        "Art. 74"
+      ],
+      "concept": {
+        "body": "Seit dem 29. Juli 2026 ist das KI-MIG in Kraft. Es macht die Bundesnetzagentur zur Marktüberwachungsbehörde, zentralen Anlaufstelle und Beschwerdestelle, soweit keine Fachbehörde zuständig ist. Für Finanzinstitute und Produkte nach Anhang I bleiben grundsätzlich die sektoralen Behörden zuständig (Art. 74).\n\nJede Person mit Grund zur Annahme eines Verstoßes kann sich beschweren (Art. 85). Die Behörde erhält Zugang zu Dokumentation sowie Trainings-, Validierungs- und Testdaten (Art. 74 Abs. 12), Quellcode nur auf begründete Anfrage, wenn andere Prüfwege nicht reichen (Abs. 13). Stellt sie Nichtkonformität fest, verlangt sie Korrekturmaßnahmen binnen höchstens 15 Arbeitstagen (Art. 79 Abs. 2).\n\nFalsche oder unvollständige Antworten fallen in eine eigene Bußgeldstufe (Art. 99 Abs. 5).",
+        "takeaway": "Frist sichern, Umfang klären, belegen, prüfen lassen, wahr antworten.",
+        "sources": [
+          {
+            "label": "Verordnung (EU) 2024/1689 (KI-VO)",
+            "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "sequence-order",
+        "title": "Ordnen Sie den Reaktionsplan",
+        "instructions": "Bringen Sie die fünf Schritte in die Reihenfolge, in der Sie auf die Anfrage reagieren. Prüfen Sie, korrigieren Sie die markierten Schritte und prüfen Sie erneut. Fertig, wenn die Reihenfolge stimmt.",
+        "props": {
+          "context": {
+            "label": "Situation (erfunden)",
+            "text": "Die Marktüberwachungsbehörde schreibt der XY GmbH: Sie bittet um Unterlagen zu einem KI-System, das Bewerbungen vorsortiert, und setzt eine Frist."
+          },
+          "steps": [
+            {
+              "id": "ack",
+              "text": "Eingang schriftlich bestätigen und die Frist notieren",
+              "why": "Ohne Frist kein Plan. Die Bestätigung belegt, wann die Anfrage ankam."
+            },
+            {
+              "id": "scope",
+              "text": "Prüfen, welche Behörde fragt, auf welcher Grundlage und was genau verlangt wird",
+              "why": "Erst der genaue Umfang entscheidet, was Sie herausgeben. Quellcode etwa nur auf begründete Anfrage (Art. 74 Abs. 13)."
+            },
+            {
+              "id": "collect",
+              "text": "Nachweise zusammenstellen: Inventareintrag, Einstufung, Art.-4-Maßnahmen, Anbieterunterlagen, Logs",
+              "why": "Belegen können Sie nur, was dokumentiert ist."
+            },
+            {
+              "id": "review",
+              "text": "Antwort mit Rechtsberatung prüfen und intern freigeben",
+              "why": "Vier Augen vor dem Versand verhindern unvollständige oder widersprüchliche Angaben."
+            },
+            {
+              "id": "answer",
+              "text": "Vollständig und wahr antworten, Lücken offen benennen, alles protokollieren",
+              "why": "Falsche oder unvollständige Angaben kosten bis 7,5 Mio. EUR oder 1 % des weltweiten Jahresumsatzes (Art. 99 Abs. 5)."
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "aufsicht-4-2-c1",
+          "prompt": "Die Behörde verlangt Ihren Quellcode. Was gilt?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Sofort herausgeben, jede Anfrage genügt",
+              "correct": false,
+              "feedback": "Art. 74 Abs. 13 knüpft den Zugang an eine begründete Anfrage und ausgeschöpfte andere Prüfwege."
+            },
+            {
+              "id": "b",
+              "text": "Nie, Quellcode ist geschützt",
+              "correct": false,
+              "feedback": "Unter den Voraussetzungen des Abs. 13 kann die Behörde ihn verlangen."
+            },
+            {
+              "id": "c",
+              "text": "Nur auf begründete Anfrage, wenn andere Prüfwege ausgeschöpft oder unzureichend sind",
+              "correct": true
+            }
+          ],
+          "explanation": "Zugang zum Quellcode gibt es nach Art. 74 Abs. 13 nur unter diesen Voraussetzungen. Klären Sie deshalb zuerst den Umfang der Anfrage."
+        },
+        {
+          "id": "aufsicht-4-2-c2",
+          "prompt": "Wer darf bei der Marktüberwachungsbehörde Beschwerde über einen mutmaßlichen Verstoß einlegen?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Nur Betroffene einer KI-Entscheidung",
+              "correct": false,
+              "feedback": "Art. 85 verlangt keine eigene Betroffenheit."
+            },
+            {
+              "id": "b",
+              "text": "Jede natürliche oder juristische Person mit Grund zur Annahme eines Verstoßes",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Nur Wettbewerber",
+              "correct": false,
+              "feedback": "Wettbewerber dürfen, aber nicht nur sie."
+            }
+          ],
+          "explanation": "Art. 85 öffnet die Beschwerde für jede natürliche oder juristische Person, die Grund zur Annahme eines Verstoßes hat."
+        }
+      ]
+    }
+  ]
+}

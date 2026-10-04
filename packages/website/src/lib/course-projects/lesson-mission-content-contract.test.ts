@@ -5,6 +5,7 @@ import { getAllLessons as getCoreLessons } from "@/lib/course/data";
 import { getAllDataInfraLessons } from "@/lib/data-infrastructure/data";
 import { getAllDefLocalizedChapters } from "@/lib/data-engineering-fundamentals/content";
 import { getAllDsLocalizedChapters } from "@/lib/data-science/content";
+import { COURSE_SLUGS } from "@/lib/course/types";
 import { CANONICAL_LESSON_IDS } from "@/lib/courses/completion";
 import { bindLessonMission } from "./lesson-mission-binding";
 
@@ -20,7 +21,7 @@ const CORE_COURSES = [
  * already-loaded active lesson projection and never import sibling lessons.
  */
 describe("authored lesson-frame content contract", () => {
-  it("wraps the shared course probes for all 143 canonical lessons in both reviewed locales", async () => {
+  it("wraps the shared course probes for every canonical lesson in both reviewed locales", async () => {
     let boundCount = 0;
 
     for (const locale of LOCALES) {
@@ -82,6 +83,12 @@ describe("authored lesson-frame content contract", () => {
       }
     }
 
-    expect(boundCount).toBe(286);
+    expect(boundCount).toBe(
+      LOCALES.length *
+        COURSE_SLUGS.reduce(
+          (sum, courseSlug) => sum + CANONICAL_LESSON_IDS[courseSlug].length,
+          0,
+        ),
+    );
   });
 });

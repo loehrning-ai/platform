@@ -1,0 +1,434 @@
+{
+  "blockId": "block_5",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-04-05",
+  "format": "lesson-engine/v1",
+  "reviewCadence": "legal",
+  "riskClass": "legal",
+  "triggerEvents": [
+    "eu-ai-act-amendment",
+    "commission-qa-update"
+  ],
+  "lessons": [
+    {
+      "id": "fall-5-1",
+      "blockId": "block_5",
+      "number": 9,
+      "title": "Fall: ein CV-Screening-Tool einführen",
+      "subtitle": "Ein KI-Entscheidungsmemo gegen die Rechtsquellen prüfen",
+      "durationMinutes": 8,
+      "keyConcepts": [
+        "CV-Screening",
+        "Anhang III Nr. 4",
+        "Grundrechte-Folgenabschätzung"
+      ],
+      "concept": {
+        "body": "Fiktiver Fall: Die XY GmbH, ein Maschinenbauer mit 200 Beschäftigten, will ein zugekauftes Tool einsetzen, das Lebensläufe per Match-Score ordnet und eine Auswahlliste vorbereitet. Ein KI-Assistent hat die Entscheidungsvorlage für die Geschäftsführung entworfen.\n\nPrüfen Sie die Vorlage so, wie es eine Aufsichtsbehörde täte. Achten Sie auf drei Verwechslungen:\n\n- menschliche Endentscheidung statt Ausnahme nach Art. 6 Abs. 3,\n- Pflichten öffentlicher Stellen, auf private Betreiber übertragen,\n- Anbieterpflichten beim Betreiber.\n\nNeben der KI-Verordnung gelten weiter das AGG, Art. 22 DSGVO bei ausschließlich automatisierten Entscheidungen und die Mitbestimmung nach § 87 Abs. 1 Nr. 6 BetrVG, wo ein Betriebsrat besteht.",
+        "takeaway": "Jede Aussage der Vorlage braucht einen Artikel, sonst fliegt sie raus.",
+        "sources": [
+          {
+            "label": "Verordnung (EU) 2024/1689 (KI-VO)",
+            "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+          },
+          {
+            "label": "Verordnung (EU) 2026/1744"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "claim-checker",
+        "title": "Prüfen Sie die Entscheidungsvorlage",
+        "instructions": "Bewerten Sie jede unterstrichene Aussage gegen die fünf Quellen als belegt, widersprochen oder nicht in den Quellen, dann werten Sie aus. Unternehmen und Tool sind erfunden.",
+        "props": {
+          "sources": [
+            {
+              "id": "A",
+              "label": "Quelle A: Anhang III Nr. 4 lit. a KI-VO (Auszug)",
+              "text": "KI-Systeme, die bestimmungsgemäß für die Einstellung oder Auswahl natürlicher Personen verwendet werden sollen, insbesondere um gezielte Stellenanzeigen zu schalten, Bewerbungen zu sichten oder zu filtern und Bewerber zu bewerten."
+            },
+            {
+              "id": "B",
+              "label": "Quelle B: Art. 6 Abs. 3 KI-VO (gekürzt)",
+              "text": "Ein in Anhang III genanntes KI-System gilt nicht als hochriskant, wenn es kein erhebliches Risiko birgt und das Ergebnis der Entscheidungsfindung nicht wesentlich beeinflusst. Ein in Anhang III genanntes KI-System gilt immer dann als hochriskant, wenn es ein Profiling natürlicher Personen vornimmt."
+            },
+            {
+              "id": "C",
+              "label": "Quelle C: Art. 26 KI-VO (zusammengefasst)",
+              "text": "Abs. 6: Betreiber bewahren automatisch erzeugte Protokolle, soweit sie ihrer Kontrolle unterliegen, mindestens sechs Monate auf. Abs. 7: Betreiber, die Arbeitgeber sind, informieren vor der Inbetriebnahme am Arbeitsplatz die Arbeitnehmervertreter und die betroffenen Arbeitnehmer."
+            },
+            {
+              "id": "D",
+              "label": "Quelle D: Art. 27 Abs. 1 KI-VO (zusammengefasst)",
+              "text": "Eine Grundrechte-Folgenabschätzung führen Einrichtungen des öffentlichen Rechts, private Einrichtungen, die öffentliche Dienste erbringen, und Betreiber von Systemen nach Anhang III Nr. 5 lit. b und c durch."
+            },
+            {
+              "id": "E",
+              "label": "Quelle E: Art. 16 KI-VO und Zeitplan (zusammengefasst)",
+              "text": "Anbieter von Hochrisiko-Systemen führen die Konformitätsbewertung durch, stellen die EU-Konformitätserklärung aus und bringen die CE-Kennzeichnung an. Nach der Verordnung (EU) 2026/1744 gelten die Hochrisiko-Regeln für eigenständige Systeme nach Anhang III ab dem 2. Dezember 2027."
+            }
+          ],
+          "draftLabel": "KI-Entwurf: Entscheidungsvorlage für die Geschäftsführung",
+          "draft": [
+            {
+              "text": "Das Tool ordnet Lebensläufe per Match-Score und "
+            },
+            {
+              "text": "fällt damit unter Anhang III Nr. 4 lit. a",
+              "claimId": "annex"
+            },
+            {
+              "text": ". "
+            },
+            {
+              "text": "Weil am Ende immer ein Mensch entscheidet, greift die Ausnahme nach Art. 6 Abs. 3",
+              "claimId": "exception"
+            },
+            {
+              "text": ". Als Betreiber "
+            },
+            {
+              "text": "bewahren wir die Logs mindestens sechs Monate auf",
+              "claimId": "logs"
+            },
+            {
+              "text": " und "
+            },
+            {
+              "text": "informieren Betriebsrat und betroffene Beschäftigte vor dem Einsatz",
+              "claimId": "inform"
+            },
+            {
+              "text": ". Zusätzlich "
+            },
+            {
+              "text": "führen wir vor dem Einsatz eine Grundrechte-Folgenabschätzung nach Art. 27 durch",
+              "claimId": "fria"
+            },
+            {
+              "text": " und "
+            },
+            {
+              "text": "erstellen die Konformitätsbewertung und die CE-Kennzeichnung selbst",
+              "claimId": "ce"
+            },
+            {
+              "text": ". "
+            },
+            {
+              "text": "Der Anbieter garantiert, dass das Tool diskriminierungsfrei ist",
+              "claimId": "bias"
+            },
+            {
+              "text": ". Die Hochrisiko-Pflichten "
+            },
+            {
+              "text": "gelten ab dem 2. Dezember 2027",
+              "claimId": "date"
+            },
+            {
+              "text": "."
+            }
+          ],
+          "claims": [
+            {
+              "id": "annex",
+              "verdict": "supported",
+              "sourceId": "A",
+              "evidence": "Bewerbungen zu sichten oder zu filtern und Bewerber zu bewerten",
+              "why": "Ein Match-Score-Ranking sichtet, filtert und bewertet Bewerbungen."
+            },
+            {
+              "id": "exception",
+              "verdict": "contradicted",
+              "sourceId": "B",
+              "evidence": "Ein in Anhang III genanntes KI-System gilt immer dann als hochriskant, wenn es ein Profiling natürlicher Personen vornimmt.",
+              "correction": "Die Ausnahme greift nicht: Der Match-Score bewertet Personen (Profiling) und bestimmt, wen Menschen überhaupt sehen.",
+              "why": "Eine menschliche Endentscheidung ist nicht die Ausnahme nach Art. 6 Abs. 3."
+            },
+            {
+              "id": "logs",
+              "verdict": "supported",
+              "sourceId": "C",
+              "evidence": "mindestens sechs Monate auf",
+              "why": "Art. 26 Abs. 6, soweit die Logs der Kontrolle des Betreibers unterliegen."
+            },
+            {
+              "id": "inform",
+              "verdict": "supported",
+              "sourceId": "C",
+              "evidence": "informieren vor der Inbetriebnahme am Arbeitsplatz die Arbeitnehmervertreter und die betroffenen Arbeitnehmer",
+              "why": "Art. 26 Abs. 7. Mitbestimmungsrechte nach Betriebsverfassungsrecht kommen hinzu."
+            },
+            {
+              "id": "fria",
+              "verdict": "contradicted",
+              "sourceId": "D",
+              "evidence": "Eine Grundrechte-Folgenabschätzung führen Einrichtungen des öffentlichen Rechts, private Einrichtungen, die öffentliche Dienste erbringen, und Betreiber von Systemen nach Anhang III Nr. 5 lit. b und c durch.",
+              "correction": "Nach Art. 27 ist keine Grundrechte-Folgenabschätzung nötig. Ob die DSGVO eine Datenschutz-Folgenabschätzung verlangt, ist getrennt zu prüfen.",
+              "why": "Ein privater Arbeitgeber mit Anhang III Nr. 4 gehört nicht zum Adressatenkreis."
+            },
+            {
+              "id": "ce",
+              "verdict": "contradicted",
+              "sourceId": "E",
+              "evidence": "Anbieter von Hochrisiko-Systemen führen die Konformitätsbewertung durch, stellen die EU-Konformitätserklärung aus und bringen die CE-Kennzeichnung an.",
+              "correction": "Das ist Anbieterpflicht. Die XY GmbH prüft Unterlagen, Kennzeichnung und Gebrauchsanweisung, solange kein Rollenwechsel nach Art. 25 eintritt.",
+              "why": "Anbieter- und Betreiberpflichten sind verwechselt."
+            },
+            {
+              "id": "bias",
+              "verdict": "missing",
+              "correction": "Streichen. Bias-Tests und Unterlagen beim Anbieter anfordern; das AGG gilt unabhängig davon.",
+              "why": "Keine Quelle belegt eine solche Garantie."
+            },
+            {
+              "id": "date",
+              "verdict": "supported",
+              "sourceId": "E",
+              "evidence": "gelten die Hochrisiko-Regeln für eigenständige Systeme nach Anhang III ab dem 2. Dezember 2027",
+              "why": "Der Termin folgt aus der Verordnung (EU) 2026/1744."
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "fall-5-1-c1",
+          "prompt": "Die XY GmbH trainiert das Tool mit eigenen Daten nach, verändert es wesentlich und vermarktet es unter eigenem Namen an Partnerfirmen. Was ändert sich?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Nichts, sie bleibt Betreiberin",
+              "correct": false,
+              "feedback": "Eigener Name und wesentliche Änderung an einem Hochrisiko-System lösen Art. 25 aus."
+            },
+            {
+              "id": "b",
+              "text": "Sie wird Händlerin",
+              "correct": false,
+              "feedback": "Händler geben ein System unverändert unter fremdem Namen weiter."
+            },
+            {
+              "id": "c",
+              "text": "Sie wird Anbieterin nach Art. 25 und trägt Konformitätsbewertung und technische Dokumentation",
+              "correct": true
+            }
+          ],
+          "explanation": "Mit dem Rollenwechsel gelten für sie die Anbieterpflichten nach Art. 16 für dieses System."
+        },
+        {
+          "id": "fall-5-1-c2",
+          "prompt": "Wann prüfen Sie Art. 22 DSGVO zusätzlich?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Nie, die KI-Verordnung verdrängt die DSGVO",
+              "correct": false,
+              "feedback": "Art. 2 Abs. 7 KI-VO lässt die DSGVO unberührt."
+            },
+            {
+              "id": "b",
+              "text": "Wenn eine ausschließlich automatisierte Entscheidung mit rechtlicher oder ähnlich erheblicher Wirkung vorliegen könnte",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Nur bei Gesundheitsdaten",
+              "correct": false,
+              "feedback": "Art. 22 DSGVO knüpft an automatisierte Entscheidungen an, nicht an eine Datenkategorie."
+            }
+          ],
+          "explanation": "Ein bloß formaler Klick eines Menschen beseitigt die Ausschließlichkeit nicht sicher. Prüfen Sie Ausnahme und Schutzmaßnahmen."
+        }
+      ]
+    },
+    {
+      "id": "plan-5-2",
+      "blockId": "block_5",
+      "number": 10,
+      "title": "Ihr Inventareintrag und 30-Tage-Plan",
+      "subtitle": "Rolle, Klasse, Pflichten und Stichtag in einem Dokument",
+      "durationMinutes": 5,
+      "keyConcepts": [
+        "KI-Inventar",
+        "30-Tage-Plan",
+        "Nachweis"
+      ],
+      "concept": {
+        "body": "Ein Inventar ist Ihr wichtigstes Arbeitsmittel: Es zeigt, welche Systeme laufen, wofür, in welcher Rolle und mit welcher Einstufung. Ein Format schreibt die Verordnung Betreibern nicht vor, und eine Tabelle allein belegt keine Compliance.\n\nNützliche Felder pro System: Name und Version, tatsächlich genutzte Funktion, Rolle, Risikoklasse mit Begründung, Pflichten und Stichtag, Verantwortliche, Anbieterunterlagen, nächster Prüfanlass.\n\nDanach ein 30-Tage-Plan: Schatten-KI über Beschaffung, Abrechnungen und SSO-Freigaben finden, alle Systeme einstufen, Lücken mit Verantwortlichen und Fristen belegen, Art.-4-Maßnahmen dokumentieren.\n\nNeu einstufen nach wesentlichen Änderungen an System, Zweck, Anbieter oder Daten, nach Vorfällen und Rechtsänderungen.",
+        "takeaway": "Ein Eintrag pro System, mit Begründung und Verantwortlichen, und ein Plan mit Fristen."
+      },
+      "exercise": {
+        "kind": "doc-builder",
+        "title": "Erstellen Sie Ihren ersten Inventareintrag",
+        "instructions": "Füllen Sie die Pflichtfelder für ein System aus Ihrem Alltag aus, gern das CV-Tool aus dem Fall. Die Vorschau zeigt das fertige Dokument; laden Sie es als Markdown herunter oder kopieren Sie es.",
+        "props": {
+          "filename": "ki-inventar-eintrag.md",
+          "template": "# KI-Inventar: {{system}}\n\nAnbieter und Version: {{vendor}}\nVerantwortlich: {{owner}}\n\n## Zweck und tatsächlich genutzte Funktion\n{{purpose}}\n\n## Rolle und Risikoklasse\nUnsere Rolle: {{role}}\nRisikoklasse: {{riskClass}}\n\nBegründung: {{reason}}\n\n## Pflichten und Stichtag\n{{duties}}\n\nMaßgeblicher Stichtag: {{deadline}}\n\n## 30-Tage-Plan\n{{plan}}\n\n## Nächster Prüfanlass\n{{review}}\n\nArbeitsvorlage ohne Rechtsberatung. Stand der Rechtslage: Verordnung (EU) 2024/1689 in der Fassung der Verordnung (EU) 2026/1744.\n",
+          "fields": [
+            {
+              "id": "system",
+              "label": "System",
+              "type": "text",
+              "required": true,
+              "placeholder": "Bewerbermanagement mit Match-Score"
+            },
+            {
+              "id": "vendor",
+              "label": "Anbieter und Version",
+              "type": "text",
+              "placeholder": "Beispielanbieter, Version 3.2"
+            },
+            {
+              "id": "purpose",
+              "label": "Zweck und genutzte Funktion",
+              "type": "textarea",
+              "required": true,
+              "placeholder": "Ordnet eingehende Bewerbungen per Match-Score für die Vorauswahl"
+            },
+            {
+              "id": "role",
+              "label": "Ihre Rolle",
+              "type": "select",
+              "required": true,
+              "options": [
+                "Betreiber",
+                "Anbieter",
+                "Einführer",
+                "Händler"
+              ]
+            },
+            {
+              "id": "riskClass",
+              "label": "Risikoklasse",
+              "type": "select",
+              "required": true,
+              "options": [
+                "Verboten (Art. 5): Einsatz stoppen",
+                "Hochrisiko nach Anhang III",
+                "Hochrisiko nach Anhang I",
+                "Kein Hochrisiko nach Art. 6 Abs. 3, dokumentiert",
+                "Transparenzfall nach Art. 50",
+                "Minimales Risiko",
+                "Kein KI-System"
+              ]
+            },
+            {
+              "id": "reason",
+              "label": "Begründung der Einstufung",
+              "type": "textarea",
+              "required": true,
+              "placeholder": "Sichtet und bewertet Bewerbungen (Anhang III Nr. 4 lit. a); Profiling, daher keine Ausnahme"
+            },
+            {
+              "id": "duties",
+              "label": "Pflichten",
+              "type": "checkboxes",
+              "required": true,
+              "options": [
+                "Art.-4-Maßnahmen für alle Nutzenden",
+                "Nutzung nach Gebrauchsanweisung (Art. 26 Abs. 1)",
+                "Menschliche Aufsicht benannt (Art. 26 Abs. 2)",
+                "Logs mindestens sechs Monate (Art. 26 Abs. 6)",
+                "Beschäftigte und Vertretung informiert (Art. 26 Abs. 7)",
+                "Grundrechte-Folgenabschätzung (Art. 27)",
+                "KI-Hinweis, Markierung oder Offenlegung (Art. 50)",
+                "Anbieterunterlagen angefordert"
+              ],
+              "default": [
+                "Art.-4-Maßnahmen für alle Nutzenden"
+              ]
+            },
+            {
+              "id": "deadline",
+              "label": "Maßgeblicher Stichtag",
+              "type": "select",
+              "required": true,
+              "options": [
+                "2. Februar 2025 (Art. 4, Art. 5)",
+                "2. August 2026 (Art. 50)",
+                "2. Dezember 2027 (Anhang III)",
+                "2. August 2028 (Anhang I)"
+              ]
+            },
+            {
+              "id": "plan",
+              "label": "30-Tage-Plan",
+              "type": "checkboxes",
+              "options": [
+                "Woche 1: Schatten-KI über Beschaffung, Abrechnungen und SSO-Freigaben finden",
+                "Woche 2: alle Systeme nach Rolle und Klasse einstufen",
+                "Woche 3: Lücken mit Verantwortlichen und Fristen belegen",
+                "Woche 4: Art.-4-Maßnahmen dokumentieren und Anbieterunterlagen anfordern"
+              ]
+            },
+            {
+              "id": "owner",
+              "label": "Verantwortlich",
+              "type": "text",
+              "required": true,
+              "placeholder": "Rolle, nicht nur Name"
+            },
+            {
+              "id": "review",
+              "label": "Nächster Prüfanlass",
+              "type": "text",
+              "placeholder": "Neue Version, Zweckänderung, Vorfall oder Rechtsänderung"
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "plan-5-2-c1",
+          "prompt": "Schreibt die KI-Verordnung Betreibern ein bestimmtes Inventarformat vor?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Ja, eine Tabellenvorlage der Kommission",
+              "correct": false,
+              "feedback": "Eine solche Pflichtvorlage für Betreiber gibt es nicht."
+            },
+            {
+              "id": "b",
+              "text": "Nein; entscheidend ist, dass Rolle, Zweck, Einstufung und Pflichten nachvollziehbar belegt sind",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Ja, für Hochrisiko-Systeme ein Formular",
+              "correct": false,
+              "feedback": "Auch für Hochrisiko-Systeme gibt es für private Betreiber kein Pflichtformular. Anbieter registrieren nach Art. 49 in der EU-Datenbank."
+            }
+          ],
+          "explanation": "Das Inventar ist ein Arbeitsmittel für Ihre Nachweise. Wählen Sie ein Werkzeug, in dem Verantwortung, Rechte und Änderungen beherrschbar bleiben."
+        },
+        {
+          "id": "plan-5-2-c2",
+          "prompt": "Wann stufen Sie ein System neu ein?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Nur einmal bei der Einführung",
+              "correct": false,
+              "feedback": "Updates, neue Zwecke und Rechtsänderungen können die Klasse ändern."
+            },
+            {
+              "id": "b",
+              "text": "Nur wenn eine Behörde fragt",
+              "correct": false,
+              "feedback": "Dann ist es zu spät. Die Einstufung muss vorher stimmen."
+            },
+            {
+              "id": "c",
+              "text": "Nach wesentlichen Änderungen an System, Zweck, Anbieter oder Daten, nach Vorfällen und nach Rechtsänderungen",
+              "correct": true
+            }
+          ],
+          "explanation": "Eine wesentliche Änderung kann Übergangsregeln beenden, eine Zweckänderung die Klasse oder sogar die Rolle."
+        }
+      ]
+    }
+  ]
+}

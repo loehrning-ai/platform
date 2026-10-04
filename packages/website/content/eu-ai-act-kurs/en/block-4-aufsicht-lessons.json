@@ -1,0 +1,344 @@
+{
+  "blockId": "block_4",
+  "owner": "tim@loehrning.ai",
+  "lastReviewed": "2026-10-04",
+  "nextReview": "2027-04-05",
+  "format": "lesson-engine/v1",
+  "reviewCadence": "legal",
+  "riskClass": "legal",
+  "triggerEvents": [
+    "eu-ai-act-amendment",
+    "commission-qa-update"
+  ],
+  "lessons": [
+    {
+      "id": "bussgeld-4-1",
+      "blockId": "block_4",
+      "number": 7,
+      "title": "What a breach can cost",
+      "subtitle": "Three tiers, fixed amount or turnover share, the SME rule",
+      "durationMinutes": 6,
+      "keyConcepts": [
+        "Penalties",
+        "Art. 99",
+        "SME rule"
+      ],
+      "concept": {
+        "body": "Art. 99 sets maximum amounts in three tiers:\n\n| Infringement | Maximum |\n|---|---|\n| Prohibited practice (Art. 5) | EUR 35 million or 7% of worldwide annual turnover (para. 3) |\n| Operator obligations, e.g. Art. 16, 26, 50 | EUR 15 million or 3% (para. 4) |\n| Incorrect information to authorities | EUR 7.5 million or 1% (para. 5) |\n\nUndertakings face the higher value, SMEs including start-ups the lower (para. 6). These are caps. Under para. 7 the authority weighs gravity, duration, intent or negligence, size, cooperation and your technical and organisational measures, among other things. Since Regulation (EU) 2026/1744, small mid-caps have their own caps.",
+        "takeaway": "For SMEs the lower value counts. Documented measures feed into the assessment without guaranteeing a reduction.",
+        "sources": [
+          {
+            "label": "Regulation (EU) 2024/1689 (AI Act)",
+            "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+          },
+          {
+            "label": "Regulation (EU) 2026/1744"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "calculator",
+        "title": "Work through three set-ups",
+        "instructions": "Set turnover, infringement and company size to reach the three goals. The calculator shows the maximum fine and which value sets it.",
+        "props": {
+          "inputs": [
+            {
+              "id": "turnover",
+              "label": "Worldwide annual turnover",
+              "type": "slider",
+              "scale": "log",
+              "min": 500000,
+              "max": 5000000000,
+              "default": 20000000,
+              "format": "eur"
+            },
+            {
+              "id": "tier",
+              "label": "Infringement",
+              "type": "select",
+              "default": 3,
+              "options": [
+                {
+                  "value": 3,
+                  "label": "Prohibited practice"
+                },
+                {
+                  "value": 2,
+                  "label": "Breach of duty, e.g. Art. 26 or 50"
+                },
+                {
+                  "value": 1,
+                  "label": "Incorrect information"
+                }
+              ]
+            },
+            {
+              "id": "sme",
+              "label": "SME or start-up (Art. 99(6))",
+              "type": "toggle",
+              "default": 1
+            }
+          ],
+          "outputs": [
+            {
+              "id": "fixed",
+              "label": "Fixed amount",
+              "formula": "tier == 3 ? 35000000 : (tier == 2 ? 15000000 : 7500000)",
+              "format": "eur"
+            },
+            {
+              "id": "rate",
+              "label": "Share of turnover",
+              "formula": "tier == 3 ? 0.07 : (tier == 2 ? 0.03 : 0.01)",
+              "format": "percent"
+            },
+            {
+              "id": "share",
+              "label": "Amount from the turnover share",
+              "formula": "turnover * rate",
+              "format": "eur"
+            },
+            {
+              "id": "cap",
+              "label": "Maximum fine",
+              "formula": "sme ? min(fixed, share) : max(fixed, share)",
+              "format": "eur",
+              "emphasis": true,
+              "help": "SMEs: the lower value. Other undertakings: the higher."
+            }
+          ],
+          "chart": {
+            "kind": "bars",
+            "title": "Fixed amount against turnover share",
+            "format": "eur",
+            "bars": [
+              {
+                "label": "Fixed amount",
+                "formula": "fixed",
+                "tone": "neutral"
+              },
+              {
+                "label": "Turnover share",
+                "formula": "share",
+                "tone": "warn"
+              },
+              {
+                "label": "Maximum fine",
+                "formula": "cap",
+                "tone": "accent"
+              }
+            ]
+          },
+          "verdicts": [
+            {
+              "when": "sme == 1 && share < fixed",
+              "tone": "warn",
+              "title": "SME: the turnover share is the cap",
+              "body": "For SMEs the lower of the two values applies (Art. 99(6))."
+            },
+            {
+              "when": "sme == 1",
+              "tone": "warn",
+              "title": "SME: the fixed amount is the cap",
+              "body": "At this turnover the fixed amount is below the turnover share."
+            },
+            {
+              "when": "share > fixed",
+              "tone": "bad",
+              "title": "Large undertaking: the turnover share exceeds the fixed amount",
+              "body": "For undertakings that are not SMEs the higher value applies."
+            },
+            {
+              "when": "true",
+              "tone": "bad",
+              "title": "Large undertaking: the fixed amount applies",
+              "body": "The higher value here is the fixed amount."
+            }
+          ],
+          "goals": [
+            {
+              "id": "sme",
+              "label": "Set an SME with at most EUR 20 million turnover and a prohibited practice",
+              "when": "sme == 1 && tier == 3 && turnover <= 20000000",
+              "insight": "At exactly EUR 20 million turnover the cap would be EUR 1.4 million (7%) instead of EUR 35 million."
+            },
+            {
+              "id": "large",
+              "label": "Find the turnover at which 7% exceeds EUR 35 million for a large undertaking",
+              "when": "sme == 0 && tier == 3 && share > fixed",
+              "insight": "Above EUR 500 million turnover, 7% exceeds EUR 35 million."
+            },
+            {
+              "id": "info",
+              "label": "Look at the tier for incorrect information",
+              "when": "tier == 1",
+              "insight": "Incorrect, incomplete or misleading information to authorities costs up to EUR 7.5 million or 1% (Art. 99(5))."
+            }
+          ],
+          "note": "Maximum amounts under Art. 99(3) to (6) AI Act, not a penalty notice. The authority weighs the actual amount under para. 7. The separate caps for small mid-caps under Regulation (EU) 2026/1744 are not modelled."
+        }
+      },
+      "checks": [
+        {
+          "id": "bussgeld-4-1-c1",
+          "prompt": "An SME with EUR 1.5 million annual turnover uses a prohibited practice. What is the maximum fine?",
+          "options": [
+            {
+              "id": "a",
+              "text": "EUR 35 million",
+              "correct": false,
+              "feedback": "For SMEs the lower of the two values applies under Art. 99(6)."
+            },
+            {
+              "id": "b",
+              "text": "EUR 105,000, i.e. 7% of turnover",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "EUR 1.5 million, i.e. the whole turnover",
+              "correct": false,
+              "feedback": "The cap is 7% of turnover, not the whole turnover."
+            }
+          ],
+          "explanation": "7% of EUR 1.5 million is EUR 105,000. As that is below EUR 35 million, it is the cap for an SME."
+        },
+        {
+          "id": "bussgeld-4-1-c2",
+          "prompt": "What role do documented Art. 4 measures, a risk register and an incident process play in a fine?",
+          "options": [
+            {
+              "id": "a",
+              "text": "They rule out a fine",
+              "correct": false,
+              "feedback": "No evidence rules out a fine. It feeds into the assessment."
+            },
+            {
+              "id": "b",
+              "text": "The authority takes them into account under Art. 99(7), without guaranteeing a set reduction",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "They play no role",
+              "correct": false,
+              "feedback": "Para. 7 expressly lists technical and organisational measures as a criterion."
+            }
+          ],
+          "explanation": "Art. 99(7) lists criteria for the amount, including responsibility in light of the measures taken and cooperation with the authority."
+        }
+      ]
+    },
+    {
+      "id": "aufsicht-4-2",
+      "blockId": "block_4",
+      "number": 8,
+      "title": "When the authority asks",
+      "subtitle": "Competence in Germany and a five-step plan",
+      "durationMinutes": 5,
+      "keyConcepts": [
+        "Market surveillance",
+        "Federal Network Agency",
+        "Art. 74"
+      ],
+      "concept": {
+        "body": "The German implementing act (KI-MIG) has been in force since 29 July 2026. It makes the Federal Network Agency (BNetzA) the market surveillance authority, single point of contact and complaints body wherever no sectoral authority is competent. For financial institutions and Annex I products the sectoral authorities generally remain competent (Art. 74).\n\nAnyone with grounds to believe there is an infringement can complain (Art. 85). The authority gets access to documentation and to training, validation and test data (Art. 74(12)), and to source code only on a reasoned request when other checks are not enough (para. 13). If it finds non-conformity, it requires corrective action within at most 15 working days (Art. 79(2)).\n\nIncorrect or incomplete answers fall into their own fine tier (Art. 99(5)).",
+        "takeaway": "Secure the deadline, clarify the scope, evidence it, have it reviewed, answer truthfully.",
+        "sources": [
+          {
+            "label": "Regulation (EU) 2024/1689 (AI Act)",
+            "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj"
+          }
+        ]
+      },
+      "exercise": {
+        "kind": "sequence-order",
+        "title": "Put the response plan in order",
+        "instructions": "Put the five steps in the order in which you respond to the request. Check, fix the marked steps and check again. Done when the order is right.",
+        "props": {
+          "context": {
+            "label": "Situation (fictional)",
+            "text": "The market surveillance authority writes to XY GmbH asking for documents on an AI system that pre-sorts applications, and sets a deadline."
+          },
+          "steps": [
+            {
+              "id": "ack",
+              "text": "Acknowledge receipt in writing and note the deadline",
+              "why": "No deadline, no plan. The acknowledgement records when the request arrived."
+            },
+            {
+              "id": "scope",
+              "text": "Check which authority is asking, on what basis and what exactly it wants",
+              "why": "Only the exact scope decides what you hand over. Source code, for example, only on a reasoned request (Art. 74(13))."
+            },
+            {
+              "id": "collect",
+              "text": "Gather evidence: inventory entry, classification, Art. 4 measures, provider documents, logs",
+              "why": "You can only prove what is documented."
+            },
+            {
+              "id": "review",
+              "text": "Review the answer with legal advice and approve it internally",
+              "why": "A second pair of eyes before sending prevents incomplete or contradictory statements."
+            },
+            {
+              "id": "answer",
+              "text": "Answer completely and truthfully, name gaps openly, log everything",
+              "why": "Incorrect or incomplete information costs up to EUR 7.5 million or 1% of worldwide annual turnover (Art. 99(5))."
+            }
+          ]
+        }
+      },
+      "checks": [
+        {
+          "id": "aufsicht-4-2-c1",
+          "prompt": "The authority asks for your source code. What applies?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Hand it over at once; any request is enough",
+              "correct": false,
+              "feedback": "Art. 74(13) ties access to a reasoned request and exhausted other checks."
+            },
+            {
+              "id": "b",
+              "text": "Never; source code is protected",
+              "correct": false,
+              "feedback": "Under the conditions of para. 13 the authority can demand it."
+            },
+            {
+              "id": "c",
+              "text": "Only on a reasoned request when other checks are exhausted or insufficient",
+              "correct": true
+            }
+          ],
+          "explanation": "Under Art. 74(13) access to source code exists only under these conditions, which is why you clarify the scope of the request first."
+        },
+        {
+          "id": "aufsicht-4-2-c2",
+          "prompt": "Who may complain to the market surveillance authority about a suspected infringement?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Only people affected by an AI decision",
+              "correct": false,
+              "feedback": "Art. 85 does not require being personally affected."
+            },
+            {
+              "id": "b",
+              "text": "Any natural or legal person with grounds to believe there is an infringement",
+              "correct": true
+            },
+            {
+              "id": "c",
+              "text": "Only competitors",
+              "correct": false,
+              "feedback": "Competitors may, but not only they."
+            }
+          ],
+          "explanation": "Art. 85 opens complaints to any natural or legal person with grounds to believe there is an infringement."
+        }
+      ]
+    }
+  ]
+}

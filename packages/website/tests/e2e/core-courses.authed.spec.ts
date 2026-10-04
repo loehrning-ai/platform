@@ -28,7 +28,7 @@ const CORE_ROUTES = [
     hub: "/eu-ai-act-kurs/kurs",
     hubHeading: "EU AI Act Kurs",
     lesson: "/eu-ai-act-kurs/kurs/block_1",
-    lessonHeading: "Warum & Für wen",
+    lessonHeading: "Gilt das für mich?",
   },
   {
     hub: "/ki-und-gesellschaft/kurs",

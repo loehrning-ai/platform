@@ -198,6 +198,14 @@ const REGISTRY: Record<
     import("@/components/widgets/lab/pii-redactor").then((m) => ({
       default: m.PiiRedactorWidget as unknown as WidgetComponent,
     })),
+  "timeline-check": () =>
+    import("@/components/widgets/lab/timeline-check").then((m) => ({
+      default: m.TimelineCheckWidget as unknown as WidgetComponent,
+    })),
+  "sequence-order": () =>
+    import("@/components/widgets/lab/sequence-order").then((m) => ({
+      default: m.SequenceOrderWidget as unknown as WidgetComponent,
+    })),
 } as const satisfies Record<
   WidgetKind,
   () => Promise<{ default: WidgetComponent }>

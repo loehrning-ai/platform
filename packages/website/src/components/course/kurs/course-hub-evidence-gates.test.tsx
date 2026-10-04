@@ -22,33 +22,44 @@ type LegacyHubProps = {
   readonly locale?: Locale;
 };
 
-// KI-Führerschein's hub is the lesson-engine ModuleOverview, which takes
-// module summaries; adapt it to the shared legacy-hub harness below.
-function KiFuehrerscheinHubAdapter({ locale }: LegacyHubProps) {
-  return (
-    <KiFuehrerscheinHub
-      locale={locale}
-      modules={[
-        {
-          id: "block_1",
-          title: "Modul",
-          description: "",
-          durationMinutes: 45,
-          orderIndex: 0,
-          lessons: CANONICAL_LESSON_IDS["ki-fuehrerschein"].map((id) => ({
-            id,
-            title: id,
-            durationMinutes: 5,
-          })),
-        },
-      ]}
-    />
-  );
+// Lesson-engine courses (KI-Führerschein, EU AI Act) use the ModuleOverview
+// hub, which takes module summaries; adapt it to the shared legacy-hub
+// harness below.
+type EngineHub = typeof KiFuehrerscheinHub;
+
+function engineHubAdapter(
+  slug: CourseSlug,
+  Hub: EngineHub,
+): ComponentType<LegacyHubProps> {
+  function Adapter({ locale }: LegacyHubProps) {
+    return (
+      <Hub
+        locale={locale}
+        modules={[
+          {
+            id: "block_1",
+            title: "Modul",
+            description: "",
+            durationMinutes: 45,
+            orderIndex: 0,
+            lessons: CANONICAL_LESSON_IDS[slug].map((id) => ({
+              id,
+              title: id,
+              durationMinutes: 5,
+            })),
+          },
+        ]}
+      />
+    );
+  }
+  return Adapter;
 }
 
+const ENGINE_SLUGS: readonly CourseSlug[] = ["ki-fuehrerschein", "eu-ai-act-kurs"];
+
 const CASES: readonly (readonly [CourseSlug, ComponentType<LegacyHubProps>])[] = [
-  ["ki-fuehrerschein", KiFuehrerscheinHubAdapter],
-  ["eu-ai-act-kurs", EuAiActHub],
+  ["ki-fuehrerschein", engineHubAdapter("ki-fuehrerschein", KiFuehrerscheinHub)],
+  ["eu-ai-act-kurs", engineHubAdapter("eu-ai-act-kurs", EuAiActHub)],
   ["ki-und-gesellschaft", SocietyHub],
 ];
 
@@ -104,7 +115,7 @@ describe("foundation course hub evidence gates", () => {
       await waitFor(() => {
         expect(screen.queryByRole("link", { name: /Passed:/ })).toBeNull();
         expect(screen.queryByRole("link", { name: /Download/ })).toBeNull();
-        if (slug === "ki-fuehrerschein") {
+        if (ENGINE_SLUGS.includes(slug)) {
           // The module overview counts evidence-backed lessons only.
           const total = CANONICAL_LESSON_IDS[slug].length;
           expect(

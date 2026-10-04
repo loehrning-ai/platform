@@ -16,7 +16,7 @@ free-text checkpoints. Completion is written automatically.
 |---|---|
 | `ki-fuehrerschein` | On the engine (pilot): 4 modules, 8 lessons, about 45 min |
 | `ki-und-gesellschaft` | Legacy section reader, port pending |
-| `eu-ai-act-kurs` | Legacy section reader, port pending |
+| `eu-ai-act-kurs` | On the engine: 5 modules, 10 lessons, about 60 min |
 | `ai-native` | Legacy reader, port pending. The reader already dispatches engine lessons (see "Porting AI-Native") |
 
 ## Transition model
@@ -381,6 +381,63 @@ the fields stay disabled until the owner is resolved.
 `{{id}}` inserts a value, and a checkbox field inserts a bullet list. Empty
 values render as `[Label]`, so gaps stay visible. Every field must appear in
 the template, and the filename must end in `.md`.
+
+### `timeline-check`
+
+A live legal timeline. Milestones carry ISO dates; the widget reads today's
+date on the learner's device (after hydration, so server and client markup
+match) and computes for each question whether the obligation "applies
+already" or is "still to come", with the day count. The learner judges each
+obligation first, then sees the computed answer and the reason. Focus moves
+to the feedback that replaces the answer buttons. Done when every question
+is answered and the first-answer ratio is at least `passRatio` (default 0).
+
+```json
+{
+  "milestones": [
+    { "id": "literacy", "date": "2025-02-02", "title": "Art. 4 und Art. 5", "source": "Art. 113 lit. a" },
+    { "id": "annex3", "date": "2027-12-02", "title": "Hochrisiko nach Anhang III" }
+  ],
+  "questions": [
+    { "id": "cv", "text": "Betreiberpflichten nach Art. 26 für Ihr CV-Ranking", "milestone": "annex3",
+      "why": "Anhang III Nr. 4, verschoben durch die Verordnung (EU) 2026/1744." }
+  ],
+  "note": "Der Abgleich nutzt das heutige Datum auf Ihrem Gerät."
+}
+```
+
+Use at least 2 milestones and 2 questions; every question points to a known
+milestone. Write the `why` without a tense that ages (the widget adds
+"gilt seit" or "gilt ab"). `today` (YYYY-MM-DD) exists for previews and tests
+only; never author it in lesson content.
+
+### `sequence-order`
+
+Put the steps of a procedure in order. Steps are authored in the correct
+order and start in a fixed shuffled order seeded by their ids (never the
+solution). The learner moves cards with 44px up/down buttons, presses
+"Reihenfolge prüfen", sees which positions are right, fixes the rest and
+checks again. Done once the order is fully right; every step then shows why
+it sits there.
+
+```json
+{
+  "context": { "label": "Situation (erfunden)", "text": "Die Behörde bittet um Unterlagen ..." },
+  "steps": [
+    { "id": "ack", "text": "Eingang bestätigen und Frist notieren", "why": "Ohne Frist kein Plan." },
+    { "id": "scope", "text": "Umfang der Anfrage prüfen", "why": "Erst der Umfang entscheidet, was Sie herausgeben." },
+    { "id": "answer", "text": "Vollständig und wahr antworten", "why": "Falsche Angaben kosten extra." }
+  ]
+}
+```
+
+Use at least 3 steps whose order is unambiguous.
+
+### `bucket-sort` layout
+
+`bucket-sort` takes an optional `"layout": "pyramid"`: the piles stack as
+tiers that widen from the first bucket (top) to the last (base). Use it for
+ordered classes such as the four risk tiers.
 
 ### `pii-redactor`
 

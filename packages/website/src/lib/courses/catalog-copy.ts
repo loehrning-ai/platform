@@ -71,9 +71,9 @@ const ENGLISH_COURSE_COPY: Readonly<Record<string, CourseCopy>> = {
     eyebrow: "Step 03 · Regulation",
     tagline: "Classify a use case, determine roles, and map obligations.",
     description:
-      "You sort a use case into its class: prohibited, transparency-bound, general-purpose, high-risk, or none. Every statement with a deadline names its legal date and primary source. The course does not replace legal advice.",
-    duration: "about 1 hr 50 min",
-    unitLabel: "units",
+      "Ten short hands-on lessons: determine your role, check application dates against today, assign use cases to a risk class, generate your obligation list, work out the fine range and check an AI memo against the sources. Every statement with a deadline names its legal date and primary source. The course does not replace legal advice.",
+    duration: "about 1 hr",
+    unitLabel: "modules",
     audience: "Compliance, IT leadership, management",
     coverImageAlt:
       "Editorial illustration of an EU AI Act dossier with risk cards, roles, and a review path",

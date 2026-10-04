@@ -87,14 +87,13 @@ export const COURSE_PROJECT_MILESTONE_MANIFEST: CourseProjectMilestoneManifest =
       transfer: authoredUnits("ki-fuehrerschein", ["regeln-"]),
     }),
     "eu-ai-act-kurs": defineCourseMilestones("eu-ai-act-kurs", {
-      ground: authoredUnits("eu-ai-act-kurs", ["block_1_lesson_"]),
-      build: authoredUnits("eu-ai-act-kurs", ["block_2_lesson_"]),
-      run: authoredUnits("eu-ai-act-kurs", ["block_3_lesson_"]),
-      verify: authoredUnits("eu-ai-act-kurs", [
-        "block_4_lesson_",
-        "block_5_lesson_",
-      ]),
-      transfer: authoredUnits("eu-ai-act-kurs", ["block_6_lesson_"]),
+      // Lesson-engine IDs (five modules): scope, risk class, obligations,
+      // supervision, implementation.
+      ground: ["rolle-1-1", "zeitplan-1-2"],
+      build: ["risiko-2-1", "risiko-2-2"],
+      run: ["pflichten-3-1", "pflichten-3-2"],
+      verify: ["bussgeld-4-1", "aufsicht-4-2"],
+      transfer: ["fall-5-1", "plan-5-2"],
     }),
     "ai-native": defineCourseMilestones("ai-native", {
       ground: authoredUnits("ai-native", ["modul_1_lesson_"]),

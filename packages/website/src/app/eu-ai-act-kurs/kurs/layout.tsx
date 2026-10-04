@@ -23,20 +23,20 @@ const COPY: Readonly<
   de: {
     title: "EU AI Act Kurs: Rollen, Risiken und Pflichten",
     description:
-      "Kostenloser EU-AI-Act-Kurs mit 6 Blöcken, 24 Lektionen und ca. 1 Std. 50 Min. Lernzeit. Ein Lernkonto ist erforderlich.",
+      "Kostenloser EU-AI-Act-Kurs mit 5 Modulen, 10 Lektionen mit Übung und ca. 1 Std. Lernzeit. Ein Lernkonto ist erforderlich.",
     graphName: "EU AI Act: Rollen, Risiken und Pflichten",
     graphDescription:
-      "Onlinekurs zu Geltungsbereich, Risikoklassen, Hochrisiko-Systemen, GPAI, Transparenz und Umsetzung.",
+      "Onlinekurs mit Übungen zu Rolle, Stichtagen, Risikoklasse, Pflichten, Kennzeichnung, Bußgeldern und Umsetzung.",
     audience:
       "Erwachsene und beruflich Verantwortliche ohne juristische Vorkenntnisse",
   },
   en: {
     title: "EU AI Act Course: roles, risks, and duties",
     description:
-      "Free EU AI Act course with 6 blocks, 24 lessons, and about 1 hour 50 minutes of study. A learning account is required.",
+      "Free EU AI Act course with 5 modules, 10 hands-on lessons, and about 1 hour of study. A learning account is required.",
     graphName: "EU AI Act: roles, risks, and duties",
     graphDescription:
-      "Online course on scope, risk classification, high-risk systems, GPAI, transparency, and implementation.",
+      "Hands-on online course on role, application dates, risk class, obligations, labelling, fines, and implementation.",
     audience: "Adults and workplace decision-makers without a legal background",
   },
 };
@@ -85,7 +85,7 @@ function courseGraph(locale: Locale) {
     hasCourseInstance: {
       "@type": "CourseInstance",
       courseMode: "online",
-      courseWorkload: "PT1H50M",
+      courseWorkload: "PT1H",
       inLanguage: locale,
     },
   };

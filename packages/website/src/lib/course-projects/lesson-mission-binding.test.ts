@@ -27,7 +27,15 @@ describe("lesson mission binding", () => {
       }
     }
 
-    expect(resolved).toBe(143);
+    // Every canonical lesson of every course binds (derived, so a course port
+    // that changes its lesson count does not need to touch this file).
+    expect(resolved).toBe(
+      COURSE_SLUGS.reduce(
+        (sum, courseSlug) => sum + CANONICAL_LESSON_IDS[courseSlug].length,
+        0,
+      ),
+    );
+    expect(resolved).toBeGreaterThan(100);
   });
 
   it("makes adjacent lesson frames visibly distinct using authored metadata", () => {

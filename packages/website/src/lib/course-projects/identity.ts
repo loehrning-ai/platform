@@ -25,7 +25,7 @@ export const COURSE_PROJECT_IDENTITIES = {
   },
   "eu-ai-act-kurs": {
     id: "project-eu-ai-act-case-file",
-    progressLessonId: "block_6_lesson_4",
+    progressLessonId: "plan-5-2",
     engineKind: "case",
   },
   "ai-native": {
