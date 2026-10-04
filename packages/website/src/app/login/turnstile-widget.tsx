@@ -26,7 +26,7 @@ interface TurnstileApi {
       readonly "response-field": false;
       readonly language: Locale;
       readonly size: "flexible";
-      readonly theme: "auto";
+      readonly theme: "dark";
       readonly callback: (token: string) => void;
       readonly "error-callback": () => boolean;
       readonly "expired-callback": () => void;
@@ -113,7 +113,8 @@ export const TurnstileWidget = forwardRef<
           "response-field": false,
           language: locale,
           size: "flexible",
-          theme: "auto",
+          // The widget always sits on the dark /login card.
+          theme: "dark",
           callback: (token) => {
             if (disposed) return;
             onToken(token);
@@ -197,7 +198,7 @@ export const TurnstileWidget = forwardRef<
     <div className="mt-4">
       <p
         id="login-security-check-label"
-        className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.14em] text-brand-orange"
+        className="mb-2 text-[13px] font-medium text-foreground"
       >
         {copy.label}
       </p>

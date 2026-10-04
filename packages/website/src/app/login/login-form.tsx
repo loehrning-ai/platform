@@ -92,17 +92,17 @@ export function LoginForm({
         aria-labelledby="login-form-title"
         data-login-method-state="unavailable"
         data-login-unavailable-reason={unavailableReason}
-        className="min-w-0 border border-border bg-card p-4 sm:p-5"
+        className="min-w-0"
       >
         <h2
           id="login-form-title"
-          className="text-xl font-bold tracking-[-0.025em] text-foreground sm:text-2xl"
+          className="text-[13px] font-medium text-muted-foreground"
         >
           {copy.title}
         </h2>
         <p
           role="note"
-          className="mt-3 break-words border-t border-border pt-3 font-mono text-xs uppercase leading-relaxed tracking-[0.08em] text-muted-foreground"
+          className="mt-2 break-words rounded-lg border border-hairline bg-white/[0.04] px-3 py-2.5 text-sm leading-relaxed text-foreground"
         >
           {copy.unavailable[unavailableReason]}
         </p>
@@ -203,16 +203,16 @@ export function LoginForm({
       onSubmit={submit}
       aria-labelledby="login-form-title"
       data-login-method-state="available"
-      className="min-w-0 border border-border border-t-[3px] border-t-brand-orange bg-card p-4 sm:p-5"
+      className="min-w-0"
     >
-      <div className="mb-5 border-b border-border pb-4">
-        <h2
-          id="login-form-title"
-          className="text-xl font-bold tracking-[-0.025em] text-foreground sm:text-2xl"
-        >
-          {copy.title}
-        </h2>
-      </div>
+      {/* The card's quiet row label, as in the reference: the page heading
+          above names the task, this names the surface. */}
+      <h2
+        id="login-form-title"
+        className="mb-2.5 text-[13px] font-medium text-muted-foreground"
+      >
+        {copy.title}
+      </h2>
       {googleAvailable ? (
         <button
           type="button"
@@ -220,7 +220,7 @@ export function LoginForm({
           disabled={!supabase || busy}
           aria-busy={state === "redirecting-google"}
           data-google-brand-button="light"
-          className="relative inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-[4px] border border-[#747775] bg-white px-12 text-[14px] font-medium leading-5 text-[#1f1f1f] hover:bg-[#f7f8f8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1a73e8] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-70"
+          className="relative inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-[9px] border border-[#747775] bg-white px-12 text-[14px] font-medium leading-5 text-[#1f1f1f] hover:bg-[#f7f8f8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-card disabled:cursor-not-allowed disabled:opacity-70"
           style={{
             fontFamily: '"Google Sans", Roboto, Arial, sans-serif',
           }}
@@ -256,7 +256,7 @@ export function LoginForm({
           disabled={!supabase || busy}
           aria-busy={state === "redirecting-github"}
           data-login-provider="github"
-          className={`${googleAvailable ? "mt-3 " : ""}relative inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-[4px] border border-border bg-background px-12 text-[14px] font-medium leading-5 text-foreground hover:border-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-card disabled:cursor-not-allowed disabled:opacity-70`}
+          className={`${googleAvailable ? "mt-3 " : ""}login-btn relative inline-flex min-h-11 w-full items-center justify-center gap-2 px-12 text-[14px] font-medium leading-5 disabled:cursor-not-allowed disabled:opacity-70`}
         >
           <Github size={18} aria-hidden="true" className="absolute left-3" />
           {state === "redirecting-github" ? copy.githubPending : copy.github}
@@ -294,29 +294,28 @@ export function LoginForm({
         </details>
       ) : null}
       {oauthAvailable && magicLinkAvailable ? (
-        <div className="my-5 flex items-center gap-3" aria-hidden="true">
-          <span className="h-px flex-1 bg-border" />
-          <span className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
-            {copy.emailSeparator}
-          </span>
-          <span className="h-px flex-1 bg-border" />
+        <div
+          className="login-divider my-4 text-[13px] text-muted-foreground"
+          aria-hidden="true"
+        >
+          {copy.emailSeparator}
         </div>
       ) : null}
       {magicLinkAvailable ? (
         <>
           <label
             htmlFor="email"
-            className="font-mono text-xs font-bold uppercase tracking-[0.12em] text-brand-orange"
+            className="block text-[13px] font-medium text-foreground"
           >
             {copy.emailLabel}
           </label>
           <p
             id="login-email-hint"
-            className="mt-2 break-words text-sm leading-relaxed text-muted-foreground"
+            className="mt-1 break-words text-[13px] leading-relaxed text-muted-foreground"
           >
             {copy.emailHint}
           </p>
-          <div className="mt-3 flex min-w-0 flex-col gap-3 sm:flex-row">
+          <div className="mt-3 flex min-w-0 flex-col gap-3">
             <div className="relative min-w-0 flex-1">
               <Mail
                 size={16}
@@ -335,7 +334,7 @@ export function LoginForm({
                 spellCheck={false}
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
-                className="h-12 min-w-0 w-full border border-border bg-background pl-10 pr-3 text-base text-foreground outline-none focus:border-brand-orange focus:ring-2 focus:ring-brand-orange focus:ring-offset-2 focus:ring-offset-background"
+                className="login-input h-12 w-full min-w-0 pl-10 pr-3 text-base"
                 placeholder="name@example.com"
               />
             </div>
@@ -343,7 +342,7 @@ export function LoginForm({
               type="submit"
               disabled={!supabase || !captchaToken || busy}
               aria-busy={state === "sending-otp"}
-              className="inline-flex h-12 items-center justify-center gap-2 border border-brand-orange bg-brand-orange px-5 font-mono text-xs font-bold uppercase tracking-[0.08em] text-white hover:border-kupfer-dark hover:bg-kupfer-dark disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="login-btn inline-flex h-12 w-full items-center justify-center gap-2 px-5 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50"
             >
               {state === "sending-otp" ? (
                 <Loader2
@@ -367,7 +366,7 @@ export function LoginForm({
           ) : null}
         </>
       ) : null}
-      <p className="mt-5 break-words border-t border-border pt-4 text-sm leading-relaxed text-muted-foreground">
+      <p className="mt-5 break-words border-t border-hairline pt-3.5 text-center text-xs leading-relaxed text-muted-foreground">
         {accountReady ? copy.accountReadyNote : copy.accountUnavailableNote}
       </p>
       {message ? (
@@ -387,7 +386,7 @@ export function LoginForm({
       {!supabase ? (
         <p
           role="note"
-          className="mt-4 break-words border border-border bg-background p-3 font-mono text-xs uppercase leading-relaxed tracking-[0.08em] text-muted-foreground"
+          className="mt-4 break-words rounded-lg border border-hairline bg-white/[0.04] p-3 text-[13px] leading-relaxed text-muted-foreground"
         >
           {copy.unavailable[unavailableReason]}
         </p>

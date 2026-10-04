@@ -180,7 +180,7 @@ Autumn carries the Rost rules: text 17px or larger at weight 400 or more, no mut
 
 ## Light grounds (no graphit)
 
-The site has no black grounds. The graphit band (`.dark-section`, `--color-dark-*`) is retired: the footer is the Pfirsich-Wash (`--color-peach-wash`, brand-peach over Bogen), a tinted band or panel is the Himmel-Wash (`--color-sky-wash`), and a pastel sheet, a selected state or a former console head is the Himmel-Blatt (`--color-sky-sheet`). Code, logs and consoles are Beton. A filled action that is not the page's Mennige primary is Kobalt with paper text, never an ink fill; a filled scene button uses `--color-scene-button`, which is never a near-black ink (Bloom fills with Terrakotta tief, not Aubergine).
+The site has no black grounds. The graphit band (`.dark-section`, `--color-dark-*`) is retired: the footer is the Pfirsich-Wash (`--color-peach-wash`, brand-peach over Bogen), a tinted band or panel is the Himmel-Wash (`--color-sky-wash`), and a pastel sheet, a selected state or a former console head is the Himmel-Blatt (`--color-sky-sheet`). Code, logs and consoles are Beton. A filled action that is not the page's Mennige primary is Kobalt with paper text, never an ink fill; a filled scene button uses `--color-scene-button`, which is never a near-black ink (Bloom fills with Terrakotta tief, not Aubergine). The one documented exception is the owner-requested `/login` scene, scoped to `.login-scene` with its own AA ratios (see `experience-system.md`).
 
 | Ground | Pairing | Colour | Use | Floor | Ratio | Result |
 | --- | --- | --- | --- | --- | --- | --- |

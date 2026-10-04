@@ -149,4 +149,20 @@ describe("<TurnstileWidget>", () => {
       "status",
     );
   });
+
+  it("renders the provider widget in its dark theme, matching the dark /login card", () => {
+    let theme: string | undefined;
+    window.turnstile = {
+      render: vi.fn((_container, options) => {
+        theme = options.theme;
+        return "widget-dark";
+      }),
+      remove: vi.fn(),
+      reset: vi.fn(),
+    };
+
+    render(<TurnstileWidget siteKey={SITE_KEY} onToken={vi.fn()} />);
+
+    expect(theme).toBe("dark");
+  });
 });
