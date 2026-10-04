@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type JSX } from "react";
+import { useEffect, useRef, useState, type JSX } from "react";
 import { AnimatePresence, m } from "framer-motion";
 import { Check, Play, Radio, RotateCcw, X } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -44,6 +44,9 @@ export interface LivePromptAbProps extends LabBaseProps {
   readonly allowEdit?: boolean;
 }
 
+/** Mirrors MAX_PROMPT_CHARS of POST /api/ai-native/practice. */
+export const PRACTICE_PROMPT_LIMIT = 4000;
+
 type Mode = "idle" | "loading" | "live" | "recorded";
 type Side = "a" | "b";
 type Marks = Readonly<Record<string, Partial<Record<Side, boolean>>>>;
@@ -61,6 +64,7 @@ const COPY = {
     recordedNote:
       "Live-Modus nicht verfügbar (nur mit Lernkonto und wenn freigeschaltet). Du siehst vorab erzeugte Beispielausgaben, keine Live-Antwort.",
     liveNote: "Live-Ausgaben variieren. Bewerte, was du siehst.",
+    editReverted: "Deine Änderung an Prompt B wurde zurückgesetzt, weil die Aufzeichnung zur Vorlage gehört.",
     rubric: "Bewerte beide Ausgaben",
     yes: "erfüllt",
     no: "nicht erfüllt",
@@ -84,6 +88,7 @@ const COPY = {
     recordedNote:
       "Live mode unavailable (requires a learning account and must be enabled). You are seeing pre-generated example outputs, not a live answer.",
     liveNote: "Live outputs vary. Judge what you see.",
+    editReverted: "Your edit to prompt B was reset because the recording belongs to the original prompt.",
     rubric: "Judge both outputs",
     yes: "met",
     no: "not met",
@@ -133,6 +138,13 @@ export function LivePromptAbWidget({
   const [promptB, setPromptB] = useState(variants[1].prompt);
   const [marks, setMarks] = useState<Marks>({});
   const [revealed, setRevealed] = useState(false);
+  const [editReverted, setEditReverted] = useState(false);
+  const summaryRef = useRef<HTMLDivElement>(null);
+
+  // The evaluate button is replaced on reveal: keep focus on the result.
+  useEffect(() => {
+    if (revealed) summaryRef.current?.focus();
+  }, [revealed]);
 
   const run = async () => {
     setMode("loading");
@@ -143,10 +155,12 @@ export function LivePromptAbWidget({
       api.complete(composePrompt(promptB, input)),
     ]);
     if (a !== null && b !== null) {
+      setEditReverted(false);
       setOutputs({ a, b });
       setMode("live");
     } else {
       setOutputs({ a: variants[0].recorded, b: variants[1].recorded });
+      setEditReverted(promptB.trim() !== variants[1].prompt.trim());
       setPromptB(variants[1].prompt);
       setMode("recorded");
     }
@@ -173,6 +187,12 @@ export function LivePromptAbWidget({
   };
 
   const hasOutputs = mode === "live" || mode === "recorded";
+  // The practice API accepts at most PRACTICE_PROMPT_LIMIT characters for
+  // prompt plus appended material.
+  const editLimit = Math.max(
+    200,
+    PRACTICE_PROMPT_LIMIT - (composePrompt("", input).length + 2),
+  );
   const sides: readonly Side[] = ["a", "b"];
 
   return (
@@ -206,7 +226,7 @@ export function LivePromptAbWidget({
                     value={promptB}
                     onChange={(event) => setPromptB(event.target.value)}
                     rows={6}
-                    maxLength={3000}
+                    maxLength={editLimit}
                     className="min-h-11 w-full resize-y rounded-xl border border-lab-line bg-paper p-3 font-mono text-[13px] leading-relaxed text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lab-accent"
                   />
                 </label>
@@ -255,7 +275,11 @@ export function LivePromptAbWidget({
           {mode === "loading" ? copy.running : copy.run}
         </LabButton>
         <LabLive className="min-w-0 flex-1 text-sm text-muted-foreground">
-          {mode === "recorded" ? copy.recordedNote : mode === "live" ? copy.liveNote : null}
+          {mode === "recorded"
+            ? `${copy.recordedNote}${editReverted ? ` ${copy.editReverted}` : ""}`
+            : mode === "live"
+              ? copy.liveNote
+              : null}
         </LabLive>
       </div>
 
@@ -314,7 +338,11 @@ export function LivePromptAbWidget({
               </li>
             ))}
           </ul>
-          <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+          <div
+            ref={summaryRef}
+            tabIndex={-1}
+            className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lab-accent"
+          >
             <LabLive>
               {revealed ? (
                 mode === "recorded" ? (

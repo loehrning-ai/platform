@@ -161,6 +161,19 @@ describe("KI-Führerschein lesson-engine content", () => {
     }
   });
 
+  it.each(pairs)("$filename explains every wrong check option", ({ de, en }) => {
+    for (const lesson of [...de.lessons, ...en.lessons]) {
+      for (const check of lesson.checks ?? []) {
+        for (const option of check.options.filter((entry) => !entry.correct)) {
+          expect(
+            option.feedback?.trim(),
+            `${lesson.id} ${check.id} ${option.id}`,
+          ).toBeTruthy();
+        }
+      }
+    }
+  });
+
   it("keeps the course at about 45 minutes", () => {
     const minutes = pairs
       .flatMap((pair) => pair.de.lessons)

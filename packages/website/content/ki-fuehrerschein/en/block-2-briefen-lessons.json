@@ -128,7 +128,8 @@
             {
               "id": "a",
               "text": "A polite greeting in the brief.",
-              "correct": false
+              "correct": false,
+              "feedback": "Politeness does not change whether gaps are marked or filled in."
             },
             {
               "id": "b",
@@ -283,7 +284,8 @@
             {
               "id": "a",
               "text": "Only whether the licence includes the feature.",
-              "correct": false
+              "correct": false,
+              "feedback": "The licence only says the feature is available, not whether the processing is allowed."
             },
             {
               "id": "b",

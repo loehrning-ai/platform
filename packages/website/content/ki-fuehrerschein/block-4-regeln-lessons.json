@@ -221,7 +221,8 @@
             {
               "id": "c",
               "text": "Ja, wenn sie standardmäßig eingeschaltet ist.",
-              "correct": false
+              "correct": false,
+              "feedback": "Eingeschaltet heißt nicht freigegeben. Die Voreinstellung trifft keine Entscheidung über Zweck und Datenklasse."
             }
           ],
           "explanation": "Neue Funktionen in gekaufter Software sind ein häufiger Weg in Shadow AI. Bis zur Freigabe bleibt die Kombination gesperrt."
@@ -233,7 +234,8 @@
             {
               "id": "a",
               "text": "Ein Zertifikat für jede Person, die KI nutzt.",
-              "correct": false
+              "correct": false,
+              "feedback": "Artikel 4 schreibt kein Zertifikat vor."
             },
             {
               "id": "b",
@@ -243,7 +245,8 @@
             {
               "id": "c",
               "text": "Einen Pflichtkurs mit fester Stundenzahl.",
-              "correct": false
+              "correct": false,
+              "feedback": "Artikel 4 legt weder Format noch Stundenzahl fest."
             }
           ],
           "explanation": "Artikel 4 ist seit dem 2. Februar 2025 anwendbar und schreibt weder Format noch Zertifikat vor. Die Teilnahmebestätigung dieses Kurses belegt nur den Abschluss dieses Kurses."
@@ -356,7 +359,8 @@
             {
               "id": "a",
               "text": "Ja, der Rest ist wichtiger.",
-              "correct": false
+              "correct": false,
+              "feedback": "Ohne Meldekanal weiß im Ernstfall niemand, wohin. Genau dieser Teil muss vollständig sein."
             },
             {
               "id": "b",
@@ -366,7 +370,8 @@
             {
               "id": "c",
               "text": "Ja, wenn alle sie gelesen haben.",
-              "correct": false
+              "correct": false,
+              "feedback": "Lesen ersetzt nicht das Ausfüllen der Platzhalter und die Zustimmung der zuständigen Stellen."
             }
           ],
           "explanation": "Freigabefähig ist eine Richtlinie erst, wenn alle Platzhalter ersetzt und die zuständigen Stellen eingebunden sind."
@@ -378,7 +383,8 @@
             {
               "id": "a",
               "text": "Der Meldekanal für Vorfälle.",
-              "correct": false
+              "correct": false,
+              "feedback": "Der Meldekanal gehört immer auf die Seite: Im Ernstfall sucht niemand in Anhängen."
             },
             {
               "id": "b",
@@ -388,7 +394,8 @@
             {
               "id": "c",
               "text": "Wer die Richtlinie pflegt.",
-              "correct": false
+              "correct": false,
+              "feedback": "Ohne verantwortliche Person veraltet die Richtlinie. Pflege gehört immer hinein."
             }
           ],
           "explanation": "Eine knappe Richtlinie reicht, wenn Freigabeliste und Verfahren separat gepflegt und eindeutig verlinkt sind. Meldekanal und Verantwortliche gehören immer hinein."

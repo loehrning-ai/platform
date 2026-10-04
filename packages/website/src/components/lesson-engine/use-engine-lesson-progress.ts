@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState, useSyncExternalStore } from "react";
 import type { CourseSlug } from "@/lib/course/types";
 import {
+  getCourseSlice,
   getLessonQuizScore,
   getReadSectionIds,
   isCheckpointDone,
@@ -48,12 +49,17 @@ function readSnapshot(
   lessonId: string,
 ): Omit<EngineLessonProgressSnapshot, "hydrated" | "ownerReady"> {
   const step = engineExerciseStepId(lessonId);
+  // Checkpoints are cross-course and never cleared, so after a course reset
+  // only the lesson step counts: the learner has to redo the exercise (the
+  // widget then notifies the reader, which records the step again).
+  const wasReset = Boolean(getCourseSlice(courseSlug).resetAt);
   const exerciseDone =
     getReadSectionIds(courseSlug, lessonId).has(step) ||
-    isCheckpointDone(
-      engineCheckpointLessonKey(courseSlug, lessonId),
-      ENGINE_EXERCISE_CHECKPOINT_ID,
-    );
+    (!wasReset &&
+      isCheckpointDone(
+        engineCheckpointLessonKey(courseSlug, lessonId),
+        ENGINE_EXERCISE_CHECKPOINT_ID,
+      ));
   const score = getLessonQuizScore(courseSlug, lessonId);
   return {
     exerciseDone,
@@ -68,7 +74,8 @@ function readSnapshot(
  * - Exercise done: the lesson's `<id>_exercise` step is in `sectionsRead`,
  *   or the exercise widget completed its checkpoint
  *   (`<course>:<lesson>::exercise`). A checkpoint without the step is
- *   promoted to the step on the next owner-ready render.
+ *   promoted to the step on the next owner-ready render. After a course
+ *   reset the checkpoint no longer counts; only a fresh completion does.
  * - Checks passed: the lesson quiz score is perfect.
  * - When both hold, the lesson proof is written once
  *   (recordLessonCompletionEvidenceDurably). No button, no self-report.

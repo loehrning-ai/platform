@@ -177,9 +177,12 @@ export function AnimatedNumber({
     return () => controls.stop();
   }, [value, reduce]);
 
+  // Screen readers get the final value only, never the intermediate frames.
+  const finalText = Number.isFinite(value) ? format(value) : "\u2014";
   return (
     <span className={cn("tabular-nums", className)}>
-      {Number.isFinite(value) ? format(display) : "—"}
+      <span aria-hidden="true">{Number.isFinite(value) ? format(display) : "\u2014"}</span>
+      <span className="sr-only">{finalText}</span>
     </span>
   );
 }

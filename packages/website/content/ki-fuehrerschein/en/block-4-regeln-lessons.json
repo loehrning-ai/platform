@@ -221,7 +221,8 @@
             {
               "id": "c",
               "text": "Yes, if it is switched on by default.",
-              "correct": false
+              "correct": false,
+              "feedback": "Switched on does not mean approved. A default setting decides nothing about purpose and data class."
             }
           ],
           "explanation": "New features in bought software are a common route into shadow AI. The combination stays blocked until it is approved."
@@ -233,7 +234,8 @@
             {
               "id": "a",
               "text": "A certificate for every person who uses AI.",
-              "correct": false
+              "correct": false,
+              "feedback": "Article 4 does not require a certificate."
             },
             {
               "id": "b",
@@ -243,7 +245,8 @@
             {
               "id": "c",
               "text": "A mandatory course with a fixed number of hours.",
-              "correct": false
+              "correct": false,
+              "feedback": "Article 4 sets neither a format nor a number of hours."
             }
           ],
           "explanation": "Article 4 has applied since 2 February 2025 and prescribes neither a format nor a certificate. This course's record only shows that you completed this course."
@@ -356,7 +359,8 @@
             {
               "id": "a",
               "text": "Yes, the rest matters more.",
-              "correct": false
+              "correct": false,
+              "feedback": "Without a reporting channel nobody knows where to go when it matters. This part has to be complete."
             },
             {
               "id": "b",
@@ -366,7 +370,8 @@
             {
               "id": "c",
               "text": "Yes, if everyone has read it.",
-              "correct": false
+              "correct": false,
+              "feedback": "Reading it does not replace filling in the placeholders and sign-off by the responsible functions."
             }
           ],
           "explanation": "A policy is ready for approval only when every placeholder is replaced and the responsible functions are involved."
@@ -378,7 +383,8 @@
             {
               "id": "a",
               "text": "The reporting channel for incidents.",
-              "correct": false
+              "correct": false,
+              "feedback": "The reporting channel always belongs on the page: in an incident nobody searches attachments."
             },
             {
               "id": "b",
@@ -388,7 +394,8 @@
             {
               "id": "c",
               "text": "Who maintains the policy.",
-              "correct": false
+              "correct": false,
+              "feedback": "Without an owner the policy goes stale. Maintenance always belongs in it."
             }
           ],
           "explanation": "A short policy is enough if the approval list and procedures are maintained separately and clearly linked. Reporting channel and owner always belong in it."

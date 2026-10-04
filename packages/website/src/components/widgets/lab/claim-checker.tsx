@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type JSX } from "react";
+import { useEffect, useRef, useState, type JSX } from "react";
 import { AnimatePresence, m } from "framer-motion";
 import { Check, ChevronLeft, ChevronRight, FileText, RotateCcw, X } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -125,6 +125,12 @@ export function ClaimCheckerWidget({
   const [marks, setMarks] = useState<Record<string, ClaimVerdict>>({});
   const [active, setActive] = useState<string | null>(claims[0]?.id ?? null);
   const [revealed, setRevealed] = useState(false);
+  const resultRef = useRef<HTMLDivElement>(null);
+
+  // The evaluate button disappears on reveal: move focus to the result.
+  useEffect(() => {
+    if (revealed) resultRef.current?.focus();
+  }, [revealed]);
 
   const markedCount = claims.filter((claim) => marks[claim.id]).length;
   const allMarked = markedCount === claims.length && claims.length > 0;
@@ -282,14 +288,21 @@ export function ClaimCheckerWidget({
         </div>
       </div>
 
-      <LabLive>
+      <LabLive className="sr-only">
+        {revealed
+          ? `${score}/${claims.length} ${copy.score}.${passed ? "" : ` ${copy.belowPass}`}`
+          : null}
+      </LabLive>
+      <div>
         <AnimatePresence initial={false}>
           {revealed ? (
             <m.div
+              ref={resultRef}
+              tabIndex={-1}
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
-              className="mt-5"
+              className="mt-5 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lab-accent"
             >
               <div className="flex flex-wrap items-baseline gap-3">
                 <p className="text-num-lg font-bold text-foreground">
@@ -346,7 +359,7 @@ export function ClaimCheckerWidget({
             </m.div>
           ) : null}
         </AnimatePresence>
-      </LabLive>
+      </div>
     </LabSurface>
   );
 }

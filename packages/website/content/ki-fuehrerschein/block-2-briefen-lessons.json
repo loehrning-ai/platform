@@ -128,7 +128,8 @@
             {
               "id": "a",
               "text": "Eine höfliche Anrede im Auftrag.",
-              "correct": false
+              "correct": false,
+              "feedback": "Höflichkeit ändert nichts daran, ob Lücken markiert oder gefüllt werden."
             },
             {
               "id": "b",
@@ -283,7 +284,8 @@
             {
               "id": "a",
               "text": "Nur, ob die Lizenz die Funktion enthält.",
-              "correct": false
+              "correct": false,
+              "feedback": "Die Lizenz klärt nur, ob die Funktion verfügbar ist, nicht ob die Verarbeitung zulässig ist."
             },
             {
               "id": "b",

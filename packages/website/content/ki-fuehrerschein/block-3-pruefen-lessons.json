@@ -358,7 +358,8 @@
             {
               "id": "a",
               "text": "Kurz gegenlesen, der Ton passt ja.",
-              "correct": false
+              "correct": false,
+              "feedback": "Ein guter Ton sagt nichts über die Gutschrift. Eine Zusage über Geld nach außen braucht Quelle und Freigabe."
             },
             {
               "id": "b",
@@ -381,7 +382,8 @@
             {
               "id": "a",
               "text": "Weil KI-Texte meistens stimmen.",
-              "correct": false
+              "correct": false,
+              "feedback": "Gerade weil Fehler plausibel klingen, richtet sich die Prüfung nach den Folgen eines Fehlers."
             },
             {
               "id": "b",
@@ -391,7 +393,8 @@
             {
               "id": "c",
               "text": "Weil nur lange Texte geprüft werden müssen.",
-              "correct": false
+              "correct": false,
+              "feedback": "Länge ist kein Maßstab. Ein einziger Satz kann eine folgenreiche Zahl enthalten."
             }
           ],
           "explanation": "Ein Satz mit einer falschen Zahl kann folgenreicher sein als eine Seite Ideensammlung."

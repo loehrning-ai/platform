@@ -42,6 +42,12 @@ export interface ModuleOverviewProps {
   readonly tagline: string;
   /** Scope note (not legal advice etc.). */
   readonly notice: string;
+  /**
+   * How lesson links are built. "block-hash" (default, block courses):
+   * `<coursePath>/<moduleId>#lesson=<lessonId>`. "segment" (one route per
+   * lesson, e.g. AI-Native): `<coursePath>/<moduleId>/<lessonId>`.
+   */
+  readonly lessonLinks?: "block-hash" | "segment";
 }
 
 const COPY = {
@@ -94,6 +100,7 @@ export function ModuleOverview({
   locale = "de",
   tagline,
   notice,
+  lessonLinks = "block-hash",
 }: ModuleOverviewProps): JSX.Element {
   const copy = COPY[locale];
   const config = getCourseConfig(courseSlug, locale);
@@ -148,7 +155,12 @@ export function ModuleOverview({
   const minutes = modules.reduce((sum, module) => sum + module.durationMinutes, 0);
   const nextLesson = lessons.find((lesson) => !completed.has(lesson.id));
   const lessonHref = (moduleId: string, lessonId: string) =>
-    localizeHref(`${config.coursePath}/${moduleId}#lesson=${encodeURIComponent(lessonId)}`, locale);
+    localizeHref(
+      lessonLinks === "segment"
+        ? `${config.coursePath}/${moduleId}/${encodeURIComponent(lessonId)}`
+        : `${config.coursePath}/${moduleId}#lesson=${encodeURIComponent(lessonId)}`,
+      locale,
+    );
 
   const share = async () => {
     setShareState("idle");

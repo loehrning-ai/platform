@@ -13,6 +13,43 @@ interface CheckState {
   readonly solved: boolean;
 }
 
+/** FNV-1a hash of a string (stable across server and client). */
+function hashString(value: string): number {
+  let hash = 0x811c9dc5;
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return hash >>> 0;
+}
+
+/**
+ * Display order of a check's options: a deterministic shuffle seeded by the
+ * check id, so the correct answer does not sit in the authored position
+ * (authors tend to put it second) and DE/EN mirrors (same ids) show the same
+ * order. Exported for tests.
+ */
+export function orderCheckOptions<T extends { readonly id: string }>(
+  checkId: string,
+  options: readonly T[],
+): readonly T[] {
+  const ordered = [...options];
+  let seed = hashString(checkId) || 1;
+  const next = () => {
+    // mulberry32
+    seed = (seed + 0x6d2b79f5) >>> 0;
+    let t = seed;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+  for (let index = ordered.length - 1; index > 0; index -= 1) {
+    const swap = Math.floor(next() * (index + 1));
+    [ordered[index], ordered[swap]] = [ordered[swap], ordered[index]];
+  }
+  return ordered;
+}
+
 function initialState(
   checks: readonly LessonCheck[],
   passed: boolean,
@@ -123,7 +160,7 @@ export function LessonChecks({
               {check.prompt}
             </h3>
             <div className="mt-4 grid gap-2">
-              {check.options.map((option) => {
+              {orderCheckOptions(check.id, check.options).map((option) => {
                 const wasPicked = current.picked.includes(option.id);
                 const isRight = wasPicked && option.correct;
                 const isWrong = wasPicked && !option.correct;

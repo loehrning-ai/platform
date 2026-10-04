@@ -358,7 +358,8 @@
             {
               "id": "a",
               "text": "A quick proofread, the tone is fine.",
-              "correct": false
+              "correct": false,
+              "feedback": "A good tone says nothing about the credit. A promise of money to a customer needs a source and sign-off."
             },
             {
               "id": "b",
@@ -381,7 +382,8 @@
             {
               "id": "a",
               "text": "Because AI texts are usually right.",
-              "correct": false
+              "correct": false,
+              "feedback": "Precisely because errors sound plausible, the check depends on the consequences of an error."
             },
             {
               "id": "b",
@@ -391,7 +393,8 @@
             {
               "id": "c",
               "text": "Because only long texts need checking.",
-              "correct": false
+              "correct": false,
+              "feedback": "Length is not the measure. A single sentence can contain a consequential number."
             }
           ],
           "explanation": "One sentence with a wrong figure can matter more than a page of brainstorming."

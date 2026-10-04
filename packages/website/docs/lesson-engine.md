@@ -106,10 +106,15 @@ LessonCheck = {
   prompt: string;
   options: { id: string; text: string; correct: boolean; feedback?: string }[];
                            // 2-4 options, exactly one correct;
-                           // feedback explains a wrong pick
+                           // feedback explains a wrong pick (write it for
+                           // every wrong option: the content tests require it)
   explanation: string;     // shown after the correct pick
 }
 ```
+
+The reader shows options in a stable shuffled order seeded by the check id
+(`orderCheckOptions`), so the authored position of the correct option does not
+matter and DE/EN show the same order.
 
 Do not author `sections`, `quiz` or `widgets` on an engine lesson. The loader
 replaces them.
@@ -347,7 +352,7 @@ learner's own scores, because live text varies. Done on evaluation.
 ```
 
 `allowEdit` lets the learner edit prompt B. It is reset to the authored text
-when the run falls back to recorded outputs. The sent prompt is
+when the run falls back to recorded outputs, and the note says so. The sent prompt is
 `prompt + "\n\n" + input.label + ":\n" + input.text` and must stay under 4,000
 characters. Write recorded outputs so that each rubric expectation is visibly
 true or false in them.
@@ -409,7 +414,8 @@ Any registered kind can be the exercise. The reader injects the same
   `failure-tagger`, `redaction-drill`, `drag-reorder`, `reflect-box`,
   `matrix-grid`, `slot-fill`) and the diagram kinds (`interactive-diagram`,
   `risk-pyramid`, `obligation-layers`). Inside the reader, `WidgetFrame` drops
-  its own title chrome.
+  its own title chrome and reports its done state to the reader through
+  `LabEmbedContext.onComplete`.
 - **Cannot complete a lesson as they are**: the AI-Native `exercise-*` kinds,
   which store results in their own exercise store, and the `demo-*` kinds.
   Use a lab kind instead, or make the widget call `useLabCompletion` (or
@@ -434,6 +440,9 @@ which uses no `eval` and has no property access.
 - **Exercise done** is stored as the step `<lessonId>_exercise` in the lesson's
   `sectionsRead`. `CANONICAL_SECTION_IDS[slug]` registers exactly that one
   step per lesson (`engineSteps(ids)` in `src/lib/courses/completion.ts`).
+- **Course reset**: checkpoints are cross-course and never cleared, so once
+  the course slice has a `resetAt` a bare exercise checkpoint no longer counts.
+  Only a fresh widget completion (`onComplete`) records the step again.
 - **Checks passed** is stored as a perfect lesson quiz score
   (`saveLessonQuizScore(slug, id, n, n)`, written once both checks are right).
 - **Lesson proof**: once both hold, `useEngineLessonProgress` calls
@@ -468,6 +477,10 @@ which uses no `eval` and has no property access.
   `CourseAssessmentCta`, progress-link import/share and a scope notice.
   `app/<slug>/kurs/page.tsx` passes slim `ModuleOverviewModule[]`, and
   `kurs-content.tsx` adds the tagline and notice copy.
+- `ModuleOverview` builds lesson links from `lessonLinks`: `"block-hash"`
+  (default) gives `<coursePath>/<moduleId>#lesson=<lessonId>`, `"segment"`
+  gives `<coursePath>/<moduleId>/<lessonId>` for one route per lesson
+  (AI-Native).
 
 ## Design system
 
@@ -589,9 +602,8 @@ in `content/ai-native/modul-N-lessons.json` (and `en/`).
    - `catalog.ts` `continueHref`.
    - `config.ts` `certificateModules`.
 4. **Hub**: the module pages and the `/ai-native/kurs` hub can adopt
-   `ModuleOverview`. Pass modules with lesson ids. Note that the hub's lesson
-   links use `coursePath/<moduleId>#lesson=` for block courses, so AI-Native
-   needs a small `lessonHref` prop or a sibling component.
+   `ModuleOverview`. Pass modules (`id` = `modul_N`) with lesson ids and
+   `lessonLinks="segment"`, which links `/ai-native/kurs/<moduleId>/<lessonId>`.
 5. **Live tasks**: use `live-prompt-ab` for briefing and iteration tasks. It
    already uses the practice API with recorded fallbacks. For the other
    planned AI-Native exercises, use `calculator` (triage matrix, local vs cloud),

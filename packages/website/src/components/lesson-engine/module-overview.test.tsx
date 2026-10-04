@@ -23,7 +23,7 @@ vi.mock("@/lib/course/progress", async (importOriginal) => ({
 }));
 
 import { KursContent } from "@/app/ki-fuehrerschein/kurs/kurs-content";
-import type { ModuleOverviewModule } from "./module-overview";
+import { ModuleOverview, type ModuleOverviewModule } from "./module-overview";
 
 const MODULES: readonly ModuleOverviewModule[] = [
   {
@@ -84,6 +84,22 @@ describe("KI-Führerschein module overview", () => {
       "/ki-fuehrerschein/kurs/block_2#lesson=briefen-2-1",
     );
     for (const link of screen.getAllByRole("link")) expect(link).toHaveClass("min-h-11");
+  });
+
+  it("builds one-route-per-lesson links when lessonLinks is segment", () => {
+    render(
+      <ModuleOverview
+        courseSlug="ai-native"
+        modules={[{ ...MODULES[0], id: "modul_1", lessons: [{ id: "modul_1_lesson_1", title: "Erste", durationMinutes: 5 }] }]}
+        tagline="t"
+        notice="n"
+        lessonLinks="segment"
+      />,
+    );
+    expect(screen.getByRole("link", { name: /Erste Lektion starten/ })).toHaveAttribute(
+      "href",
+      "/ai-native/kurs/modul_1/modul_1_lesson_1",
+    );
   });
 
   it("continues with the first unfinished lesson and fills the rings from evidence-backed progress", async () => {

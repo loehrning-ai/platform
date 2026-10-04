@@ -81,12 +81,6 @@ function isCourseRowPayload(
 }
 
 /**
- * Repair historical DB rows whose workshop score was stored as a whole
- * percentage. Impossible stored scores become zero so corrupt data cannot
- * inflate a merge or certificate; every other field still has to satisfy the
- * current strict course-slice validator.
- */
-/**
  * Courses can retire lesson IDs (KI-Führerschein moved to the lesson engine).
  * A stored row written before that change still carries the old keys. Drop
  * retired lesson entries and retired section IDs before validation so the
@@ -125,6 +119,13 @@ function dropRetiredLessonEntries(value: unknown, slug: CourseSlug): unknown {
   );
 }
 
+/**
+ * Repair historical DB rows whose workshop score was stored as a whole
+ * percentage. Impossible stored scores become zero so corrupt data cannot
+ * inflate a merge or certificate; retired lesson IDs are dropped
+ * (dropRetiredLessonEntries); every other field still has to satisfy the
+ * current strict course-slice validator.
+ */
 function coerceStoredCourseRowPayload(
   value: unknown,
   slug: CourseSlug,

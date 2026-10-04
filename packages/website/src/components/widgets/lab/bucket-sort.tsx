@@ -1,7 +1,9 @@
 "use client";
 
 import {
+  useEffect,
   useMemo,
+  useRef,
   useState,
   type DragEvent,
   type JSX,
@@ -120,6 +122,17 @@ export function BucketSortWidget({
   const [placements, setPlacements] = useState<Record<string, Placement>>({});
   const [selected, setSelected] = useState<string | null>(null);
   const [lastPlaced, setLastPlaced] = useState<string | null>(null);
+  const cardRefs = useRef(new Map<string, HTMLButtonElement>());
+  const summaryRef = useRef<HTMLDivElement>(null);
+  // Card to focus after a placement (the placed card leaves the tray).
+  const [focusTarget, setFocusTarget] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!focusTarget) return;
+    if (focusTarget === "summary") summaryRef.current?.focus();
+    else cardRefs.current.get(focusTarget)?.focus();
+    setFocusTarget(null);
+  }, [focusTarget]);
 
   const bucketById = useMemo(
     () => new Map(buckets.map((bucket) => [bucket.id, bucket])),
@@ -144,6 +157,13 @@ export function BucketSortWidget({
     setPlacements(next);
     setSelected(null);
     setLastPlaced(itemId);
+    // Keep keyboard and screen-reader users in the tray: focus the next
+    // unsorted card, or the result once everything is sorted.
+    const order = items.filter((entry) => !next[entry.id]);
+    const index = items.findIndex((entry) => entry.id === itemId);
+    const following =
+      order.find((entry) => items.indexOf(entry) > index) ?? order[0];
+    setFocusTarget(following ? following.id : "summary");
     const score = scoreBucketSort(items, next);
     if (
       score.placed === items.length &&
@@ -209,6 +229,10 @@ export function BucketSortWidget({
                     transition={LAB_SPRING}
                   >
                     <button
+                      ref={(node) => {
+                        if (node) cardRefs.current.set(item.id, node);
+                        else cardRefs.current.delete(item.id);
+                      }}
                       type="button"
                       draggable
                       onDragStart={(event) => {
@@ -259,6 +283,11 @@ export function BucketSortWidget({
                   : copy.wrongFirst(bucketById.get(last.bucket)?.label ?? last.bucket)}
               </p>
               <p className="mt-1 text-foreground">{last.why}</p>
+              {finished ? (
+                <p className="sr-only">
+                  {copy.score(firstTryRight, items.length)}.{passed ? "" : ` ${copy.belowPass}`}
+                </p>
+              ) : null}
             </m.div>
           ) : null}
         </>
@@ -339,10 +368,12 @@ export function BucketSortWidget({
 
       {finished ? (
         <m.div
+          ref={summaryRef}
+          tabIndex={-1}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35 }}
-          className="mt-4 rounded-2xl border border-lab-line bg-card p-4"
+          className="mt-4 rounded-2xl border border-lab-line bg-card p-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lab-accent"
         >
           <div className="flex flex-wrap items-center justify-between gap-3">
             <LabVerdictPill tone={passed ? "good" : "warn"}>

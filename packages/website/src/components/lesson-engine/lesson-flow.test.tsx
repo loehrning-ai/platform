@@ -7,12 +7,14 @@ import {
   continueWithAnonymousProgress,
   getLessonQuizScore,
   getReadSectionIds,
+  resetCourse,
 } from "@/lib/progress/store";
 import { isEvidenceBackedLessonCompleted } from "@/lib/progress";
 import { getBlockLessons } from "@/lib/course/data";
 import { isEngineLesson, type EngineLesson } from "@/lib/lesson-engine/lesson";
 import type { Lesson } from "@/lib/course/types";
 import { LessonFlow } from "./lesson-flow";
+import { orderCheckOptions } from "./lesson-checks";
 
 function pilotLesson(): EngineLesson<Lesson> {
   const lesson = getBlockLessons("ki-fuehrerschein", "block_1")[0];
@@ -131,6 +133,25 @@ describe("LessonFlow (lesson-engine reader)", () => {
     );
   });
 
+  it("does not count a pre-reset widget checkpoint after a course reset", async () => {
+    const lesson = pilotLesson();
+    act(() => {
+      completeCheckpoint(`ki-fuehrerschein:${lesson.id}`, "exercise");
+      resetCourse("ki-fuehrerschein");
+    });
+    render(<LessonFlow courseSlug="ki-fuehrerschein" lesson={lesson} position={{ index: 1, total: 8 }} />);
+    answerChecksCorrectly(lesson);
+    await waitFor(() => expect(getLessonQuizScore("ki-fuehrerschein", lesson.id)).toEqual({ score: 2, total: 2 }));
+    expect(getReadSectionIds("ki-fuehrerschein", lesson.id).has(`${lesson.id}_exercise`)).toBe(false);
+    expect(isEvidenceBackedLessonCompleted("ki-fuehrerschein", lesson.id)).toBe(false);
+
+    // Redoing the exercise completes the lesson again.
+    fireEvent.keyDown(await screen.findByRole("button", { name: /Pressetext/ }), { key: "1" });
+    fireEvent.keyDown(screen.getByRole("button", { name: /API-Schlüssel/ }), { key: "2" });
+    fireEvent.keyDown(screen.getByRole("button", { name: /Website-Text/ }), { key: "1" });
+    await waitFor(() => expect(isEvidenceBackedLessonCompleted("ki-fuehrerschein", lesson.id)).toBe(true));
+  });
+
   it("renders stored progress as solved after a reload", async () => {
     const lesson = pilotLesson();
     const first = render(<LessonFlow courseSlug="ki-fuehrerschein" lesson={lesson} position={{ index: 1, total: 8 }} />);
@@ -155,5 +176,18 @@ describe("LessonFlow (lesson-engine reader)", () => {
     fireEvent.click(within(fieldset).getByRole("button", { name: check.options[0].text }));
     expect(fieldset.querySelector('[data-option-state="idle"]')).not.toBeNull();
     expect(getLessonQuizScore("ki-fuehrerschein", lesson.id)).toBeNull();
+  });
+
+  it("shows check options in a stable shuffled order that keeps every option", () => {
+    const options = ["a", "b", "c", "d"].map((id) => ({ id }));
+    const first = orderCheckOptions("daten-1-1-c1", options);
+    expect(orderCheckOptions("daten-1-1-c1", options)).toEqual(first);
+    expect([...first].map((option) => option.id).sort()).toEqual(["a", "b", "c", "d"]);
+    const positions = new Set(
+      Array.from({ length: 24 }, (_, index) =>
+        orderCheckOptions(`check-${index}`, options).findIndex((option) => option.id === "b"),
+      ),
+    );
+    expect(positions.size).toBeGreaterThan(1);
   });
 });

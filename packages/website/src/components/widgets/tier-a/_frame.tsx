@@ -1,6 +1,6 @@
 "use client";
 
-import { type JSX, type ReactNode } from "react";
+import { useEffect, useRef, type JSX, type ReactNode } from "react";
 import { CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLabEmbed } from "@/components/widgets/lab/lab-context";
@@ -46,7 +46,17 @@ export function WidgetFrame({
   // shown twice.
   const titleRepeatsKind =
     title.trim().toLocaleLowerCase() === kindLabel.trim().toLocaleLowerCase();
-  const { embedded } = useLabEmbed();
+  const { embedded, onComplete } = useLabEmbed();
+  // Tell the lesson-engine reader when the widget shows its done state. The
+  // reader ignores bare checkpoints after a course reset; Tier-A widgets keep
+  // their done state from the checkpoint, so they report it themselves.
+  const notified = useRef(false);
+  useEffect(() => {
+    if (done && !notified.current) {
+      notified.current = true;
+      onComplete?.();
+    }
+  }, [done, onComplete]);
   if (embedded) {
     // Inside the lesson-engine reader the stage already shows the exercise
     // title and instructions; keep the heading for assistive technology only.

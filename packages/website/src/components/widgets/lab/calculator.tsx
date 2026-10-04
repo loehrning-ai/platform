@@ -341,6 +341,7 @@ export function CalculatorWidget({
   );
   const [changes, setChanges] = useState(0);
   const [metGoals, setMetGoals] = useState<ReadonlySet<string>>(() => new Set());
+  const [lastMetGoal, setLastMetGoal] = useState<string | null>(null);
   const completed = useRef(false);
 
   const scope = useMemo(
@@ -352,8 +353,10 @@ export function CalculatorWidget({
   useEffect(() => {
     if (changes === 0) return;
     const nowMet = goals.filter((goal) => evaluateCondition(goal.when, scope));
-    if (nowMet.some((goal) => !metGoals.has(goal.id))) {
+    const fresh = nowMet.filter((goal) => !metGoals.has(goal.id));
+    if (fresh.length > 0) {
       setMetGoals((previous) => new Set([...previous, ...nowMet.map((goal) => goal.id)]));
+      setLastMetGoal(fresh[fresh.length - 1].id);
     }
   }, [scope, goals, metGoals, changes]);
 
@@ -373,6 +376,9 @@ export function CalculatorWidget({
   };
 
   const verdict = verdicts.find((entry) => evaluateCondition(entry.when, scope));
+  const lastInsight = lastMetGoal
+    ? goals.find((goal) => goal.id === lastMetGoal)?.insight
+    : undefined;
   const headline = outputs.find((output) => output.emphasis) ?? outputs[0];
   const others = outputs.filter((output) => output !== headline);
 
@@ -397,7 +403,15 @@ export function CalculatorWidget({
         </div>
 
         <div className="min-w-0 space-y-4">
-          <LabLive>
+          {/* One concise announcement per change: the headline value, the
+              verdict and the latest insight. The visual card below tweens
+              and is not itself a live region. */}
+          <LabLive className="sr-only">
+            {changes > 0 && headline
+              ? `${headline.label}: ${formatLabValue(scope[headline.id], headline.format, lang, headline.decimals)}.${verdict ? ` ${verdict.title}.` : ""}${lastInsight ? ` ${lastInsight}` : ""}`
+              : null}
+          </LabLive>
+          <div>
             <div className="rounded-2xl border border-lab-line bg-card p-4 shadow-lab-sm">
               <p className="text-label text-muted-foreground">{headline?.label ?? copy.result}</p>
               {headline ? (
@@ -440,7 +454,7 @@ export function CalculatorWidget({
                 </m.div>
               ) : null}
             </>
-          </LabLive>
+          </div>
 
           {chart ? (
             <figure className="rounded-2xl border border-lab-line bg-card p-4 shadow-lab-sm">

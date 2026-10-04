@@ -21,8 +21,8 @@ const numbered = (prefix: string, count: number): readonly string[] =>
 /**
  * KI-Führerschein runs on the lesson engine (docs/lesson-engine.md): four
  * modules, eight lessons. The pre-engine `block_N_lesson_M` IDs are retired;
- * stored progress under them is dropped by `normalizeCanonicalProgress` and
- * `normalizeStoredCourseSlice` instead of failing validation.
+ * stored progress under them is dropped by `normalizeCanonicalProgress` (browser) and
+ * `dropRetiredLessonEntries` in server-store.ts (stored rows) instead of failing validation.
  */
 const KI_FUEHRERSCHEIN_LESSON_IDS = [
   "daten-1-1",

@@ -149,6 +149,9 @@ const COPY = {
     negative: "tatsächlich negativ",
     flagged: "rechts der Linie: markiert",
     score: "Risikowert",
+    stripLabel: (group: string, score: string, threshold: string) =>
+      `${group}: ${score} von 0 bis 1, Schwelle ${threshold}`,
+    summary: (threshold: string, rows: string) => `Schwelle ${threshold}. ${rows}`,
     goals: "Aufgaben",
     goalMet: "erledigt",
     goalOpen: "offen",
@@ -173,6 +176,9 @@ const COPY = {
     negative: "truly negative",
     flagged: "right of the line: flagged",
     score: "Risk score",
+    stripLabel: (group: string, score: string, threshold: string) =>
+      `${group}: ${score} from 0 to 1, threshold ${threshold}`,
+    summary: (threshold: string, rows: string) => `Threshold ${threshold}. ${rows}`,
     goals: "Tasks",
     goalMet: "done",
     goalOpen: "open",
@@ -187,12 +193,12 @@ function DotStrip({
   people,
   threshold,
   label,
-  scoreLabel,
+  ariaLabel,
 }: {
   readonly people: readonly Person[];
   readonly threshold: number;
   readonly label: string;
-  readonly scoreLabel: string;
+  readonly ariaLabel: string;
 }): JSX.Element {
   const width = 400;
   const columns = useMemo(() => {
@@ -214,7 +220,7 @@ function DotStrip({
         viewBox={`0 0 ${width} ${height}`}
         className="h-auto w-full"
         role="img"
-        aria-label={`${label}: ${scoreLabel} 0 bis 1, Schwelle ${threshold.toFixed(2)}`}
+        aria-label={ariaLabel}
       >
         <rect x={0} y={0} width={width} height={height - 12} rx={10} fill="var(--color-paper)" />
         <rect x={x} y={0} width={width - x} height={height - 12} fill="rgba(39, 71, 181, 0.07)" />
@@ -278,6 +284,7 @@ export function ThresholdLabWidget({
   ]);
   const [changes, setChanges] = useState(0);
   const [metGoals, setMetGoals] = useState<ReadonlySet<string>>(() => new Set());
+  const [lastMetGoal, setLastMetGoal] = useState<string | null>(null);
   const completed = useRef(false);
 
   const populations = useMemo(
@@ -305,8 +312,10 @@ export function ThresholdLabWidget({
     if (changes === 0) return;
     const parsed = JSON.parse(scopeKey) as Record<string, number>;
     const nowMet = goals.filter((goal) => evaluateCondition(goal.when, parsed));
-    if (nowMet.some((goal) => !metGoals.has(goal.id))) {
+    const fresh = nowMet.filter((goal) => !metGoals.has(goal.id));
+    if (fresh.length > 0) {
       setMetGoals((previous) => new Set([...previous, ...nowMet.map((goal) => goal.id)]));
+      setLastMetGoal(fresh[fresh.length - 1].id);
     }
   }, [scopeKey, goals, metGoals, changes]);
 
@@ -334,6 +343,10 @@ export function ThresholdLabWidget({
     { key: "ppv", label: copy.ppv, help: copy.ppvHelp, values: metrics.map((entry) => entry.ppv) },
     { key: "sel", label: copy.selection, help: copy.selectionHelp, values: metrics.map((entry) => entry.selection) },
   ];
+
+  const lastInsight = lastMetGoal
+    ? goals.find((goal) => goal.id === lastMetGoal)?.insight
+    : undefined;
 
   const slider = (index: 0 | 1, label: string) => (
     <div key={label}>
@@ -365,7 +378,11 @@ export function ThresholdLabWidget({
             people={populations[index]}
             threshold={effective[index]}
             label={group.label}
-            scoreLabel={scoreLabel ?? copy.score}
+            ariaLabel={copy.stripLabel(
+              group.label,
+              scoreLabel ?? copy.score,
+              formatLabValue(effective[index], "number", lang, 2),
+            )}
           />
         ))}
       </div>
@@ -417,7 +434,24 @@ export function ThresholdLabWidget({
           ) : null}
         </div>
 
-        <LabLive className="min-w-0 overflow-x-auto">
+        <div className="min-w-0 overflow-x-auto">
+          <LabLive className="sr-only">
+            {changes > 0
+              ? copy.summary(
+                  split
+                    ? groups.map((group, index) => `${group.label} ${formatLabValue(effective[index], "number", lang, 2)}`).join(", ")
+                    : formatLabValue(effective[0], "number", lang, 2),
+                  rows
+                    .map(
+                      (row) =>
+                        `${row.label}: ${groups
+                          .map((group, index) => `${group.label} ${formatLabValue(row.values[index], "percent", lang, 0)}`)
+                          .join(", ")}.`,
+                    )
+                    .join(" ") + (lastInsight ? ` ${lastInsight}` : ""),
+                )
+              : null}
+          </LabLive>
           <table className="w-full min-w-[22rem] border-separate border-spacing-y-1 text-sm">
             <thead>
               <tr className="text-left text-xs text-muted-foreground">
@@ -457,7 +491,7 @@ export function ThresholdLabWidget({
               })}
             </tbody>
           </table>
-        </LabLive>
+        </div>
       </div>
 
       {goals.length > 0 ? (
