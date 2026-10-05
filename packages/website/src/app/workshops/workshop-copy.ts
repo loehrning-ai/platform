@@ -95,7 +95,6 @@ export interface WorkshopPageCopy {
     readonly workshopsShort: string;
     /** Label above the q-card in the cover band. */
     readonly redLineLabel: string;
-    readonly labHeading: string;
     /** Secondary cover-band button that jumps to the material list. */
     readonly seeMaterials: string;
     /** Cover-band buttons, chosen by the role of the material they open. */
@@ -121,9 +120,6 @@ export interface WorkshopPageCopy {
     readonly agendaSource: { readonly deck: string; readonly plan: string };
     /** Station caption for an item that runs only with a group. */
     readonly liveOnly: string;
-    /** Extra caption line on the station the decision lab mirrors. */
-    readonly labStation: string;
-    /** Link under the agenda to the decision lab, naming the station when known. */
     readonly activityLabels: Readonly<Record<WorkshopActivity, string>>;
     readonly optional: string;
     readonly materialHeading: string;
@@ -245,7 +241,6 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       allWorkshops: "Alle Workshops",
       workshopsShort: "Workshops",
       redLineLabel: "Der Weg durch den Workshop",
-      labHeading: "Ausprobieren",
       seeMaterials: "Material ansehen",
       primaryAction: {
         deck: "Deck öffnen",
@@ -280,7 +275,6 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         plan: "Geplante Minuten, noch nicht mit Testpersonen gemessen.",
       },
       liveOnly: "nur live",
-      labStation: "Übung unten",
       activityLabels: {
         listen: "Zuhören",
         vote: "Abstimmen",
@@ -422,7 +416,6 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
       allWorkshops: "All workshops",
       workshopsShort: "Workshops",
       redLineLabel: "The path through the workshop",
-      labHeading: "Try it",
       seeMaterials: "See materials",
       primaryAction: {
         deck: "Open the deck",
@@ -457,7 +450,6 @@ export const WORKSHOP_PAGE_COPY: Readonly<Record<Locale, WorkshopPageCopy>> = {
         plan: "Planned minutes, not yet measured with test readers.",
       },
       liveOnly: "live only",
-      labStation: "Exercise below",
       activityLabels: {
         listen: "Listen",
         vote: "Vote",

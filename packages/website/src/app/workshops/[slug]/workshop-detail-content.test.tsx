@@ -44,7 +44,7 @@ function sectionOf(name: string | RegExp): HTMLElement {
 }
 
 describe("<WorkshopDetailContent>", () => {
-  it("puts the cover, the agenda, the decision lab and the materials in that order, with only the reference folded away", () => {
+  it("puts the cover, the agenda and the materials in that order, with no exercise band, with only the reference folded away", () => {
     const workshop = getWorkshopBySlug("ki-prognosen-einschaetzen", "de")!;
     const { container } = render(
       <WorkshopDetailContent workshop={workshop} locale="de" />,
@@ -59,7 +59,7 @@ describe("<WorkshopDetailContent>", () => {
     expect(caps?.textContent).toBe(workshop.eyebrow);
     expect(caps).toHaveTextContent("Workshop 01 · Prognosen");
     expect(within(cover as HTMLElement).getByText(workshop.summary)).toBeInTheDocument();
-    // No question card anywhere: the agenda opens with the red line, four
+    // No question card anywhere: the agenda opens with the red line, three
     // numbered jumps in page order, then the facts and the one outcome.
     const agenda = sectionOf("Ablauf");
     expect(container.querySelectorAll("[data-question-card]")).toHaveLength(0);
@@ -68,11 +68,10 @@ describe("<WorkshopDetailContent>", () => {
     expect(agenda).toContainElement(redLine);
     expect(within(redLine).getAllByRole("link").map((link) => [link.textContent, link.getAttribute("href")])).toEqual([
       ["1Ablauf", "#ablauf"],
-      ["2Ausprobieren", "#workshop-lab"],
-      ["3Material", "#material"],
-      ["4Der Fall", "#fall"],
+      ["2Material", "#material"],
+      ["3Der Fall", "#fall"],
     ]);
-    for (const id of ["ablauf", "workshop-lab", "material", "fall"]) {
+    for (const id of ["ablauf", "material", "fall"]) {
       expect(container.querySelector(`#${id}`), id).not.toBeNull();
     }
     expect(cover).not.toHaveTextContent("Selbstlernen ca. 90 Min.");
@@ -82,11 +81,13 @@ describe("<WorkshopDetailContent>", () => {
     // The brief comes first in the agenda section, before its Kopflinie.
     expect(follows(agenda.querySelector("[data-workshop-brief]")!, agenda.querySelector("header")!)).toBe(true);
 
-    const lab = container.querySelector("[data-workshop-decision-lab]")!;
+    // No "Ausprobieren" exercise band between the agenda and the materials.
+    expect(container.querySelector("[data-workshop-decision-lab]")).toBeNull();
+    expect(container.querySelector("#workshop-lab")).toBeNull();
+    expect(container).not.toHaveTextContent("Ausprobieren");
     const materials = sectionOf("Material");
     expect(follows(cover!, agenda)).toBe(true);
-    expect(follows(agenda, lab)).toBe(true);
-    expect(follows(lab, materials)).toBe(true);
+    expect(follows(agenda, materials)).toBe(true);
 
     // The Route lists every agenda item with its minutes, as an ordered list.
     const route = within(agenda).getByRole("list", { name: "Ablauf" });
@@ -96,24 +97,11 @@ describe("<WorkshopDetailContent>", () => {
       expect(stations[index]).toHaveTextContent(item.label);
       expect(stations[index]).toHaveTextContent(`${item.minutes} Min.`);
     }
-    // The station the lab mirrors is marked, and the agenda links down to the lab.
-    expect(stations[0].querySelector("[data-lab-station]")).not.toBeNull();
-    expect(stations[0]).toHaveTextContent("Übung unten");
-    expect(route.querySelectorAll("[data-lab-station]")).toHaveLength(1);
-    // It carries the inset "here" square and is the current step; the line
-    // runs dashed from it on, and no station is read out with a state word.
-    expect(stations[0]).toHaveAttribute("aria-current", "step");
-    expect(stations[0].querySelector("[data-route-here]")).not.toBeNull();
-    expect(route.querySelectorAll("[data-route-here]")).toHaveLength(1);
-    expect(route.querySelectorAll("[aria-current]")).toHaveLength(1);
-    expect(stations[0].querySelector("[data-route-line]")).toHaveAttribute(
-      "data-route-line",
-      "dashed",
-    );
-    expect(route).not.toHaveTextContent(/erledigt|aktuell|offen/);
-    // The red line carries the jump to the lab; no second link repeats it.
-    expect(within(agenda).queryByRole("link", { name: /unten ausprobieren/ })).toBeNull();
-    expect(lab).toHaveAttribute("id", "workshop-lab");
+    // No station is marked as the current one or read out with a state word.
+    expect(route.querySelectorAll("[data-lab-station]")).toHaveLength(0);
+    expect(route.querySelectorAll("[data-route-here]")).toHaveLength(0);
+    expect(route.querySelectorAll("[aria-current]")).toHaveLength(0);
+    expect(route).not.toHaveTextContent(/Übung unten|erledigt|aktuell|offen/);
     expect(agenda).not.toHaveTextContent(
       "Geplante Minuten, noch nicht mit Testpersonen gemessen.",
     );
@@ -432,7 +420,7 @@ describe("<WorkshopDetailContent>", () => {
     // Three disclosures only: optional files, data limits, the reference.
     expect(source.match(/<details/g)).toHaveLength(3);
     expect(source).not.toMatch(/from "lucide-react"/);
-    // Stays a Server Component; only the material link and the lab hydrate.
+    // Stays a Server Component; only the material link hydrates.
     expect(source).not.toMatch(/^["']use client["']/m);
   });
 

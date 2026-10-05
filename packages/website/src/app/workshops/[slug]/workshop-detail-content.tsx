@@ -35,7 +35,6 @@ import {
 } from "@/lib/plakat/palettes";
 import { materialLanguageLabel, WORKSHOP_PAGE_COPY } from "../workshop-copy";
 import { splitTitle } from "../workshop-title";
-import { WorkshopDecisionLab } from "./workshop-decision-lab";
 import { WorkshopMaterialLink } from "./workshop-material-link";
 
 interface Props {
@@ -70,22 +69,8 @@ const ROLE_PICTOGRAM: Readonly<Record<WorkshopMaterialRole, PictogramName>> = {
 
 const PHASE_ORDER: readonly WorkshopPhase[] = ["before", "during", "after"];
 
-/** Anchor of the decision lab band, linked from the agenda. */
-const LAB_ANCHOR = "workshop-lab";
 const AGENDA_ANCHOR = "ablauf";
 const CASE_ANCHOR = "fall";
-
-/**
- * Agenda station the decision lab mirrors, per workshop. Until the registry
- * carries this on decisionLab, the page keeps the mapping; a workshop without
- * an entry still gets the link under the Route, just no marked station.
- */
-const LAB_STATION: Readonly<Record<string, number>> = {
-  "ki-prognosen-einschaetzen": 0,
-  "geschaeftsberichte-mit-ki-lesen": 5,
-  "datenbereitschaft-fuer-ki": 1,
-  "esg-berichte-mit-ki": 1,
-};
 
 /**
  * A workshop without a registered poster still gets a scene, so the page
@@ -380,28 +365,19 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
   const agendaCaptionLine = sentenceStart(agendaCaption);
   const redLine = [
     { href: `#${AGENDA_ANCHOR}`, label: copy.agendaHeading },
-    { href: `#${LAB_ANCHOR}`, label: copy.labHeading },
     { href: `#${MATERIAL_ANCHOR}`, label: copy.materialHeading },
     { href: `#${CASE_ANCHOR}`, label: copy.caseHeading },
   ];
   // Minutes on one line, activity and flags on the next, so a narrow station
   // never breaks mid-pair with a dangling separator.
-  const labStation = LAB_STATION[workshop.slug];
-  const stations = workshop.agenda.map((item, index) => {
+  const stations = workshop.agenda.map((item) => {
     const detail = [
       item.activity ? copy.activityLabels[item.activity] : null,
       item.mode === "live" ? copy.liveOnly : null,
       item.optional ? copy.optional : null,
     ].filter(Boolean);
-    const isLab = index === labStation;
     return {
-      label: isLab ? (
-        <span className="font-bold" data-lab-station="">
-          {item.label}
-        </span>
-      ) : (
-        item.label
-      ),
+      label: item.label,
       caption: (
         <>
           <span className="block tabular-nums">
@@ -409,11 +385,6 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
           </span>
           {detail.length > 0 ? (
             <span className="hidden sm:block">{detail.join(" · ")}</span>
-          ) : null}
-          {isLab ? (
-            <span className="block font-semibold text-foreground">
-              {copy.labStation}
-            </span>
           ) : null}
         </>
       ),
@@ -598,13 +569,13 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
         className="pb-3 pt-6 sm:py-10 lg:pt-14"
       >
         <div className={CONTAINER}>
-          {/* The red line: four numbered steps, each a jump to its section.
+          {/* The red line: three numbered steps, each a jump to its section.
               The facts line and the one outcome sit under it. */}
           <nav
             aria-label={copy.redLineLabel}
             data-workshop-redline=""
           >
-            <ol className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
+            <ol className="grid grid-cols-3 gap-2 sm:gap-3">
               {redLine.map((step, index) => (
                 <li key={step.href} className="min-w-0">
                   <a
@@ -647,15 +618,14 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
             caption={agendaCaptionLine || copy.minutes(agendaMinutes)}
             size="compact"
           />
-          {/* Phones: one scroll-snapped rail with label, minutes and the lab
-              marker per station; the activity line returns from sm, where the
+          {/* Phones: one scroll-snapped rail with label and minutes per
+              station; the activity line returns from sm, where the
               rail is the reviewed horizontal agenda. More than six stations
               keep the rail through tablet widths, where equal columns would
               wrap the labels into three or four lines. */}
           <Route
             stations={stations}
             mode="description"
-            here={labStation}
             label={copy.agendaHeading}
             locale={locale}
             layout="rail"
@@ -665,13 +635,6 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
         </div>
       </section>
 
-      <WorkshopDecisionLab
-        id={LAB_ANCHOR}
-        config={workshop.decisionLab}
-        locale={locale}
-        step={<StepTitle n={2}>{copy.labHeading}</StepTitle>}
-      />
-
       <section
         id={MATERIAL_ANCHOR}
         aria-labelledby="workshop-materials-heading"
@@ -680,7 +643,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
         <div className={CONTAINER}>
           <SectionHead
             id="workshop-materials-heading"
-            title={<StepTitle n={3}>{copy.materialHeading}</StepTitle>}
+            title={<StepTitle n={2}>{copy.materialHeading}</StepTitle>}
             size="compact"
           />
           <ul className="mt-3 border-t border-hairline sm:mt-6">
@@ -732,7 +695,7 @@ export function WorkshopDetailContent({ workshop, locale }: Props) {
           <SectionHead
             size="compact"
             id="workshop-case-heading"
-            title={<StepTitle n={4}>{copy.caseHeading}</StepTitle>}
+            title={<StepTitle n={3}>{copy.caseHeading}</StepTitle>}
             caption={
               caseStudy.isFictional ? copy.syntheticCase : copy.realCompanyData
             }
