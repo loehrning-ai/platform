@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { isWebKitRscPrefetchCancellation } from "./fixtures/console";
 
 /**
  * ScrollToTop resets the scroll position once the app hydrates. A click on a
@@ -59,10 +60,15 @@ test.describe("workshop self-study journey", () => {
     expect(body.subarray(0, 2).toString("ascii")).toBe("PK");
   });
 
-  test("opens the third workshop guide and pairs its recorded-evidence deck", async ({ page }) => {
+  test("opens the third workshop guide and pairs its recorded-evidence deck", async ({ page, browserName }) => {
     const errors: string[] = [];
     const serviceRequests: string[] = [];
-    page.on("pageerror", (error) => errors.push(error.message));
+    page.on("pageerror", (error) => {
+      // Leaving the workshop page for the guide can cancel a Link's RSC
+      // prefetch, which WebKit reports as a page error (fixtures/console.ts).
+      if (browserName === "webkit" && isWebKitRscPrefetchCancellation(error.message)) return;
+      errors.push(error.message);
+    });
     page.on("console", (message) => {
       if (message.type() === "error") errors.push(message.text());
     });
