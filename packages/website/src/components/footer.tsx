@@ -207,8 +207,9 @@ export async function Footer() {
     // links and the old site's pastel geometry at the outer edges. Warm on
     // purpose: the page above ends on paper, Beton, a sky or an acid wash,
     // and the footer must not merge into any of them. The shapes sit behind
-    // the content, whole (never cut by the band's edge), and only where the
-    // page gutter is wide enough to hold them clear of any text.
+    // the content, bleed off the left and right screen edges (the band's
+    // overflow clips them; never cut flat at its top), and only appear where
+    // the page gutter is wide enough to hold them clear of any text.
     <footer className="relative isolate overflow-hidden border-t border-border/40 bg-peach-wash text-foreground">
       <span
         aria-hidden="true"

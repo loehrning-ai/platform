@@ -13,7 +13,11 @@ import { settleFontsAndFrame } from "./settle";
 
 export type Rgb = readonly [number, number, number];
 
-/** The routes §8.3 names. Every one of them opens with a poster band. */
+/**
+ * The routes §8.3 names. Most open with a poster band; home, the workshop hub
+ * and /kurse set their H1 on paper (see PAPER_HERO_ROUTES in
+ * plakat-contrast.spec.ts).
+ */
 export const PLAKAT_ROUTES = [
   "/",
   "/workshops",

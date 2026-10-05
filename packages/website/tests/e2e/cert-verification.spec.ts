@@ -26,9 +26,11 @@ const COURSES = [
     lang: "de",
   },
   {
+    // The course was renamed "Mit KI arbeiten"; the slug (and with it every
+    // issued certificate code) stays "ai-native".
     route: "/ai-native/verifizierung",
     slug: "ai-native",
-    title: /AI-Native/,
+    title: /Mit KI arbeiten/,
     lang: "de",
   },
   //: data-infrastructure's basePath is nested under /kurse/open-source/

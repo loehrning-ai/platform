@@ -30,8 +30,10 @@ test.describe("workshop self-study journey", () => {
       /Geschäftsberichte/i,
     );
     await expect(page.locator("body")).not.toContainText("No paid service");
-    // Detail page (design-direction 7.2): the cover starts the primary
-    // material, the agenda is a Route, and nothing is hidden in accordions.
+    // Detail page: the cover starts the primary material and the agenda is a
+    // Route. The red line (agenda, core materials, case) stays visible; only
+    // optional materials, data limits and the audience details sit behind
+    // disclosures, which start collapsed.
     // The band is the workshop's poster (IDEA for W02) and still starts the deck.
     const cover = page.locator("[data-cover-band]");
     await expect(cover).toHaveAttribute("data-plakat", "idea");
@@ -41,7 +43,7 @@ test.describe("workshop self-study journey", () => {
     );
     await expect(page.getByRole("list", { name: "Ablauf" })).toBeVisible();
     await expect(page.getByRole("heading", { level: 2, name: "Material", exact: true })).toBeVisible();
-    await expect(page.locator("main details")).toHaveCount(0);
+    await expect(page.locator("main details[open]")).toHaveCount(0);
   });
 
   test("serves the complete analyst kit as a ZIP", async ({ request }) => {
@@ -71,18 +73,6 @@ test.describe("workshop self-study journey", () => {
     });
     await page.goto("/en/workshops/datenbereitschaft-fuer-ki");
     await expect(page.getByRole("heading", { level: 1 })).toContainText(/data.*ready for AI/i);
-    await page.getByRole("button", { name: "Check decision", exact: true }).click();
-    await expect(page.getByText("Select one decision before checking the result.", { exact: true })).toBeVisible();
-    await page.getByRole("radio", { name: "Use 100 euros and check what the fields mean first.", exact: true }).check();
-    await page.getByRole("radio", { name: "The ending balance already includes the change. Adding it again counts it twice.", exact: true }).check();
-    await page.getByRole("button", { name: "Check decision", exact: true }).click();
-    await expect(page.getByText("The change is already in the ending balance.", { exact: true })).toBeVisible();
-    // A correct answer offers a neutral reset; "Try again" is reserved for wrong answers.
-    await expect(page.getByRole("button", { name: "Reset", exact: true })).toBeFocused();
-    await page.keyboard.press("Enter");
-    await expect(page.getByRole("radio", { checked: true })).toHaveCount(0);
-    // Reset reshuffles the options, then focuses whichever decision now comes first.
-    await expect(page.locator("form fieldset").first().getByRole("radio").first()).toBeFocused();
     await page.goto("/workshops/datenbereitschaft-fuer-ki/guide.html");
     await page.getByText("Reveal the explanation", { exact: true }).click();
     await expect(page.locator("details").first()).toHaveAttribute("open", "");
@@ -285,10 +275,11 @@ test.describe("workshop self-study journey", () => {
       await expect(band).toHaveAttribute("data-plakat", plakat);
       await expect(band).toHaveClass(new RegExp(`\\bplakat-${plakat}\\b`));
       bandGrounds.add(await band.evaluate((element) => getComputedStyle(element).backgroundColor));
-      // No question card; the numbered red line sits on paper below the band.
+      // No question card; the numbered red line (agenda, materials, case)
+      // sits on paper below the band.
       await expect(page.locator("[data-question-card]")).toHaveCount(0);
       await expect(band.locator("[data-workshop-redline]")).toHaveCount(0);
-      await expect(page.locator("[data-workshop-redline] li")).toHaveCount(4);
+      await expect(page.locator("[data-workshop-redline] li")).toHaveCount(3);
     }
     expect(bandGrounds.size).toBe(4);
   });

@@ -136,7 +136,8 @@ for (const locale of ["de", "en"] as const) {
         await expectReadable(disclosure);
         await expectTapTarget(card);
         const cardBox = await card.boundingBox();
-        expect(cardBox!.height).toBe(56);
+        // The card fills its fixed 4.75rem seat (continue-slot.tsx).
+        expect(cardBox!.height).toBe(76);
         await page.screenshot({
           path: testInfo.outputPath("home-before-tap.png"),
         });

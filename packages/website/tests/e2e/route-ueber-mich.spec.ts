@@ -107,6 +107,24 @@ async function expectContainedLayout(page: Page, label: string) {
   const geometry = await page.evaluate(() => {
     const tolerance = 1;
     const viewportRight = window.innerWidth + tolerance;
+    // Decorative geometry (aria-hidden, e.g. the footer's pastel shapes) may
+    // bleed past the screen edge on purpose, as long as a contained ancestor
+    // clips it: nothing scrolls and no content is cut. Text and interactive
+    // elements get no such allowance.
+    const clippedDecoration = (element: HTMLElement) => {
+      if (!element.closest('[aria-hidden="true"]')) return false;
+      for (
+        let ancestor = element.parentElement;
+        ancestor && ancestor !== document.body;
+        ancestor = ancestor.parentElement
+      ) {
+        const overflowX = getComputedStyle(ancestor).overflowX;
+        if (overflowX !== "hidden" && overflowX !== "clip") continue;
+        const clip = ancestor.getBoundingClientRect();
+        return clip.left >= -tolerance && clip.right <= viewportRight;
+      }
+      return false;
+    };
     const escaped = Array.from(document.body.querySelectorAll<HTMLElement>("*"))
       .filter((element) => {
         const rect = element.getBoundingClientRect();
@@ -118,7 +136,8 @@ async function expectContainedLayout(page: Page, label: string) {
           rect.height <= 0 ||
           rect.right <= 0 ||
           rect.left >= window.innerWidth ||
-          (rect.left >= -tolerance && rect.right <= viewportRight)
+          (rect.left >= -tolerance && rect.right <= viewportRight) ||
+          clippedDecoration(element)
         ) {
           return false;
         }
