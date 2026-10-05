@@ -171,6 +171,15 @@
       "redistribution": "Included for repository operation; reuse is not granted"
     },
     {
+      "path": "packages/website/public/course-covers/ai-native-cover-v4.webp",
+      "sizeBytes": 62496,
+      "sha256": "1079397d762ba08cf1bd9c0711b0e98851521cf2ef90bb08f31e572305636fd7",
+      "owner": "Tim L\u00f6hr",
+      "source": "Original loehrning.ai editorial course artwork, recolored for this repository on 2026-09-28",
+      "license": "LicenseRef-Loehrning-Editorial",
+      "redistribution": "Included for repository operation; reuse is not granted"
+    },
+    {
       "path": "packages/website/public/course-covers/eu-ai-act-kurs-cover-v2.webp",
       "sizeBytes": 57516,
       "sha256": "fdd8c36ea22b6ec80a44ae66e1e2d130566a742f1367c9591857413bc0521352",
@@ -185,6 +194,15 @@
       "sha256": "0fe285d79b73d9aa20e1a164c08126c84507c3397955708278f4f4d43ee08c5f",
       "owner": "Tim L\u00f6hr",
       "source": "Original loehrning.ai editorial course artwork generated for this repository on 2026-08-28",
+      "license": "LicenseRef-Loehrning-Editorial",
+      "redistribution": "Included for repository operation; reuse is not granted"
+    },
+    {
+      "path": "packages/website/public/course-covers/eu-ai-act-kurs-cover-v4.webp",
+      "sizeBytes": 55848,
+      "sha256": "b1e920e2fa02b8f9b6ad01c8e3be056a5b2595adb3a34f87c40c9d85b8acd24c",
+      "owner": "Tim L\u00f6hr",
+      "source": "Original loehrning.ai editorial course artwork, recolored for this repository on 2026-09-28",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
     },
@@ -207,6 +225,15 @@
       "redistribution": "Included for repository operation; reuse is not granted"
     },
     {
+      "path": "packages/website/public/course-covers/ki-fuehrerschein-cover-v4.webp",
+      "sizeBytes": 70828,
+      "sha256": "51e221a2e17a43de6364bbb2d067f52724a8fbb4a9dc00a649d539c8a4a01adf",
+      "owner": "Tim L\u00f6hr",
+      "source": "Original loehrning.ai editorial course artwork, recolored for this repository on 2026-09-28",
+      "license": "LicenseRef-Loehrning-Editorial",
+      "redistribution": "Included for repository operation; reuse is not granted"
+    },
+    {
       "path": "packages/website/public/course-covers/ki-und-gesellschaft-cover-v2.webp",
       "sizeBytes": 78916,
       "sha256": "619d83f8877f8bd1f5d4b70e0e8c7cdb12740ef12ed81a3457ba9ced2deeff40",
@@ -221,6 +248,15 @@
       "sha256": "7b304dc46d11a998201f731ed29ac90710cda823124452eba8b436757d820840",
       "owner": "Tim L\u00f6hr",
       "source": "Original loehrning.ai editorial course artwork generated for this repository on 2026-08-28",
+      "license": "LicenseRef-Loehrning-Editorial",
+      "redistribution": "Included for repository operation; reuse is not granted"
+    },
+    {
+      "path": "packages/website/public/course-covers/ki-und-gesellschaft-cover-v4.webp",
+      "sizeBytes": 92282,
+      "sha256": "e2b20b2fbdc0b16979f61ad1b20d28c88724fea5c9d79a45945638db85c69af7",
+      "owner": "Tim L\u00f6hr",
+      "source": "Original loehrning.ai editorial course artwork, recolored for this repository on 2026-09-28",
       "license": "LicenseRef-Loehrning-Editorial",
       "redistribution": "Included for repository operation; reuse is not granted"
     },
