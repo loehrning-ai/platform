@@ -270,6 +270,33 @@ the browser client reads the token, so a wider domain would hand a live,
 script-readable platform session to every current and future `*.loehrning.ai`
 host. `docs/hosted-tools.md` carries the full argument and the alternative.
 
+## Releasing to production
+
+Merging to `main` does **not** deploy. `vercel.json` sets
+`git.deploymentEnabled.main` to `false`, so the Vercel Git integration builds
+previews for branches and never production. Production changes through one
+deliberate step, run from the repository root with the `vercel` and `gh` CLIs
+signed in and the project linked (`vercel link`):
+
+```
+bun run deploy:production                  # dry run: every guard, no deploy
+bun run deploy:production -- --wait --yes  # wait for green CI, then deploy
+```
+
+`scripts/deploy-production.mjs` deploys only the head of `main`, and only when
+every check-run on that exact commit is completed and green with the `verify`
+aggregate present (the dependency-snapshot jobs `generate` and `submit` are
+not part of the verdict). It refuses a commit that already has a production
+deployment, creates exactly one deployment, watches it to READY with a
+12-minute cancel guard, never retries on its own, smoke-tests the production
+routes, and prints the rollback command (`vercel rollback <previous id>`).
+
+If GitHub Actions itself is degraded and the checks cannot finish,
+`--override-checks "<reason>" --yes` deploys the head of `main` anyway. The
+reason (at least 10 characters) is mandatory and is printed together with the
+state of the checks. Use it only for a commit that has been verified some
+other way, and re-check CI once it recovers. Every other guard still applies.
+
 ## Pre-deploy verification
 
 ```

@@ -108,7 +108,9 @@ It deploys only the head of `main`, and only when every check-run on that
 exact commit is green (the `verify` aggregate included). It refuses a commit
 that already has a production deployment, watches the build to READY with a
 12-minute cancel guard, smoke-tests the production routes, and prints the
-rollback command. It never retries a build on its own.
+rollback command. It never retries a build on its own. During a GitHub
+Actions outage, `--override-checks "<reason>"` is the explicit, logged escape
+hatch; see `packages/website/docs/deployment.md`.
 
 ## Optional provider activation
 

@@ -43,6 +43,16 @@ test("parseArguments accepts the documented flags", () => {
   assert.equal(options.baseUrl, "https://example.test");
 });
 
+test("parseArguments requires a real reason for the CI-outage override", () => {
+  assert.equal(parseArguments([]).overrideChecks, null);
+  assert.equal(
+    parseArguments(["--override-checks", "GitHub Actions incident, verified locally"]).overrideChecks,
+    "GitHub Actions incident, verified locally",
+  );
+  assert.throws(() => parseArguments(["--override-checks", "skip"]), /reason/);
+  assert.throws(() => parseArguments(["--override-checks"]), /needs a value/);
+});
+
 test("parseArguments rejects malformed input instead of guessing", () => {
   assert.throws(() => parseArguments(["--sha", "main"]), /40-character/);
   assert.throws(() => parseArguments(["--observe", "abc"]), /deployment id/);
@@ -89,6 +99,7 @@ test("evaluateCheckRuns ignores the dependency-snapshot jobs but not a real gate
       run("verify"),
       run("generate", "completed", "cancelled"),
       run("submit", "completed", "skipped"),
+      run("Dependabot", "in_progress", null),
     ],
     SHA,
   );

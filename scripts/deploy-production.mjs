@@ -25,6 +25,13 @@
  *   bun run deploy:production -- --sha <sha> --yes
  *   bun run deploy:production -- --observe <deployment id>
  *
+ * CI outage escape hatch: when GitHub Actions itself is degraded and the
+ * checks cannot finish, `--override-checks "<reason>" --yes` deploys the head
+ * of main anyway. The reason is mandatory, is printed with the state of the
+ * checks at that moment, and every other guard (head of main, no duplicate
+ * deployment, smoke test, rollback hint) still applies. Use it only after the
+ * commit has been verified some other way, and re-check CI once it recovers.
+ *
  * The Vercel project and team are read from the `vercel link` file
  * (`packages/website/.vercel/project.json`, or `.vercel/project.json` at the
  * root); nothing about the account is stored in the repository.
@@ -48,11 +55,11 @@ const DEFAULT_WAIT_TIMEOUT_MIN = 60;
 /** Check-runs that may legitimately finish as "skipped". */
 const SKIPPABLE_CHECKS = new Set(["voice report"]);
 /**
- * Check-runs that report on GitHub's dependency graph, not on the build that
- * would ship (the dependency-snapshot workflow). A cancelled or skipped run
+ * Check-runs that report on GitHub's dependency tooling, not on the build that
+ * would ship (the dependency-snapshot workflow and the Dependabot updater). A cancelled or skipped run
  * of one of these says nothing about the commit, so it never blocks a release.
  */
-const NON_RELEASE_CHECKS = new Set(["generate", "submit"]);
+const NON_RELEASE_CHECKS = new Set(["generate", "submit", "Dependabot"]);
 /** The aggregate check whose success is the release signal. */
 const RELEASE_CHECK = "verify";
 const SMOKE_ROUTES = [
@@ -75,6 +82,7 @@ export function parseArguments(argv) {
     observe: null,
     wait: false,
     yes: false,
+    overrideChecks: null,
     smoke: true,
     deployTimeoutMin: DEFAULT_DEPLOY_TIMEOUT_MIN,
     waitTimeoutMin: DEFAULT_WAIT_TIMEOUT_MIN,
@@ -94,12 +102,16 @@ export function parseArguments(argv) {
     else if (flag === "--observe") options.observe = value();
     else if (flag === "--wait") options.wait = true;
     else if (flag === "--yes") options.yes = true;
+    else if (flag === "--override-checks") options.overrideChecks = value();
     else if (flag === "--no-smoke") options.smoke = false;
     else if (flag === "--deploy-timeout-min") options.deployTimeoutMin = Number(value());
     else if (flag === "--wait-timeout-min") options.waitTimeoutMin = Number(value());
     else if (flag === "--base-url") options.baseUrl = value().replace(/\/+$/, "");
     else if (flag === "--help" || flag === "-h") options.help = true;
     else throw new Error(`Unknown argument: ${flag}`);
+  }
+  if (options.overrideChecks !== null && options.overrideChecks.trim().length < 10) {
+    throw new Error("--override-checks needs a reason of at least 10 characters");
   }
   if (options.sha !== null && !SHA_PATTERN.test(options.sha)) {
     throw new Error("--sha must be a full 40-character lowercase commit SHA");
@@ -317,15 +329,24 @@ async function main() {
 
   const verdict = await waitForChecks(sha, options);
   log(`Checks: ${verdict.total} reported`);
-  if (verdict.failed.length > 0) {
-    throw new Error(`Failing checks:\n  - ${verdict.failed.join("\n  - ")}`);
-  }
   if (!verdict.ready) {
-    throw new Error(
-      `Checks are not finished (${verdict.pending.join(", ")}). Re-run with --wait to wait for them.`,
+    const problems = [
+      ...verdict.failed.map((name) => `failing: ${name}`),
+      ...verdict.pending.map((name) => `not finished: ${name}`),
+    ];
+    if (options.overrideChecks === null) {
+      throw new Error(
+        verdict.failed.length > 0
+          ? `Failing checks:\n  - ${verdict.failed.join("\n  - ")}`
+          : `Checks are not finished (${verdict.pending.join(", ")}). Re-run with --wait to wait for them.`,
+      );
+    }
+    log(
+      `\nWARNING: deploying with checks not green. Reason given: ${options.overrideChecks}\n  - ${problems.join("\n  - ")}\n`,
     );
+  } else {
+    log("Checks: all green");
   }
-  log("Checks: all green");
 
   const inventory = vercelApi(
     project,
