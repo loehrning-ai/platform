@@ -109,6 +109,16 @@ function afterLoadAndIdle(callback: () => void): () => void {
   };
 }
 
+/** Set on the globe window while the one-time signal from Berlin plays. */
+export const INTRO_ATTRIBUTE = "data-home-intro";
+
+/** Ends the opening: the layer rests invisible (phone-hero.css). */
+function endSignal(slot: HTMLElement): void {
+  if (slot.getAttribute(INTRO_ATTRIBUTE) === "play") {
+    slot.setAttribute(INTRO_ATTRIBUTE, "done");
+  }
+}
+
 export type PhoneGlobeState = "static" | "running" | "paused";
 
 export type PhoneGlobe = {
@@ -138,11 +148,24 @@ export function usePhoneGlobe(): PhoneGlobe {
     pausedRef.current = readPaused();
     setPaused(pausedRef.current);
 
+    // The signal from Berlin (hero-signal-frame.tsx) plays once per page
+    // view, for exactly the browsers that would get the moving globe and
+    // have not paused it. Its resting state is invisible, so not playing it
+    // leaves the static frame untouched.
+    if (phoneGlobeEligible() && !pausedRef.current) {
+      slot.setAttribute(INTRO_ATTRIBUTE, "play");
+    }
+    const endIntro = (event: AnimationEvent) => {
+      if (event.animationName === "hz-signal-stage") endSignal(slot);
+    };
+    slot.addEventListener("animationend", endIntro);
+
     let disposed = false;
     let loading = false;
     let cancelWait: (() => void) | null = null;
 
     const stop = () => {
+      endSignal(slot);
       cancelWait?.();
       cancelWait = null;
       loading = false;
@@ -185,6 +208,7 @@ export function usePhoneGlobe(): PhoneGlobe {
     return () => {
       disposed = true;
       for (const query of queries) query.removeEventListener?.("change", sync);
+      slot.removeEventListener("animationend", endIntro);
       cancelWait?.();
     };
   }, []);
@@ -194,6 +218,8 @@ export function usePhoneGlobe(): PhoneGlobe {
     pausedRef.current = next;
     setPaused(next);
     writePaused(next);
+    // Pausing also settles the opening at once.
+    if (next && slotRef.current) endSignal(slotRef.current);
   }, []);
 
   const onLive = useCallback(() => {

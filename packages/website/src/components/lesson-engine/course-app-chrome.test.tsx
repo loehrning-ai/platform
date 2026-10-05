@@ -157,6 +157,48 @@ describe("CourseLessonHeader", () => {
     const header = document.querySelector("[data-course-lesson-header]");
     expect(header).toHaveClass("sticky", "top-[var(--nav-h-compact)]", "lg:top-[var(--nav-h)]");
   });
+
+  it("marks itself stuck only once it sits under the top bar, so its band never covers the banner above", async () => {
+    render(
+      <CourseLessonHeader
+        courseSlug="ki-fuehrerschein"
+        lessonId="daten-1-1"
+        courseLessonIds={["daten-1-1"]}
+        backHref="/ki-fuehrerschein/kurs"
+        backLabel="Zur Kursübersicht"
+        title="KI-Führerschein"
+        context="Modul 1 · Lektion 1 von 1"
+      />,
+    );
+    const header = document.querySelector<HTMLElement>("[data-course-lesson-header]");
+    expect(header).not.toBeNull();
+    // At the top of the page the header sits in flow, below the banner.
+    expect(header).not.toHaveAttribute("data-stuck");
+
+    const rect = vi.spyOn(header as HTMLElement, "getBoundingClientRect").mockReturnValue({
+      top: 0,
+    } as DOMRect);
+    const scrollY = Object.getOwnPropertyDescriptor(window, "scrollY");
+    Object.defineProperty(window, "scrollY", { configurable: true, value: 400 });
+    try {
+      await act(async () => {
+        window.dispatchEvent(new Event("scroll"));
+        await new Promise((resolve) => window.requestAnimationFrame(() => resolve(null)));
+      });
+      expect(header).toHaveAttribute("data-stuck");
+
+      Object.defineProperty(window, "scrollY", { configurable: true, value: 0 });
+      rect.mockReturnValue({ top: 120 } as DOMRect);
+      await act(async () => {
+        window.dispatchEvent(new Event("scroll"));
+        await new Promise((resolve) => window.requestAnimationFrame(() => resolve(null)));
+      });
+      expect(header).not.toHaveAttribute("data-stuck");
+    } finally {
+      rect.mockRestore();
+      if (scrollY) Object.defineProperty(window, "scrollY", scrollY);
+    }
+  });
 });
 
 describe("LessonShell course-app look", () => {

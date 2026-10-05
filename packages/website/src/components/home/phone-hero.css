@@ -237,3 +237,168 @@
     opacity: 0;
   }
 }
+
+/* ---- the signal from Berlin: once, on arrival ------------------------------
+ *
+ * hero-signal-frame.tsx draws a ping, ten lifted arcs, a light on each arc
+ * and a node at each end, in the globe window's own coordinates. Its resting
+ * state is invisible: it exists only while phone-globe.tsx has set
+ * data-home-intro="play" on the window, which it does once, for a browser
+ * that would also get the moving globe (no reduced motion, reduced data,
+ * Save-Data or remembered pause). The whole run is about five and a half
+ * seconds and then fades, while the globe's tour still rests on Berlin.
+ * Nothing repeats; nothing is animated but opacity, transforms and dashes.
+ */
+@media (width < 64rem) {
+  /* As specific as the window's `> svg` rule above, which it must outrank. */
+  [data-home-globe] > [data-home-signals] {
+    display: none;
+  }
+}
+
+@media (width < 64rem) and (prefers-reduced-motion: no-preference) {
+  [data-home-globe][data-home-intro="play"] > [data-home-signals] {
+    display: block;
+    z-index: 2;
+    opacity: 0;
+    animation: hz-signal-stage 5.6s linear 0.2s both;
+  }
+
+  [data-home-signals] :is(.sig-ring, .sig-land, .sig-node, .sig-origin) {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  [data-home-signals] .sig-origin {
+    fill: var(--color-kupfer);
+    stroke: var(--color-paper);
+    stroke-width: 4;
+    animation: hz-signal-pop 0.5s var(--ease-deck) 0.25s both;
+  }
+
+  [data-home-signals] .sig-ring {
+    stroke: var(--color-kupfer);
+    stroke-width: 3;
+    animation: hz-signal-ping 1.5s var(--ease-fade) 0.35s both;
+  }
+
+  [data-home-signals] .sig-ring-late {
+    animation-delay: 0.75s;
+  }
+
+  /* Each arc draws out from Berlin, staggered round the compass. */
+  [data-home-signals] .sig-line {
+    stroke: var(--color-brand-cobalt);
+    stroke-width: 3.2;
+    stroke-linecap: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    stroke-opacity: 0.7;
+    animation: hz-signal-draw 1.25s var(--ease-deck)
+      calc(0.7s + var(--sig-i) * 0.09s) forwards;
+  }
+
+  /* A short bright dash runs the arc once, just behind the drawing tip. */
+  [data-home-signals] .sig-comet {
+    stroke: var(--color-kupfer);
+    stroke-width: 6;
+    stroke-linecap: round;
+    stroke-dasharray: 0.07 1.2;
+    stroke-dashoffset: 0.07;
+    opacity: 0;
+    animation: hz-signal-run 1.5s var(--ease-fade)
+      calc(0.8s + var(--sig-i) * 0.09s) forwards;
+  }
+
+  [data-home-signals] .sig-land {
+    stroke: var(--color-brand-cobalt);
+    stroke-width: 2.5;
+    opacity: 0;
+    animation: hz-signal-land 0.9s var(--ease-fade)
+      calc(1.75s + var(--sig-i) * 0.09s) forwards;
+  }
+
+  [data-home-signals] .sig-node {
+    fill: var(--color-brand-cobalt);
+    stroke: var(--color-paper);
+    stroke-width: 3;
+    animation: hz-signal-pop 0.55s var(--ease-deck)
+      calc(1.7s + var(--sig-i) * 0.09s) both;
+  }
+}
+
+/* Reduced data: the window never plays it, even if the script raced it. */
+@media (width < 64rem) and (prefers-reduced-data: reduce) {
+  [data-home-globe][data-home-intro] > [data-home-signals] {
+    display: none;
+  }
+}
+
+@keyframes hz-signal-stage {
+  0% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes hz-signal-ping {
+  from {
+    opacity: 0.85;
+    transform: scale(0.3);
+  }
+  to {
+    opacity: 0;
+    transform: scale(5);
+  }
+}
+
+@keyframes hz-signal-land {
+  from {
+    opacity: 0.8;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+
+@keyframes hz-signal-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes hz-signal-run {
+  0% {
+    opacity: 1;
+    stroke-dashoffset: 0.07;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    stroke-dashoffset: -1;
+  }
+}
+
+@keyframes hz-signal-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

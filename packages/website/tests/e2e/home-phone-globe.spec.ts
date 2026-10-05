@@ -62,6 +62,9 @@ test.describe("phone home globe", () => {
     await expect(slot).not.toHaveAttribute("data-home-globe-live", "");
     await expect(page.locator("[data-home-globe-toggle]")).toHaveCount(0);
     await expect(slot.locator("[data-hero-network-motion]")).toHaveCount(0);
+    // The signal from Berlin never plays and its layer is not drawn.
+    await expect(slot).not.toHaveAttribute("data-home-intro", /.*/);
+    await expect(slot.locator("[data-home-signals]")).toBeHidden();
     const running = await page.evaluate(
       () =>
         document
@@ -76,6 +79,12 @@ test.describe("phone home globe", () => {
   }) => {
     await page.goto("/");
     const slot = page.locator("[data-home-globe]");
+    // The signal from Berlin plays once over the window, then settles and
+    // its layer is gone; nothing of it repeats.
+    await expect(slot).toHaveAttribute("data-home-intro", "done", {
+      timeout: 20_000,
+    });
+    await expect(slot.locator("[data-home-signals]")).toBeHidden();
     await expect(slot).toHaveAttribute("data-home-globe-live", "", {
       timeout: 20_000,
     });

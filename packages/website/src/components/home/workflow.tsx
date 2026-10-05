@@ -145,11 +145,13 @@ export function Workflow({ locale = "de" }: { readonly locale?: Locale }) {
           })}
         </PointerDepthList>
 
-        {/* Below 22.5rem (360px) the button takes its own row under the
-            sentence; a rem query, so it outranks max-lg in the cascade and
-            follows the browser's font size. */}
-        <div className="mt-6 grid gap-3 rounded-[1.5rem] border border-brand-cobalt bg-brand-cobalt p-4 shadow-card-hover max-lg:mt-4 max-lg:grid-cols-[minmax(0,1fr)_auto] max-lg:items-center max-lg:rounded-2xl max-lg:p-3 max-[22.5rem]:grid-cols-1 max-[22.5rem]:gap-2 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center md:px-6 md:py-5 lg:mt-7 lg:rounded-[1.6rem]">
-          <p className="max-w-2xl text-sm leading-relaxed text-white max-lg:text-xs">
+        {/* Below 30rem (480px, every phone) the button takes its own row
+            under the sentence, so the sentence keeps the body size instead
+            of squeezing into a third of the card; a rem query, so it
+            outranks max-lg in the cascade and follows the browser's font
+            size. */}
+        <div className="mt-6 grid gap-3 rounded-[1.5rem] border border-brand-cobalt bg-brand-cobalt p-4 shadow-card-hover max-lg:mt-4 max-lg:grid-cols-[minmax(0,1fr)_auto] max-lg:items-center max-lg:rounded-2xl max-lg:p-3 max-[30rem]:grid-cols-1 max-[30rem]:gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center md:px-6 md:py-5 lg:mt-7 lg:rounded-[1.6rem]">
+          <p className="max-w-2xl text-sm leading-relaxed text-white">
             {copy.accountBody}
           </p>
           <Link

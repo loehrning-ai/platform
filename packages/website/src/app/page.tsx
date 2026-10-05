@@ -7,6 +7,7 @@ import { Offering } from "@/components/home/offering";
 import { Workflow } from "@/components/home/workflow";
 import { HOME_COPY } from "@/components/home/home-copy";
 import { HeroGlobeFrame } from "@/components/home/hero-globe-frame";
+import { HeroSignalFrame } from "@/components/home/hero-signal-frame";
 import { contentLocalesForPath } from "@/lib/i18n/content-parity";
 import { buildLocaleAlternates, localizeHref } from "@/lib/i18n/locale";
 import { getRequestLocale } from "@/lib/i18n/request-locale";
@@ -58,10 +59,11 @@ export default async function HomePage() {
              server HTML, filled in the browser once the active learning
              namespace is known), the promise, the primary action and a
              window onto the line globe, whose first frame is computed here
-             on the server. */}
+             on the server, with the one-time signal from Berlin over it. */}
       <HeroSection
         locale={locale}
         phoneGlobe={<HeroGlobeFrame />}
+        phoneIntro={<HeroSignalFrame />}
         continueSlot={
           <ContinueSlot locale={locale} courses={homeContinueCourses(locale)} />
         }

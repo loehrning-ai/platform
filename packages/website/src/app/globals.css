@@ -1190,11 +1190,14 @@
   background-color: rgba(255, 252, 245, 0.97);
 }
 
-/* The lesson header sticks right below the translucent top bar. Its cap
-   paints the band behind that bar too, so lesson text never scrolls
-   visibly through the gaps around the floating desktop nav or through the
-   compact phone bar. */
-[data-course-lesson-header]::before,
+/* The lesson header sticks right below the translucent top bar. While it
+   is stuck (data-stuck, set by course-lesson-header.tsx) its cap paints the
+   band behind that bar too, so lesson text never scrolls visibly through
+   the gaps around the floating desktop nav or through the compact phone
+   bar. Unstuck, the cap would cover what sits above the header (the guest
+   banner on a phone), so it is not drawn. The fixed quiz bar is always
+   under the nav and always paints it. */
+[data-course-lesson-header][data-stuck]::before,
 [data-course-app-cap]::before {
   content: "";
   position: absolute;
@@ -1206,7 +1209,7 @@
 }
 
 @media (min-width: 64rem) {
-  [data-course-lesson-header]::before,
+  [data-course-lesson-header][data-stuck]::before,
   [data-course-app-cap]::before {
     height: var(--nav-h);
   }

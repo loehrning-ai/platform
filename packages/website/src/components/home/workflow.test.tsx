@@ -84,12 +84,18 @@ describe("Ressourcen section (Workflow)", () => {
     });
   });
 
-  it("stacks the account band below 360px instead of squeezing the sentence", () => {
+  it("stacks the account band on phones instead of squeezing the sentence", () => {
     render(<Workflow />);
     const band = screen.getByRole("link", { name: /Zum Konto/ }).parentElement;
     // A rem query: it sorts after max-lg in Tailwind's cascade (a px query
     // would sort before it and lose), and it follows the browser font size.
-    expect(band).toHaveClass("max-[22.5rem]:grid-cols-1");
+    expect(band).toHaveClass("max-[30rem]:grid-cols-1");
+    // The sentence keeps the 14px body size on a phone.
+    expect(
+      screen.getByText(
+        "Kostenloses Konto: Fortschritt und Arbeitsbelege auf jedem Gerät.",
+      ),
+    ).not.toHaveClass("max-lg:text-xs");
   });
 
   it("gives each destination one path on a phone and never truncates a card", async () => {

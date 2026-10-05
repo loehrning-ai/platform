@@ -163,6 +163,12 @@ export type HeroSectionProps = {
    * geometry is computed on the server and never ships in this client chunk.
    */
   readonly phoneGlobe?: ReactNode;
+  /**
+   * Below lg only: the one-time signal from Berlin over the phone globe
+   * (home/hero-signal-frame.tsx), server-rendered for the same reason. It
+   * rests invisible until phone-globe.tsx lets it play.
+   */
+  readonly phoneIntro?: ReactNode;
   /** Below lg only: the continue seat, the band's first row. */
   readonly continueSlot?: ReactNode;
 };
@@ -186,6 +192,7 @@ export type HeroSectionProps = {
 function HeroSectionContent({
   locale = "de",
   phoneGlobe,
+  phoneIntro,
   continueSlot,
 }: HeroSectionProps) {
   const copy = HOME_COPY[locale].hero;
@@ -409,6 +416,7 @@ function HeroSectionContent({
                 className="h-full w-full"
               />
             ) : null}
+            {phoneIntro}
           </div>
         ) : null}
       </div>

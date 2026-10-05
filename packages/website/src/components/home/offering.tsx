@@ -162,7 +162,7 @@ export function Offering({ locale = "de" }: { readonly locale?: Locale }) {
         </PointerDepthList>
 
         <div className="mt-6 grid gap-3 rounded-2xl border border-foreground/10 bg-brand-acid/65 p-4 shadow-card max-lg:mt-4 max-lg:grid-cols-[minmax(0,1fr)_auto] max-lg:items-center max-lg:p-3 max-sm:grid-cols-1 max-sm:gap-1 max-sm:px-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:px-6 sm:py-5 lg:mt-7">
-          <p className="text-sm leading-relaxed text-foreground max-lg:text-xs">
+          <p className="text-sm leading-relaxed text-foreground">
             {copy.deeperSummary(TECHNICAL_COURSE_COUNT)}
           </p>
           <Link

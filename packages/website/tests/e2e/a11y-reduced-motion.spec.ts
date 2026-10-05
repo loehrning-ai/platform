@@ -122,8 +122,9 @@ async function expectReducedMotionHonored(
     expect(
       await staticRoots.count(),
       `${route}: expected all static homepage reveal sections`,
-    ).toBe(3);
-    for (let index = 0; index < 3; index += 1) {
+    ).toBe(2);
+    // Kurse and Ressourcen; the Ground rules strip was removed from home.
+    for (let index = 0; index < 2; index += 1) {
       const root = staticRoots.nth(index);
       await expect(
         root,

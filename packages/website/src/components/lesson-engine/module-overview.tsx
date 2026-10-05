@@ -350,8 +350,10 @@ export function ModuleOverview({
                     { label: copy.statModules, value: `${modulesDone}/${modules.length}` },
                     { label: copy.statRemaining, value: copy.remaining(remainingMinutes) },
                   ].map((stat) => (
-                    <div key={stat.label} className="min-w-0 rounded-[18px] bg-paper/80 px-3 py-3 ring-1 ring-lab-line/80">
-                      <dt className="truncate text-[12px] font-semibold text-muted-foreground">{stat.label}</dt>
+                    <div key={stat.label} className="flex min-w-0 flex-col justify-between rounded-[18px] bg-paper/80 px-3 py-3 ring-1 ring-lab-line/80">
+                      {/* The label wraps on a narrow phone instead of being
+                          cut to "Module fe…"; the value stays on its line. */}
+                      <dt className="text-[12px] font-semibold leading-tight text-muted-foreground [overflow-wrap:anywhere]">{stat.label}</dt>
                       <dd className="mt-0.5 truncate text-lg font-bold tabular-nums tracking-[-0.01em] text-foreground">
                         {stat.value}
                       </dd>

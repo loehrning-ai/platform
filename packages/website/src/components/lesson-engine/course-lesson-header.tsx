@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type JSX } from "react";
+import { useEffect, useRef, useState, type JSX } from "react";
 import Link from "next/link";
 import { m } from "framer-motion";
 import { ArrowLeft, Check } from "lucide-react";
@@ -85,6 +85,34 @@ export function CourseLessonHeader({
     return () => window.removeEventListener(CONCEPT_SEEN_EVENT, onSeen);
   }, []);
 
+  // The header paints the band behind the translucent top bar only while it
+  // is stuck under it (globals.css). Unstuck, at the top of the page, that
+  // band would cover whatever sits above the header, such as the guest
+  // "progress not saved" banner on a phone.
+  const headerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+    let frame = 0;
+    const measure = () => {
+      frame = 0;
+      const stickyTop = Number.parseFloat(getComputedStyle(header).top) || 0;
+      const stuck = header.getBoundingClientRect().top <= stickyTop + 0.5 && window.scrollY > 0;
+      header.toggleAttribute("data-stuck", stuck);
+    };
+    const schedule = () => {
+      if (!frame) frame = window.requestAnimationFrame(measure);
+    };
+    measure();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
   const total = courseLessonIds.length;
   const conceptDone =
     conceptSeenFor === lessonId || steps.exerciseDone || steps.checksPassed;
@@ -98,6 +126,7 @@ export function CourseLessonHeader({
   return (
     <MotionProvider>
       <div
+        ref={headerRef}
         data-course-lesson-header
         className="course-app-frost sticky top-[var(--nav-h-compact)] z-30 -mx-4 -mt-4 mb-5 border-b border-lab-line/70 sm:-mx-5 lg:top-[var(--nav-h)] lg:-mx-6 lg:-mt-7 lg:mb-7 xl:-mx-8"
       >

@@ -41,6 +41,7 @@ vi.mock("@/components/home/hero-network", () => ({
 
 import { HeroSection } from "./hero";
 import { HeroGlobeFrame } from "./hero-globe-frame";
+import { HeroSignalFrame } from "./hero-signal-frame";
 
 type Env = {
   desktop?: boolean;
@@ -257,5 +258,113 @@ describe("phone hero globe: live globe", () => {
     expect(slot?.querySelector('[data-compact="true"]')).toBeNull();
 
     unmount();
+  });
+});
+
+describe("phone hero: the signal from Berlin", () => {
+  function renderWithIntro() {
+    return render(
+      <HeroSection
+        locale="de"
+        phoneGlobe={<HeroGlobeFrame />}
+        phoneIntro={<HeroSignalFrame />}
+      />,
+    );
+  }
+
+  function slotOf(container: HTMLElement) {
+    return container.querySelector("[data-home-globe]");
+  }
+
+  it("server-renders the layer inside the decorative globe window, at rest", () => {
+    installMatchMedia({});
+    const html = renderToString(
+      <HeroSection
+        locale="en"
+        phoneGlobe={<HeroGlobeFrame />}
+        phoneIntro={<HeroSignalFrame />}
+      />,
+    );
+    const host = document.createElement("div");
+    host.innerHTML = html;
+    const slot = host.querySelector("[data-home-globe]");
+    expect(slot).toHaveAttribute("aria-hidden", "true");
+    // Server HTML never plays it; the browser decides.
+    expect(slot).not.toHaveAttribute("data-home-intro");
+    const layer = slot?.querySelector("svg[data-home-signals]");
+    expect(layer).not.toBeNull();
+    expect(layer?.querySelectorAll(".sig-line")).toHaveLength(10);
+    expect(layer?.querySelector("text, a, button")).toBeNull();
+  });
+
+  it("plays once below lg when motion is allowed, and settles when its stage ends", () => {
+    installMatchMedia({});
+    const { container } = renderWithIntro();
+    const slot = slotOf(container);
+    expect(slot).toHaveAttribute("data-home-intro", "play");
+
+    // Another animation ending changes nothing; the stage ending settles it.
+    const end = (animationName: string) => {
+      const event = new Event("animationend", { bubbles: true });
+      Object.defineProperty(event, "animationName", { value: animationName });
+      act(() => {
+        slot?.dispatchEvent(event);
+      });
+    };
+    end("hz-signal-ping");
+    expect(slot).toHaveAttribute("data-home-intro", "play");
+    end("hz-signal-stage");
+    expect(slot).toHaveAttribute("data-home-intro", "done");
+  });
+
+  it("never plays under reduced motion, reduced data, Save-Data, a remembered pause or on desktop", () => {
+    for (const next of [
+      { reducedMotion: true },
+      { reducedData: true },
+      { desktop: true },
+    ]) {
+      installMatchMedia(next);
+      const { container, unmount } = renderWithIntro();
+      expect(slotOf(container)).not.toHaveAttribute("data-home-intro");
+      unmount();
+    }
+
+    installMatchMedia({});
+    window.localStorage.setItem("loehrning:home-globe-paused", "1");
+    const paused = renderWithIntro();
+    expect(slotOf(paused.container)).not.toHaveAttribute("data-home-intro");
+    paused.unmount();
+    window.localStorage.clear();
+
+    const connection = Object.getOwnPropertyDescriptor(navigator, "connection");
+    Object.defineProperty(navigator, "connection", {
+      configurable: true,
+      value: { saveData: true },
+    });
+    try {
+      const saver = renderWithIntro();
+      expect(slotOf(saver.container)).not.toHaveAttribute("data-home-intro");
+      saver.unmount();
+    } finally {
+      if (connection) Object.defineProperty(navigator, "connection", connection);
+      else delete (navigator as { connection?: unknown }).connection;
+    }
+  });
+
+  it("settles at once when the visitor pauses or motion becomes reduced", async () => {
+    installMatchMedia({});
+    const { container } = renderWithIntro();
+    const slot = slotOf(container);
+    fireEvent.click(await screen.findByRole("button", { name: "Globus anhalten" }));
+    expect(slot).toHaveAttribute("data-home-intro", "done");
+
+    window.localStorage.clear();
+    const second = renderWithIntro();
+    const secondSlot = slotOf(second.container);
+    expect(secondSlot).toHaveAttribute("data-home-intro", "play");
+    await act(async () => {
+      changeEnv({ reducedMotion: true });
+    });
+    expect(secondSlot).not.toHaveAttribute("data-home-intro", "play");
   });
 });
